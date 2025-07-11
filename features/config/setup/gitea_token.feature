@@ -17,7 +17,6 @@ Feature: enter the Gitea API token
       | contribution regex          | enter             |                                             |
       | observed regex              | enter             |                                             |
       | unknown branch type         | enter             |                                             |
-      | dev-remote                  | enter             |                                             |
       | origin hostname             | enter             |                                             |
       | forge type: auto-detect     | enter             |                                             |
       | gitea token                 | 1 2 3 4 5 6 enter |                                             |
@@ -38,7 +37,6 @@ Feature: enter the Gitea API token
       | git config git-town.gitea-token 123456               |
       | git config git-town.new-branch-type feature          |
       | git config git-town.unknown-branch-type feature      |
-      | git config git-town.dev-remote origin                |
       | git config git-town.push-hook true                   |
       | git config git-town.share-new-branches no            |
       | git config git-town.ship-strategy api                |
@@ -63,10 +61,9 @@ Feature: enter the Gitea API token
       | contribution regex          | enter                     |                                             |
       | observed regex              | enter                     |                                             |
       | unknown branch type         | enter                     |                                             |
-      | dev-remote                  | enter                     |                                             |
       | origin hostname             | enter                     |                                             |
       | forge type                  | down down down down enter |                                             |
-      | gitea token                 | 1 2 3 4 5 6 enter         |                                             |
+      | gitea token                 |         1 2 3 4 5 6 enter |                                             |
       | token scope                 | enter                     |                                             |
       | sync-feature-strategy       | enter                     |                                             |
       | sync-perennial-strategy     | enter                     |                                             |
@@ -85,7 +82,6 @@ Feature: enter the Gitea API token
       | git config git-town.new-branch-type feature          |
       | git config git-town.forge-type gitea                 |
       | git config git-town.unknown-branch-type feature      |
-      | git config git-town.dev-remote origin                |
       | git config git-town.push-hook true                   |
       | git config git-town.share-new-branches no            |
       | git config git-town.ship-strategy api                |
@@ -111,7 +107,6 @@ Feature: enter the Gitea API token
       | contribution regex          | enter             |                                             |
       | observed regex              | enter             |                                             |
       | unknown branch type         | enter             |                                             |
-      | dev-remote                  | enter             |                                             |
       | origin hostname             | enter             |                                             |
       | forge type                  | enter             |                                             |
       | gitea token                 | 1 2 3 4 5 6 enter |                                             |
@@ -132,7 +127,6 @@ Feature: enter the Gitea API token
       | git config --global git-town.gitea-token 123456      |
       | git config git-town.new-branch-type feature          |
       | git config git-town.unknown-branch-type feature      |
-      | git config git-town.dev-remote origin                |
       | git config git-town.push-hook true                   |
       | git config git-town.share-new-branches no            |
       | git config git-town.ship-strategy api                |
@@ -158,7 +152,6 @@ Feature: enter the Gitea API token
       | contribution regex          | enter                                     |                                             |
       | observed regex              | enter                                     |                                             |
       | unknown branch type         | enter                                     |                                             |
-      | dev-remote                  | enter                                     |                                             |
       | origin hostname             | enter                                     |                                             |
       | forge type                  | enter                                     |                                             |
       | github token                | backspace backspace backspace 4 5 6 enter |                                             |
@@ -179,7 +172,6 @@ Feature: enter the Gitea API token
       | git config --global git-town.gitea-token 456         |
       | git config git-town.new-branch-type feature          |
       | git config git-town.unknown-branch-type feature      |
-      | git config git-town.dev-remote origin                |
       | git config git-town.push-hook true                   |
       | git config git-town.share-new-branches no            |
       | git config git-town.ship-strategy api                |

@@ -17,7 +17,6 @@ Feature: enter the GitLab API token
       | contribution regex          | enter             |                                             |
       | observed regex              | enter             |                                             |
       | unknown branch type         | enter             |                                             |
-      | dev-remote                  | enter             |                                             |
       | origin hostname             | enter             |                                             |
       | forge type: auto-detect     | enter             |                                             |
       | gitlab connector type: api  | enter             |                                             |
@@ -40,7 +39,6 @@ Feature: enter the GitLab API token
       | git config git-town.new-branch-type feature          |
       | git config git-town.gitlab-connector api             |
       | git config git-town.unknown-branch-type feature      |
-      | git config git-town.dev-remote origin                |
       | git config git-town.push-hook true                   |
       | git config git-town.share-new-branches no            |
       | git config git-town.ship-strategy api                |
@@ -64,7 +62,6 @@ Feature: enter the GitLab API token
       | contribution regex          | enter             |                                             |
       | observed regex              | enter             |                                             |
       | unknown branch type         | enter             |                                             |
-      | dev-remote                  | enter             |                                             |
       | origin hostname             | enter             |                                             |
       | forge type                  | up enter          |                                             |
       | gitlab connector type: api  | enter             |                                             |
@@ -88,7 +85,6 @@ Feature: enter the GitLab API token
       | git config git-town.forge-type gitlab                |
       | git config git-town.gitlab-connector api             |
       | git config git-town.unknown-branch-type feature      |
-      | git config git-town.dev-remote origin                |
       | git config git-town.push-hook true                   |
       | git config git-town.share-new-branches no            |
       | git config git-town.ship-strategy api                |
@@ -114,7 +110,6 @@ Feature: enter the GitLab API token
       | contribution regex          | enter             |                                             |
       | observed regex              | enter             |                                             |
       | unknown branch type         | enter             |                                             |
-      | dev-remote                  | enter             |                                             |
       | origin hostname             | enter             |                                             |
       | forge type                  | enter             |                                             |
       | gitlab connector type: api  | enter             |                                             |
@@ -137,7 +132,6 @@ Feature: enter the GitLab API token
       | git config git-town.new-branch-type feature          |
       | git config git-town.gitlab-connector api             |
       | git config git-town.unknown-branch-type feature      |
-      | git config git-town.dev-remote origin                |
       | git config git-town.push-hook true                   |
       | git config git-town.share-new-branches no            |
       | git config git-town.ship-strategy api                |
@@ -163,7 +157,6 @@ Feature: enter the GitLab API token
       | contribution regex          | enter                                     |                                             |
       | observed regex              | enter                                     |                                             |
       | unknown branch type         | enter                                     |                                             |
-      | dev-remote                  | enter                                     |                                             |
       | origin hostname             | enter                                     |                                             |
       | forge type                  | enter                                     |                                             |
       | gitlab connector type: api  | enter                                     |                                             |
@@ -186,7 +179,6 @@ Feature: enter the GitLab API token
       | git config git-town.new-branch-type feature          |
       | git config git-town.gitlab-connector api             |
       | git config git-town.unknown-branch-type feature      |
-      | git config git-town.dev-remote origin                |
       | git config git-town.push-hook true                   |
       | git config git-town.share-new-branches no            |
       | git config git-town.ship-strategy api                |
