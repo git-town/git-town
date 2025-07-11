@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 const (
@@ -23,18 +24,22 @@ and limiting the sharing of confidential changes.
 `
 )
 
-func SyncPrototypeStrategy(existing configdomain.SyncPrototypeStrategy, inputs dialogcomponents.TestInput) (configdomain.SyncPrototypeStrategy, dialogdomain.Exit, error) {
-	entries := list.Entries[configdomain.SyncPrototypeStrategy]{
+func SyncPrototypeStrategy(existing configdomain.SyncPrototypeStrategy, inputs dialogcomponents.TestInput) (Option[configdomain.SyncPrototypeStrategy], dialogdomain.Exit, error) {
+	entries := list.Entries[Option[configdomain.SyncPrototypeStrategy]]{
 		{
-			Data: configdomain.SyncPrototypeStrategyMerge,
+			Data: None[configdomain.SyncPrototypeStrategy](),
+			Text: messages.DialogDefaultText,
+		},
+		{
+			Data: Some(configdomain.SyncPrototypeStrategyMerge),
 			Text: "merge updates from the parent and tracking branch",
 		},
 		{
-			Data: configdomain.SyncPrototypeStrategyRebase,
+			Data: Some(configdomain.SyncPrototypeStrategyRebase),
 			Text: "rebase branches against their parent and tracking branch",
 		},
 		{
-			Data: configdomain.SyncPrototypeStrategyCompress,
+			Data: Some(configdomain.SyncPrototypeStrategyCompress),
 			Text: "compress the branch after merging parent and tracking",
 		},
 	}

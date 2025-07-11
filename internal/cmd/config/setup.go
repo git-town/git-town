@@ -180,28 +180,28 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 			return emptyResult, exit, err
 		}
 	}
-	devRemote := repo.UnvalidatedConfig.NormalConfig.DevRemote
+	devRemote := None[gitdomain.Remote]()
 	if configFile.DevRemote.IsNone() && len(data.remotes) > 1 {
-		devRemote, exit, err = dialog.DevRemote(devRemote, data.remotes, data.dialogInputs.Next())
+		devRemote, exit, err = dialog.DevRemote(repo.UnvalidatedConfig.NormalConfig.DevRemote, data.remotes, data.dialogInputs.Next())
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}
 	}
-	hostingOriginHostName := repo.UnvalidatedConfig.NormalConfig.HostingOriginHostname
+	hostingOriginHostName := None[configdomain.HostingOriginHostname]()
 	enteredForgeType := repo.UnvalidatedConfig.NormalConfig.ForgeType.Or(repo.UnvalidatedConfig.File.GetOrDefault().ForgeType)
 	var actualForgeType Option[forgedomain.ForgeType]
-	bitbucketUsername := repo.UnvalidatedConfig.NormalConfig.BitbucketUsername
-	bitbucketAppPassword := repo.UnvalidatedConfig.NormalConfig.BitbucketAppPassword
-	codebergToken := repo.UnvalidatedConfig.NormalConfig.CodebergToken
+	bitbucketUsername := None[forgedomain.BitbucketUsername]()
+	bitbucketAppPassword := None[forgedomain.BitbucketAppPassword]()
+	codebergToken := None[forgedomain.CodebergToken]()
 	devURL := data.config.NormalConfig.DevURL(data.backend)
-	giteaToken := repo.UnvalidatedConfig.NormalConfig.GiteaToken
-	githubConnectorTypeOpt := repo.UnvalidatedConfig.NormalConfig.GitHubConnectorType
-	githubToken := repo.UnvalidatedConfig.NormalConfig.GitHubToken
-	gitlabConnectorTypeOpt := repo.UnvalidatedConfig.NormalConfig.GitLabConnectorType
-	gitlabToken := repo.UnvalidatedConfig.NormalConfig.GitLabToken
+	giteaToken := None[forgedomain.GiteaToken]()
+	githubConnectorTypeOpt := None[forgedomain.GitHubConnectorType]()
+	githubToken := None[forgedomain.GitHubToken]()
+	gitlabConnectorTypeOpt := None[forgedomain.GitLabConnectorType]()
+	gitlabToken := None[forgedomain.GitLabToken]()
 	for {
 		if configFile.HostingOriginHostname.IsNone() {
-			hostingOriginHostName, exit, err = dialog.OriginHostname(hostingOriginHostName, data.dialogInputs.Next())
+			hostingOriginHostName, exit, err = dialog.OriginHostname(repo.UnvalidatedConfig.NormalConfig.HostingOriginHostname, data.dialogInputs.Next())
 			if err != nil || exit {
 				return emptyResult, exit, err
 			}
@@ -216,36 +216,36 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		if forgeType, hasForgeType := actualForgeType.Get(); hasForgeType {
 			switch forgeType {
 			case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
-				bitbucketUsername, exit, err = dialog.BitbucketUsername(bitbucketUsername, data.dialogInputs.Next())
+				bitbucketUsername, exit, err = dialog.BitbucketUsername(repo.UnvalidatedConfig.NormalConfig.BitbucketUsername, data.dialogInputs.Next())
 				if err != nil || exit {
 					return emptyResult, exit, err
 				}
-				bitbucketAppPassword, exit, err = dialog.BitbucketAppPassword(bitbucketAppPassword, data.dialogInputs.Next())
+				bitbucketAppPassword, exit, err = dialog.BitbucketAppPassword(repo.UnvalidatedConfig.NormalConfig.BitbucketAppPassword, data.dialogInputs.Next())
 			case forgedomain.ForgeTypeCodeberg:
-				codebergToken, exit, err = dialog.CodebergToken(codebergToken, data.dialogInputs.Next())
+				codebergToken, exit, err = dialog.CodebergToken(repo.UnvalidatedConfig.NormalConfig.CodebergToken, data.dialogInputs.Next())
 			case forgedomain.ForgeTypeGitea:
-				giteaToken, exit, err = dialog.GiteaToken(giteaToken, data.dialogInputs.Next())
+				giteaToken, exit, err = dialog.GiteaToken(repo.UnvalidatedConfig.NormalConfig.GiteaToken, data.dialogInputs.Next())
 			case forgedomain.ForgeTypeGitHub:
-				githubConnectorTypeOpt, exit, err = dialog.GitHubConnectorType(githubConnectorTypeOpt, data.dialogInputs.Next())
+				githubConnectorTypeOpt, exit, err = dialog.GitHubConnectorType(repo.UnvalidatedConfig.NormalConfig.GitHubConnectorType, data.dialogInputs.Next())
 				if err != nil || exit {
 					return emptyResult, exit, err
 				}
 				if githubConnectorType, has := githubConnectorTypeOpt.Get(); has {
 					switch githubConnectorType {
 					case forgedomain.GitHubConnectorTypeAPI:
-						githubToken, exit, err = dialog.GitHubToken(githubToken, data.dialogInputs.Next())
+						githubToken, exit, err = dialog.GitHubToken(repo.UnvalidatedConfig.NormalConfig.GitHubToken, data.dialogInputs.Next())
 					case forgedomain.GitHubConnectorTypeGh:
 					}
 				}
 			case forgedomain.ForgeTypeGitLab:
-				gitlabConnectorTypeOpt, exit, err = dialog.GitLabConnectorType(gitlabConnectorTypeOpt, data.dialogInputs.Next())
+				gitlabConnectorTypeOpt, exit, err = dialog.GitLabConnectorType(repo.UnvalidatedConfig.NormalConfig.GitLabConnectorType, data.dialogInputs.Next())
 				if err != nil || exit {
 					return emptyResult, exit, err
 				}
 				if gitlabConnectorType, has := gitlabConnectorTypeOpt.Get(); has {
 					switch gitlabConnectorType {
 					case forgedomain.GitLabConnectorTypeAPI:
-						gitlabToken, exit, err = dialog.GitLabToken(gitlabToken, data.dialogInputs.Next())
+						gitlabToken, exit, err = dialog.GitLabToken(repo.UnvalidatedConfig.NormalConfig.GitLabToken, data.dialogInputs.Next())
 					case forgedomain.GitLabConnectorTypeGlab:
 					}
 				}
@@ -267,7 +267,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 			gitlabConnectorType:  gitlabConnectorTypeOpt,
 			gitlabToken:          gitlabToken,
 			inputs:               data.dialogInputs,
-			remoteURL:            data.config.NormalConfig.RemoteURL(data.backend, devRemote),
+			remoteURL:            data.config.NormalConfig.RemoteURL(data.backend, devRemote.GetOrElse(data.remotes[0])),
 		})
 		if err != nil || exit {
 			return emptyResult, exit, err
@@ -305,9 +305,9 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 			return emptyResult, exit, err
 		}
 	}
-	syncPrototypeStrategy := repo.UnvalidatedConfig.NormalConfig.SyncPrototypeStrategy
+	syncPrototypeStrategy := None[configdomain.SyncPrototypeStrategy]()
 	if configFile.SyncPrototypeStrategy.IsNone() {
-		syncPrototypeStrategy, exit, err = dialog.SyncPrototypeStrategy(syncPrototypeStrategy, data.dialogInputs.Next())
+		syncPrototypeStrategy, exit, err = dialog.SyncPrototypeStrategy(repo.UnvalidatedConfig.NormalConfig.SyncPrototypeStrategy, data.dialogInputs.Next())
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}
@@ -365,7 +365,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	normalData := configdomain.NormalConfigData{
+	normalData := configdomain.PartialConfig{
 		Aliases:                  aliases,
 		BitbucketAppPassword:     bitbucketAppPassword,
 		BitbucketUsername:        bitbucketUsername,
@@ -373,7 +373,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		CodebergToken:            codebergToken,
 		ContributionRegex:        contributionRegex,
 		DevRemote:                devRemote,
-		DryRun:                   false, // the setup assistant doesn't ask for this
+		DryRun:                   None[configdomain.DryRun](), // the setup assistant doesn't ask for this
 		FeatureRegex:             featureRegex,
 		ForgeType:                enteredForgeType,
 		GitHubConnectorType:      githubConnectorTypeOpt,
@@ -385,7 +385,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		Lineage:                  configdomain.Lineage{}, // the setup assistant doesn't ask for this
 		NewBranchType:            newBranchType,
 		ObservedRegex:            observedRegex,
-		Offline:                  false, // the setup assistant doesn't ask for this
+		Offline:                  None[configdomain.Offline](), // the setup assistant doesn't ask for this
 		PerennialBranches:        perennialBranches,
 		PerennialRegex:           perennialRegex,
 		PushHook:                 pushHook,

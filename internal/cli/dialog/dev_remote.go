@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/slice"
 	"github.com/git-town/git-town/v21/internal/messages"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 const (
@@ -22,9 +23,22 @@ Typically that's the "origin" remote.
 `
 )
 
-func DevRemote(existingValue gitdomain.Remote, options gitdomain.Remotes, inputs dialogcomponents.TestInput) (gitdomain.Remote, dialogdomain.Exit, error) {
-	cursor := slice.Index(options, existingValue).GetOrElse(0)
-	selection, exit, err := dialogcomponents.RadioList(list.NewEntries(options...), cursor, DevRemoteTypeTitle, DevRemoteHelp, inputs)
+func DevRemote(existingValue gitdomain.Remote, remotes gitdomain.Remotes, inputs dialogcomponents.TestInput) (Option[gitdomain.Remote], dialogdomain.Exit, error) {
+	cursor := slice.Index(remotes, existingValue).GetOrElse(0)
+	entries := make(list.Entries[Option[gitdomain.Remote]], len(remotes)+1)
+	entries[0] = list.Entry[Option[gitdomain.Remote]]{
+		Data:     None[gitdomain.Remote](),
+		Disabled: false,
+		Text:     messages.DialogDefaultText,
+	}
+	for _, remote := range remotes {
+		entries = append(entries, list.Entry[Option[gitdomain.Remote]]{
+			Data:     Some(remote),
+			Disabled: false,
+			Text:     remote.String(),
+		})
+	}
+	selection, exit, err := dialogcomponents.RadioList(entries, cursor, DevRemoteTypeTitle, DevRemoteHelp, inputs)
 	fmt.Printf(messages.DevRemote, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }
