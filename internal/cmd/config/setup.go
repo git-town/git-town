@@ -806,13 +806,13 @@ func saveNewBranchType(newValue Option[configdomain.BranchType], config config.N
 	return nil
 }
 
-func saveUnknownBranchType(valueToSave configdomain.BranchType, valueAlreadyInGit Option[configdomain.BranchType], runner subshelldomain.Runner) error {
-	if existingValue, has := valueAlreadyInGit.Get(); has {
-		if valueToSave == existingValue {
+func saveUnknownBranchType(valueToWriteToGit configdomain.BranchType, valueAlreadyInGit Option[configdomain.BranchType], runner subshelldomain.Runner) error {
+	if valueInGit, has := valueAlreadyInGit.Get(); has {
+		if valueToWriteToGit == valueInGit {
 			return nil
 		}
 	}
-	return gitconfig.SetUnknownBranchType(runner, valueToSave)
+	return gitconfig.SetUnknownBranchType(runner, valueToWriteToGit)
 }
 
 func saveDevRemote(value gitdomain.Remote, config config.NormalConfig, runner subshelldomain.Runner) error {
@@ -822,11 +822,11 @@ func saveDevRemote(value gitdomain.Remote, config config.NormalConfig, runner su
 	return gitconfig.SetDevRemote(runner, value)
 }
 
-func saveFeatureRegex(valueToSave Option[configdomain.FeatureRegex], valueAlreadyInGit Option[configdomain.FeatureRegex], runner subshelldomain.Runner) error {
-	if valueToSave.Equal(valueAlreadyInGit) {
+func saveFeatureRegex(valueToWriteToGit Option[configdomain.FeatureRegex], valueAlreadyInGit Option[configdomain.FeatureRegex], runner subshelldomain.Runner) error {
+	if valueToWriteToGit.Equal(valueAlreadyInGit) {
 		return nil
 	}
-	if value, has := valueToSave.Get(); has {
+	if value, has := valueToWriteToGit.Get(); has {
 		return gitconfig.SetFeatureRegex(runner, value)
 	}
 	_ = gitconfig.RemoveFeatureRegex(runner)
