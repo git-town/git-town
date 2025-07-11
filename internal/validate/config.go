@@ -43,7 +43,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 		}
 		if len(additionalPerennials) > 0 {
 			newPerennials := append(args.Unvalidated.Value.NormalConfig.PerennialBranches, additionalPerennials...)
-			if err = args.Unvalidated.Value.NormalConfig.SetPerennialBranches(args.Backend, newPerennials); err != nil {
+			if err = args.Unvalidated.Value.SetPerennialBranches(args.Backend, newPerennials); err != nil {
 				return config.EmptyValidatedConfig(), false, err
 			}
 		}
@@ -71,7 +71,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 	}
 	if len(additionalPerennials) > 0 {
 		newPerennials := append(args.Unvalidated.Value.NormalConfig.PerennialBranches, additionalPerennials...)
-		if err = args.Unvalidated.Value.NormalConfig.SetPerennialBranches(args.Backend, newPerennials); err != nil {
+		if err = args.Unvalidated.Value.SetPerennialBranches(args.Backend, newPerennials); err != nil {
 			return config.EmptyValidatedConfig(), false, err
 		}
 	}
