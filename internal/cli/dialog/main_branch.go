@@ -27,14 +27,35 @@ This is typically the branch called
 
 // MainBranch lets the user select a new main branch for this repo.
 func MainBranch(args MainBranchArgs) (Option[gitdomain.LocalBranchName], dialogdomain.Exit, error) {
-	// if set in global config: add option "use global setting" with None
+	// if mainbranch is configured in global config: add option "use global setting" with None
 	// if set in local config: don't add None option, preselect local setting
 	// if no local config: don't add None option, keep existing preselect nothing
-	cursor := 0
-	if defaultEntry, hasDefaultEntry := args.DefaultEntryOpt.Get(); hasDefaultEntry {
-		cursor = slice.Index(args.LocalBranches, defaultEntry).GetOrElse(0)
+	// if global and local: add global option but preselect the local one
+	entries := list.Entries[Option[gitdomain.LocalBranchName]]{}
+	if globalMain, hasGlobal := args.GlobalGitMainBranch.Get(); hasGlobal {
+		entries = append(entries, list.Entry[Option[gitdomain.LocalBranchName]]{
+			Data: None[gitdomain.LocalBranchName](),
+			Text: fmt.Sprintf("use global setting (%s)", globalMain),
+		})
 	}
-	selection, exit, err := dialogcomponents.RadioList(list.NewEntries(args.LocalBranches...), cursor, mainBranchTitle, MainBranchHelp, args.Inputs)
+	for _, localBranch := range args.LocalBranches {
+		entries = append(entries, list.Entry[Option[gitdomain.LocalBranchName]]{
+			Data: Some(localBranch),
+			Text: localBranch.String(),
+		})
+	}
+	cursor := 0
+	if gitStandard, hasStandard := args.GitStandardBranch.Get(); hasStandard {
+		if index, hasIndex := slice.Index(args.LocalBranches, gitStandard).Get(); hasIndex {
+			cursor = index
+		}
+	}
+	if localMain, hasLocal := args.LocalGitMainBranch.Get(); hasLocal {
+		if index, hasIndex := slice.Index(args.LocalBranches, localMain).Get(); hasIndex {
+			cursor = index
+		}
+	}
+	selection, exit, err := dialogcomponents.RadioList(entries, cursor, mainBranchTitle, MainBranchHelp, args.Inputs)
 	fmt.Printf(messages.MainBranch, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }
