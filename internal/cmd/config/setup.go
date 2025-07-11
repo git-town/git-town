@@ -122,18 +122,19 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	var mainBranch gitdomain.LocalBranchName
-	if configFileMainBranch, configFileHasMainBranch := configFile.MainBranch.Get(); configFileHasMainBranch {
-		mainBranch = configFileMainBranch
-	} else {
-		existingMainBranch := repo.UnvalidatedConfig.UnvalidatedConfig.MainBranch
-		if existingMainBranch.IsNone() {
-			existingMainBranch = gitconfig.DefaultBranch(repo.Backend)
+	mainBranch := None[gitdomain.LocalBranchName]()
+	if configFile.MainBranch.IsNone() {
+		gitStandardBranch := gitconfig.DefaultBranch(repo.Backend)
+		if gitStandardBranch.IsNone() {
+			gitStandardBranch = repo.Git.OriginHead(repo.Backend)
 		}
-		if existingMainBranch.IsNone() {
-			existingMainBranch = repo.Git.OriginHead(repo.Backend)
-		}
-		mainBranch, exit, err = dialog.MainBranch(data.localBranches.Names(), existingMainBranch, data.dialogInputs.Next())
+		mainBranch, exit, err = dialog.MainBranch(dialog.MainBranchArgs{
+			GitStandardBranch:   gitStandardBranch,
+			LocalBranches:       data.localBranches.Names(),
+			LocalGitMainBranch:  localGitMainBranch,
+			GlobalGitMainBranch: globalGitMainBranch,
+			Inputs:              data.dialogInputs.Next(),
+		})
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}

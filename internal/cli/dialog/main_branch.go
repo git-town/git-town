@@ -26,12 +26,23 @@ This is typically the branch called
 )
 
 // MainBranch lets the user select a new main branch for this repo.
-func MainBranch(localBranches gitdomain.LocalBranchNames, defaultEntryOpt Option[gitdomain.LocalBranchName], inputs dialogcomponents.TestInput) (gitdomain.LocalBranchName, dialogdomain.Exit, error) {
+func MainBranch(args MainBranchArgs) (Option[gitdomain.LocalBranchName], dialogdomain.Exit, error) {
+	// if set in global config: add option "use global setting" with None
+	// if set in local config: don't add None option, preselect local setting
+	// if no local config: don't add None option, keep existing preselect nothing
 	cursor := 0
-	if defaultEntry, hasDefaultEntry := defaultEntryOpt.Get(); hasDefaultEntry {
-		cursor = slice.Index(localBranches, defaultEntry).GetOrElse(0)
+	if defaultEntry, hasDefaultEntry := args.DefaultEntryOpt.Get(); hasDefaultEntry {
+		cursor = slice.Index(args.LocalBranches, defaultEntry).GetOrElse(0)
 	}
-	selection, exit, err := dialogcomponents.RadioList(list.NewEntries(localBranches...), cursor, mainBranchTitle, MainBranchHelp, inputs)
+	selection, exit, err := dialogcomponents.RadioList(list.NewEntries(args.LocalBranches...), cursor, mainBranchTitle, MainBranchHelp, args.Inputs)
 	fmt.Printf(messages.MainBranch, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
+}
+
+type MainBranchArgs struct {
+	GitStandardBranch   Option[gitdomain.LocalBranchName]
+	GlobalGitMainBranch Option[gitdomain.LocalBranchName]
+	LocalGitMainBranch  Option[gitdomain.LocalBranchName]
+	LocalBranches       gitdomain.LocalBranchNames
+	Inputs              dialogcomponents.TestInput
 }
