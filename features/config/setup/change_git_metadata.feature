@@ -13,7 +13,7 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.push-hook" is "false"
     And local Git setting "git-town.sync-tags" is "false"
     And local Git setting "git-town.ship-delete-tracking-branch" is "false"
-    And inspect the repo
+    # And inspect the repo
     When I run "git-town config setup" and enter into the dialogs:
       | DESCRIPTION                               | KEYS                   |
       | welcome                                   | enter                  |

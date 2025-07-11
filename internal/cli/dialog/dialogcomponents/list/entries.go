@@ -30,6 +30,16 @@ func (self Entries[S]) AllDisabled() bool {
 	return true
 }
 
+// provides the index of the first entry that is not disabled
+func (self Entries[S]) FirstEnabled() int {
+	for e, entry := range self {
+		if !entry.Disabled {
+			return e
+		}
+	}
+	return 0
+}
+
 // provides the position of the given needle in this list
 func (self Entries[S]) IndexOf(needle S) int {
 	for e, entry := range self {
