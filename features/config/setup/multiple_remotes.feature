@@ -32,8 +32,9 @@ Feature: Configure a different development remote
 
   Scenario: result
     Then Git Town runs the commands
-      | COMMAND                                 |
-      | git config --unset git-town.main-branch |
+      | COMMAND                                         |
+      | git config --unset git-town.main-branch         |
+      | git config git-town.unknown-branch-type feature |
     And the configuration file is now:
       """
       # More info around this file at https://www.git-town.com/configuration-file
