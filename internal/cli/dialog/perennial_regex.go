@@ -27,6 +27,14 @@ it's safe to leave it blank.
 func PerennialRegex(args PerennialRegexArgs) (Option[configdomain.PerennialRegex], dialogdomain.Exit, error) {
 	// if local set --> prepopulate that one, save what the user entered
 	// if unscoped set and different from local --> prepopulate that one, save only if different from unscoped
+	unscoped, hasUnscoped := args.UnscopedValue.Get()
+	local, hasLocal := args.LocalValue.Get()
+	hadOnlyLocal := hasLocal && hasUnscoped && local == unscoped
+	hadOnlyGlobal := !hasLocal && hasUnscoped
+	hadLocalAndGlobal := hasLocal && hasUnscoped && local != unscoped
+
+	// TODO: add instructions to user to PerennialRegexHelp
+
 	userInputText, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		ExistingValue: args.UnscopedValue.String(),
 		Help:          PerennialRegexHelp,
@@ -41,11 +49,6 @@ func PerennialRegex(args PerennialRegexArgs) (Option[configdomain.PerennialRegex
 	if err != nil {
 		return None[configdomain.PerennialRegex](), false, err
 	}
-	unscoped, hasUnscoped := args.UnscopedValue.Get()
-	local, hasLocal := args.LocalValue.Get()
-	hadOnlyLocal := hasLocal && hasUnscoped && local == unscoped
-	hadOnlyGlobal := !hasLocal && hasUnscoped
-	hadLocalAndGlobal := hasLocal && hasUnscoped && local != unscoped
 	result := None[configdomain.PerennialRegex]()
 	switch {
 	case hadOnlyLocal:
