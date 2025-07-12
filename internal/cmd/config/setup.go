@@ -421,8 +421,10 @@ func enterMainBranch(repo execute.OpenRepoResult, data setupData) (userInput Opt
 }
 
 func enterPerennialBranches(repo execute.OpenRepoResult, data setupData, mainBranch gitdomain.LocalBranchName) (gitdomain.LocalBranchNames, dialogdomain.Exit, error) {
-	if len(repo.UnvalidatedConfig.File.GetOrDefault().PerennialBranches) > 0 {
-		return gitdomain.LocalBranchNames{}, false, nil
+	if configFile, hasConfigFile := repo.UnvalidatedConfig.File.Get(); hasConfigFile {
+		if len(configFile.PerennialBranches) > 0 {
+			return gitdomain.LocalBranchNames{}, false, nil
+		}
 	}
 	return dialog.PerennialBranches(dialog.PerennialBranchesArgs{
 		LocalBranches:       data.localBranches.Names(),
@@ -434,15 +436,26 @@ func enterPerennialBranches(repo execute.OpenRepoResult, data setupData, mainBra
 }
 
 func enterPerennialRegex(repo execute.OpenRepoResult, data setupData) (Option[configdomain.PerennialRegex], dialogdomain.Exit, error) {
-
-	if repo.UnvalidatedConfig.File.GetOrDefault().PerennialRegex.IsSome() {
-		return None[configdomain.PerennialRegex](), false, nil
+	if configFile, hasConfigFile := repo.UnvalidatedConfig.File.Get(); hasConfigFile {
+		if configFile.PerennialRegex.IsSome() {
+			return None[configdomain.PerennialRegex](), false, nil
+		}
 	}
 	return dialog.PerennialRegex(dialog.PerennialRegexArgs{
 		Input:         data.dialogInputs.Next(),
 		LocalValue:    repo.UnvalidatedConfig.GitLocal.PerennialRegex,
 		UnscopedValue: repo.UnvalidatedConfig.NormalConfig.Git.PerennialRegex,
 	})
+}
+
+func enterFeatureRegex(repo execute.OpenRepoResult) (Option[configdomain.FeatureRegex], dialogdomain.Exit, error) {
+	if configFile, hasConfigFile := repo.UnvalidatedConfig.File.Get(); hasConfigFile {
+		if configFile.FeatureRegex.IsSome() {
+			return None[configdomain.FeatureRegex](), false, nil
+		}
+	}
+	featureRegex := repo.UnvalidatedConfig.NormalConfig.FeatureRegex
+	return dialog.FeatureRegex(featureRegex, data.dialogInputs.Next())
 }
 
 // determines the branch that is configured in Git as the default branch
