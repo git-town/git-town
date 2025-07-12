@@ -11,8 +11,8 @@ import (
 )
 
 const (
-	contributionRegexTitle = `Contribution branch regex`
-	contributionRegexHelp  = `
+	ContributionRegexTitle = `Contribution branch regex`
+	ContributionRegexHelp  = `
 Branches matching this regular expression
 will be treated as contribution branches.
 This setting only applies
@@ -25,10 +25,10 @@ is set to something other than "contribution".
 func ContributionRegex(existingValue Option[configdomain.ContributionRegex], inputs dialogcomponents.TestInput) (Option[configdomain.ContributionRegex], dialogdomain.Exit, error) {
 	value, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		ExistingValue: existingValue.String(),
-		Help:          contributionRegexHelp,
+		Help:          ContributionRegexHelp,
 		Prompt:        "Contribution regex: ",
 		TestInput:     inputs,
-		Title:         contributionRegexTitle,
+		Title:         ContributionRegexTitle,
 	})
 	fmt.Printf(messages.ContributionRegex, dialogcomponents.FormattedSelection(value, exit))
 	if err != nil {

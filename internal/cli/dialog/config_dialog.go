@@ -3,6 +3,7 @@ package dialog
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v21/internal/cli/colors"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -26,7 +27,7 @@ Git Town will use the global setting for this repository.
 )
 
 // a part of the setup assistant that allows the user to enter a string-based configuration value
-func ConfigStringDialog[T comparable](args ConfigDialogArgs[T]) (Option[T], dialogdomain.Exit, error) {
+func ConfigStringDialog[T comparable](args ConfigStringDialogArgs[T]) (Option[T], dialogdomain.Exit, error) {
 	if args.ConfigFileValue.IsSome() {
 		return None[T](), false, nil
 	}
@@ -47,19 +48,30 @@ func ConfigStringDialog[T comparable](args ConfigDialogArgs[T]) (Option[T], dial
 		helpText += addendumGlobalAndLocal[1:]
 	}
 
-	userInputText, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
-		ExistingValue: args.UnscopedValue.String(),
-		Help:          helpText,
-		Prompt:        args.Prompt,
-		TestInput:     args.Input,
-		Title:         args.Title,
-	})
-	if err != nil {
-		return None[T](), false, err
-	}
-	userInput, err := args.ParseFunc(userInputText)
-	if err != nil {
-		return None[T](), false, err
+	var userInput Option[T]
+	var exit dialogdomain.Exit
+	var err error
+	var parseError string
+	for {
+		var userInputText string
+		userInputText, exit, err = dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
+			ExistingValue: args.UnscopedValue.String(),
+			Help:          helpText + parseError,
+			Prompt:        args.Prompt,
+			TestInput:     args.Input,
+			Title:         args.Title,
+		})
+		if err != nil || exit {
+			fmt.Printf(args.ResultMessage, dialogcomponents.FormattedSelection(userInputText, exit))
+			return None[T](), exit, err
+		}
+		userInput, err = args.ParseFunc(userInputText)
+		if err != nil {
+			parseError = "\n\n" + colors.Red().Styled(err.Error())
+			continue
+		} else {
+			break
+		}
 	}
 
 	result := None[T]()
@@ -80,7 +92,7 @@ func ConfigStringDialog[T comparable](args ConfigDialogArgs[T]) (Option[T], dial
 	return result, exit, nil
 }
 
-type ConfigDialogArgs[T any] struct {
+type ConfigStringDialogArgs[T any] struct {
 	ConfigFileValue Option[T]
 	HelpText        string
 	Input           dialogcomponents.TestInput

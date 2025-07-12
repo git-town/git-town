@@ -130,7 +130,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	perennialRegex, exit, err := dialog.ConfigStringDialog(dialog.ConfigDialogArgs[configdomain.PerennialRegex]{
+	perennialRegex, exit, err := dialog.ConfigStringDialog(dialog.ConfigStringDialogArgs[configdomain.PerennialRegex]{
 		ConfigFileValue: repo.UnvalidatedConfig.File.GetOrDefault().PerennialRegex,
 		HelpText:        dialog.PerennialBranchesHelp,
 		Input:           data.dialogInputs.Next(),
@@ -144,7 +144,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	featureRegex, exit, err := dialog.ConfigStringDialog(dialog.ConfigDialogArgs[configdomain.FeatureRegex]{
+	featureRegex, exit, err := dialog.ConfigStringDialog(dialog.ConfigStringDialogArgs[configdomain.FeatureRegex]{
 		ConfigFileValue: repo.UnvalidatedConfig.File.GetOrDefault().FeatureRegex,
 		HelpText:        dialog.FeatureRegexHelp,
 		Input:           data.dialogInputs.Next(),
@@ -158,26 +158,33 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-
-	if configFile.FeatureRegex.IsNone() {
-		featureRegex, exit, err = dialog.FeatureRegex(featureRegex, data.dialogInputs.Next())
-		if err != nil || exit {
-			return emptyResult, exit, err
-		}
+	contributionRegex, exit, err := dialog.ConfigStringDialog(dialog.ConfigStringDialogArgs[configdomain.ContributionRegex]{
+		ConfigFileValue: repo.UnvalidatedConfig.File.GetOrDefault().ContributionRegex,
+		HelpText:        dialog.ContributionRegexHelp,
+		Input:           data.dialogInputs.Next(),
+		LocalValue:      repo.UnvalidatedConfig.GitLocal.ContributionRegex,
+		ParseFunc:       configdomain.ParseContributionRegex,
+		Prompt:          dialog.ContributionRegexHelp,
+		ResultMessage:   messages.ContributionRegex,
+		Title:           dialog.ContributionRegexTitle,
+		UnscopedValue:   repo.UnvalidatedConfig.NormalConfig.Git.ContributionRegex,
+	})
+	if err != nil || exit {
+		return emptyResult, exit, err
 	}
-	contributionRegex := repo.UnvalidatedConfig.NormalConfig.ContributionRegex
-	if configFile.ContributionRegex.IsNone() {
-		contributionRegex, exit, err = dialog.ContributionRegex(contributionRegex, data.dialogInputs.Next())
-		if err != nil || exit {
-			return emptyResult, exit, err
-		}
-	}
-	observedRegex := repo.UnvalidatedConfig.NormalConfig.ObservedRegex
-	if configFile.ObservedRegex.IsNone() {
-		observedRegex, exit, err = dialog.ObservedRegex(observedRegex, data.dialogInputs.Next())
-		if err != nil || exit {
-			return emptyResult, exit, err
-		}
+	observedRegex, exit, err := dialog.ConfigStringDialog(dialog.ConfigStringDialogArgs[configdomain.ObservedRegex]{
+		ConfigFileValue: repo.UnvalidatedConfig.File.GetOrDefault().ObservedRegex,
+		HelpText:        dialog.ObservedRegexHelp,
+		Input:           data.dialogInputs.Next(),
+		LocalValue:      repo.UnvalidatedConfig.GitLocal.ObservedRegex,
+		ParseFunc:       configdomain.ParseObservedRegex,
+		Prompt:          dialog.ObservedRegexHelp,
+		ResultMessage:   messages.ObservedRegex,
+		Title:           dialog.ObservedRegexTitle,
+		UnscopedValue:   repo.UnvalidatedConfig.NormalConfig.Git.ObservedRegex,
+	})
+	if err != nil || exit {
+		return emptyResult, exit, err
 	}
 	unknownBranchType := repo.UnvalidatedConfig.NormalConfig.UnknownBranchType
 	if configFile.UnknownBranchType.IsNone() {
@@ -206,11 +213,19 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	gitlabConnectorTypeOpt := None[forgedomain.GitLabConnectorType]()
 	gitlabToken := None[forgedomain.GitLabToken]()
 	for {
-		if configFile.HostingOriginHostname.IsNone() {
-			hostingOriginHostName, exit, err = dialog.OriginHostname(repo.UnvalidatedConfig.NormalConfig.HostingOriginHostname, data.dialogInputs.Next())
-			if err != nil || exit {
-				return emptyResult, exit, err
-			}
+		hostingOriginHostName, exit, err = dialog.ConfigStringDialog(dialog.ConfigStringDialogArgs[configdomain.HostingOriginHostname]{
+			ConfigFileValue: repo.UnvalidatedConfig.File.GetOrDefault().HostingOriginHostname,
+			HelpText:        dialog.OriginHostnameHelp,
+			Input:           data.dialogInputs.Next(),
+			LocalValue:      repo.UnvalidatedConfig.GitLocal.HostingOriginHostname,
+			ParseFunc:       configdomain.ParseHostingOriginHostnameErr,
+			Prompt:          dialog.OriginHostnameHelp,
+			ResultMessage:   messages.OriginHostname,
+			Title:           dialog.OriginHostnameTitle,
+			UnscopedValue:   repo.UnvalidatedConfig.NormalConfig.Git.HostingOriginHostname,
+		})
+		if err != nil || exit {
+			return emptyResult, exit, err
 		}
 		if configFile.ForgeType.IsNone() {
 			enteredForgeType, exit, err = dialog.ForgeType(enteredForgeType, data.dialogInputs.Next())
