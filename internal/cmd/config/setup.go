@@ -130,12 +130,9 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	perennialRegex := repo.UnvalidatedConfig.NormalConfig.PerennialRegex
-	if configFile.PerennialRegex.IsNone() {
-		perennialRegex, exit, err = dialog.PerennialRegex(perennialRegex, data.dialogInputs.Next())
-		if err != nil || exit {
-			return emptyResult, exit, err
-		}
+	perennialRegex, exit, err := enterPerennialRegex(repo, data)
+	if err != nil || exit {
+		return emptyResult, exit, err
 	}
 	featureRegex := repo.UnvalidatedConfig.NormalConfig.FeatureRegex
 	if configFile.FeatureRegex.IsNone() {
@@ -434,6 +431,14 @@ func enterPerennialBranches(repo execute.OpenRepoResult, data setupData, mainBra
 		LocalGitPerennials:  repo.UnvalidatedConfig.GitLocal.PerennialBranches,
 		Inputs:              data.dialogInputs.Next(),
 	})
+}
+
+func enterPerennialRegex(repo execute.OpenRepoResult, data setupData) (Option[configdomain.PerennialRegex], dialogdomain.Exit, error) {
+	perennialRegex := repo.UnvalidatedConfig.NormalConfig.PerennialRegex
+	if repo.UnvalidatedConfig.File.GetOrDefault().PerennialRegex.IsSome() {
+		return None[configdomain.PerennialRegex](), false, nil
+	}
+	return dialog.PerennialRegex(perennialRegex, data.dialogInputs.Next())
 }
 
 // determines the branch that is configured in Git as the default branch
