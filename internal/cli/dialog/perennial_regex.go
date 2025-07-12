@@ -1,7 +1,6 @@
 package dialog
 
 import (
-	"cmp"
 	"fmt"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
@@ -25,15 +24,47 @@ it's safe to leave it blank.
 `
 )
 
-func PerennialRegex(oldValue Option[configdomain.PerennialRegex], inputs dialogcomponents.TestInput) (Option[configdomain.PerennialRegex], dialogdomain.Exit, error) {
-	value, exit, err1 := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
-		ExistingValue: oldValue.String(),
+func PerennialRegex(args PerennialRegexArgs) (Option[configdomain.PerennialRegex], dialogdomain.Exit, error) {
+	// if local set --> prepopulate that one, save what the user entered
+	// if unscoped set and different from local --> prepopulate that one, save only if different from unscoped
+	userInputText, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
+		ExistingValue: args.UnscopedValue.String(),
 		Help:          PerennialRegexHelp,
 		Prompt:        "Perennial regex: ",
-		TestInput:     inputs,
+		TestInput:     args.Input,
 		Title:         perennialRegexTitle,
 	})
-	fmt.Printf(messages.PerennialRegex, dialogcomponents.FormattedSelection(value, exit))
-	perennialRegex, err2 := configdomain.ParsePerennialRegex(value)
-	return perennialRegex, exit, cmp.Or(err1, err2)
+	if err != nil {
+		return None[configdomain.PerennialRegex](), false, err
+	}
+	userInput, err := configdomain.ParsePerennialRegex(userInputText)
+	if err != nil {
+		return None[configdomain.PerennialRegex](), false, err
+	}
+	unscoped, hasUnscoped := args.UnscopedValue.Get()
+	local, hasLocal := args.LocalValue.Get()
+	hadOnlyLocal := hasLocal && hasUnscoped && local == unscoped
+	hadOnlyGlobal := !hasLocal && hasUnscoped
+	hadLocalAndGlobal := hasLocal && hasUnscoped && local != unscoped
+	result := None[configdomain.PerennialRegex]()
+	switch {
+	case hadOnlyLocal:
+		result = userInput
+	case hadOnlyGlobal && userInput.EqualSome(unscoped):
+		result = None[configdomain.PerennialRegex]()
+	case hadOnlyGlobal: // user entered a different value than unscoped here
+		result = userInput
+	case hadLocalAndGlobal && userInput.EqualSome(unscoped): // user entered the global value here
+		result = None[configdomain.PerennialRegex]()
+	case !hasLocal && !hasUnscoped:
+		result = userInput
+	}
+	fmt.Printf(messages.PerennialRegex, dialogcomponents.FormattedSelection(result.String(), exit))
+	return result, exit, nil
+}
+
+type PerennialRegexArgs struct {
+	Input         dialogcomponents.TestInput
+	LocalValue    Option[configdomain.PerennialRegex]
+	UnscopedValue Option[configdomain.PerennialRegex]
 }
