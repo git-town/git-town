@@ -1,18 +1,8 @@
 package dialog
 
-import (
-	"fmt"
-
-	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v21/internal/messages"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
-)
-
 const (
-	bitbucketAppPasswordTitle = `Bitbucket App Password/Token`
-	bitbucketAppPasswordHelp  = `
+	BitbucketAppPasswordTitle = `Bitbucket App Password/Token`
+	BitbucketAppPasswordHelp  = `
 Git Town can update pull requests
 and ship branches on Bitbucket for you.
 To enable this, please enter
@@ -26,16 +16,3 @@ Git Town will not use the Bitbucket API.
 
 `
 )
-
-// BitbucketAppPassword lets the user enter the Bitbucket API token.
-func BitbucketAppPassword(oldValue Option[forgedomain.BitbucketAppPassword], inputs dialogcomponents.TestInput) (Option[forgedomain.BitbucketAppPassword], dialogdomain.Exit, error) {
-	text, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
-		ExistingValue: oldValue.String(),
-		Help:          bitbucketAppPasswordHelp,
-		Prompt:        "Bitbucket App Password/Token: ",
-		TestInput:     inputs,
-		Title:         bitbucketAppPasswordTitle,
-	})
-	fmt.Printf(messages.BitbucketAppPassword, dialogcomponents.FormattedSecret(text, exit))
-	return forgedomain.ParseBitbucketAppPassword(text), exit, err
-}
