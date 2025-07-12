@@ -136,7 +136,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		Inputs:          data.dialogInputs,
 		LocalValue:      repo.UnvalidatedConfig.GitLocal.PerennialRegex,
 		ParseFunc:       configdomain.ParsePerennialRegex,
-		Prompt:          dialog.PerennialRegexHelp,
+		Prompt:          "Perennial Regex: ",
 		ResultMessage:   messages.PerennialRegex,
 		Title:           dialog.PerennialRegexTitle,
 		UnscopedValue:   repo.UnvalidatedConfig.NormalConfig.Git.PerennialRegex,
@@ -150,7 +150,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		Inputs:          data.dialogInputs,
 		LocalValue:      repo.UnvalidatedConfig.GitLocal.FeatureRegex,
 		ParseFunc:       configdomain.ParseFeatureRegex,
-		Prompt:          dialog.FeatureRegexHelp,
+		Prompt:          "Feature Regex: ",
 		ResultMessage:   messages.FeatureRegex,
 		Title:           dialog.FeatureRegexTitle,
 		UnscopedValue:   repo.UnvalidatedConfig.NormalConfig.Git.FeatureRegex,
@@ -164,7 +164,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		Inputs:          data.dialogInputs,
 		LocalValue:      repo.UnvalidatedConfig.GitLocal.ContributionRegex,
 		ParseFunc:       configdomain.ParseContributionRegex,
-		Prompt:          dialog.ContributionRegexHelp,
+		Prompt:          "Contribution Regex: ",
 		ResultMessage:   messages.ContributionRegex,
 		Title:           dialog.ContributionRegexTitle,
 		UnscopedValue:   repo.UnvalidatedConfig.NormalConfig.Git.ContributionRegex,
@@ -178,7 +178,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		Inputs:          data.dialogInputs,
 		LocalValue:      repo.UnvalidatedConfig.GitLocal.ObservedRegex,
 		ParseFunc:       configdomain.ParseObservedRegex,
-		Prompt:          dialog.ObservedRegexHelp,
+		Prompt:          "Observed Regex: ",
 		ResultMessage:   messages.ObservedRegex,
 		Title:           dialog.ObservedRegexTitle,
 		UnscopedValue:   repo.UnvalidatedConfig.NormalConfig.Git.ObservedRegex,
@@ -219,7 +219,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 			Inputs:          data.dialogInputs,
 			LocalValue:      repo.UnvalidatedConfig.GitLocal.HostingOriginHostname,
 			ParseFunc:       wrapParseFunc(configdomain.ParseHostingOriginHostname),
-			Prompt:          dialog.OriginHostnameHelp,
+			Prompt:          "Origin hostname: ",
 			ResultMessage:   messages.OriginHostname,
 			Title:           dialog.OriginHostnameTitle,
 			UnscopedValue:   repo.UnvalidatedConfig.NormalConfig.Git.HostingOriginHostname,
@@ -243,7 +243,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 					Inputs:          data.dialogInputs,
 					LocalValue:      repo.UnvalidatedConfig.GitLocal.BitbucketUsername,
 					ParseFunc:       wrapParseFunc(forgedomain.ParseBitbucketUsername),
-					Prompt:          dialog.BitbucketUsernameHelp,
+					Prompt:          "Your Bitbucket Username: ",
 					ResultMessage:   messages.DialogResultBitbucketUsername,
 					Title:           dialog.BitbucketUsernameTitle,
 					UnscopedValue:   repo.UnvalidatedConfig.NormalConfig.Git.BitbucketUsername,
@@ -257,15 +257,35 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 					Inputs:          data.dialogInputs,
 					LocalValue:      repo.UnvalidatedConfig.GitLocal.BitbucketAppPassword,
 					ParseFunc:       wrapParseFunc(forgedomain.ParseBitbucketAppPassword),
-					Prompt:          dialog.BitbucketAppPasswordHelp,
+					Prompt:          "Your Bitbucket App Password: ",
 					ResultMessage:   messages.DialogResultBitbucketAppPassword,
 					Title:           dialog.BitbucketAppPasswordTitle,
 					UnscopedValue:   repo.UnvalidatedConfig.NormalConfig.Git.BitbucketAppPassword,
 				})
 			case forgedomain.ForgeTypeCodeberg:
-				codebergToken, exit, err = dialog.CodebergToken(repo.UnvalidatedConfig.NormalConfig.CodebergToken, data.dialogInputs.Next())
+				codebergToken, exit, err = dialog.ConfigStringDialog(dialog.ConfigStringDialogArgs[forgedomain.CodebergToken]{
+					ConfigFileValue: configFile.CodebergToken,
+					HelpText:        dialog.CodebergTokenHelp,
+					Inputs:          data.dialogInputs,
+					LocalValue:      repo.UnvalidatedConfig.GitLocal.CodebergToken,
+					ParseFunc:       wrapParseFunc(forgedomain.ParseCodebergToken),
+					Prompt:          "Your Codeberg API token: ",
+					ResultMessage:   messages.DialogResultCodebergToken,
+					Title:           dialog.CodebergTokenTitle,
+					UnscopedValue:   repo.UnvalidatedConfig.NormalConfig.Git.CodebergToken,
+				})
 			case forgedomain.ForgeTypeGitea:
-				giteaToken, exit, err = dialog.GiteaToken(repo.UnvalidatedConfig.NormalConfig.GiteaToken, data.dialogInputs.Next())
+				giteaToken, exit, err = dialog.ConfigStringDialog(dialog.ConfigStringDialogArgs[forgedomain.GiteaToken]{
+					ConfigFileValue: configFile.GiteaToken,
+					HelpText:        dialog.GiteaTokenHelp,
+					Inputs:          data.dialogInputs,
+					LocalValue:      repo.UnvalidatedConfig.GitLocal.GiteaToken,
+					ParseFunc:       wrapParseFunc(forgedomain.ParseGiteaToken),
+					Prompt:          "Your Gitea API token: ",
+					ResultMessage:   messages.DialogResultGiteaToken,
+					Title:           dialog.GiteaTokenTitle,
+					UnscopedValue:   repo.UnvalidatedConfig.NormalConfig.Git.GiteaToken,
+				})
 			case forgedomain.ForgeTypeGitHub:
 				githubConnectorTypeOpt, exit, err = dialog.GitHubConnectorType(repo.UnvalidatedConfig.NormalConfig.GitHubConnectorType, data.dialogInputs.Next())
 				if err != nil || exit {
