@@ -434,11 +434,15 @@ func enterPerennialBranches(repo execute.OpenRepoResult, data setupData, mainBra
 }
 
 func enterPerennialRegex(repo execute.OpenRepoResult, data setupData) (Option[configdomain.PerennialRegex], dialogdomain.Exit, error) {
-	perennialRegex := repo.UnvalidatedConfig.NormalConfig.PerennialRegex
+
 	if repo.UnvalidatedConfig.File.GetOrDefault().PerennialRegex.IsSome() {
 		return None[configdomain.PerennialRegex](), false, nil
 	}
-	return dialog.PerennialRegex(perennialRegex, data.dialogInputs.Next())
+	return dialog.PerennialRegex(dialog.PerennialRegexArgs{
+		Input:         data.dialogInputs.Next(),
+		LocalValue:    repo.UnvalidatedConfig.GitLocal.PerennialRegex,
+		UnscopedValue: repo.UnvalidatedConfig.NormalConfig.Git.PerennialRegex,
+	})
 }
 
 // determines the branch that is configured in Git as the default branch
