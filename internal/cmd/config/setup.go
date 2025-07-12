@@ -130,11 +130,35 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	perennialRegex, exit, err := enterPerennialRegex(repo, data)
+	perennialRegex, exit, err := dialog.ConfigStringDialog(dialog.ConfigDialogArgs[configdomain.PerennialRegex]{
+		ConfigFileValue: repo.UnvalidatedConfig.File.GetOrDefault().PerennialRegex,
+		HelpText:        dialog.PerennialBranchesHelp,
+		Input:           data.dialogInputs.Next(),
+		LocalValue:      repo.UnvalidatedConfig.GitLocal.PerennialRegex,
+		ParseFunc:       configdomain.ParsePerennialRegex,
+		Prompt:          dialog.PerennialRegexHelp,
+		ResultMessage:   messages.PerennialRegex,
+		Title:           dialog.PerennialRegexTitle,
+		UnscopedValue:   repo.UnvalidatedConfig.NormalConfig.Git.PerennialRegex,
+	})
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	featureRegex := repo.UnvalidatedConfig.NormalConfig.FeatureRegex
+	featureRegex, exit, err := dialog.ConfigStringDialog(dialog.ConfigDialogArgs[configdomain.FeatureRegex]{
+		ConfigFileValue: repo.UnvalidatedConfig.File.GetOrDefault().FeatureRegex,
+		HelpText:        dialog.FeatureRegexHelp,
+		Input:           data.dialogInputs.Next(),
+		LocalValue:      repo.UnvalidatedConfig.GitLocal.FeatureRegex,
+		ParseFunc:       configdomain.ParseFeatureRegex,
+		Prompt:          dialog.FeatureRegexHelp,
+		ResultMessage:   messages.FeatureRegex,
+		Title:           dialog.FeatureRegexTitle,
+		UnscopedValue:   repo.UnvalidatedConfig.NormalConfig.Git.FeatureRegex,
+	})
+	if err != nil || exit {
+		return emptyResult, exit, err
+	}
+
 	if configFile.FeatureRegex.IsNone() {
 		featureRegex, exit, err = dialog.FeatureRegex(featureRegex, data.dialogInputs.Next())
 		if err != nil || exit {
@@ -433,29 +457,6 @@ func enterPerennialBranches(repo execute.OpenRepoResult, data setupData, mainBra
 		LocalGitPerennials:  repo.UnvalidatedConfig.GitLocal.PerennialBranches,
 		Inputs:              data.dialogInputs.Next(),
 	})
-}
-
-func enterPerennialRegex(repo execute.OpenRepoResult, data setupData) (Option[configdomain.PerennialRegex], dialogdomain.Exit, error) {
-	if configFile, hasConfigFile := repo.UnvalidatedConfig.File.Get(); hasConfigFile {
-		if configFile.PerennialRegex.IsSome() {
-			return None[configdomain.PerennialRegex](), false, nil
-		}
-	}
-	return dialog.ConfigDialog(dialog.ConfigDialogArgs[configdomain.PerennialRegex]{
-		Input:         data.dialogInputs.Next(),
-		LocalValue:    repo.UnvalidatedConfig.GitLocal.PerennialRegex,
-		UnscopedValue: repo.UnvalidatedConfig.NormalConfig.Git.PerennialRegex,
-	})
-}
-
-func enterFeatureRegex(repo execute.OpenRepoResult) (Option[configdomain.FeatureRegex], dialogdomain.Exit, error) {
-	if configFile, hasConfigFile := repo.UnvalidatedConfig.File.Get(); hasConfigFile {
-		if configFile.FeatureRegex.IsSome() {
-			return None[configdomain.FeatureRegex](), false, nil
-		}
-	}
-	featureRegex := repo.UnvalidatedConfig.NormalConfig.FeatureRegex
-	return dialog.FeatureRegex(featureRegex, data.dialogInputs.Next())
 }
 
 // determines the branch that is configured in Git as the default branch
