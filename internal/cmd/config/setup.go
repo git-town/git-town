@@ -131,7 +131,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		return emptyResult, exit, err
 	}
 	perennialRegex, exit, err := dialog.ConfigStringDialog(dialog.ConfigStringDialogArgs[configdomain.PerennialRegex]{
-		ConfigFileValue: repo.UnvalidatedConfig.File.GetOrDefault().PerennialRegex,
+		ConfigFileValue: configFile.PerennialRegex,
 		HelpText:        dialog.PerennialBranchesHelp,
 		Input:           data.dialogInputs.Next(),
 		LocalValue:      repo.UnvalidatedConfig.GitLocal.PerennialRegex,
@@ -145,7 +145,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		return emptyResult, exit, err
 	}
 	featureRegex, exit, err := dialog.ConfigStringDialog(dialog.ConfigStringDialogArgs[configdomain.FeatureRegex]{
-		ConfigFileValue: repo.UnvalidatedConfig.File.GetOrDefault().FeatureRegex,
+		ConfigFileValue: configFile.FeatureRegex,
 		HelpText:        dialog.FeatureRegexHelp,
 		Input:           data.dialogInputs.Next(),
 		LocalValue:      repo.UnvalidatedConfig.GitLocal.FeatureRegex,
@@ -159,7 +159,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		return emptyResult, exit, err
 	}
 	contributionRegex, exit, err := dialog.ConfigStringDialog(dialog.ConfigStringDialogArgs[configdomain.ContributionRegex]{
-		ConfigFileValue: repo.UnvalidatedConfig.File.GetOrDefault().ContributionRegex,
+		ConfigFileValue: configFile.ContributionRegex,
 		HelpText:        dialog.ContributionRegexHelp,
 		Input:           data.dialogInputs.Next(),
 		LocalValue:      repo.UnvalidatedConfig.GitLocal.ContributionRegex,
@@ -173,7 +173,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		return emptyResult, exit, err
 	}
 	observedRegex, exit, err := dialog.ConfigStringDialog(dialog.ConfigStringDialogArgs[configdomain.ObservedRegex]{
-		ConfigFileValue: repo.UnvalidatedConfig.File.GetOrDefault().ObservedRegex,
+		ConfigFileValue: configFile.ObservedRegex,
 		HelpText:        dialog.ObservedRegexHelp,
 		Input:           data.dialogInputs.Next(),
 		LocalValue:      repo.UnvalidatedConfig.GitLocal.ObservedRegex,
@@ -214,7 +214,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	gitlabToken := None[forgedomain.GitLabToken]()
 	for {
 		hostingOriginHostName, exit, err = dialog.ConfigStringDialog(dialog.ConfigStringDialogArgs[configdomain.HostingOriginHostname]{
-			ConfigFileValue: repo.UnvalidatedConfig.File.GetOrDefault().HostingOriginHostname,
+			ConfigFileValue: configFile.HostingOriginHostname,
 			HelpText:        dialog.OriginHostnameHelp,
 			Input:           data.dialogInputs.Next(),
 			LocalValue:      repo.UnvalidatedConfig.GitLocal.HostingOriginHostname,
