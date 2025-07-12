@@ -441,7 +441,7 @@ func enterPerennialRegex(repo execute.OpenRepoResult, data setupData) (Option[co
 			return None[configdomain.PerennialRegex](), false, nil
 		}
 	}
-	return dialog.PerennialRegex(dialog.PerennialRegexArgs{
+	return dialog.ConfigDialog(dialog.ConfigDialogArgs[configdomain.PerennialRegex]{
 		Input:         data.dialogInputs.Next(),
 		LocalValue:    repo.UnvalidatedConfig.GitLocal.PerennialRegex,
 		UnscopedValue: repo.UnvalidatedConfig.NormalConfig.Git.PerennialRegex,
