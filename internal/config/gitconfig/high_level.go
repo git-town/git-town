@@ -156,6 +156,10 @@ func RemoveSyncUpstream(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncUpstream)
 }
 
+func RemoveUnknownBranchType(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyUnknownBranchType)
+}
+
 func SetAlias(runner subshelldomain.Runner, aliasableCommand configdomain.AliasableCommand) error {
 	return SetConfigValue(runner, configdomain.ConfigScopeGlobal, aliasableCommand.Key().Key(), "town "+aliasableCommand.String())
 }
@@ -217,16 +221,16 @@ func SetGiteaToken(runner subshelldomain.Runner, value forgedomain.GiteaToken, s
 	return SetConfigValue(runner, scope, configdomain.KeyGiteaToken, value.String())
 }
 
-func SetMainBranch(runner subshelldomain.Runner, value gitdomain.LocalBranchName) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyMainBranch, value.String())
+func SetMainBranch(runner subshelldomain.Runner, value gitdomain.LocalBranchName, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyMainBranch, value.String())
 }
 
-func SetNewBranchType(runner subshelldomain.Runner, value configdomain.BranchType) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyNewBranchType, value.String())
+func SetNewBranchType(runner subshelldomain.Runner, value configdomain.BranchType, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyNewBranchType, value.String())
 }
 
-func SetObservedRegex(runner subshelldomain.Runner, regex configdomain.ObservedRegex) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyObservedRegex, regex.String())
+func SetObservedRegex(runner subshelldomain.Runner, regex configdomain.ObservedRegex, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyObservedRegex, regex.String())
 }
 
 func SetOffline(runner subshelldomain.Runner, value configdomain.Offline) error {

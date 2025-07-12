@@ -1,18 +1,8 @@
 package dialog
 
-import (
-	"fmt"
-
-	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v21/internal/messages"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
-)
-
 const (
-	gitLabTokenTitle = `GitLab API token`
-	gitLabTokenHelp  = `
+	GitLabTokenTitle = `GitLab API token`
+	GitLabTokenHelp  = `
 Git Town can update merge requests
 and ship branches on GitLab for you.
 To enable this,
@@ -25,16 +15,3 @@ Git Town will not use the GitLab API.
 
 `
 )
-
-// GitLabToken lets the user enter the GitHub API token.
-func GitLabToken(oldValue Option[forgedomain.GitLabToken], inputs dialogcomponents.TestInput) (Option[forgedomain.GitLabToken], dialogdomain.Exit, error) {
-	text, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
-		ExistingValue: oldValue.String(),
-		Help:          gitLabTokenHelp,
-		Prompt:        "Your GitLab API token: ",
-		TestInput:     inputs,
-		Title:         gitLabTokenTitle,
-	})
-	fmt.Printf(messages.GitLabToken, dialogcomponents.FormattedSecret(text, exit))
-	return forgedomain.ParseGitLabToken(text), exit, err
-}
