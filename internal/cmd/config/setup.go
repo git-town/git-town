@@ -122,30 +122,13 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	mainBranchOpt := None[gitdomain.LocalBranchName]()
-	if configFile.MainBranch.IsNone() {
-		gitStandardBranch := gitconfig.DefaultBranch(repo.Backend)
-		if gitStandardBranch.IsNone() {
-			gitStandardBranch = repo.Git.OriginHead(repo.Backend)
-		}
-		mainBranchOpt, exit, err = dialog.MainBranch(dialog.MainBranchArgs{
-			GitStandardBranch:   gitStandardBranch,
-			LocalBranches:       data.localBranches.Names(),
-			LocalGitMainBranch:  data.config.GitGlobal.MainBranch,
-			GlobalGitMainBranch: data.config.GitLocal.MainBranch,
-			Inputs:              data.dialogInputs.Next(),
-		})
-		if err != nil || exit {
-			return emptyResult, exit, err
-		}
+	mainBranchOpt, actualMainBranch, exit, err := enterMainBranch(repo, data)
+	if err != nil || exit {
+		return emptyResult, exit, err
 	}
-	actualMainBranch := mainBranchOpt.Or(data.config.GitLocal.MainBranch).Or(data.config.GitGlobal.MainBranch).Or(configFile.MainBranch).GetOrPanic()
-	perennialBranches := repo.UnvalidatedConfig.NormalConfig.PerennialBranches
-	if len(configFile.PerennialBranches) == 0 {
-		perennialBranches, exit, err = dialog.PerennialBranches(data.localBranches.Names(), perennialBranches, actualMainBranch, data.dialogInputs.Next())
-		if err != nil || exit {
-			return emptyResult, exit, err
-		}
+	perennialBranches, exit, err := enterPerennialBranches(repo, data, actualMainBranch)
+	if err != nil || exit {
+		return emptyResult, exit, err
 	}
 	perennialRegex := repo.UnvalidatedConfig.NormalConfig.PerennialRegex
 	if configFile.PerennialRegex.IsNone() {
@@ -417,6 +400,46 @@ type userInput struct {
 	scope               configdomain.ConfigScope
 	storageLocation     dialog.ConfigStorageOption
 	validatedConfig     configdomain.ValidatedConfigData
+}
+
+func enterMainBranch(repo execute.OpenRepoResult, data setupData) (userInput Option[gitdomain.LocalBranchName], actualMainBranch gitdomain.LocalBranchName, exit dialogdomain.Exit, err error) {
+	if configFile, hasConfigFile := repo.UnvalidatedConfig.File.Get(); hasConfigFile {
+		if configFileMainBranch, hasMain := configFile.MainBranch.Get(); hasMain {
+			return Some(configFileMainBranch), configFileMainBranch, false, nil
+		}
+	}
+	repoDefault := determineGitRepoDefaultBranch(repo)
+	userInput, exit, err = dialog.MainBranch(dialog.MainBranchArgs{
+		GitStandardBranch:   repoDefault,
+		LocalBranches:       data.localBranches.Names(),
+		LocalGitMainBranch:  data.config.GitGlobal.MainBranch,
+		GlobalGitMainBranch: data.config.GitLocal.MainBranch,
+		Inputs:              data.dialogInputs.Next(),
+	})
+	if err != nil || exit {
+		return None[gitdomain.LocalBranchName](), "", exit, err
+	}
+	actualMainBranch = userInput.Or(data.config.GitGlobal.MainBranch).GetOrPanic()
+	return userInput, actualMainBranch, false, nil
+}
+
+func enterPerennialBranches(repo execute.OpenRepoResult, data setupData, mainBranch gitdomain.LocalBranchName) (gitdomain.LocalBranchNames, dialogdomain.Exit, error) {
+	return dialog.PerennialBranches(dialog.PerennialBranchesArgs{
+		LocalBranches:        data.localBranches.Names(),
+		MainBranch:           mainBranch,
+		ConfigFilePerennials: repo.UnvalidatedConfig.File.GetOrDefault().PerennialBranches,
+		GlobalGitPerennials:  repo.UnvalidatedConfig.GitGlobal.PerennialBranches,
+		LocalGitPerennials:   repo.UnvalidatedConfig.GitLocal.PerennialBranches,
+		Inputs:               data.dialogInputs.Next(),
+	})
+}
+
+// determines the branch that is configured in Git as the default branch
+func determineGitRepoDefaultBranch(repo execute.OpenRepoResult) Option[gitdomain.LocalBranchName] {
+	if defaultBranch, has := gitconfig.DefaultBranch(repo.Backend).Get(); has {
+		return Some(defaultBranch)
+	}
+	return repo.Git.OriginHead(repo.Backend)
 }
 
 func testForgeAuth(args testForgeAuthArgs) (repeat bool, exit dialogdomain.Exit, err error) {
