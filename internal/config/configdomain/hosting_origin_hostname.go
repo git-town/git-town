@@ -19,7 +19,3 @@ func ParseHostingOriginHostname(value string) Option[HostingOriginHostname] {
 	}
 	return Some(HostingOriginHostname(value))
 }
-
-func ParseHostingOriginHostnameErr(value string) (Option[HostingOriginHostname], error) {
-	return ParseHostingOriginHostname(value), nil
-}

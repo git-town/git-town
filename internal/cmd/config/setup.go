@@ -133,7 +133,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	perennialRegex, exit, err := dialog.ConfigStringDialog(dialog.ConfigStringDialogArgs[configdomain.PerennialRegex]{
 		ConfigFileValue: configFile.PerennialRegex,
 		HelpText:        dialog.PerennialBranchesHelp,
-		Input:           data.dialogInputs.Next(),
+		Inputs:          data.dialogInputs,
 		LocalValue:      repo.UnvalidatedConfig.GitLocal.PerennialRegex,
 		ParseFunc:       configdomain.ParsePerennialRegex,
 		Prompt:          dialog.PerennialRegexHelp,
@@ -147,7 +147,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	featureRegex, exit, err := dialog.ConfigStringDialog(dialog.ConfigStringDialogArgs[configdomain.FeatureRegex]{
 		ConfigFileValue: configFile.FeatureRegex,
 		HelpText:        dialog.FeatureRegexHelp,
-		Input:           data.dialogInputs.Next(),
+		Inputs:          data.dialogInputs,
 		LocalValue:      repo.UnvalidatedConfig.GitLocal.FeatureRegex,
 		ParseFunc:       configdomain.ParseFeatureRegex,
 		Prompt:          dialog.FeatureRegexHelp,
@@ -161,7 +161,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	contributionRegex, exit, err := dialog.ConfigStringDialog(dialog.ConfigStringDialogArgs[configdomain.ContributionRegex]{
 		ConfigFileValue: configFile.ContributionRegex,
 		HelpText:        dialog.ContributionRegexHelp,
-		Input:           data.dialogInputs.Next(),
+		Inputs:          data.dialogInputs,
 		LocalValue:      repo.UnvalidatedConfig.GitLocal.ContributionRegex,
 		ParseFunc:       configdomain.ParseContributionRegex,
 		Prompt:          dialog.ContributionRegexHelp,
@@ -175,7 +175,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	observedRegex, exit, err := dialog.ConfigStringDialog(dialog.ConfigStringDialogArgs[configdomain.ObservedRegex]{
 		ConfigFileValue: configFile.ObservedRegex,
 		HelpText:        dialog.ObservedRegexHelp,
-		Input:           data.dialogInputs.Next(),
+		Inputs:          data.dialogInputs,
 		LocalValue:      repo.UnvalidatedConfig.GitLocal.ObservedRegex,
 		ParseFunc:       configdomain.ParseObservedRegex,
 		Prompt:          dialog.ObservedRegexHelp,
@@ -216,9 +216,9 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		hostingOriginHostName, exit, err = dialog.ConfigStringDialog(dialog.ConfigStringDialogArgs[configdomain.HostingOriginHostname]{
 			ConfigFileValue: configFile.HostingOriginHostname,
 			HelpText:        dialog.OriginHostnameHelp,
-			Input:           data.dialogInputs.Next(),
+			Inputs:          data.dialogInputs,
 			LocalValue:      repo.UnvalidatedConfig.GitLocal.HostingOriginHostname,
-			ParseFunc:       configdomain.ParseHostingOriginHostnameErr,
+			ParseFunc:       wrapParseFunc(configdomain.ParseHostingOriginHostname),
 			Prompt:          dialog.OriginHostnameHelp,
 			ResultMessage:   messages.OriginHostname,
 			Title:           dialog.OriginHostnameTitle,
@@ -237,7 +237,17 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		if forgeType, hasForgeType := actualForgeType.Get(); hasForgeType {
 			switch forgeType {
 			case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
-				bitbucketUsername, exit, err = dialog.BitbucketUsername(repo.UnvalidatedConfig.NormalConfig.BitbucketUsername, data.dialogInputs.Next())
+				bitbucketUsername, exit, err = dialog.ConfigStringDialog(dialog.ConfigStringDialogArgs[forgedomain.BitbucketUsername]{
+					ConfigFileValue: configFile.BitbucketUsername,
+					HelpText:        dialog.BitbucketUsernameHelp,
+					Inputs:          data.dialogInputs,
+					LocalValue:      repo.UnvalidatedConfig.GitLocal.BitbucketUsername,
+					ParseFunc:       wrapParseFunc(forgedomain.ParseBitbucketUsername),
+					Prompt:          dialog.BitbucketUsernameHelp,
+					ResultMessage:   messages.DialogResultBitbucketUsername,
+					Title:           dialog.BitbucketUsernameTitle,
+					UnscopedValue:   repo.UnvalidatedConfig.NormalConfig.Git.BitbucketUsername,
+				})
 				if err != nil || exit {
 					return emptyResult, exit, err
 				}
@@ -1153,4 +1163,10 @@ func saveToFile(userInput userInput, gitConfig configdomain.PartialConfig, runne
 	}
 	// TODO: also save ObservedRegex ContributionRegex NewBranchType
 	return saveFeatureRegex(userInput.normalConfig.FeatureRegex, gitConfig.FeatureRegex, runner)
+}
+
+func wrapParseFunc[T any](parseFunc func(arg string) Option[T]) func(string) (Option[T], error) {
+	return func(arg string) (Option[T], error) {
+		return parseFunc(arg), nil
+	}
 }

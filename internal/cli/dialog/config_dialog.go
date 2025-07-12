@@ -58,7 +58,7 @@ func ConfigStringDialog[T comparable](args ConfigStringDialogArgs[T]) (Option[T]
 			ExistingValue: args.UnscopedValue.String(),
 			Help:          helpText + parseError,
 			Prompt:        args.Prompt,
-			TestInput:     args.Input,
+			TestInput:     args.Inputs,
 			Title:         args.Title,
 		})
 		if err != nil || exit {
@@ -95,7 +95,7 @@ func ConfigStringDialog[T comparable](args ConfigStringDialogArgs[T]) (Option[T]
 type ConfigStringDialogArgs[T any] struct {
 	ConfigFileValue Option[T]
 	HelpText        string
-	Input           dialogcomponents.TestInput
+	Inputs          dialogcomponents.TestInputs
 	LocalValue      Option[T]
 	ParseFunc       func(string) (Option[T], error)
 	Prompt          string
