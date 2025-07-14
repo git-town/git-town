@@ -103,3 +103,9 @@ type ConfigStringDialogArgs[T any] struct {
 	Title           string
 	UnscopedValue   Option[T]
 }
+
+func WrapParseFunc[T any](parseFunc func(arg string) Option[T]) func(string) (Option[T], error) {
+	return func(arg string) (Option[T], error) {
+		return parseFunc(arg), nil
+	}
+}

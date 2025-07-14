@@ -1079,9 +1079,3 @@ func saveToFile(userInput userInput, gitConfig configdomain.PartialConfig, runne
 	// TODO: also save ObservedRegex ContributionRegex NewBranchType
 	return saveFeatureRegex(userInput.normalConfig.FeatureRegex, gitConfig.FeatureRegex, runner)
 }
-
-func wrapParseFunc[T any](parseFunc func(arg string) Option[T]) func(string) (Option[T], error) {
-	return func(arg string) (Option[T], error) {
-		return parseFunc(arg), nil
-	}
-}
