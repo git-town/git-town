@@ -870,11 +870,13 @@ func saveToGit(userInput userInput, existingGitConfig configdomain.PartialConfig
 		valueToWrite:      userInput.data.ShareNewBranches,
 		valueAlreadyInGit: existingGitConfig.ShareNewBranches,
 	})
-	if configFile.ShipStrategy.IsNone() {
-		ec.Check(
-			saveShipStrategy(userInput.data.ShipStrategy, existingGitConfig.ShipStrategy, frontend),
-		)
-	}
+	saveOptionToLocalGit(ec, frontend, saveToLocalGitArgs[configdomain.ShipStrategy]{
+		configFileValue:   configFile.ShipStrategy,
+		saveFunc:          gitconfig.SetShipStrategy,
+		removeFunc:        gitconfig.RemoveShipStrategy,
+		valueToWrite:      userInput.data.ShipStrategy,
+		valueAlreadyInGit: existingGitConfig.ShipStrategy,
+	})
 	if configFile.ShipDeleteTrackingBranch.IsNone() {
 		ec.Check(
 			saveShipDeleteTrackingBranch(userInput.data.ShipDeleteTrackingBranch, existingGitConfig.ShipDeleteTrackingBranch, frontend),

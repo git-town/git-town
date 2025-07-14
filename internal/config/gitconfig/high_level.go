@@ -265,8 +265,8 @@ func SetShipDeleteTrackingBranch(runner subshelldomain.Runner, value configdomai
 	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.IsTrue()))
 }
 
-func SetShipStrategy(runner subshelldomain.Runner, value configdomain.ShipStrategy) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyShipStrategy, value.String())
+func SetShipStrategy(runner subshelldomain.Runner, value configdomain.ShipStrategy, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyShipStrategy, value.String())
 }
 
 func SetSyncFeatureStrategy(runner subshelldomain.Runner, value configdomain.SyncFeatureStrategy) error {
