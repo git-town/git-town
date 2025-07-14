@@ -828,16 +828,13 @@ func saveToGit(userInput userInput, existingGitConfig configdomain.PartialConfig
 		valueToWrite:      userInput.data.UnknownBranchType,
 		valueAlreadyInGit: existingGitConfig.UnknownBranchType,
 	})
-	if configFile.UnknownBranchType.IsNone() {
-		ec.Check(
-			saveUnknownBranchType(userInput.data.UnknownBranchType, existingGitConfig.UnknownBranchType, frontend),
-		)
-	}
-	if len(data.remotes) > 1 && configFile.DevRemote.IsNone() {
-		ec.Check(
-			saveDevRemote(userInput.data.DevRemote, existingGitConfig.DevRemote, frontend),
-		)
-	}
+	saveOptionToLocalGit(ec, frontend, saveToLocalGitArgs[gitdomain.Remote]{
+		configFileValue:   configFile.DevRemote,
+		saveFunc:          gitconfig.SetDevRemote,
+		removeFunc:        gitconfig.RemoveDevRemote,
+		valueToWrite:      userInput.data.DevRemote,
+		valueAlreadyInGit: existingGitConfig.DevRemote,
+	})
 	if configFile.FeatureRegex.IsNone() {
 		ec.Check(
 			saveFeatureRegex(userInput.data.FeatureRegex, existingGitConfig.FeatureRegex, frontend),

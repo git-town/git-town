@@ -189,8 +189,8 @@ func SetContributionRegex(runner subshelldomain.Runner, regex configdomain.Contr
 	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyContributionRegex, regex.String())
 }
 
-func SetDevRemote(runner subshelldomain.Runner, remote gitdomain.Remote) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyDevRemote, remote.String())
+func SetDevRemote(runner subshelldomain.Runner, remote gitdomain.Remote, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyDevRemote, remote.String())
 }
 
 func SetFeatureRegex(runner subshelldomain.Runner, regex configdomain.FeatureRegex) error {

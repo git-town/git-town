@@ -7,6 +7,7 @@ import (
 )
 
 // Remote represents a Git remote.
+// TODO: create a DevRemote type and use it instead of this generic type where DevRemotes are used
 type Remote string
 
 func NewRemote(id string) Option[Remote] {
