@@ -2,7 +2,6 @@ package config
 
 import (
 	"fmt"
-	"slices"
 
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/envconfig"
@@ -63,12 +62,6 @@ func (self *NormalConfig) RemoteURL(querier subshelldomain.Querier, remote gitdo
 	return Some(url)
 }
 
-// RemoveParent removes the parent branch entry for the given branch from the Git configuration.
-func (self *NormalConfig) RemoveParent(runner subshelldomain.Runner, branch gitdomain.LocalBranchName) {
-	self.Git.Lineage = self.Git.Lineage.RemoveBranch(branch)
-	_ = gitconfig.RemoveParent(runner, branch)
-}
-
 func (self *NormalConfig) RemovePerennialAncestors(runner subshelldomain.Runner, finalMessages stringslice.Collector) {
 	for _, perennialBranch := range self.PerennialBranches {
 		if self.Lineage.Parent(perennialBranch).IsSome() {
@@ -87,15 +80,6 @@ func (self *NormalConfig) SetParent(runner subshelldomain.Runner, branch, parent
 	}
 	self.Lineage = self.Lineage.Set(branch, parentBranch)
 	return gitconfig.SetParent(runner, branch, parentBranch)
-}
-
-// SetPerennialBranches marks the given branches as perennial branches.
-func (self *NormalConfig) SetPerennialBranches(runner subshelldomain.Runner, branches gitdomain.LocalBranchNames) error {
-	self.PerennialBranches = branches
-	if slices.Compare(self.Git.PerennialBranches, branches) != 0 {
-		return gitconfig.SetPerennialBranches(runner, branches)
-	}
-	return nil
 }
 
 // remoteURLString provides the URL for the given remote.

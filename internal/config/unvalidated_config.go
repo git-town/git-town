@@ -1,6 +1,8 @@
 package config
 
 import (
+	"slices"
+
 	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/envconfig"
@@ -54,7 +56,6 @@ func (self *UnvalidatedConfig) Reload(backend subshelldomain.RunnerQuerier) (glo
 	})
 	self.UnvalidatedConfig = unvalidatedConfig
 	self.NormalConfig = NormalConfig{
-		Git:              unscopedGitConfig,
 		GitVersion:       self.NormalConfig.GitVersion,
 		NormalConfigData: normalConfig,
 	}
@@ -62,7 +63,7 @@ func (self *UnvalidatedConfig) Reload(backend subshelldomain.RunnerQuerier) (glo
 }
 
 func (self *UnvalidatedConfig) RemoveMainBranch(runner subshelldomain.Runner) {
-	if self.NormalConfig.Git.MainBranch.IsSome() {
+	if self.UnvalidatedConfig.MainBranch.IsSome() {
 		_ = gitconfig.RemoveMainBranch(runner)
 	}
 }
@@ -72,6 +73,15 @@ func (self *UnvalidatedConfig) RemoveMainBranch(runner subshelldomain.Runner) {
 func (self *UnvalidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName, runner subshelldomain.Runner) error {
 	self.UnvalidatedConfig.MainBranch = Some(branch)
 	return gitconfig.SetMainBranch(runner, branch)
+}
+
+// SetPerennialBranches marks the given branches as perennial branches.
+func (self *UnvalidatedConfig) SetPerennialBranches(runner subshelldomain.Runner, branches gitdomain.LocalBranchNames) error {
+	self.NormalConfig.PerennialBranches = branches
+	if slices.Compare(self.Git.PerennialBranches, branches) == 0 {
+		return nil
+	}
+	return gitconfig.SetPerennialBranches(runner, branches)
 }
 
 // UnvalidatedBranchesAndTypes provides the types for the given branches.
@@ -94,8 +104,8 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 	})
 	return UnvalidatedConfig{
 		File: args.ConfigFile,
+		Git:  args.GitConfig,
 		NormalConfig: NormalConfig{
-			Git:              args.GitConfig,
 			GitVersion:       args.GitVersion,
 			NormalConfigData: normalConfig,
 		},
