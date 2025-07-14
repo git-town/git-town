@@ -83,7 +83,7 @@ func ConfigEnumDialog[T comparableStringer](args ConfigEnumDialogArgs[T]) (Optio
 
 type ConfigEnumDialogArgs[T comparable] struct {
 	ConfigFileValue Option[T]
-	Entries         list.Entries[T]
+	Entries         list.Entries[Option[T]]
 	HelpText        string
 	Inputs          dialogcomponents.TestInputs
 	LocalValue      Option[T]
@@ -92,4 +92,11 @@ type ConfigEnumDialogArgs[T comparable] struct {
 	ResultMessage   string
 	Title           string
 	UnscopedValue   Option[T]
+}
+
+func appendSkipEntry[T comparableStringer](entries list.Entries[Option[T]]) list.Entries[Option[T]] {
+	return append(list.Entries[Option[T]]{list.Entry[Option[T]]{
+		Data: None[T](),
+		Text: "skip",
+	}}, entries...)
 }
