@@ -719,39 +719,77 @@ func loadSetupData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (
 }
 
 func saveAll(userInput userInput, existingGitConfig configdomain.PartialConfig, configFile Option[configdomain.PartialConfig], data setupData, frontend subshelldomain.Runner) error {
-	fc := gohacks.ErrorCollector{}
-	fc.Check(
+	ec := NewMutable(&gohacks.ErrorCollector{})
+	ec.Value.Check(
 		saveAliases(userInput.data.Aliases, existingGitConfig.Aliases, frontend),
 	)
 	if forgeType, hasForgeType := userInput.determinedForgeType.Get(); hasForgeType {
 		switch forgeType {
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
-			fc.Check(
-				saveBitbucketUsername(userInput.data.BitbucketUsername, existingGitConfig.BitbucketUsername, userInput.scope, frontend),
-			)
-			fc.Check(
-				saveBitbucketAppPassword(userInput.data.BitbucketAppPassword, existingGitConfig.BitbucketAppPassword, userInput.scope, frontend),
-			)
+			saveOptionToLocalGit(ec, frontend, saveToLocalGitArgs[forgedomain.BitbucketUsername]{
+				configFileValue:   None[forgedomain.BitbucketUsername](),
+				saveFunc:          gitconfig.SetBitbucketUsername,
+				removeFunc:        gitconfig.RemoveBitbucketUsername,
+				valueToWrite:      userInput.data.BitbucketUsername,
+				valueAlreadyInGit: existingGitConfig.BitbucketUsername,
+			})
+			saveOptionToLocalGit(ec, frontend, saveToLocalGitArgs[forgedomain.BitbucketAppPassword]{
+				configFileValue:   None[forgedomain.BitbucketAppPassword](),
+				saveFunc:          gitconfig.SetBitbucketAppPassword,
+				removeFunc:        gitconfig.RemoveBitbucketAppPassword,
+				valueToWrite:      userInput.data.BitbucketAppPassword,
+				valueAlreadyInGit: existingGitConfig.BitbucketAppPassword,
+			})
 		case forgedomain.ForgeTypeCodeberg:
-			fc.Check(
-				saveCodebergToken(userInput.data.CodebergToken, existingGitConfig.CodebergToken, userInput.scope, frontend),
-			)
+			saveOptionToLocalGit(ec, frontend, saveToLocalGitArgs[forgedomain.CodebergToken]{
+				configFileValue:   None[forgedomain.CodebergToken](),
+				saveFunc:          gitconfig.SetCodebergToken,
+				removeFunc:        gitconfig.RemoveCodebergToken,
+				valueToWrite:      userInput.data.CodebergToken,
+				valueAlreadyInGit: existingGitConfig.CodebergToken,
+			})
 		case forgedomain.ForgeTypeGitHub:
-			fc.Check(
-				saveGitHubToken(userInput.data.GitHubToken, existingGitConfig.GitHubToken, userInput.scope, userInput.data.GitHubConnectorType, frontend),
-			)
+			saveOptionToLocalGit(ec, frontend, saveToLocalGitArgs[forgedomain.GitHubToken]{
+				configFileValue:   None[forgedomain.GitHubToken](),
+				saveFunc:          gitconfig.SetGitHubToken,
+				removeFunc:        gitconfig.RemoveGitHubToken,
+				valueToWrite:      userInput.data.GitHubToken,
+				valueAlreadyInGit: existingGitConfig.GitHubToken,
+			})
+			saveOptionToLocalGit(ec, frontend, saveToLocalGitArgs[forgedomain.GitHubConnectorType]{
+				configFileValue:   None[forgedomain.GitHubConnectorType](),
+				saveFunc:          gitconfig.SetGitHubConnectorType,
+				removeFunc:        gitconfig.RemoveGitHubConnectorType,
+				valueToWrite:      userInput.data.GitHubConnectorType,
+				valueAlreadyInGit: existingGitConfig.GitHubConnectorType,
+			})
 		case forgedomain.ForgeTypeGitLab:
-			fc.Check(
-				saveGitLabToken(userInput.data.GitLabToken, existingGitConfig.GitLabToken, userInput.scope, userInput.data.GitLabConnectorType, frontend),
-			)
+			saveOptionToLocalGit(ec, frontend, saveToLocalGitArgs[forgedomain.GitLabToken]{
+				configFileValue:   None[forgedomain.GitLabToken](),
+				saveFunc:          gitconfig.SetGitLabToken,
+				removeFunc:        gitconfig.RemoveGitLabToken,
+				valueToWrite:      userInput.data.GitLabToken,
+				valueAlreadyInGit: existingGitConfig.GitLabToken,
+			})
+			saveOptionToLocalGit(ec, frontend, saveToLocalGitArgs[forgedomain.GitLabConnectorType]{
+				configFileValue:   None[forgedomain.GitLabConnectorType](),
+				saveFunc:          gitconfig.SetGitLabConnectorType,
+				removeFunc:        gitconfig.RemoveGitLabConnectorType,
+				valueToWrite:      userInput.data.GitLabConnectorType,
+				valueAlreadyInGit: existingGitConfig.GitLabConnectorType,
+			})
 		case forgedomain.ForgeTypeGitea:
-			fc.Check(
-				saveGiteaToken(userInput.data.GiteaToken, existingGitConfig.GiteaToken, userInput.scope, frontend),
-			)
+			saveOptionToLocalGit(ec, frontend, saveToLocalGitArgs[forgedomain.GiteaToken]{
+				configFileValue:   None[forgedomain.GiteaToken](),
+				saveFunc:          gitconfig.SetGiteaToken,
+				removeFunc:        gitconfig.RemoveGiteaToken,
+				valueToWrite:      userInput.data.GiteaToken,
+				valueAlreadyInGit: existingGitConfig.GiteaToken,
+			})
 		}
 	}
-	if fc.Err != nil {
-		return fc.Err
+	if ec.Value.Err != nil {
+		return ec.Value.Err
 	}
 	switch userInput.storageLocation {
 	case dialog.ConfigStorageOptionFile:
@@ -1007,82 +1045,6 @@ func saveBitbucketUsername(valueToWriteToGit Option[forgedomain.BitbucketUsernam
 		return gitconfig.SetBitbucketUsername(frontend, value, scope)
 	}
 	return gitconfig.RemoveBitbucketUsername(frontend)
-}
-
-func saveNewBranchType(valueToWriteToGit Option[configdomain.BranchType], valueAlreadyInGit Option[configdomain.BranchType], runner subshelldomain.Runner) error {
-	if valueToWriteToGit.Equal(valueAlreadyInGit) {
-		return nil
-	}
-	if value, hasValue := valueToWriteToGit.Get(); hasValue {
-		return gitconfig.SetNewBranchType(runner, value)
-	}
-	_ = gitconfig.RemoveNewBranchType(runner)
-	return nil
-}
-
-func saveUnknownBranchType(valueToWriteToGit Option[configdomain.BranchType], valueAlreadyInGit Option[configdomain.BranchType], runner subshelldomain.Runner) error {
-	if valueAlreadyInGit.Equal(valueToWriteToGit) {
-		return nil
-	}
-	if value, has := valueToWriteToGit.Get(); has {
-		return gitconfig.SetUnknownBranchType(runner, value)
-	}
-	return gitconfig.RemoveUnknownBranchType(runner)
-}
-
-func saveDevRemote(valueToWriteToGit gitdomain.Remote, valueAlreadyInGit Option[gitdomain.Remote], runner subshelldomain.Runner) error {
-	if valueAlreadyInGit.EqualSome(valueToWriteToGit) {
-		return nil
-	}
-	return gitconfig.SetDevRemote(runner, valueToWriteToGit)
-}
-
-func saveFeatureRegex(valueToWriteToGit Option[configdomain.FeatureRegex], valueAlreadyInGit Option[configdomain.FeatureRegex], runner subshelldomain.Runner) error {
-	if valueToWriteToGit.Equal(valueAlreadyInGit) {
-		return nil
-	}
-	if value, has := valueToWriteToGit.Get(); has {
-		return gitconfig.SetFeatureRegex(runner, value)
-	}
-	_ = gitconfig.RemoveFeatureRegex(runner)
-	return nil
-}
-
-func saveContributionRegex(valueToWriteToGit Option[configdomain.ContributionRegex], valueAlreadyInGit Option[configdomain.ContributionRegex], runner subshelldomain.Runner) error {
-	if valueToWriteToGit.Equal(valueAlreadyInGit) {
-		return nil
-	}
-	if value, has := valueToWriteToGit.Get(); has {
-		return gitconfig.SetContributionRegex(runner, value)
-	}
-	_ = gitconfig.RemoveContributionRegex(runner)
-	return nil
-}
-
-func saveObservedRegex(valueToWriteToGit Option[configdomain.ObservedRegex], valueAlreadyInGit Option[configdomain.ObservedRegex], runner subshelldomain.Runner) error {
-	if valueToWriteToGit.Equal(valueAlreadyInGit) {
-		return nil
-	}
-	if value, has := valueToWriteToGit.Get(); has {
-		return gitconfig.SetObservedRegex(runner, value)
-	}
-	_ = gitconfig.RemoveObservedRegex(runner)
-	return nil
-}
-
-func saveForgeType(valueToWriteToGit Option[forgedomain.ForgeType], valueAlreadyInGit Option[forgedomain.ForgeType], frontend subshelldomain.Runner) (err error) {
-	oldValue, oldHas := valueAlreadyInGit.Get()
-	newValue, newHas := valueToWriteToGit.Get()
-	if !oldHas && !newHas {
-		return nil
-	}
-	if oldValue == newValue {
-		return nil
-	}
-	if newHas {
-		return gitconfig.SetForgeType(frontend, newValue)
-	}
-	return gitconfig.RemoveForgeType(frontend)
 }
 
 func saveCodebergToken(valueToWriteToGit Option[forgedomain.CodebergToken], valueAlreadyInGit Option[forgedomain.CodebergToken], scope configdomain.ConfigScope, frontend subshelldomain.Runner) error {
