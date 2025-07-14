@@ -387,6 +387,20 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 			return emptyResult, exit, err
 		}
 	}
+	syncPrototypeStrategy, exit, err := dialog.ConfigStringDialog(dialog.ConfigStringDialogArgs[configdomain.SyncPrototypeStrategy]{
+		ConfigFileValue: configFile.SyncPrototypeStrategy,
+		HelpText:        dialog.PerennialBranchesHelp,
+		Inputs:          data.dialogInputs,
+		LocalValue:      repo.UnvalidatedConfig.GitLocal.PerennialRegex,
+		ParseFunc:       configdomain.ParsePerennialRegex,
+		Prompt:          "Perennial Regex: ",
+		ResultMessage:   messages.PerennialRegex,
+		Title:           dialog.PerennialRegexTitle,
+		UnscopedValue:   repo.UnvalidatedConfig.NormalConfig.Git.PerennialRegex,
+	})
+	if err != nil || exit {
+		return emptyResult, exit, err
+	}
 	syncPrototypeStrategy := None[configdomain.SyncPrototypeStrategy]()
 	if configFile.SyncPrototypeStrategy.IsNone() {
 		syncPrototypeStrategy, exit, err = dialog.SyncPrototypeStrategy(repo.UnvalidatedConfig.NormalConfig.SyncPrototypeStrategy, data.dialogInputs.Next())
