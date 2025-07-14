@@ -109,7 +109,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	FileStatProblem                     = "cannot check file %q: %w"
 	FileWriteProblem                    = "cannot write file %q: %w"
 	Forge                               = "Forge: %s\n"
-	ForgeAPITokenLocation               = "API token scope: %s"
+	ForgeAPITokenLocation               = "API token scope: %s\n"
 	ForgeBitbucketNotImplemented        = "shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues"
 	ForgeBitbucketMergingViaAPI         = "Bitbucket API: merging PR %s ... "
 	ForgeCodebergMergingViaAPI          = "Codeberg API: merging PR %s ... "
@@ -253,6 +253,7 @@ and will be removed in future versions of Git Town.`
 	ShipExitMergeError                      = "aborted because merge exited with error"
 	ShipMessageWithFastForward              = "shipping with the fast-forward strategy does not use the given commit message"
 	ShipOpenChanges                         = "you have uncommitted changes. Did you mean to commit them before shipping?"
+	ShipStrategy                            = "Ship strategy: %s\n"
 	ShipStrategyMissing                     = "no ship strategy provided"
 	SkipBranchHasConflicts                  = "cannot skip branch that resulted in conflicts"
 	SkipMessage                             = `You can run "git town skip" to skip the currently failing operation.`

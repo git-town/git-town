@@ -85,18 +85,6 @@ func (self *UnvalidatedConfig) UnvalidatedBranchesAndTypes(branches gitdomain.Lo
 	return result
 }
 
-func DefaultUnvalidatedConfig(gitVersion git.Version) UnvalidatedConfig {
-	return UnvalidatedConfig{
-		File: None[configdomain.PartialConfig](),
-		NormalConfig: NormalConfig{
-			Git:              configdomain.EmptyPartialConfig(),
-			GitVersion:       gitVersion,
-			NormalConfigData: configdomain.DefaultNormalConfig(),
-		},
-		UnvalidatedConfig: configdomain.DefaultUnvalidatedConfig(),
-	}
-}
-
 func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 	unvalidatedConfig, normalConfig := mergeConfigs(mergeConfigsArgs{
 		cli:  args.CliConfig,

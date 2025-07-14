@@ -34,6 +34,14 @@ func (self Option[T]) Equal(other Option[T]) bool {
 	return reflect.DeepEqual(selfValue, otherValue)
 }
 
+// indicates whether this option contains the given value
+func (self Option[T]) EqualSome(other T) bool {
+	if value, hasValue := self.Get(); hasValue {
+		return reflect.DeepEqual(value, other)
+	}
+	return false
+}
+
 // Get provides a copy of the contained value
 // as well as an indicator whether that value exists.
 func (self Option[T]) Get() (value T, hasValue bool) { //nolint:ireturn

@@ -12,6 +12,7 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.share-new-branches" is "no"
     And local Git setting "git-town.push-hook" is "false"
     And local Git setting "git-town.sync-tags" is "false"
+    And local Git setting "git-town.ship-delete-tracking-branch" is "false"
     When I run "git-town config setup" and enter into the dialogs:
       | DESCRIPTION                               | KEYS                   |
       | welcome                                   | enter                  |
@@ -23,7 +24,6 @@ Feature: change existing information in Git metadata
       | contribution regex                        | 1 1 1 1 enter          |
       | observed regex                            | 2 2 2 2 enter          |
       | unknown branch type                       | down enter             |
-      | dev-remote                                | enter                  |
       | origin hostname                           | c o d e enter          |
       | set forge type to "github"                | up up enter            |
       | set github forge type to "API"            | enter                  |
@@ -73,7 +73,7 @@ Feature: change existing information in Git metadata
       | git config git-town.push-hook true                       |
       | git config git-town.share-new-branches push              |
       | git config git-town.ship-strategy fast-forward           |
-      | git config git-town.ship-delete-tracking-branch false    |
+      | git config git-town.ship-delete-tracking-branch true     |
       | git config git-town.sync-feature-strategy rebase         |
       | git config git-town.sync-perennial-strategy ff-only      |
       | git config git-town.sync-prototype-strategy rebase       |
@@ -92,7 +92,7 @@ Feature: change existing information in Git metadata
     And global Git setting "alias.sync" is now "town sync"
     And the main branch is now "main"
     And local Git setting "git-town.perennial-branches" is now "production qa"
-    And local Git setting "git-town.dev-remote" now doesn't exist
+    And local Git setting "git-town.dev-remote" still doesn't exist
     And local Git setting "git-town.new-branch-type" is now "prototype"
     And local Git setting "git-town.forge-type" is now "github"
     And local Git setting "git-town.github-token" is now "123456"
@@ -110,7 +110,7 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.share-new-branches" is now "push"
     And local Git setting "git-town.push-hook" is now "true"
     And local Git setting "git-town.ship-strategy" is now "fast-forward"
-    And local Git setting "git-town.ship-delete-tracking-branch" is now "false"
+    And local Git setting "git-town.ship-delete-tracking-branch" is now "true"
 
   Scenario: undo
     When I run "git-town undo"
@@ -143,4 +143,4 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.share-new-branches" is now "no"
     And local Git setting "git-town.push-hook" is now "false"
     And local Git setting "git-town.ship-strategy" now doesn't exist
-    And local Git setting "git-town.ship-delete-tracking-branch" now doesn't exist
+    And local Git setting "git-town.ship-delete-tracking-branch" is now "false"

@@ -34,6 +34,43 @@ func TestEntries(t *testing.T) {
 		})
 	})
 
+	t.Run("FirstEnabled", func(t *testing.T) {
+		t.Parallel()
+		t.Run("first entry is disabled", func(t *testing.T) {
+			t.Parallel()
+			entries := list.Entries[configdomain.HostingOriginHostname]{
+				{Disabled: true},
+				{Disabled: false},
+			}
+			have := entries.FirstEnabled()
+			must.EqOp(t, 1, have)
+		})
+		t.Run("second entry is disabled", func(t *testing.T) {
+			t.Parallel()
+			entries := list.Entries[configdomain.HostingOriginHostname]{
+				{Disabled: false},
+				{Disabled: true},
+			}
+			have := entries.FirstEnabled()
+			must.EqOp(t, 0, have)
+		})
+		t.Run("all entries are disabled", func(t *testing.T) {
+			t.Parallel()
+			entries := list.Entries[configdomain.HostingOriginHostname]{
+				{Disabled: true},
+				{Disabled: true},
+			}
+			have := entries.FirstEnabled()
+			must.EqOp(t, 0, have)
+		})
+		t.Run("no entries", func(t *testing.T) {
+			t.Parallel()
+			entries := list.Entries[configdomain.HostingOriginHostname]{}
+			have := entries.FirstEnabled()
+			must.EqOp(t, 0, have)
+		})
+	})
+
 	t.Run("IndexOf", func(t *testing.T) {
 		t.Parallel()
 		t.Run("works with correctly comparable types", func(t *testing.T) {
