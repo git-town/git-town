@@ -835,11 +835,13 @@ func saveToGit(userInput userInput, existingGitConfig configdomain.PartialConfig
 		valueToWrite:      userInput.data.DevRemote,
 		valueAlreadyInGit: existingGitConfig.DevRemote,
 	})
-	if configFile.FeatureRegex.IsNone() {
-		ec.Check(
-			saveFeatureRegex(userInput.data.FeatureRegex, existingGitConfig.FeatureRegex, frontend),
-		)
-	}
+	saveOptionToLocalGit(ec, frontend, saveToLocalGitArgs[configdomain.FeatureRegex]{
+		configFileValue:   configFile.FeatureRegex,
+		saveFunc:          gitconfig.SetFeatureRegex,
+		removeFunc:        gitconfig.RemoveFeatureRegex,
+		valueToWrite:      userInput.data.FeatureRegex,
+		valueAlreadyInGit: existingGitConfig.FeatureRegex,
+	})
 	if configFile.ContributionRegex.IsNone() {
 		ec.Check(
 			saveContributionRegex(userInput.data.ContributionRegex, existingGitConfig.ContributionRegex, frontend),

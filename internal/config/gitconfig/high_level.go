@@ -193,8 +193,8 @@ func SetDevRemote(runner subshelldomain.Runner, remote gitdomain.Remote, scope c
 	return SetConfigValue(runner, scope, configdomain.KeyDevRemote, remote.String())
 }
 
-func SetFeatureRegex(runner subshelldomain.Runner, regex configdomain.FeatureRegex) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyFeatureRegex, regex.String())
+func SetFeatureRegex(runner subshelldomain.Runner, regex configdomain.FeatureRegex, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyFeatureRegex, regex.String())
 }
 
 func SetForgeType(runner subshelldomain.Runner, forgeType forgedomain.ForgeType, scope configdomain.ConfigScope) error {
