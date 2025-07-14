@@ -253,8 +253,8 @@ func SetPerennialRegex(runner subshelldomain.Runner, value configdomain.Perennia
 	return SetConfigValue(runner, scope, configdomain.KeyPerennialRegex, value.String())
 }
 
-func SetPushHook(runner subshelldomain.Runner, value configdomain.PushHook) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyPushHook, strconv.FormatBool(bool(value)))
+func SetPushHook(runner subshelldomain.Runner, value configdomain.PushHook, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyPushHook, strconv.FormatBool(bool(value)))
 }
 
 func SetShareNewBranches(runner subshelldomain.Runner, value configdomain.ShareNewBranches) error {

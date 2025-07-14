@@ -856,11 +856,13 @@ func saveToGit(userInput userInput, existingGitConfig configdomain.PartialConfig
 		valueToWrite:      userInput.data.ObservedRegex,
 		valueAlreadyInGit: existingGitConfig.ObservedRegex,
 	})
-	if configFile.PushHook.IsNone() {
-		ec.Check(
-			savePushHook(userInput.data.PushHook, existingGitConfig.PushHook, frontend),
-		)
-	}
+	saveOptionToLocalGit(ec, frontend, saveToLocalGitArgs[configdomain.PushHook]{
+		configFileValue:   configFile.PushHook,
+		saveFunc:          gitconfig.SetPushHook,
+		removeFunc:        gitconfig.RemovePushHook,
+		valueToWrite:      userInput.data.PushHook,
+		valueAlreadyInGit: existingGitConfig.PushHook,
+	})
 	if configFile.ShareNewBranches.IsNone() {
 		ec.Check(
 			saveShareNewBranches(userInput.data.ShareNewBranches, existingGitConfig.ShareNewBranches, frontend),
