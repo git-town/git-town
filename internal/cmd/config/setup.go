@@ -1028,7 +1028,7 @@ type saveCommonArgs struct {
 }
 
 func saveToFile(userInput userInput, gitConfig configdomain.PartialConfig, runner subshelldomain.Runner) error {
-	if err := configfile.Save(userInput.data, userInput.validatedConfig.MainBranch); err != nil {
+	if err := configfile.Save(userInput.data); err != nil {
 		return err
 	}
 	if gitConfig.DevRemote.IsSome() {
@@ -1073,9 +1073,9 @@ func saveToFile(userInput userInput, gitConfig configdomain.PartialConfig, runne
 	if gitConfig.SyncTags.IsSome() {
 		_ = gitconfig.RemoveSyncTags(runner)
 	}
-	if err := saveUnknownBranchType(userInput.normalConfig.UnknownBranchType, gitConfig.UnknownBranchType, runner); err != nil {
+	if err := saveUnknownBranchType(userInput.data.UnknownBranchType, gitConfig.UnknownBranchType, runner); err != nil {
 		return err
 	}
 	// TODO: also save ObservedRegex ContributionRegex NewBranchType
-	return saveFeatureRegex(userInput.normalConfig.FeatureRegex, gitConfig.FeatureRegex, runner)
+	return saveFeatureRegex(userInput.data.FeatureRegex, gitConfig.FeatureRegex, runner)
 }
