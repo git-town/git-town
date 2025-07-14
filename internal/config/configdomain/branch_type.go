@@ -7,6 +7,7 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
+// TODO: Create an UnknownBranchType type and use it instead of this generic type where UnknownBranchTypes are used
 type BranchType string
 
 const (

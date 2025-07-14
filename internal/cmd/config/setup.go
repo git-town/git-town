@@ -821,6 +821,13 @@ func saveToGit(userInput userInput, existingGitConfig configdomain.PartialConfig
 		valueToWrite:      userInput.data.PerennialRegex,
 		valueAlreadyInGit: existingGitConfig.PerennialRegex,
 	})
+	saveOptionToLocalGit(ec, frontend, saveToLocalGitArgs[configdomain.BranchType]{
+		configFileValue:   configFile.UnknownBranchType,
+		saveFunc:          gitconfig.SetUnknownBranchType,
+		removeFunc:        gitconfig.RemoveUnknownBranchType,
+		valueToWrite:      userInput.data.UnknownBranchType,
+		valueAlreadyInGit: existingGitConfig.UnknownBranchType,
+	})
 	if configFile.UnknownBranchType.IsNone() {
 		ec.Check(
 			saveUnknownBranchType(userInput.data.UnknownBranchType, existingGitConfig.UnknownBranchType, frontend),

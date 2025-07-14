@@ -289,6 +289,6 @@ func SetSyncUpstream(runner subshelldomain.Runner, value configdomain.SyncUpstre
 	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncUpstream, strconv.FormatBool(value.IsTrue()))
 }
 
-func SetUnknownBranchType(runner subshelldomain.Runner, value configdomain.BranchType) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyUnknownBranchType, value.String())
+func SetUnknownBranchType(runner subshelldomain.Runner, value configdomain.BranchType, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyUnknownBranchType, value.String())
 }
