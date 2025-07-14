@@ -1,6 +1,7 @@
 package config
 
 import (
+	"cmp"
 	"fmt"
 	"os"
 	"slices"
@@ -764,53 +765,62 @@ func saveAll(userInput userInput, existingGitConfig configdomain.PartialConfig, 
 func saveToGit(userInput userInput, existingGitConfig configdomain.PartialConfig, configFileOpt Option[configdomain.PartialConfig], data setupData, frontend subshelldomain.Runner) error {
 	configFile := configFileOpt.GetOrDefault()
 	ec := NewMutable(&gohacks.ErrorCollector{})
-	saveToLocalGit(ec, frontend, saveToLocalGitArgs[configdomain.BranchType]{
+	saveOptionToLocalGit(ec, frontend, saveToLocalGitArgs[configdomain.BranchType]{
 		configFileValue:   configFile.NewBranchType,
 		saveFunc:          gitconfig.SetNewBranchType,
 		removeFunc:        gitconfig.RemoveNewBranchType,
 		valueToWrite:      userInput.data.NewBranchType,
 		valueAlreadyInGit: existingGitConfig.NewBranchType,
 	})
-	if configFile.NewBranchType.IsNone() {
-		ec.Check(
-			saveNewBranchType(userInput.data.NewBranchType, existingGitConfig.NewBranchType, frontend),
-		)
-	}
-	if configFile.ForgeType.IsNone() {
-		ec.Check(
-			saveForgeType(userInput.data.ForgeType, existingGitConfig.ForgeType, frontend),
-		)
-	}
-	if configFile.GitHubConnectorType.IsNone() {
-		ec.Check(
-			saveGitHubConnectorType(userInput.data.GitHubConnectorType, existingGitConfig.GitHubConnectorType, frontend),
-		)
-	}
-	if configFile.GitLabConnectorType.IsNone() {
-		ec.Check(
-			saveGitLabConnectorType(userInput.data.GitLabConnectorType, existingGitConfig.GitLabConnectorType, frontend),
-		)
-	}
-	if configFile.HostingOriginHostname.IsNone() {
-		ec.Check(
-			saveOriginHostname(userInput.data.HostingOriginHostname, existingGitConfig.HostingOriginHostname, frontend),
-		)
-	}
-	if configFile.MainBranch.IsNone() {
-		ec.Check(
-			saveMainBranch(userInput.data.MainBranch, existingGitConfig.MainBranch, frontend),
-		)
-	}
-	if len(configFile.PerennialBranches) == 0 {
-		ec.Check(
-			savePerennialBranches(userInput.data.PerennialBranches, existingGitConfig.PerennialBranches, frontend),
-		)
-	}
-	if configFile.PerennialRegex.IsNone() {
-		ec.Check(
-			savePerennialRegex(userInput.data.PerennialRegex, existingGitConfig.PerennialRegex, frontend),
-		)
-	}
+	saveOptionToLocalGit(ec, frontend, saveToLocalGitArgs[forgedomain.ForgeType]{
+		configFileValue:   configFile.ForgeType,
+		saveFunc:          gitconfig.SetForgeType,
+		removeFunc:        gitconfig.RemoveForgeType,
+		valueToWrite:      userInput.data.ForgeType,
+		valueAlreadyInGit: existingGitConfig.ForgeType,
+	})
+	saveOptionToLocalGit(ec, frontend, saveToLocalGitArgs[forgedomain.GitHubConnectorType]{
+		configFileValue:   configFile.GitHubConnectorType,
+		saveFunc:          gitconfig.SetGitHubConnectorType,
+		removeFunc:        gitconfig.RemoveGitHubConnectorType,
+		valueToWrite:      userInput.data.GitHubConnectorType,
+		valueAlreadyInGit: existingGitConfig.GitHubConnectorType,
+	})
+	saveOptionToLocalGit(ec, frontend, saveToLocalGitArgs[forgedomain.GitLabConnectorType]{
+		configFileValue:   configFile.GitLabConnectorType,
+		saveFunc:          gitconfig.SetGitLabConnectorType,
+		removeFunc:        gitconfig.RemoveGitLabConnectorType,
+		valueToWrite:      userInput.data.GitLabConnectorType,
+		valueAlreadyInGit: existingGitConfig.GitLabConnectorType,
+	})
+	saveOptionToLocalGit(ec, frontend, saveToLocalGitArgs[configdomain.HostingOriginHostname]{
+		configFileValue:   configFile.HostingOriginHostname,
+		saveFunc:          gitconfig.SetOriginHostname,
+		removeFunc:        gitconfig.RemoveOriginHostname,
+		valueToWrite:      userInput.data.HostingOriginHostname,
+		valueAlreadyInGit: existingGitConfig.HostingOriginHostname,
+	})
+	saveOptionToLocalGit(ec, frontend, saveToLocalGitArgs[gitdomain.LocalBranchName]{
+		configFileValue:   configFile.MainBranch,
+		saveFunc:          gitconfig.SetMainBranch,
+		removeFunc:        gitconfig.RemoveMainBranch,
+		valueToWrite:      userInput.data.MainBranch,
+		valueAlreadyInGit: existingGitConfig.MainBranch,
+	})
+	saveCollectionToLocalGit(ec, frontend, saveCollectionArgs[gitdomain.LocalBranchNames, gitdomain.LocalBranchName]{
+		configFileValue:   configFile.PerennialBranches,
+		saveFunc:          gitconfig.SetPerennialBranches,
+		removeFunc:        gitconfig.RemovePerennialBranches,
+		valueToWrite:      userInput.data.PerennialBranches,
+		valueAlreadyInGit: existingGitConfig.PerennialBranches,
+	})
+	saveOptionToLocalGit(ec, frontend, saveToLocalGitArgs[configdomain.PerennialRegex]{
+		configFileValue:   configFile.PerennialRegex,
+		saveFunc:          gitconfig.SetPerennialRegex,
+		removeFunc:        gitconfig.RemovePerennialRegex,
+		valueToWrite:      userInput.data.PerennialRegex,
+		valueAlreadyInGit: existingGitConfig.PerennialRegex,
+	})
 	if configFile.UnknownBranchType.IsNone() {
 		ec.Check(
 			saveUnknownBranchType(userInput.data.UnknownBranchType, existingGitConfig.UnknownBranchType, frontend),
@@ -901,8 +911,11 @@ func saveAliases(valuesToWriteToGit configdomain.Aliases, valuesAlreadyInGit con
 	return nil
 }
 
-func saveToLocalGit[T comparable](ec Mutable[gohacks.ErrorCollector], runner subshelldomain.Runner, args saveToLocalGitArgs[T]) {
+func saveOptionToLocalGit[T comparable](ec Mutable[gohacks.ErrorCollector], runner subshelldomain.Runner, args saveToLocalGitArgs[T]) {
 	if ec.Value.Err != nil {
+		return
+	}
+	if args.valueToWrite.Equal(args.configFileValue) {
 		return
 	}
 	if args.valueToWrite.Equal(args.valueAlreadyInGit) {
@@ -918,6 +931,27 @@ type saveToLocalGitArgs[T comparable] struct {
 	configFileValue   Option[T]
 	valueToWrite      Option[T]
 	valueAlreadyInGit Option[T]
+	saveFunc          func(subshelldomain.Runner, T, configdomain.ConfigScope) error
+	removeFunc        func(subshelldomain.Runner) error
+}
+
+func saveCollectionToLocalGit[T ~[]E, E cmp.Ordered](ec Mutable[gohacks.ErrorCollector], runner subshelldomain.Runner, args saveCollectionArgs[T, E]) {
+	if ec.Value.Err != nil {
+		return
+	}
+	if slices.Compare(args.valueToWrite, args.configFileValue) == 0 {
+		return
+	}
+	if slices.Compare(args.valueToWrite, args.valueAlreadyInGit) == 0 {
+		return
+	}
+	ec.Value.Check(args.saveFunc(runner, args.valueToWrite, configdomain.ConfigScopeLocal))
+}
+
+type saveCollectionArgs[T ~[]E, E cmp.Ordered] struct {
+	configFileValue   T
+	valueToWrite      T
+	valueAlreadyInGit T
 	saveFunc          func(subshelldomain.Runner, T, configdomain.ConfigScope) error
 	removeFunc        func(subshelldomain.Runner) error
 }

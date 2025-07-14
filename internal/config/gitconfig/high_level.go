@@ -197,20 +197,20 @@ func SetFeatureRegex(runner subshelldomain.Runner, regex configdomain.FeatureReg
 	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyFeatureRegex, regex.String())
 }
 
-func SetForgeType(runner subshelldomain.Runner, forgeType forgedomain.ForgeType) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyForgeType, forgeType.String())
+func SetForgeType(runner subshelldomain.Runner, forgeType forgedomain.ForgeType, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyForgeType, forgeType.String())
 }
 
-func SetGitHubConnectorType(runner subshelldomain.Runner, value forgedomain.GitHubConnectorType) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGitHubConnectorType, value.String())
+func SetGitHubConnectorType(runner subshelldomain.Runner, value forgedomain.GitHubConnectorType, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyGitHubConnectorType, value.String())
 }
 
 func SetGitHubToken(runner subshelldomain.Runner, value forgedomain.GitHubToken, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyGitHubToken, value.String())
 }
 
-func SetGitLabConnectorType(runner subshelldomain.Runner, value forgedomain.GitLabConnectorType) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGitLabConnectorType, value.String())
+func SetGitLabConnectorType(runner subshelldomain.Runner, value forgedomain.GitLabConnectorType, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyGitLabConnectorType, value.String())
 }
 
 func SetGitLabToken(runner subshelldomain.Runner, value forgedomain.GitLabToken, scope configdomain.ConfigScope) error {
@@ -237,20 +237,20 @@ func SetOffline(runner subshelldomain.Runner, value configdomain.Offline) error 
 	return SetConfigValue(runner, configdomain.ConfigScopeGlobal, configdomain.KeyOffline, value.String())
 }
 
-func SetOriginHostname(runner subshelldomain.Runner, hostname configdomain.HostingOriginHostname) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyHostingOriginHostname, hostname.String())
+func SetOriginHostname(runner subshelldomain.Runner, hostname configdomain.HostingOriginHostname, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyHostingOriginHostname, hostname.String())
 }
 
 func SetParent(runner subshelldomain.Runner, child, parent gitdomain.LocalBranchName) error {
 	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.NewParentKey(child), parent.String())
 }
 
-func SetPerennialBranches(runner subshelldomain.Runner, branches gitdomain.LocalBranchNames) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyPerennialBranches, branches.Join(" "))
+func SetPerennialBranches(runner subshelldomain.Runner, branches gitdomain.LocalBranchNames, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyPerennialBranches, branches.Join(" "))
 }
 
-func SetPerennialRegex(runner subshelldomain.Runner, value configdomain.PerennialRegex) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyPerennialRegex, value.String())
+func SetPerennialRegex(runner subshelldomain.Runner, value configdomain.PerennialRegex, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyPerennialRegex, value.String())
 }
 
 func SetPushHook(runner subshelldomain.Runner, value configdomain.PushHook) error {
