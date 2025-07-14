@@ -842,16 +842,20 @@ func saveToGit(userInput userInput, existingGitConfig configdomain.PartialConfig
 		valueToWrite:      userInput.data.FeatureRegex,
 		valueAlreadyInGit: existingGitConfig.FeatureRegex,
 	})
-	if configFile.ContributionRegex.IsNone() {
-		ec.Check(
-			saveContributionRegex(userInput.data.ContributionRegex, existingGitConfig.ContributionRegex, frontend),
-		)
-	}
-	if configFile.ObservedRegex.IsNone() {
-		ec.Check(
-			saveObservedRegex(userInput.data.ObservedRegex, existingGitConfig.ObservedRegex, frontend),
-		)
-	}
+	saveOptionToLocalGit(ec, frontend, saveToLocalGitArgs[configdomain.ContributionRegex]{
+		configFileValue:   configFile.ContributionRegex,
+		saveFunc:          gitconfig.SetContributionRegex,
+		removeFunc:        gitconfig.RemoveContributionRegex,
+		valueToWrite:      userInput.data.ContributionRegex,
+		valueAlreadyInGit: existingGitConfig.ContributionRegex,
+	})
+	saveOptionToLocalGit(ec, frontend, saveToLocalGitArgs[configdomain.ObservedRegex]{
+		configFileValue:   configFile.ObservedRegex,
+		saveFunc:          gitconfig.SetObservedRegex,
+		removeFunc:        gitconfig.RemoveObservedRegex,
+		valueToWrite:      userInput.data.ObservedRegex,
+		valueAlreadyInGit: existingGitConfig.ObservedRegex,
+	})
 	if configFile.PushHook.IsNone() {
 		ec.Check(
 			savePushHook(userInput.data.PushHook, existingGitConfig.PushHook, frontend),

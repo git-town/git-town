@@ -185,8 +185,8 @@ func SetCodebergToken(runner subshelldomain.Runner, value forgedomain.CodebergTo
 	return SetConfigValue(runner, scope, configdomain.KeyCodebergToken, value.String())
 }
 
-func SetContributionRegex(runner subshelldomain.Runner, regex configdomain.ContributionRegex) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyContributionRegex, regex.String())
+func SetContributionRegex(runner subshelldomain.Runner, regex configdomain.ContributionRegex, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyContributionRegex, regex.String())
 }
 
 func SetDevRemote(runner subshelldomain.Runner, remote gitdomain.Remote, scope configdomain.ConfigScope) error {
