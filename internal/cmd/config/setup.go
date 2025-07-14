@@ -912,12 +912,14 @@ func saveToGit(userInput userInput, existingGitConfig configdomain.PartialConfig
 		valueToWrite:      userInput.data.SyncUpstream,
 		valueAlreadyInGit: existingGitConfig.SyncUpstream,
 	})
-	if configFile.SyncTags.IsNone() {
-		ec.Check(
-			saveSyncTags(userInput.data.SyncTags, existingGitConfig.SyncTags, frontend),
-		)
-	}
-	return ec.Err
+	saveOptionToLocalGit(ec, frontend, saveToLocalGitArgs[configdomain.SyncTags]{
+		configFileValue:   configFile.SyncTags,
+		saveFunc:          gitconfig.SetSyncTags,
+		removeFunc:        gitconfig.RemoveSyncTags,
+		valueToWrite:      userInput.data.SyncTags,
+		valueAlreadyInGit: existingGitConfig.SyncTags,
+	})
+	return ec.Value.Err
 }
 
 func saveAliases(valuesToWriteToGit configdomain.Aliases, valuesAlreadyInGit configdomain.Aliases, frontend subshelldomain.Runner) (err error) {

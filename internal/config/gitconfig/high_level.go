@@ -281,8 +281,8 @@ func SetSyncPrototypeStrategy(runner subshelldomain.Runner, value configdomain.S
 	return SetConfigValue(runner, scope, configdomain.KeySyncPrototypeStrategy, value.String())
 }
 
-func SetSyncTags(runner subshelldomain.Runner, value configdomain.SyncTags) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncTags, value.String())
+func SetSyncTags(runner subshelldomain.Runner, value configdomain.SyncTags, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeySyncTags, value.String())
 }
 
 func SetSyncUpstream(runner subshelldomain.Runner, value configdomain.SyncUpstream, scope configdomain.ConfigScope) error {
