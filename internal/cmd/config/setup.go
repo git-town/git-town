@@ -877,31 +877,41 @@ func saveToGit(userInput userInput, existingGitConfig configdomain.PartialConfig
 		valueToWrite:      userInput.data.ShipStrategy,
 		valueAlreadyInGit: existingGitConfig.ShipStrategy,
 	})
-	if configFile.ShipDeleteTrackingBranch.IsNone() {
-		ec.Check(
-			saveShipDeleteTrackingBranch(userInput.data.ShipDeleteTrackingBranch, existingGitConfig.ShipDeleteTrackingBranch, frontend),
-		)
-	}
-	if configFile.SyncFeatureStrategy.IsNone() {
-		ec.Check(
-			saveSyncFeatureStrategy(userInput.data.SyncFeatureStrategy, existingGitConfig.SyncFeatureStrategy, frontend),
-		)
-	}
-	if configFile.SyncPerennialStrategy.IsNone() {
-		ec.Check(
-			saveSyncPerennialStrategy(userInput.data.SyncPerennialStrategy, existingGitConfig.SyncPerennialStrategy, frontend),
-		)
-	}
-	if configFile.SyncPrototypeStrategy.IsNone() {
-		ec.Check(
-			saveSyncPrototypeStrategy(userInput.data.SyncPrototypeStrategy, existingGitConfig.SyncPrototypeStrategy, frontend),
-		)
-	}
-	if configFile.SyncUpstream.IsNone() {
-		ec.Check(
-			saveSyncUpstream(userInput.data.SyncUpstream, existingGitConfig.SyncUpstream, frontend),
-		)
-	}
+	saveOptionToLocalGit(ec, frontend, saveToLocalGitArgs[configdomain.ShipDeleteTrackingBranch]{
+		configFileValue:   configFile.ShipDeleteTrackingBranch,
+		saveFunc:          gitconfig.SetShipDeleteTrackingBranch,
+		removeFunc:        gitconfig.RemoveShipDeleteTrackingBranch,
+		valueToWrite:      userInput.data.ShipDeleteTrackingBranch,
+		valueAlreadyInGit: existingGitConfig.ShipDeleteTrackingBranch,
+	})
+	saveOptionToLocalGit(ec, frontend, saveToLocalGitArgs[configdomain.SyncFeatureStrategy]{
+		configFileValue:   configFile.SyncFeatureStrategy,
+		saveFunc:          gitconfig.SetSyncFeatureStrategy,
+		removeFunc:        gitconfig.RemoveSyncFeatureStrategy,
+		valueToWrite:      userInput.data.SyncFeatureStrategy,
+		valueAlreadyInGit: existingGitConfig.SyncFeatureStrategy,
+	})
+	saveOptionToLocalGit(ec, frontend, saveToLocalGitArgs[configdomain.SyncPerennialStrategy]{
+		configFileValue:   configFile.SyncPerennialStrategy,
+		saveFunc:          gitconfig.SetSyncPerennialStrategy,
+		removeFunc:        gitconfig.RemoveSyncPerennialStrategy,
+		valueToWrite:      userInput.data.SyncPerennialStrategy,
+		valueAlreadyInGit: existingGitConfig.SyncPerennialStrategy,
+	})
+	saveOptionToLocalGit(ec, frontend, saveToLocalGitArgs[configdomain.SyncPrototypeStrategy]{
+		configFileValue:   configFile.SyncPrototypeStrategy,
+		saveFunc:          gitconfig.SetSyncPrototypeStrategy,
+		removeFunc:        gitconfig.RemoveSyncPrototypeStrategy,
+		valueToWrite:      userInput.data.SyncPrototypeStrategy,
+		valueAlreadyInGit: existingGitConfig.SyncPrototypeStrategy,
+	})
+	saveOptionToLocalGit(ec, frontend, saveToLocalGitArgs[configdomain.SyncUpstream]{
+		configFileValue:   configFile.SyncUpstream,
+		saveFunc:          gitconfig.SetSyncUpstream,
+		removeFunc:        gitconfig.RemoveSyncUpstream,
+		valueToWrite:      userInput.data.SyncUpstream,
+		valueAlreadyInGit: existingGitConfig.SyncUpstream,
+	})
 	if configFile.SyncTags.IsNone() {
 		ec.Check(
 			saveSyncTags(userInput.data.SyncTags, existingGitConfig.SyncTags, frontend),

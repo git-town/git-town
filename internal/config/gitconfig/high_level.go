@@ -261,32 +261,32 @@ func SetShareNewBranches(runner subshelldomain.Runner, value configdomain.ShareN
 	return SetConfigValue(runner, scope, configdomain.KeyShareNewBranches, value.String())
 }
 
-func SetShipDeleteTrackingBranch(runner subshelldomain.Runner, value configdomain.ShipDeleteTrackingBranch) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.IsTrue()))
+func SetShipDeleteTrackingBranch(runner subshelldomain.Runner, value configdomain.ShipDeleteTrackingBranch, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.IsTrue()))
 }
 
 func SetShipStrategy(runner subshelldomain.Runner, value configdomain.ShipStrategy, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyShipStrategy, value.String())
 }
 
-func SetSyncFeatureStrategy(runner subshelldomain.Runner, value configdomain.SyncFeatureStrategy) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncFeatureStrategy, value.String())
+func SetSyncFeatureStrategy(runner subshelldomain.Runner, value configdomain.SyncFeatureStrategy, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeySyncFeatureStrategy, value.String())
 }
 
-func SetSyncPerennialStrategy(runner subshelldomain.Runner, value configdomain.SyncPerennialStrategy) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncPerennialStrategy, value.String())
+func SetSyncPerennialStrategy(runner subshelldomain.Runner, value configdomain.SyncPerennialStrategy, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeySyncPerennialStrategy, value.String())
 }
 
-func SetSyncPrototypeStrategy(runner subshelldomain.Runner, value configdomain.SyncPrototypeStrategy) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncPrototypeStrategy, value.String())
+func SetSyncPrototypeStrategy(runner subshelldomain.Runner, value configdomain.SyncPrototypeStrategy, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeySyncPrototypeStrategy, value.String())
 }
 
 func SetSyncTags(runner subshelldomain.Runner, value configdomain.SyncTags) error {
 	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncTags, value.String())
 }
 
-func SetSyncUpstream(runner subshelldomain.Runner, value configdomain.SyncUpstream) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncUpstream, strconv.FormatBool(value.IsTrue()))
+func SetSyncUpstream(runner subshelldomain.Runner, value configdomain.SyncUpstream, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeySyncUpstream, strconv.FormatBool(value.IsTrue()))
 }
 
 func SetUnknownBranchType(runner subshelldomain.Runner, value configdomain.BranchType, scope configdomain.ConfigScope) error {
