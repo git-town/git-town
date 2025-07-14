@@ -18,6 +18,22 @@ func TestRemove(t *testing.T) {
 		must.Len(t, 0, have)
 	})
 
+	t.Run("return multiple elements", func(t *testing.T) {
+		t.Parallel()
+		list := []string{"one", "two", "three", "four"}
+		have := slice.Remove(list, "two", "three")
+		want := []string{"one", "four"}
+		must.Eq(t, want, have)
+	})
+
+	t.Run("return no elements", func(t *testing.T) {
+		t.Parallel()
+		list := []string{"one", "two"}
+		have := slice.Remove(list)
+		want := []string{"one", "two"}
+		must.Eq(t, want, have)
+	})
+
 	t.Run("slice alias type", func(t *testing.T) {
 		t.Parallel()
 		list := gitdomain.SHAs{"111111", "222222", "333333"}
