@@ -94,7 +94,8 @@ func (self *ValidatedConfig) RemovePerennials(stack gitdomain.LocalBranchNames) 
 
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
+// TODO: move this somewhere else. We shouldn't change an existing validated config.
 func (self *ValidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName, runner subshelldomain.Runner) error {
 	self.ValidatedConfigData.MainBranch = branch
-	return gitconfig.SetMainBranch(runner, branch)
+	return gitconfig.SetMainBranch(runner, branch, configdomain.ConfigScopeLocal)
 }

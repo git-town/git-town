@@ -156,14 +156,20 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 			return config.EmptyValidatedConfig(), false, err
 		}
 		localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-		validatedMain, exit, err := dialog.MainBranch(localBranches, gitconfig.DefaultBranch(args.backend), args.dialogInputs.Next())
+		validatedMain, exit, err := dialog.MainBranch(dialog.MainBranchArgs{
+			GitStandardBranch:   gitconfig.DefaultBranch(args.backend),
+			GlobalGitMainBranch: args.unvalidated.Value.GitGlobal.MainBranch,
+			LocalGitMainBranch:  args.unvalidated.Value.GitLocal.MainBranch,
+			LocalBranches:       localBranches,
+			Inputs:              args.dialogInputs.Next(),
+		})
 		if err != nil || exit {
 			return config.EmptyValidatedConfig(), exit, err
 		}
-		if err = args.unvalidated.Value.SetMainBranch(validatedMain, args.backend); err != nil {
+		mainBranch = validatedMain.Or(args.unvalidated.Value.GitGlobal.MainBranch).GetOrPanic()
+		if err = args.unvalidated.Value.SetMainBranch(mainBranch, args.backend); err != nil {
 			return config.EmptyValidatedConfig(), false, err
 		}
-		mainBranch = validatedMain
 	}
 	gitUserEmail, gitUserName, err := GitUser(args.unvalidated.Value.UnvalidatedConfig)
 	if err != nil {
