@@ -257,8 +257,8 @@ func SetPushHook(runner subshelldomain.Runner, value configdomain.PushHook, scop
 	return SetConfigValue(runner, scope, configdomain.KeyPushHook, strconv.FormatBool(bool(value)))
 }
 
-func SetShareNewBranches(runner subshelldomain.Runner, value configdomain.ShareNewBranches) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyShareNewBranches, value.String())
+func SetShareNewBranches(runner subshelldomain.Runner, value configdomain.ShareNewBranches, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyShareNewBranches, value.String())
 }
 
 func SetShipDeleteTrackingBranch(runner subshelldomain.Runner, value configdomain.ShipDeleteTrackingBranch) error {

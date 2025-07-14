@@ -863,11 +863,13 @@ func saveToGit(userInput userInput, existingGitConfig configdomain.PartialConfig
 		valueToWrite:      userInput.data.PushHook,
 		valueAlreadyInGit: existingGitConfig.PushHook,
 	})
-	if configFile.ShareNewBranches.IsNone() {
-		ec.Check(
-			saveShareNewBranches(userInput.data.ShareNewBranches, existingGitConfig.ShareNewBranches, frontend),
-		)
-	}
+	saveOptionToLocalGit(ec, frontend, saveToLocalGitArgs[configdomain.ShareNewBranches]{
+		configFileValue:   configFile.ShareNewBranches,
+		saveFunc:          gitconfig.SetShareNewBranches,
+		removeFunc:        gitconfig.RemoveShareNewBranches,
+		valueToWrite:      userInput.data.ShareNewBranches,
+		valueAlreadyInGit: existingGitConfig.ShareNewBranches,
+	})
 	if configFile.ShipStrategy.IsNone() {
 		ec.Check(
 			saveShipStrategy(userInput.data.ShipStrategy, existingGitConfig.ShipStrategy, frontend),
