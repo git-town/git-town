@@ -16,7 +16,7 @@ func RenderPerennialBranches(perennials gitdomain.LocalBranchNames) string {
 	return fmt.Sprintf(`["%s"]`, perennials.Join(`", "`))
 }
 
-func RenderTOML(normalConfig configdomain.NormalConfigData, mainBranch gitdomain.LocalBranchName) string {
+func RenderTOML(normalConfig configdomain.PartialConfig) string {
 	result := strings.Builder{}
 	result.WriteString("# More info around this file at https://www.git-town.com/configuration-file\n")
 	result.WriteString("\n[branches]\n")
@@ -47,6 +47,6 @@ func RenderTOML(normalConfig configdomain.NormalConfigData, mainBranch gitdomain
 	return result.String()
 }
 
-func Save(normalConfig configdomain.NormalConfigData, mainBranch gitdomain.LocalBranchName) error {
-	return os.WriteFile(FileName, []byte(RenderTOML(normalConfig, mainBranch)), 0o600)
+func Save(normalConfig configdomain.PartialConfig) error {
+	return os.WriteFile(FileName, []byte(RenderTOML(normalConfig)), 0o600)
 }

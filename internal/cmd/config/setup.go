@@ -1028,7 +1028,7 @@ type saveCommonArgs struct {
 }
 
 func saveToFile(userInput userInput, gitConfig configdomain.PartialConfig, runner subshelldomain.Runner) error {
-	if err := configfile.Save(userInput.normalConfig, userInput.validatedConfig.MainBranch); err != nil {
+	if err := configfile.Save(userInput.data, userInput.validatedConfig.MainBranch); err != nil {
 		return err
 	}
 	if gitConfig.DevRemote.IsSome() {
