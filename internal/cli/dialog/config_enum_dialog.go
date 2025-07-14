@@ -11,8 +11,13 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
+type comparableStringer interface {
+	comparable
+	fmt.Stringer
+}
+
 // a part of the setup assistant that allows the user to enter a string-based configuration value
-func ConfigEnumDialog[T comparable](args ConfigEnumDialogArgs[T]) (Option[T], dialogdomain.Exit, error) {
+func ConfigEnumDialog[T comparableStringer](args ConfigEnumDialogArgs[T]) (Option[T], dialogdomain.Exit, error) {
 	if args.ConfigFileValue.IsSome() {
 		return None[T](), false, nil
 	}
@@ -41,24 +46,15 @@ func ConfigEnumDialog[T comparable](args ConfigEnumDialogArgs[T]) (Option[T], di
 
 	var userInput Option[T]
 	var exit dialogdomain.Exit
-	var err error
 	var parseError string
 	for {
-		selection, exit, err := dialogcomponents.RadioList(args.Entries, defaultPos, syncFeatureStrategyTitle, SyncFeatureStrategyHelp, args.Inputs.Next())
+		selection, exit, err := dialogcomponents.RadioList(args.Entries, defaultPos, args.Title, helpText+parseError, args.Inputs.Next())
 		fmt.Printf(messages.SyncFeatureBranches, dialogcomponents.FormattedSelection(selection.String(), exit))
 		// return selection, exit, err
-		userInputText, exit, err = dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
-			ExistingValue: args.UnscopedValue.String(),
-			Help:          helpText + parseError,
-			Prompt:        args.Prompt,
-			TestInput:     args.Inputs.Next(),
-			Title:         args.Title,
-		})
 		if err != nil || exit {
-			fmt.Printf(args.ResultMessage, dialogcomponents.FormattedSelection(userInputText, exit))
 			return None[T](), exit, err
 		}
-		userInput, err = args.ParseFunc(userInputText)
+		userInput, err = args.ParseFunc(selection.String())
 		if err != nil {
 			parseError = "\n\n" + colors.Red().Styled(err.Error())
 			continue
