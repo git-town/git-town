@@ -763,127 +763,125 @@ func saveAll(userInput userInput, existingGitConfig configdomain.PartialConfig, 
 
 func saveToGit(userInput userInput, existingGitConfig configdomain.PartialConfig, configFileOpt Option[configdomain.PartialConfig], data setupData, frontend subshelldomain.Runner) error {
 	configFile := configFileOpt.GetOrDefault()
-	fc := NewMutable(&gohacks.ErrorCollector{})
-	saveToLocalGit(saveToLocalGitArgs[configdomain.BranchType]{
+	ec := NewMutable(&gohacks.ErrorCollector{})
+	saveToLocalGit(ec, frontend, saveToLocalGitArgs[configdomain.BranchType]{
 		configFileValue:   configFile.NewBranchType,
-		failureCounter:    fc,
 		saveFunc:          gitconfig.SetNewBranchType,
 		removeFunc:        gitconfig.RemoveNewBranchType,
-		runner:            frontend,
 		valueToWrite:      userInput.data.NewBranchType,
 		valueAlreadyInGit: existingGitConfig.NewBranchType,
 	})
 	if configFile.NewBranchType.IsNone() {
-		fc.Check(
+		ec.Check(
 			saveNewBranchType(userInput.data.NewBranchType, existingGitConfig.NewBranchType, frontend),
 		)
 	}
 	if configFile.ForgeType.IsNone() {
-		fc.Check(
+		ec.Check(
 			saveForgeType(userInput.data.ForgeType, existingGitConfig.ForgeType, frontend),
 		)
 	}
 	if configFile.GitHubConnectorType.IsNone() {
-		fc.Check(
+		ec.Check(
 			saveGitHubConnectorType(userInput.data.GitHubConnectorType, existingGitConfig.GitHubConnectorType, frontend),
 		)
 	}
 	if configFile.GitLabConnectorType.IsNone() {
-		fc.Check(
+		ec.Check(
 			saveGitLabConnectorType(userInput.data.GitLabConnectorType, existingGitConfig.GitLabConnectorType, frontend),
 		)
 	}
 	if configFile.HostingOriginHostname.IsNone() {
-		fc.Check(
+		ec.Check(
 			saveOriginHostname(userInput.data.HostingOriginHostname, existingGitConfig.HostingOriginHostname, frontend),
 		)
 	}
 	if configFile.MainBranch.IsNone() {
-		fc.Check(
+		ec.Check(
 			saveMainBranch(userInput.data.MainBranch, existingGitConfig.MainBranch, frontend),
 		)
 	}
 	if len(configFile.PerennialBranches) == 0 {
-		fc.Check(
+		ec.Check(
 			savePerennialBranches(userInput.data.PerennialBranches, existingGitConfig.PerennialBranches, frontend),
 		)
 	}
 	if configFile.PerennialRegex.IsNone() {
-		fc.Check(
+		ec.Check(
 			savePerennialRegex(userInput.data.PerennialRegex, existingGitConfig.PerennialRegex, frontend),
 		)
 	}
 	if configFile.UnknownBranchType.IsNone() {
-		fc.Check(
+		ec.Check(
 			saveUnknownBranchType(userInput.data.UnknownBranchType, existingGitConfig.UnknownBranchType, frontend),
 		)
 	}
 	if len(data.remotes) > 1 && configFile.DevRemote.IsNone() {
-		fc.Check(
+		ec.Check(
 			saveDevRemote(userInput.data.DevRemote, existingGitConfig.DevRemote, frontend),
 		)
 	}
 	if configFile.FeatureRegex.IsNone() {
-		fc.Check(
+		ec.Check(
 			saveFeatureRegex(userInput.data.FeatureRegex, existingGitConfig.FeatureRegex, frontend),
 		)
 	}
 	if configFile.ContributionRegex.IsNone() {
-		fc.Check(
+		ec.Check(
 			saveContributionRegex(userInput.data.ContributionRegex, existingGitConfig.ContributionRegex, frontend),
 		)
 	}
 	if configFile.ObservedRegex.IsNone() {
-		fc.Check(
+		ec.Check(
 			saveObservedRegex(userInput.data.ObservedRegex, existingGitConfig.ObservedRegex, frontend),
 		)
 	}
 	if configFile.PushHook.IsNone() {
-		fc.Check(
+		ec.Check(
 			savePushHook(userInput.data.PushHook, existingGitConfig.PushHook, frontend),
 		)
 	}
 	if configFile.ShareNewBranches.IsNone() {
-		fc.Check(
+		ec.Check(
 			saveShareNewBranches(userInput.data.ShareNewBranches, existingGitConfig.ShareNewBranches, frontend),
 		)
 	}
 	if configFile.ShipStrategy.IsNone() {
-		fc.Check(
+		ec.Check(
 			saveShipStrategy(userInput.data.ShipStrategy, existingGitConfig.ShipStrategy, frontend),
 		)
 	}
 	if configFile.ShipDeleteTrackingBranch.IsNone() {
-		fc.Check(
+		ec.Check(
 			saveShipDeleteTrackingBranch(userInput.data.ShipDeleteTrackingBranch, existingGitConfig.ShipDeleteTrackingBranch, frontend),
 		)
 	}
 	if configFile.SyncFeatureStrategy.IsNone() {
-		fc.Check(
+		ec.Check(
 			saveSyncFeatureStrategy(userInput.data.SyncFeatureStrategy, existingGitConfig.SyncFeatureStrategy, frontend),
 		)
 	}
 	if configFile.SyncPerennialStrategy.IsNone() {
-		fc.Check(
+		ec.Check(
 			saveSyncPerennialStrategy(userInput.data.SyncPerennialStrategy, existingGitConfig.SyncPerennialStrategy, frontend),
 		)
 	}
 	if configFile.SyncPrototypeStrategy.IsNone() {
-		fc.Check(
+		ec.Check(
 			saveSyncPrototypeStrategy(userInput.data.SyncPrototypeStrategy, existingGitConfig.SyncPrototypeStrategy, frontend),
 		)
 	}
 	if configFile.SyncUpstream.IsNone() {
-		fc.Check(
+		ec.Check(
 			saveSyncUpstream(userInput.data.SyncUpstream, existingGitConfig.SyncUpstream, frontend),
 		)
 	}
 	if configFile.SyncTags.IsNone() {
-		fc.Check(
+		ec.Check(
 			saveSyncTags(userInput.data.SyncTags, existingGitConfig.SyncTags, frontend),
 		)
 	}
-	return fc.Err
+	return ec.Err
 }
 
 func saveAliases(valuesToWriteToGit configdomain.Aliases, valuesAlreadyInGit configdomain.Aliases, frontend subshelldomain.Runner) (err error) {
@@ -903,24 +901,30 @@ func saveAliases(valuesToWriteToGit configdomain.Aliases, valuesAlreadyInGit con
 	return nil
 }
 
-func saveToLocalGit[T comparable](args saveToLocalGitArgs[T]) error {
+func saveToLocalGit[T comparable](ec Mutable[gohacks.ErrorCollector], runner subshelldomain.Runner, args saveToLocalGitArgs[T]) {
+	if ec.Value.Err != nil {
+		return
+	}
 	if args.valueToWrite.Equal(args.valueAlreadyInGit) {
-		return nil
+		return
 	}
 	if value, has := args.valueToWrite.Get(); has {
-		return args.saveFunc(args.runner, value, configdomain.ConfigScopeLocal)
+		ec.Value.Check(args.saveFunc(runner, value, configdomain.ConfigScopeLocal))
 	}
-	return gitconfig.RemoveBitbucketAppPassword(args.runner)
+	ec.Value.Check(gitconfig.RemoveBitbucketAppPassword(runner))
 }
 
 type saveToLocalGitArgs[T comparable] struct {
 	configFileValue   Option[T]
-	failureCounter    Mutable[gohacks.ErrorCollector]
 	valueToWrite      Option[T]
 	valueAlreadyInGit Option[T]
 	saveFunc          func(subshelldomain.Runner, T, configdomain.ConfigScope) error
 	removeFunc        func(subshelldomain.Runner) error
-	runner            subshelldomain.Runner
+}
+
+type saveCommonArgs struct {
+	failureCounter Mutable[gohacks.ErrorCollector]
+	runner         subshelldomain.Runner
 }
 
 func saveBitbucketAppPassword(valueToWriteToGit Option[forgedomain.BitbucketAppPassword], valueAlreadyInGit Option[forgedomain.BitbucketAppPassword], scope configdomain.ConfigScope, runner subshelldomain.Runner) error {
