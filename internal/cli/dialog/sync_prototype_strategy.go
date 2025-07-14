@@ -24,7 +24,7 @@ and limiting the sharing of confidential changes.
 `
 )
 
-func SyncPrototypeStrategy(existing configdomain.SyncPrototypeStrategy, inputs dialogcomponents.TestInput) (Option[configdomain.SyncPrototypeStrategy], dialogdomain.Exit, error) {
+func SyncPrototypeStrategy(existing Option[configdomain.SyncPrototypeStrategy], inputs dialogcomponents.TestInput) (Option[configdomain.SyncPrototypeStrategy], dialogdomain.Exit, error) {
 	entries := list.Entries[Option[configdomain.SyncPrototypeStrategy]]{
 		{
 			Data: None[configdomain.SyncPrototypeStrategy](),

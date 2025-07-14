@@ -91,6 +91,7 @@ func (self *NormalConfig) SetParent(runner subshelldomain.Runner, branch, parent
 }
 
 // SetPerennialBranches marks the given branches as perennial branches.
+// TODO: delete this after making the validation logic pure
 func (self *NormalConfig) SetPerennialBranches(runner subshelldomain.Runner, branches gitdomain.LocalBranchNames) error {
 	self.PerennialBranches = branches
 	if slices.Compare(self.Git.PerennialBranches, branches) != 0 {
