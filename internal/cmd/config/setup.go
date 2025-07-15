@@ -358,6 +358,8 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		GitLabConnectorType:      gitlabConnectorTypeOpt,
 		GitLabToken:              gitlabToken,
 		GiteaToken:               giteaToken,
+		GitUserEmail:             None[gitdomain.GitUserEmail](),
+		GitUserName:              None[gitdomain.GitUserName](),
 		HostingOriginHostname:    hostingOriginHostName,
 		Lineage:                  configdomain.Lineage{}, // the setup assistant doesn't ask for this
 		MainBranch:               mainBranchSetting,
