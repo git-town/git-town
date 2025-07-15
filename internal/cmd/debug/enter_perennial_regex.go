@@ -15,10 +15,10 @@ func enterPerennialRegex() *cobra.Command {
 		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogInputs := dialogcomponents.LoadTestInputs(os.Environ())
 			_, _, err := dialog.PerennialRegex(dialog.CommonArgs{
-				ConfigFile:        configdomain.PartialConfig{},
+				ConfigFile:        configdomain.EmptyPartialConfig(),
 				Inputs:            dialogInputs,
-				LocalGitConfig:    configdomain.PartialConfig{},
-				UnscopedGitConfig: configdomain.PartialConfig{},
+				LocalGitConfig:    configdomain.EmptyPartialConfig(),
+				UnscopedGitConfig: configdomain.EmptyPartialConfig(),
 			})
 			return err
 		},
