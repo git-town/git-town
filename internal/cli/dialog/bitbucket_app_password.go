@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	bitbucketAppPasswordTitle = `Bitbucket App Password/Token`
+	bitbucketAppPasswordTitle = `Bitbucket App Password`
 	bitbucketAppPasswordHelp  = `
 Git Town can update pull requests
 and ship branches on Bitbucket for you.
@@ -28,12 +28,12 @@ Git Town will not use the Bitbucket API.
 )
 
 // BitbucketAppPassword lets the user enter the Bitbucket API token.
-func BitbucketAppPassword(oldValue Option[forgedomain.BitbucketAppPassword], inputs dialogcomponents.TestInput) (Option[forgedomain.BitbucketAppPassword], dialogdomain.Exit, error) {
+func BitbucketAppPassword(oldValue Option[forgedomain.BitbucketAppPassword], inputs dialogcomponents.TestInputs) (Option[forgedomain.BitbucketAppPassword], dialogdomain.Exit, error) {
 	text, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          bitbucketAppPasswordHelp,
 		Prompt:        "Bitbucket App Password/Token: ",
-		TestInput:     inputs,
+		TestInputs:    inputs,
 		Title:         bitbucketAppPasswordTitle,
 	})
 	fmt.Printf(messages.BitbucketAppPassword, dialogcomponents.FormattedSecret(text, exit))

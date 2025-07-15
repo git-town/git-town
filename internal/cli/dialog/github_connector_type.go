@@ -28,7 +28,7 @@ Git Town supports two ways to connect to GitHub:
 `
 )
 
-func GitHubConnectorType(existing Option[forgedomain.GitHubConnectorType], inputs dialogcomponents.TestInput) (Option[forgedomain.GitHubConnectorType], dialogdomain.Exit, error) {
+func GitHubConnectorType(existing Option[forgedomain.GitHubConnectorType], inputs dialogcomponents.TestInputs) (Option[forgedomain.GitHubConnectorType], dialogdomain.Exit, error) {
 	entries := list.Entries[forgedomain.GitHubConnectorType]{
 		{
 			Data: forgedomain.GitHubConnectorTypeAPI,

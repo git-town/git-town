@@ -14,7 +14,7 @@ func enterShipStrategy() *cobra.Command {
 		Use: "ship-strategy",
 		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
-			_, _, err := dialog.ShipStrategy(configdomain.ShipStrategyAPI, dialogTestInputs.Next())
+			_, _, err := dialog.ShipStrategy(configdomain.ShipStrategyAPI, dialogTestInputs)
 			return err
 		},
 	}

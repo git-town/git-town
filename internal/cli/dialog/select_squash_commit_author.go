@@ -13,7 +13,7 @@ import (
 const squashCommitAuthorTitle = `Squash commit author`
 
 // SelectSquashCommitAuthor allows the user to select an author amongst a given list of authors.
-func SelectSquashCommitAuthor(branch gitdomain.LocalBranchName, authors []gitdomain.Author, dialogTestInputs dialogcomponents.TestInput) (gitdomain.Author, dialogdomain.Exit, error) {
+func SelectSquashCommitAuthor(branch gitdomain.LocalBranchName, authors []gitdomain.Author, dialogTestInputs dialogcomponents.TestInputs) (gitdomain.Author, dialogdomain.Exit, error) {
 	if len(authors) == 1 {
 		return authors[0], false, nil
 	}

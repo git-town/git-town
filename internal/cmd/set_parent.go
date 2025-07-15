@@ -111,12 +111,12 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 		}
 	} else {
 		outcome, selectedBranch, err = dialog.Parent(dialog.ParentArgs{
-			Branch:          data.initialBranch,
-			DefaultChoice:   data.defaultChoice,
-			DialogTestInput: data.dialogTestInputs.Next(),
-			Lineage:         data.config.NormalConfig.Lineage,
-			LocalBranches:   data.branchesSnapshot.Branches.LocalBranches().Names(),
-			MainBranch:      data.mainBranch,
+			Branch:        data.initialBranch,
+			DefaultChoice: data.defaultChoice,
+			Inputs:        data.dialogTestInputs,
+			Lineage:       data.config.NormalConfig.Lineage,
+			LocalBranches: data.branchesSnapshot.Branches.LocalBranches().Names(),
+			MainBranch:    data.mainBranch,
 		})
 		if err != nil {
 			return err

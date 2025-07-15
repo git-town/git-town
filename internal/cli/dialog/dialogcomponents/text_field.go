@@ -23,7 +23,7 @@ func TextField(args TextFieldArgs) (string, dialogdomain.Exit, error) {
 		title:     args.Title,
 	}
 	program := tea.NewProgram(model)
-	SendInputs(args.TestInput, program)
+	SendInputs(args.TestInputs.Next(), program)
 	dialogResult, err := program.Run()
 	result := dialogResult.(textFieldModel)
 	return result.textInput.Value(), result.status == list.StatusExit, err
@@ -33,7 +33,7 @@ type TextFieldArgs struct {
 	ExistingValue string
 	Help          string
 	Prompt        string
-	TestInput     TestInput
+	TestInputs    TestInputs
 	Title         string
 }
 

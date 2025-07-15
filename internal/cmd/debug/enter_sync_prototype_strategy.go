@@ -14,7 +14,7 @@ func enterSyncPrototypeStrategy() *cobra.Command {
 		Use: "sync-prototype-strategy",
 		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
-			_, _, err := dialog.SyncPrototypeStrategy(configdomain.SyncPrototypeStrategyMerge, dialogTestInputs.Next())
+			_, _, err := dialog.SyncPrototypeStrategy(configdomain.SyncPrototypeStrategyMerge, dialogTestInputs)
 			return err
 		},
 	}

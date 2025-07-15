@@ -28,12 +28,12 @@ func TestParent(t *testing.T) {
 				branch3: main,
 			})
 			have := dialog.ParentCandidateNames(dialog.ParentArgs{
-				Branch:          branch2,
-				DefaultChoice:   main,
-				DialogTestInput: dialogcomponents.TestInput{},
-				Lineage:         lineage,
-				LocalBranches:   localBranches,
-				MainBranch:      main,
+				Branch:        branch2,
+				DefaultChoice: main,
+				Inputs:        dialogcomponents.TestInputs{},
+				Lineage:       lineage,
+				LocalBranches: localBranches,
+				MainBranch:    main,
 			})
 			want := gitdomain.LocalBranchNames{dialog.PerennialBranchOption, main, branch1, branch3}
 			must.Eq(t, want, have)
@@ -55,12 +55,12 @@ func TestParent(t *testing.T) {
 				branch3:  main,
 			})
 			have := dialog.ParentCandidateNames(dialog.ParentArgs{
-				Branch:          branch2,
-				DefaultChoice:   main,
-				DialogTestInput: dialogcomponents.TestInput{},
-				Lineage:         lineage,
-				LocalBranches:   localBranches,
-				MainBranch:      main,
+				Branch:        branch2,
+				DefaultChoice: main,
+				Inputs:        dialogcomponents.TestInputs{},
+				Lineage:       lineage,
+				LocalBranches: localBranches,
+				MainBranch:    main,
 			})
 			want := gitdomain.LocalBranchNames{dialog.PerennialBranchOption, main, branch1, branch1a, branch3}
 			must.Eq(t, want, have)
