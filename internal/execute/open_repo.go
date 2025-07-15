@@ -74,6 +74,10 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
+	localConfig, err := config.NewPartialConfigFromSnapshot(localSnapshot, true, backendRunner)
+	if err != nil {
+		return emptyOpenRepoResult(), err
+	}
 	unscopedConfig, err := config.NewPartialConfigFromSnapshot(unscopedSnapshot, true, backendRunner)
 	if err != nil {
 		return emptyOpenRepoResult(), err
@@ -98,6 +102,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		ConfigFile:    configFile,
 		EnvConfig:     envconfig.Load(),
 		FinalMessages: finalMessages,
+		GitLocal:      localConfig,
 		GitUnscoped:   unscopedConfig,
 		GitVersion:    gitVersion,
 	})
