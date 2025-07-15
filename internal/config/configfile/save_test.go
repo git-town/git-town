@@ -99,32 +99,6 @@ upstream = true
 			have := configfile.RenderTOML(configdomain.PartialConfig{})
 			want := `
 # More info around this file at https://www.git-town.com/configuration-file
-
-[branches]
-main = "main"
-perennials = ["qa", "staging"]
-perennial-regex = "perennial-"
-
-[create]
-new-branch-type = "prototype"
-share-new-branches = "propose"
-
-[hosting]
-dev-remote = "origin"
-forge-type = "github"
-origin-hostname = "forge"
-
-[ship]
-delete-tracking-branch = true
-strategy = "api"
-
-[sync]
-feature-strategy = "merge"
-perennial-strategy = "rebase"
-prototype-strategy = "compress"
-push-hook = true
-tags = true
-upstream = true
 `[1:]
 			must.EqOp(t, want, have)
 		})
