@@ -354,7 +354,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, cliConfig cli
 		if err != nil {
 			return data, false, err
 		}
-		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, targetBranch, repo.Git, repo.Backend, dialogTestInputs.Next())
+		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, targetBranch, repo.Git, repo.Backend, dialogTestInputs)
 		if err != nil || exit {
 			return data, exit, err
 		}

@@ -15,7 +15,7 @@ func selectCommitAuthorCmd() *cobra.Command {
 		RunE: func(_ *cobra.Command, _ []string) error {
 			authors := []gitdomain.Author{"Jean-Luc Picard <captain@enterprise.com>", "William Riker <numberone@enterprise.com>"}
 			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
-			_, _, err := dialog.SelectSquashCommitAuthor("feature-branch", authors, dialogTestInputs.Next())
+			_, _, err := dialog.SelectSquashCommitAuthor("feature-branch", authors, dialogTestInputs)
 			return err
 		},
 	}

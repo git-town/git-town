@@ -20,7 +20,7 @@ func enterAliases() *cobra.Command {
 				configdomain.AliasableCommandRepo:   "other command",
 			}
 			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
-			_, _, err := dialog.Aliases(all, existing, dialogTestInputs.Next())
+			_, _, err := dialog.Aliases(all, existing, dialogTestInputs)
 			return err
 		},
 	}
