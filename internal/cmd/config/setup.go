@@ -758,6 +758,7 @@ func saveToGit(userInput userInput, config config.UnvalidatedConfig, frontend su
 		removeFunc:            gitconfig.RemovePerennialRegex,
 		valueToWrite:          userInput.data.PerennialRegex,
 		existingValueUnscoped: config.NormalConfig.Git.PerennialRegex,
+		existingValueLocal:    config.GitLocal.PerennialRegex,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[configdomain.BranchType]{
 		configFileValue:       configFile.UnknownBranchType,
@@ -765,6 +766,7 @@ func saveToGit(userInput userInput, config config.UnvalidatedConfig, frontend su
 		removeFunc:            gitconfig.RemoveUnknownBranchType,
 		valueToWrite:          userInput.data.UnknownBranchType,
 		existingValueUnscoped: config.NormalConfig.Git.UnknownBranchType,
+		existingValueLocal:    config.GitLocal.UnknownBranchType,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[gitdomain.Remote]{
 		configFileValue:       configFile.DevRemote,
@@ -772,6 +774,7 @@ func saveToGit(userInput userInput, config config.UnvalidatedConfig, frontend su
 		removeFunc:            gitconfig.RemoveDevRemote,
 		valueToWrite:          userInput.data.DevRemote,
 		existingValueUnscoped: config.NormalConfig.Git.DevRemote,
+		existingValueLocal:    config.GitLocal.DevRemote,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[configdomain.FeatureRegex]{
 		configFileValue:       configFile.FeatureRegex,
@@ -779,6 +782,7 @@ func saveToGit(userInput userInput, config config.UnvalidatedConfig, frontend su
 		removeFunc:            gitconfig.RemoveFeatureRegex,
 		valueToWrite:          userInput.data.FeatureRegex,
 		existingValueUnscoped: config.NormalConfig.Git.FeatureRegex,
+		existingValueLocal:    config.GitLocal.FeatureRegex,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[configdomain.ContributionRegex]{
 		configFileValue:       configFile.ContributionRegex,
@@ -786,6 +790,7 @@ func saveToGit(userInput userInput, config config.UnvalidatedConfig, frontend su
 		removeFunc:            gitconfig.RemoveContributionRegex,
 		valueToWrite:          userInput.data.ContributionRegex,
 		existingValueUnscoped: config.NormalConfig.Git.ContributionRegex,
+		existingValueLocal:    config.GitLocal.ContributionRegex,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[configdomain.ObservedRegex]{
 		configFileValue:       configFile.ObservedRegex,
@@ -793,6 +798,7 @@ func saveToGit(userInput userInput, config config.UnvalidatedConfig, frontend su
 		removeFunc:            gitconfig.RemoveObservedRegex,
 		valueToWrite:          userInput.data.ObservedRegex,
 		existingValueUnscoped: config.NormalConfig.Git.ObservedRegex,
+		existingValueLocal:    config.GitLocal.ObservedRegex,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[configdomain.PushHook]{
 		configFileValue:       configFile.PushHook,
@@ -800,6 +806,7 @@ func saveToGit(userInput userInput, config config.UnvalidatedConfig, frontend su
 		removeFunc:            gitconfig.RemovePushHook,
 		valueToWrite:          userInput.data.PushHook,
 		existingValueUnscoped: config.NormalConfig.Git.PushHook,
+		existingValueLocal:    config.GitLocal.PushHook,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[configdomain.ShareNewBranches]{
 		configFileValue:       configFile.ShareNewBranches,
@@ -807,6 +814,7 @@ func saveToGit(userInput userInput, config config.UnvalidatedConfig, frontend su
 		removeFunc:            gitconfig.RemoveShareNewBranches,
 		valueToWrite:          userInput.data.ShareNewBranches,
 		existingValueUnscoped: config.NormalConfig.Git.ShareNewBranches,
+		existingValueLocal:    config.GitLocal.ShareNewBranches,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[configdomain.ShipStrategy]{
 		configFileValue:       configFile.ShipStrategy,
@@ -814,6 +822,7 @@ func saveToGit(userInput userInput, config config.UnvalidatedConfig, frontend su
 		removeFunc:            gitconfig.RemoveShipStrategy,
 		valueToWrite:          userInput.data.ShipStrategy,
 		existingValueUnscoped: config.NormalConfig.Git.ShipStrategy,
+		existingValueLocal:    config.GitLocal.ShipStrategy,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[configdomain.ShipDeleteTrackingBranch]{
 		configFileValue:       configFile.ShipDeleteTrackingBranch,
@@ -821,6 +830,7 @@ func saveToGit(userInput userInput, config config.UnvalidatedConfig, frontend su
 		removeFunc:            gitconfig.RemoveShipDeleteTrackingBranch,
 		valueToWrite:          userInput.data.ShipDeleteTrackingBranch,
 		existingValueUnscoped: config.NormalConfig.Git.ShipDeleteTrackingBranch,
+		existingValueLocal:    config.GitLocal.ShipDeleteTrackingBranch,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[configdomain.SyncFeatureStrategy]{
 		configFileValue:       configFile.SyncFeatureStrategy,
@@ -828,6 +838,7 @@ func saveToGit(userInput userInput, config config.UnvalidatedConfig, frontend su
 		removeFunc:            gitconfig.RemoveSyncFeatureStrategy,
 		valueToWrite:          userInput.data.SyncFeatureStrategy,
 		existingValueUnscoped: config.NormalConfig.Git.SyncFeatureStrategy,
+		existingValueLocal:    config.GitLocal.SyncFeatureStrategy,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[configdomain.SyncPerennialStrategy]{
 		configFileValue:       configFile.SyncPerennialStrategy,
@@ -835,6 +846,7 @@ func saveToGit(userInput userInput, config config.UnvalidatedConfig, frontend su
 		removeFunc:            gitconfig.RemoveSyncPerennialStrategy,
 		valueToWrite:          userInput.data.SyncPerennialStrategy,
 		existingValueUnscoped: config.NormalConfig.Git.SyncPerennialStrategy,
+		existingValueLocal:    config.GitLocal.SyncPerennialStrategy,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[configdomain.SyncPrototypeStrategy]{
 		configFileValue:       configFile.SyncPrototypeStrategy,
@@ -842,6 +854,7 @@ func saveToGit(userInput userInput, config config.UnvalidatedConfig, frontend su
 		removeFunc:            gitconfig.RemoveSyncPrototypeStrategy,
 		valueToWrite:          userInput.data.SyncPrototypeStrategy,
 		existingValueUnscoped: config.NormalConfig.Git.SyncPrototypeStrategy,
+		existingValueLocal:    config.GitLocal.SyncPrototypeStrategy,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[configdomain.SyncUpstream]{
 		configFileValue:       configFile.SyncUpstream,
@@ -849,6 +862,7 @@ func saveToGit(userInput userInput, config config.UnvalidatedConfig, frontend su
 		removeFunc:            gitconfig.RemoveSyncUpstream,
 		valueToWrite:          userInput.data.SyncUpstream,
 		existingValueUnscoped: config.NormalConfig.Git.SyncUpstream,
+		existingValueLocal:    config.GitLocal.SyncUpstream,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[configdomain.SyncTags]{
 		configFileValue:       configFile.SyncTags,
@@ -856,6 +870,7 @@ func saveToGit(userInput userInput, config config.UnvalidatedConfig, frontend su
 		removeFunc:            gitconfig.RemoveSyncTags,
 		valueToWrite:          userInput.data.SyncTags,
 		existingValueUnscoped: config.NormalConfig.Git.SyncTags,
+		existingValueLocal:    config.GitLocal.SyncTags,
 	})
 }
 
