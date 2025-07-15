@@ -19,22 +19,22 @@ func MainAndPerennials(args MainAndPerennialsArgs) (mainBranch gitdomain.LocalBr
 	}
 	fmt.Print(messages.ConfigNeeded)
 	mainBranchOpt, exit, err := MainBranch(MainBranchArgs{
-		GitStandardBranch:   args.GetDefaultBranch(args.Backend),
-		GlobalGitMainBranch: args.UnvalidatedConfig.GitGlobal.MainBranch,
-		LocalGitMainBranch:  args.UnvalidatedConfig.GitLocal.MainBranch,
-		LocalBranches:       args.LocalBranches,
-		Inputs:              args.DialogInputs.Next(),
+		GitStandardBranch:     args.GetDefaultBranch(args.Backend),
+		UnscopedGitMainBranch: args.UnvalidatedConfig.NormalConfig.Git.MainBranch,
+		LocalGitMainBranch:    args.UnvalidatedConfig.GitLocal.MainBranch,
+		LocalBranches:         args.LocalBranches,
+		Inputs:                args.DialogInputs.Next(),
 	})
 	if err != nil || exit {
 		return "", gitdomain.LocalBranchNames{}, exit, err
 	}
 	mainBranch = mainBranchOpt.GetOrElse(args.UnvalidatedMain.GetOrPanic())
 	perennials, exit, err = PerennialBranches(PerennialBranchesArgs{
-		LocalBranches:       args.LocalBranches,
-		MainBranch:          mainBranch,
-		GlobalGitPerennials: args.UnvalidatedConfig.GitGlobal.PerennialBranches,
-		LocalGitPerennials:  args.UnvalidatedConfig.GitLocal.PerennialBranches,
-		Inputs:              args.DialogInputs.Next(),
+		LocalBranches:         args.LocalBranches,
+		MainBranch:            mainBranch,
+		UnscopedGitPerennials: args.UnvalidatedConfig.NormalConfig.Git.PerennialBranches,
+		LocalGitPerennials:    args.UnvalidatedConfig.GitLocal.PerennialBranches,
+		Inputs:                args.DialogInputs.Next(),
 	})
 	return mainBranch, perennials, exit, err
 }

@@ -32,7 +32,7 @@ or global Git configuration cannot be changed here.
 // PerennialBranches lets the user update the perennial branches.
 // This includes asking the user and updating the respective settings based on the user selection.
 func PerennialBranches(args PerennialBranchesArgs) (gitdomain.LocalBranchNames, dialogdomain.Exit, error) {
-	perennialCandidates := args.LocalBranches.AppendAllMissing(args.GlobalGitPerennials...).AppendAllMissing(args.LocalGitPerennials...)
+	perennialCandidates := args.LocalBranches.AppendAllMissing(args.UnscopedGitPerennials...).AppendAllMissing(args.LocalGitPerennials...)
 	if len(perennialCandidates) < 2 {
 		// there is always the main branch in this list, so if that's the only one there is no branch to select --> don't display the dialog
 		return gitdomain.LocalBranchNames{}, false, nil
@@ -40,19 +40,19 @@ func PerennialBranches(args PerennialBranchesArgs) (gitdomain.LocalBranchNames, 
 	entries := make(list.Entries[gitdomain.LocalBranchName], len(perennialCandidates))
 	for b, branch := range perennialCandidates {
 		isMain := branch == args.MainBranch
-		isGlobalGitPerennial := args.GlobalGitPerennials.Contains(branch)
+		isUnscopedGitPerennial := args.UnscopedGitPerennials.Contains(branch)
 		entries[b] = list.Entry[gitdomain.LocalBranchName]{
 			Data:     branch,
-			Disabled: isMain || isGlobalGitPerennial,
+			Disabled: isMain || isUnscopedGitPerennial,
 			Text:     branch.String(),
 		}
 	}
 	selections := []int{slices.Index(perennialCandidates, args.MainBranch)}
-	selections = append(selections, slice.FindMany(perennialCandidates, args.GlobalGitPerennials)...)
+	selections = append(selections, slice.FindMany(perennialCandidates, args.UnscopedGitPerennials)...)
 	selections = append(selections, slice.FindMany(perennialCandidates, args.LocalGitPerennials)...)
 	selectedBranchesList, exit, err := dialogcomponents.CheckList(entries, selections, perennialBranchesTitle, PerennialBranchesHelp, args.Inputs)
 	selectedBranches := gitdomain.LocalBranchNames(selectedBranchesList)
-	selectedBranches = selectedBranches.Remove(args.MainBranch).Remove(args.GlobalGitPerennials...)
+	selectedBranches = selectedBranches.Remove(args.MainBranch).Remove(args.UnscopedGitPerennials...)
 	selectionText := selectedBranches.Join(", ")
 	if selectionText == "" {
 		selectionText = "(none)"
@@ -62,9 +62,9 @@ func PerennialBranches(args PerennialBranchesArgs) (gitdomain.LocalBranchNames, 
 }
 
 type PerennialBranchesArgs struct {
-	LocalBranches       gitdomain.LocalBranchNames
-	MainBranch          gitdomain.LocalBranchName
-	GlobalGitPerennials gitdomain.LocalBranchNames
-	LocalGitPerennials  gitdomain.LocalBranchNames
-	Inputs              dialogcomponents.TestInput
+	LocalBranches         gitdomain.LocalBranchNames
+	MainBranch            gitdomain.LocalBranchName
+	UnscopedGitPerennials gitdomain.LocalBranchNames
+	LocalGitPerennials    gitdomain.LocalBranchNames
+	Inputs                dialogcomponents.TestInput
 }

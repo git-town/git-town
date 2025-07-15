@@ -13,9 +13,9 @@ import (
 )
 
 type UnvalidatedConfig struct {
-	File              Option[configdomain.PartialConfig] // content of git-town.toml, nil = no config file exists
-	GitLocal          configdomain.PartialConfig
-	GitGlobal         configdomain.PartialConfig
+	File     Option[configdomain.PartialConfig] // content of git-town.toml, nil = no config file exists
+	GitLocal configdomain.PartialConfig
+	// GitUnscoped       configdomain.PartialConfig  // TODO: move NormalConfig.Git here
 	NormalConfig      NormalConfig
 	UnvalidatedConfig configdomain.UnvalidatedConfigData
 }
@@ -95,9 +95,8 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 		git:  args.GitUnscoped,
 	})
 	return UnvalidatedConfig{
-		File:      args.ConfigFile,
-		GitGlobal: args.GitGlobal,
-		GitLocal:  args.GitLocal,
+		File:     args.ConfigFile,
+		GitLocal: args.GitLocal,
 		NormalConfig: NormalConfig{
 			Git:              args.GitUnscoped,
 			GitVersion:       args.GitVersion,
@@ -112,7 +111,6 @@ type NewUnvalidatedConfigArgs struct {
 	ConfigFile    Option[configdomain.PartialConfig]
 	EnvConfig     configdomain.PartialConfig
 	FinalMessages stringslice.Collector
-	GitGlobal     configdomain.PartialConfig
 	GitLocal      configdomain.PartialConfig
 	GitUnscoped   configdomain.PartialConfig
 	GitVersion    git.Version

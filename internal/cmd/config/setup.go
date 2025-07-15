@@ -399,16 +399,16 @@ func enterMainBranch(repo execute.OpenRepoResult, data setupData) (userInput Opt
 	}
 	repoDefault := determineGitRepoDefaultBranch(repo)
 	userInput, exit, err = dialog.MainBranch(dialog.MainBranchArgs{
-		GitStandardBranch:   repoDefault,
-		LocalBranches:       data.localBranches.Names(),
-		LocalGitMainBranch:  data.config.GitGlobal.MainBranch,
-		GlobalGitMainBranch: data.config.GitLocal.MainBranch,
-		Inputs:              data.dialogInputs.Next(),
+		GitStandardBranch:     repoDefault,
+		LocalBranches:         data.localBranches.Names(),
+		LocalGitMainBranch:    data.config.GitLocal.MainBranch,
+		UnscopedGitMainBranch: data.config.NormalConfig.Git.MainBranch,
+		Inputs:                data.dialogInputs.Next(),
 	})
 	if err != nil || exit {
 		return None[gitdomain.LocalBranchName](), "", exit, err
 	}
-	actualMainBranch = userInput.Or(data.config.GitGlobal.MainBranch).GetOrPanic()
+	actualMainBranch = userInput.Or(data.config.NormalConfig.Git.MainBranch).GetOrPanic()
 	return userInput, actualMainBranch, false, nil
 }
 
@@ -419,11 +419,11 @@ func enterPerennialBranches(repo execute.OpenRepoResult, data setupData, mainBra
 		}
 	}
 	return dialog.PerennialBranches(dialog.PerennialBranchesArgs{
-		LocalBranches:       data.localBranches.Names(),
-		MainBranch:          mainBranch,
-		GlobalGitPerennials: repo.UnvalidatedConfig.GitGlobal.PerennialBranches,
-		LocalGitPerennials:  repo.UnvalidatedConfig.GitLocal.PerennialBranches,
-		Inputs:              data.dialogInputs.Next(),
+		LocalBranches:         data.localBranches.Names(),
+		MainBranch:            mainBranch,
+		UnscopedGitPerennials: repo.UnvalidatedConfig.NormalConfig.Git.PerennialBranches,
+		LocalGitPerennials:    repo.UnvalidatedConfig.GitLocal.PerennialBranches,
+		Inputs:                data.dialogInputs.Next(),
 	})
 }
 

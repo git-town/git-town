@@ -27,15 +27,15 @@ This is typically the branch called
 
 // MainBranch lets the user select a new main branch for this repo.
 func MainBranch(args MainBranchArgs) (Option[gitdomain.LocalBranchName], dialogdomain.Exit, error) {
-	// if mainbranch is configured in global config: add option "use global setting" with None
+	// if mainbranch is configured in unscoped Git config but not in local: add option "use global setting" with None
 	// if set in local config: don't add None option, preselect local setting
 	// if no local config: don't add None option, keep existing preselect nothing
 	// if global and local: add global option but preselect the local one
 	entries := list.Entries[Option[gitdomain.LocalBranchName]]{}
-	if globalMain, hasGlobal := args.GlobalGitMainBranch.Get(); hasGlobal {
+	if unscopedMain, hasUnscoped := args.UnscopedGitMainBranch.Get(); hasUnscoped {
 		entries = append(entries, list.Entry[Option[gitdomain.LocalBranchName]]{
 			Data: None[gitdomain.LocalBranchName](),
-			Text: fmt.Sprintf("use global setting (%s)", globalMain),
+			Text: fmt.Sprintf("use global setting (%s)", unscopedMain),
 		})
 	}
 	for _, localBranch := range args.LocalBranches {
@@ -61,9 +61,9 @@ func MainBranch(args MainBranchArgs) (Option[gitdomain.LocalBranchName], dialogd
 }
 
 type MainBranchArgs struct {
-	GitStandardBranch   Option[gitdomain.LocalBranchName]
-	GlobalGitMainBranch Option[gitdomain.LocalBranchName]
-	LocalGitMainBranch  Option[gitdomain.LocalBranchName]
-	LocalBranches       gitdomain.LocalBranchNames
-	Inputs              dialogcomponents.TestInput
+	GitStandardBranch     Option[gitdomain.LocalBranchName]
+	UnscopedGitMainBranch Option[gitdomain.LocalBranchName]
+	LocalGitMainBranch    Option[gitdomain.LocalBranchName]
+	LocalBranches         gitdomain.LocalBranchNames
+	Inputs                dialogcomponents.TestInput
 }

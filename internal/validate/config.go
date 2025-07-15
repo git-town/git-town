@@ -25,11 +25,12 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 	mainBranch, hasMain := args.Unvalidated.Value.UnvalidatedConfig.MainBranch.Get()
 	if !hasMain {
 		validatedMain, additionalPerennials, exit, err := dialog.MainAndPerennials(dialog.MainAndPerennialsArgs{
-			Backend:          args.Backend,
-			DialogInputs:     args.TestInputs,
-			GetDefaultBranch: gitconfig.DefaultBranch,
-			LocalBranches:    args.LocalBranches,
-			UnvalidatedMain:  args.Unvalidated.Value.UnvalidatedConfig.MainBranch,
+			Backend:           args.Backend,
+			DialogInputs:      args.TestInputs,
+			GetDefaultBranch:  gitconfig.DefaultBranch,
+			LocalBranches:     args.LocalBranches,
+			UnvalidatedMain:   args.Unvalidated.Value.UnvalidatedConfig.MainBranch,
+			UnvalidatedConfig: *args.Unvalidated.Value,
 		})
 		if err != nil || exit {
 			return config.EmptyValidatedConfig(), exit, err
