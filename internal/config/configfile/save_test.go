@@ -49,6 +49,7 @@ func TestSave(t *testing.T) {
 				DevRemote:                Some(gitdomain.RemoteOrigin),
 				ForgeType:                asserts.NoError1(forgedomain.ParseForgeType("github")),
 				HostingOriginHostname:    configdomain.ParseHostingOriginHostname("forge"),
+				MainBranch:               Some(gitdomain.NewLocalBranchName("main")),
 				NewBranchType:            Some(configdomain.BranchTypePrototypeBranch),
 				PerennialBranches:        gitdomain.NewLocalBranchNames("qa", "staging"),
 				PerennialRegex:           asserts.NoError1(configdomain.ParsePerennialRegex("perennial-")),
