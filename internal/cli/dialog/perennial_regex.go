@@ -25,12 +25,12 @@ it's safe to leave it blank.
 `
 )
 
-func PerennialRegex(oldValue Option[configdomain.PerennialRegex], inputs dialogcomponents.TestInput) (Option[configdomain.PerennialRegex], dialogdomain.Exit, error) {
+func PerennialRegex(oldValue Option[configdomain.PerennialRegex], inputs dialogcomponents.TestInputs) (Option[configdomain.PerennialRegex], dialogdomain.Exit, error) {
 	value, exit, err1 := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          PerennialRegexHelp,
 		Prompt:        "Perennial regex: ",
-		TestInput:     inputs,
+		TestInputs:    inputs,
 		Title:         perennialRegexTitle,
 	})
 	fmt.Printf(messages.PerennialRegex, dialogcomponents.FormattedSelection(value, exit))

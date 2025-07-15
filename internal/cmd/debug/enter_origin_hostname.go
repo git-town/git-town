@@ -14,7 +14,7 @@ func enterOriginHostname() *cobra.Command {
 		Use: "origin-hostname",
 		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogInputs := dialogcomponents.LoadTestInputs(os.Environ())
-			_, _, err := dialog.OriginHostname(configdomain.ParseHostingOriginHostname(""), dialogInputs.Next())
+			_, _, err := dialog.OriginHostname(configdomain.ParseHostingOriginHostname(""), dialogInputs)
 			return err
 		},
 	}

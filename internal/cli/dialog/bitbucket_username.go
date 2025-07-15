@@ -24,12 +24,12 @@ Git Town will not use the Bitbucket API.
 `
 )
 
-func BitbucketUsername(oldValue Option[forgedomain.BitbucketUsername], inputs dialogcomponents.TestInput) (Option[forgedomain.BitbucketUsername], dialogdomain.Exit, error) {
+func BitbucketUsername(oldValue Option[forgedomain.BitbucketUsername], inputs dialogcomponents.TestInputs) (Option[forgedomain.BitbucketUsername], dialogdomain.Exit, error) {
 	text, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          bitbucketUsernameHelp,
 		Prompt:        "Your Bitbucket username: ",
-		TestInput:     inputs,
+		TestInputs:    inputs,
 		Title:         bitbucketUsernameTitle,
 	})
 	fmt.Printf(messages.BitbucketUsername, dialogcomponents.FormattedSecret(text, exit))
