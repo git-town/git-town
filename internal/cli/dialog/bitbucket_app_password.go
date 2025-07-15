@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	bitbucketAppPasswordTitle = `Bitbucket App Password/Token`
+	bitbucketAppPasswordTitle = `Bitbucket App Password`
 	bitbucketAppPasswordHelp  = `
 Git Town can update pull requests
 and ship branches on Bitbucket for you.
