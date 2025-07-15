@@ -122,7 +122,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	mainBranchOpt, actualMainBranch, exit, err := enterMainBranch(repo, data)
+	mainBranchSetting, actualMainBranch, exit, err := enterMainBranch(repo, data)
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
@@ -360,7 +360,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		GiteaToken:               giteaToken,
 		HostingOriginHostname:    hostingOriginHostName,
 		Lineage:                  configdomain.Lineage{}, // the setup assistant doesn't ask for this
-		MainBranch:               mainBranchOpt,
+		MainBranch:               mainBranchSetting,
 		NewBranchType:            newBranchType,
 		ObservedRegex:            observedRegex,
 		Offline:                  None[configdomain.Offline](), // the setup assistant doesn't ask for this

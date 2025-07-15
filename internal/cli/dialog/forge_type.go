@@ -55,9 +55,7 @@ func ForgeType(existingValue Option[forgedomain.ForgeType], inputs dialogcompone
 			Text: "GitLab",
 		},
 	}
-	cursor := entries.IndexOfFunc(existingValue, func(optA, optB Option[forgedomain.ForgeType]) bool {
-		return optA.Equal(optB)
-	})
+	cursor := entries.IndexOfFunc(existingValue, func(a, b Option[forgedomain.ForgeType]) bool { return a.Equal(b) })
 	newValue, exit, err := dialogcomponents.RadioList(entries, cursor, forgeTypeTitle, forgeTypeHelp, inputs)
 	fmt.Printf(messages.Forge, dialogcomponents.FormattedSelection(newValue.GetOrElse("auto-detect").String(), exit))
 	return newValue, exit, err
