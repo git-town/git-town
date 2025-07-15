@@ -140,31 +140,11 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	featureRegex, exit, err := dialog.ConfigStringDialog(dialog.ConfigStringDialogArgs[configdomain.FeatureRegex]{
-		ConfigFileValue: configFile.FeatureRegex,
-		HelpText:        dialog.FeatureRegexHelp,
-		Inputs:          data.dialogInputs,
-		LocalValue:      repo.UnvalidatedConfig.GitLocal.FeatureRegex,
-		ParseFunc:       configdomain.ParseFeatureRegex,
-		Prompt:          "Feature Regex: ",
-		ResultMessage:   messages.FeatureRegex,
-		Title:           dialog.FeatureRegexTitle,
-		UnscopedValue:   repo.UnvalidatedConfig.NormalConfig.Git.FeatureRegex,
-	})
+	featureRegex, exit, err := dialog.FeatureRegex(commonArgs)
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	contributionRegex, exit, err := dialog.ConfigStringDialog(dialog.ConfigStringDialogArgs[configdomain.ContributionRegex]{
-		ConfigFileValue: configFile.ContributionRegex,
-		HelpText:        dialog.ContributionRegexHelp,
-		Inputs:          data.dialogInputs,
-		LocalValue:      repo.UnvalidatedConfig.GitLocal.ContributionRegex,
-		ParseFunc:       configdomain.ParseContributionRegex,
-		Prompt:          "Contribution Regex: ",
-		ResultMessage:   messages.ContributionRegex,
-		Title:           dialog.ContributionRegexTitle,
-		UnscopedValue:   repo.UnvalidatedConfig.NormalConfig.Git.ContributionRegex,
-	})
+	contributionRegex, exit, err := dialog.ContributionRegex(commonArgs)
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
