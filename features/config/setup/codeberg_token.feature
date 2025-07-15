@@ -6,7 +6,6 @@ Feature: enter the Codeberg API token
 
   Scenario: auto-detected Codeberg platform
     Given my repo's "origin" remote is "git@codeberg.org:git-town/docs.git"
-    # And inspect the repo
     When I run "git-town config setup" and enter into the dialog:
       | DIALOG                      | KEYS              | DESCRIPTION                                 |
       | welcome                     | enter             |                                             |

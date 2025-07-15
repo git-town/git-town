@@ -13,6 +13,7 @@ Feature: aborting the setup assistant
       | perennial branches | enter |
       | perennial regex    | esc   |
 
+  @debug @this
   Scenario: result
     Then Git Town runs no commands
     And the main branch is still not set
