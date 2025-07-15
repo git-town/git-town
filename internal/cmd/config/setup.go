@@ -703,6 +703,7 @@ func saveToGit(userInput userInput, config config.UnvalidatedConfig, frontend su
 		removeFunc:            gitconfig.RemoveNewBranchType,
 		valueToWrite:          userInput.data.NewBranchType,
 		existingValueUnscoped: config.NormalConfig.Git.NewBranchType,
+		existingValueLocal:    config.GitLocal.NewBranchType,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[forgedomain.ForgeType]{
 		configFileValue:       configFile.ForgeType,
@@ -710,6 +711,7 @@ func saveToGit(userInput userInput, config config.UnvalidatedConfig, frontend su
 		removeFunc:            gitconfig.RemoveForgeType,
 		valueToWrite:          userInput.data.ForgeType,
 		existingValueUnscoped: config.NormalConfig.Git.ForgeType,
+		existingValueLocal:    config.GitLocal.ForgeType,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[forgedomain.GitHubConnectorType]{
 		configFileValue:       configFile.GitHubConnectorType,
@@ -717,6 +719,7 @@ func saveToGit(userInput userInput, config config.UnvalidatedConfig, frontend su
 		removeFunc:            gitconfig.RemoveGitHubConnectorType,
 		valueToWrite:          userInput.data.GitHubConnectorType,
 		existingValueUnscoped: config.NormalConfig.Git.GitHubConnectorType,
+		existingValueLocal:    config.GitLocal.GitHubConnectorType,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[forgedomain.GitLabConnectorType]{
 		configFileValue:       configFile.GitLabConnectorType,
@@ -724,6 +727,7 @@ func saveToGit(userInput userInput, config config.UnvalidatedConfig, frontend su
 		removeFunc:            gitconfig.RemoveGitLabConnectorType,
 		valueToWrite:          userInput.data.GitLabConnectorType,
 		existingValueUnscoped: config.NormalConfig.Git.GitLabConnectorType,
+		existingValueLocal:    config.GitLocal.GitLabConnectorType,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[configdomain.HostingOriginHostname]{
 		configFileValue:       configFile.HostingOriginHostname,
@@ -731,6 +735,7 @@ func saveToGit(userInput userInput, config config.UnvalidatedConfig, frontend su
 		removeFunc:            gitconfig.RemoveOriginHostname,
 		valueToWrite:          userInput.data.HostingOriginHostname,
 		existingValueUnscoped: config.NormalConfig.Git.HostingOriginHostname,
+		existingValueLocal:    config.GitLocal.HostingOriginHostname,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[gitdomain.LocalBranchName]{
 		configFileValue:       configFile.MainBranch,
@@ -738,6 +743,7 @@ func saveToGit(userInput userInput, config config.UnvalidatedConfig, frontend su
 		removeFunc:            gitconfig.RemoveMainBranch,
 		valueToWrite:          userInput.data.MainBranch,
 		existingValueUnscoped: config.NormalConfig.Git.MainBranch,
+		existingValueLocal:    config.GitLocal.MainBranch,
 	})
 	saveCollectionToLocalGit(frontend, saveCollectionArgs[gitdomain.LocalBranchNames, gitdomain.LocalBranchName]{
 		configFileValue:   configFile.PerennialBranches,
