@@ -98,7 +98,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		ConfigFile:    configFile,
 		EnvConfig:     envconfig.Load(),
 		FinalMessages: finalMessages,
-		GitConfig:     unscopedConfig,
+		GitUnscoped:   unscopedConfig,
 		GitVersion:    gitVersion,
 	})
 	frontEndRunner := newFrontendRunner(newFrontendRunnerArgs{

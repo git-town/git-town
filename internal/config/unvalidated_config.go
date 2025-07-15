@@ -92,12 +92,14 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 		cli:  args.CliConfig,
 		env:  args.EnvConfig,
 		file: args.ConfigFile,
-		git:  args.GitConfig,
+		git:  args.GitUnscoped,
 	})
 	return UnvalidatedConfig{
-		File: args.ConfigFile,
+		File:      args.ConfigFile,
+		GitGlobal: args.GitGlobal,
+		GitLocal:  args.GitLocal,
 		NormalConfig: NormalConfig{
-			Git:              args.GitConfig,
+			Git:              args.GitUnscoped,
 			GitVersion:       args.GitVersion,
 			NormalConfigData: normalConfig,
 		},
@@ -110,7 +112,9 @@ type NewUnvalidatedConfigArgs struct {
 	ConfigFile    Option[configdomain.PartialConfig]
 	EnvConfig     configdomain.PartialConfig
 	FinalMessages stringslice.Collector
-	GitConfig     configdomain.PartialConfig
+	GitGlobal     configdomain.PartialConfig
+	GitLocal      configdomain.PartialConfig
+	GitUnscoped   configdomain.PartialConfig
 	GitVersion    git.Version
 }
 
