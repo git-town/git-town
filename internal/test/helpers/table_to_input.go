@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/cucumber/godog"
@@ -17,6 +18,7 @@ func TableToInputEnv(table *godog.Table) ([]string, error) {
 	for i := 1; i < len(table.Rows); i++ {
 		row := table.Rows[i]
 		answersEnvStyle := strings.ReplaceAll(row.Cells[keyColumn].Value, " ", "|")
+		fmt.Println("111111111111111111111111111111111", answersEnvStyle)
 		if len(answersEnvStyle) > 0 {
 			result = append(result, answersEnvStyle)
 		}

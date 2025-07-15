@@ -4,17 +4,19 @@ Feature: enter the Codeberg API token
   Background:
     Given a Git repo with origin
 
+  @debug @this
   Scenario: auto-detected Codeberg platform
     Given my repo's "origin" remote is "git@codeberg.org:git-town/docs.git"
+    # And inspect the repo
     When I run "git-town config setup" and enter into the dialog:
       | DIALOG                      | KEYS              | DESCRIPTION                                 |
       | welcome                     | enter             |                                             |
       | aliases                     | enter             |                                             |
       | main branch                 | enter             |                                             |
-      | perennial branches          |                   | no input here since the dialog doesn't show |
-      | perennial regex             | enter             |                                             |
-      | feature regex               | enter             |                                             |
-      | contribution regex          | enter             |                                             |
+      | perennial branches          | enter             | no input here since the dialog doesn't show |
+      | perennial regex             |           1 enter |                                             |
+      | feature regex               |           2 enter |                                             |
+      | contribution regex          |           3 enter |                                             |
       | observed regex              | enter             |                                             |
       | unknown branch type         | enter             |                                             |
       | origin hostname             | enter             |                                             |
@@ -63,7 +65,7 @@ Feature: enter the Codeberg API token
       | unknown branch type         | enter                |                                             |
       | origin hostname             | enter                |                                             |
       | forge type                  | down down down enter |                                             |
-      | codeberg token              | 1 2 3 4 5 6 enter    |                                             |
+      | codeberg token              |    1 2 3 4 5 6 enter |                                             |
       | token scope                 | enter                |                                             |
       | sync-feature-strategy       | enter                |                                             |
       | sync-perennial-strategy     | enter                |                                             |
