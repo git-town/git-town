@@ -13,10 +13,10 @@ Feature: enter the Codeberg API token
       | welcome                     | enter             |                                             |
       | aliases                     | enter             |                                             |
       | main branch                 | enter             |                                             |
-      | perennial branches          | enter             | no input here since the dialog doesn't show |
+      | perennial branches          |                   | no input here since the dialog doesn't show |
       | perennial regex             |           1 enter |                                             |
       | feature regex               |           2 enter |                                             |
-      | contribution regex          |           3 enter |                                             |
+      | contribution regex          | enter             |                                             |
       | observed regex              | enter             |                                             |
       | unknown branch type         | enter             |                                             |
       | origin hostname             | enter             |                                             |

@@ -31,7 +31,7 @@ and therefore always selected in this list.
 
 // PerennialBranches lets the user update the perennial branches.
 // This includes asking the user and updating the respective settings based on the user selection.
-func PerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBranches gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName, inputs dialogcomponents.TestInput) (gitdomain.LocalBranchNames, dialogdomain.Exit, error) {
+func PerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBranches gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName, inputs dialogcomponents.TestInputs) (gitdomain.LocalBranchNames, dialogdomain.Exit, error) {
 	perennialCandidates := localBranches.AppendAllMissing(oldPerennialBranches...)
 	if len(perennialCandidates) < 2 {
 		return gitdomain.LocalBranchNames{}, false, nil

@@ -19,7 +19,7 @@ Should "git town sync" sync Git tags with origin?
 `
 )
 
-func SyncTags(existing configdomain.SyncTags, inputs dialogcomponents.TestInput) (configdomain.SyncTags, dialogdomain.Exit, error) {
+func SyncTags(existing configdomain.SyncTags, inputs dialogcomponents.TestInputs) (configdomain.SyncTags, dialogdomain.Exit, error) {
 	entries := list.Entries[configdomain.SyncTags]{
 		{
 			Data: true,
