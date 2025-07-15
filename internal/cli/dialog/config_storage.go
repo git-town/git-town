@@ -32,7 +32,7 @@ const (
 	ConfigStorageOptionGit  ConfigStorageOption = `Git metadata`
 )
 
-func ConfigStorage(inputs dialogcomponents.TestInput) (ConfigStorageOption, dialogdomain.Exit, error) {
+func ConfigStorage(inputs dialogcomponents.TestInputs) (ConfigStorageOption, dialogdomain.Exit, error) {
 	entries := list.NewEntries(
 		ConfigStorageOptionFile,
 		ConfigStorageOptionGit,

@@ -21,11 +21,11 @@ func MainAndPerennials(args MainAndPerennialsArgs) (mainBranch gitdomain.LocalBr
 		return unvalidatedMain, args.UnvalidatedPerennials, false, errors.New(messages.ConfigMainbranchInConfigFile)
 	}
 	fmt.Print(messages.ConfigNeeded)
-	mainBranch, exit, err = MainBranch(args.LocalBranches, args.GetDefaultBranch(args.Backend), args.DialogInputs.Next())
+	mainBranch, exit, err = MainBranch(args.LocalBranches, args.GetDefaultBranch(args.Backend), args.DialogInputs)
 	if err != nil || exit {
 		return mainBranch, args.UnvalidatedPerennials, exit, err
 	}
-	perennials, exit, err = PerennialBranches(args.LocalBranches, args.UnvalidatedPerennials, mainBranch, args.DialogInputs.Next())
+	perennials, exit, err = PerennialBranches(args.LocalBranches, args.UnvalidatedPerennials, mainBranch, args.DialogInputs)
 	return mainBranch, perennials, exit, err
 }
 

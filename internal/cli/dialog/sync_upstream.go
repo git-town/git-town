@@ -31,7 +31,7 @@ made to the original project.
 `
 )
 
-func SyncUpstream(existing configdomain.SyncUpstream, inputs dialogcomponents.TestInput) (configdomain.SyncUpstream, dialogdomain.Exit, error) {
+func SyncUpstream(existing configdomain.SyncUpstream, inputs dialogcomponents.TestInputs) (configdomain.SyncUpstream, dialogdomain.Exit, error) {
 	entries := list.Entries[configdomain.SyncUpstream]{
 		{
 			Data: true,

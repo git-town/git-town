@@ -22,12 +22,12 @@ is set to something other than "feature".
 `
 )
 
-func FeatureRegex(existingValue Option[configdomain.FeatureRegex], inputs dialogcomponents.TestInput) (Option[configdomain.FeatureRegex], dialogdomain.Exit, error) {
+func FeatureRegex(existingValue Option[configdomain.FeatureRegex], inputs dialogcomponents.TestInputs) (Option[configdomain.FeatureRegex], dialogdomain.Exit, error) {
 	value, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		ExistingValue: existingValue.String(),
 		Help:          FeatureRegexHelp,
 		Prompt:        "Feature regex: ",
-		TestInput:     inputs,
+		TestInputs:    inputs,
 		Title:         featureRegexTitle,
 	})
 	fmt.Printf(messages.FeatureRegex, dialogcomponents.FormattedSelection(value, exit))
