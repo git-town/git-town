@@ -4,7 +4,6 @@ Feature: enter the Codeberg API token
   Background:
     Given a Git repo with origin
 
-  @debug @this
   Scenario: auto-detected Codeberg platform
     Given my repo's "origin" remote is "git@codeberg.org:git-town/docs.git"
     # And inspect the repo
@@ -14,8 +13,8 @@ Feature: enter the Codeberg API token
       | aliases                     | enter             |                                             |
       | main branch                 | enter             |                                             |
       | perennial branches          |                   | no input here since the dialog doesn't show |
-      | perennial regex             |           1 enter |                                             |
-      | feature regex               |           2 enter |                                             |
+      | perennial regex             | enter             |                                             |
+      | feature regex               | enter             |                                             |
       | contribution regex          | enter             |                                             |
       | observed regex              | enter             |                                             |
       | unknown branch type         | enter             |                                             |
