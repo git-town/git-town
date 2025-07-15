@@ -21,7 +21,7 @@ or for all Git repos on this machine?
 )
 
 // GitHubToken lets the user enter the GitHub API token.
-func TokenScope(oldValue configdomain.ConfigScope, inputs dialogcomponents.TestInput) (configdomain.ConfigScope, dialogdomain.Exit, error) {
+func TokenScope(oldValue configdomain.ConfigScope, inputs dialogcomponents.TestInputs) (configdomain.ConfigScope, dialogdomain.Exit, error) {
 	entries := list.Entries[configdomain.ConfigScope]{
 		{
 			Data: configdomain.ConfigScopeGlobal,

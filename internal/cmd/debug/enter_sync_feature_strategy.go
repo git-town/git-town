@@ -14,7 +14,7 @@ func enterSyncFeatureStrategy() *cobra.Command {
 		Use: "sync-feature-strategy",
 		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
-			_, _, err := dialog.SyncFeatureStrategy(configdomain.SyncFeatureStrategyMerge, dialogTestInputs.Next())
+			_, _, err := dialog.SyncFeatureStrategy(configdomain.SyncFeatureStrategyMerge, dialogTestInputs)
 			return err
 		},
 	}
