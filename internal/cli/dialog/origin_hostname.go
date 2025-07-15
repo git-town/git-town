@@ -31,6 +31,6 @@ func OriginHostname(oldValue Option[configdomain.HostingOriginHostname], inputs 
 		TestInput:     inputs,
 		Title:         originHostnameTitle,
 	})
-	fmt.Printf(messages.OriginHostname, dialogcomponents.FormattedToken(token, exit))
+	fmt.Printf(messages.OriginHostname, dialogcomponents.FormattedSelection(token, exit))
 	return configdomain.ParseHostingOriginHostname(token), exit, err
 }
