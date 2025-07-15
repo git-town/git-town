@@ -179,17 +179,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	gitlabConnectorTypeOpt := None[forgedomain.GitLabConnectorType]()
 	gitlabToken := None[forgedomain.GitLabToken]()
 	for {
-		hostingOriginHostName, exit, err = dialog.ConfigStringDialog(dialog.ConfigStringDialogArgs[configdomain.HostingOriginHostname]{
-			ConfigFileValue: configFile.HostingOriginHostname,
-			HelpText:        dialog.OriginHostnameHelp,
-			Inputs:          data.dialogInputs,
-			LocalValue:      repo.UnvalidatedConfig.GitLocal.HostingOriginHostname,
-			ParseFunc:       dialog.WrapParseFunc(configdomain.ParseHostingOriginHostname),
-			Prompt:          "Origin hostname: ",
-			ResultMessage:   messages.OriginHostname,
-			Title:           dialog.OriginHostnameTitle,
-			UnscopedValue:   repo.UnvalidatedConfig.NormalConfig.Git.HostingOriginHostname,
-		})
+		hostingOriginHostName, exit, err = dialog.OriginHostname(commonArgs)
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}
