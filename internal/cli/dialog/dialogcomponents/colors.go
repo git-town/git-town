@@ -21,5 +21,8 @@ func FormattedSelection(selection string, exit dialogdomain.Exit) string {
 	if exit {
 		return colors.Red().Styled("(aborted)")
 	}
+	if selection == "" {
+		return colors.Green().Styled("(not provided)")
+	}
 	return colors.Green().Styled(selection)
 }
