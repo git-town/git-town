@@ -16,9 +16,10 @@ func TableToInputEnv(table *godog.Table) ([]string, error) {
 	}
 	for i := 1; i < len(table.Rows); i++ {
 		row := table.Rows[i]
-		answersCucumberStyle := row.Cells[keyColumn].Value
-		answersEnvStyle := strings.ReplaceAll(answersCucumberStyle, " ", "|")
-		result = append(result, answersEnvStyle)
+		answersEnvStyle := strings.ReplaceAll(row.Cells[keyColumn].Value, " ", "|")
+		if len(answersEnvStyle) > 0 {
+			result = append(result, answersEnvStyle)
+		}
 	}
 	return result, nil
 }
