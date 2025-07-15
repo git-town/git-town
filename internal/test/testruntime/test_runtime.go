@@ -101,6 +101,7 @@ func New(workingDir, homeDir, binDir string) commands.TestCommands {
 		ConfigFile:    None[configdomain.PartialConfig](),
 		EnvConfig:     configdomain.EmptyPartialConfig(),
 		FinalMessages: stringslice.NewCollector(),
+		GitLocal:      configdomain.EmptyPartialConfig(),
 		GitUnscoped:   configdomain.EmptyPartialConfig(),
 		GitVersion:    git.Version{Major: 2, Minor: 38},
 	})
