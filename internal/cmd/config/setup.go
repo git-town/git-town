@@ -380,7 +380,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		UnknownBranchType:        Some(unknownBranchType),
 		Verbose:                  None[configdomain.Verbose](), // the setup assistant doesn't ask for this
 	}
-	return userInput{actualForgeType, normalData, tokenScope, configStorage}, false, nil
+	return userInput{normalData, actualForgeType, tokenScope, configStorage}, false, nil
 }
 
 // data entered by the user in the setup assistant
@@ -899,10 +899,10 @@ func saveCollectionToLocalGit[T ~[]E, E cmp.Ordered](runner subshelldomain.Runne
 
 type saveCollectionArgs[T ~[]E, E cmp.Ordered] struct {
 	configFileValue   T
-	valueToWrite      T
-	valueAlreadyInGit T
-	saveFunc          func(subshelldomain.Runner, T, configdomain.ConfigScope) error
 	removeFunc        func(subshelldomain.Runner) error
+	saveFunc          func(subshelldomain.Runner, T, configdomain.ConfigScope) error
+	valueAlreadyInGit T
+	valueToWrite      T
 }
 
 func saveToFile(userInput userInput, gitConfig configdomain.PartialConfig, runner subshelldomain.Runner) error {
