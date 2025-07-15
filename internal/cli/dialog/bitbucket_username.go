@@ -1,5 +1,12 @@
 package dialog
 
+import (
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v21/internal/messages"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
+)
+
 const (
 	BitbucketUsernameTitle = `Bitbucket username`
 	BitbucketUsernameHelp  = `
@@ -13,3 +20,18 @@ Git Town will not use the Bitbucket API.
 
 `
 )
+
+func BitbucketUsername(args CommonArgs) (Option[forgedomain.BitbucketUsername], dialogdomain.Exit, error) {
+	return ConfigStringDialog(ConfigStringDialogArgs[forgedomain.BitbucketUsername]{
+		ConfigFileValue: args.ConfigFile.BitbucketUsername,
+		HelpText:        BitbucketUsernameHelp,
+		Inputs:          args.Inputs,
+		LocalValue:      args.LocalGitConfig.BitbucketUsername,
+		ParseFunc:       WrapParseFunc(forgedomain.ParseBitbucketUsername),
+		Prompt:          "Bitbucket username: ",
+		ResultMessage:   messages.BitbucketUsername,
+		Title:           BitbucketUsernameTitle,
+		UnscopedValue:   args.UnscopedGitConfig.BitbucketUsername,
+	})
+
+}

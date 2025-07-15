@@ -193,17 +193,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		if forgeType, hasForgeType := actualForgeType.Get(); hasForgeType {
 			switch forgeType {
 			case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
-				bitbucketUsername, exit, err = dialog.ConfigStringDialog(dialog.ConfigStringDialogArgs[forgedomain.BitbucketUsername]{
-					ConfigFileValue: configFile.BitbucketUsername,
-					HelpText:        dialog.BitbucketUsernameHelp,
-					Inputs:          data.dialogInputs,
-					LocalValue:      repo.UnvalidatedConfig.GitLocal.BitbucketUsername,
-					ParseFunc:       dialog.WrapParseFunc(forgedomain.ParseBitbucketUsername),
-					Prompt:          "Your Bitbucket Username: ",
-					ResultMessage:   messages.DialogResultBitbucketUsername,
-					Title:           dialog.BitbucketUsernameTitle,
-					UnscopedValue:   repo.UnvalidatedConfig.NormalConfig.Git.BitbucketUsername,
-				})
+				bitbucketUsername, exit, err = dialog.BitbucketUsername(commonArgs)
 				if err != nil || exit {
 					return emptyResult, exit, err
 				}
