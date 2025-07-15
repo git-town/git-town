@@ -24,12 +24,8 @@ and limiting the sharing of confidential changes.
 `
 )
 
-func SyncPrototypeStrategy(existing Option[configdomain.SyncPrototypeStrategy], inputs dialogcomponents.TestInput) (Option[configdomain.SyncPrototypeStrategy], dialogdomain.Exit, error) {
+func SyncPrototypeStrategy(args SyncPrototypeStrategyArgs) (Option[configdomain.SyncPrototypeStrategy], dialogdomain.Exit, error) {
 	entries := list.Entries[Option[configdomain.SyncPrototypeStrategy]]{
-		{
-			Data: None[configdomain.SyncPrototypeStrategy](),
-			Text: messages.DialogDefaultText,
-		},
 		{
 			Data: Some(configdomain.SyncPrototypeStrategyMerge),
 			Text: "merge updates from the parent and tracking branch",
@@ -43,8 +39,25 @@ func SyncPrototypeStrategy(existing Option[configdomain.SyncPrototypeStrategy], 
 			Text: "compress the branch after merging parent and tracking",
 		},
 	}
-	defaultPos := entries.IndexOf(existing)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncPrototypeStrategyTitle, SyncPrototypeStrategyHelp, inputs)
+	selection, exit, err := ConfigEnumDialog(ConfigEnumDialogArgs[configdomain.SyncPrototypeStrategy]{
+		ConfigFileValue: args.ConfigFileValue,
+		Entries:         entries,
+		HelpText:        SyncPrototypeStrategyHelp,
+		Inputs:          args.Inputs,
+		LocalValue:      Option[configdomain.SyncPrototypeStrategy]{},
+		ParseFunc:       configdomain.ParseSyncPrototypeStrategy,
+		Prompt:          "Your sync prototype strategy: ",
+		ResultMessage:   messages.SyncPrototypeBranches,
+		Title:           syncPrototypeStrategyTitle,
+		UnscopedValue:   args.UnscopedValue,
+	})
+	// selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncPrototypeStrategyTitle, SyncPrototypeStrategyHelp, inputs)
 	fmt.Printf(messages.SyncPrototypeBranches, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
+}
+
+type SyncPrototypeStrategyArgs struct {
+	ConfigFileValue Option[configdomain.SyncPrototypeStrategy]
+	Inputs          dialogcomponents.TestInputs
+	UnscopedValue   Option[configdomain.SyncPrototypeStrategy]
 }

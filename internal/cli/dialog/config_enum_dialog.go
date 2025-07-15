@@ -38,9 +38,11 @@ func ConfigEnumDialog[T comparableStringer](args ConfigEnumDialogArgs[T]) (Optio
 	switch {
 	case hadOnlyGlobal:
 		entries = appendSkipEntry(entries)
-		defaultPos = 1
+		defaultPos = entries.IndexOf(args.LocalValue)
 		helpText += addendumGlobalOnly[1:]
 	case hadLocalAndGlobal:
+		entries = appendSkipEntry(entries)
+		defaultPos = entries.IndexOf(args.LocalValue)
 		helpText += addendumGlobalAndLocal[1:]
 	}
 
@@ -97,6 +99,6 @@ type ConfigEnumDialogArgs[T comparable] struct {
 func appendSkipEntry[T comparableStringer](entries list.Entries[Option[T]]) list.Entries[Option[T]] {
 	return append(list.Entries[Option[T]]{list.Entry[Option[T]]{
 		Data: None[T](),
-		Text: "skip",
+		Text: messages.DialogDefaultText,
 	}}, entries...)
 }
