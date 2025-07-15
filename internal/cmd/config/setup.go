@@ -385,8 +385,8 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 
 // data entered by the user in the setup assistant
 type userInput struct {
-	determinedForgeType Option[forgedomain.ForgeType] // the forge type that was determined by the setup assistant - not necessarily what the user entered (could also be "auto detect")
 	data                configdomain.PartialConfig
+	determinedForgeType Option[forgedomain.ForgeType] // the forge type that was determined by the setup assistant - not necessarily what the user entered (could also be "auto detect")
 	scope               configdomain.ConfigScope
 	storageLocation     dialog.ConfigStorageOption
 }
@@ -399,11 +399,11 @@ func enterMainBranch(repo execute.OpenRepoResult, data setupData) (userInput Opt
 	}
 	repoDefault := determineGitRepoDefaultBranch(repo)
 	userInput, exit, err = dialog.MainBranch(dialog.MainBranchArgs{
+		Inputs:                data.dialogInputs.Next(),
 		GitStandardBranch:     repoDefault,
 		LocalBranches:         data.localBranches.Names(),
 		LocalGitMainBranch:    data.config.GitLocal.MainBranch,
 		UnscopedGitMainBranch: data.config.NormalConfig.Git.MainBranch,
-		Inputs:                data.dialogInputs.Next(),
 	})
 	if err != nil || exit {
 		return None[gitdomain.LocalBranchName](), "", exit, err
@@ -419,11 +419,11 @@ func enterPerennialBranches(repo execute.OpenRepoResult, data setupData, mainBra
 		}
 	}
 	return dialog.PerennialBranches(dialog.PerennialBranchesArgs{
+		Inputs:                data.dialogInputs.Next(),
 		LocalBranches:         data.localBranches.Names(),
+		LocalGitPerennials:    repo.UnvalidatedConfig.GitLocal.PerennialBranches,
 		MainBranch:            mainBranch,
 		UnscopedGitPerennials: repo.UnvalidatedConfig.NormalConfig.Git.PerennialBranches,
-		LocalGitPerennials:    repo.UnvalidatedConfig.GitLocal.PerennialBranches,
-		Inputs:                data.dialogInputs.Next(),
 	})
 }
 
@@ -881,10 +881,10 @@ func saveOptionToLocalGit[T comparable](runner subshelldomain.Runner, args saveT
 
 type saveToLocalGitArgs[T comparable] struct {
 	configFileValue   Option[T]
-	valueToWrite      Option[T]
-	valueAlreadyInGit Option[T]
-	saveFunc          func(subshelldomain.Runner, T, configdomain.ConfigScope) error
 	removeFunc        func(subshelldomain.Runner) error
+	saveFunc          func(subshelldomain.Runner, T, configdomain.ConfigScope) error
+	valueAlreadyInGit Option[T]
+	valueToWrite      Option[T]
 }
 
 func saveCollectionToLocalGit[T ~[]E, E cmp.Ordered](runner subshelldomain.Runner, args saveCollectionArgs[T, E]) {

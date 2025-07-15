@@ -19,10 +19,10 @@ func enterMainBranchCmd() *cobra.Command {
 			dialogInputs := dialogcomponents.LoadTestInputs(os.Environ())
 			_, _, err := dialog.MainBranch(dialog.MainBranchArgs{
 				GitStandardBranch:     Some(main),
-				UnscopedGitMainBranch: None[gitdomain.LocalBranchName](),
-				LocalGitMainBranch:    None[gitdomain.LocalBranchName](),
-				LocalBranches:         localBranches,
 				Inputs:                dialogInputs.Next(),
+				LocalBranches:         localBranches,
+				LocalGitMainBranch:    None[gitdomain.LocalBranchName](),
+				UnscopedGitMainBranch: None[gitdomain.LocalBranchName](),
 			})
 			return err
 		},

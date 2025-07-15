@@ -27,11 +27,11 @@ func enterPerennialBranches() *cobra.Command {
 			existingPerennialBranches := gitdomain.NewLocalBranchNames("branch-2", "branch-4")
 			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
 			_, _, err = dialog.PerennialBranches(dialog.PerennialBranchesArgs{
+				Inputs:                dialogTestInputs.Next(),
 				LocalBranches:         localBranches,
+				LocalGitPerennials:    existingPerennialBranches,
 				MainBranch:            "main",
 				UnscopedGitPerennials: gitdomain.LocalBranchNames{},
-				LocalGitPerennials:    existingPerennialBranches,
-				Inputs:                dialogTestInputs.Next(),
 			})
 			return err
 		},
