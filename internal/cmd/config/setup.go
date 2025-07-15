@@ -130,17 +130,13 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	perennialRegex, exit, err := dialog.ConfigStringDialog(dialog.ConfigStringDialogArgs[configdomain.PerennialRegex]{
-		ConfigFileValue: configFile.PerennialRegex,
-		HelpText:        dialog.PerennialBranchesHelp,
-		Inputs:          data.dialogInputs,
-		LocalValue:      repo.UnvalidatedConfig.GitLocal.PerennialRegex,
-		ParseFunc:       configdomain.ParsePerennialRegex,
-		Prompt:          "Perennial Regex: ",
-		ResultMessage:   messages.PerennialRegex,
-		Title:           dialog.PerennialRegexTitle,
-		UnscopedValue:   repo.UnvalidatedConfig.NormalConfig.Git.PerennialRegex,
-	})
+	commonArgs := dialog.CommonArgs{
+		ConfigFile:        configFile,
+		Inputs:            data.dialogInputs,
+		LocalGitConfig:    repo.UnvalidatedConfig.GitLocal,
+		UnscopedGitConfig: repo.UnvalidatedConfig.NormalConfig.Git,
+	}
+	perennialRegex, exit, err := dialog.PerennialRegex(commonArgs)
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
