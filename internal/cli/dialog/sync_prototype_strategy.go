@@ -23,7 +23,7 @@ and limiting the sharing of confidential changes.
 `
 )
 
-func SyncPrototypeStrategy(existing configdomain.SyncPrototypeStrategy, inputs dialogcomponents.TestInput) (configdomain.SyncPrototypeStrategy, dialogdomain.Exit, error) {
+func SyncPrototypeStrategy(existing configdomain.SyncPrototypeStrategy, inputs dialogcomponents.TestInputs) (configdomain.SyncPrototypeStrategy, dialogdomain.Exit, error) {
 	entries := list.Entries[configdomain.SyncPrototypeStrategy]{
 		{
 			Data: configdomain.SyncPrototypeStrategyMerge,

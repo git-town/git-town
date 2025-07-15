@@ -9,7 +9,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 )
 
-func TextDisplay(title, text string, inputs TestInput) (dialogdomain.Exit, error) {
+func TextDisplay(title, text string, inputs TestInputs) (dialogdomain.Exit, error) {
 	model := textDisplayModel{
 		colors: colors.NewDialogColors(),
 		status: list.StatusActive,
@@ -17,7 +17,7 @@ func TextDisplay(title, text string, inputs TestInput) (dialogdomain.Exit, error
 		title:  title,
 	}
 	program := tea.NewProgram(model)
-	SendInputs(inputs, program)
+	SendInputs(inputs.Next(), program)
 	dialogResult, err := program.Run()
 	result := dialogResult.(textDisplayModel)
 	return result.status == list.StatusExit, err

@@ -23,7 +23,7 @@ More details: https://www.git-town.com/preferences/new-branch-type.
 `
 )
 
-func NewBranchType(existingOpt Option[configdomain.BranchType], inputs dialogcomponents.TestInput) (Option[configdomain.BranchType], dialogdomain.Exit, error) {
+func NewBranchType(existingOpt Option[configdomain.BranchType], inputs dialogcomponents.TestInputs) (Option[configdomain.BranchType], dialogdomain.Exit, error) {
 	entries := list.Entries[Option[configdomain.BranchType]]{
 		{
 			Data: Some(configdomain.BranchTypeFeatureBranch),

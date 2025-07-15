@@ -14,7 +14,7 @@ func enterShareNewBranches() *cobra.Command {
 		Use: "share-new-branches",
 		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
-			_, _, err := dialog.ShareNewBranches(configdomain.ShareNewBranchesNone, dialogTestInputs.Next())
+			_, _, err := dialog.ShareNewBranches(configdomain.ShareNewBranchesNone, dialogTestInputs)
 			return err
 		},
 	}

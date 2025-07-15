@@ -23,7 +23,7 @@ by shipping feature branches.
 `
 )
 
-func SyncPerennialStrategy(existing configdomain.SyncPerennialStrategy, inputs dialogcomponents.TestInput) (configdomain.SyncPerennialStrategy, dialogdomain.Exit, error) {
+func SyncPerennialStrategy(existing configdomain.SyncPerennialStrategy, inputs dialogcomponents.TestInputs) (configdomain.SyncPerennialStrategy, dialogdomain.Exit, error) {
 	entries := list.Entries[configdomain.SyncPerennialStrategy]{
 		{
 			Data: configdomain.SyncPerennialStrategyFFOnly,

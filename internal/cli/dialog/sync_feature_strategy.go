@@ -25,7 +25,7 @@ new features and bug fixes.
 `
 )
 
-func SyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs dialogcomponents.TestInput) (configdomain.SyncFeatureStrategy, dialogdomain.Exit, error) {
+func SyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs dialogcomponents.TestInputs) (configdomain.SyncFeatureStrategy, dialogdomain.Exit, error) {
 	entries := list.Entries[configdomain.SyncFeatureStrategy]{
 		{
 			Data: configdomain.SyncFeatureStrategyMerge,

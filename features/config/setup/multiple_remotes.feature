@@ -9,7 +9,7 @@ Feature: Configure a different development remote
       | welcome                     | enter    |
       | aliases                     | enter    |
       | main branch                 | enter    |
-      | perennial branches          | enter    |
+      | perennial branches          |          |
       | perennial regex             | enter    |
       | feature regex               | enter    |
       | contribution regex          | enter    |

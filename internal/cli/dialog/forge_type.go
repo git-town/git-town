@@ -24,7 +24,7 @@ is hosted at a custom URL.
 `
 )
 
-func ForgeType(existingValue Option[forgedomain.ForgeType], inputs dialogcomponents.TestInput) (Option[forgedomain.ForgeType], dialogdomain.Exit, error) {
+func ForgeType(existingValue Option[forgedomain.ForgeType], inputs dialogcomponents.TestInputs) (Option[forgedomain.ForgeType], dialogdomain.Exit, error) {
 	entries := list.Entries[Option[forgedomain.ForgeType]]{
 		{
 			Data: None[forgedomain.ForgeType](),
