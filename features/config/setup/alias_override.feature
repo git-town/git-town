@@ -4,7 +4,7 @@ Feature: override an existing Git alias
   Background:
     Given a Git repo with origin
     And I ran "git config --global alias.append checkout"
-    # And inspect the repo
+    And inspect the repo
     When I run "git-town config setup" and enter into the dialogs:
       | DIALOG                      | KEYS    | DESCRIPTION |
       | welcome                     | enter   |             |

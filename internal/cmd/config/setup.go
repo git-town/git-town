@@ -615,8 +615,8 @@ func loadSetupData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (
 	}, exit, nil
 }
 
-func saveAll(userInput userInput, existingGitConfig configdomain.PartialConfig, configFile Option[configdomain.PartialConfig], frontend subshelldomain.Runner) error {
-	_ = saveAliases(userInput.data.Aliases, existingGitConfig.Aliases, frontend)
+func saveAll(userInput userInput, unscopedGitConfig configdomain.PartialConfig, configFile Option[configdomain.PartialConfig], frontend subshelldomain.Runner) error {
+	_ = saveAliases(userInput.data.Aliases, unscopedGitConfig.Aliases, frontend)
 	if forgeType, hasForgeType := userInput.determinedForgeType.Get(); hasForgeType {
 		switch forgeType {
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
@@ -625,14 +625,14 @@ func saveAll(userInput userInput, existingGitConfig configdomain.PartialConfig, 
 				saveFunc:          gitconfig.SetBitbucketUsername,
 				removeFunc:        gitconfig.RemoveBitbucketUsername,
 				valueToWrite:      userInput.data.BitbucketUsername,
-				valueAlreadyInGit: existingGitConfig.BitbucketUsername,
+				valueAlreadyInGit: unscopedGitConfig.BitbucketUsername,
 			})
 			saveOptionToLocalGit(frontend, saveToLocalGitArgs[forgedomain.BitbucketAppPassword]{
 				configFileValue:   None[forgedomain.BitbucketAppPassword](),
 				saveFunc:          gitconfig.SetBitbucketAppPassword,
 				removeFunc:        gitconfig.RemoveBitbucketAppPassword,
 				valueToWrite:      userInput.data.BitbucketAppPassword,
-				valueAlreadyInGit: existingGitConfig.BitbucketAppPassword,
+				valueAlreadyInGit: unscopedGitConfig.BitbucketAppPassword,
 			})
 		case forgedomain.ForgeTypeCodeberg:
 			saveOptionToLocalGit(frontend, saveToLocalGitArgs[forgedomain.CodebergToken]{
@@ -640,7 +640,7 @@ func saveAll(userInput userInput, existingGitConfig configdomain.PartialConfig, 
 				saveFunc:          gitconfig.SetCodebergToken,
 				removeFunc:        gitconfig.RemoveCodebergToken,
 				valueToWrite:      userInput.data.CodebergToken,
-				valueAlreadyInGit: existingGitConfig.CodebergToken,
+				valueAlreadyInGit: unscopedGitConfig.CodebergToken,
 			})
 		case forgedomain.ForgeTypeGitHub:
 			saveOptionToLocalGit(frontend, saveToLocalGitArgs[forgedomain.GitHubToken]{
@@ -648,14 +648,14 @@ func saveAll(userInput userInput, existingGitConfig configdomain.PartialConfig, 
 				saveFunc:          gitconfig.SetGitHubToken,
 				removeFunc:        gitconfig.RemoveGitHubToken,
 				valueToWrite:      userInput.data.GitHubToken,
-				valueAlreadyInGit: existingGitConfig.GitHubToken,
+				valueAlreadyInGit: unscopedGitConfig.GitHubToken,
 			})
 			saveOptionToLocalGit(frontend, saveToLocalGitArgs[forgedomain.GitHubConnectorType]{
 				configFileValue:   None[forgedomain.GitHubConnectorType](),
 				saveFunc:          gitconfig.SetGitHubConnectorType,
 				removeFunc:        gitconfig.RemoveGitHubConnectorType,
 				valueToWrite:      userInput.data.GitHubConnectorType,
-				valueAlreadyInGit: existingGitConfig.GitHubConnectorType,
+				valueAlreadyInGit: unscopedGitConfig.GitHubConnectorType,
 			})
 		case forgedomain.ForgeTypeGitLab:
 			saveOptionToLocalGit(frontend, saveToLocalGitArgs[forgedomain.GitLabToken]{
@@ -663,14 +663,14 @@ func saveAll(userInput userInput, existingGitConfig configdomain.PartialConfig, 
 				saveFunc:          gitconfig.SetGitLabToken,
 				removeFunc:        gitconfig.RemoveGitLabToken,
 				valueToWrite:      userInput.data.GitLabToken,
-				valueAlreadyInGit: existingGitConfig.GitLabToken,
+				valueAlreadyInGit: unscopedGitConfig.GitLabToken,
 			})
 			saveOptionToLocalGit(frontend, saveToLocalGitArgs[forgedomain.GitLabConnectorType]{
 				configFileValue:   None[forgedomain.GitLabConnectorType](),
 				saveFunc:          gitconfig.SetGitLabConnectorType,
 				removeFunc:        gitconfig.RemoveGitLabConnectorType,
 				valueToWrite:      userInput.data.GitLabConnectorType,
-				valueAlreadyInGit: existingGitConfig.GitLabConnectorType,
+				valueAlreadyInGit: unscopedGitConfig.GitLabConnectorType,
 			})
 		case forgedomain.ForgeTypeGitea:
 			saveOptionToLocalGit(frontend, saveToLocalGitArgs[forgedomain.GiteaToken]{
@@ -678,174 +678,174 @@ func saveAll(userInput userInput, existingGitConfig configdomain.PartialConfig, 
 				saveFunc:          gitconfig.SetGiteaToken,
 				removeFunc:        gitconfig.RemoveGiteaToken,
 				valueToWrite:      userInput.data.GiteaToken,
-				valueAlreadyInGit: existingGitConfig.GiteaToken,
+				valueAlreadyInGit: unscopedGitConfig.GiteaToken,
 			})
 		}
 	}
 	switch userInput.storageLocation {
 	case dialog.ConfigStorageOptionFile:
-		return saveToFile(userInput, existingGitConfig, frontend)
+		return saveToFile(userInput, unscopedGitConfig, frontend)
 	case dialog.ConfigStorageOptionGit: //
-		saveToGit(userInput, existingGitConfig, configFile, frontend)
+		saveToGit(userInput, unscopedGitConfig, configFile, frontend)
 	}
 	return nil
 }
 
-func saveToGit(userInput userInput, existingGitConfig configdomain.PartialConfig, configFileOpt Option[configdomain.PartialConfig], frontend subshelldomain.Runner) {
+func saveToGit(userInput userInput, unscopedGitConfig configdomain.PartialConfig, configFileOpt Option[configdomain.PartialConfig], frontend subshelldomain.Runner) {
 	configFile := configFileOpt.GetOrDefault()
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[configdomain.BranchType]{
 		configFileValue:   configFile.NewBranchType,
 		saveFunc:          gitconfig.SetNewBranchType,
 		removeFunc:        gitconfig.RemoveNewBranchType,
 		valueToWrite:      userInput.data.NewBranchType,
-		valueAlreadyInGit: existingGitConfig.NewBranchType,
+		valueAlreadyInGit: unscopedGitConfig.NewBranchType,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[forgedomain.ForgeType]{
 		configFileValue:   configFile.ForgeType,
 		saveFunc:          gitconfig.SetForgeType,
 		removeFunc:        gitconfig.RemoveForgeType,
 		valueToWrite:      userInput.data.ForgeType,
-		valueAlreadyInGit: existingGitConfig.ForgeType,
+		valueAlreadyInGit: unscopedGitConfig.ForgeType,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[forgedomain.GitHubConnectorType]{
 		configFileValue:   configFile.GitHubConnectorType,
 		saveFunc:          gitconfig.SetGitHubConnectorType,
 		removeFunc:        gitconfig.RemoveGitHubConnectorType,
 		valueToWrite:      userInput.data.GitHubConnectorType,
-		valueAlreadyInGit: existingGitConfig.GitHubConnectorType,
+		valueAlreadyInGit: unscopedGitConfig.GitHubConnectorType,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[forgedomain.GitLabConnectorType]{
 		configFileValue:   configFile.GitLabConnectorType,
 		saveFunc:          gitconfig.SetGitLabConnectorType,
 		removeFunc:        gitconfig.RemoveGitLabConnectorType,
 		valueToWrite:      userInput.data.GitLabConnectorType,
-		valueAlreadyInGit: existingGitConfig.GitLabConnectorType,
+		valueAlreadyInGit: unscopedGitConfig.GitLabConnectorType,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[configdomain.HostingOriginHostname]{
 		configFileValue:   configFile.HostingOriginHostname,
 		saveFunc:          gitconfig.SetOriginHostname,
 		removeFunc:        gitconfig.RemoveOriginHostname,
 		valueToWrite:      userInput.data.HostingOriginHostname,
-		valueAlreadyInGit: existingGitConfig.HostingOriginHostname,
+		valueAlreadyInGit: unscopedGitConfig.HostingOriginHostname,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[gitdomain.LocalBranchName]{
 		configFileValue:   configFile.MainBranch,
 		saveFunc:          gitconfig.SetMainBranch,
 		removeFunc:        gitconfig.RemoveMainBranch,
 		valueToWrite:      userInput.data.MainBranch,
-		valueAlreadyInGit: existingGitConfig.MainBranch,
+		valueAlreadyInGit: unscopedGitConfig.MainBranch,
 	})
 	saveCollectionToLocalGit(frontend, saveCollectionArgs[gitdomain.LocalBranchNames, gitdomain.LocalBranchName]{
 		configFileValue:   configFile.PerennialBranches,
 		saveFunc:          gitconfig.SetPerennialBranches,
 		removeFunc:        gitconfig.RemovePerennialBranches,
 		valueToWrite:      userInput.data.PerennialBranches,
-		valueAlreadyInGit: existingGitConfig.PerennialBranches,
+		valueAlreadyInGit: unscopedGitConfig.PerennialBranches,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[configdomain.PerennialRegex]{
 		configFileValue:   configFile.PerennialRegex,
 		saveFunc:          gitconfig.SetPerennialRegex,
 		removeFunc:        gitconfig.RemovePerennialRegex,
 		valueToWrite:      userInput.data.PerennialRegex,
-		valueAlreadyInGit: existingGitConfig.PerennialRegex,
+		valueAlreadyInGit: unscopedGitConfig.PerennialRegex,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[configdomain.BranchType]{
 		configFileValue:   configFile.UnknownBranchType,
 		saveFunc:          gitconfig.SetUnknownBranchType,
 		removeFunc:        gitconfig.RemoveUnknownBranchType,
 		valueToWrite:      userInput.data.UnknownBranchType,
-		valueAlreadyInGit: existingGitConfig.UnknownBranchType,
+		valueAlreadyInGit: unscopedGitConfig.UnknownBranchType,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[gitdomain.Remote]{
 		configFileValue:   configFile.DevRemote,
 		saveFunc:          gitconfig.SetDevRemote,
 		removeFunc:        gitconfig.RemoveDevRemote,
 		valueToWrite:      userInput.data.DevRemote,
-		valueAlreadyInGit: existingGitConfig.DevRemote,
+		valueAlreadyInGit: unscopedGitConfig.DevRemote,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[configdomain.FeatureRegex]{
 		configFileValue:   configFile.FeatureRegex,
 		saveFunc:          gitconfig.SetFeatureRegex,
 		removeFunc:        gitconfig.RemoveFeatureRegex,
 		valueToWrite:      userInput.data.FeatureRegex,
-		valueAlreadyInGit: existingGitConfig.FeatureRegex,
+		valueAlreadyInGit: unscopedGitConfig.FeatureRegex,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[configdomain.ContributionRegex]{
 		configFileValue:   configFile.ContributionRegex,
 		saveFunc:          gitconfig.SetContributionRegex,
 		removeFunc:        gitconfig.RemoveContributionRegex,
 		valueToWrite:      userInput.data.ContributionRegex,
-		valueAlreadyInGit: existingGitConfig.ContributionRegex,
+		valueAlreadyInGit: unscopedGitConfig.ContributionRegex,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[configdomain.ObservedRegex]{
 		configFileValue:   configFile.ObservedRegex,
 		saveFunc:          gitconfig.SetObservedRegex,
 		removeFunc:        gitconfig.RemoveObservedRegex,
 		valueToWrite:      userInput.data.ObservedRegex,
-		valueAlreadyInGit: existingGitConfig.ObservedRegex,
+		valueAlreadyInGit: unscopedGitConfig.ObservedRegex,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[configdomain.PushHook]{
 		configFileValue:   configFile.PushHook,
 		saveFunc:          gitconfig.SetPushHook,
 		removeFunc:        gitconfig.RemovePushHook,
 		valueToWrite:      userInput.data.PushHook,
-		valueAlreadyInGit: existingGitConfig.PushHook,
+		valueAlreadyInGit: unscopedGitConfig.PushHook,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[configdomain.ShareNewBranches]{
 		configFileValue:   configFile.ShareNewBranches,
 		saveFunc:          gitconfig.SetShareNewBranches,
 		removeFunc:        gitconfig.RemoveShareNewBranches,
 		valueToWrite:      userInput.data.ShareNewBranches,
-		valueAlreadyInGit: existingGitConfig.ShareNewBranches,
+		valueAlreadyInGit: unscopedGitConfig.ShareNewBranches,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[configdomain.ShipStrategy]{
 		configFileValue:   configFile.ShipStrategy,
 		saveFunc:          gitconfig.SetShipStrategy,
 		removeFunc:        gitconfig.RemoveShipStrategy,
 		valueToWrite:      userInput.data.ShipStrategy,
-		valueAlreadyInGit: existingGitConfig.ShipStrategy,
+		valueAlreadyInGit: unscopedGitConfig.ShipStrategy,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[configdomain.ShipDeleteTrackingBranch]{
 		configFileValue:   configFile.ShipDeleteTrackingBranch,
 		saveFunc:          gitconfig.SetShipDeleteTrackingBranch,
 		removeFunc:        gitconfig.RemoveShipDeleteTrackingBranch,
 		valueToWrite:      userInput.data.ShipDeleteTrackingBranch,
-		valueAlreadyInGit: existingGitConfig.ShipDeleteTrackingBranch,
+		valueAlreadyInGit: unscopedGitConfig.ShipDeleteTrackingBranch,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[configdomain.SyncFeatureStrategy]{
 		configFileValue:   configFile.SyncFeatureStrategy,
 		saveFunc:          gitconfig.SetSyncFeatureStrategy,
 		removeFunc:        gitconfig.RemoveSyncFeatureStrategy,
 		valueToWrite:      userInput.data.SyncFeatureStrategy,
-		valueAlreadyInGit: existingGitConfig.SyncFeatureStrategy,
+		valueAlreadyInGit: unscopedGitConfig.SyncFeatureStrategy,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[configdomain.SyncPerennialStrategy]{
 		configFileValue:   configFile.SyncPerennialStrategy,
 		saveFunc:          gitconfig.SetSyncPerennialStrategy,
 		removeFunc:        gitconfig.RemoveSyncPerennialStrategy,
 		valueToWrite:      userInput.data.SyncPerennialStrategy,
-		valueAlreadyInGit: existingGitConfig.SyncPerennialStrategy,
+		valueAlreadyInGit: unscopedGitConfig.SyncPerennialStrategy,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[configdomain.SyncPrototypeStrategy]{
 		configFileValue:   configFile.SyncPrototypeStrategy,
 		saveFunc:          gitconfig.SetSyncPrototypeStrategy,
 		removeFunc:        gitconfig.RemoveSyncPrototypeStrategy,
 		valueToWrite:      userInput.data.SyncPrototypeStrategy,
-		valueAlreadyInGit: existingGitConfig.SyncPrototypeStrategy,
+		valueAlreadyInGit: unscopedGitConfig.SyncPrototypeStrategy,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[configdomain.SyncUpstream]{
 		configFileValue:   configFile.SyncUpstream,
 		saveFunc:          gitconfig.SetSyncUpstream,
 		removeFunc:        gitconfig.RemoveSyncUpstream,
 		valueToWrite:      userInput.data.SyncUpstream,
-		valueAlreadyInGit: existingGitConfig.SyncUpstream,
+		valueAlreadyInGit: unscopedGitConfig.SyncUpstream,
 	})
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[configdomain.SyncTags]{
 		configFileValue:   configFile.SyncTags,
 		saveFunc:          gitconfig.SetSyncTags,
 		removeFunc:        gitconfig.RemoveSyncTags,
 		valueToWrite:      userInput.data.SyncTags,
-		valueAlreadyInGit: existingGitConfig.SyncTags,
+		valueAlreadyInGit: unscopedGitConfig.SyncTags,
 	})
 }
 
@@ -876,7 +876,7 @@ func saveOptionToLocalGit[T comparable](runner subshelldomain.Runner, args saveT
 	if value, has := args.valueToWrite.Get(); has {
 		_ = args.saveFunc(runner, value, configdomain.ConfigScopeLocal)
 	}
-	gitconfig.RemoveBitbucketAppPassword(runner)
+	args.removeFunc(runner)
 }
 
 type saveToLocalGitArgs[T comparable] struct {
