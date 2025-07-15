@@ -24,7 +24,7 @@ and limiting the sharing of confidential changes.
 `
 )
 
-func SyncPrototypeStrategy(args SyncPrototypeStrategyArgs) (Option[configdomain.SyncPrototypeStrategy], dialogdomain.Exit, error) {
+func SyncPrototypeStrategy(args CommonArgs) (Option[configdomain.SyncPrototypeStrategy], dialogdomain.Exit, error) {
 	entries := list.Entries[Option[configdomain.SyncPrototypeStrategy]]{
 		{
 			Data: Some(configdomain.SyncPrototypeStrategyMerge),
@@ -40,24 +40,18 @@ func SyncPrototypeStrategy(args SyncPrototypeStrategyArgs) (Option[configdomain.
 		},
 	}
 	selection, exit, err := ConfigEnumDialog(ConfigEnumDialogArgs[configdomain.SyncPrototypeStrategy]{
-		ConfigFileValue: args.ConfigFileValue,
+		ConfigFileValue: args.ConfigFile.SyncPrototypeStrategy,
 		Entries:         entries,
 		HelpText:        SyncPrototypeStrategyHelp,
 		Inputs:          args.Inputs,
-		LocalValue:      Option[configdomain.SyncPrototypeStrategy]{},
+		LocalValue:      args.LocalGitConfig.SyncPrototypeStrategy,
 		ParseFunc:       configdomain.ParseSyncPrototypeStrategy,
 		Prompt:          "Your sync prototype strategy: ",
 		ResultMessage:   messages.SyncPrototypeBranches,
 		Title:           syncPrototypeStrategyTitle,
-		UnscopedValue:   args.UnscopedValue,
+		UnscopedValue:   args.UnscopedGitConfig.SyncPrototypeStrategy,
 	})
 	// selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncPrototypeStrategyTitle, SyncPrototypeStrategyHelp, inputs)
 	fmt.Printf(messages.SyncPrototypeBranches, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
-}
-
-type SyncPrototypeStrategyArgs struct {
-	ConfigFileValue Option[configdomain.SyncPrototypeStrategy]
-	Inputs          dialogcomponents.TestInputs
-	UnscopedValue   Option[configdomain.SyncPrototypeStrategy]
 }
