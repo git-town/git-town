@@ -688,7 +688,7 @@ func saveAll(userInput userInput, config config.UnvalidatedConfig, frontend subs
 	}
 	switch userInput.storageLocation {
 	case dialog.ConfigStorageOptionFile:
-		return saveToFile(userInput, config.NormalConfig.Git, frontend)
+		return saveToFile(userInput, config, frontend)
 	case dialog.ConfigStorageOptionGit: //
 		saveToGit(userInput, config, frontend)
 	}
@@ -942,50 +942,50 @@ type saveCollectionArgs[T ~[]E, E cmp.Ordered] struct {
 	valueToWrite      T
 }
 
-func saveToFile(userInput userInput, gitConfig configdomain.PartialConfig, runner subshelldomain.Runner) error {
+func saveToFile(userInput userInput, config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
 	if err := configfile.Save(userInput.data); err != nil {
 		return err
 	}
-	if gitConfig.DevRemote.IsSome() {
+	if config.GitLocal.DevRemote.IsSome() {
 		_ = gitconfig.RemoveDevRemote(runner)
 	}
-	if gitConfig.MainBranch.IsSome() {
+	if config.GitLocal.MainBranch.IsSome() {
 		_ = gitconfig.RemoveMainBranch(runner)
 	}
-	if gitConfig.NewBranchType.IsSome() {
+	if config.GitLocal.NewBranchType.IsSome() {
 		_ = gitconfig.RemoveNewBranchType(runner)
 	}
-	if len(gitConfig.PerennialBranches) > 0 {
+	if len(config.GitLocal.PerennialBranches) > 0 {
 		_ = gitconfig.RemovePerennialBranches(runner)
 	}
-	if gitConfig.PerennialRegex.IsSome() {
+	if config.GitLocal.PerennialRegex.IsSome() {
 		_ = gitconfig.RemovePerennialRegex(runner)
 	}
-	if gitConfig.ShareNewBranches.IsSome() {
+	if config.GitLocal.ShareNewBranches.IsSome() {
 		_ = gitconfig.RemoveShareNewBranches(runner)
 	}
-	if gitConfig.PushHook.IsSome() {
+	if config.GitLocal.PushHook.IsSome() {
 		_ = gitconfig.RemovePushHook(runner)
 	}
-	if gitConfig.ShipStrategy.IsSome() {
+	if config.GitLocal.ShipStrategy.IsSome() {
 		_ = gitconfig.RemoveShipStrategy(runner)
 	}
-	if gitConfig.ShipDeleteTrackingBranch.IsSome() {
+	if config.GitLocal.ShipDeleteTrackingBranch.IsSome() {
 		_ = gitconfig.RemoveShipDeleteTrackingBranch(runner)
 	}
-	if gitConfig.SyncFeatureStrategy.IsSome() {
+	if config.GitLocal.SyncFeatureStrategy.IsSome() {
 		_ = gitconfig.RemoveSyncFeatureStrategy(runner)
 	}
-	if gitConfig.SyncPerennialStrategy.IsSome() {
+	if config.GitLocal.SyncPerennialStrategy.IsSome() {
 		_ = gitconfig.RemoveSyncPerennialStrategy(runner)
 	}
-	if gitConfig.SyncPrototypeStrategy.IsSome() {
+	if config.GitLocal.SyncPrototypeStrategy.IsSome() {
 		_ = gitconfig.RemoveSyncPrototypeStrategy(runner)
 	}
-	if gitConfig.SyncUpstream.IsSome() {
+	if config.GitLocal.SyncUpstream.IsSome() {
 		_ = gitconfig.RemoveSyncUpstream(runner)
 	}
-	if gitConfig.SyncTags.IsSome() {
+	if config.GitLocal.SyncTags.IsSome() {
 		_ = gitconfig.RemoveSyncTags(runner)
 	}
 	saveOptionToLocalGit(runner, saveToLocalGitArgs[configdomain.BranchType]{
@@ -993,7 +993,8 @@ func saveToFile(userInput userInput, gitConfig configdomain.PartialConfig, runne
 		saveFunc:              gitconfig.SetUnknownBranchType,
 		removeFunc:            gitconfig.RemoveUnknownBranchType,
 		valueToWrite:          userInput.data.UnknownBranchType,
-		existingValueUnscoped: gitConfig.UnknownBranchType,
+		existingValueUnscoped: config.NormalConfig.Git.UnknownBranchType,
+		existingValueLocal:    config.GitLocal.NewBranchType,
 	})
 	// TODO: also save ObservedRegex ContributionRegex NewBranchType
 	saveOptionToLocalGit(runner, saveToLocalGitArgs[configdomain.FeatureRegex]{
@@ -1001,7 +1002,7 @@ func saveToFile(userInput userInput, gitConfig configdomain.PartialConfig, runne
 		saveFunc:              gitconfig.SetFeatureRegex,
 		removeFunc:            gitconfig.RemoveFeatureRegex,
 		valueToWrite:          userInput.data.FeatureRegex,
-		existingValueUnscoped: gitConfig.FeatureRegex,
+		existingValueUnscoped: config.GitLocal.FeatureRegex,
 	})
 	return nil
 }
