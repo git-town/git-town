@@ -24,7 +24,7 @@ branches when pull requests are merged through its UI.
 `
 )
 
-func ShipDeleteTrackingBranch(existing configdomain.ShipDeleteTrackingBranch, inputs dialogcomponents.TestInput) (configdomain.ShipDeleteTrackingBranch, dialogdomain.Exit, error) {
+func ShipDeleteTrackingBranch(existing configdomain.ShipDeleteTrackingBranch, inputs dialogcomponents.TestInputs) (configdomain.ShipDeleteTrackingBranch, dialogdomain.Exit, error) {
 	entries := list.Entries[bool]{
 		{
 			Data: true,

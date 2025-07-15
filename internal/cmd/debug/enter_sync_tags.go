@@ -13,7 +13,7 @@ func enterSyncTags() *cobra.Command {
 		Use: "sync-tags",
 		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
-			_, _, err := dialog.SyncTags(true, dialogTestInputs.Next())
+			_, _, err := dialog.SyncTags(true, dialogTestInputs)
 			return err
 		},
 	}

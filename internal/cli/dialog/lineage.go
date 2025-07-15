@@ -51,12 +51,12 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 		}
 		// ask for parent
 		outcome, selectedBranch, err := Parent(ParentArgs{
-			Branch:          branchToVerify,
-			DefaultChoice:   args.DefaultChoice,
-			DialogTestInput: args.DialogTestInputs.Next(),
-			Lineage:         args.Lineage,
-			LocalBranches:   args.LocalBranches,
-			MainBranch:      args.MainBranch,
+			Branch:        branchToVerify,
+			DefaultChoice: args.DefaultChoice,
+			Inputs:        args.DialogTestInputs,
+			Lineage:       args.Lineage,
+			LocalBranches: args.LocalBranches,
+			MainBranch:    args.MainBranch,
 		})
 		if err != nil {
 			return additionalLineage, additionalPerennials, false, err
