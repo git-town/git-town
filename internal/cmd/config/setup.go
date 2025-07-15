@@ -114,7 +114,7 @@ func determineForgeType(userChoice Option[forgedomain.ForgeType], devURL Option[
 func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdomain.Exit, error) {
 	var emptyResult userInput
 	configFile := data.configFile.GetOrDefault()
-	exit, err := dialog.Welcome(data.dialogInputs.Next())
+	exit, err := dialog.Welcome(data.dialogInputs)
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
