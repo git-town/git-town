@@ -222,17 +222,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 				if gitlabConnectorType, has := gitlabConnectorTypeOpt.Get(); has {
 					switch gitlabConnectorType {
 					case forgedomain.GitLabConnectorTypeAPI:
-						gitlabToken, exit, err = dialog.ConfigStringDialog(dialog.ConfigStringDialogArgs[forgedomain.GitLabToken]{
-							ConfigFileValue: configFile.GitLabToken,
-							HelpText:        dialog.GitLabTokenHelp,
-							Inputs:          data.dialogInputs,
-							LocalValue:      repo.UnvalidatedConfig.GitLocal.GitLabToken,
-							ParseFunc:       dialog.WrapParseFunc(forgedomain.ParseGitLabToken),
-							Prompt:          "Your GitLab API token: ",
-							ResultMessage:   messages.DialogResultGiteaToken,
-							Title:           dialog.GitLabTokenTitle,
-							UnscopedValue:   repo.UnvalidatedConfig.NormalConfig.Git.GitLabToken,
-						})
+						gitlabToken, exit, err = dialog.GitLabToken(commonArgs)
 					case forgedomain.GitLabConnectorTypeGlab:
 					}
 				}
