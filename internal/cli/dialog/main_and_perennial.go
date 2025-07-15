@@ -44,6 +44,6 @@ type MainAndPerennialsArgs struct {
 	DialogInputs      dialogcomponents.TestInputs
 	GetDefaultBranch  func(subshelldomain.Querier) Option[gitdomain.LocalBranchName]
 	LocalBranches     gitdomain.LocalBranchNames
-	UnvalidatedMain   Option[gitdomain.LocalBranchName]
 	UnvalidatedConfig config.UnvalidatedConfig
+	UnvalidatedMain   Option[gitdomain.LocalBranchName]
 }
