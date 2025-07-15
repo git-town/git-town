@@ -28,12 +28,12 @@ func enterParentCmd() *cobra.Command {
 			lineage := configdomain.Lineage{}
 			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
 			_, _, err = dialog.Parent(dialog.ParentArgs{
-				Branch:          "branch-2",
-				DefaultChoice:   "main",
-				DialogTestInput: dialogTestInputs.Next(),
-				Lineage:         lineage,
-				LocalBranches:   localBranches,
-				MainBranch:      "main",
+				Branch:        "branch-2",
+				DefaultChoice: "main",
+				Inputs:        dialogTestInputs,
+				Lineage:       lineage,
+				LocalBranches: localBranches,
+				MainBranch:    "main",
 			})
 			return err
 		},

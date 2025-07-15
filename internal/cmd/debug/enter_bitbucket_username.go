@@ -15,7 +15,7 @@ func enterBitbucketUsername() *cobra.Command {
 		Use: "bitbucket-username",
 		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogInputs := dialogcomponents.LoadTestInputs(os.Environ())
-			_, _, err := dialog.BitbucketUsername(None[forgedomain.BitbucketUsername](), dialogInputs.Next())
+			_, _, err := dialog.BitbucketUsername(None[forgedomain.BitbucketUsername](), dialogInputs)
 			return err
 		},
 	}

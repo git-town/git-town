@@ -22,12 +22,12 @@ is set to something other than "contribution".
 `
 )
 
-func ContributionRegex(existingValue Option[configdomain.ContributionRegex], inputs dialogcomponents.TestInput) (Option[configdomain.ContributionRegex], dialogdomain.Exit, error) {
+func ContributionRegex(existingValue Option[configdomain.ContributionRegex], inputs dialogcomponents.TestInputs) (Option[configdomain.ContributionRegex], dialogdomain.Exit, error) {
 	value, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		ExistingValue: existingValue.String(),
 		Help:          contributionRegexHelp,
 		Prompt:        "Contribution regex: ",
-		TestInput:     inputs,
+		TestInputs:    inputs,
 		Title:         contributionRegexTitle,
 	})
 	fmt.Printf(messages.ContributionRegex, dialogcomponents.FormattedSelection(value, exit))
