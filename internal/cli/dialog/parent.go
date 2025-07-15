@@ -29,7 +29,7 @@ func Parent(args ParentArgs) (ParentOutcome, gitdomain.LocalBranchName, error) {
 	cursor := slice.Index(parentCandidates, args.DefaultChoice).GetOrElse(0)
 	title := fmt.Sprintf(parentBranchTitleTemplate, args.Branch)
 	help := fmt.Sprintf(parentBranchHelpTemplate, args.Branch)
-	selection, exit, err := dialogcomponents.RadioList(list.NewEntries(parentCandidates...), cursor, title, help, args.DialogTestInput)
+	selection, exit, err := dialogcomponents.RadioList(list.NewEntries(parentCandidates...), cursor, title, help, args.Inputs)
 	fmt.Printf(messages.ParentDialogSelected, args.Branch, dialogcomponents.FormattedSelection(selection.String(), exit))
 	if exit {
 		return ParentOutcomeExit, selection, err
@@ -41,12 +41,12 @@ func Parent(args ParentArgs) (ParentOutcome, gitdomain.LocalBranchName, error) {
 }
 
 type ParentArgs struct {
-	Branch          gitdomain.LocalBranchName
-	DefaultChoice   gitdomain.LocalBranchName
-	DialogTestInput dialogcomponents.TestInput
-	Lineage         configdomain.Lineage
-	LocalBranches   gitdomain.LocalBranchNames
-	MainBranch      gitdomain.LocalBranchName
+	Branch        gitdomain.LocalBranchName
+	DefaultChoice gitdomain.LocalBranchName
+	Inputs        dialogcomponents.TestInputs
+	Lineage       configdomain.Lineage
+	LocalBranches gitdomain.LocalBranchNames
+	MainBranch    gitdomain.LocalBranchName
 }
 
 func ParentCandidateNames(args ParentArgs) gitdomain.LocalBranchNames {

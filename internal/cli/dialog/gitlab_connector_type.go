@@ -28,7 +28,7 @@ Git Town supports two ways to connect to GitLab:
 `
 )
 
-func GitLabConnectorType(existing Option[forgedomain.GitLabConnectorType], inputs dialogcomponents.TestInput) (Option[forgedomain.GitLabConnectorType], dialogdomain.Exit, error) {
+func GitLabConnectorType(existing Option[forgedomain.GitLabConnectorType], inputs dialogcomponents.TestInputs) (Option[forgedomain.GitLabConnectorType], dialogdomain.Exit, error) {
 	entries := list.Entries[forgedomain.GitLabConnectorType]{
 		{
 			Data: forgedomain.GitLabConnectorTypeAPI,

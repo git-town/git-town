@@ -31,7 +31,7 @@ You can always adjust later.
 
 // Aliases lets the user select which Git Town commands should have shorter aliases.
 // This includes asking the user and updating the respective settings based on the user selection.
-func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliases configdomain.Aliases, inputs dialogcomponents.TestInput) (configdomain.Aliases, dialogdomain.Exit, error) {
+func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliases configdomain.Aliases, inputs dialogcomponents.TestInputs) (configdomain.Aliases, dialogdomain.Exit, error) {
 	program := tea.NewProgram(AliasesModel{
 		AllAliasableCommands: allAliasableCommands,
 		CurrentSelections:    NewAliasSelections(allAliasableCommands, existingAliases),
@@ -39,7 +39,7 @@ func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliase
 		OriginalAliases:      existingAliases,
 		selectedColor:        colors.Green(),
 	})
-	dialogcomponents.SendInputs(inputs, program)
+	dialogcomponents.SendInputs(inputs.Next(), program)
 	dialogResult, err := program.Run()
 	result := dialogResult.(AliasesModel)
 	if err != nil || result.Aborted() {
