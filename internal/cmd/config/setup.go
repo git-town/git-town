@@ -199,17 +199,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 				}
 				bitbucketAppPassword, exit, err = dialog.BitbucketAppPassword(commonArgs)
 			case forgedomain.ForgeTypeCodeberg:
-				codebergToken, exit, err = dialog.ConfigStringDialog(dialog.ConfigStringDialogArgs[forgedomain.CodebergToken]{
-					ConfigFileValue: configFile.CodebergToken,
-					HelpText:        dialog.CodebergTokenHelp,
-					Inputs:          data.dialogInputs,
-					LocalValue:      repo.UnvalidatedConfig.GitLocal.CodebergToken,
-					ParseFunc:       dialog.WrapParseFunc(forgedomain.ParseCodebergToken),
-					Prompt:          "Your Codeberg API token: ",
-					ResultMessage:   messages.DialogResultCodebergToken,
-					Title:           dialog.CodebergTokenTitle,
-					UnscopedValue:   repo.UnvalidatedConfig.NormalConfig.Git.CodebergToken,
-				})
+				codebergToken, exit, err = dialog.CodebergToken(commonArgs)
 			case forgedomain.ForgeTypeGitea:
 				giteaToken, exit, err = dialog.ConfigStringDialog(dialog.ConfigStringDialogArgs[forgedomain.GiteaToken]{
 					ConfigFileValue: configFile.GiteaToken,
