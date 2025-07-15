@@ -30,7 +30,7 @@ Feature: override an existing Git alias
       | ship-strategy               | enter      |                                 |
       | ship-delete-tracking-branch | enter      |                                 |
       | save config to config file  | down enter |                                 |
-    # And inspect the repo
+# And inspect the repo
 
   @this
   Scenario: result
@@ -42,15 +42,15 @@ Feature: override an existing Git alias
     And the configuration file is now:
       """
       # More info around this file at https://www.git-town.com/configuration-file
-      
+
       [create]
       new-branch-type = "feature"
       share-new-branches = "no"
-      
+
       [ship]
       delete-tracking-branch = true
       strategy = "api"
-      
+
       [sync]
       feature-strategy = "merge"
       perennial-strategy = "rebase"
