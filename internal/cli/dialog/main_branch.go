@@ -37,6 +37,9 @@ func MainBranch(args MainBranchArgs) (Option[gitdomain.LocalBranchName], dialogd
 			Data: None[gitdomain.LocalBranchName](),
 			Text: fmt.Sprintf("use global setting (%s)", unscopedMain),
 		})
+		if len(args.LocalBranches) == 1 && unscopedMain == args.LocalBranches[0] {
+			return None[gitdomain.LocalBranchName](), false, nil
+		}
 	}
 	for _, localBranch := range args.LocalBranches {
 		entries = append(entries, list.Entry[Option[gitdomain.LocalBranchName]]{
