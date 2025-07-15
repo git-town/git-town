@@ -24,7 +24,7 @@ Possible options:
 `
 )
 
-func ShareNewBranches(existing configdomain.ShareNewBranches, inputs dialogcomponents.TestInput) (configdomain.ShareNewBranches, dialogdomain.Exit, error) {
+func ShareNewBranches(existing configdomain.ShareNewBranches, inputs dialogcomponents.TestInputs) (configdomain.ShareNewBranches, dialogdomain.Exit, error) {
 	entries := list.Entries[configdomain.ShareNewBranches]{
 		{
 			Data: configdomain.ShareNewBranchesNone,

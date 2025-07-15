@@ -24,12 +24,12 @@ it's safe to leave it blank.
 `
 )
 
-func ObservedRegex(existingValue Option[configdomain.ObservedRegex], inputs dialogcomponents.TestInput) (Option[configdomain.ObservedRegex], dialogdomain.Exit, error) {
+func ObservedRegex(existingValue Option[configdomain.ObservedRegex], inputs dialogcomponents.TestInputs) (Option[configdomain.ObservedRegex], dialogdomain.Exit, error) {
 	value, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		ExistingValue: existingValue.String(),
 		Help:          observedRegexHelp,
 		Prompt:        "Observed regex: ",
-		TestInput:     inputs,
+		TestInputs:    inputs,
 		Title:         observedRegexTitle,
 	})
 	fmt.Printf(messages.ObservedRegex, dialogcomponents.FormattedSelection(value, exit))

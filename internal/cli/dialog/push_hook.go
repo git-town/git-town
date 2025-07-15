@@ -27,7 +27,7 @@ More details: https://www.git-town.com/preferences/push-hook.
 `
 )
 
-func PushHook(existing configdomain.PushHook, inputs dialogcomponents.TestInput) (configdomain.PushHook, dialogdomain.Exit, error) {
+func PushHook(existing configdomain.PushHook, inputs dialogcomponents.TestInputs) (configdomain.PushHook, dialogdomain.Exit, error) {
 	entries := list.Entries[configdomain.PushHook]{
 		{
 			Data: true,
