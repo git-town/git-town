@@ -28,7 +28,7 @@ func ForgeType(existingValue Option[forgedomain.ForgeType], inputs dialogcompone
 	entries := list.Entries[Option[forgedomain.ForgeType]]{
 		{
 			Data: None[forgedomain.ForgeType](),
-			Text: "auto-detect",
+			Text: messages.AutoDetect,
 		},
 		{
 			Data: Some(forgedomain.ForgeTypeBitbucket),
@@ -59,6 +59,6 @@ func ForgeType(existingValue Option[forgedomain.ForgeType], inputs dialogcompone
 		return optA.Equal(optB)
 	})
 	newValue, exit, err := dialogcomponents.RadioList(entries, cursor, forgeTypeTitle, forgeTypeHelp, inputs)
-	fmt.Printf(messages.Forge, dialogcomponents.FormattedSelection(newValue.GetOrElse("auto-detect").String(), exit))
+	fmt.Printf(messages.Forge, dialogcomponents.FormattedSelection(newValue.GetOrElse(messages.AutoDetect).String(), exit))
 	return newValue, exit, err
 }
