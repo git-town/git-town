@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	syncPrototypeStrategyTitle = `Sync-prototype strategy`
+	syncPrototypeStrategyTitle = `Prototype branch sync strategy`
 	SyncPrototypeStrategyHelp  = `
 Choose how Git Town should
 synchronize prototype branches.
