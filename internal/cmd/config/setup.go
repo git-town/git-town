@@ -1002,7 +1002,8 @@ func saveToFile(userInput userInput, config config.UnvalidatedConfig, runner sub
 		saveFunc:              gitconfig.SetFeatureRegex,
 		removeFunc:            gitconfig.RemoveFeatureRegex,
 		valueToWrite:          userInput.data.FeatureRegex,
-		existingValueUnscoped: config.GitLocal.FeatureRegex,
+		existingValueUnscoped: config.NormalConfig.Git.FeatureRegex,
+		existingValueLocal:    config.GitLocal.FeatureRegex,
 	})
 	return nil
 }
