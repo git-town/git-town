@@ -14,7 +14,7 @@ func enterTokenScope() *cobra.Command {
 		Use: "token-scope",
 		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
-			_, _, err := dialog.TokenScope(configdomain.ConfigScopeGlobal, dialogTestInputs.Next())
+			_, _, err := dialog.TokenScope(configdomain.ConfigScopeGlobal, dialogTestInputs)
 			return err
 		},
 	}

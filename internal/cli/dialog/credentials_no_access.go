@@ -20,7 +20,7 @@ API error message: %v
 `
 )
 
-func CredentialsNoAccess(connectorError error, inputs dialogcomponents.TestInput) (repeat bool, exit dialogdomain.Exit, err error) {
+func CredentialsNoAccess(connectorError error, inputs dialogcomponents.TestInputs) (repeat bool, exit dialogdomain.Exit, err error) {
 	entries := list.NewEntries(
 		CredentialsNoAccessChoiceRetry,
 		CredentialsNoAccessChoiceIgnore,
