@@ -22,7 +22,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/git/giturl"
-	"github.com/git-town/git-town/v21/internal/gohacks"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/subshell"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
@@ -76,7 +75,7 @@ func executeConfigSetup(cliConfig cliconfig.CliConfig) error {
 	if err != nil || exit {
 		return err
 	}
-	if err = saveAll(enterDataResult, repo.UnvalidatedConfig.NormalConfig.Git, data.configFile, data, repo.Frontend); err != nil {
+	if err = saveAll(enterDataResult, repo.UnvalidatedConfig.NormalConfig.Git, data.configFile, repo.Frontend); err != nil {
 		return err
 	}
 	return configinterpreter.Finished(configinterpreter.FinishedArgs{
@@ -201,7 +200,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 			return emptyResult, exit, err
 		}
 	}
-	hostingOriginHostName := None[configdomain.HostingOriginHostname]()
+	var hostingOriginHostName Option[configdomain.HostingOriginHostname]
 	enteredForgeType := repo.UnvalidatedConfig.NormalConfig.ForgeType.Or(repo.UnvalidatedConfig.File.GetOrDefault().ForgeType)
 	var actualForgeType Option[forgedomain.ForgeType]
 	bitbucketUsername := None[forgedomain.BitbucketUsername]()
@@ -387,20 +386,6 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 			return emptyResult, exit, err
 		}
 	}
-	// syncPrototypeStrategy, exit, err := dialog.ConfigStringDialog(dialog.ConfigStringDialogArgs[configdomain.SyncPrototypeStrategy]{
-	// 	ConfigFileValue: configFile.SyncPrototypeStrategy,
-	// 	HelpText:        dialog.PerennialBranchesHelp,
-	// 	Inputs:          data.dialogInputs,
-	// 	LocalValue:      repo.UnvalidatedConfig.GitLocal.PerennialRegex,
-	// 	ParseFunc:       configdomain.ParsePerennialRegex,
-	// 	Prompt:          "Perennial Regex: ",
-	// 	ResultMessage:   messages.PerennialRegex,
-	// 	Title:           dialog.PerennialRegexTitle,
-	// 	UnscopedValue:   repo.UnvalidatedConfig.NormalConfig.Git.PerennialRegex,
-	// })
-	// if err != nil || exit {
-	// 	return emptyResult, exit, err
-	// }
 	syncPrototypeStrategy := None[configdomain.SyncPrototypeStrategy]()
 	if configFile.SyncPrototypeStrategy.IsNone() {
 		syncPrototypeStrategy, exit, err = dialog.SyncPrototypeStrategy(dialog.SyncPrototypeStrategyArgs{
@@ -736,7 +721,7 @@ func loadSetupData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (
 	}, exit, nil
 }
 
-func saveAll(userInput userInput, existingGitConfig configdomain.PartialConfig, configFile Option[configdomain.PartialConfig], data setupData, frontend subshelldomain.Runner) error {
+func saveAll(userInput userInput, existingGitConfig configdomain.PartialConfig, configFile Option[configdomain.PartialConfig], frontend subshelldomain.Runner) error {
 	_ = saveAliases(userInput.data.Aliases, existingGitConfig.Aliases, frontend)
 	if forgeType, hasForgeType := userInput.determinedForgeType.Get(); hasForgeType {
 		switch forgeType {
@@ -807,12 +792,12 @@ func saveAll(userInput userInput, existingGitConfig configdomain.PartialConfig, 
 	case dialog.ConfigStorageOptionFile:
 		return saveToFile(userInput, existingGitConfig, frontend)
 	case dialog.ConfigStorageOptionGit: //
-		saveToGit(userInput, existingGitConfig, configFile, data, frontend)
+		saveToGit(userInput, existingGitConfig, configFile, frontend)
 	}
 	return nil
 }
 
-func saveToGit(userInput userInput, existingGitConfig configdomain.PartialConfig, configFileOpt Option[configdomain.PartialConfig], data setupData, frontend subshelldomain.Runner) {
+func saveToGit(userInput userInput, existingGitConfig configdomain.PartialConfig, configFileOpt Option[configdomain.PartialConfig], frontend subshelldomain.Runner) {
 	configFile := configFileOpt.GetOrDefault()
 	saveOptionToLocalGit(frontend, saveToLocalGitArgs[configdomain.BranchType]{
 		configFileValue:   configFile.NewBranchType,
@@ -1026,11 +1011,6 @@ type saveCollectionArgs[T ~[]E, E cmp.Ordered] struct {
 	removeFunc        func(subshelldomain.Runner) error
 }
 
-type saveCommonArgs struct {
-	failureCounter Mutable[gohacks.ErrorCollector]
-	runner         subshelldomain.Runner
-}
-
 func saveToFile(userInput userInput, gitConfig configdomain.PartialConfig, runner subshelldomain.Runner) error {
 	if err := configfile.Save(userInput.data); err != nil {
 		return err
@@ -1093,10 +1073,4 @@ func saveToFile(userInput userInput, gitConfig configdomain.PartialConfig, runne
 		valueAlreadyInGit: gitConfig.FeatureRegex,
 	})
 	return nil
-}
-
-func wrapParseFunc[T any](parseFunc func(arg string) Option[T]) func(string) (Option[T], error) {
-	return func(arg string) (Option[T], error) {
-		return parseFunc(arg), nil
-	}
 }
