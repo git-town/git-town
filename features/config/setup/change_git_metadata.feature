@@ -19,16 +19,16 @@ Feature: change existing information in Git metadata
       | add all aliases                           | a enter                |         |
       | accept the already configured main branch | enter                  |         |
       | change the perennial branches             | space down space enter |         |
-      | enter a perennial regex                   |          3 3 6 6 enter |         |
+      | enter a perennial regex                   | 3 3 6 6 enter          |         |
       | feature regex                             | u s e r enter          |         |
-      | contribution regex                        |          1 1 1 1 enter |         |
-      | observed regex                            |          2 2 2 2 enter |         |
+      | contribution regex                        | 1 1 1 1 enter          |         |
+      | observed regex                            | 2 2 2 2 enter          |         |
       | unknown branch type                       | down enter             |         |
       | dev-remote                                |                        |         |
       | origin hostname                           | c o d e enter          |         |
       | set forge type to "github"                | up up enter            |         |
       | set github forge type to "API"            | enter                  |         |
-      | github token                              |      1 2 3 4 5 6 enter |         |
+      | github token                              | 1 2 3 4 5 6 enter      |         |
       | token scope                               | enter                  |         |
       | sync-feature-strategy                     | down enter             |         |
       | sync-perennial-strategy                   | down enter             |         |
@@ -41,7 +41,7 @@ Feature: change existing information in Git metadata
       | set ship-strategy to "fast-forward"       | down down enter        |         |
       | disable ship-delete-tracking-branch       | down enter             |         |
       | save config to Git metadata               | down enter             |         |
-  # @debug @this
+# @debug @this
 
   Scenario: result
     Then Git Town runs the commands

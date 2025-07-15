@@ -4,7 +4,6 @@ Feature: override an existing Git alias
   Background:
     Given a Git repo with origin
     And I ran "git config --global alias.append checkout"
-    And inspect the repo
     When I run "git-town config setup" and enter into the dialogs:
       | DIALOG                      | KEYS    | DESCRIPTION |
       | welcome                     | enter   |             |
@@ -31,13 +30,33 @@ Feature: override an existing Git alias
       | ship-delete-tracking-branch | enter   |             |
       | save config to config file  | enter   |             |
 
-  @debug @this
   Scenario: result
     Then Git Town runs the commands
-      | COMMAND                                        |
-      | git config --global alias.append "town append" |
-      | git config --unset git-town.main-branch        |
+      | COMMAND                                         |
+      | git config --global alias.append "town append"  |
+      | git config --unset git-town.main-branch         |
+      | git config git-town.unknown-branch-type feature |
     And global Git setting "alias.append" is now "town append"
+    And the configuration file is now:
+      """
+      # More info around this file at https://www.git-town.com/configuration-file
+
+      [create]
+      new-branch-type = "feature"
+      share-new-branches = "no"
+
+      [ship]
+      delete-tracking-branch = true
+      strategy = "api"
+
+      [sync]
+      feature-strategy = "merge"
+      perennial-strategy = "rebase"
+      prototype-strategy = "merge"
+      push-hook = true
+      tags = true
+      upstream = true
+      """
 
   Scenario: undo
     When I run "git-town undo"
