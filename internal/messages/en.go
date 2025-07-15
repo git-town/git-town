@@ -12,6 +12,7 @@ const (
 	APIUpdateProposalTarget            = "Updating target branch of proposal %s to %s ... "
 	AuthenticationMissing              = "not logged in"
 	AuthorizationMissing               = `cannot find "repo" scope: %v`
+	AutoDetect                         = "auto-detect"
 	BitbucketAppPassword               = "Bitbucket app password: %s"
 	BitbucketUsername                  = "Bitbucket username: %s"
 	BranchAlreadyExistsLocally         = "there is already a branch %q"
