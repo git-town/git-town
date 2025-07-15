@@ -197,17 +197,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 				if err != nil || exit {
 					return emptyResult, exit, err
 				}
-				bitbucketAppPassword, exit, err = dialog.ConfigStringDialog(dialog.ConfigStringDialogArgs[forgedomain.BitbucketAppPassword]{
-					ConfigFileValue: configFile.BitbucketAppPassword,
-					HelpText:        dialog.BitbucketAppPasswordHelp,
-					Inputs:          data.dialogInputs,
-					LocalValue:      repo.UnvalidatedConfig.GitLocal.BitbucketAppPassword,
-					ParseFunc:       dialog.WrapParseFunc(forgedomain.ParseBitbucketAppPassword),
-					Prompt:          "Your Bitbucket App Password: ",
-					ResultMessage:   messages.DialogResultBitbucketAppPassword,
-					Title:           dialog.BitbucketAppPasswordTitle,
-					UnscopedValue:   repo.UnvalidatedConfig.NormalConfig.Git.BitbucketAppPassword,
-				})
+				bitbucketAppPassword, exit, err = dialog.BitbucketAppPassword(commonArgs)
 			case forgedomain.ForgeTypeCodeberg:
 				codebergToken, exit, err = dialog.ConfigStringDialog(dialog.ConfigStringDialogArgs[forgedomain.CodebergToken]{
 					ConfigFileValue: configFile.CodebergToken,

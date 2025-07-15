@@ -8,8 +8,8 @@ import (
 )
 
 const (
-	BitbucketUsernameTitle = `Bitbucket username`
-	BitbucketUsernameHelp  = `
+	bitbucketUsernameTitle = `Bitbucket username`
+	bitbucketUsernameHelp  = `
 Git Town can update pull requests
 and ship branches on Bitbucket for you.
 To enable this,
@@ -24,14 +24,13 @@ Git Town will not use the Bitbucket API.
 func BitbucketUsername(args CommonArgs) (Option[forgedomain.BitbucketUsername], dialogdomain.Exit, error) {
 	return ConfigStringDialog(ConfigStringDialogArgs[forgedomain.BitbucketUsername]{
 		ConfigFileValue: args.ConfigFile.BitbucketUsername,
-		HelpText:        BitbucketUsernameHelp,
+		HelpText:        bitbucketUsernameHelp,
 		Inputs:          args.Inputs,
 		LocalValue:      args.LocalGitConfig.BitbucketUsername,
 		ParseFunc:       WrapParseFunc(forgedomain.ParseBitbucketUsername),
 		Prompt:          "Bitbucket username: ",
 		ResultMessage:   messages.BitbucketUsername,
-		Title:           BitbucketUsernameTitle,
+		Title:           bitbucketUsernameTitle,
 		UnscopedValue:   args.UnscopedGitConfig.BitbucketUsername,
 	})
-
 }

@@ -1,8 +1,15 @@
 package dialog
 
+import (
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v21/internal/messages"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
+)
+
 const (
-	BitbucketAppPasswordTitle = `Bitbucket App Password/Token`
-	BitbucketAppPasswordHelp  = `
+	bitbucketAppPasswordTitle = `Bitbucket App Password/Token`
+	bitbucketAppPasswordHelp  = `
 Git Town can update pull requests
 and ship branches on Bitbucket for you.
 To enable this, please enter
@@ -16,3 +23,17 @@ Git Town will not use the Bitbucket API.
 
 `
 )
+
+func BitbucketAppPassword(args CommonArgs) (Option[forgedomain.BitbucketAppPassword], dialogdomain.Exit, error) {
+	return ConfigStringDialog(ConfigStringDialogArgs[forgedomain.BitbucketAppPassword]{
+		ConfigFileValue: args.ConfigFile.BitbucketAppPassword,
+		HelpText:        bitbucketAppPasswordHelp,
+		Inputs:          args.Inputs,
+		LocalValue:      args.LocalGitConfig.BitbucketAppPassword,
+		ParseFunc:       WrapParseFunc(forgedomain.ParseBitbucketAppPassword),
+		Prompt:          "Bitbucket app password: ",
+		ResultMessage:   messages.BitbucketAppPassword,
+		Title:           bitbucketAppPasswordTitle,
+		UnscopedValue:   args.UnscopedGitConfig.BitbucketAppPassword,
+	})
+}
