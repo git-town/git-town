@@ -158,7 +158,7 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 		localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 		validatedMain, exit, err := dialog.MainBranch(dialog.MainBranchArgs{
 			GitStandardBranch:     gitconfig.DefaultBranch(args.backend),
-			UnscopedGitMainBranch: args.unvalidated.Value.GitUnscoped.MainBranch,
+			UnscopedGitMainBranch: args.unvalidated.Value.NormalConfig.Git.MainBranch,
 			LocalGitMainBranch:    args.unvalidated.Value.GitLocal.MainBranch,
 			LocalBranches:         localBranches,
 			Inputs:                args.dialogInputs.Next(),
@@ -166,7 +166,7 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 		if err != nil || exit {
 			return config.EmptyValidatedConfig(), exit, err
 		}
-		mainBranch = validatedMain.Or(args.unvalidated.Value.GitUnscoped.MainBranch).GetOrPanic()
+		mainBranch = validatedMain.Or(args.unvalidated.Value.NormalConfig.Git.MainBranch).GetOrPanic()
 		if err = args.unvalidated.Value.SetMainBranch(mainBranch, args.backend); err != nil {
 			return config.EmptyValidatedConfig(), false, err
 		}
