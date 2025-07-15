@@ -1,6 +1,7 @@
 package dialog
 
 import (
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -29,6 +30,7 @@ func GiteaToken(args CommonArgs) (Option[forgedomain.GiteaToken], dialogdomain.E
 		Inputs:          args.Inputs,
 		LocalValue:      args.LocalGitConfig.GiteaToken,
 		ParseFunc:       WrapParseFunc(forgedomain.ParseGiteaToken),
+		PrintResultFunc: dialogcomponents.FormattedSecret,
 		Prompt:          "Gitea token: ",
 		ResultMessage:   messages.GiteaToken,
 		Title:           giteaTokenTitle,

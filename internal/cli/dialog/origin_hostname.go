@@ -1,6 +1,7 @@
 package dialog
 
 import (
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -27,6 +28,7 @@ func OriginHostname(args CommonArgs) (Option[configdomain.HostingOriginHostname]
 		Inputs:          args.Inputs,
 		LocalValue:      args.LocalGitConfig.HostingOriginHostname,
 		ParseFunc:       WrapParseFunc(configdomain.ParseHostingOriginHostname),
+		PrintResultFunc: dialogcomponents.FormattedSelection,
 		Prompt:          "Origin hostname: ",
 		ResultMessage:   messages.OriginHostname,
 		Title:           originHostnameTitle,

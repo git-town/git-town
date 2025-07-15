@@ -1,6 +1,7 @@
 package dialog
 
 import (
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -30,6 +31,7 @@ func GitLabToken(args CommonArgs) (Option[forgedomain.GitLabToken], dialogdomain
 		Inputs:          args.Inputs,
 		LocalValue:      args.LocalGitConfig.GitLabToken,
 		ParseFunc:       WrapParseFunc(forgedomain.ParseGitLabToken),
+		PrintResultFunc: dialogcomponents.FormattedSecret,
 		Prompt:          "GitLab token: ",
 		ResultMessage:   messages.GitLabToken,
 		Title:           gitLabConnectorTypeTitle,

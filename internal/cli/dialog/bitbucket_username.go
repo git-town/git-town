@@ -1,6 +1,7 @@
 package dialog
 
 import (
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -28,6 +29,7 @@ func BitbucketUsername(args CommonArgs) (Option[forgedomain.BitbucketUsername], 
 		Inputs:          args.Inputs,
 		LocalValue:      args.LocalGitConfig.BitbucketUsername,
 		ParseFunc:       WrapParseFunc(forgedomain.ParseBitbucketUsername),
+		PrintResultFunc: dialogcomponents.FormattedSelection,
 		Prompt:          "Bitbucket username: ",
 		ResultMessage:   messages.BitbucketUsername,
 		Title:           bitbucketUsernameTitle,

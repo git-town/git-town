@@ -23,14 +23,3 @@ func FormattedSelection(selection string, exit dialogdomain.Exit) string {
 	}
 	return colors.Green().Styled(selection)
 }
-
-// FormattedToken provides the given API token in a printable format.
-func FormattedToken(token string, exit dialogdomain.Exit) string {
-	if exit {
-		return colors.Red().Styled("(aborted)")
-	}
-	if token == "" {
-		return colors.Green().Styled("(not provided)")
-	}
-	return colors.Green().Styled(token)
-}

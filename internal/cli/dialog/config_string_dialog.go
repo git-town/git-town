@@ -62,7 +62,7 @@ func ConfigStringDialog[T comparable](args ConfigStringDialogArgs[T]) (Option[T]
 			Title:         args.Title,
 		})
 		if err != nil || exit {
-			fmt.Printf(args.ResultMessage, dialogcomponents.FormattedSelection(userInputText, exit))
+			fmt.Printf(args.ResultMessage, args.PrintResultFunc(userInputText, exit))
 			return None[T](), exit, err
 		}
 		userInput, err = args.ParseFunc(userInputText)
@@ -98,6 +98,7 @@ type ConfigStringDialogArgs[T any] struct {
 	Inputs          dialogcomponents.TestInputs
 	LocalValue      Option[T]
 	ParseFunc       func(string) (Option[T], error)
+	PrintResultFunc func(string, dialogdomain.Exit) string
 	Prompt          string
 	ResultMessage   string
 	Title           string

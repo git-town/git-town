@@ -1,6 +1,7 @@
 package dialog
 
 import (
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -31,6 +32,7 @@ func BitbucketAppPassword(args CommonArgs) (Option[forgedomain.BitbucketAppPassw
 		Inputs:          args.Inputs,
 		LocalValue:      args.LocalGitConfig.BitbucketAppPassword,
 		ParseFunc:       WrapParseFunc(forgedomain.ParseBitbucketAppPassword),
+		PrintResultFunc: dialogcomponents.FormattedSecret,
 		Prompt:          "Bitbucket app password: ",
 		ResultMessage:   messages.BitbucketAppPassword,
 		Title:           bitbucketAppPasswordTitle,

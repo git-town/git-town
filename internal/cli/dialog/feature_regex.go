@@ -1,6 +1,7 @@
 package dialog
 
 import (
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -26,6 +27,7 @@ func FeatureRegex(args CommonArgs) (Option[configdomain.FeatureRegex], dialogdom
 		Inputs:          args.Inputs,
 		LocalValue:      args.LocalGitConfig.FeatureRegex,
 		ParseFunc:       configdomain.ParseFeatureRegex,
+		PrintResultFunc: dialogcomponents.FormattedSelection,
 		Prompt:          "Feature Regex: ",
 		ResultMessage:   messages.FeatureRegex,
 		Title:           featureRegexTitle,

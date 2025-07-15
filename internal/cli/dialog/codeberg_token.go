@@ -1,6 +1,7 @@
 package dialog
 
 import (
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -29,6 +30,7 @@ func CodebergToken(args CommonArgs) (Option[forgedomain.CodebergToken], dialogdo
 		Inputs:          args.Inputs,
 		LocalValue:      args.LocalGitConfig.CodebergToken,
 		ParseFunc:       WrapParseFunc(forgedomain.ParseCodebergToken),
+		PrintResultFunc: dialogcomponents.FormattedSecret,
 		Prompt:          "Codeberg token: ",
 		ResultMessage:   messages.CodebergToken,
 		Title:           codebergTokenTitle,

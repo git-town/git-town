@@ -1,6 +1,7 @@
 package dialog
 
 import (
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -33,6 +34,7 @@ func GitHubToken(args CommonArgs) (Option[forgedomain.GitHubToken], dialogdomain
 		Inputs:          args.Inputs,
 		LocalValue:      args.LocalGitConfig.GitHubToken,
 		ParseFunc:       WrapParseFunc(forgedomain.ParseGitHubToken),
+		PrintResultFunc: dialogcomponents.FormattedSecret,
 		Prompt:          "GitHub token: ",
 		ResultMessage:   messages.GitHubToken,
 		Title:           gitHubTokenTitle,

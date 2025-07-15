@@ -29,6 +29,7 @@ func PerennialRegex(args CommonArgs) (Option[configdomain.PerennialRegex], dialo
 		Inputs:          args.Inputs,
 		LocalValue:      args.LocalGitConfig.PerennialRegex,
 		ParseFunc:       configdomain.ParsePerennialRegex,
+		PrintResultFunc: dialogcomponents.FormattedSelection,
 		Prompt:          "Perennial Regex: ",
 		ResultMessage:   messages.PerennialRegex,
 		Title:           perennialRegexTitle,

@@ -1,6 +1,7 @@
 package dialog
 
 import (
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -26,6 +27,7 @@ func ObservedRegex(args CommonArgs) (Option[configdomain.ObservedRegex], dialogd
 		Inputs:          args.Inputs,
 		LocalValue:      args.LocalGitConfig.ObservedRegex,
 		ParseFunc:       configdomain.ParseObservedRegex,
+		PrintResultFunc: dialogcomponents.FormattedSelection,
 		Prompt:          "Observed Regex: ",
 		ResultMessage:   messages.ObservedRegex,
 		Title:           observedRegexTitle,
