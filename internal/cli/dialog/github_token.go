@@ -1,8 +1,15 @@
 package dialog
 
+import (
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v21/internal/messages"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
+)
+
 const (
-	GitHubTokenTitle = `GitHub API token`
-	GitHubTokenHelp  = `
+	gitHubTokenTitle = `GitHub API token`
+	gitHubTokenHelp  = `
 Git Town can update pull requests
 and ship branches on your behalf
 using the GitHub API.
@@ -18,3 +25,17 @@ with the GitHub API.
 
 `
 )
+
+func GitHubToken(args CommonArgs) (Option[forgedomain.GitHubToken], dialogdomain.Exit, error) {
+	return ConfigStringDialog(ConfigStringDialogArgs[forgedomain.GitHubToken]{
+		ConfigFileValue: args.ConfigFile.GitHubToken,
+		HelpText:        gitHubTokenHelp,
+		Inputs:          args.Inputs,
+		LocalValue:      args.LocalGitConfig.GitHubToken,
+		ParseFunc:       WrapParseFunc(forgedomain.ParseGitHubToken),
+		Prompt:          "GitHub token: ",
+		ResultMessage:   messages.GitHubToken,
+		Title:           gitHubTokenTitle,
+		UnscopedValue:   args.UnscopedGitConfig.GitHubToken,
+	})
+}

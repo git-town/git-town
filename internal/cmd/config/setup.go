@@ -210,17 +210,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 				if githubConnectorType, has := githubConnectorTypeOpt.Get(); has {
 					switch githubConnectorType {
 					case forgedomain.GitHubConnectorTypeAPI:
-						githubToken, exit, err = dialog.ConfigStringDialog(dialog.ConfigStringDialogArgs[forgedomain.GitHubToken]{
-							ConfigFileValue: configFile.GitHubToken,
-							HelpText:        dialog.GitHubTokenHelp,
-							Inputs:          data.dialogInputs,
-							LocalValue:      repo.UnvalidatedConfig.GitLocal.GitHubToken,
-							ParseFunc:       dialog.WrapParseFunc(forgedomain.ParseGitHubToken),
-							Prompt:          "Your GitHub API token: ",
-							ResultMessage:   messages.DialogResultGiteaToken,
-							Title:           dialog.GitHubTokenTitle,
-							UnscopedValue:   repo.UnvalidatedConfig.NormalConfig.Git.GitHubToken,
-						})
+						githubToken, exit, err = dialog.GitHubToken(commonArgs)
 					case forgedomain.GitHubConnectorTypeGh:
 					}
 				}
