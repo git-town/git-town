@@ -148,17 +148,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	observedRegex, exit, err := dialog.ConfigStringDialog(dialog.ConfigStringDialogArgs[configdomain.ObservedRegex]{
-		ConfigFileValue: configFile.ObservedRegex,
-		HelpText:        dialog.ObservedRegexHelp,
-		Inputs:          data.dialogInputs,
-		LocalValue:      repo.UnvalidatedConfig.GitLocal.ObservedRegex,
-		ParseFunc:       configdomain.ParseObservedRegex,
-		Prompt:          "Observed Regex: ",
-		ResultMessage:   messages.ObservedRegex,
-		Title:           dialog.ObservedRegexTitle,
-		UnscopedValue:   repo.UnvalidatedConfig.NormalConfig.Git.ObservedRegex,
-	})
+	observedRegex, exit, err := dialog.ObservedRegex(commonArgs)
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
