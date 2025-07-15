@@ -75,7 +75,7 @@ func executeConfigSetup(cliConfig cliconfig.CliConfig) error {
 	if err != nil || exit {
 		return err
 	}
-	if err = saveAll(enterDataResult, repo.UnvalidatedConfig.NormalConfig.Git, data.configFile, repo.Frontend); err != nil {
+	if err = saveAll(enterDataResult, repo.UnvalidatedConfig, repo.Frontend); err != nil {
 		return err
 	}
 	return configinterpreter.Finished(configinterpreter.FinishedArgs{
@@ -94,8 +94,6 @@ func executeConfigSetup(cliConfig cliconfig.CliConfig) error {
 
 type setupData struct {
 	backend       subshelldomain.Querier
-	config        config.UnvalidatedConfig
-	configFile    Option[configdomain.PartialConfig]
 	dialogInputs  dialogcomponents.TestInputs
 	localBranches gitdomain.BranchInfos
 	remotes       gitdomain.Remotes
@@ -113,7 +111,7 @@ func determineForgeType(userChoice Option[forgedomain.ForgeType], devURL Option[
 
 func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdomain.Exit, error) {
 	var emptyResult userInput
-	configFile := data.configFile.GetOrDefault()
+	configFile := repo.UnvalidatedConfig.File.GetOrDefault()
 	exit, err := dialog.Welcome(data.dialogInputs.Next())
 	if err != nil || exit {
 		return emptyResult, exit, err
@@ -172,7 +170,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	bitbucketUsername := None[forgedomain.BitbucketUsername]()
 	bitbucketAppPassword := None[forgedomain.BitbucketAppPassword]()
 	codebergToken := None[forgedomain.CodebergToken]()
-	devURL := data.config.NormalConfig.DevURL(data.backend)
+	devURL := repo.UnvalidatedConfig.NormalConfig.DevURL(data.backend)
 	giteaToken := None[forgedomain.GiteaToken]()
 	githubConnectorTypeOpt := None[forgedomain.GitHubConnectorType]()
 	githubToken := None[forgedomain.GitHubToken]()
@@ -244,7 +242,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 			gitlabConnectorType:  gitlabConnectorTypeOpt,
 			gitlabToken:          gitlabToken,
 			inputs:               data.dialogInputs,
-			remoteURL:            data.config.NormalConfig.RemoteURL(data.backend, devRemote.GetOrElse(data.remotes[0])),
+			remoteURL:            repo.UnvalidatedConfig.NormalConfig.RemoteURL(data.backend, devRemote.GetOrElse(data.remotes[0])),
 		})
 		if err != nil || exit {
 			return emptyResult, exit, err
@@ -258,7 +256,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		bitbucketUsername:    bitbucketUsername,
 		codebergToken:        codebergToken,
 		determinedForgeType:  actualForgeType,
-		existingConfig:       data.config.NormalConfig.NormalConfigData,
+		existingConfig:       repo.UnvalidatedConfig.NormalConfig.NormalConfigData,
 		giteaToken:           giteaToken,
 		githubToken:          githubToken,
 		gitlabToken:          gitlabToken,
@@ -402,13 +400,13 @@ func enterMainBranch(repo execute.OpenRepoResult, data setupData) (userInput Opt
 		GitStandardBranch:     repoDefault,
 		Inputs:                data.dialogInputs.Next(),
 		LocalBranches:         data.localBranches.Names(),
-		LocalGitMainBranch:    data.config.GitLocal.MainBranch,
-		UnscopedGitMainBranch: data.config.NormalConfig.Git.MainBranch,
+		LocalGitMainBranch:    repo.UnvalidatedConfig.GitLocal.MainBranch,
+		UnscopedGitMainBranch: repo.UnvalidatedConfig.NormalConfig.Git.MainBranch,
 	})
 	if err != nil || exit {
 		return None[gitdomain.LocalBranchName](), "", exit, err
 	}
-	actualMainBranch = userInput.Or(data.config.NormalConfig.Git.MainBranch).GetOrPanic()
+	actualMainBranch = userInput.Or(repo.UnvalidatedConfig.NormalConfig.Git.MainBranch).GetOrPanic()
 	return userInput, actualMainBranch, false, nil
 }
 
@@ -607,16 +605,14 @@ func loadSetupData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (
 	}
 	return setupData{
 		backend:       repo.Backend,
-		config:        repo.UnvalidatedConfig,
-		configFile:    repo.UnvalidatedConfig.File,
 		dialogInputs:  dialogTestInputs,
 		localBranches: branchesSnapshot.Branches,
 		remotes:       remotes,
 	}, exit, nil
 }
 
-func saveAll(userInput userInput, unscopedGitConfig configdomain.PartialConfig, configFile Option[configdomain.PartialConfig], frontend subshelldomain.Runner) error {
-	_ = saveAliases(userInput.data.Aliases, unscopedGitConfig.Aliases, frontend)
+func saveAll(userInput userInput, config config.UnvalidatedConfig, frontend subshelldomain.Runner) error {
+	_ = saveAliases(userInput.data.Aliases, config.NormalConfig.Aliases, frontend)
 	if forgeType, hasForgeType := userInput.determinedForgeType.Get(); hasForgeType {
 		switch forgeType {
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
@@ -625,14 +621,16 @@ func saveAll(userInput userInput, unscopedGitConfig configdomain.PartialConfig, 
 				saveFunc:              gitconfig.SetBitbucketUsername,
 				removeFunc:            gitconfig.RemoveBitbucketUsername,
 				valueToWrite:          userInput.data.BitbucketUsername,
-				existingValueUnscoped: unscopedGitConfig.BitbucketUsername,
+				existingValueUnscoped: config.NormalConfig.Git.BitbucketUsername,
+				existingValueLocal:    config.GitLocal.BitbucketUsername,
 			})
 			saveOptionToLocalGit(frontend, saveToLocalGitArgs[forgedomain.BitbucketAppPassword]{
 				configFileValue:       None[forgedomain.BitbucketAppPassword](),
 				saveFunc:              gitconfig.SetBitbucketAppPassword,
 				removeFunc:            gitconfig.RemoveBitbucketAppPassword,
 				valueToWrite:          userInput.data.BitbucketAppPassword,
-				existingValueUnscoped: unscopedGitConfig.BitbucketAppPassword,
+				existingValueUnscoped: config.NormalConfig.Git.BitbucketAppPassword,
+				existingValueLocal:    config.GitLocal.BitbucketAppPassword,
 			})
 		case forgedomain.ForgeTypeCodeberg:
 			saveOptionToLocalGit(frontend, saveToLocalGitArgs[forgedomain.CodebergToken]{
@@ -640,7 +638,8 @@ func saveAll(userInput userInput, unscopedGitConfig configdomain.PartialConfig, 
 				saveFunc:              gitconfig.SetCodebergToken,
 				removeFunc:            gitconfig.RemoveCodebergToken,
 				valueToWrite:          userInput.data.CodebergToken,
-				existingValueUnscoped: unscopedGitConfig.CodebergToken,
+				existingValueUnscoped: config.NormalConfig.Git.CodebergToken,
+				existingValueLocal:    config.GitLocal.CodebergToken,
 			})
 		case forgedomain.ForgeTypeGitHub:
 			saveOptionToLocalGit(frontend, saveToLocalGitArgs[forgedomain.GitHubToken]{
@@ -648,14 +647,16 @@ func saveAll(userInput userInput, unscopedGitConfig configdomain.PartialConfig, 
 				saveFunc:              gitconfig.SetGitHubToken,
 				removeFunc:            gitconfig.RemoveGitHubToken,
 				valueToWrite:          userInput.data.GitHubToken,
-				existingValueUnscoped: unscopedGitConfig.GitHubToken,
+				existingValueUnscoped: config.NormalConfig.Git.GitHubToken,
+				existingValueLocal:    config.GitLocal.GitHubToken,
 			})
 			saveOptionToLocalGit(frontend, saveToLocalGitArgs[forgedomain.GitHubConnectorType]{
 				configFileValue:       None[forgedomain.GitHubConnectorType](),
 				saveFunc:              gitconfig.SetGitHubConnectorType,
 				removeFunc:            gitconfig.RemoveGitHubConnectorType,
 				valueToWrite:          userInput.data.GitHubConnectorType,
-				existingValueUnscoped: unscopedGitConfig.GitHubConnectorType,
+				existingValueUnscoped: config.NormalConfig.Git.GitHubConnectorType,
+				existingValueLocal:    config.GitLocal.GitHubConnectorType,
 			})
 		case forgedomain.ForgeTypeGitLab:
 			saveOptionToLocalGit(frontend, saveToLocalGitArgs[forgedomain.GitLabToken]{
@@ -663,14 +664,16 @@ func saveAll(userInput userInput, unscopedGitConfig configdomain.PartialConfig, 
 				saveFunc:              gitconfig.SetGitLabToken,
 				removeFunc:            gitconfig.RemoveGitLabToken,
 				valueToWrite:          userInput.data.GitLabToken,
-				existingValueUnscoped: unscopedGitConfig.GitLabToken,
+				existingValueUnscoped: config.NormalConfig.Git.GitLabToken,
+				existingValueLocal:    config.GitLocal.GitLabToken,
 			})
 			saveOptionToLocalGit(frontend, saveToLocalGitArgs[forgedomain.GitLabConnectorType]{
 				configFileValue:       None[forgedomain.GitLabConnectorType](),
 				saveFunc:              gitconfig.SetGitLabConnectorType,
 				removeFunc:            gitconfig.RemoveGitLabConnectorType,
 				valueToWrite:          userInput.data.GitLabConnectorType,
-				existingValueUnscoped: unscopedGitConfig.GitLabConnectorType,
+				existingValueUnscoped: config.NormalConfig.Git.GitLabConnectorType,
+				existingValueLocal:    config.GitLocal.GitLabConnectorType,
 			})
 		case forgedomain.ForgeTypeGitea:
 			saveOptionToLocalGit(frontend, saveToLocalGitArgs[forgedomain.GiteaToken]{
@@ -678,15 +681,16 @@ func saveAll(userInput userInput, unscopedGitConfig configdomain.PartialConfig, 
 				saveFunc:              gitconfig.SetGiteaToken,
 				removeFunc:            gitconfig.RemoveGiteaToken,
 				valueToWrite:          userInput.data.GiteaToken,
-				existingValueUnscoped: unscopedGitConfig.GiteaToken,
+				existingValueUnscoped: config.NormalConfig.Git.GiteaToken,
+				existingValueLocal:    config.GitLocal.GiteaToken,
 			})
 		}
 	}
 	switch userInput.storageLocation {
 	case dialog.ConfigStorageOptionFile:
-		return saveToFile(userInput, unscopedGitConfig, frontend)
+		return saveToFile(userInput, config.NormalConfig.Git, frontend)
 	case dialog.ConfigStorageOptionGit: //
-		saveToGit(userInput, unscopedGitConfig, configFile, frontend)
+		saveToGit(userInput, config.NormalConfig.Git, config.File, frontend)
 	}
 	return nil
 }
