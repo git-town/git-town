@@ -201,17 +201,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 			case forgedomain.ForgeTypeCodeberg:
 				codebergToken, exit, err = dialog.CodebergToken(commonArgs)
 			case forgedomain.ForgeTypeGitea:
-				giteaToken, exit, err = dialog.ConfigStringDialog(dialog.ConfigStringDialogArgs[forgedomain.GiteaToken]{
-					ConfigFileValue: configFile.GiteaToken,
-					HelpText:        dialog.GiteaTokenHelp,
-					Inputs:          data.dialogInputs,
-					LocalValue:      repo.UnvalidatedConfig.GitLocal.GiteaToken,
-					ParseFunc:       dialog.WrapParseFunc(forgedomain.ParseGiteaToken),
-					Prompt:          "Your Gitea API token: ",
-					ResultMessage:   messages.DialogResultGiteaToken,
-					Title:           dialog.GiteaTokenTitle,
-					UnscopedValue:   repo.UnvalidatedConfig.NormalConfig.Git.GiteaToken,
-				})
+				giteaToken, exit, err = dialog.GiteaToken(commonArgs)
 			case forgedomain.ForgeTypeGitHub:
 				githubConnectorTypeOpt, exit, err = dialog.GitHubConnectorType(repo.UnvalidatedConfig.NormalConfig.GitHubConnectorType, data.dialogInputs.Next())
 				if err != nil || exit {
