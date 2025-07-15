@@ -58,7 +58,7 @@ func ConfigStringDialog[T comparable](args ConfigStringDialogArgs[T]) (Option[T]
 			ExistingValue: args.UnscopedValue.String(),
 			Help:          helpText + parseError,
 			Prompt:        args.Prompt,
-			TestInput:     args.Inputs.Next(),
+			TestInputs:    args.Inputs,
 			Title:         args.Title,
 		})
 		if err != nil || exit {

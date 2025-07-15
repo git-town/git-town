@@ -112,7 +112,7 @@ func determineForgeType(userChoice Option[forgedomain.ForgeType], devURL Option[
 func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdomain.Exit, error) {
 	var emptyResult userInput
 	configFile := repo.UnvalidatedConfig.File.GetOrDefault()
-	exit, err := dialog.Welcome(data.dialogInputs.Next())
+	exit, err := dialog.Welcome(data.dialogInputs)
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
@@ -159,7 +159,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	}
 	devRemote := None[gitdomain.Remote]()
 	if configFile.DevRemote.IsNone() && len(data.remotes) > 1 {
-		devRemote, exit, err = dialog.DevRemote(repo.UnvalidatedConfig.NormalConfig.DevRemote, data.remotes, data.dialogInputs.Next())
+		devRemote, exit, err = dialog.DevRemote(repo.UnvalidatedConfig.NormalConfig.DevRemote, data.remotes, data.dialogInputs)
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}
@@ -201,7 +201,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 			case forgedomain.ForgeTypeGitea:
 				giteaToken, exit, err = dialog.GiteaToken(commonArgs)
 			case forgedomain.ForgeTypeGitHub:
-				githubConnectorTypeOpt, exit, err = dialog.GitHubConnectorType(repo.UnvalidatedConfig.NormalConfig.GitHubConnectorType, data.dialogInputs.Next())
+				githubConnectorTypeOpt, exit, err = dialog.GitHubConnectorType(repo.UnvalidatedConfig.NormalConfig.GitHubConnectorType, data.dialogInputs)
 				if err != nil || exit {
 					return emptyResult, exit, err
 				}
@@ -213,7 +213,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 					}
 				}
 			case forgedomain.ForgeTypeGitLab:
-				gitlabConnectorTypeOpt, exit, err = dialog.GitLabConnectorType(repo.UnvalidatedConfig.NormalConfig.GitLabConnectorType, data.dialogInputs.Next())
+				gitlabConnectorTypeOpt, exit, err = dialog.GitLabConnectorType(repo.UnvalidatedConfig.NormalConfig.GitLabConnectorType, data.dialogInputs)
 				if err != nil || exit {
 					return emptyResult, exit, err
 				}
@@ -398,7 +398,7 @@ func enterMainBranch(repo execute.OpenRepoResult, data setupData) (userInput Opt
 	repoDefault := determineGitRepoDefaultBranch(repo)
 	userInput, exit, err = dialog.MainBranch(dialog.MainBranchArgs{
 		GitStandardBranch:     repoDefault,
-		Inputs:                data.dialogInputs.Next(),
+		Inputs:                data.dialogInputs,
 		LocalBranches:         data.localBranches.Names(),
 		LocalGitMainBranch:    repo.UnvalidatedConfig.GitLocal.MainBranch,
 		UnscopedGitMainBranch: repo.UnvalidatedConfig.NormalConfig.Git.MainBranch,
@@ -417,7 +417,7 @@ func enterPerennialBranches(repo execute.OpenRepoResult, data setupData, mainBra
 		}
 	}
 	return dialog.PerennialBranches(dialog.PerennialBranchesArgs{
-		Inputs:                data.dialogInputs.Next(),
+		Inputs:                data.dialogInputs,
 		LocalBranches:         data.localBranches.Names(),
 		LocalGitPerennials:    repo.UnvalidatedConfig.GitLocal.PerennialBranches,
 		MainBranch:            mainBranch,

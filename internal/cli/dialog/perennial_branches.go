@@ -62,7 +62,7 @@ func PerennialBranches(args PerennialBranchesArgs) (gitdomain.LocalBranchNames, 
 }
 
 type PerennialBranchesArgs struct {
-	Inputs                dialogcomponents.TestInput
+	Inputs                dialogcomponents.TestInputs
 	LocalBranches         gitdomain.LocalBranchNames
 	LocalGitPerennials    gitdomain.LocalBranchNames
 	MainBranch            gitdomain.LocalBranchName

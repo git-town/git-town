@@ -20,7 +20,7 @@ func MainAndPerennials(args MainAndPerennialsArgs) (mainBranch gitdomain.LocalBr
 	fmt.Print(messages.ConfigNeeded)
 	mainBranchOpt, exit, err := MainBranch(MainBranchArgs{
 		GitStandardBranch:     args.GetDefaultBranch(args.Backend),
-		Inputs:                args.DialogInputs.Next(),
+		Inputs:                args.DialogInputs,
 		LocalBranches:         args.LocalBranches,
 		LocalGitMainBranch:    args.UnvalidatedConfig.GitLocal.MainBranch,
 		UnscopedGitMainBranch: args.UnvalidatedConfig.NormalConfig.Git.MainBranch,
@@ -30,7 +30,7 @@ func MainAndPerennials(args MainAndPerennialsArgs) (mainBranch gitdomain.LocalBr
 	}
 	mainBranch = mainBranchOpt.GetOrElse(args.UnvalidatedMain.GetOrPanic())
 	perennials, exit, err = PerennialBranches(PerennialBranchesArgs{
-		Inputs:                args.DialogInputs.Next(),
+		Inputs:                args.DialogInputs,
 		LocalBranches:         args.LocalBranches,
 		LocalGitPerennials:    args.UnvalidatedConfig.GitLocal.PerennialBranches,
 		MainBranch:            mainBranch,

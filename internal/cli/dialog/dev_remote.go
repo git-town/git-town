@@ -23,7 +23,7 @@ Typically that's the "origin" remote.
 `
 )
 
-func DevRemote(existingValue gitdomain.Remote, remotes gitdomain.Remotes, inputs dialogcomponents.TestInput) (Option[gitdomain.Remote], dialogdomain.Exit, error) {
+func DevRemote(existingValue gitdomain.Remote, remotes gitdomain.Remotes, inputs dialogcomponents.TestInputs) (Option[gitdomain.Remote], dialogdomain.Exit, error) {
 	cursor := slice.Index(remotes, existingValue).GetOrElse(0)
 	entries := make(list.Entries[Option[gitdomain.Remote]], len(remotes)+1)
 	entries[0] = list.Entry[Option[gitdomain.Remote]]{
