@@ -33,7 +33,7 @@ Options:
 `
 )
 
-func ShipStrategy(existing configdomain.ShipStrategy, inputs dialogcomponents.TestInput) (configdomain.ShipStrategy, dialogdomain.Exit, error) {
+func ShipStrategy(existing configdomain.ShipStrategy, inputs dialogcomponents.TestInputs) (configdomain.ShipStrategy, dialogdomain.Exit, error) {
 	entries := list.Entries[configdomain.ShipStrategy]{
 		{
 			Data: configdomain.ShipStrategyAPI,

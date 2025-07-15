@@ -1,6 +1,7 @@
 package dialog
 
 import (
+	"cmp"
 	"fmt"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
@@ -22,18 +23,15 @@ is set to something other than "feature".
 `
 )
 
-func FeatureRegex(existingValue Option[configdomain.FeatureRegex], inputs dialogcomponents.TestInput) (Option[configdomain.FeatureRegex], dialogdomain.Exit, error) {
-	value, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
+func FeatureRegex(existingValue Option[configdomain.FeatureRegex], inputs dialogcomponents.TestInputs) (Option[configdomain.FeatureRegex], dialogdomain.Exit, error) {
+	value, exit, err1 := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		ExistingValue: existingValue.String(),
 		Help:          FeatureRegexHelp,
 		Prompt:        "Feature regex: ",
-		TestInput:     inputs,
+		TestInputs:    inputs,
 		Title:         featureRegexTitle,
 	})
 	fmt.Printf(messages.FeatureRegex, dialogcomponents.FormattedSelection(value, exit))
-	if err != nil {
-		return None[configdomain.FeatureRegex](), exit, err
-	}
-	featureRegex, err := configdomain.ParseFeatureRegex(value)
-	return featureRegex, false, err
+	featureRegex, err2 := configdomain.ParseFeatureRegex(value)
+	return featureRegex, exit, cmp.Or(err1, err2)
 }

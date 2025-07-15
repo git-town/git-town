@@ -15,7 +15,7 @@ const (
 How do you want to store the configuration data?
 
 You can store it as a configuration file
-(.git-branches.toml), which you commit
+(.git-town.toml), which you commit
 to the repository. This sets up Git Town
 for all people working on this codebase.
 Personal data like your API tokens
@@ -32,7 +32,7 @@ const (
 	ConfigStorageOptionGit  ConfigStorageOption = `Git metadata`
 )
 
-func ConfigStorage(inputs dialogcomponents.TestInput) (ConfigStorageOption, dialogdomain.Exit, error) {
+func ConfigStorage(inputs dialogcomponents.TestInputs) (ConfigStorageOption, dialogdomain.Exit, error) {
 	entries := list.NewEntries(
 		ConfigStorageOptionFile,
 		ConfigStorageOptionGit,
