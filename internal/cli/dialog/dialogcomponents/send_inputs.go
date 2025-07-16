@@ -1,13 +1,16 @@
 package dialogcomponents
 
-import tea "github.com/charmbracelet/bubbletea"
+import (
+	tea "github.com/charmbracelet/bubbletea"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
+)
 
 // SendInputs sends the given keystrokes to the given bubbletea program.
-func SendInputs(inputs TestInput, program *tea.Program) {
-	if len(inputs) > 0 {
+func SendInputs(input Option[TestInput], program *tea.Program) {
+	if input, has := input.Get(); has {
 		go func() {
-			for _, input := range inputs {
-				program.Send(input)
+			for _, msg := range input {
+				program.Send(msg)
 			}
 		}()
 	}
