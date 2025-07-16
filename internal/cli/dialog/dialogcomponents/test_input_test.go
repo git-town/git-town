@@ -81,28 +81,17 @@ func TestTestInputs(t *testing.T) {
 		haveNext := testInputs.Next()
 		wantNext := dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyCtrlA}}
 		must.Eq(t, wantNext, haveNext)
-		wantRemaining := dialogcomponents.NewTestInputs(
-			dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}},
-			dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}},
-		)
-		must.Eq(t, wantRemaining, testInputs)
+		must.False(t, testInputs.IsEmpty())
 		// request the next entry: B
 		haveNext = testInputs.Next()
 		wantNext = dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}}
 		must.Eq(t, wantNext, haveNext)
-		wantRemaining = dialogcomponents.NewTestInputs(
-			dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}},
-		)
-		must.Eq(t, wantRemaining, testInputs)
+		must.False(t, testInputs.IsEmpty())
 		// request the next entry: C
 		haveNext = testInputs.Next()
 		wantNext = dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}}
 		must.Eq(t, wantNext, haveNext)
 		must.EqOp(t, 0, testInputs.Len())
-		// request the next entry: empty
-		haveNext = testInputs.Next()
-		wantNext = dialogcomponents.TestInput{}
-		must.Eq(t, wantNext, haveNext)
-		must.EqOp(t, 0, testInputs.Len())
+		must.True(t, testInputs.IsEmpty())
 	})
 }

@@ -19,11 +19,8 @@ type TestInput []tea.Msg
 // This struct is always mutable, so doesn't need to be wrapped in Mutable.
 type TestInputs struct {
 	inputs *[]TestInput
-}
-
-// Next provides the TestInput for the next dialog in an end-to-end test.
-func (self TestInputs) Append(input TestInput) {
-	*self.inputs = append(*self.inputs, input)
+	cursor int
+	len    int
 }
 
 func (self TestInputs) Len() int {
@@ -31,19 +28,21 @@ func (self TestInputs) Len() int {
 }
 
 // Next provides the TestInput for the next dialog in an end-to-end test.
-func (self TestInputs) Next() TestInput {
-	if len(*self.inputs) == 0 {
+func (self *TestInputs) Next() TestInput {
+	if self.len == 0 {
 		return TestInput{}
 	}
-	result := (*self.inputs)[0]
-	*self.inputs = (*self.inputs)[1:]
-	return result
+	self.cursor += 1
+	if self.cursor == self.len {
+		panic("E2E test defines not enough dialog inputs")
+	}
+	return (*self.inputs)[self.cursor]
 }
 
 // LoadTestInputs provides the TestInputs to use in an end-to-end test,
 // taken from the given environment variable snapshot.
 func LoadTestInputs(environmenttVariables []string) TestInputs {
-	result := NewTestInputs()
+	inputs := []TestInput{}
 	sort.Strings(environmenttVariables)
 	for _, environmentVariable := range environmenttVariables {
 		if !strings.HasPrefix(environmentVariable, TestInputKey) {
@@ -55,14 +54,16 @@ func LoadTestInputs(environmenttVariables []string) TestInputs {
 			continue
 		}
 		input := ParseTestInput(value)
-		result.Append(input)
+		inputs = append(inputs, input)
 	}
-	return result
+	return NewTestInputs(inputs...)
 }
 
 func NewTestInputs(inputs ...TestInput) TestInputs {
 	return TestInputs{
 		inputs: &inputs,
+		cursor: 0,
+		len:    len(inputs),
 	}
 }
 
