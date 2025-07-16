@@ -24,7 +24,7 @@ type TestInputs struct {
 }
 
 func (self TestInputs) IsEmpty() bool {
-	return self.len == 0 || self.cursor == self.len
+	return self.cursor == self.len
 }
 
 // Next provides the TestInput for the next dialog in an end-to-end test.
