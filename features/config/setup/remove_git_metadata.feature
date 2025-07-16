@@ -10,9 +10,13 @@ Feature: remove existing configuration in Git metadata
       | production | (none) | local     |
     And the main branch is "main"
     And global Git setting "alias.append" is "town append"
+    And global Git setting "alias.compress" is "town compress"
+    And global Git setting "alias.contribute" is "town contribute"
     And global Git setting "alias.diff-parent" is "town diff-parent"
     And global Git setting "alias.hack" is "town hack"
     And global Git setting "alias.delete" is "town delete"
+    And global Git setting "alias.observe" is "town observe"
+    And global Git setting "alias.park" is "town park"
     And global Git setting "alias.prepend" is "town prepend"
     And global Git setting "alias.propose" is "town propose"
     And global Git setting "alias.rename" is "town rename"
@@ -44,7 +48,7 @@ Feature: remove existing configuration in Git metadata
     When I run "git-town config setup" and enter into the dialogs:
       | DESCRIPTION                             | KEYS                                                                        |
       | welcome                                 | enter                                                                       |
-      | add all aliases                         | n enter                                                                     |
+      | remove all aliases                      | n enter                                                                     |
       | keep the already configured main branch | enter                                                                       |
       | remove the perennial branches           | down space enter                                                            |
       | remove the perennial regex              | backspace backspace backspace backspace enter                               |
@@ -71,9 +75,13 @@ Feature: remove existing configuration in Git metadata
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config --global --unset alias.append             |
+      | git config --global --unset alias.compress           |
+      | git config --global --unset alias.contribute         |
       | git config --global --unset alias.diff-parent        |
       | git config --global --unset alias.hack               |
       | git config --global --unset alias.delete             |
+      | git config --global --unset alias.observe            |
+      | git config --global --unset alias.park               |
       | git config --global --unset alias.prepend            |
       | git config --global --unset alias.propose            |
       | git config --global --unset alias.rename             |
