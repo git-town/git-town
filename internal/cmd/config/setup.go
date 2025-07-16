@@ -157,7 +157,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 			return emptyResult, exit, err
 		}
 	}
-	devRemote := Some(repo.UnvalidatedConfig.NormalConfig.DevRemote)
+	devRemote := None[gitdomain.Remote]()
 	if configFile.DevRemote.IsNone() && len(data.remotes) > 1 {
 		devRemote, exit, err = dialog.DevRemote(repo.UnvalidatedConfig.NormalConfig.DevRemote, data.remotes, data.dialogInputs)
 		if err != nil || exit {
