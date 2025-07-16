@@ -34,7 +34,7 @@ func (self TestInputs) Next() Option[TestInput] {
 		return None[TestInput]()
 	}
 	if *self.cursor.Value == self.len {
-		panic("E2E test defines not enough dialog inputs")
+		panic("not enough dialog inputs")
 	}
 	result := self.inputs[*self.cursor.Value]
 	*self.cursor.Value += 1
