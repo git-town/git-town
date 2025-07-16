@@ -69,8 +69,8 @@ Feature: remove existing configuration in Git metadata
       | change ship-strategy                    | down enter                                                                  |
       | disable ship-delete-tracking-branch     | down enter                                                                  |
       | save config to Git metadata             | down enter                                                                  |
-# @debug @this
 
+  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                              |
