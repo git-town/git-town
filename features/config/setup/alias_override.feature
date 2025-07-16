@@ -5,12 +5,13 @@ Feature: override an existing Git alias
     Given a Git repo with origin
     And I ran "git config --global alias.append checkout"
     And local Git setting "git-town.unknown-branch-type" is "feature"
+    # And inspect the repo
     When I run "git-town config setup" and enter into the dialogs:
       | DIALOG                      | KEYS       |
       | welcome                     | enter      |
       | aliases                     | o enter    |
       | main branch                 | enter      |
-      | perennial branches          | enter      |
+      | perennial branches          |            |
       | perennial regex             | enter      |
       | feature regex               | enter      |
       | contribution regex          | enter      |
@@ -30,7 +31,6 @@ Feature: override an existing Git alias
       | ship-delete-tracking-branch | enter      |
       | save config to config file  | down enter |
 
-  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                        |
