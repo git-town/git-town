@@ -25,7 +25,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | welcome                                   | enter |
       | add all aliases                           | enter |
       | accept the already configured main branch | enter |
-      | perennial branches                        | enter |
+      | perennial branches                        |       |
       | perennial regex                           | enter |
       | feature regex                             | enter |
       | contribution regex                        | enter |

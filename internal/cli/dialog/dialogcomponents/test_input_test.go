@@ -91,7 +91,6 @@ func TestTestInputs(t *testing.T) {
 		haveNext = testInputs.Next()
 		wantNext = dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}}
 		must.Eq(t, wantNext, haveNext)
-		must.EqOp(t, 0, testInputs.Len())
 		must.True(t, testInputs.IsEmpty())
 	})
 }
