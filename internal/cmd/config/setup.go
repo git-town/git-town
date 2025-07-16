@@ -405,7 +405,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		GitUserName:  "", // the setup assistant doesn't ask for this
 		MainBranch:   mainBranch,
 	}
-	if data.dialogInputs.IsEmpty() {
+	if !data.dialogInputs.IsEmpty() {
 		panic("unused dialog inputs")
 	}
 	return userInput{actualForgeType, normalData, tokenScope, configStorage, validatedData}, false, nil
