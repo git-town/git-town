@@ -18,12 +18,12 @@ type TestInput []tea.Msg
 // TestInputs contains the input for all dialogs in an end-to-end test.
 // This struct is always mutable, so doesn't need to be wrapped in Mutable.
 type TestInputs struct {
-	inputs []TestInput // the input values
 	cursor int         // index of the input to return next
+	inputs []TestInput // the input values
 	len    int         // the total number of inputs
 }
 
-func (self TestInputs) IsEmpty() bool {
+func (self *TestInputs) IsEmpty() bool {
 	return self.cursor == self.len
 }
 
@@ -54,7 +54,7 @@ func LoadTestInputs(environmenttVariables []string) TestInputs {
 			fmt.Printf(messages.SettingIgnoreInvalid, environmentVariable)
 			continue
 		}
-		input := parseTestInput(value)
+		input := ParseTestInput(value)
 		inputs = append(inputs, input)
 	}
 	return NewTestInputs(inputs...)
@@ -62,15 +62,15 @@ func LoadTestInputs(environmenttVariables []string) TestInputs {
 
 func NewTestInputs(inputs ...TestInput) TestInputs {
 	return TestInputs{
-		inputs: inputs,
 		cursor: 0,
+		inputs: inputs,
 		len:    len(inputs),
 	}
 }
 
 // parseTestInput converts the given input data in the environment variable format
 // into the format understood by Git Town's dialogs.
-func parseTestInput(envData string) TestInput {
+func ParseTestInput(envData string) TestInput {
 	result := TestInput{}
 	for _, input := range strings.Split(envData, "|") {
 		if len(input) > 0 {
