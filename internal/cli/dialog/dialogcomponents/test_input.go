@@ -18,9 +18,9 @@ type TestInput []tea.Msg
 // TestInputs contains the input for all dialogs in an end-to-end test.
 // This struct is always mutable, so doesn't need to be wrapped in Mutable.
 type TestInputs struct {
-	inputs *[]TestInput // the input values
-	cursor int          // index of the input to return next
-	len    int          // the total number of available inputs
+	inputs []TestInput // the input values
+	cursor int         // index of the input to return next
+	len    int         // the total number of available inputs
 }
 
 func (self TestInputs) IsEmpty() bool {
@@ -35,7 +35,7 @@ func (self *TestInputs) Next() TestInput {
 	if self.cursor == self.len {
 		panic("E2E test defines not enough dialog inputs")
 	}
-	result := (*self.inputs)[self.cursor]
+	result := self.inputs[self.cursor]
 	self.cursor += 1
 	return result
 }
@@ -62,7 +62,7 @@ func LoadTestInputs(environmenttVariables []string) TestInputs {
 
 func NewTestInputs(inputs ...TestInput) TestInputs {
 	return TestInputs{
-		inputs: &inputs,
+		inputs: inputs,
 		cursor: 0,
 		len:    len(inputs),
 	}
