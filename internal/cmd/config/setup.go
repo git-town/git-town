@@ -280,7 +280,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 			return emptyResult, exit, err
 		}
 	}
-	syncPrototypeStrategy := None[configdomain.SyncPrototypeStrategy]()
+	syncPrototypeStrategy := repo.UnvalidatedConfig.NormalConfig.Git.SyncPrototypeStrategy
 	if configFile.SyncPrototypeStrategy.IsNone() {
 		syncPrototypeStrategy, exit, err = dialog.SyncPrototypeStrategy(commonArgs)
 		if err != nil || exit {

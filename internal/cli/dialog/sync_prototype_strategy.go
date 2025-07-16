@@ -24,6 +24,10 @@ and limiting the sharing of confidential changes.
 func SyncPrototypeStrategy(args CommonArgs) (Option[configdomain.SyncPrototypeStrategy], dialogdomain.Exit, error) {
 	entries := list.Entries[Option[configdomain.SyncPrototypeStrategy]]{
 		{
+			Data: None[configdomain.SyncPrototypeStrategy](),
+			Text: messages.DialogSkip,
+		},
+		{
 			Data: Some(configdomain.SyncPrototypeStrategyMerge),
 			Text: "merge updates from the parent and tracking branch",
 		},

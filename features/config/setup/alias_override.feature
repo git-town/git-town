@@ -57,7 +57,6 @@ Feature: override an existing Git alias
       [sync]
       feature-strategy = "merge"
       perennial-strategy = "rebase"
-      prototype-strategy = "merge"
       tags = true
       upstream = true
       """
