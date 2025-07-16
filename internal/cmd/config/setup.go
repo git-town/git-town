@@ -804,7 +804,7 @@ func saveNewBranchType(valueToWriteToGit Option[configdomain.BranchType], valueA
 		return nil
 	}
 	if value, hasValue := valueToWriteToGit.Get(); hasValue {
-		return gitconfig.SetNewBranchType(runner, value)
+		return gitconfig.SetNewBranchType(runner, value, configdomain.ConfigScopeLocal)
 	}
 	_ = gitconfig.RemoveNewBranchType(runner)
 	return nil
@@ -814,14 +814,14 @@ func saveUnknownBranchType(valueToWriteToGit configdomain.BranchType, valueAlrea
 	if valueAlreadyInGit.EqualSome(valueToWriteToGit) {
 		return nil
 	}
-	return gitconfig.SetUnknownBranchType(runner, valueToWriteToGit)
+	return gitconfig.SetUnknownBranchType(runner, valueToWriteToGit, configdomain.ConfigScopeLocal)
 }
 
 func saveDevRemote(valueToWriteToGit gitdomain.Remote, valueAlreadyInGit Option[gitdomain.Remote], runner subshelldomain.Runner) error {
 	if valueAlreadyInGit.EqualSome(valueToWriteToGit) {
 		return nil
 	}
-	return gitconfig.SetDevRemote(runner, valueToWriteToGit)
+	return gitconfig.SetDevRemote(runner, valueToWriteToGit, configdomain.ConfigScopeLocal)
 }
 
 func saveFeatureRegex(valueToWriteToGit Option[configdomain.FeatureRegex], valueAlreadyInGit Option[configdomain.FeatureRegex], runner subshelldomain.Runner) error {
@@ -829,7 +829,7 @@ func saveFeatureRegex(valueToWriteToGit Option[configdomain.FeatureRegex], value
 		return nil
 	}
 	if value, has := valueToWriteToGit.Get(); has {
-		return gitconfig.SetFeatureRegex(runner, value)
+		return gitconfig.SetFeatureRegex(runner, value, configdomain.ConfigScopeLocal)
 	}
 	_ = gitconfig.RemoveFeatureRegex(runner)
 	return nil
@@ -840,7 +840,7 @@ func saveContributionRegex(valueToWriteToGit Option[configdomain.ContributionReg
 		return nil
 	}
 	if value, has := valueToWriteToGit.Get(); has {
-		return gitconfig.SetContributionRegex(runner, value)
+		return gitconfig.SetContributionRegex(runner, value, configdomain.ConfigScopeLocal)
 	}
 	_ = gitconfig.RemoveContributionRegex(runner)
 	return nil
@@ -851,7 +851,7 @@ func saveObservedRegex(valueToWriteToGit Option[configdomain.ObservedRegex], val
 		return nil
 	}
 	if value, has := valueToWriteToGit.Get(); has {
-		return gitconfig.SetObservedRegex(runner, value)
+		return gitconfig.SetObservedRegex(runner, value, configdomain.ConfigScopeLocal)
 	}
 	_ = gitconfig.RemoveObservedRegex(runner)
 	return nil
@@ -867,7 +867,7 @@ func saveForgeType(valueToWriteToGit Option[forgedomain.ForgeType], valueAlready
 		return nil
 	}
 	if newHas {
-		return gitconfig.SetForgeType(frontend, newValue)
+		return gitconfig.SetForgeType(frontend, newValue, configdomain.ConfigScopeLocal)
 	}
 	return gitconfig.RemoveForgeType(frontend)
 }
@@ -897,7 +897,7 @@ func saveGitHubConnectorType(valueToWriteToGit Option[forgedomain.GitHubConnecto
 		return nil
 	}
 	if value, has := valueToWriteToGit.Get(); has {
-		return gitconfig.SetGitHubConnectorType(frontend, value)
+		return gitconfig.SetGitHubConnectorType(frontend, value, configdomain.ConfigScopeLocal)
 	}
 	return gitconfig.RemoveGitHubConnectorType(frontend)
 }
@@ -922,7 +922,7 @@ func saveGitLabConnectorType(valueToWriteToGit Option[forgedomain.GitLabConnecto
 		return nil
 	}
 	if value, has := valueToWriteToGit.Get(); has {
-		return gitconfig.SetGitLabConnectorType(frontend, value)
+		return gitconfig.SetGitLabConnectorType(frontend, value, configdomain.ConfigScopeLocal)
 	}
 	return gitconfig.RemoveGitLabConnectorType(frontend)
 }
@@ -948,7 +948,7 @@ func saveMainBranch(valueToWriteToGit gitdomain.LocalBranchName, valueAlreadyInG
 			return nil
 		}
 	}
-	return gitconfig.SetMainBranch(runner, valueToWriteToGit)
+	return gitconfig.SetMainBranch(runner, valueToWriteToGit, configdomain.ConfigScopeLocal)
 }
 
 func saveOriginHostname(valueToWriteToGit Option[configdomain.HostingOriginHostname], valueAlreadyInGit Option[configdomain.HostingOriginHostname], frontend subshelldomain.Runner) error {
@@ -956,7 +956,7 @@ func saveOriginHostname(valueToWriteToGit Option[configdomain.HostingOriginHostn
 		return nil
 	}
 	if value, has := valueToWriteToGit.Get(); has {
-		return gitconfig.SetOriginHostname(frontend, value)
+		return gitconfig.SetOriginHostname(frontend, value, configdomain.ConfigScopeLocal)
 	}
 	return gitconfig.RemoveOriginHostname(frontend)
 }
@@ -965,7 +965,7 @@ func savePerennialBranches(valueToWriteToGit gitdomain.LocalBranchNames, valueAl
 	if slices.Compare(valueAlreadyInGit, valueToWriteToGit) == 0 {
 		return nil
 	}
-	return gitconfig.SetPerennialBranches(runner, valueToWriteToGit)
+	return gitconfig.SetPerennialBranches(runner, valueToWriteToGit, configdomain.ConfigScopeLocal)
 }
 
 func savePerennialRegex(valueToWriteToGit Option[configdomain.PerennialRegex], valueAlreadyInGit Option[configdomain.PerennialRegex], runner subshelldomain.Runner) error {
@@ -973,7 +973,7 @@ func savePerennialRegex(valueToWriteToGit Option[configdomain.PerennialRegex], v
 		return nil
 	}
 	if value, has := valueToWriteToGit.Get(); has {
-		return gitconfig.SetPerennialRegex(runner, value)
+		return gitconfig.SetPerennialRegex(runner, value, configdomain.ConfigScopeLocal)
 	}
 	_ = gitconfig.RemovePerennialRegex(runner)
 	return nil
@@ -983,63 +983,63 @@ func savePushHook(valueToWriteToGit configdomain.PushHook, valueAlreadyInGit Opt
 	if valueAlreadyInGit.EqualSome(valueToWriteToGit) {
 		return nil
 	}
-	return gitconfig.SetPushHook(runner, valueToWriteToGit)
+	return gitconfig.SetPushHook(runner, valueToWriteToGit, configdomain.ConfigScopeLocal)
 }
 
 func saveShareNewBranches(valueToWriteToGit configdomain.ShareNewBranches, valueAlreadyInGit Option[configdomain.ShareNewBranches], runner subshelldomain.Runner) error {
 	if valueAlreadyInGit.EqualSome(valueToWriteToGit) {
 		return nil
 	}
-	return gitconfig.SetShareNewBranches(runner, valueToWriteToGit)
+	return gitconfig.SetShareNewBranches(runner, valueToWriteToGit, configdomain.ConfigScopeLocal)
 }
 
 func saveShipDeleteTrackingBranch(valueToWriteToGit configdomain.ShipDeleteTrackingBranch, valueAlreadyInGit Option[configdomain.ShipDeleteTrackingBranch], runner subshelldomain.Runner) error {
 	if valueAlreadyInGit.EqualSome(valueToWriteToGit) {
 		return nil
 	}
-	return gitconfig.SetShipDeleteTrackingBranch(runner, valueToWriteToGit)
+	return gitconfig.SetShipDeleteTrackingBranch(runner, valueToWriteToGit, configdomain.ConfigScopeLocal)
 }
 
 func saveShipStrategy(valueToWriteToGit configdomain.ShipStrategy, valueAlreadyInGit Option[configdomain.ShipStrategy], runner subshelldomain.Runner) error {
 	if valueAlreadyInGit.EqualSome(valueToWriteToGit) {
 		return nil
 	}
-	return gitconfig.SetShipStrategy(runner, valueToWriteToGit)
+	return gitconfig.SetShipStrategy(runner, valueToWriteToGit, configdomain.ConfigScopeLocal)
 }
 
 func saveSyncFeatureStrategy(valueToWriteToGit configdomain.SyncFeatureStrategy, valueAlreadyInGit Option[configdomain.SyncFeatureStrategy], runner subshelldomain.Runner) error {
 	if valueAlreadyInGit.EqualSome(valueToWriteToGit) {
 		return nil
 	}
-	return gitconfig.SetSyncFeatureStrategy(runner, valueToWriteToGit)
+	return gitconfig.SetSyncFeatureStrategy(runner, valueToWriteToGit, configdomain.ConfigScopeLocal)
 }
 
 func saveSyncPerennialStrategy(valueToWriteToGit configdomain.SyncPerennialStrategy, valueAlreadyInGit Option[configdomain.SyncPerennialStrategy], runner subshelldomain.Runner) error {
 	if valueAlreadyInGit.EqualSome(valueToWriteToGit) {
 		return nil
 	}
-	return gitconfig.SetSyncPerennialStrategy(runner, valueToWriteToGit)
+	return gitconfig.SetSyncPerennialStrategy(runner, valueToWriteToGit, configdomain.ConfigScopeLocal)
 }
 
 func saveSyncPrototypeStrategy(valueToWriteToGit configdomain.SyncPrototypeStrategy, valueAlreadyInGit Option[configdomain.SyncPrototypeStrategy], runner subshelldomain.Runner) error {
 	if valueAlreadyInGit.EqualSome(valueToWriteToGit) {
 		return nil
 	}
-	return gitconfig.SetSyncPrototypeStrategy(runner, valueToWriteToGit)
+	return gitconfig.SetSyncPrototypeStrategy(runner, valueToWriteToGit, configdomain.ConfigScopeLocal)
 }
 
 func saveSyncUpstream(valueToWriteToGit configdomain.SyncUpstream, valueAlreadyInGit Option[configdomain.SyncUpstream], runner subshelldomain.Runner) error {
 	if valueAlreadyInGit.EqualSome(valueToWriteToGit) {
 		return nil
 	}
-	return gitconfig.SetSyncUpstream(runner, valueToWriteToGit)
+	return gitconfig.SetSyncUpstream(runner, valueToWriteToGit, configdomain.ConfigScopeLocal)
 }
 
 func saveSyncTags(valueToWriteToGit configdomain.SyncTags, valueAlreadyInGit Option[configdomain.SyncTags], runner subshelldomain.Runner) error {
 	if valueAlreadyInGit.EqualSome(valueToWriteToGit) {
 		return nil
 	}
-	return gitconfig.SetSyncTags(runner, valueToWriteToGit)
+	return gitconfig.SetSyncTags(runner, valueToWriteToGit, configdomain.ConfigScopeLocal)
 }
 
 func saveToFile(userInput userInput, gitConfig configdomain.PartialConfig, runner subshelldomain.Runner) error {
