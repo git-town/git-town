@@ -456,6 +456,9 @@ func enterForgeAuth(repo execute.OpenRepoResult, data *setupData, forgeTypeOpt O
 		GitUserName:  "", // the setup assistant doesn't ask for this
 		MainBranch:   mainBranch,
 	}
+	if data.dialogInputs.Len() > 0 {
+		panic(fmt.Sprintf("%d unused dialog inputs", data.dialogInputs.Len()))
+	}
 	return userInput{actualForgeType, normalData, tokenScope, configStorage, validatedData}, false, nil
 }
 

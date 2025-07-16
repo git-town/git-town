@@ -26,8 +26,8 @@ func (self TestInputs) Append(input TestInput) {
 	*self.inputs = append(*self.inputs, input)
 }
 
-func (self TestInputs) Len() int {
-	return len(*self.inputs)
+func (self TestInputs) IsEmpty() bool {
+	return len(*self.inputs) == 0
 }
 
 // Next provides the TestInput for the next dialog in an end-to-end test.
