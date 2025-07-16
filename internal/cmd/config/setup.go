@@ -315,6 +315,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 			return emptyResult, exit, err
 		}
 	}
+	// TODO: move this up below UnknownBranchType
 	newBranchType := repo.UnvalidatedConfig.NormalConfig.NewBranchType
 	if configFile.NewBranchType.IsNone() {
 		newBranchType, exit, err = dialog.NewBranchType(newBranchType, data.dialogInputs)
