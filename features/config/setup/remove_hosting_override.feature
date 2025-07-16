@@ -20,7 +20,7 @@ Feature: remove an existing forge type override
       | sync-feature-strategy       | enter                |                                             |
       | sync-perennial-strategy     | enter                |                                             |
       | sync-prototype-strategy     | enter                |                                             |
-      | sync-upstream               | enter                |                                             |
+      | sync-upstream               |                      |                                             |
       | sync-tags                   | enter                |                                             |
       | share-new-branches          | enter                |                                             |
       | push-hook                   | enter                |                                             |
@@ -29,6 +29,7 @@ Feature: remove an existing forge type override
       | ship-delete-tracking-branch | enter                |                                             |
       | save config to Git metadata | down enter           |                                             |
 
+  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                              |
