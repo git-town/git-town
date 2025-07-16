@@ -378,11 +378,12 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		UnknownBranchType:        Some(unknownBranchType),
 		Verbose:                  None[configdomain.Verbose](), // the setup assistant doesn't ask for this
 	}
-	return userInput{normalData, actualForgeType, tokenScope, configStorage}, false, nil
+	return userInput{actualMainBranch, normalData, actualForgeType, tokenScope, configStorage}, false, nil
 }
 
 // data entered by the user in the setup assistant
 type userInput struct {
+	actualMainBranch    gitdomain.LocalBranchName
 	data                configdomain.PartialConfig
 	determinedForgeType Option[forgedomain.ForgeType] // the forge type that was determined by the setup assistant - not necessarily what the user entered (could also be "auto detect")
 	scope               configdomain.ConfigScope
@@ -943,14 +944,15 @@ type saveCollectionArgs[T ~[]E, E cmp.Ordered] struct {
 }
 
 func saveToFile(userInput userInput, config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
+	if config.GitLocal.MainBranch.IsSome() {
+		_ = gitconfig.RemoveMainBranch(runner)
+	}
+	userInput.data.MainBranch = Some(userInput.actualMainBranch)
 	if err := configfile.Save(userInput.data); err != nil {
 		return err
 	}
 	if config.GitLocal.DevRemote.IsSome() {
 		_ = gitconfig.RemoveDevRemote(runner)
-	}
-	if config.GitLocal.MainBranch.IsSome() {
-		_ = gitconfig.RemoveMainBranch(runner)
 	}
 	if config.GitLocal.NewBranchType.IsSome() {
 		_ = gitconfig.RemoveNewBranchType(runner)
