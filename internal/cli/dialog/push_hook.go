@@ -32,7 +32,7 @@ func PushHook(existing Option[configdomain.PushHook], inputs dialogcomponents.Te
 	entries := list.Entries[Option[configdomain.PushHook]]{
 		{
 			Data: None[configdomain.PushHook](),
-			Text: "not sure, skip this",
+			Text: messages.DialogSkip,
 		},
 		{
 			Data: Some(configdomain.PushHook(true)),
