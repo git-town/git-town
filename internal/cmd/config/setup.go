@@ -1043,25 +1043,34 @@ func saveSyncPerennialStrategy(valueToWriteToGit Option[configdomain.SyncPerenni
 	return gitconfig.RemoveSyncPerennialStrategy(runner)
 }
 
-func saveSyncPrototypeStrategy(valueToWriteToGit configdomain.SyncPrototypeStrategy, valueAlreadyInGit Option[configdomain.SyncPrototypeStrategy], runner subshelldomain.Runner) error {
-	if valueAlreadyInGit.EqualSome(valueToWriteToGit) {
+func saveSyncPrototypeStrategy(valueToWriteToGit Option[configdomain.SyncPrototypeStrategy], valueAlreadyInGit Option[configdomain.SyncPrototypeStrategy], runner subshelldomain.Runner) error {
+	if valueAlreadyInGit.Equal(valueToWriteToGit) {
 		return nil
 	}
-	return gitconfig.SetSyncPrototypeStrategy(runner, valueToWriteToGit, configdomain.ConfigScopeLocal)
+	if value, has := valueToWriteToGit.Get(); has {
+		return gitconfig.SetSyncPrototypeStrategy(runner, value, configdomain.ConfigScopeLocal)
+	}
+	return gitconfig.RemoveSyncPrototypeStrategy(runner)
 }
 
-func saveSyncUpstream(valueToWriteToGit configdomain.SyncUpstream, valueAlreadyInGit Option[configdomain.SyncUpstream], runner subshelldomain.Runner) error {
-	if valueAlreadyInGit.EqualSome(valueToWriteToGit) {
+func saveSyncUpstream(valueToWriteToGit Option[configdomain.SyncUpstream], valueAlreadyInGit Option[configdomain.SyncUpstream], runner subshelldomain.Runner) error {
+	if valueAlreadyInGit.Equal(valueToWriteToGit) {
 		return nil
 	}
-	return gitconfig.SetSyncUpstream(runner, valueToWriteToGit, configdomain.ConfigScopeLocal)
+	if value, has := valueToWriteToGit.Get(); has {
+		return gitconfig.SetSyncUpstream(runner, value, configdomain.ConfigScopeLocal)
+	}
+	return gitconfig.RemoveSyncUpstream(runner)
 }
 
-func saveSyncTags(valueToWriteToGit configdomain.SyncTags, valueAlreadyInGit Option[configdomain.SyncTags], runner subshelldomain.Runner) error {
-	if valueAlreadyInGit.EqualSome(valueToWriteToGit) {
+func saveSyncTags(valueToWriteToGit Option[configdomain.SyncTags], valueAlreadyInGit Option[configdomain.SyncTags], runner subshelldomain.Runner) error {
+	if valueAlreadyInGit.Equal(valueToWriteToGit) {
 		return nil
 	}
-	return gitconfig.SetSyncTags(runner, valueToWriteToGit, configdomain.ConfigScopeLocal)
+	if value, has := valueToWriteToGit.Get(); has {
+		return gitconfig.SetSyncTags(runner, value, configdomain.ConfigScopeLocal)
+	}
+	return gitconfig.RemoveSyncTags(runner)
 }
 
 func saveToFile(userInput userInput, gitConfig configdomain.PartialConfig, runner subshelldomain.Runner) error {
