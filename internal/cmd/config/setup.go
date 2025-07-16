@@ -288,7 +288,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		}
 	}
 	syncUpstream := repo.UnvalidatedConfig.NormalConfig.SyncUpstream
-	if configFile.SyncUpstream.IsNone() {
+	if configFile.SyncUpstream.IsNone() && len(data.remotes) > 1 {
 		syncUpstream, exit, err = dialog.SyncUpstream(syncUpstream, data.dialogInputs)
 		if err != nil || exit {
 			return emptyResult, exit, err
