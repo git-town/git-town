@@ -993,39 +993,54 @@ func savePushHook(valueToWriteToGit Option[configdomain.PushHook], valueAlreadyI
 	return gitconfig.RemovePushHook(runner)
 }
 
-func saveShareNewBranches(valueToWriteToGit configdomain.ShareNewBranches, valueAlreadyInGit Option[configdomain.ShareNewBranches], runner subshelldomain.Runner) error {
-	if valueAlreadyInGit.EqualSome(valueToWriteToGit) {
+func saveShareNewBranches(valueToWriteToGit Option[configdomain.ShareNewBranches], valueAlreadyInGit Option[configdomain.ShareNewBranches], runner subshelldomain.Runner) error {
+	if valueAlreadyInGit.Equal(valueToWriteToGit) {
 		return nil
 	}
-	return gitconfig.SetShareNewBranches(runner, valueToWriteToGit, configdomain.ConfigScopeLocal)
+	if value, has := valueToWriteToGit.Get(); has {
+		return gitconfig.SetShareNewBranches(runner, value, configdomain.ConfigScopeLocal)
+	}
+	return gitconfig.RemoveShareNewBranches(runner)
 }
 
-func saveShipDeleteTrackingBranch(valueToWriteToGit configdomain.ShipDeleteTrackingBranch, valueAlreadyInGit Option[configdomain.ShipDeleteTrackingBranch], runner subshelldomain.Runner) error {
-	if valueAlreadyInGit.EqualSome(valueToWriteToGit) {
+func saveShipDeleteTrackingBranch(valueToWriteToGit Option[configdomain.ShipDeleteTrackingBranch], valueAlreadyInGit Option[configdomain.ShipDeleteTrackingBranch], runner subshelldomain.Runner) error {
+	if valueAlreadyInGit.Equal(valueToWriteToGit) {
 		return nil
 	}
-	return gitconfig.SetShipDeleteTrackingBranch(runner, valueToWriteToGit, configdomain.ConfigScopeLocal)
+	if value, has := valueToWriteToGit.Get(); has {
+		return gitconfig.SetShipDeleteTrackingBranch(runner, value, configdomain.ConfigScopeLocal)
+	}
+	return gitconfig.RemoveShipDeleteTrackingBranch(runner)
 }
 
-func saveShipStrategy(valueToWriteToGit configdomain.ShipStrategy, valueAlreadyInGit Option[configdomain.ShipStrategy], runner subshelldomain.Runner) error {
-	if valueAlreadyInGit.EqualSome(valueToWriteToGit) {
+func saveShipStrategy(valueToWriteToGit Option[configdomain.ShipStrategy], valueAlreadyInGit Option[configdomain.ShipStrategy], runner subshelldomain.Runner) error {
+	if valueAlreadyInGit.Equal(valueToWriteToGit) {
 		return nil
 	}
-	return gitconfig.SetShipStrategy(runner, valueToWriteToGit, configdomain.ConfigScopeLocal)
+	if value, has := valueToWriteToGit.Get(); has {
+		return gitconfig.SetShipStrategy(runner, value, configdomain.ConfigScopeLocal)
+	}
+	return gitconfig.RemoveShipStrategy(runner)
 }
 
-func saveSyncFeatureStrategy(valueToWriteToGit configdomain.SyncFeatureStrategy, valueAlreadyInGit Option[configdomain.SyncFeatureStrategy], runner subshelldomain.Runner) error {
-	if valueAlreadyInGit.EqualSome(valueToWriteToGit) {
+func saveSyncFeatureStrategy(valueToWriteToGit Option[configdomain.SyncFeatureStrategy], valueAlreadyInGit Option[configdomain.SyncFeatureStrategy], runner subshelldomain.Runner) error {
+	if valueAlreadyInGit.Equal(valueToWriteToGit) {
 		return nil
 	}
-	return gitconfig.SetSyncFeatureStrategy(runner, valueToWriteToGit, configdomain.ConfigScopeLocal)
+	if value, has := valueToWriteToGit.Get(); has {
+		return gitconfig.SetSyncFeatureStrategy(runner, value, configdomain.ConfigScopeLocal)
+	}
+	return gitconfig.RemoveSyncFeatureStrategy(runner)
 }
 
-func saveSyncPerennialStrategy(valueToWriteToGit configdomain.SyncPerennialStrategy, valueAlreadyInGit Option[configdomain.SyncPerennialStrategy], runner subshelldomain.Runner) error {
-	if valueAlreadyInGit.EqualSome(valueToWriteToGit) {
+func saveSyncPerennialStrategy(valueToWriteToGit Option[configdomain.SyncPerennialStrategy], valueAlreadyInGit Option[configdomain.SyncPerennialStrategy], runner subshelldomain.Runner) error {
+	if valueAlreadyInGit.Equal(valueToWriteToGit) {
 		return nil
 	}
-	return gitconfig.SetSyncPerennialStrategy(runner, valueToWriteToGit, configdomain.ConfigScopeLocal)
+	if value, has := valueToWriteToGit.Get(); has {
+		return gitconfig.SetSyncPerennialStrategy(runner, value, configdomain.ConfigScopeLocal)
+	}
+	return gitconfig.RemoveSyncPerennialStrategy(runner)
 }
 
 func saveSyncPrototypeStrategy(valueToWriteToGit configdomain.SyncPrototypeStrategy, valueAlreadyInGit Option[configdomain.SyncPrototypeStrategy], runner subshelldomain.Runner) error {
