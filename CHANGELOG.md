@@ -1,5 +1,13 @@
 # Git Town Changelog
 
+## 21.3.0 (2025-07-16)
+
+#### New Features
+
+#### Bug Fixes
+
+- Update the base branch in a stack using the [gh connector](https://www.git-town.com/preferences/github-connector.html) works now ([#5163](https://github.com/git-town/git-town/pull/5163)).
+
 ## 21.2.0 (2025-07-02)
 
 #### New Features
