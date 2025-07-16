@@ -24,12 +24,12 @@ type TestInputs struct {
 	len    int          // the total number of inputs
 }
 
-func (self *TestInputs) IsEmpty() bool {
+func (self TestInputs) IsEmpty() bool {
 	return *self.cursor.Value == self.len
 }
 
 // Next provides the TestInput for the next dialog in an end-to-end test.
-func (self *TestInputs) Next() Option[TestInput] {
+func (self TestInputs) Next() Option[TestInput] {
 	if self.len == 0 {
 		return None[TestInput]()
 	}
