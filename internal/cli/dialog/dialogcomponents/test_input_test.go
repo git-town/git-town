@@ -104,5 +104,21 @@ func TestTestInputs(t *testing.T) {
 			must.Eq(t, None[dialogcomponents.TestInput](), have)
 			must.True(t, testInputs.IsEmpty())
 		})
+		t.Run("exceed given inputs", func(t *testing.T) {
+			t.Parallel()
+			defer func() {
+				if err := recover(); err == nil {
+					t.Errorf("did not panic as expected")
+				}
+			}()
+			keyA := dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyCtrlA}}
+			testInputs := dialogcomponents.NewTestInputs(keyA)
+			// request the first entry
+			have := testInputs.Next()
+			must.Eq(t, Some(keyA), have)
+			must.True(t, testInputs.IsEmpty())
+			// request the next entry
+			_ = testInputs.Next()
+		})
 	})
 }
