@@ -14,13 +14,13 @@ func TestTestInputs(t *testing.T) {
 
 	t.Run("LoadTestInputs", func(t *testing.T) {
 		t.Parallel()
-		give := []string{
+		env := []string{
 			"foo=bar",
 			"GITTOWN_DIALOG_INPUT_1=enter",
 			"GITTOWN_DIALOG_INPUT_2=space|down|space|5|enter",
 			"GITTOWN_DIALOG_INPUT_3=ctrl+c",
 		}
-		have := dialogcomponents.LoadTestInputs(give)
+		have := dialogcomponents.LoadTestInputs(env)
 		want := dialogcomponents.NewTestInputs(
 			dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyEnter}},
 			dialogcomponents.TestInput{
@@ -73,25 +73,36 @@ func TestTestInputs(t *testing.T) {
 
 	t.Run("TestInputs.Next", func(t *testing.T) {
 		t.Parallel()
-		keyA := dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyCtrlA}}
-		keyB := dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}}
-		keyC := dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}}
-		testInputs := dialogcomponents.NewTestInputs(
-			keyA,
-			keyB,
-			keyC,
-		)
-		// request the first entry: A
-		have := testInputs.Next()
-		must.Eq(t, Some(keyA), have)
-		must.False(t, testInputs.IsEmpty())
-		// request the next entry: B
-		have = testInputs.Next()
-		must.Eq(t, Some(keyB), have)
-		must.False(t, testInputs.IsEmpty())
-		// request the next entry: C
-		have = testInputs.Next()
-		must.Eq(t, Some(keyC), have)
-		must.True(t, testInputs.IsEmpty())
+		t.Run("populated", func(t *testing.T) {
+			t.Parallel()
+			keyA := dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyCtrlA}}
+			keyB := dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}}
+			keyC := dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}}
+			testInputs := dialogcomponents.NewTestInputs(
+				keyA,
+				keyB,
+				keyC,
+			)
+			// request the first entry: A
+			have := testInputs.Next()
+			must.Eq(t, Some(keyA), have)
+			must.False(t, testInputs.IsEmpty())
+			// request the next entry: B
+			have = testInputs.Next()
+			must.Eq(t, Some(keyB), have)
+			must.False(t, testInputs.IsEmpty())
+			// request the next entry: C
+			have = testInputs.Next()
+			must.Eq(t, Some(keyC), have)
+			must.True(t, testInputs.IsEmpty())
+		})
+		t.Run("not populated", func(t *testing.T) {
+			t.Parallel()
+			testInputs := dialogcomponents.NewTestInputs()
+			// request the first entry: A
+			have := testInputs.Next()
+			must.Eq(t, None[dialogcomponents.TestInput](), have)
+			must.True(t, testInputs.IsEmpty())
+		})
 	})
 }
