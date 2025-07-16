@@ -46,7 +46,6 @@ func (self *List[S]) EntryNumberStr(number int) string {
 
 // HandleKey handles keypresses that are common for all bubbleLists.
 func (self *List[S]) HandleKey(key tea.KeyMsg) (bool, tea.Cmd) {
-	// fmt.Println("1111111111111111111111", key.Type)
 	switch key.Type { //nolint:exhaustive
 	case tea.KeyUp, tea.KeyShiftTab:
 		self.MoveCursorUp()
