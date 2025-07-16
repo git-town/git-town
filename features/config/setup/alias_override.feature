@@ -10,7 +10,7 @@ Feature: override an existing Git alias
       | welcome                     | enter   |
       | aliases                     | o enter |
       | main branch                 | enter   |
-      | perennial branches          | enter   |
+      | perennial branches          |         |
       | perennial regex             | enter   |
       | feature regex               | enter   |
       | contribution regex          | enter   |
