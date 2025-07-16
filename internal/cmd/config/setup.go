@@ -382,6 +382,9 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	if data.dialogInputs.IsEmpty() {
 		panic("unused dialog inputs")
 	}
+	if !data.dialogInputs.IsEmpty() {
+		panic("unused dialog inputs")
+	}
 	return userInput{actualMainBranch, normalData, actualForgeType, tokenScope, configStorage}, false, nil
 }
 
