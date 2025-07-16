@@ -24,7 +24,7 @@ type TestInputs struct {
 }
 
 func (self TestInputs) IsEmpty() bool {
-	return len(*self.inputs) == 0
+	return self.len == 0 || self.cursor == self.len
 }
 
 // Next provides the TestInput for the next dialog in an end-to-end test.
@@ -32,11 +32,12 @@ func (self *TestInputs) Next() TestInput {
 	if self.len == 0 {
 		return TestInput{}
 	}
-	self.cursor += 1
 	if self.cursor == self.len {
 		panic("E2E test defines not enough dialog inputs")
 	}
-	return (*self.inputs)[self.cursor]
+	result := (*self.inputs)[self.cursor]
+	self.cursor += 1
+	return result
 }
 
 // LoadTestInputs provides the TestInputs to use in an end-to-end test,

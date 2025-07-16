@@ -71,25 +71,27 @@ func TestTestInputs(t *testing.T) {
 
 	t.Run("TestInputs.Next", func(t *testing.T) {
 		t.Parallel()
+		keyA := TestInput{tea.KeyMsg{Type: tea.KeyCtrlA}}
+		keyB := TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}}
+		keyC := TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}}
 		testInputs := NewTestInputs(
-			TestInput{tea.KeyMsg{Type: tea.KeyCtrlA}},
-			TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}},
-			TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}},
+			keyA,
+			keyB,
+			keyC,
 		)
+		must.EqOp(t, 0, testInputs.cursor)
 		// request the first entry: A
-		haveNext := testInputs.Next()
-		wantNext := TestInput{tea.KeyMsg{Type: tea.KeyCtrlA}}
-		must.Eq(t, wantNext, haveNext)
+		have := testInputs.Next()
+		must.Eq(t, keyA, have)
+		must.EqOp(t, 1, testInputs.cursor)
 		must.False(t, testInputs.IsEmpty())
 		// request the next entry: B
-		haveNext = testInputs.Next()
-		wantNext = TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}}
-		must.Eq(t, wantNext, haveNext)
+		have = testInputs.Next()
+		must.Eq(t, keyB, have)
 		must.False(t, testInputs.IsEmpty())
 		// request the next entry: C
-		haveNext = testInputs.Next()
-		wantNext = TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}}
-		must.Eq(t, wantNext, haveNext)
+		have = testInputs.Next()
+		must.Eq(t, keyC, have)
 		must.True(t, testInputs.IsEmpty())
 	})
 }
