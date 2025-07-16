@@ -36,7 +36,7 @@ Feature: override an existing Git alias
     Then Git Town runs the commands
       | COMMAND                                        |
       | git config --global alias.append "town append" |
-      | git config --unset git-town.main-branch        |
+      | git config git-town.new-branch-type feature    |
     And global Git setting "alias.append" is now "town append"
     And the configuration file is now:
       """
