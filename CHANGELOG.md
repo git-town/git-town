@@ -5,6 +5,7 @@
 #### New Features
 
 _[setup assistant](https://www.git-town.com/commands/config-setup.html):_
+
 - now creates configuration files with name `git-town.toml` instead of the deprecated `git-branches.toml` ([#5162](https://github.com/git-town/git-town/pull/5162))
 - now gives the user a chance to enter the [observed regex](https://www.git-town.com/preferences/observed-regex.html) and [contribution regex](https://www.git-town.com/preferences/contribution-regex.html), ([#5133](https://github.com/git-town/git-town/pull/5133), [#5132](https://github.com/git-town/git-town/pull/5132))
 - when entering perennial branches, the main and perennial branches from the config file are now preselected and locked ([#5154](https://github.com/git-town/git-town/pull/5154))
