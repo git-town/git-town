@@ -53,7 +53,7 @@ func LoadTestInputs(environmenttVariables []string) TestInputs {
 			fmt.Printf(messages.SettingIgnoreInvalid, environmentVariable)
 			continue
 		}
-		input := ParseTestInput(value)
+		input := parseTestInput(value)
 		inputs = append(inputs, input)
 	}
 	return NewTestInputs(inputs...)
@@ -67,9 +67,9 @@ func NewTestInputs(inputs ...TestInput) TestInputs {
 	}
 }
 
-// ParseTestInput converts the given input data in the environment variable format
+// parseTestInput converts the given input data in the environment variable format
 // into the format understood by Git Town's dialogs.
-func ParseTestInput(envData string) TestInput {
+func parseTestInput(envData string) TestInput {
 	result := TestInput{}
 	for _, input := range strings.Split(envData, "|") {
 		if len(input) > 0 {
