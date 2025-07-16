@@ -15,7 +15,7 @@ const (
 How do you want to store the configuration data?
 
 You can store it as a configuration file
-(.git-branches.toml), which you commit
+(.git-town.toml), which you commit
 to the repository. This sets up Git Town
 for all people working on this codebase.
 Personal data like your API tokens
