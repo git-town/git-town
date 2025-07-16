@@ -20,6 +20,10 @@ _[setup assistant](https://www.git-town.com/commands/config-setup.html):_
   -  now displays the entered value for the API token scope ([#5144](https://github.com/git-town/git-town/pull/5144))
   - more consistent dialog captions in the [setup assistant](https://www.git-town.com/commands/config-setup.html) ([#5159](https://github.com/git-town/git-town/pull/5159))
 
+#### Contributors
+
+Shoutout to @kevgo, @stephenwade, @wengh for contributing code, ideas, and feedback to 52 shipped PRs and 1 resolved issue!
+
 ## 21.2.0 (2025-07-02)
 
 #### New Features
