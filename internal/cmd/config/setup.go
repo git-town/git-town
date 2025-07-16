@@ -157,7 +157,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 			return emptyResult, exit, err
 		}
 	}
-	devRemote := None[gitdomain.Remote]()
+	devRemote := Some(repo.UnvalidatedConfig.NormalConfig.DevRemote)
 	if configFile.DevRemote.IsNone() && len(data.remotes) > 1 {
 		devRemote, exit, err = dialog.DevRemote(repo.UnvalidatedConfig.NormalConfig.DevRemote, data.remotes, data.dialogInputs)
 		if err != nil || exit {
@@ -893,7 +893,7 @@ func saveAliases(valuesToWriteToGit configdomain.Aliases, valuesAlreadyInGit con
 }
 
 func saveOptionToLocalGit[T comparable](runner subshelldomain.Runner, args saveToLocalGitArgs[T]) {
-	if args.valueToWrite.Equal(args.configFileValue) {
+	if args.valueToWrite.Equal(args.configFileValue) && args.valueToWrite.IsSome() {
 		return
 	}
 	newValue, hasNew := args.valueToWrite.Get()
@@ -902,13 +902,15 @@ func saveOptionToLocalGit[T comparable](runner subshelldomain.Runner, args saveT
 	newEqualsExisting := args.valueToWrite.Equal(args.existingValueUnscoped)
 	switch {
 	case hasNew && newEqualsExisting && hasLocal:
-		_ = args.removeFunc(runner)
+		// the local setting is already the desired value --> nothing to do
 	case hasNew && newEqualsExisting && !hasLocal:
-		// nothing to do
+		_ = args.saveFunc(runner, newValue, configdomain.ConfigScopeLocal)
 	case hasNew && !newEqualsExisting:
 		_ = args.saveFunc(runner, newValue, configdomain.ConfigScopeLocal)
 	case !hasNew && hasLocal:
 		_ = args.removeFunc(runner)
+	case !hasNew && !hasLocal:
+		// nothing to do
 	case !hasNew && hasUnscoped:
 		_ = args.saveFunc(runner, newValue, configdomain.ConfigScopeLocal)
 	default:
@@ -926,7 +928,7 @@ type saveToLocalGitArgs[T comparable] struct {
 }
 
 func saveCollectionToLocalGit[T ~[]E, E cmp.Ordered](runner subshelldomain.Runner, args saveCollectionArgs[T, E]) {
-	if slices.Compare(args.valueToWrite, args.configFileValue) == 0 {
+	if slices.Compare(args.valueToWrite, args.configFileValue) == 0 && len(args.valueToWrite) > 0 {
 		return
 	}
 	if slices.Compare(args.valueToWrite, args.valueAlreadyInGit) == 0 {

@@ -33,12 +33,14 @@ func MainBranch(args MainBranchArgs) (Option[gitdomain.LocalBranchName], dialogd
 	// if global and local: add global option but preselect the local one
 	entries := list.Entries[Option[gitdomain.LocalBranchName]]{}
 	if unscopedMain, hasUnscoped := args.UnscopedGitMainBranch.Get(); hasUnscoped {
-		entries = append(entries, list.Entry[Option[gitdomain.LocalBranchName]]{
-			Data: None[gitdomain.LocalBranchName](),
-			Text: fmt.Sprintf("use global setting (%s)", unscopedMain),
-		})
-		if len(args.LocalBranches) == 1 && unscopedMain == args.LocalBranches[0] {
-			return None[gitdomain.LocalBranchName](), false, nil
+		if args.LocalGitMainBranch.IsNone() {
+			if len(args.LocalBranches) == 1 && unscopedMain == args.LocalBranches[0] {
+				return None[gitdomain.LocalBranchName](), false, nil
+			}
+			entries = append(entries, list.Entry[Option[gitdomain.LocalBranchName]]{
+				Data: None[gitdomain.LocalBranchName](),
+				Text: fmt.Sprintf("use global setting (%s)", unscopedMain),
+			})
 		}
 	}
 	for _, localBranch := range args.LocalBranches {
