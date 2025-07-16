@@ -27,7 +27,7 @@ Feature: remove an existing forge type override
       | new-branch-type             | enter                |                                             |
       | ship-strategy               | enter                |                                             |
       | ship-delete-tracking-branch | enter                |                                             |
-      | save config to Git metadata | down enter           |                                             |
+      | save config to Git metadata | enter                |                                             |
 
   Scenario: result
     Then Git Town runs the commands

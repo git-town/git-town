@@ -4,29 +4,29 @@ Feature: Accepting all default values in a brand-new Git repo leads to a working
   Background:
     Given a brand-new Git repo
     When I run "git-town config setup" and enter into the dialogs:
-      | DIALOG                      | KEYS  |
-      | welcome                     | enter |
-      | aliases                     | enter |
-      | main branch                 | enter |
-      | perennial branches          | enter |
-      | perennial regex             | enter |
-      | feature regex               | enter |
-      | contribution regex          | enter |
-      | observed regex              | enter |
-      | unknown branch type         | enter |
-      | origin hostname             | enter |
-      | forge type                  | enter |
-      | sync-feature-strategy       | enter |
-      | sync-perennial-strategy     | enter |
-      | sync-prototype-strategy     | enter |
-      | sync-upstream               | enter |
-      | sync-tags                   | enter |
-      | share-new-branches          | enter |
-      | push-hook                   | enter |
-      | new-branch-type             | enter |
-      | ship-strategy               | enter |
-      | ship-delete-tracking-branch | enter |
-      | save config to config file  | enter |
+      | DIALOG                      | KEYS       |
+      | welcome                     | enter      |
+      | aliases                     | enter      |
+      | main branch                 | enter      |
+      | perennial branches          | enter      |
+      | perennial regex             | enter      |
+      | feature regex               | enter      |
+      | contribution regex          | enter      |
+      | observed regex              | enter      |
+      | unknown branch type         | enter      |
+      | origin hostname             | enter      |
+      | forge type                  | enter      |
+      | sync-feature-strategy       | enter      |
+      | sync-perennial-strategy     | enter      |
+      | sync-prototype-strategy     | enter      |
+      | sync-upstream               | enter      |
+      | sync-tags                   | enter      |
+      | share-new-branches          | enter      |
+      | push-hook                   | enter      |
+      | new-branch-type             | enter      |
+      | ship-strategy               | enter      |
+      | ship-delete-tracking-branch | enter      |
+      | save config to config file  | down enter |
 
   Scenario: result
     Then Git Town runs the commands

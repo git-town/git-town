@@ -39,7 +39,7 @@ Feature: change existing information in Git metadata
       | new-branch-type                           | down enter             |
       | set ship-strategy to "fast-forward"       | down down enter        |
       | disable ship-delete-tracking-branch       | down enter             |
-      | save config to Git metadata               | down enter             |
+      | save config to Git metadata               | enter                  |
 
   Scenario: result
     Then Git Town runs the commands

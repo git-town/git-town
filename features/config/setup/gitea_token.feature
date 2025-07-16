@@ -31,7 +31,7 @@ Feature: enter the Gitea API token
       | new-branch-type             | enter             |                                             |
       | ship-strategy               | enter             |                                             |
       | ship-delete-tracking-branch | enter             |                                             |
-      | save config to Git metadata | down enter        |                                             |
+      | save config to Git metadata | enter             |                                             |
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config git-town.gitea-token 123456               |

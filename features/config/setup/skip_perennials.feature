@@ -27,7 +27,7 @@ Feature: don't ask for perennial branches if no branches that could be perennial
       | new-branch-type             | enter      |                                             |
       | ship-strategy               | enter      |                                             |
       | ship-delete-tracking-branch | enter      |                                             |
-      | save config to Git metadata | down enter |                                             |
+      | save config to Git metadata | enter      |                                             |
 
   Scenario: result
     Then the main branch is now "main"
