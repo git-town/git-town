@@ -43,9 +43,27 @@ func TestSave(t *testing.T) {
 
 	t.Run("RenderTOML", func(t *testing.T) {
 		t.Parallel()
-		give := exampleConfig()
-		have := configfile.RenderTOML(give, "main")
-		want := `
+		t.Run("all options given", func(t *testing.T) {
+			t.Parallel()
+			have := configfile.RenderTOML(configdomain.PartialConfig{
+				DevRemote:                Some(gitdomain.RemoteOrigin),
+				ForgeType:                asserts.NoError1(forgedomain.ParseForgeType("github")),
+				HostingOriginHostname:    configdomain.ParseHostingOriginHostname("forge"),
+				MainBranch:               Some(gitdomain.NewLocalBranchName("main")),
+				NewBranchType:            Some(configdomain.BranchTypePrototypeBranch),
+				PerennialBranches:        gitdomain.NewLocalBranchNames("qa", "staging"),
+				PerennialRegex:           asserts.NoError1(configdomain.ParsePerennialRegex("perennial-")),
+				PushHook:                 Some(configdomain.PushHook(true)),
+				ShareNewBranches:         Some(configdomain.ShareNewBranchesPropose),
+				ShipDeleteTrackingBranch: Some(configdomain.ShipDeleteTrackingBranch(true)),
+				ShipStrategy:             Some(configdomain.ShipStrategyAPI),
+				SyncFeatureStrategy:      Some(configdomain.SyncFeatureStrategyMerge),
+				SyncPerennialStrategy:    Some(configdomain.SyncPerennialStrategyRebase),
+				SyncPrototypeStrategy:    Some(configdomain.SyncPrototypeStrategyCompress),
+				SyncTags:                 Some(configdomain.SyncTags(true)),
+				SyncUpstream:             Some(configdomain.SyncUpstream(true)),
+			})
+			want := `
 # More info around this file at https://www.git-town.com/configuration-file
 
 [branches]
@@ -74,39 +92,28 @@ push-hook = true
 tags = true
 upstream = true
 `[1:]
-		must.EqOp(t, want, have)
+			must.EqOp(t, want, have)
+		})
+		t.Run("no options given", func(t *testing.T) {
+			t.Parallel()
+			have := configfile.RenderTOML(configdomain.PartialConfig{})
+			want := `
+# More info around this file at https://www.git-town.com/configuration-file
+`[1:]
+			must.EqOp(t, want, have)
+		})
 	})
 
 	t.Run("Save", func(t *testing.T) {
 		t.Parallel()
-		config := exampleConfig()
-		err := configfile.Save(config, "main")
+		config := configdomain.PartialConfig{}
+		err := configfile.Save(config)
 		defer os.Remove(configfile.FileName)
 		must.NoError(t, err)
 		bytes, err := os.ReadFile(configfile.FileName)
 		must.NoError(t, err)
 		have := string(bytes)
-		want := configfile.RenderTOML(config, "main")
+		want := configfile.RenderTOML(config)
 		must.EqOp(t, want, have)
 	})
-}
-
-func exampleConfig() configdomain.NormalConfigData {
-	return configdomain.NormalConfigData{
-		DevRemote:                "origin",
-		ForgeType:                asserts.NoError1(forgedomain.ParseForgeType("github")),
-		HostingOriginHostname:    configdomain.ParseHostingOriginHostname("forge"),
-		NewBranchType:            Some(configdomain.BranchTypePrototypeBranch),
-		PerennialBranches:        gitdomain.NewLocalBranchNames("qa", "staging"),
-		PerennialRegex:           asserts.NoError1(configdomain.ParsePerennialRegex("perennial-")),
-		PushHook:                 true,
-		ShareNewBranches:         configdomain.ShareNewBranchesPropose,
-		ShipDeleteTrackingBranch: true,
-		ShipStrategy:             configdomain.ShipStrategyAPI,
-		SyncFeatureStrategy:      configdomain.SyncFeatureStrategyMerge,
-		SyncPerennialStrategy:    configdomain.SyncPerennialStrategyRebase,
-		SyncPrototypeStrategy:    configdomain.SyncPrototypeStrategyCompress,
-		SyncTags:                 true,
-		SyncUpstream:             true,
-	}
 }
