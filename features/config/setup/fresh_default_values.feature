@@ -8,7 +8,7 @@ Feature: Accepting all default values in a brand-new Git repo leads to a working
       | welcome                     | enter |
       | aliases                     | enter |
       | main branch                 | enter |
-      | perennial branches          | enter |
+      | perennial branches          |       |
       | perennial regex             | enter |
       | feature regex               | enter |
       | contribution regex          | enter |
