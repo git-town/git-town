@@ -7,6 +7,7 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/git-town/git-town/v21/internal/messages"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 // TestInputKey specifies the name of environment variables containing input for dialogs in end-to-end tests.
@@ -28,16 +29,16 @@ func (self *TestInputs) IsEmpty() bool {
 }
 
 // Next provides the TestInput for the next dialog in an end-to-end test.
-func (self *TestInputs) Next() TestInput {
+func (self *TestInputs) Next() Option[TestInput] {
 	if self.len == 0 {
-		return TestInput{}
+		return None[TestInput]()
 	}
 	if self.cursor == self.len {
 		panic("E2E test defines not enough dialog inputs")
 	}
 	result := self.inputs[self.cursor]
 	self.cursor += 1
-	return result
+	return Some(result)
 }
 
 // LoadTestInputs provides the TestInputs to use in an end-to-end test,

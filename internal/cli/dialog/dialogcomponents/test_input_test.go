@@ -5,6 +5,7 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -82,15 +83,15 @@ func TestTestInputs(t *testing.T) {
 		)
 		// request the first entry: A
 		have := testInputs.Next()
-		must.Eq(t, keyA, have)
+		must.Eq(t, Some(keyA), have)
 		must.False(t, testInputs.IsEmpty())
 		// request the next entry: B
 		have = testInputs.Next()
-		must.Eq(t, keyB, have)
+		must.Eq(t, Some(keyB), have)
 		must.False(t, testInputs.IsEmpty())
 		// request the next entry: C
 		have = testInputs.Next()
-		must.Eq(t, keyC, have)
+		must.Eq(t, Some(keyC), have)
 		must.True(t, testInputs.IsEmpty())
 	})
 }
