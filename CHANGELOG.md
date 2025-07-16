@@ -10,7 +10,7 @@ _[setup assistant](https://www.git-town.com/commands/config-setup.html):_
 - now gives the user a chance to enter the [observed regex](https://www.git-town.com/preferences/observed-regex.html) and [contribution regex](https://www.git-town.com/preferences/contribution-regex.html), ([#5133](https://github.com/git-town/git-town/pull/5133), [#5132](https://github.com/git-town/git-town/pull/5132))
 - when entering perennial branches, the main and perennial branches from the config file are now preselected and locked ([#5154](https://github.com/git-town/git-town/pull/5154))
 - no longer asks for the [dev remote](https://www.git-town.com/preferences/dev-remote.html) if only one Git remote exists ([#5153](https://github.com/git-town/git-town/pull/5153))
-- now update Git metadata only if the user entered a different value than already exists ([#5127](https://github.com/git-town/git-town/pull/5127)
+- now updates Git metadata only if the user entered a different value than already exists ([#5127](https://github.com/git-town/git-town/pull/5127)
 - no longer creates commented out entries ([#5110](https://github.com/git-town/git-town/pull/5110))
 - now explains how to run it manually ([#5155](https://github.com/git-town/git-town/pull/5155/files))
 
