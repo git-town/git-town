@@ -379,6 +379,9 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		UnknownBranchType:        Some(unknownBranchType),
 		Verbose:                  None[configdomain.Verbose](), // the setup assistant doesn't ask for this
 	}
+	if data.dialogInputs.IsEmpty() {
+		panic("unused dialog inputs")
+	}
 	return userInput{actualMainBranch, normalData, actualForgeType, tokenScope, configStorage}, false, nil
 }
 
