@@ -1,5 +1,30 @@
 # Git Town Changelog
 
+## 21.3.0 (2025-07-16)
+
+#### New Features
+
+_[setup assistant](https://www.git-town.com/commands/config-setup.html):_
+
+- now creates configuration files with name `git-town.toml` instead of the deprecated `git-branches.toml` ([#5162](https://github.com/git-town/git-town/pull/5162))
+- now gives the user a chance to enter the [observed regex](https://www.git-town.com/preferences/observed-regex.html) and [contribution regex](https://www.git-town.com/preferences/contribution-regex.html), ([#5133](https://github.com/git-town/git-town/pull/5133), [#5132](https://github.com/git-town/git-town/pull/5132))
+- when entering perennial branches, the main and perennial branches from the config file are now preselected and locked ([#5154](https://github.com/git-town/git-town/pull/5154))
+- no longer asks for the [dev remote](https://www.git-town.com/preferences/dev-remote.html) if only one Git remote exists ([#5153](https://github.com/git-town/git-town/pull/5153))
+- now updates Git metadata only if the user entered a different value than already exists ([#5127](https://github.com/git-town/git-town/pull/5127))
+- no longer creates commented out entries ([#5110](https://github.com/git-town/git-town/pull/5110))
+- now explains how to run it manually ([#5155](https://github.com/git-town/git-town/pull/5155/files))
+
+#### Bug Fixes
+
+- updating the base branch in a stack using the [gh connector](https://www.git-town.com/preferences/github-connector.html) works now ([#5163](https://github.com/git-town/git-town/pull/5163))
+- setup assistant:
+  - now displays the entered value for the API token scope ([#5144](https://github.com/git-town/git-town/pull/5144))
+  - more consistent dialog captions ([#5159](https://github.com/git-town/git-town/pull/5159))
+
+#### Contributors
+
+Shoutout to @kevgo, @stephenwade, @wengh for contributing code, ideas, and feedback to 52 shipped PRs and 1 resolved issue!
+
 ## 21.2.0 (2025-07-02)
 
 #### New Features
