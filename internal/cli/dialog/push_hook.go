@@ -32,7 +32,7 @@ func PushHook(existing Option[configdomain.PushHook], inputs dialogcomponents.Te
 	entries := list.Entries[Option[configdomain.PushHook]]{
 		{
 			Data: None[configdomain.PushHook](),
-			Text: "enabled: run Git hooks when pushing branches",
+			Text: "not sure, skip this",
 		},
 		{
 			Data: Some(configdomain.PushHook(true)),
