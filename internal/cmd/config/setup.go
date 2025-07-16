@@ -1074,7 +1074,8 @@ func saveSyncTags(valueToWriteToGit Option[configdomain.SyncTags], valueAlreadyI
 }
 
 func saveToFile(userInput userInput, gitConfig configdomain.PartialConfig, runner subshelldomain.Runner) error {
-	if err := configfile.Save(userInput.data, userInput.validatedConfig.MainBranch); err != nil {
+	userInput.data.MainBranch = Some(userInput.validatedConfig.MainBranch)
+	if err := configfile.Save(userInput.data); err != nil {
 		return err
 	}
 	if gitConfig.DevRemote.IsSome() {
