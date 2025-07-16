@@ -1,6 +1,6 @@
 package configfile
 
 const (
-	FileName            = ".git-branches.toml"
-	AlternativeFileName = ".git-town.toml"
+	FileName            = ".git-town.toml"
+	AlternativeFileName = ".git-branches.toml"
 )
