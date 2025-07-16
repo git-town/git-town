@@ -380,9 +380,12 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		GitHubToken:              githubToken,
 		GitLabConnectorType:      gitlabConnectorTypeOpt,
 		GitLabToken:              gitlabToken,
+		GitUserEmail:             None[gitdomain.GitUserEmail](),
+		GitUserName:              None[gitdomain.GitUserName](),
 		GiteaToken:               giteaToken,
 		HostingOriginHostname:    hostingOriginHostName,
 		Lineage:                  configdomain.Lineage{}, // the setup assistant doesn't ask for this
+		MainBranch:               Some(mainBranch),
 		NewBranchType:            newBranchType,
 		ObservedRegex:            observedRegex,
 		Offline:                  None[configdomain.Offline](), // the setup assistant doesn't ask for this
@@ -408,13 +411,13 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	if !data.dialogInputs.IsEmpty() {
 		panic("unused dialog inputs")
 	}
-	return userInput{actualForgeType, normalData, tokenScope, configStorage, validatedData}, false, nil
+	return userInput{normalData, actualForgeType, tokenScope, configStorage, validatedData}, false, nil
 }
 
 // data entered by the user in the setup assistant
 type userInput struct {
-	determinedForgeType Option[forgedomain.ForgeType] // the forge type that was determined by the setup assistant - not necessarily what the user entered (could also be "auto detect")
 	data                configdomain.PartialConfig
+	determinedForgeType Option[forgedomain.ForgeType] // the forge type that was determined by the setup assistant - not necessarily what the user entered (could also be "auto detect")
 	scope               configdomain.ConfigScope
 	storageLocation     dialog.ConfigStorageOption
 	validatedConfig     configdomain.ValidatedConfigData
