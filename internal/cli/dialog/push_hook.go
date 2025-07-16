@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/format"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 const (
@@ -27,19 +28,23 @@ More details: https://www.git-town.com/preferences/push-hook.
 `
 )
 
-func PushHook(existing configdomain.PushHook, inputs dialogcomponents.TestInputs) (configdomain.PushHook, dialogdomain.Exit, error) {
-	entries := list.Entries[configdomain.PushHook]{
+func PushHook(existing Option[configdomain.PushHook], inputs dialogcomponents.TestInputs) (Option[configdomain.PushHook], dialogdomain.Exit, error) {
+	entries := list.Entries[Option[configdomain.PushHook]]{
 		{
-			Data: true,
+			Data: None[configdomain.PushHook](),
 			Text: "enabled: run Git hooks when pushing branches",
 		},
 		{
-			Data: false,
+			Data: Some(configdomain.PushHook(true)),
+			Text: "enabled: run Git hooks when pushing branches",
+		},
+		{
+			Data: Some(configdomain.PushHook(false)),
 			Text: "disabled: don't run Git hooks when pushing branches",
 		},
 	}
 	defaultPos := entries.IndexOf(existing)
 	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, pushHookTitle, PushHookHelp, inputs)
-	fmt.Printf(messages.PushHook, dialogcomponents.FormattedSelection(format.Bool(selection.IsTrue()), exit))
+	fmt.Printf(messages.PushHook, dialogcomponents.FormattedSelection(format.BoolOpt(selection.Get()), exit))
 	return selection, exit, err
 }

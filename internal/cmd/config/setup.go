@@ -308,7 +308,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 			return emptyResult, exit, err
 		}
 	}
-	pushHook := repo.UnvalidatedConfig.NormalConfig.PushHook
+	pushHook := repo.UnvalidatedConfig.NormalConfig.Git.PushHook
 	if configFile.PushHook.IsNone() {
 		pushHook, exit, err = dialog.PushHook(pushHook, data.dialogInputs)
 		if err != nil || exit {
@@ -366,7 +366,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		Offline:                  None[configdomain.Offline](), // the setup assistant doesn't ask for this
 		PerennialBranches:        perennialBranches,
 		PerennialRegex:           perennialRegex,
-		PushHook:                 Some(pushHook),
+		PushHook:                 pushHook,
 		ShareNewBranches:         Some(shareNewBranches),
 		ShipDeleteTrackingBranch: Some(shipDeleteTrackingBranch),
 		ShipStrategy:             Some(shipStrategy),
