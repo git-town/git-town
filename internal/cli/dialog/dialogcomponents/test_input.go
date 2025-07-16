@@ -70,7 +70,7 @@ func NewTestInputs(inputs ...TestInput) TestInputs {
 	}
 }
 
-// parseTestInput converts the given input data in the environment variable format
+// ParseTestInput converts the given input data in the environment variable format
 // into the format understood by Git Town's dialogs.
 func ParseTestInput(envData string) TestInput {
 	result := TestInput{}
