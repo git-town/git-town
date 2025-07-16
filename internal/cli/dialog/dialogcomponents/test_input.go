@@ -20,7 +20,7 @@ type TestInput []tea.Msg
 type TestInputs struct {
 	inputs []TestInput // the input values
 	cursor int         // index of the input to return next
-	len    int         // the total number of available inputs
+	len    int         // the total number of inputs
 }
 
 func (self TestInputs) IsEmpty() bool {
