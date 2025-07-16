@@ -18,8 +18,8 @@ _[setup assistant](https://www.git-town.com/commands/config-setup.html):_
 
 - updating the base branch in a stack using the [gh connector](https://www.git-town.com/preferences/github-connector.html) works now ([#5163](https://github.com/git-town/git-town/pull/5163))
 - setup assistant:
-  -  now displays the entered value for the API token scope ([#5144](https://github.com/git-town/git-town/pull/5144))
-  - more consistent dialog captions in the [setup assistant](https://www.git-town.com/commands/config-setup.html) ([#5159](https://github.com/git-town/git-town/pull/5159))
+  - now displays the entered value for the API token scope ([#5144](https://github.com/git-town/git-town/pull/5144))
+  - more consistent dialog captions ([#5159](https://github.com/git-town/git-town/pull/5159))
 
 #### Contributors
 
