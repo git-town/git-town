@@ -1,9 +1,6 @@
 package dialog
 
 import (
-	"fmt"
-
-	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
@@ -51,7 +48,5 @@ func SyncPrototypeStrategy(args CommonArgs) (Option[configdomain.SyncPrototypeSt
 		Title:           syncPrototypeStrategyTitle,
 		UnscopedValue:   args.UnscopedGitConfig.SyncPrototypeStrategy,
 	})
-	// selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncPrototypeStrategyTitle, SyncPrototypeStrategyHelp, inputs)
-	fmt.Printf(messages.SyncPrototypeBranches, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }

@@ -51,9 +51,8 @@ func ConfigEnumDialog[T comparableStringer](args ConfigEnumDialogArgs[T]) (Optio
 	var parseError string
 	for {
 		selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, args.Title, helpText+parseError, args.Inputs)
-		fmt.Printf(messages.SyncFeatureBranches, dialogcomponents.FormattedSelection(selection.String(), exit))
-		// return selection, exit, err
 		if err != nil || exit {
+			fmt.Printf(args.ResultMessage, dialogcomponents.FormattedSelection(selection.String(), exit))
 			return None[T](), exit, err
 		}
 		userInput, err = args.ParseFunc(selection.String())
