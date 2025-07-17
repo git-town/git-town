@@ -1,6 +1,7 @@
 @messyoutput
 Feature: don't ask for information already provided by the config file
 
+  @debug @this
   Scenario:
     Given a Git repo with origin
     And Git Town is not configured
@@ -45,8 +46,8 @@ Feature: don't ask for information already provided by the config file
       | welcome               | enter             |
       | aliases               | enter             |
       | github connector type | enter             |
-      | GitHub token          | 1 2 3 4 5 6 enter |
-      | token scope: local    | enter             |
+      | github token          | 1 2 3 4 5 6 enter |
+      | token scope           | enter             |
       | save config to Git    | down enter        |
     Then Git Town runs the commands
       | COMMAND                                  |

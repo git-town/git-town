@@ -32,10 +32,10 @@ Feature: ask for information not provided by the config file
       | unknown branch type     | enter       |
       | github connector type   | enter       |
       | GitHub token            | 9 9 9 enter |
-      | token scope: local      | enter       |
-      | sync-feature-branches   | enter       |
-      | sync-perennial-branches | enter       |
-      | sync-prototype-branches | enter       |
+      | token scope             | enter       |
+      | sync feature branches   | enter       |
+      | sync perennial branches | enter       |
+      | sync prototype branches | enter       |
       | share new branches      | enter       |
       | push hook               | enter       |
       | new branch type         | enter       |
