@@ -17,10 +17,6 @@ const (
 Select the type branches get if
 Git Town cannot determine their type any other way.
 
-If you set this to something other than "feature",
-consider also configuring the "feature-regex" setting
-on the next screen.
-
 `
 )
 
