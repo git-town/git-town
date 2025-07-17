@@ -258,7 +258,7 @@ func determineDetachData(args []string, repo execute.OpenRepoResult, cliConfig c
 		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	previousBranchOpt := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
-	parentBranch, hasParentBranch := validatedConfig.NormalConfig.Git.Lineage.Parent(branchNameToDetach).Get()
+	parentBranch, hasParentBranch := validatedConfig.NormalConfig.Lineage.Parent(branchNameToDetach).Get()
 	if !hasParentBranch {
 		return data, false, errors.New(messages.DetachNoParent)
 	}
@@ -269,7 +269,7 @@ func determineDetachData(args []string, repo execute.OpenRepoResult, cliConfig c
 	if branchHasMergeCommits {
 		return data, false, fmt.Errorf(messages.BranchContainsMergeCommits, branchNameToDetach)
 	}
-	childBranches := validatedConfig.NormalConfig.Git.Lineage.Children(branchNameToDetach)
+	childBranches := validatedConfig.NormalConfig.Lineage.Children(branchNameToDetach)
 	children := make([]detachChildBranch, len(childBranches))
 	for c, childBranch := range childBranches {
 		proposal := None[forgedomain.Proposal]()
@@ -291,7 +291,7 @@ func determineDetachData(args []string, repo execute.OpenRepoResult, cliConfig c
 			proposal: proposal,
 		}
 	}
-	descendentNames := validatedConfig.NormalConfig.Git.Lineage.Descendants(branchNameToDetach)
+	descendentNames := validatedConfig.NormalConfig.Lineage.Descendants(branchNameToDetach)
 	descendents := make([]detachChildBranch, len(descendentNames))
 	for d, descendentName := range descendentNames {
 		info, has := branchesSnapshot.Branches.FindByLocalName(descendentName).Get()
@@ -304,7 +304,7 @@ func determineDetachData(args []string, repo execute.OpenRepoResult, cliConfig c
 			proposal: None[forgedomain.Proposal](),
 		}
 	}
-	lineageBranches := validatedConfig.NormalConfig.Git.Lineage.BranchNames()
+	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
 	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
 	return detachData{
 		branchInfosLastRun:  branchInfosLastRun,
@@ -366,7 +366,7 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 				Parent: data.config.ValidatedConfigData.MainBranch,
 			},
 		)
-		for _, child := range data.config.NormalConfig.Git.Lineage.Children(data.branchToDetachName) {
+		for _, child := range data.config.NormalConfig.Lineage.Children(data.branchToDetachName) {
 			prog.Value.Add(
 				&opcodes.LineageParentSet{
 					Branch: child,

@@ -251,7 +251,7 @@ func determineWalkData(cliConfig cliconfig.CliConfig, all configdomain.AllBranch
 	case all.Enabled():
 		branchesToWalk = localBranches.Remove(perennialBranchNames...)
 	case stack.Enabled():
-		branchesToWalk = validatedConfig.NormalConfig.Git.Lineage.BranchLineageWithoutRoot(initialBranch, perennialBranchNames)
+		branchesToWalk = validatedConfig.NormalConfig.Lineage.BranchLineageWithoutRoot(initialBranch, perennialBranchNames)
 	}
 	return walkData{
 		branchInfosLastRun: branchInfosLastRun,

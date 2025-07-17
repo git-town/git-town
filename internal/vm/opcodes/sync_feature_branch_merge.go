@@ -24,7 +24,7 @@ func (self *SyncFeatureBranchMerge) Run(args shared.RunArgs) error {
 	}
 	branch := self.Branch
 	for {
-		parent, hasParent := args.Config.Value.NormalConfig.Git.Lineage.Parent(branch).Get()
+		parent, hasParent := args.Config.Value.NormalConfig.Lineage.Parent(branch).Get()
 		if !hasParent {
 			break
 		}

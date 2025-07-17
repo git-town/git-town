@@ -80,7 +80,7 @@ func executeSwitch(args []string, cliConfig cliconfig.CliConfig, allBranches con
 	}
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchNames)
 	unknownBranchType := repo.UnvalidatedConfig.NormalConfig.UnknownBranchType
-	entries := SwitchBranchEntries(data.branchesSnapshot.Branches, branchTypes, branchesAndTypes, data.config.NormalConfig.Git.Lineage, unknownBranchType, allBranches, data.regexes)
+	entries := SwitchBranchEntries(data.branchesSnapshot.Branches, branchTypes, branchesAndTypes, data.config.NormalConfig.Lineage, unknownBranchType, allBranches, data.regexes)
 	if len(entries) == 0 {
 		return errors.New(messages.SwitchNoBranches)
 	}
@@ -157,7 +157,7 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult, cliConfig c
 		config:             repo.UnvalidatedConfig,
 		dialogInputs:       dialogTestInputs,
 		initialBranch:      initialBranch,
-		lineage:            repo.UnvalidatedConfig.NormalConfig.Git.Lineage,
+		lineage:            repo.UnvalidatedConfig.NormalConfig.Lineage,
 		regexes:            regexes,
 		uncommittedChanges: repoStatus.OpenChanges,
 	}, false, err

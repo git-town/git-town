@@ -315,7 +315,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(branchText)
-		parent := devRepo.Config.NormalConfig.Git.Lineage.Parent(branch).GetOrPanic()
+		parent := devRepo.Config.NormalConfig.Lineage.Parent(branch).GetOrPanic()
 		sha := devRepo.CommitSHA(devRepo, title, branch, parent.BranchName())
 		have := asserts.NoError1(devRepo.Git.CommitMessage(devRepo, sha)).String()
 		want := expected.Content
@@ -926,8 +926,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^no lineage exists now$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		if devRepo.Config.NormalConfig.Git.Lineage.Len() > 0 {
-			lineage := devRepo.Config.NormalConfig.Git.Lineage
+		if devRepo.Config.NormalConfig.Lineage.Len() > 0 {
+			lineage := devRepo.Config.NormalConfig.Lineage
 			return fmt.Errorf("unexpected Git Town lineage information: %+v", lineage)
 		}
 		return nil
@@ -1414,7 +1414,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the main branch is (?:now|still) not set$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.Config.NormalConfig.Git.MainBranch
+		have := devRepo.Config.Git.MainBranch
 		if branch, has := have.Get(); has {
 			return fmt.Errorf("unexpected main branch setting %q", branch)
 		}
@@ -1459,7 +1459,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^there are (?:now|still) no perennial branches$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		branches := devRepo.Config.NormalConfig.Git.PerennialBranches
+		branches := devRepo.Config.Git.PerennialBranches
 		if len(branches) > 0 {
 			return fmt.Errorf("expected no perennial branches, got %q", branches)
 		}

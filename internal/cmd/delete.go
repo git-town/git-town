@@ -256,12 +256,12 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult, cliConfig c
 	})
 	proposalsOfChildBranches := ship.LoadProposalsOfChildBranches(ship.LoadProposalsOfChildBranchesArgs{
 		ConnectorOpt:               connector,
-		Lineage:                    validatedConfig.NormalConfig.Git.Lineage,
+		Lineage:                    validatedConfig.NormalConfig.Lineage,
 		Offline:                    repo.IsOffline,
 		OldBranch:                  branchNameToDelete,
 		OldBranchHasTrackingBranch: branchToDelete.HasTrackingBranch(),
 	})
-	lineageBranches := validatedConfig.NormalConfig.Git.Lineage.BranchNames()
+	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
 	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
 	return deleteData{
 		branchInfosLastRun:       branchInfosLastRun,
@@ -347,7 +347,7 @@ func deleteLocalBranch(prog, finalUndoProgram Mutable[program.Program], data del
 		}
 		// delete the commits of this branch from all descendents
 		if data.config.NormalConfig.SyncFeatureStrategy == configdomain.SyncFeatureStrategyRebase {
-			descendents := data.config.NormalConfig.Git.Lineage.Descendants(localBranchToDelete)
+			descendents := data.config.NormalConfig.Lineage.Descendants(localBranchToDelete)
 			for _, descendent := range descendents {
 				if branchInfo, hasBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(descendent).Get(); hasBranchInfo {
 					sync.RemoveAncestorCommits(sync.RemoveAncestorCommitsArgs{
@@ -367,7 +367,7 @@ func deleteLocalBranch(prog, finalUndoProgram Mutable[program.Program], data del
 		if !data.dryRun {
 			sync.RemoveBranchConfiguration(sync.RemoveBranchConfigurationArgs{
 				Branch:  localBranchToDelete,
-				Lineage: data.config.NormalConfig.Git.Lineage,
+				Lineage: data.config.NormalConfig.Lineage,
 				Program: prog,
 			})
 		}

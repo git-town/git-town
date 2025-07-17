@@ -113,7 +113,7 @@ func determineBranchData(repo execute.OpenRepoResult, cliConfig cliconfig.CliCon
 		branchesAndTypes:  branchesAndTypes,
 		colors:            colors,
 		initialBranchOpt:  initialBranchOpt,
-		lineage:           repo.UnvalidatedConfig.NormalConfig.Git.Lineage,
+		lineage:           repo.UnvalidatedConfig.NormalConfig.Lineage,
 		unknownBranchType: unknownBranchType,
 	}, false, err
 }
