@@ -15,7 +15,7 @@ type BranchWithRemoteGoneDeleteIfEmptyAtRuntime struct {
 }
 
 func (self *BranchWithRemoteGoneDeleteIfEmptyAtRuntime) Run(args shared.RunArgs) error {
-	parent, hasParent := args.Config.Value.NormalConfig.Lineage.Parent(self.Branch).Get()
+	parent, hasParent := args.Config.Value.NormalConfig.Git.Lineage.Parent(self.Branch).Get()
 	if !hasParent {
 		return nil
 	}
