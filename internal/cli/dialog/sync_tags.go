@@ -2,6 +2,7 @@ package dialog
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
@@ -31,7 +32,7 @@ func SyncTags(existing configdomain.SyncTags, inputs dialogcomponents.TestInputs
 		},
 	}
 	defaultPos := entries.IndexOf(existing)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncTagsTitle, SyncTagsHelp, inputs)
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncTagsTitle, SyncTagsHelp, inputs, strings.ToLower(syncTagsTitle))
 	fmt.Printf(messages.SyncTags, dialogcomponents.FormattedSelection(format.Bool(selection.IsTrue()), exit))
 	return selection, exit, err
 }

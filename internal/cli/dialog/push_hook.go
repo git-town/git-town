@@ -2,6 +2,7 @@ package dialog
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
@@ -39,7 +40,7 @@ func PushHook(existing configdomain.PushHook, inputs dialogcomponents.TestInputs
 		},
 	}
 	defaultPos := entries.IndexOf(existing)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, pushHookTitle, PushHookHelp, inputs)
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, pushHookTitle, PushHookHelp, inputs, strings.ToLower(pushHookTitle))
 	fmt.Printf(messages.PushHook, dialogcomponents.FormattedSelection(format.Bool(selection.IsTrue()), exit))
 	return selection, exit, err
 }

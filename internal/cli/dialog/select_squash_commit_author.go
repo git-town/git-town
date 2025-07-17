@@ -2,6 +2,7 @@ package dialog
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
@@ -17,7 +18,7 @@ func SelectSquashCommitAuthor(branch gitdomain.LocalBranchName, authors []gitdom
 	if len(authors) == 1 {
 		return authors[0], false, nil
 	}
-	selection, exit, err := dialogcomponents.RadioList(list.NewEntries(authors...), 0, squashCommitAuthorTitle, fmt.Sprintf(messages.BranchAuthorMultiple, branch), dialogTestInputs)
+	selection, exit, err := dialogcomponents.RadioList(list.NewEntries(authors...), 0, squashCommitAuthorTitle, fmt.Sprintf(messages.BranchAuthorMultiple, branch), dialogTestInputs, strings.ToLower(squashCommitAuthorTitle))
 	fmt.Printf(messages.SquashCommitAuthorSelection, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }

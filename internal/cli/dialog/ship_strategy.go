@@ -2,6 +2,7 @@ package dialog
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
@@ -53,7 +54,7 @@ func ShipStrategy(existing configdomain.ShipStrategy, inputs dialogcomponents.Te
 		},
 	}
 	defaultPos := shipStrategyEntryIndex(entries, existing)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, shipStrategyTitle, ShipStrategyHelp, inputs)
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, shipStrategyTitle, ShipStrategyHelp, inputs, strings.ToLower("shipStrategyTitle"))
 	fmt.Printf(messages.ShipStrategy, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }
