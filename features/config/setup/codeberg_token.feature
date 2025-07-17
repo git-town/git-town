@@ -24,7 +24,7 @@ Feature: enter the Codeberg API token
       | sync feature strategy       | enter             |                                             |
       | sync perennial strategy     | enter             |                                             |
       | sync prototype strategy     | enter             |                                             |
-      | sync-upstream               | enter             |                                             |
+      | sync upstream               | enter             |                                             |
       | sync tags                   | enter             |                                             |
       | share new branches          | enter             |                                             |
       | push hook                   | enter             |                                             |
@@ -68,7 +68,7 @@ Feature: enter the Codeberg API token
       | sync feature strategy       | enter                |                                             |
       | sync perennial strategy     | enter                |                                             |
       | sync prototype strategy     | enter                |                                             |
-      | sync-upstream               | enter                |                                             |
+      | sync upstream               | enter                |                                             |
       | sync tags                   | enter                |                                             |
       | share new branches          | enter                |                                             |
       | push hook                   | enter                |                                             |
@@ -114,7 +114,7 @@ Feature: enter the Codeberg API token
       | sync feature strategy       | enter             |                                             |
       | sync perennial strategy     | enter             |                                             |
       | sync prototype strategy     | enter             |                                             |
-      | sync-upstream               | enter             |                                             |
+      | sync upstream               | enter             |                                             |
       | sync tags                   | enter             |                                             |
       | share new branches          | enter             |                                             |
       | push hook                   | enter             |                                             |
@@ -159,7 +159,7 @@ Feature: enter the Codeberg API token
       | sync feature strategy       | enter                                     |                                             |
       | sync perennial strategy     | enter                                     |                                             |
       | sync prototype strategy     | enter                                     |                                             |
-      | sync-upstream               | enter                                     |                                             |
+      | sync upstream               | enter                                     |                                             |
       | sync tags                   | enter                                     |                                             |
       | share new branches          | enter                                     |                                             |
       | push hook                   | enter                                     |                                             |

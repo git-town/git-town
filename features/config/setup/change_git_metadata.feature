@@ -32,7 +32,7 @@ Feature: change existing information in Git metadata
       | sync feature strategy               | down enter             |
       | sync perennial strategy             | down enter             |
       | sync prototype strategy             | down enter             |
-      | sync-upstream                       | down enter             |
+      | sync upstream                       | down enter             |
       | sync tags                           | down enter             |
       | enable share-new-branches           | down enter             |
       | enable the push hook                | down enter             |

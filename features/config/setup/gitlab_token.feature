@@ -25,7 +25,7 @@ Feature: enter the GitLab API token
       | sync feature strategy       | enter             |                                             |
       | sync perennial strategy     | enter             |                                             |
       | sync prototype strategy     | enter             |                                             |
-      | sync-upstream               | enter             |                                             |
+      | sync upstream               | enter             |                                             |
       | sync tags                   | enter             |                                             |
       | share new branches          | enter             |                                             |
       | push hook                   | enter             |                                             |
@@ -70,7 +70,7 @@ Feature: enter the GitLab API token
       | sync feature strategy       | enter             |                                             |
       | sync perennial strategy     | enter             |                                             |
       | sync prototype strategy     | enter             |                                             |
-      | sync-upstream               | enter             |                                             |
+      | sync upstream               | enter             |                                             |
       | sync tags                   | enter             |                                             |
       | share new branches          | enter             |                                             |
       | push hook                   | enter             |                                             |
@@ -118,7 +118,7 @@ Feature: enter the GitLab API token
       | sync feature strategy       | enter             |                                             |
       | sync perennial strategy     | enter             |                                             |
       | sync prototype strategy     | enter             |                                             |
-      | sync-upstream               | enter             |                                             |
+      | sync upstream               | enter             |                                             |
       | sync tags                   | enter             |                                             |
       | share new branches          | enter             |                                             |
       | push hook                   | enter             |                                             |
@@ -143,6 +143,7 @@ Feature: enter the GitLab API token
       | git config git-town.sync-tags true                   |
     And global Git setting "git-town.gitlab-token" is now "123456"
 
+  @debug @this
   Scenario: edit global GitLab token
     Given my repo's "origin" remote is "git@gitlab.com:git-town/git-town.git"
     And global Git setting "git-town.gitlab-token" is "123"
@@ -159,13 +160,13 @@ Feature: enter the GitLab API token
       | unknown branch type         | enter                                     |                                             |
       | origin hostname             | enter                                     |                                             |
       | forge type                  | enter                                     |                                             |
-      | gitlab connector type: api  | enter                                     |                                             |
+      | gitlab connector type       | enter                                     |                                             |
       | gitlab token                | backspace backspace backspace 4 5 6 enter |                                             |
       | token scope                 | enter                                     |                                             |
       | sync feature strategy       | enter                                     |                                             |
       | sync perennial strategy     | enter                                     |                                             |
       | sync prototype strategy     | enter                                     |                                             |
-      | sync-upstream               | enter                                     |                                             |
+      | sync upstream               | enter                                     |                                             |
       | sync tags                   | enter                                     |                                             |
       | share new branches          | enter                                     |                                             |
       | push hook                   | enter                                     |                                             |

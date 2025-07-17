@@ -60,7 +60,7 @@ Feature: remove existing configuration in Git metadata
       | sync feature strategy       | up enter                                                                    |                     |
       | sync perennial strategy     | down enter                                                                  |                     |
       | sync prototype strategy     | up enter                                                                    |                     |
-      | sync-upstream               | down enter                                                                  |                     |
+      | sync upstream               | down enter                                                                  |                     |
       | sync tags                   | down enter                                                                  |                     |
       | share new branches          | up enter                                                                    | enable              |
       | push hook                   | down enter                                                                  | enable              |

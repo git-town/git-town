@@ -19,7 +19,7 @@ Feature: Accepting all default values in a brand-new Git repo leads to a working
       | sync feature strategy       | enter |
       | sync perennial strategy     | enter |
       | sync prototype strategy     | enter |
-      | sync-upstream               | enter |
+      | sync upstream               | enter |
       | sync tags                   | enter |
       | share new branches          | enter |
       | push hook                   | enter |

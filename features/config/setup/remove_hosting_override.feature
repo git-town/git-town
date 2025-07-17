@@ -20,7 +20,7 @@ Feature: remove an existing forge type override
       | sync feature strategy       | enter                |                                             |
       | sync perennial strategy     | enter                |                                             |
       | sync prototype strategy     | enter                |                                             |
-      | sync-upstream               | enter                |                                             |
+      | sync upstream               | enter                |                                             |
       | sync tags                   | enter                |                                             |
       | share new branches          | enter                |                                             |
       | push hook                   | enter                |                                             |
