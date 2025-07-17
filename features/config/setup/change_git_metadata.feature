@@ -39,7 +39,7 @@ Feature: change existing information in Git metadata
       | new branch type             | down enter             |
       | ship strategy               | down down enter        |
       | ship delete tracking branch | down enter             |
-      | config storage              | down enter             |
+      | config storage              | enter                  |
 
   Scenario: result
     Then Git Town runs the commands
