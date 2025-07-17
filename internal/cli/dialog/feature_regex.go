@@ -25,6 +25,7 @@ is set to something other than "feature".
 
 func FeatureRegex(existingValue Option[configdomain.FeatureRegex], inputs dialogcomponents.TestInputs) (Option[configdomain.FeatureRegex], dialogdomain.Exit, error) {
 	value, exit, err1 := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
+		DialogName:    "feature-regex",
 		ExistingValue: existingValue.String(),
 		Help:          FeatureRegexHelp,
 		Prompt:        "Feature regex: ",

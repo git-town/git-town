@@ -18,21 +18,21 @@ Feature: enter the GitHub API token
       | observed regex              | enter             |                                             |
       | unknown branch type         | enter             |                                             |
       | origin hostname             | enter             |                                             |
-      | forge type: auto-detect     | enter             |                                             |
-      | github connector type: API  | enter             |                                             |
+      | forge type                  | enter             |                                             |
+      | github connector type       | enter             |                                             |
       | github token                | 1 2 3 4 5 6 enter |                                             |
       | token scope                 | enter             |                                             |
-      | sync-feature-strategy       | enter             |                                             |
-      | sync-perennial-strategy     | enter             |                                             |
-      | sync-prototype-strategy     | enter             |                                             |
-      | sync-upstream               | enter             |                                             |
-      | sync-tags                   | enter             |                                             |
-      | share-new-branches          | enter             |                                             |
-      | push-hook                   | enter             |                                             |
-      | new-branch-type             | enter             |                                             |
-      | ship-strategy               | enter             |                                             |
-      | ship-delete-tracking-branch | enter             |                                             |
-      | save config to Git metadata | enter             |                                             |
+      | sync feature strategy       | enter             |                                             |
+      | sync perennial strategy     | enter             |                                             |
+      | sync prototype strategy     | enter             |                                             |
+      | sync upstream               | enter             |                                             |
+      | sync tags                   | enter             |                                             |
+      | share new branches          | enter             |                                             |
+      | push hook                   | enter             |                                             |
+      | new branch type             | enter             |                                             |
+      | ship strategy               | enter             |                                             |
+      | ship delete tracking branch | enter             |                                             |
+      | config storage              | down enter        |                                             |
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config git-town.github-token 123456              |
@@ -65,20 +65,20 @@ Feature: enter the GitHub API token
       | unknown branch type         | enter                          |                                             |
       | origin hostname             | enter                          |                                             |
       | forge type                  | down down down down down enter |                                             |
-      | github connector type: API  | enter                          |                                             |
-      | github token                | 1 2 3 4 5 6 enter              |                                             |
+      | github connector type       | enter                          |                                             |
+      | github token                |              1 2 3 4 5 6 enter |                                             |
       | token scope                 | enter                          |                                             |
-      | sync-feature-strategy       | enter                          |                                             |
-      | sync-perennial-strategy     | enter                          |                                             |
-      | sync-prototype-strategy     | enter                          |                                             |
-      | sync-upstream               | enter                          |                                             |
-      | sync-tags                   | enter                          |                                             |
-      | share-new-branches          | enter                          |                                             |
-      | push-hook                   | enter                          |                                             |
-      | new-branch-type             | enter                          |                                             |
-      | ship-strategy               | enter                          |                                             |
-      | ship-delete-tracking-branch | enter                          |                                             |
-      | save config to Git metadata | down enter                     |                                             |
+      | sync feature strategy       | enter                          |                                             |
+      | sync perennial strategy     | enter                          |                                             |
+      | sync prototype strategy     | enter                          |                                             |
+      | sync upstream               | enter                          |                                             |
+      | sync tags                   | enter                          |                                             |
+      | share new branches          | enter                          |                                             |
+      | push hook                   | enter                          |                                             |
+      | new branch type             | enter                          |                                             |
+      | ship strategy               | enter                          |                                             |
+      | ship delete tracking branch | enter                          |                                             |
+      | config storage              | down enter                     |                                             |
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config git-town.github-token 123456              |
@@ -113,20 +113,20 @@ Feature: enter the GitHub API token
       | observed regex              | enter                               |                                             |
       | unknown branch type         | enter                               |                                             |
       | origin hostname             | enter                               |                                             |
-      | forge type: auto-detect     | enter                               |                                             |
-      | github connector type: API  | enter                               |                                             |
+      | forge type                  | enter                               |                                             |
+      | github connector type       | enter                               |                                             |
       | github token                | backspace backspace backspace enter |                                             |
-      | sync-feature-strategy       | enter                               |                                             |
-      | sync-perennial-strategy     | enter                               |                                             |
-      | sync-prototype-strategy     | enter                               |                                             |
-      | sync-upstream               | enter                               |                                             |
-      | sync-tags                   | enter                               |                                             |
-      | share-new-branches          | enter                               |                                             |
-      | push-hook                   | enter                               |                                             |
-      | new-branch-type             | enter                               |                                             |
-      | ship-strategy               | enter                               |                                             |
-      | ship-delete-tracking-branch | enter                               |                                             |
-      | save config to Git metadata | down enter                          |                                             |
+      | sync feature strategy       | enter                               |                                             |
+      | sync perennial strategy     | enter                               |                                             |
+      | sync prototype strategy     | enter                               |                                             |
+      | sync upstream               | enter                               |                                             |
+      | sync tags                   | enter                               |                                             |
+      | share new branches          | enter                               |                                             |
+      | push hook                   | enter                               |                                             |
+      | new branch type             | enter                               |                                             |
+      | ship strategy               | enter                               |                                             |
+      | ship delete tracking branch | enter                               |                                             |
+      | config storage              | down enter                          |                                             |
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config --unset git-town.github-token             |
@@ -160,20 +160,20 @@ Feature: enter the GitHub API token
       | unknown branch type         | enter             |                                             |
       | origin hostname             | enter             |                                             |
       | forge type                  | enter             |                                             |
-      | github connector type: API  | enter             |                                             |
+      | github connector type       | enter             |                                             |
       | github token                | 1 2 3 4 5 6 enter |                                             |
       | token scope                 | down enter        |                                             |
-      | sync-feature-strategy       | enter             |                                             |
-      | sync-perennial-strategy     | enter             |                                             |
-      | sync-prototype-strategy     | enter             |                                             |
-      | sync-upstream               | enter             |                                             |
-      | sync-tags                   | enter             |                                             |
-      | share-new-branches          | enter             |                                             |
-      | push-hook                   | enter             |                                             |
-      | new-branch-type             | enter             |                                             |
-      | ship-strategy               | enter             |                                             |
-      | ship-delete-tracking-branch | enter             |                                             |
-      | save config to Git metadata | down enter        |                                             |
+      | sync feature strategy       | enter             |                                             |
+      | sync perennial strategy     | enter             |                                             |
+      | sync prototype strategy     | enter             |                                             |
+      | sync upstream               | enter             |                                             |
+      | sync tags                   | enter             |                                             |
+      | share new branches          | enter             |                                             |
+      | push hook                   | enter             |                                             |
+      | new branch type             | enter             |                                             |
+      | ship strategy               | enter             |                                             |
+      | ship delete tracking branch | enter             |                                             |
+      | config storage              | down enter        |                                             |
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config --global git-town.github-token 123456     |
@@ -207,20 +207,20 @@ Feature: enter the GitHub API token
       | unknown branch type         | enter                                     |                                             |
       | origin hostname             | enter                                     |                                             |
       | forge type                  | enter                                     |                                             |
-      | github connector type: API  | enter                                     |                                             |
+      | github connector type       | enter                                     |                                             |
       | github token                | backspace backspace backspace 4 5 6 enter |                                             |
       | token scope                 | enter                                     |                                             |
-      | sync-feature-strategy       | enter                                     |                                             |
-      | sync-perennial-strategy     | enter                                     |                                             |
-      | sync-prototype-strategy     | enter                                     |                                             |
-      | sync-upstream               | enter                                     |                                             |
-      | sync-tags                   | enter                                     |                                             |
-      | share-new-branches          | enter                                     |                                             |
-      | push-hook                   | enter                                     |                                             |
-      | new-branch-type             | enter                                     |                                             |
-      | ship-strategy               | enter                                     |                                             |
-      | ship-delete-tracking-branch | enter                                     |                                             |
-      | save config to Git metadata | down enter                                |                                             |
+      | sync feature strategy       | enter                                     |                                             |
+      | sync perennial strategy     | enter                                     |                                             |
+      | sync prototype strategy     | enter                                     |                                             |
+      | sync upstream               | enter                                     |                                             |
+      | sync tags                   | enter                                     |                                             |
+      | share new branches          | enter                                     |                                             |
+      | push hook                   | enter                                     |                                             |
+      | new branch type             | enter                                     |                                             |
+      | ship strategy               | enter                                     |                                             |
+      | ship delete tracking branch | enter                                     |                                             |
+      | config storage              | down enter                                |                                             |
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config --global git-town.github-token 456        |

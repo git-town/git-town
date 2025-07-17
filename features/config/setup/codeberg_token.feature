@@ -18,20 +18,20 @@ Feature: enter the Codeberg API token
       | observed regex              | enter             |                                             |
       | unknown branch type         | enter             |                                             |
       | origin hostname             | enter             |                                             |
-      | forge type: auto-detect     | enter             |                                             |
+      | forge type                  | enter             |                                             |
       | codeberg token              | 1 2 3 4 5 6 enter |                                             |
       | token scope                 | enter             |                                             |
-      | sync-feature-strategy       | enter             |                                             |
-      | sync-perennial-strategy     | enter             |                                             |
-      | sync-prototype-strategy     | enter             |                                             |
-      | sync-upstream               | enter             |                                             |
-      | sync-tags                   | enter             |                                             |
-      | share-new-branches          | enter             |                                             |
-      | push-hook                   | enter             |                                             |
-      | new-branch-type             | enter             |                                             |
-      | ship-strategy               | enter             |                                             |
-      | ship-delete-tracking-branch | enter             |                                             |
-      | save config to Git metadata | enter             |                                             |
+      | sync feature strategy       | enter             |                                             |
+      | sync perennial strategy     | enter             |                                             |
+      | sync prototype strategy     | enter             |                                             |
+      | sync upstream               | enter             |                                             |
+      | sync tags                   | enter             |                                             |
+      | share new branches          | enter             |                                             |
+      | push hook                   | enter             |                                             |
+      | new branch type             | enter             |                                             |
+      | ship strategy               | enter             |                                             |
+      | ship delete tracking branch | enter             |                                             |
+      | config storage              | down enter        |                                             |
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config git-town.codeberg-token 123456            |
@@ -66,17 +66,17 @@ Feature: enter the Codeberg API token
       | forge type                  | down down down enter |                                             |
       | codeberg token              |    1 2 3 4 5 6 enter |                                             |
       | token scope                 | enter                |                                             |
-      | sync-feature-strategy       | enter                |                                             |
-      | sync-perennial-strategy     | enter                |                                             |
-      | sync-prototype-strategy     | enter                |                                             |
-      | sync-upstream               | enter                |                                             |
-      | sync-tags                   | enter                |                                             |
-      | share-new-branches          | enter                |                                             |
-      | push-hook                   | enter                |                                             |
-      | new-branch-type             | enter                |                                             |
-      | ship-strategy               | enter                |                                             |
-      | ship-delete-tracking-branch | enter                |                                             |
-      | save config to Git metadata | down enter           |                                             |
+      | sync feature strategy       | enter                |                                             |
+      | sync perennial strategy     | enter                |                                             |
+      | sync prototype strategy     | enter                |                                             |
+      | sync upstream               | enter                |                                             |
+      | sync tags                   | enter                |                                             |
+      | share new branches          | enter                |                                             |
+      | push hook                   | enter                |                                             |
+      | new branch type             | enter                |                                             |
+      | ship strategy               | enter                |                                             |
+      | ship delete tracking branch | enter                |                                             |
+      | config storage              | down enter           |                                             |
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config git-town.codeberg-token 123456            |
@@ -101,7 +101,7 @@ Feature: enter the Codeberg API token
       | DIALOG                      | KEYS              | DESCRIPTION                                 |
       | welcome                     | enter             |                                             |
       | aliases                     | enter             |                                             |
-      | main branch                 | enter             |                                             |
+      | main-branch                 | enter             |                                             |
       | perennial branches          |                   | no input here since the dialog doesn't show |
       | perennial regex             | enter             |                                             |
       | feature regex               | enter             |                                             |
@@ -109,20 +109,20 @@ Feature: enter the Codeberg API token
       | observed regex              | enter             |                                             |
       | unknown branch type         | enter             |                                             |
       | origin hostname             | enter             |                                             |
-      | forge type: auto-detect     | enter             |                                             |
+      | forge type                  | enter             |                                             |
       | codeberg token              | 1 2 3 4 5 6 enter |                                             |
       | token scope                 | down enter        |                                             |
-      | sync-feature-strategy       | enter             |                                             |
-      | sync-perennial-strategy     | enter             |                                             |
-      | sync-prototype-strategy     | enter             |                                             |
-      | sync-upstream               | enter             |                                             |
-      | sync-tags                   | enter             |                                             |
-      | share-new-branches          | enter             |                                             |
-      | push-hook                   | enter             |                                             |
-      | new-branch-type             | enter             |                                             |
-      | ship-strategy               | enter             |                                             |
-      | ship-delete-tracking-branch | enter             |                                             |
-      | save config to Git metadata | down enter        |                                             |
+      | sync feature strategy       | enter             |                                             |
+      | sync perennial strategy     | enter             |                                             |
+      | sync prototype strategy     | enter             |                                             |
+      | sync upstream               | enter             |                                             |
+      | sync tags                   | enter             |                                             |
+      | share new branches          | enter             |                                             |
+      | push hook                   | enter             |                                             |
+      | new branch type             | enter             |                                             |
+      | ship strategy               | enter             |                                             |
+      | ship delete tracking branch | enter             |                                             |
+      | config storage              | down enter        |                                             |
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config --global git-town.codeberg-token 123456   |
@@ -154,20 +154,20 @@ Feature: enter the Codeberg API token
       | observed regex              | enter                                     |                                             |
       | unknown branch type         | enter                                     |                                             |
       | origin hostname             | enter                                     |                                             |
-      | forge type: auto-detect     | enter                                     |                                             |
-      | github token                | backspace backspace backspace 4 5 6 enter |                                             |
+      | forge type                  | enter                                     |                                             |
+      | codeberg token              | backspace backspace backspace 4 5 6 enter |                                             |
       | token scope                 | enter                                     |                                             |
-      | sync-feature-strategy       | enter                                     |                                             |
-      | sync-perennial-strategy     | enter                                     |                                             |
-      | sync-prototype-strategy     | enter                                     |                                             |
-      | sync-upstream               | enter                                     |                                             |
-      | sync-tags                   | enter                                     |                                             |
-      | share-new-branches          | enter                                     |                                             |
-      | push-hook                   | enter                                     |                                             |
-      | new-branch-type             | enter                                     |                                             |
-      | ship-strategy               | enter                                     |                                             |
-      | ship-delete-tracking-branch | enter                                     |                                             |
-      | save config to Git metadata | down enter                                |                                             |
+      | sync feature strategy       | enter                                     |                                             |
+      | sync perennial strategy     | enter                                     |                                             |
+      | sync prototype strategy     | enter                                     |                                             |
+      | sync upstream               | enter                                     |                                             |
+      | sync tags                   | enter                                     |                                             |
+      | share new branches          | enter                                     |                                             |
+      | push hook                   | enter                                     |                                             |
+      | new branch type             | enter                                     |                                             |
+      | ship strategy               | enter                                     |                                             |
+      | ship delete tracking branch | enter                                     |                                             |
+      | config storage              | down enter                                |                                             |
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config --global git-town.codeberg-token 456      |

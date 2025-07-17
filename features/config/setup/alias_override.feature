@@ -7,29 +7,29 @@ Feature: override an existing Git alias
     And local Git setting "git-town.unknown-branch-type" is "feature"
     # And inspect the repo
     When I run "git-town config setup" and enter into the dialogs:
-      | DIALOG                      | KEYS       |
-      | welcome                     | enter      |
-      | aliases                     | o enter    |
-      | main branch                 | enter      |
-      | perennial branches          |            |
-      | perennial regex             | enter      |
-      | feature regex               | enter      |
-      | contribution regex          | enter      |
-      | observed regex              | enter      |
-      | unknown branch type         | enter      |
-      | origin hostname             | enter      |
-      | forge type                  | enter      |
-      | sync-feature-strategy       | enter      |
-      | sync-perennial-strategy     | enter      |
-      | sync-prototype-strategy     | enter      |
-      | sync-upstream               | enter      |
-      | sync-tags                   | enter      |
-      | share-new-branches          | enter      |
-      | push-hook                   | enter      |
-      | new-branch-type             | enter      |
-      | ship-strategy               | enter      |
-      | ship-delete-tracking-branch | enter      |
-      | save config to config file  | down enter |
+      | DIALOG                      | KEYS    |
+      | welcome                     | enter   |
+      | aliases                     | o enter |
+      | main branch                 | enter   |
+      | perennial branches          |         |
+      | perennial regex             | enter   |
+      | feature regex               | enter   |
+      | contribution regex          | enter   |
+      | observed regex              | enter   |
+      | unknown branch type         | enter   |
+      | origin hostname             | enter   |
+      | forge type                  | enter   |
+      | sync feature strategy       | enter   |
+      | sync perennial strategy     | enter   |
+      | sync prototype strategy     | enter   |
+      | sync upstream               | enter   |
+      | sync tags                   | enter   |
+      | share new branches          | enter   |
+      | push hook                   | enter   |
+      | new branch type             | enter   |
+      | ship strategy               | enter   |
+      | ship delete tracking branch | enter   |
+      | config storage              | enter   |
 
   Scenario: result
     Then Git Town runs the commands

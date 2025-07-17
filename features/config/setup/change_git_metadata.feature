@@ -14,32 +14,32 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.sync-tags" is "false"
     And local Git setting "git-town.ship-delete-tracking-branch" is "false"
     When I run "git-town config setup" and enter into the dialogs:
-      | DESCRIPTION                         | KEYS                   |
-      | welcome                             | enter                  |
-      | add all aliases                     | a enter                |
-      | main branch                         | enter                  |
-      | change the perennial branches       | space down space enter |
-      | enter a perennial regex             |          3 3 6 6 enter |
-      | feature regex                       | u s e r enter          |
-      | contribution regex                  |          1 1 1 1 enter |
-      | observed regex                      |          2 2 2 2 enter |
-      | unknown branch type                 | down enter             |
-      | origin hostname                     | c o d e enter          |
-      | set forge type to "github"          | up up enter            |
-      | set github forge type to "API"      | enter                  |
-      | github token                        |      1 2 3 4 5 6 enter |
-      | token scope                         | enter                  |
-      | sync-feature-strategy               | down enter             |
-      | sync-perennial-strategy             | down enter             |
-      | sync-prototype-strategy             | down enter             |
-      | sync-upstream                       | down enter             |
-      | sync-tags                           | down enter             |
-      | enable share-new-branches           | down enter             |
-      | enable the push hook                | down enter             |
-      | new-branch-type                     | down enter             |
-      | set ship-strategy to "fast-forward" | down down enter        |
-      | disable ship-delete-tracking-branch | down enter             |
-      | save config to Git metadata         | enter                  |
+      | DIALOG                      | KEYS                   |
+      | welcome                     | enter                  |
+      | aliases                     | a enter                |
+      | main branch                 | enter                  |
+      | perennial branches          | space down space enter |
+      | perennial regex             |          3 3 6 6 enter |
+      | feature regex               | u s e r enter          |
+      | contribution regex          |          1 1 1 1 enter |
+      | observed regex              |          2 2 2 2 enter |
+      | unknown branch type         | down enter             |
+      | origin hostname             | c o d e enter          |
+      | forge type                  | up up enter            |
+      | github connector type       | enter                  |
+      | github token                |      1 2 3 4 5 6 enter |
+      | token scope                 | enter                  |
+      | sync feature strategy       | down enter             |
+      | sync perennial strategy     | down enter             |
+      | sync prototype strategy     | down enter             |
+      | sync upstream               | down enter             |
+      | sync tags                   | down enter             |
+      | share-new-branches          | down enter             |
+      | push hook                   | down enter             |
+      | new branch type             | down enter             |
+      | ship strategy               | down down enter        |
+      | ship delete tracking branch | down enter             |
+      | config storage              | down enter             |
 
   Scenario: result
     Then Git Town runs the commands
