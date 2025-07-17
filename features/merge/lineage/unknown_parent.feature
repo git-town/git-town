@@ -6,9 +6,9 @@ Feature: merging with missing lineage
     And I ran "git checkout -b alpha"
     And I ran "git checkout -b beta"
     When I run "git-town merge" and enter into the dialog:
-      | DIALOG                          | KEYS       |
-      | select parent branch for "beta" | down enter |
-      | select parent branch for "beta" | enter      |
+      | DIALOG                  | KEYS       |
+      | parent branch for beta  | down enter |
+      | parent branch for alpha | enter      |
 
   Scenario: result
     Then Git Town runs the commands
