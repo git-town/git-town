@@ -69,7 +69,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	var syncUpstream Option[configdomain.SyncUpstream]
 	// load legacy definitions first, so that the proper definitions loaded later override them
 	if data.CreatePrototypeBranches != nil {
-		newBranchType = configdomain.NewBranchTypeOpt(Some(configdomain.BranchTypePrototypeBranch))
+		newBranchType = Some(configdomain.NewBranchType(configdomain.BranchTypePrototypeBranch))
 		finalMessages.Add(messages.CreatePrototypeBranchesDeprecation)
 	}
 	if data.PushNewbranches != nil {
