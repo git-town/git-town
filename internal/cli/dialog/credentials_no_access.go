@@ -25,7 +25,7 @@ func CredentialsNoAccess(connectorError error, inputs dialogcomponents.TestInput
 		CredentialsNoAccessChoiceRetry,
 		CredentialsNoAccessChoiceIgnore,
 	)
-	selection, exit, err := dialogcomponents.RadioList(entries, 0, credentialsNoAccessTitle, fmt.Sprintf(credentialsNoAccessHelp, connectorError), inputs)
+	selection, exit, err := dialogcomponents.RadioList(entries, 0, credentialsNoAccessTitle, fmt.Sprintf(credentialsNoAccessHelp, connectorError), inputs, "credentials no API access")
 	fmt.Printf(messages.CredentialsNoAccess, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection.Repeat(), exit, err
 }

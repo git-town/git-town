@@ -6,7 +6,7 @@ import (
 )
 
 // SendInputs sends the given keystrokes to the given bubbletea program.
-func SendInputs(input Option[TestInput], program *tea.Program) {
+func SendInputs(stepName string, input Option[TestInput], program *tea.Program) {
 	if input, has := input.Get(); has {
 		go func() {
 			for _, msg := range input.Messages {
