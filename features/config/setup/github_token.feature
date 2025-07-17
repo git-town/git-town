@@ -191,7 +191,6 @@ Feature: enter the GitHub API token
       | git config git-town.sync-tags true                   |
     And global Git setting "git-town.github-token" is now "123456"
 
-  @debug @this
   Scenario: edit global GitHub token
     Given my repo's "origin" remote is "git@github.com:git-town/git-town.git"
     And global Git setting "git-town.github-token" is "123"
