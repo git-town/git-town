@@ -9,10 +9,9 @@ Feature: select the new parent via a visual dialog
       | branch-2 | feature | main   | local, origin |
     And the current branch is "branch-2"
     When I run "git-town set-parent" and enter into the dialog:
-      | DIALOG                  | KEYS       |
-      | parent branch for child | down enter |
+      | DIALOG                     | KEYS       |
+      | parent branch for branch-2 | down enter |
 
-  @debug @this
   Scenario: result
     Then Git Town prints:
       """
