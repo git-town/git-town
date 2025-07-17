@@ -90,7 +90,7 @@ func (self *TestCommands) CommitStagedChanges(message gitdomain.CommitMessage) {
 
 // Commits provides a list of the commits in this Git repository with the given fields.
 func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.BranchName, lineage configdomain.Lineage) []testgit.Commit {
-	// NOTE: This method uses the provided lineage instead of self.Config.NormalConfig.Lineage
+	// NOTE: This method uses the provided lineage instead of self.Config.NormalConfig.Git.Lineage
 	//       because it might determine the commits on a remote repo, and that repo has no lineage information.
 	//       We therefore always provide the lineage of the local repo.
 	branches, branchesInOtherWorktree := asserts.NoError2(self.LocalBranchesMainFirst(mainBranch.LocalName()))

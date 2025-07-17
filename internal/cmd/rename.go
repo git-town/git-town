@@ -244,8 +244,8 @@ func determineRenameData(args []string, cliConfig cliconfig.CliConfig, force con
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(newBranchName, repo.UnvalidatedConfig.NormalConfig.DevRemote) {
 		return data, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
-	parentOpt := validatedConfig.NormalConfig.Lineage.Parent(initialBranch)
-	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
+	parentOpt := validatedConfig.NormalConfig.Git.Lineage.Parent(initialBranch)
+	lineageBranches := validatedConfig.NormalConfig.Git.Lineage.BranchNames()
 	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
 	proposalOpt := None[forgedomain.Proposal]()
 	if !repo.IsOffline {
@@ -253,7 +253,7 @@ func determineRenameData(args []string, cliConfig cliconfig.CliConfig, force con
 	}
 	proposalsOfChildBranches := ship.LoadProposalsOfChildBranches(ship.LoadProposalsOfChildBranchesArgs{
 		ConnectorOpt:               connector,
-		Lineage:                    validatedConfig.NormalConfig.Lineage,
+		Lineage:                    validatedConfig.NormalConfig.Git.Lineage,
 		Offline:                    false,
 		OldBranch:                  oldBranchName,
 		OldBranchHasTrackingBranch: oldBranch.HasTrackingBranch(),
@@ -302,12 +302,12 @@ func renameProgram(repo execute.OpenRepoResult, data renameData, finalMessages s
 				},
 			)
 		}
-		if parentBranch, hasParent := data.config.NormalConfig.Lineage.Parent(oldLocalBranch).Get(); hasParent {
+		if parentBranch, hasParent := data.config.NormalConfig.Git.Lineage.Parent(oldLocalBranch).Get(); hasParent {
 			prog.Value.Add(&opcodes.LineageParentSet{Branch: data.newBranch, Parent: parentBranch})
 		}
 		prog.Value.Add(&opcodes.LineageParentRemove{Branch: oldLocalBranch})
 	}
-	for _, child := range data.config.NormalConfig.Lineage.Children(oldLocalBranch) {
+	for _, child := range data.config.NormalConfig.Git.Lineage.Children(oldLocalBranch) {
 		prog.Value.Add(&opcodes.LineageParentSet{Branch: child, Parent: data.newBranch})
 	}
 	if oldTrackingBranch, hasOldTrackingBranch := data.oldBranch.RemoteName.Get(); hasOldTrackingBranch {

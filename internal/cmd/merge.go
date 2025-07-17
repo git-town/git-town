@@ -235,11 +235,11 @@ func determineMergeData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConf
 	if err != nil || exit {
 		return mergeData{}, exit, err
 	}
-	parentBranch, hasParentBranch := validatedConfig.NormalConfig.Lineage.Parent(initialBranch).Get()
+	parentBranch, hasParentBranch := validatedConfig.NormalConfig.Git.Lineage.Parent(initialBranch).Get()
 	if !hasParentBranch {
 		return mergeData{}, false, fmt.Errorf(messages.MergeNoParent, initialBranch)
 	}
-	grandParentBranch := validatedConfig.NormalConfig.Lineage.Parent(parentBranch)
+	grandParentBranch := validatedConfig.NormalConfig.Git.Lineage.Parent(parentBranch)
 	if grandParentBranch.IsNone() {
 		return mergeData{}, false, fmt.Errorf(messages.MergeNoGrandParent, initialBranch, parentBranch)
 	}
@@ -353,7 +353,7 @@ func validateMergeData(repo execute.OpenRepoResult, data mergeData) error {
 	case gitdomain.SyncStatusOtherWorktree:
 		return fmt.Errorf(messages.BranchOtherWorktree, data.parentBranch)
 	}
-	children := data.config.NormalConfig.Lineage.Children(data.parentBranch)
+	children := data.config.NormalConfig.Git.Lineage.Children(data.parentBranch)
 	if len(children) > 1 {
 		return fmt.Errorf("branch %q has more than one child", data.parentBranch)
 	}
