@@ -4,7 +4,7 @@ Feature: enter the Gitea API token
   Background:
     Given a Git repo with origin
 
-  @debug @this
+  @this
   Scenario: auto-detected Gitea platform
     And my repo's "origin" remote is "git@gitea.com:git-town/git-town.git"
     When I run "git-town config setup" and enter into the dialog:
@@ -22,17 +22,17 @@ Feature: enter the Gitea API token
       | forge type                  | enter             | auto-detect                                 |
       | gitea token                 | 1 2 3 4 5 6 enter |                                             |
       | token scope                 | enter             |                                             |
-      | sync-feature-strategy       | enter             |                                             |
-      | sync-perennial-strategy     | enter             |                                             |
-      | sync-prototype-strategy     | enter             |                                             |
-      | sync-upstream               | enter             |                                             |
-      | sync-tags                   | enter             |                                             |
-      | share-new-branches          | enter             |                                             |
-      | push-hook                   | enter             |                                             |
-      | new-branch-type             | enter             |                                             |
-      | ship-strategy               | enter             |                                             |
-      | ship-delete-tracking-branch | enter             |                                             |
-      | save config to Git metadata | down enter        |                                             |
+      | sync feature strategy       | enter             |                                             |
+      | sync perennial strategy     | enter             |                                             |
+      | sync prototype strategy     | enter             |                                             |
+      | sync upstream               | enter             |                                             |
+      | sync tags                   | enter             |                                             |
+      | share new branches          | enter             |                                             |
+      | push hook                   | enter             |                                             |
+      | new branch type             | enter             |                                             |
+      | ship strategy               | enter             |                                             |
+      | ship delete tracking branch | enter             |                                             |
+      | config storage              | down enter        | git metadata                                |
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config git-town.gitea-token 123456               |
