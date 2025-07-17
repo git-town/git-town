@@ -50,7 +50,6 @@ Feature: enter the GitLab API token
       | git config git-town.sync-tags true                   |
     And local Git setting "git-town.forge-type" still doesn't exist
 
-  @debug @this
   Scenario: select GitLab manually
     When I run "git-town config setup" and enter into the dialog:
       | DIALOG                      | KEYS              | DESCRIPTION                                 |
