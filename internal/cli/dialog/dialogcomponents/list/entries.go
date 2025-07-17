@@ -2,6 +2,8 @@ package list
 
 import (
 	"fmt"
+
+	"github.com/google/go-cmp/cmp"
 )
 
 // Entries provides methods for a collection of Entry instances.
@@ -43,7 +45,7 @@ func (self Entries[S]) FirstEnabled() int {
 // provides the position of the given needle in this list
 func (self Entries[S]) IndexOf(needle S) int {
 	for e, entry := range self {
-		if entry.Data == needle {
+		if cmp.Equal(entry.Data, needle) {
 			return e
 		}
 	}

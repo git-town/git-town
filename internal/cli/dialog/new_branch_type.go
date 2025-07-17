@@ -42,7 +42,7 @@ func NewBranchType(existingOpt Option[configdomain.NewBranchType], inputs dialog
 			Text: "always create perennial branches",
 		},
 	}
-	existingOptBranchType := None[configdomain.BranchType]()
+	existingOptBranchType := Some(configdomain.BranchTypeFeatureBranch)
 	if existing, has := existingOpt.Get(); has {
 		existingOptBranchType = Some(existing.BranchType())
 	}
