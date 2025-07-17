@@ -13,6 +13,7 @@ Feature: ship a parent branch using the always-merge strategy
     And the current branch is "child"
     And Git setting "git-town.ship-strategy" is "always-merge"
     When I run "git-town ship parent" and close the editor
+  # @this
 
   Scenario: result
     Then Git Town runs the commands
