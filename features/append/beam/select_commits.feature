@@ -16,8 +16,8 @@ Feature: beam multiple commits onto a new child branch
     And the current branch is "existing"
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town append new --beam" and enter into the dialog:
-      | DIALOG                 | KEYS                             |
-      | select commits 1 and 4 | space down down down space enter |
+      | DIALOG          | KEYS                             |
+      | commits to beam | space down down down space enter |
 
   Scenario: result
     Then Git Town runs the commands

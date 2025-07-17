@@ -15,8 +15,8 @@ Feature: prepend a branch to a feature branch using the "merge" sync strategy
     And the current branch is "old"
     And Git setting "git-town.sync-feature-strategy" is "merge"
     When I run "git-town prepend parent --beam" and enter into the dialog:
-      | DIALOG                 | KEYS                             |
-      | select commits 2 and 4 | down space down down space enter |
+      | DIALOG          | KEYS                             |
+      | commits to beam | down space down down space enter |
 
   Scenario: result
     Then Git Town runs the commands

@@ -22,25 +22,25 @@ Feature: ask for information not provided by the config file
       upstream = false
       """
     When I run "git-town config setup" and enter into the dialogs:
-      | DIALOG                     | KEYS        |
-      | welcome                    | enter       |
-      | aliases                    | enter       |
-      | perennial regex            | 1 1 1 enter |
-      | feature regex              | 2 2 2 enter |
-      | contribution regex         | 3 3 3 enter |
-      | observed regex             | 4 4 4 enter |
-      | unknown branch type        | enter       |
-      | github connector type: API | enter       |
-      | GitHub token               | 9 9 9 enter |
-      | token scope: local         | enter       |
-      | sync-feature-branches      | enter       |
-      | sync-perennial-branches    | enter       |
-      | sync-prototype-branches    | enter       |
-      | share-new-branches         | enter       |
-      | push-hook                  | enter       |
-      | new-branch-type            | enter       |
-      | ship-strategy              | enter       |
-      | save config to Git         | down enter  |
+      | DIALOG                  | KEYS        |
+      | welcome                 | enter       |
+      | aliases                 | enter       |
+      | perennial regex         | 1 1 1 enter |
+      | feature regex           | 2 2 2 enter |
+      | contribution regex      | 3 3 3 enter |
+      | observed regex          | 4 4 4 enter |
+      | unknown branch type     | enter       |
+      | github connector type   | enter       |
+      | github token            | 9 9 9 enter |
+      | token scope             | enter       |
+      | sync feature strategy   | enter       |
+      | sync perennial strategy | enter       |
+      | sync prototype strategy | enter       |
+      | share new branches      | enter       |
+      | push hook               | enter       |
+      | new branch type         | enter       |
+      | ship strategy           | enter       |
+      | config storage          | down enter  |
     Then Git Town runs the commands
       | COMMAND                                            |
       | git config git-town.github-token 999               |

@@ -39,7 +39,7 @@ func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliase
 		OriginalAliases:      existingAliases,
 		selectedColor:        colors.Green(),
 	})
-	dialogcomponents.SendInputs(inputs.Next(), program)
+	dialogcomponents.SendInputs("aliases", inputs.Next(), program)
 	dialogResult, err := program.Run()
 	result := dialogResult.(AliasesModel)
 	if err != nil || result.Aborted() {

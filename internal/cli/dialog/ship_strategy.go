@@ -53,7 +53,7 @@ func ShipStrategy(existing configdomain.ShipStrategy, inputs dialogcomponents.Te
 		},
 	}
 	defaultPos := shipStrategyEntryIndex(entries, existing)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, shipStrategyTitle, ShipStrategyHelp, inputs)
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, shipStrategyTitle, ShipStrategyHelp, inputs, "ship-strategy")
 	fmt.Printf(messages.ShipStrategy, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }

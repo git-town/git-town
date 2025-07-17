@@ -8,8 +8,8 @@ Feature: ask for missing parent
       | feature | feature | main   | local     |
     And the current branch is "feature"
     When I run "git-town diff-parent" and enter into the dialog:
-      | DIALOG                   | KEYS  |
-      | parent branch of feature | enter |
+      | DIALOG                      | KEYS  |
+      | parent branch for "feature" | enter |
     Then Git Town runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git diff --merge-base main feature |
