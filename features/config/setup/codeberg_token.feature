@@ -31,7 +31,7 @@ Feature: enter the Codeberg API token
       | new branch type             | enter             |                                             |
       | ship strategy               | enter             |                                             |
       | ship delete tracking branch | enter             |                                             |
-      | config storage              | down enter        |                                             |
+      | config storage              | enter             |                                             |
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config git-town.codeberg-token 123456            |
@@ -49,7 +49,6 @@ Feature: enter the Codeberg API token
     And local Git setting "git-town.forge-type" still doesn't exist
     And local Git setting "git-town.codeberg-token" is now "123456"
 
-  @debug @this
   Scenario: select Codeberg manually
     When I run "git-town config setup" and enter into the dialog:
       | DIALOG                      | KEYS                 | DESCRIPTION                                 |
@@ -64,7 +63,7 @@ Feature: enter the Codeberg API token
       | unknown branch type         | enter                |                                             |
       | origin hostname             | enter                |                                             |
       | forge type                  | down down down enter |                                             |
-      | codeberg token              | 1 2 3 4 5 6 enter    |                                             |
+      | codeberg token              |    1 2 3 4 5 6 enter |                                             |
       | token scope                 | enter                |                                             |
       | sync feature strategy       | enter                |                                             |
       | sync perennial strategy     | enter                |                                             |
@@ -76,7 +75,7 @@ Feature: enter the Codeberg API token
       | new branch type             | enter                |                                             |
       | ship strategy               | enter                |                                             |
       | ship delete tracking branch | enter                |                                             |
-      | config storage              | down enter           |                                             |
+      | config storage              | enter                |                                             |
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config git-town.codeberg-token 123456            |
@@ -95,6 +94,7 @@ Feature: enter the Codeberg API token
     And local Git setting "git-town.forge-type" is now "codeberg"
     And local Git setting "git-town.codeberg-token" is now "123456"
 
+  @this
   Scenario: store Codeberge API token globally
     And my repo's "origin" remote is "git@codeberg.org:git-town/docs.git"
     When I run "git-town config setup" and enter into the dialog:
@@ -122,7 +122,7 @@ Feature: enter the Codeberg API token
       | new branch type             | enter             |                                             |
       | ship strategy               | enter             |                                             |
       | ship delete tracking branch | enter             |                                             |
-      | config storage              | down enter        |                                             |
+      | config storage              | enter             |                                             |
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config --global git-town.codeberg-token 123456   |
@@ -167,7 +167,7 @@ Feature: enter the Codeberg API token
       | new branch type             | enter                                     |                                             |
       | ship strategy               | enter                                     |                                             |
       | ship delete tracking branch | enter                                     |                                             |
-      | config storage              | down enter                                |                                             |
+      | config storage              | enter                                     |                                             |
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config --global git-town.codeberg-token 456      |
