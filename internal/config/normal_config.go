@@ -24,18 +24,18 @@ type NormalConfig struct {
 
 // removes the given branch from the lineage, and updates its children
 func (self *NormalConfig) CleanupBranchFromLineage(runner subshelldomain.Runner, branch gitdomain.LocalBranchName) {
-	parent, hasParent := self.Lineage.Parent(branch).Get()
-	children := self.Lineage.Children(branch)
+	parent, hasParent := self.Git.Lineage.Parent(branch).Get()
+	children := self.Git.Lineage.Children(branch)
 	for _, child := range children {
 		if hasParent {
-			self.Lineage = self.Lineage.Set(child, parent)
+			self.Git.Lineage = self.Git.Lineage.Set(child, parent)
 			_ = gitconfig.SetParent(runner, child, parent)
 		} else {
-			self.Lineage = self.Lineage.RemoveBranch(child)
+			self.Git.Lineage = self.Git.Lineage.RemoveBranch(child)
 			_ = gitconfig.RemoveParent(runner, parent)
 		}
 	}
-	self.Lineage = self.Lineage.RemoveBranch(branch)
+	self.Git.Lineage = self.Git.Lineage.RemoveBranch(branch)
 	_ = gitconfig.RemoveParent(runner, branch)
 }
 
@@ -72,9 +72,9 @@ func (self *NormalConfig) RemoveParent(runner subshelldomain.Runner, branch gitd
 
 func (self *NormalConfig) RemovePerennialAncestors(runner subshelldomain.Runner, finalMessages stringslice.Collector) {
 	for _, perennialBranch := range self.PerennialBranches {
-		if self.Lineage.Parent(perennialBranch).IsSome() {
+		if self.Git.Lineage.Parent(perennialBranch).IsSome() {
 			_ = gitconfig.RemoveParent(runner, perennialBranch)
-			self.Lineage = self.Lineage.RemoveBranch(perennialBranch)
+			self.Git.Lineage = self.Git.Lineage.RemoveBranch(perennialBranch)
 			finalMessages.Add(fmt.Sprintf(messages.PerennialBranchRemovedParentEntry, perennialBranch))
 		}
 	}
@@ -86,7 +86,7 @@ func (self *NormalConfig) SetParent(runner subshelldomain.Runner, branch, parent
 	if self.DryRun {
 		return nil
 	}
-	self.Lineage = self.Lineage.Set(branch, parentBranch)
+	self.Git.Lineage = self.Git.Lineage.Set(branch, parentBranch)
 	return gitconfig.SetParent(runner, branch, parentBranch)
 }
 

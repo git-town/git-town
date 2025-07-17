@@ -12,7 +12,7 @@ import (
 
 // BranchProgram syncs the given branch.
 func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.BranchInfo, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
-	initialParentName := args.Config.NormalConfig.Lineage.Parent(localName)
+	initialParentName := args.Config.NormalConfig.Git.Lineage.Parent(localName)
 	initialParentSHA := None[gitdomain.SHA]()
 	parentName, hasParentName := initialParentName.Get()
 	if hasParentName {
@@ -22,8 +22,8 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	}
 	trackingBranchGone := branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote
 	rebaseSyncStrategy := args.Config.NormalConfig.SyncFeatureStrategy == configdomain.SyncFeatureStrategyRebase
-	hasDescendents := args.Config.NormalConfig.Lineage.HasDescendents(localName)
-	parentToRemove, hasParentToRemove := args.Config.NormalConfig.Lineage.LatestAncestor(localName, args.BranchesToDelete.Value.Values()).Get()
+	hasDescendents := args.Config.NormalConfig.Git.Lineage.HasDescendents(localName)
+	parentToRemove, hasParentToRemove := args.Config.NormalConfig.Git.Lineage.LatestAncestor(localName, args.BranchesToDelete.Value.Values()).Get()
 	if hasParentToRemove && rebaseSyncStrategy {
 		RemoveAncestorCommits(RemoveAncestorCommitsArgs{
 			Ancestor:          parentToRemove.BranchName(),

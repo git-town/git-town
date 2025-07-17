@@ -315,7 +315,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(branchText)
-		parent := devRepo.Config.NormalConfig.Lineage.Parent(branch).GetOrPanic()
+		parent := devRepo.Config.NormalConfig.Git.Lineage.Parent(branch).GetOrPanic()
 		sha := devRepo.CommitSHA(devRepo, title, branch, parent.BranchName())
 		have := asserts.NoError1(devRepo.Git.CommitMessage(devRepo, sha)).String()
 		want := expected.Content
@@ -926,8 +926,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^no lineage exists now$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		if devRepo.Config.NormalConfig.Lineage.Len() > 0 {
-			lineage := devRepo.Config.NormalConfig.Lineage
+		if devRepo.Config.NormalConfig.Git.Lineage.Len() > 0 {
+			lineage := devRepo.Config.NormalConfig.Git.Lineage
 			return fmt.Errorf("unexpected Git Town lineage information: %+v", lineage)
 		}
 		return nil

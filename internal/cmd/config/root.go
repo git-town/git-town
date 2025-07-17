@@ -106,7 +106,7 @@ func printConfig(config config.UnvalidatedConfig) {
 	print.Entry("sync tags", format.Bool(config.NormalConfig.SyncTags.IsTrue()))
 	print.Entry("sync with upstream", format.Bool(config.NormalConfig.SyncUpstream.IsTrue()))
 	fmt.Println()
-	if config.NormalConfig.Lineage.Len() > 0 {
-		print.LabelAndValue("Branch Lineage", format.BranchLineage(config.NormalConfig.Lineage))
+	if config.NormalConfig.Git.Lineage.Len() > 0 {
+		print.LabelAndValue("Branch Lineage", format.BranchLineage(config.NormalConfig.Git.Lineage))
 	}
 }

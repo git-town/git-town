@@ -114,7 +114,7 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 			Branch:        data.initialBranch,
 			DefaultChoice: data.defaultChoice,
 			Inputs:        data.dialogTestInputs,
-			Lineage:       data.config.NormalConfig.Lineage,
+			Lineage:       data.config.NormalConfig.Git.Lineage,
 			LocalBranches: data.branchesSnapshot.Branches.LocalBranches().Names(),
 			MainBranch:    data.mainBranch,
 		})
@@ -247,7 +247,7 @@ func determineSetParentData(repo execute.OpenRepoResult, cliConfig cliconfig.Cli
 	if !hasInitialBranch {
 		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
-	parentOpt := validatedConfig.NormalConfig.Lineage.Parent(initialBranch)
+	parentOpt := validatedConfig.NormalConfig.Git.Lineage.Parent(initialBranch)
 	existingParent, hasParent := parentOpt.Get()
 	var defaultChoice gitdomain.LocalBranchName
 	if hasParent {
@@ -312,7 +312,7 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 					&opcodes.PullCurrentBranch{},
 				)
 			}
-			parentOpt := data.config.NormalConfig.Lineage.Parent(data.initialBranch)
+			parentOpt := data.config.NormalConfig.Git.Lineage.Parent(data.initialBranch)
 			if parent, hasParent := parentOpt.Get(); hasParent {
 				prog.Add(
 					&opcodes.RebaseOntoKeepDeleted{
@@ -334,7 +334,7 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 				)
 			}
 			// remove commits from descendents
-			descendents := data.config.NormalConfig.Lineage.Descendants(data.initialBranch)
+			descendents := data.config.NormalConfig.Git.Lineage.Descendants(data.initialBranch)
 			for _, descendent := range descendents {
 				prog.Add(
 					&opcodes.CheckoutIfNeeded{

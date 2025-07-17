@@ -75,7 +75,7 @@ func syncDeleteLocalBranchProgram(prog Mutable[program.Program], branch gitdomai
 	)
 	RemoveBranchConfiguration(RemoveBranchConfigurationArgs{
 		Branch:  branch,
-		Lineage: args.Config.NormalConfig.Lineage,
+		Lineage: args.Config.NormalConfig.Git.Lineage,
 		Program: prog,
 	})
 }
