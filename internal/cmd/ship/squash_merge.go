@@ -39,9 +39,6 @@ func shipProgramSquashMerge(prog Mutable[program.Program], sharedData sharedShip
 	if squashMergeData.remotes.HasRemote(sharedData.config.NormalConfig.DevRemote) && sharedData.config.NormalConfig.Offline.IsOnline() {
 		prog.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: sharedData.targetBranchName})
 	}
-	if !sharedData.dryRun {
-		prog.Value.Add(&opcodes.LineageParentRemove{Branch: sharedData.branchNameToShip})
-	}
 	if branchToShipRemoteName, hasRemoteName := sharedData.branchToShip.RemoteName.Get(); hasRemoteName {
 		if sharedData.config.NormalConfig.Offline.IsOnline() {
 			if sharedData.config.NormalConfig.ShipDeleteTrackingBranch {
@@ -51,6 +48,9 @@ func shipProgramSquashMerge(prog Mutable[program.Program], sharedData sharedShip
 	}
 	for _, child := range sharedData.childBranches {
 		prog.Value.Add(&opcodes.LineageParentSetToGrandParent{Branch: child})
+	}
+	if !sharedData.dryRun {
+		prog.Value.Add(&opcodes.LineageParentRemove{Branch: sharedData.branchNameToShip})
 	}
 	if !sharedData.isShippingInitialBranch {
 		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: sharedData.initialBranch})
