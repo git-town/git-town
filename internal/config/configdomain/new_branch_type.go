@@ -1,0 +1,20 @@
+package configdomain
+
+import . "github.com/git-town/git-town/v21/pkg/prelude"
+
+type NewBranchType BranchType
+
+func (self NewBranchType) BranchType() BranchType {
+	return BranchType(self)
+}
+
+func (self NewBranchType) String() string {
+	return self.BranchType().String()
+}
+
+func NewBranchTypeOption(value Option[BranchType]) Option[NewBranchType] {
+	if branchType, has := value.Get(); has {
+		return Some(NewBranchType(branchType))
+	}
+	return None[NewBranchType]()
+}

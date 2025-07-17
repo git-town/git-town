@@ -23,7 +23,7 @@ More details: https://www.git-town.com/preferences/new-branch-type.
 `
 )
 
-func NewBranchType(existingOpt Option[configdomain.BranchType], inputs dialogcomponents.TestInputs) (Option[configdomain.BranchType], dialogdomain.Exit, error) {
+func NewBranchType(existingOpt Option[configdomain.NewBranchType], inputs dialogcomponents.TestInputs) (Option[configdomain.NewBranchType], dialogdomain.Exit, error) {
 	entries := list.Entries[Option[configdomain.BranchType]]{
 		{
 			Data: Some(configdomain.BranchTypeFeatureBranch),
@@ -42,13 +42,12 @@ func NewBranchType(existingOpt Option[configdomain.BranchType], inputs dialogcom
 			Text: "always create perennial branches",
 		},
 	}
-	defaultPos := 0
-	for e, entry := range entries {
-		if entry.Data.Equal(existingOpt) {
-			defaultPos = e
-		}
+	existingOptBranchType := None[configdomain.BranchType]()
+	if existing, has := existingOpt.Get(); has {
+		existingOptBranchType = Some(existing.BranchType())
 	}
+	defaultPos := entries.IndexOf(existingOptBranchType)
 	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, newBranchTypeTitle, NewBranchTypeHelp, inputs, "new-branch-type")
 	fmt.Println(messages.NewBranchType, dialogcomponents.FormattedSelection(selection.String(), exit))
-	return selection, exit, err
+	return configdomain.NewBranchTypeOption(selection), exit, err
 }

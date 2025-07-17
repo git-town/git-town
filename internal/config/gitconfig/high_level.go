@@ -225,7 +225,7 @@ func SetMainBranch(runner subshelldomain.Runner, value gitdomain.LocalBranchName
 	return SetConfigValue(runner, scope, configdomain.KeyMainBranch, value.String())
 }
 
-func SetNewBranchType(runner subshelldomain.Runner, value configdomain.BranchType, scope configdomain.ConfigScope) error {
+func SetNewBranchType(runner subshelldomain.Runner, value configdomain.NewBranchType, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyNewBranchType, value.String())
 }
 

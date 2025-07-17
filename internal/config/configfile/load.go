@@ -54,7 +54,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	var gitLabConnectorType Option[forgedomain.GitLabConnectorType]
 	var hostingOriginHostname Option[configdomain.HostingOriginHostname]
 	var mainBranch Option[gitdomain.LocalBranchName]
-	var newBranchType Option[configdomain.BranchType]
+	var newBranchType Option[configdomain.NewBranchType]
 	var observedRegex Option[configdomain.ObservedRegex]
 	var perennialBranches gitdomain.LocalBranchNames
 	var perennialRegex Option[configdomain.PerennialRegex]
@@ -69,7 +69,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	var syncUpstream Option[configdomain.SyncUpstream]
 	// load legacy definitions first, so that the proper definitions loaded later override them
 	if data.CreatePrototypeBranches != nil {
-		newBranchType = Some(configdomain.BranchTypePrototypeBranch)
+		newBranchType = configdomain.NewBranchTypeOption(Some(configdomain.BranchTypePrototypeBranch))
 		finalMessages.Add(messages.CreatePrototypeBranchesDeprecation)
 	}
 	if data.PushNewbranches != nil {
@@ -134,7 +134,8 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	}
 	if data.Create != nil {
 		if data.Create.NewBranchType != nil {
-			newBranchType, err = configdomain.ParseBranchType(*data.Create.NewBranchType)
+			branchType, err := configdomain.ParseBranchType(*data.Create.NewBranchType)
+			newBranchType = configdomain.NewBranchTypeOption(branchType)
 			ec.Check(err)
 		}
 		if data.Create.PushNewbranches != nil {

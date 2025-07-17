@@ -35,7 +35,7 @@ type NormalConfig struct {
 	GiteaToken               Option[forgedomain.GiteaToken]
 	HostingOriginHostname    Option[configdomain.HostingOriginHostname]
 	Lineage                  configdomain.Lineage
-	NewBranchType            Option[configdomain.BranchType]
+	NewBranchType            Option[configdomain.NewBranchType]
 	ObservedRegex            Option[configdomain.ObservedRegex]
 	Offline                  configdomain.Offline
 	PerennialBranches        gitdomain.LocalBranchNames
@@ -184,7 +184,7 @@ func DefaultNormalConfig() NormalConfig {
 		GiteaToken:               None[forgedomain.GiteaToken](),
 		HostingOriginHostname:    None[configdomain.HostingOriginHostname](),
 		Lineage:                  configdomain.NewLineage(),
-		NewBranchType:            None[configdomain.BranchType](),
+		NewBranchType:            None[configdomain.NewBranchType](),
 		ObservedRegex:            None[configdomain.ObservedRegex](),
 		Offline:                  false,
 		PerennialBranches:        gitdomain.LocalBranchNames{},
