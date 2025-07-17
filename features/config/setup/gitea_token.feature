@@ -18,20 +18,20 @@ Feature: enter the Gitea API token
       | observed regex              | enter             |                                             |
       | unknown branch type         | enter             |                                             |
       | origin hostname             | enter             |                                             |
-      | forge type: auto-detect     | enter             |                                             |
+      | forge type                  | enter             | auto-detect                                 |
       | gitea token                 | 1 2 3 4 5 6 enter |                                             |
       | token scope                 | enter             |                                             |
-      | sync-feature-strategy       | enter             |                                             |
-      | sync-perennial-strategy     | enter             |                                             |
-      | sync-prototype-strategy     | enter             |                                             |
-      | sync-upstream               | enter             |                                             |
-      | sync-tags                   | enter             |                                             |
-      | share-new-branches          | enter             |                                             |
-      | push-hook                   | enter             |                                             |
-      | new-branch-type             | enter             |                                             |
-      | ship-strategy               | enter             |                                             |
-      | ship-delete-tracking-branch | enter             |                                             |
-      | save config to Git metadata | down enter        |                                             |
+      | sync feature strategy       | enter             |                                             |
+      | sync perennial strategy     | enter             |                                             |
+      | sync prototype strategy     | enter             |                                             |
+      | sync upstream               | enter             |                                             |
+      | sync tags                   | enter             |                                             |
+      | share new branches          | enter             |                                             |
+      | push hook                   | enter             |                                             |
+      | new branch type             | enter             |                                             |
+      | ship strategy               | enter             |                                             |
+      | ship delete tracking branch | enter             |                                             |
+      | config storage              | down enter        | git metadata                                |
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config git-town.gitea-token 123456               |
@@ -65,17 +65,17 @@ Feature: enter the Gitea API token
       | forge type                  | down down down down enter |                                             |
       | gitea token                 | 1 2 3 4 5 6 enter         |                                             |
       | token scope                 | enter                     |                                             |
-      | sync-feature-strategy       | enter                     |                                             |
-      | sync-perennial-strategy     | enter                     |                                             |
-      | sync-prototype-strategy     | enter                     |                                             |
-      | sync-upstream               | enter                     |                                             |
-      | sync-tags                   | enter                     |                                             |
-      | share-new-branches          | enter                     |                                             |
-      | push-hook                   | enter                     |                                             |
-      | new-branch-type             | enter                     |                                             |
-      | ship-strategy               | enter                     |                                             |
-      | ship-delete-tracking-branch | enter                     |                                             |
-      | save config to Git metadata | down enter                |                                             |
+      | sync feature strategy       | enter                     |                                             |
+      | sync perennial strategy     | enter                     |                                             |
+      | sync prototype strategy     | enter                     |                                             |
+      | sync upstream               | enter                     |                                             |
+      | sync tags                   | enter                     |                                             |
+      | share new branches          | enter                     |                                             |
+      | push hook                   | enter                     |                                             |
+      | new branch type             | enter                     |                                             |
+      | ship strategy               | enter                     |                                             |
+      | ship delete tracking branch | enter                     |                                             |
+      | config storage              | down enter                | git metadata                                |
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config git-town.gitea-token 123456               |
@@ -111,17 +111,17 @@ Feature: enter the Gitea API token
       | forge type                  | enter             |                                             |
       | gitea token                 | 1 2 3 4 5 6 enter |                                             |
       | token scope                 | down enter        |                                             |
-      | sync-feature-strategy       | enter             |                                             |
-      | sync-perennial-strategy     | enter             |                                             |
-      | sync-prototype-strategy     | enter             |                                             |
-      | sync-upstream               | enter             |                                             |
-      | sync-tags                   | enter             |                                             |
-      | share-new-branches          | enter             |                                             |
-      | push-hook                   | enter             |                                             |
-      | new-branch-type             | enter             |                                             |
-      | ship-strategy               | enter             |                                             |
-      | ship-delete-tracking-branch | enter             |                                             |
-      | save config to Git metadata | down enter        |                                             |
+      | sync feature strategy       | enter             |                                             |
+      | sync perennial strategy     | enter             |                                             |
+      | sync prototype strategy     | enter             |                                             |
+      | sync upstream               | enter             |                                             |
+      | sync tags                   | enter             |                                             |
+      | share new branches          | enter             |                                             |
+      | push hook                   | enter             |                                             |
+      | new branch type             | enter             |                                             |
+      | ship strategy               | enter             |                                             |
+      | ship delete tracking branch | enter             |                                             |
+      | config storage              | down enter        | git metadata                                |
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config --global git-town.gitea-token 123456      |
@@ -154,19 +154,19 @@ Feature: enter the Gitea API token
       | unknown branch type         | enter                                     |                                             |
       | origin hostname             | enter                                     |                                             |
       | forge type                  | enter                                     |                                             |
-      | github token                | backspace backspace backspace 4 5 6 enter |                                             |
+      | gitea token                 | backspace backspace backspace 4 5 6 enter |                                             |
       | token scope                 | enter                                     |                                             |
-      | sync-feature-strategy       | enter                                     |                                             |
-      | sync-perennial-strategy     | enter                                     |                                             |
-      | sync-prototype-strategy     | enter                                     |                                             |
-      | sync-upstream               | enter                                     |                                             |
-      | sync-tags                   | enter                                     |                                             |
-      | share-new-branches          | enter                                     |                                             |
-      | push-hook                   | enter                                     |                                             |
-      | new-branch-type             | enter                                     |                                             |
-      | ship-strategy               | enter                                     |                                             |
-      | ship-delete-tracking-branch | enter                                     |                                             |
-      | save config to Git metadata | down enter                                |                                             |
+      | sync feature strategy       | enter                                     |                                             |
+      | sync perennial strategy     | enter                                     |                                             |
+      | sync prototype strategy     | enter                                     |                                             |
+      | sync upstream               | enter                                     |                                             |
+      | sync tags                   | enter                                     |                                             |
+      | share new branches          | enter                                     |                                             |
+      | push hook                   | enter                                     |                                             |
+      | new branch type             | enter                                     |                                             |
+      | ship strategy               | enter                                     |                                             |
+      | ship delete tracking branch | enter                                     |                                             |
+      | config storage              | down enter                                | git metadata                                |
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config --global git-town.gitea-token 456         |
