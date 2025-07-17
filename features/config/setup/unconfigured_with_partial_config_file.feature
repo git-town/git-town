@@ -40,7 +40,7 @@ Feature: ask for information not provided by the config file
       | push hook               | enter       |
       | new branch type         | enter       |
       | ship strategy           | enter       |
-      | save config to Git      | down enter  |
+      | config storage          | down enter  |
     Then Git Town runs the commands
       | COMMAND                                            |
       | git config git-town.github-token 999               |
