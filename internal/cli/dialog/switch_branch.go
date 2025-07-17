@@ -174,7 +174,7 @@ func SwitchBranch(entries []SwitchBranchEntry, cursor int, uncommittedChanges bo
 		List:               list.NewList(newSwitchBranchListEntries(entries), cursor),
 		UncommittedChanges: uncommittedChanges,
 	})
-	dialogcomponents.SendInputs("branch tree", inputs.Next(), dialogProgram)
+	dialogcomponents.SendInputs("branch-tree", inputs.Next(), dialogProgram)
 	dialogResult, err := dialogProgram.Run()
 	result := dialogResult.(SwitchModel)
 	selectedData := result.List.SelectedData()
