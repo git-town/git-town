@@ -22,12 +22,12 @@ Feature: Configure a different development remote
       | sync perennial strategy     | enter    |
       | sync prototype strategy     | enter    |
       | sync-upstream               | enter    |
-      | sync-tags                   | enter    |
-      | share-new-branches          | enter    |
-      | push-hook                   | enter    |
-      | new-branch-type             | enter    |
-      | ship-strategy               | enter    |
-      | ship-delete-tracking-branch | enter    |
+      | sync tags                   | enter    |
+      | share new branches          | enter    |
+      | push hook                   | enter    |
+      | new branch type             | enter    |
+      | ship strategy               | enter    |
+      | ship delete tracking branch | enter    |
       | config storage              | enter    |
 
   Scenario: result

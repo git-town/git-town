@@ -8,15 +8,15 @@ Feature: ask for information not provided by the config file
       """
       [branches]
       main = "main"
-
+      
       [hosting]
       dev-remote = "something"
       forge-type = "github"
       origin-hostname = "github.com"
-
+      
       [ship]
       delete-tracking-branch = false
-
+      
       [sync]
       tags = false
       upstream = false
@@ -36,10 +36,10 @@ Feature: ask for information not provided by the config file
       | sync-feature-branches      | enter       |
       | sync-perennial-branches    | enter       |
       | sync-prototype-branches    | enter       |
-      | share-new-branches         | enter       |
-      | push-hook                  | enter       |
-      | new-branch-type            | enter       |
-      | ship-strategy              | enter       |
+      | share new branches         | enter       |
+      | push hook                  | enter       |
+      | new branch type            | enter       |
+      | ship strategy              | enter       |
       | save config to Git         | down enter  |
     Then Git Town runs the commands
       | COMMAND                                            |

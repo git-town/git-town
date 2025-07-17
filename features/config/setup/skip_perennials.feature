@@ -21,12 +21,12 @@ Feature: don't ask for perennial branches if no branches that could be perennial
       | sync perennial strategy     | enter      |                                             |
       | sync prototype strategy     | enter      |                                             |
       | sync-upstream               | enter      |                                             |
-      | sync-tags                   | enter      |                                             |
-      | share-new-branches          | enter      |                                             |
-      | push-hook                   | enter      |                                             |
-      | new-branch-type             | enter      |                                             |
-      | ship-strategy               | enter      |                                             |
-      | ship-delete-tracking-branch | enter      |                                             |
+      | sync tags                   | enter      |                                             |
+      | share new branches          | enter      |                                             |
+      | push hook                   | enter      |                                             |
+      | new branch type             | enter      |                                             |
+      | ship strategy               | enter      |                                             |
+      | ship delete tracking branch | enter      |                                             |
       | save config to Git metadata | down enter |                                             |
 
   Scenario: result

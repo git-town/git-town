@@ -61,12 +61,12 @@ Feature: remove existing configuration in Git metadata
       | sync perennial strategy     | down enter                                                                  |                     |
       | sync prototype strategy     | up enter                                                                    |                     |
       | sync-upstream               | down enter                                                                  |                     |
-      | sync-tags                   | down enter                                                                  |                     |
-      | share-new-branches          | up enter                                                                    | enable              |
+      | sync tags                   | down enter                                                                  |                     |
+      | share new branches          | up enter                                                                    | enable              |
       | push hook                   | down enter                                                                  | enable              |
-      | new-branch-type             | up enter                                                                    |                     |
-      | ship-strategy               | down enter                                                                  |                     |
-      | ship-delete-tracking-branch | down enter                                                                  | disable             |
+      | new branch type             | up enter                                                                    |                     |
+      | ship strategy               | down enter                                                                  |                     |
+      | ship delete tracking branch | down enter                                                                  | disable             |
       | config storage              | down enter                                                                  | git metadata        |
 
   Scenario: result

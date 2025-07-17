@@ -26,12 +26,12 @@ Feature: Accepting all default values leads to a working setup
       | sync perennial strategy     | enter |
       | sync prototype strategy     | enter |
       | sync-upstream               | enter |
-      | sync-tags                   | enter |
-      | share-new-branches          | enter |
-      | push-hook                   | enter |
-      | new-branch-type             | enter |
-      | ship-strategy               | enter |
-      | ship-delete-tracking-branch | enter |
+      | sync tags                   | enter |
+      | share new branches          | enter |
+      | push hook                   | enter |
+      | new branch type             | enter |
+      | ship strategy               | enter |
+      | ship delete tracking branch | enter |
       | save config to config file  | enter |
 
   Scenario: result

@@ -33,10 +33,10 @@ Feature: change existing information in Git metadata
       | sync perennial strategy             | down enter             |
       | sync prototype strategy             | down enter             |
       | sync-upstream                       | down enter             |
-      | sync-tags                           | down enter             |
+      | sync tags                           | down enter             |
       | enable share-new-branches           | down enter             |
       | enable the push hook                | down enter             |
-      | new-branch-type                     | down enter             |
+      | new branch type                     | down enter             |
       | set ship-strategy to "fast-forward" | down down enter        |
       | disable ship-delete-tracking-branch | down enter             |
       | save config to Git metadata         | down enter             |
