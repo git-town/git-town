@@ -22,7 +22,7 @@ func TestUnvalidatedConfig(t *testing.T) {
 			want := configdomain.NewLineageWith(configdomain.LineageData{
 				"branch": "main",
 			})
-			must.Eq(t, want, repo.Config.NormalConfig.Git.Lineage)
+			must.Eq(t, want, repo.Config.NormalConfig.Lineage)
 		})
 		t.Run("contribution branches changed", func(t *testing.T) {
 			t.Parallel()

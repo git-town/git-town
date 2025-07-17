@@ -22,7 +22,7 @@ type SyncFeatureBranchCompress struct {
 func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 	opcodes := []shared.Opcode{}
 	commitsInBranch := gitdomain.Commits{}
-	if parentLocalName, hasParent := args.Config.Value.NormalConfig.Git.Lineage.Parent(self.CurrentBranch).Get(); hasParent {
+	if parentLocalName, hasParent := args.Config.Value.NormalConfig.Lineage.Parent(self.CurrentBranch).Get(); hasParent {
 		parentName := determineParentBranchName(parentLocalName, args.BranchInfos, args.Config.Value.NormalConfig.DevRemote)
 		inSyncWithParent, err := args.Git.BranchInSyncWithParent(args.Backend, self.CurrentBranch, parentName)
 		if err != nil {

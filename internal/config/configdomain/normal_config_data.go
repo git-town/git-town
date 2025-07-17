@@ -29,6 +29,7 @@ type NormalConfigData struct {
 	GitLabToken              Option[forgedomain.GitLabToken]
 	GiteaToken               Option[forgedomain.GiteaToken]
 	HostingOriginHostname    Option[HostingOriginHostname]
+	Lineage                  Lineage
 	NewBranchType            Option[BranchType]
 	ObservedRegex            Option[ObservedRegex]
 	Offline                  Offline
@@ -116,6 +117,7 @@ func DefaultNormalConfig() NormalConfigData {
 		GitLabToken:              None[forgedomain.GitLabToken](),
 		GiteaToken:               None[forgedomain.GiteaToken](),
 		HostingOriginHostname:    None[HostingOriginHostname](),
+		Lineage:                  NewLineage(),
 		NewBranchType:            None[BranchType](),
 		ObservedRegex:            None[ObservedRegex](),
 		Offline:                  false,
