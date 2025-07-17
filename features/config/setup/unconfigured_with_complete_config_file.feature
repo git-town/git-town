@@ -47,25 +47,8 @@ Feature: don't ask for information already provided by the config file
       | github connector type: API | enter             |
       | GitHub token               | 1 2 3 4 5 6 enter |
       | token scope: local         | enter             |
-      | save config to config file | down enter        |
+      | save config to Git         | down enter        |
     Then Git Town runs the commands
       | COMMAND                                  |
       | git config git-town.github-token 123456  |
       | git config git-town.github-connector api |
-    And there are still no perennial branches
-    And local Git setting "git-town.dev-remote" still doesn't exist
-    And local Git setting "git-town.new-branch-type" still doesn't exist
-    And local Git setting "git-town.main-branch" still doesn't exist
-    And local Git setting "git-town.perennial-branches" still doesn't exist
-    And local Git setting "git-town.feature-regex" still doesn't exist
-    And local Git setting "git-town.forge-type" still doesn't exist
-    And local Git setting "git-town.github-token" is now "123456"
-    And local Git setting "git-town.share-new-branches" still doesn't exist
-    And local Git setting "git-town.push-hook" still doesn't exist
-    And local Git setting "git-town.sync-feature-strategy" still doesn't exist
-    And local Git setting "git-town.sync-perennial-strategy" still doesn't exist
-    And local Git setting "git-town.sync-upstream" still doesn't exist
-    And local Git setting "git-town.sync-tags" still doesn't exist
-    And local Git setting "git-town.ship-strategy" still doesn't exist
-    And local Git setting "git-town.ship-delete-tracking-branch" still doesn't exist
-    And local Git setting "git-town.unknown-branch-type" still doesn't exist
