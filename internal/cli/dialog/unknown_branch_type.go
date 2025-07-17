@@ -20,7 +20,7 @@ Git Town cannot determine their type any other way.
 `
 )
 
-func UnknownBranchType(existingValue configdomain.BranchType, inputs dialogcomponents.TestInputs) (configdomain.BranchType, dialogdomain.Exit, error) {
+func UnknownBranchType(existingValue configdomain.UnknownBranchType, inputs dialogcomponents.TestInputs) (configdomain.UnknownBranchType, dialogdomain.Exit, error) {
 	options := []configdomain.BranchType{
 		configdomain.BranchTypeContributionBranch,
 		configdomain.BranchTypeFeatureBranch,
@@ -28,8 +28,8 @@ func UnknownBranchType(existingValue configdomain.BranchType, inputs dialogcompo
 		configdomain.BranchTypeParkedBranch,
 		configdomain.BranchTypePrototypeBranch,
 	}
-	cursor := slice.Index(options, existingValue).GetOrElse(0)
+	cursor := slice.Index(options, existingValue.BranchType()).GetOrElse(0)
 	selection, exit, err := dialogcomponents.RadioList(list.NewEntries(options...), cursor, unknownBranchTypeTitle, UnknownBranchTypeHelp, inputs, "unknown-branch-type")
 	fmt.Printf(messages.UnknownBranchType, dialogcomponents.FormattedSelection(selection.String(), exit))
-	return selection, exit, err
+	return configdomain.UnknownBranchType(selection), exit, err
 }

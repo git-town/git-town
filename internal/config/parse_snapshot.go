@@ -94,7 +94,8 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	syncPrototypeStrategy, err18 := configdomain.ParseSyncPrototypeStrategy(snapshot[configdomain.KeySyncPrototypeStrategy])
 	syncTags, err19 := configdomain.ParseSyncTags(snapshot[configdomain.KeySyncTags], configdomain.KeySyncTags)
 	syncUpstream, err20 := configdomain.ParseSyncUpstream(snapshot[configdomain.KeySyncUpstream], configdomain.KeySyncUpstream)
-	unknownBranchType, err21 := configdomain.ParseBranchType(snapshot[configdomain.KeyUnknownBranchType])
+	branchType, err21 := configdomain.ParseBranchType(snapshot[configdomain.KeyUnknownBranchType])
+	unknownBranchType := configdomain.UnknownBranchTypeOpt(branchType)
 	return configdomain.PartialConfig{
 		Aliases:                  aliases,
 		BitbucketAppPassword:     forgedomain.ParseBitbucketAppPassword(snapshot[configdomain.KeyBitbucketAppPassword]),

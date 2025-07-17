@@ -46,7 +46,7 @@ func Load(rootDir gitdomain.RepoRootDir, fileName string, finalMessages stringsl
 func Validate(data Data, finalMessages stringslice.Collector) (configdomain.PartialConfig, error) {
 	var err error
 	var contributionRegex Option[configdomain.ContributionRegex]
-	var unknownBranchType Option[configdomain.BranchType]
+	var unknownBranchType Option[configdomain.UnknownBranchType]
 	var devRemote Option[gitdomain.Remote]
 	var featureRegex Option[configdomain.FeatureRegex]
 	var forgeType Option[forgedomain.ForgeType]
@@ -103,7 +103,8 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			ec.Check(err)
 		}
 		if data.Branches.DefaultType != nil {
-			unknownBranchType, err = configdomain.ParseBranchType(*data.Branches.DefaultType)
+			branchType, err := configdomain.ParseBranchType(*data.Branches.DefaultType)
+			unknownBranchType = configdomain.UnknownBranchTypeOpt(branchType)
 			ec.Check(err)
 		}
 		if data.Branches.FeatureRegex != nil {
@@ -128,7 +129,8 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			}
 		}
 		if data.Branches.UnknownType != nil {
-			unknownBranchType, err = configdomain.ParseBranchType(*data.Branches.UnknownType)
+			branchType, err := configdomain.ParseBranchType(*data.Branches.UnknownType)
+			unknownBranchType = configdomain.UnknownBranchTypeOpt(branchType)
 			ec.Check(err)
 		}
 	}

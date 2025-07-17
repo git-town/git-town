@@ -124,7 +124,7 @@ type branchData struct {
 	colors            colors.DialogColors
 	initialBranchOpt  Option[gitdomain.LocalBranchName]
 	lineage           configdomain.Lineage
-	unknownBranchType configdomain.BranchType
+	unknownBranchType configdomain.UnknownBranchType
 }
 
 func branchLayout(entries dialog.SwitchBranchEntries, data branchData) string {

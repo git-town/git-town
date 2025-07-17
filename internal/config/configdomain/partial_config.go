@@ -43,7 +43,7 @@ type PartialConfig struct {
 	SyncPrototypeStrategy    Option[SyncPrototypeStrategy]
 	SyncTags                 Option[SyncTags]
 	SyncUpstream             Option[SyncUpstream]
-	UnknownBranchType        Option[BranchType]
+	UnknownBranchType        Option[UnknownBranchType]
 	Verbose                  Option[Verbose]
 }
 
