@@ -26,7 +26,7 @@ Feature: Accepting all default values in a brand-new Git repo leads to a working
       | new branch type             | enter |
       | ship strategy               | enter |
       | ship delete tracking branch | enter |
-      | save config to config file  | enter |
+      | config storage              | enter |
 
   Scenario: result
     Then Git Town runs the commands

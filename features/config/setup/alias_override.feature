@@ -28,7 +28,7 @@ Feature: override an existing Git alias
       | new branch type             | enter   |
       | ship strategy               | enter   |
       | ship delete tracking branch | enter   |
-      | save config to config file  | enter   |
+      | config storage              | enter   |
 
   Scenario: result
     Then Git Town runs the commands
