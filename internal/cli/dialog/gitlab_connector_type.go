@@ -43,7 +43,7 @@ func GitLabConnectorType(existing Option[forgedomain.GitLabConnectorType], input
 	if existingValue, hasExisting := existing.Get(); hasExisting {
 		defaultPos = entries.IndexOf(existingValue)
 	}
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, gitLabConnectorTypeTitle, gitLabConnectorTypeHelp, inputs, "GitLab connector type")
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, gitLabConnectorTypeTitle, gitLabConnectorTypeHelp, inputs, "gitlab-connector-type")
 	fmt.Printf(messages.GitLabConnectorType, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return NewOption(selection), exit, err
 }

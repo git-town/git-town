@@ -143,7 +143,6 @@ Feature: enter the GitLab API token
       | git config git-town.sync-tags true                   |
     And global Git setting "git-town.gitlab-token" is now "123456"
 
-  @debug @this
   Scenario: edit global GitLab token
     Given my repo's "origin" remote is "git@gitlab.com:git-town/git-town.git"
     And global Git setting "git-town.gitlab-token" is "123"
@@ -173,7 +172,7 @@ Feature: enter the GitLab API token
       | new branch type             | enter                                     |                                             |
       | ship strategy               | enter                                     |                                             |
       | ship delete tracking branch | enter                                     |                                             |
-      | save config to Git metadata | down enter                                |                                             |
+      | config storage              | down enter                                |                                             |
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config --global git-town.gitlab-token 456        |
