@@ -36,8 +36,8 @@ Feature: enter a parent branch name when prompted
   Scenario: enter the parent for several branches
     When I run "git-town sync --all" and enter into the dialog:
       | DIALOG                  | KEYS  |
-      | parent branch for alpha | enter |
       | parent branch for beta  | enter |
+      | parent branch for alpha | enter |
     Then this lineage exists now
       | BRANCH | PARENT |
       | alpha  | main   |
