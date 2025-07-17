@@ -128,7 +128,7 @@ func (self *Fixture) Branches() datatable.DataTable {
 // CommitTable provides a table for all commits in this Git environment containing only the given fields.
 func (self *Fixture) CommitTable(fields []string) datatable.DataTable {
 	builder := datatable.NewCommitTableBuilder()
-	lineage := self.DevRepo.Value.Config.NormalConfig.Lineage
+	lineage := self.DevRepo.Value.Config.NormalConfig.Git.Lineage
 	var mainBranch gitdomain.BranchName
 	mainIsLocal := self.DevRepo.Value.Git.BranchExists(self.DevRepo.Value, "main")
 	if mainIsLocal {

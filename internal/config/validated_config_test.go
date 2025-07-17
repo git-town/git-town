@@ -52,7 +52,7 @@ func TestValidatedConfig(t *testing.T) {
 		repo.CreateFeatureBranch("feature1", "main")
 		repo.CreateFeatureBranch("feature2", "main")
 		repo.Config.Reload(repo.TestRunner)
-		have := repo.Config.NormalConfig.Lineage
+		have := repo.Config.NormalConfig.Git.Lineage
 		want := configdomain.NewLineageWith(configdomain.LineageData{
 			"feature1": "main",
 			"feature2": "main",

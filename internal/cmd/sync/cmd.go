@@ -308,7 +308,7 @@ func determineSyncData(cliConfig cliconfig.CliConfig, syncAllBranches configdoma
 	case syncAllBranches.Enabled():
 		branchNamesToSync = localBranches
 	case syncStack.Enabled():
-		branchNamesToSync = validatedConfig.NormalConfig.Lineage.BranchLineageWithoutRoot(initialBranch, perennialAndMain)
+		branchNamesToSync = validatedConfig.NormalConfig.Git.Lineage.BranchLineageWithoutRoot(initialBranch, perennialAndMain)
 	default:
 		branchNamesToSync = gitdomain.LocalBranchNames{initialBranch}
 	}
@@ -339,7 +339,7 @@ func determineSyncData(cliConfig cliconfig.CliConfig, syncAllBranches configdoma
 	default:
 		shouldPushTags = validatedConfig.IsMainOrPerennialBranch(initialBranch)
 	}
-	allBranchNamesToSync := validatedConfig.NormalConfig.Lineage.BranchesAndAncestors(branchNamesToSync)
+	allBranchNamesToSync := validatedConfig.NormalConfig.Git.Lineage.BranchesAndAncestors(branchNamesToSync)
 	if detached {
 		allBranchNamesToSync = allBranchNamesToSync.Remove(perennialAndMain...)
 	}
@@ -378,7 +378,7 @@ func BranchesToSync(branchInfosToSync gitdomain.BranchInfos, allBranchInfos gitd
 			}
 			continue
 		}
-		parentLocalName, hasParentName := repo.UnvalidatedConfig.NormalConfig.Lineage.Parent(branchNameToSync.LocalName()).Get()
+		parentLocalName, hasParentName := repo.UnvalidatedConfig.NormalConfig.Git.Lineage.Parent(branchNameToSync.LocalName()).Get()
 		if !hasParentName {
 			parentLocalName = mainBranch
 		}
