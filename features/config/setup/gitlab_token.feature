@@ -112,7 +112,7 @@ Feature: enter the GitLab API token
       | unknown branch type         | enter             |                                             |
       | origin hostname             | enter             |                                             |
       | forge type                  | enter             |                                             |
-      | gitlab connector type: api  | enter             |                                             |
+      | gitlab connector type       | enter             | api                                         |
       | gitlab token                | 1 2 3 4 5 6 enter |                                             |
       | token scope                 | down enter        |                                             |
       | sync feature strategy       | enter             |                                             |
@@ -125,7 +125,7 @@ Feature: enter the GitLab API token
       | new branch type             | enter             |                                             |
       | ship strategy               | enter             |                                             |
       | ship delete tracking branch | enter             |                                             |
-      | save config to Git metadata | down enter        |                                             |
+      | config storage              | down enter        | git metadata                                |
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config --global git-town.gitlab-token 123456     |
