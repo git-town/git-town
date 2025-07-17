@@ -1,34 +1,33 @@
 package helpers
 
 import (
-	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/cucumber/godog"
 	messages "github.com/cucumber/messages/go/v21"
 )
 
-func TableToInputEnv(table *godog.Table) ([]string, error) {
+func TableToInputEnv(table *godog.Table) []string {
 	result := make([]string, 0, len(table.Rows)-1)
-	keyColumn, err := detectKeysColumn(table.Rows[0])
-	if err != nil {
-		return result, err
-	}
+	dialogColumn := detectColumn("DIALOG", table.Rows[0])
+	inputColumn := detectColumn("KEYS", table.Rows[0])
 	for i := 1; i < len(table.Rows); i++ {
 		row := table.Rows[i]
-		answersEnvStyle := strings.ReplaceAll(row.Cells[keyColumn].Value, " ", "|")
-		if len(answersEnvStyle) > 0 {
-			result = append(result, answersEnvStyle)
+		dialogName := strings.ReplaceAll(row.Cells[dialogColumn].Value, " ", "-")
+		input := strings.ReplaceAll(row.Cells[inputColumn].Value, " ", "|")
+		if len(input) > 0 {
+			result = append(result, dialogName+"@"+input)
 		}
 	}
-	return result, nil
+	return result
 }
 
-func detectKeysColumn(row *messages.PickleTableRow) (int, error) {
+func detectColumn(caption string, row *messages.PickleTableRow) int {
 	for i, cell := range row.Cells {
-		if cell.Value == "KEYS" {
-			return i, nil
+		if cell.Value == caption {
+			return i
 		}
 	}
-	return 0, errors.New(`no table column with header "KEYS" detected`)
+	panic(fmt.Sprintf("no table column with header %q detected", caption))
 }

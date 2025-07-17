@@ -298,7 +298,7 @@ func TestTestCommands(t *testing.T) {
 		t.Run("the perennial branches are configured", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			must.NoError(t, gitconfig.SetPerennialBranches(runtime.TestRunner, gitdomain.NewLocalBranchNames("qa")))
+			must.NoError(t, gitconfig.SetPerennialBranches(runtime.TestRunner, gitdomain.NewLocalBranchNames("qa"), configdomain.ConfigScopeLocal))
 			must.Error(t, runtime.VerifyNoGitTownConfiguration())
 		})
 		t.Run("branch lineage is configured", func(t *testing.T) {
