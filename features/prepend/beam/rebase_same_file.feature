@@ -15,7 +15,7 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town prepend parent --beam" and enter into the dialog:
       | DIALOG          | KEYS             |
-      | select commit 2 | down space enter |
+      | commits to beam | down space enter |
     Then Git Town runs the commands
       | BRANCH | COMMAND                                      |
       | old    | git checkout -b parent main                  |

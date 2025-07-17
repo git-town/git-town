@@ -24,6 +24,7 @@ is set to something other than "observed".
 
 func ObservedRegex(existingValue Option[configdomain.ObservedRegex], inputs dialogcomponents.TestInputs) (Option[configdomain.ObservedRegex], dialogdomain.Exit, error) {
 	value, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
+		DialogName:    "observed-regex",
 		ExistingValue: existingValue.String(),
 		Help:          observedRegexHelp,
 		Prompt:        "Observed regex: ",

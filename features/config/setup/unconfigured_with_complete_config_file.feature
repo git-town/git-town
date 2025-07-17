@@ -41,13 +41,13 @@ Feature: don't ask for information already provided by the config file
       perennial-branches = "ff-only"
       """
     When I run "git-town config setup" and enter into the dialogs:
-      | DIALOG                     | KEYS              |
-      | welcome                    | enter             |
-      | aliases                    | enter             |
-      | github connector type: API | enter             |
-      | GitHub token               | 1 2 3 4 5 6 enter |
-      | token scope: local         | enter             |
-      | save config to Git         | down enter        |
+      | DIALOG                | KEYS              |
+      | welcome               | enter             |
+      | aliases               | enter             |
+      | github connector type | enter             |
+      | github token          | 1 2 3 4 5 6 enter |
+      | token scope           | enter             |
+      | config storage        | down enter        |
     Then Git Town runs the commands
       | COMMAND                                  |
       | git config git-town.github-token 123456  |

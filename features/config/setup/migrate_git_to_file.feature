@@ -21,30 +21,30 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.sync-tags" is "false"
     And local Git setting "git-town.unknown-branch-type" is "observed"
     When I run "git-town config setup" and enter into the dialogs:
-      | DESCRIPTION                 | KEYS  |
+      | DIALOG                      | KEYS  |
       | welcome                     | enter |
-      | add all aliases             | enter |
+      | aliases                     | enter |
       | main branch                 | enter |
-      | perennial branches          |       |
+      | perennial branches          | enter |
       | perennial regex             | enter |
       | feature regex               | enter |
       | contribution regex          | enter |
       | observed regex              | enter |
       | unknown branch type         | enter |
-      | dev-remote                  | enter |
+      | dev-remote                  |       |
       | origin hostname             | enter |
       | forge type                  | enter |
-      | sync-feature-strategy       | enter |
-      | sync-perennial-strategy     | enter |
-      | sync-prototype-strategy     | enter |
-      | sync-upstream               | enter |
-      | sync-tags                   | enter |
-      | share-new-branches          | enter |
-      | disable the push hook       | enter |
-      | new-branch-type             | enter |
-      | ship-strategy               | enter |
-      | ship-delete-tracking-branch | enter |
-      | save config to config file  | enter |
+      | sync feature strategy       | enter |
+      | sync perennial strategy     | enter |
+      | sync prototype strategy     | enter |
+      | sync upstream               | enter |
+      | sync tags                   | enter |
+      | share new branches          | enter |
+      | push hook                   | enter |
+      | new branch type             | enter |
+      | ship strategy               | enter |
+      | ship delete tracking branch | enter |
+      | config storage              | enter |
 
   Scenario: result
     Then Git Town runs the commands

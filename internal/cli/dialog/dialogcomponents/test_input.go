@@ -1,6 +1,7 @@
 package dialogcomponents
 
 import (
+	"fmt"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -10,18 +11,28 @@ import (
 const TestInputKey = "GITTOWN_DIALOG_INPUT"
 
 // TestInput contains the input for a single dialog in an end-to-end test.
-type TestInput []tea.Msg
+type TestInput struct {
+	Messages []tea.Msg
+	StepName string
+}
 
 // ParseTestInput converts the given input data in the environment variable format
 // into the format understood by Git Town's dialogs.
 func ParseTestInput(envData string) TestInput {
-	result := TestInput{}
-	for _, input := range strings.Split(envData, "|") {
+	messages := []tea.Msg{}
+	stepName, keys, has := strings.Cut(envData, "@")
+	if !has {
+		panic(fmt.Sprintf("found test input without step name: %q", envData))
+	}
+	for _, input := range strings.Split(keys, "|") {
 		if len(input) > 0 {
-			result = append(result, recognizeTestInput(input))
+			messages = append(messages, recognizeTestInput(input))
 		}
 	}
-	return result
+	return TestInput{
+		Messages: messages,
+		StepName: stepName,
+	}
 }
 
 // recognizeTestInput provides the matching BubbleTea message for the given string.

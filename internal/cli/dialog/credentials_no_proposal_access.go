@@ -25,7 +25,7 @@ func CredentialsNoProposalAccess(connectorError error, inputs dialogcomponents.T
 		CredentialsNoAccessChoiceRetry,
 		CredentialsNoAccessChoiceIgnore,
 	)
-	selection, exit, err := dialogcomponents.RadioList(entries, 0, credentialsNoProposalAccessTitle, fmt.Sprintf(credentialsNoProposalAccessHelp, connectorError), inputs)
+	selection, exit, err := dialogcomponents.RadioList(entries, 0, credentialsNoProposalAccessTitle, fmt.Sprintf(credentialsNoProposalAccessHelp, connectorError), inputs, "credentials-no-access-to-proposal")
 	fmt.Printf(messages.CredentialsNoAccess, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection.Repeat(), exit, err
 }

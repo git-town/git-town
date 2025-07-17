@@ -9,8 +9,8 @@ Feature: switch branches
       | beta  | feature | main   | local, origin |
     And the current branch is "alpha"
     When I run "git-town switch" and enter into the dialogs:
-      | KEYS       |
-      | down enter |
+      | DIALOG      | KEYS       |
+      | branch-tree | down enter |
     Then Git Town runs the commands
       | BRANCH | COMMAND           |
       | alpha  | git checkout beta |

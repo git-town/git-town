@@ -1,5 +1,4 @@
-@messyoutput
-@skipWindows
+@messyoutput @skipWindows
 Feature: ship a coworker's feature branch
 
   Background:
@@ -17,8 +16,8 @@ Feature: ship a coworker's feature branch
 
   Scenario: choose myself as the author
     When I run "git-town ship -m 'feature done'" and enter into the dialog:
-      | DIALOG                              | KEYS  |
-      | choose author for the squash commit | enter |
+      | DIALOG               | KEYS  |
+      | squash commit author | enter |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR                            |
       | main   | local, origin | feature done | developer <developer@example.com> |
@@ -26,8 +25,8 @@ Feature: ship a coworker's feature branch
 
   Scenario: choose a coworker as the author
     When I run "git-town ship -m 'feature done'" and enter into the dialog:
-      | DIALOG                              | KEYS       |
-      | choose author for the squash commit | down enter |
+      | DIALOG               | KEYS       |
+      | squash commit author | down enter |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR                          |
       | main   | local, origin | feature done | coworker <coworker@example.com> |
@@ -35,8 +34,8 @@ Feature: ship a coworker's feature branch
 
   Scenario: undo
     Given I ran "git-town ship -m 'feature done'" and enter into the dialog:
-      | DIALOG                              | KEYS  |
-      | choose author for the squash commit | enter |
+      | DIALOG               | KEYS  |
+      | squash commit author | enter |
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                        |

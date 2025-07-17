@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/cucumber/godog"
@@ -9,23 +10,24 @@ import (
 
 func TableToInputEnv(table *godog.Table) []string {
 	result := make([]string, 0, len(table.Rows)-1)
-	keyColumn := detectKeysColumn(table.Rows[0])
+	dialogColumn := detectColumn("DIALOG", table.Rows[0])
+	inputColumn := detectColumn("KEYS", table.Rows[0])
 	for i := 1; i < len(table.Rows); i++ {
 		row := table.Rows[i]
-		input := row.Cells[keyColumn].Value
-		answersEnvStyle := strings.ReplaceAll(input, " ", "|")
-		if len(answersEnvStyle) > 0 {
-			result = append(result, answersEnvStyle)
+		dialogName := strings.ReplaceAll(row.Cells[dialogColumn].Value, " ", "-")
+		input := strings.ReplaceAll(row.Cells[inputColumn].Value, " ", "|")
+		if len(input) > 0 {
+			result = append(result, dialogName+"@"+input)
 		}
 	}
 	return result
 }
 
-func detectKeysColumn(row *messages.PickleTableRow) int {
+func detectColumn(caption string, row *messages.PickleTableRow) int {
 	for i, cell := range row.Cells {
-		if cell.Value == "KEYS" {
+		if cell.Value == caption {
 			return i
 		}
 	}
-	panic(`no table column with header "KEYS" detected`)
+	panic(fmt.Sprintf("no table column with header %q detected", caption))
 }
