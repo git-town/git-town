@@ -74,11 +74,12 @@ func (self *NormalConfig) SetParent(runner subshelldomain.Runner, branch, parent
 
 // SetPerennialBranches marks the given branches as perennial branches.
 func (self *NormalConfig) SetPerennialBranches(runner subshelldomain.Runner, branches gitdomain.LocalBranchNames) error {
-	self.PerennialBranches = branches
+	var err error
 	if slices.Compare(self.PerennialBranches, branches) != 0 {
-		return gitconfig.SetPerennialBranches(runner, branches, configdomain.ConfigScopeLocal)
+		err = gitconfig.SetPerennialBranches(runner, branches, configdomain.ConfigScopeLocal)
 	}
-	return nil
+	self.PerennialBranches = branches
+	return err
 }
 
 // remoteURLString provides the URL for the given remote.
