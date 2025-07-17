@@ -31,11 +31,11 @@ Feature: ask for information not provided by the config file
       | observed regex          | 4 4 4 enter |
       | unknown branch type     | enter       |
       | github connector type   | enter       |
-      | GitHub token            | 9 9 9 enter |
+      | github token            | 9 9 9 enter |
       | token scope             | enter       |
-      | sync feature branches   | enter       |
-      | sync perennial branches | enter       |
-      | sync prototype branches | enter       |
+      | sync feature strategy   | enter       |
+      | sync perennial strategy | enter       |
+      | sync prototype strategy | enter       |
       | share new branches      | enter       |
       | push hook               | enter       |
       | new branch type         | enter       |
