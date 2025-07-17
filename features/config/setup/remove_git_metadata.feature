@@ -45,7 +45,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.ship-strategy" is "squash-merge"
     And local Git setting "git-town.ship-delete-tracking-branch" is "false"
     When I run "git-town config setup" and enter into the dialogs:
-      | DESCRIPTION                             | KEYS                                                                        |
+      | DIALOG                                  | KEYS                                                                        |
       | welcome                                 | enter                                                                       |
       | remove all aliases                      | n enter                                                                     |
       | keep the already configured main branch | enter                                                                       |

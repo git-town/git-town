@@ -21,7 +21,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.sync-tags" is "false"
     And local Git setting "git-town.unknown-branch-type" is "observed"
     When I run "git-town config setup" and enter into the dialogs:
-      | DESCRIPTION                 | KEYS  |
+      | DIALOG                      | KEYS  |
       | welcome                     | enter |
       | add all aliases             | enter |
       | main branch                 | enter |
@@ -83,23 +83,23 @@ Feature: migrate existing configuration in Git metadata to a config file
     And the configuration file is now:
       """
       # More info around this file at https://www.git-town.com/configuration-file
-
+      
       [branches]
       main = "main"
       perennials = ["qa"]
       perennial-regex = "release-.*"
-
+      
       [create]
       new-branch-type = "prototype"
       share-new-branches = "no"
-
+      
       [hosting]
       dev-remote = "fork"
-
+      
       [ship]
       delete-tracking-branch = false
       strategy = "squash-merge"
-
+      
       [sync]
       feature-strategy = "merge"
       perennial-strategy = "rebase"
