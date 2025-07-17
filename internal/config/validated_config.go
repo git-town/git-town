@@ -4,7 +4,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 )
 
@@ -44,11 +43,6 @@ func (self *ValidatedConfig) BranchesOfType(branches gitdomain.LocalBranchNames,
 	return result
 }
 
-func (self *ValidatedConfig) CleanupLineage(branchInfos gitdomain.BranchInfos, nonExistingBranches gitdomain.LocalBranchNames, finalMessages stringslice.Collector, runner subshelldomain.Runner) {
-	self.RemoveDeletedBranchesFromLineage(branchInfos, nonExistingBranches, runner)
-	self.NormalConfig.RemovePerennialAncestors(runner, finalMessages)
-}
-
 // IsMainOrPerennialBranch indicates whether the branch with the given name
 // is the main branch or a perennial branch of the repository.
 func (self *ValidatedConfig) IsMainOrPerennialBranch(branch gitdomain.LocalBranchName) bool {
@@ -58,30 +52,6 @@ func (self *ValidatedConfig) IsMainOrPerennialBranch(branch gitdomain.LocalBranc
 
 func (self *ValidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 	return append(gitdomain.LocalBranchNames{self.ValidatedConfigData.MainBranch}, self.NormalConfig.PerennialBranches...)
-}
-
-func (self *ValidatedConfig) RemoveDeletedBranchesFromLineage(branchInfos gitdomain.BranchInfos, nonExistingBranches gitdomain.LocalBranchNames, runner subshelldomain.Runner) {
-	for _, nonExistingBranch := range nonExistingBranches {
-		self.NormalConfig.CleanupBranchFromLineage(runner, nonExistingBranch)
-	}
-	for _, entry := range self.NormalConfig.Lineage.Entries() {
-		childDoesntExist := nonExistingBranches.Contains(entry.Child)
-		parentDoesntExist := nonExistingBranches.Contains(entry.Parent)
-		if childDoesntExist || parentDoesntExist {
-			self.RemoveParent(runner, entry.Child)
-		}
-		childExists := branchInfos.HasBranch(entry.Child)
-		parentExists := branchInfos.HasBranch(entry.Parent)
-		if !childExists || !parentExists {
-			self.RemoveParent(runner, entry.Child)
-		}
-	}
-}
-
-// RemoveParent removes the parent branch entry for the given branch from the Git configuration.
-func (self *ValidatedConfig) RemoveParent(runner subshelldomain.Runner, branch gitdomain.LocalBranchName) {
-	self.NormalConfig.Lineage = self.NormalConfig.Lineage.RemoveBranch(branch)
-	_ = gitconfig.RemoveParent(runner, branch)
 }
 
 // provides this collection without the perennial branch at the root

@@ -25,6 +25,11 @@ func (self *UnvalidatedConfig) BranchType(branch gitdomain.LocalBranchName) conf
 	return self.UnvalidatedConfig.PartialBranchType(branch).GetOrElse(self.NormalConfig.PartialBranchType(branch))
 }
 
+func (self *UnvalidatedConfig) CleanupLineage(branchInfos gitdomain.BranchInfos, nonExistingBranches gitdomain.LocalBranchNames, finalMessages stringslice.Collector, runner subshelldomain.Runner) {
+	self.RemoveDeletedBranchesFromLineage(branchInfos, nonExistingBranches, runner)
+	self.NormalConfig.RemovePerennialAncestors(runner, finalMessages)
+}
+
 // IsMainOrPerennialBranch indicates whether the branch with the given name
 // is the main branch or a perennial branch of the repository.
 func (self *UnvalidatedConfig) IsMainOrPerennialBranch(branch gitdomain.LocalBranchName) bool {
@@ -62,6 +67,24 @@ func (self *UnvalidatedConfig) Reload(backend subshelldomain.RunnerQuerier) (glo
 	return globalSnapshot, localSnapshot, unscopedSnapshot
 }
 
+func (self *UnvalidatedConfig) RemoveDeletedBranchesFromLineage(branchInfos gitdomain.BranchInfos, nonExistingBranches gitdomain.LocalBranchNames, runner subshelldomain.Runner) {
+	for _, nonExistingBranch := range nonExistingBranches {
+		self.NormalConfig.CleanupBranchFromLineage(runner, nonExistingBranch)
+	}
+	for _, entry := range self.NormalConfig.Lineage.Entries() {
+		childDoesntExist := nonExistingBranches.Contains(entry.Child)
+		parentDoesntExist := nonExistingBranches.Contains(entry.Parent)
+		if childDoesntExist || parentDoesntExist {
+			self.RemoveParent(runner, entry.Child)
+		}
+		childExists := branchInfos.HasBranch(entry.Child)
+		parentExists := branchInfos.HasBranch(entry.Parent)
+		if !childExists || !parentExists {
+			self.RemoveParent(runner, entry.Child)
+		}
+	}
+}
+
 func (self *UnvalidatedConfig) RemoveMainBranch(runner subshelldomain.Runner) {
 	if self.Git.MainBranch.IsSome() {
 		_ = gitconfig.RemoveMainBranch(runner)
@@ -73,6 +96,12 @@ func (self *UnvalidatedConfig) RemoveMainBranch(runner subshelldomain.Runner) {
 func (self *UnvalidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName, runner subshelldomain.Runner) error {
 	self.UnvalidatedConfig.MainBranch = Some(branch)
 	return gitconfig.SetMainBranch(runner, branch, configdomain.ConfigScopeLocal)
+}
+
+// RemoveParent removes the parent branch entry for the given branch from the Git configuration.
+func (self *UnvalidatedConfig) RemoveParent(runner subshelldomain.Runner, branch gitdomain.LocalBranchName) {
+	self.Git.Lineage = self.NormalConfig.Lineage.RemoveBranch(branch)
+	_ = gitconfig.RemoveParent(runner, branch)
 }
 
 // SetPerennialBranches marks the given branches as perennial branches.

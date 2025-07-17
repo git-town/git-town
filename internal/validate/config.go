@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
@@ -20,6 +21,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 	if err != nil {
 		return config.EmptyValidatedConfig(), false, err
 	}
+	args.Unvalidated.Value.CleanupLineage(args.BranchInfos, args.NonExistingBranches, args.FinalMessages, args.Frontend)
 
 	// enter and save main and perennials
 	mainBranch, hasMain := args.Unvalidated.Value.UnvalidatedConfig.MainBranch.Get()
@@ -90,16 +92,19 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 }
 
 type ConfigArgs struct {
-	Backend            subshelldomain.RunnerQuerier
-	BranchesAndTypes   configdomain.BranchesAndTypes
-	BranchesSnapshot   gitdomain.BranchesSnapshot
-	BranchesToValidate gitdomain.LocalBranchNames
-	Connector          Option[forgedomain.Connector]
-	DialogTestInputs   dialogcomponents.TestInputs
-	Frontend           subshelldomain.Runner
-	Git                git.Commands
-	LocalBranches      gitdomain.LocalBranchNames
-	RepoStatus         gitdomain.RepoStatus
-	TestInputs         dialogcomponents.TestInputs
-	Unvalidated        Mutable[config.UnvalidatedConfig]
+	Backend             subshelldomain.RunnerQuerier
+	BranchesAndTypes    configdomain.BranchesAndTypes
+	BranchInfos         gitdomain.BranchInfos
+	BranchesSnapshot    gitdomain.BranchesSnapshot
+	BranchesToValidate  gitdomain.LocalBranchNames
+	Connector           Option[forgedomain.Connector]
+	DialogTestInputs    dialogcomponents.TestInputs
+	FinalMessages       stringslice.Collector
+	Frontend            subshelldomain.Runner
+	Git                 git.Commands
+	LocalBranches       gitdomain.LocalBranchNames
+	NonExistingBranches gitdomain.LocalBranchNames
+	RepoStatus          gitdomain.RepoStatus
+	TestInputs          dialogcomponents.TestInputs
+	Unvalidated         Mutable[config.UnvalidatedConfig]
 }
