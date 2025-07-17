@@ -14,7 +14,10 @@ import (
 const TestInputKey = "GITTOWN_DIALOG_INPUT"
 
 // TestInput contains the input for a single dialog in an end-to-end test.
-type TestInput []tea.Msg
+type TestInput struct {
+	Messages []tea.Msg
+	// stepName string
+}
 
 // TestInputs contains the input for all dialogs in an end-to-end test.
 // This struct is always mutable, so doesn't need to be wrapped in Mutable.
@@ -73,13 +76,15 @@ func NewTestInputs(inputs ...TestInput) TestInputs {
 // ParseTestInput converts the given input data in the environment variable format
 // into the format understood by Git Town's dialogs.
 func ParseTestInput(envData string) TestInput {
-	result := TestInput{}
+	messages := []tea.Msg{}
 	for _, input := range strings.Split(envData, "|") {
 		if len(input) > 0 {
-			result = append(result, recognizeTestInput(input))
+			messages = append(messages, recognizeTestInput(input))
 		}
 	}
-	return result
+	return TestInput{
+		Messages: messages,
+	}
 }
 
 // recognizeTestInput provides the matching BubbleTea message for the given string.

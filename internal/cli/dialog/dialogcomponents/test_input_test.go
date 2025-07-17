@@ -22,13 +22,17 @@ func TestTestInputs(t *testing.T) {
 		}
 		have := dialogcomponents.LoadTestInputs(env)
 		want := dialogcomponents.NewTestInputs(
-			dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyEnter}},
 			dialogcomponents.TestInput{
-				tea.KeyMsg{Type: tea.KeySpace},
-				tea.KeyMsg{Type: tea.KeyDown},
-				tea.KeyMsg{Type: tea.KeySpace},
-				tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'5'}},
-				tea.KeyMsg{Type: tea.KeyEnter},
+				Messages: []tea.Msg{tea.KeyMsg{Type: tea.KeyEnter}},
+			},
+			dialogcomponents.TestInput{
+				Messages: []tea.Msg{
+					tea.KeyMsg{Type: tea.KeySpace},
+					tea.KeyMsg{Type: tea.KeyDown},
+					tea.KeyMsg{Type: tea.KeySpace},
+					tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'5'}},
+					tea.KeyMsg{Type: tea.KeyEnter},
+				},
 			},
 			dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}},
 		)

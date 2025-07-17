@@ -9,7 +9,7 @@ import (
 func SendInputs(input Option[TestInput], program *tea.Program) {
 	if input, has := input.Get(); has {
 		go func() {
-			for _, msg := range input {
+			for _, msg := range input.Messages {
 				program.Send(msg)
 			}
 		}()
