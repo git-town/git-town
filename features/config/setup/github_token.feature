@@ -32,7 +32,7 @@ Feature: enter the GitHub API token
       | new branch type             | enter             |                                             |
       | ship strategy               | enter             |                                             |
       | ship delete tracking branch | enter             |                                             |
-      | config storage              | down enter        |                                             |
+      | config storage              | enter             |                                             |
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config git-town.github-token 123456              |
@@ -78,7 +78,7 @@ Feature: enter the GitHub API token
       | new branch type             | enter                          |                                             |
       | ship strategy               | enter                          |                                             |
       | ship delete tracking branch | enter                          |                                             |
-      | config storage              | down enter                     |                                             |
+      | config storage              | enter                          |                                             |
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config git-town.github-token 123456              |
@@ -126,7 +126,7 @@ Feature: enter the GitHub API token
       | new branch type             | enter                               |                                             |
       | ship strategy               | enter                               |                                             |
       | ship delete tracking branch | enter                               |                                             |
-      | config storage              | down enter                          |                                             |
+      | config storage              | enter                               |                                             |
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config --unset git-town.github-token             |
@@ -173,7 +173,7 @@ Feature: enter the GitHub API token
       | new branch type             | enter             |                                             |
       | ship strategy               | enter             |                                             |
       | ship delete tracking branch | enter             |                                             |
-      | config storage              | down enter        |                                             |
+      | config storage              | enter             |                                             |
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config --global git-town.github-token 123456     |
@@ -220,7 +220,7 @@ Feature: enter the GitHub API token
       | new branch type             | enter                                     |                                             |
       | ship strategy               | enter                                     |                                             |
       | ship delete tracking branch | enter                                     |                                             |
-      | config storage              | down enter                                |                                             |
+      | config storage              | enter                                     |                                             |
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config --global git-town.github-token 456        |
