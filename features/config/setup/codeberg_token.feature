@@ -18,7 +18,7 @@ Feature: enter the Codeberg API token
       | observed regex              | enter             |                                             |
       | unknown branch type         | enter             |                                             |
       | origin hostname             | enter             |                                             |
-      | forge type: auto-detect     | enter             |                                             |
+      | forge type                  | enter             |                                             |
       | codeberg token              | 1 2 3 4 5 6 enter |                                             |
       | token scope                 | enter             |                                             |
       | sync feature strategy       | enter             |                                             |
@@ -31,7 +31,7 @@ Feature: enter the Codeberg API token
       | new branch type             | enter             |                                             |
       | ship strategy               | enter             |                                             |
       | ship delete tracking branch | enter             |                                             |
-      | save config to Git metadata | down enter        |                                             |
+      | config storage              | down enter        |                                             |
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config git-town.codeberg-token 123456            |
@@ -75,7 +75,7 @@ Feature: enter the Codeberg API token
       | new branch type             | enter                |                                             |
       | ship strategy               | enter                |                                             |
       | ship delete tracking branch | enter                |                                             |
-      | save config to Git metadata | down enter           |                                             |
+      | config storage              | down enter           |                                             |
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config git-town.codeberg-token 123456            |
@@ -108,7 +108,7 @@ Feature: enter the Codeberg API token
       | observed regex              | enter             |                                             |
       | unknown branch type         | enter             |                                             |
       | origin hostname             | enter             |                                             |
-      | forge type: auto-detect     | enter             |                                             |
+      | forge type                  | enter             |                                             |
       | codeberg token              | 1 2 3 4 5 6 enter |                                             |
       | token scope                 | down enter        |                                             |
       | sync feature strategy       | enter             |                                             |
@@ -121,7 +121,7 @@ Feature: enter the Codeberg API token
       | new branch type             | enter             |                                             |
       | ship strategy               | enter             |                                             |
       | ship delete tracking branch | enter             |                                             |
-      | save config to Git metadata | down enter        |                                             |
+      | config storage              | down enter        |                                             |
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config --global git-town.codeberg-token 123456   |
@@ -153,7 +153,7 @@ Feature: enter the Codeberg API token
       | observed regex              | enter                                     |                                             |
       | unknown branch type         | enter                                     |                                             |
       | origin hostname             | enter                                     |                                             |
-      | forge type: auto-detect     | enter                                     |                                             |
+      | forge type                  | enter                                     |                                             |
       | github token                | backspace backspace backspace 4 5 6 enter |                                             |
       | token scope                 | enter                                     |                                             |
       | sync feature strategy       | enter                                     |                                             |
@@ -166,7 +166,7 @@ Feature: enter the Codeberg API token
       | new branch type             | enter                                     |                                             |
       | ship strategy               | enter                                     |                                             |
       | ship delete tracking branch | enter                                     |                                             |
-      | save config to Git metadata | down enter                                |                                             |
+      | config storage              | down enter                                |                                             |
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config --global git-town.codeberg-token 456      |

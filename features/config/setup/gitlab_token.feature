@@ -4,6 +4,7 @@ Feature: enter the GitLab API token
   Background:
     Given a Git repo with origin
 
+  @debug @this
   Scenario: auto-detected GitLab platform
     Given my repo's "origin" remote is "git@gitlab.com:git-town/git-town.git"
     When I run "git-town config setup" and enter into the dialog:
@@ -18,8 +19,8 @@ Feature: enter the GitLab API token
       | observed regex              | enter             |                                             |
       | unknown branch type         | enter             |                                             |
       | origin hostname             | enter             |                                             |
-      | forge type: auto-detect     | enter             |                                             |
-      | gitlab connector type: api  | enter             |                                             |
+      | forge type                  | enter             |                                             |
+      | gitlab connector type       | enter             |                                             |
       | gitlab token                | 1 2 3 4 5 6 enter |                                             |
       | token scope                 | enter             |                                             |
       | sync feature strategy       | enter             |                                             |
@@ -32,7 +33,7 @@ Feature: enter the GitLab API token
       | new branch type             | enter             |                                             |
       | ship strategy               | enter             |                                             |
       | ship delete tracking branch | enter             |                                             |
-      | save config to Git metadata | down enter        |                                             |
+      | config storage              | down enter        |                                             |
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config git-town.gitlab-token 123456              |
@@ -50,6 +51,7 @@ Feature: enter the GitLab API token
       | git config git-town.sync-tags true                   |
     And local Git setting "git-town.forge-type" still doesn't exist
 
+  @debug @this
   Scenario: select GitLab manually
     When I run "git-town config setup" and enter into the dialog:
       | DIALOG                      | KEYS              | DESCRIPTION                                 |
@@ -64,7 +66,7 @@ Feature: enter the GitLab API token
       | unknown branch type         | enter             |                                             |
       | origin hostname             | enter             |                                             |
       | forge type                  | up enter          |                                             |
-      | gitlab connector type: api  | enter             |                                             |
+      | gitlab connector type       | enter             |                                             |
       | gitlab token                | 1 2 3 4 5 6 enter |                                             |
       | token scope                 | enter             |                                             |
       | sync feature strategy       | enter             |                                             |
@@ -77,7 +79,7 @@ Feature: enter the GitLab API token
       | new branch type             | enter             |                                             |
       | ship strategy               | enter             |                                             |
       | ship delete tracking branch | enter             |                                             |
-      | save config to Git metadata | down enter        |                                             |
+      | config storage              | down enter        |                                             |
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config git-town.gitlab-token 123456              |
