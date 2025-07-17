@@ -23,28 +23,28 @@ Feature: migrate existing configuration in Git metadata to a config file
     When I run "git-town config setup" and enter into the dialogs:
       | DIALOG                      | KEYS  |
       | welcome                     | enter |
-      | add all aliases             | enter |
+      | aliases                     | enter |
       | main branch                 | enter |
-      | perennial branches          |       |
+      | perennial branches          | enter |
       | perennial regex             | enter |
       | feature regex               | enter |
       | contribution regex          | enter |
       | observed regex              | enter |
       | unknown branch type         | enter |
-      | dev-remote                  | enter |
+      | dev-remote                  |       |
       | origin hostname             | enter |
       | forge type                  | enter |
-      | sync-feature-strategy       | enter |
-      | sync-perennial-strategy     | enter |
-      | sync-prototype-strategy     | enter |
-      | sync-upstream               | enter |
-      | sync-tags                   | enter |
-      | share-new-branches          | enter |
-      | disable the push hook       | enter |
-      | new-branch-type             | enter |
-      | ship-strategy               | enter |
-      | ship-delete-tracking-branch | enter |
-      | save config to config file  | enter |
+      | sync feature strategy       | enter |
+      | sync perennial strategy     | enter |
+      | sync prototype strategy     | enter |
+      | sync upstream               | enter |
+      | sync tags                   | enter |
+      | share new branches          | enter |
+      | push hook                   | enter |
+      | new branch type             | enter |
+      | ship strategy               | enter |
+      | ship delete tracking branch | enter |
+      | config storage              | enter |
 
   Scenario: result
     Then Git Town runs the commands
@@ -83,23 +83,23 @@ Feature: migrate existing configuration in Git metadata to a config file
     And the configuration file is now:
       """
       # More info around this file at https://www.git-town.com/configuration-file
-
+      
       [branches]
       main = "main"
       perennials = ["qa"]
       perennial-regex = "release-.*"
-
+      
       [create]
       new-branch-type = "prototype"
       share-new-branches = "no"
-
+      
       [hosting]
       dev-remote = "fork"
-
+      
       [ship]
       delete-tracking-branch = false
       strategy = "squash-merge"
-
+      
       [sync]
       feature-strategy = "merge"
       perennial-strategy = "rebase"
