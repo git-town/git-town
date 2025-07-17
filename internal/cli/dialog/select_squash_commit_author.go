@@ -10,6 +10,8 @@ import (
 	"github.com/git-town/git-town/v21/internal/messages"
 )
 
+// TODO: rename this file to squash_commit_author.go
+
 const squashCommitAuthorTitle = `Squash commit author`
 
 // SelectSquashCommitAuthor allows the user to select an author amongst a given list of authors.
