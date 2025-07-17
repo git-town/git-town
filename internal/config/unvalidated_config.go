@@ -63,7 +63,7 @@ func (self *UnvalidatedConfig) Reload(backend subshelldomain.RunnerQuerier) (glo
 }
 
 func (self *UnvalidatedConfig) RemoveMainBranch(runner subshelldomain.Runner) {
-	if self.UnvalidatedConfig.MainBranch.IsSome() {
+	if self.Git.MainBranch.IsSome() {
 		_ = gitconfig.RemoveMainBranch(runner)
 	}
 }
