@@ -28,7 +28,7 @@ Feature: Configure a different development remote
       | new-branch-type             | enter    |
       | ship-strategy               | enter    |
       | ship-delete-tracking-branch | enter    |
-      | save config to config file  | enter    |
+      | config storage              | enter    |
 
   Scenario: result
     Then Git Town runs the commands
@@ -38,21 +38,21 @@ Feature: Configure a different development remote
     And the configuration file is now:
       """
       # More info around this file at https://www.git-town.com/configuration-file
-
+      
       [branches]
       main = "main"
-
+      
       [create]
       new-branch-type = "feature"
       share-new-branches = "no"
-
+      
       [hosting]
       dev-remote = "fork"
-
+      
       [ship]
       delete-tracking-branch = true
       strategy = "api"
-
+      
       [sync]
       feature-strategy = "merge"
       perennial-strategy = "rebase"
