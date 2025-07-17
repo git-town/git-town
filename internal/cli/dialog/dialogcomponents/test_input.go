@@ -12,7 +12,7 @@ const TestInputKey = "GITTOWN_DIALOG_INPUT"
 // TestInput contains the input for a single dialog in an end-to-end test.
 type TestInput struct {
 	Messages []tea.Msg
-	// stepName string
+	StepName string
 }
 
 // ParseTestInput converts the given input data in the environment variable format
