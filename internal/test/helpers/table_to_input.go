@@ -9,21 +9,23 @@ import (
 
 func TableToInputEnv(table *godog.Table) []string {
 	result := make([]string, 0, len(table.Rows)-1)
-	keyColumn := detectKeysColumn(table.Rows[0])
+	dialogColumn := detectColumn("DIALOG", table.Rows[0])
+	inputColumn := detectColumn("KEYS", table.Rows[0])
 	for i := 1; i < len(table.Rows); i++ {
 		row := table.Rows[i]
-		input := row.Cells[keyColumn].Value
-		answersEnvStyle := strings.ReplaceAll(input, " ", "|")
-		if len(answersEnvStyle) > 0 {
-			result = append(result, answersEnvStyle)
+		dialogName := row.Cells[dialogColumn].Value
+		input := row.Cells[inputColumn].Value
+		inputEnvStyle := strings.ReplaceAll(input, " ", "|")
+		if len(inputEnvStyle) > 0 {
+			result = append(result, dialogName+"|"+inputEnvStyle)
 		}
 	}
 	return result
 }
 
-func detectKeysColumn(row *messages.PickleTableRow) int {
+func detectColumn(caption string, row *messages.PickleTableRow) int {
 	for i, cell := range row.Cells {
-		if cell.Value == "KEYS" {
+		if cell.Value == caption {
 			return i
 		}
 	}

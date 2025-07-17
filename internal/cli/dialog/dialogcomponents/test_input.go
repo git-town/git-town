@@ -1,6 +1,7 @@
 package dialogcomponents
 
 import (
+	"fmt"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -19,13 +20,18 @@ type TestInput struct {
 // into the format understood by Git Town's dialogs.
 func ParseTestInput(envData string) TestInput {
 	messages := []tea.Msg{}
-	for _, input := range strings.Split(envData, "|") {
+	stepName, keys, ok := strings.Cut(envData, "|")
+	if !ok {
+		panic(fmt.Sprintf("found test input without step name: %q", envData))
+	}
+	for _, input := range strings.Split(keys, "|") {
 		if len(input) > 0 {
 			messages = append(messages, recognizeTestInput(input))
 		}
 	}
 	return TestInput{
 		Messages: messages,
+		StepName: stepName,
 	}
 }
 
