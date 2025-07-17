@@ -22,7 +22,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/git/giturl"
 	"github.com/git-town/git-town/v21/internal/gohacks"
-	"github.com/git-town/git-town/v21/internal/gohacks/slice"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/subshell"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
@@ -681,8 +680,7 @@ func saveToGit(userInput userInput, existingGitConfig configdomain.PartialConfig
 			saveMainBranch(userInput.validatedConfig.MainBranch, existingGitConfig.MainBranch, frontend),
 		)
 	}
-	perennialBranchesForGit := slice.Remove(userInput.normalConfig.PerennialBranches, configFile.PerennialBranches...)
-	if len(perennialBranchesForGit) == 0 {
+	if len(configFile.PerennialBranches) == 0 {
 		fc.Check(
 			savePerennialBranches(userInput.data.PerennialBranches, existingGitConfig.PerennialBranches, frontend),
 		)
