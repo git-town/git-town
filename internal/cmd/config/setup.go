@@ -281,7 +281,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		bitbucketUsername:    bitbucketUsername,
 		codebergToken:        codebergToken,
 		determinedForgeType:  actualForgeType,
-		existingConfig:       data.config.NormalConfig.NormalConfigData,
+		existingConfig:       data.config.NormalConfig,
 		giteaToken:           giteaToken,
 		githubToken:          githubToken,
 		gitlabToken:          gitlabToken,
@@ -491,7 +491,7 @@ type enterTokenScopeArgs struct {
 	bitbucketUsername    Option[forgedomain.BitbucketUsername]
 	codebergToken        Option[forgedomain.CodebergToken]
 	determinedForgeType  Option[forgedomain.ForgeType]
-	existingConfig       configdomain.NormalConfigData
+	existingConfig       config.NormalConfig
 	giteaToken           Option[forgedomain.GiteaToken]
 	githubToken          Option[forgedomain.GitHubToken]
 	gitlabToken          Option[forgedomain.GitLabToken]

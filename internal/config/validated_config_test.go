@@ -24,10 +24,8 @@ func TestValidatedConfig(t *testing.T) {
 				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
-				NormalConfigData: configdomain.NormalConfigData{
-					UnknownBranchType: configdomain.BranchTypeFeatureBranch,
-					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
-				},
+				UnknownBranchType: configdomain.BranchTypeFeatureBranch,
+				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
 			},
 		}
 		tests := map[string]bool{
@@ -67,9 +65,7 @@ func TestValidatedConfig(t *testing.T) {
 				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
-				NormalConfigData: configdomain.NormalConfigData{
-					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
-				},
+				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
 			},
 		}
 		have := config.MainAndPerennials()
@@ -113,11 +109,9 @@ func TestValidatedConfig(t *testing.T) {
 				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
-				NormalConfigData: configdomain.NormalConfigData{
-					UnknownBranchType: configdomain.BranchTypeFeatureBranch,
-					PerennialBranches: gitdomain.LocalBranchNames{perennial1},
-					PerennialRegex:    perennialRegexOpt,
-				},
+				UnknownBranchType: configdomain.BranchTypeFeatureBranch,
+				PerennialBranches: gitdomain.LocalBranchNames{perennial1},
+				PerennialRegex:    perennialRegexOpt,
 			},
 		}
 		tests := map[*gitdomain.LocalBranchNames]gitdomain.LocalBranchNames{

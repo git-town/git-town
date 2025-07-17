@@ -53,9 +53,7 @@ func (self *UnvalidatedConfig) Reload(backend subshelldomain.RunnerQuerier) (glo
 	})
 	self.Git = unscopedGitConfig
 	self.UnvalidatedConfig = unvalidatedConfig
-	self.NormalConfig = NormalConfig{
-		NormalConfigData: normalConfig,
-	}
+	self.NormalConfig = normalConfig
 	return globalSnapshot, localSnapshot, unscopedSnapshot
 }
 
@@ -85,11 +83,9 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 		git:  args.GitConfig,
 	})
 	return UnvalidatedConfig{
-		File: args.ConfigFile,
-		Git:  args.GitConfig,
-		NormalConfig: NormalConfig{
-			NormalConfigData: normalConfig,
-		},
+		File:              args.ConfigFile,
+		Git:               args.GitConfig,
+		NormalConfig:      normalConfig,
 		UnvalidatedConfig: unvalidatedConfig,
 	}
 }
@@ -102,7 +98,7 @@ type NewUnvalidatedConfigArgs struct {
 	GitConfig     configdomain.PartialConfig
 }
 
-func mergeConfigs(args mergeConfigsArgs) (configdomain.UnvalidatedConfigData, configdomain.NormalConfigData) {
+func mergeConfigs(args mergeConfigsArgs) (configdomain.UnvalidatedConfigData, NormalConfig) {
 	result := configdomain.EmptyPartialConfig()
 	if configFile, hasConfigFile := args.file.Get(); hasConfigFile {
 		result = result.Merge(configFile)
@@ -111,7 +107,7 @@ func mergeConfigs(args mergeConfigsArgs) (configdomain.UnvalidatedConfigData, co
 	result = result.Merge(args.env)
 	result.DryRun = Some(args.cli.DryRun)
 	result.Verbose = Some(args.cli.Verbose)
-	return result.ToUnvalidatedConfig(), result.ToNormalConfig(configdomain.DefaultNormalConfig())
+	return result.ToUnvalidatedConfig(), NewNormalConfigFromPartial(result, DefaultNormalConfig())
 }
 
 type mergeConfigsArgs struct {
