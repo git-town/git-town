@@ -108,10 +108,3 @@ func (self *ValidatedConfig) RemovePerennials(stack gitdomain.LocalBranchNames) 
 	}
 	return result
 }
-
-// SetMainBranch marks the given branch as the main branch
-// in the Git Town configuration.
-func (self *ValidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName, runner subshelldomain.Runner) error {
-	self.ValidatedConfigData.MainBranch = branch
-	return gitconfig.SetMainBranch(runner, branch, configdomain.ConfigScopeLocal)
-}

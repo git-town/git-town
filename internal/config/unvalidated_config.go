@@ -61,12 +61,6 @@ func (self *UnvalidatedConfig) Reload(backend subshelldomain.RunnerQuerier) (glo
 	return globalSnapshot, localSnapshot, unscopedSnapshot
 }
 
-func (self *UnvalidatedConfig) RemoveMainBranch(runner subshelldomain.Runner) {
-	if self.Git.MainBranch.IsSome() {
-		_ = gitconfig.RemoveMainBranch(runner)
-	}
-}
-
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
 func (self *UnvalidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName, runner subshelldomain.Runner) error {
