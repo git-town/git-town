@@ -2,6 +2,7 @@ package configdomain
 
 import . "github.com/git-town/git-town/v21/pkg/prelude"
 
+// the type that branches created with hack, append, and prepend have
 type NewBranchType BranchType
 
 func (self NewBranchType) BranchType() BranchType {

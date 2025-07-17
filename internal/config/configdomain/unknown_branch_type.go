@@ -2,6 +2,7 @@ package configdomain
 
 import . "github.com/git-town/git-town/v21/pkg/prelude"
 
+// the type that branches downloaded from the dev remote have
 type UnknownBranchType BranchType
 
 func (self UnknownBranchType) BranchType() BranchType {
