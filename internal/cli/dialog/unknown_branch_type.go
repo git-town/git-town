@@ -2,7 +2,6 @@ package dialog
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
@@ -34,7 +33,7 @@ func UnknownBranchType(existingValue configdomain.BranchType, inputs dialogcompo
 		configdomain.BranchTypePrototypeBranch,
 	}
 	cursor := slice.Index(options, existingValue).GetOrElse(0)
-	selection, exit, err := dialogcomponents.RadioList(list.NewEntries(options...), cursor, unknownBranchTypeTitle, UnknownBranchTypeHelp, inputs, strings.ToLower(unknownBranchTypeTitle))
+	selection, exit, err := dialogcomponents.RadioList(list.NewEntries(options...), cursor, unknownBranchTypeTitle, UnknownBranchTypeHelp, inputs, "unknown-branch-type")
 	fmt.Printf(messages.UnknownBranchType, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }

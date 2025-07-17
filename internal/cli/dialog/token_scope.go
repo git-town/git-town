@@ -2,7 +2,6 @@ package dialog
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
@@ -34,7 +33,7 @@ func TokenScope(oldValue configdomain.ConfigScope, inputs dialogcomponents.TestI
 		},
 	}
 	defaultPos := entries.IndexOf(oldValue)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, tokenScopeTitle, tokenScopeHelp, inputs, strings.ToLower(tokenScopeTitle))
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, tokenScopeTitle, tokenScopeHelp, inputs, "token-scope")
 	fmt.Printf(messages.ForgeAPITokenLocation, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }

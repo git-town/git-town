@@ -2,7 +2,6 @@ package dialog
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
@@ -40,7 +39,7 @@ func SyncPrototypeStrategy(existing configdomain.SyncPrototypeStrategy, inputs d
 		},
 	}
 	defaultPos := entries.IndexOf(existing)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncPrototypeStrategyTitle, SyncPrototypeStrategyHelp, inputs, strings.ToLower(syncPrototypeStrategyTitle))
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncPrototypeStrategyTitle, SyncPrototypeStrategyHelp, inputs, "prototype-sync-strategy")
 	fmt.Printf(messages.SyncPrototypeBranches, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }

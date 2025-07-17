@@ -3,7 +3,6 @@ package dialog
 import (
 	"fmt"
 	"slices"
-	"strings"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
@@ -48,7 +47,7 @@ func PerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBra
 	}
 	selections := slice.FindMany(perennialCandidates, oldPerennialBranches)
 	selections = append(selections, slices.Index(perennialCandidates, mainBranch))
-	selectedBranchesList, exit, err := dialogcomponents.CheckList(entries, selections, perennialBranchesTitle, PerennialBranchesHelp, inputs, strings.ToLower(perennialBranchesTitle))
+	selectedBranchesList, exit, err := dialogcomponents.CheckList(entries, selections, perennialBranchesTitle, PerennialBranchesHelp, inputs, "perennial-branches")
 	selectedBranches := gitdomain.LocalBranchNames(selectedBranchesList)
 	selectedBranches = selectedBranches.Remove(mainBranch)
 	selectionText := selectedBranches.Join(", ")

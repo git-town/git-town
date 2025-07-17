@@ -2,7 +2,6 @@ package dialog
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
@@ -36,7 +35,7 @@ func SyncPerennialStrategy(existing configdomain.SyncPerennialStrategy, inputs d
 		},
 	}
 	defaultPos := entries.IndexOf(existing)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncPerennialStrategyTitle, SyncPerennialStrategyHelp, inputs, strings.ToLower(syncPerennialStrategyTitle))
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncPerennialStrategyTitle, SyncPerennialStrategyHelp, inputs, "perennial-sync-strategy")
 	fmt.Printf(messages.SyncPerennialBranches, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }

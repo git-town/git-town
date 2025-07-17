@@ -11,7 +11,7 @@ import (
 func SendInputs(stepName string, input Option[TestInput], program *tea.Program) {
 	if input, has := input.Get(); has {
 		if stepName != input.StepName {
-			panic(fmt.Sprintf("mismatching dialog names: want %q but have %q", input.StepName, stepName))
+			panic(fmt.Sprintf("mismatching dialog names: want %q but have %q", stepName, input.StepName))
 		}
 		go func() {
 			for _, msg := range input.Messages {

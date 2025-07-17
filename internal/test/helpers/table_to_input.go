@@ -14,7 +14,8 @@ func TableToInputEnv(table *godog.Table) []string {
 	inputColumn := detectColumn("KEYS", table.Rows[0])
 	for i := 1; i < len(table.Rows); i++ {
 		row := table.Rows[i]
-		dialogName := row.Cells[dialogColumn].Value
+		dialogName := strings.ReplaceAll(row.Cells[dialogColumn].Value, " ", "-")
+		fmt.Println("1111111111111111111111", dialogName)
 		input := row.Cells[inputColumn].Value
 		inputEnvStyle := strings.ReplaceAll(input, " ", "|")
 		if len(inputEnvStyle) > 0 {

@@ -2,7 +2,6 @@ package dialog
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
@@ -42,7 +41,7 @@ func ShipDeleteTrackingBranch(existing configdomain.ShipDeleteTrackingBranch, in
 	} else {
 		defaultPos = 1
 	}
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, shipDeleteTrackingBranchTitle, ShipDeleteTrackingBranchHelp, inputs, strings.ToLower(shipDeleteTrackingBranchTitle))
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, shipDeleteTrackingBranchTitle, ShipDeleteTrackingBranchHelp, inputs, "ship-delete-tracking-branch")
 	fmt.Printf(messages.ShipDeletesTrackingBranches, dialogcomponents.FormattedSelection(format.Bool(selection), exit))
 	return configdomain.ShipDeleteTrackingBranch(selection), exit, err
 }
