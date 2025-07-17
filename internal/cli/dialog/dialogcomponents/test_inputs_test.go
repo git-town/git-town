@@ -22,15 +22,23 @@ func TestTestInputs(t *testing.T) {
 		}
 		have := dialogcomponents.LoadTestInputs(env)
 		want := dialogcomponents.NewTestInputs(
-			dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyEnter}},
 			dialogcomponents.TestInput{
-				tea.KeyMsg{Type: tea.KeySpace},
-				tea.KeyMsg{Type: tea.KeyDown},
-				tea.KeyMsg{Type: tea.KeySpace},
-				tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'5'}},
-				tea.KeyMsg{Type: tea.KeyEnter},
+				Messages: []tea.Msg{
+					tea.KeyMsg{Type: tea.KeyEnter}},
 			},
-			dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}},
+			dialogcomponents.TestInput{
+				Messages: []tea.Msg{
+					tea.KeyMsg{Type: tea.KeySpace},
+					tea.KeyMsg{Type: tea.KeyDown},
+					tea.KeyMsg{Type: tea.KeySpace},
+					tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'5'}},
+					tea.KeyMsg{Type: tea.KeyEnter},
+				},
+			},
+			dialogcomponents.TestInput{
+				Messages: []tea.Msg{
+					tea.KeyMsg{Type: tea.KeyCtrlC}},
+			},
 		)
 		must.Eq(t, want, have)
 	})
@@ -39,9 +47,21 @@ func TestTestInputs(t *testing.T) {
 		t.Parallel()
 		t.Run("populated", func(t *testing.T) {
 			t.Parallel()
-			keyA := dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyCtrlA}}
-			keyB := dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}}
-			keyC := dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}}
+			keyA := dialogcomponents.TestInput{
+				Messages: []tea.Msg{
+					tea.KeyMsg{Type: tea.KeyCtrlA},
+				},
+			}
+			keyB := dialogcomponents.TestInput{
+				Messages: []tea.Msg{
+					tea.KeyMsg{Type: tea.KeyCtrlB},
+				},
+			}
+			keyC := dialogcomponents.TestInput{
+				Messages: []tea.Msg{
+					tea.KeyMsg{Type: tea.KeyCtrlC},
+				},
+			}
 			testInputs := dialogcomponents.NewTestInputs(
 				keyA,
 				keyB,
@@ -75,7 +95,11 @@ func TestTestInputs(t *testing.T) {
 					t.Errorf("did not panic as expected")
 				}
 			}()
-			keyA := dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyCtrlA}}
+			keyA := dialogcomponents.TestInput{
+				Messages: []tea.Msg{
+					tea.KeyMsg{Type: tea.KeyCtrlA},
+				},
+			}
 			testInputs := dialogcomponents.NewTestInputs(keyA)
 			// request the first entry
 			have := testInputs.Next()

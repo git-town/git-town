@@ -17,14 +17,16 @@ func TestTestInput(t *testing.T) {
 			t.Parallel()
 			have := dialogcomponents.ParseTestInput("enter|space|ctrl+c")
 			want := dialogcomponents.TestInput{
-				tea.KeyMsg{
-					Type: tea.KeyEnter,
-				},
-				tea.KeyMsg{
-					Type: tea.KeySpace,
-				},
-				tea.KeyMsg{
-					Type: tea.KeyCtrlC,
+				Messages: []tea.Msg{
+					tea.KeyMsg{
+						Type: tea.KeyEnter,
+					},
+					tea.KeyMsg{
+						Type: tea.KeySpace,
+					},
+					tea.KeyMsg{
+						Type: tea.KeyCtrlC,
+					},
 				},
 			}
 			must.Eq(t, want, have)
@@ -33,8 +35,10 @@ func TestTestInput(t *testing.T) {
 			t.Parallel()
 			have := dialogcomponents.ParseTestInput("enter")
 			want := dialogcomponents.TestInput{
-				tea.KeyMsg{
-					Type: tea.KeyEnter,
+				Messages: []tea.Msg{
+					tea.KeyMsg{
+						Type: tea.KeyEnter,
+					},
 				},
 			}
 			must.Eq(t, want, have)
@@ -42,7 +46,9 @@ func TestTestInput(t *testing.T) {
 		t.Run("empty", func(t *testing.T) {
 			t.Parallel()
 			have := dialogcomponents.ParseTestInput("")
-			want := dialogcomponents.TestInput{}
+			want := dialogcomponents.TestInput{
+				Messages: []tea.Msg{},
+			}
 			must.Eq(t, want, have)
 		})
 	})
