@@ -9,8 +9,8 @@ Feature: abort the dialog
       | child  | feature | parent | local, origin |
     And the current branch is "child"
     When I run "git-town set-parent" and enter into the dialog:
-      | DIALOG                  | KEYS |
-      | parent branch for child | esc  |
+      | DIALOG                    | KEYS |
+      | parent branch for "child" | esc  |
 
   Scenario: result
     Then Git Town prints:
