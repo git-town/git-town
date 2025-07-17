@@ -154,7 +154,7 @@ Feature: enter the Codeberg API token
       | unknown branch type         | enter                                     |                                             |
       | origin hostname             | enter                                     |                                             |
       | forge type                  | enter                                     |                                             |
-      | github token                | backspace backspace backspace 4 5 6 enter |                                             |
+      | codeberg token              | backspace backspace backspace 4 5 6 enter |                                             |
       | token scope                 | enter                                     |                                             |
       | sync feature strategy       | enter                                     |                                             |
       | sync perennial strategy     | enter                                     |                                             |
