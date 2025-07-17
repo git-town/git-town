@@ -31,5 +31,5 @@ When you're ready, press ENTER or O to continue.
 
 // MainBranch lets the user select a new main branch for this repo.
 func Welcome(inputs dialogcomponents.TestInputs) (dialogdomain.Exit, error) {
-	return dialogcomponents.TextDisplay(welcomeTitle, welcomeText, inputs)
+	return dialogcomponents.TextDisplay(welcomeTitle, welcomeText, inputs, "welcome")
 }

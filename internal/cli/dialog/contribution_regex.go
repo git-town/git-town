@@ -24,6 +24,7 @@ is set to something other than "contribution".
 
 func ContributionRegex(existingValue Option[configdomain.ContributionRegex], inputs dialogcomponents.TestInputs) (Option[configdomain.ContributionRegex], dialogdomain.Exit, error) {
 	value, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
+		DialogName:    "contribution-regex",
 		ExistingValue: existingValue.String(),
 		Help:          contributionRegexHelp,
 		Prompt:        "Contribution regex: ",
