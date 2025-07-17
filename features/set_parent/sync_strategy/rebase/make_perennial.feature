@@ -24,8 +24,8 @@ Feature: remove a branch from a stack
     And the current branch is "branch-2"
     And local Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town set-parent" and enter into the dialog:
-      | DIALOG                 | KEYS        |
-      | parent branch of child | up up enter |
+      | DIALOG                  | KEYS        |
+      | parent branch for child | up up enter |
 
   Scenario: result
     Then Git Town prints:

@@ -9,8 +9,8 @@ Feature: update the parent of a feature branch
       | child  | feature | parent | local, origin |
     And the current branch is "child"
     When I run "git-town set-parent" and enter into the dialog:
-      | DIALOG                 | KEYS  |
-      | parent branch of child | enter |
+      | DIALOG                  | KEYS  |
+      | parent branch for child | enter |
 
   Scenario: result
     Then Git Town prints:
