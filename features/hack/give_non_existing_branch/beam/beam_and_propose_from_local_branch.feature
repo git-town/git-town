@@ -19,8 +19,8 @@ Feature: beam commits and uncommitted changes from a local branch onto a new fea
     And an uncommitted file
     And I ran "git add ."
     When I run "git-town hack new --beam --commit --message uncommitted --propose" and enter into the dialog:
-      | DIALOG                 | KEYS                             |
-      | select commits 1 and 4 | space down down down space enter |
+      | DIALOG          | KEYS                             |
+      | commits to beam | space down down down space enter |
 
   Scenario: result
     Then Git Town runs the commands

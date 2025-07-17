@@ -33,7 +33,7 @@ func TokenScope(oldValue configdomain.ConfigScope, inputs dialogcomponents.TestI
 		},
 	}
 	defaultPos := entries.IndexOf(oldValue)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, tokenScopeTitle, tokenScopeHelp, inputs)
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, tokenScopeTitle, tokenScopeHelp, inputs, "token-scope")
 	fmt.Printf(messages.ForgeAPITokenLocation, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }

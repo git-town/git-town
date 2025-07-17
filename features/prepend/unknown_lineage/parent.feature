@@ -8,8 +8,8 @@ Feature: ask for missing parent information
       | old  | (none) | local     |
     And the current branch is "old"
     When I run "git-town prepend new" and enter into the dialog:
-      | DIALOG               | KEYS  |
-      | parent branch of old | enter |
+      | DIALOG                  | KEYS  |
+      | parent branch for "old" | enter |
     Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | old    | git fetch --prune --tags |

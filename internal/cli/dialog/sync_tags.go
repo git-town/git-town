@@ -31,7 +31,7 @@ func SyncTags(existing configdomain.SyncTags, inputs dialogcomponents.TestInputs
 		},
 	}
 	defaultPos := entries.IndexOf(existing)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncTagsTitle, SyncTagsHelp, inputs)
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncTagsTitle, SyncTagsHelp, inputs, "sync-tags")
 	fmt.Printf(messages.SyncTags, dialogcomponents.FormattedSelection(format.Bool(selection.IsTrue()), exit))
 	return selection, exit, err
 }

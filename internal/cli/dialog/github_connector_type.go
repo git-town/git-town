@@ -43,7 +43,7 @@ func GitHubConnectorType(existing Option[forgedomain.GitHubConnectorType], input
 	if existingValue, hasExisting := existing.Get(); hasExisting {
 		defaultPos = entries.IndexOf(existingValue)
 	}
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, gitHubConnectorTypeTitle, gitHubConnectorTypeHelp, inputs)
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, gitHubConnectorTypeTitle, gitHubConnectorTypeHelp, inputs, "github-connector-type")
 	fmt.Printf(messages.GitHubConnectorType, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return NewOption(selection), exit, err
 }

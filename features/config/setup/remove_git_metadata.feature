@@ -45,29 +45,29 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.ship-strategy" is "squash-merge"
     And local Git setting "git-town.ship-delete-tracking-branch" is "false"
     When I run "git-town config setup" and enter into the dialogs:
-      | DESCRIPTION                             | KEYS                                                                        |
-      | welcome                                 | enter                                                                       |
-      | remove all aliases                      | n enter                                                                     |
-      | keep the already configured main branch | enter                                                                       |
-      | remove the perennial branches           | down space enter                                                            |
-      | remove the perennial regex              | backspace backspace backspace backspace enter                               |
-      | feature regex                           | backspace backspace backspace backspace backspace backspace enter           |
-      | contribution regex                      | backspace backspace backspace backspace backspace backspace backspace enter |
-      | observed regex                          | backspace backspace backspace backspace backspace enter                     |
-      | unknown branch type                     | up enter                                                                    |
-      | remove origin hostname                  | backspace backspace backspace backspace enter                               |
-      | remove forge type override              | up up up up up enter                                                        |
-      | sync-feature-strategy                   | up enter                                                                    |
-      | sync-perennial-strategy                 | down enter                                                                  |
-      | sync-prototype-strategy                 | up enter                                                                    |
-      | sync-upstream                           | down enter                                                                  |
-      | sync-tags                               | down enter                                                                  |
-      | enable share-new-branches               | up enter                                                                    |
-      | enable the push hook                    | down enter                                                                  |
-      | new-branch-type                         | up enter                                                                    |
-      | change ship-strategy                    | down enter                                                                  |
-      | disable ship-delete-tracking-branch     | down enter                                                                  |
-      | save config to Git metadata             | down enter                                                                  |
+      | DIALOG                      | KEYS                                                                        | DESCRIPTION         |
+      | welcome                     | enter                                                                       |                     |
+      | aliases                     | n enter                                                                     | remove all aliases  |
+      | main branch                 | enter                                                                       |                     |
+      | perennial branches          | down space enter                                                            |                     |
+      | perennial regex             | backspace backspace backspace backspace enter                               |                     |
+      | feature regex               | backspace backspace backspace backspace backspace backspace enter           |                     |
+      | contribution regex          | backspace backspace backspace backspace backspace backspace backspace enter |                     |
+      | observed regex              | backspace backspace backspace backspace backspace enter                     |                     |
+      | unknown branch type         | up enter                                                                    |                     |
+      | origin hostname             | backspace backspace backspace backspace enter                               | remove the override |
+      | forge type                  | up up up up up enter                                                        | remove the override |
+      | sync feature strategy       | up enter                                                                    |                     |
+      | sync perennial strategy     | down enter                                                                  |                     |
+      | sync prototype strategy     | up enter                                                                    |                     |
+      | sync upstream               | down enter                                                                  |                     |
+      | sync tags                   | down enter                                                                  |                     |
+      | share new branches          | up enter                                                                    | enable              |
+      | push hook                   | down enter                                                                  | enable              |
+      | new branch type             | up enter                                                                    |                     |
+      | ship strategy               | down enter                                                                  |                     |
+      | ship delete tracking branch | down enter                                                                  | disable             |
+      | config storage              | down enter                                                                  | git metadata        |
 
   Scenario: result
     Then Git Town runs the commands
