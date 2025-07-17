@@ -137,8 +137,8 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	if data.Create != nil {
 		if data.Create.NewBranchType != nil {
 			branchType, err := configdomain.ParseBranchType(*data.Create.NewBranchType)
-			newBranchType = configdomain.NewBranchTypeOpt(branchType)
 			ec.Check(err)
+			newBranchType = configdomain.NewBranchTypeOpt(branchType)
 		}
 		if data.Create.PushNewbranches != nil {
 			shareNewBranches = Some(configdomain.ParseShareNewBranchesDeprecatedBool(*data.Create.PushNewbranches))
