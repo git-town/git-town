@@ -28,6 +28,7 @@ Git Town will not use the Bitbucket API.
 func BitbucketAppPassword(args CommonArgs) (Option[forgedomain.BitbucketAppPassword], dialogdomain.Exit, error) {
 	return ConfigStringDialog(ConfigStringDialogArgs[forgedomain.BitbucketAppPassword]{
 		ConfigFileValue: args.ConfigFile.BitbucketAppPassword,
+		DialogName:      "bitbucket-app-password",
 		HelpText:        bitbucketAppPasswordHelp,
 		Inputs:          args.Inputs,
 		LocalValue:      args.LocalGitConfig.BitbucketAppPassword,

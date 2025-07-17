@@ -16,24 +16,24 @@ Feature: switch branches of a single type
 
   Scenario: long form
     When I run "git-town switch --type=observed" and enter into the dialogs:
-      | KEYS       |
-      | down enter |
+      | DIALOG      | KEYS       |
+      | branch-tree | down enter |
     Then Git Town runs the commands
       | BRANCH     | COMMAND                 |
       | observed-2 | git checkout observed-1 |
 
   Scenario: short form
     When I run "git-town switch -to" and enter into the dialogs:
-      | KEYS       |
-      | down enter |
+      | DIALOG      | KEYS       |
+      | branch-tree | down enter |
     Then Git Town runs the commands
       | BRANCH     | COMMAND                 |
       | observed-2 | git checkout observed-1 |
 
   Scenario: undo
     Given I ran "git-town switch -to" and enter into the dialogs:
-      | KEYS       |
-      | down enter |
+      | DIALOG      | KEYS       |
+      | branch-tree | down enter |
     When I run "git-town undo"
     Then Git Town runs no commands
     And the initial branches and lineage exist now

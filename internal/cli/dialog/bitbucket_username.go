@@ -25,6 +25,7 @@ Git Town will not use the Bitbucket API.
 func BitbucketUsername(args CommonArgs) (Option[forgedomain.BitbucketUsername], dialogdomain.Exit, error) {
 	return ConfigStringDialog(ConfigStringDialogArgs[forgedomain.BitbucketUsername]{
 		ConfigFileValue: args.ConfigFile.BitbucketUsername,
+		DialogName:      "bitbucket-username",
 		HelpText:        bitbucketUsernameHelp,
 		Inputs:          args.Inputs,
 		LocalValue:      args.LocalGitConfig.BitbucketUsername,

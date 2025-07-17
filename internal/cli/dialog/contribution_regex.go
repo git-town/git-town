@@ -23,6 +23,7 @@ is set to something other than "contribution".
 func ContributionRegex(args CommonArgs) (Option[configdomain.ContributionRegex], dialogdomain.Exit, error) {
 	return ConfigStringDialog(ConfigStringDialogArgs[configdomain.ContributionRegex]{
 		ConfigFileValue: args.ConfigFile.ContributionRegex,
+		DialogName:      "contribution-regex",
 		HelpText:        contributionRegexHelp,
 		Inputs:          args.Inputs,
 		LocalValue:      args.LocalGitConfig.ContributionRegex,

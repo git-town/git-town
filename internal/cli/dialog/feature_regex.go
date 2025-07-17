@@ -23,6 +23,7 @@ is set to something other than "feature".
 func FeatureRegex(args CommonArgs) (Option[configdomain.FeatureRegex], dialogdomain.Exit, error) {
 	return ConfigStringDialog(ConfigStringDialogArgs[configdomain.FeatureRegex]{
 		ConfigFileValue: args.ConfigFile.FeatureRegex,
+		DialogName:      "feature-regex",
 		HelpText:        featureRegexHelp,
 		Inputs:          args.Inputs,
 		LocalValue:      args.LocalGitConfig.FeatureRegex,

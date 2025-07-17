@@ -17,17 +17,17 @@ Feature: remove an existing forge type override
       | unknown branch type         | enter                |                                             |
       | origin hostname             | enter                |                                             |
       | forge type                  | up up up up up enter |                                             |
-      | sync-feature-strategy       | enter                |                                             |
-      | sync-perennial-strategy     | enter                |                                             |
-      | sync-prototype-strategy     | enter                |                                             |
-      | sync-upstream               |                      |                                             |
-      | sync-tags                   | enter                |                                             |
-      | share-new-branches          | enter                |                                             |
-      | push-hook                   | enter                |                                             |
-      | new-branch-type             | enter                |                                             |
-      | ship-strategy               | enter                |                                             |
-      | ship-delete-tracking-branch | enter                |                                             |
-      | save config to Git metadata | down enter           |                                             |
+      | sync feature strategy       | enter                |                                             |
+      | sync perennial strategy     | enter                |                                             |
+      | sync prototype strategy     | enter                |                                             |
+      | sync upstream               | enter                |                                             |
+      | sync tags                   | enter                |                                             |
+      | share new branches          | enter                |                                             |
+      | push hook                   | enter                |                                             |
+      | new branch type             | enter                |                                             |
+      | ship strategy               | enter                |                                             |
+      | ship delete tracking branch | enter                |                                             |
+      | config storage              | down enter           |                                             |
 
   @debug @this
   Scenario: result

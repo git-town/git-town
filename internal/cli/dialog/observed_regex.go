@@ -23,6 +23,7 @@ is set to something other than "observed".
 func ObservedRegex(args CommonArgs) (Option[configdomain.ObservedRegex], dialogdomain.Exit, error) {
 	return ConfigStringDialog(ConfigStringDialogArgs[configdomain.ObservedRegex]{
 		ConfigFileValue: args.ConfigFile.ObservedRegex,
+		DialogName:      "observed-regex",
 		HelpText:        observedRegexHelp,
 		Inputs:          args.Inputs,
 		LocalValue:      args.LocalGitConfig.ObservedRegex,

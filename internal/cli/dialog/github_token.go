@@ -30,6 +30,7 @@ with the GitHub API.
 func GitHubToken(args CommonArgs) (Option[forgedomain.GitHubToken], dialogdomain.Exit, error) {
 	return ConfigStringDialog(ConfigStringDialogArgs[forgedomain.GitHubToken]{
 		ConfigFileValue: args.ConfigFile.GitHubToken,
+		DialogName:      "github-token",
 		HelpText:        gitHubTokenHelp,
 		Inputs:          args.Inputs,
 		LocalValue:      args.LocalGitConfig.GitHubToken,

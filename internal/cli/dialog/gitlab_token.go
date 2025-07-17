@@ -27,6 +27,7 @@ Git Town will not use the GitLab API.
 func GitLabToken(args CommonArgs) (Option[forgedomain.GitLabToken], dialogdomain.Exit, error) {
 	return ConfigStringDialog(ConfigStringDialogArgs[forgedomain.GitLabToken]{
 		ConfigFileValue: args.ConfigFile.GitLabToken,
+		DialogName:      "gitlab-token",
 		HelpText:        gitLabTokenHelp,
 		Inputs:          args.Inputs,
 		LocalValue:      args.LocalGitConfig.GitLabToken,

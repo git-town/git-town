@@ -25,6 +25,7 @@ it's safe to leave it blank.
 func PerennialRegex(args CommonArgs) (Option[configdomain.PerennialRegex], dialogdomain.Exit, error) {
 	return ConfigStringDialog(ConfigStringDialogArgs[configdomain.PerennialRegex]{
 		ConfigFileValue: args.ConfigFile.PerennialRegex,
+		DialogName:      "perennial-regex",
 		HelpText:        perennialRegexHelp,
 		Inputs:          args.Inputs,
 		LocalValue:      args.LocalGitConfig.PerennialRegex,

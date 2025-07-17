@@ -26,6 +26,7 @@ Git Town will not use the codeberg API.
 func CodebergToken(args CommonArgs) (Option[forgedomain.CodebergToken], dialogdomain.Exit, error) {
 	return ConfigStringDialog(ConfigStringDialogArgs[forgedomain.CodebergToken]{
 		ConfigFileValue: args.ConfigFile.CodebergToken,
+		DialogName:      "codeberg-token",
 		HelpText:        codebergTokenHelp,
 		Inputs:          args.Inputs,
 		LocalValue:      args.LocalGitConfig.CodebergToken,

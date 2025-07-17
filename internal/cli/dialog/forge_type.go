@@ -56,7 +56,7 @@ func ForgeType(existingValue Option[forgedomain.ForgeType], inputs dialogcompone
 		},
 	}
 	cursor := entries.IndexOfFunc(existingValue, func(a, b Option[forgedomain.ForgeType]) bool { return a.Equal(b) })
-	newValue, exit, err := dialogcomponents.RadioList(entries, cursor, forgeTypeTitle, forgeTypeHelp, inputs)
+	newValue, exit, err := dialogcomponents.RadioList(entries, cursor, forgeTypeTitle, forgeTypeHelp, inputs, "forge-type")
 	fmt.Printf(messages.Forge, dialogcomponents.FormattedSelection(newValue.GetOrElse(messages.AutoDetect).String(), exit))
 	return newValue, exit, err
 }
