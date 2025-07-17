@@ -81,7 +81,7 @@ func (self *UnvalidatedConfig) SetPerennialBranches(runner subshelldomain.Runner
 	if slices.Compare(self.Git.PerennialBranches, branches) == 0 {
 		return nil
 	}
-	return gitconfig.SetPerennialBranches(runner, branches)
+	return gitconfig.SetPerennialBranches(runner, branches, configdomain.ConfigScopeLocal)
 }
 
 // UnvalidatedBranchesAndTypes provides the types for the given branches.
