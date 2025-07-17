@@ -104,8 +104,8 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		}
 		if data.Branches.DefaultType != nil {
 			branchType, err := configdomain.ParseBranchType(*data.Branches.DefaultType)
-			unknownBranchType = configdomain.UnknownBranchTypeOpt(branchType)
 			ec.Check(err)
+			unknownBranchType = configdomain.UnknownBranchTypeOpt(branchType)
 		}
 		if data.Branches.FeatureRegex != nil {
 			verifiedRegexOpt, err := configdomain.ParseRegex(*data.Branches.FeatureRegex)
@@ -130,8 +130,8 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		}
 		if data.Branches.UnknownType != nil {
 			branchType, err := configdomain.ParseBranchType(*data.Branches.UnknownType)
-			unknownBranchType = configdomain.UnknownBranchTypeOpt(branchType)
 			ec.Check(err)
+			unknownBranchType = configdomain.UnknownBranchTypeOpt(branchType)
 		}
 	}
 	if data.Create != nil {
