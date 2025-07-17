@@ -9,8 +9,8 @@ Feature: make a feature branch perennial
       | child  | feature | parent | local, origin |
     And the current branch is "child"
     When I run "git-town set-parent" and enter into the dialog:
-      | DIALOG                 | KEYS       |
-      | parent branch of child | down enter |
+      | DIALOG                  | KEYS       |
+      | parent branch for child | down enter |
 
   Scenario: result
     Then Git Town prints:
