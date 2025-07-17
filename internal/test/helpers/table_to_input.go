@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/cucumber/godog"
@@ -29,5 +30,5 @@ func detectColumn(caption string, row *messages.PickleTableRow) int {
 			return i
 		}
 	}
-	panic(`no table column with header "KEYS" detected`)
+	panic(fmt.Sprintf("no table column with header %q detected", caption))
 }
