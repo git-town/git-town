@@ -12,7 +12,8 @@ func TableToInputEnv(table *godog.Table) []string {
 	keyColumn := detectKeysColumn(table.Rows[0])
 	for i := 1; i < len(table.Rows); i++ {
 		row := table.Rows[i]
-		answersEnvStyle := strings.ReplaceAll(row.Cells[keyColumn].Value, " ", "|")
+		input := row.Cells[keyColumn].Value
+		answersEnvStyle := strings.ReplaceAll(input, " ", "|")
 		if len(answersEnvStyle) > 0 {
 			result = append(result, answersEnvStyle)
 		}
