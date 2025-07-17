@@ -1,7 +1,6 @@
 @messyoutput
 Feature: a global API token of another forge exists
 
-  @debug @this
   Scenario: on GitHub, with global GitLab token
     Given a Git repo with origin
     And my repo's "origin" remote is "git@github.com:git-town/git-town.git"
@@ -32,7 +31,7 @@ Feature: a global API token of another forge exists
       | new branch type             | enter             |                                             |
       | ship strategy               | enter             |                                             |
       | ship delete tracking branch | enter             |                                             |
-      | save config to Git metadata | down enter        |                                             |
+      | config storage              | down enter        |                                             |
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config git-town.github-token 123456              |
