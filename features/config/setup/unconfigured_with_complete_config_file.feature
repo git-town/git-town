@@ -47,7 +47,7 @@ Feature: don't ask for information already provided by the config file
       | github connector type | enter             |
       | github token          | 1 2 3 4 5 6 enter |
       | token scope           | enter             |
-      | config storage        | down enter        |
+      | config storage        | enter             |
     Then Git Town runs the commands
       | COMMAND                                  |
       | git config git-town.github-token 123456  |

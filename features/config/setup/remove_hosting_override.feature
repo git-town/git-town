@@ -27,7 +27,7 @@ Feature: remove an existing forge type override
       | new branch type             | enter                |                                             |
       | ship strategy               | enter                |                                             |
       | ship delete tracking branch | enter                |                                             |
-      | config storage              | down enter           |                                             |
+      | config storage              | enter                |                                             |
 
   @debug @this
   Scenario: result
