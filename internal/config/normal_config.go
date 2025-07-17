@@ -60,6 +60,57 @@ func (self *NormalConfig) DevURL(querier subshelldomain.Querier) Option[giturl.P
 	return self.RemoteURL(querier, self.DevRemote)
 }
 
+func (self *NormalConfig) NoPushHook() configdomain.NoPushHook {
+	return self.PushHook.Negate()
+}
+
+func (self *NormalConfig) PartialBranchType(branch gitdomain.LocalBranchName) configdomain.BranchType {
+	// check the branch type overrides
+	if branchTypeOverride, hasBranchTypeOverride := self.BranchTypeOverrides[branch]; hasBranchTypeOverride {
+		return branchTypeOverride
+	}
+	// check the configured branch lists
+	if slices.Contains(self.PerennialBranches, branch) {
+		return configdomain.BranchTypePerennialBranch
+	}
+	// check if a regex matches
+	if regex, has := self.ContributionRegex.Get(); has && regex.MatchesBranch(branch) {
+		return configdomain.BranchTypeContributionBranch
+	}
+	if regex, has := self.FeatureRegex.Get(); has && regex.MatchesBranch(branch) {
+		return configdomain.BranchTypeFeatureBranch
+	}
+	if regex, has := self.ObservedRegex.Get(); has && regex.MatchesBranch(branch) {
+		return configdomain.BranchTypeObservedBranch
+	}
+	if regex, has := self.PerennialRegex.Get(); has && regex.MatchesBranch(branch) {
+		return configdomain.BranchTypePerennialBranch
+	}
+	// branch doesn't match any of the overrides --> unknown branch type
+	return self.UnknownBranchType
+}
+
+func (self *NormalConfig) PartialBranchesOfType(branchType configdomain.BranchType) gitdomain.LocalBranchNames {
+	matching := set.New[gitdomain.LocalBranchName]()
+	switch branchType {
+	case configdomain.BranchTypeContributionBranch:
+	case configdomain.BranchTypeFeatureBranch:
+	case configdomain.BranchTypeMainBranch:
+		// main branch is stored in ValidatedConfig
+	case configdomain.BranchTypeObservedBranch:
+	case configdomain.BranchTypeParkedBranch:
+	case configdomain.BranchTypePerennialBranch:
+		matching.Add(self.PerennialBranches...)
+	case configdomain.BranchTypePrototypeBranch:
+	}
+	for key, value := range self.BranchTypeOverrides {
+		if value == branchType {
+			matching.Add(key)
+		}
+	}
+	return matching.Values()
+}
+
 // RemoteURL provides the URL for the given remote.
 // Tests can stub this through the GIT_TOWN_REMOTE environment variable.
 // Caches its result so can be called repeatedly.
@@ -122,57 +173,6 @@ func remoteURLString(querier subshelldomain.Querier, remote gitdomain.Remote) Op
 		return remoteOverride
 	}
 	return gitconfig.RemoteURL(querier, remote)
-}
-
-func (self *NormalConfig) NoPushHook() configdomain.NoPushHook {
-	return self.PushHook.Negate()
-}
-
-func (self *NormalConfig) PartialBranchType(branch gitdomain.LocalBranchName) configdomain.BranchType {
-	// check the branch type overrides
-	if branchTypeOverride, hasBranchTypeOverride := self.BranchTypeOverrides[branch]; hasBranchTypeOverride {
-		return branchTypeOverride
-	}
-	// check the configured branch lists
-	if slices.Contains(self.PerennialBranches, branch) {
-		return configdomain.BranchTypePerennialBranch
-	}
-	// check if a regex matches
-	if regex, has := self.ContributionRegex.Get(); has && regex.MatchesBranch(branch) {
-		return configdomain.BranchTypeContributionBranch
-	}
-	if regex, has := self.FeatureRegex.Get(); has && regex.MatchesBranch(branch) {
-		return configdomain.BranchTypeFeatureBranch
-	}
-	if regex, has := self.ObservedRegex.Get(); has && regex.MatchesBranch(branch) {
-		return configdomain.BranchTypeObservedBranch
-	}
-	if regex, has := self.PerennialRegex.Get(); has && regex.MatchesBranch(branch) {
-		return configdomain.BranchTypePerennialBranch
-	}
-	// branch doesn't match any of the overrides --> unknown branch type
-	return self.UnknownBranchType
-}
-
-func (self *NormalConfig) PartialBranchesOfType(branchType configdomain.BranchType) gitdomain.LocalBranchNames {
-	matching := set.New[gitdomain.LocalBranchName]()
-	switch branchType {
-	case configdomain.BranchTypeContributionBranch:
-	case configdomain.BranchTypeFeatureBranch:
-	case configdomain.BranchTypeMainBranch:
-		// main branch is stored in ValidatedConfig
-	case configdomain.BranchTypeObservedBranch:
-	case configdomain.BranchTypeParkedBranch:
-	case configdomain.BranchTypePerennialBranch:
-		matching.Add(self.PerennialBranches...)
-	case configdomain.BranchTypePrototypeBranch:
-	}
-	for key, value := range self.BranchTypeOverrides {
-		if value == branchType {
-			matching.Add(key)
-		}
-	}
-	return matching.Values()
 }
 
 func DefaultNormalConfig() NormalConfig {
