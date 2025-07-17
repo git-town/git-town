@@ -29,7 +29,10 @@ func ParseTestInput(envData string) TestInput {
 			messages = append(messages, recognizeTestInput(input))
 		}
 	}
-	return TestInput{messages, stepName}
+	return TestInput{
+		Messages: messages,
+		StepName: stepName,
+	}
 }
 
 // recognizeTestInput provides the matching BubbleTea message for the given string.
