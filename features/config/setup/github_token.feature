@@ -22,9 +22,9 @@ Feature: enter the GitHub API token
       | github connector type: API  | enter             |                                             |
       | github token                | 1 2 3 4 5 6 enter |                                             |
       | token scope                 | enter             |                                             |
-      | sync-feature-strategy       | enter             |                                             |
-      | sync-perennial-strategy     | enter             |                                             |
-      | sync-prototype-strategy     | enter             |                                             |
+      | sync feature strategy       | enter             |                                             |
+      | sync perennial strategy     | enter             |                                             |
+      | sync prototype strategy     | enter             |                                             |
       | sync-upstream               | enter             |                                             |
       | sync-tags                   | enter             |                                             |
       | share-new-branches          | enter             |                                             |
@@ -66,11 +66,11 @@ Feature: enter the GitHub API token
       | origin hostname             | enter                          |                                             |
       | forge type                  | down down down down down enter |                                             |
       | github connector type: API  | enter                          |                                             |
-      | github token                | 1 2 3 4 5 6 enter              |                                             |
+      | github token                |              1 2 3 4 5 6 enter |                                             |
       | token scope                 | enter                          |                                             |
-      | sync-feature-strategy       | enter                          |                                             |
-      | sync-perennial-strategy     | enter                          |                                             |
-      | sync-prototype-strategy     | enter                          |                                             |
+      | sync feature strategy       | enter                          |                                             |
+      | sync perennial strategy     | enter                          |                                             |
+      | sync prototype strategy     | enter                          |                                             |
       | sync-upstream               | enter                          |                                             |
       | sync-tags                   | enter                          |                                             |
       | share-new-branches          | enter                          |                                             |
@@ -116,9 +116,9 @@ Feature: enter the GitHub API token
       | forge type: auto-detect     | enter                               |                                             |
       | github connector type: API  | enter                               |                                             |
       | github token                | backspace backspace backspace enter |                                             |
-      | sync-feature-strategy       | enter                               |                                             |
-      | sync-perennial-strategy     | enter                               |                                             |
-      | sync-prototype-strategy     | enter                               |                                             |
+      | sync feature strategy       | enter                               |                                             |
+      | sync perennial strategy     | enter                               |                                             |
+      | sync prototype strategy     | enter                               |                                             |
       | sync-upstream               | enter                               |                                             |
       | sync-tags                   | enter                               |                                             |
       | share-new-branches          | enter                               |                                             |
@@ -163,9 +163,9 @@ Feature: enter the GitHub API token
       | github connector type: API  | enter             |                                             |
       | github token                | 1 2 3 4 5 6 enter |                                             |
       | token scope                 | down enter        |                                             |
-      | sync-feature-strategy       | enter             |                                             |
-      | sync-perennial-strategy     | enter             |                                             |
-      | sync-prototype-strategy     | enter             |                                             |
+      | sync feature strategy       | enter             |                                             |
+      | sync perennial strategy     | enter             |                                             |
+      | sync prototype strategy     | enter             |                                             |
       | sync-upstream               | enter             |                                             |
       | sync-tags                   | enter             |                                             |
       | share-new-branches          | enter             |                                             |
@@ -210,9 +210,9 @@ Feature: enter the GitHub API token
       | github connector type: API  | enter                                     |                                             |
       | github token                | backspace backspace backspace 4 5 6 enter |                                             |
       | token scope                 | enter                                     |                                             |
-      | sync-feature-strategy       | enter                                     |                                             |
-      | sync-perennial-strategy     | enter                                     |                                             |
-      | sync-prototype-strategy     | enter                                     |                                             |
+      | sync feature strategy       | enter                                     |                                             |
+      | sync perennial strategy     | enter                                     |                                             |
+      | sync prototype strategy     | enter                                     |                                             |
       | sync-upstream               | enter                                     |                                             |
       | sync-tags                   | enter                                     |                                             |
       | share-new-branches          | enter                                     |                                             |

@@ -17,9 +17,9 @@ Feature: remove an existing forge type override
       | unknown branch type         | enter                |                                             |
       | origin hostname             | enter                |                                             |
       | forge type                  | up up up up up enter |                                             |
-      | sync-feature-strategy       | enter                |                                             |
-      | sync-perennial-strategy     | enter                |                                             |
-      | sync-prototype-strategy     | enter                |                                             |
+      | sync feature strategy       | enter                |                                             |
+      | sync perennial strategy     | enter                |                                             |
+      | sync prototype strategy     | enter                |                                             |
       | sync-upstream               | enter                |                                             |
       | sync-tags                   | enter                |                                             |
       | share-new-branches          | enter                |                                             |

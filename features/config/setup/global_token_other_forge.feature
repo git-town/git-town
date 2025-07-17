@@ -1,6 +1,7 @@
 @messyoutput
 Feature: a global API token of another forge exists
 
+  @debug @this
   Scenario: on GitHub, with global GitLab token
     Given a Git repo with origin
     And my repo's "origin" remote is "git@github.com:git-town/git-town.git"
@@ -17,20 +18,20 @@ Feature: a global API token of another forge exists
       | observed regex              | enter             |                                             |
       | unknown branch type         | enter             |                                             |
       | origin hostname             | enter             |                                             |
-      | forge type: auto-detect     | enter             |                                             |
-      | github connector type: API  | enter             |                                             |
+      | forge type                  | enter             |                                             |
+      | github connector type       | enter             |                                             |
       | github token                | 1 2 3 4 5 6 enter |                                             |
       | token scope                 | enter             |                                             |
-      | sync-feature-strategy       | enter             |                                             |
-      | sync-perennial-strategy     | enter             |                                             |
-      | sync-prototype-strategy     | enter             |                                             |
-      | sync-upstream               | enter             |                                             |
-      | sync-tags                   | enter             |                                             |
-      | share-new-branches          | enter             |                                             |
-      | push-hook                   | enter             |                                             |
-      | new-branch-type             | enter             |                                             |
-      | ship-strategy               | enter             |                                             |
-      | ship-delete-tracking-branch | enter             |                                             |
+      | sync feature strategy       | enter             |                                             |
+      | sync perennial strategy     | enter             |                                             |
+      | sync prototype strategy     | enter             |                                             |
+      | sync upstream               | enter             |                                             |
+      | sync tags                   | enter             |                                             |
+      | share new branches          | enter             |                                             |
+      | push hook                   | enter             |                                             |
+      | new branch type             | enter             |                                             |
+      | ship strategy               | enter             |                                             |
+      | ship delete tracking branch | enter             |                                             |
       | save config to Git metadata | down enter        |                                             |
     Then Git Town runs the commands
       | COMMAND                                              |

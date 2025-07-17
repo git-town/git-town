@@ -22,9 +22,9 @@ Feature: enter the GitLab API token
       | gitlab connector type: api  | enter             |                                             |
       | gitlab token                | 1 2 3 4 5 6 enter |                                             |
       | token scope                 | enter             |                                             |
-      | sync-feature-strategy       | enter             |                                             |
-      | sync-perennial-strategy     | enter             |                                             |
-      | sync-prototype-strategy     | enter             |                                             |
+      | sync feature strategy       | enter             |                                             |
+      | sync perennial strategy     | enter             |                                             |
+      | sync prototype strategy     | enter             |                                             |
       | sync-upstream               | enter             |                                             |
       | sync-tags                   | enter             |                                             |
       | share-new-branches          | enter             |                                             |
@@ -67,9 +67,9 @@ Feature: enter the GitLab API token
       | gitlab connector type: api  | enter             |                                             |
       | gitlab token                | 1 2 3 4 5 6 enter |                                             |
       | token scope                 | enter             |                                             |
-      | sync-feature-strategy       | enter             |                                             |
-      | sync-perennial-strategy     | enter             |                                             |
-      | sync-prototype-strategy     | enter             |                                             |
+      | sync feature strategy       | enter             |                                             |
+      | sync perennial strategy     | enter             |                                             |
+      | sync prototype strategy     | enter             |                                             |
       | sync-upstream               | enter             |                                             |
       | sync-tags                   | enter             |                                             |
       | share-new-branches          | enter             |                                             |
@@ -115,9 +115,9 @@ Feature: enter the GitLab API token
       | gitlab connector type: api  | enter             |                                             |
       | gitlab token                | 1 2 3 4 5 6 enter |                                             |
       | token scope                 | down enter        |                                             |
-      | sync-feature-strategy       | enter             |                                             |
-      | sync-perennial-strategy     | enter             |                                             |
-      | sync-prototype-strategy     | enter             |                                             |
+      | sync feature strategy       | enter             |                                             |
+      | sync perennial strategy     | enter             |                                             |
+      | sync prototype strategy     | enter             |                                             |
       | sync-upstream               | enter             |                                             |
       | sync-tags                   | enter             |                                             |
       | share-new-branches          | enter             |                                             |
@@ -162,9 +162,9 @@ Feature: enter the GitLab API token
       | gitlab connector type: api  | enter                                     |                                             |
       | gitlab token                | backspace backspace backspace 4 5 6 enter |                                             |
       | token scope                 | enter                                     |                                             |
-      | sync-feature-strategy       | enter                                     |                                             |
-      | sync-perennial-strategy     | enter                                     |                                             |
-      | sync-prototype-strategy     | enter                                     |                                             |
+      | sync feature strategy       | enter                                     |                                             |
+      | sync perennial strategy     | enter                                     |                                             |
+      | sync prototype strategy     | enter                                     |                                             |
       | sync-upstream               | enter                                     |                                             |
       | sync-tags                   | enter                                     |                                             |
       | share-new-branches          | enter                                     |                                             |

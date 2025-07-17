@@ -18,9 +18,9 @@ Feature: override an existing Git alias
       | unknown branch type         | enter   |
       | origin hostname             | enter   |
       | forge type                  | enter   |
-      | sync-feature-strategy       | enter   |
-      | sync-perennial-strategy     | enter   |
-      | sync-prototype-strategy     | enter   |
+      | sync feature strategy       | enter   |
+      | sync perennial strategy     | enter   |
+      | sync prototype strategy     | enter   |
       | sync-upstream               | enter   |
       | sync-tags                   | enter   |
       | share-new-branches          | enter   |

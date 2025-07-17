@@ -19,19 +19,19 @@ Feature: change existing information in Git metadata
       | add all aliases                     | a enter                |
       | main branch                         | enter                  |
       | change the perennial branches       | space down space enter |
-      | enter a perennial regex             | 3 3 6 6 enter          |
+      | enter a perennial regex             |          3 3 6 6 enter |
       | feature regex                       | u s e r enter          |
-      | contribution regex                  | 1 1 1 1 enter          |
-      | observed regex                      | 2 2 2 2 enter          |
+      | contribution regex                  |          1 1 1 1 enter |
+      | observed regex                      |          2 2 2 2 enter |
       | unknown branch type                 | down enter             |
       | origin hostname                     | c o d e enter          |
       | set forge type to "github"          | up up enter            |
       | set github forge type to "API"      | enter                  |
-      | github token                        | 1 2 3 4 5 6 enter      |
+      | github token                        |      1 2 3 4 5 6 enter |
       | token scope                         | enter                  |
-      | sync-feature-strategy               | down enter             |
-      | sync-perennial-strategy             | down enter             |
-      | sync-prototype-strategy             | down enter             |
+      | sync feature strategy               | down enter             |
+      | sync perennial strategy             | down enter             |
+      | sync prototype strategy             | down enter             |
       | sync-upstream                       | down enter             |
       | sync-tags                           | down enter             |
       | enable share-new-branches           | down enter             |

@@ -57,9 +57,9 @@ Feature: remove existing configuration in Git metadata
       | unknown branch type         | up enter                                                                    |                     |
       | origin hostname             | backspace backspace backspace backspace enter                               | remove the override |
       | forge type                  | up up up up up enter                                                        | remove the override |
-      | sync-feature-strategy       | up enter                                                                    |                     |
-      | sync-perennial-strategy     | down enter                                                                  |                     |
-      | sync-prototype-strategy     | up enter                                                                    |                     |
+      | sync feature strategy       | up enter                                                                    |                     |
+      | sync perennial strategy     | down enter                                                                  |                     |
+      | sync prototype strategy     | up enter                                                                    |                     |
       | sync-upstream               | down enter                                                                  |                     |
       | sync-tags                   | down enter                                                                  |                     |
       | share-new-branches          | up enter                                                                    | enable              |

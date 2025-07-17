@@ -21,9 +21,9 @@ Feature: enter the Codeberg API token
       | forge type: auto-detect     | enter             |                                             |
       | codeberg token              | 1 2 3 4 5 6 enter |                                             |
       | token scope                 | enter             |                                             |
-      | sync-feature-strategy       | enter             |                                             |
-      | sync-perennial-strategy     | enter             |                                             |
-      | sync-prototype-strategy     | enter             |                                             |
+      | sync feature strategy       | enter             |                                             |
+      | sync perennial strategy     | enter             |                                             |
+      | sync prototype strategy     | enter             |                                             |
       | sync-upstream               | enter             |                                             |
       | sync-tags                   | enter             |                                             |
       | share-new-branches          | enter             |                                             |
@@ -63,11 +63,11 @@ Feature: enter the Codeberg API token
       | unknown branch type         | enter                |                                             |
       | origin hostname             | enter                |                                             |
       | forge type                  | down down down enter |                                             |
-      | codeberg token              | 1 2 3 4 5 6 enter    |                                             |
+      | codeberg token              |    1 2 3 4 5 6 enter |                                             |
       | token scope                 | enter                |                                             |
-      | sync-feature-strategy       | enter                |                                             |
-      | sync-perennial-strategy     | enter                |                                             |
-      | sync-prototype-strategy     | enter                |                                             |
+      | sync feature strategy       | enter                |                                             |
+      | sync perennial strategy     | enter                |                                             |
+      | sync prototype strategy     | enter                |                                             |
       | sync-upstream               | enter                |                                             |
       | sync-tags                   | enter                |                                             |
       | share-new-branches          | enter                |                                             |
@@ -111,9 +111,9 @@ Feature: enter the Codeberg API token
       | forge type: auto-detect     | enter             |                                             |
       | codeberg token              | 1 2 3 4 5 6 enter |                                             |
       | token scope                 | down enter        |                                             |
-      | sync-feature-strategy       | enter             |                                             |
-      | sync-perennial-strategy     | enter             |                                             |
-      | sync-prototype-strategy     | enter             |                                             |
+      | sync feature strategy       | enter             |                                             |
+      | sync perennial strategy     | enter             |                                             |
+      | sync prototype strategy     | enter             |                                             |
       | sync-upstream               | enter             |                                             |
       | sync-tags                   | enter             |                                             |
       | share-new-branches          | enter             |                                             |
@@ -156,9 +156,9 @@ Feature: enter the Codeberg API token
       | forge type: auto-detect     | enter                                     |                                             |
       | github token                | backspace backspace backspace 4 5 6 enter |                                             |
       | token scope                 | enter                                     |                                             |
-      | sync-feature-strategy       | enter                                     |                                             |
-      | sync-perennial-strategy     | enter                                     |                                             |
-      | sync-prototype-strategy     | enter                                     |                                             |
+      | sync feature strategy       | enter                                     |                                             |
+      | sync perennial strategy     | enter                                     |                                             |
+      | sync prototype strategy     | enter                                     |                                             |
       | sync-upstream               | enter                                     |                                             |
       | sync-tags                   | enter                                     |                                             |
       | share-new-branches          | enter                                     |                                             |
