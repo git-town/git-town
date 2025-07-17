@@ -356,6 +356,8 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		GitHubToken:              githubToken,
 		GitLabConnectorType:      gitlabConnectorTypeOpt,
 		GitLabToken:              gitlabToken,
+		GitUserEmail:             None[gitdomain.GitUserEmail](),
+		GitUserName:              None[gitdomain.GitUserName](),
 		GiteaToken:               giteaToken,
 		GitUserEmail:             None[gitdomain.GitUserEmail](),
 		GitUserName:              None[gitdomain.GitUserName](),
@@ -385,12 +387,11 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	if !data.dialogInputs.IsEmpty() {
 		panic("unused dialog inputs")
 	}
-	return userInput{actualMainBranch, normalData, actualForgeType, tokenScope, configStorage}, false, nil
+	return userInput{normalData, actualForgeType, tokenScope, configStorage, validatedData}, false, nil
 }
 
 // data entered by the user in the setup assistant
 type userInput struct {
-	actualMainBranch    gitdomain.LocalBranchName
 	data                configdomain.PartialConfig
 	determinedForgeType Option[forgedomain.ForgeType] // the forge type that was determined by the setup assistant - not necessarily what the user entered (could also be "auto detect")
 	scope               configdomain.ConfigScope

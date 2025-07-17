@@ -16,28 +16,28 @@ func RenderPerennialBranches(perennials gitdomain.LocalBranchNames) string {
 	return fmt.Sprintf(`["%s"]`, perennials.Join(`", "`))
 }
 
-func RenderTOML(config configdomain.PartialConfig) string {
+func RenderTOML(data configdomain.PartialConfig) string {
 	result := strings.Builder{}
 	result.WriteString("# More info around this file at https://www.git-town.com/configuration-file\n")
 
-	main, hasMain := config.MainBranch.Get()
-	hasPerennialBranches := len(config.PerennialBranches) > 0
-	perennialRegex, hasPerennialRegex := config.PerennialRegex.Get()
+	main, hasMain := data.MainBranch.Get()
+	hasPerennialBranches := len(data.PerennialBranches) > 0
+	perennialRegex, hasPerennialRegex := data.PerennialRegex.Get()
 	if hasMain || hasPerennialBranches || hasPerennialRegex {
 		result.WriteString("\n[branches]\n")
 		if hasMain {
 			result.WriteString(fmt.Sprintf("main = %q\n", main))
 		}
 		if hasPerennialBranches {
-			result.WriteString(fmt.Sprintf("perennials = %s\n", RenderPerennialBranches(config.PerennialBranches)))
+			result.WriteString(fmt.Sprintf("perennials = %s\n", RenderPerennialBranches(data.PerennialBranches)))
 		}
 		if hasPerennialRegex {
 			result.WriteString(fmt.Sprintf("perennial-regex = %q\n", perennialRegex))
 		}
 	}
 
-	newBranchType, hasNewBranchType := config.NewBranchType.Get()
-	shareNewBranches, hasShareNewBranches := config.ShareNewBranches.Get()
+	newBranchType, hasNewBranchType := data.NewBranchType.Get()
+	shareNewBranches, hasShareNewBranches := data.ShareNewBranches.Get()
 	if hasNewBranchType || hasShareNewBranches {
 		result.WriteString("\n[create]\n")
 		if hasNewBranchType {
@@ -48,9 +48,9 @@ func RenderTOML(config configdomain.PartialConfig) string {
 		}
 	}
 
-	devRemote, hasDevRemote := config.DevRemote.Get()
-	forgeType, hasForgeType := config.ForgeType.Get()
-	originHostName, hasOriginHostName := config.HostingOriginHostname.Get()
+	devRemote, hasDevRemote := data.DevRemote.Get()
+	forgeType, hasForgeType := data.ForgeType.Get()
+	originHostName, hasOriginHostName := data.HostingOriginHostname.Get()
 	if hasDevRemote || hasForgeType || hasOriginHostName {
 		result.WriteString("\n[hosting]\n")
 		if hasDevRemote {
@@ -64,8 +64,8 @@ func RenderTOML(config configdomain.PartialConfig) string {
 		}
 	}
 
-	deleteTrackingBranch, hasDeleteTrackingBranch := config.ShipDeleteTrackingBranch.Get()
-	shipStrategy, hasShipStrategy := config.ShipStrategy.Get()
+	deleteTrackingBranch, hasDeleteTrackingBranch := data.ShipDeleteTrackingBranch.Get()
+	shipStrategy, hasShipStrategy := data.ShipStrategy.Get()
 	if hasDeleteTrackingBranch || hasShipStrategy {
 		result.WriteString("\n[ship]\n")
 		if hasDeleteTrackingBranch {
@@ -76,12 +76,12 @@ func RenderTOML(config configdomain.PartialConfig) string {
 		}
 	}
 
-	syncFeatureStrategy, hasSyncFeatureStrategy := config.SyncFeatureStrategy.Get()
-	syncPerennialStrategy, hasSyncPerennialStrategy := config.SyncPerennialStrategy.Get()
-	syncPrototypeStrategy, hasSyncPrototypeStrategy := config.SyncPrototypeStrategy.Get()
-	pushHook, hasPushHook := config.PushHook.Get()
-	syncTags, hasSyncTags := config.SyncTags.Get()
-	syncUpstream, hasSyncUpstream := config.SyncUpstream.Get()
+	syncFeatureStrategy, hasSyncFeatureStrategy := data.SyncFeatureStrategy.Get()
+	syncPerennialStrategy, hasSyncPerennialStrategy := data.SyncPerennialStrategy.Get()
+	syncPrototypeStrategy, hasSyncPrototypeStrategy := data.SyncPrototypeStrategy.Get()
+	pushHook, hasPushHook := data.PushHook.Get()
+	syncTags, hasSyncTags := data.SyncTags.Get()
+	syncUpstream, hasSyncUpstream := data.SyncUpstream.Get()
 	if hasSyncFeatureStrategy || hasSyncPerennialStrategy || hasSyncPrototypeStrategy || hasPushHook || hasSyncTags || hasSyncUpstream {
 		result.WriteString("\n[sync]\n")
 		if hasSyncFeatureStrategy {
@@ -106,6 +106,6 @@ func RenderTOML(config configdomain.PartialConfig) string {
 	return result.String()
 }
 
-func Save(config configdomain.PartialConfig) error {
-	return os.WriteFile(FileName, []byte(RenderTOML(config)), 0o600)
+func Save(data configdomain.PartialConfig) error {
+	return os.WriteFile(FileName, []byte(RenderTOML(data)), 0o600)
 }
