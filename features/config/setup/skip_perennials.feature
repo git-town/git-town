@@ -27,7 +27,7 @@ Feature: don't ask for perennial branches if no branches that could be perennial
       | new branch type             | enter      |                                             |
       | ship strategy               | enter      |                                             |
       | ship delete tracking branch | enter      |                                             |
-      | config storage              | down enter |                                             |
+      | config storage              | enter      |                                             |
 
   Scenario: result
     Then the main branch is now "main"
