@@ -20,8 +20,8 @@ type TestInput struct {
 // into the format understood by Git Town's dialogs.
 func ParseTestInput(envData string) TestInput {
 	messages := []tea.Msg{}
-	stepName, keys, ok := strings.Cut(envData, "@")
-	if !ok {
+	stepName, keys, has := strings.Cut(envData, "@")
+	if !has {
 		panic(fmt.Sprintf("found test input without step name: %q", envData))
 	}
 	for _, input := range strings.Split(keys, "|") {
