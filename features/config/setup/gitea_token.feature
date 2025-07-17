@@ -138,7 +138,6 @@ Feature: enter the Gitea API token
       | git config git-town.sync-tags true                   |
     And global Git setting "git-town.gitea-token" is now "123456"
 
-  @debug @this
   Scenario: edit global Gitea token
     Given my repo's "origin" remote is "git@gitea.com:git-town/git-town.git"
     And global Git setting "git-town.gitea-token" is "123"
