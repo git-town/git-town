@@ -39,7 +39,7 @@ func SyncPrototypeStrategy(existing configdomain.SyncPrototypeStrategy, inputs d
 		},
 	}
 	defaultPos := entries.IndexOf(existing)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncPrototypeStrategyTitle, SyncPrototypeStrategyHelp, inputs)
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncPrototypeStrategyTitle, SyncPrototypeStrategyHelp, inputs, "sync-prototype-strategy")
 	fmt.Printf(messages.SyncPrototypeBranches, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }

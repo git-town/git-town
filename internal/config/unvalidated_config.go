@@ -72,7 +72,7 @@ func (self *UnvalidatedConfig) RemoveMainBranch(runner subshelldomain.Runner) {
 // in the Git Town configuration.
 func (self *UnvalidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName, runner subshelldomain.Runner) error {
 	self.UnvalidatedConfig.MainBranch = Some(branch)
-	return gitconfig.SetMainBranch(runner, branch)
+	return gitconfig.SetMainBranch(runner, branch, configdomain.ConfigScopeLocal)
 }
 
 // SetPerennialBranches marks the given branches as perennial branches.

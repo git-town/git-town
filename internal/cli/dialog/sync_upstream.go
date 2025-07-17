@@ -43,7 +43,7 @@ func SyncUpstream(existing configdomain.SyncUpstream, inputs dialogcomponents.Te
 		},
 	}
 	defaultPos := entries.IndexOf(existing)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncUpstreamTitle, SyncUpstreamHelp, inputs)
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncUpstreamTitle, SyncUpstreamHelp, inputs, "sync-upstream")
 	fmt.Printf(messages.SyncWithUpstream, dialogcomponents.FormattedSelection(format.Bool(selection.IsTrue()), exit))
 	return selection, exit, err
 }

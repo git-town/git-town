@@ -13,8 +13,8 @@ Feature: switch to another branch with uncommitted changes
     And the current branch is "alpha"
     And an uncommitted file
     When I run "git-town switch" and enter into the dialogs:
-      | KEYS       |
-      | down enter |
+      | DIALOG      | KEYS       |
+      | branch-tree | down enter |
 
   Scenario: result
     Then Git Town runs the commands

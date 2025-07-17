@@ -29,7 +29,7 @@ func Parent(args ParentArgs) (ParentOutcome, gitdomain.LocalBranchName, error) {
 	cursor := slice.Index(parentCandidates, args.DefaultChoice).GetOrElse(0)
 	title := fmt.Sprintf(parentBranchTitleTemplate, args.Branch)
 	help := fmt.Sprintf(parentBranchHelpTemplate, args.Branch)
-	selection, exit, err := dialogcomponents.RadioList(list.NewEntries(parentCandidates...), cursor, title, help, args.Inputs)
+	selection, exit, err := dialogcomponents.RadioList(list.NewEntries(parentCandidates...), cursor, title, help, args.Inputs, fmt.Sprintf("parent-branch-for-%q", args.Branch))
 	fmt.Printf(messages.ParentDialogSelected, args.Branch, dialogcomponents.FormattedSelection(selection.String(), exit))
 	if exit {
 		return ParentOutcomeExit, selection, err

@@ -44,8 +44,8 @@ Feature: handle conflicts between the current feature branch and the main branch
   @messyoutput
   Scenario: undo through another sync invocation
     When I run "git-town sync" and enter into the dialog:
-      | DIALOG            | KEYS    |
-      | choose what to do | 3 enter |
+      | DIALOG              | KEYS    |
+      | unfinished runstate | 3 enter |
     Then Git Town prints:
       """
       Handle unfinished command: undo

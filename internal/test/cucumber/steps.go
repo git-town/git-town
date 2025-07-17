@@ -886,8 +886,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if browserPath, has := state.browserVariable.Get(); has {
 			env = envvars.Replace(env, browser.EnvVarName, browserPath)
 		}
-		answers := asserts.NoError1(helpers.TableToInputEnv(input))
-		for a, answer := range answers {
+		for a, answer := range helpers.TableToInputEnv(input) {
 			env = append(env, fmt.Sprintf("%s_%02d=%s", dialogcomponents.TestInputKey, a, answer))
 		}
 		output, exitCode := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
@@ -1232,7 +1231,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
 		syncFeatureStrategy := asserts.NoError1(configdomain.ParseSyncFeatureStrategy(value))
-		_ = gitconfig.SetSyncFeatureStrategy(coworkerRepo.TestRunner, syncFeatureStrategy.GetOrPanic())
+		_ = gitconfig.SetSyncFeatureStrategy(coworkerRepo.TestRunner, syncFeatureStrategy.GetOrPanic(), configdomain.ConfigScopeLocal)
 	})
 
 	sc.Step(`^the coworkers workspace now contains file "([^"]*)" with content "([^"]*)"$`, func(ctx context.Context, file, expectedContent string) error {
@@ -1431,7 +1430,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the perennial branches are "([^"]+)"$`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return gitconfig.SetPerennialBranches(devRepo.TestRunner, gitdomain.NewLocalBranchNames(name))
+		return gitconfig.SetPerennialBranches(devRepo.TestRunner, gitdomain.NewLocalBranchNames(name), configdomain.ConfigScopeLocal)
 	})
 
 	sc.Step(`^the perennial branches are (?:now|still) "([^"]+)"$`, func(ctx context.Context, name string) error {

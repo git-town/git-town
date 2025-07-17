@@ -9,6 +9,6 @@ Feature: switch branches
       | beta  | feature | main   | local, origin |
     And the current branch is "alpha"
     When I run "git-town switch" and enter into the dialogs:
-      | KEYS     |
-      | down esc |
+      | DIALOG      | KEYS     |
+      | branch-tree | down esc |
     Then Git Town runs no commands
