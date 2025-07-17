@@ -115,6 +115,7 @@ func DefaultNormalConfig() NormalConfigData {
 		GitLabToken:              None[forgedomain.GitLabToken](),
 		GiteaToken:               None[forgedomain.GiteaToken](),
 		HostingOriginHostname:    None[HostingOriginHostname](),
+		Lineage:                  NewLineage(),
 		NewBranchType:            None[BranchType](),
 		ObservedRegex:            None[ObservedRegex](),
 		Offline:                  false,
