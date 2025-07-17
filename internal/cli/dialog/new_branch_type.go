@@ -49,5 +49,5 @@ func NewBranchType(existingOpt Option[configdomain.NewBranchType], inputs dialog
 	defaultPos := entries.IndexOf(existingOptBranchType)
 	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, newBranchTypeTitle, NewBranchTypeHelp, inputs, "new-branch-type")
 	fmt.Println(messages.NewBranchType, dialogcomponents.FormattedSelection(selection.String(), exit))
-	return configdomain.NewBranchTypeOption(selection), exit, err
+	return configdomain.NewBranchTypeOpt(selection), exit, err
 }

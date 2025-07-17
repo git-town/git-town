@@ -13,7 +13,7 @@ func (self NewBranchType) String() string {
 	return self.BranchType().String()
 }
 
-func NewBranchTypeOption(value Option[BranchType]) Option[NewBranchType] {
+func NewBranchTypeOpt(value Option[BranchType]) Option[NewBranchType] {
 	if branchType, has := value.Get(); has {
 		return Some(NewBranchType(branchType))
 	}

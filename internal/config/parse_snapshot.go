@@ -81,7 +81,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	gitlabConnectorType, err6 := forgedomain.ParseGitLabConnectorType(snapshot[configdomain.KeyGitLabConnectorType])
 	lineage, err7 := NewLineageFromSnapshot(snapshot, updateOutdated, runner)
 	branchType, err8 := configdomain.ParseBranchType(snapshot[configdomain.KeyNewBranchType])
-	newBranchType := configdomain.NewBranchTypeOption(branchType)
+	newBranchType := configdomain.NewBranchTypeOpt(branchType)
 	observedRegex, err9 := configdomain.ParseObservedRegex(snapshot[configdomain.KeyObservedRegex])
 	offline, err10 := configdomain.ParseOffline(snapshot[configdomain.KeyOffline], configdomain.KeyOffline)
 	perennialRegex, err11 := configdomain.ParsePerennialRegex(snapshot[configdomain.KeyPerennialRegex])
