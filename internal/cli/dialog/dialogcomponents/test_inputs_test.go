@@ -24,7 +24,8 @@ func TestTestInputs(t *testing.T) {
 		want := dialogcomponents.NewTestInputs(
 			dialogcomponents.TestInput{
 				Messages: []tea.Msg{
-					tea.KeyMsg{Type: tea.KeyEnter}},
+					tea.KeyMsg{Type: tea.KeyEnter},
+				},
 			},
 			dialogcomponents.TestInput{
 				Messages: []tea.Msg{
@@ -37,7 +38,8 @@ func TestTestInputs(t *testing.T) {
 			},
 			dialogcomponents.TestInput{
 				Messages: []tea.Msg{
-					tea.KeyMsg{Type: tea.KeyCtrlC}},
+					tea.KeyMsg{Type: tea.KeyCtrlC},
+				},
 			},
 		)
 		must.Eq(t, want, have)
