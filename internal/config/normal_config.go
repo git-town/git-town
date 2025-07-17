@@ -165,16 +165,6 @@ func (self *NormalConfig) SetPerennialBranches(runner subshelldomain.Runner, bra
 	return err
 }
 
-// remoteURLString provides the URL for the given remote.
-// Tests can stub this through the GIT_TOWN_REMOTE environment variable.
-func remoteURLString(querier subshelldomain.Querier, remote gitdomain.Remote) Option[string] {
-	remoteOverride := envconfig.RemoteURLOverride()
-	if remoteOverride.IsSome() {
-		return remoteOverride
-	}
-	return gitconfig.RemoteURL(querier, remote)
-}
-
 func DefaultNormalConfig() NormalConfig {
 	return NormalConfig{
 		Aliases:                  configdomain.Aliases{},
@@ -250,4 +240,14 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		UnknownBranchType:        partial.UnknownBranchType.GetOrElse(configdomain.BranchTypeFeatureBranch),
 		Verbose:                  partial.Verbose.GetOrDefault(),
 	}
+}
+
+// remoteURLString provides the URL for the given remote.
+// Tests can stub this through the GIT_TOWN_REMOTE environment variable.
+func remoteURLString(querier subshelldomain.Querier, remote gitdomain.Remote) Option[string] {
+	remoteOverride := envconfig.RemoteURLOverride()
+	if remoteOverride.IsSome() {
+		return remoteOverride
+	}
+	return gitconfig.RemoteURL(querier, remote)
 }
