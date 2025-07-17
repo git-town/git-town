@@ -19,6 +19,46 @@ func EmptyValidatedConfig() ValidatedConfig {
 	return ValidatedConfig{} //exhaustruct:ignore
 }
 
+// removes the given branch from the lineage, and updates its children
+func (self *ValidatedConfig) CleanupBranchFromLineage(runner subshelldomain.Runner, branch gitdomain.LocalBranchName) {
+	parent, hasParent := self.NormalConfig.Lineage.Parent(branch).Get()
+	children := self.NormalConfig.Lineage.Children(branch)
+	for _, child := range children {
+		if hasParent {
+			self.NormalConfig.Lineage = self.NormalConfig.Lineage.Set(child, parent)
+			_ = gitconfig.SetParent(runner, child, parent)
+		} else {
+			self.NormalConfig.Lineage = self.NormalConfig.Lineage.RemoveBranch(child)
+			_ = gitconfig.RemoveParent(runner, parent)
+		}
+	}
+	self.NormalConfig.Lineage = self.NormalConfig.Lineage.RemoveBranch(branch)
+	_ = gitconfig.RemoveParent(runner, branch)
+}
+
+func (self *ValidatedConfig) RemoveDeletedBranchesFromLineage(branchInfos gitdomain.BranchInfos, nonExistingBranches gitdomain.LocalBranchNames, runner subshelldomain.Runner) {
+	for _, nonExistingBranch := range nonExistingBranches {
+		self.CleanupBranchFromLineage(runner, nonExistingBranch)
+	}
+	for _, entry := range self.NormalConfig.Lineage.Entries() {
+		childDoesntExist := nonExistingBranches.Contains(entry.Child)
+		parentDoesntExist := nonExistingBranches.Contains(entry.Parent)
+		if childDoesntExist || parentDoesntExist {
+			self.NormalConfig.RemoveParent(runner, entry.Child)
+		}
+		childExists := branchInfos.HasBranch(entry.Child)
+		parentExists := branchInfos.HasBranch(entry.Parent)
+		if !childExists || !parentExists {
+			self.NormalConfig.RemoveParent(runner, entry.Child)
+		}
+	}
+}
+
+func (self *ValidatedConfig) CleanupLineage(branchInfos gitdomain.BranchInfos, nonExistingBranches gitdomain.LocalBranchNames, finalMessages stringslice.Collector, runner subshelldomain.Runner) {
+	self.RemoveDeletedBranchesFromLineage(branchInfos, nonExistingBranches, runner)
+	self.NormalConfig.RemovePerennialAncestors(runner, finalMessages)
+}
+
 func (self *ValidatedConfig) BranchType(branch gitdomain.LocalBranchName) configdomain.BranchType {
 	if self.ValidatedConfigData.IsMainBranch(branch) {
 		return configdomain.BranchTypeMainBranch
@@ -44,11 +84,6 @@ func (self *ValidatedConfig) BranchesOfType(branches gitdomain.LocalBranchNames,
 	return result
 }
 
-func (self *ValidatedConfig) CleanupLineage(branchInfos gitdomain.BranchInfos, nonExistingBranches gitdomain.LocalBranchNames, finalMessages stringslice.Collector, runner subshelldomain.Runner) {
-	self.RemoveDeletedBranchesFromLineage(branchInfos, nonExistingBranches, runner)
-	self.NormalConfig.RemovePerennialAncestors(runner, finalMessages)
-}
-
 // IsMainOrPerennialBranch indicates whether the branch with the given name
 // is the main branch or a perennial branch of the repository.
 func (self *ValidatedConfig) IsMainOrPerennialBranch(branch gitdomain.LocalBranchName) bool {
@@ -58,24 +93,6 @@ func (self *ValidatedConfig) IsMainOrPerennialBranch(branch gitdomain.LocalBranc
 
 func (self *ValidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 	return append(gitdomain.LocalBranchNames{self.ValidatedConfigData.MainBranch}, self.NormalConfig.PerennialBranches...)
-}
-
-func (self *ValidatedConfig) RemoveDeletedBranchesFromLineage(branchInfos gitdomain.BranchInfos, nonExistingBranches gitdomain.LocalBranchNames, runner subshelldomain.Runner) {
-	for _, nonExistingBranch := range nonExistingBranches {
-		self.NormalConfig.CleanupBranchFromLineage(runner, nonExistingBranch)
-	}
-	for _, entry := range self.NormalConfig.Lineage.Entries() {
-		childDoesntExist := nonExistingBranches.Contains(entry.Child)
-		parentDoesntExist := nonExistingBranches.Contains(entry.Parent)
-		if childDoesntExist || parentDoesntExist {
-			self.NormalConfig.RemoveParent(runner, entry.Child)
-		}
-		childExists := branchInfos.HasBranch(entry.Child)
-		parentExists := branchInfos.HasBranch(entry.Parent)
-		if !childExists || !parentExists {
-			self.NormalConfig.RemoveParent(runner, entry.Child)
-		}
-	}
 }
 
 // provides this collection without the perennial branch at the root
