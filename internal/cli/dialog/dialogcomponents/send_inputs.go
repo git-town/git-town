@@ -1,6 +1,8 @@
 package dialogcomponents
 
 import (
+	"fmt"
+
 	tea "github.com/charmbracelet/bubbletea"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
@@ -8,6 +10,9 @@ import (
 // SendInputs sends the given keystrokes to the given bubbletea program.
 func SendInputs(stepName string, input Option[TestInput], program *tea.Program) {
 	if input, has := input.Get(); has {
+		if stepName != input.StepName {
+			panic(fmt.Sprintf("mismatching dialog names: want %q but have %q", input.StepName, stepName))
+		}
 		go func() {
 			for _, msg := range input.Messages {
 				program.Send(msg)
