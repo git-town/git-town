@@ -192,8 +192,8 @@ func printConfig(config config.UnvalidatedConfig) {
 	print.Entry("contribution regex", format.OptionalStringerSetting(config.NormalConfig.ContributionRegex))
 	print.Entry("feature regex", format.OptionalStringerSetting(config.NormalConfig.FeatureRegex))
 	fmt.Println()
-	if config.NormalConfig.Git.Lineage.Len() > 0 {
-		print.LabelAndValue("Branch Lineage", format.BranchLineage(config.NormalConfig.Git.Lineage))
+	if config.NormalConfig.Lineage.Len() > 0 {
+		print.LabelAndValue("Branch Lineage", format.BranchLineage(config.NormalConfig.Lineage))
 	}
 }
 `
@@ -205,8 +205,8 @@ func printConfig(config config.UnvalidatedConfig) {
 	print.Entry("contribution regex", format.OptionalStringerSetting(config.NormalConfig.ContributionRegex))
 	print.Entry("feature regex", format.OptionalStringerSetting(config.NormalConfig.FeatureRegex))
 	fmt.Println()
-	if config.NormalConfig.Git.Lineage.Len() > 0 {
-		print.LabelAndValue("Branch Lineage", format.BranchLineage(config.NormalConfig.Git.Lineage))
+	if config.NormalConfig.Lineage.Len() > 0 {
+		print.LabelAndValue("Branch Lineage", format.BranchLineage(config.NormalConfig.Lineage))
 	`
 	must.EqOp(t, want, have)
 }

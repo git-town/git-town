@@ -158,7 +158,7 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult, cliConf
 	if err != nil || exit {
 		return data, exit, err
 	}
-	parentBranch, hasParent := validatedConfig.NormalConfig.Git.Lineage.Parent(branch).Get()
+	parentBranch, hasParent := validatedConfig.NormalConfig.Lineage.Parent(branch).Get()
 	if !hasParent {
 		return data, false, errors.New(messages.DiffParentNoFeatureBranch)
 	}

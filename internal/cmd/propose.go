@@ -257,16 +257,16 @@ func determineProposeData(repo execute.OpenRepoResult, cliConfig cliconfig.CliCo
 	var branchNamesToPropose gitdomain.LocalBranchNames
 	var branchNamesToSync gitdomain.LocalBranchNames
 	if fullStack {
-		branchNamesToSync = validatedConfig.NormalConfig.Git.Lineage.BranchLineageWithoutRoot(initialBranch, perennialAndMain)
+		branchNamesToSync = validatedConfig.NormalConfig.Lineage.BranchLineageWithoutRoot(initialBranch, perennialAndMain)
 		branchNamesToPropose = make(gitdomain.LocalBranchNames, len(branchNamesToSync))
 		copy(branchNamesToPropose, branchNamesToSync)
 	} else {
-		branchNamesToSync = validatedConfig.NormalConfig.Git.Lineage.BranchAndAncestorsWithoutRoot(initialBranch)
+		branchNamesToSync = validatedConfig.NormalConfig.Lineage.BranchAndAncestorsWithoutRoot(initialBranch)
 		branchNamesToPropose = gitdomain.LocalBranchNames{initialBranch}
 		if err = validateBranchTypeToPropose(branchesAndTypes[initialBranch]); err != nil {
 			return data, false, err
 		}
-		if validatedConfig.NormalConfig.Git.Lineage.Parent(initialBranch).IsNone() {
+		if validatedConfig.NormalConfig.Lineage.Parent(initialBranch).IsNone() {
 			return data, false, fmt.Errorf(messages.ProposalNoParent, initialBranch)
 		}
 	}
@@ -283,7 +283,7 @@ func determineProposeData(repo execute.OpenRepoResult, cliConfig cliconfig.CliCo
 		}
 		existingProposalURL := None[string]()
 		if canFindProposals {
-			if parent, hasParent := validatedConfig.NormalConfig.Git.Lineage.Parent(branchNameToPropose).Get(); hasParent {
+			if parent, hasParent := validatedConfig.NormalConfig.Lineage.Parent(branchNameToPropose).Get(); hasParent {
 				existingProposalOpt, err := findProposal(branchNameToPropose, parent)
 				if err != nil {
 					print.Error(err)

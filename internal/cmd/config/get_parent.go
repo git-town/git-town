@@ -57,7 +57,7 @@ func executeGetParent(args []string, cliConfig cliconfig.CliConfig) error {
 	} else {
 		childBranch = gitdomain.NewLocalBranchName(args[0])
 	}
-	parentOpt := repo.UnvalidatedConfig.NormalConfig.Git.Lineage.Parent(childBranch)
+	parentOpt := repo.UnvalidatedConfig.NormalConfig.Lineage.Parent(childBranch)
 	if parent, hasParent := parentOpt.Get(); hasParent {
 		fmt.Print(parent)
 	}

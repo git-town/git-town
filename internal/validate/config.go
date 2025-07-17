@@ -56,7 +56,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 		Connector:         args.Connector,
 		DefaultChoice:     mainBranch,
 		DialogTestInputs:  args.TestInputs,
-		Lineage:           args.Unvalidated.Value.NormalConfig.Git.Lineage,
+		Lineage:           args.Unvalidated.Value.NormalConfig.Lineage,
 		LocalBranches:     args.LocalBranches,
 		MainBranch:        mainBranch,
 		PerennialBranches: args.Unvalidated.Value.NormalConfig.PerennialBranches,

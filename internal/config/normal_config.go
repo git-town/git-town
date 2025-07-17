@@ -18,25 +18,7 @@ import (
 
 type NormalConfig struct {
 	configdomain.NormalConfigData
-	Git        configdomain.PartialConfig // configuration data taken from Git metadata, in particular the unscoped Git metadata
-	GitVersion git.Version                // version of the installed Git executable
-}
-
-// removes the given branch from the lineage, and updates its children
-func (self *NormalConfig) CleanupBranchFromLineage(runner subshelldomain.Runner, branch gitdomain.LocalBranchName) {
-	parent, hasParent := self.Git.Lineage.Parent(branch).Get()
-	children := self.Git.Lineage.Children(branch)
-	for _, child := range children {
-		if hasParent {
-			self.Git.Lineage = self.Git.Lineage.Set(child, parent)
-			_ = gitconfig.SetParent(runner, child, parent)
-		} else {
-			self.Git.Lineage = self.Git.Lineage.RemoveBranch(child)
-			_ = gitconfig.RemoveParent(runner, parent)
-		}
-	}
-	self.Git.Lineage = self.Git.Lineage.RemoveBranch(branch)
-	_ = gitconfig.RemoveParent(runner, branch)
+	GitVersion git.Version // version of the installed Git executable
 }
 
 // DevURL provides the URL for the development remote.
@@ -66,15 +48,15 @@ func (self *NormalConfig) RemoteURL(querier subshelldomain.Querier, remote gitdo
 
 // RemoveParent removes the parent branch entry for the given branch from the Git configuration.
 func (self *NormalConfig) RemoveParent(runner subshelldomain.Runner, branch gitdomain.LocalBranchName) {
-	self.Git.Lineage = self.Git.Lineage.RemoveBranch(branch)
+	self.Lineage = self.Lineage.RemoveBranch(branch)
 	_ = gitconfig.RemoveParent(runner, branch)
 }
 
 func (self *NormalConfig) RemovePerennialAncestors(runner subshelldomain.Runner, finalMessages stringslice.Collector) {
 	for _, perennialBranch := range self.PerennialBranches {
-		if self.Git.Lineage.Parent(perennialBranch).IsSome() {
+		if self.Lineage.Parent(perennialBranch).IsSome() {
 			_ = gitconfig.RemoveParent(runner, perennialBranch)
-			self.Git.Lineage = self.Git.Lineage.RemoveBranch(perennialBranch)
+			self.Lineage = self.Lineage.RemoveBranch(perennialBranch)
 			finalMessages.Add(fmt.Sprintf(messages.PerennialBranchRemovedParentEntry, perennialBranch))
 		}
 	}
@@ -86,17 +68,18 @@ func (self *NormalConfig) SetParent(runner subshelldomain.Runner, branch, parent
 	if self.DryRun {
 		return nil
 	}
-	self.Git.Lineage = self.Git.Lineage.Set(branch, parentBranch)
+	self.Lineage = self.Lineage.Set(branch, parentBranch)
 	return gitconfig.SetParent(runner, branch, parentBranch)
 }
 
 // SetPerennialBranches marks the given branches as perennial branches.
 func (self *NormalConfig) SetPerennialBranches(runner subshelldomain.Runner, branches gitdomain.LocalBranchNames) error {
-	self.PerennialBranches = branches
-	if slices.Compare(self.Git.PerennialBranches, branches) != 0 {
-		return gitconfig.SetPerennialBranches(runner, branches, configdomain.ConfigScopeLocal)
+	var err error
+	if slices.Compare(self.PerennialBranches, branches) != 0 {
+		err = gitconfig.SetPerennialBranches(runner, branches, configdomain.ConfigScopeLocal)
 	}
-	return nil
+	self.PerennialBranches = branches
+	return err
 }
 
 // remoteURLString provides the URL for the given remote.

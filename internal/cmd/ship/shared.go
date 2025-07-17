@@ -139,7 +139,7 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, cliConf
 		configdomain.BranchTypeParkedBranch,
 		configdomain.BranchTypePrototypeBranch:
 	}
-	targetBranchName, hasTargetBranch := validatedConfig.NormalConfig.Git.Lineage.Parent(branchNameToShip).Get()
+	targetBranchName, hasTargetBranch := validatedConfig.NormalConfig.Lineage.Parent(branchNameToShip).Get()
 	if !hasTargetBranch {
 		return data, false, fmt.Errorf(messages.ShipBranchHasNoParent, branchNameToShip)
 	}
@@ -147,10 +147,10 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, cliConf
 	if !hasTargetBranch {
 		return data, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
-	childBranches := validatedConfig.NormalConfig.Git.Lineage.Children(branchNameToShip)
+	childBranches := validatedConfig.NormalConfig.Lineage.Children(branchNameToShip)
 	proposalsOfChildBranches := LoadProposalsOfChildBranches(LoadProposalsOfChildBranchesArgs{
 		ConnectorOpt:               connector,
-		Lineage:                    validatedConfig.NormalConfig.Git.Lineage,
+		Lineage:                    validatedConfig.NormalConfig.Lineage,
 		Offline:                    repo.IsOffline,
 		OldBranch:                  branchNameToShip,
 		OldBranchHasTrackingBranch: branchToShip.HasTrackingBranch(),

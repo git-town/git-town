@@ -72,10 +72,8 @@ func TestChanges(t *testing.T) {
 				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
-				Git: configdomain.PartialConfig{
-					Lineage: lineage,
-				},
 				NormalConfigData: configdomain.NormalConfigData{
+					Lineage:           lineage,
 					PushHook:          false,
 					PerennialBranches: gitdomain.LocalBranchNames{},
 				},
@@ -168,10 +166,8 @@ func TestChanges(t *testing.T) {
 				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
-				Git: configdomain.PartialConfig{
-					Lineage: lineage,
-				},
 				NormalConfigData: configdomain.NormalConfigData{
+					Lineage:           lineage,
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          false,
 				},
@@ -266,10 +262,8 @@ func TestChanges(t *testing.T) {
 				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
-				Git: configdomain.PartialConfig{
-					Lineage: lineage,
-				},
 				NormalConfigData: configdomain.NormalConfigData{
+					Lineage:           lineage,
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          false,
 				},
@@ -411,10 +405,8 @@ func TestChanges(t *testing.T) {
 				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
-				Git: configdomain.PartialConfig{
-					Lineage: lineage,
-				},
 				NormalConfigData: configdomain.NormalConfigData{
+					Lineage:           lineage,
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          false,
 				},
@@ -514,10 +506,8 @@ func TestChanges(t *testing.T) {
 				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
-				Git: configdomain.PartialConfig{
-					Lineage: lineage,
-				},
 				NormalConfigData: configdomain.NormalConfigData{
+					Lineage:           lineage,
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          true,
 				},
@@ -642,10 +632,8 @@ func TestChanges(t *testing.T) {
 				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
-				Git: configdomain.PartialConfig{
-					Lineage: lineage,
-				},
 				NormalConfigData: configdomain.NormalConfigData{
+					Lineage:           lineage,
 					UnknownBranchType: configdomain.BranchTypeFeatureBranch,
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          false,
@@ -766,10 +754,8 @@ func TestChanges(t *testing.T) {
 				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
-				Git: configdomain.PartialConfig{
-					Lineage: lineage,
-				},
 				NormalConfigData: configdomain.NormalConfigData{
+					Lineage:           lineage,
 					UnknownBranchType: configdomain.BranchTypeFeatureBranch,
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          false,
@@ -864,10 +850,8 @@ func TestChanges(t *testing.T) {
 				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
-				Git: configdomain.PartialConfig{
-					Lineage: lineage,
-				},
 				NormalConfigData: configdomain.NormalConfigData{
+					Lineage:           lineage,
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          false,
 				},
@@ -1001,10 +985,8 @@ func TestChanges(t *testing.T) {
 				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
-				Git: configdomain.PartialConfig{
-					Lineage: lineage,
-				},
 				NormalConfigData: configdomain.NormalConfigData{
+					Lineage:           lineage,
 					UnknownBranchType: configdomain.BranchTypeFeatureBranch,
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          true,
@@ -1104,10 +1086,8 @@ func TestChanges(t *testing.T) {
 				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
-				Git: configdomain.PartialConfig{
-					Lineage: lineage,
-				},
 				NormalConfigData: configdomain.NormalConfigData{
+					Lineage:           lineage,
 					UnknownBranchType: configdomain.BranchTypeFeatureBranch,
 				},
 			},
@@ -1197,10 +1177,8 @@ func TestChanges(t *testing.T) {
 				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
-				Git: configdomain.PartialConfig{
-					Lineage: lineage,
-				},
 				NormalConfigData: configdomain.NormalConfigData{
+					Lineage:           lineage,
 					UnknownBranchType: configdomain.BranchTypeFeatureBranch,
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          false,
@@ -1298,10 +1276,8 @@ func TestChanges(t *testing.T) {
 				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
-				Git: configdomain.PartialConfig{
-					Lineage: lineage,
-				},
 				NormalConfigData: configdomain.NormalConfigData{
+					Lineage:           lineage,
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          false,
 				},
@@ -1402,10 +1378,8 @@ func TestChanges(t *testing.T) {
 				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
-				Git: configdomain.PartialConfig{
-					Lineage: lineage,
-				},
 				NormalConfigData: configdomain.NormalConfigData{
+					Lineage:           lineage,
 					UnknownBranchType: configdomain.BranchTypeFeatureBranch,
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          false,
@@ -1494,10 +1468,8 @@ func TestChanges(t *testing.T) {
 				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
-				Git: configdomain.PartialConfig{
-					Lineage: lineage,
-				},
 				NormalConfigData: configdomain.NormalConfigData{
+					Lineage:           lineage,
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          false,
 				},
@@ -1581,10 +1553,8 @@ func TestChanges(t *testing.T) {
 				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
-				Git: configdomain.PartialConfig{
-					Lineage: lineage,
-				},
 				NormalConfigData: configdomain.NormalConfigData{
+					Lineage:           lineage,
 					PerennialBranches: gitdomain.LocalBranchNames{},
 					PushHook:          false,
 				},
@@ -1683,10 +1653,8 @@ func TestChanges(t *testing.T) {
 				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
-				Git: configdomain.PartialConfig{
-					Lineage: lineage,
-				},
 				NormalConfigData: configdomain.NormalConfigData{
+					Lineage:           lineage,
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          false,
 				},

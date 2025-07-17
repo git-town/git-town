@@ -115,6 +115,7 @@ func (self PartialConfig) ToNormalConfig(defaults NormalConfigData) NormalConfig
 		GitLabToken:              self.GitLabToken,
 		GiteaToken:               self.GiteaToken,
 		HostingOriginHostname:    self.HostingOriginHostname,
+		Lineage:                  self.Lineage,
 		NewBranchType:            self.NewBranchType.Or(defaults.NewBranchType),
 		ObservedRegex:            self.ObservedRegex,
 		Offline:                  self.Offline.GetOrElse(defaults.Offline),
