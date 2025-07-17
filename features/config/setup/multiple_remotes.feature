@@ -41,8 +41,6 @@ Feature: Configure a different development remote
 
       [branches]
       main = "main"
-      perennials = []
-      perennial-regex = ""
 
       [create]
       new-branch-type = "feature"
