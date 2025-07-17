@@ -14,6 +14,7 @@ import (
 
 type UnvalidatedConfig struct {
 	File              Option[configdomain.PartialConfig] // content of git-town.toml, nil = no config file exists
+	Git               configdomain.PartialConfig         // configuration data taken from Git metadata, in particular the unscoped Git metadata
 	NormalConfig      NormalConfig
 	UnvalidatedConfig configdomain.UnvalidatedConfigData
 }
@@ -51,9 +52,9 @@ func (self *UnvalidatedConfig) Reload(backend subshelldomain.RunnerQuerier) (glo
 		file: self.File,
 		git:  unscopedGitConfig,
 	})
+	self.Git = unscopedGitConfig
 	self.UnvalidatedConfig = unvalidatedConfig
 	self.NormalConfig = NormalConfig{
-		Git:              unscopedGitConfig,
 		GitVersion:       self.NormalConfig.GitVersion,
 		NormalConfigData: normalConfig,
 	}
@@ -61,7 +62,7 @@ func (self *UnvalidatedConfig) Reload(backend subshelldomain.RunnerQuerier) (glo
 }
 
 func (self *UnvalidatedConfig) RemoveMainBranch(runner subshelldomain.Runner) {
-	if self.NormalConfig.Git.MainBranch.IsSome() {
+	if self.Git.MainBranch.IsSome() {
 		_ = gitconfig.RemoveMainBranch(runner)
 	}
 }
@@ -93,8 +94,8 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 	})
 	return UnvalidatedConfig{
 		File: args.ConfigFile,
+		Git:  args.GitConfig,
 		NormalConfig: NormalConfig{
-			Git:              args.GitConfig,
 			GitVersion:       args.GitVersion,
 			NormalConfigData: normalConfig,
 		},

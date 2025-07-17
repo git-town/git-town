@@ -64,7 +64,7 @@ func (self *ValidatedConfig) RemoveDeletedBranchesFromLineage(branchInfos gitdom
 	for _, nonExistingBranch := range nonExistingBranches {
 		self.NormalConfig.CleanupBranchFromLineage(runner, nonExistingBranch)
 	}
-	for _, entry := range self.NormalConfig.Git.Lineage.Entries() {
+	for _, entry := range self.NormalConfig.Lineage.Entries() {
 		childDoesntExist := nonExistingBranches.Contains(entry.Child)
 		parentDoesntExist := nonExistingBranches.Contains(entry.Parent)
 		if childDoesntExist || parentDoesntExist {

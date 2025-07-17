@@ -255,7 +255,7 @@ func determineSwapData(args []string, repo execute.OpenRepoResult, cliConfig cli
 		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	previousBranchOpt := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
-	parentBranch, hasParentBranch := validatedConfig.NormalConfig.Git.Lineage.Parent(branchNameToSwap).Get()
+	parentBranch, hasParentBranch := validatedConfig.NormalConfig.Lineage.Parent(branchNameToSwap).Get()
 	if !hasParentBranch {
 		return data, false, errors.New(messages.SwapNoParent)
 	}
@@ -264,11 +264,11 @@ func determineSwapData(args []string, repo execute.OpenRepoResult, cliConfig cli
 		return data, false, fmt.Errorf(messages.SwapParentNotLocal, parentBranch)
 	}
 	parentBranchType := validatedConfig.BranchType(parentBranch)
-	grandParentBranch, hasGrandParentBranch := validatedConfig.NormalConfig.Git.Lineage.Parent(parentBranch).Get()
+	grandParentBranch, hasGrandParentBranch := validatedConfig.NormalConfig.Lineage.Parent(parentBranch).Get()
 	if !hasGrandParentBranch {
 		return data, false, errors.New(messages.SwapNoGrandParent)
 	}
-	childBranches := validatedConfig.NormalConfig.Git.Lineage.Children(branchNameToSwap)
+	childBranches := validatedConfig.NormalConfig.Lineage.Children(branchNameToSwap)
 	children := make([]swapChildBranch, len(childBranches))
 	for c, childBranch := range childBranches {
 		proposal := None[forgedomain.Proposal]()
@@ -304,7 +304,7 @@ func determineSwapData(args []string, repo execute.OpenRepoResult, cliConfig cli
 	if parentContainsMerges {
 		return data, false, fmt.Errorf(messages.SwapNeedsCompress, parentBranch)
 	}
-	lineageBranches := validatedConfig.NormalConfig.Git.Lineage.BranchNames()
+	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
 	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
 	return swapData{
 		branchInfosLastRun:  branchInfosLastRun,

@@ -249,7 +249,7 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, cliConfig clicon
 	perennialBranches := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
 	var branchNamesToCompress gitdomain.LocalBranchNames
 	if compressEntireStack {
-		branchNamesToCompress = validatedConfig.NormalConfig.Git.Lineage.BranchLineageWithoutRoot(initialBranch, perennialBranches)
+		branchNamesToCompress = validatedConfig.NormalConfig.Lineage.BranchLineageWithoutRoot(initialBranch, perennialBranches)
 	} else {
 		branchNamesToCompress = gitdomain.LocalBranchNames{initialBranch}
 	}
@@ -269,7 +269,7 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, cliConfig clicon
 		if err := validateBranchIsSynced(branchNameToCompress, branchInfo.SyncStatus); err != nil {
 			return data, exit, err
 		}
-		parent := validatedConfig.NormalConfig.Git.Lineage.Parent(branchNameToCompress)
+		parent := validatedConfig.NormalConfig.Lineage.Parent(branchNameToCompress)
 		commits, err := repo.Git.CommitsInBranch(repo.Backend, branchNameToCompress, parent)
 		if err != nil {
 			return data, exit, err
@@ -397,7 +397,7 @@ func validateBranchIsSynced(branchName gitdomain.LocalBranchName, syncStatus git
 
 func validateCompressBranchesData(data compressBranchesData, repo execute.OpenRepoResult) error {
 	for _, branch := range data.branchesToCompress {
-		if parent, hasParent := data.config.NormalConfig.Git.Lineage.Parent(branch.name).Get(); hasParent {
+		if parent, hasParent := data.config.NormalConfig.Lineage.Parent(branch.name).Get(); hasParent {
 			isInSyncWithParent, err := repo.Git.BranchInSyncWithParent(repo.Backend, branch.name, parent.BranchName())
 			if err != nil {
 				return err

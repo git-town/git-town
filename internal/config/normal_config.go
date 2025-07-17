@@ -18,8 +18,7 @@ import (
 
 type NormalConfig struct {
 	configdomain.NormalConfigData
-	Git        configdomain.PartialConfig // configuration data taken from Git metadata, in particular the unscoped Git metadata
-	GitVersion git.Version                // version of the installed Git executable
+	GitVersion git.Version // version of the installed Git executable
 }
 
 // removes the given branch from the lineage, and updates its children

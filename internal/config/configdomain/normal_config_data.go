@@ -27,6 +27,7 @@ type NormalConfigData struct {
 	GitLabToken              Option[forgedomain.GitLabToken]
 	GiteaToken               Option[forgedomain.GiteaToken]
 	HostingOriginHostname    Option[HostingOriginHostname]
+	Lineage                  Lineage
 	NewBranchType            Option[BranchType]
 	ObservedRegex            Option[ObservedRegex]
 	Offline                  Offline

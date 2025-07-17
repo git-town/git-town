@@ -296,7 +296,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, cliConfig 
 	if err != nil || exit {
 		return data, exit, err
 	}
-	ancestorOpt := latestExistingAncestor(initialBranch, branchesSnapshot.Branches, validatedConfig.NormalConfig.Git.Lineage)
+	ancestorOpt := latestExistingAncestor(initialBranch, branchesSnapshot.Branches, validatedConfig.NormalConfig.Lineage)
 	ancestor, hasAncestor := ancestorOpt.Get()
 	if !hasAncestor {
 		return data, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branchesSnapshot.Active)
@@ -312,7 +312,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, cliConfig 
 			return data, exit, err
 		}
 	}
-	branchNamesToSync := validatedConfig.NormalConfig.Git.Lineage.BranchAndAncestors(initialBranch)
+	branchNamesToSync := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(initialBranch)
 	if detached {
 		branchNamesToSync = validatedConfig.RemovePerennials(branchNamesToSync)
 	}
@@ -321,7 +321,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, cliConfig 
 	if err != nil {
 		return data, false, err
 	}
-	parentAndAncestors := validatedConfig.NormalConfig.Git.Lineage.BranchAndAncestors(ancestor)
+	parentAndAncestors := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(ancestor)
 	slices.Reverse(parentAndAncestors)
 	proposalOpt := None[forgedomain.Proposal]()
 	if !repo.IsOffline {
