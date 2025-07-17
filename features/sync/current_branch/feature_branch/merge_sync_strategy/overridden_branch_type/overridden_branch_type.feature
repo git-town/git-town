@@ -13,8 +13,8 @@ Feature: sync the current branch which has a branch-type override
     And the current branch is "contribution"
     And I ran "git-town hack"
     When I run "git-town sync" and enter into the dialog:
-      | DIALOG                           | KEYS  |
-      | parent branch for "contribution" | enter |
+      | DIALOG                         | KEYS  |
+      | parent branch for contribution | enter |
 
   Scenario: result
     Then Git Town runs the commands
