@@ -156,6 +156,10 @@ func RemoveSyncUpstream(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncUpstream)
 }
 
+func RemoveUnknownBranchType(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyUnknownBranchType)
+}
+
 func SetAlias(runner subshelldomain.Runner, aliasableCommand configdomain.AliasableCommand) error {
 	return SetConfigValue(runner, configdomain.ConfigScopeGlobal, aliasableCommand.Key().Key(), "town "+aliasableCommand.String())
 }
