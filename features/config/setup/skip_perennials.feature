@@ -17,17 +17,17 @@ Feature: don't ask for perennial branches if no branches that could be perennial
       | unknown branch type         | enter      |                                             |
       | origin hostname             | enter      |                                             |
       | forge type                  | enter      |                                             |
-      | sync-feature-strategy       | enter      |                                             |
-      | sync-perennial-strategy     | enter      |                                             |
-      | sync-prototype-strategy     | enter      |                                             |
-      | sync-upstream               | enter      |                                             |
-      | sync-tags                   | enter      |                                             |
-      | share-new-branches          | enter      |                                             |
-      | push-hook                   | enter      |                                             |
-      | new-branch-type             | enter      |                                             |
-      | ship-strategy               | enter      |                                             |
-      | ship-delete-tracking-branch | enter      |                                             |
-      | save config to Git metadata | down enter |                                             |
+      | sync feature strategy       | enter      |                                             |
+      | sync perennial strategy     | enter      |                                             |
+      | sync prototype strategy     | enter      |                                             |
+      | sync upstream               | enter      |                                             |
+      | sync tags                   | enter      |                                             |
+      | share new branches          | enter      |                                             |
+      | push hook                   | enter      |                                             |
+      | new branch type             | enter      |                                             |
+      | ship strategy               | enter      |                                             |
+      | ship delete tracking branch | enter      |                                             |
+      | config storage              | down enter |                                             |
 
   Scenario: result
     Then the main branch is now "main"

@@ -156,6 +156,10 @@ func RemoveSyncUpstream(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncUpstream)
 }
 
+func RemoveUnknownBranchType(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyUnknownBranchType)
+}
+
 func SetAlias(runner subshelldomain.Runner, aliasableCommand configdomain.AliasableCommand) error {
 	return SetConfigValue(runner, configdomain.ConfigScopeGlobal, aliasableCommand.Key().Key(), "town "+aliasableCommand.String())
 }
@@ -181,32 +185,32 @@ func SetCodebergToken(runner subshelldomain.Runner, value forgedomain.CodebergTo
 	return SetConfigValue(runner, scope, configdomain.KeyCodebergToken, value.String())
 }
 
-func SetContributionRegex(runner subshelldomain.Runner, regex configdomain.ContributionRegex) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyContributionRegex, regex.String())
+func SetContributionRegex(runner subshelldomain.Runner, regex configdomain.ContributionRegex, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyContributionRegex, regex.String())
 }
 
-func SetDevRemote(runner subshelldomain.Runner, remote gitdomain.Remote) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyDevRemote, remote.String())
+func SetDevRemote(runner subshelldomain.Runner, remote gitdomain.Remote, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyDevRemote, remote.String())
 }
 
-func SetFeatureRegex(runner subshelldomain.Runner, regex configdomain.FeatureRegex) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyFeatureRegex, regex.String())
+func SetFeatureRegex(runner subshelldomain.Runner, regex configdomain.FeatureRegex, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyFeatureRegex, regex.String())
 }
 
-func SetForgeType(runner subshelldomain.Runner, forgeType forgedomain.ForgeType) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyForgeType, forgeType.String())
+func SetForgeType(runner subshelldomain.Runner, forgeType forgedomain.ForgeType, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyForgeType, forgeType.String())
 }
 
-func SetGitHubConnectorType(runner subshelldomain.Runner, value forgedomain.GitHubConnectorType) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGitHubConnectorType, value.String())
+func SetGitHubConnectorType(runner subshelldomain.Runner, value forgedomain.GitHubConnectorType, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyGitHubConnectorType, value.String())
 }
 
 func SetGitHubToken(runner subshelldomain.Runner, value forgedomain.GitHubToken, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyGitHubToken, value.String())
 }
 
-func SetGitLabConnectorType(runner subshelldomain.Runner, value forgedomain.GitLabConnectorType) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGitLabConnectorType, value.String())
+func SetGitLabConnectorType(runner subshelldomain.Runner, value forgedomain.GitLabConnectorType, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyGitLabConnectorType, value.String())
 }
 
 func SetGitLabToken(runner subshelldomain.Runner, value forgedomain.GitLabToken, scope configdomain.ConfigScope) error {
@@ -217,74 +221,74 @@ func SetGiteaToken(runner subshelldomain.Runner, value forgedomain.GiteaToken, s
 	return SetConfigValue(runner, scope, configdomain.KeyGiteaToken, value.String())
 }
 
-func SetMainBranch(runner subshelldomain.Runner, value gitdomain.LocalBranchName) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyMainBranch, value.String())
+func SetMainBranch(runner subshelldomain.Runner, value gitdomain.LocalBranchName, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyMainBranch, value.String())
 }
 
-func SetNewBranchType(runner subshelldomain.Runner, value configdomain.BranchType) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyNewBranchType, value.String())
+func SetNewBranchType(runner subshelldomain.Runner, value configdomain.BranchType, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyNewBranchType, value.String())
 }
 
-func SetObservedRegex(runner subshelldomain.Runner, regex configdomain.ObservedRegex) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyObservedRegex, regex.String())
+func SetObservedRegex(runner subshelldomain.Runner, regex configdomain.ObservedRegex, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyObservedRegex, regex.String())
 }
 
 func SetOffline(runner subshelldomain.Runner, value configdomain.Offline) error {
 	return SetConfigValue(runner, configdomain.ConfigScopeGlobal, configdomain.KeyOffline, value.String())
 }
 
-func SetOriginHostname(runner subshelldomain.Runner, hostname configdomain.HostingOriginHostname) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyHostingOriginHostname, hostname.String())
+func SetOriginHostname(runner subshelldomain.Runner, hostname configdomain.HostingOriginHostname, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyHostingOriginHostname, hostname.String())
 }
 
 func SetParent(runner subshelldomain.Runner, child, parent gitdomain.LocalBranchName) error {
 	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.NewParentKey(child), parent.String())
 }
 
-func SetPerennialBranches(runner subshelldomain.Runner, branches gitdomain.LocalBranchNames) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyPerennialBranches, branches.Join(" "))
+func SetPerennialBranches(runner subshelldomain.Runner, branches gitdomain.LocalBranchNames, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyPerennialBranches, branches.Join(" "))
 }
 
-func SetPerennialRegex(runner subshelldomain.Runner, value configdomain.PerennialRegex) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyPerennialRegex, value.String())
+func SetPerennialRegex(runner subshelldomain.Runner, value configdomain.PerennialRegex, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyPerennialRegex, value.String())
 }
 
-func SetPushHook(runner subshelldomain.Runner, value configdomain.PushHook) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyPushHook, strconv.FormatBool(bool(value)))
+func SetPushHook(runner subshelldomain.Runner, value configdomain.PushHook, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyPushHook, strconv.FormatBool(bool(value)))
 }
 
-func SetShareNewBranches(runner subshelldomain.Runner, value configdomain.ShareNewBranches) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyShareNewBranches, value.String())
+func SetShareNewBranches(runner subshelldomain.Runner, value configdomain.ShareNewBranches, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyShareNewBranches, value.String())
 }
 
-func SetShipDeleteTrackingBranch(runner subshelldomain.Runner, value configdomain.ShipDeleteTrackingBranch) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.IsTrue()))
+func SetShipDeleteTrackingBranch(runner subshelldomain.Runner, value configdomain.ShipDeleteTrackingBranch, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.IsTrue()))
 }
 
-func SetShipStrategy(runner subshelldomain.Runner, value configdomain.ShipStrategy) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyShipStrategy, value.String())
+func SetShipStrategy(runner subshelldomain.Runner, value configdomain.ShipStrategy, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyShipStrategy, value.String())
 }
 
-func SetSyncFeatureStrategy(runner subshelldomain.Runner, value configdomain.SyncFeatureStrategy) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncFeatureStrategy, value.String())
+func SetSyncFeatureStrategy(runner subshelldomain.Runner, value configdomain.SyncFeatureStrategy, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeySyncFeatureStrategy, value.String())
 }
 
-func SetSyncPerennialStrategy(runner subshelldomain.Runner, value configdomain.SyncPerennialStrategy) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncPerennialStrategy, value.String())
+func SetSyncPerennialStrategy(runner subshelldomain.Runner, value configdomain.SyncPerennialStrategy, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeySyncPerennialStrategy, value.String())
 }
 
-func SetSyncPrototypeStrategy(runner subshelldomain.Runner, value configdomain.SyncPrototypeStrategy) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncPrototypeStrategy, value.String())
+func SetSyncPrototypeStrategy(runner subshelldomain.Runner, value configdomain.SyncPrototypeStrategy, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeySyncPrototypeStrategy, value.String())
 }
 
-func SetSyncTags(runner subshelldomain.Runner, value configdomain.SyncTags) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncTags, value.String())
+func SetSyncTags(runner subshelldomain.Runner, value configdomain.SyncTags, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeySyncTags, value.String())
 }
 
-func SetSyncUpstream(runner subshelldomain.Runner, value configdomain.SyncUpstream) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncUpstream, strconv.FormatBool(value.IsTrue()))
+func SetSyncUpstream(runner subshelldomain.Runner, value configdomain.SyncUpstream, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeySyncUpstream, strconv.FormatBool(value.IsTrue()))
 }
 
-func SetUnknownBranchType(runner subshelldomain.Runner, value configdomain.BranchType) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyUnknownBranchType, value.String())
+func SetUnknownBranchType(runner subshelldomain.Runner, value configdomain.BranchType, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyUnknownBranchType, value.String())
 }
