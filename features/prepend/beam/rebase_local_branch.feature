@@ -15,7 +15,7 @@ Feature: prepend a branch to a local feature branch using the "rebase" sync stra
     And wait 1 second to ensure new Git timestamps
     When I run "git-town prepend parent --beam" and enter into the dialog:
       | DIALOG          | KEYS        |
-      | select commit 1 | space enter |
+      | commits to beam | space enter |
 
   Scenario: result
     Then Git Town runs the commands

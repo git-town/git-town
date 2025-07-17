@@ -16,8 +16,8 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
     And Git setting "git-town.sync-feature-strategy" is "compress"
     And wait 1 second to ensure new Git timestamps
     When I run "git-town prepend parent --beam" and enter into the dialog:
-      | DIALOG                 | KEYS                             |
-      | select commits 1 and 4 | space down down down space enter |
+      | DIALOG          | KEYS                             |
+      | commits to beam | space down down down space enter |
 
   Scenario: result
     Then Git Town runs the commands

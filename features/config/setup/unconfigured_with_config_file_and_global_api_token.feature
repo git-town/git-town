@@ -43,11 +43,11 @@ Feature: don't ask for information already provided by the config file
       perennial-branches = "ff-only"
       """
     When I run "git-town config setup" and enter into the dialogs:
-      | DIALOG                     | KEYS       |
-      | welcome                    | enter      |
-      | aliases                    | enter      |
-      | GitHub token               | enter      |
-      | save config to config file | down enter |
+      | DIALOG                | KEYS       |
+      | welcome               | enter      |
+      | aliases               | enter      |
+      | github connector type | enter      |
+      | config storage        | down enter |
     Then Git Town runs no commands
     And there are still no perennial branches
     And local Git setting "git-town.dev-remote" still doesn't exist
