@@ -34,8 +34,8 @@ const (
 
 func ConfigStorage(inputs dialogcomponents.TestInputs) (ConfigStorageOption, dialogdomain.Exit, error) {
 	entries := list.NewEntries(
-		ConfigStorageOptionFile,
 		ConfigStorageOptionGit,
+		ConfigStorageOptionFile,
 	)
 	selection, exit, err := dialogcomponents.RadioList(entries, 0, configStorageTitle, configStorageHelp, inputs, "config-storage")
 	fmt.Printf(messages.ConfigStorage, dialogcomponents.FormattedSelection(selection.Short(), exit))
