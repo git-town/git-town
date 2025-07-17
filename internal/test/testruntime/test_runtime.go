@@ -102,7 +102,6 @@ func New(workingDir, homeDir, binDir string) commands.TestCommands {
 		EnvConfig:     configdomain.EmptyPartialConfig(),
 		FinalMessages: stringslice.NewCollector(),
 		GitConfig:     configdomain.EmptyPartialConfig(),
-		GitVersion:    git.Version{Major: 2, Minor: 38},
 	})
 	unvalidatedConfig.UnvalidatedConfig.MainBranch = gitdomain.NewLocalBranchNameOption("main")
 	testCommands := commands.TestCommands{

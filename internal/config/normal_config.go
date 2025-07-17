@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/envconfig"
 	"github.com/git-town/git-town/v21/internal/config/gitconfig"
-	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/git/giturl"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
@@ -18,7 +17,6 @@ import (
 
 type NormalConfig struct {
 	configdomain.NormalConfigData
-	GitVersion git.Version // version of the installed Git executable
 }
 
 // DevURL provides the URL for the development remote.

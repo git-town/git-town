@@ -5,7 +5,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/envconfig"
 	"github.com/git-town/git-town/v21/internal/config/gitconfig"
-	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
@@ -55,7 +54,6 @@ func (self *UnvalidatedConfig) Reload(backend subshelldomain.RunnerQuerier) (glo
 	self.Git = unscopedGitConfig
 	self.UnvalidatedConfig = unvalidatedConfig
 	self.NormalConfig = NormalConfig{
-		GitVersion:       self.NormalConfig.GitVersion,
 		NormalConfigData: normalConfig,
 	}
 	return globalSnapshot, localSnapshot, unscopedSnapshot
@@ -96,7 +94,6 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 		File: args.ConfigFile,
 		Git:  args.GitConfig,
 		NormalConfig: NormalConfig{
-			GitVersion:       args.GitVersion,
 			NormalConfigData: normalConfig,
 		},
 		UnvalidatedConfig: unvalidatedConfig,
@@ -109,7 +106,6 @@ type NewUnvalidatedConfigArgs struct {
 	EnvConfig     configdomain.PartialConfig
 	FinalMessages stringslice.Collector
 	GitConfig     configdomain.PartialConfig
-	GitVersion    git.Version
 }
 
 func mergeConfigs(args mergeConfigsArgs) (configdomain.UnvalidatedConfigData, configdomain.NormalConfigData) {
