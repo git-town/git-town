@@ -82,11 +82,13 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 		cli:  args.CliConfig,
 		env:  args.EnvConfig,
 		file: args.ConfigFile,
-		git:  args.GitConfig,
+		git:  args.GitUnscoped,
 	})
 	return UnvalidatedConfig{
 		File:              args.ConfigFile,
-		GitUnscoped:       args.GitConfig,
+		GitGlobal:         args.GitLocal,
+		GitLocal:          args.GitLocal,
+		GitUnscoped:       args.GitUnscoped,
 		NormalConfig:      normalConfig,
 		UnvalidatedConfig: unvalidatedConfig,
 	}
@@ -97,7 +99,9 @@ type NewUnvalidatedConfigArgs struct {
 	ConfigFile    Option[configdomain.PartialConfig]
 	EnvConfig     configdomain.PartialConfig
 	FinalMessages stringslice.Collector
-	GitConfig     configdomain.PartialConfig
+	GitLocal      configdomain.PartialConfig
+	GitGlobal     configdomain.PartialConfig
+	GitUnscoped   configdomain.PartialConfig
 }
 
 func mergeConfigs(args mergeConfigsArgs) (configdomain.UnvalidatedConfigData, NormalConfig) {
@@ -116,5 +120,5 @@ type mergeConfigsArgs struct {
 	cli  cliconfig.CliConfig
 	env  configdomain.PartialConfig         // configuration data taken from environment variables
 	file Option[configdomain.PartialConfig] // data of the configuration file
-	git  configdomain.PartialConfig         // data from the unscoped Git configuration
+	git  configdomain.PartialConfig
 }
