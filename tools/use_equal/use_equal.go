@@ -17,7 +17,7 @@ type cmpEqualFinder struct {
 }
 
 // Visit is called for each node in the AST.
-func (v *cmpEqualFinder) Visit(node ast.Node) ast.Visitor {
+func (self *cmpEqualFinder) Visit(node ast.Node) ast.Visitor {
 	// ensure the node is a function call expression
 	callExpr, ok := node.(*ast.CallExpr)
 	if !ok {
