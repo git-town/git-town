@@ -47,7 +47,7 @@ Feature: enter the Codeberg API token
       | git config git-town.sync-upstream true               |
       | git config git-town.sync-tags true                   |
     And local Git setting "git-town.forge-type" still doesn't exist
-    And local Git setting "git-town.codeberg-token" is now "123456"
+    And local Git setting "git-town.codeberg-token" is now "code-tok"
 
   Scenario: select Codeberg manually
     When I run "git-town config setup" and enter into the dialog:
