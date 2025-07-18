@@ -61,9 +61,3 @@ func (self Entries[S]) IndexOfFunc(needle S, equalFn func(a, b S) bool) int {
 	}
 	return 0
 }
-
-// narrower type needed to use the NewEntries convenience function
-type ComparableStringer interface {
-	comparable
-	fmt.Stringer
-}

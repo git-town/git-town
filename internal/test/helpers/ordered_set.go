@@ -3,15 +3,17 @@ package helpers
 import (
 	"fmt"
 	"strings"
+
+	"github.com/google/go-cmp/cmp"
 )
 
 // OrderedSet is a Set that provides its elements in the order they were received.
-type OrderedSet[T comparable] struct {
+type OrderedSet[T any] struct {
 	elements []T
 }
 
 // NewOrderedSet provides instances of OrderedSet populated with the given elements.
-func NewOrderedSet[T comparable](elements ...T) OrderedSet[T] {
+func NewOrderedSet[T any](elements ...T) OrderedSet[T] {
 	return OrderedSet[T]{elements}
 }
 
@@ -27,7 +29,7 @@ func (self OrderedSet[T]) Add(element T) OrderedSet[T] {
 // Contains indicates whether this Set contains the given element.
 func (self OrderedSet[T]) Contains(element T) bool {
 	for _, existing := range self.elements {
-		if element == existing {
+		if cmp.Equal(element, existing) {
 			return true
 		}
 	}
