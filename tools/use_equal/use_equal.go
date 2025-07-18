@@ -21,28 +21,28 @@ func (self *cmpEqualFinder) Visit(node ast.Node) ast.Visitor {
 	// ensure the node is a function call expression
 	callExpr, ok := node.(*ast.CallExpr)
 	if !ok {
-		return v
+		return self
 	}
 
 	// ensure the function being called is a selector expression (e.g., "pkg.Func")
 	selectorExpr, ok := callExpr.Fun.(*ast.SelectorExpr)
 	if !ok {
-		return v
+		return self
 	}
 
 	// ensure the package part of the selector is an identifier (e.g., "cmp")
 	pkgIdent, ok := selectorExpr.X.(*ast.Ident)
 	if !ok {
-		return v
+		return self
 	}
 
 	// ensure the package name is "cmp" and the function name is "Equal"
 	if pkgIdent.Name == "cmp" && selectorExpr.Sel.Name == "Equal" {
-		position := v.fileSet.Position(callExpr.Pos())
-		fmt.Printf("%s:%d: Please call equal.Equal instead of cmp.Equal\n", v.filePath, position.Line)
+		position := self.fileSet.Position(callExpr.Pos())
+		fmt.Printf("%s:%d: Please call equal.Equal instead of cmp.Equal\n", self.filePath, position.Line)
 	}
 
-	return v
+	return self
 }
 
 // lintFile parses a single Go file and walks all its AST nodes to find cmp.Equal calls.
