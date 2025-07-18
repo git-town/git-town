@@ -18,19 +18,19 @@ type cmpEqualFinder struct {
 
 // Visit is called for each node in the AST.
 func (self *cmpEqualFinder) Visit(node ast.Node) ast.Visitor {
-	// ensure the node is a function call expression
+	// ensure the AST node is a function call expression
 	callExpr, ok := node.(*ast.CallExpr)
 	if !ok {
 		return self
 	}
 
-	// ensure the function being called is a selector expression (e.g., "pkg.Func")
+	// ensure the function being called is a selector expression, e.g. "pkg.Func"
 	selectorExpr, ok := callExpr.Fun.(*ast.SelectorExpr)
 	if !ok {
 		return self
 	}
 
-	// ensure the package part of the selector is an identifier (e.g., "cmp")
+	// ensure the package part of the selector is an identifier, e.g. "cmp"
 	pkgIdent, ok := selectorExpr.X.(*ast.Ident)
 	if !ok {
 		return self
@@ -45,7 +45,7 @@ func (self *cmpEqualFinder) Visit(node ast.Node) ast.Visitor {
 	return self
 }
 
-// lintFile parses a single Go file and walks all its AST nodes to find cmp.Equal calls.
+// parses the given Go file and walks its AST nodes to find cmp.Equal calls
 func lintFile(filePath string) error {
 	fileSet := token.NewFileSet() // holds position information
 	fileAST, err := parser.ParseFile(fileSet, filePath, nil, parser.ParseComments)
