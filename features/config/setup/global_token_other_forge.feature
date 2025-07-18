@@ -48,6 +48,6 @@ Feature: a global API token of another forge exists
       | git config git-town.sync-upstream true               |
       | git config git-town.sync-tags true                   |
     And local Git setting "git-town.forge-type" still doesn't exist
-    And local Git setting "git-town.github-token" is now "123456"
+    And local Git setting "git-town.github-token" is now "ghtok"
     And local Git setting "git-town.gitlab-token" now doesn't exist
     And global Git setting "git-town.gitlab-token" is still "987654"
