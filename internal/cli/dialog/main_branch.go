@@ -26,12 +26,49 @@ This is typically the branch called
 )
 
 // MainBranch lets the user select a new main branch for this repo.
-func MainBranch(localBranches gitdomain.LocalBranchNames, defaultEntryOpt Option[gitdomain.LocalBranchName], inputs dialogcomponents.TestInputs) (gitdomain.LocalBranchName, dialogdomain.Exit, error) {
-	cursor := 0
-	if defaultEntry, hasDefaultEntry := defaultEntryOpt.Get(); hasDefaultEntry {
-		cursor = slice.Index(localBranches, defaultEntry).GetOrElse(0)
+func MainBranch(args MainBranchArgs) (Option[gitdomain.LocalBranchName], dialogdomain.Exit, error) {
+	// if mainbranch is configured in unscoped Git config but not in local: add option "use global setting" with None
+	// if set in local config: don't add None option, preselect local setting
+	// if no local config: don't add None option, keep existing preselect nothing
+	// if global and local: add global option but preselect the local one
+	entries := list.Entries[Option[gitdomain.LocalBranchName]]{}
+	if unscopedMain, hasUnscoped := args.UnscopedGitMainBranch.Get(); hasUnscoped {
+		if args.LocalGitMainBranch.IsNone() {
+			if len(args.LocalBranches) == 1 && unscopedMain == args.LocalBranches[0] {
+				return None[gitdomain.LocalBranchName](), false, nil
+			}
+			entries = append(entries, list.Entry[Option[gitdomain.LocalBranchName]]{
+				Data: None[gitdomain.LocalBranchName](),
+				Text: fmt.Sprintf("use global setting (%s)", unscopedMain),
+			})
+		}
 	}
-	selection, exit, err := dialogcomponents.RadioList(list.NewEntries(localBranches...), cursor, mainBranchTitle, MainBranchHelp, inputs, "main-branch")
+	for _, localBranch := range args.LocalBranches {
+		entries = append(entries, list.Entry[Option[gitdomain.LocalBranchName]]{
+			Data: Some(localBranch),
+			Text: localBranch.String(),
+		})
+	}
+	cursor := 0
+	if gitStandard, hasStandard := args.GitStandardBranch.Get(); hasStandard {
+		if index, hasIndex := slice.Index(args.LocalBranches, gitStandard).Get(); hasIndex {
+			cursor = index
+		}
+	}
+	if localMain, hasLocal := args.LocalGitMainBranch.Get(); hasLocal {
+		if index, hasIndex := slice.Index(args.LocalBranches, localMain).Get(); hasIndex {
+			cursor = index
+		}
+	}
+	selection, exit, err := dialogcomponents.RadioList(entries, cursor, mainBranchTitle, MainBranchHelp, args.Inputs, "main-branch")
 	fmt.Printf(messages.MainBranch, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
+}
+
+type MainBranchArgs struct {
+	GitStandardBranch     Option[gitdomain.LocalBranchName]
+	Inputs                dialogcomponents.TestInputs
+	LocalBranches         gitdomain.LocalBranchNames
+	LocalGitMainBranch    Option[gitdomain.LocalBranchName]
+	UnscopedGitMainBranch Option[gitdomain.LocalBranchName]
 }
