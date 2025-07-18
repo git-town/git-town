@@ -5,7 +5,6 @@ import (
 	"go/ast"
 	"go/parser"
 	"go/token"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -74,45 +73,16 @@ func shouldSkipPath(path string) bool {
 }
 
 func main() {
-	p := "."
-	info, err := os.Stat(p)
+	err := filepath.Walk(".", func(path string, fileInfo os.FileInfo, err error) error {
+		if err != nil || shouldSkipPath(path) || fileInfo.IsDir() || !strings.HasSuffix(path, ".go") {
+			return err
+		}
+		if err := lintFile(path); err != nil {
+			fmt.Fprintf(os.Stderr, "Error linting file %s: %v\n", path, err)
+		}
+		return nil
+	})
 	if err != nil {
-		log.Fatalf("Error accessing path %s: %v\n", p, err)
-	}
-
-	if info.IsDir() {
-		// If it's a directory, walk it recursively.
-		err := filepath.Walk(p, func(path string, d os.FileInfo, err error) error {
-			if err != nil {
-				return err
-			}
-
-			// Check if the current path (file or directory) should be skipped.
-			if shouldSkipPath(path) {
-				return nil // Return filepath.SkipDir if it's a vendor or pkg/equal directory, or nil to skip file.
-			}
-
-			// Only process .go files and skip directories themselves.
-			if !d.IsDir() && strings.HasSuffix(path, ".go") {
-				if err := lintFile(path); err != nil {
-					fmt.Fprintf(os.Stderr, "Error linting file %s: %v\n", path, err)
-				}
-			}
-			return nil
-		})
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error walking directory %s: %v\n", p, err)
-		}
-	} else if strings.HasSuffix(p, ".go") {
-		// If it's a .go file, lint it directly.
-		// Check if the file path itself is within a vendor or pkg/equal directory.
-		if shouldSkipPath(p) { // We know it's not a directory here
-			log.Fatalf("Skipping file: %s\n", p)
-		}
-		if err := lintFile(p); err != nil {
-			fmt.Fprintf(os.Stderr, "Error linting file %s: %v\n", p, err)
-		}
-	} else {
-		fmt.Fprintf(os.Stderr, "Skipping non-.go file or unsupported path: %s\n", p)
+		fmt.Fprintf(os.Stderr, "Error walking current directory: %v\n", err)
 	}
 }
