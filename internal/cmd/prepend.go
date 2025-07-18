@@ -452,7 +452,7 @@ func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages
 }
 
 // provides the strategy to use to sync a branch after beaming some of its commits to its new parent branch
-func afterBeamToParentSyncStrategy(branchType configdomain.BranchType, config configdomain.NormalConfigData) Option[configdomain.SyncStrategy] {
+func afterBeamToParentSyncStrategy(branchType configdomain.BranchType, config config.NormalConfig) Option[configdomain.SyncStrategy] {
 	switch branchType {
 	case
 		configdomain.BranchTypeContributionBranch,
@@ -506,7 +506,7 @@ func moveCommitsToPrependedBranch(prog Mutable[program.Program], data prependDat
 	}
 	// sync the initial branch with the new parent branch to remove the moved commits from the initial branch
 	initialBranchType := data.config.BranchType(data.initialBranch)
-	syncWithParent(prog, data.targetBranch, data.initialBranchInfo, initialBranchType, data.config.NormalConfig.NormalConfigData)
+	syncWithParent(prog, data.targetBranch, data.initialBranchInfo, initialBranchType, data.config.NormalConfig)
 	// go back to the target branch
 	prog.Value.Add(
 		&opcodes.Checkout{Branch: data.targetBranch},
@@ -514,7 +514,7 @@ func moveCommitsToPrependedBranch(prog Mutable[program.Program], data prependDat
 }
 
 // basic sync of the current branch with its parent after beaming some commits into the parent
-func syncWithParent(prog Mutable[program.Program], parentName gitdomain.LocalBranchName, initialBranchInfo gitdomain.BranchInfo, initialBranchType configdomain.BranchType, config configdomain.NormalConfigData) {
+func syncWithParent(prog Mutable[program.Program], parentName gitdomain.LocalBranchName, initialBranchInfo gitdomain.BranchInfo, initialBranchType configdomain.BranchType, config config.NormalConfig) {
 	if syncStrategy, hasSyncStrategy := afterBeamToParentSyncStrategy(initialBranchType, config).Get(); hasSyncStrategy {
 		switch syncStrategy {
 		case configdomain.SyncStrategyCompress, configdomain.SyncStrategyMerge:

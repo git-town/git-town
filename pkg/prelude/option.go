@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"reflect"
+
+	"github.com/google/go-cmp/cmp"
 )
 
 // Option provides infrastructure for optional (nullable) values
@@ -134,9 +136,9 @@ func (self *Option[T]) UnmarshalJSON(b []byte) error {
 }
 
 // Creates a new Option containing None if the given value is the zero value, otherwise Some.
-func NewOption[T comparable](value T) Option[T] {
+func NewOption[T any](value T) Option[T] {
 	var zero T
-	if value == zero {
+	if cmp.Equal(value, zero) {
 		return None[T]()
 	}
 	return Some(value)

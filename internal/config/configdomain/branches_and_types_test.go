@@ -35,9 +35,7 @@ func TestBranchesAndTypes(t *testing.T) {
 				MainBranch: gitdomain.NewLocalBranchNameOption("main"),
 			},
 			NormalConfig: config.NormalConfig{
-				NormalConfigData: configdomain.NormalConfigData{
-					PerennialBranches: gitdomain.NewLocalBranchNames("perennial"),
-				},
+				PerennialBranches: gitdomain.NewLocalBranchNames("perennial"),
 			},
 		}
 		have.AddMany(gitdomain.NewLocalBranchNames("main", "perennial"), &unvalidatedConfig)

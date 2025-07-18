@@ -2,13 +2,15 @@ package list
 
 import (
 	"fmt"
+
+	"github.com/google/go-cmp/cmp"
 )
 
 // Entries provides methods for a collection of Entry instances.
-type Entries[S comparable] []Entry[S]
+type Entries[S any] []Entry[S]
 
 // creates an Entries instance containing the given records
-func NewEntries[S ComparableStringer](records ...S) Entries[S] {
+func NewEntries[S fmt.Stringer](records ...S) Entries[S] {
 	result := make([]Entry[S], len(records))
 	for r, record := range records {
 		result[r] = Entry[S]{
@@ -43,7 +45,7 @@ func (self Entries[S]) FirstEnabled() int {
 // provides the position of the given needle in this list
 func (self Entries[S]) IndexOf(needle S) int {
 	for e, entry := range self {
-		if entry.Data == needle {
+		if cmp.Equal(entry.Data, needle) {
 			return e
 		}
 	}
@@ -58,10 +60,4 @@ func (self Entries[S]) IndexOfFunc(needle S, equalFn func(a, b S) bool) int {
 		}
 	}
 	return 0
-}
-
-// narrower type needed to use the NewEntries convenience function
-type ComparableStringer interface {
-	comparable
-	fmt.Stringer
 }

@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	normalConfigDataPath = "internal/config/configdomain/normal_config_data.go"
+	normalConfigDataPath = "internal/config/normal_config.go"
 	printConfigPath      = "internal/cmd/config/root.go"
 )
 
@@ -32,10 +32,10 @@ func main() {
 }
 
 func FindDefinedFields(text string) []string {
-	structRE := regexp.MustCompile(`type NormalConfigData struct {([^}]*)}`)
+	structRE := regexp.MustCompile(`type NormalConfig struct {([^}]*)}`)
 	match := structRE.FindStringSubmatch(text)
 	if len(match) < 2 {
-		log.Fatalf("Error: Failed to find NormalConfigData struct")
+		log.Fatalf("Error: Failed to find NormalConfig struct")
 	}
 	result := []string{}
 	for _, line := range strings.Split(strings.TrimSpace(match[1]), "\n") {
