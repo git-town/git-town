@@ -435,12 +435,12 @@ func enterMainBranch(repo execute.OpenRepoResult, data setupData) (userInput Opt
 		Inputs:                data.dialogInputs,
 		LocalBranches:         data.localBranches.Names(),
 		LocalGitMainBranch:    repo.UnvalidatedConfig.GitLocal.MainBranch,
-		UnscopedGitMainBranch: repo.UnvalidatedConfig.NormalConfig.Git.MainBranch,
+		UnscopedGitMainBranch: repo.UnvalidatedConfig.GitUnscoped.MainBranch,
 	})
 	if err != nil || exit {
 		return None[gitdomain.LocalBranchName](), "", exit, err
 	}
-	actualMainBranch = userInput.Or(repo.UnvalidatedConfig.NormalConfig.Git.MainBranch).GetOrPanic()
+	actualMainBranch = userInput.Or(repo.UnvalidatedConfig.GitUnscoped.MainBranch).GetOrPanic()
 	return userInput, actualMainBranch, false, nil
 }
 
