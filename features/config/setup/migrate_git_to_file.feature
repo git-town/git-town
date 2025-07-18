@@ -30,6 +30,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | feature regex               | enter      |
       | contribution regex          | enter      |
       | observed regex              | enter      |
+      | new branch type             | enter      |
       | unknown branch type         | enter      |
       | dev-remote                  |            |
       | origin hostname             | enter      |
@@ -41,7 +42,6 @@ Feature: migrate existing configuration in Git metadata to a config file
       | sync tags                   | enter      |
       | share new branches          | enter      |
       | push hook                   | enter      |
-      | new branch type             | enter      |
       | ship strategy               | enter      |
       | ship delete tracking branch | enter      |
       | config storage              | down enter |

@@ -173,6 +173,13 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 			return emptyResult, exit, err
 		}
 	}
+	newBranchType := repo.UnvalidatedConfig.NormalConfig.NewBranchType
+	if configFile.NewBranchType.IsNone() {
+		newBranchType, exit, err = dialog.NewBranchType(newBranchType, data.dialogInputs)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+	}
 	unknownBranchType := None[configdomain.UnknownBranchType]()
 	if configFile.UnknownBranchType.IsNone() {
 		unknownBranchType, exit, err = dialog.UnknownBranchType(repo.UnvalidatedConfig, data.dialogInputs)
@@ -336,13 +343,6 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	pushHook := repo.UnvalidatedConfig.NormalConfig.PushHook
 	if configFile.PushHook.IsNone() {
 		pushHook, exit, err = dialog.PushHook(pushHook, data.dialogInputs)
-		if err != nil || exit {
-			return emptyResult, exit, err
-		}
-	}
-	newBranchType := repo.UnvalidatedConfig.NormalConfig.NewBranchType
-	if configFile.NewBranchType.IsNone() {
-		newBranchType, exit, err = dialog.NewBranchType(newBranchType, data.dialogInputs)
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}

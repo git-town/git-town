@@ -16,6 +16,7 @@ Feature: enter the GitLab API token
       | feature regex               | enter             |                                             |
       | contribution regex          | enter             |                                             |
       | observed regex              | enter             |                                             |
+      | new branch type             | enter             |                                             |
       | unknown branch type         | enter             |                                             |
       | origin hostname             | enter             |                                             |
       | forge type                  | enter             |                                             |
@@ -29,7 +30,6 @@ Feature: enter the GitLab API token
       | sync tags                   | enter             |                                             |
       | share new branches          | enter             |                                             |
       | push hook                   | enter             |                                             |
-      | new branch type             | enter             |                                             |
       | ship strategy               | enter             |                                             |
       | ship delete tracking branch | enter             |                                             |
       | config storage              | enter             |                                             |
@@ -61,6 +61,7 @@ Feature: enter the GitLab API token
       | feature regex               | enter             |                                             |
       | contribution regex          | enter             |                                             |
       | observed regex              | enter             |                                             |
+      | new branch type             | enter             |                                             |
       | unknown branch type         | enter             |                                             |
       | origin hostname             | enter             |                                             |
       | forge type                  | up enter          |                                             |
@@ -74,7 +75,6 @@ Feature: enter the GitLab API token
       | sync tags                   | enter             |                                             |
       | share new branches          | enter             |                                             |
       | push hook                   | enter             |                                             |
-      | new branch type             | enter             |                                             |
       | ship strategy               | enter             |                                             |
       | ship delete tracking branch | enter             |                                             |
       | config storage              | enter             |                                             |
@@ -109,6 +109,7 @@ Feature: enter the GitLab API token
       | feature regex               | enter             |                                             |
       | contribution regex          | enter             |                                             |
       | observed regex              | enter             |                                             |
+      | new branch type             | enter             |                                             |
       | unknown branch type         | enter             |                                             |
       | origin hostname             | enter             |                                             |
       | forge type                  | enter             |                                             |
@@ -122,7 +123,6 @@ Feature: enter the GitLab API token
       | sync tags                   | enter             |                                             |
       | share new branches          | enter             |                                             |
       | push hook                   | enter             |                                             |
-      | new branch type             | enter             |                                             |
       | ship strategy               | enter             |                                             |
       | ship delete tracking branch | enter             |                                             |
       | config storage              | enter             | git metadata                                |
@@ -156,6 +156,7 @@ Feature: enter the GitLab API token
       | feature regex               | enter                                     |                                             |
       | contribution regex          | enter                                     |                                             |
       | observed regex              | enter                                     |                                             |
+      | new branch type             | enter                                     |                                             |
       | unknown branch type         | enter                                     |                                             |
       | origin hostname             | enter                                     |                                             |
       | forge type                  | enter                                     |                                             |
@@ -169,7 +170,6 @@ Feature: enter the GitLab API token
       | sync tags                   | enter                                     |                                             |
       | share new branches          | enter                                     |                                             |
       | push hook                   | enter                                     |                                             |
-      | new branch type             | enter                                     |                                             |
       | ship strategy               | enter                                     |                                             |
       | ship delete tracking branch | enter                                     |                                             |
       | config storage              | enter                                     |                                             |
