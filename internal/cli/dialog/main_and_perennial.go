@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
@@ -13,28 +14,26 @@ import (
 )
 
 func MainAndPerennials(args MainAndPerennialsArgs) (mainBranch gitdomain.LocalBranchName, perennials gitdomain.LocalBranchNames, exit dialogdomain.Exit, err error) {
-	unvalidatedMain, hasMain := args.UnvalidatedMain.Get()
+	unvalidatedMain, hasMain := args.UnvalidatedConfig.UnvalidatedConfig.MainBranch.Get()
 	if hasMain {
-		return unvalidatedMain, args.UnvalidatedPerennials, false, nil
+		return unvalidatedMain, args.UnvalidatedConfig.NormalConfig.PerennialBranches, false, nil
 	}
-	if args.HasConfigFile {
-		return unvalidatedMain, args.UnvalidatedPerennials, false, errors.New(messages.ConfigMainbranchInConfigFile)
+	if args.UnvalidatedConfig.File.IsSome() {
+		return unvalidatedMain, args.UnvalidatedConfig.NormalConfig.PerennialBranches, false, errors.New(messages.ConfigMainbranchInConfigFile)
 	}
 	fmt.Print(messages.ConfigNeeded)
 	mainBranch, exit, err = MainBranch(args.LocalBranches, args.GetDefaultBranch(args.Backend), args.DialogInputs)
 	if err != nil || exit {
-		return mainBranch, args.UnvalidatedPerennials, exit, err
+		return mainBranch, args.UnvalidatedConfig.NormalConfig.PerennialBranches, exit, err
 	}
-	perennials, exit, err = PerennialBranches(args.LocalBranches, args.UnvalidatedPerennials, mainBranch, args.DialogInputs)
+	perennials, exit, err = PerennialBranches(args.LocalBranches, args.UnvalidatedConfig.NormalConfig.PerennialBranches, mainBranch, args.DialogInputs)
 	return mainBranch, perennials, exit, err
 }
 
 type MainAndPerennialsArgs struct {
-	Backend               subshelldomain.RunnerQuerier
-	DialogInputs          dialogcomponents.TestInputs
-	GetDefaultBranch      func(subshelldomain.Querier) Option[gitdomain.LocalBranchName]
-	HasConfigFile         bool
-	LocalBranches         gitdomain.LocalBranchNames
-	UnvalidatedMain       Option[gitdomain.LocalBranchName]
-	UnvalidatedPerennials gitdomain.LocalBranchNames
+	Backend           subshelldomain.RunnerQuerier
+	DialogInputs      dialogcomponents.TestInputs
+	GetDefaultBranch  func(subshelldomain.Querier) Option[gitdomain.LocalBranchName]
+	LocalBranches     gitdomain.LocalBranchNames
+	UnvalidatedConfig config.UnvalidatedConfig
 }
