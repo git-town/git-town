@@ -75,7 +75,7 @@ func executeConfigSetup(cliConfig cliconfig.CliConfig) error {
 	if err != nil || exit {
 		return err
 	}
-	if err = saveAll(enterDataResult, repo.UnvalidatedConfig.NormalConfig.Git, data.configFile, data, repo.Frontend); err != nil {
+	if err = saveAll(enterDataResult, repo.UnvalidatedConfig, data.configFile, data, repo.Frontend); err != nil {
 		return err
 	}
 	return configinterpreter.Finished(configinterpreter.FinishedArgs{
@@ -173,9 +173,16 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 			return emptyResult, exit, err
 		}
 	}
-	unknownBranchType := repo.UnvalidatedConfig.NormalConfig.UnknownBranchType
+	newBranchType := repo.UnvalidatedConfig.NormalConfig.NewBranchType
+	if configFile.NewBranchType.IsNone() {
+		newBranchType, exit, err = dialog.NewBranchType(newBranchType, data.dialogInputs)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+	}
+	unknownBranchType := None[configdomain.UnknownBranchType]()
 	if configFile.UnknownBranchType.IsNone() {
-		unknownBranchType, exit, err = dialog.UnknownBranchType(unknownBranchType, data.dialogInputs)
+		unknownBranchType, exit, err = dialog.UnknownBranchType(repo.UnvalidatedConfig, data.dialogInputs)
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}
@@ -281,7 +288,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		bitbucketUsername:    bitbucketUsername,
 		codebergToken:        codebergToken,
 		determinedForgeType:  actualForgeType,
-		existingConfig:       data.config.NormalConfig.NormalConfigData,
+		existingConfig:       data.config.NormalConfig,
 		giteaToken:           giteaToken,
 		githubToken:          githubToken,
 		gitlabToken:          gitlabToken,
@@ -340,13 +347,6 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 			return emptyResult, exit, err
 		}
 	}
-	newBranchType := repo.UnvalidatedConfig.NormalConfig.NewBranchType
-	if configFile.NewBranchType.IsNone() {
-		newBranchType, exit, err = dialog.NewBranchType(newBranchType, data.dialogInputs)
-		if err != nil || exit {
-			return emptyResult, exit, err
-		}
-	}
 	shipStrategy := repo.UnvalidatedConfig.NormalConfig.ShipStrategy
 	if configFile.ShipStrategy.IsNone() {
 		shipStrategy, exit, err = dialog.ShipStrategy(shipStrategy, data.dialogInputs)
@@ -400,7 +400,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		SyncPrototypeStrategy:    Some(syncPrototypeStrategy),
 		SyncTags:                 Some(syncTags),
 		SyncUpstream:             Some(syncUpstream),
-		UnknownBranchType:        Some(unknownBranchType),
+		UnknownBranchType:        unknownBranchType,
 		Verbose:                  None[configdomain.Verbose](), // the setup assistant doesn't ask for this
 	}
 	return tokenScope, forgeType, false, nil
@@ -542,7 +542,7 @@ type enterTokenScopeArgs struct {
 	bitbucketUsername    Option[forgedomain.BitbucketUsername]
 	codebergToken        Option[forgedomain.CodebergToken]
 	determinedForgeType  Option[forgedomain.ForgeType]
-	existingConfig       configdomain.NormalConfigData
+	existingConfig       config.NormalConfig
 	giteaToken           Option[forgedomain.GiteaToken]
 	githubToken          Option[forgedomain.GitHubToken]
 	gitlabToken          Option[forgedomain.GitLabToken]
@@ -654,35 +654,35 @@ func loadSetupData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (
 	}, exit, nil
 }
 
-func saveAll(userInput userInput, existingGitConfig configdomain.PartialConfig, configFile Option[configdomain.PartialConfig], data setupData, frontend subshelldomain.Runner) error {
+func saveAll(userInput userInput, unvalidatedConfig config.UnvalidatedConfig, configFile Option[configdomain.PartialConfig], data setupData, frontend subshelldomain.Runner) error {
 	fc := gohacks.ErrorCollector{}
 	fc.Check(
-		saveAliases(userInput.data.Aliases, existingGitConfig.Aliases, frontend),
+		saveAliases(userInput.data.Aliases, unvalidatedConfig.GitGlobal.Aliases, frontend),
 	)
 	if forgeType, hasForgeType := userInput.determinedForgeType.Get(); hasForgeType {
 		switch forgeType {
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
 			fc.Check(
-				saveBitbucketUsername(userInput.data.BitbucketUsername, existingGitConfig.BitbucketUsername, userInput.scope, frontend),
+				saveBitbucketUsername(userInput.data.BitbucketUsername, unvalidatedConfig.GitLocal.BitbucketUsername, userInput.scope, frontend),
 			)
 			fc.Check(
-				saveBitbucketAppPassword(userInput.data.BitbucketAppPassword, existingGitConfig.BitbucketAppPassword, userInput.scope, frontend),
+				saveBitbucketAppPassword(userInput.data.BitbucketAppPassword, unvalidatedConfig.GitLocal.BitbucketAppPassword, userInput.scope, frontend),
 			)
 		case forgedomain.ForgeTypeCodeberg:
 			fc.Check(
-				saveCodebergToken(userInput.data.CodebergToken, existingGitConfig.CodebergToken, userInput.scope, frontend),
+				saveCodebergToken(userInput.data.CodebergToken, unvalidatedConfig.GitLocal.CodebergToken, userInput.scope, frontend),
 			)
 		case forgedomain.ForgeTypeGitHub:
 			fc.Check(
-				saveGitHubToken(userInput.data.GitHubToken, existingGitConfig.GitHubToken, userInput.scope, userInput.data.GitHubConnectorType, frontend),
+				saveGitHubToken(userInput.data.GitHubToken, unvalidatedConfig.GitLocal.GitHubToken, userInput.scope, userInput.data.GitHubConnectorType, frontend),
 			)
 		case forgedomain.ForgeTypeGitLab:
 			fc.Check(
-				saveGitLabToken(userInput.data.GitLabToken, existingGitConfig.GitLabToken, userInput.scope, userInput.data.GitLabConnectorType, frontend),
+				saveGitLabToken(userInput.data.GitLabToken, unvalidatedConfig.GitLocal.GitLabToken, userInput.scope, userInput.data.GitLabConnectorType, frontend),
 			)
 		case forgedomain.ForgeTypeGitea:
 			fc.Check(
-				saveGiteaToken(userInput.data.GiteaToken, existingGitConfig.GiteaToken, userInput.scope, frontend),
+				saveGiteaToken(userInput.data.GiteaToken, unvalidatedConfig.GitLocal.GiteaToken, userInput.scope, frontend),
 			)
 		}
 	}
@@ -691,9 +691,9 @@ func saveAll(userInput userInput, existingGitConfig configdomain.PartialConfig, 
 	}
 	switch userInput.storageLocation {
 	case dialog.ConfigStorageOptionFile:
-		return saveToFile(userInput, existingGitConfig, frontend)
+		return saveToFile(userInput, unvalidatedConfig.GitLocal, frontend)
 	case dialog.ConfigStorageOptionGit:
-		return saveToGit(userInput, existingGitConfig, configFile, data, frontend)
+		return saveToGit(userInput, unvalidatedConfig.GitLocal, configFile, data, frontend)
 	}
 	return nil
 }
@@ -851,7 +851,7 @@ func saveBitbucketUsername(valueToWriteToGit Option[forgedomain.BitbucketUsernam
 	return gitconfig.RemoveBitbucketUsername(frontend)
 }
 
-func saveNewBranchType(valueToWriteToGit Option[configdomain.BranchType], valueAlreadyInGit Option[configdomain.BranchType], runner subshelldomain.Runner) error {
+func saveNewBranchType(valueToWriteToGit Option[configdomain.NewBranchType], valueAlreadyInGit Option[configdomain.NewBranchType], runner subshelldomain.Runner) error {
 	if valueToWriteToGit.Equal(valueAlreadyInGit) {
 		return nil
 	}
@@ -862,7 +862,7 @@ func saveNewBranchType(valueToWriteToGit Option[configdomain.BranchType], valueA
 	return nil
 }
 
-func saveUnknownBranchType(valueToWriteToGit Option[configdomain.BranchType], valueAlreadyInGit Option[configdomain.BranchType], runner subshelldomain.Runner) error {
+func saveUnknownBranchType(valueToWriteToGit Option[configdomain.UnknownBranchType], valueAlreadyInGit Option[configdomain.UnknownBranchType], runner subshelldomain.Runner) error {
 	if valueAlreadyInGit.Equal(valueToWriteToGit) {
 		return nil
 	}
