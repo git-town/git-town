@@ -75,19 +75,17 @@ func lintFile(filePath string) error {
 }
 
 // shouldSkipPath indicates whether a given path should be skipped
-func shouldSkipPath(path string) (bool, error) {
+func shouldSkipPath(path string) bool {
 	// Use filepath.Clean to resolve any ".." or "." components and get a canonical path.
 	cleanedPath := filepath.Clean(path)
-
-	// Check for "vendor" component
 	if strings.HasPrefix(cleanedPath, "vendor"+string(filepath.Separator)) {
-		return true, filepath.SkipDir
+		return true
 	}
 	if strings.HasPrefix(cleanedPath, "pkg"+string(filepath.Separator)+"equal"+string(filepath.Separator)) {
-		return true, filepath.SkipDir
+		return true
 	}
 
-	return false, nil // Path should not be skipped.
+	return false // Path should not be skipped.
 }
 
 func main() {
@@ -117,9 +115,8 @@ func main() {
 				}
 
 				// Check if the current path (file or directory) should be skipped.
-				skip, skipErr := shouldSkipPath(path)
-				if skip {
-					return skipErr // Return filepath.SkipDir if it's a vendor or pkg/equal directory, or nil to skip file.
+				if shouldSkipPath(path) {
+					return nil // Return filepath.SkipDir if it's a vendor or pkg/equal directory, or nil to skip file.
 				}
 
 				// Only process .go files and skip directories themselves.
@@ -136,8 +133,7 @@ func main() {
 		} else if strings.HasSuffix(p, ".go") {
 			// If it's a .go file, lint it directly.
 			// Check if the file path itself is within a vendor or pkg/equal directory.
-			skip, _ := shouldSkipPath(p) // We know it's not a directory here
-			if skip {
+			if shouldSkipPath(p) { // We know it's not a directory here
 				fmt.Fprintf(os.Stderr, "Skipping file: %s\n", p)
 				continue
 			}
