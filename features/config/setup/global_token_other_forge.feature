@@ -15,6 +15,7 @@ Feature: a global API token of another forge exists
       | feature regex               | enter             |                                             |
       | contribution regex          | enter             |                                             |
       | observed regex              | enter             |                                             |
+      | new branch type             | enter             |                                             |
       | unknown branch type         | enter             |                                             |
       | origin hostname             | enter             |                                             |
       | forge type                  | enter             |                                             |
@@ -28,7 +29,6 @@ Feature: a global API token of another forge exists
       | sync tags                   | enter             |                                             |
       | share new branches          | enter             |                                             |
       | push hook                   | enter             |                                             |
-      | new branch type             | enter             |                                             |
       | ship strategy               | enter             |                                             |
       | ship delete tracking branch | enter             |                                             |
       | config storage              | enter             |                                             |

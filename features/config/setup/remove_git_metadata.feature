@@ -54,6 +54,7 @@ Feature: remove existing configuration in Git metadata
       | feature regex               | backspace backspace backspace backspace backspace backspace enter           |                     |
       | contribution regex          | backspace backspace backspace backspace backspace backspace backspace enter |                     |
       | observed regex              | backspace backspace backspace backspace backspace enter                     |                     |
+      | new branch type             | up enter                                                                    |                     |
       | unknown branch type         | up enter                                                                    |                     |
       | origin hostname             | backspace backspace backspace backspace enter                               | remove the override |
       | forge type                  | up up up up up enter                                                        | remove the override |
@@ -64,7 +65,6 @@ Feature: remove existing configuration in Git metadata
       | sync tags                   | down enter                                                                  |                     |
       | share new branches          | up enter                                                                    | enable              |
       | push hook                   | down enter                                                                  | enable              |
-      | new branch type             | up enter                                                                    |                     |
       | ship strategy               | down enter                                                                  |                     |
       | ship delete tracking branch | down enter                                                                  | disable             |
       | config storage              | enter                                                                       | git metadata        |

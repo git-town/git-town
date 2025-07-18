@@ -29,6 +29,7 @@ Feature: ask for information not provided by the config file
       | feature regex           | 2 2 2 enter |
       | contribution regex      | 3 3 3 enter |
       | observed regex          | 4 4 4 enter |
+      | new branch type         | enter       |
       | unknown branch type     | enter       |
       | github connector type   | enter       |
       | github token            | 9 9 9 enter |
@@ -38,7 +39,6 @@ Feature: ask for information not provided by the config file
       | sync prototype strategy | enter       |
       | share new branches      | enter       |
       | push hook               | enter       |
-      | new branch type         | enter       |
       | ship strategy           | enter       |
       | config storage          | enter       |
     Then Git Town runs the commands
