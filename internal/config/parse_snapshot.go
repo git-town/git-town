@@ -80,7 +80,8 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	githubConnectorType, err5 := forgedomain.ParseGitHubConnectorType(snapshot[configdomain.KeyGitHubConnectorType])
 	gitlabConnectorType, err6 := forgedomain.ParseGitLabConnectorType(snapshot[configdomain.KeyGitLabConnectorType])
 	lineage, err7 := NewLineageFromSnapshot(snapshot, updateOutdated, runner)
-	newBranchType, err8 := configdomain.ParseBranchType(snapshot[configdomain.KeyNewBranchType])
+	branchType, err8 := configdomain.ParseBranchType(snapshot[configdomain.KeyNewBranchType])
+	newBranchType := configdomain.NewBranchTypeOpt(branchType)
 	observedRegex, err9 := configdomain.ParseObservedRegex(snapshot[configdomain.KeyObservedRegex])
 	offline, err10 := configdomain.ParseOffline(snapshot[configdomain.KeyOffline], configdomain.KeyOffline)
 	perennialRegex, err11 := configdomain.ParsePerennialRegex(snapshot[configdomain.KeyPerennialRegex])
@@ -93,7 +94,8 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	syncPrototypeStrategy, err18 := configdomain.ParseSyncPrototypeStrategy(snapshot[configdomain.KeySyncPrototypeStrategy])
 	syncTags, err19 := configdomain.ParseSyncTags(snapshot[configdomain.KeySyncTags], configdomain.KeySyncTags)
 	syncUpstream, err20 := configdomain.ParseSyncUpstream(snapshot[configdomain.KeySyncUpstream], configdomain.KeySyncUpstream)
-	unknownBranchType, err21 := configdomain.ParseBranchType(snapshot[configdomain.KeyUnknownBranchType])
+	branchType, err21 := configdomain.ParseBranchType(snapshot[configdomain.KeyUnknownBranchType])
+	unknownBranchType := configdomain.UnknownBranchTypeOpt(branchType)
 	return configdomain.PartialConfig{
 		Aliases:                  aliases,
 		BitbucketAppPassword:     forgedomain.ParseBitbucketAppPassword(snapshot[configdomain.KeyBitbucketAppPassword]),

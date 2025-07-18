@@ -621,7 +621,7 @@ func TestChanges(t *testing.T) {
 			},
 			NormalConfig: config.NormalConfig{
 				Lineage:           lineage,
-				UnknownBranchType: configdomain.BranchTypeFeatureBranch,
+				UnknownBranchType: configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch),
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 				PushHook:          false,
 			},
@@ -741,7 +741,7 @@ func TestChanges(t *testing.T) {
 			},
 			NormalConfig: config.NormalConfig{
 				Lineage:           lineage,
-				UnknownBranchType: configdomain.BranchTypeFeatureBranch,
+				UnknownBranchType: configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch),
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 				PushHook:          false,
 			},
@@ -968,7 +968,7 @@ func TestChanges(t *testing.T) {
 			},
 			NormalConfig: config.NormalConfig{
 				Lineage:           lineage,
-				UnknownBranchType: configdomain.BranchTypeFeatureBranch,
+				UnknownBranchType: configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch),
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 				PushHook:          true,
 			},
@@ -1067,7 +1067,7 @@ func TestChanges(t *testing.T) {
 			},
 			NormalConfig: config.NormalConfig{
 				Lineage:           lineage,
-				UnknownBranchType: configdomain.BranchTypeFeatureBranch,
+				UnknownBranchType: configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch),
 			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
@@ -1156,7 +1156,7 @@ func TestChanges(t *testing.T) {
 			},
 			NormalConfig: config.NormalConfig{
 				Lineage:           lineage,
-				UnknownBranchType: configdomain.BranchTypeFeatureBranch,
+				UnknownBranchType: configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch),
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 				PushHook:          false,
 			},
@@ -1353,7 +1353,7 @@ func TestChanges(t *testing.T) {
 			},
 			NormalConfig: config.NormalConfig{
 				Lineage:           lineage,
-				UnknownBranchType: configdomain.BranchTypeFeatureBranch,
+				UnknownBranchType: configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch),
 				PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 				PushHook:          false,
 			},

@@ -368,7 +368,7 @@ func appendProgram(frontend subshelldomain.Runner, data appendFeatureData, final
 		prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: configdomain.BranchTypePrototypeBranch})
 	} else {
 		if newBranchType, hasNewBranchType := data.config.NormalConfig.NewBranchType.Get(); hasNewBranchType {
-			switch newBranchType {
+			switch newBranchType.BranchType() {
 			case
 				configdomain.BranchTypeContributionBranch,
 				configdomain.BranchTypeObservedBranch,
@@ -376,7 +376,7 @@ func appendProgram(frontend subshelldomain.Runner, data appendFeatureData, final
 				configdomain.BranchTypePerennialBranch,
 				configdomain.BranchTypePrototypeBranch,
 				configdomain.BranchTypeFeatureBranch:
-				prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: newBranchType})
+				prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: newBranchType.BranchType()})
 			case configdomain.BranchTypeMainBranch:
 			}
 		}

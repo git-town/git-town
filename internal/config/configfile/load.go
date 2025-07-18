@@ -46,7 +46,7 @@ func Load(rootDir gitdomain.RepoRootDir, fileName string, finalMessages stringsl
 func Validate(data Data, finalMessages stringslice.Collector) (configdomain.PartialConfig, error) {
 	var err error
 	var contributionRegex Option[configdomain.ContributionRegex]
-	var unknownBranchType Option[configdomain.BranchType]
+	var unknownBranchType Option[configdomain.UnknownBranchType]
 	var devRemote Option[gitdomain.Remote]
 	var featureRegex Option[configdomain.FeatureRegex]
 	var forgeType Option[forgedomain.ForgeType]
@@ -54,7 +54,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	var gitLabConnectorType Option[forgedomain.GitLabConnectorType]
 	var hostingOriginHostname Option[configdomain.HostingOriginHostname]
 	var mainBranch Option[gitdomain.LocalBranchName]
-	var newBranchType Option[configdomain.BranchType]
+	var newBranchType Option[configdomain.NewBranchType]
 	var observedRegex Option[configdomain.ObservedRegex]
 	var perennialBranches gitdomain.LocalBranchNames
 	var perennialRegex Option[configdomain.PerennialRegex]
@@ -69,7 +69,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	var syncUpstream Option[configdomain.SyncUpstream]
 	// load legacy definitions first, so that the proper definitions loaded later override them
 	if data.CreatePrototypeBranches != nil {
-		newBranchType = Some(configdomain.BranchTypePrototypeBranch)
+		newBranchType = Some(configdomain.NewBranchType(configdomain.BranchTypePrototypeBranch))
 		finalMessages.Add(messages.CreatePrototypeBranchesDeprecation)
 	}
 	if data.PushNewbranches != nil {
@@ -103,8 +103,9 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			ec.Check(err)
 		}
 		if data.Branches.DefaultType != nil {
-			unknownBranchType, err = configdomain.ParseBranchType(*data.Branches.DefaultType)
+			branchType, err := configdomain.ParseBranchType(*data.Branches.DefaultType)
 			ec.Check(err)
+			unknownBranchType = configdomain.UnknownBranchTypeOpt(branchType)
 		}
 		if data.Branches.FeatureRegex != nil {
 			verifiedRegexOpt, err := configdomain.ParseRegex(*data.Branches.FeatureRegex)
@@ -128,14 +129,16 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			}
 		}
 		if data.Branches.UnknownType != nil {
-			unknownBranchType, err = configdomain.ParseBranchType(*data.Branches.UnknownType)
+			branchType, err := configdomain.ParseBranchType(*data.Branches.UnknownType)
 			ec.Check(err)
+			unknownBranchType = configdomain.UnknownBranchTypeOpt(branchType)
 		}
 	}
 	if data.Create != nil {
 		if data.Create.NewBranchType != nil {
-			newBranchType, err = configdomain.ParseBranchType(*data.Create.NewBranchType)
+			branchType, err := configdomain.ParseBranchType(*data.Create.NewBranchType)
 			ec.Check(err)
+			newBranchType = configdomain.NewBranchTypeOpt(branchType)
 		}
 		if data.Create.PushNewbranches != nil {
 			shareNewBranches = Some(configdomain.ParseShareNewBranchesDeprecatedBool(*data.Create.PushNewbranches))
