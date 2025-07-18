@@ -15,6 +15,7 @@ Feature: override an existing Git alias
       | feature regex               | enter      |
       | contribution regex          | enter      |
       | observed regex              | enter      |
+      | new branch type             | enter      |
       | unknown branch type         | enter      |
       | origin hostname             | enter      |
       | forge type                  | enter      |
@@ -25,7 +26,6 @@ Feature: override an existing Git alias
       | sync tags                   | enter      |
       | share new branches          | enter      |
       | push hook                   | enter      |
-      | new branch type             | enter      |
       | ship strategy               | enter      |
       | ship delete tracking branch | enter      |
       | config storage              | down enter |

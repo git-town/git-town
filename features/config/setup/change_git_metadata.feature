@@ -19,15 +19,16 @@ Feature: change existing information in Git metadata
       | aliases                     | a enter                |
       | main branch                 | enter                  |
       | perennial branches          | space down space enter |
-      | perennial regex             | 3 3 6 6 enter          |
+      | perennial regex             |          3 3 6 6 enter |
       | feature regex               | u s e r enter          |
-      | contribution regex          | 1 1 1 1 enter          |
-      | observed regex              | 2 2 2 2 enter          |
+      | contribution regex          |          1 1 1 1 enter |
+      | observed regex              |          2 2 2 2 enter |
+      | new branch type             | down enter             |
       | unknown branch type         | down enter             |
       | origin hostname             | c o d e enter          |
       | forge type                  | up up enter            |
       | github connector type       | enter                  |
-      | github token                | 1 2 3 4 5 6 enter      |
+      | github token                |      1 2 3 4 5 6 enter |
       | token scope                 | enter                  |
       | sync feature strategy       | down enter             |
       | sync perennial strategy     | down enter             |
@@ -36,7 +37,6 @@ Feature: change existing information in Git metadata
       | sync tags                   | down enter             |
       | share-new-branches          | down enter             |
       | push hook                   | down enter             |
-      | new branch type             | down enter             |
       | ship strategy               | down down enter        |
       | ship delete tracking branch | down enter             |
       | config storage              | enter                  |

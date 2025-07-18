@@ -14,6 +14,7 @@ Feature: Configure a different development remote
       | feature regex               | enter      |
       | contribution regex          | enter      |
       | observed regex              | enter      |
+      | new branch type             | enter      |
       | unknown branch type         | enter      |
       | dev-remote                  | up enter   |
       | origin hostname             | enter      |
@@ -25,7 +26,6 @@ Feature: Configure a different development remote
       | sync tags                   | enter      |
       | share new branches          | enter      |
       | push hook                   | enter      |
-      | new branch type             | enter      |
       | ship strategy               | enter      |
       | ship delete tracking branch | enter      |
       | config storage              | down enter |
@@ -38,21 +38,21 @@ Feature: Configure a different development remote
     And the configuration file is now:
       """
       # More info around this file at https://www.git-town.com/configuration-file
-
+      
       [branches]
       main = "main"
-
+      
       [create]
       new-branch-type = "feature"
       share-new-branches = "no"
-
+      
       [hosting]
       dev-remote = "fork"
-
+      
       [ship]
       delete-tracking-branch = true
       strategy = "api"
-
+      
       [sync]
       feature-strategy = "merge"
       perennial-strategy = "rebase"

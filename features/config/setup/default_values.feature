@@ -19,6 +19,7 @@ Feature: Accepting all default values leads to a working setup
       | feature regex               | enter      |
       | contribution regex          | enter      |
       | observed regex              | enter      |
+      | new branch type             | enter      |
       | unknown branch type         | enter      |
       | origin hostname             | enter      |
       | forge type                  | enter      |
@@ -29,7 +30,6 @@ Feature: Accepting all default values leads to a working setup
       | sync tags                   | enter      |
       | share new branches          | enter      |
       | push hook                   | enter      |
-      | new branch type             | enter      |
       | ship strategy               | enter      |
       | ship delete tracking branch | enter      |
       | config storage              | down enter |
@@ -60,21 +60,21 @@ Feature: Accepting all default values leads to a working setup
     And the configuration file is now:
       """
       # More info around this file at https://www.git-town.com/configuration-file
-
+      
       [branches]
       main = "main"
-
+      
       [create]
       new-branch-type = "feature"
       share-new-branches = "no"
-
+      
       [hosting]
       dev-remote = "origin"
-
+      
       [ship]
       delete-tracking-branch = true
       strategy = "api"
-
+      
       [sync]
       feature-strategy = "merge"
       perennial-strategy = "rebase"

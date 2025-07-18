@@ -16,6 +16,7 @@ Feature: enter the Gitea API token
       | feature regex               | enter             |                                             |
       | contribution regex          | enter             |                                             |
       | observed regex              | enter             |                                             |
+      | new branch type             | enter             |                                             |
       | unknown branch type         | enter             |                                             |
       | origin hostname             | enter             |                                             |
       | forge type                  | enter             | auto-detect                                 |
@@ -28,7 +29,6 @@ Feature: enter the Gitea API token
       | sync tags                   | enter             |                                             |
       | share new branches          | enter             |                                             |
       | push hook                   | enter             |                                             |
-      | new branch type             | enter             |                                             |
       | ship strategy               | enter             |                                             |
       | ship delete tracking branch | enter             |                                             |
       | config storage              | enter             | git metadata                                |
@@ -60,10 +60,11 @@ Feature: enter the Gitea API token
       | feature regex               | enter                     |                                             |
       | contribution regex          | enter                     |                                             |
       | observed regex              | enter                     |                                             |
+      | new branch type             | enter                     |                                             |
       | unknown branch type         | enter                     |                                             |
       | origin hostname             | enter                     |                                             |
       | forge type                  | down down down down enter |                                             |
-      | gitea token                 | 1 2 3 4 5 6 enter         |                                             |
+      | gitea token                 |         1 2 3 4 5 6 enter |                                             |
       | token scope                 | enter                     |                                             |
       | sync feature strategy       | enter                     |                                             |
       | sync perennial strategy     | enter                     |                                             |
@@ -72,7 +73,6 @@ Feature: enter the Gitea API token
       | sync tags                   | enter                     |                                             |
       | share new branches          | enter                     |                                             |
       | push hook                   | enter                     |                                             |
-      | new branch type             | enter                     |                                             |
       | ship strategy               | enter                     |                                             |
       | ship delete tracking branch | enter                     |                                             |
       | config storage              | enter                     | git metadata                                |
@@ -106,6 +106,7 @@ Feature: enter the Gitea API token
       | feature regex               | enter             |                                             |
       | contribution regex          | enter             |                                             |
       | observed regex              | enter             |                                             |
+      | new branch type             | enter             |                                             |
       | unknown branch type         | enter             |                                             |
       | origin hostname             | enter             |                                             |
       | forge type                  | enter             |                                             |
@@ -118,7 +119,6 @@ Feature: enter the Gitea API token
       | sync tags                   | enter             |                                             |
       | share new branches          | enter             |                                             |
       | push hook                   | enter             |                                             |
-      | new branch type             | enter             |                                             |
       | ship strategy               | enter             |                                             |
       | ship delete tracking branch | enter             |                                             |
       | config storage              | enter             | git metadata                                |
@@ -151,6 +151,7 @@ Feature: enter the Gitea API token
       | feature regex               | enter                                     |                                             |
       | contribution regex          | enter                                     |                                             |
       | observed regex              | enter                                     |                                             |
+      | new branch type             | enter                                     |                                             |
       | unknown branch type         | enter                                     |                                             |
       | origin hostname             | enter                                     |                                             |
       | forge type                  | enter                                     |                                             |
@@ -163,7 +164,6 @@ Feature: enter the Gitea API token
       | sync tags                   | enter                                     |                                             |
       | share new branches          | enter                                     |                                             |
       | push hook                   | enter                                     |                                             |
-      | new branch type             | enter                                     |                                             |
       | ship strategy               | enter                                     |                                             |
       | ship delete tracking branch | enter                                     |                                             |
       | config storage              | enter                                     | git metadata                                |

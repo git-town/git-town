@@ -30,6 +30,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | feature regex               | 2 2 2 enter |
       | contribution regex          | 3 3 3 enter |
       | observed regex              | 4 4 4 enter |
+      | new branch type             | enter       |
       | unknown branch type         | enter       |
       | origin hostname             | enter       |
       | forge type                  | enter       |
@@ -40,7 +41,6 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | sync tags                   | enter       |
       | share new branches          | enter       |
       | push hook                   | enter       |
-      | new branch type             | enter       |
       | ship strategy               | enter       |
       | ship delete tracking branch | enter       |
       | config storage              | enter       |
