@@ -11,7 +11,7 @@ import (
 )
 
 // List contains elements and operations common to all BubbleTea-based list implementations.
-type List[S comparable] struct {
+type List[S any] struct {
 	Colors       colors.DialogColors // colors to use for help text
 	Cursor       int                 // index of the currently selected row
 	Entries      Entries[S]          // the entries to select from
@@ -21,7 +21,7 @@ type List[S comparable] struct {
 	Status       Status
 }
 
-func NewList[S comparable](entries Entries[S], cursor int) List[S] {
+func NewList[S any](entries Entries[S], cursor int) List[S] {
 	numberLen := gohacks.NumberLength(len(entries))
 	return List[S]{
 		Status:       StatusActive,
