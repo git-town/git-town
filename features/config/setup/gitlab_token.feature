@@ -100,35 +100,35 @@ Feature: enter the GitLab API token
   Scenario: store GitLab API token globally
     Given my repo's "origin" remote is "git@gitlab.com:git-town/git-town.git"
     When I run "git-town config setup" and enter into the dialog:
-      | DIALOG                      | KEYS              | DESCRIPTION                                 |
-      | welcome                     | enter             |                                             |
-      | aliases                     | enter             |                                             |
-      | main branch                 | enter             |                                             |
-      | perennial branches          |                   | no input here since the dialog doesn't show |
-      | perennial regex             | enter             |                                             |
-      | feature regex               | enter             |                                             |
-      | contribution regex          | enter             |                                             |
-      | observed regex              | enter             |                                             |
-      | new branch type             | enter             |                                             |
-      | unknown branch type         | enter             |                                             |
-      | origin hostname             | enter             |                                             |
-      | forge type                  | enter             |                                             |
-      | gitlab connector type       | enter             | api                                         |
-      | gitlab token                | 1 2 3 4 5 6 enter |                                             |
-      | token scope                 | down enter        |                                             |
-      | sync feature strategy       | enter             |                                             |
-      | sync perennial strategy     | enter             |                                             |
-      | sync prototype strategy     | enter             |                                             |
-      | sync upstream               | enter             |                                             |
-      | sync tags                   | enter             |                                             |
-      | share new branches          | enter             |                                             |
-      | push hook                   | enter             |                                             |
-      | ship strategy               | enter             |                                             |
-      | ship delete tracking branch | enter             |                                             |
-      | config storage              | enter             | git metadata                                |
+      | DIALOG                      | KEYS            | DESCRIPTION                                 |
+      | welcome                     | enter           |                                             |
+      | aliases                     | enter           |                                             |
+      | main branch                 | enter           |                                             |
+      | perennial branches          |                 | no input here since the dialog doesn't show |
+      | perennial regex             | enter           |                                             |
+      | feature regex               | enter           |                                             |
+      | contribution regex          | enter           |                                             |
+      | observed regex              | enter           |                                             |
+      | new branch type             | enter           |                                             |
+      | unknown branch type         | enter           |                                             |
+      | origin hostname             | enter           |                                             |
+      | forge type                  | enter           |                                             |
+      | gitlab connector type       | enter           | api                                         |
+      | gitlab token                | g l t o k enter |                                             |
+      | token scope                 | down enter      |                                             |
+      | sync feature strategy       | enter           |                                             |
+      | sync perennial strategy     | enter           |                                             |
+      | sync prototype strategy     | enter           |                                             |
+      | sync upstream               | enter           |                                             |
+      | sync tags                   | enter           |                                             |
+      | share new branches          | enter           |                                             |
+      | push hook                   | enter           |                                             |
+      | ship strategy               | enter           |                                             |
+      | ship delete tracking branch | enter           |                                             |
+      | config storage              | enter           | git metadata                                |
     Then Git Town runs the commands
       | COMMAND                                              |
-      | git config --global git-town.gitlab-token 123456     |
+      | git config --global git-town.gitlab-token gltok      |
       | git config git-town.new-branch-type feature          |
       | git config git-town.gitlab-connector api             |
       | git config git-town.unknown-branch-type feature      |
