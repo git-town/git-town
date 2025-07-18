@@ -444,6 +444,14 @@ func enterMainBranch(repo execute.OpenRepoResult, data setupData) (userInput Opt
 	return userInput, actualMainBranch, false, nil
 }
 
+// determines the branch that is configured in Git as the default branch
+func determineGitRepoDefaultBranch(repo execute.OpenRepoResult) Option[gitdomain.LocalBranchName] {
+	if defaultBranch, has := gitconfig.DefaultBranch(repo.Backend).Get(); has {
+		return Some(defaultBranch)
+	}
+	return repo.Git.OriginHead(repo.Backend)
+}
+
 func testForgeAuth(args testForgeAuthArgs) (repeat bool, exit dialogdomain.Exit, err error) {
 	if _, inTest := os.LookupEnv(subshell.TestToken); inTest {
 		return false, false, nil
