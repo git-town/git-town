@@ -16,7 +16,7 @@ type cmpEqualFinder struct {
 	fileSet  *token.FileSet // position information for AST nodes in the current file
 }
 
-// Visit is called for each node in the AST.
+// Visit is called by ast.Walk for each node in the AST.
 func (self *cmpEqualFinder) Visit(node ast.Node) ast.Visitor {
 	// ensure the AST node is a function call expression
 	callExpr, ok := node.(*ast.CallExpr)
