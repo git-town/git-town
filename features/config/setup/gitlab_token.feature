@@ -141,7 +141,7 @@ Feature: enter the GitLab API token
       | git config git-town.sync-prototype-strategy merge    |
       | git config git-town.sync-upstream true               |
       | git config git-town.sync-tags true                   |
-    And global Git setting "git-town.gitlab-token" is now "123456"
+    And global Git setting "git-town.gitlab-token" is now "gltok"
 
   Scenario: edit global GitLab token
     Given my repo's "origin" remote is "git@gitlab.com:git-town/git-town.git"
