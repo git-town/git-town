@@ -13,8 +13,7 @@ import (
 )
 
 func MainAndPerennials(args MainAndPerennialsArgs) (mainBranch gitdomain.LocalBranchName, perennials gitdomain.LocalBranchNames, exit dialogdomain.Exit, err error) {
-	unvalidatedMain, hasMain := args.UnvalidatedConfig.UnvalidatedConfig.MainBranch.Get()
-	if hasMain {
+	if unvalidatedMain, hasMain := args.UnvalidatedConfig.UnvalidatedConfig.MainBranch.Get(); hasMain {
 		return unvalidatedMain, args.UnvalidatedConfig.NormalConfig.PerennialBranches, false, nil
 	}
 	fmt.Print(messages.ConfigNeeded)
