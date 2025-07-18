@@ -10,14 +10,14 @@ import (
 	"strings"
 )
 
-// cmpEqualVisitor implements the ast.Visitor interface to find calls to "cmp.Equal".
-type cmpEqualVisitor struct {
+// cmpEqualFinder implements the ast.Visitor interface to find calls to "cmp.Equal".
+type cmpEqualFinder struct {
 	fileSet  *token.FileSet // FileSet to get position information for nodes.
 	filePath string         // Path of the file being currently visited.
 }
 
 // Visit is called for each node in the AST.
-func (v *cmpEqualVisitor) Visit(node ast.Node) ast.Visitor {
+func (v *cmpEqualFinder) Visit(node ast.Node) ast.Visitor {
 	// ensure the node is a function call expression
 	callExpr, ok := node.(*ast.CallExpr)
 	if !ok {
@@ -52,7 +52,7 @@ func lintFile(filePath string) error {
 	if err != nil {
 		return fmt.Errorf("error parsing file %s: %w", filePath, err)
 	}
-	visitor := &cmpEqualVisitor{
+	visitor := &cmpEqualFinder{
 		fileSet:  fileSet,
 		filePath: filePath,
 	}
