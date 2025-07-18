@@ -74,18 +74,16 @@ func lintFile(filePath string) error {
 	return nil
 }
 
-// shouldSkipPath indicates whether a given path should be skipped
+// indicates whether a given path should be skipped
 func shouldSkipPath(path string) bool {
-	// Use filepath.Clean to resolve any ".." or "." components and get a canonical path.
-	cleanedPath := filepath.Clean(path)
+	cleanedPath := filepath.Clean(path) // resolve any ".." or "." components and get a canonical path.
 	if strings.HasPrefix(cleanedPath, "vendor"+string(filepath.Separator)) {
 		return true
 	}
 	if strings.HasPrefix(cleanedPath, "pkg"+string(filepath.Separator)+"equal"+string(filepath.Separator)) {
 		return true
 	}
-
-	return false // Path should not be skipped.
+	return false
 }
 
 func main() {
