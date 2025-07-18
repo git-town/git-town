@@ -29,7 +29,7 @@ type PartialConfig struct {
 	HostingOriginHostname    Option[HostingOriginHostname]
 	Lineage                  Lineage
 	MainBranch               Option[gitdomain.LocalBranchName]
-	NewBranchType            Option[BranchType]
+	NewBranchType            Option[NewBranchType]
 	ObservedRegex            Option[ObservedRegex]
 	Offline                  Option[Offline]
 	PerennialBranches        gitdomain.LocalBranchNames
@@ -43,7 +43,7 @@ type PartialConfig struct {
 	SyncPrototypeStrategy    Option[SyncPrototypeStrategy]
 	SyncTags                 Option[SyncTags]
 	SyncUpstream             Option[SyncUpstream]
-	UnknownBranchType        Option[BranchType]
+	UnknownBranchType        Option[UnknownBranchType]
 	Verbose                  Option[Verbose]
 }
 
@@ -93,45 +93,6 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		SyncUpstream:             other.SyncUpstream.Or(self.SyncUpstream),
 		UnknownBranchType:        other.UnknownBranchType.Or(self.UnknownBranchType),
 		Verbose:                  other.Verbose.Or(self.Verbose),
-	}
-}
-
-func (self PartialConfig) ToNormalConfig(defaults NormalConfigData) NormalConfigData {
-	syncFeatureStrategy := self.SyncFeatureStrategy.GetOrElse(defaults.SyncFeatureStrategy)
-	return NormalConfigData{
-		Aliases:                  self.Aliases,
-		BitbucketAppPassword:     self.BitbucketAppPassword,
-		BitbucketUsername:        self.BitbucketUsername,
-		BranchTypeOverrides:      self.BranchTypeOverrides,
-		CodebergToken:            self.CodebergToken,
-		ContributionRegex:        self.ContributionRegex,
-		DevRemote:                self.DevRemote.GetOrElse(defaults.DevRemote),
-		DryRun:                   self.DryRun.GetOrDefault(),
-		FeatureRegex:             self.FeatureRegex,
-		ForgeType:                self.ForgeType,
-		GitHubConnectorType:      self.GitHubConnectorType,
-		GitHubToken:              self.GitHubToken,
-		GitLabConnectorType:      self.GitLabConnectorType,
-		GitLabToken:              self.GitLabToken,
-		GiteaToken:               self.GiteaToken,
-		HostingOriginHostname:    self.HostingOriginHostname,
-		Lineage:                  self.Lineage,
-		NewBranchType:            self.NewBranchType.Or(defaults.NewBranchType),
-		ObservedRegex:            self.ObservedRegex,
-		Offline:                  self.Offline.GetOrElse(defaults.Offline),
-		PerennialBranches:        self.PerennialBranches,
-		PerennialRegex:           self.PerennialRegex,
-		PushHook:                 self.PushHook.GetOrElse(defaults.PushHook),
-		ShareNewBranches:         self.ShareNewBranches.GetOrElse(defaults.ShareNewBranches),
-		ShipDeleteTrackingBranch: self.ShipDeleteTrackingBranch.GetOrElse(defaults.ShipDeleteTrackingBranch),
-		ShipStrategy:             self.ShipStrategy.GetOrElse(defaults.ShipStrategy),
-		SyncFeatureStrategy:      syncFeatureStrategy,
-		SyncPerennialStrategy:    self.SyncPerennialStrategy.GetOrElse(defaults.SyncPerennialStrategy),
-		SyncPrototypeStrategy:    self.SyncPrototypeStrategy.GetOrElse(NewSyncPrototypeStrategyFromSyncFeatureStrategy(syncFeatureStrategy)),
-		SyncTags:                 self.SyncTags.GetOrElse(defaults.SyncTags),
-		SyncUpstream:             self.SyncUpstream.GetOrElse(defaults.SyncUpstream),
-		UnknownBranchType:        self.UnknownBranchType.GetOrElse(BranchTypeFeatureBranch),
-		Verbose:                  self.Verbose.GetOrDefault(),
 	}
 }
 
