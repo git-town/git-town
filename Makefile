@@ -58,6 +58,7 @@ lint: tools/node_modules tools/rta@${RTA_VERSION}  # lints the main codebase con
 	make --no-print-directory lint-print-config
 	make --no-print-directory lint-structs-sorted
 	make --no-print-directory lint-tests-sorted
+	make --no-print-directory lint-use-equal
 	git diff --check
 	(cd tools/lint_steps && go build && ./lint_steps)
 	tools/rta node tools/node_modules/.bin/gherkin-lint
@@ -105,6 +106,9 @@ lint-structs-sorted:
 
 lint-tests-sorted:
 	@(cd tools/tests_sorted && go build) && ./tools/tests_sorted/tests_sorted
+
+lint-use-equal:
+	@(cd tools/use_equal && go build) && ./tools/use_equal/use_equal
 
 smoke: install  # run the smoke tests
 	@env $(GO_TEST_ARGS) smoke=1 go test . -v -count=1

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/google/go-cmp/cmp"
+	"github.com/git-town/git-town/v21/pkg/equal"
 )
 
 // OrderedSet is a Set that provides its elements in the order they were received.
@@ -29,7 +29,7 @@ func (self OrderedSet[T]) Add(element T) OrderedSet[T] {
 // Contains indicates whether this Set contains the given element.
 func (self OrderedSet[T]) Contains(element T) bool {
 	for _, existing := range self.elements {
-		if cmp.Equal(element, existing) {
+		if equal.Equal(element, existing) {
 			return true
 		}
 	}
