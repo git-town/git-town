@@ -90,7 +90,7 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 	return UnvalidatedConfig{
 		Defaults:          args.Defaults,
 		File:              args.ConfigFile,
-		GitGlobal:         args.GitLocal,
+		GitGlobal:         args.GitGlobal,
 		GitLocal:          args.GitLocal,
 		GitUnscoped:       args.GitUnscoped,
 		NormalConfig:      normalConfig,
