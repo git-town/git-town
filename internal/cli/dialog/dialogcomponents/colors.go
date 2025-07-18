@@ -29,7 +29,7 @@ func FormattedSelection(selection string, exit dialogdomain.Exit) string {
 	return colors.Green().Styled(selection)
 }
 
-// FormattedSelection provides the given dialog choice in a printable format.
+// FormattedOptionalSelection provides the given optional dialog choice in a printable format.
 func FormattedOptionalSelection(value fmt.Stringer, has bool, exit dialogdomain.Exit) string {
 	if exit {
 		return colors.Red().Styled("(aborted)")
