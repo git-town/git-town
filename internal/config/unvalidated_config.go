@@ -99,8 +99,8 @@ type NewUnvalidatedConfigArgs struct {
 	ConfigFile    Option[configdomain.PartialConfig]
 	EnvConfig     configdomain.PartialConfig
 	FinalMessages stringslice.Collector
-	GitLocal      configdomain.PartialConfig
 	GitGlobal     configdomain.PartialConfig
+	GitLocal      configdomain.PartialConfig
 	GitUnscoped   configdomain.PartialConfig
 }
 
