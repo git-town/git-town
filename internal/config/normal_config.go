@@ -35,7 +35,7 @@ type NormalConfig struct {
 	GiteaToken               Option[forgedomain.GiteaToken]
 	HostingOriginHostname    Option[configdomain.HostingOriginHostname]
 	Lineage                  configdomain.Lineage
-	NewBranchType            Option[configdomain.BranchType]
+	NewBranchType            Option[configdomain.NewBranchType]
 	ObservedRegex            Option[configdomain.ObservedRegex]
 	Offline                  configdomain.Offline
 	PerennialBranches        gitdomain.LocalBranchNames
@@ -49,7 +49,7 @@ type NormalConfig struct {
 	SyncPrototypeStrategy    configdomain.SyncPrototypeStrategy
 	SyncTags                 configdomain.SyncTags
 	SyncUpstream             configdomain.SyncUpstream
-	UnknownBranchType        configdomain.BranchType
+	UnknownBranchType        configdomain.UnknownBranchType
 	Verbose                  configdomain.Verbose
 }
 
@@ -87,7 +87,7 @@ func (self *NormalConfig) PartialBranchType(branch gitdomain.LocalBranchName) co
 		return configdomain.BranchTypePerennialBranch
 	}
 	// branch doesn't match any of the overrides --> unknown branch type
-	return self.UnknownBranchType
+	return self.UnknownBranchType.BranchType()
 }
 
 func (self *NormalConfig) PartialBranchesOfType(branchType configdomain.BranchType) gitdomain.LocalBranchNames {
@@ -184,7 +184,7 @@ func DefaultNormalConfig() NormalConfig {
 		GiteaToken:               None[forgedomain.GiteaToken](),
 		HostingOriginHostname:    None[configdomain.HostingOriginHostname](),
 		Lineage:                  configdomain.NewLineage(),
-		NewBranchType:            None[configdomain.BranchType](),
+		NewBranchType:            None[configdomain.NewBranchType](),
 		ObservedRegex:            None[configdomain.ObservedRegex](),
 		Offline:                  false,
 		PerennialBranches:        gitdomain.LocalBranchNames{},
@@ -198,7 +198,7 @@ func DefaultNormalConfig() NormalConfig {
 		SyncPrototypeStrategy:    configdomain.SyncPrototypeStrategyRebase,
 		SyncTags:                 true,
 		SyncUpstream:             true,
-		UnknownBranchType:        configdomain.BranchTypeFeatureBranch,
+		UnknownBranchType:        configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch),
 		Verbose:                  false,
 	}
 }
@@ -237,7 +237,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		SyncPrototypeStrategy:    partial.SyncPrototypeStrategy.GetOrElse(configdomain.NewSyncPrototypeStrategyFromSyncFeatureStrategy(syncFeatureStrategy)),
 		SyncTags:                 partial.SyncTags.GetOrElse(defaults.SyncTags),
 		SyncUpstream:             partial.SyncUpstream.GetOrElse(defaults.SyncUpstream),
-		UnknownBranchType:        partial.UnknownBranchType.GetOrElse(configdomain.BranchTypeFeatureBranch),
+		UnknownBranchType:        partial.UnknownBranchType.GetOrElse(configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch)),
 		Verbose:                  partial.Verbose.GetOrDefault(),
 	}
 }
