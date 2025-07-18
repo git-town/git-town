@@ -23,6 +23,7 @@ Feature: change existing information in Git metadata
       | feature regex               | u s e r enter          |
       | contribution regex          | 1 1 1 1 enter          |
       | observed regex              | 2 2 2 2 enter          |
+      | new branch type             | down enter             |
       | unknown branch type         | down enter             |
       | origin hostname             | c o d e enter          |
       | forge type                  | up up enter            |
@@ -36,7 +37,6 @@ Feature: change existing information in Git metadata
       | sync tags                   | down enter             |
       | share-new-branches          | down enter             |
       | push hook                   | down enter             |
-      | new branch type             | down enter             |
       | ship strategy               | down down enter        |
       | ship delete tracking branch | down enter             |
       | config storage              | enter                  |
