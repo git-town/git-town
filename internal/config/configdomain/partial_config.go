@@ -96,45 +96,6 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 	}
 }
 
-func (self PartialConfig) ToNormalConfig(defaults NormalConfigData) NormalConfigData {
-	syncFeatureStrategy := self.SyncFeatureStrategy.GetOrElse(defaults.SyncFeatureStrategy)
-	return NormalConfigData{
-		Aliases:                  self.Aliases,
-		BitbucketAppPassword:     self.BitbucketAppPassword,
-		BitbucketUsername:        self.BitbucketUsername,
-		BranchTypeOverrides:      self.BranchTypeOverrides,
-		CodebergToken:            self.CodebergToken,
-		ContributionRegex:        self.ContributionRegex,
-		DevRemote:                self.DevRemote.GetOrElse(defaults.DevRemote),
-		DryRun:                   self.DryRun.GetOrDefault(),
-		FeatureRegex:             self.FeatureRegex,
-		ForgeType:                self.ForgeType,
-		GitHubConnectorType:      self.GitHubConnectorType,
-		GitHubToken:              self.GitHubToken,
-		GitLabConnectorType:      self.GitLabConnectorType,
-		GitLabToken:              self.GitLabToken,
-		GiteaToken:               self.GiteaToken,
-		HostingOriginHostname:    self.HostingOriginHostname,
-		Lineage:                  self.Lineage,
-		NewBranchType:            self.NewBranchType.Or(defaults.NewBranchType),
-		ObservedRegex:            self.ObservedRegex,
-		Offline:                  self.Offline.GetOrElse(defaults.Offline),
-		PerennialBranches:        self.PerennialBranches,
-		PerennialRegex:           self.PerennialRegex,
-		PushHook:                 self.PushHook.GetOrElse(defaults.PushHook),
-		ShareNewBranches:         self.ShareNewBranches.GetOrElse(defaults.ShareNewBranches),
-		ShipDeleteTrackingBranch: self.ShipDeleteTrackingBranch.GetOrElse(defaults.ShipDeleteTrackingBranch),
-		ShipStrategy:             self.ShipStrategy.GetOrElse(defaults.ShipStrategy),
-		SyncFeatureStrategy:      syncFeatureStrategy,
-		SyncPerennialStrategy:    self.SyncPerennialStrategy.GetOrElse(defaults.SyncPerennialStrategy),
-		SyncPrototypeStrategy:    self.SyncPrototypeStrategy.GetOrElse(NewSyncPrototypeStrategyFromSyncFeatureStrategy(syncFeatureStrategy)),
-		SyncTags:                 self.SyncTags.GetOrElse(defaults.SyncTags),
-		SyncUpstream:             self.SyncUpstream.GetOrElse(defaults.SyncUpstream),
-		UnknownBranchType:        self.UnknownBranchType.GetOrElse(BranchTypeFeatureBranch),
-		Verbose:                  self.Verbose.GetOrDefault(),
-	}
-}
-
 func (self PartialConfig) ToUnvalidatedConfig() UnvalidatedConfigData {
 	return UnvalidatedConfigData{
 		GitUserEmail: self.GitUserEmail,
