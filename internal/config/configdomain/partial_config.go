@@ -29,7 +29,7 @@ type PartialConfig struct {
 	HostingOriginHostname    Option[HostingOriginHostname]
 	Lineage                  Lineage
 	MainBranch               Option[gitdomain.LocalBranchName]
-	NewBranchType            Option[BranchType]
+	NewBranchType            Option[NewBranchType]
 	ObservedRegex            Option[ObservedRegex]
 	Offline                  Option[Offline]
 	PerennialBranches        gitdomain.LocalBranchNames
@@ -43,7 +43,7 @@ type PartialConfig struct {
 	SyncPrototypeStrategy    Option[SyncPrototypeStrategy]
 	SyncTags                 Option[SyncTags]
 	SyncUpstream             Option[SyncUpstream]
-	UnknownBranchType        Option[BranchType]
+	UnknownBranchType        Option[UnknownBranchType]
 	Verbose                  Option[Verbose]
 }
 

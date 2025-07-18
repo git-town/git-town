@@ -14,7 +14,7 @@ func enterUnknownBranch() *cobra.Command {
 		Use: "unknown-branch-type",
 		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
-			_, _, err := dialog.UnknownBranchType(configdomain.BranchTypeFeatureBranch, dialogTestInputs)
+			_, _, err := dialog.UnknownBranchType(configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch), dialogTestInputs)
 			return err
 		},
 	}

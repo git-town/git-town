@@ -50,7 +50,7 @@ func TestSave(t *testing.T) {
 				ForgeType:                asserts.NoError1(forgedomain.ParseForgeType("github")),
 				HostingOriginHostname:    configdomain.ParseHostingOriginHostname("forge"),
 				MainBranch:               Some(gitdomain.NewLocalBranchName("main")),
-				NewBranchType:            Some(configdomain.BranchTypePrototypeBranch),
+				NewBranchType:            Some(configdomain.NewBranchType(configdomain.BranchTypePrototypeBranch)),
 				PerennialBranches:        gitdomain.NewLocalBranchNames("qa", "staging"),
 				PerennialRegex:           asserts.NoError1(configdomain.ParsePerennialRegex("perennial-")),
 				PushHook:                 Some(configdomain.PushHook(true)),
