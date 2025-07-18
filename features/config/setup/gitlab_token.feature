@@ -50,6 +50,7 @@ Feature: enter the GitLab API token
       | git config git-town.sync-tags true                   |
     And local Git setting "git-town.forge-type" still doesn't exist
 
+  @this
   Scenario: select GitLab manually
     When I run "git-town config setup" and enter into the dialog:
       | DIALOG                      | KEYS              | DESCRIPTION                                 |
@@ -95,7 +96,7 @@ Feature: enter the GitLab API token
       | git config git-town.sync-upstream true               |
       | git config git-town.sync-tags true                   |
     And local Git setting "git-town.forge-type" is now "gitlab"
-    And local Git setting "git-town.gitlab-token" is now "123456"
+    And local Git setting "git-town.gitlab-token" is now "gl-tok"
 
   Scenario: store GitLab API token globally
     Given my repo's "origin" remote is "git@gitlab.com:git-town/git-town.git"

@@ -96,7 +96,7 @@ Feature: enter the GitHub API token
       | git config git-town.sync-upstream true               |
       | git config git-town.sync-tags true                   |
     And local Git setting "git-town.forge-type" is now "github"
-    And local Git setting "git-town.github-token" is now "123456"
+    And local Git setting "git-town.github-token" is now "gh-tok"
 
   Scenario: remove existing GitHub token
     Given my repo's "origin" remote is "git@github.com:git-town/git-town.git"
