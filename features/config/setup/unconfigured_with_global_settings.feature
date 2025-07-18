@@ -9,6 +9,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
     And global Git setting "git-town.observed-regex" is "staging-"
     And global Git setting "git-town.main-branch" is "main"
     And global Git setting "git-town.new-branch-type" is "prototype"
+    And global Git setting "git-town.perennial-branches" is "public"
     And global Git setting "git-town.push-hook" is "false"
     And global Git setting "git-town.share-new-branches" is "push"
     And global Git setting "git-town.ship-strategy" is "api"
@@ -24,6 +25,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | welcome                     | enter       |
       | aliases                     | enter       |
       | main branch                 | enter       |
+      | perennial branches          | enter       |
       | perennial regex             | 1 1 1 enter |
       | feature regex               | 2 2 2 enter |
       | contribution regex          | 3 3 3 enter |
@@ -46,6 +48,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | COMMAND                                               |
       | git config git-town.new-branch-type prototype         |
       | git config git-town.main-branch main                  |
+      | git config git-town.perennial-branches public         |
       | git config git-town.perennial-regex 111               |
       | git config git-town.feature-regex ^kg-222             |
       | git config git-town.contribution-regex release-333    |
@@ -59,3 +62,4 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | git config git-town.sync-prototype-strategy compress  |
       | git config git-town.sync-upstream false               |
       | git config git-town.sync-tags false                   |
+      # TODO: don't save the perennial branches locally here
