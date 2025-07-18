@@ -12,6 +12,7 @@ import (
 )
 
 type UnvalidatedConfig struct {
+	Defaults          NormalConfig                       // default values
 	File              Option[configdomain.PartialConfig] // content of git-town.toml, nil = no config file exists
 	GitGlobal         configdomain.PartialConfig
 	GitLocal          configdomain.PartialConfig
@@ -49,9 +50,10 @@ func (self *UnvalidatedConfig) Reload(backend subshelldomain.RunnerQuerier) (glo
 			DryRun:  false,
 			Verbose: false,
 		},
-		env:  envConfig,
-		file: self.File,
-		git:  unscopedGitConfig,
+		defaults: DefaultNormalConfig(),
+		env:      envConfig,
+		file:     self.File,
+		git:      unscopedGitConfig,
 	})
 	self.GitUnscoped = unscopedGitConfig
 	self.UnvalidatedConfig = unvalidatedConfig
@@ -79,12 +81,14 @@ func (self *UnvalidatedConfig) UnvalidatedBranchesAndTypes(branches gitdomain.Lo
 
 func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 	unvalidatedConfig, normalConfig := mergeConfigs(mergeConfigsArgs{
-		cli:  args.CliConfig,
-		env:  args.EnvConfig,
-		file: args.ConfigFile,
-		git:  args.GitUnscoped,
+		cli:      args.CliConfig,
+		defaults: args.Defaults,
+		env:      args.EnvConfig,
+		file:     args.ConfigFile,
+		git:      args.GitUnscoped,
 	})
 	return UnvalidatedConfig{
+		Defaults:          args.Defaults,
 		File:              args.ConfigFile,
 		GitGlobal:         args.GitLocal,
 		GitLocal:          args.GitLocal,
@@ -97,6 +101,7 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 type NewUnvalidatedConfigArgs struct {
 	CliConfig     cliconfig.CliConfig
 	ConfigFile    Option[configdomain.PartialConfig]
+	Defaults      NormalConfig
 	EnvConfig     configdomain.PartialConfig
 	FinalMessages stringslice.Collector
 	GitGlobal     configdomain.PartialConfig
@@ -113,12 +118,13 @@ func mergeConfigs(args mergeConfigsArgs) (configdomain.UnvalidatedConfigData, No
 	result = result.Merge(args.env)
 	result.DryRun = Some(args.cli.DryRun)
 	result.Verbose = Some(args.cli.Verbose)
-	return result.ToUnvalidatedConfig(), NewNormalConfigFromPartial(result, DefaultNormalConfig())
+	return result.ToUnvalidatedConfig(), NewNormalConfigFromPartial(result, args.defaults)
 }
 
 type mergeConfigsArgs struct {
-	cli  cliconfig.CliConfig
-	env  configdomain.PartialConfig         // configuration data taken from environment variables
-	file Option[configdomain.PartialConfig] // data of the configuration file
-	git  configdomain.PartialConfig
+	cli      cliconfig.CliConfig
+	defaults NormalConfig
+	env      configdomain.PartialConfig         // configuration data taken from environment variables
+	file     Option[configdomain.PartialConfig] // data of the configuration file
+	git      configdomain.PartialConfig
 }

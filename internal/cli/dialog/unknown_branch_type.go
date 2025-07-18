@@ -34,9 +34,9 @@ func UnknownBranchType(unvalidatedConfig config.UnvalidatedConfig, inputs dialog
 	entries = appendEntry(entries, configdomain.BranchTypeObservedBranch)
 	entries = appendEntry(entries, configdomain.BranchTypeParkedBranch)
 	entries = appendEntry(entries, configdomain.BranchTypePrototypeBranch)
-	defaultPos := determinePos(entries, unvalidatedConfig.GitLocal.UnknownBranchType)
+	defaultPos := determinePos(entries, unvalidatedConfig)
 	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, unknownBranchTypeTitle, UnknownBranchTypeHelp, inputs, "unknown-branch-type")
-	fmt.Printf(messages.UnknownBranchType, dialogcomponents.FormattedSelection(selection.String(), exit))
+	fmt.Printf(messages.ShareNewBranches, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }
 
@@ -47,9 +47,12 @@ func appendEntry(entries list.Entries[Option[configdomain.UnknownBranchType]], b
 	})
 }
 
-func determinePos(entries list.Entries[Option[configdomain.UnknownBranchType]], localGitValue Option[configdomain.UnknownBranchType]) int {
-	if localValue, has := localGitValue.Get(); has {
+func determinePos(entries list.Entries[Option[configdomain.UnknownBranchType]], unvalidatedConfig config.UnvalidatedConfig) int {
+	if localValue, has := unvalidatedConfig.GitLocal.UnknownBranchType.Get(); has {
 		return entries.IndexOf(Some(localValue))
 	}
-	return 0
+	if unvalidatedConfig.GitGlobal.UnknownBranchType.IsSome() {
+		return 0
+	}
+	return entries.IndexOf(Some(unvalidatedConfig.Defaults.UnknownBranchType))
 }

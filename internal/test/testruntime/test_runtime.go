@@ -99,6 +99,7 @@ func New(workingDir, homeDir, binDir string) commands.TestCommands {
 			Verbose: false,
 		},
 		ConfigFile:    None[configdomain.PartialConfig](),
+		Defaults:      config.DefaultNormalConfig(),
 		EnvConfig:     configdomain.EmptyPartialConfig(),
 		FinalMessages: stringslice.NewCollector(),
 		GitGlobal:     configdomain.EmptyPartialConfig(),
