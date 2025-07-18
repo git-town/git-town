@@ -23,7 +23,7 @@ Git Town cannot determine their type any other way.
 
 func UnknownBranchType(unvalidatedConfig config.UnvalidatedConfig, inputs dialogcomponents.TestInputs) (Option[configdomain.UnknownBranchType], dialogdomain.Exit, error) {
 	entries := make(list.Entries[Option[configdomain.UnknownBranchType]], 0, 5)
-	if globalValue, has := config.G.Get(); has {
+	if globalValue, has := unvalidatedConfig.GitGlobal.UnknownBranchType.Get(); has {
 		entries = append(entries, list.Entry[Option[configdomain.UnknownBranchType]]{
 			Data: None[configdomain.UnknownBranchType](),
 			Text: fmt.Sprintf("use global value (%s)", globalValue),
@@ -34,9 +34,9 @@ func UnknownBranchType(unvalidatedConfig config.UnvalidatedConfig, inputs dialog
 	entries = appendEntry(entries, configdomain.BranchTypeObservedBranch)
 	entries = appendEntry(entries, configdomain.BranchTypeParkedBranch)
 	entries = appendEntry(entries, configdomain.BranchTypePrototypeBranch)
-	defaultPos := determinePos(entries, localGitValue)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, shareNewBranchesTitle, ShareNewBranchesHelp, inputs, "share-new-branches")
-	fmt.Printf(messages.ShareNewBranches, dialogcomponents.FormattedSelection(selection.String(), exit))
+	defaultPos := determinePos(entries, unvalidatedConfig.GitLocal.UnknownBranchType)
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, unknownBranchTypeTitle, UnknownBranchTypeHelp, inputs, "unknown-branch-type")
+	fmt.Printf(messages.UnknownBranchType, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }
 

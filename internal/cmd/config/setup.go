@@ -400,7 +400,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		SyncPrototypeStrategy:    Some(syncPrototypeStrategy),
 		SyncTags:                 Some(syncTags),
 		SyncUpstream:             Some(syncUpstream),
-		UnknownBranchType:        Some(unknownBranchType),
+		UnknownBranchType:        unknownBranchType,
 		Verbose:                  None[configdomain.Verbose](), // the setup assistant doesn't ask for this
 	}
 	validatedData := configdomain.ValidatedConfigData{
