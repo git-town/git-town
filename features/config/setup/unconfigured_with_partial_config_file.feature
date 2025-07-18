@@ -8,15 +8,15 @@ Feature: ask for information not provided by the config file
       """
       [branches]
       main = "main"
-      
+
       [hosting]
       dev-remote = "something"
       forge-type = "github"
       origin-hostname = "github.com"
-      
+
       [ship]
       delete-tracking-branch = false
-      
+
       [sync]
       tags = false
       upstream = false
