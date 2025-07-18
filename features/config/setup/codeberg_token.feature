@@ -92,7 +92,7 @@ Feature: enter the Codeberg API token
       | git config git-town.sync-upstream true               |
       | git config git-town.sync-tags true                   |
     And local Git setting "git-town.forge-type" is now "codeberg"
-    And local Git setting "git-town.codeberg-token" is now "123456"
+    And local Git setting "git-town.codeberg-token" is now "code-tok"
 
   Scenario: store Codeberge API token globally
     And my repo's "origin" remote is "git@codeberg.org:git-town/docs.git"
