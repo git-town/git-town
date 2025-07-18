@@ -14,27 +14,27 @@ Feature: don't ask for information already provided by the config file
       perennial-regex = "release-"
       perennials = ["staging"]
       unknown-type = "observed"
-
+      
       [create]
       new-branch-type = "feature"
       share-new-branches = "propose"
-
+      
       [hosting]
       dev-remote = "something"
       origin-hostname = "github.com"
       forge-type = "github"
-
+      
       [ship]
       delete-tracking-branch = true
       strategy = "api"
-
+      
       [sync]
       feature-strategy = "merge"
       perennial-strategy = "rebase"
       push-hook = true
       tags = true
       upstream = true
-
+      
       [sync-strategy]
       feature-branches = "rebase"
       prototype-branches = "merge"
@@ -45,10 +45,10 @@ Feature: don't ask for information already provided by the config file
       | welcome               | enter             |
       | aliases               | enter             |
       | github connector type | enter             |
-      | github token          | 1 2 3 4 5 6 enter |
+      | github token          | g h - t o k enter |
       | token scope           | enter             |
       | config storage        | enter             |
     Then Git Town runs the commands
       | COMMAND                                  |
-      | git config git-town.github-token 123456  |
+      | git config git-town.github-token gh-tok  |
       | git config git-town.github-connector api |
