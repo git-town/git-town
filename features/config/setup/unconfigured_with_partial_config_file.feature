@@ -1,6 +1,7 @@
 @messyoutput
 Feature: ask for information not provided by the config file
 
+  @debug @this
   Scenario:
     Given a Git repo with origin
     And Git Town is not configured
@@ -8,15 +9,15 @@ Feature: ask for information not provided by the config file
       """
       [branches]
       main = "main"
-
+      
       [hosting]
       dev-remote = "something"
       forge-type = "github"
       origin-hostname = "github.com"
-
+      
       [ship]
       delete-tracking-branch = false
-
+      
       [sync]
       tags = false
       upstream = false
@@ -25,14 +26,14 @@ Feature: ask for information not provided by the config file
       | DIALOG                  | KEYS        |
       | welcome                 | enter       |
       | aliases                 | enter       |
-      | perennial regex         | 1 1 1 enter |
-      | feature regex           | 2 2 2 enter |
-      | contribution regex      | 3 3 3 enter |
-      | observed regex          | 4 4 4 enter |
+      | perennial regex         | p p p enter |
+      | feature regex           | f f f enter |
+      | contribution regex      | c c c enter |
+      | observed regex          | o o o enter |
       | new branch type         | enter       |
       | unknown branch type     | enter       |
       | github connector type   | enter       |
-      | github token            | 9 9 9 enter |
+      | github token            | g g g enter |
       | token scope             | enter       |
       | sync feature strategy   | enter       |
       | sync perennial strategy | enter       |
@@ -43,14 +44,14 @@ Feature: ask for information not provided by the config file
       | config storage          | enter       |
     Then Git Town runs the commands
       | COMMAND                                            |
-      | git config git-town.github-token 999               |
+      | git config git-town.github-token ggg               |
       | git config git-town.new-branch-type feature        |
       | git config git-town.github-connector api           |
-      | git config git-town.perennial-regex 111            |
+      | git config git-town.perennial-regex ppp            |
       | git config git-town.unknown-branch-type feature    |
-      | git config git-town.feature-regex 222              |
-      | git config git-town.contribution-regex 333         |
-      | git config git-town.observed-regex 444             |
+      | git config git-town.feature-regex fff              |
+      | git config git-town.contribution-regex ccc         |
+      | git config git-town.observed-regex ooo             |
       | git config git-town.push-hook true                 |
       | git config git-town.share-new-branches no          |
       | git config git-town.ship-strategy api              |
