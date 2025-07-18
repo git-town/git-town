@@ -44,6 +44,23 @@ func (self *ValidatedConfig) BranchesOfType(branches gitdomain.LocalBranchNames,
 	return result
 }
 
+// removes the given branch from the lineage, and updates its children
+func (self *ValidatedConfig) CleanupBranchFromLineage(runner subshelldomain.Runner, branch gitdomain.LocalBranchName) {
+	parent, hasParent := self.NormalConfig.Lineage.Parent(branch).Get()
+	children := self.NormalConfig.Lineage.Children(branch)
+	for _, child := range children {
+		if hasParent {
+			self.NormalConfig.Lineage = self.NormalConfig.Lineage.Set(child, parent)
+			_ = gitconfig.SetParent(runner, child, parent)
+		} else {
+			self.NormalConfig.Lineage = self.NormalConfig.Lineage.RemoveBranch(child)
+			_ = gitconfig.RemoveParent(runner, parent)
+		}
+	}
+	self.NormalConfig.Lineage = self.NormalConfig.Lineage.RemoveBranch(branch)
+	_ = gitconfig.RemoveParent(runner, branch)
+}
+
 func (self *ValidatedConfig) CleanupLineage(branchInfos gitdomain.BranchInfos, nonExistingBranches gitdomain.LocalBranchNames, finalMessages stringslice.Collector, runner subshelldomain.Runner) {
 	self.RemoveDeletedBranchesFromLineage(branchInfos, nonExistingBranches, runner)
 	self.NormalConfig.RemovePerennialAncestors(runner, finalMessages)
@@ -62,7 +79,7 @@ func (self *ValidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 
 func (self *ValidatedConfig) RemoveDeletedBranchesFromLineage(branchInfos gitdomain.BranchInfos, nonExistingBranches gitdomain.LocalBranchNames, runner subshelldomain.Runner) {
 	for _, nonExistingBranch := range nonExistingBranches {
-		self.NormalConfig.CleanupBranchFromLineage(runner, nonExistingBranch)
+		self.CleanupBranchFromLineage(runner, nonExistingBranch)
 	}
 	for _, entry := range self.NormalConfig.Lineage.Entries() {
 		childDoesntExist := nonExistingBranches.Contains(entry.Child)
@@ -90,11 +107,4 @@ func (self *ValidatedConfig) RemovePerennials(stack gitdomain.LocalBranchNames) 
 		}
 	}
 	return result
-}
-
-// SetMainBranch marks the given branch as the main branch
-// in the Git Town configuration.
-func (self *ValidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName, runner subshelldomain.Runner) error {
-	self.ValidatedConfigData.MainBranch = branch
-	return gitconfig.SetMainBranch(runner, branch, configdomain.ConfigScopeLocal)
 }

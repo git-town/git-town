@@ -6,6 +6,7 @@ import (
 	"go/token"
 	"testing"
 
+	"github.com/git-town/git-town/v21/pkg/equal"
 	"github.com/google/go-cmp/cmp"
 	"github.com/shoenig/test/must"
 )
@@ -26,7 +27,7 @@ func parseFuncDecl(t *testing.T, fset *token.FileSet, funcText string) *ast.Func
 // without taking issue.position into account.
 func ignoreIssuePosition() must.Setting {
 	return must.Cmp(cmp.Comparer(func(a, b issue) bool {
-		return cmp.Equal(a.expected, b.expected)
+		return equal.Equal(a.expected, b.expected)
 	}))
 }
 
