@@ -12,8 +12,8 @@ import (
 
 // cmpEqualFinder implements the ast.Visitor interface to find calls to "cmp.Equal".
 type cmpEqualFinder struct {
-	filePath string         // Path of the file being currently visited.
-	fileSet  *token.FileSet // FileSet to get position information for nodes.
+	filePath string         // path of the file being currently visited
+	fileSet  *token.FileSet // fileSet to get position information for nodes
 }
 
 // Visit is called for each node in the AST.
