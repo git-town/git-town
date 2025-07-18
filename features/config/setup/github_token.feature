@@ -21,7 +21,7 @@ Feature: enter the GitHub API token
       | origin hostname             | enter             |                                             |
       | forge type                  | enter             |                                             |
       | github connector type       | enter             |                                             |
-      | github token                | 1 2 3 4 5 6 enter |                                             |
+      | github token                | g h - t o k enter |                                             |
       | token scope                 | enter             |                                             |
       | sync feature strategy       | enter             |                                             |
       | sync perennial strategy     | enter             |                                             |
@@ -35,7 +35,7 @@ Feature: enter the GitHub API token
       | config storage              | enter             |                                             |
     Then Git Town runs the commands
       | COMMAND                                              |
-      | git config git-town.github-token 123456              |
+      | git config git-town.github-token gh-tok              |
       | git config git-town.new-branch-type feature          |
       | git config git-town.github-connector api             |
       | git config git-town.unknown-branch-type feature      |
@@ -49,7 +49,7 @@ Feature: enter the GitHub API token
       | git config git-town.sync-upstream true               |
       | git config git-town.sync-tags true                   |
     And local Git setting "git-town.forge-type" still doesn't exist
-    And local Git setting "git-town.github-token" is now "123456"
+    And local Git setting "git-town.github-token" is now "gh-tok"
 
   Scenario: manually selected GitHub
     When I run "git-town config setup" and enter into the dialog:
@@ -67,7 +67,7 @@ Feature: enter the GitHub API token
       | origin hostname             | enter                          |                                             |
       | forge type                  | down down down down down enter |                                             |
       | github connector type       | enter                          |                                             |
-      | github token                |              1 2 3 4 5 6 enter |                                             |
+      | github token                | g h - t o k enter              |                                             |
       | token scope                 | enter                          |                                             |
       | sync feature strategy       | enter                          |                                             |
       | sync perennial strategy     | enter                          |                                             |
@@ -81,7 +81,7 @@ Feature: enter the GitHub API token
       | config storage              | enter                          |                                             |
     Then Git Town runs the commands
       | COMMAND                                              |
-      | git config git-town.github-token 123456              |
+      | git config git-town.github-token gh-tok              |
       | git config git-town.new-branch-type feature          |
       | git config git-town.forge-type github                |
       | git config git-town.github-connector api             |

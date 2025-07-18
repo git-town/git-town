@@ -21,7 +21,7 @@ Feature: enter the GitLab API token
       | origin hostname             | enter             |                                             |
       | forge type                  | enter             |                                             |
       | gitlab connector type       | enter             |                                             |
-      | gitlab token                | 1 2 3 4 5 6 enter |                                             |
+      | gitlab token                | g l - t o k enter |                                             |
       | token scope                 | enter             |                                             |
       | sync feature strategy       | enter             |                                             |
       | sync perennial strategy     | enter             |                                             |
@@ -35,7 +35,7 @@ Feature: enter the GitLab API token
       | config storage              | enter             |                                             |
     Then Git Town runs the commands
       | COMMAND                                              |
-      | git config git-town.gitlab-token 123456              |
+      | git config git-town.gitlab-token gl-tok              |
       | git config git-town.new-branch-type feature          |
       | git config git-town.gitlab-connector api             |
       | git config git-town.unknown-branch-type feature      |
@@ -66,7 +66,7 @@ Feature: enter the GitLab API token
       | origin hostname             | enter             |                                             |
       | forge type                  | up enter          |                                             |
       | gitlab connector type       | enter             |                                             |
-      | gitlab token                | 1 2 3 4 5 6 enter |                                             |
+      | gitlab token                | g l - t o k enter |                                             |
       | token scope                 | enter             |                                             |
       | sync feature strategy       | enter             |                                             |
       | sync perennial strategy     | enter             |                                             |
@@ -80,7 +80,7 @@ Feature: enter the GitLab API token
       | config storage              | enter             |                                             |
     Then Git Town runs the commands
       | COMMAND                                              |
-      | git config git-town.gitlab-token 123456              |
+      | git config git-town.gitlab-token gl-tok              |
       | git config git-town.new-branch-type feature          |
       | git config git-town.forge-type gitlab                |
       | git config git-town.gitlab-connector api             |
