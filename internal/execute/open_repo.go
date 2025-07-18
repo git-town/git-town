@@ -66,7 +66,15 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
+	globalConfig, err := config.NewPartialConfigFromSnapshot(globalSnapshot, true, backendRunner)
+	if err != nil {
+		return emptyOpenRepoResult(), err
+	}
 	localSnapshot, err := gitconfig.LoadSnapshot(backendRunner, Some(configdomain.ConfigScopeLocal), configdomain.UpdateOutdatedYes)
+	if err != nil {
+		return emptyOpenRepoResult(), err
+	}
+	localConfig, err := config.NewPartialConfigFromSnapshot(localSnapshot, true, backendRunner)
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
@@ -96,9 +104,12 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	unvalidatedConfig := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
 		CliConfig:     args.CliConfig,
 		ConfigFile:    configFile,
+		Defaults:      config.DefaultNormalConfig(),
 		EnvConfig:     envconfig.Load(),
 		FinalMessages: finalMessages,
-		GitConfig:     unscopedConfig,
+		GitGlobal:     globalConfig,
+		GitLocal:      localConfig,
+		GitUnscoped:   unscopedConfig,
 	})
 	frontEndRunner := newFrontendRunner(newFrontendRunnerArgs{
 		backend:          backendRunner,
