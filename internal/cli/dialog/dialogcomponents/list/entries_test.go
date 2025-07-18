@@ -73,7 +73,7 @@ func TestEntries(t *testing.T) {
 
 	t.Run("IndexOf", func(t *testing.T) {
 		t.Parallel()
-		t.Run("works with correctly comparable types", func(t *testing.T) {
+		t.Run("works with comparable types", func(t *testing.T) {
 			t.Parallel()
 			entries := list.Entries[forgedomain.ForgeType]{
 				{
