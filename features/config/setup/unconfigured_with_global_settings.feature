@@ -5,10 +5,20 @@ Feature: setup a new repo when I have configured some things in global Git metad
   Scenario:
     Given a Git repo with origin
     And Git Town is not configured
+    And global Git setting "git-town.feature-regex" is "^kg-"
+    And global Git setting "git-town.contribution-regex" is "release-"
+    And global Git setting "git-town.observed-regex" is "staging-"
     And global Git setting "git-town.main-branch" is "main"
+    And global Git setting "git-town.new-branch-type" is "prototype"
+    And global Git setting "git-town.push-hook" is "false"
+    And global Git setting "git-town.share-new-branches" is "push"
+    And global Git setting "git-town.ship-strategy" is "api"
+    And global Git setting "git-town.ship-delete-tracking-branch" is "false"
     And global Git setting "git-town.sync-feature-strategy" is "rebase"
     And global Git setting "git-town.sync-perennial-strategy" is "ff-only"
     And global Git setting "git-town.sync-prototype-strategy" is "compress"
+    And global Git setting "git-town.sync-tags" is "false"
+    And global Git setting "git-town.sync-upstream" is "false"
     And global Git setting "git-town.unknown-branch-type" is "observed"
     When I run "git-town config setup" and enter into the dialogs:
       | DIALOG                      | KEYS        |
@@ -34,16 +44,9 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | ship delete tracking branch | enter       |
       | config storage              | enter       |
     Then Git Town runs the commands
-      | COMMAND                                              |
-      | git config git-town.new-branch-type feature          |
-      | git config git-town.perennial-regex 111              |
-      | git config git-town.unknown-branch-type feature      |
-      | git config git-town.feature-regex 222                |
-      | git config git-town.contribution-regex 333           |
-      | git config git-town.observed-regex 444               |
-      | git config git-town.push-hook true                   |
-      | git config git-town.share-new-branches no            |
-      | git config git-town.ship-strategy api                |
-      | git config git-town.ship-delete-tracking-branch true |
-      | git config git-town.sync-upstream true               |
-      | git config git-town.sync-tags true                   |
+      | COMMAND                                            |
+      | git config git-town.perennial-regex 111            |
+      | git config git-town.unknown-branch-type feature    |
+      | git config git-town.feature-regex ^kg-222          |
+      | git config git-town.contribution-regex release-333 |
+      | git config git-town.observed-regex staging-444     |
