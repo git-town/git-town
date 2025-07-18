@@ -19,16 +19,16 @@ Feature: change existing information in Git metadata
       | aliases                     | a enter                |
       | main branch                 | enter                  |
       | perennial branches          | space down space enter |
-      | perennial regex             | 3 3 6 6 enter          |
-      | feature regex               | u s e r enter          |
-      | contribution regex          | 1 1 1 1 enter          |
-      | observed regex              | 2 2 2 2 enter          |
+      | perennial regex             | p e r enter            |
+      | feature regex               | f e a t enter          |
+      | contribution regex          | c o n t enter          |
+      | observed regex              | o b s enter            |
       | new branch type             | down enter             |
       | unknown branch type         | down enter             |
       | origin hostname             | c o d e enter          |
       | forge type                  | up up enter            |
       | github connector type       | enter                  |
-      | github token                | 1 2 3 4 5 6 enter      |
+      | github token                | g h - t o k enter      |
       | token scope                 | enter                  |
       | sync feature strategy       | down enter             |
       | sync perennial strategy     | down enter             |
@@ -59,17 +59,17 @@ Feature: change existing information in Git metadata
       | git config --global alias.set-parent "town set-parent"   |
       | git config --global alias.ship "town ship"               |
       | git config --global alias.sync "town sync"               |
-      | git config git-town.github-token 123456                  |
+      | git config git-town.github-token gh-tok                  |
       | git config git-town.new-branch-type prototype            |
       | git config git-town.forge-type github                    |
       | git config git-town.github-connector api                 |
       | git config git-town.hosting-origin-hostname code         |
       | git config git-town.perennial-branches "production qa"   |
-      | git config git-town.perennial-regex 3366                 |
+      | git config git-town.perennial-regex per                  |
       | git config git-town.unknown-branch-type observed         |
-      | git config git-town.feature-regex user                   |
-      | git config git-town.contribution-regex 1111              |
-      | git config git-town.observed-regex 2222                  |
+      | git config git-town.feature-regex feat                   |
+      | git config git-town.contribution-regex cont              |
+      | git config git-town.observed-regex obs                   |
       | git config git-town.push-hook true                       |
       | git config git-town.share-new-branches push              |
       | git config git-town.ship-strategy fast-forward           |
@@ -95,17 +95,17 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.dev-remote" still doesn't exist
     And local Git setting "git-town.new-branch-type" is now "prototype"
     And local Git setting "git-town.forge-type" is now "github"
-    And local Git setting "git-town.github-token" is now "123456"
+    And local Git setting "git-town.github-token" is now "gh-tok"
     And local Git setting "git-town.hosting-origin-hostname" is now "code"
     And local Git setting "git-town.sync-feature-strategy" is now "rebase"
     And local Git setting "git-town.sync-perennial-strategy" is now "ff-only"
     And local Git setting "git-town.sync-prototype-strategy" is now "rebase"
     And local Git setting "git-town.sync-upstream" is now "false"
     And local Git setting "git-town.sync-tags" is now "true"
-    And local Git setting "git-town.perennial-regex" is now "3366"
-    And local Git setting "git-town.feature-regex" is now "user"
-    And local Git setting "git-town.contribution-regex" is now "1111"
-    And local Git setting "git-town.observed-regex" is now "2222"
+    And local Git setting "git-town.perennial-regex" is now "per"
+    And local Git setting "git-town.feature-regex" is now "feat"
+    And local Git setting "git-town.contribution-regex" is now "cont"
+    And local Git setting "git-town.observed-regex" is now "obs"
     And local Git setting "git-town.unknown-branch-type" is now "observed"
     And local Git setting "git-town.share-new-branches" is now "push"
     And local Git setting "git-town.push-hook" is now "true"

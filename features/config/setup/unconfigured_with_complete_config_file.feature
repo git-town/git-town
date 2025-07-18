@@ -45,10 +45,10 @@ Feature: don't ask for information already provided by the config file
       | welcome               | enter             |
       | aliases               | enter             |
       | github connector type | enter             |
-      | github token          | 1 2 3 4 5 6 enter |
+      | github token          | g h - t o k enter |
       | token scope           | enter             |
       | config storage        | enter             |
     Then Git Town runs the commands
       | COMMAND                                  |
-      | git config git-town.github-token 123456  |
+      | git config git-town.github-token gh-tok  |
       | git config git-town.github-connector api |
