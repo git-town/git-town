@@ -24,9 +24,14 @@ func enterPerennialBranches() *cobra.Command {
 			for i := range amount {
 				localBranches = append(localBranches, gitdomain.NewLocalBranchName(fmt.Sprintf("branch-%d", i)))
 			}
-			existingPerennialBranches := gitdomain.NewLocalBranchNames("branch-2", "branch-4")
 			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
-			_, _, err = dialog.PerennialBranches(localBranches, existingPerennialBranches, "main", dialogTestInputs)
+			_, _, err = dialog.PerennialBranches(dialog.PerennialBranchesArgs{
+				Inputs:                dialogTestInputs,
+				LocalBranches:         localBranches,
+				LocalGitPerennials:    gitdomain.NewLocalBranchNames("local-1", "local-2"),
+				MainBranch:            "main",
+				UnscopedGitPerennials: gitdomain.NewLocalBranchNames("global-1", "global-2"),
+			})
 			return err
 		},
 	}
