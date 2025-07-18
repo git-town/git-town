@@ -1,7 +1,6 @@
 package dialog
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
@@ -17,9 +16,6 @@ func MainAndPerennials(args MainAndPerennialsArgs) (mainBranch gitdomain.LocalBr
 	unvalidatedMain, hasMain := args.UnvalidatedConfig.UnvalidatedConfig.MainBranch.Get()
 	if hasMain {
 		return unvalidatedMain, args.UnvalidatedConfig.NormalConfig.PerennialBranches, false, nil
-	}
-	if args.UnvalidatedConfig.File.IsSome() {
-		return unvalidatedMain, args.UnvalidatedConfig.NormalConfig.PerennialBranches, false, errors.New(messages.ConfigMainbranchInConfigFile)
 	}
 	fmt.Print(messages.ConfigNeeded)
 	mainBranch, exit, err = MainBranch(args.LocalBranches, args.GetDefaultBranch(args.Backend), args.DialogInputs)
