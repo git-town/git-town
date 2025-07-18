@@ -66,11 +66,11 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
-	localSnapshot, err := gitconfig.LoadSnapshot(backendRunner, Some(configdomain.ConfigScopeLocal), configdomain.UpdateOutdatedYes)
+	globalConfig, err := config.NewPartialConfigFromSnapshot(globalSnapshot, true, backendRunner)
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
-	globalConfig, err := config.NewPartialConfigFromSnapshot(globalSnapshot, true, backendRunner)
+	localSnapshot, err := gitconfig.LoadSnapshot(backendRunner, Some(configdomain.ConfigScopeLocal), configdomain.UpdateOutdatedYes)
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
