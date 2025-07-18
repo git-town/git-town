@@ -62,4 +62,4 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | git config git-town.sync-prototype-strategy compress  |
       | git config git-town.sync-upstream false               |
       | git config git-town.sync-tags false                   |
-      # TODO: don't save the perennial branches locally here
+  # TODO: don't save the perennial branches locally here
