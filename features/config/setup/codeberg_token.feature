@@ -138,7 +138,6 @@ Feature: enter the Codeberg API token
       | git config git-town.sync-tags true                   |
     And global Git setting "git-town.codeberg-token" is now "123456"
 
-  @this
   Scenario: edit global Codeberge API token
     And my repo's "origin" remote is "git@codeberg.org:git-town/docs.git"
     Given global Git setting "git-town.codeberg-token" is "code123"
