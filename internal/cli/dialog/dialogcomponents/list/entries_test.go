@@ -89,7 +89,7 @@ func TestEntries(t *testing.T) {
 			want := 1
 			must.EqOp(t, want, have)
 		})
-		t.Run("does not work with options", func(t *testing.T) {
+		t.Run("works with options", func(t *testing.T) {
 			t.Parallel()
 			entries := list.Entries[Option[forgedomain.ForgeType]]{
 				{
@@ -106,12 +106,7 @@ func TestEntries(t *testing.T) {
 				},
 			}
 			have := entries.IndexOf(Some(forgedomain.ForgeTypeGitHub))
-			want := 0 // this should be 1 if comparing options would work
-			must.EqOp(t, want, have)
-			have = entries.IndexOfFunc(Some(forgedomain.ForgeTypeGitHub), func(a, b Option[forgedomain.ForgeType]) bool {
-				return a.Equal(b)
-			})
-			want = 1
+			want := 1
 			must.EqOp(t, want, have)
 		})
 	})
