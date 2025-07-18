@@ -423,6 +423,27 @@ type userInput struct {
 	validatedConfig     configdomain.ValidatedConfigData
 }
 
+func enterMainBranch(repo execute.OpenRepoResult, data setupData) (userInput Option[gitdomain.LocalBranchName], actualMainBranch gitdomain.LocalBranchName, exit dialogdomain.Exit, err error) {
+	if configFile, hasConfigFile := repo.UnvalidatedConfig.File.Get(); hasConfigFile {
+		if configFileMainBranch, hasMain := configFile.MainBranch.Get(); hasMain {
+			return Some(configFileMainBranch), configFileMainBranch, false, nil
+		}
+	}
+	repoDefault := determineGitRepoDefaultBranch(repo)
+	userInput, exit, err = dialog.MainBranch(dialog.MainBranchArgs{
+		GitStandardBranch:     repoDefault,
+		Inputs:                data.dialogInputs,
+		LocalBranches:         data.localBranches.Names(),
+		LocalGitMainBranch:    repo.UnvalidatedConfig.GitLocal.MainBranch,
+		UnscopedGitMainBranch: repo.UnvalidatedConfig.NormalConfig.Git.MainBranch,
+	})
+	if err != nil || exit {
+		return None[gitdomain.LocalBranchName](), "", exit, err
+	}
+	actualMainBranch = userInput.Or(repo.UnvalidatedConfig.NormalConfig.Git.MainBranch).GetOrPanic()
+	return userInput, actualMainBranch, false, nil
+}
+
 func testForgeAuth(args testForgeAuthArgs) (repeat bool, exit dialogdomain.Exit, err error) {
 	if _, inTest := os.LookupEnv(subshell.TestToken); inTest {
 		return false, false, nil
