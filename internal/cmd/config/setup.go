@@ -173,9 +173,9 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 			return emptyResult, exit, err
 		}
 	}
-	unknownBranchType := repo.UnvalidatedConfig.NormalConfig.UnknownBranchType
+	unknownBranchType := None[configdomain.UnknownBranchType]()
 	if configFile.UnknownBranchType.IsNone() {
-		unknownBranchType, exit, err = dialog.UnknownBranchType(unknownBranchType, data.dialogInputs)
+		unknownBranchType, exit, err = dialog.UnknownBranchType(repo.UnvalidatedConfig, data.dialogInputs)
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}

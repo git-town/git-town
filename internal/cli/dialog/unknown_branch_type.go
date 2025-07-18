@@ -6,9 +6,10 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/gohacks/slice"
 	"github.com/git-town/git-town/v21/internal/messages"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 const (
@@ -20,16 +21,35 @@ Git Town cannot determine their type any other way.
 `
 )
 
-func UnknownBranchType(existingValue configdomain.UnknownBranchType, inputs dialogcomponents.TestInputs) (configdomain.UnknownBranchType, dialogdomain.Exit, error) {
-	options := []configdomain.BranchType{
-		configdomain.BranchTypeContributionBranch,
-		configdomain.BranchTypeFeatureBranch,
-		configdomain.BranchTypeObservedBranch,
-		configdomain.BranchTypeParkedBranch,
-		configdomain.BranchTypePrototypeBranch,
+func UnknownBranchType(unvalidatedConfig config.UnvalidatedConfig, inputs dialogcomponents.TestInputs) (Option[configdomain.UnknownBranchType], dialogdomain.Exit, error) {
+	entries := make(list.Entries[Option[configdomain.UnknownBranchType]], 0, 5)
+	if globalValue, has := config.G.Get(); has {
+		entries = append(entries, list.Entry[Option[configdomain.UnknownBranchType]]{
+			Data: None[configdomain.UnknownBranchType](),
+			Text: fmt.Sprintf("use global value (%s)", globalValue),
+		})
 	}
-	cursor := slice.Index(options, existingValue.BranchType()).GetOrElse(0)
-	selection, exit, err := dialogcomponents.RadioList(list.NewEntries(options...), cursor, unknownBranchTypeTitle, UnknownBranchTypeHelp, inputs, "unknown-branch-type")
-	fmt.Printf(messages.UnknownBranchType, dialogcomponents.FormattedSelection(selection.String(), exit))
-	return configdomain.UnknownBranchType(selection), exit, err
+	entries = appendEntry(entries, configdomain.BranchTypeContributionBranch)
+	entries = appendEntry(entries, configdomain.BranchTypeFeatureBranch)
+	entries = appendEntry(entries, configdomain.BranchTypeObservedBranch)
+	entries = appendEntry(entries, configdomain.BranchTypeParkedBranch)
+	entries = appendEntry(entries, configdomain.BranchTypePrototypeBranch)
+	defaultPos := determinePos(entries, localGitValue)
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, shareNewBranchesTitle, ShareNewBranchesHelp, inputs, "share-new-branches")
+	fmt.Printf(messages.ShareNewBranches, dialogcomponents.FormattedSelection(selection.String(), exit))
+	return selection, exit, err
+}
+
+func appendEntry(entries list.Entries[Option[configdomain.UnknownBranchType]], branchType configdomain.BranchType) list.Entries[Option[configdomain.UnknownBranchType]] {
+	return append(entries, list.Entry[Option[configdomain.UnknownBranchType]]{
+		Data: Some(configdomain.UnknownBranchType(branchType)),
+		Text: branchType.String(),
+	})
+}
+
+func determinePos(entries list.Entries[Option[configdomain.UnknownBranchType]], localGitValue Option[configdomain.UnknownBranchType]) int {
+	if localValue, has := localGitValue.Get(); has {
+		return entries.IndexOf(Some(localValue))
+	}
+	return 0
 }
