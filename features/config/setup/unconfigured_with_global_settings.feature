@@ -26,10 +26,10 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | aliases                     | enter       |
       | main branch                 | enter       |
       | perennial branches          | enter       |
-      | perennial regex             | 1 1 1 enter |
-      | feature regex               | 2 2 2 enter |
-      | contribution regex          | 3 3 3 enter |
-      | observed regex              | 4 4 4 enter |
+      | perennial regex             | p p p enter |
+      | feature regex               | f f f enter |
+      | contribution regex          | c c c enter |
+      | observed regex              | o o o enter |
       | new branch type             | enter       |
       | unknown branch type         | enter       |
       | origin hostname             | enter       |
@@ -49,7 +49,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | git config git-town.new-branch-type prototype         |
       | git config git-town.main-branch main                  |
       | git config git-town.perennial-branches public         |
-      | git config git-town.perennial-regex 111               |
+      | git config git-town.perennial-regex ppp               |
       | git config git-town.feature-regex ^kg-222             |
       | git config git-town.contribution-regex release-333    |
       | git config git-town.observed-regex staging-444        |

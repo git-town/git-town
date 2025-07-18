@@ -124,6 +124,10 @@ func recognizeTestInput(input string) tea.Msg { //nolint:ireturn
 		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'y'}} //exhaustruct:ignore
 	case "z":
 		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'z'}} //exhaustruct:ignore
+	case "^":
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'^'}} //exhaustruct:ignore
+	case "-":
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'-'}} //exhaustruct:ignore
 	}
 	panic("unknown test input: " + input)
 }
