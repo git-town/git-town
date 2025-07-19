@@ -122,25 +122,13 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	var mainBranch gitdomain.LocalBranchName
-	if configFileMainBranch, configFileHasMainBranch := configFile.MainBranch.Get(); configFileHasMainBranch {
-		mainBranch = configFileMainBranch
-	} else {
-		existingMainBranch := repo.UnvalidatedConfig.UnvalidatedConfig.MainBranch
-		if existingMainBranch.IsNone() {
-			existingMainBranch = gitconfig.DefaultBranch(repo.Backend)
-		}
-		if existingMainBranch.IsNone() {
-			existingMainBranch = repo.Git.OriginHead(repo.Backend)
-		}
-		mainBranch, exit, err = dialog.MainBranch(data.localBranches.Names(), existingMainBranch, data.dialogInputs)
-		if err != nil || exit {
-			return emptyResult, exit, err
-		}
+	mainBranchSetting, actualMainBranch, exit, err := enterMainBranch(repo, data)
+	if err != nil || exit {
+		return emptyResult, exit, err
 	}
 	perennialBranches := repo.UnvalidatedConfig.NormalConfig.PerennialBranches
 	if len(configFile.PerennialBranches) == 0 {
-		perennialBranches, exit, err = dialog.PerennialBranches(data.localBranches.Names(), perennialBranches, mainBranch, data.dialogInputs)
+		perennialBranches, exit, err = dialog.PerennialBranches(data.localBranches.Names(), perennialBranches, actualMainBranch, data.dialogInputs)
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}
@@ -385,7 +373,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		GiteaToken:               giteaToken,
 		HostingOriginHostname:    hostingOriginHostName,
 		Lineage:                  configdomain.Lineage{}, // the setup assistant doesn't ask for this
-		MainBranch:               Some(mainBranch),
+		MainBranch:               mainBranchSetting,
 		NewBranchType:            newBranchType,
 		ObservedRegex:            observedRegex,
 		Offline:                  None[configdomain.Offline](), // the setup assistant doesn't ask for this
@@ -406,7 +394,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	validatedData := configdomain.ValidatedConfigData{
 		GitUserEmail: "", // the setup assistant doesn't ask for this
 		GitUserName:  "", // the setup assistant doesn't ask for this
-		MainBranch:   mainBranch,
+		MainBranch:   actualMainBranch,
 	}
 	if !data.dialogInputs.IsEmpty() {
 		panic("unused dialog inputs")
@@ -421,6 +409,21 @@ type userInput struct {
 	scope               configdomain.ConfigScope
 	storageLocation     dialog.ConfigStorageOption
 	validatedConfig     configdomain.ValidatedConfigData
+}
+
+func enterMainBranch(repo execute.OpenRepoResult, data setupData) (userChoice Option[gitdomain.LocalBranchName], actualMainBranch gitdomain.LocalBranchName, exit dialogdomain.Exit, err error) {
+	if configFile, hasConfigFile := repo.UnvalidatedConfig.File.Get(); hasConfigFile {
+		if configFileMainBranch, hasMain := configFile.MainBranch.Get(); hasMain {
+			return Some(configFileMainBranch), configFileMainBranch, false, nil
+		}
+	}
+	return dialog.MainBranch(dialog.MainBranchArgs{
+		GitStandardBranch:     repo.Git.StandardBranch(repo.Backend),
+		Inputs:                data.dialogInputs,
+		LocalBranches:         data.localBranches.Names(),
+		LocalGitMainBranch:    repo.UnvalidatedConfig.GitLocal.MainBranch,
+		UnscopedGitMainBranch: repo.UnvalidatedConfig.GitUnscoped.MainBranch,
+	})
 }
 
 func testForgeAuth(args testForgeAuthArgs) (repeat bool, exit dialogdomain.Exit, err error) {
