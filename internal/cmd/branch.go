@@ -65,7 +65,7 @@ func executeBranch(cliConfig cliconfig.CliConfig) error {
 	if err != nil || exit {
 		return err
 	}
-	entries := SwitchBranchEntries(data.branchInfos, []configdomain.BranchType{}, data.branchesAndTypes, data.lineage, data.unknownBranchType, false, []*regexp.Regexp{})
+	entries := SwitchBranchEntries(data.branchInfos, []configdomain.BranchType{}, data.branchesAndTypes, repo.UnvalidatedConfig.NormalConfig.Lineage, repo.UnvalidatedConfig.NormalConfig.UnknownBranchType, false, []*regexp.Regexp{})
 	fmt.Print(branchLayout(entries, data))
 	return nil
 }
@@ -105,26 +105,21 @@ func determineBranchData(repo execute.OpenRepoResult, cliConfig cliconfig.CliCon
 			initialBranchOpt = Some(initialBranch)
 		}
 	}
-	unknownBranchType := repo.UnvalidatedConfig.NormalConfig.UnknownBranchType
 	colors := colors.NewDialogColors()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.Names())
 	return branchData{
-		branchInfos:       branchesSnapshot.Branches,
-		branchesAndTypes:  branchesAndTypes,
-		colors:            colors,
-		initialBranchOpt:  initialBranchOpt,
-		lineage:           repo.UnvalidatedConfig.NormalConfig.Lineage,
-		unknownBranchType: unknownBranchType,
+		branchInfos:      branchesSnapshot.Branches,
+		branchesAndTypes: branchesAndTypes,
+		colors:           colors,
+		initialBranchOpt: initialBranchOpt,
 	}, false, err
 }
 
 type branchData struct {
-	branchInfos       gitdomain.BranchInfos
-	branchesAndTypes  configdomain.BranchesAndTypes
-	colors            colors.DialogColors
-	initialBranchOpt  Option[gitdomain.LocalBranchName]
-	lineage           configdomain.Lineage
-	unknownBranchType configdomain.UnknownBranchType
+	branchInfos      gitdomain.BranchInfos
+	branchesAndTypes configdomain.BranchesAndTypes
+	colors           colors.DialogColors
+	initialBranchOpt Option[gitdomain.LocalBranchName]
 }
 
 func branchLayout(entries dialog.SwitchBranchEntries, data branchData) string {
