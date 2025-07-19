@@ -46,6 +46,7 @@ Feature: don't ask for information already provided by the config file
       | DIALOG                | KEYS  |
       | welcome               | enter |
       | aliases               | enter |
+      | perennial branches    | enter |
       | github connector type | enter |
       | config storage        | enter |
     Then Git Town runs no commands
