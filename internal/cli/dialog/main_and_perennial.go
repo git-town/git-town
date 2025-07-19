@@ -24,8 +24,8 @@ func MainAndPerennials(args MainAndPerennialsArgs) (mainBranch gitdomain.LocalBr
 	if err != nil || exit {
 		return "", gitdomain.LocalBranchNames{}, exit, err
 	}
-	perennials, exit, err = PerennialBranches(args.LocalBranches, args.UnvalidatedConfig.NormalConfig.PerennialBranches, mainBranch, args.DialogInputs)
 	actualMain := mainBranchOpt.Or(args.UnvalidatedConfig.GitUnscoped.MainBranch).GetOrPanic()
+	perennials, exit, err = PerennialBranches(args.LocalBranches, args.UnvalidatedConfig.NormalConfig.PerennialBranches, mainBranch, args.DialogInputs)
 	return actualMain, perennials, exit, err
 }
 
