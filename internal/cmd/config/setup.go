@@ -126,7 +126,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		return emptyResult, exit, err
 	}
 	perennialBranches := repo.UnvalidatedConfig.NormalConfig.PerennialBranches
-	if len(data.configFile.PerennialBranches) == 0 {
+	if len(repo.UnvalidatedConfig.File.PerennialBranches) == 0 {
 		perennialBranches, exit, err = dialog.PerennialBranches(data.localBranches.Names(), perennialBranches, actualMainBranch, data.dialogInputs)
 		if err != nil || exit {
 			return emptyResult, exit, err
