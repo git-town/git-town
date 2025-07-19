@@ -34,6 +34,8 @@ func MainBranch(args MainBranchArgs) (Option[gitdomain.LocalBranchName], dialogd
 			Text: localBranch.String(),
 		})
 	}
+
+	// optionally add "None" entry and pre-select the already configured value
 	cursor := 0
 	unscopedMain, hasUnscoped := args.UnscopedGitMainBranch.Get()
 	local, hasLocal := args.LocalGitMainBranch.Get()
@@ -57,6 +59,7 @@ func MainBranch(args MainBranchArgs) (Option[gitdomain.LocalBranchName], dialogd
 		entries = append(list.Entries[Option[gitdomain.LocalBranchName]]{noneEntry}, entries...)
 		cursor = entries.IndexOf(Some(local))
 	}
+	// show the dialog
 	selection, exit, err := dialogcomponents.RadioList(entries, cursor, mainBranchTitle, MainBranchHelp, args.Inputs, "main-branch")
 	fmt.Printf(messages.MainBranch, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
