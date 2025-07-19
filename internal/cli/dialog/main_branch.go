@@ -27,10 +27,9 @@ This is typically the branch called
 
 // MainBranch lets the user select a new main branch for this repo.
 func MainBranch(args MainBranchArgs) (Option[gitdomain.LocalBranchName], dialogdomain.Exit, error) {
-	// if mainbranch is configured in unscoped Git config but not in local: add option "use global setting" with None
-	// if set in local config: don't add None option, preselect local setting
-	// if no local config: don't add None option, keep existing preselect nothing
-	// if global and local: add global option but preselect the local one
+	// if local: don't add None option, preselect local setting
+	// if no local and unscoped: add None option and preselect it
+	// if local and different unscoped: add None option but preselect the local one
 	entries := list.Entries[Option[gitdomain.LocalBranchName]]{}
 	if unscopedMain, hasUnscoped := args.UnscopedGitMainBranch.Get(); hasUnscoped {
 		if args.LocalGitMainBranch.IsNone() {
