@@ -104,7 +104,7 @@ func executeShip(args []string, cliConfig cliconfig.CliConfig, message Option[gi
 		if err != nil {
 			return err
 		}
-		if err = shipAPIProgram(prog, sharedData, apiData, message); err != nil {
+		if err = shipAPIProgram(prog, repo, sharedData, apiData, message); err != nil {
 			return err
 		}
 	case configdomain.ShipStrategyAlwaysMerge:
@@ -112,19 +112,19 @@ func executeShip(args []string, cliConfig cliconfig.CliConfig, message Option[gi
 		if err != nil {
 			return err
 		}
-		shipProgramAlwaysMerge(prog, sharedData, mergeData, message)
+		shipProgramAlwaysMerge(prog, repo, sharedData, mergeData, message)
 	case configdomain.ShipStrategyFastForward:
 		mergeData, err := determineMergeData(repo, sharedData.branchNameToShip, sharedData.targetBranchName)
 		if err != nil {
 			return err
 		}
-		shipProgramFastForward(prog, sharedData, mergeData)
+		shipProgramFastForward(prog, repo, sharedData, mergeData)
 	case configdomain.ShipStrategySquashMerge:
 		squashMergeData, err := determineMergeData(repo, sharedData.branchNameToShip, sharedData.targetBranchName)
 		if err != nil {
 			return err
 		}
-		shipProgramSquashMerge(prog, sharedData, squashMergeData, message)
+		shipProgramSquashMerge(prog, repo, sharedData, squashMergeData, message)
 	}
 	optimizedProgram := optimizer.Optimize(prog.Immutable())
 	runState := runstate.RunState{
