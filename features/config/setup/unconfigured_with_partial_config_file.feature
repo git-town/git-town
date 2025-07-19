@@ -1,22 +1,27 @@
 @messyoutput
 Feature: ask for information not provided by the config file
 
+  @this
   Scenario:
     Given a Git repo with origin
     And Git Town is not configured
+    And the branches
+      | NAME     | TYPE   | LOCATIONS |
+      | branch-1 | (none) | local     |
     And the committed configuration file:
       """
       [branches]
       main = "main"
-
+      perennials = ["public"]
+      
       [hosting]
       dev-remote = "something"
       forge-type = "github"
       origin-hostname = "github.com"
-
+      
       [ship]
       delete-tracking-branch = false
-
+      
       [sync]
       tags = false
       upstream = false
@@ -25,6 +30,7 @@ Feature: ask for information not provided by the config file
       | DIALOG                  | KEYS                  |
       | welcome                 | enter                 |
       | aliases                 | enter                 |
+      | perennial branches      | space enter           |
       | perennial regex         | p e r e n enter       |
       | feature regex           | f e a t enter         |
       | contribution regex      | c o n t enter         |
