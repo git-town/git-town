@@ -12,8 +12,8 @@ import (
 )
 
 type UnvalidatedConfig struct {
-	Defaults          NormalConfig                       // default values
-	File              Option[configdomain.PartialConfig] // content of git-town.toml, nil = no config file exists
+	Defaults          NormalConfig               // default values
+	File              configdomain.PartialConfig // content of git-town.toml
 	GitGlobal         configdomain.PartialConfig
 	GitLocal          configdomain.PartialConfig
 	GitUnscoped       configdomain.PartialConfig // configuration data taken from Git metadata, in particular the unscoped Git metadata
@@ -100,7 +100,7 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 
 type NewUnvalidatedConfigArgs struct {
 	CliConfig     cliconfig.CliConfig
-	ConfigFile    Option[configdomain.PartialConfig]
+	ConfigFile    configdomain.PartialConfig
 	Defaults      NormalConfig
 	EnvConfig     configdomain.PartialConfig
 	FinalMessages stringslice.Collector
@@ -111,9 +111,7 @@ type NewUnvalidatedConfigArgs struct {
 
 func mergeConfigs(args mergeConfigsArgs) (configdomain.UnvalidatedConfigData, NormalConfig) {
 	result := configdomain.EmptyPartialConfig()
-	if configFile, hasConfigFile := args.file.Get(); hasConfigFile {
-		result = result.Merge(configFile)
-	}
+	result = result.Merge(args.file)
 	result = result.Merge(args.git)
 	result = result.Merge(args.env)
 	result.DryRun = Some(args.cli.DryRun)
@@ -124,7 +122,7 @@ func mergeConfigs(args mergeConfigsArgs) (configdomain.UnvalidatedConfigData, No
 type mergeConfigsArgs struct {
 	cli      cliconfig.CliConfig
 	defaults NormalConfig
-	env      configdomain.PartialConfig         // configuration data taken from environment variables
-	file     Option[configdomain.PartialConfig] // data of the configuration file
+	env      configdomain.PartialConfig // configuration data taken from environment variables
+	file     configdomain.PartialConfig // data of the configuration file
 	git      configdomain.PartialConfig
 }
