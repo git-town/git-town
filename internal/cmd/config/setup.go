@@ -75,7 +75,7 @@ func executeConfigSetup(cliConfig cliconfig.CliConfig) error {
 	if err != nil || exit {
 		return err
 	}
-	if err = saveAll(enterDataResult, repo.UnvalidatedConfig, data.configFile, data, repo.Frontend); err != nil {
+	if err = saveAll(enterDataResult, repo.UnvalidatedConfig, repo.UnvalidatedConfig.File, data, repo.Frontend); err != nil {
 		return err
 	}
 	return configinterpreter.Finished(configinterpreter.FinishedArgs{
@@ -94,8 +94,6 @@ func executeConfigSetup(cliConfig cliconfig.CliConfig) error {
 
 type setupData struct {
 	backend       subshelldomain.Querier
-	config        config.UnvalidatedConfig
-	configFile    configdomain.PartialConfig
 	dialogInputs  dialogcomponents.TestInputs
 	localBranches gitdomain.BranchInfos
 	remotes       gitdomain.Remotes
@@ -187,7 +185,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	bitbucketUsername := repo.UnvalidatedConfig.NormalConfig.BitbucketUsername
 	bitbucketAppPassword := repo.UnvalidatedConfig.NormalConfig.BitbucketAppPassword
 	codebergToken := repo.UnvalidatedConfig.NormalConfig.CodebergToken
-	devURL := data.config.NormalConfig.DevURL(data.backend)
+	devURL := repo.UnvalidatedConfig.NormalConfig.DevURL(data.backend)
 	giteaToken := repo.UnvalidatedConfig.NormalConfig.GiteaToken
 	githubConnectorTypeOpt := repo.UnvalidatedConfig.NormalConfig.GitHubConnectorType
 	githubToken := repo.UnvalidatedConfig.NormalConfig.GitHubToken
@@ -261,7 +259,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 			gitlabConnectorType:  gitlabConnectorTypeOpt,
 			gitlabToken:          gitlabToken,
 			inputs:               data.dialogInputs,
-			remoteURL:            data.config.NormalConfig.RemoteURL(data.backend, devRemote),
+			remoteURL:            repo.UnvalidatedConfig.NormalConfig.RemoteURL(data.backend, devRemote),
 		})
 		if err != nil || exit {
 			return emptyResult, exit, err
@@ -275,7 +273,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		bitbucketUsername:    bitbucketUsername,
 		codebergToken:        codebergToken,
 		determinedForgeType:  actualForgeType,
-		existingConfig:       data.config.NormalConfig,
+		existingConfig:       repo.UnvalidatedConfig.NormalConfig,
 		giteaToken:           giteaToken,
 		githubToken:          githubToken,
 		gitlabToken:          gitlabToken,
@@ -595,8 +593,6 @@ func loadSetupData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (
 	}
 	return setupData{
 		backend:       repo.Backend,
-		config:        repo.UnvalidatedConfig,
-		configFile:    repo.UnvalidatedConfig.File,
 		dialogInputs:  dialogTestInputs,
 		localBranches: branchesSnapshot.Branches,
 		remotes:       remotes,

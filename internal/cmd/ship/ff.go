@@ -2,13 +2,14 @@ package ship
 
 import (
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/vm/opcodes"
 	"github.com/git-town/git-town/v21/internal/vm/program"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-func shipProgramFastForward(prog Mutable[program.Program], sharedData sharedShipData, squashMergeData shipDataMerge) {
+func shipProgramFastForward(prog Mutable[program.Program], repo execute.OpenRepoResult, sharedData sharedShipData, squashMergeData shipDataMerge) {
 	prog.Value.Add(&opcodes.BranchEnsureShippableChanges{Branch: sharedData.branchNameToShip, Parent: sharedData.targetBranchName})
 	if sharedData.initialBranch != sharedData.targetBranchName {
 		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: sharedData.targetBranchName})
@@ -30,7 +31,7 @@ func shipProgramFastForward(prog Mutable[program.Program], sharedData sharedShip
 	for _, child := range sharedData.childBranches {
 		prog.Value.Add(&opcodes.LineageParentSetToGrandParent{Branch: child})
 	}
-	if !sharedData.dryRun {
+	if !repo.UnvalidatedConfig.NormalConfig.DryRun {
 		prog.Value.Add(&opcodes.LineageParentRemove{Branch: sharedData.branchNameToShip})
 	}
 	if !sharedData.isShippingInitialBranch {
@@ -39,7 +40,7 @@ func shipProgramFastForward(prog Mutable[program.Program], sharedData sharedShip
 	prog.Value.Add(&opcodes.BranchLocalDelete{Branch: sharedData.branchNameToShip})
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{sharedData.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
-		DryRun:                   sharedData.dryRun,
+		DryRun:                   repo.UnvalidatedConfig.NormalConfig.DryRun,
 		InitialStashSize:         sharedData.stashSize,
 		RunInGitRoot:             true,
 		StashOpenChanges:         !sharedData.isShippingInitialBranch && sharedData.hasOpenChanges,

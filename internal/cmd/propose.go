@@ -155,7 +155,6 @@ type proposeData struct {
 	config              config.ValidatedConfig
 	connector           Option[forgedomain.Connector]
 	dialogTestInputs    dialogcomponents.TestInputs
-	dryRun              configdomain.DryRun
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
 	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
@@ -336,7 +335,6 @@ func determineProposeData(repo execute.OpenRepoResult, cliConfig cliconfig.CliCo
 		config:              validatedConfig,
 		connector:           connectorOpt,
 		dialogTestInputs:    dialogTestInputs,
-		dryRun:              cliConfig.DryRun,
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
 		nonExistingBranches: nonExistingBranches,
@@ -382,7 +380,7 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 		})
 		previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 		cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
-			DryRun:                   data.dryRun,
+			DryRun:                   data.config.NormalConfig.DryRun,
 			InitialStashSize:         data.stashSize,
 			RunInGitRoot:             true,
 			StashOpenChanges:         data.hasOpenChanges,

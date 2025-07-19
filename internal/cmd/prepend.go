@@ -187,7 +187,6 @@ type prependData struct {
 	config              config.ValidatedConfig
 	connector           Option[forgedomain.Connector]
 	dialogTestInputs    dialogcomponents.TestInputs
-	dryRun              configdomain.DryRun
 	existingParent      gitdomain.LocalBranchName
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
@@ -342,7 +341,6 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, cliConfig 
 		config:              validatedConfig,
 		connector:           connector,
 		dialogTestInputs:    dialogTestInputs,
-		dryRun:              cliConfig.DryRun,
 		existingParent:      ancestor,
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
@@ -441,7 +439,7 @@ func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages
 	} else {
 		previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 		cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
-			DryRun:                   data.dryRun,
+			DryRun:                   repo.UnvalidatedConfig.NormalConfig.DryRun,
 			InitialStashSize:         data.stashSize,
 			RunInGitRoot:             true,
 			StashOpenChanges:         data.hasOpenChanges,

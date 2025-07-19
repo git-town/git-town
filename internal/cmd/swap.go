@@ -157,7 +157,6 @@ type swapData struct {
 	config              config.ValidatedConfig
 	connector           Option[forgedomain.Connector]
 	dialogTestInputs    dialogcomponents.TestInputs
-	dryRun              configdomain.DryRun
 	grandParentBranch   gitdomain.LocalBranchName
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
@@ -316,7 +315,6 @@ func determineSwapData(args []string, repo execute.OpenRepoResult, cliConfig cli
 		config:              validatedConfig,
 		connector:           connector,
 		dialogTestInputs:    dialogTestInputs,
-		dryRun:              cliConfig.DryRun,
 		grandParentBranch:   grandParentBranch,
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
@@ -386,7 +384,7 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 		}
 	}
 	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.branchToSwapName})
-	if !data.dryRun {
+	if !data.config.NormalConfig.DryRun {
 		prog.Value.Add(
 			&opcodes.LineageParentSet{
 				Branch: data.branchToSwapName,
@@ -407,7 +405,7 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 		}
 	}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
-		DryRun:                   data.dryRun,
+		DryRun:                   data.config.NormalConfig.DryRun,
 		InitialStashSize:         data.stashSize,
 		RunInGitRoot:             true,
 		StashOpenChanges:         false,

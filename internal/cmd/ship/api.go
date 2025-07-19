@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -45,7 +46,7 @@ func determineAPIData(sharedData sharedShipData) (result shipDataAPI, err error)
 	}, err
 }
 
-func shipAPIProgram(prog Mutable[program.Program], sharedData sharedShipData, apiData shipDataAPI, commitMessage Option[gitdomain.CommitMessage]) error {
+func shipAPIProgram(prog Mutable[program.Program], repo execute.OpenRepoResult, sharedData sharedShipData, apiData shipDataAPI, commitMessage Option[gitdomain.CommitMessage]) error {
 	branchToShipLocal, hasLocalBranchToShip := sharedData.branchToShip.LocalName.Get()
 	UpdateChildBranchProposalsToGrandParent(prog.Value, sharedData.proposalsOfChildBranches)
 	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: sharedData.targetBranchName})
@@ -67,7 +68,7 @@ func shipAPIProgram(prog Mutable[program.Program], sharedData sharedShipData, ap
 	if hasLocalBranchToShip {
 		prog.Value.Add(&opcodes.BranchLocalDelete{Branch: branchToShipLocal})
 	}
-	if !sharedData.dryRun {
+	if !repo.UnvalidatedConfig.NormalConfig.DryRun {
 		prog.Value.Add(&opcodes.LineageParentRemove{Branch: branchToShipLocal})
 	}
 	for _, child := range sharedData.childBranches {
@@ -75,7 +76,7 @@ func shipAPIProgram(prog Mutable[program.Program], sharedData sharedShipData, ap
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{sharedData.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
-		DryRun:                   sharedData.dryRun,
+		DryRun:                   repo.UnvalidatedConfig.NormalConfig.DryRun,
 		InitialStashSize:         sharedData.stashSize,
 		RunInGitRoot:             true,
 		StashOpenChanges:         !sharedData.isShippingInitialBranch && sharedData.hasOpenChanges,

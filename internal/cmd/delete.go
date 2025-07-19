@@ -158,7 +158,6 @@ type deleteData struct {
 	config                   config.ValidatedConfig
 	connector                Option[forgedomain.Connector]
 	dialogTestInputs         dialogcomponents.TestInputs
-	dryRun                   configdomain.DryRun
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
 	nonExistingBranches      gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
@@ -272,7 +271,6 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult, cliConfig c
 		config:                   validatedConfig,
 		connector:                connector,
 		dialogTestInputs:         dialogTestInputs,
-		dryRun:                   cliConfig.DryRun,
 		hasOpenChanges:           repoStatus.OpenChanges,
 		initialBranch:            initialBranch,
 		nonExistingBranches:      nonExistingBranches,
@@ -310,7 +308,7 @@ func deleteProgram(repo execute.OpenRepoResult, data deleteData, finalMessages s
 	}
 	localBranchNameToDelete, hasLocalBranchToDelete := data.branchToDeleteInfo.LocalName.Get()
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
-		DryRun:                   data.dryRun,
+		DryRun:                   data.config.NormalConfig.DryRun,
 		InitialStashSize:         data.stashSize,
 		RunInGitRoot:             true,
 		StashOpenChanges:         hasLocalBranchToDelete && data.initialBranch != localBranchNameToDelete && data.hasOpenChanges,
@@ -364,7 +362,7 @@ func deleteLocalBranch(prog, finalUndoProgram Mutable[program.Program], data del
 		prog.Value.Add(&opcodes.BranchLocalDelete{
 			Branch: localBranchToDelete,
 		})
-		if !data.dryRun {
+		if !data.config.NormalConfig.DryRun {
 			sync.RemoveBranchConfiguration(sync.RemoveBranchConfigurationArgs{
 				Branch:  localBranchToDelete,
 				Lineage: data.config.NormalConfig.Lineage,
