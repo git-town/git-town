@@ -24,6 +24,8 @@ For more flexible configuration,
 you can also use the "perennial-regex" setting
 to match branch names dynamically.
 
+The main branch is automatically perennial
+and therefore always selected in this list.
 The perennial branches defined in the config file
 or global Git configuration cannot be changed here.
 `
