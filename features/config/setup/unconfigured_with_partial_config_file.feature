@@ -4,10 +4,14 @@ Feature: ask for information not provided by the config file
   Scenario:
     Given a Git repo with origin
     And Git Town is not configured
+    And the branches
+      | NAME     | TYPE   | LOCATIONS |
+      | branch-1 | (none) | local     |
     And the committed configuration file:
       """
       [branches]
       main = "main"
+      perennials = ["public"]
 
       [hosting]
       dev-remote = "something"
