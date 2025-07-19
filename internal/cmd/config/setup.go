@@ -75,7 +75,7 @@ func executeConfigSetup(cliConfig cliconfig.CliConfig) error {
 	if err != nil || exit {
 		return err
 	}
-	if err = saveAll(enterDataResult, repo.UnvalidatedConfig, repo.Frontend); err != nil {
+	if err = saveAll(enterDataResult, repo.UnvalidatedConfig, data.configFile, data, repo.Frontend); err != nil {
 		return err
 	}
 	return configinterpreter.Finished(configinterpreter.FinishedArgs{
@@ -150,9 +150,16 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	unknownBranchType := repo.UnvalidatedConfig.NormalConfig.UnknownBranchType
+	newBranchType := repo.UnvalidatedConfig.NormalConfig.NewBranchType
+	if configFile.NewBranchType.IsNone() {
+		newBranchType, exit, err = dialog.NewBranchType(newBranchType, data.dialogInputs)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+	}
+	unknownBranchType := None[configdomain.UnknownBranchType]()
 	if configFile.UnknownBranchType.IsNone() {
-		unknownBranchType, exit, err = dialog.UnknownBranchType(unknownBranchType, data.dialogInputs)
+		unknownBranchType, exit, err = dialog.UnknownBranchType(repo.UnvalidatedConfig, data.dialogInputs)
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}
@@ -315,14 +322,6 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 			return emptyResult, exit, err
 		}
 	}
-	// TODO: move this up below UnknownBranchType
-	newBranchType := repo.UnvalidatedConfig.NormalConfig.NewBranchType
-	if configFile.NewBranchType.IsNone() {
-		newBranchType, exit, err = dialog.NewBranchType(newBranchType, data.dialogInputs)
-		if err != nil || exit {
-			return emptyResult, exit, err
-		}
-	}
 	shipStrategy := repo.UnvalidatedConfig.NormalConfig.ShipStrategy
 	if configFile.ShipStrategy.IsNone() {
 		shipStrategy, exit, err = dialog.ShipStrategy(shipStrategy, data.dialogInputs)
@@ -378,7 +377,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		SyncPrototypeStrategy:    syncPrototypeStrategy,
 		SyncTags:                 Some(syncTags),
 		SyncUpstream:             Some(syncUpstream),
-		UnknownBranchType:        Some(unknownBranchType),
+		UnknownBranchType:        unknownBranchType,
 		Verbose:                  None[configdomain.Verbose](), // the setup assistant doesn't ask for this
 	}
 	if data.dialogInputs.IsEmpty() {
@@ -510,7 +509,7 @@ type enterTokenScopeArgs struct {
 	bitbucketUsername    Option[forgedomain.BitbucketUsername]
 	codebergToken        Option[forgedomain.CodebergToken]
 	determinedForgeType  Option[forgedomain.ForgeType]
-	existingConfig       configdomain.NormalConfigData
+	existingConfig       config.NormalConfig
 	giteaToken           Option[forgedomain.GiteaToken]
 	githubToken          Option[forgedomain.GitHubToken]
 	gitlabToken          Option[forgedomain.GitLabToken]

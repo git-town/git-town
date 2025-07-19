@@ -13,9 +13,8 @@ import (
 )
 
 func MainAndPerennials(args MainAndPerennialsArgs) (mainBranch gitdomain.LocalBranchName, perennials gitdomain.LocalBranchNames, exit dialogdomain.Exit, err error) {
-	unvalidatedMain, hasMain := args.UnvalidatedMain.Get()
-	if hasMain {
-		return unvalidatedMain, gitdomain.LocalBranchNames{}, false, nil
+	if unvalidatedMain, hasMain := args.UnvalidatedConfig.UnvalidatedConfig.MainBranch.Get(); hasMain {
+		return unvalidatedMain, args.UnvalidatedConfig.NormalConfig.PerennialBranches, false, nil
 	}
 	fmt.Print(messages.ConfigNeeded)
 	mainBranchOpt, exit, err := MainBranch(MainBranchArgs{
@@ -45,5 +44,4 @@ type MainAndPerennialsArgs struct {
 	GetDefaultBranch  func(subshelldomain.Querier) Option[gitdomain.LocalBranchName]
 	LocalBranches     gitdomain.LocalBranchNames
 	UnvalidatedConfig config.UnvalidatedConfig
-	UnvalidatedMain   Option[gitdomain.LocalBranchName]
 }

@@ -30,7 +30,6 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 			GetDefaultBranch:  gitconfig.DefaultBranch,
 			LocalBranches:     args.LocalBranches,
 			UnvalidatedConfig: *args.Unvalidated.Value,
-			UnvalidatedMain:   args.Unvalidated.Value.UnvalidatedConfig.MainBranch,
 		})
 		if err != nil || exit {
 			return config.EmptyValidatedConfig(), exit, err
