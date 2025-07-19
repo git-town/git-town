@@ -128,7 +128,6 @@ type renameData struct {
 	config                   config.ValidatedConfig
 	connector                Option[forgedomain.Connector]
 	dialogTestInputs         dialogcomponents.TestInputs
-	dryRun                   configdomain.DryRun
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
 	newBranch                gitdomain.LocalBranchName
@@ -264,7 +263,6 @@ func determineRenameData(args []string, cliConfig cliconfig.CliConfig, force con
 		config:                   validatedConfig,
 		connector:                connector,
 		dialogTestInputs:         dialogTestInputs,
-		dryRun:                   cliConfig.DryRun,
 		hasOpenChanges:           repoStatus.OpenChanges,
 		initialBranch:            initialBranch,
 		newBranch:                newBranchName,
@@ -288,7 +286,7 @@ func renameProgram(repo execute.OpenRepoResult, data renameData, finalMessages s
 	if data.initialBranch == oldLocalBranch {
 		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.newBranch})
 	}
-	if !data.dryRun {
+	if !data.config.NormalConfig.DryRun {
 		if override, hasBranchTypeOverride := data.config.NormalConfig.BranchTypeOverrides[oldLocalBranch]; hasBranchTypeOverride {
 			prog.Value.Add(
 				&opcodes.ConfigSet{
@@ -329,7 +327,7 @@ func renameProgram(repo execute.OpenRepoResult, data renameData, finalMessages s
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.newBranch), data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
-		DryRun:                   data.dryRun,
+		DryRun:                   data.config.NormalConfig.DryRun,
 		InitialStashSize:         data.stashSize,
 		RunInGitRoot:             false,
 		StashOpenChanges:         false,
