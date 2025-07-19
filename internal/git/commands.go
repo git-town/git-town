@@ -23,6 +23,8 @@ import (
 // They don't change the user's repo, execute instantaneously, and Git Town needs to know their output.
 // They are invisible to the end user unless the "verbose" option is set.
 type Commands struct {
+	// TODO: convert the methods of this struct to stand-alone function.
+	// Provide the CurrentBranchCache or RemotesCache as an additional function argument if needed.
 	CurrentBranchCache *cache.WithPrevious[gitdomain.LocalBranchName] // caches the currently checked out Git branch
 	RemotesCache       *cache.Cache[gitdomain.Remotes]                // caches Git remotes
 }
