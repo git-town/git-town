@@ -26,7 +26,7 @@ func determineMergeData(repo execute.OpenRepoResult, branch, parent gitdomain.Lo
 	}, err
 }
 
-func shipProgramSquashMerge(prog Mutable[program.Program], sharedData sharedShipData, squashMergeData shipDataMerge, commitMessage Option[gitdomain.CommitMessage]) {
+func shipProgramSquashMerge(prog Mutable[program.Program], repo execute.OpenRepoResult, sharedData sharedShipData, squashMergeData shipDataMerge, commitMessage Option[gitdomain.CommitMessage]) {
 	prog.Value.Add(&opcodes.BranchEnsureShippableChanges{Branch: sharedData.branchNameToShip, Parent: sharedData.targetBranchName})
 	localTargetBranch, _ := sharedData.targetBranch.LocalName.Get()
 	if sharedData.initialBranch != sharedData.targetBranchName {
@@ -49,7 +49,7 @@ func shipProgramSquashMerge(prog Mutable[program.Program], sharedData sharedShip
 	for _, child := range sharedData.childBranches {
 		prog.Value.Add(&opcodes.LineageParentSetToGrandParent{Branch: child})
 	}
-	if !sharedData.dryRun {
+	if !repo.UnvalidatedConfig.NormalConfig.DryRun {
 		prog.Value.Add(&opcodes.LineageParentRemove{Branch: sharedData.branchNameToShip})
 	}
 	if !sharedData.isShippingInitialBranch {
@@ -58,7 +58,7 @@ func shipProgramSquashMerge(prog Mutable[program.Program], sharedData sharedShip
 	prog.Value.Add(&opcodes.BranchLocalDelete{Branch: sharedData.branchNameToShip})
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{sharedData.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
-		DryRun:                   sharedData.dryRun,
+		DryRun:                   repo.UnvalidatedConfig.NormalConfig.DryRun,
 		InitialStashSize:         sharedData.stashSize,
 		RunInGitRoot:             true,
 		StashOpenChanges:         !sharedData.isShippingInitialBranch && sharedData.hasOpenChanges,

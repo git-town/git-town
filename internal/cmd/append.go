@@ -177,7 +177,6 @@ type appendFeatureData struct {
 	connector                 Option[forgedomain.Connector]
 	detached                  configdomain.Detached
 	dialogTestInputs          dialogcomponents.TestInputs
-	dryRun                    configdomain.DryRun
 	hasOpenChanges            bool
 	initialBranch             gitdomain.LocalBranchName
 	initialBranchInfo         *gitdomain.BranchInfo
@@ -319,7 +318,6 @@ func determineAppendData(cliConfig cliconfig.CliConfig, targetBranch gitdomain.L
 		connector:                 connector,
 		detached:                  detached,
 		dialogTestInputs:          dialogTestInputs,
-		dryRun:                    cliConfig.DryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             initialBranch,
 		initialBranchInfo:         initialBranchInfo,
@@ -415,7 +413,7 @@ func appendProgram(frontend subshelldomain.Runner, data appendFeatureData, final
 	} else {
 		previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.initialBranch), data.previousBranch}
 		cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
-			DryRun:                   data.dryRun,
+			DryRun:                   data.config.NormalConfig.DryRun,
 			InitialStashSize:         data.stashSize,
 			RunInGitRoot:             true,
 			StashOpenChanges:         data.hasOpenChanges,
