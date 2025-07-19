@@ -418,7 +418,7 @@ func enterMainBranch(repo execute.OpenRepoResult, data setupData) (userInput Opt
 		}
 	}
 	userInput, exit, err = dialog.MainBranch(dialog.MainBranchArgs{
-		GitStandardBranch:     determineGitRepoDefaultBranch(repo),
+		GitStandardBranch:     repo.Git.StandardBranch(repo.Backend),
 		Inputs:                data.dialogInputs,
 		LocalBranches:         data.localBranches.Names(),
 		LocalGitMainBranch:    repo.UnvalidatedConfig.GitLocal.MainBranch,
@@ -432,14 +432,6 @@ func enterMainBranch(repo execute.OpenRepoResult, data setupData) (userInput Opt
 	// which is only visible if there is an unscoped main branch.
 	actualMainBranch = userInput.Or(repo.UnvalidatedConfig.GitUnscoped.MainBranch).GetOrPanic()
 	return userInput, actualMainBranch, false, nil
-}
-
-// determines the branch that is configured in Git as the default branch
-func determineGitRepoDefaultBranch(repo execute.OpenRepoResult) Option[gitdomain.LocalBranchName] {
-	if defaultBranch, has := gitconfig.DefaultBranch(repo.Backend).Get(); has {
-		return Some(defaultBranch)
-	}
-	return repo.Git.OriginHead(repo.Backend)
 }
 
 func testForgeAuth(args testForgeAuthArgs) (repeat bool, exit dialogdomain.Exit, err error) {

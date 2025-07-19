@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/cache"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
@@ -816,6 +817,14 @@ func (self *Commands) SquashMerge(runner subshelldomain.Runner, branch gitdomain
 func (self *Commands) StageFiles(runner subshelldomain.Runner, names ...string) error {
 	args := append([]string{"add"}, names...)
 	return runner.Run("git", args...)
+}
+
+// determines the branch that is configured in Git as the default branch
+func (self *Commands) StandardBranch(querier subshelldomain.Querier) Option[gitdomain.LocalBranchName] {
+	if defaultBranch, has := gitconfig.DefaultBranch(querier).Get(); has {
+		return Some(defaultBranch)
+	}
+	return self.OriginHead(querier)
 }
 
 func (self *Commands) Stash(runner subshelldomain.Runner) error {

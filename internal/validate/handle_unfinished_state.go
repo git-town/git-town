@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/forge"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git"
@@ -157,7 +156,7 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 		}
 		localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 		validatedMain, exit, err := dialog.MainBranch(dialog.MainBranchArgs{
-			GitStandardBranch:     gitconfig.DefaultBranch(args.backend),
+			GitStandardBranch:     args.git.StandardBranch(args.backend),
 			Inputs:                args.dialogInputs,
 			LocalBranches:         localBranches,
 			LocalGitMainBranch:    args.unvalidated.Value.GitGlobal.MainBranch,
