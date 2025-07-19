@@ -24,6 +24,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | DIALOG                      | KEYS  |
       | welcome                     | enter |
       | aliases                     | enter |
+      | main branch                 | enter |
       | perennial branches          | enter |
       | perennial regex             | enter |
       | feature regex               | enter |

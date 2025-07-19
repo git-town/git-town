@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/gohacks/slice"
 	"github.com/git-town/git-town/v21/internal/messages"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
@@ -27,21 +26,8 @@ This is typically the branch called
 
 // MainBranch lets the user select a new main branch for this repo.
 func MainBranch(args MainBranchArgs) (Option[gitdomain.LocalBranchName], dialogdomain.Exit, error) {
-	// if local: don't add None option, preselect local setting
-	// if no local and unscoped: add None option and preselect it
-	// if local and different unscoped: add None option but preselect the local one
-	entries := list.Entries[Option[gitdomain.LocalBranchName]]{}
-	if unscopedMain, hasUnscoped := args.UnscopedGitMainBranch.Get(); hasUnscoped {
-		if args.LocalGitMainBranch.IsNone() {
-			if len(args.LocalBranches) == 1 && unscopedMain == args.LocalBranches[0] {
-				return None[gitdomain.LocalBranchName](), false, nil
-			}
-			entries = append(entries, list.Entry[Option[gitdomain.LocalBranchName]]{
-				Data: None[gitdomain.LocalBranchName](),
-				Text: fmt.Sprintf("use global setting (%s)", unscopedMain),
-			})
-		}
-	}
+	// populate the local branches
+	entries := make(list.Entries[Option[gitdomain.LocalBranchName]], 0, len(args.LocalBranches)+1)
 	for _, localBranch := range args.LocalBranches {
 		entries = append(entries, list.Entry[Option[gitdomain.LocalBranchName]]{
 			Data: Some(localBranch),
@@ -49,15 +35,30 @@ func MainBranch(args MainBranchArgs) (Option[gitdomain.LocalBranchName], dialogd
 		})
 	}
 	cursor := 0
-	if gitStandard, hasStandard := args.GitStandardBranch.Get(); hasStandard {
-		if index, hasIndex := slice.Index(args.LocalBranches, gitStandard).Get(); hasIndex {
-			cursor = index
+	// local && no unscoped: don't add None option, preselect local setting
+	// no local && unscoped: add None option and preselect it
+	// local && different unscoped: add None option but preselect the local setting
+	unscopedMain, hasUnscoped := args.UnscopedGitMainBranch.Get()
+	local, hasLocal := args.LocalGitMainBranch.Get()
+	switch {
+	case !hasLocal && !hasUnscoped:
+		cursor = entries.IndexOf(args.GitStandardBranch)
+	case hasLocal && !hasUnscoped:
+		cursor = entries.IndexOf(Some(local))
+	case !hasLocal && hasUnscoped:
+		noneEntry := list.Entry[Option[gitdomain.LocalBranchName]]{
+			Data: None[gitdomain.LocalBranchName](),
+			Text: fmt.Sprintf("use global value (%s)", unscopedMain),
 		}
-	}
-	if localMain, hasLocal := args.LocalGitMainBranch.Get(); hasLocal {
-		if index, hasIndex := slice.Index(args.LocalBranches, localMain).Get(); hasIndex {
-			cursor = index
+		entries = append(list.Entries[Option[gitdomain.LocalBranchName]]{noneEntry}, entries...)
+		cursor = 0
+	case hasLocal && hasUnscoped:
+		noneEntry := list.Entry[Option[gitdomain.LocalBranchName]]{
+			Data: None[gitdomain.LocalBranchName](),
+			Text: fmt.Sprintf("use global value (%s)", unscopedMain),
 		}
+		entries = append(list.Entries[Option[gitdomain.LocalBranchName]]{noneEntry}, entries...)
+		cursor = entries.IndexOf(Some(local))
 	}
 	selection, exit, err := dialogcomponents.RadioList(entries, cursor, mainBranchTitle, MainBranchHelp, args.Inputs, "main-branch")
 	fmt.Printf(messages.MainBranch, dialogcomponents.FormattedSelection(selection.String(), exit))
