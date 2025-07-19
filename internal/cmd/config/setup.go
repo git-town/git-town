@@ -126,18 +126,9 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	perennialBranches := repo.UnvalidatedConfig.NormalConfig.PerennialBranches
-	if len(configFile.PerennialBranches) == 0 {
-		perennialBranches, exit, err = dialog.PerennialBranches(dialog.PerennialBranchesArgs{
-			Inputs:                data.dialogInputs,
-			LocalBranches:         data.localBranches.Names(),
-			LocalGitPerennials:    repo.UnvalidatedConfig.GitLocal.PerennialBranches,
-			MainBranch:            actualMainBranch,
-			UnscopedGitPerennials: repo.UnvalidatedConfig.GitUnscoped.PerennialBranches,
-		})
-		if err != nil || exit {
-			return emptyResult, exit, err
-		}
+	perennialBranches, exit, err := enterPerennialBranches(repo, data)
+	if err != nil || exit {
+		return emptyResult, exit, err
 	}
 	perennialRegex := repo.UnvalidatedConfig.NormalConfig.PerennialRegex
 	if configFile.PerennialRegex.IsNone() {
@@ -430,6 +421,23 @@ func enterMainBranch(repo execute.OpenRepoResult, data setupData) (userChoice Op
 		LocalGitMainBranch:    repo.UnvalidatedConfig.GitLocal.MainBranch,
 		UnscopedGitMainBranch: repo.UnvalidatedConfig.GitUnscoped.MainBranch,
 	})
+}
+
+func enterPerennialBranches(repo execute.OpenRepoResult, data setupData) (gitdomain.LocalBranchNames, dialogdomain.Exit, error) {
+	if configFile, hasConfigFile := repo.UnvalidatedConfig.File.Get(); hasConfigFile {
+		if len(configFile.PerennialBranches) == 0 {
+			perennialBranches, exit, err = dialog.PerennialBranches(dialog.PerennialBranchesArgs{
+				Inputs:                data.dialogInputs,
+				LocalBranches:         data.localBranches.Names(),
+				LocalGitPerennials:    repo.UnvalidatedConfig.GitLocal.PerennialBranches,
+				MainBranch:            actualMainBranch,
+				UnscopedGitPerennials: repo.UnvalidatedConfig.GitUnscoped.PerennialBranches,
+			})
+			if err != nil || exit {
+				return emptyResult, exit, err
+			}
+		}
+	}
 }
 
 func testForgeAuth(args testForgeAuthArgs) (repeat bool, exit dialogdomain.Exit, err error) {
