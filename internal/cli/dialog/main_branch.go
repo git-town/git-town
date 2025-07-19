@@ -35,9 +35,6 @@ func MainBranch(args MainBranchArgs) (Option[gitdomain.LocalBranchName], dialogd
 		})
 	}
 	cursor := 0
-	// local && no unscoped: don't add None option, preselect local setting
-	// no local && unscoped: add None option and preselect it
-	// local && different unscoped: add None option but preselect the local setting
 	unscopedMain, hasUnscoped := args.UnscopedGitMainBranch.Get()
 	local, hasLocal := args.LocalGitMainBranch.Get()
 	switch {
