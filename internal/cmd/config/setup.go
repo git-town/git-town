@@ -411,27 +411,19 @@ type userInput struct {
 	validatedConfig     configdomain.ValidatedConfigData
 }
 
-func enterMainBranch(repo execute.OpenRepoResult, data setupData) (userInput Option[gitdomain.LocalBranchName], actualMainBranch gitdomain.LocalBranchName, exit dialogdomain.Exit, err error) {
+func enterMainBranch(repo execute.OpenRepoResult, data setupData) (userChoice Option[gitdomain.LocalBranchName], actualMainBranch gitdomain.LocalBranchName, exit dialogdomain.Exit, err error) {
 	if configFile, hasConfigFile := repo.UnvalidatedConfig.File.Get(); hasConfigFile {
 		if configFileMainBranch, hasMain := configFile.MainBranch.Get(); hasMain {
 			return Some(configFileMainBranch), configFileMainBranch, false, nil
 		}
 	}
-	userInput, exit, err = dialog.MainBranch(dialog.MainBranchArgs{
+	return dialog.MainBranch(dialog.MainBranchArgs{
 		GitStandardBranch:     repo.Git.StandardBranch(repo.Backend),
 		Inputs:                data.dialogInputs,
 		LocalBranches:         data.localBranches.Names(),
 		LocalGitMainBranch:    repo.UnvalidatedConfig.GitLocal.MainBranch,
 		UnscopedGitMainBranch: repo.UnvalidatedConfig.GitUnscoped.MainBranch,
 	})
-	if err != nil || exit {
-		return None[gitdomain.LocalBranchName](), "", exit, err
-	}
-	// This will never panic because at this point
-	// the user entered either a branch or choose the unscoped option,
-	// which is only visible if there is an unscoped main branch.
-	actualMainBranch = userInput.Or(repo.UnvalidatedConfig.GitUnscoped.MainBranch).GetOrPanic()
-	return userInput, actualMainBranch, false, nil
 }
 
 func testForgeAuth(args testForgeAuthArgs) (repeat bool, exit dialogdomain.Exit, err error) {

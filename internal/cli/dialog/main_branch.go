@@ -25,7 +25,7 @@ This is typically the branch called
 )
 
 // MainBranch lets the user select a new main branch for this repo.
-func MainBranch(args MainBranchArgs) (Option[gitdomain.LocalBranchName], dialogdomain.Exit, error) {
+func MainBranch(args MainBranchArgs) (selectedMainBranch Option[gitdomain.LocalBranchName], mainBranch gitdomain.LocalBranchName, exit dialogdomain.Exit, err error) {
 	// populate the local branches
 	entries := make(list.Entries[Option[gitdomain.LocalBranchName]], 0, len(args.LocalBranches)+1)
 	for _, localBranch := range args.LocalBranches {
@@ -63,7 +63,8 @@ func MainBranch(args MainBranchArgs) (Option[gitdomain.LocalBranchName], dialogd
 	// show the dialog
 	selection, exit, err := dialogcomponents.RadioList(entries, cursor, mainBranchTitle, MainBranchHelp, args.Inputs, "main-branch")
 	fmt.Printf(messages.MainBranch, dialogcomponents.FormattedSelection(selection.String(), exit))
-	return selection, exit, err
+	mainBranch = selection.GetOrElse(unscopedMain) // the user either selected a branch, or None if unscoped exists
+	return selection, mainBranch, exit, err
 }
 
 type MainBranchArgs struct {
