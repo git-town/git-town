@@ -417,9 +417,8 @@ func enterMainBranch(repo execute.OpenRepoResult, data setupData) (userInput Opt
 			return Some(configFileMainBranch), configFileMainBranch, false, nil
 		}
 	}
-	repoDefault := determineGitRepoDefaultBranch(repo)
 	userInput, exit, err = dialog.MainBranch(dialog.MainBranchArgs{
-		GitStandardBranch:     repoDefault,
+		GitStandardBranch:     determineGitRepoDefaultBranch(repo),
 		Inputs:                data.dialogInputs,
 		LocalBranches:         data.localBranches.Names(),
 		LocalGitMainBranch:    repo.UnvalidatedConfig.GitLocal.MainBranch,
