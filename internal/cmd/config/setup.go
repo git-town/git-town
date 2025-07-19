@@ -427,6 +427,9 @@ func enterMainBranch(repo execute.OpenRepoResult, data setupData) (userInput Opt
 	if err != nil || exit {
 		return None[gitdomain.LocalBranchName](), "", exit, err
 	}
+	// This will never panic because at this point
+	// the user entered either a branch or choose the unscoped option,
+	// which is only visible if there is an unscoped main branch.
 	actualMainBranch = userInput.Or(repo.UnvalidatedConfig.GitUnscoped.MainBranch).GetOrPanic()
 	return userInput, actualMainBranch, false, nil
 }
