@@ -1,7 +1,6 @@
 package dialog
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
@@ -14,17 +13,16 @@ import (
 )
 
 func MainAndPerennials(args MainAndPerennialsArgs) (mainBranch gitdomain.LocalBranchName, perennials gitdomain.LocalBranchNames, exit dialogdomain.Exit, err error) {
-	unvalidatedMain, hasMain := args.UnvalidatedConfig.UnvalidatedConfig.MainBranch.Get()
-	if hasMain {
-		return unvalidatedMain, args.UnvalidatedConfig.NormalConfig.PerennialBranches, false, nil
-	}
-	if args.UnvalidatedConfig.File.IsSome() {
-		return unvalidatedMain, args.UnvalidatedConfig.NormalConfig.PerennialBranches, false, errors.New(messages.ConfigMainbranchInConfigFile)
-	}
 	fmt.Print(messages.ConfigNeeded)
-	mainBranch, exit, err = MainBranch(args.LocalBranches, args.GetDefaultBranch(args.Backend), args.DialogInputs)
+	_, mainBranch, exit, err = MainBranch(MainBranchArgs{
+		GitStandardBranch:     args.GetDefaultBranch(args.Backend),
+		Inputs:                args.DialogInputs,
+		LocalBranches:         args.LocalBranches,
+		LocalGitMainBranch:    args.UnvalidatedConfig.GitLocal.MainBranch,
+		UnscopedGitMainBranch: args.UnvalidatedConfig.GitUnscoped.MainBranch,
+	})
 	if err != nil || exit {
-		return mainBranch, args.UnvalidatedConfig.NormalConfig.PerennialBranches, exit, err
+		return "", gitdomain.LocalBranchNames{}, exit, err
 	}
 	perennials, exit, err = PerennialBranches(PerennialBranchesArgs{
 		Inputs:                args.DialogInputs,

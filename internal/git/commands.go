@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/cache"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
@@ -23,6 +24,8 @@ import (
 // They don't change the user's repo, execute instantaneously, and Git Town needs to know their output.
 // They are invisible to the end user unless the "verbose" option is set.
 type Commands struct {
+	// TODO: convert the methods of this struct to stand-alone function.
+	// Provide the CurrentBranchCache or RemotesCache as an additional function argument if needed.
 	CurrentBranchCache *cache.WithPrevious[gitdomain.LocalBranchName] // caches the currently checked out Git branch
 	RemotesCache       *cache.Cache[gitdomain.Remotes]                // caches Git remotes
 }
@@ -814,6 +817,14 @@ func (self *Commands) SquashMerge(runner subshelldomain.Runner, branch gitdomain
 func (self *Commands) StageFiles(runner subshelldomain.Runner, names ...string) error {
 	args := append([]string{"add"}, names...)
 	return runner.Run("git", args...)
+}
+
+// determines the branch that is configured in Git as the default branch
+func (self *Commands) StandardBranch(querier subshelldomain.Querier) Option[gitdomain.LocalBranchName] {
+	if defaultBranch, has := gitconfig.DefaultBranch(querier).Get(); has {
+		return Some(defaultBranch)
+	}
+	return self.OriginHead(querier)
 }
 
 func (self *Commands) Stash(runner subshelldomain.Runner) error {
