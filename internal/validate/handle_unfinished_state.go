@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/forge"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git"
@@ -156,17 +155,17 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 			return config.EmptyValidatedConfig(), false, err
 		}
 		localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-		validatedMain, exit, err := dialog.MainBranch(dialog.MainBranchArgs{
-			GitStandardBranch:     gitconfig.DefaultBranch(args.backend),
+		var exit dialogdomain.Exit
+		_, mainBranch, exit, err = dialog.MainBranch(dialog.MainBranchArgs{
+			GitStandardBranch:     args.git.StandardBranch(args.backend),
 			Inputs:                args.dialogInputs,
 			LocalBranches:         localBranches,
-			LocalGitMainBranch:    args.unvalidated.Value.GitLocal.MainBranch,
-			UnscopedGitMainBranch: args.unvalidated.Value.NormalConfig.Git.MainBranch,
+			LocalGitMainBranch:    args.unvalidated.Value.GitGlobal.MainBranch,
+			UnscopedGitMainBranch: args.unvalidated.Value.GitUnscoped.MainBranch,
 		})
 		if err != nil || exit {
 			return config.EmptyValidatedConfig(), exit, err
 		}
-		mainBranch = validatedMain.Or(args.unvalidated.Value.NormalConfig.Git.MainBranch).GetOrPanic()
 		if err = args.unvalidated.Value.SetMainBranch(mainBranch, args.backend); err != nil {
 			return config.EmptyValidatedConfig(), false, err
 		}

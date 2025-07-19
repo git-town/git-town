@@ -380,9 +380,6 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		UnknownBranchType:        unknownBranchType,
 		Verbose:                  None[configdomain.Verbose](), // the setup assistant doesn't ask for this
 	}
-	if data.dialogInputs.IsEmpty() {
-		panic("unused dialog inputs")
-	}
 	if !data.dialogInputs.IsEmpty() {
 		panic("unused dialog inputs")
 	}
@@ -439,6 +436,21 @@ func determineGitRepoDefaultBranch(repo execute.OpenRepoResult) Option[gitdomain
 		return Some(defaultBranch)
 	}
 	return repo.Git.OriginHead(repo.Backend)
+}
+
+func enterMainBranch(repo execute.OpenRepoResult, data setupData) (userChoice Option[gitdomain.LocalBranchName], actualMainBranch gitdomain.LocalBranchName, exit dialogdomain.Exit, err error) {
+	if configFile, hasConfigFile := repo.UnvalidatedConfig.File.Get(); hasConfigFile {
+		if configFileMainBranch, hasMain := configFile.MainBranch.Get(); hasMain {
+			return Some(configFileMainBranch), configFileMainBranch, false, nil
+		}
+	}
+	return dialog.MainBranch(dialog.MainBranchArgs{
+		GitStandardBranch:     repo.Git.StandardBranch(repo.Backend),
+		Inputs:                data.dialogInputs,
+		LocalBranches:         data.localBranches.Names(),
+		LocalGitMainBranch:    repo.UnvalidatedConfig.GitLocal.MainBranch,
+		UnscopedGitMainBranch: repo.UnvalidatedConfig.GitUnscoped.MainBranch,
+	})
 }
 
 func testForgeAuth(args testForgeAuthArgs) (repeat bool, exit dialogdomain.Exit, err error) {
