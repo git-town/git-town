@@ -39,11 +39,10 @@ func PerennialBranches(args PerennialBranchesArgs) (gitdomain.LocalBranchNames, 
 	}
 	entries := make(list.Entries[gitdomain.LocalBranchName], len(perennialCandidates))
 	for b, branch := range perennialCandidates {
-		isMain := branch == args.MainBranch
 		isImmutablePerennial := args.ImmutableGitPerennials.Contains(branch)
 		entries[b] = list.Entry[gitdomain.LocalBranchName]{
 			Data:     branch,
-			Disabled: isMain || isImmutablePerennial,
+			Disabled: isImmutablePerennial,
 			Text:     branch.String(),
 		}
 	}
@@ -52,7 +51,7 @@ func PerennialBranches(args PerennialBranchesArgs) (gitdomain.LocalBranchNames, 
 	selections = append(selections, slice.FindMany(perennialCandidates, args.LocalGitPerennials)...)
 	selectedBranchesList, exit, err := dialogcomponents.CheckList(entries, selections, perennialBranchesTitle, PerennialBranchesHelp, args.Inputs, "perennial-branches")
 	selectedBranches := gitdomain.LocalBranchNames(selectedBranchesList)
-	selectedBranches = selectedBranches.Remove(args.MainBranch).Remove(args.ImmutableGitPerennials...)
+	selectedBranches = selectedBranches.Remove(args.ImmutableGitPerennials...)
 	selectionText := selectedBranches.Join(", ")
 	if selectionText == "" {
 		selectionText = "(none)"
