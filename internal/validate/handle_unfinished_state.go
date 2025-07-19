@@ -166,10 +166,10 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 		if err != nil || exit {
 			return config.EmptyValidatedConfig(), exit, err
 		}
-		if err = args.unvalidated.Value.SetMainBranch(validatedMain, args.backend); err != nil {
+		if err = args.unvalidated.Value.SetMainBranch(validatedMain.GetOrPanic(), args.backend); err != nil {
 			return config.EmptyValidatedConfig(), false, err
 		}
-		mainBranch = validatedMain
+		mainBranch = validatedMain.GetOrPanic()
 	}
 	gitUserEmail, gitUserName, err := GitUser(args.unvalidated.Value.UnvalidatedConfig)
 	if err != nil {
