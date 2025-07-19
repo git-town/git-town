@@ -123,12 +123,9 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	perennialBranches := repo.UnvalidatedConfig.NormalConfig.PerennialBranches
-	if len(repo.UnvalidatedConfig.File.PerennialBranches) == 0 {
-		perennialBranches, exit, err = dialog.PerennialBranches(data.localBranches.Names(), perennialBranches, actualMainBranch, data.dialogInputs)
-		if err != nil || exit {
-			return emptyResult, exit, err
-		}
+	perennialBranches, exit, err := enterPerennialBranches(repo, data, actualMainBranch)
+	if err != nil || exit {
+		return emptyResult, exit, err
 	}
 	perennialRegex := repo.UnvalidatedConfig.NormalConfig.PerennialRegex
 	if repo.UnvalidatedConfig.File.PerennialRegex.IsNone() {
@@ -421,6 +418,19 @@ func enterMainBranch(repo execute.OpenRepoResult, data setupData) (userChoice Op
 	})
 }
 
+func enterPerennialBranches(repo execute.OpenRepoResult, data setupData, mainBranch gitdomain.LocalBranchName) (gitdomain.LocalBranchNames, dialogdomain.Exit, error) {
+	immutablePerennials := gitdomain.LocalBranchNames{mainBranch}.
+		AppendAllMissing(repo.UnvalidatedConfig.File.PerennialBranches...).
+		AppendAllMissing(repo.UnvalidatedConfig.GitGlobal.PerennialBranches...)
+	return dialog.PerennialBranches(dialog.PerennialBranchesArgs{
+		ImmutableGitPerennials: immutablePerennials,
+		Inputs:                 data.dialogInputs,
+		LocalBranches:          data.localBranches.Names(),
+		LocalGitPerennials:     repo.UnvalidatedConfig.GitLocal.PerennialBranches,
+		MainBranch:             mainBranch,
+	})
+}
+
 func testForgeAuth(args testForgeAuthArgs) (repeat bool, exit dialogdomain.Exit, err error) {
 	if _, inTest := os.LookupEnv(subshell.TestToken); inTest {
 		return false, false, nil
@@ -675,11 +685,9 @@ func saveToGit(userInput userInput, existingGitConfig configdomain.PartialConfig
 			saveMainBranch(userInput.validatedConfig.MainBranch, existingGitConfig.MainBranch, frontend),
 		)
 	}
-	if len(configFile.PerennialBranches) == 0 {
-		fc.Check(
-			savePerennialBranches(userInput.data.PerennialBranches, existingGitConfig.PerennialBranches, frontend),
-		)
-	}
+	fc.Check(
+		savePerennialBranches(userInput.data.PerennialBranches, existingGitConfig.PerennialBranches, frontend),
+	)
 	if configFile.PerennialRegex.IsNone() {
 		fc.Check(
 			savePerennialRegex(userInput.data.PerennialRegex, existingGitConfig.PerennialRegex, frontend),

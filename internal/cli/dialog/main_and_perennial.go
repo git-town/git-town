@@ -24,7 +24,16 @@ func MainAndPerennials(args MainAndPerennialsArgs) (mainBranch gitdomain.LocalBr
 	if err != nil || exit {
 		return "", gitdomain.LocalBranchNames{}, exit, err
 	}
-	perennials, exit, err = PerennialBranches(args.LocalBranches, args.UnvalidatedConfig.NormalConfig.PerennialBranches, mainBranch, args.DialogInputs)
+	immutablePerennials := gitdomain.LocalBranchNames{mainBranch}.
+		AppendAllMissing(args.UnvalidatedConfig.File.PerennialBranches...).
+		AppendAllMissing(args.UnvalidatedConfig.GitGlobal.PerennialBranches...)
+	perennials, exit, err = PerennialBranches(PerennialBranchesArgs{
+		ImmutableGitPerennials: immutablePerennials,
+		Inputs:                 args.DialogInputs,
+		LocalBranches:          args.LocalBranches,
+		LocalGitPerennials:     args.UnvalidatedConfig.GitLocal.PerennialBranches,
+		MainBranch:             mainBranch,
+	})
 	return mainBranch, perennials, exit, err
 }
 
