@@ -116,7 +116,7 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 			Inputs:        data.dialogTestInputs,
 			Lineage:       data.config.NormalConfig.Lineage,
 			LocalBranches: data.branchesSnapshot.Branches.LocalBranches().Names(),
-			MainBranch:    data.mainBranch,
+			MainBranch:    data.config.ValidatedConfigData.MainBranch,
 		})
 		if err != nil {
 			return err
@@ -171,7 +171,6 @@ type setParentData struct {
 	dialogTestInputs   dialogcomponents.TestInputs
 	hasOpenChanges     bool
 	initialBranch      gitdomain.LocalBranchName
-	mainBranch         gitdomain.LocalBranchName
 	proposal           Option[forgedomain.Proposal]
 	stashSize          gitdomain.StashSize
 }
@@ -268,7 +267,6 @@ func determineSetParentData(repo execute.OpenRepoResult, cliConfig cliconfig.Cli
 		dialogTestInputs:   dialogTestInputs,
 		hasOpenChanges:     repoStatus.OpenChanges,
 		initialBranch:      initialBranch,
-		mainBranch:         mainBranch,
 		proposal:           proposalOpt,
 		stashSize:          stashSize,
 	}, false, nil
