@@ -132,7 +132,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 			Inputs:                data.dialogInputs,
 			LocalBranches:         data.localBranches.Names(),
 			LocalGitPerennials:    repo.UnvalidatedConfig.GitLocal.PerennialBranches,
-			MainBranch:            mainBranch,
+			MainBranch:            actualMainBranch,
 			UnscopedGitPerennials: repo.UnvalidatedConfig.GitUnscoped.PerennialBranches,
 		})
 		if err != nil || exit {
