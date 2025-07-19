@@ -123,7 +123,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	perennialBranches, exit, err := enterPerennialBranches(repo, data)
+	perennialBranches, exit, err := enterPerennialBranches(repo, data, actualMainBranch)
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
@@ -418,21 +418,15 @@ func enterMainBranch(repo execute.OpenRepoResult, data setupData) (userChoice Op
 	})
 }
 
-func enterPerennialBranches(repo execute.OpenRepoResult, data setupData) (gitdomain.LocalBranchNames, dialogdomain.Exit, error) {
-	if configFile, hasConfigFile := repo.UnvalidatedConfig.File.Get(); hasConfigFile {
-		if len(configFile.PerennialBranches) == 0 {
-			perennialBranches, exit, err = dialog.PerennialBranches(dialog.PerennialBranchesArgs{
-				Inputs:                data.dialogInputs,
-				LocalBranches:         data.localBranches.Names(),
-				LocalGitPerennials:    repo.UnvalidatedConfig.GitLocal.PerennialBranches,
-				MainBranch:            actualMainBranch,
-				UnscopedGitPerennials: repo.UnvalidatedConfig.GitUnscoped.PerennialBranches,
-			})
-			if err != nil || exit {
-				return emptyResult, exit, err
-			}
-		}
-	}
+func enterPerennialBranches(repo execute.OpenRepoResult, data setupData, mainBranch gitdomain.LocalBranchName) (gitdomain.LocalBranchNames, dialogdomain.Exit, error) {
+	immutablePerennials := repo.UnvalidatedConfig.File.PerennialBranches.AppendAllMissing(repo.UnvalidatedConfig.GitGlobal.PerennialBranches...)
+	return dialog.PerennialBranches(dialog.PerennialBranchesArgs{
+		Inputs:                 data.dialogInputs,
+		LocalBranches:          data.localBranches.Names(),
+		LocalGitPerennials:     repo.UnvalidatedConfig.GitLocal.PerennialBranches,
+		MainBranch:             mainBranch,
+		ImmutableGitPerennials: immutablePerennials,
+	})
 }
 
 func testForgeAuth(args testForgeAuthArgs) (repeat bool, exit dialogdomain.Exit, err error) {
