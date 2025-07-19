@@ -419,7 +419,9 @@ func enterMainBranch(repo execute.OpenRepoResult, data setupData) (userChoice Op
 }
 
 func enterPerennialBranches(repo execute.OpenRepoResult, data setupData, mainBranch gitdomain.LocalBranchName) (gitdomain.LocalBranchNames, dialogdomain.Exit, error) {
-	immutablePerennials := repo.UnvalidatedConfig.File.PerennialBranches.AppendAllMissing(repo.UnvalidatedConfig.GitGlobal.PerennialBranches...)
+	immutablePerennials := gitdomain.LocalBranchNames{mainBranch}.
+		AppendAllMissing(repo.UnvalidatedConfig.File.PerennialBranches...).
+		AppendAllMissing(repo.UnvalidatedConfig.GitGlobal.PerennialBranches...)
 	return dialog.PerennialBranches(dialog.PerennialBranchesArgs{
 		Inputs:                 data.dialogInputs,
 		LocalBranches:          data.localBranches.Names(),

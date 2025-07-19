@@ -32,7 +32,6 @@ or global Git configuration cannot be changed here.
 // PerennialBranches lets the user update the perennial branches.
 // This includes asking the user and updating the respective settings based on the user selection.
 func PerennialBranches(args PerennialBranchesArgs) (gitdomain.LocalBranchNames, dialogdomain.Exit, error) {
-	globalOnlyPerennialBranches := args.ImmutableGitPerennials.Remove(args.LocalGitPerennials...)
 	perennialCandidates := args.LocalBranches.AppendAllMissing(args.ImmutableGitPerennials...).AppendAllMissing(args.LocalGitPerennials...)
 	if len(perennialCandidates) < 2 {
 		// there is always the main branch in this list, so if that's the only one there is no branch to select --> don't display the dialog
@@ -41,10 +40,10 @@ func PerennialBranches(args PerennialBranchesArgs) (gitdomain.LocalBranchNames, 
 	entries := make(list.Entries[gitdomain.LocalBranchName], len(perennialCandidates))
 	for b, branch := range perennialCandidates {
 		isMain := branch == args.MainBranch
-		isUnscopedGitPerennial := globalOnlyPerennialBranches.Contains(branch)
+		isImmutablePerennial := args.ImmutableGitPerennials.Contains(branch)
 		entries[b] = list.Entry[gitdomain.LocalBranchName]{
 			Data:     branch,
-			Disabled: isMain || isUnscopedGitPerennial,
+			Disabled: isMain || isImmutablePerennial,
 			Text:     branch.String(),
 		}
 	}
@@ -53,7 +52,7 @@ func PerennialBranches(args PerennialBranchesArgs) (gitdomain.LocalBranchNames, 
 	selections = append(selections, slice.FindMany(perennialCandidates, args.LocalGitPerennials)...)
 	selectedBranchesList, exit, err := dialogcomponents.CheckList(entries, selections, perennialBranchesTitle, PerennialBranchesHelp, args.Inputs, "perennial-branches")
 	selectedBranches := gitdomain.LocalBranchNames(selectedBranchesList)
-	selectedBranches = selectedBranches.Remove(args.MainBranch).Remove(globalOnlyPerennialBranches...)
+	selectedBranches = selectedBranches.Remove(args.MainBranch).Remove(args.ImmutableGitPerennials...)
 	selectionText := selectedBranches.Join(", ")
 	if selectionText == "" {
 		selectionText = "(none)"
