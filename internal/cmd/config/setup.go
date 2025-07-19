@@ -685,11 +685,9 @@ func saveToGit(userInput userInput, existingGitConfig configdomain.PartialConfig
 			saveMainBranch(userInput.validatedConfig.MainBranch, existingGitConfig.MainBranch, frontend),
 		)
 	}
-	if len(configFile.PerennialBranches) == 0 {
-		fc.Check(
-			savePerennialBranches(userInput.data.PerennialBranches, existingGitConfig.PerennialBranches, frontend),
-		)
-	}
+	fc.Check(
+		savePerennialBranches(userInput.data.PerennialBranches, existingGitConfig.PerennialBranches, frontend),
+	)
 	if configFile.PerennialRegex.IsNone() {
 		fc.Check(
 			savePerennialRegex(userInput.data.PerennialRegex, existingGitConfig.PerennialRegex, frontend),

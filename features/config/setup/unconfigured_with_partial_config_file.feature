@@ -1,7 +1,6 @@
 @messyoutput
 Feature: ask for information not provided by the config file
 
-  @this
   Scenario:
     Given a Git repo with origin
     And Git Town is not configured
@@ -52,6 +51,7 @@ Feature: ask for information not provided by the config file
       | git config git-town.github-token gh-token          |
       | git config git-town.new-branch-type feature        |
       | git config git-town.github-connector api           |
+      | git config git-town.perennial-branches branch-1    |
       | git config git-town.perennial-regex peren          |
       | git config git-town.unknown-branch-type feature    |
       | git config git-town.feature-regex feat             |
