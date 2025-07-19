@@ -423,11 +423,11 @@ func enterPerennialBranches(repo execute.OpenRepoResult, data setupData, mainBra
 		AppendAllMissing(repo.UnvalidatedConfig.File.PerennialBranches...).
 		AppendAllMissing(repo.UnvalidatedConfig.GitGlobal.PerennialBranches...)
 	return dialog.PerennialBranches(dialog.PerennialBranchesArgs{
+		ImmutableGitPerennials: immutablePerennials,
 		Inputs:                 data.dialogInputs,
 		LocalBranches:          data.localBranches.Names(),
 		LocalGitPerennials:     repo.UnvalidatedConfig.GitLocal.PerennialBranches,
 		MainBranch:             mainBranch,
-		ImmutableGitPerennials: immutablePerennials,
 	})
 }
 

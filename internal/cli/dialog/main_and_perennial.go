@@ -25,11 +25,11 @@ func MainAndPerennials(args MainAndPerennialsArgs) (mainBranch gitdomain.LocalBr
 		return "", gitdomain.LocalBranchNames{}, exit, err
 	}
 	perennials, exit, err = PerennialBranches(PerennialBranchesArgs{
+		ImmutableGitPerennials: args.UnvalidatedConfig.GitUnscoped.PerennialBranches,
 		Inputs:                 args.DialogInputs,
 		LocalBranches:          args.LocalBranches,
 		LocalGitPerennials:     args.UnvalidatedConfig.GitLocal.PerennialBranches,
 		MainBranch:             mainBranch,
-		ImmutableGitPerennials: args.UnvalidatedConfig.GitUnscoped.PerennialBranches,
 	})
 	return mainBranch, perennials, exit, err
 }
