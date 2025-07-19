@@ -59,6 +59,7 @@ func MainBranch(args MainBranchArgs) (Option[gitdomain.LocalBranchName], dialogd
 		entries = append(list.Entries[Option[gitdomain.LocalBranchName]]{noneEntry}, entries...)
 		cursor = entries.IndexOf(Some(local))
 	}
+
 	// show the dialog
 	selection, exit, err := dialogcomponents.RadioList(entries, cursor, mainBranchTitle, MainBranchHelp, args.Inputs, "main-branch")
 	fmt.Printf(messages.MainBranch, dialogcomponents.FormattedSelection(selection.String(), exit))
