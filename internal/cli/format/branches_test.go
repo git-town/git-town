@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/cli/format"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/shoenig/test/must"
 )
 
@@ -14,7 +15,7 @@ func TestBranchNames(t *testing.T) {
 	t.Run("empty", func(t *testing.T) {
 		t.Parallel()
 		have := format.BranchNames(gitdomain.LocalBranchNames{})
-		want := "(none)"
+		want := messages.DialogResultNone
 		must.EqOp(t, want, have)
 	})
 
