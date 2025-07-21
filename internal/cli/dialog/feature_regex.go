@@ -39,6 +39,6 @@ func FeatureRegex(args TextArgs[configdomain.FeatureRegex]) (Option[configdomain
 		// the user has entered the global value --> keep using the global value, don't store the local value
 		newValue = None[configdomain.FeatureRegex]()
 	}
-	fmt.Printf(messages.FeatureRegex, dialogcomponents.FormattedSelection(newValue.String(), exit))
+	fmt.Printf(messages.FeatureRegexResult, dialogcomponents.FormattedSelection(newValue.String(), exit))
 	return newValue, exit, cmp.Or(err1, err2)
 }
