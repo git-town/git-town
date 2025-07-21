@@ -75,7 +75,7 @@ Feature: change existing information in Git metadata
       | git config git-town.ship-strategy fast-forward           |
       | git config git-town.ship-delete-tracking-branch true     |
       | git config git-town.sync-feature-strategy rebase         |
-      | git config git-town.sync-perennial-strategy ff-only      |
+      | git config git-town.sync-perennial-strategy rebase       |
       | git config git-town.sync-prototype-strategy rebase       |
       | git config git-town.sync-upstream false                  |
       | git config git-town.sync-tags true                       |
@@ -98,7 +98,7 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.github-token" is now "gh-tok"
     And local Git setting "git-town.hosting-origin-hostname" is now "code"
     And local Git setting "git-town.sync-feature-strategy" is now "rebase"
-    And local Git setting "git-town.sync-perennial-strategy" is now "ff-only"
+    And local Git setting "git-town.sync-perennial-strategy" is now "rebase"
     And local Git setting "git-town.sync-prototype-strategy" is now "rebase"
     And local Git setting "git-town.sync-upstream" is now "false"
     And local Git setting "git-town.sync-tags" is now "true"
