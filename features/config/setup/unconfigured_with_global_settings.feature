@@ -13,6 +13,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
     And global Git setting "git-town.main-branch" is "main"
     And global Git setting "git-town.new-branch-type" is "prototype"
     And global Git setting "git-town.perennial-branches" is "public"
+    And global Git setting "git-town.perennial-regex" is "version-"
     And global Git setting "git-town.push-hook" is "false"
     And global Git setting "git-town.share-new-branches" is "push"
     And global Git setting "git-town.ship-strategy" is "api"
