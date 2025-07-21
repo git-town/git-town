@@ -167,14 +167,14 @@ EnterForgeData:
 	devURL := repo.UnvalidatedConfig.NormalConfig.DevURL(data.backend)
 	actualForgeType := determineForgeType(enteredForgeType.Or(repo.UnvalidatedConfig.File.ForgeType), devURL)
 
-	bitbucketUsername := repo.UnvalidatedConfig.NormalConfig.BitbucketUsername
-	bitbucketAppPassword := repo.UnvalidatedConfig.NormalConfig.BitbucketAppPassword
-	codebergToken := repo.UnvalidatedConfig.NormalConfig.CodebergToken
-	giteaToken := repo.UnvalidatedConfig.NormalConfig.GiteaToken
-	githubConnectorTypeOpt := repo.UnvalidatedConfig.NormalConfig.GitHubConnectorType
-	githubToken := repo.UnvalidatedConfig.NormalConfig.GitHubToken
-	gitlabConnectorTypeOpt := repo.UnvalidatedConfig.NormalConfig.GitLabConnectorType
-	gitlabToken := repo.UnvalidatedConfig.NormalConfig.GitLabToken
+	bitbucketUsername := None[forgedomain.BitbucketUsername]()
+	bitbucketAppPassword := None[forgedomain.BitbucketAppPassword]()
+	codebergToken := None[forgedomain.CodebergToken]()
+	giteaToken := None[forgedomain.GiteaToken]()
+	githubConnectorTypeOpt := None[forgedomain.GitHubConnectorType]()
+	githubToken := None[forgedomain.GitHubToken]()
+	gitlabConnectorTypeOpt := None[forgedomain.GitLabConnectorType]()
+	gitlabToken := None[forgedomain.GitLabToken]()
 	if forgeType, hasForgeType := actualForgeType.Get(); hasForgeType {
 		switch forgeType {
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
