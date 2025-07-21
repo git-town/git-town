@@ -41,7 +41,7 @@ func ParseBranchType(text string) (Option[BranchType], error) {
 			return Some(branchType), nil
 		}
 	}
-	return None[BranchType](), fmt.Errorf("unknown branch type: %q", text)
+	return None[BranchType](), fmt.Errorf(messages.DialogResultUnknownBranchType, text)
 }
 
 func (self BranchType) MustKnowParent() bool {
