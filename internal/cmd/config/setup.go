@@ -173,8 +173,8 @@ EnterForgeData:
 	giteaToken := None[forgedomain.GiteaToken]()
 	githubConnectorTypeOpt := None[forgedomain.GitHubConnectorType]()
 	githubToken := None[forgedomain.GitHubToken]()
-	gitlabConnectorTypeOpt := repo.UnvalidatedConfig.NormalConfig.GitLabConnectorType
-	gitlabToken := repo.UnvalidatedConfig.NormalConfig.GitLabToken
+	gitlabConnectorTypeOpt := None[forgedomain.GitLabConnectorType]()
+	gitlabToken := None[forgedomain.GitLabToken]()
 	if forgeType, hasForgeType := actualForgeType.Get(); hasForgeType {
 		switch forgeType {
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
@@ -200,14 +200,14 @@ EnterForgeData:
 				}
 			}
 		case forgedomain.ForgeTypeGitLab:
-			gitlabConnectorTypeOpt, exit, err = dialog.GitLabConnectorType(gitlabConnectorTypeOpt, data.dialogInputs)
+			gitlabConnectorTypeOpt, exit, err = enterGitLabConnectorType(repo, data)
 			if err != nil || exit {
 				return emptyResult, exit, err
 			}
 			if gitlabConnectorType, has := gitlabConnectorTypeOpt.Get(); has {
 				switch gitlabConnectorType {
 				case forgedomain.GitLabConnectorTypeAPI:
-					gitlabToken, exit, err = dialog.GitLabToken(gitlabToken, data.dialogInputs)
+					gitlabToken, exit, err = enterGitLabToken(repo, data)
 				case forgedomain.GitLabConnectorTypeGlab:
 				}
 			}
@@ -440,6 +440,28 @@ func enterGitHubToken(repo execute.OpenRepoResult, data setupData) (Option[forge
 		Global: repo.UnvalidatedConfig.GitGlobal.GitHubToken,
 		Inputs: data.dialogInputs,
 		Local:  repo.UnvalidatedConfig.GitLocal.GitHubToken,
+	})
+}
+
+func enterGitLabConnectorType(repo execute.OpenRepoResult, data setupData) (Option[forgedomain.GitLabConnectorType], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.GitLabConnectorType.IsSome() {
+		return None[forgedomain.GitLabConnectorType](), false, nil
+	}
+	return dialog.GitLabConnectorType(dialog.Args[forgedomain.GitLabConnectorType]{
+		Global: repo.UnvalidatedConfig.GitGlobal.GitLabConnectorType,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.GitLabConnectorType,
+	})
+}
+
+func enterGitLabToken(repo execute.OpenRepoResult, data setupData) (Option[forgedomain.GitLabToken], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.GitLabToken.IsSome() {
+		return None[forgedomain.GitLabToken](), false, nil
+	}
+	return dialog.GitLabToken(dialog.Args[forgedomain.GitLabToken]{
+		Global: repo.UnvalidatedConfig.GitGlobal.GitLabToken,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.GitLabToken,
 	})
 }
 
