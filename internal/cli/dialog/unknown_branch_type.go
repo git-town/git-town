@@ -35,8 +35,7 @@ func UnknownBranchType(args Args[configdomain.UnknownBranchType]) (Option[config
 	entries = appendEntry(entries, configdomain.BranchTypeObservedBranch)
 	entries = appendEntry(entries, configdomain.BranchTypeParkedBranch)
 	entries = appendEntry(entries, configdomain.BranchTypePrototypeBranch)
-	cursor := 0
-
+	var cursor int
 	local, hasLocal := args.Local.Get()
 	switch {
 	case hasLocal:
