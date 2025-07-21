@@ -165,7 +165,7 @@ EnterForgeData:
 		return emptyResult, exit, err
 	}
 	devURL := repo.UnvalidatedConfig.NormalConfig.DevURL(data.backend)
-	actualForgeType := determineForgeType(enteredForgeType, devURL)
+	actualForgeType := determineForgeType(enteredForgeType.Or(repo.UnvalidatedConfig.File.ForgeType), devURL)
 
 	bitbucketUsername := repo.UnvalidatedConfig.NormalConfig.BitbucketUsername
 	bitbucketAppPassword := repo.UnvalidatedConfig.NormalConfig.BitbucketAppPassword
