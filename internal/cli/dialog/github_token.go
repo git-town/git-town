@@ -31,7 +31,7 @@ with the GitHub API.
 
 // GitHubToken lets the user enter the GitHub API token.
 func GitHubToken(args Args[forgedomain.GitHubToken]) (Option[forgedomain.GitHubToken], dialogdomain.Exit, error) {
-	input, exit, err1 := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
+	input, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "github-token",
 		ExistingValue: args.Local.Or(args.Global).String(),
 		Help:          gitHubTokenHelp,
@@ -45,5 +45,5 @@ func GitHubToken(args Args[forgedomain.GitHubToken]) (Option[forgedomain.GitHubT
 		newValue = None[forgedomain.GitHubToken]()
 	}
 	fmt.Printf(messages.GitHubTokenResult, dialogcomponents.FormattedSelection(newValue.String(), exit))
-	return newValue, exit, err1
+	return newValue, exit, err
 }
