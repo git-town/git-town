@@ -25,7 +25,7 @@ it's safe to leave it blank.
 `
 )
 
-func ObservedRegex(args TextArgs[configdomain.ObservedRegex]) (Option[configdomain.ObservedRegex], dialogdomain.Exit, error) {
+func ObservedRegex(args Args[configdomain.ObservedRegex]) (Option[configdomain.ObservedRegex], dialogdomain.Exit, error) {
 	input, exit, err1 := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "observed-regex",
 		ExistingValue: args.Local.Or(args.Global).String(),
