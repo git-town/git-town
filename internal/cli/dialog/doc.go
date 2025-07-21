@@ -6,6 +6,7 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
+// TextArgs are arguments for dialogs that allow to enter a textual configuration value.
 type TextArgs[T any] struct {
 	Global Option[T]
 	Inputs dialogcomponents.TestInputs
