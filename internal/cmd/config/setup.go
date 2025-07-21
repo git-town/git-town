@@ -135,12 +135,9 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	contributionRegex := repo.UnvalidatedConfig.NormalConfig.ContributionRegex
-	if repo.UnvalidatedConfig.File.ContributionRegex.IsNone() {
-		contributionRegex, exit, err = dialog.ContributionRegex(contributionRegex, data.dialogInputs)
-		if err != nil || exit {
-			return emptyResult, exit, err
-		}
+	contributionRegex, exit, err := enterContributionRegex(repo, data)
+	if err != nil || exit {
+		return emptyResult, exit, err
 	}
 	observedRegex := repo.UnvalidatedConfig.NormalConfig.ObservedRegex
 	if repo.UnvalidatedConfig.File.ObservedRegex.IsNone() {
@@ -397,6 +394,17 @@ type userInput struct {
 	scope               configdomain.ConfigScope
 	storageLocation     dialog.ConfigStorageOption
 	validatedConfig     configdomain.ValidatedConfigData
+}
+
+func enterContributionRegex(repo execute.OpenRepoResult, data setupData) (Option[configdomain.ContributionRegex], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.ContributionRegex.IsSome() {
+		return None[configdomain.ContributionRegex](), false, nil
+	}
+	return dialog.ContributionRegex(dialog.TextArgs[configdomain.ContributionRegex]{
+		Global: repo.UnvalidatedConfig.GitGlobal.ContributionRegex,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.ContributionRegex,
+	})
 }
 
 func enterFeatureRegex(repo execute.OpenRepoResult, data setupData) (Option[configdomain.FeatureRegex], dialogdomain.Exit, error) {
