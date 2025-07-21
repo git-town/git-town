@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 const (
@@ -25,23 +26,30 @@ new features and bug fixes.
 `
 )
 
-func SyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs dialogcomponents.TestInputs) (configdomain.SyncFeatureStrategy, dialogdomain.Exit, error) {
-	entries := list.Entries[configdomain.SyncFeatureStrategy]{
+func SyncFeatureStrategy(args Args[configdomain.SyncFeatureStrategy]) (Option[configdomain.SyncFeatureStrategy], dialogdomain.Exit, error) {
+	entries := list.Entries[Option[configdomain.SyncFeatureStrategy]]{}
+	if global, hasGlobal := args.Global.Get(); hasGlobal {
+		entries = append(entries, list.Entry[Option[configdomain.SyncFeatureStrategy]]{
+			Data: None[configdomain.SyncFeatureStrategy](),
+			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
+		})
+	}
+	entries = append(entries, list.Entries[Option[configdomain.SyncFeatureStrategy]]{
 		{
-			Data: configdomain.SyncFeatureStrategyMerge,
+			Data: Some(configdomain.SyncFeatureStrategyMerge),
 			Text: `merge updates from the parent and tracking branch`,
 		},
 		{
-			Data: configdomain.SyncFeatureStrategyRebase,
+			Data: Some(configdomain.SyncFeatureStrategyRebase),
 			Text: `rebase branches against their parent and tracking branch`,
 		},
 		{
-			Data: configdomain.SyncFeatureStrategyCompress,
+			Data: Some(configdomain.SyncFeatureStrategyCompress),
 			Text: `compress the branch after merging parent and tracking`,
 		},
-	}
-	defaultPos := entries.IndexOf(existing)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncFeatureStrategyTitle, SyncFeatureStrategyHelp, inputs, "sync-feature-strategy")
+	}...)
+	defaultPos := entries.IndexOf(args.Local)
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncFeatureStrategyTitle, SyncFeatureStrategyHelp, args.Inputs, "sync-feature-strategy")
 	fmt.Printf(messages.SyncFeatureBranches, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }
