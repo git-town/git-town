@@ -169,10 +169,10 @@ EnterForgeData:
 
 	bitbucketUsername := None[forgedomain.BitbucketUsername]()
 	bitbucketAppPassword := None[forgedomain.BitbucketAppPassword]()
-	codebergToken := repo.UnvalidatedConfig.NormalConfig.CodebergToken
-	giteaToken := repo.UnvalidatedConfig.NormalConfig.GiteaToken
-	githubConnectorTypeOpt := repo.UnvalidatedConfig.NormalConfig.GitHubConnectorType
-	githubToken := repo.UnvalidatedConfig.NormalConfig.GitHubToken
+	codebergToken := None[forgedomain.CodebergToken]()
+	giteaToken := None[forgedomain.GiteaToken]()
+	githubConnectorTypeOpt := None[forgedomain.GitHubConnectorType]()
+	githubToken := None[forgedomain.GitHubToken]()
 	gitlabConnectorTypeOpt := repo.UnvalidatedConfig.NormalConfig.GitLabConnectorType
 	gitlabToken := repo.UnvalidatedConfig.NormalConfig.GitLabToken
 	if forgeType, hasForgeType := actualForgeType.Get(); hasForgeType {
@@ -188,14 +188,14 @@ EnterForgeData:
 		case forgedomain.ForgeTypeGitea:
 			giteaToken, exit, err = enterGiteaToken(repo, data)
 		case forgedomain.ForgeTypeGitHub:
-			githubConnectorTypeOpt, exit, err = dialog.GitHubConnectorType(githubConnectorTypeOpt, data.dialogInputs)
+			githubConnectorTypeOpt, exit, err = enterGitHubConnectorType(repo, data)
 			if err != nil || exit {
 				return emptyResult, exit, err
 			}
 			if githubConnectorType, has := githubConnectorTypeOpt.Get(); has {
 				switch githubConnectorType {
 				case forgedomain.GitHubConnectorTypeAPI:
-					githubToken, exit, err = dialog.GitHubToken(githubToken, data.dialogInputs)
+					githubToken, exit, err = enterGitHubToken(repo, data)
 				case forgedomain.GitHubConnectorTypeGh:
 				}
 			}
@@ -418,6 +418,28 @@ func enterGiteaToken(repo execute.OpenRepoResult, data setupData) (Option[forged
 		Global: repo.UnvalidatedConfig.GitGlobal.GiteaToken,
 		Inputs: data.dialogInputs,
 		Local:  repo.UnvalidatedConfig.GitLocal.GiteaToken,
+	})
+}
+
+func enterGitHubConnectorType(repo execute.OpenRepoResult, data setupData) (Option[forgedomain.GitHubConnectorType], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.GitHubConnectorType.IsSome() {
+		return None[forgedomain.GitHubConnectorType](), false, nil
+	}
+	return dialog.GitHubConnectorType(dialog.Args[forgedomain.GitHubConnectorType]{
+		Global: repo.UnvalidatedConfig.GitGlobal.GitHubConnectorType,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.GitHubConnectorType,
+	})
+}
+
+func enterGitHubToken(repo execute.OpenRepoResult, data setupData) (Option[forgedomain.GitHubToken], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.GitHubToken.IsSome() {
+		return None[forgedomain.GitHubToken](), false, nil
+	}
+	return dialog.GitHubToken(dialog.Args[forgedomain.GitHubToken]{
+		Global: repo.UnvalidatedConfig.GitGlobal.GitHubToken,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.GitHubToken,
 	})
 }
 
