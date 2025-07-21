@@ -30,7 +30,6 @@ type sharedShipData struct {
 	config                   config.ValidatedConfig
 	connector                Option[forgedomain.Connector]
 	dialogTestInputs         dialogcomponents.TestInputs
-	dryRun                   configdomain.DryRun
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
 	isShippingInitialBranch  bool
@@ -163,7 +162,6 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, cliConf
 		config:                   validatedConfig,
 		connector:                connector,
 		dialogTestInputs:         dialogTestInputs,
-		dryRun:                   cliConfig.DryRun,
 		hasOpenChanges:           repoStatus.OpenChanges,
 		initialBranch:            initialBranch,
 		isShippingInitialBranch:  isShippingInitialBranch,

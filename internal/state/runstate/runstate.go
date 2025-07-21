@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/vm/opcodes"
@@ -132,7 +133,7 @@ func (self *RunState) String() string {
 	if endSnapshot, has := self.EndBranchesSnapshot.Get(); has {
 		writeBranchInfos(&result, endSnapshot.Branches)
 	} else {
-		result.WriteString("(none)")
+		result.WriteString(messages.DialogResultNone)
 	}
 	return result.String()
 }
@@ -144,9 +145,9 @@ func writeBranchInfos(result *strings.Builder, branchInfos gitdomain.BranchInfos
 		result.WriteString(" (")
 		result.WriteString(string(branchInfo.SyncStatus))
 		result.WriteString(")\n      Local: ")
-		result.WriteString(branchInfo.LocalSHA.StringOr("(none)"))
+		result.WriteString(branchInfo.LocalSHA.StringOr(messages.DialogResultNone))
 		result.WriteString("\n      Remote: ")
-		result.WriteString(branchInfo.RemoteSHA.StringOr("(none)"))
+		result.WriteString(branchInfo.RemoteSHA.StringOr(messages.DialogResultNone))
 		result.WriteRune('\n')
 	}
 }

@@ -109,7 +109,7 @@ func executeMerge(cliConfig cliconfig.CliConfig) error {
 	if err = validateMergeData(repo, data); err != nil {
 		return err
 	}
-	runProgram := mergeProgram(data, cliConfig.DryRun)
+	runProgram := mergeProgram(repo, data, cliConfig.DryRun)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -156,7 +156,6 @@ type mergeData struct {
 	initialBranchInfo  gitdomain.BranchInfo
 	initialBranchSHA   gitdomain.SHA
 	initialBranchType  configdomain.BranchType
-	offline            configdomain.Offline
 	parentBranch       gitdomain.LocalBranchName
 	parentBranchInfo   gitdomain.BranchInfo
 	parentBranchSHA    gitdomain.SHA
@@ -272,7 +271,6 @@ func determineMergeData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConf
 		initialBranchInfo:  *initialBranchInfo,
 		initialBranchSHA:   initialBranchSHA,
 		initialBranchType:  initialBranchType,
-		offline:            repo.IsOffline,
 		parentBranch:       parentBranch,
 		parentBranchInfo:   *parentBranchInfo,
 		parentBranchSHA:    parentBranchSHA,
@@ -282,7 +280,7 @@ func determineMergeData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConf
 	}, false, err
 }
 
-func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
+func mergeProgram(repo execute.OpenRepoResult, data mergeData, dryRun configdomain.DryRun) program.Program {
 	prog := NewMutable(&program.Program{})
 	// there is no point in updating proposals:
 	// If the parent branch has a proposal, it doesn't need to change.
@@ -299,14 +297,14 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 	prog.Value.Add(&opcodes.BranchLocalDelete{
 		Branch: data.initialBranch,
 	})
-	if data.parentBranchInfo.RemoteName.IsSome() && data.offline.IsOnline() {
+	if data.parentBranchInfo.RemoteName.IsSome() && repo.IsOffline.IsOnline() {
 		prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{
 			CurrentBranch:   data.parentBranch,
 			ForceIfIncludes: true,
 		})
 	}
 	initialTrackingBranch, initialHasTrackingBranch := data.initialBranchInfo.RemoteName.Get()
-	if initialHasTrackingBranch && data.offline.IsOnline() {
+	if initialHasTrackingBranch && repo.IsOffline.IsOnline() {
 		prog.Value.Add(&opcodes.BranchTrackingDelete{
 			Branch: initialTrackingBranch,
 		})

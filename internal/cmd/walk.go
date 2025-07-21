@@ -103,20 +103,30 @@ func walkCommand() *cobra.Command {
 }
 
 func executeWalk(args []string, cliConfig cliconfig.CliConfig, allBranches configdomain.AllBranches, fullStack configdomain.FullStack) error {
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		CliConfig:        cliConfig,
+		PrintBranchNames: true,
+		PrintCommands:    true,
+		ValidateGitRepo:  true,
+		ValidateIsOnline: false,
+	})
+	if err != nil {
+		return err
+	}
 	if len(args) == 0 && cliConfig.DryRun {
 		return errors.New(messages.WalkNoDryRun)
 	}
 	if err := validateArgs(allBranches, fullStack); err != nil {
 		return err
 	}
-	data, exit, err := determineWalkData(cliConfig, allBranches, fullStack)
+	data, exit, err := determineWalkData(repo, cliConfig, allBranches, fullStack)
 	if err != nil || exit {
 		return err
 	}
 	runProgram := walkProgram(args, data, cliConfig.DryRun)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
-		BeginConfigSnapshot:   data.repo.ConfigSnapshot,
+		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        data.stashSize,
 		BranchInfosLastRun:    data.branchInfosLastRun,
 		Command:               walkCmd,
@@ -129,22 +139,22 @@ func executeWalk(args []string, cliConfig cliconfig.CliConfig, allBranches confi
 		UndoAPIProgram:        program.Program{},
 	}
 	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
-		Backend:                 data.repo.Backend,
-		CommandsCounter:         data.repo.CommandsCounter,
+		Backend:                 repo.Backend,
+		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               data.connector,
 		Detached:                true,
 		DialogTestInputs:        data.dialogTestInputs,
-		FinalMessages:           data.repo.FinalMessages,
-		Frontend:                data.repo.Frontend,
-		Git:                     data.repo.Git,
+		FinalMessages:           repo.FinalMessages,
+		Frontend:                repo.Frontend,
+		Git:                     repo.Git,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranch:           data.initialBranch,
 		InitialBranchesSnapshot: data.branchesSnapshot,
-		InitialConfigSnapshot:   data.repo.ConfigSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        data.stashSize,
 		PendingCommand:          None[string](),
-		RootDir:                 data.repo.RootDir,
+		RootDir:                 repo.RootDir,
 		RunState:                runState,
 		Verbose:                 cliConfig.Verbose,
 	})
@@ -160,21 +170,10 @@ type walkData struct {
 	hasOpenChanges     bool
 	initialBranch      gitdomain.LocalBranchName
 	previousBranch     Option[gitdomain.LocalBranchName]
-	repo               execute.OpenRepoResult
 	stashSize          gitdomain.StashSize
 }
 
-func determineWalkData(cliConfig cliconfig.CliConfig, all configdomain.AllBranches, stack configdomain.FullStack) (walkData, dialogdomain.Exit, error) {
-	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		CliConfig:        cliConfig,
-		PrintBranchNames: true,
-		PrintCommands:    true,
-		ValidateGitRepo:  true,
-		ValidateIsOnline: false,
-	})
-	if err != nil {
-		return walkData{}, false, err
-	}
+func determineWalkData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig, all configdomain.AllBranches, stack configdomain.FullStack) (walkData, dialogdomain.Exit, error) {
 	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -263,7 +262,6 @@ func determineWalkData(cliConfig cliconfig.CliConfig, all configdomain.AllBranch
 		hasOpenChanges:     repoStatus.OpenChanges,
 		initialBranch:      initialBranch,
 		previousBranch:     previousBranch,
-		repo:               repo,
 		stashSize:          stashSize,
 	}, false, nil
 }

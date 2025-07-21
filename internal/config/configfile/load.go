@@ -23,23 +23,23 @@ func Decode(text string) (*Data, error) {
 	return &result, err
 }
 
-func Load(rootDir gitdomain.RepoRootDir, fileName string, finalMessages stringslice.Collector) (Option[configdomain.PartialConfig], error) {
+func Load(rootDir gitdomain.RepoRootDir, fileName string, finalMessages stringslice.Collector) (configdomain.PartialConfig, bool, error) {
 	configPath := filepath.Join(rootDir.String(), fileName)
 	file, err := os.Open(configPath)
 	if err != nil {
-		return None[configdomain.PartialConfig](), nil
+		return configdomain.EmptyPartialConfig(), false, nil
 	}
 	defer file.Close()
 	bytes, err := io.ReadAll(file)
 	if err != nil {
-		return None[configdomain.PartialConfig](), fmt.Errorf(messages.ConfigFileCannotRead, fileName, err)
+		return configdomain.EmptyPartialConfig(), false, fmt.Errorf(messages.ConfigFileCannotRead, fileName, err)
 	}
 	configFileData, err := Decode(string(bytes))
 	if err != nil {
-		return None[configdomain.PartialConfig](), fmt.Errorf(messages.ConfigFileInvalidContent, fileName, err)
+		return configdomain.EmptyPartialConfig(), false, fmt.Errorf(messages.ConfigFileInvalidContent, fileName, err)
 	}
 	result, err := Validate(*configFileData, finalMessages)
-	return Some(result), err
+	return result, true, err
 }
 
 // Validate converts the given low-level configfile data into high-level config data.

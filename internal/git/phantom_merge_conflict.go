@@ -44,8 +44,9 @@ var UnmergedStages = []UnmergedStage{
 // complete information about a file with merge conflicts, to determine whether it is a pantom merge conflict
 type FileConflictFullInfo struct {
 	Current Option[BlobInfo] // info about the file on the current branch
-	Main    Option[BlobInfo] // info about the file on the main branch
-	Parent  Option[BlobInfo] // info about the file on the original parent
+	// TODO: rename to Root and provide the root branch of the stack here, instead of the main branch
+	Main   Option[BlobInfo] // info about the file on the main branch
+	Parent Option[BlobInfo] // info about the file on the original parent
 }
 
 // describes a file within an unresolved merge conflict that experiences a phantom merge conflict
