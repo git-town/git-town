@@ -25,16 +25,20 @@ it's safe to leave it blank.
 `
 )
 
-func FeatureRegex(existingValue Option[configdomain.FeatureRegex], inputs dialogcomponents.TestInputs) (Option[configdomain.FeatureRegex], dialogdomain.Exit, error) {
-	value, exit, err1 := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
+func FeatureRegex(args TextArgs[configdomain.FeatureRegex]) (Option[configdomain.FeatureRegex], dialogdomain.Exit, error) {
+	input, exit, err1 := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "feature-regex",
-		ExistingValue: existingValue.String(),
+		ExistingValue: args.Local.Or(args.Global).String(),
 		Help:          FeatureRegexHelp,
-		Prompt:        "Feature regex: ",
-		TestInputs:    inputs,
+		Prompt:        messages.FeatureRegexPrompt,
+		TestInputs:    args.Inputs,
 		Title:         featureRegexTitle,
 	})
-	fmt.Printf(messages.FeatureRegex, dialogcomponents.FormattedSelection(value, exit))
-	featureRegex, err2 := configdomain.ParseFeatureRegex(value)
-	return featureRegex, exit, cmp.Or(err1, err2)
+	newValue, err2 := configdomain.ParseFeatureRegex(input)
+	if args.Global.Equal(newValue) {
+		// the user has entered the global value --> keep using the global value, don't store the local value
+		newValue = None[configdomain.FeatureRegex]()
+	}
+	fmt.Printf(messages.FeatureRegexResult, dialogcomponents.FormattedSelection(newValue.String(), exit))
+	return newValue, exit, cmp.Or(err1, err2)
 }
