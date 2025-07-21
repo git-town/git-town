@@ -34,19 +34,19 @@ func NewBranchType(args NewBranchTypeArgs) (Option[configdomain.NewBranchType], 
 	entries = append(entries, list.Entries[Option[configdomain.BranchType]]{
 		{
 			Data: Some(configdomain.BranchTypeFeatureBranch),
-			Text: "always create feature branches",
+			Text: "create feature branches",
 		},
 		{
 			Data: Some(configdomain.BranchTypeParkedBranch),
-			Text: "always create parked branches",
+			Text: "create parked branches",
 		},
 		{
 			Data: Some(configdomain.BranchTypePrototypeBranch),
-			Text: "always create prototype branches",
+			Text: "create prototype branches",
 		},
 		{
 			Data: Some(configdomain.BranchTypePerennialBranch),
-			Text: "always create perennial branches",
+			Text: "create perennial branches",
 		},
 	}...)
 	cursor := 0
