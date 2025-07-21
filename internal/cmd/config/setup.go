@@ -143,12 +143,9 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	newBranchType := repo.UnvalidatedConfig.NormalConfig.NewBranchType
-	if repo.UnvalidatedConfig.File.NewBranchType.IsNone() {
-		newBranchType, exit, err = dialog.NewBranchType(newBranchType, data.dialogInputs)
-		if err != nil || exit {
-			return emptyResult, exit, err
-		}
+	newBranchType, exit, err := enterNewBranchType(repo, data)
+	if err != nil || exit {
+		return emptyResult, exit, err
 	}
 	unknownBranchType := None[configdomain.UnknownBranchType]()
 	if repo.UnvalidatedConfig.File.UnknownBranchType.IsNone() {
@@ -425,6 +422,17 @@ func enterMainBranch(repo execute.OpenRepoResult, data setupData) (userChoice Op
 		LocalBranches:         data.localBranches.Names(),
 		LocalGitMainBranch:    repo.UnvalidatedConfig.GitLocal.MainBranch,
 		UnscopedGitMainBranch: repo.UnvalidatedConfig.GitUnscoped.MainBranch,
+	})
+}
+
+func enterNewBranchType(repo execute.OpenRepoResult, data setupData) (Option[configdomain.NewBranchType], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.NewBranchType.IsSome() {
+		return None[configdomain.NewBranchType](), false, nil
+	}
+	return dialog.NewBranchType(dialog.TextArgs[configdomain.NewBranchType]{
+		Global: repo.UnvalidatedConfig.GitGlobal.NewBranchType,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.NewBranchType,
 	})
 }
 
