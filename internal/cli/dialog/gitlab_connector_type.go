@@ -28,22 +28,26 @@ Git Town supports two ways to connect to GitLab:
 `
 )
 
-func GitLabConnectorType(existing Option[forgedomain.GitLabConnectorType], inputs dialogcomponents.TestInputs) (Option[forgedomain.GitLabConnectorType], dialogdomain.Exit, error) {
-	entries := list.Entries[forgedomain.GitLabConnectorType]{
+func GitLabConnectorType(args Args[forgedomain.GitLabConnectorType]) (Option[forgedomain.GitLabConnectorType], dialogdomain.Exit, error) {
+	entries := list.Entries[Option[forgedomain.GitLabConnectorType]]{}
+	if global, hasGlobal := args.Global.Get(); hasGlobal {
+		entries = append(entries, list.Entry[Option[forgedomain.GitLabConnectorType]]{
+			Data: None[forgedomain.GitLabConnectorType](),
+			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
+		})
+	}
+	entries = append(entries, list.Entries[Option[forgedomain.GitLabConnectorType]]{
 		{
-			Data: forgedomain.GitLabConnectorTypeAPI,
+			Data: Some(forgedomain.GitLabConnectorTypeAPI),
 			Text: "API token",
 		},
 		{
-			Data: forgedomain.GitLabConnectorTypeGlab,
+			Data: Some(forgedomain.GitLabConnectorTypeGlab),
 			Text: "glab tool",
 		},
-	}
-	defaultPos := 0
-	if existingValue, hasExisting := existing.Get(); hasExisting {
-		defaultPos = entries.IndexOf(existingValue)
-	}
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, gitLabConnectorTypeTitle, gitLabConnectorTypeHelp, inputs, "gitlab-connector-type")
-	fmt.Printf(messages.GitLabConnectorType, dialogcomponents.FormattedSelection(selection.String(), exit))
-	return NewOption(selection), exit, err
+	}...)
+	cursor := entries.IndexOf(args.Local)
+	selection, exit, err := dialogcomponents.RadioList(entries, cursor, gitLabConnectorTypeTitle, gitLabConnectorTypeHelp, args.Inputs, "gitlab-connector-type")
+	fmt.Printf(messages.GitLabConnectorTypeResult, dialogcomponents.FormattedSelection(selection.String(), exit))
+	return selection, exit, err
 }

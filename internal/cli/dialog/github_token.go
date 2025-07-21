@@ -29,7 +29,6 @@ with the GitHub API.
 `
 )
 
-// GitHubToken lets the user enter the GitHub API token.
 func GitHubToken(args Args[forgedomain.GitHubToken]) (Option[forgedomain.GitHubToken], dialogdomain.Exit, error) {
 	input, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "github-token",
