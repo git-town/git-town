@@ -56,7 +56,7 @@ func PerennialBranches(args PerennialBranchesArgs) (gitdomain.LocalBranchNames, 
 	selectedBranches = selectedBranches.Remove(args.ImmutableGitPerennials...)
 	selectionText := selectedBranches.Join(", ")
 	if selectionText == "" {
-		selectionText = "(none)"
+		selectionText = messages.DialogResultNone
 	}
 	fmt.Printf(messages.PerennialBranches, dialogcomponents.FormattedSelection(selectionText, exit))
 	return selectedBranches, exit, err

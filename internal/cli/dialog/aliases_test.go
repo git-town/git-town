@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/shoenig/test/must"
 )
 
@@ -54,7 +55,7 @@ func TestAliases(t *testing.T) {
 			t.Parallel()
 			give := configdomain.AliasableCommands{}
 			have := dialog.DetermineAliasSelectionText(give)
-			want := "(none)"
+			want := messages.DialogResultNone
 			must.EqOp(t, want, have)
 		})
 		t.Run("some commands selected", func(t *testing.T) {

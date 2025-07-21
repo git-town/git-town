@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/git-town/git-town/v21/internal/messages"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -32,7 +33,7 @@ func AllBranchTypes() []BranchType {
 }
 
 func ParseBranchType(text string) (Option[BranchType], error) {
-	if len(text) == 0 || text == "(none)" {
+	if len(text) == 0 || text == messages.DialogResultNone {
 		return None[BranchType](), nil
 	}
 	for _, branchType := range AllBranchTypes() {
@@ -40,7 +41,7 @@ func ParseBranchType(text string) (Option[BranchType], error) {
 			return Some(branchType), nil
 		}
 	}
-	return None[BranchType](), fmt.Errorf("unknown branch type: %q", text)
+	return None[BranchType](), fmt.Errorf(messages.DialogResultUnknownBranchType, text)
 }
 
 func (self BranchType) MustKnowParent() bool {
