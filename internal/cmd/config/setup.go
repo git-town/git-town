@@ -127,16 +127,9 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	perennialRegex := None[configdomain.PerennialRegex]()
-	if repo.UnvalidatedConfig.File.PerennialRegex.IsNone() {
-		perennialRegex, exit, err = dialog.PerennialRegex(dialog.PerennialRegexArgs{
-			Global: repo.UnvalidatedConfig.GitGlobal.PerennialRegex,
-			Inputs: data.dialogInputs,
-			Local:  repo.UnvalidatedConfig.GitLocal.PerennialRegex,
-		})
-		if err != nil || exit {
-			return emptyResult, exit, err
-		}
+	perennialRegex, exit, err := enterPerennialRegex(repo, data)
+	if err != nil || exit {
+		return emptyResult, exit, err
 	}
 	featureRegex := repo.UnvalidatedConfig.NormalConfig.FeatureRegex
 	if repo.UnvalidatedConfig.File.FeatureRegex.IsNone() {
@@ -432,6 +425,17 @@ func enterPerennialBranches(repo execute.OpenRepoResult, data setupData, mainBra
 		LocalBranches:          data.localBranches.Names(),
 		LocalGitPerennials:     repo.UnvalidatedConfig.GitLocal.PerennialBranches,
 		MainBranch:             mainBranch,
+	})
+}
+
+func enterPerennialRegex(repo execute.OpenRepoResult, data setupData) (Option[configdomain.PerennialRegex], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.PerennialRegex.IsSome() {
+		return None[configdomain.PerennialRegex](), false, nil
+	}
+	return dialog.PerennialRegex(dialog.PerennialRegexArgs{
+		Global: repo.UnvalidatedConfig.GitGlobal.PerennialRegex,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.PerennialRegex,
 	})
 }
 
