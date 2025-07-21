@@ -228,7 +228,7 @@ func DetermineAliasSelectionText(selectedCommands configdomain.AliasableCommands
 		return messages.DialogResultNone
 	case len(configdomain.AllAliasableCommands()):
 		// TODO: extract into en.go
-		return "(all)"
+		return messages.DialogResultAll
 	default:
 		return strings.Join(selectedCommands.Strings(), ", ")
 	}

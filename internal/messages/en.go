@@ -88,6 +88,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	DetachRemoteBranch                  = "cannot detach a remote branch"
 	DetachUnsupportedBranchType         = "cannot detach %s branches since you don't own them"
 	DevRemote                           = "Development remote: %s\n"
+	DialogResultAll                     = "(all)"
 	DialogResultNone                    = "(none)"
 	DialogResultUnknownBranchType       = "unknown branch type: %q"
 	DialogResultUseGlobalValue          = "use global value (%s)"
