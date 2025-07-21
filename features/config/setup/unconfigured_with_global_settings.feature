@@ -50,7 +50,6 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | config storage              | enter       |
     Then Git Town runs the commands
       | COMMAND                                               |
-      | git config git-town.new-branch-type prototype         |
       | git config git-town.main-branch main                  |
       | git config git-town.perennial-branches branch-1       |
       | git config git-town.push-hook false                   |
