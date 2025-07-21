@@ -182,7 +182,7 @@ EnterForgeData:
 			if err != nil || exit {
 				return emptyResult, exit, err
 			}
-			bitbucketAppPassword, exit, err = dialog.BitbucketAppPassword(bitbucketAppPassword, data.dialogInputs)
+			bitbucketAppPassword, exit, err = enterBitbucketAppPassword(repo, data)
 		case forgedomain.ForgeTypeCodeberg:
 			codebergToken, exit, err = dialog.CodebergToken(codebergToken, data.dialogInputs)
 		case forgedomain.ForgeTypeGitea:

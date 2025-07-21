@@ -13,9 +13,10 @@ const (
 	AuthenticationMissing              = "not logged in"
 	AuthorizationMissing               = `cannot find "repo" scope: %v`
 	AutoDetect                         = "auto-detect"
-	BitbucketAppPassword               = "Bitbucket app password: %s"
+	BitBucketAppPasswordPrompt         = "Bitbucket App Password/Token: "
+	BitBucketAppPasswordResult         = "Bitbucket app password: %s"
 	BitBucketUsernamePrompt            = "Your Bitbucket username: "
-	BitbucketUsernameResult            = "Bitbucket username: %s"
+	BitBucketUsernameResult            = "Bitbucket username: %s"
 	BranchAlreadyExistsLocally         = "there is already a branch %q"
 	BranchAlreadyExistsRemotely        = "there is already a branch %q at the \"origin\" remote"
 	BranchAuthorMultiple               = "\nMultiple people authored the %q branch.\n\n"
