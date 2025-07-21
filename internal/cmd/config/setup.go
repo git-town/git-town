@@ -139,12 +139,9 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	observedRegex := repo.UnvalidatedConfig.NormalConfig.ObservedRegex
-	if repo.UnvalidatedConfig.File.ObservedRegex.IsNone() {
-		observedRegex, exit, err = dialog.ObservedRegex(observedRegex, data.dialogInputs)
-		if err != nil || exit {
-			return emptyResult, exit, err
-		}
+	observedRegex, exit, err := enterObservedRegex(repo, data)
+	if err != nil || exit {
+		return emptyResult, exit, err
 	}
 	newBranchType := repo.UnvalidatedConfig.NormalConfig.NewBranchType
 	if repo.UnvalidatedConfig.File.NewBranchType.IsNone() {
@@ -428,6 +425,17 @@ func enterMainBranch(repo execute.OpenRepoResult, data setupData) (userChoice Op
 		LocalBranches:         data.localBranches.Names(),
 		LocalGitMainBranch:    repo.UnvalidatedConfig.GitLocal.MainBranch,
 		UnscopedGitMainBranch: repo.UnvalidatedConfig.GitUnscoped.MainBranch,
+	})
+}
+
+func enterObservedRegex(repo execute.OpenRepoResult, data setupData) (Option[configdomain.ObservedRegex], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.ObservedRegex.IsSome() {
+		return None[configdomain.ObservedRegex](), false, nil
+	}
+	return dialog.ObservedRegex(dialog.TextArgs[configdomain.ObservedRegex]{
+		Global: repo.UnvalidatedConfig.GitGlobal.ObservedRegex,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.ObservedRegex,
 	})
 }
 

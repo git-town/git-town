@@ -1,6 +1,7 @@
 package dialog
 
 import (
+	"cmp"
 	"fmt"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
@@ -24,19 +25,20 @@ it's safe to leave it blank.
 `
 )
 
-func ObservedRegex(existingValue Option[configdomain.ObservedRegex], inputs dialogcomponents.TestInputs) (Option[configdomain.ObservedRegex], dialogdomain.Exit, error) {
-	value, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
+func ObservedRegex(args TextArgs[configdomain.ObservedRegex]) (Option[configdomain.ObservedRegex], dialogdomain.Exit, error) {
+	input, exit, err1 := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "observed-regex",
-		ExistingValue: existingValue.String(),
+		ExistingValue: args.Local.Or(args.Global).String(),
 		Help:          observedRegexHelp,
-		Prompt:        "Observed regex: ",
-		TestInputs:    inputs,
+		Prompt:        messages.ObservedRegexPrompt,
+		TestInputs:    args.Inputs,
 		Title:         observedRegexTitle,
 	})
-	fmt.Printf(messages.ObservedRegex, dialogcomponents.FormattedSelection(value, exit))
-	if err != nil {
-		return None[configdomain.ObservedRegex](), exit, err
+	newValue, err2 := configdomain.ParseObservedRegex(input)
+	if args.Global.Equal(newValue) {
+		// the user has entered the global value --> keep using the global value, don't store the local value
+		newValue = None[configdomain.ObservedRegex]()
 	}
-	observedRegex, err := configdomain.ParseObservedRegex(value)
-	return observedRegex, false, err
+	fmt.Printf(messages.ObservedRegexResult, dialogcomponents.FormattedSelection(newValue.String(), exit))
+	return newValue, exit, cmp.Or(err1, err2)
 }
