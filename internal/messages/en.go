@@ -104,6 +104,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	DiffProblem                         = "cannot list diff of %q and %q: %w"
 	DirCurrentProblem                   = "cannot determine the current directory"
 	FeatureRegex                        = "Feature regex: %s\n"
+	FeatureRegexPrompt                  = "Feature regex: "
 	FileContentInvalidJSON              = "cannot parse JSON content of file %q: %w"
 	FileDeleteProblem                   = "cannot delete file %q: %w"
 	FileReadProblem                     = "cannot read file %q: %w"

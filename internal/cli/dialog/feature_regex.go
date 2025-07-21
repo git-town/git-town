@@ -25,16 +25,22 @@ it's safe to leave it blank.
 `
 )
 
-func FeatureRegex(existingValue Option[configdomain.FeatureRegex], inputs dialogcomponents.TestInputs) (Option[configdomain.FeatureRegex], dialogdomain.Exit, error) {
-	value, exit, err1 := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
+func FeatureRegex(args FeatureRegexArgs) (Option[configdomain.FeatureRegex], dialogdomain.Exit, error) {
+	input, exit, err1 := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "feature-regex",
-		ExistingValue: existingValue.String(),
+		ExistingValue: args.Local.Or(args.Global).String(),
 		Help:          FeatureRegexHelp,
-		Prompt:        "Feature regex: ",
-		TestInputs:    inputs,
+		Prompt:        messages.FeatureRegexPrompt,
+		TestInputs:    args.Inputs,
 		Title:         featureRegexTitle,
 	})
-	fmt.Printf(messages.FeatureRegex, dialogcomponents.FormattedSelection(value, exit))
-	featureRegex, err2 := configdomain.ParseFeatureRegex(value)
+	fmt.Printf(messages.FeatureRegex, dialogcomponents.FormattedSelection(input, exit))
+	featureRegex, err2 := configdomain.ParseFeatureRegex(input)
 	return featureRegex, exit, cmp.Or(err1, err2)
+}
+
+type FeatureRegexArgs struct {
+	Global Option[configdomain.FeatureRegex]
+	Inputs dialogcomponents.TestInputs
+	Local  Option[configdomain.FeatureRegex]
 }

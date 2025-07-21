@@ -402,6 +402,13 @@ type userInput struct {
 	validatedConfig     configdomain.ValidatedConfigData
 }
 
+func enterFeatureRegex(repo execute.OpenRepoResult, data setupData) (Option[configdomain.FeatureRegex], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.FeatureRegex.IsSome() {
+		return None[configdomain.FeatureRegex](), false, nil
+	}
+	return dialog.FeatureRegex(featureRegex, data.dialogInputs)
+}
+
 func enterMainBranch(repo execute.OpenRepoResult, data setupData) (userChoice Option[gitdomain.LocalBranchName], actualMainBranch gitdomain.LocalBranchName, exit dialogdomain.Exit, err error) {
 	if configFileMainBranch, hasMain := repo.UnvalidatedConfig.File.MainBranch.Get(); hasMain {
 		return Some(configFileMainBranch), configFileMainBranch, false, nil
