@@ -57,4 +57,3 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | git config git-town.share-new-branches push           |
       | git config git-town.ship-strategy api                 |
       | git config git-town.ship-delete-tracking-branch false |
-      | git config git-town.sync-tags false                   |
