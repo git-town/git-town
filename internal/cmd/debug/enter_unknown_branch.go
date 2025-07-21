@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/config/cliconfig"
+	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/spf13/cobra"
 )
@@ -28,7 +29,11 @@ func enterUnknownBranch() *cobra.Command {
 				return err
 			}
 			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
-			_, _, err = dialog.UnknownBranchType(repo.UnvalidatedConfig, dialogTestInputs)
+			_, _, err = dialog.UnknownBranchType(dialog.Args[configdomain.UnknownBranchType]{
+				Global: repo.UnvalidatedConfig.GitGlobal.UnknownBranchType,
+				Inputs: dialogTestInputs,
+				Local:  repo.UnvalidatedConfig.GitLocal.UnknownBranchType,
+			})
 			return err
 		},
 	}

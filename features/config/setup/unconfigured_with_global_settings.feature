@@ -12,6 +12,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
     And global Git setting "git-town.observed-regex" is "^obs-"
     And global Git setting "git-town.main-branch" is "main"
     And global Git setting "git-town.new-branch-type" is "prototype"
+    And global Git setting "git-town.unknown-branch-type" is "prototype"
     And global Git setting "git-town.perennial-branches" is "perennials"
     And global Git setting "git-town.perennial-regex" is "^per-"
     And global Git setting "git-town.push-hook" is "false"
