@@ -388,6 +388,17 @@ func enterBitbucketUserName(repo execute.OpenRepoResult, data setupData) (Option
 	})
 }
 
+func enterBitbucketAppPassword(repo execute.OpenRepoResult, data setupData) (Option[forgedomain.BitbucketAppPassword], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.BitbucketUsername.IsSome() {
+		return None[forgedomain.BitbucketAppPassword](), false, nil
+	}
+	return dialog.BitbucketAppPassword(dialog.Args[forgedomain.BitbucketAppPassword]{
+		Global: repo.UnvalidatedConfig.GitLocal.BitbucketAppPassword,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.BitbucketAppPassword,
+	})
+}
+
 func enterContributionRegex(repo execute.OpenRepoResult, data setupData) (Option[configdomain.ContributionRegex], dialogdomain.Exit, error) {
 	if repo.UnvalidatedConfig.File.ContributionRegex.IsSome() {
 		return None[configdomain.ContributionRegex](), false, nil
