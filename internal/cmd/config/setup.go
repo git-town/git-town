@@ -131,12 +131,9 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	featureRegex := repo.UnvalidatedConfig.NormalConfig.FeatureRegex
-	if repo.UnvalidatedConfig.File.FeatureRegex.IsNone() {
-		featureRegex, exit, err = dialog.FeatureRegex(featureRegex, data.dialogInputs)
-		if err != nil || exit {
-			return emptyResult, exit, err
-		}
+	featureRegex, exit, err := enterFeatureRegex(repo, data)
+	if err != nil || exit {
+		return emptyResult, exit, err
 	}
 	contributionRegex := repo.UnvalidatedConfig.NormalConfig.ContributionRegex
 	if repo.UnvalidatedConfig.File.ContributionRegex.IsNone() {
@@ -406,7 +403,11 @@ func enterFeatureRegex(repo execute.OpenRepoResult, data setupData) (Option[conf
 	if repo.UnvalidatedConfig.File.FeatureRegex.IsSome() {
 		return None[configdomain.FeatureRegex](), false, nil
 	}
-	return dialog.FeatureRegex(featureRegex, data.dialogInputs)
+	return dialog.FeatureRegex(dialog.DialogArgs[configdomain.FeatureRegex]{
+		Global: repo.UnvalidatedConfig.GitGlobal.FeatureRegex,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.FeatureRegex,
+	})
 }
 
 func enterMainBranch(repo execute.OpenRepoResult, data setupData) (userChoice Option[gitdomain.LocalBranchName], actualMainBranch gitdomain.LocalBranchName, exit dialogdomain.Exit, err error) {
@@ -439,7 +440,7 @@ func enterPerennialRegex(repo execute.OpenRepoResult, data setupData) (Option[co
 	if repo.UnvalidatedConfig.File.PerennialRegex.IsSome() {
 		return None[configdomain.PerennialRegex](), false, nil
 	}
-	return dialog.PerennialRegex(dialog.PerennialRegexArgs{
+	return dialog.PerennialRegex(dialog.DialogArgs[configdomain.PerennialRegex]{
 		Global: repo.UnvalidatedConfig.GitGlobal.PerennialRegex,
 		Inputs: data.dialogInputs,
 		Local:  repo.UnvalidatedConfig.GitLocal.PerennialRegex,

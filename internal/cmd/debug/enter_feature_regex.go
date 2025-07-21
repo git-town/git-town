@@ -15,7 +15,11 @@ func enterFeatureRegex() *cobra.Command {
 		Use: "feature-regex",
 		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogInputs := dialogcomponents.LoadTestInputs(os.Environ())
-			_, _, err := dialog.FeatureRegex(None[configdomain.FeatureRegex](), dialogInputs)
+			_, _, err := dialog.FeatureRegex(dialog.DialogArgs[configdomain.FeatureRegex]{
+				Global: None[configdomain.FeatureRegex](),
+				Inputs: dialogInputs,
+				Local:  None[configdomain.FeatureRegex](),
+			})
 			return err
 		},
 	}
