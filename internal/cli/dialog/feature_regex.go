@@ -34,9 +34,13 @@ func FeatureRegex(args FeatureRegexArgs) (Option[configdomain.FeatureRegex], dia
 		TestInputs:    args.Inputs,
 		Title:         featureRegexTitle,
 	})
-	fmt.Printf(messages.FeatureRegex, dialogcomponents.FormattedSelection(input, exit))
-	featureRegex, err2 := configdomain.ParseFeatureRegex(input)
-	return featureRegex, exit, cmp.Or(err1, err2)
+	newValue, err2 := configdomain.ParseFeatureRegex(input)
+	if args.Global.Equal(newValue) {
+		// the user has entered the global value --> keep using the global value, don't store the local value
+		newValue = None[configdomain.FeatureRegex]()
+	}
+	fmt.Printf(messages.FeatureRegex, dialogcomponents.FormattedSelection(newValue.String(), exit))
+	return newValue, exit, cmp.Or(err1, err2)
 }
 
 type FeatureRegexArgs struct {
