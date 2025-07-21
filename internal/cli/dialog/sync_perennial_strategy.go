@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 const (
@@ -23,19 +24,26 @@ by shipping feature branches.
 `
 )
 
-func SyncPerennialStrategy(existing configdomain.SyncPerennialStrategy, inputs dialogcomponents.TestInputs) (configdomain.SyncPerennialStrategy, dialogdomain.Exit, error) {
-	entries := list.Entries[configdomain.SyncPerennialStrategy]{
+func SyncPerennialStrategy(args Args[configdomain.SyncPerennialStrategy]) (Option[configdomain.SyncPerennialStrategy], dialogdomain.Exit, error) {
+	entries := list.Entries[Option[configdomain.SyncPerennialStrategy]]{}
+	if global, hasGlobal := args.Global.Get(); hasGlobal {
+		entries = append(entries, list.Entry[Option[configdomain.SyncPerennialStrategy]]{
+			Data: None[configdomain.SyncPerennialStrategy](),
+			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
+		})
+	}
+	entries = append(entries, list.Entries[Option[configdomain.SyncPerennialStrategy]]{
 		{
-			Data: configdomain.SyncPerennialStrategyFFOnly,
+			Data: Some(configdomain.SyncPerennialStrategyFFOnly),
 			Text: "fast-forward perennial branches to their tracking branch",
 		},
 		{
-			Data: configdomain.SyncPerennialStrategyRebase,
+			Data: Some(configdomain.SyncPerennialStrategyRebase),
 			Text: "rebase perennial branches against their tracking branch",
 		},
-	}
-	defaultPos := entries.IndexOf(existing)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncPerennialStrategyTitle, SyncPerennialStrategyHelp, inputs, "sync-perennial-strategy")
+	}...)
+	defaultPos := entries.IndexOf(args.Local)
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncPerennialStrategyTitle, SyncPerennialStrategyHelp, args.Inputs, "sync-perennial-strategy")
 	fmt.Printf(messages.SyncPerennialBranches, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }

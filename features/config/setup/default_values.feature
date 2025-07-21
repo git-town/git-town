@@ -77,7 +77,7 @@ Feature: Accepting all default values leads to a working setup
 
       [sync]
       feature-strategy = "merge"
-      perennial-strategy = "rebase"
+      perennial-strategy = "ff-only"
       prototype-strategy = "merge"
       push-hook = true
       tags = true

@@ -256,12 +256,9 @@ EnterForgeData:
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	syncPerennialStrategy := repo.UnvalidatedConfig.NormalConfig.SyncPerennialStrategy
-	if repo.UnvalidatedConfig.File.SyncPerennialStrategy.IsNone() {
-		syncPerennialStrategy, exit, err = dialog.SyncPerennialStrategy(syncPerennialStrategy, data.dialogInputs)
-		if err != nil || exit {
-			return emptyResult, exit, err
-		}
+	syncPerennialStrategy, exit, err := enterSyncPerennialStrategy(repo, data)
+	if err != nil || exit {
+		return emptyResult, exit, err
 	}
 	syncPrototypeStrategy := repo.UnvalidatedConfig.NormalConfig.SyncPrototypeStrategy
 	if repo.UnvalidatedConfig.File.SyncPrototypeStrategy.IsNone() {
@@ -347,7 +344,7 @@ EnterForgeData:
 		ShipDeleteTrackingBranch: Some(shipDeleteTrackingBranch),
 		ShipStrategy:             Some(shipStrategy),
 		SyncFeatureStrategy:      syncFeatureStrategy,
-		SyncPerennialStrategy:    Some(syncPerennialStrategy),
+		SyncPerennialStrategy:    syncPerennialStrategy,
 		SyncPrototypeStrategy:    Some(syncPrototypeStrategy),
 		SyncTags:                 Some(syncTags),
 		SyncUpstream:             Some(syncUpstream),
@@ -584,6 +581,17 @@ func enterSyncFeatureStrategy(repo execute.OpenRepoResult, data setupData) (Opti
 		Global: repo.UnvalidatedConfig.GitGlobal.SyncFeatureStrategy,
 		Inputs: data.dialogInputs,
 		Local:  repo.UnvalidatedConfig.GitLocal.SyncFeatureStrategy,
+	})
+}
+
+func enterSyncPerennialStrategy(repo execute.OpenRepoResult, data setupData) (Option[configdomain.SyncPerennialStrategy], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.SyncPerennialStrategy.IsSome() {
+		return None[configdomain.SyncPerennialStrategy](), false, nil
+	}
+	return dialog.SyncPerennialStrategy(dialog.Args[configdomain.SyncPerennialStrategy]{
+		Global: repo.UnvalidatedConfig.GitGlobal.SyncPerennialStrategy,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.SyncPerennialStrategy,
 	})
 }
 
