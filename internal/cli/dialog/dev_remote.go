@@ -46,6 +46,9 @@ func DevRemote(remotes gitdomain.Remotes, args Args[gitdomain.Remote]) (Option[g
 			Text: local.String(),
 		})
 	}
+	if len(options) == 1 {
+		return options[0].Data, false, nil
+	}
 	var cursor int
 	switch {
 	case hasLocal:
