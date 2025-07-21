@@ -21,7 +21,7 @@ Git Town cannot determine their type any other way.
 `
 )
 
-func UnknownBranchType(args TextArgs[configdomain.UnknownBranchType]) (Option[configdomain.UnknownBranchType], dialogdomain.Exit, error) {
+func UnknownBranchType(args Args[configdomain.UnknownBranchType]) (Option[configdomain.UnknownBranchType], dialogdomain.Exit, error) {
 	entries := make(list.Entries[Option[configdomain.UnknownBranchType]], 0, 5)
 	globalValue, hasGlobal := args.Global.Get()
 	if hasGlobal {

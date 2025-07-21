@@ -25,7 +25,7 @@ it's safe to leave it blank.
 `
 )
 
-func ContributionRegex(args TextArgs[configdomain.ContributionRegex]) (Option[configdomain.ContributionRegex], dialogdomain.Exit, error) {
+func ContributionRegex(args Args[configdomain.ContributionRegex]) (Option[configdomain.ContributionRegex], dialogdomain.Exit, error) {
 	input, exit, err1 := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "contribution-regex",
 		ExistingValue: args.Local.Or(args.Global).String(),
