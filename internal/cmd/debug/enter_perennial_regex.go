@@ -17,6 +17,7 @@ func enterPerennialRegex() *cobra.Command {
 			dialogInputs := dialogcomponents.LoadTestInputs(os.Environ())
 			_, _, err := dialog.PerennialRegex(dialog.PerennialRegexArgs{
 				Local:  None[configdomain.PerennialRegex](),
+				Global: None[configdomain.PerennialRegex](),
 				Inputs: dialogInputs,
 			})
 			return err
