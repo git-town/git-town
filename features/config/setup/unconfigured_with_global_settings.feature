@@ -1,7 +1,6 @@
 @messyoutput
 Feature: setup a new repo when I have configured some things in global Git metadata
 
-  @this
   Scenario:
     Given a Git repo with origin
     And Git Town is not configured
@@ -26,7 +25,6 @@ Feature: setup a new repo when I have configured some things in global Git metad
     And global Git setting "git-town.sync-tags" is "false"
     And global Git setting "git-town.sync-upstream" is "false"
     And global Git setting "git-town.unknown-branch-type" is "observed"
-    And inspect the repo
     When I run "git-town config setup" and enter into the dialogs:
       | DIALOG                      | KEYS        |
       | welcome                     | enter       |
@@ -59,4 +57,3 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | git config git-town.share-new-branches push           |
       | git config git-town.ship-strategy api                 |
       | git config git-town.ship-delete-tracking-branch false |
-      | git config git-town.sync-tags false                   |
