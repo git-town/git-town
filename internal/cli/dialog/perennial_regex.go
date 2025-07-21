@@ -25,16 +25,26 @@ it's safe to leave it blank.
 `
 )
 
-func PerennialRegex(oldValue Option[configdomain.PerennialRegex], inputs dialogcomponents.TestInputs) (Option[configdomain.PerennialRegex], dialogdomain.Exit, error) {
-	value, exit, err1 := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
+func PerennialRegex(args PerennialRegexArgs) (Option[configdomain.PerennialRegex], dialogdomain.Exit, error) {
+	input, exit, err1 := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "perennial-regex",
-		ExistingValue: oldValue.String(),
+		ExistingValue: args.Local.Or(args.Global).String(),
 		Help:          PerennialRegexHelp,
-		Prompt:        "Perennial regex: ",
-		TestInputs:    inputs,
+		Prompt:        messages.PerennialRegexPrompt,
+		TestInputs:    args.Inputs,
 		Title:         perennialRegexTitle,
 	})
-	fmt.Printf(messages.PerennialRegex, dialogcomponents.FormattedSelection(value, exit))
-	perennialRegex, err2 := configdomain.ParsePerennialRegex(value)
-	return perennialRegex, exit, cmp.Or(err1, err2)
+	newValue, err2 := configdomain.ParsePerennialRegex(input)
+	if args.Global.Equal(newValue) {
+		// the user has entered the global value --> keep using the global value, don't store the local value
+		newValue = None[configdomain.PerennialRegex]()
+	}
+	fmt.Printf(messages.PerennialRegexResult, dialogcomponents.FormattedSelection(newValue.String(), exit))
+	return newValue, exit, cmp.Or(err1, err2)
+}
+
+type PerennialRegexArgs struct {
+	Global Option[configdomain.PerennialRegex]
+	Inputs dialogcomponents.TestInputs
+	Local  Option[configdomain.PerennialRegex]
 }

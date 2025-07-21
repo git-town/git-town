@@ -7,12 +7,13 @@ Feature: setup a new repo when I have configured some things in global Git metad
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS |
       | branch-1 | feature | main   | local     |
-    And global Git setting "git-town.feature-regex" is "^kg-"
-    And global Git setting "git-town.contribution-regex" is "release-"
-    And global Git setting "git-town.observed-regex" is "staging-"
+    And global Git setting "git-town.feature-regex" is "^feat-"
+    And global Git setting "git-town.contribution-regex" is "^cont-"
+    And global Git setting "git-town.observed-regex" is "^obs-"
     And global Git setting "git-town.main-branch" is "main"
     And global Git setting "git-town.new-branch-type" is "prototype"
-    And global Git setting "git-town.perennial-branches" is "public"
+    And global Git setting "git-town.perennial-branches" is "perennials"
+    And global Git setting "git-town.perennial-regex" is "^per-"
     And global Git setting "git-town.push-hook" is "false"
     And global Git setting "git-town.share-new-branches" is "push"
     And global Git setting "git-town.ship-strategy" is "api"
@@ -52,9 +53,9 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | git config git-town.new-branch-type prototype         |
       | git config git-town.main-branch main                  |
       | git config git-town.perennial-branches branch-1       |
-      | git config git-town.feature-regex ^kg-                |
-      | git config git-town.contribution-regex release-       |
-      | git config git-town.observed-regex staging-           |
+      | git config git-town.feature-regex ^feat-              |
+      | git config git-town.contribution-regex ^cont-         |
+      | git config git-town.observed-regex ^obs-              |
       | git config git-town.push-hook false                   |
       | git config git-town.share-new-branches push           |
       | git config git-town.ship-strategy api                 |
