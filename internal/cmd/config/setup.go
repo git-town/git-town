@@ -268,12 +268,9 @@ EnterForgeData:
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	syncTags := repo.UnvalidatedConfig.NormalConfig.SyncTags
-	if repo.UnvalidatedConfig.File.SyncTags.IsNone() {
-		syncTags, exit, err = dialog.SyncTags(syncTags, data.dialogInputs)
-		if err != nil || exit {
-			return emptyResult, exit, err
-		}
+	syncTags, exit, err := enterSyncTags(repo, data)
+	if err != nil || exit {
+		return emptyResult, exit, err
 	}
 	shareNewBranches := repo.UnvalidatedConfig.NormalConfig.ShareNewBranches
 	if repo.UnvalidatedConfig.File.ShareNewBranches.IsNone() {
@@ -340,7 +337,7 @@ EnterForgeData:
 		SyncFeatureStrategy:      syncFeatureStrategy,
 		SyncPerennialStrategy:    syncPerennialStrategy,
 		SyncPrototypeStrategy:    syncPrototypeStrategy,
-		SyncTags:                 Some(syncTags),
+		SyncTags:                 syncTags,
 		SyncUpstream:             syncUpstream,
 		UnknownBranchType:        unknownBranchType,
 		Verbose:                  None[configdomain.Verbose](), // the setup assistant doesn't ask for this
@@ -608,6 +605,17 @@ func enterSyncUpstream(repo execute.OpenRepoResult, data setupData) (Option[conf
 		Global: repo.UnvalidatedConfig.GitGlobal.SyncUpstream,
 		Inputs: data.dialogInputs,
 		Local:  repo.UnvalidatedConfig.GitLocal.SyncUpstream,
+	})
+}
+
+func enterSyncTags(repo execute.OpenRepoResult, data setupData) (Option[configdomain.SyncTags], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.SyncTags.IsSome() {
+		return None[configdomain.SyncTags](), false, nil
+	}
+	return dialog.SyncTags(dialog.Args[configdomain.SyncTags]{
+		Global: repo.UnvalidatedConfig.GitGlobal.SyncTags,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.SyncTags,
 	})
 }
 
