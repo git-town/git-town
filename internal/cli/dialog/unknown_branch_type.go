@@ -41,7 +41,10 @@ func UnknownBranchType(args Args[configdomain.UnknownBranchType]) (Option[config
 	switch {
 	case hasLocal:
 		cursor = entries.IndexOf(Some(local))
-	case !hasGlobal:
+	case hasGlobal:
+		cursor = 0
+	default:
+		// neither local nor global --> preselect the default value
 		cursor = entries.IndexOf(Some(config.DefaultNormalConfig().UnknownBranchType))
 	}
 	selection, exit, err := dialogcomponents.RadioList(entries, cursor, unknownBranchTypeTitle, UnknownBranchTypeHelp, args.Inputs, "unknown-branch-type")
