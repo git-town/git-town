@@ -39,7 +39,7 @@ func PerennialRegex(args PerennialRegexArgs) (Option[configdomain.PerennialRegex
 		// the user has entered the global value --> keep using the global value, don't store the local value
 		newValue = None[configdomain.PerennialRegex]()
 	}
-	fmt.Printf(messages.PerennialRegex, dialogcomponents.FormattedSelection(newValue.String(), exit))
+	fmt.Printf(messages.PerennialRegexResult, dialogcomponents.FormattedSelection(newValue.String(), exit))
 	return newValue, exit, cmp.Or(err1, err2)
 }
 
