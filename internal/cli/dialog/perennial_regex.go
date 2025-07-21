@@ -28,7 +28,7 @@ it's safe to leave it blank.
 func PerennialRegex(args PerennialRegexArgs) (Option[configdomain.PerennialRegex], dialogdomain.Exit, error) {
 	value, exit, err1 := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "perennial-regex",
-		ExistingValue: args.OldValue.String(),
+		ExistingValue: args.Local.String(),
 		Help:          PerennialRegexHelp,
 		Prompt:        "Perennial regex: ",
 		TestInputs:    args.Inputs,
@@ -40,6 +40,6 @@ func PerennialRegex(args PerennialRegexArgs) (Option[configdomain.PerennialRegex
 }
 
 type PerennialRegexArgs struct {
-	OldValue Option[configdomain.PerennialRegex]
-	Inputs   dialogcomponents.TestInputs
+	Local  Option[configdomain.PerennialRegex]
+	Inputs dialogcomponents.TestInputs
 }
