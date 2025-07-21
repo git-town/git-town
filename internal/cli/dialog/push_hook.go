@@ -6,9 +6,9 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v21/internal/cli/format"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 const (
@@ -27,19 +27,26 @@ More details: https://www.git-town.com/preferences/push-hook.
 `
 )
 
-func PushHook(existing configdomain.PushHook, inputs dialogcomponents.TestInputs) (configdomain.PushHook, dialogdomain.Exit, error) {
-	entries := list.Entries[configdomain.PushHook]{
+func PushHook(args Args[configdomain.PushHook]) (Option[configdomain.PushHook], dialogdomain.Exit, error) {
+	entries := list.Entries[Option[configdomain.PushHook]]{}
+	if global, hasGlobal := args.Global.Get(); hasGlobal {
+		entries = append(entries, list.Entry[Option[configdomain.PushHook]]{
+			Data: None[configdomain.PushHook](),
+			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
+		})
+	}
+	entries = append(entries, list.Entries[Option[configdomain.PushHook]]{
 		{
-			Data: true,
+			Data: Some(configdomain.PushHook(true)),
 			Text: "enabled: run Git hooks when pushing branches",
 		},
 		{
-			Data: false,
+			Data: Some(configdomain.PushHook(false)),
 			Text: "disabled: don't run Git hooks when pushing branches",
 		},
-	}
-	defaultPos := entries.IndexOf(existing)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, pushHookTitle, PushHookHelp, inputs, "push-hook")
-	fmt.Printf(messages.PushHook, dialogcomponents.FormattedSelection(format.Bool(selection.IsTrue()), exit))
+	}...)
+	defaultPos := entries.IndexOf(args.Local)
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, pushHookTitle, PushHookHelp, args.Inputs, "push-hook")
+	fmt.Printf(messages.PushHook, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }
