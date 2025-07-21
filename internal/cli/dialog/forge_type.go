@@ -24,8 +24,15 @@ is hosted at a custom URL.
 `
 )
 
-func ForgeType(existingValue Option[forgedomain.ForgeType], inputs dialogcomponents.TestInputs) (Option[forgedomain.ForgeType], dialogdomain.Exit, error) {
-	entries := list.Entries[Option[forgedomain.ForgeType]]{
+func ForgeType(args Args[forgedomain.ForgeType]) (Option[forgedomain.ForgeType], dialogdomain.Exit, error) {
+	entries := list.Entries[Option[forgedomain.ForgeType]]{}
+	if global, hasGlobal := args.Global.Get(); hasGlobal {
+		entries = append(entries, list.Entry[Option[forgedomain.ForgeType]]{
+			Data: None[forgedomain.ForgeType](),
+			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
+		})
+	}
+	entries = append(entries, list.Entries[Option[forgedomain.ForgeType]]{
 		{
 			Data: None[forgedomain.ForgeType](),
 			Text: messages.AutoDetect,
@@ -54,11 +61,11 @@ func ForgeType(existingValue Option[forgedomain.ForgeType], inputs dialogcompone
 			Data: Some(forgedomain.ForgeTypeGitLab),
 			Text: "GitLab",
 		},
-	}
-	cursor := entries.IndexOfFunc(existingValue, func(optA, optB Option[forgedomain.ForgeType]) bool {
+	}...)
+	cursor := entries.IndexOfFunc(args.Local, func(optA, optB Option[forgedomain.ForgeType]) bool {
 		return optA.Equal(optB)
 	})
-	newValue, exit, err := dialogcomponents.RadioList(entries, cursor, forgeTypeTitle, forgeTypeHelp, inputs, "forge-type")
+	newValue, exit, err := dialogcomponents.RadioList(entries, cursor, forgeTypeTitle, forgeTypeHelp, args.Inputs, "forge-type")
 	fmt.Printf(messages.Forge, dialogcomponents.FormattedSelection(newValue.GetOrElse(messages.AutoDetect).String(), exit))
 	return newValue, exit, err
 }
