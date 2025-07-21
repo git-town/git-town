@@ -145,7 +145,10 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	}
 	newBranchType := repo.UnvalidatedConfig.NormalConfig.NewBranchType
 	if repo.UnvalidatedConfig.File.NewBranchType.IsNone() {
-		newBranchType, exit, err = dialog.NewBranchType(newBranchType, data.dialogInputs)
+		newBranchType, exit, err = dialog.NewBranchType(dialog.NewBranchTypeArgs{
+			Local:  newBranchType,
+			Inputs: data.dialogInputs,
+		})
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}
