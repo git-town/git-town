@@ -1,6 +1,7 @@
 @messyoutput
 Feature: ask for information not provided by the config file
 
+  @debug @this
   Scenario:
     Given a Git repo with origin
     And Git Town is not configured
