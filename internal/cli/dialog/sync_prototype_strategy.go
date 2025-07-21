@@ -35,15 +35,15 @@ func SyncPrototypeStrategy(args Args[configdomain.SyncPrototypeStrategy]) (Optio
 	entries = append(entries, list.Entries[Option[configdomain.SyncPrototypeStrategy]]{
 		{
 			Data: Some(configdomain.SyncPrototypeStrategyMerge),
-			Text: `merge updates from the parent and tracking branch`,
+			Text: "merge updates from the parent and tracking branch",
 		},
 		{
 			Data: Some(configdomain.SyncPrototypeStrategyRebase),
-			Text: `rebase branches against their parent and tracking branch`,
+			Text: "rebase branches against their parent and tracking branch",
 		},
 		{
 			Data: Some(configdomain.SyncPrototypeStrategyCompress),
-			Text: `compress the branch after merging parent and tracking`,
+			Text: "compress the branch after merging parent and tracking",
 		},
 	}...)
 	defaultPos := entries.IndexOf(args.Local)
