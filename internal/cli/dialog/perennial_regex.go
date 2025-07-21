@@ -26,12 +26,11 @@ it's safe to leave it blank.
 )
 
 func PerennialRegex(args PerennialRegexArgs) (Option[configdomain.PerennialRegex], dialogdomain.Exit, error) {
-	value := args.Local.Or(args.Global)
 	input, exit, err1 := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "perennial-regex",
-		ExistingValue: value.String(),
+		ExistingValue: args.Local.Or(args.Global).String(),
 		Help:          PerennialRegexHelp,
-		Prompt:        "Perennial regex: ",
+		Prompt:        messages.PerennialRegexPrompt,
 		TestInputs:    args.Inputs,
 		Title:         perennialRegexTitle,
 	})
