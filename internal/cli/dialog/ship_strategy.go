@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 const (
@@ -33,36 +34,34 @@ Options:
 `
 )
 
-func ShipStrategy(existing configdomain.ShipStrategy, inputs dialogcomponents.TestInputs) (configdomain.ShipStrategy, dialogdomain.Exit, error) {
-	entries := list.Entries[configdomain.ShipStrategy]{
+func ShipStrategy(args Args[configdomain.ShipStrategy]) (Option[configdomain.ShipStrategy], dialogdomain.Exit, error) {
+	entries := list.Entries[Option[configdomain.ShipStrategy]]{}
+	if global, hasGlobal := args.Global.Get(); hasGlobal {
+		entries = append(entries, list.Entry[Option[configdomain.ShipStrategy]]{
+			Data: None[configdomain.ShipStrategy](),
+			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
+		})
+	}
+	entries = append(entries, list.Entries[Option[configdomain.ShipStrategy]]{
 		{
-			Data: configdomain.ShipStrategyAPI,
+			Data: Some(configdomain.ShipStrategyAPI),
 			Text: `api: merge the proposal on your forge via the forge API`,
 		},
 		{
-			Data: configdomain.ShipStrategyAlwaysMerge,
+			Data: Some(configdomain.ShipStrategyAlwaysMerge),
 			Text: `always-merge: in your local repo, merge the feature branch into its parent by always creating a merge comment (merge --no-ff)`,
 		},
 		{
-			Data: configdomain.ShipStrategyFastForward,
+			Data: Some(configdomain.ShipStrategyFastForward),
 			Text: `fast-forward: in your local repo, fast-forward the parent branch to point to the commits on the feature branch`,
 		},
 		{
-			Data: configdomain.ShipStrategySquashMerge,
+			Data: Some(configdomain.ShipStrategySquashMerge),
 			Text: `squash-merge: in your local repo, squash-merge the feature branch into its parent branch`,
 		},
-	}
-	defaultPos := shipStrategyEntryIndex(entries, existing)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, shipStrategyTitle, ShipStrategyHelp, inputs, "ship-strategy")
+	}...)
+	defaultPos := entries.IndexOf(args.Local)
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, shipStrategyTitle, ShipStrategyHelp, args.Inputs, "ship-strategy")
 	fmt.Printf(messages.ShipStrategy, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
-}
-
-func shipStrategyEntryIndex(entries list.Entries[configdomain.ShipStrategy], needle configdomain.ShipStrategy) int {
-	for e, entry := range entries {
-		if entry.Data == needle {
-			return e
-		}
-	}
-	return 0
 }
