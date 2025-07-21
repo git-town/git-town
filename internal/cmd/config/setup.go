@@ -342,7 +342,7 @@ EnterForgeData:
 		ShipStrategy:             Some(shipStrategy),
 		SyncFeatureStrategy:      syncFeatureStrategy,
 		SyncPerennialStrategy:    syncPerennialStrategy,
-		SyncPrototypeStrategy:    Some(syncPrototypeStrategy),
+		SyncPrototypeStrategy:    syncPrototypeStrategy,
 		SyncTags:                 Some(syncTags),
 		SyncUpstream:             Some(syncUpstream),
 		UnknownBranchType:        unknownBranchType,
