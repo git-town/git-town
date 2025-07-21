@@ -188,7 +188,7 @@ EnterForgeData:
 		case forgedomain.ForgeTypeGitea:
 			giteaToken, exit, err = enterGiteaToken(repo, data)
 		case forgedomain.ForgeTypeGitHub:
-			githubConnectorTypeOpt, exit, err = dialog.GitHubConnectorType(githubConnectorTypeOpt, data.dialogInputs)
+			githubConnectorTypeOpt, exit, err = enterGitHubConnectorType(repo, data)
 			if err != nil || exit {
 				return emptyResult, exit, err
 			}
@@ -418,6 +418,17 @@ func enterGiteaToken(repo execute.OpenRepoResult, data setupData) (Option[forged
 		Global: repo.UnvalidatedConfig.GitGlobal.GiteaToken,
 		Inputs: data.dialogInputs,
 		Local:  repo.UnvalidatedConfig.GitLocal.GiteaToken,
+	})
+}
+
+func enterGitHubConnectorType(repo execute.OpenRepoResult, data setupData) (Option[forgedomain.GitHubConnectorType], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.GitHubConnectorType.IsSome() {
+		return None[forgedomain.GitHubConnectorType](), false, nil
+	}
+	return dialog.GitHubConnectorType(dialog.Args[forgedomain.GitHubConnectorType]{
+		Global: repo.UnvalidatedConfig.GitGlobal.GitHubConnectorType,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.GitHubConnectorType,
 	})
 }
 

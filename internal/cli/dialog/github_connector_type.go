@@ -28,22 +28,30 @@ Git Town supports two ways to connect to GitHub:
 `
 )
 
-func GitHubConnectorType(existing Option[forgedomain.GitHubConnectorType], inputs dialogcomponents.TestInputs) (Option[forgedomain.GitHubConnectorType], dialogdomain.Exit, error) {
-	entries := list.Entries[forgedomain.GitHubConnectorType]{
+func GitHubConnectorType(args Args[forgedomain.GitHubConnectorType]) (Option[forgedomain.GitHubConnectorType], dialogdomain.Exit, error) {
+	entries := list.Entries[Option[forgedomain.GitHubConnectorType]]{}
+	global, hasGlobal := args.Global.Get()
+	if hasGlobal {
+		entries = append(entries, list.Entry[Option[forgedomain.GitHubConnectorType]]{
+			Data: None[forgedomain.GitHubConnectorType](),
+			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
+		})
+	}
+	entries = append(entries, list.Entries[Option[forgedomain.GitHubConnectorType]]{
 		{
-			Data: forgedomain.GitHubConnectorTypeAPI,
+			Data: Some(forgedomain.GitHubConnectorTypeAPI),
 			Text: "API token",
 		},
 		{
-			Data: forgedomain.GitHubConnectorTypeGh,
+			Data: Some(forgedomain.GitHubConnectorTypeGh),
 			Text: "gh tool",
 		},
+	}...)
+	cursor := 0
+	if args.Local.IsSome() {
+		cursor = entries.IndexOf(args.Local)
 	}
-	defaultPos := 0
-	if existingValue, hasExisting := existing.Get(); hasExisting {
-		defaultPos = entries.IndexOf(existingValue)
-	}
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, gitHubConnectorTypeTitle, gitHubConnectorTypeHelp, inputs, "github-connector-type")
-	fmt.Printf(messages.GitHubConnectorType, dialogcomponents.FormattedSelection(selection.String(), exit))
-	return NewOption(selection), exit, err
+	selection, exit, err := dialogcomponents.RadioList(entries, cursor, gitHubConnectorTypeTitle, gitHubConnectorTypeHelp, args.Inputs, "github-connector-type")
+	fmt.Printf(messages.GitHubConnectorTypeResult, dialogcomponents.FormattedSelection(selection.String(), exit))
+	return selection, exit, err
 }
