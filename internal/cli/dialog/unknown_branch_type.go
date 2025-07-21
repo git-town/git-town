@@ -23,7 +23,8 @@ Git Town cannot determine their type any other way.
 
 func UnknownBranchType(args TextArgs[configdomain.UnknownBranchType]) (Option[configdomain.UnknownBranchType], dialogdomain.Exit, error) {
 	entries := make(list.Entries[Option[configdomain.UnknownBranchType]], 0, 5)
-	if globalValue, has := args.Global.Get(); has {
+	globalValue, hasGlobal := args.Global.Get()
+	if hasGlobal {
 		entries = append(entries, list.Entry[Option[configdomain.UnknownBranchType]]{
 			Data: None[configdomain.UnknownBranchType](),
 			Text: fmt.Sprintf("use global setting (%s)", globalValue),
@@ -35,9 +36,12 @@ func UnknownBranchType(args TextArgs[configdomain.UnknownBranchType]) (Option[co
 	entries = appendEntry(entries, configdomain.BranchTypeParkedBranch)
 	entries = appendEntry(entries, configdomain.BranchTypePrototypeBranch)
 	cursor := 0
-	if local, hasLocal := args.Local.Get(); hasLocal {
+
+	local, hasLocal := args.Local.Get()
+	switch {
+	case hasLocal:
 		cursor = entries.IndexOf(Some(local))
-	} else {
+	case !hasGlobal:
 		cursor = entries.IndexOf(Some(config.DefaultNormalConfig().UnknownBranchType))
 	}
 	selection, exit, err := dialogcomponents.RadioList(entries, cursor, unknownBranchTypeTitle, UnknownBranchTypeHelp, args.Inputs, "unknown-branch-type")
