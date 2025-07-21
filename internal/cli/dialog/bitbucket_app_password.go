@@ -28,15 +28,20 @@ Git Town will not use the Bitbucket API.
 )
 
 // BitbucketAppPassword lets the user enter the Bitbucket API token.
-func BitbucketAppPassword(oldValue Option[forgedomain.BitbucketAppPassword], inputs dialogcomponents.TestInputs) (Option[forgedomain.BitbucketAppPassword], dialogdomain.Exit, error) {
-	text, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
+func BitbucketAppPassword(args Args[forgedomain.BitbucketAppPassword]) (Option[forgedomain.BitbucketAppPassword], dialogdomain.Exit, error) {
+	input, exit, err1 := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "bitbucket-app-password",
-		ExistingValue: oldValue.String(),
+		ExistingValue: args.Local.Or(args.Global).String(),
 		Help:          bitbucketAppPasswordHelp,
-		Prompt:        "Bitbucket App Password/Token: ",
-		TestInputs:    inputs,
+		Prompt:        messages.BitBucketAppPasswordPrompt,
+		TestInputs:    args.Inputs,
 		Title:         bitbucketAppPasswordTitle,
 	})
-	fmt.Printf(messages.BitbucketAppPassword, dialogcomponents.FormattedSecret(text, exit))
-	return forgedomain.ParseBitbucketAppPassword(text), exit, err
+	newValue := forgedomain.ParseBitbucketAppPassword(input)
+	if args.Global.Equal(newValue) {
+		// the user has entered the global value --> keep using the global value, don't store the local value
+		newValue = None[forgedomain.BitbucketAppPassword]()
+	}
+	fmt.Printf(messages.BitBucketAppPasswordResult, dialogcomponents.FormattedSelection(newValue.String(), exit))
+	return newValue, exit, err1
 }
