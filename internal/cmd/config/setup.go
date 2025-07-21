@@ -195,7 +195,7 @@ EnterForgeData:
 			if githubConnectorType, has := githubConnectorTypeOpt.Get(); has {
 				switch githubConnectorType {
 				case forgedomain.GitHubConnectorTypeAPI:
-					githubToken, exit, err = dialog.GitHubToken(githubToken, data.dialogInputs)
+					githubToken, exit, err = enterGitHubToken(repo, data)
 				case forgedomain.GitHubConnectorTypeGh:
 				}
 			}
@@ -429,6 +429,17 @@ func enterGitHubConnectorType(repo execute.OpenRepoResult, data setupData) (Opti
 		Global: repo.UnvalidatedConfig.GitGlobal.GitHubConnectorType,
 		Inputs: data.dialogInputs,
 		Local:  repo.UnvalidatedConfig.GitLocal.GitHubConnectorType,
+	})
+}
+
+func enterGitHubToken(repo execute.OpenRepoResult, data setupData) (Option[forgedomain.GitHubToken], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.GitHubToken.IsSome() {
+		return None[forgedomain.GitHubToken](), false, nil
+	}
+	return dialog.GitHubToken(dialog.Args[forgedomain.GitHubToken]{
+		Global: repo.UnvalidatedConfig.GitGlobal.GitHubToken,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.GitHubToken,
 	})
 }
 
