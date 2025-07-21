@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 const (
@@ -23,23 +24,30 @@ and limiting the sharing of confidential changes.
 `
 )
 
-func SyncPrototypeStrategy(existing configdomain.SyncPrototypeStrategy, inputs dialogcomponents.TestInputs) (configdomain.SyncPrototypeStrategy, dialogdomain.Exit, error) {
-	entries := list.Entries[configdomain.SyncPrototypeStrategy]{
-		{
-			Data: configdomain.SyncPrototypeStrategyMerge,
-			Text: "merge updates from the parent and tracking branch",
-		},
-		{
-			Data: configdomain.SyncPrototypeStrategyRebase,
-			Text: "rebase branches against their parent and tracking branch",
-		},
-		{
-			Data: configdomain.SyncPrototypeStrategyCompress,
-			Text: "compress the branch after merging parent and tracking",
-		},
+func SyncPrototypeStrategy(args Args[configdomain.SyncPrototypeStrategy]) (Option[configdomain.SyncPrototypeStrategy], dialogdomain.Exit, error) {
+	entries := list.Entries[Option[configdomain.SyncPrototypeStrategy]]{}
+	if global, hasGlobal := args.Global.Get(); hasGlobal {
+		entries = append(entries, list.Entry[Option[configdomain.SyncPrototypeStrategy]]{
+			Data: None[configdomain.SyncPrototypeStrategy](),
+			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
+		})
 	}
-	defaultPos := entries.IndexOf(existing)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncPrototypeStrategyTitle, SyncPrototypeStrategyHelp, inputs, "sync-prototype-strategy")
+	entries = append(entries, list.Entries[Option[configdomain.SyncPrototypeStrategy]]{
+		{
+			Data: Some(configdomain.SyncPrototypeStrategyMerge),
+			Text: `merge updates from the parent and tracking branch`,
+		},
+		{
+			Data: Some(configdomain.SyncPrototypeStrategyRebase),
+			Text: `rebase branches against their parent and tracking branch`,
+		},
+		{
+			Data: Some(configdomain.SyncPrototypeStrategyCompress),
+			Text: `compress the branch after merging parent and tracking`,
+		},
+	}...)
+	defaultPos := entries.IndexOf(args.Local)
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncPrototypeStrategyTitle, SyncPrototypeStrategyHelp, args.Inputs, "sync-prototype-strategy")
 	fmt.Printf(messages.SyncPrototypeBranches, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }

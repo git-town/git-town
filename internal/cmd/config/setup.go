@@ -260,12 +260,9 @@ EnterForgeData:
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	syncPrototypeStrategy := repo.UnvalidatedConfig.NormalConfig.SyncPrototypeStrategy
-	if repo.UnvalidatedConfig.File.SyncPrototypeStrategy.IsNone() {
-		syncPrototypeStrategy, exit, err = dialog.SyncPrototypeStrategy(syncPrototypeStrategy, data.dialogInputs)
-		if err != nil || exit {
-			return emptyResult, exit, err
-		}
+	syncPrototypeStrategy, exit, err := enterSyncPrototypeStrategy(repo, data)
+	if err != nil || exit {
+		return emptyResult, exit, err
 	}
 	syncUpstream := repo.UnvalidatedConfig.NormalConfig.SyncUpstream
 	if repo.UnvalidatedConfig.File.SyncUpstream.IsNone() {
@@ -592,6 +589,17 @@ func enterSyncPerennialStrategy(repo execute.OpenRepoResult, data setupData) (Op
 		Global: repo.UnvalidatedConfig.GitGlobal.SyncPerennialStrategy,
 		Inputs: data.dialogInputs,
 		Local:  repo.UnvalidatedConfig.GitLocal.SyncPerennialStrategy,
+	})
+}
+
+func enterSyncPrototypeStrategy(repo execute.OpenRepoResult, data setupData) (Option[configdomain.SyncPrototypeStrategy], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.SyncPrototypeStrategy.IsSome() {
+		return None[configdomain.SyncPrototypeStrategy](), false, nil
+	}
+	return dialog.SyncPrototypeStrategy(dialog.Args[configdomain.SyncPrototypeStrategy]{
+		Global: repo.UnvalidatedConfig.GitGlobal.SyncPrototypeStrategy,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.SyncPrototypeStrategy,
 	})
 }
 
