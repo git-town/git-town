@@ -26,16 +26,20 @@ Git Town will not use the GitLab API.
 `
 )
 
-// GitLabToken lets the user enter the GitHub API token.
-func GitLabToken(oldValue Option[forgedomain.GitLabToken], inputs dialogcomponents.TestInputs) (Option[forgedomain.GitLabToken], dialogdomain.Exit, error) {
-	text, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
+func GitLabToken(args Args[forgedomain.GitLabToken]) (Option[forgedomain.GitLabToken], dialogdomain.Exit, error) {
+	input, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "gitlab-token",
-		ExistingValue: oldValue.String(),
+		ExistingValue: args.Local.Or(args.Global).String(),
 		Help:          gitLabTokenHelp,
-		Prompt:        "Your GitLab API token: ",
-		TestInputs:    inputs,
+		Prompt:        messages.GitLabTokenPrompt,
+		TestInputs:    args.Inputs,
 		Title:         gitLabTokenTitle,
 	})
-	fmt.Printf(messages.GitLabToken, dialogcomponents.FormattedSecret(text, exit))
-	return forgedomain.ParseGitLabToken(text), exit, err
+	newValue := forgedomain.ParseGitLabToken(input)
+	if args.Global.Equal(newValue) {
+		// the user has entered the global value --> keep using the global value, don't store the local value
+		newValue = None[forgedomain.GitLabToken]()
+	}
+	fmt.Printf(messages.GitLabTokenResult, dialogcomponents.FormattedSecret(newValue.String(), exit))
+	return newValue, exit, err
 }
