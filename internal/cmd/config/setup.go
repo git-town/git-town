@@ -399,13 +399,10 @@ func enterDevRemote(repo execute.OpenRepoResult, data setupData) (Option[gitdoma
 	if repo.UnvalidatedConfig.File.DevRemote.IsSome() {
 		return None[gitdomain.Remote](), false, nil
 	}
-	if len(data.remotes) == 1 {
-		return Some(data.remotes[0]), false, nil
-	}
 	return dialog.DevRemote(data.remotes, dialog.Args[gitdomain.Remote]{
 		Global: repo.UnvalidatedConfig.GitGlobal.DevRemote,
 		Inputs: data.dialogInputs,
-		Local:  repo.UnvalidatedConfig.GitGlobal.DevRemote,
+		Local:  repo.UnvalidatedConfig.GitLocal.DevRemote,
 	})
 }
 

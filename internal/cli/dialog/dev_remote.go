@@ -2,6 +2,7 @@ package dialog
 
 import (
 	"fmt"
+	"slices"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
@@ -38,8 +39,14 @@ func DevRemote(remotes gitdomain.Remotes, args Args[gitdomain.Remote]) (Option[g
 			Text: remote.String(),
 		})
 	}
-	var cursor int
 	local, hasLocal := args.Local.Get()
+	if hasLocal && !slices.Contains(remotes, local) {
+		options = append(options, list.Entry[Option[gitdomain.Remote]]{
+			Data: Some(local),
+			Text: local.String(),
+		})
+	}
+	var cursor int
 	switch {
 	case hasLocal:
 		cursor = options.IndexOf(Some(local))
