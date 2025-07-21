@@ -6,9 +6,9 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v21/internal/cli/format"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 const (
@@ -31,19 +31,26 @@ made to the original project.
 `
 )
 
-func SyncUpstream(existing configdomain.SyncUpstream, inputs dialogcomponents.TestInputs) (configdomain.SyncUpstream, dialogdomain.Exit, error) {
-	entries := list.Entries[configdomain.SyncUpstream]{
+func SyncUpstream(args Args[configdomain.SyncUpstream]) (Option[configdomain.SyncUpstream], dialogdomain.Exit, error) {
+	entries := list.Entries[Option[configdomain.SyncUpstream]]{}
+	if global, hasGlobal := args.Global.Get(); hasGlobal {
+		entries = append(entries, list.Entry[Option[configdomain.SyncUpstream]]{
+			Data: None[configdomain.SyncUpstream](),
+			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
+		})
+	}
+	entries = append(entries, list.Entries[Option[configdomain.SyncUpstream]]{
 		{
-			Data: true,
+			Data: Some(configdomain.SyncUpstream(true)),
 			Text: "yes, receive updates from the upstream repo",
 		},
 		{
-			Data: false,
+			Data: Some(configdomain.SyncUpstream(false)),
 			Text: "no, don't receive updates from upstream",
 		},
-	}
-	defaultPos := entries.IndexOf(existing)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncUpstreamTitle, SyncUpstreamHelp, inputs, "sync-upstream")
-	fmt.Printf(messages.SyncWithUpstream, dialogcomponents.FormattedSelection(format.Bool(selection.IsTrue()), exit))
+	}...)
+	defaultPos := entries.IndexOf(args.Local)
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncUpstreamTitle, SyncUpstreamHelp, args.Inputs, "sync-upstream")
+	fmt.Printf(messages.SyncWithUpstream, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }

@@ -264,12 +264,9 @@ EnterForgeData:
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	syncUpstream := repo.UnvalidatedConfig.NormalConfig.SyncUpstream
-	if repo.UnvalidatedConfig.File.SyncUpstream.IsNone() {
-		syncUpstream, exit, err = dialog.SyncUpstream(syncUpstream, data.dialogInputs)
-		if err != nil || exit {
-			return emptyResult, exit, err
-		}
+	syncUpstream, exit, err := enterSyncUpstream(repo, data)
+	if err != nil || exit {
+		return emptyResult, exit, err
 	}
 	syncTags := repo.UnvalidatedConfig.NormalConfig.SyncTags
 	if repo.UnvalidatedConfig.File.SyncTags.IsNone() {
@@ -344,7 +341,7 @@ EnterForgeData:
 		SyncPerennialStrategy:    syncPerennialStrategy,
 		SyncPrototypeStrategy:    syncPrototypeStrategy,
 		SyncTags:                 Some(syncTags),
-		SyncUpstream:             Some(syncUpstream),
+		SyncUpstream:             syncUpstream,
 		UnknownBranchType:        unknownBranchType,
 		Verbose:                  None[configdomain.Verbose](), // the setup assistant doesn't ask for this
 	}
@@ -600,6 +597,17 @@ func enterSyncPrototypeStrategy(repo execute.OpenRepoResult, data setupData) (Op
 		Global: repo.UnvalidatedConfig.GitGlobal.SyncPrototypeStrategy,
 		Inputs: data.dialogInputs,
 		Local:  repo.UnvalidatedConfig.GitLocal.SyncPrototypeStrategy,
+	})
+}
+
+func enterSyncUpstream(repo execute.OpenRepoResult, data setupData) (Option[configdomain.SyncUpstream], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.SyncUpstream.IsSome() {
+		return None[configdomain.SyncUpstream](), false, nil
+	}
+	return dialog.SyncUpstream(dialog.Args[configdomain.SyncUpstream]{
+		Global: repo.UnvalidatedConfig.GitGlobal.SyncUpstream,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.SyncUpstream,
 	})
 }
 
