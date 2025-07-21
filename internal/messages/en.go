@@ -88,6 +88,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	DetachRemoteBranch                  = "cannot detach a remote branch"
 	DetachUnsupportedBranchType         = "cannot detach %s branches since you don't own them"
 	DevRemote                           = "Development remote: %s\n"
+	DialogResultUseGlobalValue          = "use global value (%s)"
 	DiffConflictWithMain                = "conflicts between your uncommmitted changes and the main branch"
 	DryRun                              = "In dry run mode. No commands will be run. When run in normal mode, the command output will appear beneath the command. Some commands will only be run if necessary. For example: 'git push' will run if and only if there are local commits not on origin."
 	ValueInvalid                        = "invalid value for %s: %q. Please provide either \"yes\" or \"no\""
