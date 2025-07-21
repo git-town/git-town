@@ -16,8 +16,9 @@ func enterNewBranchType() *cobra.Command {
 		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
 			_, _, err := dialog.NewBranchType(dialog.NewBranchTypeArgs{
-				Local:  Some(configdomain.NewBranchType(configdomain.BranchTypePrototypeBranch)),
+				Global: Some(configdomain.NewBranchType(configdomain.BranchTypeFeatureBranch)),
 				Inputs: dialogTestInputs,
+				Local:  Some(configdomain.NewBranchType(configdomain.BranchTypePrototypeBranch)),
 			})
 			return err
 		},
