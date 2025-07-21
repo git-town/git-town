@@ -46,10 +46,7 @@ func GitHubConnectorType(args Args[forgedomain.GitHubConnectorType]) (Option[for
 			Text: "gh tool",
 		},
 	}...)
-	cursor := 0
-	if args.Local.IsSome() {
-		cursor = entries.IndexOf(args.Local)
-	}
+	cursor := entries.IndexOf(args.Local)
 	selection, exit, err := dialogcomponents.RadioList(entries, cursor, gitHubConnectorTypeTitle, gitHubConnectorTypeHelp, args.Inputs, "github-connector-type")
 	fmt.Printf(messages.GitHubConnectorTypeResult, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
