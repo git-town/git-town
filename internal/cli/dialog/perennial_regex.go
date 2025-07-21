@@ -45,7 +45,7 @@ func PerennialRegex(args PerennialRegexArgs) (Option[configdomain.PerennialRegex
 }
 
 type PerennialRegexArgs struct {
-	Local  Option[configdomain.PerennialRegex]
 	Global Option[configdomain.PerennialRegex]
 	Inputs dialogcomponents.TestInputs
+	Local  Option[configdomain.PerennialRegex]
 }

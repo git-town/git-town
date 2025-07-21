@@ -130,9 +130,9 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	perennialRegex := None[configdomain.PerennialRegex]()
 	if repo.UnvalidatedConfig.File.PerennialRegex.IsNone() {
 		perennialRegex, exit, err = dialog.PerennialRegex(dialog.PerennialRegexArgs{
-			Local:  repo.UnvalidatedConfig.GitLocal.PerennialRegex,
 			Global: repo.UnvalidatedConfig.GitGlobal.PerennialRegex,
 			Inputs: data.dialogInputs,
+			Local:  repo.UnvalidatedConfig.GitLocal.PerennialRegex,
 		})
 		if err != nil || exit {
 			return emptyResult, exit, err
