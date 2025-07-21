@@ -375,7 +375,6 @@ func determineHackData(args []string, repo execute.OpenRepoResult, cliConfig cli
 		connector:                 connector,
 		detached:                  detached,
 		dialogTestInputs:          dialogTestInputs,
-		dryRun:                    cliConfig.DryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             initialBranch,
 		initialBranchInfo:         initialBranchInfo,

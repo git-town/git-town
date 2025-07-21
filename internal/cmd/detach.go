@@ -163,7 +163,6 @@ type detachData struct {
 	connector           Option[forgedomain.Connector]
 	descendents         []detachChildBranch
 	dialogTestInputs    dialogcomponents.TestInputs
-	dryRun              configdomain.DryRun
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
 	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
@@ -317,7 +316,6 @@ func determineDetachData(args []string, repo execute.OpenRepoResult, cliConfig c
 		connector:           connector,
 		descendents:         descendents,
 		dialogTestInputs:    dialogTestInputs,
-		dryRun:              cliConfig.DryRun,
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
 		nonExistingBranches: nonExistingBranches,
@@ -359,7 +357,7 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 		lastParent = descendent.name
 	}
 	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.initialBranch})
-	if !data.dryRun {
+	if !data.config.NormalConfig.DryRun {
 		prog.Value.Add(
 			&opcodes.LineageParentSet{
 				Branch: data.branchToDetachName,
@@ -376,7 +374,7 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 		}
 	}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
-		DryRun:                   data.dryRun,
+		DryRun:                   data.config.NormalConfig.DryRun,
 		InitialStashSize:         data.stashSize,
 		RunInGitRoot:             true,
 		StashOpenChanges:         false,

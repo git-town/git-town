@@ -159,7 +159,6 @@ type compressBranchesData struct {
 	branchesToCompress []compressBranchData
 	config             config.ValidatedConfig
 	dialogTestInputs   dialogcomponents.TestInputs
-	dryRun             configdomain.DryRun
 	hasOpenChanges     bool
 	initialBranch      gitdomain.LocalBranchName
 	previousBranch     Option[gitdomain.LocalBranchName]
@@ -310,7 +309,6 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, cliConfig clicon
 		branchesToCompress: branchesToCompress,
 		config:             validatedConfig,
 		dialogTestInputs:   dialogTestInputs,
-		dryRun:             cliConfig.DryRun,
 		hasOpenChanges:     repoStatus.OpenChanges,
 		initialBranch:      initialBranch,
 		previousBranch:     previousBranch,
@@ -326,7 +324,7 @@ func compressProgram(data compressBranchesData, commitHook configdomain.CommitHo
 	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.initialBranch})
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
-		DryRun:                   data.dryRun,
+		DryRun:                   data.config.NormalConfig.DryRun,
 		InitialStashSize:         data.stashSize,
 		RunInGitRoot:             true,
 		StashOpenChanges:         data.hasOpenChanges,

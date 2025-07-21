@@ -98,7 +98,7 @@ func New(workingDir, homeDir, binDir string) commands.TestCommands {
 			DryRun:  false,
 			Verbose: false,
 		},
-		ConfigFile:    None[configdomain.PartialConfig](),
+		ConfigFile:    configdomain.EmptyPartialConfig(),
 		Defaults:      config.DefaultNormalConfig(),
 		EnvConfig:     configdomain.EmptyPartialConfig(),
 		FinalMessages: stringslice.NewCollector(),
