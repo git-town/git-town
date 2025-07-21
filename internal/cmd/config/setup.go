@@ -186,7 +186,7 @@ EnterForgeData:
 		case forgedomain.ForgeTypeCodeberg:
 			codebergToken, exit, err = enterCodebergToken(repo, data)
 		case forgedomain.ForgeTypeGitea:
-			giteaToken, exit, err = dialog.GiteaToken(giteaToken, data.dialogInputs)
+			giteaToken, exit, err = enterGiteaToken(repo, data)
 		case forgedomain.ForgeTypeGitHub:
 			githubConnectorTypeOpt, exit, err = dialog.GitHubConnectorType(githubConnectorTypeOpt, data.dialogInputs)
 			if err != nil || exit {
@@ -407,6 +407,17 @@ func enterCodebergToken(repo execute.OpenRepoResult, data setupData) (Option[for
 		Global: repo.UnvalidatedConfig.GitGlobal.CodebergToken,
 		Inputs: data.dialogInputs,
 		Local:  repo.UnvalidatedConfig.GitLocal.CodebergToken,
+	})
+}
+
+func enterGiteaToken(repo execute.OpenRepoResult, data setupData) (Option[forgedomain.GiteaToken], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.GiteaToken.IsSome() {
+		return None[forgedomain.GiteaToken](), false, nil
+	}
+	return dialog.GiteaToken(dialog.Args[forgedomain.GiteaToken]{
+		Global: repo.UnvalidatedConfig.GitGlobal.GiteaToken,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.GiteaToken,
 	})
 }
 

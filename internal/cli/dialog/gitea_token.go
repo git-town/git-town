@@ -25,16 +25,20 @@ Git Town will not use the gitea API.
 `
 )
 
-// GiteaToken lets the user enter the Gitea API token.
-func GiteaToken(oldValue Option[forgedomain.GiteaToken], inputs dialogcomponents.TestInputs) (Option[forgedomain.GiteaToken], dialogdomain.Exit, error) {
-	text, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
+func GiteaToken(args Args[forgedomain.GiteaToken]) (Option[forgedomain.GiteaToken], dialogdomain.Exit, error) {
+	input, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "gitea-token",
-		ExistingValue: oldValue.String(),
+		ExistingValue: args.Local.Or(args.Global).String(),
 		Help:          giteaTokenHelp,
-		Prompt:        "Your Gitea API token: ",
-		TestInputs:    inputs,
+		Prompt:        messages.GiteaTokenPrompt,
+		TestInputs:    args.Inputs,
 		Title:         giteaTokenTitle,
 	})
-	fmt.Printf(messages.GiteaToken, dialogcomponents.FormattedSecret(text, exit))
-	return forgedomain.ParseGiteaToken(text), exit, err
+	newValue := forgedomain.ParseGiteaToken(input)
+	if args.Global.Equal(newValue) {
+		// the user has entered the global value --> keep using the global value, don't store the local value
+		newValue = None[forgedomain.GiteaToken]()
+	}
+	fmt.Printf(messages.GiteaTokenResult, dialogcomponents.FormattedSelection(newValue.String(), exit))
+	return newValue, exit, err
 }

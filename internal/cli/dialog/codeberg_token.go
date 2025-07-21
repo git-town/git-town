@@ -25,7 +25,6 @@ Git Town will not use the codeberg API.
 `
 )
 
-// CodebergToken lets the user enter the Gitea API token.
 func CodebergToken(args Args[forgedomain.CodebergToken]) (Option[forgedomain.CodebergToken], dialogdomain.Exit, error) {
 	input, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "codeberg-token",
