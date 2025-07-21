@@ -429,7 +429,7 @@ func enterNewBranchType(repo execute.OpenRepoResult, data setupData) (Option[con
 	if repo.UnvalidatedConfig.File.NewBranchType.IsSome() {
 		return None[configdomain.NewBranchType](), false, nil
 	}
-	return dialog.NewBranchType(dialog.NewBranchTypeArgs{
+	return dialog.NewBranchType(dialog.TextArgs[configdomain.NewBranchType]{
 		Global: repo.UnvalidatedConfig.GitGlobal.NewBranchType,
 		Inputs: data.dialogInputs,
 		Local:  repo.UnvalidatedConfig.GitLocal.NewBranchType,

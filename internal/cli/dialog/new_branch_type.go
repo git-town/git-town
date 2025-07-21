@@ -23,7 +23,7 @@ More details: https://www.git-town.com/preferences/new-branch-type.
 `
 )
 
-func NewBranchType(args NewBranchTypeArgs) (Option[configdomain.NewBranchType], dialogdomain.Exit, error) {
+func NewBranchType(args TextArgs[configdomain.NewBranchType]) (Option[configdomain.NewBranchType], dialogdomain.Exit, error) {
 	entries := list.Entries[Option[configdomain.BranchType]]{}
 	if global, hasGlobal := args.Global.Get(); hasGlobal {
 		entries = append(entries, list.Entry[Option[configdomain.BranchType]]{
@@ -56,10 +56,4 @@ func NewBranchType(args NewBranchTypeArgs) (Option[configdomain.NewBranchType], 
 	selection, exit, err := dialogcomponents.RadioList(entries, cursor, newBranchTypeTitle, NewBranchTypeHelp, args.Inputs, "new-branch-type")
 	fmt.Println(messages.NewBranchType, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return configdomain.NewBranchTypeOpt(selection), exit, err
-}
-
-type NewBranchTypeArgs struct {
-	Global Option[configdomain.NewBranchType]
-	Inputs dialogcomponents.TestInputs
-	Local  Option[configdomain.NewBranchType]
 }
