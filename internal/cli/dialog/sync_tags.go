@@ -20,7 +20,14 @@ Should "git town sync" sync Git tags with origin?
 )
 
 func SyncTags(args Args[configdomain.SyncTags]) (Option[configdomain.SyncTags], dialogdomain.Exit, error) {
-	entries := list.Entries[Option[configdomain.SyncTags]]{
+	entries := list.Entries[Option[configdomain.SyncTags]]{}
+	if global, hasGlobal := args.Global.Get(); hasGlobal {
+		entries = append(entries, list.Entry[Option[configdomain.SyncTags]]{
+			Data: None[configdomain.SyncTags](),
+			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
+		})
+	}
+	entries = append(entries, list.Entries[Option[configdomain.SyncTags]]{
 		{
 			Data: Some(configdomain.SyncTags(true)),
 			Text: "yes, sync Git tags",
@@ -29,7 +36,7 @@ func SyncTags(args Args[configdomain.SyncTags]) (Option[configdomain.SyncTags], 
 			Data: Some(configdomain.SyncTags(false)),
 			Text: "no, don't sync Git tags",
 		},
-	}
+	}...)
 	defaultPos := entries.IndexOf(args.Local)
 	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncTagsTitle, SyncTagsHelp, args.Inputs, "sync-tags")
 	fmt.Printf(messages.SyncTags, dialogcomponents.FormattedSelection(selection.String(), exit))
