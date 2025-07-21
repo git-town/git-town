@@ -167,8 +167,8 @@ EnterForgeData:
 	devURL := repo.UnvalidatedConfig.NormalConfig.DevURL(data.backend)
 	actualForgeType := determineForgeType(enteredForgeType.Or(repo.UnvalidatedConfig.File.ForgeType), devURL)
 
-	bitbucketUsername := repo.UnvalidatedConfig.NormalConfig.BitbucketUsername
-	bitbucketAppPassword := repo.UnvalidatedConfig.NormalConfig.BitbucketAppPassword
+	bitbucketUsername := None[forgedomain.BitbucketUsername]()
+	bitbucketAppPassword := None[forgedomain.BitbucketAppPassword]()
 	codebergToken := repo.UnvalidatedConfig.NormalConfig.CodebergToken
 	giteaToken := repo.UnvalidatedConfig.NormalConfig.GiteaToken
 	githubConnectorTypeOpt := repo.UnvalidatedConfig.NormalConfig.GitHubConnectorType
@@ -178,11 +178,11 @@ EnterForgeData:
 	if forgeType, hasForgeType := actualForgeType.Get(); hasForgeType {
 		switch forgeType {
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
-			bitbucketUsername, exit, err = dialog.BitbucketUsername(bitbucketUsername, data.dialogInputs)
+			bitbucketUsername, exit, err = enterBitbucketUserName(repo, data)
 			if err != nil || exit {
 				return emptyResult, exit, err
 			}
-			bitbucketAppPassword, exit, err = dialog.BitbucketAppPassword(bitbucketAppPassword, data.dialogInputs)
+			bitbucketAppPassword, exit, err = enterBitbucketAppPassword(repo, data)
 		case forgedomain.ForgeTypeCodeberg:
 			codebergToken, exit, err = dialog.CodebergToken(codebergToken, data.dialogInputs)
 		case forgedomain.ForgeTypeGitea:
@@ -375,6 +375,28 @@ type userInput struct {
 	scope               configdomain.ConfigScope
 	storageLocation     dialog.ConfigStorageOption
 	validatedConfig     configdomain.ValidatedConfigData
+}
+
+func enterBitbucketUserName(repo execute.OpenRepoResult, data setupData) (Option[forgedomain.BitbucketUsername], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.BitbucketUsername.IsSome() {
+		return None[forgedomain.BitbucketUsername](), false, nil
+	}
+	return dialog.BitbucketUsername(dialog.Args[forgedomain.BitbucketUsername]{
+		Global: repo.UnvalidatedConfig.GitLocal.BitbucketUsername,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.BitbucketUsername,
+	})
+}
+
+func enterBitbucketAppPassword(repo execute.OpenRepoResult, data setupData) (Option[forgedomain.BitbucketAppPassword], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.BitbucketUsername.IsSome() {
+		return None[forgedomain.BitbucketAppPassword](), false, nil
+	}
+	return dialog.BitbucketAppPassword(dialog.Args[forgedomain.BitbucketAppPassword]{
+		Global: repo.UnvalidatedConfig.GitLocal.BitbucketAppPassword,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.BitbucketAppPassword,
+	})
 }
 
 func enterContributionRegex(repo execute.OpenRepoResult, data setupData) (Option[configdomain.ContributionRegex], dialogdomain.Exit, error) {
