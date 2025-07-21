@@ -169,10 +169,10 @@ EnterForgeData:
 
 	bitbucketUsername := None[forgedomain.BitbucketUsername]()
 	bitbucketAppPassword := None[forgedomain.BitbucketAppPassword]()
-	codebergToken := repo.UnvalidatedConfig.NormalConfig.CodebergToken
-	giteaToken := repo.UnvalidatedConfig.NormalConfig.GiteaToken
-	githubConnectorTypeOpt := repo.UnvalidatedConfig.NormalConfig.GitHubConnectorType
-	githubToken := repo.UnvalidatedConfig.NormalConfig.GitHubToken
+	codebergToken := None[forgedomain.CodebergToken]()
+	giteaToken := None[forgedomain.GiteaToken]()
+	githubConnectorTypeOpt := None[forgedomain.GitHubConnectorType]()
+	githubToken := None[forgedomain.GitHubToken]()
 	gitlabConnectorTypeOpt := repo.UnvalidatedConfig.NormalConfig.GitLabConnectorType
 	gitlabToken := repo.UnvalidatedConfig.NormalConfig.GitLabToken
 	if forgeType, hasForgeType := actualForgeType.Get(); hasForgeType {
