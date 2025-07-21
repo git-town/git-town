@@ -30,15 +30,20 @@ with the GitHub API.
 )
 
 // GitHubToken lets the user enter the GitHub API token.
-func GitHubToken(oldValue Option[forgedomain.GitHubToken], inputs dialogcomponents.TestInputs) (Option[forgedomain.GitHubToken], dialogdomain.Exit, error) {
-	text, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
+func GitHubToken(args Args[forgedomain.GitHubToken]) (Option[forgedomain.GitHubToken], dialogdomain.Exit, error) {
+	input, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "github-token",
-		ExistingValue: oldValue.String(),
+		ExistingValue: args.Local.Or(args.Global).String(),
 		Help:          gitHubTokenHelp,
-		Prompt:        "Your GitHub API token: ",
-		TestInputs:    inputs,
+		Prompt:        messages.GitHubTokenPrompt,
+		TestInputs:    args.Inputs,
 		Title:         githubTokenTitle,
 	})
-	fmt.Printf(messages.GitHubToken, dialogcomponents.FormattedSecret(text, exit))
-	return forgedomain.ParseGitHubToken(text), exit, err
+	newValue := forgedomain.ParseGitHubToken(input)
+	if args.Global.Equal(newValue) {
+		// the user has entered the global value --> keep using the global value, don't store the local value
+		newValue = None[forgedomain.GitHubToken]()
+	}
+	fmt.Printf(messages.GitHubTokenResult, dialogcomponents.FormattedSelection(newValue.String(), exit))
+	return newValue, exit, err
 }
