@@ -30,8 +30,7 @@ Git Town supports two ways to connect to GitHub:
 
 func GitHubConnectorType(args Args[forgedomain.GitHubConnectorType]) (Option[forgedomain.GitHubConnectorType], dialogdomain.Exit, error) {
 	entries := list.Entries[Option[forgedomain.GitHubConnectorType]]{}
-	global, hasGlobal := args.Global.Get()
-	if hasGlobal {
+	if global, hasGlobal := args.Global.Get(); hasGlobal {
 		entries = append(entries, list.Entry[Option[forgedomain.GitHubConnectorType]]{
 			Data: None[forgedomain.GitHubConnectorType](),
 			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
