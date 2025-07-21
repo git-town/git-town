@@ -6,7 +6,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -21,9 +20,9 @@ Git Town cannot determine their type any other way.
 `
 )
 
-func UnknownBranchType(unvalidatedConfig config.UnvalidatedConfig, inputs dialogcomponents.TestInputs) (Option[configdomain.UnknownBranchType], dialogdomain.Exit, error) {
+func UnknownBranchType(args TextArgs[configdomain.UnknownBranchType]) (Option[configdomain.UnknownBranchType], dialogdomain.Exit, error) {
 	entries := make(list.Entries[Option[configdomain.UnknownBranchType]], 0, 5)
-	if globalValue, has := unvalidatedConfig.GitGlobal.UnknownBranchType.Get(); has {
+	if globalValue, has := args.Global.Get(); has {
 		entries = append(entries, list.Entry[Option[configdomain.UnknownBranchType]]{
 			Data: None[configdomain.UnknownBranchType](),
 			Text: fmt.Sprintf("use global setting (%s)", globalValue),
@@ -34,8 +33,11 @@ func UnknownBranchType(unvalidatedConfig config.UnvalidatedConfig, inputs dialog
 	entries = appendEntry(entries, configdomain.BranchTypeObservedBranch)
 	entries = appendEntry(entries, configdomain.BranchTypeParkedBranch)
 	entries = appendEntry(entries, configdomain.BranchTypePrototypeBranch)
-	defaultPos := determinePos(entries, unvalidatedConfig)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, unknownBranchTypeTitle, UnknownBranchTypeHelp, inputs, "unknown-branch-type")
+	cursor := 0
+	if local, hasLocal := args.Local.Get(); hasLocal {
+		cursor = entries.IndexOf(Some(local))
+	}
+	selection, exit, err := dialogcomponents.RadioList(entries, cursor, unknownBranchTypeTitle, UnknownBranchTypeHelp, args.Inputs, "unknown-branch-type")
 	value, has := selection.Get()
 	fmt.Printf(messages.UnknownBranchType, dialogcomponents.FormattedOptionalSelection(value, has, exit))
 	return selection, exit, err
@@ -46,14 +48,4 @@ func appendEntry(entries list.Entries[Option[configdomain.UnknownBranchType]], b
 		Data: Some(configdomain.UnknownBranchType(branchType)),
 		Text: branchType.String(),
 	})
-}
-
-func determinePos(entries list.Entries[Option[configdomain.UnknownBranchType]], unvalidatedConfig config.UnvalidatedConfig) int {
-	if localValue, has := unvalidatedConfig.GitLocal.UnknownBranchType.Get(); has {
-		return entries.IndexOf(Some(localValue))
-	}
-	if unvalidatedConfig.GitGlobal.UnknownBranchType.IsSome() {
-		return 0
-	}
-	return entries.IndexOf(Some(unvalidatedConfig.Defaults.UnknownBranchType))
 }
