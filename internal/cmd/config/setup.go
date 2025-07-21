@@ -160,24 +160,21 @@ EnterForgeData:
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	enteredForgeType := repo.UnvalidatedConfig.NormalConfig.ForgeType.Or(repo.UnvalidatedConfig.File.ForgeType)
-	var actualForgeType Option[forgedomain.ForgeType]
+	enteredForgeType, exit, err := enterForgeType(repo, data)
+	if err != nil || exit {
+		return emptyResult, exit, err
+	}
+	devURL := repo.UnvalidatedConfig.NormalConfig.DevURL(data.backend)
+	actualForgeType := determineForgeType(enteredForgeType.Or(repo.UnvalidatedConfig.File.ForgeType), devURL)
+
 	bitbucketUsername := repo.UnvalidatedConfig.NormalConfig.BitbucketUsername
 	bitbucketAppPassword := repo.UnvalidatedConfig.NormalConfig.BitbucketAppPassword
 	codebergToken := repo.UnvalidatedConfig.NormalConfig.CodebergToken
-	devURL := repo.UnvalidatedConfig.NormalConfig.DevURL(data.backend)
 	giteaToken := repo.UnvalidatedConfig.NormalConfig.GiteaToken
 	githubConnectorTypeOpt := repo.UnvalidatedConfig.NormalConfig.GitHubConnectorType
 	githubToken := repo.UnvalidatedConfig.NormalConfig.GitHubToken
 	gitlabConnectorTypeOpt := repo.UnvalidatedConfig.NormalConfig.GitLabConnectorType
 	gitlabToken := repo.UnvalidatedConfig.NormalConfig.GitLabToken
-	if repo.UnvalidatedConfig.File.ForgeType.IsNone() {
-		enteredForgeType, exit, err = dialog.ForgeType(enteredForgeType, data.dialogInputs)
-		if err != nil || exit {
-			return emptyResult, exit, err
-		}
-	}
-	actualForgeType = determineForgeType(enteredForgeType, devURL)
 	if forgeType, hasForgeType := actualForgeType.Get(); hasForgeType {
 		switch forgeType {
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
@@ -410,6 +407,17 @@ func enterFeatureRegex(repo execute.OpenRepoResult, data setupData) (Option[conf
 		Global: repo.UnvalidatedConfig.GitGlobal.FeatureRegex,
 		Inputs: data.dialogInputs,
 		Local:  repo.UnvalidatedConfig.GitLocal.FeatureRegex,
+	})
+}
+
+func enterForgeType(repo execute.OpenRepoResult, data setupData) (Option[forgedomain.ForgeType], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.ForgeType.IsSome() {
+		return None[forgedomain.ForgeType](), false, nil
+	}
+	return dialog.ForgeType(dialog.Args[forgedomain.ForgeType]{
+		Global: repo.UnvalidatedConfig.GitGlobal.ForgeType,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.ForgeType,
 	})
 }
 
