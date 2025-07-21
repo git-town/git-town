@@ -147,12 +147,9 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	unknownBranchType := None[configdomain.UnknownBranchType]()
-	if repo.UnvalidatedConfig.File.UnknownBranchType.IsNone() {
-		unknownBranchType, exit, err = dialog.UnknownBranchType(repo.UnvalidatedConfig, data.dialogInputs)
-		if err != nil || exit {
-			return emptyResult, exit, err
-		}
+	unknownBranchType, exit, err := enterUnknownBranchType(repo, data)
+	if err != nil || exit {
+		return emptyResult, exit, err
 	}
 	devRemote := repo.UnvalidatedConfig.NormalConfig.DevRemote
 	if len(data.remotes) > 1 && repo.UnvalidatedConfig.File.DevRemote.IsNone() {
@@ -394,7 +391,7 @@ func enterContributionRegex(repo execute.OpenRepoResult, data setupData) (Option
 	if repo.UnvalidatedConfig.File.ContributionRegex.IsSome() {
 		return None[configdomain.ContributionRegex](), false, nil
 	}
-	return dialog.ContributionRegex(dialog.TextArgs[configdomain.ContributionRegex]{
+	return dialog.ContributionRegex(dialog.Args[configdomain.ContributionRegex]{
 		Global: repo.UnvalidatedConfig.GitGlobal.ContributionRegex,
 		Inputs: data.dialogInputs,
 		Local:  repo.UnvalidatedConfig.GitLocal.ContributionRegex,
@@ -405,7 +402,7 @@ func enterFeatureRegex(repo execute.OpenRepoResult, data setupData) (Option[conf
 	if repo.UnvalidatedConfig.File.FeatureRegex.IsSome() {
 		return None[configdomain.FeatureRegex](), false, nil
 	}
-	return dialog.FeatureRegex(dialog.TextArgs[configdomain.FeatureRegex]{
+	return dialog.FeatureRegex(dialog.Args[configdomain.FeatureRegex]{
 		Global: repo.UnvalidatedConfig.GitGlobal.FeatureRegex,
 		Inputs: data.dialogInputs,
 		Local:  repo.UnvalidatedConfig.GitLocal.FeatureRegex,
@@ -429,7 +426,7 @@ func enterNewBranchType(repo execute.OpenRepoResult, data setupData) (Option[con
 	if repo.UnvalidatedConfig.File.NewBranchType.IsSome() {
 		return None[configdomain.NewBranchType](), false, nil
 	}
-	return dialog.NewBranchType(dialog.TextArgs[configdomain.NewBranchType]{
+	return dialog.NewBranchType(dialog.Args[configdomain.NewBranchType]{
 		Global: repo.UnvalidatedConfig.GitGlobal.NewBranchType,
 		Inputs: data.dialogInputs,
 		Local:  repo.UnvalidatedConfig.GitLocal.NewBranchType,
@@ -440,7 +437,7 @@ func enterObservedRegex(repo execute.OpenRepoResult, data setupData) (Option[con
 	if repo.UnvalidatedConfig.File.ObservedRegex.IsSome() {
 		return None[configdomain.ObservedRegex](), false, nil
 	}
-	return dialog.ObservedRegex(dialog.TextArgs[configdomain.ObservedRegex]{
+	return dialog.ObservedRegex(dialog.Args[configdomain.ObservedRegex]{
 		Global: repo.UnvalidatedConfig.GitGlobal.ObservedRegex,
 		Inputs: data.dialogInputs,
 		Local:  repo.UnvalidatedConfig.GitLocal.ObservedRegex,
@@ -464,10 +461,21 @@ func enterPerennialRegex(repo execute.OpenRepoResult, data setupData) (Option[co
 	if repo.UnvalidatedConfig.File.PerennialRegex.IsSome() {
 		return None[configdomain.PerennialRegex](), false, nil
 	}
-	return dialog.PerennialRegex(dialog.TextArgs[configdomain.PerennialRegex]{
+	return dialog.PerennialRegex(dialog.Args[configdomain.PerennialRegex]{
 		Global: repo.UnvalidatedConfig.GitGlobal.PerennialRegex,
 		Inputs: data.dialogInputs,
 		Local:  repo.UnvalidatedConfig.GitLocal.PerennialRegex,
+	})
+}
+
+func enterUnknownBranchType(repo execute.OpenRepoResult, data setupData) (Option[configdomain.UnknownBranchType], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.UnknownBranchType.IsSome() {
+		return None[configdomain.UnknownBranchType](), false, nil
+	}
+	return dialog.UnknownBranchType(dialog.Args[configdomain.UnknownBranchType]{
+		Global: repo.UnvalidatedConfig.GitGlobal.UnknownBranchType,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.UnknownBranchType,
 	})
 }
 

@@ -25,7 +25,7 @@ it's safe to leave it blank.
 `
 )
 
-func FeatureRegex(args TextArgs[configdomain.FeatureRegex]) (Option[configdomain.FeatureRegex], dialogdomain.Exit, error) {
+func FeatureRegex(args Args[configdomain.FeatureRegex]) (Option[configdomain.FeatureRegex], dialogdomain.Exit, error) {
 	input, exit, err1 := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "feature-regex",
 		ExistingValue: args.Local.Or(args.Global).String(),
