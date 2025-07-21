@@ -28,7 +28,7 @@ func OriginHostname(args Args[configdomain.HostingOriginHostname]) (Option[confi
 		DialogName:    "origin-hostname",
 		ExistingValue: args.Local.Or(args.Global).String(),
 		Help:          OriginHostnameHelp,
-		Prompt:        "Origin hostname override: ",
+		Prompt:        messages.OriginHostnamePrompt,
 		TestInputs:    args.Inputs,
 		Title:         originHostnameTitle,
 	})
@@ -37,6 +37,6 @@ func OriginHostname(args Args[configdomain.HostingOriginHostname]) (Option[confi
 		// the user has entered the global value --> keep using the global value, don't store the local value
 		newValue = None[configdomain.HostingOriginHostname]()
 	}
-	fmt.Printf(messages.OriginHostname, dialogcomponents.FormattedSelection(newValue.String(), exit))
+	fmt.Printf(messages.OriginHostnameResult, dialogcomponents.FormattedSelection(newValue.String(), exit))
 	return newValue, exit, err
 }
