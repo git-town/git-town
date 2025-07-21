@@ -127,9 +127,12 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	perennialRegex := repo.UnvalidatedConfig.NormalConfig.PerennialRegex
+	perennialRegex := None[configdomain.PerennialRegex]()
 	if repo.UnvalidatedConfig.File.PerennialRegex.IsNone() {
-		perennialRegex, exit, err = dialog.PerennialRegex(perennialRegex, data.dialogInputs)
+		perennialRegex, exit, err = dialog.PerennialRegex(dialog.PerennialRegexArgs{
+			OldValue: perennialRegex,
+			Inputs:   data.dialogInputs,
+		})
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}
