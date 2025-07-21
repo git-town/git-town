@@ -156,7 +156,10 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		return emptyResult, exit, err
 	}
 EnterForgeData:
-	hostingOriginHostName := repo.UnvalidatedConfig.NormalConfig.HostingOriginHostname
+	hostingOriginHostName, exit, err := enterOriginHostName(repo, data)
+	if err != nil || exit {
+		return emptyResult, exit, err
+	}
 	enteredForgeType := repo.UnvalidatedConfig.NormalConfig.ForgeType.Or(repo.UnvalidatedConfig.File.ForgeType)
 	var actualForgeType Option[forgedomain.ForgeType]
 	bitbucketUsername := repo.UnvalidatedConfig.NormalConfig.BitbucketUsername
@@ -168,12 +171,6 @@ EnterForgeData:
 	githubToken := repo.UnvalidatedConfig.NormalConfig.GitHubToken
 	gitlabConnectorTypeOpt := repo.UnvalidatedConfig.NormalConfig.GitLabConnectorType
 	gitlabToken := repo.UnvalidatedConfig.NormalConfig.GitLabToken
-	if repo.UnvalidatedConfig.File.HostingOriginHostname.IsNone() {
-		hostingOriginHostName, exit, err = dialog.OriginHostname(hostingOriginHostName, data.dialogInputs)
-		if err != nil || exit {
-			return emptyResult, exit, err
-		}
-	}
 	if repo.UnvalidatedConfig.File.ForgeType.IsNone() {
 		enteredForgeType, exit, err = dialog.ForgeType(enteredForgeType, data.dialogInputs)
 		if err != nil || exit {
@@ -448,6 +445,17 @@ func enterObservedRegex(repo execute.OpenRepoResult, data setupData) (Option[con
 		Global: repo.UnvalidatedConfig.GitGlobal.ObservedRegex,
 		Inputs: data.dialogInputs,
 		Local:  repo.UnvalidatedConfig.GitLocal.ObservedRegex,
+	})
+}
+
+func enterOriginHostName(repo execute.OpenRepoResult, data setupData) (Option[configdomain.HostingOriginHostname], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.HostingOriginHostname.IsSome() {
+		return None[configdomain.HostingOriginHostname](), false, nil
+	}
+	return dialog.OriginHostname(dialog.Args[configdomain.HostingOriginHostname]{
+		Global: repo.UnvalidatedConfig.GitGlobal.HostingOriginHostname,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.HostingOriginHostname,
 	})
 }
 
