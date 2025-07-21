@@ -77,6 +77,8 @@ const (
 	ContributionBranchCannotPark       = "cannot park contribution branches"
 	ContributionBranchCannotPropose    = "cannot propose contribution branches"
 	ContributionBranchCannotShip       = "cannot ship contribution branches"
+	ContributionRegexPrompt            = "Contribution regex: "
+	ContributionRegexResult            = "Contribution regex: %s\n"
 	CreatePrototypeBranchesDeprecation = `The Git Town configuration file contains the deprecated setting "create-prototype-branches".
 Please upgrade to the new format: create.new-branch-type = "prototype"`
 	CredentialsAccess                   = "API token permits access to pull requests"

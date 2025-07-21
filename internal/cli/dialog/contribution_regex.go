@@ -1,6 +1,7 @@
 package dialog
 
 import (
+	"cmp"
 	"fmt"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
@@ -24,19 +25,20 @@ it's safe to leave it blank.
 `
 )
 
-func ContributionRegex(existingValue Option[configdomain.ContributionRegex], inputs dialogcomponents.TestInputs) (Option[configdomain.ContributionRegex], dialogdomain.Exit, error) {
-	value, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
+func ContributionRegex(args TextArgs[configdomain.ContributionRegex]) (Option[configdomain.ContributionRegex], dialogdomain.Exit, error) {
+	input, exit, err1 := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "contribution-regex",
-		ExistingValue: existingValue.String(),
+		ExistingValue: args.Local.Or(args.Global).String(),
 		Help:          contributionRegexHelp,
-		Prompt:        "Contribution regex: ",
-		TestInputs:    inputs,
+		Prompt:        messages.ContributionRegexPrompt,
+		TestInputs:    args.Inputs,
 		Title:         contributionRegexTitle,
 	})
-	fmt.Printf(messages.ContributionRegex, dialogcomponents.FormattedSelection(value, exit))
-	if err != nil {
-		return None[configdomain.ContributionRegex](), exit, err
+	newValue, err2 := configdomain.ParseContributionRegex(input)
+	if args.Global.Equal(newValue) {
+		// the user has entered the global value --> keep using the global value, don't store the local value
+		newValue = None[configdomain.ContributionRegex]()
 	}
-	contributionRegex, err := configdomain.ParseContributionRegex(value)
-	return contributionRegex, false, err
+	fmt.Printf(messages.ContributionRegexResult, dialogcomponents.FormattedSelection(newValue.String(), exit))
+	return newValue, exit, cmp.Or(err1, err2)
 }
