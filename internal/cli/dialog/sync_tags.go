@@ -6,9 +6,9 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v21/internal/cli/format"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 const (
@@ -19,19 +19,19 @@ Should "git town sync" sync Git tags with origin?
 `
 )
 
-func SyncTags(existing configdomain.SyncTags, inputs dialogcomponents.TestInputs) (configdomain.SyncTags, dialogdomain.Exit, error) {
-	entries := list.Entries[configdomain.SyncTags]{
+func SyncTags(args Args[configdomain.SyncTags]) (Option[configdomain.SyncTags], dialogdomain.Exit, error) {
+	entries := list.Entries[Option[configdomain.SyncTags]]{
 		{
-			Data: true,
+			Data: Some(configdomain.SyncTags(true)),
 			Text: "yes, sync Git tags",
 		},
 		{
-			Data: false,
+			Data: Some(configdomain.SyncTags(false)),
 			Text: "no, don't sync Git tags",
 		},
 	}
-	defaultPos := entries.IndexOf(existing)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncTagsTitle, SyncTagsHelp, inputs, "sync-tags")
-	fmt.Printf(messages.SyncTags, dialogcomponents.FormattedSelection(format.Bool(selection.IsTrue()), exit))
+	defaultPos := entries.IndexOf(args.Local)
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncTagsTitle, SyncTagsHelp, args.Inputs, "sync-tags")
+	fmt.Printf(messages.SyncTags, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }
