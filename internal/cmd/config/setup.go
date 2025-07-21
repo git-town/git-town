@@ -414,15 +414,11 @@ func enterForgeType(repo execute.OpenRepoResult, data setupData) (Option[forgedo
 	if repo.UnvalidatedConfig.File.ForgeType.IsSome() {
 		return None[forgedomain.ForgeType](), false, nil
 	}
-	enteredForgeType, exit, err := dialog.ForgeType(dialog.Args[forgedomain.ForgeType]{
+	return dialog.ForgeType(dialog.Args[forgedomain.ForgeType]{
 		Global: repo.UnvalidatedConfig.GitGlobal.ForgeType,
 		Inputs: data.dialogInputs,
 		Local:  repo.UnvalidatedConfig.GitLocal.ForgeType,
 	})
-	if err != nil || exit {
-		return None[forgedomain.ForgeType](), exit, err
-	}
-	return enteredForgeType, false, nil
 }
 
 func enterMainBranch(repo execute.OpenRepoResult, data setupData) (userChoice Option[gitdomain.LocalBranchName], actualMainBranch gitdomain.LocalBranchName, exit dialogdomain.Exit, err error) {
