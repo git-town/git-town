@@ -43,6 +43,6 @@ func GitHubToken(args Args[forgedomain.GitHubToken]) (Option[forgedomain.GitHubT
 		// the user has entered the global value --> keep using the global value, don't store the local value
 		newValue = None[forgedomain.GitHubToken]()
 	}
-	fmt.Printf(messages.GitHubTokenResult, dialogcomponents.FormattedSelection(newValue.String(), exit))
+	fmt.Printf(messages.GitHubTokenResult, dialogcomponents.FormattedSecret(newValue.String(), exit))
 	return newValue, exit, err
 }

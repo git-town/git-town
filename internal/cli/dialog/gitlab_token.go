@@ -40,6 +40,6 @@ func GitLabToken(args Args[forgedomain.GitLabToken]) (Option[forgedomain.GitLabT
 		// the user has entered the global value --> keep using the global value, don't store the local value
 		newValue = None[forgedomain.GitLabToken]()
 	}
-	fmt.Printf(messages.GitLabTokenResult, dialogcomponents.FormattedSelection(newValue.String(), exit))
+	fmt.Printf(messages.GitLabTokenResult, dialogcomponents.FormattedSecret(newValue.String(), exit))
 	return newValue, exit, err
 }
