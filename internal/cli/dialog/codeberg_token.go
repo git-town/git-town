@@ -26,15 +26,20 @@ Git Town will not use the codeberg API.
 )
 
 // CodebergToken lets the user enter the Gitea API token.
-func CodebergToken(oldValue Option[forgedomain.CodebergToken], inputs dialogcomponents.TestInputs) (Option[forgedomain.CodebergToken], dialogdomain.Exit, error) {
-	text, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
+func CodebergToken(args Args[forgedomain.CodebergToken]) (Option[forgedomain.CodebergToken], dialogdomain.Exit, error) {
+	input, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "codeberg-token",
-		ExistingValue: oldValue.String(),
+		ExistingValue: args.Local.Or(args.Global).String(),
 		Help:          codebergTokenHelp,
-		Prompt:        "Your Codeberg API token: ",
-		TestInputs:    inputs,
+		Prompt:        messages.CodebergTokenPrompt,
+		TestInputs:    args.Inputs,
 		Title:         codebergTokenTitle,
 	})
-	fmt.Printf(messages.CodebergToken, dialogcomponents.FormattedSecret(text, exit))
-	return forgedomain.ParseCodebergToken(text), exit, err
+	newValue := forgedomain.ParseCodebergToken(input)
+	if args.Global.Equal(newValue) {
+		// the user has entered the global value --> keep using the global value, don't store the local value
+		newValue = None[forgedomain.CodebergToken]()
+	}
+	fmt.Printf(messages.CodebergTokenResult, dialogcomponents.FormattedSelection(newValue.String(), exit))
+	return newValue, exit, err
 }

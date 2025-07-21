@@ -184,7 +184,7 @@ EnterForgeData:
 			}
 			bitbucketAppPassword, exit, err = enterBitbucketAppPassword(repo, data)
 		case forgedomain.ForgeTypeCodeberg:
-			codebergToken, exit, err = dialog.CodebergToken(codebergToken, data.dialogInputs)
+			codebergToken, exit, err = enterCodebergToken(repo, data)
 		case forgedomain.ForgeTypeGitea:
 			giteaToken, exit, err = dialog.GiteaToken(giteaToken, data.dialogInputs)
 		case forgedomain.ForgeTypeGitHub:
@@ -396,6 +396,17 @@ func enterBitbucketAppPassword(repo execute.OpenRepoResult, data setupData) (Opt
 		Global: repo.UnvalidatedConfig.GitLocal.BitbucketAppPassword,
 		Inputs: data.dialogInputs,
 		Local:  repo.UnvalidatedConfig.GitLocal.BitbucketAppPassword,
+	})
+}
+
+func enterCodebergToken(repo execute.OpenRepoResult, data setupData) (Option[forgedomain.CodebergToken], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.CodebergToken.IsSome() {
+		return None[forgedomain.CodebergToken](), false, nil
+	}
+	return dialog.CodebergToken(dialog.Args[forgedomain.CodebergToken]{
+		Global: repo.UnvalidatedConfig.GitGlobal.CodebergToken,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.CodebergToken,
 	})
 }
 
