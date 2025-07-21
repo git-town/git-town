@@ -272,12 +272,9 @@ EnterForgeData:
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	shareNewBranches := repo.UnvalidatedConfig.NormalConfig.ShareNewBranches
-	if repo.UnvalidatedConfig.File.ShareNewBranches.IsNone() {
-		shareNewBranches, exit, err = dialog.ShareNewBranches(shareNewBranches, data.dialogInputs)
-		if err != nil || exit {
-			return emptyResult, exit, err
-		}
+	shareNewBranches, exit, err := enterShareNewBranches(repo, data)
+	if err != nil || exit {
+		return emptyResult, exit, err
 	}
 	pushHook := repo.UnvalidatedConfig.NormalConfig.PushHook
 	if repo.UnvalidatedConfig.File.PushHook.IsNone() {
@@ -331,7 +328,7 @@ EnterForgeData:
 		PerennialBranches:        perennialBranches,
 		PerennialRegex:           perennialRegex,
 		PushHook:                 Some(pushHook),
-		ShareNewBranches:         Some(shareNewBranches),
+		ShareNewBranches:         shareNewBranches,
 		ShipDeleteTrackingBranch: Some(shipDeleteTrackingBranch),
 		ShipStrategy:             Some(shipStrategy),
 		SyncFeatureStrategy:      syncFeatureStrategy,
@@ -616,6 +613,17 @@ func enterSyncTags(repo execute.OpenRepoResult, data setupData) (Option[configdo
 		Global: repo.UnvalidatedConfig.GitGlobal.SyncTags,
 		Inputs: data.dialogInputs,
 		Local:  repo.UnvalidatedConfig.GitLocal.SyncTags,
+	})
+}
+
+func enterShareNewBranches(repo execute.OpenRepoResult, data setupData) (Option[configdomain.ShareNewBranches], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.ShareNewBranches.IsSome() {
+		return None[configdomain.ShareNewBranches](), false, nil
+	}
+	return dialog.ShareNewBranches(dialog.Args[configdomain.ShareNewBranches]{
+		Global: repo.UnvalidatedConfig.GitGlobal.ShareNewBranches,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.ShareNewBranches,
 	})
 }
 

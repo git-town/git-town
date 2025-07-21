@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 const (
@@ -24,23 +25,30 @@ Possible options:
 `
 )
 
-func ShareNewBranches(existing configdomain.ShareNewBranches, inputs dialogcomponents.TestInputs) (configdomain.ShareNewBranches, dialogdomain.Exit, error) {
-	entries := list.Entries[configdomain.ShareNewBranches]{
+func ShareNewBranches(args Args[configdomain.ShareNewBranches]) (Option[configdomain.ShareNewBranches], dialogdomain.Exit, error) {
+	entries := list.Entries[Option[configdomain.ShareNewBranches]]{}
+	if global, hasGlobal := args.Global.Get(); hasGlobal {
+		entries = append(entries, list.Entry[Option[configdomain.ShareNewBranches]]{
+			Data: None[configdomain.ShareNewBranches](),
+			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
+		})
+	}
+	entries = append(entries, list.Entries[Option[configdomain.ShareNewBranches]]{
 		{
-			Data: configdomain.ShareNewBranchesNone,
+			Data: Some(configdomain.ShareNewBranchesNone),
 			Text: "no sharing: new branches remain local until synced or proposed",
 		},
 		{
-			Data: configdomain.ShareNewBranchesPush,
+			Data: Some(configdomain.ShareNewBranchesPush),
 			Text: "push new branches to the dev remote",
 		},
 		{
-			Data: configdomain.ShareNewBranchesPropose,
+			Data: Some(configdomain.ShareNewBranchesPropose),
 			Text: "propose new branches",
 		},
-	}
-	defaultPos := entries.IndexOf(existing)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, shareNewBranchesTitle, ShareNewBranchesHelp, inputs, "share-new-branches")
+	}...)
+	defaultPos := entries.IndexOf(args.Local)
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, shareNewBranchesTitle, ShareNewBranchesHelp, args.Inputs, "share-new-branches")
 	fmt.Printf(messages.ShareNewBranches, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }
