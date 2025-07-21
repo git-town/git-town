@@ -169,16 +169,16 @@ EnterForgeData:
 
 	bitbucketUsername := None[forgedomain.BitbucketUsername]()
 	bitbucketAppPassword := None[forgedomain.BitbucketAppPassword]()
-	codebergToken := None[forgedomain.CodebergToken]()
-	giteaToken := None[forgedomain.GiteaToken]()
-	githubConnectorTypeOpt := None[forgedomain.GitHubConnectorType]()
-	githubToken := None[forgedomain.GitHubToken]()
-	gitlabConnectorTypeOpt := None[forgedomain.GitLabConnectorType]()
-	gitlabToken := None[forgedomain.GitLabToken]()
+	codebergToken := repo.UnvalidatedConfig.NormalConfig.CodebergToken
+	giteaToken := repo.UnvalidatedConfig.NormalConfig.GiteaToken
+	githubConnectorTypeOpt := repo.UnvalidatedConfig.NormalConfig.GitHubConnectorType
+	githubToken := repo.UnvalidatedConfig.NormalConfig.GitHubToken
+	gitlabConnectorTypeOpt := repo.UnvalidatedConfig.NormalConfig.GitLabConnectorType
+	gitlabToken := repo.UnvalidatedConfig.NormalConfig.GitLabToken
 	if forgeType, hasForgeType := actualForgeType.Get(); hasForgeType {
 		switch forgeType {
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
-			bitbucketUsername, exit, err = dialog.BitbucketUsername(bitbucketUsername, data.dialogInputs)
+			bitbucketUsername, exit, err = enterBitbucketUserName(repo, data)
 			if err != nil || exit {
 				return emptyResult, exit, err
 			}
@@ -375,6 +375,17 @@ type userInput struct {
 	scope               configdomain.ConfigScope
 	storageLocation     dialog.ConfigStorageOption
 	validatedConfig     configdomain.ValidatedConfigData
+}
+
+func enterBitbucketUserName(repo execute.OpenRepoResult, data setupData) (Option[forgedomain.BitbucketUsername], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.BitbucketUsername.IsSome() {
+		return None[forgedomain.BitbucketUsername](), false, nil
+	}
+	return dialog.BitbucketUsername(dialog.Args[forgedomain.BitbucketUsername]{
+		Global: repo.UnvalidatedConfig.GitLocal.BitbucketUsername,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.BitbucketUsername,
+	})
 }
 
 func enterContributionRegex(repo execute.OpenRepoResult, data setupData) (Option[configdomain.ContributionRegex], dialogdomain.Exit, error) {

@@ -24,15 +24,20 @@ Git Town will not use the Bitbucket API.
 `
 )
 
-func BitbucketUsername(oldValue Option[forgedomain.BitbucketUsername], inputs dialogcomponents.TestInputs) (Option[forgedomain.BitbucketUsername], dialogdomain.Exit, error) {
-	text, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
+func BitbucketUsername(args Args[forgedomain.BitbucketUsername]) (Option[forgedomain.BitbucketUsername], dialogdomain.Exit, error) {
+	input, exit, err1 := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "bitbucket-username",
-		ExistingValue: oldValue.String(),
+		ExistingValue: args.Local.Or(args.Global).String(),
 		Help:          bitbucketUsernameHelp,
 		Prompt:        "Your Bitbucket username: ",
-		TestInputs:    inputs,
+		TestInputs:    args.Inputs,
 		Title:         bitbucketUsernameTitle,
 	})
-	fmt.Printf(messages.BitbucketUsername, dialogcomponents.FormattedSecret(text, exit))
-	return forgedomain.ParseBitbucketUsername(text), exit, err
+	newValue := forgedomain.ParseBitbucketUsername(input)
+	if args.Global.Equal(newValue) {
+		// the user has entered the global value --> keep using the global value, don't store the local value
+		newValue = None[forgedomain.BitbucketUsername]()
+	}
+	fmt.Printf(messages.FeatureRegexResult, dialogcomponents.FormattedSelection(newValue.String(), exit))
+	return newValue, exit, err1
 }
