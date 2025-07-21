@@ -151,12 +151,9 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	devRemote := repo.UnvalidatedConfig.NormalConfig.DevRemote
-	if len(data.remotes) > 1 && repo.UnvalidatedConfig.File.DevRemote.IsNone() {
-		devRemote, exit, err = dialog.DevRemote(devRemote, data.remotes, data.dialogInputs)
-		if err != nil || exit {
-			return emptyResult, exit, err
-		}
+	devRemote, exit, err := enterDevRemote(repo, data)
+	if err != nil || exit {
+		return emptyResult, exit, err
 	}
 	hostingOriginHostName := repo.UnvalidatedConfig.NormalConfig.HostingOriginHostname
 	enteredForgeType := repo.UnvalidatedConfig.NormalConfig.ForgeType.Or(repo.UnvalidatedConfig.File.ForgeType)
@@ -238,7 +235,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 			gitlabConnectorType:  gitlabConnectorTypeOpt,
 			gitlabToken:          gitlabToken,
 			inputs:               data.dialogInputs,
-			remoteURL:            repo.UnvalidatedConfig.NormalConfig.RemoteURL(data.backend, devRemote),
+			remoteURL:            repo.UnvalidatedConfig.NormalConfig.RemoteURL(data.backend, devRemote.GetOrElse(config.DefaultNormalConfig().DevRemote)),
 		})
 		if err != nil || exit {
 			return emptyResult, exit, err
@@ -336,7 +333,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{}, // the setup assistant doesn't ask for this
 		CodebergToken:            codebergToken,
 		ContributionRegex:        contributionRegex,
-		DevRemote:                Some(devRemote),
+		DevRemote:                devRemote,
 		DryRun:                   None[configdomain.DryRun](), // the setup assistant doesn't ask for this
 		FeatureRegex:             featureRegex,
 		ForgeType:                enteredForgeType,
@@ -395,6 +392,20 @@ func enterContributionRegex(repo execute.OpenRepoResult, data setupData) (Option
 		Global: repo.UnvalidatedConfig.GitGlobal.ContributionRegex,
 		Inputs: data.dialogInputs,
 		Local:  repo.UnvalidatedConfig.GitLocal.ContributionRegex,
+	})
+}
+
+func enterDevRemote(repo execute.OpenRepoResult, data setupData) (Option[gitdomain.Remote], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.DevRemote.IsSome() {
+		return None[gitdomain.Remote](), false, nil
+	}
+	if len(data.remotes) == 1 {
+		return Some(data.remotes[0]), false, nil
+	}
+	return dialog.DevRemote(data.remotes, dialog.Args[gitdomain.Remote]{
+		Global: repo.UnvalidatedConfig.GitGlobal.DevRemote,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitGlobal.DevRemote,
 	})
 }
 
