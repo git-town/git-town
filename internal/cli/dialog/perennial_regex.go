@@ -25,7 +25,7 @@ it's safe to leave it blank.
 `
 )
 
-func PerennialRegex(args DialogArgs[configdomain.PerennialRegex]) (Option[configdomain.PerennialRegex], dialogdomain.Exit, error) {
+func PerennialRegex(args TextArgs[configdomain.PerennialRegex]) (Option[configdomain.PerennialRegex], dialogdomain.Exit, error) {
 	input, exit, err1 := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "perennial-regex",
 		ExistingValue: args.Local.Or(args.Global).String(),

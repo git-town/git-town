@@ -403,7 +403,7 @@ func enterFeatureRegex(repo execute.OpenRepoResult, data setupData) (Option[conf
 	if repo.UnvalidatedConfig.File.FeatureRegex.IsSome() {
 		return None[configdomain.FeatureRegex](), false, nil
 	}
-	return dialog.FeatureRegex(dialog.DialogArgs[configdomain.FeatureRegex]{
+	return dialog.FeatureRegex(dialog.TextArgs[configdomain.FeatureRegex]{
 		Global: repo.UnvalidatedConfig.GitGlobal.FeatureRegex,
 		Inputs: data.dialogInputs,
 		Local:  repo.UnvalidatedConfig.GitLocal.FeatureRegex,
@@ -440,7 +440,7 @@ func enterPerennialRegex(repo execute.OpenRepoResult, data setupData) (Option[co
 	if repo.UnvalidatedConfig.File.PerennialRegex.IsSome() {
 		return None[configdomain.PerennialRegex](), false, nil
 	}
-	return dialog.PerennialRegex(dialog.DialogArgs[configdomain.PerennialRegex]{
+	return dialog.PerennialRegex(dialog.TextArgs[configdomain.PerennialRegex]{
 		Global: repo.UnvalidatedConfig.GitGlobal.PerennialRegex,
 		Inputs: data.dialogInputs,
 		Local:  repo.UnvalidatedConfig.GitLocal.PerennialRegex,

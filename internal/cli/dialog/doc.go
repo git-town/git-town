@@ -6,7 +6,7 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-type DialogArgs[T any] struct {
+type TextArgs[T any] struct {
 	Global Option[T]
 	Inputs dialogcomponents.TestInputs
 	Local  Option[T]
