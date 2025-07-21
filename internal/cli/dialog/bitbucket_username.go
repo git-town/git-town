@@ -25,7 +25,7 @@ Git Town will not use the Bitbucket API.
 )
 
 func BitbucketUsername(args Args[forgedomain.BitbucketUsername]) (Option[forgedomain.BitbucketUsername], dialogdomain.Exit, error) {
-	input, exit, err1 := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
+	input, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "bitbucket-username",
 		ExistingValue: args.Local.Or(args.Global).String(),
 		Help:          bitbucketUsernameHelp,
@@ -39,5 +39,5 @@ func BitbucketUsername(args Args[forgedomain.BitbucketUsername]) (Option[forgedo
 		newValue = None[forgedomain.BitbucketUsername]()
 	}
 	fmt.Printf(messages.BitBucketUsernameResult, dialogcomponents.FormattedSelection(newValue.String(), exit))
-	return newValue, exit, err1
+	return newValue, exit, err
 }
