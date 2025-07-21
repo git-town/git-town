@@ -276,12 +276,9 @@ EnterForgeData:
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	pushHook := repo.UnvalidatedConfig.NormalConfig.PushHook
-	if repo.UnvalidatedConfig.File.PushHook.IsNone() {
-		pushHook, exit, err = dialog.PushHook(pushHook, data.dialogInputs)
-		if err != nil || exit {
-			return emptyResult, exit, err
-		}
+	pushHook, exit, err := enterPushHook(repo, data)
+	if err != nil || exit {
+		return emptyResult, exit, err
 	}
 	shipStrategy := repo.UnvalidatedConfig.NormalConfig.ShipStrategy
 	if repo.UnvalidatedConfig.File.ShipStrategy.IsNone() {
@@ -327,7 +324,7 @@ EnterForgeData:
 		Offline:                  None[configdomain.Offline](), // the setup assistant doesn't ask for this
 		PerennialBranches:        perennialBranches,
 		PerennialRegex:           perennialRegex,
-		PushHook:                 Some(pushHook),
+		PushHook:                 pushHook,
 		ShareNewBranches:         shareNewBranches,
 		ShipDeleteTrackingBranch: Some(shipDeleteTrackingBranch),
 		ShipStrategy:             Some(shipStrategy),
@@ -624,6 +621,17 @@ func enterShareNewBranches(repo execute.OpenRepoResult, data setupData) (Option[
 		Global: repo.UnvalidatedConfig.GitGlobal.ShareNewBranches,
 		Inputs: data.dialogInputs,
 		Local:  repo.UnvalidatedConfig.GitLocal.ShareNewBranches,
+	})
+}
+
+func enterPushHook(repo execute.OpenRepoResult, data setupData) (Option[configdomain.PushHook], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.PushHook.IsSome() {
+		return None[configdomain.PushHook](), false, nil
+	}
+	return dialog.PushHook(dialog.Args[configdomain.PushHook]{
+		Global: repo.UnvalidatedConfig.GitGlobal.PushHook,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.PushHook,
 	})
 }
 
