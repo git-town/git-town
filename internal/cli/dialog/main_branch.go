@@ -47,14 +47,14 @@ func MainBranch(args MainBranchArgs) (selectedMainBranch Option[gitdomain.LocalB
 	case !hasLocal && hasUnscoped:
 		noneEntry := list.Entry[Option[gitdomain.LocalBranchName]]{
 			Data: None[gitdomain.LocalBranchName](),
-			Text: fmt.Sprintf(messages.DialogResultUseGlobalValue, unscopedMain),
+			Text: fmt.Sprintf(messages.DialogUseGlobalValue, unscopedMain),
 		}
 		entries = append(list.Entries[Option[gitdomain.LocalBranchName]]{noneEntry}, entries...)
 		cursor = 0
 	case hasLocal && hasUnscoped:
 		noneEntry := list.Entry[Option[gitdomain.LocalBranchName]]{
 			Data: None[gitdomain.LocalBranchName](),
-			Text: fmt.Sprintf(messages.DialogResultUseGlobalValue, unscopedMain),
+			Text: fmt.Sprintf(messages.DialogUseGlobalValue, unscopedMain),
 		}
 		entries = append(list.Entries[Option[gitdomain.LocalBranchName]]{noneEntry}, entries...)
 		cursor = entries.IndexOf(Some(local))

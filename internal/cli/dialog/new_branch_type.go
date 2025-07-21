@@ -24,7 +24,14 @@ More details: https://www.git-town.com/preferences/new-branch-type.
 )
 
 func NewBranchType(args NewBranchTypeArgs) (Option[configdomain.NewBranchType], dialogdomain.Exit, error) {
-	entries := list.Entries[Option[configdomain.BranchType]]{
+	entries := list.Entries[Option[configdomain.BranchType]]{}
+	if global, hasGlobal := args.Global.Get(); hasGlobal {
+		entries = append(entries, list.Entry[Option[configdomain.BranchType]]{
+			Data: None[configdomain.BranchType](),
+			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
+		})
+	}
+	entries = append(entries, list.Entries[Option[configdomain.BranchType]]{
 		{
 			Data: Some(configdomain.BranchTypeFeatureBranch),
 			Text: "always create feature branches",
@@ -41,18 +48,18 @@ func NewBranchType(args NewBranchTypeArgs) (Option[configdomain.NewBranchType], 
 			Data: Some(configdomain.BranchTypePerennialBranch),
 			Text: "always create perennial branches",
 		},
+	}...)
+	cursor := 0
+	if local, hasLocal := args.Local.Get(); hasLocal {
+		cursor = entries.IndexOf(Some(local.BranchType()))
 	}
-	existingOptBranchType := Some(configdomain.BranchTypeFeatureBranch)
-	if existing, has := args.Local.Get(); has {
-		existingOptBranchType = Some(existing.BranchType())
-	}
-	defaultPos := entries.IndexOf(existingOptBranchType)
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, newBranchTypeTitle, NewBranchTypeHelp, args.Inputs, "new-branch-type")
+	selection, exit, err := dialogcomponents.RadioList(entries, cursor, newBranchTypeTitle, NewBranchTypeHelp, args.Inputs, "new-branch-type")
 	fmt.Println(messages.NewBranchType, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return configdomain.NewBranchTypeOpt(selection), exit, err
 }
 
 type NewBranchTypeArgs struct {
-	Local  Option[configdomain.NewBranchType]
+	Global Option[configdomain.NewBranchType]
 	Inputs dialogcomponents.TestInputs
+	Local  Option[configdomain.NewBranchType]
 }
