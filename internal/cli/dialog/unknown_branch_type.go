@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -36,6 +37,8 @@ func UnknownBranchType(args TextArgs[configdomain.UnknownBranchType]) (Option[co
 	cursor := 0
 	if local, hasLocal := args.Local.Get(); hasLocal {
 		cursor = entries.IndexOf(Some(local))
+	} else {
+		cursor = entries.IndexOf(Some(config.DefaultNormalConfig().UnknownBranchType))
 	}
 	selection, exit, err := dialogcomponents.RadioList(entries, cursor, unknownBranchTypeTitle, UnknownBranchTypeHelp, args.Inputs, "unknown-branch-type")
 	value, has := selection.Get()
