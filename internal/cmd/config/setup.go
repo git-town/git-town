@@ -155,6 +155,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
+EnterForgeData:
 	hostingOriginHostName := repo.UnvalidatedConfig.NormalConfig.HostingOriginHostname
 	enteredForgeType := repo.UnvalidatedConfig.NormalConfig.ForgeType.Or(repo.UnvalidatedConfig.File.ForgeType)
 	var actualForgeType Option[forgedomain.ForgeType]
@@ -167,82 +168,80 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 	githubToken := repo.UnvalidatedConfig.NormalConfig.GitHubToken
 	gitlabConnectorTypeOpt := repo.UnvalidatedConfig.NormalConfig.GitLabConnectorType
 	gitlabToken := repo.UnvalidatedConfig.NormalConfig.GitLabToken
-	for {
-		if repo.UnvalidatedConfig.File.HostingOriginHostname.IsNone() {
-			hostingOriginHostName, exit, err = dialog.OriginHostname(hostingOriginHostName, data.dialogInputs)
-			if err != nil || exit {
-				return emptyResult, exit, err
-			}
-		}
-		if repo.UnvalidatedConfig.File.ForgeType.IsNone() {
-			enteredForgeType, exit, err = dialog.ForgeType(enteredForgeType, data.dialogInputs)
-			if err != nil || exit {
-				return emptyResult, exit, err
-			}
-		}
-		actualForgeType = determineForgeType(enteredForgeType, devURL)
-		if forgeType, hasForgeType := actualForgeType.Get(); hasForgeType {
-			switch forgeType {
-			case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
-				bitbucketUsername, exit, err = dialog.BitbucketUsername(bitbucketUsername, data.dialogInputs)
-				if err != nil || exit {
-					return emptyResult, exit, err
-				}
-				bitbucketAppPassword, exit, err = dialog.BitbucketAppPassword(bitbucketAppPassword, data.dialogInputs)
-			case forgedomain.ForgeTypeCodeberg:
-				codebergToken, exit, err = dialog.CodebergToken(codebergToken, data.dialogInputs)
-			case forgedomain.ForgeTypeGitea:
-				giteaToken, exit, err = dialog.GiteaToken(giteaToken, data.dialogInputs)
-			case forgedomain.ForgeTypeGitHub:
-				githubConnectorTypeOpt, exit, err = dialog.GitHubConnectorType(githubConnectorTypeOpt, data.dialogInputs)
-				if err != nil || exit {
-					return emptyResult, exit, err
-				}
-				if githubConnectorType, has := githubConnectorTypeOpt.Get(); has {
-					switch githubConnectorType {
-					case forgedomain.GitHubConnectorTypeAPI:
-						githubToken, exit, err = dialog.GitHubToken(githubToken, data.dialogInputs)
-					case forgedomain.GitHubConnectorTypeGh:
-					}
-				}
-			case forgedomain.ForgeTypeGitLab:
-				gitlabConnectorTypeOpt, exit, err = dialog.GitLabConnectorType(gitlabConnectorTypeOpt, data.dialogInputs)
-				if err != nil || exit {
-					return emptyResult, exit, err
-				}
-				if gitlabConnectorType, has := gitlabConnectorTypeOpt.Get(); has {
-					switch gitlabConnectorType {
-					case forgedomain.GitLabConnectorTypeAPI:
-						gitlabToken, exit, err = dialog.GitLabToken(gitlabToken, data.dialogInputs)
-					case forgedomain.GitLabConnectorTypeGlab:
-					}
-				}
-			}
-			if err != nil || exit {
-				return emptyResult, exit, err
-			}
-		}
-		repeat, exit, err := testForgeAuth(testForgeAuthArgs{
-			backend:              repo.Backend,
-			bitbucketAppPassword: bitbucketAppPassword,
-			bitbucketUsername:    bitbucketUsername,
-			codebergToken:        codebergToken,
-			devURL:               devURL,
-			forgeTypeOpt:         actualForgeType,
-			giteaToken:           giteaToken,
-			githubConnectorType:  githubConnectorTypeOpt,
-			githubToken:          githubToken,
-			gitlabConnectorType:  gitlabConnectorTypeOpt,
-			gitlabToken:          gitlabToken,
-			inputs:               data.dialogInputs,
-			remoteURL:            repo.UnvalidatedConfig.NormalConfig.RemoteURL(data.backend, devRemote.GetOrElse(config.DefaultNormalConfig().DevRemote)),
-		})
+	if repo.UnvalidatedConfig.File.HostingOriginHostname.IsNone() {
+		hostingOriginHostName, exit, err = dialog.OriginHostname(hostingOriginHostName, data.dialogInputs)
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}
-		if !repeat {
-			break
+	}
+	if repo.UnvalidatedConfig.File.ForgeType.IsNone() {
+		enteredForgeType, exit, err = dialog.ForgeType(enteredForgeType, data.dialogInputs)
+		if err != nil || exit {
+			return emptyResult, exit, err
 		}
+	}
+	actualForgeType = determineForgeType(enteredForgeType, devURL)
+	if forgeType, hasForgeType := actualForgeType.Get(); hasForgeType {
+		switch forgeType {
+		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
+			bitbucketUsername, exit, err = dialog.BitbucketUsername(bitbucketUsername, data.dialogInputs)
+			if err != nil || exit {
+				return emptyResult, exit, err
+			}
+			bitbucketAppPassword, exit, err = dialog.BitbucketAppPassword(bitbucketAppPassword, data.dialogInputs)
+		case forgedomain.ForgeTypeCodeberg:
+			codebergToken, exit, err = dialog.CodebergToken(codebergToken, data.dialogInputs)
+		case forgedomain.ForgeTypeGitea:
+			giteaToken, exit, err = dialog.GiteaToken(giteaToken, data.dialogInputs)
+		case forgedomain.ForgeTypeGitHub:
+			githubConnectorTypeOpt, exit, err = dialog.GitHubConnectorType(githubConnectorTypeOpt, data.dialogInputs)
+			if err != nil || exit {
+				return emptyResult, exit, err
+			}
+			if githubConnectorType, has := githubConnectorTypeOpt.Get(); has {
+				switch githubConnectorType {
+				case forgedomain.GitHubConnectorTypeAPI:
+					githubToken, exit, err = dialog.GitHubToken(githubToken, data.dialogInputs)
+				case forgedomain.GitHubConnectorTypeGh:
+				}
+			}
+		case forgedomain.ForgeTypeGitLab:
+			gitlabConnectorTypeOpt, exit, err = dialog.GitLabConnectorType(gitlabConnectorTypeOpt, data.dialogInputs)
+			if err != nil || exit {
+				return emptyResult, exit, err
+			}
+			if gitlabConnectorType, has := gitlabConnectorTypeOpt.Get(); has {
+				switch gitlabConnectorType {
+				case forgedomain.GitLabConnectorTypeAPI:
+					gitlabToken, exit, err = dialog.GitLabToken(gitlabToken, data.dialogInputs)
+				case forgedomain.GitLabConnectorTypeGlab:
+				}
+			}
+		}
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+	}
+	repeat, exit, err := testForgeAuth(testForgeAuthArgs{
+		backend:              repo.Backend,
+		bitbucketAppPassword: bitbucketAppPassword,
+		bitbucketUsername:    bitbucketUsername,
+		codebergToken:        codebergToken,
+		devURL:               devURL,
+		forgeTypeOpt:         actualForgeType,
+		giteaToken:           giteaToken,
+		githubConnectorType:  githubConnectorTypeOpt,
+		githubToken:          githubToken,
+		gitlabConnectorType:  gitlabConnectorTypeOpt,
+		gitlabToken:          gitlabToken,
+		inputs:               data.dialogInputs,
+		remoteURL:            repo.UnvalidatedConfig.NormalConfig.RemoteURL(data.backend, devRemote.GetOrElse(config.DefaultNormalConfig().DevRemote)),
+	})
+	if err != nil || exit {
+		return emptyResult, exit, err
+	}
+	if repeat {
+		goto EnterForgeData
 	}
 	tokenScope, exit, err := enterTokenScope(enterTokenScopeArgs{
 		bitbucketAppPassword: bitbucketAppPassword,
@@ -450,6 +449,13 @@ func enterObservedRegex(repo execute.OpenRepoResult, data setupData) (Option[con
 		Inputs: data.dialogInputs,
 		Local:  repo.UnvalidatedConfig.GitLocal.ObservedRegex,
 	})
+}
+
+func enterOriginHostName(repo execute.OpenRepoResult, data setupData) (Option[configdomain.HostingOriginHostname], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.HostingOriginHostname.IsSome() {
+		return None[configdomain.HostingOriginHostname](), false, nil
+	}
+	return dialog.OriginHostname(hostingOriginHostName, data.dialogInputs)
 }
 
 func enterPerennialBranches(repo execute.OpenRepoResult, data setupData, mainBranch gitdomain.LocalBranchName) (gitdomain.LocalBranchNames, dialogdomain.Exit, error) {

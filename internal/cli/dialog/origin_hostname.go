@@ -23,15 +23,20 @@ if Git Town's auto-detection doesn't work.
 `
 )
 
-func OriginHostname(oldValue Option[configdomain.HostingOriginHostname], inputs dialogcomponents.TestInputs) (Option[configdomain.HostingOriginHostname], dialogdomain.Exit, error) {
-	token, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
+func OriginHostname(args Args[configdomain.HostingOriginHostname]) (Option[configdomain.HostingOriginHostname], dialogdomain.Exit, error) {
+	input, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "origin-hostname",
-		ExistingValue: oldValue.String(),
+		ExistingValue: args.Local.Or(args.Global).String(),
 		Help:          OriginHostnameHelp,
 		Prompt:        "Origin hostname override: ",
-		TestInputs:    inputs,
+		TestInputs:    args.Inputs,
 		Title:         originHostnameTitle,
 	})
-	fmt.Printf(messages.OriginHostname, dialogcomponents.FormattedSelection(token, exit))
-	return configdomain.ParseHostingOriginHostname(token), exit, err
+	newValue := configdomain.ParseHostingOriginHostname(input)
+	if args.Global.Equal(newValue) {
+		// the user has entered the global value --> keep using the global value, don't store the local value
+		newValue = None[configdomain.HostingOriginHostname]()
+	}
+	fmt.Printf(messages.OriginHostname, dialogcomponents.FormattedSelection(newValue.String(), exit))
+	return newValue, exit, err
 }
