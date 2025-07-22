@@ -39,11 +39,7 @@ func (self *ConflictPhantomResolveAll) Run(args shared.RunArgs) error {
 	if err != nil {
 		return err
 	}
-	rootBranch := args.Config.Value.ValidatedConfigData.MainBranch
-	ancestors := args.Config.Value.NormalConfig.Lineage.Ancestors(self.CurrentBranch)
-	if len(ancestors) == 0 {
-		rootBranch = ancestors[0]
-	}
+	rootBranch := args.Config.Value.NormalConfig.Lineage.Root(self.CurrentBranch)
 	fullInfos, err := args.Git.FileConflictFullInfos(args.Backend, quickInfos, parentSHA.Location(), rootBranch)
 	if err != nil {
 		return err
