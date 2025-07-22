@@ -59,6 +59,23 @@ func SaveAll(userInput userInput, unvalidatedConfig config.UnvalidatedConfig, da
 	return nil
 }
 
+func saveAliases(valuesToWriteToGit configdomain.Aliases, valuesAlreadyInGit configdomain.Aliases, frontend subshelldomain.Runner) (err error) {
+	for _, aliasableCommand := range configdomain.AllAliasableCommands() {
+		oldAlias, hasOld := valuesAlreadyInGit[aliasableCommand]
+		newAlias, hasNew := valuesToWriteToGit[aliasableCommand]
+		switch {
+		case hasOld && !hasNew:
+			err = gitconfig.RemoveAlias(frontend, aliasableCommand)
+		case hasNew && !hasOld, newAlias != oldAlias:
+			err = gitconfig.SetAlias(frontend, aliasableCommand)
+		}
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func saveAllToGit(userInput userInput, existingGitConfig configdomain.PartialConfig, configFile configdomain.PartialConfig, data SetupData, frontend subshelldomain.Runner) error {
 	fc := gohacks.ErrorCollector{}
 	if configFile.NewBranchType.IsNone() {
@@ -172,23 +189,6 @@ func saveAllToGit(userInput userInput, existingGitConfig configdomain.PartialCon
 	return fc.Err
 }
 
-func saveAliases(valuesToWriteToGit configdomain.Aliases, valuesAlreadyInGit configdomain.Aliases, frontend subshelldomain.Runner) (err error) {
-	for _, aliasableCommand := range configdomain.AllAliasableCommands() {
-		oldAlias, hasOld := valuesAlreadyInGit[aliasableCommand]
-		newAlias, hasNew := valuesToWriteToGit[aliasableCommand]
-		switch {
-		case hasOld && !hasNew:
-			err = gitconfig.RemoveAlias(frontend, aliasableCommand)
-		case hasNew && !hasOld, newAlias != oldAlias:
-			err = gitconfig.SetAlias(frontend, aliasableCommand)
-		}
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
 func saveBitbucketAppPassword(valueToWriteToGit Option[forgedomain.BitbucketAppPassword], valueAlreadyInGit Option[forgedomain.BitbucketAppPassword], scope configdomain.ConfigScope, runner subshelldomain.Runner) error {
 	if valueToWriteToGit.Equal(valueAlreadyInGit) {
 		return nil
@@ -218,16 +218,6 @@ func saveNewBranchType(valueToWriteToGit Option[configdomain.NewBranchType], val
 	}
 	_ = gitconfig.RemoveNewBranchType(runner)
 	return nil
-}
-
-func saveUnknownBranchType(valueToWriteToGit Option[configdomain.UnknownBranchType], valueAlreadyInGit Option[configdomain.UnknownBranchType], runner subshelldomain.Runner) error {
-	if valueAlreadyInGit.Equal(valueToWriteToGit) {
-		return nil
-	}
-	if value, hasValue := valueToWriteToGit.Get(); hasValue {
-		return gitconfig.SetUnknownBranchType(runner, value, configdomain.ConfigScopeLocal)
-	}
-	return gitconfig.RemoveUnknownBranchType(runner)
 }
 
 func saveDevRemote(valueToWriteToGit Option[gitdomain.Remote], valueAlreadyInGit Option[gitdomain.Remote], runner subshelldomain.Runner) error {
@@ -549,4 +539,14 @@ func saveToFile(userInput userInput, gitConfig configdomain.PartialConfig, runne
 		return err
 	}
 	return saveFeatureRegex(userInput.data.FeatureRegex, gitConfig.FeatureRegex, runner)
+}
+
+func saveUnknownBranchType(valueToWriteToGit Option[configdomain.UnknownBranchType], valueAlreadyInGit Option[configdomain.UnknownBranchType], runner subshelldomain.Runner) error {
+	if valueAlreadyInGit.Equal(valueToWriteToGit) {
+		return nil
+	}
+	if value, hasValue := valueToWriteToGit.Get(); hasValue {
+		return gitconfig.SetUnknownBranchType(runner, value, configdomain.ConfigScopeLocal)
+	}
+	return gitconfig.RemoveUnknownBranchType(runner)
 }
