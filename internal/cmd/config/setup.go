@@ -284,12 +284,9 @@ EnterForgeData:
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	shipDeleteTrackingBranch := repo.UnvalidatedConfig.NormalConfig.ShipDeleteTrackingBranch
-	if repo.UnvalidatedConfig.File.ShipDeleteTrackingBranch.IsNone() {
-		shipDeleteTrackingBranch, exit, err = dialog.ShipDeleteTrackingBranch(shipDeleteTrackingBranch, data.dialogInputs)
-		if err != nil || exit {
-			return emptyResult, exit, err
-		}
+	shipDeleteTrackingBranch, exit, err := enterShipDeleteTrackingBranch(repo, data)
+	if err != nil || exit {
+		return emptyResult, exit, err
 	}
 	configStorage, exit, err := dialog.ConfigStorage(data.dialogInputs)
 	if err != nil || exit {
@@ -323,7 +320,7 @@ EnterForgeData:
 		PerennialRegex:           perennialRegex,
 		PushHook:                 pushHook,
 		ShareNewBranches:         shareNewBranches,
-		ShipDeleteTrackingBranch: Some(shipDeleteTrackingBranch),
+		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,
 		ShipStrategy:             shipStrategy,
 		SyncFeatureStrategy:      syncFeatureStrategy,
 		SyncPerennialStrategy:    syncPerennialStrategy,
@@ -640,6 +637,17 @@ func enterShipStrategy(repo execute.OpenRepoResult, data setupData) (Option[conf
 		Global: repo.UnvalidatedConfig.GitGlobal.ShipStrategy,
 		Inputs: data.dialogInputs,
 		Local:  repo.UnvalidatedConfig.GitLocal.ShipStrategy,
+	})
+}
+
+func enterShipDeleteTrackingBranch(repo execute.OpenRepoResult, data setupData) (Option[configdomain.ShipDeleteTrackingBranch], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.ShipDeleteTrackingBranch.IsSome() {
+		return None[configdomain.ShipDeleteTrackingBranch](), false, nil
+	}
+	return dialog.ShipDeleteTrackingBranch(dialog.Args[configdomain.ShipDeleteTrackingBranch]{
+		Global: repo.UnvalidatedConfig.GitGlobal.ShipDeleteTrackingBranch,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.ShipDeleteTrackingBranch,
 	})
 }
 

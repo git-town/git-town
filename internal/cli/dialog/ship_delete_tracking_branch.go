@@ -6,9 +6,9 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v21/internal/cli/format"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 const (
@@ -24,24 +24,26 @@ branches when pull requests are merged through its UI.
 `
 )
 
-func ShipDeleteTrackingBranch(existing configdomain.ShipDeleteTrackingBranch, inputs dialogcomponents.TestInputs) (configdomain.ShipDeleteTrackingBranch, dialogdomain.Exit, error) {
-	entries := list.Entries[bool]{
+func ShipDeleteTrackingBranch(args Args[configdomain.ShipDeleteTrackingBranch]) (Option[configdomain.ShipDeleteTrackingBranch], dialogdomain.Exit, error) {
+	entries := list.Entries[Option[configdomain.ShipDeleteTrackingBranch]]{}
+	if global, hasGlobal := args.Global.Get(); hasGlobal {
+		entries = append(entries, list.Entry[Option[configdomain.ShipDeleteTrackingBranch]]{
+			Data: None[configdomain.ShipDeleteTrackingBranch](),
+			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
+		})
+	}
+	entries = append(entries, list.Entries[Option[configdomain.ShipDeleteTrackingBranch]]{
 		{
-			Data: true,
+			Data: Some(configdomain.ShipDeleteTrackingBranch(true)),
 			Text: `yes, "git town ship" should delete tracking branches`,
 		},
 		{
-			Data: false,
+			Data: Some(configdomain.ShipDeleteTrackingBranch(false)),
 			Text: `no, my forge deletes branches after merging them`,
 		},
-	}
-	var defaultPos int
-	if existing {
-		defaultPos = 0
-	} else {
-		defaultPos = 1
-	}
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, shipDeleteTrackingBranchTitle, ShipDeleteTrackingBranchHelp, inputs, "ship-delete-tracking-branch")
-	fmt.Printf(messages.ShipDeletesTrackingBranches, dialogcomponents.FormattedSelection(format.Bool(selection), exit))
-	return configdomain.ShipDeleteTrackingBranch(selection), exit, err
+	}...)
+	defaultPos := entries.IndexOf(args.Local)
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, shipDeleteTrackingBranchTitle, ShipDeleteTrackingBranchHelp, args.Inputs, "ship-delete-tracking-branch")
+	fmt.Printf(messages.ShipDeletesTrackingBranches, dialogcomponents.FormattedSelection(selection.String(), exit))
+	return selection, exit, err
 }
