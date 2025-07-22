@@ -1316,14 +1316,23 @@ func saveToFile(userInput userInput, gitConfig configdomain.PartialConfig, runne
 	if err := configfile.Save(userInput.data); err != nil {
 		return err
 	}
+	if gitConfig.ContributionRegex.IsSome() {
+		_ = gitconfig.RemoveContributionRegex(runner)
+	}
 	if gitConfig.DevRemote.IsSome() {
 		_ = gitconfig.RemoveDevRemote(runner)
+	}
+	if gitConfig.FeatureRegex.IsSome() {
+		_ = gitconfig.RemoveFeatureRegex(runner)
 	}
 	if gitConfig.MainBranch.IsSome() {
 		_ = gitconfig.RemoveMainBranch(runner)
 	}
 	if gitConfig.NewBranchType.IsSome() {
 		_ = gitconfig.RemoveNewBranchType(runner)
+	}
+	if gitConfig.ObservedRegex.IsSome() {
+		_ = gitconfig.RemoveObservedRegex(runner)
 	}
 	if len(gitConfig.PerennialBranches) > 0 {
 		_ = gitconfig.RemovePerennialBranches(runner)
@@ -1358,9 +1367,11 @@ func saveToFile(userInput userInput, gitConfig configdomain.PartialConfig, runne
 	if gitConfig.SyncTags.IsSome() {
 		_ = gitconfig.RemoveSyncTags(runner)
 	}
+	if gitConfig.UnknownBranchType.IsSome() {
+		_ = gitconfig.RemoveUnknownBranchType(runner)
+	}
 	if err := saveUnknownBranchType(userInput.data.UnknownBranchType, gitConfig.UnknownBranchType, runner); err != nil {
 		return err
 	}
-	// TODO: also save ObservedRegex ContributionRegex NewBranchType
 	return saveFeatureRegex(userInput.data.FeatureRegex, gitConfig.FeatureRegex, runner)
 }
