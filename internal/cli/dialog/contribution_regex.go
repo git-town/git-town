@@ -39,6 +39,6 @@ func ContributionRegex(args Args[configdomain.ContributionRegex]) (Option[config
 		// the user has entered the global value --> keep using the global value, don't store the local value
 		newValue = None[configdomain.ContributionRegex]()
 	}
-	fmt.Printf(messages.ContributionRegexResult, dialogcomponents.FormattedSelection(newValue.String(), exit))
+	fmt.Printf(messages.ContributionRegexResult, dialogcomponents.FormattedOption(newValue, args.Global, exit))
 	return newValue, exit, cmp.Or(err1, err2)
 }

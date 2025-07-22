@@ -44,6 +44,6 @@ func SyncPerennialStrategy(args Args[configdomain.SyncPerennialStrategy]) (Optio
 	}...)
 	defaultPos := entries.IndexOf(args.Local)
 	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncPerennialStrategyTitle, SyncPerennialStrategyHelp, args.Inputs, "sync-perennial-strategy")
-	fmt.Printf(messages.SyncPerennialBranches, dialogcomponents.FormattedSelection(selection.String(), exit))
+	fmt.Printf(messages.SyncPerennialBranches, dialogcomponents.FormattedOption(selection, args.Global, exit))
 	return selection, exit, err
 }

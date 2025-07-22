@@ -39,6 +39,6 @@ func ObservedRegex(args Args[configdomain.ObservedRegex]) (Option[configdomain.O
 		// the user has entered the global value --> keep using the global value, don't store the local value
 		newValue = None[configdomain.ObservedRegex]()
 	}
-	fmt.Printf(messages.ObservedRegexResult, dialogcomponents.FormattedSelection(newValue.String(), exit))
+	fmt.Printf(messages.ObservedRegexResult, dialogcomponents.FormattedOption(newValue, args.Global, exit))
 	return newValue, exit, cmp.Or(err1, err2)
 }

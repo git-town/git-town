@@ -39,6 +39,6 @@ func CodebergToken(args Args[forgedomain.CodebergToken]) (Option[forgedomain.Cod
 		// the user has entered the global value --> keep using the global value, don't store the local value
 		newValue = None[forgedomain.CodebergToken]()
 	}
-	fmt.Printf(messages.CodebergTokenResult, dialogcomponents.FormattedSelection(newValue.String(), exit))
+	fmt.Printf(messages.CodebergTokenResult, dialogcomponents.FormattedOption(newValue, args.Global, exit))
 	return newValue, exit, err
 }

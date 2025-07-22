@@ -44,6 +44,6 @@ func ShipDeleteTrackingBranch(args Args[configdomain.ShipDeleteTrackingBranch]) 
 	}...)
 	defaultPos := entries.IndexOf(args.Local)
 	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, shipDeleteTrackingBranchTitle, ShipDeleteTrackingBranchHelp, args.Inputs, "ship-delete-tracking-branch")
-	fmt.Printf(messages.ShipDeletesTrackingBranches, dialogcomponents.FormattedSelection(selection.String(), exit))
+	fmt.Printf(messages.ShipDeletesTrackingBranches, dialogcomponents.FormattedOption(selection, args.Global, exit))
 	return selection, exit, err
 }
