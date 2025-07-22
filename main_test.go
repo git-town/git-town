@@ -1,7 +1,6 @@
 package main_test
 
 import (
-	"fmt"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -76,7 +75,6 @@ func findFeatureFiles() []string {
 		if err != nil {
 			return err
 		}
-		fmt.Println(dir.Name())
 		if dir.Name() == "verbose.feature" {
 			result = append(result, path)
 		}
