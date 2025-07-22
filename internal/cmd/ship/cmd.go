@@ -4,6 +4,8 @@ import (
 	"cmp"
 	"errors"
 	"fmt"
+	"io"
+	"os"
 
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
@@ -82,7 +84,7 @@ func Cmd() *cobra.Command {
 	return &cmd
 }
 
-func executeShip(args []string, cliConfig cliconfig.CliConfig, message Option[gitdomain.CommitMessage], messageFile Option[gitdomain.CommitMessageFile], shipStrategy Option[configdomain.ShipStrategy], toParent configdomain.ShipIntoNonperennialParent) error {
+func executeShip(args []string, cliConfig cliconfig.CliConfig, messageOpt Option[gitdomain.CommitMessage], messageFileOpt Option[gitdomain.CommitMessageFile], shipStrategy Option[configdomain.ShipStrategy], toParent configdomain.ShipIntoNonperennialParent) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,
@@ -96,6 +98,24 @@ func executeShip(args []string, cliConfig cliconfig.CliConfig, message Option[gi
 	sharedData, exit, err := determineSharedShipData(args, repo, cliConfig, shipStrategy)
 	if err != nil || exit {
 		return err
+	}
+	var message Option[gitdomain.CommitMessage]
+	if messageOpt.IsSome() {
+		message = messageOpt
+	} else if messageFile, hasMessageFile := messageFileOpt.Get(); hasMessageFile {
+		if messageFile.ShouldReadStdin() {
+			content, err := io.ReadAll(os.Stdin)
+			if err != nil {
+				return fmt.Errorf("cannot read STDIN: %w", err)
+			}
+			message = NewOption(gitdomain.CommitMessage(content))
+		} else {
+			fileData, err := os.ReadFile(messageFile.String())
+			if err != nil {
+				return err
+			}
+			message = NewOption(gitdomain.CommitMessage(fileData))
+		}
 	}
 	if err = validateSharedData(sharedData, toParent, message); err != nil {
 		return err
