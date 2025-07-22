@@ -22,8 +22,8 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-func EnterUserInput(repo execute.OpenRepoResult, data SetupData) (userInput, dialogdomain.Exit, error) {
-	var emptyResult userInput
+func EnterUserInput(repo execute.OpenRepoResult, data Data) (UserInput, dialogdomain.Exit, error) {
+	var emptyResult UserInput
 	exit, err := dialog.Welcome(data.dialogInputs)
 	if err != nil || exit {
 		return emptyResult, exit, err
@@ -250,11 +250,11 @@ EnterForgeData:
 	if !data.dialogInputs.IsEmpty() {
 		panic("unused dialog inputs")
 	}
-	return userInput{normalData, actualForgeType, tokenScope, configStorage, validatedData}, false, nil
+	return UserInput{normalData, actualForgeType, tokenScope, configStorage, validatedData}, false, nil
 }
 
 // data entered by the user in the setup assistant
-type userInput struct {
+type UserInput struct {
 	data                configdomain.PartialConfig
 	determinedForgeType Option[forgedomain.ForgeType] // the forge type that was determined by the setup assistant - not necessarily what the user entered (could also be "auto detect")
 	scope               configdomain.ConfigScope
@@ -285,7 +285,7 @@ func determineForgeType(userChoice Option[forgedomain.ForgeType], devURL Option[
 	return None[forgedomain.ForgeType]()
 }
 
-func enterBitbucketAppPassword(repo execute.OpenRepoResult, data SetupData) (Option[forgedomain.BitbucketAppPassword], dialogdomain.Exit, error) {
+func enterBitbucketAppPassword(repo execute.OpenRepoResult, data Data) (Option[forgedomain.BitbucketAppPassword], dialogdomain.Exit, error) {
 	if repo.UnvalidatedConfig.File.BitbucketUsername.IsSome() {
 		return None[forgedomain.BitbucketAppPassword](), false, nil
 	}
@@ -296,7 +296,7 @@ func enterBitbucketAppPassword(repo execute.OpenRepoResult, data SetupData) (Opt
 	})
 }
 
-func enterBitbucketUserName(repo execute.OpenRepoResult, data SetupData) (Option[forgedomain.BitbucketUsername], dialogdomain.Exit, error) {
+func enterBitbucketUserName(repo execute.OpenRepoResult, data Data) (Option[forgedomain.BitbucketUsername], dialogdomain.Exit, error) {
 	if repo.UnvalidatedConfig.File.BitbucketUsername.IsSome() {
 		return None[forgedomain.BitbucketUsername](), false, nil
 	}
@@ -307,7 +307,7 @@ func enterBitbucketUserName(repo execute.OpenRepoResult, data SetupData) (Option
 	})
 }
 
-func enterCodebergToken(repo execute.OpenRepoResult, data SetupData) (Option[forgedomain.CodebergToken], dialogdomain.Exit, error) {
+func enterCodebergToken(repo execute.OpenRepoResult, data Data) (Option[forgedomain.CodebergToken], dialogdomain.Exit, error) {
 	if repo.UnvalidatedConfig.File.CodebergToken.IsSome() {
 		return None[forgedomain.CodebergToken](), false, nil
 	}
@@ -318,7 +318,7 @@ func enterCodebergToken(repo execute.OpenRepoResult, data SetupData) (Option[for
 	})
 }
 
-func enterContributionRegex(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.ContributionRegex], dialogdomain.Exit, error) {
+func enterContributionRegex(repo execute.OpenRepoResult, data Data) (Option[configdomain.ContributionRegex], dialogdomain.Exit, error) {
 	if repo.UnvalidatedConfig.File.ContributionRegex.IsSome() {
 		return None[configdomain.ContributionRegex](), false, nil
 	}
@@ -329,7 +329,7 @@ func enterContributionRegex(repo execute.OpenRepoResult, data SetupData) (Option
 	})
 }
 
-func enterDevRemote(repo execute.OpenRepoResult, data SetupData) (Option[gitdomain.Remote], dialogdomain.Exit, error) {
+func enterDevRemote(repo execute.OpenRepoResult, data Data) (Option[gitdomain.Remote], dialogdomain.Exit, error) {
 	if repo.UnvalidatedConfig.File.DevRemote.IsSome() {
 		return None[gitdomain.Remote](), false, nil
 	}
@@ -340,7 +340,7 @@ func enterDevRemote(repo execute.OpenRepoResult, data SetupData) (Option[gitdoma
 	})
 }
 
-func enterFeatureRegex(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.FeatureRegex], dialogdomain.Exit, error) {
+func enterFeatureRegex(repo execute.OpenRepoResult, data Data) (Option[configdomain.FeatureRegex], dialogdomain.Exit, error) {
 	if repo.UnvalidatedConfig.File.FeatureRegex.IsSome() {
 		return None[configdomain.FeatureRegex](), false, nil
 	}
@@ -351,7 +351,7 @@ func enterFeatureRegex(repo execute.OpenRepoResult, data SetupData) (Option[conf
 	})
 }
 
-func enterForgeType(repo execute.OpenRepoResult, data SetupData) (Option[forgedomain.ForgeType], dialogdomain.Exit, error) {
+func enterForgeType(repo execute.OpenRepoResult, data Data) (Option[forgedomain.ForgeType], dialogdomain.Exit, error) {
 	if repo.UnvalidatedConfig.File.ForgeType.IsSome() {
 		return None[forgedomain.ForgeType](), false, nil
 	}
@@ -362,7 +362,7 @@ func enterForgeType(repo execute.OpenRepoResult, data SetupData) (Option[forgedo
 	})
 }
 
-func enterGitHubConnectorType(repo execute.OpenRepoResult, data SetupData) (Option[forgedomain.GitHubConnectorType], dialogdomain.Exit, error) {
+func enterGitHubConnectorType(repo execute.OpenRepoResult, data Data) (Option[forgedomain.GitHubConnectorType], dialogdomain.Exit, error) {
 	if repo.UnvalidatedConfig.File.GitHubConnectorType.IsSome() {
 		return None[forgedomain.GitHubConnectorType](), false, nil
 	}
@@ -373,7 +373,7 @@ func enterGitHubConnectorType(repo execute.OpenRepoResult, data SetupData) (Opti
 	})
 }
 
-func enterGitHubToken(repo execute.OpenRepoResult, data SetupData) (Option[forgedomain.GitHubToken], dialogdomain.Exit, error) {
+func enterGitHubToken(repo execute.OpenRepoResult, data Data) (Option[forgedomain.GitHubToken], dialogdomain.Exit, error) {
 	if repo.UnvalidatedConfig.File.GitHubToken.IsSome() {
 		return None[forgedomain.GitHubToken](), false, nil
 	}
@@ -384,7 +384,7 @@ func enterGitHubToken(repo execute.OpenRepoResult, data SetupData) (Option[forge
 	})
 }
 
-func enterGitLabConnectorType(repo execute.OpenRepoResult, data SetupData) (Option[forgedomain.GitLabConnectorType], dialogdomain.Exit, error) {
+func enterGitLabConnectorType(repo execute.OpenRepoResult, data Data) (Option[forgedomain.GitLabConnectorType], dialogdomain.Exit, error) {
 	if repo.UnvalidatedConfig.File.GitLabConnectorType.IsSome() {
 		return None[forgedomain.GitLabConnectorType](), false, nil
 	}
@@ -395,7 +395,7 @@ func enterGitLabConnectorType(repo execute.OpenRepoResult, data SetupData) (Opti
 	})
 }
 
-func enterGitLabToken(repo execute.OpenRepoResult, data SetupData) (Option[forgedomain.GitLabToken], dialogdomain.Exit, error) {
+func enterGitLabToken(repo execute.OpenRepoResult, data Data) (Option[forgedomain.GitLabToken], dialogdomain.Exit, error) {
 	if repo.UnvalidatedConfig.File.GitLabToken.IsSome() {
 		return None[forgedomain.GitLabToken](), false, nil
 	}
@@ -406,7 +406,7 @@ func enterGitLabToken(repo execute.OpenRepoResult, data SetupData) (Option[forge
 	})
 }
 
-func enterGiteaToken(repo execute.OpenRepoResult, data SetupData) (Option[forgedomain.GiteaToken], dialogdomain.Exit, error) {
+func enterGiteaToken(repo execute.OpenRepoResult, data Data) (Option[forgedomain.GiteaToken], dialogdomain.Exit, error) {
 	if repo.UnvalidatedConfig.File.GiteaToken.IsSome() {
 		return None[forgedomain.GiteaToken](), false, nil
 	}
@@ -417,7 +417,7 @@ func enterGiteaToken(repo execute.OpenRepoResult, data SetupData) (Option[forged
 	})
 }
 
-func enterMainBranch(repo execute.OpenRepoResult, data SetupData) (userChoice Option[gitdomain.LocalBranchName], actualMainBranch gitdomain.LocalBranchName, exit dialogdomain.Exit, err error) {
+func enterMainBranch(repo execute.OpenRepoResult, data Data) (userChoice Option[gitdomain.LocalBranchName], actualMainBranch gitdomain.LocalBranchName, exit dialogdomain.Exit, err error) {
 	if configFileMainBranch, hasMain := repo.UnvalidatedConfig.File.MainBranch.Get(); hasMain {
 		return Some(configFileMainBranch), configFileMainBranch, false, nil
 	}
@@ -430,7 +430,7 @@ func enterMainBranch(repo execute.OpenRepoResult, data SetupData) (userChoice Op
 	})
 }
 
-func enterNewBranchType(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.NewBranchType], dialogdomain.Exit, error) {
+func enterNewBranchType(repo execute.OpenRepoResult, data Data) (Option[configdomain.NewBranchType], dialogdomain.Exit, error) {
 	if repo.UnvalidatedConfig.File.NewBranchType.IsSome() {
 		return None[configdomain.NewBranchType](), false, nil
 	}
@@ -441,7 +441,7 @@ func enterNewBranchType(repo execute.OpenRepoResult, data SetupData) (Option[con
 	})
 }
 
-func enterObservedRegex(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.ObservedRegex], dialogdomain.Exit, error) {
+func enterObservedRegex(repo execute.OpenRepoResult, data Data) (Option[configdomain.ObservedRegex], dialogdomain.Exit, error) {
 	if repo.UnvalidatedConfig.File.ObservedRegex.IsSome() {
 		return None[configdomain.ObservedRegex](), false, nil
 	}
@@ -452,7 +452,7 @@ func enterObservedRegex(repo execute.OpenRepoResult, data SetupData) (Option[con
 	})
 }
 
-func enterOriginHostName(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.HostingOriginHostname], dialogdomain.Exit, error) {
+func enterOriginHostName(repo execute.OpenRepoResult, data Data) (Option[configdomain.HostingOriginHostname], dialogdomain.Exit, error) {
 	if repo.UnvalidatedConfig.File.HostingOriginHostname.IsSome() {
 		return None[configdomain.HostingOriginHostname](), false, nil
 	}
@@ -463,7 +463,7 @@ func enterOriginHostName(repo execute.OpenRepoResult, data SetupData) (Option[co
 	})
 }
 
-func enterPerennialBranches(repo execute.OpenRepoResult, data SetupData, mainBranch gitdomain.LocalBranchName) (gitdomain.LocalBranchNames, dialogdomain.Exit, error) {
+func enterPerennialBranches(repo execute.OpenRepoResult, data Data, mainBranch gitdomain.LocalBranchName) (gitdomain.LocalBranchNames, dialogdomain.Exit, error) {
 	immutablePerennials := gitdomain.LocalBranchNames{mainBranch}.
 		AppendAllMissing(repo.UnvalidatedConfig.File.PerennialBranches...).
 		AppendAllMissing(repo.UnvalidatedConfig.GitGlobal.PerennialBranches...)
@@ -476,7 +476,7 @@ func enterPerennialBranches(repo execute.OpenRepoResult, data SetupData, mainBra
 	})
 }
 
-func enterPerennialRegex(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.PerennialRegex], dialogdomain.Exit, error) {
+func enterPerennialRegex(repo execute.OpenRepoResult, data Data) (Option[configdomain.PerennialRegex], dialogdomain.Exit, error) {
 	if repo.UnvalidatedConfig.File.PerennialRegex.IsSome() {
 		return None[configdomain.PerennialRegex](), false, nil
 	}
@@ -487,7 +487,7 @@ func enterPerennialRegex(repo execute.OpenRepoResult, data SetupData) (Option[co
 	})
 }
 
-func enterPushHook(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.PushHook], dialogdomain.Exit, error) {
+func enterPushHook(repo execute.OpenRepoResult, data Data) (Option[configdomain.PushHook], dialogdomain.Exit, error) {
 	if repo.UnvalidatedConfig.File.PushHook.IsSome() {
 		return None[configdomain.PushHook](), false, nil
 	}
@@ -498,7 +498,7 @@ func enterPushHook(repo execute.OpenRepoResult, data SetupData) (Option[configdo
 	})
 }
 
-func enterShareNewBranches(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.ShareNewBranches], dialogdomain.Exit, error) {
+func enterShareNewBranches(repo execute.OpenRepoResult, data Data) (Option[configdomain.ShareNewBranches], dialogdomain.Exit, error) {
 	if repo.UnvalidatedConfig.File.ShareNewBranches.IsSome() {
 		return None[configdomain.ShareNewBranches](), false, nil
 	}
@@ -509,7 +509,7 @@ func enterShareNewBranches(repo execute.OpenRepoResult, data SetupData) (Option[
 	})
 }
 
-func enterShipDeleteTrackingBranch(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.ShipDeleteTrackingBranch], dialogdomain.Exit, error) {
+func enterShipDeleteTrackingBranch(repo execute.OpenRepoResult, data Data) (Option[configdomain.ShipDeleteTrackingBranch], dialogdomain.Exit, error) {
 	if repo.UnvalidatedConfig.File.ShipDeleteTrackingBranch.IsSome() {
 		return None[configdomain.ShipDeleteTrackingBranch](), false, nil
 	}
@@ -520,7 +520,7 @@ func enterShipDeleteTrackingBranch(repo execute.OpenRepoResult, data SetupData) 
 	})
 }
 
-func enterShipStrategy(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.ShipStrategy], dialogdomain.Exit, error) {
+func enterShipStrategy(repo execute.OpenRepoResult, data Data) (Option[configdomain.ShipStrategy], dialogdomain.Exit, error) {
 	if repo.UnvalidatedConfig.File.ShipStrategy.IsSome() {
 		return None[configdomain.ShipStrategy](), false, nil
 	}
@@ -531,7 +531,7 @@ func enterShipStrategy(repo execute.OpenRepoResult, data SetupData) (Option[conf
 	})
 }
 
-func enterSyncFeatureStrategy(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.SyncFeatureStrategy], dialogdomain.Exit, error) {
+func enterSyncFeatureStrategy(repo execute.OpenRepoResult, data Data) (Option[configdomain.SyncFeatureStrategy], dialogdomain.Exit, error) {
 	if repo.UnvalidatedConfig.File.SyncFeatureStrategy.IsSome() {
 		return None[configdomain.SyncFeatureStrategy](), false, nil
 	}
@@ -542,7 +542,7 @@ func enterSyncFeatureStrategy(repo execute.OpenRepoResult, data SetupData) (Opti
 	})
 }
 
-func enterSyncPerennialStrategy(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.SyncPerennialStrategy], dialogdomain.Exit, error) {
+func enterSyncPerennialStrategy(repo execute.OpenRepoResult, data Data) (Option[configdomain.SyncPerennialStrategy], dialogdomain.Exit, error) {
 	if repo.UnvalidatedConfig.File.SyncPerennialStrategy.IsSome() {
 		return None[configdomain.SyncPerennialStrategy](), false, nil
 	}
@@ -553,7 +553,7 @@ func enterSyncPerennialStrategy(repo execute.OpenRepoResult, data SetupData) (Op
 	})
 }
 
-func enterSyncPrototypeStrategy(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.SyncPrototypeStrategy], dialogdomain.Exit, error) {
+func enterSyncPrototypeStrategy(repo execute.OpenRepoResult, data Data) (Option[configdomain.SyncPrototypeStrategy], dialogdomain.Exit, error) {
 	if repo.UnvalidatedConfig.File.SyncPrototypeStrategy.IsSome() {
 		return None[configdomain.SyncPrototypeStrategy](), false, nil
 	}
@@ -564,7 +564,7 @@ func enterSyncPrototypeStrategy(repo execute.OpenRepoResult, data SetupData) (Op
 	})
 }
 
-func enterSyncTags(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.SyncTags], dialogdomain.Exit, error) {
+func enterSyncTags(repo execute.OpenRepoResult, data Data) (Option[configdomain.SyncTags], dialogdomain.Exit, error) {
 	if repo.UnvalidatedConfig.File.SyncTags.IsSome() {
 		return None[configdomain.SyncTags](), false, nil
 	}
@@ -575,7 +575,7 @@ func enterSyncTags(repo execute.OpenRepoResult, data SetupData) (Option[configdo
 	})
 }
 
-func enterSyncUpstream(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.SyncUpstream], dialogdomain.Exit, error) {
+func enterSyncUpstream(repo execute.OpenRepoResult, data Data) (Option[configdomain.SyncUpstream], dialogdomain.Exit, error) {
 	if repo.UnvalidatedConfig.File.SyncUpstream.IsSome() {
 		return None[configdomain.SyncUpstream](), false, nil
 	}
@@ -606,7 +606,7 @@ type enterTokenScopeArgs struct {
 	repo                 execute.OpenRepoResult
 }
 
-func enterUnknownBranchType(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.UnknownBranchType], dialogdomain.Exit, error) {
+func enterUnknownBranchType(repo execute.OpenRepoResult, data Data) (Option[configdomain.UnknownBranchType], dialogdomain.Exit, error) {
 	if repo.UnvalidatedConfig.File.UnknownBranchType.IsSome() {
 		return None[configdomain.UnknownBranchType](), false, nil
 	}

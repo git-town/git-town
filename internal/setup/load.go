@@ -14,14 +14,14 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-type SetupData struct {
+type Data struct {
 	backend       subshelldomain.Querier
 	dialogInputs  dialogcomponents.TestInputs
 	localBranches gitdomain.BranchInfos
 	remotes       gitdomain.Remotes
 }
 
-func LoadData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data SetupData, exit dialogdomain.Exit, err error) {
+func LoadData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data Data, exit dialogdomain.Exit, err error) {
 	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -56,7 +56,7 @@ func LoadData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data 
 	if len(remotes) == 0 {
 		remotes = gitdomain.Remotes{gitconfig.DefaultRemote(repo.Backend)}
 	}
-	return SetupData{
+	return Data{
 		backend:       repo.Backend,
 		dialogInputs:  dialogTestInputs,
 		localBranches: branchesSnapshot.Branches,

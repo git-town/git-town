@@ -15,7 +15,7 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-func SaveAll(userInput userInput, unvalidatedConfig config.UnvalidatedConfig, data SetupData, frontend subshelldomain.Runner) error {
+func SaveAll(userInput UserInput, unvalidatedConfig config.UnvalidatedConfig, data Data, frontend subshelldomain.Runner) error {
 	fc := gohacks.ErrorCollector{}
 	fc.Check(
 		saveAliases(userInput.data.Aliases, unvalidatedConfig.GitGlobal.Aliases, frontend),
@@ -76,7 +76,7 @@ func saveAliases(valuesToWriteToGit configdomain.Aliases, valuesAlreadyInGit con
 	return nil
 }
 
-func saveAllToGit(userInput userInput, existingGitConfig configdomain.PartialConfig, configFile configdomain.PartialConfig, data SetupData, frontend subshelldomain.Runner) error {
+func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialConfig, configFile configdomain.PartialConfig, data Data, frontend subshelldomain.Runner) error {
 	fc := gohacks.ErrorCollector{}
 	if configFile.NewBranchType.IsNone() {
 		fc.Check(
@@ -476,7 +476,7 @@ func saveSyncUpstream(valueToWriteToGit Option[configdomain.SyncUpstream], value
 	return gitconfig.RemoveSyncUpstream(runner)
 }
 
-func saveToFile(userInput userInput, gitConfig configdomain.PartialConfig, runner subshelldomain.Runner) error {
+func saveToFile(userInput UserInput, gitConfig configdomain.PartialConfig, runner subshelldomain.Runner) error {
 	userInput.data.MainBranch = Some(userInput.validatedConfig.MainBranch)
 	if err := configfile.Save(userInput.data); err != nil {
 		return err
