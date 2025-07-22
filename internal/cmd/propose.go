@@ -4,7 +4,6 @@ import (
 	"cmp"
 	"errors"
 	"fmt"
-	"io"
 	"os"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
@@ -12,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v21/internal/cmd/ship"
 	"github.com/git-town/git-town/v21/internal/cmd/sync"
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/cliconfig"
@@ -308,24 +308,7 @@ func determineProposeData(repo execute.OpenRepoResult, cliConfig cliconfig.CliCo
 	if err != nil {
 		return data, false, err
 	}
-	var bodyText Option[gitdomain.ProposalBody]
-	if body.IsSome() {
-		bodyText = body
-	} else if bodyFile, hasBodyFile := bodyFileOpt.Get(); hasBodyFile {
-		if bodyFile.ShouldReadStdin() {
-			content, err := io.ReadAll(os.Stdin)
-			if err != nil {
-				return data, false, fmt.Errorf("cannot read STDIN: %w", err)
-			}
-			bodyText = NewOption(gitdomain.ProposalBody(content))
-		} else {
-			fileData, err := os.ReadFile(bodyFile.String())
-			if err != nil {
-				return data, false, err
-			}
-			bodyText = NewOption(gitdomain.ProposalBody(fileData))
-		}
-	}
+	bodyText, err := ship.ReadFile(body, bodyFileOpt)
 	return proposeData{
 		branchInfos:         branchesSnapshot.Branches,
 		branchInfosLastRun:  branchInfosLastRun,
