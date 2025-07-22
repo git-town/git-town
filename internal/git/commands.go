@@ -475,12 +475,12 @@ func (self *Commands) FetchUpstream(runner subshelldomain.Runner, branch gitdoma
 	return runner.Run("git", "fetch", gitdomain.RemoteUpstream.String(), branch.String())
 }
 
-func (self *Commands) FileConflictFullInfo(querier subshelldomain.Querier, quickInfo FileConflictQuickInfo, parentLocation gitdomain.Location, mainBranch gitdomain.LocalBranchName) (FileConflictFullInfo, error) {
-	mainBlob := None[BlobInfo]()
+func (self *Commands) FileConflictFullInfo(querier subshelldomain.Querier, quickInfo FileConflictQuickInfo, parentLocation gitdomain.Location, rootBranch gitdomain.LocalBranchName) (FileConflictFullInfo, error) {
+	rootBlob := None[BlobInfo]()
 	parentBlob := None[BlobInfo]()
 	if currentBranchBlobInfo, has := quickInfo.CurrentBranchChange.Get(); has {
 		var err error
-		mainBlob, err = self.ContentBlobInfo(querier, mainBranch.Location(), currentBranchBlobInfo.FilePath)
+		rootBlob, err = self.ContentBlobInfo(querier, rootBranch.Location(), currentBranchBlobInfo.FilePath)
 		if err != nil {
 			return FileConflictFullInfo{}, err
 		}
@@ -492,15 +492,15 @@ func (self *Commands) FileConflictFullInfo(querier subshelldomain.Querier, quick
 	result := FileConflictFullInfo{
 		Current: quickInfo.CurrentBranchChange,
 		Parent:  parentBlob,
-		Root:    mainBlob,
+		Root:    rootBlob,
 	}
 	return result, nil
 }
 
-func (self *Commands) FileConflictFullInfos(querier subshelldomain.Querier, quickInfos []FileConflictQuickInfo, parentLocation gitdomain.Location, mainBranch gitdomain.LocalBranchName) ([]FileConflictFullInfo, error) {
+func (self *Commands) FileConflictFullInfos(querier subshelldomain.Querier, quickInfos []FileConflictQuickInfo, parentLocation gitdomain.Location, rootBranch gitdomain.LocalBranchName) ([]FileConflictFullInfo, error) {
 	result := make([]FileConflictFullInfo, len(quickInfos))
 	for q, quickInfo := range quickInfos {
-		fullInfo, err := self.FileConflictFullInfo(querier, quickInfo, parentLocation, mainBranch)
+		fullInfo, err := self.FileConflictFullInfo(querier, quickInfo, parentLocation, rootBranch)
 		if err != nil {
 			return result, err
 		}
