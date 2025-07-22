@@ -272,17 +272,6 @@ func determineForgeType(userChoice Option[forgedomain.ForgeType], devURL Option[
 	return None[forgedomain.ForgeType]()
 }
 
-func enterBitbucketUserName(repo execute.OpenRepoResult, data SetupData) (Option[forgedomain.BitbucketUsername], dialogdomain.Exit, error) {
-	if repo.UnvalidatedConfig.File.BitbucketUsername.IsSome() {
-		return None[forgedomain.BitbucketUsername](), false, nil
-	}
-	return dialog.BitbucketUsername(dialog.Args[forgedomain.BitbucketUsername]{
-		Global: repo.UnvalidatedConfig.GitLocal.BitbucketUsername,
-		Inputs: data.dialogInputs,
-		Local:  repo.UnvalidatedConfig.GitLocal.BitbucketUsername,
-	})
-}
-
 func enterBitbucketAppPassword(repo execute.OpenRepoResult, data SetupData) (Option[forgedomain.BitbucketAppPassword], dialogdomain.Exit, error) {
 	if repo.UnvalidatedConfig.File.BitbucketUsername.IsSome() {
 		return None[forgedomain.BitbucketAppPassword](), false, nil
@@ -291,6 +280,17 @@ func enterBitbucketAppPassword(repo execute.OpenRepoResult, data SetupData) (Opt
 		Global: repo.UnvalidatedConfig.GitLocal.BitbucketAppPassword,
 		Inputs: data.dialogInputs,
 		Local:  repo.UnvalidatedConfig.GitLocal.BitbucketAppPassword,
+	})
+}
+
+func enterBitbucketUserName(repo execute.OpenRepoResult, data SetupData) (Option[forgedomain.BitbucketUsername], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.BitbucketUsername.IsSome() {
+		return None[forgedomain.BitbucketUsername](), false, nil
+	}
+	return dialog.BitbucketUsername(dialog.Args[forgedomain.BitbucketUsername]{
+		Global: repo.UnvalidatedConfig.GitLocal.BitbucketUsername,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.BitbucketUsername,
 	})
 }
 
@@ -304,15 +304,47 @@ func enterCodebergToken(repo execute.OpenRepoResult, data SetupData) (Option[for
 		Local:  repo.UnvalidatedConfig.GitLocal.CodebergToken,
 	})
 }
-
-func enterGiteaToken(repo execute.OpenRepoResult, data SetupData) (Option[forgedomain.GiteaToken], dialogdomain.Exit, error) {
-	if repo.UnvalidatedConfig.File.GiteaToken.IsSome() {
-		return None[forgedomain.GiteaToken](), false, nil
+func enterContributionRegex(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.ContributionRegex], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.ContributionRegex.IsSome() {
+		return None[configdomain.ContributionRegex](), false, nil
 	}
-	return dialog.GiteaToken(dialog.Args[forgedomain.GiteaToken]{
-		Global: repo.UnvalidatedConfig.GitGlobal.GiteaToken,
+	return dialog.ContributionRegex(dialog.Args[configdomain.ContributionRegex]{
+		Global: repo.UnvalidatedConfig.GitGlobal.ContributionRegex,
 		Inputs: data.dialogInputs,
-		Local:  repo.UnvalidatedConfig.GitLocal.GiteaToken,
+		Local:  repo.UnvalidatedConfig.GitLocal.ContributionRegex,
+	})
+}
+
+func enterDevRemote(repo execute.OpenRepoResult, data SetupData) (Option[gitdomain.Remote], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.DevRemote.IsSome() {
+		return None[gitdomain.Remote](), false, nil
+	}
+	return dialog.DevRemote(data.remotes, dialog.Args[gitdomain.Remote]{
+		Global: repo.UnvalidatedConfig.GitGlobal.DevRemote,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.DevRemote,
+	})
+}
+
+func enterFeatureRegex(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.FeatureRegex], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.FeatureRegex.IsSome() {
+		return None[configdomain.FeatureRegex](), false, nil
+	}
+	return dialog.FeatureRegex(dialog.Args[configdomain.FeatureRegex]{
+		Global: repo.UnvalidatedConfig.GitGlobal.FeatureRegex,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.FeatureRegex,
+	})
+}
+
+func enterForgeType(repo execute.OpenRepoResult, data SetupData) (Option[forgedomain.ForgeType], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.ForgeType.IsSome() {
+		return None[forgedomain.ForgeType](), false, nil
+	}
+	return dialog.ForgeType(dialog.Args[forgedomain.ForgeType]{
+		Global: repo.UnvalidatedConfig.GitGlobal.ForgeType,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.ForgeType,
 	})
 }
 
@@ -360,47 +392,14 @@ func enterGitLabToken(repo execute.OpenRepoResult, data SetupData) (Option[forge
 	})
 }
 
-func enterContributionRegex(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.ContributionRegex], dialogdomain.Exit, error) {
-	if repo.UnvalidatedConfig.File.ContributionRegex.IsSome() {
-		return None[configdomain.ContributionRegex](), false, nil
+func enterGiteaToken(repo execute.OpenRepoResult, data SetupData) (Option[forgedomain.GiteaToken], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.GiteaToken.IsSome() {
+		return None[forgedomain.GiteaToken](), false, nil
 	}
-	return dialog.ContributionRegex(dialog.Args[configdomain.ContributionRegex]{
-		Global: repo.UnvalidatedConfig.GitGlobal.ContributionRegex,
+	return dialog.GiteaToken(dialog.Args[forgedomain.GiteaToken]{
+		Global: repo.UnvalidatedConfig.GitGlobal.GiteaToken,
 		Inputs: data.dialogInputs,
-		Local:  repo.UnvalidatedConfig.GitLocal.ContributionRegex,
-	})
-}
-
-func enterDevRemote(repo execute.OpenRepoResult, data SetupData) (Option[gitdomain.Remote], dialogdomain.Exit, error) {
-	if repo.UnvalidatedConfig.File.DevRemote.IsSome() {
-		return None[gitdomain.Remote](), false, nil
-	}
-	return dialog.DevRemote(data.remotes, dialog.Args[gitdomain.Remote]{
-		Global: repo.UnvalidatedConfig.GitGlobal.DevRemote,
-		Inputs: data.dialogInputs,
-		Local:  repo.UnvalidatedConfig.GitLocal.DevRemote,
-	})
-}
-
-func enterFeatureRegex(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.FeatureRegex], dialogdomain.Exit, error) {
-	if repo.UnvalidatedConfig.File.FeatureRegex.IsSome() {
-		return None[configdomain.FeatureRegex](), false, nil
-	}
-	return dialog.FeatureRegex(dialog.Args[configdomain.FeatureRegex]{
-		Global: repo.UnvalidatedConfig.GitGlobal.FeatureRegex,
-		Inputs: data.dialogInputs,
-		Local:  repo.UnvalidatedConfig.GitLocal.FeatureRegex,
-	})
-}
-
-func enterForgeType(repo execute.OpenRepoResult, data SetupData) (Option[forgedomain.ForgeType], dialogdomain.Exit, error) {
-	if repo.UnvalidatedConfig.File.ForgeType.IsSome() {
-		return None[forgedomain.ForgeType](), false, nil
-	}
-	return dialog.ForgeType(dialog.Args[forgedomain.ForgeType]{
-		Global: repo.UnvalidatedConfig.GitGlobal.ForgeType,
-		Inputs: data.dialogInputs,
-		Local:  repo.UnvalidatedConfig.GitLocal.ForgeType,
+		Local:  repo.UnvalidatedConfig.GitLocal.GiteaToken,
 	})
 }
 
@@ -474,6 +473,50 @@ func enterPerennialRegex(repo execute.OpenRepoResult, data SetupData) (Option[co
 	})
 }
 
+func enterPushHook(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.PushHook], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.PushHook.IsSome() {
+		return None[configdomain.PushHook](), false, nil
+	}
+	return dialog.PushHook(dialog.Args[configdomain.PushHook]{
+		Global: repo.UnvalidatedConfig.GitGlobal.PushHook,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.PushHook,
+	})
+}
+
+func enterShareNewBranches(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.ShareNewBranches], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.ShareNewBranches.IsSome() {
+		return None[configdomain.ShareNewBranches](), false, nil
+	}
+	return dialog.ShareNewBranches(dialog.Args[configdomain.ShareNewBranches]{
+		Global: repo.UnvalidatedConfig.GitGlobal.ShareNewBranches,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.ShareNewBranches,
+	})
+}
+
+func enterShipDeleteTrackingBranch(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.ShipDeleteTrackingBranch], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.ShipDeleteTrackingBranch.IsSome() {
+		return None[configdomain.ShipDeleteTrackingBranch](), false, nil
+	}
+	return dialog.ShipDeleteTrackingBranch(dialog.Args[configdomain.ShipDeleteTrackingBranch]{
+		Global: repo.UnvalidatedConfig.GitGlobal.ShipDeleteTrackingBranch,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.ShipDeleteTrackingBranch,
+	})
+}
+
+func enterShipStrategy(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.ShipStrategy], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.ShipStrategy.IsSome() {
+		return None[configdomain.ShipStrategy](), false, nil
+	}
+	return dialog.ShipStrategy(dialog.Args[configdomain.ShipStrategy]{
+		Global: repo.UnvalidatedConfig.GitGlobal.ShipStrategy,
+		Inputs: data.dialogInputs,
+		Local:  repo.UnvalidatedConfig.GitLocal.ShipStrategy,
+	})
+}
+
 func enterSyncFeatureStrategy(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.SyncFeatureStrategy], dialogdomain.Exit, error) {
 	if repo.UnvalidatedConfig.File.SyncFeatureStrategy.IsSome() {
 		return None[configdomain.SyncFeatureStrategy](), false, nil
@@ -507,17 +550,6 @@ func enterSyncPrototypeStrategy(repo execute.OpenRepoResult, data SetupData) (Op
 	})
 }
 
-func enterSyncUpstream(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.SyncUpstream], dialogdomain.Exit, error) {
-	if repo.UnvalidatedConfig.File.SyncUpstream.IsSome() {
-		return None[configdomain.SyncUpstream](), false, nil
-	}
-	return dialog.SyncUpstream(dialog.Args[configdomain.SyncUpstream]{
-		Global: repo.UnvalidatedConfig.GitGlobal.SyncUpstream,
-		Inputs: data.dialogInputs,
-		Local:  repo.UnvalidatedConfig.GitLocal.SyncUpstream,
-	})
-}
-
 func enterSyncTags(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.SyncTags], dialogdomain.Exit, error) {
 	if repo.UnvalidatedConfig.File.SyncTags.IsSome() {
 		return None[configdomain.SyncTags](), false, nil
@@ -529,47 +561,14 @@ func enterSyncTags(repo execute.OpenRepoResult, data SetupData) (Option[configdo
 	})
 }
 
-func enterShareNewBranches(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.ShareNewBranches], dialogdomain.Exit, error) {
-	if repo.UnvalidatedConfig.File.ShareNewBranches.IsSome() {
-		return None[configdomain.ShareNewBranches](), false, nil
+func enterSyncUpstream(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.SyncUpstream], dialogdomain.Exit, error) {
+	if repo.UnvalidatedConfig.File.SyncUpstream.IsSome() {
+		return None[configdomain.SyncUpstream](), false, nil
 	}
-	return dialog.ShareNewBranches(dialog.Args[configdomain.ShareNewBranches]{
-		Global: repo.UnvalidatedConfig.GitGlobal.ShareNewBranches,
+	return dialog.SyncUpstream(dialog.Args[configdomain.SyncUpstream]{
+		Global: repo.UnvalidatedConfig.GitGlobal.SyncUpstream,
 		Inputs: data.dialogInputs,
-		Local:  repo.UnvalidatedConfig.GitLocal.ShareNewBranches,
-	})
-}
-
-func enterPushHook(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.PushHook], dialogdomain.Exit, error) {
-	if repo.UnvalidatedConfig.File.PushHook.IsSome() {
-		return None[configdomain.PushHook](), false, nil
-	}
-	return dialog.PushHook(dialog.Args[configdomain.PushHook]{
-		Global: repo.UnvalidatedConfig.GitGlobal.PushHook,
-		Inputs: data.dialogInputs,
-		Local:  repo.UnvalidatedConfig.GitLocal.PushHook,
-	})
-}
-
-func enterShipStrategy(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.ShipStrategy], dialogdomain.Exit, error) {
-	if repo.UnvalidatedConfig.File.ShipStrategy.IsSome() {
-		return None[configdomain.ShipStrategy](), false, nil
-	}
-	return dialog.ShipStrategy(dialog.Args[configdomain.ShipStrategy]{
-		Global: repo.UnvalidatedConfig.GitGlobal.ShipStrategy,
-		Inputs: data.dialogInputs,
-		Local:  repo.UnvalidatedConfig.GitLocal.ShipStrategy,
-	})
-}
-
-func enterShipDeleteTrackingBranch(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.ShipDeleteTrackingBranch], dialogdomain.Exit, error) {
-	if repo.UnvalidatedConfig.File.ShipDeleteTrackingBranch.IsSome() {
-		return None[configdomain.ShipDeleteTrackingBranch](), false, nil
-	}
-	return dialog.ShipDeleteTrackingBranch(dialog.Args[configdomain.ShipDeleteTrackingBranch]{
-		Global: repo.UnvalidatedConfig.GitGlobal.ShipDeleteTrackingBranch,
-		Inputs: data.dialogInputs,
-		Local:  repo.UnvalidatedConfig.GitLocal.ShipDeleteTrackingBranch,
+		Local:  repo.UnvalidatedConfig.GitLocal.SyncUpstream,
 	})
 }
 
