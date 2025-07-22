@@ -22,7 +22,10 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-const ConfigFileCommitMessage = "persisted config file"
+const (
+	ConfigFileCommitMessage = "persisted config file"
+	FileCommitMessage       = "persisted file"
+)
 
 // TestCommands defines Git commands used only in test code.
 type TestCommands struct {
