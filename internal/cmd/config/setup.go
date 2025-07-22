@@ -913,7 +913,7 @@ func saveToGit(userInput userInput, existingGitConfig configdomain.PartialConfig
 	}
 	if configFile.MainBranch.IsNone() {
 		fc.Check(
-			saveMainBranch(userInput.validatedConfig.MainBranch, existingGitConfig.MainBranch, frontend),
+			saveMainBranch(userInput.data.MainBranch, existingGitConfig.MainBranch, frontend),
 		)
 	}
 	fc.Check(
@@ -1183,13 +1183,14 @@ func saveGitLabToken(valueToWriteToGit Option[forgedomain.GitLabToken], valueAlr
 	return gitconfig.RemoveGitLabToken(frontend)
 }
 
-func saveMainBranch(valueToWriteToGit gitdomain.LocalBranchName, valueAlreadyInGit Option[gitdomain.LocalBranchName], runner subshelldomain.Runner) error {
-	if existing, hasExisting := valueAlreadyInGit.Get(); hasExisting {
-		if existing == valueToWriteToGit {
-			return nil
-		}
+func saveMainBranch(valueToWriteToGit Option[gitdomain.LocalBranchName], valueAlreadyInGit Option[gitdomain.LocalBranchName], runner subshelldomain.Runner) error {
+	if valueToWriteToGit.Equal(valueAlreadyInGit) {
+		return nil
 	}
-	return gitconfig.SetMainBranch(runner, valueToWriteToGit, configdomain.ConfigScopeLocal)
+	if value, has := valueToWriteToGit.Get(); has {
+		return gitconfig.SetMainBranch(runner, value, configdomain.ConfigScopeLocal)
+	}
+	return gitconfig.RemoveMainBranch(runner)
 }
 
 func saveOriginHostname(valueToWriteToGit Option[configdomain.HostingOriginHostname], valueAlreadyInGit Option[configdomain.HostingOriginHostname], frontend subshelldomain.Runner) error {

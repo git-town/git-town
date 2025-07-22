@@ -73,6 +73,5 @@ func ForgeType(args Args[forgedomain.ForgeType]) (Option[forgedomain.ForgeType],
 			fmt.Printf(messages.Forge, dialogcomponents.FormattedSelection(messages.AutoDetect, exit))
 		}
 	}
-	fmt.Printf(messages.Forge, dialogcomponents.FormattedSelection(newValue.GetOrElse(messages.AutoDetect).String(), exit))
 	return newValue, exit, err
 }
