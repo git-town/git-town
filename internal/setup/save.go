@@ -209,14 +209,14 @@ func saveBitbucketUsername(valueToWriteToGit Option[forgedomain.BitbucketUsernam
 	return gitconfig.RemoveBitbucketUsername(frontend)
 }
 
-func saveNewBranchType(valueToWriteToGit Option[configdomain.NewBranchType], valueAlreadyInGit Option[configdomain.NewBranchType], runner subshelldomain.Runner) error {
+func saveContributionRegex(valueToWriteToGit Option[configdomain.ContributionRegex], valueAlreadyInGit Option[configdomain.ContributionRegex], runner subshelldomain.Runner) error {
 	if valueToWriteToGit.Equal(valueAlreadyInGit) {
 		return nil
 	}
-	if value, hasValue := valueToWriteToGit.Get(); hasValue {
-		return gitconfig.SetNewBranchType(runner, value, configdomain.ConfigScopeLocal)
+	if value, has := valueToWriteToGit.Get(); has {
+		return gitconfig.SetContributionRegex(runner, value, configdomain.ConfigScopeLocal)
 	}
-	_ = gitconfig.RemoveNewBranchType(runner)
+	_ = gitconfig.RemoveContributionRegex(runner)
 	return nil
 }
 
@@ -238,28 +238,6 @@ func saveFeatureRegex(valueToWriteToGit Option[configdomain.FeatureRegex], value
 		return gitconfig.SetFeatureRegex(runner, value, configdomain.ConfigScopeLocal)
 	}
 	_ = gitconfig.RemoveFeatureRegex(runner)
-	return nil
-}
-
-func saveContributionRegex(valueToWriteToGit Option[configdomain.ContributionRegex], valueAlreadyInGit Option[configdomain.ContributionRegex], runner subshelldomain.Runner) error {
-	if valueToWriteToGit.Equal(valueAlreadyInGit) {
-		return nil
-	}
-	if value, has := valueToWriteToGit.Get(); has {
-		return gitconfig.SetContributionRegex(runner, value, configdomain.ConfigScopeLocal)
-	}
-	_ = gitconfig.RemoveContributionRegex(runner)
-	return nil
-}
-
-func saveObservedRegex(valueToWriteToGit Option[configdomain.ObservedRegex], valueAlreadyInGit Option[configdomain.ObservedRegex], runner subshelldomain.Runner) error {
-	if valueToWriteToGit.Equal(valueAlreadyInGit) {
-		return nil
-	}
-	if value, has := valueToWriteToGit.Get(); has {
-		return gitconfig.SetObservedRegex(runner, value, configdomain.ConfigScopeLocal)
-	}
-	_ = gitconfig.RemoveObservedRegex(runner)
 	return nil
 }
 
@@ -356,6 +334,28 @@ func saveMainBranch(valueToWriteToGit Option[gitdomain.LocalBranchName], valueAl
 		return gitconfig.SetMainBranch(runner, value, configdomain.ConfigScopeLocal)
 	}
 	return gitconfig.RemoveMainBranch(runner)
+}
+
+func saveNewBranchType(valueToWriteToGit Option[configdomain.NewBranchType], valueAlreadyInGit Option[configdomain.NewBranchType], runner subshelldomain.Runner) error {
+	if valueToWriteToGit.Equal(valueAlreadyInGit) {
+		return nil
+	}
+	if value, hasValue := valueToWriteToGit.Get(); hasValue {
+		return gitconfig.SetNewBranchType(runner, value, configdomain.ConfigScopeLocal)
+	}
+	_ = gitconfig.RemoveNewBranchType(runner)
+	return nil
+}
+
+func saveObservedRegex(valueToWriteToGit Option[configdomain.ObservedRegex], valueAlreadyInGit Option[configdomain.ObservedRegex], runner subshelldomain.Runner) error {
+	if valueToWriteToGit.Equal(valueAlreadyInGit) {
+		return nil
+	}
+	if value, has := valueToWriteToGit.Get(); has {
+		return gitconfig.SetObservedRegex(runner, value, configdomain.ConfigScopeLocal)
+	}
+	_ = gitconfig.RemoveObservedRegex(runner)
+	return nil
 }
 
 func saveOriginHostname(valueToWriteToGit Option[configdomain.HostingOriginHostname], valueAlreadyInGit Option[configdomain.HostingOriginHostname], frontend subshelldomain.Runner) error {
