@@ -1,0 +1,14 @@
+package gitdomain
+
+// MessageFile is the name of the file from which to read CommitMessage
+type CommitMessageFile string
+
+// indicates whether the commit message should be read from STDIN
+func (self CommitMessageFile) ShouldReadStdin() bool {
+	return self == "-"
+}
+
+// String implements the fmt.Stringer interface.
+func (self CommitMessageFile) String() string {
+	return string(self)
+}
