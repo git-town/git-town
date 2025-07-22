@@ -14,7 +14,7 @@ type Data struct {
 	Config        config.UnvalidatedConfig
 	DialogInputs  dialogcomponents.TestInputs
 	Git           git.Commands
-	LocalBranches gitdomain.BranchInfos
+	LocalBranches gitdomain.LocalBranchNames
 	Remotes       gitdomain.Remotes
 	Snapshot      undoconfig.ConfigSnapshot
 }

@@ -119,7 +119,7 @@ func LoadData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data 
 		Config:        repo.UnvalidatedConfig,
 		DialogInputs:  dialogTestInputs,
 		Git:           repo.Git,
-		LocalBranches: branchesSnapshot.Branches,
+		LocalBranches: branchesSnapshot.Branches.LocalBranches().Names(),
 		Remotes:       remotes,
 		Snapshot:      repo.ConfigSnapshot,
 	}, exit, nil

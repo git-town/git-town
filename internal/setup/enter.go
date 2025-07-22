@@ -423,7 +423,7 @@ func enterMainBranch(data Data) (userChoice Option[gitdomain.LocalBranchName], a
 	return dialog.MainBranch(dialog.MainBranchArgs{
 		Inputs:         data.DialogInputs,
 		Local:          data.Config.GitLocal.MainBranch,
-		LocalBranches:  data.LocalBranches.Names(),
+		LocalBranches:  data.LocalBranches,
 		StandardBranch: data.Git.StandardBranch(data.Backend),
 		Unscoped:       data.Config.GitUnscoped.MainBranch,
 	})
@@ -469,7 +469,7 @@ func enterPerennialBranches(data Data, mainBranch gitdomain.LocalBranchName) (gi
 	return dialog.PerennialBranches(dialog.PerennialBranchesArgs{
 		ImmutableGitPerennials: immutablePerennials,
 		Inputs:                 data.DialogInputs,
-		LocalBranches:          data.LocalBranches.Names(),
+		LocalBranches:          data.LocalBranches,
 		LocalGitPerennials:     data.Config.GitLocal.PerennialBranches,
 		MainBranch:             mainBranch,
 	})
