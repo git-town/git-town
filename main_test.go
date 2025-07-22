@@ -1,7 +1,9 @@
 package main_test
 
 import (
+	"io/fs"
 	"os"
+	"path/filepath"
 	"runtime"
 	"strings"
 	"testing"
@@ -56,7 +58,7 @@ func TestMain(_ *testing.M) {
 		options.Tags = "@this"
 	}
 	if flagVerbose {
-		options.Paths = append(options.Paths, "*.feature")
+		options.Paths = append(options.Paths, findFeatureFiles()...)
 	}
 	suite := godog.TestSuite{
 		Options:              &options,
@@ -65,4 +67,21 @@ func TestMain(_ *testing.M) {
 	}
 	status := suite.Run()
 	os.Exit(status)
+}
+
+func findFeatureFiles() []string {
+	var result []string
+	err := filepath.WalkDir("features", func(path string, dir fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if filepath.Ext(dir.Name()) == "feature" {
+			result = append(result, path)
+		}
+		return nil
+	})
+	if err != nil {
+		panic(err.Error())
+	}
+	return result
 }
