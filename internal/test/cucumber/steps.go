@@ -1129,6 +1129,15 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.PushBranch()
 	})
 
+	sc.Step(`^the committed file "([^"]+)":$`, func(ctx context.Context, name string, content *godog.DocString) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		devRepo.CreateFile(name, content.Content)
+		devRepo.StageFiles(name)
+		devRepo.CommitStagedChanges(commands.FileCommitMessage)
+		devRepo.PushBranch()
+	})
+
 	sc.Step(`^the configuration file:$`, func(ctx context.Context, content *godog.DocString) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()

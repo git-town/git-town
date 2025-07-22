@@ -23,6 +23,7 @@ import (
 )
 
 const ConfigFileCommitMessage = "persisted config file"
+const FileCommitMessage = "persisted file"
 
 // TestCommands defines Git commands used only in test code.
 type TestCommands struct {
