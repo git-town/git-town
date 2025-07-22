@@ -157,11 +157,11 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 		localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 		var exit dialogdomain.Exit
 		_, mainBranch, exit, err = dialog.MainBranch(dialog.MainBranchArgs{
-			GitStandardBranch:     args.git.StandardBranch(args.backend),
-			Inputs:                args.dialogInputs,
-			LocalBranches:         localBranches,
-			LocalGitMainBranch:    args.unvalidated.Value.GitGlobal.MainBranch,
-			UnscopedGitMainBranch: args.unvalidated.Value.GitUnscoped.MainBranch,
+			Inputs:         args.dialogInputs,
+			Local:          args.unvalidated.Value.GitGlobal.MainBranch,
+			LocalBranches:  localBranches,
+			StandardBranch: args.git.StandardBranch(args.backend),
+			Unscoped:       args.unvalidated.Value.GitUnscoped.MainBranch,
 		})
 		if err != nil || exit {
 			return config.EmptyValidatedConfig(), exit, err
