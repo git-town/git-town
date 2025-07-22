@@ -54,10 +54,10 @@ type PhantomMergeConflict struct {
 	FilePath string
 }
 
-func DetectPhantomMergeConflicts(conflictInfos []FileConflictFullInfo, parentBranchOpt Option[gitdomain.LocalBranchName], rootBranch gitdomain.LocalBranchName) []PhantomMergeConflict {
+func DetectPhantomMergeConflicts(conflictInfos []FileConflictFullInfo, parentBranchOpt Option[gitdomain.LocalBranchName], mainBranch gitdomain.LocalBranchName) []PhantomMergeConflict {
 	result := []PhantomMergeConflict{}
 	parentBranch, hasParentBranch := parentBranchOpt.Get()
-	if !hasParentBranch || parentBranch == rootBranch {
+	if !hasParentBranch || parentBranch == mainBranch {
 		// branches that don't have a parent or whose parent is the main branch cannot have phantom merge conflicts
 		return []PhantomMergeConflict{}
 	}
