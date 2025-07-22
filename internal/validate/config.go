@@ -92,6 +92,7 @@ type ConfigArgs struct {
 	Frontend           subshelldomain.Runner
 	Git                git.Commands
 	LocalBranches      gitdomain.LocalBranchNames
+	Remotes            gitdomain.Remotes
 	RepoStatus         gitdomain.RepoStatus
 	TestInputs         dialogcomponents.TestInputs
 	Unvalidated        Mutable[config.UnvalidatedConfig]
