@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/forge"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
@@ -338,7 +337,7 @@ func enterDevRemote(data Data) (Option[gitdomain.Remote], dialogdomain.Exit, err
 		return None[gitdomain.Remote](), false, err
 	}
 	if len(remotes) == 0 {
-		remotes = gitdomain.Remotes{gitconfig.DefaultRemote(data.Backend)}
+		return None[gitdomain.Remote](), false, nil
 	}
 	return dialog.DevRemote(remotes, dialog.Args[gitdomain.Remote]{
 		Global: data.Config.GitGlobal.DevRemote,
