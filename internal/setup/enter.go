@@ -336,7 +336,7 @@ func enterDevRemote(data Data) (Option[gitdomain.Remote], dialogdomain.Exit, err
 	if err != nil {
 		return None[gitdomain.Remote](), false, err
 	}
-	if len(remotes) < 2 {
+	if len(remotes) == 0 {
 		return None[gitdomain.Remote](), false, nil
 	}
 	return dialog.DevRemote(remotes, dialog.Args[gitdomain.Remote]{
