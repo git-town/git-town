@@ -17,13 +17,13 @@ type RebaseOntoRemoveDeleted struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *RebaseOntoRemoveDeleted) AbortProgram() []shared.Opcode {
+func (self *RebaseOntoRemoveDeleted) Abort() []shared.Opcode {
 	return []shared.Opcode{
 		&RebaseAbort{},
 	}
 }
 
-func (self *RebaseOntoRemoveDeleted) ContinueProgram() []shared.Opcode {
+func (self *RebaseOntoRemoveDeleted) Continue() []shared.Opcode {
 	return []shared.Opcode{
 		&RebaseContinueIfNeeded{},
 	}

@@ -18,7 +18,7 @@ type CommitAutoUndo struct {
 	undeclaredOpcodeMethods        `exhaustruct:"optional"`
 }
 
-func (self *CommitAutoUndo) AbortProgram() []shared.Opcode {
+func (self *CommitAutoUndo) Abort() []shared.Opcode {
 	return []shared.Opcode{
 		&ChangesDiscard{},
 	}

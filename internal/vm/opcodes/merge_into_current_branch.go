@@ -11,13 +11,13 @@ type MergeIntoCurrentBranch struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *MergeIntoCurrentBranch) AbortProgram() []shared.Opcode {
+func (self *MergeIntoCurrentBranch) Abort() []shared.Opcode {
 	return []shared.Opcode{
 		&MergeAbort{},
 	}
 }
 
-func (self *MergeIntoCurrentBranch) ContinueProgram() []shared.Opcode {
+func (self *MergeIntoCurrentBranch) Continue() []shared.Opcode {
 	return []shared.Opcode{
 		&MergeContinue{},
 	}

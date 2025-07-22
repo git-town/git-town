@@ -17,13 +17,13 @@ type ConflictPhantomResolveAll struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *ConflictPhantomResolveAll) AbortProgram() []shared.Opcode {
+func (self *ConflictPhantomResolveAll) Abort() []shared.Opcode {
 	return []shared.Opcode{
 		&MergeAbort{},
 	}
 }
 
-func (self *ConflictPhantomResolveAll) ContinueProgram() []shared.Opcode {
+func (self *ConflictPhantomResolveAll) Continue() []shared.Opcode {
 	return []shared.Opcode{
 		&MergeContinue{},
 	}

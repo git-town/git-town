@@ -11,13 +11,13 @@ type CherryPick struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *CherryPick) AbortProgram() []shared.Opcode {
+func (self *CherryPick) Abort() []shared.Opcode {
 	return []shared.Opcode{
 		&CherryPickAbort{},
 	}
 }
 
-func (self *CherryPick) ContinueProgram() []shared.Opcode {
+func (self *CherryPick) Continue() []shared.Opcode {
 	return []shared.Opcode{
 		&CherryPickContinue{},
 	}

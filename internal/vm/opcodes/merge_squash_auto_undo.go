@@ -13,7 +13,7 @@ type MergeSquashAutoUndo struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *MergeSquashAutoUndo) AbortProgram() []shared.Opcode {
+func (self *MergeSquashAutoUndo) Abort() []shared.Opcode {
 	result := []shared.Opcode{
 		&ChangesDiscard{},
 	}

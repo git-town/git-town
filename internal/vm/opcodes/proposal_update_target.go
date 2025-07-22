@@ -37,7 +37,7 @@ func (self *ProposalUpdateTarget) ShouldUndoOnError() bool {
 	return true
 }
 
-func (self *ProposalUpdateTarget) UndoExternalChangesProgram() []shared.Opcode {
+func (self *ProposalUpdateTarget) UndoExternalChanges() []shared.Opcode {
 	return []shared.Opcode{
 		&ProposalUpdateTarget{
 			NewBranch: self.OldBranch,

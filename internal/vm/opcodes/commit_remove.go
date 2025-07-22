@@ -11,13 +11,13 @@ type CommitRemove struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *CommitRemove) AbortProgram() []shared.Opcode {
+func (self *CommitRemove) Abort() []shared.Opcode {
 	return []shared.Opcode{
 		&RebaseAbort{},
 	}
 }
 
-func (self *CommitRemove) ContinueProgram() []shared.Opcode {
+func (self *CommitRemove) Continue() []shared.Opcode {
 	return []shared.Opcode{
 		&RebaseContinueIfNeeded{},
 	}

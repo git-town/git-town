@@ -43,11 +43,11 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		return err
 	}
 	args.RunState.EndStashSize = Some(endStashSize)
-	args.RunState.AbortProgram.Add(failedOpcode.AbortProgram()...)
+	args.RunState.AbortProgram.Add(failedOpcode.Abort()...)
 	if failedOpcode.ShouldUndoOnError() {
 		return autoUndo(failedOpcode, runErr, args)
 	}
-	continueProgram := failedOpcode.ContinueProgram()
+	continueProgram := failedOpcode.Continue()
 	if len(continueProgram) == 0 {
 		continueProgram = []shared.Opcode{failedOpcode}
 	}
