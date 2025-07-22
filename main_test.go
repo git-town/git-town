@@ -58,7 +58,7 @@ func TestMain(_ *testing.M) {
 		options.Tags = "@this"
 	}
 	if flagVerbose {
-		options.Paths = append(options.Paths, findFeatureFiles()...)
+		options.Paths = append(options.Paths, findVerboseFiles()...)
 	}
 	suite := godog.TestSuite{
 		Options:              &options,
@@ -69,7 +69,7 @@ func TestMain(_ *testing.M) {
 	os.Exit(status)
 }
 
-func findFeatureFiles() []string {
+func findVerboseFiles() []string {
 	var result []string
 	err := filepath.WalkDir("features", func(path string, dir fs.DirEntry, err error) error {
 		if err != nil {
