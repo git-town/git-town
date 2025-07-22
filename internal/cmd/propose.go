@@ -69,9 +69,9 @@ func proposeCommand() *cobra.Command {
 		Short:   proposeDesc,
 		Long:    cmdhelpers.Long(proposeDesc, fmt.Sprintf(proposeHelp, configdomain.KeyForgeType, configdomain.KeyHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			dryRun, err1 := readDryRunFlag(cmd)
 			bodyFile, err2 := readBodyFileFlag(cmd)
 			bodyText, err3 := readBodyFlag(cmd)
+			dryRun, err1 := readDryRunFlag(cmd)
 			stack, err4 := readStackFlag(cmd)
 			title, err5 := readTitleFlag(cmd)
 			verbose, err6 := readVerboseFlag(cmd)
