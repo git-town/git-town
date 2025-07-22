@@ -1,6 +1,7 @@
 package main_test
 
 import (
+	"fmt"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -75,13 +76,17 @@ func findFeatureFiles() []string {
 		if err != nil {
 			return err
 		}
-		if filepath.Ext(dir.Name()) == "feature" {
+		fmt.Println(dir.Name())
+		if dir.Name() == "verbose.feature" {
 			result = append(result, path)
 		}
 		return nil
 	})
 	if err != nil {
 		panic(err.Error())
+	}
+	if len(result) == 0 {
+		panic("no feature files found")
 	}
 	return result
 }
