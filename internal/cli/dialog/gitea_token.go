@@ -39,6 +39,6 @@ func GiteaToken(args Args[forgedomain.GiteaToken]) (Option[forgedomain.GiteaToke
 		// the user has entered the global value --> keep using the global value, don't store the local value
 		newValue = None[forgedomain.GiteaToken]()
 	}
-	fmt.Printf(messages.GiteaTokenResult, dialogcomponents.FormattedSelection(newValue.String(), exit))
+	fmt.Printf(messages.GiteaTokenResult, dialogcomponents.FormattedOption(newValue, args.Global.IsSome(), exit))
 	return newValue, exit, err
 }

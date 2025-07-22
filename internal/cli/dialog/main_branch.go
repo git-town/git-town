@@ -25,6 +25,7 @@ This is typically the branch called
 )
 
 // MainBranch lets the user select a new main branch for this repo.
+// TODO: add an option to use the globally configured main branch
 func MainBranch(args MainBranchArgs) (selectedMainBranch Option[gitdomain.LocalBranchName], mainBranch gitdomain.LocalBranchName, exit dialogdomain.Exit, err error) {
 	// populate the local branches
 	entries := make(list.Entries[Option[gitdomain.LocalBranchName]], 0, len(args.LocalBranches)+1)
