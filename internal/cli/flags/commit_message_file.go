@@ -6,8 +6,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const commitMessageFileLong = "message-file"
-const commitMessageFileShort = "f"
+const (
+	commitMessageFileLong  = "message-file"
+	commitMessageFileShort = "f"
+)
 
 // provides type-safe access to the CLI arguments of type gitdomain.MessageFile
 func CommitMessageFile() (AddFunc, ReadCommitMessageFileFlagFunc) {
