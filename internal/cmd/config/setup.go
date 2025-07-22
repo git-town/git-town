@@ -56,7 +56,7 @@ func executeConfigSetup(cliConfig cliconfig.CliConfig) error {
 	if err != nil || exit {
 		return err
 	}
-	if err = setup.SaveAll(userInput, repo.UnvalidatedConfig, data, repo.Frontend); err != nil {
+	if err = setup.Save(userInput, repo.UnvalidatedConfig, data, repo.Frontend); err != nil {
 		return err
 	}
 	return configinterpreter.Finished(configinterpreter.FinishedArgs{
