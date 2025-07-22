@@ -229,6 +229,7 @@ func determineSetParentData(repo execute.OpenRepoResult, cliConfig cliconfig.Cli
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
+		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,

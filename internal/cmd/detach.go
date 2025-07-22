@@ -239,6 +239,7 @@ func determineDetachData(args []string, repo execute.OpenRepoResult, cliConfig c
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
+		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,

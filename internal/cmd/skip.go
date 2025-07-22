@@ -117,6 +117,7 @@ func executeSkip(cliConfig cliconfig.CliConfig) error {
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: localBranches,
+		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,

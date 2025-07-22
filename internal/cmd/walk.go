@@ -232,6 +232,7 @@ func determineWalkData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfi
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
+		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,

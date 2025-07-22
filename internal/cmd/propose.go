@@ -240,6 +240,7 @@ func determineProposeData(repo execute.OpenRepoResult, cliConfig cliconfig.CliCo
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
+		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connectorOpt,
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
