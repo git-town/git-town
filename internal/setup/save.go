@@ -54,12 +54,12 @@ func SaveAll(userInput userInput, unvalidatedConfig config.UnvalidatedConfig, da
 	case dialog.ConfigStorageOptionFile:
 		return saveToFile(userInput, unvalidatedConfig.GitLocal, frontend)
 	case dialog.ConfigStorageOptionGit:
-		return saveToGit(userInput, unvalidatedConfig.GitLocal, unvalidatedConfig.File, data, frontend)
+		return saveAllToGit(userInput, unvalidatedConfig.GitLocal, unvalidatedConfig.File, data, frontend)
 	}
 	return nil
 }
 
-func saveToGit(userInput userInput, existingGitConfig configdomain.PartialConfig, configFile configdomain.PartialConfig, data SetupData, frontend subshelldomain.Runner) error {
+func saveAllToGit(userInput userInput, existingGitConfig configdomain.PartialConfig, configFile configdomain.PartialConfig, data SetupData, frontend subshelldomain.Runner) error {
 	fc := gohacks.ErrorCollector{}
 	if configFile.NewBranchType.IsNone() {
 		fc.Check(
