@@ -8,6 +8,7 @@ import (
 
 // MergeParentResolvePhantomConflicts merges the given parent branch into the current branch.
 type MergeParentResolvePhantomConflicts struct {
+	CurrentBranch           gitdomain.LocalBranchName
 	CurrentParent           gitdomain.BranchName              // the currently active parent, after all remotely deleted parents were removed
 	InitialParentName       Option[gitdomain.LocalBranchName] // name of the original parent when Git Town started
 	InitialParentSHA        Option[gitdomain.SHA]             // SHA of the original parent when Git Town started
@@ -17,9 +18,10 @@ type MergeParentResolvePhantomConflicts struct {
 func (self *MergeParentResolvePhantomConflicts) Run(args shared.RunArgs) error {
 	if err := args.Git.MergeBranchNoEdit(args.Frontend, self.CurrentParent); err != nil {
 		args.PrependOpcodes(&ConflictPhantomResolveAll{
-			ParentBranch: self.InitialParentName,
-			ParentSHA:    self.InitialParentSHA,
-			Resolution:   gitdomain.ConflictResolutionOurs,
+			CurrentBranch: self.CurrentBranch,
+			ParentBranch:  self.InitialParentName,
+			ParentSHA:     self.InitialParentSHA,
+			Resolution:    gitdomain.ConflictResolutionOurs,
 		})
 	}
 	return nil
