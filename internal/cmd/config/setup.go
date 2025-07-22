@@ -52,7 +52,7 @@ func executeConfigSetup(cliConfig cliconfig.CliConfig) error {
 	if err != nil || exit {
 		return err
 	}
-	userInput, exit, err := setup.EnterUserInput(repo, data)
+	userInput, exit, err := setup.Enter(data)
 	if err != nil || exit {
 		return err
 	}

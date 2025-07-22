@@ -5,20 +5,26 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
+	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 type Data struct {
-	backend       subshelldomain.Querier
+	backend       subshelldomain.RunnerQuerier
+	config        config.UnvalidatedConfig
 	dialogInputs  dialogcomponents.TestInputs
+	git           git.Commands
 	localBranches gitdomain.BranchInfos
 	remotes       gitdomain.Remotes
+	snapshot      undoconfig.ConfigSnapshot
 }
 
 func LoadData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data Data, exit dialogdomain.Exit, err error) {
