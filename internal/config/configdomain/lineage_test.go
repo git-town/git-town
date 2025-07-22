@@ -667,6 +667,34 @@ func TestLineage(t *testing.T) {
 		})
 	})
 
+	t.Run("Root", func(t *testing.T) {
+		t.Parallel()
+		t.Run("stack", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				three: two,
+				two:   one,
+				one:   main,
+			})
+			have := lineage.Root(three)
+			must.Eq(t, main, have)
+		})
+		t.Run("one ancestor", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				one: main,
+			})
+			have := lineage.Root(one)
+			must.Eq(t, main, have)
+		})
+		t.Run("no ancestors", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{})
+			have := lineage.Root(two)
+			must.Eq(t, two, have)
+		})
+	})
+
 	t.Run("Roots", func(t *testing.T) {
 		t.Parallel()
 		t.Run("multiple roots with child branches", func(t *testing.T) {

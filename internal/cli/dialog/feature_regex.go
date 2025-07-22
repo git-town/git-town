@@ -22,6 +22,7 @@ is set to something other than "feature".
 
 If you're not sure what to enter here,
 it's safe to leave it blank.
+
 `
 )
 
@@ -39,6 +40,6 @@ func FeatureRegex(args Args[configdomain.FeatureRegex]) (Option[configdomain.Fea
 		// the user has entered the global value --> keep using the global value, don't store the local value
 		newValue = None[configdomain.FeatureRegex]()
 	}
-	fmt.Printf(messages.FeatureRegexResult, dialogcomponents.FormattedSelection(newValue.String(), exit))
+	fmt.Printf(messages.FeatureRegexResult, dialogcomponents.FormattedOption(newValue, args.Global.IsSome(), exit))
 	return newValue, exit, cmp.Or(err1, err2)
 }

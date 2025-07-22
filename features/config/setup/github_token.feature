@@ -44,7 +44,7 @@ Feature: enter the GitHub API token
       | git config git-town.ship-strategy api                |
       | git config git-town.ship-delete-tracking-branch true |
       | git config git-town.sync-feature-strategy merge      |
-      | git config git-town.sync-perennial-strategy rebase   |
+      | git config git-town.sync-perennial-strategy ff-only  |
       | git config git-town.sync-prototype-strategy merge    |
       | git config git-town.sync-upstream true               |
       | git config git-town.sync-tags true                   |
@@ -91,7 +91,7 @@ Feature: enter the GitHub API token
       | git config git-town.ship-strategy api                |
       | git config git-town.ship-delete-tracking-branch true |
       | git config git-town.sync-feature-strategy merge      |
-      | git config git-town.sync-perennial-strategy rebase   |
+      | git config git-town.sync-perennial-strategy ff-only  |
       | git config git-town.sync-prototype-strategy merge    |
       | git config git-town.sync-upstream true               |
       | git config git-town.sync-tags true                   |
@@ -138,7 +138,7 @@ Feature: enter the GitHub API token
       | git config git-town.ship-strategy api                |
       | git config git-town.ship-delete-tracking-branch true |
       | git config git-town.sync-feature-strategy merge      |
-      | git config git-town.sync-perennial-strategy rebase   |
+      | git config git-town.sync-perennial-strategy ff-only  |
       | git config git-town.sync-prototype-strategy merge    |
       | git config git-town.sync-upstream true               |
       | git config git-town.sync-tags true                   |
@@ -185,7 +185,7 @@ Feature: enter the GitHub API token
       | git config git-town.ship-strategy api                |
       | git config git-town.ship-delete-tracking-branch true |
       | git config git-town.sync-feature-strategy merge      |
-      | git config git-town.sync-perennial-strategy rebase   |
+      | git config git-town.sync-perennial-strategy ff-only  |
       | git config git-town.sync-prototype-strategy merge    |
       | git config git-town.sync-upstream true               |
       | git config git-town.sync-tags true                   |
@@ -232,7 +232,7 @@ Feature: enter the GitHub API token
       | git config git-town.ship-strategy api                |
       | git config git-town.ship-delete-tracking-branch true |
       | git config git-town.sync-feature-strategy merge      |
-      | git config git-town.sync-perennial-strategy rebase   |
+      | git config git-town.sync-perennial-strategy ff-only  |
       | git config git-town.sync-prototype-strategy merge    |
       | git config git-town.sync-upstream true               |
       | git config git-town.sync-tags true                   |

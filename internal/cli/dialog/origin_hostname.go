@@ -37,6 +37,6 @@ func OriginHostname(args Args[configdomain.HostingOriginHostname]) (Option[confi
 		// the user has entered the global value --> keep using the global value, don't store the local value
 		newValue = None[configdomain.HostingOriginHostname]()
 	}
-	fmt.Printf(messages.OriginHostnameResult, dialogcomponents.FormattedSelection(newValue.String(), exit))
+	fmt.Printf(messages.OriginHostnameResult, dialogcomponents.FormattedOption(newValue, args.Global.IsSome(), exit))
 	return newValue, exit, err
 }

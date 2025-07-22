@@ -14,7 +14,7 @@ type MergeFastForward struct {
 	undeclaredOpcodeMethods
 }
 
-func (self *MergeFastForward) AbortProgram() []shared.Opcode {
+func (self *MergeFastForward) Abort() []shared.Opcode {
 	return []shared.Opcode{
 		&MergeAbort{},
 	}

@@ -10,7 +10,7 @@ type StashPop struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *StashPop) ContinueProgram() []shared.Opcode {
+func (self *StashPop) Continue() []shared.Opcode {
 	return []shared.Opcode{&StashDrop{}}
 }
 

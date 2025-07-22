@@ -13,6 +13,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
     And global Git setting "git-town.main-branch" is "main"
     And global Git setting "git-town.new-branch-type" is "prototype"
     And global Git setting "git-town.unknown-branch-type" is "prototype"
+    And global Git setting "git-town.hosting-origin-hostname" is "git"
     And global Git setting "git-town.perennial-branches" is "perennials"
     And global Git setting "git-town.perennial-regex" is "^per-"
     And global Git setting "git-town.push-hook" is "false"
@@ -50,15 +51,5 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | ship delete tracking branch | enter       |
       | config storage              | enter       |
     Then Git Town runs the commands
-      | COMMAND                                               |
-      | git config git-town.main-branch main                  |
-      | git config git-town.perennial-branches branch-1       |
-      | git config git-town.push-hook false                   |
-      | git config git-town.share-new-branches push           |
-      | git config git-town.ship-strategy api                 |
-      | git config git-town.ship-delete-tracking-branch false |
-      | git config git-town.sync-feature-strategy rebase      |
-      | git config git-town.sync-perennial-strategy ff-only   |
-      | git config git-town.sync-prototype-strategy compress  |
-      | git config git-town.sync-upstream false               |
-      | git config git-town.sync-tags false                   |
+      | COMMAND                                         |
+      | git config git-town.perennial-branches branch-1 |
