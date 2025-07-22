@@ -22,6 +22,7 @@ func TestMain(_ *testing.M) {
 	flagThis := len(os.Getenv("cukethis")) > 0
 	flagSmoke := len(os.Getenv("smoke")) > 0
 	flagMessyOutput := os.Getenv("messyoutput")
+	flagVerbose := len(os.Getenv("verbose")) > 0
 	switch {
 	case flagThis:
 		options.Format = "pretty"
@@ -53,6 +54,9 @@ func TestMain(_ *testing.M) {
 	}
 	if flagThis {
 		options.Tags = "@this"
+	}
+	if flagVerbose {
+		options.Paths = append(options.Paths, "*.feature")
 	}
 	suite := godog.TestSuite{
 		Options:              &options,
