@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/gohacks"
 	"github.com/git-town/git-town/v21/internal/gohacks/cache"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -71,10 +72,7 @@ func (self *Commands) BranchExistsRemotely(runner subshelldomain.Runner, branch 
 // contains changes that were not merged into the main branch.
 func (self *Commands) BranchHasUnmergedChanges(querier subshelldomain.Querier, branch, parent gitdomain.LocalBranchName) (bool, error) {
 	out, err := querier.QueryTrim("git", "diff", "--shortstat", parent.String(), branch.String())
-	if err != nil {
-		return false, fmt.Errorf(messages.BranchDiffProblem, branch, err)
-	}
-	return len(out) > 0, nil
+	return len(out) > 0, gohacks.WrapIfError(err, messages.BranchDiffProblem, branch)
 }
 
 func (self *Commands) BranchInSyncWithParent(querier subshelldomain.Querier, branch gitdomain.LocalBranchName, parent gitdomain.BranchName) (bool, error) {
@@ -794,18 +792,12 @@ func (self *Commands) RootDirectory(querier subshelldomain.Querier) Option[gitdo
 
 func (self *Commands) SHAForBranch(querier subshelldomain.Querier, name gitdomain.BranchName) (gitdomain.SHA, error) {
 	output, err := querier.QueryTrim("git", "rev-parse", name.String())
-	if err != nil {
-		return gitdomain.SHA(""), fmt.Errorf(messages.BranchLocalSHAProblem, name, err)
-	}
-	return gitdomain.NewSHA(output), nil
+	return gitdomain.NewSHA(output), gohacks.WrapIfError(err, messages.BranchLocalSHAProblem, name)
 }
 
 func (self *Commands) ShortenSHA(querier subshelldomain.Querier, sha gitdomain.SHA) (gitdomain.SHA, error) {
 	output, err := querier.QueryTrim("git", "rev-parse", "--short", sha.String())
-	if err != nil {
-		return gitdomain.SHA(""), fmt.Errorf(messages.BranchLocalSHAProblem, sha, err)
-	}
-	return gitdomain.NewSHA(output), nil
+	return gitdomain.NewSHA(output), gohacks.WrapIfError(err, messages.BranchLocalSHAProblem, sha)
 }
 
 func (self *Commands) SquashMerge(runner subshelldomain.Runner, branch gitdomain.LocalBranchName) error {
@@ -955,10 +947,7 @@ func determineSyncStatus(track string, upstream Option[gitdomain.RemoteBranchNam
 // provides the path of the `.git` directory of the current repository.
 func (self *Commands) gitDirectory(querier subshelldomain.Querier) (string, error) {
 	output, err := querier.QueryTrim("git", "rev-parse", "--absolute-git-dir")
-	if err != nil {
-		return "", fmt.Errorf(messages.GitDirMissing, err)
-	}
-	return output, nil
+	return output, gohacks.WrapIfError(err, messages.GitDirMissing)
 }
 
 // indicates whether the ref is a local branch
