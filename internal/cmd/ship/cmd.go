@@ -14,6 +14,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/gohacks"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/state/runstate"
@@ -99,23 +100,9 @@ func executeShip(args []string, cliConfig cliconfig.CliConfig, messageOpt Option
 	if err != nil || exit {
 		return err
 	}
-	var message Option[gitdomain.CommitMessage]
-	if messageOpt.IsSome() {
-		message = messageOpt
-	} else if messageFile, hasMessageFile := messageFileOpt.Get(); hasMessageFile {
-		if messageFile.ShouldReadStdin() {
-			content, err := io.ReadAll(os.Stdin)
-			if err != nil {
-				return fmt.Errorf("cannot read STDIN: %w", err)
-			}
-			message = NewOption(gitdomain.CommitMessage(content))
-		} else {
-			fileData, err := os.ReadFile(messageFile.String())
-			if err != nil {
-				return err
-			}
-			message = NewOption(gitdomain.CommitMessage(fileData))
-		}
+	message, err := ReadFile(messageOpt, messageFileOpt)
+	if err != nil {
+		return err
 	}
 	if err = validateSharedData(sharedData, toParent, message); err != nil {
 		return err
@@ -232,4 +219,25 @@ func validateSharedData(data sharedShipData, toParent configdomain.ShipIntoNonpe
 		}
 	}
 	return nil
+}
+
+func ReadFile[TEXT ~string, FILE FileFlag](inputText Option[TEXT], inputFileOpt Option[FILE]) (Option[TEXT], error) {
+	if inputText.IsSome() {
+		return inputText, nil
+	}
+	file, hasFile := inputFileOpt.Get()
+	if !hasFile {
+		return None[TEXT](), nil
+	}
+	if file.ShouldReadStdin() {
+		content, err := io.ReadAll(os.Stdin)
+		return NewOption(TEXT(string(content))), gohacks.WrapError(err, "cannot read STDIN: %w")
+	}
+	fileData, err := os.ReadFile(file.String())
+	return NewOption(TEXT(string(fileData))), err
+}
+
+type FileFlag interface {
+	ShouldReadStdin() bool
+	fmt.Stringer
 }
