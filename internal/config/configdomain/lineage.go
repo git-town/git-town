@@ -220,6 +220,18 @@ func (self Lineage) RemoveBranch(branch gitdomain.LocalBranchName) Lineage {
 	return self
 }
 
+// Root provides the oldest ancestor of the given branch.
+func (self Lineage) Root(branch gitdomain.LocalBranchName) gitdomain.LocalBranchName {
+	current := branch
+	for {
+		parent, found := self.data[current]
+		if !found {
+			return current
+		}
+		current = parent
+	}
+}
+
 // Roots provides the branches with children and no parents.
 func (self Lineage) Roots() gitdomain.LocalBranchNames {
 	roots := gitdomain.LocalBranchNames{}

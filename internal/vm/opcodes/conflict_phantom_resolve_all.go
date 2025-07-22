@@ -11,6 +11,7 @@ import (
 )
 
 type ConflictPhantomResolveAll struct {
+	CurrentBranch           gitdomain.LocalBranchName
 	ParentBranch            Option[gitdomain.LocalBranchName]
 	ParentSHA               Option[gitdomain.SHA]
 	Resolution              gitdomain.ConflictResolution
@@ -38,8 +39,11 @@ func (self *ConflictPhantomResolveAll) Run(args shared.RunArgs) error {
 	if err != nil {
 		return err
 	}
-	ancestors := args.Config.Value.NormalConfig.Lineage.Ancestors(currentBranch)
-	rootBranch := ancestors[0]
+	rootBranch := args.Config.Value.ValidatedConfigData.MainBranch
+	ancestors := args.Config.Value.NormalConfig.Lineage.Ancestors(self.CurrentBranch)
+	if len(ancestors) == 0 {
+		rootBranch = ancestors[0]
+	}
 	fullInfos, err := args.Git.FileConflictFullInfos(args.Backend, quickInfos, parentSHA.Location(), rootBranch)
 	if err != nil {
 		return err
