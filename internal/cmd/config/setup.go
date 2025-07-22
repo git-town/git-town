@@ -487,10 +487,10 @@ func enterMainBranch(repo execute.OpenRepoResult, data setupData) (userChoice Op
 		return Some(configFileMainBranch), configFileMainBranch, false, nil
 	}
 	return dialog.MainBranch(dialog.MainBranchArgs{
-		StandardBranch: repo.Git.StandardBranch(repo.Backend),
 		Inputs:         data.dialogInputs,
-		LocalBranches:  data.localBranches.Names(),
 		Local:          repo.UnvalidatedConfig.GitLocal.MainBranch,
+		LocalBranches:  data.localBranches.Names(),
+		StandardBranch: repo.Git.StandardBranch(repo.Backend),
 		Unscoped:       repo.UnvalidatedConfig.GitUnscoped.MainBranch,
 	})
 }

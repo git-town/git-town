@@ -62,9 +62,9 @@ func MainBranch(args MainBranchArgs) (selectedMainBranch Option[gitdomain.LocalB
 }
 
 type MainBranchArgs struct {
-	StandardBranch Option[gitdomain.LocalBranchName]
 	Inputs         dialogcomponents.TestInputs
-	LocalBranches  gitdomain.LocalBranchNames
 	Local          Option[gitdomain.LocalBranchName]
+	LocalBranches  gitdomain.LocalBranchNames
+	StandardBranch Option[gitdomain.LocalBranchName]
 	Unscoped       Option[gitdomain.LocalBranchName]
 }
