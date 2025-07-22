@@ -45,9 +45,9 @@ disable the ship-delete-tracking-branch configuration setting.`
 )
 
 func Cmd() *cobra.Command {
-	addCommitMessageFileFlag, readCommitMessageFileFlag := flags.CommitMessageFile()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addMessageFlag, readMessageFlag := flags.CommitMessage("specify the commit message for the squash commit")
+	addMessageFileFlag, readMessageFileFlag := flags.CommitMessageFile()
 	addShipStrategyFlag, readShipStrategyFlag := flags.ShipStrategy()
 	addToParentFlag, readToParentFlag := flags.ShipIntoNonPerennialParent()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
@@ -57,10 +57,10 @@ func Cmd() *cobra.Command {
 		Short: shipDesc,
 		Long:  cmdhelpers.Long(shipDesc, fmt.Sprintf(shipHelp, configdomain.KeyGitHubToken)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			commitMessageFile, err2 := readCommitMessageFileFlag(cmd)
 			dryRun, err3 := readDryRunFlag(cmd)
 			message, err2 := readMessageFlag(cmd)
-			shipStrategyOverride, err3 := readShipStrategyFlag(cmd)
+			messageFile, err2 := readMessageFileFlag(cmd)
+			shipStrategyOverride, err1 := readShipStrategyFlag(cmd)
 			toParent, err4 := readToParentFlag(cmd)
 			verbose, err5 := readVerboseFlag(cmd)
 			if err := cmp.Or(err1, err2, err3, err4, err5); err != nil {
@@ -70,10 +70,10 @@ func Cmd() *cobra.Command {
 				DryRun:  dryRun,
 				Verbose: verbose,
 			}
-			return executeShip(args, cliConfig, message, shipStrategyOverride, toParent)
+			return executeShip(args, cliConfig, message, messageFile, shipStrategyOverride, toParent)
 		},
 	}
-	addCommitMessageFileFlag(&cmd)
+	addMessageFileFlag(&cmd)
 	addDryRunFlag(&cmd)
 	addMessageFlag(&cmd)
 	addShipStrategyFlag(&cmd)
@@ -82,7 +82,7 @@ func Cmd() *cobra.Command {
 	return &cmd
 }
 
-func executeShip(args []string, cliConfig cliconfig.CliConfig, message Option[gitdomain.CommitMessage], shipStrategy Option[configdomain.ShipStrategy], toParent configdomain.ShipIntoNonperennialParent) error {
+func executeShip(args []string, cliConfig cliconfig.CliConfig, message Option[gitdomain.CommitMessage], messageFile Option[gitdomain.CommitMessageFile], shipStrategy Option[configdomain.ShipStrategy], toParent configdomain.ShipIntoNonperennialParent) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,
