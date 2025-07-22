@@ -231,7 +231,7 @@ func ReadFile[TEXT ~string, FILE FileFlag](inputText Option[TEXT], inputFileOpt 
 	}
 	if file.ShouldReadStdin() {
 		content, err := io.ReadAll(os.Stdin)
-		return NewOption(TEXT(string(content))), gohacks.WrapError(err, "cannot read STDIN: %w")
+		return NewOption(TEXT(string(content))), gohacks.WrapIfError(err, "cannot read STDIN: %w")
 	}
 	fileData, err := os.ReadFile(file.String())
 	return NewOption(TEXT(string(fileData))), err
