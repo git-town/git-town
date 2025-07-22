@@ -15,7 +15,7 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-func Save(userInput UserInput, unvalidatedConfig config.UnvalidatedConfig, frontend subshelldomain.Runner) error {
+func Save(userInput UserInput, unvalidatedConfig config.UnvalidatedConfig, data Data, frontend subshelldomain.Runner) error {
 	fc := gohacks.ErrorCollector{}
 	fc.Check(
 		saveAliases(userInput.Data.Aliases, unvalidatedConfig.GitGlobal.Aliases, frontend),
@@ -54,7 +54,7 @@ func Save(userInput UserInput, unvalidatedConfig config.UnvalidatedConfig, front
 	case dialog.ConfigStorageOptionFile:
 		return saveToFile(userInput, unvalidatedConfig.GitLocal, frontend)
 	case dialog.ConfigStorageOptionGit:
-		return saveAllToGit(userInput, unvalidatedConfig.GitLocal, unvalidatedConfig.File, frontend)
+		return saveAllToGit(userInput, unvalidatedConfig.GitLocal, unvalidatedConfig.File, data, frontend)
 	}
 	return nil
 }
@@ -76,7 +76,7 @@ func saveAliases(valuesToWriteToGit configdomain.Aliases, valuesAlreadyInGit con
 	return nil
 }
 
-func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialConfig, configFile configdomain.PartialConfig, frontend subshelldomain.Runner) error {
+func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialConfig, configFile configdomain.PartialConfig, data Data, frontend subshelldomain.Runner) error {
 	fc := gohacks.ErrorCollector{}
 	if configFile.NewBranchType.IsNone() {
 		fc.Check(
@@ -121,7 +121,7 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 			saveUnknownBranchType(userInput.Data.UnknownBranchType, existingGitConfig.UnknownBranchType, frontend),
 		)
 	}
-	if configFile.DevRemote.IsNone() {
+	if len(data.Remotes) > 1 && configFile.DevRemote.IsNone() {
 		fc.Check(
 			saveDevRemote(userInput.Data.DevRemote, existingGitConfig.DevRemote, frontend),
 		)
