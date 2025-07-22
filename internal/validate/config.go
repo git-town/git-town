@@ -31,7 +31,6 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 			DialogInputs:   args.TestInputs,
 			Git:            args.Git,
 			LocalBranches:  args.LocalBranches,
-			Remotes:        args.Remotes,
 			ConfigSnapshot: args.ConfigSnapshot,
 		})
 		if err != nil || exit {

@@ -15,6 +15,5 @@ type Data struct {
 	DialogInputs   dialogcomponents.TestInputs
 	Git            git.Commands
 	LocalBranches  gitdomain.LocalBranchNames
-	Remotes        gitdomain.Remotes
 	ConfigSnapshot undoconfig.ConfigSnapshot
 }

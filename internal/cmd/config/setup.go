@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v21/internal/config/cliconfig"
-	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
@@ -107,20 +106,12 @@ func LoadData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data 
 	if err != nil {
 		return data, exit, err
 	}
-	remotes, err := repo.Git.Remotes(repo.Backend)
-	if err != nil {
-		return data, exit, err
-	}
-	if len(remotes) == 0 {
-		remotes = gitdomain.Remotes{gitconfig.DefaultRemote(repo.Backend)}
-	}
 	return setup.Data{
 		Backend:        repo.Backend,
 		Config:         repo.UnvalidatedConfig,
 		DialogInputs:   dialogTestInputs,
 		Git:            repo.Git,
 		LocalBranches:  branchesSnapshot.Branches.LocalBranches().Names(),
-		Remotes:        remotes,
 		ConfigSnapshot: repo.ConfigSnapshot,
 	}, exit, nil
 }
