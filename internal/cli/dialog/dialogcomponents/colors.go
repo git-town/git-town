@@ -5,17 +5,21 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/cli/colors"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-// FormattedOptionalSelection provides the given optional dialog choice in a printable format.
-func FormattedOptionalSelection(value fmt.Stringer, has bool, exit dialogdomain.Exit) string {
+// FormattedOption provides the given optional dialog choice in a printable format.
+func FormattedOption[T fmt.Stringer](userInput Option[T], hasGlobal bool, exit dialogdomain.Exit) string {
 	if exit {
 		return colors.Red().Styled("(aborted)")
 	}
-	if has {
-		return colors.Green().Styled(value.String())
+	if input, hasInput := userInput.Get(); hasInput {
+		return colors.Green().Styled(input.String())
 	}
-	return colors.Green().Styled("(use global setting)")
+	if hasGlobal {
+		return colors.Green().Styled("(use global setting)")
+	}
+	return colors.Green().Styled("(not provided)")
 }
 
 // FormattedToken provides the given API token in a printable format.
