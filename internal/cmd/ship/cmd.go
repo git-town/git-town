@@ -60,7 +60,7 @@ func Cmd() *cobra.Command {
 			commitMessageFile, err2 := readCommitMessageFileFlag(cmd)
 			dryRun, err3 := readDryRunFlag(cmd)
 			message, err2 := readMessageFlag(cmd)
-			shipStrategyOverride, err1 := readShipStrategyFlag(cmd)
+			shipStrategyOverride, err3 := readShipStrategyFlag(cmd)
 			toParent, err4 := readToParentFlag(cmd)
 			verbose, err5 := readVerboseFlag(cmd)
 			if err := cmp.Or(err1, err2, err3, err4, err5); err != nil {
