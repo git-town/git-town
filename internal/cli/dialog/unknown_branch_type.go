@@ -47,7 +47,7 @@ func UnknownBranchType(args Args[configdomain.UnknownBranchType]) (Option[config
 		cursor = entries.IndexOf(Some(config.DefaultNormalConfig().UnknownBranchType))
 	}
 	selection, exit, err := dialogcomponents.RadioList(entries, cursor, unknownBranchTypeTitle, UnknownBranchTypeHelp, args.Inputs, "unknown-branch-type")
-	fmt.Printf(messages.UnknownBranchType, dialogcomponents.FormattedOption(selection, args.Global, exit))
+	fmt.Printf(messages.UnknownBranchType, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
 	return selection, exit, err
 }
 

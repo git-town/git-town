@@ -55,6 +55,6 @@ func NewBranchType(args Args[configdomain.NewBranchType]) (Option[configdomain.N
 	}
 	input, exit, err := dialogcomponents.RadioList(entries, cursor, newBranchTypeTitle, NewBranchTypeHelp, args.Inputs, "new-branch-type")
 	selection := configdomain.NewBranchTypeOpt(input)
-	fmt.Println(messages.NewBranchType, dialogcomponents.FormattedOption(selection, args.Global, exit))
+	fmt.Println(messages.NewBranchType, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
 	return selection, exit, err
 }

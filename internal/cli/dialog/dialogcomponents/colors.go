@@ -9,14 +9,14 @@ import (
 )
 
 // FormattedOption provides the given optional dialog choice in a printable format.
-func FormattedOption[T fmt.Stringer](userInput Option[T], globalValue Option[T], exit dialogdomain.Exit) string {
+func FormattedOption[T fmt.Stringer](userInput Option[T], hasGlobal bool, exit dialogdomain.Exit) string {
 	if exit {
 		return colors.Red().Styled("(aborted)")
 	}
 	if input, hasInput := userInput.Get(); hasInput {
 		return colors.Green().Styled(input.String())
 	}
-	if globalValue.IsSome() {
+	if hasGlobal {
 		return colors.Green().Styled("(use global setting)")
 	}
 	return colors.Green().Styled("(not provided)")

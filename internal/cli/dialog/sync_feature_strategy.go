@@ -50,6 +50,6 @@ func SyncFeatureStrategy(args Args[configdomain.SyncFeatureStrategy]) (Option[co
 	}...)
 	defaultPos := entries.IndexOf(args.Local)
 	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncFeatureStrategyTitle, SyncFeatureStrategyHelp, args.Inputs, "sync-feature-strategy")
-	fmt.Printf(messages.SyncFeatureBranches, dialogcomponents.FormattedOption(selection, args.Global, exit))
+	fmt.Printf(messages.SyncFeatureBranches, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
 	return selection, exit, err
 }

@@ -51,6 +51,6 @@ func SyncUpstream(args Args[configdomain.SyncUpstream]) (Option[configdomain.Syn
 	}...)
 	defaultPos := entries.IndexOf(args.Local)
 	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncUpstreamTitle, SyncUpstreamHelp, args.Inputs, "sync-upstream")
-	fmt.Printf(messages.SyncWithUpstream, dialogcomponents.FormattedOption(selection, args.Global, exit))
+	fmt.Printf(messages.SyncWithUpstream, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
 	return selection, exit, err
 }
