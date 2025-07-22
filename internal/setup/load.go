@@ -64,8 +64,11 @@ func LoadData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data 
 	}
 	return Data{
 		backend:       repo.Backend,
+		config:        repo.UnvalidatedConfig,
 		dialogInputs:  dialogTestInputs,
+		git:           repo.Git,
 		localBranches: branchesSnapshot.Branches,
 		remotes:       remotes,
+		snapshot:      repo.ConfigSnapshot,
 	}, exit, nil
 }

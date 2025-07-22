@@ -152,6 +152,7 @@ EnterForgeData:
 		bitbucketAppPassword: bitbucketAppPassword,
 		bitbucketUsername:    bitbucketUsername,
 		codebergToken:        codebergToken,
+		data:                 data,
 		determinedForgeType:  actualForgeType,
 		existingConfig:       data.config.NormalConfig,
 		giteaToken:           giteaToken,
