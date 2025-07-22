@@ -572,6 +572,26 @@ func enterSyncUpstream(repo execute.OpenRepoResult, data SetupData) (Option[conf
 	})
 }
 
+func enterTokenScope(args enterTokenScopeArgs) (configdomain.ConfigScope, dialogdomain.Exit, error) {
+	if shouldAskForScope(args) {
+		return tokenScopeDialog(args)
+	}
+	return configdomain.ConfigScopeLocal, false, nil
+}
+
+type enterTokenScopeArgs struct {
+	bitbucketAppPassword Option[forgedomain.BitbucketAppPassword]
+	bitbucketUsername    Option[forgedomain.BitbucketUsername]
+	codebergToken        Option[forgedomain.CodebergToken]
+	determinedForgeType  Option[forgedomain.ForgeType]
+	existingConfig       config.NormalConfig
+	giteaToken           Option[forgedomain.GiteaToken]
+	githubToken          Option[forgedomain.GitHubToken]
+	gitlabToken          Option[forgedomain.GitLabToken]
+	inputs               dialogcomponents.TestInputs
+	repo                 execute.OpenRepoResult
+}
+
 func enterUnknownBranchType(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.UnknownBranchType], dialogdomain.Exit, error) {
 	if repo.UnvalidatedConfig.File.UnknownBranchType.IsSome() {
 		return None[configdomain.UnknownBranchType](), false, nil
@@ -637,26 +657,6 @@ type testForgeAuthArgs struct {
 	gitlabToken          Option[forgedomain.GitLabToken]
 	inputs               dialogcomponents.TestInputs
 	remoteURL            Option[giturl.Parts]
-}
-
-func enterTokenScope(args enterTokenScopeArgs) (configdomain.ConfigScope, dialogdomain.Exit, error) {
-	if shouldAskForScope(args) {
-		return tokenScopeDialog(args)
-	}
-	return configdomain.ConfigScopeLocal, false, nil
-}
-
-type enterTokenScopeArgs struct {
-	bitbucketAppPassword Option[forgedomain.BitbucketAppPassword]
-	bitbucketUsername    Option[forgedomain.BitbucketUsername]
-	codebergToken        Option[forgedomain.CodebergToken]
-	determinedForgeType  Option[forgedomain.ForgeType]
-	existingConfig       config.NormalConfig
-	giteaToken           Option[forgedomain.GiteaToken]
-	githubToken          Option[forgedomain.GitHubToken]
-	gitlabToken          Option[forgedomain.GitLabToken]
-	inputs               dialogcomponents.TestInputs
-	repo                 execute.OpenRepoResult
 }
 
 func shouldAskForScope(args enterTokenScopeArgs) bool {
