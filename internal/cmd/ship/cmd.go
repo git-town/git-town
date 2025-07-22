@@ -60,13 +60,13 @@ func Cmd() *cobra.Command {
 		Short: shipDesc,
 		Long:  cmdhelpers.Long(shipDesc, fmt.Sprintf(shipHelp, configdomain.KeyGitHubToken)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			dryRun, err3 := readDryRunFlag(cmd)
+			dryRun, err1 := readDryRunFlag(cmd)
 			message, err2 := readMessageFlag(cmd)
-			messageFile, err2 := readMessageFileFlag(cmd)
-			shipStrategyOverride, err1 := readShipStrategyFlag(cmd)
-			toParent, err4 := readToParentFlag(cmd)
-			verbose, err5 := readVerboseFlag(cmd)
-			if err := cmp.Or(err1, err2, err3, err4, err5); err != nil {
+			messageFile, err3 := readMessageFileFlag(cmd)
+			shipStrategyOverride, err4 := readShipStrategyFlag(cmd)
+			toParent, err5 := readToParentFlag(cmd)
+			verbose, err6 := readVerboseFlag(cmd)
+			if err := cmp.Or(err1, err2, err3, err4, err5, err6); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.CliConfig{
