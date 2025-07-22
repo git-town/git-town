@@ -317,6 +317,7 @@ func enterCodebergToken(repo execute.OpenRepoResult, data SetupData) (Option[for
 		Local:  repo.UnvalidatedConfig.GitLocal.CodebergToken,
 	})
 }
+
 func enterContributionRegex(repo execute.OpenRepoResult, data SetupData) (Option[configdomain.ContributionRegex], dialogdomain.Exit, error) {
 	if repo.UnvalidatedConfig.File.ContributionRegex.IsSome() {
 		return None[configdomain.ContributionRegex](), false, nil
