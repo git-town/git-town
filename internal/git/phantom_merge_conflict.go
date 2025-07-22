@@ -44,9 +44,8 @@ var UnmergedStages = []UnmergedStage{
 // complete information about a file with merge conflicts, to determine whether it is a pantom merge conflict
 type FileConflictFullInfo struct {
 	Current Option[BlobInfo] // info about the file on the current branch
-	// TODO: rename to Root and provide the root branch of the stack here, instead of the main branch
-	Main   Option[BlobInfo] // info about the file on the main branch
-	Parent Option[BlobInfo] // info about the file on the original parent
+	Root    Option[BlobInfo] // info about the file on the root branch
+	Parent  Option[BlobInfo] // info about the file on the original parent
 }
 
 // describes a file within an unresolved merge conflict that experiences a phantom merge conflict
@@ -54,11 +53,11 @@ type PhantomMergeConflict struct {
 	FilePath string
 }
 
-func DetectPhantomMergeConflicts(conflictInfos []FileConflictFullInfo, parentBranchOpt Option[gitdomain.LocalBranchName], mainBranch gitdomain.LocalBranchName) []PhantomMergeConflict {
+func DetectPhantomMergeConflicts(conflictInfos []FileConflictFullInfo, parentBranchOpt Option[gitdomain.LocalBranchName], rootBranch gitdomain.LocalBranchName) []PhantomMergeConflict {
 	result := []PhantomMergeConflict{}
 	parentBranch, hasParentBranch := parentBranchOpt.Get()
-	if !hasParentBranch || parentBranch == mainBranch {
-		// branches that don't have a parent or whose parent is the main branch cannot have phantom merge conflicts
+	if !hasParentBranch || parentBranch == rootBranch {
+		// branches that don't have a parent or whose parent is the root branch cannot have phantom merge conflicts
 		return []PhantomMergeConflict{}
 	}
 	for _, conflictInfo := range conflictInfos {
@@ -67,8 +66,8 @@ func DetectPhantomMergeConflicts(conflictInfos []FileConflictFullInfo, parentBra
 		if !hasInitialParentInfo || !hasCurrentInfo || currentInfo.Permission != initialParentInfo.Permission {
 			continue
 		}
-		if !reflect.DeepEqual(conflictInfo.Main, conflictInfo.Parent) {
-			// main and parent don't have the exact same version of the file --> not a phantom merge conflict
+		if !reflect.DeepEqual(conflictInfo.Root, conflictInfo.Parent) {
+			// root and parent don't have the exact same version of the file --> not a phantom merge conflict
 			continue
 		}
 		result = append(result, PhantomMergeConflict{

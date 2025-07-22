@@ -491,7 +491,7 @@ func (self *Commands) FileConflictFullInfo(querier subshelldomain.Querier, quick
 	}
 	result := FileConflictFullInfo{
 		Current: quickInfo.CurrentBranchChange,
-		Main:    mainBlob,
+		Root:    mainBlob,
 		Parent:  parentBlob,
 	}
 	return result, nil

@@ -987,7 +987,7 @@ func TestBackendCommands(t *testing.T) {
 			t.Parallel()
 			fullInfos := []git.FileConflictFullInfo{
 				{
-					Main: Some(git.BlobInfo{
+					Root: Some(git.BlobInfo{
 						FilePath:   "file",
 						Permission: "100755",
 						SHA:        "111111",
@@ -1014,7 +1014,7 @@ func TestBackendCommands(t *testing.T) {
 			t.Parallel()
 			fullInfos := []git.FileConflictFullInfo{
 				{
-					Main: Some(git.BlobInfo{
+					Root: Some(git.BlobInfo{
 						FilePath:   "file",
 						Permission: "100755",
 						SHA:        "111111",
@@ -1039,7 +1039,7 @@ func TestBackendCommands(t *testing.T) {
 			t.Parallel()
 			fullInfos := []git.FileConflictFullInfo{
 				{
-					Main: Some(git.BlobInfo{
+					Root: Some(git.BlobInfo{
 						FilePath:   "file",
 						Permission: "100755",
 						SHA:        "111111",
@@ -1064,7 +1064,7 @@ func TestBackendCommands(t *testing.T) {
 			t.Parallel()
 			fullInfos := []git.FileConflictFullInfo{
 				{
-					Main: Some(git.BlobInfo{
+					Root: Some(git.BlobInfo{
 						FilePath:   "file-1",
 						Permission: "100755",
 						SHA:        "222222",
