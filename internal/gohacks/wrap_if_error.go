@@ -1,6 +1,8 @@
 package gohacks
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // If the given error is nil, returns nil.
 // If the given error is not nil, returns it wrapped in the given error message.

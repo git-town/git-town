@@ -1,6 +1,6 @@
 package gitdomain
 
-// MessageFile is the name of the file from which to read CommitMessage
+// CommitMessageFile is the name of the file from which to read the CommitMessage.
 type CommitMessageFile string
 
 // indicates whether the commit message should be read from STDIN
