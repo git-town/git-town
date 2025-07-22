@@ -77,8 +77,8 @@ func saveAliases(valuesToWriteToGit configdomain.Aliases, valuesAlreadyInGit con
 }
 
 func saveAllToFile(userInput UserInput, gitConfig configdomain.PartialConfig, runner subshelldomain.Runner) error {
-	userInput.data.MainBranch = Some(userInput.validatedConfig.MainBranch)
-	if err := configfile.Save(userInput.data); err != nil {
+	userInput.Data.MainBranch = Some(userInput.ValidatedConfig.MainBranch)
+	if err := configfile.Save(userInput.Data); err != nil {
 		return err
 	}
 	if gitConfig.ContributionRegex.IsSome() {
@@ -135,10 +135,10 @@ func saveAllToFile(userInput UserInput, gitConfig configdomain.PartialConfig, ru
 	if gitConfig.UnknownBranchType.IsSome() {
 		_ = gitconfig.RemoveUnknownBranchType(runner)
 	}
-	if err := saveUnknownBranchType(userInput.data.UnknownBranchType, gitConfig.UnknownBranchType, runner); err != nil {
+	if err := saveUnknownBranchType(userInput.Data.UnknownBranchType, gitConfig.UnknownBranchType, runner); err != nil {
 		return err
 	}
-	return saveFeatureRegex(userInput.data.FeatureRegex, gitConfig.FeatureRegex, runner)
+	return saveFeatureRegex(userInput.Data.FeatureRegex, gitConfig.FeatureRegex, runner)
 }
 
 func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialConfig, configFile configdomain.PartialConfig, data Data, frontend subshelldomain.Runner) error {
