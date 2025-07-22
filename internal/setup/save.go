@@ -266,16 +266,6 @@ func saveForgeType(valueToWriteToGit Option[forgedomain.ForgeType], valueAlready
 	return gitconfig.RemoveForgeType(frontend)
 }
 
-func saveGiteaToken(valueToWriteToGit Option[forgedomain.GiteaToken], valueAlreadyInGit Option[forgedomain.GiteaToken], scope configdomain.ConfigScope, frontend subshelldomain.Runner) error {
-	if valueToWriteToGit.Equal(valueAlreadyInGit) {
-		return nil
-	}
-	if value, has := valueToWriteToGit.Get(); has {
-		return gitconfig.SetGiteaToken(frontend, value, scope)
-	}
-	return gitconfig.RemoveGiteaToken(frontend)
-}
-
 func saveGitHubConnectorType(valueToWriteToGit Option[forgedomain.GitHubConnectorType], valueAlreadyInGit Option[forgedomain.GitHubConnectorType], frontend subshelldomain.Runner) error {
 	if valueToWriteToGit.Equal(valueAlreadyInGit) {
 		return nil
@@ -324,6 +314,16 @@ func saveGitLabToken(valueToWriteToGit Option[forgedomain.GitLabToken], valueAlr
 		return gitconfig.SetGitLabToken(frontend, value, scope)
 	}
 	return gitconfig.RemoveGitLabToken(frontend)
+}
+
+func saveGiteaToken(valueToWriteToGit Option[forgedomain.GiteaToken], valueAlreadyInGit Option[forgedomain.GiteaToken], scope configdomain.ConfigScope, frontend subshelldomain.Runner) error {
+	if valueToWriteToGit.Equal(valueAlreadyInGit) {
+		return nil
+	}
+	if value, has := valueToWriteToGit.Get(); has {
+		return gitconfig.SetGiteaToken(frontend, value, scope)
+	}
+	return gitconfig.RemoveGiteaToken(frontend)
 }
 
 func saveMainBranch(valueToWriteToGit Option[gitdomain.LocalBranchName], valueAlreadyInGit Option[gitdomain.LocalBranchName], runner subshelldomain.Runner) error {
