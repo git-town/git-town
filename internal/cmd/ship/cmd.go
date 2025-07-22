@@ -45,20 +45,20 @@ disable the ship-delete-tracking-branch configuration setting.`
 )
 
 func Cmd() *cobra.Command {
-	addVerboseFlag, readVerboseFlag := flags.Verbose()
-	addMessageFlag, readMessageFlag := flags.CommitMessage("specify the commit message for the squash commit")
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addMessageFlag, readMessageFlag := flags.CommitMessage("specify the commit message for the squash commit")
 	addShipStrategyFlag, readShipStrategyFlag := flags.ShipStrategy()
 	addToParentFlag, readToParentFlag := flags.ShipIntoNonPerennialParent()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   shipCommand,
 		Args:  cobra.MaximumNArgs(1),
 		Short: shipDesc,
 		Long:  cmdhelpers.Long(shipDesc, fmt.Sprintf(shipHelp, configdomain.KeyGitHubToken)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			shipStrategyOverride, err1 := readShipStrategyFlag(cmd)
-			message, err2 := readMessageFlag(cmd)
 			dryRun, err3 := readDryRunFlag(cmd)
+			message, err2 := readMessageFlag(cmd)
+			shipStrategyOverride, err1 := readShipStrategyFlag(cmd)
 			toParent, err4 := readToParentFlag(cmd)
 			verbose, err5 := readVerboseFlag(cmd)
 			if err := cmp.Or(err1, err2, err3, err4, err5); err != nil {
@@ -72,10 +72,10 @@ func Cmd() *cobra.Command {
 		},
 	}
 	addDryRunFlag(&cmd)
-	addVerboseFlag(&cmd)
 	addMessageFlag(&cmd)
 	addShipStrategyFlag(&cmd)
 	addToParentFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
