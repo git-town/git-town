@@ -28,6 +28,7 @@ Always selected in this list are:
 - the main branch because it is automatically perennial
 - perennial branches defined in the config file
 - perennial branches from the global Git configuration
+
 `
 )
 

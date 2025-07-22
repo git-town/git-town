@@ -57,7 +57,7 @@ func MainBranch(args MainBranchArgs) (selectedMainBranch Option[gitdomain.LocalB
 
 	// show the dialog
 	selection, exit, err := dialogcomponents.RadioList(entries, cursor, mainBranchTitle, MainBranchHelp, args.Inputs, "main-branch")
-	fmt.Printf(messages.MainBranch, dialogcomponents.FormattedSelection(selection.String(), exit))
+	fmt.Printf(messages.MainBranch, dialogcomponents.FormattedOption(selection, hasUnscoped, exit))
 	mainBranch = selection.GetOrElse(unscoped) // the user either selected a branch, or None if unscoped exists
 	return selection, mainBranch, exit, err
 }
