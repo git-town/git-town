@@ -262,6 +262,19 @@ type userInput struct {
 	validatedConfig     configdomain.ValidatedConfigData
 }
 
+func determineExistingScope(configSnapshot undoconfig.ConfigSnapshot, key configdomain.Key, oldValue fmt.Stringer) configdomain.ConfigScope {
+	switch {
+	case oldValue.String() == "":
+		return configdomain.ConfigScopeLocal
+	case configSnapshot.Global[key] == oldValue.String():
+		return configdomain.ConfigScopeGlobal
+	case configSnapshot.Local[key] == oldValue.String():
+		return configdomain.ConfigScopeLocal
+	default:
+		return configdomain.ConfigScopeLocal
+	}
+}
+
 func determineForgeType(userChoice Option[forgedomain.ForgeType], devURL Option[giturl.Parts]) Option[forgedomain.ForgeType] {
 	if userChoice.IsSome() {
 		return userChoice
@@ -603,6 +616,29 @@ func enterUnknownBranchType(repo execute.OpenRepoResult, data SetupData) (Option
 	})
 }
 
+func existsAndChanged[T fmt.Stringer](input, existing T) bool {
+	return input.String() != "" && input.String() != existing.String()
+}
+
+func shouldAskForScope(args enterTokenScopeArgs) bool {
+	if forgeType, hasForgeType := args.determinedForgeType.Get(); hasForgeType {
+		switch forgeType {
+		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
+			return existsAndChanged(args.bitbucketUsername, args.existingConfig.BitbucketUsername) &&
+				existsAndChanged(args.bitbucketAppPassword, args.existingConfig.BitbucketAppPassword)
+		case forgedomain.ForgeTypeCodeberg:
+			return existsAndChanged(args.codebergToken, args.existingConfig.CodebergToken)
+		case forgedomain.ForgeTypeGitea:
+			return existsAndChanged(args.giteaToken, args.existingConfig.GiteaToken)
+		case forgedomain.ForgeTypeGitHub:
+			return existsAndChanged(args.githubToken, args.existingConfig.GitHubToken)
+		case forgedomain.ForgeTypeGitLab:
+			return existsAndChanged(args.gitlabToken, args.existingConfig.GitLabToken)
+		}
+	}
+	return false
+}
+
 func testForgeAuth(args testForgeAuthArgs) (repeat bool, exit dialogdomain.Exit, err error) {
 	if _, inTest := os.LookupEnv(subshell.TestToken); inTest {
 		return false, false, nil
@@ -659,25 +695,6 @@ type testForgeAuthArgs struct {
 	remoteURL            Option[giturl.Parts]
 }
 
-func shouldAskForScope(args enterTokenScopeArgs) bool {
-	if forgeType, hasForgeType := args.determinedForgeType.Get(); hasForgeType {
-		switch forgeType {
-		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
-			return existsAndChanged(args.bitbucketUsername, args.existingConfig.BitbucketUsername) &&
-				existsAndChanged(args.bitbucketAppPassword, args.existingConfig.BitbucketAppPassword)
-		case forgedomain.ForgeTypeCodeberg:
-			return existsAndChanged(args.codebergToken, args.existingConfig.CodebergToken)
-		case forgedomain.ForgeTypeGitea:
-			return existsAndChanged(args.giteaToken, args.existingConfig.GiteaToken)
-		case forgedomain.ForgeTypeGitHub:
-			return existsAndChanged(args.githubToken, args.existingConfig.GitHubToken)
-		case forgedomain.ForgeTypeGitLab:
-			return existsAndChanged(args.gitlabToken, args.existingConfig.GitLabToken)
-		}
-	}
-	return false
-}
-
 func tokenScopeDialog(args enterTokenScopeArgs) (configdomain.ConfigScope, dialogdomain.Exit, error) {
 	if forgeType, hasForgeType := args.determinedForgeType.Get(); hasForgeType {
 		switch forgeType {
@@ -699,21 +716,4 @@ func tokenScopeDialog(args enterTokenScopeArgs) (configdomain.ConfigScope, dialo
 		}
 	}
 	return configdomain.ConfigScopeLocal, false, nil
-}
-
-func determineExistingScope(configSnapshot undoconfig.ConfigSnapshot, key configdomain.Key, oldValue fmt.Stringer) configdomain.ConfigScope {
-	switch {
-	case oldValue.String() == "":
-		return configdomain.ConfigScopeLocal
-	case configSnapshot.Global[key] == oldValue.String():
-		return configdomain.ConfigScopeGlobal
-	case configSnapshot.Local[key] == oldValue.String():
-		return configdomain.ConfigScopeLocal
-	default:
-		return configdomain.ConfigScopeLocal
-	}
-}
-
-func existsAndChanged[T fmt.Stringer](input, existing T) bool {
-	return input.String() != "" && input.String() != existing.String()
 }
