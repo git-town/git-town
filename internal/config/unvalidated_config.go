@@ -12,11 +12,12 @@ import (
 )
 
 type UnvalidatedConfig struct {
+	CLI               cliconfig.CliConfig        // configuration received via CLI flags
 	Defaults          NormalConfig               // default values
 	File              configdomain.PartialConfig // content of git-town.toml
-	GitGlobal         configdomain.PartialConfig
-	GitLocal          configdomain.PartialConfig
-	GitUnscoped       configdomain.PartialConfig // configuration data taken from Git metadata, in particular the unscoped Git metadata
+	GitGlobal         configdomain.PartialConfig // global Git metadata
+	GitLocal          configdomain.PartialConfig // local Git metadata
+	GitUnscoped       configdomain.PartialConfig // unscoped Git metadata
 	NormalConfig      NormalConfig
 	UnvalidatedConfig configdomain.UnvalidatedConfigData
 }
@@ -88,6 +89,7 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 		git:      args.GitUnscoped,
 	})
 	return UnvalidatedConfig{
+		CLI:               args.CliConfig,
 		Defaults:          args.Defaults,
 		File:              args.ConfigFile,
 		GitGlobal:         args.GitGlobal,
