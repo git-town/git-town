@@ -45,11 +45,11 @@ disable the ship-delete-tracking-branch configuration setting.`
 )
 
 func Cmd() *cobra.Command {
-	addVerboseFlag, readVerboseFlag := flags.Verbose()
-	addMessageFlag, readMessageFlag := flags.CommitMessage("specify the commit message for the squash commit")
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addMessageFlag, readMessageFlag := flags.CommitMessage("specify the commit message for the squash commit")
 	addShipStrategyFlag, readShipStrategyFlag := flags.ShipStrategy()
 	addToParentFlag, readToParentFlag := flags.ShipIntoNonPerennialParent()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   shipCommand,
 		Args:  cobra.MaximumNArgs(1),
@@ -72,10 +72,10 @@ func Cmd() *cobra.Command {
 		},
 	}
 	addDryRunFlag(&cmd)
-	addVerboseFlag(&cmd)
 	addMessageFlag(&cmd)
 	addShipStrategyFlag(&cmd)
 	addToParentFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
