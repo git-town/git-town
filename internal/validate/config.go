@@ -28,10 +28,10 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 		userInput, exit, err := setup.Enter(setup.Data{
 			Backend:        args.Backend,
 			Config:         *args.Unvalidated.Value,
+			ConfigSnapshot: args.ConfigSnapshot,
 			DialogInputs:   args.TestInputs,
 			Git:            args.Git,
 			LocalBranches:  args.LocalBranches,
-			ConfigSnapshot: args.ConfigSnapshot,
 		})
 		if err != nil || exit {
 			return config.EmptyValidatedConfig(), exit, err
