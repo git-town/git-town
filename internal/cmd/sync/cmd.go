@@ -326,6 +326,7 @@ func determineSyncData(cliConfig cliconfig.CliConfig, syncAllBranches configdoma
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
 		LocalBranches:      localBranches,
+		Remotes:            remotes,
 		RepoStatus:         repoStatus,
 		TestInputs:         dialogTestInputs,
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),

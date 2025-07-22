@@ -299,6 +299,10 @@ func determineHackData(args []string, repo execute.OpenRepoResult, cliConfig cli
 		}
 	}
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(localBranchNames)
+	remotes, err := repo.Git.Remotes(repo.Backend)
+	if err != nil {
+		return data, false, err
+	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesAndTypes:   branchesAndTypes,
@@ -310,6 +314,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, cliConfig cli
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
 		LocalBranches:      localBranchNames,
+		Remotes:            remotes,
 		RepoStatus:         repoStatus,
 		TestInputs:         dialogTestInputs,
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
@@ -328,11 +333,6 @@ func determineHackData(args []string, repo execute.OpenRepoResult, cliConfig cli
 		return data, false, errors.New(messages.HackTooManyArguments)
 	}
 	targetBranch := targetBranches[0]
-	var remotes gitdomain.Remotes
-	remotes, err = repo.Git.Remotes(repo.Backend)
-	if err != nil {
-		return data, false, err
-	}
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
 		return data, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}

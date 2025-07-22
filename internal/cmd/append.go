@@ -273,6 +273,7 @@ func determineAppendData(cliConfig cliconfig.CliConfig, targetBranch gitdomain.L
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
 		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
+		Remotes:            remotes,
 		RepoStatus:         repoStatus,
 		TestInputs:         dialogTestInputs,
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
