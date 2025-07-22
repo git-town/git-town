@@ -32,6 +32,11 @@ When called with a positional argument, it ships the branch with the given name.
 Similar to `git commit`, the `--message <message>` aka `-m` parameter allows
 specifying the commit message via the CLI.
 
+#### `-f <path>`<br>`--message-file <path>`
+
+The `--message-file` aka `-f` flag uses the content of the given file for the
+commit message. The filename `-` reads the commit message from STDIN.
+
 #### `-s <name>`<br>`--strategy <name>`
 
 Overrides the configured [ship-strategy](../preferences/ship-strategy.md).
