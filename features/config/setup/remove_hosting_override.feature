@@ -29,7 +29,6 @@ Feature: remove an existing forge type override
       | ship delete tracking branch | enter                |                                             |
       | config storage              | enter                |                                             |
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                              |
