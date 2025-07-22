@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/setup"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
+	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -25,28 +26,19 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 	mainBranch, hasMain := args.Unvalidated.Value.UnvalidatedConfig.MainBranch.Get()
 	if !hasMain {
 		userInput, exit, err := setup.Enter(setup.Data{
-			Backend:       args.Backend,
-			Config:        *args.Unvalidated.Value,
-			DialogInputs:  args.TestInputs,
-			Git:           args.Git,
-			LocalBranches: args.LocalBranches,
-			Remotes:       args.Remotes,
-			Snapshot:      args.BranchesSnapshot,
+			Backend:        args.Backend,
+			Config:         *args.Unvalidated.Value,
+			DialogInputs:   args.TestInputs,
+			Git:            args.Git,
+			LocalBranches:  args.LocalBranches,
+			Remotes:        args.Remotes,
+			ConfigSnapshot: args.ConfigSnapshot,
 		})
 		if err != nil || exit {
 			return config.EmptyValidatedConfig(), exit, err
 		}
-		mainBranch = validatedMain
-		args.BranchesAndTypes[validatedMain] = configdomain.BranchTypeMainBranch
-		if err = args.Unvalidated.Value.SetMainBranch(validatedMain, args.Backend); err != nil {
-			return config.EmptyValidatedConfig(), false, err
-		}
-		if len(additionalPerennials) > 0 {
-			newPerennials := append(args.Unvalidated.Value.NormalConfig.PerennialBranches, additionalPerennials...)
-			if err = args.Unvalidated.Value.NormalConfig.SetPerennialBranches(args.Backend, newPerennials); err != nil {
-				return config.EmptyValidatedConfig(), false, err
-			}
-		}
+		mainBranch = userInput.ValidatedConfig.MainBranch
+		args.BranchesAndTypes[mainBranch] = configdomain.BranchTypeMainBranch
 	}
 
 	// enter and save missing parent branches
@@ -94,11 +86,13 @@ type ConfigArgs struct {
 	BranchesAndTypes   configdomain.BranchesAndTypes
 	BranchesSnapshot   gitdomain.BranchesSnapshot
 	BranchesToValidate gitdomain.LocalBranchNames
+	ConfigSnapshot     undoconfig.ConfigSnapshot
 	Connector          Option[forgedomain.Connector]
 	DialogTestInputs   dialogcomponents.TestInputs
 	Frontend           subshelldomain.Runner
 	Git                git.Commands
 	LocalBranches      gitdomain.LocalBranchNames
+	Remotes            gitdomain.Remotes
 	RepoStatus         gitdomain.RepoStatus
 	TestInputs         dialogcomponents.TestInputs
 	Unvalidated        Mutable[config.UnvalidatedConfig]

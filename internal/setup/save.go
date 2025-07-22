@@ -18,39 +18,39 @@ import (
 func Save(userInput UserInput, unvalidatedConfig config.UnvalidatedConfig, data Data, frontend subshelldomain.Runner) error {
 	fc := gohacks.ErrorCollector{}
 	fc.Check(
-		saveAliases(userInput.data.Aliases, unvalidatedConfig.GitGlobal.Aliases, frontend),
+		saveAliases(userInput.Data.Aliases, unvalidatedConfig.GitGlobal.Aliases, frontend),
 	)
-	if forgeType, hasForgeType := userInput.determinedForgeType.Get(); hasForgeType {
+	if forgeType, hasForgeType := userInput.DeterminedForgeType.Get(); hasForgeType {
 		switch forgeType {
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
 			fc.Check(
-				saveBitbucketUsername(userInput.data.BitbucketUsername, unvalidatedConfig.GitLocal.BitbucketUsername, userInput.scope, frontend),
+				saveBitbucketUsername(userInput.Data.BitbucketUsername, unvalidatedConfig.GitLocal.BitbucketUsername, userInput.Scope, frontend),
 			)
 			fc.Check(
-				saveBitbucketAppPassword(userInput.data.BitbucketAppPassword, unvalidatedConfig.GitLocal.BitbucketAppPassword, userInput.scope, frontend),
+				saveBitbucketAppPassword(userInput.Data.BitbucketAppPassword, unvalidatedConfig.GitLocal.BitbucketAppPassword, userInput.Scope, frontend),
 			)
 		case forgedomain.ForgeTypeCodeberg:
 			fc.Check(
-				saveCodebergToken(userInput.data.CodebergToken, unvalidatedConfig.GitLocal.CodebergToken, userInput.scope, frontend),
+				saveCodebergToken(userInput.Data.CodebergToken, unvalidatedConfig.GitLocal.CodebergToken, userInput.Scope, frontend),
 			)
 		case forgedomain.ForgeTypeGitHub:
 			fc.Check(
-				saveGitHubToken(userInput.data.GitHubToken, unvalidatedConfig.GitLocal.GitHubToken, userInput.scope, userInput.data.GitHubConnectorType, frontend),
+				saveGitHubToken(userInput.Data.GitHubToken, unvalidatedConfig.GitLocal.GitHubToken, userInput.Scope, userInput.Data.GitHubConnectorType, frontend),
 			)
 		case forgedomain.ForgeTypeGitLab:
 			fc.Check(
-				saveGitLabToken(userInput.data.GitLabToken, unvalidatedConfig.GitLocal.GitLabToken, userInput.scope, userInput.data.GitLabConnectorType, frontend),
+				saveGitLabToken(userInput.Data.GitLabToken, unvalidatedConfig.GitLocal.GitLabToken, userInput.Scope, userInput.Data.GitLabConnectorType, frontend),
 			)
 		case forgedomain.ForgeTypeGitea:
 			fc.Check(
-				saveGiteaToken(userInput.data.GiteaToken, unvalidatedConfig.GitLocal.GiteaToken, userInput.scope, frontend),
+				saveGiteaToken(userInput.Data.GiteaToken, unvalidatedConfig.GitLocal.GiteaToken, userInput.Scope, frontend),
 			)
 		}
 	}
 	if fc.Err != nil {
 		return fc.Err
 	}
-	switch userInput.storageLocation {
+	switch userInput.StorageLocation {
 	case dialog.ConfigStorageOptionFile:
 		return saveToFile(userInput, unvalidatedConfig.GitLocal, frontend)
 	case dialog.ConfigStorageOptionGit:
@@ -80,110 +80,110 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 	fc := gohacks.ErrorCollector{}
 	if configFile.NewBranchType.IsNone() {
 		fc.Check(
-			saveNewBranchType(userInput.data.NewBranchType, existingGitConfig.NewBranchType, frontend),
+			saveNewBranchType(userInput.Data.NewBranchType, existingGitConfig.NewBranchType, frontend),
 		)
 	}
 	if configFile.ForgeType.IsNone() {
 		fc.Check(
-			saveForgeType(userInput.data.ForgeType, existingGitConfig.ForgeType, frontend),
+			saveForgeType(userInput.Data.ForgeType, existingGitConfig.ForgeType, frontend),
 		)
 	}
 	if configFile.GitHubConnectorType.IsNone() {
 		fc.Check(
-			saveGitHubConnectorType(userInput.data.GitHubConnectorType, existingGitConfig.GitHubConnectorType, frontend),
+			saveGitHubConnectorType(userInput.Data.GitHubConnectorType, existingGitConfig.GitHubConnectorType, frontend),
 		)
 	}
 	if configFile.GitLabConnectorType.IsNone() {
 		fc.Check(
-			saveGitLabConnectorType(userInput.data.GitLabConnectorType, existingGitConfig.GitLabConnectorType, frontend),
+			saveGitLabConnectorType(userInput.Data.GitLabConnectorType, existingGitConfig.GitLabConnectorType, frontend),
 		)
 	}
 	if configFile.HostingOriginHostname.IsNone() {
 		fc.Check(
-			saveOriginHostname(userInput.data.HostingOriginHostname, existingGitConfig.HostingOriginHostname, frontend),
+			saveOriginHostname(userInput.Data.HostingOriginHostname, existingGitConfig.HostingOriginHostname, frontend),
 		)
 	}
 	if configFile.MainBranch.IsNone() {
 		fc.Check(
-			saveMainBranch(userInput.data.MainBranch, existingGitConfig.MainBranch, frontend),
+			saveMainBranch(userInput.Data.MainBranch, existingGitConfig.MainBranch, frontend),
 		)
 	}
 	fc.Check(
-		savePerennialBranches(userInput.data.PerennialBranches, existingGitConfig.PerennialBranches, frontend),
+		savePerennialBranches(userInput.Data.PerennialBranches, existingGitConfig.PerennialBranches, frontend),
 	)
 	if configFile.PerennialRegex.IsNone() {
 		fc.Check(
-			savePerennialRegex(userInput.data.PerennialRegex, existingGitConfig.PerennialRegex, frontend),
+			savePerennialRegex(userInput.Data.PerennialRegex, existingGitConfig.PerennialRegex, frontend),
 		)
 	}
 	if configFile.UnknownBranchType.IsNone() {
 		fc.Check(
-			saveUnknownBranchType(userInput.data.UnknownBranchType, existingGitConfig.UnknownBranchType, frontend),
+			saveUnknownBranchType(userInput.Data.UnknownBranchType, existingGitConfig.UnknownBranchType, frontend),
 		)
 	}
 	if len(data.Remotes) > 1 && configFile.DevRemote.IsNone() {
 		fc.Check(
-			saveDevRemote(userInput.data.DevRemote, existingGitConfig.DevRemote, frontend),
+			saveDevRemote(userInput.Data.DevRemote, existingGitConfig.DevRemote, frontend),
 		)
 	}
 	if configFile.FeatureRegex.IsNone() {
 		fc.Check(
-			saveFeatureRegex(userInput.data.FeatureRegex, existingGitConfig.FeatureRegex, frontend),
+			saveFeatureRegex(userInput.Data.FeatureRegex, existingGitConfig.FeatureRegex, frontend),
 		)
 	}
 	if configFile.ContributionRegex.IsNone() {
 		fc.Check(
-			saveContributionRegex(userInput.data.ContributionRegex, existingGitConfig.ContributionRegex, frontend),
+			saveContributionRegex(userInput.Data.ContributionRegex, existingGitConfig.ContributionRegex, frontend),
 		)
 	}
 	if configFile.ObservedRegex.IsNone() {
 		fc.Check(
-			saveObservedRegex(userInput.data.ObservedRegex, existingGitConfig.ObservedRegex, frontend),
+			saveObservedRegex(userInput.Data.ObservedRegex, existingGitConfig.ObservedRegex, frontend),
 		)
 	}
 	if configFile.PushHook.IsNone() {
 		fc.Check(
-			savePushHook(userInput.data.PushHook, existingGitConfig.PushHook, frontend),
+			savePushHook(userInput.Data.PushHook, existingGitConfig.PushHook, frontend),
 		)
 	}
 	if configFile.ShareNewBranches.IsNone() {
 		fc.Check(
-			saveShareNewBranches(userInput.data.ShareNewBranches, existingGitConfig.ShareNewBranches, frontend),
+			saveShareNewBranches(userInput.Data.ShareNewBranches, existingGitConfig.ShareNewBranches, frontend),
 		)
 	}
 	if configFile.ShipStrategy.IsNone() {
 		fc.Check(
-			saveShipStrategy(userInput.data.ShipStrategy, existingGitConfig.ShipStrategy, frontend),
+			saveShipStrategy(userInput.Data.ShipStrategy, existingGitConfig.ShipStrategy, frontend),
 		)
 	}
 	if configFile.ShipDeleteTrackingBranch.IsNone() {
 		fc.Check(
-			saveShipDeleteTrackingBranch(userInput.data.ShipDeleteTrackingBranch, existingGitConfig.ShipDeleteTrackingBranch, frontend),
+			saveShipDeleteTrackingBranch(userInput.Data.ShipDeleteTrackingBranch, existingGitConfig.ShipDeleteTrackingBranch, frontend),
 		)
 	}
 	if configFile.SyncFeatureStrategy.IsNone() {
 		fc.Check(
-			saveSyncFeatureStrategy(userInput.data.SyncFeatureStrategy, existingGitConfig.SyncFeatureStrategy, frontend),
+			saveSyncFeatureStrategy(userInput.Data.SyncFeatureStrategy, existingGitConfig.SyncFeatureStrategy, frontend),
 		)
 	}
 	if configFile.SyncPerennialStrategy.IsNone() {
 		fc.Check(
-			saveSyncPerennialStrategy(userInput.data.SyncPerennialStrategy, existingGitConfig.SyncPerennialStrategy, frontend),
+			saveSyncPerennialStrategy(userInput.Data.SyncPerennialStrategy, existingGitConfig.SyncPerennialStrategy, frontend),
 		)
 	}
 	if configFile.SyncPrototypeStrategy.IsNone() {
 		fc.Check(
-			saveSyncPrototypeStrategy(userInput.data.SyncPrototypeStrategy, existingGitConfig.SyncPrototypeStrategy, frontend),
+			saveSyncPrototypeStrategy(userInput.Data.SyncPrototypeStrategy, existingGitConfig.SyncPrototypeStrategy, frontend),
 		)
 	}
 	if configFile.SyncUpstream.IsNone() {
 		fc.Check(
-			saveSyncUpstream(userInput.data.SyncUpstream, existingGitConfig.SyncUpstream, frontend),
+			saveSyncUpstream(userInput.Data.SyncUpstream, existingGitConfig.SyncUpstream, frontend),
 		)
 	}
 	if configFile.SyncTags.IsNone() {
 		fc.Check(
-			saveSyncTags(userInput.data.SyncTags, existingGitConfig.SyncTags, frontend),
+			saveSyncTags(userInput.Data.SyncTags, existingGitConfig.SyncTags, frontend),
 		)
 	}
 	return fc.Err
@@ -477,8 +477,8 @@ func saveSyncUpstream(valueToWriteToGit Option[configdomain.SyncUpstream], value
 }
 
 func saveToFile(userInput UserInput, gitConfig configdomain.PartialConfig, runner subshelldomain.Runner) error {
-	userInput.data.MainBranch = Some(userInput.validatedConfig.MainBranch)
-	if err := configfile.Save(userInput.data); err != nil {
+	userInput.Data.MainBranch = Some(userInput.ValidatedConfig.MainBranch)
+	if err := configfile.Save(userInput.Data); err != nil {
 		return err
 	}
 	if gitConfig.ContributionRegex.IsSome() {
@@ -535,10 +535,10 @@ func saveToFile(userInput UserInput, gitConfig configdomain.PartialConfig, runne
 	if gitConfig.UnknownBranchType.IsSome() {
 		_ = gitconfig.RemoveUnknownBranchType(runner)
 	}
-	if err := saveUnknownBranchType(userInput.data.UnknownBranchType, gitConfig.UnknownBranchType, runner); err != nil {
+	if err := saveUnknownBranchType(userInput.Data.UnknownBranchType, gitConfig.UnknownBranchType, runner); err != nil {
 		return err
 	}
-	return saveFeatureRegex(userInput.data.FeatureRegex, gitConfig.FeatureRegex, runner)
+	return saveFeatureRegex(userInput.Data.FeatureRegex, gitConfig.FeatureRegex, runner)
 }
 
 func saveUnknownBranchType(valueToWriteToGit Option[configdomain.UnknownBranchType], valueAlreadyInGit Option[configdomain.UnknownBranchType], runner subshelldomain.Runner) error {
