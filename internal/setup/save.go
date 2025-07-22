@@ -15,7 +15,7 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-func SaveAll(userInput userInput, unvalidatedConfig config.UnvalidatedConfig, configFile configdomain.PartialConfig, data SetupData, frontend subshelldomain.Runner) error {
+func SaveAll(userInput userInput, unvalidatedConfig config.UnvalidatedConfig, data SetupData, frontend subshelldomain.Runner) error {
 	fc := gohacks.ErrorCollector{}
 	fc.Check(
 		saveAliases(userInput.data.Aliases, unvalidatedConfig.GitGlobal.Aliases, frontend),
@@ -54,7 +54,7 @@ func SaveAll(userInput userInput, unvalidatedConfig config.UnvalidatedConfig, co
 	case dialog.ConfigStorageOptionFile:
 		return saveToFile(userInput, unvalidatedConfig.GitLocal, frontend)
 	case dialog.ConfigStorageOptionGit:
-		return saveToGit(userInput, unvalidatedConfig.GitLocal, configFile, data, frontend)
+		return saveToGit(userInput, unvalidatedConfig.GitLocal, unvalidatedConfig.File, data, frontend)
 	}
 	return nil
 }
