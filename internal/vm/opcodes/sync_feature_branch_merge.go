@@ -47,6 +47,7 @@ func (self *SyncFeatureBranchMerge) Run(args shared.RunArgs) error {
 				}
 				if !isInSync {
 					program = append(program, &MergeParentResolvePhantomConflicts{
+						CurrentBranch:     self.Branch,
 						CurrentParent:     parentToMerge,
 						InitialParentName: self.InitialParentName,
 						InitialParentSHA:  self.InitialParentSHA,
@@ -62,6 +63,7 @@ func (self *SyncFeatureBranchMerge) Run(args shared.RunArgs) error {
 				}
 				if !isInSync {
 					program = append(program, &MergeParentResolvePhantomConflicts{
+						CurrentBranch:     self.Branch,
 						CurrentParent:     parentTrackingBranch.BranchName(),
 						InitialParentName: self.InitialParentName,
 						InitialParentSHA:  self.InitialParentSHA,

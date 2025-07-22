@@ -10,12 +10,12 @@ import (
 // and provide opcodes to continue and abort them.
 // Undoing an opcode is done via the undo package.
 type Opcode interface {
-	// AbortProgram provides the opcodes to abort this Opcode when it encounters an error.
-	AbortProgram() []Opcode
+	// Abort provides the opcodes to abort this Opcode when it encounters an error.
+	Abort() []Opcode
 
-	// ContinueProgram provides the opcodes continue this opcode
+	// Continue provides the opcodes continue this opcode
 	// after it encountered an error and the user has resolved the error.
-	ContinueProgram() []Opcode
+	Continue() []Opcode
 
 	// AutomaticUndoError provides the error message to display when this opcode
 	// cause the command to automatically undo.
@@ -30,12 +30,12 @@ type Opcode interface {
 	// When false, stops execution to let the user fix the issue and continue or manually undo.
 	ShouldUndoOnError() bool
 
-	// UndoProgram provides the opcodes to undo this operation.
+	// UndoExternalChanges provides the opcodes to undo this operation.
 	// All Git changes are automatically undone by the snapshot-based undo engine
 	// and don't need to be undone here.
 	// The undo program returned here is only for external changes
 	// like updating proposals at the forge.
-	UndoExternalChangesProgram() []Opcode
+	UndoExternalChanges() []Opcode
 }
 
 func RenderOpcodes(opcodes []Opcode, indent string) string {

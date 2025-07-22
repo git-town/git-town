@@ -4,6 +4,8 @@ import (
 	"cmp"
 	"errors"
 	"fmt"
+	"io"
+	"os"
 
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
@@ -12,6 +14,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/gohacks"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/state/runstate"
@@ -45,41 +48,44 @@ disable the ship-delete-tracking-branch configuration setting.`
 )
 
 func Cmd() *cobra.Command {
-	addVerboseFlag, readVerboseFlag := flags.Verbose()
-	addMessageFlag, readMessageFlag := flags.CommitMessage("specify the commit message for the squash commit")
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addMessageFlag, readMessageFlag := flags.CommitMessage("specify the commit message for the squash commit")
+	addMessageFileFlag, readMessageFileFlag := flags.CommitMessageFile()
 	addShipStrategyFlag, readShipStrategyFlag := flags.ShipStrategy()
 	addToParentFlag, readToParentFlag := flags.ShipIntoNonPerennialParent()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   shipCommand,
 		Args:  cobra.MaximumNArgs(1),
 		Short: shipDesc,
 		Long:  cmdhelpers.Long(shipDesc, fmt.Sprintf(shipHelp, configdomain.KeyGitHubToken)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			shipStrategyOverride, err1 := readShipStrategyFlag(cmd)
+			dryRun, err1 := readDryRunFlag(cmd)
 			message, err2 := readMessageFlag(cmd)
-			dryRun, err3 := readDryRunFlag(cmd)
-			toParent, err4 := readToParentFlag(cmd)
-			verbose, err5 := readVerboseFlag(cmd)
-			if err := cmp.Or(err1, err2, err3, err4, err5); err != nil {
+			messageFile, err3 := readMessageFileFlag(cmd)
+			shipStrategyOverride, err4 := readShipStrategyFlag(cmd)
+			toParent, err5 := readToParentFlag(cmd)
+			verbose, err6 := readVerboseFlag(cmd)
+			if err := cmp.Or(err1, err2, err3, err4, err5, err6); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.CliConfig{
 				DryRun:  dryRun,
 				Verbose: verbose,
 			}
-			return executeShip(args, cliConfig, message, shipStrategyOverride, toParent)
+			return executeShip(args, cliConfig, message, messageFile, shipStrategyOverride, toParent)
 		},
 	}
+	addMessageFileFlag(&cmd)
 	addDryRunFlag(&cmd)
-	addVerboseFlag(&cmd)
 	addMessageFlag(&cmd)
 	addShipStrategyFlag(&cmd)
 	addToParentFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeShip(args []string, cliConfig cliconfig.CliConfig, message Option[gitdomain.CommitMessage], shipStrategy Option[configdomain.ShipStrategy], toParent configdomain.ShipIntoNonperennialParent) error {
+func executeShip(args []string, cliConfig cliconfig.CliConfig, messageOpt Option[gitdomain.CommitMessage], messageFileOpt Option[gitdomain.CommitMessageFile], shipStrategy Option[configdomain.ShipStrategy], toParent configdomain.ShipIntoNonperennialParent) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,
@@ -92,6 +98,10 @@ func executeShip(args []string, cliConfig cliconfig.CliConfig, message Option[gi
 	}
 	sharedData, exit, err := determineSharedShipData(args, repo, cliConfig, shipStrategy)
 	if err != nil || exit {
+		return err
+	}
+	message, err := ReadFile(messageOpt, messageFileOpt)
+	if err != nil {
 		return err
 	}
 	if err = validateSharedData(sharedData, toParent, message); err != nil {
@@ -209,4 +219,25 @@ func validateSharedData(data sharedShipData, toParent configdomain.ShipIntoNonpe
 		}
 	}
 	return nil
+}
+
+func ReadFile[TEXT ~string, FILE FileFlag](inputText Option[TEXT], inputFileOpt Option[FILE]) (Option[TEXT], error) {
+	if inputText.IsSome() {
+		return inputText, nil
+	}
+	file, hasFile := inputFileOpt.Get()
+	if !hasFile {
+		return None[TEXT](), nil
+	}
+	if file.ShouldReadStdin() {
+		content, err := io.ReadAll(os.Stdin)
+		return NewOption(TEXT(string(content))), gohacks.WrapIfError(err, "cannot read STDIN: %w")
+	}
+	fileData, err := os.ReadFile(file.String())
+	return NewOption(TEXT(string(fileData))), err
+}
+
+type FileFlag interface {
+	ShouldReadStdin() bool
+	fmt.Stringer
 }

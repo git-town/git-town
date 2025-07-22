@@ -12,13 +12,13 @@ type RebaseBranch struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *RebaseBranch) AbortProgram() []shared.Opcode {
+func (self *RebaseBranch) Abort() []shared.Opcode {
 	return []shared.Opcode{
 		&RebaseAbort{},
 	}
 }
 
-func (self *RebaseBranch) ContinueProgram() []shared.Opcode {
+func (self *RebaseBranch) Continue() []shared.Opcode {
 	return []shared.Opcode{
 		&RebaseContinueIfNeeded{},
 	}
