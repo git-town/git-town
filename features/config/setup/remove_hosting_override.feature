@@ -8,7 +8,7 @@ Feature: remove an existing forge type override
       | DIALOG                      | KEYS                 | DESCRIPTION                                 |
       | welcome                     | enter                |                                             |
       | aliases                     | enter                |                                             |
-      | main branch                 | down enter           |                                             |
+      | main branch                 | enter                |                                             |
       | perennial branches          |                      | no input here since the dialog doesn't show |
       | perennial regex             | enter                |                                             |
       | feature regex               | enter                |                                             |

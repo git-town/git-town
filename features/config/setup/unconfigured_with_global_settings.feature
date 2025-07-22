@@ -13,6 +13,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
     And global Git setting "git-town.main-branch" is "main"
     And global Git setting "git-town.new-branch-type" is "prototype"
     And global Git setting "git-town.unknown-branch-type" is "prototype"
+    And global Git setting "git-town.hosting-origin-hostname" is "git"
     And global Git setting "git-town.perennial-branches" is "perennials"
     And global Git setting "git-town.perennial-regex" is "^per-"
     And global Git setting "git-town.push-hook" is "false"
@@ -51,5 +52,4 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | config storage              | enter       |
     Then Git Town runs the commands
       | COMMAND                                         |
-      | git config git-town.main-branch main            |
       | git config git-town.perennial-branches branch-1 |
