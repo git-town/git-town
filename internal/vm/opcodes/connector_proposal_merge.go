@@ -21,7 +21,7 @@ type ConnectorProposalMerge struct {
 	undeclaredOpcodeMethods   `exhaustruct:"optional"`
 }
 
-func (self *ConnectorProposalMerge) AbortProgram() []shared.Opcode {
+func (self *ConnectorProposalMerge) Abort() []shared.Opcode {
 	if self.enteredEmptyCommitMessage {
 		return []shared.Opcode{&ChangesDiscard{}}
 	}
