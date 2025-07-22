@@ -17,7 +17,7 @@ type MergeAlwaysProgram struct {
 	undeclaredOpcodeMethods
 }
 
-func (self *MergeAlwaysProgram) AbortProgram() []shared.Opcode {
+func (self *MergeAlwaysProgram) Abort() []shared.Opcode {
 	return []shared.Opcode{
 		&MergeAbort{},
 	}

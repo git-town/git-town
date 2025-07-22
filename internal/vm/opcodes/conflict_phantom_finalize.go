@@ -13,13 +13,13 @@ type ConflictPhantomFinalize struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *ConflictPhantomFinalize) AbortProgram() []shared.Opcode {
+func (self *ConflictPhantomFinalize) Abort() []shared.Opcode {
 	return []shared.Opcode{
 		&MergeAbort{},
 	}
 }
 
-func (self *ConflictPhantomFinalize) ContinueProgram() []shared.Opcode {
+func (self *ConflictPhantomFinalize) Continue() []shared.Opcode {
 	return []shared.Opcode{
 		&MergeContinue{},
 	}

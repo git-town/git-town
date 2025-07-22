@@ -53,7 +53,8 @@ func NewBranchType(args Args[configdomain.NewBranchType]) (Option[configdomain.N
 	if local, hasLocal := args.Local.Get(); hasLocal {
 		cursor = entries.IndexOf(Some(local.BranchType()))
 	}
-	selection, exit, err := dialogcomponents.RadioList(entries, cursor, newBranchTypeTitle, NewBranchTypeHelp, args.Inputs, "new-branch-type")
-	fmt.Println(messages.NewBranchType, dialogcomponents.FormattedSelection(selection.String(), exit))
-	return configdomain.NewBranchTypeOpt(selection), exit, err
+	input, exit, err := dialogcomponents.RadioList(entries, cursor, newBranchTypeTitle, NewBranchTypeHelp, args.Inputs, "new-branch-type")
+	selection := configdomain.NewBranchTypeOpt(input)
+	fmt.Println(messages.NewBranchType, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
+	return selection, exit, err
 }

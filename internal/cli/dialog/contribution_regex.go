@@ -22,6 +22,7 @@ is set to something other than "contribution".
 
 If you're not sure what to enter here,
 it's safe to leave it blank.
+
 `
 )
 
@@ -39,6 +40,6 @@ func ContributionRegex(args Args[configdomain.ContributionRegex]) (Option[config
 		// the user has entered the global value --> keep using the global value, don't store the local value
 		newValue = None[configdomain.ContributionRegex]()
 	}
-	fmt.Printf(messages.ContributionRegexResult, dialogcomponents.FormattedSelection(newValue.String(), exit))
+	fmt.Printf(messages.ContributionRegexResult, dialogcomponents.FormattedOption(newValue, args.Global.IsSome(), exit))
 	return newValue, exit, cmp.Or(err1, err2)
 }
