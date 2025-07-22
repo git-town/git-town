@@ -28,6 +28,7 @@ Feature: Accepting all default values in a brand-new Git repo leads to a working
       | ship delete tracking branch | enter      |
       | config storage              | down enter |
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                         |
