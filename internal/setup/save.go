@@ -121,7 +121,7 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 			saveUnknownBranchType(userInput.data.UnknownBranchType, existingGitConfig.UnknownBranchType, frontend),
 		)
 	}
-	if len(data.remotes) > 1 && configFile.DevRemote.IsNone() {
+	if len(data.Remotes) > 1 && configFile.DevRemote.IsNone() {
 		fc.Check(
 			saveDevRemote(userInput.data.DevRemote, existingGitConfig.DevRemote, frontend),
 		)

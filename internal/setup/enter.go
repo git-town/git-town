@@ -23,11 +23,11 @@ import (
 
 func Enter(data Data) (UserInput, dialogdomain.Exit, error) {
 	var emptyResult UserInput
-	exit, err := dialog.Welcome(data.dialogInputs)
+	exit, err := dialog.Welcome(data.DialogInputs)
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	aliases, exit, err := dialog.Aliases(configdomain.AllAliasableCommands(), data.config.NormalConfig.Aliases, data.dialogInputs)
+	aliases, exit, err := dialog.Aliases(configdomain.AllAliasableCommands(), data.Config.NormalConfig.Aliases, data.DialogInputs)
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
@@ -76,8 +76,8 @@ EnterForgeData:
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	devURL := data.config.NormalConfig.DevURL(data.backend)
-	actualForgeType := determineForgeType(enteredForgeType.Or(data.config.File.ForgeType), devURL)
+	devURL := data.Config.NormalConfig.DevURL(data.Backend)
+	actualForgeType := determineForgeType(enteredForgeType.Or(data.Config.File.ForgeType), devURL)
 	bitbucketUsername := None[forgedomain.BitbucketUsername]()
 	bitbucketAppPassword := None[forgedomain.BitbucketAppPassword]()
 	codebergToken := None[forgedomain.CodebergToken]()
@@ -128,7 +128,7 @@ EnterForgeData:
 		}
 	}
 	repeat, exit, err := testForgeAuth(testForgeAuthArgs{
-		backend:              data.backend,
+		backend:              data.Backend,
 		bitbucketAppPassword: bitbucketAppPassword,
 		bitbucketUsername:    bitbucketUsername,
 		codebergToken:        codebergToken,
@@ -139,8 +139,8 @@ EnterForgeData:
 		githubToken:          githubToken,
 		gitlabConnectorType:  gitlabConnectorTypeOpt,
 		gitlabToken:          gitlabToken,
-		inputs:               data.dialogInputs,
-		remoteURL:            data.config.NormalConfig.RemoteURL(data.backend, devRemote.GetOrElse(config.DefaultNormalConfig().DevRemote)),
+		inputs:               data.DialogInputs,
+		remoteURL:            data.Config.NormalConfig.RemoteURL(data.Backend, devRemote.GetOrElse(config.DefaultNormalConfig().DevRemote)),
 	})
 	if err != nil || exit {
 		return emptyResult, exit, err
@@ -154,11 +154,11 @@ EnterForgeData:
 		codebergToken:        codebergToken,
 		data:                 data,
 		determinedForgeType:  actualForgeType,
-		existingConfig:       data.config.NormalConfig,
+		existingConfig:       data.Config.NormalConfig,
 		giteaToken:           giteaToken,
 		githubToken:          githubToken,
 		gitlabToken:          gitlabToken,
-		inputs:               data.dialogInputs,
+		inputs:               data.DialogInputs,
 	})
 	if err != nil || exit {
 		return emptyResult, exit, err
@@ -199,7 +199,7 @@ EnterForgeData:
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	configStorage, exit, err := dialog.ConfigStorage(data.dialogInputs)
+	configStorage, exit, err := dialog.ConfigStorage(data.DialogInputs)
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
@@ -246,7 +246,7 @@ EnterForgeData:
 		GitUserName:  "", // the setup assistant doesn't ask for this
 		MainBranch:   actualMainBranch,
 	}
-	if !data.dialogInputs.IsEmpty() {
+	if !data.DialogInputs.IsEmpty() {
 		panic("unused dialog inputs")
 	}
 	return UserInput{normalData, actualForgeType, tokenScope, configStorage, validatedData}, false, nil
@@ -285,303 +285,303 @@ func determineForgeType(userChoice Option[forgedomain.ForgeType], devURL Option[
 }
 
 func enterBitbucketAppPassword(data Data) (Option[forgedomain.BitbucketAppPassword], dialogdomain.Exit, error) {
-	if data.config.File.BitbucketUsername.IsSome() {
+	if data.Config.File.BitbucketUsername.IsSome() {
 		return None[forgedomain.BitbucketAppPassword](), false, nil
 	}
 	return dialog.BitbucketAppPassword(dialog.Args[forgedomain.BitbucketAppPassword]{
-		Global: data.config.GitLocal.BitbucketAppPassword,
-		Inputs: data.dialogInputs,
-		Local:  data.config.GitLocal.BitbucketAppPassword,
+		Global: data.Config.GitLocal.BitbucketAppPassword,
+		Inputs: data.DialogInputs,
+		Local:  data.Config.GitLocal.BitbucketAppPassword,
 	})
 }
 
 func enterBitbucketUserName(data Data) (Option[forgedomain.BitbucketUsername], dialogdomain.Exit, error) {
-	if data.config.File.BitbucketUsername.IsSome() {
+	if data.Config.File.BitbucketUsername.IsSome() {
 		return None[forgedomain.BitbucketUsername](), false, nil
 	}
 	return dialog.BitbucketUsername(dialog.Args[forgedomain.BitbucketUsername]{
-		Global: data.config.GitLocal.BitbucketUsername,
-		Inputs: data.dialogInputs,
-		Local:  data.config.GitLocal.BitbucketUsername,
+		Global: data.Config.GitLocal.BitbucketUsername,
+		Inputs: data.DialogInputs,
+		Local:  data.Config.GitLocal.BitbucketUsername,
 	})
 }
 
 func enterCodebergToken(data Data) (Option[forgedomain.CodebergToken], dialogdomain.Exit, error) {
-	if data.config.File.CodebergToken.IsSome() {
+	if data.Config.File.CodebergToken.IsSome() {
 		return None[forgedomain.CodebergToken](), false, nil
 	}
 	return dialog.CodebergToken(dialog.Args[forgedomain.CodebergToken]{
-		Global: data.config.GitGlobal.CodebergToken,
-		Inputs: data.dialogInputs,
-		Local:  data.config.GitLocal.CodebergToken,
+		Global: data.Config.GitGlobal.CodebergToken,
+		Inputs: data.DialogInputs,
+		Local:  data.Config.GitLocal.CodebergToken,
 	})
 }
 
 func enterContributionRegex(data Data) (Option[configdomain.ContributionRegex], dialogdomain.Exit, error) {
-	if data.config.File.ContributionRegex.IsSome() {
+	if data.Config.File.ContributionRegex.IsSome() {
 		return None[configdomain.ContributionRegex](), false, nil
 	}
 	return dialog.ContributionRegex(dialog.Args[configdomain.ContributionRegex]{
-		Global: data.config.GitGlobal.ContributionRegex,
-		Inputs: data.dialogInputs,
-		Local:  data.config.GitLocal.ContributionRegex,
+		Global: data.Config.GitGlobal.ContributionRegex,
+		Inputs: data.DialogInputs,
+		Local:  data.Config.GitLocal.ContributionRegex,
 	})
 }
 
 func enterDevRemote(data Data) (Option[gitdomain.Remote], dialogdomain.Exit, error) {
-	if data.config.File.DevRemote.IsSome() {
+	if data.Config.File.DevRemote.IsSome() {
 		return None[gitdomain.Remote](), false, nil
 	}
-	return dialog.DevRemote(data.remotes, dialog.Args[gitdomain.Remote]{
-		Global: data.config.GitGlobal.DevRemote,
-		Inputs: data.dialogInputs,
-		Local:  data.config.GitLocal.DevRemote,
+	return dialog.DevRemote(data.Remotes, dialog.Args[gitdomain.Remote]{
+		Global: data.Config.GitGlobal.DevRemote,
+		Inputs: data.DialogInputs,
+		Local:  data.Config.GitLocal.DevRemote,
 	})
 }
 
 func enterFeatureRegex(data Data) (Option[configdomain.FeatureRegex], dialogdomain.Exit, error) {
-	if data.config.File.FeatureRegex.IsSome() {
+	if data.Config.File.FeatureRegex.IsSome() {
 		return None[configdomain.FeatureRegex](), false, nil
 	}
 	return dialog.FeatureRegex(dialog.Args[configdomain.FeatureRegex]{
-		Global: data.config.GitGlobal.FeatureRegex,
-		Inputs: data.dialogInputs,
-		Local:  data.config.GitLocal.FeatureRegex,
+		Global: data.Config.GitGlobal.FeatureRegex,
+		Inputs: data.DialogInputs,
+		Local:  data.Config.GitLocal.FeatureRegex,
 	})
 }
 
 func enterForgeType(data Data) (Option[forgedomain.ForgeType], dialogdomain.Exit, error) {
-	if data.config.File.ForgeType.IsSome() {
+	if data.Config.File.ForgeType.IsSome() {
 		return None[forgedomain.ForgeType](), false, nil
 	}
 	return dialog.ForgeType(dialog.Args[forgedomain.ForgeType]{
-		Global: data.config.GitGlobal.ForgeType,
-		Inputs: data.dialogInputs,
-		Local:  data.config.GitLocal.ForgeType,
+		Global: data.Config.GitGlobal.ForgeType,
+		Inputs: data.DialogInputs,
+		Local:  data.Config.GitLocal.ForgeType,
 	})
 }
 
 func enterGitHubConnectorType(data Data) (Option[forgedomain.GitHubConnectorType], dialogdomain.Exit, error) {
-	if data.config.File.GitHubConnectorType.IsSome() {
+	if data.Config.File.GitHubConnectorType.IsSome() {
 		return None[forgedomain.GitHubConnectorType](), false, nil
 	}
 	return dialog.GitHubConnectorType(dialog.Args[forgedomain.GitHubConnectorType]{
-		Global: data.config.GitGlobal.GitHubConnectorType,
-		Inputs: data.dialogInputs,
-		Local:  data.config.GitLocal.GitHubConnectorType,
+		Global: data.Config.GitGlobal.GitHubConnectorType,
+		Inputs: data.DialogInputs,
+		Local:  data.Config.GitLocal.GitHubConnectorType,
 	})
 }
 
 func enterGitHubToken(data Data) (Option[forgedomain.GitHubToken], dialogdomain.Exit, error) {
-	if data.config.File.GitHubToken.IsSome() {
+	if data.Config.File.GitHubToken.IsSome() {
 		return None[forgedomain.GitHubToken](), false, nil
 	}
 	return dialog.GitHubToken(dialog.Args[forgedomain.GitHubToken]{
-		Global: data.config.GitGlobal.GitHubToken,
-		Inputs: data.dialogInputs,
-		Local:  data.config.GitLocal.GitHubToken,
+		Global: data.Config.GitGlobal.GitHubToken,
+		Inputs: data.DialogInputs,
+		Local:  data.Config.GitLocal.GitHubToken,
 	})
 }
 
 func enterGitLabConnectorType(data Data) (Option[forgedomain.GitLabConnectorType], dialogdomain.Exit, error) {
-	if data.config.File.GitLabConnectorType.IsSome() {
+	if data.Config.File.GitLabConnectorType.IsSome() {
 		return None[forgedomain.GitLabConnectorType](), false, nil
 	}
 	return dialog.GitLabConnectorType(dialog.Args[forgedomain.GitLabConnectorType]{
-		Global: data.config.GitGlobal.GitLabConnectorType,
-		Inputs: data.dialogInputs,
-		Local:  data.config.GitLocal.GitLabConnectorType,
+		Global: data.Config.GitGlobal.GitLabConnectorType,
+		Inputs: data.DialogInputs,
+		Local:  data.Config.GitLocal.GitLabConnectorType,
 	})
 }
 
 func enterGitLabToken(data Data) (Option[forgedomain.GitLabToken], dialogdomain.Exit, error) {
-	if data.config.File.GitLabToken.IsSome() {
+	if data.Config.File.GitLabToken.IsSome() {
 		return None[forgedomain.GitLabToken](), false, nil
 	}
 	return dialog.GitLabToken(dialog.Args[forgedomain.GitLabToken]{
-		Global: data.config.GitGlobal.GitLabToken,
-		Inputs: data.dialogInputs,
-		Local:  data.config.GitLocal.GitLabToken,
+		Global: data.Config.GitGlobal.GitLabToken,
+		Inputs: data.DialogInputs,
+		Local:  data.Config.GitLocal.GitLabToken,
 	})
 }
 
 func enterGiteaToken(data Data) (Option[forgedomain.GiteaToken], dialogdomain.Exit, error) {
-	if data.config.File.GiteaToken.IsSome() {
+	if data.Config.File.GiteaToken.IsSome() {
 		return None[forgedomain.GiteaToken](), false, nil
 	}
 	return dialog.GiteaToken(dialog.Args[forgedomain.GiteaToken]{
-		Global: data.config.GitGlobal.GiteaToken,
-		Inputs: data.dialogInputs,
-		Local:  data.config.GitLocal.GiteaToken,
+		Global: data.Config.GitGlobal.GiteaToken,
+		Inputs: data.DialogInputs,
+		Local:  data.Config.GitLocal.GiteaToken,
 	})
 }
 
 func enterMainBranch(data Data) (userChoice Option[gitdomain.LocalBranchName], actualMainBranch gitdomain.LocalBranchName, exit dialogdomain.Exit, err error) {
-	if configFileMainBranch, hasMain := data.config.File.MainBranch.Get(); hasMain {
+	if configFileMainBranch, hasMain := data.Config.File.MainBranch.Get(); hasMain {
 		return Some(configFileMainBranch), configFileMainBranch, false, nil
 	}
 	return dialog.MainBranch(dialog.MainBranchArgs{
-		Inputs:         data.dialogInputs,
-		Local:          data.config.GitLocal.MainBranch,
-		LocalBranches:  data.localBranches.Names(),
-		StandardBranch: data.git.StandardBranch(data.backend),
-		Unscoped:       data.config.GitUnscoped.MainBranch,
+		Inputs:         data.DialogInputs,
+		Local:          data.Config.GitLocal.MainBranch,
+		LocalBranches:  data.LocalBranches.Names(),
+		StandardBranch: data.Git.StandardBranch(data.Backend),
+		Unscoped:       data.Config.GitUnscoped.MainBranch,
 	})
 }
 
 func enterNewBranchType(data Data) (Option[configdomain.NewBranchType], dialogdomain.Exit, error) {
-	if data.config.File.NewBranchType.IsSome() {
+	if data.Config.File.NewBranchType.IsSome() {
 		return None[configdomain.NewBranchType](), false, nil
 	}
 	return dialog.NewBranchType(dialog.Args[configdomain.NewBranchType]{
-		Global: data.config.GitGlobal.NewBranchType,
-		Inputs: data.dialogInputs,
-		Local:  data.config.GitLocal.NewBranchType,
+		Global: data.Config.GitGlobal.NewBranchType,
+		Inputs: data.DialogInputs,
+		Local:  data.Config.GitLocal.NewBranchType,
 	})
 }
 
 func enterObservedRegex(data Data) (Option[configdomain.ObservedRegex], dialogdomain.Exit, error) {
-	if data.config.File.ObservedRegex.IsSome() {
+	if data.Config.File.ObservedRegex.IsSome() {
 		return None[configdomain.ObservedRegex](), false, nil
 	}
 	return dialog.ObservedRegex(dialog.Args[configdomain.ObservedRegex]{
-		Global: data.config.GitGlobal.ObservedRegex,
-		Inputs: data.dialogInputs,
-		Local:  data.config.GitLocal.ObservedRegex,
+		Global: data.Config.GitGlobal.ObservedRegex,
+		Inputs: data.DialogInputs,
+		Local:  data.Config.GitLocal.ObservedRegex,
 	})
 }
 
 func enterOriginHostName(data Data) (Option[configdomain.HostingOriginHostname], dialogdomain.Exit, error) {
-	if data.config.File.HostingOriginHostname.IsSome() {
+	if data.Config.File.HostingOriginHostname.IsSome() {
 		return None[configdomain.HostingOriginHostname](), false, nil
 	}
 	return dialog.OriginHostname(dialog.Args[configdomain.HostingOriginHostname]{
-		Global: data.config.GitGlobal.HostingOriginHostname,
-		Inputs: data.dialogInputs,
-		Local:  data.config.GitLocal.HostingOriginHostname,
+		Global: data.Config.GitGlobal.HostingOriginHostname,
+		Inputs: data.DialogInputs,
+		Local:  data.Config.GitLocal.HostingOriginHostname,
 	})
 }
 
 func enterPerennialBranches(data Data, mainBranch gitdomain.LocalBranchName) (gitdomain.LocalBranchNames, dialogdomain.Exit, error) {
 	immutablePerennials := gitdomain.LocalBranchNames{mainBranch}.
-		AppendAllMissing(data.config.File.PerennialBranches...).
-		AppendAllMissing(data.config.GitGlobal.PerennialBranches...)
+		AppendAllMissing(data.Config.File.PerennialBranches...).
+		AppendAllMissing(data.Config.GitGlobal.PerennialBranches...)
 	return dialog.PerennialBranches(dialog.PerennialBranchesArgs{
 		ImmutableGitPerennials: immutablePerennials,
-		Inputs:                 data.dialogInputs,
-		LocalBranches:          data.localBranches.Names(),
-		LocalGitPerennials:     data.config.GitLocal.PerennialBranches,
+		Inputs:                 data.DialogInputs,
+		LocalBranches:          data.LocalBranches.Names(),
+		LocalGitPerennials:     data.Config.GitLocal.PerennialBranches,
 		MainBranch:             mainBranch,
 	})
 }
 
 func enterPerennialRegex(data Data) (Option[configdomain.PerennialRegex], dialogdomain.Exit, error) {
-	if data.config.File.PerennialRegex.IsSome() {
+	if data.Config.File.PerennialRegex.IsSome() {
 		return None[configdomain.PerennialRegex](), false, nil
 	}
 	return dialog.PerennialRegex(dialog.Args[configdomain.PerennialRegex]{
-		Global: data.config.GitGlobal.PerennialRegex,
-		Inputs: data.dialogInputs,
-		Local:  data.config.GitLocal.PerennialRegex,
+		Global: data.Config.GitGlobal.PerennialRegex,
+		Inputs: data.DialogInputs,
+		Local:  data.Config.GitLocal.PerennialRegex,
 	})
 }
 
 func enterPushHook(data Data) (Option[configdomain.PushHook], dialogdomain.Exit, error) {
-	if data.config.File.PushHook.IsSome() {
+	if data.Config.File.PushHook.IsSome() {
 		return None[configdomain.PushHook](), false, nil
 	}
 	return dialog.PushHook(dialog.Args[configdomain.PushHook]{
-		Global: data.config.GitGlobal.PushHook,
-		Inputs: data.dialogInputs,
-		Local:  data.config.GitLocal.PushHook,
+		Global: data.Config.GitGlobal.PushHook,
+		Inputs: data.DialogInputs,
+		Local:  data.Config.GitLocal.PushHook,
 	})
 }
 
 func enterShareNewBranches(data Data) (Option[configdomain.ShareNewBranches], dialogdomain.Exit, error) {
-	if data.config.File.ShareNewBranches.IsSome() {
+	if data.Config.File.ShareNewBranches.IsSome() {
 		return None[configdomain.ShareNewBranches](), false, nil
 	}
 	return dialog.ShareNewBranches(dialog.Args[configdomain.ShareNewBranches]{
-		Global: data.config.GitGlobal.ShareNewBranches,
-		Inputs: data.dialogInputs,
-		Local:  data.config.GitLocal.ShareNewBranches,
+		Global: data.Config.GitGlobal.ShareNewBranches,
+		Inputs: data.DialogInputs,
+		Local:  data.Config.GitLocal.ShareNewBranches,
 	})
 }
 
 func enterShipDeleteTrackingBranch(data Data) (Option[configdomain.ShipDeleteTrackingBranch], dialogdomain.Exit, error) {
-	if data.config.File.ShipDeleteTrackingBranch.IsSome() {
+	if data.Config.File.ShipDeleteTrackingBranch.IsSome() {
 		return None[configdomain.ShipDeleteTrackingBranch](), false, nil
 	}
 	return dialog.ShipDeleteTrackingBranch(dialog.Args[configdomain.ShipDeleteTrackingBranch]{
-		Global: data.config.GitGlobal.ShipDeleteTrackingBranch,
-		Inputs: data.dialogInputs,
-		Local:  data.config.GitLocal.ShipDeleteTrackingBranch,
+		Global: data.Config.GitGlobal.ShipDeleteTrackingBranch,
+		Inputs: data.DialogInputs,
+		Local:  data.Config.GitLocal.ShipDeleteTrackingBranch,
 	})
 }
 
 func enterShipStrategy(data Data) (Option[configdomain.ShipStrategy], dialogdomain.Exit, error) {
-	if data.config.File.ShipStrategy.IsSome() {
+	if data.Config.File.ShipStrategy.IsSome() {
 		return None[configdomain.ShipStrategy](), false, nil
 	}
 	return dialog.ShipStrategy(dialog.Args[configdomain.ShipStrategy]{
-		Global: data.config.GitGlobal.ShipStrategy,
-		Inputs: data.dialogInputs,
-		Local:  data.config.GitLocal.ShipStrategy,
+		Global: data.Config.GitGlobal.ShipStrategy,
+		Inputs: data.DialogInputs,
+		Local:  data.Config.GitLocal.ShipStrategy,
 	})
 }
 
 func enterSyncFeatureStrategy(data Data) (Option[configdomain.SyncFeatureStrategy], dialogdomain.Exit, error) {
-	if data.config.File.SyncFeatureStrategy.IsSome() {
+	if data.Config.File.SyncFeatureStrategy.IsSome() {
 		return None[configdomain.SyncFeatureStrategy](), false, nil
 	}
 	return dialog.SyncFeatureStrategy(dialog.Args[configdomain.SyncFeatureStrategy]{
-		Global: data.config.GitGlobal.SyncFeatureStrategy,
-		Inputs: data.dialogInputs,
-		Local:  data.config.GitLocal.SyncFeatureStrategy,
+		Global: data.Config.GitGlobal.SyncFeatureStrategy,
+		Inputs: data.DialogInputs,
+		Local:  data.Config.GitLocal.SyncFeatureStrategy,
 	})
 }
 
 func enterSyncPerennialStrategy(data Data) (Option[configdomain.SyncPerennialStrategy], dialogdomain.Exit, error) {
-	if data.config.File.SyncPerennialStrategy.IsSome() {
+	if data.Config.File.SyncPerennialStrategy.IsSome() {
 		return None[configdomain.SyncPerennialStrategy](), false, nil
 	}
 	return dialog.SyncPerennialStrategy(dialog.Args[configdomain.SyncPerennialStrategy]{
-		Global: data.config.GitGlobal.SyncPerennialStrategy,
-		Inputs: data.dialogInputs,
-		Local:  data.config.GitLocal.SyncPerennialStrategy,
+		Global: data.Config.GitGlobal.SyncPerennialStrategy,
+		Inputs: data.DialogInputs,
+		Local:  data.Config.GitLocal.SyncPerennialStrategy,
 	})
 }
 
 func enterSyncPrototypeStrategy(data Data) (Option[configdomain.SyncPrototypeStrategy], dialogdomain.Exit, error) {
-	if data.config.File.SyncPrototypeStrategy.IsSome() {
+	if data.Config.File.SyncPrototypeStrategy.IsSome() {
 		return None[configdomain.SyncPrototypeStrategy](), false, nil
 	}
 	return dialog.SyncPrototypeStrategy(dialog.Args[configdomain.SyncPrototypeStrategy]{
-		Global: data.config.GitGlobal.SyncPrototypeStrategy,
-		Inputs: data.dialogInputs,
-		Local:  data.config.GitLocal.SyncPrototypeStrategy,
+		Global: data.Config.GitGlobal.SyncPrototypeStrategy,
+		Inputs: data.DialogInputs,
+		Local:  data.Config.GitLocal.SyncPrototypeStrategy,
 	})
 }
 
 func enterSyncTags(data Data) (Option[configdomain.SyncTags], dialogdomain.Exit, error) {
-	if data.config.File.SyncTags.IsSome() {
+	if data.Config.File.SyncTags.IsSome() {
 		return None[configdomain.SyncTags](), false, nil
 	}
 	return dialog.SyncTags(dialog.Args[configdomain.SyncTags]{
-		Global: data.config.GitGlobal.SyncTags,
-		Inputs: data.dialogInputs,
-		Local:  data.config.GitLocal.SyncTags,
+		Global: data.Config.GitGlobal.SyncTags,
+		Inputs: data.DialogInputs,
+		Local:  data.Config.GitLocal.SyncTags,
 	})
 }
 
 func enterSyncUpstream(data Data) (Option[configdomain.SyncUpstream], dialogdomain.Exit, error) {
-	if data.config.File.SyncUpstream.IsSome() {
+	if data.Config.File.SyncUpstream.IsSome() {
 		return None[configdomain.SyncUpstream](), false, nil
 	}
 	return dialog.SyncUpstream(dialog.Args[configdomain.SyncUpstream]{
-		Global: data.config.GitGlobal.SyncUpstream,
-		Inputs: data.dialogInputs,
-		Local:  data.config.GitLocal.SyncUpstream,
+		Global: data.Config.GitGlobal.SyncUpstream,
+		Inputs: data.DialogInputs,
+		Local:  data.Config.GitLocal.SyncUpstream,
 	})
 }
 
@@ -606,13 +606,13 @@ type enterTokenScopeArgs struct {
 }
 
 func enterUnknownBranchType(data Data) (Option[configdomain.UnknownBranchType], dialogdomain.Exit, error) {
-	if data.config.File.UnknownBranchType.IsSome() {
+	if data.Config.File.UnknownBranchType.IsSome() {
 		return None[configdomain.UnknownBranchType](), false, nil
 	}
 	return dialog.UnknownBranchType(dialog.Args[configdomain.UnknownBranchType]{
-		Global: data.config.GitGlobal.UnknownBranchType,
-		Inputs: data.dialogInputs,
-		Local:  data.config.GitLocal.UnknownBranchType,
+		Global: data.Config.GitGlobal.UnknownBranchType,
+		Inputs: data.DialogInputs,
+		Local:  data.Config.GitLocal.UnknownBranchType,
 	})
 }
 
@@ -699,19 +699,19 @@ func tokenScopeDialog(args enterTokenScopeArgs) (configdomain.ConfigScope, dialo
 	if forgeType, hasForgeType := args.determinedForgeType.Get(); hasForgeType {
 		switch forgeType {
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
-			existingScope := determineExistingScope(args.data.snapshot, configdomain.KeyBitbucketUsername, args.data.config.NormalConfig.BitbucketUsername)
+			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyBitbucketUsername, args.data.Config.NormalConfig.BitbucketUsername)
 			return dialog.TokenScope(existingScope, args.inputs)
 		case forgedomain.ForgeTypeCodeberg:
-			existingScope := determineExistingScope(args.data.snapshot, configdomain.KeyCodebergToken, args.data.config.NormalConfig.CodebergToken)
+			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyCodebergToken, args.data.Config.NormalConfig.CodebergToken)
 			return dialog.TokenScope(existingScope, args.inputs)
 		case forgedomain.ForgeTypeGitea:
-			existingScope := determineExistingScope(args.data.snapshot, configdomain.KeyGiteaToken, args.data.config.NormalConfig.GiteaToken)
+			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyGiteaToken, args.data.Config.NormalConfig.GiteaToken)
 			return dialog.TokenScope(existingScope, args.inputs)
 		case forgedomain.ForgeTypeGitHub:
-			existingScope := determineExistingScope(args.data.snapshot, configdomain.KeyGitHubToken, args.data.config.NormalConfig.GitHubToken)
+			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyGitHubToken, args.data.Config.NormalConfig.GitHubToken)
 			return dialog.TokenScope(existingScope, args.inputs)
 		case forgedomain.ForgeTypeGitLab:
-			existingScope := determineExistingScope(args.data.snapshot, configdomain.KeyGitLabToken, args.data.config.NormalConfig.GitLabToken)
+			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyGitLabToken, args.data.Config.NormalConfig.GitLabToken)
 			return dialog.TokenScope(existingScope, args.inputs)
 		}
 	}
