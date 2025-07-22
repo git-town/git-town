@@ -45,7 +45,7 @@ disable the ship-delete-tracking-branch configuration setting.`
 )
 
 func Cmd() *cobra.Command {
-	addBodyFileFlag, readBodyFileFlag := flags.ProposalBodyFile()
+	addCommitMessageFileFlag, readCommitMessageFileFlag := flags.CommitMessageFile()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addMessageFlag, readMessageFlag := flags.CommitMessage("specify the commit message for the squash commit")
 	addShipStrategyFlag, readShipStrategyFlag := flags.ShipStrategy()
@@ -57,7 +57,7 @@ func Cmd() *cobra.Command {
 		Short: shipDesc,
 		Long:  cmdhelpers.Long(shipDesc, fmt.Sprintf(shipHelp, configdomain.KeyGitHubToken)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			bodyFile, err2 := readBodyFileFlag(cmd)
+			commitMessageFile, err2 := readCommitMessageFileFlag(cmd)
 			dryRun, err3 := readDryRunFlag(cmd)
 			message, err2 := readMessageFlag(cmd)
 			shipStrategyOverride, err1 := readShipStrategyFlag(cmd)
@@ -73,6 +73,7 @@ func Cmd() *cobra.Command {
 			return executeShip(args, cliConfig, message, shipStrategyOverride, toParent)
 		},
 	}
+	addCommitMessageFileFlag(&cmd)
 	addDryRunFlag(&cmd)
 	addMessageFlag(&cmd)
 	addShipStrategyFlag(&cmd)
