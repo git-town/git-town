@@ -48,15 +48,15 @@ func executeConfigSetup(cliConfig cliconfig.CliConfig) error {
 	if err != nil {
 		return err
 	}
-	data, exit, err := setup.LoadSetupData(repo, cliConfig)
+	data, exit, err := setup.LoadData(repo, cliConfig)
 	if err != nil || exit {
 		return err
 	}
-	enterDataResult, exit, err := setup.EnterData(repo, data)
+	userInput, exit, err := setup.EnterUserInput(repo, data)
 	if err != nil || exit {
 		return err
 	}
-	if err = setup.SaveAll(enterDataResult, repo.UnvalidatedConfig, repo.UnvalidatedConfig.File, data, repo.Frontend); err != nil {
+	if err = setup.SaveAll(userInput, repo.UnvalidatedConfig, repo.UnvalidatedConfig.File, data, repo.Frontend); err != nil {
 		return err
 	}
 	return configinterpreter.Finished(configinterpreter.FinishedArgs{

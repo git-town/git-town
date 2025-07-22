@@ -22,7 +22,7 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-func EnterData(repo execute.OpenRepoResult, data SetupData) (userInput, dialogdomain.Exit, error) {
+func EnterUserInput(repo execute.OpenRepoResult, data SetupData) (userInput, dialogdomain.Exit, error) {
 	var emptyResult userInput
 	exit, err := dialog.Welcome(data.dialogInputs)
 	if err != nil || exit {

@@ -21,7 +21,7 @@ type SetupData struct {
 	remotes       gitdomain.Remotes
 }
 
-func LoadSetupData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data SetupData, exit dialogdomain.Exit, err error) {
+func LoadData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data SetupData, exit dialogdomain.Exit, err error) {
 	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
