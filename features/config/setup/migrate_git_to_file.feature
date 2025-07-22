@@ -49,9 +49,12 @@ Feature: migrate existing configuration in Git metadata to a config file
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                                 |
+      | git config --unset git-town.contribution-regex          |
       | git config --unset git-town.dev-remote                  |
+      | git config --unset git-town.feature-regex               |
       | git config --unset git-town.main-branch                 |
       | git config --unset git-town.new-branch-type             |
+      | git config --unset git-town.observed-regex              |
       | git config --unset git-town.perennial-branches          |
       | git config --unset git-town.perennial-regex             |
       | git config --unset git-town.share-new-branches          |
@@ -62,6 +65,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | git config --unset git-town.sync-perennial-strategy     |
       | git config --unset git-town.sync-upstream               |
       | git config --unset git-town.sync-tags                   |
+      | git config --unset git-town.unknown-branch-type         |
     And the main branch is now not set
     And there are now no perennial branches
     And local Git setting "git-town.forge-type" now doesn't exist
@@ -71,10 +75,10 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.sync-upstream" now doesn't exist
     And local Git setting "git-town.sync-tags" now doesn't exist
     And local Git setting "git-town.perennial-regex" now doesn't exist
-    And local Git setting "git-town.feature-regex" is still "user-.*"
-    And local Git setting "git-town.contribution-regex" is still "coworker-.*"
-    And local Git setting "git-town.observed-regex" is still "other-.*"
-    And local Git setting "git-town.unknown-branch-type" is still "observed"
+    And local Git setting "git-town.feature-regex" now doesn't exist
+    And local Git setting "git-town.contribution-regex" now doesn't exist
+    And local Git setting "git-town.observed-regex" now doesn't exist
+    And local Git setting "git-town.unknown-branch-type" now doesn't exist
     And local Git setting "git-town.share-new-branches" now doesn't exist
     And local Git setting "git-town.push-hook" now doesn't exist
     And local Git setting "git-town.new-branch-type" now doesn't exist
