@@ -11,6 +11,7 @@ import (
 )
 
 type ConflictPhantomResolveAll struct {
+	CurrentBranch           gitdomain.LocalBranchName
 	ParentBranch            Option[gitdomain.LocalBranchName]
 	ParentSHA               Option[gitdomain.SHA]
 	Resolution              gitdomain.ConflictResolution
@@ -38,12 +39,12 @@ func (self *ConflictPhantomResolveAll) Run(args shared.RunArgs) error {
 	if err != nil {
 		return err
 	}
-	mainBranch := args.Config.Value.ValidatedConfigData.MainBranch
-	fullInfos, err := args.Git.FileConflictFullInfos(args.Backend, quickInfos, parentSHA.Location(), mainBranch)
+	rootBranch := args.Config.Value.NormalConfig.Lineage.Root(self.CurrentBranch)
+	fullInfos, err := args.Git.FileConflictFullInfos(args.Backend, quickInfos, parentSHA.Location(), rootBranch)
 	if err != nil {
 		return err
 	}
-	phantomMergeConflicts := git.DetectPhantomMergeConflicts(fullInfos, self.ParentBranch, mainBranch)
+	phantomMergeConflicts := git.DetectPhantomMergeConflicts(fullInfos, self.ParentBranch, rootBranch)
 	newOpcodes := make([]shared.Opcode, len(phantomMergeConflicts)+1)
 	for p, phantomMergeConflict := range phantomMergeConflicts {
 		newOpcodes[p] = &ConflictPhantomResolve{
