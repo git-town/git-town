@@ -15,11 +15,11 @@ import (
 func MainAndPerennials(args MainAndPerennialsArgs) (mainBranch gitdomain.LocalBranchName, perennials gitdomain.LocalBranchNames, exit dialogdomain.Exit, err error) {
 	fmt.Print(messages.ConfigNeeded)
 	_, mainBranch, exit, err = MainBranch(MainBranchArgs{
-		GitStandardBranch:     args.GetDefaultBranch(args.Backend),
-		Inputs:                args.DialogInputs,
-		LocalBranches:         args.LocalBranches,
-		LocalGitMainBranch:    args.UnvalidatedConfig.GitLocal.MainBranch,
-		UnscopedGitMainBranch: args.UnvalidatedConfig.GitUnscoped.MainBranch,
+		StandardBranch: args.GetDefaultBranch(args.Backend),
+		Inputs:         args.DialogInputs,
+		LocalBranches:  args.LocalBranches,
+		Local:          args.UnvalidatedConfig.GitLocal.MainBranch,
+		Unscoped:       args.UnvalidatedConfig.GitUnscoped.MainBranch,
 	})
 	if err != nil || exit {
 		return "", gitdomain.LocalBranchNames{}, exit, err

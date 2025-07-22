@@ -25,12 +25,12 @@ This is typically the branch called
 )
 
 // MainBranch lets the user select a new main branch for this repo.
-// TODO: add an option to use the globally configured main branch
 func MainBranch(args MainBranchArgs) (selectedMainBranch Option[gitdomain.LocalBranchName], mainBranch gitdomain.LocalBranchName, exit dialogdomain.Exit, err error) {
 	// populate the local branches
 	entries := list.Entries[Option[gitdomain.LocalBranchName]]{}
-	unscoped, hasUnscoped := args.UnscopedGitMainBranch.Get()
-	if hasUnscoped {
+	unscoped, hasUnscoped := args.Unscoped.Get()
+	local, hasLocal := args.Local.Get()
+	if hasUnscoped && !hasLocal {
 		entries = append(entries, list.Entry[Option[gitdomain.LocalBranchName]]{
 			Data: None[gitdomain.LocalBranchName](),
 			Text: fmt.Sprintf(messages.DialogUseGlobalValue, unscoped),
@@ -45,14 +45,13 @@ func MainBranch(args MainBranchArgs) (selectedMainBranch Option[gitdomain.LocalB
 
 	// pre-select the already configured value
 	var cursor int
-	local, hasLocal := args.LocalGitMainBranch.Get()
 	switch {
 	case hasLocal:
 		cursor = entries.IndexOf(Some(local))
 	case hasUnscoped:
 		cursor = 0
 	default:
-		cursor = entries.IndexOf(args.GitStandardBranch)
+		cursor = entries.IndexOf(args.StandardBranch)
 	}
 
 	// show the dialog
@@ -63,9 +62,9 @@ func MainBranch(args MainBranchArgs) (selectedMainBranch Option[gitdomain.LocalB
 }
 
 type MainBranchArgs struct {
-	GitStandardBranch     Option[gitdomain.LocalBranchName]
-	Inputs                dialogcomponents.TestInputs
-	LocalBranches         gitdomain.LocalBranchNames
-	LocalGitMainBranch    Option[gitdomain.LocalBranchName]
-	UnscopedGitMainBranch Option[gitdomain.LocalBranchName]
+	StandardBranch Option[gitdomain.LocalBranchName]
+	Inputs         dialogcomponents.TestInputs
+	LocalBranches  gitdomain.LocalBranchNames
+	Local          Option[gitdomain.LocalBranchName]
+	Unscoped       Option[gitdomain.LocalBranchName]
 }
