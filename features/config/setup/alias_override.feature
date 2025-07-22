@@ -30,6 +30,7 @@ Feature: override an existing Git alias
       | ship delete tracking branch | enter      |
       | config storage              | down enter |
 
+  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                        |
