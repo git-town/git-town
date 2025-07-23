@@ -371,7 +371,7 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 			)
 		}
 	}
-	message := ""
+	var message string
 	if parent, has := parentOpt.Get(); has {
 		message = fmt.Sprintf(messages.ParentDialogSelected, data.initialBranch, parent)
 	} else {
