@@ -27,7 +27,7 @@ git town hack branch-A
 echo "
 line 1a
 line 2a
-" > file
+" >file
 git add file
 git commit -m commit-A
 
@@ -36,7 +36,7 @@ git town hack branch-B
 echo "
 line 1b
 line 2b
-" > file
+" >file
 git add file
 git commit -m commit-B
 
