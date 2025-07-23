@@ -159,7 +159,6 @@ func executePrepend(args []string, cliConfig cliconfig.CliConfig, beam configdom
 		Config:                  data.config,
 		Connector:               data.connector,
 		Detached:                detached,
-		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -168,6 +167,7 @@ func executePrepend(args []string, cliConfig cliconfig.CliConfig, beam configdom
 		InitialBranchesSnapshot: data.branchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        data.stashSize,
+		Inputs:                  data.inputs,
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
@@ -186,11 +186,11 @@ type prependData struct {
 	commitsToBeam       gitdomain.Commits
 	config              config.ValidatedConfig
 	connector           Option[forgedomain.Connector]
-	dialogTestInputs    dialogcomponents.TestInputs
 	existingParent      gitdomain.LocalBranchName
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
 	initialBranchInfo   gitdomain.BranchInfo
+	inputs              dialogcomponents.Inputs
 	newParentCandidates gitdomain.LocalBranchNames
 	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	preFetchBranchInfos gitdomain.BranchInfos
@@ -210,7 +210,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, cliConfig 
 	if err != nil {
 		return data, false, err
 	}
-	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
+	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -240,12 +240,12 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, cliConfig 
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
 		Detached:              detached,
-		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 !repoStatus.OpenChanges && beam.IsFalse() && commit.IsFalse(),
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
 		HandleUnfinishedState: true,
+		Inputs:                inputs,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
@@ -284,12 +284,11 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, cliConfig 
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
 		Connector:          connector,
-		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
+		Inputs:             inputs,
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
-		TestInputs:         dialogTestInputs,
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
@@ -306,7 +305,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, cliConfig 
 		if err != nil {
 			return data, false, err
 		}
-		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, targetBranch, repo.Git, repo.Backend, dialogTestInputs)
+		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, targetBranch, repo.Git, repo.Backend, inputs)
 		if err != nil || exit {
 			return data, exit, err
 		}
@@ -340,11 +339,11 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, cliConfig 
 		commitsToBeam:       commitsToBeam,
 		config:              validatedConfig,
 		connector:           connector,
-		dialogTestInputs:    dialogTestInputs,
 		existingParent:      ancestor,
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
 		initialBranchInfo:   *initialBranchInfo,
+		inputs:              inputs,
 		newParentCandidates: parentAndAncestors,
 		nonExistingBranches: nonExistingBranches,
 		preFetchBranchInfos: prefetchBranchSnapshot.Branches,

@@ -15,7 +15,7 @@ import (
 func MainAndPerennials(args MainAndPerennialsArgs) (mainBranch gitdomain.LocalBranchName, perennials gitdomain.LocalBranchNames, exit dialogdomain.Exit, err error) {
 	fmt.Print(messages.ConfigNeeded)
 	_, mainBranch, exit, err = MainBranch(MainBranchArgs{
-		Inputs:         args.DialogInputs,
+		Inputs:         args.Inputs,
 		Local:          args.UnvalidatedConfig.GitLocal.MainBranch,
 		LocalBranches:  args.LocalBranches,
 		StandardBranch: args.GetDefaultBranch(args.Backend),
@@ -29,7 +29,7 @@ func MainAndPerennials(args MainAndPerennialsArgs) (mainBranch gitdomain.LocalBr
 		AppendAllMissing(args.UnvalidatedConfig.GitGlobal.PerennialBranches...)
 	perennials, exit, err = PerennialBranches(PerennialBranchesArgs{
 		ImmutableGitPerennials: immutablePerennials,
-		Inputs:                 args.DialogInputs,
+		Inputs:                 args.Inputs,
 		LocalBranches:          args.LocalBranches,
 		LocalGitPerennials:     args.UnvalidatedConfig.GitLocal.PerennialBranches,
 		MainBranch:             mainBranch,
@@ -39,8 +39,8 @@ func MainAndPerennials(args MainAndPerennialsArgs) (mainBranch gitdomain.LocalBr
 
 type MainAndPerennialsArgs struct {
 	Backend           subshelldomain.RunnerQuerier
-	DialogInputs      dialogcomponents.TestInputs
 	GetDefaultBranch  func(subshelldomain.Querier) Option[gitdomain.LocalBranchName]
+	Inputs            dialogcomponents.Inputs
 	LocalBranches     gitdomain.LocalBranchNames
 	UnvalidatedConfig config.UnvalidatedConfig
 }

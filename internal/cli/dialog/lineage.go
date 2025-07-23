@@ -53,7 +53,7 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 		outcome, selectedBranch, err := Parent(ParentArgs{
 			Branch:        branchToVerify,
 			DefaultChoice: args.DefaultChoice,
-			Inputs:        args.DialogTestInputs,
+			Inputs:        args.Inputs,
 			Lineage:       args.Lineage,
 			LocalBranches: args.LocalBranches,
 			MainBranch:    args.MainBranch,
@@ -79,7 +79,7 @@ type LineageArgs struct {
 	BranchesToVerify  gitdomain.LocalBranchNames
 	Connector         Option[forgedomain.Connector]
 	DefaultChoice     gitdomain.LocalBranchName
-	DialogTestInputs  dialogcomponents.TestInputs
+	Inputs            dialogcomponents.Inputs
 	Lineage           configdomain.Lineage
 	LocalBranches     gitdomain.LocalBranchNames
 	MainBranch        gitdomain.LocalBranchName

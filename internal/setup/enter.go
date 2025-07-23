@@ -23,11 +23,11 @@ import (
 
 func Enter(data Data) (UserInput, dialogdomain.Exit, error) {
 	var emptyResult UserInput
-	exit, err := dialog.Welcome(data.DialogInputs)
+	exit, err := dialog.Welcome(data.Inputs)
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	aliases, exit, err := dialog.Aliases(configdomain.AllAliasableCommands(), data.Config.NormalConfig.Aliases, data.DialogInputs)
+	aliases, exit, err := dialog.Aliases(configdomain.AllAliasableCommands(), data.Config.NormalConfig.Aliases, data.Inputs)
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
@@ -139,7 +139,7 @@ EnterForgeData:
 		githubToken:          githubToken,
 		gitlabConnectorType:  gitlabConnectorTypeOpt,
 		gitlabToken:          gitlabToken,
-		inputs:               data.DialogInputs,
+		inputs:               data.Inputs,
 		remoteURL:            data.Config.NormalConfig.RemoteURL(data.Backend, devRemote.GetOrElse(config.DefaultNormalConfig().DevRemote)),
 	})
 	if err != nil || exit {
@@ -158,7 +158,7 @@ EnterForgeData:
 		giteaToken:           giteaToken,
 		githubToken:          githubToken,
 		gitlabToken:          gitlabToken,
-		inputs:               data.DialogInputs,
+		inputs:               data.Inputs,
 	})
 	if err != nil || exit {
 		return emptyResult, exit, err
@@ -199,7 +199,7 @@ EnterForgeData:
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	configStorage, exit, err := dialog.ConfigStorage(data.DialogInputs)
+	configStorage, exit, err := dialog.ConfigStorage(data.Inputs)
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
@@ -287,7 +287,7 @@ func enterBitbucketAppPassword(data Data) (Option[forgedomain.BitbucketAppPasswo
 	}
 	return dialog.BitbucketAppPassword(dialog.Args[forgedomain.BitbucketAppPassword]{
 		Global: data.Config.GitLocal.BitbucketAppPassword,
-		Inputs: data.DialogInputs,
+		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.BitbucketAppPassword,
 	})
 }
@@ -298,7 +298,7 @@ func enterBitbucketUserName(data Data) (Option[forgedomain.BitbucketUsername], d
 	}
 	return dialog.BitbucketUsername(dialog.Args[forgedomain.BitbucketUsername]{
 		Global: data.Config.GitLocal.BitbucketUsername,
-		Inputs: data.DialogInputs,
+		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.BitbucketUsername,
 	})
 }
@@ -309,7 +309,7 @@ func enterCodebergToken(data Data) (Option[forgedomain.CodebergToken], dialogdom
 	}
 	return dialog.CodebergToken(dialog.Args[forgedomain.CodebergToken]{
 		Global: data.Config.GitGlobal.CodebergToken,
-		Inputs: data.DialogInputs,
+		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.CodebergToken,
 	})
 }
@@ -320,7 +320,7 @@ func enterContributionRegex(data Data) (Option[configdomain.ContributionRegex], 
 	}
 	return dialog.ContributionRegex(dialog.Args[configdomain.ContributionRegex]{
 		Global: data.Config.GitGlobal.ContributionRegex,
-		Inputs: data.DialogInputs,
+		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.ContributionRegex,
 	})
 }
@@ -331,7 +331,7 @@ func enterDevRemote(data Data) (Option[gitdomain.Remote], dialogdomain.Exit, err
 	}
 	return dialog.DevRemote(data.Remotes, dialog.Args[gitdomain.Remote]{
 		Global: data.Config.GitGlobal.DevRemote,
-		Inputs: data.DialogInputs,
+		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.DevRemote,
 	})
 }
@@ -342,7 +342,7 @@ func enterFeatureRegex(data Data) (Option[configdomain.FeatureRegex], dialogdoma
 	}
 	return dialog.FeatureRegex(dialog.Args[configdomain.FeatureRegex]{
 		Global: data.Config.GitGlobal.FeatureRegex,
-		Inputs: data.DialogInputs,
+		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.FeatureRegex,
 	})
 }
@@ -353,7 +353,7 @@ func enterForgeType(data Data) (Option[forgedomain.ForgeType], dialogdomain.Exit
 	}
 	return dialog.ForgeType(dialog.Args[forgedomain.ForgeType]{
 		Global: data.Config.GitGlobal.ForgeType,
-		Inputs: data.DialogInputs,
+		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.ForgeType,
 	})
 }
@@ -364,7 +364,7 @@ func enterGitHubConnectorType(data Data) (Option[forgedomain.GitHubConnectorType
 	}
 	return dialog.GitHubConnectorType(dialog.Args[forgedomain.GitHubConnectorType]{
 		Global: data.Config.GitGlobal.GitHubConnectorType,
-		Inputs: data.DialogInputs,
+		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.GitHubConnectorType,
 	})
 }
@@ -375,7 +375,7 @@ func enterGitHubToken(data Data) (Option[forgedomain.GitHubToken], dialogdomain.
 	}
 	return dialog.GitHubToken(dialog.Args[forgedomain.GitHubToken]{
 		Global: data.Config.GitGlobal.GitHubToken,
-		Inputs: data.DialogInputs,
+		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.GitHubToken,
 	})
 }
@@ -386,7 +386,7 @@ func enterGitLabConnectorType(data Data) (Option[forgedomain.GitLabConnectorType
 	}
 	return dialog.GitLabConnectorType(dialog.Args[forgedomain.GitLabConnectorType]{
 		Global: data.Config.GitGlobal.GitLabConnectorType,
-		Inputs: data.DialogInputs,
+		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.GitLabConnectorType,
 	})
 }
@@ -397,7 +397,7 @@ func enterGitLabToken(data Data) (Option[forgedomain.GitLabToken], dialogdomain.
 	}
 	return dialog.GitLabToken(dialog.Args[forgedomain.GitLabToken]{
 		Global: data.Config.GitGlobal.GitLabToken,
-		Inputs: data.DialogInputs,
+		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.GitLabToken,
 	})
 }
@@ -408,7 +408,7 @@ func enterGiteaToken(data Data) (Option[forgedomain.GiteaToken], dialogdomain.Ex
 	}
 	return dialog.GiteaToken(dialog.Args[forgedomain.GiteaToken]{
 		Global: data.Config.GitGlobal.GiteaToken,
-		Inputs: data.DialogInputs,
+		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.GiteaToken,
 	})
 }
@@ -418,7 +418,7 @@ func enterMainBranch(data Data) (userChoice Option[gitdomain.LocalBranchName], a
 		return Some(configFileMainBranch), configFileMainBranch, false, nil
 	}
 	return dialog.MainBranch(dialog.MainBranchArgs{
-		Inputs:         data.DialogInputs,
+		Inputs:         data.Inputs,
 		Local:          data.Config.GitLocal.MainBranch,
 		LocalBranches:  data.LocalBranches,
 		StandardBranch: data.Git.StandardBranch(data.Backend),
@@ -432,7 +432,7 @@ func enterNewBranchType(data Data) (Option[configdomain.NewBranchType], dialogdo
 	}
 	return dialog.NewBranchType(dialog.Args[configdomain.NewBranchType]{
 		Global: data.Config.GitGlobal.NewBranchType,
-		Inputs: data.DialogInputs,
+		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.NewBranchType,
 	})
 }
@@ -443,7 +443,7 @@ func enterObservedRegex(data Data) (Option[configdomain.ObservedRegex], dialogdo
 	}
 	return dialog.ObservedRegex(dialog.Args[configdomain.ObservedRegex]{
 		Global: data.Config.GitGlobal.ObservedRegex,
-		Inputs: data.DialogInputs,
+		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.ObservedRegex,
 	})
 }
@@ -454,7 +454,7 @@ func enterOriginHostName(data Data) (Option[configdomain.HostingOriginHostname],
 	}
 	return dialog.OriginHostname(dialog.Args[configdomain.HostingOriginHostname]{
 		Global: data.Config.GitGlobal.HostingOriginHostname,
-		Inputs: data.DialogInputs,
+		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.HostingOriginHostname,
 	})
 }
@@ -465,7 +465,7 @@ func enterPerennialBranches(data Data, mainBranch gitdomain.LocalBranchName) (gi
 		AppendAllMissing(data.Config.GitGlobal.PerennialBranches...)
 	return dialog.PerennialBranches(dialog.PerennialBranchesArgs{
 		ImmutableGitPerennials: immutablePerennials,
-		Inputs:                 data.DialogInputs,
+		Inputs:                 data.Inputs,
 		LocalBranches:          data.LocalBranches,
 		LocalGitPerennials:     data.Config.GitLocal.PerennialBranches,
 		MainBranch:             mainBranch,
@@ -478,7 +478,7 @@ func enterPerennialRegex(data Data) (Option[configdomain.PerennialRegex], dialog
 	}
 	return dialog.PerennialRegex(dialog.Args[configdomain.PerennialRegex]{
 		Global: data.Config.GitGlobal.PerennialRegex,
-		Inputs: data.DialogInputs,
+		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.PerennialRegex,
 	})
 }
@@ -489,7 +489,7 @@ func enterPushHook(data Data) (Option[configdomain.PushHook], dialogdomain.Exit,
 	}
 	return dialog.PushHook(dialog.Args[configdomain.PushHook]{
 		Global: data.Config.GitGlobal.PushHook,
-		Inputs: data.DialogInputs,
+		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.PushHook,
 	})
 }
@@ -500,7 +500,7 @@ func enterShareNewBranches(data Data) (Option[configdomain.ShareNewBranches], di
 	}
 	return dialog.ShareNewBranches(dialog.Args[configdomain.ShareNewBranches]{
 		Global: data.Config.GitGlobal.ShareNewBranches,
-		Inputs: data.DialogInputs,
+		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.ShareNewBranches,
 	})
 }
@@ -511,7 +511,7 @@ func enterShipDeleteTrackingBranch(data Data) (Option[configdomain.ShipDeleteTra
 	}
 	return dialog.ShipDeleteTrackingBranch(dialog.Args[configdomain.ShipDeleteTrackingBranch]{
 		Global: data.Config.GitGlobal.ShipDeleteTrackingBranch,
-		Inputs: data.DialogInputs,
+		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.ShipDeleteTrackingBranch,
 	})
 }
@@ -522,7 +522,7 @@ func enterShipStrategy(data Data) (Option[configdomain.ShipStrategy], dialogdoma
 	}
 	return dialog.ShipStrategy(dialog.Args[configdomain.ShipStrategy]{
 		Global: data.Config.GitGlobal.ShipStrategy,
-		Inputs: data.DialogInputs,
+		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.ShipStrategy,
 	})
 }
@@ -533,7 +533,7 @@ func enterSyncFeatureStrategy(data Data) (Option[configdomain.SyncFeatureStrateg
 	}
 	return dialog.SyncFeatureStrategy(dialog.Args[configdomain.SyncFeatureStrategy]{
 		Global: data.Config.GitGlobal.SyncFeatureStrategy,
-		Inputs: data.DialogInputs,
+		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.SyncFeatureStrategy,
 	})
 }
@@ -544,7 +544,7 @@ func enterSyncPerennialStrategy(data Data) (Option[configdomain.SyncPerennialStr
 	}
 	return dialog.SyncPerennialStrategy(dialog.Args[configdomain.SyncPerennialStrategy]{
 		Global: data.Config.GitGlobal.SyncPerennialStrategy,
-		Inputs: data.DialogInputs,
+		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.SyncPerennialStrategy,
 	})
 }
@@ -555,7 +555,7 @@ func enterSyncPrototypeStrategy(data Data) (Option[configdomain.SyncPrototypeStr
 	}
 	return dialog.SyncPrototypeStrategy(dialog.Args[configdomain.SyncPrototypeStrategy]{
 		Global: data.Config.GitGlobal.SyncPrototypeStrategy,
-		Inputs: data.DialogInputs,
+		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.SyncPrototypeStrategy,
 	})
 }
@@ -566,7 +566,7 @@ func enterSyncTags(data Data) (Option[configdomain.SyncTags], dialogdomain.Exit,
 	}
 	return dialog.SyncTags(dialog.Args[configdomain.SyncTags]{
 		Global: data.Config.GitGlobal.SyncTags,
-		Inputs: data.DialogInputs,
+		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.SyncTags,
 	})
 }
@@ -577,7 +577,7 @@ func enterSyncUpstream(data Data) (Option[configdomain.SyncUpstream], dialogdoma
 	}
 	return dialog.SyncUpstream(dialog.Args[configdomain.SyncUpstream]{
 		Global: data.Config.GitGlobal.SyncUpstream,
-		Inputs: data.DialogInputs,
+		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.SyncUpstream,
 	})
 }
@@ -599,7 +599,7 @@ type enterTokenScopeArgs struct {
 	giteaToken           Option[forgedomain.GiteaToken]
 	githubToken          Option[forgedomain.GitHubToken]
 	gitlabToken          Option[forgedomain.GitLabToken]
-	inputs               dialogcomponents.TestInputs
+	inputs               dialogcomponents.Inputs
 }
 
 func enterUnknownBranchType(data Data) (Option[configdomain.UnknownBranchType], dialogdomain.Exit, error) {
@@ -608,7 +608,7 @@ func enterUnknownBranchType(data Data) (Option[configdomain.UnknownBranchType], 
 	}
 	return dialog.UnknownBranchType(dialog.Args[configdomain.UnknownBranchType]{
 		Global: data.Config.GitGlobal.UnknownBranchType,
-		Inputs: data.DialogInputs,
+		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.UnknownBranchType,
 	})
 }
@@ -688,7 +688,7 @@ type testForgeAuthArgs struct {
 	githubToken          Option[forgedomain.GitHubToken]
 	gitlabConnectorType  Option[forgedomain.GitLabConnectorType]
 	gitlabToken          Option[forgedomain.GitLabToken]
-	inputs               dialogcomponents.TestInputs
+	inputs               dialogcomponents.Inputs
 	remoteURL            Option[giturl.Parts]
 }
 

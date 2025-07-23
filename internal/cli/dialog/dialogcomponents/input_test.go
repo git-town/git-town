@@ -8,15 +8,15 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestTestInput(t *testing.T) {
+func TestInput(t *testing.T) {
 	t.Parallel()
 
-	t.Run("ParseTestInput", func(t *testing.T) {
+	t.Run("ParseInput", func(t *testing.T) {
 		t.Parallel()
 		t.Run("multiple values", func(t *testing.T) {
 			t.Parallel()
-			have := dialogcomponents.ParseTestInput("step@enter|space|ctrl+c")
-			want := dialogcomponents.TestInput{
+			have := dialogcomponents.ParseInput("step@enter|space|ctrl+c")
+			want := dialogcomponents.Input{
 				Messages: []tea.Msg{
 					tea.KeyMsg{
 						Type: tea.KeyEnter,
@@ -34,8 +34,8 @@ func TestTestInput(t *testing.T) {
 		})
 		t.Run("single value", func(t *testing.T) {
 			t.Parallel()
-			have := dialogcomponents.ParseTestInput("step@enter")
-			want := dialogcomponents.TestInput{
+			have := dialogcomponents.ParseInput("step@enter")
+			want := dialogcomponents.Input{
 				Messages: []tea.Msg{
 					tea.KeyMsg{
 						Type: tea.KeyEnter,
@@ -47,8 +47,8 @@ func TestTestInput(t *testing.T) {
 		})
 		t.Run("empty", func(t *testing.T) {
 			t.Parallel()
-			have := dialogcomponents.ParseTestInput("step@")
-			want := dialogcomponents.TestInput{
+			have := dialogcomponents.ParseInput("step@")
+			want := dialogcomponents.Input{
 				Messages: []tea.Msg{},
 				StepName: "step",
 			}

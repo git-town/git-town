@@ -14,10 +14,10 @@ func enterBitbucketUsername() *cobra.Command {
 	return &cobra.Command{
 		Use: "bitbucket-username",
 		RunE: func(_ *cobra.Command, _ []string) error {
-			dialogInputs := dialogcomponents.LoadTestInputs(os.Environ())
+			inputs := dialogcomponents.LoadInputs(os.Environ())
 			_, _, err := dialog.BitbucketUsername(dialog.Args[forgedomain.BitbucketUsername]{
 				Global: None[forgedomain.BitbucketUsername](),
-				Inputs: dialogInputs,
+				Inputs: inputs,
 				Local:  None[forgedomain.BitbucketUsername](),
 			})
 			return err

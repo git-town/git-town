@@ -59,7 +59,7 @@ type finishedArgs struct {
 	CommandsCounter Mutable[gohacks.Counter]
 	FinalMessages   stringslice.Collector
 	Git             git.Commands
-	Inputs          dialogcomponents.TestInputs
+	Inputs          dialogcomponents.Inputs
 	RootDir         gitdomain.RepoRootDir
 	RunState        runstate.RunState
 	Verbose         configdomain.Verbose

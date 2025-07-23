@@ -166,7 +166,6 @@ func executeSync(cliConfig cliconfig.CliConfig, syncAllBranches configdomain.All
 		Config:                  data.config,
 		Connector:               None[forgedomain.Connector](),
 		Detached:                detached,
-		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -175,6 +174,7 @@ func executeSync(cliConfig cliconfig.CliConfig, syncAllBranches configdomain.All
 		InitialBranchesSnapshot: data.branchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        data.stashSize,
+		Inputs:                  data.inputs,
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
@@ -188,9 +188,9 @@ type syncData struct {
 	branchesToSync           configdomain.BranchesToSync
 	config                   config.ValidatedConfig
 	detached                 configdomain.Detached
-	dialogTestInputs         dialogcomponents.TestInputs
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
+	inputs                   dialogcomponents.Inputs
 	nonExistingBranches      gitdomain.LocalBranchNames
 	prefetchBranchesSnapshot gitdomain.BranchesSnapshot
 	previousBranch           Option[gitdomain.LocalBranchName]
@@ -201,7 +201,7 @@ type syncData struct {
 }
 
 func determineSyncData(cliConfig cliconfig.CliConfig, syncAllBranches configdomain.AllBranches, syncStack configdomain.FullStack, repo execute.OpenRepoResult, detached configdomain.Detached) (data syncData, exit dialogdomain.Exit, err error) {
-	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
+	inputs := dialogcomponents.LoadInputs(os.Environ())
 	preFetchBranchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -235,12 +235,12 @@ func determineSyncData(cliConfig cliconfig.CliConfig, syncAllBranches configdoma
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
 		Detached:              detached,
-		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
 		HandleUnfinishedState: true,
+		Inputs:                inputs,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
@@ -289,12 +289,11 @@ func determineSyncData(cliConfig cliconfig.CliConfig, syncAllBranches configdoma
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
 		Connector:          connector,
-		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
+		Inputs:             inputs,
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
-		TestInputs:         dialogTestInputs,
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
@@ -319,12 +318,11 @@ func determineSyncData(cliConfig cliconfig.CliConfig, syncAllBranches configdoma
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: branchNamesToSync,
 		Connector:          connector,
-		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
+		Inputs:             inputs,
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
-		TestInputs:         dialogTestInputs,
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
@@ -354,9 +352,9 @@ func determineSyncData(cliConfig cliconfig.CliConfig, syncAllBranches configdoma
 		branchesToSync:           branchesToSync,
 		config:                   validatedConfig,
 		detached:                 detached,
-		dialogTestInputs:         dialogTestInputs,
 		hasOpenChanges:           repoStatus.OpenChanges,
 		initialBranch:            initialBranch,
+		inputs:                   inputs,
 		nonExistingBranches:      nonExistingBranches,
 		prefetchBranchesSnapshot: preFetchBranchesSnapshot,
 		previousBranch:           previousBranchOpt,

@@ -14,10 +14,10 @@ func enterGitHubToken() *cobra.Command {
 	return &cobra.Command{
 		Use: "github-token",
 		RunE: func(_ *cobra.Command, _ []string) error {
-			dialogInputs := dialogcomponents.LoadTestInputs(os.Environ())
+			inputs := dialogcomponents.LoadInputs(os.Environ())
 			_, _, err := dialog.GitHubToken(dialog.Args[forgedomain.GitHubToken]{
 				Global: None[forgedomain.GitHubToken](),
-				Inputs: dialogInputs,
+				Inputs: inputs,
 				Local:  None[forgedomain.GitHubToken](),
 			})
 			return err

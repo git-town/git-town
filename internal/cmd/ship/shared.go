@@ -29,9 +29,9 @@ type sharedShipData struct {
 	childBranches            gitdomain.LocalBranchNames
 	config                   config.ValidatedConfig
 	connector                Option[forgedomain.Connector]
-	dialogTestInputs         dialogcomponents.TestInputs
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
+	inputs                   dialogcomponents.Inputs
 	isShippingInitialBranch  bool
 	previousBranch           Option[gitdomain.LocalBranchName]
 	previousBranchInfos      Option[gitdomain.BranchInfos]
@@ -42,7 +42,7 @@ type sharedShipData struct {
 }
 
 func determineSharedShipData(args []string, repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig, shipStrategyOverride Option[configdomain.ShipStrategy]) (data sharedShipData, exit dialogdomain.Exit, err error) {
-	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
+	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -72,12 +72,12 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, cliConf
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
 		Detached:              false,
-		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
 		HandleUnfinishedState: true,
+		Inputs:                inputs,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
@@ -110,12 +110,11 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, cliConf
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{branchNameToShip},
 		Connector:          data.connector,
-		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
+		Inputs:             inputs,
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
-		TestInputs:         dialogTestInputs,
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
@@ -161,9 +160,9 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, cliConf
 		childBranches:            childBranches,
 		config:                   validatedConfig,
 		connector:                connector,
-		dialogTestInputs:         dialogTestInputs,
 		hasOpenChanges:           repoStatus.OpenChanges,
 		initialBranch:            initialBranch,
+		inputs:                   inputs,
 		isShippingInitialBranch:  isShippingInitialBranch,
 		previousBranch:           previousBranch,
 		previousBranchInfos:      previousBranchInfos,

@@ -12,8 +12,8 @@ import (
 type Data struct {
 	Backend       subshelldomain.RunnerQuerier
 	Config        config.UnvalidatedConfig
-	DialogInputs  dialogcomponents.TestInputs
 	Git           git.Commands
+	Inputs        dialogcomponents.Inputs
 	LocalBranches gitdomain.LocalBranchNames
 	Remotes       gitdomain.Remotes
 	Snapshot      undoconfig.ConfigSnapshot

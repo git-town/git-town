@@ -14,10 +14,10 @@ func enterShareNewBranches() *cobra.Command {
 	return &cobra.Command{
 		Use: "share-new-branches",
 		RunE: func(_ *cobra.Command, _ []string) error {
-			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
+			inputs := dialogcomponents.LoadInputs(os.Environ())
 			_, _, err := dialog.ShareNewBranches(dialog.Args[configdomain.ShareNewBranches]{
 				Global: None[configdomain.ShareNewBranches](),
-				Inputs: dialogTestInputs,
+				Inputs: inputs,
 				Local:  None[configdomain.ShareNewBranches](),
 			})
 			return err

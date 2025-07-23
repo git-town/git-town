@@ -13,8 +13,8 @@ func unfinishedStateCommitAuthorCmd() *cobra.Command {
 	return &cobra.Command{
 		Use: "unfinished-state",
 		RunE: func(_ *cobra.Command, _ []string) error {
-			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
-			_, _, err := dialog.AskHowToHandleUnfinishedRunState("sync", "feature-branch", time.Now().Add(time.Second*-1), true, dialogTestInputs)
+			inputs := dialogcomponents.LoadInputs(os.Environ())
+			_, _, err := dialog.AskHowToHandleUnfinishedRunState("sync", "feature-branch", time.Now().Add(time.Second*-1), true, inputs)
 			return err
 		},
 	}
