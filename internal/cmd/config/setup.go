@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
@@ -63,7 +62,6 @@ func executeConfigSetup(cliConfig cliconfig.CliConfig) error {
 	if err != nil || exit {
 		return err
 	}
-	fmt.Println("1111111111111111111111111", userInput.Data.DevRemote)
 	if err = setup.Save(userInput, repo.UnvalidatedConfig, data, repo.Frontend); err != nil {
 		return err
 	}
