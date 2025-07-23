@@ -184,7 +184,7 @@ func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomai
 type SwitchBranchArgs struct {
 	Cursor             int
 	DisplayBranchTypes configdomain.DisplayTypes
-	Entries            []SwitchBranchEntry
+	Entries            SwitchBranchEntries
 	Inputs             dialogcomponents.Inputs
 	UncommittedChanges bool
 }
