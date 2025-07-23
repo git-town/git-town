@@ -70,7 +70,6 @@ func (self *proposalLineageBuilder) AddBranch(childBranch gitdomain.LocalBranchN
 }
 
 func (self *proposalLineageBuilder) Build(currentBranch gitdomain.LocalBranchName, location LineageDisplayLocation) Option[string] {
-
 	var builder strings.Builder
 	builder.WriteString("### This proposal is part of stack\n\n")
 	length := len(self.orderedLineage)
@@ -106,8 +105,7 @@ func currentBranchProposalExpression(location LineageDisplayLocation) string {
 	return response
 }
 
-type noopProposalLineageBuilder struct {
-}
+type noopProposalLineageBuilder struct{}
 
 func (self *noopProposalLineageBuilder) AddBranch(childBranch gitdomain.LocalBranchName, parentBranch Option[gitdomain.LocalBranchName]) (ProposalLineageBuilder, error) {
 	return self, nil

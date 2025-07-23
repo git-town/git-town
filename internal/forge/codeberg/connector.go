@@ -228,7 +228,6 @@ func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterf
 	_, _, err := self.client.EditPullRequest(self.Organization, self.Repository, int64(data.Number), forgejo.EditPullRequestOption{
 		Body: data.Body.GetOrDefault(),
 	})
-
 	if err != nil {
 		self.log.Failed(err.Error())
 		return err

@@ -230,7 +230,6 @@ func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterf
 	_, _, err := self.client.PullRequests.Edit(context.Background(), self.Organization, self.Repository, data.Number, &github.PullRequest{
 		Body: Ptr(updatedBody),
 	})
-
 	if err != nil {
 		self.log.Failed(err.Error())
 		return err

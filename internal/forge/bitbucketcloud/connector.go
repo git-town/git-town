@@ -350,7 +350,6 @@ func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterf
 		Draft:             data.Draft,
 		CloseSourceBranch: data.CloseSourceBranch,
 	})
-
 	if err != nil {
 		self.log.Failed(err.Error())
 		return err

@@ -209,7 +209,6 @@ func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterf
 	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), data.Number, &gitlab.UpdateMergeRequestOptions{
 		Description: Ptr(updatedDescription),
 	})
-
 	if err != nil {
 		self.log.Failed(err.Error())
 		return err
