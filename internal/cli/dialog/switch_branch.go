@@ -37,6 +37,15 @@ func (sbes SwitchBranchEntries) ContainsBranch(branch gitdomain.LocalBranchName)
 	return false
 }
 
+func (sbes SwitchBranchEntries) IndexOf(branch gitdomain.LocalBranchName) int {
+	for e, entry := range sbes {
+		if entry.Branch == branch {
+			return e
+		}
+	}
+	return 0
+}
+
 type SwitchModel struct {
 	list.List[SwitchBranchEntry]
 	DisplayBranchTypes configdomain.DisplayTypes

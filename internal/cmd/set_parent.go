@@ -118,7 +118,7 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 			Regexes:           []*regexp.Regexp{},
 			UnknownBranchType: unknownBranchType,
 		})
-		cursor := 0 // TODO: preselect the entry for data.initialBranch here
+		cursor := entries.IndexOf(data.defaultChoice)
 		selectedBranch, exit, err = dialog.SwitchBranch(dialog.SwitchBranchArgs{
 			Cursor:             cursor,
 			DisplayBranchTypes: true,
