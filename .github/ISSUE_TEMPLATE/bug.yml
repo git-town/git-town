@@ -10,9 +10,8 @@ body:
       label: Steps to reproduce
       description:
         Please provide detailed steps to reproduce the problem.
-        If a textual description isn't enough,
-        please consider creating a script that reproduces the issue
-        based on [this starter template](https://github.com/git-town/git-town/blob/main/docs/repro.sh).
+        If a textual description isn't enough, please consider creating a shell script that reproduces the issue.
+        You can use [this template](https://github.com/git-town/git-town/blob/main/docs/repro.sh) to create one quickly.
     validations:
       required: true
   - type: textarea
