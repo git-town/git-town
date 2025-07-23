@@ -114,5 +114,4 @@ func TestInputs(t *testing.T) {
 		)
 		must.Eq(t, want, have)
 	})
-
 }
