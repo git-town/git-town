@@ -191,7 +191,7 @@ func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomai
 		List:               list.NewList(newSwitchBranchListEntries(args.Entries), args.Cursor),
 		UncommittedChanges: args.UncommittedChanges,
 	})
-	dialogcomponents.SendInputs("branch-tree", args.Inputs.Next(), dialogProgram)
+	dialogcomponents.SendInputs(args.InputName, args.Inputs.Next(), dialogProgram)
 	dialogResult, err := dialogProgram.Run()
 	result := dialogResult.(SwitchModel)
 	selectedData := result.List.SelectedData()
@@ -203,6 +203,7 @@ type SwitchBranchArgs struct {
 	Cursor             int
 	DisplayBranchTypes configdomain.DisplayTypes
 	Entries            SwitchBranchEntries
+	InputName          string
 	Inputs             dialogcomponents.Inputs
 	UncommittedChanges bool
 }

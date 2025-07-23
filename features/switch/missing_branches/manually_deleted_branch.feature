@@ -11,8 +11,8 @@ Feature: switch branches while a manually deleted branch is still listed in the 
     And the current branch is "alpha"
     And I run "git branch -D beta"
     When I run "git-town switch" and enter into the dialogs:
-      | DIALOG      | KEYS       |
-      | branch-tree | down enter |
+      | DIALOG        | KEYS       |
+      | switch-branch | down enter |
     Then Git Town runs the commands
       | BRANCH | COMMAND            |
       | alpha  | git checkout gamma |

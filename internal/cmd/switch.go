@@ -99,6 +99,7 @@ func executeSwitch(args []string, cliConfig cliconfig.CliConfig, allBranches con
 		Cursor:             cursor,
 		DisplayBranchTypes: displayTypes,
 		Entries:            entries,
+		InputName:          "switch-branch",
 		Inputs:             data.inputs,
 		UncommittedChanges: data.uncommittedChanges,
 	})

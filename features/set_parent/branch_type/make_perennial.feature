@@ -12,6 +12,7 @@ Feature: make a feature branch perennial
       | DIALOG                    | KEYS       |
       | parent branch for "child" | down enter |
 
+  @debug @this
   Scenario: result
     Then Git Town prints:
       """

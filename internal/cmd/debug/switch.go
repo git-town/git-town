@@ -37,6 +37,7 @@ func switchBranch() *cobra.Command {
 				Cursor:             0,
 				DisplayBranchTypes: false,
 				Entries:            entries,
+				InputName:          `parent branch for "main"`,
 				Inputs:             inputs,
 				UncommittedChanges: false,
 			})
