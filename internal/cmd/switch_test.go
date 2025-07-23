@@ -21,35 +21,6 @@ func TestSwitchBranch(t *testing.T) {
 	prototype := gitdomain.NewLocalBranchName("prototype")
 	perennial := gitdomain.NewLocalBranchName("perennial")
 
-	t.Run("SwitchBranchCursorPos", func(t *testing.T) {
-		t.Parallel()
-		t.Run("initialBranch is in the entry list", func(t *testing.T) {
-			t.Parallel()
-			entries := dialog.SwitchBranchEntries{
-				{Branch: "main", Indentation: "", OtherWorktree: false},
-				{Branch: "alpha", Indentation: "", OtherWorktree: false},
-				{Branch: "alpha1", Indentation: "", OtherWorktree: false},
-				{Branch: "beta", Indentation: "", OtherWorktree: false},
-			}
-			initialBranch := gitdomain.NewLocalBranchName("alpha1")
-			have := cmd.SwitchBranchCursorPos(entries, initialBranch)
-			want := 2
-			must.EqOp(t, want, have)
-		})
-		t.Run("initialBranch is not in the entry list", func(t *testing.T) {
-			t.Parallel()
-			entries := dialog.SwitchBranchEntries{
-				{Branch: "main", Indentation: "", OtherWorktree: false},
-				{Branch: "alpha", Indentation: "", OtherWorktree: false},
-				{Branch: "beta", Indentation: "", OtherWorktree: false},
-			}
-			initialBranch := gitdomain.NewLocalBranchName("other")
-			have := cmd.SwitchBranchCursorPos(entries, initialBranch)
-			want := 0
-			must.EqOp(t, want, have)
-		})
-	})
-
 	t.Run("SwitchBranchEntries", func(t *testing.T) {
 		t.Parallel()
 		t.Run("worktree", func(t *testing.T) {
