@@ -329,14 +329,7 @@ func enterDevRemote(data Data) (Option[gitdomain.Remote], dialogdomain.Exit, err
 	if data.Config.File.DevRemote.IsSome() {
 		return None[gitdomain.Remote](), false, nil
 	}
-	remotes, err := data.Git.Remotes(data.Backend)
-	if err != nil {
-		return None[gitdomain.Remote](), false, err
-	}
-	if len(remotes) == 0 {
-		return None[gitdomain.Remote](), false, nil
-	}
-	return dialog.DevRemote(remotes, dialog.Args[gitdomain.Remote]{
+	return dialog.DevRemote(data.Remotes, dialog.Args[gitdomain.Remote]{
 		Global: data.Config.GitGlobal.DevRemote,
 		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.DevRemote,
