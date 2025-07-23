@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
@@ -62,6 +63,7 @@ func executeConfigSetup(cliConfig cliconfig.CliConfig) error {
 	if err != nil || exit {
 		return err
 	}
+	fmt.Println("1111111111111111111111111", userInput.Data.DevRemote)
 	if err = setup.Save(userInput, repo.UnvalidatedConfig, data, repo.Frontend); err != nil {
 		return err
 	}
@@ -117,10 +119,10 @@ func LoadData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data 
 	return setup.Data{
 		Backend:        repo.Backend,
 		Config:         repo.UnvalidatedConfig,
+		ConfigSnapshot: repo.ConfigSnapshot,
 		Git:            repo.Git,
 		Inputs:         inputs,
 		LocalBranches:  branchesSnapshot.Branches.LocalBranches().Names(),
-		ConfigSnapshot: repo.ConfigSnapshot,
 		Remotes:        remotes,
 	}, exit, nil
 }
