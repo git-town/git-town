@@ -40,7 +40,10 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 		if err != nil || exit {
 			return config.EmptyValidatedConfig(), exit, err
 		}
-		setup.Save(userInput, args.Unvalidated.Immutable(), setupData, args.Frontend)
+		err = setup.Save(userInput, args.Unvalidated.Immutable(), setupData, args.Frontend)
+		if err != nil {
+			return config.EmptyValidatedConfig(), exit, err
+		}
 		mainBranch = userInput.ValidatedConfig.MainBranch
 	}
 
