@@ -82,6 +82,6 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		}
 	}
 	message += "\n"
-	args.DialogTestInputs.IsEmpty()
+	args.DialogTestInputs.VerifyAllUsed()
 	return errors.New(message)
 }

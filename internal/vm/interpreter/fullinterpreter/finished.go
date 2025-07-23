@@ -50,7 +50,7 @@ func finished(args finishedArgs) error {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
 	}
 	print.Footer(args.Verbose, args.CommandsCounter.Immutable(), args.FinalMessages.Result())
-	args.Inputs.IsEmpty()
+	args.Inputs.VerifyAllUsed()
 	return nil
 }
 
