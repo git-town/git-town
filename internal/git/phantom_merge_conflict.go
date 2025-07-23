@@ -54,25 +54,24 @@ type PhantomMergeConflict struct {
 }
 
 func DetectPhantomMergeConflicts(conflictInfos []FileConflictFullInfo, parentBranchOpt Option[gitdomain.LocalBranchName], rootBranch gitdomain.LocalBranchName) []PhantomMergeConflict {
-	result := []PhantomMergeConflict{}
 	parentBranch, hasParentBranch := parentBranchOpt.Get()
 	if !hasParentBranch || parentBranch == rootBranch {
 		// branches that don't have a parent or whose parent is the root branch cannot have phantom merge conflicts
 		return []PhantomMergeConflict{}
 	}
+	result := []PhantomMergeConflict{}
 	for _, conflictInfo := range conflictInfos {
 		initialParentInfo, hasInitialParentInfo := conflictInfo.Parent.Get()
 		currentInfo, hasCurrentInfo := conflictInfo.Current.Get()
 		if !hasInitialParentInfo || !hasCurrentInfo || currentInfo.Permission != initialParentInfo.Permission {
 			continue
 		}
-		if !reflect.DeepEqual(conflictInfo.Root, conflictInfo.Parent) {
-			// root and parent don't have the exact same version of the file --> not a phantom merge conflict
-			continue
+		if reflect.DeepEqual(conflictInfo.Root, conflictInfo.Parent) {
+			// root and parent have the exact same version of the file --> this is a phantom merge conflict
+			result = append(result, PhantomMergeConflict{
+				FilePath: currentInfo.FilePath,
+			})
 		}
-		result = append(result, PhantomMergeConflict{
-			FilePath: currentInfo.FilePath,
-		})
 	}
 	return result
 }
