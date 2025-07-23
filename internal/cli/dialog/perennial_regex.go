@@ -31,7 +31,7 @@ func PerennialRegex(args Args[configdomain.PerennialRegex]) (Option[configdomain
 		ExistingValue: args.Local.Or(args.Global).String(),
 		Help:          PerennialRegexHelp,
 		Prompt:        messages.PerennialRegexPrompt,
-		TestInputs:    args.Inputs,
+		Inputs:        args.Inputs,
 		Title:         perennialRegexTitle,
 	})
 	newValue, err2 := configdomain.ParsePerennialRegex(input)

@@ -18,7 +18,7 @@ type RunArgs struct {
 	Config                          Mutable[config.ValidatedConfig]
 	Connector                       Option[forgedomain.Connector]
 	Detached                        configdomain.Detached
-	DialogTestInputs                dialogcomponents.TestInputs
+	Inputs                          dialogcomponents.Inputs
 	FinalMessages                   stringslice.Collector
 	Frontend                        subshelldomain.Runner
 	Git                             git.Commands

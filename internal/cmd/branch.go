@@ -71,7 +71,7 @@ func executeBranch(cliConfig cliconfig.CliConfig) error {
 }
 
 func determineBranchData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data branchData, exit dialogdomain.Exit, err error) {
-	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
+	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -82,7 +82,7 @@ func determineBranchData(repo execute.OpenRepoResult, cliConfig cliconfig.CliCon
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             None[forgedomain.Connector](),
 		Detached:              true,
-		DialogTestInputs:      dialogTestInputs,
+		Inputs:                inputs,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,

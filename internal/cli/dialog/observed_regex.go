@@ -32,7 +32,7 @@ func ObservedRegex(args Args[configdomain.ObservedRegex]) (Option[configdomain.O
 		ExistingValue: args.Local.Or(args.Global).String(),
 		Help:          observedRegexHelp,
 		Prompt:        messages.ObservedRegexPrompt,
-		TestInputs:    args.Inputs,
+		Inputs:        args.Inputs,
 		Title:         observedRegexTitle,
 	})
 	newValue, err2 := configdomain.ParseObservedRegex(input)

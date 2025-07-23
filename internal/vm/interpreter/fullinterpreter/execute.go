@@ -31,7 +31,7 @@ func Execute(args ExecuteArgs) error {
 				CommandsCounter: args.CommandsCounter,
 				FinalMessages:   args.FinalMessages,
 				Git:             args.Git,
-				Inputs:          args.DialogTestInputs,
+				Inputs:          args.Inputs,
 				RootDir:         args.RootDir,
 				RunState:        args.RunState,
 				Verbose:         args.Verbose,
@@ -46,7 +46,7 @@ func Execute(args ExecuteArgs) error {
 			Config:                          NewMutable(&args.Config),
 			Connector:                       args.Connector,
 			Detached:                        args.Detached,
-			DialogTestInputs:                args.DialogTestInputs,
+			Inputs:                          args.Inputs,
 			FinalMessages:                   args.FinalMessages,
 			Frontend:                        args.Frontend,
 			Git:                             args.Git,
@@ -67,7 +67,7 @@ type ExecuteArgs struct {
 	Config                  config.ValidatedConfig
 	Connector               Option[forgedomain.Connector]
 	Detached                configdomain.Detached
-	DialogTestInputs        dialogcomponents.TestInputs
+	Inputs                  dialogcomponents.Inputs
 	FinalMessages           stringslice.Collector
 	Frontend                subshelldomain.Runner
 	Git                     git.Commands

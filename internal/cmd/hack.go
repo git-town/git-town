@@ -192,7 +192,7 @@ func createFeatureBranch(args createFeatureBranchArgs) error {
 		Config:                  args.appendData.config,
 		Connector:               args.appendData.connector,
 		Detached:                args.appendData.detached,
-		DialogTestInputs:        args.appendData.dialogTestInputs,
+		Inputs:                  args.appendData.inputs,
 		FinalMessages:           args.finalMessages,
 		Frontend:                args.frontend,
 		Git:                     args.git,
@@ -229,7 +229,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, cliConfig cli
 	if err != nil {
 		return data, false, err
 	}
-	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
+	inputs := dialogcomponents.LoadInputs(os.Environ())
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	targetBranches := gitdomain.NewLocalBranchNames(args...)
 	var repoStatus gitdomain.RepoStatus
@@ -262,7 +262,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, cliConfig cli
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
 		Detached:              detached,
-		DialogTestInputs:      dialogTestInputs,
+		Inputs:                inputs,
 		Fetch:                 len(args) == 1 && !repoStatus.OpenChanges && beam.IsFalse() && commit.IsFalse(),
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
@@ -305,12 +305,11 @@ func determineHackData(args []string, repo execute.OpenRepoResult, cliConfig cli
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: branchesToValidate,
 		Connector:          connector,
-		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
+		Inputs:             inputs,
 		LocalBranches:      localBranchNames,
 		RepoStatus:         repoStatus,
-		TestInputs:         dialogTestInputs,
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
@@ -354,7 +353,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, cliConfig cli
 		if err != nil {
 			return data, false, err
 		}
-		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, targetBranch, repo.Git, repo.Backend, dialogTestInputs)
+		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, targetBranch, repo.Git, repo.Backend, inputs)
 		if err != nil || exit {
 			return data, exit, err
 		}
@@ -374,7 +373,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, cliConfig cli
 		config:                    validatedConfig,
 		connector:                 connector,
 		detached:                  detached,
-		dialogTestInputs:          dialogTestInputs,
+		inputs:                    inputs,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             initialBranch,
 		initialBranchInfo:         initialBranchInfo,

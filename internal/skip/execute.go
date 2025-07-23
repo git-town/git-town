@@ -46,7 +46,7 @@ func Execute(args ExecuteArgs) error {
 		Config:                  args.Config,
 		Connector:               args.Connector,
 		Detached:                args.Detached,
-		DialogTestInputs:        args.TestInputs,
+		Inputs:                  args.Inputs,
 		FinalMessages:           args.FinalMessages,
 		Frontend:                args.Frontend,
 		Git:                     args.Git,
@@ -75,7 +75,7 @@ type ExecuteArgs struct {
 	InitialBranch   gitdomain.LocalBranchName
 	RootDir         gitdomain.RepoRootDir
 	RunState        runstate.RunState
-	TestInputs      dialogcomponents.TestInputs
+	Inputs          dialogcomponents.Inputs
 	Verbose         configdomain.Verbose
 }
 

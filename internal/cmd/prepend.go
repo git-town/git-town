@@ -159,7 +159,7 @@ func executePrepend(args []string, cliConfig cliconfig.CliConfig, beam configdom
 		Config:                  data.config,
 		Connector:               data.connector,
 		Detached:                detached,
-		DialogTestInputs:        data.dialogTestInputs,
+		Inputs:                  data.inputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -186,7 +186,7 @@ type prependData struct {
 	commitsToBeam       gitdomain.Commits
 	config              config.ValidatedConfig
 	connector           Option[forgedomain.Connector]
-	dialogTestInputs    dialogcomponents.TestInputs
+	inputs              dialogcomponents.Inputs
 	existingParent      gitdomain.LocalBranchName
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
@@ -210,7 +210,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, cliConfig 
 	if err != nil {
 		return data, false, err
 	}
-	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
+	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -240,7 +240,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, cliConfig 
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
 		Detached:              detached,
-		DialogTestInputs:      dialogTestInputs,
+		Inputs:                inputs,
 		Fetch:                 !repoStatus.OpenChanges && beam.IsFalse() && commit.IsFalse(),
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
@@ -284,12 +284,11 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, cliConfig 
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
 		Connector:          connector,
-		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
+		Inputs:             inputs,
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
-		TestInputs:         dialogTestInputs,
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
@@ -306,7 +305,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, cliConfig 
 		if err != nil {
 			return data, false, err
 		}
-		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, targetBranch, repo.Git, repo.Backend, dialogTestInputs)
+		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, targetBranch, repo.Git, repo.Backend, inputs)
 		if err != nil || exit {
 			return data, exit, err
 		}
@@ -340,7 +339,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, cliConfig 
 		commitsToBeam:       commitsToBeam,
 		config:              validatedConfig,
 		connector:           connector,
-		dialogTestInputs:    dialogTestInputs,
+		inputs:              inputs,
 		existingParent:      ancestor,
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,

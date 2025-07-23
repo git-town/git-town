@@ -76,7 +76,7 @@ func executeContinue(cliConfig cliconfig.CliConfig) error {
 		Config:                  data.config,
 		Connector:               data.connector,
 		Detached:                false,
-		DialogTestInputs:        data.dialogTestInputs,
+		Inputs:                  data.inputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -93,7 +93,7 @@ func executeContinue(cliConfig cliconfig.CliConfig) error {
 }
 
 func determineContinueData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data continueData, exit dialogdomain.Exit, err error) {
-	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
+	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -123,7 +123,7 @@ func determineContinueData(repo execute.OpenRepoResult, cliConfig cliconfig.CliC
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
 		Detached:              false,
-		DialogTestInputs:      dialogTestInputs,
+		Inputs:                inputs,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
@@ -147,12 +147,11 @@ func determineContinueData(repo execute.OpenRepoResult, cliConfig cliconfig.CliC
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
 		Connector:          data.connector,
-		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
+		Inputs:             inputs,
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
-		TestInputs:         dialogTestInputs,
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
@@ -175,7 +174,7 @@ func determineContinueData(repo execute.OpenRepoResult, cliConfig cliconfig.CliC
 		branchesSnapshot: branchesSnapshot,
 		config:           validatedConfig,
 		connector:        connector,
-		dialogTestInputs: dialogTestInputs,
+		inputs:           inputs,
 		hasOpenChanges:   repoStatus.OpenChanges,
 		initialBranch:    initialBranch,
 		stashSize:        stashSize,
@@ -186,7 +185,7 @@ type continueData struct {
 	branchesSnapshot gitdomain.BranchesSnapshot
 	config           config.ValidatedConfig
 	connector        Option[forgedomain.Connector]
-	dialogTestInputs dialogcomponents.TestInputs
+	inputs           dialogcomponents.Inputs
 	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName
 	stashSize        gitdomain.StashSize

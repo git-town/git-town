@@ -41,7 +41,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (dialogdomain.Exit, error) 
 		unfinishedDetails.EndBranch,
 		unfinishedDetails.EndTime,
 		unfinishedDetails.CanSkip,
-		args.DialogTestInputs,
+		args.Inputs,
 	)
 	if err != nil {
 		return false, err
@@ -91,7 +91,7 @@ type UnfinishedStateArgs struct {
 	CommandsCounter   Mutable[gohacks.Counter]
 	Connector         Option[forgedomain.Connector]
 	Detached          configdomain.Detached
-	DialogTestInputs  dialogcomponents.TestInputs
+	Inputs            dialogcomponents.Inputs
 	FinalMessages     stringslice.Collector
 	Frontend          subshelldomain.Runner
 	Git               git.Commands
@@ -109,10 +109,10 @@ func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (dia
 		return false, errors.New(messages.ContinueUnresolvedConflicts)
 	}
 	validatedConfig, exit, err := quickValidateConfig(quickValidateConfigArgs{
-		backend:      args.Backend,
-		dialogInputs: args.DialogTestInputs,
-		git:          args.Git,
-		unvalidated:  NewMutable(&args.UnvalidatedConfig),
+		backend:     args.Backend,
+		inputs:      args.Inputs,
+		git:         args.Git,
+		unvalidated: NewMutable(&args.UnvalidatedConfig),
 	})
 	if err != nil || exit {
 		return exit, err
@@ -123,7 +123,7 @@ func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (dia
 		Config:                  validatedConfig,
 		Connector:               args.Connector,
 		Detached:                args.Detached,
-		DialogTestInputs:        args.DialogTestInputs,
+		Inputs:                  args.Inputs,
 		FinalMessages:           args.FinalMessages,
 		Frontend:                args.Frontend,
 		Git:                     args.Git,
@@ -157,7 +157,7 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 		localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 		var exit dialogdomain.Exit
 		_, mainBranch, exit, err = dialog.MainBranch(dialog.MainBranchArgs{
-			Inputs:         args.dialogInputs,
+			Inputs:         args.inputs,
 			Local:          args.unvalidated.Value.GitGlobal.MainBranch,
 			LocalBranches:  localBranches,
 			StandardBranch: args.git.StandardBranch(args.backend),
@@ -190,10 +190,10 @@ func skipRunstate(args UnfinishedStateArgs, runState runstate.RunState) (dialogd
 		return false, err
 	}
 	validatedConfig, exit, err := quickValidateConfig(quickValidateConfigArgs{
-		backend:      args.Backend,
-		dialogInputs: args.DialogTestInputs,
-		git:          args.Git,
-		unvalidated:  NewMutable(&args.UnvalidatedConfig),
+		backend:     args.Backend,
+		inputs:      args.Inputs,
+		git:         args.Git,
+		unvalidated: NewMutable(&args.UnvalidatedConfig),
 	})
 	if err != nil || exit {
 		return exit, err
@@ -211,17 +211,17 @@ func skipRunstate(args UnfinishedStateArgs, runState runstate.RunState) (dialogd
 		InitialBranch:   currentBranch,
 		RootDir:         args.RootDir,
 		RunState:        runState,
-		TestInputs:      args.DialogTestInputs,
+		Inputs:          args.Inputs,
 		Verbose:         args.Verbose,
 	})
 }
 
 func undoRunState(args UnfinishedStateArgs, runState runstate.RunState) (dialogdomain.Exit, error) {
 	validatedConfig, exit, err := quickValidateConfig(quickValidateConfigArgs{
-		backend:      args.Backend,
-		dialogInputs: args.DialogTestInputs,
-		git:          args.Git,
-		unvalidated:  NewMutable(&args.UnvalidatedConfig),
+		backend:     args.Backend,
+		inputs:      args.Inputs,
+		git:         args.Git,
+		unvalidated: NewMutable(&args.UnvalidatedConfig),
 	})
 	if err != nil || exit {
 		return exit, err
@@ -244,8 +244,8 @@ func undoRunState(args UnfinishedStateArgs, runState runstate.RunState) (dialogd
 }
 
 type quickValidateConfigArgs struct {
-	backend      subshelldomain.RunnerQuerier
-	dialogInputs dialogcomponents.TestInputs
-	git          git.Commands
-	unvalidated  Mutable[config.UnvalidatedConfig]
+	backend     subshelldomain.RunnerQuerier
+	inputs      dialogcomponents.Inputs
+	git         git.Commands
+	unvalidated Mutable[config.UnvalidatedConfig]
 }

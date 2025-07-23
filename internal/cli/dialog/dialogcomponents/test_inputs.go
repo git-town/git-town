@@ -9,20 +9,20 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-// TestInputs contains the input for all dialogs in an end-to-end test.
+// Inputs contains the input for all dialogs in an end-to-end test.
 // This struct is always mutable, so doesn't need to be wrapped in Mutable.
-type TestInputs struct {
+type Inputs struct {
 	cursor Mutable[int] // index of the input to return next
 	inputs []TestInput  // the input values
 	len    int          // the total number of inputs
 }
 
-func (self TestInputs) IsEmpty() bool {
+func (self Inputs) IsEmpty() bool {
 	return self.cursor.Immutable() == self.len
 }
 
 // Next provides the TestInput for the next dialog in an end-to-end test.
-func (self TestInputs) Next() Option[TestInput] {
+func (self Inputs) Next() Option[TestInput] {
 	if self.len == 0 {
 		return None[TestInput]()
 	}
@@ -34,15 +34,15 @@ func (self TestInputs) Next() Option[TestInput] {
 	return Some(result)
 }
 
-func (self TestInputs) VerifyAllUsed() {
+func (self Inputs) VerifyAllUsed() {
 	if !self.IsEmpty() {
 		panic("unused dialog inputs")
 	}
 }
 
-// LoadTestInputs provides the TestInputs to use in an end-to-end test,
+// LoadInputs provides the Inputs to use in an end-to-end test,
 // taken from the given environment variable snapshot.
-func LoadTestInputs(environmenttVariables []string) TestInputs {
+func LoadInputs(environmenttVariables []string) Inputs {
 	inputs := []TestInput{}
 	sort.Strings(environmenttVariables)
 	for _, environmentVariable := range environmenttVariables {
@@ -57,12 +57,12 @@ func LoadTestInputs(environmenttVariables []string) TestInputs {
 		input := ParseTestInput(value)
 		inputs = append(inputs, input)
 	}
-	return NewTestInputs(inputs...)
+	return NewInputs(inputs...)
 }
 
-func NewTestInputs(inputs ...TestInput) TestInputs {
+func NewInputs(inputs ...TestInput) Inputs {
 	cursor := 0
-	return TestInputs{
+	return Inputs{
 		cursor: NewMutable(&cursor),
 		inputs: inputs,
 		len:    len(inputs),

@@ -144,7 +144,7 @@ func executeWalk(args []string, cliConfig cliconfig.CliConfig, allBranches confi
 		Config:                  data.config,
 		Connector:               data.connector,
 		Detached:                true,
-		DialogTestInputs:        data.dialogTestInputs,
+		Inputs:                  data.inputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -166,7 +166,7 @@ type walkData struct {
 	branchesToWalk     gitdomain.LocalBranchNames
 	config             config.ValidatedConfig
 	connector          Option[forgedomain.Connector]
-	dialogTestInputs   dialogcomponents.TestInputs
+	inputs             dialogcomponents.Inputs
 	hasOpenChanges     bool
 	initialBranch      gitdomain.LocalBranchName
 	previousBranch     Option[gitdomain.LocalBranchName]
@@ -174,7 +174,7 @@ type walkData struct {
 }
 
 func determineWalkData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig, all configdomain.AllBranches, stack configdomain.FullStack) (walkData, dialogdomain.Exit, error) {
-	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
+	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return walkData{}, false, err
@@ -204,7 +204,7 @@ func determineWalkData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfi
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
 		Detached:              true,
-		DialogTestInputs:      dialogTestInputs,
+		Inputs:                inputs,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
@@ -233,12 +233,11 @@ func determineWalkData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfi
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
 		Connector:          connector,
-		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
+		Inputs:             inputs,
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
-		TestInputs:         dialogTestInputs,
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
@@ -258,7 +257,7 @@ func determineWalkData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfi
 		branchesToWalk:     branchesToWalk,
 		config:             validatedConfig,
 		connector:          connector,
-		dialogTestInputs:   dialogTestInputs,
+		inputs:             inputs,
 		hasOpenChanges:     repoStatus.OpenChanges,
 		initialBranch:      initialBranch,
 		previousBranch:     previousBranch,

@@ -14,10 +14,10 @@ func enterShipDeleteTrackingBranch() *cobra.Command {
 	return &cobra.Command{
 		Use: "ship-delete-tracking-branch",
 		RunE: func(_ *cobra.Command, _ []string) error {
-			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
+			inputs := dialogcomponents.LoadInputs(os.Environ())
 			_, _, err := dialog.ShipDeleteTrackingBranch(dialog.Args[configdomain.ShipDeleteTrackingBranch]{
 				Global: None[configdomain.ShipDeleteTrackingBranch](),
-				Inputs: dialogTestInputs,
+				Inputs: inputs,
 				Local:  None[configdomain.ShipDeleteTrackingBranch](),
 			})
 			return err

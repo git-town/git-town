@@ -136,7 +136,7 @@ func executeDetach(args []string, cliConfig cliconfig.CliConfig) error {
 		Config:                  data.config,
 		Connector:               data.connector,
 		Detached:                true,
-		DialogTestInputs:        data.dialogTestInputs,
+		Inputs:                  data.inputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -162,7 +162,7 @@ type detachData struct {
 	config              config.ValidatedConfig
 	connector           Option[forgedomain.Connector]
 	descendents         []detachChildBranch
-	dialogTestInputs    dialogcomponents.TestInputs
+	inputs              dialogcomponents.Inputs
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
 	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
@@ -178,7 +178,7 @@ type detachChildBranch struct {
 }
 
 func determineDetachData(args []string, repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data detachData, exit dialogdomain.Exit, err error) {
-	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
+	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -208,7 +208,7 @@ func determineDetachData(args []string, repo execute.OpenRepoResult, cliConfig c
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
 		Detached:              true,
-		DialogTestInputs:      dialogTestInputs,
+		Inputs:                inputs,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
@@ -240,12 +240,11 @@ func determineDetachData(args []string, repo execute.OpenRepoResult, cliConfig c
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
 		Connector:          connector,
-		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
+		Inputs:             inputs,
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
-		TestInputs:         dialogTestInputs,
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
@@ -315,7 +314,7 @@ func determineDetachData(args []string, repo execute.OpenRepoResult, cliConfig c
 		config:              validatedConfig,
 		connector:           connector,
 		descendents:         descendents,
-		dialogTestInputs:    dialogTestInputs,
+		inputs:              inputs,
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
 		nonExistingBranches: nonExistingBranches,

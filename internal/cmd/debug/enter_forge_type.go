@@ -14,10 +14,10 @@ func enterForgeType() *cobra.Command {
 	return &cobra.Command{
 		Use: "forge-type",
 		RunE: func(_ *cobra.Command, _ []string) error {
-			dialogInputs := dialogcomponents.LoadTestInputs(os.Environ())
+			inputs := dialogcomponents.LoadInputs(os.Environ())
 			_, _, err := dialog.ForgeType(dialog.Args[forgedomain.ForgeType]{
 				Global: None[forgedomain.ForgeType](),
-				Inputs: dialogInputs,
+				Inputs: inputs,
 				Local:  None[forgedomain.ForgeType](),
 			})
 			return err

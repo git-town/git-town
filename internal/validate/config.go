@@ -26,7 +26,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 	if !hasMain {
 		validatedMain, additionalPerennials, exit, err := dialog.MainAndPerennials(dialog.MainAndPerennialsArgs{
 			Backend:           args.Backend,
-			DialogInputs:      args.TestInputs,
+			Inputs:            args.Inputs,
 			GetDefaultBranch:  gitconfig.DefaultBranch,
 			LocalBranches:     args.LocalBranches,
 			UnvalidatedConfig: *args.Unvalidated.Value,
@@ -53,7 +53,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 		BranchesToVerify:  args.BranchesToValidate,
 		Connector:         args.Connector,
 		DefaultChoice:     mainBranch,
-		DialogTestInputs:  args.TestInputs,
+		Inputs:            args.Inputs,
 		Lineage:           args.Unvalidated.Value.NormalConfig.Lineage,
 		LocalBranches:     args.LocalBranches,
 		MainBranch:        mainBranch,
@@ -93,11 +93,10 @@ type ConfigArgs struct {
 	BranchesSnapshot   gitdomain.BranchesSnapshot
 	BranchesToValidate gitdomain.LocalBranchNames
 	Connector          Option[forgedomain.Connector]
-	DialogTestInputs   dialogcomponents.TestInputs
 	Frontend           subshelldomain.Runner
 	Git                git.Commands
+	Inputs             dialogcomponents.Inputs
 	LocalBranches      gitdomain.LocalBranchNames
 	RepoStatus         gitdomain.RepoStatus
-	TestInputs         dialogcomponents.TestInputs
 	Unvalidated        Mutable[config.UnvalidatedConfig]
 }

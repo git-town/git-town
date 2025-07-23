@@ -133,7 +133,7 @@ func executeDelete(args []string, cliConfig cliconfig.CliConfig) error {
 		Config:                  data.config,
 		Connector:               data.connector,
 		Detached:                true,
-		DialogTestInputs:        data.dialogTestInputs,
+		Inputs:                  data.inputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -157,7 +157,7 @@ type deleteData struct {
 	branchesSnapshot         gitdomain.BranchesSnapshot
 	config                   config.ValidatedConfig
 	connector                Option[forgedomain.Connector]
-	dialogTestInputs         dialogcomponents.TestInputs
+	inputs                   dialogcomponents.Inputs
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
 	nonExistingBranches      gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
@@ -167,7 +167,7 @@ type deleteData struct {
 }
 
 func determineDeleteData(args []string, repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data deleteData, exit dialogdomain.Exit, err error) {
-	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
+	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -197,7 +197,7 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult, cliConfig c
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
 		Detached:              true,
-		DialogTestInputs:      dialogTestInputs,
+		Inputs:                inputs,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
@@ -229,12 +229,11 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult, cliConfig c
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
 		Connector:          connector,
-		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
+		Inputs:             inputs,
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
-		TestInputs:         dialogTestInputs,
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
@@ -270,7 +269,7 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult, cliConfig c
 		branchesSnapshot:         branchesSnapshot,
 		config:                   validatedConfig,
 		connector:                connector,
-		dialogTestInputs:         dialogTestInputs,
+		inputs:                   inputs,
 		hasOpenChanges:           repoStatus.OpenChanges,
 		initialBranch:            initialBranch,
 		nonExistingBranches:      nonExistingBranches,

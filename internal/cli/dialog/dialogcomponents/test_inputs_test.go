@@ -9,10 +9,10 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestTestInputs(t *testing.T) {
+func TestInputs(t *testing.T) {
 	t.Parallel()
 
-	t.Run("LoadTestInputs", func(t *testing.T) {
+	t.Run("LoadInputs", func(t *testing.T) {
 		t.Parallel()
 		env := []string{
 			"foo=bar",
@@ -20,8 +20,8 @@ func TestTestInputs(t *testing.T) {
 			"GITTOWN_DIALOG_INPUT_2=perennial-branches@space|down|space|5|enter",
 			"GITTOWN_DIALOG_INPUT_3=perennial-regex@ctrl+c",
 		}
-		have := dialogcomponents.LoadTestInputs(env)
-		want := dialogcomponents.NewTestInputs(
+		have := dialogcomponents.LoadInputs(env)
+		want := dialogcomponents.NewInputs(
 			dialogcomponents.TestInput{
 				Messages: []tea.Msg{
 					tea.KeyMsg{Type: tea.KeyEnter},
@@ -48,7 +48,7 @@ func TestTestInputs(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("TestInputs.Next", func(t *testing.T) {
+	t.Run("Inputs.Next", func(t *testing.T) {
 		t.Parallel()
 		t.Run("populated", func(t *testing.T) {
 			t.Parallel()
@@ -67,31 +67,31 @@ func TestTestInputs(t *testing.T) {
 					tea.KeyMsg{Type: tea.KeyCtrlC},
 				},
 			}
-			testInputs := dialogcomponents.NewTestInputs(
+			inputs := dialogcomponents.NewInputs(
 				keyA,
 				keyB,
 				keyC,
 			)
 			// request the first entry: A
-			have := testInputs.Next()
+			have := inputs.Next()
 			must.Eq(t, Some(keyA), have)
-			must.False(t, testInputs.IsEmpty())
+			must.False(t, inputs.IsEmpty())
 			// request the next entry: B
-			have = testInputs.Next()
+			have = inputs.Next()
 			must.Eq(t, Some(keyB), have)
-			must.False(t, testInputs.IsEmpty())
+			must.False(t, inputs.IsEmpty())
 			// request the next entry: C
-			have = testInputs.Next()
+			have = inputs.Next()
 			must.Eq(t, Some(keyC), have)
-			must.True(t, testInputs.IsEmpty())
+			must.True(t, inputs.IsEmpty())
 		})
 		t.Run("not populated", func(t *testing.T) {
 			t.Parallel()
-			testInputs := dialogcomponents.NewTestInputs()
+			inputs := dialogcomponents.NewInputs()
 			// request the first entry: A
-			have := testInputs.Next()
+			have := inputs.Next()
 			must.Eq(t, None[dialogcomponents.TestInput](), have)
-			must.True(t, testInputs.IsEmpty())
+			must.True(t, inputs.IsEmpty())
 		})
 		t.Run("exceed given inputs", func(t *testing.T) {
 			t.Parallel()
@@ -105,13 +105,13 @@ func TestTestInputs(t *testing.T) {
 					tea.KeyMsg{Type: tea.KeyCtrlA},
 				},
 			}
-			testInputs := dialogcomponents.NewTestInputs(keyA)
+			inputs := dialogcomponents.NewInputs(keyA)
 			// request the first entry
-			have := testInputs.Next()
+			have := inputs.Next()
 			must.Eq(t, Some(keyA), have)
-			must.True(t, testInputs.IsEmpty())
+			must.True(t, inputs.IsEmpty())
 			// request the next entry
-			_ = testInputs.Next()
+			_ = inputs.Next()
 		})
 	})
 }

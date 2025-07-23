@@ -29,7 +29,7 @@ func Execute(args ExecuteArgs) {
 			Config:                          NewMutable(&args.Config),
 			Connector:                       args.Connector,
 			Detached:                        args.Detached,
-			DialogTestInputs:                dialogcomponents.NewTestInputs(),
+			Inputs:                          dialogcomponents.NewInputs(),
 			FinalMessages:                   args.FinalMessages,
 			Frontend:                        args.Frontend,
 			Git:                             args.Git,

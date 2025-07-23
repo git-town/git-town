@@ -12,8 +12,8 @@ func welcome() *cobra.Command {
 	return &cobra.Command{
 		Use: "welcome",
 		RunE: func(_ *cobra.Command, _ []string) error {
-			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
-			_, err := dialog.Welcome(dialogTestInputs)
+			inputs := dialogcomponents.LoadInputs(os.Environ())
+			_, err := dialog.Welcome(inputs)
 			return err
 		},
 	}

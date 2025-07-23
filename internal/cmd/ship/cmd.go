@@ -157,7 +157,7 @@ func executeShip(args []string, cliConfig cliconfig.CliConfig, messageOpt Option
 		Config:                  sharedData.config,
 		Connector:               sharedData.connector,
 		Detached:                false,
-		DialogTestInputs:        sharedData.dialogTestInputs,
+		Inputs:                  sharedData.inputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,

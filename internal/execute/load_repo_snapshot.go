@@ -36,7 +36,7 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 			CommandsCounter:   args.Repo.CommandsCounter,
 			Connector:         args.Connector,
 			Detached:          args.Detached,
-			DialogTestInputs:  args.DialogTestInputs,
+			Inputs:            args.Inputs,
 			FinalMessages:     args.Repo.FinalMessages,
 			Frontend:          args.Repo.Frontend,
 			Git:               args.Git,
@@ -83,12 +83,12 @@ type LoadRepoSnapshotArgs struct {
 	ConfigSnapshot        undoconfig.ConfigSnapshot
 	Connector             Option[forgedomain.Connector]
 	Detached              configdomain.Detached
-	DialogTestInputs      dialogcomponents.TestInputs
 	Fetch                 bool
 	FinalMessages         stringslice.Collector
 	Frontend              subshelldomain.Runner
 	Git                   git.Commands
 	HandleUnfinishedState bool
+	Inputs                dialogcomponents.Inputs
 	Repo                  OpenRepoResult
 	RepoStatus            gitdomain.RepoStatus
 	RootDir               gitdomain.RepoRootDir

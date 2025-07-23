@@ -131,7 +131,7 @@ func executeSwap(args []string, cliConfig cliconfig.CliConfig) error {
 		Config:                  data.config,
 		Connector:               data.connector,
 		Detached:                true,
-		DialogTestInputs:        data.dialogTestInputs,
+		Inputs:                  data.inputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -156,7 +156,7 @@ type swapData struct {
 	children            []swapChildBranch
 	config              config.ValidatedConfig
 	connector           Option[forgedomain.Connector]
-	dialogTestInputs    dialogcomponents.TestInputs
+	inputs              dialogcomponents.Inputs
 	grandParentBranch   gitdomain.LocalBranchName
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
@@ -175,7 +175,7 @@ type swapChildBranch struct {
 }
 
 func determineSwapData(args []string, repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data swapData, exit dialogdomain.Exit, err error) {
-	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
+	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -205,7 +205,7 @@ func determineSwapData(args []string, repo execute.OpenRepoResult, cliConfig cli
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
 		Detached:              true,
-		DialogTestInputs:      dialogTestInputs,
+		Inputs:                inputs,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
@@ -237,12 +237,11 @@ func determineSwapData(args []string, repo execute.OpenRepoResult, cliConfig cli
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
 		Connector:          connector,
-		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
+		Inputs:             inputs,
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
-		TestInputs:         dialogTestInputs,
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
@@ -314,7 +313,7 @@ func determineSwapData(args []string, repo execute.OpenRepoResult, cliConfig cli
 		children:            children,
 		config:              validatedConfig,
 		connector:           connector,
-		dialogTestInputs:    dialogTestInputs,
+		inputs:              inputs,
 		grandParentBranch:   grandParentBranch,
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,

@@ -130,7 +130,7 @@ func executePropose(cliConfig cliconfig.CliConfig, title Option[gitdomain.Propos
 		Config:                  data.config,
 		Connector:               data.connector,
 		Detached:                true,
-		DialogTestInputs:        data.dialogTestInputs,
+		Inputs:                  data.inputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -154,7 +154,7 @@ type proposeData struct {
 	branchesToSync      configdomain.BranchesToSync
 	config              config.ValidatedConfig
 	connector           Option[forgedomain.Connector]
-	dialogTestInputs    dialogcomponents.TestInputs
+	inputs              dialogcomponents.Inputs
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
 	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
@@ -178,7 +178,7 @@ func determineProposeData(repo execute.OpenRepoResult, cliConfig cliconfig.CliCo
 	if err != nil {
 		return data, false, err
 	}
-	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
+	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -208,7 +208,7 @@ func determineProposeData(repo execute.OpenRepoResult, cliConfig cliconfig.CliCo
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connectorOpt,
 		Detached:              true,
-		DialogTestInputs:      dialogTestInputs,
+		Inputs:                inputs,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
@@ -241,12 +241,11 @@ func determineProposeData(repo execute.OpenRepoResult, cliConfig cliconfig.CliCo
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
 		Connector:          connectorOpt,
-		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
+		Inputs:             inputs,
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
-		TestInputs:         dialogTestInputs,
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
@@ -317,7 +316,7 @@ func determineProposeData(repo execute.OpenRepoResult, cliConfig cliconfig.CliCo
 		branchesToSync:      branchesToSync,
 		config:              validatedConfig,
 		connector:           connectorOpt,
-		dialogTestInputs:    dialogTestInputs,
+		inputs:              inputs,
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
 		nonExistingBranches: nonExistingBranches,

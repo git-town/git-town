@@ -30,8 +30,8 @@ func switchBranch() *cobra.Command {
 					Type:          configdomain.BranchTypeFeatureBranch,
 				}
 			}
-			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
-			_, _, err = dialog.SwitchBranch(entries, 0, false, false, dialogTestInputs)
+			inputs := dialogcomponents.LoadInputs(os.Environ())
+			_, _, err = dialog.SwitchBranch(entries, 0, false, false, inputs)
 			return err
 		},
 	}

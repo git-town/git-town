@@ -106,7 +106,7 @@ func executeRename(args []string, cliConfig cliconfig.CliConfig, force configdom
 		Config:                  data.config,
 		Connector:               data.connector,
 		Detached:                true,
-		DialogTestInputs:        data.dialogTestInputs,
+		Inputs:                  data.inputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -127,7 +127,7 @@ type renameData struct {
 	branchesSnapshot         gitdomain.BranchesSnapshot
 	config                   config.ValidatedConfig
 	connector                Option[forgedomain.Connector]
-	dialogTestInputs         dialogcomponents.TestInputs
+	inputs                   dialogcomponents.Inputs
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
 	newBranch                gitdomain.LocalBranchName
@@ -141,7 +141,7 @@ type renameData struct {
 
 func determineRenameData(args []string, cliConfig cliconfig.CliConfig, force configdomain.Force, repo execute.OpenRepoResult) (data renameData, exit dialogdomain.Exit, err error) {
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
-	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
+	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -171,7 +171,7 @@ func determineRenameData(args []string, cliConfig cliconfig.CliConfig, force con
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
 		Detached:              true,
-		DialogTestInputs:      dialogTestInputs,
+		Inputs:                inputs,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
@@ -212,12 +212,11 @@ func determineRenameData(args []string, cliConfig cliconfig.CliConfig, force con
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{oldBranchName},
 		Connector:          connector,
-		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
+		Inputs:             inputs,
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
-		TestInputs:         dialogTestInputs,
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
@@ -262,7 +261,7 @@ func determineRenameData(args []string, cliConfig cliconfig.CliConfig, force con
 		branchesSnapshot:         branchesSnapshot,
 		config:                   validatedConfig,
 		connector:                connector,
-		dialogTestInputs:         dialogTestInputs,
+		inputs:                   inputs,
 		hasOpenChanges:           repoStatus.OpenChanges,
 		initialBranch:            initialBranch,
 		newBranch:                newBranchName,

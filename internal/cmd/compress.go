@@ -137,7 +137,7 @@ func executeCompress(cliConfig cliconfig.CliConfig, message Option[gitdomain.Com
 		Config:                  data.config,
 		Connector:               None[forgedomain.Connector](),
 		Detached:                true,
-		DialogTestInputs:        data.dialogTestInputs,
+		Inputs:                  data.inputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -158,7 +158,7 @@ type compressBranchesData struct {
 	branchesSnapshot   gitdomain.BranchesSnapshot
 	branchesToCompress []compressBranchData
 	config             config.ValidatedConfig
-	dialogTestInputs   dialogcomponents.TestInputs
+	inputs             dialogcomponents.Inputs
 	hasOpenChanges     bool
 	initialBranch      gitdomain.LocalBranchName
 	previousBranch     Option[gitdomain.LocalBranchName]
@@ -176,7 +176,7 @@ type compressBranchData struct {
 
 func determineCompressBranchesData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig, message Option[gitdomain.CommitMessage], compressEntireStack configdomain.FullStack) (data compressBranchesData, exit dialogdomain.Exit, err error) {
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
-	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
+	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -206,7 +206,7 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, cliConfig clicon
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
 		Detached:              true,
-		DialogTestInputs:      dialogTestInputs,
+		Inputs:                inputs,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
@@ -234,12 +234,11 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, cliConfig clicon
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
 		Connector:          connector,
-		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
+		Inputs:             inputs,
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
-		TestInputs:         dialogTestInputs,
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
@@ -308,7 +307,7 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, cliConfig clicon
 		branchesSnapshot:   branchesSnapshot,
 		branchesToCompress: branchesToCompress,
 		config:             validatedConfig,
-		dialogTestInputs:   dialogTestInputs,
+		inputs:             inputs,
 		hasOpenChanges:     repoStatus.OpenChanges,
 		initialBranch:      initialBranch,
 		previousBranch:     previousBranch,

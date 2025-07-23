@@ -30,7 +30,7 @@ func BitbucketUsername(args Args[forgedomain.BitbucketUsername]) (Option[forgedo
 		ExistingValue: args.Local.Or(args.Global).String(),
 		Help:          bitbucketUsernameHelp,
 		Prompt:        messages.BitBucketUsernamePrompt,
-		TestInputs:    args.Inputs,
+		Inputs:        args.Inputs,
 		Title:         bitbucketUsernameTitle,
 	})
 	newValue := forgedomain.ParseBitbucketUsername(input)

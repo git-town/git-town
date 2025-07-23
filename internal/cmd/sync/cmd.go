@@ -166,7 +166,7 @@ func executeSync(cliConfig cliconfig.CliConfig, syncAllBranches configdomain.All
 		Config:                  data.config,
 		Connector:               None[forgedomain.Connector](),
 		Detached:                detached,
-		DialogTestInputs:        data.dialogTestInputs,
+		Inputs:                  data.inputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -188,7 +188,7 @@ type syncData struct {
 	branchesToSync           configdomain.BranchesToSync
 	config                   config.ValidatedConfig
 	detached                 configdomain.Detached
-	dialogTestInputs         dialogcomponents.TestInputs
+	inputs                   dialogcomponents.Inputs
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
 	nonExistingBranches      gitdomain.LocalBranchNames
@@ -201,7 +201,7 @@ type syncData struct {
 }
 
 func determineSyncData(cliConfig cliconfig.CliConfig, syncAllBranches configdomain.AllBranches, syncStack configdomain.FullStack, repo execute.OpenRepoResult, detached configdomain.Detached) (data syncData, exit dialogdomain.Exit, err error) {
-	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
+	inputs := dialogcomponents.LoadInputs(os.Environ())
 	preFetchBranchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -235,7 +235,7 @@ func determineSyncData(cliConfig cliconfig.CliConfig, syncAllBranches configdoma
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
 		Detached:              detached,
-		DialogTestInputs:      dialogTestInputs,
+		Inputs:                inputs,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
@@ -289,12 +289,11 @@ func determineSyncData(cliConfig cliconfig.CliConfig, syncAllBranches configdoma
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
 		Connector:          connector,
-		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
+		Inputs:             inputs,
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
-		TestInputs:         dialogTestInputs,
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
@@ -319,12 +318,11 @@ func determineSyncData(cliConfig cliconfig.CliConfig, syncAllBranches configdoma
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: branchNamesToSync,
 		Connector:          connector,
-		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
+		Inputs:             inputs,
 		LocalBranches:      localBranches,
 		RepoStatus:         repoStatus,
-		TestInputs:         dialogTestInputs,
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
@@ -354,7 +352,7 @@ func determineSyncData(cliConfig cliconfig.CliConfig, syncAllBranches configdoma
 		branchesToSync:           branchesToSync,
 		config:                   validatedConfig,
 		detached:                 detached,
-		dialogTestInputs:         dialogTestInputs,
+		inputs:                   inputs,
 		hasOpenChanges:           repoStatus.OpenChanges,
 		initialBranch:            initialBranch,
 		nonExistingBranches:      nonExistingBranches,

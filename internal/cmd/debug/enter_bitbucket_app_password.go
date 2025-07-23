@@ -14,10 +14,10 @@ func enterBitbucketAppPassword() *cobra.Command {
 	return &cobra.Command{
 		Use: "bitbucket-app-password",
 		RunE: func(_ *cobra.Command, _ []string) error {
-			dialogInputs := dialogcomponents.LoadTestInputs(os.Environ())
+			inputs := dialogcomponents.LoadInputs(os.Environ())
 			_, _, err := dialog.BitbucketAppPassword(dialog.Args[forgedomain.BitbucketAppPassword]{
 				Global: None[forgedomain.BitbucketAppPassword](),
-				Inputs: dialogInputs,
+				Inputs: inputs,
 				Local:  None[forgedomain.BitbucketAppPassword](),
 			})
 			return err

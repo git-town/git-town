@@ -16,9 +16,9 @@ func enterMainBranchCmd() *cobra.Command {
 		RunE: func(_ *cobra.Command, _ []string) error {
 			localBranches := gitdomain.NewLocalBranchNames("main", "branch-1", "branch-2", "branch-3", "branch-4", "branch-5", "branch-6", "branch-7", "branch-8", "branch-9", "branch-A", "branch-B")
 			main := gitdomain.NewLocalBranchName("main")
-			dialogInputs := dialogcomponents.LoadTestInputs(os.Environ())
+			inputs := dialogcomponents.LoadInputs(os.Environ())
 			_, _, _, err := dialog.MainBranch(dialog.MainBranchArgs{
-				Inputs:         dialogInputs,
+				Inputs:         inputs,
 				Local:          Some(main),
 				LocalBranches:  localBranches,
 				StandardBranch: Some(gitdomain.NewLocalBranchName("main")),

@@ -12,7 +12,7 @@ import (
 type Data struct {
 	Backend       subshelldomain.RunnerQuerier
 	Config        config.UnvalidatedConfig
-	DialogInputs  dialogcomponents.TestInputs
+	Inputs        dialogcomponents.Inputs
 	Git           git.Commands
 	LocalBranches gitdomain.LocalBranchNames
 	Remotes       gitdomain.Remotes
