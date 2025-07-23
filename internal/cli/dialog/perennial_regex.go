@@ -30,8 +30,8 @@ func PerennialRegex(args Args[configdomain.PerennialRegex]) (Option[configdomain
 		DialogName:    "perennial-regex",
 		ExistingValue: args.Local.Or(args.Global).String(),
 		Help:          PerennialRegexHelp,
-		Prompt:        messages.PerennialRegexPrompt,
 		Inputs:        args.Inputs,
+		Prompt:        messages.PerennialRegexPrompt,
 		Title:         perennialRegexTitle,
 	})
 	newValue, err2 := configdomain.ParsePerennialRegex(input)

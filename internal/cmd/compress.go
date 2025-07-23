@@ -137,7 +137,6 @@ func executeCompress(cliConfig cliconfig.CliConfig, message Option[gitdomain.Com
 		Config:                  data.config,
 		Connector:               None[forgedomain.Connector](),
 		Detached:                true,
-		Inputs:                  data.inputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -146,6 +145,7 @@ func executeCompress(cliConfig cliconfig.CliConfig, message Option[gitdomain.Com
 		InitialBranchesSnapshot: data.branchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        data.stashSize,
+		Inputs:                  data.inputs,
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
@@ -158,9 +158,9 @@ type compressBranchesData struct {
 	branchesSnapshot   gitdomain.BranchesSnapshot
 	branchesToCompress []compressBranchData
 	config             config.ValidatedConfig
-	inputs             dialogcomponents.Inputs
 	hasOpenChanges     bool
 	initialBranch      gitdomain.LocalBranchName
+	inputs             dialogcomponents.Inputs
 	previousBranch     Option[gitdomain.LocalBranchName]
 	stashSize          gitdomain.StashSize
 }
@@ -206,12 +206,12 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, cliConfig clicon
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
 		Detached:              true,
-		Inputs:                inputs,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
 		HandleUnfinishedState: true,
+		Inputs:                inputs,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
@@ -307,9 +307,9 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, cliConfig clicon
 		branchesSnapshot:   branchesSnapshot,
 		branchesToCompress: branchesToCompress,
 		config:             validatedConfig,
-		inputs:             inputs,
 		hasOpenChanges:     repoStatus.OpenChanges,
 		initialBranch:      initialBranch,
+		inputs:             inputs,
 		previousBranch:     previousBranch,
 		stashSize:          stashSize,
 	}, false, nil

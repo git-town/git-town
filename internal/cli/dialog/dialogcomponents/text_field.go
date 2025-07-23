@@ -33,8 +33,8 @@ type TextFieldArgs struct {
 	DialogName    string
 	ExistingValue string
 	Help          string
-	Prompt        string
 	Inputs        Inputs
+	Prompt        string
 	Title         string
 }
 

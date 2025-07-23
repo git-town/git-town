@@ -28,8 +28,8 @@ func OriginHostname(args Args[configdomain.HostingOriginHostname]) (Option[confi
 		DialogName:    "origin-hostname",
 		ExistingValue: args.Local.Or(args.Global).String(),
 		Help:          OriginHostnameHelp,
-		Prompt:        messages.OriginHostnamePrompt,
 		Inputs:        args.Inputs,
+		Prompt:        messages.OriginHostnamePrompt,
 		Title:         originHostnameTitle,
 	})
 	newValue := configdomain.ParseHostingOriginHostname(input)

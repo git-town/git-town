@@ -34,8 +34,8 @@ func GitHubToken(args Args[forgedomain.GitHubToken]) (Option[forgedomain.GitHubT
 		DialogName:    "github-token",
 		ExistingValue: args.Local.Or(args.Global).String(),
 		Help:          gitHubTokenHelp,
-		Prompt:        messages.GitHubTokenPrompt,
 		Inputs:        args.Inputs,
+		Prompt:        messages.GitHubTokenPrompt,
 		Title:         githubTokenTitle,
 	})
 	newValue := forgedomain.ParseGitHubToken(input)

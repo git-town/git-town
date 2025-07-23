@@ -39,8 +39,8 @@ func MainAndPerennials(args MainAndPerennialsArgs) (mainBranch gitdomain.LocalBr
 
 type MainAndPerennialsArgs struct {
 	Backend           subshelldomain.RunnerQuerier
-	Inputs            dialogcomponents.Inputs
 	GetDefaultBranch  func(subshelldomain.Querier) Option[gitdomain.LocalBranchName]
+	Inputs            dialogcomponents.Inputs
 	LocalBranches     gitdomain.LocalBranchNames
 	UnvalidatedConfig config.UnvalidatedConfig
 }

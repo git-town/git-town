@@ -136,7 +136,6 @@ func executeDetach(args []string, cliConfig cliconfig.CliConfig) error {
 		Config:                  data.config,
 		Connector:               data.connector,
 		Detached:                true,
-		Inputs:                  data.inputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -145,6 +144,7 @@ func executeDetach(args []string, cliConfig cliconfig.CliConfig) error {
 		InitialBranchesSnapshot: data.branchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        data.stashSize,
+		Inputs:                  data.inputs,
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
@@ -162,9 +162,9 @@ type detachData struct {
 	config              config.ValidatedConfig
 	connector           Option[forgedomain.Connector]
 	descendents         []detachChildBranch
-	inputs              dialogcomponents.Inputs
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
+	inputs              dialogcomponents.Inputs
 	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	parentBranch        gitdomain.LocalBranchName
 	previousBranch      Option[gitdomain.LocalBranchName]
@@ -208,12 +208,12 @@ func determineDetachData(args []string, repo execute.OpenRepoResult, cliConfig c
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
 		Detached:              true,
-		Inputs:                inputs,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
 		HandleUnfinishedState: true,
+		Inputs:                inputs,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
@@ -314,9 +314,9 @@ func determineDetachData(args []string, repo execute.OpenRepoResult, cliConfig c
 		config:              validatedConfig,
 		connector:           connector,
 		descendents:         descendents,
-		inputs:              inputs,
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
+		inputs:              inputs,
 		nonExistingBranches: nonExistingBranches,
 		parentBranch:        parentBranch,
 		previousBranch:      previousBranchOpt,

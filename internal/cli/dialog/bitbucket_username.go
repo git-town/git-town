@@ -29,8 +29,8 @@ func BitbucketUsername(args Args[forgedomain.BitbucketUsername]) (Option[forgedo
 		DialogName:    "bitbucket-username",
 		ExistingValue: args.Local.Or(args.Global).String(),
 		Help:          bitbucketUsernameHelp,
-		Prompt:        messages.BitBucketUsernamePrompt,
 		Inputs:        args.Inputs,
+		Prompt:        messages.BitBucketUsernamePrompt,
 		Title:         bitbucketUsernameTitle,
 	})
 	newValue := forgedomain.ParseBitbucketUsername(input)
