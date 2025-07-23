@@ -37,6 +37,16 @@ func (sbes SwitchBranchEntries) ContainsBranch(branch gitdomain.LocalBranchName)
 	return false
 }
 
+// SwitchBranchCursorPos provides the initial cursor position for the "switch branch" components.
+func (sbes SwitchBranchEntries) IndexOf(initialBranch gitdomain.LocalBranchName) int {
+	for e, entry := range sbes {
+		if entry.Branch == initialBranch {
+			return e
+		}
+	}
+	return 0
+}
+
 type SwitchModel struct {
 	list.List[SwitchBranchEntry]
 	DisplayBranchTypes configdomain.DisplayTypes
@@ -184,7 +194,7 @@ func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomai
 type SwitchBranchArgs struct {
 	Cursor             int
 	DisplayBranchTypes configdomain.DisplayTypes
-	Entries            []SwitchBranchEntry
+	Entries            SwitchBranchEntries
 	Inputs             dialogcomponents.Inputs
 	UncommittedChanges bool
 }
