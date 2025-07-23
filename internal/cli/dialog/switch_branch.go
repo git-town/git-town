@@ -167,18 +167,26 @@ func ShouldDisplayBranchType(branchType configdomain.BranchType) bool {
 	panic("unhandled branch type:" + branchType.String())
 }
 
-func SwitchBranch(entries []SwitchBranchEntry, cursor int, uncommittedChanges bool, displayTypes configdomain.DisplayTypes, inputs dialogcomponents.Inputs) (gitdomain.LocalBranchName, dialogdomain.Exit, error) {
+func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomain.Exit, error) {
 	dialogProgram := tea.NewProgram(SwitchModel{
-		DisplayBranchTypes: displayTypes,
-		InitialBranchPos:   cursor,
-		List:               list.NewList(newSwitchBranchListEntries(entries), cursor),
-		UncommittedChanges: uncommittedChanges,
+		DisplayBranchTypes: args.DisplayTypes,
+		InitialBranchPos:   args.Cursor,
+		List:               list.NewList(newSwitchBranchListEntries(args.Entries), args.Cursor),
+		UncommittedChanges: args.UncommittedChanges,
 	})
-	dialogcomponents.SendInputs("branch-tree", inputs.Next(), dialogProgram)
+	dialogcomponents.SendInputs("branch-tree", args.Inputs.Next(), dialogProgram)
 	dialogResult, err := dialogProgram.Run()
 	result := dialogResult.(SwitchModel)
 	selectedData := result.List.SelectedData()
 	return selectedData.Branch, result.Aborted(), err
+}
+
+type SwitchBranchArgs struct {
+	Entries            []SwitchBranchEntry
+	Cursor             int
+	UncommittedChanges bool
+	DisplayTypes       configdomain.DisplayTypes
+	Inputs             dialogcomponents.Inputs
 }
 
 func newSwitchBranchListEntries(switchBranchEntries []SwitchBranchEntry) list.Entries[SwitchBranchEntry] {
