@@ -29,5 +29,5 @@ Feature: ask for missing configuration information
       | ship strategy               | enter |
       | ship delete tracking branch | enter |
       | config storage              | enter |
-      | eee                         | enter |
+      | welcome                     | enter |
     And the main branch is now "main"
