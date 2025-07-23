@@ -1,7 +1,9 @@
 package main_test
 
 import (
+	"io/fs"
 	"os"
+	"path/filepath"
 	"runtime"
 	"strings"
 	"testing"
@@ -22,6 +24,7 @@ func TestMain(_ *testing.M) {
 	flagThis := len(os.Getenv("cukethis")) > 0
 	flagSmoke := len(os.Getenv("smoke")) > 0
 	flagMessyOutput := os.Getenv("messyoutput")
+	flagVerbose := len(os.Getenv("verbose")) > 0
 	switch {
 	case flagThis:
 		options.Format = "pretty"
@@ -54,6 +57,9 @@ func TestMain(_ *testing.M) {
 	if flagThis {
 		options.Tags = "@this"
 	}
+	if flagVerbose {
+		options.Paths = append(options.Paths, findVerboseFiles()...)
+	}
 	suite := godog.TestSuite{
 		Options:              &options,
 		ScenarioInitializer:  cucumber.InitializeScenario,
@@ -61,4 +67,24 @@ func TestMain(_ *testing.M) {
 	}
 	status := suite.Run()
 	os.Exit(status)
+}
+
+func findVerboseFiles() []string {
+	var result []string
+	err := filepath.WalkDir("features", func(path string, dir fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if dir.Name() == "verbose.feature" {
+			result = append(result, path)
+		}
+		return nil
+	})
+	if err != nil {
+		panic(err.Error())
+	}
+	if len(result) == 0 {
+		panic("no feature files found")
+	}
+	return result
 }
