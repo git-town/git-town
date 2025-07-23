@@ -703,19 +703,19 @@ func tokenScopeDialog(args enterTokenScopeArgs) (configdomain.ConfigScope, dialo
 	if forgeType, hasForgeType := args.determinedForgeType.Get(); hasForgeType {
 		switch forgeType {
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
-			existingScope := determineExistingScope(args.data.ConfigSnapshot, configdomain.KeyBitbucketUsername, args.data.Config.NormalConfig.BitbucketUsername)
+			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyBitbucketUsername, args.data.Config.NormalConfig.BitbucketUsername)
 			return dialog.TokenScope(existingScope, args.inputs)
 		case forgedomain.ForgeTypeCodeberg:
-			existingScope := determineExistingScope(args.data.ConfigSnapshot, configdomain.KeyCodebergToken, args.data.Config.NormalConfig.CodebergToken)
+			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyCodebergToken, args.data.Config.NormalConfig.CodebergToken)
 			return dialog.TokenScope(existingScope, args.inputs)
 		case forgedomain.ForgeTypeGitea:
-			existingScope := determineExistingScope(args.data.ConfigSnapshot, configdomain.KeyGiteaToken, args.data.Config.NormalConfig.GiteaToken)
+			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyGiteaToken, args.data.Config.NormalConfig.GiteaToken)
 			return dialog.TokenScope(existingScope, args.inputs)
 		case forgedomain.ForgeTypeGitHub:
-			existingScope := determineExistingScope(args.data.ConfigSnapshot, configdomain.KeyGitHubToken, args.data.Config.NormalConfig.GitHubToken)
+			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyGitHubToken, args.data.Config.NormalConfig.GitHubToken)
 			return dialog.TokenScope(existingScope, args.inputs)
 		case forgedomain.ForgeTypeGitLab:
-			existingScope := determineExistingScope(args.data.ConfigSnapshot, configdomain.KeyGitLabToken, args.data.Config.NormalConfig.GitLabToken)
+			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyGitLabToken, args.data.Config.NormalConfig.GitLabToken)
 			return dialog.TokenScope(existingScope, args.inputs)
 		}
 	}

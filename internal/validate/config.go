@@ -27,13 +27,13 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 	var userInput setup.UserInput
 	if !hasMain {
 		setupData := setup.Data{
-			Backend:        args.Backend,
-			Config:         args.Unvalidated.Immutable(),
-			ConfigSnapshot: args.ConfigSnapshot,
-			Git:            args.Git,
-			Inputs:         args.Inputs,
-			LocalBranches:  args.LocalBranches,
-			Remotes:        args.Remotes,
+			Backend:       args.Backend,
+			Config:        args.Unvalidated.Immutable(),
+			Git:           args.Git,
+			Inputs:        args.Inputs,
+			LocalBranches: args.LocalBranches,
+			Remotes:       args.Remotes,
+			Snapshot:      args.ConfigSnapshot,
 		}
 		var exit dialogdomain.Exit
 		userInput, exit, err = setup.Enter(setupData)

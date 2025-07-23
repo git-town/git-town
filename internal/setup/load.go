@@ -10,11 +10,11 @@ import (
 )
 
 type Data struct {
-	Backend        subshelldomain.RunnerQuerier
-	Config         config.UnvalidatedConfig
-	ConfigSnapshot undoconfig.ConfigSnapshot
-	Git            git.Commands
-	Inputs         dialogcomponents.Inputs
-	LocalBranches  gitdomain.LocalBranchNames
-	Remotes        gitdomain.Remotes
+	Backend       subshelldomain.RunnerQuerier
+	Config        config.UnvalidatedConfig
+	Git           git.Commands
+	Inputs        dialogcomponents.Inputs
+	LocalBranches gitdomain.LocalBranchNames
+	Remotes       gitdomain.Remotes
+	Snapshot      undoconfig.ConfigSnapshot
 }

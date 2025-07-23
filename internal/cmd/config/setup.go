@@ -117,12 +117,12 @@ func LoadData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data 
 		remotes = gitdomain.Remotes{gitconfig.DefaultRemote(repo.Backend)}
 	}
 	return setup.Data{
-		Backend:        repo.Backend,
-		Config:         repo.UnvalidatedConfig,
-		ConfigSnapshot: repo.ConfigSnapshot,
-		Git:            repo.Git,
-		Inputs:         inputs,
-		LocalBranches:  branchesSnapshot.Branches.LocalBranches().Names(),
-		Remotes:        remotes,
+		Backend:       repo.Backend,
+		Config:        repo.UnvalidatedConfig,
+		Git:           repo.Git,
+		Inputs:        inputs,
+		LocalBranches: branchesSnapshot.Branches.LocalBranches().Names(),
+		Remotes:       remotes,
+		Snapshot:      repo.ConfigSnapshot,
 	}, exit, nil
 }
