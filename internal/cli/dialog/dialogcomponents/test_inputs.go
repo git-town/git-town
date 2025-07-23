@@ -34,6 +34,12 @@ func (self TestInputs) Next() Option[TestInput] {
 	return Some(result)
 }
 
+func (self TestInputs) VerifyAllUsed() {
+	if !self.IsEmpty() {
+		panic("unused dialog inputs")
+	}
+}
+
 // LoadTestInputs provides the TestInputs to use in an end-to-end test,
 // taken from the given environment variable snapshot.
 func LoadTestInputs(environmenttVariables []string) TestInputs {

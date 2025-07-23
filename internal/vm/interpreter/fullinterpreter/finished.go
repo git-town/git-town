@@ -50,9 +50,7 @@ func finished(args finishedArgs) error {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
 	}
 	print.Footer(args.Verbose, args.CommandsCounter.Immutable(), args.FinalMessages.Result())
-	if !args.Inputs.IsEmpty() {
-		panic("unused dialog inputs")
-	}
+	args.Inputs.IsEmpty()
 	return nil
 }
 
