@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
@@ -37,6 +38,23 @@ func TestSwitchBranch(t *testing.T) {
 				entries := dialog.SwitchBranchEntries{}
 				must.False(t, entries.ContainsBranch("branch-2"))
 			})
+		})
+
+		t.Run("IndexOf", func(t *testing.T) {
+			t.Parallel()
+			entries := dialog.SwitchBranchEntries{
+				{Branch: "main", Indentation: "", OtherWorktree: false},
+				{Branch: "alpha", Indentation: "", OtherWorktree: false},
+				{Branch: "alpha1", Indentation: "", OtherWorktree: false},
+				{Branch: "beta", Indentation: "", OtherWorktree: false},
+			}
+			tests := map[gitdomain.LocalBranchName]int{
+				"alpha1": 2,
+				"other":  0,
+			}
+			for give, want := range tests {
+				must.EqOp(t, want, entries.IndexOf(give))
+			}
 		})
 	})
 

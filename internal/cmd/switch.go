@@ -93,7 +93,7 @@ func executeSwitch(args []string, cliConfig cliconfig.CliConfig, allBranches con
 	if len(entries) == 0 {
 		return errors.New(messages.SwitchNoBranches)
 	}
-	cursor := SwitchBranchCursorPos(entries, data.initialBranch)
+	cursor := entries.IndexOf(data.initialBranch)
 	branchToCheckout, exit, err := dialog.SwitchBranch(dialog.SwitchBranchArgs{
 		CurrentBranch:      Some(data.initialBranch),
 		Cursor:             cursor,
@@ -177,16 +177,6 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult, cliConfig c
 		regexes:            regexes,
 		uncommittedChanges: repoStatus.OpenChanges,
 	}, false, err
-}
-
-// SwitchBranchCursorPos provides the initial cursor position for the "switch branch" components.
-func SwitchBranchCursorPos(entries dialog.SwitchBranchEntries, initialBranch gitdomain.LocalBranchName) int {
-	for e, entry := range entries {
-		if entry.Branch == initialBranch {
-			return e
-		}
-	}
-	return 0
 }
 
 // SwitchBranchEntries provides the entries for the "switch branch" components.
