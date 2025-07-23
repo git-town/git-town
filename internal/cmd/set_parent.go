@@ -105,6 +105,7 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 	var selectedBranch gitdomain.LocalBranchName
 	switch len(args) {
 	case 0:
+		entries := SwitchBranchEntries()
 		outcome, selectedBranch, err = dialog.SwitchBranch(dialog.SwitchBranchArgs{
 			Cursor:             0,
 			DisplayTypes:       false,
