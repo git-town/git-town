@@ -57,7 +57,7 @@ func executeSkip(cliConfig cliconfig.CliConfig) error {
 	if err != nil {
 		return err
 	}
-	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
+	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return err
@@ -87,12 +87,12 @@ func executeSkip(cliConfig cliconfig.CliConfig) error {
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
 		Detached:              false,
-		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
 		HandleUnfinishedState: false,
+		Inputs:                inputs,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
@@ -123,13 +123,12 @@ func executeSkip(cliConfig cliconfig.CliConfig) error {
 		BranchesToValidate: localBranches,
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
-		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
+		Inputs:             inputs,
 		LocalBranches:      localBranches,
 		Remotes:            remotes,
 		RepoStatus:         repoStatus,
-		TestInputs:         dialogTestInputs,
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
@@ -159,9 +158,9 @@ func executeSkip(cliConfig cliconfig.CliConfig) error {
 		Git:             repo.Git,
 		HasOpenChanges:  repoStatus.OpenChanges,
 		InitialBranch:   currentBranch,
+		Inputs:          inputs,
 		RootDir:         repo.RootDir,
 		RunState:        runState,
-		TestInputs:      dialogTestInputs,
 		Verbose:         cliConfig.Verbose,
 	})
 }

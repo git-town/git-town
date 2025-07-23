@@ -148,7 +148,6 @@ func executeAppend(arg string, cliConfig cliconfig.CliConfig, beam configdomain.
 		Config:                  data.config,
 		Connector:               data.connector,
 		Detached:                detached,
-		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -157,6 +156,7 @@ func executeAppend(arg string, cliConfig cliconfig.CliConfig, beam configdomain.
 		InitialBranchesSnapshot: data.branchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        data.stashSize,
+		Inputs:                  data.inputs,
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
@@ -176,10 +176,10 @@ type appendFeatureData struct {
 	config                    config.ValidatedConfig
 	connector                 Option[forgedomain.Connector]
 	detached                  configdomain.Detached
-	dialogTestInputs          dialogcomponents.TestInputs
 	hasOpenChanges            bool
 	initialBranch             gitdomain.LocalBranchName
 	initialBranchInfo         *gitdomain.BranchInfo
+	inputs                    dialogcomponents.Inputs
 	newBranchParentCandidates gitdomain.LocalBranchNames
 	nonExistingBranches       gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	preFetchBranchInfos       gitdomain.BranchInfos
@@ -196,7 +196,7 @@ func determineAppendData(cliConfig cliconfig.CliConfig, targetBranch gitdomain.L
 	if err != nil {
 		return data, false, err
 	}
-	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
+	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -226,12 +226,12 @@ func determineAppendData(cliConfig cliconfig.CliConfig, targetBranch gitdomain.L
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
 		Detached:              detached,
-		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 !repoStatus.OpenChanges && beam.IsFalse() && commit.IsFalse(),
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
 		HandleUnfinishedState: true,
+		Inputs:                inputs,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
@@ -271,7 +271,7 @@ func determineAppendData(cliConfig cliconfig.CliConfig, targetBranch gitdomain.L
 		Connector:          connector,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
-		Inputs:             dialogTestInputs,
+		Inputs:             inputs,
 		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
 		Remotes:            remotes,
 		RepoStatus:         repoStatus,
@@ -298,7 +298,7 @@ func determineAppendData(cliConfig cliconfig.CliConfig, targetBranch gitdomain.L
 		if err != nil {
 			return data, false, err
 		}
-		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, targetBranch, repo.Git, repo.Backend, dialogTestInputs)
+		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, targetBranch, repo.Git, repo.Backend, inputs)
 		if err != nil || exit {
 			return data, exit, err
 		}
@@ -318,10 +318,10 @@ func determineAppendData(cliConfig cliconfig.CliConfig, targetBranch gitdomain.L
 		config:                    validatedConfig,
 		connector:                 connector,
 		detached:                  detached,
-		dialogTestInputs:          dialogTestInputs,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             initialBranch,
 		initialBranchInfo:         initialBranchInfo,
+		inputs:                    inputs,
 		newBranchParentCandidates: initialAndAncestors,
 		nonExistingBranches:       nonExistingBranches,
 		preFetchBranchInfos:       preFetchBranchSnapshot.Branches,

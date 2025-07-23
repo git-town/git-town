@@ -113,7 +113,7 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 		outcome, selectedBranch, err = dialog.Parent(dialog.ParentArgs{
 			Branch:        data.initialBranch,
 			DefaultChoice: data.defaultChoice,
-			Inputs:        data.dialogTestInputs,
+			Inputs:        data.inputs,
 			Lineage:       data.config.NormalConfig.Lineage,
 			LocalBranches: data.branchesSnapshot.Branches.LocalBranches().Names(),
 			MainBranch:    data.config.ValidatedConfigData.MainBranch,
@@ -146,7 +146,6 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 		Config:                  data.config,
 		Connector:               data.connector,
 		Detached:                true,
-		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -155,6 +154,7 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 		InitialBranchesSnapshot: data.branchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        data.stashSize,
+		Inputs:                  data.inputs,
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
@@ -168,15 +168,15 @@ type setParentData struct {
 	config             config.ValidatedConfig
 	connector          Option[forgedomain.Connector]
 	defaultChoice      gitdomain.LocalBranchName
-	dialogTestInputs   dialogcomponents.TestInputs
 	hasOpenChanges     bool
 	initialBranch      gitdomain.LocalBranchName
+	inputs             dialogcomponents.Inputs
 	proposal           Option[forgedomain.Proposal]
 	stashSize          gitdomain.StashSize
 }
 
 func determineSetParentData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data setParentData, exit dialogdomain.Exit, err error) {
-	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
+	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -206,12 +206,12 @@ func determineSetParentData(repo execute.OpenRepoResult, cliConfig cliconfig.Cli
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
 		Detached:              true,
-		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
 		HandleUnfinishedState: true,
+		Inputs:                inputs,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
@@ -235,13 +235,12 @@ func determineSetParentData(repo execute.OpenRepoResult, cliConfig cliconfig.Cli
 		BranchesToValidate: gitdomain.LocalBranchNames{},
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
-		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
+		Inputs:             inputs,
 		LocalBranches:      localBranches,
 		Remotes:            remotes,
 		RepoStatus:         repoStatus,
-		TestInputs:         dialogTestInputs,
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
@@ -270,9 +269,9 @@ func determineSetParentData(repo execute.OpenRepoResult, cliConfig cliconfig.Cli
 		config:             validatedConfig,
 		connector:          connector,
 		defaultChoice:      defaultChoice,
-		dialogTestInputs:   dialogTestInputs,
 		hasOpenChanges:     repoStatus.OpenChanges,
 		initialBranch:      initialBranch,
+		inputs:             inputs,
 		proposal:           proposalOpt,
 		stashSize:          stashSize,
 	}, false, nil

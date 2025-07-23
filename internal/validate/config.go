@@ -29,7 +29,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 			Backend:        args.Backend,
 			Config:         args.Unvalidated.Immutable(),
 			ConfigSnapshot: args.ConfigSnapshot,
-			DialogInputs:   args.Inputs,
+			Inputs:         args.Inputs,
 			Git:            args.Git,
 			LocalBranches:  args.LocalBranches,
 			Remotes:        args.Remotes,
@@ -49,7 +49,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 		BranchesToVerify:  args.BranchesToValidate,
 		Connector:         args.Connector,
 		DefaultChoice:     mainBranch,
-		DialogTestInputs:  args.Inputs,
+		Inputs:            args.Inputs,
 		Lineage:           args.Unvalidated.Value.NormalConfig.Lineage,
 		LocalBranches:     args.LocalBranches,
 		MainBranch:        mainBranch,
@@ -92,7 +92,7 @@ type ConfigArgs struct {
 	Connector          Option[forgedomain.Connector]
 	Frontend           subshelldomain.Runner
 	Git                git.Commands
-	Inputs             dialogcomponents.TestInputs
+	Inputs             dialogcomponents.Inputs
 	LocalBranches      gitdomain.LocalBranchNames
 	Remotes            gitdomain.Remotes
 	RepoStatus         gitdomain.RepoStatus

@@ -7,18 +7,18 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-// TestInputKey specifies the name of environment variables containing input for dialogs in end-to-end tests.
-const TestInputKey = "GITTOWN_DIALOG_INPUT"
+// InputKey specifies the name of environment variables containing input for dialogs in end-to-end tests.
+const InputKey = "GITTOWN_DIALOG_INPUT"
 
-// TestInput contains the input for a single dialog in an end-to-end test.
-type TestInput struct {
+// Input contains the input for a single dialog in an end-to-end test.
+type Input struct {
 	Messages []tea.Msg
 	StepName string
 }
 
-// ParseTestInput converts the given input data in the environment variable format
+// ParseInput converts the given input data in the environment variable format
 // into the format understood by Git Town's dialogs.
-func ParseTestInput(envData string) TestInput {
+func ParseInput(envData string) Input {
 	messages := []tea.Msg{}
 	stepName, keys, has := strings.Cut(envData, "@")
 	if !has {
@@ -26,17 +26,17 @@ func ParseTestInput(envData string) TestInput {
 	}
 	for _, input := range strings.Split(keys, "|") {
 		if len(input) > 0 {
-			messages = append(messages, recognizeTestInput(input))
+			messages = append(messages, recognizeInput(input))
 		}
 	}
-	return TestInput{
+	return Input{
 		Messages: messages,
 		StepName: stepName,
 	}
 }
 
-// recognizeTestInput provides the matching BubbleTea message for the given string.
-func recognizeTestInput(input string) tea.Msg { //nolint:ireturn
+// recognizeInput provides the matching BubbleTea message for the given string.
+func recognizeInput(input string) tea.Msg { //nolint:ireturn
 	switch input {
 	case "backspace":
 		return tea.KeyMsg{Type: tea.KeyBackspace} //exhaustruct:ignore

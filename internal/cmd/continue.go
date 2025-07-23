@@ -76,7 +76,6 @@ func executeContinue(cliConfig cliconfig.CliConfig) error {
 		Config:                  data.config,
 		Connector:               data.connector,
 		Detached:                false,
-		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -85,6 +84,7 @@ func executeContinue(cliConfig cliconfig.CliConfig) error {
 		InitialBranchesSnapshot: data.branchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        data.stashSize,
+		Inputs:                  data.inputs,
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
@@ -93,7 +93,7 @@ func executeContinue(cliConfig cliconfig.CliConfig) error {
 }
 
 func determineContinueData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data continueData, exit dialogdomain.Exit, err error) {
-	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
+	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -123,12 +123,12 @@ func determineContinueData(repo execute.OpenRepoResult, cliConfig cliconfig.CliC
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
 		Detached:              false,
-		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
 		HandleUnfinishedState: false,
+		Inputs:                inputs,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
@@ -154,7 +154,7 @@ func determineContinueData(repo execute.OpenRepoResult, cliConfig cliconfig.CliC
 		Connector:          data.connector,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
-		Inputs:             dialogTestInputs,
+		Inputs:             inputs,
 		LocalBranches:      localBranches,
 		Remotes:            remotes,
 		RepoStatus:         repoStatus,
@@ -180,9 +180,9 @@ func determineContinueData(repo execute.OpenRepoResult, cliConfig cliconfig.CliC
 		branchesSnapshot: branchesSnapshot,
 		config:           validatedConfig,
 		connector:        connector,
-		dialogTestInputs: dialogTestInputs,
 		hasOpenChanges:   repoStatus.OpenChanges,
 		initialBranch:    initialBranch,
+		inputs:           inputs,
 		stashSize:        stashSize,
 	}, false, err
 }
@@ -191,9 +191,9 @@ type continueData struct {
 	branchesSnapshot gitdomain.BranchesSnapshot
 	config           config.ValidatedConfig
 	connector        Option[forgedomain.Connector]
-	dialogTestInputs dialogcomponents.TestInputs
 	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName
+	inputs           dialogcomponents.Inputs
 	stashSize        gitdomain.StashSize
 }
 

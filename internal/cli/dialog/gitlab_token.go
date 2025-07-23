@@ -31,8 +31,8 @@ func GitLabToken(args Args[forgedomain.GitLabToken]) (Option[forgedomain.GitLabT
 		DialogName:    "gitlab-token",
 		ExistingValue: args.Local.Or(args.Global).String(),
 		Help:          gitLabTokenHelp,
+		Inputs:        args.Inputs,
 		Prompt:        messages.GitLabTokenPrompt,
-		TestInputs:    args.Inputs,
 		Title:         gitLabTokenTitle,
 	})
 	newValue := forgedomain.ParseGitLabToken(input)

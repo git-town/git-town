@@ -31,7 +31,7 @@ func Execute(args ExecuteArgs) error {
 				CommandsCounter: args.CommandsCounter,
 				FinalMessages:   args.FinalMessages,
 				Git:             args.Git,
-				Inputs:          args.DialogTestInputs,
+				Inputs:          args.Inputs,
 				RootDir:         args.RootDir,
 				RunState:        args.RunState,
 				Verbose:         args.Verbose,
@@ -46,10 +46,10 @@ func Execute(args ExecuteArgs) error {
 			Config:                          NewMutable(&args.Config),
 			Connector:                       args.Connector,
 			Detached:                        args.Detached,
-			DialogTestInputs:                args.DialogTestInputs,
 			FinalMessages:                   args.FinalMessages,
 			Frontend:                        args.Frontend,
 			Git:                             args.Git,
+			Inputs:                          args.Inputs,
 			PrependOpcodes:                  args.RunState.RunProgram.Prepend,
 			RegisterUndoablePerennialCommit: args.RunState.RegisterUndoablePerennialCommit,
 			UpdateInitialSnapshotLocalSHA:   args.InitialBranchesSnapshot.Branches.UpdateLocalSHA,
@@ -67,7 +67,6 @@ type ExecuteArgs struct {
 	Config                  config.ValidatedConfig
 	Connector               Option[forgedomain.Connector]
 	Detached                configdomain.Detached
-	DialogTestInputs        dialogcomponents.TestInputs
 	FinalMessages           stringslice.Collector
 	Frontend                subshelldomain.Runner
 	Git                     git.Commands
@@ -76,6 +75,7 @@ type ExecuteArgs struct {
 	InitialBranchesSnapshot gitdomain.BranchesSnapshot
 	InitialConfigSnapshot   undoconfig.ConfigSnapshot
 	InitialStashSize        gitdomain.StashSize
+	Inputs                  dialogcomponents.Inputs
 	PendingCommand          Option[string]
 	RootDir                 gitdomain.RepoRootDir
 	RunState                runstate.RunState

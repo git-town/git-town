@@ -83,7 +83,7 @@ type diffParentData struct {
 
 // Does not return error because "Ensure" functions will call exit directly.
 func determineDiffParentData(args []string, repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data diffParentData, exit dialogdomain.Exit, err error) {
-	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
+	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -113,12 +113,12 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult, cliConf
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
 		Detached:              true,
-		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
 		HandleUnfinishedState: true,
+		Inputs:                inputs,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
@@ -152,13 +152,12 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult, cliConf
 		BranchesToValidate: gitdomain.LocalBranchNames{branch},
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
-		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
+		Inputs:             inputs,
 		LocalBranches:      localBranches,
 		Remotes:            remotes,
 		RepoStatus:         repoStatus,
-		TestInputs:         dialogTestInputs,
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {

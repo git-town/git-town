@@ -93,15 +93,15 @@ func executeUndo(cliConfig cliconfig.CliConfig) error {
 type undoData struct {
 	config                  config.ValidatedConfig
 	connector               Option[forgedomain.Connector]
-	dialogTestInputs        dialogcomponents.TestInputs
 	hasOpenChanges          bool
 	initialBranchesSnapshot gitdomain.BranchesSnapshot
+	inputs                  dialogcomponents.Inputs
 	previousBranch          Option[gitdomain.LocalBranchName]
 	stashSize               gitdomain.StashSize
 }
 
 func determineUndoData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data undoData, exit dialogdomain.Exit, err error) {
-	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
+	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -131,12 +131,12 @@ func determineUndoData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfi
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
 		Detached:              true,
-		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
 		HandleUnfinishedState: false,
+		Inputs:                inputs,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
@@ -160,13 +160,12 @@ func determineUndoData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfi
 		BranchesToValidate: gitdomain.LocalBranchNames{},
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
-		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
+		Inputs:             inputs,
 		LocalBranches:      localBranches,
 		Remotes:            remotes,
 		RepoStatus:         repoStatus,
-		TestInputs:         dialogTestInputs,
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
@@ -176,9 +175,9 @@ func determineUndoData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfi
 	return undoData{
 		config:                  validatedConfig,
 		connector:               connector,
-		dialogTestInputs:        dialogTestInputs,
 		hasOpenChanges:          repoStatus.OpenChanges,
 		initialBranchesSnapshot: branchesSnapshot,
+		inputs:                  inputs,
 		previousBranch:          previousBranch,
 		stashSize:               stashSize,
 	}, false, nil
