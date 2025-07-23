@@ -182,11 +182,11 @@ func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomai
 }
 
 type SwitchBranchArgs struct {
-	Entries            []SwitchBranchEntry
 	Cursor             int
-	UncommittedChanges bool
 	DisplayTypes       configdomain.DisplayTypes
+	Entries            []SwitchBranchEntry
 	Inputs             dialogcomponents.Inputs
+	UncommittedChanges bool
 }
 
 func newSwitchBranchListEntries(switchBranchEntries []SwitchBranchEntry) list.Entries[SwitchBranchEntry] {
