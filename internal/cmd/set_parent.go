@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"regexp"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
@@ -105,22 +106,27 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 	var selectedBranch gitdomain.LocalBranchName
 	switch len(args) {
 	case 0:
-		entries := SwitchBranchEntries()
-		outcome, selectedBranch, err = dialog.SwitchBranch(dialog.SwitchBranchArgs{
-			Cursor:             0,
-			DisplayTypes:       false,
-			Entries:            []dialog.SwitchBranchEntry{},
-			Inputs:             dialogcomponents.Inputs{},
-			UncommittedChanges: false,
-		},
-			Branch:        data.initialBranch,
-			DefaultChoice: data.defaultChoice,
-			Inputs:        data.inputs,
-			Lineage:       data.config.NormalConfig.Lineage,
-			LocalBranches: data.branchesSnapshot.Branches.LocalBranches().Names(),
-			MainBranch:    data.config.ValidatedConfigData.MainBranch,
+		branchNames := data.branchesSnapshot.Branches.Names()
+		branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchNames)
+		unknownBranchType := repo.UnvalidatedConfig.NormalConfig.UnknownBranchType
+		entries := SwitchBranchEntries(SwitchBranchArgs{
+			AllBranches:       false,
+			BranchInfos:       data.branchesSnapshot.Branches,
+			BranchTypes:       []configdomain.BranchType{},
+			BranchesAndTypes:  branchesAndTypes,
+			Lineage:           repo.UnvalidatedConfig.NormalConfig.Lineage,
+			Regexes:           []*regexp.Regexp{},
+			UnknownBranchType: unknownBranchType,
 		})
-		if err != nil {
+		cursor := 0 // TODO: preselect the entry for data.initialBranch here
+		selectedBranch, exit, err = dialog.SwitchBranch(dialog.SwitchBranchArgs{
+			Cursor:             cursor,
+			DisplayBranchTypes: true,
+			Entries:            entries,
+			Inputs:             data.inputs,
+			UncommittedChanges: false,
+		})
+		if err != nil || exit {
 			return err
 		}
 	case 1:
