@@ -12,42 +12,6 @@ import (
 func TestInputs(t *testing.T) {
 	t.Parallel()
 
-	t.Run("LoadInputs", func(t *testing.T) {
-		t.Parallel()
-		env := []string{
-			"foo=bar",
-			"GITTOWN_DIALOG_INPUT_1=welcome@enter",
-			"GITTOWN_DIALOG_INPUT_2=perennial-branches@space|down|space|5|enter",
-			"GITTOWN_DIALOG_INPUT_3=perennial-regex@ctrl+c",
-		}
-		have := dialogcomponents.LoadInputs(env)
-		want := dialogcomponents.NewInputs(
-			dialogcomponents.TestInput{
-				Messages: []tea.Msg{
-					tea.KeyMsg{Type: tea.KeyEnter},
-				},
-				StepName: "welcome",
-			},
-			dialogcomponents.TestInput{
-				Messages: []tea.Msg{
-					tea.KeyMsg{Type: tea.KeySpace},
-					tea.KeyMsg{Type: tea.KeyDown},
-					tea.KeyMsg{Type: tea.KeySpace},
-					tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'5'}},
-					tea.KeyMsg{Type: tea.KeyEnter},
-				},
-				StepName: "perennial-branches",
-			},
-			dialogcomponents.TestInput{
-				Messages: []tea.Msg{
-					tea.KeyMsg{Type: tea.KeyCtrlC},
-				},
-				StepName: "perennial-regex",
-			},
-		)
-		must.Eq(t, want, have)
-	})
-
 	t.Run("Inputs.Next", func(t *testing.T) {
 		t.Parallel()
 		t.Run("populated", func(t *testing.T) {
@@ -114,4 +78,41 @@ func TestInputs(t *testing.T) {
 			_ = inputs.Next()
 		})
 	})
+
+	t.Run("LoadInputs", func(t *testing.T) {
+		t.Parallel()
+		env := []string{
+			"foo=bar",
+			"GITTOWN_DIALOG_INPUT_1=welcome@enter",
+			"GITTOWN_DIALOG_INPUT_2=perennial-branches@space|down|space|5|enter",
+			"GITTOWN_DIALOG_INPUT_3=perennial-regex@ctrl+c",
+		}
+		have := dialogcomponents.LoadInputs(env)
+		want := dialogcomponents.NewInputs(
+			dialogcomponents.TestInput{
+				Messages: []tea.Msg{
+					tea.KeyMsg{Type: tea.KeyEnter},
+				},
+				StepName: "welcome",
+			},
+			dialogcomponents.TestInput{
+				Messages: []tea.Msg{
+					tea.KeyMsg{Type: tea.KeySpace},
+					tea.KeyMsg{Type: tea.KeyDown},
+					tea.KeyMsg{Type: tea.KeySpace},
+					tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'5'}},
+					tea.KeyMsg{Type: tea.KeyEnter},
+				},
+				StepName: "perennial-branches",
+			},
+			dialogcomponents.TestInput{
+				Messages: []tea.Msg{
+					tea.KeyMsg{Type: tea.KeyCtrlC},
+				},
+				StepName: "perennial-regex",
+			},
+		)
+		must.Eq(t, want, have)
+	})
+
 }
