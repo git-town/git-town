@@ -1,4 +1,4 @@
-Feature: conflicting sibling branches, one shipped
+Feature: conflicting sibling branches, some shipped
 
   Background:
     Given a Git repo with origin
