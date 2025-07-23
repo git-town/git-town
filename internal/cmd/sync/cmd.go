@@ -273,26 +273,28 @@ func determineSyncData(cliConfig cliconfig.CliConfig, syncAllBranches configdoma
 	} else {
 		previousBranchOpt = None[gitdomain.LocalBranchName]()
 	}
-	remotes, err := repo.Git.Remotes(repo.Backend)
-	if err != nil {
-		return data, false, err
-	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
 		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
+	remotes, err := repo.Git.Remotes(repo.Backend)
+	if err != nil {
+		return data, false, err
+	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
+		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
 		Inputs:             inputs,
 		LocalBranches:      localBranches,
+		Remotes:            remotes,
 		RepoStatus:         repoStatus,
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
@@ -317,11 +319,13 @@ func determineSyncData(cliConfig cliconfig.CliConfig, syncAllBranches configdoma
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: branchNamesToSync,
+		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
 		Inputs:             inputs,
 		LocalBranches:      localBranches,
+		Remotes:            remotes,
 		RepoStatus:         repoStatus,
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})

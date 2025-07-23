@@ -6,11 +6,12 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/setup"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
+	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -23,28 +24,27 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 
 	// enter and save main and perennials
 	mainBranch, hasMain := args.Unvalidated.Value.UnvalidatedConfig.MainBranch.Get()
+	var userInput setup.UserInput
 	if !hasMain {
-		validatedMain, additionalPerennials, exit, err := dialog.MainAndPerennials(dialog.MainAndPerennialsArgs{
-			Backend:           args.Backend,
-			GetDefaultBranch:  gitconfig.DefaultBranch,
-			Inputs:            args.Inputs,
-			LocalBranches:     args.LocalBranches,
-			UnvalidatedConfig: *args.Unvalidated.Value,
-		})
+		setupData := setup.Data{
+			Backend:       args.Backend,
+			Config:        args.Unvalidated.Immutable(),
+			Git:           args.Git,
+			Inputs:        args.Inputs,
+			LocalBranches: args.LocalBranches,
+			Remotes:       args.Remotes,
+			Snapshot:      args.ConfigSnapshot,
+		}
+		var exit dialogdomain.Exit
+		userInput, exit, err = setup.Enter(setupData)
 		if err != nil || exit {
 			return config.EmptyValidatedConfig(), exit, err
 		}
-		mainBranch = validatedMain
-		args.BranchesAndTypes[validatedMain] = configdomain.BranchTypeMainBranch
-		if err = args.Unvalidated.Value.SetMainBranch(validatedMain, args.Backend); err != nil {
-			return config.EmptyValidatedConfig(), false, err
+		err = setup.Save(userInput, args.Unvalidated.Immutable(), setupData, args.Frontend)
+		if err != nil {
+			return config.EmptyValidatedConfig(), exit, err
 		}
-		if len(additionalPerennials) > 0 {
-			newPerennials := append(args.Unvalidated.Value.NormalConfig.PerennialBranches, additionalPerennials...)
-			if err = args.Unvalidated.Value.NormalConfig.SetPerennialBranches(args.Backend, newPerennials); err != nil {
-				return config.EmptyValidatedConfig(), false, err
-			}
-		}
+		mainBranch = userInput.ValidatedConfig.MainBranch
 	}
 
 	// enter and save missing parent branches
@@ -74,7 +74,12 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 		}
 	}
 
-	// create validated configuration
+	// store the entered data
+	if !hasMain {
+		args.Unvalidated.Value.NormalConfig = args.Unvalidated.Value.NormalConfig.OverwriteWith(userInput.Data)
+		args.Unvalidated.Value.UnvalidatedConfig.MainBranch = Some(mainBranch)
+		args.BranchesAndTypes[mainBranch] = configdomain.BranchTypeMainBranch
+	}
 	validatedConfig := config.ValidatedConfig{
 		ValidatedConfigData: configdomain.ValidatedConfigData{
 			GitUserEmail: gitUserEmail,
@@ -83,7 +88,6 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 		},
 		NormalConfig: args.Unvalidated.Value.NormalConfig,
 	}
-
 	return validatedConfig, false, err
 }
 
@@ -92,11 +96,13 @@ type ConfigArgs struct {
 	BranchesAndTypes   configdomain.BranchesAndTypes
 	BranchesSnapshot   gitdomain.BranchesSnapshot
 	BranchesToValidate gitdomain.LocalBranchNames
+	ConfigSnapshot     undoconfig.ConfigSnapshot
 	Connector          Option[forgedomain.Connector]
 	Frontend           subshelldomain.Runner
 	Git                git.Commands
 	Inputs             dialogcomponents.Inputs
 	LocalBranches      gitdomain.LocalBranchNames
+	Remotes            gitdomain.Remotes
 	RepoStatus         gitdomain.RepoStatus
 	Unvalidated        Mutable[config.UnvalidatedConfig]
 }

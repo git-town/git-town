@@ -141,16 +141,22 @@ func determineContinueData(repo execute.OpenRepoResult, cliConfig cliconfig.CliC
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
+	remotes, err := repo.Git.Remotes(repo.Backend)
+	if err != nil {
+		return data, false, err
+	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
+		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          data.connector,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
 		Inputs:             inputs,
 		LocalBranches:      localBranches,
+		Remotes:            remotes,
 		RepoStatus:         repoStatus,
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})

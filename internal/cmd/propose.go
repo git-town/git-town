@@ -240,11 +240,13 @@ func determineProposeData(repo execute.OpenRepoResult, cliConfig cliconfig.CliCo
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
+		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connectorOpt,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
 		Inputs:             inputs,
 		LocalBranches:      localBranches,
+		Remotes:            remotes,
 		RepoStatus:         repoStatus,
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})

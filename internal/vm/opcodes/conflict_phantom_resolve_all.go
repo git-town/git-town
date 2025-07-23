@@ -45,14 +45,14 @@ func (self *ConflictPhantomResolveAll) Run(args shared.RunArgs) error {
 		return err
 	}
 	phantomMergeConflicts := git.DetectPhantomMergeConflicts(fullInfos, self.ParentBranch, rootBranch)
-	newOpcodes := make([]shared.Opcode, len(phantomMergeConflicts)+1)
-	for p, phantomMergeConflict := range phantomMergeConflicts {
-		newOpcodes[p] = &ConflictPhantomResolve{
+	newOpcodes := []shared.Opcode{}
+	for _, phantomMergeConflict := range phantomMergeConflicts {
+		newOpcodes = append(newOpcodes, &ConflictPhantomResolve{
 			FilePath:   phantomMergeConflict.FilePath,
 			Resolution: self.Resolution,
-		}
+		})
 	}
-	newOpcodes[len(phantomMergeConflicts)] = &ConflictPhantomFinalize{}
+	newOpcodes = append(newOpcodes, &ConflictPhantomFinalize{})
 	args.PrependOpcodes(newOpcodes...)
 	return nil
 }
