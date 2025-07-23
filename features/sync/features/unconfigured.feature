@@ -1,7 +1,6 @@
 @messyoutput
 Feature: ask for missing configuration information
 
-  @debug @this
   Scenario: run unconfigured
     Given a Git repo with origin
     And Git Town is not configured
