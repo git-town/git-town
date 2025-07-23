@@ -103,6 +103,14 @@ func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
 	}
 }
 
+func (self Connector) UpdateProposalBodyFn() Option[func(forgedomain.ProposalInterface) error] {
+	if self.APIToken.IsNone() {
+		return None[func(forgedomain.ProposalInterface) error]()
+	}
+
+	return Some(self.updateProposalBody)
+}
+
 func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	openPullRequests, _, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, forgejo.ListPullRequestsOptions{
@@ -206,6 +214,21 @@ func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInte
 	_, _, err := self.client.EditPullRequest(self.Organization, self.Repository, int64(data.Number), forgejo.EditPullRequestOption{
 		Base: targetName,
 	})
+	if err != nil {
+		self.log.Failed(err.Error())
+		return err
+	}
+	self.log.Ok()
+	return nil
+}
+
+func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterface) error {
+	data := proposalData.Data()
+	self.log.Start(messages.APIUpdateProposalBody, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)))
+	_, _, err := self.client.EditPullRequest(self.Organization, self.Repository, int64(data.Number), forgejo.EditPullRequestOption{
+		Body: data.Body.GetOrDefault(),
+	})
+
 	if err != nil {
 		self.log.Failed(err.Error())
 		return err

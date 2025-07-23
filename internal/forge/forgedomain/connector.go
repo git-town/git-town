@@ -52,6 +52,8 @@ type Connector interface {
 	// A None return value indicates that this connector does not support this feature (yet).
 	UpdateProposalTargetFn() Option[func(proposal ProposalInterface, newTarget gitdomain.LocalBranchName) error]
 
+	UpdateProposalBodyFn() Option[func(proposal ProposalInterface) error]
+
 	// VerifyConnection checks whether this connector can make successful requests to the forge.
 	VerifyConnection() VerifyConnectionResult
 }
