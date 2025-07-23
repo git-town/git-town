@@ -3,6 +3,7 @@ package fullinterpreter
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/gitconfig"
@@ -49,6 +50,7 @@ func finished(args finishedArgs) error {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
 	}
 	print.Footer(args.Verbose, args.CommandsCounter.Immutable(), args.FinalMessages.Result())
+	args.Inputs.VerifyAllUsed()
 	return nil
 }
 
@@ -57,6 +59,7 @@ type finishedArgs struct {
 	CommandsCounter Mutable[gohacks.Counter]
 	FinalMessages   stringslice.Collector
 	Git             git.Commands
+	Inputs          dialogcomponents.TestInputs
 	RootDir         gitdomain.RepoRootDir
 	RunState        runstate.RunState
 	Verbose         configdomain.Verbose

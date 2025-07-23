@@ -18,7 +18,7 @@ type TestInputs struct {
 }
 
 func (self TestInputs) IsEmpty() bool {
-	return *self.cursor.Value == self.len
+	return self.cursor.Immutable() == self.len
 }
 
 // Next provides the TestInput for the next dialog in an end-to-end test.
@@ -32,6 +32,12 @@ func (self TestInputs) Next() Option[TestInput] {
 	result := self.inputs[*self.cursor.Value]
 	*self.cursor.Value += 1
 	return Some(result)
+}
+
+func (self TestInputs) VerifyAllUsed() {
+	if !self.IsEmpty() {
+		panic("unused dialog inputs")
+	}
 }
 
 // LoadTestInputs provides the TestInputs to use in an end-to-end test,

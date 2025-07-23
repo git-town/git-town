@@ -31,6 +31,7 @@ func Execute(args ExecuteArgs) error {
 				CommandsCounter: args.CommandsCounter,
 				FinalMessages:   args.FinalMessages,
 				Git:             args.Git,
+				Inputs:          args.DialogTestInputs,
 				RootDir:         args.RootDir,
 				RunState:        args.RunState,
 				Verbose:         args.Verbose,

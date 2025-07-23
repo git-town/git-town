@@ -246,9 +246,6 @@ EnterForgeData:
 		GitUserName:  "", // the setup assistant doesn't ask for this
 		MainBranch:   actualMainBranch,
 	}
-	if !data.DialogInputs.IsEmpty() {
-		panic("unused dialog inputs")
-	}
 	return UserInput{normalData, actualForgeType, tokenScope, configStorage, validatedData}, false, nil
 }
 

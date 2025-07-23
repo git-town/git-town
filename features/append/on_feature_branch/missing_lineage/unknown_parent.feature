@@ -4,13 +4,13 @@ Feature: ask for missing parent branch information
   Scenario:
     Given a Git repo with origin
     And the branches
-      | NAME    | TYPE    | PARENT | LOCATIONS     |
-      | feature | feature | main   | local, origin |
-    And the current branch is "feature"
+      | NAME   | TYPE   | PARENT | LOCATIONS     |
+      | branch | (none) |        | local, origin |
+    And the current branch is "branch"
     When I run "git-town append new" and enter into the dialog:
-      | DIALOG                      | KEYS  |
-      | parent branch for "feature" | enter |
+      | DIALOG                     | KEYS  |
+      | parent branch for "branch" | enter |
     Then this lineage exists now
-      | BRANCH  | PARENT  |
-      | feature | main    |
-      | new     | feature |
+      | BRANCH | PARENT |
+      | branch | main   |
+      | new    | branch |
