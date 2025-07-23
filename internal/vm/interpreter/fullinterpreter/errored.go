@@ -82,5 +82,8 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		}
 	}
 	message += "\n"
+	if !args.DialogTestInputs.IsEmpty() {
+		panic("unused dialog inputs")
+	}
 	return errors.New(message)
 }
