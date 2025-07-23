@@ -6,55 +6,74 @@ Feature: conflicting sibling branches, one shipped
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | branch-1 | feature | main   | local, origin |
       | branch-2 | feature | main   | local, origin |
+      | branch-3 | feature | main   | local, origin |
     And the commits
-      | BRANCH   | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
-      | branch-1 | local, origin | commit 1 | file.txt  | content 1    |
-      | branch-2 | local, origin | commit 2 | file.txt  | content 2    |
+      | BRANCH   | LOCATION      | MESSAGE   | FILE NAME | FILE CONTENT |
+      | branch-1 | local, origin | commit 1  | file_a    | content 1    |
+      | branch-2 | local, origin | commit 2  | file_b    | content 2    |
+      | branch-3 | local, origin | commit 3a | file_a    | content 3a   |
+      |          | local, origin | commit 3b | file_b    | content 3b   |
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     And origin ships the "branch-1" branch using the "squash-merge" ship-strategy
-    And the current branch is "branch-2"
-    When I run "git-town sync"
+    And origin ships the "branch-2" branch using the "squash-merge" ship-strategy
+    And the current branch is "main"
+    When I run "git-town sync --stack"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                           |
-      | branch-2 | git fetch --prune --tags                          |
-      |          | git checkout main                                 |
-      | main     | git -c rebase.updateRefs=false rebase origin/main |
-      |          | git checkout branch-2                             |
-      | branch-2 | git -c rebase.updateRefs=false rebase main        |
+      | main     | git fetch --prune --tags                          |
+      |          | git -c rebase.updateRefs=false rebase origin/main |
+      |          | git branch -D branch-1                            |
+      |          | git branch -D branch-2                            |
+      |          | git checkout branch-3                             |
+      | branch-3 | git -c rebase.updateRefs=false rebase main        |
     And Git Town prints the error:
       """
-      CONFLICT (add/add): Merge conflict in file.txt
+      CONFLICT (add/add): Merge conflict in file_a
       """
-    And file "file.txt" now has content:
+    And file "file_a" now has content:
       """
       <<<<<<< HEAD
       content 1
       =======
-      content 2
-      >>>>>>> {{ sha-short 'commit 2' }} (commit 2)
+      content 3a
+      >>>>>>> {{ sha-short 'commit 3a' }} (commit 3a)
       """
-    When I resolve the conflict in "file.txt" with "content 2"
+    When I resolve the conflict in "file_a" with "content 3a"
+    And I run "git town continue"
+    Then Git Town prints the error:
+      """
+      CONFLICT (add/add): Merge conflict in file_b
+      """
+    And file "file_b" now has content:
+      """
+      <<<<<<< HEAD
+      content 2
+      =======
+      content 3b
+      >>>>>>> {{ sha-short 'commit 3b' }} (commit 3b)
+      """
+    When I resolve the conflict in "file_b" with "content 3b"
     And I run "git town continue"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                         |
-      | branch-2 | GIT_EDITOR=true git rebase --continue           |
+      | branch-3 | GIT_EDITOR=true git rebase --continue           |
       |          | git push --force-with-lease --force-if-includes |
+      |          | git checkout main                               |
+      | main     | git push --tags                                 |
     And the branches are now
-      | REPOSITORY | BRANCHES                 |
-      | local      | main, branch-1, branch-2 |
-      | origin     | main, branch-2           |
+      | REPOSITORY    | BRANCHES       |
+      | local, origin | main, branch-3 |
     And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
-      | main     | local, origin | commit 1 | file.txt  | content 1    |
-      | branch-1 | local         | commit 1 | file.txt  | content 1    |
-      | branch-2 | local, origin | commit 2 | file.txt  | content 2    |
+      | BRANCH   | LOCATION      | MESSAGE   | FILE NAME | FILE CONTENT |
+      | main     | local, origin | commit 1  | file_a    | content 1    |
+      |          |               | commit 2  | file_b    | content 2    |
+      | branch-3 | local, origin | commit 3a | file_a    | content 3a   |
+      |          |               | commit 3b | file_b    | content 3b   |
     And this lineage exists now
       | BRANCH   | PARENT |
-      | branch-1 | main   |
-      | branch-2 | main   |
+      | branch-3 | main   |
 
   Scenario: undo
     When I run "git-town undo"
