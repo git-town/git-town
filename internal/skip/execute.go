@@ -46,7 +46,6 @@ func Execute(args ExecuteArgs) error {
 		Config:                  args.Config,
 		Connector:               args.Connector,
 		Detached:                args.Detached,
-		Inputs:                  args.Inputs,
 		FinalMessages:           args.FinalMessages,
 		Frontend:                args.Frontend,
 		Git:                     args.Git,
@@ -55,6 +54,7 @@ func Execute(args ExecuteArgs) error {
 		InitialBranchesSnapshot: args.RunState.BeginBranchesSnapshot,
 		InitialConfigSnapshot:   args.RunState.BeginConfigSnapshot,
 		InitialStashSize:        args.RunState.BeginStashSize,
+		Inputs:                  args.Inputs,
 		PendingCommand:          Some(args.RunState.Command),
 		RootDir:                 args.RootDir,
 		RunState:                args.RunState,
@@ -73,9 +73,9 @@ type ExecuteArgs struct {
 	Git             git.Commands
 	HasOpenChanges  bool
 	InitialBranch   gitdomain.LocalBranchName
+	Inputs          dialogcomponents.Inputs
 	RootDir         gitdomain.RepoRootDir
 	RunState        runstate.RunState
-	Inputs          dialogcomponents.Inputs
 	Verbose         configdomain.Verbose
 }
 

@@ -93,9 +93,9 @@ func executeUndo(cliConfig cliconfig.CliConfig) error {
 type undoData struct {
 	config                  config.ValidatedConfig
 	connector               Option[forgedomain.Connector]
-	inputs                  dialogcomponents.Inputs
 	hasOpenChanges          bool
 	initialBranchesSnapshot gitdomain.BranchesSnapshot
+	inputs                  dialogcomponents.Inputs
 	previousBranch          Option[gitdomain.LocalBranchName]
 	stashSize               gitdomain.StashSize
 }
@@ -131,12 +131,12 @@ func determineUndoData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfi
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
 		Detached:              true,
-		Inputs:                inputs,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
 		HandleUnfinishedState: false,
+		Inputs:                inputs,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
@@ -169,9 +169,9 @@ func determineUndoData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfi
 	return undoData{
 		config:                  validatedConfig,
 		connector:               connector,
-		inputs:                  inputs,
 		hasOpenChanges:          repoStatus.OpenChanges,
 		initialBranchesSnapshot: branchesSnapshot,
+		inputs:                  inputs,
 		previousBranch:          previousBranch,
 		stashSize:               stashSize,
 	}, false, nil

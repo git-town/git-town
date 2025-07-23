@@ -29,9 +29,9 @@ type sharedShipData struct {
 	childBranches            gitdomain.LocalBranchNames
 	config                   config.ValidatedConfig
 	connector                Option[forgedomain.Connector]
-	inputs                   dialogcomponents.Inputs
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
+	inputs                   dialogcomponents.Inputs
 	isShippingInitialBranch  bool
 	previousBranch           Option[gitdomain.LocalBranchName]
 	previousBranchInfos      Option[gitdomain.BranchInfos]
@@ -72,12 +72,12 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, cliConf
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
 		Detached:              false,
-		Inputs:                inputs,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
 		HandleUnfinishedState: true,
+		Inputs:                inputs,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
@@ -160,9 +160,9 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, cliConf
 		childBranches:            childBranches,
 		config:                   validatedConfig,
 		connector:                connector,
-		inputs:                   inputs,
 		hasOpenChanges:           repoStatus.OpenChanges,
 		initialBranch:            initialBranch,
+		inputs:                   inputs,
 		isShippingInitialBranch:  isShippingInitialBranch,
 		previousBranch:           previousBranch,
 		previousBranchInfos:      previousBranchInfos,

@@ -130,7 +130,6 @@ func executeMerge(cliConfig cliconfig.CliConfig) error {
 		Config:                  data.config,
 		Connector:               None[forgedomain.Connector](),
 		Detached:                true,
-		Inputs:                  data.inputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -139,6 +138,7 @@ func executeMerge(cliConfig cliconfig.CliConfig) error {
 		InitialBranchesSnapshot: data.branchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        data.stashSize,
+		Inputs:                  data.inputs,
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
@@ -150,12 +150,12 @@ type mergeData struct {
 	branchInfosLastRun Option[gitdomain.BranchInfos]
 	branchesSnapshot   gitdomain.BranchesSnapshot
 	config             config.ValidatedConfig
-	inputs             dialogcomponents.Inputs
 	hasOpenChanges     bool
 	initialBranch      gitdomain.LocalBranchName
 	initialBranchInfo  gitdomain.BranchInfo
 	initialBranchSHA   gitdomain.SHA
 	initialBranchType  configdomain.BranchType
+	inputs             dialogcomponents.Inputs
 	parentBranch       gitdomain.LocalBranchName
 	parentBranchInfo   gitdomain.BranchInfo
 	parentBranchSHA    gitdomain.SHA
@@ -195,12 +195,12 @@ func determineMergeData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConf
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
 		Detached:              true,
-		Inputs:                inputs,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
 		HandleUnfinishedState: true,
+		Inputs:                inputs,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
@@ -264,12 +264,12 @@ func determineMergeData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConf
 		branchInfosLastRun: branchInfosLastRun,
 		branchesSnapshot:   branchesSnapshot,
 		config:             validatedConfig,
-		inputs:             inputs,
 		hasOpenChanges:     repoStatus.OpenChanges,
 		initialBranch:      initialBranch,
 		initialBranchInfo:  *initialBranchInfo,
 		initialBranchSHA:   initialBranchSHA,
 		initialBranchType:  initialBranchType,
+		inputs:             inputs,
 		parentBranch:       parentBranch,
 		parentBranchInfo:   *parentBranchInfo,
 		parentBranchSHA:    parentBranchSHA,

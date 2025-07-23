@@ -146,7 +146,6 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 		Config:                  data.config,
 		Connector:               data.connector,
 		Detached:                true,
-		Inputs:                  data.inputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -155,6 +154,7 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 		InitialBranchesSnapshot: data.branchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        data.stashSize,
+		Inputs:                  data.inputs,
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
@@ -168,9 +168,9 @@ type setParentData struct {
 	config             config.ValidatedConfig
 	connector          Option[forgedomain.Connector]
 	defaultChoice      gitdomain.LocalBranchName
-	inputs             dialogcomponents.Inputs
 	hasOpenChanges     bool
 	initialBranch      gitdomain.LocalBranchName
+	inputs             dialogcomponents.Inputs
 	proposal           Option[forgedomain.Proposal]
 	stashSize          gitdomain.StashSize
 }
@@ -206,12 +206,12 @@ func determineSetParentData(repo execute.OpenRepoResult, cliConfig cliconfig.Cli
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
 		Detached:              true,
-		Inputs:                inputs,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
 		HandleUnfinishedState: true,
+		Inputs:                inputs,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
@@ -263,9 +263,9 @@ func determineSetParentData(repo execute.OpenRepoResult, cliConfig cliconfig.Cli
 		config:             validatedConfig,
 		connector:          connector,
 		defaultChoice:      defaultChoice,
-		inputs:             inputs,
 		hasOpenChanges:     repoStatus.OpenChanges,
 		initialBranch:      initialBranch,
+		inputs:             inputs,
 		proposal:           proposalOpt,
 		stashSize:          stashSize,
 	}, false, nil

@@ -130,7 +130,6 @@ func executePropose(cliConfig cliconfig.CliConfig, title Option[gitdomain.Propos
 		Config:                  data.config,
 		Connector:               data.connector,
 		Detached:                true,
-		Inputs:                  data.inputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -139,6 +138,7 @@ func executePropose(cliConfig cliconfig.CliConfig, title Option[gitdomain.Propos
 		InitialBranchesSnapshot: data.branchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        data.stashSize,
+		Inputs:                  data.inputs,
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
@@ -154,9 +154,9 @@ type proposeData struct {
 	branchesToSync      configdomain.BranchesToSync
 	config              config.ValidatedConfig
 	connector           Option[forgedomain.Connector]
-	inputs              dialogcomponents.Inputs
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
+	inputs              dialogcomponents.Inputs
 	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	preFetchBranchInfos gitdomain.BranchInfos
 	previousBranch      Option[gitdomain.LocalBranchName]
@@ -208,12 +208,12 @@ func determineProposeData(repo execute.OpenRepoResult, cliConfig cliconfig.CliCo
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connectorOpt,
 		Detached:              true,
-		Inputs:                inputs,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
 		HandleUnfinishedState: true,
+		Inputs:                inputs,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
@@ -316,9 +316,9 @@ func determineProposeData(repo execute.OpenRepoResult, cliConfig cliconfig.CliCo
 		branchesToSync:      branchesToSync,
 		config:              validatedConfig,
 		connector:           connectorOpt,
-		inputs:              inputs,
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
+		inputs:              inputs,
 		nonExistingBranches: nonExistingBranches,
 		preFetchBranchInfos: preFetchBranchSnapshot.Branches,
 		previousBranch:      previousBranch,

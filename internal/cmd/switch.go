@@ -108,8 +108,8 @@ type switchData struct {
 	branchNames        gitdomain.LocalBranchNames
 	branchesSnapshot   gitdomain.BranchesSnapshot
 	config             config.UnvalidatedConfig
-	inputs             dialogcomponents.Inputs
 	initialBranch      gitdomain.LocalBranchName
+	inputs             dialogcomponents.Inputs
 	lineage            configdomain.Lineage
 	regexes            []*regexp.Regexp
 	uncommittedChanges bool
@@ -127,12 +127,12 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult, cliConfig c
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             None[forgedomain.Connector](),
 		Detached:              true,
-		Inputs:                inputs,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
 		HandleUnfinishedState: true,
+		Inputs:                inputs,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
@@ -155,8 +155,8 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult, cliConfig c
 		branchNames:        branchesSnapshot.Branches.Names(),
 		branchesSnapshot:   branchesSnapshot,
 		config:             repo.UnvalidatedConfig,
-		inputs:             inputs,
 		initialBranch:      initialBranch,
+		inputs:             inputs,
 		lineage:            repo.UnvalidatedConfig.NormalConfig.Lineage,
 		regexes:            regexes,
 		uncommittedChanges: repoStatus.OpenChanges,

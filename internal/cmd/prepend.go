@@ -159,7 +159,6 @@ func executePrepend(args []string, cliConfig cliconfig.CliConfig, beam configdom
 		Config:                  data.config,
 		Connector:               data.connector,
 		Detached:                detached,
-		Inputs:                  data.inputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -168,6 +167,7 @@ func executePrepend(args []string, cliConfig cliconfig.CliConfig, beam configdom
 		InitialBranchesSnapshot: data.branchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        data.stashSize,
+		Inputs:                  data.inputs,
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
@@ -186,11 +186,11 @@ type prependData struct {
 	commitsToBeam       gitdomain.Commits
 	config              config.ValidatedConfig
 	connector           Option[forgedomain.Connector]
-	inputs              dialogcomponents.Inputs
 	existingParent      gitdomain.LocalBranchName
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
 	initialBranchInfo   gitdomain.BranchInfo
+	inputs              dialogcomponents.Inputs
 	newParentCandidates gitdomain.LocalBranchNames
 	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	preFetchBranchInfos gitdomain.BranchInfos
@@ -240,12 +240,12 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, cliConfig 
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
 		Detached:              detached,
-		Inputs:                inputs,
 		Fetch:                 !repoStatus.OpenChanges && beam.IsFalse() && commit.IsFalse(),
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
 		HandleUnfinishedState: true,
+		Inputs:                inputs,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
@@ -339,11 +339,11 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, cliConfig 
 		commitsToBeam:       commitsToBeam,
 		config:              validatedConfig,
 		connector:           connector,
-		inputs:              inputs,
 		existingParent:      ancestor,
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
 		initialBranchInfo:   *initialBranchInfo,
+		inputs:              inputs,
 		newParentCandidates: parentAndAncestors,
 		nonExistingBranches: nonExistingBranches,
 		preFetchBranchInfos: prefetchBranchSnapshot.Branches,

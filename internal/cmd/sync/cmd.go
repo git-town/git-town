@@ -166,7 +166,6 @@ func executeSync(cliConfig cliconfig.CliConfig, syncAllBranches configdomain.All
 		Config:                  data.config,
 		Connector:               None[forgedomain.Connector](),
 		Detached:                detached,
-		Inputs:                  data.inputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -175,6 +174,7 @@ func executeSync(cliConfig cliconfig.CliConfig, syncAllBranches configdomain.All
 		InitialBranchesSnapshot: data.branchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        data.stashSize,
+		Inputs:                  data.inputs,
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
@@ -188,9 +188,9 @@ type syncData struct {
 	branchesToSync           configdomain.BranchesToSync
 	config                   config.ValidatedConfig
 	detached                 configdomain.Detached
-	inputs                   dialogcomponents.Inputs
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
+	inputs                   dialogcomponents.Inputs
 	nonExistingBranches      gitdomain.LocalBranchNames
 	prefetchBranchesSnapshot gitdomain.BranchesSnapshot
 	previousBranch           Option[gitdomain.LocalBranchName]
@@ -235,12 +235,12 @@ func determineSyncData(cliConfig cliconfig.CliConfig, syncAllBranches configdoma
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
 		Detached:              detached,
-		Inputs:                inputs,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
 		HandleUnfinishedState: true,
+		Inputs:                inputs,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
@@ -352,9 +352,9 @@ func determineSyncData(cliConfig cliconfig.CliConfig, syncAllBranches configdoma
 		branchesToSync:           branchesToSync,
 		config:                   validatedConfig,
 		detached:                 detached,
-		inputs:                   inputs,
 		hasOpenChanges:           repoStatus.OpenChanges,
 		initialBranch:            initialBranch,
+		inputs:                   inputs,
 		nonExistingBranches:      nonExistingBranches,
 		prefetchBranchesSnapshot: preFetchBranchesSnapshot,
 		previousBranch:           previousBranchOpt,

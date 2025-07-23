@@ -106,7 +106,6 @@ func executeRename(args []string, cliConfig cliconfig.CliConfig, force configdom
 		Config:                  data.config,
 		Connector:               data.connector,
 		Detached:                true,
-		Inputs:                  data.inputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -115,6 +114,7 @@ func executeRename(args []string, cliConfig cliconfig.CliConfig, force configdom
 		InitialBranchesSnapshot: data.branchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        data.stashSize,
+		Inputs:                  data.inputs,
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
@@ -127,9 +127,9 @@ type renameData struct {
 	branchesSnapshot         gitdomain.BranchesSnapshot
 	config                   config.ValidatedConfig
 	connector                Option[forgedomain.Connector]
-	inputs                   dialogcomponents.Inputs
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
+	inputs                   dialogcomponents.Inputs
 	newBranch                gitdomain.LocalBranchName
 	nonExistingBranches      gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	oldBranch                gitdomain.BranchInfo
@@ -171,12 +171,12 @@ func determineRenameData(args []string, cliConfig cliconfig.CliConfig, force con
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
 		Detached:              true,
-		Inputs:                inputs,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
 		HandleUnfinishedState: true,
+		Inputs:                inputs,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
@@ -261,9 +261,9 @@ func determineRenameData(args []string, cliConfig cliconfig.CliConfig, force con
 		branchesSnapshot:         branchesSnapshot,
 		config:                   validatedConfig,
 		connector:                connector,
-		inputs:                   inputs,
 		hasOpenChanges:           repoStatus.OpenChanges,
 		initialBranch:            initialBranch,
+		inputs:                   inputs,
 		newBranch:                newBranchName,
 		nonExistingBranches:      nonExistingBranches,
 		oldBranch:                *oldBranch,

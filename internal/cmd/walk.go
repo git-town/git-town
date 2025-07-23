@@ -144,7 +144,6 @@ func executeWalk(args []string, cliConfig cliconfig.CliConfig, allBranches confi
 		Config:                  data.config,
 		Connector:               data.connector,
 		Detached:                true,
-		Inputs:                  data.inputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -153,6 +152,7 @@ func executeWalk(args []string, cliConfig cliconfig.CliConfig, allBranches confi
 		InitialBranchesSnapshot: data.branchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        data.stashSize,
+		Inputs:                  data.inputs,
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
@@ -166,9 +166,9 @@ type walkData struct {
 	branchesToWalk     gitdomain.LocalBranchNames
 	config             config.ValidatedConfig
 	connector          Option[forgedomain.Connector]
-	inputs             dialogcomponents.Inputs
 	hasOpenChanges     bool
 	initialBranch      gitdomain.LocalBranchName
+	inputs             dialogcomponents.Inputs
 	previousBranch     Option[gitdomain.LocalBranchName]
 	stashSize          gitdomain.StashSize
 }
@@ -204,12 +204,12 @@ func determineWalkData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfi
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
 		Detached:              true,
-		Inputs:                inputs,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
 		HandleUnfinishedState: true,
+		Inputs:                inputs,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
@@ -257,9 +257,9 @@ func determineWalkData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfi
 		branchesToWalk:     branchesToWalk,
 		config:             validatedConfig,
 		connector:          connector,
-		inputs:             inputs,
 		hasOpenChanges:     repoStatus.OpenChanges,
 		initialBranch:      initialBranch,
+		inputs:             inputs,
 		previousBranch:     previousBranch,
 		stashSize:          stashSize,
 	}, false, nil
