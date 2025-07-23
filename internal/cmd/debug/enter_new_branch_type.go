@@ -14,10 +14,10 @@ func enterNewBranchType() *cobra.Command {
 	return &cobra.Command{
 		Use: "new-branch-type",
 		RunE: func(_ *cobra.Command, _ []string) error {
-			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
+			inputs := dialogcomponents.LoadInputs(os.Environ())
 			_, _, err := dialog.NewBranchType(dialog.Args[configdomain.NewBranchType]{
 				Global: Some(configdomain.NewBranchType(configdomain.BranchTypeFeatureBranch)),
-				Inputs: dialogTestInputs,
+				Inputs: inputs,
 				Local:  Some(configdomain.NewBranchType(configdomain.BranchTypePrototypeBranch)),
 			})
 			return err

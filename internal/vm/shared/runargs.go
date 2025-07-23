@@ -18,10 +18,10 @@ type RunArgs struct {
 	Config                          Mutable[config.ValidatedConfig]
 	Connector                       Option[forgedomain.Connector]
 	Detached                        configdomain.Detached
-	DialogTestInputs                dialogcomponents.TestInputs
 	FinalMessages                   stringslice.Collector
 	Frontend                        subshelldomain.Runner
 	Git                             git.Commands
+	Inputs                          dialogcomponents.Inputs
 	PrependOpcodes                  func(...Opcode)
 	RegisterUndoablePerennialCommit func(gitdomain.SHA)
 	UpdateInitialSnapshotLocalSHA   func(gitdomain.LocalBranchName, gitdomain.SHA) error

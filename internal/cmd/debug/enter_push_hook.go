@@ -14,10 +14,10 @@ func enterPushHookCmd() *cobra.Command {
 	return &cobra.Command{
 		Use: "push-hook",
 		RunE: func(_ *cobra.Command, _ []string) error {
-			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
+			inputs := dialogcomponents.LoadInputs(os.Environ())
 			_, _, err := dialog.PushHook(dialog.Args[configdomain.PushHook]{
 				Global: None[configdomain.PushHook](),
-				Inputs: dialogTestInputs,
+				Inputs: inputs,
 				Local:  None[configdomain.PushHook](),
 			})
 			return err
