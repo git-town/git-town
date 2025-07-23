@@ -75,7 +75,7 @@ func findVerboseFiles() []string {
 		if err != nil {
 			return err
 		}
-		if dir.Name() == "verbose.feature" {
+		if strings.Contains(dir.Name(), "verbose") {
 			result = append(result, path)
 		}
 		return nil
