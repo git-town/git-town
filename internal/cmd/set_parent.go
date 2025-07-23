@@ -114,6 +114,7 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 			BranchInfos:       data.branchesSnapshot.Branches,
 			BranchTypes:       []configdomain.BranchType{},
 			BranchesAndTypes:  branchesAndTypes,
+			ExcludeBranches:   gitdomain.LocalBranchNames{},
 			Lineage:           repo.UnvalidatedConfig.NormalConfig.Lineage,
 			Regexes:           []*regexp.Regexp{},
 			UnknownBranchType: unknownBranchType,
