@@ -70,9 +70,9 @@ func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalI
 	return Some(self.updateProposalTarget)
 }
 
-func (self Connector) UpdateProposalBodyFn() Option[func(forgedomain.ProposalInterface) error] {
+func (self Connector) UpdateProposalBodyFn() Option[func(forgedomain.ProposalInterface, string) error] {
 	if self.APIToken.IsNone() {
-		return None[func(forgedomain.ProposalInterface) error]()
+		return None[func(forgedomain.ProposalInterface, string) error]()
 	}
 
 	return Some(self.updateProposalBody)
@@ -203,11 +203,11 @@ func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInte
 	return nil
 }
 
-func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterface) error {
+func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterface, updatedDescription string) error {
 	data := proposalData.Data()
 	self.log.Start(messages.ForgeGitlabUpdateMRBodyViaAPI, data.Number)
 	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), data.Number, &gitlab.UpdateMergeRequestOptions{
-		Description: Ptr(data.Body.GetOrDefault()),
+		Description: Ptr(updatedDescription),
 	})
 
 	if err != nil {

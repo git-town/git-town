@@ -82,12 +82,12 @@ func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalI
 	return None[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName) error]()
 }
 
-func (self Connector) UpdateProposalBodyFn() Option[func(forgedomain.ProposalInterface) error] {
+func (self Connector) UpdateProposalBodyFn() Option[func(forgedomain.ProposalInterface, string) error] {
 	if self.APIToken.IsSome() {
 		return Some(self.updateProposalBodyFn)
 	}
 
-	return None[func(forgedomain.ProposalInterface) error]()
+	return None[func(forgedomain.ProposalInterface, string) error]()
 }
 
 func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
@@ -222,11 +222,11 @@ func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInte
 	return nil
 }
 
-func (self Connector) updateProposalBodyFn(proposalData forgedomain.ProposalInterface) error {
+func (self Connector) updateProposalBodyFn(proposalData forgedomain.ProposalInterface, updatedBody string) error {
 	data := proposalData.Data()
 	self.log.Start(messages.ForgeGiteaUpdatePRBodyViaAPI, data.Number)
 	_, _, err := self.client.EditPullRequest(self.Organization, self.Repository, int64(data.Number), gitea.EditPullRequestOption{
-		Body: data.Body.GetOrDefault(),
+		Body: updatedBody,
 	})
 	if err != nil {
 		self.log.Failed(err.Error())

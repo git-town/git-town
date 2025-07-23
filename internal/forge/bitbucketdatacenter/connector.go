@@ -105,8 +105,8 @@ func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
 	}
 }
 
-func (self Connector) UpdateProposalBodyFn() Option[func(forgedomain.ProposalInterface) error] {
-	return None[func(forgedomain.ProposalInterface) error]()
+func (self Connector) UpdateProposalBodyFn() Option[func(forgedomain.ProposalInterface, string) error] {
+	return None[func(forgedomain.ProposalInterface, string) error]()
 }
 
 func (self Connector) apiBaseURL() string {

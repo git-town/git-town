@@ -99,7 +99,7 @@ func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalI
 	return Some(self.updateProposalTarget)
 }
 
-func (self Connector) UpdateProposalBodyFn() Option[func(forgedomain.ProposalInterface) error] {
+func (self Connector) UpdateProposalBodyFn() Option[func(forgedomain.ProposalInterface, string) error] {
 	return Some(self.updateProposalBody)
 }
 
@@ -336,7 +336,7 @@ func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInte
 	return nil
 }
 
-func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterface) error {
+func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterface, updatedDescription string) error {
 	data := proposalData.(forgedomain.BitbucketCloudProposalData)
 	self.log.Start(messages.APIUpdateProposalBody, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)))
 	_, err := self.client.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
@@ -346,7 +346,7 @@ func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterf
 		SourceBranch:      data.Source.String(),
 		DestinationBranch: data.Target.String(),
 		Title:             data.Title,
-		Description:       data.Body.GetOrDefault(),
+		Description:       updatedDescription,
 		Draft:             data.Draft,
 		CloseSourceBranch: data.CloseSourceBranch,
 	})

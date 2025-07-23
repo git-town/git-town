@@ -66,7 +66,7 @@ func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalI
 	return Some(self.updateProposalTarget)
 }
 
-func (self Connector) UpdateProposalBodyFn() Option[func(forgedomain.ProposalInterface) error] {
+func (self Connector) UpdateProposalBodyFn() Option[func(forgedomain.ProposalInterface, string) error] {
 	return Some(self.updateProposalBody)
 }
 
@@ -106,8 +106,8 @@ func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInte
 	return self.Frontend.Run("glab", "edit", strconv.Itoa(proposalData.Data().Number), "--base="+target.String())
 }
 
-func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterface) error {
-	return self.Frontend.Run("glab", "mr", "update", strconv.Itoa(proposalData.Data().Number), "--description="+proposalData.Data().Body.GetOrDefault())
+func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterface, updatedDescription string) error {
+	return self.Frontend.Run("glab", "mr", "update", strconv.Itoa(proposalData.Data().Number), "--description="+updatedDescription)
 }
 
 func ParsePermissionsOutput(output string) forgedomain.VerifyConnectionResult {

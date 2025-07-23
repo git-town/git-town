@@ -98,9 +98,9 @@ func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalI
 	return Some(self.updateProposalTarget)
 }
 
-func (self Connector) UpdateProposalBodyFn() Option[func(forgedomain.ProposalInterface) error] {
+func (self Connector) UpdateProposalBodyFn() Option[func(forgedomain.ProposalInterface, string) error] {
 	if self.APIToken.IsNone() {
-		return None[func(forgedomain.ProposalInterface) error]()
+		return None[func(forgedomain.ProposalInterface, string) error]()
 	}
 	return Some(self.updateProposalBody)
 }
@@ -225,10 +225,10 @@ func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInte
 	return nil
 }
 
-func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterface) error {
+func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody string) error {
 	data := proposalData.Data()
 	_, _, err := self.client.PullRequests.Edit(context.Background(), self.Organization, self.Repository, data.Number, &github.PullRequest{
-		Body: Ptr(data.Body.GetOrDefault()),
+		Body: Ptr(updatedBody),
 	})
 
 	if err != nil {
