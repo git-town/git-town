@@ -13,7 +13,7 @@ import (
 // This struct is always mutable, so doesn't need to be wrapped in Mutable.
 type Inputs struct {
 	cursor Mutable[int] // index of the input to return next
-	inputs []TestInput  // the input values
+	inputs []Input      // the input values
 	len    int          // the total number of inputs
 }
 
@@ -21,10 +21,10 @@ func (self Inputs) IsEmpty() bool {
 	return self.cursor.Immutable() == self.len
 }
 
-// Next provides the TestInput for the next dialog in an end-to-end test.
-func (self Inputs) Next() Option[TestInput] {
+// Next provides the Input for the next dialog in an end-to-end test.
+func (self Inputs) Next() Option[Input] {
 	if self.len == 0 {
-		return None[TestInput]()
+		return None[Input]()
 	}
 	if *self.cursor.Value == self.len {
 		panic("not enough dialog inputs")
@@ -43,10 +43,10 @@ func (self Inputs) VerifyAllUsed() {
 // LoadInputs provides the Inputs to use in an end-to-end test,
 // taken from the given environment variable snapshot.
 func LoadInputs(environmenttVariables []string) Inputs {
-	inputs := []TestInput{}
+	inputs := []Input{}
 	sort.Strings(environmenttVariables)
 	for _, environmentVariable := range environmenttVariables {
-		if !strings.HasPrefix(environmentVariable, TestInputKey) {
+		if !strings.HasPrefix(environmentVariable, InputKey) {
 			continue
 		}
 		_, value, match := strings.Cut(environmentVariable, "=")
@@ -54,13 +54,13 @@ func LoadInputs(environmenttVariables []string) Inputs {
 			fmt.Printf(messages.SettingIgnoreInvalid, environmentVariable)
 			continue
 		}
-		input := ParseTestInput(value)
+		input := ParseInput(value)
 		inputs = append(inputs, input)
 	}
 	return NewInputs(inputs...)
 }
 
-func NewInputs(inputs ...TestInput) Inputs {
+func NewInputs(inputs ...Input) Inputs {
 	cursor := 0
 	return Inputs{
 		cursor: NewMutable(&cursor),

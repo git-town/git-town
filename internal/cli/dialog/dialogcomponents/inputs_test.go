@@ -16,17 +16,17 @@ func TestInputs(t *testing.T) {
 		t.Parallel()
 		t.Run("populated", func(t *testing.T) {
 			t.Parallel()
-			keyA := dialogcomponents.TestInput{
+			keyA := dialogcomponents.Input{
 				Messages: []tea.Msg{
 					tea.KeyMsg{Type: tea.KeyCtrlA},
 				},
 			}
-			keyB := dialogcomponents.TestInput{
+			keyB := dialogcomponents.Input{
 				Messages: []tea.Msg{
 					tea.KeyMsg{Type: tea.KeyCtrlB},
 				},
 			}
-			keyC := dialogcomponents.TestInput{
+			keyC := dialogcomponents.Input{
 				Messages: []tea.Msg{
 					tea.KeyMsg{Type: tea.KeyCtrlC},
 				},
@@ -54,7 +54,7 @@ func TestInputs(t *testing.T) {
 			inputs := dialogcomponents.NewInputs()
 			// request the first entry: A
 			have := inputs.Next()
-			must.Eq(t, None[dialogcomponents.TestInput](), have)
+			must.Eq(t, None[dialogcomponents.Input](), have)
 			must.True(t, inputs.IsEmpty())
 		})
 		t.Run("exceed given inputs", func(t *testing.T) {
@@ -64,7 +64,7 @@ func TestInputs(t *testing.T) {
 					t.Errorf("did not panic as expected")
 				}
 			}()
-			keyA := dialogcomponents.TestInput{
+			keyA := dialogcomponents.Input{
 				Messages: []tea.Msg{
 					tea.KeyMsg{Type: tea.KeyCtrlA},
 				},
@@ -89,13 +89,13 @@ func TestInputs(t *testing.T) {
 		}
 		have := dialogcomponents.LoadInputs(env)
 		want := dialogcomponents.NewInputs(
-			dialogcomponents.TestInput{
+			dialogcomponents.Input{
 				Messages: []tea.Msg{
 					tea.KeyMsg{Type: tea.KeyEnter},
 				},
 				StepName: "welcome",
 			},
-			dialogcomponents.TestInput{
+			dialogcomponents.Input{
 				Messages: []tea.Msg{
 					tea.KeyMsg{Type: tea.KeySpace},
 					tea.KeyMsg{Type: tea.KeyDown},
@@ -105,7 +105,7 @@ func TestInputs(t *testing.T) {
 				},
 				StepName: "perennial-branches",
 			},
-			dialogcomponents.TestInput{
+			dialogcomponents.Input{
 				Messages: []tea.Msg{
 					tea.KeyMsg{Type: tea.KeyCtrlC},
 				},
