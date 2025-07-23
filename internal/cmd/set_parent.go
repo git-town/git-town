@@ -121,7 +121,13 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 			Regexes:           []*regexp.Regexp{},
 			UnknownBranchType: unknownBranchType,
 		})
-		// <none> (perennial branch)
+		noneEntry := dialog.SwitchBranchEntry{
+			Branch:        "<none>",
+			Indentation:   "",
+			OtherWorktree: false,
+			Type:          configdomain.BranchTypePerennialBranch,
+		}
+		entries = append(dialog.SwitchBranchEntries{noneEntry}, entries...)
 		cursor := entries.IndexOf(data.defaultChoice)
 		selectedBranch, exit, err = dialog.SwitchBranch(dialog.SwitchBranchArgs{
 			CurrentBranch:      None[gitdomain.LocalBranchName](),
