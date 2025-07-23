@@ -25,30 +25,22 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 	// enter and save main and perennials
 	mainBranch, hasMain := args.Unvalidated.Value.UnvalidatedConfig.MainBranch.Get()
 	if !hasMain {
-		userInput, exit, err := setup.Enter(setup.Data{
-			Backend:        args.Backend,
-			Config:         *args.Unvalidated.Value,
-			ConfigSnapshot: args.ConfigSnapshot,
-			DialogInputs:   args.TestInputs,
-			Git:            args.Git,
-			LocalBranches:  args.LocalBranches,
-			Remotes:        args.Remotes,
-		})
-		if err != nil || exit {
-			return config.EmptyValidatedConfig(), exit, err
-		}
 		setupData := setup.Data{
 			Backend:        args.Backend,
 			Config:         args.Unvalidated.Immutable(),
 			ConfigSnapshot: args.ConfigSnapshot,
-			DialogInputs:   args.DialogTestInputs,
+			DialogInputs:   args.Inputs,
 			Git:            args.Git,
 			LocalBranches:  args.LocalBranches,
 			Remotes:        args.Remotes,
 		}
+		userInput, exit, err := setup.Enter(setupData)
+		if err != nil || exit {
+			return config.EmptyValidatedConfig(), exit, err
+		}
 		setup.Save(userInput, args.Unvalidated.Immutable(), setupData, args.Frontend)
 		mainBranch = userInput.ValidatedConfig.MainBranch
-		args.BranchesAndTypes[mainBranch] = configdomain.BranchTypeMainBranch
+		args.BranchesAndTypes[mainBranch] = configdomain.BranchTypeMainBranch // TODO: don't modify this here?
 	}
 
 	// enter and save missing parent branches
@@ -57,7 +49,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 		BranchesToVerify:  args.BranchesToValidate,
 		Connector:         args.Connector,
 		DefaultChoice:     mainBranch,
-		DialogTestInputs:  args.TestInputs,
+		DialogTestInputs:  args.Inputs,
 		Lineage:           args.Unvalidated.Value.NormalConfig.Lineage,
 		LocalBranches:     args.LocalBranches,
 		MainBranch:        mainBranch,
@@ -85,9 +77,9 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 			GitUserName:  gitUserName,
 			MainBranch:   mainBranch,
 		},
+		// TODO: merge userInput.Data into this
 		NormalConfig: args.Unvalidated.Value.NormalConfig,
 	}
-
 	return validatedConfig, false, err
 }
 
@@ -98,12 +90,11 @@ type ConfigArgs struct {
 	BranchesToValidate gitdomain.LocalBranchNames
 	ConfigSnapshot     undoconfig.ConfigSnapshot
 	Connector          Option[forgedomain.Connector]
-	DialogTestInputs   dialogcomponents.TestInputs
 	Frontend           subshelldomain.Runner
 	Git                git.Commands
+	Inputs             dialogcomponents.TestInputs
 	LocalBranches      gitdomain.LocalBranchNames
 	Remotes            gitdomain.Remotes
 	RepoStatus         gitdomain.RepoStatus
-	TestInputs         dialogcomponents.TestInputs
 	Unvalidated        Mutable[config.UnvalidatedConfig]
 }
