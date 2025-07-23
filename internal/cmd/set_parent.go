@@ -103,13 +103,8 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 	}
 	var outcome dialog.ParentOutcome
 	var selectedBranch gitdomain.LocalBranchName
-	if len(args) == 1 {
-		outcome = dialog.ParentOutcomeSelectedParent
-		selectedBranch = gitdomain.NewLocalBranchName(args[0])
-		if !data.branchesSnapshot.Branches.HasLocalBranch(selectedBranch) {
-			return fmt.Errorf(messages.BranchDoesntExist, selectedBranch)
-		}
-	} else {
+	switch len(args) {
+	case 0:
 		outcome, selectedBranch, err = dialog.Parent(dialog.ParentArgs{
 			Branch:        data.initialBranch,
 			DefaultChoice: data.defaultChoice,
@@ -120,6 +115,12 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 		})
 		if err != nil {
 			return err
+		}
+	case 1:
+		outcome = dialog.ParentOutcomeSelectedParent
+		selectedBranch = gitdomain.NewLocalBranchName(args[0])
+		if !data.branchesSnapshot.Branches.HasLocalBranch(selectedBranch) {
+			return fmt.Errorf(messages.BranchDoesntExist, selectedBranch)
 		}
 	}
 	runProgram, exit := setParentProgram(outcome, selectedBranch, data)
