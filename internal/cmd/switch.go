@@ -85,7 +85,7 @@ func executeSwitch(args []string, cliConfig cliconfig.CliConfig, allBranches con
 		return errors.New(messages.SwitchNoBranches)
 	}
 	cursor := SwitchBranchCursorPos(entries, data.initialBranch)
-	branchToCheckout, exit, err := dialog.SwitchBranch(entries, cursor, data.uncommittedChanges, displayTypes, data.dialogInputs)
+	branchToCheckout, exit, err := dialog.SwitchBranch(entries, cursor, data.uncommittedChanges, displayTypes, data.inputs)
 	if err != nil || exit {
 		return err
 	}
@@ -108,15 +108,15 @@ type switchData struct {
 	branchNames        gitdomain.LocalBranchNames
 	branchesSnapshot   gitdomain.BranchesSnapshot
 	config             config.UnvalidatedConfig
-	dialogInputs       dialogcomponents.TestInputs
 	initialBranch      gitdomain.LocalBranchName
+	inputs             dialogcomponents.Inputs
 	lineage            configdomain.Lineage
 	regexes            []*regexp.Regexp
 	uncommittedChanges bool
 }
 
 func determineSwitchData(args []string, repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data switchData, exit dialogdomain.Exit, err error) {
-	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
+	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -127,12 +127,12 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult, cliConfig c
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             None[forgedomain.Connector](),
 		Detached:              true,
-		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
 		HandleUnfinishedState: true,
+		Inputs:                inputs,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
@@ -155,8 +155,8 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult, cliConfig c
 		branchNames:        branchesSnapshot.Branches.Names(),
 		branchesSnapshot:   branchesSnapshot,
 		config:             repo.UnvalidatedConfig,
-		dialogInputs:       dialogTestInputs,
 		initialBranch:      initialBranch,
+		inputs:             inputs,
 		lineage:            repo.UnvalidatedConfig.NormalConfig.Lineage,
 		regexes:            regexes,
 		uncommittedChanges: repoStatus.OpenChanges,

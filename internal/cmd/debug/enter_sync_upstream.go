@@ -14,10 +14,10 @@ func enterSyncUpstream() *cobra.Command {
 	return &cobra.Command{
 		Use: "sync-upstream",
 		RunE: func(_ *cobra.Command, _ []string) error {
-			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
+			inputs := dialogcomponents.LoadInputs(os.Environ())
 			_, _, err := dialog.SyncUpstream(dialog.Args[configdomain.SyncUpstream]{
 				Global: None[configdomain.SyncUpstream](),
-				Inputs: dialogTestInputs,
+				Inputs: inputs,
 				Local:  None[configdomain.SyncUpstream](),
 			})
 			return err
