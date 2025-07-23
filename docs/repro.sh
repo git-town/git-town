@@ -5,11 +5,8 @@
 # This script sets up a minimal Git repository in a directory named "test"
 # and runs the Git Town command that exhibits the buggy behavior.
 #
-# As a starter, we create two branches and run "git town sync".
-# Please change this to the conditions under which you encounter the bug.
-#
-# The goal is to provide a self-contained, minimal reproduction that clearly
-# demonstrates the issue.
+# To get you going, this script creates two branches and runs "git town sync".
+# Please change this to create the conditions under which the bug happens.
 
 set -x
 
