@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/shoenig/test/must"
 )
 
@@ -40,29 +41,19 @@ func TestSwitchBranch(t *testing.T) {
 
 		t.Run("IndexOf", func(t *testing.T) {
 			t.Parallel()
-			t.Run("is in the entry list", func(t *testing.T) {
-				t.Parallel()
-				entries := dialog.SwitchBranchEntries{
-					{Branch: "main", Indentation: "", OtherWorktree: false},
-					{Branch: "alpha", Indentation: "", OtherWorktree: false},
-					{Branch: "alpha1", Indentation: "", OtherWorktree: false},
-					{Branch: "beta", Indentation: "", OtherWorktree: false},
-				}
-				have := entries.IndexOf("alpha1")
-				want := 2
-				must.EqOp(t, want, have)
-			})
-			t.Run("is not in the entry list", func(t *testing.T) {
-				t.Parallel()
-				entries := dialog.SwitchBranchEntries{
-					{Branch: "main", Indentation: "", OtherWorktree: false},
-					{Branch: "alpha", Indentation: "", OtherWorktree: false},
-					{Branch: "beta", Indentation: "", OtherWorktree: false},
-				}
-				have := entries.IndexOf("other")
-				want := 0
-				must.EqOp(t, want, have)
-			})
+			entries := dialog.SwitchBranchEntries{
+				{Branch: "main", Indentation: "", OtherWorktree: false},
+				{Branch: "alpha", Indentation: "", OtherWorktree: false},
+				{Branch: "alpha1", Indentation: "", OtherWorktree: false},
+				{Branch: "beta", Indentation: "", OtherWorktree: false},
+			}
+			tests := map[gitdomain.LocalBranchName]int{
+				"alpha1": 2,
+				"other":  0,
+			}
+			for give, want := range tests {
+				must.EqOp(t, want, entries.IndexOf(give))
+			}
 		})
 	})
 
