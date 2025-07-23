@@ -20,6 +20,7 @@ git commit --allow-empty -m "initial"
 echo "CONFIGURE GIT TOWN"
 git config set git-town.main-branch "main"
 git config set git-town.new-branch-type "feature"
+git config set git-town.sync-feature-strategy "rebase"
 
 echo "CREATE BRANCH A"
 git town hack branch-A
