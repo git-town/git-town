@@ -42,7 +42,6 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 		}
 		setup.Save(userInput, args.Unvalidated.Immutable(), setupData, args.Frontend)
 		mainBranch = userInput.ValidatedConfig.MainBranch
-		args.BranchesAndTypes[mainBranch] = configdomain.BranchTypeMainBranch // TODO: don't modify this here?
 	}
 
 	// enter and save missing parent branches
@@ -72,12 +71,14 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 		}
 	}
 
+	// store the entered data
 	normalConfig := args.Unvalidated.Value.NormalConfig
 	if !hasMain {
 		normalConfig = normalConfig.OverwriteWith(userInput.Data)
+		args.Unvalidated.Value.NormalConfig = normalConfig
+		args.Unvalidated.Value.UnvalidatedConfig.MainBranch = Some(mainBranch)
+		args.BranchesAndTypes[mainBranch] = configdomain.BranchTypeMainBranch
 	}
-
-	// create validated configuration
 	validatedConfig := config.ValidatedConfig{
 		ValidatedConfigData: configdomain.ValidatedConfigData{
 			GitUserEmail: gitUserEmail,
