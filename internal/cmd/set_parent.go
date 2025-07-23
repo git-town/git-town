@@ -134,7 +134,7 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 			Cursor:             cursor,
 			DisplayBranchTypes: true,
 			Entries:            entries,
-			InputName:          fmt.Sprintf("parent branch for %q", data.initialBranch),
+			InputName:          fmt.Sprintf("parent-branch-for-%q", data.initialBranch),
 			Inputs:             data.inputs,
 			UncommittedChanges: false,
 		})
