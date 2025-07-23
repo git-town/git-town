@@ -37,6 +37,8 @@ const (
 	BranchIsAlreadyObserved            = "branch %q is already observed"
 	BranchIsAlreadyPrototype           = "branch %q is already a prototype branch"
 	BranchIsAlreadyParked              = "branch %q is already parked"
+	BranchIsNowParked                  = "branch %q is now parked\n"
+	BranchIsNowPerennial               = "branch %q is now perennial\n"
 	BranchLocalSHAProblem              = "cannot determine SHA of local branch %q: %w"
 	BranchLocalProblem                 = "cannot determine whether the local branch %q exists: %w"
 	BranchNotInSyncWithParent          = `branch %q is not in sync with its parent, please run "git town sync" and try again`
@@ -191,7 +193,6 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	OriginHostnamePrompt                  = "Origin hostname override: "
 	OriginHostnameResult                  = "Origin hostname: %s\n"
 	ParentDialogSelected                  = "Selected parent branch for %q: %s\n"
-	ParkedBranchIsNowParked               = "branch %q is now parked\n"
 	ParkedRemoved                         = "branch %q is no longer parked"
 	PerennialBranchCannotMakeContribution = "cannot make perennial branches contribution branches"
 	PerennialBranchCannotObserve          = "cannot observe perennial branches"
