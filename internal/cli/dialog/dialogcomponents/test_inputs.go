@@ -18,7 +18,7 @@ type TestInputs struct {
 }
 
 func (self TestInputs) IsEmpty() bool {
-	return *self.cursor.Value == self.len
+	return self.cursor.Immutable() == self.len
 }
 
 // Next provides the TestInput for the next dialog in an end-to-end test.
