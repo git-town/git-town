@@ -6,7 +6,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/shoenig/test/must"
 )
 
@@ -49,8 +48,7 @@ func TestSwitchBranch(t *testing.T) {
 					{Branch: "alpha1", Indentation: "", OtherWorktree: false},
 					{Branch: "beta", Indentation: "", OtherWorktree: false},
 				}
-				initialBranch := gitdomain.NewLocalBranchName("alpha1")
-				have := entries.IndexOf(initialBranch)
+				have := entries.IndexOf("alpha1")
 				want := 2
 				must.EqOp(t, want, have)
 			})
@@ -61,8 +59,7 @@ func TestSwitchBranch(t *testing.T) {
 					{Branch: "alpha", Indentation: "", OtherWorktree: false},
 					{Branch: "beta", Indentation: "", OtherWorktree: false},
 				}
-				initialBranch := gitdomain.NewLocalBranchName("other")
-				have := entries.IndexOf(initialBranch)
+				have := entries.IndexOf("other")
 				want := 0
 				must.EqOp(t, want, have)
 			})
