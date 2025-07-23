@@ -251,11 +251,11 @@ EnterForgeData:
 
 // data entered by the user in the setup assistant
 type UserInput struct {
-	data                configdomain.PartialConfig
-	determinedForgeType Option[forgedomain.ForgeType] // the forge type that was determined by the setup assistant - not necessarily what the user entered (could also be "auto detect")
-	scope               configdomain.ConfigScope
-	storageLocation     dialog.ConfigStorageOption
-	validatedConfig     configdomain.ValidatedConfigData
+	Data                configdomain.PartialConfig
+	DeterminedForgeType Option[forgedomain.ForgeType] // the forge type that was determined by the setup assistant - not necessarily what the user entered (could also be "auto detect")
+	Scope               configdomain.ConfigScope
+	StorageLocation     dialog.ConfigStorageOption
+	ValidatedConfig     configdomain.ValidatedConfigData
 }
 
 func determineExistingScope(configSnapshot undoconfig.ConfigSnapshot, key configdomain.Key, oldValue fmt.Stringer) configdomain.ConfigScope {
