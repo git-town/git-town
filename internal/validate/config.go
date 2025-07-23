@@ -75,10 +75,8 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 	}
 
 	// store the entered data
-	normalConfig := args.Unvalidated.Value.NormalConfig
 	if !hasMain {
-		normalConfig = normalConfig.OverwriteWith(userInput.Data)
-		args.Unvalidated.Value.NormalConfig = normalConfig
+		args.Unvalidated.Value.NormalConfig = args.Unvalidated.Value.NormalConfig.OverwriteWith(userInput.Data)
 		args.Unvalidated.Value.UnvalidatedConfig.MainBranch = Some(mainBranch)
 		args.BranchesAndTypes[mainBranch] = configdomain.BranchTypeMainBranch
 	}
@@ -88,7 +86,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 			GitUserName:  gitUserName,
 			MainBranch:   mainBranch,
 		},
-		NormalConfig: normalConfig,
+		NormalConfig: args.Unvalidated.Value.NormalConfig,
 	}
 	return validatedConfig, false, err
 }
