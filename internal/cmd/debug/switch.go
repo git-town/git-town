@@ -33,7 +33,7 @@ func switchBranch() *cobra.Command {
 			inputs := dialogcomponents.LoadInputs(os.Environ())
 			_, _, err = dialog.SwitchBranch(dialog.SwitchBranchArgs{
 				Cursor:             0,
-				DisplayTypes:       false,
+				DisplayBranchTypes: false,
 				Entries:            entries,
 				Inputs:             inputs,
 				UncommittedChanges: false,
