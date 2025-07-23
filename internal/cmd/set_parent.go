@@ -122,7 +122,7 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 			UnknownBranchType: unknownBranchType,
 		})
 		noneEntry := dialog.SwitchBranchEntry{
-			Branch:        "<none>",
+			Branch:        messages.SetParentNoneOption,
 			Indentation:   "",
 			OtherWorktree: false,
 			Type:          configdomain.BranchTypePerennialBranch,
@@ -139,6 +139,11 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 		})
 		if err != nil || exit {
 			return err
+		}
+		if selectedBranch == messages.SetParentNoneOption {
+			outcome = dialog.ParentOutcomePerennialBranch
+		} else {
+			outcome = dialog.ParentOutcomeSelectedParent
 		}
 	case 1:
 		outcome = dialog.ParentOutcomeSelectedParent

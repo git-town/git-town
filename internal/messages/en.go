@@ -250,6 +250,7 @@ and will be removed in future versions of Git Town.`
 	RunstateCannotDetermineUserDir          = "cannot determine the user configuration directory: %w"
 	RunstateSaveProblem                     = "cannot save run state: %w"
 	SetParentNoFeatureBranch                = "the branch %q is not a feature branch. Only feature branches can have parent branches"
+	SetParentNoneOption                     = "<none>"
 	SettingDeprecatedMessage                = "Upgrading deprecated %s setting %q to %q."
 	SettingDeprecatedValueMessage           = "Upgrading value of %s Git alias %q from %q to %q."
 	SettingCannotRemove                     = "ERROR: cannot remove %s Git setting %q: %v"
