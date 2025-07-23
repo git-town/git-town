@@ -37,6 +37,16 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 		if err != nil || exit {
 			return config.EmptyValidatedConfig(), exit, err
 		}
+		setupData := setup.Data{
+			Backend:        args.Backend,
+			Config:         args.Unvalidated.Immutable(),
+			ConfigSnapshot: args.ConfigSnapshot,
+			DialogInputs:   args.DialogTestInputs,
+			Git:            args.Git,
+			LocalBranches:  args.LocalBranches,
+			Remotes:        args.Remotes,
+		}
+		setup.Save(userInput, args.Unvalidated.Immutable(), setupData, args.Frontend)
 		mainBranch = userInput.ValidatedConfig.MainBranch
 		args.BranchesAndTypes[mainBranch] = configdomain.BranchTypeMainBranch
 	}

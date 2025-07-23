@@ -29,12 +29,23 @@ Feature: missing configuration
       | ship delete tracking branch | enter |
       | config storage              | enter |
 
-  @this
   Scenario: result
     And Git Town runs the commands
-      | BRANCH | COMMAND                  |
-      | main   | git fetch --prune --tags |
-      |        | git checkout -b feature  |
+      | BRANCH | COMMAND                                              |
+      | main   | git fetch --prune --tags                             |
+      |        | git config git-town.new-branch-type feature          |
+      |        | git config git-town.main-branch main                 |
+      |        | git config git-town.unknown-branch-type feature      |
+      |        | git config git-town.push-hook true                   |
+      |        | git config git-town.share-new-branches no            |
+      |        | git config git-town.ship-strategy api                |
+      |        | git config git-town.ship-delete-tracking-branch true |
+      |        | git config git-town.sync-feature-strategy merge      |
+      |        | git config git-town.sync-perennial-strategy ff-only  |
+      |        | git config git-town.sync-prototype-strategy merge    |
+      |        | git config git-town.sync-upstream true               |
+      |        | git config git-town.sync-tags true                   |
+      |        | git checkout -b feature                              |
     And the main branch is now "main"
     And this lineage exists now
       | BRANCH  | PARENT |
