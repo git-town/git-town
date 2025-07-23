@@ -64,6 +64,44 @@ func (self *NormalConfig) NoPushHook() configdomain.NoPushHook {
 	return self.PushHook.Negate()
 }
 
+func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) NormalConfig {
+	return NormalConfig{
+		Aliases:                  other.Aliases,
+		BitbucketAppPassword:     other.BitbucketAppPassword,
+		BitbucketUsername:        other.BitbucketUsername,
+		BranchTypeOverrides:      other.BranchTypeOverrides.Concat(self.BranchTypeOverrides),
+		CodebergToken:            other.CodebergToken,
+		ContributionRegex:        other.ContributionRegex,
+		DevRemote:                other.DevRemote.GetOrElse(self.DevRemote),
+		DryRun:                   other.DryRun.GetOrElse(self.DryRun),
+		FeatureRegex:             other.FeatureRegex,
+		ForgeType:                other.ForgeType,
+		GitHubConnectorType:      other.GitHubConnectorType,
+		GitHubToken:              other.GitHubToken,
+		GitLabConnectorType:      other.GitLabConnectorType,
+		GitLabToken:              other.GitLabToken,
+		GiteaToken:               other.GiteaToken,
+		HostingOriginHostname:    other.HostingOriginHostname,
+		Lineage:                  other.Lineage.Merge(self.Lineage),
+		NewBranchType:            other.NewBranchType,
+		ObservedRegex:            other.ObservedRegex,
+		Offline:                  other.Offline.GetOrElse(self.Offline),
+		PerennialBranches:        other.PerennialBranches,
+		PerennialRegex:           other.PerennialRegex,
+		PushHook:                 other.PushHook.GetOrElse(self.PushHook),
+		ShareNewBranches:         other.ShareNewBranches.GetOrElse(self.ShareNewBranches),
+		ShipDeleteTrackingBranch: other.ShipDeleteTrackingBranch.GetOrElse(self.ShipDeleteTrackingBranch),
+		ShipStrategy:             other.ShipStrategy.GetOrElse(self.ShipStrategy),
+		SyncFeatureStrategy:      other.SyncFeatureStrategy.GetOrElse(self.SyncFeatureStrategy),
+		SyncPerennialStrategy:    other.SyncPerennialStrategy.GetOrElse(self.SyncPerennialStrategy),
+		SyncPrototypeStrategy:    other.SyncPrototypeStrategy.GetOrElse(self.SyncPrototypeStrategy),
+		SyncTags:                 other.SyncTags.GetOrElse(self.SyncTags),
+		SyncUpstream:             other.SyncUpstream.GetOrElse(self.SyncUpstream),
+		UnknownBranchType:        other.UnknownBranchType.GetOrElse(self.UnknownBranchType),
+		Verbose:                  other.Verbose.GetOrElse(self.Verbose),
+	}
+}
+
 func (self *NormalConfig) PartialBranchType(branch gitdomain.LocalBranchName) configdomain.BranchType {
 	// check the branch type overrides
 	if branchTypeOverride, hasBranchTypeOverride := self.BranchTypeOverrides[branch]; hasBranchTypeOverride {

@@ -24,6 +24,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 
 	// enter and save main and perennials
 	mainBranch, hasMain := args.Unvalidated.Value.UnvalidatedConfig.MainBranch.Get()
+	var userInput setup.UserInput
 	if !hasMain {
 		setupData := setup.Data{
 			Backend:        args.Backend,
@@ -34,7 +35,8 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 			LocalBranches:  args.LocalBranches,
 			Remotes:        args.Remotes,
 		}
-		userInput, exit, err := setup.Enter(setupData)
+		var exit dialogdomain.Exit
+		userInput, exit, err = setup.Enter(setupData)
 		if err != nil || exit {
 			return config.EmptyValidatedConfig(), exit, err
 		}
@@ -70,6 +72,11 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 		}
 	}
 
+	normalConfig := args.Unvalidated.Value.NormalConfig
+	if !hasMain {
+		normalConfig = normalConfig.OverwriteWith(userInput.Data)
+	}
+
 	// create validated configuration
 	validatedConfig := config.ValidatedConfig{
 		ValidatedConfigData: configdomain.ValidatedConfigData{
@@ -77,8 +84,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 			GitUserName:  gitUserName,
 			MainBranch:   mainBranch,
 		},
-		// TODO: merge userInput.Data into this
-		NormalConfig: args.Unvalidated.Value.NormalConfig,
+		NormalConfig: normalConfig,
 	}
 	return validatedConfig, false, err
 }
