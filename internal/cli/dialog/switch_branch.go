@@ -169,7 +169,7 @@ func ShouldDisplayBranchType(branchType configdomain.BranchType) bool {
 
 func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomain.Exit, error) {
 	dialogProgram := tea.NewProgram(SwitchModel{
-		DisplayBranchTypes: args.DisplayTypes,
+		DisplayBranchTypes: args.DisplayBranchTypes,
 		InitialBranchPos:   args.Cursor,
 		List:               list.NewList(newSwitchBranchListEntries(args.Entries), args.Cursor),
 		UncommittedChanges: args.UncommittedChanges,
@@ -183,7 +183,7 @@ func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomai
 
 type SwitchBranchArgs struct {
 	Cursor             int
-	DisplayTypes       configdomain.DisplayTypes
+	DisplayBranchTypes configdomain.DisplayTypes
 	Entries            []SwitchBranchEntry
 	Inputs             dialogcomponents.Inputs
 	UncommittedChanges bool
