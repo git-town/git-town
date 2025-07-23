@@ -9,19 +9,34 @@ import (
 	"github.com/git-town/git-town/v21/internal/vm/shared"
 )
 
-type ProposalCreateLineageProposalBody struct {
+type ProposalLineageCreate struct {
 	Branch                  gitdomain.LocalBranchName
+	ProposalLineageIn       configdomain.ProposalLineageIn
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *ProposalCreateLineageProposalBody) Run(args shared.RunArgs) error {
+func (self *ProposalLineageCreate) Run(args shared.RunArgs) error {
 	connector, hasConnector := args.Connector.Get()
 	if !hasConnector {
 		return forgedomain.UnsupportedServiceError()
 	}
-	_, hasFindProposal := connector.FindProposalFn().Get()
-	if !hasFindProposal {
+	findProposalFn, hasFindProposalFn := connector.FindProposalFn().Get()
+	if !hasFindProposalFn {
 		return fmt.Errorf("connector does not support finding proposals")
+	}
+
+	targetBranch := args.Config.Value.NormalConfig.Lineage.Parent(self.Branch)
+	if targetBranch.IsNone() {
+		return fmt.Errorf("current branch has no parent. Cannot find proposal to create lineage")
+	}
+
+	proposalData, err := findProposalFn(self.Branch, targetBranch.GetOrPanic())
+	if err != nil {
+		return err
+	}
+
+	if proposalData.IsNone() {
+		return fmt.Errorf("current branch has no proposal")
 	}
 
 	builder := configdomain.NewProposalLineageBuilder(connector, args.Config.Value.MainAndPerennials()...)
@@ -31,6 +46,22 @@ func (self *ProposalCreateLineageProposalBody) Run(args shared.RunArgs) error {
 		builder.AddBranch(curr, currParent)
 	}
 
-	_ = builder.Build(self.Branch, configdomain.LineageDisplayLocationProposalBody)
+	lineageAsString := builder.Build(self.Branch, self.ProposalLineageIn)
+
+	switch self.ProposalLineageIn {
+	case configdomain.ProposalLineageInTerminal:
+		fmt.Print(lineageAsString)
+		return nil
+	case configdomain.ProposalLineageOperationInProposalBody:
+		op := &ProposalUpdateBody{
+			Proposal:    proposalData.GetOrPanic().Data,
+			UpdatedBody: lineageAsString,
+		}
+		return op.Run(args)
+	case configdomain.ProposalLineageOperationInProposalComment:
+		// TODO: Implement soon
+	default:
+		return nil
+	}
 	return nil
 }
