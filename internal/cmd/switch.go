@@ -81,13 +81,13 @@ func executeSwitch(args []string, cliConfig cliconfig.CliConfig, allBranches con
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchNames)
 	unknownBranchType := repo.UnvalidatedConfig.NormalConfig.UnknownBranchType
 	entries := SwitchBranchEntries(SwitchBranchArgs{
+		AllBranches:       allBranches,
 		BranchInfos:       data.branchesSnapshot.Branches,
 		BranchTypes:       branchTypes,
 		BranchesAndTypes:  branchesAndTypes,
 		Lineage:           data.config.NormalConfig.Lineage,
-		UnknownBranchType: unknownBranchType,
-		AllBranches:       allBranches,
 		Regexes:           data.regexes,
+		UnknownBranchType: unknownBranchType,
 	})
 	if len(entries) == 0 {
 		return errors.New(messages.SwitchNoBranches)
@@ -194,16 +194,16 @@ func SwitchBranchEntries(args SwitchBranchArgs) dialog.SwitchBranchEntries {
 	// add all entries from the lineage
 	for _, root := range roots {
 		layoutBranches(layoutBranchesArgs{
-			result:            &entries,
-			branch:            root,
-			indentation:       "",
-			lineage:           args.Lineage,
-			branchInfos:       args.BranchInfos,
 			allBranches:       args.AllBranches,
+			branch:            root,
+			branchInfos:       args.BranchInfos,
 			branchTypes:       args.BranchTypes,
 			branchesAndTypes:  args.BranchesAndTypes,
-			unknownBranchType: args.UnknownBranchType,
+			indentation:       "",
+			lineage:           args.Lineage,
 			regexes:           args.Regexes,
+			result:            &entries,
+			unknownBranchType: args.UnknownBranchType,
 		})
 	}
 	// add branches not in the lineage
@@ -220,29 +220,29 @@ func SwitchBranchEntries(args SwitchBranchArgs) dialog.SwitchBranchEntries {
 			continue
 		}
 		layoutBranches(layoutBranchesArgs{
-			result:            &entries,
-			branch:            localBranch,
-			indentation:       "",
-			lineage:           args.Lineage,
-			branchInfos:       args.BranchInfos,
 			allBranches:       args.AllBranches,
+			branch:            localBranch,
+			branchInfos:       args.BranchInfos,
 			branchTypes:       args.BranchTypes,
 			branchesAndTypes:  args.BranchesAndTypes,
-			unknownBranchType: args.UnknownBranchType,
+			indentation:       "",
+			lineage:           args.Lineage,
 			regexes:           args.Regexes,
+			result:            &entries,
+			unknownBranchType: args.UnknownBranchType,
 		})
 	}
 	return entries
 }
 
 type SwitchBranchArgs struct {
+	AllBranches       configdomain.AllBranches
 	BranchInfos       gitdomain.BranchInfos
 	BranchTypes       []configdomain.BranchType
 	BranchesAndTypes  configdomain.BranchesAndTypes
 	Lineage           configdomain.Lineage
-	UnknownBranchType configdomain.UnknownBranchType
-	AllBranches       configdomain.AllBranches
 	Regexes           []*regexp.Regexp
+	UnknownBranchType configdomain.UnknownBranchType
 }
 
 // layoutBranches adds entries for the given branch and its children to the given entry list.
@@ -275,29 +275,29 @@ func layoutBranches(args layoutBranchesArgs) {
 	}
 	for _, child := range args.lineage.Children(args.branch) {
 		layoutBranches(layoutBranchesArgs{
-			result:            args.result,
-			branch:            child,
-			indentation:       args.indentation + "  ",
-			lineage:           args.lineage,
-			branchInfos:       args.branchInfos,
 			allBranches:       args.allBranches,
+			branch:            child,
+			branchInfos:       args.branchInfos,
 			branchTypes:       args.branchTypes,
 			branchesAndTypes:  args.branchesAndTypes,
-			unknownBranchType: args.unknownBranchType,
+			indentation:       args.indentation + "  ",
+			lineage:           args.lineage,
 			regexes:           args.regexes,
+			result:            args.result,
+			unknownBranchType: args.unknownBranchType,
 		})
 	}
 }
 
 type layoutBranchesArgs struct {
-	result            *dialog.SwitchBranchEntries
-	branch            gitdomain.LocalBranchName
-	indentation       string
-	lineage           configdomain.Lineage
-	branchInfos       gitdomain.BranchInfos
 	allBranches       configdomain.AllBranches
+	branch            gitdomain.LocalBranchName
+	branchInfos       gitdomain.BranchInfos
 	branchTypes       []configdomain.BranchType
 	branchesAndTypes  configdomain.BranchesAndTypes
-	unknownBranchType configdomain.UnknownBranchType
+	indentation       string
+	lineage           configdomain.Lineage
 	regexes           regexes.Regexes
+	result            *dialog.SwitchBranchEntries
+	unknownBranchType configdomain.UnknownBranchType
 }
