@@ -41,7 +41,7 @@ func TestSwitchBranch(t *testing.T) {
 
 		t.Run("IndexOf", func(t *testing.T) {
 			t.Parallel()
-			t.Run("initialBranch is in the entry list", func(t *testing.T) {
+			t.Run("is in the entry list", func(t *testing.T) {
 				t.Parallel()
 				entries := dialog.SwitchBranchEntries{
 					{Branch: "main", Indentation: "", OtherWorktree: false},
@@ -54,7 +54,7 @@ func TestSwitchBranch(t *testing.T) {
 				want := 2
 				must.EqOp(t, want, have)
 			})
-			t.Run("initialBranch is not in the entry list", func(t *testing.T) {
+			t.Run("is not in the entry list", func(t *testing.T) {
 				t.Parallel()
 				entries := dialog.SwitchBranchEntries{
 					{Branch: "main", Indentation: "", OtherWorktree: false},
