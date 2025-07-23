@@ -85,7 +85,13 @@ func executeSwitch(args []string, cliConfig cliconfig.CliConfig, allBranches con
 		return errors.New(messages.SwitchNoBranches)
 	}
 	cursor := SwitchBranchCursorPos(entries, data.initialBranch)
-	branchToCheckout, exit, err := dialog.SwitchBranch(entries, cursor, data.uncommittedChanges, displayTypes, data.inputs)
+	branchToCheckout, exit, err := dialog.SwitchBranch(dialog.SwitchBranchArgs{
+		Cursor:             cursor,
+		DisplayTypes:       displayTypes,
+		Entries:            entries,
+		Inputs:             data.inputs,
+		UncommittedChanges: data.uncommittedChanges,
+	})
 	if err != nil || exit {
 		return err
 	}
