@@ -8,7 +8,7 @@
 # To get you going, this script creates two branches and runs "git town sync".
 # Please change this to create the conditions under which the bug happens.
 
-set -x
+set -ex
 
 rm -rf test || true
 
