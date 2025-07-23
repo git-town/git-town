@@ -26,11 +26,11 @@ func enterParentCmd() *cobra.Command {
 				localBranches = append(localBranches, gitdomain.NewLocalBranchName(fmt.Sprintf("branch-%d", i)))
 			}
 			lineage := configdomain.Lineage{}
-			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
+			inputs := dialogcomponents.LoadInputs(os.Environ())
 			_, _, err = dialog.Parent(dialog.ParentArgs{
 				Branch:        "branch-2",
 				DefaultChoice: "main",
-				Inputs:        dialogTestInputs,
+				Inputs:        inputs,
 				Lineage:       lineage,
 				LocalBranches: localBranches,
 				MainBranch:    "main",

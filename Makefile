@@ -24,6 +24,9 @@ cuke-prof: install  # creates a flamegraph for the end-to-end tests
 	@rm git-town.test
 	@echo Please open https://www.speedscope.app and load the file godog.out
 
+cukeverbose: install  # run all tests in "verbose.feature" files
+	@env $(GO_TEST_ARGS) verbose=1 go test . -v -count=1
+
 cukewin: install  # runs all end-to-end tests on Windows
 	go test . -v -count=1
 

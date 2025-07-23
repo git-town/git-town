@@ -19,8 +19,8 @@ func enterAliases() *cobra.Command {
 				configdomain.AliasableCommandHack:   "town hack",
 				configdomain.AliasableCommandRepo:   "other command",
 			}
-			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
-			_, _, err := dialog.Aliases(all, existing, dialogTestInputs)
+			inputs := dialogcomponents.LoadInputs(os.Environ())
+			_, _, err := dialog.Aliases(all, existing, inputs)
 			return err
 		},
 	}

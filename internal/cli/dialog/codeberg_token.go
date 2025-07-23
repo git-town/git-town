@@ -30,8 +30,8 @@ func CodebergToken(args Args[forgedomain.CodebergToken]) (Option[forgedomain.Cod
 		DialogName:    "codeberg-token",
 		ExistingValue: args.Local.Or(args.Global).String(),
 		Help:          codebergTokenHelp,
+		Inputs:        args.Inputs,
 		Prompt:        messages.CodebergTokenPrompt,
-		TestInputs:    args.Inputs,
 		Title:         codebergTokenTitle,
 	})
 	newValue := forgedomain.ParseCodebergToken(input)

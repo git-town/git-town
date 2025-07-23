@@ -5,7 +5,7 @@ Feature: rename a branch that has an overridden branch type
     Given a Git repo with origin
     And the branches
       | NAME | TYPE         | PARENT | LOCATIONS     |
-      | old  | contribution | main   | local, origin |
+      | old  | contribution |        | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |

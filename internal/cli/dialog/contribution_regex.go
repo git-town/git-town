@@ -31,8 +31,8 @@ func ContributionRegex(args Args[configdomain.ContributionRegex]) (Option[config
 		DialogName:    "contribution-regex",
 		ExistingValue: args.Local.Or(args.Global).String(),
 		Help:          contributionRegexHelp,
+		Inputs:        args.Inputs,
 		Prompt:        messages.ContributionRegexPrompt,
-		TestInputs:    args.Inputs,
 		Title:         contributionRegexTitle,
 	})
 	newValue, err2 := configdomain.ParseContributionRegex(input)

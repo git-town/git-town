@@ -65,7 +65,7 @@ func PerennialBranches(args PerennialBranchesArgs) (gitdomain.LocalBranchNames, 
 
 type PerennialBranchesArgs struct {
 	ImmutableGitPerennials gitdomain.LocalBranchNames // perennial branches defined in the config file and the global Git metadata
-	Inputs                 dialogcomponents.TestInputs
+	Inputs                 dialogcomponents.Inputs
 	LocalBranches          gitdomain.LocalBranchNames
 	LocalGitPerennials     gitdomain.LocalBranchNames
 	MainBranch             gitdomain.LocalBranchName

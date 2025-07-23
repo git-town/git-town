@@ -35,8 +35,8 @@ func enterCommitsToBeam() *cobra.Command {
 			for i := range amount {
 				commits[i] = allCommits[i]
 			}
-			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
-			_, _, err := dialog.CommitsToBeam(commits, "target-branch", repo.Git, repo.Backend, dialogTestInputs)
+			inputs := dialogcomponents.LoadInputs(os.Environ())
+			_, _, err := dialog.CommitsToBeam(commits, "target-branch", repo.Git, repo.Backend, inputs)
 			return err
 		},
 	}

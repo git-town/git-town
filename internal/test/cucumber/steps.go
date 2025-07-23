@@ -887,7 +887,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			env = envvars.Replace(env, browser.EnvVarName, browserPath)
 		}
 		for a, answer := range helpers.TableToInputEnv(input) {
-			env = append(env, fmt.Sprintf("%s_%02d=%s", dialogcomponents.TestInputKey, a, answer))
+			env = append(env, fmt.Sprintf("%s_%02d=%s", dialogcomponents.InputKey, a, answer))
 		}
 		output, exitCode := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
 		state.runOutput = Some(output)

@@ -8,7 +8,7 @@ import (
 )
 
 // SendInputs sends the given keystrokes to the given bubbletea program.
-func SendInputs(stepName string, input Option[TestInput], program *tea.Program) {
+func SendInputs(stepName string, input Option[Input], program *tea.Program) {
 	if input, has := input.Get(); has {
 		if stepName != input.StepName {
 			panic(fmt.Sprintf("mismatching dialog names: want %q but have %q", stepName, input.StepName))
