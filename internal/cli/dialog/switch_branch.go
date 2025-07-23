@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/slice"
 	"github.com/git-town/git-town/v21/internal/messages"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/muesli/termenv"
 )
 
@@ -49,8 +50,8 @@ func (sbes SwitchBranchEntries) IndexOf(branch gitdomain.LocalBranchName) int {
 type SwitchModel struct {
 	list.List[SwitchBranchEntry]
 	DisplayBranchTypes configdomain.DisplayTypes
-	InitialBranchPos   int  // position of the currently checked out branch in the list
-	UncommittedChanges bool // whether the workspace has uncommitted changes
+	InitialBranchPos   Option[int] // position of the currently checked out branch in the list
+	UncommittedChanges bool        // whether the workspace has uncommitted changes
 }
 
 func (self SwitchModel) Init() tea.Cmd {
@@ -94,7 +95,10 @@ func (self SwitchModel) View() string {
 	for i := window.StartRow; i < window.EndRow; i++ {
 		entry := self.Entries[i]
 		isSelected := i == self.Cursor
-		isInitial := i == self.InitialBranchPos
+		isInitial := false
+		if initialBranchPos, has := self.InitialBranchPos.Get(); has {
+			isInitial = i == initialBranchPos
+		}
 		switch {
 		case isSelected:
 			color := self.Colors.Selection
@@ -177,9 +181,13 @@ func ShouldDisplayBranchType(branchType configdomain.BranchType) bool {
 }
 
 func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomain.Exit, error) {
+	initialBranchPos := None[int]()
+	if currentBranch, has := args.CurrentBranch.Get(); has {
+		initialBranchPos = Some(args.Entries.IndexOf(currentBranch))
+	}
 	dialogProgram := tea.NewProgram(SwitchModel{
 		DisplayBranchTypes: args.DisplayBranchTypes,
-		InitialBranchPos:   args.Cursor,
+		InitialBranchPos:   initialBranchPos,
 		List:               list.NewList(newSwitchBranchListEntries(args.Entries), args.Cursor),
 		UncommittedChanges: args.UncommittedChanges,
 	})
@@ -191,9 +199,10 @@ func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomai
 }
 
 type SwitchBranchArgs struct {
+	CurrentBranch      Option[gitdomain.LocalBranchName]
 	Cursor             int
 	DisplayBranchTypes configdomain.DisplayTypes
-	Entries            []SwitchBranchEntry
+	Entries            SwitchBranchEntries
 	Inputs             dialogcomponents.Inputs
 	UncommittedChanges bool
 }

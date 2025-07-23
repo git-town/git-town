@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -52,7 +53,7 @@ func TestSwitchBranch(t *testing.T) {
 					MaxDigits:    1,
 					NumberFormat: "%d",
 				},
-				InitialBranchPos:   0,
+				InitialBranchPos:   Some(0),
 				UncommittedChanges: false,
 				DisplayBranchTypes: false,
 			}
@@ -78,7 +79,7 @@ func TestSwitchBranch(t *testing.T) {
 					MaxDigits:    1,
 					NumberFormat: "%d",
 				},
-				InitialBranchPos:   0,
+				InitialBranchPos:   Some(0),
 				UncommittedChanges: false,
 				DisplayBranchTypes: false,
 			}
@@ -113,7 +114,7 @@ func TestSwitchBranch(t *testing.T) {
 					MaxDigits:    1,
 					NumberFormat: "%d",
 				},
-				InitialBranchPos:   0,
+				InitialBranchPos:   Some(0),
 				UncommittedChanges: false,
 				DisplayBranchTypes: false,
 			}
@@ -152,7 +153,7 @@ func TestSwitchBranch(t *testing.T) {
 					MaxDigits:    1,
 					NumberFormat: "%d",
 				},
-				InitialBranchPos:   0,
+				InitialBranchPos:   Some(0),
 				UncommittedChanges: false,
 				DisplayBranchTypes: true,
 			}
@@ -185,7 +186,7 @@ func TestSwitchBranch(t *testing.T) {
 					MaxDigits:    1,
 					NumberFormat: "%d",
 				},
-				InitialBranchPos:   0,
+				InitialBranchPos:   Some(0),
 				UncommittedChanges: true,
 				DisplayBranchTypes: false,
 			}
