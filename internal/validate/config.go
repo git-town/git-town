@@ -29,8 +29,8 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 			Backend:        args.Backend,
 			Config:         args.Unvalidated.Immutable(),
 			ConfigSnapshot: args.ConfigSnapshot,
-			Inputs:         args.Inputs,
 			Git:            args.Git,
+			Inputs:         args.Inputs,
 			LocalBranches:  args.LocalBranches,
 			Remotes:        args.Remotes,
 		}

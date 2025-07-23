@@ -13,8 +13,8 @@ type Data struct {
 	Backend        subshelldomain.RunnerQuerier
 	Config         config.UnvalidatedConfig
 	ConfigSnapshot undoconfig.ConfigSnapshot
-	Inputs         dialogcomponents.Inputs
 	Git            git.Commands
+	Inputs         dialogcomponents.Inputs
 	LocalBranches  gitdomain.LocalBranchNames
 	Remotes        gitdomain.Remotes
 }
