@@ -45,8 +45,9 @@ func (self *RebaseOntoKeepDeleted) Run(args shared.RunArgs) error {
 		for _, conflictingFile := range conflictingFiles {
 			if conflictingChange, has := conflictingFile.CurrentBranchChange.Get(); has {
 				// This is where the incorrect resolution happens.
-				// The merge conflict is not a phantom merge conflict,
-				// but Git Town thinks it is.
+				// The merge conflict is not a phantom merge conflict but Git Town thinks it is one.
+				// Shouldn't it compare the file version on the branch to the one on the root branch here?
+				// Shouldn't it call git.DetectPhantomMergeConflicts here?
 				_ = args.Git.ResolveConflict(args.Frontend, conflictingChange.FilePath, gitdomain.ConflictResolutionTheirs)
 				_ = args.Git.StageFiles(args.Frontend, conflictingChange.FilePath)
 			} else if baseChange, has := conflictingFile.BaseChange.Get(); has {
