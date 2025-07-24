@@ -1,6 +1,7 @@
 @messyoutput
 Feature: ask for missing parent branch information
 
+  @debug @this
   Scenario:
     Given a Git repo with origin
     And the branches
