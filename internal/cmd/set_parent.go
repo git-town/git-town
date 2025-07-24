@@ -107,19 +107,19 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 	switch len(args) {
 	case 0:
 		branchNames := data.branchesSnapshot.Branches.Names()
-		branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchNames)
-		unknownBranchType := repo.UnvalidatedConfig.NormalConfig.UnknownBranchType
-		excludeBranches := gitdomain.LocalBranchNames{data.initialBranch}
-		excludeBranches = append(excludeBranches, data.config.NormalConfig.Lineage.Children(data.initialBranch)...)
+		excludeBranches := append(
+			gitdomain.LocalBranchNames{data.initialBranch},
+			data.config.NormalConfig.Lineage.Children(data.initialBranch)...,
+		)
 		entries := SwitchBranchEntries(SwitchBranchArgs{
 			AllBranches:       false,
 			BranchInfos:       data.branchesSnapshot.Branches,
 			BranchTypes:       []configdomain.BranchType{},
-			BranchesAndTypes:  branchesAndTypes,
+			BranchesAndTypes:  repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchNames),
 			ExcludeBranches:   excludeBranches,
 			Lineage:           repo.UnvalidatedConfig.NormalConfig.Lineage,
 			Regexes:           []*regexp.Regexp{},
-			UnknownBranchType: unknownBranchType,
+			UnknownBranchType: repo.UnvalidatedConfig.NormalConfig.UnknownBranchType,
 		})
 		noneEntry := dialog.SwitchBranchEntry{
 			Branch:        messages.SetParentNoneOption,
