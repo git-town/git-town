@@ -56,7 +56,6 @@ Feature: conflicting sibling branches, one gets shipped, the other syncs afterwa
       | branch-1 | main   |
       | branch-2 | main   |
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
