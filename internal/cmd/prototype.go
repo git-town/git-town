@@ -107,7 +107,7 @@ type prototypeData struct {
 
 func printPrototypeBranches(branches gitdomain.LocalBranchNames) {
 	for _, branch := range branches {
-		fmt.Printf(messages.PrototypeBranchIsNowPrototype, branch)
+		fmt.Printf(messages.BranchIsNowPrototype, branch)
 	}
 }
 

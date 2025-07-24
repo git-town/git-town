@@ -15,7 +15,7 @@ Feature: update the parent of a feature branch
   Scenario: result
     Then Git Town prints:
       """
-      Selected parent branch for "child": parent
+      Branch "child" is now a child of "parent"
       """
     And Git Town runs no commands
     And the initial lineage exists now

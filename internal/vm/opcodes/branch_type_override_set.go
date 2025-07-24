@@ -1,9 +1,12 @@
 package opcodes
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
 )
 
@@ -15,5 +18,26 @@ type BranchTypeOverrideSet struct {
 }
 
 func (self *BranchTypeOverrideSet) Run(args shared.RunArgs) error {
-	return gitconfig.SetBranchTypeOverride(args.Backend, self.BranchType, self.Branch)
+	err := gitconfig.SetBranchTypeOverride(args.Backend, self.BranchType, self.Branch)
+	args.FinalMessages.Add(self.message())
+	return err
+}
+
+func (self BranchTypeOverrideSet) message() string {
+	switch self.BranchType {
+	case configdomain.BranchTypeContributionBranch:
+		return fmt.Sprintf(messages.BranchIsNowContribution, self.Branch)
+	case configdomain.BranchTypeFeatureBranch:
+		return fmt.Sprintf(messages.BranchIsNowFeature, self.Branch)
+	case configdomain.BranchTypeMainBranch:
+	case configdomain.BranchTypeObservedBranch:
+		return fmt.Sprintf(messages.BranchIsNowObserved, self.Branch)
+	case configdomain.BranchTypeParkedBranch:
+		return fmt.Sprintf(messages.BranchIsNowParked, self.Branch)
+	case configdomain.BranchTypePerennialBranch:
+		return fmt.Sprintf(messages.BranchIsNowPerennial, self.Branch)
+	case configdomain.BranchTypePrototypeBranch:
+		return fmt.Sprintf(messages.BranchIsNowPrototype, self.Branch)
+	}
+	return ""
 }
