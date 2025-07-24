@@ -80,13 +80,13 @@ func executeSwitch(args []string, cliConfig cliconfig.CliConfig, allBranches con
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchNames)
 	unknownBranchType := repo.UnvalidatedConfig.NormalConfig.UnknownBranchType
 	entries := dialog.CreateSwitchBranchEntries(dialog.CreateSwitchBranchArgs{
-		AllBranches:       allBranches,
 		BranchInfos:       data.branchesSnapshot.Branches,
 		BranchTypes:       branchTypes,
 		BranchesAndTypes:  branchesAndTypes,
 		ExcludeBranches:   gitdomain.LocalBranchNames{},
 		Lineage:           data.config.NormalConfig.Lineage,
 		Regexes:           data.regexes,
+		ShowAllBranches:   allBranches,
 		UnknownBranchType: unknownBranchType,
 	})
 	if len(entries) == 0 {
