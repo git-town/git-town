@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/slice"
-	"github.com/git-town/git-town/v21/internal/messages"
 )
 
 var PerennialBranchOption = gitdomain.LocalBranchName("<none> (perennial branch)")
@@ -30,7 +29,6 @@ func Parent(args ParentArgs) (ParentOutcome, gitdomain.LocalBranchName, error) {
 	title := fmt.Sprintf(parentBranchTitleTemplate, args.Branch)
 	help := fmt.Sprintf(parentBranchHelpTemplate, args.Branch)
 	selection, exit, err := dialogcomponents.RadioList(list.NewEntries(parentCandidates...), cursor, title, help, args.Inputs, fmt.Sprintf("parent-branch-for-%q", args.Branch))
-	fmt.Printf(messages.ParentDialogSelected, args.Branch, dialogcomponents.FormattedSelection(selection.String(), exit))
 	if exit {
 		return ParentOutcomeExit, selection, err
 	}
