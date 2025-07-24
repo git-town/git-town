@@ -287,7 +287,6 @@ func verifySetParentData(data setParentData) error {
 
 func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdomain.LocalBranchName, data setParentData) (prog program.Program, exit dialogdomain.Exit) {
 	proposal, hasProposal := data.proposal.Get()
-	parentOpt := data.config.NormalConfig.Lineage.Parent(data.initialBranch)
 	// update lineage
 	switch dialogOutcome {
 	case dialog.ParentOutcomeExit:
@@ -317,6 +316,7 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 					&opcodes.PullCurrentBranch{},
 				)
 			}
+			parentOpt := data.config.NormalConfig.Lineage.Parent(data.initialBranch)
 			if parent, hasParent := parentOpt.Get(); hasParent {
 				prog.Add(
 					&opcodes.RebaseOntoKeepDeleted{
