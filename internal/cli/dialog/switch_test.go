@@ -39,7 +39,7 @@ func TestCreateSwitchBranchEntries(t *testing.T) {
 				branchesAndTypes := configdomain.BranchesAndTypes{}
 				unknownBranchType := configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch)
 				regexes := []*regexp.Regexp{}
-				have := dialog.CreateSwitchBranchEntries(dialog.CreateSwitchBranchArgs{
+				have := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
 					BranchInfos:       branchInfos,
 					BranchTypes:       branchTypes,
 					BranchesAndTypes:  branchesAndTypes,
@@ -70,7 +70,7 @@ func TestCreateSwitchBranchEntries(t *testing.T) {
 				branchesAndTypes := configdomain.BranchesAndTypes{}
 				unknownBranchType := configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch)
 				regexes := []*regexp.Regexp{}
-				have := dialog.CreateSwitchBranchEntries(dialog.CreateSwitchBranchArgs{
+				have := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
 					BranchInfos:       branchInfos,
 					BranchTypes:       branchTypes,
 					BranchesAndTypes:  branchesAndTypes,
@@ -105,7 +105,7 @@ func TestCreateSwitchBranchEntries(t *testing.T) {
 			branchesAndTypes := configdomain.BranchesAndTypes{}
 			unknownBranchType := configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch)
 			regexes := []*regexp.Regexp{}
-			have := dialog.CreateSwitchBranchEntries(dialog.CreateSwitchBranchArgs{
+			have := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
 				BranchInfos:       branchInfos,
 				BranchTypes:       branchTypes,
 				BranchesAndTypes:  branchesAndTypes,
@@ -139,7 +139,7 @@ func TestCreateSwitchBranchEntries(t *testing.T) {
 				branchesAndTypes := configdomain.BranchesAndTypes{}
 				unknownBranchType := configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch)
 				regexes := []*regexp.Regexp{}
-				have := dialog.CreateSwitchBranchEntries(dialog.CreateSwitchBranchArgs{
+				have := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
 					BranchInfos:       branchInfos,
 					BranchTypes:       branchTypes,
 					BranchesAndTypes:  branchesAndTypes,
@@ -173,7 +173,7 @@ func TestCreateSwitchBranchEntries(t *testing.T) {
 				branchesAndTypes := configdomain.BranchesAndTypes{}
 				unknownBranchType := configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch)
 				regexes := []*regexp.Regexp{}
-				have := dialog.CreateSwitchBranchEntries(dialog.CreateSwitchBranchArgs{
+				have := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
 					BranchInfos:       branchInfos,
 					BranchTypes:       branchTypes,
 					BranchesAndTypes:  branchesAndTypes,
@@ -204,7 +204,7 @@ func TestCreateSwitchBranchEntries(t *testing.T) {
 				branchesAndTypes := configdomain.BranchesAndTypes{}
 				unknownBranchType := configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch)
 				regexes := []*regexp.Regexp{}
-				have := dialog.CreateSwitchBranchEntries(dialog.CreateSwitchBranchArgs{
+				have := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
 					BranchInfos:       branchInfos,
 					BranchTypes:       branchTypes,
 					BranchesAndTypes:  branchesAndTypes,
@@ -246,7 +246,7 @@ func TestCreateSwitchBranchEntries(t *testing.T) {
 				}
 				unknownBranchType := configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch)
 				regexes := []*regexp.Regexp{}
-				have := dialog.CreateSwitchBranchEntries(dialog.CreateSwitchBranchArgs{
+				have := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
 					BranchInfos:       branchInfos,
 					BranchTypes:       branchTypes,
 					BranchesAndTypes:  branchesAndTypes,
@@ -286,7 +286,7 @@ func TestCreateSwitchBranchEntries(t *testing.T) {
 				}
 				unknownBranchType := configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch)
 				regexes := []*regexp.Regexp{}
-				have := dialog.CreateSwitchBranchEntries(dialog.CreateSwitchBranchArgs{
+				have := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
 					BranchInfos:       branchInfos,
 					BranchTypes:       branchTypes,
 					BranchesAndTypes:  branchesAndTypes,
@@ -323,7 +323,7 @@ func TestCreateSwitchBranchEntries(t *testing.T) {
 				unknownBranchType := configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch)
 				regexes, err := regexes.NewRegexes([]string{})
 				must.NoError(t, err)
-				have := dialog.CreateSwitchBranchEntries(dialog.CreateSwitchBranchArgs{
+				have := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
 					BranchInfos:       branchInfos,
 					BranchTypes:       branchTypes,
 					BranchesAndTypes:  branchesAndTypes,
@@ -358,7 +358,7 @@ func TestCreateSwitchBranchEntries(t *testing.T) {
 				unknownBranchType := configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch)
 				regexes, err := regexes.NewRegexes([]string{"observed-"})
 				must.NoError(t, err)
-				have := dialog.CreateSwitchBranchEntries(dialog.CreateSwitchBranchArgs{
+				have := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
 					BranchInfos:       branchInfos,
 					BranchTypes:       branchTypes,
 					BranchesAndTypes:  branchesAndTypes,
@@ -390,7 +390,7 @@ func TestCreateSwitchBranchEntries(t *testing.T) {
 				unknownBranchType := configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch)
 				regexes, err := regexes.NewRegexes([]string{"observed-", "main"})
 				must.NoError(t, err)
-				have := dialog.CreateSwitchBranchEntries(dialog.CreateSwitchBranchArgs{
+				have := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
 					BranchInfos:       branchInfos,
 					BranchTypes:       branchTypes,
 					BranchesAndTypes:  branchesAndTypes,
