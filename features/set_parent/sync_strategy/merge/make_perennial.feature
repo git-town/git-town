@@ -30,7 +30,7 @@ Feature: remove a branch from a stack
   Scenario: result
     Then Git Town prints:
       """
-      Selected parent branch for "branch-2": <none> (perennial branch)
+      Branch "branch-2" is now perennial.
       """
     And Git Town runs no commands
     And these commits exist now
