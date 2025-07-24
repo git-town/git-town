@@ -148,7 +148,6 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult, cliConf
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesAndTypes:   branchesAndTypes,
-		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{branch},
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
