@@ -28,8 +28,7 @@ echo "
 line 1a
 line 2a
 " >file
-git add file
-git commit -m commit-A
+git add file && git commit -m commit-A
 
 echo "CREATE BRANCH B"
 git town hack branch-B
@@ -37,8 +36,7 @@ echo "
 line 1b
 line 2b
 " >file
-git add file
-git commit -m commit-B
+git add file && git commit -m commit-B
 
 echo "SHIP BRANCH A"
 git checkout main
