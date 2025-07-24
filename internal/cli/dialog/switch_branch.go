@@ -174,6 +174,9 @@ func (self SwitchModel) View() string {
 func NewSwitchBranchEntries(args NewSwitchBranchEntriesArgs) SwitchBranchEntries {
 	entries := make(SwitchBranchEntries, 0, args.Lineage.Len())
 	roots := args.Lineage.Roots()
+	if mainBranch, hasMainBranch := args.MainBranch.Get(); hasMainBranch {
+		roots = roots.Hoist(mainBranch)
+	}
 	// add all entries from the lineage
 	for _, root := range roots {
 		layoutBranches(layoutBranchesArgs{
@@ -226,6 +229,7 @@ type NewSwitchBranchEntriesArgs struct {
 	BranchesAndTypes  configdomain.BranchesAndTypes
 	ExcludeBranches   gitdomain.LocalBranchNames
 	Lineage           configdomain.Lineage
+	MainBranch        Option[gitdomain.LocalBranchName]
 	Regexes           []*regexp.Regexp
 	ShowAllBranches   configdomain.AllBranches
 	UnknownBranchType configdomain.UnknownBranchType
@@ -257,7 +261,7 @@ func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomai
 		DisplayBranchTypes: args.DisplayBranchTypes,
 		InitialBranchPos:   initialBranchPos,
 		List:               list.NewList(newSwitchBranchListEntries(args.Entries), args.Cursor),
-		Title:              None[string](),
+		Title:              args.Title,
 		UncommittedChanges: args.UncommittedChanges,
 	})
 	dialogcomponents.SendInputs(args.InputName, args.Inputs.Next(), dialogProgram)

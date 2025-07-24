@@ -116,6 +116,7 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 			BranchesAndTypes:  repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchesSnapshot.Branches.Names()),
 			ExcludeBranches:   excludeBranches,
 			Lineage:           repo.UnvalidatedConfig.NormalConfig.Lineage,
+			MainBranch:        repo.UnvalidatedConfig.UnvalidatedConfig.MainBranch,
 			Regexes:           []*regexp.Regexp{},
 			ShowAllBranches:   false,
 			UnknownBranchType: repo.UnvalidatedConfig.NormalConfig.UnknownBranchType,

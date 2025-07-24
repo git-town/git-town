@@ -64,6 +64,7 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 			BranchesAndTypes:  args.BranchesAndTypes,
 			ExcludeBranches:   excludeBranches,
 			Lineage:           args.Config.NormalConfig.Lineage,
+			MainBranch:        Some(args.MainBranch),
 			Regexes:           []*regexp.Regexp{},
 			ShowAllBranches:   true,
 			UnknownBranchType: args.Config.NormalConfig.UnknownBranchType,

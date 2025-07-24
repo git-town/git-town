@@ -5,6 +5,7 @@ Feature: merging with missing lineage
     Given a Git repo with origin
     And I ran "git checkout -b alpha"
     And I ran "git checkout -b beta"
+    And inspect the repo
     When I run "git-town merge" and enter into the dialog:
       | DIALOG                    | KEYS       |
       | parent branch for "beta"  | down enter |
