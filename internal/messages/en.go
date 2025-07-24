@@ -193,7 +193,6 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	OpenChangesProblem                    = "cannot determine open changes: %w"
 	OriginHostnamePrompt                  = "Origin hostname override: "
 	OriginHostnameResult                  = "Origin hostname: %s\n"
-	ParentDialogSelected                  = "Selected parent branch for %q: %s\n"
 	ParkedRemoved                         = "branch %q is no longer parked"
 	PerennialBranchCannotMakeContribution = "cannot make perennial branches contribution branches"
 	PerennialBranchCannotObserve          = "cannot observe perennial branches"
