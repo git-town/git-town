@@ -95,10 +95,8 @@ func (self SwitchModel) View() string {
 	for i := window.StartRow; i < window.EndRow; i++ {
 		entry := self.Entries[i]
 		isSelected := i == self.Cursor
-		isInitial := false
-		if initialBranchPos, has := self.InitialBranchPos.Get(); has {
-			isInitial = i == initialBranchPos
-		}
+		initialBranchPos, hasInitialBranchPos := self.InitialBranchPos.Get()
+		isInitial := hasInitialBranchPos && i == initialBranchPos
 		switch {
 		case isSelected:
 			color := self.Colors.Selection
