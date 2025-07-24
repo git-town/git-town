@@ -64,13 +64,13 @@ lint: tools/node_modules tools/rta@${RTA_VERSION}  # lints the main codebase con
 	make --no-print-directory lint-use-equal
 	git diff --check
 	(cd tools/lint_steps && go build && ./lint_steps)
-	tools/rta node tools/node_modules/.bin/gherkin-lint
 	tools/rta actionlint
 	tools/rta --from-source staticcheck ./...
 	tools/ensure_no_files_with_dashes.sh
 	tools/rta shfmt -f . | grep -v 'tools/node_modules' | grep -v '^vendor/' | xargs tools/rta --optional shellcheck
 	tools/rta golangci-lint cache clean
 	tools/rta golangci-lint run
+	tools/rta node tools/node_modules/.bin/gherkin-lint
 
 lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	(cd website && make test)

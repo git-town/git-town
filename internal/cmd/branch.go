@@ -65,7 +65,17 @@ func executeBranch(cliConfig cliconfig.CliConfig) error {
 	if err != nil || exit {
 		return err
 	}
-	entries := SwitchBranchEntries(data.branchInfos, []configdomain.BranchType{}, data.branchesAndTypes, repo.UnvalidatedConfig.NormalConfig.Lineage, repo.UnvalidatedConfig.NormalConfig.UnknownBranchType, false, []*regexp.Regexp{})
+	entries := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
+		BranchInfos:       data.branchInfos,
+		BranchTypes:       []configdomain.BranchType{},
+		BranchesAndTypes:  data.branchesAndTypes,
+		ExcludeBranches:   gitdomain.LocalBranchNames{},
+		Lineage:           repo.UnvalidatedConfig.NormalConfig.Lineage,
+		MainBranch:        repo.UnvalidatedConfig.UnvalidatedConfig.MainBranch,
+		Regexes:           []*regexp.Regexp{},
+		ShowAllBranches:   false,
+		UnknownBranchType: repo.UnvalidatedConfig.NormalConfig.UnknownBranchType,
+	})
 	fmt.Print(branchLayout(entries, data))
 	return nil
 }

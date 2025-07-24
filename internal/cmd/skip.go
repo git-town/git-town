@@ -118,8 +118,8 @@ func executeSkip(cliConfig cliconfig.CliConfig) error {
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
+		BranchInfos:        branchesSnapshot.Branches,
 		BranchesAndTypes:   branchesAndTypes,
-		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: localBranches,
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,

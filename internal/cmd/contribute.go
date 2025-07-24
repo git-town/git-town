@@ -111,7 +111,7 @@ type contributeData struct {
 
 func printContributeBranches(branches gitdomain.LocalBranchNames) {
 	for _, branch := range branches {
-		fmt.Printf(messages.ContributeBranchIsNowContribution, branch)
+		fmt.Printf(messages.BranchIsNowContribution, branch)
 	}
 }
 

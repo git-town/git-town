@@ -104,7 +104,7 @@ type parkData struct {
 
 func printParkedBranches(branches gitdomain.LocalBranchNames) {
 	for _, branch := range branches {
-		fmt.Printf(messages.ParkedBranchIsNowParked, branch)
+		fmt.Printf(messages.BranchIsNowParked, branch)
 	}
 }
 
