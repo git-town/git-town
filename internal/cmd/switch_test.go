@@ -41,12 +41,12 @@ func TestSwitchBranch(t *testing.T) {
 				unknownBranchType := configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch)
 				regexes := []*regexp.Regexp{}
 				have := cmd.SwitchBranchEntries(cmd.SwitchBranchArgs{
-					ShowAllBranches:   false,
 					BranchInfos:       branchInfos,
 					BranchTypes:       branchTypes,
 					BranchesAndTypes:  branchesAndTypes,
 					Lineage:           lineage,
 					Regexes:           regexes,
+					ShowAllBranches:   false,
 					UnknownBranchType: unknownBranchType,
 				})
 				want := dialog.SwitchBranchEntries{
@@ -72,12 +72,12 @@ func TestSwitchBranch(t *testing.T) {
 				unknownBranchType := configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch)
 				regexes := []*regexp.Regexp{}
 				have := cmd.SwitchBranchEntries(cmd.SwitchBranchArgs{
-					ShowAllBranches:   false,
 					BranchInfos:       branchInfos,
 					BranchTypes:       branchTypes,
 					BranchesAndTypes:  branchesAndTypes,
 					Lineage:           lineage,
 					Regexes:           regexes,
+					ShowAllBranches:   false,
 					UnknownBranchType: unknownBranchType,
 				})
 				want := dialog.SwitchBranchEntries{
@@ -107,12 +107,12 @@ func TestSwitchBranch(t *testing.T) {
 			unknownBranchType := configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch)
 			regexes := []*regexp.Regexp{}
 			have := cmd.SwitchBranchEntries(cmd.SwitchBranchArgs{
-				ShowAllBranches:   false,
 				BranchInfos:       branchInfos,
 				BranchTypes:       branchTypes,
 				BranchesAndTypes:  branchesAndTypes,
 				Lineage:           lineage,
 				Regexes:           regexes,
+				ShowAllBranches:   false,
 				UnknownBranchType: unknownBranchType,
 			})
 			want := dialog.SwitchBranchEntries{
@@ -141,12 +141,12 @@ func TestSwitchBranch(t *testing.T) {
 				unknownBranchType := configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch)
 				regexes := []*regexp.Regexp{}
 				have := cmd.SwitchBranchEntries(cmd.SwitchBranchArgs{
-					ShowAllBranches:   false,
 					BranchInfos:       branchInfos,
 					BranchTypes:       branchTypes,
 					BranchesAndTypes:  branchesAndTypes,
 					Lineage:           lineage,
 					Regexes:           regexes,
+					ShowAllBranches:   false,
 					UnknownBranchType: unknownBranchType,
 				})
 				want := dialog.SwitchBranchEntries{
@@ -175,12 +175,12 @@ func TestSwitchBranch(t *testing.T) {
 				unknownBranchType := configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch)
 				regexes := []*regexp.Regexp{}
 				have := cmd.SwitchBranchEntries(cmd.SwitchBranchArgs{
-					ShowAllBranches:   false,
 					BranchInfos:       branchInfos,
 					BranchTypes:       branchTypes,
 					BranchesAndTypes:  branchesAndTypes,
 					Lineage:           lineage,
 					Regexes:           regexes,
+					ShowAllBranches:   false,
 					UnknownBranchType: unknownBranchType,
 				})
 				want := dialog.SwitchBranchEntries{
@@ -206,12 +206,12 @@ func TestSwitchBranch(t *testing.T) {
 				unknownBranchType := configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch)
 				regexes := []*regexp.Regexp{}
 				have := cmd.SwitchBranchEntries(cmd.SwitchBranchArgs{
-					ShowAllBranches:   true,
 					BranchInfos:       branchInfos,
 					BranchTypes:       branchTypes,
 					BranchesAndTypes:  branchesAndTypes,
 					Lineage:           lineage,
 					Regexes:           regexes,
+					ShowAllBranches:   true,
 					UnknownBranchType: unknownBranchType,
 				})
 				want := dialog.SwitchBranchEntries{
@@ -248,12 +248,12 @@ func TestSwitchBranch(t *testing.T) {
 				unknownBranchType := configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch)
 				regexes := []*regexp.Regexp{}
 				have := cmd.SwitchBranchEntries(cmd.SwitchBranchArgs{
-					ShowAllBranches:   false,
 					BranchInfos:       branchInfos,
 					BranchTypes:       branchTypes,
 					BranchesAndTypes:  branchesAndTypes,
 					Lineage:           lineage,
 					Regexes:           regexes,
+					ShowAllBranches:   false,
 					UnknownBranchType: unknownBranchType,
 				})
 				want := dialog.SwitchBranchEntries{
@@ -288,12 +288,12 @@ func TestSwitchBranch(t *testing.T) {
 				unknownBranchType := configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch)
 				regexes := []*regexp.Regexp{}
 				have := cmd.SwitchBranchEntries(cmd.SwitchBranchArgs{
-					ShowAllBranches:   false,
 					BranchInfos:       branchInfos,
 					BranchTypes:       branchTypes,
 					BranchesAndTypes:  branchesAndTypes,
 					Lineage:           lineage,
 					Regexes:           regexes,
+					ShowAllBranches:   false,
 					UnknownBranchType: unknownBranchType,
 				})
 				want := dialog.SwitchBranchEntries{
@@ -325,12 +325,12 @@ func TestSwitchBranch(t *testing.T) {
 				regexes, err := regexes.NewRegexes([]string{})
 				must.NoError(t, err)
 				have := cmd.SwitchBranchEntries(cmd.SwitchBranchArgs{
-					ShowAllBranches:   false,
 					BranchInfos:       branchInfos,
 					BranchTypes:       branchTypes,
 					BranchesAndTypes:  branchesAndTypes,
 					Lineage:           lineage,
 					Regexes:           regexes,
+					ShowAllBranches:   false,
 					UnknownBranchType: unknownBranchType,
 				})
 				want := dialog.SwitchBranchEntries{
@@ -360,12 +360,12 @@ func TestSwitchBranch(t *testing.T) {
 				regexes, err := regexes.NewRegexes([]string{"observed-"})
 				must.NoError(t, err)
 				have := cmd.SwitchBranchEntries(cmd.SwitchBranchArgs{
-					ShowAllBranches:   false,
 					BranchInfos:       branchInfos,
 					BranchTypes:       branchTypes,
 					BranchesAndTypes:  branchesAndTypes,
 					Lineage:           lineage,
 					Regexes:           regexes,
+					ShowAllBranches:   false,
 					UnknownBranchType: unknownBranchType,
 				})
 				want := dialog.SwitchBranchEntries{
@@ -392,12 +392,12 @@ func TestSwitchBranch(t *testing.T) {
 				regexes, err := regexes.NewRegexes([]string{"observed-", "main"})
 				must.NoError(t, err)
 				have := cmd.SwitchBranchEntries(cmd.SwitchBranchArgs{
-					ShowAllBranches:   false,
 					BranchInfos:       branchInfos,
 					BranchTypes:       branchTypes,
 					BranchesAndTypes:  branchesAndTypes,
 					Lineage:           lineage,
 					Regexes:           regexes,
+					ShowAllBranches:   false,
 					UnknownBranchType: unknownBranchType,
 				})
 				want := dialog.SwitchBranchEntries{
