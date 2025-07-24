@@ -260,7 +260,7 @@ func determineSetParentData(repo execute.OpenRepoResult, cliConfig cliconfig.Cli
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesAndTypes:   branchesAndTypes,
-		BranchesSnapshot:   branchesSnapshot,
+		BranchInfos:        branchesSnapshot.Branches,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
