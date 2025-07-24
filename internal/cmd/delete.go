@@ -229,8 +229,8 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult, cliConfig c
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
-		BranchesAndTypes:   branchesAndTypes,
 		BranchInfos:        branchesSnapshot.Branches,
+		BranchesAndTypes:   branchesAndTypes,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,

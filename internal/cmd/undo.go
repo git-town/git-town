@@ -155,8 +155,8 @@ func determineUndoData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfi
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
-		BranchesAndTypes:   branchesAndTypes,
 		BranchInfos:        branchesSnapshot.Branches,
+		BranchesAndTypes:   branchesAndTypes,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
