@@ -13,7 +13,7 @@ type ProposalLineageBuilder interface {
 	// Adds the next branch in the lineage chain
 	AddBranch(childBranch gitdomain.LocalBranchName, parentBranch Option[gitdomain.LocalBranchName]) (ProposalLineageBuilder, error)
 	// Build - creates the proposal lineage based on the display location
-	Build(currentBranch gitdomain.LocalBranchName, location LineageDisplayLocation) Option[string]
+	Build(currentBranch gitdomain.LocalBranchName, location ProposalLineageIn) Option[string]
 }
 
 func NewProposalLineageBuilder(connector forgedomain.Connector, exemptBranches ...gitdomain.LocalBranchName) ProposalLineageBuilder {
@@ -69,7 +69,7 @@ func (self *proposalLineageBuilder) AddBranch(childBranch gitdomain.LocalBranchN
 	return self, nil
 }
 
-func (self *proposalLineageBuilder) Build(currentBranch gitdomain.LocalBranchName, location LineageDisplayLocation) Option[string] {
+func (self *proposalLineageBuilder) Build(currentBranch gitdomain.LocalBranchName, location ProposalLineageIn) Option[string] {
 	var builder strings.Builder
 	builder.WriteString("### This proposal is part of stack\n\n")
 	length := len(self.orderedLineage)
@@ -87,18 +87,18 @@ func (self *proposalLineageBuilder) Build(currentBranch gitdomain.LocalBranchNam
 		}
 
 		if currentBranch == proposalData.Source {
-			builder.WriteString(fmt.Sprintf("%s↳ #%d [%s](%s) %s\n", indent, proposalData.Number, proposalData.Title, proposalData.URL, currentBranchExpression))
+			builder.WriteString(fmt.Sprintf("%s #%d [%s](%s) %s\n", indent, proposalData.Number, proposalData.Title, proposalData.URL, currentBranchExpression))
 		} else {
-			builder.WriteString(fmt.Sprintf("%s↳ #%d [%s](%s)\n", indent, proposalData.Number, proposalData.Title, proposalData.URL))
+			builder.WriteString(fmt.Sprintf("%s #%d [%s](%s)\n", indent, proposalData.Number, proposalData.Title, proposalData.URL))
 		}
 	}
 
 	return Some(builder.String())
 }
 
-func currentBranchProposalExpression(location LineageDisplayLocation) string {
+func currentBranchProposalExpression(location ProposalLineageIn) string {
 	response := ":point_left:"
-	if location == LineageDisplayLocationTerminal {
+	if location == ProposalLineageInTerminal {
 		response = "☜"
 	}
 
@@ -111,6 +111,6 @@ func (self *noopProposalLineageBuilder) AddBranch(childBranch gitdomain.LocalBra
 	return self, nil
 }
 
-func (self *noopProposalLineageBuilder) Build(currentBranch gitdomain.LocalBranchName, location LineageDisplayLocation) Option[string] {
+func (self *noopProposalLineageBuilder) Build(currentBranch gitdomain.LocalBranchName, location ProposalLineageIn) Option[string] {
 	return None[string]()
 }
