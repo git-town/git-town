@@ -110,7 +110,7 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 			gitdomain.LocalBranchNames{data.initialBranch},
 			data.config.NormalConfig.Lineage.Children(data.initialBranch)...,
 		)
-		entries := SwitchBranchEntries(SwitchBranchArgs{
+		entries := dialog.CreateSwitchBranchEntries(dialog.CreateSwitchBranchArgs{
 			AllBranches:       false,
 			BranchInfos:       data.branchesSnapshot.Branches,
 			BranchTypes:       []configdomain.BranchType{},

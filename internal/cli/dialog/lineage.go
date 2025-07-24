@@ -1,6 +1,7 @@
 package dialog
 
 import (
+	"regexp"
 	"slices"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
@@ -50,14 +51,32 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 			}
 		}
 		// ask for parent
-		outcome, selectedBranch, err := Parent(ParentArgs{
-			Branch:        branchToVerify,
-			DefaultChoice: args.DefaultChoice,
-			Inputs:        args.Inputs,
-			Lineage:       args.Lineage,
-			LocalBranches: args.LocalBranches,
-			MainBranch:    args.MainBranch,
+		entries := CreateSwitchBranchEntries(CreateSwitchBranchArgs{
+			AllBranches:       false,
+			BranchInfos:       gitdomain.BranchInfos{},
+			BranchTypes:       []configdomain.BranchType{},
+			BranchesAndTypes:  configdomain.BranchesAndTypes{},
+			ExcludeBranches:   gitdomain.LocalBranchNames{},
+			Lineage:           additionalLineage,
+			Regexes:           []*regexp.Regexp{},
+			UnknownBranchType: "",
 		})
+		outcome, selectedBranch, err := SwitchBranch(SwitchBranchArgs{
+			CurrentBranch:      None[gitdomain.LocalBranchName](),
+			Cursor:             0,
+			DisplayBranchTypes: false,
+			Entries:            SwitchBranchEntries{},
+			InputName:          "",
+			Inputs:             dialogcomponents.Inputs{},
+			UncommittedChanges: false,
+		})
+		// 	Branch:        branchToVerify,
+		// 	DefaultChoice: args.DefaultChoice,
+		// 	Inputs:        args.Inputs,
+		// 	Lineage:       args.Lineage,
+		// 	LocalBranches: args.LocalBranches,
+		// 	MainBranch:    args.MainBranch,
+		// })
 		if err != nil {
 			return additionalLineage, additionalPerennials, false, err
 		}
