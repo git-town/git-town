@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
@@ -51,15 +52,19 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 			}
 		}
 		// ask for parent
+		excludeBranches := append(
+			gitdomain.LocalBranchNames{branchToVerify},
+			args.Lineage.Children(branchToVerify)...,
+		)
 		entries := NewSwitchBranchEntries(NewSwitchBranchEntriesArgs{
-			ShowAllBranches:   false,
-			BranchInfos:       gitdomain.BranchInfos{},
+			BranchInfos:       args.BranchInfos,
 			BranchTypes:       []configdomain.BranchType{},
-			BranchesAndTypes:  configdomain.BranchesAndTypes{},
-			ExcludeBranches:   gitdomain.LocalBranchNames{},
-			Lineage:           additionalLineage,
+			BranchesAndTypes:  args.BranchesAndTypes,
+			ExcludeBranches:   excludeBranches,
+			Lineage:           args.Lineage,
 			Regexes:           []*regexp.Regexp{},
-			UnknownBranchType: "",
+			ShowAllBranches:   true,
+			UnknownBranchType: args.UnvalidatedConfig.NormalConfig.UnknownBranchType,
 		})
 		outcome, selectedBranch, err := SwitchBranch(SwitchBranchArgs{
 			CurrentBranch:      None[gitdomain.LocalBranchName](),
@@ -70,13 +75,6 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 			Inputs:             args.Inputs,
 			UncommittedChanges: false,
 		})
-		// 	Branch:        branchToVerify,
-		// 	DefaultChoice: args.DefaultChoice,
-		// 	Inputs:        args.Inputs,
-		// 	Lineage:       args.Lineage,
-		// 	LocalBranches: args.LocalBranches,
-		// 	MainBranch:    args.MainBranch,
-		// })
 		if err != nil {
 			return additionalLineage, additionalPerennials, false, err
 		}
@@ -94,6 +92,7 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 }
 
 type LineageArgs struct {
+	BranchInfos       gitdomain.BranchInfos
 	BranchesAndTypes  configdomain.BranchesAndTypes
 	BranchesToVerify  gitdomain.LocalBranchNames
 	Connector         Option[forgedomain.Connector]
@@ -103,4 +102,5 @@ type LineageArgs struct {
 	LocalBranches     gitdomain.LocalBranchNames
 	MainBranch        gitdomain.LocalBranchName
 	PerennialBranches gitdomain.LocalBranchNames
+	UnvalidatedConfig config.UnvalidatedConfig
 }
