@@ -39,6 +39,7 @@ func switchBranch() *cobra.Command {
 				Entries:            entries,
 				InputName:          `parent-branch-for-"main"`,
 				Inputs:             inputs,
+				Title:              Some("select a branch"),
 				UncommittedChanges: false,
 			})
 			return err

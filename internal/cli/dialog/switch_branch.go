@@ -257,6 +257,7 @@ func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomai
 		DisplayBranchTypes: args.DisplayBranchTypes,
 		InitialBranchPos:   initialBranchPos,
 		List:               list.NewList(newSwitchBranchListEntries(args.Entries), args.Cursor),
+		Title:              None[string](),
 		UncommittedChanges: args.UncommittedChanges,
 	})
 	dialogcomponents.SendInputs(args.InputName, args.Inputs.Next(), dialogProgram)

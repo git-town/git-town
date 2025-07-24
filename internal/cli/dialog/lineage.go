@@ -82,7 +82,7 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 			Entries:            entries,
 			InputName:          "",
 			Inputs:             args.Inputs,
-			Title:              Some(fmt.Sprintf(parentBranchTitleTemplate, branchToVerify)),
+			Title:              Some(fmt.Sprintf(ParentBranchTitleTemplate, branchToVerify)),
 			UncommittedChanges: false,
 		})
 		if err != nil || exit {
