@@ -125,7 +125,7 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 			Branch:        messages.SetParentNoneOption,
 			Indentation:   "",
 			OtherWorktree: false,
-			Type:          configdomain.BranchTypePerennialBranch,
+			Type:          configdomain.BranchTypeFeatureBranch,
 		}
 		entries = append(dialog.SwitchBranchEntries{noneEntry}, entries...)
 		cursor := entries.IndexOf(data.defaultChoice)
