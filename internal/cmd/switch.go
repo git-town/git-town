@@ -6,7 +6,6 @@ import (
 	"os"
 	"os/exec"
 	"regexp"
-	"slices"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
@@ -80,7 +79,7 @@ func executeSwitch(args []string, cliConfig cliconfig.CliConfig, allBranches con
 	}
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchNames)
 	unknownBranchType := repo.UnvalidatedConfig.NormalConfig.UnknownBranchType
-	entries := NewSwitchBranchEntries(SwitchBranchArgs{
+	entries := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
 		BranchInfos:       data.branchesSnapshot.Branches,
 		BranchTypes:       branchTypes,
 		BranchesAndTypes:  branchesAndTypes,
@@ -178,127 +177,4 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult, cliConfig c
 		regexes:            regexes,
 		uncommittedChanges: repoStatus.OpenChanges,
 	}, false, err
-}
-
-// NewSwitchBranchEntries provides the entries for the "switch branch" components.
-func NewSwitchBranchEntries(args SwitchBranchArgs) dialog.SwitchBranchEntries {
-	entries := make(dialog.SwitchBranchEntries, 0, args.Lineage.Len())
-	roots := args.Lineage.Roots()
-	// add all entries from the lineage
-	for _, root := range roots {
-		layoutBranches(layoutBranchesArgs{
-			branch:            root,
-			branchInfos:       args.BranchInfos,
-			branchTypes:       args.BranchTypes,
-			branchesAndTypes:  args.BranchesAndTypes,
-			excludeBranches:   args.ExcludeBranches,
-			indentation:       "",
-			lineage:           args.Lineage,
-			regexes:           args.Regexes,
-			result:            &entries,
-			showAllBranches:   args.ShowAllBranches,
-			unknownBranchType: args.UnknownBranchType,
-		})
-	}
-	// add branches not in the lineage
-	branchesInLineage := args.Lineage.BranchesWithParents()
-	for _, branchInfo := range args.BranchInfos {
-		localBranch := branchInfo.LocalBranchName()
-		if slices.Contains(roots, localBranch) {
-			continue
-		}
-		if slices.Contains(branchesInLineage, localBranch) {
-			continue
-		}
-		if entries.ContainsBranch(localBranch) {
-			continue
-		}
-		layoutBranches(layoutBranchesArgs{
-			branch:            localBranch,
-			branchInfos:       args.BranchInfos,
-			branchTypes:       args.BranchTypes,
-			branchesAndTypes:  args.BranchesAndTypes,
-			excludeBranches:   args.ExcludeBranches,
-			indentation:       "",
-			lineage:           args.Lineage,
-			regexes:           args.Regexes,
-			result:            &entries,
-			showAllBranches:   args.ShowAllBranches,
-			unknownBranchType: args.UnknownBranchType,
-		})
-	}
-	return entries
-}
-
-type SwitchBranchArgs struct {
-	BranchInfos       gitdomain.BranchInfos
-	BranchTypes       []configdomain.BranchType
-	BranchesAndTypes  configdomain.BranchesAndTypes
-	ExcludeBranches   gitdomain.LocalBranchNames
-	Lineage           configdomain.Lineage
-	Regexes           []*regexp.Regexp
-	ShowAllBranches   configdomain.AllBranches
-	UnknownBranchType configdomain.UnknownBranchType
-}
-
-// layoutBranches adds entries for the given branch and its children to the given entry list.
-// The entries are indented according to their position in the given lineage.
-func layoutBranches(args layoutBranchesArgs) {
-	if args.excludeBranches.Contains(args.branch) {
-		return
-	}
-	if args.branchInfos.HasLocalBranch(args.branch) || args.showAllBranches.Enabled() {
-		var otherWorktree bool
-		if branchInfo, hasBranchInfo := args.branchInfos.FindByLocalName(args.branch).Get(); hasBranchInfo {
-			otherWorktree = branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
-		} else {
-			otherWorktree = false
-		}
-		branchType, hasBranchType := args.branchesAndTypes[args.branch]
-		if !hasBranchType && len(args.branchTypes) > 0 {
-			branchType = args.unknownBranchType.BranchType()
-		}
-		var hasCorrectBranchType bool
-		if len(args.branchTypes) == 0 || slices.Contains(args.branchTypes, branchType) {
-			hasCorrectBranchType = true
-		}
-		matchesRegex := args.regexes.Matches(args.branch.String())
-		if hasCorrectBranchType && matchesRegex {
-			*args.result = append(*args.result, dialog.SwitchBranchEntry{
-				Branch:        args.branch,
-				Indentation:   args.indentation,
-				OtherWorktree: otherWorktree,
-				Type:          branchType,
-			})
-		}
-	}
-	for _, child := range args.lineage.Children(args.branch) {
-		layoutBranches(layoutBranchesArgs{
-			branch:            child,
-			branchInfos:       args.branchInfos,
-			branchTypes:       args.branchTypes,
-			branchesAndTypes:  args.branchesAndTypes,
-			excludeBranches:   args.excludeBranches,
-			indentation:       args.indentation + "  ",
-			lineage:           args.lineage,
-			regexes:           args.regexes,
-			result:            args.result,
-			showAllBranches:   args.showAllBranches,
-			unknownBranchType: args.unknownBranchType,
-		})
-	}
-}
-
-type layoutBranchesArgs struct {
-	branch            gitdomain.LocalBranchName
-	branchInfos       gitdomain.BranchInfos
-	branchTypes       []configdomain.BranchType
-	branchesAndTypes  configdomain.BranchesAndTypes
-	excludeBranches   gitdomain.LocalBranchNames
-	indentation       string
-	lineage           configdomain.Lineage
-	regexes           regexes.Regexes
-	result            *dialog.SwitchBranchEntries
-	showAllBranches   configdomain.AllBranches
-	unknownBranchType configdomain.UnknownBranchType
 }
