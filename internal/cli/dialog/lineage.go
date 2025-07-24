@@ -83,7 +83,7 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 			Entries:            entries,
 			InputName:          fmt.Sprintf("parent-branch-for-%q", branchToVerify),
 			Inputs:             args.Inputs,
-			Title:              Some(fmt.Sprintf(ParentBranchTitleTemplate, branchToVerify)),
+			Title:              Some(fmt.Sprintf(messages.ParentBranchTitle, branchToVerify)),
 			UncommittedChanges: false,
 		})
 		if err != nil || exit {

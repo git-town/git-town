@@ -6,16 +6,6 @@ import (
 
 var PerennialBranchOption = gitdomain.LocalBranchName("<none> (perennial branch)")
 
-const (
-	ParentBranchTitleTemplate = `Parent branch for %s`
-	parentBranchHelpTemplate  = `
-Please select the parent of branch %q
-or enter its number.
-
-
-`
-)
-
 // ParentOutcome describes the selection that the user made in the `Parent` dialog.
 type ParentOutcome int
 

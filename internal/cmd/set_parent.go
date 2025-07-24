@@ -135,7 +135,7 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 			Entries:            entries,
 			InputName:          fmt.Sprintf("parent-branch-for-%q", data.initialBranch),
 			Inputs:             data.inputs,
-			Title:              Some(fmt.Sprintf(dialog.ParentBranchTitleTemplate, data.initialBranch)),
+			Title:              Some(fmt.Sprintf(messages.ParentBranchTitle, data.initialBranch)),
 			UncommittedChanges: false,
 		})
 		if err != nil || exit {
