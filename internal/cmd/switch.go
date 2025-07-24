@@ -85,6 +85,7 @@ func executeSwitch(args []string, cliConfig cliconfig.CliConfig, allBranches con
 		BranchInfos:       data.branchesSnapshot.Branches,
 		BranchTypes:       branchTypes,
 		BranchesAndTypes:  branchesAndTypes,
+		ExcludeBranches:   gitdomain.LocalBranchNames{},
 		Lineage:           data.config.NormalConfig.Lineage,
 		Regexes:           data.regexes,
 		UnknownBranchType: unknownBranchType,
@@ -94,9 +95,11 @@ func executeSwitch(args []string, cliConfig cliconfig.CliConfig, allBranches con
 	}
 	cursor := entries.IndexOf(data.initialBranch)
 	branchToCheckout, exit, err := dialog.SwitchBranch(dialog.SwitchBranchArgs{
+		CurrentBranch:      Some(data.initialBranch),
 		Cursor:             cursor,
 		DisplayBranchTypes: displayTypes,
 		Entries:            entries,
+		InputName:          "switch-branch",
 		Inputs:             data.inputs,
 		UncommittedChanges: data.uncommittedChanges,
 	})
@@ -189,6 +192,7 @@ func SwitchBranchEntries(args SwitchBranchArgs) dialog.SwitchBranchEntries {
 			branchInfos:       args.BranchInfos,
 			branchTypes:       args.BranchTypes,
 			branchesAndTypes:  args.BranchesAndTypes,
+			excludeBranches:   args.ExcludeBranches,
 			indentation:       "",
 			lineage:           args.Lineage,
 			regexes:           args.Regexes,
@@ -215,6 +219,7 @@ func SwitchBranchEntries(args SwitchBranchArgs) dialog.SwitchBranchEntries {
 			branchInfos:       args.BranchInfos,
 			branchTypes:       args.BranchTypes,
 			branchesAndTypes:  args.BranchesAndTypes,
+			excludeBranches:   args.ExcludeBranches,
 			indentation:       "",
 			lineage:           args.Lineage,
 			regexes:           args.Regexes,
@@ -230,6 +235,7 @@ type SwitchBranchArgs struct {
 	BranchInfos       gitdomain.BranchInfos
 	BranchTypes       []configdomain.BranchType
 	BranchesAndTypes  configdomain.BranchesAndTypes
+	ExcludeBranches   gitdomain.LocalBranchNames
 	Lineage           configdomain.Lineage
 	Regexes           []*regexp.Regexp
 	UnknownBranchType configdomain.UnknownBranchType
@@ -238,6 +244,9 @@ type SwitchBranchArgs struct {
 // layoutBranches adds entries for the given branch and its children to the given entry list.
 // The entries are indented according to their position in the given lineage.
 func layoutBranches(args layoutBranchesArgs) {
+	if args.excludeBranches.Contains(args.branch) {
+		return
+	}
 	if args.branchInfos.HasLocalBranch(args.branch) || args.allBranches.Enabled() {
 		var otherWorktree bool
 		if branchInfo, hasBranchInfo := args.branchInfos.FindByLocalName(args.branch).Get(); hasBranchInfo {
@@ -270,6 +279,7 @@ func layoutBranches(args layoutBranchesArgs) {
 			branchInfos:       args.branchInfos,
 			branchTypes:       args.branchTypes,
 			branchesAndTypes:  args.branchesAndTypes,
+			excludeBranches:   args.excludeBranches,
 			indentation:       args.indentation + "  ",
 			lineage:           args.lineage,
 			regexes:           args.regexes,
@@ -285,6 +295,7 @@ type layoutBranchesArgs struct {
 	branchInfos       gitdomain.BranchInfos
 	branchTypes       []configdomain.BranchType
 	branchesAndTypes  configdomain.BranchesAndTypes
+	excludeBranches   gitdomain.LocalBranchNames
 	indentation       string
 	lineage           configdomain.Lineage
 	regexes           regexes.Regexes

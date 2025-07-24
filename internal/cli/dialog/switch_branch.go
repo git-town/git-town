@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/slice"
 	"github.com/git-town/git-town/v21/internal/messages"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/muesli/termenv"
 )
 
@@ -37,10 +38,9 @@ func (sbes SwitchBranchEntries) ContainsBranch(branch gitdomain.LocalBranchName)
 	return false
 }
 
-// SwitchBranchCursorPos provides the initial cursor position for the "switch branch" components.
-func (sbes SwitchBranchEntries) IndexOf(initialBranch gitdomain.LocalBranchName) int {
+func (sbes SwitchBranchEntries) IndexOf(branch gitdomain.LocalBranchName) int {
 	for e, entry := range sbes {
-		if entry.Branch == initialBranch {
+		if entry.Branch == branch {
 			return e
 		}
 	}
@@ -50,8 +50,8 @@ func (sbes SwitchBranchEntries) IndexOf(initialBranch gitdomain.LocalBranchName)
 type SwitchModel struct {
 	list.List[SwitchBranchEntry]
 	DisplayBranchTypes configdomain.DisplayTypes
-	InitialBranchPos   int  // position of the currently checked out branch in the list
-	UncommittedChanges bool // whether the workspace has uncommitted changes
+	InitialBranchPos   Option[int] // position of the currently checked out branch in the list
+	UncommittedChanges bool        // whether the workspace has uncommitted changes
 }
 
 func (self SwitchModel) Init() tea.Cmd {
@@ -95,7 +95,8 @@ func (self SwitchModel) View() string {
 	for i := window.StartRow; i < window.EndRow; i++ {
 		entry := self.Entries[i]
 		isSelected := i == self.Cursor
-		isInitial := i == self.InitialBranchPos
+		initialBranchPos, hasInitialBranchPos := self.InitialBranchPos.Get()
+		isInitial := hasInitialBranchPos && i == initialBranchPos
 		switch {
 		case isSelected:
 			color := self.Colors.Selection
@@ -178,13 +179,17 @@ func ShouldDisplayBranchType(branchType configdomain.BranchType) bool {
 }
 
 func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomain.Exit, error) {
+	initialBranchPos := None[int]()
+	if currentBranch, has := args.CurrentBranch.Get(); has {
+		initialBranchPos = Some(args.Entries.IndexOf(currentBranch))
+	}
 	dialogProgram := tea.NewProgram(SwitchModel{
 		DisplayBranchTypes: args.DisplayBranchTypes,
-		InitialBranchPos:   args.Cursor,
+		InitialBranchPos:   initialBranchPos,
 		List:               list.NewList(newSwitchBranchListEntries(args.Entries), args.Cursor),
 		UncommittedChanges: args.UncommittedChanges,
 	})
-	dialogcomponents.SendInputs("branch-tree", args.Inputs.Next(), dialogProgram)
+	dialogcomponents.SendInputs(args.InputName, args.Inputs.Next(), dialogProgram)
 	dialogResult, err := dialogProgram.Run()
 	result := dialogResult.(SwitchModel)
 	selectedData := result.List.SelectedData()
@@ -192,9 +197,11 @@ func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomai
 }
 
 type SwitchBranchArgs struct {
+	CurrentBranch      Option[gitdomain.LocalBranchName]
 	Cursor             int
 	DisplayBranchTypes configdomain.DisplayTypes
 	Entries            SwitchBranchEntries
+	InputName          string
 	Inputs             dialogcomponents.Inputs
 	UncommittedChanges bool
 }

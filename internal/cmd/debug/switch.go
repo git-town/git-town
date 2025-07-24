@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -32,9 +33,11 @@ func switchBranch() *cobra.Command {
 			}
 			inputs := dialogcomponents.LoadInputs(os.Environ())
 			_, _, err = dialog.SwitchBranch(dialog.SwitchBranchArgs{
+				CurrentBranch:      Some(gitdomain.NewLocalBranchName("main")),
 				Cursor:             0,
 				DisplayBranchTypes: false,
 				Entries:            entries,
+				InputName:          `parent-branch-for-"main"`,
 				Inputs:             inputs,
 				UncommittedChanges: false,
 			})

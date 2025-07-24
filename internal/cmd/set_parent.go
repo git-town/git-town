@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"regexp"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
@@ -105,16 +106,43 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 	var selectedBranch gitdomain.LocalBranchName
 	switch len(args) {
 	case 0:
-		outcome, selectedBranch, err = dialog.Parent(dialog.ParentArgs{
-			Branch:        data.initialBranch,
-			DefaultChoice: data.defaultChoice,
-			Inputs:        data.inputs,
-			Lineage:       data.config.NormalConfig.Lineage,
-			LocalBranches: data.branchesSnapshot.Branches.LocalBranches().Names(),
-			MainBranch:    data.config.ValidatedConfigData.MainBranch,
+		excludeBranches := append(
+			gitdomain.LocalBranchNames{data.initialBranch},
+			data.config.NormalConfig.Lineage.Children(data.initialBranch)...,
+		)
+		entries := SwitchBranchEntries(SwitchBranchArgs{
+			AllBranches:       false,
+			BranchInfos:       data.branchesSnapshot.Branches,
+			BranchTypes:       []configdomain.BranchType{},
+			BranchesAndTypes:  repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchesSnapshot.Branches.Names()),
+			ExcludeBranches:   excludeBranches,
+			Lineage:           repo.UnvalidatedConfig.NormalConfig.Lineage,
+			Regexes:           []*regexp.Regexp{},
+			UnknownBranchType: repo.UnvalidatedConfig.NormalConfig.UnknownBranchType,
 		})
-		if err != nil {
+		noneEntry := dialog.SwitchBranchEntry{
+			Branch:        messages.SetParentNoneOption,
+			Indentation:   "",
+			OtherWorktree: false,
+			Type:          configdomain.BranchTypeFeatureBranch,
+		}
+		entries = append(dialog.SwitchBranchEntries{noneEntry}, entries...)
+		selectedBranch, exit, err = dialog.SwitchBranch(dialog.SwitchBranchArgs{
+			CurrentBranch:      None[gitdomain.LocalBranchName](),
+			Cursor:             entries.IndexOf(data.defaultChoice),
+			DisplayBranchTypes: true,
+			Entries:            entries,
+			InputName:          fmt.Sprintf("parent-branch-for-%q", data.initialBranch),
+			Inputs:             data.inputs,
+			UncommittedChanges: false,
+		})
+		if err != nil || exit {
 			return err
+		}
+		if selectedBranch == messages.SetParentNoneOption {
+			outcome = dialog.ParentOutcomePerennialBranch
+		} else {
+			outcome = dialog.ParentOutcomeSelectedParent
 		}
 	case 1:
 		outcome = dialog.ParentOutcomeSelectedParent
