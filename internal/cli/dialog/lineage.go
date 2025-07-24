@@ -51,7 +51,7 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 			}
 		}
 		// ask for parent
-		entries := CreateSwitchBranchEntries(CreateSwitchBranchArgs{
+		entries := NewSwitchBranchEntries(NewSwitchBranchEntriesArgs{
 			ShowAllBranches:   false,
 			BranchInfos:       gitdomain.BranchInfos{},
 			BranchTypes:       []configdomain.BranchType{},
