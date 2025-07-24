@@ -2,6 +2,7 @@ package opcodes
 
 import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/subshell"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
 )
 
@@ -25,5 +26,12 @@ func (self *RebaseBranch) Continue() []shared.Opcode {
 }
 
 func (self *RebaseBranch) Run(args shared.RunArgs) error {
+	// Fix for https://github.com/git-town/git-town/issues/4942.
+	// Waiting here in end-to-end tests to ensure new timestamps for the rebased commits,
+	// which avoids flaky end-to-end tests.
+	if subshell.IsInTest() {
+		args.Frontend.Run("sleep", "1")
+		// time.Sleep(1 * time.Second)
+	}
 	return args.Git.Rebase(args.Frontend, self.Branch)
 }

@@ -2,7 +2,6 @@ package opcodes
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/subshell"
@@ -35,7 +34,8 @@ func (self *RebaseOntoKeepDeleted) Run(args shared.RunArgs) error {
 	// Waiting here in end-to-end tests to ensure new timestamps for the rebased commits,
 	// which avoids flaky end-to-end tests.
 	if subshell.IsInTest() {
-		time.Sleep(1 * time.Second)
+		args.Frontend.Run("sleep", "1")
+		// time.Sleep(1 * time.Second)
 	}
 	if err := args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseOnto.Location(), self.CommitsToRemove, self.Upstream); err != nil {
 		conflictingFiles, err := args.Git.FileConflictQuickInfos(args.Backend)

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/subshell"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
@@ -30,6 +31,13 @@ func (self *RebaseOntoRemoveDeleted) Continue() []shared.Opcode {
 }
 
 func (self *RebaseOntoRemoveDeleted) Run(args shared.RunArgs) error {
+	// Fix for https://github.com/git-town/git-town/issues/4942.
+	// Waiting here in end-to-end tests to ensure new timestamps for the rebased commits,
+	// which avoids flaky end-to-end tests.
+	if subshell.IsInTest() {
+		args.Frontend.Run("sleep", "1")
+		// time.Sleep(1 * time.Second)
+	}
 	if err := args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseOnto.Location(), self.CommitsToRemove.Location(), self.Upstream); err != nil {
 		// Here the rebase-onto has failed.
 		// The branch that gets rebased onto will be deleted.
