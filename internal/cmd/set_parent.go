@@ -372,10 +372,11 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 		}
 	}
 	var message string
-	if parent, has := parentOpt.Get(); has {
-		message = fmt.Sprintf(messages.ParentDialogSelected, data.initialBranch, parent)
-	} else {
+	// This is wrong: parentOpt is the old parent. We need the new parent here.
+	if selectedBranch == dialog.PerennialBranchOption {
 		message = fmt.Sprintf(messages.BranchIsNowPerennial, data.initialBranch)
+	} else {
+		message = fmt.Sprintf(messages.ParentDialogSelected, data.initialBranch, selectedBranch)
 	}
 	prog.Add(&opcodes.MessageQueue{
 		Message: message,

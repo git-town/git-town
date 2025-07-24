@@ -8,6 +8,7 @@ Feature: make a feature branch perennial
       | parent | feature | main   | local, origin |
       | child  | feature | parent | local, origin |
     And the current branch is "child"
+    # And inspect the repo
     When I run "git-town set-parent" and enter into the dialog:
       | DIALOG                    | KEYS       |
       | parent branch for "child" | down enter |
@@ -15,7 +16,7 @@ Feature: make a feature branch perennial
   Scenario: result
     Then Git Town prints:
       """
-      Selected parent branch for "child": <none> (perennial branch)
+      Branch "child" is now perennial.
       """
     And Git Town runs no commands
     And the perennial branches are now "child"
