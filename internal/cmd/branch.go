@@ -66,7 +66,7 @@ func executeBranch(cliConfig cliconfig.CliConfig) error {
 		return err
 	}
 	entries := SwitchBranchEntries(SwitchBranchArgs{
-		AllBranches:       false,
+		ShowAllBranches:   false,
 		BranchInfos:       data.branchInfos,
 		BranchTypes:       []configdomain.BranchType{},
 		BranchesAndTypes:  data.branchesAndTypes,

@@ -111,7 +111,7 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 			data.config.NormalConfig.Lineage.Children(data.initialBranch)...,
 		)
 		entries := SwitchBranchEntries(SwitchBranchArgs{
-			AllBranches:       false,
+			ShowAllBranches:   false,
 			BranchInfos:       data.branchesSnapshot.Branches,
 			BranchTypes:       []configdomain.BranchType{},
 			BranchesAndTypes:  repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchesSnapshot.Branches.Names()),
