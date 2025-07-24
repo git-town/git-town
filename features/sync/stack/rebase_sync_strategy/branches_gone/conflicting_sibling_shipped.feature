@@ -1,4 +1,5 @@
 Feature: conflicting sibling branches, one gets shipped, the other syncs afterwards
+  # TODO: this doesn't remove the local branch-1
 
   Background:
     Given a Git repo with origin
