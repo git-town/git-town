@@ -27,7 +27,7 @@ Feature: observe the current branch verbosely
       """
     And Git Town prints:
       """
-      branch "feature" is now an observed branch
+      Branch "feature" is now an observed branch
       """
     And branch "feature" now has type "observed"
 

@@ -12,7 +12,7 @@ Feature: observing the current feature branch
     Then Git Town runs no commands
     And Git Town prints:
       """
-      branch "feature" is now an observed branch
+      Branch "feature" is now an observed branch
       """
     And branch "feature" now has type "observed"
 
