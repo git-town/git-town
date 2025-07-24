@@ -80,7 +80,7 @@ func executeSwitch(args []string, cliConfig cliconfig.CliConfig, allBranches con
 	}
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchNames)
 	unknownBranchType := repo.UnvalidatedConfig.NormalConfig.UnknownBranchType
-	entries := SwitchBranchEntries(SwitchBranchArgs{
+	entries := NewSwitchBranchEntries(SwitchBranchArgs{
 		BranchInfos:       data.branchesSnapshot.Branches,
 		BranchTypes:       branchTypes,
 		BranchesAndTypes:  branchesAndTypes,
@@ -180,8 +180,8 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult, cliConfig c
 	}, false, err
 }
 
-// SwitchBranchEntries provides the entries for the "switch branch" components.
-func SwitchBranchEntries(args SwitchBranchArgs) dialog.SwitchBranchEntries {
+// NewSwitchBranchEntries provides the entries for the "switch branch" components.
+func NewSwitchBranchEntries(args SwitchBranchArgs) dialog.SwitchBranchEntries {
 	entries := make(dialog.SwitchBranchEntries, 0, args.Lineage.Len())
 	roots := args.Lineage.Roots()
 	// add all entries from the lineage
