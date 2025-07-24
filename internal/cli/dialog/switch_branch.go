@@ -287,10 +287,7 @@ func layoutBranches(args layoutBranchesArgs) {
 		if !hasBranchType && len(args.branchTypes) > 0 {
 			branchType = args.unknownBranchType.BranchType()
 		}
-		var hasCorrectBranchType bool
-		if len(args.branchTypes) == 0 || slices.Contains(args.branchTypes, branchType) {
-			hasCorrectBranchType = true
-		}
+		hasCorrectBranchType := len(args.branchTypes) == 0 || slices.Contains(args.branchTypes, branchType)
 		matchesRegex := args.regexes.Matches(args.branch.String())
 		if hasCorrectBranchType && matchesRegex {
 			*args.result = append(*args.result, SwitchBranchEntry{
