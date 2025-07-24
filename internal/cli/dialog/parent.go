@@ -23,6 +23,7 @@ or enter its number.
 )
 
 // Parent lets the user select the parent branch for the given branch.
+// TODO: delete and replace all usages with dialog.SwitchBranch
 func Parent(args ParentArgs) (ParentOutcome, gitdomain.LocalBranchName, error) {
 	parentCandidates := ParentCandidateNames(args)
 	cursor := slice.Index(parentCandidates, args.DefaultChoice).GetOrElse(0)
