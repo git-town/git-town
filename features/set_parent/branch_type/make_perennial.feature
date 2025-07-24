@@ -8,7 +8,6 @@ Feature: make a feature branch perennial
       | parent | feature | main   | local, origin |
       | child  | feature | parent | local, origin |
     And the current branch is "child"
-    # And inspect the repo
     When I run "git-town set-parent" and enter into the dialog:
       | DIALOG                    | KEYS       |
       | parent branch for "child" | down enter |
