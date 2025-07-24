@@ -89,18 +89,9 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 		if err != nil || exit {
 			return additionalLineage, additionalPerennials, exit, err
 		}
-		var outcome ParentOutcome
 		if selectedBranch == messages.SetParentNoneOption {
-			outcome = ParentOutcomePerennialBranch
-		} else {
-			outcome = ParentOutcomeSelectedParent
-		}
-		switch outcome {
-		case ParentOutcomeExit:
-			return additionalLineage, additionalPerennials, true, nil
-		case ParentOutcomePerennialBranch:
 			additionalPerennials = append(additionalPerennials, branchToVerify)
-		case ParentOutcomeSelectedParent:
+		} else {
 			additionalLineage = additionalLineage.Set(branchToVerify, selectedBranch)
 			branchesToVerify = append(branchesToVerify, selectedBranch)
 		}
