@@ -164,63 +164,6 @@ func (self SwitchModel) View() string {
 	return s.String()
 }
 
-func ShouldDisplayBranchType(branchType configdomain.BranchType) bool {
-	switch branchType {
-	case
-		configdomain.BranchTypeMainBranch,
-		configdomain.BranchTypeFeatureBranch:
-		return false
-	case
-		configdomain.BranchTypeContributionBranch,
-		configdomain.BranchTypeObservedBranch,
-		configdomain.BranchTypeParkedBranch,
-		configdomain.BranchTypePerennialBranch,
-		configdomain.BranchTypePrototypeBranch:
-		return true
-	}
-	panic("unhandled branch type:" + branchType.String())
-}
-
-func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomain.Exit, error) {
-	initialBranchPos := None[int]()
-	if currentBranch, has := args.CurrentBranch.Get(); has {
-		initialBranchPos = Some(args.Entries.IndexOf(currentBranch))
-	}
-	dialogProgram := tea.NewProgram(SwitchModel{
-		DisplayBranchTypes: args.DisplayBranchTypes,
-		InitialBranchPos:   initialBranchPos,
-		List:               list.NewList(newSwitchBranchListEntries(args.Entries), args.Cursor),
-		UncommittedChanges: args.UncommittedChanges,
-	})
-	dialogcomponents.SendInputs(args.InputName, args.Inputs.Next(), dialogProgram)
-	dialogResult, err := dialogProgram.Run()
-	result := dialogResult.(SwitchModel)
-	selectedData := result.List.SelectedData()
-	return selectedData.Branch, result.Aborted(), err
-}
-
-type SwitchBranchArgs struct {
-	CurrentBranch      Option[gitdomain.LocalBranchName]
-	Cursor             int
-	DisplayBranchTypes configdomain.DisplayTypes
-	Entries            SwitchBranchEntries
-	InputName          string
-	Inputs             dialogcomponents.Inputs
-	UncommittedChanges bool
-}
-
-func newSwitchBranchListEntries(switchBranchEntries []SwitchBranchEntry) list.Entries[SwitchBranchEntry] {
-	result := make(list.Entries[SwitchBranchEntry], len(switchBranchEntries))
-	for e, entry := range switchBranchEntries {
-		result[e] = list.Entry[SwitchBranchEntry]{
-			Data:     entry,
-			Disabled: entry.OtherWorktree,
-			Text:     entry.String(),
-		}
-	}
-	return result
-}
-
 // NewSwitchBranchEntries provides the entries for the "switch branch" components.
 func NewSwitchBranchEntries(args NewSwitchBranchEntriesArgs) SwitchBranchEntries {
 	entries := make(SwitchBranchEntries, 0, args.Lineage.Len())
@@ -280,6 +223,51 @@ type NewSwitchBranchEntriesArgs struct {
 	Regexes           []*regexp.Regexp
 	ShowAllBranches   configdomain.AllBranches
 	UnknownBranchType configdomain.UnknownBranchType
+}
+
+func ShouldDisplayBranchType(branchType configdomain.BranchType) bool {
+	switch branchType {
+	case
+		configdomain.BranchTypeMainBranch,
+		configdomain.BranchTypeFeatureBranch:
+		return false
+	case
+		configdomain.BranchTypeContributionBranch,
+		configdomain.BranchTypeObservedBranch,
+		configdomain.BranchTypeParkedBranch,
+		configdomain.BranchTypePerennialBranch,
+		configdomain.BranchTypePrototypeBranch:
+		return true
+	}
+	panic("unhandled branch type:" + branchType.String())
+}
+
+func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomain.Exit, error) {
+	initialBranchPos := None[int]()
+	if currentBranch, has := args.CurrentBranch.Get(); has {
+		initialBranchPos = Some(args.Entries.IndexOf(currentBranch))
+	}
+	dialogProgram := tea.NewProgram(SwitchModel{
+		DisplayBranchTypes: args.DisplayBranchTypes,
+		InitialBranchPos:   initialBranchPos,
+		List:               list.NewList(newSwitchBranchListEntries(args.Entries), args.Cursor),
+		UncommittedChanges: args.UncommittedChanges,
+	})
+	dialogcomponents.SendInputs(args.InputName, args.Inputs.Next(), dialogProgram)
+	dialogResult, err := dialogProgram.Run()
+	result := dialogResult.(SwitchModel)
+	selectedData := result.List.SelectedData()
+	return selectedData.Branch, result.Aborted(), err
+}
+
+type SwitchBranchArgs struct {
+	CurrentBranch      Option[gitdomain.LocalBranchName]
+	Cursor             int
+	DisplayBranchTypes configdomain.DisplayTypes
+	Entries            SwitchBranchEntries
+	InputName          string
+	Inputs             dialogcomponents.Inputs
+	UncommittedChanges bool
 }
 
 // layoutBranches adds entries for the given branch and its children to the given entry list.
@@ -342,4 +330,16 @@ type layoutBranchesArgs struct {
 	result            *SwitchBranchEntries
 	showAllBranches   configdomain.AllBranches
 	unknownBranchType configdomain.UnknownBranchType
+}
+
+func newSwitchBranchListEntries(switchBranchEntries []SwitchBranchEntry) list.Entries[SwitchBranchEntry] {
+	result := make(list.Entries[SwitchBranchEntry], len(switchBranchEntries))
+	for e, entry := range switchBranchEntries {
+		result[e] = list.Entry[SwitchBranchEntry]{
+			Data:     entry,
+			Disabled: entry.OtherWorktree,
+			Text:     entry.String(),
+		}
+	}
+	return result
 }
