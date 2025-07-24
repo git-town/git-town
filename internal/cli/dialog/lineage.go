@@ -33,10 +33,10 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 		}
 		// If a perennial branch isn't local, it isn't in args.BranchesAndTypes.
 		// We therefore exclude them manually here.
-		if slices.Contains(args.PerennialBranches, branchToVerify) {
+		if slices.Contains(args.UnvalidatedConfig.NormalConfig.PerennialBranches, branchToVerify) {
 			continue
 		}
-		if parent, hasParent := args.Lineage.Parent(branchToVerify).Get(); hasParent {
+		if parent, hasParent := args.UnvalidatedConfig.NormalConfig.Lineage.Parent(branchToVerify).Get(); hasParent {
 			branchesToVerify = append(branchesToVerify, parent)
 			continue
 		}
@@ -55,14 +55,14 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 		// ask for parent
 		excludeBranches := append(
 			gitdomain.LocalBranchNames{branchToVerify},
-			args.Lineage.Children(branchToVerify)...,
+			args.UnvalidatedConfig.NormalConfig.Lineage.Children(branchToVerify)...,
 		)
 		entries := NewSwitchBranchEntries(NewSwitchBranchEntriesArgs{
 			BranchInfos:       args.BranchInfos,
 			BranchTypes:       []configdomain.BranchType{},
 			BranchesAndTypes:  args.BranchesAndTypes,
 			ExcludeBranches:   excludeBranches,
-			Lineage:           args.Lineage,
+			Lineage:           args.UnvalidatedConfig.NormalConfig.Lineage,
 			Regexes:           []*regexp.Regexp{},
 			ShowAllBranches:   true,
 			UnknownBranchType: args.UnvalidatedConfig.NormalConfig.UnknownBranchType,
@@ -112,9 +112,7 @@ type LineageArgs struct {
 	Connector         Option[forgedomain.Connector]
 	DefaultChoice     gitdomain.LocalBranchName
 	Inputs            dialogcomponents.Inputs
-	Lineage           configdomain.Lineage
 	LocalBranches     gitdomain.LocalBranchNames
 	MainBranch        gitdomain.LocalBranchName
-	PerennialBranches gitdomain.LocalBranchNames
 	UnvalidatedConfig config.UnvalidatedConfig
 }
