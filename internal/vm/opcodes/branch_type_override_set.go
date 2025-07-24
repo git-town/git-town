@@ -25,7 +25,7 @@ func (self *BranchTypeOverrideSet) Run(args shared.RunArgs) error {
 	return gitconfig.SetBranchTypeOverride(args.Backend, self.BranchType, self.Branch)
 }
 
-func (self BranchTypeOverrideSet) message() Option[string] {
+func (self *BranchTypeOverrideSet) message() Option[string] {
 	switch self.BranchType {
 	case configdomain.BranchTypeContributionBranch:
 		return Some(fmt.Sprintf(messages.BranchIsNowContribution, self.Branch))
