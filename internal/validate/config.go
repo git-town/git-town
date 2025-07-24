@@ -49,15 +49,14 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 
 	// enter and save missing parent branches
 	additionalLineage, additionalPerennials, exit, err := dialog.Lineage(dialog.LineageArgs{
-		BranchesAndTypes:  args.BranchesAndTypes,
-		BranchesToVerify:  args.BranchesToValidate,
-		Connector:         args.Connector,
-		DefaultChoice:     mainBranch,
-		Inputs:            args.Inputs,
-		Lineage:           args.Unvalidated.Value.NormalConfig.Lineage,
-		LocalBranches:     args.LocalBranches,
-		MainBranch:        mainBranch,
-		PerennialBranches: args.Unvalidated.Value.NormalConfig.PerennialBranches,
+		BranchesAndTypes: args.BranchesAndTypes,
+		BranchesToVerify: args.BranchesToValidate,
+		Config:           args.Unvalidated.Immutable(),
+		Connector:        args.Connector,
+		DefaultChoice:    mainBranch,
+		Inputs:           args.Inputs,
+		LocalBranches:    args.LocalBranches,
+		MainBranch:       mainBranch,
 	})
 	if err != nil || exit {
 		return config.EmptyValidatedConfig(), exit, err
