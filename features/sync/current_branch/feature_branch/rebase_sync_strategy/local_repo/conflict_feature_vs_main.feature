@@ -14,6 +14,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town sync"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                    |
@@ -21,6 +22,14 @@ Feature: handle conflicts between the current feature branch and the main branch
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
+      """
+    And file "conflicting_file" now has content:
+      """
+      <<<<<<< HEAD
+      main content
+      =======
+      feature content
+      >>>>>>> {{ sha-short 'conflicting feature commit' }} (conflicting feature commit)
       """
     And a rebase is now in progress
 
