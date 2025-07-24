@@ -14,7 +14,6 @@ Feature: handle conflicts between the current feature branch and the main branch
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                    |
