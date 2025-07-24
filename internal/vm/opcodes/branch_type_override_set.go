@@ -18,9 +18,8 @@ type BranchTypeOverrideSet struct {
 }
 
 func (self *BranchTypeOverrideSet) Run(args shared.RunArgs) error {
-	err := gitconfig.SetBranchTypeOverride(args.Backend, self.BranchType, self.Branch)
 	args.FinalMessages.Add(self.message())
-	return err
+	return gitconfig.SetBranchTypeOverride(args.Backend, self.BranchType, self.Branch)
 }
 
 func (self BranchTypeOverrideSet) message() string {
