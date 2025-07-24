@@ -1,7 +1,6 @@
 package dialog
 
 import (
-	"fmt"
 	"regexp"
 	"slices"
 	"strings"
@@ -174,17 +173,14 @@ func (self SwitchModel) View() string {
 // NewSwitchBranchEntries provides the entries for the "switch branch" components.
 func NewSwitchBranchEntries(args NewSwitchBranchEntriesArgs) SwitchBranchEntries {
 	entries := make(SwitchBranchEntries, 0, args.Lineage.Len())
-	fmt.Println("AAAAAAAAAAAAAAAAAAAAAAAAAAAaa", args.Lineage)
 	roots := args.Lineage.Roots()
-	fmt.Println("1111111111111111111111111111111111", roots, args.MainBranch)
+	roots = slice.NaturalSort(roots)
 	if mainBranch, hasMainBranch := args.MainBranch.Get(); hasMainBranch {
-		fmt.Println("2222222222222222222")
 		if !roots.Contains(mainBranch) {
 			roots = append(roots, mainBranch)
 		}
 		roots = roots.Hoist(mainBranch)
 	}
-	fmt.Println("33333333333333333", roots)
 	// add all entries from the lineage
 	for _, root := range roots {
 		layoutBranches(layoutBranchesArgs{

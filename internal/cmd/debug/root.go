@@ -23,7 +23,6 @@ func RootCmd() *cobra.Command {
 	debugCommand.AddCommand(enterGitLabToken())
 	debugCommand.AddCommand(enterMainBranchCmd())
 	debugCommand.AddCommand(enterNewBranchType())
-	debugCommand.AddCommand(enterParentCmd())
 	debugCommand.AddCommand(enterOriginHostname())
 	debugCommand.AddCommand(enterPerennialBranches())
 	debugCommand.AddCommand(enterPerennialRegex())
