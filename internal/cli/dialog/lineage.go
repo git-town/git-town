@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
@@ -30,10 +31,10 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 		}
 		// If a perennial branch isn't local, it isn't in args.BranchesAndTypes.
 		// We therefore exclude them manually here.
-		if slices.Contains(args.PerennialBranches, branchToVerify) {
+		if slices.Contains(args.Config.NormalConfig.PerennialBranches, branchToVerify) {
 			continue
 		}
-		if parent, hasParent := args.Lineage.Parent(branchToVerify).Get(); hasParent {
+		if parent, hasParent := args.Config.NormalConfig.Lineage.Parent(branchToVerify).Get(); hasParent {
 			branchesToVerify = append(branchesToVerify, parent)
 			continue
 		}
@@ -54,7 +55,7 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 			Branch:        branchToVerify,
 			DefaultChoice: args.DefaultChoice,
 			Inputs:        args.Inputs,
-			Lineage:       args.Lineage,
+			Lineage:       args.Config.NormalConfig.Lineage,
 			LocalBranches: args.LocalBranches,
 			MainBranch:    args.MainBranch,
 		})
@@ -75,13 +76,12 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 }
 
 type LineageArgs struct {
-	BranchesAndTypes  configdomain.BranchesAndTypes
-	BranchesToVerify  gitdomain.LocalBranchNames
-	Connector         Option[forgedomain.Connector]
-	DefaultChoice     gitdomain.LocalBranchName
-	Inputs            dialogcomponents.Inputs
-	Lineage           configdomain.Lineage
-	LocalBranches     gitdomain.LocalBranchNames
-	MainBranch        gitdomain.LocalBranchName
-	PerennialBranches gitdomain.LocalBranchNames
+	BranchesAndTypes configdomain.BranchesAndTypes
+	BranchesToVerify gitdomain.LocalBranchNames
+	Config           config.UnvalidatedConfig
+	Connector        Option[forgedomain.Connector]
+	DefaultChoice    gitdomain.LocalBranchName
+	Inputs           dialogcomponents.Inputs
+	LocalBranches    gitdomain.LocalBranchNames
+	MainBranch       gitdomain.LocalBranchName
 }
