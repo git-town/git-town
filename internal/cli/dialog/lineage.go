@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/messages"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -66,7 +67,14 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 			ShowAllBranches:   true,
 			UnknownBranchType: args.UnvalidatedConfig.NormalConfig.UnknownBranchType,
 		})
-		outcome, selectedBranch, err := SwitchBranch(SwitchBranchArgs{
+		noneEntry := SwitchBranchEntry{
+			Branch:        messages.SetParentNoneOption,
+			Indentation:   "",
+			OtherWorktree: false,
+			Type:          configdomain.BranchTypeFeatureBranch,
+		}
+		entries = append(SwitchBranchEntries{noneEntry}, entries...)
+		selectedBranch, exit, err := SwitchBranch(SwitchBranchArgs{
 			CurrentBranch:      None[gitdomain.LocalBranchName](),
 			Cursor:             0,
 			DisplayBranchTypes: false,
@@ -75,8 +83,14 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 			Inputs:             args.Inputs,
 			UncommittedChanges: false,
 		})
-		if err != nil {
-			return additionalLineage, additionalPerennials, false, err
+		if err != nil || exit {
+			return additionalLineage, additionalPerennials, exit, err
+		}
+		var outcome ParentOutcome
+		if selectedBranch == messages.SetParentNoneOption {
+			outcome = ParentOutcomePerennialBranch
+		} else {
+			outcome = ParentOutcomeSelectedParent
 		}
 		switch outcome {
 		case ParentOutcomeExit:
