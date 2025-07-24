@@ -16,7 +16,7 @@ Feature: make a feature branch perennial
   Scenario: result
     Then Git Town prints:
       """
-      Selected parent branch for "child": <none> (perennial branch)
+      branch "child" is now perennial
       """
     And Git Town runs no commands
     And the perennial branches are now "child"
