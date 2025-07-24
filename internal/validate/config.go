@@ -93,8 +93,8 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 
 type ConfigArgs struct {
 	Backend            subshelldomain.RunnerQuerier
-	BranchesAndTypes   configdomain.BranchesAndTypes
 	BranchInfos        gitdomain.BranchInfos
+	BranchesAndTypes   configdomain.BranchesAndTypes
 	BranchesToValidate gitdomain.LocalBranchNames
 	ConfigSnapshot     undoconfig.ConfigSnapshot
 	Connector          Option[forgedomain.Connector]
