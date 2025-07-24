@@ -102,8 +102,8 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 	if err != nil {
 		return err
 	}
-	var outcome dialog.ParentOutcome
 	var selectedBranch gitdomain.LocalBranchName
+	newParentOpt := None[gitdomain.LocalBranchName]()
 	switch len(args) {
 	case 0:
 		excludeBranches := append(
@@ -141,19 +141,17 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 		if err != nil || exit {
 			return err
 		}
-		if selectedBranch == messages.SetParentNoneOption {
-			outcome = dialog.ParentOutcomePerennialBranch
-		} else {
-			outcome = dialog.ParentOutcomeSelectedParent
+		if selectedBranch != messages.SetParentNoneOption {
+			newParentOpt = Some(selectedBranch)
 		}
 	case 1:
-		outcome = dialog.ParentOutcomeSelectedParent
 		selectedBranch = gitdomain.NewLocalBranchName(args[0])
 		if !data.branchesSnapshot.Branches.HasLocalBranch(selectedBranch) {
 			return fmt.Errorf(messages.BranchDoesntExist, selectedBranch)
 		}
+		newParentOpt = Some(selectedBranch)
 	}
-	runProgram, exit := setParentProgram(outcome, selectedBranch, data)
+	runProgram, exit := setParentProgram(newParentOpt, data)
 	if exit {
 		return nil
 	}
@@ -315,22 +313,20 @@ func verifySetParentData(data setParentData) error {
 	return nil
 }
 
-func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdomain.LocalBranchName, data setParentData) (prog program.Program, exit dialogdomain.Exit) {
+func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setParentData) (prog program.Program, exit dialogdomain.Exit) {
 	proposal, hasProposal := data.proposal.Get()
 	// update lineage
-	switch dialogOutcome {
-	case dialog.ParentOutcomeExit:
-		return prog, true
-	case dialog.ParentOutcomePerennialBranch:
+	newParent, hasNewParent := newParentOpt.Get()
+	if !hasNewParent {
 		prog.Add(&opcodes.BranchTypeOverrideSet{Branch: data.initialBranch, BranchType: configdomain.BranchTypePerennialBranch})
 		prog.Add(&opcodes.LineageParentRemove{Branch: data.initialBranch})
-	case dialog.ParentOutcomeSelectedParent:
-		prog.Add(&opcodes.LineageParentSet{Branch: data.initialBranch, Parent: selectedBranch})
+	} else {
+		prog.Add(&opcodes.LineageParentSet{Branch: data.initialBranch, Parent: newParent})
 		connector, hasConnector := data.connector.Get()
 		connectorCanUpdateProposalTarget := hasConnector && connector.UpdateProposalTargetFn().IsSome()
 		if hasProposal && hasConnector && connectorCanUpdateProposalTarget {
 			prog.Add(&opcodes.ProposalUpdateTarget{
-				NewBranch: selectedBranch,
+				NewBranch: newParent,
 				OldBranch: proposal.Data.Data().Target,
 				Proposal:  proposal,
 			})
@@ -350,7 +346,7 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 			if parent, hasParent := parentOpt.Get(); hasParent {
 				prog.Add(
 					&opcodes.RebaseOntoKeepDeleted{
-						BranchToRebaseOnto: selectedBranch.BranchName(),
+						BranchToRebaseOnto: newParent.BranchName(),
 						CommitsToRemove:    parent.Location(),
 						Upstream:           None[gitdomain.LocalBranchName](),
 					},
@@ -358,7 +354,7 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 			} else {
 				prog.Add(
 					&opcodes.RebaseBranch{
-						Branch: selectedBranch.BranchName(),
+						Branch: newParent.BranchName(),
 					},
 				)
 			}
