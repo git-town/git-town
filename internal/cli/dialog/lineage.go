@@ -78,7 +78,7 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 		entries = append(SwitchBranchEntries{noneEntry}, entries...)
 		selectedBranch, exit, err := SwitchBranch(SwitchBranchArgs{
 			CurrentBranch:      None[gitdomain.LocalBranchName](),
-			Cursor:             1,
+			Cursor:             1, // select the "main branch" entry, below the "make perennial" entry
 			DisplayBranchTypes: false,
 			Entries:            entries,
 			InputName:          fmt.Sprintf("parent-branch-for-%q", branchToVerify),
