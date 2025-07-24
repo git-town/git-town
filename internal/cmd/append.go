@@ -264,6 +264,7 @@ func determineAppendData(cliConfig cliconfig.CliConfig, targetBranch gitdomain.L
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
+		BranchInfos:        branchesSnapshot.Branches,
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
 		ConfigSnapshot:     repo.ConfigSnapshot,

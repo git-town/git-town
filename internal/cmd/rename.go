@@ -212,6 +212,7 @@ func determineRenameData(args []string, cliConfig cliconfig.CliConfig, force con
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
+		BranchInfos:        branchesSnapshot.Branches,
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesToValidate: gitdomain.LocalBranchNames{oldBranchName},
 		ConfigSnapshot:     repo.ConfigSnapshot,

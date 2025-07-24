@@ -110,6 +110,7 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, cliConf
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
+		BranchInfos:        branchesSnapshot.Branches,
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesToValidate: gitdomain.LocalBranchNames{branchNameToShip},
 		ConfigSnapshot:     repo.ConfigSnapshot,

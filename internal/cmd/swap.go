@@ -237,6 +237,7 @@ func determineSwapData(args []string, repo execute.OpenRepoResult, cliConfig cli
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
+		BranchInfos:        branchesSnapshot.Branches,
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
 		ConfigSnapshot:     repo.ConfigSnapshot,

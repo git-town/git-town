@@ -71,6 +71,7 @@ func executeBranch(cliConfig cliconfig.CliConfig) error {
 		BranchesAndTypes:  data.branchesAndTypes,
 		ExcludeBranches:   gitdomain.LocalBranchNames{},
 		Lineage:           repo.UnvalidatedConfig.NormalConfig.Lineage,
+		MainBranch:        repo.UnvalidatedConfig.UnvalidatedConfig.MainBranch,
 		Regexes:           []*regexp.Regexp{},
 		ShowAllBranches:   false,
 		UnknownBranchType: repo.UnvalidatedConfig.NormalConfig.UnknownBranchType,
