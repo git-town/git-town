@@ -233,6 +233,7 @@ func determineWalkData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfi
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
+		BranchInfos:        branchesSnapshot.Branches,
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
 		ConfigSnapshot:     repo.ConfigSnapshot,

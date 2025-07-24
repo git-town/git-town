@@ -1,6 +1,8 @@
 package dialog
 
 import (
+	"fmt"
+	"regexp"
 	"slices"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
@@ -9,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/messages"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -51,31 +54,53 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 			}
 		}
 		// ask for parent
-		outcome, selectedBranch, err := Parent(ParentArgs{
-			Branch:        branchToVerify,
-			DefaultChoice: args.DefaultChoice,
-			Inputs:        args.Inputs,
-			Lineage:       args.Config.NormalConfig.Lineage,
-			LocalBranches: args.LocalBranches,
-			MainBranch:    args.MainBranch,
+		excludeBranches := append(
+			gitdomain.LocalBranchNames{branchToVerify},
+			args.Config.NormalConfig.Lineage.Children(branchToVerify)...,
+		)
+		entries := NewSwitchBranchEntries(NewSwitchBranchEntriesArgs{
+			BranchInfos:       args.BranchInfos,
+			BranchTypes:       []configdomain.BranchType{},
+			BranchesAndTypes:  args.BranchesAndTypes,
+			ExcludeBranches:   excludeBranches,
+			Lineage:           args.Config.NormalConfig.Lineage,
+			MainBranch:        Some(args.MainBranch),
+			Regexes:           []*regexp.Regexp{},
+			ShowAllBranches:   true,
+			UnknownBranchType: args.Config.NormalConfig.UnknownBranchType,
 		})
-		if err != nil {
-			return additionalLineage, additionalPerennials, false, err
+		noneEntry := SwitchBranchEntry{
+			Branch:        messages.SetParentNoneOption,
+			Indentation:   "",
+			OtherWorktree: false,
+			Type:          configdomain.BranchTypeFeatureBranch,
 		}
-		switch outcome {
-		case ParentOutcomeExit:
-			return additionalLineage, additionalPerennials, true, nil
-		case ParentOutcomePerennialBranch:
+		entries = append(SwitchBranchEntries{noneEntry}, entries...)
+		newParent, exit, err := SwitchBranch(SwitchBranchArgs{
+			CurrentBranch:      None[gitdomain.LocalBranchName](),
+			Cursor:             1, // select the "main branch" entry, below the "make perennial" entry
+			DisplayBranchTypes: false,
+			Entries:            entries,
+			InputName:          fmt.Sprintf("parent-branch-for-%q", branchToVerify),
+			Inputs:             args.Inputs,
+			Title:              Some(fmt.Sprintf(messages.ParentBranchTitle, branchToVerify)),
+			UncommittedChanges: false,
+		})
+		if err != nil || exit {
+			return additionalLineage, additionalPerennials, exit, err
+		}
+		if newParent == messages.SetParentNoneOption {
 			additionalPerennials = append(additionalPerennials, branchToVerify)
-		case ParentOutcomeSelectedParent:
-			additionalLineage = additionalLineage.Set(branchToVerify, selectedBranch)
-			branchesToVerify = append(branchesToVerify, selectedBranch)
+		} else {
+			additionalLineage = additionalLineage.Set(branchToVerify, newParent)
+			branchesToVerify = append(branchesToVerify, newParent)
 		}
 	}
 	return additionalLineage, additionalPerennials, false, nil
 }
 
 type LineageArgs struct {
+	BranchInfos      gitdomain.BranchInfos
 	BranchesAndTypes configdomain.BranchesAndTypes
 	BranchesToVerify gitdomain.LocalBranchNames
 	Config           config.UnvalidatedConfig

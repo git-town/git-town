@@ -85,6 +85,7 @@ func executeSwitch(args []string, cliConfig cliconfig.CliConfig, allBranches con
 		BranchesAndTypes:  branchesAndTypes,
 		ExcludeBranches:   gitdomain.LocalBranchNames{},
 		Lineage:           data.config.NormalConfig.Lineage,
+		MainBranch:        repo.UnvalidatedConfig.UnvalidatedConfig.MainBranch,
 		Regexes:           data.regexes,
 		ShowAllBranches:   allBranches,
 		UnknownBranchType: unknownBranchType,
@@ -100,6 +101,7 @@ func executeSwitch(args []string, cliConfig cliconfig.CliConfig, allBranches con
 		Entries:            entries,
 		InputName:          "switch-branch",
 		Inputs:             data.inputs,
+		Title:              None[string](),
 		UncommittedChanges: data.uncommittedChanges,
 	})
 	if err != nil || exit {

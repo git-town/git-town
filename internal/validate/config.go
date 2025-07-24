@@ -49,6 +49,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 
 	// enter and save missing parent branches
 	additionalLineage, additionalPerennials, exit, err := dialog.Lineage(dialog.LineageArgs{
+		BranchInfos:      args.BranchInfos,
 		BranchesAndTypes: args.BranchesAndTypes,
 		BranchesToVerify: args.BranchesToValidate,
 		Config:           args.Unvalidated.Immutable(),
@@ -92,6 +93,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 
 type ConfigArgs struct {
 	Backend            subshelldomain.RunnerQuerier
+	BranchInfos        gitdomain.BranchInfos
 	BranchesAndTypes   configdomain.BranchesAndTypes
 	BranchesToValidate gitdomain.LocalBranchNames
 	ConfigSnapshot     undoconfig.ConfigSnapshot
