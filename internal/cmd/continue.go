@@ -148,7 +148,6 @@ func determineContinueData(repo execute.OpenRepoResult, cliConfig cliconfig.CliC
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesAndTypes:   branchesAndTypes,
-		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          data.connector,
