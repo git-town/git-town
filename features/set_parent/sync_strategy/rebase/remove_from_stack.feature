@@ -35,7 +35,7 @@ Feature: remove a branch from a stack
       |          | git push --force-with-lease --force-if-includes            |
     And Git Town prints:
       """
-      Branch "branch-3" is now a child of "main"
+      branch "branch-3" is now a child of "main"
       """
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |

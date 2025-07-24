@@ -13,7 +13,7 @@ Feature: reproduce bug
   Scenario: result
     Then Git Town prints:
       """
-      Branch "test" is now a child of "main"
+      branch "test" is now a child of "main"
       """
     And Git Town runs the commands
       | BRANCH | COMMAND                                    |

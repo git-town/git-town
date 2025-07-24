@@ -27,7 +27,7 @@ Feature: move a branch within a stack
   Scenario: result
     And Git Town prints:
       """
-      Branch "branch-3" is now a child of "branch-1"
+      branch "branch-3" is now a child of "branch-1"
       """
     And Git Town runs the commands
       | BRANCH   | COMMAND                                                        |

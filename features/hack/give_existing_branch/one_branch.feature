@@ -13,7 +13,7 @@ Feature: making a branch a feature branch
       | main   | git fetch --prune --tags |
     And Git Town prints:
       """
-      Branch "contribution" is now a feature branch
+      branch "contribution" is now a feature branch
       """
     And branch "contribution" now has type "feature"
 

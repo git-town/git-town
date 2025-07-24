@@ -27,7 +27,7 @@ Feature: prototype the current branch verbosely
       """
     And Git Town prints:
       """
-      Branch "feature" is now a prototype branch
+      branch "feature" is now a prototype branch
       """
     And branch "feature" now has type "prototype"
 

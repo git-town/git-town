@@ -13,7 +13,7 @@ Feature: making the current contribution branch a feature branch
     Then Git Town runs no commands
     And Git Town prints:
       """
-      Branch "contribution" is now a feature branch
+      branch "contribution" is now a feature branch
       """
     And branch "contribution" now has type "feature"
     And local Git setting "git-town-branch.contribution.branchtype" is now "feature"

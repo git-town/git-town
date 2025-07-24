@@ -27,7 +27,7 @@ Feature: remove a branch from a stack
   Scenario: result
     Then Git Town prints:
       """
-      Branch "branch-2" is now a child of "main"
+      branch "branch-2" is now a child of "main"
       """
     And Git Town runs the commands
       | BRANCH   | COMMAND                                                                 |

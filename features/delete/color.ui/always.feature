@@ -25,7 +25,7 @@ Feature: delete a branch within a branch chain
       | alpha  | git branch -D beta       |
     And Git Town prints:
       """
-      Branch "gamma" is now a child of "alpha"
+      branch "gamma" is now a child of "alpha"
       """
     And no uncommitted files exist now
     And the branches are now

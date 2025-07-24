@@ -13,7 +13,7 @@ Feature: making the current observed branch a feature branch
     Then Git Town runs no commands
     And Git Town prints:
       """
-      Branch "observed" is now a feature branch
+      branch "observed" is now a feature branch
       """
     And branch "observed" now has type "feature"
     And local Git setting "git-town-branch.observed.branchtype" is now "feature"

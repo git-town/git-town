@@ -14,7 +14,7 @@ Feature: make another remote feature branch an observed branch
       |        | git checkout remote-feature |
     And Git Town prints:
       """
-      Branch "remote-feature" is now an observed branch
+      branch "remote-feature" is now an observed branch
       """
     And branch "remote-feature" now has type "observed"
 

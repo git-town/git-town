@@ -11,7 +11,7 @@ Feature: make another parked branch an observed branch
     Then Git Town runs no commands
     And Git Town prints:
       """
-      Branch "parked" is now an observed branch
+      branch "parked" is now an observed branch
       """
     And branch "parked" now has type "observed"
 

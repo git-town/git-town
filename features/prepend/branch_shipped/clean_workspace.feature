@@ -31,7 +31,7 @@ Feature: prepend a branch to a branch that was shipped at the remote
       """
     And Git Town prints:
       """
-      Branch "new" is now a child of "parent"
+      branch "new" is now a child of "parent"
       """
     And the branches are now
       | REPOSITORY | BRANCHES          |

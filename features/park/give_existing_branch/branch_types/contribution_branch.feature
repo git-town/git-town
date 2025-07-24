@@ -11,7 +11,7 @@ Feature: park another contribution branch
     Then Git Town runs no commands
     And Git Town prints:
       """
-      Branch "contribution" is now parked
+      branch "contribution" is now parked
       """
     And branch "contribution" now has type "parked"
 
