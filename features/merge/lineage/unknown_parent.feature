@@ -3,13 +3,16 @@ Feature: merging with missing lineage
 
   Background:
     Given a Git repo with origin
-    And I ran "git checkout -b alpha"
-    And I ran "git checkout -b beta"
+    And the branches
+      | NAME  | TYPE   | PARENT | LOCATIONS |
+      | alpha | (none) |        | local     |
+      | beta  | (none) |        | local     |
     When I run "git-town merge" and enter into the dialog:
       | DIALOG                    | KEYS       |
       | parent branch for "beta"  | down enter |
       | parent branch for "alpha" | enter      |
 
+  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                  |
