@@ -24,7 +24,6 @@ Feature: remove a branch from a stack
     And local Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town set-parent main"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                    |
