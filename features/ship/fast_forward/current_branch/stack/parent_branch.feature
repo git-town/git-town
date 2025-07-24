@@ -25,7 +25,7 @@ Feature: ship a parent branch using the fast-forward strategy
       |        | git branch -D parent       |
     And Git Town prints:
       """
-      branch "child" is now a child of "main"
+      Branch "child" is now a child of "main"
       """
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |

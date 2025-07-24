@@ -26,7 +26,7 @@ Feature: ship a parent branch
       |        | git branch -D parent           |
     And Git Town prints:
       """
-      branch "child" is now a child of "main"
+      Branch "child" is now a child of "main"
       """
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |

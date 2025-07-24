@@ -27,7 +27,7 @@ Feature: remove a branch from a stack
   Scenario: result
     Then Git Town prints:
       """
-      branch "branch-2" is now a child of "main"
+      Branch "branch-2" is now a child of "main"
       """
     And Git Town runs no commands
     And these commits exist now

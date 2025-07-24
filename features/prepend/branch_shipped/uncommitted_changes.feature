@@ -25,11 +25,11 @@ Feature: prepend a branch to a branch that was shipped at the remote
       |        | git restore --staged .      |
     And Git Town prints:
       """
-      branch "new" is now a child of "parent"
+      Branch "new" is now a child of "parent"
       """
     And Git Town prints:
       """
-      branch "child" is now a child of "new"
+      Branch "child" is now a child of "new"
       """
     And the uncommitted file still exists
     And the branches are now

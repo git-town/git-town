@@ -24,6 +24,7 @@ Feature: remove a branch from a stack
     And local Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town set-parent main"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                    |
@@ -34,7 +35,7 @@ Feature: remove a branch from a stack
       |          | git push --force-with-lease --force-if-includes            |
     And Git Town prints:
       """
-      branch "branch-3" is now a child of "main"
+      Branch "branch-3" is now a child of "main"
       """
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
