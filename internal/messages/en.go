@@ -41,7 +41,7 @@ const (
 	BranchIsNowFeature                 = "branch %q is now a feature branch\n"
 	BranchIsNowObserved                = "branch %q is now an observed branch\n"
 	BranchIsNowParked                  = "branch %q is now parked\n"
-	BranchIsNowPerennial               = "branch %q is now perennial.\n"
+	BranchIsNowPerennial               = "branch %q is now perennial\n"
 	BranchIsNowPrototype               = "branch %q is now a prototype branch\n"
 	BranchLocalSHAProblem              = "cannot determine SHA of local branch %q: %w"
 	BranchLocalProblem                 = "cannot determine whether the local branch %q exists: %w"
