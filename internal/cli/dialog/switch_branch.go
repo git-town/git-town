@@ -293,20 +293,13 @@ func layoutBranches(args layoutBranchesArgs) {
 		return
 	}
 	if args.branchInfos.HasLocalBranch(args.branch) || args.showAllBranches.Enabled() {
-		var otherWorktree bool
-		if branchInfo, hasBranchInfo := args.branchInfos.FindByLocalName(args.branch).Get(); hasBranchInfo {
-			otherWorktree = branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
-		} else {
-			otherWorktree = false
-		}
+		branchInfo, hasBranchInfo := args.branchInfos.FindByLocalName(args.branch).Get()
+		otherWorktree := hasBranchInfo && branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
 		branchType, hasBranchType := args.branchesAndTypes[args.branch]
 		if !hasBranchType && len(args.branchTypes) > 0 {
 			branchType = args.unknownBranchType.BranchType()
 		}
-		var hasCorrectBranchType bool
-		if len(args.branchTypes) == 0 || slices.Contains(args.branchTypes, branchType) {
-			hasCorrectBranchType = true
-		}
+		hasCorrectBranchType := len(args.branchTypes) == 0 || slices.Contains(args.branchTypes, branchType)
 		matchesRegex := args.regexes.Matches(args.branch.String())
 		if hasCorrectBranchType && matchesRegex {
 			*args.result = append(*args.result, SwitchBranchEntry{
