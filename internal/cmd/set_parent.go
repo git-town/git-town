@@ -106,7 +106,6 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 	var selectedBranch gitdomain.LocalBranchName
 	switch len(args) {
 	case 0:
-		branchNames := data.branchesSnapshot.Branches.Names()
 		excludeBranches := append(
 			gitdomain.LocalBranchNames{data.initialBranch},
 			data.config.NormalConfig.Lineage.Children(data.initialBranch)...,
@@ -115,7 +114,7 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 			AllBranches:       false,
 			BranchInfos:       data.branchesSnapshot.Branches,
 			BranchTypes:       []configdomain.BranchType{},
-			BranchesAndTypes:  repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchNames),
+			BranchesAndTypes:  repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchesSnapshot.Branches.Names()),
 			ExcludeBranches:   excludeBranches,
 			Lineage:           repo.UnvalidatedConfig.NormalConfig.Lineage,
 			Regexes:           []*regexp.Regexp{},
@@ -128,10 +127,9 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 			Type:          configdomain.BranchTypeFeatureBranch,
 		}
 		entries = append(dialog.SwitchBranchEntries{noneEntry}, entries...)
-		cursor := entries.IndexOf(data.defaultChoice)
 		selectedBranch, exit, err = dialog.SwitchBranch(dialog.SwitchBranchArgs{
 			CurrentBranch:      None[gitdomain.LocalBranchName](),
-			Cursor:             cursor,
+			Cursor:             entries.IndexOf(data.defaultChoice),
 			DisplayBranchTypes: true,
 			Entries:            entries,
 			InputName:          fmt.Sprintf("parent-branch-for-%q", data.initialBranch),
