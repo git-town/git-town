@@ -58,5 +58,4 @@ Feature: handle conflicts between the current feature branch and the main branch
     When I resolve the conflict in "conflicting_file"
     And I run "git rebase --continue" and enter "resolved commit" for the commit message
     And I run "git-town continue"
-    Then Git Town runs the commands
-      | BRANCH | COMMAND |
+    Then Git Town runs no commands
