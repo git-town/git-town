@@ -22,6 +22,14 @@ Feature: handle conflicts between the current feature branch and the main branch
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
+    And file "conflicting_file" now has content:
+      """
+      <<<<<<< HEAD
+      main content
+      =======
+      feature content
+      >>>>>>> {{ sha-short 'conflicting feature commit' }} (conflicting feature commit)
+      """
     And a rebase is now in progress
 
   Scenario: undo
