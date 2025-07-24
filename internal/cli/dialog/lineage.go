@@ -76,7 +76,7 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 			Type:          configdomain.BranchTypeFeatureBranch,
 		}
 		entries = append(SwitchBranchEntries{noneEntry}, entries...)
-		selectedBranch, exit, err := SwitchBranch(SwitchBranchArgs{
+		newParent, exit, err := SwitchBranch(SwitchBranchArgs{
 			CurrentBranch:      None[gitdomain.LocalBranchName](),
 			Cursor:             1, // select the "main branch" entry, below the "make perennial" entry
 			DisplayBranchTypes: false,
@@ -89,11 +89,11 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 		if err != nil || exit {
 			return additionalLineage, additionalPerennials, exit, err
 		}
-		if selectedBranch == messages.SetParentNoneOption {
+		if newParent == messages.SetParentNoneOption {
 			additionalPerennials = append(additionalPerennials, branchToVerify)
 		} else {
-			additionalLineage = additionalLineage.Set(branchToVerify, selectedBranch)
-			branchesToVerify = append(branchesToVerify, selectedBranch)
+			additionalLineage = additionalLineage.Set(branchToVerify, newParent)
+			branchesToVerify = append(branchesToVerify, newParent)
 		}
 	}
 	return additionalLineage, additionalPerennials, false, nil
