@@ -14,7 +14,7 @@ Feature: hack an existing contribution branch
       | main   | git fetch --prune --tags |
     And Git Town prints:
       """
-      branch "existing" is now a feature branch
+      Branch "existing" is now a feature branch
       """
     And branch "existing" now has type "feature"
     And the initial branches and lineage exist now

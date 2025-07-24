@@ -13,17 +13,17 @@ Feature: making multiple branches a feature branch
     Then Git Town runs no commands
     And Git Town prints:
       """
-      branch "contribution" is now a feature branch
+      Branch "contribution" is now a feature branch
       """
     And branch "contribution" now has type "feature"
     And Git Town prints:
       """
-      branch "observed" is now a feature branch
+      Branch "observed" is now a feature branch
       """
     And branch "observed" now has type "feature"
     And Git Town prints:
       """
-      branch "parked" is now a feature branch
+      Branch "parked" is now a feature branch
       """
     And branch "parked" now has type "feature"
 

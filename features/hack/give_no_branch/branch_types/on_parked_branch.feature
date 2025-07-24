@@ -13,7 +13,7 @@ Feature: making the current parked branch a feature branch
     Then Git Town runs no commands
     And Git Town prints:
       """
-      branch "parked" is now a feature branch
+      Branch "parked" is now a feature branch
       """
     And branch "parked" now has type "feature"
     And local Git setting "git-town-branch.parked.branchtype" is now "feature"
