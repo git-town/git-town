@@ -33,10 +33,10 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 		}
 		// If a perennial branch isn't local, it isn't in args.BranchesAndTypes.
 		// We therefore exclude them manually here.
-		if slices.Contains(args.UnvalidatedConfig.NormalConfig.PerennialBranches, branchToVerify) {
+		if slices.Contains(args.Config.NormalConfig.PerennialBranches, branchToVerify) {
 			continue
 		}
-		if parent, hasParent := args.UnvalidatedConfig.NormalConfig.Lineage.Parent(branchToVerify).Get(); hasParent {
+		if parent, hasParent := args.Config.NormalConfig.Lineage.Parent(branchToVerify).Get(); hasParent {
 			branchesToVerify = append(branchesToVerify, parent)
 			continue
 		}
@@ -55,17 +55,17 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 		// ask for parent
 		excludeBranches := append(
 			gitdomain.LocalBranchNames{branchToVerify},
-			args.UnvalidatedConfig.NormalConfig.Lineage.Children(branchToVerify)...,
+			args.Config.NormalConfig.Lineage.Children(branchToVerify)...,
 		)
 		entries := NewSwitchBranchEntries(NewSwitchBranchEntriesArgs{
 			BranchInfos:       args.BranchInfos,
 			BranchTypes:       []configdomain.BranchType{},
 			BranchesAndTypes:  args.BranchesAndTypes,
 			ExcludeBranches:   excludeBranches,
-			Lineage:           args.UnvalidatedConfig.NormalConfig.Lineage,
+			Lineage:           args.Config.NormalConfig.Lineage,
 			Regexes:           []*regexp.Regexp{},
 			ShowAllBranches:   true,
-			UnknownBranchType: args.UnvalidatedConfig.NormalConfig.UnknownBranchType,
+			UnknownBranchType: args.Config.NormalConfig.UnknownBranchType,
 		})
 		noneEntry := SwitchBranchEntry{
 			Branch:        messages.SetParentNoneOption,
@@ -106,13 +106,13 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 }
 
 type LineageArgs struct {
-	BranchInfos       gitdomain.BranchInfos
-	BranchesAndTypes  configdomain.BranchesAndTypes
-	BranchesToVerify  gitdomain.LocalBranchNames
-	Connector         Option[forgedomain.Connector]
-	DefaultChoice     gitdomain.LocalBranchName
-	Inputs            dialogcomponents.Inputs
-	LocalBranches     gitdomain.LocalBranchNames
-	MainBranch        gitdomain.LocalBranchName
-	UnvalidatedConfig config.UnvalidatedConfig
+	BranchInfos      gitdomain.BranchInfos
+	BranchesAndTypes configdomain.BranchesAndTypes
+	BranchesToVerify gitdomain.LocalBranchNames
+	Config           config.UnvalidatedConfig
+	Connector        Option[forgedomain.Connector]
+	DefaultChoice    gitdomain.LocalBranchName
+	Inputs           dialogcomponents.Inputs
+	LocalBranches    gitdomain.LocalBranchNames
+	MainBranch       gitdomain.LocalBranchName
 }
