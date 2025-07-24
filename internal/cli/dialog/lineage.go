@@ -77,10 +77,10 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 		entries = append(SwitchBranchEntries{noneEntry}, entries...)
 		selectedBranch, exit, err := SwitchBranch(SwitchBranchArgs{
 			CurrentBranch:      None[gitdomain.LocalBranchName](),
-			Cursor:             0,
+			Cursor:             1,
 			DisplayBranchTypes: false,
 			Entries:            entries,
-			InputName:          "",
+			InputName:          fmt.Sprintf("parent-branch-for-%q", branchToVerify),
 			Inputs:             args.Inputs,
 			Title:              Some(fmt.Sprintf(ParentBranchTitleTemplate, branchToVerify)),
 			UncommittedChanges: false,
