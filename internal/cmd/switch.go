@@ -81,13 +81,13 @@ func executeSwitch(args []string, cliConfig cliconfig.CliConfig, allBranches con
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchNames)
 	unknownBranchType := repo.UnvalidatedConfig.NormalConfig.UnknownBranchType
 	entries := SwitchBranchEntries(SwitchBranchArgs{
-		AllBranches:       allBranches,
 		BranchInfos:       data.branchesSnapshot.Branches,
 		BranchTypes:       branchTypes,
 		BranchesAndTypes:  branchesAndTypes,
 		ExcludeBranches:   gitdomain.LocalBranchNames{},
 		Lineage:           data.config.NormalConfig.Lineage,
 		Regexes:           data.regexes,
+		ShowAllBranches:   allBranches,
 		UnknownBranchType: unknownBranchType,
 	})
 	if len(entries) == 0 {
@@ -187,7 +187,6 @@ func SwitchBranchEntries(args SwitchBranchArgs) dialog.SwitchBranchEntries {
 	// add all entries from the lineage
 	for _, root := range roots {
 		layoutBranches(layoutBranchesArgs{
-			allBranches:       args.AllBranches,
 			branch:            root,
 			branchInfos:       args.BranchInfos,
 			branchTypes:       args.BranchTypes,
@@ -197,6 +196,7 @@ func SwitchBranchEntries(args SwitchBranchArgs) dialog.SwitchBranchEntries {
 			lineage:           args.Lineage,
 			regexes:           args.Regexes,
 			result:            &entries,
+			showAllBranches:   args.ShowAllBranches,
 			unknownBranchType: args.UnknownBranchType,
 		})
 	}
@@ -214,7 +214,6 @@ func SwitchBranchEntries(args SwitchBranchArgs) dialog.SwitchBranchEntries {
 			continue
 		}
 		layoutBranches(layoutBranchesArgs{
-			allBranches:       args.AllBranches,
 			branch:            localBranch,
 			branchInfos:       args.BranchInfos,
 			branchTypes:       args.BranchTypes,
@@ -224,6 +223,7 @@ func SwitchBranchEntries(args SwitchBranchArgs) dialog.SwitchBranchEntries {
 			lineage:           args.Lineage,
 			regexes:           args.Regexes,
 			result:            &entries,
+			showAllBranches:   args.ShowAllBranches,
 			unknownBranchType: args.UnknownBranchType,
 		})
 	}
@@ -231,13 +231,13 @@ func SwitchBranchEntries(args SwitchBranchArgs) dialog.SwitchBranchEntries {
 }
 
 type SwitchBranchArgs struct {
-	AllBranches       configdomain.AllBranches
 	BranchInfos       gitdomain.BranchInfos
 	BranchTypes       []configdomain.BranchType
 	BranchesAndTypes  configdomain.BranchesAndTypes
 	ExcludeBranches   gitdomain.LocalBranchNames
 	Lineage           configdomain.Lineage
 	Regexes           []*regexp.Regexp
+	ShowAllBranches   configdomain.AllBranches
 	UnknownBranchType configdomain.UnknownBranchType
 }
 
@@ -247,7 +247,7 @@ func layoutBranches(args layoutBranchesArgs) {
 	if args.excludeBranches.Contains(args.branch) {
 		return
 	}
-	if args.branchInfos.HasLocalBranch(args.branch) || args.allBranches.Enabled() {
+	if args.branchInfos.HasLocalBranch(args.branch) || args.showAllBranches.Enabled() {
 		var otherWorktree bool
 		if branchInfo, hasBranchInfo := args.branchInfos.FindByLocalName(args.branch).Get(); hasBranchInfo {
 			otherWorktree = branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
@@ -274,7 +274,6 @@ func layoutBranches(args layoutBranchesArgs) {
 	}
 	for _, child := range args.lineage.Children(args.branch) {
 		layoutBranches(layoutBranchesArgs{
-			allBranches:       args.allBranches,
 			branch:            child,
 			branchInfos:       args.branchInfos,
 			branchTypes:       args.branchTypes,
@@ -284,13 +283,13 @@ func layoutBranches(args layoutBranchesArgs) {
 			lineage:           args.lineage,
 			regexes:           args.regexes,
 			result:            args.result,
+			showAllBranches:   args.showAllBranches,
 			unknownBranchType: args.unknownBranchType,
 		})
 	}
 }
 
 type layoutBranchesArgs struct {
-	allBranches       configdomain.AllBranches
 	branch            gitdomain.LocalBranchName
 	branchInfos       gitdomain.BranchInfos
 	branchTypes       []configdomain.BranchType
@@ -300,5 +299,6 @@ type layoutBranchesArgs struct {
 	lineage           configdomain.Lineage
 	regexes           regexes.Regexes
 	result            *dialog.SwitchBranchEntries
+	showAllBranches   configdomain.AllBranches
 	unknownBranchType configdomain.UnknownBranchType
 }
