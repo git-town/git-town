@@ -102,7 +102,7 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 	if err != nil {
 		return err
 	}
-	var selectedBranch gitdomain.LocalBranchName
+	var selectedParent gitdomain.LocalBranchName
 	newParentOpt := None[gitdomain.LocalBranchName]()
 	switch len(args) {
 	case 0:
@@ -128,7 +128,7 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 			Type:          configdomain.BranchTypeFeatureBranch,
 		}
 		entries = append(dialog.SwitchBranchEntries{noneEntry}, entries...)
-		selectedBranch, exit, err = dialog.SwitchBranch(dialog.SwitchBranchArgs{
+		selectedParent, exit, err = dialog.SwitchBranch(dialog.SwitchBranchArgs{
 			CurrentBranch:      None[gitdomain.LocalBranchName](),
 			Cursor:             entries.IndexOf(data.defaultChoice),
 			DisplayBranchTypes: true,
@@ -141,15 +141,15 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 		if err != nil || exit {
 			return err
 		}
-		if selectedBranch != messages.SetParentNoneOption {
-			newParentOpt = Some(selectedBranch)
+		if selectedParent != messages.SetParentNoneOption {
+			newParentOpt = Some(selectedParent)
 		}
 	case 1:
-		selectedBranch = gitdomain.NewLocalBranchName(args[0])
-		if !data.branchesSnapshot.Branches.HasLocalBranch(selectedBranch) {
-			return fmt.Errorf(messages.BranchDoesntExist, selectedBranch)
+		selectedParent = gitdomain.NewLocalBranchName(args[0])
+		if !data.branchesSnapshot.Branches.HasLocalBranch(selectedParent) {
+			return fmt.Errorf(messages.BranchDoesntExist, selectedParent)
 		}
-		newParentOpt = Some(selectedBranch)
+		newParentOpt = Some(selectedParent)
 	}
 	runProgram, exit := setParentProgram(newParentOpt, data)
 	if exit {
