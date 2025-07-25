@@ -424,10 +424,14 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "CurrentBranch": "branch",
-        "BranchToRebaseOnto": "parent"
+        "FilePath": "file",
+        "Resolution": "ours",
       },
-      "type": "ConflictRebasePhantomResolveAll"
+      "type": "ConflictPhantomResolve",
+    },
+    {
+      "data": {},,
+      "type": "ConflictRebasePhantomFinalize",
     },
     {
       "data": {
