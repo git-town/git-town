@@ -1,8 +1,6 @@
 package opcodes
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
 )
@@ -21,7 +19,6 @@ func (self *RebaseBranch) Abort() []shared.Opcode {
 }
 
 func (self *RebaseBranch) Continue() []shared.Opcode {
-	fmt.Println("111111111111111111111111111 CONTINUE REBASE BRANCH")
 	return []shared.Opcode{
 		&RebaseContinueIfNeeded{},
 	}
