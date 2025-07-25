@@ -414,18 +414,18 @@ func TestLoadSave(t *testing.T) {
         "ParentSHA": "123456",
         "Resolution": "ours"
       },
-      "type": "ConflictPhantomResolveAll"
+      "type": "ConflictMergePhantomResolveAll"
     },
     {
       "data": {},
-      "type": "ConflictPhantomFinalize"
+      "type": "ConflictMergePhantomFinalize"
     },
     {
       "data": {
         "FilePath": "file",
         "Resolution": "ours"
       },
-      "type": "ConflictPhantomResolve"
+      "type": "ConflictMergePhantomResolve"
     },
     {
       "data": {
