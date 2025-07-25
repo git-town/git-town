@@ -706,7 +706,7 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "Branch": "branch",
-        "PreviousSHA": "123456"
+        "ParentSHAPreviousRun": "123456"
       },
       "type": "RebaseParentsUntilLocal"
     },
@@ -782,7 +782,7 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "Branch": "branch",
-        "ParentLastRunSHA": "111111",
+        "ParentSHAPreviousRun": "111111",
         "PushBranches": true,
         "TrackingBranch": "origin/branch"
       },
