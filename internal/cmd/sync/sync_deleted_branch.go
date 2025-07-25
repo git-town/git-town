@@ -9,10 +9,10 @@ import (
 )
 
 // deletedBranchProgram adds opcodes that sync a branch that was deleted at origin to the given program.
-func deletedBranchProgram(prog Mutable[program.Program], branch gitdomain.LocalBranchName, initialParentName Option[gitdomain.LocalBranchName], initialParentSHA, parentLastRunSHA Option[gitdomain.SHA], args BranchProgramArgs) {
+func deletedBranchProgram(prog Mutable[program.Program], branch gitdomain.LocalBranchName, initialParentName Option[gitdomain.LocalBranchName], initialParentSHA, parentSHAPreviousRun Option[gitdomain.SHA], args BranchProgramArgs) {
 	switch args.Config.BranchType(branch) {
 	case configdomain.BranchTypeFeatureBranch:
-		syncDeletedFeatureBranchProgram(prog, branch, initialParentName, initialParentSHA, parentLastRunSHA, args)
+		syncDeletedFeatureBranchProgram(prog, branch, initialParentName, initialParentSHA, parentSHAPreviousRun, args)
 	case
 		configdomain.BranchTypePerennialBranch,
 		configdomain.BranchTypeMainBranch,
@@ -31,7 +31,7 @@ func deletedBranchProgram(prog Mutable[program.Program], branch gitdomain.LocalB
 
 // syncDeletedFeatureBranchProgram syncs a feare branch whose remote has been deleted.
 // The parent branch must have been fully synced before calling this function.
-func syncDeletedFeatureBranchProgram(prog Mutable[program.Program], branch gitdomain.LocalBranchName, initialParentName Option[gitdomain.LocalBranchName], initialParentSHA, parentLastRunSHA Option[gitdomain.SHA], args BranchProgramArgs) {
+func syncDeletedFeatureBranchProgram(prog Mutable[program.Program], branch gitdomain.LocalBranchName, initialParentName Option[gitdomain.LocalBranchName], initialParentSHA, parentSHAPreviousRun Option[gitdomain.SHA], args BranchProgramArgs) {
 	var syncStatus gitdomain.SyncStatus
 	if preFetchBranchInfo, has := args.PrefetchBranchInfos.FindByLocalName(branch).Get(); has {
 		syncStatus = preFetchBranchInfo.SyncStatus
@@ -54,12 +54,12 @@ func syncDeletedFeatureBranchProgram(prog Mutable[program.Program], branch gitdo
 		gitdomain.SyncStatusNotInSync:
 		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: branch})
 		pullParentBranchOfCurrentFeatureBranchOpcode(pullParentBranchOfCurrentFeatureBranchOpcodeArgs{
-			branch:            branch,
-			initialParentName: initialParentName,
-			initialParentSHA:  initialParentSHA,
-			previousParentSHA: parentLastRunSHA,
-			program:           prog,
-			syncStrategy:      args.Config.NormalConfig.SyncFeatureStrategy,
+			branch:               branch,
+			initialParentName:    initialParentName,
+			initialParentSHA:     initialParentSHA,
+			parentSHAPreviousRun: parentSHAPreviousRun,
+			program:              prog,
+			syncStrategy:         args.Config.NormalConfig.SyncFeatureStrategy,
 			// this function syncs a branch whose remote was deleted --> we know for sure there is no tracking branch
 			trackingBranch: None[gitdomain.RemoteBranchName](),
 		})
