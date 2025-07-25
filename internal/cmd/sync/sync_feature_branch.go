@@ -43,10 +43,10 @@ func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBr
 	case configdomain.SyncStrategyRebase:
 		args.program.Value.Add(
 			&opcodes.SyncFeatureBranchRebase{
-				Branch:           args.localName,
-				ParentLastRunSHA: args.parentLastRunSHA,
-				PushBranches:     args.pushBranches,
-				TrackingBranch:   args.trackingBranch,
+				Branch:               args.localName,
+				ParentSHAPreviousRun: args.parentSHAPreviousRun,
+				PushBranches:         args.pushBranches,
+				TrackingBranch:       args.trackingBranch,
 			},
 		)
 	}
@@ -56,14 +56,14 @@ func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBr
 }
 
 type featureBranchArgs struct {
-	firstCommitMessage Option[gitdomain.CommitMessage]
-	initialParentName  Option[gitdomain.LocalBranchName] // the parent when Git Town started
-	initialParentSHA   Option[gitdomain.SHA]             // the parent when Git Town started
-	localName          gitdomain.LocalBranchName         // name of the feature branch
-	offline            configdomain.Offline              // whether offline mode is enabled
-	parentLastRunSHA   Option[gitdomain.SHA]             // the parent at the end of the last Git Town command
-	program            Mutable[program.Program]          // the program to update
-	prune              configdomain.Prune
-	pushBranches       configdomain.PushBranches
-	trackingBranch     Option[gitdomain.RemoteBranchName]
+	firstCommitMessage   Option[gitdomain.CommitMessage]
+	initialParentName    Option[gitdomain.LocalBranchName] // the parent when Git Town started
+	initialParentSHA     Option[gitdomain.SHA]             // the parent when Git Town started
+	localName            gitdomain.LocalBranchName         // name of the feature branch
+	offline              configdomain.Offline              // whether offline mode is enabled
+	parentSHAPreviousRun Option[gitdomain.SHA]             // the parent at the end of the last Git Town command
+	program              Mutable[program.Program]          // the program to update
+	prune                configdomain.Prune
+	pushBranches         configdomain.PushBranches
+	trackingBranch       Option[gitdomain.RemoteBranchName]
 }
