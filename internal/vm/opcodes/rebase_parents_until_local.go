@@ -60,6 +60,10 @@ func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
 			// TODO: this doesn't work correctly if the main branch contains a new commit.
 			// Then we have a proper merge conflict, which shouldn't get auto-resolved.
 			// So we need some sort of phantom merge conflict detection here.
+			//
+			// Rather than calling RebaseOntoKeepDeleted, we should call RebaseOntoResolvePhantomConflicts.
+			// This opcode then checks each conflicting file and if it identifies a phantom merge conflict,
+			// it auto-resolves it. It leaves the other conflicts open to let the user resolve them.
 			program = append(program, &RebaseOntoKeepDeleted{
 				BranchToRebaseOnto: branchToRebase,
 				CommitsToRemove:    parentSHAPreviousRun.Location(),
