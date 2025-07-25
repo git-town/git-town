@@ -12,7 +12,7 @@ type SyncFeatureBranchRebase struct {
 	Branch gitdomain.LocalBranchName
 	// InitialParentName       Option[gitdomain.LocalBranchName]
 	// InitialParentSHA        Option[gitdomain.SHA]
-	ParentLastRunSHA        Option[gitdomain.SHA]
+	ParentSHAPreviousRun    Option[gitdomain.SHA]
 	PushBranches            configdomain.PushBranches
 	TrackingBranch          Option[gitdomain.RemoteBranchName]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
@@ -34,8 +34,8 @@ func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
 	}
 	program = append(program,
 		&RebaseParentsUntilLocal{
-			Branch:            self.Branch,
-			PreviousParentSHA: self.ParentLastRunSHA,
+			Branch:               self.Branch,
+			ParentSHAPreviousRun: self.ParentSHAPreviousRun,
 		},
 	)
 	syncTracking, hasTrackingBranch, _, err := self.shouldSyncWithTracking(args)

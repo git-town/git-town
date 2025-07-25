@@ -9,7 +9,7 @@ import (
 
 type RebaseParentsUntilLocal struct {
 	Branch                  gitdomain.LocalBranchName
-	PreviousParentSHA       Option[gitdomain.SHA]
+	ParentSHAPreviousRun    Option[gitdomain.SHA]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
@@ -52,15 +52,15 @@ func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
 		} else {
 			branchToRebase = parent.BranchName()
 		}
-		// WHY DO WE LOOK AT THE PREVIOUS SHA HERE?
-		// what is this the previous SHA of?
-		// the previous parent. Which previous parent?
-		if previousParentSHA, hasPreviousParentSHA := self.PreviousParentSHA.Get(); hasPreviousParentSHA {
+		if parentSHAPreviousRun, hasParentSHAPreviousRun := self.ParentSHAPreviousRun.Get(); hasParentSHAPreviousRun {
+			// Here we rebase onto the new parent, while removing the commits that the parent had in the last run.
+			// This allows syncing while some commits were amended
+			// by removing the old commits that were amended and should no longer exist in the branch.
 			// TODO: we can't assume that we can always keep the deleted variant here.
 			// We need to check whether the other variant contains fresh changes?
 			program = append(program, &RebaseOntoKeepDeleted{
 				BranchToRebaseOnto: branchToRebase,
-				CommitsToRemove:    previousParentSHA.Location(),
+				CommitsToRemove:    parentSHAPreviousRun.Location(),
 				Upstream:           None[gitdomain.LocalBranchName](),
 			})
 		} else {
