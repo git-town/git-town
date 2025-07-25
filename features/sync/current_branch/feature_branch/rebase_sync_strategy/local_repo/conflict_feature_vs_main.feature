@@ -4,9 +4,7 @@ Feature: handle conflicts between the current feature branch and the main branch
   Background:
     Given a local Git repo
     And Git setting "git-town.sync-feature-strategy" is "rebase"
-    And the branches
-      | NAME    | TYPE    | PARENT | LOCATIONS |
-      | feature | feature | main   | local     |
+    And I ran "git-town hack feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
@@ -15,7 +13,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     # And inspect the repo
     When I run "git-town sync"
 
-  @debug @this
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                    |
