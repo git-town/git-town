@@ -425,13 +425,13 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "FilePath": "file",
-        "Resolution": "ours",
+        "Resolution": "ours"
       },
-      "type": "ConflictPhantomResolve",
+      "type": "ConflictPhantomResolve"
     },
     {
-      "data": {},,
-      "type": "ConflictRebasePhantomFinalize",
+      "data": {},
+      "type": "ConflictRebasePhantomFinalize"
     },
     {
       "data": {
