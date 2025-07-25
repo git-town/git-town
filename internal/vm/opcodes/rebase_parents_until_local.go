@@ -54,8 +54,8 @@ func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
 		}
 		if parentSHAPreviousRun, hasParentSHAPreviousRun := self.ParentSHAPreviousRun.Get(); hasParentSHAPreviousRun {
 			// Here we rebase onto the new parent, while removing the commits that the parent had in the last run.
-			// This allows syncing while some commits were amended
-			// by removing the old commits that were amended and should no longer exist in the branch.
+			// This removes old versions of commits that were amended by the user.
+			// The new commits of the parent get added back during the rebase.
 			// TODO: we can't assume that we can always keep the deleted variant here.
 			// We need to check whether the other variant contains fresh changes?
 			program = append(program, &RebaseOntoKeepDeleted{
