@@ -294,14 +294,12 @@ func renameProgram(repo execute.OpenRepoResult, data renameData, finalMessages s
 	if !data.config.NormalConfig.DryRun {
 		if override, hasBranchTypeOverride := data.config.NormalConfig.BranchTypeOverrides[oldLocalBranch]; hasBranchTypeOverride {
 			prog.Value.Add(
-				&opcodes.ConfigSet{
-					Key:   configdomain.NewBranchTypeOverrideKeyForBranch(data.newBranch).Key,
-					Scope: configdomain.ConfigScopeLocal,
-					Value: override.String(),
+				&opcodes.BranchTypeOverrideSet{
+					Branch:     data.newBranch,
+					BranchType: override,
 				},
-				&opcodes.ConfigRemove{
-					Key:   configdomain.NewBranchTypeOverrideKeyForBranch(oldLocalBranch).Key,
-					Scope: configdomain.ConfigScopeLocal,
+				&opcodes.BranchTypeOverrideRemove{
+					Branch: oldLocalBranch,
 				},
 			)
 		}
