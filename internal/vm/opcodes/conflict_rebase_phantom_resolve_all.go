@@ -34,11 +34,11 @@ func (self *ConflictRebasePhantomResolveAll) Run(args shared.RunArgs) error {
 	if err != nil {
 		return err
 	}
-	phantomRebaseConflicts := git.DetectPhantomRebaseConflicts(fullInfos, self.BranchToRebaseOnto, rootBranch)
+	phantomConflicts := git.DetectPhantomRebaseConflicts(fullInfos, self.BranchToRebaseOnto, rootBranch)
 	newOpcodes := []shared.Opcode{}
-	for _, phantomMergeConflict := range phantomRebaseConflicts {
+	for _, phantomConflict := range phantomConflicts {
 		newOpcodes = append(newOpcodes, &ConflictPhantomResolve{
-			FilePath:   phantomMergeConflict.FilePath,
+			FilePath:   phantomConflict.FilePath,
 			Resolution: gitdomain.ConflictResolutionTheirs,
 		})
 	}
