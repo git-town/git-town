@@ -26,12 +26,12 @@ func (self *ConflictMergePhantomFinalize) Continue() []shared.Opcode {
 }
 
 func (self *ConflictMergePhantomFinalize) Run(args shared.RunArgs) error {
-	unmergedFiles, err := args.Git.FileConflictQuickInfos(args.Backend)
+	unresolvedFiles, err := args.Git.FileConflictQuickInfos(args.Backend)
 	if err != nil {
 		return err
 	}
-	if len(unmergedFiles) > 0 {
-		// there are still unmerged files --> these are not phantom merge conflicts, let the user sort this out
+	if len(unresolvedFiles) > 0 {
+		// there are still unresolved files --> these are not phantom merge conflicts, let the user sort this out
 		return errors.New(messages.ConflictMerge)
 	}
 	// here all merge conflicts have been resolved --> commit to finish the merge conflict and continue the program
