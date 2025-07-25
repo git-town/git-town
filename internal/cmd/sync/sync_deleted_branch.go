@@ -22,9 +22,11 @@ func deletedBranchProgram(prog Mutable[program.Program], branch gitdomain.LocalB
 		configdomain.BranchTypePrototypeBranch:
 		syncDeleteLocalBranchProgram(prog, branch, args)
 	}
-	prog.Value.Add(&opcodes.BranchTypeOverrideRemove{
-		Branch: branch,
-	})
+	if _, hasOverride := args.Config.NormalConfig.BranchTypeOverrides[branch]; hasOverride {
+		prog.Value.Add(&opcodes.BranchTypeOverrideRemove{
+			Branch: branch,
+		})
+	}
 }
 
 // syncDeletedFeatureBranchProgram syncs a feare branch whose remote has been deleted.
