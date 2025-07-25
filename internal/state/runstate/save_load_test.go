@@ -425,7 +425,7 @@ func TestLoadSave(t *testing.T) {
         "FilePath": "file",
         "Resolution": "ours"
       },
-      "type": "ConflictMergePhantomResolve"
+      "type": "ConflictPhantomResolve"
     },
     {
       "data": {
