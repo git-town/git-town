@@ -86,8 +86,8 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.ConfigRemove{Key: configdomain.KeyOffline, Scope: configdomain.ConfigScopeLocal},
 				&opcodes.ConfigSet{Key: configdomain.KeyOffline, Scope: configdomain.ConfigScopeLocal, Value: "1"},
 				&opcodes.ConflictMergePhantomResolveAll{CurrentBranch: "current", ParentBranch: gitdomain.NewLocalBranchNameOption("parent"), ParentSHA: Some(gitdomain.NewSHA("123456")), Resolution: gitdomain.ConflictResolutionOurs},
-				&opcodes.ConflictPhantomFinalize{},
-				&opcodes.ConflictPhantomResolve{FilePath: "file", Resolution: gitdomain.ConflictResolutionOurs},
+				&opcodes.ConflictMergePhantomFinalize{},
+				&opcodes.ConflictMergePhantomResolve{FilePath: "file", Resolution: gitdomain.ConflictResolutionOurs},
 				&opcodes.ConnectorProposalMerge{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Proposal: forgedomain.Proposal{Data: forgedomain.BitbucketCloudProposalData{ProposalData: forgedomain.ProposalData{Body: Some("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}}, ForgeType: forgedomain.ForgeTypeBitbucket}},
 				&opcodes.ExecuteShellCommand{Args: []string{"arg1", "arg2"}, Executable: "executable"},
 				&opcodes.ExitToShell{},
@@ -414,18 +414,18 @@ func TestLoadSave(t *testing.T) {
         "ParentSHA": "123456",
         "Resolution": "ours"
       },
-      "type": "ConflictPhantomResolveAll"
+      "type": "ConflictMergePhantomResolveAll"
     },
     {
       "data": {},
-      "type": "ConflictPhantomFinalize"
+      "type": "ConflictMergePhantomFinalize"
     },
     {
       "data": {
         "FilePath": "file",
         "Resolution": "ours"
       },
-      "type": "ConflictPhantomResolve"
+      "type": "ConflictMergePhantomResolve"
     },
     {
       "data": {
