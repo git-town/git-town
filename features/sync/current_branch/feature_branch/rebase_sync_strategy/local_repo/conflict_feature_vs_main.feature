@@ -13,7 +13,6 @@ Feature: handle conflicts between the current feature branch and the main branch
     # And inspect the repo
     When I run "git-town sync"
 
-  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                      |
@@ -40,6 +39,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     And no rebase is now in progress
     And the initial commits exist now
 
+  @this
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
     Then Git Town runs no commands
