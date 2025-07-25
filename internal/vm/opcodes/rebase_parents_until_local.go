@@ -53,7 +53,9 @@ func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
 			branchToRebase = parent.BranchName()
 		}
 		if parentSHAPreviousRun, hasParentSHAPreviousRun := self.ParentSHAPreviousRun.Get(); hasParentSHAPreviousRun {
-			// here we rebase onto the new parent, while removing the commits that the parent had in the last run
+			// Here we rebase onto the new parent, while removing the commits that the parent had in the last run.
+			// This allows syncing while some commits were amended
+			// by removing the old commits that were amended and should no longer exist in the branch.
 			program = append(program, &RebaseOntoKeepDeleted{
 				BranchToRebaseOnto: branchToRebase,
 				CommitsToRemove:    parentSHAPreviousRun.Location(),
