@@ -4,14 +4,11 @@ import (
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 type ConflictRebasePhantomResolveAll struct {
 	CurrentBranch           gitdomain.LocalBranchName
 	BranchToRebaseOnto      gitdomain.BranchName
-	ParentSHA               Option[gitdomain.SHA]
-	Resolution              gitdomain.ConflictResolution
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
@@ -42,10 +39,10 @@ func (self *ConflictRebasePhantomResolveAll) Run(args shared.RunArgs) error {
 	for _, phantomMergeConflict := range phantomRebaseConflicts {
 		newOpcodes = append(newOpcodes, &ConflictPhantomResolve{
 			FilePath:   phantomMergeConflict.FilePath,
-			Resolution: self.Resolution,
+			Resolution: gitdomain.ConflictResolutionTheirs,
 		})
 	}
-	newOpcodes = append(newOpcodes, &ConflictMergePhantomFinalize{})
+	newOpcodes = append(newOpcodes, &ConflictRebasePhantomFinalize{})
 	args.PrependOpcodes(newOpcodes...)
 	return nil
 }

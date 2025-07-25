@@ -1,11 +1,8 @@
 package opcodes
 
 import (
-	"fmt"
 	"time"
 
-	"github.com/davecgh/go-spew/spew"
-	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/subshell"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
@@ -17,7 +14,6 @@ type RebaseOntoResolvePhantomConflicts struct {
 	BranchToRebaseOnto      gitdomain.BranchName
 	CommitsToRemove         gitdomain.Location
 	CurrentBranch           gitdomain.LocalBranchName
-	Resolution              gitdomain.ConflictResolution
 	Upstream                Option[gitdomain.LocalBranchName]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
@@ -37,36 +33,9 @@ func (self *RebaseOntoResolvePhantomConflicts) Run(args shared.RunArgs) error {
 	}
 	if err := args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseOnto.Location(), self.CommitsToRemove, self.Upstream); err != nil {
 		args.PrependOpcodes(&ConflictRebasePhantomResolveAll{
-			CurrentBranch: self.CurrentBranch,
-			ParentBranch:  self.InitialParentName,
-			ParentSHA:     self.InitialParentSHA,
-			Resolution:    gitdomain.ConflictResolutionOurs,
+			CurrentBranch:      self.CurrentBranch,
+			BranchToRebaseOnto: self.BranchToRebaseOnto,
 		})
-
-		conflictingFiles, err := args.Git.FileConflictQuickInfos(args.Backend)
-		if err != nil {
-			return fmt.Errorf("cannot determine conflicting files after rebase: %w", err)
-		}
-		rootBranch := args.Config.Value.NormalConfig.Lineage.Root(self.CurrentBranch)
-		fullInfos, err := args.Git.FileConflictFullInfos(args.Backend, conflictingFiles, self.BranchToRebaseOnto.Location(), rootBranch)
-		if err != nil {
-			return err
-		}
-		phantomRebaseConflicts := git.DetectPhantomRebaseConflicts(fullInfos, self.BranchToRebaseOnto, rootBranch)
-		fmt.Println("333333333333333333333333333333333333333333")
-		spew.Dump(phantomRebaseConflicts)
-		newOpcodes := []shared.Opcode{}
-		for _, phantomRebaseConflict := range phantomRebaseConflicts {
-			newOpcodes = append(newOpcodes, &ConflictRebasePhantomResolve{
-				FilePath:   phantomRebaseConflict.FilePath,
-				Resolution: self.Resolution,
-			})
-		}
-		newOpcodes = append(newOpcodes, &ConflictRebasePhantomFinalize{})
-		args.PrependOpcodes(newOpcodes...)
-		if err = args.Git.ContinueRebase(args.Frontend); err != nil {
-			return fmt.Errorf("cannot continue rebase: %w", err)
-		}
 	}
 	return nil
 }

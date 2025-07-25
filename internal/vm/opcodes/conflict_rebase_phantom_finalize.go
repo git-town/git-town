@@ -1,0 +1,28 @@
+package opcodes
+
+import (
+	"errors"
+
+	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/vm/shared"
+)
+
+type ConflictRebasePhantomFinalize struct {
+	undeclaredOpcodeMethods `exhaustruct:"optional"`
+}
+
+func (self *ConflictRebasePhantomFinalize) Run(args shared.RunArgs) error {
+	unresolvedFiles, err := args.Git.FileConflictQuickInfos(args.Backend)
+	if err != nil {
+		return err
+	}
+	if len(unresolvedFiles) > 0 {
+		// there are still unresolved files --> these are not phantom conflicts, let the user sort this out
+		return errors.New(messages.ConflictRebase)
+	}
+	// here all rebase conflicts have been resolved --> commit to finish the rebase conflict and continue the program
+	args.PrependOpcodes(
+		&RebaseContinue{},
+	)
+	return nil
+}

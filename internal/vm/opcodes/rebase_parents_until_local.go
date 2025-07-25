@@ -68,7 +68,6 @@ func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
 				BranchToRebaseOnto: branchToRebase,
 				CommitsToRemove:    parentSHAPreviousRun.Location(),
 				CurrentBranch:      self.Branch,
-				Resolution:         gitdomain.ConflictResolutionTheirs, // TODO: change if not correct
 				Upstream:           None[gitdomain.LocalBranchName](),
 			})
 		} else {
