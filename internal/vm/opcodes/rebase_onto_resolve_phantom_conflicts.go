@@ -36,6 +36,13 @@ func (self *RebaseOntoResolvePhantomConflicts) Run(args shared.RunArgs) error {
 		time.Sleep(1 * time.Second)
 	}
 	if err := args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseOnto.Location(), self.CommitsToRemove, self.Upstream); err != nil {
+		args.PrependOpcodes(&ConflictRebasePhantomResolveAll{
+			CurrentBranch: self.CurrentBranch,
+			ParentBranch:  self.InitialParentName,
+			ParentSHA:     self.InitialParentSHA,
+			Resolution:    gitdomain.ConflictResolutionOurs,
+		})
+
 		conflictingFiles, err := args.Git.FileConflictQuickInfos(args.Backend)
 		if err != nil {
 			return fmt.Errorf("cannot determine conflicting files after rebase: %w", err)
@@ -50,12 +57,12 @@ func (self *RebaseOntoResolvePhantomConflicts) Run(args shared.RunArgs) error {
 		spew.Dump(phantomRebaseConflicts)
 		newOpcodes := []shared.Opcode{}
 		for _, phantomRebaseConflict := range phantomRebaseConflicts {
-			newOpcodes = append(newOpcodes, &ConflictPhantomResolve{
+			newOpcodes = append(newOpcodes, &ConflictRebasePhantomResolve{
 				FilePath:   phantomRebaseConflict.FilePath,
 				Resolution: self.Resolution,
 			})
 		}
-		newOpcodes = append(newOpcodes, &ConflictPhantomFinalize{})
+		newOpcodes = append(newOpcodes, &ConflictRebasePhantomFinalize{})
 		args.PrependOpcodes(newOpcodes...)
 		if err = args.Git.ContinueRebase(args.Frontend); err != nil {
 			return fmt.Errorf("cannot continue rebase: %w", err)
