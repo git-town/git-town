@@ -54,8 +54,8 @@ func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
 		}
 		// WHY DO WE LOOK AT THE PREVIOUS SHA HERE?
 		// what is this the previous SHA of?
+		// the previous parent. Which previous parent?
 		if previousParentSHA, hasPreviousParentSHA := self.PreviousSHA.Get(); hasPreviousParentSHA {
-			// TODO: only perform this operation if really needed, i.e. if there are commits to remove?
 			// TODO: we can't assume that we can always keep the deleted variant here.
 			// We need to check whether the other variant contains fresh changes?
 			program = append(program, &RebaseOntoKeepDeleted{
