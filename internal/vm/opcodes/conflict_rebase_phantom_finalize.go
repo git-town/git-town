@@ -11,6 +11,12 @@ type ConflictRebasePhantomFinalize struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
+func (self *ConflictRebasePhantomFinalize) Abort() []shared.Opcode {
+	return []shared.Opcode{
+		&RebaseAbort{},
+	}
+}
+
 func (self *ConflictRebasePhantomFinalize) Run(args shared.RunArgs) error {
 	unresolvedFiles, err := args.Git.FileConflictQuickInfos(args.Backend)
 	if err != nil {
