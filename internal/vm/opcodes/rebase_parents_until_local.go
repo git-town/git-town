@@ -9,7 +9,7 @@ import (
 
 type RebaseParentsUntilLocal struct {
 	Branch                  gitdomain.LocalBranchName
-	PreviousSHA             Option[gitdomain.SHA]
+	PreviousParentSHA       Option[gitdomain.SHA]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
@@ -55,7 +55,7 @@ func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
 		// WHY DO WE LOOK AT THE PREVIOUS SHA HERE?
 		// what is this the previous SHA of?
 		// the previous parent. Which previous parent?
-		if previousParentSHA, hasPreviousParentSHA := self.PreviousSHA.Get(); hasPreviousParentSHA {
+		if previousParentSHA, hasPreviousParentSHA := self.PreviousParentSHA.Get(); hasPreviousParentSHA {
 			// TODO: we can't assume that we can always keep the deleted variant here.
 			// We need to check whether the other variant contains fresh changes?
 			program = append(program, &RebaseOntoKeepDeleted{
