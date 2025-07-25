@@ -306,9 +306,8 @@ func deleteProgram(repo execute.OpenRepoResult, data deleteData, finalMessages s
 	}
 	localBranchNameToDelete := data.branchToDeleteInfo.LocalBranchName()
 	if _, hasOverride := data.config.NormalConfig.BranchTypeOverrides[localBranchNameToDelete]; hasOverride {
-		prog.Value.Add(&opcodes.ConfigRemove{
-			Key:   configdomain.NewBranchTypeOverrideKeyForBranch(localBranchNameToDelete).Key,
-			Scope: configdomain.ConfigScopeLocal,
+		prog.Value.Add(&opcodes.BranchTypeOverrideRemove{
+			Branch: localBranchNameToDelete,
 		})
 	}
 	localBranchNameToDelete, hasLocalBranchToDelete := data.branchToDeleteInfo.LocalName.Get()

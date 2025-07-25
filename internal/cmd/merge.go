@@ -314,6 +314,11 @@ func mergeProgram(repo execute.OpenRepoResult, data mergeData, dryRun configdoma
 			Branch: initialTrackingBranch,
 		})
 	}
+	if _, hasOverride := data.config.NormalConfig.BranchTypeOverrides[data.initialBranch]; hasOverride {
+		prog.Value.Add(&opcodes.BranchTypeOverrideRemove{
+			Branch: data.initialBranch,
+		})
+	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   dryRun,
