@@ -36,7 +36,6 @@ Feature: display all executed Git commands
       |          | frontend | git checkout main                                                                                                                                                                                                                                                                                                                                |
       | main     | frontend | git branch -D branch-2                                                                                                                                                                                                                                                                                                                           |
       |          | backend  | git config --unset git-town-branch.branch-2.parent                                                                                                                                                                                                                                                                                               |
-      |          | backend  | git config --unset git-town-branch.branch-2.branchtype                                                                                                                                                                                                                                                                                           |
       |          | backend  | git rev-parse --verify -q refs/heads/branch-2                                                                                                                                                                                                                                                                                                    |
       |          | backend  | git rev-parse --verify -q refs/heads/branch-1                                                                                                                                                                                                                                                                                                    |
       |          | frontend | git checkout branch-1                                                                                                                                                                                                                                                                                                                            |
@@ -46,7 +45,7 @@ Feature: display all executed Git commands
       |          | backend  | git stash list                                                                                                                                                                                                                                                                                                                                   |
     And Git Town prints:
       """
-      Ran 27 shell commands.
+      Ran 26 shell commands.
       """
     And the branches are now
       | REPOSITORY    | BRANCHES       |
