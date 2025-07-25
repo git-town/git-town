@@ -3,6 +3,7 @@ Feature: handle conflicts between the current feature branch and the main branch
 
   Background:
     Given a local Git repo
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |
@@ -11,9 +12,10 @@ Feature: handle conflicts between the current feature branch and the main branch
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And the current branch is "feature"
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
+    # And inspect the repo
     When I run "git-town sync"
 
+  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                    |

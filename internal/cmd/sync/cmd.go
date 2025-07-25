@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/cli/flags"
@@ -108,6 +109,8 @@ func executeSync(cliConfig cliconfig.CliConfig, syncAllBranches configdomain.All
 	if err != nil || exit {
 		return err
 	}
+	fmt.Println("1111111111111111111111111111111111111")
+	spew.Dump(data)
 	if err = validateSyncData(data); err != nil {
 		return err
 	}
