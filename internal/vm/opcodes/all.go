@@ -56,6 +56,7 @@ func All() []shared.Opcode {
 		&ConflictMergePhantomResolveAll{},
 		&ConflictPhantomResolve{},
 		&ConflictRebasePhantomFinalize{},
+		&ConflictRebasePhantomResolveAll{},
 		&ConnectorProposalMerge{},
 		&ExecuteShellCommand{},
 		&ExitToShell{},
