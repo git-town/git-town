@@ -435,10 +435,10 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "CurrentBranch": "branch",
-        "BranchToRebaseOnto": "parent"
+        "BranchToRebaseOnto": "parent",
+        "CurrentBranch": "branch"
       },
-      "type": "ConflictPhantomResolve"
+      "type": "ConflictRebasePhantomResolveAll"
     },
     {
       "data": {
