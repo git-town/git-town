@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/subshell"
@@ -13,9 +14,9 @@ import (
 
 // rebases the current branch against the target branch while executing "git town swap", while moving the target branch onto the Onto branch.
 type RebaseOntoResolvePhantomConflicts struct {
-	CurrentBranch           gitdomain.LocalBranchName
 	BranchToRebaseOnto      gitdomain.BranchName
 	CommitsToRemove         gitdomain.Location
+	CurrentBranch           gitdomain.LocalBranchName
 	Resolution              gitdomain.ConflictResolution
 	Upstream                Option[gitdomain.LocalBranchName]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
@@ -41,15 +42,22 @@ func (self *RebaseOntoResolvePhantomConflicts) Run(args shared.RunArgs) error {
 		time.Sleep(1 * time.Second)
 	}
 	if err := args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseOnto.Location(), self.CommitsToRemove, self.Upstream); err != nil {
+		fmt.Println("111111111111111111111111111111111111111111111111111")
 		conflictingFiles, err := args.Git.FileConflictQuickInfos(args.Backend)
 		if err != nil {
 			return fmt.Errorf("cannot determine conflicting files after rebase: %w", err)
 		}
+		fmt.Println("222222222222222222222222222222222222222 CONFLICTING FILES")
+		spew.Dump(conflictingFiles)
+		fmt.Println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC root branch")
 		rootBranch := args.Config.Value.NormalConfig.Lineage.Root(self.CurrentBranch)
+		fmt.Println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC root branch", rootBranch)
 		fullInfos, err := args.Git.FileConflictFullInfos(args.Backend, conflictingFiles, self.BranchToRebaseOnto.Location(), rootBranch)
 		if err != nil {
 			return err
 		}
+		fmt.Println("3333333333333333333333333333333333333 FULLINFOS")
+		spew.Dump(fullInfos)
 		phantomRebaseConflicts := git.DetectPhantomRebaseConflicts(fullInfos, self.BranchToRebaseOnto, rootBranch)
 		newOpcodes := []shared.Opcode{}
 		for _, phantomRebaseConflict := range phantomRebaseConflicts {

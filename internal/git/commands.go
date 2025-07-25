@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
@@ -478,6 +479,7 @@ func (self *Commands) FileConflictFullInfo(querier subshelldomain.Querier, quick
 	parentBlob := None[BlobInfo]()
 	if currentBranchBlobInfo, has := quickInfo.CurrentBranchChange.Get(); has {
 		var err error
+		fmt.Println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", rootBranch)
 		rootBlob, err = self.ContentBlobInfo(querier, rootBranch.Location(), currentBranchBlobInfo.FilePath)
 		if err != nil {
 			return FileConflictFullInfo{}, err
@@ -498,10 +500,14 @@ func (self *Commands) FileConflictFullInfo(querier subshelldomain.Querier, quick
 func (self *Commands) FileConflictFullInfos(querier subshelldomain.Querier, quickInfos []FileConflictQuickInfo, parentLocation gitdomain.Location, rootBranch gitdomain.LocalBranchName) ([]FileConflictFullInfo, error) {
 	result := make([]FileConflictFullInfo, len(quickInfos))
 	for q, quickInfo := range quickInfos {
+		fmt.Println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAA quick info")
+		spew.Dump(quickInfo)
 		fullInfo, err := self.FileConflictFullInfo(querier, quickInfo, parentLocation, rootBranch)
 		if err != nil {
 			return result, err
 		}
+		fmt.Println("AAAAAAAAAAAAAAAAAAAAAAAAAAAA full info")
+		spew.Dump(fullInfo)
 		result[q] = fullInfo
 	}
 	return result, nil

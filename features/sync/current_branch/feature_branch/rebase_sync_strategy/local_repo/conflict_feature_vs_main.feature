@@ -13,7 +13,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     # And inspect the repo
     When I run "git-town sync"
 
-  @this
+  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                    |
