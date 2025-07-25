@@ -64,7 +64,7 @@ func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
 			// Rather than calling RebaseOntoKeepDeleted, we should call RebaseOntoResolvePhantomConflicts.
 			// This opcode then checks each conflicting file and if it identifies a phantom merge conflict,
 			// it auto-resolves it. It leaves the other conflicts open to let the user resolve them.
-			program = append(program, &RebaseOntoKeepDeleted{
+			program = append(program, &RebaseOntoResolvePhantomConflicts{
 				BranchToRebaseOnto: branchToRebase,
 				CommitsToRemove:    parentSHAPreviousRun.Location(),
 				Upstream:           None[gitdomain.LocalBranchName](),
