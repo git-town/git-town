@@ -1,24 +1,19 @@
 package git
 
 import (
-	"fmt"
 	"reflect"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 )
 
 func DetectPhantomRebaseConflicts(conflictInfos []FileConflictFullInfo, parentBranch gitdomain.BranchName, rootBranch gitdomain.LocalBranchName) []PhantomMergeConflict {
-	// TODO: inspect the conflictInfos here
-	fmt.Println("2222222222222222222222222222222222222222222222222222222222")
-	spew.Dump(conflictInfos)
-
 	if parentBranch == rootBranch.BranchName() {
 		// branches whose parent is the root branch cannot have phantom merge conflicts
 		return []PhantomMergeConflict{}
 	}
 	result := []PhantomMergeConflict{}
 	for _, conflictInfo := range conflictInfos {
+		// TODO: inspect the conflictInfo
 		initialParentInfo, hasInitialParentInfo := conflictInfo.Parent.Get()
 		currentInfo, hasCurrentInfo := conflictInfo.Current.Get()
 		if !hasInitialParentInfo || !hasCurrentInfo || currentInfo.Permission != initialParentInfo.Permission {
