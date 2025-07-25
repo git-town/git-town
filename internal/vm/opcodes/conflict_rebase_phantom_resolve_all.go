@@ -7,8 +7,8 @@ import (
 )
 
 type ConflictRebasePhantomResolveAll struct {
-	CurrentBranch           gitdomain.LocalBranchName
 	BranchToRebaseOnto      gitdomain.BranchName
+	CurrentBranch           gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 

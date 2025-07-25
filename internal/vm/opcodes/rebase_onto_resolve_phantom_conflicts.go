@@ -33,8 +33,8 @@ func (self *RebaseOntoResolvePhantomConflicts) Run(args shared.RunArgs) error {
 	}
 	if err := args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseOnto.Location(), self.CommitsToRemove, self.Upstream); err != nil {
 		args.PrependOpcodes(&ConflictRebasePhantomResolveAll{
-			CurrentBranch:      self.CurrentBranch,
 			BranchToRebaseOnto: self.BranchToRebaseOnto,
+			CurrentBranch:      self.CurrentBranch,
 		})
 	}
 	return nil
