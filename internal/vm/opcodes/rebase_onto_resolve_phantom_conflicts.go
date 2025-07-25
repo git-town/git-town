@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/subshell"
@@ -27,12 +28,6 @@ func (self *RebaseOntoResolvePhantomConflicts) Abort() []shared.Opcode {
 	}
 }
 
-func (self *RebaseOntoResolvePhantomConflicts) Continue() []shared.Opcode {
-	return []shared.Opcode{
-		&RebaseContinueIfNeeded{},
-	}
-}
-
 func (self *RebaseOntoResolvePhantomConflicts) Run(args shared.RunArgs) error {
 	// Fix for https://github.com/git-town/git-town/issues/4942.
 	// Waiting here in end-to-end tests to ensure new timestamps for the rebased commits,
@@ -51,6 +46,8 @@ func (self *RebaseOntoResolvePhantomConflicts) Run(args shared.RunArgs) error {
 			return err
 		}
 		phantomRebaseConflicts := git.DetectPhantomRebaseConflicts(fullInfos, self.BranchToRebaseOnto, rootBranch)
+		fmt.Println("333333333333333333333333333333333333333333")
+		spew.Dump(phantomRebaseConflicts)
 		newOpcodes := []shared.Opcode{}
 		for _, phantomRebaseConflict := range phantomRebaseConflicts {
 			newOpcodes = append(newOpcodes, &ConflictPhantomResolve{
