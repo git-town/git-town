@@ -39,7 +39,6 @@ Feature: handle conflicts between the current feature branch and the main branch
     And no rebase is now in progress
     And the initial commits exist now
 
-  @this
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
     Then Git Town runs no commands
