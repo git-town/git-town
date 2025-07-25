@@ -7,8 +7,10 @@ import (
 )
 
 func DetectPhantomRebaseConflicts(conflictInfos []FileConflictFullInfo, parentBranch gitdomain.BranchName, rootBranch gitdomain.LocalBranchName) []PhantomMergeConflict {
+	// TODO: inspect the conflictInfos here
+
 	if parentBranch == rootBranch.BranchName() {
-		// branches that don't have a parent or whose parent is the root branch cannot have phantom merge conflicts
+		// branches whose parent is the root branch cannot have phantom merge conflicts
 		return []PhantomMergeConflict{}
 	}
 	result := []PhantomMergeConflict{}
