@@ -14,7 +14,6 @@ type ConflictMergePhantomResolveAll struct {
 	CurrentBranch           gitdomain.LocalBranchName
 	ParentBranch            Option[gitdomain.LocalBranchName]
 	ParentSHA               Option[gitdomain.SHA]
-	Resolution              gitdomain.ConflictResolution
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
@@ -49,7 +48,7 @@ func (self *ConflictMergePhantomResolveAll) Run(args shared.RunArgs) error {
 	for _, phantomMergeConflict := range phantomMergeConflicts {
 		newOpcodes = append(newOpcodes, &ConflictPhantomResolve{
 			FilePath:   phantomMergeConflict.FilePath,
-			Resolution: self.Resolution,
+			Resolution: phantomMergeConflict.Resolution,
 		})
 	}
 	newOpcodes = append(newOpcodes, &ConflictMergePhantomFinalize{})
