@@ -9,10 +9,18 @@ import (
 func DetectPhantomRebaseConflicts(conflictInfos []FileConflictFullInfo, parentBranch gitdomain.BranchName, rootBranch gitdomain.LocalBranchName) []PhantomConflict {
 	// How to detect phantom merge conflicts:
 	//
-	// One side is the root branch from the last run: this was resolved before, automatically resolve using the other side
-	//   - can this even happen?
-	//     One side is the current root branch, and its different from the root branch of the last run --> don't auto-resolve
-	// One side is the feature branch from the last run: this was
+	// Situations we want to cover:
+	//
+	// 1. Feature branch changed (commit added, amended, or rebased) and root not changed --> Keep the feature branch change
+	// 2. Root branch branch was changed and feature branch not changed --> don't auto-resolve
+	// 3. Both happen at the same time: root and feature branch changed --> don't auto-resolve
+	//
+	// Determine upfront:
+	// Feature branch is changed (current SHA is different from SHA at end of last run)
+	// Root branch is changed
+	//
+	// One side is the old feature branch: auto-resolve to the other side?
+	// One side is the old root branch: auto-resolve to the other side?
 	//
 	// O
 	//
