@@ -22,12 +22,15 @@ import (
 )
 
 const (
-	branchDesc = "Display the local branch hierarchy and types"
+	branchDesc = `
+Display hierarchy either for local branches or an existing proposal of stack.
+	`
 	branchHelp = `
 Git Town's equivalent of the "git branch" command.`
 )
 
 func branchCmd() *cobra.Command {
+	addProposalLineageFlag, readProposalLineageFlag := flags.Proposal("If proposal exists, display the proposal lineage")
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "branch",
@@ -35,6 +38,10 @@ func branchCmd() *cobra.Command {
 		Short: branchDesc,
 		Long:  cmdhelpers.Long(branchDesc, branchHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
+			proposalLineageAction, err := readProposalLineageFlag(cmd)
+			if err != nil {
+				return err
+			}
 			verbose, err := readVerboseFlag(cmd)
 			if err != nil {
 				return err
@@ -43,14 +50,16 @@ func branchCmd() *cobra.Command {
 				DryRun:  false,
 				Verbose: verbose,
 			}
-			return executeBranch(cliConfig)
+			return executeBranch(cliConfig, proposalLineageAction)
 		},
 	}
+
+	addProposalLineageFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeBranch(cliConfig cliconfig.CliConfig) error {
+func executeBranch(cliConfig cliconfig.CliConfig, showProposalLineage configdomain.Proposal) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,

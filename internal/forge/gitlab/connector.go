@@ -70,6 +70,14 @@ func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalI
 	return Some(self.updateProposalTarget)
 }
 
+func (self Connector) UpdateProposalBodyFn() Option[func(forgedomain.ProposalInterface, string) error] {
+	if self.APIToken.IsNone() {
+		return None[func(forgedomain.ProposalInterface, string) error]()
+	}
+
+	return Some(self.updateProposalBody)
+}
+
 func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
 	user, _, err := self.client.Users.CurrentUser()
 	if err != nil {
@@ -186,6 +194,20 @@ func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInte
 	self.log.Start(messages.ForgeGitLabUpdateMRViaAPI, data.Number, target)
 	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), data.Number, &gitlab.UpdateMergeRequestOptions{
 		TargetBranch: gitlab.Ptr(target.String()),
+	})
+	if err != nil {
+		self.log.Failed(err.Error())
+		return err
+	}
+	self.log.Ok()
+	return nil
+}
+
+func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterface, updatedDescription string) error {
+	data := proposalData.Data()
+	self.log.Start(messages.ForgeGitlabUpdateMRBodyViaAPI, data.Number)
+	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), data.Number, &gitlab.UpdateMergeRequestOptions{
+		Description: Ptr(updatedDescription),
 	})
 	if err != nil {
 		self.log.Failed(err.Error())

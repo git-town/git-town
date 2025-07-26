@@ -99,6 +99,10 @@ func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalI
 	return Some(self.updateProposalTarget)
 }
 
+func (self Connector) UpdateProposalBodyFn() Option[func(forgedomain.ProposalInterface, string) error] {
+	return Some(self.updateProposalBody)
+}
+
 func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
 	user, err := self.client.User.Profile()
 	if err != nil {
@@ -321,6 +325,28 @@ func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInte
 		DestinationBranch: target.String(),
 		Title:             data.Title,
 		Description:       data.Body.GetOrDefault(),
+		Draft:             data.Draft,
+		CloseSourceBranch: data.CloseSourceBranch,
+	})
+	if err != nil {
+		self.log.Failed(err.Error())
+		return err
+	}
+	self.log.Ok()
+	return nil
+}
+
+func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterface, updatedDescription string) error {
+	data := proposalData.(forgedomain.BitbucketCloudProposalData)
+	self.log.Start(messages.APIUpdateProposalBody, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)))
+	_, err := self.client.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
+		ID:                strconv.Itoa(data.Number),
+		Owner:             self.Organization,
+		RepoSlug:          self.Repository,
+		SourceBranch:      data.Source.String(),
+		DestinationBranch: data.Target.String(),
+		Title:             data.Title,
+		Description:       updatedDescription,
 		Draft:             data.Draft,
 		CloseSourceBranch: data.CloseSourceBranch,
 	})
