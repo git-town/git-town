@@ -79,6 +79,7 @@ const (
 	ConfigSyncStrategyUnknown          = "unknown sync strategy: %q"
 	ConfigRemoveError                  = "unexpected error while removing the 'git-town' section from the Git configuration: %w"
 	ConflictMerge                      = "git merge conflict"
+	ConflictRebase                     = "git rebase conflict"
 	ContinueMessage                    = `You can run "git town continue" to finish it.`
 	ContinueSkipGuidance               = "To continue by skipping the current branch, run \"git town skip\"."
 	ContributeBranchIsLocal            = "branch %q is local only - branches you want to contribute to must have a remote branch because they are per definition other people's branches"
