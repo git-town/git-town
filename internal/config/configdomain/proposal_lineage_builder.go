@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/git-town/git-town/v21/internal/cli/colors"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -22,9 +23,9 @@ func NewProposalLineageBuilder(connector forgedomain.Connector, exemptBranches .
 	}
 
 	return &proposalLineageBuilder{
-		orderedLineage: make([]*proposalLineage, 0),
-		connector:      connector,
-		trackingExempt: exemptBranches,
+		orderedLineage:                           make([]*proposalLineage, 0),
+		connector:                                connector,
+		branchesExemptFromDisplayingProposalInfo: exemptBranches,
 	}
 }
 
@@ -34,14 +35,13 @@ type proposalLineage struct {
 }
 
 type proposalLineageBuilder struct {
-	// map of local branch to remote branch
-	orderedLineage []*proposalLineage
-	connector      forgedomain.Connector
-	trackingExempt gitdomain.LocalBranchNames
+	connector                                forgedomain.Connector
+	orderedLineage                           []*proposalLineage
+	branchesExemptFromDisplayingProposalInfo gitdomain.LocalBranchNames
 }
 
 func (self *proposalLineageBuilder) AddBranch(childBranch gitdomain.LocalBranchName, parentBranch Option[gitdomain.LocalBranchName]) (ProposalLineageBuilder, error) {
-	if self.trackingExempt.Contains(childBranch) || parentBranch.IsNone() {
+	if self.branchesExemptFromDisplayingProposalInfo.Contains(childBranch) || parentBranch.IsNone() {
 		self.orderedLineage = append(self.orderedLineage, &proposalLineage{
 			branch:   childBranch,
 			proposal: None[forgedomain.ProposalData](),
@@ -73,33 +73,45 @@ func (self *proposalLineageBuilder) Build(currentBranch gitdomain.LocalBranchNam
 	var builder strings.Builder
 	builder.WriteString("### This proposal is part of stack\n\n")
 	length := len(self.orderedLineage)
-	currentBranchExpression := currentBranchProposalExpression(location)
 	for i := len(self.orderedLineage) - 1; i >= 0; i-- {
 		node := self.orderedLineage[length]
 		indent := strings.Repeat(" ", length-i)
-		if self.trackingExempt.Contains(node.branch) {
-			builder.WriteString(fmt.Sprintf("%s↳ #%s \n", indent, node.branch.BranchName()))
+		if self.branchesExemptFromDisplayingProposalInfo.Contains(node.branch) {
+			builder.WriteString(fmt.Sprintf("%s #%s\n", indent, node.branch.BranchName()))
+			continue
 		}
 
 		proposalData, hasProposalData := node.proposal.Get()
 		if !hasProposalData {
-			continue
+			break
 		}
 
-		if currentBranch == proposalData.Source {
-			builder.WriteString(fmt.Sprintf("%s #%d [%s](%s) %s\n", indent, proposalData.Number, proposalData.Title, proposalData.URL, currentBranchExpression))
-		} else {
-			builder.WriteString(fmt.Sprintf("%s #%d [%s](%s)\n", indent, proposalData.Number, proposalData.Title, proposalData.URL))
-		}
+		builder.WriteString(locationBasedFormatting(currentBranch, indent, location, proposalData))
+	}
+
+	if builder.Len() == 0 {
+		return None[string]()
 	}
 
 	return Some(builder.String())
 }
 
+func locationBasedFormatting(currentBranch gitdomain.LocalBranchName, indent string, location ProposalLineageIn, proposalData forgedomain.ProposalData) string {
+	if currentBranch == proposalData.Source {
+		if location == ProposalLineageInTerminal {
+			return colors.Green().Styled(fmt.Sprintf("%s%s #%d [%s](%s)\n", currentBranchProposalExpression(location), indent, proposalData.Number, proposalData.Title, proposalData.URL))
+		} else {
+			return fmt.Sprintf("%s #%d [%s](%s) %s\n", indent, proposalData.Number, proposalData.Title, proposalData.URL, currentBranchProposalExpression(location))
+		}
+	}
+
+	return fmt.Sprintf("%s #%d [%s](%s)\n", indent, proposalData.Number, proposalData.Title, proposalData.URL)
+}
+
 func currentBranchProposalExpression(location ProposalLineageIn) string {
 	response := ":point_left:"
 	if location == ProposalLineageInTerminal {
-		response = "☜"
+		response = "*"
 	}
 
 	return response
