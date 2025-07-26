@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/git-town/git-town/v21/internal/cli/colors"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
@@ -18,6 +20,14 @@ type ProposalLineageCreate struct {
 }
 
 func (self *ProposalLineageCreate) Run(args shared.RunArgs) error {
+	if currentBranchType := args.Config.Value.BranchType(self.Branch); currentBranchType == configdomain.BranchTypeMainBranch || currentBranchType == configdomain.BranchTypePerennialBranch {
+		s := strings.Builder{}
+		s.WriteString("\n")
+		s.WriteString(colors.BoldCyan().Styled(fmt.Sprintf(messages.ProposalLineageUnsupportedForBranchType, currentBranchType)))
+		s.WriteString("\n")
+		fmt.Print(s.String())
+		return nil
+	}
 	connector, hasConnector := args.Connector.Get()
 	if !hasConnector {
 		return forgedomain.UnsupportedServiceError()
