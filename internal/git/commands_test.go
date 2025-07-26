@@ -1006,7 +1006,10 @@ func TestBackendCommands(t *testing.T) {
 			}
 			have := git.DetectPhantomMergeConflicts(fullInfos, gitdomain.NewLocalBranchNameOption("alpha"), "main")
 			want := []git.PhantomConflict{
-				{FilePath: "file"},
+				{
+					FilePath:   "file",
+					Resolution: gitdomain.ConflictResolutionOurs,
+				},
 			}
 			must.Eq(t, want, have)
 		})

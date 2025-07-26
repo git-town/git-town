@@ -411,8 +411,7 @@ func TestLoadSave(t *testing.T) {
       "data": {
         "CurrentBranch": "current",
         "ParentBranch": "parent",
-        "ParentSHA": "123456",
-        "Resolution": "ours"
+        "ParentSHA": "123456"
       },
       "type": "ConflictMergePhantomResolveAll"
     },
