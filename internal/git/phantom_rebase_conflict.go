@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 )
 
-func DetectPhantomRebaseConflicts(conflictInfos []FileConflictFullInfo, parentBranch gitdomain.BranchName, rootBranch gitdomain.LocalBranchName) []PhantomMergeConflict {
+func DetectPhantomRebaseConflicts(conflictInfos []FileConflictFullInfo, parentBranch gitdomain.BranchName, rootBranch gitdomain.LocalBranchName) []PhantomConflict {
 	// How to detect phantom merge conflicts:
 	//
 	// One side is the root branch from the last run: this was resolved before, automatically resolve using the other side
@@ -20,7 +20,7 @@ func DetectPhantomRebaseConflicts(conflictInfos []FileConflictFullInfo, parentBr
 	// 	// branches whose parent is the root branch cannot have phantom merge conflicts
 	// 	return []PhantomMergeConflict{}
 	// }
-	result := []PhantomMergeConflict{}
+	result := []PhantomConflict{}
 	for _, conflictInfo := range conflictInfos {
 		// TODO: inspect the conflictInfo
 		initialParentInfo, hasInitialParentInfo := conflictInfo.Parent.Get()
@@ -30,7 +30,7 @@ func DetectPhantomRebaseConflicts(conflictInfos []FileConflictFullInfo, parentBr
 		}
 		if reflect.DeepEqual(conflictInfo.Root, conflictInfo.Parent) {
 			// root and parent have the exact same version of the file --> this is a phantom rebase conflict
-			result = append(result, PhantomMergeConflict{
+			result = append(result, PhantomConflict{
 				FilePath: currentInfo.FilePath,
 			})
 		}
