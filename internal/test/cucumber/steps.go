@@ -735,7 +735,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^I ran "(.+)"$`, func(ctx context.Context, command string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		runCommand(ctx, command, false)
+		runCommand(state, command, false)
 		if exitCode, hasExitCode := state.runExitCode.Get(); hasExitCode {
 			if exitCode != 0 {
 				fmt.Println("Output from failed command:")
@@ -747,8 +747,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 	})
 
 	sc.Step(`^I ran "(.+)" and ignore the error$`, func(ctx context.Context, command string) error {
-		runCommand(ctx, command, false)
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		runCommand(state, command, false)
 		if exitCode, hasExitCode := state.runExitCode.Get(); hasExitCode {
 			if exitCode == 0 {
 				return errors.New("this command should fail")
@@ -783,7 +783,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 	})
 
 	sc.Step(`^I run "(.+)"$`, func(ctx context.Context, command string) {
-		runCommand(ctx, command, true)
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		runCommand(state, command, true)
 	})
 
 	sc.Step(`^I run "(.+)" with these environment variables$`, func(ctx context.Context, command string, envVars *godog.Table) {
@@ -1583,8 +1584,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	})
 }
 
-func runCommand(ctx context.Context, command string, captureState bool) {
-	state := ctx.Value(keyScenarioState).(*ScenarioState)
+func runCommand(state *ScenarioState, command string, captureState bool) {
 	devRepo, hasDevRepo := state.fixture.DevRepo.Get()
 	if captureState && hasDevRepo {
 		state.CaptureState()
