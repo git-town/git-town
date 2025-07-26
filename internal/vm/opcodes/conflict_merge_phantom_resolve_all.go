@@ -10,7 +10,7 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-type ConflictPhantomResolveAll struct {
+type ConflictMergePhantomResolveAll struct {
 	CurrentBranch           gitdomain.LocalBranchName
 	ParentBranch            Option[gitdomain.LocalBranchName]
 	ParentSHA               Option[gitdomain.SHA]
@@ -18,19 +18,19 @@ type ConflictPhantomResolveAll struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *ConflictPhantomResolveAll) Abort() []shared.Opcode {
+func (self *ConflictMergePhantomResolveAll) Abort() []shared.Opcode {
 	return []shared.Opcode{
 		&MergeAbort{},
 	}
 }
 
-func (self *ConflictPhantomResolveAll) Continue() []shared.Opcode {
+func (self *ConflictMergePhantomResolveAll) Continue() []shared.Opcode {
 	return []shared.Opcode{
 		&MergeContinue{},
 	}
 }
 
-func (self *ConflictPhantomResolveAll) Run(args shared.RunArgs) error {
+func (self *ConflictMergePhantomResolveAll) Run(args shared.RunArgs) error {
 	parentSHA, hasParentSHA := self.ParentSHA.Get()
 	if !hasParentSHA {
 		return errors.New(messages.ConflictMerge)
@@ -45,14 +45,14 @@ func (self *ConflictPhantomResolveAll) Run(args shared.RunArgs) error {
 		return err
 	}
 	phantomMergeConflicts := git.DetectPhantomMergeConflicts(fullInfos, self.ParentBranch, rootBranch)
-	newOpcodes := make([]shared.Opcode, len(phantomMergeConflicts)+1)
-	for p, phantomMergeConflict := range phantomMergeConflicts {
-		newOpcodes[p] = &ConflictPhantomResolve{
+	newOpcodes := []shared.Opcode{}
+	for _, phantomMergeConflict := range phantomMergeConflicts {
+		newOpcodes = append(newOpcodes, &ConflictPhantomResolve{
 			FilePath:   phantomMergeConflict.FilePath,
 			Resolution: self.Resolution,
-		}
+		})
 	}
-	newOpcodes[len(phantomMergeConflicts)] = &ConflictPhantomFinalize{}
+	newOpcodes = append(newOpcodes, &ConflictMergePhantomFinalize{})
 	args.PrependOpcodes(newOpcodes...)
 	return nil
 }

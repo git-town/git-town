@@ -31,8 +31,8 @@ func ObservedRegex(args Args[configdomain.ObservedRegex]) (Option[configdomain.O
 		DialogName:    "observed-regex",
 		ExistingValue: args.Local.Or(args.Global).String(),
 		Help:          observedRegexHelp,
+		Inputs:        args.Inputs,
 		Prompt:        messages.ObservedRegexPrompt,
-		TestInputs:    args.Inputs,
 		Title:         observedRegexTitle,
 	})
 	newValue, err2 := configdomain.ParseObservedRegex(input)

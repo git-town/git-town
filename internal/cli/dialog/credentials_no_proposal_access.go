@@ -20,7 +20,7 @@ Received error: %v
 `
 )
 
-func CredentialsNoProposalAccess(connectorError error, inputs dialogcomponents.TestInputs) (repeat bool, exit dialogdomain.Exit, err error) {
+func CredentialsNoProposalAccess(connectorError error, inputs dialogcomponents.Inputs) (repeat bool, exit dialogdomain.Exit, err error) {
 	entries := list.NewEntries(
 		CredentialsNoAccessChoiceRetry,
 		CredentialsNoAccessChoiceIgnore,

@@ -15,7 +15,7 @@ Feature: select the new parent via a visual dialog
   Scenario: result
     Then Git Town prints:
       """
-      Selected parent branch for "branch-2": branch-1
+      branch "branch-2" is now a child of "branch-1"
       """
     And Git Town runs no commands
     And this lineage exists now

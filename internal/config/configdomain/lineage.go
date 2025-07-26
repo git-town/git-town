@@ -122,8 +122,7 @@ func (self Lineage) Children(branch gitdomain.LocalBranchName) gitdomain.LocalBr
 			result = append(result, child)
 		}
 	}
-	result.Sort()
-	return result
+	return slice.NaturalSort(result)
 }
 
 // Descendants provides all branches that depend on the given branch in its lineage.

@@ -13,8 +13,8 @@ Feature: switch branches from detached head
     And the current branch is "alpha"
     And I ran "git checkout HEAD^"
     When I run "git-town switch" and enter into the dialogs:
-      | DIALOG      | KEYS     |
-      | branch-tree | up enter |
+      | DIALOG        | KEYS     |
+      | switch-branch | up enter |
 
   Scenario: result
     Then Git Town runs the commands

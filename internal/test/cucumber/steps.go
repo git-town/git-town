@@ -734,8 +734,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 	})
 
 	sc.Step(`^I ran "(.+)"$`, func(ctx context.Context, command string) error {
-		runCommand(ctx, command)
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		runCommand(state, command, false)
 		if exitCode, hasExitCode := state.runExitCode.Get(); hasExitCode {
 			if exitCode != 0 {
 				fmt.Println("Output from failed command:")
@@ -747,8 +747,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 	})
 
 	sc.Step(`^I ran "(.+)" and ignore the error$`, func(ctx context.Context, command string) error {
-		runCommand(ctx, command)
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		runCommand(state, command, false)
 		if exitCode, hasExitCode := state.runExitCode.Get(); hasExitCode {
 			if exitCode == 0 {
 				return errors.New("this command should fail")
@@ -783,7 +783,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 	})
 
 	sc.Step(`^I run "(.+)"$`, func(ctx context.Context, command string) {
-		runCommand(ctx, command)
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		runCommand(state, command, true)
 	})
 
 	sc.Step(`^I run "(.+)" with these environment variables$`, func(ctx context.Context, command string, envVars *godog.Table) {
@@ -887,7 +888,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			env = envvars.Replace(env, browser.EnvVarName, browserPath)
 		}
 		for a, answer := range helpers.TableToInputEnv(input) {
-			env = append(env, fmt.Sprintf("%s_%02d=%s", dialogcomponents.TestInputKey, a, answer))
+			env = append(env, fmt.Sprintf("%s_%02d=%s", dialogcomponents.InputKey, a, answer))
 		}
 		output, exitCode := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
 		state.runOutput = Some(output)
@@ -1583,10 +1584,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 	})
 }
 
-func runCommand(ctx context.Context, command string) {
-	state := ctx.Value(keyScenarioState).(*ScenarioState)
+func runCommand(state *ScenarioState, command string, captureState bool) {
 	devRepo, hasDevRepo := state.fixture.DevRepo.Get()
-	if hasDevRepo {
+	if captureState && hasDevRepo {
 		state.CaptureState()
 		updateInitialSHAs(state)
 	}

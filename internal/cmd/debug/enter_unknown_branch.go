@@ -28,10 +28,10 @@ func enterUnknownBranch() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
+			inputs := dialogcomponents.LoadInputs(os.Environ())
 			_, _, err = dialog.UnknownBranchType(dialog.Args[configdomain.UnknownBranchType]{
 				Global: repo.UnvalidatedConfig.GitGlobal.UnknownBranchType,
-				Inputs: dialogTestInputs,
+				Inputs: inputs,
 				Local:  repo.UnvalidatedConfig.GitLocal.UnknownBranchType,
 			})
 			return err

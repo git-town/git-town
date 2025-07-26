@@ -130,7 +130,6 @@ func executeMerge(cliConfig cliconfig.CliConfig) error {
 		Config:                  data.config,
 		Connector:               None[forgedomain.Connector](),
 		Detached:                true,
-		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -139,6 +138,7 @@ func executeMerge(cliConfig cliconfig.CliConfig) error {
 		InitialBranchesSnapshot: data.branchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        data.stashSize,
+		Inputs:                  data.inputs,
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
@@ -150,12 +150,12 @@ type mergeData struct {
 	branchInfosLastRun Option[gitdomain.BranchInfos]
 	branchesSnapshot   gitdomain.BranchesSnapshot
 	config             config.ValidatedConfig
-	dialogTestInputs   dialogcomponents.TestInputs
 	hasOpenChanges     bool
 	initialBranch      gitdomain.LocalBranchName
 	initialBranchInfo  gitdomain.BranchInfo
 	initialBranchSHA   gitdomain.SHA
 	initialBranchType  configdomain.BranchType
+	inputs             dialogcomponents.Inputs
 	parentBranch       gitdomain.LocalBranchName
 	parentBranchInfo   gitdomain.BranchInfo
 	parentBranchSHA    gitdomain.SHA
@@ -165,7 +165,7 @@ type mergeData struct {
 }
 
 func determineMergeData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (mergeData, dialogdomain.Exit, error) {
-	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
+	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return mergeData{}, false, err
@@ -195,12 +195,12 @@ func determineMergeData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConf
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
 		Detached:              true,
-		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
 		HandleUnfinishedState: true,
+		Inputs:                inputs,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
@@ -217,18 +217,23 @@ func determineMergeData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConf
 	}
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
+	remotes, err := repo.Git.Remotes(repo.Backend)
+	if err != nil {
+		return mergeData{}, false, err
+	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
+		BranchInfos:        branchesSnapshot.Branches,
 		BranchesAndTypes:   branchesAndTypes,
-		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
+		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
-		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
+		Inputs:             inputs,
 		LocalBranches:      localBranches,
+		Remotes:            remotes,
 		RepoStatus:         repoStatus,
-		TestInputs:         dialogTestInputs,
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
@@ -265,12 +270,12 @@ func determineMergeData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConf
 		branchInfosLastRun: branchInfosLastRun,
 		branchesSnapshot:   branchesSnapshot,
 		config:             validatedConfig,
-		dialogTestInputs:   dialogTestInputs,
 		hasOpenChanges:     repoStatus.OpenChanges,
 		initialBranch:      initialBranch,
 		initialBranchInfo:  *initialBranchInfo,
 		initialBranchSHA:   initialBranchSHA,
 		initialBranchType:  initialBranchType,
+		inputs:             inputs,
 		parentBranch:       parentBranch,
 		parentBranchInfo:   *parentBranchInfo,
 		parentBranchSHA:    parentBranchSHA,
@@ -307,6 +312,11 @@ func mergeProgram(repo execute.OpenRepoResult, data mergeData, dryRun configdoma
 	if initialHasTrackingBranch && repo.IsOffline.IsOnline() {
 		prog.Value.Add(&opcodes.BranchTrackingDelete{
 			Branch: initialTrackingBranch,
+		})
+	}
+	if _, hasOverride := data.config.NormalConfig.BranchTypeOverrides[data.initialBranch]; hasOverride {
+		prog.Value.Add(&opcodes.BranchTypeOverrideRemove{
+			Branch: data.initialBranch,
 		})
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}

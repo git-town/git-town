@@ -80,7 +80,7 @@ func executeConfigSetup(cliConfig cliconfig.CliConfig) error {
 }
 
 func LoadData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data setup.Data, exit dialogdomain.Exit, err error) {
-	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
+	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -91,12 +91,12 @@ func LoadData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data 
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             None[forgedomain.Connector](),
 		Detached:              false,
-		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
 		HandleUnfinishedState: true,
+		Inputs:                inputs,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
@@ -117,8 +117,8 @@ func LoadData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data 
 	return setup.Data{
 		Backend:       repo.Backend,
 		Config:        repo.UnvalidatedConfig,
-		DialogInputs:  dialogTestInputs,
 		Git:           repo.Git,
+		Inputs:        inputs,
 		LocalBranches: branchesSnapshot.Branches.LocalBranches().Names(),
 		Remotes:       remotes,
 		Snapshot:      repo.ConfigSnapshot,
