@@ -59,11 +59,9 @@ Feature: conflicting sibling branches, one gets shipped, the other syncs afterwa
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                          |
-      | branch-2 | git reset --hard {{ sha-initial 'commit 4' }}    |
-      |          | git push --force-with-lease --force-if-includes  |
-      |          | git checkout main                                |
-      | main     | git reset --hard {{ sha 'initial commit' }}      |
-      |          | git branch branch-1 {{ sha-initial 'commit 2' }} |
-      |          | git checkout branch-2                            |
+      | BRANCH   | COMMAND                                     |
+      | branch-2 | git rebase --abort                          |
+      |          | git checkout main                           |
+      | main     | git reset --hard {{ sha 'initial commit' }} |
+      |          | git checkout branch-2                       |
     And the initial branches and lineage exist now
