@@ -99,9 +99,9 @@ Feature: compatibility between different sync-feature-strategy settings
     And file "file.txt" now has content:
       """
       <<<<<<< HEAD
-      coworker content
+      coworker first content
       =======
-      my content
+      my first content
       >>>>>>> {{ sha-short 'my first commit' }} (my first commit)
       """
     And a rebase is now in progress
@@ -114,8 +114,8 @@ Feature: compatibility between different sync-feature-strategy settings
     And no rebase is now in progress
     And all branches are now synchronized
     And these commits exist now
-      | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME | FILE CONTENT                |
-      | feature | local, coworker, origin | coworker first commit                                      | file.txt  | coworker content            |
-      |         | local, origin           | my first commit                                            | file.txt  | my new and coworker content |
-      |         | coworker                | my first commit                                            | file.txt  | my content                  |
-      |         |                         | Merge remote-tracking branch 'origin/feature' into feature | file.txt  | my and coworker content     |
+      | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME | FILE CONTENT                         |
+      | feature | local, coworker, origin | coworker first commit                                      | file.txt  | coworker first content               |
+      |         | local, origin           | my first commit                                            | file.txt  | my second and coworker first content |
+      |         | coworker                | my first commit                                            | file.txt  | my first content                     |
+      |         |                         | Merge remote-tracking branch 'origin/feature' into feature | file.txt  | my and coworker first content        |
