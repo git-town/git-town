@@ -12,18 +12,6 @@ type ConflictRebasePhantomResolveAll struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *ConflictRebasePhantomResolveAll) Abort() []shared.Opcode {
-	return []shared.Opcode{
-		&RebaseAbort{},
-	}
-}
-
-func (self *ConflictRebasePhantomResolveAll) Continue() []shared.Opcode {
-	return []shared.Opcode{
-		&RebaseContinue{},
-	}
-}
-
 func (self *ConflictRebasePhantomResolveAll) Run(args shared.RunArgs) error {
 	quickInfos, err := args.Git.FileConflictQuickInfos(args.Backend)
 	if err != nil {

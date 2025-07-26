@@ -18,12 +18,6 @@ type RebaseOntoResolvePhantomConflicts struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *RebaseOntoResolvePhantomConflicts) Abort() []shared.Opcode {
-	return []shared.Opcode{
-		&RebaseAbort{},
-	}
-}
-
 func (self *RebaseOntoResolvePhantomConflicts) Run(args shared.RunArgs) error {
 	// Fix for https://github.com/git-town/git-town/issues/4942.
 	// Waiting here in end-to-end tests to ensure new timestamps for the rebased commits,

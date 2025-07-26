@@ -28,7 +28,7 @@ func (self *ConflictRebasePhantomFinalize) Run(args shared.RunArgs) error {
 	}
 	// here all rebase conflicts have been resolved --> commit to finish the rebase conflict and continue the program
 	args.PrependOpcodes(
-		&RebaseContinue{},
+		&RebaseContinueIfNeeded{},
 	)
 	return nil
 }

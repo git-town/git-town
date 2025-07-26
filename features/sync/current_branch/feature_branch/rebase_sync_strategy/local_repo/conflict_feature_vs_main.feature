@@ -30,7 +30,6 @@ Feature: handle conflicts between the current feature branch and the main branch
       """
     And a rebase is now in progress
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

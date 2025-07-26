@@ -11,18 +11,6 @@ type ConflictPhantomResolve struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *ConflictPhantomResolve) Abort() []shared.Opcode {
-	return []shared.Opcode{
-		&MergeAbort{},
-	}
-}
-
-func (self *ConflictPhantomResolve) Continue() []shared.Opcode {
-	return []shared.Opcode{
-		&MergeContinue{},
-	}
-}
-
 func (self *ConflictPhantomResolve) Run(args shared.RunArgs) error {
 	if err := args.Git.ResolveConflict(args.Frontend, self.FilePath, self.Resolution); err != nil {
 		return err
