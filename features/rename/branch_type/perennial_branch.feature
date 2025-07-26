@@ -41,7 +41,7 @@ Feature: rename a perennial branch
       | hotfix | new    |
 
   Scenario: undo
-    Given I ran "git-town rename --force production new"
+    Given I run "git-town rename --force production new"
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH     | COMMAND                                             |
