@@ -21,7 +21,6 @@ func (self *MergeParentResolvePhantomConflicts) Run(args shared.RunArgs) error {
 			CurrentBranch: self.CurrentBranch,
 			ParentBranch:  self.InitialParentName,
 			ParentSHA:     self.InitialParentSHA,
-			Resolution:    gitdomain.ConflictResolutionOurs,
 		})
 	}
 	return nil

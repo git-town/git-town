@@ -85,7 +85,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.CommitWithMessage{AuthorOverride: Some(gitdomain.Author("user@acme.com")), Message: "my message", CommitHook: configdomain.CommitHookEnabled},
 				&opcodes.ConfigRemove{Key: configdomain.KeyOffline, Scope: configdomain.ConfigScopeLocal},
 				&opcodes.ConfigSet{Key: configdomain.KeyOffline, Scope: configdomain.ConfigScopeLocal, Value: "1"},
-				&opcodes.ConflictMergePhantomResolveAll{CurrentBranch: "current", ParentBranch: gitdomain.NewLocalBranchNameOption("parent"), ParentSHA: Some(gitdomain.NewSHA("123456")), Resolution: gitdomain.ConflictResolutionOurs},
+				&opcodes.ConflictMergePhantomResolveAll{CurrentBranch: "current", ParentBranch: gitdomain.NewLocalBranchNameOption("parent"), ParentSHA: Some(gitdomain.NewSHA("123456"))},
 				&opcodes.ConflictMergePhantomFinalize{},
 				&opcodes.ConflictPhantomResolve{FilePath: "file", Resolution: gitdomain.ConflictResolutionOurs},
 				&opcodes.ConnectorProposalMerge{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Proposal: forgedomain.Proposal{Data: forgedomain.BitbucketCloudProposalData{ProposalData: forgedomain.ProposalData{Body: Some("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}}, ForgeType: forgedomain.ForgeTypeBitbucket}},
@@ -411,8 +411,7 @@ func TestLoadSave(t *testing.T) {
       "data": {
         "CurrentBranch": "current",
         "ParentBranch": "parent",
-        "ParentSHA": "123456",
-        "Resolution": "ours"
+        "ParentSHA": "123456"
       },
       "type": "ConflictMergePhantomResolveAll"
     },
