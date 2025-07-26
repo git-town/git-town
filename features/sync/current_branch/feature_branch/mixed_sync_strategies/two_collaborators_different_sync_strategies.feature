@@ -62,8 +62,8 @@ Feature: compatibility between different sync-feature-strategy settings
     #
     # I add a conflicting commit locally and then sync
     Given I add this commit to the current branch:
-      | MESSAGE          | FILE NAME | FILE CONTENT   |
-      | my second commit | file.txt  | my new content |
+      | MESSAGE          | FILE NAME | FILE CONTENT      |
+      | my second commit | file.txt  | my second content |
     When I run "git-town sync"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                              |
@@ -79,10 +79,10 @@ Feature: compatibility between different sync-feature-strategy settings
       <<<<<<< HEAD
       my and coworker first content
       =======
-      my new content
+      my second content
       >>>>>>> {{ sha-short 'my second commit' }} (my second commit)
       """
-    When I resolve the conflict in "file.txt" with "my new and coworker first content"
+    When I resolve the conflict in "file.txt" with "my second and coworker first content"
     And I run "git town continue" and close the editor
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                      |
@@ -104,11 +104,11 @@ Feature: compatibility between different sync-feature-strategy settings
       <<<<<<< HEAD
       my first content
       =======
-      my new and coworker first content
+      my second and coworker first content
       >>>>>>> {{ sha-short 'my second commit' }} (my second commit)
       """
     And a rebase is now in progress
-    When I resolve the conflict in "file.txt" with "my new and coworker first content"
+    When I resolve the conflict in "file.txt" with "my second and coworker first content"
     And I run "git town continue" and close the editor
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
@@ -117,9 +117,9 @@ Feature: compatibility between different sync-feature-strategy settings
     And no rebase is now in progress
     And all branches are now synchronized
     And these commits exist now
-      | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME | FILE CONTENT                      |
-      | feature | local, coworker, origin | coworker first commit                                      | file.txt  | coworker first content            |
-      |         | local, origin           | my first commit                                            | file.txt  | my first content                  |
-      |         |                         | my second commit                                           | file.txt  | my new and coworker first content |
-      |         | coworker                | my first commit                                            | file.txt  | my first content                  |
-      |         |                         | Merge remote-tracking branch 'origin/feature' into feature | file.txt  | my and coworker first content     |
+      | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME | FILE CONTENT                         |
+      | feature | local, coworker, origin | coworker first commit                                      | file.txt  | coworker first content               |
+      |         | local, origin           | my first commit                                            | file.txt  | my first content                     |
+      |         |                         | my second commit                                           | file.txt  | my second and coworker first content |
+      |         | coworker                | my first commit                                            | file.txt  | my first content                     |
+      |         |                         | Merge remote-tracking branch 'origin/feature' into feature | file.txt  | my and coworker first content        |
