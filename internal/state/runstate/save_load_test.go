@@ -86,7 +86,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.ConfigRemove{Key: configdomain.KeyOffline, Scope: configdomain.ConfigScopeLocal},
 				&opcodes.ConfigSet{Key: configdomain.KeyOffline, Scope: configdomain.ConfigScopeLocal, Value: "1"},
 				&opcodes.ConflictMergePhantomFinalize{},
-				&opcodes.ConflictMergePhantomResolveAll{CurrentBranch: "current", ParentBranch: gitdomain.NewLocalBranchNameOption("parent"), ParentSHA: Some(gitdomain.NewSHA("123456")), Resolution: gitdomain.ConflictResolutionOurs},
+				&opcodes.ConflictMergePhantomResolveAll{CurrentBranch: "current", ParentBranch: gitdomain.NewLocalBranchNameOption("parent"), ParentSHA: Some(gitdomain.NewSHA("123456"))},
 				&opcodes.ConflictPhantomResolve{FilePath: "file", Resolution: gitdomain.ConflictResolutionOurs},
 				&opcodes.ConflictRebasePhantomFinalize{},
 				&opcodes.ConflictRebasePhantomResolveAll{CurrentBranch: "branch", BranchToRebaseOnto: "parent"},
@@ -417,8 +417,7 @@ func TestLoadSave(t *testing.T) {
       "data": {
         "CurrentBranch": "current",
         "ParentBranch": "parent",
-        "ParentSHA": "123456",
-        "Resolution": "ours"
+        "ParentSHA": "123456"
       },
       "type": "ConflictMergePhantomResolveAll"
     },
