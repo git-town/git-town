@@ -1005,7 +1005,7 @@ func TestBackendCommands(t *testing.T) {
 				},
 			}
 			have := git.DetectPhantomMergeConflicts(fullInfos, gitdomain.NewLocalBranchNameOption("alpha"), "main")
-			want := []git.PhantomMergeConflict{
+			want := []git.PhantomConflict{
 				{FilePath: "file"},
 			}
 			must.Eq(t, want, have)
@@ -1032,7 +1032,7 @@ func TestBackendCommands(t *testing.T) {
 				},
 			}
 			have := git.DetectPhantomMergeConflicts(fullInfos, gitdomain.NewLocalBranchNameOption("alpha"), "main")
-			want := []git.PhantomMergeConflict{}
+			want := []git.PhantomConflict{}
 			must.Eq(t, want, have)
 		})
 		t.Run("file checksums between parent and main differ", func(t *testing.T) {
@@ -1057,7 +1057,7 @@ func TestBackendCommands(t *testing.T) {
 				},
 			}
 			have := git.DetectPhantomMergeConflicts(fullInfos, gitdomain.NewLocalBranchNameOption("alpha"), "main")
-			want := []git.PhantomMergeConflict{}
+			want := []git.PhantomConflict{}
 			must.Eq(t, want, have)
 		})
 		t.Run("file names between parent and main differ", func(t *testing.T) {
@@ -1082,7 +1082,7 @@ func TestBackendCommands(t *testing.T) {
 				},
 			}
 			have := git.DetectPhantomMergeConflicts(fullInfos, gitdomain.NewLocalBranchNameOption("alpha"), "main")
-			want := []git.PhantomMergeConflict{}
+			want := []git.PhantomConflict{}
 			must.Eq(t, want, have)
 		})
 	})

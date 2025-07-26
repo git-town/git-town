@@ -49,17 +49,18 @@ type FileConflictFullInfo struct {
 }
 
 // describes a file within an unresolved merge conflict that experiences a phantom merge conflict
-type PhantomMergeConflict struct {
-	FilePath string
+type PhantomConflict struct {
+	FilePath   string
+	Resolution gitdomain.ConflictResolution
 }
 
-func DetectPhantomMergeConflicts(conflictInfos []FileConflictFullInfo, parentBranchOpt Option[gitdomain.LocalBranchName], rootBranch gitdomain.LocalBranchName) []PhantomMergeConflict {
+func DetectPhantomMergeConflicts(conflictInfos []FileConflictFullInfo, parentBranchOpt Option[gitdomain.LocalBranchName], rootBranch gitdomain.LocalBranchName) []PhantomConflict {
 	parentBranch, hasParentBranch := parentBranchOpt.Get()
 	if !hasParentBranch || parentBranch == rootBranch {
 		// branches that don't have a parent or whose parent is the root branch cannot have phantom merge conflicts
-		return []PhantomMergeConflict{}
+		return []PhantomConflict{}
 	}
-	result := []PhantomMergeConflict{}
+	result := []PhantomConflict{}
 	for _, conflictInfo := range conflictInfos {
 		initialParentInfo, hasInitialParentInfo := conflictInfo.Parent.Get()
 		currentInfo, hasCurrentInfo := conflictInfo.Current.Get()
@@ -68,8 +69,9 @@ func DetectPhantomMergeConflicts(conflictInfos []FileConflictFullInfo, parentBra
 		}
 		if reflect.DeepEqual(conflictInfo.Root, conflictInfo.Parent) {
 			// root and parent have the exact same version of the file --> this is a phantom merge conflict
-			result = append(result, PhantomMergeConflict{
-				FilePath: currentInfo.FilePath,
+			result = append(result, PhantomConflict{
+				FilePath:   currentInfo.FilePath,
+				Resolution: gitdomain.ConflictResolutionOurs,
 			})
 		}
 	}
