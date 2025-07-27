@@ -1,11 +1,5 @@
 # Git Town
 
-This is a monorepo containing several main codebases:
-
-- Source code for Git Town, a CLI application written in Go.
-- Source code for the Git Town website, an
-  [mdBook](https://rust-lang.github.io/mdBook) application
-
 ## Development Guidelines
 
 - you can change any file in the current folder and its subfolders

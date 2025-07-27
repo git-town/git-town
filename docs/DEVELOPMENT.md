@@ -4,6 +4,19 @@ This page provides guidance for contributing to the Git Town codebase. For a
 comprehensive understanding of the architecture, refer to
 [ARCHITECTURE.md](ARCHITECTURE.md).
 
+## Folders
+
+This monorepo contains a number of codebases:
+
+1. **internal** and **pkg**: Git Town, a CLI application written in Go
+2. **website**: the Git Town website, an
+   [mdBook](https://rust-lang.github.io/mdBook) application
+3. **features**: end-to-end tests for Git Town
+4. **installer**: the Windows installer for Git Town
+5. **tools**: custom-made linters for the Git Town codebase
+
+- source code for tool
+
 ## Setup
 
 1. install [Go](https://golang.org) version 1.23
