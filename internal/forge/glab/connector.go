@@ -58,16 +58,16 @@ func (self Connector) SquashMergeProposalFn() Option[func(int, gitdomain.CommitM
 	return Some(self.squashMergeProposal)
 }
 
+func (self Connector) UpdateProposalBodyFn() Option[func(forgedomain.ProposalInterface, string) error] {
+	return Some(self.updateProposalBody)
+}
+
 func (self Connector) UpdateProposalSourceFn() Option[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName) error] {
 	return None[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName) error]()
 }
 
 func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName) error] {
 	return Some(self.updateProposalTarget)
-}
-
-func (self Connector) UpdateProposalBodyFn() Option[func(forgedomain.ProposalInterface, string) error] {
-	return Some(self.updateProposalBody)
 }
 
 func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
@@ -102,12 +102,12 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 	return self.Frontend.Run("glab", "mr", "merge", "--squash", "--body="+message.String(), strconv.Itoa(number))
 }
 
-func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
-	return self.Frontend.Run("glab", "edit", strconv.Itoa(proposalData.Data().Number), "--base="+target.String())
-}
-
 func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterface, updatedDescription string) error {
 	return self.Frontend.Run("glab", "mr", "update", strconv.Itoa(proposalData.Data().Number), "--description="+updatedDescription)
+}
+
+func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
+	return self.Frontend.Run("glab", "edit", strconv.Itoa(proposalData.Data().Number), "--base="+target.String())
 }
 
 func ParsePermissionsOutput(output string) forgedomain.VerifyConnectionResult {

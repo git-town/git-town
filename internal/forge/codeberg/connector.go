@@ -71,6 +71,14 @@ func (self Connector) SquashMergeProposalFn() Option[func(int, gitdomain.CommitM
 	return None[func(int, gitdomain.CommitMessage) error]()
 }
 
+func (self Connector) UpdateProposalBodyFn() Option[func(forgedomain.ProposalInterface, string) error] {
+	if self.APIToken.IsNone() {
+		return None[func(forgedomain.ProposalInterface, string) error]()
+	}
+
+	return Some(self.updateProposalBody)
+}
+
 func (self Connector) UpdateProposalSourceFn() Option[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName) error] {
 	return None[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName) error]()
 }
@@ -101,14 +109,6 @@ func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
 		AuthenticationError: nil,
 		AuthorizationError:  err,
 	}
-}
-
-func (self Connector) UpdateProposalBodyFn() Option[func(forgedomain.ProposalInterface, string) error] {
-	if self.APIToken.IsNone() {
-		return None[func(forgedomain.ProposalInterface, string) error]()
-	}
-
-	return Some(self.updateProposalBody)
 }
 
 func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
@@ -207,12 +207,11 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 	return err
 }
 
-func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
+func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody string) error {
 	data := proposalData.Data()
-	targetName := target.String()
-	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)), colors.BoldCyan().Styled(targetName))
+	self.log.Start(messages.APIUpdateProposalBody, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)))
 	_, _, err := self.client.EditPullRequest(self.Organization, self.Repository, int64(data.Number), forgejo.EditPullRequestOption{
-		Base: targetName,
+		Body: data.Body.GetOrDefault(),
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
@@ -222,11 +221,12 @@ func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInte
 	return nil
 }
 
-func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody string) error {
+func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	data := proposalData.Data()
-	self.log.Start(messages.APIUpdateProposalBody, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)))
+	targetName := target.String()
+	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)), colors.BoldCyan().Styled(targetName))
 	_, _, err := self.client.EditPullRequest(self.Organization, self.Repository, int64(data.Number), forgejo.EditPullRequestOption{
-		Body: data.Body.GetOrDefault(),
+		Base: targetName,
 	})
 	if err != nil {
 		self.log.Failed(err.Error())

@@ -59,6 +59,14 @@ func (self Connector) SquashMergeProposalFn() Option[func(int, gitdomain.CommitM
 	return Some(self.squashMergeProposal)
 }
 
+func (self Connector) UpdateProposalBodyFn() Option[func(forgedomain.ProposalInterface, string) error] {
+	if self.APIToken.IsNone() {
+		return None[func(forgedomain.ProposalInterface, string) error]()
+	}
+
+	return Some(self.updateProposalBody)
+}
+
 func (self Connector) UpdateProposalSourceFn() Option[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName) error] {
 	return None[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName) error]()
 }
@@ -68,14 +76,6 @@ func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalI
 		return None[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName) error]()
 	}
 	return Some(self.updateProposalTarget)
-}
-
-func (self Connector) UpdateProposalBodyFn() Option[func(forgedomain.ProposalInterface, string) error] {
-	if self.APIToken.IsNone() {
-		return None[func(forgedomain.ProposalInterface, string) error]()
-	}
-
-	return Some(self.updateProposalBody)
 }
 
 func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
@@ -189,11 +189,11 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 	return nil
 }
 
-func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
+func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterface, updatedDescription string) error {
 	data := proposalData.Data()
-	self.log.Start(messages.ForgeGitLabUpdateMRViaAPI, data.Number, target)
+	self.log.Start(messages.ForgeGitlabUpdateMRBodyViaAPI, data.Number)
 	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), data.Number, &gitlab.UpdateMergeRequestOptions{
-		TargetBranch: gitlab.Ptr(target.String()),
+		Description: Ptr(updatedDescription),
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
@@ -203,11 +203,11 @@ func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInte
 	return nil
 }
 
-func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterface, updatedDescription string) error {
+func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	data := proposalData.Data()
-	self.log.Start(messages.ForgeGitlabUpdateMRBodyViaAPI, data.Number)
+	self.log.Start(messages.ForgeGitLabUpdateMRViaAPI, data.Number, target)
 	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), data.Number, &gitlab.UpdateMergeRequestOptions{
-		Description: Ptr(updatedDescription),
+		TargetBranch: gitlab.Ptr(target.String()),
 	})
 	if err != nil {
 		self.log.Failed(err.Error())

@@ -19,15 +19,20 @@ import (
 	"github.com/git-town/git-town/v21/internal/forge"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/state/runstate"
+	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/validate"
+	"github.com/git-town/git-town/v21/internal/vm/interpreter/fullinterpreter"
 	"github.com/git-town/git-town/v21/internal/vm/opcodes"
-	"github.com/git-town/git-town/v21/internal/vm/shared"
+	"github.com/git-town/git-town/v21/internal/vm/optimizer"
+	"github.com/git-town/git-town/v21/internal/vm/program"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
 const (
-	branchDesc = `
+	branchCommand = "branch"
+	branchDesc    = `
 Display hierarchy either for local branches or an existing proposal of stack.
 	`
 	branchHelp = `
@@ -38,7 +43,7 @@ func branchCmd() *cobra.Command {
 	addProposalLineageFlag, readProposalFlag := flags.Proposal("Display the proposal stack lineage based on the current branch")
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:   "branch",
+		Use:   branchCommand,
 		Args:  cobra.NoArgs,
 		Short: branchDesc,
 		Long:  cmdhelpers.Long(branchDesc, branchHelp),
@@ -126,6 +131,8 @@ func executeProposalDisplay(cliConfig cliconfig.CliConfig) error {
 		return err
 	}
 
+	runProgram := NewMutable(&program.Program{})
+
 	config := repo.UnvalidatedConfig.NormalConfig
 	connector, err := forge.NewConnector(forge.NewConnectorArgs{
 		Backend:              repo.Backend,
@@ -172,14 +179,46 @@ func executeProposalDisplay(cliConfig cliconfig.CliConfig) error {
 		return err
 	}
 
-	opcode := &opcodes.ProposalLineageCreate{
+	runProgram.Value.Add(&opcodes.ProposalLineageCreate{
 		Branch:            currentBranch,
 		ProposalLineageIn: configdomain.ProposalLineageInTerminal,
-	}
+	})
 
-	return opcode.Run(shared.RunArgs{
-		Config:    NewMutable(&validatedConfig),
-		Connector: connector,
+	optimizedProgram := optimizer.Optimize(runProgram.Immutable())
+
+	runState := runstate.RunState{
+		BeginBranchesSnapshot: branchesSnapshot,
+		BeginConfigSnapshot:   repo.ConfigSnapshot,
+		BeginStashSize:        0,
+		Command:               branchCommand,
+		DryRun:                cliConfig.DryRun,
+		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
+		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
+		EndStashSize:          None[gitdomain.StashSize](),
+		BranchInfosLastRun:    None[gitdomain.BranchInfos](),
+		RunProgram:            optimizedProgram,
+		TouchedBranches:       optimizedProgram.TouchedBranches(),
+		UndoAPIProgram:        program.Program{},
+	}
+	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
+		Backend:                 repo.Backend,
+		CommandsCounter:         repo.CommandsCounter,
+		Config:                  validatedConfig,
+		Connector:               connector,
+		Detached:                false,
+		FinalMessages:           repo.FinalMessages,
+		Frontend:                repo.Frontend,
+		Git:                     repo.Git,
+		HasOpenChanges:          false,
+		InitialBranch:           currentBranch,
+		InitialBranchesSnapshot: branchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSize:        0,
+		Inputs:                  dialogcomponents.LoadInputs(os.Environ()),
+		PendingCommand:          None[string](),
+		RootDir:                 repo.RootDir,
+		RunState:                runState,
+		Verbose:                 cliConfig.Verbose,
 	})
 }
 

@@ -19,80 +19,7 @@ type ProposalStackLineageBuilder interface {
 	GetProposal(branch gitdomain.LocalBranchName) Option[forgedomain.ProposalData]
 }
 
-type proposalStackLineageBuildOptions struct {
-	currentBranch          Option[gitdomain.LocalBranchName]
-	location               ProposalLineageIn
-	indentMarker           string
-	currentBranchIndicator string
-	beforeStackDisplay     []string
-	afterStackDisplay      []string
-}
-
-func newProposalStackLineageBuilderOptions() *proposalStackLineageBuildOptions {
-	return &proposalStackLineageBuildOptions{
-		currentBranch:          None[gitdomain.LocalBranchName](),
-		location:               ProposalLineageOperationInProposalBody,
-		indentMarker:           "-",
-		currentBranchIndicator: "point_left",
-		beforeStackDisplay:     make([]string, 0),
-		afterStackDisplay:      make([]string, 0),
-	}
-}
-
-type configureProposalStackLineage func(opts *proposalStackLineageBuildOptions)
-
-// WithStringBeforeStackDisplay
-// A set of texts to appear before the main stack information is displayed.
-// If this method is called more than once, the text appear in FIFO order.
-func WithStringBeforeStackDisplay(text string) configureProposalStackLineage {
-	return func(opts *proposalStackLineageBuildOptions) {
-		opts.beforeStackDisplay = append(opts.beforeStackDisplay, text)
-	}
-}
-
-// WithStringAfterStackDisplay
-// A set of texts to appear after the main stack information is displayed.
-// If this method is called more than once, the text appear in FIFO order.
-func WithStringAfterStackDisplay(text string) configureProposalStackLineage {
-	return func(opts *proposalStackLineageBuildOptions) {
-		opts.afterStackDisplay = append(opts.afterStackDisplay, text)
-	}
-}
-
-// WithIndentMarker
-// Controls the marker following an indent.
-func WithIndentMarker(marker string) configureProposalStackLineage {
-	return func(opts *proposalStackLineageBuildOptions) {
-		opts.indentMarker = marker
-	}
-}
-
-// WithCurrentBranchIndicator
-// Special character used to denote the current branch's proposal (if there is one).
-func WithCurrentBranchIndicator(indicator string) configureProposalStackLineage {
-	return func(opts *proposalStackLineageBuildOptions) {
-		opts.currentBranchIndicator = indicator
-	}
-}
-
-// WithProposalLineageIn
-// Determines the context the proposal stack lineage is displayed.
-func WithProposalLineageIn(location ProposalLineageIn) configureProposalStackLineage {
-	return func(opts *proposalStackLineageBuildOptions) {
-		opts.location = location
-	}
-}
-
-// WithCurrentBranch
-// Informs the builder which branch is the current. This is used to determine when the
-// `WithCurrentBranchIndicator` character appears.
-func WithCurrentBranch(branch gitdomain.LocalBranchName) configureProposalStackLineage {
-	return func(opts *proposalStackLineageBuildOptions) {
-		opts.currentBranch = Some(branch)
-	}
-}
-
-// NewProposalStackLineageBuilder enables generating the proposal stack lineage under different contexts
+// NewProposalStackLineageBuilder enables generating the proposal stack lineage under daferent contexts
 // connector - forgedomain.Connector
 // exemptBranches - the branches we do not care to fetch proposal data.
 func NewProposalStackLineageBuilder(connector forgedomain.Connector, exemptBranches ...gitdomain.LocalBranchName) ProposalStackLineageBuilder {
@@ -102,9 +29,9 @@ func NewProposalStackLineageBuilder(connector forgedomain.Connector, exemptBranc
 	}
 
 	return &proposalStackLineageBuilder{
-		orderedLineage:                           make([]*proposalLineage, 0),
-		connector:                                connector,
 		branchesExemptFromDisplayingProposalInfo: exemptBranches,
+		connector:                                connector,
+		orderedLineage:                           make([]*proposalLineage, 0),
 	}
 }
 
@@ -114,9 +41,9 @@ type proposalLineage struct {
 }
 
 type proposalStackLineageBuilder struct {
+	branchesExemptFromDisplayingProposalInfo gitdomain.LocalBranchNames
 	connector                                forgedomain.Connector
 	orderedLineage                           []*proposalLineage
-	branchesExemptFromDisplayingProposalInfo gitdomain.LocalBranchNames
 }
 
 func (self *proposalStackLineageBuilder) AddBranch(childBranch gitdomain.LocalBranchName, parentBranch Option[gitdomain.LocalBranchName]) (ProposalStackLineageBuilder, error) {
@@ -205,18 +132,4 @@ func formattedDisplay(builderOptions *proposalStackLineageBuildOptions, currentI
 		}
 		return fmt.Sprintf("%s %s PR %s\n", currentIndentLevel, builderOptions.indentMarker, proposalData.URL)
 	}
-}
-
-type noopProposalStackLineageBuilder struct{}
-
-func (self *noopProposalStackLineageBuilder) AddBranch(childBranch gitdomain.LocalBranchName, parentBranch Option[gitdomain.LocalBranchName]) (ProposalStackLineageBuilder, error) {
-	return self, nil
-}
-
-func (self *noopProposalStackLineageBuilder) Build(cfgs ...configureProposalStackLineage) Option[string] {
-	return None[string]()
-}
-
-func (self *noopProposalStackLineageBuilder) GetProposal(branch gitdomain.LocalBranchName) Option[forgedomain.ProposalData] {
-	return None[forgedomain.ProposalData]()
 }
