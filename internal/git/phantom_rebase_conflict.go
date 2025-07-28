@@ -6,21 +6,31 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 )
 
-func DetectPhantomRebaseConflicts(conflictInfos []FileConflictFullInfo, parentBranch gitdomain.BranchName, rootBranch gitdomain.LocalBranchName) []PhantomConflict {
-	// How to detect phantom merge conflicts:
+func DetectPhantomRebaseConflicts(fileConflicts []FileConflictFullInfo, parentBranch gitdomain.BranchName, rootBranch gitdomain.LocalBranchName) []PhantomConflict {
+	// OVERALL SYNC STRATEGY
 	//
-	// Situations we want to cover:
+	// Sync tracking branch:
 	//
-	// 1. Feature branch changed (commit added, amended, or rebased) and root not changed --> Keep the feature branch change
-	// 2. Root branch branch was changed and feature branch not changed --> don't auto-resolve
-	// 3. Both happen at the same time: root and feature branch changed --> don't auto-resolve
+	// Feature branch changed && tracking not changed --> overwrite tracking
 	//
-	// Determine upfront:
-	// Feature branch is changed (current SHA is different from SHA at end of last run)
-	// Root branch is changed
+	// Feature branch changed && tracking changed --> sync normally
 	//
-	// One side is the old feature branch: auto-resolve to the other side?
-	// One side is the old root branch: auto-resolve to the other side?
+	// Feature branch not changed && tracking changed --> pull
+	//
+	// Feature branch not changed && tracking not changed --> do nothing
+	//
+	// Sync parent branch:
+	//
+	// Feature branch changed && parent not changed --> do nothing
+	//
+	// Feature branch changed && parent changed --> sync normally
+	//
+	// Feature branch not changed && parent changed --> pull
+	//
+	// Feature branch not changed && parent not changed --> do nothing
+	//
+	// AUTO-RESOLVING CONFLICTS ENCOUNTERED WHILE SYNCING
+	//
 	//
 	// O
 	//
@@ -29,17 +39,21 @@ func DetectPhantomRebaseConflicts(conflictInfos []FileConflictFullInfo, parentBr
 	// 	return []PhantomMergeConflict{}
 	// }
 	result := []PhantomConflict{}
-	for _, conflictInfo := range conflictInfos {
+	for _, fileConflict := range fileConflicts {
 		// TODO: inspect the conflictInfo
-		initialParentInfo, hasInitialParentInfo := conflictInfo.Parent.Get()
-		currentInfo, hasCurrentInfo := conflictInfo.Current.Get()
-		if !hasInitialParentInfo || !hasCurrentInfo || currentInfo.Permission != initialParentInfo.Permission {
+		//
+		// One side is the old feature branch: auto-resolve to the other side?
+		// One side is the old root branch: auto-resolve to the other side?
+		parentBlob, hasParentBlob := fileConflict.Parent.Get()
+		currentBlob, hasCurrentBlob := fileConflict.Current.Get()
+		rootBlob, hasRootBlob := fileConflict.Root.Get()
+		if !hasParentBlob || !hasCurrentBlob || currentBlob.Permission != parentBlob.Permission {
 			continue
 		}
-		if reflect.DeepEqual(conflictInfo.Root, conflictInfo.Parent) {
+		if reflect.DeepEqual(fileConflict.Root, fileConflict.Parent) {
 			// root and parent have the exact same version of the file --> this is a phantom rebase conflict
 			result = append(result, PhantomConflict{
-				FilePath: currentInfo.FilePath,
+				FilePath: currentBlob.FilePath,
 			})
 		}
 	}
