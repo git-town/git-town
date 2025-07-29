@@ -40,6 +40,8 @@ type Connector interface {
 	// A None return value indicates that this connector does not support this feature (yet).
 	SquashMergeProposalFn() Option[func(number int, message gitdomain.CommitMessage) error]
 
+	UpdateProposalBodyFn() Option[func(proposal ProposalInterface, newBody string) error]
+
 	// If this connector instance supports loading proposals via the API,
 	// calling this function returns a function that you can call
 	// to update the source branch of the proposal with the given number.
