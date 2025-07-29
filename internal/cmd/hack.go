@@ -102,8 +102,8 @@ func hackCmd() *cobra.Command {
 			}
 			return executeHack(determineHackDataArgs{
 				args:          args,
-				cliConfig:     cliConfig,
 				beam:          beam,
+				cliConfig:     cliConfig,
 				commit:        commit,
 				commitMessage: commitMessage,
 				detached:      detached,
@@ -411,8 +411,8 @@ func determineHackData(args determineHackDataArgs, repo execute.OpenRepoResult) 
 
 type determineHackDataArgs struct {
 	args          []string
-	cliConfig     cliconfig.CliConfig
 	beam          configdomain.Beam
+	cliConfig     cliconfig.CliConfig
 	commit        configdomain.Commit
 	commitMessage Option[gitdomain.CommitMessage]
 	detached      configdomain.Detached
