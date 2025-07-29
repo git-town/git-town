@@ -66,14 +66,14 @@ func Cmd() *cobra.Command {
 		Short:   syncDesc,
 		Long:    cmdhelpers.Long(syncDesc, fmt.Sprintf(syncHelp, configdomain.KeySyncUpstream)),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			allBranches, err1 := readAllFlag(cmd)
-			detached, err2 := readDetachedFlag(cmd)
-			dryRun, err3 := readDryRunFlag(cmd)
-			noPush, err4 := readNoPushFlag(cmd)
-			prune, err5 := readPruneFlag(cmd)
-			stack, err6 := readStackFlag(cmd)
-			verbose, err7 := readVerboseFlag(cmd)
-			if err := cmp.Or(err1, err2, err3, err4, err5, err6, err7); err != nil {
+			allBranches, errAllBranches := readAllFlag(cmd)
+			detached, errDetached := readDetachedFlag(cmd)
+			dryRun, errDryRun := readDryRunFlag(cmd)
+			noPush, errNoPush := readNoPushFlag(cmd)
+			prune, errPrune := readPruneFlag(cmd)
+			stack, errStack := readStackFlag(cmd)
+			verbose, errVerbose := readVerboseFlag(cmd)
+			if err := cmp.Or(errAllBranches, errDetached, errDryRun, errNoPush, errPrune, errStack, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.CliConfig{
