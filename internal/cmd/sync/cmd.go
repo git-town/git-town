@@ -75,7 +75,7 @@ func Cmd() *cobra.Command {
 			prune, errPrune := readPruneFlag(cmd)
 			stack, errStack := readStackFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errAllBranches, errDetached, errDryRun, errNoAutoResolve, errNoPush, errPrune, errStack, errVerbose); err != nil {
+			if err := cmp.Or(errAllBranches, errDetached, errDryRun, errNoAutoResolve, errPushBranches, errPrune, errStack, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.CliConfig{
@@ -96,7 +96,7 @@ func Cmd() *cobra.Command {
 	return &cmd
 }
 
-func executeSync(cliConfig cliconfig.CliConfig, syncAllBranches configdomain.AllBranches, syncStack configdomain.FullStack, detached configdomain.Detached, pushBranches configdomain.PushBranches, prune configdomain.Prune) error {
+func executeSync(cliConfig cliconfig.CliConfig, syncAllBranches configdomain.AllBranches, syncStack configdomain.FullStack, detached configdomain.Detached, noAutoResolve configdomain.NoAutoResolve, pushBranches configdomain.PushBranches, prune configdomain.Prune) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,
