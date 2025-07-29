@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/git-town/git-town/v21/internal/gohacks"
 	"github.com/git-town/git-town/v21/internal/messages"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
@@ -23,13 +24,22 @@ func (self ProposalsShowLineage) String() string {
 
 func ParseProposalsShowLineage(value string) (Option[ProposalsShowLineage], error) {
 	switch strings.ToLower(strings.TrimSpace(value)) {
-	case "":
+	case "", ProposalsShowLineageNone.String():
 		return None[ProposalsShowLineage](), nil
-	case "ci":
+	case ProposalsShowLineageCI.String():
 		return Some(ProposalsShowLineageCI), nil
-	case "cli":
+	case ProposalsShowLineageCLI.String():
 		return Some(ProposalsShowLineageCLI), nil
 	default:
+		parsedOpt, err := gohacks.ParseBoolOpt(value, "proposals-show-lineage")
+		if err != nil {
+			return None[ProposalsShowLineage](), fmt.Errorf(messages.ProposalsShowLineageInvalid, value)
+		}
+		if parsed, has := parsedOpt.Get(); has {
+			if !parsed {
+				return Some(ProposalsShowLineageNone), nil
+			}
+		}
 		return None[ProposalsShowLineage](), fmt.Errorf(messages.ProposalsShowLineageInvalid, value)
 	}
 }

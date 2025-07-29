@@ -18,7 +18,7 @@ func TestParseProposalsShowLineage(t *testing.T) {
 		{
 			give: "",
 			want: None[configdomain.ProposalsShowLineage](),
-			err:  true,
+			err:  false,
 		},
 		{
 			give: "none",
