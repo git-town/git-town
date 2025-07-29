@@ -36,12 +36,12 @@ func TestParseProposalsShowLineage(t *testing.T) {
 			err:  false,
 		},
 		{
-			give: "cli",
-			want: Some(configdomain.ProposalsShowLineageCLI),
+			give: "Ci",
+			want: Some(configdomain.ProposalsShowLineageCI),
 			err:  false,
 		},
 		{
-			give: "CLI",
+			give: "cli",
 			want: Some(configdomain.ProposalsShowLineageCLI),
 			err:  false,
 		},
