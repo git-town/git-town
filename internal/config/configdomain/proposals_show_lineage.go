@@ -14,7 +14,7 @@ type ProposalsShowLineage string
 
 const (
 	ProposalsShowLineageNone ProposalsShowLineage = "none" // don't display lineage in proposals
-	ProposalsShowLineageCI   ProposalsShowLineage = "ci"   // this team has set up https://github.com/git-town/action to embed the stack lineage into proposals
+	ProposalsShowLineageCI   ProposalsShowLineage = "ci"   // lineage is embedded into proposals via https://github.com/git-town/action
 	ProposalsShowLineageCLI  ProposalsShowLineage = "cli"  // the Git Town CLI should embed the lineage into proposals
 )
 
