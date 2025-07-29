@@ -11,14 +11,14 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-// quick information about a file with merge conflicts
+// information about a file with merge conflicts, as provided by "git ls-files --unmerged"
 type FileConflictQuickInfo struct {
 	BaseChange          Option[BlobInfo] // info about the base version of the file (when 3-way merging)
 	CurrentBranchChange Option[BlobInfo] // info about the content of the file on the branch where the merge conflict occurs, None == file is deleted here
 	IncomingChange      Option[BlobInfo] // info about the content of the file on the branch being merged in, None == file is being deleted here
 }
 
-// describes the content of a file in Git
+// describes the content of a file blob in Git
 type BlobInfo struct {
 	FilePath   string        // relative path of the file in the repo
 	Permission string        // permissions, in the form "100755"
@@ -41,7 +41,9 @@ var UnmergedStages = []UnmergedStage{
 	UnmergedStageIncoming,
 }
 
-// complete information about a file with merge conflicts, to determine whether it is a pantom merge conflict
+// Everything Git Town needs to know about a file merge conflict to determine whether this is a phantom merge conflict.
+// Includes the FileConflictQuickInfo as well as information that only Git Town knows,
+// like how this file looks at the root branch of the stack on which the conflict occurs.
 type FileConflictFullInfo struct {
 	Current Option[BlobInfo] // info about the file on the current branch
 	Parent  Option[BlobInfo] // info about the file on the original parent
