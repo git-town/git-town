@@ -7,9 +7,6 @@ import (
 	"net/url"
 	"strconv"
 
-	"github.com/google/go-github/v58/github"
-	"golang.org/x/oauth2"
-
 	"github.com/git-town/git-town/v21/internal/browser"
 	"github.com/git-town/git-town/v21/internal/cli/colors"
 	"github.com/git-town/git-town/v21/internal/cli/print"
@@ -19,6 +16,8 @@ import (
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/google/go-github/v58/github"
+	"golang.org/x/oauth2"
 )
 
 // Connector provides standardized connectivity for the given repository (github.com/owner/repo)
@@ -243,8 +242,6 @@ func DefaultProposalMessage(data forgedomain.ProposalData) string {
 	return forgedomain.CommitBody(data, fmt.Sprintf("%s (#%d)", data.Title, data.Number))
 }
 
-// NewConnector provides a fully configured GithubConnector instance
-// if the current repo is hosted on GitHub, otherwise nil.
 func NewConnector(args NewConnectorArgs) (Connector, error) {
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: args.APIToken.String()})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
