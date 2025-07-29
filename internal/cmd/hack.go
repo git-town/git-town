@@ -134,16 +134,7 @@ func executeHack(args determineHackDataArgs) error {
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineHackData(determineHackDataArgs{
-		argv:          args.argv,
-		beam:          args.beam,
-		cliConfig:     args.cliConfig,
-		commit:        args.commit,
-		commitMessage: args.commitMessage,
-		detached:      args.detached,
-		propose:       args.propose,
-		prototype:     args.prototype,
-	}, repo)
+	data, exit, err := determineHackData(args, repo)
 	if err != nil || exit {
 		return err
 	}
