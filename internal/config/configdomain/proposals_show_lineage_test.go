@@ -22,7 +22,7 @@ func TestParseProposalsShowLineage(t *testing.T) {
 		},
 		{
 			give: "none",
-			want: None[configdomain.ProposalsShowLineage](),
+			want: Some(configdomain.ProposalsShowLineageNone)(),
 			err:  false,
 		},
 		{
@@ -43,6 +43,11 @@ func TestParseProposalsShowLineage(t *testing.T) {
 		{
 			give: "CLI",
 			want: Some(configdomain.ProposalsShowLineageCLI),
+			err:  false,
+		},
+		{
+			give: "false",
+			want: Some()
 			err:  false,
 		},
 	}
