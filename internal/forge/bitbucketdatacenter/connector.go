@@ -89,6 +89,10 @@ func (self Connector) SquashMergeProposalFn() Option[func(int, gitdomain.CommitM
 	return None[func(int, gitdomain.CommitMessage) error]()
 }
 
+func (self Connector) UpdateProposalBodyFn() Option[func(forgedomain.ProposalInterface, string) error] {
+	return None[func(forgedomain.ProposalInterface, string) error]()
+}
+
 func (self Connector) UpdateProposalSourceFn() Option[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName) error] {
 	return None[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName) error]()
 }

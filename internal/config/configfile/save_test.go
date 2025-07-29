@@ -53,6 +53,7 @@ func TestSave(t *testing.T) {
 				NewBranchType:            Some(configdomain.NewBranchType(configdomain.BranchTypePrototypeBranch)),
 				PerennialBranches:        gitdomain.NewLocalBranchNames("qa", "staging"),
 				PerennialRegex:           asserts.NoError1(configdomain.ParsePerennialRegex("perennial-")),
+				ProposalsShowLineage:     Some(configdomain.ProposalsShowLineageCLI),
 				PushHook:                 Some(configdomain.PushHook(true)),
 				ShareNewBranches:         Some(configdomain.ShareNewBranchesPropose),
 				ShipDeleteTrackingBranch: Some(configdomain.ShipDeleteTrackingBranch(true)),
@@ -79,6 +80,9 @@ share-new-branches = "propose"
 dev-remote = "origin"
 forge-type = "github"
 origin-hostname = "forge"
+
+[propose]
+lineage = "cli"
 
 [ship]
 delete-tracking-branch = true

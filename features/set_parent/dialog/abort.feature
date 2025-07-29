@@ -13,11 +13,7 @@ Feature: abort the dialog
       | parent branch for "child" | esc  |
 
   Scenario: result
-    Then Git Town prints:
-      """
-      Selected parent branch for "child": (aborted)
-      """
-    And Git Town runs no commands
+    Then Git Town runs no commands
     And the initial commits exist now
     And the initial branches and lineage exist now
 

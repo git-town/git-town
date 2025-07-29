@@ -223,8 +223,8 @@ func determineMergeData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConf
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
+		BranchInfos:        branchesSnapshot.Branches,
 		BranchesAndTypes:   branchesAndTypes,
-		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
@@ -312,6 +312,11 @@ func mergeProgram(repo execute.OpenRepoResult, data mergeData, dryRun configdoma
 	if initialHasTrackingBranch && repo.IsOffline.IsOnline() {
 		prog.Value.Add(&opcodes.BranchTrackingDelete{
 			Branch: initialTrackingBranch,
+		})
+	}
+	if _, hasOverride := data.config.NormalConfig.BranchTypeOverrides[data.initialBranch]; hasOverride {
+		prog.Value.Add(&opcodes.BranchTypeOverrideRemove{
+			Branch: data.initialBranch,
 		})
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}

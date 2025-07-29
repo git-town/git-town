@@ -85,16 +85,17 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	observedRegex, err9 := configdomain.ParseObservedRegex(snapshot[configdomain.KeyObservedRegex])
 	offline, err10 := configdomain.ParseOffline(snapshot[configdomain.KeyOffline], configdomain.KeyOffline)
 	perennialRegex, err11 := configdomain.ParsePerennialRegex(snapshot[configdomain.KeyPerennialRegex])
-	pushHook, err12 := configdomain.ParsePushHook(snapshot[configdomain.KeyPushHook], configdomain.KeyPushHook)
-	shareNewBranches, err13 := configdomain.ParseShareNewBranches(snapshot[configdomain.KeyShareNewBranches], configdomain.KeyShareNewBranches)
-	shipDeleteTrackingBranch, err14 := configdomain.ParseShipDeleteTrackingBranch(snapshot[configdomain.KeyShipDeleteTrackingBranch], configdomain.KeyShipDeleteTrackingBranch)
-	shipStrategy, err15 := configdomain.ParseShipStrategy(snapshot[configdomain.KeyShipStrategy])
-	syncFeatureStrategy, err16 := configdomain.ParseSyncFeatureStrategy(snapshot[configdomain.KeySyncFeatureStrategy])
-	syncPerennialStrategy, err17 := configdomain.ParseSyncPerennialStrategy(snapshot[configdomain.KeySyncPerennialStrategy])
-	syncPrototypeStrategy, err18 := configdomain.ParseSyncPrototypeStrategy(snapshot[configdomain.KeySyncPrototypeStrategy])
-	syncTags, err19 := configdomain.ParseSyncTags(snapshot[configdomain.KeySyncTags], configdomain.KeySyncTags)
-	syncUpstream, err20 := configdomain.ParseSyncUpstream(snapshot[configdomain.KeySyncUpstream], configdomain.KeySyncUpstream)
-	branchType, err21 := configdomain.ParseBranchType(snapshot[configdomain.KeyUnknownBranchType])
+	proposalsShowLineage, err12 := configdomain.ParseProposalsShowLineage(snapshot[configdomain.KeyProposalsShowLineage])
+	pushHook, err13 := configdomain.ParsePushHook(snapshot[configdomain.KeyPushHook], configdomain.KeyPushHook)
+	shareNewBranches, err14 := configdomain.ParseShareNewBranches(snapshot[configdomain.KeyShareNewBranches], configdomain.KeyShareNewBranches)
+	shipDeleteTrackingBranch, err15 := configdomain.ParseShipDeleteTrackingBranch(snapshot[configdomain.KeyShipDeleteTrackingBranch], configdomain.KeyShipDeleteTrackingBranch)
+	shipStrategy, err16 := configdomain.ParseShipStrategy(snapshot[configdomain.KeyShipStrategy])
+	syncFeatureStrategy, err17 := configdomain.ParseSyncFeatureStrategy(snapshot[configdomain.KeySyncFeatureStrategy])
+	syncPerennialStrategy, err18 := configdomain.ParseSyncPerennialStrategy(snapshot[configdomain.KeySyncPerennialStrategy])
+	syncPrototypeStrategy, err19 := configdomain.ParseSyncPrototypeStrategy(snapshot[configdomain.KeySyncPrototypeStrategy])
+	syncTags, err20 := configdomain.ParseSyncTags(snapshot[configdomain.KeySyncTags], configdomain.KeySyncTags)
+	syncUpstream, err21 := configdomain.ParseSyncUpstream(snapshot[configdomain.KeySyncUpstream], configdomain.KeySyncUpstream)
+	branchType, err22 := configdomain.ParseBranchType(snapshot[configdomain.KeyUnknownBranchType])
 	unknownBranchType := configdomain.UnknownBranchTypeOpt(branchType)
 	return configdomain.PartialConfig{
 		Aliases:                  aliases,
@@ -122,6 +123,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		Offline:                  offline,
 		PerennialBranches:        gitdomain.ParseLocalBranchNames(snapshot[configdomain.KeyPerennialBranches]),
 		PerennialRegex:           perennialRegex,
+		ProposalsShowLineage:     proposalsShowLineage,
 		PushHook:                 pushHook,
 		ShareNewBranches:         shareNewBranches,
 		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,
@@ -133,5 +135,5 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		SyncUpstream:             syncUpstream,
 		UnknownBranchType:        unknownBranchType,
 		Verbose:                  None[configdomain.Verbose](),
-	}, cmp.Or(err1, err2, err3, err4, err5, err6, err7, err8, err9, err10, err11, err12, err13, err14, err15, err16, err17, err18, err19, err20, err21)
+	}, cmp.Or(err1, err2, err3, err4, err5, err6, err7, err8, err9, err10, err11, err12, err13, err14, err15, err16, err17, err18, err19, err20, err21, err22)
 }

@@ -9,29 +9,29 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-type ConflictPhantomFinalize struct {
+type ConflictMergePhantomFinalize struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *ConflictPhantomFinalize) Abort() []shared.Opcode {
+func (self *ConflictMergePhantomFinalize) Abort() []shared.Opcode {
 	return []shared.Opcode{
 		&MergeAbort{},
 	}
 }
 
-func (self *ConflictPhantomFinalize) Continue() []shared.Opcode {
+func (self *ConflictMergePhantomFinalize) Continue() []shared.Opcode {
 	return []shared.Opcode{
 		&MergeContinue{},
 	}
 }
 
-func (self *ConflictPhantomFinalize) Run(args shared.RunArgs) error {
-	unmergedFiles, err := args.Git.FileConflictQuickInfos(args.Backend)
+func (self *ConflictMergePhantomFinalize) Run(args shared.RunArgs) error {
+	unresolvedFiles, err := args.Git.FileConflictQuickInfos(args.Backend)
 	if err != nil {
 		return err
 	}
-	if len(unmergedFiles) > 0 {
-		// there are still unmerged files --> these are not phantom merge conflicts, let the user sort this out
+	if len(unresolvedFiles) > 0 {
+		// there are still unresolved files --> these are not phantom merge conflicts, let the user sort this out
 		return errors.New(messages.ConflictMerge)
 	}
 	// here all merge conflicts have been resolved --> commit to finish the merge conflict and continue the program

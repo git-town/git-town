@@ -57,6 +57,10 @@ func (self Connector) SquashMergeProposalFn() Option[func(int, gitdomain.CommitM
 	return Some(self.squashMergeProposal)
 }
 
+func (self Connector) UpdateProposalBodyFn() Option[func(forgedomain.ProposalInterface, string) error] {
+	return Some(self.updateProposalBody)
+}
+
 func (self Connector) UpdateProposalSourceFn() Option[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName) error] {
 	return None[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName) error]()
 }
@@ -95,6 +99,10 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[f
 
 func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMessage) error {
 	return self.Frontend.Run("gh", "pr", "merge", "--squash", "--body="+message.String(), strconv.Itoa(number))
+}
+
+func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody string) error {
+	return self.Frontend.Run("gh", "pr", "edit", strconv.Itoa(proposalData.Data().Number), "--body="+updatedBody)
 }
 
 func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {

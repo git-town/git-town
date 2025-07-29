@@ -45,7 +45,7 @@ Feature: ship a coworker's feature branch
     And no lineage exists now
 
   Scenario: undo
-    Given I ran "git-town ship -m 'feature done'"
+    Given I run "git-town ship -m 'feature done'"
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                        |
