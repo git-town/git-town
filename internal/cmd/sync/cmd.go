@@ -55,6 +55,7 @@ func Cmd() *cobra.Command {
 	addAllFlag, readAllFlag := flags.All("sync all local branches")
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addNoAutoResolveFlag, readNoAutoResolveFlag := flags.NoAutoResolve()
 	addNoPushFlag, readNoPushFlag := flags.NoPush()
 	addPruneFlag, readPruneFlag := flags.Prune()
 	addStackFlag, readStackFlag := flags.Stack("sync the stack that the current branch belongs to")
@@ -69,6 +70,7 @@ func Cmd() *cobra.Command {
 			allBranches, err1 := readAllFlag(cmd)
 			detached, err2 := readDetachedFlag(cmd)
 			dryRun, err3 := readDryRunFlag(cmd)
+			noAutoResolve, err4 := readNoAutoResolveFlag(cmd)
 			noPush, err4 := readNoPushFlag(cmd)
 			prune, err5 := readPruneFlag(cmd)
 			stack, err6 := readStackFlag(cmd)
@@ -80,7 +82,7 @@ func Cmd() *cobra.Command {
 				DryRun:  dryRun,
 				Verbose: verbose,
 			}
-			return executeSync(cliConfig, allBranches, stack, detached, noPush, prune)
+			return executeSync(cliConfig, allBranches, stack, detached, noAutoResolve, noPush, prune)
 		},
 	}
 	addAllFlag(&cmd)
