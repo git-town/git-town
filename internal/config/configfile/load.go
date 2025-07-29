@@ -58,6 +58,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	var observedRegex Option[configdomain.ObservedRegex]
 	var perennialBranches gitdomain.LocalBranchNames
 	var perennialRegex Option[configdomain.PerennialRegex]
+	var proposalsShowLineage Option[configdomain.ProposalsShowLineage]
 	var pushHook Option[configdomain.PushHook]
 	var shareNewBranches Option[configdomain.ShareNewBranches]
 	var shipDeleteTrackingBranch Option[configdomain.ShipDeleteTrackingBranch]
@@ -173,6 +174,12 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			hostingOriginHostname = configdomain.ParseHostingOriginHostname(*data.Hosting.OriginHostname)
 		}
 	}
+	if data.Propose != nil {
+		if data.Propose.Lineage != nil {
+			proposalsShowLineage, err = configdomain.ParseProposalsShowLineage(*data.Propose.Lineage)
+			ec.Check(err)
+		}
+	}
 	if data.Ship != nil {
 		if data.Ship.DeleteTrackingBranch != nil {
 			shipDeleteTrackingBranch = Some(configdomain.ShipDeleteTrackingBranch(*data.Ship.DeleteTrackingBranch))
@@ -245,6 +252,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		Offline:                  None[configdomain.Offline](),
 		PerennialBranches:        perennialBranches,
 		PerennialRegex:           perennialRegex,
+		ProposalsShowLineage:     proposalsShowLineage,
 		PushHook:                 pushHook,
 		ShareNewBranches:         shareNewBranches,
 		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,
