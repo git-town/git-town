@@ -95,7 +95,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	syncPrototypeStrategy, errSyncPrototypeStrategy := configdomain.ParseSyncPrototypeStrategy(snapshot[configdomain.KeySyncPrototypeStrategy])
 	syncTags, errSyncTags := configdomain.ParseSyncTags(snapshot[configdomain.KeySyncTags], configdomain.KeySyncTags)
 	syncUpstream, errSyncUpstream := configdomain.ParseSyncUpstream(snapshot[configdomain.KeySyncUpstream], configdomain.KeySyncUpstream)
-	branchType, err22 := configdomain.ParseBranchType(snapshot[configdomain.KeyUnknownBranchType])
+	branchType, errBranchTypeq := configdomain.ParseBranchType(snapshot[configdomain.KeyUnknownBranchType])
 	unknownBranchType := configdomain.UnknownBranchTypeOpt(branchType)
 	return configdomain.PartialConfig{
 		Aliases:                  aliases,
@@ -135,5 +135,5 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		SyncUpstream:             syncUpstream,
 		UnknownBranchType:        unknownBranchType,
 		Verbose:                  None[configdomain.Verbose](),
-	}, cmp.Or(errBranchTypeOverride, errContributionRegex, errFeatureRegex, errForgeType, errGitHubConnectorType, errGitLabConnectorType, errLineage, errBranchType, errObservedRegex, errOffline, errPerennialRegex, errProposalsShowLineage, errPushHook, errShareNewBranches, errShipDeleteTrackingBranch, errShipStrategy, errSyncFeatureStrategy, errSyncPerennialStrategy, errSyncPrototypeStrategy, errSyncTags, errSyncUpstream, err22)
+	}, cmp.Or(errBranchTypeOverride, errContributionRegex, errFeatureRegex, errForgeType, errGitHubConnectorType, errGitLabConnectorType, errLineage, errBranchType, errObservedRegex, errOffline, errPerennialRegex, errProposalsShowLineage, errPushHook, errShareNewBranches, errShipDeleteTrackingBranch, errShipStrategy, errSyncFeatureStrategy, errSyncPerennialStrategy, errSyncPrototypeStrategy, errSyncTags, errSyncUpstream, errBranchTypeq)
 }
