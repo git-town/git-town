@@ -30,11 +30,29 @@ func DetectPhantomRebaseConflicts(fileConflicts []FileConflictFullInfo, parentBr
 	//
 	// Feature branch not changed && parent not changed --> do nothing
 	//
-	// AUTO-RESOLVING CONFLICTS ENCOUNTERED WHILE SYNCING
+	// AUTO-RESOLVING CONFLICTS ENCOUNTERED WHILE SYNCING WITH THE TRACKING BRANCH
 	//
+	// When is it a proper rebase conflict?
+	// When both the current branch and the tracking branch have different SHA compared to the end of the previous Git Town command that synced them.
 	//
-	// O
+	// When is it a phantom rebase conflict?
+	// When the tracking branch has the same SHA it had at the end of the previous Git Town command,
+	// and the current branch has a different SHA --> the current branch was changed/rebased, we can force-push it.
 	//
+	// AUTO-RESOLVING CONFLICTS ENCOUNTERED WHILE SYNCING WITH THE PARENT BRANCH
+	//
+	// When is it a proper rebase conflict?
+	// When both the current and the tracking branch have different SHA compared to the last time they were synced.
+	//
+	// When is it a phantom rebase conflict?
+	// When the parent branch has the same SHA it had at the end of the previous Git Town command that synced it,
+	// and the current branch has a different SHA compared to the end of the last Git Town command that synced it.
+	// If there is a conflict now, we can keep the version of the current branch.
+	//
+	// We need to compare to the previous SHA when the branch was last synced.
+	// If we just compare to the SHA at the end of the last command,
+	// and the last command was "git town park", then it would wrongfully think the other branch has no changes.
+
 	// if parentBranch == rootBranch.BranchName() {
 	// 	// branches whose parent is the root branch cannot have phantom merge conflicts
 	// 	return []PhantomMergeConflict{}
