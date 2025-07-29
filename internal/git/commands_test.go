@@ -988,19 +988,19 @@ func TestBackendCommands(t *testing.T) {
 			fullInfos := []git.FileConflictFullInfo{
 				{
 					Root: Some(git.BlobInfo{
-						FilePath:   "file",
-						Permission: "100755",
-						SHA:        "111111",
+						FilePath:       "file",
+						Permission:     "100755",
+						ContentBlobSHA: "111111",
 					}),
 					Parent: Some(git.BlobInfo{
-						FilePath:   "file",
-						Permission: "100755",
-						SHA:        "111111",
+						FilePath:       "file",
+						Permission:     "100755",
+						ContentBlobSHA: "111111",
 					}),
 					Current: Some(git.BlobInfo{
-						FilePath:   "file",
-						Permission: "100755",
-						SHA:        "111111",
+						FilePath:       "file",
+						Permission:     "100755",
+						ContentBlobSHA: "111111",
 					}),
 				},
 			}
@@ -1018,19 +1018,19 @@ func TestBackendCommands(t *testing.T) {
 			fullInfos := []git.FileConflictFullInfo{
 				{
 					Root: Some(git.BlobInfo{
-						FilePath:   "file",
-						Permission: "100755",
-						SHA:        "111111",
+						FilePath:       "file",
+						Permission:     "100755",
+						ContentBlobSHA: "111111",
 					}),
 					Parent: Some(git.BlobInfo{
-						FilePath:   "file",
-						Permission: "100644",
-						SHA:        "111111",
+						FilePath:       "file",
+						Permission:     "100644",
+						ContentBlobSHA: "111111",
 					}),
 					Current: Some(git.BlobInfo{
-						FilePath:   "file",
-						Permission: "100755",
-						SHA:        "111111",
+						FilePath:       "file",
+						Permission:     "100755",
+						ContentBlobSHA: "111111",
 					}),
 				},
 			}
@@ -1043,19 +1043,19 @@ func TestBackendCommands(t *testing.T) {
 			fullInfos := []git.FileConflictFullInfo{
 				{
 					Root: Some(git.BlobInfo{
-						FilePath:   "file",
-						Permission: "100755",
-						SHA:        "111111",
+						FilePath:       "file",
+						Permission:     "100755",
+						ContentBlobSHA: "111111",
 					}),
 					Parent: Some(git.BlobInfo{
-						FilePath:   "file",
-						Permission: "100644",
-						SHA:        "222222",
+						FilePath:       "file",
+						Permission:     "100644",
+						ContentBlobSHA: "222222",
 					}),
 					Current: Some(git.BlobInfo{
-						FilePath:   "file",
-						Permission: "100755",
-						SHA:        "222222",
+						FilePath:       "file",
+						Permission:     "100755",
+						ContentBlobSHA: "222222",
 					}),
 				},
 			}
@@ -1068,19 +1068,19 @@ func TestBackendCommands(t *testing.T) {
 			fullInfos := []git.FileConflictFullInfo{
 				{
 					Root: Some(git.BlobInfo{
-						FilePath:   "file-1",
-						Permission: "100755",
-						SHA:        "222222",
+						FilePath:       "file-1",
+						Permission:     "100755",
+						ContentBlobSHA: "222222",
 					}),
 					Parent: Some(git.BlobInfo{
-						FilePath:   "file-2",
-						Permission: "100755",
-						SHA:        "111111",
+						FilePath:       "file-2",
+						Permission:     "100755",
+						ContentBlobSHA: "111111",
 					}),
 					Current: Some(git.BlobInfo{
-						FilePath:   "file-2",
-						Permission: "100755",
-						SHA:        "111111",
+						FilePath:       "file-2",
+						Permission:     "100755",
+						ContentBlobSHA: "111111",
 					}),
 				},
 			}

@@ -20,9 +20,9 @@ type FileConflictQuickInfo struct {
 
 // describes the content of a file in Git
 type BlobInfo struct {
-	FilePath   string        // relative path of the file in the repo
-	Permission string        // permissions, in the form "100755"
-	SHA        gitdomain.SHA // checksum of the content blob of the file - this is not the commit SHA!
+	FilePath       string        // relative path of the file in the repo
+	Permission     string        // permissions, in the form "100755"
+	ContentBlobSHA gitdomain.SHA // SHA of the content blob for the file, this is not the commit SHA!
 }
 
 // describes the roles that a file can play in a merge conflict
@@ -112,9 +112,9 @@ func ParseLsFilesUnmergedLine(line string) (BlobInfo, UnmergedStage, string, err
 	}
 	filePath := remainder
 	change := BlobInfo{
-		FilePath:   filePath,
-		Permission: permissions,
-		SHA:        sha,
+		FilePath:       filePath,
+		Permission:     permissions,
+		ContentBlobSHA: sha,
 	}
 	return change, stage, filePath, nil
 }
@@ -193,9 +193,9 @@ func ParseLsTreeOutput(output string) (BlobInfo, error) {
 		return EmptyBlobInfo(), fmt.Errorf("invalid SHA (%s) in the output of \"git ls-tree\": %q", shaText, output)
 	}
 	blobInfo := BlobInfo{
-		FilePath:   remainder,
-		Permission: permission,
-		SHA:        sha,
+		FilePath:       remainder,
+		Permission:     permission,
+		ContentBlobSHA: sha,
 	}
 	return blobInfo, nil
 }

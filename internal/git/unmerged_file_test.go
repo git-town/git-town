@@ -23,14 +23,14 @@ func TestUnmergedFile(t *testing.T) {
 			{
 				BaseChange: None[git.BlobInfo](),
 				CurrentBranchChange: Some(git.BlobInfo{
-					FilePath:   "file",
-					Permission: "100755",
-					SHA:        "c887ff2255bb9e9440f9456bcf8d310bc8d718d4",
+					FilePath:       "file",
+					Permission:     "100755",
+					ContentBlobSHA: "c887ff2255bb9e9440f9456bcf8d310bc8d718d4",
 				}),
 				IncomingChange: Some(git.BlobInfo{
-					FilePath:   "file",
-					Permission: "100755",
-					SHA:        "ece1e56bf2125e5b114644258872f04bc375ba69",
+					FilePath:       "file",
+					Permission:     "100755",
+					ContentBlobSHA: "ece1e56bf2125e5b114644258872f04bc375ba69",
 				}),
 			},
 		}
@@ -45,9 +45,9 @@ func TestUnmergedFile(t *testing.T) {
 			have, err := git.ParseLsTreeOutput(give)
 			must.NoError(t, err)
 			want := git.BlobInfo{
-				FilePath:   "file",
-				Permission: "100755",
-				SHA:        "ece1e56bf2125e5b114644258872f04bc375ba69",
+				FilePath:       "file",
+				Permission:     "100755",
+				ContentBlobSHA: "ece1e56bf2125e5b114644258872f04bc375ba69",
 			}
 			must.Eq(t, want, have)
 		})
