@@ -7,6 +7,7 @@ const (
 	APIParentBranchLookupStart         = "Looking for parent of %s ... "
 	APIProposalLookupStart             = "Looking for proposal online ... "
 	APIProposalUpdateStart             = "Updating proposal online ... "
+	APIProposalUpdateBody              = "Update proposal body for proposal #%s ... "
 	APIUnexpectedResultDataStructure   = "unexpected result data structure"
 	APIUpdateProposalSource            = "Updating source branch of proposal %s to %s ... "
 	APIUpdateProposalTarget            = "Updating target branch of proposal %s to %s ... "
