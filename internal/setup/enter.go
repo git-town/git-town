@@ -229,6 +229,7 @@ EnterForgeData:
 		Offline:                  None[configdomain.Offline](), // the setup assistant doesn't ask for this
 		PerennialBranches:        perennialBranches,
 		PerennialRegex:           perennialRegex,
+		ProposalsShowLineage:     None[configdomain.ProposalsShowLineage](), // TODO: populate this in the setup assistant once this feature is finalized
 		PushHook:                 pushHook,
 		ShareNewBranches:         shareNewBranches,
 		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,
