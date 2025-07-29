@@ -43,6 +43,7 @@ When run on a feature branch:
 - pulls updates for the current branch
 - merges the parent branch into the current branch
 - pushes the current branch
+- updates proposal(s)
 
 When run on the main branch or a perennial branch:
 - pulls and pushes updates for the current branch
@@ -59,6 +60,7 @@ func Cmd() *cobra.Command {
 	addPruneFlag, readPruneFlag := flags.Prune()
 	addStackFlag, readStackFlag := flags.Stack("sync the stack that the current branch belongs to")
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	addProposalFlag, readProposalFlag := flags.Proposal("sync lineage information to proposal")
 	cmd := cobra.Command{
 		Use:     syncCommand,
 		GroupID: cmdhelpers.GroupIDBasic,
@@ -73,14 +75,15 @@ func Cmd() *cobra.Command {
 			prune, err5 := readPruneFlag(cmd)
 			stack, err6 := readStackFlag(cmd)
 			verbose, err7 := readVerboseFlag(cmd)
-			if err := cmp.Or(err1, err2, err3, err4, err5, err6, err7); err != nil {
+			proposal, err8 := readProposalFlag(cmd)
+			if err := cmp.Or(err1, err2, err3, err4, err5, err6, err7, err8); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.CliConfig{
 				DryRun:  dryRun,
 				Verbose: verbose,
 			}
-			return executeSync(cliConfig, allBranches, stack, detached, noPush, prune)
+			return executeSync(cliConfig, allBranches, stack, detached, noPush, prune, proposal)
 		},
 	}
 	addAllFlag(&cmd)
@@ -90,10 +93,11 @@ func Cmd() *cobra.Command {
 	addPruneFlag(&cmd)
 	addStackFlag(&cmd)
 	addVerboseFlag(&cmd)
+	addProposalFlag(&cmd)
 	return &cmd
 }
 
-func executeSync(cliConfig cliconfig.CliConfig, syncAllBranches configdomain.AllBranches, syncStack configdomain.FullStack, detached configdomain.Detached, pushBranches configdomain.PushBranches, prune configdomain.Prune) error {
+func executeSync(cliConfig cliconfig.CliConfig, syncAllBranches configdomain.AllBranches, syncStack configdomain.FullStack, detached configdomain.Detached, pushBranches configdomain.PushBranches, prune configdomain.Prune, proposal configdomain.Proposal) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,
@@ -138,6 +142,14 @@ func executeSync(cliConfig cliconfig.CliConfig, syncAllBranches configdomain.All
 	if data.remotes.HasRemote(data.config.NormalConfig.DevRemote) && data.shouldPushTags && data.config.NormalConfig.Offline.IsOnline() {
 		runProgram.Value.Add(&opcodes.PushTags{})
 	}
+
+	if proposal {
+		runProgram.Value.Add(&opcodes.ProposalLineageCreate{
+			Branch:            data.initialBranch,
+			ProposalLineageIn: configdomain.ProposalLineageOperationInProposalBody,
+		})
+	}
+
 	cmdhelpers.Wrap(runProgram, cmdhelpers.WrapOptions{
 		DryRun:                   cliConfig.DryRun,
 		InitialStashSize:         data.stashSize,
@@ -164,7 +176,7 @@ func executeSync(cliConfig cliconfig.CliConfig, syncAllBranches configdomain.All
 		Backend:                 repo.Backend,
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
-		Connector:               None[forgedomain.Connector](),
+		Connector:               data.connector,
 		Detached:                detached,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
@@ -187,6 +199,7 @@ type syncData struct {
 	branchesSnapshot         gitdomain.BranchesSnapshot
 	branchesToSync           configdomain.BranchesToSync
 	config                   config.ValidatedConfig
+	connector                Option[forgedomain.Connector]
 	detached                 configdomain.Detached
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
@@ -355,6 +368,7 @@ func determineSyncData(cliConfig cliconfig.CliConfig, syncAllBranches configdoma
 		branchesSnapshot:         branchesSnapshot,
 		branchesToSync:           branchesToSync,
 		config:                   validatedConfig,
+		connector:                connector,
 		detached:                 detached,
 		hasOpenChanges:           repoStatus.OpenChanges,
 		initialBranch:            initialBranch,
