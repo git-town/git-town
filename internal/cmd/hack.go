@@ -100,7 +100,7 @@ func hackCmd() *cobra.Command {
 				DryRun:  dryRun,
 				Verbose: verbose,
 			}
-			return executeHack(determineHackDataArgs{
+			return executeHack(hackArgs{
 				argv:          args,
 				beam:          beam,
 				cliConfig:     cliConfig,
@@ -123,7 +123,7 @@ func hackCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeHack(args determineHackDataArgs) error {
+func executeHack(args hackArgs) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        args.cliConfig,
 		PrintBranchNames: true,
@@ -233,7 +233,7 @@ type createFeatureBranchArgs struct {
 	verbose               configdomain.Verbose
 }
 
-func determineHackData(args determineHackDataArgs, repo execute.OpenRepoResult) (data hackData, exit dialogdomain.Exit, err error) {
+func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data hackData, exit dialogdomain.Exit, err error) {
 	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -400,7 +400,7 @@ func determineHackData(args determineHackDataArgs, repo execute.OpenRepoResult) 
 	return data, false, err
 }
 
-type determineHackDataArgs struct {
+type hackArgs struct {
 	argv          []string
 	beam          configdomain.Beam
 	cliConfig     cliconfig.CliConfig
