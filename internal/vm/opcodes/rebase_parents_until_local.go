@@ -9,7 +9,7 @@ import (
 
 type RebaseParentsUntilLocal struct {
 	Branch                  gitdomain.LocalBranchName
-	PreviousSHA             Option[gitdomain.SHA]
+	ParentSHAPreviousRun    Option[gitdomain.SHA]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
@@ -52,11 +52,13 @@ func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
 		} else {
 			branchToRebase = parent.BranchName()
 		}
-		if previousParentSHA, hasPreviousParentSHA := self.PreviousSHA.Get(); hasPreviousParentSHA {
-			// TODO: only perform this operation if really needed, i.e. if there are commits to remove?
+		if parentSHAPreviousRun, hasParentSHAPreviousRun := self.ParentSHAPreviousRun.Get(); hasParentSHAPreviousRun {
+			// Here we rebase onto the new parent, while removing the commits that the parent had in the last run.
+			// This removes old versions of commits that were amended by the user.
+			// The new commits of the parent get added back during the rebase.
 			program = append(program, &RebaseOntoKeepDeleted{
 				BranchToRebaseOnto: branchToRebase,
-				CommitsToRemove:    previousParentSHA.Location(),
+				CommitsToRemove:    parentSHAPreviousRun.Location(),
 				Upstream:           None[gitdomain.LocalBranchName](),
 			})
 		} else {

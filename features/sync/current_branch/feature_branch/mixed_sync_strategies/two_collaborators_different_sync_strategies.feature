@@ -15,23 +15,23 @@ Feature: compatibility between different sync-feature-strategy settings
     #
     # I make a commit and sync
     Given I add this commit to the current branch:
-      | MESSAGE         | FILE NAME | FILE CONTENT |
-      | my first commit | file.txt  | my content   |
+      | MESSAGE         | FILE NAME | FILE CONTENT     |
+      | my first commit | file.txt  | my first content |
     When I run "git town sync"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
       |         | git push --force-with-lease --force-if-includes |
     And these commits exist now
-      | BRANCH  | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT |
-      | feature | local, origin | my first commit | file.txt  | my content   |
+      | BRANCH  | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT     |
+      | feature | local, origin | my first commit | file.txt  | my first content |
     And no rebase is now in progress
     And all branches are now synchronized
     #
     # coworker makes a conflicting local commit concurrently with me and then syncs
     Given the coworker adds this commit to their current branch:
-      | MESSAGE               | FILE NAME | FILE CONTENT     |
-      | coworker first commit | file.txt  | coworker content |
+      | MESSAGE               | FILE NAME | FILE CONTENT           |
+      | coworker first commit | file.txt  | coworker first content |
     When the coworker runs "git-town sync"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
@@ -41,7 +41,11 @@ Feature: compatibility between different sync-feature-strategy settings
       """
       CONFLICT (add/add): Merge conflict in file.txt
       """
-    When the coworker resolves the conflict in "file.txt" with "my and coworker content"
+    And file "file.txt" now has content:
+      """
+      my first content
+      """
+    When the coworker resolves the conflict in "file.txt" with "my and coworker first content"
     And the coworker runs "git town continue" and closes the editor
     Then Git Town runs the commands
       | BRANCH  | COMMAND              |
@@ -49,16 +53,16 @@ Feature: compatibility between different sync-feature-strategy settings
       |         | git push             |
     And all branches are now synchronized
     And these commits exist now
-      | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME | FILE CONTENT            |
-      | feature | local, coworker, origin | my first commit                                            | file.txt  | my content              |
-      |         | coworker, origin        | coworker first commit                                      | file.txt  | coworker content        |
-      |         |                         | Merge remote-tracking branch 'origin/feature' into feature | file.txt  | my and coworker content |
-    And the coworkers workspace now contains file "file.txt" with content "my and coworker content"
+      | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME | FILE CONTENT                  |
+      | feature | local, coworker, origin | my first commit                                            | file.txt  | my first content              |
+      |         | coworker, origin        | coworker first commit                                      | file.txt  | coworker first content        |
+      |         |                         | Merge remote-tracking branch 'origin/feature' into feature | file.txt  | my and coworker first content |
+    And the coworkers workspace now contains file "file.txt" with content "my and coworker first content"
     #
     # I add a conflicting commit locally and then sync
     Given I add this commit to the current branch:
-      | MESSAGE          | FILE NAME | FILE CONTENT   |
-      | my second commit | file.txt  | my new content |
+      | MESSAGE          | FILE NAME | FILE CONTENT      |
+      | my second commit | file.txt  | my second content |
     When I run "git-town sync"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                              |
@@ -69,19 +73,15 @@ Feature: compatibility between different sync-feature-strategy settings
       """
       CONFLICT (content): Merge conflict in file.txt
       """
-    And Git Town prints something like:
-      """
-      could not apply \S+ my second commit
-      """
     And file "file.txt" now has content:
       """
       <<<<<<< HEAD
-      my and coworker content
+      my and coworker first content
       =======
-      my new content
+      my second content
       >>>>>>> {{ sha-short 'my second commit' }} (my second commit)
       """
-    When I resolve the conflict in "file.txt" with "my new and coworker content"
+    When I resolve the conflict in "file.txt" with "my second and coworker first content"
     And I run "git town continue" and close the editor
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                      |
@@ -101,13 +101,13 @@ Feature: compatibility between different sync-feature-strategy settings
     And file "file.txt" now has content:
       """
       <<<<<<< HEAD
-      my content
+      my first content
       =======
-      my new and coworker content
+      my second and coworker first content
       >>>>>>> {{ sha-short 'my second commit' }} (my second commit)
       """
     And a rebase is now in progress
-    When I resolve the conflict in "file.txt" with "my new and coworker content"
+    When I resolve the conflict in "file.txt" with "my second and coworker first content"
     And I run "git town continue" and close the editor
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
@@ -116,9 +116,9 @@ Feature: compatibility between different sync-feature-strategy settings
     And no rebase is now in progress
     And all branches are now synchronized
     And these commits exist now
-      | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME | FILE CONTENT                |
-      | feature | local, coworker, origin | coworker first commit                                      | file.txt  | coworker content            |
-      |         | local, origin           | my first commit                                            | file.txt  | my content                  |
-      |         |                         | my second commit                                           | file.txt  | my new and coworker content |
-      |         | coworker                | my first commit                                            | file.txt  | my content                  |
-      |         |                         | Merge remote-tracking branch 'origin/feature' into feature | file.txt  | my and coworker content     |
+      | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME | FILE CONTENT                         |
+      | feature | local, coworker, origin | coworker first commit                                      | file.txt  | coworker first content               |
+      |         | local, origin           | my first commit                                            | file.txt  | my first content                     |
+      |         |                         | my second commit                                           | file.txt  | my second and coworker first content |
+      |         | coworker                | my first commit                                            | file.txt  | my first content                     |
+      |         |                         | Merge remote-tracking branch 'origin/feature' into feature | file.txt  | my and coworker first content        |

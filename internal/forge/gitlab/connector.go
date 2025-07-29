@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/git-town/git-town/v21/internal/browser"
+	"github.com/git-town/git-town/v21/internal/cli/colors"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
@@ -57,6 +58,14 @@ func (self Connector) SquashMergeProposalFn() Option[func(int, gitdomain.CommitM
 		return None[func(int, gitdomain.CommitMessage) error]()
 	}
 	return Some(self.squashMergeProposal)
+}
+
+func (self Connector) UpdateProposalBodyFn() Option[func(forgedomain.ProposalInterface, string) error] {
+	if self.APIToken.IsNone() {
+		return None[func(forgedomain.ProposalInterface, string) error]()
+	}
+
+	return Some(self.updateProposalBody)
 }
 
 func (self Connector) UpdateProposalSourceFn() Option[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName) error] {
@@ -172,6 +181,20 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 		Squash:              gitlab.Ptr(true),
 		// the branch will be deleted by Git Town
 		ShouldRemoveSourceBranch: gitlab.Ptr(false),
+	})
+	if err != nil {
+		self.log.Failed(err.Error())
+		return err
+	}
+	self.log.Ok()
+	return nil
+}
+
+func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterface, updatedDescription string) error {
+	data := proposalData.Data()
+	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)))
+	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), data.Number, &gitlab.UpdateMergeRequestOptions{
+		Description: Ptr(updatedDescription),
 	})
 	if err != nil {
 		self.log.Failed(err.Error())

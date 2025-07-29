@@ -86,6 +86,13 @@ func (self Connector) SquashMergeProposalFn() Option[func(int, gitdomain.CommitM
 	return Some(self.squashMergeProposal)
 }
 
+func (self Connector) UpdateProposalBodyFn() Option[func(forgedomain.ProposalInterface, string) error] {
+	if self.APIToken.IsNone() {
+		return None[func(forgedomain.ProposalInterface, string) error]()
+	}
+	return Some(self.updateProposalBody)
+}
+
 func (self Connector) UpdateProposalSourceFn() Option[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName) error] {
 	return None[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName) error]()
 }
@@ -198,6 +205,20 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 		self.log.Ok()
 	}
 	return err
+}
+
+func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody string) error {
+	data := proposalData.Data()
+	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)))
+	_, _, err := self.client.PullRequests.Edit(context.Background(), self.Organization, self.Repository, data.Number, &github.PullRequest{
+		Body: Ptr(updatedBody),
+	})
+	if err != nil {
+		self.log.Failed(err.Error())
+		return err
+	}
+	self.log.Ok()
+	return nil
 }
 
 func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {

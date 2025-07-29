@@ -110,7 +110,7 @@ type observeData struct {
 
 func printObservedBranches(branches gitdomain.LocalBranchNames) {
 	for _, branch := range branches {
-		fmt.Printf(messages.ObservedBranchIsNowObserved, branch)
+		fmt.Printf(messages.BranchIsNowObserved, branch)
 	}
 }
 

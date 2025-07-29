@@ -16,24 +16,24 @@ Feature: switch branches using multiple types
 
   Scenario: long form
     When I run "git-town switch --type=observed+prototype" and enter into the dialogs:
-      | DIALOG      | KEYS       |
-      | branch-tree | down enter |
+      | DIALOG        | KEYS       |
+      | switch-branch | down enter |
     Then Git Town runs the commands
       | BRANCH     | COMMAND                |
       | observed-2 | git checkout prototype |
 
   Scenario: short form
     When I run "git-town switch -to+pr" and enter into the dialogs:
-      | DIALOG      | KEYS       |
-      | branch-tree | down enter |
+      | DIALOG        | KEYS       |
+      | switch-branch | down enter |
     Then Git Town runs the commands
       | BRANCH     | COMMAND                |
       | observed-2 | git checkout prototype |
 
   Scenario: undo
     Given I ran "git-town switch -to+pr" and enter into the dialogs:
-      | DIALOG      | KEYS       |
-      | branch-tree | down enter |
+      | DIALOG        | KEYS       |
+      | switch-branch | down enter |
     When I run "git-town undo"
     Then Git Town runs no commands
     And the initial branches and lineage exist now
