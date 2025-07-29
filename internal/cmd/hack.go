@@ -100,7 +100,16 @@ func hackCmd() *cobra.Command {
 				DryRun:  dryRun,
 				Verbose: verbose,
 			}
-			return executeHack(args, cliConfig, beam, commit, commitMessage, detached, propose, prototype)
+			return executeHack(determineHackDataArgs{
+				args:          args,
+				cliConfig:     cliConfig,
+				beam:          beam,
+				commit:        commit,
+				commitMessage: commitMessage,
+				detached:      detached,
+				propose:       propose,
+				prototype:     prototype,
+			})
 		},
 	}
 	addBeamFlag(&cmd)
@@ -114,9 +123,9 @@ func hackCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeHack(args []string, cliConfig cliconfig.CliConfig, beam configdomain.Beam, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, propose configdomain.Propose, prototype configdomain.Prototype) error {
+func executeHack(args determineHackDataArgs) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		CliConfig:        cliConfig,
+		CliConfig:        args.cliConfig,
 		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
@@ -126,14 +135,14 @@ func executeHack(args []string, cliConfig cliconfig.CliConfig, beam configdomain
 		return err
 	}
 	data, exit, err := determineHackData(determineHackDataArgs{
-		args:          args,
-		beam:          beam,
-		cliConfig:     cliConfig,
-		commit:        commit,
-		commitMessage: commitMessage,
-		detached:      detached,
-		propose:       propose,
-		prototype:     prototype,
+		args:          args.args,
+		beam:          args.beam,
+		cliConfig:     args.cliConfig,
+		commit:        args.commit,
+		commitMessage: args.commitMessage,
+		detached:      args.detached,
+		propose:       args.propose,
+		prototype:     args.prototype,
 	}, repo)
 	if err != nil || exit {
 		return err
@@ -148,12 +157,12 @@ func executeHack(args []string, cliConfig cliconfig.CliConfig, beam configdomain
 			beginStashSize:        createNewFeatureBranchData.stashSize,
 			branchInfosLastRun:    createNewFeatureBranchData.branchInfosLastRun,
 			commandsCounter:       repo.CommandsCounter,
-			dryRun:                cliConfig.DryRun,
+			dryRun:                args.cliConfig.DryRun,
 			finalMessages:         repo.FinalMessages,
 			frontend:              repo.Frontend,
 			git:                   repo.Git,
 			rootDir:               repo.RootDir,
-			verbose:               cliConfig.Verbose,
+			verbose:               args.cliConfig.Verbose,
 		})
 	}
 	if doConvertToFeatureBranch {
@@ -163,7 +172,7 @@ func executeHack(args []string, cliConfig cliconfig.CliConfig, beam configdomain
 			makeFeatureData:     convertToFeatureBranchData,
 			repo:                repo,
 			rootDir:             repo.RootDir,
-			verbose:             cliConfig.Verbose,
+			verbose:             args.cliConfig.Verbose,
 		})
 	}
 	panic("both config arms were nil")
