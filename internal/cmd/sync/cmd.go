@@ -69,18 +69,18 @@ func Cmd() *cobra.Command {
 			allBranches, errAllBranches := readAllFlag(cmd)
 			detached, errDetached := readDetachedFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
-			noPush, errNoPush := readNoPushFlag(cmd)
+			pushBranches, errPushBranches := readNoPushFlag(cmd)
 			prune, errPrune := readPruneFlag(cmd)
 			stack, errStack := readStackFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errAllBranches, errDetached, errDryRun, errNoPush, errPrune, errStack, errVerbose); err != nil {
+			if err := cmp.Or(errAllBranches, errDetached, errDryRun, errPushBranches, errPrune, errStack, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.CliConfig{
 				DryRun:  dryRun,
 				Verbose: verbose,
 			}
-			return executeSync(cliConfig, allBranches, stack, detached, noPush, prune)
+			return executeSync(cliConfig, allBranches, stack, detached, pushBranches, prune)
 		},
 	}
 	addAllFlag(&cmd)
