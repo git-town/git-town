@@ -181,6 +181,7 @@ type appendFeatureData struct {
 	initialBranchInfo         *gitdomain.BranchInfo
 	inputs                    dialogcomponents.Inputs
 	newBranchParentCandidates gitdomain.LocalBranchNames
+	noAutoResolve             configdomain.NoAutoResolve
 	nonExistingBranches       gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	preFetchBranchInfos       gitdomain.BranchInfos
 	previousBranch            Option[gitdomain.LocalBranchName]
@@ -345,6 +346,7 @@ func appendProgram(frontend subshelldomain.Runner, data appendFeatureData, final
 			BranchesToDelete:    NewMutable(&branchesToDelete),
 			Config:              data.config,
 			InitialBranch:       data.initialBranch,
+			NoAutoResolve:       data.noAutoResolve,
 			PrefetchBranchInfos: data.preFetchBranchInfos,
 			Program:             prog,
 			Prune:               false,

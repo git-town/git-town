@@ -64,6 +64,7 @@ type BranchProgramArgs struct {
 	BranchesToDelete    Mutable[set.Set[gitdomain.LocalBranchName]] // branches that should be deleted after the branches are all synced
 	Config              config.ValidatedConfig
 	InitialBranch       gitdomain.LocalBranchName
+	NoAutoResolve       configdomain.NoAutoResolve
 	PrefetchBranchInfos gitdomain.BranchInfos // BranchInfos before "git fetch" ran
 	Program             Mutable[program.Program]
 	Prune               configdomain.Prune
@@ -152,6 +153,7 @@ func pullParentBranchOfCurrentFeatureBranchOpcode(args pullParentBranchOfCurrent
 			Branch:            args.branch,
 			InitialParentName: args.initialParentName,
 			InitialParentSHA:  args.initialParentSHA,
+			NoAutoResolve:     args.noAutoResolve,
 			TrackingBranch:    args.trackingBranch,
 		})
 	case configdomain.SyncFeatureStrategyRebase:
@@ -166,6 +168,7 @@ type pullParentBranchOfCurrentFeatureBranchOpcodeArgs struct {
 	branch               gitdomain.LocalBranchName
 	initialParentName    Option[gitdomain.LocalBranchName]
 	initialParentSHA     Option[gitdomain.SHA]
+	noAutoResolve        configdomain.NoAutoResolve
 	parentSHAPreviousRun Option[gitdomain.SHA]
 	program              Mutable[program.Program]
 	syncStrategy         configdomain.SyncFeatureStrategy

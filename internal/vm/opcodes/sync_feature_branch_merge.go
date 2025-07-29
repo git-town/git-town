@@ -1,6 +1,7 @@
 package opcodes
 
 import (
+	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
@@ -12,6 +13,7 @@ type SyncFeatureBranchMerge struct {
 	Branch                  gitdomain.LocalBranchName
 	InitialParentName       Option[gitdomain.LocalBranchName]
 	InitialParentSHA        Option[gitdomain.SHA]
+	NoAutoResolve           configdomain.NoAutoResolve
 	TrackingBranch          Option[gitdomain.RemoteBranchName]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
@@ -46,11 +48,12 @@ func (self *SyncFeatureBranchMerge) Run(args shared.RunArgs) error {
 					return err
 				}
 				if !isInSync {
-					program = append(program, &MergeParentResolvePhantomConflicts{
+					program = append(program, &MergeParent{
 						CurrentBranch:     self.Branch,
 						CurrentParent:     parentToMerge,
 						InitialParentName: self.InitialParentName,
 						InitialParentSHA:  self.InitialParentSHA,
+						NoAutoResolve:     self.NoAutoResolve,
 					})
 				}
 				break
@@ -62,11 +65,12 @@ func (self *SyncFeatureBranchMerge) Run(args shared.RunArgs) error {
 					return err
 				}
 				if !isInSync {
-					program = append(program, &MergeParentResolvePhantomConflicts{
+					program = append(program, &MergeParent{
 						CurrentBranch:     self.Branch,
 						CurrentParent:     parentTrackingBranch.BranchName(),
 						InitialParentName: self.InitialParentName,
 						InitialParentSHA:  self.InitialParentSHA,
+						NoAutoResolve:     self.NoAutoResolve,
 					})
 				}
 			}

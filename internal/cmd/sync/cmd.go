@@ -123,6 +123,7 @@ func executeSync(cliConfig cliconfig.CliConfig, syncAllBranches configdomain.All
 		BranchesToDelete:    NewMutable(&branchesToDelete),
 		Config:              data.config,
 		InitialBranch:       data.initialBranch,
+		NoAutoResolve:       noAutoResolve,
 		PrefetchBranchInfos: data.prefetchBranchesSnapshot.Branches,
 		Program:             runProgram,
 		Prune:               prune,
