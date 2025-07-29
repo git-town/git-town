@@ -75,7 +75,6 @@ func (self Connector) UpdateProposalBodyFn() Option[func(forgedomain.ProposalInt
 	if self.APIToken.IsNone() {
 		return None[func(forgedomain.ProposalInterface, string) error]()
 	}
-
 	return Some(self.updateProposalBody)
 }
 
