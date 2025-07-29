@@ -40,6 +40,7 @@ type NormalConfig struct {
 	Offline                  configdomain.Offline
 	PerennialBranches        gitdomain.LocalBranchNames
 	PerennialRegex           Option[configdomain.PerennialRegex]
+	ProposalsShowLineage     configdomain.ProposalsShowLineage
 	PushHook                 configdomain.PushHook
 	ShareNewBranches         configdomain.ShareNewBranches
 	ShipDeleteTrackingBranch configdomain.ShipDeleteTrackingBranch
