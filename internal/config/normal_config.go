@@ -51,6 +51,7 @@ type NormalConfig struct {
 	Offline                  configdomain.Offline
 	PerennialBranches        gitdomain.LocalBranchNames
 	PerennialRegex           Option[configdomain.PerennialRegex]
+	ProposalsShowLineage     configdomain.ProposalsShowLineage
 	PushHook                 configdomain.PushHook
 	ShareNewBranches         configdomain.ShareNewBranches
 	ShipDeleteTrackingBranch configdomain.ShipDeleteTrackingBranch
@@ -101,6 +102,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		Offline:                  other.Offline.GetOrElse(self.Offline),
 		PerennialBranches:        other.PerennialBranches,
 		PerennialRegex:           other.PerennialRegex,
+		ProposalsShowLineage:     other.ProposalsShowLineage.GetOrElse(self.ProposalsShowLineage),
 		PushHook:                 other.PushHook.GetOrElse(self.PushHook),
 		ShareNewBranches:         other.ShareNewBranches.GetOrElse(self.ShareNewBranches),
 		ShipDeleteTrackingBranch: other.ShipDeleteTrackingBranch.GetOrElse(self.ShipDeleteTrackingBranch),
@@ -240,6 +242,7 @@ func DefaultNormalConfig() NormalConfig {
 		Offline:                  false,
 		PerennialBranches:        gitdomain.LocalBranchNames{},
 		PerennialRegex:           None[configdomain.PerennialRegex](),
+		ProposalsShowLineage:     configdomain.ProposalsShowLineageNone,
 		PushHook:                 true,
 		ShareNewBranches:         configdomain.ShareNewBranchesNone,
 		ShipDeleteTrackingBranch: true,
@@ -279,6 +282,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		Offline:                  partial.Offline.GetOrElse(defaults.Offline),
 		PerennialBranches:        partial.PerennialBranches,
 		PerennialRegex:           partial.PerennialRegex,
+		ProposalsShowLineage:     partial.ProposalsShowLineage.GetOrElse(defaults.ProposalsShowLineage),
 		PushHook:                 partial.PushHook.GetOrElse(defaults.PushHook),
 		ShareNewBranches:         partial.ShareNewBranches.GetOrElse(defaults.ShareNewBranches),
 		ShipDeleteTrackingBranch: partial.ShipDeleteTrackingBranch.GetOrElse(defaults.ShipDeleteTrackingBranch),

@@ -41,6 +41,7 @@ type PartialConfig struct {
 	Offline                  Option[Offline]
 	PerennialBranches        gitdomain.LocalBranchNames
 	PerennialRegex           Option[PerennialRegex]
+	ProposalsShowLineage     Option[ProposalsShowLineage]
 	PushHook                 Option[PushHook]
 	ShareNewBranches         Option[ShareNewBranches]
 	ShipDeleteTrackingBranch Option[ShipDeleteTrackingBranch]
@@ -89,6 +90,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		Offline:                  other.Offline.Or(self.Offline),
 		PerennialBranches:        append(other.PerennialBranches, self.PerennialBranches...),
 		PerennialRegex:           other.PerennialRegex.Or(self.PerennialRegex),
+		ProposalsShowLineage:     other.ProposalsShowLineage.Or(self.ProposalsShowLineage),
 		PushHook:                 other.PushHook.Or(self.PushHook),
 		ShareNewBranches:         other.ShareNewBranches.Or(self.ShareNewBranches),
 		ShipDeleteTrackingBranch: other.ShipDeleteTrackingBranch.Or(self.ShipDeleteTrackingBranch),
