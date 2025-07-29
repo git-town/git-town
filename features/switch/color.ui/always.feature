@@ -10,8 +10,8 @@ Feature: switch branches
     And the current branch is "alpha"
     And local Git setting "color.ui" is "always"
     When I run "git-town switch" and enter into the dialogs:
-      | DIALOG      | KEYS       |
-      | branch-tree | down enter |
+      | DIALOG        | KEYS       |
+      | switch-branch | down enter |
     Then Git Town runs the commands
       | BRANCH | COMMAND           |
       | alpha  | git checkout beta |

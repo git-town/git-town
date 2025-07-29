@@ -305,8 +305,8 @@ func determineHackData(args []string, repo execute.OpenRepoResult, cliConfig cli
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
+		BranchInfos:        branchesSnapshot.Branches,
 		BranchesAndTypes:   branchesAndTypes,
-		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: branchesToValidate,
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
@@ -409,7 +409,7 @@ func convertToFeatureBranch(args convertToFeatureBranchArgs) error {
 		case configdomain.BranchTypePerennialBranch:
 			return fmt.Errorf(messages.HackCannotFeaturePerennialBranch, branchName)
 		}
-		fmt.Printf(messages.HackBranchIsNowFeature, branchName)
+		fmt.Printf(messages.BranchIsNowFeature, branchName)
 	}
 	return configinterpreter.Finished(configinterpreter.FinishedArgs{
 		Backend:               args.repo.Backend,

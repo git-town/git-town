@@ -212,8 +212,8 @@ func determineRenameData(args []string, cliConfig cliconfig.CliConfig, force con
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
+		BranchInfos:        branchesSnapshot.Branches,
 		BranchesAndTypes:   branchesAndTypes,
-		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{oldBranchName},
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
@@ -294,14 +294,12 @@ func renameProgram(repo execute.OpenRepoResult, data renameData, finalMessages s
 	if !data.config.NormalConfig.DryRun {
 		if override, hasBranchTypeOverride := data.config.NormalConfig.BranchTypeOverrides[oldLocalBranch]; hasBranchTypeOverride {
 			prog.Value.Add(
-				&opcodes.ConfigSet{
-					Key:   configdomain.NewBranchTypeOverrideKeyForBranch(data.newBranch).Key,
-					Scope: configdomain.ConfigScopeLocal,
-					Value: override.String(),
+				&opcodes.BranchTypeOverrideSet{
+					Branch:     data.newBranch,
+					BranchType: override,
 				},
-				&opcodes.ConfigRemove{
-					Key:   configdomain.NewBranchTypeOverrideKeyForBranch(oldLocalBranch).Key,
-					Scope: configdomain.ConfigScopeLocal,
+				&opcodes.BranchTypeOverrideRemove{
+					Branch: oldLocalBranch,
 				},
 			)
 		}

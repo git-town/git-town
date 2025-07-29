@@ -285,8 +285,8 @@ func determineSyncData(cliConfig cliconfig.CliConfig, syncAllBranches configdoma
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
+		BranchInfos:        branchesSnapshot.Branches,
 		BranchesAndTypes:   branchesAndTypes,
-		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
@@ -316,8 +316,8 @@ func determineSyncData(cliConfig cliconfig.CliConfig, syncAllBranches configdoma
 	branchesAndTypes = repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	validatedConfig, exit, err = validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
+		BranchInfos:        branchesSnapshot.Branches,
 		BranchesAndTypes:   branchesAndTypes,
-		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: branchNamesToSync,
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          connector,
