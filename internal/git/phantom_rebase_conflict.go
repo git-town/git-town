@@ -1,6 +1,7 @@
 package git
 
 import (
+	"fmt"
 	"reflect"
 
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
@@ -47,6 +48,11 @@ func DetectPhantomRebaseConflicts(fileConflicts []FileConflictFullInfo, parentBr
 		parentBlob, hasParentBlob := fileConflict.Parent.Get()
 		currentBlob, hasCurrentBlob := fileConflict.Current.Get()
 		rootBlob, hasRootBlob := fileConflict.Root.Get()
+		fmt.Println("1111111111111111111111111111111111111")
+		fmt.Println("parent:", hasParentBlob, parentBlob)
+		fmt.Println("current:", hasCurrentBlob, currentBlob)
+		fmt.Println("root:", hasRootBlob, rootBlob)
+		fmt.Println(fileConflict)
 		if !hasParentBlob || !hasCurrentBlob || currentBlob.Permission != parentBlob.Permission {
 			continue
 		}
