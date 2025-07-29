@@ -67,9 +67,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	proposalShowLineage, hasProposalShowLineage := data.ProposalsShowLineage.Get()
 	if hasProposalShowLineage {
 		result.WriteString("\n[propose]\n")
-		if hasProposalShowLineage {
-			result.WriteString(fmt.Sprintf("lineage = %q\n", proposalShowLineage))
-		}
+		result.WriteString(fmt.Sprintf("lineage = %q\n", proposalShowLineage))
 	}
 
 	deleteTrackingBranch, hasDeleteTrackingBranch := data.ShipDeleteTrackingBranch.Get()
