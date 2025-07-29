@@ -207,11 +207,11 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 	return err
 }
 
-func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody string) error {
+func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterface, newBody string) error {
 	data := proposalData.Data()
 	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)))
 	_, _, err := self.client.EditPullRequest(self.Organization, self.Repository, int64(data.Number), forgejo.EditPullRequestOption{
-		Body: data.Body.GetOrDefault(),
+		Body: newBody,
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
