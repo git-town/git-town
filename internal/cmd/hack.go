@@ -125,7 +125,16 @@ func executeHack(args []string, cliConfig cliconfig.CliConfig, beam configdomain
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineHackData(args, repo, cliConfig, beam, commit, commitMessage, detached, propose, prototype)
+	data, exit, err := determineHackData(determineHackDataArgs{
+		args:          args,
+		beam:          beam,
+		cliConfig:     cliConfig,
+		commit:        commit,
+		commitMessage: commitMessage,
+		detached:      detached,
+		propose:       propose,
+		prototype:     prototype,
+	}, repo)
 	if err != nil || exit {
 		return err
 	}
@@ -224,14 +233,14 @@ type createFeatureBranchArgs struct {
 	verbose               configdomain.Verbose
 }
 
-func determineHackData(args []string, repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig, beam configdomain.Beam, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, propose configdomain.Propose, prototype configdomain.Prototype) (data hackData, exit dialogdomain.Exit, err error) {
+func determineHackData(args determineHackDataArgs, repo execute.OpenRepoResult) (data hackData, exit dialogdomain.Exit, err error) {
 	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return data, false, err
 	}
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
-	targetBranches := gitdomain.NewLocalBranchNames(args...)
+	targetBranches := gitdomain.NewLocalBranchNames(args.args...)
 	var repoStatus gitdomain.RepoStatus
 	repoStatus, err = repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -261,8 +270,8 @@ func determineHackData(args []string, repo execute.OpenRepoResult, cliConfig cli
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
-		Detached:              detached,
-		Fetch:                 len(args) == 1 && !repoStatus.OpenChanges && beam.IsFalse() && commit.IsFalse(),
+		Detached:              args.detached,
+		Fetch:                 len(args.args) == 1 && !repoStatus.OpenChanges && args.beam.IsFalse() && args.commit.IsFalse(),
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
@@ -273,7 +282,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, cliConfig cli
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               cliConfig.Verbose,
+		Verbose:               args.cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return data, exit, err
@@ -339,7 +348,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, cliConfig cli
 		return data, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	branchNamesToSync := gitdomain.LocalBranchNames{validatedConfig.ValidatedConfigData.MainBranch}
-	if detached {
+	if args.detached {
 		branchNamesToSync = validatedConfig.RemovePerennials(branchNamesToSync)
 	}
 	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, branchNamesToSync...)
@@ -349,7 +358,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, cliConfig cli
 	}
 	commitsToBeam := []gitdomain.Commit{}
 	ancestor, hasAncestor := latestExistingAncestor(initialBranch, branchesSnapshot.Branches, validatedConfig.NormalConfig.Lineage).Get()
-	if beam.IsTrue() && hasAncestor {
+	if args.beam.IsTrue() && hasAncestor {
 		commitsInBranch, err := repo.Git.CommitsInFeatureBranch(repo.Backend, initialBranch, ancestor.BranchName())
 		if err != nil {
 			return data, false, err
@@ -360,20 +369,20 @@ func determineHackData(args []string, repo execute.OpenRepoResult, cliConfig cli
 		}
 	}
 	if validatedConfig.NormalConfig.ShareNewBranches == configdomain.ShareNewBranchesPropose {
-		propose = true
+		args.propose = true
 	}
 	data = Left[appendFeatureData, convertToFeatureData](appendFeatureData{
-		beam:                      beam,
+		beam:                      args.beam,
 		branchInfos:               branchesSnapshot.Branches,
 		branchInfosLastRun:        branchInfosLastRun,
 		branchesSnapshot:          branchesSnapshot,
 		branchesToSync:            branchesToSync,
-		commit:                    commit,
-		commitMessage:             commitMessage,
+		commit:                    args.commit,
+		commitMessage:             args.commitMessage,
 		commitsToBeam:             commitsToBeam,
 		config:                    validatedConfig,
 		connector:                 connector,
-		detached:                  detached,
+		detached:                  args.detached,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             initialBranch,
 		initialBranchInfo:         initialBranchInfo,
@@ -382,13 +391,24 @@ func determineHackData(args []string, repo execute.OpenRepoResult, cliConfig cli
 		nonExistingBranches:       nonExistingBranches,
 		preFetchBranchInfos:       preFetchBranchSnapshot.Branches,
 		previousBranch:            previousBranch,
-		propose:                   propose,
-		prototype:                 prototype,
+		propose:                   args.propose,
+		prototype:                 args.prototype,
 		remotes:                   remotes,
 		stashSize:                 stashSize,
 		targetBranch:              targetBranch,
 	})
 	return data, false, err
+}
+
+type determineHackDataArgs struct {
+	args          []string
+	cliConfig     cliconfig.CliConfig
+	beam          configdomain.Beam
+	commit        configdomain.Commit
+	commitMessage Option[gitdomain.CommitMessage]
+	detached      configdomain.Detached
+	propose       configdomain.Propose
+	prototype     configdomain.Prototype
 }
 
 func convertToFeatureBranch(args convertToFeatureBranchArgs) error {
