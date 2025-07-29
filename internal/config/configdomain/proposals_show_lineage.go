@@ -32,16 +32,17 @@ func ParseProposalsShowLineage(value string) (Option[ProposalsShowLineage], erro
 		return Some(ProposalsShowLineageCI), nil
 	case ProposalsShowLineageCLI.String():
 		return Some(ProposalsShowLineageCLI), nil
-	default:
-		parsedOpt, err := gohacks.ParseBoolOpt(value, "proposals-show-lineage")
-		if err != nil {
-			return None[ProposalsShowLineage](), fmt.Errorf(messages.ProposalsShowLineageInvalid, value)
-		}
-		if parsed, has := parsedOpt.Get(); has {
-			if !parsed {
-				return Some(ProposalsShowLineageNone), nil
-			}
-		}
+	}
+	parsedOpt, err := gohacks.ParseBoolOpt(value, "proposals-show-lineage")
+	if err != nil {
 		return None[ProposalsShowLineage](), fmt.Errorf(messages.ProposalsShowLineageInvalid, value)
 	}
+	if parsed, has := parsedOpt.Get(); has {
+		if parsed {
+			// The CLI is configured with "true" --> assume the user wants the CLI to embed lineage into proposals.
+			return Some(ProposalsShowLineageCLI), nil
+		}
+		return Some(ProposalsShowLineageNone), nil
+	}
+	return None[ProposalsShowLineage](), fmt.Errorf(messages.ProposalsShowLineageInvalid, value)
 }
