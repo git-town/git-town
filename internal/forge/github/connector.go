@@ -210,6 +210,7 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 
 func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody string) error {
 	data := proposalData.Data()
+	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)))
 	_, _, err := self.client.PullRequests.Edit(context.Background(), self.Organization, self.Repository, data.Number, &github.PullRequest{
 		Body: Ptr(updatedBody),
 	})

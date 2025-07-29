@@ -292,9 +292,10 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 	return nil
 }
 
-func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterface, updatedDescription string) error {
+
+func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterface, newBody string) error {
 	data := proposalData.(forgedomain.BitbucketCloudProposalData)
-	self.log.Start(messages.APIUpdateProposalBody, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)))
+	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)))
 	_, err := self.client.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
 		ID:                strconv.Itoa(data.Number),
 		Owner:             self.Organization,
@@ -302,7 +303,7 @@ func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterf
 		SourceBranch:      data.Source.String(),
 		DestinationBranch: data.Target.String(),
 		Title:             data.Title,
-		Description:       updatedDescription,
+		Description:       newBody,
 		Draft:             data.Draft,
 		CloseSourceBranch: data.CloseSourceBranch,
 	})

@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/git-town/git-town/v21/internal/browser"
+	"github.com/git-town/git-town/v21/internal/cli/colors"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
@@ -191,7 +192,7 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 
 func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterface, updatedDescription string) error {
 	data := proposalData.Data()
-	self.log.Start(messages.ForgeGitlabUpdateMRBodyViaAPI, data.Number)
+	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)))
 	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), data.Number, &gitlab.UpdateMergeRequestOptions{
 		Description: Ptr(updatedDescription),
 	})
