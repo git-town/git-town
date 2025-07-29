@@ -51,14 +51,34 @@ func TestParseProposalsShowLineage(t *testing.T) {
 			err:  false,
 		},
 		{
+			give: "true",
+			want: Some(configdomain.ProposalsShowLineageCLI),
+			err:  false,
+		},
+		{
 			give: "no",
 			want: Some(configdomain.ProposalsShowLineageNone),
+			err:  false,
+		},
+		{
+			give: "yes",
+			want: Some(configdomain.ProposalsShowLineageCLI),
 			err:  false,
 		},
 		{
 			give: "0",
 			want: Some(configdomain.ProposalsShowLineageNone),
 			err:  false,
+		},
+		{
+			give: "1",
+			want: Some(configdomain.ProposalsShowLineageCLI),
+			err:  false,
+		},
+		{
+			give: "zonk",
+			want: None[configdomain.ProposalsShowLineage](),
+			err:  true,
 		},
 	}
 	for _, tt := range tests {
