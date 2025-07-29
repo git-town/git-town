@@ -17,6 +17,10 @@ import (
 	"github.com/git-town/git-town/v21/pkg/set"
 )
 
+// NormalConfig contains the final configuration data to be used by Git Town,
+// merged from the various configuration sources (Git metadata, configuration file, CLI arguments).
+// It only contains the configuration data that doesn't need to be validated by the user,
+// but can be used as-is.
 type NormalConfig struct {
 	Aliases                  configdomain.Aliases
 	BitbucketAppPassword     Option[forgedomain.BitbucketAppPassword]
