@@ -52,6 +52,7 @@ func DetectPhantomRebaseConflicts(fileConflicts []FileConflictFullInfo, parentBr
 		fmt.Println("parent:", hasParentBlob, parentBlob)
 		fmt.Println("current:", hasCurrentBlob, currentBlob)
 		fmt.Println("root:", hasRootBlob, rootBlob)
+		fmt.Println(fileConflict)
 		if !hasParentBlob || !hasCurrentBlob || currentBlob.Permission != parentBlob.Permission {
 			continue
 		}
