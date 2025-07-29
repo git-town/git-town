@@ -101,7 +101,7 @@ func hackCmd() *cobra.Command {
 				Verbose: verbose,
 			}
 			return executeHack(determineHackDataArgs{
-				args:          args,
+				argv:          args,
 				beam:          beam,
 				cliConfig:     cliConfig,
 				commit:        commit,
@@ -135,7 +135,7 @@ func executeHack(args determineHackDataArgs) error {
 		return err
 	}
 	data, exit, err := determineHackData(determineHackDataArgs{
-		args:          args.args,
+		argv:          args.argv,
 		beam:          args.beam,
 		cliConfig:     args.cliConfig,
 		commit:        args.commit,
@@ -249,7 +249,7 @@ func determineHackData(args determineHackDataArgs, repo execute.OpenRepoResult) 
 	}
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
-	targetBranches := gitdomain.NewLocalBranchNames(args.args...)
+	targetBranches := gitdomain.NewLocalBranchNames(args.argv...)
 	var repoStatus gitdomain.RepoStatus
 	repoStatus, err = repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -280,7 +280,7 @@ func determineHackData(args determineHackDataArgs, repo execute.OpenRepoResult) 
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
 		Detached:              args.detached,
-		Fetch:                 len(args.args) == 1 && !repoStatus.OpenChanges && args.beam.IsFalse() && args.commit.IsFalse(),
+		Fetch:                 len(args.argv) == 1 && !repoStatus.OpenChanges && args.beam.IsFalse() && args.commit.IsFalse(),
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
@@ -410,7 +410,7 @@ func determineHackData(args determineHackDataArgs, repo execute.OpenRepoResult) 
 }
 
 type determineHackDataArgs struct {
-	args          []string
+	argv          []string
 	beam          configdomain.Beam
 	cliConfig     cliconfig.CliConfig
 	commit        configdomain.Commit
