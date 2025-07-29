@@ -24,8 +24,10 @@ func (self ProposalsShowLineage) String() string {
 
 func ParseProposalsShowLineage(value string) (Option[ProposalsShowLineage], error) {
 	switch strings.ToLower(strings.TrimSpace(value)) {
-	case "", ProposalsShowLineageNone.String():
+	case "":
 		return None[ProposalsShowLineage](), nil
+	case ProposalsShowLineageNone.String():
+		return Some(ProposalsShowLineageNone), nil
 	case ProposalsShowLineageCI.String():
 		return Some(ProposalsShowLineageCI), nil
 	case ProposalsShowLineageCLI.String():
