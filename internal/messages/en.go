@@ -217,6 +217,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	ProposalSourceCannotUpdate            = "cannot update the proposal source branch on your forge"
 	ProposalTargetBranchUpdateProblem     = "cannot update the target branch of proposal %d on your forge"
 	ProposalURLProblem                    = "cannot determine proposal URL from %q to %q: %w"
+	ProposalsShowLineageInvalid           = "invalid value for whether proposals should show the lineage: %q. Valid values are: none, ci, cli"
 	PrototypeRemoved                      = "branch %q is no longer a prototype branch"
 	PullRequestDeprecation                = `DEPRECATION NOTICE
 
