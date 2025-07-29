@@ -71,7 +71,7 @@ func Cmd() *cobra.Command {
 			detached, errDetached := readDetachedFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
 			noAutoResolve, errNoAutoResolve := readNoAutoResolveFlag(cmd)
-			noPush, errNoPush := readNoPushFlag(cmd)
+			pushBranches, errNoPush := readNoPushFlag(cmd)
 			prune, errPrune := readPruneFlag(cmd)
 			stack, errStack := readStackFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
@@ -82,12 +82,13 @@ func Cmd() *cobra.Command {
 				DryRun:  dryRun,
 				Verbose: verbose,
 			}
-			return executeSync(cliConfig, allBranches, stack, detached, noAutoResolve, noPush, prune)
+			return executeSync(cliConfig, allBranches, stack, detached, noAutoResolve, pushBranches, prune)
 		},
 	}
 	addAllFlag(&cmd)
 	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
+	addNoAutoResolveFlag(&cmd)
 	addNoPushFlag(&cmd)
 	addPruneFlag(&cmd)
 	addStackFlag(&cmd)
