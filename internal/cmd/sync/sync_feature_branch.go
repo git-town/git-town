@@ -19,6 +19,7 @@ func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBr
 				Offline:           args.offline,
 				InitialParentName: args.initialParentName,
 				InitialParentSHA:  args.initialParentSHA,
+				NoAutoResolve:     args.noAutoResolve,
 				PushBranches:      args.pushBranches,
 				TrackingBranch:    args.trackingBranch,
 			},

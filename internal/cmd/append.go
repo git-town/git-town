@@ -70,6 +70,7 @@ func appendCmd() *cobra.Command {
 	addCommitMessageFlag, readCommitMessageFlag := flags.CommitMessage("the commit message")
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addNoAutoResolveFlag, readNoAutoResolveFlag := flags.NoAutoResolve()
 	addProposeFlag, readProposeFlag := flags.Propose()
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
@@ -85,10 +86,11 @@ func appendCmd() *cobra.Command {
 			commitMessage, err3 := readCommitMessageFlag(cmd)
 			detached, err4 := readDetachedFlag(cmd)
 			dryRun, err5 := readDryRunFlag(cmd)
+			noAutoResolve, errNoAutoResolve := readNoAutoResolveFlag(cmd)
 			propose, err6 := readProposeFlag(cmd)
 			prototype, err7 := readPrototypeFlag(cmd)
 			verbose, err8 := readVerboseFlag(cmd)
-			if err := cmp.Or(err1, err2, err3, err4, err5, err6, err7, err8); err != nil {
+			if err := cmp.Or(err1, err2, err3, err4, err5, errNoAutoResolve, err6, err7, err8); err != nil {
 				return err
 			}
 			if commitMessage.IsSome() || propose.IsTrue() {
@@ -106,6 +108,7 @@ func appendCmd() *cobra.Command {
 	addCommitMessageFlag(&cmd)
 	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
+	addNoAutoResolveFlag(&cmd)
 	addProposeFlag(&cmd)
 	addPrototypeFlag(&cmd)
 	addVerboseFlag(&cmd)
@@ -192,7 +195,7 @@ type appendFeatureData struct {
 	targetBranch              gitdomain.LocalBranchName
 }
 
-func determineAppendData(cliConfig cliconfig.CliConfig, targetBranch gitdomain.LocalBranchName, beam configdomain.Beam, repo execute.OpenRepoResult, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, propose configdomain.Propose, prototype configdomain.Prototype) (data appendFeatureData, exit dialogdomain.Exit, err error) {
+func determineAppendData(cliConfig cliconfig.CliConfig, targetBranch gitdomain.LocalBranchName, beam configdomain.Beam, repo execute.OpenRepoResult, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, propose configdomain.Propose, noAutoResolve configdomain.NoAutoResolve, prototype configdomain.Prototype) (data appendFeatureData, exit dialogdomain.Exit, err error) {
 	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -324,6 +327,7 @@ func determineAppendData(cliConfig cliconfig.CliConfig, targetBranch gitdomain.L
 		initialBranchInfo:         initialBranchInfo,
 		inputs:                    inputs,
 		newBranchParentCandidates: initialAndAncestors,
+		noAutoResolve:             noAutoResolve,
 		nonExistingBranches:       nonExistingBranches,
 		preFetchBranchInfos:       preFetchBranchSnapshot.Branches,
 		previousBranch:            previousBranch,
