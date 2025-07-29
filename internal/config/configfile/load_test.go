@@ -43,6 +43,9 @@ share-new-branches = "push"
 forge-type = "github"
 origin-hostname = "github.com"
 
+[propose]
+lineage = "ci"
+
 [ship]
 delete-tracking-branch = false
 strategy = "api"
@@ -81,6 +84,9 @@ prototype-branches = "compress"
 				Hosting: &configfile.Hosting{
 					ForgeType:      Ptr("github"),
 					OriginHostname: Ptr("github.com"),
+				},
+				Propose: &configfile.Propose{
+					Lineage: Ptr("ci"),
 				},
 				Ship: &configfile.Ship{
 					DeleteTrackingBranch: Ptr(false),
