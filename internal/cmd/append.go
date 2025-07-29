@@ -142,6 +142,7 @@ func executeAppend(args executeAppendArgs) error {
 		commit:        args.commit,
 		commitMessage: args.commitMessage,
 		detached:      args.detached,
+		noAutoResolve: args.noAutoResolve,
 		propose:       args.propose,
 		prototype:     args.prototype,
 		targetBranch:  gitdomain.NewLocalBranchName(args.arg),
