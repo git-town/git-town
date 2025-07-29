@@ -100,8 +100,8 @@ func appendCmd() *cobra.Command {
 			}
 			return executeAppend(executeAppendArgs{
 				arg:           args[0],
-				cliConfig:     cliConfig,
 				beam:          beam,
+				cliConfig:     cliConfig,
 				commit:        commit,
 				commitMessage: commitMessage,
 				detached:      detached,
@@ -133,14 +133,14 @@ func executeAppend(args executeAppendArgs) error {
 		return err
 	}
 	data, exit, err := determineAppendData(determineAppendDataArgs{
-		cliConfig:     args.cliConfig,
-		targetBranch:  gitdomain.NewLocalBranchName(args.arg),
 		beam:          args.beam,
+		cliConfig:     args.cliConfig,
 		commit:        args.commit,
 		commitMessage: args.commitMessage,
 		detached:      args.detached,
 		propose:       args.propose,
 		prototype:     args.prototype,
+		targetBranch:  gitdomain.NewLocalBranchName(args.arg),
 	}, repo)
 	if err != nil || exit {
 		return err
@@ -184,8 +184,8 @@ func executeAppend(args executeAppendArgs) error {
 
 type executeAppendArgs struct {
 	arg           string
-	cliConfig     cliconfig.CliConfig
 	beam          configdomain.Beam
+	cliConfig     cliconfig.CliConfig
 	commit        configdomain.Commit
 	commitMessage Option[gitdomain.CommitMessage]
 	detached      configdomain.Detached
@@ -364,14 +364,14 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 }
 
 type determineAppendDataArgs struct {
-	cliConfig     cliconfig.CliConfig
-	targetBranch  gitdomain.LocalBranchName
 	beam          configdomain.Beam
+	cliConfig     cliconfig.CliConfig
 	commit        configdomain.Commit
 	commitMessage Option[gitdomain.CommitMessage]
 	detached      configdomain.Detached
 	propose       configdomain.Propose
 	prototype     configdomain.Prototype
+	targetBranch  gitdomain.LocalBranchName
 }
 
 func appendProgram(frontend subshelldomain.Runner, data appendFeatureData, finalMessages stringslice.Collector, beamCherryPick bool) program.Program {
