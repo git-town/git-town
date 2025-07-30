@@ -53,7 +53,7 @@ func switchCmd() *cobra.Command {
 			}
 			return executeSwitch(executeSwitchArgs{
 				allBranches:  allBranches,
-				args:         args,
+				argv:         args,
 				branchTypes:  branchTypes,
 				cliConfig:    cliConfig,
 				displayTypes: displayTypes,
@@ -71,7 +71,7 @@ func switchCmd() *cobra.Command {
 
 type executeSwitchArgs struct {
 	allBranches  configdomain.AllBranches
-	args         []string
+	argv         []string
 	branchTypes  []configdomain.BranchType
 	cliConfig    cliconfig.CliConfig
 	displayTypes configdomain.DisplayTypes
@@ -89,7 +89,7 @@ func executeSwitch(args executeSwitchArgs) error {
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineSwitchData(args.args, repo, args.cliConfig)
+	data, exit, err := determineSwitchData(args.argv, repo, args.cliConfig)
 	if err != nil || exit {
 		return err
 	}
