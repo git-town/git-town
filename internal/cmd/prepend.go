@@ -108,7 +108,7 @@ func prependCommand() *cobra.Command {
 				Verbose: verbose,
 			}
 			return executePrepend(executePrependArgs{
-				args:          args,
+				argv:          args,
 				beam:          beam,
 				cliConfig:     cliConfig,
 				commit:        commit,
@@ -135,7 +135,7 @@ func prependCommand() *cobra.Command {
 }
 
 type executePrependArgs struct {
-	args          []string
+	argv          []string
 	beam          configdomain.Beam
 	cliConfig     cliconfig.CliConfig
 	commit        configdomain.Commit
@@ -159,7 +159,7 @@ func executePrepend(args executePrependArgs) error {
 		return err
 	}
 	data, exit, err := determinePrependData(determinePrependDataArgs{
-		args:          args.args,
+		args:          args.argv,
 		beam:          args.beam,
 		cliConfig:     args.cliConfig,
 		commit:        args.commit,
