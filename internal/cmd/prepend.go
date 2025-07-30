@@ -141,6 +141,7 @@ type prependArgs struct {
 	commit        configdomain.Commit
 	commitMessage Option[gitdomain.CommitMessage]
 	detached      configdomain.Detached
+	noAutoResolve configdomain.NoAutoResolve
 	proposalBody  Option[gitdomain.ProposalBody]
 	proposalTitle Option[gitdomain.ProposalTitle]
 	propose       configdomain.Propose
@@ -373,7 +374,7 @@ func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (data p
 		initialBranchInfo:   *initialBranchInfo,
 		inputs:              inputs,
 		newParentCandidates: parentAndAncestors,
-		noAutoResolve:       noAutoResolve,
+		noAutoResolve:       args.noAutoResolve,
 		nonExistingBranches: nonExistingBranches,
 		preFetchBranchInfos: prefetchBranchSnapshot.Branches,
 		previousBranch:      previousBranch,
