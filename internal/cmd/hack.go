@@ -72,6 +72,7 @@ func hackCmd() *cobra.Command {
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addCommitMessageFlag, readCommitMessageFlag := flags.CommitMessage("the commit message")
+	addNoAutoResolveFlag, readNoAutoResolveFlag := flags.NoAutoResolve()
 	addProposeFlag, readProposeFlag := flags.Propose()
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
@@ -87,10 +88,11 @@ func hackCmd() *cobra.Command {
 			commitMessage, errCommitMessage := readCommitMessageFlag(cmd)
 			detached, errDetached := readDetachedFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
+			noAutoResolve, errNoAutoResolve := readNoAutoResolveFlag(cmd)
 			propose, errPropose := readProposeFlag(cmd)
 			prototype, errPrototype := readPrototypeFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errBeam, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errVerbose); err != nil {
+			if err := cmp.Or(errBeam, errCommit, errCommitMessage, errDetached, errDryRun, errNoAutoResolve, errPropose, errPrototype, errVerbose); err != nil {
 				return err
 			}
 			if commitMessage.IsSome() || propose.IsTrue() {
@@ -107,6 +109,7 @@ func hackCmd() *cobra.Command {
 				commit:        commit,
 				commitMessage: commitMessage,
 				detached:      detached,
+				noAutoResolve: noAutoResolve,
 				propose:       propose,
 				prototype:     prototype,
 			})
@@ -117,6 +120,7 @@ func hackCmd() *cobra.Command {
 	addCommitMessageFlag(&cmd)
 	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
+	addNoAutoResolveFlag(&cmd)
 	addProposeFlag(&cmd)
 	addPrototypeFlag(&cmd)
 	addVerboseFlag(&cmd)
@@ -388,7 +392,7 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data hackDat
 		initialBranchInfo:         initialBranchInfo,
 		inputs:                    inputs,
 		newBranchParentCandidates: gitdomain.LocalBranchNames{validatedConfig.ValidatedConfigData.MainBranch},
-		noAutoResolve:             noAutoResolve,
+		noAutoResolve:             args.noAutoResolve,
 		nonExistingBranches:       nonExistingBranches,
 		preFetchBranchInfos:       preFetchBranchSnapshot.Branches,
 		previousBranch:            previousBranch,
@@ -408,6 +412,7 @@ type hackArgs struct {
 	commit        configdomain.Commit
 	commitMessage Option[gitdomain.CommitMessage]
 	detached      configdomain.Detached
+	noAutoResolve configdomain.NoAutoResolve
 	propose       configdomain.Propose
 	prototype     configdomain.Prototype
 }
