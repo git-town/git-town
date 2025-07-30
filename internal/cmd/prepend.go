@@ -85,18 +85,18 @@ func prependCommand() *cobra.Command {
 		Short:   prependDesc,
 		Long:    cmdhelpers.Long(prependDesc, prependHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			beam, err1 := readBeamFlag(cmd)
-			bodyText, err2 := readBodyFlag(cmd)
-			commit, err3 := readCommitFlag(cmd)
-			commitMessage, err4 := readCommitMessageFlag(cmd)
-			detached, err5 := readDetachedFlag(cmd)
-			dryRun, err6 := readDryRunFlag(cmd)
+			beam, errBeam := readBeamFlag(cmd)
+			bodyText, errBodyText := readBodyFlag(cmd)
+			commit, errCommit := readCommitFlag(cmd)
+			commitMessage, errCommitMessage := readCommitMessageFlag(cmd)
+			detached, errDetached := readDetachedFlag(cmd)
+			dryRun, errDryRun := readDryRunFlag(cmd)
 			noAutoResolve, errNoAutoResolve := readNoAutoResolveFlag(cmd)
-			propose, err7 := readProposeFlag(cmd)
-			prototype, err8 := readPrototypeFlag(cmd)
-			title, err9 := readTitleFlag(cmd)
-			verbose, err10 := readVerboseFlag(cmd)
-			if err := cmp.Or(err1, err2, err3, err4, err5, err6, err7, err8, err9, err10); err != nil {
+			propose, errPropose := readProposeFlag(cmd)
+			prototype, errPrototype := readPrototypeFlag(cmd)
+			title, errTitle := readTitleFlag(cmd)
+			verbose, errVerbose := readVerboseFlag(cmd)
+			if err := cmp.Or(errBeam, errBodyText, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errTitle, errVerbose); err != nil {
 				return err
 			}
 			if commitMessage.IsSome() {
