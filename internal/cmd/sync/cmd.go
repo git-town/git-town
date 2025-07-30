@@ -86,7 +86,7 @@ func Cmd() *cobra.Command {
 				prune:           prune,
 				pushBranches:    pushBranches,
 				syncAllBranches: allBranches,
-				syncStack:       stack,
+				stack:           stack,
 			})
 		},
 	}
@@ -106,7 +106,7 @@ type executeSyncArgs struct {
 	prune           configdomain.Prune
 	pushBranches    configdomain.PushBranches
 	syncAllBranches configdomain.AllBranches
-	syncStack       configdomain.FullStack
+	stack           configdomain.FullStack
 }
 
 func executeSync(args executeSyncArgs) error {
@@ -124,7 +124,7 @@ func executeSync(args executeSyncArgs) error {
 		cliConfig:       args.cliConfig,
 		detached:        args.detached,
 		syncAllBranches: args.syncAllBranches,
-		syncStack:       args.syncStack,
+		syncStack:       args.stack,
 	})
 	if err != nil || exit {
 		return err
