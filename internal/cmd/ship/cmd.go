@@ -63,7 +63,7 @@ func Cmd() *cobra.Command {
 			dryRun, err1 := readDryRunFlag(cmd)
 			message, err2 := readMessageFlag(cmd)
 			messageFile, err3 := readMessageFileFlag(cmd)
-			shipStrategyOverride, err4 := readShipStrategyFlag(cmd)
+			shipStrategy, err4 := readShipStrategyFlag(cmd)
 			toParent, err5 := readToParentFlag(cmd)
 			verbose, err6 := readVerboseFlag(cmd)
 			if err := cmp.Or(err1, err2, err3, err4, err5, err6); err != nil {
@@ -78,7 +78,7 @@ func Cmd() *cobra.Command {
 				cliConfig:    cliConfig,
 				messageFile:  messageFile,
 				message:      message,
-				shipStrategy: shipStrategyOverride,
+				shipStrategy: shipStrategy,
 				toParent:     toParent,
 			})
 		},
