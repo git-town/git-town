@@ -348,6 +348,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, cliConfig 
 		initialBranchInfo:   *initialBranchInfo,
 		inputs:              inputs,
 		newParentCandidates: parentAndAncestors,
+		noAutoResolve:       noAutoResolve,
 		nonExistingBranches: nonExistingBranches,
 		preFetchBranchInfos: prefetchBranchSnapshot.Branches,
 		previousBranch:      previousBranch,
