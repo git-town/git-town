@@ -73,6 +73,7 @@ func prependCommand() *cobra.Command {
 	addCommitMessageFlag, readCommitMessageFlag := flags.CommitMessage("the commit message")
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addNoAutoResolveFlag, readNoAutoResolveFlag := flags.NoAutoResolve()
 	addProposeFlag, readProposeFlag := flags.Propose()
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
 	addTitleFlag, readTitleFlag := flags.ProposalTitle()
@@ -90,6 +91,7 @@ func prependCommand() *cobra.Command {
 			commitMessage, errCommitMessage := readCommitMessageFlag(cmd)
 			detached, errDetached := readDetachedFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
+			noAutoResolve, errNoAutoResolve := readNoAutoResolveFlag(cmd)
 			propose, errPropose := readProposeFlag(cmd)
 			prototype, errPrototype := readPrototypeFlag(cmd)
 			title, errTitle := readTitleFlag(cmd)
@@ -114,6 +116,7 @@ func prependCommand() *cobra.Command {
 				commit:        commit,
 				commitMessage: commitMessage,
 				detached:      detached,
+				noAutoResolve: noAutoResolve,
 				proposalBody:  bodyText,
 				proposalTitle: title,
 				propose:       propose,
@@ -141,6 +144,7 @@ type prependArgs struct {
 	commit        configdomain.Commit
 	commitMessage Option[gitdomain.CommitMessage]
 	detached      configdomain.Detached
+	noAutoResolve configdomain.NoAutoResolve
 	proposalBody  Option[gitdomain.ProposalBody]
 	proposalTitle Option[gitdomain.ProposalTitle]
 	propose       configdomain.Propose
@@ -373,7 +377,7 @@ func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (data p
 		initialBranchInfo:   *initialBranchInfo,
 		inputs:              inputs,
 		newParentCandidates: parentAndAncestors,
-		noAutoResolve:       noAutoResolve,
+		noAutoResolve:       args.noAutoResolve,
 		nonExistingBranches: nonExistingBranches,
 		preFetchBranchInfos: prefetchBranchSnapshot.Branches,
 		previousBranch:      previousBranch,
