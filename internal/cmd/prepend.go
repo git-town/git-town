@@ -107,7 +107,18 @@ func prependCommand() *cobra.Command {
 				DryRun:  dryRun,
 				Verbose: verbose,
 			}
-			return executePrepend(args, cliConfig, beam, bodyText, commit, commitMessage, detached, propose, prototype, title)
+			return executePrepend(prependArgs{
+				argv:          args,
+				beam:          beam,
+				cliConfig:     cliConfig,
+				commit:        commit,
+				commitMessage: commitMessage,
+				detached:      detached,
+				proposalBody:  bodyText,
+				proposalTitle: title,
+				propose:       propose,
+				prototype:     prototype,
+			})
 		},
 	}
 	addBeamFlag(&cmd)
@@ -123,9 +134,22 @@ func prependCommand() *cobra.Command {
 	return &cmd
 }
 
-func executePrepend(args []string, cliConfig cliconfig.CliConfig, beam configdomain.Beam, proposalBody Option[gitdomain.ProposalBody], commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, propose configdomain.Propose, prototype configdomain.Prototype, proposalTitle Option[gitdomain.ProposalTitle]) error {
+type prependArgs struct {
+	argv          []string
+	beam          configdomain.Beam
+	cliConfig     cliconfig.CliConfig
+	commit        configdomain.Commit
+	commitMessage Option[gitdomain.CommitMessage]
+	detached      configdomain.Detached
+	proposalBody  Option[gitdomain.ProposalBody]
+	proposalTitle Option[gitdomain.ProposalTitle]
+	propose       configdomain.Propose
+	prototype     configdomain.Prototype
+}
+
+func executePrepend(args prependArgs) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		CliConfig:        cliConfig,
+		CliConfig:        args.cliConfig,
 		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
@@ -134,7 +158,7 @@ func executePrepend(args []string, cliConfig cliconfig.CliConfig, beam configdom
 	if err != nil {
 		return err
 	}
-	data, exit, err := determinePrependData(args, repo, cliConfig, beam, commit, commitMessage, detached, proposalBody, proposalTitle, propose, prototype)
+	data, exit, err := determinePrependData(args, repo)
 	if err != nil || exit {
 		return err
 	}
@@ -145,7 +169,7 @@ func executePrepend(args []string, cliConfig cliconfig.CliConfig, beam configdom
 		BeginStashSize:        data.stashSize,
 		BranchInfosLastRun:    data.branchInfosLastRun,
 		Command:               "prepend",
-		DryRun:                cliConfig.DryRun,
+		DryRun:                args.cliConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
@@ -158,7 +182,7 @@ func executePrepend(args []string, cliConfig cliconfig.CliConfig, beam configdom
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               data.connector,
-		Detached:                detached,
+		Detached:                args.detached,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -171,7 +195,7 @@ func executePrepend(args []string, cliConfig cliconfig.CliConfig, beam configdom
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
-		Verbose:                 cliConfig.Verbose,
+		Verbose:                 args.cliConfig.Verbose,
 	})
 }
 
@@ -205,7 +229,7 @@ type prependData struct {
 	targetBranch        gitdomain.LocalBranchName
 }
 
-func determinePrependData(args []string, repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig, beam configdomain.Beam, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, proposalBody Option[gitdomain.ProposalBody], proposalTitle Option[gitdomain.ProposalTitle], propose configdomain.Propose, prototype configdomain.Prototype) (data prependData, exit dialogdomain.Exit, err error) {
+func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (data prependData, exit dialogdomain.Exit, err error) {
 	prefetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -239,8 +263,8 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, cliConfig 
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
-		Detached:              detached,
-		Fetch:                 !repoStatus.OpenChanges && beam.IsFalse() && commit.IsFalse(),
+		Detached:              args.detached,
+		Fetch:                 !repoStatus.OpenChanges && args.beam.IsFalse() && args.commit.IsFalse(),
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
@@ -251,7 +275,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, cliConfig 
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               cliConfig.Verbose,
+		Verbose:               args.cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return data, exit, err
@@ -261,7 +285,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, cliConfig 
 	if err != nil {
 		return data, false, err
 	}
-	targetBranch := gitdomain.NewLocalBranchName(args[0])
+	targetBranch := gitdomain.NewLocalBranchName(args.argv[0])
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
 		return data, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
@@ -302,7 +326,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, cliConfig 
 		return data, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branchesSnapshot.Active)
 	}
 	commitsToBeam := []gitdomain.Commit{}
-	if beam {
+	if args.beam {
 		commitsInBranch, err := repo.Git.CommitsInFeatureBranch(repo.Backend, initialBranch, ancestor.BranchName())
 		if err != nil {
 			return data, false, err
@@ -313,7 +337,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, cliConfig 
 		}
 	}
 	branchNamesToSync := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(initialBranch)
-	if detached {
+	if args.detached {
 		branchNamesToSync = validatedConfig.RemovePerennials(branchNamesToSync)
 	}
 	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, branchNamesToSync...)
@@ -327,17 +351,18 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, cliConfig 
 	if !repo.IsOffline {
 		proposalOpt = ship.FindProposal(connector, initialBranch, Some(ancestor))
 	}
+	propose := args.propose
 	if validatedConfig.NormalConfig.ShareNewBranches == configdomain.ShareNewBranchesPropose {
 		propose = true
 	}
 	return prependData{
-		beam:                beam,
+		beam:                args.beam,
 		branchInfos:         branchesSnapshot.Branches,
 		branchInfosLastRun:  branchInfosLastRun,
 		branchesSnapshot:    branchesSnapshot,
 		branchesToSync:      branchesToSync,
-		commit:              commit,
-		commitMessage:       commitMessage,
+		commit:              args.commit,
+		commitMessage:       args.commitMessage,
 		commitsToBeam:       commitsToBeam,
 		config:              validatedConfig,
 		connector:           connector,
@@ -351,10 +376,10 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, cliConfig 
 		preFetchBranchInfos: prefetchBranchSnapshot.Branches,
 		previousBranch:      previousBranch,
 		proposal:            proposalOpt,
-		proposalBody:        proposalBody,
-		proposalTitle:       proposalTitle,
+		proposalBody:        args.proposalBody,
+		proposalTitle:       args.proposalTitle,
 		propose:             propose,
-		prototype:           prototype,
+		prototype:           args.prototype,
 		remotes:             remotes,
 		stashSize:           stashSize,
 		targetBranch:        targetBranch,
