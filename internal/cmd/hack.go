@@ -72,6 +72,7 @@ func hackCmd() *cobra.Command {
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addCommitMessageFlag, readCommitMessageFlag := flags.CommitMessage("the commit message")
+	addNoAutoResolveFlag, readNoAutoResolveFlag := flags.NoAutoResolve()
 	addProposeFlag, readProposeFlag := flags.Propose()
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
@@ -87,7 +88,8 @@ func hackCmd() *cobra.Command {
 			commitMessage, err3 := readCommitMessageFlag(cmd)
 			detached, err4 := readDetachedFlag(cmd)
 			dryRun, err5 := readDryRunFlag(cmd)
-			propose, err6 := readProposeFlag(cmd)
+			noAutoResolve,
+				propose, err6 := readProposeFlag(cmd)
 			prototype, err7 := readPrototypeFlag(cmd)
 			verbose, err8 := readVerboseFlag(cmd)
 			if err := cmp.Or(err1, err2, err3, err4, err5, err6, err7, err8); err != nil {
@@ -100,7 +102,7 @@ func hackCmd() *cobra.Command {
 				DryRun:  dryRun,
 				Verbose: verbose,
 			}
-			return executeHack(args, cliConfig, beam, commit, commitMessage, detached, propose, prototype)
+			return executeHack(args, cliConfig, beam, commit, commitMessage, detached, noAutoResolve, propose, prototype)
 		},
 	}
 	addBeamFlag(&cmd)
@@ -114,7 +116,7 @@ func hackCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeHack(args []string, cliConfig cliconfig.CliConfig, beam configdomain.Beam, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, propose configdomain.Propose, prototype configdomain.Prototype) error {
+func executeHack(args []string, cliConfig cliconfig.CliConfig, beam configdomain.Beam, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, noAutoResolve configdomain.NoAutoResolve, propose configdomain.Propose, prototype configdomain.Prototype) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,
@@ -125,7 +127,7 @@ func executeHack(args []string, cliConfig cliconfig.CliConfig, beam configdomain
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineHackData(args, repo, cliConfig, beam, commit, commitMessage, detached, propose, prototype)
+	data, exit, err := determineHackData(args, repo, cliConfig, beam, commit, commitMessage, detached, noAutoResolve, propose, prototype)
 	if err != nil || exit {
 		return err
 	}
@@ -224,7 +226,7 @@ type createFeatureBranchArgs struct {
 	verbose               configdomain.Verbose
 }
 
-func determineHackData(args []string, repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig, beam configdomain.Beam, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, propose configdomain.Propose, prototype configdomain.Prototype) (data hackData, exit dialogdomain.Exit, err error) {
+func determineHackData(args []string, repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig, beam configdomain.Beam, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, noAutoResolve configdomain.NoAutoResolve, propose configdomain.Propose, prototype configdomain.Prototype) (data hackData, exit dialogdomain.Exit, err error) {
 	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -379,6 +381,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, cliConfig cli
 		initialBranchInfo:         initialBranchInfo,
 		inputs:                    inputs,
 		newBranchParentCandidates: gitdomain.LocalBranchNames{validatedConfig.ValidatedConfigData.MainBranch},
+		noAutoResolve:             noAutoResolve,
 		nonExistingBranches:       nonExistingBranches,
 		preFetchBranchInfos:       preFetchBranchSnapshot.Branches,
 		previousBranch:            previousBranch,
