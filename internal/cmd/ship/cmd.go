@@ -74,12 +74,12 @@ func Cmd() *cobra.Command {
 				Verbose: verbose,
 			}
 			return executeShip(executeShipArgs{
-				args:           args,
-				cliConfig:      cliConfig,
-				messageFileOpt: messageFile,
-				messageOpt:     message,
-				shipStrategy:   shipStrategyOverride,
-				toParent:       toParent,
+				args:         args,
+				cliConfig:    cliConfig,
+				messageFile:  messageFile,
+				message:      message,
+				shipStrategy: shipStrategyOverride,
+				toParent:     toParent,
 			})
 		},
 	}
@@ -93,12 +93,12 @@ func Cmd() *cobra.Command {
 }
 
 type executeShipArgs struct {
-	args           []string
-	cliConfig      cliconfig.CliConfig
-	messageFileOpt Option[gitdomain.CommitMessageFile]
-	messageOpt     Option[gitdomain.CommitMessage]
-	shipStrategy   Option[configdomain.ShipStrategy]
-	toParent       configdomain.ShipIntoNonperennialParent
+	args         []string
+	cliConfig    cliconfig.CliConfig
+	messageFile  Option[gitdomain.CommitMessageFile]
+	message      Option[gitdomain.CommitMessage]
+	shipStrategy Option[configdomain.ShipStrategy]
+	toParent     configdomain.ShipIntoNonperennialParent
 }
 
 func executeShip(args executeShipArgs) error {
@@ -116,7 +116,7 @@ func executeShip(args executeShipArgs) error {
 	if err != nil || exit {
 		return err
 	}
-	message, err := ReadFile(args.messageOpt, args.messageFileOpt)
+	message, err := ReadFile(args.message, args.messageFile)
 	if err != nil {
 		return err
 	}
