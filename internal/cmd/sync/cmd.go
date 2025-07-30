@@ -82,7 +82,14 @@ func Cmd() *cobra.Command {
 				DryRun:  dryRun,
 				Verbose: verbose,
 			}
-			return executeSync(cliConfig, allBranches, stack, detached, noAutoResolve, pushBranches, prune)
+			return executeSync(executeSyncArgs{
+				cliConfig:       cliConfig,
+				detached:        detached,
+				prune:           prune,
+				pushBranches:    pushBranches,
+				stack:           stack,
+				syncAllBranches: allBranches,
+			})
 		},
 	}
 	addAllFlag(&cmd)
@@ -96,9 +103,18 @@ func Cmd() *cobra.Command {
 	return &cmd
 }
 
-func executeSync(cliConfig cliconfig.CliConfig, syncAllBranches configdomain.AllBranches, syncStack configdomain.FullStack, detached configdomain.Detached, noAutoResolve configdomain.NoAutoResolve, pushBranches configdomain.PushBranches, prune configdomain.Prune) error {
+type executeSyncArgs struct {
+	cliConfig       cliconfig.CliConfig
+	detached        configdomain.Detached
+	prune           configdomain.Prune
+	pushBranches    configdomain.PushBranches
+	stack           configdomain.FullStack
+	syncAllBranches configdomain.AllBranches
+}
+
+func executeSync(args executeSyncArgs) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		CliConfig:        cliConfig,
+		CliConfig:        args.cliConfig,
 		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
@@ -107,7 +123,12 @@ func executeSync(cliConfig cliconfig.CliConfig, syncAllBranches configdomain.All
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineSyncData(cliConfig, syncAllBranches, syncStack, repo, detached)
+	data, exit, err := determineSyncData(repo, determineSyncDataArgs{
+		cliConfig:       args.cliConfig,
+		detached:        args.detached,
+		syncAllBranches: args.syncAllBranches,
+		syncStack:       args.stack,
+	})
 	if err != nil || exit {
 		return err
 	}
@@ -126,8 +147,8 @@ func executeSync(cliConfig cliconfig.CliConfig, syncAllBranches configdomain.All
 		NoAutoResolve:       noAutoResolve,
 		PrefetchBranchInfos: data.prefetchBranchesSnapshot.Branches,
 		Program:             runProgram,
-		Prune:               prune,
-		PushBranches:        pushBranches,
+		Prune:               args.prune,
+		PushBranches:        args.pushBranches,
 		Remotes:             data.remotes,
 	})
 	previousbranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
@@ -143,7 +164,7 @@ func executeSync(cliConfig cliconfig.CliConfig, syncAllBranches configdomain.All
 		runProgram.Value.Add(&opcodes.PushTags{})
 	}
 	cmdhelpers.Wrap(runProgram, cmdhelpers.WrapOptions{
-		DryRun:                   cliConfig.DryRun,
+		DryRun:                   args.cliConfig.DryRun,
 		InitialStashSize:         data.stashSize,
 		RunInGitRoot:             true,
 		StashOpenChanges:         data.hasOpenChanges,
@@ -155,7 +176,7 @@ func executeSync(cliConfig cliconfig.CliConfig, syncAllBranches configdomain.All
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        0,
 		Command:               syncCommand,
-		DryRun:                cliConfig.DryRun,
+		DryRun:                args.cliConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
@@ -169,7 +190,7 @@ func executeSync(cliConfig cliconfig.CliConfig, syncAllBranches configdomain.All
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               None[forgedomain.Connector](),
-		Detached:                detached,
+		Detached:                args.detached,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -182,7 +203,7 @@ func executeSync(cliConfig cliconfig.CliConfig, syncAllBranches configdomain.All
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
-		Verbose:                 cliConfig.Verbose,
+		Verbose:                 args.cliConfig.Verbose,
 	})
 }
 
@@ -204,7 +225,14 @@ type syncData struct {
 	stashSize                gitdomain.StashSize
 }
 
-func determineSyncData(cliConfig cliconfig.CliConfig, syncAllBranches configdomain.AllBranches, syncStack configdomain.FullStack, repo execute.OpenRepoResult, detached configdomain.Detached) (data syncData, exit dialogdomain.Exit, err error) {
+type determineSyncDataArgs struct {
+	cliConfig       cliconfig.CliConfig
+	detached        configdomain.Detached
+	syncAllBranches configdomain.AllBranches
+	syncStack       configdomain.FullStack
+}
+
+func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) (data syncData, exit dialogdomain.Exit, err error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	preFetchBranchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
@@ -238,7 +266,7 @@ func determineSyncData(cliConfig cliconfig.CliConfig, syncAllBranches configdoma
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
-		Detached:              detached,
+		Detached:              args.detached,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
@@ -250,7 +278,7 @@ func determineSyncData(cliConfig cliconfig.CliConfig, syncAllBranches configdoma
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               cliConfig.Verbose,
+		Verbose:               args.cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return data, exit, err
@@ -308,11 +336,11 @@ func determineSyncData(cliConfig cliconfig.CliConfig, syncAllBranches configdoma
 	perennialAndMain := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
 	var branchNamesToSync gitdomain.LocalBranchNames
 	switch {
-	case syncAllBranches.Enabled() && detached.IsTrue():
+	case args.syncAllBranches.Enabled() && args.detached.IsTrue():
 		branchNamesToSync = localBranches.Remove(perennialAndMain...)
-	case syncAllBranches.Enabled():
+	case args.syncAllBranches.Enabled():
 		branchNamesToSync = localBranches
-	case syncStack.Enabled():
+	case args.syncStack.Enabled():
 		branchNamesToSync = validatedConfig.NormalConfig.Lineage.BranchLineageWithoutRoot(initialBranch, perennialAndMain)
 	default:
 		branchNamesToSync = gitdomain.LocalBranchNames{initialBranch}
@@ -340,13 +368,13 @@ func determineSyncData(cliConfig cliconfig.CliConfig, syncAllBranches configdoma
 	switch {
 	case validatedConfig.NormalConfig.SyncTags.IsFalse():
 		shouldPushTags = false
-	case syncAllBranches.Enabled():
+	case args.syncAllBranches.Enabled():
 		shouldPushTags = true
 	default:
 		shouldPushTags = validatedConfig.IsMainOrPerennialBranch(initialBranch)
 	}
 	allBranchNamesToSync := validatedConfig.NormalConfig.Lineage.BranchesAndAncestors(branchNamesToSync)
-	if detached {
+	if args.detached {
 		allBranchNamesToSync = allBranchNamesToSync.Remove(perennialAndMain...)
 	}
 	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, allBranchNamesToSync...)
@@ -359,7 +387,7 @@ func determineSyncData(cliConfig cliconfig.CliConfig, syncAllBranches configdoma
 		branchesSnapshot:         branchesSnapshot,
 		branchesToSync:           branchesToSync,
 		config:                   validatedConfig,
-		detached:                 detached,
+		detached:                 args.detached,
 		hasOpenChanges:           repoStatus.OpenChanges,
 		initialBranch:            initialBranch,
 		inputs:                   inputs,
