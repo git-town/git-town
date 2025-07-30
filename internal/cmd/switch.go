@@ -51,7 +51,14 @@ func switchCmd() *cobra.Command {
 				DryRun:  false,
 				Verbose: verbose,
 			}
-			return executeSwitch(args, cliConfig, allBranches, merge, displayTypes, branchTypes)
+			return executeSwitch(executeSwitchArgs{
+				allBranches:  allBranches,
+				argv:         args,
+				branchTypes:  branchTypes,
+				cliConfig:    cliConfig,
+				displayTypes: displayTypes,
+				merge:        merge,
+			})
 		},
 	}
 	addAllFlag(&cmd)
@@ -62,9 +69,18 @@ func switchCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeSwitch(args []string, cliConfig cliconfig.CliConfig, allBranches configdomain.AllBranches, merge configdomain.SwitchUsingMerge, displayTypes configdomain.DisplayTypes, branchTypes []configdomain.BranchType) error {
+type executeSwitchArgs struct {
+	allBranches  configdomain.AllBranches
+	argv         []string
+	branchTypes  []configdomain.BranchType
+	cliConfig    cliconfig.CliConfig
+	displayTypes configdomain.DisplayTypes
+	merge        configdomain.SwitchUsingMerge
+}
+
+func executeSwitch(args executeSwitchArgs) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		CliConfig:        cliConfig,
+		CliConfig:        args.cliConfig,
 		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
@@ -73,7 +89,7 @@ func executeSwitch(args []string, cliConfig cliconfig.CliConfig, allBranches con
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineSwitchData(args, repo, cliConfig)
+	data, exit, err := determineSwitchData(args.argv, repo, args.cliConfig)
 	if err != nil || exit {
 		return err
 	}
@@ -81,13 +97,13 @@ func executeSwitch(args []string, cliConfig cliconfig.CliConfig, allBranches con
 	unknownBranchType := repo.UnvalidatedConfig.NormalConfig.UnknownBranchType
 	entries := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
 		BranchInfos:       data.branchesSnapshot.Branches,
-		BranchTypes:       branchTypes,
+		BranchTypes:       args.branchTypes,
 		BranchesAndTypes:  branchesAndTypes,
 		ExcludeBranches:   gitdomain.LocalBranchNames{},
 		Lineage:           data.config.NormalConfig.Lineage,
 		MainBranch:        repo.UnvalidatedConfig.UnvalidatedConfig.MainBranch,
 		Regexes:           data.regexes,
-		ShowAllBranches:   allBranches,
+		ShowAllBranches:   args.allBranches,
 		UnknownBranchType: unknownBranchType,
 	})
 	if len(entries) == 0 {
@@ -97,7 +113,7 @@ func executeSwitch(args []string, cliConfig cliconfig.CliConfig, allBranches con
 	branchToCheckout, exit, err := dialog.SwitchBranch(dialog.SwitchBranchArgs{
 		CurrentBranch:      Some(data.initialBranch),
 		Cursor:             cursor,
-		DisplayBranchTypes: displayTypes,
+		DisplayBranchTypes: args.displayTypes,
 		Entries:            entries,
 		InputName:          "switch-branch",
 		Inputs:             data.inputs,
@@ -110,7 +126,7 @@ func executeSwitch(args []string, cliConfig cliconfig.CliConfig, allBranches con
 	if branchToCheckout == data.initialBranch {
 		return nil
 	}
-	err = repo.Git.CheckoutBranch(repo.Frontend, branchToCheckout, merge)
+	err = repo.Git.CheckoutBranch(repo.Frontend, branchToCheckout, args.merge)
 	if err != nil {
 		exitCode := 1
 		var exitErr *exec.ExitError
