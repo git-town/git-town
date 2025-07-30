@@ -7,7 +7,14 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-// PartialConfig contains configuration data as it is stored in the local or global Git configuration.
+// PartialConfig contains configuration data as it is stored in one of the configuration sources for Git Town:
+// - local Git metadata
+// - global Git metadata
+// - the configuration file
+// - CLI arguments
+//
+// Any of these configuration data source can contain as much or as little configuration information as it wants.
+// Hence, all fields here are optional.
 type PartialConfig struct {
 	Aliases                  Aliases
 	BitbucketAppPassword     Option[forgedomain.BitbucketAppPassword]

@@ -66,7 +66,7 @@ func setParentCommand() *cobra.Command {
 		GroupID: cmdhelpers.GroupIDStack,
 		Args:    cobra.MaximumNArgs(1),
 		Short:   setParentDesc,
-		Long:    cmdhelpers.Long(setParentDesc),
+		Long:    cmdhelpers.Long(setParentDesc, setParentHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			verbose, err := readVerboseFlag(cmd)
 			if err != nil {
