@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(make:*)",
+      "Bash(gofmt:*)"
     ],
     "deny": []
   }
