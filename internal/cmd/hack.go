@@ -162,7 +162,6 @@ func executeHack(args hackArgs) error {
 			config:              convertToFeatureBranchData.config,
 			makeFeatureData:     convertToFeatureBranchData,
 			repo:                repo,
-			rootDir:             repo.RootDir,
 			verbose:             args.cliConfig.Verbose,
 		})
 	}
@@ -439,7 +438,7 @@ func convertToFeatureBranch(args convertToFeatureBranchArgs) error {
 		CommandsCounter:       args.repo.CommandsCounter,
 		FinalMessages:         args.repo.FinalMessages,
 		Git:                   args.repo.Git,
-		RootDir:               args.rootDir,
+		RootDir:               args.repo.RootDir,
 		TouchedBranches:       args.makeFeatureData.targetBranches.Keys().BranchNames(),
 		Verbose:               args.verbose,
 	})
@@ -450,6 +449,5 @@ type convertToFeatureBranchArgs struct {
 	config              config.ValidatedConfig
 	makeFeatureData     convertToFeatureData
 	repo                execute.OpenRepoResult
-	rootDir             gitdomain.RepoRootDir
 	verbose             configdomain.Verbose
 }
