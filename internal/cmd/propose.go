@@ -322,6 +322,7 @@ func determineProposeData(repo execute.OpenRepoResult, cliConfig cliconfig.CliCo
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
 		inputs:              inputs,
+		noAutoResolve:       noAutoResolve,
 		nonExistingBranches: nonExistingBranches,
 		preFetchBranchInfos: preFetchBranchSnapshot.Branches,
 		previousBranch:      previousBranch,
