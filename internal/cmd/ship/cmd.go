@@ -76,8 +76,8 @@ func Cmd() *cobra.Command {
 			return executeShip(executeShipArgs{
 				args:         args,
 				cliConfig:    cliConfig,
-				messageFile:  messageFile,
 				message:      message,
+				messageFile:  messageFile,
 				shipStrategy: shipStrategy,
 				toParent:     toParent,
 			})
@@ -95,8 +95,8 @@ func Cmd() *cobra.Command {
 type executeShipArgs struct {
 	args         []string
 	cliConfig    cliconfig.CliConfig
-	messageFile  Option[gitdomain.CommitMessageFile]
 	message      Option[gitdomain.CommitMessage]
+	messageFile  Option[gitdomain.CommitMessageFile]
 	shipStrategy Option[configdomain.ShipStrategy]
 	toParent     configdomain.ShipIntoNonperennialParent
 }
