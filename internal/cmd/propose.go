@@ -86,7 +86,7 @@ func proposeCommand() *cobra.Command {
 				body:      bodyText,
 				bodyFile:  bodyFile,
 				cliConfig: cliConfig,
-				fullStack: stack,
+				stack:     stack,
 				title:     title,
 			})
 		},
@@ -104,7 +104,7 @@ type proposeArgs struct {
 	body      Option[gitdomain.ProposalBody]
 	bodyFile  Option[gitdomain.ProposalBodyFile]
 	cliConfig cliconfig.CliConfig
-	fullStack configdomain.FullStack
+	stack     configdomain.FullStack
 	title     Option[gitdomain.ProposalTitle]
 }
 
@@ -270,7 +270,7 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (data p
 	perennialAndMain := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
 	var branchNamesToPropose gitdomain.LocalBranchNames
 	var branchNamesToSync gitdomain.LocalBranchNames
-	if args.fullStack {
+	if args.stack {
 		branchNamesToSync = validatedConfig.NormalConfig.Lineage.BranchLineageWithoutRoot(initialBranch, perennialAndMain)
 		branchNamesToPropose = make(gitdomain.LocalBranchNames, len(branchNamesToSync))
 		copy(branchNamesToPropose, branchNamesToSync)
