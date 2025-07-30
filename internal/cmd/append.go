@@ -90,7 +90,7 @@ func appendCmd() *cobra.Command {
 			propose, errPropose := readProposeFlag(cmd)
 			prototype, errPrototype := readPrototypeFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errBeam, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errVerbose); err != nil {
+			if err := cmp.Or(errBeam, errCommit, errCommitMessage, errDetached, errDryRun, errNoAutoResolve, errPropose, errPrototype, errVerbose); err != nil {
 				return err
 			}
 			if commitMessage.IsSome() || propose.IsTrue() {
@@ -107,6 +107,7 @@ func appendCmd() *cobra.Command {
 				commit:        commit,
 				commitMessage: commitMessage,
 				detached:      detached,
+				noAutoResolve: noAutoResolve,
 				propose:       propose,
 				prototype:     prototype,
 			})
@@ -192,6 +193,7 @@ type executeAppendArgs struct {
 	commit        configdomain.Commit
 	commitMessage Option[gitdomain.CommitMessage]
 	detached      configdomain.Detached
+	noAutoResolve configdomain.NoAutoResolve
 	propose       configdomain.Propose
 	prototype     configdomain.Prototype
 }
@@ -356,7 +358,7 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 		initialBranchInfo:         initialBranchInfo,
 		inputs:                    inputs,
 		newBranchParentCandidates: initialAndAncestors,
-		noAutoResolve:             noAutoResolve,
+		noAutoResolve:             args.noAutoResolve,
 		nonExistingBranches:       nonExistingBranches,
 		preFetchBranchInfos:       preFetchBranchSnapshot.Branches,
 		previousBranch:            previousBranch,
@@ -374,6 +376,7 @@ type determineAppendDataArgs struct {
 	commit        configdomain.Commit
 	commitMessage Option[gitdomain.CommitMessage]
 	detached      configdomain.Detached
+	noAutoResolve configdomain.NoAutoResolve
 	propose       configdomain.Propose
 	prototype     configdomain.Prototype
 	targetBranch  gitdomain.LocalBranchName
