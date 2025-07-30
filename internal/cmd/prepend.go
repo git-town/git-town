@@ -73,6 +73,7 @@ func prependCommand() *cobra.Command {
 	addCommitMessageFlag, readCommitMessageFlag := flags.CommitMessage("the commit message")
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addNoAutoResolveFlag, readNoAutoResolveFlag := flags.NoAutoResolve()
 	addProposeFlag, readProposeFlag := flags.Propose()
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
 	addTitleFlag, readTitleFlag := flags.ProposalTitle()
@@ -90,6 +91,7 @@ func prependCommand() *cobra.Command {
 			commitMessage, err4 := readCommitMessageFlag(cmd)
 			detached, err5 := readDetachedFlag(cmd)
 			dryRun, err6 := readDryRunFlag(cmd)
+			noAutoResolve, errNoAutoResolve := readNoAutoResolveFlag(cmd)
 			propose, err7 := readProposeFlag(cmd)
 			prototype, err8 := readPrototypeFlag(cmd)
 			title, err9 := readTitleFlag(cmd)
@@ -114,6 +116,7 @@ func prependCommand() *cobra.Command {
 				commit:        commit,
 				commitMessage: commitMessage,
 				detached:      detached,
+				noAutoResolve: noAutoResolve,
 				proposalBody:  bodyText,
 				proposalTitle: title,
 				propose:       propose,
