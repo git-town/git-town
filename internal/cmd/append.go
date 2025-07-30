@@ -121,6 +121,17 @@ func appendCmd() *cobra.Command {
 	return &cmd
 }
 
+type executeAppendArgs struct {
+	arg           string
+	beam          configdomain.Beam
+	cliConfig     cliconfig.CliConfig
+	commit        configdomain.Commit
+	commitMessage Option[gitdomain.CommitMessage]
+	detached      configdomain.Detached
+	propose       configdomain.Propose
+	prototype     configdomain.Prototype
+}
+
 func executeAppend(args executeAppendArgs) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        args.cliConfig,
@@ -180,17 +191,6 @@ func executeAppend(args executeAppendArgs) error {
 		RunState:                runState,
 		Verbose:                 args.cliConfig.Verbose,
 	})
-}
-
-type executeAppendArgs struct {
-	arg           string
-	beam          configdomain.Beam
-	cliConfig     cliconfig.CliConfig
-	commit        configdomain.Commit
-	commitMessage Option[gitdomain.CommitMessage]
-	detached      configdomain.Detached
-	propose       configdomain.Propose
-	prototype     configdomain.Prototype
 }
 
 type appendFeatureData struct {

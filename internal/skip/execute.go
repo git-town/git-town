@@ -23,6 +23,23 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
+type ExecuteArgs struct {
+	Backend         subshelldomain.RunnerQuerier
+	CommandsCounter Mutable[gohacks.Counter]
+	Config          config.ValidatedConfig
+	Connector       Option[forgedomain.Connector]
+	Detached        configdomain.Detached
+	FinalMessages   stringslice.Collector
+	Frontend        subshelldomain.Runner
+	Git             git.Commands
+	HasOpenChanges  bool
+	InitialBranch   gitdomain.LocalBranchName
+	Inputs          dialogcomponents.Inputs
+	RootDir         gitdomain.RepoRootDir
+	RunState        runstate.RunState
+	Verbose         configdomain.Verbose
+}
+
 // executes the "skip" command at the given runstate
 func Execute(args ExecuteArgs) error {
 	lightinterpreter.Execute(lightinterpreter.ExecuteArgs{
@@ -60,23 +77,6 @@ func Execute(args ExecuteArgs) error {
 		RunState:                args.RunState,
 		Verbose:                 args.Verbose,
 	})
-}
-
-type ExecuteArgs struct {
-	Backend         subshelldomain.RunnerQuerier
-	CommandsCounter Mutable[gohacks.Counter]
-	Config          config.ValidatedConfig
-	Connector       Option[forgedomain.Connector]
-	Detached        configdomain.Detached
-	FinalMessages   stringslice.Collector
-	Frontend        subshelldomain.Runner
-	Git             git.Commands
-	HasOpenChanges  bool
-	InitialBranch   gitdomain.LocalBranchName
-	Inputs          dialogcomponents.Inputs
-	RootDir         gitdomain.RepoRootDir
-	RunState        runstate.RunState
-	Verbose         configdomain.Verbose
 }
 
 // removes the remaining opcodes for the current branch from the given program

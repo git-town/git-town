@@ -123,6 +123,17 @@ func hackCmd() *cobra.Command {
 	return &cmd
 }
 
+type hackArgs struct {
+	argv          []string
+	beam          configdomain.Beam
+	cliConfig     cliconfig.CliConfig
+	commit        configdomain.Commit
+	commitMessage Option[gitdomain.CommitMessage]
+	detached      configdomain.Detached
+	propose       configdomain.Propose
+	prototype     configdomain.Prototype
+}
+
 func executeHack(args hackArgs) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        args.cliConfig,
@@ -179,6 +190,22 @@ type convertToFeatureData struct {
 	targetBranches configdomain.BranchesAndTypes
 }
 
+type createFeatureBranchArgs struct {
+	appendData            appendFeatureData
+	backend               subshelldomain.RunnerQuerier
+	beginBranchesSnapshot gitdomain.BranchesSnapshot
+	beginConfigSnapshot   undoconfig.ConfigSnapshot
+	beginStashSize        gitdomain.StashSize
+	branchInfosLastRun    Option[gitdomain.BranchInfos]
+	commandsCounter       Mutable[gohacks.Counter]
+	dryRun                configdomain.DryRun
+	finalMessages         stringslice.Collector
+	frontend              subshelldomain.Runner
+	git                   git.Commands
+	rootDir               gitdomain.RepoRootDir
+	verbose               configdomain.Verbose
+}
+
 func createFeatureBranch(args createFeatureBranchArgs) error {
 	runProgram := appendProgram(args.backend, args.appendData, args.finalMessages, true)
 	runState := runstate.RunState{
@@ -215,22 +242,6 @@ func createFeatureBranch(args createFeatureBranchArgs) error {
 		RunState:                runState,
 		Verbose:                 args.verbose,
 	})
-}
-
-type createFeatureBranchArgs struct {
-	appendData            appendFeatureData
-	backend               subshelldomain.RunnerQuerier
-	beginBranchesSnapshot gitdomain.BranchesSnapshot
-	beginConfigSnapshot   undoconfig.ConfigSnapshot
-	beginStashSize        gitdomain.StashSize
-	branchInfosLastRun    Option[gitdomain.BranchInfos]
-	commandsCounter       Mutable[gohacks.Counter]
-	dryRun                configdomain.DryRun
-	finalMessages         stringslice.Collector
-	frontend              subshelldomain.Runner
-	git                   git.Commands
-	rootDir               gitdomain.RepoRootDir
-	verbose               configdomain.Verbose
 }
 
 func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data hackData, exit dialogdomain.Exit, err error) {
@@ -400,15 +411,13 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data hackDat
 	return data, false, err
 }
 
-type hackArgs struct {
-	argv          []string
-	beam          configdomain.Beam
-	cliConfig     cliconfig.CliConfig
-	commit        configdomain.Commit
-	commitMessage Option[gitdomain.CommitMessage]
-	detached      configdomain.Detached
-	propose       configdomain.Propose
-	prototype     configdomain.Prototype
+type convertToFeatureBranchArgs struct {
+	beginConfigSnapshot undoconfig.ConfigSnapshot
+	config              config.ValidatedConfig
+	makeFeatureData     convertToFeatureData
+	repo                execute.OpenRepoResult
+	rootDir             gitdomain.RepoRootDir
+	verbose             configdomain.Verbose
 }
 
 func convertToFeatureBranch(args convertToFeatureBranchArgs) error {
@@ -443,13 +452,4 @@ func convertToFeatureBranch(args convertToFeatureBranchArgs) error {
 		TouchedBranches:       args.makeFeatureData.targetBranches.Keys().BranchNames(),
 		Verbose:               args.verbose,
 	})
-}
-
-type convertToFeatureBranchArgs struct {
-	beginConfigSnapshot undoconfig.ConfigSnapshot
-	config              config.ValidatedConfig
-	makeFeatureData     convertToFeatureData
-	repo                execute.OpenRepoResult
-	rootDir             gitdomain.RepoRootDir
-	verbose             configdomain.Verbose
 }
