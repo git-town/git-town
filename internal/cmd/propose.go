@@ -69,13 +69,13 @@ func proposeCommand() *cobra.Command {
 		Short:   proposeDesc,
 		Long:    cmdhelpers.Long(proposeDesc, fmt.Sprintf(proposeHelp, configdomain.KeyForgeType, configdomain.KeyHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			bodyFile, err1 := readBodyFileFlag(cmd)
-			bodyText, err2 := readBodyFlag(cmd)
-			dryRun, err3 := readDryRunFlag(cmd)
-			stack, err4 := readStackFlag(cmd)
-			title, err5 := readTitleFlag(cmd)
-			verbose, err6 := readVerboseFlag(cmd)
-			if err := cmp.Or(err1, err2, err3, err4, err5, err6); err != nil {
+			bodyFile, errBodyFile := readBodyFileFlag(cmd)
+			bodyText, errBodyText := readBodyFlag(cmd)
+			dryRun, errDryRun := readDryRunFlag(cmd)
+			stack, errStack := readStackFlag(cmd)
+			title, errTitle := readTitleFlag(cmd)
+			verbose, errVerbose := readVerboseFlag(cmd)
+			if err := cmp.Or(errBodyFile, errBodyText, errDryRun, errStack, errTitle, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.CliConfig{
@@ -86,7 +86,7 @@ func proposeCommand() *cobra.Command {
 				body:      bodyText,
 				bodyFile:  bodyFile,
 				cliConfig: cliConfig,
-				fullStack: stack,
+				stack:     stack,
 				title:     title,
 			})
 		},
@@ -98,6 +98,14 @@ func proposeCommand() *cobra.Command {
 	addTitleFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
+}
+
+type proposeArgs struct {
+	body      Option[gitdomain.ProposalBody]
+	bodyFile  Option[gitdomain.ProposalBodyFile]
+	cliConfig cliconfig.CliConfig
+	stack     configdomain.FullStack
+	title     Option[gitdomain.ProposalTitle]
 }
 
 func executePropose(args proposeArgs) error {
@@ -270,7 +278,7 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (data p
 	perennialAndMain := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
 	var branchNamesToPropose gitdomain.LocalBranchNames
 	var branchNamesToSync gitdomain.LocalBranchNames
-	if args.fullStack {
+	if args.stack {
 		branchNamesToSync = validatedConfig.NormalConfig.Lineage.BranchLineageWithoutRoot(initialBranch, perennialAndMain)
 		branchNamesToPropose = make(gitdomain.LocalBranchNames, len(branchNamesToSync))
 		copy(branchNamesToPropose, branchNamesToSync)

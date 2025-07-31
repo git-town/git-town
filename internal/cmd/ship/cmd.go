@@ -63,7 +63,7 @@ func Cmd() *cobra.Command {
 			dryRun, err1 := readDryRunFlag(cmd)
 			message, err2 := readMessageFlag(cmd)
 			messageFile, err3 := readMessageFileFlag(cmd)
-			shipStrategyOverride, err4 := readShipStrategyFlag(cmd)
+			shipStrategy, err4 := readShipStrategyFlag(cmd)
 			toParent, err5 := readToParentFlag(cmd)
 			verbose, err6 := readVerboseFlag(cmd)
 			if err := cmp.Or(err1, err2, err3, err4, err5, err6); err != nil {
@@ -74,12 +74,12 @@ func Cmd() *cobra.Command {
 				Verbose: verbose,
 			}
 			return executeShip(executeShipArgs{
-				args:           args,
-				cliConfig:      cliConfig,
-				messageOpt:     message,
-				messageFileOpt: messageFile,
-				shipStrategy:   shipStrategyOverride,
-				toParent:       toParent,
+				args:         args,
+				cliConfig:    cliConfig,
+				message:      message,
+				messageFile:  messageFile,
+				shipStrategy: shipStrategy,
+				toParent:     toParent,
 			})
 		},
 	}
@@ -92,9 +92,18 @@ func Cmd() *cobra.Command {
 	return &cmd
 }
 
+type executeShipArgs struct {
+	args         []string
+	cliConfig    cliconfig.CliConfig
+	message      Option[gitdomain.CommitMessage]
+	messageFile  Option[gitdomain.CommitMessageFile]
+	shipStrategy Option[configdomain.ShipStrategy]
+	toParent     configdomain.ShipIntoNonperennialParent
+}
+
 func executeShip(args executeShipArgs) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		CliConfig:        cliConfig,
+		CliConfig:        args.cliConfig,
 		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
@@ -103,15 +112,15 @@ func executeShip(args executeShipArgs) error {
 	if err != nil {
 		return err
 	}
-	sharedData, exit, err := determineSharedShipData(args, repo, cliConfig, shipStrategy)
+	sharedData, exit, err := determineSharedShipData(args.args, repo, args.cliConfig, args.shipStrategy)
 	if err != nil || exit {
 		return err
 	}
-	message, err := ReadFile(messageOpt, messageFileOpt)
+	message, err := ReadFile(args.message, args.messageFile)
 	if err != nil {
 		return err
 	}
-	if err = validateSharedData(sharedData, toParent, message); err != nil {
+	if err = validateSharedData(sharedData, args.toParent, message); err != nil {
 		return err
 	}
 	prog := NewMutable(&program.Program{})
@@ -149,7 +158,7 @@ func executeShip(args executeShipArgs) error {
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        sharedData.stashSize,
 		Command:               shipCommand,
-		DryRun:                cliConfig.DryRun,
+		DryRun:                args.cliConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
@@ -176,7 +185,7 @@ func executeShip(args executeShipArgs) error {
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
-		Verbose:                 cliConfig.Verbose,
+		Verbose:                 args.cliConfig.Verbose,
 	})
 }
 

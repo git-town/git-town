@@ -84,17 +84,17 @@ func prependCommand() *cobra.Command {
 		Short:   prependDesc,
 		Long:    cmdhelpers.Long(prependDesc, prependHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			beam, err1 := readBeamFlag(cmd)
-			bodyText, err2 := readBodyFlag(cmd)
-			commit, err3 := readCommitFlag(cmd)
-			commitMessage, err4 := readCommitMessageFlag(cmd)
-			detached, err5 := readDetachedFlag(cmd)
-			dryRun, err6 := readDryRunFlag(cmd)
-			propose, err7 := readProposeFlag(cmd)
-			prototype, err8 := readPrototypeFlag(cmd)
-			title, err9 := readTitleFlag(cmd)
-			verbose, err10 := readVerboseFlag(cmd)
-			if err := cmp.Or(err1, err2, err3, err4, err5, err6, err7, err8, err9, err10); err != nil {
+			beam, errBeam := readBeamFlag(cmd)
+			bodyText, errBodyText := readBodyFlag(cmd)
+			commit, errCommit := readCommitFlag(cmd)
+			commitMessage, errCommitMessage := readCommitMessageFlag(cmd)
+			detached, errDetached := readDetachedFlag(cmd)
+			dryRun, errDryRun := readDryRunFlag(cmd)
+			propose, errPropose := readProposeFlag(cmd)
+			prototype, errPrototype := readPrototypeFlag(cmd)
+			title, errTitle := readTitleFlag(cmd)
+			verbose, errVerbose := readVerboseFlag(cmd)
+			if err := cmp.Or(errBeam, errBodyText, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errTitle, errVerbose); err != nil {
 				return err
 			}
 			if commitMessage.IsSome() {
@@ -107,8 +107,8 @@ func prependCommand() *cobra.Command {
 				DryRun:  dryRun,
 				Verbose: verbose,
 			}
-			return executePrepend(executePrependArgs{
-				args:          args,
+			return executePrepend(prependArgs{
+				argv:          args,
 				beam:          beam,
 				cliConfig:     cliConfig,
 				commit:        commit,
@@ -134,7 +134,20 @@ func prependCommand() *cobra.Command {
 	return &cmd
 }
 
-func executePrepend(args executePrependArgs) error {
+type prependArgs struct {
+	argv          []string
+	beam          configdomain.Beam
+	cliConfig     cliconfig.CliConfig
+	commit        configdomain.Commit
+	commitMessage Option[gitdomain.CommitMessage]
+	detached      configdomain.Detached
+	proposalBody  Option[gitdomain.ProposalBody]
+	proposalTitle Option[gitdomain.ProposalTitle]
+	propose       configdomain.Propose
+	prototype     configdomain.Prototype
+}
+
+func executePrepend(args prependArgs) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        args.cliConfig,
 		PrintBranchNames: true,
@@ -229,12 +242,7 @@ type prependData struct {
 	targetBranch        gitdomain.LocalBranchName
 }
 
-type determinePrependDataArgs struct {
-	executePrependArgs
-	repo execute.OpenRepoResult
-}
-
-func determinePrependData(args executePrependArgs, repo execute.OpenRepoResult) (data prependData, exit dialogdomain.Exit, err error) {
+func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (data prependData, exit dialogdomain.Exit, err error) {
 	prefetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -290,7 +298,7 @@ func determinePrependData(args executePrependArgs, repo execute.OpenRepoResult) 
 	if err != nil {
 		return data, false, err
 	}
-	targetBranch := gitdomain.NewLocalBranchName(args.args[0])
+	targetBranch := gitdomain.NewLocalBranchName(args.argv[0])
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
 		return data, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
@@ -356,8 +364,9 @@ func determinePrependData(args executePrependArgs, repo execute.OpenRepoResult) 
 	if !repo.IsOffline {
 		proposalOpt = ship.FindProposal(connector, initialBranch, Some(ancestor))
 	}
+	propose := args.propose
 	if validatedConfig.NormalConfig.ShareNewBranches == configdomain.ShareNewBranchesPropose {
-		args.propose = true
+		propose = true
 	}
 	return prependData{
 		beam:                args.beam,
@@ -382,7 +391,7 @@ func determinePrependData(args executePrependArgs, repo execute.OpenRepoResult) 
 		proposal:            proposalOpt,
 		proposalBody:        args.proposalBody,
 		proposalTitle:       args.proposalTitle,
-		propose:             args.propose,
+		propose:             propose,
 		prototype:           args.prototype,
 		remotes:             remotes,
 		stashSize:           stashSize,
