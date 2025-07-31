@@ -359,7 +359,6 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 						Upstream:           None[gitdomain.LocalBranchName](),
 					},
 				)
-
 			} else {
 				prog.Add(
 					&opcodes.RebaseBranch{
