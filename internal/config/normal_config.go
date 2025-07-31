@@ -225,6 +225,7 @@ func (self *NormalConfig) SetPerennialBranches(runner subshelldomain.Runner, bra
 func DefaultNormalConfig() NormalConfig {
 	return NormalConfig{
 		Aliases:                  configdomain.Aliases{},
+		AutoResolve:              true,
 		BitbucketAppPassword:     None[forgedomain.BitbucketAppPassword](),
 		BitbucketUsername:        None[forgedomain.BitbucketUsername](),
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{},
@@ -266,6 +267,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 	syncFeatureStrategy := partial.SyncFeatureStrategy.GetOrElse(defaults.SyncFeatureStrategy)
 	return NormalConfig{
 		Aliases:                  partial.Aliases,
+		AutoResolve:              partial.AutoResolve.GetOrElse(defaults.AutoResolve),
 		BitbucketAppPassword:     partial.BitbucketAppPassword,
 		BitbucketUsername:        partial.BitbucketUsername,
 		BranchTypeOverrides:      partial.BranchTypeOverrides,

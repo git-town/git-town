@@ -8,7 +8,7 @@ import (
 )
 
 type NewArgs struct {
-	AutoResolve configdomain.AutoResolve
+	AutoResolve Option[configdomain.AutoResolve]
 	DryRun      Option[configdomain.DryRun]
 	Verbose     Option[configdomain.Verbose]
 }
@@ -16,6 +16,7 @@ type NewArgs struct {
 func New(args NewArgs) configdomain.PartialConfig {
 	return configdomain.PartialConfig{
 		Aliases:                  configdomain.Aliases{},
+		AutoResolve:              args.AutoResolve,
 		BitbucketAppPassword:     None[forgedomain.BitbucketAppPassword](),
 		BitbucketUsername:        None[forgedomain.BitbucketUsername](),
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{},

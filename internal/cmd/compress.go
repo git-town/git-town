@@ -83,7 +83,7 @@ func compressCmd() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve: false,
+				AutoResolve: None[configdomain.AutoResolve](),
 				DryRun:      dryRun,
 				Verbose:     verbose,
 			})
