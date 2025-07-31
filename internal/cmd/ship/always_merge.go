@@ -9,39 +9,46 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-func shipProgramAlwaysMerge(prog Mutable[program.Program], repo execute.OpenRepoResult, sharedData sharedShipData, mergeData shipDataMerge, commitMessage Option[gitdomain.CommitMessage]) {
-	prog.Value.Add(&opcodes.BranchEnsureShippableChanges{Branch: sharedData.branchNameToShip, Parent: sharedData.targetBranchName})
-	if sharedData.initialBranch != sharedData.targetBranchName {
-		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: sharedData.targetBranchName})
+type shipProgramAlwaysMergeArgs struct {
+	commitMessage Option[gitdomain.CommitMessage]
+	mergeData     shipDataMerge
+	prog          Mutable[program.Program]
+	sharedData    sharedShipData
+}
+
+func shipProgramAlwaysMerge(repo execute.OpenRepoResult, args shipProgramAlwaysMergeArgs) {
+	args.prog.Value.Add(&opcodes.BranchEnsureShippableChanges{Branch: args.sharedData.branchNameToShip, Parent: args.sharedData.targetBranchName})
+	if args.sharedData.initialBranch != args.sharedData.targetBranchName {
+		args.prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: args.sharedData.targetBranchName})
 	}
-	if mergeData.remotes.HasRemote(sharedData.config.NormalConfig.DevRemote) && sharedData.config.NormalConfig.Offline.IsOnline() {
-		UpdateChildBranchProposalsToGrandParent(prog.Value, sharedData.proposalsOfChildBranches)
+	if args.mergeData.remotes.HasRemote(args.sharedData.config.NormalConfig.DevRemote) && args.sharedData.config.NormalConfig.Offline.IsOnline() {
+		UpdateChildBranchProposalsToGrandParent(args.prog.Value, args.sharedData.proposalsOfChildBranches)
 	}
-	prog.Value.Add(&opcodes.MergeAlwaysProgram{Branch: sharedData.branchNameToShip, CommitMessage: commitMessage})
-	if mergeData.remotes.HasRemote(sharedData.config.NormalConfig.DevRemote) && sharedData.config.NormalConfig.Offline.IsOnline() {
-		prog.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: sharedData.targetBranchName})
+	args.prog.Value.Add(&opcodes.MergeAlwaysProgram{Branch: args.sharedData.branchNameToShip, CommitMessage: args.commitMessage})
+	if args.mergeData.remotes.HasRemote(args.sharedData.config.NormalConfig.DevRemote) && args.sharedData.config.NormalConfig.Offline.IsOnline() {
+		args.prog.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: args.sharedData.targetBranchName})
 	}
-	if branchToShipRemoteName, hasRemoteName := sharedData.branchToShip.RemoteName.Get(); hasRemoteName {
-		if sharedData.config.NormalConfig.Offline.IsOnline() {
-			if sharedData.config.NormalConfig.ShipDeleteTrackingBranch {
-				prog.Value.Add(&opcodes.BranchTrackingDelete{Branch: branchToShipRemoteName})
+	if branchToShipRemoteName, hasRemoteName := args.sharedData.branchToShip.RemoteName.Get(); hasRemoteName {
+		if args.sharedData.config.NormalConfig.Offline.IsOnline() {
+			if args.sharedData.config.NormalConfig.ShipDeleteTrackingBranch {
+				args.prog.Value.Add(&opcodes.BranchTrackingDelete{Branch: branchToShipRemoteName})
 			}
 		}
 	}
-	for _, child := range sharedData.childBranches {
-		prog.Value.Add(&opcodes.LineageParentSetToGrandParent{Branch: child})
+	for _, child := range args.sharedData.childBranches {
+		args.prog.Value.Add(&opcodes.LineageParentSetToGrandParent{Branch: child})
 	}
-	prog.Value.Add(&opcodes.LineageParentRemove{Branch: sharedData.branchNameToShip})
-	if !sharedData.isShippingInitialBranch {
-		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: sharedData.initialBranch})
+	args.prog.Value.Add(&opcodes.LineageParentRemove{Branch: args.sharedData.branchNameToShip})
+	if !args.sharedData.isShippingInitialBranch {
+		args.prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: args.sharedData.initialBranch})
 	}
-	prog.Value.Add(&opcodes.BranchLocalDelete{Branch: sharedData.branchNameToShip})
-	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{sharedData.previousBranch}
-	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
+	args.prog.Value.Add(&opcodes.BranchLocalDelete{Branch: args.sharedData.branchNameToShip})
+	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{args.sharedData.previousBranch}
+	cmdhelpers.Wrap(args.prog, cmdhelpers.WrapOptions{
 		DryRun:                   repo.UnvalidatedConfig.NormalConfig.DryRun,
-		InitialStashSize:         sharedData.stashSize,
+		InitialStashSize:         args.sharedData.stashSize,
 		RunInGitRoot:             true,
-		StashOpenChanges:         !sharedData.isShippingInitialBranch && sharedData.hasOpenChanges,
+		StashOpenChanges:         !args.sharedData.isShippingInitialBranch && args.sharedData.hasOpenChanges,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
 }
