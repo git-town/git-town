@@ -6,12 +6,10 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/pkg/asserts"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -21,12 +19,8 @@ func enterCommitsToBeam() *cobra.Command {
 		Args: cobra.ExactArgs(1),
 		RunE: func(_ *cobra.Command, args []string) error {
 			amount := asserts.NoError1(strconv.ParseInt(args[0], 10, 64))
-			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				DryRun:  None[configdomain.DryRun](),
-				Verbose: None[configdomain.Verbose](),
-			})
 			repo := asserts.NoError1(execute.OpenRepo(execute.OpenRepoArgs{
-				CliConfig:        cliConfig,
+				CliConfig:        configdomain.EmptyPartialConfig(),
 				PrintBranchNames: true,
 				PrintCommands:    true,
 				ValidateGitRepo:  true,
