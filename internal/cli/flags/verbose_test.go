@@ -25,6 +25,18 @@ func TestVerbose(t *testing.T) {
 		must.True(t, have.EqualSome(true))
 	})
 
+	t.Run("nothing given", func(t *testing.T) {
+		t.Parallel()
+		cmd := cobra.Command{}
+		addFlag, readFlag := flags.Verbose()
+		addFlag(&cmd)
+		err := cmd.ParseFlags([]string{""})
+		must.NoError(t, err)
+		have, err := readFlag(&cmd)
+		must.NoError(t, err)
+		must.Eq(t, None[configdomain.Verbose](), have)
+	})
+
 	t.Run("short version", func(t *testing.T) {
 		t.Parallel()
 		cmd := cobra.Command{}
@@ -34,6 +46,6 @@ func TestVerbose(t *testing.T) {
 		must.NoError(t, err)
 		have, err := readFlag(&cmd)
 		must.NoError(t, err)
-		must.Eq(t, None[configdomain.Verbose](), have)
+		must.True(t, have.EqualSome(true))
 	})
 }

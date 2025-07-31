@@ -32,7 +32,7 @@ func New(args NewArgs) configdomain.PartialConfig {
 		GitUserName:              None[gitdomain.GitUserName](),
 		GiteaToken:               None[forgedomain.GiteaToken](),
 		HostingOriginHostname:    None[configdomain.HostingOriginHostname](),
-		Lineage:                  configdomain.Lineage{},
+		Lineage:                  configdomain.NewLineage(),
 		MainBranch:               None[gitdomain.LocalBranchName](),
 		NewBranchType:            None[configdomain.NewBranchType](),
 		ObservedRegex:            None[configdomain.ObservedRegex](),
