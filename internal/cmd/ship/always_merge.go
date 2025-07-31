@@ -9,6 +9,14 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
+type shipProgramAlwaysMergeArgs struct {
+	commitMessage Option[gitdomain.CommitMessage]
+	mergeData     shipDataMerge
+	prog          Mutable[program.Program]
+	repo          execute.OpenRepoResult
+	sharedData    sharedShipData
+}
+
 func shipProgramAlwaysMerge(args shipProgramAlwaysMergeArgs) {
 	args.prog.Value.Add(&opcodes.BranchEnsureShippableChanges{Branch: args.sharedData.branchNameToShip, Parent: args.sharedData.targetBranchName})
 	if args.sharedData.initialBranch != args.sharedData.targetBranchName {
@@ -44,12 +52,4 @@ func shipProgramAlwaysMerge(args shipProgramAlwaysMergeArgs) {
 		StashOpenChanges:         !args.sharedData.isShippingInitialBranch && args.sharedData.hasOpenChanges,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
-}
-
-type shipProgramAlwaysMergeArgs struct {
-	commitMessage Option[gitdomain.CommitMessage]
-	mergeData     shipDataMerge
-	prog          Mutable[program.Program]
-	repo          execute.OpenRepoResult
-	sharedData    sharedShipData
 }
