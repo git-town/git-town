@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const autoResolveLong = "no-auto-resolve"
+const autoResolveLong = "auto-resolve"
 
 // type-safe access to the CLI arguments of type configdomain.AutoResolve
 func AutoResolve() (AddFunc, ReadAutoResolveFlagFunc) {
@@ -23,5 +23,5 @@ func AutoResolve() (AddFunc, ReadAutoResolveFlagFunc) {
 	return addFlag, readFlag
 }
 
-// ReadAutoResolveFlagFunc is the type signature for the function that reads the "no-auto-resolve" flag from the args to the given Cobra command.
+// ReadAutoResolveFlagFunc is the type signature for the function that reads the "auto-resolve" flag from the args to the given Cobra command.
 type ReadAutoResolveFlagFunc func(*cobra.Command) (Option[configdomain.AutoResolve], error)
