@@ -342,6 +342,14 @@ func compressProgram(data compressBranchesData, commitHook configdomain.CommitHo
 	return optimizer.Optimize(prog.Immutable())
 }
 
+type compressBranchProgramArgs struct {
+	commitHook    configdomain.CommitHook
+	data          compressBranchData
+	initialBranch gitdomain.LocalBranchName
+	offline       configdomain.Offline
+	prog          Mutable[program.Program]
+}
+
 func compressBranchProgram(args compressBranchProgramArgs) {
 	if !shouldCompressBranch(args.data.name, args.data.branchType, args.initialBranch) {
 		return
@@ -356,14 +364,6 @@ func compressBranchProgram(args compressBranchProgramArgs) {
 	if args.data.hasTracking && args.offline.IsOnline() {
 		args.prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: args.data.name, ForceIfIncludes: true})
 	}
-}
-
-type compressBranchProgramArgs struct {
-	commitHook    configdomain.CommitHook
-	data          compressBranchData
-	initialBranch gitdomain.LocalBranchName
-	offline       configdomain.Offline
-	prog          Mutable[program.Program]
 }
 
 func shouldCompressBranch(branchName gitdomain.LocalBranchName, branchType configdomain.BranchType, initialBranchName gitdomain.LocalBranchName) bool {
