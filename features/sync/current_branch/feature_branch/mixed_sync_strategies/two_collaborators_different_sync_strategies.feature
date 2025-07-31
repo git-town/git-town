@@ -22,6 +22,7 @@ Feature: compatibility between different sync-feature-strategy settings
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
       |         | git push --force-with-lease --force-if-includes |
+      |         | git -c rebase.updateRefs=false rebase main      |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT     |
       | feature | local, origin | my first commit | file.txt  | my first content |
