@@ -6,7 +6,6 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v21/internal/config"
-	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/git"
@@ -94,10 +93,7 @@ func New(workingDir, homeDir, binDir string) commands.TestCommands {
 		RemotesCache:       &cache.Cache[gitdomain.Remotes]{},
 	}
 	unvalidatedConfig := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
-		CliConfig: cliconfig.CliConfig{
-			DryRun:  false,
-			Verbose: false,
-		},
+		CliConfig:     configdomain.EmptyPartialConfig(),
 		ConfigFile:    configdomain.EmptyPartialConfig(),
 		Defaults:      config.DefaultNormalConfig(),
 		EnvConfig:     configdomain.EmptyPartialConfig(),

@@ -7,7 +7,9 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v21/internal/config/cliconfig"
+	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/execute"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -25,10 +27,10 @@ func showRunstateCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			cliConfig := cliconfig.CliConfig{
-				DryRun:  false,
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				DryRun:  None[configdomain.DryRun](),
 				Verbose: verbose,
-			}
+			})
 			return executeStatusShow(cliConfig)
 		},
 	}
@@ -36,7 +38,7 @@ func showRunstateCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeStatusShow(cliConfig cliconfig.CliConfig) error {
+func executeStatusShow(cliConfig configdomain.PartialConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,
@@ -52,7 +54,7 @@ func executeStatusShow(cliConfig cliconfig.CliConfig) error {
 		return err
 	}
 	showStatus(data)
-	print.Footer(cliConfig.Verbose, *repo.CommandsCounter.Value, []string{})
+	print.Footer(repo.UnvalidatedConfig.NormalConfig.Verbose, *repo.CommandsCounter.Value, []string{})
 	return nil
 }
 

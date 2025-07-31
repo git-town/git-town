@@ -36,10 +36,10 @@ func RootCommand() *cobra.Command {
 			if err := cmp.Or(err1, err2); err != nil {
 				return err
 			}
-			cliConfig := cliconfig.CliConfig{
-				DryRun:  false,
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				DryRun:  None[configdomain.DryRun](),
 				Verbose: verbose,
-			}
+			})
 			return executeStatus(cliConfig, pending)
 		},
 	}
@@ -50,7 +50,7 @@ func RootCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeStatus(cliConfig cliconfig.CliConfig, pending configdomain.Pending) error {
+func executeStatus(cliConfig configdomain.PartialConfig, pending configdomain.Pending) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,
@@ -70,7 +70,7 @@ func executeStatus(cliConfig cliconfig.CliConfig, pending configdomain.Pending) 
 	}
 	displayStatus(data, pending)
 	if !pending {
-		print.Footer(cliConfig.Verbose, *repo.CommandsCounter.Value, []string{})
+		print.Footer(repo.UnvalidatedConfig.NormalConfig.Verbose, *repo.CommandsCounter.Value, []string{})
 	}
 	return nil
 }
