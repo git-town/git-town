@@ -82,10 +82,10 @@ func compressCmd() *cobra.Command {
 			if err := cmp.Or(err1, err2, err3, err4, err5); err != nil {
 				return err
 			}
-			cliConfig := cliconfig.CliConfig{
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				DryRun:  dryRun,
 				Verbose: verbose,
-			}
+			})
 			return executeCompress(cliConfig, message, commitHook, stack)
 		},
 	}
@@ -97,7 +97,7 @@ func compressCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeCompress(cliConfig cliconfig.CliConfig, message Option[gitdomain.CommitMessage], commitHook configdomain.CommitHook, compressEntireStack configdomain.FullStack) error {
+func executeCompress(cliConfig configdomain.PartialConfig, message Option[gitdomain.CommitMessage], commitHook configdomain.CommitHook, compressEntireStack configdomain.FullStack) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,
@@ -108,7 +108,7 @@ func executeCompress(cliConfig cliconfig.CliConfig, message Option[gitdomain.Com
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineCompressBranchesData(repo, cliConfig, message, compressEntireStack)
+	data, exit, err := determineCompressBranchesData(repo, message, compressEntireStack)
 	if err != nil || exit {
 		return err
 	}
@@ -122,7 +122,7 @@ func executeCompress(cliConfig cliconfig.CliConfig, message Option[gitdomain.Com
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        data.stashSize,
 		Command:               compressCommand,
-		DryRun:                cliConfig.DryRun,
+		DryRun:                data.config.NormalConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
@@ -149,7 +149,6 @@ func executeCompress(cliConfig cliconfig.CliConfig, message Option[gitdomain.Com
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
-		Verbose:                 cliConfig.Verbose,
 	})
 }
 
@@ -174,7 +173,7 @@ type compressBranchData struct {
 	parentBranch     gitdomain.LocalBranchName
 }
 
-func determineCompressBranchesData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig, message Option[gitdomain.CommitMessage], compressEntireStack configdomain.FullStack) (data compressBranchesData, exit dialogdomain.Exit, err error) {
+func determineCompressBranchesData(repo execute.OpenRepoResult, message Option[gitdomain.CommitMessage], compressEntireStack configdomain.FullStack) (data compressBranchesData, exit dialogdomain.Exit, err error) {
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
@@ -217,7 +216,6 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, cliConfig clicon
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return data, exit, err

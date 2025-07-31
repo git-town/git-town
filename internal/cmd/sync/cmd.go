@@ -76,10 +76,10 @@ func Cmd() *cobra.Command {
 			if err := cmp.Or(errAllBranches, errDetached, errDryRun, errPushBranches, errPrune, errStack, errVerbose); err != nil {
 				return err
 			}
-			cliConfig := cliconfig.CliConfig{
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				DryRun:  dryRun,
 				Verbose: verbose,
-			}
+			})
 			return executeSync(executeSyncArgs{
 				cliConfig:       cliConfig,
 				detached:        detached,
@@ -101,7 +101,7 @@ func Cmd() *cobra.Command {
 }
 
 type executeSyncArgs struct {
-	cliConfig       cliconfig.CliConfig
+	cliConfig       configdomain.PartialConfig
 	detached        configdomain.Detached
 	prune           configdomain.Prune
 	pushBranches    configdomain.PushBranches
@@ -121,7 +121,6 @@ func executeSync(args executeSyncArgs) error {
 		return err
 	}
 	data, exit, err := determineSyncData(repo, determineSyncDataArgs{
-		cliConfig:       args.cliConfig,
 		detached:        args.detached,
 		syncAllBranches: args.syncAllBranches,
 		syncStack:       args.stack,
@@ -160,7 +159,7 @@ func executeSync(args executeSyncArgs) error {
 		runProgram.Value.Add(&opcodes.PushTags{})
 	}
 	cmdhelpers.Wrap(runProgram, cmdhelpers.WrapOptions{
-		DryRun:                   args.cliConfig.DryRun,
+		DryRun:                   data.config.NormalConfig.DryRun,
 		InitialStashSize:         data.stashSize,
 		RunInGitRoot:             true,
 		StashOpenChanges:         data.hasOpenChanges,
@@ -172,7 +171,7 @@ func executeSync(args executeSyncArgs) error {
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        0,
 		Command:               syncCommand,
-		DryRun:                args.cliConfig.DryRun,
+		DryRun:                data.config.NormalConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
@@ -199,7 +198,6 @@ func executeSync(args executeSyncArgs) error {
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
-		Verbose:                 args.cliConfig.Verbose,
 	})
 }
 
@@ -222,7 +220,6 @@ type syncData struct {
 }
 
 type determineSyncDataArgs struct {
-	cliConfig       cliconfig.CliConfig
 	detached        configdomain.Detached
 	syncAllBranches configdomain.AllBranches
 	syncStack       configdomain.FullStack
@@ -274,7 +271,6 @@ func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) 
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               args.cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return data, exit, err

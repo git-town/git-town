@@ -80,10 +80,10 @@ func deleteCommand() *cobra.Command {
 			if err := cmp.Or(err1, err2); err != nil {
 				return err
 			}
-			cliConfig := cliconfig.CliConfig{
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				DryRun:  dryRun,
 				Verbose: verbose,
-			}
+			})
 			return executeDelete(args, cliConfig)
 		},
 	}
@@ -92,7 +92,7 @@ func deleteCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeDelete(args []string, cliConfig cliconfig.CliConfig) error {
+func executeDelete(args []string, cliConfig configdomain.PartialConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,
@@ -103,7 +103,7 @@ func executeDelete(args []string, cliConfig cliconfig.CliConfig) error {
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineDeleteData(args, repo, cliConfig)
+	data, exit, err := determineDeleteData(args, repo)
 	if err != nil || exit {
 		return err
 	}
@@ -117,7 +117,7 @@ func executeDelete(args []string, cliConfig cliconfig.CliConfig) error {
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        data.stashSize,
 		Command:               "delete",
-		DryRun:                cliConfig.DryRun,
+		DryRun:                data.config.NormalConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
@@ -145,7 +145,6 @@ func executeDelete(args []string, cliConfig cliconfig.CliConfig) error {
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
-		Verbose:                 cliConfig.Verbose,
 	})
 }
 
@@ -166,7 +165,7 @@ type deleteData struct {
 	stashSize                gitdomain.StashSize
 }
 
-func determineDeleteData(args []string, repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data deleteData, exit dialogdomain.Exit, err error) {
+func determineDeleteData(args []string, repo execute.OpenRepoResult) (data deleteData, exit dialogdomain.Exit, err error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -208,7 +207,6 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult, cliConfig c
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return data, exit, err
