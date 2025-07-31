@@ -106,8 +106,9 @@ func prependCommand() *cobra.Command {
 				commit = true
 			}
 			cliConfig := cliconfig.CliConfig{
-				DryRun:  dryRun,
-				Verbose: verbose,
+				DryRun:        dryRun,
+				NoAutoResolve: noAutoResolve,
+				Verbose:       verbose,
 			}
 			return executePrepend(prependArgs{
 				argv:          args,
@@ -116,7 +117,6 @@ func prependCommand() *cobra.Command {
 				commit:        commit,
 				commitMessage: commitMessage,
 				detached:      detached,
-				noAutoResolve: noAutoResolve,
 				proposalBody:  bodyText,
 				proposalTitle: title,
 				propose:       propose,
@@ -145,7 +145,6 @@ type prependArgs struct {
 	commit        configdomain.Commit
 	commitMessage Option[gitdomain.CommitMessage]
 	detached      configdomain.Detached
-	noAutoResolve configdomain.NoAutoResolve
 	proposalBody  Option[gitdomain.ProposalBody]
 	proposalTitle Option[gitdomain.ProposalTitle]
 	propose       configdomain.Propose
@@ -378,7 +377,7 @@ func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (data p
 		initialBranchInfo:   *initialBranchInfo,
 		inputs:              inputs,
 		newParentCandidates: parentAndAncestors,
-		noAutoResolve:       args.noAutoResolve,
+		noAutoResolve:       args.cliConfig.NoAutoResolve,
 		nonExistingBranches: nonExistingBranches,
 		preFetchBranchInfos: prefetchBranchSnapshot.Branches,
 		previousBranch:      previousBranch,

@@ -40,8 +40,9 @@ func offlineCmd() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.CliConfig{
-				DryRun:  false,
-				Verbose: verbose,
+				DryRun:        false,
+				NoAutoResolve: false,
+				Verbose:       verbose,
 			}
 			return executeOffline(args, cliConfig)
 		},

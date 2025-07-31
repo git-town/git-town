@@ -17,8 +17,9 @@ func enterUnknownBranch() *cobra.Command {
 		RunE: func(_ *cobra.Command, _ []string) error {
 			repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 				CliConfig: cliconfig.CliConfig{
-					DryRun:  false,
-					Verbose: false,
+					DryRun:        false,
+					NoAutoResolve: false,
+					Verbose:       false,
 				},
 				PrintBranchNames: false,
 				PrintCommands:    true,

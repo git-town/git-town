@@ -81,16 +81,16 @@ func proposeCommand() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.CliConfig{
-				DryRun:  dryRun,
-				Verbose: verbose,
+				DryRun:        dryRun,
+				NoAutoResolve: noAutoResolve,
+				Verbose:       verbose,
 			}
 			return executePropose(proposeArgs{
-				body:          bodyText,
-				bodyFile:      bodyFile,
-				cliConfig:     cliConfig,
-				noAutoResolve: noAutoResolve,
-				stack:         stack,
-				title:         title,
+				body:      bodyText,
+				bodyFile:  bodyFile,
+				cliConfig: cliConfig,
+				stack:     stack,
+				title:     title,
 			})
 		},
 	}
@@ -105,12 +105,11 @@ func proposeCommand() *cobra.Command {
 }
 
 type proposeArgs struct {
-	body          Option[gitdomain.ProposalBody]
-	bodyFile      Option[gitdomain.ProposalBodyFile]
-	cliConfig     cliconfig.CliConfig
-	noAutoResolve configdomain.NoAutoResolve
-	stack         configdomain.FullStack
-	title         Option[gitdomain.ProposalTitle]
+	body      Option[gitdomain.ProposalBody]
+	bodyFile  Option[gitdomain.ProposalBodyFile]
+	cliConfig cliconfig.CliConfig
+	stack     configdomain.FullStack
+	title     Option[gitdomain.ProposalTitle]
 }
 
 func executePropose(args proposeArgs) error {
@@ -341,7 +340,7 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (data p
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
 		inputs:              inputs,
-		noAutoResolve:       args.noAutoResolve,
+		noAutoResolve:       args.cliConfig.NoAutoResolve,
 		nonExistingBranches: nonExistingBranches,
 		preFetchBranchInfos: preFetchBranchSnapshot.Branches,
 		previousBranch:      previousBranch,

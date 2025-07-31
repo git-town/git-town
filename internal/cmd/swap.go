@@ -80,8 +80,9 @@ func swapCommand() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.CliConfig{
-				DryRun:  dryRun,
-				Verbose: verbose,
+				DryRun:        dryRun,
+				NoAutoResolve: false,
+				Verbose:       verbose,
 			}
 			return executeSwap(args, cliConfig)
 		},
@@ -324,6 +325,7 @@ func determineSwapData(args []string, repo execute.OpenRepoResult, cliConfig cli
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
 		inputs:              inputs,
+		noAutoResolve:       cliConfig.NoAutoResolve,
 		nonExistingBranches: nonExistingBranches,
 		parentBranch:        parentBranch,
 		parentBranchInfo:    *parentBranchInfo,

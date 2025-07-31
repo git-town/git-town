@@ -46,8 +46,9 @@ func prototypeCmd() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.CliConfig{
-				DryRun:  false,
-				Verbose: verbose,
+				DryRun:        false,
+				NoAutoResolve: false,
+				Verbose:       verbose,
 			}
 			return executePrototype(args, cliConfig)
 		},

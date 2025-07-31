@@ -97,8 +97,9 @@ func appendCmd() *cobra.Command {
 				commit = true
 			}
 			cliConfig := cliconfig.CliConfig{
-				DryRun:  dryRun,
-				Verbose: verbose,
+				DryRun:        dryRun,
+				NoAutoResolve: noAutoResolve,
+				Verbose:       verbose,
 			}
 			return executeAppend(executeAppendArgs{
 				arg:           args[0],
@@ -107,7 +108,6 @@ func appendCmd() *cobra.Command {
 				commit:        commit,
 				commitMessage: commitMessage,
 				detached:      detached,
-				noAutoResolve: noAutoResolve,
 				propose:       propose,
 				prototype:     prototype,
 			})
@@ -142,7 +142,7 @@ func executeAppend(args executeAppendArgs) error {
 		commit:        args.commit,
 		commitMessage: args.commitMessage,
 		detached:      args.detached,
-		noAutoResolve: args.noAutoResolve,
+		noAutoResolve: args.cliConfig.NoAutoResolve,
 		propose:       args.propose,
 		prototype:     args.prototype,
 		targetBranch:  gitdomain.NewLocalBranchName(args.arg),
@@ -194,7 +194,6 @@ type executeAppendArgs struct {
 	commit        configdomain.Commit
 	commitMessage Option[gitdomain.CommitMessage]
 	detached      configdomain.Detached
-	noAutoResolve configdomain.NoAutoResolve
 	propose       configdomain.Propose
 	prototype     configdomain.Prototype
 }

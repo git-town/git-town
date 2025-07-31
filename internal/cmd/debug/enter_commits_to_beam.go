@@ -20,8 +20,9 @@ func enterCommitsToBeam() *cobra.Command {
 		RunE: func(_ *cobra.Command, args []string) error {
 			amount := asserts.NoError1(strconv.ParseInt(args[0], 10, 64))
 			cliConfig := cliconfig.CliConfig{
-				DryRun:  false,
-				Verbose: false,
+				DryRun:        false,
+				NoAutoResolve: false,
+				Verbose:       false,
 			}
 			repo := asserts.NoError1(execute.OpenRepo(execute.OpenRepoArgs{
 				CliConfig:        cliConfig,

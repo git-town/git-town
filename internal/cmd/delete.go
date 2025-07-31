@@ -81,8 +81,9 @@ func deleteCommand() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.CliConfig{
-				DryRun:  dryRun,
-				Verbose: verbose,
+				DryRun:        dryRun,
+				NoAutoResolve: false,
+				Verbose:       verbose,
 			}
 			return executeDelete(args, cliConfig)
 		},

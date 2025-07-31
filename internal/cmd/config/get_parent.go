@@ -27,8 +27,9 @@ func getParentCommand() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.CliConfig{
-				DryRun:  false,
-				Verbose: verbose,
+				DryRun:        false,
+				NoAutoResolve: false,
+				Verbose:       verbose,
 			}
 			return executeGetParent(args, cliConfig)
 		},

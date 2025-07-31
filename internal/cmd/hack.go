@@ -99,8 +99,9 @@ func hackCmd() *cobra.Command {
 				commit = true
 			}
 			cliConfig := cliconfig.CliConfig{
-				DryRun:  dryRun,
-				Verbose: verbose,
+				DryRun:        dryRun,
+				NoAutoResolve: noAutoResolve,
+				Verbose:       verbose,
 			}
 			return executeHack(hackArgs{
 				argv:          args,
@@ -109,7 +110,6 @@ func hackCmd() *cobra.Command {
 				commit:        commit,
 				commitMessage: commitMessage,
 				detached:      detached,
-				noAutoResolve: noAutoResolve,
 				propose:       propose,
 				prototype:     prototype,
 			})
@@ -392,7 +392,7 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data hackDat
 		initialBranchInfo:         initialBranchInfo,
 		inputs:                    inputs,
 		newBranchParentCandidates: gitdomain.LocalBranchNames{validatedConfig.ValidatedConfigData.MainBranch},
-		noAutoResolve:             args.noAutoResolve,
+		noAutoResolve:             args.cliConfig.NoAutoResolve,
 		nonExistingBranches:       nonExistingBranches,
 		preFetchBranchInfos:       preFetchBranchSnapshot.Branches,
 		previousBranch:            previousBranch,
@@ -412,7 +412,6 @@ type hackArgs struct {
 	commit        configdomain.Commit
 	commitMessage Option[gitdomain.CommitMessage]
 	detached      configdomain.Detached
-	noAutoResolve configdomain.NoAutoResolve
 	propose       configdomain.Propose
 	prototype     configdomain.Prototype
 }

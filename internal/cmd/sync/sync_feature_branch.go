@@ -46,6 +46,7 @@ func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBr
 		args.program.Value.Add(
 			&opcodes.SyncFeatureBranchRebase{
 				Branch:               args.localName,
+				NoAutoResolve:        args.noAutoResolve,
 				ParentSHAPreviousRun: args.parentSHAPreviousRun,
 				PushBranches:         args.pushBranches,
 				TrackingBranch:       args.trackingBranch,

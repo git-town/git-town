@@ -40,8 +40,9 @@ func branchCmd() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.CliConfig{
-				DryRun:  false,
-				Verbose: verbose,
+				DryRun:        false,
+				NoAutoResolve: false,
+				Verbose:       verbose,
 			}
 			return executeBranch(cliConfig)
 		},

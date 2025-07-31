@@ -29,8 +29,9 @@ func killCommand() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.CliConfig{
-				DryRun:  dryRun,
-				Verbose: verbose,
+				DryRun:        dryRun,
+				NoAutoResolve: false,
+				Verbose:       verbose,
 			}
 			result := executeDelete(args, cliConfig)
 			printKillDeprecationNotice()
