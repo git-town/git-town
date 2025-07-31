@@ -1,5 +1,7 @@
 @skipWindows
 Feature: handle conflicts between the current feature branch and the main branch (in a local repo)
+# TODO: This wrongfully assumes this is a phantom merge conflict,
+# and resolves it the wrong way. It should stop and let the user resolve this.
 
   Background:
     Given a local Git repo
