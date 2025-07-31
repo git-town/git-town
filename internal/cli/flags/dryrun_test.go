@@ -12,6 +12,7 @@ import (
 
 func TestDryRun(t *testing.T) {
 	t.Parallel()
+
 	t.Run("user provides flag", func(t *testing.T) {
 		t.Parallel()
 		cmd := cobra.Command{}
