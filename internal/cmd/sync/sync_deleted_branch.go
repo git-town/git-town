@@ -57,7 +57,7 @@ func syncDeletedFeatureBranchProgram(prog Mutable[program.Program], branch gitdo
 			branch:               branch,
 			initialParentName:    initialParentName,
 			initialParentSHA:     initialParentSHA,
-			autoResolve:          args.AutoResolve,
+			autoResolve:          args.Config.NormalConfig.AutoResolve,
 			parentSHAPreviousRun: parentSHAPreviousRun,
 			program:              prog,
 			syncStrategy:         args.Config.NormalConfig.SyncFeatureStrategy,

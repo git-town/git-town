@@ -372,7 +372,6 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data hackDat
 		args.propose = true
 	}
 	data = Left[appendFeatureData, convertToFeatureData](appendFeatureData{
-		autoResolve:               args.cliConfig.AutoResolve,
 		beam:                      args.beam,
 		branchInfos:               branchesSnapshot.Branches,
 		branchInfosLastRun:        branchInfosLastRun,

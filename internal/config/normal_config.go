@@ -30,6 +30,7 @@ import (
 // Configuration data that needs to be prompted from the user exists in UnvalidatedConfigData/ValidatedConfigData.
 type NormalConfig struct {
 	Aliases                  configdomain.Aliases
+	AutoResolve              configdomain.AutoResolve
 	BitbucketAppPassword     Option[forgedomain.BitbucketAppPassword]
 	BitbucketUsername        Option[forgedomain.BitbucketUsername]
 	BranchTypeOverrides      configdomain.BranchTypeOverrides
@@ -82,6 +83,7 @@ func (self *NormalConfig) NoPushHook() configdomain.NoPushHook {
 func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) NormalConfig {
 	return NormalConfig{
 		Aliases:                  other.Aliases,
+		AutoResolve:              other.AutoResolve.GetOrElse(self.AutoResolve),
 		BitbucketAppPassword:     other.BitbucketAppPassword,
 		BitbucketUsername:        other.BitbucketUsername,
 		BranchTypeOverrides:      other.BranchTypeOverrides.Concat(self.BranchTypeOverrides),
@@ -99,7 +101,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		HostingOriginHostname:    other.HostingOriginHostname,
 		Lineage:                  other.Lineage.Merge(self.Lineage),
 		NewBranchType:            other.NewBranchType,
-		NoAutoResolve:            other.NoAutoResolve.GetOrElse(self.NoAutoResolve),
+		NoAutoResolve:            other.AutoResolve.GetOrElse(self.NoAutoResolve),
 		ObservedRegex:            other.ObservedRegex,
 		Offline:                  other.Offline.GetOrElse(self.Offline),
 		PerennialBranches:        other.PerennialBranches,
@@ -281,7 +283,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		HostingOriginHostname:    partial.HostingOriginHostname,
 		Lineage:                  partial.Lineage,
 		NewBranchType:            partial.NewBranchType.Or(defaults.NewBranchType),
-		NoAutoResolve:            partial.NoAutoResolve.GetOrElse(defaults.NoAutoResolve),
+		NoAutoResolve:            partial.AutoResolve.GetOrElse(defaults.NoAutoResolve),
 		ObservedRegex:            partial.ObservedRegex,
 		Offline:                  partial.Offline.GetOrElse(defaults.Offline),
 		PerennialBranches:        partial.PerennialBranches,

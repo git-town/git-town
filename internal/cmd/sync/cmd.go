@@ -144,7 +144,6 @@ func executeSync(args executeSyncArgs) error {
 		BranchesToDelete:    NewMutable(&branchesToDelete),
 		Config:              data.config,
 		InitialBranch:       data.initialBranch,
-		AutoResolve:         args.cliConfig.AutoResolve,
 		PrefetchBranchInfos: data.prefetchBranchesSnapshot.Branches,
 		Program:             runProgram,
 		Prune:               args.prune,

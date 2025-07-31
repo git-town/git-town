@@ -249,7 +249,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		Lineage:                  configdomain.Lineage{},
 		MainBranch:               mainBranch,
 		NewBranchType:            newBranchType,
-		NoAutoResolve:            autoResolve,
+		AutoResolve:              autoResolve,
 		ObservedRegex:            observedRegex,
 		Offline:                  None[configdomain.Offline](),
 		PerennialBranches:        perennialBranches,

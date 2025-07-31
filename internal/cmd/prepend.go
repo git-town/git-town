@@ -219,7 +219,6 @@ type prependData struct {
 	initialBranchInfo   gitdomain.BranchInfo
 	inputs              dialogcomponents.Inputs
 	newParentCandidates gitdomain.LocalBranchNames
-	autoResolve         configdomain.AutoResolve
 	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	preFetchBranchInfos gitdomain.BranchInfos
 	previousBranch      Option[gitdomain.LocalBranchName]
@@ -375,7 +374,6 @@ func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (data p
 		initialBranchInfo:   *initialBranchInfo,
 		inputs:              inputs,
 		newParentCandidates: parentAndAncestors,
-		autoResolve:         args.cliConfig.AutoResolve,
 		nonExistingBranches: nonExistingBranches,
 		preFetchBranchInfos: prefetchBranchSnapshot.Branches,
 		previousBranch:      previousBranch,
@@ -401,7 +399,6 @@ func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages
 			BranchesToDelete:    NewMutable(&branchesToDelete),
 			Config:              data.config,
 			InitialBranch:       data.initialBranch,
-			AutoResolve:         data.autoResolve,
 			PrefetchBranchInfos: data.preFetchBranchInfos,
 			Program:             prog,
 			Prune:               false,

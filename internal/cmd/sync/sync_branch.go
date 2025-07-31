@@ -64,7 +64,6 @@ type BranchProgramArgs struct {
 	BranchesToDelete    Mutable[set.Set[gitdomain.LocalBranchName]] // branches that should be deleted after the branches are all synced
 	Config              config.ValidatedConfig
 	InitialBranch       gitdomain.LocalBranchName
-	AutoResolve         configdomain.AutoResolve
 	PrefetchBranchInfos gitdomain.BranchInfos // BranchInfos before "git fetch" ran
 	Program             Mutable[program.Program]
 	Prune               configdomain.Prune
@@ -88,7 +87,7 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 			initialParentName:    initialParentName,
 			initialParentSHA:     initialParentSHA,
 			localName:            localName,
-			autoResolve:          args.AutoResolve,
+			autoResolve:          args.Config.NormalConfig.AutoResolve,
 			offline:              args.Config.NormalConfig.Offline,
 			parentSHAPreviousRun: parentSHAPreviousRun,
 			program:              args.Program,
@@ -104,7 +103,7 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 			initialParentName:    initialParentName,
 			initialParentSHA:     initialParentSHA,
 			localName:            localName,
-			autoResolve:          args.AutoResolve,
+			autoResolve:          args.Config.NormalConfig.AutoResolve,
 			offline:              args.Config.NormalConfig.Offline,
 			parentSHAPreviousRun: parentSHAPreviousRun,
 			program:              args.Program,
@@ -122,7 +121,7 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 			initialParentName:    initialParentName,
 			initialParentSHA:     initialParentSHA,
 			localName:            localName,
-			autoResolve:          args.AutoResolve,
+			autoResolve:          args.Config.NormalConfig.AutoResolve,
 			offline:              args.Config.NormalConfig.Offline,
 			parentSHAPreviousRun: parentSHAPreviousRun,
 			program:              args.Program,

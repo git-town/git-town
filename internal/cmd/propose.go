@@ -174,7 +174,6 @@ type proposeData struct {
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
 	inputs              dialogcomponents.Inputs
-	autoResolve         configdomain.AutoResolve
 	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	preFetchBranchInfos gitdomain.BranchInfos
 	previousBranch      Option[gitdomain.LocalBranchName]
@@ -338,7 +337,6 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (data p
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
 		inputs:              inputs,
-		autoResolve:         args.cliConfig.AutoResolve,
 		nonExistingBranches: nonExistingBranches,
 		preFetchBranchInfos: preFetchBranchSnapshot.Branches,
 		previousBranch:      previousBranch,
@@ -359,7 +357,6 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 		BranchesToDelete:    NewMutable(&branchesToDelete),
 		Config:              data.config,
 		InitialBranch:       data.initialBranch,
-		AutoResolve:         data.autoResolve,
 		PrefetchBranchInfos: data.preFetchBranchInfos,
 		Remotes:             data.remotes,
 		Program:             prog,

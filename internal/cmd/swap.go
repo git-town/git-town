@@ -160,7 +160,6 @@ type swapData struct {
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
 	inputs              dialogcomponents.Inputs
-	autoResolve         configdomain.AutoResolve
 	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	parentBranch        gitdomain.LocalBranchName
 	parentBranchInfo    gitdomain.BranchInfo
@@ -323,7 +322,6 @@ func determineSwapData(args []string, repo execute.OpenRepoResult) (data swapDat
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
 		inputs:              inputs,
-		autoResolve:         cliConfig.AutoResolve,
 		nonExistingBranches: nonExistingBranches,
 		parentBranch:        parentBranch,
 		parentBranchInfo:    *parentBranchInfo,
@@ -336,7 +334,7 @@ func determineSwapData(args []string, repo execute.OpenRepoResult) (data swapDat
 func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Frontend)
-	if data.autoResolve.ShouldAutoResolve() {
+	if data.config.NormalConfig.AutoResolve.ShouldAutoResolve() {
 		prog.Value.Add(
 			&opcodes.RebaseOntoKeepDeleted{
 				BranchToRebaseOnto: data.grandParentBranch.BranchName(),
@@ -361,7 +359,7 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 			Branch: data.parentBranch,
 		},
 	)
-	if data.autoResolve.ShouldAutoResolve() {
+	if data.config.NormalConfig.AutoResolve.ShouldAutoResolve() {
 		prog.Value.Add(
 			&opcodes.RebaseOntoKeepDeleted{
 				BranchToRebaseOnto: data.branchToSwapName.BranchName(),
@@ -391,7 +389,7 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 		if !hasOldBranchSHA {
 			oldBranchSHA = data.branchToSwapInfo.RemoteSHA.GetOrDefault()
 		}
-		if data.autoResolve.ShouldAutoResolve() {
+		if data.config.NormalConfig.AutoResolve.ShouldAutoResolve() {
 			prog.Value.Add(
 				&opcodes.RebaseOntoKeepDeleted{
 					BranchToRebaseOnto: data.parentBranch.BranchName(),
