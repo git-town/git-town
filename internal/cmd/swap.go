@@ -160,6 +160,7 @@ type swapData struct {
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
 	inputs              dialogcomponents.Inputs
+	noAutoResolve       configdomain.NoAutoResolve
 	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	parentBranch        gitdomain.LocalBranchName
 	parentBranchInfo    gitdomain.BranchInfo
@@ -335,13 +336,21 @@ func determineSwapData(args []string, repo execute.OpenRepoResult, cliConfig cli
 func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Frontend)
-	prog.Value.Add(
-		&opcodes.RebaseOntoKeepDeleted{
-			BranchToRebaseOnto: data.grandParentBranch.BranchName(),
-			CommitsToRemove:    data.parentBranch.Location(),
-			Upstream:           None[gitdomain.LocalBranchName](),
-		},
-	)
+	if data.noAutoResolve.ShouldAutoResolve() {
+		prog.Value.Add(
+			&opcodes.RebaseOntoKeepDeleted{
+				BranchToRebaseOnto: data.grandParentBranch.BranchName(),
+				CommitsToRemove:    data.parentBranch.Location(),
+				Upstream:           None[gitdomain.LocalBranchName](),
+			},
+		)
+	} else {
+		prog.Value.Add(
+			&opcodes.RebaseBranch{
+				Branch: data.grandParentBranch.BranchName(),
+			},
+		)
+	}
 	if data.branchToSwapInfo.HasTrackingBranch() {
 		prog.Value.Add(
 			&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: data.branchToSwapName, ForceIfIncludes: true},
@@ -351,12 +360,22 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 		&opcodes.Checkout{
 			Branch: data.parentBranch,
 		},
-		&opcodes.RebaseOntoKeepDeleted{
-			BranchToRebaseOnto: data.branchToSwapName.BranchName(),
-			CommitsToRemove:    data.grandParentBranch.Location(),
-			Upstream:           None[gitdomain.LocalBranchName](),
-		},
 	)
+	if data.noAutoResolve.ShouldAutoResolve() {
+		prog.Value.Add(
+			&opcodes.RebaseOntoKeepDeleted{
+				BranchToRebaseOnto: data.branchToSwapName.BranchName(),
+				CommitsToRemove:    data.grandParentBranch.Location(),
+				Upstream:           None[gitdomain.LocalBranchName](),
+			},
+		)
+	} else {
+		prog.Value.Add(
+			&opcodes.RebaseBranch{
+				Branch: data.branchToSwapName.BranchName(),
+			},
+		)
+	}
 	if data.parentBranchInfo.HasTrackingBranch() {
 		prog.Value.Add(
 			&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: data.parentBranch, ForceIfIncludes: true},
@@ -372,13 +391,21 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 		if !hasOldBranchSHA {
 			oldBranchSHA = data.branchToSwapInfo.RemoteSHA.GetOrDefault()
 		}
-		prog.Value.Add(
-			&opcodes.RebaseOntoKeepDeleted{
-				BranchToRebaseOnto: data.parentBranch.BranchName(),
-				CommitsToRemove:    oldBranchSHA.Location(),
-				Upstream:           None[gitdomain.LocalBranchName](),
-			},
-		)
+		if data.noAutoResolve.ShouldAutoResolve() {
+			prog.Value.Add(
+				&opcodes.RebaseOntoKeepDeleted{
+					BranchToRebaseOnto: data.parentBranch.BranchName(),
+					CommitsToRemove:    oldBranchSHA.Location(),
+					Upstream:           None[gitdomain.LocalBranchName](),
+				},
+			)
+		} else {
+			prog.Value.Add(
+				&opcodes.RebaseBranch{
+					Branch: data.parentBranch.BranchName(),
+				},
+			)
+		}
 		if child.info.HasTrackingBranch() {
 			prog.Value.Add(
 				&opcodes.PushCurrentBranchForceIfNeeded{
