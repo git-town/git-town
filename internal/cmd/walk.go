@@ -92,7 +92,12 @@ func walkCommand() *cobra.Command {
 				DryRun:  dryRun,
 				Verbose: verbose,
 			})
-			return executeWalk(args, cliConfig, allBranches, stack)
+			return executeWalk(executeWalkArgs{
+				allBranches: allBranches,
+				argv:        args,
+				cliConfig:   cliConfig,
+				stack:       stack,
+			})
 		},
 	}
 	addAllFlag(&cmd)
@@ -102,9 +107,16 @@ func walkCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeWalk(args []string, cliConfig configdomain.PartialConfig, allBranches configdomain.AllBranches, fullStack configdomain.FullStack) error {
+type executeWalkArgs struct {
+	allBranches configdomain.AllBranches
+	argv        []string
+	cliConfig   configdomain.PartialConfig
+	stack       configdomain.FullStack
+}
+
+func executeWalk(args executeWalkArgs) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		CliConfig:        cliConfig,
+		CliConfig:        args.cliConfig,
 		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
@@ -113,17 +125,17 @@ func executeWalk(args []string, cliConfig configdomain.PartialConfig, allBranche
 	if err != nil {
 		return err
 	}
-	if len(args) == 0 && repo.UnvalidatedConfig.NormalConfig.DryRun {
+	if len(args.argv) == 0 && repo.UnvalidatedConfig.NormalConfig.DryRun {
 		return errors.New(messages.WalkNoDryRun)
 	}
-	if err := validateArgs(allBranches, fullStack); err != nil {
+	if err := validateArgs(args.allBranches, args.stack); err != nil {
 		return err
 	}
-	data, exit, err := determineWalkData(repo, allBranches, fullStack)
+	data, exit, err := determineWalkData(repo, args.allBranches, args.stack)
 	if err != nil || exit {
 		return err
 	}
-	runProgram := walkProgram(args, data)
+	runProgram := walkProgram(args.argv, data)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
