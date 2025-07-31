@@ -35,6 +35,7 @@ Feature: shipped parent branches in a stacked change
     And wait 1 second to ensure new Git timestamps
     When I run "git-town sync"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                                     |
