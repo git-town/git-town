@@ -81,10 +81,7 @@ func executeRename(args []string, cliConfig configdomain.PartialConfig, force co
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineRenameData(repo, determineRenameDataArgs{
-		args:  args,
-		force: force,
-	})
+	data, exit, err := determineRenameData(args, force, repo)
 	if err != nil || exit {
 		return err
 	}
@@ -141,7 +138,7 @@ type renameData struct {
 	stashSize                gitdomain.StashSize
 }
 
-func determineRenameData(repo execute.OpenRepoResult, args determineRenameDataArgs) (data renameData, exit dialogdomain.Exit, err error) {
+func determineRenameData(args []string, force configdomain.Force, repo execute.OpenRepoResult) (data renameData, exit dialogdomain.Exit, err error) {
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
@@ -194,12 +191,12 @@ func determineRenameData(repo execute.OpenRepoResult, args determineRenameDataAr
 	}
 	var oldBranchName gitdomain.LocalBranchName
 	var newBranchName gitdomain.LocalBranchName
-	if len(args.args) == 1 {
+	if len(args) == 1 {
 		oldBranchName = initialBranch
-		newBranchName = gitdomain.NewLocalBranchName(args.args[0])
+		newBranchName = gitdomain.NewLocalBranchName(args[0])
 	} else {
-		oldBranchName = gitdomain.NewLocalBranchName(args.args[0])
-		newBranchName = gitdomain.NewLocalBranchName(args.args[1])
+		oldBranchName = gitdomain.NewLocalBranchName(args[0])
+		newBranchName = gitdomain.NewLocalBranchName(args[1])
 	}
 	oldBranch, hasOldBranch := branchesSnapshot.Branches.FindByLocalName(oldBranchName).Get()
 	if !hasOldBranch {
@@ -232,7 +229,7 @@ func determineRenameData(repo execute.OpenRepoResult, args determineRenameDataAr
 	if validatedConfig.ValidatedConfigData.IsMainBranch(oldBranchName) {
 		return data, false, errors.New(messages.RenameMainBranch)
 	}
-	if !args.force {
+	if !force {
 		if validatedConfig.BranchType(oldBranchName) == configdomain.BranchTypePerennialBranch {
 			return data, false, fmt.Errorf(messages.RenamePerennialBranchWarning, oldBranchName)
 		}
@@ -279,11 +276,6 @@ func determineRenameData(repo execute.OpenRepoResult, args determineRenameDataAr
 		proposalsOfChildBranches: proposalsOfChildBranches,
 		stashSize:                stashSize,
 	}, false, err
-}
-
-type determineRenameDataArgs struct {
-	args  []string
-	force configdomain.Force
 }
 
 func renameProgram(repo execute.OpenRepoResult, data renameData, finalMessages stringslice.Collector) program.Program {
