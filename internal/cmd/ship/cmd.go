@@ -112,7 +112,7 @@ func executeShip(args executeShipArgs) error {
 	if err != nil {
 		return err
 	}
-	sharedData, exit, err := determineSharedShipData(args.args, repo, args.cliConfig, args.shipStrategy)
+	sharedData, exit, err := determineSharedShipData(args.args, repo, args.shipStrategy)
 	if err != nil || exit {
 		return err
 	}
