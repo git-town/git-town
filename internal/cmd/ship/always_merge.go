@@ -13,11 +13,10 @@ type shipProgramAlwaysMergeArgs struct {
 	commitMessage Option[gitdomain.CommitMessage]
 	mergeData     shipDataMerge
 	prog          Mutable[program.Program]
-	repo          execute.OpenRepoResult
 	sharedData    sharedShipData
 }
 
-func shipProgramAlwaysMerge(args shipProgramAlwaysMergeArgs) {
+func shipProgramAlwaysMerge(repo execute.OpenRepoResult, args shipProgramAlwaysMergeArgs) {
 	args.prog.Value.Add(&opcodes.BranchEnsureShippableChanges{Branch: args.sharedData.branchNameToShip, Parent: args.sharedData.targetBranchName})
 	if args.sharedData.initialBranch != args.sharedData.targetBranchName {
 		args.prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: args.sharedData.targetBranchName})
@@ -46,7 +45,7 @@ func shipProgramAlwaysMerge(args shipProgramAlwaysMergeArgs) {
 	args.prog.Value.Add(&opcodes.BranchLocalDelete{Branch: args.sharedData.branchNameToShip})
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{args.sharedData.previousBranch}
 	cmdhelpers.Wrap(args.prog, cmdhelpers.WrapOptions{
-		DryRun:                   args.repo.UnvalidatedConfig.NormalConfig.DryRun,
+		DryRun:                   repo.UnvalidatedConfig.NormalConfig.DryRun,
 		InitialStashSize:         args.sharedData.stashSize,
 		RunInGitRoot:             true,
 		StashOpenChanges:         !args.sharedData.isShippingInitialBranch && args.sharedData.hasOpenChanges,

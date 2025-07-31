@@ -138,11 +138,10 @@ func executeShip(args executeShipArgs) error {
 		if err != nil {
 			return err
 		}
-		shipProgramAlwaysMerge(shipProgramAlwaysMergeArgs{
+		shipProgramAlwaysMerge(repo, shipProgramAlwaysMergeArgs{
 			commitMessage: message,
 			mergeData:     mergeData,
 			prog:          prog,
-			repo:          repo,
 			sharedData:    sharedData,
 		})
 	case configdomain.ShipStrategyFastForward:
