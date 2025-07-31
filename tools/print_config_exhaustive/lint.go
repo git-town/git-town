@@ -16,6 +16,7 @@ const (
 
 var whiteList = []string{
 	"Aliases",
+	"AutoResolve",
 	"BranchTypeOverrides",
 	"DryRun",
 	"ProposalsShowLineage", // TODO: remove once https://github.com/git-town/git-town/issues/3003 is shipped
