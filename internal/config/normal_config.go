@@ -47,6 +47,7 @@ type NormalConfig struct {
 	HostingOriginHostname    Option[configdomain.HostingOriginHostname]
 	Lineage                  configdomain.Lineage
 	NewBranchType            Option[configdomain.NewBranchType]
+	NoAutoResolve            configdomain.NoAutoResolve
 	ObservedRegex            Option[configdomain.ObservedRegex]
 	Offline                  configdomain.Offline
 	PerennialBranches        gitdomain.LocalBranchNames
@@ -98,6 +99,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		HostingOriginHostname:    other.HostingOriginHostname,
 		Lineage:                  other.Lineage.Merge(self.Lineage),
 		NewBranchType:            other.NewBranchType,
+		NoAutoResolve:            other.NoAutoResolve.GetOrElse(self.NoAutoResolve),
 		ObservedRegex:            other.ObservedRegex,
 		Offline:                  other.Offline.GetOrElse(self.Offline),
 		PerennialBranches:        other.PerennialBranches,
@@ -238,6 +240,7 @@ func DefaultNormalConfig() NormalConfig {
 		HostingOriginHostname:    None[configdomain.HostingOriginHostname](),
 		Lineage:                  configdomain.NewLineage(),
 		NewBranchType:            None[configdomain.NewBranchType](),
+		NoAutoResolve:            false,
 		ObservedRegex:            None[configdomain.ObservedRegex](),
 		Offline:                  false,
 		PerennialBranches:        gitdomain.LocalBranchNames{},
@@ -278,6 +281,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		HostingOriginHostname:    partial.HostingOriginHostname,
 		Lineage:                  partial.Lineage,
 		NewBranchType:            partial.NewBranchType.Or(defaults.NewBranchType),
+		NoAutoResolve:            partial.NoAutoResolve.GetOrElse(defaults.NoAutoResolve),
 		ObservedRegex:            partial.ObservedRegex,
 		Offline:                  partial.Offline.GetOrElse(defaults.Offline),
 		PerennialBranches:        partial.PerennialBranches,

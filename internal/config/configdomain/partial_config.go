@@ -37,6 +37,7 @@ type PartialConfig struct {
 	Lineage                  Lineage
 	MainBranch               Option[gitdomain.LocalBranchName]
 	NewBranchType            Option[NewBranchType]
+	NoAutoResolve            Option[NoAutoResolve]
 	ObservedRegex            Option[ObservedRegex]
 	Offline                  Option[Offline]
 	PerennialBranches        gitdomain.LocalBranchNames
@@ -86,6 +87,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		Lineage:                  other.Lineage.Merge(self.Lineage),
 		MainBranch:               other.MainBranch.Or(self.MainBranch),
 		NewBranchType:            other.NewBranchType.Or(self.NewBranchType),
+		NoAutoResolve:            other.NoAutoResolve.Or(self.NoAutoResolve),
 		ObservedRegex:            other.ObservedRegex.Or(self.ObservedRegex),
 		Offline:                  other.Offline.Or(self.Offline),
 		PerennialBranches:        append(other.PerennialBranches, self.PerennialBranches...),

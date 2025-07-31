@@ -51,6 +51,7 @@ func TestSave(t *testing.T) {
 				HostingOriginHostname:    configdomain.ParseHostingOriginHostname("forge"),
 				MainBranch:               Some(gitdomain.NewLocalBranchName("main")),
 				NewBranchType:            Some(configdomain.NewBranchType(configdomain.BranchTypePrototypeBranch)),
+				NoAutoResolve:            Some(configdomain.NoAutoResolve(false)),
 				PerennialBranches:        gitdomain.NewLocalBranchNames("qa", "staging"),
 				PerennialRegex:           asserts.NoError1(configdomain.ParsePerennialRegex("perennial-")),
 				ProposalsShowLineage:     Some(configdomain.ProposalsShowLineageCLI),
@@ -89,6 +90,7 @@ delete-tracking-branch = true
 strategy = "api"
 
 [sync]
+auto-resolve = false
 feature-strategy = "merge"
 perennial-strategy = "rebase"
 prototype-strategy = "compress"
