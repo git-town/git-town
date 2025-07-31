@@ -28,11 +28,11 @@ func killCommand() *cobra.Command {
 			if err := cmp.Or(err1, err2); err != nil {
 				return err
 			}
-			cliConfig := cliconfig.CliConfig{
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve: false,
 				DryRun:      dryRun,
 				Verbose:     verbose,
-			}
+			})
 			result := executeDelete(args, cliConfig)
 			printKillDeprecationNotice()
 			return result

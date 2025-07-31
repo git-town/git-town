@@ -79,11 +79,11 @@ func swapCommand() *cobra.Command {
 			if err := cmp.Or(err1, err2); err != nil {
 				return err
 			}
-			cliConfig := cliconfig.CliConfig{
-				DryRun:      dryRun,
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve: false,
+				DryRun:      dryRun,
 				Verbose:     verbose,
-			}
+			})
 			return executeSwap(args, cliConfig)
 		},
 	}
@@ -92,7 +92,7 @@ func swapCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeSwap(args []string, cliConfig cliconfig.CliConfig) error {
+func executeSwap(args []string, cliConfig configdomain.PartialConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,
@@ -103,7 +103,7 @@ func executeSwap(args []string, cliConfig cliconfig.CliConfig) error {
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineSwapData(args, repo, cliConfig)
+	data, exit, err := determineSwapData(args, repo)
 	if err != nil || exit {
 		return err
 	}
@@ -118,7 +118,7 @@ func executeSwap(args []string, cliConfig cliconfig.CliConfig) error {
 		BeginStashSize:        data.stashSize,
 		BranchInfosLastRun:    data.branchInfosLastRun,
 		Command:               swapCommandName,
-		DryRun:                cliConfig.DryRun,
+		DryRun:                data.config.NormalConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
@@ -144,7 +144,6 @@ func executeSwap(args []string, cliConfig cliconfig.CliConfig) error {
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
-		Verbose:                 cliConfig.Verbose,
 	})
 }
 
@@ -176,7 +175,7 @@ type swapChildBranch struct {
 	proposal Option[forgedomain.Proposal]
 }
 
-func determineSwapData(args []string, repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data swapData, exit dialogdomain.Exit, err error) {
+func determineSwapData(args []string, repo execute.OpenRepoResult) (data swapData, exit dialogdomain.Exit, err error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -218,7 +217,6 @@ func determineSwapData(args []string, repo execute.OpenRepoResult, cliConfig cli
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return data, exit, err

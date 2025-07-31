@@ -79,11 +79,11 @@ func mergeCommand() *cobra.Command {
 			if err := cmp.Or(err1, err2); err != nil {
 				return err
 			}
-			cliConfig := cliconfig.CliConfig{
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve: false,
 				DryRun:      dryRun,
 				Verbose:     verbose,
-			}
+			})
 			return executeMerge(cliConfig)
 		},
 	}
@@ -92,7 +92,7 @@ func mergeCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeMerge(cliConfig cliconfig.CliConfig) error {
+func executeMerge(cliConfig configdomain.PartialConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,
@@ -103,21 +103,21 @@ func executeMerge(cliConfig cliconfig.CliConfig) error {
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineMergeData(repo, cliConfig)
+	data, exit, err := determineMergeData(repo)
 	if err != nil || exit {
 		return err
 	}
 	if err = validateMergeData(repo, data); err != nil {
 		return err
 	}
-	runProgram := mergeProgram(repo, data, cliConfig.DryRun)
+	runProgram := mergeProgram(repo, data)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        data.stashSize,
 		BranchInfosLastRun:    data.branchInfosLastRun,
 		Command:               mergeCmd,
-		DryRun:                cliConfig.DryRun,
+		DryRun:                data.config.NormalConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
@@ -143,7 +143,6 @@ func executeMerge(cliConfig cliconfig.CliConfig) error {
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
-		Verbose:                 cliConfig.Verbose,
 	})
 }
 
@@ -165,7 +164,7 @@ type mergeData struct {
 	stashSize          gitdomain.StashSize
 }
 
-func determineMergeData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (mergeData, dialogdomain.Exit, error) {
+func determineMergeData(repo execute.OpenRepoResult) (mergeData, dialogdomain.Exit, error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -207,7 +206,6 @@ func determineMergeData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConf
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return mergeData{}, exit, err
@@ -286,7 +284,7 @@ func determineMergeData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConf
 	}, false, err
 }
 
-func mergeProgram(repo execute.OpenRepoResult, data mergeData, dryRun configdomain.DryRun) program.Program {
+func mergeProgram(repo execute.OpenRepoResult, data mergeData) program.Program {
 	prog := NewMutable(&program.Program{})
 	// there is no point in updating proposals:
 	// If the parent branch has a proposal, it doesn't need to change.
@@ -322,7 +320,7 @@ func mergeProgram(repo execute.OpenRepoResult, data mergeData, dryRun configdoma
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
-		DryRun:                   dryRun,
+		DryRun:                   data.config.NormalConfig.DryRun,
 		InitialStashSize:         data.stashSize,
 		RunInGitRoot:             true,
 		StashOpenChanges:         data.hasOpenChanges,

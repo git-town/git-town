@@ -39,11 +39,11 @@ func offlineCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			cliConfig := cliconfig.CliConfig{
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve: false,
-				DryRun:      false,
+				DryRun:      None[configdomain.DryRun](),
 				Verbose:     verbose,
-			}
+			})
 			return executeOffline(args, cliConfig)
 		},
 	}
@@ -51,7 +51,7 @@ func offlineCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeOffline(args []string, cliConfig cliconfig.CliConfig) error {
+func executeOffline(args []string, cliConfig configdomain.PartialConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: false,
@@ -81,7 +81,7 @@ func executeOffline(args []string, cliConfig cliconfig.CliConfig) error {
 		Git:                   repo.Git,
 		RootDir:               repo.RootDir,
 		TouchedBranches:       []gitdomain.BranchName{},
-		Verbose:               cliConfig.Verbose,
+		Verbose:               repo.UnvalidatedConfig.NormalConfig.Verbose,
 	})
 }
 

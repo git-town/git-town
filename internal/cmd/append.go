@@ -96,11 +96,11 @@ func appendCmd() *cobra.Command {
 			if commitMessage.IsSome() || propose.IsTrue() {
 				commit = true
 			}
-			cliConfig := cliconfig.CliConfig{
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve: autoResolve,
 				DryRun:      dryRun,
 				Verbose:     verbose,
-			}
+			})
 			return executeAppend(executeAppendArgs{
 				arg:           args[0],
 				beam:          beam,
@@ -137,9 +137,8 @@ func executeAppend(args executeAppendArgs) error {
 		return err
 	}
 	data, exit, err := determineAppendData(determineAppendDataArgs{
-		autoResolve:   args.cliConfig.AutoResolve,
+		autoResolve:   repo.UnvalidatedConfig.NormalConfig.AutoResolve,
 		beam:          args.beam,
-		cliConfig:     args.cliConfig,
 		commit:        args.commit,
 		commitMessage: args.commitMessage,
 		detached:      args.detached,
@@ -156,7 +155,7 @@ func executeAppend(args executeAppendArgs) error {
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        data.stashSize,
 		Command:               "append",
-		DryRun:                args.cliConfig.DryRun,
+		DryRun:                data.config.NormalConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
@@ -183,14 +182,13 @@ func executeAppend(args executeAppendArgs) error {
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
-		Verbose:                 args.cliConfig.Verbose,
 	})
 }
 
 type executeAppendArgs struct {
 	arg           string
 	beam          configdomain.Beam
-	cliConfig     cliconfig.CliConfig
+	cliConfig     configdomain.PartialConfig
 	commit        configdomain.Commit
 	commitMessage Option[gitdomain.CommitMessage]
 	detached      configdomain.Detached
@@ -272,7 +270,6 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               args.cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return data, exit, err
@@ -373,7 +370,6 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 type determineAppendDataArgs struct {
 	autoResolve   configdomain.AutoResolve
 	beam          configdomain.Beam
-	cliConfig     cliconfig.CliConfig
 	commit        configdomain.Commit
 	commitMessage Option[gitdomain.CommitMessage]
 	detached      configdomain.Detached

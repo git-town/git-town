@@ -105,11 +105,11 @@ func prependCommand() *cobra.Command {
 			if propose.IsTrue() && beam.IsFalse() {
 				commit = true
 			}
-			cliConfig := cliconfig.CliConfig{
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve: autoResolve,
 				DryRun:      dryRun,
 				Verbose:     verbose,
-			}
+			})
 			return executePrepend(prependArgs{
 				argv:          args,
 				beam:          beam,
@@ -141,7 +141,7 @@ func prependCommand() *cobra.Command {
 type prependArgs struct {
 	argv          []string
 	beam          configdomain.Beam
-	cliConfig     cliconfig.CliConfig
+	cliConfig     configdomain.PartialConfig
 	commit        configdomain.Commit
 	commitMessage Option[gitdomain.CommitMessage]
 	detached      configdomain.Detached
@@ -173,7 +173,7 @@ func executePrepend(args prependArgs) error {
 		BeginStashSize:        data.stashSize,
 		BranchInfosLastRun:    data.branchInfosLastRun,
 		Command:               "prepend",
-		DryRun:                args.cliConfig.DryRun,
+		DryRun:                data.config.NormalConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
@@ -199,7 +199,6 @@ func executePrepend(args prependArgs) error {
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
-		Verbose:                 args.cliConfig.Verbose,
 	})
 }
 
@@ -280,7 +279,6 @@ func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (data p
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               args.cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return data, exit, err

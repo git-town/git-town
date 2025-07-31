@@ -1,7 +1,6 @@
 package config
 
 import (
-	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/envconfig"
 	"github.com/git-town/git-town/v21/internal/config/gitconfig"
@@ -12,7 +11,7 @@ import (
 )
 
 type UnvalidatedConfig struct {
-	CLI               cliconfig.CliConfig        // configuration received via CLI flags
+	CLI               configdomain.PartialConfig // configuration received via CLI flags
 	Defaults          NormalConfig               // default values
 	File              configdomain.PartialConfig // content of git-town.toml
 	GitGlobal         configdomain.PartialConfig // global Git metadata
@@ -47,11 +46,7 @@ func (self *UnvalidatedConfig) Reload(backend subshelldomain.RunnerQuerier) (glo
 	unscopedGitConfig, _ := NewPartialConfigFromSnapshot(unscopedSnapshot, false, nil)
 	envConfig := envconfig.Load()
 	unvalidatedConfig, normalConfig := mergeConfigs(mergeConfigsArgs{
-		cli: cliconfig.CliConfig{
-			DryRun:      false,
-			AutoResolve: false,
-			Verbose:     false,
-		},
+		cli:      configdomain.EmptyPartialConfig(),
 		defaults: DefaultNormalConfig(),
 		env:      envConfig,
 		file:     self.File,
@@ -102,7 +97,7 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 }
 
 type NewUnvalidatedConfigArgs struct {
-	CliConfig     cliconfig.CliConfig
+	CliConfig     configdomain.PartialConfig
 	ConfigFile    configdomain.PartialConfig
 	Defaults      NormalConfig
 	EnvConfig     configdomain.PartialConfig
@@ -117,13 +112,12 @@ func mergeConfigs(args mergeConfigsArgs) (configdomain.UnvalidatedConfigData, No
 	result = result.Merge(args.file)
 	result = result.Merge(args.git)
 	result = result.Merge(args.env)
-	result.DryRun = Some(args.cli.DryRun)
-	result.Verbose = Some(args.cli.Verbose)
+	result = result.Merge(args.cli)
 	return result.ToUnvalidatedConfig(), NewNormalConfigFromPartial(result, args.defaults)
 }
 
 type mergeConfigsArgs struct {
-	cli      cliconfig.CliConfig
+	cli      configdomain.PartialConfig
 	defaults NormalConfig
 	env      configdomain.PartialConfig // configuration data taken from environment variables
 	file     configdomain.PartialConfig // data of the configuration file

@@ -43,11 +43,11 @@ func repoCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			cliConfig := cliconfig.CliConfig{
-				DryRun:      false,
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve: false,
+				DryRun:      None[configdomain.DryRun](),
 				Verbose:     verbose,
-			}
+			})
 			return executeRepo(args, cliConfig)
 		},
 	}
@@ -55,7 +55,7 @@ func repoCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeRepo(args []string, cliConfig cliconfig.CliConfig) error {
+func executeRepo(args []string, cliConfig configdomain.PartialConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,
@@ -71,7 +71,7 @@ func executeRepo(args []string, cliConfig cliconfig.CliConfig) error {
 		return err
 	}
 	err = data.connector.OpenRepository(repo.Frontend)
-	print.Footer(cliConfig.Verbose, repo.CommandsCounter.Immutable(), repo.FinalMessages.Result())
+	print.Footer(repo.UnvalidatedConfig.NormalConfig.Verbose, repo.CommandsCounter.Immutable(), repo.FinalMessages.Result())
 	return err
 }
 

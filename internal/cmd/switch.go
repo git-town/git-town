@@ -47,11 +47,11 @@ func switchCmd() *cobra.Command {
 			if err := cmp.Or(err1, err2, err3, err4, err5); err != nil {
 				return err
 			}
-			cliConfig := cliconfig.CliConfig{
-				DryRun:      false,
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve: false,
+				DryRun:      None[configdomain.DryRun](),
 				Verbose:     verbose,
-			}
+			})
 			return executeSwitch(executeSwitchArgs{
 				allBranches:  allBranches,
 				argv:         args,
@@ -74,7 +74,7 @@ type executeSwitchArgs struct {
 	allBranches  configdomain.AllBranches
 	argv         []string
 	branchTypes  []configdomain.BranchType
-	cliConfig    cliconfig.CliConfig
+	cliConfig    configdomain.PartialConfig
 	displayTypes configdomain.DisplayTypes
 	merge        configdomain.SwitchUsingMerge
 }
@@ -90,7 +90,7 @@ func executeSwitch(args executeSwitchArgs) error {
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineSwitchData(args.argv, repo, args.cliConfig)
+	data, exit, err := determineSwitchData(args.argv, repo)
 	if err != nil || exit {
 		return err
 	}
@@ -150,7 +150,7 @@ type switchData struct {
 	uncommittedChanges bool
 }
 
-func determineSwitchData(args []string, repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data switchData, exit dialogdomain.Exit, err error) {
+func determineSwitchData(args []string, repo execute.OpenRepoResult) (data switchData, exit dialogdomain.Exit, err error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -173,7 +173,6 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult, cliConfig c
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return data, exit, err
