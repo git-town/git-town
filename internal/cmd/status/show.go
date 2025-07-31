@@ -26,9 +26,9 @@ func showRunstateCommand() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.CliConfig{
-				DryRun:        false,
-				NoAutoResolve: false,
-				Verbose:       verbose,
+				DryRun:      false,
+				AutoResolve: false,
+				Verbose:     verbose,
 			}
 			return executeStatusShow(cliConfig)
 		},

@@ -70,7 +70,7 @@ func appendCmd() *cobra.Command {
 	addCommitMessageFlag, readCommitMessageFlag := flags.CommitMessage("the commit message")
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
-	addNoAutoResolveFlag, readNoAutoResolveFlag := flags.NoAutoResolve()
+	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
 	addProposeFlag, readProposeFlag := flags.Propose()
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
@@ -86,20 +86,20 @@ func appendCmd() *cobra.Command {
 			commitMessage, errCommitMessage := readCommitMessageFlag(cmd)
 			detached, errDetached := readDetachedFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
-			noAutoResolve, errNoAutoResolve := readNoAutoResolveFlag(cmd)
+			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
 			propose, errPropose := readProposeFlag(cmd)
 			prototype, errPrototype := readPrototypeFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errBeam, errCommit, errCommitMessage, errDetached, errDryRun, errNoAutoResolve, errPropose, errPrototype, errVerbose); err != nil {
+			if err := cmp.Or(errBeam, errCommit, errCommitMessage, errDetached, errDryRun, errAutoResolve, errPropose, errPrototype, errVerbose); err != nil {
 				return err
 			}
 			if commitMessage.IsSome() || propose.IsTrue() {
 				commit = true
 			}
 			cliConfig := cliconfig.CliConfig{
-				DryRun:        dryRun,
-				NoAutoResolve: noAutoResolve,
-				Verbose:       verbose,
+				AutoResolve: autoResolve,
+				DryRun:      dryRun,
+				Verbose:     verbose,
 			}
 			return executeAppend(executeAppendArgs{
 				arg:           args[0],
@@ -118,7 +118,7 @@ func appendCmd() *cobra.Command {
 	addCommitMessageFlag(&cmd)
 	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
-	addNoAutoResolveFlag(&cmd)
+	addAutoResolveFlag(&cmd)
 	addProposeFlag(&cmd)
 	addPrototypeFlag(&cmd)
 	addVerboseFlag(&cmd)
@@ -137,12 +137,12 @@ func executeAppend(args executeAppendArgs) error {
 		return err
 	}
 	data, exit, err := determineAppendData(determineAppendDataArgs{
+		autoResolve:   args.cliConfig.AutoResolve,
 		beam:          args.beam,
 		cliConfig:     args.cliConfig,
 		commit:        args.commit,
 		commitMessage: args.commitMessage,
 		detached:      args.detached,
-		noAutoResolve: args.cliConfig.NoAutoResolve,
 		propose:       args.propose,
 		prototype:     args.prototype,
 		targetBranch:  gitdomain.NewLocalBranchName(args.arg),
@@ -215,7 +215,7 @@ type appendFeatureData struct {
 	initialBranchInfo         *gitdomain.BranchInfo
 	inputs                    dialogcomponents.Inputs
 	newBranchParentCandidates gitdomain.LocalBranchNames
-	noAutoResolve             configdomain.NoAutoResolve
+	autoResolve               configdomain.AutoResolve
 	nonExistingBranches       gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	preFetchBranchInfos       gitdomain.BranchInfos
 	previousBranch            Option[gitdomain.LocalBranchName]
@@ -342,6 +342,7 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 		args.propose = true
 	}
 	return appendFeatureData{
+		autoResolve:               args.autoResolve,
 		beam:                      args.beam,
 		branchInfos:               branchesSnapshot.Branches,
 		branchInfosLastRun:        branchInfosLastRun,
@@ -358,7 +359,6 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 		initialBranchInfo:         initialBranchInfo,
 		inputs:                    inputs,
 		newBranchParentCandidates: initialAndAncestors,
-		noAutoResolve:             args.noAutoResolve,
 		nonExistingBranches:       nonExistingBranches,
 		preFetchBranchInfos:       preFetchBranchSnapshot.Branches,
 		previousBranch:            previousBranch,
@@ -371,12 +371,12 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 }
 
 type determineAppendDataArgs struct {
+	autoResolve   configdomain.AutoResolve
 	beam          configdomain.Beam
 	cliConfig     cliconfig.CliConfig
 	commit        configdomain.Commit
 	commitMessage Option[gitdomain.CommitMessage]
 	detached      configdomain.Detached
-	noAutoResolve configdomain.NoAutoResolve
 	propose       configdomain.Propose
 	prototype     configdomain.Prototype
 	targetBranch  gitdomain.LocalBranchName
@@ -388,12 +388,12 @@ func appendProgram(frontend subshelldomain.Runner, data appendFeatureData, final
 	if !data.hasOpenChanges && data.beam.IsFalse() && data.commit.IsFalse() {
 		branchesToDelete := set.New[gitdomain.LocalBranchName]()
 		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
+			AutoResolve:         data.autoResolve,
 			BranchInfos:         data.branchInfos,
 			BranchInfosLastRun:  data.branchInfosLastRun,
 			BranchesToDelete:    NewMutable(&branchesToDelete),
 			Config:              data.config,
 			InitialBranch:       data.initialBranch,
-			NoAutoResolve:       data.noAutoResolve,
 			PrefetchBranchInfos: data.preFetchBranchInfos,
 			Program:             prog,
 			Prune:               false,

@@ -43,9 +43,9 @@ func parkCmd() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.CliConfig{
-				DryRun:        false,
-				NoAutoResolve: false,
-				Verbose:       verbose,
+				AutoResolve: false,
+				DryRun:      false,
+				Verbose:     verbose,
 			}
 			return executePark(args, cliConfig)
 		},

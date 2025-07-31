@@ -59,7 +59,7 @@ func proposeCommand() *cobra.Command {
 	addBodyFlag, readBodyFlag := flags.ProposalBody("b")
 	addBodyFileFlag, readBodyFileFlag := flags.ProposalBodyFile()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
-	addNoAutoResolveFlag, readNoAutoResolveFlag := flags.NoAutoResolve()
+	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
 	addStackFlag, readStackFlag := flags.Stack("propose the entire stack")
 	addTitleFlag, readTitleFlag := flags.ProposalTitle()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
@@ -73,17 +73,17 @@ func proposeCommand() *cobra.Command {
 			bodyFile, errBodyFile := readBodyFileFlag(cmd)
 			bodyText, errBodyText := readBodyFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
-			noAutoResolve, errNoAutoResolve := readNoAutoResolveFlag(cmd)
+			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
 			stack, errStack := readStackFlag(cmd)
 			title, errTitle := readTitleFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errBodyFile, errBodyText, errDryRun, errNoAutoResolve, errStack, errTitle, errVerbose); err != nil {
+			if err := cmp.Or(errBodyFile, errBodyText, errDryRun, errAutoResolve, errStack, errTitle, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.CliConfig{
-				DryRun:        dryRun,
-				NoAutoResolve: noAutoResolve,
-				Verbose:       verbose,
+				DryRun:      dryRun,
+				AutoResolve: autoResolve,
+				Verbose:     verbose,
 			}
 			return executePropose(proposeArgs{
 				body:      bodyText,
@@ -97,7 +97,7 @@ func proposeCommand() *cobra.Command {
 	addBodyFlag(&cmd)
 	addBodyFileFlag(&cmd)
 	addDryRunFlag(&cmd)
-	addNoAutoResolveFlag(&cmd)
+	addAutoResolveFlag(&cmd)
 	addStackFlag(&cmd)
 	addTitleFlag(&cmd)
 	addVerboseFlag(&cmd)
@@ -175,7 +175,7 @@ type proposeData struct {
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
 	inputs              dialogcomponents.Inputs
-	noAutoResolve       configdomain.NoAutoResolve
+	autoResolve         configdomain.AutoResolve
 	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	preFetchBranchInfos gitdomain.BranchInfos
 	previousBranch      Option[gitdomain.LocalBranchName]
@@ -340,7 +340,7 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (data p
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
 		inputs:              inputs,
-		noAutoResolve:       args.cliConfig.NoAutoResolve,
+		autoResolve:         args.cliConfig.AutoResolve,
 		nonExistingBranches: nonExistingBranches,
 		preFetchBranchInfos: preFetchBranchSnapshot.Branches,
 		previousBranch:      previousBranch,
@@ -361,7 +361,7 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 		BranchesToDelete:    NewMutable(&branchesToDelete),
 		Config:              data.config,
 		InitialBranch:       data.initialBranch,
-		NoAutoResolve:       data.noAutoResolve,
+		AutoResolve:         data.autoResolve,
 		PrefetchBranchInfos: data.preFetchBranchInfos,
 		Remotes:             data.remotes,
 		Program:             prog,

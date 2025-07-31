@@ -67,13 +67,13 @@ main
 )
 
 func prependCommand() *cobra.Command {
+	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
 	addBeamFlag, readBeamFlag := flags.Beam()
 	addBodyFlag, readBodyFlag := flags.ProposalBody("")
 	addCommitFlag, readCommitFlag := flags.Commit()
 	addCommitMessageFlag, readCommitMessageFlag := flags.CommitMessage("the commit message")
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
-	addNoAutoResolveFlag, readNoAutoResolveFlag := flags.NoAutoResolve()
 	addProposeFlag, readProposeFlag := flags.Propose()
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
 	addTitleFlag, readTitleFlag := flags.ProposalTitle()
@@ -85,18 +85,18 @@ func prependCommand() *cobra.Command {
 		Short:   prependDesc,
 		Long:    cmdhelpers.Long(prependDesc, prependHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
+			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
 			beam, errBeam := readBeamFlag(cmd)
 			bodyText, errBodyText := readBodyFlag(cmd)
 			commit, errCommit := readCommitFlag(cmd)
 			commitMessage, errCommitMessage := readCommitMessageFlag(cmd)
 			detached, errDetached := readDetachedFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
-			noAutoResolve, errNoAutoResolve := readNoAutoResolveFlag(cmd)
 			propose, errPropose := readProposeFlag(cmd)
 			prototype, errPrototype := readPrototypeFlag(cmd)
 			title, errTitle := readTitleFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errBeam, errBodyText, errCommit, errCommitMessage, errDetached, errDryRun, errNoAutoResolve, errPropose, errPrototype, errTitle, errVerbose); err != nil {
+			if err := cmp.Or(errAutoResolve, errBeam, errBodyText, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errTitle, errVerbose); err != nil {
 				return err
 			}
 			if commitMessage.IsSome() {
@@ -106,9 +106,9 @@ func prependCommand() *cobra.Command {
 				commit = true
 			}
 			cliConfig := cliconfig.CliConfig{
-				DryRun:        dryRun,
-				NoAutoResolve: noAutoResolve,
-				Verbose:       verbose,
+				AutoResolve: autoResolve,
+				DryRun:      dryRun,
+				Verbose:     verbose,
 			}
 			return executePrepend(prependArgs{
 				argv:          args,
@@ -124,13 +124,13 @@ func prependCommand() *cobra.Command {
 			})
 		},
 	}
+	addAutoResolveFlag(&cmd)
 	addBeamFlag(&cmd)
 	addBodyFlag(&cmd)
 	addCommitFlag(&cmd)
 	addCommitMessageFlag(&cmd)
 	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
-	addNoAutoResolveFlag(&cmd)
 	addProposeFlag(&cmd)
 	addPrototypeFlag(&cmd)
 	addTitleFlag(&cmd)
@@ -220,7 +220,7 @@ type prependData struct {
 	initialBranchInfo   gitdomain.BranchInfo
 	inputs              dialogcomponents.Inputs
 	newParentCandidates gitdomain.LocalBranchNames
-	noAutoResolve       configdomain.NoAutoResolve
+	autoResolve         configdomain.AutoResolve
 	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	preFetchBranchInfos gitdomain.BranchInfos
 	previousBranch      Option[gitdomain.LocalBranchName]
@@ -377,7 +377,7 @@ func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (data p
 		initialBranchInfo:   *initialBranchInfo,
 		inputs:              inputs,
 		newParentCandidates: parentAndAncestors,
-		noAutoResolve:       args.cliConfig.NoAutoResolve,
+		autoResolve:         args.cliConfig.AutoResolve,
 		nonExistingBranches: nonExistingBranches,
 		preFetchBranchInfos: prefetchBranchSnapshot.Branches,
 		previousBranch:      previousBranch,
@@ -403,7 +403,7 @@ func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages
 			BranchesToDelete:    NewMutable(&branchesToDelete),
 			Config:              data.config,
 			InitialBranch:       data.initialBranch,
-			NoAutoResolve:       data.noAutoResolve,
+			AutoResolve:         data.autoResolve,
 			PrefetchBranchInfos: data.preFetchBranchInfos,
 			Program:             prog,
 			Prune:               false,

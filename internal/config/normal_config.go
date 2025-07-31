@@ -47,7 +47,7 @@ type NormalConfig struct {
 	HostingOriginHostname    Option[configdomain.HostingOriginHostname]
 	Lineage                  configdomain.Lineage
 	NewBranchType            Option[configdomain.NewBranchType]
-	NoAutoResolve            configdomain.NoAutoResolve
+	NoAutoResolve            configdomain.AutoResolve
 	ObservedRegex            Option[configdomain.ObservedRegex]
 	Offline                  configdomain.Offline
 	PerennialBranches        gitdomain.LocalBranchNames

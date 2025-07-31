@@ -61,7 +61,7 @@ main
 )
 
 func setParentCommand() *cobra.Command {
-	addNoAutoResolveFlag, readNoAutoResolveFlag := flags.NoAutoResolve()
+	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "set-parent [branch]",
@@ -70,20 +70,20 @@ func setParentCommand() *cobra.Command {
 		Short:   setParentDesc,
 		Long:    cmdhelpers.Long(setParentDesc, setParentHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			noAutoResolve, errNoAutoResolve := readNoAutoResolveFlag(cmd)
+			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if cmp.Or(errNoAutoResolve, errVerbose) != nil {
+			if cmp.Or(errAutoResolve, errVerbose) != nil {
 				return errVerbose
 			}
 			cliConfig := cliconfig.CliConfig{
-				DryRun:        false, // TODO: provide the real value here
-				NoAutoResolve: noAutoResolve,
-				Verbose:       verbose,
+				DryRun:      false, // TODO: provide the real value here
+				AutoResolve: autoResolve,
+				Verbose:     verbose,
 			}
 			return executeSetParent(args, cliConfig)
 		},
 	}
-	addNoAutoResolveFlag(&cmd)
+	addAutoResolveFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
@@ -205,7 +205,7 @@ type setParentData struct {
 	hasOpenChanges     bool
 	initialBranch      gitdomain.LocalBranchName
 	inputs             dialogcomponents.Inputs
-	noAutoResolve      configdomain.NoAutoResolve
+	autoResolve        configdomain.AutoResolve
 	proposal           Option[forgedomain.Proposal]
 	stashSize          gitdomain.StashSize
 }
@@ -307,7 +307,7 @@ func determineSetParentData(repo execute.OpenRepoResult, cliConfig cliconfig.Cli
 		hasOpenChanges:     repoStatus.OpenChanges,
 		initialBranch:      initialBranch,
 		inputs:             inputs,
-		noAutoResolve:      cliConfig.NoAutoResolve,
+		autoResolve:        cliConfig.AutoResolve,
 		proposal:           proposalOpt,
 		stashSize:          stashSize,
 	}, false, nil
@@ -351,7 +351,7 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 			}
 			parentOpt := data.config.NormalConfig.Lineage.Parent(data.initialBranch)
 			parent, hasParent := parentOpt.Get()
-			if hasParent && data.noAutoResolve.ShouldAutoResolve() {
+			if hasParent && data.autoResolve.ShouldAutoResolve() {
 				prog.Add(
 					&opcodes.RebaseOntoKeepDeleted{
 						BranchToRebaseOnto: newParent.BranchName(),

@@ -67,12 +67,12 @@ it also syncs all affected branches.
 )
 
 func hackCmd() *cobra.Command {
+	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
 	addBeamFlag, readBeamFlag := flags.Beam()
 	addCommitFlag, readCommitFlag := flags.Commit()
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addCommitMessageFlag, readCommitMessageFlag := flags.CommitMessage("the commit message")
-	addNoAutoResolveFlag, readNoAutoResolveFlag := flags.NoAutoResolve()
 	addProposeFlag, readProposeFlag := flags.Propose()
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
@@ -83,25 +83,25 @@ func hackCmd() *cobra.Command {
 		Short:   hackDesc,
 		Long:    cmdhelpers.Long(hackDesc, hackHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
+			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
 			beam, errBeam := readBeamFlag(cmd)
 			commit, errCommit := readCommitFlag(cmd)
 			commitMessage, errCommitMessage := readCommitMessageFlag(cmd)
 			detached, errDetached := readDetachedFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
-			noAutoResolve, errNoAutoResolve := readNoAutoResolveFlag(cmd)
 			propose, errPropose := readProposeFlag(cmd)
 			prototype, errPrototype := readPrototypeFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errBeam, errCommit, errCommitMessage, errDetached, errDryRun, errNoAutoResolve, errPropose, errPrototype, errVerbose); err != nil {
+			if err := cmp.Or(errAutoResolve, errBeam, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errVerbose); err != nil {
 				return err
 			}
 			if commitMessage.IsSome() || propose.IsTrue() {
 				commit = true
 			}
 			cliConfig := cliconfig.CliConfig{
-				DryRun:        dryRun,
-				NoAutoResolve: noAutoResolve,
-				Verbose:       verbose,
+				AutoResolve: autoResolve,
+				DryRun:      dryRun,
+				Verbose:     verbose,
 			}
 			return executeHack(hackArgs{
 				argv:          args,
@@ -120,7 +120,7 @@ func hackCmd() *cobra.Command {
 	addCommitMessageFlag(&cmd)
 	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
-	addNoAutoResolveFlag(&cmd)
+	addAutoResolveFlag(&cmd)
 	addProposeFlag(&cmd)
 	addPrototypeFlag(&cmd)
 	addVerboseFlag(&cmd)
@@ -376,6 +376,7 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data hackDat
 		args.propose = true
 	}
 	data = Left[appendFeatureData, convertToFeatureData](appendFeatureData{
+		autoResolve:               args.cliConfig.AutoResolve,
 		beam:                      args.beam,
 		branchInfos:               branchesSnapshot.Branches,
 		branchInfosLastRun:        branchInfosLastRun,
@@ -392,7 +393,6 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data hackDat
 		initialBranchInfo:         initialBranchInfo,
 		inputs:                    inputs,
 		newBranchParentCandidates: gitdomain.LocalBranchNames{validatedConfig.ValidatedConfigData.MainBranch},
-		noAutoResolve:             args.cliConfig.NoAutoResolve,
 		nonExistingBranches:       nonExistingBranches,
 		preFetchBranchInfos:       preFetchBranchSnapshot.Branches,
 		previousBranch:            previousBranch,

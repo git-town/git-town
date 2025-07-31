@@ -6,7 +6,7 @@ import "github.com/git-town/git-town/v21/internal/config/configdomain"
 // configuration information that can be received
 // via CLI flags.
 type CliConfig struct {
-	DryRun        configdomain.DryRun
-	NoAutoResolve configdomain.NoAutoResolve
-	Verbose       configdomain.Verbose
+	AutoResolve configdomain.AutoResolve
+	DryRun      configdomain.DryRun
+	Verbose     configdomain.Verbose
 }

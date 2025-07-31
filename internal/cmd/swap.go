@@ -80,9 +80,9 @@ func swapCommand() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.CliConfig{
-				DryRun:        dryRun,
-				NoAutoResolve: false,
-				Verbose:       verbose,
+				DryRun:      dryRun,
+				AutoResolve: false,
+				Verbose:     verbose,
 			}
 			return executeSwap(args, cliConfig)
 		},
@@ -161,7 +161,7 @@ type swapData struct {
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
 	inputs              dialogcomponents.Inputs
-	noAutoResolve       configdomain.NoAutoResolve
+	autoResolve         configdomain.AutoResolve
 	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	parentBranch        gitdomain.LocalBranchName
 	parentBranchInfo    gitdomain.BranchInfo
@@ -325,7 +325,7 @@ func determineSwapData(args []string, repo execute.OpenRepoResult, cliConfig cli
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
 		inputs:              inputs,
-		noAutoResolve:       cliConfig.NoAutoResolve,
+		autoResolve:         cliConfig.AutoResolve,
 		nonExistingBranches: nonExistingBranches,
 		parentBranch:        parentBranch,
 		parentBranchInfo:    *parentBranchInfo,
@@ -338,7 +338,7 @@ func determineSwapData(args []string, repo execute.OpenRepoResult, cliConfig cli
 func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Frontend)
-	if data.noAutoResolve.ShouldAutoResolve() {
+	if data.autoResolve.ShouldAutoResolve() {
 		prog.Value.Add(
 			&opcodes.RebaseOntoKeepDeleted{
 				BranchToRebaseOnto: data.grandParentBranch.BranchName(),
@@ -363,7 +363,7 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 			Branch: data.parentBranch,
 		},
 	)
-	if data.noAutoResolve.ShouldAutoResolve() {
+	if data.autoResolve.ShouldAutoResolve() {
 		prog.Value.Add(
 			&opcodes.RebaseOntoKeepDeleted{
 				BranchToRebaseOnto: data.branchToSwapName.BranchName(),
@@ -393,7 +393,7 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 		if !hasOldBranchSHA {
 			oldBranchSHA = data.branchToSwapInfo.RemoteSHA.GetOrDefault()
 		}
-		if data.noAutoResolve.ShouldAutoResolve() {
+		if data.autoResolve.ShouldAutoResolve() {
 			prog.Value.Add(
 				&opcodes.RebaseOntoKeepDeleted{
 					BranchToRebaseOnto: data.parentBranch.BranchName(),

@@ -19,7 +19,7 @@ func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBr
 				Offline:           args.offline,
 				InitialParentName: args.initialParentName,
 				InitialParentSHA:  args.initialParentSHA,
-				NoAutoResolve:     args.noAutoResolve,
+				NoAutoResolve:     args.autoResolve,
 				PushBranches:      args.pushBranches,
 				TrackingBranch:    args.trackingBranch,
 			},
@@ -38,7 +38,7 @@ func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBr
 				Branch:            args.localName,
 				InitialParentName: args.initialParentName,
 				InitialParentSHA:  args.initialParentSHA,
-				NoAutoResolve:     args.noAutoResolve,
+				NoAutoResolve:     args.autoResolve,
 				TrackingBranch:    args.trackingBranch,
 			},
 		)
@@ -46,7 +46,7 @@ func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBr
 		args.program.Value.Add(
 			&opcodes.SyncFeatureBranchRebase{
 				Branch:               args.localName,
-				NoAutoResolve:        args.noAutoResolve,
+				NoAutoResolve:        args.autoResolve,
 				ParentSHAPreviousRun: args.parentSHAPreviousRun,
 				PushBranches:         args.pushBranches,
 				TrackingBranch:       args.trackingBranch,
@@ -63,7 +63,7 @@ type featureBranchArgs struct {
 	initialParentName    Option[gitdomain.LocalBranchName] // the parent when Git Town started
 	initialParentSHA     Option[gitdomain.SHA]             // the parent when Git Town started
 	localName            gitdomain.LocalBranchName         // name of the feature branch
-	noAutoResolve        configdomain.NoAutoResolve        // whether to not auto-resolve conflicts
+	autoResolve          configdomain.AutoResolve          // whether to not auto-resolve conflicts
 	offline              configdomain.Offline              // whether offline mode is enabled
 	parentSHAPreviousRun Option[gitdomain.SHA]             // the parent at the end of the last Git Town command
 	program              Mutable[program.Program]          // the program to update

@@ -13,7 +13,7 @@ type SyncFeatureBranchCompress struct {
 	CurrentBranch           gitdomain.LocalBranchName
 	InitialParentName       Option[gitdomain.LocalBranchName]
 	InitialParentSHA        Option[gitdomain.SHA]
-	NoAutoResolve           configdomain.NoAutoResolve
+	NoAutoResolve           configdomain.AutoResolve
 	Offline                 configdomain.Offline
 	PushBranches            configdomain.PushBranches
 	TrackingBranch          Option[gitdomain.RemoteBranchName]

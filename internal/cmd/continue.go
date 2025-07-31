@@ -41,9 +41,9 @@ func continueCmd() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.CliConfig{
-				DryRun:        false,
-				NoAutoResolve: false,
-				Verbose:       verbose,
+				AutoResolve: false,
+				DryRun:      false,
+				Verbose:     verbose,
 			}
 			return executeContinue(cliConfig)
 		},

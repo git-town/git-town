@@ -119,7 +119,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		Lineage:                  lineage,
 		MainBranch:               gitdomain.NewLocalBranchNameOption(snapshot[configdomain.KeyMainBranch]),
 		NewBranchType:            newBranchType,
-		NoAutoResolve:            None[configdomain.NoAutoResolve](),
+		NoAutoResolve:            None[configdomain.AutoResolve](),
 		ObservedRegex:            observedRegex,
 		Offline:                  offline,
 		PerennialBranches:        gitdomain.ParseLocalBranchNames(snapshot[configdomain.KeyPerennialBranches]),

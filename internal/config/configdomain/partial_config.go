@@ -37,7 +37,7 @@ type PartialConfig struct {
 	Lineage                  Lineage
 	MainBranch               Option[gitdomain.LocalBranchName]
 	NewBranchType            Option[NewBranchType]
-	NoAutoResolve            Option[NoAutoResolve]
+	NoAutoResolve            Option[AutoResolve]
 	ObservedRegex            Option[ObservedRegex]
 	Offline                  Option[Offline]
 	PerennialBranches        gitdomain.LocalBranchNames

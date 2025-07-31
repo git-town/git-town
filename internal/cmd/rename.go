@@ -58,9 +58,9 @@ func renameCommand() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.CliConfig{
-				DryRun:        dryRun,
-				NoAutoResolve: false,
-				Verbose:       verbose,
+				DryRun:      dryRun,
+				AutoResolve: false,
+				Verbose:     verbose,
 			}
 			return executeRename(args, cliConfig, force)
 		},

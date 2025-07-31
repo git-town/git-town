@@ -13,7 +13,7 @@ type SyncFeatureBranchMerge struct {
 	Branch                  gitdomain.LocalBranchName
 	InitialParentName       Option[gitdomain.LocalBranchName]
 	InitialParentSHA        Option[gitdomain.SHA]
-	NoAutoResolve           configdomain.NoAutoResolve
+	NoAutoResolve           configdomain.AutoResolve
 	TrackingBranch          Option[gitdomain.RemoteBranchName]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }

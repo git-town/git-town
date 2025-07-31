@@ -64,7 +64,7 @@ type BranchProgramArgs struct {
 	BranchesToDelete    Mutable[set.Set[gitdomain.LocalBranchName]] // branches that should be deleted after the branches are all synced
 	Config              config.ValidatedConfig
 	InitialBranch       gitdomain.LocalBranchName
-	NoAutoResolve       configdomain.NoAutoResolve
+	AutoResolve         configdomain.AutoResolve
 	PrefetchBranchInfos gitdomain.BranchInfos // BranchInfos before "git fetch" ran
 	Program             Mutable[program.Program]
 	Prune               configdomain.Prune
@@ -88,7 +88,7 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 			initialParentName:    initialParentName,
 			initialParentSHA:     initialParentSHA,
 			localName:            localName,
-			noAutoResolve:        args.NoAutoResolve,
+			autoResolve:          args.AutoResolve,
 			offline:              args.Config.NormalConfig.Offline,
 			parentSHAPreviousRun: parentSHAPreviousRun,
 			program:              args.Program,
@@ -104,7 +104,7 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 			initialParentName:    initialParentName,
 			initialParentSHA:     initialParentSHA,
 			localName:            localName,
-			noAutoResolve:        args.NoAutoResolve,
+			autoResolve:          args.AutoResolve,
 			offline:              args.Config.NormalConfig.Offline,
 			parentSHAPreviousRun: parentSHAPreviousRun,
 			program:              args.Program,
@@ -122,7 +122,7 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 			initialParentName:    initialParentName,
 			initialParentSHA:     initialParentSHA,
 			localName:            localName,
-			noAutoResolve:        args.NoAutoResolve,
+			autoResolve:          args.AutoResolve,
 			offline:              args.Config.NormalConfig.Offline,
 			parentSHAPreviousRun: parentSHAPreviousRun,
 			program:              args.Program,
@@ -156,13 +156,13 @@ func pullParentBranchOfCurrentFeatureBranchOpcode(args pullParentBranchOfCurrent
 			Branch:            args.branch,
 			InitialParentName: args.initialParentName,
 			InitialParentSHA:  args.initialParentSHA,
-			NoAutoResolve:     args.noAutoResolve,
+			NoAutoResolve:     args.autoResolve,
 			TrackingBranch:    args.trackingBranch,
 		})
 	case configdomain.SyncFeatureStrategyRebase:
 		args.program.Value.Add(&opcodes.RebaseParentsUntilLocal{
 			Branch:               args.branch,
-			NoAutoResolve:        args.noAutoResolve,
+			NoAutoResolve:        args.autoResolve,
 			ParentSHAPreviousRun: args.parentSHAPreviousRun,
 		})
 	}
@@ -172,7 +172,7 @@ type pullParentBranchOfCurrentFeatureBranchOpcodeArgs struct {
 	branch               gitdomain.LocalBranchName
 	initialParentName    Option[gitdomain.LocalBranchName]
 	initialParentSHA     Option[gitdomain.SHA]
-	noAutoResolve        configdomain.NoAutoResolve
+	autoResolve          configdomain.AutoResolve
 	parentSHAPreviousRun Option[gitdomain.SHA]
 	program              Mutable[program.Program]
 	syncStrategy         configdomain.SyncFeatureStrategy

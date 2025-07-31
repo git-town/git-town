@@ -48,9 +48,9 @@ func (self *UnvalidatedConfig) Reload(backend subshelldomain.RunnerQuerier) (glo
 	envConfig := envconfig.Load()
 	unvalidatedConfig, normalConfig := mergeConfigs(mergeConfigsArgs{
 		cli: cliconfig.CliConfig{
-			DryRun:        false,
-			NoAutoResolve: false,
-			Verbose:       false,
+			DryRun:      false,
+			AutoResolve: false,
+			Verbose:     false,
 		},
 		defaults: DefaultNormalConfig(),
 		env:      envConfig,

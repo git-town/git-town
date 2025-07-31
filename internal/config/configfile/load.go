@@ -55,7 +55,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	var hostingOriginHostname Option[configdomain.HostingOriginHostname]
 	var mainBranch Option[gitdomain.LocalBranchName]
 	var newBranchType Option[configdomain.NewBranchType]
-	var noAutoResolve Option[configdomain.NoAutoResolve]
+	var autoResolve Option[configdomain.AutoResolve]
 	var observedRegex Option[configdomain.ObservedRegex]
 	var perennialBranches gitdomain.LocalBranchNames
 	var perennialRegex Option[configdomain.PerennialRegex]
@@ -249,7 +249,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		Lineage:                  configdomain.Lineage{},
 		MainBranch:               mainBranch,
 		NewBranchType:            newBranchType,
-		NoAutoResolve:            noAutoResolve,
+		NoAutoResolve:            autoResolve,
 		ObservedRegex:            observedRegex,
 		Offline:                  None[configdomain.Offline](),
 		PerennialBranches:        perennialBranches,

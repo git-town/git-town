@@ -85,9 +85,9 @@ func detachCommand() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.CliConfig{
-				DryRun:        dryRun,
-				NoAutoResolve: false,
-				Verbose:       verbose,
+				AutoResolve: false,
+				DryRun:      dryRun,
+				Verbose:     verbose,
 			}
 			return executeDetach(args, cliConfig)
 		},
