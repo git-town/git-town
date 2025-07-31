@@ -156,11 +156,10 @@ func executeHack(args hackArgs) error {
 		})
 	}
 	if doConvertToFeatureBranch {
-		return convertToFeatureBranch(convertToFeatureBranchArgs{
+		return convertToFeatureBranch(repo, convertToFeatureBranchArgs{
 			beginConfigSnapshot: repo.ConfigSnapshot,
 			config:              convertToFeatureBranchData.config,
 			makeFeatureData:     convertToFeatureBranchData,
-			repo:                repo,
 			verbose:             convertToFeatureBranchData.config.NormalConfig.Verbose,
 		})
 	}
@@ -406,7 +405,7 @@ type hackArgs struct {
 	prototype     configdomain.Prototype
 }
 
-func convertToFeatureBranch(args convertToFeatureBranchArgs) error {
+func convertToFeatureBranch(repo execute.OpenRepoResult, args convertToFeatureBranchArgs) error {
 	for branchName, branchType := range args.makeFeatureData.targetBranches {
 		switch branchType {
 		case
@@ -414,7 +413,7 @@ func convertToFeatureBranch(args convertToFeatureBranchArgs) error {
 			configdomain.BranchTypeObservedBranch,
 			configdomain.BranchTypeParkedBranch,
 			configdomain.BranchTypePrototypeBranch:
-			if err := gitconfig.SetBranchTypeOverride(args.repo.Backend, configdomain.BranchTypeFeatureBranch, branchName); err != nil {
+			if err := gitconfig.SetBranchTypeOverride(repo.Backend, configdomain.BranchTypeFeatureBranch, branchName); err != nil {
 				return err
 			}
 		case configdomain.BranchTypeFeatureBranch:
@@ -427,14 +426,14 @@ func convertToFeatureBranch(args convertToFeatureBranchArgs) error {
 		fmt.Printf(messages.BranchIsNowFeature, branchName)
 	}
 	return configinterpreter.Finished(configinterpreter.FinishedArgs{
-		Backend:               args.repo.Backend,
+		Backend:               repo.Backend,
 		BeginBranchesSnapshot: None[gitdomain.BranchesSnapshot](),
 		BeginConfigSnapshot:   args.beginConfigSnapshot,
 		Command:               "observe",
-		CommandsCounter:       args.repo.CommandsCounter,
-		FinalMessages:         args.repo.FinalMessages,
-		Git:                   args.repo.Git,
-		RootDir:               args.repo.RootDir,
+		CommandsCounter:       repo.CommandsCounter,
+		FinalMessages:         repo.FinalMessages,
+		Git:                   repo.Git,
+		RootDir:               repo.RootDir,
 		TouchedBranches:       args.makeFeatureData.targetBranches.Keys().BranchNames(),
 		Verbose:               args.verbose,
 	})
@@ -444,6 +443,5 @@ type convertToFeatureBranchArgs struct {
 	beginConfigSnapshot undoconfig.ConfigSnapshot
 	config              config.ValidatedConfig
 	makeFeatureData     convertToFeatureData
-	repo                execute.OpenRepoResult
 	verbose             configdomain.Verbose
 }
