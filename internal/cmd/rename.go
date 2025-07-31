@@ -57,10 +57,10 @@ func renameCommand() *cobra.Command {
 			if err := cmp.Or(err1, err2, err3); err != nil {
 				return err
 			}
-			cliConfig := cliconfig.CliConfig{
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				DryRun:  dryRun,
 				Verbose: verbose,
-			}
+			})
 			return executeRename(args, cliConfig, force)
 		},
 	}
@@ -70,7 +70,7 @@ func renameCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeRename(args []string, cliConfig cliconfig.CliConfig, force configdomain.Force) error {
+func executeRename(args []string, cliConfig configdomain.PartialConfig, force configdomain.Force) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,
@@ -82,9 +82,8 @@ func executeRename(args []string, cliConfig cliconfig.CliConfig, force configdom
 		return err
 	}
 	data, exit, err := determineRenameData(repo, determineRenameDataArgs{
-		args:      args,
-		cliConfig: cliConfig,
-		force:     force,
+		args:  args,
+		force: force,
 	})
 	if err != nil || exit {
 		return err
@@ -96,7 +95,7 @@ func executeRename(args []string, cliConfig cliconfig.CliConfig, force configdom
 		BeginStashSize:        data.stashSize,
 		BranchInfosLastRun:    data.branchInfosLastRun,
 		Command:               "rename",
-		DryRun:                cliConfig.DryRun,
+		DryRun:                data.config.NormalConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
@@ -122,7 +121,6 @@ func executeRename(args []string, cliConfig cliconfig.CliConfig, force configdom
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
-		Verbose:                 cliConfig.Verbose,
 	})
 }
 
@@ -186,7 +184,6 @@ func determineRenameData(repo execute.OpenRepoResult, args determineRenameDataAr
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               args.cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return data, exit, err
@@ -285,9 +282,8 @@ func determineRenameData(repo execute.OpenRepoResult, args determineRenameDataAr
 }
 
 type determineRenameDataArgs struct {
-	args      []string
-	cliConfig cliconfig.CliConfig
-	force     configdomain.Force
+	args  []string
+	force configdomain.Force
 }
 
 func renameProgram(repo execute.OpenRepoResult, data renameData, finalMessages stringslice.Collector) program.Program {

@@ -88,10 +88,10 @@ func walkCommand() *cobra.Command {
 			if err := cmp.Or(err1, err2, err3, err4); err != nil {
 				return err
 			}
-			cliConfig := cliconfig.CliConfig{
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				DryRun:  dryRun,
 				Verbose: verbose,
-			}
+			})
 			return executeWalk(executeWalkArgs{
 				args:        args,
 				cliConfig:   cliConfig,
@@ -109,7 +109,7 @@ func walkCommand() *cobra.Command {
 
 type executeWalkArgs struct {
 	args        []string
-	cliConfig   cliconfig.CliConfig
+	cliConfig   configdomain.PartialConfig
 	allBranches configdomain.AllBranches
 	fullStack   configdomain.FullStack
 }
@@ -125,24 +125,24 @@ func executeWalk(args executeWalkArgs) error {
 	if err != nil {
 		return err
 	}
-	if len(args.args) == 0 && args.cliConfig.DryRun {
+	if len(args.args) == 0 && repo.UnvalidatedConfig.NormalConfig.DryRun {
 		return errors.New(messages.WalkNoDryRun)
 	}
 	if err := validateArgs(args.allBranches, args.fullStack); err != nil {
 		return err
 	}
-	data, exit, err := determineWalkData(repo, args.cliConfig, args.allBranches, args.fullStack)
+	data, exit, err := determineWalkData(repo, allBranches, fullStack)
 	if err != nil || exit {
 		return err
 	}
-	runProgram := walkProgram(args.args, data, args.cliConfig.DryRun)
+	runProgram := walkProgram(args, data)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        data.stashSize,
 		BranchInfosLastRun:    data.branchInfosLastRun,
 		Command:               walkCmd,
-		DryRun:                args.cliConfig.DryRun,
+		DryRun:                data.config.NormalConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
@@ -168,7 +168,6 @@ func executeWalk(args executeWalkArgs) error {
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
-		Verbose:                 args.cliConfig.Verbose,
 	})
 }
 
@@ -185,7 +184,7 @@ type walkData struct {
 	stashSize          gitdomain.StashSize
 }
 
-func determineWalkData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig, all configdomain.AllBranches, stack configdomain.FullStack) (walkData, dialogdomain.Exit, error) {
+func determineWalkData(repo execute.OpenRepoResult, all configdomain.AllBranches, stack configdomain.FullStack) (walkData, dialogdomain.Exit, error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -227,7 +226,6 @@ func determineWalkData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfi
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return walkData{}, exit, err
@@ -283,7 +281,7 @@ func determineWalkData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfi
 	}, false, nil
 }
 
-func walkProgram(args []string, data walkData, dryRun configdomain.DryRun) program.Program {
+func walkProgram(args []string, data walkData) program.Program {
 	prog := NewMutable(&program.Program{})
 	hasCall, executable, callArgs := parseArgs(args)
 	for _, branchToWalk := range data.branchesToWalk {
@@ -313,7 +311,7 @@ func walkProgram(args []string, data walkData, dryRun configdomain.DryRun) progr
 		},
 	)
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
-		DryRun:                   dryRun,
+		DryRun:                   data.config.NormalConfig.DryRun,
 		InitialStashSize:         data.stashSize,
 		RunInGitRoot:             true,
 		StashOpenChanges:         data.hasOpenChanges,

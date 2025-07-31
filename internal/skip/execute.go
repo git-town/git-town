@@ -58,7 +58,6 @@ func Execute(args ExecuteArgs) error {
 		PendingCommand:          Some(args.RunState.Command),
 		RootDir:                 args.RootDir,
 		RunState:                args.RunState,
-		Verbose:                 args.Verbose,
 	})
 }
 
@@ -76,7 +75,6 @@ type ExecuteArgs struct {
 	Inputs          dialogcomponents.Inputs
 	RootDir         gitdomain.RepoRootDir
 	RunState        runstate.RunState
-	Verbose         configdomain.Verbose
 }
 
 // removes the remaining opcodes for the current branch from the given program
