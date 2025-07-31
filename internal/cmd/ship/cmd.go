@@ -141,9 +141,9 @@ func executeShip(args executeShipArgs) error {
 		shipProgramAlwaysMerge(shipProgramAlwaysMergeArgs{
 			commitMessage: message,
 			mergeData:     mergeData,
+			prog:          prog,
 			repo:          repo,
 			sharedData:    sharedData,
-			prog:          prog,
 		})
 	case configdomain.ShipStrategyFastForward:
 		mergeData, err := determineMergeData(repo, sharedData.branchNameToShip, sharedData.targetBranchName)
