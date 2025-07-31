@@ -94,7 +94,7 @@ func walkCommand() *cobra.Command {
 			})
 			return executeWalk(executeWalkArgs{
 				allBranches: allBranches,
-				args:        args,
+				argv:        args,
 				cliConfig:   cliConfig,
 				stack:       stack,
 			})
@@ -109,7 +109,7 @@ func walkCommand() *cobra.Command {
 
 type executeWalkArgs struct {
 	allBranches configdomain.AllBranches
-	args        []string
+	argv        []string
 	cliConfig   configdomain.PartialConfig
 	stack       configdomain.FullStack
 }
@@ -125,7 +125,7 @@ func executeWalk(args executeWalkArgs) error {
 	if err != nil {
 		return err
 	}
-	if len(args.args) == 0 && repo.UnvalidatedConfig.NormalConfig.DryRun {
+	if len(args.argv) == 0 && repo.UnvalidatedConfig.NormalConfig.DryRun {
 		return errors.New(messages.WalkNoDryRun)
 	}
 	if err := validateArgs(args.allBranches, args.stack); err != nil {
@@ -135,7 +135,7 @@ func executeWalk(args executeWalkArgs) error {
 	if err != nil || exit {
 		return err
 	}
-	runProgram := walkProgram(args.args, data)
+	runProgram := walkProgram(args.argv, data)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
