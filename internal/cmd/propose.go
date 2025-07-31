@@ -101,11 +101,12 @@ func proposeCommand() *cobra.Command {
 }
 
 type proposeArgs struct {
-	body      Option[gitdomain.ProposalBody]
-	bodyFile  Option[gitdomain.ProposalBodyFile]
-	cliConfig cliconfig.CliConfig
-	stack     configdomain.FullStack
-	title     Option[gitdomain.ProposalTitle]
+	body          Option[gitdomain.ProposalBody]
+	bodyFile      Option[gitdomain.ProposalBodyFile]
+	cliConfig     cliconfig.CliConfig
+	noAutoResolve configdomain.NoAutoResolve
+	stack         configdomain.FullStack
+	title         Option[gitdomain.ProposalTitle]
 }
 
 func executePropose(args proposeArgs) error {
@@ -336,7 +337,7 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (data p
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
 		inputs:              inputs,
-		noAutoResolve:       noAutoResolve,
+		noAutoResolve:       args.noAutoResolve,
 		nonExistingBranches: nonExistingBranches,
 		preFetchBranchInfos: preFetchBranchSnapshot.Branches,
 		previousBranch:      previousBranch,

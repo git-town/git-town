@@ -85,6 +85,7 @@ func Cmd() *cobra.Command {
 			return executeSync(executeSyncArgs{
 				cliConfig:       cliConfig,
 				detached:        detached,
+				noAutoResolve:   noAutoResolve,
 				prune:           prune,
 				pushBranches:    pushBranches,
 				stack:           stack,
@@ -106,6 +107,7 @@ func Cmd() *cobra.Command {
 type executeSyncArgs struct {
 	cliConfig       cliconfig.CliConfig
 	detached        configdomain.Detached
+	noAutoResolve   configdomain.NoAutoResolve
 	prune           configdomain.Prune
 	pushBranches    configdomain.PushBranches
 	stack           configdomain.FullStack
@@ -144,7 +146,7 @@ func executeSync(args executeSyncArgs) error {
 		BranchesToDelete:    NewMutable(&branchesToDelete),
 		Config:              data.config,
 		InitialBranch:       data.initialBranch,
-		NoAutoResolve:       noAutoResolve,
+		NoAutoResolve:       args.noAutoResolve,
 		PrefetchBranchInfos: data.prefetchBranchesSnapshot.Branches,
 		Program:             runProgram,
 		Prune:               args.prune,
