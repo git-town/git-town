@@ -77,7 +77,7 @@ func proposeCommand() *cobra.Command {
 			stack, errStack := readStackFlag(cmd)
 			title, errTitle := readTitleFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errBodyFile, errBodyText, errDryRun, errStack, errTitle, errVerbose); err != nil {
+			if err := cmp.Or(errBodyFile, errBodyText, errDryRun, errNoAutoResolve, errStack, errTitle, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.CliConfig{
@@ -97,6 +97,7 @@ func proposeCommand() *cobra.Command {
 	addBodyFlag(&cmd)
 	addBodyFileFlag(&cmd)
 	addDryRunFlag(&cmd)
+	addNoAutoResolveFlag(&cmd)
 	addStackFlag(&cmd)
 	addTitleFlag(&cmd)
 	addVerboseFlag(&cmd)
