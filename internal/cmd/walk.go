@@ -93,9 +93,9 @@ func walkCommand() *cobra.Command {
 				Verbose: verbose,
 			})
 			return executeWalk(executeWalkArgs{
+				allBranches: allBranches,
 				args:        args,
 				cliConfig:   cliConfig,
-				allBranches: allBranches,
 				fullStack:   stack,
 			})
 		},
@@ -108,9 +108,9 @@ func walkCommand() *cobra.Command {
 }
 
 type executeWalkArgs struct {
+	allBranches configdomain.AllBranches
 	args        []string
 	cliConfig   configdomain.PartialConfig
-	allBranches configdomain.AllBranches
 	fullStack   configdomain.FullStack
 }
 

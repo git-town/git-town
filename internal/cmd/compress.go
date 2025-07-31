@@ -323,11 +323,11 @@ func compressProgram(data compressBranchesData, commitHook configdomain.CommitHo
 	prog := NewMutable(&program.Program{})
 	for _, branchToCompress := range data.branchesToCompress {
 		compressBranchProgram(compressBranchProgramArgs{
-			prog:          prog,
-			data:          branchToCompress,
-			offline:       data.config.NormalConfig.Offline,
-			initialBranch: data.initialBranch,
 			commitHook:    commitHook,
+			data:          branchToCompress,
+			initialBranch: data.initialBranch,
+			offline:       data.config.NormalConfig.Offline,
+			prog:          prog,
 		})
 	}
 	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.initialBranch})
@@ -359,11 +359,11 @@ func compressBranchProgram(args compressBranchProgramArgs) {
 }
 
 type compressBranchProgramArgs struct {
-	prog          Mutable[program.Program]
-	data          compressBranchData
-	offline       configdomain.Offline
-	initialBranch gitdomain.LocalBranchName
 	commitHook    configdomain.CommitHook
+	data          compressBranchData
+	initialBranch gitdomain.LocalBranchName
+	offline       configdomain.Offline
+	prog          Mutable[program.Program]
 }
 
 func shouldCompressBranch(branchName gitdomain.LocalBranchName, branchType configdomain.BranchType, initialBranchName gitdomain.LocalBranchName) bool {

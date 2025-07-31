@@ -47,9 +47,9 @@ func shipProgramAlwaysMerge(args shipProgramAlwaysMergeArgs) {
 }
 
 type shipProgramAlwaysMergeArgs struct {
-	prog          Mutable[program.Program]
+	commitMessage Option[gitdomain.CommitMessage]
+	mergeData     shipDataMerge
 	repo          execute.OpenRepoResult
 	sharedData    sharedShipData
-	mergeData     shipDataMerge
-	commitMessage Option[gitdomain.CommitMessage]
+	prog          Mutable[program.Program]
 }
