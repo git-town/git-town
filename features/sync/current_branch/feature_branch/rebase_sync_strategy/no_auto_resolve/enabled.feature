@@ -1,4 +1,4 @@
-Feature: a grandchild branch has conflicts while its parent was deleted remotely
+Feature: don't auto-resolve merge conflicts
 
   Background:
     Given a Git repo with origin
