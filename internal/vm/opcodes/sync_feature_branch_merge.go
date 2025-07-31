@@ -10,10 +10,10 @@ import (
 
 // SyncFeatureBranchMerge merges the parent branches of the given branch until a local parent is found.
 type SyncFeatureBranchMerge struct {
+	AutoResolve             configdomain.AutoResolve
 	Branch                  gitdomain.LocalBranchName
 	InitialParentName       Option[gitdomain.LocalBranchName]
 	InitialParentSHA        Option[gitdomain.SHA]
-	AutoResolve             configdomain.AutoResolve
 	TrackingBranch          Option[gitdomain.RemoteBranchName]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
@@ -49,11 +49,11 @@ func (self *SyncFeatureBranchMerge) Run(args shared.RunArgs) error {
 				}
 				if !isInSync {
 					program = append(program, &MergeParent{
+						AutoResolve:       self.AutoResolve,
 						CurrentBranch:     self.Branch,
 						CurrentParent:     parentToMerge,
 						InitialParentName: self.InitialParentName,
 						InitialParentSHA:  self.InitialParentSHA,
-						AutoResolve:       self.AutoResolve,
 					})
 				}
 				break
@@ -66,11 +66,11 @@ func (self *SyncFeatureBranchMerge) Run(args shared.RunArgs) error {
 				}
 				if !isInSync {
 					program = append(program, &MergeParent{
+						AutoResolve:       self.AutoResolve,
 						CurrentBranch:     self.Branch,
 						CurrentParent:     parentTrackingBranch.BranchName(),
 						InitialParentName: self.InitialParentName,
 						InitialParentSHA:  self.InitialParentSHA,
-						AutoResolve:       self.AutoResolve,
 					})
 				}
 			}

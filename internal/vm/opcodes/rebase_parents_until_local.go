@@ -9,8 +9,8 @@ import (
 )
 
 type RebaseParentsUntilLocal struct {
-	Branch                  gitdomain.LocalBranchName
 	AutoResolve             configdomain.AutoResolve
+	Branch                  gitdomain.LocalBranchName
 	ParentSHAPreviousRun    Option[gitdomain.SHA]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }

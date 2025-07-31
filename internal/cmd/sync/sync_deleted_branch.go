@@ -54,10 +54,10 @@ func syncDeletedFeatureBranchProgram(prog Mutable[program.Program], branch gitdo
 		gitdomain.SyncStatusNotInSync:
 		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: branch})
 		pullParentBranchOfCurrentFeatureBranchOpcode(pullParentBranchOfCurrentFeatureBranchOpcodeArgs{
+			autoResolve:          args.Config.NormalConfig.AutoResolve,
 			branch:               branch,
 			initialParentName:    initialParentName,
 			initialParentSHA:     initialParentSHA,
-			autoResolve:          args.Config.NormalConfig.AutoResolve,
 			parentSHAPreviousRun: parentSHAPreviousRun,
 			program:              prog,
 			syncStrategy:         args.Config.NormalConfig.SyncFeatureStrategy,

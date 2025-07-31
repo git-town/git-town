@@ -83,11 +83,11 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 	switch branchType {
 	case configdomain.BranchTypeFeatureBranch:
 		FeatureBranchProgram(args.Config.NormalConfig.SyncFeatureStrategy.SyncStrategy(), featureBranchArgs{
+			autoResolve:          args.Config.NormalConfig.AutoResolve,
 			firstCommitMessage:   firstCommitMessage,
 			initialParentName:    initialParentName,
 			initialParentSHA:     initialParentSHA,
 			localName:            localName,
-			autoResolve:          args.Config.NormalConfig.AutoResolve,
 			offline:              args.Config.NormalConfig.Offline,
 			parentSHAPreviousRun: parentSHAPreviousRun,
 			program:              args.Program,
@@ -99,11 +99,11 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 		PerennialBranchProgram(branchInfo, args)
 	case configdomain.BranchTypeParkedBranch:
 		ParkedBranchProgram(args.Config.NormalConfig.SyncFeatureStrategy.SyncStrategy(), args.InitialBranch, featureBranchArgs{
+			autoResolve:          args.Config.NormalConfig.AutoResolve,
 			firstCommitMessage:   firstCommitMessage,
 			initialParentName:    initialParentName,
 			initialParentSHA:     initialParentSHA,
 			localName:            localName,
-			autoResolve:          args.Config.NormalConfig.AutoResolve,
 			offline:              args.Config.NormalConfig.Offline,
 			parentSHAPreviousRun: parentSHAPreviousRun,
 			program:              args.Program,
@@ -117,11 +117,11 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 		ObservedBranchProgram(branchInfo, args.Program)
 	case configdomain.BranchTypePrototypeBranch:
 		FeatureBranchProgram(args.Config.NormalConfig.SyncPrototypeStrategy.SyncStrategy(), featureBranchArgs{
+			autoResolve:          args.Config.NormalConfig.AutoResolve,
 			firstCommitMessage:   firstCommitMessage,
 			initialParentName:    initialParentName,
 			initialParentSHA:     initialParentSHA,
 			localName:            localName,
-			autoResolve:          args.Config.NormalConfig.AutoResolve,
 			offline:              args.Config.NormalConfig.Offline,
 			parentSHAPreviousRun: parentSHAPreviousRun,
 			program:              args.Program,
@@ -168,10 +168,10 @@ func pullParentBranchOfCurrentFeatureBranchOpcode(args pullParentBranchOfCurrent
 }
 
 type pullParentBranchOfCurrentFeatureBranchOpcodeArgs struct {
+	autoResolve          configdomain.AutoResolve
 	branch               gitdomain.LocalBranchName
 	initialParentName    Option[gitdomain.LocalBranchName]
 	initialParentSHA     Option[gitdomain.SHA]
-	autoResolve          configdomain.AutoResolve
 	parentSHAPreviousRun Option[gitdomain.SHA]
 	program              Mutable[program.Program]
 	syncStrategy         configdomain.SyncFeatureStrategy

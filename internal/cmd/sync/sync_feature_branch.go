@@ -59,11 +59,11 @@ func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBr
 }
 
 type featureBranchArgs struct {
+	autoResolve          configdomain.AutoResolve // whether to not auto-resolve conflicts
 	firstCommitMessage   Option[gitdomain.CommitMessage]
 	initialParentName    Option[gitdomain.LocalBranchName] // the parent when Git Town started
 	initialParentSHA     Option[gitdomain.SHA]             // the parent when Git Town started
 	localName            gitdomain.LocalBranchName         // name of the feature branch
-	autoResolve          configdomain.AutoResolve          // whether to not auto-resolve conflicts
 	offline              configdomain.Offline              // whether offline mode is enabled
 	parentSHAPreviousRun Option[gitdomain.SHA]             // the parent at the end of the last Git Town command
 	program              Mutable[program.Program]          // the program to update
