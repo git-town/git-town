@@ -4,6 +4,8 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v21/internal/cli/flags"
+	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/shoenig/test/must"
 	"github.com/spf13/cobra"
 )
@@ -20,7 +22,7 @@ func TestVerbose(t *testing.T) {
 		must.NoError(t, err)
 		have, err := readFlag(&cmd)
 		must.NoError(t, err)
-		must.EqOp(t, true, have)
+		must.True(t, have.EqualSome(true))
 	})
 
 	t.Run("short version", func(t *testing.T) {
@@ -32,6 +34,6 @@ func TestVerbose(t *testing.T) {
 		must.NoError(t, err)
 		have, err := readFlag(&cmd)
 		must.NoError(t, err)
-		must.EqOp(t, true, have)
+		must.Eq(t, None[configdomain.Verbose](), have)
 	})
 }

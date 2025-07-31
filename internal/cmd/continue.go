@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/cliconfig"
+	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
@@ -40,10 +41,10 @@ func continueCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			cliConfig := cliconfig.CliConfig{
-				DryRun:  false,
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				DryRun:  None[configdomain.DryRun](),
 				Verbose: verbose,
-			}
+			})
 			return executeContinue(cliConfig)
 		},
 	}
@@ -51,7 +52,7 @@ func continueCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeContinue(cliConfig cliconfig.CliConfig) error {
+func executeContinue(cliConfig configdomain.PartialConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,
@@ -66,7 +67,7 @@ func executeContinue(cliConfig cliconfig.CliConfig) error {
 	if err != nil || exit {
 		return err
 	}
-	data, exit, err := determineContinueData(repo, cliConfig)
+	data, exit, err := determineContinueData(repo)
 	if err != nil || exit {
 		return err
 	}
@@ -88,11 +89,10 @@ func executeContinue(cliConfig cliconfig.CliConfig) error {
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
-		Verbose:                 cliConfig.Verbose,
 	})
 }
 
-func determineContinueData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data continueData, exit dialogdomain.Exit, err error) {
+func determineContinueData(repo execute.OpenRepoResult) (data continueData, exit dialogdomain.Exit, err error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -134,7 +134,6 @@ func determineContinueData(repo execute.OpenRepoResult, cliConfig cliconfig.CliC
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return data, exit, err

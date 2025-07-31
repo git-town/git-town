@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v21/internal/config/cliconfig"
+	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
@@ -32,10 +33,10 @@ func SetupCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			cliConfig := cliconfig.CliConfig{
-				DryRun:  false,
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				DryRun:  None[configdomain.DryRun](),
 				Verbose: verbose,
-			}
+			})
 			return executeConfigSetup(cliConfig)
 		},
 	}
@@ -43,7 +44,7 @@ func SetupCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeConfigSetup(cliConfig cliconfig.CliConfig) error {
+func executeConfigSetup(cliConfig configdomain.PartialConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: false,
@@ -54,7 +55,7 @@ func executeConfigSetup(cliConfig cliconfig.CliConfig) error {
 	if err != nil {
 		return err
 	}
-	data, exit, err := LoadData(repo, cliConfig)
+	data, exit, err := LoadData(repo)
 	if err != nil || exit {
 		return err
 	}
@@ -75,11 +76,11 @@ func executeConfigSetup(cliConfig cliconfig.CliConfig) error {
 		Git:                   repo.Git,
 		RootDir:               repo.RootDir,
 		TouchedBranches:       []gitdomain.BranchName{},
-		Verbose:               cliConfig.Verbose,
+		Verbose:               repo.UnvalidatedConfig.NormalConfig.Verbose,
 	})
 }
 
-func LoadData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data setup.Data, exit dialogdomain.Exit, err error) {
+func LoadData(repo execute.OpenRepoResult) (data setup.Data, exit dialogdomain.Exit, err error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -102,7 +103,6 @@ func LoadData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data 
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               cliConfig.Verbose,
 	})
 	if err != nil {
 		return data, exit, err

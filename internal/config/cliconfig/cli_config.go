@@ -7,15 +7,12 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-// CliConfig contains the generic (command-independent)
-// configuration information that can be received
-// via CLI flags.
-type CliConfig struct {
-	DryRun  configdomain.DryRun
-	Verbose configdomain.Verbose
+type NewArgs struct {
+	DryRun  Option[configdomain.DryRun]
+	Verbose Option[configdomain.Verbose]
 }
 
-func NewCliConfig(dryRun Option[configdomain.DryRun], verbose Option[configdomain.Verbose]) configdomain.PartialConfig {
+func New(args NewArgs) configdomain.PartialConfig {
 	return configdomain.PartialConfig{
 		Aliases:                  configdomain.Aliases{},
 		BitbucketAppPassword:     None[forgedomain.BitbucketAppPassword](),
@@ -24,7 +21,7 @@ func NewCliConfig(dryRun Option[configdomain.DryRun], verbose Option[configdomai
 		CodebergToken:            None[forgedomain.CodebergToken](),
 		ContributionRegex:        None[configdomain.ContributionRegex](),
 		DevRemote:                None[gitdomain.Remote](),
-		DryRun:                   dryRun,
+		DryRun:                   args.DryRun,
 		FeatureRegex:             None[configdomain.FeatureRegex](),
 		ForgeType:                None[forgedomain.ForgeType](),
 		GitHubConnectorType:      None[forgedomain.GitHubConnectorType](),
@@ -53,6 +50,6 @@ func NewCliConfig(dryRun Option[configdomain.DryRun], verbose Option[configdomai
 		SyncTags:                 None[configdomain.SyncTags](),
 		SyncUpstream:             None[configdomain.SyncUpstream](),
 		UnknownBranchType:        None[configdomain.UnknownBranchType](),
-		Verbose:                  verbose,
+		Verbose:                  args.Verbose,
 	}
 }
