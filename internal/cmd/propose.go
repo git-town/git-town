@@ -59,6 +59,7 @@ func proposeCommand() *cobra.Command {
 	addBodyFlag, readBodyFlag := flags.ProposalBody("b")
 	addBodyFileFlag, readBodyFileFlag := flags.ProposalBodyFile()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addNoAutoResolveFlag, readNoAutoResolveFlag := flags.NoAutoResolve()
 	addStackFlag, readStackFlag := flags.Stack("propose the entire stack")
 	addTitleFlag, readTitleFlag := flags.ProposalTitle()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
@@ -72,6 +73,7 @@ func proposeCommand() *cobra.Command {
 			bodyFile, err1 := readBodyFileFlag(cmd)
 			bodyText, err2 := readBodyFlag(cmd)
 			dryRun, err3 := readDryRunFlag(cmd)
+			noAutoResolve, errNoAutoResolve := readNoAutoResolveFlag(cmd)
 			stack, err4 := readStackFlag(cmd)
 			title, err5 := readTitleFlag(cmd)
 			verbose, err6 := readVerboseFlag(cmd)
@@ -83,11 +85,12 @@ func proposeCommand() *cobra.Command {
 				Verbose: verbose,
 			}
 			return executePropose(proposeArgs{
-				body:      bodyText,
-				bodyFile:  bodyFile,
-				cliConfig: cliConfig,
-				stack:     stack,
-				title:     title,
+				body:          bodyText,
+				bodyFile:      bodyFile,
+				cliConfig:     cliConfig,
+				noAutoResolve: noAutoResolve,
+				stack:         stack,
+				title:         title,
 			})
 		},
 	}
