@@ -39,10 +39,10 @@ func branchCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			cliConfig := cliconfig.CliConfig{
-				DryRun:  false,
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				DryRun:  None[configdomain.DryRun](),
 				Verbose: verbose,
-			}
+			})
 			return executeBranch(cliConfig)
 		},
 	}
@@ -50,7 +50,7 @@ func branchCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeBranch(cliConfig cliconfig.CliConfig) error {
+func executeBranch(cliConfig configdomain.PartialConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,
@@ -61,7 +61,7 @@ func executeBranch(cliConfig cliconfig.CliConfig) error {
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineBranchData(repo, cliConfig)
+	data, exit, err := determineBranchData(repo)
 	if err != nil || exit {
 		return err
 	}
@@ -80,7 +80,7 @@ func executeBranch(cliConfig cliconfig.CliConfig) error {
 	return nil
 }
 
-func determineBranchData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data branchData, exit dialogdomain.Exit, err error) {
+func determineBranchData(repo execute.OpenRepoResult) (data branchData, exit dialogdomain.Exit, err error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -103,7 +103,6 @@ func determineBranchData(repo execute.OpenRepoResult, cliConfig cliconfig.CliCon
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return data, exit, err

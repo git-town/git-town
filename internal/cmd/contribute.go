@@ -49,10 +49,10 @@ func contributeCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			cliConfig := cliconfig.CliConfig{
-				DryRun:  false,
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				DryRun:  None[configdomain.DryRun](),
 				Verbose: verbose,
-			}
+			})
 			return executeContribute(args, cliConfig)
 		},
 	}
@@ -60,7 +60,7 @@ func contributeCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeContribute(args []string, cliConfig cliconfig.CliConfig) error {
+func executeContribute(args []string, cliConfig configdomain.PartialConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: false,
@@ -98,7 +98,7 @@ func executeContribute(args []string, cliConfig cliconfig.CliConfig) error {
 		Git:                   repo.Git,
 		RootDir:               repo.RootDir,
 		TouchedBranches:       data.branchesToMark.Keys().BranchNames(),
-		Verbose:               cliConfig.Verbose,
+		Verbose:               repo.UnvalidatedConfig.NormalConfig.Verbose,
 	})
 }
 

@@ -47,7 +47,7 @@ func exitToShell(args ExecuteArgs) error {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
 	}
 	args.FinalMessages.Add(`Run "git town continue" to go to the next branch.`)
-	print.Footer(args.Verbose, args.CommandsCounter.Immutable(), args.FinalMessages.Result())
+	print.Footer(args.Config.NormalConfig.Verbose, args.CommandsCounter.Immutable(), args.FinalMessages.Result())
 	args.Inputs.VerifyAllUsed()
 	return nil
 }

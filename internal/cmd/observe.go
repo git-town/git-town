@@ -48,10 +48,10 @@ func observeCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			cliConfig := cliconfig.CliConfig{
-				DryRun:  false,
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				DryRun:  None[configdomain.DryRun](),
 				Verbose: verbose,
-			}
+			})
 			return executeObserve(args, cliConfig)
 		},
 	}
@@ -59,7 +59,7 @@ func observeCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeObserve(args []string, cliConfig cliconfig.CliConfig) error {
+func executeObserve(args []string, cliConfig configdomain.PartialConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: false,
@@ -97,7 +97,7 @@ func executeObserve(args []string, cliConfig cliconfig.CliConfig) error {
 		Git:                   repo.Git,
 		RootDir:               repo.RootDir,
 		TouchedBranches:       branchNames.BranchNames(),
-		Verbose:               cliConfig.Verbose,
+		Verbose:               repo.UnvalidatedConfig.NormalConfig.Verbose,
 	})
 }
 

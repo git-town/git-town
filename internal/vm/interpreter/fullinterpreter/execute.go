@@ -34,7 +34,7 @@ func Execute(args ExecuteArgs) error {
 				Inputs:          args.Inputs,
 				RootDir:         args.RootDir,
 				RunState:        args.RunState,
-				Verbose:         args.Verbose,
+				Verbose:         args.Config.NormalConfig.Verbose,
 			})
 		}
 		if _, ok := nextStep.(*opcodes.ExitToShell); ok {
@@ -79,5 +79,4 @@ type ExecuteArgs struct {
 	PendingCommand          Option[string]
 	RootDir                 gitdomain.RepoRootDir
 	RunState                runstate.RunState
-	Verbose                 configdomain.Verbose
 }

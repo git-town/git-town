@@ -84,10 +84,10 @@ func detachCommand() *cobra.Command {
 			if err := cmp.Or(err1, err2); err != nil {
 				return err
 			}
-			cliConfig := cliconfig.CliConfig{
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				DryRun:  dryRun,
 				Verbose: verbose,
-			}
+			})
 			return executeDetach(args, cliConfig)
 		},
 	}
@@ -96,7 +96,7 @@ func detachCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeDetach(args []string, cliConfig cliconfig.CliConfig) error {
+func executeDetach(args []string, cliConfig configdomain.PartialConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,
@@ -107,7 +107,7 @@ func executeDetach(args []string, cliConfig cliconfig.CliConfig) error {
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineDetachData(args, repo, cliConfig)
+	data, exit, err := determineDetachData(args, repo)
 	if err != nil || exit {
 		return err
 	}
@@ -121,7 +121,7 @@ func executeDetach(args []string, cliConfig cliconfig.CliConfig) error {
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        data.stashSize,
 		Command:               detachCommandName,
-		DryRun:                cliConfig.DryRun,
+		DryRun:                data.config.NormalConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
@@ -148,7 +148,6 @@ func executeDetach(args []string, cliConfig cliconfig.CliConfig) error {
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
-		Verbose:                 cliConfig.Verbose,
 	})
 }
 
@@ -177,7 +176,7 @@ type detachChildBranch struct {
 	proposal Option[forgedomain.Proposal]
 }
 
-func determineDetachData(args []string, repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data detachData, exit dialogdomain.Exit, err error) {
+func determineDetachData(args []string, repo execute.OpenRepoResult) (data detachData, exit dialogdomain.Exit, err error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -219,7 +218,6 @@ func determineDetachData(args []string, repo execute.OpenRepoResult, cliConfig c
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return data, exit, err

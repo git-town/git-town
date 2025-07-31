@@ -72,10 +72,10 @@ func setParentCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			cliConfig := cliconfig.CliConfig{
-				DryRun:  false,
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				DryRun:  None[configdomain.DryRun](),
 				Verbose: verbose,
-			}
+			})
 			return executeSetParent(args, cliConfig)
 		},
 	}
@@ -83,7 +83,7 @@ func setParentCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
+func executeSetParent(args []string, cliConfig configdomain.PartialConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,
@@ -94,7 +94,7 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineSetParentData(repo, cliConfig)
+	data, exit, err := determineSetParentData(repo)
 	if err != nil || exit {
 		return err
 	}
@@ -187,7 +187,6 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
-		Verbose:                 cliConfig.Verbose,
 	})
 }
 
@@ -204,7 +203,7 @@ type setParentData struct {
 	stashSize          gitdomain.StashSize
 }
 
-func determineSetParentData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data setParentData, exit dialogdomain.Exit, err error) {
+func determineSetParentData(repo execute.OpenRepoResult) (data setParentData, exit dialogdomain.Exit, err error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -246,7 +245,6 @@ func determineSetParentData(repo execute.OpenRepoResult, cliConfig cliconfig.Cli
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return data, exit, err

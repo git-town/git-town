@@ -69,10 +69,10 @@ func Cmd() *cobra.Command {
 			if err := cmp.Or(err1, err2, err3, err4, err5, err6); err != nil {
 				return err
 			}
-			cliConfig := cliconfig.CliConfig{
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				DryRun:  dryRun,
 				Verbose: verbose,
-			}
+			})
 			return executeShip(executeShipArgs{
 				args:         args,
 				cliConfig:    cliConfig,
@@ -94,7 +94,7 @@ func Cmd() *cobra.Command {
 
 type executeShipArgs struct {
 	args         []string
-	cliConfig    cliconfig.CliConfig
+	cliConfig    configdomain.PartialConfig
 	message      Option[gitdomain.CommitMessage]
 	messageFile  Option[gitdomain.CommitMessageFile]
 	shipStrategy Option[configdomain.ShipStrategy]
@@ -112,7 +112,7 @@ func executeShip(args executeShipArgs) error {
 	if err != nil {
 		return err
 	}
-	sharedData, exit, err := determineSharedShipData(args.args, repo, args.cliConfig, args.shipStrategy)
+	sharedData, exit, err := determineSharedShipData(args.args, repo, args.shipStrategy)
 	if err != nil || exit {
 		return err
 	}
@@ -158,7 +158,7 @@ func executeShip(args executeShipArgs) error {
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        sharedData.stashSize,
 		Command:               shipCommand,
-		DryRun:                args.cliConfig.DryRun,
+		DryRun:                sharedData.config.NormalConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
@@ -185,7 +185,6 @@ func executeShip(args executeShipArgs) error {
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
-		Verbose:                 args.cliConfig.Verbose,
 	})
 }
 
