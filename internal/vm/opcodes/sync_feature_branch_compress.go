@@ -24,13 +24,9 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 	commitsInBranch := gitdomain.Commits{}
 	if parentLocalName, hasParent := args.Config.Value.NormalConfig.Lineage.Parent(self.CurrentBranch).Get(); hasParent {
 		parentName := determineParentBranchName(parentLocalName, args.BranchInfos, args.Config.Value.NormalConfig.DevRemote)
-		inSyncWithParent, err := args.Git.BranchInSyncWithParent(args.Backend, self.CurrentBranch, parentName)
-		if err != nil {
-			return err
-		}
 		parentIsPerennial := args.Config.Value.IsMainOrPerennialBranch(parentLocalName)
 		skipParent := args.Detached.IsTrue() && parentIsPerennial
-		if !inSyncWithParent && !skipParent {
+		if !skipParent {
 			opcodes = append(opcodes, &SyncFeatureBranchMerge{
 				Branch:            self.CurrentBranch,
 				InitialParentName: self.InitialParentName,
@@ -40,6 +36,7 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 				TrackingBranch: None[gitdomain.RemoteBranchName](),
 			})
 		}
+		var err error
 		commitsInBranch, err = args.Git.CommitsInFeatureBranch(args.Backend, self.CurrentBranch, parentName)
 		if err != nil {
 			return err
