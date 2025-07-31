@@ -5,10 +5,8 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/execute"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -17,10 +15,7 @@ func enterUnknownBranch() *cobra.Command {
 		Use: "unknown-branch-type",
 		RunE: func(_ *cobra.Command, _ []string) error {
 			repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-				CliConfig: cliconfig.New(cliconfig.NewArgs{
-					DryRun:  None[configdomain.DryRun](),
-					Verbose: None[configdomain.Verbose](),
-				}),
+				CliConfig:        configdomain.EmptyPartialConfig(),
 				PrintBranchNames: false,
 				PrintCommands:    true,
 				ValidateGitRepo:  true,
