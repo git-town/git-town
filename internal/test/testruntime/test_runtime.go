@@ -95,8 +95,9 @@ func New(workingDir, homeDir, binDir string) commands.TestCommands {
 	}
 	unvalidatedConfig := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
 		CliConfig: cliconfig.CliConfig{
-			DryRun:  false,
-			Verbose: false,
+			DryRun:        false,
+			NoAutoResolve: false,
+			Verbose:       false,
 		},
 		ConfigFile:    configdomain.EmptyPartialConfig(),
 		Defaults:      config.DefaultNormalConfig(),
