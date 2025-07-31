@@ -200,6 +200,7 @@ type setParentData struct {
 	hasOpenChanges     bool
 	initialBranch      gitdomain.LocalBranchName
 	inputs             dialogcomponents.Inputs
+	noAutoResolve      configdomain.NoAutoResolve
 	proposal           Option[forgedomain.Proposal]
 	stashSize          gitdomain.StashSize
 }
@@ -343,7 +344,8 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 				)
 			}
 			parentOpt := data.config.NormalConfig.Lineage.Parent(data.initialBranch)
-			if parent, hasParent := parentOpt.Get(); hasParent {
+			parent, hasParent := parentOpt.Get()
+			if hasParent && data.noAutoResolve.ShouldAutoResolve() {
 				prog.Add(
 					&opcodes.RebaseOntoKeepDeleted{
 						BranchToRebaseOnto: newParent.BranchName(),
@@ -351,6 +353,7 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 						Upstream:           None[gitdomain.LocalBranchName](),
 					},
 				)
+
 			} else {
 				prog.Add(
 					&opcodes.RebaseBranch{
