@@ -324,7 +324,13 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, cliConfig clicon
 func compressProgram(data compressBranchesData, commitHook configdomain.CommitHook) program.Program {
 	prog := NewMutable(&program.Program{})
 	for _, branchToCompress := range data.branchesToCompress {
-		compressBranchProgram(prog, branchToCompress, data.config.NormalConfig.Offline, data.initialBranch, commitHook)
+		compressBranchProgram(compressBranchProgramArgs{
+			prog:          prog,
+			data:          branchToCompress,
+			offline:       data.config.NormalConfig.Offline,
+			initialBranch: data.initialBranch,
+			commitHook:    commitHook,
+		})
 	}
 	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.initialBranch})
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
@@ -338,20 +344,28 @@ func compressProgram(data compressBranchesData, commitHook configdomain.CommitHo
 	return optimizer.Optimize(prog.Immutable())
 }
 
-func compressBranchProgram(prog Mutable[program.Program], data compressBranchData, offline configdomain.Offline, initialBranch gitdomain.LocalBranchName, commitHook configdomain.CommitHook) {
-	if !shouldCompressBranch(data.name, data.branchType, initialBranch) {
+func compressBranchProgram(args compressBranchProgramArgs) {
+	if !shouldCompressBranch(args.data.name, args.data.branchType, args.initialBranch) {
 		return
 	}
-	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.name})
-	prog.Value.Add(&opcodes.BranchCurrentReset{Base: data.parentBranch.BranchName()})
-	prog.Value.Add(&opcodes.CommitWithMessage{
+	args.prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: args.data.name})
+	args.prog.Value.Add(&opcodes.BranchCurrentReset{Base: args.data.parentBranch.BranchName()})
+	args.prog.Value.Add(&opcodes.CommitWithMessage{
 		AuthorOverride: None[gitdomain.Author](),
-		CommitHook:     commitHook,
-		Message:        data.newCommitMessage,
+		CommitHook:     args.commitHook,
+		Message:        args.data.newCommitMessage,
 	})
-	if data.hasTracking && offline.IsOnline() {
-		prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: data.name, ForceIfIncludes: true})
+	if args.data.hasTracking && args.offline.IsOnline() {
+		args.prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: args.data.name, ForceIfIncludes: true})
 	}
+}
+
+type compressBranchProgramArgs struct {
+	prog          Mutable[program.Program]
+	data          compressBranchData
+	offline       configdomain.Offline
+	initialBranch gitdomain.LocalBranchName
+	commitHook    configdomain.CommitHook
 }
 
 func shouldCompressBranch(branchName gitdomain.LocalBranchName, branchType configdomain.BranchType, initialBranchName gitdomain.LocalBranchName) bool {

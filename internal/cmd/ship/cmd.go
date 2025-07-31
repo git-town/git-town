@@ -73,7 +73,14 @@ func Cmd() *cobra.Command {
 				DryRun:  dryRun,
 				Verbose: verbose,
 			}
-			return executeShip(args, cliConfig, message, messageFile, shipStrategyOverride, toParent)
+			return executeShip(executeShipArgs{
+				args:           args,
+				cliConfig:      cliConfig,
+				messageOpt:     message,
+				messageFileOpt: messageFile,
+				shipStrategy:   shipStrategyOverride,
+				toParent:       toParent,
+			})
 		},
 	}
 	addMessageFileFlag(&cmd)
@@ -85,7 +92,7 @@ func Cmd() *cobra.Command {
 	return &cmd
 }
 
-func executeShip(args []string, cliConfig cliconfig.CliConfig, messageOpt Option[gitdomain.CommitMessage], messageFileOpt Option[gitdomain.CommitMessageFile], shipStrategy Option[configdomain.ShipStrategy], toParent configdomain.ShipIntoNonperennialParent) error {
+func executeShip(args executeShipArgs) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,
