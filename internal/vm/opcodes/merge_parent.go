@@ -9,17 +9,17 @@ import (
 
 // MergeParent merges the given parent branch into the current branch.
 type MergeParent struct {
+	AutoResolve             configdomain.AutoResolve
 	CurrentBranch           gitdomain.LocalBranchName
 	CurrentParent           gitdomain.BranchName              // the currently active parent, after all remotely deleted parents were removed
 	InitialParentName       Option[gitdomain.LocalBranchName] // name of the original parent when Git Town started
 	InitialParentSHA        Option[gitdomain.SHA]             // SHA of the original parent when Git Town started
-	NoAutoResolve           configdomain.AutoResolve
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *MergeParent) Run(args shared.RunArgs) error {
 	err := args.Git.MergeBranchNoEdit(args.Frontend, self.CurrentParent)
-	if err == nil || self.NoAutoResolve {
+	if err == nil || self.AutoResolve {
 		return err
 	}
 	args.PrependOpcodes(&ConflictMergePhantomResolveAll{

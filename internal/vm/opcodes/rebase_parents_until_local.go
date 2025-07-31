@@ -10,7 +10,7 @@ import (
 
 type RebaseParentsUntilLocal struct {
 	Branch                  gitdomain.LocalBranchName
-	NoAutoResolve           configdomain.AutoResolve
+	AutoResolve             configdomain.AutoResolve
 	ParentSHAPreviousRun    Option[gitdomain.SHA]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
@@ -55,7 +55,7 @@ func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
 			branchToRebase = parent.BranchName()
 		}
 		parentSHAPreviousRun, hasParentSHAPreviousRun := self.ParentSHAPreviousRun.Get()
-		if hasParentSHAPreviousRun && self.NoAutoResolve.ShouldAutoResolve() {
+		if hasParentSHAPreviousRun && self.AutoResolve.ShouldAutoResolve() {
 			// Here we rebase onto the new parent, while removing the commits that the parent had in the last run.
 			// This removes old versions of commits that were amended by the user.
 			// The new commits of the parent get added back during the rebase.

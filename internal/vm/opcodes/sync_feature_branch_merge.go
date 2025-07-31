@@ -13,7 +13,7 @@ type SyncFeatureBranchMerge struct {
 	Branch                  gitdomain.LocalBranchName
 	InitialParentName       Option[gitdomain.LocalBranchName]
 	InitialParentSHA        Option[gitdomain.SHA]
-	NoAutoResolve           configdomain.AutoResolve
+	AutoResolve             configdomain.AutoResolve
 	TrackingBranch          Option[gitdomain.RemoteBranchName]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
@@ -53,7 +53,7 @@ func (self *SyncFeatureBranchMerge) Run(args shared.RunArgs) error {
 						CurrentParent:     parentToMerge,
 						InitialParentName: self.InitialParentName,
 						InitialParentSHA:  self.InitialParentSHA,
-						NoAutoResolve:     self.NoAutoResolve,
+						AutoResolve:       self.AutoResolve,
 					})
 				}
 				break
@@ -70,7 +70,7 @@ func (self *SyncFeatureBranchMerge) Run(args shared.RunArgs) error {
 						CurrentParent:     parentTrackingBranch.BranchName(),
 						InitialParentName: self.InitialParentName,
 						InitialParentSHA:  self.InitialParentSHA,
-						NoAutoResolve:     self.NoAutoResolve,
+						AutoResolve:       self.AutoResolve,
 					})
 				}
 			}

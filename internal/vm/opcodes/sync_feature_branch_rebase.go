@@ -10,7 +10,7 @@ import (
 // SyncFeatureBranchMerge merges the parent branches of the given branch until a local parent is found.
 type SyncFeatureBranchRebase struct {
 	Branch                  gitdomain.LocalBranchName
-	NoAutoResolve           configdomain.AutoResolve
+	AutoResolve             configdomain.AutoResolve
 	ParentSHAPreviousRun    Option[gitdomain.SHA]
 	PushBranches            configdomain.PushBranches
 	TrackingBranch          Option[gitdomain.RemoteBranchName]
@@ -34,7 +34,7 @@ func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
 	program = append(program,
 		&RebaseParentsUntilLocal{
 			Branch:               self.Branch,
-			NoAutoResolve:        self.NoAutoResolve,
+			AutoResolve:          self.AutoResolve,
 			ParentSHAPreviousRun: self.ParentSHAPreviousRun,
 		},
 	)

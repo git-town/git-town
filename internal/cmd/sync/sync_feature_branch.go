@@ -14,12 +14,12 @@ func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBr
 	case configdomain.SyncStrategyCompress:
 		args.program.Value.Add(
 			&opcodes.SyncFeatureBranchCompress{
+				AutoResolve:       args.autoResolve,
 				CurrentBranch:     args.localName,
 				CommitMessage:     args.firstCommitMessage,
 				Offline:           args.offline,
 				InitialParentName: args.initialParentName,
 				InitialParentSHA:  args.initialParentSHA,
-				NoAutoResolve:     args.autoResolve,
 				PushBranches:      args.pushBranches,
 				TrackingBranch:    args.trackingBranch,
 			},
@@ -38,15 +38,15 @@ func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBr
 				Branch:            args.localName,
 				InitialParentName: args.initialParentName,
 				InitialParentSHA:  args.initialParentSHA,
-				NoAutoResolve:     args.autoResolve,
+				AutoResolve:       args.autoResolve,
 				TrackingBranch:    args.trackingBranch,
 			},
 		)
 	case configdomain.SyncStrategyRebase:
 		args.program.Value.Add(
 			&opcodes.SyncFeatureBranchRebase{
+				AutoResolve:          args.autoResolve,
 				Branch:               args.localName,
-				NoAutoResolve:        args.autoResolve,
 				ParentSHAPreviousRun: args.parentSHAPreviousRun,
 				PushBranches:         args.pushBranches,
 				TrackingBranch:       args.trackingBranch,

@@ -9,7 +9,7 @@ import (
 const autoResolveLong = "no-auto-resolve"
 
 // type-safe access to the CLI arguments of type configdomain.AutoResolve
-func AutoResolve() (AddFunc, ReadNoAutoResolveFlagFunc) {
+func AutoResolve() (AddFunc, ReadAutoResolveFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.Flags().BoolP(autoResolveLong, "", true, "whether to auto-resolve phantom merge conflicts")
 	}
@@ -23,5 +23,5 @@ func AutoResolve() (AddFunc, ReadNoAutoResolveFlagFunc) {
 	return addFlag, readFlag
 }
 
-// ReadNoAutoResolveFlagFunc is the type signature for the function that reads the "no-auto-resolve" flag from the args to the given Cobra command.
-type ReadNoAutoResolveFlagFunc func(*cobra.Command) (Option[configdomain.AutoResolve], error)
+// ReadAutoResolveFlagFunc is the type signature for the function that reads the "no-auto-resolve" flag from the args to the given Cobra command.
+type ReadAutoResolveFlagFunc func(*cobra.Command) (Option[configdomain.AutoResolve], error)

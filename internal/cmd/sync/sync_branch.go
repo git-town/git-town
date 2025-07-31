@@ -152,16 +152,16 @@ func pullParentBranchOfCurrentFeatureBranchOpcode(args pullParentBranchOfCurrent
 	switch args.syncStrategy {
 	case configdomain.SyncFeatureStrategyMerge, configdomain.SyncFeatureStrategyCompress:
 		args.program.Value.Add(&opcodes.SyncFeatureBranchMerge{
+			AutoResolve:       args.autoResolve,
 			Branch:            args.branch,
 			InitialParentName: args.initialParentName,
 			InitialParentSHA:  args.initialParentSHA,
-			NoAutoResolve:     args.autoResolve,
 			TrackingBranch:    args.trackingBranch,
 		})
 	case configdomain.SyncFeatureStrategyRebase:
 		args.program.Value.Add(&opcodes.RebaseParentsUntilLocal{
+			AutoResolve:          args.autoResolve,
 			Branch:               args.branch,
-			NoAutoResolve:        args.autoResolve,
 			ParentSHAPreviousRun: args.parentSHAPreviousRun,
 		})
 	}

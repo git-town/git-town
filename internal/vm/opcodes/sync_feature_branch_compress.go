@@ -13,7 +13,7 @@ type SyncFeatureBranchCompress struct {
 	CurrentBranch           gitdomain.LocalBranchName
 	InitialParentName       Option[gitdomain.LocalBranchName]
 	InitialParentSHA        Option[gitdomain.SHA]
-	NoAutoResolve           configdomain.AutoResolve
+	AutoResolve             configdomain.AutoResolve
 	Offline                 configdomain.Offline
 	PushBranches            configdomain.PushBranches
 	TrackingBranch          Option[gitdomain.RemoteBranchName]
@@ -36,7 +36,7 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 				Branch:            self.CurrentBranch,
 				InitialParentName: self.InitialParentName,
 				InitialParentSHA:  self.InitialParentSHA,
-				NoAutoResolve:     self.NoAutoResolve,
+				AutoResolve:       self.AutoResolve,
 				// We must sync with the tracking branch separately below,
 				// because this only runs if we aren't in sync with the parent.
 				TrackingBranch: None[gitdomain.RemoteBranchName](),
