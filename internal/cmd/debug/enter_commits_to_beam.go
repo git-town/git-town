@@ -19,6 +19,7 @@ func enterCommitsToBeam() *cobra.Command {
 		Args: cobra.ExactArgs(1),
 		RunE: func(_ *cobra.Command, args []string) error {
 			amount := asserts.NoError1(strconv.ParseInt(args[0], 10, 64))
+
 			repo := asserts.NoError1(execute.OpenRepo(execute.OpenRepoArgs{
 				CliConfig:        configdomain.EmptyPartialConfig(),
 				PrintBranchNames: true,
