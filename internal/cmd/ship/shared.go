@@ -9,7 +9,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/config"
-	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge"
@@ -41,7 +40,7 @@ type sharedShipData struct {
 	targetBranchName         gitdomain.LocalBranchName
 }
 
-func determineSharedShipData(args []string, repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig, shipStrategyOverride Option[configdomain.ShipStrategy]) (data sharedShipData, exit dialogdomain.Exit, err error) {
+func determineSharedShipData(args []string, repo execute.OpenRepoResult, cliConfig configdomain.PartialConfig, shipStrategyOverride Option[configdomain.ShipStrategy]) (data sharedShipData, exit dialogdomain.Exit, err error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -83,7 +82,6 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, cliConf
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: len(args) == 0,
-		Verbose:               cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return data, exit, err
