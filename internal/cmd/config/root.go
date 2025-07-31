@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/execute"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -30,10 +31,10 @@ func RootCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			cliConfig := cliconfig.CliConfig{
-				DryRun:  false,
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				DryRun:  None[configdomain.DryRun](),
 				Verbose: verbose,
-			}
+			})
 			return executeDisplayConfig(cliConfig)
 		},
 	}
@@ -44,7 +45,7 @@ func RootCmd() *cobra.Command {
 	return &configCmd
 }
 
-func executeDisplayConfig(cliConfig cliconfig.CliConfig) error {
+func executeDisplayConfig(cliConfig configdomain.PartialConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: false,
