@@ -71,6 +71,7 @@ func Cmd() *cobra.Command {
 			detached, errDetached := readDetachedFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
 			noAutoResolve, errNoAutoResolve := readNoAutoResolveFlag(cmd)
+			fmt.Println("111111111111111111111111111111111111", noAutoResolve)
 			pushBranches, errPushBranches := readNoPushFlag(cmd)
 			prune, errPrune := readPruneFlag(cmd)
 			stack, errStack := readStackFlag(cmd)

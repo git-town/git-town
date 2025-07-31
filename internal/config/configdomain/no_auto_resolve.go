@@ -7,6 +7,10 @@ func (self NoAutoResolve) IsTrue() bool {
 	return bool(self)
 }
 
-func (self NoAutoResolve) ShouldAutoResolve() bool {
+func (self NoAutoResolve) IsFalse() bool {
 	return !self.IsTrue()
+}
+
+func (self NoAutoResolve) ShouldAutoResolve() bool {
+	return self.IsFalse()
 }
