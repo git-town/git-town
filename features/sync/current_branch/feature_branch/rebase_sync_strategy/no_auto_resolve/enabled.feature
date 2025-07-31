@@ -14,7 +14,7 @@ Feature: don't auto-resolve merge conflicts
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     And origin deletes the "child" branch
     And the current branch is "child" and the previous branch is "grandchild"
-    When I run "git-town sync --all --no-auto-resolve"
+    When I run "git-town sync --all --auto-resolve=0"
 
   @this
   Scenario: result
