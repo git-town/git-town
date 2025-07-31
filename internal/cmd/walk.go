@@ -131,11 +131,11 @@ func executeWalk(args executeWalkArgs) error {
 	if err := validateArgs(args.allBranches, args.fullStack); err != nil {
 		return err
 	}
-	data, exit, err := determineWalkData(repo, allBranches, fullStack)
+	data, exit, err := determineWalkData(repo, args.allBranches, args.fullStack)
 	if err != nil || exit {
 		return err
 	}
-	runProgram := walkProgram(args, data)
+	runProgram := walkProgram(args.args, data)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,

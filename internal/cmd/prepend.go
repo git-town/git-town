@@ -198,19 +198,6 @@ func executePrepend(args prependArgs) error {
 	})
 }
 
-type executePrependArgs struct {
-	args          []string
-	beam          configdomain.Beam
-	cliConfig     cliconfig.CliConfig
-	commit        configdomain.Commit
-	commitMessage Option[gitdomain.CommitMessage]
-	detached      configdomain.Detached
-	proposalBody  Option[gitdomain.ProposalBody]
-	proposalTitle Option[gitdomain.ProposalTitle]
-	propose       configdomain.Propose
-	prototype     configdomain.Prototype
-}
-
 type prependData struct {
 	beam                configdomain.Beam
 	branchInfos         gitdomain.BranchInfos

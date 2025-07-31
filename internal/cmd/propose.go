@@ -159,14 +159,6 @@ func executePropose(args proposeArgs) error {
 	})
 }
 
-type proposeArgs struct {
-	body      Option[gitdomain.ProposalBody]
-	bodyFile  Option[gitdomain.ProposalBodyFile]
-	cliConfig cliconfig.CliConfig
-	fullStack configdomain.FullStack
-	title     Option[gitdomain.ProposalTitle]
-}
-
 type proposeData struct {
 	branchInfos         gitdomain.BranchInfos
 	branchInfosLastRun  Option[gitdomain.BranchInfos]
