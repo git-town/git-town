@@ -16,7 +16,7 @@ Feature: don't auto-resolve merge conflicts
     And the current branch is "child" and the previous branch is "grandchild"
     When I run "git-town sync --all --no-auto-resolve"
 
-  @this
+  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH     | COMMAND                                                 |

@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"cmp"
 	"errors"
 	"fmt"
 	"os"
@@ -60,6 +61,7 @@ main
 )
 
 func setParentCommand() *cobra.Command {
+	addNoAutoResolveFlag, readNoAutoResolveFlag := flags.NoAutoResolve()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "set-parent [branch]",
@@ -68,17 +70,20 @@ func setParentCommand() *cobra.Command {
 		Short:   setParentDesc,
 		Long:    cmdhelpers.Long(setParentDesc, setParentHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			verbose, err := readVerboseFlag(cmd)
-			if err != nil {
-				return err
+			noAutoResolve, errNoAutoResolve := readNoAutoResolveFlag(cmd)
+			verbose, errVerbose := readVerboseFlag(cmd)
+			if cmp.Or(errNoAutoResolve, errVerbose) != nil {
+				return errVerbose
 			}
 			cliConfig := cliconfig.CliConfig{
-				DryRun:  false,
-				Verbose: verbose,
+				DryRun:        false, // TODO: provide the real value here
+				NoAutoResolve: noAutoResolve,
+				Verbose:       verbose,
 			}
 			return executeSetParent(args, cliConfig)
 		},
 	}
+	addNoAutoResolveFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
@@ -302,6 +307,7 @@ func determineSetParentData(repo execute.OpenRepoResult, cliConfig cliconfig.Cli
 		hasOpenChanges:     repoStatus.OpenChanges,
 		initialBranch:      initialBranch,
 		inputs:             inputs,
+		noAutoResolve:      cliConfig.NoAutoResolve,
 		proposal:           proposalOpt,
 		stashSize:          stashSize,
 	}, false, nil
