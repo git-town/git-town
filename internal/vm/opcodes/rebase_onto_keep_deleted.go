@@ -42,18 +42,16 @@ func (self *RebaseOntoKeepDeleted) Run(args shared.RunArgs) error {
 		if err != nil {
 			return fmt.Errorf("cannot determine conflicting files after rebase: %w", err)
 		}
-		if args.Config.Value.NormalConfig.AutoResolve.ShouldAutoResolve() {
-			for _, conflictingFile := range conflictingFiles {
-				if conflictingChange, has := conflictingFile.CurrentBranchChange.Get(); has {
-					_ = args.Git.ResolveConflict(args.Frontend, conflictingChange.FilePath, gitdomain.ConflictResolutionTheirs)
-					_ = args.Git.StageFiles(args.Frontend, conflictingChange.FilePath)
-				} else if baseChange, has := conflictingFile.BaseChange.Get(); has {
-					_ = args.Git.StageFiles(args.Frontend, baseChange.FilePath)
-				}
+		for _, conflictingFile := range conflictingFiles {
+			if conflictingChange, has := conflictingFile.CurrentBranchChange.Get(); has {
+				_ = args.Git.ResolveConflict(args.Frontend, conflictingChange.FilePath, gitdomain.ConflictResolutionTheirs)
+				_ = args.Git.StageFiles(args.Frontend, conflictingChange.FilePath)
+			} else if baseChange, has := conflictingFile.BaseChange.Get(); has {
+				_ = args.Git.StageFiles(args.Frontend, baseChange.FilePath)
 			}
-			if err = args.Git.ContinueRebase(args.Frontend); err != nil {
-				return fmt.Errorf("cannot continue rebase: %w", err)
-			}
+		}
+		if err = args.Git.ContinueRebase(args.Frontend); err != nil {
+			return fmt.Errorf("cannot continue rebase: %w", err)
 		}
 	}
 	return nil
