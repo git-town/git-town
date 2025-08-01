@@ -16,7 +16,6 @@ Feature: don't auto-resolve merge conflicts
     And the current branch is "child" and the previous branch is "grandchild"
     When I run "git-town sync --all --auto-resolve=0"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH     | COMMAND                                                 |
@@ -27,15 +26,14 @@ Feature: don't auto-resolve merge conflicts
       |            | git checkout grandchild                                 |
       | grandchild | git pull                                                |
       |            | git -c rebase.updateRefs=false rebase --onto main child |
-      |            | git checkout --theirs conflicting_file                  |
-      |            | git add conflicting_file                                |
       |            | GIT_EDITOR=true git rebase --continue                   |
       |            | git push --force-with-lease                             |
-      |            | git branch -D child                                     |
-      |            | git push --tags                                         |
-    And no rebase is now in progress
-    And all branches are now synchronized
-    And these commits exist now
-      | BRANCH     | LOCATION      | MESSAGE                       | FILE NAME        | FILE CONTENT       |
-      | main       | local, origin | conflicting main commit       | conflicting_file | main content       |
-      | grandchild | local, origin | conflicting grandchild commit | conflicting_file | grandchild content |
+    And Git Town prints the error:
+      """
+      CONFLICT (add/add): Merge conflict in conflicting_file
+      """
+    And Git Town prints something like:
+      """
+      could not apply .* conflicting grandchild commit
+      """
+    And a rebase is now in progress
