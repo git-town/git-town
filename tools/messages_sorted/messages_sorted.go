@@ -55,7 +55,9 @@ func lintMessagesFile(filePath string) []string {
 		if !isSorted(constNames) {
 			sortedNames := make([]string, len(constNames))
 			copy(sortedNames, constNames)
-			sort.Strings(sortedNames)
+			sort.Slice(sortedNames, func(i, j int) bool {
+				return strings.ToLower(sortedNames[i]) < strings.ToLower(sortedNames[j])
+			})
 
 			// Use line-by-line diffmatchpatch to show complete lines
 			dmp := diffmatchpatch.New()
@@ -80,7 +82,7 @@ func lintMessagesFile(filePath string) []string {
 
 func isSorted(names []string) bool {
 	for i := 1; i < len(names); i++ {
-		if strings.Compare(names[i-1], names[i]) > 0 {
+		if strings.Compare(strings.ToLower(names[i-1]), strings.ToLower(names[i])) > 0 {
 			return false
 		}
 	}
@@ -95,12 +97,12 @@ func addEmptyLinesBetweenLetters(names []string) []string {
 	result := []string{names[0]}
 	var prevFirstLetter rune
 	if len(names[0]) > 0 {
-		prevFirstLetter = rune(names[0][0])
+		prevFirstLetter = rune(strings.ToLower(names[0])[0])
 	}
 
 	for i := 1; i < len(names); i++ {
 		if len(names[i]) > 0 {
-			currentFirstLetter := rune(names[i][0])
+			currentFirstLetter := rune(strings.ToLower(names[i])[0])
 			if currentFirstLetter != prevFirstLetter {
 				result = append(result, "")
 				prevFirstLetter = currentFirstLetter
