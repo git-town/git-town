@@ -11,7 +11,6 @@
       "Bash(go run:*)",
       "Bash(grep:*)",
       "Bash(go:*)",
-      "Bash(./messages_sorted)",
       "Bash(ls:*)"
     ],
     "deny": []

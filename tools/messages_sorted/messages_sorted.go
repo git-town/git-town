@@ -8,6 +8,8 @@ import (
 	"os"
 	"sort"
 	"strings"
+
+	"github.com/sergi/go-diff/diffmatchpatch"
 )
 
 func main() {
@@ -55,9 +57,16 @@ func lintMessagesFile(filePath string) []string {
 			copy(sortedNames, constNames)
 			sort.Strings(sortedNames)
 
+			// Use diffmatchpatch to show only the differences
+			dmp := diffmatchpatch.New()
+			actualText := strings.Join(constNames, "\n")
+			expectedText := strings.Join(sortedNames, "\n")
+			diffs := dmp.DiffMain(actualText, expectedText, false)
+			diffText := dmp.DiffPrettyText(diffs)
+
 			issues = append(issues, fmt.Sprintf("%s: Constants in const block are not sorted alphabetically", filePath))
-			issues = append(issues, fmt.Sprintf("Expected order: %s", strings.Join(sortedNames, ", ")))
-			issues = append(issues, fmt.Sprintf("Actual order: %s", strings.Join(constNames, ", ")))
+			issues = append(issues, "Differences (- actual, + expected):")
+			issues = append(issues, diffText)
 		}
 	}
 
