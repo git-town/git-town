@@ -50,8 +50,9 @@ func contributeCmd() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				DryRun:  None[configdomain.DryRun](),
-				Verbose: verbose,
+				AutoResolve: None[configdomain.AutoResolve](),
+				DryRun:      None[configdomain.DryRun](),
+				Verbose:     verbose,
 			})
 			return executeContribute(args, cliConfig)
 		},

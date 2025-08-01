@@ -54,6 +54,7 @@ const (
 	KeyAliasSetParent                      = Key("alias.set-parent")
 	KeyAliasShip                           = Key("alias.ship")
 	KeyAliasSync                           = Key("alias.sync")
+	KeyAutoResolve                         = Key("auto-resolve")
 	KeyBitbucketAppPassword                = Key("git-town.bitbucket-app-password")
 	KeyBitbucketUsername                   = Key("git-town.bitbucket-username")
 	KeyCodebergToken                       = Key("git-town.codeberg-token")
@@ -110,7 +111,7 @@ const (
 )
 
 var keys = []Key{
-	KeyHostingOriginHostname,
+	KeyAutoResolve,
 	KeyBitbucketAppPassword,
 	KeyBitbucketUsername,
 	KeyCodebergToken,
@@ -145,6 +146,7 @@ var keys = []Key{
 	KeyGitLabToken,
 	KeyGitUserEmail,
 	KeyGitUserName,
+	KeyHostingOriginHostname,
 	KeyMainBranch,
 	KeyNewBranchType,
 	KeyObservedRegex,

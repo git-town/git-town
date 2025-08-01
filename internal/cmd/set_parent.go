@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"cmp"
 	"errors"
 	"fmt"
 	"os"
@@ -60,6 +61,7 @@ main
 )
 
 func setParentCommand() *cobra.Command {
+	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "set-parent [branch]",
@@ -68,17 +70,20 @@ func setParentCommand() *cobra.Command {
 		Short:   setParentDesc,
 		Long:    cmdhelpers.Long(setParentDesc, setParentHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			verbose, err := readVerboseFlag(cmd)
-			if err != nil {
-				return err
+			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
+			verbose, errVerbose := readVerboseFlag(cmd)
+			if cmp.Or(errAutoResolve, errVerbose) != nil {
+				return errVerbose
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				DryRun:  None[configdomain.DryRun](),
-				Verbose: verbose,
+				AutoResolve: autoResolve,
+				DryRun:      None[configdomain.DryRun](),
+				Verbose:     verbose,
 			})
 			return executeSetParent(args, cliConfig)
 		},
 	}
+	addAutoResolveFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
@@ -341,7 +346,8 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 				)
 			}
 			parentOpt := data.config.NormalConfig.Lineage.Parent(data.initialBranch)
-			if parent, hasParent := parentOpt.Get(); hasParent {
+			parent, hasParent := parentOpt.Get()
+			if hasParent && data.config.NormalConfig.AutoResolve.ShouldAutoResolve() {
 				prog.Add(
 					&opcodes.RebaseOntoKeepDeleted{
 						BranchToRebaseOnto: newParent.BranchName(),
