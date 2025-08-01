@@ -6,6 +6,7 @@ import (
 	"go/parser"
 	"go/token"
 	"os"
+	"slices"
 	"sort"
 	"strings"
 
@@ -13,7 +14,7 @@ import (
 )
 
 func main() {
-	issues := lintMessagesFile("internal/messages/en.go")
+	issues := findUnsortedConst("internal/messages/en.go")
 	if len(issues) > 0 {
 		for _, issue := range issues {
 			fmt.Println(issue)
@@ -22,7 +23,7 @@ func main() {
 	}
 }
 
-func lintMessagesFile(filePath string) []string {
+func findUnsortedConst(filePath string) []string {
 	var issues []string
 
 	fileSet := token.NewFileSet()
@@ -70,15 +71,6 @@ func lintMessagesFile(filePath string) []string {
 	}
 
 	return issues
-}
-
-func isSorted(names []string) bool {
-	for i := 1; i < len(names); i++ {
-		if strings.Compare(strings.ToLower(names[i-1]), strings.ToLower(names[i])) > 0 {
-			return false
-		}
-	}
-	return true
 }
 
 func findUnsortedPositions(names []string) []int {
@@ -129,7 +121,7 @@ func getDiffContextLines(filePath string, actualNames []string, expectedNames []
 		// Add lines with context, showing diff format
 		for i := start; i <= end; i++ {
 			covered[i] = true
-			if contains(unsortedPositions, i) {
+			if slices.Contains(unsortedPositions, i) {
 				// Show the diff for unsorted lines
 				result = append(result, colors.Red(fmt.Sprintf("%s:%d: %s", filePath, i+4, actualNames[i])))
 				result = append(result, colors.Green(fmt.Sprintf("%s:%d: %s", filePath, i+4, expectedNames[i])))
@@ -143,11 +135,11 @@ func getDiffContextLines(filePath string, actualNames []string, expectedNames []
 	return result
 }
 
-func contains(slice []int, item int) bool {
-	for _, v := range slice {
-		if v == item {
-			return true
+func isSorted(names []string) bool {
+	for i := 1; i < len(names); i++ {
+		if strings.Compare(strings.ToLower(names[i-1]), strings.ToLower(names[i])) > 0 {
+			return false
 		}
 	}
-	return false
+	return true
 }
