@@ -80,14 +80,14 @@ lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	@(cd tools/format_self && ../rta golangci-lint run)
 	@echo lint tools/format_unittests
 	@(cd tools/format_unittests && ../rta golangci-lint run)
+	@echo lint tools/messages_sorted
+	@(cd tools/messages_sorted && ../rta golangci-lint run)
 	@echo lint tools/stats_release
 	@(cd tools/stats_release && ../rta golangci-lint run)
 	@echo lint tools/structs_sorted
 	@(cd tools/structs_sorted && ../rta golangci-lint run)
 	@echo lint tools/tests_sorted
 	@(cd tools/tests_sorted && ../rta golangci-lint run)
-	@echo lint tools/messages_sorted
-	@(cd tools/messages_sorted && ../rta golangci-lint run)
 	@echo lint tools/lint_steps
 	@(cd tools/lint_steps && ../rta golangci-lint run)
 
