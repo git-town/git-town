@@ -79,6 +79,8 @@ lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	@(cd tools/format_self && ../rta golangci-lint run)
 	@echo lint tools/format_unittests
 	@(cd tools/format_unittests && ../rta golangci-lint run)
+	@echo lint tools/print_config_exhaustive
+	@(cd tools/print_config_exhaustive && make test)
 	@echo lint tools/stats_release
 	@(cd tools/stats_release && ../rta golangci-lint run)
 	@echo lint tools/structs_sorted
