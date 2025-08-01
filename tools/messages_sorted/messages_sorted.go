@@ -8,6 +8,8 @@ import (
 	"os"
 	"sort"
 	"strings"
+
+	"github.com/cucumber/godog/colors"
 )
 
 func main() {
@@ -130,11 +132,11 @@ func getDiffContextLines(filePath string, actualNames []string, expectedNames []
 			covered[i] = true
 			if contains(unsortedPositions, i) {
 				// Show the diff for unsorted lines
-				result = append(result, fmt.Sprintf("- %s:%d: %s", filePath, i+1, actualNames[i]))
-				result = append(result, fmt.Sprintf("+ %s:%d: %s", filePath, i+1, expectedNames[i]))
+				result = append(result, colors.Red(fmt.Sprintf("%s:%d: %s", filePath, i+1, actualNames[i])))
+				result = append(result, colors.Green(fmt.Sprintf("%s:%d: %s", filePath, i+1, expectedNames[i])))
 			} else {
 				// Show context lines without prefix
-				result = append(result, fmt.Sprintf("  %s:%d: %s", filePath, i+1, actualNames[i]))
+				result = append(result, fmt.Sprintf("%s:%d: %s", filePath, i+1, actualNames[i]))
 			}
 		}
 	}
