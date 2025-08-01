@@ -83,7 +83,7 @@ lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	@echo lint tools/lint_steps
 	@(cd tools/lint_steps && make test)
 	@echo lint tools/messages_sorted
-	@(cd tools/messages_sorted && ../rta make lint)
+	@(cd tools/messages_sorted && make lint)
 	@echo lint tools/messy_output
 	@(cd tools/messy_output && make test)
 	@echo lint tools/optioncompare
