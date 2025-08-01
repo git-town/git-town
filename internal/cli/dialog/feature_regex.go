@@ -27,7 +27,7 @@ it's safe to leave it blank.
 )
 
 func FeatureRegex(args Args[configdomain.FeatureRegex]) (Option[configdomain.FeatureRegex], dialogdomain.Exit, error) {
-	input, exit, err1 := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
+	input, exit, errInput := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "feature-regex",
 		ExistingValue: args.Local.Or(args.Global).String(),
 		Help:          FeatureRegexHelp,
@@ -35,11 +35,11 @@ func FeatureRegex(args Args[configdomain.FeatureRegex]) (Option[configdomain.Fea
 		Prompt:        messages.FeatureRegexPrompt,
 		Title:         featureRegexTitle,
 	})
-	newValue, err2 := configdomain.ParseFeatureRegex(input)
+	newValue, errNewValue := configdomain.ParseFeatureRegex(input)
 	if args.Global.Equal(newValue) {
 		// the user has entered the global value --> keep using the global value, don't store the local value
 		newValue = None[configdomain.FeatureRegex]()
 	}
 	fmt.Printf(messages.FeatureRegexResult, dialogcomponents.FormattedOption(newValue, args.Global.IsSome(), exit))
-	return newValue, exit, cmp.Or(err1, err2)
+	return newValue, exit, cmp.Or(errInput, errNewValue)
 }

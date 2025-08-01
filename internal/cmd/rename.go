@@ -51,10 +51,10 @@ func renameCommand() *cobra.Command {
 		Short: renameDesc,
 		Long:  cmdhelpers.Long(renameDesc, renameHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			dryRun, err1 := readDryRunFlag(cmd)
-			force, err2 := readForceFlag(cmd)
-			verbose, err3 := readVerboseFlag(cmd)
-			if err := cmp.Or(err1, err2, err3); err != nil {
+			dryRun, errDryRun := readDryRunFlag(cmd)
+			force, errForce := readForceFlag(cmd)
+			verbose, errVerbose := readVerboseFlag(cmd)
+			if err := cmp.Or(errDryRun, errForce, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
