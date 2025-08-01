@@ -27,7 +27,7 @@ it's safe to leave it blank.
 )
 
 func ObservedRegex(args Args[configdomain.ObservedRegex]) (Option[configdomain.ObservedRegex], dialogdomain.Exit, error) {
-	input, exit, err1 := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
+	input, exit, errInput := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "observed-regex",
 		ExistingValue: args.Local.Or(args.Global).String(),
 		Help:          observedRegexHelp,
@@ -35,11 +35,11 @@ func ObservedRegex(args Args[configdomain.ObservedRegex]) (Option[configdomain.O
 		Prompt:        messages.ObservedRegexPrompt,
 		Title:         observedRegexTitle,
 	})
-	newValue, err2 := configdomain.ParseObservedRegex(input)
+	newValue, errNewValue := configdomain.ParseObservedRegex(input)
 	if args.Global.Equal(newValue) {
 		// the user has entered the global value --> keep using the global value, don't store the local value
 		newValue = None[configdomain.ObservedRegex]()
 	}
 	fmt.Printf(messages.ObservedRegexResult, dialogcomponents.FormattedOption(newValue, args.Global.IsSome(), exit))
-	return newValue, exit, cmp.Or(err1, err2)
+	return newValue, exit, cmp.Or(errInput, errNewValue)
 }
