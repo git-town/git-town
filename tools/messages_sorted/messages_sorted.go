@@ -57,11 +57,16 @@ func lintMessagesFile(filePath string) []string {
 			copy(sortedNames, constNames)
 			sort.Strings(sortedNames)
 
-			// Use diffmatchpatch to show only the differences
+			// Use line-by-line diffmatchpatch to show complete lines
 			dmp := diffmatchpatch.New()
 			actualText := strings.Join(constNames, "\n")
 			expectedText := strings.Join(sortedNames, "\n")
-			diffs := dmp.DiffMain(actualText, expectedText, false)
+			
+			// Convert to line-based diff
+			lineArray1, lineArray2, lineHash := dmp.DiffLinesToChars(actualText, expectedText)
+			diffs := dmp.DiffMain(lineArray1, lineArray2, false)
+			diffs = dmp.DiffCharsToLines(diffs, lineHash)
+			
 			diffText := dmp.DiffPrettyText(diffs)
 
 			issues = append(issues, fmt.Sprintf("%s: Constants in const block are not sorted alphabetically", filePath))
