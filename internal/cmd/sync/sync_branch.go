@@ -163,7 +163,6 @@ func pullParentBranchOfCurrentFeatureBranchOpcode(args pullParentBranchOfCurrent
 }
 
 type pullParentBranchOfCurrentFeatureBranchOpcodeArgs struct {
-	autoResolve          configdomain.AutoResolve
 	branch               gitdomain.LocalBranchName
 	initialParentName    Option[gitdomain.LocalBranchName]
 	initialParentSHA     Option[gitdomain.SHA]
