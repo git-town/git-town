@@ -13,8 +13,8 @@ Feature: handle conflicts between the current feature branch and the main branch
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And the current branch is "feature"
     When I run "git-town sync"
+  # @this
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                      |
