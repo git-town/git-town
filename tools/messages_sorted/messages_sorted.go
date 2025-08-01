@@ -60,7 +60,7 @@ func lintMessagesFile(filePath string) []string {
 			// Use line-by-line diffmatchpatch to show complete lines
 			dmp := diffmatchpatch.New()
 			actualText := strings.Join(constNames, "\n")
-			expectedText := strings.Join(sortedNames, "\n")
+			expectedText := strings.Join(addEmptyLinesBetweenLetters(sortedNames), "\n")
 			
 			// Convert to line-based diff
 			lineArray1, lineArray2, lineHash := dmp.DiffLinesToChars(actualText, expectedText)
@@ -85,4 +85,30 @@ func isSorted(names []string) bool {
 		}
 	}
 	return true
+}
+
+func addEmptyLinesBetweenLetters(names []string) []string {
+	if len(names) == 0 {
+		return names
+	}
+	
+	result := []string{names[0]}
+	var prevFirstLetter rune
+	
+	if len(names[0]) > 0 {
+		prevFirstLetter = rune(names[0][0])
+	}
+	
+	for i := 1; i < len(names); i++ {
+		if len(names[i]) > 0 {
+			currentFirstLetter := rune(names[i][0])
+			if currentFirstLetter != prevFirstLetter {
+				result = append(result, "")
+				prevFirstLetter = currentFirstLetter
+			}
+		}
+		result = append(result, names[i])
+	}
+	
+	return result
 }
