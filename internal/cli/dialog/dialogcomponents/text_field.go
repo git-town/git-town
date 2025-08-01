@@ -5,7 +5,7 @@ import (
 
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/git-town/git-town/v21/internal/cli/colors"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcolors"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 )
@@ -16,7 +16,7 @@ func TextField(args TextFieldArgs) (string, dialogdomain.Exit, error) {
 	textInput.Prompt = args.Prompt
 	textInput.Focus()
 	model := textFieldModel{
-		colors:    colors.NewDialogColors(),
+		colors:    dialogcolors.NewDialogColors(),
 		help:      args.Help,
 		status:    list.StatusActive,
 		textInput: textInput,
@@ -39,7 +39,7 @@ type TextFieldArgs struct {
 }
 
 type textFieldModel struct {
-	colors    colors.DialogColors // colors to use for help text
+	colors    dialogcolors.DialogColors // colors to use for help text
 	help      string
 	status    list.Status
 	textInput textinput.Model
