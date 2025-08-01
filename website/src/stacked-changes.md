@@ -243,36 +243,35 @@ the order of branches.
 
 #### Avoid phantom merge conflicts
 
-Phantom merge conflicts are merge conflicts that Git cannot resolve, but where
-the changes aren't really conflicting if you know the big picture. An example
-for a phantom merge conflict is when shipping the oldest branch in a stack via
-squash-merge. In this case, the main branch contains a different commit than the
-shipped feature branch had. If children of the shipped feature branch change the
-same code as the just shipped feature branch, they might conflict with the new
-commit on the main branch again, even if the user had already resolved those
-conflicts as part of developing the stack.
+Phantom merge conflicts are situations where Git reports a conflict, even though
+(if you understand the full context) there is no real conflict. A common example
+is shipping the oldest branch in a stack using a squash merge. This results in
+the main branch containing a new commit that differs from the original commit on
+the shipped feature branch. If any downstream branches in the stack touch the
+same lines of code, they may conflict with this new commit on main, even though
+those exact conflicts were already resolved earlier in the stack's development.
 
-Git cannot resolve those phantom merge conflicts because it only looks at the
-current conflict, and sees two conflicting changes. Git Town can resolve phantom
-merge conflicts because it knows the complete branch hierarchy, which branches
-just disappeared, and the state of all the branches the last time they were
-synced. This gives it the information necessary to resolve such phantom merge
-conflicts.
+Git cannot resolve these phantom conflicts on its own because it only sees the
+immediate diff: two changes to the same lines. It doesn't know about the
+stacking structure or prior conflict resolutions. Git Town can resolve phantom
+conflicts because it tracks the full branch hierarchy, knows which branches were
+recently removed, and remembers the state of each branch from the last sync.
+That context allows it to resolve conflicts that are merely apparent.
 
-To eliminate the occurrence of phantom merge conflicts after shipping the oldest
-branch in a stacked change, ship using a
+To avoid phantom merge conflicts when shipping the base of a stack, use a
 [fast-forward merge](https://git-scm.com/docs/git-merge#_fast_forward_merge).
-This guarantees that the new commit(s) on the main branch are the same commit(s)
-from the shipped feature branch. This helps Git recognize those commits at the
-next `git town sync` operation and omit unnecessary merge and rebase operations.
+This ensures the new commits on main are bit-for-bit identical to those on the
+shipped branch, allowing Git to recognize them as shared history in future
+syncs, which avoids unnecessary merges or rebases.
 
-GitLab provides fast-forward merges
-[out of the box](https://docs.gitlab.com/ee/user/project/merge_requests/methods/#fast-forward-merge).
-GitHub doesn't provide this out-of-the-box, but allows a workaround that you can
-utilize by running [git town ship](commands/ship.md) locally with the
-[fast-forward shipping strategy](preferences/ship-strategy.md#fast-forward).
-This problem is documented by
-[GitHub](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges#squashing-and-merging-a-long-running-branch).
+GitLab supports fast-forward merges
+[natively](https://docs.gitlab.com/ee/user/project/merge_requests/methods/#fast-forward-merge).
+GitHub doesn’t offer this merge option, but you can work around it by
+[shipping locally](commands/ship.md) using Git Town’s
+[fast-forward shipping strategy](preferences/ship-strategy.md#fast-forward),
+then pushing the result. See
+[GitHub’s documentation](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges#squashing-and-merging-a-long-running-branch)
+on this issue.
 
 It also helps to [compress](commands/compress.md) feature branches, so that you
 don't need to resolve so many new merge conflicts when they happen.
