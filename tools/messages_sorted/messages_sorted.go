@@ -6,6 +6,7 @@ import (
 	"go/parser"
 	"go/token"
 	"os"
+	"sort"
 	"strings"
 )
 
@@ -50,12 +51,18 @@ func lintMessagesFile(filePath string) []string {
 
 		// Check if constants are sorted alphabetically
 		if !isSorted(constNames) {
+			sortedNames := make([]string, len(constNames))
+			copy(sortedNames, constNames)
+			sort.Slice(sortedNames, func(i, j int) bool {
+				return strings.ToLower(sortedNames[i]) < strings.ToLower(sortedNames[j])
+			})
+
 			unsortedPositions := findUnsortedPositions(constNames)
-			contextLines := getContextLines(constNames, unsortedPositions, 3)
+			diffLines := getDiffContextLines(constNames, sortedNames, unsortedPositions, 3)
 
 			issues = append(issues, fmt.Sprintf("%s: Constants in const block are not sorted alphabetically", filePath))
-			issues = append(issues, "Unsorted constants with context:")
-			for _, line := range contextLines {
+			issues = append(issues, "Differences (- actual, + expected):")
+			for _, line := range diffLines {
 				issues = append(issues, line)
 			}
 		}
@@ -89,7 +96,7 @@ func findUnsortedPositions(names []string) []int {
 	return unsortedPositions
 }
 
-func getContextLines(names []string, unsortedPositions []int, contextSize int) []string {
+func getDiffContextLines(actualNames []string, expectedNames []string, unsortedPositions []int, contextSize int) []string {
 	if len(unsortedPositions) == 0 {
 		return []string{}
 	}
@@ -109,8 +116,8 @@ func getContextLines(names []string, unsortedPositions []int, contextSize int) [
 			start = 0
 		}
 		end := pos + contextSize
-		if end >= len(names) {
-			end = len(names) - 1
+		if end >= len(actualNames) {
+			end = len(actualNames) - 1
 		}
 		
 		// Add separator if this isn't the first group
@@ -118,14 +125,17 @@ func getContextLines(names []string, unsortedPositions []int, contextSize int) [
 			result = append(result, "--")
 		}
 		
-		// Add lines with context, marking unsorted ones
+		// Add lines with context, showing diff format
 		for i := start; i <= end; i++ {
 			covered[i] = true
-			prefix := "  "
 			if contains(unsortedPositions, i) {
-				prefix = "> " // Mark unsorted lines
+				// Show the diff for unsorted lines
+				result = append(result, fmt.Sprintf("-%d: %s", i+1, actualNames[i]))
+				result = append(result, fmt.Sprintf("+%d: %s", i+1, expectedNames[i]))
+			} else {
+				// Show context lines without prefix
+				result = append(result, fmt.Sprintf(" %d: %s", i+1, actualNames[i]))
 			}
-			result = append(result, fmt.Sprintf("%s%d: %s", prefix, i+1, names[i]))
 		}
 	}
 	
