@@ -242,7 +242,7 @@ Feature: test
 
 func assert_scenarios(t *testing.T, text string, wantScenarios []messy.ScenarioInfo) {
 	t.Helper()
-	must.NoError(t, os.WriteFile("test", []byte(text), 0o744))
+	must.NoError(t, os.WriteFile("test", []byte(text), 0o600))
 	defer os.Remove("test")
 	regex := messy.CompileRegex()
 	feature := messy.ReadGherkinFile("test")
