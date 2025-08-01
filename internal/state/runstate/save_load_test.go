@@ -537,7 +537,7 @@ func TestLoadSave(t *testing.T) {
         "InitialParentName": "original-parent",
         "InitialParentSHA": "123456"
       },
-      "type": "MergeParentResolvePhantomConflicts"
+      "type": "MergeParent"
     },
     {
       "data": {
