@@ -6,10 +6,7 @@ import (
 	"go/parser"
 	"go/token"
 	"os"
-	"sort"
 	"strings"
-
-	"github.com/sergi/go-diff/diffmatchpatch"
 )
 
 func main() {
@@ -53,27 +50,14 @@ func lintMessagesFile(filePath string) []string {
 
 		// Check if constants are sorted alphabetically
 		if !isSorted(constNames) {
-			sortedNames := make([]string, len(constNames))
-			copy(sortedNames, constNames)
-			sort.Slice(sortedNames, func(i, j int) bool {
-				return strings.ToLower(sortedNames[i]) < strings.ToLower(sortedNames[j])
-			})
-
-			// Use line-by-line diffmatchpatch to show complete lines
-			dmp := diffmatchpatch.New()
-			actualText := strings.Join(constNames, "\n")
-			expectedText := strings.Join(addEmptyLinesBetweenLetters(sortedNames), "\n")
-
-			// Convert to line-based diff
-			lineArray1, lineArray2, lineHash := dmp.DiffLinesToChars(actualText, expectedText)
-			diffs := dmp.DiffMain(lineArray1, lineArray2, false)
-			diffs = dmp.DiffCharsToLines(diffs, lineHash)
-
-			diffText := dmp.DiffPrettyText(diffs)
+			unsortedPositions := findUnsortedPositions(constNames)
+			contextLines := getContextLines(constNames, unsortedPositions, 3)
 
 			issues = append(issues, fmt.Sprintf("%s: Constants in const block are not sorted alphabetically", filePath))
-			issues = append(issues, "Differences (- actual, + expected):")
-			issues = append(issues, diffText)
+			issues = append(issues, "Unsorted constants with context:")
+			for _, line := range contextLines {
+				issues = append(issues, line)
+			}
 		}
 	}
 
@@ -89,27 +73,70 @@ func isSorted(names []string) bool {
 	return true
 }
 
-func addEmptyLinesBetweenLetters(names []string) []string {
-	if len(names) == 0 {
-		return names
-	}
-
-	result := []string{names[0]}
-	var prevFirstLetter rune
-	if len(names[0]) > 0 {
-		prevFirstLetter = rune(strings.ToLower(names[0])[0])
-	}
-
+func findUnsortedPositions(names []string) []int {
+	var unsortedPositions []int
+	
 	for i := 1; i < len(names); i++ {
-		if len(names[i]) > 0 {
-			currentFirstLetter := rune(strings.ToLower(names[i])[0])
-			if currentFirstLetter != prevFirstLetter {
-				result = append(result, "")
-				prevFirstLetter = currentFirstLetter
+		if strings.Compare(strings.ToLower(names[i-1]), strings.ToLower(names[i])) > 0 {
+			// Both the previous and current items are part of the unsorted sequence
+			if len(unsortedPositions) == 0 || unsortedPositions[len(unsortedPositions)-1] != i-1 {
+				unsortedPositions = append(unsortedPositions, i-1)
 			}
+			unsortedPositions = append(unsortedPositions, i)
 		}
-		result = append(result, names[i])
 	}
+	
+	return unsortedPositions
+}
 
+func getContextLines(names []string, unsortedPositions []int, contextSize int) []string {
+	if len(unsortedPositions) == 0 {
+		return []string{}
+	}
+	
+	var result []string
+	covered := make(map[int]bool)
+	
+	// For each unsorted position, show it with context
+	for _, pos := range unsortedPositions {
+		if covered[pos] {
+			continue
+		}
+		
+		// Calculate context range
+		start := pos - contextSize
+		if start < 0 {
+			start = 0
+		}
+		end := pos + contextSize
+		if end >= len(names) {
+			end = len(names) - 1
+		}
+		
+		// Add separator if this isn't the first group
+		if len(result) > 0 {
+			result = append(result, "--")
+		}
+		
+		// Add lines with context, marking unsorted ones
+		for i := start; i <= end; i++ {
+			covered[i] = true
+			prefix := "  "
+			if contains(unsortedPositions, i) {
+				prefix = "> " // Mark unsorted lines
+			}
+			result = append(result, fmt.Sprintf("%s%d: %s", prefix, i+1, names[i]))
+		}
+	}
+	
 	return result
+}
+
+func contains(slice []int, item int) bool {
+	for _, v := range slice {
+		if v == item {
+			return true
+		}
+	}
+	return false
 }
