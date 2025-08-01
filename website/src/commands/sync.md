@@ -63,12 +63,10 @@ parameter makes Git Town sync all local branches.
 
 Git Town automatically resolves
 [phantom merge conflicts](../stacked-changes.md#avoid-phantom-merge-conflicts)
-by default.
-
-This relies on fairly sophisticated logic. If you run into a bug related to
-auto-resolution, please [report it](https://github.com/git-town/git-town/issues)
-and then use this flag to disable auto-resolution as a temporary workaround
-until the issue is addressed.
+by default. If you run into a bug related to auto-resolution, please
+[report it](https://github.com/git-town/git-town/issues) and then use this flag
+to disable auto-resolution as a temporary workaround until the issue is
+addressed.
 
 #### `--no-push`
 

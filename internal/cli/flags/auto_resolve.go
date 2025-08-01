@@ -12,6 +12,8 @@ const autoResolveLong = "auto-resolve"
 // type-safe access to the CLI arguments of type configdomain.AutoResolve
 func AutoResolve() (AddFunc, ReadAutoResolveFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
+		// Defining a string flag here, even though this is technically a bool flag,
+		// so that we can parse it using our expanded bool syntax.
 		cmd.Flags().StringP(autoResolveLong, "", "yes", "whether to auto-resolve phantom merge conflicts")
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.AutoResolve], error) {
