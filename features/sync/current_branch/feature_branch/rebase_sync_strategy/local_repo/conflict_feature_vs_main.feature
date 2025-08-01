@@ -14,6 +14,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     And the current branch is "feature"
     When I run "git-town sync"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                      |
