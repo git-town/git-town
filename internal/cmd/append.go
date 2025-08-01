@@ -137,7 +137,6 @@ func executeAppend(args executeAppendArgs) error {
 		return err
 	}
 	data, exit, err := determineAppendData(determineAppendDataArgs{
-		autoResolve:   repo.UnvalidatedConfig.NormalConfig.AutoResolve,
 		beam:          args.beam,
 		commit:        args.commit,
 		commitMessage: args.commitMessage,
@@ -366,7 +365,6 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 }
 
 type determineAppendDataArgs struct {
-	autoResolve   configdomain.AutoResolve
 	beam          configdomain.Beam
 	commit        configdomain.Commit
 	commitMessage Option[gitdomain.CommitMessage]
