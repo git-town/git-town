@@ -20,11 +20,11 @@ func AutoResolve() (AddFunc, ReadAutoResolveFlagFunc) {
 		if !cmd.Flags().Changed(autoResolveLong) {
 			return None[configdomain.AutoResolve](), nil
 		}
-		value, err := cmd.Flags().GetString(autoResolveLong)
+		text, err := cmd.Flags().GetString(autoResolveLong)
 		if err != nil {
 			return None[configdomain.AutoResolve](), err
 		}
-		parsed, err := gohacks.ParseBool(value, autoResolveLong)
+		parsed, err := gohacks.ParseBool(text, autoResolveLong)
 		return Some(configdomain.AutoResolve(parsed)), err
 	}
 	return addFlag, readFlag
