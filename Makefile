@@ -94,6 +94,9 @@ lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 alphavet:
 	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v internal/cmd)
 
+lint-messages-sorted:
+	@(cd tools/messages_sorted && go build) && ./tools/messages_sorted/messages_sorted
+
 lint-messy-output:
 	@(cd tools/messy_output && go build) && ./tools/messy_output/messy_output
 
@@ -112,9 +115,6 @@ lint-structs-sorted:
 
 lint-tests-sorted:
 	@(cd tools/tests_sorted && go build) && ./tools/tests_sorted/tests_sorted
-
-lint-messages-sorted:
-	@(cd tools/messages_sorted && go build) && ./tools/messages_sorted/messages_sorted
 
 lint-use-equal:
 	@(cd tools/use_equal && go build) && ./tools/use_equal/use_equal
