@@ -14,7 +14,6 @@ func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBr
 	case configdomain.SyncStrategyCompress:
 		args.program.Value.Add(
 			&opcodes.SyncFeatureBranchCompress{
-				AutoResolve:       args.autoResolve,
 				CurrentBranch:     args.localName,
 				CommitMessage:     args.firstCommitMessage,
 				Offline:           args.offline,
@@ -38,14 +37,12 @@ func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBr
 				Branch:            args.localName,
 				InitialParentName: args.initialParentName,
 				InitialParentSHA:  args.initialParentSHA,
-				AutoResolve:       args.autoResolve,
 				TrackingBranch:    args.trackingBranch,
 			},
 		)
 	case configdomain.SyncStrategyRebase:
 		args.program.Value.Add(
 			&opcodes.SyncFeatureBranchRebase{
-				AutoResolve:          args.autoResolve,
 				Branch:               args.localName,
 				ParentSHAPreviousRun: args.parentSHAPreviousRun,
 				PushBranches:         args.pushBranches,
@@ -59,7 +56,6 @@ func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBr
 }
 
 type featureBranchArgs struct {
-	autoResolve          configdomain.AutoResolve // whether to not auto-resolve conflicts
 	firstCommitMessage   Option[gitdomain.CommitMessage]
 	initialParentName    Option[gitdomain.LocalBranchName] // the parent when Git Town started
 	initialParentSHA     Option[gitdomain.SHA]             // the parent when Git Town started

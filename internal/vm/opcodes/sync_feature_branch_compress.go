@@ -9,7 +9,6 @@ import (
 
 // SyncFeatureBranchCompress expands to all opcodes needed to sync a feature branch using the "compress" sync strategy.
 type SyncFeatureBranchCompress struct {
-	AutoResolve             configdomain.AutoResolve
 	CommitMessage           Option[gitdomain.CommitMessage]
 	CurrentBranch           gitdomain.LocalBranchName
 	InitialParentName       Option[gitdomain.LocalBranchName]
@@ -33,7 +32,6 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 		skipParent := args.Detached.IsTrue() && parentIsPerennial
 		if !inSyncWithParent && !skipParent {
 			opcodes = append(opcodes, &SyncFeatureBranchMerge{
-				AutoResolve:       self.AutoResolve,
 				Branch:            self.CurrentBranch,
 				InitialParentName: self.InitialParentName,
 				InitialParentSHA:  self.InitialParentSHA,

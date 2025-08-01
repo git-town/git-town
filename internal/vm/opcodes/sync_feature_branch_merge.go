@@ -1,7 +1,6 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
@@ -10,7 +9,6 @@ import (
 
 // SyncFeatureBranchMerge merges the parent branches of the given branch until a local parent is found.
 type SyncFeatureBranchMerge struct {
-	AutoResolve             configdomain.AutoResolve
 	Branch                  gitdomain.LocalBranchName
 	InitialParentName       Option[gitdomain.LocalBranchName]
 	InitialParentSHA        Option[gitdomain.SHA]
@@ -49,7 +47,6 @@ func (self *SyncFeatureBranchMerge) Run(args shared.RunArgs) error {
 				}
 				if !isInSync {
 					program = append(program, &MergeParent{
-						AutoResolve:       self.AutoResolve,
 						CurrentBranch:     self.Branch,
 						CurrentParent:     parentToMerge,
 						InitialParentName: self.InitialParentName,
@@ -66,7 +63,6 @@ func (self *SyncFeatureBranchMerge) Run(args shared.RunArgs) error {
 				}
 				if !isInSync {
 					program = append(program, &MergeParent{
-						AutoResolve:       self.AutoResolve,
 						CurrentBranch:     self.Branch,
 						CurrentParent:     parentTrackingBranch.BranchName(),
 						InitialParentName: self.InitialParentName,

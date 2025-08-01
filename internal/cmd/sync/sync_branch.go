@@ -83,7 +83,6 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 	switch branchType {
 	case configdomain.BranchTypeFeatureBranch:
 		FeatureBranchProgram(args.Config.NormalConfig.SyncFeatureStrategy.SyncStrategy(), featureBranchArgs{
-			autoResolve:          args.Config.NormalConfig.AutoResolve,
 			firstCommitMessage:   firstCommitMessage,
 			initialParentName:    initialParentName,
 			initialParentSHA:     initialParentSHA,
@@ -99,7 +98,6 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 		PerennialBranchProgram(branchInfo, args)
 	case configdomain.BranchTypeParkedBranch:
 		ParkedBranchProgram(args.Config.NormalConfig.SyncFeatureStrategy.SyncStrategy(), args.InitialBranch, featureBranchArgs{
-			autoResolve:          args.Config.NormalConfig.AutoResolve,
 			firstCommitMessage:   firstCommitMessage,
 			initialParentName:    initialParentName,
 			initialParentSHA:     initialParentSHA,
@@ -117,7 +115,6 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 		ObservedBranchProgram(branchInfo, args.Program)
 	case configdomain.BranchTypePrototypeBranch:
 		FeatureBranchProgram(args.Config.NormalConfig.SyncPrototypeStrategy.SyncStrategy(), featureBranchArgs{
-			autoResolve:          args.Config.NormalConfig.AutoResolve,
 			firstCommitMessage:   firstCommitMessage,
 			initialParentName:    initialParentName,
 			initialParentSHA:     initialParentSHA,
@@ -152,7 +149,6 @@ func pullParentBranchOfCurrentFeatureBranchOpcode(args pullParentBranchOfCurrent
 	switch args.syncStrategy {
 	case configdomain.SyncFeatureStrategyMerge, configdomain.SyncFeatureStrategyCompress:
 		args.program.Value.Add(&opcodes.SyncFeatureBranchMerge{
-			AutoResolve:       args.autoResolve,
 			Branch:            args.branch,
 			InitialParentName: args.initialParentName,
 			InitialParentSHA:  args.initialParentSHA,
@@ -160,7 +156,6 @@ func pullParentBranchOfCurrentFeatureBranchOpcode(args pullParentBranchOfCurrent
 		})
 	case configdomain.SyncFeatureStrategyRebase:
 		args.program.Value.Add(&opcodes.RebaseParentsUntilLocal{
-			AutoResolve:          args.autoResolve,
 			Branch:               args.branch,
 			ParentSHAPreviousRun: args.parentSHAPreviousRun,
 		})
