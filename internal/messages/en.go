@@ -159,13 +159,13 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	GitVersionMajorNotNumber        = "cannot convert major version %q to int: %w"
 	GitVersionMinorNotNumber        = "cannot convert minor version %q to int: %w"
 	GitVersionProblem               = "cannot determine Git version: %w"
-	GitVersionUnexpectedOutput      = "'git version' returned unexpected output: %q.\nPlease open an issue and supply the output of running 'git version'"
 	GitVersionTooLow                = "this app requires Git 2.30 or higher"
+	GitVersionUnexpectedOutput      = "'git version' returned unexpected output: %q.\nPlease open an issue and supply the output of running 'git version'"
 
-	HackTooManyArguments             = "please provide only one branch to create"
 	HackBranchIsAlreadyFeature       = "branch %q is already a feature branch"
 	HackCannotFeatureMainBranch      = "you are trying to convert the main branch to a feature branch. That's not possible. If you want to create a feature branch, did you forget to add the branch name?"
 	HackCannotFeaturePerennialBranch = "branch %q is a perennial branch and cannot be a feature branch"
+	HackTooManyArguments             = "please provide only one branch to create"
 
 	InputAddOrRemove    = `invalid argument %q. Please provide either "add" or "remove"`
 	InputYesOrNo        = `invalid argument: %q. Please provide either "yes" or "no".\n`
@@ -184,18 +184,18 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	MainBranchCannotPrototype        = "cannot prototype the main branch"
 	MainBranchCannotShip             = "cannot ship the main branch"
 	MergeBranchNotLocal              = "cannot merge: branch %q is not local"
-	MergeOpenChanges                 = "please commit or remove the open changes first"
 	MergeNoGrandParent               = "cannot merge branch %q because its parent branch (%s) has no parent"
 	MergeNoParent                    = "cannot merge branch %q because it has no parent"
 	MergeNotInSyncWithTracking       = `branch %q is not in sync with its tracking branch, please run "git town sync" and try again`
+	MergeOpenChanges                 = "please commit or remove the open changes first"
 	MergeWrongBranchType             = "cannot merge %s branches"
 
 	NewBranchType = "New branch type:"
 
+	ObserveBranchIsLocal        = "branch %q is local only - branches you want to observe must have a remote branch because they are per definition other people's branches"
 	ObservedBranchCannotPark    = "cannot park observed branches"
 	ObservedBranchCannotPropose = "cannot propose observed branches"
 	ObservedBranchCannotShip    = "cannot ship observed branches"
-	ObserveBranchIsLocal        = "branch %q is local only - branches you want to observe must have a remote branch because they are per definition other people's branches"
 	ObservedRegexPrompt         = "Observed regex: "
 	ObservedRegexResult         = "Observed regex: %s\n"
 	OfflineNotAllowed           = "this command requires an active internet connection"
@@ -218,15 +218,15 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	PerennialRegexResult                  = "Perennial regex: %s\n"
 	PreviousCommandFinished               = "The previous Git Town command (%s) finished successfully.\n"
 	PreviousCommandProblem                = "The last Git Town command (%s) hit a problem %v ago.\n"
-	ProposalMultipleFromToFound           = "found %d proposals from branch %q to branch %q"
 	ProposalMultipleFromFound             = "found %d proposals for branch %q"
+	ProposalMultipleFromToFound           = "found %d proposals from branch %q to branch %q"
 	ProposalNoNumberGiven                 = "no proposal number given"
 	ProposalNoParent                      = "branch %q has no parent and can therefore not be proposed"
 	ProposalNotFoundForBranch             = "cannot determine proposal for branch %q: %w"
 	ProposalSourceCannotUpdate            = "cannot update the proposal source branch on your forge"
+	ProposalsShowLineageInvalid           = "invalid value for whether proposals should show the lineage: %q. Valid values are: none, ci, cli"
 	ProposalTargetBranchUpdateProblem     = "cannot update the target branch of proposal %d on your forge"
 	ProposalURLProblem                    = "cannot determine proposal URL from %q to %q: %w"
-	ProposalsShowLineageInvalid           = "invalid value for whether proposals should show the lineage: %q. Valid values are: none, ci, cli"
 	PrototypeRemoved                      = "branch %q is no longer a prototype branch"
 	PullRequestDeprecation                = `DEPRECATION NOTICE
 
