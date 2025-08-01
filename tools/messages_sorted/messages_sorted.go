@@ -58,7 +58,7 @@ func lintMessagesFile(filePath string) []string {
 			})
 
 			unsortedPositions := findUnsortedPositions(constNames)
-			diffLines := getDiffContextLines(constNames, sortedNames, unsortedPositions, 3)
+			diffLines := getDiffContextLines(filePath, constNames, sortedNames, unsortedPositions, 3)
 
 			issues = append(issues, fmt.Sprintf("%s: Constants in const block are not sorted alphabetically", filePath))
 			issues = append(issues, "Differences (- actual, + expected):")
@@ -82,7 +82,7 @@ func isSorted(names []string) bool {
 
 func findUnsortedPositions(names []string) []int {
 	var unsortedPositions []int
-	
+
 	for i := 1; i < len(names); i++ {
 		if strings.Compare(strings.ToLower(names[i-1]), strings.ToLower(names[i])) > 0 {
 			// Both the previous and current items are part of the unsorted sequence
@@ -92,24 +92,24 @@ func findUnsortedPositions(names []string) []int {
 			unsortedPositions = append(unsortedPositions, i)
 		}
 	}
-	
+
 	return unsortedPositions
 }
 
-func getDiffContextLines(actualNames []string, expectedNames []string, unsortedPositions []int, contextSize int) []string {
+func getDiffContextLines(filePath string, actualNames []string, expectedNames []string, unsortedPositions []int, contextSize int) []string {
 	if len(unsortedPositions) == 0 {
 		return []string{}
 	}
-	
+
 	var result []string
 	covered := make(map[int]bool)
-	
+
 	// For each unsorted position, show it with context
 	for _, pos := range unsortedPositions {
 		if covered[pos] {
 			continue
 		}
-		
+
 		// Calculate context range
 		start := pos - contextSize
 		if start < 0 {
@@ -119,26 +119,26 @@ func getDiffContextLines(actualNames []string, expectedNames []string, unsortedP
 		if end >= len(actualNames) {
 			end = len(actualNames) - 1
 		}
-		
+
 		// Add separator if this isn't the first group
 		if len(result) > 0 {
 			result = append(result, "--")
 		}
-		
+
 		// Add lines with context, showing diff format
 		for i := start; i <= end; i++ {
 			covered[i] = true
 			if contains(unsortedPositions, i) {
 				// Show the diff for unsorted lines
-				result = append(result, fmt.Sprintf("-%d: %s", i+1, actualNames[i]))
-				result = append(result, fmt.Sprintf("+%d: %s", i+1, expectedNames[i]))
+				result = append(result, fmt.Sprintf("- %s:%d: %s", filePath, i+1, actualNames[i]))
+				result = append(result, fmt.Sprintf("+ %s:%d: %s", filePath, i+1, expectedNames[i]))
 			} else {
 				// Show context lines without prefix
-				result = append(result, fmt.Sprintf(" %d: %s", i+1, actualNames[i]))
+				result = append(result, fmt.Sprintf("  %s:%d: %s", filePath, i+1, actualNames[i]))
 			}
 		}
 	}
-	
+
 	return result
 }
 
