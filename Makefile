@@ -76,19 +76,27 @@ lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	(cd website && make test)
 	tools/rta govulncheck ./...
 	@echo lint tools/format_self
-	@(cd tools/format_self && ../rta golangci-lint run)
+	@(cd tools/format_self && make test)
 	@echo lint tools/format_unittests
-	@(cd tools/format_unittests && ../rta golangci-lint run)
+	@(cd tools/format_unittests && make test)
+	@echo lint tools/lint_steps
+	@(cd tools/lint_steps && make test)
+	@echo lint tools/messy_output
+	@(cd tools/messy_output && make test)
+	@echo lint tools/optioncompare
+	@(cd tools/optioncompare && make test)
 	@echo lint tools/print_config_exhaustive
 	@(cd tools/print_config_exhaustive && make test)
 	@echo lint tools/stats_release
-	@(cd tools/stats_release && ../rta golangci-lint run)
+	@(cd tools/stats_release && make test)
 	@echo lint tools/structs_sorted
-	@(cd tools/structs_sorted && ../rta golangci-lint run)
+	@(cd tools/structs_sorted && make test)
 	@echo lint tools/tests_sorted
-	@(cd tools/tests_sorted && ../rta golangci-lint run)
-	@echo lint tools/lint_steps
-	@(cd tools/lint_steps && ../rta golangci-lint run)
+	@(cd tools/tests_sorted && make test)
+	@echo lint tools/tests_sorted
+	@(cd tools/tests_sorted && make test)
+	@echo lint tools/use_equal
+	@(cd tools/use_equal && make test)
 
 alphavet:
 	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v internal/cmd)
