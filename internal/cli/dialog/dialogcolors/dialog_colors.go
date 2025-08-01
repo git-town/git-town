@@ -1,6 +1,9 @@
-package colors
+package dialogcolors
 
-import "github.com/muesli/termenv"
+import (
+	"github.com/git-town/git-town/v21/pkg/colors"
+	"github.com/muesli/termenv"
+)
 
 // Typical colors used in BubbleTea dialogs.
 type DialogColors struct {
@@ -14,11 +17,11 @@ type DialogColors struct {
 
 func NewDialogColors() DialogColors {
 	return DialogColors{
-		EntryNumber: Faint(),
-		Help:        Faint(),
-		HelpKey:     FaintBold(),
-		Initial:     Green(),
-		Selection:   Cyan(),
-		Title:       Bold(),
+		EntryNumber: colors.Faint(),
+		Help:        colors.Faint(),
+		HelpKey:     colors.FaintBold(),
+		Initial:     colors.Green(),
+		Selection:   colors.Cyan(),
+		Title:       colors.Bold(),
 	}
 }
