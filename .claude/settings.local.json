@@ -1,13 +1,19 @@
 {
+  "env": {
+    "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1"
+  },
   "permissions": {
     "allow": [
       "Bash(find:*)",
       "Bash(make:*)",
-      "Bash(gofmt:*)"
+      "Bash(gofmt:*)",
+      "Bash(mkdir:*)",
+      "Bash(go run:*)",
+      "Bash(grep:*)",
+      "Bash(go:*)",
+      "Bash(./messages_sorted)",
+      "Bash(ls:*)"
     ],
     "deny": []
-  },
-  "env": {
-    "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1"
   }
 }

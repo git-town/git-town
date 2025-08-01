@@ -56,6 +56,7 @@ lint: tools/node_modules tools/rta@${RTA_VERSION}  # lints the main codebase con
 	make --no-print-directory lint-smoke
 	make --no-print-directory alphavet
 	make --no-print-directory deadcode
+	make --no-print-directory lint-messages-sorted
 	make --no-print-directory lint-messy-output
 	make --no-print-directory lint-optioncompare
 	make --no-print-directory lint-print-config
@@ -85,6 +86,8 @@ lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	@(cd tools/structs_sorted && ../rta golangci-lint run)
 	@echo lint tools/tests_sorted
 	@(cd tools/tests_sorted && ../rta golangci-lint run)
+	@echo lint tools/messages_sorted
+	@(cd tools/messages_sorted && ../rta golangci-lint run)
 	@echo lint tools/lint_steps
 	@(cd tools/lint_steps && ../rta golangci-lint run)
 
@@ -109,6 +112,9 @@ lint-structs-sorted:
 
 lint-tests-sorted:
 	@(cd tools/tests_sorted && go build) && ./tools/tests_sorted/tests_sorted
+
+lint-messages-sorted:
+	@(cd tools/messages_sorted && go build) && ./tools/messages_sorted/messages_sorted
 
 lint-use-equal:
 	@(cd tools/use_equal && go build) && ./tools/use_equal/use_equal
@@ -150,6 +156,7 @@ UNIT_TEST_DIRS = \
 	./tools/format_self/... \
 	./tools/format_unittests/... \
 	./tools/lint_steps/... \
+	./tools/messages_sorted/... \
 	./tools/messy_output/... \
 	./tools/stats_release/... \
 	./tools/structs_sorted/... \
