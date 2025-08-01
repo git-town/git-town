@@ -1,3 +1,4 @@
+// Package colors provids basic CLI colors used in various Git Town codebases.
 package colors
 
 import "github.com/muesli/termenv"

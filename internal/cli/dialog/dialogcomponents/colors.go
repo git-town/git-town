@@ -3,10 +3,12 @@ package dialogcomponents
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/cli/colors"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v21/pkg/colors"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
+
+// TODO: move into dialogcolors package
 
 // FormattedOption provides the given optional dialog choice in a printable format.
 func FormattedOption[T fmt.Stringer](userInput Option[T], hasGlobal bool, exit dialogdomain.Exit) string {
