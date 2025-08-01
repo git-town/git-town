@@ -61,10 +61,14 @@ parameter makes Git Town sync all local branches.
 
 #### `--auto-resolve`
 
-Git Town can resolve phantom merge conflicts that Git cannot resolve, because
-Git Town has additional information like the branch hierarchy and the state of
-branches the last time they were synced. this command syncs only the current
-branch. The `--all` aka `-a` parameter makes Git Town sync all local branches.
+Git Town automatically resolves
+[phantom merge conflicts](../stacked-changes.md#avoid-phantom-merge-conflicts)
+by default.
+
+This relies on fairly sophisticated logic. If you run into a bug related to
+auto-resolution, please [report it](https://github.com/git-town/git-town/issues)
+and then use this flag to disable auto-resolution as a temporary workaround
+until the issue is addressed.
 
 #### `--no-push`
 
