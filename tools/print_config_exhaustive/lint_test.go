@@ -24,7 +24,7 @@ import (
 )
 
 // configuration settings that exist in both UnvalidatedConfig and ValidatedConfig
-type NormalConfigData struct {
+type NormalConfig struct {
 	Aliases                  Aliases
 	BitbucketAppPassword     Option[forgedomain.BitbucketAppPassword]
 	BitbucketUsername        Option[forgedomain.BitbucketUsername]
@@ -58,7 +58,7 @@ type NormalConfigData struct {
 	UnknownBranchType        BranchType
 }
 
-func (self *NormalConfigData) NoPushHook() NoPushHook {
+func (self *NormalConfig) NoPushHook() NoPushHook {
 	return self.PushHook.Negate()
 }
 `

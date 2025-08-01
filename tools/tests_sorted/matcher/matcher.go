@@ -20,19 +20,15 @@ type Result interface {
 
 type stringResult string
 
-func (self stringResult) Success() bool {
-	return self == ""
+func (sr stringResult) FailureReason() string {
+	return string(sr)
 }
 
-func (self stringResult) FailureReason() string {
-	return string(self)
+func (sr stringResult) Success() bool {
+	return sr == ""
 }
 
 const okResult = stringResult("")
-
-func fmtResult(format string, a ...any) stringResult {
-	return stringResult(fmt.Sprintf(format, a...))
-}
 
 // ExprMatcher matches ast.Expr.
 type ExprMatcher interface {
@@ -85,7 +81,7 @@ type IdentSelectorMatcher struct {
 	Name      string
 }
 
-func (self *IdentSelectorMatcher) Match(expr ast.Expr) Result {
+func (ism *IdentSelectorMatcher) Match(expr ast.Expr) Result {
 	// Check that the whole expression is `<namespace>.<name>`.
 	selector, ok := expr.(*ast.SelectorExpr)
 	if !ok {
@@ -97,11 +93,11 @@ func (self *IdentSelectorMatcher) Match(expr ast.Expr) Result {
 		return stringResult("namespace is not an ast.Ident")
 	}
 	// Match the names.
-	if self.Namespace != namespace.Name {
-		return fmtResult("namespace doesn't match: want %q, got %q", self.Namespace, namespace.Name)
+	if ism.Namespace != namespace.Name {
+		return fmtResult("namespace doesn't match: want %q, got %q", ism.Namespace, namespace.Name)
 	}
-	if self.Name != selector.Sel.Name {
-		return fmtResult("name doesn't match: want %q, got %q", self.Name, selector.Sel.Name)
+	if ism.Name != selector.Sel.Name {
+		return fmtResult("name doesn't match: want %q, got %q", ism.Name, selector.Sel.Name)
 	}
 	return okResult
 }
@@ -111,14 +107,14 @@ type PointerMatcher struct {
 	InnerMatcher ExprMatcher
 }
 
-func (self *PointerMatcher) Match(expr ast.Expr) Result {
+func (pm *PointerMatcher) Match(expr ast.Expr) Result {
 	// Verify that this is a `*<expr>`.
 	ptr, ok := expr.(*ast.StarExpr)
 	if !ok {
 		return stringResult("not an ast.StarExpr")
 	}
 	// Delegate to the InnerMatcher.
-	return self.InnerMatcher.Match(ptr.X)
+	return pm.InnerMatcher.Match(ptr.X)
 }
 
 // FieldMatcher matches an ast.Field element if it has a given Name and Type.
@@ -127,11 +123,11 @@ type FieldMatcher struct {
 	TypeMatcher ExprMatcher
 }
 
-func (self *FieldMatcher) Match(field PositionalField) Result {
-	if self.Name != field.Name.Name {
-		return fmtResult("field name doesn't match: want %q, got %q", self.Name, field.Name.Name)
+func (fm *FieldMatcher) Match(field PositionalField) Result {
+	if fm.Name != field.Name.Name {
+		return fmtResult("field name doesn't match: want %q, got %q", fm.Name, field.Name.Name)
 	}
-	if r := self.TypeMatcher.Match(field.Field.Type); !r.Success() {
+	if r := fm.TypeMatcher.Match(field.Field.Type); !r.Success() {
 		return fmtResult("field type doesn't match: %v", r)
 	}
 	return okResult
@@ -144,11 +140,11 @@ type FieldListPrefixMatcher struct {
 	Prefix []PositionalFieldMatcher
 }
 
-func (self *FieldListPrefixMatcher) Match(fields *ast.FieldList) Result {
+func (flpm *FieldListPrefixMatcher) Match(fields *ast.FieldList) Result {
 	posFields := PositionalFields(fields)
-	for i, fieldMatcher := range self.Prefix {
+	for i, fieldMatcher := range flpm.Prefix {
 		if i >= len(posFields) {
-			return fmtResult("not enough fields, want at least %d, got %d", len(self.Prefix), len(posFields))
+			return fmtResult("not enough fields, want at least %d, got %d", len(flpm.Prefix), len(posFields))
 		}
 		field := posFields[i]
 		if r := fieldMatcher.Match(field); !r.Success() {
@@ -167,14 +163,14 @@ type FirstStringArgFromFuncCallExtractor struct {
 	FuncMatcher ExprMatcher
 }
 
-func (self *FirstStringArgFromFuncCallExtractor) Extract(expr ast.Expr) (string, Result, error) {
+func (f *FirstStringArgFromFuncCallExtractor) Extract(expr ast.Expr) (string, Result, error) {
 	// Check that this is a <Fun>(<Call>) expression.
 	call, ok := expr.(*ast.CallExpr)
 	if !ok {
 		return "", stringResult("not an ast.CallExpr"), nil
 	}
 	// Check that the call.Fun matches the FuncMatcher.
-	if r := self.FuncMatcher.Match(call.Fun); !r.Success() {
+	if r := f.FuncMatcher.Match(call.Fun); !r.Success() {
 		return "", fmtResult("call.Fun doesn't match: %v", r.FailureReason()), nil
 	}
 	// Check call.Args.
@@ -198,4 +194,8 @@ func (self *FirstStringArgFromFuncCallExtractor) Extract(expr ast.Expr) (string,
 		return "", okResult, fmt.Errorf("the first call argument is an invalid string literal: %w", err)
 	}
 	return literal, okResult, nil
+}
+
+func fmtResult(format string, a ...any) stringResult {
+	return stringResult(fmt.Sprintf(format, a...))
 }

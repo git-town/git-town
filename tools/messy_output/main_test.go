@@ -1,3 +1,4 @@
+//nolint:paralleltest
 package main_test
 
 import (
@@ -33,8 +34,8 @@ Feature: test
 				Line:    8,
 			},
 		}
-		assert_scenarios(t, text, scenarios)
-		assert_errors(t, scenarios, []string{
+		assertScenarios(t, text, scenarios)
+		assertErrors(t, scenarios, []string{
 			"test:4  unnecessary @messyoutput tag\n",
 			"test:8  unnecessary @messyoutput tag\n",
 		})
@@ -63,8 +64,8 @@ Feature: test
 				Line:    7,
 			},
 		}
-		assert_scenarios(t, text, scenarios)
-		assert_errors(t, scenarios, []string{})
+		assertScenarios(t, text, scenarios)
+		assertErrors(t, scenarios, []string{})
 	})
 
 	t.Run("one scenario has a tag but no steps", func(t *testing.T) {
@@ -91,8 +92,8 @@ Feature: test
 				Line:    8,
 			},
 		}
-		assert_scenarios(t, text, scenarios)
-		assert_errors(t, scenarios, []string{
+		assertScenarios(t, text, scenarios)
+		assertErrors(t, scenarios, []string{
 			"test:4  unnecessary @messyoutput tag\n",
 		})
 	})
@@ -121,8 +122,8 @@ Feature: test
 				Line:    8,
 			},
 		}
-		assert_scenarios(t, text, scenarios)
-		assert_errors(t, scenarios, []string{})
+		assertScenarios(t, text, scenarios)
+		assertErrors(t, scenarios, []string{})
 	})
 
 	t.Run("one scenario has the step in plural", func(t *testing.T) {
@@ -148,8 +149,8 @@ Feature: test
 				Line:    7,
 			},
 		}
-		assert_scenarios(t, text, scenarios)
-		assert_errors(t, scenarios, []string{
+		assertScenarios(t, text, scenarios)
+		assertErrors(t, scenarios, []string{
 			"test:3  missing @messyoutput tag\n",
 		})
 	})
@@ -177,8 +178,8 @@ Feature: test
 				Line:    7,
 			},
 		}
-		assert_scenarios(t, text, scenarios)
-		assert_errors(t, scenarios, []string{
+		assertScenarios(t, text, scenarios)
+		assertErrors(t, scenarios, []string{
 			"test:3  missing @messyoutput tag\n",
 		})
 	})
@@ -206,8 +207,8 @@ Feature: test
 				Line:    7,
 			},
 		}
-		assert_scenarios(t, text, scenarios)
-		assert_errors(t, scenarios, []string{})
+		assertScenarios(t, text, scenarios)
+		assertErrors(t, scenarios, []string{})
 	})
 
 	t.Run("the feature has the tag, only one scenarios has the step", func(t *testing.T) {
@@ -233,25 +234,25 @@ Feature: test
 				Line:    7,
 			},
 		}
-		assert_scenarios(t, text, scenarios)
-		assert_errors(t, scenarios, []string{
+		assertScenarios(t, text, scenarios)
+		assertErrors(t, scenarios, []string{
 			"test:7  unnecessary @messyoutput tag\n",
 		})
 	})
 }
 
-func assert_scenarios(t *testing.T, text string, wantScenarios []messy.ScenarioInfo) {
-	t.Helper()
-	must.NoError(t, os.WriteFile("test", []byte(text), 0o744))
-	defer os.Remove("test")
-	regex := messy.CompileRegex()
-	feature := messy.ReadGherkinFile("test")
-	haveScenarios := messy.FindScenarios(feature, "test", regex)
-	must.Eq(t, wantScenarios, haveScenarios)
-}
-
-func assert_errors(t *testing.T, scenarios []messy.ScenarioInfo, wantErrors []string) {
+func assertErrors(t *testing.T, scenarios []messy.ScenarioInfo, wantErrors []string) {
 	t.Helper()
 	haveErrors := messy.AnalyzeScenarios("test", scenarios)
 	must.Eq(t, wantErrors, haveErrors)
+}
+
+func assertScenarios(t *testing.T, text string, wantScenarios []messy.ScenarioInfo) {
+	t.Helper()
+	must.NoError(t, os.WriteFile("test", []byte(text), 0o600))
+	defer os.Remove("test")
+	regex := messy.CompileRegex()
+	feature := messy.ReadGherkinFile("test")
+	haveScenarios := messy.FindScenarios(feature, regex)
+	must.Eq(t, wantScenarios, haveScenarios)
 }
