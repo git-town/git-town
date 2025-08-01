@@ -39,12 +39,12 @@ func switchCmd() *cobra.Command {
 		Short:   switchDesc,
 		Long:    cmdhelpers.Long(switchDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			branchTypes, err1 := readTypeFlag(cmd)
-			allBranches, err2 := readAllFlag(cmd)
-			displayTypes, err3 := readDisplayTypesFlag(cmd)
+			branchTypes, errBranchTypes := readTypeFlag(cmd)
+			allBranches, errAllBranches := readAllFlag(cmd)
+			displayTypes, errDisplayTypes := readDisplayTypesFlag(cmd)
 			merge, err4 := readMergeFlag(cmd)
 			verbose, err5 := readVerboseFlag(cmd)
-			if err := cmp.Or(err1, err2, err3, err4, err5); err != nil {
+			if err := cmp.Or(errBranchTypes, errAllBranches, errDisplayTypes, err4, err5); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
