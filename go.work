@@ -5,6 +5,7 @@ use (
 	./tools/format_self
 	./tools/format_unittests
 	./tools/lint_steps
+	./tools/messages_sorted
 	./tools/messy_output
 	./tools/optioncompare
 	./tools/print_config_exhaustive

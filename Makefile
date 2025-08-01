@@ -56,6 +56,7 @@ lint: tools/node_modules tools/rta@${RTA_VERSION}  # lints the main codebase con
 	make --no-print-directory lint-smoke
 	make --no-print-directory alphavet
 	make --no-print-directory deadcode
+	make --no-print-directory lint-messages-sorted
 	make --no-print-directory lint-messy-output
 	make --no-print-directory lint-optioncompare
 	make --no-print-directory lint-print-config
@@ -81,6 +82,8 @@ lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	@(cd tools/format_unittests && make test)
 	@echo lint tools/lint_steps
 	@(cd tools/lint_steps && make test)
+	@echo lint tools/messages_sorted
+	@(cd tools/messages_sorted && make lint)
 	@echo lint tools/messy_output
 	@(cd tools/messy_output && make test)
 	@echo lint tools/optioncompare
@@ -100,6 +103,9 @@ lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 
 alphavet:
 	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v internal/cmd)
+
+lint-messages-sorted:
+	@(cd tools/messages_sorted && go build) && ./tools/messages_sorted/messages_sorted
 
 lint-messy-output:
 	@(cd tools/messy_output && go build) && ./tools/messy_output/messy_output
@@ -160,6 +166,7 @@ UNIT_TEST_DIRS = \
 	./tools/format_self/... \
 	./tools/format_unittests/... \
 	./tools/lint_steps/... \
+	./tools/messages_sorted/... \
 	./tools/messy_output/... \
 	./tools/stats_release/... \
 	./tools/structs_sorted/... \
