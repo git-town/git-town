@@ -6,8 +6,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/git-town/git-town/v21/internal/cli/colors"
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcolors"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/cli/flags"
@@ -17,6 +17,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/pkg/colors"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/spf13/cobra"
 )
@@ -114,7 +115,7 @@ func determineBranchData(repo execute.OpenRepoResult) (data branchData, exit dia
 			initialBranchOpt = Some(initialBranch)
 		}
 	}
-	colors := colors.NewDialogColors()
+	colors := dialogcolors.NewDialogColors()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.Names())
 	return branchData{
 		branchInfos:      branchesSnapshot.Branches,
@@ -127,7 +128,7 @@ func determineBranchData(repo execute.OpenRepoResult) (data branchData, exit dia
 type branchData struct {
 	branchInfos      gitdomain.BranchInfos
 	branchesAndTypes configdomain.BranchesAndTypes
-	colors           colors.DialogColors
+	colors           dialogcolors.DialogColors
 	initialBranchOpt Option[gitdomain.LocalBranchName]
 }
 

@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/git-town/git-town/v21/internal/cli/colors"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
+	"github.com/git-town/git-town/v21/pkg/colors"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
