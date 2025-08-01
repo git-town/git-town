@@ -6,8 +6,8 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-// MergeParent merges the given parent branch into the current branch.
-type MergeParent struct {
+// MergeParentResolvePhantomConflicts merges the given parent branch into the current branch.
+type MergeParentResolvePhantomConflicts struct {
 	CurrentBranch           gitdomain.LocalBranchName
 	CurrentParent           gitdomain.BranchName              // the currently active parent, after all remotely deleted parents were removed
 	InitialParentName       Option[gitdomain.LocalBranchName] // name of the original parent when Git Town started
@@ -15,7 +15,7 @@ type MergeParent struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *MergeParent) Run(args shared.RunArgs) error {
+func (self *MergeParentResolvePhantomConflicts) Run(args shared.RunArgs) error {
 	err := args.Git.MergeBranchNoEdit(args.Frontend, self.CurrentParent)
 	if err == nil || !args.Config.Value.NormalConfig.AutoResolve.ShouldAutoResolve() {
 		return err
