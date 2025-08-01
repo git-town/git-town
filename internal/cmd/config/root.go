@@ -32,8 +32,9 @@ func RootCmd() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				DryRun:  None[configdomain.DryRun](),
-				Verbose: verbose,
+				AutoResolve: None[configdomain.AutoResolve](),
+				DryRun:      None[configdomain.DryRun](),
+				Verbose:     verbose,
 			})
 			return executeDisplayConfig(cliConfig)
 		},
@@ -106,6 +107,7 @@ func printConfig(config config.UnvalidatedConfig) {
 	print.Entry("prototype sync strategy", config.NormalConfig.SyncPrototypeStrategy.String())
 	print.Entry("sync tags", format.Bool(config.NormalConfig.SyncTags.IsTrue()))
 	print.Entry("sync with upstream", format.Bool(config.NormalConfig.SyncUpstream.IsTrue()))
+	print.Entry("auto-resolve phantom conflicts", format.Bool(config.NormalConfig.AutoResolve.ShouldAutoResolve()))
 	fmt.Println()
 	if config.NormalConfig.Lineage.Len() > 0 {
 		print.LabelAndValue("Branch Lineage", format.BranchLineage(config.NormalConfig.Lineage))

@@ -91,6 +91,11 @@ that would be run but doesn't execute them.
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.
 
+#### `--auto-resolve`
+
+Disables automatic resolution of
+[phantom merge conflicts](../stacked-changes.md#avoid-phantom-merge-conflicts).
+
 ## Configuration
 
 [sync-perennial-strategy](../preferences/sync-perennial-strategy.md) configures

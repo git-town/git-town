@@ -59,6 +59,7 @@ func proposeCommand() *cobra.Command {
 	addBodyFlag, readBodyFlag := flags.ProposalBody("b")
 	addBodyFileFlag, readBodyFileFlag := flags.ProposalBodyFile()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
 	addStackFlag, readStackFlag := flags.Stack("propose the entire stack")
 	addTitleFlag, readTitleFlag := flags.ProposalTitle()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
@@ -72,15 +73,17 @@ func proposeCommand() *cobra.Command {
 			bodyFile, errBodyFile := readBodyFileFlag(cmd)
 			bodyText, errBodyText := readBodyFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
+			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
 			stack, errStack := readStackFlag(cmd)
 			title, errTitle := readTitleFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errBodyFile, errBodyText, errDryRun, errStack, errTitle, errVerbose); err != nil {
+			if err := cmp.Or(errBodyFile, errBodyText, errDryRun, errAutoResolve, errStack, errTitle, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				DryRun:  dryRun,
-				Verbose: verbose,
+				AutoResolve: autoResolve,
+				DryRun:      dryRun,
+				Verbose:     verbose,
 			})
 			return executePropose(proposeArgs{
 				body:      bodyText,
@@ -94,6 +97,7 @@ func proposeCommand() *cobra.Command {
 	addBodyFlag(&cmd)
 	addBodyFileFlag(&cmd)
 	addDryRunFlag(&cmd)
+	addAutoResolveFlag(&cmd)
 	addStackFlag(&cmd)
 	addTitleFlag(&cmd)
 	addVerboseFlag(&cmd)

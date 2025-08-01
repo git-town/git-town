@@ -80,8 +80,9 @@ func mergeCommand() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				DryRun:  dryRun,
-				Verbose: verbose,
+				AutoResolve: None[configdomain.AutoResolve](),
+				DryRun:      dryRun,
+				Verbose:     verbose,
 			})
 			return executeMerge(cliConfig)
 		},

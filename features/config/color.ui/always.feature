@@ -74,6 +74,7 @@ Feature: show the configuration
         prototype sync strategy: merge
         sync tags: yes
         sync with upstream: yes
+        auto-resolve phantom conflicts: yes
       """
 
   Scenario: all configured in config file
@@ -105,6 +106,7 @@ Feature: show the configuration
       prototype-strategy = "compress"
       tags = false
       upstream = true
+      auto-resolve = false
       """
     When I run "git-town config"
     Then Git Town prints:
@@ -153,6 +155,7 @@ Feature: show the configuration
         prototype sync strategy: compress
         sync tags: no
         sync with upstream: yes
+        auto-resolve phantom conflicts: no
       """
 
   Scenario: configured in both Git and config file
@@ -171,6 +174,7 @@ Feature: show the configuration
     And Git setting "git-town.sync-feature-strategy" is "merge"
     And Git setting "git-town.sync-prototype-strategy" is "compress"
     And Git setting "git-town.unknown-branch-type" is "observed"
+    And Git setting "git-town.auto-resolve" is "false"
     And the configuration file:
       """
       [branches]
@@ -199,6 +203,7 @@ Feature: show the configuration
       prototype-strategy = "rebase"
       tags = true
       upstream = true
+      auto-resolve = true
       """
     When I run "git-town config"
     Then Git Town prints:
@@ -247,6 +252,7 @@ Feature: show the configuration
         prototype sync strategy: compress
         sync tags: no
         sync with upstream: no
+        auto-resolve phantom conflicts: yes
       """
 
   Scenario: all configured, with stacked changes
@@ -305,6 +311,7 @@ Feature: show the configuration
         prototype sync strategy: merge
         sync tags: yes
         sync with upstream: yes
+        auto-resolve phantom conflicts: yes
 
       Branch Lineage:
         main
@@ -369,4 +376,5 @@ Feature: show the configuration
         prototype sync strategy: merge
         sync tags: yes
         sync with upstream: yes
+        auto-resolve phantom conflicts: yes
       """

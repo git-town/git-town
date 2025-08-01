@@ -55,6 +55,7 @@ func Cmd() *cobra.Command {
 	addAllFlag, readAllFlag := flags.All("sync all local branches")
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
 	addNoPushFlag, readNoPushFlag := flags.NoPush()
 	addPruneFlag, readPruneFlag := flags.Prune()
 	addStackFlag, readStackFlag := flags.Stack("sync the stack that the current branch belongs to")
@@ -69,16 +70,18 @@ func Cmd() *cobra.Command {
 			allBranches, errAllBranches := readAllFlag(cmd)
 			detached, errDetached := readDetachedFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
+			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
 			pushBranches, errPushBranches := readNoPushFlag(cmd)
 			prune, errPrune := readPruneFlag(cmd)
 			stack, errStack := readStackFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errAllBranches, errDetached, errDryRun, errPushBranches, errPrune, errStack, errVerbose); err != nil {
+			if err := cmp.Or(errAllBranches, errDetached, errDryRun, errAutoResolve, errPushBranches, errPrune, errStack, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				DryRun:  dryRun,
-				Verbose: verbose,
+				AutoResolve: autoResolve,
+				DryRun:      dryRun,
+				Verbose:     verbose,
 			})
 			return executeSync(executeSyncArgs{
 				cliConfig:       cliConfig,
@@ -93,6 +96,7 @@ func Cmd() *cobra.Command {
 	addAllFlag(&cmd)
 	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
+	addAutoResolveFlag(&cmd)
 	addNoPushFlag(&cmd)
 	addPruneFlag(&cmd)
 	addStackFlag(&cmd)

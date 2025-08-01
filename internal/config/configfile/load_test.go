@@ -51,6 +51,7 @@ delete-tracking-branch = false
 strategy = "api"
 
 [sync]
+auto-resolve = false
 feature-strategy = "merge"
 perennial-strategy = "rebase"
 prototype-strategy = "compress"
@@ -93,6 +94,7 @@ prototype-branches = "compress"
 					Strategy:             Ptr("api"),
 				},
 				Sync: &configfile.Sync{
+					AutoResolve:       Ptr(false),
 					FeatureStrategy:   Ptr("merge"),
 					PerennialStrategy: Ptr("rebase"),
 					PrototypeStrategy: Ptr("compress"),

@@ -67,6 +67,7 @@ main
 )
 
 func prependCommand() *cobra.Command {
+	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
 	addBeamFlag, readBeamFlag := flags.Beam()
 	addBodyFlag, readBodyFlag := flags.ProposalBody("")
 	addCommitFlag, readCommitFlag := flags.Commit()
@@ -84,6 +85,7 @@ func prependCommand() *cobra.Command {
 		Short:   prependDesc,
 		Long:    cmdhelpers.Long(prependDesc, prependHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
+			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
 			beam, errBeam := readBeamFlag(cmd)
 			bodyText, errBodyText := readBodyFlag(cmd)
 			commit, errCommit := readCommitFlag(cmd)
@@ -94,7 +96,7 @@ func prependCommand() *cobra.Command {
 			prototype, errPrototype := readPrototypeFlag(cmd)
 			title, errTitle := readTitleFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errBeam, errBodyText, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errTitle, errVerbose); err != nil {
+			if err := cmp.Or(errAutoResolve, errBeam, errBodyText, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errTitle, errVerbose); err != nil {
 				return err
 			}
 			if commitMessage.IsSome() {
@@ -104,8 +106,9 @@ func prependCommand() *cobra.Command {
 				commit = true
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				DryRun:  dryRun,
-				Verbose: verbose,
+				AutoResolve: autoResolve,
+				DryRun:      dryRun,
+				Verbose:     verbose,
 			})
 			return executePrepend(prependArgs{
 				argv:          args,
@@ -121,6 +124,7 @@ func prependCommand() *cobra.Command {
 			})
 		},
 	}
+	addAutoResolveFlag(&cmd)
 	addBeamFlag(&cmd)
 	addBodyFlag(&cmd)
 	addCommitFlag(&cmd)

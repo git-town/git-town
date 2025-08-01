@@ -67,6 +67,7 @@ it also syncs all affected branches.
 )
 
 func hackCmd() *cobra.Command {
+	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
 	addBeamFlag, readBeamFlag := flags.Beam()
 	addCommitFlag, readCommitFlag := flags.Commit()
 	addDetachedFlag, readDetachedFlag := flags.Detached()
@@ -82,6 +83,7 @@ func hackCmd() *cobra.Command {
 		Short:   hackDesc,
 		Long:    cmdhelpers.Long(hackDesc, hackHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
+			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
 			beam, errBeam := readBeamFlag(cmd)
 			commit, errCommit := readCommitFlag(cmd)
 			commitMessage, errCommitMessage := readCommitMessageFlag(cmd)
@@ -90,15 +92,16 @@ func hackCmd() *cobra.Command {
 			propose, errPropose := readProposeFlag(cmd)
 			prototype, errPrototype := readPrototypeFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errBeam, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errVerbose); err != nil {
+			if err := cmp.Or(errAutoResolve, errBeam, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errVerbose); err != nil {
 				return err
 			}
 			if commitMessage.IsSome() || propose.IsTrue() {
 				commit = true
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				DryRun:  dryRun,
-				Verbose: verbose,
+				AutoResolve: autoResolve,
+				DryRun:      dryRun,
+				Verbose:     verbose,
 			})
 			return executeHack(hackArgs{
 				argv:          args,
@@ -117,6 +120,7 @@ func hackCmd() *cobra.Command {
 	addCommitMessageFlag(&cmd)
 	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
+	addAutoResolveFlag(&cmd)
 	addProposeFlag(&cmd)
 	addPrototypeFlag(&cmd)
 	addVerboseFlag(&cmd)

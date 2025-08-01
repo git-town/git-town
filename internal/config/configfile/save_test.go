@@ -46,6 +46,7 @@ func TestSave(t *testing.T) {
 		t.Run("all options given", func(t *testing.T) {
 			t.Parallel()
 			have := configfile.RenderTOML(configdomain.PartialConfig{
+				AutoResolve:              Some(configdomain.AutoResolve(false)),
 				DevRemote:                Some(gitdomain.RemoteOrigin),
 				ForgeType:                asserts.NoError1(forgedomain.ParseForgeType("github")),
 				HostingOriginHostname:    configdomain.ParseHostingOriginHostname("forge"),
@@ -89,6 +90,7 @@ delete-tracking-branch = true
 strategy = "api"
 
 [sync]
+auto-resolve = false
 feature-strategy = "merge"
 perennial-strategy = "rebase"
 prototype-strategy = "compress"
