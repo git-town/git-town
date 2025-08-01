@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/subshell"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
@@ -13,7 +12,6 @@ import (
 
 // rebases the current branch against the target branch while executing "git town swap", while moving the target branch onto the Onto branch.
 type RebaseOntoKeepDeleted struct {
-	AutoResolve             configdomain.AutoResolve
 	BranchToRebaseOnto      gitdomain.BranchName
 	CommitsToRemove         gitdomain.Location
 	Upstream                Option[gitdomain.LocalBranchName]
@@ -44,7 +42,7 @@ func (self *RebaseOntoKeepDeleted) Run(args shared.RunArgs) error {
 		if err != nil {
 			return fmt.Errorf("cannot determine conflicting files after rebase: %w", err)
 		}
-		if self.AutoResolve.ShouldAutoResolve() {
+		if args.Config.Value.NormalConfig.AutoResolve.ShouldAutoResolve() {
 			for _, conflictingFile := range conflictingFiles {
 				if conflictingChange, has := conflictingFile.CurrentBranchChange.Get(); has {
 					_ = args.Git.ResolveConflict(args.Frontend, conflictingChange.FilePath, gitdomain.ConflictResolutionTheirs)
