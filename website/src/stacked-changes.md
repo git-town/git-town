@@ -243,21 +243,36 @@ the order of branches.
 
 #### Avoid phantom merge conflicts
 
-To eliminate phantom merge conflicts after shipping the oldest branch in a
-stacked change, ship using a
+Phantom merge conflicts are merge conflicts that Git cannot resolve, but where
+the changes aren't really conflicting if you know the big picture. An example
+for a phantom merge conflict is when shipping the oldest branch in a stack via
+squash-merge. In this case, the main branch contains a different commit than the
+shipped feature branch had. If children of the shipped feature branch change the
+same code as the just shipped feature branch, they might conflict with the new
+commit on the main branch again, even if the user had already resolved those
+conflicts as part of developing the stack.
+
+Git cannot resolve those phantom merge conflicts because it only looks at the
+current conflict, and sees two conflicting changes. Git Town can resolve phantom
+merge conflicts because it knows the complete branch hierarchy, which branches
+just disappeared, and the state of all the branches the last time they were
+synced. This gives it the information necessary to resolve such phantom merge
+conflicts.
+
+To eliminate the occurrence of phantom merge conflicts after shipping the oldest
+branch in a stacked change, ship using a
 [fast-forward merge](https://git-scm.com/docs/git-merge#_fast_forward_merge).
-This guarantees that the new commit(s) on the main branch are the exact same
-commit(s) from the shipped feature branch. This helps Git recognize those
-commits at the next `git town sync` operation and omit unnecessary merge and
-rebase operations.
+This guarantees that the new commit(s) on the main branch are the same commit(s)
+from the shipped feature branch. This helps Git recognize those commits at the
+next `git town sync` operation and omit unnecessary merge and rebase operations.
 
 GitLab provides fast-forward merges
 [out of the box](https://docs.gitlab.com/ee/user/project/merge_requests/methods/#fast-forward-merge).
 GitHub doesn't provide this out-of-the-box, but allows a workaround that you can
-utilize by using [git town ship](commands/ship.md) with the
+utilize by running [git town ship](commands/ship.md) locally with the
 [fast-forward shipping strategy](preferences/ship-strategy.md#fast-forward).
 This problem is documented by
 [GitHub](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges#squashing-and-merging-a-long-running-branch).
 
-You might want to [compress](commands/compress.md) the feature branch to have
-only one new commit on the main branch.
+It also helps to [compress](commands/compress.md) feature branches, so that you
+don't need to resolve so many new merge conflicts when they happen.
