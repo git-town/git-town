@@ -74,9 +74,9 @@ func mergeCommand() *cobra.Command {
 		Short:   mergeDesc,
 		Long:    cmdhelpers.Long(mergeDesc, mergeHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			dryRun, err1 := readDryRunFlag(cmd)
-			verbose, err2 := readVerboseFlag(cmd)
-			if err := cmp.Or(err1, err2); err != nil {
+			dryRun, errDryRun := readDryRunFlag(cmd)
+			verbose, errVerbose := readVerboseFlag(cmd)
+			if err := cmp.Or(errDryRun, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{

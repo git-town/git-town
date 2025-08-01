@@ -31,9 +31,9 @@ func RootCommand() *cobra.Command {
 		Short:   statusDesc,
 		Long:    cmdhelpers.Long(statusDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			pending, err1 := readPendingFlag(cmd)
-			verbose, err2 := readVerboseFlag(cmd)
-			if err := cmp.Or(err1, err2); err != nil {
+			pending, errPending := readPendingFlag(cmd)
+			verbose, errVerbose := readVerboseFlag(cmd)
+			if err := cmp.Or(errPending, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{

@@ -79,9 +79,9 @@ func detachCommand() *cobra.Command {
 		GroupID: cmdhelpers.GroupIDStack,
 		Long:    cmdhelpers.Long(detachDesc, detachHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			dryRun, err1 := readDryRunFlag(cmd)
-			verbose, err2 := readVerboseFlag(cmd)
-			if err := cmp.Or(err1, err2); err != nil {
+			dryRun, errDryRun := readDryRunFlag(cmd)
+			verbose, errVerbose := readVerboseFlag(cmd)
+			if err := cmp.Or(errDryRun, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{

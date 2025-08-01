@@ -81,11 +81,11 @@ func walkCommand() *cobra.Command {
 		Short:   walkDesc,
 		Long:    cmdhelpers.Long(walkDesc, walkHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			allBranches, err1 := readAllFlag(cmd)
-			dryRun, err2 := readDryRunFlag(cmd)
-			stack, err3 := readStackFlag(cmd)
-			verbose, err4 := readVerboseFlag(cmd)
-			if err := cmp.Or(err1, err2, err3, err4); err != nil {
+			allBranches, errAllBranches := readAllFlag(cmd)
+			dryRun, errDryRun := readDryRunFlag(cmd)
+			stack, errStack := readStackFlag(cmd)
+			verbose, errVerbose := readVerboseFlag(cmd)
+			if err := cmp.Or(errAllBranches, errDryRun, errStack, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
