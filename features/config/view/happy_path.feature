@@ -305,6 +305,7 @@ Feature: show the configuration
         prototype sync strategy: merge
         sync tags: yes
         sync with upstream: yes
+        auto-resolve phantom conflicts: yes
 
       Branch Lineage:
         main
