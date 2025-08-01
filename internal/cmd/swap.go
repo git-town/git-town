@@ -75,18 +75,21 @@ func swapCommand() *cobra.Command {
 		GroupID: cmdhelpers.GroupIDStack,
 		Long:    cmdhelpers.Long(swapDesc, swapHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
+			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errDryRun, errVerbose); err != nil {
+			if err := cmp.Or(errAutoResolve, errDryRun, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				DryRun:  dryRun,
-				Verbose: verbose,
+				AutoResolve: autoResolve,
+				DryRun:      dryRun,
+				Verbose:     verbose,
 			})
 			return executeSwap(args, cliConfig)
 		},
 	}
+	addAutoResolveFlag(&cmd)
 	addDryRunFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
