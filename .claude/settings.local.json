@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "env": {
     "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1"
   },
@@ -11,7 +12,9 @@
       "Bash(go run:*)",
       "Bash(grep:*)",
       "Bash(go:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(sed:*)",
+      "Bash(awk:*)"
     ],
     "deny": []
   }
