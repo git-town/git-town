@@ -204,6 +204,9 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		}
 	}
 	if data.Sync != nil {
+		if data.Sync.AutoResolve != nil {
+			autoResolve = Some(configdomain.AutoResolve(*data.Sync.AutoResolve))
+		}
 		if data.Sync.FeatureStrategy != nil {
 			syncFeatureStrategy, err = configdomain.ParseSyncFeatureStrategy(*data.Sync.FeatureStrategy)
 			ec.Check(err)
