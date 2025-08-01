@@ -61,12 +61,12 @@ func lintMessagesFile(filePath string) []string {
 			dmp := diffmatchpatch.New()
 			actualText := strings.Join(constNames, "\n")
 			expectedText := strings.Join(addEmptyLinesBetweenLetters(sortedNames), "\n")
-			
+
 			// Convert to line-based diff
 			lineArray1, lineArray2, lineHash := dmp.DiffLinesToChars(actualText, expectedText)
 			diffs := dmp.DiffMain(lineArray1, lineArray2, false)
 			diffs = dmp.DiffCharsToLines(diffs, lineHash)
-			
+
 			diffText := dmp.DiffPrettyText(diffs)
 
 			issues = append(issues, fmt.Sprintf("%s: Constants in const block are not sorted alphabetically", filePath))
@@ -91,14 +91,13 @@ func addEmptyLinesBetweenLetters(names []string) []string {
 	if len(names) == 0 {
 		return names
 	}
-	
+
 	result := []string{names[0]}
 	var prevFirstLetter rune
-	
 	if len(names[0]) > 0 {
 		prevFirstLetter = rune(names[0][0])
 	}
-	
+
 	for i := 1; i < len(names); i++ {
 		if len(names[i]) > 0 {
 			currentFirstLetter := rune(names[i][0])
@@ -109,6 +108,6 @@ func addEmptyLinesBetweenLetters(names []string) []string {
 		}
 		result = append(result, names[i])
 	}
-	
+
 	return result
 }
