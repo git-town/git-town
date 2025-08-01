@@ -4,11 +4,11 @@
 
 #### New Features
 
-- Git Town now has an option to disable automatic resolving of phantom merge conflicts ([#5317](https://github.com/git-town/git-town/pull/5317))
+- The setup assistant now correctly handles existing configuration settings in global Git metadata ([#5201](https://github.com/git-town/git-town/issues/5201))
 - When unconfigured, Git Town now displays the full setup assistant rather than just asking for the main branch ([#5057](https://github.com/git-town/git-town/issues/5057))
 - `git town set-parent` now uses the hierarchical branch list that `git town switch` uses ([#5259](https://github.com/git-town/git-town/pull/5259))
 - When Git Town asks the user for the parent branch of a branch, it now displays the hierarchical list that "git town switch" uses ([#5266](https://github.com/git-town/git-town/pull/5266))
-- The setup assistant now correctly handles existing configuration settings in global Git metadata ([#5201](https://github.com/git-town/git-town/issues/5201))
+- Git Town now has an option to disable automatic resolving of phantom merge conflicts ([#5317](https://github.com/git-town/git-town/pull/5317))
 
 #### Bug Fixes
 
@@ -16,6 +16,11 @@
 - the `glab` connector now updates proposal targets correctly ([#5283](https://github.com/git-town/git-town/pull/5283))
 - Git Town now removes branch type overrides for branches that were shipped at the remote ([#5274](https://github.com/git-town/git-town/pull/5274))
 - The setup assistant now correctly cleans up local Git metadata when the user chooses to save into global Git metadata ([#5230](https://github.com/git-town/git-town/pull/5230))
+
+#### Contributors
+
+Shoutout to @Ydot19, @kevgo, @thekarel for contributing code, ideas, and bug reports to 145 shipped PRs
+5 resolved issues!
 
 ## 21.3.0 (2025-07-16)
 
