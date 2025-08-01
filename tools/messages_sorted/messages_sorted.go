@@ -62,8 +62,7 @@ func lintMessagesFile(filePath string) []string {
 			unsortedPositions := findUnsortedPositions(constNames)
 			diffLines := getDiffContextLines(filePath, constNames, sortedNames, unsortedPositions, 3)
 
-			issues = append(issues, fmt.Sprintf("%s: Constants in const block are not sorted alphabetically", filePath))
-			issues = append(issues, "Differences (- actual, + expected):")
+			issues = append(issues, "Constants are not sorted alphabetically")
 			for _, line := range diffLines {
 				issues = append(issues, line)
 			}
@@ -132,11 +131,11 @@ func getDiffContextLines(filePath string, actualNames []string, expectedNames []
 			covered[i] = true
 			if contains(unsortedPositions, i) {
 				// Show the diff for unsorted lines
-				result = append(result, colors.Red(fmt.Sprintf("%s:%d: %s", filePath, i+1, actualNames[i])))
-				result = append(result, colors.Green(fmt.Sprintf("%s:%d: %s", filePath, i+1, expectedNames[i])))
+				result = append(result, colors.Red(fmt.Sprintf("%s:%d: %s", filePath, i+4, actualNames[i])))
+				result = append(result, colors.Green(fmt.Sprintf("%s:%d: %s", filePath, i+4, expectedNames[i])))
 			} else {
 				// Show context lines without prefix
-				result = append(result, fmt.Sprintf("%s:%d: %s", filePath, i+1, actualNames[i]))
+				result = append(result, fmt.Sprintf("%s:%d: %s", filePath, i+4, actualNames[i]))
 			}
 		}
 	}
