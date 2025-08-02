@@ -14,7 +14,7 @@ Feature: don't auto-resolve merge conflicts
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     And origin deletes the "branch-1" branch
     And the current branch is "branch-2"
-    When I run "git-town sync --auto-resolve=0"
+    When I run "git-town sync"
 
   Scenario: result
     Then Git Town runs the commands
@@ -26,14 +26,9 @@ Feature: don't auto-resolve merge conflicts
       |          | git checkout branch-2                                      |
       | branch-2 | git pull                                                   |
       |          | git -c rebase.updateRefs=false rebase --onto main branch-1 |
+      |          | git checkout --theirs conflicting_file                     |
+      |          | git add conflicting_file                                   |
       |          | GIT_EDITOR=true git rebase --continue                      |
       |          | git push --force-with-lease                                |
-    And Git Town prints the error:
-      """
-      CONFLICT (add/add): Merge conflict in conflicting_file
-      """
-    And Git Town prints something like:
-      """
-      could not apply .* conflicting branch-2 commit
-      """
-    And a rebase is now in progress
+      |          | git branch -D branch-1                                     |
+    And no rebase is now in progress
