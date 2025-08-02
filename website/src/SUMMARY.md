@@ -82,7 +82,7 @@
     - [Delete tracking branch](preferences/ship-delete-tracking-branch.md)
     - [Ship strategy](preferences/ship-strategy.md)
   - [Sync]()
-    - [Auto-resolve phantom merge conflicts](preferences/auto-resolve.md)
+    - [Auto-resolve phantom conflicts](preferences/auto-resolve.md)
     - [Feature sync strategy](preferences/sync-feature-strategy.md)
     - [Perennial sync strategy](preferences/sync-perennial-strategy.md)
     - [Prototype sync strategy](preferences/sync-prototype-strategy.md)
