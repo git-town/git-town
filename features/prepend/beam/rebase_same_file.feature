@@ -137,10 +137,26 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
       |        | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }}                  |
       |        | git checkout old                                                                              |
       | old    | git -c rebase.updateRefs=false rebase --onto parent {{ sha-in-origin-before-run 'commit 2' }} |
-      |        | git checkout --theirs file                                                                    |
-      |        | git add file                                                                                  |
-      |        | GIT_EDITOR=true git rebase --continue                                                         |
-      |        | git push --force-with-lease --force-if-includes                                               |
+    And Git Town prints the error:
+      """
+      CONFLICT (content): Merge conflict in file
+      """
+    And file "file" now has content:
+      """
+      <<<<<<< HEAD
+      amended content
+      =======
+      content 1
+      >>>>>>> {{ sha-short "commit 1" }} (commit 1)
+      """
+    When I resolve the conflict in "file" with "content 1"
+    And I run "git add file"
+    And I run "git town continue"
+    Then Git Town runs the commands
+      | BRANCH | COMMAND                                         |
+      | old    | GIT_EDITOR=true git rebase --continue           |
+      |        | git push --force-with-lease --force-if-includes |
+    And no rebase is now in progress
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE   | FILE NAME | FILE CONTENT    |
       | old    | local, origin | commit 1  | file      | content 1       |

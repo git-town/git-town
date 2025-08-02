@@ -14,19 +14,24 @@ Feature: handle conflicts between the current feature branch and the main branch
     And the current branch is "feature"
     When I run "git-town sync"
 
+  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                      |
       | feature | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
-      |         | git checkout --theirs conflicting_file                                       |
-      |         | git add conflicting_file                                                     |
-      |         | GIT_EDITOR=true git rebase --continue                                        |
-    And no rebase is now in progress
-    And all branches are now synchronized
-    And these committed files exist now
-      | BRANCH  | NAME             | CONTENT         |
-      | main    | conflicting_file | main content    |
-      | feature | conflicting_file | feature content |
+    And Git Town prints the error:
+      """
+      CONFLICT (add/add): Merge conflict in conflicting_file
+      """
+    And file "conflicting_file" now has content:
+      """
+      <<<<<<< HEAD
+      main content
+      =======
+      feature content
+      >>>>>>> {{ sha-short 'conflicting feature commit' }} (conflicting feature commit)
+      """
+    And a rebase is now in progress
 
   Scenario: undo
     When I run "git-town undo"
