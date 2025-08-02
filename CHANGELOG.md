@@ -19,8 +19,7 @@
 
 #### Contributors
 
-Shoutout to @Ydot19, @kevgo, @thekarel for contributing code, ideas, and bug reports to 145 shipped PRs
-5 resolved issues! 🚀
+Shoutout to @Ydot19, @kevgo, @thekarel for contributing code, ideas, and bug reports to 145 shipped PRs 5 resolved issues! 🚀
 
 ## 21.3.0 (2025-07-16)
 
