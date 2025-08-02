@@ -1,4 +1,4 @@
-Feature: don't auto-resolve merge conflicts
+Feature: auto-resolve phantom merge conflicts
 
   Background:
     Given a Git repo with origin

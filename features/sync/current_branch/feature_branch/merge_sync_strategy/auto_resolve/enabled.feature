@@ -1,4 +1,4 @@
-Feature: don't auto-resolve phantom merge conflicts
+Feature: auto-resolve phantom merge conflicts
 
   Background:
     Given a Git repo with origin
@@ -7,15 +7,16 @@ Feature: don't auto-resolve phantom merge conflicts
       | branch-1 | feature | main     | local, origin |
       | branch-2 | feature | branch-1 | local, origin |
     And the commits
-      | BRANCH   | LOCATION | MESSAGE                     | FILE NAME        | FILE CONTENT     |
-      | main     | local    | conflicting main commit     | conflicting_file | main content     |
-      | branch-1 | local    | commit 1                    | other_file       | content          |
-      | branch-2 | local    | conflicting branch-2 commit | conflicting_file | branch-2 content |
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
-    And origin deletes the "branch-1" branch
+      | BRANCH   | LOCATION      | MESSAGE                     | FILE NAME        | FILE CONTENT |
+      | main     | local         | conflicting main commit     | conflicting_file | main content |
+      | branch-1 | local, origin | commit 1                    | conflicting_file | content 1    |
+      | branch-2 | local         | conflicting branch-2 commit | conflicting_file | content 2    |
+    And Git setting "git-town.sync-feature-strategy" is "merge"
+    And origin ships the "branch-1" branch using the "squash-merge" ship-strategy
     And the current branch is "branch-2"
-    When I run "git-town sync --auto-resolve=0"
+    When I run "git-town sync"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                    |
@@ -26,14 +27,9 @@ Feature: don't auto-resolve phantom merge conflicts
       |          | git checkout branch-2                                      |
       | branch-2 | git pull                                                   |
       |          | git -c rebase.updateRefs=false rebase --onto main branch-1 |
+      |          | git checkout --theirs conflicting_file                     |
+      |          | git add conflicting_file                                   |
       |          | GIT_EDITOR=true git rebase --continue                      |
       |          | git push --force-with-lease                                |
-    And Git Town prints the error:
-      """
-      CONFLICT (add/add): Merge conflict in conflicting_file
-      """
-    And Git Town prints something like:
-      """
-      could not apply .* conflicting branch-2 commit
-      """
-    And a rebase is now in progress
+      |          | git branch -D branch-1                                     |
+    And no rebase is now in progress
