@@ -3,8 +3,8 @@ Feature: auto-resolve phantom merge conflicts
   Background:
     Given a Git repo with origin
     And the commits
-      | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT               |
-      | main   | local, origin | main commit | file      | line 1\n\nline 2\n\nline 3 |
+      | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT                   |
+      | main   | local, origin | main commit | file      | line 1 \n\n line 2 \n\n line 3 |
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | branch-1 | feature | main   | local, origin |
@@ -36,11 +36,9 @@ Feature: auto-resolve phantom merge conflicts
       |          | git branch -D branch-1                                     |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                           |
-      | main     | local, origin | main commit     | file      | line 1\n\nline 2\n\nline 3                                             |
+      | main     | local, origin | main commit     | file      | line 1 \n\n line 2 \n\n line 3                                         |
       |          |               | branch-1 commit | file      | line 1 \n\n line 2 changed by branch-1 \n\n line 3                     |
       | branch-2 | local, origin | branch-2 commit | file      | line 1 \n\n line 2 changed by branch-1 \n\n line 3 changed by branch-2 |
-    # TODO: in the branch table above, branch-2 does not contain the changes made by branch-1,
-    # which were just shipped. This is a bug related to https://github.com/git-town/git-town/issues/5156
     And no rebase is now in progress
 
   Scenario: undo
