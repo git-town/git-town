@@ -6,14 +6,14 @@ Feature: disable auto-resolve phantom merge conflicts via CLI
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | branch-1 | feature | main   | local, origin |
     And the commits
-      | BRANCH   | LOCATION      | MESSAGE                     | FILE NAME        | FILE CONTENT |
-      | branch-1 | local, origin | conflicting branch-1 commit | conflicting_file | content 1    |
+      | BRANCH   | LOCATION      | MESSAGE                     | FILE NAME | FILE CONTENT |
+      | branch-1 | local, origin | conflicting branch-1 commit | file      | content 1    |
     And the branches
       | NAME     | TYPE    | PARENT   | LOCATIONS     |
       | branch-2 | feature | branch-1 | local, origin |
     And the commits
-      | BRANCH   | LOCATION | MESSAGE                     | FILE NAME        | FILE CONTENT |
-      | branch-2 | local    | conflicting branch-2 commit | conflicting_file | content 2    |
+      | BRANCH   | LOCATION | MESSAGE                     | FILE NAME | FILE CONTENT |
+      | branch-2 | local    | conflicting branch-2 commit | file      | content 2    |
     And Git setting "git-town.sync-feature-strategy" is "merge"
     And origin ships the "branch-1" branch using the "squash-merge" ship-strategy
     And the current branch is "branch-2"
@@ -30,9 +30,9 @@ Feature: disable auto-resolve phantom merge conflicts via CLI
       | branch-2 | git merge --no-edit --ff main                     |
     And Git Town prints the error:
       """
-      CONFLICT (add/add): Merge conflict in conflicting_file
+      CONFLICT (add/add): Merge conflict in file
       """
-    And file "conflicting_file" now has content:
+    And file "file" now has content:
       """
       <<<<<<< HEAD
       content 2
@@ -52,11 +52,11 @@ Feature: disable auto-resolve phantom merge conflicts via CLI
       |          | git branch branch-1 {{ sha-initial 'conflicting branch-1 commit' }} |
       |          | git checkout branch-2                                               |
     And these commits exist now
-      | BRANCH   | LOCATION | MESSAGE                     | FILE NAME        | FILE CONTENT |
-      | main     | origin   | conflicting branch-1 commit | conflicting_file | content 1    |
-      | branch-1 | local    | conflicting branch-1 commit | conflicting_file | content 1    |
-      | branch-2 | local    | conflicting branch-2 commit | conflicting_file | content 2    |
-      |          | origin   | conflicting branch-1 commit | conflicting_file | content 1    |
+      | BRANCH   | LOCATION | MESSAGE                     | FILE NAME | FILE CONTENT |
+      | main     | origin   | conflicting branch-1 commit | file      | content 1    |
+      | branch-1 | local    | conflicting branch-1 commit | file      | content 1    |
+      | branch-2 | local    | conflicting branch-2 commit | file      | content 2    |
+      |          | origin   | conflicting branch-1 commit | file      | content 1    |
     And no merge is now in progress
 
   Scenario: run without resolving the conflicts
@@ -69,7 +69,7 @@ Feature: disable auto-resolve phantom merge conflicts via CLI
     And a merge is still in progress
 
   Scenario: resolve the conflicts and continue
-    When I resolve the conflict in "conflicting_file" with "content_2"
+    When I resolve the conflict in "file" with "content_2"
     And I run "git town continue"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                  |
@@ -77,15 +77,15 @@ Feature: disable auto-resolve phantom merge conflicts via CLI
       |          | git merge --no-edit --ff origin/branch-2 |
       |          | git push                                 |
     And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE                           | FILE NAME        | FILE CONTENT |
-      | main     | local, origin | conflicting branch-1 commit       | conflicting_file | content 1    |
-      | branch-2 | local, origin | conflicting branch-1 commit       | conflicting_file | content 1    |
-      |          |               | conflicting branch-2 commit       | conflicting_file | content 2    |
-      |          |               | Merge branch 'main' into branch-2 | conflicting_file | content_2    |
+      | BRANCH   | LOCATION      | MESSAGE                           | FILE NAME | FILE CONTENT |
+      | main     | local, origin | conflicting branch-1 commit       | file      | content 1    |
+      | branch-2 | local, origin | conflicting branch-1 commit       | file      | content 1    |
+      |          |               | conflicting branch-2 commit       | file      | content 2    |
+      |          |               | Merge branch 'main' into branch-2 | file      | content_2    |
     And no merge is now in progress
 
   Scenario: resolve the conflicts, commit, and continue
-    When I resolve the conflict in "conflicting_file" with "content_2"
+    When I resolve the conflict in "file" with "content_2"
     And I ran "git commit --no-edit"
     And I run "git town continue"
     Then Git Town runs the commands
@@ -93,9 +93,9 @@ Feature: disable auto-resolve phantom merge conflicts via CLI
       | branch-2 | git merge --no-edit --ff origin/branch-2 |
       |          | git push                                 |
     And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE                           | FILE NAME        | FILE CONTENT |
-      | main     | local, origin | conflicting branch-1 commit       | conflicting_file | content 1    |
-      | branch-2 | local, origin | conflicting branch-1 commit       | conflicting_file | content 1    |
-      |          |               | conflicting branch-2 commit       | conflicting_file | content 2    |
-      |          |               | Merge branch 'main' into branch-2 | conflicting_file | content_2    |
+      | BRANCH   | LOCATION      | MESSAGE                           | FILE NAME | FILE CONTENT |
+      | main     | local, origin | conflicting branch-1 commit       | file      | content 1    |
+      | branch-2 | local, origin | conflicting branch-1 commit       | file      | content 1    |
+      |          |               | conflicting branch-2 commit       | file      | content 2    |
+      |          |               | Merge branch 'main' into branch-2 | file      | content_2    |
     And no merge is now in progress
