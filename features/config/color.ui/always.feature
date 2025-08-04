@@ -252,7 +252,7 @@ Feature: show the configuration
         prototype sync strategy: compress
         sync tags: no
         sync with upstream: no
-        auto-resolve phantom conflicts: yes
+        auto-resolve phantom conflicts: no
       """
 
   Scenario: all configured, with stacked changes
