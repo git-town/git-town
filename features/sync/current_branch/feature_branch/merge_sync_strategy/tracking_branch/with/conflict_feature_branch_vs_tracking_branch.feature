@@ -28,7 +28,7 @@ Feature: handle conflicts between the current feature branch and its tracking br
     Then Git Town runs the commands
       | BRANCH  | COMMAND           |
       | feature | git merge --abort |
-    And no merge is in progress
+    And no merge is now in progress
     And the initial commits exist now
     And the initial branches and lineage exist now
 
@@ -62,7 +62,7 @@ Feature: handle conflicts between the current feature branch and its tracking br
       | feature | git commit --no-edit |
       |         | git push             |
     And all branches are now synchronized
-    And no merge is in progress
+    And no merge is now in progress
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | feature | conflicting_file | resolved content |
