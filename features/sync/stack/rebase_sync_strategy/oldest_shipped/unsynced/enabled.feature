@@ -30,6 +30,10 @@ Feature: auto-resolve phantom merge conflicts after the oldest branch ships in a
       |          | git push --force-with-lease                                |
       |          | git branch -D branch-1                                     |
     And no rebase is now in progress
+    And these commits exist now
+      | BRANCH   | LOCATION      | MESSAGE                     | FILE NAME        | FILE CONTENT     |
+      | main     | local, origin | conflicting branch-1 commit | conflicting_file | branch-1 content |
+      | branch-2 | local, origin | conflicting branch-2 commit | conflicting_file | branch-2 content |
 
   Scenario: undo
     When I run "git town undo"
