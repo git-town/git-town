@@ -16,7 +16,6 @@ Feature: disable auto-resolve phantom merge conflicts via configuration setting
     And the current branch is "branch-2"
     When I run "git-town sync --auto-resolve=0"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                    |
