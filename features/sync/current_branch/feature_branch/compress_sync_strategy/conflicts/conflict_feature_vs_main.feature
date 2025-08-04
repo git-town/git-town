@@ -62,7 +62,7 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
       |         | git commit -m "conflicting feature commit" |
       |         | git push --force-with-lease                |
     And all branches are now synchronized
-    And no merge is in progress
+    And no merge is now in progress
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
@@ -80,7 +80,7 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
       |         | git commit -m "conflicting feature commit" |
       |         | git push --force-with-lease                |
     And all branches are now synchronized
-    And no merge is in progress
+    And no merge is now in progress
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |

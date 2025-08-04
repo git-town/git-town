@@ -38,7 +38,7 @@ Feature: do not undo branches that were pulled in through "git fetch" while reso
       | BRANCH  | COMMAND              |
       | feature | git commit --no-edit |
       |         | git push             |
-    And no merge is in progress
+    And no merge is now in progress
     And all branches are now synchronized
 
   Scenario: undo
@@ -47,7 +47,7 @@ Feature: do not undo branches that were pulled in through "git fetch" while reso
       | BRANCH  | COMMAND                                                                                    |
       | feature | git reset --hard {{ sha 'conflicting local commit' }}                                      |
       |         | git push --force-with-lease origin {{ sha-in-origin 'conflicting origin commit' }}:feature |
-    And no merge is in progress
+    And no merge is now in progress
     And these branches exist now
       | REPOSITORY | BRANCHES                              |
       | local      | main, feature                         |

@@ -58,4 +58,4 @@ Feature: multiple conflicting branches
       | gamma  | git merge --abort |
       |        | git checkout main |
       | main   | git push --tags   |
-    And no merge is in progress
+    And no merge is now in progress
