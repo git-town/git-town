@@ -33,6 +33,14 @@ Feature: disable auto-resolve phantom merge conflicts via CLI
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
     And a merge is now in progress
+    And file "conflicting_file" now has content:
+      """
+      <<<<<<< HEAD
+      content 2
+      =======
+      content 1
+      >>>>>>> main
+      """
 
   Scenario: undo
     When I run "git town undo"
