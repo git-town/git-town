@@ -104,11 +104,10 @@ func (self *RunState) RegisterUndoablePerennialCommit(commit gitdomain.SHA) {
 // from this run state.
 func (self *RunState) SkipCurrentBranchProgram() {
 	for {
-		opcode, hasOpcode := self.RunProgram.Peek().Get()
+		opcode, hasOpcode := self.RunProgram.Pop().Get()
 		if !hasOpcode || opcodes.IsEndOfBranchProgramOpcode(opcode) {
 			break
 		}
-		self.RunProgram.Pop()
 	}
 }
 
