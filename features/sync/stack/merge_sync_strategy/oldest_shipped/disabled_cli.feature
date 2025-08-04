@@ -84,7 +84,6 @@ Feature: disable auto-resolve phantom merge conflicts via CLI
       |          |               | Merge branch 'main' into branch-2 | conflicting_file | content_2    |
     And no merge is now in progress
 
-  @this
   Scenario: resolve the conflicts, commit, and continue
     When I resolve the conflict in "conflicting_file" with "content_2"
     And I ran "git commit --no-edit"
@@ -96,6 +95,7 @@ Feature: disable auto-resolve phantom merge conflicts via CLI
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE                           | FILE NAME        | FILE CONTENT |
       | main     | local, origin | conflicting branch-1 commit       | conflicting_file | content 1    |
-      | branch-2 | local, origin | conflicting branch-2 commit       | conflicting_file | content 2    |
+      | branch-2 | local, origin | conflicting branch-1 commit       | conflicting_file | content 1    |
+      |          |               | conflicting branch-2 commit       | conflicting_file | content 2    |
       |          |               | Merge branch 'main' into branch-2 | conflicting_file | content_2    |
     And no merge is now in progress
