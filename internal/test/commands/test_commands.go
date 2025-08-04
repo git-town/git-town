@@ -25,6 +25,7 @@ import (
 const (
 	ConfigFileCommitMessage = "persisted config file"
 	FileCommitMessage       = "persisted file"
+	deleted                 = "(deleted)"
 )
 
 // TestCommands defines Git commands used only in test code.
@@ -145,7 +146,7 @@ func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, pare
 				var err error
 				filecontent, err = self.FileContentInCommit(commit.SHA.Location(), commit.FileName)
 				if err != nil {
-					filecontent = "(deleted)"
+					filecontent = deleted
 				}
 			}
 			commit.FileContent = filecontent
@@ -303,7 +304,7 @@ func (self *TestCommands) FilesInBranches(mainBranch gitdomain.LocalBranchName) 
 		for _, file := range files {
 			content, err := self.FileContentInCommit(branch.Location(), file)
 			if err != nil {
-				content = "(deleted)"
+				content = deleted
 			}
 			if branch == lastBranch {
 				result.AddRow("", file, content)
