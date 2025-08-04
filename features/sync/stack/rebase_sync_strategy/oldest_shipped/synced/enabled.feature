@@ -31,6 +31,10 @@ Feature: auto-resolve phantom merge conflicts
       |          | git -c rebase.updateRefs=false rebase --onto main branch-1 |
       |          | git push --force-with-lease                                |
       |          | git branch -D branch-1                                     |
+    And these commits exist now
+      | BRANCH   | LOCATION      | MESSAGE                     | FILE NAME        | FILE CONTENT     |
+      | main     | local, origin | conflicting branch-1 commit | conflicting_file | branch-1 content |
+      | branch-2 | local, origin | conflicting branch-2 commit | conflicting_file | branch-2 content |
     And no rebase is now in progress
 
   Scenario: undo
