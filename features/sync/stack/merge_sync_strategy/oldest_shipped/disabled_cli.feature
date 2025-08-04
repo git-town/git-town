@@ -19,6 +19,7 @@ Feature: disable auto-resolve phantom merge conflicts via CLI
     And the current branch is "branch-2"
     When I run "git-town sync --auto-resolve=0"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                           |
@@ -32,7 +33,6 @@ Feature: disable auto-resolve phantom merge conflicts via CLI
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
-    And a merge is now in progress
     And file "conflicting_file" now has content:
       """
       <<<<<<< HEAD
@@ -41,6 +41,7 @@ Feature: disable auto-resolve phantom merge conflicts via CLI
       content 1
       >>>>>>> main
       """
+    And a merge is now in progress
 
   Scenario: undo
     When I run "git town undo"
