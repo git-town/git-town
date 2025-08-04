@@ -1,3 +1,4 @@
+@this
 Feature: don't auto-resolve phantom merge conflicts
 
   Background:

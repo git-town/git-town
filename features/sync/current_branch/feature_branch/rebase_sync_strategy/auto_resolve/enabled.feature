@@ -32,3 +32,11 @@ Feature: auto-resolve phantom merge conflicts
       |          | git push --force-with-lease                                |
       |          | git branch -D branch-1                                     |
     And no rebase is now in progress
+
+  Scenario: undo
+    When I run "git town undo"
+    Then Git Town runs the commands
+      | BRANCH   | COMMAND                                                                |
+      | branch-2 | git reset --hard {{ sha-initial 'conflicting branch-2 commit' }}       |
+      |          | git push --force-with-lease origin {{ sha 'initial commit' }}:branch-2 |
+      |          | git branch branch-1 {{ sha-initial 'commit 1' }}                       |
