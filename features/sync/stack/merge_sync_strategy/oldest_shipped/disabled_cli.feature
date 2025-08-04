@@ -6,14 +6,14 @@ Feature: disable auto-resolve phantom merge conflicts via CLI
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | branch-1 | feature | main   | local, origin |
     And the commits
-      | BRANCH   | LOCATION      | MESSAGE                     | FILE NAME | FILE CONTENT |
-      | branch-1 | local, origin | conflicting branch-1 commit | file      | content 1    |
+      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT |
+      | branch-1 | local, origin | branch-1 commit | file      | content 1    |
     And the branches
       | NAME     | TYPE    | PARENT   | LOCATIONS     |
       | branch-2 | feature | branch-1 | local, origin |
     And the commits
-      | BRANCH   | LOCATION | MESSAGE                     | FILE NAME | FILE CONTENT |
-      | branch-2 | local    | conflicting branch-2 commit | file      | content 2    |
+      | BRANCH   | LOCATION | MESSAGE         | FILE NAME | FILE CONTENT |
+      | branch-2 | local    | branch-2 commit | file      | content 2    |
     And Git setting "git-town.sync-feature-strategy" is "merge"
     And origin ships the "branch-1" branch using the "squash-merge" ship-strategy
     And the current branch is "branch-2"
@@ -45,18 +45,18 @@ Feature: disable auto-resolve phantom merge conflicts via CLI
   Scenario: undo
     When I run "git town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                                             |
-      | branch-2 | git merge --abort                                                   |
-      |          | git checkout main                                                   |
-      | main     | git reset --hard {{ sha 'initial commit' }}                         |
-      |          | git branch branch-1 {{ sha-initial 'conflicting branch-1 commit' }} |
-      |          | git checkout branch-2                                               |
+      | BRANCH   | COMMAND                                                 |
+      | branch-2 | git merge --abort                                       |
+      |          | git checkout main                                       |
+      | main     | git reset --hard {{ sha 'initial commit' }}             |
+      |          | git branch branch-1 {{ sha-initial 'branch-1 commit' }} |
+      |          | git checkout branch-2                                   |
     And these commits exist now
-      | BRANCH   | LOCATION | MESSAGE                     | FILE NAME | FILE CONTENT |
-      | main     | origin   | conflicting branch-1 commit | file      | content 1    |
-      | branch-1 | local    | conflicting branch-1 commit | file      | content 1    |
-      | branch-2 | local    | conflicting branch-2 commit | file      | content 2    |
-      |          | origin   | conflicting branch-1 commit | file      | content 1    |
+      | BRANCH   | LOCATION | MESSAGE         | FILE NAME | FILE CONTENT |
+      | main     | origin   | branch-1 commit | file      | content 1    |
+      | branch-1 | local    | branch-1 commit | file      | content 1    |
+      | branch-2 | local    | branch-2 commit | file      | content 2    |
+      |          | origin   | branch-1 commit | file      | content 1    |
     And no merge is now in progress
 
   Scenario: run without resolving the conflicts
@@ -78,9 +78,9 @@ Feature: disable auto-resolve phantom merge conflicts via CLI
       |          | git push                                 |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE                           | FILE NAME | FILE CONTENT |
-      | main     | local, origin | conflicting branch-1 commit       | file      | content 1    |
-      | branch-2 | local, origin | conflicting branch-1 commit       | file      | content 1    |
-      |          |               | conflicting branch-2 commit       | file      | content 2    |
+      | main     | local, origin | branch-1 commit                   | file      | content 1    |
+      | branch-2 | local, origin | branch-1 commit                   | file      | content 1    |
+      |          |               | branch-2 commit                   | file      | content 2    |
       |          |               | Merge branch 'main' into branch-2 | file      | content_2    |
     And no merge is now in progress
 
@@ -94,8 +94,8 @@ Feature: disable auto-resolve phantom merge conflicts via CLI
       |          | git push                                 |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE                           | FILE NAME | FILE CONTENT |
-      | main     | local, origin | conflicting branch-1 commit       | file      | content 1    |
-      | branch-2 | local, origin | conflicting branch-1 commit       | file      | content 1    |
-      |          |               | conflicting branch-2 commit       | file      | content 2    |
+      | main     | local, origin | branch-1 commit                   | file      | content 1    |
+      | branch-2 | local, origin | branch-1 commit                   | file      | content 1    |
+      |          |               | branch-2 commit                   | file      | content 2    |
       |          |               | Merge branch 'main' into branch-2 | file      | content_2    |
     And no merge is now in progress
