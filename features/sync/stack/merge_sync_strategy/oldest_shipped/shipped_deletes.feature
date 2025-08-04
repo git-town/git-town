@@ -56,7 +56,6 @@ Feature: auto-resolve phantom merge conflicts
       """
     And a merge is now in progress
 
-  @this
   Scenario: resolve and continue
     When I ran "git add file"
     And I ran "git town continue"
@@ -64,6 +63,22 @@ Feature: auto-resolve phantom merge conflicts
       | BRANCH   | COMMAND                                  |
       | branch-2 | git commit --no-edit                     |
       |          | git merge --no-edit --ff origin/branch-2 |
+      |          | git push                                 |
+    And these commits exist now
+      | BRANCH   | LOCATION      | MESSAGE                           | FILE NAME | FILE CONTENT     |
+      | main     | local, origin | main commit                       | file      | branch-1 content |
+      |          |               | branch-1-commit                   | file      | (deleted)        |
+      | branch-2 | local, origin | branch-1-commit                   | file      | (deleted)        |
+      |          |               | branch-2 commit                   | file      | branch-2 content |
+      |          |               | Merge branch 'main' into branch-2 |           |                  |
+
+  Scenario: resolve, commit, and continue
+    When I ran "git add file"
+    When I ran "git commit --no-edit"
+    And I ran "git town continue"
+    Then Git Town runs the commands
+      | BRANCH   | COMMAND                                  |
+      | branch-2 | git merge --no-edit --ff origin/branch-2 |
       |          | git push                                 |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE                           | FILE NAME | FILE CONTENT     |
