@@ -20,7 +20,6 @@ Feature: auto-resolve phantom merge conflicts
     And the current branch is "branch-2"
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                           |
@@ -34,17 +33,42 @@ Feature: auto-resolve phantom merge conflicts
       """
       CONFLICT (modify/delete): file deleted in main and modified in HEAD.  Version HEAD of file left in tree.
       """
-    And no rebase is now in progress
+    And a merge is now in progress
 
   Scenario: undo
     When I run "git town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                                                         |
-      | branch-2 | git reset --hard {{ sha-initial 'branch-2 commit' }}                            |
-      |          | git push --force-with-lease origin {{ sha-initial 'branch-1 commit' }}:branch-2 |
-      |          | git checkout main                                                               |
-      | main     | git reset --hard {{ sha 'initial commit' }}                                     |
-      |          | git branch branch-1 {{ sha-initial 'branch-1 commit' }}                         |
-      |          | git checkout branch-2                                                           |
+      | BRANCH   | COMMAND                                                 |
+      | branch-2 | git merge --abort                                       |
+      |          | git checkout main                                       |
+      | main     | git reset --hard {{ sha 'main commit' }}                |
+      |          | git branch branch-1 {{ sha-initial 'branch-1-commit' }} |
+      |          | git checkout branch-2                                   |
     And the initial commits exist now
-    And no rebase is now in progress
+    And no merge is now in progress
+
+  Scenario: continue with unresolved conflict
+    When I run "git town continue"
+    Then Git Town runs no commands
+    And Git Town prints the error:
+      """
+      you must resolve the conflicts before continuing
+      """
+    And a merge is now in progress
+
+  @this
+  Scenario: resolve and continue
+    When I ran "git add file"
+    And I ran "git town continue"
+    Then Git Town runs the commands
+      | BRANCH   | COMMAND                                  |
+      | branch-2 | git commit --no-edit                     |
+      |          | git merge --no-edit --ff origin/branch-2 |
+      |          | git push                                 |
+    And these commits exist now
+      | BRANCH   | LOCATION      | MESSAGE                           | FILE NAME | FILE CONTENT     |
+      | main     | local, origin | main commit                       | file      | branch-1 content |
+      |          |               | branch-1-commit                   | file      |                  |
+      | branch-2 | local, origin | branch-1-commit                   | file      |                  |
+      |          |               | branch-2 commit                   | file      | branch-2 content |
+      |          |               | Merge branch 'main' into branch-2 |           |                  |
