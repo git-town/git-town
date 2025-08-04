@@ -16,7 +16,6 @@ Feature: don't auto-resolve phantom merge conflicts
     And the current branch is "branch-2"
     When I run "git-town sync --auto-resolve=0"
 
-  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                    |
@@ -29,6 +28,7 @@ Feature: don't auto-resolve phantom merge conflicts
       |          | git -c rebase.updateRefs=false rebase --onto main branch-1 |
       |          | GIT_EDITOR=true git rebase --continue                      |
       |          | git push --force-with-lease                                |
+    # TODO: it should not run the rebase-continue and force-push at the end
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
