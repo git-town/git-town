@@ -1,4 +1,4 @@
-Feature: auto-resolve phantom merge conflicts
+Feature: disable auto-resolve phantom merge conflicts via CLI
 
   Background:
     Given a Git repo with origin
@@ -13,7 +13,7 @@ Feature: auto-resolve phantom merge conflicts
     And Git setting "git-town.sync-feature-strategy" is "merge"
     And origin ships the "branch-1" branch using the "squash-merge" ship-strategy
     And the current branch is "branch-2"
-    When I run "git-town sync"
+    When I run "git-town sync --auto-resolve=0"
 
   Scenario: result
     Then Git Town runs the commands
@@ -24,9 +24,16 @@ Feature: auto-resolve phantom merge conflicts
       |          | git branch -D branch-1                            |
       |          | git checkout branch-2                             |
       | branch-2 | git merge --no-edit --ff main                     |
-      |          | git checkout --ours conflicting_file              |
-      |          | git add conflicting_file                          |
-      |          | git commit --no-edit                              |
-      |          | git merge --no-edit --ff origin/branch-2          |
-      |          | git push                                          |
-    And no rebase is now in progress
+    And Git Town prints the error:
+      """
+      CONFLICT (add/add): Merge conflict in conflicting_file
+      """
+    And a merge is now in progress
+
+  @this
+  Scenario: undo
+    When I run "git town undo"
+    Then Git Town runs the commands
+      | BRANCH   | COMMAND                                                             |
+      | branch-2 | git checkout main                                                   |
+      |          | git branch branch-1 {{ sha-initial 'conflicting branch-1 commit' }} |
