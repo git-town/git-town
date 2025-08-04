@@ -8,67 +8,12 @@ import (
 )
 
 func DetectPhantomRebaseConflicts(fileConflicts []FileConflictFullInfo, parentBranch gitdomain.BranchName, rootBranch gitdomain.LocalBranchName) []PhantomConflict {
-	// OVERALL SYNC STRATEGY
-	//
-	// Sync tracking branch:
-	//
-	// Feature branch changed && tracking not changed --> overwrite tracking
-	//
-	// Feature branch changed && tracking changed --> sync normally
-	//
-	// Feature branch not changed && tracking changed --> pull
-	//
-	// Feature branch not changed && tracking not changed --> do nothing
-	//
-	// Sync parent branch:
-	//
-	// Feature branch changed && parent not changed --> do nothing
-	//
-	// Feature branch changed && parent changed --> sync normally
-	//
-	// Feature branch not changed && parent changed --> pull
-	//
-	// Feature branch not changed && parent not changed --> do nothing
-	//
-	// AUTO-RESOLVING CONFLICTS ENCOUNTERED WHILE SYNCING WITH THE TRACKING BRANCH
-	//
-	// When is it a proper rebase conflict?
-	// When both the current branch and the tracking branch have new commits that didn't exist when they were last modified by Git Town.
-	// This means different SHA compared to the end of the previous Git Town command that synced them.
-	//
-	// When is it a phantom rebase conflict?
-	// When the tracking branch has the same SHA it had at the end of the previous Git Town command,
-	// and the current branch has a different SHA --> the current branch was changed/rebased since the last sync, the tracking branch wasn't --> we can force-push.
-	//
-	// But we always force-push. Wouldn't this situation get auto-resolved with the initial force push?
-	//
-	// AUTO-RESOLVING CONFLICTS ENCOUNTERED WHILE SYNCING WITH THE PARENT BRANCH
-	//
-	// When is it a proper rebase conflict?
-	// When both the current and the parent branch have new commits since they were last synced.
-	// This means different SHA compared to the last time they were synced.
-	//
-	// When is it a phantom rebase conflict?
-	// When the parent branch has the same SHA it had at the end of the previous Git Town command that synced it,
-	// and the current branch has a different SHA compared to the end of the last Git Town command that synced it.
-	// If there is a conflict now, we can keep the version of the current branch.
-	//
-	// But wouldn't this rebase be a no-op, since the new commits are already on top of the (unchanged) old commits?
-	//
-	// We need to compare to the previous SHA when the branch was last synced.
-	// If we just compare to the SHA at the end of the last command,
-	// and the last command was "git town park", then it would wrongfully think the other branch has no changes.
-
 	// if parentBranch == rootBranch.BranchName() {
 	// 	// branches whose parent is the root branch cannot have phantom merge conflicts
 	// 	return []PhantomMergeConflict{}
 	// }
 	result := []PhantomConflict{}
 	for _, fileConflict := range fileConflicts {
-		// TODO: inspect the conflictInfo
-		//
-		// One side is the old feature branch: auto-resolve to the other side?
-		// One side is the old root branch: auto-resolve to the other side?
 		parentBlob, hasParentBlob := fileConflict.Parent.Get()
 		currentBlob, hasCurrentBlob := fileConflict.Current.Get()
 		rootBlob, hasRootBlob := fileConflict.Root.Get()
