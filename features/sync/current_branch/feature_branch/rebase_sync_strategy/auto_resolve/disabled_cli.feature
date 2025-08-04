@@ -16,6 +16,7 @@ Feature: don't auto-resolve phantom merge conflicts
     And the current branch is "branch-2"
     When I run "git-town sync --auto-resolve=0"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                    |
@@ -36,6 +37,14 @@ Feature: don't auto-resolve phantom merge conflicts
     And Git Town prints something like:
       """
       could not apply .* conflicting branch-2 commit
+      """
+    And file "conflicting_file" now has content:
+      """
+      <<<<<<< HEAD
+      main content
+      =======
+      branch-2 content
+      >>>>>>> {{ sha-short 'conflicting branch-2 commit' }} (conflicting branch-2 commit)
       """
     And a rebase is now in progress
 
@@ -67,7 +76,6 @@ Feature: don't auto-resolve phantom merge conflicts
     # And no rebase is now in progress
     # TODO: it should not print an error here but finish the sync
 
-  @this
   Scenario: resolve, continue the rebase, and continue the sync
     When I resolve the conflict in "conflicting_file" with "branch-2 content"
     And I run "git rebase --continue" and enter "resolved commit" for the commit message
