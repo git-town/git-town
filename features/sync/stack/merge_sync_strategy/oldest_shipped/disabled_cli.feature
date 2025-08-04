@@ -56,6 +56,7 @@ Feature: disable auto-resolve phantom merge conflicts via CLI
       | main     | origin   | conflicting branch-1 commit | conflicting_file | content 1    |
       | branch-1 | local    | conflicting branch-1 commit | conflicting_file | content 1    |
       | branch-2 | local    | conflicting branch-2 commit | conflicting_file | content 2    |
+      |          | origin   | conflicting branch-1 commit | conflicting_file | content 1    |
     And no merge is now in progress
 
   Scenario: run without resolving the conflicts
