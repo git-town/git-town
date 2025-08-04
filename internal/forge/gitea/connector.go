@@ -255,6 +255,12 @@ func FilterPullRequests2(pullRequests []*gitea.PullRequest, branch gitdomain.Loc
 	return result
 }
 
+type NewConnectorArgs struct {
+	APIToken  Option[forgedomain.GiteaToken]
+	Log       print.Logger
+	RemoteURL giturl.Parts
+}
+
 // NewGiteaConfig provides Gitea configuration data if the current repo is hosted on Gitea,
 // otherwise nil.
 func NewConnector(args NewConnectorArgs) Connector {
@@ -271,12 +277,6 @@ func NewConnector(args NewConnectorArgs) Connector {
 		client: giteaClient,
 		log:    args.Log,
 	}
-}
-
-type NewConnectorArgs struct {
-	APIToken  Option[forgedomain.GiteaToken]
-	Log       print.Logger
-	RemoteURL giturl.Parts
 }
 
 func parsePullRequest(pullRequest *gitea.PullRequest) forgedomain.ProposalData {
