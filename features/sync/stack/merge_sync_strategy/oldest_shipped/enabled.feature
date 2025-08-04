@@ -19,6 +19,7 @@ Feature: auto-resolve phantom merge conflicts
     And the current branch is "branch-2"
     When I run "git-town sync"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                           |
@@ -34,11 +35,11 @@ Feature: auto-resolve phantom merge conflicts
       |          | git merge --no-edit --ff origin/branch-2          |
       |          | git push                                          |
     And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE                           | FILE NAME        | FILE CONTENT |
-      | main     | local, origin | conflicting branch-1 commit       | conflicting_file | content 1    |
-      | branch-2 | local, origin | conflicting branch-1 commit       | conflicting_file | content 1    |
-      |          |               | conflicting branch-2 commit       | conflicting_file | content 2    |
-      |          |               | Merge branch 'main' into branch-2 |                  |              |
+      | BRANCH   | LOCATION      | MESSAGE                           | FILE NAME        | FILE CONTENT     |
+      | main     | local, origin | conflicting branch-1 commit       | conflicting_file | branch-1 content |
+      | branch-2 | local, origin | conflicting branch-1 commit       | conflicting_file | branch-1 content |
+      |          |               | conflicting branch-2 commit       | conflicting_file | branch-2 content |
+      |          |               | Merge branch 'main' into branch-2 |                  |                  |
     And no rebase is now in progress
 
   Scenario: undo
