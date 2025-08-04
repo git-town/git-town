@@ -45,9 +45,9 @@ func EmptyRunState() RunState {
 func (self *RunState) AddPushBranchAfterCurrentBranchProgram(gitCommands git.Commands, backend subshelldomain.Querier) error {
 	popped := program.Program{}
 	for {
-		peekedOpcode, hasPeekedOpcode := self.RunProgram.Pop().Get()
-		if hasPeekedOpcode && !opcodes.IsEndOfBranchProgramOpcode(peekedOpcode) {
-			popped.Add(peekedOpcode)
+		nextOpcode, hasNextOpcode := self.RunProgram.Pop().Get()
+		if hasNextOpcode && !opcodes.IsEndOfBranchProgramOpcode(nextOpcode) {
+			popped.Add(nextOpcode)
 		} else {
 			currentBranch, err := gitCommands.CurrentBranch(backend)
 			if err != nil {
