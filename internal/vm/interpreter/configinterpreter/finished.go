@@ -15,6 +15,19 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
+type FinishedArgs struct {
+	Backend               subshelldomain.RunnerQuerier
+	BeginBranchesSnapshot Option[gitdomain.BranchesSnapshot]
+	BeginConfigSnapshot   undoconfig.ConfigSnapshot
+	Command               string
+	CommandsCounter       Mutable[gohacks.Counter]
+	FinalMessages         stringslice.Collector
+	Git                   git.Commands
+	RootDir               gitdomain.RepoRootDir
+	TouchedBranches       []gitdomain.BranchName
+	Verbose               configdomain.Verbose
+}
+
 // Finished is called when a Git Town command that only changes configuration has finished successfully.
 func Finished(args FinishedArgs) error {
 	var endBranchesSnapshot Option[gitdomain.BranchesSnapshot]
@@ -57,17 +70,4 @@ func Finished(args FinishedArgs) error {
 	}
 	print.Footer(args.Verbose, args.CommandsCounter.Immutable(), args.FinalMessages.Result())
 	return runstate.Save(runState, args.RootDir)
-}
-
-type FinishedArgs struct {
-	Backend               subshelldomain.RunnerQuerier
-	BeginBranchesSnapshot Option[gitdomain.BranchesSnapshot]
-	BeginConfigSnapshot   undoconfig.ConfigSnapshot
-	Command               string
-	CommandsCounter       Mutable[gohacks.Counter]
-	FinalMessages         stringslice.Collector
-	Git                   git.Commands
-	RootDir               gitdomain.RepoRootDir
-	TouchedBranches       []gitdomain.BranchName
-	Verbose               configdomain.Verbose
 }

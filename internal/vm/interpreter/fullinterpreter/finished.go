@@ -19,6 +19,17 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
+type finishedArgs struct {
+	Backend         subshelldomain.RunnerQuerier
+	CommandsCounter Mutable[gohacks.Counter]
+	FinalMessages   stringslice.Collector
+	Git             git.Commands
+	Inputs          dialogcomponents.Inputs
+	RootDir         gitdomain.RepoRootDir
+	RunState        runstate.RunState
+	Verbose         configdomain.Verbose
+}
+
 // finished is called when executing all steps has successfully finished.
 func finished(args finishedArgs) error {
 	endBranchesSnapshot, err := args.Git.BranchesSnapshot(args.Backend)
@@ -52,15 +63,4 @@ func finished(args finishedArgs) error {
 	print.Footer(args.Verbose, args.CommandsCounter.Immutable(), args.FinalMessages.Result())
 	args.Inputs.VerifyAllUsed()
 	return nil
-}
-
-type finishedArgs struct {
-	Backend         subshelldomain.RunnerQuerier
-	CommandsCounter Mutable[gohacks.Counter]
-	FinalMessages   stringslice.Collector
-	Git             git.Commands
-	Inputs          dialogcomponents.Inputs
-	RootDir         gitdomain.RepoRootDir
-	RunState        runstate.RunState
-	Verbose         configdomain.Verbose
 }
