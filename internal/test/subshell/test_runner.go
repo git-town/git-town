@@ -209,7 +209,9 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	subProcess.Env = opts.Env
 	var outputBuf bytes.Buffer
 	subProcess.Stdout = &outputBuf
-	subProcess.Stderr = &outputBuf
+	if !opts.IgnoreStdErr {
+		subProcess.Stderr = &outputBuf
+	}
 	if input, hasInput := opts.Input.Get(); hasInput {
 		var stdin io.WriteCloser
 		stdin, err = subProcess.StdinPipe()
@@ -308,6 +310,9 @@ type Options struct {
 
 	// when set, captures the output and returns it
 	IgnoreOutput bool `exhaustruct:"optional"`
+
+	// when set, captures only StdOut
+	IgnoreStdErr bool `exhaustruct:"optional"`
 
 	// input to pipe into STDIN
 	Input Option[string] `exhaustruct:"optional"`
