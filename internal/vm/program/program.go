@@ -46,14 +46,6 @@ func (self *Program) OpcodeTypes() []string {
 	return result
 }
 
-// Peek provides the first element of this program.
-func (self *Program) Peek() Option[shared.Opcode] {
-	if self.IsEmpty() {
-		return None[shared.Opcode]()
-	}
-	return Some((*self)[0])
-}
-
 // Pop removes and provides the first element of this program.
 func (self *Program) Pop() Option[shared.Opcode] {
 	if self.IsEmpty() {

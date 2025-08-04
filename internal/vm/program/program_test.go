@@ -105,30 +105,6 @@ func TestProgram(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("Peek", func(t *testing.T) {
-		t.Parallel()
-		t.Run("populated list", func(t *testing.T) {
-			t.Parallel()
-			give := program.Program{
-				&opcodes.MergeAbort{},
-				&opcodes.StashOpenChanges{},
-			}
-			have, has := give.Peek().Get()
-			must.True(t, has)
-			must.Eq(t, "*opcodes.MergeAbort", reflect.TypeOf(have).String())
-			wantProgram := program.Program{&opcodes.MergeAbort{}, &opcodes.StashOpenChanges{}}
-			must.Eq(t, wantProgram, give)
-		})
-		t.Run("empty list", func(t *testing.T) {
-			t.Parallel()
-			give := program.Program{}
-			have := give.Peek()
-			must.EqOp(t, None[shared.Opcode](), have)
-			wantProgram := program.Program{}
-			must.Eq(t, wantProgram, give)
-		})
-	})
-
 	t.Run("Pop", func(t *testing.T) {
 		t.Parallel()
 		t.Run("populated list", func(t *testing.T) {
