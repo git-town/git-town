@@ -45,9 +45,9 @@ func EmptyRunState() RunState {
 func (self *RunState) AddPushBranchAfterCurrentBranchProgram(gitCommands git.Commands, backend subshelldomain.Querier) error {
 	popped := program.Program{}
 	for {
-		nextOpcode := self.RunProgram.Peek()
-		if !opcodes.IsEndOfBranchProgramOpcode(nextOpcode) {
-			popped.Add(self.RunProgram.Pop())
+		nextOpcode, hasNextOpcode := self.RunProgram.Pop().Get()
+		if hasNextOpcode && !opcodes.IsEndOfBranchProgramOpcode(nextOpcode) {
+			popped.Add(nextOpcode)
 		} else {
 			currentBranch, err := gitCommands.CurrentBranch(backend)
 			if err != nil {
@@ -104,11 +104,10 @@ func (self *RunState) RegisterUndoablePerennialCommit(commit gitdomain.SHA) {
 // from this run state.
 func (self *RunState) SkipCurrentBranchProgram() {
 	for {
-		opcode := self.RunProgram.Peek()
-		if opcodes.IsEndOfBranchProgramOpcode(opcode) {
+		opcode, hasOpcode := self.RunProgram.Pop().Get()
+		if !hasOpcode || opcodes.IsEndOfBranchProgramOpcode(opcode) {
 			break
 		}
-		self.RunProgram.Pop()
 	}
 }
 

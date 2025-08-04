@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/slice"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 // Program is a mutable collection of Opcodes.
@@ -45,22 +46,14 @@ func (self *Program) OpcodeTypes() []string {
 	return result
 }
 
-// Peek provides the first element of this program.
-func (self *Program) Peek() shared.Opcode { //nolint:ireturn
-	if self.IsEmpty() {
-		return nil
-	}
-	return (*self)[0]
-}
-
 // Pop removes and provides the first element of this program.
-func (self *Program) Pop() shared.Opcode { //nolint:ireturn
+func (self *Program) Pop() Option[shared.Opcode] {
 	if self.IsEmpty() {
-		return nil
+		return None[shared.Opcode]()
 	}
 	result := (*self)[0]
 	*self = (*self)[1:]
-	return result
+	return Some(result)
 }
 
 // Prepend adds the given opcode to the beginning of this program.
