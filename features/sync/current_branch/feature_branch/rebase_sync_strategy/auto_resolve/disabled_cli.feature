@@ -39,7 +39,8 @@ Feature: don't auto-resolve phantom merge conflicts
       """
     And a rebase is now in progress
 
+  @this
   Scenario: undo
     When I run "git town undo"
-    Then Git Town runs the commands
-      | BRANCH | COMMAND |
+    Then Git Town runs no commands
+    And the initial branches and lineage exist now
