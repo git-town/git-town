@@ -1,4 +1,3 @@
-@this
 Feature: don't auto-resolve phantom merge conflicts
 
   Background:
@@ -38,3 +37,8 @@ Feature: don't auto-resolve phantom merge conflicts
       could not apply .* conflicting branch-2 commit
       """
     And a rebase is now in progress
+
+  Scenario: undo
+    When I run "git town undo"
+    Then Git Town runs the commands
+      | BRANCH | COMMAND |
