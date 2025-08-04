@@ -191,7 +191,8 @@ func TestTestCommands(t *testing.T) {
 		})
 		commits := runtime.CommitsInBranch("initial", None[gitdomain.BranchName](), []string{})
 		must.Len(t, 1, commits)
-		content := runtime.FileContentInCommit(commits[0].SHA.Location(), "hello.txt")
+		content, err := runtime.FileContentInCommit(commits[0].SHA.Location(), "hello.txt")
+		must.NoError(t, err)
 		must.EqOp(t, "hello world", content)
 	})
 

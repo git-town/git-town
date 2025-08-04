@@ -68,7 +68,7 @@ Feature: auto-resolve phantom merge conflicts
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE                           | FILE NAME | FILE CONTENT     |
       | main     | local, origin | main commit                       | file      | branch-1 content |
-      |          |               | branch-1-commit                   | file      |                  |
-      | branch-2 | local, origin | branch-1-commit                   | file      |                  |
+      |          |               | branch-1-commit                   | file      | (deleted)        |
+      | branch-2 | local, origin | branch-1-commit                   | file      | (deleted)        |
       |          |               | branch-2 commit                   | file      | branch-2 content |
       |          |               | Merge branch 'main' into branch-2 |           |                  |

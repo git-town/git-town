@@ -142,7 +142,11 @@ func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, pare
 		if slices.Contains(fields, "FILE CONTENT") {
 			filecontent := ""
 			if commit.FileName != "" {
-				filecontent = self.FileContentInCommit(commit.SHA.Location(), commit.FileName)
+				var err error
+				filecontent, err = self.FileContentInCommit(commit.SHA.Location(), commit.FileName)
+				if err != nil {
+					filecontent = "(deleted)"
+				}
 			}
 			commit.FileContent = filecontent
 		}
@@ -271,9 +275,8 @@ func (self *TestCommands) FileContentErr(filename string) (string, error) {
 }
 
 // FileContentInCommit provides the content of the file with the given name in the commit with the given SHA.
-func (self *TestCommands) FileContentInCommit(location gitdomain.Location, filename string) string {
-	output, _ := self.Query("git", "show", location.String()+":"+filename)
-	return output
+func (self *TestCommands) FileContentInCommit(location gitdomain.Location, filename string) (string, error) {
+	return self.Query("git", "show", location.String()+":"+filename)
 }
 
 // FilesInBranch provides the list of the files present in the given branch.
@@ -298,7 +301,10 @@ func (self *TestCommands) FilesInBranches(mainBranch gitdomain.LocalBranchName) 
 	for _, branch := range branches {
 		files := self.FilesInBranch(branch)
 		for _, file := range files {
-			content := self.FileContentInCommit(branch.Location(), file)
+			content, err := self.FileContentInCommit(branch.Location(), file)
+			if err != nil {
+				content = "(deleted)"
+			}
 			if branch == lastBranch {
 				result.AddRow("", file, content)
 			} else {
