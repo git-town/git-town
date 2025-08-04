@@ -39,8 +39,17 @@ Feature: don't auto-resolve phantom merge conflicts
       """
     And a rebase is now in progress
 
-  @this
   Scenario: undo
     When I run "git town undo"
     Then Git Town runs no commands
     And the initial branches and lineage exist now
+    # And no rebase is now in progress
+    # TODO: make this work
+
+  Scenario: continue without resolving the conflict
+    When I run "git town continue"
+    Then Git Town runs no commands
+    And Git Town prints the error:
+      """
+      you must resolve the conflicts before continuing
+      """
