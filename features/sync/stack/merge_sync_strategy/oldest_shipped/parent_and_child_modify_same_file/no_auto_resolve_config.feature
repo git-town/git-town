@@ -1,19 +1,22 @@
-Feature: disable auto-resolve phantom merge conflicts via configuration data
+Feature: disable auto-resolve phantom merge conflicts via CLI
 
   Background:
     Given a Git repo with origin
+    And the commits
+      | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT           |
+      | main   | local, origin | main commit | file      | line 1\nline 2\nline 3 |
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | branch-1 | feature | main   | local, origin |
     And the commits
-      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT |
-      | branch-1 | local, origin | branch-1 commit | file      | content 1    |
+      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                               |
+      | branch-1 | local, origin | branch-1 commit | file      | line 1\nline 2 changed by branch-1\nline 3 |
     And the branches
       | NAME     | TYPE    | PARENT   | LOCATIONS     |
       | branch-2 | feature | branch-1 | local, origin |
     And the commits
-      | BRANCH   | LOCATION | MESSAGE         | FILE NAME | FILE CONTENT |
-      | branch-2 | local    | branch-2 commit | file      | content 2    |
+      | BRANCH   | LOCATION | MESSAGE         | FILE NAME | FILE CONTENT                                                   |
+      | branch-2 | local    | branch-2 commit | file      | line 1\nline 2 changed by branch-1\nline 3 changed by branch-2 |
     And Git setting "git-town.sync-feature-strategy" is "merge"
     And Git setting "git-town.auto-resolve" is "no"
     And origin ships the "branch-1" branch using the "squash-merge" ship-strategy
@@ -31,17 +34,19 @@ Feature: disable auto-resolve phantom merge conflicts via configuration data
       | branch-2 | git merge --no-edit --ff main                     |
     And Git Town prints the error:
       """
-      CONFLICT (add/add): Merge conflict in file
+      CONFLICT (content): Merge conflict in file
       """
-    And a merge is now in progress
     And file "file" now has content:
       """
+      line 1
+      line 2 changed by branch-1
       <<<<<<< HEAD
-      content 2
+      line 3 changed by branch-2
       =======
-      content 1
+      line 3
       >>>>>>> main
       """
+    And a merge is now in progress
 
   Scenario: undo
     When I run "git town undo"
@@ -49,15 +54,16 @@ Feature: disable auto-resolve phantom merge conflicts via configuration data
       | BRANCH   | COMMAND                                                 |
       | branch-2 | git merge --abort                                       |
       |          | git checkout main                                       |
-      | main     | git reset --hard {{ sha 'initial commit' }}             |
+      | main     | git reset --hard {{ sha 'main commit' }}                |
       |          | git branch branch-1 {{ sha-initial 'branch-1 commit' }} |
       |          | git checkout branch-2                                   |
     And these commits exist now
-      | BRANCH   | LOCATION | MESSAGE         | FILE NAME | FILE CONTENT |
-      | main     | origin   | branch-1 commit | file      | content 1    |
-      | branch-1 | local    | branch-1 commit | file      | content 1    |
-      | branch-2 | local    | branch-2 commit | file      | content 2    |
-      |          | origin   | branch-1 commit | file      | content 1    |
+      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                   |
+      | main     | local, origin | main commit     | file      | line 1\nline 2\nline 3                                         |
+      |          | origin        | branch-1 commit | file      | line 1\nline 2 changed by branch-1\nline 3                     |
+      | branch-1 | local         | branch-1 commit | file      | line 1\nline 2 changed by branch-1\nline 3                     |
+      | branch-2 | local         | branch-2 commit | file      | line 1\nline 2 changed by branch-1\nline 3 changed by branch-2 |
+      |          | origin        | branch-1 commit | file      | line 1\nline 2 changed by branch-1\nline 3                     |
     And no merge is now in progress
 
   Scenario: run without resolving the conflicts
@@ -78,11 +84,12 @@ Feature: disable auto-resolve phantom merge conflicts via configuration data
       |          | git merge --no-edit --ff origin/branch-2 |
       |          | git push                                 |
     And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE                           | FILE NAME | FILE CONTENT |
-      | main     | local, origin | branch-1 commit                   | file      | content 1    |
-      | branch-2 | local, origin | branch-1 commit                   | file      | content 1    |
-      |          |               | branch-2 commit                   | file      | content 2    |
-      |          |               | Merge branch 'main' into branch-2 | file      | content_2    |
+      | BRANCH   | LOCATION      | MESSAGE                           | FILE NAME | FILE CONTENT                                                   |
+      | main     | local, origin | main commit                       | file      | line 1\nline 2\nline 3                                         |
+      |          |               | branch-1 commit                   | file      | line 1\nline 2 changed by branch-1\nline 3                     |
+      | branch-2 | local, origin | branch-1 commit                   | file      | line 1\nline 2 changed by branch-1\nline 3                     |
+      |          |               | branch-2 commit                   | file      | line 1\nline 2 changed by branch-1\nline 3 changed by branch-2 |
+      |          |               | Merge branch 'main' into branch-2 | file      | content_2                                                      |
     And no merge is now in progress
 
   Scenario: resolve the conflicts, commit, and continue
@@ -94,9 +101,10 @@ Feature: disable auto-resolve phantom merge conflicts via configuration data
       | branch-2 | git merge --no-edit --ff origin/branch-2 |
       |          | git push                                 |
     And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE                           | FILE NAME | FILE CONTENT |
-      | main     | local, origin | branch-1 commit                   | file      | content 1    |
-      | branch-2 | local, origin | branch-1 commit                   | file      | content 1    |
-      |          |               | branch-2 commit                   | file      | content 2    |
-      |          |               | Merge branch 'main' into branch-2 | file      | content_2    |
+      | BRANCH   | LOCATION      | MESSAGE                           | FILE NAME | FILE CONTENT                                                   |
+      | main     | local, origin | main commit                       | file      | line 1\nline 2\nline 3                                         |
+      |          |               | branch-1 commit                   | file      | line 1\nline 2 changed by branch-1\nline 3                     |
+      | branch-2 | local, origin | branch-1 commit                   | file      | line 1\nline 2 changed by branch-1\nline 3                     |
+      |          |               | branch-2 commit                   | file      | line 1\nline 2 changed by branch-1\nline 3 changed by branch-2 |
+      |          |               | Merge branch 'main' into branch-2 | file      | content_2                                                      |
     And no merge is now in progress
