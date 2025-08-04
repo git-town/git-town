@@ -22,12 +22,12 @@ func main() {
 		Name:     "optioncompare",
 		Doc:      "Ensures no == comparison between Option types",
 		Requires: []*analysis.Analyzer{inspect.Analyzer},
-		Run:      run,
+		Run:      execute,
 		Flags:    *flag.NewFlagSet("optioncompare", flag.ExitOnError),
 	})
 }
 
-func run(pass *analysis.Pass) (interface{}, error) {
+func execute(pass *analysis.Pass) (any, error) { //nolint:ireturn
 	inspectorInstance := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
 	nodeFilter := []ast.Node{
 		(*ast.BinaryExpr)(nil), // We are interested in binary expressions like 'a == b'

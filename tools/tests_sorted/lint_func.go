@@ -8,6 +8,29 @@ import (
 	"github.com/git-town/git-town/tools/tests_sorted/matcher"
 )
 
+// isTestFunc returns true if a given funcType describes a test function/helper.
+//
+// `ast.FuncType` does not differentiate between top-level functions, function
+// literals, or between tests or test helpers. This is merely a signature check.
+// The main objective of isTestFunc is to select test functions that are
+// compatible with `tRunSubtestNames` as we make an assumption about the first
+// parameter being `t *testing.T` named `t` specifically.
+func isTestFunc(funcType *ast.FuncType) bool {
+	firstParam := &matcher.FieldMatcher{
+		Name: "t",
+		TypeMatcher: &matcher.PointerMatcher{
+			InnerMatcher: &matcher.IdentSelectorMatcher{
+				Namespace: "testing",
+				Name:      "T",
+			},
+		},
+	}
+	m := &matcher.FieldListPrefixMatcher{
+		Prefix: []matcher.PositionalFieldMatcher{firstParam},
+	}
+	return m.Match(funcType.Params).Success()
+}
+
 // lintFuncDecl returns a list of issues in a given ast.FuncDecl.
 func lintFuncDecl(funcDecl *ast.FuncDecl, fileSet *token.FileSet) (Issues, error) {
 	return lintFuncImpl(fileSet.Position(funcDecl.Pos()), funcDecl.Type, funcDecl.Body)
@@ -37,29 +60,6 @@ func lintFuncImpl(pos token.Position, funcType *ast.FuncType, funcBody *ast.Bloc
 		}, nil
 	}
 	return nil, nil
-}
-
-// isTestFunc returns true if a given funcType describes a test function/helper.
-//
-// `ast.FuncType` does not differentiate between top-level functions, function
-// literals, or between tests or test helpers. This is merely a signature check.
-// The main objective of isTestFunc is to select test functions that are
-// compatible with `tRunSubtestNames` as we make an assumption about the first
-// parameter being `t *testing.T` named `t` specifically.
-func isTestFunc(funcType *ast.FuncType) bool {
-	firstParam := &matcher.FieldMatcher{
-		Name: "t",
-		TypeMatcher: &matcher.PointerMatcher{
-			InnerMatcher: &matcher.IdentSelectorMatcher{
-				Namespace: "testing",
-				Name:      "T",
-			},
-		},
-	}
-	m := &matcher.FieldListPrefixMatcher{
-		Prefix: []matcher.PositionalFieldMatcher{firstParam},
-	}
-	return m.Match(funcType.Params).Success()
 }
 
 // tRunSubtestNames returns a list of subtest names from `t.Run(...)`

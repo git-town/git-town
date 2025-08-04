@@ -48,7 +48,7 @@ func Execute(args ExecuteArgs) error {
 	if err != nil {
 		return fmt.Errorf(messages.RunstateDeleteProblem, err)
 	}
-	print.Footer(args.Verbose, args.CommandsCounter.Immutable(), args.FinalMessages.Result())
+	print.Footer(args.Config.NormalConfig.Verbose, args.CommandsCounter.Immutable(), args.FinalMessages.Result())
 	return nil
 }
 
@@ -65,5 +65,4 @@ type ExecuteArgs struct {
 	InitialStashSize gitdomain.StashSize
 	RootDir          gitdomain.RepoRootDir
 	RunState         runstate.RunState
-	Verbose          configdomain.Verbose
 }

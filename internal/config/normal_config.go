@@ -30,6 +30,7 @@ import (
 // Configuration data that needs to be prompted from the user exists in UnvalidatedConfigData/ValidatedConfigData.
 type NormalConfig struct {
 	Aliases                  configdomain.Aliases
+	AutoResolve              configdomain.AutoResolve
 	BitbucketAppPassword     Option[forgedomain.BitbucketAppPassword]
 	BitbucketUsername        Option[forgedomain.BitbucketUsername]
 	BranchTypeOverrides      configdomain.BranchTypeOverrides
@@ -81,6 +82,7 @@ func (self *NormalConfig) NoPushHook() configdomain.NoPushHook {
 func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) NormalConfig {
 	return NormalConfig{
 		Aliases:                  other.Aliases,
+		AutoResolve:              other.AutoResolve.GetOrElse(self.AutoResolve),
 		BitbucketAppPassword:     other.BitbucketAppPassword,
 		BitbucketUsername:        other.BitbucketUsername,
 		BranchTypeOverrides:      other.BranchTypeOverrides.Concat(self.BranchTypeOverrides),
@@ -221,6 +223,7 @@ func (self *NormalConfig) SetPerennialBranches(runner subshelldomain.Runner, bra
 func DefaultNormalConfig() NormalConfig {
 	return NormalConfig{
 		Aliases:                  configdomain.Aliases{},
+		AutoResolve:              true,
 		BitbucketAppPassword:     None[forgedomain.BitbucketAppPassword](),
 		BitbucketUsername:        None[forgedomain.BitbucketUsername](),
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{},
@@ -261,6 +264,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 	syncFeatureStrategy := partial.SyncFeatureStrategy.GetOrElse(defaults.SyncFeatureStrategy)
 	return NormalConfig{
 		Aliases:                  partial.Aliases,
+		AutoResolve:              partial.AutoResolve.GetOrElse(defaults.AutoResolve),
 		BitbucketAppPassword:     partial.BitbucketAppPassword,
 		BitbucketUsername:        partial.BitbucketUsername,
 		BranchTypeOverrides:      partial.BranchTypeOverrides,
