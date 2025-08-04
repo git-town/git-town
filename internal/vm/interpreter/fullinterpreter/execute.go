@@ -44,8 +44,8 @@ func Execute(args ExecuteArgs) error {
 		return err
 	}
 	for {
-		nextStep := args.RunState.RunProgram.Pop()
-		if nextStep == nil {
+		nextStep, hasNextStep := args.RunState.RunProgram.Pop().Get()
+		if !hasNextStep {
 			return finished(finishedArgs{
 				Backend:         args.Backend,
 				CommandsCounter: args.CommandsCounter,

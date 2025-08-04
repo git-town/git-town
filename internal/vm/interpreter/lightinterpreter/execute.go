@@ -19,8 +19,8 @@ import (
 
 func Execute(args ExecuteArgs) {
 	for {
-		nextStep := args.Prog.Pop()
-		if nextStep == nil {
+		nextStep, hasNextStep := args.Prog.Pop().Get()
+		if !hasNextStep {
 			return
 		}
 		err := nextStep.Run(shared.RunArgs{
