@@ -52,8 +52,8 @@ Feature: disable auto-resolve phantom merge conflicts via configuration setting
     When I run "git town undo"
     Then Git Town runs no commands
     And the initial branches and lineage exist now
-    # And no rebase is now in progress
-    # TODO: make this work
+# And no rebase is now in progress
+# TODO: make this work
 
   Scenario: continue with unresolved conflicts
     When I run "git town continue"
@@ -73,8 +73,8 @@ Feature: disable auto-resolve phantom merge conflicts via configuration setting
       """
       You are not currently on a branch.
       """
-    # And no rebase is now in progress
-    # TODO: it should not print an error here but finish the sync
+# And no rebase is now in progress
+# TODO: it should not print an error here but finish the sync
 
   Scenario: resolve, continue the rebase, and continue the sync
     When I resolve the conflict in "conflicting_file" with "branch-2 content"
