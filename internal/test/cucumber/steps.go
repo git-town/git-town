@@ -934,7 +934,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^no merge is in progress$`, func(ctx context.Context) error {
+	sc.Step(`^no merge is now in progress$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		if devRepo.Git.HasMergeInProgress(devRepo.TestRunner) {

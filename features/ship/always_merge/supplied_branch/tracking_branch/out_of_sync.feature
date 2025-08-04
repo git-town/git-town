@@ -26,6 +26,6 @@ Feature: does not ship the given out-of-sync branch using the always-merge strat
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And no merge is in progress
+    And no merge is now in progress
     And the initial commits exist now
     And the initial lineage exists now

@@ -32,7 +32,7 @@ Feature: adding additional branches while resolving conflicts
     Then Git Town runs the commands
       | BRANCH    | COMMAND  |
       | feature-1 | git push |
-    And no merge is in progress
+    And no merge is now in progress
     And all branches are now synchronized
 
   Scenario: undo
@@ -41,7 +41,7 @@ Feature: adding additional branches while resolving conflicts
       | BRANCH    | COMMAND                                                                                      |
       | feature-1 | git reset --hard {{ sha 'conflicting local commit' }}                                        |
       |           | git push --force-with-lease origin {{ sha-in-origin 'conflicting origin commit' }}:feature-1 |
-    And no merge is in progress
+    And no merge is now in progress
     And these branches exist now
       | REPOSITORY | BRANCHES                   |
       | local      | main, feature-1, feature-2 |
