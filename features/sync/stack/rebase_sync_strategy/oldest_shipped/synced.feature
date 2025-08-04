@@ -1,4 +1,4 @@
-Feature: disable auto-resolve phantom merge conflicts via CLI flag
+Feature: auto-resolve phantom merge conflicts
 
   Background:
     Given a Git repo with origin
@@ -20,7 +20,7 @@ Feature: disable auto-resolve phantom merge conflicts via CLI flag
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     And origin ships the "branch-1" branch using the "squash-merge" ship-strategy
     And the current branch is "branch-2"
-    When I run "git-town sync --auto-resolve=0"
+    When I run "git-town sync"
 
   Scenario: result
     Then Git Town runs the commands
@@ -33,43 +33,20 @@ Feature: disable auto-resolve phantom merge conflicts via CLI flag
       |          | git -c rebase.updateRefs=false rebase --onto main branch-1 |
       |          | git push --force-with-lease                                |
       |          | git branch -D branch-1                                     |
-    # TODO: it should not run the rebase-continue and force-push at the end
+    And these commits exist now
+      | BRANCH   | LOCATION      | MESSAGE                     | FILE NAME        | FILE CONTENT                                   |
+      | main     | local, origin | main commit                 | conflicting_file | line 1\n\nline 2\n\nline 3                     |
+      |          |               | conflicting branch-1 commit | conflicting_file | line 1\n\nline 2 changed by branch-1\n\nline 3 |
+      | branch-2 | local, origin | conflicting branch-2 commit | conflicting_file | line 1\n\nline 2\n\nline 3 changed by branch-2 |
+      # TODO: in the branch table above, branch-2 does not contain the changes made by branch-1,
+      # which were just shipped. This is a bug related to https://github.com/git-town/git-town/issues/5156
     And no rebase is now in progress
 
   Scenario: undo
     When I run "git town undo"
-    Then Git Town runs no commands
+    Then Git Town runs the commands
+      | BRANCH   | COMMAND                                                                |
+      | branch-2 | git reset --hard {{ sha-initial 'conflicting branch-2 commit' }}       |
+      |          | git push --force-with-lease origin {{ sha 'initial commit' }}:branch-2 |
+      |          | git branch branch-1 {{ sha-initial 'commit 1' }}                       |
     And the initial branches and lineage exist now
-# And no rebase is now in progress
-# TODO: make this work
-
-  Scenario: continue with unresolved conflicts
-    When I run "git town continue"
-    Then Git Town runs no commands
-    And Git Town prints the error:
-      """
-      you must resolve the conflicts before continuing
-      """
-
-  Scenario: resolve and continue
-    When I resolve the conflict in "conflicting_file" with "branch-2 content"
-    And I run "git-town continue" and enter "resolved commit" for the commit message
-    Then Git Town runs the commands
-      | BRANCH   | COMMAND                     |
-      | branch-2 | git push --force-with-lease |
-    And Git Town prints the error:
-      """
-      You are not currently on a branch.
-      """
-# And no rebase is now in progress
-# TODO: it should not print an error here but finish the sync
-
-  Scenario: resolve, continue the rebase, and continue the sync
-    When I resolve the conflict in "conflicting_file" with "branch-2 content"
-    And I run "git rebase --continue" and enter "resolved commit" for the commit message
-    And I run "git-town continue"
-    Then Git Town runs the commands
-      | BRANCH   | COMMAND                     |
-      | branch-2 | git push --force-with-lease |
-      |          | git branch -D branch-1      |
-    And no rebase is now in progress
