@@ -69,3 +69,18 @@ Feature: disable auto-resolve phantom merge conflicts via CLI
       | branch-2 | local, origin | conflicting branch-2 commit       | conflicting_file | content 2    |
       |          |               | Merge branch 'main' into branch-2 | conflicting_file | content_2    |
     And no merge is now in progress
+
+  Scenario: resolve the conflicts, commit, and continue
+    When I resolve the conflict in "conflicting_file" with "content_2"
+    And I ran "git commit --no-edit"
+    And I run "git town continue"
+    Then Git Town runs the commands
+      | BRANCH   | COMMAND                                  |
+      | branch-2 | git merge --no-edit --ff origin/branch-2 |
+      |          | git push                                 |
+    And these commits exist now
+      | BRANCH   | LOCATION      | MESSAGE                           | FILE NAME        | FILE CONTENT |
+      | main     | local, origin | conflicting branch-1 commit       | conflicting_file | content 1    |
+      | branch-2 | local, origin | conflicting branch-2 commit       | conflicting_file | content 2    |
+      |          |               | Merge branch 'main' into branch-2 | conflicting_file | content_2    |
+    And no merge is now in progress
