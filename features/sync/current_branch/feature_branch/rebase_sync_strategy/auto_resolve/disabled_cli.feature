@@ -46,10 +46,23 @@ Feature: don't auto-resolve phantom merge conflicts
     # And no rebase is now in progress
     # TODO: make this work
 
-  Scenario: continue without resolving the conflict
+  Scenario: continue with unresolved conflicts
     When I run "git town continue"
     Then Git Town runs no commands
     And Git Town prints the error:
       """
       you must resolve the conflicts before continuing
       """
+
+  @this
+  Scenario: resolve and continue
+    When I resolve the conflict in "conflicting_file" with "branch-2 content"
+    And I run "git-town continue" and enter "resolved commit" for the commit message
+    Then Git Town runs the commands
+      | BRANCH   | COMMAND                     |
+      | branch-2 | git push --force-with-lease |
+    And Git Town prints the error:
+      """
+      You are not currently on a branch.
+      """
+    # TODO: fix this
