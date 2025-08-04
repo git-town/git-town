@@ -57,6 +57,7 @@ Feature: disable auto-resolve phantom merge conflicts via configuration data
       | main     | origin   | conflicting branch-1 commit | conflicting_file | content 1    |
       | branch-1 | local    | conflicting branch-1 commit | conflicting_file | content 1    |
       | branch-2 | local    | conflicting branch-2 commit | conflicting_file | content 2    |
+      |          | origin   | conflicting branch-1 commit | conflicting_file | content 1    |
     And no merge is now in progress
 
   Scenario: run without resolving the conflicts
@@ -79,7 +80,8 @@ Feature: disable auto-resolve phantom merge conflicts via configuration data
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE                           | FILE NAME        | FILE CONTENT |
       | main     | local, origin | conflicting branch-1 commit       | conflicting_file | content 1    |
-      | branch-2 | local, origin | conflicting branch-2 commit       | conflicting_file | content 2    |
+      | branch-2 | local, origin | conflicting branch-1 commit       | conflicting_file | content 1    |
+      |          |               | conflicting branch-2 commit       | conflicting_file | content 2    |
       |          |               | Merge branch 'main' into branch-2 | conflicting_file | content_2    |
     And no merge is now in progress
 
@@ -94,6 +96,7 @@ Feature: disable auto-resolve phantom merge conflicts via configuration data
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE                           | FILE NAME        | FILE CONTENT |
       | main     | local, origin | conflicting branch-1 commit       | conflicting_file | content 1    |
-      | branch-2 | local, origin | conflicting branch-2 commit       | conflicting_file | content 2    |
+      | branch-2 | local, origin | conflicting branch-1 commit       | conflicting_file | content 1    |
+      |          |               | conflicting branch-2 commit       | conflicting_file | content 2    |
       |          |               | Merge branch 'main' into branch-2 | conflicting_file | content_2    |
     And no merge is now in progress
