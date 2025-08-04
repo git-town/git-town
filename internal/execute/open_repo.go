@@ -8,7 +8,6 @@ import (
 	"runtime"
 
 	"github.com/git-town/git-town/v21/internal/config"
-	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/configfile"
 	"github.com/git-town/git-town/v21/internal/config/envconfig"
@@ -26,24 +25,13 @@ import (
 )
 
 func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
+	defaultConfig := config.DefaultNormalConfig()
+	envConfig := envconfig.Load()
 	commandsCounter := NewMutable(new(gohacks.Counter))
-	if args.CliConfig.Verbose {
-		fmt.Println("Git Town " + config.GitTownVersion)
-		fmt.Println("OS:", runtime.GOOS)
-		var cmd *exec.Cmd
-		if runtime.GOOS == "windows" {
-			cmd = exec.Command("cmd", "/c", "ver")
-		} else {
-			cmd = exec.Command("uname", "-a")
-		}
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		_ = cmd.Run()
-	}
 	backendRunner := subshell.BackendRunner{
 		Dir:             None[string](),
 		CommandsCounter: commandsCounter,
-		Verbose:         args.CliConfig.Verbose,
+		Verbose:         args.CliConfig.Verbose.Or(envConfig.Verbose).GetOrElse(defaultConfig.Verbose),
 	}
 	gitCommands := git.Commands{
 		CurrentBranchCache: &cache.WithPrevious[gitdomain.LocalBranchName]{},
@@ -104,21 +92,35 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	unvalidatedConfig := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
 		CliConfig:     args.CliConfig,
 		ConfigFile:    configFile,
-		Defaults:      config.DefaultNormalConfig(),
-		EnvConfig:     envconfig.Load(),
+		Defaults:      defaultConfig,
+		EnvConfig:     envConfig,
 		FinalMessages: finalMessages,
 		GitGlobal:     globalConfig,
 		GitLocal:      localConfig,
 		GitUnscoped:   unscopedConfig,
 	})
+	backendRunner.Verbose = unvalidatedConfig.NormalConfig.Verbose
 	frontEndRunner := newFrontendRunner(newFrontendRunnerArgs{
 		backend:          backendRunner,
 		counter:          commandsCounter,
-		dryRun:           args.CliConfig.DryRun,
+		dryRun:           unvalidatedConfig.NormalConfig.DryRun,
 		getCurrentBranch: gitCommands.CurrentBranch,
 		printBranchNames: args.PrintBranchNames,
 		printCommands:    args.PrintCommands,
 	})
+	if unvalidatedConfig.NormalConfig.Verbose {
+		fmt.Println("Git Town " + config.GitTownVersion)
+		fmt.Println("OS:", runtime.GOOS)
+		var cmd *exec.Cmd
+		if runtime.GOOS == "windows" {
+			cmd = exec.Command("cmd", "/c", "ver")
+		} else {
+			cmd = exec.Command("uname", "-a")
+		}
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		_ = cmd.Run()
+	}
 	isOffline := unvalidatedConfig.NormalConfig.Offline
 	if args.ValidateIsOnline && isOffline.IsOffline() {
 		return emptyOpenRepoResult(), errors.New(messages.OfflineNotAllowed)
@@ -147,7 +149,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 }
 
 type OpenRepoArgs struct {
-	CliConfig        cliconfig.CliConfig
+	CliConfig        configdomain.PartialConfig
 	PrintBranchNames bool
 	PrintCommands    bool
 	ValidateGitRepo  bool

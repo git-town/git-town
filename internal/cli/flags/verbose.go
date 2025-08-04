@@ -2,6 +2,7 @@ package flags
 
 import (
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -15,12 +16,15 @@ func Verbose() (AddFunc, ReadVerboseFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.Flags().BoolP(verboseLong, verboseShort, false, "display all Git commands run under the hood")
 	}
-	readFlag := func(cmd *cobra.Command) (configdomain.Verbose, error) {
+	readFlag := func(cmd *cobra.Command) (Option[configdomain.Verbose], error) {
+		if !cmd.Flags().Changed(verboseLong) {
+			return None[configdomain.Verbose](), nil
+		}
 		value, err := cmd.Flags().GetBool(verboseLong)
-		return configdomain.Verbose(value), err
+		return Some(configdomain.Verbose(value)), err
 	}
 	return addFlag, readFlag
 }
 
 // ReadVerboseFlagFunc is the type signature for the function that reads the "verbose" flag from the args to the given Cobra command.
-type ReadVerboseFlagFunc func(*cobra.Command) (configdomain.Verbose, error)
+type ReadVerboseFlagFunc func(*cobra.Command) (Option[configdomain.Verbose], error)

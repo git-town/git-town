@@ -59,6 +59,7 @@ func proposeCommand() *cobra.Command {
 	addBodyFlag, readBodyFlag := flags.ProposalBody("b")
 	addBodyFileFlag, readBodyFileFlag := flags.ProposalBodyFile()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
 	addStackFlag, readStackFlag := flags.Stack("propose the entire stack")
 	addTitleFlag, readTitleFlag := flags.ProposalTitle()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
@@ -72,16 +73,18 @@ func proposeCommand() *cobra.Command {
 			bodyFile, errBodyFile := readBodyFileFlag(cmd)
 			bodyText, errBodyText := readBodyFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
+			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
 			stack, errStack := readStackFlag(cmd)
 			title, errTitle := readTitleFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errBodyFile, errBodyText, errDryRun, errStack, errTitle, errVerbose); err != nil {
+			if err := cmp.Or(errBodyFile, errBodyText, errDryRun, errAutoResolve, errStack, errTitle, errVerbose); err != nil {
 				return err
 			}
-			cliConfig := cliconfig.CliConfig{
-				DryRun:  dryRun,
-				Verbose: verbose,
-			}
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				AutoResolve: autoResolve,
+				DryRun:      dryRun,
+				Verbose:     verbose,
+			})
 			return executePropose(proposeArgs{
 				body:      bodyText,
 				bodyFile:  bodyFile,
@@ -94,6 +97,7 @@ func proposeCommand() *cobra.Command {
 	addBodyFlag(&cmd)
 	addBodyFileFlag(&cmd)
 	addDryRunFlag(&cmd)
+	addAutoResolveFlag(&cmd)
 	addStackFlag(&cmd)
 	addTitleFlag(&cmd)
 	addVerboseFlag(&cmd)
@@ -103,7 +107,7 @@ func proposeCommand() *cobra.Command {
 type proposeArgs struct {
 	body      Option[gitdomain.ProposalBody]
 	bodyFile  Option[gitdomain.ProposalBodyFile]
-	cliConfig cliconfig.CliConfig
+	cliConfig configdomain.PartialConfig
 	stack     configdomain.FullStack
 	title     Option[gitdomain.ProposalTitle]
 }
@@ -130,7 +134,7 @@ func executePropose(args proposeArgs) error {
 		BeginStashSize:        data.stashSize,
 		BranchInfosLastRun:    data.branchInfosLastRun,
 		Command:               proposeCmd,
-		DryRun:                args.cliConfig.DryRun,
+		DryRun:                data.config.NormalConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
@@ -156,7 +160,6 @@ func executePropose(args proposeArgs) error {
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
-		Verbose:                 args.cliConfig.Verbose,
 	})
 }
 
@@ -233,7 +236,6 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (data p
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               args.cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return data, exit, err

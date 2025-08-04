@@ -16,12 +16,14 @@ type MergeParentResolvePhantomConflicts struct {
 }
 
 func (self *MergeParentResolvePhantomConflicts) Run(args shared.RunArgs) error {
-	if err := args.Git.MergeBranchNoEdit(args.Frontend, self.CurrentParent); err != nil {
-		args.PrependOpcodes(&ConflictMergePhantomResolveAll{
-			CurrentBranch: self.CurrentBranch,
-			ParentBranch:  self.InitialParentName,
-			ParentSHA:     self.InitialParentSHA,
-		})
+	err := args.Git.MergeBranchNoEdit(args.Frontend, self.CurrentParent)
+	if err == nil || !args.Config.Value.NormalConfig.AutoResolve.ShouldAutoResolve() {
+		return err
 	}
+	args.PrependOpcodes(&ConflictMergePhantomResolveAll{
+		CurrentBranch: self.CurrentBranch,
+		ParentBranch:  self.InitialParentName,
+		ParentSHA:     self.InitialParentSHA,
+	})
 	return nil
 }

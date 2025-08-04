@@ -2,7 +2,7 @@ RTA_VERSION = 0.17.0  # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
-RELEASE_VERSION := "21.3.0"
+RELEASE_VERSION := "21.4.0"
 GO_TEST_ARGS = LANG=C GOGC=off BROWSER=
 
 cuke: install  # runs all end-to-end tests in a way that looks nice during development
@@ -56,6 +56,7 @@ lint: tools/node_modules tools/rta@${RTA_VERSION}  # lints the main codebase con
 	make --no-print-directory lint-smoke
 	make --no-print-directory alphavet
 	make --no-print-directory deadcode
+	make --no-print-directory lint-messages-sorted
 	make --no-print-directory lint-messy-output
 	make --no-print-directory lint-optioncompare
 	make --no-print-directory lint-print-config
@@ -76,20 +77,35 @@ lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	(cd website && make test)
 	tools/rta govulncheck ./...
 	@echo lint tools/format_self
-	@(cd tools/format_self && ../rta golangci-lint run)
+	@(cd tools/format_self && make test)
 	@echo lint tools/format_unittests
-	@(cd tools/format_unittests && ../rta golangci-lint run)
-	@echo lint tools/stats_release
-	@(cd tools/stats_release && ../rta golangci-lint run)
-	@echo lint tools/structs_sorted
-	@(cd tools/structs_sorted && ../rta golangci-lint run)
-	@echo lint tools/tests_sorted
-	@(cd tools/tests_sorted && ../rta golangci-lint run)
+	@(cd tools/format_unittests && make test)
 	@echo lint tools/lint_steps
-	@(cd tools/lint_steps && ../rta golangci-lint run)
+	@(cd tools/lint_steps && make test)
+	@echo lint tools/messages_sorted
+	@(cd tools/messages_sorted && make lint)
+	@echo lint tools/messy_output
+	@(cd tools/messy_output && make test)
+	@echo lint tools/optioncompare
+	@(cd tools/optioncompare && make test)
+	@echo lint tools/print_config_exhaustive
+	@(cd tools/print_config_exhaustive && make test)
+	@echo lint tools/stats_release
+	@(cd tools/stats_release && make test)
+	@echo lint tools/structs_sorted
+	@(cd tools/structs_sorted && make test)
+	@echo lint tools/tests_sorted
+	@(cd tools/tests_sorted && make test)
+	@echo lint tools/tests_sorted
+	@(cd tools/tests_sorted && make test)
+	@echo lint tools/use_equal
+	@(cd tools/use_equal && make test)
 
 alphavet:
 	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v internal/cmd)
+
+lint-messages-sorted:
+	@(cd tools/messages_sorted && go build) && ./tools/messages_sorted/messages_sorted
 
 lint-messy-output:
 	@(cd tools/messy_output && go build) && ./tools/messy_output/messy_output
@@ -150,6 +166,7 @@ UNIT_TEST_DIRS = \
 	./tools/format_self/... \
 	./tools/format_unittests/... \
 	./tools/lint_steps/... \
+	./tools/messages_sorted/... \
 	./tools/messy_output/... \
 	./tools/stats_release/... \
 	./tools/structs_sorted/... \

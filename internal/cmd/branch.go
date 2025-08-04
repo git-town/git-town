@@ -6,8 +6,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/git-town/git-town/v21/internal/cli/colors"
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcolors"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/cli/flags"
@@ -17,6 +17,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/pkg/colors"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/spf13/cobra"
 )
@@ -39,10 +40,11 @@ func branchCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			cliConfig := cliconfig.CliConfig{
-				DryRun:  false,
-				Verbose: verbose,
-			}
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				AutoResolve: None[configdomain.AutoResolve](),
+				DryRun:      None[configdomain.DryRun](),
+				Verbose:     verbose,
+			})
 			return executeBranch(cliConfig)
 		},
 	}
@@ -50,7 +52,7 @@ func branchCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeBranch(cliConfig cliconfig.CliConfig) error {
+func executeBranch(cliConfig configdomain.PartialConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,
@@ -61,7 +63,7 @@ func executeBranch(cliConfig cliconfig.CliConfig) error {
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineBranchData(repo, cliConfig)
+	data, exit, err := determineBranchData(repo)
 	if err != nil || exit {
 		return err
 	}
@@ -80,7 +82,7 @@ func executeBranch(cliConfig cliconfig.CliConfig) error {
 	return nil
 }
 
-func determineBranchData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data branchData, exit dialogdomain.Exit, err error) {
+func determineBranchData(repo execute.OpenRepoResult) (data branchData, exit dialogdomain.Exit, err error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -103,7 +105,6 @@ func determineBranchData(repo execute.OpenRepoResult, cliConfig cliconfig.CliCon
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return data, exit, err
@@ -115,7 +116,7 @@ func determineBranchData(repo execute.OpenRepoResult, cliConfig cliconfig.CliCon
 			initialBranchOpt = Some(initialBranch)
 		}
 	}
-	colors := colors.NewDialogColors()
+	colors := dialogcolors.NewDialogColors()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.Names())
 	return branchData{
 		branchInfos:      branchesSnapshot.Branches,
@@ -128,7 +129,7 @@ func determineBranchData(repo execute.OpenRepoResult, cliConfig cliconfig.CliCon
 type branchData struct {
 	branchInfos      gitdomain.BranchInfos
 	branchesAndTypes configdomain.BranchesAndTypes
-	colors           colors.DialogColors
+	colors           dialogcolors.DialogColors
 	initialBranchOpt Option[gitdomain.LocalBranchName]
 }
 

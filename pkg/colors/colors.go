@@ -1,3 +1,4 @@
+// Package colors provides definitions for ANSI colors used in terminal output.
 package colors
 
 import "github.com/muesli/termenv"

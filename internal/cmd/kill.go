@@ -8,7 +8,9 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v21/internal/config/cliconfig"
+	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -23,15 +25,16 @@ func killCommand() *cobra.Command {
 		Long:   cmdhelpers.Long(deleteDesc, deleteHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			printKillDeprecationNotice()
-			dryRun, err1 := readDryRunFlag(cmd)
-			verbose, err2 := readVerboseFlag(cmd)
-			if err := cmp.Or(err1, err2); err != nil {
+			dryRun, errDryRun := readDryRunFlag(cmd)
+			verbose, errVerbose := readVerboseFlag(cmd)
+			if err := cmp.Or(errDryRun, errVerbose); err != nil {
 				return err
 			}
-			cliConfig := cliconfig.CliConfig{
-				DryRun:  dryRun,
-				Verbose: verbose,
-			}
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				AutoResolve: None[configdomain.AutoResolve](),
+				DryRun:      dryRun,
+				Verbose:     verbose,
+			})
 			result := executeDelete(args, cliConfig)
 			printKillDeprecationNotice()
 			return result

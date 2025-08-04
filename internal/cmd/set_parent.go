@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"cmp"
 	"errors"
 	"fmt"
 	"os"
@@ -60,6 +61,7 @@ main
 )
 
 func setParentCommand() *cobra.Command {
+	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "set-parent [branch]",
@@ -68,22 +70,25 @@ func setParentCommand() *cobra.Command {
 		Short:   setParentDesc,
 		Long:    cmdhelpers.Long(setParentDesc, setParentHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			verbose, err := readVerboseFlag(cmd)
-			if err != nil {
-				return err
+			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
+			verbose, errVerbose := readVerboseFlag(cmd)
+			if cmp.Or(errAutoResolve, errVerbose) != nil {
+				return errVerbose
 			}
-			cliConfig := cliconfig.CliConfig{
-				DryRun:  false,
-				Verbose: verbose,
-			}
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				AutoResolve: autoResolve,
+				DryRun:      None[configdomain.DryRun](),
+				Verbose:     verbose,
+			})
 			return executeSetParent(args, cliConfig)
 		},
 	}
+	addAutoResolveFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
+func executeSetParent(args []string, cliConfig configdomain.PartialConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,
@@ -94,7 +99,7 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineSetParentData(repo, cliConfig)
+	data, exit, err := determineSetParentData(repo)
 	if err != nil || exit {
 		return err
 	}
@@ -187,7 +192,6 @@ func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
-		Verbose:                 cliConfig.Verbose,
 	})
 }
 
@@ -204,7 +208,7 @@ type setParentData struct {
 	stashSize          gitdomain.StashSize
 }
 
-func determineSetParentData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data setParentData, exit dialogdomain.Exit, err error) {
+func determineSetParentData(repo execute.OpenRepoResult) (data setParentData, exit dialogdomain.Exit, err error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -246,7 +250,6 @@ func determineSetParentData(repo execute.OpenRepoResult, cliConfig cliconfig.Cli
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return data, exit, err
@@ -343,7 +346,8 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 				)
 			}
 			parentOpt := data.config.NormalConfig.Lineage.Parent(data.initialBranch)
-			if parent, hasParent := parentOpt.Get(); hasParent {
+			parent, hasParent := parentOpt.Get()
+			if hasParent && data.config.NormalConfig.AutoResolve.ShouldAutoResolve() {
 				prog.Add(
 					&opcodes.RebaseOntoKeepDeleted{
 						BranchToRebaseOnto: newParent.BranchName(),

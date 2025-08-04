@@ -101,7 +101,6 @@ type UnfinishedStateArgs struct {
 	RootDir           gitdomain.RepoRootDir
 	RunState          Option[runstate.RunState]
 	UnvalidatedConfig config.UnvalidatedConfig
-	Verbose           configdomain.Verbose
 }
 
 func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (dialogdomain.Exit, error) {
@@ -135,7 +134,6 @@ func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (dia
 		PendingCommand:          Some(runState.Command),
 		RootDir:                 args.RootDir,
 		RunState:                runState,
-		Verbose:                 args.Verbose,
 	})
 }
 
@@ -212,7 +210,6 @@ func skipRunstate(args UnfinishedStateArgs, runState runstate.RunState) (dialogd
 		Inputs:          args.Inputs,
 		RootDir:         args.RootDir,
 		RunState:        runState,
-		Verbose:         args.Verbose,
 	})
 }
 
@@ -239,7 +236,6 @@ func undoRunState(args UnfinishedStateArgs, runState runstate.RunState) (dialogd
 		InitialStashSize: runState.BeginStashSize,
 		RootDir:          args.RootDir,
 		RunState:         runState,
-		Verbose:          args.Verbose,
 	})
 }
 

@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v21/internal/config/cliconfig"
+	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -35,10 +36,11 @@ func skipCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			cliConfig := cliconfig.CliConfig{
-				DryRun:  false,
-				Verbose: verbose,
-			}
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				AutoResolve: None[configdomain.AutoResolve](),
+				DryRun:      None[configdomain.DryRun](),
+				Verbose:     verbose,
+			})
 			return executeSkip(cliConfig)
 		},
 	}
@@ -46,7 +48,7 @@ func skipCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeSkip(cliConfig cliconfig.CliConfig) error {
+func executeSkip(cliConfig configdomain.PartialConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,
@@ -98,7 +100,6 @@ func executeSkip(cliConfig cliconfig.CliConfig) error {
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return err
@@ -161,6 +162,5 @@ func executeSkip(cliConfig cliconfig.CliConfig) error {
 		Inputs:          inputs,
 		RootDir:         repo.RootDir,
 		RunState:        runState,
-		Verbose:         cliConfig.Verbose,
 	})
 }

@@ -205,6 +205,7 @@ EnterForgeData:
 	}
 	normalData := configdomain.PartialConfig{
 		Aliases:                  aliases,
+		AutoResolve:              None[configdomain.AutoResolve](),
 		BitbucketAppPassword:     bitbucketAppPassword,
 		BitbucketUsername:        bitbucketUsername,
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{}, // the setup assistant doesn't ask for this

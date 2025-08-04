@@ -46,7 +46,6 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 			RootDir:           args.Repo.RootDir,
 			RunState:          runStateOpt,
 			UnvalidatedConfig: args.UnvalidatedConfig,
-			Verbose:           args.Verbose,
 		})
 		if err != nil || exit {
 			return gitdomain.EmptyBranchesSnapshot(), 0, previousBranchInfos, exit, err
@@ -94,5 +93,4 @@ type LoadRepoSnapshotArgs struct {
 	RootDir               gitdomain.RepoRootDir
 	UnvalidatedConfig     config.UnvalidatedConfig
 	ValidateNoOpenChanges bool
-	Verbose               configdomain.Verbose
 }
