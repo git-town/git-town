@@ -25,6 +25,7 @@ import (
 const (
 	ConfigFileCommitMessage = "persisted config file"
 	FileCommitMessage       = "persisted file"
+	deletedText             = "(deleted)"
 )
 
 // TestCommands defines Git commands used only in test code.
@@ -142,7 +143,11 @@ func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, pare
 		if slices.Contains(fields, "FILE CONTENT") {
 			filecontent := ""
 			if commit.FileName != "" {
-				filecontent = self.FileContentInCommit(commit.SHA.Location(), commit.FileName)
+				var deleted bool
+				filecontent, deleted = self.FileContentInCommit(commit.SHA.Location(), commit.FileName)
+				if deleted {
+					filecontent = deletedText
+				}
 			}
 			commit.FileContent = filecontent
 		}
@@ -271,9 +276,13 @@ func (self *TestCommands) FileContentErr(filename string) (string, error) {
 }
 
 // FileContentInCommit provides the content of the file with the given name in the commit with the given SHA.
-func (self *TestCommands) FileContentInCommit(location gitdomain.Location, filename string) string {
-	output := self.MustQuery("git", "show", location.String()+":"+filename)
-	return output
+// If the file was deleted, the return content is empty and the bool return variable is set.
+func (self *TestCommands) FileContentInCommit(location gitdomain.Location, filename string) (content string, deleted bool) {
+	output, err := self.Query("git", "show", location.String()+":"+filename)
+	if err != nil {
+		return "", true
+	}
+	return output, false
 }
 
 // FilesInBranch provides the list of the files present in the given branch.
@@ -298,7 +307,10 @@ func (self *TestCommands) FilesInBranches(mainBranch gitdomain.LocalBranchName) 
 	for _, branch := range branches {
 		files := self.FilesInBranch(branch)
 		for _, file := range files {
-			content := self.FileContentInCommit(branch.Location(), file)
+			content, deleted := self.FileContentInCommit(branch.Location(), file)
+			if deleted {
+				content = deletedText
+			}
 			if branch == lastBranch {
 				result.AddRow("", file, content)
 			} else {
