@@ -42,7 +42,6 @@ Feature: disable auto-resolve phantom merge conflicts via CLI
       """
     And a merge is now in progress
 
-  @this
   Scenario: undo
     When I run "git town undo"
     Then Git Town runs the commands
