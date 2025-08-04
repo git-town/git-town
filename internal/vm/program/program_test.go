@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/vm/opcodes"
 	"github.com/git-town/git-town/v21/internal/vm/program"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -104,35 +105,13 @@ func TestProgram(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("Peek", func(t *testing.T) {
-		t.Parallel()
-		t.Run("populated list", func(t *testing.T) {
-			t.Parallel()
-			give := program.Program{
-				&opcodes.MergeAbort{},
-				&opcodes.StashOpenChanges{},
-			}
-			have := give.Peek()
-			must.Eq(t, "*opcodes.MergeAbort", reflect.TypeOf(have).String())
-			wantProgram := program.Program{&opcodes.MergeAbort{}, &opcodes.StashOpenChanges{}}
-			must.Eq(t, wantProgram, give)
-		})
-		t.Run("empty list", func(t *testing.T) {
-			t.Parallel()
-			give := program.Program{}
-			have := give.Peek()
-			must.EqOp(t, nil, have)
-			wantProgram := program.Program{}
-			must.Eq(t, wantProgram, give)
-		})
-	})
-
 	t.Run("Pop", func(t *testing.T) {
 		t.Parallel()
 		t.Run("populated list", func(t *testing.T) {
 			t.Parallel()
 			give := program.Program{&opcodes.MergeAbort{}, &opcodes.StashOpenChanges{}}
-			have := give.Pop()
+			have, has := give.Pop().Get()
+			must.True(t, has)
 			must.EqOp(t, "*opcodes.MergeAbort", reflect.TypeOf(have).String())
 			wantProgram := program.Program{&opcodes.StashOpenChanges{}}
 			must.Eq(t, wantProgram, give)
@@ -141,7 +120,7 @@ func TestProgram(t *testing.T) {
 			t.Parallel()
 			give := program.Program{}
 			have := give.Pop()
-			must.EqOp(t, nil, have)
+			must.EqOp(t, None[shared.Opcode](), have)
 			wantProgram := program.Program{}
 			must.Eq(t, wantProgram, give)
 		})
