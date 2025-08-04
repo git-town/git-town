@@ -54,7 +54,6 @@ Feature: don't auto-resolve phantom merge conflicts
       you must resolve the conflicts before continuing
       """
 
-  @this
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file" with "branch-2 content"
     And I run "git-town continue" and enter "resolved commit" for the commit message
@@ -65,4 +64,16 @@ Feature: don't auto-resolve phantom merge conflicts
       """
       You are not currently on a branch.
       """
-    # TODO: fix this
+    # And no rebase is now in progress
+    # TODO: it should not print an error here but finish the sync
+
+  @this
+  Scenario: resolve, continue the rebase, and continue the sync
+    When I resolve the conflict in "conflicting_file" with "branch-2 content"
+    And I run "git rebase --continue" and enter "resolved commit" for the commit message
+    And I run "git-town continue"
+    Then Git Town runs the commands
+      | BRANCH   | COMMAND                     |
+      | branch-2 | git push --force-with-lease |
+      |          | git branch -D branch-1      |
+    And no rebase is now in progress
