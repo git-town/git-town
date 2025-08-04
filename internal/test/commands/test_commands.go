@@ -25,6 +25,7 @@ import (
 const (
 	ConfigFileCommitMessage = "persisted config file"
 	FileCommitMessage       = "persisted file"
+	deletedText             = "(deleted)"
 )
 
 // TestCommands defines Git commands used only in test code.
@@ -142,10 +143,10 @@ func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, pare
 		if slices.Contains(fields, "FILE CONTENT") {
 			filecontent := ""
 			if commit.FileName != "" {
-				var err error
-				filecontent, err = self.FileContentInCommit(commit.SHA.Location(), commit.FileName)
-				if err != nil {
-					filecontent = "(deleted)"
+				var deleted bool
+				filecontent, deleted = self.FileContentInCommit(commit.SHA.Location(), commit.FileName)
+				if deleted {
+					filecontent = deletedText
 				}
 			}
 			commit.FileContent = filecontent
@@ -275,8 +276,13 @@ func (self *TestCommands) FileContentErr(filename string) (string, error) {
 }
 
 // FileContentInCommit provides the content of the file with the given name in the commit with the given SHA.
-func (self *TestCommands) FileContentInCommit(location gitdomain.Location, filename string) (string, error) {
-	return self.Query("git", "show", location.String()+":"+filename)
+// If the file was deleted, the return content is empty and the bool return variable is set.
+func (self *TestCommands) FileContentInCommit(location gitdomain.Location, filename string) (content string, deleted bool) {
+	output, err := self.Query("git", "show", location.String()+":"+filename)
+	if err != nil {
+		return "", true
+	}
+	return output, false
 }
 
 // FilesInBranch provides the list of the files present in the given branch.
@@ -301,9 +307,9 @@ func (self *TestCommands) FilesInBranches(mainBranch gitdomain.LocalBranchName) 
 	for _, branch := range branches {
 		files := self.FilesInBranch(branch)
 		for _, file := range files {
-			content, err := self.FileContentInCommit(branch.Location(), file)
-			if err != nil {
-				content = "(deleted)"
+			content, deleted := self.FileContentInCommit(branch.Location(), file)
+			if deleted {
+				content = deletedText
 			}
 			if branch == lastBranch {
 				result.AddRow("", file, content)
