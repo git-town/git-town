@@ -33,9 +33,9 @@ Feature: auto-resolve phantom merge conflicts after the oldest branch ships in a
       | BRANCH   | LOCATION      | MESSAGE                     | FILE NAME        | FILE CONTENT                                   |
       | main     | local, origin | conflicting branch-1 commit | conflicting_file | line 1\n\nline 2 changed by branch-1\n\nline 3 |
       | branch-2 | local, origin | conflicting branch-2 commit | conflicting_file | line 1\n\nline 2\n\nline 3 changed by branch-2 |
-    # TODO: Fix this bug
-    # In the branch table above, branch-2 does not contain the changes made by branch-1,
-    # which were just shipped. This is a bug related to https://github.com/git-town/git-town/issues/5156
+    # TODO: Fix this bug related to https://github.com/git-town/git-town/issues/5156
+    # In this test, branch-1 and branch-2 change the same file.
+    # After shipping branch-1 and syncing branch-2, branch-2 does not contain the changes made by branch-1.
     And no rebase is now in progress
 
   Scenario: undo
