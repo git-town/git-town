@@ -26,13 +26,9 @@ Feature: auto-resolve phantom merge conflicts
       | branch-2 | git fetch --prune --tags                                   |
       |          | git checkout main                                          |
       | main     | git -c rebase.updateRefs=false rebase origin/main          |
-      |          | git push                                                   |
       |          | git checkout branch-2                                      |
       | branch-2 | git pull                                                   |
       |          | git -c rebase.updateRefs=false rebase --onto main branch-1 |
-      |          | git checkout --theirs conflicting_file                     |
-      |          | git add conflicting_file                                   |
-      |          | GIT_EDITOR=true git rebase --continue                      |
       |          | git push --force-with-lease                                |
       |          | git branch -D branch-1                                     |
     And no rebase is now in progress
