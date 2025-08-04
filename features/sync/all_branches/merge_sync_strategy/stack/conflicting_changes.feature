@@ -45,7 +45,7 @@ Feature: sync a stack that makes conflicting changes
       |        | git push             |
       |        | git checkout alpha   |
       | alpha  | git push --tags      |
-    And no merge is in progress
+    And no merge is now in progress
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        | FILE NAME | FILE CONTENT           |
       | main   | local, origin | main commit                    | file      | main content           |

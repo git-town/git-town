@@ -36,7 +36,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       | BRANCH  | COMMAND                                                               |
       | feature | git rebase --abort                                                    |
       |         | git push --force-with-lease origin {{ sha 'initial commit' }}:feature |
-    And no merge is in progress
+    And no merge is now in progress
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local, origin | conflicting main commit    | conflicting_file | main content    |
@@ -73,7 +73,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       | feature | GIT_EDITOR=true git rebase --continue           |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
-    And no merge is in progress
+    And no merge is now in progress
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT         |
       | main    | conflicting_file | main content    |
@@ -87,7 +87,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       | BRANCH  | COMMAND                                         |
       | feature | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
-    And no merge is in progress
+    And no merge is now in progress
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |

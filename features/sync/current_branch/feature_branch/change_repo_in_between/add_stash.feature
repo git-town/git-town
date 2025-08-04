@@ -35,7 +35,7 @@ Feature: adding additional stash entries while resolving conflicts
       | feature | git push               |
       |         | git stash pop          |
       |         | git restore --staged . |
-    And no merge is in progress
+    And no merge is now in progress
     And an uncommitted file with name "stashed_file" exists now
     And all branches are now synchronized
 
@@ -46,7 +46,7 @@ Feature: adding additional stash entries while resolving conflicts
       | feature | git merge --abort      |
       |         | git stash pop          |
       |         | git restore --staged . |
-    And no merge is in progress
+    And no merge is now in progress
     And an uncommitted file with name "stashed_file" exists now
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                                                    | FILE NAME        | FILE CONTENT     |
