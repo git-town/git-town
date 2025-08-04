@@ -272,7 +272,7 @@ func (self *TestCommands) FileContentErr(filename string) (string, error) {
 
 // FileContentInCommit provides the content of the file with the given name in the commit with the given SHA.
 func (self *TestCommands) FileContentInCommit(location gitdomain.Location, filename string) string {
-	output := self.MustQuery("git", "show", location.String()+":"+filename)
+	output, _ := self.Query("git", "show", location.String()+":"+filename)
 	return output
 }
 

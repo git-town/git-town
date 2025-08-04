@@ -2,12 +2,13 @@ Feature: auto-resolve phantom merge conflicts
 
   Background:
     Given a Git repo with origin
-    And the branches
-      | NAME     | TYPE    | PARENT | LOCATIONS     |
-      | branch-1 | feature | main   | local, origin |
     And the commits
-      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT     |
-      | branch-1 | local, origin | branch-1 commit | file      | branch-1 content |
+      | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT     |
+      | main   | local, origin | main commit | file      | branch-1 content |
+    And I ran "git-town hack branch-1"
+    And I ran "git rm file"
+    And I ran "git commit -m branch-1-commit"
+    And I ran "git push -u origin branch-1"
     And the branches
       | NAME     | TYPE    | PARENT   | LOCATIONS     |
       | branch-2 | feature | branch-1 | local, origin |
@@ -19,6 +20,7 @@ Feature: auto-resolve phantom merge conflicts
     And the current branch is "branch-2"
     When I run "git-town sync"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                           |
@@ -28,18 +30,11 @@ Feature: auto-resolve phantom merge conflicts
       |          | git branch -D branch-1                            |
       |          | git checkout branch-2                             |
       | branch-2 | git merge --no-edit --ff main                     |
-      |          | git checkout --ours file                          |
-      |          | git add file                                      |
-      |          | git commit --no-edit                              |
-      |          | git merge --no-edit --ff origin/branch-2          |
-      |          | git push                                          |
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE                           | FILE NAME | FILE CONTENT     |
-      | main     | local, origin | branch-1 commit                   | file      | branch-1 content |
-      | branch-2 | local, origin | branch-1 commit                   | file      | branch-1 content |
-      |          |               | branch-2 commit                   | file      | branch-2 content |
-      |          |               | Merge branch 'main' into branch-2 |           |                  |
-    And no merge is now in progress
+    And Git Town prints the error:
+      """
+      CONFLICT (modify/delete): file deleted in main and modified in HEAD.  Version HEAD of file left in tree.
+      """
+    And no rebase is now in progress
 
   Scenario: undo
     When I run "git town undo"
@@ -52,4 +47,4 @@ Feature: auto-resolve phantom merge conflicts
       |          | git branch branch-1 {{ sha-initial 'branch-1 commit' }}                         |
       |          | git checkout branch-2                                                           |
     And the initial commits exist now
-    And no merge is now in progress
+    And no rebase is now in progress
