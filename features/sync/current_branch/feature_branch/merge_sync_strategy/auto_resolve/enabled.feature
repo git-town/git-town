@@ -6,14 +6,14 @@ Feature: auto-resolve phantom merge conflicts
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | branch-1 | feature | main   | local, origin |
     And the commits
-      | BRANCH   | LOCATION      | MESSAGE                     | FILE NAME        | FILE CONTENT |
-      | branch-1 | local, origin | conflicting branch-1 commit | conflicting_file | content 1    |
+      | BRANCH   | LOCATION      | MESSAGE                     | FILE NAME        | FILE CONTENT     |
+      | branch-1 | local, origin | conflicting branch-1 commit | conflicting_file | branch-1 content |
     And the branches
       | NAME     | TYPE    | PARENT   | LOCATIONS     |
       | branch-2 | feature | branch-1 | local, origin |
     And the commits
-      | BRANCH   | LOCATION | MESSAGE                     | FILE NAME        | FILE CONTENT |
-      | branch-2 | local    | conflicting branch-2 commit | conflicting_file | content 2    |
+      | BRANCH   | LOCATION | MESSAGE                     | FILE NAME        | FILE CONTENT     |
+      | branch-2 | local    | conflicting branch-2 commit | conflicting_file | branch-2 content |
     And Git setting "git-town.sync-feature-strategy" is "merge"
     And origin ships the "branch-1" branch using the "squash-merge" ship-strategy
     And the current branch is "branch-2"

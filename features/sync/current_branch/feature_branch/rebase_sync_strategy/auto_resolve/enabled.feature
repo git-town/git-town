@@ -3,19 +3,23 @@ Feature: auto-resolve phantom merge conflicts
   Background:
     Given a Git repo with origin
     And the branches
+      | NAME     | TYPE    | PARENT | LOCATIONS     |
+      | branch-1 | feature | main   | local, origin |
+    And the commits
+      | BRANCH   | LOCATION      | MESSAGE                     | FILE NAME        | FILE CONTENT     |
+      | branch-1 | local, origin | conflicting branch-1 commit | conflicting_file | branch-1 content |
+    And the branches
       | NAME     | TYPE    | PARENT   | LOCATIONS     |
-      | branch-1 | feature | main     | local, origin |
       | branch-2 | feature | branch-1 | local, origin |
     And the commits
       | BRANCH   | LOCATION | MESSAGE                     | FILE NAME        | FILE CONTENT     |
-      | main     | local    | conflicting main commit     | conflicting_file | main content     |
-      | branch-1 | local    | commit 1                    | other_file       | content          |
       | branch-2 | local    | conflicting branch-2 commit | conflicting_file | branch-2 content |
     And Git setting "git-town.sync-feature-strategy" is "rebase"
-    And origin deletes the "branch-1" branch
+    And origin ships the "branch-1" branch using the "squash-merge" ship-strategy
     And the current branch is "branch-2"
     When I run "git-town sync"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                    |
