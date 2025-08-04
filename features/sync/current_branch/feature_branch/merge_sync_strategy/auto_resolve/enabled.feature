@@ -30,3 +30,16 @@ Feature: auto-resolve phantom merge conflicts
       |          | git merge --no-edit --ff origin/branch-2          |
       |          | git push                                          |
     And no rebase is now in progress
+
+  Scenario: undo
+    When I run "git town undo"
+    Then Git Town runs the commands
+      | BRANCH   | COMMAND                                                                |
+      | branch-2 | git reset --hard {{ sha-initial 'conflicting branch-2 commit' }}       |
+      |          | git push --force-with-lease origin {{ sha 'initial commit' }}:branch-2 |
+      |          | git checkout main                                                      |
+      | main     | git reset --hard {{ sha 'initial commit' }}                            |
+      |          | git branch branch-1 {{ sha-initial 'conflicting branch-1 commit' }}    |
+      |          | git checkout branch-2                                                  |
+    And the initial commits exist now
+    And no rebase is now in progress

@@ -29,8 +29,8 @@ Feature: disable auto-resolve phantom merge conflicts via CLI
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
     And a merge is now in progress
+  # @this
 
-  @this
   Scenario: undo
     When I run "git town undo"
     Then Git Town runs the commands
@@ -38,11 +38,11 @@ Feature: disable auto-resolve phantom merge conflicts via CLI
       | branch-2 | git checkout main                                                   |
       |          | git branch branch-1 {{ sha-initial 'conflicting branch-1 commit' }} |
     And these commits exist now
-      | BRANCH   | LOCATION | MESSAGE                     | FILE NAME        | FILE CONTENT |
-      | main     | origin   | conflicting branch-1 commit | conflicting_file | content 1    |
-      | branch-1 | local    | conflicting branch-1 commit | conflicting_file | content 1    |
-      | branch-2 | local    | conflicting branch-2 commit | conflicting_file | content 2    |
-    And no merge is in progress
+      | BRANCH   | LOCATION      | MESSAGE                     | FILE NAME        | FILE CONTENT |
+      | main     | local, origin | conflicting branch-1 commit | conflicting_file | content 1    |
+      | branch-1 | local         | conflicting branch-1 commit | conflicting_file | content 1    |
+      | branch-2 | local         | conflicting branch-2 commit | conflicting_file | content 2    |
+    And no merge is now in progress
 
   Scenario: run without resolving the conflicts
     When I run "git town continue"
