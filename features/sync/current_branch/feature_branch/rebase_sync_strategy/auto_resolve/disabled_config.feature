@@ -1,4 +1,4 @@
-Feature: disable auto-resolve phantom merge conflicts via CLI flag
+Feature: disable auto-resolve phantom merge conflicts via configuration setting
 
   Background:
     Given a Git repo with origin
