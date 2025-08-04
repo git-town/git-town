@@ -82,14 +82,18 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		}
 	}
 
+	autoResolve, hasAutoResolve := data.AutoResolve.Get()
 	syncFeatureStrategy, hasSyncFeatureStrategy := data.SyncFeatureStrategy.Get()
 	syncPerennialStrategy, hasSyncPerennialStrategy := data.SyncPerennialStrategy.Get()
 	syncPrototypeStrategy, hasSyncPrototypeStrategy := data.SyncPrototypeStrategy.Get()
 	pushHook, hasPushHook := data.PushHook.Get()
 	syncTags, hasSyncTags := data.SyncTags.Get()
 	syncUpstream, hasSyncUpstream := data.SyncUpstream.Get()
-	if hasSyncFeatureStrategy || hasSyncPerennialStrategy || hasSyncPrototypeStrategy || hasPushHook || hasSyncTags || hasSyncUpstream {
+	if hasAutoResolve || hasSyncFeatureStrategy || hasSyncPerennialStrategy || hasSyncPrototypeStrategy || hasPushHook || hasSyncTags || hasSyncUpstream {
 		result.WriteString("\n[sync]\n")
+		if hasAutoResolve {
+			result.WriteString(fmt.Sprintf("auto-resolve = %t\n", autoResolve))
+		}
 		if hasSyncFeatureStrategy {
 			result.WriteString(fmt.Sprintf("feature-strategy = %q\n", syncFeatureStrategy))
 		}

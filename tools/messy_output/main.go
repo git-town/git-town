@@ -28,7 +28,7 @@ func main() {
 			return err
 		}
 		feature := ReadGherkinFile(path)
-		scenarios := FindScenarios(feature, path, dialogStepRegex)
+		scenarios := FindScenarios(feature, dialogStepRegex)
 		for _, error := range AnalyzeScenarios(path, scenarios) {
 			fmt.Println(error)
 			errors += 1
@@ -38,43 +38,24 @@ func main() {
 	os.Exit(errors)
 }
 
+func AnalyzeScenarios(file string, scenarios []ScenarioInfo) []string {
+	result := []string{}
+	for _, scenario := range scenarios {
+		if scenario.HasTag && !scenario.HasStep {
+			result = append(result, fmt.Sprintf("%s:%d  unnecessary @messyoutput tag\n", file, scenario.Line))
+		}
+		if !scenario.HasTag && scenario.HasStep {
+			result = append(result, fmt.Sprintf("%s:%d  missing @messyoutput tag\n", file, scenario.Line))
+		}
+	}
+	return result
+}
+
 func CompileRegex() *regexp.Regexp {
 	return regexp.MustCompile(`^I r[au]n ".*" and enter into the dialogs?:$`)
 }
 
-// indicates whether the given steps contain a step that matches the given regex
-func hasStep(steps []*messages.Step, stepRE *regexp.Regexp) bool {
-	for _, step := range steps {
-		if stepRE.MatchString(step.Text) {
-			return true
-		}
-	}
-	return false
-}
-
-// indicates whether the given tags contain a tag with the given name
-func hasTag(tags []*messages.Tag, name string) bool {
-	for _, tag := range tags {
-		if tag.Name == name {
-			return true
-		}
-	}
-	return false
-}
-
-// parses the content of a Gherkin file
-func ReadGherkinFile(filePath string) *messages.Feature {
-	file := asserts.NoError1(os.Open(filePath))
-	defer file.Close()
-	idGenerator := messages.Incrementing{}
-	document := asserts.NoError1(gherkin.ParseGherkinDocument(file, idGenerator.NewId))
-	if document.Feature == nil {
-		log.Fatalf("%s:  no feature definitions", filePath) //nolint:gocritic
-	}
-	return document.Feature
-}
-
-func FindScenarios(feature *messages.Feature, filePath string, dialogStepRegex *regexp.Regexp) []ScenarioInfo {
+func FindScenarios(feature *messages.Feature, dialogStepRegex *regexp.Regexp) []ScenarioInfo {
 	result := []ScenarioInfo{}
 	featureHasTag := hasTag(feature.Tags, tag)
 	backgroundHasStep := false
@@ -99,15 +80,34 @@ func FindScenarios(feature *messages.Feature, filePath string, dialogStepRegex *
 	return result
 }
 
-func AnalyzeScenarios(file string, scenarios []ScenarioInfo) []string {
-	result := []string{}
-	for _, scenario := range scenarios {
-		if scenario.HasTag && !scenario.HasStep {
-			result = append(result, fmt.Sprintf("%s:%d  unnecessary @messyoutput tag\n", file, scenario.Line))
-		}
-		if !scenario.HasTag && scenario.HasStep {
-			result = append(result, fmt.Sprintf("%s:%d  missing @messyoutput tag\n", file, scenario.Line))
+// parses the content of a Gherkin file
+func ReadGherkinFile(filePath string) *messages.Feature {
+	file := asserts.NoError1(os.Open(filePath))
+	defer file.Close()
+	idGenerator := messages.Incrementing{}
+	document := asserts.NoError1(gherkin.ParseGherkinDocument(file, idGenerator.NewId))
+	if document.Feature == nil {
+		log.Fatalf("%s:  no feature definitions", filePath) //nolint:gocritic
+	}
+	return document.Feature
+}
+
+// indicates whether the given steps contain a step that matches the given regex
+func hasStep(steps []*messages.Step, stepRE *regexp.Regexp) bool {
+	for _, step := range steps {
+		if stepRE.MatchString(step.Text) {
+			return true
 		}
 	}
-	return result
+	return false
+}
+
+// indicates whether the given tags contain a tag with the given name
+func hasTag(tags []*messages.Tag, name string) bool {
+	for _, tag := range tags {
+		if tag.Name == name {
+			return true
+		}
+	}
+	return false
 }

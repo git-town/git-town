@@ -5,19 +5,19 @@ import (
 	"strconv"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/git-town/git-town/v21/internal/cli/colors"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcolors"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks"
 )
 
 // List contains elements and operations common to all BubbleTea-based list implementations.
 type List[S any] struct {
-	Colors       colors.DialogColors // colors to use for help text
-	Cursor       int                 // index of the currently selected row
-	Entries      Entries[S]          // the entries to select from
-	EntryNumber  string              // the manually entered entry number
-	MaxDigits    int                 // how many digits make up an entry number
-	NumberFormat string              // template for formatting the entry number
+	Colors       dialogcolors.DialogColors // colors to use for help text
+	Cursor       int                       // index of the currently selected row
+	Entries      Entries[S]                // the entries to select from
+	EntryNumber  string                    // the manually entered entry number
+	MaxDigits    int                       // how many digits make up an entry number
+	NumberFormat string                    // template for formatting the entry number
 	Status       Status
 }
 
@@ -25,7 +25,7 @@ func NewList[S any](entries Entries[S], cursor int) List[S] {
 	numberLen := gohacks.NumberLength(len(entries))
 	return List[S]{
 		Status:       StatusActive,
-		Colors:       colors.NewDialogColors(),
+		Colors:       dialogcolors.NewDialogColors(),
 		Cursor:       cursor,
 		Entries:      entries,
 		EntryNumber:  "",

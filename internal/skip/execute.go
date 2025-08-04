@@ -37,7 +37,6 @@ type ExecuteArgs struct {
 	Inputs          dialogcomponents.Inputs
 	RootDir         gitdomain.RepoRootDir
 	RunState        runstate.RunState
-	Verbose         configdomain.Verbose
 }
 
 // executes the "skip" command at the given runstate
@@ -75,7 +74,6 @@ func Execute(args ExecuteArgs) error {
 		PendingCommand:          Some(args.RunState.Command),
 		RootDir:                 args.RootDir,
 		RunState:                args.RunState,
-		Verbose:                 args.Verbose,
 	})
 }
 
