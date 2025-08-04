@@ -37,6 +37,7 @@ func (self *RebaseOntoKeepDeleted) Run(args shared.RunArgs) error {
 	if subshell.IsInTest() {
 		time.Sleep(1 * time.Second)
 	}
+	fmt.Println("11111111111111111111111111111111 REBASE ONTO KEEP DELETED")
 	if err := args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseOnto.Location(), self.CommitsToRemove, self.Upstream); err != nil {
 		conflictingFiles, err := args.Git.FileConflictQuickInfos(args.Backend)
 		if err != nil {
