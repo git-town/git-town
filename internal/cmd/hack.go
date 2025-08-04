@@ -130,7 +130,7 @@ func hackCmd() *cobra.Command {
 type hackArgs struct {
 	argv          []string
 	beam          configdomain.Beam
-	cliConfig     cliconfig.CliConfig
+	cliConfig     configdomain.PartialConfig
 	commit        configdomain.Commit
 	commitMessage Option[gitdomain.CommitMessage]
 	detached      configdomain.Detached

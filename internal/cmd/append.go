@@ -128,7 +128,7 @@ func appendCmd() *cobra.Command {
 type executeAppendArgs struct {
 	arg           string
 	beam          configdomain.Beam
-	cliConfig     cliconfig.CliConfig
+	cliConfig     configdomain.PartialConfig
 	commit        configdomain.Commit
 	commitMessage Option[gitdomain.CommitMessage]
 	detached      configdomain.Detached
