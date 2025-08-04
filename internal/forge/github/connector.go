@@ -242,6 +242,12 @@ func DefaultProposalMessage(data forgedomain.ProposalData) string {
 	return forgedomain.CommitBody(data, fmt.Sprintf("%s (#%d)", data.Title, data.Number))
 }
 
+type NewConnectorArgs struct {
+	APIToken  Option[forgedomain.GitHubToken]
+	Log       print.Logger
+	RemoteURL giturl.Parts
+}
+
 func NewConnector(args NewConnectorArgs) (Connector, error) {
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: args.APIToken.String()})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
@@ -264,12 +270,6 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 		client: githubClient,
 		log:    args.Log,
 	}, nil
-}
-
-type NewConnectorArgs struct {
-	APIToken  Option[forgedomain.GitHubToken]
-	Log       print.Logger
-	RemoteURL giturl.Parts
 }
 
 func RepositoryURL(hostNameWithStandardPort string, organization string, repository string) string {

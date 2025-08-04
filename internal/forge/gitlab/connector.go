@@ -218,6 +218,12 @@ func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInte
 	return nil
 }
 
+type NewConnectorArgs struct {
+	APIToken  Option[forgedomain.GitLabToken]
+	Log       print.Logger
+	RemoteURL giturl.Parts
+}
+
 func NewConnector(args NewConnectorArgs) (Connector, error) {
 	gitlabData := Data{
 		APIToken: args.APIToken,
@@ -237,12 +243,6 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 		log:    args.Log,
 	}
 	return connector, nil
-}
-
-type NewConnectorArgs struct {
-	APIToken  Option[forgedomain.GitLabToken]
-	Log       print.Logger
-	RemoteURL giturl.Parts
 }
 
 func parseMergeRequest(mergeRequest *gitlab.BasicMergeRequest) forgedomain.ProposalData {
