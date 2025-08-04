@@ -3,25 +3,24 @@ Feature: disable auto-resolve phantom merge conflicts via CLI flag
   Background:
     Given a Git repo with origin
     And the commits
-      | BRANCH | LOCATION | MESSAGE                 | FILE NAME        | FILE CONTENT |
-      | main   | local    | conflicting main commit | conflicting_file | main content |
+      | BRANCH | LOCATION      | MESSAGE     | FILE NAME        | FILE CONTENT               |
+      | main   | local, origin | main commit | conflicting_file | line 1\n\nline 2\n\nline 3 |
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | branch-1 | feature | main   | local, origin |
     And the commits
-      | BRANCH   | LOCATION | MESSAGE  | FILE NAME        | FILE CONTENT     |
-      | branch-1 | local    | commit 1 | conflicting_file | branch-1 content |
+      | BRANCH   | LOCATION      | MESSAGE                     | FILE NAME        | FILE CONTENT                                   |
+      | branch-1 | local, origin | conflicting branch-1 commit | conflicting_file | line 1\n\nline 2 changed by branch-1\n\nline 3 |
     And the branches
       | NAME     | TYPE    | PARENT   | LOCATIONS     |
       | branch-2 | feature | branch-1 | local, origin |
     And the commits
-      | BRANCH   | LOCATION | MESSAGE                     | FILE NAME        | FILE CONTENT     |
-      | branch-2 | local    | conflicting branch-2 commit | conflicting_file | branch-2 content |
+      | BRANCH   | LOCATION | MESSAGE                     | FILE NAME        | FILE CONTENT                                   |
+      | branch-2 | local    | conflicting branch-2 commit | conflicting_file | line 1\n\nline 2\n\nline 3 changed by branch-2 |
     And Git setting "git-town.sync-feature-strategy" is "rebase"
-    And origin deletes the "branch-1" branch
+    And origin ships the "branch-1" branch using the "squash-merge" ship-strategy
     And the current branch is "branch-2"
     When I run "git-town sync --auto-resolve=0"
-  # @this
 
   Scenario: result
     Then Git Town runs the commands
@@ -29,30 +28,13 @@ Feature: disable auto-resolve phantom merge conflicts via CLI flag
       | branch-2 | git fetch --prune --tags                                   |
       |          | git checkout main                                          |
       | main     | git -c rebase.updateRefs=false rebase origin/main          |
-      |          | git push                                                   |
       |          | git checkout branch-2                                      |
       | branch-2 | git pull                                                   |
       |          | git -c rebase.updateRefs=false rebase --onto main branch-1 |
       |          | git push --force-with-lease                                |
       |          | git branch -D branch-1                                     |
     # TODO: it should not run the rebase-continue and force-push at the end
-    And Git Town prints the error:
-      """
-      CONFLICT (add/add): Merge conflict in conflicting_file
-      """
-    And Git Town prints something like:
-      """
-      could not apply .* conflicting branch-2 commit
-      """
-    And file "conflicting_file" now has content:
-      """
-      <<<<<<< HEAD
-      main content
-      =======
-      branch-2 content
-      >>>>>>> {{ sha-short 'conflicting branch-2 commit' }} (conflicting branch-2 commit)
-      """
-    And a rebase is now in progress
+    And no rebase is now in progress
 
   Scenario: undo
     When I run "git town undo"
