@@ -38,6 +38,11 @@ func SyncUpstream(args Args[configdomain.SyncUpstream]) (Option[configdomain.Syn
 			Data: None[configdomain.SyncUpstream](),
 			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
 		})
+	} else {
+		entries = append(entries, list.Entry[Option[configdomain.SyncUpstream]]{
+			Data: None[configdomain.SyncUpstream](),
+			Text: fmt.Sprintf(messages.DialogUseDefaultValue, args.Defaults),
+		})
 	}
 	entries = append(entries, list.Entries[Option[configdomain.SyncUpstream]]{
 		{

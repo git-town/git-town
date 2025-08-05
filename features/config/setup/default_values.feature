@@ -63,9 +63,6 @@ Feature: Accepting all default values leads to a working setup
       
       [branches]
       main = "main"
-      
-      [sync]
-      upstream = true
       """
 
   Scenario: undo
