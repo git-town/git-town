@@ -56,17 +56,18 @@ Feature: remove existing configuration in Git metadata
       | observed regex              | backspace backspace backspace backspace backspace enter                     |                     |
       | new branch type             | up enter                                                                    |                     |
       | unknown branch type         | up enter                                                                    |                     |
+      | dev remote                  | backspace backspace backspace backspace enter                               | remove the override |
       | origin hostname             | backspace backspace backspace backspace enter                               | remove the override |
       | forge type                  | up up up up up enter                                                        | remove the override |
       | sync feature strategy       | up enter                                                                    |                     |
       | sync perennial strategy     | down enter                                                                  |                     |
       | sync prototype strategy     | up enter                                                                    |                     |
-      | sync upstream               | down enter                                                                  |                     |
-      | sync tags                   | down enter                                                                  |                     |
+      | sync upstream               | up enter                                                                    |                     |
+      | sync tags                   | up enter                                                                    |                     |
       | share new branches          | up enter                                                                    | enable              |
-      | push hook                   | down enter                                                                  | enable              |
-      | ship strategy               | down enter                                                                  |                     |
-      | ship delete tracking branch | down enter                                                                  | disable             |
+      | push hook                   | up enter                                                                    | enable              |
+      | ship strategy               | down down enter                                                             |                     |
+      | ship delete tracking branch | up enter                                                                    | disable             |
       | config storage              | enter                                                                       | git metadata        |
 
   Scenario: result
