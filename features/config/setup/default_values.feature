@@ -35,7 +35,6 @@ Feature: Accepting all default values leads to a working setup
       | ship delete tracking branch | enter      |
       | config storage              | down enter |
 
-  @debug @this
   Scenario: result
     Then Git Town runs no commands
     And the main branch is still not set
