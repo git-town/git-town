@@ -25,8 +25,7 @@ Typically that's the "origin" remote.
 
 func DevRemote(remotes gitdomain.Remotes, args Args[gitdomain.Remote]) (Option[gitdomain.Remote], dialogdomain.Exit, error) {
 	options := list.Entries[Option[gitdomain.Remote]]{}
-	global, hasGlobal := args.Global.Get()
-	if hasGlobal {
+	if global, hasGlobal := args.Global.Get(); hasGlobal {
 		options = append(options, list.Entry[Option[gitdomain.Remote]]{
 			Data: None[gitdomain.Remote](),
 			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
