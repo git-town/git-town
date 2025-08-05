@@ -113,7 +113,6 @@ Feature: enter the GitLab API token
       | git config git-town.gitlab-connector api        |
     And global Git setting "git-town.gitlab-token" is now "gltok"
 
-  @debug @this
   Scenario: edit global GitLab token
     Given my repo's "origin" remote is "git@gitlab.com:git-town/git-town.git"
     And global Git setting "git-town.gitlab-token" is "123"
