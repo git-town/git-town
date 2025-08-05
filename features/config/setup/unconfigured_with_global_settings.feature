@@ -38,6 +38,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | observed regex              | enter       |
       | new branch type             | enter       |
       | unknown branch type         | enter       |
+      | dev remote                  | enter       |
       | origin hostname             | enter       |
       | forge type                  | enter       |
       | sync feature strategy       | enter       |
