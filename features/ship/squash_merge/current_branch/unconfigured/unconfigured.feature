@@ -14,10 +14,10 @@ Feature: ask for missing configuration information
       | perennial regex             | enter |
       | feature regex               | enter |
       | contribution regex          | enter |
-      | dev remote                  | enter |
       | observed regex              | enter |
       | new branch type             | enter |
       | unknown branch type         | enter |
+      | dev remote                  | enter |
       | origin hostname             | enter |
       | forge type                  | enter |
       | sync feature strategy       | enter |
