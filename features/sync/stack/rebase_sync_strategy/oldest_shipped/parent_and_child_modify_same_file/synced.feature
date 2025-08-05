@@ -1,4 +1,4 @@
-Feature: auto-resolve phantom merge conflicts in a synced stack where parent modifies a file and gets shipped, and the child modifies the same file
+Feature: sync a synced stack where parent modifies a file and gets shipped, and the child modifies the same file
 
   Background:
     Given a Git repo with origin
