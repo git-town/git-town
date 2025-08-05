@@ -288,11 +288,11 @@ Here are some best practices to minimize phantom merge conflicts:
      [docs](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges#squashing-and-merging-a-long-running-branch)
      for details.
 
-4. If your branches contain too many commits, and you need to resolve the same
-   conflict for commit, [compress](commands/compress.md) your feature branches
-   so that each branch contains only one commit.
+4. If a feature branch has too many commits and you're resolving the same
+   conflicts repeatedly, [compress](commands/compress.md) it down to a single
+   commit.
 
-5. Slim down your feature branches so that each branch performs only one change.
-   This reduces the amount of information you need to process when resolving
-   merge conflicts, and makes it easier to see which branch makes which change
-   and why, and what the correct resolution is.
+5. Focus your feature branches to implement only a single change. This reduces
+   the amount of context you need to process when resolving merge conflicts, and
+   makes it easier to see which branch makes which change and why, and what the
+   correct resolution is.
