@@ -32,6 +32,11 @@ func ShareNewBranches(args Args[configdomain.ShareNewBranches]) (Option[configdo
 			Data: None[configdomain.ShareNewBranches](),
 			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
 		})
+	} else {
+		entries = append(entries, list.Entry[Option[configdomain.ShareNewBranches]]{
+			Data: None[configdomain.ShareNewBranches](),
+			Text: fmt.Sprintf(messages.DialogUseDefaultValue, args.Defaults),
+		})
 	}
 	entries = append(entries, list.Entries[Option[configdomain.ShareNewBranches]]{
 		{
