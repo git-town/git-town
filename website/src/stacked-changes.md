@@ -243,51 +243,39 @@ the order of branches.
 
 #### Avoid phantom conflicts
 
-_Phantom conflicts_ occur when Git reports a merge or rebase conflict that, when
-looked at with more context, isn't a real conflict. Phantom conflicts can occur
-when multiple branches in a stack modify the same line in the same file, and you
-ship using squash-merges.
+_Phantom conflicts_ occur when Git reports a merge or rebase conflict that -
+when looked at with more context - isn't a real conflict. Phantom conflicts can
+occur when multiple branches in a stack modify the same line in the same file,
+and you ship using squash-merges.
 
-This can create situations where you just shipped a branch, the main branch
-contains the same changes as a branch
+After you ship the oldest branch of such a stack, the main branch contains a new
+commit that makes the same changes as the shipped branch, but as a different
+commit than the one(s) on the shipped branch. As this new commit populates
+through the stack in the next sync, Git sees sees two changes to the same lines
+and assumes a conflict.
 
-At some point you ship the oldest branch of that stack using a squash-merge. Now
-the main branch contains a new commit that makes the same changes as the branch
-that just shipped, but as a different commit than the one(s) that existed on the
-shipped branch. When you sync the stack, its branches merge or rebase that new
-commit on the main branch. Git sees a new commit that changes the same lines as
-the currently syncing branch, and lets the user sort this out. This can happen
-even though those exact conflicts were already resolved earlier in the stack's
-development, because the commit on main is a new commit.
+Git Town can resolve these phantom conflicts because it tracks the branch
+hierarchy, can investigate such conflicts, and execute multiple Git commands to
+resolve them.
 
-Git cannot resolve these phantom conflicts on its own because it only sees the
-immediate diff: two changes to the same lines. It doesn't know about the
-stacking structure or prior conflict resolutions. Git Town can resolve phantom
-conflicts because it tracks the full branch hierarchy, knows which branches were
-recently removed, and remembers the state of each branch from the last sync.
-That context allows it to resolve conflicts that are merely apparent.
+Here are some best practices to minimize phantom merge conflicts:
 
-There are several things you can do to avoid phantom merge conflicts.
+1. Sync frequently. In a synced stack, each branch builds directly on top of its
+   parent, so changes are linear and easy for Git to reconcile. In an unsynced
+   stack, sibling branches evolve concurrently, making conflicts more likely,
+   especially when they touch the same files.
 
-1. Sync frequently. In a synced stack, the changes made by each branch are on
-   top of (or after) the changes made by the parent branch. In an unsynced
-   stack, the changes made by each branch happen concurrently with the changes
-   of the parent branch. It's self-evident that Git will have a harder time
-   resolving changes that happen concurrently to the same file, compared to
-   changes that happen one after another.
+   If you are hesitant to sync because it takes too long, use the
+   [--detached](commands/sync.md#-d--detached) and
+   [--no-push](commands/sync.md#--no-push) flags to speed it up.
 
-2. If syncing your code takes too long, utilize the
-   [--detached](commands/sync.md#-d--detached) and/or
-   [--no-push](commands/sync.md#--no-push) flags to make it faster, so that you
-   can sync regularly.
-
-3. Enable Git's [rerere](https://git-scm.com/book/en/v2/Git-Tools-Rerere)
+2. Enable Git's [rerere](https://git-scm.com/book/en/v2/Git-Tools-Rerere)
    [feature](https://git-scm.com/docs/git-rerere). This makes Git record how you
    resolve specific merge conflicts. If Git encounters the same conflicts again,
    it can now use the recorded solution to resolve them on its own now, instead
    of asking you to resolve them again.
 
-4. Ship using a
+3. Ship using a
    [fast-forward merge](https://git-scm.com/docs/git-merge#_fast_forward_merge).
    This ensures the new commits on main are bit-for-bit identical to those on
    the shipped branch, allowing Git to recognize them as shared history in
@@ -302,11 +290,11 @@ There are several things you can do to avoid phantom merge conflicts.
    [GitHub’s documentation](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges#squashing-and-merging-a-long-running-branch)
    on this issue.
 
-5. If your branches contain too many commits, and you need to resolve the same
+4. If your branches contain too many commits, and you need to resolve the same
    conflict for commit, [compress](commands/compress.md) your feature branches
    so that each branch contains only one commit.
 
-6. Slim down your feature branches so that each branch performs only one change.
+5. Slim down your feature branches so that each branch performs only one change.
    This reduces the amount of information you need to process when resolving
    merge conflicts, and makes it easier to see which branch makes which change
    and why, and what the correct resolution is.
