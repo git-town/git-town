@@ -16,6 +16,7 @@ Feature: don't ask for perennial branches if no branches that could be perennial
       | observed regex              | enter      |                                             |
       | new branch type             | enter      |                                             |
       | unknown branch type         | enter      |                                             |
+      | dev remote                  | enter      |                                             |
       | origin hostname             | enter      |                                             |
       | forge type                  | enter      |                                             |
       | sync feature strategy       | enter      |                                             |
