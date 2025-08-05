@@ -1,4 +1,4 @@
-Feature: disable auto-resolve phantom merge conflicts via CLI
+Feature: disable auto-resolution of phantom merge conflicts via CLI flag when parent and child modify the same file and the parent gets shipped
 
   Background:
     Given a Git repo with origin

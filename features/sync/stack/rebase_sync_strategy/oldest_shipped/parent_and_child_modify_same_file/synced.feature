@@ -1,4 +1,4 @@
-Feature: auto-resolve phantom merge conflicts
+Feature: auto-resolve phantom merge conflicts after the oldest branch ships in a synced stack
 
   Background:
     Given a Git repo with origin

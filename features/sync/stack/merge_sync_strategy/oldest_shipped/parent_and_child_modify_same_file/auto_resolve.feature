@@ -1,4 +1,4 @@
-Feature: auto-resolve phantom merge conflicts
+Feature: auto-resolve phantom merge conflicts when parent and child modify the same file and the parent gets shipped
 
   Background:
     Given a Git repo with origin
