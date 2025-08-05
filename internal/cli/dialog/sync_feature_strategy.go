@@ -36,7 +36,7 @@ func SyncFeatureStrategy(args Args[configdomain.SyncFeatureStrategy]) (Option[co
 	} else {
 		entries = append(entries, list.Entry[Option[configdomain.SyncFeatureStrategy]]{
 			Data: None[configdomain.SyncFeatureStrategy](),
-			Text: fmt.Sprintf(messages.DialogUseDefaultValue, configdomain.SyncFeatureStrategyMerge),
+			Text: fmt.Sprintf(messages.DialogUseDefaultValue, args.Defaults),
 		})
 	}
 	entries = append(entries, list.Entries[Option[configdomain.SyncFeatureStrategy]]{
