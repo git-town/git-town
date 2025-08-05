@@ -1,5 +1,11 @@
 # Git Town Changelog
 
+## 21.4.1 (2025-08-05)
+
+#### Bug Fixes
+
+- Fixes parsing of the new Git metadata config entries that disable auto-resolving phantom conflicts ([#5326](https://github.com/git-town/git-town/pull/5326)).
+
 ## 21.4.0 (2025-08-01)
 
 #### New Features
