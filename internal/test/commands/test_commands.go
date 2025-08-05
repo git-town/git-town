@@ -146,7 +146,7 @@ func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, pare
 				var deleted bool
 				filecontent, deleted = self.FileContentInCommit(commit.SHA.Location(), commit.FileName)
 				if deleted {
-					filecontent = deletedText
+					commit.FileName += " " + deletedText
 				}
 			}
 			commit.FileContent = filecontent
@@ -309,7 +309,7 @@ func (self *TestCommands) FilesInBranches(mainBranch gitdomain.LocalBranchName) 
 		for _, file := range files {
 			content, deleted := self.FileContentInCommit(branch.Location(), file)
 			if deleted {
-				content = deletedText
+				file += " " + deletedText
 			}
 			if branch == lastBranch {
 				result.AddRow("", file, content)

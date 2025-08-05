@@ -69,12 +69,12 @@ Feature: auto-resolve phantom merge conflicts in a synced stack where the parent
       |          | git merge --no-edit --ff origin/branch-2 |
       |          | git push                                 |
     And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE                           | FILE NAME | FILE CONTENT     |
-      | main     | local, origin | main commit                       | file      | branch-1 content |
-      |          |               | branch-1-commit                   | file      | (deleted)        |
-      | branch-2 | local, origin | branch-1-commit                   | file      | (deleted)        |
-      |          |               | branch-2 commit                   | file      | branch-2 content |
-      |          |               | Merge branch 'main' into branch-2 |           |                  |
+      | BRANCH   | LOCATION      | MESSAGE                           | FILE NAME      | FILE CONTENT     |
+      | main     | local, origin | main commit                       | file           | branch-1 content |
+      |          |               | branch-1-commit                   | file (deleted) |                  |
+      | branch-2 | local, origin | branch-1-commit                   | file (deleted) |                  |
+      |          |               | branch-2 commit                   | file           | branch-2 content |
+      |          |               | Merge branch 'main' into branch-2 |                |                  |
 
   Scenario: resolve, commit, and continue
     When I ran "git add file"
@@ -85,9 +85,9 @@ Feature: auto-resolve phantom merge conflicts in a synced stack where the parent
       | branch-2 | git merge --no-edit --ff origin/branch-2 |
       |          | git push                                 |
     And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE                           | FILE NAME | FILE CONTENT     |
-      | main     | local, origin | main commit                       | file      | branch-1 content |
-      |          |               | branch-1-commit                   | file      | (deleted)        |
-      | branch-2 | local, origin | branch-1-commit                   | file      | (deleted)        |
-      |          |               | branch-2 commit                   | file      | branch-2 content |
-      |          |               | Merge branch 'main' into branch-2 |           |                  |
+      | BRANCH   | LOCATION      | MESSAGE                           | FILE NAME      | FILE CONTENT     |
+      | main     | local, origin | main commit                       | file           | branch-1 content |
+      |          |               | branch-1-commit                   | file (deleted) |                  |
+      | branch-2 | local, origin | branch-1-commit                   | file (deleted) |                  |
+      |          |               | branch-2 commit                   | file           | branch-2 content |
+      |          |               | Merge branch 'main' into branch-2 |                |                  |
