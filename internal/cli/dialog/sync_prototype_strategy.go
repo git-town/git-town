@@ -31,6 +31,11 @@ func SyncPrototypeStrategy(args Args[configdomain.SyncPrototypeStrategy]) (Optio
 			Data: None[configdomain.SyncPrototypeStrategy](),
 			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
 		})
+	} else {
+		entries = append(entries, list.Entry[Option[configdomain.SyncPrototypeStrategy]]{
+			Data: None[configdomain.SyncPrototypeStrategy](),
+			Text: fmt.Sprintf(messages.DialogUseDefaultValue, args.Defaults),
+		})
 	}
 	entries = append(entries, list.Entries[Option[configdomain.SyncPrototypeStrategy]]{
 		{
