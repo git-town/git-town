@@ -1,8 +1,8 @@
 # auto-resolve
 
 Git Town automatically resolves
-[phantom merge conflicts](../stacked-changes.md#avoid-phantom-merge-conflicts)
-by default. If you run into a bug related to auto-resolution, please
+[phantom merge conflicts](../stacked-changes.md#avoid-phantom-conflicts) by
+default. If you run into a bug related to auto-resolution, please
 [report it](https://github.com/git-town/git-town/issues) and then use this
 configuration setting to disable auto-resolution as a temporary workaround until
 the issue is addressed.
