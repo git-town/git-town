@@ -16,7 +16,7 @@ Feature: Configure a different development remote
       | observed regex              | enter      |
       | new branch type             | enter      |
       | unknown branch type         | enter      |
-      | dev-remote                  | up enter   |
+      | dev-remote                  | down enter |
       | origin hostname             | enter      |
       | forge type                  | enter      |
       | sync feature strategy       | enter      |
@@ -32,32 +32,15 @@ Feature: Configure a different development remote
 
   Scenario: result
     Then Git Town runs the commands
-      | COMMAND                                         |
-      | git config --unset git-town.main-branch         |
-      | git config git-town.unknown-branch-type feature |
+      | COMMAND                                 |
+      | git config --unset git-town.main-branch |
     And the configuration file is now:
       """
       # More info around this file at https://www.git-town.com/configuration-file
-
+      
       [branches]
       main = "main"
-
-      [create]
-      new-branch-type = "feature"
-      share-new-branches = "no"
-
+      
       [hosting]
       dev-remote = "fork"
-
-      [ship]
-      delete-tracking-branch = true
-      strategy = "api"
-
-      [sync]
-      feature-strategy = "merge"
-      perennial-strategy = "ff-only"
-      prototype-strategy = "merge"
-      push-hook = true
-      tags = true
-      upstream = true
       """
