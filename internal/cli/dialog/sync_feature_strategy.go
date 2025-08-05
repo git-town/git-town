@@ -33,6 +33,11 @@ func SyncFeatureStrategy(args Args[configdomain.SyncFeatureStrategy]) (Option[co
 			Data: None[configdomain.SyncFeatureStrategy](),
 			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
 		})
+	} else {
+		entries = append(entries, list.Entry[Option[configdomain.SyncFeatureStrategy]]{
+			Data: None[configdomain.SyncFeatureStrategy](),
+			Text: fmt.Sprintf(messages.DialogUseDefaultValue, configdomain.SyncFeatureStrategyMerge),
+		})
 	}
 	entries = append(entries, list.Entries[Option[configdomain.SyncFeatureStrategy]]{
 		{

@@ -31,6 +31,11 @@ func SyncPerennialStrategy(args Args[configdomain.SyncPerennialStrategy]) (Optio
 			Data: None[configdomain.SyncPerennialStrategy](),
 			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
 		})
+	} else {
+		entries = append(entries, list.Entry[Option[configdomain.SyncPerennialStrategy]]{
+			Data: None[configdomain.SyncPerennialStrategy](),
+			Text: fmt.Sprintf(messages.DialogUseDefaultValue, args.Defaults),
+		})
 	}
 	entries = append(entries, list.Entries[Option[configdomain.SyncPerennialStrategy]]{
 		{
