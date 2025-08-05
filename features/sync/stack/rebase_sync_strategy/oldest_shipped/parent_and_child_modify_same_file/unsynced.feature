@@ -7,9 +7,9 @@ Feature: auto-resolve phantom merge conflicts in an unsynced stack where parent 
       | branch-1 | feature | main     | local, origin |
       | branch-2 | feature | branch-1 | local, origin |
     And the commits
-      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                   |
-      | branch-1 | local, origin | branch-1 commit | file      | line 1\n\nline 2 changed by branch-1\n\nline 3 |
-      | branch-2 | local         | branch-2 commit | file      | line 1\n\nline 2\n\nline 3 changed by branch-2 |
+      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                         |
+      | branch-1 | local, origin | branch-1 commit | file      | line 1 changed by branch-1\n\nline 2 |
+      | branch-2 | local         | branch-2 commit | file      | line 1\n\nline 2 changed by branch-2 |
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     And origin ships the "branch-1" branch using the "squash-merge" ship-strategy
     And the current branch is "branch-2"
@@ -30,9 +30,9 @@ Feature: auto-resolve phantom merge conflicts in an unsynced stack where parent 
       |          | git push --force-with-lease                                |
       |          | git branch -D branch-1                                     |
     And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                   |
-      | main     | local, origin | branch-1 commit | file      | line 1\n\nline 2 changed by branch-1\n\nline 3 |
-      | branch-2 | local, origin | branch-2 commit | file      | line 1\n\nline 2\n\nline 3 changed by branch-2 |
+      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                         |
+      | main     | local, origin | branch-1 commit | file      | line 1 changed by branch-1\n\nline 2 |
+      | branch-2 | local, origin | branch-2 commit | file      | line 1\n\nline 2 changed by branch-2 |
     # TODO: Fix this bug related to https://github.com/git-town/git-town/issues/5156
     # In this test, branch-1 and branch-2 change the same file.
     # After shipping branch-1 and syncing branch-2, branch-2 does not contain the changes made by branch-1.
