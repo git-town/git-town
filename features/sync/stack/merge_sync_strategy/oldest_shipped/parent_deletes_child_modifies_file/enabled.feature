@@ -29,7 +29,7 @@ Feature: auto-resolve phantom merge conflicts in a synced stack where the parent
       |          | git branch -D branch-1                            |
       |          | git checkout branch-2                             |
       | branch-2 | git merge --no-edit --ff main                     |
-    # This is an unresolved phantom merge conflict.
+    # TODO: auto-resolve this phantom merge conflict.
     # Branch-1 deletes "file" and branch-2 creates it again.
     # Branch-2 was properly synced with branch-1.
     # When branch-1 got shipped, the user needs to tell Git again that branch-2 should create "file".
