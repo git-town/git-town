@@ -32,7 +32,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND           |
       | feature | git merge --abort |
-    And no merge is in progress
+    And no merge is now in progress
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local, origin | conflicting main commit    | conflicting_file | main content    |
@@ -50,7 +50,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     And Git Town runs the commands
       | BRANCH  | COMMAND           |
       | feature | git merge --abort |
-    And no merge is in progress
+    And no merge is now in progress
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local, origin | conflicting main commit    | conflicting_file | main content    |
@@ -74,7 +74,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       |         | git merge --no-edit --ff origin/feature |
       |         | git push                                |
     And all branches are now synchronized
-    And no merge is in progress
+    And no merge is now in progress
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
@@ -89,7 +89,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       |         | git merge --no-edit --ff origin/feature |
       |         | git push                                |
     And all branches are now synchronized
-    And no merge is in progress
+    And no merge is now in progress
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT         |
       | main    | conflicting_file | main content    |
@@ -104,7 +104,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       | feature | git merge --no-edit --ff origin/feature |
       |         | git push                                |
     And all branches are now synchronized
-    And no merge is in progress
+    And no merge is now in progress
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |

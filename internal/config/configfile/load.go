@@ -55,6 +55,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	var hostingOriginHostname Option[configdomain.HostingOriginHostname]
 	var mainBranch Option[gitdomain.LocalBranchName]
 	var newBranchType Option[configdomain.NewBranchType]
+	var autoResolve Option[configdomain.AutoResolve]
 	var observedRegex Option[configdomain.ObservedRegex]
 	var perennialBranches gitdomain.LocalBranchNames
 	var perennialRegex Option[configdomain.PerennialRegex]
@@ -203,6 +204,9 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		}
 	}
 	if data.Sync != nil {
+		if data.Sync.AutoResolve != nil {
+			autoResolve = Some(configdomain.AutoResolve(*data.Sync.AutoResolve))
+		}
 		if data.Sync.FeatureStrategy != nil {
 			syncFeatureStrategy, err = configdomain.ParseSyncFeatureStrategy(*data.Sync.FeatureStrategy)
 			ec.Check(err)
@@ -248,6 +252,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		Lineage:                  configdomain.Lineage{},
 		MainBranch:               mainBranch,
 		NewBranchType:            newBranchType,
+		AutoResolve:              autoResolve,
 		ObservedRegex:            observedRegex,
 		Offline:                  None[configdomain.Offline](),
 		PerennialBranches:        perennialBranches,

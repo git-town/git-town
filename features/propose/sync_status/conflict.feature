@@ -33,7 +33,7 @@ Feature: merge conflict
     Then Git Town runs the commands
       | BRANCH  | COMMAND           |
       | feature | git merge --abort |
-    And no merge is in progress
+    And no merge is now in progress
     And the initial commits exist now
 
   Scenario: continue with unresolved conflict

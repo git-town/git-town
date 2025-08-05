@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/cucumber/godog"
+	"github.com/git-town/git-town/v21/internal/gohacks"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/test/handlebars"
 	"github.com/sergi/go-diff/diffmatchpatch"
@@ -106,7 +107,7 @@ func (self *DataTable) String() string {
 	result := ""
 	for row := range self.Cells {
 		for col := range self.Cells[row] {
-			result += fmt.Sprintf(formatStrings[col], self.Cells[row][col])
+			result += fmt.Sprintf(formatStrings[col], gohacks.EscapeNewLines(self.Cells[row][col]))
 		}
 		result += "|\n"
 	}

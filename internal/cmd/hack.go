@@ -67,6 +67,7 @@ it also syncs all affected branches.
 )
 
 func hackCmd() *cobra.Command {
+	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
 	addBeamFlag, readBeamFlag := flags.Beam()
 	addCommitFlag, readCommitFlag := flags.Commit()
 	addDetachedFlag, readDetachedFlag := flags.Detached()
@@ -82,6 +83,7 @@ func hackCmd() *cobra.Command {
 		Short:   hackDesc,
 		Long:    cmdhelpers.Long(hackDesc, hackHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
+			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
 			beam, errBeam := readBeamFlag(cmd)
 			commit, errCommit := readCommitFlag(cmd)
 			commitMessage, errCommitMessage := readCommitMessageFlag(cmd)
@@ -90,15 +92,16 @@ func hackCmd() *cobra.Command {
 			propose, errPropose := readProposeFlag(cmd)
 			prototype, errPrototype := readPrototypeFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errBeam, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errVerbose); err != nil {
+			if err := cmp.Or(errAutoResolve, errBeam, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errVerbose); err != nil {
 				return err
 			}
 			if commitMessage.IsSome() || propose.IsTrue() {
 				commit = true
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				DryRun:  dryRun,
-				Verbose: verbose,
+				AutoResolve: autoResolve,
+				DryRun:      dryRun,
+				Verbose:     verbose,
 			})
 			return executeHack(hackArgs{
 				argv:          args,
@@ -117,10 +120,22 @@ func hackCmd() *cobra.Command {
 	addCommitMessageFlag(&cmd)
 	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
+	addAutoResolveFlag(&cmd)
 	addProposeFlag(&cmd)
 	addPrototypeFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
+}
+
+type hackArgs struct {
+	argv          []string
+	beam          configdomain.Beam
+	cliConfig     configdomain.PartialConfig
+	commit        configdomain.Commit
+	commitMessage Option[gitdomain.CommitMessage]
+	detached      configdomain.Detached
+	propose       configdomain.Propose
+	prototype     configdomain.Prototype
 }
 
 func executeHack(args hackArgs) error {
@@ -176,6 +191,21 @@ type convertToFeatureData struct {
 	targetBranches configdomain.BranchesAndTypes
 }
 
+type createFeatureBranchArgs struct {
+	appendData            appendFeatureData
+	backend               subshelldomain.RunnerQuerier
+	beginBranchesSnapshot gitdomain.BranchesSnapshot
+	beginConfigSnapshot   undoconfig.ConfigSnapshot
+	beginStashSize        gitdomain.StashSize
+	branchInfosLastRun    Option[gitdomain.BranchInfos]
+	commandsCounter       Mutable[gohacks.Counter]
+	dryRun                configdomain.DryRun
+	finalMessages         stringslice.Collector
+	frontend              subshelldomain.Runner
+	git                   git.Commands
+	rootDir               gitdomain.RepoRootDir
+}
+
 func createFeatureBranch(args createFeatureBranchArgs) error {
 	runProgram := appendProgram(args.backend, args.appendData, args.finalMessages, true)
 	runState := runstate.RunState{
@@ -211,21 +241,6 @@ func createFeatureBranch(args createFeatureBranchArgs) error {
 		RootDir:                 args.rootDir,
 		RunState:                runState,
 	})
-}
-
-type createFeatureBranchArgs struct {
-	appendData            appendFeatureData
-	backend               subshelldomain.RunnerQuerier
-	beginBranchesSnapshot gitdomain.BranchesSnapshot
-	beginConfigSnapshot   undoconfig.ConfigSnapshot
-	beginStashSize        gitdomain.StashSize
-	branchInfosLastRun    Option[gitdomain.BranchInfos]
-	commandsCounter       Mutable[gohacks.Counter]
-	dryRun                configdomain.DryRun
-	finalMessages         stringslice.Collector
-	frontend              subshelldomain.Runner
-	git                   git.Commands
-	rootDir               gitdomain.RepoRootDir
 }
 
 func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data hackData, exit dialogdomain.Exit, err error) {
@@ -394,15 +409,11 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data hackDat
 	return data, false, err
 }
 
-type hackArgs struct {
-	argv          []string
-	beam          configdomain.Beam
-	cliConfig     configdomain.PartialConfig
-	commit        configdomain.Commit
-	commitMessage Option[gitdomain.CommitMessage]
-	detached      configdomain.Detached
-	propose       configdomain.Propose
-	prototype     configdomain.Prototype
+type convertToFeatureBranchArgs struct {
+	beginConfigSnapshot undoconfig.ConfigSnapshot
+	config              config.ValidatedConfig
+	makeFeatureData     convertToFeatureData
+	verbose             configdomain.Verbose
 }
 
 func convertToFeatureBranch(repo execute.OpenRepoResult, args convertToFeatureBranchArgs) error {
@@ -437,11 +448,4 @@ func convertToFeatureBranch(repo execute.OpenRepoResult, args convertToFeatureBr
 		TouchedBranches:       args.makeFeatureData.targetBranches.Keys().BranchNames(),
 		Verbose:               args.verbose,
 	})
-}
-
-type convertToFeatureBranchArgs struct {
-	beginConfigSnapshot undoconfig.ConfigSnapshot
-	config              config.ValidatedConfig
-	makeFeatureData     convertToFeatureData
-	verbose             configdomain.Verbose
 }

@@ -8,13 +8,13 @@ import (
 
 	"codeberg.org/mvdkleijn/forgejo-sdk/forgejo/v2"
 	"github.com/git-town/git-town/v21/internal/browser"
-	"github.com/git-town/git-town/v21/internal/cli/colors"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/git/giturl"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
+	"github.com/git-town/git-town/v21/pkg/colors"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -255,6 +255,12 @@ func FilterPullRequests2(pullRequests []*forgejo.PullRequest, branch gitdomain.L
 	return result
 }
 
+type NewConnectorArgs struct {
+	APIToken  Option[forgedomain.CodebergToken]
+	Log       print.Logger
+	RemoteURL giturl.Parts
+}
+
 // NewConnector provides a new connector instance.
 func NewConnector(args NewConnectorArgs) (Connector, error) {
 	codebergClient, err := forgejo.NewClient("https://"+args.RemoteURL.Host, forgejo.SetToken(args.APIToken.String()))
@@ -268,12 +274,6 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 		client: codebergClient,
 		log:    args.Log,
 	}, err
-}
-
-type NewConnectorArgs struct {
-	APIToken  Option[forgedomain.CodebergToken]
-	Log       print.Logger
-	RemoteURL giturl.Parts
 }
 
 func parsePullRequest(pullRequest *forgejo.PullRequest) forgedomain.ProposalData {

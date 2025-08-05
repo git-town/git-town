@@ -9,13 +9,13 @@ import (
 
 	"code.gitea.io/sdk/gitea"
 	"github.com/git-town/git-town/v21/internal/browser"
-	"github.com/git-town/git-town/v21/internal/cli/colors"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/git/giturl"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
+	"github.com/git-town/git-town/v21/pkg/colors"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"golang.org/x/oauth2"
 )
@@ -255,6 +255,12 @@ func FilterPullRequests2(pullRequests []*gitea.PullRequest, branch gitdomain.Loc
 	return result
 }
 
+type NewConnectorArgs struct {
+	APIToken  Option[forgedomain.GiteaToken]
+	Log       print.Logger
+	RemoteURL giturl.Parts
+}
+
 // NewGiteaConfig provides Gitea configuration data if the current repo is hosted on Gitea,
 // otherwise nil.
 func NewConnector(args NewConnectorArgs) Connector {
@@ -271,12 +277,6 @@ func NewConnector(args NewConnectorArgs) Connector {
 		client: giteaClient,
 		log:    args.Log,
 	}
-}
-
-type NewConnectorArgs struct {
-	APIToken  Option[forgedomain.GiteaToken]
-	Log       print.Logger
-	RemoteURL giturl.Parts
 }
 
 func parsePullRequest(pullRequest *gitea.PullRequest) forgedomain.ProposalData {

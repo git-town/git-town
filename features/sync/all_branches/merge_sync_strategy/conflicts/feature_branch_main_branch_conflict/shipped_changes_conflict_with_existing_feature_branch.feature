@@ -53,7 +53,7 @@ Feature: shipped changes conflict with multiple existing feature branches
       |        | git checkout main    |
       | main   | git push --tags      |
     And all branches are now synchronized
-    And no merge is in progress
+    And no merge is now in progress
     And these committed files exist now
       | BRANCH | NAME             | CONTENT          |
       | main   | conflicting_file | beta content     |

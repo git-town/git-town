@@ -70,6 +70,7 @@ func appendCmd() *cobra.Command {
 	addCommitMessageFlag, readCommitMessageFlag := flags.CommitMessage("the commit message")
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
 	addProposeFlag, readProposeFlag := flags.Propose()
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
@@ -85,18 +86,20 @@ func appendCmd() *cobra.Command {
 			commitMessage, errCommitMessage := readCommitMessageFlag(cmd)
 			detached, errDetached := readDetachedFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
+			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
 			propose, errPropose := readProposeFlag(cmd)
 			prototype, errPrototype := readPrototypeFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errBeam, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errVerbose); err != nil {
+			if err := cmp.Or(errBeam, errCommit, errCommitMessage, errDetached, errDryRun, errAutoResolve, errPropose, errPrototype, errVerbose); err != nil {
 				return err
 			}
 			if commitMessage.IsSome() || propose.IsTrue() {
 				commit = true
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				DryRun:  dryRun,
-				Verbose: verbose,
+				AutoResolve: autoResolve,
+				DryRun:      dryRun,
+				Verbose:     verbose,
 			})
 			return executeAppend(executeAppendArgs{
 				arg:           args[0],
@@ -115,10 +118,22 @@ func appendCmd() *cobra.Command {
 	addCommitMessageFlag(&cmd)
 	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
+	addAutoResolveFlag(&cmd)
 	addProposeFlag(&cmd)
 	addPrototypeFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
+}
+
+type executeAppendArgs struct {
+	arg           string
+	beam          configdomain.Beam
+	cliConfig     configdomain.PartialConfig
+	commit        configdomain.Commit
+	commitMessage Option[gitdomain.CommitMessage]
+	detached      configdomain.Detached
+	propose       configdomain.Propose
+	prototype     configdomain.Prototype
 }
 
 func executeAppend(args executeAppendArgs) error {
@@ -178,17 +193,6 @@ func executeAppend(args executeAppendArgs) error {
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
 	})
-}
-
-type executeAppendArgs struct {
-	arg           string
-	beam          configdomain.Beam
-	cliConfig     configdomain.PartialConfig
-	commit        configdomain.Commit
-	commitMessage Option[gitdomain.CommitMessage]
-	detached      configdomain.Detached
-	propose       configdomain.Propose
-	prototype     configdomain.Prototype
 }
 
 type appendFeatureData struct {
