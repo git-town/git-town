@@ -1,4 +1,4 @@
-Feature: auto-resolve phantom merge conflicts after the oldest branch ships in a synced stack
+Feature: sync an already synced stack where parent and child modify the same file, and the oldest branch ships
 
   Background:
     Given a Git repo with origin
