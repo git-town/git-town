@@ -245,7 +245,7 @@ the order of branches.
 
 Phantom merge conflicts are situations where Git reports a conflict, even though
 (if you understand the full context) there is no real conflict. A common example
-is having a stack in which multple branches change the same file, and shipping
+is having a stack in which multiple branches change the same file, and shipping
 the oldest branch of that stack using a squash merge. Afterwards, the main
 branch contains a new commit that differs from the original commit on the
 shipped feature branch. If any downstream branches in the stack touch the same
