@@ -15,6 +15,7 @@ Feature: Accepting all default values in a brand-new Git repo leads to a working
       | observed regex              | enter      |
       | new branch type             | enter      |
       | unknown branch type         | enter      |
+      | dev remote                  | enter      |
       | origin hostname             | enter      |
       | forge type                  | enter      |
       | sync feature strategy       | enter      |
@@ -28,17 +29,16 @@ Feature: Accepting all default values in a brand-new Git repo leads to a working
       | ship delete tracking branch | enter      |
       | config storage              | down enter |
 
+  @debug @this
   Scenario: result
-    Then Git Town runs the commands
-      | COMMAND                                         |
-      | git config git-town.unknown-branch-type feature |
+    Then Git Town runs no commands
     And the main branch is still not set
     And there are still no perennial branches
     And local Git setting "git-town.dev-remote" still doesn't exist
     And local Git setting "git-town.new-branch-type" still doesn't exist
     And local Git setting "git-town.main-branch" still doesn't exist
     And local Git setting "git-town.perennial-branches" still doesn't exist
-    And local Git setting "git-town.unknown-branch-type" is now "feature"
+    And local Git setting "git-town.unknown-branch-type" still doesn't exist
     And local Git setting "git-town.feature-regex" still doesn't exist
     And local Git setting "git-town.contribution-regex" still doesn't exist
     And local Git setting "git-town.observed-regex" still doesn't exist
@@ -54,28 +54,9 @@ Feature: Accepting all default values in a brand-new Git repo leads to a working
     And the configuration file is now:
       """
       # More info around this file at https://www.git-town.com/configuration-file
-
+      
       [branches]
       main = "initial"
-
-      [create]
-      new-branch-type = "feature"
-      share-new-branches = "no"
-
-      [hosting]
-      dev-remote = "origin"
-
-      [ship]
-      delete-tracking-branch = true
-      strategy = "api"
-
-      [sync]
-      feature-strategy = "merge"
-      perennial-strategy = "ff-only"
-      prototype-strategy = "merge"
-      push-hook = true
-      tags = true
-      upstream = true
       """
 
   Scenario: undo
