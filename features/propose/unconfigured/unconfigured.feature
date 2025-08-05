@@ -17,6 +17,7 @@ Feature: ask for missing configuration
       | observed regex              | enter           |
       | new branch type             | enter           |
       | unknown branch type         | enter           |
+      | dev remote                  | enter           |
       | origin hostname             | enter           |
       | forge type                  | enter           |
       | github connector type       | enter           |
