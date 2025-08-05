@@ -26,6 +26,11 @@ func SyncTags(args Args[configdomain.SyncTags]) (Option[configdomain.SyncTags], 
 			Data: None[configdomain.SyncTags](),
 			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
 		})
+	} else {
+		entries = append(entries, list.Entry[Option[configdomain.SyncTags]]{
+			Data: None[configdomain.SyncTags](),
+			Text: fmt.Sprintf(messages.DialogUseDefaultValue, args.Defaults),
+		})
 	}
 	entries = append(entries, list.Entries[Option[configdomain.SyncTags]]{
 		{
