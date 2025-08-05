@@ -25,6 +25,7 @@ Feature: change existing information in Git metadata
       | observed regex              | o b s enter            |
       | new branch type             | down enter             |
       | unknown branch type         | down down down enter   |
+      | dev remote                  | enter                  |
       | origin hostname             | c o d e enter          |
       | forge type                  | up up enter            |
       | github connector type       | enter                  |
@@ -33,12 +34,12 @@ Feature: change existing information in Git metadata
       | sync feature strategy       | down down enter        |
       | sync perennial strategy     | down down enter        |
       | sync prototype strategy     | down down enter        |
-      | sync upstream               | down enter             |
-      | sync tags                   | down enter             |
+      | sync upstream               | up enter               |
+      | sync tags                   | up enter               |
       | share-new-branches          | down enter             |
-      | push hook                   | down enter             |
-      | ship strategy               | down down enter        |
-      | ship delete tracking branch | down enter             |
+      | push hook                   | up enter               |
+      | ship strategy               | down down down enter   |
+      | ship delete tracking branch | up enter               |
       | config storage              | enter                  |
 
   Scenario: result
