@@ -17,6 +17,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.ship-delete-tracking-branch" is "false"
     And local Git setting "git-town.sync-feature-strategy" is "merge"
     And local Git setting "git-town.sync-perennial-strategy" is "rebase"
+    And local Git setting "git-town.sync-prototype-strategy" is "compress"
     And local Git setting "git-town.sync-upstream" is "true"
     And local Git setting "git-town.sync-tags" is "false"
     And local Git setting "git-town.unknown-branch-type" is "observed"
@@ -63,6 +64,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | git config --unset git-town.ship-delete-tracking-branch |
       | git config --unset git-town.sync-feature-strategy       |
       | git config --unset git-town.sync-perennial-strategy     |
+      | git config --unset git-town.sync-prototype-strategy     |
       | git config --unset git-town.sync-upstream               |
       | git config --unset git-town.sync-tags                   |
       | git config --unset git-town.unknown-branch-type         |
@@ -87,27 +89,27 @@ Feature: migrate existing configuration in Git metadata to a config file
     And the configuration file is now:
       """
       # More info around this file at https://www.git-town.com/configuration-file
-
+      
       [branches]
       main = "main"
       perennials = ["qa"]
       perennial-regex = "release-.*"
-
+      
       [create]
       new-branch-type = "prototype"
       share-new-branches = "no"
-
+      
       [hosting]
       dev-remote = "fork"
-
+      
       [ship]
       delete-tracking-branch = false
       strategy = "squash-merge"
-
+      
       [sync]
       feature-strategy = "merge"
       perennial-strategy = "rebase"
-      prototype-strategy = "merge"
+      prototype-strategy = "compress"
       push-hook = true
       tags = false
       upstream = true
