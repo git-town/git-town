@@ -37,10 +37,10 @@ Feature: Configure a different development remote
     And the configuration file is now:
       """
       # More info around this file at https://www.git-town.com/configuration-file
-      
+
       [branches]
       main = "main"
-      
+
       [hosting]
       dev-remote = "fork"
       """
