@@ -21,6 +21,7 @@ Feature: Accepting all default values leads to a working setup
       | observed regex              | enter      |
       | new branch type             | enter      |
       | unknown branch type         | enter      |
+      | dev remote                  | enter      |
       | origin hostname             | enter      |
       | forge type                  | enter      |
       | sync feature strategy       | enter      |
@@ -34,7 +35,7 @@ Feature: Accepting all default values leads to a working setup
       | ship delete tracking branch | enter      |
       | config storage              | down enter |
 
-  @this
+  @debug @this
   Scenario: result
     Then Git Town runs no commands
     And the main branch is still not set

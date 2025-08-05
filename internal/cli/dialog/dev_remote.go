@@ -32,6 +32,11 @@ func DevRemote(remotes gitdomain.Remotes, args Args[gitdomain.Remote]) (Option[g
 			Data: None[gitdomain.Remote](),
 			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
 		})
+	} else {
+		options = append(options, list.Entry[Option[gitdomain.Remote]]{
+			Data: None[gitdomain.Remote](),
+			Text: fmt.Sprintf(messages.DialogUseDefaultValue, args.Defaults),
+		})
 	}
 	for _, remote := range remotes {
 		options = append(options, list.Entry[Option[gitdomain.Remote]]{
