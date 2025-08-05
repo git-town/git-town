@@ -245,11 +245,12 @@ the order of branches.
 
 Phantom merge conflicts are situations where Git reports a conflict, even though
 (if you understand the full context) there is no real conflict. A common example
-is shipping the oldest branch in a stack using a squash merge. This results in
-the main branch containing a new commit that differs from the original commit on
-the shipped feature branch. If any downstream branches in the stack touch the
-same lines of code, they may conflict with this new commit on main, even though
-those exact conflicts were already resolved earlier in the stack's development.
+is having a stack in which multple branches change the same file, and shipping
+the oldest branch of that stack using a squash merge. Afterwards, the main
+branch contains a new commit that differs from the original commit on the
+shipped feature branch. If any downstream branches in the stack touch the same
+lines of code, they may conflict with this new commit on main, even though those
+exact conflicts were already resolved earlier in the stack's development.
 
 Git cannot resolve these phantom conflicts on its own because it only sees the
 immediate diff: two changes to the same lines. It doesn't know about the
@@ -258,20 +259,46 @@ conflicts because it tracks the full branch hierarchy, knows which branches were
 recently removed, and remembers the state of each branch from the last sync.
 That context allows it to resolve conflicts that are merely apparent.
 
-To avoid phantom merge conflicts when shipping the base of a stack, use a
-[fast-forward merge](https://git-scm.com/docs/git-merge#_fast_forward_merge).
-This ensures the new commits on main are bit-for-bit identical to those on the
-shipped branch, allowing Git to recognize them as shared history in future
-syncs, which avoids unnecessary merges or rebases.
+There are several things you can do to avoid phantom merge conflicts.
 
-GitLab supports fast-forward merges
-[natively](https://docs.gitlab.com/ee/user/project/merge_requests/methods/#fast-forward-merge).
-GitHub doesn’t offer this merge option, but you can work around it by
-[shipping locally](commands/ship.md) using Git Town’s
-[fast-forward shipping strategy](preferences/ship-strategy.md#fast-forward),
-then pushing the result. See
-[GitHub’s documentation](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges#squashing-and-merging-a-long-running-branch)
-on this issue.
+1. Sync frequently. In a synced stack, the changes made by each branch are on
+   top of (or after) the changes made by the parent branch. In an unsynced
+   stack, the changes made by each branch happen concurrently with the changes
+   of the parent branch. It's self-evident that Git will have a harder time
+   resolving changes that happen concurrently to the same file, compared to
+   changes that happen one after another.
 
-It also helps to [compress](commands/compress.md) feature branches, so that you
-don't need to resolve so many new merge conflicts when they happen.
+2. If syncing your code takes too long, utilize the
+   [--detached](commands/sync.md#-d--detached) and/or
+   [--no-push](commands/sync.md#--no-push) flags to make it faster, so that you
+   can sync regularly.
+
+3. Enable Git's [rerere](https://git-scm.com/book/en/v2/Git-Tools-Rerere)
+   [feature](https://git-scm.com/docs/git-rerere). This makes Git record how you
+   resolve specific merge conflicts. If Git encounters the same conflicts again,
+   it can now use the recorded solution to resolve them on its own now, instead
+   of asking you to resolve them again.
+
+4. Ship using a
+   [fast-forward merge](https://git-scm.com/docs/git-merge#_fast_forward_merge).
+   This ensures the new commits on main are bit-for-bit identical to those on
+   the shipped branch, allowing Git to recognize them as shared history in
+   future syncs, which avoids unnecessary merges or rebases.
+
+   GitLab supports fast-forward merges
+   [natively](https://docs.gitlab.com/ee/user/project/merge_requests/methods/#fast-forward-merge).
+   GitHub doesn’t offer this merge option, but you can work around it by
+   [shipping locally](commands/ship.md) using Git Town’s
+   [fast-forward shipping strategy](preferences/ship-strategy.md#fast-forward),
+   then pushing the result. See
+   [GitHub’s documentation](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges#squashing-and-merging-a-long-running-branch)
+   on this issue.
+
+5. If your branches contain too many commits, and you need to resolve the same
+   conflict for commit, [compress](commands/compress.md) your feature branches
+   so that each branch contains only one commit.
+
+6. Slim down your feature branches so that each branch performs only one change.
+   This reduces the amount of information you need to process when resolving
+   merge conflicts, and makes it easier to see which branch makes which change
+   and why, and what the correct resolution is.
