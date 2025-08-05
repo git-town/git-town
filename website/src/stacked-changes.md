@@ -241,16 +241,20 @@ You always have to ship the oldest branch first. You can use
 of the current feature branch or [set parent](commands/set-parent.md) to change
 the order of branches.
 
-#### Avoid phantom merge conflicts
+#### Avoid phantom conflicts
 
-Phantom merge conflicts are situations where Git reports a conflict, even though
-(if you understand the full context) there is no real conflict. A common example
-is having a stack in which multiple branches change the same file, and shipping
-the oldest branch of that stack using a squash merge. Afterwards, the main
-branch contains a new commit that differs from the original commit on the
-shipped feature branch. If any downstream branches in the stack touch the same
-lines of code, they may conflict with this new commit on main, even though those
-exact conflicts were already resolved earlier in the stack's development.
+_Phantom conflicts_ occur when Git reports a merge or rebase conflict that, when
+looked at with more context, isn't a real conflict. Phantom conflicts can occur
+when multiple branches in a stack modify the same line in the same file. When
+you ship the oldest branch of that stack using a squash-merge, and then sync the
+remaining stack. In this situation, the main branch contains a new commit that
+makes the same changes as the branch that just shipped, but as a different
+commit than the one(s) that existed on the shipped branch. When you sync the
+stack, its branches merge or rebase that new commit on the main branch. Git sees
+a new commit that changes the same lines as the currently syncing branch, and
+lets the user sort this out. This can happen even though those exact conflicts
+were already resolved earlier in the stack's development, because the commit on
+main is a new commit.
 
 Git cannot resolve these phantom conflicts on its own because it only sees the
 immediate diff: two changes to the same lines. It doesn't know about the
