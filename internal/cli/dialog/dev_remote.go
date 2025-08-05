@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -54,14 +53,9 @@ func DevRemote(remotes gitdomain.Remotes, args Args[gitdomain.Remote]) (Option[g
 	if len(options) == 1 {
 		return options[0].Data, false, nil
 	}
-	var cursor int
-	switch {
-	case hasLocal:
+	cursor := 0
+	if hasLocal {
 		cursor = options.IndexOf(Some(local))
-	case hasGlobal:
-		cursor = 0
-	default:
-		cursor = options.IndexOf(Some(config.DefaultNormalConfig().DevRemote))
 	}
 	selection, exit, err := dialogcomponents.RadioList(options, cursor, DevRemoteTypeTitle, DevRemoteHelp, args.Inputs, "dev-remote")
 	fmt.Printf(messages.DevRemote, dialogcomponents.FormattedSelection(selection.String(), exit))
