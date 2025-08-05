@@ -41,6 +41,11 @@ func ShipStrategy(args Args[configdomain.ShipStrategy]) (Option[configdomain.Shi
 			Data: None[configdomain.ShipStrategy](),
 			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
 		})
+	} else {
+		entries = append(entries, list.Entry[Option[configdomain.ShipStrategy]]{
+			Data: None[configdomain.ShipStrategy](),
+			Text: fmt.Sprintf(messages.DialogUseDefaultValue, args.Defaults),
+		})
 	}
 	entries = append(entries, list.Entries[Option[configdomain.ShipStrategy]]{
 		{

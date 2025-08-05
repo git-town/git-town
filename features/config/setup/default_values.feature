@@ -64,9 +64,6 @@ Feature: Accepting all default values leads to a working setup
       [branches]
       main = "main"
       
-      [ship]
-      strategy = "api"
-      
       [sync]
       push-hook = true
       tags = true
