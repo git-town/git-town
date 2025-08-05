@@ -245,16 +245,20 @@ the order of branches.
 
 _Phantom conflicts_ occur when Git reports a merge or rebase conflict that, when
 looked at with more context, isn't a real conflict. Phantom conflicts can occur
-when multiple branches in a stack modify the same line in the same file. When
-you ship the oldest branch of that stack using a squash-merge, and then sync the
-remaining stack. In this situation, the main branch contains a new commit that
-makes the same changes as the branch that just shipped, but as a different
-commit than the one(s) that existed on the shipped branch. When you sync the
-stack, its branches merge or rebase that new commit on the main branch. Git sees
-a new commit that changes the same lines as the currently syncing branch, and
-lets the user sort this out. This can happen even though those exact conflicts
-were already resolved earlier in the stack's development, because the commit on
-main is a new commit.
+when multiple branches in a stack modify the same line in the same file, and you
+ship using squash-merges.
+
+This can create situations where you just shipped a branch, the main branch
+contains the same changes as a branch
+
+At some point you ship the oldest branch of that stack using a squash-merge. Now
+the main branch contains a new commit that makes the same changes as the branch
+that just shipped, but as a different commit than the one(s) that existed on the
+shipped branch. When you sync the stack, its branches merge or rebase that new
+commit on the main branch. Git sees a new commit that changes the same lines as
+the currently syncing branch, and lets the user sort this out. This can happen
+even though those exact conflicts were already resolved earlier in the stack's
+development, because the commit on main is a new commit.
 
 Git cannot resolve these phantom conflicts on its own because it only sees the
 immediate diff: two changes to the same lines. It doesn't know about the
