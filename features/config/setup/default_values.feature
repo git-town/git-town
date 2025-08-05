@@ -65,7 +65,6 @@ Feature: Accepting all default values leads to a working setup
       main = "main"
       
       [sync]
-      push-hook = true
       tags = true
       upstream = true
       """

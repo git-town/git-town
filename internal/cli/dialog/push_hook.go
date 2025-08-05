@@ -34,6 +34,11 @@ func PushHook(args Args[configdomain.PushHook]) (Option[configdomain.PushHook], 
 			Data: None[configdomain.PushHook](),
 			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
 		})
+	} else {
+		entries = append(entries, list.Entry[Option[configdomain.PushHook]]{
+			Data: None[configdomain.PushHook](),
+			Text: fmt.Sprintf(messages.DialogUseDefaultValue, args.Defaults),
+		})
 	}
 	entries = append(entries, list.Entries[Option[configdomain.PushHook]]{
 		{
