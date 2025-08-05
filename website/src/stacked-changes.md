@@ -275,18 +275,18 @@ Here are some best practices to minimize phantom merge conflicts:
 
 3. Ship using a
    [fast-forward merge](https://git-scm.com/docs/git-merge#_fast_forward_merge).
-   This ensures the new commits on main are bit-for-bit identical to those on
-   the shipped branch, allowing Git to recognize them as shared history in
-   future syncs, which avoids unnecessary merges or rebases.
+   This ensures the commits on main are byte-for-byte identical to those on the
+   shipped branchs. This preserved shared history avoids unnecessary merges or
+   rebases that likely produce phantom conflicts.
 
-   GitLab supports fast-forward merges
-   [natively](https://docs.gitlab.com/ee/user/project/merge_requests/methods/#fast-forward-merge).
-   GitHub doesn’t offer this merge option, but you can work around it by
-   [shipping locally](commands/ship.md) using Git Town’s
-   [fast-forward shipping strategy](preferences/ship-strategy.md#fast-forward),
-   then pushing the result. See
-   [GitHub’s documentation](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges#squashing-and-merging-a-long-running-branch)
-   on this issue.
+   - GitLab supports this
+     [natively](https://docs.gitlab.com/ee/user/project/merge_requests/methods/#fast-forward-merge).
+   - GitHub doesn’t support fast-forward merges via the UI, but you can achieve
+     the same effect by [shipping locally](commands/ship.md) with Git Town's
+     [fast-forward strategy](preferences/ship-strategy.md#fast-forward) and then
+     pushing the result. See GitHub’s
+     [docs](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges#squashing-and-merging-a-long-running-branch)
+     for details.
 
 4. If your branches contain too many commits, and you need to resolve the same
    conflict for commit, [compress](commands/compress.md) your feature branches
