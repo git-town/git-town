@@ -31,6 +31,11 @@ func ShipDeleteTrackingBranch(args Args[configdomain.ShipDeleteTrackingBranch]) 
 			Data: None[configdomain.ShipDeleteTrackingBranch](),
 			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
 		})
+	} else {
+		entries = append(entries, list.Entry[Option[configdomain.ShipDeleteTrackingBranch]]{
+			Data: None[configdomain.ShipDeleteTrackingBranch](),
+			Text: fmt.Sprintf(messages.DialogUseDefaultValue, args.Defaults),
+		})
 	}
 	entries = append(entries, list.Entries[Option[configdomain.ShipDeleteTrackingBranch]]{
 		{
