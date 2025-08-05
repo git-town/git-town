@@ -270,10 +270,8 @@ Here are some best practices to minimize phantom merge conflicts:
    [--no-push](commands/sync.md#--no-push) flags to speed it up.
 
 2. Enable Git's [rerere](https://git-scm.com/book/en/v2/Git-Tools-Rerere)
-   [feature](https://git-scm.com/docs/git-rerere). This makes Git record how you
-   resolve specific merge conflicts. If Git encounters the same conflicts again,
-   it can now use the recorded solution to resolve them on its own now, instead
-   of asking you to resolve them again.
+   feature. This lets Git remember how you resolved past conflicts and applies
+   those resolutions in the future.
 
 3. Ship using a
    [fast-forward merge](https://git-scm.com/docs/git-merge#_fast_forward_merge).
