@@ -78,7 +78,7 @@ Feature: auto-resolve phantom merge conflicts
 
   Scenario: resolve, commit, and continue
     When I ran "git add file"
-    When I ran "git commit --no-edit"
+    And I ran "git commit --no-edit"
     And I ran "git town continue"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                  |
