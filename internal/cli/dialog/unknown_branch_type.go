@@ -30,7 +30,7 @@ func UnknownBranchType(args Args[configdomain.UnknownBranchType]) (Option[config
 	} else {
 		entries = append(entries, list.Entry[Option[configdomain.UnknownBranchType]]{
 			Data: None[configdomain.UnknownBranchType](),
-			Text: fmt.Sprintf(messages.DialogUseDefaultValue, configdomain.BranchTypeFeatureBranch),
+			Text: fmt.Sprintf(messages.DialogUseDefaultValue, args.Defaults),
 		})
 	}
 	entries = appendEntry(entries, configdomain.BranchTypeContributionBranch)
