@@ -24,15 +24,15 @@ Feature: change existing information in Git metadata
       | contribution regex          | c o n t enter          |
       | observed regex              | o b s enter            |
       | new branch type             | down enter             |
-      | unknown branch type         | down enter             |
+      | unknown branch type         | down down down enter   |
       | origin hostname             | c o d e enter          |
       | forge type                  | up up enter            |
       | github connector type       | enter                  |
       | github token                | g h - t o k enter      |
       | token scope                 | enter                  |
-      | sync feature strategy       | down enter             |
-      | sync perennial strategy     | down enter             |
-      | sync prototype strategy     | down enter             |
+      | sync feature strategy       | down down enter        |
+      | sync perennial strategy     | down down enter        |
+      | sync prototype strategy     | down down enter        |
       | sync upstream               | down enter             |
       | sync tags                   | down enter             |
       | share-new-branches          | down enter             |
@@ -41,6 +41,7 @@ Feature: change existing information in Git metadata
       | ship delete tracking branch | down enter             |
       | config storage              | enter                  |
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                                  |
