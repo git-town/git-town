@@ -41,7 +41,6 @@ Feature: change existing information in Git metadata
       | ship delete tracking branch | down enter             |
       | config storage              | enter                  |
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                                  |

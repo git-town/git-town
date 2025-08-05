@@ -35,15 +35,10 @@ Feature: enter the Codeberg API token
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config git-town.codeberg-token code-tok          |
-      | git config git-town.new-branch-type feature          |
-      | git config git-town.unknown-branch-type feature      |
       | git config git-town.push-hook true                   |
       | git config git-town.share-new-branches no            |
       | git config git-town.ship-strategy api                |
       | git config git-town.ship-delete-tracking-branch true |
-      | git config git-town.sync-feature-strategy merge      |
-      | git config git-town.sync-perennial-strategy ff-only  |
-      | git config git-town.sync-prototype-strategy merge    |
       | git config git-town.sync-upstream true               |
       | git config git-town.sync-tags true                   |
     And local Git setting "git-town.forge-type" still doesn't exist
@@ -79,16 +74,11 @@ Feature: enter the Codeberg API token
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config git-town.codeberg-token code-tok          |
-      | git config git-town.new-branch-type feature          |
       | git config git-town.forge-type codeberg              |
-      | git config git-town.unknown-branch-type feature      |
       | git config git-town.push-hook true                   |
       | git config git-town.share-new-branches no            |
       | git config git-town.ship-strategy api                |
       | git config git-town.ship-delete-tracking-branch true |
-      | git config git-town.sync-feature-strategy merge      |
-      | git config git-town.sync-perennial-strategy ff-only  |
-      | git config git-town.sync-prototype-strategy merge    |
       | git config git-town.sync-upstream true               |
       | git config git-town.sync-tags true                   |
     And local Git setting "git-town.forge-type" is now "codeberg"
@@ -125,15 +115,10 @@ Feature: enter the Codeberg API token
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config --global git-town.codeberg-token code-tok |
-      | git config git-town.new-branch-type feature          |
-      | git config git-town.unknown-branch-type feature      |
       | git config git-town.push-hook true                   |
       | git config git-town.share-new-branches no            |
       | git config git-town.ship-strategy api                |
       | git config git-town.ship-delete-tracking-branch true |
-      | git config git-town.sync-feature-strategy merge      |
-      | git config git-town.sync-perennial-strategy ff-only  |
-      | git config git-town.sync-prototype-strategy merge    |
       | git config git-town.sync-upstream true               |
       | git config git-town.sync-tags true                   |
     And global Git setting "git-town.codeberg-token" is now "code-tok"
@@ -170,15 +155,10 @@ Feature: enter the Codeberg API token
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config --global git-town.codeberg-token code456  |
-      | git config git-town.new-branch-type feature          |
-      | git config git-town.unknown-branch-type feature      |
       | git config git-town.push-hook true                   |
       | git config git-town.share-new-branches no            |
       | git config git-town.ship-strategy api                |
       | git config git-town.ship-delete-tracking-branch true |
-      | git config git-town.sync-feature-strategy merge      |
-      | git config git-town.sync-perennial-strategy ff-only  |
-      | git config git-town.sync-prototype-strategy merge    |
       | git config git-town.sync-upstream true               |
       | git config git-town.sync-tags true                   |
     And global Git setting "git-town.codeberg-token" is now "code456"
