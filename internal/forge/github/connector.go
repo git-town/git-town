@@ -130,7 +130,7 @@ func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchNam
 	pullRequests, _, err := self.client.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
 		Head:  self.Organization + ":" + branch.String(),
 		Base:  target.String(),
-		State: "open",
+		State: "all",
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
@@ -140,10 +140,28 @@ func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchNam
 		self.log.Success("none")
 		return None[forgedomain.Proposal](), nil
 	}
+	var pullRequest *github.PullRequest
+	var proposal forgedomain.ProposalData
 	if len(pullRequests) > 1 {
-		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(pullRequests), branch, target)
+		// Find an open pull request. If there is more than one, return multiple found error
+		for _, pr := range pullRequests {
+			if pr.State != nil && *pr.State == "open" {
+				if pullRequest == nil {
+					pullRequest = pr
+				} else {
+					return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(pullRequests), branch, target)
+				}
+			}
+		}
+		// If all of the proposals are closed, return multiple not found
+		if pullRequest == nil {
+			return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(pullRequests), branch, target)
+		}
+	} else {
+		pullRequest = pullRequests[0]
 	}
-	proposal := parsePullRequest(pullRequests[0])
+
+	proposal = parsePullRequest(pullRequest)
 	self.log.Log(fmt.Sprintf("%s (%s)", colors.BoldGreen().Styled("#"+strconv.Itoa(proposal.Number)), proposal.Title))
 	return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeGitHub}), nil
 }
