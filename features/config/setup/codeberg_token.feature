@@ -18,6 +18,7 @@ Feature: enter the Codeberg API token
       | observed regex              | enter                  |                                             |
       | new branch type             | enter                  |                                             |
       | unknown branch type         | enter                  |                                             |
+      | dev remote                  | enter                  |                                             |
       | origin hostname             | enter                  |                                             |
       | forge type                  | enter                  |                                             |
       | codeberg token              | c o d e - t o k  enter |                                             |
@@ -33,14 +34,8 @@ Feature: enter the Codeberg API token
       | ship delete tracking branch | enter                  |                                             |
       | config storage              | enter                  |                                             |
     Then Git Town runs the commands
-      | COMMAND                                              |
-      | git config git-town.codeberg-token code-tok          |
-      | git config git-town.push-hook true                   |
-      | git config git-town.share-new-branches no            |
-      | git config git-town.ship-strategy api                |
-      | git config git-town.ship-delete-tracking-branch true |
-      | git config git-town.sync-upstream true               |
-      | git config git-town.sync-tags true                   |
+      | COMMAND                                     |
+      | git config git-town.codeberg-token code-tok |
     And local Git setting "git-town.forge-type" still doesn't exist
     And local Git setting "git-town.codeberg-token" is now "code-tok"
 
@@ -57,6 +52,7 @@ Feature: enter the Codeberg API token
       | observed regex              | enter                  |                                             |
       | new branch type             | enter                  |                                             |
       | unknown branch type         | enter                  |                                             |
+      | dev remote                  | enter                  |                                             |
       | origin hostname             | enter                  |                                             |
       | forge type                  | down down down enter   |                                             |
       | codeberg token              | c o d e - t o k  enter |                                             |
@@ -72,15 +68,9 @@ Feature: enter the Codeberg API token
       | ship delete tracking branch | enter                  |                                             |
       | config storage              | enter                  |                                             |
     Then Git Town runs the commands
-      | COMMAND                                              |
-      | git config git-town.codeberg-token code-tok          |
-      | git config git-town.forge-type codeberg              |
-      | git config git-town.push-hook true                   |
-      | git config git-town.share-new-branches no            |
-      | git config git-town.ship-strategy api                |
-      | git config git-town.ship-delete-tracking-branch true |
-      | git config git-town.sync-upstream true               |
-      | git config git-town.sync-tags true                   |
+      | COMMAND                                     |
+      | git config git-town.codeberg-token code-tok |
+      | git config git-town.forge-type codeberg     |
     And local Git setting "git-town.forge-type" is now "codeberg"
     And local Git setting "git-town.codeberg-token" is now "code-tok"
 
@@ -98,6 +88,7 @@ Feature: enter the Codeberg API token
       | observed regex              | enter                  |                                             |
       | new branch type             | enter                  |                                             |
       | unknown branch type         | enter                  |                                             |
+      | dev remote                  | enter                  |                                             |
       | origin hostname             | enter                  |                                             |
       | forge type                  | enter                  |                                             |
       | codeberg token              | c o d e - t o k  enter |                                             |
@@ -115,12 +106,6 @@ Feature: enter the Codeberg API token
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config --global git-town.codeberg-token code-tok |
-      | git config git-town.push-hook true                   |
-      | git config git-town.share-new-branches no            |
-      | git config git-town.ship-strategy api                |
-      | git config git-town.ship-delete-tracking-branch true |
-      | git config git-town.sync-upstream true               |
-      | git config git-town.sync-tags true                   |
     And global Git setting "git-town.codeberg-token" is now "code-tok"
 
   Scenario: edit global Codeberge API token
@@ -138,6 +123,7 @@ Feature: enter the Codeberg API token
       | observed regex              | enter                                     |                                             |
       | new branch type             | enter                                     |                                             |
       | unknown branch type         | enter                                     |                                             |
+      | dev remote                  | enter                                     |                                             |
       | origin hostname             | enter                                     |                                             |
       | forge type                  | enter                                     |                                             |
       | codeberg token              | backspace backspace backspace 4 5 6 enter |                                             |
@@ -153,12 +139,6 @@ Feature: enter the Codeberg API token
       | ship delete tracking branch | enter                                     |                                             |
       | config storage              | enter                                     |                                             |
     Then Git Town runs the commands
-      | COMMAND                                              |
-      | git config --global git-town.codeberg-token code456  |
-      | git config git-town.push-hook true                   |
-      | git config git-town.share-new-branches no            |
-      | git config git-town.ship-strategy api                |
-      | git config git-town.ship-delete-tracking-branch true |
-      | git config git-town.sync-upstream true               |
-      | git config git-town.sync-tags true                   |
+      | COMMAND                                             |
+      | git config --global git-town.codeberg-token code456 |
     And global Git setting "git-town.codeberg-token" is now "code456"
