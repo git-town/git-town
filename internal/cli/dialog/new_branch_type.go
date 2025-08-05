@@ -30,6 +30,11 @@ func NewBranchType(args Args[configdomain.NewBranchType]) (Option[configdomain.N
 			Data: None[configdomain.BranchType](),
 			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
 		})
+	} else {
+		entries = append(entries, list.Entry[Option[configdomain.BranchType]]{
+			Data: None[configdomain.BranchType](),
+			Text: fmt.Sprintf(messages.DialogUseDefaultValue, configdomain.BranchTypeFeatureBranch),
+		})
 	}
 	entries = append(entries, list.Entries[Option[configdomain.BranchType]]{
 		{

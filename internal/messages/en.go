@@ -113,6 +113,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	DialogResultNone                    = "(none)"
 	DialogResultUnknownBranchType       = "unknown branch type: %q"
 	DialogUnexpectedResponse            = "unexpected response: %s"
+	DialogUseDefaultValue               = "use default value (%s)"
 	DialogUseGlobalValue                = "use global value (%s)"
 	DiffConflictWithMain                = "conflicts between your uncommmitted changes and the main branch"
 	DiffParentNoFeatureBranch           = "you can only diff-parent feature branches"

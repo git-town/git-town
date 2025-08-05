@@ -6,7 +6,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -23,11 +22,15 @@ Git Town cannot determine their type any other way.
 
 func UnknownBranchType(args Args[configdomain.UnknownBranchType]) (Option[configdomain.UnknownBranchType], dialogdomain.Exit, error) {
 	entries := make(list.Entries[Option[configdomain.UnknownBranchType]], 0, 5)
-	globalValue, hasGlobal := args.Global.Get()
-	if hasGlobal {
+	if globalValue, hasGlobal := args.Global.Get(); hasGlobal {
 		entries = append(entries, list.Entry[Option[configdomain.UnknownBranchType]]{
 			Data: None[configdomain.UnknownBranchType](),
-			Text: fmt.Sprintf("use global setting (%s)", globalValue),
+			Text: fmt.Sprintf(messages.DialogUseGlobalValue, globalValue),
+		})
+	} else {
+		entries = append(entries, list.Entry[Option[configdomain.UnknownBranchType]]{
+			Data: None[configdomain.UnknownBranchType](),
+			Text: fmt.Sprintf(messages.DialogUseGlobalValue, configdomain.BranchTypeFeatureBranch),
 		})
 	}
 	entries = appendEntry(entries, configdomain.BranchTypeContributionBranch)
@@ -35,16 +38,9 @@ func UnknownBranchType(args Args[configdomain.UnknownBranchType]) (Option[config
 	entries = appendEntry(entries, configdomain.BranchTypeObservedBranch)
 	entries = appendEntry(entries, configdomain.BranchTypeParkedBranch)
 	entries = appendEntry(entries, configdomain.BranchTypePrototypeBranch)
-	var cursor int
-	local, hasLocal := args.Local.Get()
-	switch {
-	case hasLocal:
+	cursor := 0
+	if local, hasLocal := args.Local.Get(); hasLocal {
 		cursor = entries.IndexOf(Some(local))
-	case hasGlobal:
-		cursor = 0
-	default:
-		// neither local nor global --> preselect the default value
-		cursor = entries.IndexOf(Some(config.DefaultNormalConfig().UnknownBranchType))
 	}
 	selection, exit, err := dialogcomponents.RadioList(entries, cursor, unknownBranchTypeTitle, UnknownBranchTypeHelp, args.Inputs, "unknown-branch-type")
 	fmt.Printf(messages.UnknownBranchType, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
