@@ -8,8 +8,8 @@ import (
 
 // Args are arguments for dialogs that allow to enter a textual configuration value.
 type Args[T any] struct {
+	Defaults Option[T]
 	Global   Option[T]
 	Inputs   dialogcomponents.Inputs
 	Local    Option[T]
-	Defaults Option[T]
 }
