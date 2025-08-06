@@ -495,7 +495,7 @@ func (self *Commands) FileConflictFullInfo(querier subshelldomain.Querier, quick
 	return result, nil
 }
 
-func (self *Commands) FileConflictFullInfos(querier subshelldomain.Querier, quickInfos FileConflictQuickInfos, parentLocation gitdomain.Location, rootBranch gitdomain.LocalBranchName) (MergeConflictInfos, error) {
+func (self *Commands) MergeConflictInfos(querier subshelldomain.Querier, quickInfos FileConflictQuickInfos, parentLocation gitdomain.Location, rootBranch gitdomain.LocalBranchName) (MergeConflictInfos, error) {
 	result := make([]MergeConflictInfo, len(quickInfos))
 	for q, quickInfo := range quickInfos {
 		fullInfo, err := self.FileConflictFullInfo(querier, quickInfo, parentLocation, rootBranch)
