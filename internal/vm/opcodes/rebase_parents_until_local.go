@@ -1,6 +1,8 @@
 package opcodes
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
@@ -52,7 +54,9 @@ func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
 		} else {
 			branchToRebase = parent.BranchName()
 		}
+		fmt.Println("333333333333333333333333333333333333333333")
 		if parentSHAPreviousRun, hasParentSHAPreviousRun := self.ParentSHAPreviousRun.Get(); hasParentSHAPreviousRun {
+			fmt.Println("444444444444444444444444444444444444444444")
 			// Here we rebase onto the new parent, while removing the commits that the parent had in the last run.
 			// This removes old versions of commits that were amended by the user.
 			// The new commits of the parent get added back during the rebase.
