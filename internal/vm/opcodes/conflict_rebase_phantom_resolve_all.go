@@ -27,7 +27,7 @@ func (self *ConflictRebasePhantomResolveAll) Run(args shared.RunArgs) error {
 		return err
 	}
 	fmt.Println("111111111111111111111111111 FULL INFOS")
-	fmt.Println(fullInfos)
+	fullInfos.Debug(args.Backend)
 	phantomConflicts := git.DetectPhantomRebaseConflicts(fullInfos, self.BranchToRebaseOnto, rootBranch)
 	newOpcodes := []shared.Opcode{}
 	for _, phantomConflict := range phantomConflicts {

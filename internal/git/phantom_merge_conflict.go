@@ -15,9 +15,9 @@ import (
 
 type FileConflictQuickInfos []FileConflictQuickInfo
 
-func (qis FileConflictQuickInfos) Debug(querier subshelldomain.Querier) {
-	for _, qi := range qis {
-		qi.Debug(querier)
+func (quickInfos FileConflictQuickInfos) Debug(querier subshelldomain.Querier) {
+	for _, quickInfo := range quickInfos {
+		quickInfo.Debug(querier)
 	}
 }
 
@@ -29,10 +29,10 @@ type FileConflictQuickInfo struct {
 }
 
 // prints debug information
-func (qi FileConflictQuickInfo) Debug(querier subshelldomain.Querier) {
-	base, hasBase := qi.BaseChange.Get()
-	current, hasCurrent := qi.CurrentBranchChange.Get()
-	incoming, hasIncoming := qi.IncomingChange.Get()
+func (quickInfo FileConflictQuickInfo) Debug(querier subshelldomain.Querier) {
+	base, hasBase := quickInfo.BaseChange.Get()
+	current, hasCurrent := quickInfo.CurrentBranchChange.Get()
+	incoming, hasIncoming := quickInfo.IncomingChange.Get()
 	fmt.Print("BASE CHANGE: ")
 	if hasBase {
 		base.Debug(querier)
@@ -84,6 +84,14 @@ var UnmergedStages = []UnmergedStage{
 	UnmergedStageIncoming,
 }
 
+type FileConflictFullInfos []FileConflictFullInfo
+
+func (fullInfos FileConflictFullInfos) Debug(querier subshelldomain.Querier) {
+	for _, fullInfo := range fullInfos {
+		fullInfo.Debug(querier)
+	}
+}
+
 // Everything Git Town needs to know about a file merge conflict to determine whether this is a phantom merge conflict.
 // Includes the FileConflictQuickInfo as well as information that only Git Town knows,
 // like how this file looks at the root branch of the stack on which the conflict occurs.
@@ -91,6 +99,30 @@ type FileConflictFullInfo struct {
 	Current Option[BlobInfo] // info about the file on the current branch
 	Parent  Option[BlobInfo] // info about the file on the original parent
 	Root    Option[BlobInfo] // info about the file on the root branch
+}
+
+func (fullInfo FileConflictFullInfo) Debug(querier subshelldomain.Querier) {
+	current, hasCurrent := fullInfo.Current.Get()
+	parent, hasParent := fullInfo.Parent.Get()
+	root, hasRoot := fullInfo.Root.Get()
+	fmt.Print("ROOT: ")
+	if hasRoot {
+		root.Debug(querier)
+	} else {
+		fmt.Println("(none)")
+	}
+	fmt.Print("PARENT CHANGE: ")
+	if hasParent {
+		parent.Debug(querier)
+	} else {
+		fmt.Println("(none)")
+	}
+	fmt.Print("CURRENT CHANGE: ")
+	if hasCurrent {
+		current.Debug(querier)
+	} else {
+		fmt.Println("(none)")
+	}
 }
 
 // describes a file within an unresolved merge conflict that experiences a phantom merge conflict
