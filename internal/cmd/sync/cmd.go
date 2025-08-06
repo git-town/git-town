@@ -44,7 +44,7 @@ When run on a feature branch:
 - pulls updates for the current branch
 - merges the parent branch into the current branch
 - pushes the current branch
-- updates proposal(s)
+- updates branch lineage in proposals
 
 When run on the main branch or a perennial branch:
 - pulls and pushes updates for the current branch
