@@ -22,7 +22,7 @@ func (self *ConflictRebasePhantomResolveAll) Run(args shared.RunArgs) error {
 	fmt.Println("111111111111111111111111111 FILE CONFLICTS")
 	quickInfos.Debug(args.Backend)
 	rootBranch := args.Config.Value.NormalConfig.Lineage.Root(self.CurrentBranch)
-	fullInfos, err := args.Git.MergeConflicts(args.Backend, quickInfos, self.BranchToRebaseOnto.Location(), rootBranch)
+	fullInfos, err := args.Git.RebaseConflicts(args.Backend, quickInfos, self.BranchToRebaseOnto.Location(), rootBranch)
 	if err != nil {
 		return err
 	}

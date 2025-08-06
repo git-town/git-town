@@ -495,9 +495,10 @@ func (self *Commands) FileConflictFullInfo(querier subshelldomain.Querier, quick
 	return result, nil
 }
 
-func (self *Commands) MergeConflicts(querier subshelldomain.Querier, quickInfos FileConflicts, parentLocation gitdomain.Location, rootBranch gitdomain.LocalBranchName) (MergeConflicts, error) {
-	result := make([]MergeConflict, len(quickInfos))
-	for q, quickInfo := range quickInfos {
+// loads the information needed to determine which of the given file conflicts are phantom merge conflicts
+func (self *Commands) MergeConflicts(querier subshelldomain.Querier, fileConflicts FileConflicts, parentLocation gitdomain.Location, rootBranch gitdomain.LocalBranchName) (MergeConflicts, error) {
+	result := make([]MergeConflict, len(fileConflicts))
+	for q, quickInfo := range fileConflicts {
 		fullInfo, err := self.FileConflictFullInfo(querier, quickInfo, parentLocation, rootBranch)
 		if err != nil {
 			return result, err
@@ -688,6 +689,19 @@ func (self *Commands) PushTags(runner subshelldomain.Runner, noPushHook configdo
 // Rebase initiates a Git rebase of the current branch against the given branch.
 func (self *Commands) Rebase(runner subshelldomain.Runner, target gitdomain.BranchName) error {
 	return runner.Run("git", "-c", "rebase.updateRefs=false", "rebase", target.String())
+}
+
+// loads the information needed to determine which of the given file conflicts are phantom rebase conflicts
+func (self *Commands) RebaseConflicts(querier subshelldomain.Querier, fileConflicts FileConflicts, parentLocation gitdomain.Location, rootBranch gitdomain.LocalBranchName) (RebaseConflicts, error) {
+	result := make([]MergeConflict, len(fileConflicts))
+	for q, quickInfo := range fileConflicts {
+		fullInfo, err := self.FileConflictFullInfo(querier, quickInfo, parentLocation, rootBranch)
+		if err != nil {
+			return result, err
+		}
+		result[q] = fullInfo
+	}
+	return result, nil
 }
 
 // Rebase initiates a Git rebase of the current branch onto the given branch.
