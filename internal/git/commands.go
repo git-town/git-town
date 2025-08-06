@@ -327,10 +327,10 @@ func (self *Commands) CommitsInPerennialBranch(querier subshelldomain.Querier) (
 	return result, nil
 }
 
-func (self *Commands) ContentBlobInfo(querier subshelldomain.Querier, branch gitdomain.Location, filePath string) (Option[BlobInfo], error) {
+func (self *Commands) ContentBlobInfo(querier subshelldomain.Querier, branch gitdomain.Location, filePath string) (Option[Blob], error) {
 	output, err := querier.QueryTrim("git", "ls-tree", branch.String(), filePath)
 	if err != nil || len(output) == 0 {
-		return None[BlobInfo](), err
+		return None[Blob](), err
 	}
 	sha, err := ParseLsTreeOutput(output)
 	return Some(sha), err
@@ -473,21 +473,21 @@ func (self *Commands) FetchUpstream(runner subshelldomain.Runner, branch gitdoma
 	return runner.Run("git", "fetch", gitdomain.RemoteUpstream.String(), branch.String())
 }
 
-func (self *Commands) FileConflictFullInfo(querier subshelldomain.Querier, quickInfo FileConflictQuickInfo, parentLocation gitdomain.Location, rootBranch gitdomain.LocalBranchName) (MergeConflictInfo, error) {
-	rootBlob := None[BlobInfo]()
-	parentBlob := None[BlobInfo]()
+func (self *Commands) FileConflictFullInfo(querier subshelldomain.Querier, quickInfo FileConflict, parentLocation gitdomain.Location, rootBranch gitdomain.LocalBranchName) (MergeConflict, error) {
+	rootBlob := None[Blob]()
+	parentBlob := None[Blob]()
 	if currentBranchBlobInfo, has := quickInfo.CurrentBranchChange.Get(); has {
 		var err error
 		rootBlob, err = self.ContentBlobInfo(querier, rootBranch.Location(), currentBranchBlobInfo.FilePath)
 		if err != nil {
-			return MergeConflictInfo{}, err
+			return MergeConflict{}, err
 		}
 		parentBlob, err = self.ContentBlobInfo(querier, parentLocation, currentBranchBlobInfo.FilePath)
 		if err != nil {
-			return MergeConflictInfo{}, err
+			return MergeConflict{}, err
 		}
 	}
-	result := MergeConflictInfo{
+	result := MergeConflict{
 		Current: quickInfo.CurrentBranchChange,
 		Parent:  parentBlob,
 		Root:    rootBlob,
@@ -495,8 +495,8 @@ func (self *Commands) FileConflictFullInfo(querier subshelldomain.Querier, quick
 	return result, nil
 }
 
-func (self *Commands) FileConflictFullInfos(querier subshelldomain.Querier, quickInfos []FileConflictQuickInfo, parentLocation gitdomain.Location, rootBranch gitdomain.LocalBranchName) ([]MergeConflictInfo, error) {
-	result := make([]MergeConflictInfo, len(quickInfos))
+func (self *Commands) FileConflictFullInfos(querier subshelldomain.Querier, quickInfos []FileConflict, parentLocation gitdomain.Location, rootBranch gitdomain.LocalBranchName) ([]MergeConflict, error) {
+	result := make([]MergeConflict, len(quickInfos))
 	for q, quickInfo := range quickInfos {
 		fullInfo, err := self.FileConflictFullInfo(querier, quickInfo, parentLocation, rootBranch)
 		if err != nil {
@@ -507,10 +507,10 @@ func (self *Commands) FileConflictFullInfos(querier subshelldomain.Querier, quic
 	return result, nil
 }
 
-func (self *Commands) FileConflictQuickInfos(querier subshelldomain.Querier) ([]FileConflictQuickInfo, error) {
+func (self *Commands) FileConflictQuickInfos(querier subshelldomain.Querier) ([]FileConflict, error) {
 	output, err := querier.Query("git", "ls-files", "--unmerged")
 	if err != nil {
-		return []FileConflictQuickInfo{}, err
+		return []FileConflict{}, err
 	}
 	return ParseLsFilesUnmergedOutput(output)
 }
