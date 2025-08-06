@@ -37,7 +37,6 @@ Feature: auto-resolve phantom merge conflicts in an unsynced stack where parent 
     # In this test, branch-1 and branch-2 change the same file.
     # After shipping branch-1 and syncing branch-2, branch-2 does not contain the changes made by branch-1.
 
-  @this
   Scenario: undo
     When I run "git town undo"
     Then Git Town runs the commands
@@ -47,3 +46,14 @@ Feature: auto-resolve phantom merge conflicts in an unsynced stack where parent 
       | main     | git reset --hard {{ sha 'initial commit' }} |
       |          | git checkout branch-2                       |
     And the initial branches and lineage exist now
+
+  Scenario: resolve and continue
+    When I resolve the conflict in "file" with "line 1 changed by branch-1\n\nline 2 changed by branch-2"
+    And I run "git-town continue"
+    Then Git Town runs the commands
+      | BRANCH   | COMMAND                               |
+      | branch-2 | GIT_EDITOR=true git rebase --continue |
+      |          | git push --force-with-lease           |
+      |          | git branch -D branch-1                |
+    And no rebase is now in progress
+    And all branches are now synchronized
