@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/git-town/git-town/v21/internal/cli/colors"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
+	"github.com/git-town/git-town/v21/pkg/colors"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -73,6 +73,7 @@ func NewLineageFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated
 
 func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated bool, runner subshelldomain.Runner) (configdomain.PartialConfig, error) {
 	aliases := snapshot.Aliases()
+	autoResolve, errAutoResolve := configdomain.ParseAutoResolve(snapshot[configdomain.KeyAutoResolve], configdomain.KeyAutoResolve)
 	branchTypeOverrides, errBranchTypeOverride := NewBranchTypeOverridesInSnapshot(snapshot, runner)
 	contributionRegex, errContributionRegex := configdomain.ParseContributionRegex(snapshot[configdomain.KeyContributionRegex])
 	featureRegex, errFeatureRegex := configdomain.ParseFeatureRegex(snapshot[configdomain.KeyFeatureRegex])
@@ -99,6 +100,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	unknownBranchType := configdomain.UnknownBranchTypeOpt(unknownBranchTypeValue)
 	return configdomain.PartialConfig{
 		Aliases:                  aliases,
+		AutoResolve:              autoResolve,
 		BitbucketAppPassword:     forgedomain.ParseBitbucketAppPassword(snapshot[configdomain.KeyBitbucketAppPassword]),
 		BitbucketUsername:        forgedomain.ParseBitbucketUsername(snapshot[configdomain.KeyBitbucketUsername]),
 		BranchTypeOverrides:      branchTypeOverrides,
@@ -135,5 +137,5 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		SyncUpstream:             syncUpstream,
 		UnknownBranchType:        unknownBranchType,
 		Verbose:                  None[configdomain.Verbose](),
-	}, cmp.Or(errBranchTypeOverride, errContributionRegex, errFeatureRegex, errForgeType, errGitHubConnectorType, errGitLabConnectorType, errLineage, errNewBranchType, errObservedRegex, errOffline, errPerennialRegex, errProposalsShowLineage, errPushHook, errShareNewBranches, errShipDeleteTrackingBranch, errShipStrategy, errSyncFeatureStrategy, errSyncPerennialStrategy, errSyncPrototypeStrategy, errSyncTags, errSyncUpstream, errUnknownBranchType)
+	}, cmp.Or(errAutoResolve, errBranchTypeOverride, errContributionRegex, errFeatureRegex, errForgeType, errGitHubConnectorType, errGitLabConnectorType, errLineage, errNewBranchType, errObservedRegex, errOffline, errPerennialRegex, errProposalsShowLineage, errPushHook, errShareNewBranches, errShipDeleteTrackingBranch, errShipStrategy, errSyncFeatureStrategy, errSyncPerennialStrategy, errSyncPrototypeStrategy, errSyncTags, errSyncUpstream, errUnknownBranchType)
 }

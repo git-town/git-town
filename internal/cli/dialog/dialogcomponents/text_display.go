@@ -4,14 +4,14 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/git-town/git-town/v21/internal/cli/colors"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcolors"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 )
 
 func TextDisplay(title, text string, inputs Inputs, dialogName string) (dialogdomain.Exit, error) {
 	model := textDisplayModel{
-		colors: colors.NewDialogColors(),
+		colors: dialogcolors.NewDialogColors(),
 		status: list.StatusActive,
 		text:   text,
 		title:  title,
@@ -24,7 +24,7 @@ func TextDisplay(title, text string, inputs Inputs, dialogName string) (dialogdo
 }
 
 type textDisplayModel struct {
-	colors colors.DialogColors
+	colors dialogcolors.DialogColors
 	status list.Status
 	text   string
 	title  string

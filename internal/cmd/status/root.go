@@ -31,15 +31,16 @@ func RootCommand() *cobra.Command {
 		Short:   statusDesc,
 		Long:    cmdhelpers.Long(statusDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			pending, err1 := readPendingFlag(cmd)
-			verbose, err2 := readVerboseFlag(cmd)
-			if err := cmp.Or(err1, err2); err != nil {
+			pending, errPending := readPendingFlag(cmd)
+			verbose, errVerbose := readVerboseFlag(cmd)
+			if err := cmp.Or(errPending, errVerbose); err != nil {
 				return err
 			}
-			cliConfig := cliconfig.CliConfig{
-				DryRun:  false,
-				Verbose: verbose,
-			}
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				AutoResolve: None[configdomain.AutoResolve](),
+				DryRun:      None[configdomain.DryRun](),
+				Verbose:     verbose,
+			})
 			return executeStatus(cliConfig, pending)
 		},
 	}
@@ -50,7 +51,7 @@ func RootCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeStatus(cliConfig cliconfig.CliConfig, pending configdomain.Pending) error {
+func executeStatus(cliConfig configdomain.PartialConfig, pending configdomain.Pending) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,
@@ -70,7 +71,7 @@ func executeStatus(cliConfig cliconfig.CliConfig, pending configdomain.Pending) 
 	}
 	displayStatus(data, pending)
 	if !pending {
-		print.Footer(cliConfig.Verbose, *repo.CommandsCounter.Value, []string{})
+		print.Footer(repo.UnvalidatedConfig.NormalConfig.Verbose, *repo.CommandsCounter.Value, []string{})
 	}
 	return nil
 }

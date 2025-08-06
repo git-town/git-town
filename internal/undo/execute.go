@@ -19,6 +19,21 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
+type ExecuteArgs struct {
+	Backend          subshelldomain.RunnerQuerier
+	CommandsCounter  Mutable[gohacks.Counter]
+	Config           config.ValidatedConfig
+	Connector        Option[forgedomain.Connector]
+	Detached         configdomain.Detached
+	FinalMessages    stringslice.Collector
+	Frontend         subshelldomain.Runner
+	Git              git.Commands
+	HasOpenChanges   bool
+	InitialStashSize gitdomain.StashSize
+	RootDir          gitdomain.RepoRootDir
+	RunState         runstate.RunState
+}
+
 // undoes the persisted runstate
 func Execute(args ExecuteArgs) error {
 	if args.RunState.DryRun {
@@ -48,22 +63,6 @@ func Execute(args ExecuteArgs) error {
 	if err != nil {
 		return fmt.Errorf(messages.RunstateDeleteProblem, err)
 	}
-	print.Footer(args.Verbose, args.CommandsCounter.Immutable(), args.FinalMessages.Result())
+	print.Footer(args.Config.NormalConfig.Verbose, args.CommandsCounter.Immutable(), args.FinalMessages.Result())
 	return nil
-}
-
-type ExecuteArgs struct {
-	Backend          subshelldomain.RunnerQuerier
-	CommandsCounter  Mutable[gohacks.Counter]
-	Config           config.ValidatedConfig
-	Connector        Option[forgedomain.Connector]
-	Detached         configdomain.Detached
-	FinalMessages    stringslice.Collector
-	Frontend         subshelldomain.Runner
-	Git              git.Commands
-	HasOpenChanges   bool
-	InitialStashSize gitdomain.StashSize
-	RootDir          gitdomain.RepoRootDir
-	RunState         runstate.RunState
-	Verbose          configdomain.Verbose
 }

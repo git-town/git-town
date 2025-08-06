@@ -9,13 +9,13 @@ import (
 
 	"code.gitea.io/sdk/gitea"
 	"github.com/git-town/git-town/v21/internal/browser"
-	"github.com/git-town/git-town/v21/internal/cli/colors"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/git/giturl"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
+	"github.com/git-town/git-town/v21/pkg/colors"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"golang.org/x/oauth2"
 )
@@ -73,7 +73,7 @@ func (self Connector) SquashMergeProposalFn() Option[func(int, gitdomain.CommitM
 
 func (self Connector) UpdateProposalBodyFn() Option[func(forgedomain.ProposalInterface, string) error] {
 	if self.APIToken.IsSome() {
-		return Some(self.updateProposalBodyFn)
+		return Some(self.updateProposalBody)
 	}
 	return None[func(forgedomain.ProposalInterface, string) error]()
 }
@@ -206,7 +206,7 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 	return err
 }
 
-func (self Connector) updateProposalBodyFn(proposalData forgedomain.ProposalInterface, updatedBody string) error {
+func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody string) error {
 	data := proposalData.Data()
 	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)))
 	_, _, err := self.client.EditPullRequest(self.Organization, self.Repository, int64(data.Number), gitea.EditPullRequestOption{
@@ -255,6 +255,12 @@ func FilterPullRequests2(pullRequests []*gitea.PullRequest, branch gitdomain.Loc
 	return result
 }
 
+type NewConnectorArgs struct {
+	APIToken  Option[forgedomain.GiteaToken]
+	Log       print.Logger
+	RemoteURL giturl.Parts
+}
+
 // NewGiteaConfig provides Gitea configuration data if the current repo is hosted on Gitea,
 // otherwise nil.
 func NewConnector(args NewConnectorArgs) Connector {
@@ -271,12 +277,6 @@ func NewConnector(args NewConnectorArgs) Connector {
 		client: giteaClient,
 		log:    args.Log,
 	}
-}
-
-type NewConnectorArgs struct {
-	APIToken  Option[forgedomain.GiteaToken]
-	Log       print.Logger
-	RemoteURL giturl.Parts
 }
 
 func parsePullRequest(pullRequest *gitea.PullRequest) forgedomain.ProposalData {

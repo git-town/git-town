@@ -42,7 +42,7 @@ Feature: handle merge conflicts between feature branch and main branch
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout main                               |
       | main   | git reset --hard {{ sha 'initial commit' }}     |
-    And no merge is in progress
+    And no merge is now in progress
     And the initial commits exist now
     And the initial branches and lineage exist now
 
@@ -56,7 +56,7 @@ Feature: handle merge conflicts between feature branch and main branch
       |        | git push                      |
       |        | git checkout main             |
       | main   | git push --tags               |
-    And no merge is in progress
+    And no merge is now in progress
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        |
       | main   | local, origin | main commit                    |
@@ -93,7 +93,7 @@ Feature: handle merge conflicts between feature branch and main branch
       """
       please stage or commit the untracked changes first
       """
-    And no merge is in progress
+    And no merge is now in progress
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
@@ -108,7 +108,7 @@ Feature: handle merge conflicts between feature branch and main branch
       |        | git checkout main             |
       | main   | git push --tags               |
     And all branches are now synchronized
-    And no merge is in progress
+    And no merge is now in progress
     And these committed files exist now
       | BRANCH | NAME             | CONTENT          |
       | main   | conflicting_file | main content     |

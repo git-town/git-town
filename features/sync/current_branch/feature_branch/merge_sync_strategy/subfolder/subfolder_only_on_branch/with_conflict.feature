@@ -31,7 +31,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND           |
       | current | git merge --abort |
-    And no merge is in progress
+    And no merge is now in progress
     And the initial commits exist now
     And the initial branches and lineage exist now
 
@@ -58,7 +58,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       |         | git checkout current                    |
       | current | git push --tags                         |
     And all branches are now synchronized
-    And no merge is in progress
+    And no merge is now in progress
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, origin | conflicting main commit          |

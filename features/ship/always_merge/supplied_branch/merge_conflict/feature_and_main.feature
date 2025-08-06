@@ -30,7 +30,7 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       """
       aborted because merge exited with error
       """
-    And no merge is in progress
+    And no merge is now in progress
 
   Scenario: undo
     When I run "git-town undo"
@@ -39,6 +39,6 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       """
       nothing to undo
       """
-    And no merge is in progress
+    And no merge is now in progress
     And the initial commits exist now
     And the initial branches and lineage exist now

@@ -39,18 +39,19 @@ func switchCmd() *cobra.Command {
 		Short:   switchDesc,
 		Long:    cmdhelpers.Long(switchDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			branchTypes, err1 := readTypeFlag(cmd)
-			allBranches, err2 := readAllFlag(cmd)
-			displayTypes, err3 := readDisplayTypesFlag(cmd)
+			branchTypes, errBranchTypes := readTypeFlag(cmd)
+			allBranches, errAllBranches := readAllFlag(cmd)
+			displayTypes, errDisplayTypes := readDisplayTypesFlag(cmd)
 			merge, err4 := readMergeFlag(cmd)
 			verbose, err5 := readVerboseFlag(cmd)
-			if err := cmp.Or(err1, err2, err3, err4, err5); err != nil {
+			if err := cmp.Or(errBranchTypes, errAllBranches, errDisplayTypes, err4, err5); err != nil {
 				return err
 			}
-			cliConfig := cliconfig.CliConfig{
-				DryRun:  false,
-				Verbose: verbose,
-			}
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				AutoResolve: None[configdomain.AutoResolve](),
+				DryRun:      None[configdomain.DryRun](),
+				Verbose:     verbose,
+			})
 			return executeSwitch(executeSwitchArgs{
 				allBranches:  allBranches,
 				argv:         args,
@@ -73,7 +74,7 @@ type executeSwitchArgs struct {
 	allBranches  configdomain.AllBranches
 	argv         []string
 	branchTypes  []configdomain.BranchType
-	cliConfig    cliconfig.CliConfig
+	cliConfig    configdomain.PartialConfig
 	displayTypes configdomain.DisplayTypes
 	merge        configdomain.SwitchUsingMerge
 }
@@ -89,7 +90,7 @@ func executeSwitch(args executeSwitchArgs) error {
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineSwitchData(args.argv, repo, args.cliConfig)
+	data, exit, err := determineSwitchData(args.argv, repo)
 	if err != nil || exit {
 		return err
 	}
@@ -149,7 +150,7 @@ type switchData struct {
 	uncommittedChanges bool
 }
 
-func determineSwitchData(args []string, repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data switchData, exit dialogdomain.Exit, err error) {
+func determineSwitchData(args []string, repo execute.OpenRepoResult) (data switchData, exit dialogdomain.Exit, err error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -172,7 +173,6 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult, cliConfig c
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return data, exit, err

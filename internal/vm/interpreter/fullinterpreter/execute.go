@@ -18,14 +18,34 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
+type ExecuteArgs struct {
+	Backend                 subshelldomain.RunnerQuerier
+	CommandsCounter         Mutable[gohacks.Counter]
+	Config                  config.ValidatedConfig
+	Connector               Option[forgedomain.Connector]
+	Detached                configdomain.Detached
+	FinalMessages           stringslice.Collector
+	Frontend                subshelldomain.Runner
+	Git                     git.Commands
+	HasOpenChanges          bool
+	InitialBranch           gitdomain.LocalBranchName
+	InitialBranchesSnapshot gitdomain.BranchesSnapshot
+	InitialConfigSnapshot   undoconfig.ConfigSnapshot
+	InitialStashSize        gitdomain.StashSize
+	Inputs                  dialogcomponents.Inputs
+	PendingCommand          Option[string]
+	RootDir                 gitdomain.RepoRootDir
+	RunState                runstate.RunState
+}
+
 // Execute runs the commands in the given runstate.
 func Execute(args ExecuteArgs) error {
 	if err := runlog.Write(runlog.EventStart, args.InitialBranchesSnapshot.Branches, args.PendingCommand, args.RootDir); err != nil {
 		return err
 	}
 	for {
-		nextStep := args.RunState.RunProgram.Pop()
-		if nextStep == nil {
+		nextStep, hasNextStep := args.RunState.RunProgram.Pop().Get()
+		if !hasNextStep {
 			return finished(finishedArgs{
 				Backend:         args.Backend,
 				CommandsCounter: args.CommandsCounter,
@@ -34,7 +54,7 @@ func Execute(args ExecuteArgs) error {
 				Inputs:          args.Inputs,
 				RootDir:         args.RootDir,
 				RunState:        args.RunState,
-				Verbose:         args.Verbose,
+				Verbose:         args.Config.NormalConfig.Verbose,
 			})
 		}
 		if _, ok := nextStep.(*opcodes.ExitToShell); ok {
@@ -59,25 +79,4 @@ func Execute(args ExecuteArgs) error {
 		}
 		args.RunState.UndoAPIProgram = append(args.RunState.UndoAPIProgram, nextStep.UndoExternalChanges()...)
 	}
-}
-
-type ExecuteArgs struct {
-	Backend                 subshelldomain.RunnerQuerier
-	CommandsCounter         Mutable[gohacks.Counter]
-	Config                  config.ValidatedConfig
-	Connector               Option[forgedomain.Connector]
-	Detached                configdomain.Detached
-	FinalMessages           stringslice.Collector
-	Frontend                subshelldomain.Runner
-	Git                     git.Commands
-	HasOpenChanges          bool
-	InitialBranch           gitdomain.LocalBranchName
-	InitialBranchesSnapshot gitdomain.BranchesSnapshot
-	InitialConfigSnapshot   undoconfig.ConfigSnapshot
-	InitialStashSize        gitdomain.StashSize
-	Inputs                  dialogcomponents.Inputs
-	PendingCommand          Option[string]
-	RootDir                 gitdomain.RepoRootDir
-	RunState                runstate.RunState
-	Verbose                 configdomain.Verbose
 }

@@ -45,10 +45,11 @@ func prototypeCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			cliConfig := cliconfig.CliConfig{
-				DryRun:  false,
-				Verbose: verbose,
-			}
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				AutoResolve: None[configdomain.AutoResolve](),
+				DryRun:      None[configdomain.DryRun](),
+				Verbose:     verbose,
+			})
 			return executePrototype(args, cliConfig)
 		},
 	}
@@ -56,7 +57,7 @@ func prototypeCmd() *cobra.Command {
 	return &cmd
 }
 
-func executePrototype(args []string, cliConfig cliconfig.CliConfig) error {
+func executePrototype(args []string, cliConfig configdomain.PartialConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,
@@ -94,7 +95,7 @@ func executePrototype(args []string, cliConfig cliconfig.CliConfig) error {
 		Git:                   repo.Git,
 		RootDir:               repo.RootDir,
 		TouchedBranches:       branchNames.BranchNames(),
-		Verbose:               cliConfig.Verbose,
+		Verbose:               repo.UnvalidatedConfig.NormalConfig.Verbose,
 	})
 }
 

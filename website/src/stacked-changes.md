@@ -241,23 +241,58 @@ You always have to ship the oldest branch first. You can use
 of the current feature branch or [set parent](commands/set-parent.md) to change
 the order of branches.
 
-#### Avoid phantom merge conflicts
+#### Avoid phantom conflicts
 
-To eliminate phantom merge conflicts after shipping the oldest branch in a
-stacked change, ship using a
-[fast-forward merge](https://git-scm.com/docs/git-merge#_fast_forward_merge).
-This guarantees that the new commit(s) on the main branch are the exact same
-commit(s) from the shipped feature branch. This helps Git recognize those
-commits at the next `git town sync` operation and omit unnecessary merge and
-rebase operations.
+_Phantom conflicts_ occur when Git reports a merge or rebase conflict that -
+when looked at with more context - isn't a real conflict. Phantom conflicts can
+occur when multiple branches in a stack modify the same line in the same file,
+and you ship using squash-merges.
 
-GitLab provides fast-forward merges
-[out of the box](https://docs.gitlab.com/ee/user/project/merge_requests/methods/#fast-forward-merge).
-GitHub doesn't provide this out-of-the-box, but allows a workaround that you can
-utilize by using [git town ship](commands/ship.md) with the
-[fast-forward shipping strategy](preferences/ship-strategy.md#fast-forward).
-This problem is documented by
-[GitHub](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges#squashing-and-merging-a-long-running-branch).
+After you ship the oldest branch of such a stack, the main branch contains a new
+commit that makes the same changes as the shipped branch, but as a different
+commit than the one(s) on the shipped branch. As this new commit populates
+through the stack in the next sync, Git sees sees two changes to the same lines
+and assumes a conflict.
 
-You might want to [compress](commands/compress.md) the feature branch to have
-only one new commit on the main branch.
+Git Town can resolve these phantom conflicts because it tracks the branch
+hierarchy, can investigate such conflicts, and execute multiple Git commands to
+resolve them.
+
+Here are some best practices to minimize phantom merge conflicts:
+
+1. Sync frequently. In a synced stack, each branch builds directly on top of its
+   parent, so changes are linear and easy for Git to reconcile. In an unsynced
+   stack, sibling branches evolve concurrently, making conflicts more likely,
+   especially when they touch the same files.
+
+   If you are hesitant to sync because it takes too long, use the
+   [--detached](commands/sync.md#-d--detached) and
+   [--no-push](commands/sync.md#--no-push) flags to speed it up.
+
+2. Enable Git's [rerere](https://git-scm.com/book/en/v2/Git-Tools-Rerere)
+   feature. This lets Git remember how you resolved past conflicts and applies
+   those resolutions in the future.
+
+3. Ship using a
+   [fast-forward merge](https://git-scm.com/docs/git-merge#_fast_forward_merge).
+   This ensures the commits on main are byte-for-byte identical to those on the
+   shipped branchs. This preserved shared history avoids unnecessary merges or
+   rebases that likely produce phantom conflicts.
+
+   - GitLab supports this
+     [natively](https://docs.gitlab.com/ee/user/project/merge_requests/methods/#fast-forward-merge).
+   - GitHub doesn’t support fast-forward merges via the UI, but you can achieve
+     the same effect by [shipping locally](commands/ship.md) with Git Town's
+     [fast-forward strategy](preferences/ship-strategy.md#fast-forward) and then
+     pushing the result. See GitHub’s
+     [docs](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges#squashing-and-merging-a-long-running-branch)
+     for details.
+
+4. If a feature branch has too many commits and you're resolving the same
+   conflicts repeatedly, [compress](commands/compress.md) it down to a single
+   commit.
+
+5. Focus your feature branches to implement only a single change. This reduces
+   the amount of context you need to process when resolving merge conflicts, and
+   makes it easier to see which branch makes which change and why, and what the
+   correct resolution is.

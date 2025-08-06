@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/execute"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -30,10 +31,11 @@ func RootCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			cliConfig := cliconfig.CliConfig{
-				DryRun:  false,
-				Verbose: verbose,
-			}
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				AutoResolve: None[configdomain.AutoResolve](),
+				DryRun:      None[configdomain.DryRun](),
+				Verbose:     verbose,
+			})
 			return executeDisplayConfig(cliConfig)
 		},
 	}
@@ -44,7 +46,7 @@ func RootCmd() *cobra.Command {
 	return &configCmd
 }
 
-func executeDisplayConfig(cliConfig cliconfig.CliConfig) error {
+func executeDisplayConfig(cliConfig configdomain.PartialConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: false,
@@ -105,6 +107,7 @@ func printConfig(config config.UnvalidatedConfig) {
 	print.Entry("prototype sync strategy", config.NormalConfig.SyncPrototypeStrategy.String())
 	print.Entry("sync tags", format.Bool(config.NormalConfig.SyncTags.IsTrue()))
 	print.Entry("sync with upstream", format.Bool(config.NormalConfig.SyncUpstream.IsTrue()))
+	print.Entry("auto-resolve phantom conflicts", format.Bool(config.NormalConfig.AutoResolve.ShouldAutoResolve()))
 	fmt.Println()
 	if config.NormalConfig.Lineage.Len() > 0 {
 		print.LabelAndValue("Branch Lineage", format.BranchLineage(config.NormalConfig.Lineage))

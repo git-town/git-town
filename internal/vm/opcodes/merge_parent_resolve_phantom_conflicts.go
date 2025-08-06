@@ -15,13 +15,27 @@ type MergeParentResolvePhantomConflicts struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *MergeParentResolvePhantomConflicts) Run(args shared.RunArgs) error {
-	if err := args.Git.MergeBranchNoEdit(args.Frontend, self.CurrentParent); err != nil {
-		args.PrependOpcodes(&ConflictMergePhantomResolveAll{
-			CurrentBranch: self.CurrentBranch,
-			ParentBranch:  self.InitialParentName,
-			ParentSHA:     self.InitialParentSHA,
-		})
+func (self *MergeParentResolvePhantomConflicts) Abort() []shared.Opcode {
+	return []shared.Opcode{
+		&MergeAbort{},
 	}
+}
+
+func (self *MergeParentResolvePhantomConflicts) Continue() []shared.Opcode {
+	return []shared.Opcode{
+		&MergeContinue{},
+	}
+}
+
+func (self *MergeParentResolvePhantomConflicts) Run(args shared.RunArgs) error {
+	err := args.Git.MergeBranchNoEdit(args.Frontend, self.CurrentParent)
+	if err == nil || !args.Config.Value.NormalConfig.AutoResolve.ShouldAutoResolve() {
+		return err
+	}
+	args.PrependOpcodes(&ConflictMergePhantomResolveAll{
+		CurrentBranch: self.CurrentBranch,
+		ParentBranch:  self.InitialParentName,
+		ParentSHA:     self.InitialParentSHA,
+	})
 	return nil
 }

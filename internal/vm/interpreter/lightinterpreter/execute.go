@@ -3,7 +3,6 @@ package lightinterpreter
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/cli/colors"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
@@ -14,13 +13,14 @@ import (
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	"github.com/git-town/git-town/v21/internal/vm/program"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
+	"github.com/git-town/git-town/v21/pkg/colors"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 func Execute(args ExecuteArgs) {
 	for {
-		nextStep := args.Prog.Pop()
-		if nextStep == nil {
+		nextStep, hasNextStep := args.Prog.Pop().Get()
+		if !hasNextStep {
 			return
 		}
 		err := nextStep.Run(shared.RunArgs{

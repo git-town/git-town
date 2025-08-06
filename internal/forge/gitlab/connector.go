@@ -6,13 +6,13 @@ import (
 	"strconv"
 
 	"github.com/git-town/git-town/v21/internal/browser"
-	"github.com/git-town/git-town/v21/internal/cli/colors"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/git/giturl"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
+	"github.com/git-town/git-town/v21/pkg/colors"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	gitlab "gitlab.com/gitlab-org/api/client-go"
 )
@@ -218,6 +218,12 @@ func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInte
 	return nil
 }
 
+type NewConnectorArgs struct {
+	APIToken  Option[forgedomain.GitLabToken]
+	Log       print.Logger
+	RemoteURL giturl.Parts
+}
+
 func NewConnector(args NewConnectorArgs) (Connector, error) {
 	gitlabData := Data{
 		APIToken: args.APIToken,
@@ -237,12 +243,6 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 		log:    args.Log,
 	}
 	return connector, nil
-}
-
-type NewConnectorArgs struct {
-	APIToken  Option[forgedomain.GitLabToken]
-	Log       print.Logger
-	RemoteURL giturl.Parts
 }
 
 func parseMergeRequest(mergeRequest *gitlab.BasicMergeRequest) forgedomain.ProposalData {

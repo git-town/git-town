@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
@@ -32,19 +33,24 @@ func resetRunstateCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeStatusReset(verbose)
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				AutoResolve: None[configdomain.AutoResolve](),
+				DryRun:      None[configdomain.DryRun](),
+				Verbose:     verbose,
+			})
+			return executeStatusReset(cliConfig)
 		},
 	}
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeStatusReset(verbose configdomain.Verbose) error {
+func executeStatusReset(cliConfig configdomain.PartialConfig) error {
 	commandsCounter := NewMutable(new(gohacks.Counter))
 	backendRunner := subshell.BackendRunner{
 		Dir:             None[string](),
 		CommandsCounter: commandsCounter,
-		Verbose:         verbose,
+		Verbose:         cliConfig.Verbose.GetOrDefault(),
 	}
 	gitCommands := git.Commands{
 		CurrentBranchCache: &cache.WithPrevious[gitdomain.LocalBranchName]{},

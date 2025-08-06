@@ -27,7 +27,7 @@ it's safe to leave it blank.
 )
 
 func ContributionRegex(args Args[configdomain.ContributionRegex]) (Option[configdomain.ContributionRegex], dialogdomain.Exit, error) {
-	input, exit, err1 := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
+	input, exit, errInput := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "contribution-regex",
 		ExistingValue: args.Local.Or(args.Global).String(),
 		Help:          contributionRegexHelp,
@@ -35,11 +35,11 @@ func ContributionRegex(args Args[configdomain.ContributionRegex]) (Option[config
 		Prompt:        messages.ContributionRegexPrompt,
 		Title:         contributionRegexTitle,
 	})
-	newValue, err2 := configdomain.ParseContributionRegex(input)
+	newValue, errNewValue := configdomain.ParseContributionRegex(input)
 	if args.Global.Equal(newValue) {
 		// the user has entered the global value --> keep using the global value, don't store the local value
 		newValue = None[configdomain.ContributionRegex]()
 	}
 	fmt.Printf(messages.ContributionRegexResult, dialogcomponents.FormattedOption(newValue, args.Global.IsSome(), exit))
-	return newValue, exit, cmp.Or(err1, err2)
+	return newValue, exit, cmp.Or(errInput, errNewValue)
 }
