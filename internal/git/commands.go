@@ -495,7 +495,7 @@ func (self *Commands) FileConflictFullInfo(querier subshelldomain.Querier, quick
 	return result, nil
 }
 
-func (self *Commands) FileConflictFullInfos(querier subshelldomain.Querier, quickInfos []FileConflict, parentLocation gitdomain.Location, rootBranch gitdomain.LocalBranchName) ([]MergeConflict, error) {
+func (self *Commands) MergeConflicts(querier subshelldomain.Querier, quickInfos FileConflicts, parentLocation gitdomain.Location, rootBranch gitdomain.LocalBranchName) (MergeConflicts, error) {
 	result := make([]MergeConflict, len(quickInfos))
 	for q, quickInfo := range quickInfos {
 		fullInfo, err := self.FileConflictFullInfo(querier, quickInfo, parentLocation, rootBranch)
@@ -507,7 +507,7 @@ func (self *Commands) FileConflictFullInfos(querier subshelldomain.Querier, quic
 	return result, nil
 }
 
-func (self *Commands) FileConflictQuickInfos(querier subshelldomain.Querier) ([]FileConflict, error) {
+func (self *Commands) FileConflictInfos(querier subshelldomain.Querier) (FileConflicts, error) {
 	output, err := querier.Query("git", "ls-files", "--unmerged")
 	if err != nil {
 		return []FileConflict{}, err
