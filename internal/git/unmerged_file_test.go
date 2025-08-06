@@ -19,15 +19,15 @@ func TestUnmergedFile(t *testing.T) {
 `[1:]
 		have, err := git.ParseLsFilesUnmergedOutput(give)
 		must.NoError(t, err)
-		want := []git.FileConflictQuickInfo{
+		want := []git.FileConflict{
 			{
-				BaseChange: None[git.BlobInfo](),
-				CurrentBranchChange: Some(git.BlobInfo{
+				BaseChange: None[git.Blob](),
+				CurrentBranchChange: Some(git.Blob{
 					FilePath:   "file",
 					Permission: "100755",
 					SHA:        "c887ff2255bb9e9440f9456bcf8d310bc8d718d4",
 				}),
-				IncomingChange: Some(git.BlobInfo{
+				IncomingChange: Some(git.Blob{
 					FilePath:   "file",
 					Permission: "100755",
 					SHA:        "ece1e56bf2125e5b114644258872f04bc375ba69",
@@ -44,7 +44,7 @@ func TestUnmergedFile(t *testing.T) {
 			give := `100755 blob ece1e56bf2125e5b114644258872f04bc375ba69	file`
 			have, err := git.ParseLsTreeOutput(give)
 			must.NoError(t, err)
-			want := git.BlobInfo{
+			want := git.Blob{
 				FilePath:   "file",
 				Permission: "100755",
 				SHA:        "ece1e56bf2125e5b114644258872f04bc375ba69",
