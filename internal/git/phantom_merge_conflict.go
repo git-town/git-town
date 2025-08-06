@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/gohacks"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
@@ -53,7 +54,8 @@ type BlobInfo struct {
 }
 
 func (bi BlobInfo) String() string {
-	return fmt.Sprintf("%s %s %s", bi.FilePath, bi.SHA.Truncate(7), bi.Permission)
+	fileContent := gohacks.ReadTextFilePanic(bi.FilePath)
+	return fmt.Sprintf("%s %s %s\n%s", bi.FilePath, bi.SHA.Truncate(7), bi.Permission, fileContent)
 }
 
 // describes the roles that a file can play in a merge conflict
