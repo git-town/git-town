@@ -15,20 +15,20 @@ type ConflictRebasePhantomResolveAll struct {
 }
 
 func (self *ConflictRebasePhantomResolveAll) Run(args shared.RunArgs) error {
-	quickInfos, err := args.Git.FileConflictInfos(args.Backend)
+	fileConflicts, err := args.Git.FileConflictInfos(args.Backend)
 	if err != nil {
 		return err
 	}
 	fmt.Println("111111111111111111111111111 FILE CONFLICTS")
-	quickInfos.Debug(args.Backend)
+	fileConflicts.Debug(args.Backend)
 	rootBranch := args.Config.Value.NormalConfig.Lineage.Root(self.CurrentBranch)
-	fullInfos, err := args.Git.RebaseConflicts(args.Backend, quickInfos, self.BranchToRebaseOnto.Location(), rootBranch)
+	rebaseConflicts, err := args.Git.RebaseConflicts(args.Backend, fileConflicts, self.BranchToRebaseOnto.Location(), rootBranch)
 	if err != nil {
 		return err
 	}
 	fmt.Println("111111111111111111111111111 FULL INFOS")
-	fullInfos.Debug(args.Backend)
-	phantomConflicts := git.DetectPhantomRebaseConflicts(fullInfos, self.BranchToRebaseOnto, rootBranch)
+	rebaseConflicts.Debug(args.Backend)
+	phantomConflicts := git.DetectPhantomRebaseConflicts(rebaseConflicts, self.BranchToRebaseOnto, rootBranch)
 	newOpcodes := []shared.Opcode{}
 	for _, phantomConflict := range phantomConflicts {
 		newOpcodes = append(newOpcodes, &ConflictPhantomResolve{
