@@ -985,7 +985,7 @@ func TestBackendCommands(t *testing.T) {
 		t.Parallel()
 		t.Run("legit phantom merge conflict", func(t *testing.T) {
 			t.Parallel()
-			fullInfos := []git.MergeConflictInfo{
+			mergeInfos := []git.MergeConflictInfo{
 				{
 					Root: Some(git.BlobInfo{
 						FilePath:   "file",
@@ -1004,7 +1004,7 @@ func TestBackendCommands(t *testing.T) {
 					}),
 				},
 			}
-			have := git.DetectPhantomMergeConflicts(fullInfos, gitdomain.NewLocalBranchNameOption("alpha"), "main")
+			have := git.DetectPhantomMergeConflicts(mergeInfos, gitdomain.NewLocalBranchNameOption("alpha"), "main")
 			want := []git.PhantomConflict{
 				{
 					FilePath:   "file",
@@ -1015,7 +1015,7 @@ func TestBackendCommands(t *testing.T) {
 		})
 		t.Run("permissions differ", func(t *testing.T) {
 			t.Parallel()
-			fullInfos := []git.MergeConflictInfo{
+			mergeInfos := []git.MergeConflictInfo{
 				{
 					Root: Some(git.BlobInfo{
 						FilePath:   "file",
@@ -1034,13 +1034,13 @@ func TestBackendCommands(t *testing.T) {
 					}),
 				},
 			}
-			have := git.DetectPhantomMergeConflicts(fullInfos, gitdomain.NewLocalBranchNameOption("alpha"), "main")
+			have := git.DetectPhantomMergeConflicts(mergeInfos, gitdomain.NewLocalBranchNameOption("alpha"), "main")
 			want := []git.PhantomConflict{}
 			must.Eq(t, want, have)
 		})
 		t.Run("file checksums between parent and main differ", func(t *testing.T) {
 			t.Parallel()
-			fullInfos := []git.MergeConflictInfo{
+			mergeInfos := []git.MergeConflictInfo{
 				{
 					Root: Some(git.BlobInfo{
 						FilePath:   "file",
@@ -1059,13 +1059,13 @@ func TestBackendCommands(t *testing.T) {
 					}),
 				},
 			}
-			have := git.DetectPhantomMergeConflicts(fullInfos, gitdomain.NewLocalBranchNameOption("alpha"), "main")
+			have := git.DetectPhantomMergeConflicts(mergeInfos, gitdomain.NewLocalBranchNameOption("alpha"), "main")
 			want := []git.PhantomConflict{}
 			must.Eq(t, want, have)
 		})
 		t.Run("file names between parent and main differ", func(t *testing.T) {
 			t.Parallel()
-			fullInfos := []git.MergeConflictInfo{
+			mergeInfos := []git.MergeConflictInfo{
 				{
 					Root: Some(git.BlobInfo{
 						FilePath:   "file-1",
@@ -1084,7 +1084,7 @@ func TestBackendCommands(t *testing.T) {
 					}),
 				},
 			}
-			have := git.DetectPhantomMergeConflicts(fullInfos, gitdomain.NewLocalBranchNameOption("alpha"), "main")
+			have := git.DetectPhantomMergeConflicts(mergeInfos, gitdomain.NewLocalBranchNameOption("alpha"), "main")
 			want := []git.PhantomConflict{}
 			must.Eq(t, want, have)
 		})

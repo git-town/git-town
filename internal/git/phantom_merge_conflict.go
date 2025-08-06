@@ -93,8 +93,6 @@ func (fullInfos MergeConflictInfos) Debug(querier subshelldomain.Querier) {
 }
 
 // Everything Git Town needs to know about a file merge conflict to determine whether this is a phantom merge conflict.
-// Includes the FileConflictQuickInfo as well as information that only Git Town knows,
-// like how this file looks at the root branch of the stack on which the conflict occurs.
 type MergeConflictInfo struct {
 	Current Option[BlobInfo] // info about the file on the current branch
 	Parent  Option[BlobInfo] // info about the file on the original parent
