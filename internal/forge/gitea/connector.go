@@ -73,7 +73,7 @@ func (self Connector) SquashMergeProposalFn() Option[func(int, gitdomain.CommitM
 
 func (self Connector) UpdateProposalBodyFn() Option[func(forgedomain.ProposalInterface, string) error] {
 	if self.APIToken.IsSome() {
-		return Some(self.updateProposalBodyFn)
+		return Some(self.updateProposalBody)
 	}
 	return None[func(forgedomain.ProposalInterface, string) error]()
 }
@@ -206,7 +206,7 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 	return err
 }
 
-func (self Connector) updateProposalBodyFn(proposalData forgedomain.ProposalInterface, updatedBody string) error {
+func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody string) error {
 	data := proposalData.Data()
 	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)))
 	_, _, err := self.client.EditPullRequest(self.Organization, self.Repository, int64(data.Number), gitea.EditPullRequestOption{
