@@ -44,7 +44,7 @@ var UnmergedStages = []UnmergedStage{
 // Everything Git Town needs to know about a file merge conflict to determine whether this is a phantom merge conflict.
 // Includes the FileConflictQuickInfo as well as information that only Git Town knows,
 // like how this file looks at the root branch of the stack on which the conflict occurs.
-type FileConflictFullInfo struct {
+type MergeConflictFullInfo struct {
 	Current Option[BlobInfo] // info about the file on the current branch
 	Parent  Option[BlobInfo] // info about the file on the original parent
 	Root    Option[BlobInfo] // info about the file on the root branch
@@ -56,7 +56,7 @@ type PhantomConflict struct {
 	Resolution gitdomain.ConflictResolution
 }
 
-func DetectPhantomMergeConflicts(conflictInfos []FileConflictFullInfo, parentBranchOpt Option[gitdomain.LocalBranchName], rootBranch gitdomain.LocalBranchName) []PhantomConflict {
+func DetectPhantomMergeConflicts(conflictInfos []MergeConflictFullInfo, parentBranchOpt Option[gitdomain.LocalBranchName], rootBranch gitdomain.LocalBranchName) []PhantomConflict {
 	parentBranch, hasParentBranch := parentBranchOpt.Get()
 	if !hasParentBranch || parentBranch == rootBranch {
 		// branches that don't have a parent or whose parent is the root branch cannot have phantom merge conflicts
