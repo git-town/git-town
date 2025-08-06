@@ -2,6 +2,7 @@ Feature: auto-resolve phantom merge conflicts in an unsynced stack where parent 
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME     | TYPE    | PARENT   | LOCATIONS     |
       | branch-1 | feature | main     | local, origin |
@@ -10,11 +11,11 @@ Feature: auto-resolve phantom merge conflicts in an unsynced stack where parent 
       | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                         |
       | branch-1 | local, origin | branch-1 commit | file      | line 1 changed by branch-1\n\nline 2 |
       | branch-2 | local         | branch-2 commit | file      | line 1\n\nline 2 changed by branch-2 |
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And origin ships the "branch-1" branch using the "squash-merge" ship-strategy
     And the current branch is "branch-2"
     When I run "git-town sync"
 
+  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                    |
