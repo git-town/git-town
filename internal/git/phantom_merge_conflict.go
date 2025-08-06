@@ -18,11 +18,42 @@ type FileConflictQuickInfo struct {
 	IncomingChange      Option[BlobInfo] // info about the content of the file on the branch being merged in, None == file is being deleted here
 }
 
+func (qi FileConflictQuickInfo) String() string {
+	base, hasBase := qi.BaseChange.Get()
+	current, hasCurrent := qi.CurrentBranchChange.Get()
+	incoming, hasIncoming := qi.IncomingChange.Get()
+	result := strings.Builder{}
+	result.WriteString("base change: ")
+	if hasBase {
+		result.WriteString(base.String())
+	} else {
+		result.WriteString("(none)")
+	}
+	result.WriteString("\ncurrent change: ")
+	if hasCurrent {
+		result.WriteString(current.String())
+	} else {
+		result.WriteString("(none)")
+	}
+	result.WriteString("\nincoming change: ")
+	if hasIncoming {
+		result.WriteString(incoming.String())
+	} else {
+		result.WriteString("(none)")
+	}
+	result.WriteString("\n")
+	return result.String()
+}
+
 // describes the content of a file blob in Git
 type BlobInfo struct {
 	FilePath   string        // relative path of the file in the repo
 	Permission string        // permissions, in the form "100755"
 	SHA        gitdomain.SHA // checksum of the content blob of the file - this is not the commit SHA!
+}
+
+func (bi BlobInfo) String() string {
+	return fmt.Sprintf("%s %s %s", bi.FilePath, bi.SHA.Truncate(7), bi.Permission)
 }
 
 // describes the roles that a file can play in a merge conflict
