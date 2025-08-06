@@ -166,9 +166,9 @@ func executeSync(args executeSyncArgs) error {
 	}
 
 	if args.cliConfig.ProposalsShowLineage.GetOrDefault() == configdomain.ProposalsShowLineageCLI {
-		explainationText := "Current dependencies on/for this pull-request\n\n"
+		explanationText := "Current dependencies on/for this pull-request\n\n"
 		if data.config.NormalConfig.ForgeType.GetOrDefault() == forgedomain.ForgeTypeGitLab {
-			explainationText = strings.ReplaceAll(explainationText, "pull-request", "merge-request")
+			explanationText = strings.ReplaceAll(explanationText, "pull-request", "merge-request")
 		}
 		proposalStackLineageArgs := configdomain.ProposalStackLineageArgs{
 			AfterStackDisplay: []string{
@@ -176,7 +176,7 @@ func executeSync(args executeSyncArgs) error {
 			},
 			BeforeStackDisplay: []string{
 				"\n-------------------------\n",
-				explainationText,
+				explanationText,
 			},
 			Connector:                data.connector,
 			CurrentBranch:            data.initialBranch,
