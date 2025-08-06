@@ -3,7 +3,6 @@ package cmd
 
 import (
 	"github.com/git-town/git-town/v21/internal/cmd/config"
-	"github.com/git-town/git-town/v21/internal/cmd/debug"
 	"github.com/git-town/git-town/v21/internal/cmd/ship"
 	"github.com/git-town/git-town/v21/internal/cmd/status"
 	"github.com/git-town/git-town/v21/internal/cmd/sync"
@@ -19,7 +18,6 @@ func Execute() error {
 	rootCmd.AddCommand(config.RootCmd())
 	rootCmd.AddCommand(continueCmd())
 	rootCmd.AddCommand(contributeCmd())
-	rootCmd.AddCommand(debug.RootCmd())
 	rootCmd.AddCommand(diffParentCommand())
 	rootCmd.AddCommand(hackCmd())
 	rootCmd.AddCommand(detachCommand())
