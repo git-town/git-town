@@ -1,7 +1,5 @@
 @skipWindows
 Feature: handle conflicts between the current feature branch and the main branch (in a local repo)
-# TODO: This wrongfully assumes this is a phantom merge conflict,
-# and resolves it the wrong way. It should stop and let the user resolve this.
 
   Background:
     Given a local Git repo
@@ -21,6 +19,8 @@ Feature: handle conflicts between the current feature branch and the main branch
       |         | git checkout --theirs conflicting_file                                       |
       |         | git add conflicting_file                                                     |
       |         | GIT_EDITOR=true git rebase --continue                                        |
+    # TODO: This wrongfully assumes this is a phantom merge conflict,
+    # and resolves it the wrong way. It should stop and let the user resolve this.
     And no rebase is now in progress
     And all branches are now synchronized
     And these committed files exist now

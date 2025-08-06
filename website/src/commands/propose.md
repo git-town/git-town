@@ -58,7 +58,7 @@ determine the repository state.
 #### `--auto-resolve`
 
 Disables automatic resolution of
-[phantom merge conflicts](../stacked-changes.md#avoid-phantom-merge-conflicts).
+[phantom merge conflicts](../stacked-changes.md#avoid-phantom-conflicts).
 
 ## Configuration
 

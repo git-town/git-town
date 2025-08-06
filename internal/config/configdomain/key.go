@@ -54,7 +54,7 @@ const (
 	KeyAliasSetParent                      = Key("alias.set-parent")
 	KeyAliasShip                           = Key("alias.ship")
 	KeyAliasSync                           = Key("alias.sync")
-	KeyAutoResolve                         = Key("auto-resolve")
+	KeyAutoResolve                         = Key("git-town.auto-resolve")
 	KeyBitbucketAppPassword                = Key("git-town.bitbucket-app-password")
 	KeyBitbucketUsername                   = Key("git-town.bitbucket-username")
 	KeyCodebergToken                       = Key("git-town.codeberg-token")
