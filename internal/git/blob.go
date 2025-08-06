@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
+	"github.com/git-town/git-town/v21/pkg/colors"
 )
 
 // Blob describes the content of a file blob in Git.
@@ -21,7 +22,7 @@ func (self Blob) Debug(querier subshelldomain.Querier) {
 	if err != nil {
 		panic(fmt.Sprintf("cannot display content of blob %q: %s", self.SHA, err))
 	}
-	fmt.Printf("%s %s %s\n%s", self.FilePath, self.SHA.Truncate(7), self.Permission, gohacks.IndentLines(fileContent, 4))
+	fmt.Printf("%s %s %s\n%s\n", self.FilePath, self.SHA.Truncate(7), self.Permission, colors.Faint().Styled(gohacks.IndentLines(fileContent, 4)))
 }
 
 func EmptyBlob() Blob {
