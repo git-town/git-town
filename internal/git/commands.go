@@ -473,21 +473,21 @@ func (self *Commands) FetchUpstream(runner subshelldomain.Runner, branch gitdoma
 	return runner.Run("git", "fetch", gitdomain.RemoteUpstream.String(), branch.String())
 }
 
-func (self *Commands) FileConflictFullInfo(querier subshelldomain.Querier, quickInfo FileConflictQuickInfo, parentLocation gitdomain.Location, rootBranch gitdomain.LocalBranchName) (FileConflictFullInfo, error) {
+func (self *Commands) FileConflictFullInfo(querier subshelldomain.Querier, quickInfo FileConflictQuickInfo, parentLocation gitdomain.Location, rootBranch gitdomain.LocalBranchName) (MergeConflictFullInfo, error) {
 	rootBlob := None[BlobInfo]()
 	parentBlob := None[BlobInfo]()
 	if currentBranchBlobInfo, has := quickInfo.CurrentBranchChange.Get(); has {
 		var err error
 		rootBlob, err = self.ContentBlobInfo(querier, rootBranch.Location(), currentBranchBlobInfo.FilePath)
 		if err != nil {
-			return FileConflictFullInfo{}, err
+			return MergeConflictFullInfo{}, err
 		}
 		parentBlob, err = self.ContentBlobInfo(querier, parentLocation, currentBranchBlobInfo.FilePath)
 		if err != nil {
-			return FileConflictFullInfo{}, err
+			return MergeConflictFullInfo{}, err
 		}
 	}
-	result := FileConflictFullInfo{
+	result := MergeConflictFullInfo{
 		Current: quickInfo.CurrentBranchChange,
 		Parent:  parentBlob,
 		Root:    rootBlob,
@@ -495,8 +495,8 @@ func (self *Commands) FileConflictFullInfo(querier subshelldomain.Querier, quick
 	return result, nil
 }
 
-func (self *Commands) FileConflictFullInfos(querier subshelldomain.Querier, quickInfos FileConflictQuickInfos, parentLocation gitdomain.Location, rootBranch gitdomain.LocalBranchName) (FileConflictFullInfos, error) {
-	result := make([]FileConflictFullInfo, len(quickInfos))
+func (self *Commands) FileConflictFullInfos(querier subshelldomain.Querier, quickInfos FileConflictQuickInfos, parentLocation gitdomain.Location, rootBranch gitdomain.LocalBranchName) (MergeConflictFullInfos, error) {
+	result := make([]MergeConflictFullInfo, len(quickInfos))
 	for q, quickInfo := range quickInfos {
 		fullInfo, err := self.FileConflictFullInfo(querier, quickInfo, parentLocation, rootBranch)
 		if err != nil {
