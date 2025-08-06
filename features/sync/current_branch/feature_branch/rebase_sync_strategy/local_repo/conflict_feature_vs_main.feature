@@ -50,12 +50,19 @@ Feature: handle conflicts between the current feature branch and the main branch
       you must resolve the conflicts before continuing
       """
 
-  @this
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file" with "main and feature content"
     And I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                               |
       | feature | GIT_EDITOR=true git rebase --continue |
+    And no rebase is now in progress
+    And all branches are now synchronized
+
+  Scenario: resolve, rebase, and continue
+    When I resolve the conflict in "conflicting_file" with "main and feature content"
+    And I run "git rebase --continue" and close the editor
+    And I run "git-town continue"
+    Then Git Town runs no commands
     And no rebase is now in progress
     And all branches are now synchronized
