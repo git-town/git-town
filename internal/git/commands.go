@@ -507,7 +507,7 @@ func (self *Commands) FileConflictFullInfos(querier subshelldomain.Querier, quic
 	return result, nil
 }
 
-func (self *Commands) FileConflictQuickInfos(querier subshelldomain.Querier) ([]FileConflictQuickInfo, error) {
+func (self *Commands) FileConflictQuickInfos(querier subshelldomain.Querier) (FileConflictQuickInfos, error) {
 	output, err := querier.Query("git", "ls-files", "--unmerged")
 	if err != nil {
 		return []FileConflictQuickInfo{}, err

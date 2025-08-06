@@ -20,7 +20,7 @@ func (self *ConflictRebasePhantomResolveAll) Run(args shared.RunArgs) error {
 		return err
 	}
 	fmt.Println("111111111111111111111111111 QUICK INFOS")
-	fmt.Println(quickInfos)
+	quickInfos.Debug(args.Backend)
 	rootBranch := args.Config.Value.NormalConfig.Lineage.Root(self.CurrentBranch)
 	fullInfos, err := args.Git.FileConflictFullInfos(args.Backend, quickInfos, self.BranchToRebaseOnto.Location(), rootBranch)
 	if err != nil {

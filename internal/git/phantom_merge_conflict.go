@@ -9,8 +9,17 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
+
+type FileConflictQuickInfos []FileConflictQuickInfo
+
+func (qis FileConflictQuickInfos) Debug(querier subshelldomain.Querier) {
+	for _, qi := range qis {
+		qi.Debug(querier)
+	}
+}
 
 // information about a file with merge conflicts, as provided by "git ls-files --unmerged"
 type FileConflictQuickInfo struct {
@@ -19,31 +28,29 @@ type FileConflictQuickInfo struct {
 	IncomingChange      Option[BlobInfo] // info about the content of the file on the branch being merged in, None == file is being deleted here
 }
 
-func (qi FileConflictQuickInfo) String() string {
+// prints debug information
+func (qi FileConflictQuickInfo) Debug(querier subshelldomain.Querier) {
 	base, hasBase := qi.BaseChange.Get()
 	current, hasCurrent := qi.CurrentBranchChange.Get()
 	incoming, hasIncoming := qi.IncomingChange.Get()
-	result := strings.Builder{}
-	result.WriteString("base change: ")
+	fmt.Print("BASE CHANGE: ")
 	if hasBase {
-		result.WriteString(base.String())
+		base.Debug(querier)
 	} else {
-		result.WriteString("(none)")
+		fmt.Println("(none)")
 	}
-	result.WriteString("\ncurrent change: ")
+	fmt.Print("CURRENT CHANGE: ")
 	if hasCurrent {
-		result.WriteString(current.String())
+		current.Debug(querier)
 	} else {
-		result.WriteString("(none)")
+		fmt.Println("(none)")
 	}
-	result.WriteString("\nincoming change: ")
+	fmt.Print("INCOMING CHANGE: ")
 	if hasIncoming {
-		result.WriteString(incoming.String())
+		incoming.Debug(querier)
 	} else {
-		result.WriteString("(none)")
+		fmt.Println("(none)")
 	}
-	result.WriteString("\n")
-	return result.String()
 }
 
 // describes the content of a file blob in Git
@@ -53,9 +60,12 @@ type BlobInfo struct {
 	SHA        gitdomain.SHA // checksum of the content blob of the file - this is not the commit SHA!
 }
 
-func (bi BlobInfo) String() string {
-	fileContent := gohacks.ReadTextFilePanic(bi.FilePath)
-	return fmt.Sprintf("%s %s %s\n%s", bi.FilePath, bi.SHA.Truncate(7), bi.Permission, fileContent)
+func (bi BlobInfo) Debug(querier subshelldomain.Querier) {
+	fileContent, err := querier.Query("git", "show", bi.SHA.String())
+	if err != nil {
+		panic(fmt.Sprintf("cannot display content of blob %q: %s", bi.SHA, err))
+	}
+	fmt.Printf("%s %s %s\n%s", bi.FilePath, bi.SHA.Truncate(7), bi.Permission, gohacks.IndentLines(fileContent, 4))
 }
 
 // describes the roles that a file can play in a merge conflict
