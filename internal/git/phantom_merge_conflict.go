@@ -84,11 +84,11 @@ var UnmergedStages = []UnmergedStage{
 	UnmergedStageIncoming,
 }
 
-type MergeConflictInfos []MergeConflictInfo
+type MergeConflicts []MergeConflict
 
-func (fullInfos MergeConflictInfos) Debug(querier subshelldomain.Querier) {
-	for _, fullInfo := range fullInfos {
-		fullInfo.Debug(querier)
+func (mergeConflicts MergeConflicts) Debug(querier subshelldomain.Querier) {
+	for _, mergeConflict := range mergeConflicts {
+		mergeConflict.Debug(querier)
 	}
 }
 
@@ -99,10 +99,10 @@ type MergeConflict struct {
 	Root    Option[Blob] // info about the file on the root branch
 }
 
-func (fullInfo MergeConflictInfo) Debug(querier subshelldomain.Querier) {
-	current, hasCurrent := fullInfo.Current.Get()
-	parent, hasParent := fullInfo.Parent.Get()
-	root, hasRoot := fullInfo.Root.Get()
+func (mergeConflict MergeConflict) Debug(querier subshelldomain.Querier) {
+	current, hasCurrent := mergeConflict.Current.Get()
+	parent, hasParent := mergeConflict.Parent.Get()
+	root, hasRoot := mergeConflict.Root.Get()
 	fmt.Print("ROOT: ")
 	if hasRoot {
 		root.Debug(querier)
