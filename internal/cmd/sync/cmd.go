@@ -187,10 +187,10 @@ func executeSync(args executeSyncArgs) error {
 		}
 		proposalStackLineageBuilder := configdomain.NewProposalStackLineageBuilder(&proposalStackLineageArgs)
 		if builder, hasBuilder := proposalStackLineageBuilder.Get(); hasBuilder {
-			if branchProposalData, hasBranchProposalData := builder.GetProposal(data.initialBranch).Get(); hasBranchProposalData {
+			if branchProposal, hasBranchProposalData := builder.GetProposal(data.initialBranch).Get(); hasBranchProposalData {
 				runProgram.Value.Add(&opcodes.ProposalUpdateBody{
-					Proposal:    branchProposalData,
-					UpdatedBody: configdomain.ProposalBodyUpdateWithStackLineage(branchProposalData.Body.GetOrDefault(), builder.Build(&proposalStackLineageArgs).GetOrDefault()),
+					Proposal:    branchProposal,
+					UpdatedBody: configdomain.ProposalBodyUpdateWithStackLineage(branchProposal.Data.Data().Body.GetOrDefault(), builder.Build(&proposalStackLineageArgs).GetOrDefault()),
 				})
 			} else {
 				fmt.Printf(messages.ProposalNotFoundForUpdate, data.initialBranch)

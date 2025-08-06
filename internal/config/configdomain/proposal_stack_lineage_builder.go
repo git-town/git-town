@@ -44,7 +44,7 @@ func NewProposalStackLineageBuilder(args *ProposalStackLineageArgs) Option[Propo
 
 type proposalLineage struct {
 	branch   gitdomain.LocalBranchName
-	proposal Option[forgedomain.ProposalData]
+	proposal Option[forgedomain.Proposal]
 }
 
 type ProposalStackLineageBuilder struct {
@@ -67,12 +67,12 @@ func (self *ProposalStackLineageBuilder) Build(args *ProposalStackLineageArgs) O
 			continue
 		}
 
-		proposalData, hasProposalData := node.proposal.Get()
-		if !hasProposalData {
+		proposal, hasProposal := node.proposal.Get()
+		if !hasProposal {
 			break
 		}
 
-		builder.WriteString(formattedDisplay(args, indent, proposalData))
+		builder.WriteString(formattedDisplay(args, indent, proposal))
 	}
 
 	for _, text := range args.AfterStackDisplay {
@@ -82,8 +82,8 @@ func (self *ProposalStackLineageBuilder) Build(args *ProposalStackLineageArgs) O
 	return Some(builder.String())
 }
 
-func (self *ProposalStackLineageBuilder) GetProposal(branch gitdomain.LocalBranchName) Option[forgedomain.ProposalData] {
-	response := None[forgedomain.ProposalData]()
+func (self *ProposalStackLineageBuilder) GetProposal(branch gitdomain.LocalBranchName) Option[forgedomain.Proposal] {
+	response := None[forgedomain.Proposal]()
 	for _, curr := range self.orderedLineage {
 		if curr.branch == branch {
 			response = curr.proposal
@@ -100,7 +100,7 @@ func (self *ProposalStackLineageBuilder) addBranch(
 	if self.mainAndPerennialBranches.Contains(childBranch) || parentBranch.IsNone() {
 		self.orderedLineage = append(self.orderedLineage, &proposalLineage{
 			branch:   childBranch,
-			proposal: None[forgedomain.ProposalData](),
+			proposal: None[forgedomain.Proposal](),
 		})
 		return self, nil
 	}
@@ -118,14 +118,15 @@ func (self *ProposalStackLineageBuilder) addBranch(
 
 	self.orderedLineage = append(self.orderedLineage, &proposalLineage{
 		branch:   childBranch,
-		proposal: Some(proposalData.Data.Data()),
+		proposal: Some(proposalData),
 	})
 	return self, nil
 }
 
-func formattedDisplay(args *ProposalStackLineageArgs, currentIndentLevel string, proposalData forgedomain.ProposalData) string {
-	if args.CurrentBranch == proposalData.Source {
-		return fmt.Sprintf("%s %s PR %s %s\n", currentIndentLevel, args.IndentMarker, proposalData.URL, args.CurrentBranchIndicator)
+func formattedDisplay(args *ProposalStackLineageArgs, currentIndentLevel string, proposal forgedomain.Proposal) string {
+	proposalData := proposal.Data
+	if args.CurrentBranch == proposalData.Data().Source {
+		return fmt.Sprintf("%s %s PR %s %s\n", currentIndentLevel, args.IndentMarker, proposalData.Data().URL, args.CurrentBranchIndicator)
 	}
-	return fmt.Sprintf("%s %s PR %s\n", currentIndentLevel, args.IndentMarker, proposalData.URL)
+	return fmt.Sprintf("%s %s PR %s\n", currentIndentLevel, args.IndentMarker, proposalData.Data().URL)
 }

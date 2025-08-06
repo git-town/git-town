@@ -9,7 +9,7 @@ import (
 )
 
 type ProposalUpdateBody struct {
-	Proposal                forgedomain.ProposalInterface
+	Proposal                forgedomain.Proposal
 	UpdatedBody             string
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
@@ -24,5 +24,5 @@ func (self *ProposalUpdateBody) Run(args shared.RunArgs) error {
 	if !hasUpdateProposalBody {
 		return errors.New(messages.UpdateProposalBodyUnsupported)
 	}
-	return updateProposalBodyFn(self.Proposal, self.UpdatedBody)
+	return updateProposalBodyFn(self.Proposal.Data, self.UpdatedBody)
 }
