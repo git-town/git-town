@@ -103,8 +103,8 @@ func TestProposalStackLineageBuilder_CheckLineageAndProposals(t *testing.T) {
 	actual := configdomain.NewProposalStackLineageBuilder(&args)
 
 	// assert
-	must.True(t, actual.IsSome())
-	builder := actual.GetOrDefault()
+	builder, hasBuilder := actual.Get()
+	must.True(t, hasBuilder)
 	must.True(t, builder.GetProposal(mainBranch).IsNone())
 	must.True(t, builder.GetProposal(perennialBranch).IsNone())
 	must.True(t, builder.GetProposal(featureBranch).IsSome())
