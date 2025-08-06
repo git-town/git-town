@@ -34,7 +34,7 @@ func (self *ConflictMergePhantomResolveAll) Run(args shared.RunArgs) error {
 	if !hasParentSHA {
 		return errors.New(messages.ConflictMerge)
 	}
-	quickInfos, err := args.Git.FileConflictQuickInfos(args.Backend)
+	quickInfos, err := args.Git.FileConflictInfos(args.Backend)
 	if err != nil {
 		return err
 	}

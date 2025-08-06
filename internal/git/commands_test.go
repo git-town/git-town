@@ -987,17 +987,17 @@ func TestBackendCommands(t *testing.T) {
 			t.Parallel()
 			mergeInfos := []git.MergeConflictInfo{
 				{
-					Root: Some(git.BlobInfo{
+					Root: Some(git.Blob{
 						FilePath:   "file",
 						Permission: "100755",
 						SHA:        "111111",
 					}),
-					Parent: Some(git.BlobInfo{
+					Parent: Some(git.Blob{
 						FilePath:   "file",
 						Permission: "100755",
 						SHA:        "111111",
 					}),
-					Current: Some(git.BlobInfo{
+					Current: Some(git.Blob{
 						FilePath:   "file",
 						Permission: "100755",
 						SHA:        "111111",
@@ -1017,17 +1017,17 @@ func TestBackendCommands(t *testing.T) {
 			t.Parallel()
 			mergeInfos := []git.MergeConflictInfo{
 				{
-					Root: Some(git.BlobInfo{
+					Root: Some(git.Blob{
 						FilePath:   "file",
 						Permission: "100755",
 						SHA:        "111111",
 					}),
-					Parent: Some(git.BlobInfo{
+					Parent: Some(git.Blob{
 						FilePath:   "file",
 						Permission: "100644",
 						SHA:        "111111",
 					}),
-					Current: Some(git.BlobInfo{
+					Current: Some(git.Blob{
 						FilePath:   "file",
 						Permission: "100755",
 						SHA:        "111111",
@@ -1042,17 +1042,17 @@ func TestBackendCommands(t *testing.T) {
 			t.Parallel()
 			mergeInfos := []git.MergeConflictInfo{
 				{
-					Root: Some(git.BlobInfo{
+					Root: Some(git.Blob{
 						FilePath:   "file",
 						Permission: "100755",
 						SHA:        "111111",
 					}),
-					Parent: Some(git.BlobInfo{
+					Parent: Some(git.Blob{
 						FilePath:   "file",
 						Permission: "100644",
 						SHA:        "222222",
 					}),
-					Current: Some(git.BlobInfo{
+					Current: Some(git.Blob{
 						FilePath:   "file",
 						Permission: "100755",
 						SHA:        "222222",
@@ -1067,17 +1067,17 @@ func TestBackendCommands(t *testing.T) {
 			t.Parallel()
 			mergeInfos := []git.MergeConflictInfo{
 				{
-					Root: Some(git.BlobInfo{
+					Root: Some(git.Blob{
 						FilePath:   "file-1",
 						Permission: "100755",
 						SHA:        "222222",
 					}),
-					Parent: Some(git.BlobInfo{
+					Parent: Some(git.Blob{
 						FilePath:   "file-2",
 						Permission: "100755",
 						SHA:        "111111",
 					}),
-					Current: Some(git.BlobInfo{
+					Current: Some(git.Blob{
 						FilePath:   "file-2",
 						Permission: "100755",
 						SHA:        "111111",
