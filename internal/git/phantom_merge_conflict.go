@@ -84,9 +84,9 @@ var UnmergedStages = []UnmergedStage{
 	UnmergedStageIncoming,
 }
 
-type MergeConflictFullInfos []MergeConflictFullInfo
+type MergeConflictInfos []MergeConflictInfo
 
-func (fullInfos MergeConflictFullInfos) Debug(querier subshelldomain.Querier) {
+func (fullInfos MergeConflictInfos) Debug(querier subshelldomain.Querier) {
 	for _, fullInfo := range fullInfos {
 		fullInfo.Debug(querier)
 	}
@@ -95,13 +95,13 @@ func (fullInfos MergeConflictFullInfos) Debug(querier subshelldomain.Querier) {
 // Everything Git Town needs to know about a file merge conflict to determine whether this is a phantom merge conflict.
 // Includes the FileConflictQuickInfo as well as information that only Git Town knows,
 // like how this file looks at the root branch of the stack on which the conflict occurs.
-type MergeConflictFullInfo struct {
+type MergeConflictInfo struct {
 	Current Option[BlobInfo] // info about the file on the current branch
 	Parent  Option[BlobInfo] // info about the file on the original parent
 	Root    Option[BlobInfo] // info about the file on the root branch
 }
 
-func (fullInfo MergeConflictFullInfo) Debug(querier subshelldomain.Querier) {
+func (fullInfo MergeConflictInfo) Debug(querier subshelldomain.Querier) {
 	current, hasCurrent := fullInfo.Current.Get()
 	parent, hasParent := fullInfo.Parent.Get()
 	root, hasRoot := fullInfo.Root.Get()
@@ -131,7 +131,7 @@ type PhantomConflict struct {
 	Resolution gitdomain.ConflictResolution
 }
 
-func DetectPhantomMergeConflicts(conflictInfos []MergeConflictFullInfo, parentBranchOpt Option[gitdomain.LocalBranchName], rootBranch gitdomain.LocalBranchName) []PhantomConflict {
+func DetectPhantomMergeConflicts(conflictInfos []MergeConflictInfo, parentBranchOpt Option[gitdomain.LocalBranchName], rootBranch gitdomain.LocalBranchName) []PhantomConflict {
 	parentBranch, hasParentBranch := parentBranchOpt.Get()
 	if !hasParentBranch || parentBranch == rootBranch {
 		// branches that don't have a parent or whose parent is the root branch cannot have phantom merge conflicts
