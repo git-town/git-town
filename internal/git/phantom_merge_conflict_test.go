@@ -16,7 +16,7 @@ func TestParseLsFilesUnmergedLine(t *testing.T) {
 		give := `100755 9f8f8acb41baba910c147c21eb61c55cf6d0447b 1	file`
 		haveBlobInfo, haveStage, havePath, err := git.ParseLsFilesUnmergedLine(give)
 		must.NoError(t, err)
-		wantBlobInfo := git.BlobInfo{
+		wantBlobInfo := git.Blob{
 			FilePath:   "file",
 			Permission: "100755",
 			SHA:        "9f8f8acb41baba910c147c21eb61c55cf6d0447b",
@@ -33,7 +33,7 @@ func TestParseLsFilesUnmergedLine(t *testing.T) {
 		give := `100755 9f8f8acb41baba910c147c21eb61c55cf6d0447b 2	file`
 		haveBlobInfo, haveStage, havePath, err := git.ParseLsFilesUnmergedLine(give)
 		must.NoError(t, err)
-		wantBlobInfo := git.BlobInfo{
+		wantBlobInfo := git.Blob{
 			FilePath:   "file",
 			Permission: "100755",
 			SHA:        "9f8f8acb41baba910c147c21eb61c55cf6d0447b",
@@ -50,7 +50,7 @@ func TestParseLsFilesUnmergedLine(t *testing.T) {
 		give := `100755 9f8f8acb41baba910c147c21eb61c55cf6d0447b 3	file`
 		haveBlobInfo, haveStage, havePath, err := git.ParseLsFilesUnmergedLine(give)
 		must.NoError(t, err)
-		wantBlobInfo := git.BlobInfo{
+		wantBlobInfo := git.Blob{
 			FilePath:   "file",
 			Permission: "100755",
 			SHA:        "9f8f8acb41baba910c147c21eb61c55cf6d0447b",
@@ -72,15 +72,15 @@ func TestParseLsFilesUnmergedOutput(t *testing.T) {
 			100755 c887ff2255bb9e9440f9456bcf8d310bc8d718d4 2	file
 			100755 ece1e56bf2125e5b114644258872f04bc375ba69 3	file`
 		have, err := git.ParseLsFilesUnmergedOutput(give)
-		want := []git.FileConflictQuickInfo{
+		want := []git.FileConflict{
 			{
-				BaseChange: None[git.BlobInfo](),
-				CurrentBranchChange: Some(git.BlobInfo{
+				BaseChange: None[git.Blob](),
+				CurrentBranchChange: Some(git.Blob{
 					FilePath:   "file",
 					Permission: "100755",
 					SHA:        "c887ff2255bb9e9440f9456bcf8d310bc8d718d4",
 				}),
-				IncomingChange: Some(git.BlobInfo{
+				IncomingChange: Some(git.Blob{
 					FilePath:   "file",
 					Permission: "100755",
 					SHA:        "ece1e56bf2125e5b114644258872f04bc375ba69",
@@ -97,15 +97,15 @@ func TestParseLsFilesUnmergedOutput(t *testing.T) {
 			100755 9f8f8acb41baba910c147c21eb61c55cf6d0447b 1	file
 			100755 554e589880fc9e46b8b313499d325337187b1ee1 3	file`
 		have, err := git.ParseLsFilesUnmergedOutput(give)
-		want := []git.FileConflictQuickInfo{
+		want := []git.FileConflict{
 			{
-				BaseChange: Some(git.BlobInfo{
+				BaseChange: Some(git.Blob{
 					FilePath:   "file",
 					Permission: "100755",
 					SHA:        "9f8f8acb41baba910c147c21eb61c55cf6d0447b",
 				}),
-				CurrentBranchChange: None[git.BlobInfo](),
-				IncomingChange: Some(git.BlobInfo{
+				CurrentBranchChange: None[git.Blob](),
+				IncomingChange: Some(git.Blob{
 					FilePath:   "file",
 					Permission: "100755",
 					SHA:        "554e589880fc9e46b8b313499d325337187b1ee1",
@@ -122,19 +122,19 @@ func TestParseLsFilesUnmergedOutput(t *testing.T) {
 			100755 9f8f8acb41baba910c147c21eb61c55cf6d0447b 1	file
 			100755 554e589880fc9e46b8b313499d325337187b1ee1 2	file`
 		have, err := git.ParseLsFilesUnmergedOutput(give)
-		want := []git.FileConflictQuickInfo{
+		want := []git.FileConflict{
 			{
-				BaseChange: Some(git.BlobInfo{
+				BaseChange: Some(git.Blob{
 					FilePath:   "file",
 					Permission: "100755",
 					SHA:        "9f8f8acb41baba910c147c21eb61c55cf6d0447b",
 				}),
-				CurrentBranchChange: Some(git.BlobInfo{
+				CurrentBranchChange: Some(git.Blob{
 					FilePath:   "file",
 					Permission: "100755",
 					SHA:        "554e589880fc9e46b8b313499d325337187b1ee1",
 				}),
-				IncomingChange: None[git.BlobInfo](),
+				IncomingChange: None[git.Blob](),
 			},
 		}
 		must.NoError(t, err)

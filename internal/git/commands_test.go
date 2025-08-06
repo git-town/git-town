@@ -985,26 +985,26 @@ func TestBackendCommands(t *testing.T) {
 		t.Parallel()
 		t.Run("legit phantom merge conflict", func(t *testing.T) {
 			t.Parallel()
-			fullInfos := []git.FileConflictFullInfo{
+			mergeInfos := []git.MergeConflict{
 				{
-					Root: Some(git.BlobInfo{
+					Root: Some(git.Blob{
 						FilePath:   "file",
 						Permission: "100755",
 						SHA:        "111111",
 					}),
-					Parent: Some(git.BlobInfo{
+					Parent: Some(git.Blob{
 						FilePath:   "file",
 						Permission: "100755",
 						SHA:        "111111",
 					}),
-					Current: Some(git.BlobInfo{
+					Current: Some(git.Blob{
 						FilePath:   "file",
 						Permission: "100755",
 						SHA:        "111111",
 					}),
 				},
 			}
-			have := git.DetectPhantomMergeConflicts(fullInfos, gitdomain.NewLocalBranchNameOption("alpha"), "main")
+			have := git.DetectPhantomMergeConflicts(mergeInfos, gitdomain.NewLocalBranchNameOption("alpha"), "main")
 			want := []git.PhantomConflict{
 				{
 					FilePath:   "file",
@@ -1015,76 +1015,76 @@ func TestBackendCommands(t *testing.T) {
 		})
 		t.Run("permissions differ", func(t *testing.T) {
 			t.Parallel()
-			fullInfos := []git.FileConflictFullInfo{
+			mergeInfos := []git.MergeConflict{
 				{
-					Root: Some(git.BlobInfo{
+					Root: Some(git.Blob{
 						FilePath:   "file",
 						Permission: "100755",
 						SHA:        "111111",
 					}),
-					Parent: Some(git.BlobInfo{
+					Parent: Some(git.Blob{
 						FilePath:   "file",
 						Permission: "100644",
 						SHA:        "111111",
 					}),
-					Current: Some(git.BlobInfo{
+					Current: Some(git.Blob{
 						FilePath:   "file",
 						Permission: "100755",
 						SHA:        "111111",
 					}),
 				},
 			}
-			have := git.DetectPhantomMergeConflicts(fullInfos, gitdomain.NewLocalBranchNameOption("alpha"), "main")
+			have := git.DetectPhantomMergeConflicts(mergeInfos, gitdomain.NewLocalBranchNameOption("alpha"), "main")
 			want := []git.PhantomConflict{}
 			must.Eq(t, want, have)
 		})
 		t.Run("file checksums between parent and main differ", func(t *testing.T) {
 			t.Parallel()
-			fullInfos := []git.FileConflictFullInfo{
+			mergeInfos := []git.MergeConflict{
 				{
-					Root: Some(git.BlobInfo{
+					Root: Some(git.Blob{
 						FilePath:   "file",
 						Permission: "100755",
 						SHA:        "111111",
 					}),
-					Parent: Some(git.BlobInfo{
+					Parent: Some(git.Blob{
 						FilePath:   "file",
 						Permission: "100644",
 						SHA:        "222222",
 					}),
-					Current: Some(git.BlobInfo{
+					Current: Some(git.Blob{
 						FilePath:   "file",
 						Permission: "100755",
 						SHA:        "222222",
 					}),
 				},
 			}
-			have := git.DetectPhantomMergeConflicts(fullInfos, gitdomain.NewLocalBranchNameOption("alpha"), "main")
+			have := git.DetectPhantomMergeConflicts(mergeInfos, gitdomain.NewLocalBranchNameOption("alpha"), "main")
 			want := []git.PhantomConflict{}
 			must.Eq(t, want, have)
 		})
 		t.Run("file names between parent and main differ", func(t *testing.T) {
 			t.Parallel()
-			fullInfos := []git.FileConflictFullInfo{
+			mergeInfos := []git.MergeConflict{
 				{
-					Root: Some(git.BlobInfo{
+					Root: Some(git.Blob{
 						FilePath:   "file-1",
 						Permission: "100755",
 						SHA:        "222222",
 					}),
-					Parent: Some(git.BlobInfo{
+					Parent: Some(git.Blob{
 						FilePath:   "file-2",
 						Permission: "100755",
 						SHA:        "111111",
 					}),
-					Current: Some(git.BlobInfo{
+					Current: Some(git.Blob{
 						FilePath:   "file-2",
 						Permission: "100755",
 						SHA:        "111111",
 					}),
 				},
 			}
-			have := git.DetectPhantomMergeConflicts(fullInfos, gitdomain.NewLocalBranchNameOption("alpha"), "main")
+			have := git.DetectPhantomMergeConflicts(mergeInfos, gitdomain.NewLocalBranchNameOption("alpha"), "main")
 			want := []git.PhantomConflict{}
 			must.Eq(t, want, have)
 		})
