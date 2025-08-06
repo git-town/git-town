@@ -93,7 +93,7 @@ func (fullInfos MergeConflictInfos) Debug(querier subshelldomain.Querier) {
 }
 
 // Everything Git Town needs to know about a file merge conflict to determine whether this is a phantom merge conflict.
-type MergeConflictInfo struct {
+type MergeConflict struct {
 	Current Option[Blob] // info about the file on the current branch
 	Parent  Option[Blob] // info about the file on the original parent
 	Root    Option[Blob] // info about the file on the root branch
@@ -129,7 +129,7 @@ type PhantomConflict struct {
 	Resolution gitdomain.ConflictResolution
 }
 
-func DetectPhantomMergeConflicts(conflictInfos []MergeConflictInfo, parentBranchOpt Option[gitdomain.LocalBranchName], rootBranch gitdomain.LocalBranchName) []PhantomConflict {
+func DetectPhantomMergeConflicts(conflictInfos []MergeConflict, parentBranchOpt Option[gitdomain.LocalBranchName], rootBranch gitdomain.LocalBranchName) []PhantomConflict {
 	parentBranch, hasParentBranch := parentBranchOpt.Get()
 	if !hasParentBranch || parentBranch == rootBranch {
 		// branches that don't have a parent or whose parent is the root branch cannot have phantom merge conflicts
@@ -153,7 +153,7 @@ func DetectPhantomMergeConflicts(conflictInfos []MergeConflictInfo, parentBranch
 	return result
 }
 
-func EmptyBlobInfo() Blob {
+func EmptyBlob() Blob {
 	var result Blob
 	return result
 }
@@ -250,22 +250,22 @@ func ParseLsTreeOutput(output string) (Blob, error) {
 	// skip permissions
 	permission, remainder, match := strings.Cut(output, " ")
 	if !match {
-		return EmptyBlobInfo(), fmt.Errorf("cannot read permissions portion from the output of \"git ls-tree\": %q", output)
+		return EmptyBlob(), fmt.Errorf("cannot read permissions portion from the output of \"git ls-tree\": %q", output)
 	}
 	objType, remainder, match := strings.Cut(remainder, " ")
 	if !match {
-		return EmptyBlobInfo(), fmt.Errorf("cannot read object type from the output of \"git ls-tree\": %q", output)
+		return EmptyBlob(), fmt.Errorf("cannot read object type from the output of \"git ls-tree\": %q", output)
 	}
 	if objType != "blob" {
-		return EmptyBlobInfo(), fmt.Errorf("unexpected object type (%s) in the output of \"git ls-tree\": %q", objType, output)
+		return EmptyBlob(), fmt.Errorf("unexpected object type (%s) in the output of \"git ls-tree\": %q", objType, output)
 	}
 	shaText, remainder, match := strings.Cut(remainder, "\t")
 	if !match {
-		return EmptyBlobInfo(), fmt.Errorf("cannot read SHA from the output of \"git ls-tree\": %q", output)
+		return EmptyBlob(), fmt.Errorf("cannot read SHA from the output of \"git ls-tree\": %q", output)
 	}
 	sha, err := gitdomain.NewSHAErr(shaText)
 	if err != nil {
-		return EmptyBlobInfo(), fmt.Errorf("invalid SHA (%s) in the output of \"git ls-tree\": %q", shaText, output)
+		return EmptyBlob(), fmt.Errorf("invalid SHA (%s) in the output of \"git ls-tree\": %q", shaText, output)
 	}
 	blobInfo := Blob{
 		FilePath:   remainder,

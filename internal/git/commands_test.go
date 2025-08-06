@@ -985,7 +985,7 @@ func TestBackendCommands(t *testing.T) {
 		t.Parallel()
 		t.Run("legit phantom merge conflict", func(t *testing.T) {
 			t.Parallel()
-			mergeInfos := []git.MergeConflictInfo{
+			mergeInfos := []git.MergeConflict{
 				{
 					Root: Some(git.Blob{
 						FilePath:   "file",
@@ -1015,7 +1015,7 @@ func TestBackendCommands(t *testing.T) {
 		})
 		t.Run("permissions differ", func(t *testing.T) {
 			t.Parallel()
-			mergeInfos := []git.MergeConflictInfo{
+			mergeInfos := []git.MergeConflict{
 				{
 					Root: Some(git.Blob{
 						FilePath:   "file",
@@ -1040,7 +1040,7 @@ func TestBackendCommands(t *testing.T) {
 		})
 		t.Run("file checksums between parent and main differ", func(t *testing.T) {
 			t.Parallel()
-			mergeInfos := []git.MergeConflictInfo{
+			mergeInfos := []git.MergeConflict{
 				{
 					Root: Some(git.Blob{
 						FilePath:   "file",
@@ -1065,7 +1065,7 @@ func TestBackendCommands(t *testing.T) {
 		})
 		t.Run("file names between parent and main differ", func(t *testing.T) {
 			t.Parallel()
-			mergeInfos := []git.MergeConflictInfo{
+			mergeInfos := []git.MergeConflict{
 				{
 					Root: Some(git.Blob{
 						FilePath:   "file-1",

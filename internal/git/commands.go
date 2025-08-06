@@ -473,21 +473,21 @@ func (self *Commands) FetchUpstream(runner subshelldomain.Runner, branch gitdoma
 	return runner.Run("git", "fetch", gitdomain.RemoteUpstream.String(), branch.String())
 }
 
-func (self *Commands) FileConflictFullInfo(querier subshelldomain.Querier, quickInfo FileConflict, parentLocation gitdomain.Location, rootBranch gitdomain.LocalBranchName) (MergeConflictInfo, error) {
+func (self *Commands) FileConflictFullInfo(querier subshelldomain.Querier, quickInfo FileConflict, parentLocation gitdomain.Location, rootBranch gitdomain.LocalBranchName) (MergeConflict, error) {
 	rootBlob := None[Blob]()
 	parentBlob := None[Blob]()
 	if currentBranchBlobInfo, has := quickInfo.CurrentBranchChange.Get(); has {
 		var err error
 		rootBlob, err = self.ContentBlobInfo(querier, rootBranch.Location(), currentBranchBlobInfo.FilePath)
 		if err != nil {
-			return MergeConflictInfo{}, err
+			return MergeConflict{}, err
 		}
 		parentBlob, err = self.ContentBlobInfo(querier, parentLocation, currentBranchBlobInfo.FilePath)
 		if err != nil {
-			return MergeConflictInfo{}, err
+			return MergeConflict{}, err
 		}
 	}
-	result := MergeConflictInfo{
+	result := MergeConflict{
 		Current: quickInfo.CurrentBranchChange,
 		Parent:  parentBlob,
 		Root:    rootBlob,
@@ -495,8 +495,8 @@ func (self *Commands) FileConflictFullInfo(querier subshelldomain.Querier, quick
 	return result, nil
 }
 
-func (self *Commands) MergeConflictInfos(querier subshelldomain.Querier, quickInfos FileConflicts, parentLocation gitdomain.Location, rootBranch gitdomain.LocalBranchName) (MergeConflictInfos, error) {
-	result := make([]MergeConflictInfo, len(quickInfos))
+func (self *Commands) MergeConflictInfos(querier subshelldomain.Querier, quickInfos FileConflicts, parentLocation gitdomain.Location, rootBranch gitdomain.LocalBranchName) (MergeConflict, error) {
+	result := make([]MergeConflict, len(quickInfos))
 	for q, quickInfo := range quickInfos {
 		fullInfo, err := self.FileConflictFullInfo(querier, quickInfo, parentLocation, rootBranch)
 		if err != nil {
