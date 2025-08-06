@@ -7,9 +7,19 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/gohacks"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
+
+type FileConflictQuickInfos []FileConflictQuickInfo
+
+func (quickInfos FileConflictQuickInfos) Debug(querier subshelldomain.Querier) {
+	for _, quickInfo := range quickInfos {
+		quickInfo.Debug(querier)
+	}
+}
 
 // information about a file with merge conflicts, as provided by "git ls-files --unmerged"
 type FileConflictQuickInfo struct {
@@ -18,11 +28,44 @@ type FileConflictQuickInfo struct {
 	IncomingChange      Option[BlobInfo] // info about the content of the file on the branch being merged in, None == file is being deleted here
 }
 
+// prints debug information
+func (quickInfo FileConflictQuickInfo) Debug(querier subshelldomain.Querier) {
+	base, hasBase := quickInfo.BaseChange.Get()
+	current, hasCurrent := quickInfo.CurrentBranchChange.Get()
+	incoming, hasIncoming := quickInfo.IncomingChange.Get()
+	fmt.Print("BASE CHANGE: ")
+	if hasBase {
+		base.Debug(querier)
+	} else {
+		fmt.Println("(none)")
+	}
+	fmt.Print("CURRENT CHANGE: ")
+	if hasCurrent {
+		current.Debug(querier)
+	} else {
+		fmt.Println("(none)")
+	}
+	fmt.Print("INCOMING CHANGE: ")
+	if hasIncoming {
+		incoming.Debug(querier)
+	} else {
+		fmt.Println("(none)")
+	}
+}
+
 // describes the content of a file blob in Git
 type BlobInfo struct {
 	FilePath   string        // relative path of the file in the repo
 	Permission string        // permissions, in the form "100755"
 	SHA        gitdomain.SHA // checksum of the content blob of the file - this is not the commit SHA!
+}
+
+func (bi BlobInfo) Debug(querier subshelldomain.Querier) {
+	fileContent, err := querier.Query("git", "show", bi.SHA.String())
+	if err != nil {
+		panic(fmt.Sprintf("cannot display content of blob %q: %s", bi.SHA, err))
+	}
+	fmt.Printf("%s %s %s\n%s", bi.FilePath, bi.SHA.Truncate(7), bi.Permission, gohacks.IndentLines(fileContent, 4))
 }
 
 // describes the roles that a file can play in a merge conflict
@@ -41,6 +84,14 @@ var UnmergedStages = []UnmergedStage{
 	UnmergedStageIncoming,
 }
 
+type FileConflictFullInfos []FileConflictFullInfo
+
+func (fullInfos FileConflictFullInfos) Debug(querier subshelldomain.Querier) {
+	for _, fullInfo := range fullInfos {
+		fullInfo.Debug(querier)
+	}
+}
+
 // Everything Git Town needs to know about a file merge conflict to determine whether this is a phantom merge conflict.
 // Includes the FileConflictQuickInfo as well as information that only Git Town knows,
 // like how this file looks at the root branch of the stack on which the conflict occurs.
@@ -48,6 +99,30 @@ type FileConflictFullInfo struct {
 	Current Option[BlobInfo] // info about the file on the current branch
 	Parent  Option[BlobInfo] // info about the file on the original parent
 	Root    Option[BlobInfo] // info about the file on the root branch
+}
+
+func (fullInfo FileConflictFullInfo) Debug(querier subshelldomain.Querier) {
+	current, hasCurrent := fullInfo.Current.Get()
+	parent, hasParent := fullInfo.Parent.Get()
+	root, hasRoot := fullInfo.Root.Get()
+	fmt.Print("ROOT: ")
+	if hasRoot {
+		root.Debug(querier)
+	} else {
+		fmt.Println("(none)")
+	}
+	fmt.Print("PARENT CHANGE: ")
+	if hasParent {
+		parent.Debug(querier)
+	} else {
+		fmt.Println("(none)")
+	}
+	fmt.Print("CURRENT CHANGE: ")
+	if hasCurrent {
+		current.Debug(querier)
+	} else {
+		fmt.Println("(none)")
+	}
 }
 
 // describes a file within an unresolved merge conflict that experiences a phantom merge conflict
