@@ -14,10 +14,10 @@ type MergeConflict struct {
 	Root    Option[Blob] // info about the file on the root branch
 }
 
-func (mergeConflict MergeConflict) Debug(querier subshelldomain.Querier) {
-	current, hasCurrent := mergeConflict.Current.Get()
-	parent, hasParent := mergeConflict.Parent.Get()
-	root, hasRoot := mergeConflict.Root.Get()
+func (self MergeConflict) Debug(querier subshelldomain.Querier) {
+	current, hasCurrent := self.Current.Get()
+	parent, hasParent := self.Parent.Get()
+	root, hasRoot := self.Root.Get()
 	fmt.Print("ROOT: ")
 	if hasRoot {
 		root.Debug(querier)

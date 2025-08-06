@@ -4,8 +4,8 @@ import "github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 
 type FileConflicts []FileConflict
 
-func (quickInfos FileConflicts) Debug(querier subshelldomain.Querier) {
-	for _, quickInfo := range quickInfos {
+func (self FileConflicts) Debug(querier subshelldomain.Querier) {
+	for _, quickInfo := range self {
 		quickInfo.Debug(querier)
 	}
 }
