@@ -35,5 +35,5 @@ type ProposalStackLineageArgs struct {
 	// MainAndPerennialBranches
 	// These branches will not be searched for having a proposal attached to them
 	// when building the stack lineage.
-	MainAndPerennialBranches Option[gitdomain.LocalBranchNames]
+	MainAndPerennialBranches gitdomain.LocalBranchNames
 }

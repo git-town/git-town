@@ -183,7 +183,7 @@ func executeSync(args executeSyncArgs) error {
 			CurrentBranchIndicator:   ":point_left:",
 			IndentMarker:             "-",
 			Lineage:                  data.config.NormalConfig.Lineage,
-			MainAndPerennialBranches: Some(data.config.MainAndPerennials()),
+			MainAndPerennialBranches: data.config.MainAndPerennials(),
 		}
 		proposalStackLineageBuilder := configdomain.NewProposalStackLineageBuilder(&proposalStackLineageArgs)
 		if builder, hasBuilder := proposalStackLineageBuilder.Get(); hasBuilder {

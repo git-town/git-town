@@ -14,7 +14,7 @@ func NewProposalStackLineageBuilder(args *ProposalStackLineageArgs) Option[Propo
 		return None[ProposalStackLineageBuilder]()
 	}
 
-	if args.MainAndPerennialBranches.GetOrDefault().Contains(args.CurrentBranch) {
+	if args.MainAndPerennialBranches.Contains(args.CurrentBranch) {
 		// cannot create proposal stack lineage for main or perennial branch
 		return None[ProposalStackLineageBuilder]()
 	}
@@ -26,7 +26,7 @@ func NewProposalStackLineageBuilder(args *ProposalStackLineageArgs) Option[Propo
 
 	lineage := args.Lineage.BranchLineage(args.CurrentBranch)
 	builder := &ProposalStackLineageBuilder{
-		mainAndPerennialBranches: args.MainAndPerennialBranches.GetOrDefault(),
+		mainAndPerennialBranches: args.MainAndPerennialBranches,
 		orderedLineage:           make([]*proposalLineage, 0, len(args.Lineage.data)),
 	}
 	for _, currBranch := range lineage {

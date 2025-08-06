@@ -1,6 +1,7 @@
 package configdomain_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/shoenig/test/must"
@@ -26,6 +27,10 @@ func (self *mockConnectorProposalStackLineageBuilder) DefaultProposalMessage(_ f
 
 func (self *mockConnectorProposalStackLineageBuilder) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
 	return Some(func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+		var prNumber int
+		for _, char := range branch {
+			prNumber += int(char)
+		}
 		return Some(forgedomain.Proposal{
 			Data: forgedomain.ProposalData{
 				Body:         None[string](),
@@ -34,7 +39,7 @@ func (self *mockConnectorProposalStackLineageBuilder) FindProposalFn() Option[fu
 				Source:       branch,
 				Target:       target,
 				Title:        "Test Mocker",
-				URL:          "https://www.github.com/git-town/pull/1",
+				URL:          fmt.Sprintf("https://www.github.com/git-town/pull/%d", prNumber),
 			},
 			ForgeType: forgedomain.ForgeTypeCodeberg,
 		}), nil
@@ -77,26 +82,26 @@ func TestProposalStackLineageBuilder_CheckLineageAndProposals(t *testing.T) {
 	t.Parallel()
 	// arrange
 	mainBranch := gitdomain.NewLocalBranchName("main")
-	perennialBranch := gitdomain.NewLocalBranchName("development")
-	featureBranch := gitdomain.NewLocalBranchName("git-town/proposal-stack-lineage")
-	lineage := configdomain.NewLineage()
-	lineage.Root(mainBranch)
-	lineage.Set(perennialBranch, mainBranch)
-	lineage.Set(featureBranch, perennialBranch)
+	featureBranchA := gitdomain.NewLocalBranchName("a")
+	featureBranchB := gitdomain.NewLocalBranchName("b")
+	lineage := configdomain.NewLineageWith(configdomain.LineageData{
+		featureBranchA: mainBranch,
+		featureBranchB: featureBranchA,
+	})
 	var connector forgedomain.Connector = &mockConnectorProposalStackLineageBuilder{}
 	args := configdomain.ProposalStackLineageArgs{
 		AfterStackDisplay:        []string{},
 		BeforeStackDisplay:       []string{},
 		Connector:                Some(connector),
-		CurrentBranch:            featureBranch,
+		CurrentBranch:            featureBranchA,
 		CurrentBranchIndicator:   ":point_left:",
 		IndentMarker:             "-",
 		Lineage:                  lineage,
-		MainAndPerennialBranches: Some(gitdomain.NewLocalBranchNames(mainBranch.String(), perennialBranch.String())),
+		MainAndPerennialBranches: gitdomain.NewLocalBranchNames(mainBranch.String()),
 	}
 	expectedStackLineage := ` - main
-   - development
-     - PR https://www.github.com/git-town/pull/1 :point_left:
+   - PR https://www.github.com/git-town/pull/97 :point_left:
+     - PR https://www.github.com/git-town/pull/98
 `
 
 	// act
@@ -106,8 +111,8 @@ func TestProposalStackLineageBuilder_CheckLineageAndProposals(t *testing.T) {
 	builder, hasBuilder := actual.Get()
 	must.True(t, hasBuilder)
 	must.True(t, builder.GetProposal(mainBranch).IsNone())
-	must.True(t, builder.GetProposal(perennialBranch).IsNone())
-	must.True(t, builder.GetProposal(featureBranch).IsSome())
+	must.True(t, builder.GetProposal(featureBranchB).IsSome())
+	must.True(t, builder.GetProposal(featureBranchA).IsSome())
 
 	stackLineageAsString := builder.Build(&args)
 	must.EqOp(t, expectedStackLineage, stackLineageAsString.GetOrPanic())
@@ -124,7 +129,7 @@ func TestProposalStackLineageBuilder_ForgeConnectorNone(t *testing.T) {
 		CurrentBranchIndicator:   ":point_left:",
 		IndentMarker:             "-",
 		Lineage:                  configdomain.NewLineage(),
-		MainAndPerennialBranches: None[gitdomain.LocalBranchNames](),
+		MainAndPerennialBranches: gitdomain.NewLocalBranchNames("main"),
 	}
 	expected := None[configdomain.ProposalStackLineageBuilder]()
 	// act
@@ -144,14 +149,14 @@ func TestProposalStackLineageBuilder_NilArgs(t *testing.T) {
 	must.EqOp(t, expected, actual)
 }
 
-func TestProposalStackLineageBuilder_NoLineageForMainOrPerennialLineage(t *testing.T) {
+func TestProposalStackLineageBuilder_NoLineageForMainAndPerennialBranches(t *testing.T) {
 	t.Parallel()
 	// arrange
 	mainBranch := gitdomain.NewLocalBranchName("main")
-	perennialBranch := gitdomain.NewLocalBranchName("development")
-	lineage := configdomain.NewLineage()
-	lineage.Root(mainBranch)
-	lineage.Set(perennialBranch, mainBranch)
+	featureBranchA := gitdomain.NewLocalBranchName("a")
+	lineage := configdomain.NewLineageWith(configdomain.LineageData{
+		featureBranchA: mainBranch,
+	})
 	var connector forgedomain.Connector = &mockConnectorProposalStackLineageBuilder{}
 	args := configdomain.ProposalStackLineageArgs{
 		AfterStackDisplay:        []string{},
@@ -161,7 +166,7 @@ func TestProposalStackLineageBuilder_NoLineageForMainOrPerennialLineage(t *testi
 		CurrentBranchIndicator:   ":point_left:",
 		IndentMarker:             "-",
 		Lineage:                  lineage,
-		MainAndPerennialBranches: Some(gitdomain.NewLocalBranchNames(mainBranch.String(), perennialBranch.String())),
+		MainAndPerennialBranches: lineage.Roots(),
 	}
 	expected := None[configdomain.ProposalStackLineageBuilder]()
 
