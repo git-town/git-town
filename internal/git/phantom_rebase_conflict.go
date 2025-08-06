@@ -7,7 +7,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 )
 
-func DetectPhantomRebaseConflicts(fileConflicts []FileConflictFullInfo, parentBranch gitdomain.BranchName, rootBranch gitdomain.LocalBranchName) []PhantomConflict {
+func DetectPhantomRebaseConflicts(fileConflicts MergeConflictFullInfos, parentBranch gitdomain.BranchName, rootBranch gitdomain.LocalBranchName) []PhantomConflict {
 	// if parentBranch == rootBranch.BranchName() {
 	// 	// branches whose parent is the root branch cannot have phantom merge conflicts
 	// 	return []PhantomMergeConflict{}

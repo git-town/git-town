@@ -84,9 +84,9 @@ var UnmergedStages = []UnmergedStage{
 	UnmergedStageIncoming,
 }
 
-type FileConflictFullInfos []FileConflictFullInfo
+type MergeConflictFullInfos []MergeConflictFullInfo
 
-func (fullInfos FileConflictFullInfos) Debug(querier subshelldomain.Querier) {
+func (fullInfos MergeConflictFullInfos) Debug(querier subshelldomain.Querier) {
 	for _, fullInfo := range fullInfos {
 		fullInfo.Debug(querier)
 	}
@@ -101,7 +101,7 @@ type MergeConflictFullInfo struct {
 	Root    Option[BlobInfo] // info about the file on the root branch
 }
 
-func (fullInfo FileConflictFullInfo) Debug(querier subshelldomain.Querier) {
+func (fullInfo MergeConflictFullInfo) Debug(querier subshelldomain.Querier) {
 	current, hasCurrent := fullInfo.Current.Get()
 	parent, hasParent := fullInfo.Parent.Get()
 	root, hasRoot := fullInfo.Root.Get()
