@@ -3,18 +3,18 @@ Feature: auto-resolve phantom merge conflicts in a synced stack where the parent
   Background:
     Given a Git repo with origin
     And the commits
-      | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT     |
-      | main   | local, origin | main commit | file      | branch-1 content |
+      | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
+      | main   | local, origin | create file | file      | main content |
     And I ran "git-town hack branch-1"
     And I ran "git rm file"
-    And I ran "git commit -m branch-1-commit"
+    And I ran "git commit -m delete-file"
     And I ran "git push -u origin branch-1"
     And the branches
       | NAME     | TYPE    | PARENT   | LOCATIONS     |
       | branch-2 | feature | branch-1 | local, origin |
     And the commits
-      | BRANCH   | LOCATION | MESSAGE         | FILE NAME | FILE CONTENT     |
-      | branch-2 | local    | branch-2 commit | file      | branch-2 content |
+      | BRANCH   | LOCATION | MESSAGE     | FILE NAME | FILE CONTENT     |
+      | branch-2 | local    | change file | file      | branch-2 content |
     And Git setting "git-town.sync-feature-strategy" is "merge"
     And origin ships the "branch-1" branch using the "squash-merge" ship-strategy
     And the current branch is "branch-2"
