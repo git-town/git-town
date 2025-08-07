@@ -34,16 +34,16 @@ func (self *ConflictMergePhantomResolveAll) Run(args shared.RunArgs) error {
 	if !hasParentSHA {
 		return errors.New(messages.ConflictMerge)
 	}
-	quickInfos, err := args.Git.FileConflictQuickInfos(args.Backend)
+	fileConflicts, err := args.Git.FileConflicts(args.Backend)
 	if err != nil {
 		return err
 	}
 	rootBranch := args.Config.Value.NormalConfig.Lineage.Root(self.CurrentBranch)
-	fullInfos, err := args.Git.FileConflictFullInfos(args.Backend, quickInfos, parentSHA.Location(), rootBranch)
+	mergeConflits, err := args.Git.MergeConflicts(args.Backend, fileConflicts, parentSHA.Location(), rootBranch)
 	if err != nil {
 		return err
 	}
-	phantomMergeConflicts := git.DetectPhantomMergeConflicts(fullInfos, self.ParentBranch, rootBranch)
+	phantomMergeConflicts := git.DetectPhantomMergeConflicts(mergeConflits, self.ParentBranch, rootBranch)
 	newOpcodes := []shared.Opcode{}
 	for _, phantomMergeConflict := range phantomMergeConflicts {
 		newOpcodes = append(newOpcodes, &ConflictPhantomResolve{
