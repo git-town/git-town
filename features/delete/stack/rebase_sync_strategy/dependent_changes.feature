@@ -44,7 +44,7 @@ Feature: deleting a branch that conflicts with the main branch
       git rebase conflict
       """
     # Note: this is a legit conflict.
-    # Because the changes are dependent, Git cannot remove branch-2 changes from branch-3
+    # Because the changes in the stack are dependent, Git cannot remove branch-2 changes from branch-3
     # and asks the user.
     And file "file" now has content:
       """
