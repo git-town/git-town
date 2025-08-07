@@ -25,8 +25,8 @@ Feature: compatibility between different sync-feature-strategy settings
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT     |
       | feature | local, origin | my first commit | file.txt  | my first content |
-    And no rebase is now in progress
     And all branches are now synchronized
+    And no rebase is now in progress
     #
     # coworker makes a conflicting local commit concurrently with me and then syncs
     Given the coworker adds this commit to their current branch:
