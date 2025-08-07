@@ -51,7 +51,7 @@ type ProposalStackLineageBuilder struct {
 	orderedLineage           []*proposalLineage
 }
 
-func (self *ProposalStackLineageBuilder) Build(args ProposalStackLineageArgs) Option[string] {
+func (self *ProposalStackLineageBuilder) Build(args ProposalStackLineageArgs) string {
 	var builder strings.Builder
 	for _, text := range args.BeforeStackDisplay {
 		builder.WriteString(text)
@@ -78,7 +78,7 @@ func (self *ProposalStackLineageBuilder) Build(args ProposalStackLineageArgs) Op
 		builder.WriteString(text)
 	}
 
-	return Some(builder.String())
+	return builder.String()
 }
 
 func (self *ProposalStackLineageBuilder) GetProposal(branch gitdomain.LocalBranchName) Option[forgedomain.Proposal] {

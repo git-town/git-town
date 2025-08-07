@@ -190,7 +190,7 @@ func executeSync(args executeSyncArgs) error {
 			if branchProposal, hasBranchProposalData := builder.GetProposal(data.initialBranch).Get(); hasBranchProposalData {
 				runProgram.Value.Add(&opcodes.ProposalUpdateBody{
 					Proposal:    branchProposal,
-					UpdatedBody: configdomain.ProposalBodyUpdateWithStackLineage(branchProposal.Data.Data().Body.GetOrDefault(), builder.Build(proposalStackLineageArgs).GetOrDefault()),
+					UpdatedBody: configdomain.ProposalBodyUpdateWithStackLineage(branchProposal.Data.Data().Body.GetOrDefault(), builder.Build(proposalStackLineageArgs)),
 				})
 			}
 		}

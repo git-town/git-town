@@ -113,7 +113,7 @@ func TestProposalStackLineageBuilder_CheckLineageAndProposals(t *testing.T) {
 	must.True(t, builder.GetProposal(featureBranchA).IsSome())
 
 	stackLineageAsString := builder.Build(args)
-	must.EqOp(t, expectedStackLineage, stackLineageAsString.GetOrPanic())
+	must.EqOp(t, expectedStackLineage, stackLineageAsString)
 }
 
 func TestProposalStackLineageBuilder_ForgeConnectorNone(t *testing.T) {
