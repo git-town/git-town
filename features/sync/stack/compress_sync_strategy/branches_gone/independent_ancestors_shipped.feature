@@ -2,6 +2,7 @@ Feature: sync a stack that contains shipped parent branches using the "compress"
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the branches
       | NAME      | TYPE    | PARENT    | LOCATIONS     |
       | feature-1 | feature | main      | local, origin |
@@ -13,7 +14,6 @@ Feature: sync a stack that contains shipped parent branches using the "compress"
       | feature-2 | local, origin | feature-2 commit   | feature-2-file   | feature 2 content   |
       | feature-3 | local, origin | feature-3 commit A | feature-3-file-A | feature 3 content A |
       | feature-3 | local, origin | feature-3 commit B | feature-3-file-B | feature 3 content B |
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     And origin ships the "feature-1" branch using the "squash-merge" ship-strategy
     And origin ships the "feature-2" branch using the "squash-merge" ship-strategy
     And the current branch is "feature-3"

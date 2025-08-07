@@ -2,6 +2,7 @@ Feature: sync a grandchild feature branch using the "compress" strategy
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the branches
       | NAME   | TYPE    | PARENT | LOCATIONS     |
       | parent | feature | main   | local, origin |
@@ -15,7 +16,6 @@ Feature: sync a grandchild feature branch using the "compress" strategy
       | child  | local    | local child commit   |
       |        | origin   | origin child commit  |
     And wait 1 second to ensure new Git timestamps
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the current branch is "child"
     When I run "git-town sync"
 
