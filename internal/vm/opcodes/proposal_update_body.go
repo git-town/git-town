@@ -20,8 +20,8 @@ func (self *ProposalUpdateBody) Run(args shared.RunArgs) error {
 		return forgedomain.UnsupportedServiceError()
 	}
 
-	updateProposalBodyFn, hasUpdateProposalBody := connector.UpdateProposalBodyFn().Get()
-	if !hasUpdateProposalBody {
+	updateProposalBodyFn, canUpdateProposalBody := connector.UpdateProposalBodyFn().Get()
+	if !canUpdateProposalBody {
 		return errors.New(messages.UpdateProposalBodyUnsupported)
 	}
 	return updateProposalBodyFn(self.Proposal.Data, self.UpdatedBody)
