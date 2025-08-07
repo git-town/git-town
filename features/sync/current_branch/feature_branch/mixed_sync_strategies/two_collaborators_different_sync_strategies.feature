@@ -25,8 +25,8 @@ Feature: compatibility between different sync-feature-strategy settings
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT     |
       | feature | local, origin | my first commit | file.txt  | my first content |
-    And no rebase is now in progress
     And all branches are now synchronized
+    And no rebase is now in progress
     #
     # coworker makes a conflicting local commit concurrently with me and then syncs
     Given the coworker adds this commit to their current branch:
@@ -113,7 +113,6 @@ Feature: compatibility between different sync-feature-strategy settings
       | BRANCH  | COMMAND                                         |
       | feature | GIT_EDITOR=true git rebase --continue           |
       |         | git push --force-with-lease --force-if-includes |
-    And no rebase is now in progress
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME | FILE CONTENT                         |
@@ -122,3 +121,4 @@ Feature: compatibility between different sync-feature-strategy settings
       |         |                         | my second commit                                           | file.txt  | my second and coworker first content |
       |         | coworker                | my first commit                                            | file.txt  | my first content                     |
       |         |                         | Merge remote-tracking branch 'origin/feature' into feature | file.txt  | my and coworker first content        |
+    And no rebase is now in progress
