@@ -11,20 +11,6 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-// information about a file with merge conflicts, as provided by "git ls-files --unmerged"
-type FileConflict struct {
-	BaseChange          Option[Blob] // info about the base version of the file (when 3-way merging)
-	CurrentBranchChange Option[Blob] // info about the content of the file on the branch where the merge conflict occurs, None == file is deleted here
-	IncomingChange      Option[Blob] // info about the content of the file on the branch being merged in, None == file is being deleted here
-}
-
-// describes the content of a file blob in Git
-type Blob struct {
-	FilePath   string        // relative path of the file in the repo
-	Permission string        // permissions, in the form "100755"
-	SHA        gitdomain.SHA // checksum of the content blob of the file - this is not the commit SHA!
-}
-
 // describes the roles that a file can play in a merge conflict
 type UnmergedStage int
 
@@ -39,19 +25,6 @@ var UnmergedStages = []UnmergedStage{
 	UnmergedStageBase,
 	UnmergedStageCurrentBranch,
 	UnmergedStageIncoming,
-}
-
-// Everything Git Town needs to know about a merge conflict to determine whether this is a phantom merge conflict.
-type MergeConflict struct {
-	Current Option[Blob] // info about the file on the current branch
-	Parent  Option[Blob] // info about the file on the original parent
-	Root    Option[Blob] // info about the file on the root branch
-}
-
-// describes a file within an unresolved merge conflict that experiences a phantom merge conflict
-type PhantomConflict struct {
-	FilePath   string
-	Resolution gitdomain.ConflictResolution
 }
 
 func DetectPhantomMergeConflicts(conflictInfos []MergeConflict, parentBranchOpt Option[gitdomain.LocalBranchName], rootBranch gitdomain.LocalBranchName) []PhantomConflict {
@@ -75,11 +48,6 @@ func DetectPhantomMergeConflicts(conflictInfos []MergeConflict, parentBranchOpt 
 			})
 		}
 	}
-	return result
-}
-
-func EmptyBlob() Blob {
-	var result Blob
 	return result
 }
 
