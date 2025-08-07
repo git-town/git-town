@@ -39,11 +39,11 @@ func (self *ConflictMergePhantomResolveAll) Run(args shared.RunArgs) error {
 		return err
 	}
 	rootBranch := args.Config.Value.NormalConfig.Lineage.Root(self.CurrentBranch)
-	fullInfos, err := args.Git.FileConflictFullInfos(args.Backend, quickInfos, parentSHA.Location(), rootBranch)
+	mergeConflits, err := args.Git.MergeConflicts(args.Backend, quickInfos, parentSHA.Location(), rootBranch)
 	if err != nil {
 		return err
 	}
-	phantomMergeConflicts := git.DetectPhantomMergeConflicts(fullInfos, self.ParentBranch, rootBranch)
+	phantomMergeConflicts := git.DetectPhantomMergeConflicts(mergeConflits, self.ParentBranch, rootBranch)
 	newOpcodes := []shared.Opcode{}
 	for _, phantomMergeConflict := range phantomMergeConflicts {
 		newOpcodes = append(newOpcodes, &ConflictPhantomResolve{
