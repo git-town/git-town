@@ -33,7 +33,6 @@ Feature: detaching a branch from a stack with independent changes
     And the current branch is "branch-2"
     When I run "git-town detach"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                        |
@@ -75,5 +74,12 @@ Feature: detaching a branch from a stack with independent changes
       | BRANCH   | COMMAND                                         |
       | branch-2 | git reset --hard {{ sha 'branch-2 commit' }}    |
       |          | git push --force-with-lease --force-if-includes |
+      |          | git checkout branch-3                           |
+      | branch-3 | git reset --hard {{ sha 'branch-3 commit' }}    |
+      |          | git push --force-with-lease --force-if-includes |
+      |          | git checkout branch-4                           |
+      | branch-4 | git reset --hard {{ sha 'branch-4 commit' }}    |
+      |          | git push --force-with-lease --force-if-includes |
+      |          | git checkout branch-2                           |
     And the initial commits exist now
     And the initial lineage exists now
