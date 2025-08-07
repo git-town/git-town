@@ -28,8 +28,8 @@ Feature: detaching a branch from a stack with independent changes
       | NAME     | TYPE    | PARENT   | LOCATIONS     |
       | branch-4 | feature | branch-3 | local, origin |
     And the commits
-      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                                                                 |
-      | branch-4 | local, origin | branch-4 commit | file      | line 0: main content\nline 1: branch-1 content\nline 2: branch-2 content\nline 3: branch-3 content\nline 4: branch-4 content |
+      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                                                                       |
+      | branch-4 | local, origin | branch-4 commit | file      | line 0: main content\nline 1: branch-1 content\n\nline 2: branch-2 content\n\nline 3: branch-3 content\n\nline 4: branch-4 content |
     And the current branch is "branch-2"
     When I run "git-town detach"
 
