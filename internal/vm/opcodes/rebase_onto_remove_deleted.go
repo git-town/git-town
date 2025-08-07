@@ -35,7 +35,7 @@ func (self *RebaseOntoRemoveDeleted) Run(args shared.RunArgs) error {
 		// The branch that gets rebased onto will be deleted.
 		// We therefore don't need to bother the user with resolving the merge conflict
 		// and can resolve it ourselves.
-		conflictingFiles, err := args.Git.FileConflictQuickInfos(args.Backend)
+		conflictingFiles, err := args.Git.FileConflicts(args.Backend)
 		if err != nil {
 			return fmt.Errorf("cannot determine conflicting files after rebase: %w", err)
 		}
