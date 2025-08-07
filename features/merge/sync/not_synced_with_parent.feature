@@ -2,6 +2,7 @@ Feature: merging when the branch is not in sync with its parent
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
@@ -11,7 +12,6 @@ Feature: merging when the branch is not in sync with its parent
       | alpha  | local, origin | alpha commit | alpha-file | alpha content |
       | beta   | local, origin | beta commit  | beta-file  | beta content  |
     And the current branch is "beta"
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town merge"
 
   Scenario: result

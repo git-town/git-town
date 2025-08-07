@@ -2,6 +2,7 @@ Feature: sync the current feature branch without a tracking branch using the "co
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |
@@ -12,7 +13,6 @@ Feature: sync the current feature branch without a tracking branch using the "co
       | feature | local    | local feature commit 1 |
       | feature | local    | local feature commit 2 |
     And the current branch is "feature"
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     When I run "git-town sync"
 
   Scenario: result

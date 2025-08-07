@@ -2,6 +2,7 @@ Feature: detached sync a grandchild feature branch using the "compress" strategy
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
@@ -15,7 +16,6 @@ Feature: detached sync a grandchild feature branch using the "compress" strategy
       | beta   | local    | local beta commit   |
       |        | origin   | origin beta commit  |
     And wait 1 second to ensure new Git timestamps
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the current branch is "beta"
     When I run "git-town sync --detached"
 
