@@ -26,9 +26,9 @@ func (self *ConflictRebasePhantomFinalize) Run(args shared.RunArgs) error {
 		// there are still unresolved files --> these are not phantom conflicts, let the user sort this out
 		return errors.New(messages.ConflictRebase)
 	}
-	// here all rebase conflicts have been resolved --> commit to finish the rebase conflict and continue the program
+	// here all rebase conflicts have been resolved --> finish the rebase conflict and continue the program
 	args.PrependOpcodes(
-		&RebaseContinueIfNeeded{},
+		&RebaseContinue{},
 	)
 	return nil
 }
