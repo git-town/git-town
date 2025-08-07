@@ -26,7 +26,7 @@ func (self *ConflictMergePhantomFinalize) Continue() []shared.Opcode {
 }
 
 func (self *ConflictMergePhantomFinalize) Run(args shared.RunArgs) error {
-	unresolvedFiles, err := args.Git.FileConflictQuickInfos(args.Backend)
+	unresolvedFiles, err := args.Git.FileConflicts(args.Backend)
 	if err != nil {
 		return err
 	}
