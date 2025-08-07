@@ -36,19 +36,16 @@ Feature: deleting a branch that conflicts with the main branch
       |           | git checkout feature-3                                      |
       | feature-3 | git pull                                                    |
       |           | git -c rebase.updateRefs=false rebase --onto main feature-2 |
-      |           | git checkout --theirs file                                  |
-      |           | git add file                                                |
-      |           | GIT_EDITOR=true git rebase --continue                       |
       |           | git push --force-with-lease                                 |
       |           | git branch -D feature-2                                     |
     And the branches are now
       | REPOSITORY    | BRANCHES                   |
       | local, origin | main, feature-1, feature-3 |
     And these commits exist now
-      | BRANCH    | LOCATION      | MESSAGE          | FILE NAME | FILE CONTENT |
-      | main      | local, origin | main commit      | file      | main content |
-      | feature-1 | local, origin | feature-1 commit | file      | content 1    |
-      | feature-3 | local, origin | feature-3 commit | file      | content 3    |
+      | BRANCH    | LOCATION      | MESSAGE          | FILE NAME | FILE CONTENT                                                        |
+      | main      | local, origin | main commit      | file      | line 0: main content\n\nline 1\n\nline2\n\nline 3                   |
+      | feature-1 | local, origin | feature-1 commit | file      | line 0: main content\n\nline 1: branch-1 content\n\nline2\n\nline 3 |
+      | feature-3 | local, origin | feature-3 commit | file      | line 0: main content\n\nline 1\n\nline2\n\nline 3: branch-3 content |
     And this lineage exists now
       | BRANCH    | PARENT    |
       | feature-1 | main      |
