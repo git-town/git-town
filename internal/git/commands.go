@@ -565,27 +565,26 @@ func (self *Commands) MergeBranchNoEdit(runner subshelldomain.Runner, branch git
 
 // loads the information needed to determine which of the given file conflicts are phantom merge conflicts
 func (self *Commands) MergeConflicts(querier subshelldomain.Querier, fileConflicts FileConflicts, parentLocation gitdomain.Location, rootBranch gitdomain.LocalBranchName) (MergeConflicts, error) {
-	result := make([]MergeConflict, len(fileConflicts))
+	result := make(MergeConflicts, len(fileConflicts))
 	for f, fileConflict := range fileConflicts {
 		rootBlob := None[Blob]()
 		parentBlob := None[Blob]()
-		if currentBranchBlobInfo, has := fileConflict.CurrentBranchChange.Get(); has {
+		if currentBranchBlob, has := fileConflict.CurrentBranchChange.Get(); has {
 			var err error
-			rootBlob, err = self.ContentBlobInfo(querier, rootBranch.Location(), currentBranchBlobInfo.FilePath)
+			rootBlob, err = self.ContentBlobInfo(querier, rootBranch.Location(), currentBranchBlob.FilePath)
 			if err != nil {
 				return result, err
 			}
-			parentBlob, err = self.ContentBlobInfo(querier, parentLocation, currentBranchBlobInfo.FilePath)
+			parentBlob, err = self.ContentBlobInfo(querier, parentLocation, currentBranchBlob.FilePath)
 			if err != nil {
 				return result, err
 			}
 		}
-		mergeConflict := MergeConflict{
+		result[f] = MergeConflict{
 			Current: fileConflict.CurrentBranchChange,
 			Parent:  parentBlob,
 			Root:    rootBlob,
 		}
-		result[f] = mergeConflict
 	}
 	return result, nil
 }
