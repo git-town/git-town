@@ -33,7 +33,6 @@ Feature: detaching a branch from a stack with independent changes
     And the current branch is "branch-2"
     When I run "git-town detach"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                        |
