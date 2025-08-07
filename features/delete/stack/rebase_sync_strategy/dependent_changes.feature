@@ -1,4 +1,3 @@
-@this
 Feature: deleting a branch that conflicts with the main branch
 
   Background:
