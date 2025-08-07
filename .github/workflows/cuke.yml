@@ -13,6 +13,7 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
+      - run: sudo apt update
       - name: install Spanish language pack
         run: sudo apt-get install language-pack-es language-pack-es-base
       - run: make cukeall
