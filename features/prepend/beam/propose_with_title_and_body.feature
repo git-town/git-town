@@ -3,6 +3,7 @@ Feature: propose a newly prepended branch
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
@@ -11,7 +12,6 @@ Feature: propose a newly prepended branch
       | existing | local, origin | existing commit  |
       |          |               | unrelated commit |
     And the current branch is "existing"
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the origin is "git@github.com:git-town/git-town.git"
     And tool "open" is installed
     And a proposal for this branch does not exist

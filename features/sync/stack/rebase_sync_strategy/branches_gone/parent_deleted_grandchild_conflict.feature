@@ -2,6 +2,7 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME       | TYPE    | PARENT | LOCATIONS     |
       | child      | feature | main   | local, origin |
@@ -11,7 +12,6 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
       | main       | local    | conflicting main commit       | conflicting_file | main content       |
       | child      | local    | child commit                  | child_file       | child content      |
       | grandchild | local    | conflicting grandchild commit | conflicting_file | grandchild content |
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And origin deletes the "child" branch
     And the current branch is "child" and the previous branch is "grandchild"
     When I run "git-town sync --all"

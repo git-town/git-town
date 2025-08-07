@@ -2,11 +2,11 @@ Feature: append a new feature branch to the main branch using the "compress" syn
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the commits
       | BRANCH | LOCATION | MESSAGE     |
       | main   | origin   | main commit |
     And the current branch is "main"
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     When I run "git-town append new"
 
   Scenario: result

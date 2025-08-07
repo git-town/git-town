@@ -2,6 +2,7 @@ Feature: stacked changes
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME   | TYPE    | PARENT | LOCATIONS     |
       | parent | feature | main   | local, origin |
@@ -15,7 +16,6 @@ Feature: stacked changes
       | child  | local    | local child commit   |
       |        | origin   | origin child commit  |
     And the current branch is "child"
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And global Git setting "rebase.updateRefs" is "true"
     When I run "git-town sync"
 

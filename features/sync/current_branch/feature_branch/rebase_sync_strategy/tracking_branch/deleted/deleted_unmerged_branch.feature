@@ -2,6 +2,7 @@ Feature: sync a branch with unmerged commits whose tracking branch was deleted
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | branch-1 | feature | main   | local, origin |
@@ -12,7 +13,6 @@ Feature: sync a branch with unmerged commits whose tracking branch was deleted
       | branch-2 | local         | branch-2 commit |
     And the current branch is "branch-2"
     And origin deletes the "branch-2" branch
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town sync"
 
   Scenario: result

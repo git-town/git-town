@@ -3,6 +3,7 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
@@ -12,7 +13,6 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
       | feature | local, origin | conflicting feature commit | conflicting_file | feature content |
       |         | origin        | remote feature commit      | feature_file     | feature content |
     And the current branch is "feature"
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     When I run "git-town sync"
 
   Scenario: result

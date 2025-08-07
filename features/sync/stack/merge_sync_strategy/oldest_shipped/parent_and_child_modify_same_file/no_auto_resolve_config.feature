@@ -2,6 +2,7 @@ Feature: disable auto-resolution of phantom merge conflicts via config setting w
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "merge"
     And the commits
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT   |
       | main   | local, origin | main commit | file      | line 1\nline 2 |
@@ -17,7 +18,6 @@ Feature: disable auto-resolution of phantom merge conflicts via config setting w
     And the commits
       | BRANCH   | LOCATION | MESSAGE         | FILE NAME | FILE CONTENT                                           |
       | branch-2 | local    | branch-2 commit | file      | line 1 changed by branch-1\nline 2 changed by branch-2 |
-    And Git setting "git-town.sync-feature-strategy" is "merge"
     And Git setting "git-town.auto-resolve" is "no"
     And origin ships the "branch-1" branch using the "squash-merge" ship-strategy
     And the current branch is "branch-2"
