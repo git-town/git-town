@@ -37,6 +37,9 @@ Feature: deleting a branch from a stack with independent changes
       |          | git -c rebase.updateRefs=false rebase --onto main branch-2 |
       |          | git push --force-with-lease                                |
       |          | git branch -D branch-2                                     |
+    # TODO: these commits are wrong.
+    # After removing branch-2, branch-3 no longer contains changes from branch-1.
+    # This is because it wrongly rebases branch-3 onto main, when it should rebase onto branch-1.
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                         |
       | main     | local, origin | main commit     | file      | line 0: main content\n\nline 1\n\nline 2\n\nline 3                   |
