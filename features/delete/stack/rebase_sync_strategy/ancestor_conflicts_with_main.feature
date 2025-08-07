@@ -45,7 +45,8 @@ Feature: deleting a branch that conflicts with the main branch
       | REPOSITORY    | BRANCHES                 |
       | local, origin | main, branch-1, branch-3 |
     # TODO: the commits below are wrong.
-    # It should
+    # Branch-3 still contains the changes from branch-2.
+    # These changes should have been removed when branch-2 was deleted.
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                                      |
       | main     | local, origin | main commit     | file      | line 0: main content\nline 1\nline2\nline 3                                                       |
