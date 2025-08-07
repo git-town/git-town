@@ -332,18 +332,6 @@ func determineDetachData(args []string, repo execute.OpenRepoResult) (data detac
 func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Frontend)
-	prog.Value.Add(
-		&opcodes.RebaseOntoRemoveDeleted{
-			BranchToRebaseOnto: data.config.ValidatedConfigData.MainBranch,
-			CommitsToRemove:    data.parentBranch.BranchName(),
-			Upstream:           None[gitdomain.LocalBranchName](),
-		},
-	)
-	if data.branchToDetachInfo.HasTrackingBranch() {
-		prog.Value.Add(
-			&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: data.branchToDetachName, ForceIfIncludes: true},
-		)
-	}
 	// delete the commits of this branch from all descendents
 	lastParent := data.parentBranch
 	for _, descendent := range data.descendents {
@@ -360,6 +348,22 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 			)
 		}
 		lastParent = descendent.name
+	}
+	// delete the parent commits from the detached branch
+	prog.Value.Add(
+		&opcodes.CheckoutIfNeeded{
+			Branch: data.branchToDetachName,
+		},
+		&opcodes.RebaseOntoRemoveDeleted{
+			BranchToRebaseOnto: data.config.ValidatedConfigData.MainBranch,
+			CommitsToRemove:    data.parentBranch.BranchName(),
+			Upstream:           None[gitdomain.LocalBranchName](),
+		},
+	)
+	if data.branchToDetachInfo.HasTrackingBranch() {
+		prog.Value.Add(
+			&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: data.branchToDetachName, ForceIfIncludes: true},
+		)
 	}
 	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.initialBranch})
 	if !data.config.NormalConfig.DryRun {
