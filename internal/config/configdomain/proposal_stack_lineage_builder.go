@@ -82,13 +82,12 @@ func (self *ProposalStackLineageBuilder) Build(args ProposalStackLineageArgs) st
 }
 
 func (self *ProposalStackLineageBuilder) GetProposal(branch gitdomain.LocalBranchName) Option[forgedomain.Proposal] {
-	response := None[forgedomain.Proposal]()
 	for _, curr := range self.orderedLineage {
 		if curr.branch == branch {
-			response = curr.proposal
+			return curr.proposal
 		}
 	}
-	return response
+	return None[forgedomain.Proposal]()
 }
 
 func (self *ProposalStackLineageBuilder) addBranch(
