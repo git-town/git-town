@@ -33,6 +33,7 @@ Feature: detaching a branch from a stack with dependent changes
     And the current branch is "branch-2"
     When I run "git-town detach"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                        |
@@ -40,20 +41,30 @@ Feature: detaching a branch from a stack with dependent changes
       |          | git checkout branch-3                                          |
       | branch-3 | git pull                                                       |
       |          | git -c rebase.updateRefs=false rebase --onto branch-1 branch-2 |
-      |          | git checkout --theirs file                                     |
-      |          | git add file                                                   |
-      |          | GIT_EDITOR=true git rebase --continue                          |
-      |          | git push --force-with-lease                                    |
-      |          | git checkout branch-4                                          |
-      | branch-4 | git pull                                                       |
-      |          | git -c rebase.updateRefs=false rebase --onto branch-3 branch-2 |
-      |          | git push --force-with-lease                                    |
-      |          | git checkout branch-2                                          |
-      | branch-2 | git -c rebase.updateRefs=false rebase --onto main branch-1     |
-      |          | git checkout --theirs file                                     |
-      |          | git add file                                                   |
-      |          | GIT_EDITOR=true git rebase --continue                          |
-      |          | git push --force-with-lease --force-if-includes                |
+    And Git Town prints the error:
+      """
+      CONFLICT (content): Merge conflict in file
+      """
+    And Git Town prints the error:
+      """
+      To continue after having resolved conflicts, run "git town continue".
+      """
+    And file "file" now has content:
+      """
+      line 0: main content
+      line 1: branch-1 content
+      <<<<<<< HEAD
+      line 2
+      line 3
+      =======
+      line 2: branch-2 content
+      line 3: branch-3 content
+      >>>>>>> {{ sha-short 'branch-3 commit' }} (branch-3 commit)
+      line 4
+      """
+    And a rebase is now in progress
+
+  Scenario: undo
     # TODO: things wrong with the commits below
     # - these aren't phantom conflicts since we have dependent changes here
     # - branch-2 was detached from the stack, but still contains changes from branch-1
