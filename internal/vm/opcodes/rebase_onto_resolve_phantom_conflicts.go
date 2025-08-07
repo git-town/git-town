@@ -1,6 +1,7 @@
 package opcodes
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
@@ -19,13 +20,15 @@ type RebaseOntoResolvePhantomConflicts struct {
 }
 
 func (self *RebaseOntoResolvePhantomConflicts) Run(args shared.RunArgs) error {
-	// Fix for https://github.com/git-town/git-town/issues/4942.
-	// Waiting here in end-to-end tests to ensure new timestamps for the rebased commits,
-	// which avoids flaky end-to-end tests.
 	if subshell.IsInTest() {
+		// Fix for https://github.com/git-town/git-town/issues/4942.
+		// Waiting here in end-to-end tests to ensure new timestamps for the rebased commits,
+		// which avoids flaky end-to-end tests.
 		time.Sleep(1 * time.Second)
 	}
+	fmt.Println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD BEFORE")
 	if err := args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseOnto.Location(), self.CommitsToRemove, self.Upstream); err != nil {
+		fmt.Println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD", err)
 		args.PrependOpcodes(&ConflictRebasePhantomResolveAll{
 			BranchToRebaseOnto: self.BranchToRebaseOnto,
 			CurrentBranch:      self.CurrentBranch,

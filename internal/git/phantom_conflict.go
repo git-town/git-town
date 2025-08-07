@@ -1,6 +1,7 @@
 package git
 
 import (
+	"fmt"
 	"reflect"
 
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
@@ -38,6 +39,7 @@ func DetectPhantomMergeConflicts(conflictInfos []MergeConflict, parentBranchOpt 
 }
 
 func DetectPhantomRebaseConflicts(fileConflicts RebaseConflicts, parentBranch gitdomain.BranchName, rootBranch gitdomain.LocalBranchName) []PhantomConflict {
+	fmt.Println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC detect phantom rebase conflicts")
 	// if parentBranch == rootBranch.BranchName() {
 	// 	// branches whose parent is the root branch cannot have phantom merge conflicts
 	// 	return []PhantomMergeConflict{}

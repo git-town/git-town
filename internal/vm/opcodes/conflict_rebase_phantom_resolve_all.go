@@ -15,6 +15,7 @@ type ConflictRebasePhantomResolveAll struct {
 }
 
 func (self *ConflictRebasePhantomResolveAll) Run(args shared.RunArgs) error {
+	fmt.Println("11111111111111111111111111 rebase resolve all phantom conflicts")
 	fileConflicts, err := args.Git.FileConflictInfos(args.Backend)
 	if err != nil {
 		return err

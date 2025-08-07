@@ -24,10 +24,11 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 		}
 	}
 	trackingBranchGone := branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote
-	rebaseSyncStrategy := args.Config.NormalConfig.SyncFeatureStrategy == configdomain.SyncFeatureStrategyRebase
+	usesRebaseSyncStrategy := args.Config.NormalConfig.SyncFeatureStrategy == configdomain.SyncFeatureStrategyRebase
 	hasDescendents := args.Config.NormalConfig.Lineage.HasDescendents(localName)
 	parentToRemove, hasParentToRemove := args.Config.NormalConfig.Lineage.LatestAncestor(localName, args.BranchesToDelete.Value.Values()).Get()
-	if hasParentToRemove && rebaseSyncStrategy {
+	fmt.Println("EEEEEEEEEEEEEEEEEEEEEEEEEeeeeeeeeeee", hasParentToRemove, usesRebaseSyncStrategy)
+	if hasParentToRemove && usesRebaseSyncStrategy {
 		RemoveAncestorCommits(RemoveAncestorCommitsArgs{
 			Ancestor:          parentToRemove.BranchName(),
 			Branch:            localName,
@@ -51,7 +52,7 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	case hasParentToRemove && parentToRemove == parentName:
 		fmt.Println("22222222222222222222222")
 		// nothing to do here, we already synced with the parent by calling RemoveAncestorCommits above
-	case rebaseSyncStrategy && trackingBranchGone && hasDescendents:
+	case usesRebaseSyncStrategy && trackingBranchGone && hasDescendents:
 		fmt.Println("33333333333333333333333333333333333")
 		args.BranchesToDelete.Value.Add(localName)
 	case trackingBranchGone:
