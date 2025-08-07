@@ -37,11 +37,11 @@ Feature: let the user resolve the merge conflict in an unsynced stack where the 
       """
       <<<<<<< HEAD
       line 1 changed by branch-1
-      
+
       line 2
       =======
       line 1
-      
+
       line 2 changed by branch-2
       >>>>>>> {{ sha-short 'branch-2 commit' }} (branch-2 commit)
       """
@@ -57,7 +57,12 @@ Feature: let the user resolve the merge conflict in an unsynced stack where the 
     And the initial branches and lineage exist now
 
   Scenario: resolve and continue
-    When I resolve the conflict in "file" with "line 1 changed by branch-1\n\nline 2 changed by branch-2"
+    When I resolve the conflict in "file" with:
+      """
+      line 1 changed by branch-1
+
+      line 2 changed by branch-2
+      """
     And I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                               |

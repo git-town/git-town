@@ -24,11 +24,13 @@ func TestEscapeNewLines(t *testing.T) {
 
 func TestIndent(t *testing.T) {
 	t.Parallel()
+
 	t.Run("empty", func(t *testing.T) {
 		t.Parallel()
 		have := gohacks.IndentLines("", 2)
 		must.EqOp(t, "  ", have)
 	})
+
 	t.Run("indent by two spaces", func(t *testing.T) {
 		t.Parallel()
 		give := "one\ntwo\nthree"
@@ -36,6 +38,7 @@ func TestIndent(t *testing.T) {
 		want := "  one\n  two\n  three"
 		must.EqOp(t, want, have)
 	})
+
 	t.Run("indent by four spaces", func(t *testing.T) {
 		t.Parallel()
 		give := "one\ntwo\nthree"
