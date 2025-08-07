@@ -10,7 +10,8 @@ import (
 )
 
 func NewProposalStackLineageBuilder(args ProposalStackLineageArgs) Option[ProposalStackLineageBuilder] {
-	if args.Connector.IsNone() {
+	connector, hasConnector := args.Connector.Get()
+	if !hasConnector {
 		return None[ProposalStackLineageBuilder]()
 	}
 
@@ -19,7 +20,7 @@ func NewProposalStackLineageBuilder(args ProposalStackLineageArgs) Option[Propos
 		return None[ProposalStackLineageBuilder]()
 	}
 
-	findPropsalFn, hasFindPropsalFn := args.Connector.GetOrPanic().FindProposalFn().Get()
+	findPropsalFn, hasFindPropsalFn := connector.FindProposalFn().Get()
 	if !hasFindPropsalFn {
 		return None[ProposalStackLineageBuilder]()
 	}
@@ -31,9 +32,7 @@ func NewProposalStackLineageBuilder(args ProposalStackLineageArgs) Option[Propos
 	}
 	for _, currBranch := range lineage {
 		currBranchParent := args.Lineage.Parent(currBranch)
-		var err error
-		builder, err = builder.addBranch(currBranch, currBranchParent, findPropsalFn)
-		if err != nil {
+		if err := builder.addBranch(currBranch, currBranchParent, findPropsalFn); err != nil {
 			fmt.Printf("failed to build proposal stack lineage: %s\n", err.Error())
 			return None[ProposalStackLineageBuilder]()
 		}
@@ -96,31 +95,35 @@ func (self *ProposalStackLineageBuilder) addBranch(
 	childBranch gitdomain.LocalBranchName,
 	parentBranch Option[gitdomain.LocalBranchName],
 	findProposalFn func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error),
-) (*ProposalStackLineageBuilder, error) {
-	if self.mainAndPerennialBranches.Contains(childBranch) || parentBranch.IsNone() {
+) error {
+	parent, hasParentBranch := parentBranch.Get()
+	if self.mainAndPerennialBranches.Contains(childBranch) || !hasParentBranch {
 		self.orderedLineage = append(self.orderedLineage, &proposalLineage{
 			branch:   childBranch,
 			proposal: None[forgedomain.Proposal](),
 		})
-		return self, nil
+		return nil
 	}
 
-	parent := parentBranch.GetOrPanic().BranchName().LocalName()
 	proposal, err := findProposalFn(childBranch, parent)
 	if err != nil {
-		return self, fmt.Errorf("failed to find proposal for branch %s: %w", childBranch, err)
+		return fmt.Errorf("failed to find proposal for branch %s: %w", childBranch, err)
 	}
 
 	proposalData, hasProposal := proposal.Get()
 	if !hasProposal {
-		return self, fmt.Errorf("no proposal found branch %q", childBranch)
+		self.orderedLineage = append(self.orderedLineage, &proposalLineage{
+			branch:   childBranch,
+			proposal: None[forgedomain.Proposal](),
+		})
+		return nil
 	}
 
 	self.orderedLineage = append(self.orderedLineage, &proposalLineage{
 		branch:   childBranch,
 		proposal: Some(proposalData),
 	})
-	return self, nil
+	return nil
 }
 
 func formattedDisplay(args ProposalStackLineageArgs, currentIndentLevel string, proposal forgedomain.Proposal) string {
