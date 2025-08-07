@@ -10,7 +10,7 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-// information about a file with merge conflicts, as provided by "git ls-files --unmerged"
+// FileConflict contains information about a file with conflicts, as provided by "git ls-files --unmerged".
 type FileConflict struct {
 	BaseChange          Option[Blob] // info about the base version of the file (when 3-way merging)
 	CurrentBranchChange Option[Blob] // info about the content of the file on the branch where the merge conflict occurs, None == file is deleted here
@@ -19,7 +19,7 @@ type FileConflict struct {
 
 func ParseLsFilesUnmergedLine(line string) (Blob, UnmergedStage, string, error) {
 	// Example text to parse:
-	// 100755 ece1e56bf2125e5b114644258872f04bc375ba69 3    file
+	// 100755 ece1e56bf2125e5b114644258872f04bc375ba69 3  file
 	permissions, remainder, match := strings.Cut(line, " ")
 	if !match {
 		return Blob{}, 0, "", fmt.Errorf("cannot read permissions portion from output of \"git ls-files --unmerged\": %q", line)
