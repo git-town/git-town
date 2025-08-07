@@ -29,17 +29,17 @@ Feature: deleting a branch from a stack with dependent changes
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                                    |
-      | branch-2 | git fetch --prune --tags                                   |
-      |          | git push origin :branch-2                                  |
-      |          | git checkout branch-3                                      |
-      | branch-3 | git pull                                                   |
-      |          | git -c rebase.updateRefs=false rebase --onto main branch-2 |
-      |          | git checkout --theirs file                                 |
-      |          | git add file                                               |
-      |          | GIT_EDITOR=true git rebase --continue                      |
-      |          | git push --force-with-lease                                |
-      |          | git branch -D branch-2                                     |
+      | BRANCH   | COMMAND                                                        |
+      | branch-2 | git fetch --prune --tags                                       |
+      |          | git push origin :branch-2                                      |
+      |          | git checkout branch-3                                          |
+      | branch-3 | git pull                                                       |
+      |          | git -c rebase.updateRefs=false rebase --onto branch-1 branch-2 |
+      |          | git checkout --theirs file                                     |
+      |          | git add file                                                   |
+      |          | GIT_EDITOR=true git rebase --continue                          |
+      |          | git push --force-with-lease                                    |
+      |          | git branch -D branch-2                                         |
     And the branches are now
       | REPOSITORY    | BRANCHES                 |
       | local, origin | main, branch-1, branch-3 |
