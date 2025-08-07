@@ -2,6 +2,7 @@ Feature: syncing a grandchild branch with conflicts using the "compress" strateg
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the branches
       | NAME       | TYPE    | PARENT | LOCATIONS     |
       | child      | feature | main   | local, origin |
@@ -11,7 +12,6 @@ Feature: syncing a grandchild branch with conflicts using the "compress" strateg
       | main       | local    | conflicting main commit       | conflicting_file | main content       |
       | grandchild | local    | conflicting grandchild commit | conflicting_file | grandchild content |
     And the current branch is "child" and the previous branch is "grandchild"
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     And origin deletes the "child" branch
     And wait 1 second to ensure new Git timestamps
     When I run "git-town sync --all"

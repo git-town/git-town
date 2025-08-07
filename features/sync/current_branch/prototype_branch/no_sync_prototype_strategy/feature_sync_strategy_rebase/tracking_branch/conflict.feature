@@ -2,6 +2,7 @@ Feature: handle conflicts between the current prototype branch and its tracking 
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME      | TYPE      | PARENT | LOCATIONS     |
       | prototype | prototype | main   | local, origin |
@@ -10,7 +11,6 @@ Feature: handle conflicts between the current prototype branch and its tracking 
       | prototype | local    | conflicting local commit  | conflicting_file | local content  |
       |           | origin   | conflicting origin commit | conflicting_file | origin content |
     And the current branch is "prototype"
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town sync"
 
   Scenario: result

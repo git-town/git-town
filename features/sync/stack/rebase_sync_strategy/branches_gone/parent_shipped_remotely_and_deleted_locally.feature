@@ -2,6 +2,7 @@ Feature: syncing a branch whose parent was shipped and the local branch deleted 
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME   | TYPE    | PARENT | LOCATIONS     |
       | parent | feature | main   | local, origin |
@@ -13,7 +14,6 @@ Feature: syncing a branch whose parent was shipped and the local branch deleted 
     And origin ships the "parent" branch using the "squash-merge" ship-strategy
     And I ran "git branch -d parent"
     And the current branch is "child"
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town sync"
 
   Scenario: result

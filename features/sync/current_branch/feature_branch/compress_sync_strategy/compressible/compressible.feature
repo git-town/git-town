@@ -2,6 +2,7 @@ Feature: sync a feature branch with multiple commits using the "compress" sync s
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
@@ -13,7 +14,6 @@ Feature: sync a feature branch with multiple commits using the "compress" sync s
       | beta   | local, origin | beta commit 1  | beta_file  | content 3    |
       |        |               | beta commit 2  | beta_file  | content 4    |
     And wait 1 second to ensure new Git timestamps
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the current branch is "beta"
     When I run "git-town sync"
 

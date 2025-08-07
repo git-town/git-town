@@ -2,6 +2,7 @@ Feature: using the "compress" strategy, sync a branch with unshipped local chang
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | shipped | feature | main   | local, origin |
@@ -11,7 +12,6 @@ Feature: using the "compress" strategy, sync a branch with unshipped local chang
       |         | local         | unshipped commit |
     And the current branch is "shipped"
     And origin ships the "shipped" branch using the "squash-merge" ship-strategy
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     When I run "git-town sync"
 
   Scenario: result
