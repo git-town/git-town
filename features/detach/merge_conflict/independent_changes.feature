@@ -33,6 +33,7 @@ Feature: detaching a branch from a stack with independent changes
     And the current branch is "branch-2"
     When I run "git-town detach"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                        |
@@ -44,9 +45,6 @@ Feature: detaching a branch from a stack with independent changes
       |          | git checkout branch-4                                          |
       | branch-4 | git pull                                                       |
       |          | git -c rebase.updateRefs=false rebase --onto branch-3 branch-2 |
-      |          | git checkout --theirs file                                     |
-      |          | git add file                                                   |
-      |          | GIT_EDITOR=true git rebase --continue                          |
       |          | git push --force-with-lease                                    |
       |          | git checkout branch-2                                          |
       | branch-2 | git -c rebase.updateRefs=false rebase --onto main branch-1     |
@@ -55,12 +53,12 @@ Feature: detaching a branch from a stack with independent changes
     # This happens because Git Town wrongfully assumes a phantom merge conflict when removing branch-2 from branch-4.
     # It works correctly for branch-3.
     And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                                                                 |
-      | main     | local, origin | main commit     | file      | line 0: main content\n\nline 1\n\nline 2\n\nline 3\n\nline 4                                                                 |
-      | branch-1 | local, origin | branch-1 commit | file      | line 0: main content\n\nline 1: branch-1 content\n\nline 2\n\nline 3\n\nline 4                                               |
-      | branch-2 | local, origin | branch-2 commit | file      | line 0: main content\n\nline 1\n\nline 2: branch-2 content\n\nline 3\n\nline 4                                               |
-      | branch-3 | local, origin | branch-3 commit | file      | line 0: main content\n\nline 1: branch-1 content\n\nline 2\n\nline 3: branch-3 content\n\nline 4                             |
-      | branch-4 | local, origin | branch-4 commit | file      | line 0: main content\nline 1: branch-1 content\nline 2: branch-2 content\nline 3: branch-3 content\nline 4: branch-4 content |
+      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                                                     |
+      | main     | local, origin | main commit     | file      | line 0: main content\n\nline 1\n\nline 2\n\nline 3\n\nline 4                                                     |
+      | branch-1 | local, origin | branch-1 commit | file      | line 0: main content\n\nline 1: branch-1 content\n\nline 2\n\nline 3\n\nline 4                                   |
+      | branch-2 | local, origin | branch-2 commit | file      | line 0: main content\n\nline 1\n\nline 2: branch-2 content\n\nline 3\n\nline 4                                   |
+      | branch-3 | local, origin | branch-3 commit | file      | line 0: main content\n\nline 1: branch-1 content\n\nline 2\n\nline 3: branch-3 content\n\nline 4                 |
+      | branch-4 | local, origin | branch-4 commit | file      | line 0: main content\nline 1: branch-1 content\n\nline 2\n\nline 3: branch-3 content\n\nline 4: branch-4 content |
     And this lineage exists now
       | BRANCH   | PARENT   |
       | branch-1 | main     |
