@@ -98,3 +98,30 @@ Feature: deleting a branch that conflicts with the main branch
       | BRANCH   | PARENT   |
       | branch-1 | main     |
       | branch-3 | branch-1 |
+
+  Scenario: resolve, rebase, and continue
+    When I resolve the conflict in "file" with:
+      """
+      line 0: main content
+      line 1: branch-1 content
+      line 2
+      line 3: branch-3 content
+      """
+    And I run "git rebase --continue" and close the editor
+    And I run "git town continue"
+    Then Git Town runs the commands
+      | BRANCH   | COMMAND                     |
+      | branch-3 | git push --force-with-lease |
+      |          | git branch -D branch-2      |
+    And the branches are now
+      | REPOSITORY    | BRANCHES                 |
+      | local, origin | main, branch-1, branch-3 |
+    And these commits exist now
+      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                     |
+      | main     | local, origin | main commit     | file      | line 0: main content\nline 1\nline 2\nline 3                                     |
+      | branch-1 | local, origin | branch-1 commit | file      | line 0: main content\nline 1: branch-1 content\nline 2\nline 3                   |
+      | branch-3 | local, origin | branch-3 commit | file      | line 0: main content\nline 1: branch-1 content\nline 2\nline 3: branch-3 content |
+    And this lineage exists now
+      | BRANCH   | PARENT   |
+      | branch-1 | main     |
+      | branch-3 | branch-1 |
