@@ -473,40 +473,6 @@ func (self *Commands) FetchUpstream(runner subshelldomain.Runner, branch gitdoma
 	return runner.Run("git", "fetch", gitdomain.RemoteUpstream.String(), branch.String())
 }
 
-func (self *Commands) FileConflictFullInfo(querier subshelldomain.Querier, quickInfo FileConflict, parentLocation gitdomain.Location, rootBranch gitdomain.LocalBranchName) (MergeConflict, error) {
-	rootBlob := None[Blob]()
-	parentBlob := None[Blob]()
-	if currentBranchBlobInfo, has := quickInfo.CurrentBranchChange.Get(); has {
-		var err error
-		rootBlob, err = self.ContentBlobInfo(querier, rootBranch.Location(), currentBranchBlobInfo.FilePath)
-		if err != nil {
-			return MergeConflict{}, err
-		}
-		parentBlob, err = self.ContentBlobInfo(querier, parentLocation, currentBranchBlobInfo.FilePath)
-		if err != nil {
-			return MergeConflict{}, err
-		}
-	}
-	result := MergeConflict{
-		Current: quickInfo.CurrentBranchChange,
-		Parent:  parentBlob,
-		Root:    rootBlob,
-	}
-	return result, nil
-}
-
-func (self *Commands) FileConflictFullInfos(querier subshelldomain.Querier, quickInfos []FileConflict, parentLocation gitdomain.Location, rootBranch gitdomain.LocalBranchName) ([]MergeConflict, error) {
-	result := make([]MergeConflict, len(quickInfos))
-	for q, quickInfo := range quickInfos {
-		fullInfo, err := self.FileConflictFullInfo(querier, quickInfo, parentLocation, rootBranch)
-		if err != nil {
-			return result, err
-		}
-		result[q] = fullInfo
-	}
-	return result, nil
-}
-
 func (self *Commands) FileConflictQuickInfos(querier subshelldomain.Querier) ([]FileConflict, error) {
 	output, err := querier.Query("git", "ls-files", "--unmerged")
 	if err != nil {
@@ -595,6 +561,33 @@ func (self *Commands) HasRebaseInProgress(querier subshelldomain.Querier) (bool,
 
 func (self *Commands) MergeBranchNoEdit(runner subshelldomain.Runner, branch gitdomain.BranchName) error {
 	return runner.Run("git", "merge", "--no-edit", "--ff", branch.String())
+}
+
+// loads the information needed to determine which of the given file conflicts are phantom merge conflicts
+func (self *Commands) MergeConflicts(querier subshelldomain.Querier, fileConflicts FileConflicts, parentLocation gitdomain.Location, rootBranch gitdomain.LocalBranchName) (MergeConflicts, error) {
+	result := make([]MergeConflict, len(fileConflicts))
+	for f, fileConflict := range fileConflicts {
+		rootBlob := None[Blob]()
+		parentBlob := None[Blob]()
+		if currentBranchBlobInfo, has := fileConflict.CurrentBranchChange.Get(); has {
+			var err error
+			rootBlob, err = self.ContentBlobInfo(querier, rootBranch.Location(), currentBranchBlobInfo.FilePath)
+			if err != nil {
+				return result, err
+			}
+			parentBlob, err = self.ContentBlobInfo(querier, parentLocation, currentBranchBlobInfo.FilePath)
+			if err != nil {
+				return result, err
+			}
+		}
+		mergeConflict := MergeConflict{
+			Current: fileConflict.CurrentBranchChange,
+			Parent:  parentBlob,
+			Root:    rootBlob,
+		}
+		result[f] = mergeConflict
+	}
+	return result, nil
 }
 
 func (self *Commands) MergeFastForward(runner subshelldomain.Runner, branch gitdomain.BranchName) error {

@@ -39,7 +39,7 @@ func (self *ConflictMergePhantomResolveAll) Run(args shared.RunArgs) error {
 		return err
 	}
 	rootBranch := args.Config.Value.NormalConfig.Lineage.Root(self.CurrentBranch)
-	fullInfos, err := args.Git.FileConflictFullInfos(args.Backend, quickInfos, parentSHA.Location(), rootBranch)
+	fullInfos, err := args.Git.MergeConflicts(args.Backend, quickInfos, parentSHA.Location(), rootBranch)
 	if err != nil {
 		return err
 	}
