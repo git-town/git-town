@@ -29,22 +29,19 @@ Feature: deleting a branch from a stack with independent changes
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                                    |
-      | branch-2 | git fetch --prune --tags                                   |
-      |          | git push origin :branch-2                                  |
-      |          | git checkout branch-3                                      |
-      | branch-3 | git pull                                                   |
-      |          | git -c rebase.updateRefs=false rebase --onto main branch-2 |
-      |          | git push --force-with-lease                                |
-      |          | git branch -D branch-2                                     |
-    # TODO: these commits are wrong.
-    # After removing branch-2, branch-3 no longer contains changes from branch-1.
-    # This is because it wrongly rebases branch-3 onto main, when it should rebase onto branch-1.
+      | BRANCH   | COMMAND                                                        |
+      | branch-2 | git fetch --prune --tags                                       |
+      |          | git push origin :branch-2                                      |
+      |          | git checkout branch-3                                          |
+      | branch-3 | git pull                                                       |
+      |          | git -c rebase.updateRefs=false rebase --onto branch-1 branch-2 |
+      |          | git push --force-with-lease                                    |
+      |          | git branch -D branch-2                                         |
     And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                         |
-      | main     | local, origin | main commit     | file      | line 0: main content\n\nline 1\n\nline 2\n\nline 3                   |
-      | branch-1 | local, origin | branch-1 commit | file      | line 0: main content\n\nline 1: branch-1 content\n\nline 2\n\nline 3 |
-      | branch-3 | local, origin | branch-3 commit | file      | line 0: main content\n\nline 1\n\nline 2\n\nline 3: branch-3 content |
+      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                           |
+      | main     | local, origin | main commit     | file      | line 0: main content\n\nline 1\n\nline 2\n\nline 3                                     |
+      | branch-1 | local, origin | branch-1 commit | file      | line 0: main content\n\nline 1: branch-1 content\n\nline 2\n\nline 3                   |
+      | branch-3 | local, origin | branch-3 commit | file      | line 0: main content\n\nline 1: branch-1 content\n\nline 2\n\nline 3: branch-3 content |
     And the branches are now
       | REPOSITORY    | BRANCHES                 |
       | local, origin | main, branch-1, branch-3 |
