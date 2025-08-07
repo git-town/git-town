@@ -60,7 +60,6 @@ Feature: deleting a branch that conflicts with the main branch
       """
     And a rebase is now in progress
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
@@ -81,17 +80,20 @@ Feature: deleting a branch that conflicts with the main branch
       line 2
       line 3: branch-3 content
       """
+    And I run "git town continue"
+    Then Git Town runs the commands
+      | BRANCH   | COMMAND                               |
+      | branch-3 | GIT_EDITOR=true git rebase --continue |
+      |          | git push --force-with-lease           |
+      |          | git branch -D branch-2                |
     And the branches are now
       | REPOSITORY    | BRANCHES                 |
       | local, origin | main, branch-1, branch-3 |
-    # TODO: the commits below are wrong.
-    # Branch-3 still contains the changes from branch-2.
-    # These changes should have been removed when branch-2 was deleted.
     And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                                      |
-      | main     | local, origin | main commit     | file      | line 0: main content\nline 1\nline2\nline 3                                                       |
-      | branch-1 | local, origin | branch-1 commit | file      | line 0: main content\nline 1: branch-1 content\nline2\n\nline 3                                   |
-      | branch-3 | local, origin | branch-3 commit | file      | line 0: main content\nline 1: branch-1 content\nline2: branch-2 content\nline 3: branch-3 content |
+      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                     |
+      | main     | local, origin | main commit     | file      | line 0: main content\nline 1\nline 2\nline 3                                     |
+      | branch-1 | local, origin | branch-1 commit | file      | line 0: main content\nline 1: branch-1 content\nline 2\nline 3                   |
+      | branch-3 | local, origin | branch-3 commit | file      | line 0: main content\nline 1: branch-1 content\nline 2\nline 3: branch-3 content |
     And this lineage exists now
       | BRANCH   | PARENT   |
       | branch-1 | main     |
