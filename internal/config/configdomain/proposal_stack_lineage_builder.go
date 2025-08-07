@@ -9,8 +9,8 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-func NewProposalStackLineageBuilder(args *ProposalStackLineageArgs) Option[ProposalStackLineageBuilder] {
-	if args == nil || args.Connector.IsNone() {
+func NewProposalStackLineageBuilder(args ProposalStackLineageArgs) Option[ProposalStackLineageBuilder] {
+	if args.Connector.IsNone() {
 		return None[ProposalStackLineageBuilder]()
 	}
 
@@ -52,7 +52,7 @@ type ProposalStackLineageBuilder struct {
 	orderedLineage           []*proposalLineage
 }
 
-func (self *ProposalStackLineageBuilder) Build(args *ProposalStackLineageArgs) Option[string] {
+func (self *ProposalStackLineageBuilder) Build(args ProposalStackLineageArgs) Option[string] {
 	var builder strings.Builder
 	for _, text := range args.BeforeStackDisplay {
 		builder.WriteString(text)
@@ -123,7 +123,7 @@ func (self *ProposalStackLineageBuilder) addBranch(
 	return self, nil
 }
 
-func formattedDisplay(args *ProposalStackLineageArgs, currentIndentLevel string, proposal forgedomain.Proposal) string {
+func formattedDisplay(args ProposalStackLineageArgs, currentIndentLevel string, proposal forgedomain.Proposal) string {
 	proposalData := proposal.Data
 	if args.CurrentBranch == proposalData.Data().Source {
 		return fmt.Sprintf("%s %s PR %s %s\n", currentIndentLevel, args.IndentMarker, proposalData.Data().URL, args.CurrentBranchIndicator)

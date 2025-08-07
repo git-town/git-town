@@ -105,7 +105,7 @@ func TestProposalStackLineageBuilder_CheckLineageAndProposals(t *testing.T) {
 `
 
 	// act
-	actual := configdomain.NewProposalStackLineageBuilder(&args)
+	actual := configdomain.NewProposalStackLineageBuilder(args)
 
 	// assert
 	builder, hasBuilder := actual.Get()
@@ -114,7 +114,7 @@ func TestProposalStackLineageBuilder_CheckLineageAndProposals(t *testing.T) {
 	must.True(t, builder.GetProposal(featureBranchB).IsSome())
 	must.True(t, builder.GetProposal(featureBranchA).IsSome())
 
-	stackLineageAsString := builder.Build(&args)
+	stackLineageAsString := builder.Build(args)
 	must.EqOp(t, expectedStackLineage, stackLineageAsString.GetOrPanic())
 }
 
@@ -131,17 +131,6 @@ func TestProposalStackLineageBuilder_ForgeConnectorNone(t *testing.T) {
 		Lineage:                  configdomain.NewLineage(),
 		MainAndPerennialBranches: gitdomain.NewLocalBranchNames("main"),
 	}
-	expected := None[configdomain.ProposalStackLineageBuilder]()
-	// act
-	actual := configdomain.NewProposalStackLineageBuilder(&args)
-	// assert
-	must.EqOp(t, expected, actual)
-}
-
-func TestProposalStackLineageBuilder_NilArgs(t *testing.T) {
-	t.Parallel()
-	// arrange
-	var args *configdomain.ProposalStackLineageArgs
 	expected := None[configdomain.ProposalStackLineageBuilder]()
 	// act
 	actual := configdomain.NewProposalStackLineageBuilder(args)
@@ -171,7 +160,7 @@ func TestProposalStackLineageBuilder_NoLineageForMainAndPerennialBranches(t *tes
 	expected := None[configdomain.ProposalStackLineageBuilder]()
 
 	// act
-	actual := configdomain.NewProposalStackLineageBuilder(&args)
+	actual := configdomain.NewProposalStackLineageBuilder(args)
 
 	// assert
 	must.EqOp(t, expected, actual)
