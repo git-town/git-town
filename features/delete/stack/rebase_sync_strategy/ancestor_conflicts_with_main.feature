@@ -10,8 +10,8 @@ Feature: deleting a branch that conflicts with the main branch
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | branch-1 | feature | main   | local, origin |
     And the commits
-      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                     |
-      | branch-1 | local, origin | branch-1 commit | file      | line 0: main content\nline 1: branch-1 content\nline 2\n\nline 3 |
+      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                   |
+      | branch-1 | local, origin | branch-1 commit | file      | line 0: main content\nline 1: branch-1 content\nline 2\nline 3 |
     And the branches
       | NAME     | TYPE    | PARENT   | LOCATIONS     |
       | branch-2 | feature | branch-1 | local, origin |
@@ -30,19 +30,15 @@ Feature: deleting a branch that conflicts with the main branch
   @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                                    |
-      | branch-2 | git fetch --prune --tags                                   |
-      |          | git push origin :branch-2                                  |
-      |          | git checkout branch-3                                      |
-      | branch-3 | git pull                                                   |
-      |          | git -c rebase.updateRefs=false rebase --onto main branch-2 |
+      | BRANCH   | COMMAND                                                        |
+      | branch-2 | git fetch --prune --tags                                       |
+      |          | git push origin :branch-2                                      |
+      |          | git checkout branch-3                                          |
+      | branch-3 | git pull                                                       |
+      |          | git -c rebase.updateRefs=false rebase --onto branch-1 branch-2 |
     And Git Town prints the error:
       """
       CONFLICT (content): Merge conflict in file
-      """
-    And Git Town prints the error:
-      """
-      could not apply .* branch-3 commit
       """
     And Git Town prints the error:
       """
@@ -53,12 +49,11 @@ Feature: deleting a branch that conflicts with the main branch
     And file "file" now has content:
       """
       line 0: main content
+      line 1: branch-1 content
       <<<<<<< HEAD
-      line 1
       line 2
       line 3
       =======
-      line 1: branch-1 content
       line 2: branch-2 content
       line 3: branch-3 content
       >>>>>>> {{ sha-short 'branch-3 commit' }} (branch-3 commit)
