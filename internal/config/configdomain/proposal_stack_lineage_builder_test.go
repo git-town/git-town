@@ -15,8 +15,6 @@ import (
 
 type mockConnectorProposalStackLineageBuilder struct{}
 
-var _ forgedomain.Connector = (*mockConnectorProposalStackLineageBuilder)(nil)
-
 func (self *mockConnectorProposalStackLineageBuilder) CreateProposal(_ forgedomain.CreateProposalArgs) error {
 	return nil
 }
