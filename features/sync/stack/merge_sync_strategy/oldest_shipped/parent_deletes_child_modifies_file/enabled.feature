@@ -33,6 +33,8 @@ Feature: auto-resolve phantom merge conflicts in a synced stack where the parent
     # Branch-1 deletes "file" and branch-2 creates it again.
     # Branch-2 was properly synced with branch-1.
     # When branch-1 got shipped, and the user syncs, they shouldn't need to tell Git again that branch-2 should re-create the "file".
+    # This could be detected the same way we detect phantom merge conflicts:
+    # If one variant of the conflict matches the root branch, pick the other variant.
     And Git Town prints the error:
       """
       CONFLICT (modify/delete): file deleted in main and modified in HEAD.  Version HEAD of file left in tree.
