@@ -165,7 +165,7 @@ func executeSync(args executeSyncArgs) error {
 		runProgram.Value.Add(&opcodes.PushTags{})
 	}
 
-	if args.cliConfig.ProposalsShowLineage.GetOrDefault() == configdomain.ProposalsShowLineageCLI {
+	if data.config.NormalConfig.ProposalsShowLineage.IsCLI() {
 		explanationText := "Current dependencies on/for this pull-request\n\n"
 		if data.config.NormalConfig.ForgeType.GetOrDefault() == forgedomain.ForgeTypeGitLab {
 			explanationText = strings.ReplaceAll(explanationText, "pull-request", "merge-request")
