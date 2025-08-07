@@ -333,7 +333,7 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Frontend)
 	// step 1: delete the commits of the branch to detach from all descendents,
-	// while that branch is still intact
+	// while that branch is still in the form it had inside the stack
 	lastParent := data.parentBranch
 	for _, descendent := range data.descendents {
 		sync.RemoveAncestorCommits(sync.RemoveAncestorCommitsArgs{
