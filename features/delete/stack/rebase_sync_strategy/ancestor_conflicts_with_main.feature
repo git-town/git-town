@@ -42,6 +42,10 @@ Feature: deleting a branch that conflicts with the main branch
       """
     And Git Town prints the error:
       """
+      could not apply .* branch-3 commit
+      """
+    And Git Town prints the error:
+      """
       git rebase conflict
       """
     And file "file" now has content:
