@@ -37,11 +37,3 @@ func (self MergeConflict) Debug(querier subshelldomain.Querier) {
 		fmt.Println("(none)")
 	}
 }
-
-type MergeConflicts []MergeConflict
-
-func (self MergeConflicts) Debug(querier subshelldomain.Querier) {
-	for _, mergeConflict := range self {
-		mergeConflict.Debug(querier)
-	}
-}
