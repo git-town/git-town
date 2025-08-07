@@ -48,6 +48,9 @@ Feature: detaching a branch from a stack with independent changes
       |          | git -c rebase.updateRefs=false rebase --onto branch-3 branch-2 |
       |          | git push --force-with-lease                                    |
       |          | git checkout branch-2                                          |
+    # Note: the commits below aren't correct, but that seems a problem with Git instead of Git Town.
+    # On branch-3, Git Town correctly runs "git rebase --onto branch-1 branch-2".
+    # This should remove "branch-2 commit" from the branch, but it doesn't.
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                                                                 |
       | main     | local, origin | main commit     | file      | line 0: main content\n\nline 1\n\nline 2\n\nline 3\n\nline 4                                                                 |
