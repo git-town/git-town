@@ -38,7 +38,7 @@ func (self *RebaseOntoKeepDeleted) Run(args shared.RunArgs) error {
 		time.Sleep(1 * time.Second)
 	}
 	if err := args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseOnto.Location(), self.CommitsToRemove, self.Upstream); err != nil {
-		conflictingFiles, err := args.Git.FileConflictInfos(args.Backend)
+		conflictingFiles, err := args.Git.FileConflicts(args.Backend)
 		if err != nil {
 			return fmt.Errorf("cannot determine conflicting files after rebase: %w", err)
 		}

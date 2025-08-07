@@ -473,10 +473,10 @@ func (self *Commands) FetchUpstream(runner subshelldomain.Runner, branch gitdoma
 	return runner.Run("git", "fetch", gitdomain.RemoteUpstream.String(), branch.String())
 }
 
-func (self *Commands) FileConflictInfos(querier subshelldomain.Querier) (FileConflicts, error) {
+func (self *Commands) FileConflicts(querier subshelldomain.Querier) (FileConflicts, error) {
 	output, err := querier.Query("git", "ls-files", "--unmerged")
 	if err != nil {
-		return []FileConflict{}, err
+		return FileConflicts{}, err
 	}
 	return ParseLsFilesUnmergedOutput(output)
 }

@@ -79,11 +79,11 @@ func ParseLsFilesUnmergedLine(line string) (Blob, UnmergedStage, string, error) 
 	return change, stage, filePath, nil
 }
 
-func ParseLsFilesUnmergedOutput(output string) ([]FileConflict, error) {
+func ParseLsFilesUnmergedOutput(output string) (FileConflicts, error) {
 	// Example output to parse:
 	// 100755 c887ff2255bb9e9440f9456bcf8d310bc8d718d4 2	file
 	// 100755 ece1e56bf2125e5b114644258872f04bc375ba69 3	file
-	result := []FileConflict{}
+	result := FileConflicts{}
 	filePathOpt := None[string]()
 	baseChange := None[Blob]()
 	currentBranchChange := None[Blob]()
@@ -95,7 +95,7 @@ func ParseLsFilesUnmergedOutput(output string) ([]FileConflict, error) {
 		}
 		change, stage, file, err := ParseLsFilesUnmergedLine(line)
 		if err != nil {
-			return []FileConflict{}, err
+			return FileConflicts{}, err
 		}
 		filePath, hasFilePath := filePathOpt.Get()
 		if hasFilePath && file != filePath {
