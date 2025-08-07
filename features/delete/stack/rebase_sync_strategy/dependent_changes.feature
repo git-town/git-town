@@ -43,8 +43,9 @@ Feature: deleting a branch that conflicts with the main branch
       """
       git rebase conflict
       """
-    # This seems wrong. It should not rebase branch-3 onto main,
-    # it should rebase it onto branch-1.
+    # Note: this is a legit conflict.
+    # Because the changes are dependent, Git cannot remove branch-2 changes from branch-3
+    # and asks the user.
     And file "file" now has content:
       """
       line 0: main content
@@ -72,7 +73,14 @@ Feature: deleting a branch that conflicts with the main branch
       | local, origin | main, branch-1, branch-2, branch-3 |
     And the initial lineage exists now
 
-  Scenario:
+  Scenario: resolve and continue
+    When I resolve the conflict in "file" with:
+      """
+      line 0: main content
+      line 1: branch-1 content
+      line 2
+      line 3: branch-3 content
+      """
     And the branches are now
       | REPOSITORY    | BRANCHES                 |
       | local, origin | main, branch-1, branch-3 |
