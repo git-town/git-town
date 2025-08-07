@@ -29,7 +29,7 @@ func (self *ConflictRebasePhantomResolveAll) Run(args shared.RunArgs) error {
 	for _, phantomConflict := range phantomConflicts {
 		newOpcodes = append(newOpcodes, &ConflictPhantomResolve{
 			FilePath:   phantomConflict.FilePath,
-			Resolution: gitdomain.ConflictResolutionTheirs,
+			Resolution: phantomConflict.Resolution,
 		})
 	}
 	newOpcodes = append(newOpcodes, &ConflictRebasePhantomFinalize{})
