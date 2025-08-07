@@ -140,9 +140,9 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
       | old    | git -c rebase.updateRefs=false rebase --onto parent {{ sha-in-origin-before-run 'commit 2' }} |
     # NOTE: this is a legit rebase conflict.
     # The branches were in sync before.
-    # Now branch "parent" contains an updated commit.
-    # Branch "old" (its child) also changes the same file.
-    # Neither of the two conflicting versions is the correct one.
+    # Now the parent branch contains new changes.
+    # Its child branch ("old") changes the same file.
+    # These two changes need to be be integrated with each other by the user.
     And Git Town prints the error:
       """
       CONFLICT (content): Merge conflict in file
