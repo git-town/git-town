@@ -332,7 +332,8 @@ func determineDetachData(args []string, repo execute.OpenRepoResult) (data detac
 func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Frontend)
-	// delete the commits of this branch from all descendents
+	// step 1: delete the commits of the branch to detach from all descendents,
+	// while that branch is still intact
 	lastParent := data.parentBranch
 	for _, descendent := range data.descendents {
 		sync.RemoveAncestorCommits(sync.RemoveAncestorCommitsArgs{
@@ -349,7 +350,7 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 		}
 		lastParent = descendent.name
 	}
-	// delete the parent commits from the detached branch
+	// step 2: delete the commits of parent branches from the detached branch
 	prog.Value.Add(
 		&opcodes.CheckoutIfNeeded{
 			Branch: data.branchToDetachName,
