@@ -111,7 +111,6 @@ Feature: compatibility between different sync-feature-strategy settings
       | BRANCH  | COMMAND                                         |
       | feature | GIT_EDITOR=true git rebase --continue           |
       |         | git push --force-with-lease --force-if-includes |
-    And no rebase is now in progress
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME | FILE CONTENT                         |
@@ -119,3 +118,4 @@ Feature: compatibility between different sync-feature-strategy settings
       |         | local, origin           | my first commit                                            | file.txt  | my second and coworker first content |
       |         | coworker                | my first commit                                            | file.txt  | my first content                     |
       |         |                         | Merge remote-tracking branch 'origin/feature' into feature | file.txt  | my and coworker first content        |
+    And no rebase is now in progress
