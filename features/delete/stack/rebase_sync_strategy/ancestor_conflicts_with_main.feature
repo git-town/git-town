@@ -48,6 +48,8 @@ Feature: deleting a branch that conflicts with the main branch
       """
       git rebase conflict
       """
+    # This seems wrong. It should not rebase branch-3 onto main,
+    # it should rebase it onto branch-1.
     And file "file" now has content:
       """
       line 0: main content
