@@ -10,8 +10,8 @@ Feature: deleting a branch from a stack with dependent changes
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | branch-1 | feature | main   | local, origin |
     And the commits
-      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                     |
-      | branch-1 | local, origin | branch-1 commit | file      | line 0: main content\nline 1: branch-1 content\nline 2\n\nline 3 |
+      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                   |
+      | branch-1 | local, origin | branch-1 commit | file      | line 0: main content\nline 1: branch-1 content\nline 2\nline 3 |
     And the branches
       | NAME     | TYPE    | PARENT   | LOCATIONS     |
       | branch-2 | feature | branch-1 | local, origin |
@@ -49,7 +49,7 @@ Feature: deleting a branch from a stack with dependent changes
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                                       |
       | main     | local, origin | main commit     | file      | line 0: main content\nline 1\nline 2\nline 3                                                       |
-      | branch-1 | local, origin | branch-1 commit | file      | line 0: main content\nline 1: branch-1 content\nline 2\n\nline 3                                   |
+      | branch-1 | local, origin | branch-1 commit | file      | line 0: main content\nline 1: branch-1 content\nline 2\nline 3                                     |
       | branch-3 | local, origin | branch-3 commit | file      | line 0: main content\nline 1: branch-1 content\nline 2: branch-2 content\nline 3: branch-3 content |
     And this lineage exists now
       | BRANCH   | PARENT   |
