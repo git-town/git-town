@@ -1,4 +1,4 @@
-Feature: deleting a branch that conflicts with the main branch
+Feature: deleting a branch from a stack with dependent changes
 
   Background:
     Given a Git repo with origin
