@@ -142,7 +142,7 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
     # The branches were in sync before.
     # Now the parent branch contains new changes.
     # Its child branch ("old") changes the same file.
-    # These two changes need to be be integrated with each other by the user.
+    # These two changes need to get integrated, by the user.
     And Git Town prints the error:
       """
       CONFLICT (content): Merge conflict in file
