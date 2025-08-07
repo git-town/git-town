@@ -7,11 +7,6 @@ git town sync [-a | --all] [--no-push] [-s | --stack] [-d | --detached] [-p | --
 The _sync_ command ("synchronize this branch") updates your local Git workspace
 with what happened in the rest of the repository.
 
-Merge conflicts are not fun and can break code. Minimize them by syncing your
-branches frequently. Git town knows how to sync many different types of
-branches. When properly configured, `git town sync --all` can synchronize all
-your local branches the right way without losing changes, even in edge cases.
-
 You can (and should) sync all branches many times per day without thinking about
 it, even in the middle of ongoing work. If a sync goes wrong, you can safely go
 back to the exact state you repo was in before the sync by running
@@ -29,6 +24,26 @@ back to the exact state you repo was in before the sync by running
 
 If the parent branch is not known, Git Town looks for a pull/merge request for
 this branch and uses its parent branch. Otherwise it prompts you for the parent.
+
+### Sync frequently
+
+Merge conflicts are not fun and can break code. Minimize them by making it a
+habit to sync your branches regularly and frequently. When properly configured,
+`git town sync --all` can synchronize all your local branches the right way
+without losing changes, even in edge cases.
+
+If you don't sync because:
+
+- you don't want to pull in new changes from the main branch:
+  [sync detached](sync.md#-d--detached).
+- you don't want to increase pressure on your CI server:
+  [sync without pushing](sync.md#--no-push) or indicate in your commit messages
+  to CI to skip test runs
+  - [BitBucket](https://support.atlassian.com/bitbucket-cloud/kb/how-to-skip-triggering-an-automatic-pipeline-build-using-skip-ci-label)
+  - [Gitea](https://docs.gitea.com/administration/config-cheat-sheet#actions-actions)
+  - [GitHub](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/skip-workflow-runs)
+  - [GitLab](https://docs.gitlab.com/ci/pipelines/#skip-a-pipeline)
+  - [Forgejo](https://forgejo.org/docs/latest/admin/config-cheat-sheet/#actions-actions)
 
 ### Why does Git Town sometimes not sync the tracking or parent branch?
 
