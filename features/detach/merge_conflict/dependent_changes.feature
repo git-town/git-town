@@ -54,6 +54,12 @@ Feature: detaching a branch from a chain that edits the same file
       |          | GIT_EDITOR=true git rebase --continue                          |
       |          | git push --force-with-lease                                    |
       |          | git checkout branch-2                                          |
+    # TODO: things wrong with the commits below
+    # - branch-2 was detached from the stack, but still contains changes from branch-1
+    # - branch-3 still contains commit "branch-2 commit"
+    # - branch-3 still contains changes from branch-2
+    # - branch-4 still contains commit "branch-2 commit"
+    # - branch-4 still contains changes from branch-2
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                                                                 |
       | main     | local, origin | main commit     | file      | line 0: main content\nline 1\nline 2\nline 3\nline 4                                                                         |
