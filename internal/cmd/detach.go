@@ -376,22 +376,6 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 		}
 		lastParent = descendent.name
 	}
-	// delete the commits of all ancestors from the detached branch
-	for _, ancestor := range data.ancestorsWithoutMain {
-		ancestorParent := data.config.NormalConfig.Lineage.Parent(ancestor.name).GetOrElse(data.config.ValidatedConfigData.MainBranch)
-		sync.RemoveAncestorCommits(sync.RemoveAncestorCommitsArgs{
-			Ancestor:          ancestor.name.BranchName(),
-			Branch:            data.branchToDetachName,
-			HasTrackingBranch: ancestor.info.HasTrackingBranch(),
-			Program:           prog,
-			RebaseOnto:        ancestorParent,
-		})
-		if data.branchToDetachInfo.HasTrackingBranch() {
-			prog.Value.Add(
-				&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: data.branchToDetachName, ForceIfIncludes: true},
-			)
-		}
-	}
 	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.initialBranch})
 	if !data.config.NormalConfig.DryRun {
 		prog.Value.Add(

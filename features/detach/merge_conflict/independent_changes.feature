@@ -48,9 +48,6 @@ Feature: detaching a branch from a chain that edits the same file
       |          | git -c rebase.updateRefs=false rebase --onto branch-3 branch-2 |
       |          | git push --force-with-lease                                    |
       |          | git checkout branch-2                                          |
-      | branch-2 | git pull                                                       |
-      |          | git -c rebase.updateRefs=false rebase --onto main branch-1     |
-      |          | git push --force-with-lease                                    |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                                                                 |
       | main     | local, origin | main commit     | file      | line 0: main content\n\nline 1\n\nline 2\n\nline 3\n\nline 4                                                                 |
