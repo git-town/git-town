@@ -14,8 +14,8 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
     And the current branch is "old"
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town prepend parent --beam" and enter into the dialog:
-      | DIALOG          | KEYS             |
-      | commits to beam | down space enter |
+      | DIALOG          | KEYS             | COMMENT         |
+      | commits to beam | down space enter | select commit 2 |
     Then Git Town runs the commands
       | BRANCH | COMMAND                                      |
       | old    | git checkout -b parent main                  |
@@ -121,6 +121,7 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
     And the initial commits exist now
     And the initial lineage exists now
 
+  @debug @this
   Scenario: sync and amend the beamed commit
     When wait 1 second to ensure new Git timestamps
     And I run "git town sync"
@@ -137,6 +138,13 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
       |        | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }}                  |
       |        | git checkout old                                                                              |
       | old    | git -c rebase.updateRefs=false rebase --onto parent {{ sha-in-origin-before-run 'commit 2' }} |
+    # TODO: it should auto-resolve this phantom conflict.
+    # The branches were in sync. The user amended a commit.
+    # Git Town should detect this and resolve.
+    #
+    # In this case, the branches were in sync and now they are not.
+    # Branch "parent" hasn't encountered any changes since the last sync (has the same SHA since the last sync).
+    # Branch "old" has a new SHA. --> Keep the change on branch "old".
     And Git Town prints the error:
       """
       CONFLICT (content): Merge conflict in file

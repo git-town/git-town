@@ -1,8 +1,6 @@
 package sync
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
@@ -14,7 +12,6 @@ import (
 
 // BranchProgram syncs the given branch.
 func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.BranchInfo, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
-	fmt.Println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA BRANCH PROGRAM FOR", localName)
 	initialParentName := args.Config.NormalConfig.Lineage.Parent(localName)
 	initialParentSHA := None[gitdomain.SHA]()
 	parentName, hasParentName := initialParentName.Get()
@@ -27,7 +24,6 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	usesRebaseSyncStrategy := args.Config.NormalConfig.SyncFeatureStrategy == configdomain.SyncFeatureStrategyRebase
 	hasDescendents := args.Config.NormalConfig.Lineage.HasDescendents(localName)
 	parentToRemove, hasParentToRemove := args.Config.NormalConfig.Lineage.LatestAncestor(localName, args.BranchesToDelete.Value.Values()).Get()
-	fmt.Println("EEEEEEEEEEEEEEEEEEEEEEEEEeeeeeeeeeee", hasParentToRemove, usesRebaseSyncStrategy)
 	if hasParentToRemove && usesRebaseSyncStrategy {
 		RemoveAncestorCommits(RemoveAncestorCommitsArgs{
 			Ancestor:          parentToRemove.BranchName(),
@@ -47,21 +43,16 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	}
 	switch {
 	case hasParentToRemove && parentToRemove == parentName && trackingBranchGone && hasDescendents:
-		fmt.Println("11111111111111111111111 DELETE ")
 		args.BranchesToDelete.Value.Add(localName)
 	case hasParentToRemove && parentToRemove == parentName:
-		fmt.Println("22222222222222222222222")
 		// nothing to do here, we already synced with the parent by calling RemoveAncestorCommits above
 	case usesRebaseSyncStrategy && trackingBranchGone && hasDescendents:
-		fmt.Println("33333333333333333333333333333333333")
 		args.BranchesToDelete.Value.Add(localName)
 	case trackingBranchGone:
-		fmt.Println("44444444444444444444444444444444444")
 		deletedBranchProgram(args.Program, localName, initialParentName, initialParentSHA, parentSHAPreviousRun, args)
 	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// cannot sync branches that are active in another worktree
 	default:
-		fmt.Println("55555555555555555555555555555")
 		LocalBranchProgram(localName, branchInfo, initialParentName, initialParentSHA, parentSHAPreviousRun, firstCommitMessage, args)
 	}
 	args.Program.Value.Add(&opcodes.ProgramEndOfBranch{})
@@ -82,9 +73,7 @@ type BranchProgramArgs struct {
 
 // LocalBranchProgram provides the program to sync a local branch.
 func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.BranchInfo, initialParentName Option[gitdomain.LocalBranchName], initialParentSHA, parentSHAPreviousRun Option[gitdomain.SHA], firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
-	fmt.Println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa LOCAL BRANCH PROGRAM")
 	branchType := args.Config.BranchType(localName)
-	fmt.Println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaa BRANCH TYPE", branchType)
 	isMainOrPerennialBranch := branchType == configdomain.BranchTypeMainBranch || branchType == configdomain.BranchTypePerennialBranch
 	if isMainOrPerennialBranch && !args.Remotes.HasRemote(args.Config.NormalConfig.DevRemote) {
 		// perennial branch but no remote --> this branch cannot be synced

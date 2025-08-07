@@ -1,8 +1,6 @@
 package sync
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/vm/opcodes"
@@ -12,7 +10,6 @@ import (
 
 // FeatureBranchProgram adds the opcodes to sync the feature branch with the given name.
 func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBranchArgs) {
-	fmt.Println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa FEATURE BRANCH PROGRAM", syncStrategy)
 	switch syncStrategy {
 	case configdomain.SyncStrategyCompress:
 		args.program.Value.Add(
