@@ -351,12 +351,16 @@ func deleteLocalBranch(prog, finalUndoProgram Mutable[program.Program], data del
 			descendents := data.config.NormalConfig.Lineage.Descendants(localBranchToDelete)
 			for _, descendent := range descendents {
 				if branchInfo, hasBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(descendent).Get(); hasBranchInfo {
+					parent := data.config.NormalConfig.Lineage.Parent(descendent).GetOrElse(data.config.ValidatedConfigData.MainBranch)
+					if parent == localBranchToDelete {
+						parent = data.config.NormalConfig.Lineage.Parent(parent).GetOrElse(data.config.ValidatedConfigData.MainBranch)
+					}
 					sync.RemoveAncestorCommits(sync.RemoveAncestorCommitsArgs{
 						Ancestor:          localBranchToDelete.BranchName(),
 						Branch:            descendent,
 						HasTrackingBranch: branchInfo.HasTrackingBranch(),
 						Program:           prog,
-						RebaseOnto:        data.config.ValidatedConfigData.MainBranch,
+						RebaseOnto:        parent,
 					})
 				}
 			}
