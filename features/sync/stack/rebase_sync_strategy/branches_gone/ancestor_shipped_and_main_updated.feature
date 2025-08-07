@@ -2,6 +2,7 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | branch-1 | feature | main   | local, origin |
@@ -28,7 +29,6 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
     And the commits
       | BRANCH   | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | branch-4 | local, origin | commit 4 | file      | content 4    |
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And wait 1 second to ensure new Git timestamps
     And origin ships the "branch-1" branch using the "squash-merge" ship-strategy
     And wait 1 second to ensure new Git timestamps

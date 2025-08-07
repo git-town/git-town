@@ -3,6 +3,7 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | old  | feature | main   | local, origin |
@@ -12,7 +13,6 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
       | old    | local, origin | commit 2 | file      | content 2    |
       | old    | local, origin | commit 3 | file      | content 3    |
     And the current branch is "old"
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town prepend parent --beam" and enter into the dialog:
       | DIALOG          | KEYS             | COMMENT         |
       | commits to beam | down space enter | select commit 2 |

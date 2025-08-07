@@ -2,6 +2,7 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
@@ -14,7 +15,6 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
     And the commits
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | beta   | local, origin | beta commit | file      | beta content |
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     And origin ships the "alpha" branch using the "squash-merge" ship-strategy
     And I add this commit to the "main" branch
       | MESSAGE                    | FILE NAME | FILE CONTENT   |

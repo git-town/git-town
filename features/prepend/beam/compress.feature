@@ -3,6 +3,7 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the branches
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | old  | feature | main   | local, origin |
@@ -13,7 +14,6 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
       | old    | local, origin | commit 3 | file 3    | content 3    |
       | old    | local, origin | commit 4 | file 4    | content 4    |
     And the current branch is "old"
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     And wait 1 second to ensure new Git timestamps
     When I run "git-town prepend parent --beam" and enter into the dialog:
       | DIALOG          | KEYS                             |

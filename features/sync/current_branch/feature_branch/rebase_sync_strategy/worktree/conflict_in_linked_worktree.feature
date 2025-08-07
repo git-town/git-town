@@ -2,6 +2,7 @@ Feature: sync a branch in a "linked worktree" that has a merge conflict
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
@@ -11,7 +12,6 @@ Feature: sync a branch in a "linked worktree" that has a merge conflict
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And the current branch is "main"
     And branch "feature" is active in another worktree
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town sync" in the other worktree
 
   Scenario: result

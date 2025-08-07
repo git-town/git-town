@@ -2,6 +2,7 @@ Feature: prepend a branch to a feature branch in a clean workspace using the "co
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the branches
       | NAME     | TYPE    | PARENT   | LOCATIONS     |
       | branch-1 | feature | main     | local, origin |
@@ -12,7 +13,6 @@ Feature: prepend a branch to a feature branch in a clean workspace using the "co
       | branch-2 | local, origin | branch-2 commit |
       | main     | local, origin | main commit     |
     And the current branch is "branch-2"
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     And wait 1 second to ensure new Git timestamps
     When I run "git-town prepend branch-1a"
 

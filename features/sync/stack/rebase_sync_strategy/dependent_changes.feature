@@ -2,6 +2,7 @@ Feature: stack that changes the same file in multiple commits per branch
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
@@ -16,7 +17,6 @@ Feature: stack that changes the same file in multiple commits per branch
       | BRANCH | LOCATION      | MESSAGE       | FILE NAME      | FILE CONTENT |
       | beta   | local, origin | beta commit 1 | favorite-pizza | pepperoni    |
       | beta   | local, origin | beta commit 2 | favorite-pizza | pineapple    |
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "beta"
     And origin ships the "alpha" branch using the "squash-merge" ship-strategy
     When I run "git-town sync"
