@@ -105,7 +105,7 @@ Feature: compatibility between different sync-feature-strategy settings
       >>>>>>> {{ sha-short 'my first commit' }} (my first commit)
       """
     And a rebase is now in progress
-    When I resolve the conflict in "file.txt" with "my second and coworker first content"
+    When I resolve the conflict in "file.txt" with "my and coworker first content"
     And I run "git town continue" and close the editor
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
@@ -115,7 +115,8 @@ Feature: compatibility between different sync-feature-strategy settings
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME | FILE CONTENT                         |
       | feature | local, coworker, origin | coworker first commit                                      | file.txt  | coworker first content               |
-      |         | local, origin           | my first commit                                            | file.txt  | my second and coworker first content |
+      |         | local, origin           | my first commit                                            | file.txt  | my and coworker first content        |
+      |         |                         | my second commit                                           | file.txt  | my second and coworker first content |
       |         | coworker                | my first commit                                            | file.txt  | my first content                     |
       |         |                         | Merge remote-tracking branch 'origin/feature' into feature | file.txt  | my and coworker first content        |
     And no rebase is now in progress
