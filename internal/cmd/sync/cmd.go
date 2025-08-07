@@ -192,8 +192,6 @@ func executeSync(args executeSyncArgs) error {
 					Proposal:    branchProposal,
 					UpdatedBody: configdomain.ProposalBodyUpdateWithStackLineage(branchProposal.Data.Data().Body.GetOrDefault(), builder.Build(proposalStackLineageArgs).GetOrDefault()),
 				})
-			} else {
-				fmt.Printf(messages.ProposalNotFoundForUpdate, data.initialBranch)
 			}
 		}
 	}

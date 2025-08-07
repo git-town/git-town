@@ -222,7 +222,6 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	ProposalMultipleFromToFound             = "found %d proposals from branch %q to branch %q"
 	ProposalNoNumberGiven                   = "no proposal number given"
 	ProposalNoParent                        = "branch %q has no parent and can therefore not be proposed"
-	ProposalNotFoundForUpdate               = "cannot find proposal to update for branch %s\n"
 	ProposalSourceCannotUpdate              = "cannot update the proposal source branch on your forge"
 	ProposalsShowLineageInvalid             = "invalid value for whether proposals should show the lineage: %q. Valid values are: none, ci, cli"
 	ProposalTargetBranchUpdateProblem       = "cannot update the target branch of proposal %d on your forge"
