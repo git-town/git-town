@@ -153,22 +153,23 @@ func executeDetach(args []string, cliConfig configdomain.PartialConfig) error {
 }
 
 type detachData struct {
-	branchInfosLastRun  Option[gitdomain.BranchInfos]
-	branchToDetachInfo  gitdomain.BranchInfo
-	branchToDetachName  gitdomain.LocalBranchName
-	branchToDetachType  configdomain.BranchType
-	branchesSnapshot    gitdomain.BranchesSnapshot
-	children            []detachChildBranch
-	config              config.ValidatedConfig
-	connector           Option[forgedomain.Connector]
-	descendents         []detachChildBranch
-	hasOpenChanges      bool
-	initialBranch       gitdomain.LocalBranchName
-	inputs              dialogcomponents.Inputs
-	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
-	parentBranch        gitdomain.LocalBranchName
-	previousBranch      Option[gitdomain.LocalBranchName]
-	stashSize           gitdomain.StashSize
+	ancestorsWithoutMain []detachChildBranch
+	branchInfosLastRun   Option[gitdomain.BranchInfos]
+	branchToDetachInfo   gitdomain.BranchInfo
+	branchToDetachName   gitdomain.LocalBranchName
+	branchToDetachType   configdomain.BranchType
+	branchesSnapshot     gitdomain.BranchesSnapshot
+	children             []detachChildBranch
+	config               config.ValidatedConfig
+	connector            Option[forgedomain.Connector]
+	descendents          []detachChildBranch
+	hasOpenChanges       bool
+	initialBranch        gitdomain.LocalBranchName
+	inputs               dialogcomponents.Inputs
+	nonExistingBranches  gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
+	parentBranch         gitdomain.LocalBranchName
+	previousBranch       Option[gitdomain.LocalBranchName]
+	stashSize            gitdomain.StashSize
 }
 
 type detachChildBranch struct {
@@ -294,6 +295,19 @@ func determineDetachData(args []string, repo execute.OpenRepoResult) (data detac
 			proposal: proposal,
 		}
 	}
+	ancestorNames := validatedConfig.NormalConfig.Lineage.AncestorsWithoutRoot(branchNameToDetach)
+	ancestors := make([]detachChildBranch, len(ancestorNames))
+	for a, ancestorName := range ancestorNames {
+		info, has := branchesSnapshot.Branches.FindByLocalName(ancestorName).Get()
+		if !has {
+			return data, false, fmt.Errorf("cannot find branch info for %q", ancestorName)
+		}
+		ancestors[a] = detachChildBranch{
+			info:     info,
+			name:     ancestorName,
+			proposal: None[forgedomain.Proposal](),
+		}
+	}
 	descendentNames := validatedConfig.NormalConfig.Lineage.Descendants(branchNameToDetach)
 	descendents := make([]detachChildBranch, len(descendentNames))
 	for d, descendentName := range descendentNames {
@@ -310,22 +324,23 @@ func determineDetachData(args []string, repo execute.OpenRepoResult) (data detac
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
 	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
 	return detachData{
-		branchInfosLastRun:  branchInfosLastRun,
-		branchToDetachInfo:  *branchToDetachInfo,
-		branchToDetachName:  branchNameToDetach,
-		branchToDetachType:  branchTypeToDetach,
-		branchesSnapshot:    branchesSnapshot,
-		children:            children,
-		config:              validatedConfig,
-		connector:           connector,
-		descendents:         descendents,
-		hasOpenChanges:      repoStatus.OpenChanges,
-		initialBranch:       initialBranch,
-		inputs:              inputs,
-		nonExistingBranches: nonExistingBranches,
-		parentBranch:        parentBranch,
-		previousBranch:      previousBranchOpt,
-		stashSize:           stashSize,
+		ancestorsWithoutMain: ancestors,
+		branchInfosLastRun:   branchInfosLastRun,
+		branchToDetachInfo:   *branchToDetachInfo,
+		branchToDetachName:   branchNameToDetach,
+		branchToDetachType:   branchTypeToDetach,
+		branchesSnapshot:     branchesSnapshot,
+		children:             children,
+		config:               validatedConfig,
+		connector:            connector,
+		descendents:          descendents,
+		hasOpenChanges:       repoStatus.OpenChanges,
+		initialBranch:        initialBranch,
+		inputs:               inputs,
+		nonExistingBranches:  nonExistingBranches,
+		parentBranch:         parentBranch,
+		previousBranch:       previousBranchOpt,
+		stashSize:            stashSize,
 	}, false, nil
 }
 
@@ -344,6 +359,7 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 			&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: data.branchToDetachName, ForceIfIncludes: true},
 		)
 	}
+	// delete the commits of this branch from all descendents
 	lastParent := data.parentBranch
 	for _, descendent := range data.descendents {
 		sync.RemoveAncestorCommits(sync.RemoveAncestorCommitsArgs{
@@ -359,6 +375,22 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 			)
 		}
 		lastParent = descendent.name
+	}
+	// delete the commits of all ancestors from the detached branch
+	for _, ancestor := range data.ancestorsWithoutMain {
+		ancestorParent := data.config.NormalConfig.Lineage.Parent(ancestor.name).GetOrElse(data.config.ValidatedConfigData.MainBranch)
+		sync.RemoveAncestorCommits(sync.RemoveAncestorCommitsArgs{
+			Ancestor:          ancestor.name.BranchName(),
+			Branch:            data.branchToDetachName,
+			HasTrackingBranch: ancestor.info.HasTrackingBranch(),
+			Program:           prog,
+			RebaseOnto:        ancestorParent,
+		})
+		if data.branchToDetachInfo.HasTrackingBranch() {
+			prog.Value.Add(
+				&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: data.branchToDetachName, ForceIfIncludes: true},
+			)
+		}
 	}
 	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.initialBranch})
 	if !data.config.NormalConfig.DryRun {

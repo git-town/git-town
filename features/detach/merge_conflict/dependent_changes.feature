@@ -54,6 +54,9 @@ Feature: detaching a branch from a chain that edits the same file
       |          | GIT_EDITOR=true git rebase --continue                          |
       |          | git push --force-with-lease                                    |
       |          | git checkout branch-2                                          |
+      | branch-2 | git pull                                                       |
+      |          | git -c rebase.updateRefs=false rebase --onto main branch-1     |
+      |          | git push --force-with-lease                                    |
     # TODO: things wrong with the commits below
     # - branch-2 was detached from the stack, but still contains changes from branch-1
     # - branch-3 still contains commit "branch-2 commit"
