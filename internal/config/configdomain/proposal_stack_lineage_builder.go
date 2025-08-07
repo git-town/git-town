@@ -58,7 +58,7 @@ func (self *ProposalStackLineageBuilder) Build(args ProposalStackLineageArgs) Op
 	}
 
 	length := len(self.orderedLineage)
-	for i := len(self.orderedLineage); i > 0; i-- {
+	for i := length; i > 0; i-- {
 		node := self.orderedLineage[length-i]
 		indent := strings.Repeat(" ", (length-i)*2)
 		if self.mainAndPerennialBranches.Contains(node.branch) {
