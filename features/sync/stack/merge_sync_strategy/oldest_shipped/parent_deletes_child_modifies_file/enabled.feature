@@ -2,6 +2,7 @@ Feature: auto-resolve phantom merge conflicts in a synced stack where the parent
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "merge"
     And the commits
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | main   | local, origin | create file | file      | main content |
@@ -15,7 +16,6 @@ Feature: auto-resolve phantom merge conflicts in a synced stack where the parent
     And the commits
       | BRANCH   | LOCATION | MESSAGE     | FILE NAME | FILE CONTENT     |
       | branch-2 | local    | change file | file      | branch-2 content |
-    And Git setting "git-town.sync-feature-strategy" is "merge"
     And origin ships the "branch-1" branch using the "squash-merge" ship-strategy
     And the current branch is "branch-2"
     When I run "git-town sync"

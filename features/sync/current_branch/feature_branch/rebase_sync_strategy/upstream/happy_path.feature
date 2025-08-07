@@ -2,6 +2,7 @@ Feature: with upstream repo
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And an upstream repo
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
@@ -11,7 +12,6 @@ Feature: with upstream repo
       | main    | upstream | upstream commit |
       | feature | local    | local commit    |
     And the current branch is "feature"
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town sync"
 
   Scenario: result

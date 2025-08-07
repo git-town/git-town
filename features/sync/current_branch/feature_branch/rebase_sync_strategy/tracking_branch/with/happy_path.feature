@@ -2,6 +2,7 @@ Feature: sync the current feature branch using the "rebase" feature sync strateg
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the commits
       | BRANCH | LOCATION | MESSAGE            |
       | main   | local    | local main commit  |
@@ -14,7 +15,6 @@ Feature: sync the current feature branch using the "rebase" feature sync strateg
       | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
     And the current branch is "feature"
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town sync"
 
   Scenario: result

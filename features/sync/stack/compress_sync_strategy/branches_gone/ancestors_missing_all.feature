@@ -2,6 +2,7 @@ Feature: stacked changes where all ancestor branches aren't local
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
@@ -15,7 +16,6 @@ Feature: stacked changes where all ancestor branches aren't local
       | gamma  | local    | local gamma commit  |
       |        | origin   | origin gamma commit |
     And the current branch is "gamma"
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     And I ran "git branch -d main"
     And I ran "git branch -d alpha"
     And I ran "git branch -d beta"

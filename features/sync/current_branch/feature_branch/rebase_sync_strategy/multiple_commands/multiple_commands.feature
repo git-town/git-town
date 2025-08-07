@@ -2,6 +2,7 @@ Feature: running a sync after running another Git Town command
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME   | TYPE    | PARENT | LOCATIONS     |
       | parent | feature | main   | local, origin |
@@ -15,7 +16,6 @@ Feature: running a sync after running another Git Town command
       | parent | local    | local parent commit  |
       |        | origin   | origin parent commit |
     And the current branch is "child"
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And I ran "git-town sync"
     And I ran "git-town hack new"
     And the current branch is "child"
