@@ -31,7 +31,7 @@ func TestIndent(t *testing.T) {
 		must.EqOp(t, "  ", have)
 	})
 
-	t.Run("indent by two spaces", func(t *testing.T) {
+	t.Run("indent by 2 spaces", func(t *testing.T) {
 		t.Parallel()
 		give := "one\ntwo\nthree"
 		have := gohacks.IndentLines(give, 2)
@@ -39,7 +39,7 @@ func TestIndent(t *testing.T) {
 		must.EqOp(t, want, have)
 	})
 
-	t.Run("indent by four spaces", func(t *testing.T) {
+	t.Run("indent by 4 spaces", func(t *testing.T) {
 		t.Parallel()
 		give := "one\ntwo\nthree"
 		have := gohacks.IndentLines(give, 4)
