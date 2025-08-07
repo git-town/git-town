@@ -51,6 +51,8 @@ Feature: detaching a branch from a stack with independent changes
     # Note: the commits below aren't correct, but that seems a problem with Git instead of Git Town.
     # On branch-3, Git Town correctly runs "git rebase --onto branch-1 branch-2".
     # This should remove "branch-2 commit" from the branch, but it doesn't.
+    # When removing "branch-2 commit" via interactive rebase, it works correctly.
+    # Is the call above wrong?
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                                                                 |
       | main     | local, origin | main commit     | file      | line 0: main content\n\nline 1\n\nline 2\n\nline 3\n\nline 4                                                                 |
