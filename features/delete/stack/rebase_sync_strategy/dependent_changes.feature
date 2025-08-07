@@ -1,3 +1,4 @@
+@this
 Feature: deleting a branch that conflicts with the main branch
 
   Background:
@@ -47,10 +48,10 @@ Feature: deleting a branch that conflicts with the main branch
     # Branch-3 still contains the changes from branch-2.
     # These changes should have been removed when branch-2 was deleted.
     And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                                      |
-      | main     | local, origin | main commit     | file      | line 0: main content\nline 1\nline2\nline 3                                                       |
-      | branch-1 | local, origin | branch-1 commit | file      | line 0: main content\nline 1: branch-1 content\nline2\n\nline 3                                   |
-      | branch-3 | local, origin | branch-3 commit | file      | line 0: main content\nline 1: branch-1 content\nline2: branch-2 content\nline 3: branch-3 content |
+      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                                       |
+      | main     | local, origin | main commit     | file      | line 0: main content\nline 1\nline 2\nline 3                                                       |
+      | branch-1 | local, origin | branch-1 commit | file      | line 0: main content\nline 1: branch-1 content\nline 2\n\nline 3                                   |
+      | branch-3 | local, origin | branch-3 commit | file      | line 0: main content\nline 1: branch-1 content\nline 2: branch-2 content\nline 3: branch-3 content |
     And this lineage exists now
       | BRANCH   | PARENT   |
       | branch-1 | main     |
