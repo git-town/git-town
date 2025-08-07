@@ -121,7 +121,7 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
     And the initial commits exist now
     And the initial lineage exists now
 
-  @debug @this
+  @this
   Scenario: sync and amend the beamed commit
     When wait 1 second to ensure new Git timestamps
     And I run "git town sync"
@@ -138,13 +138,11 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
       |        | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }}                  |
       |        | git checkout old                                                                              |
       | old    | git -c rebase.updateRefs=false rebase --onto parent {{ sha-in-origin-before-run 'commit 2' }} |
-    # TODO: it should auto-resolve this phantom conflict.
-    # The branches were in sync. The user amended a commit.
-    # Git Town should detect this and resolve.
-    #
-    # In this case, the branches were in sync and now they are not.
-    # Branch "parent" hasn't encountered any changes since the last sync (has the same SHA since the last sync).
-    # Branch "old" has a new SHA. --> Keep the change on branch "old".
+    # NOTE: this is a legit rebase conflict.
+    # The branches were in sync before.
+    # Now branch "parent" contains an updated commit.
+    # Branch "old" (its child) also changes the same file.
+    # Neither of the two conflicting versions is the correct one.
     And Git Town prints the error:
       """
       CONFLICT (content): Merge conflict in file
@@ -157,7 +155,7 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
       content 1
       >>>>>>> {{ sha-short "commit 1" }} (commit 1)
       """
-    When I resolve the conflict in "file" with "content 1"
+    When I resolve the conflict in "file" with "amended content 1"
     And I run "git add file"
     And I run "git town continue"
     Then Git Town runs the commands
@@ -166,7 +164,7 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
       |        | git push --force-with-lease --force-if-includes |
     And no rebase is now in progress
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE   | FILE NAME | FILE CONTENT    |
-      | old    | local, origin | commit 1  | file      | content 1       |
-      |        |               | commit 3  | file      | content 3       |
-      | parent | local, origin | commit 2b | file      | amended content |
+      | BRANCH | LOCATION      | MESSAGE   | FILE NAME | FILE CONTENT      |
+      | old    | local, origin | commit 1  | file      | amended content 1 |
+      |        |               | commit 3  | file      | content 3         |
+      | parent | local, origin | commit 2b | file      | amended content   |
