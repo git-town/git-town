@@ -1,4 +1,4 @@
-Feature: detaching a branch from a chain that edits the same file
+Feature: detaching a branch from a stack with independent changes
 
   Background:
     Given a Git repo with origin
