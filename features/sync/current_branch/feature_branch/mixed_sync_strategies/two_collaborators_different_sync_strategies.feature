@@ -1,5 +1,6 @@
 Feature: compatibility between different sync-feature-strategy settings
 
+  @this
   Scenario: I use rebase and my coworker uses merge
     Given a Git repo with origin
     And the branches
@@ -90,6 +91,10 @@ Feature: compatibility between different sync-feature-strategy settings
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in file.txt
+      """
+    And Git Town prints something like:
+      """
+      could not apply \S+ my first commit
       """
     And file "file.txt" now has content:
       """
