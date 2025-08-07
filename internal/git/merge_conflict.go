@@ -8,5 +8,3 @@ type MergeConflict struct {
 	Parent  Option[Blob] // info about the file on the original parent
 	Root    Option[Blob] // info about the file on the root branch
 }
-
-type MergeConflicts []MergeConflict
