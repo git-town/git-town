@@ -35,7 +35,7 @@ Feature: auto-resolve phantom merge conflicts in a synced stack where the parent
     # When branch-1 got shipped, and the user syncs, they shouldn't need to tell Git again that branch-2 should re-create the "file".
     And Git Town prints the error:
       """
-      CONFLICT (modify/delete): file deleted in main and modified in HEAD.  Version HEAD of file left in tree.
+      CONFLICT (modify/delete): file deleted in main and modified in HEAD.
       """
     And a merge is now in progress
 
