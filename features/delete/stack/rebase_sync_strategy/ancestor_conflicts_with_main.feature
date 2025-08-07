@@ -27,7 +27,6 @@ Feature: deleting a branch that conflicts with the main branch
     And the current branch is "branch-2"
     When I run "git-town delete"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                        |
@@ -60,15 +59,14 @@ Feature: deleting a branch that conflicts with the main branch
       """
     And a rebase is now in progress
 
+  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                         |
-      | branch-3 | git reset --hard {{ sha 'branch-3 commit' }}    |
-      |          | git push --force-with-lease --force-if-includes |
-      |          | git branch branch-2 {{ sha 'branch-2 commit' }} |
-      |          | git push -u origin branch-2                     |
-      |          | git checkout branch-2                           |
+      | BRANCH   | COMMAND                                                                 |
+      | branch-3 | git rebase --abort                                                      |
+      |          | git push origin {{ sha-initial 'branch-2 commit' }}:refs/heads/branch-2 |
+      |          | git checkout branch-2                                                   |
     And the branches are now
       | REPOSITORY    | BRANCHES                           |
       | local, origin | main, branch-1, branch-2, branch-3 |
