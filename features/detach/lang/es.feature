@@ -20,7 +20,6 @@ Feature: detaching a branch in Spanish
     When I run "git-town detach" with these environment variables
       | LANG | es_ES.UTF-8 |
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                    |
