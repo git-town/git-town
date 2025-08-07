@@ -13,7 +13,7 @@ type ConflictRebasePhantomResolveAll struct {
 }
 
 func (self *ConflictRebasePhantomResolveAll) Run(args shared.RunArgs) error {
-	fileConflicts, err := args.Git.FileConflictInfos(args.Backend)
+	fileConflicts, err := args.Git.FileConflicts(args.Backend)
 	if err != nil {
 		return err
 	}

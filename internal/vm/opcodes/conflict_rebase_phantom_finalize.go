@@ -18,7 +18,7 @@ func (self *ConflictRebasePhantomFinalize) Abort() []shared.Opcode {
 }
 
 func (self *ConflictRebasePhantomFinalize) Run(args shared.RunArgs) error {
-	unresolvedFiles, err := args.Git.FileConflictInfos(args.Backend)
+	unresolvedFiles, err := args.Git.FileConflicts(args.Backend)
 	if err != nil {
 		return err
 	}
