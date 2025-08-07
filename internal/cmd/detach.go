@@ -153,23 +153,22 @@ func executeDetach(args []string, cliConfig configdomain.PartialConfig) error {
 }
 
 type detachData struct {
-	ancestorsWithoutMain []detachChildBranch
-	branchInfosLastRun   Option[gitdomain.BranchInfos]
-	branchToDetachInfo   gitdomain.BranchInfo
-	branchToDetachName   gitdomain.LocalBranchName
-	branchToDetachType   configdomain.BranchType
-	branchesSnapshot     gitdomain.BranchesSnapshot
-	children             []detachChildBranch
-	config               config.ValidatedConfig
-	connector            Option[forgedomain.Connector]
-	descendents          []detachChildBranch
-	hasOpenChanges       bool
-	initialBranch        gitdomain.LocalBranchName
-	inputs               dialogcomponents.Inputs
-	nonExistingBranches  gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
-	parentBranch         gitdomain.LocalBranchName
-	previousBranch       Option[gitdomain.LocalBranchName]
-	stashSize            gitdomain.StashSize
+	branchInfosLastRun  Option[gitdomain.BranchInfos]
+	branchToDetachInfo  gitdomain.BranchInfo
+	branchToDetachName  gitdomain.LocalBranchName
+	branchToDetachType  configdomain.BranchType
+	branchesSnapshot    gitdomain.BranchesSnapshot
+	children            []detachChildBranch
+	config              config.ValidatedConfig
+	connector           Option[forgedomain.Connector]
+	descendents         []detachChildBranch
+	hasOpenChanges      bool
+	initialBranch       gitdomain.LocalBranchName
+	inputs              dialogcomponents.Inputs
+	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
+	parentBranch        gitdomain.LocalBranchName
+	previousBranch      Option[gitdomain.LocalBranchName]
+	stashSize           gitdomain.StashSize
 }
 
 type detachChildBranch struct {
@@ -295,19 +294,6 @@ func determineDetachData(args []string, repo execute.OpenRepoResult) (data detac
 			proposal: proposal,
 		}
 	}
-	ancestorNames := validatedConfig.NormalConfig.Lineage.AncestorsWithoutRoot(branchNameToDetach)
-	ancestors := make([]detachChildBranch, len(ancestorNames))
-	for a, ancestorName := range ancestorNames {
-		info, has := branchesSnapshot.Branches.FindByLocalName(ancestorName).Get()
-		if !has {
-			return data, false, fmt.Errorf("cannot find branch info for %q", ancestorName)
-		}
-		ancestors[a] = detachChildBranch{
-			info:     info,
-			name:     ancestorName,
-			proposal: None[forgedomain.Proposal](),
-		}
-	}
 	descendentNames := validatedConfig.NormalConfig.Lineage.Descendants(branchNameToDetach)
 	descendents := make([]detachChildBranch, len(descendentNames))
 	for d, descendentName := range descendentNames {
@@ -324,23 +310,22 @@ func determineDetachData(args []string, repo execute.OpenRepoResult) (data detac
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
 	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
 	return detachData{
-		ancestorsWithoutMain: ancestors,
-		branchInfosLastRun:   branchInfosLastRun,
-		branchToDetachInfo:   *branchToDetachInfo,
-		branchToDetachName:   branchNameToDetach,
-		branchToDetachType:   branchTypeToDetach,
-		branchesSnapshot:     branchesSnapshot,
-		children:             children,
-		config:               validatedConfig,
-		connector:            connector,
-		descendents:          descendents,
-		hasOpenChanges:       repoStatus.OpenChanges,
-		initialBranch:        initialBranch,
-		inputs:               inputs,
-		nonExistingBranches:  nonExistingBranches,
-		parentBranch:         parentBranch,
-		previousBranch:       previousBranchOpt,
-		stashSize:            stashSize,
+		branchInfosLastRun:  branchInfosLastRun,
+		branchToDetachInfo:  *branchToDetachInfo,
+		branchToDetachName:  branchNameToDetach,
+		branchToDetachType:  branchTypeToDetach,
+		branchesSnapshot:    branchesSnapshot,
+		children:            children,
+		config:              validatedConfig,
+		connector:           connector,
+		descendents:         descendents,
+		hasOpenChanges:      repoStatus.OpenChanges,
+		initialBranch:       initialBranch,
+		inputs:              inputs,
+		nonExistingBranches: nonExistingBranches,
+		parentBranch:        parentBranch,
+		previousBranch:      previousBranchOpt,
+		stashSize:           stashSize,
 	}, false, nil
 }
 
