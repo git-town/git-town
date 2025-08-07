@@ -55,6 +55,7 @@ Feature: detaching a branch from a chain that edits the same file
       |          | git push --force-with-lease                                    |
       |          | git checkout branch-2                                          |
     # TODO: things wrong with the commits below
+    # - these aren't phantom conflicts since we have dependent changes here
     # - branch-2 was detached from the stack, but still contains changes from branch-1
     # - branch-3 still contains commit "branch-2 commit"
     # - branch-3 still contains changes from branch-2
