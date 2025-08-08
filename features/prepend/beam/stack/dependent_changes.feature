@@ -150,7 +150,6 @@ Feature: beam a commit from a stack with dependent changes into a prepended bran
       | new    | main   |
       | old    | new    |
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
@@ -162,6 +161,7 @@ Feature: beam a commit from a stack with dependent changes into a prepended bran
     And the initial commits exist now
     And the initial lineage exists now
 
+  @this
   Scenario: first sync after prepend
     When I run "git town sync"
     Then Git Town runs the commands
