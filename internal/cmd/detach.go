@@ -358,8 +358,8 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 		&opcodes.RebaseOntoResolvePhantomConflicts{
 			BranchToRebaseOnto: data.config.ValidatedConfigData.MainBranch.BranchName(),
 			CommitsToRemove:    data.parentBranch.BranchName().Location(),
-			Upstream:           None[gitdomain.LocalBranchName](),
 			CurrentBranch:      data.branchToDetachName,
+			Upstream:           None[gitdomain.LocalBranchName](),
 		},
 	)
 	if data.branchToDetachInfo.HasTrackingBranch() {
