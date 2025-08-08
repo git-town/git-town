@@ -161,21 +161,23 @@ Feature: beam a commit from a stack with dependent changes into a prepended bran
     And the initial commits exist now
     And the initial lineage exists now
 
-  @this
   Scenario: first sync after prepend
     When I run "git town sync"
+    And inspect the commits
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                                                      |
-      | new    | git fetch --prune --tags                                                     |
-      |        | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
-      |        | git push -u origin new                                                       |
+      | BRANCH | COMMAND                                                                   |
+      | new    | git fetch --prune --tags                                                  |
+      |        | git -c rebase.updateRefs=false rebase --onto main {{ sha 'main commit' }} |
+      |        | git push -u origin new                                                    |
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE  |
-      | old    | local, origin | commit 1 |
-      |        |               | commit 3 |
-      | new    | local, origin | commit 2 |
+      | BRANCH | LOCATION      | MESSAGE     |
+      | main   | local, origin | main commit |
+      | new    | local, origin | commit 2    |
+      | old    | local, origin | commit 1    |
+      |        |               | commit 3    |
     And no uncommitted files exist now
 
+  @this
   Scenario: sync and amend the beamed commit
     When wait 1 second to ensure new Git timestamps
     And I run "git town sync"
@@ -189,7 +191,7 @@ Feature: beam a commit from a stack with dependent changes into a prepended bran
       | old    | git fetch --prune --tags                                                                   |
       |        | git checkout new                                                                           |
       | new    | git push --force-with-lease --force-if-includes                                            |
-      |        | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }}               |
+      |        | git -c rebase.updateRefs=false rebase --onto main {{ sha 'main commit' }}                  |
       |        | git checkout old                                                                           |
       | old    | git -c rebase.updateRefs=false rebase --onto new {{ sha-in-origin-before-run 'commit 2' }} |
       |        | git checkout --theirs file                                                                 |
@@ -197,7 +199,8 @@ Feature: beam a commit from a stack with dependent changes into a prepended bran
       |        | GIT_EDITOR=true git rebase --continue                                                      |
       |        | git push --force-with-lease --force-if-includes                                            |
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE   | FILE NAME | FILE CONTENT    |
-      | old    | local, origin | commit 1  | file      | content 1       |
-      |        |               | commit 3  | file      | content 3       |
-      | new    | local, origin | commit 2b | file      | amended content |
+      | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT                                                                 |
+      | main   | local, origin | main commit | file      | line 1\nline 2\nline 3                                                       |
+      | new    | local, origin | commit 2b   | file      | amended content                                                              |
+      | old    | local, origin | commit 1    | file      | line 1: commit-1 changes\nline 2: commit-2 changes\nline 3                   |
+      |        |               | commit 3    | file      | line 1: commit-1 changes\nline 2: commit-2 changes\nline 3: commit-3 changes |
