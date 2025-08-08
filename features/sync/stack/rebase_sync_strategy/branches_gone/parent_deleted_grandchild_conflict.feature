@@ -16,6 +16,7 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
     And the current branch is "branch-1" and the previous branch is "branch-2"
     When I run "git-town sync --all"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                    |
