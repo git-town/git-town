@@ -68,8 +68,7 @@ Feature: beam a commit from a stack with independent changes into a prepended br
     And no uncommitted files exist now
 
   Scenario: sync and amend the beamed commit
-    When I run "git-town sync"
-    And I amend this commit
+    When I amend this commit
       | BRANCH | LOCATION | MESSAGE          | FILE NAME | FILE CONTENT                                         |
       | new    | local    | commit 2 amended | file      | line 1\n\nline 2: amended commit-2 changes\n\nline 3 |
     And the current branch is "old"
