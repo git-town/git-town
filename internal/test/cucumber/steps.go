@@ -782,6 +782,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.StageFiles(filename)
 	})
 
+	sc.Step(`^I resolve the conflict in "([^"]*)" with:$`, func(ctx context.Context, filename string, content *godog.DocString) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		devRepo.CreateFile(filename, content.Content)
+		devRepo.StageFiles(filename)
+	})
+
 	sc.Step(`^I run "(.+)"$`, func(ctx context.Context, command string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		runCommand(state, command, true)
@@ -995,22 +1002,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		originRepo.RemoveBranch(branchToShip)
 		originRepo.CheckoutBranch("initial")
 		return nil
-	})
-
-	sc.Step(`^origin ships the "([^"]*)" branch using the "squash-merge" ship-strategy and resolves the merge conflict in "([^"]+)" with "([^"]+)" and commits as "([^"]+)"$`, func(ctx context.Context, branchName, fileName, fileContent, commitMessage string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		branchToShip := gitdomain.NewLocalBranchName(branchName)
-		originRepo := state.fixture.OriginRepo.GetOrPanic()
-		originRepo.CheckoutBranch("main")
-		err := originRepo.Git.SquashMerge(originRepo.TestRunner, branchToShip)
-		if err == nil {
-			panic("expected a merge conflict here")
-		}
-		originRepo.CreateFile(fileName, fileContent)
-		originRepo.StageFiles("-A")
-		asserts.NoError(originRepo.Git.Commit(originRepo.TestRunner, configdomain.UseCustomMessage(gitdomain.CommitMessage(commitMessage)), gitdomain.NewAuthorOpt("CI <ci@acme.com>"), configdomain.CommitHookEnabled))
-		originRepo.RemoveBranch(branchToShip)
-		originRepo.CheckoutBranch("initial")
 	})
 
 	sc.Step(`^origin ships the "([^"]*)" branch using the "squash-merge" ship-strategy as "([^"]+)"$`, func(ctx context.Context, branchName, commitMessage string) error {
