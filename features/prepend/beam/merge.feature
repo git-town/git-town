@@ -44,7 +44,7 @@ Feature: prepend a branch to a feature branch using the "merge" sync strategy
       | BRANCH | PARENT |
       | old    | parent |
       | parent | main   |
-    When I run "git town sync"
+    When I run "git-town sync"
     Then Git Town runs the commands
       | BRANCH | COMMAND                   |
       | parent | git fetch --prune --tags  |
@@ -74,7 +74,7 @@ Feature: prepend a branch to a feature branch using the "merge" sync strategy
       | BRANCH | LOCATION | MESSAGE   | FILE NAME | FILE CONTENT    |
       | parent | local    | commit 4b | file_4    | amended content |
     And the current branch is "old"
-    When I run "git town sync"
+    When I run "git-town sync"
     Then Git Town runs the commands
       | BRANCH | COMMAND                         |
       | old    | git fetch --prune --tags        |

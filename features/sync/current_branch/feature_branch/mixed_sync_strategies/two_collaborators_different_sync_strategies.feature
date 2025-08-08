@@ -17,7 +17,7 @@ Feature: compatibility between different sync-feature-strategy settings
     Given I add this commit to the current branch:
       | MESSAGE         | FILE NAME | FILE CONTENT     |
       | my first commit | file.txt  | my first content |
-    When I run "git town sync"
+    When I run "git-town sync"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
@@ -82,7 +82,7 @@ Feature: compatibility between different sync-feature-strategy settings
       >>>>>>> {{ sha-short 'my second commit' }} (my second commit)
       """
     When I resolve the conflict in "file.txt" with "my second and coworker first content"
-    And I run "git town continue" and close the editor
+    And I run "git-town continue" and close the editor
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                      |
       | feature | GIT_EDITOR=true git rebase --continue                                        |
@@ -108,7 +108,7 @@ Feature: compatibility between different sync-feature-strategy settings
       """
     And a rebase is now in progress
     When I resolve the conflict in "file.txt" with "my second and coworker first content"
-    And I run "git town continue" and close the editor
+    And I run "git-town continue" and close the editor
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | GIT_EDITOR=true git rebase --continue           |
