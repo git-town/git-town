@@ -13,8 +13,8 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | beta | feature | alpha  | local, origin |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
-      | beta   | local, origin | beta commit | file      | beta content |
+      | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT           |
+      | beta   | local, origin | beta commit | file      | alpha and beta content |
     And origin ships the "alpha" branch using the "squash-merge" ship-strategy
     And I add this commit to the "main" branch
       | MESSAGE                    | FILE NAME | FILE CONTENT |
@@ -33,9 +33,18 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       CONFLICT (add/add): Merge conflict in file
       """
     And a rebase is now in progress
+    And file "file" now has content:
+      """
+      <<<<<<< HEAD
+      alpha content
+      =======
+      main content
+      >>>>>>> {{ sha-short 'independent commit on main' }} (independent commit on main)
+      """
 
+  @this
   Scenario: resolve and continue
-    When I resolve the conflict in "file" with "resolved main content"
+    When I resolve the conflict in "file" with "alpha and independent content"
     And I run "git-town continue" and close the editor
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                 |
@@ -44,17 +53,33 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       |        | git checkout beta                                       |
       | beta   | git pull                                                |
       |        | git -c rebase.updateRefs=false rebase --onto main alpha |
-      |        | git checkout --theirs file                              |
-      |        | git add file                                            |
-      |        | GIT_EDITOR=true git rebase --continue                   |
-      |        | git push --force-with-lease                             |
-      |        | git branch -D alpha                                     |
+    And Git Town prints the error:
+      """
+      CONFLICT (content): Merge conflict in file
+      """
+    And a rebase is now in progress
+    And file "file" now has content:
+      """
+      <<<<<<< HEAD
+      alpha and independent content
+      =======
+      alpha and beta content
+      >>>>>>> {{ sha-short 'beta commit' }} (beta commit)
+      """
+    When I resolve the conflict in "file" with "alpha, beta, and independent content"
+    And I run "git-town continue"
+    Then Git Town runs the commands
+      | BRANCH | COMMAND                               |
+      | beta   | GIT_EDITOR=true git rebase --continue |
+      |        | git push --force-with-lease           |
+      |        | git branch -D alpha                   |
+    And no rebase is now in progress
     And all branches are now synchronized
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE                    | FILE NAME | FILE CONTENT          |
-      | main   | local, origin | alpha commit               | file      | alpha content         |
-      |        |               | independent commit on main | file      | resolved main content |
-      | beta   | local, origin | beta commit                | file      | beta content          |
+      | BRANCH | LOCATION      | MESSAGE                    | FILE NAME | FILE CONTENT                         |
+      | main   | local, origin | alpha commit               | file      | alpha content                        |
+      |        |               | independent commit on main | file      | alpha and independent content        |
+      | beta   | local, origin | beta commit                | file      | alpha, beta, and independent content |
 
   Scenario: undo
     When I run "git-town undo"
