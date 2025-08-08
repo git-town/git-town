@@ -42,7 +42,6 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       >>>>>>> {{ sha-short 'independent commit on main' }} (independent commit on main)
       """
 
-  @this
   Scenario: resolve and continue
     When I resolve the conflict in "file" with "alpha and independent content"
     And I run "git-town continue" and close the editor
@@ -81,6 +80,7 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       |        |               | independent commit on main | file      | alpha and independent content        |
       | beta   | local, origin | beta commit                | file      | alpha, beta, and independent content |
 
+  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
@@ -88,10 +88,10 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       | main   | git rebase --abort |
       |        | git checkout beta  |
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE                    | FILE NAME | FILE CONTENT  |
-      | main   | local         | independent commit on main | file      | main content  |
-      |        | origin        | alpha commit               | file      | alpha content |
-      | alpha  | local         | alpha commit               | file      | alpha content |
-      | beta   | local, origin | beta commit                | file      | beta content  |
-      |        | origin        | alpha commit               | file      | alpha content |
+      | BRANCH | LOCATION      | MESSAGE                    | FILE NAME | FILE CONTENT           |
+      | main   | local         | independent commit on main | file      | main content           |
+      |        | origin        | alpha commit               | file      | alpha content          |
+      | alpha  | local         | alpha commit               | file      | alpha content          |
+      | beta   | local, origin | beta commit                | file      | alpha and beta content |
+      |        | origin        | alpha commit               | file      | alpha content          |
     And the initial branches and lineage exist now
