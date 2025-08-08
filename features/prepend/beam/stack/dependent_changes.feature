@@ -76,7 +76,7 @@ Feature: beam a commit from a stack with dependent changes into a prepended bran
       line 3: commit-3 changes
       """
     And I run "git add file"
-    And I run "git town continue"
+    And I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                   |
       | old    | GIT_EDITOR=true git rebase --continue     |
@@ -162,7 +162,7 @@ Feature: beam a commit from a stack with dependent changes into a prepended bran
     And the initial lineage exists now
 
   Scenario: first sync after prepend
-    When I run "git town sync"
+    When I run "git-town sync"
     And inspect the commits
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                   |
@@ -180,12 +180,12 @@ Feature: beam a commit from a stack with dependent changes into a prepended bran
   @this
   Scenario: sync and amend the beamed commit
     When wait 1 second to ensure new Git timestamps
-    And I run "git town sync"
+    And I run "git-town sync"
     And I amend this commit
       | BRANCH | LOCATION | MESSAGE   | FILE NAME | FILE CONTENT    |
       | new    | local    | commit 2b | file      | amended content |
     And the current branch is "old"
-    And I run "git town sync"
+    And I run "git-town sync"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                                    |
       | old    | git fetch --prune --tags                                                                   |
