@@ -47,7 +47,7 @@ Feature: let the user resolve the merge conflict in an unsynced stack where the 
       """
 
   Scenario: undo
-    When I run "git town undo"
+    When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                     |
       | branch-2 | git rebase --abort                          |

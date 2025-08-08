@@ -41,7 +41,7 @@ Feature: sync a synced stack where parent modifies a file and gets shipped, and 
     And no rebase is now in progress
 
   Scenario: undo
-    When I run "git town undo"
+    When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                         |
       | branch-2 | git reset --hard {{ sha-initial 'branch-2 commit' }}                            |

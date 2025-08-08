@@ -42,7 +42,7 @@ Feature: auto-resolve phantom merge conflicts in a synced stack where the parent
     And a merge is now in progress
 
   Scenario: undo
-    When I run "git town undo"
+    When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                             |
       | branch-2 | git merge --abort                                   |
@@ -54,7 +54,7 @@ Feature: auto-resolve phantom merge conflicts in a synced stack where the parent
     And no merge is now in progress
 
   Scenario: continue with unresolved conflict
-    When I run "git town continue"
+    When I run "git-town continue"
     Then Git Town runs no commands
     And Git Town prints the error:
       """
