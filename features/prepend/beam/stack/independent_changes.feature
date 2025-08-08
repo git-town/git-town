@@ -69,8 +69,8 @@ Feature: beam a commit from a stack with independent changes into a prepended br
 
   Scenario: sync and amend the beamed commit
     When I amend this commit
-      | BRANCH | LOCATION | MESSAGE          | FILE NAME | FILE CONTENT                                     |
-      | new    | local    | commit 2 amended | file      | line 1\nline 2: amended commit-2 changes\nline 3 |
+      | BRANCH | LOCATION | MESSAGE          | FILE NAME | FILE CONTENT                                         |
+      | new    | local    | commit 2 amended | file      | line 1\n\nline 2: amended commit-2 changes\n\nline 3 |
     And the current branch is "old"
     And I run "git-town sync"
     Then Git Town runs the commands
@@ -81,13 +81,10 @@ Feature: beam a commit from a stack with independent changes into a prepended br
       |        | git push -u origin new                                                           |
       |        | git checkout old                                                                 |
       | old    | git -c rebase.updateRefs=false rebase --onto new {{ sha-before-run 'commit 2' }} |
-      |        | git checkout --theirs file                                                       |
-      |        | git add file                                                                     |
-      |        | GIT_EDITOR=true git rebase --continue                                            |
       |        | git push --force-with-lease --force-if-includes                                  |
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE          | FILE NAME | FILE CONTENT                                                                     |
-      | main   | local, origin | main commit      | file      | line 1\n\nline 2\n\nline 3                                                       |
-      | new    | local, origin | commit 2 amended | file      | line 1\nline 2: amended commit-2 changes\nline 3                                 |
-      | old    | local, origin | commit 1         | file      | line 1: commit-1 changes\n\nline 2: commit-2 changes\n\nline 3                   |
-      |        |               | commit 3         | file      | line 1: commit-1 changes\n\nline 2: commit-2 changes\n\nline 3: commit-3 changes |
+      | BRANCH | LOCATION      | MESSAGE          | FILE NAME | FILE CONTENT                                                                             |
+      | main   | local, origin | main commit      | file      | line 1\n\nline 2\n\nline 3                                                               |
+      | new    | local, origin | commit 2 amended | file      | line 1\n\nline 2: amended commit-2 changes\n\nline 3                                     |
+      | old    | local, origin | commit 1         | file      | line 1: commit-1 changes\n\nline 2: amended commit-2 changes\n\nline 3                   |
+      |        |               | commit 3         | file      | line 1: commit-1 changes\n\nline 2: amended commit-2 changes\n\nline 3: commit-3 changes |
