@@ -17,6 +17,18 @@ type RebaseOnto struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
+func (self *RebaseOnto) Abort() []shared.Opcode {
+	return []shared.Opcode{
+		&RebaseAbort{},
+	}
+}
+
+func (self *RebaseOnto) Continue() []shared.Opcode {
+	return []shared.Opcode{
+		&RebaseContinueIfNeeded{},
+	}
+}
+
 func (self *RebaseOnto) Run(args shared.RunArgs) error {
 	if subshell.IsInTest() {
 		// Fix for https://github.com/git-town/git-town/issues/4942.

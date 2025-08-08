@@ -41,7 +41,7 @@ Feature: deleting a branch from a stack with dependent changes
       """
     And Git Town prints the error:
       """
-      git rebase conflict
+      To continue after having resolved conflicts, run "git town continue".
       """
     # Note: this is a legit conflict.
     # Because the changes in the stack are dependent, Git cannot remove branch-2 changes from branch-3
