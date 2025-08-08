@@ -12,7 +12,7 @@ Feature: two people make alternating non-conflicting changes to the same branch 
       [branches]
       main = "main"
       perennials = []
-      
+
       [sync]
       feature-strategy = "compress"
       """

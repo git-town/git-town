@@ -7,7 +7,7 @@ Feature: two people using rebase make conflicting changes to a branch
       [branches]
       main = "main"
       perennials = []
-      
+
       [sync]
       feature-strategy = "rebase"
       """

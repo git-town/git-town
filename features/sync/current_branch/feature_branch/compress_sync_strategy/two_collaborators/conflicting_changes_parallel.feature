@@ -13,7 +13,7 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
       [branches]
       main = "main"
       perennials = []
-      
+
       [sync]
       feature-strategy = "compress"
       """
