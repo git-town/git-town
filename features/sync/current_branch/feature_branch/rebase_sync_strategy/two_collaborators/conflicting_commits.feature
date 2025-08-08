@@ -7,7 +7,7 @@ Feature: two people using rebase make conflicting changes to a branch
       [branches]
       main = "main"
       perennials = []
-
+      
       [sync]
       feature-strategy = "rebase"
       """
@@ -24,7 +24,7 @@ Feature: two people using rebase make conflicting changes to a branch
     Given I add this commit to the current branch:
       | MESSAGE         | FILE NAME | FILE CONTENT |
       | my first commit | file.txt  | my content   |
-    When I run "git town sync"
+    When I run "git-town sync"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
@@ -75,7 +75,7 @@ Feature: two people using rebase make conflicting changes to a branch
       To continue after having resolved conflicts, run "git town continue".
       """
     When I resolve the conflict in "file.txt" with "my new and coworker content"
-    And I run "git town continue" and close the editor
+    And I run "git-town continue" and close the editor
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                             |
       | feature | GIT_EDITOR=true git rebase --continue                                               |

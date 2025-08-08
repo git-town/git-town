@@ -12,7 +12,7 @@ Feature: two people make alternating conflicting changes to the same branch usin
       [branches]
       main = "main"
       perennials = []
-
+      
       [sync]
       feature-strategy = "compress"
       """
@@ -84,7 +84,7 @@ Feature: two people make alternating conflicting changes to the same branch usin
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
     When I resolve the conflict in "conflicting_file" with "my content 1 and coworker content 1"
-    And I run "git town continue" and close the editor
+    And I run "git-town continue" and close the editor
     Then Git Town runs the commands
       | BRANCH  | COMMAND                     |
       | feature | git commit --no-edit        |
