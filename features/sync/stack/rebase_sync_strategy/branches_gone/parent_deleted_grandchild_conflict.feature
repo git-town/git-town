@@ -8,10 +8,10 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
       | branch-1 | feature | main     | local, origin |
       | branch-2 | feature | branch-1 | local, origin |
     And the commits
-      | BRANCH   | LOCATION | MESSAGE                     | FILE NAME        | FILE CONTENT     |
-      | main     | local    | conflicting main commit     | conflicting_file | main content     |
-      | branch-1 | local    | branch-1 commit             | child_file       | branch-1 content |
-      | branch-2 | local    | conflicting branch-2 commit | conflicting_file | branch-2 content |
+      | BRANCH   | LOCATION | MESSAGE                     | FILE NAME        | FILE CONTENT                             |
+      | main     | local    | conflicting main commit     | conflicting_file | line 1\nline 2\nline 3: main content     |
+      | branch-1 | local    | branch-1 commit             | child_file       | line 1: branch-1 content\nline 2\nline 3 |
+      | branch-2 | local    | conflicting branch-2 commit | conflicting_file | line 1\nline 2: branch-2 content\nline 3 |
     And origin deletes the "branch-1" branch
     And the current branch is "branch-1" and the previous branch is "branch-2"
     When I run "git-town sync --all"
