@@ -16,7 +16,6 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
     And the current branch is "branch-1" and the previous branch is "branch-2"
     When I run "git-town sync --all"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                    |
@@ -34,10 +33,13 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
     And a rebase is now in progress
     And file "conflicting_file" now has content:
       """
+      line 1
       <<<<<<< HEAD
-      main content
+      line 2
+      line 3: main content
       =======
-      branch-2 content
+      line 2: branch-2 content
+      line 3
       >>>>>>> {{ sha-short 'conflicting branch-2 commit' }} (conflicting branch-2 commit)
       """
 
@@ -61,6 +63,6 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
     And no rebase is now in progress
     And all branches are now synchronized
     And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE                     | FILE NAME        | FILE CONTENT              |
-      | main     | local, origin | conflicting main commit     | conflicting_file | main content              |
-      | branch-2 | local, origin | conflicting branch-2 commit | conflicting_file | main and branch-2 content |
+      | BRANCH   | LOCATION      | MESSAGE                     | FILE NAME        | FILE CONTENT                         |
+      | main     | local, origin | conflicting main commit     | conflicting_file | line 1\nline 2\nline 3: main content |
+      | branch-2 | local, origin | conflicting branch-2 commit | conflicting_file | main and branch-2 content            |
