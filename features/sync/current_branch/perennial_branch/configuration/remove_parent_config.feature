@@ -13,7 +13,7 @@ Feature: remove parent entries for perennial branches
       main = "main"
       perennials = [ "feature-2" ]
       """
-    When I run "git town sync"
+    When I run "git-town sync"
     Then Git Town prints:
       """
       Removed parent entry for perennial branch "feature-2"

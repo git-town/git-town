@@ -47,7 +47,7 @@ Feature: disable auto-resolution of phantom merge conflicts via CLI flag when pa
     And a merge is now in progress
 
   Scenario: undo
-    When I run "git town undo"
+    When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                 |
       | branch-2 | git merge --abort                                       |
@@ -65,7 +65,7 @@ Feature: disable auto-resolution of phantom merge conflicts via CLI flag when pa
     And no merge is now in progress
 
   Scenario: run without resolving the conflicts
-    When I run "git town continue"
+    When I run "git-town continue"
     Then Git Town runs no commands
     And Git Town prints the error:
       """
@@ -75,7 +75,7 @@ Feature: disable auto-resolution of phantom merge conflicts via CLI flag when pa
 
   Scenario: resolve the conflicts and continue
     When I resolve the conflict in "file" with "content_2"
-    And I run "git town continue"
+    And I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                  |
       | branch-2 | git commit --no-edit                     |
@@ -93,7 +93,7 @@ Feature: disable auto-resolution of phantom merge conflicts via CLI flag when pa
   Scenario: resolve the conflicts, commit, and continue
     When I resolve the conflict in "file" with "content_2"
     And I ran "git commit --no-edit"
-    And I run "git town continue"
+    And I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                  |
       | branch-2 | git merge --no-edit --ff origin/branch-2 |
