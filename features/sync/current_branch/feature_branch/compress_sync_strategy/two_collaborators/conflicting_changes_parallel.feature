@@ -31,7 +31,7 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
       | MESSAGE         | FILE NAME        | FILE CONTENT |
       | my first commit | conflicting_file | my content 1 |
     And wait 1 second to ensure new Git timestamps
-    When I run "git town sync"
+    When I run "git-town sync"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
@@ -87,7 +87,7 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
     When I resolve the conflict in "conflicting_file" with "my content 2 and coworker content 1"
-    And I run "git town continue" and close the editor
+    And I run "git-town continue" and close the editor
     Then Git Town runs the commands
       | BRANCH  | COMMAND                         |
       | feature | git commit --no-edit            |
