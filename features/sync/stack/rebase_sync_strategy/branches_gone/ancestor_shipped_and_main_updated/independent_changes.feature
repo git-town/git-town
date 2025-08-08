@@ -1,4 +1,4 @@
-Feature: shipped the head branch of a synced stack with dependent changes that create a file while main also creates the same file
+Feature: shipped the head branch of a synced stack with inddependent changes that create a file while main also creates the same file with independent changes
 
   Background:
     Given a Git repo with origin
