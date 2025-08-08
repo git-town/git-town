@@ -77,8 +77,8 @@ Feature: beam a commit from a stack with independent changes into a prepended br
       | BRANCH | COMMAND                                                                          |
       | old    | git fetch --prune --tags                                                         |
       |        | git checkout new                                                                 |
-      | new    | git push --force-with-lease --force-if-includes                                  |
-      |        | git -c rebase.updateRefs=false rebase --onto main {{ sha 'main commit' }}        |
+      | new    | git -c rebase.updateRefs=false rebase --onto main {{ sha 'main commit' }}        |
+      |        | git push -u origin new                                                           |
       |        | git checkout old                                                                 |
       | old    | git -c rebase.updateRefs=false rebase --onto new {{ sha-before-run 'commit 2' }} |
       |        | git push --force-with-lease --force-if-includes                                  |
