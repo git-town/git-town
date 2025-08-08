@@ -43,9 +43,6 @@ Feature: deleting a branch from a stack with dependent changes
       """
       To continue after having resolved conflicts, run "git town continue".
       """
-    # Note: this is a legit conflict.
-    # Because the changes in the stack are dependent, Git cannot remove branch-2 changes from branch-3
-    # and asks the user.
     And file "file" now has content:
       """
       line 0: main content
