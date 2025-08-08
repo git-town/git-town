@@ -46,7 +46,7 @@ Feature: auto-resolve phantom merge conflicts when parent and child modify the s
     And no merge is now in progress
 
   Scenario: undo
-    When I run "git town undo"
+    When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                         |
       | branch-2 | git reset --hard {{ sha-initial 'branch-2 commit' }}                            |
