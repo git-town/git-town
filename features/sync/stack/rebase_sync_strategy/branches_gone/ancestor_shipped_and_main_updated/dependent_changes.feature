@@ -25,7 +25,6 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
     And the current branch is "branch-2"
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                           |
@@ -46,15 +45,27 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       """
     When I resolve the conflict in "file" with:
       """
-      
+      line 0: independent content
+      line 1: branch-1 content
+      line 2
       """
+    And I run "git-town continue"
+    Then Git Town runs the commands
+      | BRANCH   | COMMAND                                                    |
+      | main     | GIT_EDITOR=true git rebase --continue                      |
+      |          | git push                                                   |
+      |          | git checkout branch-2                                      |
+      | branch-2 | git pull                                                   |
+      |          | git -c rebase.updateRefs=false rebase --onto main branch-1 |
+      |          | git push --force-with-lease                                |
+      |          | git branch -D branch-1                                     |
     And all branches are now synchronized
     And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE                    | FILE NAME | FILE CONTENT                                                  |
-      | main     | local, origin | main commit                | file      | line 1\nline 2\nline 3                                        |
-      |          |               | branch-1 commit            | file      | line 1: branch-1 content\nline 2\nline 3                      |
-      |          |               | independent commit on main | file      | line 1: branch-1 content\nline 2\nline 3: independent content |
-      | branch-2 | local, origin | branch-2 commit            | file      | line 1: branch-1 content\nline 2: branch-2 content\nline 3    |
+      | BRANCH   | LOCATION      | MESSAGE                    | FILE NAME | FILE CONTENT                                                                    |
+      | main     | local, origin | main commit                | file      | line 0\nline 1\nline 2                                                          |
+      |          |               | branch-1 commit            | file      | line 0\nline 1: branch-1 content\nline 2                                        |
+      |          |               | independent commit on main | file      | line 0: independent content\nline 1: branch-1 content\nline 2                   |
+      | branch-2 | local, origin | branch-2 commit            | file      | line 0: independent content\nline 1: branch-1 content\nline 2: branch-2 content |
 
   Scenario: undo
     When I run "git-town undo"
@@ -63,10 +74,11 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       | main   | git rebase --abort    |
       |        | git checkout branch-2 |
     And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE                    | FILE NAME | FILE CONTENT                  |
-      | main     | local         | independent commit on main | file      | main content                  |
-      |          | origin        | branch-1 commit            | file      | branch-1 content              |
-      | branch-1 | local         | branch-1 commit            | file      | branch-1 content              |
-      | branch-2 | local, origin | branch-2 commit            | file      | branch-1 and branch-2 content |
-      |          | origin        | branch-1 commit            | file      | branch-1 content              |
+      | BRANCH   | LOCATION      | MESSAGE                    | FILE NAME | FILE CONTENT                                               |
+      | main     | local, origin | main commit                | file      | line 0\nline 1\nline 2                                     |
+      |          | local         | independent commit on main | file      | line 0: independent content\nline 1\nline 2                |
+      |          | origin        | branch-1 commit            | file      | line 0\nline 1: branch-1 content\nline 2                   |
+      | branch-1 | local         | branch-1 commit            | file      | line 0\nline 1: branch-1 content\nline 2                   |
+      | branch-2 | local, origin | branch-2 commit            | file      | line 0\nline 1: branch-1 content\nline 2: branch-2 content |
+      |          | origin        | branch-1 commit            | file      | line 0\nline 1: branch-1 content\nline 2                   |
     And the initial branches and lineage exist now

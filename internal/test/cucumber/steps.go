@@ -782,6 +782,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.StageFiles(filename)
 	})
 
+	sc.Step(`^I resolve the conflict in "([^"]*)" with:$`, func(ctx context.Context, filename string, content *godog.DocString) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		devRepo.CreateFile(filename, content.Content)
+		devRepo.StageFiles(filename)
+	})
+
 	sc.Step(`^I run "(.+)"$`, func(ctx context.Context, command string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		runCommand(state, command, true)
