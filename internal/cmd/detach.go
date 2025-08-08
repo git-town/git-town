@@ -355,10 +355,11 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 		&opcodes.CheckoutIfNeeded{
 			Branch: data.branchToDetachName,
 		},
-		&opcodes.RebaseOntoRemoveDeleted{
-			BranchToRebaseOnto: data.config.ValidatedConfigData.MainBranch,
-			CommitsToRemove:    data.parentBranch.BranchName(),
+		&opcodes.RebaseOntoResolvePhantomConflicts{
+			BranchToRebaseOnto: data.config.ValidatedConfigData.MainBranch.BranchName(),
+			CommitsToRemove:    data.parentBranch.BranchName().Location(),
 			Upstream:           None[gitdomain.LocalBranchName](),
+			CurrentBranch:      data.branchToDetachName,
 		},
 	)
 	if data.branchToDetachInfo.HasTrackingBranch() {
