@@ -684,15 +684,9 @@ func (self *Commands) Rebase(runner subshelldomain.Runner, target gitdomain.Bran
 
 // loads the information needed to determine which of the given file conflicts are phantom rebase conflicts
 func (self *Commands) RebaseConflicts(querier subshelldomain.Querier, fileConflicts FileConflicts, parentLocation gitdomain.Location, rootBranch gitdomain.LocalBranchName) (RebaseConflicts, error) {
-	result := make([]RebaseConflict, len(fileConflicts))
-	// for q, quickInfo := range fileConflicts {
-	// 	fullInfo, err := self.FileConflictFullInfo(querier, quickInfo, parentLocation, rootBranch)
-	// 	if err != nil {
-	// 		return result, err
-	// 	}
-	// 	result[q] = fullInfo
-	// }
-	return result, nil
+	// No resolution to detect and resolve phantom rebase conflicts is implemented yet.
+	// If you find some, please add the logic here.
+	return []RebaseConflict{}, nil
 }
 
 // Rebase initiates a Git rebase of the current branch onto the given branch.
