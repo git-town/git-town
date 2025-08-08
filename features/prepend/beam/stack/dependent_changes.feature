@@ -163,7 +163,6 @@ Feature: beam a commit from a stack with dependent changes into a prepended bran
 
   Scenario: first sync after prepend
     When I run "git-town sync"
-    And inspect the commits
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                   |
       | new    | git fetch --prune --tags                                                  |
@@ -177,30 +176,28 @@ Feature: beam a commit from a stack with dependent changes into a prepended bran
       |        |               | commit 3    |
     And no uncommitted files exist now
 
-  @this
   Scenario: sync and amend the beamed commit
-    When wait 1 second to ensure new Git timestamps
-    And I run "git-town sync"
+    When I run "git-town sync"
     And I amend this commit
-      | BRANCH | LOCATION | MESSAGE   | FILE NAME | FILE CONTENT    |
-      | new    | local    | commit 2b | file      | amended content |
+      | BRANCH | LOCATION | MESSAGE          | FILE NAME | FILE CONTENT                                     |
+      | new    | local    | commit 2 amended | file      | line 1\nline 2: amended commit-2 changes\nline 3 |
     And the current branch is "old"
     And I run "git-town sync"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                                                                    |
-      | old    | git fetch --prune --tags                                                                   |
-      |        | git checkout new                                                                           |
-      | new    | git push --force-with-lease --force-if-includes                                            |
-      |        | git -c rebase.updateRefs=false rebase --onto main {{ sha 'main commit' }}                  |
-      |        | git checkout old                                                                           |
-      | old    | git -c rebase.updateRefs=false rebase --onto new {{ sha-in-origin-before-run 'commit 2' }} |
-      |        | git checkout --theirs file                                                                 |
-      |        | git add file                                                                               |
-      |        | GIT_EDITOR=true git rebase --continue                                                      |
-      |        | git push --force-with-lease --force-if-includes                                            |
+      | BRANCH | COMMAND                                                                          |
+      | old    | git fetch --prune --tags                                                         |
+      |        | git checkout new                                                                 |
+      | new    | git push --force-with-lease --force-if-includes                                  |
+      |        | git -c rebase.updateRefs=false rebase --onto main {{ sha 'main commit' }}        |
+      |        | git checkout old                                                                 |
+      | old    | git -c rebase.updateRefs=false rebase --onto new {{ sha-before-run 'commit 2' }} |
+      |        | git checkout --theirs file                                                       |
+      |        | git add file                                                                     |
+      |        | GIT_EDITOR=true git rebase --continue                                            |
+      |        | git push --force-with-lease --force-if-includes                                  |
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT                                                                 |
-      | main   | local, origin | main commit | file      | line 1\nline 2\nline 3                                                       |
-      | new    | local, origin | commit 2b   | file      | amended content                                                              |
-      | old    | local, origin | commit 1    | file      | line 1: commit-1 changes\nline 2: commit-2 changes\nline 3                   |
-      |        |               | commit 3    | file      | line 1: commit-1 changes\nline 2: commit-2 changes\nline 3: commit-3 changes |
+      | BRANCH | LOCATION      | MESSAGE          | FILE NAME | FILE CONTENT                                                                 |
+      | main   | local, origin | main commit      | file      | line 1\nline 2\nline 3                                                       |
+      | new    | local, origin | commit 2 amended | file      | line 1\nline 2: amended commit-2 changes\nline 3                             |
+      | old    | local, origin | commit 1         | file      | line 1: commit-1 changes\nline 2: commit-2 changes\nline 3                   |
+      |        |               | commit 3         | file      | line 1: commit-1 changes\nline 2: commit-2 changes\nline 3: commit-3 changes |
