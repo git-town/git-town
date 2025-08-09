@@ -3,7 +3,6 @@ package configdomain
 import (
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 // ProposalStackLineageArgs
@@ -18,7 +17,7 @@ type ProposalStackLineageArgs struct {
 	BeforeStackDisplay []string
 	// Connector
 	// The current forge connector.
-	Connector Option[forgedomain.Connector]
+	Connector forgedomain.Connector
 	// CurrentBranch
 	// Informs the builder which branch is the current. This is used to determine when
 	// the current branch indicator should be used AND how the stack hierarchy is computed.
