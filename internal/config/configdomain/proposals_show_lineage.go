@@ -18,10 +18,6 @@ const (
 	ProposalsShowLineageCLI  ProposalsShowLineage = "cli"  // the Git Town CLI should embed the lineage into proposals
 )
 
-func (self ProposalsShowLineage) IsCLI() bool {
-	return self == ProposalsShowLineageCLI
-}
-
 func (self ProposalsShowLineage) String() string {
 	return string(self)
 }
