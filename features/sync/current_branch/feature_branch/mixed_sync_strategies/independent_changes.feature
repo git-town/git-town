@@ -6,6 +6,9 @@ Feature: compatibility between different sync-feature-strategy settings when edi
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
+    And the commits
+      | BRANCH  | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT     |
+      | feature | local, origin | set up file | file.txt  | line 1\n\nline 2 |
     Given Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "feature"
     And a coworker clones the repository
@@ -24,8 +27,9 @@ Feature: compatibility between different sync-feature-strategy settings when edi
       | feature | git fetch --prune --tags                        |
       |         | git push --force-with-lease --force-if-includes |
     And these commits exist now
-      | BRANCH  | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                    |
-      | feature | local, origin | my first commit | file.txt  | line 1: my content 1\n\nline 2: |
+      | BRANCH  | LOCATION                | MESSAGE         | FILE NAME | FILE CONTENT                    |
+      | feature | local, coworker, origin | set up file     | file.txt  | line 1\n\nline 2                |
+      |         | local, origin           | my first commit | file.txt  | line 1: my content 1\n\nline 2: |
     And all branches are now synchronized
     And no rebase is now in progress
     #
@@ -40,7 +44,7 @@ Feature: compatibility between different sync-feature-strategy settings when edi
       |         | git merge --no-edit --ff origin/feature |
     And Git Town prints the error:
       """
-      CONFLICT (add/add): Merge conflict in file.txt
+      CONFLICT (content): Merge conflict in file.txt
       """
     # Note: strange that this file doesn't contain conflict markers here,
     # given that this file experiences an add/add merge conflict
@@ -64,7 +68,8 @@ Feature: compatibility between different sync-feature-strategy settings when edi
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME | FILE CONTENT                                       |
-      | feature | local, coworker, origin | my first commit                                            | file.txt  | line 1: my content 1\n\nline 2:                    |
+      | feature | local, coworker, origin | set up file                                                | file.txt  | line 1\n\nline 2                                   |
+      |         |                         | my first commit                                            | file.txt  | line 1: my content 1\n\nline 2:                    |
       |         | coworker, origin        | coworker first commit                                      | file.txt  | line 1:\n\nline 2: coworker content 1              |
       |         |                         | Merge remote-tracking branch 'origin/feature' into feature | file.txt  | line 1: my content 1\n\nline 2: coworker content 1 |
     #
@@ -88,7 +93,8 @@ Feature: compatibility between different sync-feature-strategy settings when edi
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME | FILE CONTENT                                       |
-      | feature | local, coworker, origin | coworker first commit                                      | file.txt  | line 1:\n\nline 2: coworker content 1              |
+      | feature | local, coworker, origin | set up file                                                | file.txt  | line 1\n\nline 2                                   |
+      |         |                         | coworker first commit                                      | file.txt  | line 1:\n\nline 2: coworker content 1              |
       |         | local, origin           | my first commit                                            | file.txt  | line 1: my content 1\n\nline 2:                    |
       |         |                         | my second commit                                           | file.txt  | line 1: my content 2\n\nline 2:                    |
       |         | coworker                | my first commit                                            | file.txt  | line 1: my content 1\n\nline 2:                    |
