@@ -85,6 +85,10 @@ Feature: compatibility between different sync-feature-strategy settings when edi
       """
       CONFLICT (content): Merge conflict in file.txt
       """
+    And Git Town prints something like:
+      """
+      could not apply .* my second commit
+      """
     And file "file.txt" now has content:
       """
       <<<<<<< HEAD
@@ -111,6 +115,10 @@ Feature: compatibility between different sync-feature-strategy settings when edi
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in file.txt
+      """
+    And Git Town prints something like:
+      """
+      could not apply .* my first commit
       """
     And file "file.txt" now has content:
       """
