@@ -7,10 +7,6 @@ import (
 
 // ProposalStackLineageArgs
 type ProposalStackLineageArgs struct {
-	// AfterStackDisplay
-	// A set of texts to appear after the main stack information is displayed.
-	// The strings in this area appear in the order of the slice after the stack lineage is displayed.
-	AfterStackDisplay []string
 	// Connector
 	// The current forge connector.
 	Connector forgedomain.Connector
