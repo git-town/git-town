@@ -9,7 +9,7 @@ Feature: compatibility between different sync-feature-strategy settings when edi
     And the commits
       | BRANCH  | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT     |
       | feature | local, origin | set up file | file.txt  | line 1\n\nline 2 |
-    Given Git setting "git-town.sync-feature-strategy" is "rebase"
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "feature"
     And a coworker clones the repository
     And the coworker fetches updates
