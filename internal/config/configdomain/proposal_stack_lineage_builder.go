@@ -9,10 +9,7 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-const (
-	currentBranchIndicator = ":point_left:"
-	indentMarker           = "-"
-)
+const indentMarker = "-"
 
 type ProposalStackLineageArgs struct {
 	Connector                forgedomain.Connector
@@ -131,7 +128,7 @@ func (self *ProposalStackLineageBuilder) addBranch(
 func formattedDisplay(args ProposalStackLineageArgs, currentIndentLevel string, proposal forgedomain.Proposal) string {
 	proposalData := proposal.Data
 	if args.CurrentBranch == proposalData.Data().Source {
-		return fmt.Sprintf("%s %s PR %s %s\n", currentIndentLevel, indentMarker, proposalData.Data().URL, currentBranchIndicator)
+		return fmt.Sprintf("%s %s PR %s :point_left:\n", currentIndentLevel, indentMarker, proposalData.Data().URL)
 	}
 	return fmt.Sprintf("%s %s PR %s\n", currentIndentLevel, indentMarker, proposalData.Data().URL)
 }
