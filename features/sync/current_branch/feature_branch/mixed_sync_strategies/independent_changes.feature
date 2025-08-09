@@ -19,17 +19,17 @@ Feature: compatibility between different sync-feature-strategy settings when edi
     #
     # I make a commit and sync
     Given I add this commit to the current branch:
-      | MESSAGE         | FILE NAME | FILE CONTENT                    |
-      | my first commit | file.txt  | line 1: my content 1\n\nline 2: |
+      | MESSAGE         | FILE NAME | FILE CONTENT                   |
+      | my first commit | file.txt  | line 1: my content 1\n\nline 2 |
     When I run "git-town sync"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
       |         | git push --force-with-lease --force-if-includes |
     And these commits exist now
-      | BRANCH  | LOCATION                | MESSAGE         | FILE NAME | FILE CONTENT                    |
-      | feature | local, coworker, origin | set up file     | file.txt  | line 1\n\nline 2                |
-      |         | local, origin           | my first commit | file.txt  | line 1: my content 1\n\nline 2: |
+      | BRANCH  | LOCATION                | MESSAGE         | FILE NAME | FILE CONTENT                   |
+      | feature | local, coworker, origin | set up file     | file.txt  | line 1\n\nline 2               |
+      |         | local, origin           | my first commit | file.txt  | line 1: my content 1\n\nline 2 |
     And all branches are now synchronized
     And no rebase is now in progress
     #
@@ -57,7 +57,7 @@ Feature: compatibility between different sync-feature-strategy settings when edi
       """
       line 1: my content 1
       
-      line 2:
+      line 2
       """
     When the coworker resolves the conflict in "file.txt" with:
       """
@@ -74,16 +74,15 @@ Feature: compatibility between different sync-feature-strategy settings when edi
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME | FILE CONTENT                                       |
       | feature | local, coworker, origin | set up file                                                | file.txt  | line 1\n\nline 2                                   |
-      |         |                         | my first commit                                            | file.txt  | line 1: my content 1\n\nline 2:                    |
+      |         |                         | my first commit                                            | file.txt  | line 1: my content 1\n\nline 2                     |
       |         | coworker, origin        | coworker first commit                                      | file.txt  | line 1:\n\nline 2: coworker content 1              |
       |         |                         | Merge remote-tracking branch 'origin/feature' into feature | file.txt  | line 1: my content 1\n\nline 2: coworker content 1 |
     #
     # I add a conflicting commit locally and then sync
     Given I add this commit to the current branch:
-      | MESSAGE          | FILE NAME | FILE CONTENT                                       |
-      | my second commit | file.txt  | line 1: my content 2\n\nline 2: coworker content 1 |
+      | MESSAGE          | FILE NAME | FILE CONTENT                   |
+      | my second commit | file.txt  | line 1: my content 2\n\nline 2 |
     When I run "git-town sync"
-    # TODO: it wrongfully removes
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                      |
       | feature | git fetch --prune --tags                                                     |
@@ -100,7 +99,7 @@ Feature: compatibility between different sync-feature-strategy settings when edi
       | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME | FILE CONTENT                                       |
       | feature | local, coworker, origin | set up file                                                | file.txt  | line 1\n\nline 2                                   |
       |         |                         | coworker first commit                                      | file.txt  | line 1:\n\nline 2: coworker content 1              |
-      |         | local, origin           | my first commit                                            | file.txt  | line 1: my content 1\n\nline 2:                    |
-      |         |                         | my second commit                                           | file.txt  | line 1: my content 2\n\nline 2:                    |
-      |         | coworker                | my first commit                                            | file.txt  | line 1: my content 1\n\nline 2:                    |
+      |         | local, origin           | my first commit                                            | file.txt  | line 1: my content 1\n\nline 2                     |
+      |         |                         | my second commit                                           | file.txt  | line 1: my content 2\n\nline 2                     |
+      |         | coworker                | my first commit                                            | file.txt  | line 1: my content 1\n\nline 2                     |
       |         |                         | Merge remote-tracking branch 'origin/feature' into feature | file.txt  | line 1: my content 1\n\nline 2: coworker content 1 |
