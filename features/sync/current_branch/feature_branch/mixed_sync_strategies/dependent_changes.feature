@@ -42,12 +42,16 @@ Feature: compatibility between different sync-feature-strategy settings when edi
       """
       CONFLICT (add/add): Merge conflict in file.txt
       """
-    # Note: strange that this file doesn't contain conflict markers,
-    # given that it encounters an add/add conflict
-    And file "file.txt" now has content:
+    And the coworkers workspace now contains file "file.txt" with content:
       """
+      <<<<<<< HEAD
+      line 1:
+      line 2: coworker content 1
+      =======
       line 1: my content 1
       line 2:
+      >>>>>>> origin/feature
+
       """
     When the coworker resolves the conflict in "file.txt" with:
       """
