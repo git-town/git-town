@@ -41,6 +41,8 @@ Feature: compatibility between different sync-feature-strategy settings
       """
       CONFLICT (add/add): Merge conflict in file.txt
       """
+    # Note: strange that this file doesn't contain conflict markers,
+    # given that it is an add/add conflict
     And file "file.txt" now has content:
       """
       line 1: my content 1
