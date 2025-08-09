@@ -89,7 +89,6 @@ func TestProposalStackLineageBuilder_CheckLineageAndProposals(t *testing.T) {
 	var connector forgedomain.Connector = &mockConnectorProposalStackLineageBuilder{}
 	args := configdomain.ProposalStackLineageArgs{
 		AfterStackDisplay:        []string{},
-		BeforeStackDisplay:       []string{},
 		Connector:                connector,
 		CurrentBranch:            featureBranchA,
 		Lineage:                  lineage,
@@ -125,7 +124,6 @@ func TestProposalStackLineageBuilder_NoLineageForMainAndPerennialBranches(t *tes
 	var connector forgedomain.Connector = &mockConnectorProposalStackLineageBuilder{}
 	args := configdomain.ProposalStackLineageArgs{
 		AfterStackDisplay:        []string{},
-		BeforeStackDisplay:       []string{},
 		Connector:                connector,
 		CurrentBranch:            mainBranch,
 		Lineage:                  lineage,

@@ -53,9 +53,7 @@ type ProposalStackLineageBuilder struct {
 
 func (self *ProposalStackLineageBuilder) Build(args ProposalStackLineageArgs) string {
 	var builder strings.Builder
-	for _, text := range args.BeforeStackDisplay {
-		builder.WriteString(text)
-	}
+	builder.WriteString("\n-------------------------\n")
 
 	length := len(self.orderedLineage)
 	for i := length; i > 0; i-- {
