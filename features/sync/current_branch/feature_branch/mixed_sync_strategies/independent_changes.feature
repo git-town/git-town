@@ -50,14 +50,15 @@ Feature: compatibility between different sync-feature-strategy settings when edi
       """
       Automatic merge failed; fix conflicts and then commit the result.
       """
-    # Note: strange that this file doesn't contain conflict markers now,
-    # given that it experiences a merge conflict.
-    # Git even says to fix the conflicts, but there aren't any conflicts in the file.
     And the coworkers workspace now contains file "file.txt" with content:
       """
+      <<<<<<< HEAD
+      line 1:
+      =======
       line 1: my content 1
+      >>>>>>> origin/feature
 
-      line 2
+      line 2: coworker content 1
       """
     When the coworker resolves the conflict in "file.txt" with:
       """
@@ -91,7 +92,11 @@ Feature: compatibility between different sync-feature-strategy settings when edi
       |         | git push --force-with-lease --force-if-includes                              |
       |         | git -c rebase.updateRefs=false rebase origin/feature                         |
       |         | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
-    And a rebase is now in progress
+      |         | git checkout --theirs file.txt                                               |
+      |         | git add file.txt                                                             |
+      |         | GIT_EDITOR=true git rebase --continue                                        |
+      |         | git push --force-with-lease --force-if-includes                              |
+    And no rebase is now in progress
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME | FILE CONTENT                                       |
