@@ -22,9 +22,6 @@ type ProposalStackLineageArgs struct {
 	// Informs the builder which branch is the current. This is used to determine when
 	// the current branch indicator should be used AND how the stack hierarchy is computed.
 	CurrentBranch gitdomain.LocalBranchName
-	// CurrentBranchIndicator
-	// Special character used to denote the current branch's proposal (if there is one).
-	CurrentBranchIndicator string
 	// IndentMarker
 	// Controls the marker following an indent.
 	IndentMarker string

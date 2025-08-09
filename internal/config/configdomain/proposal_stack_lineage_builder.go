@@ -9,6 +9,8 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
+const currentBranchIndicator = ":point_left:"
+
 func NewProposalStackLineageBuilder(args ProposalStackLineageArgs) Option[ProposalStackLineageBuilder] {
 	if args.MainAndPerennialBranches.Contains(args.CurrentBranch) {
 		// cannot create proposal stack lineage for main or perennial branch
@@ -123,7 +125,7 @@ func (self *ProposalStackLineageBuilder) addBranch(
 func formattedDisplay(args ProposalStackLineageArgs, currentIndentLevel string, proposal forgedomain.Proposal) string {
 	proposalData := proposal.Data
 	if args.CurrentBranch == proposalData.Data().Source {
-		return fmt.Sprintf("%s %s PR %s %s\n", currentIndentLevel, args.IndentMarker, proposalData.Data().URL, args.CurrentBranchIndicator)
+		return fmt.Sprintf("%s %s PR %s %s\n", currentIndentLevel, args.IndentMarker, proposalData.Data().URL, currentBranchIndicator)
 	}
 	return fmt.Sprintf("%s %s PR %s\n", currentIndentLevel, args.IndentMarker, proposalData.Data().URL)
 }
