@@ -42,8 +42,8 @@ Feature: compatibility between different sync-feature-strategy settings when edi
       """
       CONFLICT (add/add): Merge conflict in file.txt
       """
-    # Note: strange that this file doesn't contain conflict markers,
-    # given that it is an add/add conflict
+    # Note: strange that this file doesn't contain conflict markers here,
+    # given that this file experiences an add/add merge conflict
     And file "file.txt" now has content:
       """
       line 1: my content 1
@@ -67,18 +67,13 @@ Feature: compatibility between different sync-feature-strategy settings when edi
       | feature | local, coworker, origin | my first commit                                            | file.txt  | line 1: my content 1\n\nline 2:                    |
       |         | coworker, origin        | coworker first commit                                      | file.txt  | line 1:\n\nline 2: coworker content 1              |
       |         |                         | Merge remote-tracking branch 'origin/feature' into feature | file.txt  | line 1: my content 1\n\nline 2: coworker content 1 |
-    And the coworkers workspace now contains file "file.txt" with content:
-      """
-      line 1: my content 1
-      
-      line 2: coworker content 1
-      """
     #
     # I add a conflicting commit locally and then sync
     Given I add this commit to the current branch:
       | MESSAGE          | FILE NAME | FILE CONTENT                                       |
       | my second commit | file.txt  | line 1: my content 2\n\nline 2: coworker content 1 |
     When I run "git-town sync"
+    # TODO: it wrongfully removes
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                      |
       | feature | git fetch --prune --tags                                                     |
