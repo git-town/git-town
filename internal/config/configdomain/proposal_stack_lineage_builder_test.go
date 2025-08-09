@@ -90,7 +90,7 @@ func TestProposalStackLineageBuilder_CheckLineageAndProposals(t *testing.T) {
 	args := configdomain.ProposalStackLineageArgs{
 		AfterStackDisplay:        []string{},
 		BeforeStackDisplay:       []string{},
-		Connector:                Some(connector),
+		Connector:                connector,
 		CurrentBranch:            featureBranchA,
 		CurrentBranchIndicator:   ":point_left:",
 		IndentMarker:             "-",
@@ -116,26 +116,6 @@ func TestProposalStackLineageBuilder_CheckLineageAndProposals(t *testing.T) {
 	must.EqOp(t, expectedStackLineage, stackLineageAsString)
 }
 
-func TestProposalStackLineageBuilder_ForgeConnectorNone(t *testing.T) {
-	t.Parallel()
-	// arrange
-	args := configdomain.ProposalStackLineageArgs{
-		AfterStackDisplay:        []string{},
-		BeforeStackDisplay:       []string{},
-		Connector:                None[forgedomain.Connector](),
-		CurrentBranch:            gitdomain.LocalBranchName("main"),
-		CurrentBranchIndicator:   ":point_left:",
-		IndentMarker:             "-",
-		Lineage:                  configdomain.NewLineage(),
-		MainAndPerennialBranches: gitdomain.NewLocalBranchNames("main"),
-	}
-	expected := None[configdomain.ProposalStackLineageBuilder]()
-	// act
-	actual := configdomain.NewProposalStackLineageBuilder(args)
-	// assert
-	must.EqOp(t, expected, actual)
-}
-
 func TestProposalStackLineageBuilder_NoLineageForMainAndPerennialBranches(t *testing.T) {
 	t.Parallel()
 	// arrange
@@ -148,7 +128,7 @@ func TestProposalStackLineageBuilder_NoLineageForMainAndPerennialBranches(t *tes
 	args := configdomain.ProposalStackLineageArgs{
 		AfterStackDisplay:        []string{},
 		BeforeStackDisplay:       []string{},
-		Connector:                Some(connector),
+		Connector:                connector,
 		CurrentBranch:            mainBranch,
 		CurrentBranchIndicator:   ":point_left:",
 		IndentMarker:             "-",
