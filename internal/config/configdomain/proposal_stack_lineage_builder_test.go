@@ -93,10 +93,11 @@ func TestProposalStackLineageBuilder_CheckLineageAndProposals(t *testing.T) {
 		Lineage:                  lineage,
 		MainAndPerennialBranches: gitdomain.NewLocalBranchNames(mainBranch.String()),
 	}
-	expectedStackLineage := ` - main
+	expectedStackLineage := `
+ - main
    - PR https://www.github.com/git-town/pull/97 :point_left:
      - PR https://www.github.com/git-town/pull/98
-`
+`[1:]
 
 	// act
 	actual := configdomain.NewProposalStackLineageBuilder(args)
