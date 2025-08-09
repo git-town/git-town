@@ -1206,6 +1206,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 		coworkerRepo.StageFiles(filename)
 	})
 
+	sc.Step(`^the coworker resolves the conflict in "([^"]*)" with:$`, func(ctx context.Context, filename string, content *godog.DocString) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
+		coworkerRepo.CreateFile(filename, content.Content)
+		coworkerRepo.StageFiles(filename)
+	})
+
 	sc.Step(`^the coworker runs "([^"]+)"$`, func(ctx context.Context, command string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		output, exitCode := state.fixture.CoworkerRepo.GetOrPanic().MustQueryStringCode(command)
@@ -1235,11 +1242,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 		_ = gitconfig.SetSyncFeatureStrategy(coworkerRepo.TestRunner, syncFeatureStrategy.GetOrPanic(), configdomain.ConfigScopeLocal)
 	})
 
-	sc.Step(`^the coworkers workspace now contains file "([^"]*)" with content "([^"]*)"$`, func(ctx context.Context, file, expectedContent string) error {
+	sc.Step(`^the coworkers workspace now contains file "([^"]*)" with content:$`, func(ctx context.Context, file string, expectedContent *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
 		actualContent := coworkerRepo.FileContent(file)
-		if expectedContent != actualContent {
+		if expectedContent.Content != actualContent {
 			return fmt.Errorf("file content does not match\n\nEXPECTED: %q\n\nACTUAL:\n\n%q\n----------------------------", expectedContent, actualContent)
 		}
 		return nil
