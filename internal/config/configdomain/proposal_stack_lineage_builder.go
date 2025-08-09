@@ -10,17 +10,12 @@ import (
 )
 
 func NewProposalStackLineageBuilder(args ProposalStackLineageArgs) Option[ProposalStackLineageBuilder] {
-	connector, hasConnector := args.Connector.Get()
-	if !hasConnector {
-		return None[ProposalStackLineageBuilder]()
-	}
-
 	if args.MainAndPerennialBranches.Contains(args.CurrentBranch) {
 		// cannot create proposal stack lineage for main or perennial branch
 		return None[ProposalStackLineageBuilder]()
 	}
 
-	findPropsalFn, hasFindPropsalFn := connector.FindProposalFn().Get()
+	findPropsalFn, hasFindPropsalFn := args.Connector.FindProposalFn().Get()
 	if !hasFindPropsalFn {
 		return None[ProposalStackLineageBuilder]()
 	}
