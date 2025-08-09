@@ -83,6 +83,8 @@ Feature: compatibility between different sync-feature-strategy settings when edi
       | MESSAGE          | FILE NAME | FILE CONTENT                   |
       | my second commit | file.txt  | line 1: my content 2\n\nline 2 |
     When I run "git-town sync"
+    # TODO: the conflict below isn't a phantom conflict.
+    # Git Town leaves my repository without the coworker changes.
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                      |
       | feature | git fetch --prune --tags                                                     |
