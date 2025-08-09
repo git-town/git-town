@@ -94,6 +94,7 @@ func All() []shared.Opcode {
 		&RebaseContinue{},
 		&RebaseOntoKeepDeleted{},
 		&RebaseOntoRemoveDeleted{},
+		&RebaseOnto{},
 		&RebaseParentsUntilLocal{},
 		&RebaseTrackingBranch{},
 		&RegisterUndoablePerennialCommit{},

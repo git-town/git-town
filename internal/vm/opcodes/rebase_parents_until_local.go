@@ -56,7 +56,7 @@ func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
 			// Here we rebase onto the new parent, while removing the commits that the parent had in the last run.
 			// This removes old versions of commits that were amended by the user.
 			// The new commits of the parent get added back during the rebase.
-			program = append(program, &RebaseOntoKeepDeleted{
+			program = append(program, &RebaseOnto{
 				BranchToRebaseOnto: branchToRebase,
 				CommitsToRemove:    parentSHAPreviousRun.Location(),
 				Upstream:           None[gitdomain.LocalBranchName](),

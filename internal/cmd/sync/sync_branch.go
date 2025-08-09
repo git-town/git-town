@@ -193,9 +193,9 @@ func RemoveAncestorCommits(args RemoveAncestorCommitsArgs) {
 		)
 	}
 	args.Program.Value.Add(
-		&opcodes.RebaseOntoRemoveDeleted{
-			BranchToRebaseOnto: args.RebaseOnto,
-			CommitsToRemove:    args.Ancestor,
+		&opcodes.RebaseOnto{
+			BranchToRebaseOnto: args.RebaseOnto.BranchName(),
+			CommitsToRemove:    args.Ancestor.Location(),
 			Upstream:           None[gitdomain.LocalBranchName](),
 		},
 	)
