@@ -1,5 +1,6 @@
 Feature: compatibility between different sync-feature-strategy settings when editing dependent changes
 
+  @this
   Scenario: I use rebase and my coworker uses merge
     Given a Git repo with origin
     And the branches
@@ -86,7 +87,7 @@ Feature: compatibility between different sync-feature-strategy settings when edi
       """
     And Git Town prints something like:
       """
-      could not apply .* my second commit
+      could not apply \S+ my second commit
       """
     And file "file.txt" now has content:
       """
@@ -120,7 +121,7 @@ Feature: compatibility between different sync-feature-strategy settings when edi
     # which the user has already resolved above.
     And Git Town prints something like:
       """
-      could not apply .* my first commit
+      could not apply \S+ my first commit
       """
     And file "file.txt" now has content:
       """
