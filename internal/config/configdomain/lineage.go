@@ -67,6 +67,12 @@ func (self Lineage) BranchAndAncestorsWithoutRoot(branchName gitdomain.LocalBran
 	return append(self.AncestorsWithoutRoot(branchName), branchName)
 }
 
+// BranchLineage method returns a complete lineage chain for a given branch, including the branch itself,
+// all its ancestors, and all its descendants.
+func (self Lineage) BranchLineage(branch gitdomain.LocalBranchName) gitdomain.LocalBranchNames {
+	return append(append(self.Ancestors(branch), branch), self.Descendants(branch)...)
+}
+
 // BranchLineageWithoutRoot provides all branches in the lineage of the given branch,
 // from oldest to youngest, including the given branch.
 func (self Lineage) BranchLineageWithoutRoot(branch gitdomain.LocalBranchName, perennialBranches gitdomain.LocalBranchNames) gitdomain.LocalBranchNames {
