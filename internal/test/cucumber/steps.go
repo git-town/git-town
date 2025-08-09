@@ -1242,16 +1242,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		_ = gitconfig.SetSyncFeatureStrategy(coworkerRepo.TestRunner, syncFeatureStrategy.GetOrPanic(), configdomain.ConfigScopeLocal)
 	})
 
-	sc.Step(`^the coworkers workspace now contains file "([^"]*)" with content "([^"]*)"$`, func(ctx context.Context, file, expectedContent string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
-		actualContent := coworkerRepo.FileContent(file)
-		if expectedContent != actualContent {
-			return fmt.Errorf("file content does not match\n\nEXPECTED: %q\n\nACTUAL:\n\n%q\n----------------------------", expectedContent, actualContent)
-		}
-		return nil
-	})
-
 	sc.Step(`^the coworkers workspace now contains file "([^"]*)" with content:$`, func(ctx context.Context, file string, expectedContent *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
