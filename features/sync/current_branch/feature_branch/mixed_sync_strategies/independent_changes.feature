@@ -1,5 +1,6 @@
 Feature: compatibility between different sync-feature-strategy settings when editing independent changes
 
+  @this
   Scenario: I use rebase and my coworker uses merge
     Given a Git repo with origin
     And the branches
@@ -52,7 +53,7 @@ Feature: compatibility between different sync-feature-strategy settings when edi
     # Note: strange that this file doesn't contain conflict markers now,
     # given that it experiences a merge conflict.
     # Git even says to fix the conflicts, but there aren't any conflicts in the file.
-    And file "file.txt" now has content:
+    And the coworkers workspace now contains file "file.txt" with content:
       """
       line 1: my content 1
 
@@ -90,11 +91,7 @@ Feature: compatibility between different sync-feature-strategy settings when edi
       |         | git push --force-with-lease --force-if-includes                              |
       |         | git -c rebase.updateRefs=false rebase origin/feature                         |
       |         | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
-      |         | git checkout --theirs file.txt                                               |
-      |         | git add file.txt                                                             |
-      |         | GIT_EDITOR=true git rebase --continue                                        |
-      |         | git push --force-with-lease --force-if-includes                              |
-    And no rebase is now in progress
+    And a rebase is now in progress
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME | FILE CONTENT                                       |
