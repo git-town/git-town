@@ -1,6 +1,5 @@
 Feature: compatibility between different sync-feature-strategy settings when editing dependent changes
 
-  @this
   Scenario: I use rebase and my coworker uses merge
     Given a Git repo with origin
     And the branches
