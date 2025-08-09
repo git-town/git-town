@@ -1,5 +1,6 @@
 Feature: compatibility between different sync-feature-strategy settings when editing dependent changes
 
+  @this
   Scenario: I use rebase and my coworker uses merge
     Given a Git repo with origin
     And the branches
@@ -72,8 +73,8 @@ Feature: compatibility between different sync-feature-strategy settings when edi
     #
     # I add a conflicting commit locally and then sync
     Given I add this commit to the current branch:
-      | MESSAGE          | FILE NAME | FILE CONTENT                                     |
-      | my second commit | file.txt  | line 1: my content 2\nline 2: coworker content 1 |
+      | MESSAGE          | FILE NAME | FILE CONTENT                 |
+      | my second commit | file.txt  | line 1: my content 2\nline 2 |
     When I run "git-town sync"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                              |
@@ -88,10 +89,11 @@ Feature: compatibility between different sync-feature-strategy settings when edi
       """
       <<<<<<< HEAD
       line 1: my content 1
+      line 2: coworker content 1
       =======
       line 1: my content 2
+      line 2
       >>>>>>> {{ sha-short 'my second commit' }} (my second commit)
-      line 2: coworker content 1
       """
     When I resolve the conflict in "file.txt" with:
       """
