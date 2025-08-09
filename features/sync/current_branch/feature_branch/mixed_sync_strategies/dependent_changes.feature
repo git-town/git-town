@@ -117,6 +117,7 @@ Feature: compatibility between different sync-feature-strategy settings when edi
       CONFLICT (add/add): Merge conflict in file.txt
       """
     # Note: strange that Git tries to apply "my second commit" first, and after that "my first commit".
+    # In this case, the correct resolution is to use the version from "my second commit".
     And Git Town prints something like:
       """
       could not apply .* my first commit
