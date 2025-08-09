@@ -55,13 +55,13 @@ Feature: compatibility between different sync-feature-strategy settings when edi
     And file "file.txt" now has content:
       """
       line 1: my content 1
-      
+
       line 2
       """
     When the coworker resolves the conflict in "file.txt" with:
       """
       line 1: my content 1
-      
+
       line 2: coworker content 1
       """
     And the coworker runs "git town continue" and closes the editor
