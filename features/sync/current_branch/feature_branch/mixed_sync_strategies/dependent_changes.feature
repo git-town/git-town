@@ -1,4 +1,4 @@
-Feature: compatibility between different sync-feature-strategy settings
+Feature: compatibility between different sync-feature-strategy settings when editing dependent changes
 
   Scenario: I use rebase and my coworker uses merge
     Given a Git repo with origin
