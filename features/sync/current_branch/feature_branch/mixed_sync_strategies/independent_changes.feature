@@ -46,8 +46,13 @@ Feature: compatibility between different sync-feature-strategy settings when edi
       """
       CONFLICT (content): Merge conflict in file.txt
       """
+    And Git Town prints the error:
+      """
+      Automatic merge failed; fix conflicts and then commit the result.
+      """
     # Note: strange that this file doesn't contain conflict markers here,
-    # given that this file experiences an add/add merge conflict
+    # given that this file experiences a merge conflict.
+    # Git even says to fix the conflicts, but there aren't any in this file.
     And file "file.txt" now has content:
       """
       line 1: my content 1
