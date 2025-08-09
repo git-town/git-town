@@ -92,7 +92,6 @@ func TestProposalStackLineageBuilder_CheckLineageAndProposals(t *testing.T) {
 		BeforeStackDisplay:       []string{},
 		Connector:                connector,
 		CurrentBranch:            featureBranchA,
-		IndentMarker:             "-",
 		Lineage:                  lineage,
 		MainAndPerennialBranches: gitdomain.NewLocalBranchNames(mainBranch.String()),
 	}
@@ -129,7 +128,6 @@ func TestProposalStackLineageBuilder_NoLineageForMainAndPerennialBranches(t *tes
 		BeforeStackDisplay:       []string{},
 		Connector:                connector,
 		CurrentBranch:            mainBranch,
-		IndentMarker:             "-",
 		Lineage:                  lineage,
 		MainAndPerennialBranches: lineage.Roots(),
 	}

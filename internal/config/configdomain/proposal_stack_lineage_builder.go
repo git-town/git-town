@@ -9,7 +9,10 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-const currentBranchIndicator = ":point_left:"
+const (
+	currentBranchIndicator = ":point_left:"
+	indentMarker           = "-"
+)
 
 func NewProposalStackLineageBuilder(args ProposalStackLineageArgs) Option[ProposalStackLineageBuilder] {
 	if args.MainAndPerennialBranches.Contains(args.CurrentBranch) {
@@ -59,7 +62,7 @@ func (self *ProposalStackLineageBuilder) Build(args ProposalStackLineageArgs) st
 		node := self.orderedLineage[length-i]
 		indent := strings.Repeat(" ", (length-i)*2)
 		if self.mainAndPerennialBranches.Contains(node.branch) {
-			builder.WriteString(fmt.Sprintf("%s %s %s\n", indent, args.IndentMarker, node.branch.BranchName()))
+			builder.WriteString(fmt.Sprintf("%s %s %s\n", indent, indentMarker, node.branch.BranchName()))
 			continue
 		}
 
@@ -125,7 +128,7 @@ func (self *ProposalStackLineageBuilder) addBranch(
 func formattedDisplay(args ProposalStackLineageArgs, currentIndentLevel string, proposal forgedomain.Proposal) string {
 	proposalData := proposal.Data
 	if args.CurrentBranch == proposalData.Data().Source {
-		return fmt.Sprintf("%s %s PR %s %s\n", currentIndentLevel, args.IndentMarker, proposalData.Data().URL, currentBranchIndicator)
+		return fmt.Sprintf("%s %s PR %s %s\n", currentIndentLevel, indentMarker, proposalData.Data().URL, currentBranchIndicator)
 	}
-	return fmt.Sprintf("%s %s PR %s\n", currentIndentLevel, args.IndentMarker, proposalData.Data().URL)
+	return fmt.Sprintf("%s %s PR %s\n", currentIndentLevel, indentMarker, proposalData.Data().URL)
 }

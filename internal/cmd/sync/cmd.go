@@ -175,7 +175,6 @@ func executeSync(args executeSyncArgs) error {
 			},
 			Connector:                connector,
 			CurrentBranch:            data.initialBranch,
-			IndentMarker:             "-",
 			Lineage:                  data.config.NormalConfig.Lineage,
 			MainAndPerennialBranches: data.config.MainAndPerennials(),
 		}
