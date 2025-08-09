@@ -14,6 +14,13 @@ const (
 	indentMarker           = "-"
 )
 
+type ProposalStackLineageArgs struct {
+	Connector                forgedomain.Connector
+	CurrentBranch            gitdomain.LocalBranchName
+	Lineage                  Lineage
+	MainAndPerennialBranches gitdomain.LocalBranchNames
+}
+
 func NewProposalStackLineageBuilder(args ProposalStackLineageArgs) Option[ProposalStackLineageBuilder] {
 	if args.MainAndPerennialBranches.Contains(args.CurrentBranch) {
 		// cannot create proposal stack lineage for main or perennial branch
