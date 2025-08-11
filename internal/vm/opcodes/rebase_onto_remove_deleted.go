@@ -30,26 +30,26 @@ func (self *RebaseOntoRemoveDeleted) Continue() []shared.Opcode {
 }
 
 func (self *RebaseOntoRemoveDeleted) Run(args shared.RunArgs) error {
-	if err := args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseOnto.Location(), self.CommitsToRemove.Location(), self.Upstream); err != nil {
-		// Here the rebase-onto has failed.
-		// The branch that gets rebased onto will be deleted.
-		// We therefore don't need to bother the user with resolving the merge conflict
-		// and can resolve it ourselves.
-		conflictingFiles, err := args.Git.FileConflicts(args.Backend)
-		if err != nil {
-			return fmt.Errorf("cannot determine conflicting files after rebase: %w", err)
-		}
-		if args.Config.Value.NormalConfig.AutoResolve.ShouldAutoResolve() {
-			for _, conflictingFile := range conflictingFiles {
-				if conflictingChange, has := conflictingFile.CurrentBranchChange.Get(); has {
-					_ = args.Git.ResolveConflict(args.Frontend, conflictingChange.FilePath, gitdomain.ConflictResolutionTheirs)
-					_ = args.Git.StageFiles(args.Frontend, conflictingChange.FilePath)
-				} else if baseChange, has := conflictingFile.BaseChange.Get(); has {
-					_ = args.Git.RemoveFile(args.Frontend, baseChange.FilePath)
-				}
-			}
-		}
-		_ = args.Git.ContinueRebase(args.Frontend)
+	err := args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseOnto.Location(), self.CommitsToRemove.Location(), self.Upstream)
+	if err != nil || args.Config.Value.NormalConfig.AutoResolve.NoAutoResolve() {
+		return err
 	}
+	// Here the rebase-onto has failed.
+	// The branch that gets rebased onto will be deleted.
+	// We therefore don't need to bother the user with resolving the merge conflict
+	// and can resolve it ourselves.
+	conflictingFiles, err := args.Git.FileConflicts(args.Backend)
+	if err != nil {
+		return fmt.Errorf("cannot determine conflicting files after rebase: %w", err)
+	}
+	for _, conflictingFile := range conflictingFiles {
+		if conflictingChange, has := conflictingFile.CurrentBranchChange.Get(); has {
+			_ = args.Git.ResolveConflict(args.Frontend, conflictingChange.FilePath, gitdomain.ConflictResolutionTheirs)
+			_ = args.Git.StageFiles(args.Frontend, conflictingChange.FilePath)
+		} else if baseChange, has := conflictingFile.BaseChange.Get(); has {
+			_ = args.Git.RemoveFile(args.Frontend, baseChange.FilePath)
+		}
+	}
+	_ = args.Git.ContinueRebase(args.Frontend)
 	return nil
 }
