@@ -42,14 +42,25 @@ func (self *RebaseOntoRemoveDeleted) Run(args shared.RunArgs) error {
 	if err != nil {
 		return fmt.Errorf("cannot determine conflicting files after rebase: %w", err)
 	}
+	opcodes := []shared.Opcode{}
 	for _, conflictingFile := range conflictingFiles {
 		if conflictingChange, has := conflictingFile.CurrentBranchChange.Get(); has {
-			_ = args.Git.ResolveConflict(args.Frontend, conflictingChange.FilePath, gitdomain.ConflictResolutionTheirs)
-			_ = args.Git.StageFiles(args.Frontend, conflictingChange.FilePath)
+			opcodes = append(opcodes,
+				&ConflictResolve{
+					FilePath:   conflictingChange.FilePath,
+					Resolution: gitdomain.ConflictResolutionTheirs,
+				},
+				&FileStage{
+					FilePath: conflictingChange.FilePath,
+				},
+			)
 		} else if baseChange, has := conflictingFile.BaseChange.Get(); has {
-			_ = args.Git.RemoveFile(args.Frontend, baseChange.FilePath)
+			opcodes = append(opcodes, &FileRemove{
+				FilePath: baseChange.FilePath,
+			})
 		}
 	}
-	_ = args.Git.ContinueRebase(args.Frontend)
+	opcodes = append(opcodes, &RebaseContinue{})
+	args.PrependOpcodes(opcodes...)
 	return nil
 }

@@ -59,6 +59,8 @@ func All() []shared.Opcode {
 		&ExecuteShellCommand{},
 		&ExitToShell{},
 		&FetchUpstream{},
+		&FileRemove{},
+		&FileStage{},
 		&LineageBranchRemove{},
 		&LineageParentRemove{},
 		&LineageParentSetFirstExisting{},
