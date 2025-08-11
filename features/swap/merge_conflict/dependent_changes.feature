@@ -28,33 +28,77 @@ Feature: swapping a feature branch in a stack with dependent changes
 
   Scenario: result
     Then Git Town runs the commands
+      | BRANCH   | COMMAND                                                    |
+      | branch-2 | git fetch --prune --tags                                   |
+      |          | git -c rebase.updateRefs=false rebase --onto main branch-1 |
+    And Git Town prints the error:
+      """
+      CONFLICT (content): Merge conflict in file
+      """
+    And a rebase is now in progress
+    And file "file" now has content:
+      """
+      <<<<<<< HEAD
+      line 1
+      line 2
+      =======
+      line 1: branch-1 changes
+      line 2: branch-2 changes
+      >>>>>>> {{ sha-short 'branch-2 commit' }} (branch-2 commit)
+      line 3
+      """
+
+  Scenario: resolve and continue
+    When I resolve the conflict in "file" with:
+      """
+      line 1
+      line 2: branch-2 changes
+      line 3
+      """
+    And I run "git-town continue"
+    Then Git Town runs the commands
+      | BRANCH   | COMMAND                                                    |
+      | branch-2 | GIT_EDITOR=true git rebase --continue                      |
+      |          | git push --force-with-lease --force-if-includes            |
+      |          | git checkout branch-1                                      |
+      | branch-1 | git -c rebase.updateRefs=false rebase --onto branch-2 main |
+    And Git Town prints the error:
+      """
+      CONFLICT (content): Merge conflict in file
+      """
+    And a rebase is now in progress
+    And file "file" now has content:
+      """
+      <<<<<<< HEAD
+      line 1
+      line 2: branch-2 changes
+      =======
+      line 1: branch-1 changes
+      line 2
+      >>>>>>> {{ sha-short 'branch-1 commit' }} (branch-1 commit)
+      line 3
+      """
+    When I resolve the conflict in "file" with:
+      """
+      line 1: branch-1 changes
+      line 2: branch-2 changes
+      line 3
+      """
+    And I run "git-town continue"
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                                   |
-      | branch-2 | git fetch --prune --tags                                                                  |
-      |          | git -c rebase.updateRefs=false rebase --onto main branch-1                                |
-      |          | git checkout --theirs file                                                                |
-      |          | git add file                                                                              |
-      |          | GIT_EDITOR=true git rebase --continue                                                     |
-      |          | git push --force-with-lease --force-if-includes                                           |
-      |          | git checkout branch-1                                                                     |
-      | branch-1 | git -c rebase.updateRefs=false rebase --onto branch-2 main                                |
-      |          | git checkout --theirs file                                                                |
-      |          | git add file                                                                              |
-      |          | GIT_EDITOR=true git rebase --continue                                                     |
+      | branch-1 | GIT_EDITOR=true git rebase --continue                                                     |
       |          | git push --force-with-lease --force-if-includes                                           |
       |          | git checkout branch-3                                                                     |
       | branch-3 | git -c rebase.updateRefs=false rebase --onto branch-1 {{ sha-initial 'branch-2 commit' }} |
-      |          | git checkout --theirs file                                                                |
-      |          | git add file                                                                              |
-      |          | GIT_EDITOR=true git rebase --continue                                                     |
       |          | git push --force-with-lease --force-if-includes                                           |
       |          | git checkout branch-2                                                                     |
-    # TODO: the conflicts above are not phantom conflicts
-    # In the commits below, branch-1 should contains branch-2 changes, and branch-2 should not contain branch-1 changes
+    And no rebase is now in progress
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                 |
       | main     | local, origin | main commit     | file      | line 1\nline 2\nline 3                                                       |
-      | branch-1 | local, origin | branch-1 commit | file      | line 1: branch-1 changes\nline 2\nline 3                                     |
-      | branch-2 | local, origin | branch-2 commit | file      | line 1: branch-1 changes\nline 2: branch-2 changes\nline 3                   |
+      | branch-1 | local, origin | branch-1 commit | file      | line 1: branch-1 changes\nline 2: branch-2 changes\nline 3                   |
+      | branch-2 | local, origin | branch-2 commit | file      | line 1\nline 2: branch-2 changes\nline 3                                     |
       | branch-3 | local, origin | branch-3 commit | file      | line 1: branch-1 changes\nline 2: branch-2 changes\nline 3: branch-3 changes |
     And this lineage exists now
       | BRANCH   | PARENT   |
@@ -65,16 +109,7 @@ Feature: swapping a feature branch in a stack with dependent changes
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                         |
-      | branch-2 | git checkout branch-1                           |
-      | branch-1 | git reset --hard {{ sha 'branch-1 commit' }}    |
-      |          | git push --force-with-lease --force-if-includes |
-      |          | git checkout branch-2                           |
-      | branch-2 | git reset --hard {{ sha 'branch-2 commit' }}    |
-      |          | git push --force-with-lease --force-if-includes |
-      |          | git checkout branch-3                           |
-      | branch-3 | git reset --hard {{ sha 'branch-3 commit' }}    |
-      |          | git push --force-with-lease --force-if-includes |
-      |          | git checkout branch-2                           |
+      | BRANCH   | COMMAND            |
+      | branch-2 | git rebase --abort |
     And the initial commits exist now
     And the initial lineage exists now

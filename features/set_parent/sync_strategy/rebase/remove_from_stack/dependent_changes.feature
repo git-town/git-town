@@ -29,45 +29,73 @@ Feature: remove a branch and all its children from a stack with dependent change
 
   Scenario: result
     Then Git Town runs the commands
+      | BRANCH   | COMMAND                                                    |
+      | branch-2 | git pull                                                   |
+      |          | git -c rebase.updateRefs=false rebase --onto main branch-1 |
+    And Git Town prints the error:
+      """
+      To continue after having resolved conflicts, run "git town continue".
+      """
+    And a rebase is now in progress
+    And file "file" now has content:
+      """
+      <<<<<<< HEAD
+      line 1
+      line 2
+      =======
+      line 1: branch-1 changes
+      line 2: branch-2 changes
+      >>>>>>> {{ sha-short 'branch-2 commit' }} (branch-2 commit)
+      line 3
+      """
+
+  Scenario: resolve and continue
+    When I resolve the conflict in "file" with:
+      """
+      line 1
+      line 2: branch-2 changes
+      line 3
+      """
+    And I run "git-town continue"
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                 |
-      | branch-2 | git pull                                                                |
-      |          | git -c rebase.updateRefs=false rebase --onto main branch-1              |
-      |          | git checkout --theirs file                                              |
-      |          | git add file                                                            |
-      |          | GIT_EDITOR=true git rebase --continue                                   |
+      | branch-2 | GIT_EDITOR=true git rebase --continue                                   |
       |          | git push --force-with-lease --force-if-includes                         |
       |          | git checkout branch-3                                                   |
       | branch-3 | git pull                                                                |
       |          | git -c rebase.updateRefs=false rebase --onto branch-2 branch-1 branch-3 |
-      |          | git push --force-with-lease --force-if-includes                         |
-      |          | git checkout branch-2                                                   |
-    And Git Town prints:
+    And a rebase is now in progress
+    And file "file" now has content:
       """
-      branch "branch-2" is now a child of "main"
+      <<<<<<< HEAD
+      line 1
+      =======
+      line 1: branch-1 changes
+      >>>>>>> {{ sha-initial-short 'branch-2 commit' }} (branch-2 commit)
+      line 2: branch-2 changes
+      line 3
       """
-    # TODO: the conflict above is not a phantom conflict
-    # below, branch-2 and branch-3 should not contain changes from branch-1 because they are no longer descendents of it
+    When I resolve the conflict in "file" with:
+      """
+      line 1
+      line 2: branch-2 changes
+      line 3
+      """
+    And I run "git-town continue"
+    Then Git Town runs the commands
+      | BRANCH   | COMMAND                                         |
+      | branch-3 | GIT_EDITOR=true git rebase --continue           |
+      |          | git push --force-with-lease --force-if-includes |
+      |          | git checkout branch-2                           |
+    And no rebase is now in progress
     And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                 |
-      | main     | local, origin | main commit     | file      | line 1\nline 2\nline 3                                                       |
-      | branch-1 | local, origin | branch-1 commit | file      | line 1: branch-1 changes\nline 2\nline 3                                     |
-      | branch-2 | local, origin | branch-2 commit | file      | line 1: branch-1 changes\nline 2: branch-2 changes\nline 3                   |
-      | branch-3 | local, origin | branch-3 commit | file      | line 1: branch-1 changes\nline 2: branch-2 changes\nline 3: branch-3 changes |
+      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                               |
+      | main     | local, origin | main commit     | file      | line 1\nline 2\nline 3                                     |
+      | branch-1 | local, origin | branch-1 commit | file      | line 1: branch-1 changes\nline 2\nline 3                   |
+      | branch-2 | local, origin | branch-2 commit | file      | line 1\nline 2: branch-2 changes\nline 3                   |
+      | branch-3 | local, origin | branch-3 commit | file      | line 1\nline 2: branch-2 changes\nline 3: branch-3 changes |
     And this lineage exists now
       | BRANCH   | PARENT   |
       | branch-1 | main     |
       | branch-2 | main     |
       | branch-3 | branch-2 |
-
-  Scenario: undo
-    When I run "git-town undo"
-    And Git Town runs the commands
-      | BRANCH   | COMMAND                                         |
-      | branch-2 | git reset --hard {{ sha 'branch-2 commit' }}    |
-      |          | git push --force-with-lease --force-if-includes |
-      |          | git checkout branch-3                           |
-      | branch-3 | git reset --hard {{ sha 'branch-3 commit' }}    |
-      |          | git push --force-with-lease --force-if-includes |
-      |          | git checkout branch-2                           |
-    And the initial commits exist now
-    And the initial branches and lineage exist now
