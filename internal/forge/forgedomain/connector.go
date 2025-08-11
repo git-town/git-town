@@ -11,6 +11,27 @@ import (
 // Functions that might or might not be supported by a connector are implemented as higher-level functions,
 // i.e. they return an option of the function to call.
 // A `None` value implies that the respective functionality isn't supported by this connector implementation.
+//
+// A more idiomatic way to implement this would be to define a specific interface for each optional method of the constructor,
+// and then checking whether a specific connector implements the specific interface via a type assertion.
+// Example:
+//
+//	type ProposalFinder interface {
+//	  FindProposal(branch, target gitdomain.LocalBranchName) (Option[Proposal], error)
+//	}
+//
+// We decided against this approach because:
+//
+//  1. This makes it too easy to forget to implement a new optional feature in all connector implementations.
+//     When adding a new optional feature, or changing an existing one, our implementation results in a compiler error
+//     if a connector doesn't provide an answer whether this functionality is implemented or not.
+//     The idiomatic interface-based solution leaves it up to you to remember to implement the new feature,
+//     and then find all connector implementations and update them.
+//
+//  2. This doesn't provide an idiomatic way to document why a connector doesn't implement optional functionality.
+//     With our approach, the connector provides `None`, together with documentation (links to open tickets) why.
+//     With the idiomatic interface-based implementation, we could add a comment somewhere in the connector implementation,
+//     but that's hard to find, and sorting cannot be verified by linters.
 type Connector interface {
 	// CreateProposal creates a proposal at the forge.
 	CreateProposal(CreateProposalArgs) error

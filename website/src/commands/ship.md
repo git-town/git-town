@@ -78,3 +78,9 @@ If your forge automatically deletes shipped branches, for example
 [GitHub's feature to automatically delete head branches](https://help.github.com/en/github/administering-a-repository/managing-the-automatic-deletion-of-branches),
 you can
 [disable deleting remote branches](../preferences/ship-delete-tracking-branch.md).
+
+## See also
+
+- [propose](propose.md) creates a pull request for the current branch
+- [repo](repo.md) opens the website of your forge in the browser, so that you
+  can ship branches there

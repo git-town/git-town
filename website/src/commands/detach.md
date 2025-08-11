@@ -53,3 +53,9 @@ that would be run but doesn't execute them.
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.
+
+## See also
+
+- [swap](swap.md) move the current branch up in the stack
+- [set-parent](set-parent.md) move the current branch and its descendents under
+  a different parent
