@@ -1,5 +1,12 @@
 # Git Town Changelog
 
+## 21.4.2 (2025-08-11)
+
+#### Bug Fixes
+
+- Git Town no longer mistakes legit file conflicts for phantom conflicts ([#5156](https://github.com/git-town/git-town/issues/5156), [#5140](https://github.com/git-town/git-town/issues/5140))
+- delete: Git Town now rebases onto the correct branch ([#5358](https://github.com/git-town/git-town/pull/5358))
+
 ## 21.4.1 (2025-08-05)
 
 #### Bug Fixes
