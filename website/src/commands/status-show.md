@@ -17,6 +17,7 @@ determine the repository state.
 
 ## See also
 
-- [runlog](runlog.md) displays an overview of
+- [runlog](runlog.md) displays an overview of the most recently executed Git
+  Town commands
 - [status reset](status-reset.md) deletes the runstate. This can solve errors
   after upgrading Git Town.
