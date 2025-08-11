@@ -2,6 +2,7 @@ Feature: prepend a branch to a feature branch with compressible commits in a cle
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the branches
       | NAME     | TYPE    | PARENT   | LOCATIONS     |
       | branch-1 | feature | main     | local, origin |
@@ -13,7 +14,6 @@ Feature: prepend a branch to a feature branch with compressible commits in a cle
       | branch-2 | local, origin | branch-2 commit 1 | file_2    | content 3    |
       | branch-2 | local, origin | branch-2 commit 2 | file_2    | content 4    |
     And the current branch is "branch-2"
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     And wait 1 second to ensure new Git timestamps
     When I run "git-town prepend branch-1a"
 

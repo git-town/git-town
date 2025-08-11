@@ -2,6 +2,7 @@ Feature: remove a prototype branch as soon as its tracking branch is gone, even 
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME      | TYPE      | PARENT | LOCATIONS     |
       | prototype | prototype | main   | local, origin |
@@ -11,7 +12,6 @@ Feature: remove a prototype branch as soon as its tracking branch is gone, even 
       | prototype | local         | local commit | local_file |
     And the current branch is "prototype"
     And origin deletes the "prototype" branch
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town sync"
 
   Scenario: result

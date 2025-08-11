@@ -2,10 +2,10 @@ Feature: offline mode
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And offline mode is enabled
     And the commits
       | BRANCH  | LOCATION | MESSAGE               |

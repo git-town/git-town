@@ -7,6 +7,9 @@ import (
 	"net/url"
 	"strconv"
 
+	"github.com/google/go-github/v58/github"
+	"golang.org/x/oauth2"
+
 	"github.com/git-town/git-town/v21/internal/browser"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
@@ -16,8 +19,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	"github.com/git-town/git-town/v21/pkg/colors"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
-	"github.com/google/go-github/v58/github"
-	"golang.org/x/oauth2"
 )
 
 // Connector provides standardized connectivity for the given repository (github.com/owner/repo)

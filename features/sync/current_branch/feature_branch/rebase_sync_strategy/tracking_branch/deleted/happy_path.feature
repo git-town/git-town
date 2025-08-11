@@ -3,6 +3,7 @@ Feature: sync a branch whose tracking branch was shipped
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME      | TYPE    | PARENT | LOCATIONS     |
       | feature-1 | feature | main   | local, origin |
@@ -13,7 +14,6 @@ Feature: sync a branch whose tracking branch was shipped
       | feature-2 | local, origin | feature-2 commit | feature-2-file | feature 2 content |
     And the current branch is "feature-1"
     And origin ships the "feature-1" branch using the "squash-merge" ship-strategy
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town sync"
 
   Scenario: result

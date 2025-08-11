@@ -2,6 +2,7 @@ Feature: sync a branch with unshipped local changes whose tracking branch was de
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | shipped | feature | main   | local, origin |
@@ -11,7 +12,6 @@ Feature: sync a branch with unshipped local changes whose tracking branch was de
       |         | local         | unshipped commit |
     And the current branch is "shipped"
     And origin ships the "shipped" branch using the "squash-merge" ship-strategy
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town sync"
 
   Scenario: result

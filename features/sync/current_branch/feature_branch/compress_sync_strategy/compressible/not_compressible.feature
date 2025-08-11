@@ -2,6 +2,7 @@ Feature: sync a feature branch that is already compressed using the "compress" s
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
@@ -15,7 +16,6 @@ Feature: sync a feature branch that is already compressed using the "compress" s
       | BRANCH | LOCATION      | MESSAGE       |
       | beta   | local, origin | beta commit 1 |
     And wait 1 second to ensure new Git timestamps
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the current branch is "beta"
     When I run "git-town sync --detached"
 

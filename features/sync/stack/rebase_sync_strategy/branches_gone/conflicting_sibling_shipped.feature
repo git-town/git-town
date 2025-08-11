@@ -37,7 +37,7 @@ Feature: conflicting sibling branches, one gets shipped, the other syncs afterwa
       >>>>>>> {{ sha-short 'commit 2' }} (commit 2)
       """
     When I resolve the conflict in "file" with "content 1 and 2"
-    And I run "git town continue"
+    And I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                         |
       | branch-2 | GIT_EDITOR=true git rebase --continue           |
