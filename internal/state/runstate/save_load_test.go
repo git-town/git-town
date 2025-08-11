@@ -92,6 +92,8 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.ExecuteShellCommand{Args: []string{"arg1", "arg2"}, Executable: "executable"},
 				&opcodes.ExitToShell{},
 				&opcodes.FetchUpstream{Branch: "branch"},
+				&opcodes.FileRemove{FilePath: "file"},
+				&opcodes.FileStage{FilePath: "file"},
 				&opcodes.LineageBranchRemove{Branch: "branch"},
 				&opcodes.LineageParentRemove{Branch: "branch"},
 				&opcodes.LineageParentSet{Branch: "branch", Parent: "parent"},
@@ -465,6 +467,18 @@ func TestLoadSave(t *testing.T) {
         "Branch": "branch"
       },
       "type": "FetchUpstream"
+    },
+    {
+      "data": {
+        "FilePath": "file"
+      },
+      "type": "FileRemove"
+    },
+    {
+      "data": {
+        "FilePath": "file"
+      },
+      "type": "FileStage"
     },
     {
       "data": {
