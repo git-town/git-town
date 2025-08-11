@@ -347,7 +347,7 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 			}
 			parentOpt := data.config.NormalConfig.Lineage.Parent(data.initialBranch)
 			parent, hasParent := parentOpt.Get()
-			if hasParent && data.config.NormalConfig.AutoResolve.ShouldAutoResolve() {
+			if hasParent {
 				prog.Add(
 					&opcodes.RebaseOnto{
 						BranchToRebaseOnto: newParent.BranchName(),
