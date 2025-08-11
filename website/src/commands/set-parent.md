@@ -4,30 +4,64 @@
 git town set-parent [<branch>] [-v | --verbose]
 ```
 
-The _set-parent_ command changes the parent branch for the current branch.
-Consider this stack:
+The _set-parent_ command moves a branch and all its children below another
+branch. Consider this stack:
 
 ```
 main
  \
   feature-1
    \
-*   feature-B
+*   feature-2
+     \
+      feature-3
+
  \
   feature-A
 ```
 
-After running `git town set-parent` and selecting `feature-A` in the dialog, we
-end up with this stack:
+Running `git town set-parent feature-A` creates this stack:
 
 ```
 main
  \
   feature-1
+
  \
   feature-A
    \
-*   feature-B
+*   feature-2
+     \
+      feature-3
+```
+
+You can also use `set-parent` to make a child branch a sibling branch. Consider
+this stack:
+
+```
+main
+ \
+  feature-1
+   \
+    feature-2
+     \
+*     feature-3
+       \
+        feature-4
+```
+
+Running `git town set-parent feature-1` creates this stack:
+
+```
+main
+ \
+  feature-1
+   \
+    feature-2
+   \
+*   feature-3
+     \
+      feature-4
 ```
 
 Since set-parent changes commits, your branches must be in sync when running
