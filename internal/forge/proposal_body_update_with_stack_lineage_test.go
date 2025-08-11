@@ -1,11 +1,10 @@
-package forgedomain_test
+package forge_test
 
 import (
 	"testing"
 
+	"github.com/git-town/git-town/v21/internal/forge"
 	"github.com/shoenig/test/must"
-
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
 )
 
 func TestUpdateProposalBodyUpdateWithStackLineage(t *testing.T) {
@@ -180,7 +179,7 @@ Please check the box that apply
 		t.Run(tc.description, func(t *testing.T) {
 			t.Parallel()
 			// act
-			actual := configdomain.ProposalBodyUpdateWithStackLineage(tc.currentBody, tc.lineage)
+			actual := forge.ProposalBodyUpdateWithStackLineage(tc.currentBody, tc.lineage)
 			// assert
 			must.EqOp(t, tc.want, actual)
 		})

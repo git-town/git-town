@@ -42,7 +42,7 @@ type PartialConfig struct {
 	Offline                  Option[Offline]
 	PerennialBranches        gitdomain.LocalBranchNames
 	PerennialRegex           Option[PerennialRegex]
-	ProposalsShowLineage     Option[ProposalsShowLineage]
+	ProposalsShowLineage     Option[forgedomain.ProposalsShowLineage]
 	PushHook                 Option[PushHook]
 	ShareNewBranches         Option[ShareNewBranches]
 	ShipDeleteTrackingBranch Option[ShipDeleteTrackingBranch]

@@ -1,4 +1,4 @@
-package forgedomain
+package forge
 
 import "strings"
 
