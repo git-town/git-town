@@ -382,9 +382,9 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 					)
 				}
 				prog.Add(
-					&opcodes.RebaseOntoRemoveDeleted{
-						BranchToRebaseOnto: data.initialBranch,
-						CommitsToRemove:    descendent.BranchName(),
+					&opcodes.RebaseOnto{
+						BranchToRebaseOnto: data.initialBranch.BranchName(),
+						CommitsToRemove:    descendent.BranchName().Location(),
 						Upstream:           parentOpt,
 					},
 				)
