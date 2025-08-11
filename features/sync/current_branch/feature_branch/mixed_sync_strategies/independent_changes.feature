@@ -56,13 +56,13 @@ Feature: compatibility between different sync-feature-strategy settings when edi
       =======
       line 1: my content 1
       >>>>>>> origin/feature
-      
+
       line 2: coworker content 1
       """
     When the coworker resolves the conflict in "file.txt" with:
       """
       line 1: my content 1
-      
+
       line 2: coworker content 1
       """
     And the coworker runs "git town continue" and closes the editor
