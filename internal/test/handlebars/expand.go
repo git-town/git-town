@@ -57,6 +57,18 @@ func Expand(text string, args ExpandArgs) string {
 				panic("see error above")
 			}
 			text = strings.Replace(text, match, commit.SHA.String(), 1)
+		case strings.HasPrefix(match, "{{ sha-initial-short "):
+			commitMessage := gitdomain.CommitMessage(match[22 : len(match)-4])
+			commit, hasCommit := args.InitialDevCommits.FindByCommitMessage(commitMessage).Get()
+			if !hasCommit {
+				fmt.Printf("I cannot find the initial dev commit %q.\n", commitMessage)
+				fmt.Printf("I have records about %d commits:\n", len(args.InitialDevCommits))
+				for _, commit := range args.InitialDevCommits {
+					fmt.Printf("  - %q (%s)\n", commit.Message, commit.SHA)
+				}
+				panic("see error above")
+			}
+			text = strings.Replace(text, match, commit.SHA.Truncate(7).String(), 1)
 		case strings.HasPrefix(match, "{{ sha-before-run "):
 			commitMessage := gitdomain.CommitMessage(match[19 : len(match)-4])
 			commit, found := args.BeforeRunDevSHAs.FindByCommitMessage(commitMessage).Get()

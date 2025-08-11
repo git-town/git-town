@@ -682,19 +682,6 @@ func (self *Commands) Rebase(runner subshelldomain.Runner, target gitdomain.Bran
 	return runner.Run("git", "-c", "rebase.updateRefs=false", "rebase", target.String())
 }
 
-// loads the information needed to determine which of the given file conflicts are phantom rebase conflicts
-func (self *Commands) RebaseConflicts(querier subshelldomain.Querier, fileConflicts FileConflicts, parentLocation gitdomain.Location, rootBranch gitdomain.LocalBranchName) (RebaseConflicts, error) {
-	result := make([]RebaseConflict, len(fileConflicts))
-	// for q, quickInfo := range fileConflicts {
-	// 	fullInfo, err := self.FileConflictFullInfo(querier, quickInfo, parentLocation, rootBranch)
-	// 	if err != nil {
-	// 		return result, err
-	// 	}
-	// 	result[q] = fullInfo
-	// }
-	return result, nil
-}
-
 // Rebase initiates a Git rebase of the current branch onto the given branch.
 func (self *Commands) RebaseOnto(runner subshelldomain.Runner, branchToRebaseOnto gitdomain.Location, commitsToRemove gitdomain.Location, upstream Option[gitdomain.LocalBranchName]) error {
 	args := []string{"-c", "rebase.updateRefs=false", "rebase", "--onto", branchToRebaseOnto.String()}

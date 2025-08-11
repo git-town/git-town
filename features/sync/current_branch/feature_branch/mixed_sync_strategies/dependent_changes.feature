@@ -126,17 +126,17 @@ Feature: compatibility between different sync-feature-strategy settings when edi
     And file "file.txt" now has content:
       """
       <<<<<<< HEAD
+      line 1:
+      line 2: coworker content 1
+      =======
       line 1: my content 1
       line 2:
-      =======
-      line 1: my content 2
-      line 2: coworker content 1
-      >>>>>>> {{ sha-short 'my second commit' }} (my second commit)
+      >>>>>>> {{ sha-short 'my first commit' }} (my first commit)
       """
     And a rebase is now in progress
     When I resolve the conflict in "file.txt" with:
       """
-      line 1: my content 2
+      line 1: my content 1
       line 2: coworker content 1
       """
     And I run "git-town continue" and close the editor
@@ -148,7 +148,7 @@ Feature: compatibility between different sync-feature-strategy settings when edi
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME | FILE CONTENT                                     |
       | feature | local, coworker, origin | coworker first commit                                      | file.txt  | line 1:\nline 2: coworker content 1              |
-      |         | local, origin           | my first commit                                            | file.txt  | line 1: my content 1\nline 2:                    |
+      |         | local, origin           | my first commit                                            | file.txt  | line 1: my content 1\nline 2: coworker content 1 |
       |         |                         | my second commit                                           | file.txt  | line 1: my content 2\nline 2: coworker content 1 |
       |         | coworker                | my first commit                                            | file.txt  | line 1: my content 1\nline 2:                    |
       |         |                         | Merge remote-tracking branch 'origin/feature' into feature | file.txt  | line 1: my content 1\nline 2: coworker content 1 |
