@@ -349,7 +349,7 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 			parent, hasParent := parentOpt.Get()
 			if hasParent && data.config.NormalConfig.AutoResolve.ShouldAutoResolve() {
 				prog.Add(
-					&opcodes.RebaseOntoKeepDeleted{
+					&opcodes.RebaseOnto{
 						BranchToRebaseOnto: newParent.BranchName(),
 						CommitsToRemove:    parent.Location(),
 						Upstream:           None[gitdomain.LocalBranchName](),
