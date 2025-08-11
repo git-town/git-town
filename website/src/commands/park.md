@@ -30,3 +30,10 @@ git town park alpha beta
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.
+
+## See also
+
+- [contribute](contribute.md) makes the chosen branches contribution branches
+- [hack](hack.md) makes the chosen branches feature branches
+- [observe](observe.md) makes the chosen branches observed
+- [prototype](prototype.md) makes the chosen branches prototype branches
