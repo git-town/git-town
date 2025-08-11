@@ -28,37 +28,48 @@ Feature: make a child branch a sibling in a stack with dependent changes
     When I run "git-town set-parent branch-1"
 
   Scenario: result
-    And Git Town prints:
-      """
-      branch "branch-3" is now a child of "branch-1"
-      """
     And Git Town runs the commands
       | BRANCH   | COMMAND                                                        |
       | branch-3 | git pull                                                       |
       |          | git -c rebase.updateRefs=false rebase --onto branch-1 branch-2 |
-      |          | git checkout --theirs file                                     |
-      |          | git add file                                                   |
-      |          | GIT_EDITOR=true git rebase --continue                          |
-      |          | git push --force-with-lease --force-if-includes                |
-    # TODO: the conflict above is not a phantom merge conflict
-    # Below, branch-3 should not contain changes from branch-2, since they are siblings now
+    And Git Town prints the error:
+      """
+      To continue after having resolved conflicts, run "git town continue".
+      """
+    And a rebase is now in progress
+    And file "file" now has content:
+      """
+      line 1: branch-1 changes
+      <<<<<<< HEAD
+      line 2
+      line 3
+      =======
+      line 2: branch-2 changes
+      line 3: branch-3 changes
+      >>>>>>> {{ sha-short 'branch-3 commit' }} (branch-3 commit)
+      """
+
+  Scenario: resolve and continue
+    When I resolve the conflict in "file" with:
+      """
+      line 1: branch-1 changes
+      line 2
+      line 3: branch-3 changes
+      """
+    And I run "git-town continue"
+    Then Git Town runs the commands
+      | BRANCH   | COMMAND                                         |
+      | branch-3 | GIT_EDITOR=true git rebase --continue           |
+      |          | git push --force-with-lease --force-if-includes |
     And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                 |
-      | main     | local, origin | main commit     | file      | line 1\nline 2\nline 3                                                       |
-      | branch-1 | local, origin | branch-1 commit | file      | line 1: branch-1 changes\nline 2\nline 3                                     |
-      | branch-2 | local, origin | branch-2 commit | file      | line 1: branch-1 changes\nline 2: branch-2 changes\nline 3                   |
-      | branch-3 | local, origin | branch-3 commit | file      | line 1: branch-1 changes\nline 2: branch-2 changes\nline 3: branch-3 changes |
+      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                               |
+      | main     | local, origin | main commit     | file      | line 1\nline 2\nline 3                                     |
+      | branch-1 | local, origin | branch-1 commit | file      | line 1: branch-1 changes\nline 2\nline 3                   |
+      | branch-2 | local, origin | branch-2 commit | file      | line 1: branch-1 changes\nline 2: branch-2 changes\nline 3 |
+      | branch-3 | local, origin | branch-3 commit | file      | line 1: branch-1 changes\nline 2\nline 3: branch-3 changes |
+    And no rebase is now in progress
     And this lineage exists now
       | BRANCH   | PARENT   |
       | branch-1 | main     |
       | branch-2 | branch-1 |
       | branch-3 | branch-1 |
-
-  Scenario: undo
-    When I run "git-town undo"
-    And Git Town runs the commands
-      | BRANCH   | COMMAND                                         |
-      | branch-3 | git reset --hard {{ sha 'branch-3 commit' }}    |
-      |          | git push --force-with-lease --force-if-includes |
-    And the initial commits exist now
-    And the initial branches and lineage exist now

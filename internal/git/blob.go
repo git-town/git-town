@@ -5,6 +5,9 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/gohacks"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
+	"github.com/git-town/git-town/v21/pkg/colors"
 )
 
 // describes the content of a file blob in Git
@@ -12,6 +15,14 @@ type Blob struct {
 	FilePath   string        // relative path of the file in the repo
 	Permission string        // permissions, in the form "100755"
 	SHA        gitdomain.SHA // checksum of the content blob of the file - this is not the commit SHA!
+}
+
+func (self Blob) Debug(querier subshelldomain.Querier) {
+	fileContent, err := querier.Query("git", "show", self.SHA.String())
+	if err != nil {
+		panic(fmt.Sprintf("cannot display content of blob %q: %s", self.SHA, err))
+	}
+	fmt.Printf("%s %s %s\n%s\n", self.FilePath, self.SHA.Truncate(7), self.Permission, colors.Faint().Styled(gohacks.IndentLines(fileContent, 4)))
 }
 
 func EmptyBlob() Blob {

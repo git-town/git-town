@@ -81,6 +81,7 @@ const (
 	ConfigSyncStrategyUnknown          = "unknown sync strategy: %q"
 	ConflictDetectionProblem           = "cannot determine conflicts: %w"
 	ConflictMerge                      = "git merge conflict"
+	ConflictRebase                     = "git rebase conflict"
 	ContinueMessage                    = `You can run "git town continue" to finish it.`
 	ContinueNothingToDo                = "nothing to continue"
 	ContinueSkipGuidance               = "To continue by skipping the current branch, run \"git town skip\"."

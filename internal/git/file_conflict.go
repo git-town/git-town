@@ -7,6 +7,7 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -15,6 +16,31 @@ type FileConflict struct {
 	BaseChange          Option[Blob] // info about the base version of the file (when 3-way merging)
 	CurrentBranchChange Option[Blob] // info about the content of the file on the branch where the merge conflict occurs, None == file is deleted here
 	IncomingChange      Option[Blob] // info about the content of the file on the branch being merged in, None == file is being deleted here
+}
+
+// prints debug information
+func (self FileConflict) Debug(querier subshelldomain.Querier) {
+	base, hasBase := self.BaseChange.Get()
+	current, hasCurrent := self.CurrentBranchChange.Get()
+	incoming, hasIncoming := self.IncomingChange.Get()
+	fmt.Print("BASE CHANGE: ")
+	if hasBase {
+		base.Debug(querier)
+	} else {
+		fmt.Println("(none)")
+	}
+	fmt.Print("CURRENT CHANGE: ")
+	if hasCurrent {
+		current.Debug(querier)
+	} else {
+		fmt.Println("(none)")
+	}
+	fmt.Print("INCOMING CHANGE: ")
+	if hasIncoming {
+		incoming.Debug(querier)
+	} else {
+		fmt.Println("(none)")
+	}
 }
 
 func ParseLsFilesUnmergedLine(line string) (Blob, UnmergedStage, string, error) {
