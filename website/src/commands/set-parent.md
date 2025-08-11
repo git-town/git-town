@@ -55,3 +55,9 @@ determine the repository state.
 
 Disables automatic resolution of
 [phantom merge conflicts](../stacked-changes.md#avoid-phantom-conflicts).
+
+## See also
+
+- [detach](detach.md) extract the current branch from a stack, leaving its
+  children in the stack.
+- [swap](swap.md) move the current branch up in the stack
