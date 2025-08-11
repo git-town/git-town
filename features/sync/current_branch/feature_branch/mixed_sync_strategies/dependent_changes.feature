@@ -50,7 +50,7 @@ Feature: compatibility between different sync-feature-strategy settings when edi
       line 1: my content 1
       line 2:
       >>>>>>> origin/feature
-      
+
       """
     When the coworker resolves the conflict in "file.txt" with:
       """
