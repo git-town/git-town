@@ -1,8 +1,6 @@
 package configdomain
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -151,18 +149,7 @@ func findProposal(
 	if !hasFindProposalFn {
 		return None[forgedomain.Proposal](), nil
 	}
-
-	proposal, err := findProposalFn(childBranch, targetBranch)
-	if err != nil {
-		return None[forgedomain.Proposal](), fmt.Errorf("failed to find proposal for branch %s: %w", childBranch, err)
-	}
-
-	proposalData, hasProposal := proposal.Get()
-	if !hasProposal {
-		return None[forgedomain.Proposal](), nil
-	}
-
-	return Some(proposalData), nil
+	return findProposalFn(childBranch, targetBranch)
 }
 
 func findRelevantChildren(
