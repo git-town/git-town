@@ -1,7 +1,8 @@
-Feature: move a branch within a stack
+Feature: make a child branch a sibling in a stack with dependent changes
 
   Background:
     Given a Git repo with origin
+    And local Git setting "git-town.sync-feature-strategy" is "rebase"
     And the commits
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT           |
       | main   | local, origin | main commit | file      | line 1\nline 2\nline 3 |
@@ -24,7 +25,6 @@ Feature: move a branch within a stack
       | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                 |
       | branch-3 | local, origin | branch-3 commit | file      | line 1: branch-1 changes\nline 2: branch-2 changes\nline 3: branch-3 changes |
     And the current branch is "branch-3"
-    And local Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town set-parent branch-1"
 
   Scenario: result
@@ -41,7 +41,7 @@ Feature: move a branch within a stack
       |          | GIT_EDITOR=true git rebase --continue                          |
       |          | git push --force-with-lease --force-if-includes                |
     # TODO: the conflict above is not a phantom merge conflict
-    # Because of the incorrect resolution, branch-3 still contains changes from branch-2, even though they are siblings now
+    # Below, branch-3 should not contain changes from branch-2, since they are siblings now
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                 |
       | main     | local, origin | main commit     | file      | line 1\nline 2\nline 3                                                       |
