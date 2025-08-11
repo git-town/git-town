@@ -782,6 +782,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.StageFiles(filename)
 	})
 
+	sc.Step(`^I resolve the conflict in "([^"]*)" with:$`, func(ctx context.Context, filename string, content *godog.DocString) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		devRepo.CreateFile(filename, content.Content)
+		devRepo.StageFiles(filename)
+	})
+
 	sc.Step(`^I run "(.+)"$`, func(ctx context.Context, command string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		runCommand(state, command, true)
@@ -997,22 +1004,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^origin ships the "([^"]*)" branch using the "squash-merge" ship-strategy and resolves the merge conflict in "([^"]+)" with "([^"]+)" and commits as "([^"]+)"$`, func(ctx context.Context, branchName, fileName, fileContent, commitMessage string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		branchToShip := gitdomain.NewLocalBranchName(branchName)
-		originRepo := state.fixture.OriginRepo.GetOrPanic()
-		originRepo.CheckoutBranch("main")
-		err := originRepo.Git.SquashMerge(originRepo.TestRunner, branchToShip)
-		if err == nil {
-			panic("expected a merge conflict here")
-		}
-		originRepo.CreateFile(fileName, fileContent)
-		originRepo.StageFiles("-A")
-		asserts.NoError(originRepo.Git.Commit(originRepo.TestRunner, configdomain.UseCustomMessage(gitdomain.CommitMessage(commitMessage)), gitdomain.NewAuthorOpt("CI <ci@acme.com>"), configdomain.CommitHookEnabled))
-		originRepo.RemoveBranch(branchToShip)
-		originRepo.CheckoutBranch("initial")
-	})
-
 	sc.Step(`^origin ships the "([^"]*)" branch using the "squash-merge" ship-strategy as "([^"]+)"$`, func(ctx context.Context, branchName, commitMessage string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		branchToShip := gitdomain.NewLocalBranchName(branchName)
@@ -1215,6 +1206,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 		coworkerRepo.StageFiles(filename)
 	})
 
+	sc.Step(`^the coworker resolves the conflict in "([^"]*)" with:$`, func(ctx context.Context, filename string, content *godog.DocString) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
+		coworkerRepo.CreateFile(filename, content.Content)
+		coworkerRepo.StageFiles(filename)
+	})
+
 	sc.Step(`^the coworker runs "([^"]+)"$`, func(ctx context.Context, command string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		output, exitCode := state.fixture.CoworkerRepo.GetOrPanic().MustQueryStringCode(command)
@@ -1244,11 +1242,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 		_ = gitconfig.SetSyncFeatureStrategy(coworkerRepo.TestRunner, syncFeatureStrategy.GetOrPanic(), configdomain.ConfigScopeLocal)
 	})
 
-	sc.Step(`^the coworkers workspace now contains file "([^"]*)" with content "([^"]*)"$`, func(ctx context.Context, file, expectedContent string) error {
+	sc.Step(`^the coworkers workspace now contains file "([^"]*)" with content:$`, func(ctx context.Context, file string, expectedContent *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
 		actualContent := coworkerRepo.FileContent(file)
-		if expectedContent != actualContent {
+		if expectedContent.Content != actualContent {
 			return fmt.Errorf("file content does not match\n\nEXPECTED: %q\n\nACTUAL:\n\n%q\n----------------------------", expectedContent, actualContent)
 		}
 		return nil

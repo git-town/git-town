@@ -2,6 +2,7 @@ Feature: syncing a branch whose parent with dependent changes was shipped
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | branch-1 | feature | main   | local, origin |
@@ -16,7 +17,6 @@ Feature: syncing a branch whose parent with dependent changes was shipped
       | BRANCH   | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT  |
       | branch-2 | local, origin | commit 3 | file.txt  | new content 3 |
       |          | local, origin | commit 4 | file.txt  | new content 4 |
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And origin ships the "branch-1" branch using the "squash-merge" ship-strategy
     And the current branch is "branch-2"
     When I run "git-town sync"

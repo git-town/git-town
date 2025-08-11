@@ -2,6 +2,7 @@ Feature: syncing a stack that contains an observed branch
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME     | TYPE   | LOCATIONS |
       | observed | (none) | origin    |
@@ -11,7 +12,6 @@ Feature: syncing a stack that contains an observed branch
     And the commits
       | BRANCH   | LOCATION | MESSAGE    |
       | observed | origin   | new commit |
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town sync --stack"
 
   Scenario: result

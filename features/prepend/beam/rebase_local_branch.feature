@@ -3,6 +3,7 @@ Feature: prepend a branch to a local feature branch using the "rebase" sync stra
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME | TYPE    | PARENT | LOCATIONS |
       | old  | feature | main   | local     |
@@ -11,7 +12,6 @@ Feature: prepend a branch to a local feature branch using the "rebase" sync stra
       | old    | local    | commit 1 |
       | old    | local    | commit 2 |
     And the current branch is "old"
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And wait 1 second to ensure new Git timestamps
     When I run "git-town prepend parent --beam" and enter into the dialog:
       | DIALOG          | KEYS        |

@@ -2,6 +2,7 @@ Feature: append a new feature branch in a dirty workspace using the "compress" s
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
@@ -11,7 +12,6 @@ Feature: append a new feature branch in a dirty workspace using the "compress" s
       | existing | local, origin | existing commit 2 |
     And the current branch is "existing"
     And an uncommitted file
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     And wait 1 second to ensure new Git timestamps
     When I run "git-town append new"
 
