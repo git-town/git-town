@@ -29,6 +29,11 @@ func NewProposalStackLineageBuilder(args ProposalStackLineageArgs) Option[Propos
 		fmt.Printf("failed to build proposal stack lineage: %s", err.Error())
 		return None[ProposalStackLineageBuilder]()
 	}
+
+	if tree == nil {
+		return None[ProposalStackLineageBuilder]()
+	}
+
 	builder := &ProposalStackLineageBuilder{
 		mainAndPerennialBranches: args.MainAndPerennialBranches,
 		tree:                     tree,
