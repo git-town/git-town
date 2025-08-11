@@ -34,7 +34,7 @@ Feature: make a child branch a sibling in a stack with dependent changes
       |          | git -c rebase.updateRefs=false rebase --onto branch-1 branch-2 |
     And Git Town prints the error:
       """
-      xxx
+      To continue after having resolved conflicts, run "git town continue".
       """
     And a rebase is now in progress
     And file "file" now has content:
