@@ -5,13 +5,13 @@ import (
 	"github.com/git-town/git-town/v21/internal/vm/shared"
 )
 
-type ConflictPhantomResolve struct {
+type ConflictResolve struct {
 	FilePath                string
 	Resolution              gitdomain.ConflictResolution
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *ConflictPhantomResolve) Run(args shared.RunArgs) error {
+func (self *ConflictResolve) Run(args shared.RunArgs) error {
 	if err := args.Git.ResolveConflict(args.Frontend, self.FilePath, self.Resolution); err != nil {
 		return err
 	}
