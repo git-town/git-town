@@ -36,3 +36,8 @@ development remote. You can override the type of hosting server with the
 
 Set the [hosting-origin-hostname](../preferences/hosting-origin-hostname.md)
 setting to tell Git Town about the hostname when using ssh identities.
+
+## See also
+
+- [propose](propose.md) opens the website displaying the pull request for the
+  current branch

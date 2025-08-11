@@ -67,3 +67,8 @@ You can configure the forge type with the
 
 When using SSH identities, this command uses the hostname in the
 [hosting-origin-hostname](../preferences/hosting-origin-hostname.md) setting.
+
+## See also
+
+- [repo](repo.md) opens the website for the repository in the browser
+- [ship](ship.md) ships the current branch

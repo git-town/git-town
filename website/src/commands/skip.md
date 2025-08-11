@@ -13,3 +13,8 @@ all feature branches.
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.
+
+## See also
+
+- [continue](continue.md) tries to continue the currently suspended Git Town
+  command by re-running the Git command that failed.

@@ -14,3 +14,8 @@ the state it was before you ran the problematic command.
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.
+
+## See also
+
+- [continue](continue.md) continues the currently suspended Git Town command
+  after you have resolved the conflicting changes

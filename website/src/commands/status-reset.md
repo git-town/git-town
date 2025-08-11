@@ -13,3 +13,7 @@ if the runstate is corrupted and causes Git Town to crash.
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.
+
+## See also
+
+- [status show](status-show.md) displays the runstate

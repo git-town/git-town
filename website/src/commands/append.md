@@ -103,3 +103,9 @@ branch.
 If the configuration setting
 [new-branch-type](../preferences/new-branch-type.md) is set, `git town append`
 creates a branch with the given [type](../branch-types.md).
+
+## See also
+
+- [hack](hack.md) creates the new branch as a child of the
+  [main branch](../preferences/main-branch.md)
+- [prepend](prepend.md) creates the new branch as a parent of the current branch
