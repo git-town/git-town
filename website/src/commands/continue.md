@@ -19,7 +19,7 @@ determine the repository state.
 
 ## See also
 
-- [skip](skip.md) skips all conflicts on the current branch and continues
-  syncing the next Git branch that was scheduled to be synced
+- [skip](skip.md) ignores all remaining merge conflicts on the current branch
+  and then continues the currently suspended Git Town command
 - [undo](undo.md) aborts the currently suspended Git Town command and returns
   the repository to the state it was in before you ran that command
