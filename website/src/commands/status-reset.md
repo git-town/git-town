@@ -16,4 +16,5 @@ determine the repository state.
 
 ## See also
 
-- [status show](status-show.md) displays the runstate
+- [status show](status-show.md) displays the runstate that this command would
+  delete
