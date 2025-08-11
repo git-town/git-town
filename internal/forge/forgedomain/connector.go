@@ -14,8 +14,24 @@ import (
 //
 // A more idiomatic way to implement this would be to define a specific interface for each optional method of the constructor,
 // and then checking whether a specific connector implements the specific interface via a type assertion.
-// A downside of that approach is that (1) this makes it too easy to forget to implement a new optional feature in all connector implementations,
-// and (2) this doesn't provide an idiomatic way to document why a connector doesn't implement optional functionality.
+// Example:
+//
+//	type ProposalFinder interface {
+//	  FindProposal(branch, target gitdomain.LocalBranchName) (Option[Proposal], error)
+//	}
+//
+// We decided against this approach because:
+//
+//  1. This makes it too easy to forget to implement a new optional feature in all connector implementations.
+//     When adding a new optional feature, or changing an existing one, our implementation results in a compiler error
+//     if a connector doesn't provide an answer whether this functionality is implemented or not.
+//     The idiomatic interface-based solution leaves it up to you to remember to implement the new feature,
+//     and then find all connector implementations and update them.
+//
+//  2. This doesn't provide an idiomatic way to document why a connector doesn't implement optional functionality.
+//     With our approach, the connector provides `None`, together with documentation (links to open tickets) why.
+//     With the idiomatic interface-based implementation, we could add a comment somewhere in the connector implementation,
+//     but that's hard to find, and sorting cannot be verified by linters.
 type Connector interface {
 	// CreateProposal creates a proposal at the forge.
 	CreateProposal(CreateProposalArgs) error
