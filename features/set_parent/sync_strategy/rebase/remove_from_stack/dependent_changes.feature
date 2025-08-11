@@ -27,7 +27,6 @@ Feature: remove a branch and all its children from a stack with dependent change
     And the current branch is "branch-2"
     When I run "git-town set-parent main"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                 |
