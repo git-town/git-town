@@ -34,7 +34,7 @@ Feature: remove a branch and all its children from a stack with dependent change
       |          | git -c rebase.updateRefs=false rebase --onto main branch-1 |
     And Git Town prints the error:
       """
-      branch "branch-2" is now a child of "main"
+      To continue after having resolved conflicts, run "git town continue".
       """
     And a rebase is now in progress
     And file "file" now has content:
