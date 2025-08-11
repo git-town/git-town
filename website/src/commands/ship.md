@@ -82,3 +82,5 @@ you can
 ## See also
 
 - [propose](propose.md) creates a pull request for the current branch
+- [repo](repo.md) opens the website of your forge in the browser, so that you
+  can ship branches there
