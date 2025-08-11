@@ -27,7 +27,6 @@ Feature: remove a branch and all its children from a stack
     And the current branch is "branch-2"
     When I run "git-town set-parent main"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                 |
@@ -59,7 +58,11 @@ Feature: remove a branch and all its children from a stack
     When I run "git-town undo"
     And Git Town runs the commands
       | BRANCH   | COMMAND                                         |
-      | branch-3 | git reset --hard {{ sha 'commit 3' }}           |
+      | branch-2 | git reset --hard {{ sha 'branch-2 commit' }}    |
       |          | git push --force-with-lease --force-if-includes |
+      |          | git checkout branch-3                           |
+      | branch-3 | git reset --hard {{ sha 'branch-3 commit' }}    |
+      |          | git push --force-with-lease --force-if-includes |
+      |          | git checkout branch-2                           |
     And the initial commits exist now
     And the initial branches and lineage exist now
