@@ -92,7 +92,7 @@ func (self *ProposalStackLineageBuilder) build(node *ProposalStackLineageTreeNod
 func formattedDisplay(args ProposalStackLineageArgs, currentIndentLevel string, proposal forgedomain.Proposal) string {
 	proposalData := proposal.Data
 	if args.CurrentBranch == proposalData.Data().Source {
-		return fmt.Sprintf("%s %s PR %s :point_left:\n", currentIndentLevel, indentMarker, proposalData.Data().URL)
+		return fmt.Sprintf("%s %s %s :point_left:\n", currentIndentLevel, indentMarker, proposalData.Data().URL)
 	}
-	return fmt.Sprintf("%s %s PR %s\n", currentIndentLevel, indentMarker, proposalData.Data().URL)
+	return fmt.Sprintf("%s %s %s\n", currentIndentLevel, indentMarker, proposalData.Data().URL)
 }
