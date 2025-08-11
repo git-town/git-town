@@ -11,6 +11,11 @@ import (
 // Functions that might or might not be supported by a connector are implemented as higher-level functions,
 // i.e. they return an option of the function to call.
 // A `None` value implies that the respective functionality isn't supported by this connector implementation.
+//
+// A more idiomatic way to implement this would be to define a specific interface for each optional method of the constructor,
+// and then checking whether a specific connector implements the specific interface via a type assertion.
+// A downside of that approach is that (1) this makes it too easy to forget to implement a new optional feature in all connector implementations,
+// and (2) this doesn't provide an idiomatic way to document why a connector doesn't implement optional functionality.
 type Connector interface {
 	// CreateProposal creates a proposal at the forge.
 	CreateProposal(CreateProposalArgs) error
