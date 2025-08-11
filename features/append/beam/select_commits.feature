@@ -3,6 +3,7 @@ Feature: beam multiple commits onto a new child branch
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
@@ -14,7 +15,6 @@ Feature: beam multiple commits onto a new child branch
       | existing | local    | commit 3    |
       | existing | local    | commit 4    |
     And the current branch is "existing"
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town append new --beam" and enter into the dialog:
       | DIALOG          | KEYS                             |
       | commits to beam | space down down down space enter |
@@ -58,7 +58,7 @@ Feature: beam multiple commits onto a new child branch
       | BRANCH | LOCATION | MESSAGE   | FILE NAME | FILE CONTENT    |
       | new    | local    | commit 4b | file_4    | amended content |
     And the current branch is "new"
-    When I run "git town sync"
+    When I run "git-town sync"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                                         |
       | new      | git fetch --prune --tags                                                                        |

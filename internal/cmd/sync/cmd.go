@@ -43,6 +43,7 @@ When run on a feature branch:
 - pulls updates for the current branch
 - merges the parent branch into the current branch
 - pushes the current branch
+- updates branch lineage in proposals
 
 When run on the main branch or a perennial branch:
 - pulls and pushes updates for the current branch
@@ -162,6 +163,26 @@ func executeSync(args executeSyncArgs) error {
 	if data.remotes.HasRemote(data.config.NormalConfig.DevRemote) && data.shouldPushTags && data.config.NormalConfig.Offline.IsOnline() {
 		runProgram.Value.Add(&opcodes.PushTags{})
 	}
+
+	connector, hasConnector := data.connector.Get()
+	if data.config.NormalConfig.ProposalsShowLineage == configdomain.ProposalsShowLineageCLI && hasConnector {
+		proposalStackLineageArgs := configdomain.ProposalStackLineageArgs{
+			Connector:                connector,
+			CurrentBranch:            data.initialBranch,
+			Lineage:                  data.config.NormalConfig.Lineage,
+			MainAndPerennialBranches: data.config.MainAndPerennials(),
+		}
+		proposalStackLineageBuilder := configdomain.NewProposalStackLineageBuilder(proposalStackLineageArgs)
+		if builder, hasBuilder := proposalStackLineageBuilder.Get(); hasBuilder {
+			if branchProposal, hasBranchProposalData := builder.GetProposal(data.initialBranch).Get(); hasBranchProposalData {
+				runProgram.Value.Add(&opcodes.ProposalUpdateBody{
+					Proposal:    branchProposal,
+					UpdatedBody: configdomain.ProposalBodyUpdateWithStackLineage(branchProposal.Data.Data().Body.GetOrDefault(), builder.Build(proposalStackLineageArgs)),
+				})
+			}
+		}
+	}
+
 	cmdhelpers.Wrap(runProgram, cmdhelpers.WrapOptions{
 		DryRun:                   data.config.NormalConfig.DryRun,
 		InitialStashSize:         data.stashSize,
@@ -188,7 +209,7 @@ func executeSync(args executeSyncArgs) error {
 		Backend:                 repo.Backend,
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
-		Connector:               None[forgedomain.Connector](),
+		Connector:               data.connector,
 		Detached:                args.detached,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
@@ -210,6 +231,7 @@ type syncData struct {
 	branchesSnapshot         gitdomain.BranchesSnapshot
 	branchesToSync           configdomain.BranchesToSync
 	config                   config.ValidatedConfig
+	connector                Option[forgedomain.Connector]
 	detached                 configdomain.Detached
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
@@ -383,6 +405,7 @@ func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) 
 		branchesSnapshot:         branchesSnapshot,
 		branchesToSync:           branchesToSync,
 		config:                   validatedConfig,
+		connector:                connector,
 		detached:                 args.detached,
 		hasOpenChanges:           repoStatus.OpenChanges,
 		initialBranch:            initialBranch,

@@ -2,6 +2,7 @@ Feature: disable auto-resolution of phantom merge conflicts via CLI flag when pa
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "merge"
     And the commits
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT   |
       | main   | local, origin | main commit | file      | line 1\nline 2 |
@@ -17,7 +18,6 @@ Feature: disable auto-resolution of phantom merge conflicts via CLI flag when pa
     And the commits
       | BRANCH   | LOCATION | MESSAGE         | FILE NAME | FILE CONTENT                                           |
       | branch-2 | local    | branch-2 commit | file      | line 1 changed by branch-1\nline 2 changed by branch-2 |
-    And Git setting "git-town.sync-feature-strategy" is "merge"
     And origin ships the "branch-1" branch using the "squash-merge" ship-strategy
     And the current branch is "branch-2"
     When I run "git-town sync --auto-resolve=0"
@@ -47,7 +47,7 @@ Feature: disable auto-resolution of phantom merge conflicts via CLI flag when pa
     And a merge is now in progress
 
   Scenario: undo
-    When I run "git town undo"
+    When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                 |
       | branch-2 | git merge --abort                                       |
@@ -65,7 +65,7 @@ Feature: disable auto-resolution of phantom merge conflicts via CLI flag when pa
     And no merge is now in progress
 
   Scenario: run without resolving the conflicts
-    When I run "git town continue"
+    When I run "git-town continue"
     Then Git Town runs no commands
     And Git Town prints the error:
       """
@@ -75,7 +75,7 @@ Feature: disable auto-resolution of phantom merge conflicts via CLI flag when pa
 
   Scenario: resolve the conflicts and continue
     When I resolve the conflict in "file" with "content_2"
-    And I run "git town continue"
+    And I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                  |
       | branch-2 | git commit --no-edit                     |
@@ -93,7 +93,7 @@ Feature: disable auto-resolution of phantom merge conflicts via CLI flag when pa
   Scenario: resolve the conflicts, commit, and continue
     When I resolve the conflict in "file" with "content_2"
     And I ran "git commit --no-edit"
-    And I run "git town continue"
+    And I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                  |
       | branch-2 | git merge --no-edit --ff origin/branch-2 |

@@ -2,6 +2,7 @@ Feature: prepend a branch to a branch that was shipped at the remote
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME     | TYPE    | PARENT   | LOCATIONS     |
       | branch-1 | feature | main     | local, origin |
@@ -11,7 +12,6 @@ Feature: prepend a branch to a branch that was shipped at the remote
       | branch-1 | local, origin | commit 1 |
       | branch-2 | local, origin | commit 2 |
     And origin deletes the "branch-1" branch
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "branch-2"
     When I run "git-town prepend new"
 

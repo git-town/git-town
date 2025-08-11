@@ -2,6 +2,7 @@ Feature: "compress" sync with upstream repo
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And an upstream repo
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
@@ -11,7 +12,6 @@ Feature: "compress" sync with upstream repo
       | main    | upstream | upstream commit | upstream_file | upstream content |
       | feature | local    | local commit    | local file    | local content    |
     And the current branch is "feature"
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     And wait 1 second to ensure new Git timestamps
     When I run "git-town sync"
 
