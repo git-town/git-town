@@ -126,3 +126,16 @@ also pulls new commits from the upstream's main branch.
 
 [sync-tags](../preferences/sync-tags.md) configures whether Git Town syncs Git
 tags with the [development remote](../preferences/dev-remote.md).
+
+## See also
+
+When you run into merge conflicts:
+
+- [continue](continue.md) allows you to resume the suspended Git Town command
+  after you have resolved the merge conflicts by re-running the failed Git
+  command
+- [skip](skip.md) ignores all remaining merge conflicts on the current branch
+  and then continues the currently suspended Git Town command
+- [undo](undo.md) aborts the currently suspended Git Town command and undoes all
+  the changes it did, bringing your Git repository back to the state it was
+  before you ran the currently suspended Git Town command

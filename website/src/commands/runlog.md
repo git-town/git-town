@@ -17,3 +17,8 @@ command made.
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.
+
+## See also
+
+- [status show](status-show.md) displays the runstate, i.e. detailed information
+  for the current or last Git Town command

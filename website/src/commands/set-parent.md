@@ -92,6 +92,6 @@ Disables automatic resolution of
 
 ## See also
 
-- [detach](detach.md) extract only the current branch from a stack, leaving its
+- [detach](detach.md) extract the current branch from a stack, leaving its
   children in the stack.
 - [swap](swap.md) move the current branch up in the stack
