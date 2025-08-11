@@ -1,4 +1,4 @@
-package configdomain_test
+package forgedomain_test
 
 import (
 	"testing"
@@ -41,7 +41,7 @@ func TestUpdateProposalBodyUpdateWithStackLineage(t *testing.T) {
 			main
 				feat-a
 					feat-b
-			
+
 <!-- branch-stack-end -->`,
 		},
 		{
@@ -58,14 +58,14 @@ These Gitters are the stackers of tomorrow
 			want: `
 Git-town is a town of Gitters.
 These Gitters are the stackers of tomorrow
-			
+
 
 <!-- branch-stack -->
 
 			main
 				feat-a
 					feat-b
-			
+
 <!-- branch-stack-end -->`,
 		},
 		{
@@ -90,7 +90,7 @@ Git-town is a town of Gitters.
 			main
 				feat-a
 					feat-b
-			
+
 <!-- branch-stack-end -->
 			Please check the box that apply
 			- [ ] Add Tests
@@ -106,7 +106,7 @@ Git-town is a town of Gitters.
 
 			main
 				feat-a
-			
+
 <!-- branch-stack-end -->
 			Please check the box that apply
 			- [ ] Add Tests
@@ -129,7 +129,7 @@ Git-town is a town of Gitters.
 					feat-b
 						feat-c
 							feat-d
-			
+
 <!-- branch-stack-end -->
 			Please check the box that apply
 			- [ ] Add Tests
@@ -172,7 +172,7 @@ Please check the box that apply
 					feat-b
 						feat-c
 							feat-d
-			
+
 <!-- branch-stack-end -->
 			`,
 		},

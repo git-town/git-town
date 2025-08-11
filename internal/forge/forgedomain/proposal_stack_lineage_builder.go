@@ -1,10 +1,9 @@
-package configdomain
+package forgedomain
 
 import (
 	"fmt"
 	"strings"
 
-	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
@@ -12,7 +11,7 @@ import (
 const indentMarker = "-"
 
 type ProposalStackLineageArgs struct {
-	Connector                forgedomain.Connector
+	Connector                Connector
 	CurrentBranch            gitdomain.LocalBranchName
 	Lineage                  Lineage
 	MainAndPerennialBranches gitdomain.LocalBranchNames
@@ -56,10 +55,10 @@ func (self *ProposalStackLineageBuilder) Build(args ProposalStackLineageArgs) st
 	return builder.String()
 }
 
-func (self *ProposalStackLineageBuilder) GetProposal(branch gitdomain.LocalBranchName) Option[forgedomain.Proposal] {
+func (self *ProposalStackLineageBuilder) GetProposal(branch gitdomain.LocalBranchName) Option[Proposal] {
 	proposal, ok := self.tree.BranchToProposal[branch]
 	if !ok {
-		return None[forgedomain.Proposal]()
+		return None[Proposal]()
 	}
 
 	return proposal
@@ -89,7 +88,7 @@ func (self *ProposalStackLineageBuilder) build(node *ProposalStackLineageTreeNod
 	return builder.String()
 }
 
-func formattedDisplay(args ProposalStackLineageArgs, currentIndentLevel string, proposal forgedomain.Proposal) string {
+func formattedDisplay(args ProposalStackLineageArgs, currentIndentLevel string, proposal Proposal) string {
 	proposalData := proposal.Data
 	if args.CurrentBranch == proposalData.Data().Source {
 		return fmt.Sprintf("%s %s %s :point_left:\n", currentIndentLevel, indentMarker, proposalData.Data().URL)

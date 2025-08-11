@@ -1,4 +1,4 @@
-package configdomain_test
+package forgedomain_test
 
 import (
 	"fmt"

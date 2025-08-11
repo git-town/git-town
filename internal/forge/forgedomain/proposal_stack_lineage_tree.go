@@ -1,14 +1,13 @@
-package configdomain
+package forgedomain
 
 import (
-	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 func NewProposalStackLineageTree(args ProposalStackLineageArgs) (*ProposalStackLineageTree, error) {
 	tree := &ProposalStackLineageTree{
-		BranchToProposal: make(map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]),
+		BranchToProposal: make(map[gitdomain.LocalBranchName]Option[Proposal]),
 		Node:             newProposalStackLineageTreeNode(""),
 	}
 
@@ -31,7 +30,7 @@ func NewProposalStackLineageTree(args ProposalStackLineageArgs) (*ProposalStackL
 }
 
 type ProposalStackLineageTree struct {
-	BranchToProposal map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]
+	BranchToProposal map[gitdomain.LocalBranchName]Option[Proposal]
 	Node             *ProposalStackLineageTreeNode
 }
 
@@ -39,7 +38,7 @@ type ProposalStackLineageTreeNode struct {
 	branch     gitdomain.LocalBranchName
 	childNodes []*ProposalStackLineageTreeNode
 	depth      int
-	proposal   Option[forgedomain.Proposal]
+	proposal   Option[Proposal]
 }
 
 func addDescendantNodes(branch gitdomain.LocalBranchName, args ProposalStackLineageArgs, visited map[gitdomain.LocalBranchName]*ProposalStackLineageTreeNode, tree *ProposalStackLineageTree) error {
@@ -123,7 +122,7 @@ func buildDescendantChain(
 
 type childWithProposal struct {
 	branch   gitdomain.LocalBranchName
-	proposal Option[forgedomain.Proposal]
+	proposal Option[Proposal]
 }
 
 func createAncestorNode(
@@ -143,11 +142,11 @@ func createAncestorNode(
 func findProposal(
 	childBranch gitdomain.LocalBranchName,
 	targetBranch gitdomain.LocalBranchName,
-	connector forgedomain.Connector,
-) (Option[forgedomain.Proposal], error) {
+	connector Connector,
+) (Option[Proposal], error) {
 	findProposalFn, hasFindProposalFn := connector.FindProposalFn().Get()
 	if !hasFindProposalFn {
-		return None[forgedomain.Proposal](), nil
+		return None[Proposal](), nil
 	}
 	return findProposalFn(childBranch, targetBranch)
 }
@@ -181,7 +180,7 @@ func newProposalStackLineageTreeNode(branch gitdomain.LocalBranchName) *Proposal
 		branch:     branch,
 		childNodes: make([]*ProposalStackLineageTreeNode, 0),
 		depth:      -1,
-		proposal:   None[forgedomain.Proposal](),
+		proposal:   None[Proposal](),
 	}
 }
 
