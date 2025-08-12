@@ -32,11 +32,9 @@ func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
 		parentIsLocal := branchInfos.HasLocalBranch(parent)
 		if !parentIsLocal {
 			// here the parent isn't local --> sync with its tracking branch, then try again with the grandparent until we find a local ancestor
-			parentTrackingName := parent.AtRemote(args.Config.Value.NormalConfig.DevRemote)
 			program = append(program, &RebaseParentRemote{
-				Branch:                  branch,
-				Parent:                  parentTrackingName,
-				undeclaredOpcodeMethods: undeclaredOpcodeMethods{},
+				Branch: branch,
+				Parent: parent.AtRemote(args.Config.Value.NormalConfig.DevRemote),
 			})
 			branch = parent
 			continue

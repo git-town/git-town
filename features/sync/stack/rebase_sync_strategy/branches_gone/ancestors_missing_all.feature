@@ -21,6 +21,7 @@ Feature: stacked changes where all ancestor branches aren't local
     And I ran "git branch -d beta"
     When I run "git-town sync"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                            |
@@ -28,9 +29,10 @@ Feature: stacked changes where all ancestor branches aren't local
       |        | git push --force-with-lease --force-if-includes    |
       |        | git -c rebase.updateRefs=false rebase origin/gamma |
       |        | git -c rebase.updateRefs=false rebase origin/beta  |
-      |        | git -c rebase.updateRefs=false rebase origin/alpha |
-      |        | git -c rebase.updateRefs=false rebase origin/main  |
-      |        | git push --force-with-lease --force-if-includes    |
+    And Git Town prints the error:
+      """
+      xxx
+      """
     And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE             |
