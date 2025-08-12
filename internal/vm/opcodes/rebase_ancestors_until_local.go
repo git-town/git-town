@@ -9,10 +9,8 @@ import (
 
 type RebaseAncestorsUntilLocal struct {
 	Branch gitdomain.LocalBranchName
-	// TODO: this is most likely not the correct SHA.
-	// We don't even know which parent we are going to rebase against
-	// until we find a local ancestor at runtime.
-	// This data can only be determined dynamically at runtime.
+	// SHA of the direct parent at the previous run.
+	// These are the commits we need to remove from this branch.
 	ParentSHAPreviousRun    Option[gitdomain.SHA]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
@@ -46,7 +44,7 @@ func (self *RebaseAncestorsUntilLocal) Run(args shared.RunArgs) error {
 		// here we found a local parent
 		program = append(program, &RebaseAncestorLocal{
 			Branch:               self.Branch,
-			Parent:               parent,
+			Ancestor:             parent,
 			ParentSHAPreviousRun: self.ParentSHAPreviousRun,
 		})
 		break

@@ -9,12 +9,10 @@ import (
 
 // rebases a branch against a local ancestor branch
 type RebaseAncestorLocal struct {
-	Branch gitdomain.LocalBranchName
-	Parent gitdomain.LocalBranchName
-	// TODO: this is most likely not the correct SHA.
-	// We don't even know which parent we are going to rebase against
-	// until we find a local ancestor at runtime.
-	// This data can only be determined dynamically at runtime.
+	Branch   gitdomain.LocalBranchName
+	Ancestor gitdomain.LocalBranchName
+	// SHA of the direct parent at the previous run.
+	// These are the commits we need to remove from this branch.
 	ParentSHAPreviousRun    Option[gitdomain.SHA]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
@@ -25,10 +23,10 @@ func (self *RebaseAncestorLocal) Run(args shared.RunArgs) error {
 		panic(messages.BranchInfosNotProvided)
 	}
 	var branchToRebaseOnto gitdomain.BranchName
-	if branchInfos.BranchIsActiveInAnotherWorktree(self.Parent) {
-		branchToRebaseOnto = self.Parent.TrackingBranch(args.Config.Value.NormalConfig.DevRemote).BranchName()
+	if branchInfos.BranchIsActiveInAnotherWorktree(self.Ancestor) {
+		branchToRebaseOnto = self.Ancestor.TrackingBranch(args.Config.Value.NormalConfig.DevRemote).BranchName()
 	} else {
-		branchToRebaseOnto = self.Parent.BranchName()
+		branchToRebaseOnto = self.Ancestor.BranchName()
 	}
 	if parentSHAPreviousRun, hasParentSHAPreviousRun := self.ParentSHAPreviousRun.Get(); hasParentSHAPreviousRun {
 		// Here we rebase onto the new parent, while removing the commits that the parent had in the last run.
