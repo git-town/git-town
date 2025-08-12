@@ -13,7 +13,6 @@ import (
 )
 
 func TestSingleSnapshot(t *testing.T) {
-
 	t.Run("DefaultBranch", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
