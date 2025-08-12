@@ -108,10 +108,11 @@ func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (dia
 		return false, errors.New(messages.ContinueUnresolvedConflicts)
 	}
 	validatedConfig, exit, err := quickValidateConfig(quickValidateConfigArgs{
-		backend:     args.Backend,
-		git:         args.Git,
-		inputs:      args.Inputs,
-		unvalidated: NewMutable(&args.UnvalidatedConfig),
+		backend:          args.Backend,
+		git:              args.Git,
+		inputs:           args.Inputs,
+		unscopedSnapshot: runState.BeginConfigSnapshot.Unscoped,
+		unvalidated:      NewMutable(&args.UnvalidatedConfig),
 	})
 	if err != nil || exit {
 		return exit, err
@@ -196,10 +197,11 @@ func skipRunstate(args UnfinishedStateArgs, runState runstate.RunState) (dialogd
 		return false, err
 	}
 	validatedConfig, exit, err := quickValidateConfig(quickValidateConfigArgs{
-		backend:     args.Backend,
-		git:         args.Git,
-		inputs:      args.Inputs,
-		unvalidated: NewMutable(&args.UnvalidatedConfig),
+		backend:          args.Backend,
+		git:              args.Git,
+		inputs:           args.Inputs,
+		unscopedSnapshot: runState.BeginConfigSnapshot.Unscoped,
+		unvalidated:      NewMutable(&args.UnvalidatedConfig),
 	})
 	if err != nil || exit {
 		return exit, err
@@ -223,10 +225,11 @@ func skipRunstate(args UnfinishedStateArgs, runState runstate.RunState) (dialogd
 
 func undoRunState(args UnfinishedStateArgs, runState runstate.RunState) (dialogdomain.Exit, error) {
 	validatedConfig, exit, err := quickValidateConfig(quickValidateConfigArgs{
-		backend:     args.Backend,
-		git:         args.Git,
-		inputs:      args.Inputs,
-		unvalidated: NewMutable(&args.UnvalidatedConfig),
+		backend:          args.Backend,
+		git:              args.Git,
+		inputs:           args.Inputs,
+		unscopedSnapshot: runState.BeginConfigSnapshot.Unscoped,
+		unvalidated:      NewMutable(&args.UnvalidatedConfig),
 	})
 	if err != nil || exit {
 		return exit, err
