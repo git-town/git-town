@@ -16,34 +16,34 @@ func TestUpdateProposalBodyUpdateWithStackLineage(t *testing.T) {
 		lineage     string
 		want        string
 	}{
-		// 		{
-		// 			description: "Empty body with empty lineage content",
-		// 			currentBody: "",
-		// 			lineage:     "",
-		// 			want:        "",
-		// 		},
-		// 		{
-		// 			description: "Non-Empty body with empty lineage content",
-		// 			currentBody: "Some description",
-		// 			lineage:     "",
-		// 			want:        "Some description",
-		// 		},
-		// 		{
-		// 			description: "Empty body with non-empty lineage content",
-		// 			currentBody: "",
-		// 			lineage: `
-		// main
-		// 	feat-a
-		// 		feat-b
-		// `,
-		// 			want: `<!-- branch-stack -->
+		{
+			description: "Empty body with empty lineage content",
+			currentBody: "",
+			lineage:     "",
+			want:        "",
+		},
+		{
+			description: "Non-Empty body with empty lineage content",
+			currentBody: "Some description",
+			lineage:     "",
+			want:        "Some description",
+		},
+		{
+			description: "Empty body with non-empty lineage content",
+			currentBody: "",
+			lineage: `
+main
+	feat-a
+		feat-b
+`,
+			want: `<!-- branch-stack -->
 
-		// main
-		// 	feat-a
-		// 		feat-b
+main
+	feat-a
+		feat-b
 
-		// <!-- branch-stack-end -->`,
-		// 		},
+<!-- branch-stack-end -->`,
+		},
 		{
 			description: "Proposal Body with multiple line body",
 			currentBody: `
