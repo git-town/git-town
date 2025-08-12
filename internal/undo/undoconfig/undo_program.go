@@ -5,6 +5,5 @@ import (
 )
 
 func DetermineUndoConfigProgram(begin BeginConfigSnapshot, end EndConfigSnapshot) program.Program {
-	configDiff := NewConfigDiffs(begin, end)
-	return configDiff.UndoProgram()
+	return NewConfigDiffs(begin, end).UndoProgram()
 }
