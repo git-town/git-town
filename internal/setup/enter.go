@@ -83,6 +83,7 @@ EnterForgeData:
 	codebergToken := None[forgedomain.CodebergToken]()
 	giteaToken := None[forgedomain.GiteaToken]()
 	githubConnectorTypeOpt := None[forgedomain.GitHubConnectorType]()
+	githubTokenType := None[forgedomain.GitHubTokenType]()
 	githubToken := None[forgedomain.GitHubToken]()
 	gitlabConnectorTypeOpt := None[forgedomain.GitLabConnectorType]()
 	gitlabToken := None[forgedomain.GitLabToken]()
@@ -106,6 +107,12 @@ EnterForgeData:
 			if githubConnectorType, has := githubConnectorTypeOpt.Get(); has {
 				switch githubConnectorType {
 				case forgedomain.GitHubConnectorTypeAPI:
+					githubTokenType, exit, err = enterGitHubTokenType(data)
+					if err != nil || exit {
+						return emptyResult, exit, err
+					}
+					switch githubTokenType {
+					}
 					githubToken, exit, err = enterGitHubToken(data)
 				case forgedomain.GitHubConnectorTypeGh:
 				}
@@ -373,6 +380,17 @@ func enterGitHubConnectorType(data Data) (Option[forgedomain.GitHubConnectorType
 
 func enterGitHubToken(data Data) (Option[forgedomain.GitHubToken], dialogdomain.Exit, error) {
 	if data.Config.File.GitHubToken.IsSome() {
+		return None[forgedomain.GitHubToken](), false, nil
+	}
+	return dialog.GitHubToken(dialog.Args[forgedomain.GitHubToken]{
+		Global: data.Config.GitGlobal.GitHubToken,
+		Inputs: data.Inputs,
+		Local:  data.Config.GitLocal.GitHubToken,
+	})
+}
+
+func enterGitHubTokenType(data Data) (Option[forgedomain.GitHubTokenType], dialogdomain.Exit, error) {
+	if data.Config.File.GitHubTokenType.IsSome() {
 		return None[forgedomain.GitHubToken](), false, nil
 	}
 	return dialog.GitHubToken(dialog.Args[forgedomain.GitHubToken]{
