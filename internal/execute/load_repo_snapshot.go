@@ -12,7 +12,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/state/runstate"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
-	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/validate"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
@@ -79,7 +78,7 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 type LoadRepoSnapshotArgs struct {
 	Backend               subshelldomain.RunnerQuerier
 	CommandsCounter       Mutable[gohacks.Counter]
-	ConfigSnapshot        undoconfig.BeginConfigSnapshot
+	ConfigSnapshot        configdomain.BeginConfigSnapshot
 	Connector             Option[forgedomain.Connector]
 	Detached              configdomain.Detached
 	Fetch                 bool

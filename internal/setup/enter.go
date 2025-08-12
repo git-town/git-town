@@ -17,7 +17,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/subshell"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
-	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -260,7 +259,7 @@ type UserInput struct {
 	ValidatedConfig     configdomain.ValidatedConfigData
 }
 
-func determineExistingScope(configSnapshot undoconfig.BeginConfigSnapshot, key configdomain.Key, oldValue fmt.Stringer) configdomain.ConfigScope {
+func determineExistingScope(configSnapshot configdomain.BeginConfigSnapshot, key configdomain.Key, oldValue fmt.Stringer) configdomain.ConfigScope {
 	switch {
 	case oldValue.String() == "":
 		return configdomain.ConfigScopeLocal
