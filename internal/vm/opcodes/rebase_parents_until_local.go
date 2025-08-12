@@ -55,26 +55,11 @@ func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
 		} else {
 			branchToRebaseOnto = parent.BranchName()
 		}
-		if parentSHAPreviousRun, hasParentSHAPreviousRun := self.ParentSHAPreviousRun.Get(); hasParentSHAPreviousRun {
-			// Here we rebase onto the new parent, while removing the commits that the parent had in the last run.
-			// This removes old versions of commits that were amended by the user.
-			// The new commits of the parent get added back during the rebase.
-			program = append(program, &RebaseOnto{
-				BranchToRebaseOnto: branchToRebaseOnto,
-				CommitsToRemove:    parentSHAPreviousRun.Location(),
-				Upstream:           None[gitdomain.LocalBranchName](),
-			})
-		} else {
-			isInSync, err := args.Git.BranchInSyncWithParent(args.Backend, self.Branch, branchToRebaseOnto)
-			if err != nil {
-				return err
-			}
-			if !isInSync {
-				program = append(program, &RebaseBranch{
-					Branch: branchToRebaseOnto,
-				})
-			}
-		}
+		program = append(program, &RebaseOnto{
+			BranchToRebaseOnto: branchToRebaseOnto,
+			CommitsToRemove:    commitsToRemove,
+			Upstream:           None[gitdomain.LocalBranchName](),
+		})
 		break
 	}
 	args.PrependOpcodes(program...)
