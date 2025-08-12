@@ -9,8 +9,10 @@ import (
 
 // rebases a branch against a local ancestor branch
 type RebaseAncestorLocal struct {
-	Branch   gitdomain.LocalBranchName
+	// The ancestor to rebase against
 	Ancestor gitdomain.LocalBranchName
+	// The branch to rebase
+	Branch gitdomain.LocalBranchName
 	// SHA of the direct parent at the previous run.
 	// These are the commits we need to remove from this branch.
 	ParentSHAPreviousRun    Option[gitdomain.SHA]
