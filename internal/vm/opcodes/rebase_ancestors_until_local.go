@@ -11,7 +11,7 @@ type RebaseAncestorsUntilLocal struct {
 	Branch gitdomain.LocalBranchName
 	// SHA of the direct parent at the previous run.
 	// These are the commits we need to remove from this branch.
-	ParentSHAPreviousRun    Option[gitdomain.SHA]
+	CommitsToRemove         Option[gitdomain.SHA]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
@@ -43,9 +43,9 @@ func (self *RebaseAncestorsUntilLocal) Run(args shared.RunArgs) error {
 		}
 		// here we found a local parent
 		program = append(program, &RebaseAncestorLocal{
-			Branch:               self.Branch,
-			Ancestor:             parent,
-			ParentSHAPreviousRun: self.ParentSHAPreviousRun,
+			Branch:          self.Branch,
+			Ancestor:        parent,
+			CommitsToRemove: self.CommitsToRemove,
 		})
 		break
 	}

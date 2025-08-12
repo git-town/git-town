@@ -12,10 +12,8 @@ type RebaseAncestorLocal struct {
 	// The ancestor to rebase against
 	Ancestor gitdomain.LocalBranchName
 	// The branch to rebase
-	Branch gitdomain.LocalBranchName
-	// SHA of the direct parent at the previous run.
-	// These are the commits we need to remove from this branch.
-	ParentSHAPreviousRun    Option[gitdomain.SHA]
+	Branch                  gitdomain.LocalBranchName
+	CommitsToRemove         Option[gitdomain.SHA]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
@@ -30,13 +28,13 @@ func (self *RebaseAncestorLocal) Run(args shared.RunArgs) error {
 	} else {
 		branchToRebaseOnto = self.Ancestor.BranchName()
 	}
-	if parentSHAPreviousRun, hasParentSHAPreviousRun := self.ParentSHAPreviousRun.Get(); hasParentSHAPreviousRun {
+	if commitsToRemove, hasCommitsToRemove := self.CommitsToRemove.Get(); hasCommitsToRemove {
 		// Here we rebase onto the new parent, while removing the commits that the parent had in the last run.
 		// This removes old versions of commits that were amended by the user.
 		// The new commits of the parent get added back during the rebase.
 		args.PrependOpcodes(&RebaseOnto{
 			BranchToRebaseOnto: branchToRebaseOnto,
-			CommitsToRemove:    parentSHAPreviousRun.Location(),
+			CommitsToRemove:    commitsToRemove.Location(),
 		})
 	} else {
 		isInSync, err := args.Git.BranchInSyncWithParent(args.Backend, self.Branch, branchToRebaseOnto)
