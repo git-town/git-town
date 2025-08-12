@@ -66,36 +66,36 @@ main
 
 <!-- branch-stack-end -->`,
 		},
-		// 		{
-		// 			description: "Proposal with template where branch-stack hidden comment is in the middle of the proposal body",
-		// 			currentBody: `
-		// Git-town is a town of Gitters.
-		// <!-- branch-stack -->
-		// 			Please check the box that apply
-		// 			- [ ] Add Tests
-		// 			- [ ] Wrote Documentation
-		// 			- [ ] Fixed Infra
-		// 			`,
-		// 			lineage: `
-		// 			main
-		// 				feat-a
-		// 					feat-b
-		// 			`,
-		// 			want: `
-		// Git-town is a town of Gitters.
-		// <!-- branch-stack -->
+		{
+			description: "Proposal with template where branch-stack hidden comment is in the middle of the proposal body",
+			currentBody: `
+Git-town is a town of Gitters.
+<!-- branch-stack -->
+Please check the box that apply
+- [ ] Add Tests
+- [ ] Wrote Documentation
+- [ ] Fixed Infra
+`,
+			lineage: `
+main
+	feat-a
+		feat-b
+`,
+			want: `
+Git-town is a town of Gitters.
+<!-- branch-stack -->
 
-		// 			main
-		// 				feat-a
-		// 					feat-b
+main
+	feat-a
+		feat-b
 
-		// <!-- branch-stack-end -->
-		// 			Please check the box that apply
-		// 			- [ ] Add Tests
-		// 			- [ ] Wrote Documentation
-		// 			- [ ] Fixed Infra
-		// 			`,
-		// 		},
+<!-- branch-stack-end -->
+Please check the box that apply
+- [ ] Add Tests
+- [ ] Wrote Documentation
+- [ ] Fixed Infra
+`,
+		},
 		// 		{
 		// 			description: "Proposal existing proposal lineage in the middle of the body is updated",
 		// 			currentBody: `
