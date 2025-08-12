@@ -22,6 +22,11 @@ func BranchProposalsProgram(branchesToSync configdomain.BranchesToSync, args Bra
 	}
 
 	for _, branch := range branchesToSync {
+		// TODO: there are now multiple places that load and use proposals for branches.
+		// To avoid double-loading the same proposal data in one run,
+		// extract an object that caches the already known proposals,
+		// i.e. which branch has which proposal,
+		// and loads missing proposal info on demand.
 		proposal, hasProposal := builder.GetProposal(branch.BranchInfo.LocalBranchName()).Get()
 		if !hasProposal {
 			continue
