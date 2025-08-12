@@ -33,7 +33,7 @@ type TestCommands struct {
 	*subshell.TestRunner
 	Config    config.UnvalidatedConfig
 	Git       *prodgit.Commands
-	SnapShots map[configdomain.ConfigScope]configdomain.SingleSnapshot // copy of the low-level Git config data, for verifying it in end-to-end tests
+	SnapShots configdomain.BeginConfigSnapshot // copy of the low-level Git config data, for verifying it in end-to-end tests
 }
 
 // AddRemote adds a Git remote with the given name and URL to this repository.
@@ -442,9 +442,7 @@ func (self *TestCommands) RebaseAgainstBranch(branch gitdomain.LocalBranchName) 
 }
 
 func (self *TestCommands) Reload() {
-	snapshots := self.Config.Reload(self.TestRunner)
-	self.SnapShots[configdomain.ConfigScopeGlobal] = snapshots.Global
-	self.SnapShots[configdomain.ConfigScopeLocal] = snapshots.Local
+	self.SnapShots = self.Config.Reload(self.TestRunner)
 }
 
 // RemoveBranch deletes the branch with the given name from this repo.
