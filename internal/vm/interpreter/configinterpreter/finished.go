@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/state/runstate"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
-	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/vm/program"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
@@ -18,7 +17,7 @@ import (
 type FinishedArgs struct {
 	Backend               subshelldomain.RunnerQuerier
 	BeginBranchesSnapshot Option[gitdomain.BranchesSnapshot]
-	BeginConfigSnapshot   undoconfig.BeginConfigSnapshot
+	BeginConfigSnapshot   configdomain.BeginConfigSnapshot
 	Command               string
 	CommandsCounter       Mutable[gohacks.Counter]
 	FinalMessages         stringslice.Collector
@@ -46,7 +45,7 @@ func Finished(args FinishedArgs) error {
 	if err != nil {
 		return err
 	}
-	configSnapshot := undoconfig.EndConfigSnapshot{
+	configSnapshot := configdomain.EndConfigSnapshot{
 		Global: globalSnapshot,
 		Local:  localSnapshot,
 	}

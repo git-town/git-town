@@ -9,7 +9,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/state/runlog"
 	"github.com/git-town/git-town/v21/internal/state/runstate"
-	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -31,7 +30,7 @@ func exitToShell(args ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	args.RunState.EndConfigSnapshot = Some(undoconfig.EndConfigSnapshot{
+	args.RunState.EndConfigSnapshot = Some(configdomain.EndConfigSnapshot{
 		Global: globalSnapshot,
 		Local:  localSnapshot,
 	})
