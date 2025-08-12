@@ -30,7 +30,7 @@ type ExecuteArgs struct {
 	HasOpenChanges          bool
 	InitialBranch           gitdomain.LocalBranchName
 	InitialBranchesSnapshot gitdomain.BranchesSnapshot
-	InitialConfigSnapshot   undoconfig.ConfigSnapshot
+	InitialConfigSnapshot   undoconfig.BeginConfigSnapshot
 	InitialStashSize        gitdomain.StashSize
 	Inputs                  dialogcomponents.Inputs
 	PendingCommand          Option[string]
