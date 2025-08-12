@@ -10,11 +10,3 @@ type BeginConfigSnapshot struct {
 	Local    configdomain.SingleSnapshot
 	Unscoped configdomain.SingleSnapshot
 }
-
-func EmptyBeginConfigSnapshot() BeginConfigSnapshot {
-	return BeginConfigSnapshot{
-		Global:   map[configdomain.Key]string{},
-		Local:    map[configdomain.Key]string{},
-		Unscoped: map[configdomain.Key]string{},
-	}
-}
