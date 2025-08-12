@@ -88,7 +88,8 @@ func TestRunState(t *testing.T) {
   },
   "BeginConfigSnapshot": {
     "Global": {},
-    "Local": {}
+    "Local": {},
+    "Unscoped": {}
   },
   "BeginStashSize": 0,
   "BranchInfosLastRun": [
