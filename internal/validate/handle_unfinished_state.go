@@ -142,6 +142,14 @@ func discardRunstate(rootDir gitdomain.RepoRootDir) (dialogdomain.Exit, error) {
 	return false, err
 }
 
+type quickValidateConfigArgs struct {
+	backend          subshelldomain.RunnerQuerier
+	git              git.Commands
+	inputs           dialogcomponents.Inputs
+	unscopedSnapshot configdomain.SingleSnapshot
+	unvalidated      Mutable[config.UnvalidatedConfig]
+}
+
 // quickly provides a ValidatedConfig instance in situations where we continue runstate.
 // It is expected that all data exists.
 // This doesn't change lineage since we are in the middle of an ongoing Git Town operation.
@@ -158,7 +166,7 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 			Inputs:         args.inputs,
 			Local:          args.unvalidated.Value.GitGlobal.MainBranch,
 			LocalBranches:  localBranches,
-			StandardBranch: args.git.StandardBranch(args.backend),
+			StandardBranch: args.git.StandardBranch(args.backend, args.unscopedSnapshot),
 			Unscoped:       args.unvalidated.Value.GitUnscoped.MainBranch,
 		})
 		if err != nil || exit {
@@ -237,11 +245,4 @@ func undoRunState(args UnfinishedStateArgs, runState runstate.RunState) (dialogd
 		RootDir:          args.RootDir,
 		RunState:         runState,
 	})
-}
-
-type quickValidateConfigArgs struct {
-	backend     subshelldomain.RunnerQuerier
-	git         git.Commands
-	inputs      dialogcomponents.Inputs
-	unvalidated Mutable[config.UnvalidatedConfig]
 }

@@ -41,7 +41,6 @@ func (self SingleSnapshot) BranchTypeOverrideEntries() map[BranchTypeOverrideKey
 	return result
 }
 
-// TODO: make this a method of SingleSnapshot?
 func (self SingleSnapshot) DefaultBranch(querier subshelldomain.Querier) Option[gitdomain.LocalBranchName] {
 	text, has := self["init.defaultbranch"]
 	if !has {
