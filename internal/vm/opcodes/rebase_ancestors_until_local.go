@@ -35,16 +35,16 @@ func (self *RebaseAncestorsUntilLocal) Run(args shared.RunArgs) error {
 		if !parentIsLocal {
 			// here the parent isn't local --> sync with its tracking branch, then try again with the grandparent until we find a local ancestor
 			program = append(program, &RebaseAncestorRemote{
-				Branch:   self.Branch,
 				Ancestor: parent.AtRemote(args.Config.Value.NormalConfig.DevRemote),
+				Branch:   self.Branch,
 			})
 			branch = parent
 			continue
 		}
 		// here we found a local parent
 		program = append(program, &RebaseAncestorLocal{
-			Branch:          self.Branch,
 			Ancestor:        parent,
+			Branch:          self.Branch,
 			CommitsToRemove: self.CommitsToRemove,
 		})
 		break
