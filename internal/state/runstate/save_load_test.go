@@ -713,7 +713,7 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "Branch": "branch",
-        "ParentSHAPreviousRun": "123456"
+        "CommitsToRemove": "123456"
       },
       "type": "RebaseAncestorsUntilLocal"
     },
