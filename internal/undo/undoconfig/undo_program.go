@@ -4,7 +4,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/vm/program"
 )
 
-func DetermineUndoConfigProgram(initialConfigSnapshot BeginConfigSnapshot, finalConfigSnapshot EndConfigSnapshot) program.Program {
-	configDiff := NewConfigDiffs(initialConfigSnapshot, finalConfigSnapshot)
+func DetermineUndoConfigProgram(begin BeginConfigSnapshot, end EndConfigSnapshot) program.Program {
+	configDiff := NewConfigDiffs(begin, end)
 	return configDiff.UndoProgram()
 }
