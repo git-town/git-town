@@ -24,7 +24,6 @@ Feature: remove a branch from a stack
     And local Git setting "git-town.sync-feature-strategy" is "compress"
     When I run "git-town set-parent main"
 
-  @this
   Scenario: result
     Then Git Town prints:
       """
@@ -57,6 +56,7 @@ Feature: remove a branch from a stack
       | branch-3 | file_2 |
       |          | file_3 |
 
+  @this
   Scenario: undo
     When I run "git-town undo"
     And Git Town runs the commands
