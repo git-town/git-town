@@ -533,7 +533,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		parsedScope := asserts.NoError1(configdomain.ParseConfigScope(scope))
-		have := devRepo.SnapShots[parsedScope][configdomain.Key(name)]
+		snapshot := devRepo.SnapShots.ByScope(parsedScope)
+		key := configdomain.ParseKey(name).GetOrPanic()
+		have := snapshot[key]
 		if have != want {
 			return fmt.Errorf("unexpected value for key %q: want %q have %q", name, want, have)
 		}
@@ -544,7 +546,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		parsedScope := asserts.NoError1(configdomain.ParseConfigScope(scope))
-		have, has := devRepo.SnapShots[parsedScope][configdomain.Key(name)]
+		snapshot := devRepo.SnapShots.ByScope(parsedScope)
+		key := configdomain.ParseKey(name).GetOrPanic()
+		have, has := snapshot[key]
 		if has {
 			return fmt.Errorf("unexpected value for %q: %q", name, have)
 		}
