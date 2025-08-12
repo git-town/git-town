@@ -39,7 +39,7 @@ func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
 			branch = parent
 			continue
 		}
-		// here the parent is local
+		// here we found a local parent
 		var branchToRebaseOnto gitdomain.BranchName
 		if branchInfos.BranchIsActiveInAnotherWorktree(parent) {
 			branchToRebaseOnto = parent.TrackingBranch(args.Config.Value.NormalConfig.DevRemote).BranchName()
