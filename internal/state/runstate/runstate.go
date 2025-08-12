@@ -21,7 +21,7 @@ import (
 type RunState struct {
 	AbortProgram             program.Program                            `exhaustruct:"optional"` // opcodes to abort the currently pending Git operation
 	BeginBranchesSnapshot    gitdomain.BranchesSnapshot                 // snapshot of the Git branches before the Git Town command that this RunState is for ran
-	BeginConfigSnapshot      undoconfig.BeginConfigSnapshot             // snapshot of the Git configuration before the Git Town command that this RunState is for ran
+	BeginConfigSnapshot      configdomain.BeginConfigSnapshot           // snapshot of the Git configuration before the Git Town command that this RunState is for ran
 	BeginStashSize           gitdomain.StashSize                        // size of the Git stash before the Git Town command that this RunState is for ran
 	BranchInfosLastRun       Option[gitdomain.BranchInfos]              // branch infos when the last Git Town command ended
 	Command                  string                                     // name of the Git Town command that this RunState is for

@@ -195,7 +195,7 @@ type createFeatureBranchArgs struct {
 	appendData            appendFeatureData
 	backend               subshelldomain.RunnerQuerier
 	beginBranchesSnapshot gitdomain.BranchesSnapshot
-	beginConfigSnapshot   undoconfig.BeginConfigSnapshot
+	beginConfigSnapshot   configdomain.BeginConfigSnapshot
 	beginStashSize        gitdomain.StashSize
 	branchInfosLastRun    Option[gitdomain.BranchInfos]
 	commandsCounter       Mutable[gohacks.Counter]
@@ -410,7 +410,7 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data hackDat
 }
 
 type convertToFeatureBranchArgs struct {
-	beginConfigSnapshot undoconfig.BeginConfigSnapshot
+	beginConfigSnapshot configdomain.BeginConfigSnapshot
 	config              config.ValidatedConfig
 	makeFeatureData     convertToFeatureData
 	verbose             configdomain.Verbose

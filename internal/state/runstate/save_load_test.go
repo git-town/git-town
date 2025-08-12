@@ -39,7 +39,7 @@ func TestLoadSave(t *testing.T) {
 		runState := runstate.RunState{
 			AbortProgram:          program.Program{},
 			BeginBranchesSnapshot: gitdomain.EmptyBranchesSnapshot(),
-			BeginConfigSnapshot: undoconfig.BeginConfigSnapshot{
+			BeginConfigSnapshot: configdomain.BeginConfigSnapshot{
 				Global:   configdomain.SingleSnapshot{},
 				Local:    configdomain.SingleSnapshot{},
 				Unscoped: configdomain.SingleSnapshot{},

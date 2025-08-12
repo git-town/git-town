@@ -16,7 +16,7 @@ func TestConfigUndo(t *testing.T) {
 
 	t.Run("adding a value to the global cache", func(t *testing.T) {
 		t.Parallel()
-		before := undoconfig.BeginConfigSnapshot{
+		before := configdomain.BeginConfigSnapshot{
 			Global: configdomain.SingleSnapshot{
 				configdomain.KeyOffline: "0",
 			},
@@ -54,7 +54,7 @@ func TestConfigUndo(t *testing.T) {
 
 	t.Run("adding a value to the local cache", func(t *testing.T) {
 		t.Parallel()
-		before := undoconfig.BeginConfigSnapshot{
+		before := configdomain.BeginConfigSnapshot{
 			Global: configdomain.SingleSnapshot{},
 			Local: configdomain.SingleSnapshot{
 				configdomain.KeyOffline: "0",
@@ -91,7 +91,7 @@ func TestConfigUndo(t *testing.T) {
 
 	t.Run("changing a value in the global cache", func(t *testing.T) {
 		t.Parallel()
-		before := undoconfig.BeginConfigSnapshot{
+		before := configdomain.BeginConfigSnapshot{
 			Global: configdomain.SingleSnapshot{
 				configdomain.KeyOffline: "0",
 			},
@@ -135,7 +135,7 @@ func TestConfigUndo(t *testing.T) {
 
 	t.Run("changing a value in the local cache", func(t *testing.T) {
 		t.Parallel()
-		before := undoconfig.BeginConfigSnapshot{
+		before := configdomain.BeginConfigSnapshot{
 			Global: configdomain.SingleSnapshot{},
 			Local: configdomain.SingleSnapshot{
 				configdomain.KeyOffline: "0",
@@ -179,7 +179,7 @@ func TestConfigUndo(t *testing.T) {
 
 	t.Run("complex example", func(t *testing.T) {
 		t.Parallel()
-		before := undoconfig.BeginConfigSnapshot{
+		before := configdomain.BeginConfigSnapshot{
 			Global: configdomain.SingleSnapshot{
 				configdomain.KeyOffline:  "0",
 				configdomain.KeyPushHook: "0",
@@ -267,7 +267,7 @@ func TestConfigUndo(t *testing.T) {
 
 	t.Run("removing a value from the global cache", func(t *testing.T) {
 		t.Parallel()
-		before := undoconfig.BeginConfigSnapshot{
+		before := configdomain.BeginConfigSnapshot{
 			Global: configdomain.SingleSnapshot{
 				configdomain.KeyOffline:               "0",
 				configdomain.KeySyncPerennialStrategy: "1",
@@ -309,7 +309,7 @@ func TestConfigUndo(t *testing.T) {
 
 	t.Run("removing a value from the local cache", func(t *testing.T) {
 		t.Parallel()
-		before := undoconfig.BeginConfigSnapshot{
+		before := configdomain.BeginConfigSnapshot{
 			Global: configdomain.SingleSnapshot{},
 			Local: configdomain.SingleSnapshot{
 				configdomain.KeyOffline:               "0",

@@ -11,7 +11,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/setup"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
-	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -96,7 +95,7 @@ type ConfigArgs struct {
 	BranchInfos        gitdomain.BranchInfos
 	BranchesAndTypes   configdomain.BranchesAndTypes
 	BranchesToValidate gitdomain.LocalBranchNames
-	ConfigSnapshot     undoconfig.BeginConfigSnapshot
+	ConfigSnapshot     configdomain.BeginConfigSnapshot
 	Connector          Option[forgedomain.Connector]
 	Frontend           subshelldomain.Runner
 	Git                git.Commands

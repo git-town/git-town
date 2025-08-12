@@ -18,7 +18,7 @@ import (
 type FinishedArgs struct {
 	Backend               subshelldomain.RunnerQuerier
 	BeginBranchesSnapshot Option[gitdomain.BranchesSnapshot]
-	BeginConfigSnapshot   undoconfig.BeginConfigSnapshot
+	BeginConfigSnapshot   configdomain.BeginConfigSnapshot
 	Command               string
 	CommandsCounter       Mutable[gohacks.Counter]
 	FinalMessages         stringslice.Collector

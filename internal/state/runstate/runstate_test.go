@@ -65,7 +65,7 @@ func TestRunState(t *testing.T) {
 			EndConfigSnapshot:     None[undoconfig.EndConfigSnapshot](),
 			EndStashSize:          Some(gitdomain.StashSize(1)),
 			BeginBranchesSnapshot: gitdomain.EmptyBranchesSnapshot(),
-			BeginConfigSnapshot: undoconfig.BeginConfigSnapshot{
+			BeginConfigSnapshot: configdomain.BeginConfigSnapshot{
 				Global:   configdomain.SingleSnapshot{},
 				Local:    configdomain.SingleSnapshot{},
 				Unscoped: configdomain.SingleSnapshot{},
