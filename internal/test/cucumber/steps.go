@@ -522,18 +522,20 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^(global |local |)Git setting "([^"]+)" is "([^"]*)"$`, func(ctx context.Context, scope, key, value string) error {
+	sc.Step(`^(global |local |)Git setting "([^"]+)" is "([^"]*)"$`, func(ctx context.Context, scope, name, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		parsedScope := asserts.NoError1(configdomain.ParseConfigScope(scope))
-		return gitconfig.SetConfigValue(devRepo.TestRunner, parsedScope, configdomain.Key(key), value)
+		parsedKey := configdomain.ParseKey(name).GetOrPanic()
+		return gitconfig.SetConfigValue(devRepo.TestRunner, parsedScope, parsedKey, value)
 	})
 
 	sc.Step(`^(global |local |)Git setting "([^"]+)" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, scope, name, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		parsedScope := asserts.NoError1(configdomain.ParseConfigScope(scope))
-		have := devRepo.SnapShots[parsedScope][configdomain.Key(name)]
+		key := configdomain.ParseKey(name).GetOrPanic()
+		have := devRepo.SnapShots[parsedScope][key]
 		if have != want {
 			return fmt.Errorf("unexpected value for key %q: want %q have %q", name, want, have)
 		}
@@ -544,7 +546,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		parsedScope := asserts.NoError1(configdomain.ParseConfigScope(scope))
-		have, has := devRepo.SnapShots[parsedScope][configdomain.Key(name)]
+		key := configdomain.ParseKey(name).GetOrPanic()
+		have, has := devRepo.SnapShots[parsedScope][key]
 		if has {
 			return fmt.Errorf("unexpected value for %q: %q", name, have)
 		}
