@@ -2,28 +2,34 @@ package opcodes
 
 import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 type RebaseParentLocal struct {
 	Branch                  gitdomain.LocalBranchName
+	Parent                  gitdomain.LocalBranchName
 	ParentSHAPreviousRun    Option[gitdomain.SHA]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *RebaseParentLocal) Run(args shared.RunArgs) error {
+	branchInfos, hasBranchInfos := args.BranchInfos.Get()
+	if !hasBranchInfos {
+		panic(messages.BranchInfosNotProvided)
+	}
 	var branchToRebaseOnto gitdomain.BranchName
-	if branchInfos.BranchIsActiveInAnotherWorktree(parent) {
-		branchToRebaseOnto = parent.TrackingBranch(args.Config.Value.NormalConfig.DevRemote).BranchName()
+	if branchInfos.BranchIsActiveInAnotherWorktree(self.Parent) {
+		branchToRebaseOnto = self.Parent.TrackingBranch(args.Config.Value.NormalConfig.DevRemote).BranchName()
 	} else {
-		branchToRebaseOnto = parent.BranchName()
+		branchToRebaseOnto = self.Parent.BranchName()
 	}
 	if parentSHAPreviousRun, hasParentSHAPreviousRun := self.ParentSHAPreviousRun.Get(); hasParentSHAPreviousRun {
 		// Here we rebase onto the new parent, while removing the commits that the parent had in the last run.
 		// This removes old versions of commits that were amended by the user.
 		// The new commits of the parent get added back during the rebase.
-		program = append(program, &RebaseOnto{
+		args.PrependOpcodes(&RebaseOnto{
 			BranchToRebaseOnto: branchToRebaseOnto,
 			CommitsToRemove:    parentSHAPreviousRun.Location(),
 		})
@@ -33,7 +39,7 @@ func (self *RebaseParentLocal) Run(args shared.RunArgs) error {
 			return err
 		}
 		if !isInSync {
-			program = append(program, &RebaseBranch{
+			args.PrependOpcodes(&RebaseBranch{
 				Branch: branchToRebaseOnto,
 			})
 		}
