@@ -55,6 +55,18 @@ func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
 		} else {
 			branchToRebaseOnto = parent.BranchName()
 		}
+		// TODO: new sync architecture
+		//
+		// Currently, Git Town syncs a branch like so:
+		// 1. rebase the branch onto main to remove all old commits
+		//    - this is unnecessarily reductive, we should rebase onto its new parent
+		// 2. rebase the branch against its new parent
+		//
+		// It should be possible to perform both in one operation:
+		// - rebase onto the new parent, removing the commits of the old parent.
+		// - the old parent is determined this way:
+		//   - previous parent deleted --> SHA of the branch that got deleted
+		//   - previous parent not deleted --> SHA of that branch at the last run
 		if parentSHAPreviousRun, hasParentSHAPreviousRun := self.ParentSHAPreviousRun.Get(); hasParentSHAPreviousRun {
 			// Here we rebase onto the new parent, while removing the commits that the parent had in the last run.
 			// This removes old versions of commits that were amended by the user.
