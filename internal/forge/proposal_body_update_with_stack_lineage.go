@@ -1,4 +1,4 @@
-package configdomain
+package forge
 
 import "strings"
 

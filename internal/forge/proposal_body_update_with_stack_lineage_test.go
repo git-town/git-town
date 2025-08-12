@@ -1,11 +1,11 @@
-package configdomain_test
+package forge_test
 
 import (
+	"fmt"
 	"testing"
 
+	"github.com/git-town/git-town/v21/internal/forge"
 	"github.com/shoenig/test/must"
-
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
 )
 
 func TestUpdateProposalBodyUpdateWithStackLineage(t *testing.T) {
@@ -32,40 +32,38 @@ func TestUpdateProposalBodyUpdateWithStackLineage(t *testing.T) {
 			description: "Empty body with non-empty lineage content",
 			currentBody: "",
 			lineage: `
-			main
-				feat-a
-					feat-b
-			`,
+main
+	feat-a
+		feat-b
+`,
 			want: `<!-- branch-stack -->
 
-			main
-				feat-a
-					feat-b
-			
+main
+	feat-a
+		feat-b
+
 <!-- branch-stack-end -->`,
 		},
 		{
 			description: "Proposal Body with multiple line body",
 			currentBody: `
 Git-town is a town of Gitters.
-These Gitters are the stackers of tomorrow
-			`,
+These Gitters are the stackers of tomorrow`,
 			lineage: `
-			main
-				feat-a
-					feat-b
-			`,
+main
+	feat-a
+		feat-b
+`,
 			want: `
 Git-town is a town of Gitters.
 These Gitters are the stackers of tomorrow
-			
 
 <!-- branch-stack -->
 
-			main
-				feat-a
-					feat-b
-			
+main
+	feat-a
+		feat-b
+
 <!-- branch-stack-end -->`,
 		},
 		{
@@ -73,30 +71,30 @@ These Gitters are the stackers of tomorrow
 			currentBody: `
 Git-town is a town of Gitters.
 <!-- branch-stack -->
-			Please check the box that apply
-			- [ ] Add Tests
-			- [ ] Wrote Documentation
-			- [ ] Fixed Infra
-			`,
+Please check the box that apply
+- [ ] Add Tests
+- [ ] Wrote Documentation
+- [ ] Fixed Infra
+`,
 			lineage: `
-			main
-				feat-a
-					feat-b
-			`,
+main
+	feat-a
+		feat-b
+`,
 			want: `
 Git-town is a town of Gitters.
 <!-- branch-stack -->
 
-			main
-				feat-a
-					feat-b
-			
+main
+	feat-a
+		feat-b
+
 <!-- branch-stack-end -->
-			Please check the box that apply
-			- [ ] Add Tests
-			- [ ] Wrote Documentation
-			- [ ] Fixed Infra
-			`,
+Please check the box that apply
+- [ ] Add Tests
+- [ ] Wrote Documentation
+- [ ] Fixed Infra
+`,
 		},
 		{
 			description: "Proposal existing proposal lineage in the middle of the body is updated",
@@ -104,84 +102,86 @@ Git-town is a town of Gitters.
 Git-town is a town of Gitters.
 <!-- branch-stack -->
 
-			main
-				feat-a
-			
+main
+	feat-a
+
 <!-- branch-stack-end -->
-			Please check the box that apply
-			- [ ] Add Tests
-			- [ ] Wrote Documentation
-			- [ ] Fixed Infra
-			`,
+Please check the box that apply
+- [ ] Add Tests
+- [ ] Wrote Documentation
+- [ ] Fixed Infra
+`,
 			lineage: `
-			main
-				feat-a
-					feat-b
-						feat-c
-							feat-d
-			`,
+main
+	feat-a
+		feat-b
+			feat-c
+				feat-d
+`,
 			want: `
 Git-town is a town of Gitters.
 <!-- branch-stack -->
 
-			main
-				feat-a
-					feat-b
-						feat-c
-							feat-d
-			
+main
+	feat-a
+		feat-b
+			feat-c
+				feat-d
+
 <!-- branch-stack-end -->
-			Please check the box that apply
-			- [ ] Add Tests
-			- [ ] Wrote Documentation
-			- [ ] Fixed Infra
-			`,
+Please check the box that apply
+- [ ] Add Tests
+- [ ] Wrote Documentation
+- [ ] Fixed Infra
+`,
 		},
 		{
 			description: "Proposal existing proposal lineage at the end of the body",
 			currentBody: `
 Git-town is a town of Gitters.
 Please check the box that apply
-	- [ ] Add Tests
-	- [ ] Wrote Documentation
-	- [ ] Fixed Infra
+- [ ] Add Tests
+- [ ] Wrote Documentation
+- [ ] Fixed Infra
 <!-- branch-stack -->
 
-			main
-				feat-a
+main
+	feat-a
 
 <!-- branch-stack-end -->
-			`,
+`,
 			lineage: `
-			main
-				feat-a
-					feat-b
-						feat-c
-							feat-d
-			`,
+main
+	feat-a
+		feat-b
+			feat-c
+				feat-d
+`,
 			want: `
 Git-town is a town of Gitters.
 Please check the box that apply
-	- [ ] Add Tests
-	- [ ] Wrote Documentation
-	- [ ] Fixed Infra
+- [ ] Add Tests
+- [ ] Wrote Documentation
+- [ ] Fixed Infra
 <!-- branch-stack -->
 
-			main
-				feat-a
-					feat-b
-						feat-c
-							feat-d
-			
+main
+	feat-a
+		feat-b
+			feat-c
+				feat-d
+
 <!-- branch-stack-end -->
-			`,
+`,
 		},
 	} {
 		t.Run(tc.description, func(t *testing.T) {
 			t.Parallel()
 			// act
-			actual := configdomain.ProposalBodyUpdateWithStackLineage(tc.currentBody, tc.lineage)
+			actual := forge.ProposalBodyUpdateWithStackLineage(tc.currentBody, tc.lineage)
 			// assert
+			fmt.Println(tc.want)
+			fmt.Println(actual)
 			must.EqOp(t, tc.want, actual)
 		})
 	}
