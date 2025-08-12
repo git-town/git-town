@@ -9,10 +9,3 @@ type EndConfigSnapshot struct {
 	Global configdomain.SingleSnapshot
 	Local  configdomain.SingleSnapshot
 }
-
-func EmptyAfterConfigSnapshot() EndConfigSnapshot {
-	return EndConfigSnapshot{
-		Global: map[configdomain.Key]string{},
-		Local:  map[configdomain.Key]string{},
-	}
-}
