@@ -42,6 +42,7 @@ type NormalConfig struct {
 	ForgeType                Option[forgedomain.ForgeType] // None = auto-detect
 	GitHubConnectorType      Option[forgedomain.GitHubConnectorType]
 	GitHubToken              Option[forgedomain.GitHubToken]
+	GitHubTokenType          Option[forgedomain.GitHubTokenType]
 	GitLabConnectorType      Option[forgedomain.GitLabConnectorType]
 	GitLabToken              Option[forgedomain.GitLabToken]
 	GiteaToken               Option[forgedomain.GiteaToken]
@@ -94,6 +95,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		ForgeType:                other.ForgeType,
 		GitHubConnectorType:      other.GitHubConnectorType,
 		GitHubToken:              other.GitHubToken,
+		GitHubTokenType:          other.GitHubTokenType.Or(self.GitHubTokenType),
 		GitLabConnectorType:      other.GitLabConnectorType,
 		GitLabToken:              other.GitLabToken,
 		GiteaToken:               other.GiteaToken,
