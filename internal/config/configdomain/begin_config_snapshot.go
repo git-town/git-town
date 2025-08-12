@@ -9,6 +9,7 @@ type BeginConfigSnapshot struct {
 	Unscoped SingleSnapshot
 }
 
+// looks up one of the contained SingleSnapshots by scope
 func (self BeginConfigSnapshot) ByScope(scope ConfigScope) SingleSnapshot {
 	switch scope {
 	case ConfigScopeGlobal:
