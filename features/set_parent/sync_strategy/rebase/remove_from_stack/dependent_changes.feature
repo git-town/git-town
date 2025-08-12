@@ -58,12 +58,12 @@ Feature: remove a branch and all its children from a stack with dependent change
       """
     And I run "git-town continue"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                                                 |
-      | branch-2 | GIT_EDITOR=true git rebase --continue                                   |
-      |          | git push --force-with-lease --force-if-includes                         |
-      |          | git checkout branch-3                                                   |
-      | branch-3 | git pull                                                                |
-      |          | git -c rebase.updateRefs=false rebase --onto branch-2 branch-1 branch-3 |
+      | BRANCH   | COMMAND                                                        |
+      | branch-2 | GIT_EDITOR=true git rebase --continue                          |
+      |          | git push --force-with-lease --force-if-includes                |
+      |          | git checkout branch-3                                          |
+      | branch-3 | git pull                                                       |
+      |          | git -c rebase.updateRefs=false rebase --onto branch-2 branch-1 |
     And a rebase is now in progress
     And file "file" now has content:
       """
