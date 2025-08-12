@@ -124,7 +124,7 @@ func executeDetach(args []string, cliConfig configdomain.PartialConfig) error {
 		Command:               detachCommandName,
 		DryRun:                data.config.NormalConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
-		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
+		EndConfigSnapshot:     None[undoconfig.EndConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
 		BranchInfosLastRun:    data.branchInfosLastRun,
 		RunProgram:            runProgram,
