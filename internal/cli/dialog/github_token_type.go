@@ -3,8 +3,8 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -19,7 +19,7 @@ Git Town supports multiple ways to enter the GitHub token:
 `
 )
 
-func GitHubTokenType(existing Option[forgedomain.GitHubTokenType], inputs components.TestInput) (forgedomain.GitHubTokenType, dialogdomain.Exit, error) {
+func GitHubTokenType(existing Option[forgedomain.GitHubTokenType], inputs dialogcomponents.Inputs) (forgedomain.GitHubTokenType, dialogdomain.Exit, error) {
 	entries := list.Entries[forgedomain.GitHubTokenType]{
 		{
 			Data: forgedomain.GitHubTokenTypeEnter,
@@ -34,10 +34,10 @@ func GitHubTokenType(existing Option[forgedomain.GitHubTokenType], inputs compon
 	if existingValue, hasExisting := existing.Get(); hasExisting {
 		defaultPos = entries.IndexOf(existingValue)
 	}
-	selection, exit, err := components.RadioList(entries, defaultPos, gitHubTokenTypeTitle, gitHubTokenTypeHelp, inputs)
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, gitHubTokenTypeTitle, gitHubTokenTypeHelp, inputs, "github-token-type")
 	if err != nil || exit {
 		return forgedomain.GitHubTokenTypeEnter, exit, err
 	}
-	fmt.Printf(messages.GitHubTokenType, components.FormattedSelection(selection.String(), exit))
+	fmt.Printf(messages.GitHubTokenType, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }
