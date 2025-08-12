@@ -47,7 +47,7 @@ func finished(args finishedArgs) error {
 	if err != nil {
 		return err
 	}
-	args.RunState.EndConfigSnapshot = Some(undoconfig.ConfigSnapshot{
+	args.RunState.EndConfigSnapshot = Some(undoconfig.EndConfigSnapshot{
 		Global: globalSnapshot,
 		Local:  localSnapshot,
 	})

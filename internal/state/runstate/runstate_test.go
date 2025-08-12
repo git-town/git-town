@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/state/runstate"
 	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
@@ -61,10 +62,14 @@ func TestRunState(t *testing.T) {
 					},
 				},
 			}),
-			EndConfigSnapshot:        None[undoconfig.ConfigSnapshot](),
-			EndStashSize:             Some(gitdomain.StashSize(1)),
-			BeginBranchesSnapshot:    gitdomain.EmptyBranchesSnapshot(),
-			BeginConfigSnapshot:      undoconfig.EmptyConfigSnapshot(),
+			EndConfigSnapshot:     None[undoconfig.EndConfigSnapshot](),
+			EndStashSize:          Some(gitdomain.StashSize(1)),
+			BeginBranchesSnapshot: gitdomain.EmptyBranchesSnapshot(),
+			BeginConfigSnapshot: undoconfig.BeginConfigSnapshot{
+				Global:   configdomain.SingleSnapshot{},
+				Local:    configdomain.SingleSnapshot{},
+				Unscoped: configdomain.SingleSnapshot{},
+			},
 			BeginStashSize:           0,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 			TouchedBranches:          []gitdomain.BranchName{"branch-1", "branch-2"},
@@ -88,7 +93,8 @@ func TestRunState(t *testing.T) {
   },
   "BeginConfigSnapshot": {
     "Global": {},
-    "Local": {}
+    "Local": {},
+    "Unscoped": {}
   },
   "BeginStashSize": 0,
   "BranchInfosLastRun": [

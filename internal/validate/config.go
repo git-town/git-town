@@ -96,7 +96,7 @@ type ConfigArgs struct {
 	BranchInfos        gitdomain.BranchInfos
 	BranchesAndTypes   configdomain.BranchesAndTypes
 	BranchesToValidate gitdomain.LocalBranchNames
-	ConfigSnapshot     undoconfig.ConfigSnapshot
+	ConfigSnapshot     undoconfig.BeginConfigSnapshot
 	Connector          Option[forgedomain.Connector]
 	Frontend           subshelldomain.Runner
 	Git                git.Commands

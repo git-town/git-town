@@ -198,7 +198,7 @@ func executeSync(args executeSyncArgs) error {
 		Command:               syncCommand,
 		DryRun:                data.config.NormalConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
-		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
+		EndConfigSnapshot:     None[undoconfig.EndConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
 		BranchInfosLastRun:    data.previousBranchInfos,
 		RunProgram:            optimizedProgram,

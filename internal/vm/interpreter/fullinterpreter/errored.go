@@ -34,7 +34,7 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	args.RunState.EndConfigSnapshot = Some(undoconfig.ConfigSnapshot{
+	args.RunState.EndConfigSnapshot = Some(undoconfig.EndConfigSnapshot{
 		Global: globalSnapshot,
 		Local:  localSnapshot,
 	})

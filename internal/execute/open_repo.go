@@ -74,9 +74,10 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
-	configSnapshot := undoconfig.ConfigSnapshot{
-		Global: globalSnapshot,
-		Local:  localSnapshot,
+	configSnapshot := undoconfig.BeginConfigSnapshot{
+		Global:   globalSnapshot,
+		Local:    localSnapshot,
+		Unscoped: unscopedSnapshot,
 	}
 	finalMessages := stringslice.NewCollector()
 	configFile, hasConfigFile, err := configfile.Load(rootDir, configfile.FileName, finalMessages)
@@ -159,7 +160,7 @@ type OpenRepoArgs struct {
 type OpenRepoResult struct {
 	Backend           subshelldomain.RunnerQuerier
 	CommandsCounter   Mutable[gohacks.Counter]
-	ConfigSnapshot    undoconfig.ConfigSnapshot
+	ConfigSnapshot    undoconfig.BeginConfigSnapshot
 	FinalMessages     stringslice.Collector
 	Frontend          subshelldomain.Runner
 	Git               git.Commands

@@ -120,7 +120,7 @@ func executeDelete(args []string, cliConfig configdomain.PartialConfig) error {
 		Command:               "delete",
 		DryRun:                data.config.NormalConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
-		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
+		EndConfigSnapshot:     None[undoconfig.EndConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
 		FinalUndoProgram:      finalUndoProgram,
 		BranchInfosLastRun:    data.branchInfosLastRun,

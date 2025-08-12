@@ -166,7 +166,7 @@ func executeShip(args executeShipArgs) error {
 		Command:               shipCommand,
 		DryRun:                sharedData.config.NormalConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
-		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
+		EndConfigSnapshot:     None[undoconfig.EndConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
 		BranchInfosLastRun:    sharedData.previousBranchInfos,
 		RunProgram:            optimizedProgram,

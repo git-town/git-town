@@ -16,13 +16,14 @@ func TestConfigUndo(t *testing.T) {
 
 	t.Run("adding a value to the global cache", func(t *testing.T) {
 		t.Parallel()
-		before := undoconfig.ConfigSnapshot{
+		before := undoconfig.BeginConfigSnapshot{
 			Global: configdomain.SingleSnapshot{
 				configdomain.KeyOffline: "0",
 			},
-			Local: configdomain.SingleSnapshot{},
+			Local:    configdomain.SingleSnapshot{},
+			Unscoped: configdomain.SingleSnapshot{},
 		}
-		after := undoconfig.ConfigSnapshot{
+		after := undoconfig.EndConfigSnapshot{
 			Global: configdomain.SingleSnapshot{
 				configdomain.KeyOffline:               "0",
 				configdomain.KeySyncPerennialStrategy: "1",
@@ -53,13 +54,13 @@ func TestConfigUndo(t *testing.T) {
 
 	t.Run("adding a value to the local cache", func(t *testing.T) {
 		t.Parallel()
-		before := undoconfig.ConfigSnapshot{
+		before := undoconfig.BeginConfigSnapshot{
 			Global: configdomain.SingleSnapshot{},
 			Local: configdomain.SingleSnapshot{
 				configdomain.KeyOffline: "0",
 			},
 		}
-		after := undoconfig.ConfigSnapshot{
+		after := undoconfig.EndConfigSnapshot{
 			Global: configdomain.SingleSnapshot{},
 			Local: configdomain.SingleSnapshot{
 				configdomain.KeyOffline:               "0",
@@ -90,13 +91,13 @@ func TestConfigUndo(t *testing.T) {
 
 	t.Run("changing a value in the global cache", func(t *testing.T) {
 		t.Parallel()
-		before := undoconfig.ConfigSnapshot{
+		before := undoconfig.BeginConfigSnapshot{
 			Global: configdomain.SingleSnapshot{
 				configdomain.KeyOffline: "0",
 			},
 			Local: configdomain.SingleSnapshot{},
 		}
-		after := undoconfig.ConfigSnapshot{
+		after := undoconfig.EndConfigSnapshot{
 			Global: configdomain.SingleSnapshot{
 				configdomain.KeyOffline: "1",
 			},
@@ -134,13 +135,13 @@ func TestConfigUndo(t *testing.T) {
 
 	t.Run("changing a value in the local cache", func(t *testing.T) {
 		t.Parallel()
-		before := undoconfig.ConfigSnapshot{
+		before := undoconfig.BeginConfigSnapshot{
 			Global: configdomain.SingleSnapshot{},
 			Local: configdomain.SingleSnapshot{
 				configdomain.KeyOffline: "0",
 			},
 		}
-		after := undoconfig.ConfigSnapshot{
+		after := undoconfig.EndConfigSnapshot{
 			Global: configdomain.SingleSnapshot{},
 			Local: configdomain.SingleSnapshot{
 				configdomain.KeyOffline: "1",
@@ -178,7 +179,7 @@ func TestConfigUndo(t *testing.T) {
 
 	t.Run("complex example", func(t *testing.T) {
 		t.Parallel()
-		before := undoconfig.ConfigSnapshot{
+		before := undoconfig.BeginConfigSnapshot{
 			Global: configdomain.SingleSnapshot{
 				configdomain.KeyOffline:  "0",
 				configdomain.KeyPushHook: "0",
@@ -188,7 +189,7 @@ func TestConfigUndo(t *testing.T) {
 				configdomain.KeyGitHubToken:       "token",
 			},
 		}
-		after := undoconfig.ConfigSnapshot{
+		after := undoconfig.EndConfigSnapshot{
 			Global: configdomain.SingleSnapshot{
 				configdomain.KeyOffline:               "1",
 				configdomain.KeySyncPerennialStrategy: "1",
@@ -266,14 +267,14 @@ func TestConfigUndo(t *testing.T) {
 
 	t.Run("removing a value from the global cache", func(t *testing.T) {
 		t.Parallel()
-		before := undoconfig.ConfigSnapshot{
+		before := undoconfig.BeginConfigSnapshot{
 			Global: configdomain.SingleSnapshot{
 				configdomain.KeyOffline:               "0",
 				configdomain.KeySyncPerennialStrategy: "1",
 			},
 			Local: configdomain.SingleSnapshot{},
 		}
-		after := undoconfig.ConfigSnapshot{
+		after := undoconfig.EndConfigSnapshot{
 			Global: configdomain.SingleSnapshot{
 				configdomain.KeyOffline: "0",
 			},
@@ -308,14 +309,14 @@ func TestConfigUndo(t *testing.T) {
 
 	t.Run("removing a value from the local cache", func(t *testing.T) {
 		t.Parallel()
-		before := undoconfig.ConfigSnapshot{
+		before := undoconfig.BeginConfigSnapshot{
 			Global: configdomain.SingleSnapshot{},
 			Local: configdomain.SingleSnapshot{
 				configdomain.KeyOffline:               "0",
 				configdomain.KeySyncPerennialStrategy: "1",
 			},
 		}
-		after := undoconfig.ConfigSnapshot{
+		after := undoconfig.EndConfigSnapshot{
 			Global: configdomain.SingleSnapshot{},
 			Local: configdomain.SingleSnapshot{
 				configdomain.KeyOffline: "0",
