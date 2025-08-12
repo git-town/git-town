@@ -35,6 +35,7 @@ Feature: shipped parent branches in a stacked change
     And wait 1 second to ensure new Git timestamps
     When I run "git-town sync"
 
+  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                                     |
@@ -55,6 +56,8 @@ Feature: shipped parent branches in a stacked change
       |           | git push --force-with-lease --force-if-includes             |
       |           | git branch -D feature-1                                     |
       |           | git branch -D feature-2                                     |
+      # TODO: when syncing feature-4,
+      # shouldn't it rebase onto feature-3 since that's the parent of feature-4?
     And Git Town prints:
       """
       deleted branch "feature-1"
