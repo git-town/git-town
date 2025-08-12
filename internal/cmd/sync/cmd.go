@@ -165,21 +165,18 @@ func executeSync(args executeSyncArgs) error {
 
 	connector, hasConnector := data.connector.Get()
 	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI && hasConnector {
-		proposalStackLineageArgs := forge.ProposalStackLineageArgs{
-			Connector:                connector,
-			CurrentBranch:            data.initialBranch,
-			Lineage:                  data.config.NormalConfig.Lineage,
-			MainAndPerennialBranches: data.config.MainAndPerennials(),
-		}
-		proposalStackLineageBuilder := forge.NewProposalStackLineageBuilder(proposalStackLineageArgs)
-		if builder, hasBuilder := proposalStackLineageBuilder.Get(); hasBuilder {
-			if branchProposal, hasBranchProposalData := builder.GetProposal(data.initialBranch).Get(); hasBranchProposalData {
-				runProgram.Value.Add(&opcodes.ProposalUpdateBody{
-					Proposal:    branchProposal,
-					UpdatedBody: forge.ProposalBodyUpdateWithStackLineage(branchProposal.Data.Data().Body.GetOrDefault(), builder.Build(proposalStackLineageArgs)),
-				})
-			}
-		}
+		BranchProposalsProgram(
+			data.branchesToSync,
+			BranchProposalsProgramArgs{
+				Program: runProgram,
+				ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
+					Connector:                connector,
+					CurrentBranch:            data.initialBranch,
+					Lineage:                  data.config.NormalConfig.Lineage,
+					MainAndPerennialBranches: data.config.MainAndPerennials(),
+				},
+			},
+		)
 	}
 
 	cmdhelpers.Wrap(runProgram, cmdhelpers.WrapOptions{
