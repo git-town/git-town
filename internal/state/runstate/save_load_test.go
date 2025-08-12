@@ -715,7 +715,7 @@ func TestLoadSave(t *testing.T) {
         "Branch": "branch",
         "ParentSHAPreviousRun": "123456"
       },
-      "type": "RebaseParentsUntilLocal"
+      "type": "RebaseAncestorsUntilLocal"
     },
     {
       "data": {
