@@ -59,7 +59,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	var observedRegex Option[configdomain.ObservedRegex]
 	var perennialBranches gitdomain.LocalBranchNames
 	var perennialRegex Option[configdomain.PerennialRegex]
-	var proposalsShowLineage Option[configdomain.ProposalsShowLineage]
+	var proposalsShowLineage Option[forgedomain.ProposalsShowLineage]
 	var pushHook Option[configdomain.PushHook]
 	var shareNewBranches Option[configdomain.ShareNewBranches]
 	var shipDeleteTrackingBranch Option[configdomain.ShipDeleteTrackingBranch]
@@ -177,7 +177,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	}
 	if data.Propose != nil {
 		if data.Propose.Lineage != nil {
-			proposalsShowLineage, err = configdomain.ParseProposalsShowLineage(*data.Propose.Lineage)
+			proposalsShowLineage, err = forgedomain.ParseProposalsShowLineage(*data.Propose.Lineage)
 			ec.Check(err)
 		}
 	}

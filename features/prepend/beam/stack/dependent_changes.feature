@@ -190,13 +190,61 @@ Feature: beam a commit from a stack with dependent changes into a prepended bran
       |        | git push -u origin new                                                           |
       |        | git checkout old                                                                 |
       | old    | git -c rebase.updateRefs=false rebase --onto new {{ sha-before-run 'commit 2' }} |
-      |        | git checkout --theirs file                                                       |
-      |        | git add file                                                                     |
-      |        | GIT_EDITOR=true git rebase --continue                                            |
-      |        | git push --force-with-lease --force-if-includes                                  |
+    And Git Town prints the error:
+      """
+      CONFLICT (content): Merge conflict in file
+      """
+    And file "file" now has content:
+      """
+      <<<<<<< HEAD
+      line 1
+      line 2: amended commit-2 changes
+      =======
+      line 1: commit-1 changes
+      line 2: commit-2 changes
+      >>>>>>> {{ sha-short 'commit 1' }} (commit 1)
+      line 3
+      """
+    When I resolve the conflict in "file" with:
+      """
+      line 1: commit-1 changes
+      line 2: amended commit-2 changes
+      line 3
+      """
+    And I run "git-town continue"
+    Then Git Town runs the commands
+      | BRANCH | COMMAND                               |
+      | old    | GIT_EDITOR=true git rebase --continue |
+    And Git Town prints the error:
+      """
+      CONFLICT (content): Merge conflict in file
+      """
+    And file "file" now has content:
+      """
+      line 1: commit-1 changes
+      <<<<<<< HEAD
+      line 2: amended commit-2 changes
+      line 3
+      =======
+      line 2: commit-2 changes
+      line 3: commit-3 changes
+      >>>>>>> {{ sha-short 'commit 3' }} (commit 3)
+      """
+    When I resolve the conflict in "file" with:
+      """
+      line 1: commit-1 changes
+      line 2: amended commit-2 changes
+      line 3: commit-3 changes
+      """
+    And I run "git-town continue"
+    Then Git Town runs the commands
+      | BRANCH | COMMAND                                         |
+      | old    | GIT_EDITOR=true git rebase --continue           |
+      |        | git push --force-with-lease --force-if-includes |
+    And no rebase is now in progress
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE          | FILE NAME | FILE CONTENT                                                                 |
-      | main   | local, origin | main commit      | file      | line 1\nline 2\nline 3                                                       |
-      | new    | local, origin | commit 2 amended | file      | line 1\nline 2: amended commit-2 changes\nline 3                             |
-      | old    | local, origin | commit 1         | file      | line 1: commit-1 changes\nline 2: commit-2 changes\nline 3                   |
-      |        |               | commit 3         | file      | line 1: commit-1 changes\nline 2: commit-2 changes\nline 3: commit-3 changes |
+      | BRANCH | LOCATION      | MESSAGE          | FILE NAME | FILE CONTENT                                                                         |
+      | main   | local, origin | main commit      | file      | line 1\nline 2\nline 3                                                               |
+      | new    | local, origin | commit 2 amended | file      | line 1\nline 2: amended commit-2 changes\nline 3                                     |
+      | old    | local, origin | commit 1         | file      | line 1: commit-1 changes\nline 2: amended commit-2 changes\nline 3                   |
+      |        |               | commit 3         | file      | line 1: commit-1 changes\nline 2: amended commit-2 changes\nline 3: commit-3 changes |

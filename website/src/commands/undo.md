@@ -14,3 +14,10 @@ the state it was before you ran the problematic command.
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.
+
+## See also
+
+- [continue](continue.md) continues the currently suspended Git Town command
+  after you have resolved the conflicting changes
+- [skip](skip.md) ignores all remaining merge conflicts on the current branch
+  and then continues the currently suspended Git Town command

@@ -29,7 +29,7 @@ func (self *MergeParentResolvePhantomConflicts) Continue() []shared.Opcode {
 
 func (self *MergeParentResolvePhantomConflicts) Run(args shared.RunArgs) error {
 	err := args.Git.MergeBranchNoEdit(args.Frontend, self.CurrentParent)
-	if err == nil || !args.Config.Value.NormalConfig.AutoResolve.ShouldAutoResolve() {
+	if err == nil || args.Config.Value.NormalConfig.AutoResolve.NoAutoResolve() {
 		return err
 	}
 	args.PrependOpcodes(&ConflictMergePhantomResolveAll{

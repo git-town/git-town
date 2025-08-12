@@ -44,3 +44,10 @@ git town contribute somebody-elses-branch
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.
+
+## See also
+
+- [hack](hack.md) makes the chosen branches feature branches
+- [observe](observe.md) makes the chosen branches observed
+- [prototype](prototype.md) makes the chosen branches prototype branches
+- [park](park.md) makes the chosen branches parked

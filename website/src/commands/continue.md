@@ -16,3 +16,10 @@ and execute all remaining operations of the original command.
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.
+
+## See also
+
+- [skip](skip.md) ignores all remaining merge conflicts on the current branch
+  and then continues the currently suspended Git Town command
+- [undo](undo.md) aborts the currently suspended Git Town command and returns
+  the repository to the state it was in before you ran that command

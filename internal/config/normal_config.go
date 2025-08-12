@@ -52,7 +52,7 @@ type NormalConfig struct {
 	Offline                  configdomain.Offline
 	PerennialBranches        gitdomain.LocalBranchNames
 	PerennialRegex           Option[configdomain.PerennialRegex]
-	ProposalsShowLineage     configdomain.ProposalsShowLineage
+	ProposalsShowLineage     forgedomain.ProposalsShowLineage
 	PushHook                 configdomain.PushHook
 	ShareNewBranches         configdomain.ShareNewBranches
 	ShipDeleteTrackingBranch configdomain.ShipDeleteTrackingBranch
@@ -83,27 +83,27 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 	return NormalConfig{
 		Aliases:                  other.Aliases,
 		AutoResolve:              other.AutoResolve.GetOrElse(self.AutoResolve),
-		BitbucketAppPassword:     other.BitbucketAppPassword,
-		BitbucketUsername:        other.BitbucketUsername,
+		BitbucketAppPassword:     other.BitbucketAppPassword.Or(self.BitbucketAppPassword),
+		BitbucketUsername:        other.BitbucketUsername.Or(self.BitbucketUsername),
 		BranchTypeOverrides:      other.BranchTypeOverrides.Concat(self.BranchTypeOverrides),
-		CodebergToken:            other.CodebergToken,
-		ContributionRegex:        other.ContributionRegex,
+		CodebergToken:            other.CodebergToken.Or(self.CodebergToken),
+		ContributionRegex:        other.ContributionRegex.Or(self.ContributionRegex),
 		DevRemote:                other.DevRemote.GetOrElse(self.DevRemote),
 		DryRun:                   other.DryRun.GetOrElse(self.DryRun),
-		FeatureRegex:             other.FeatureRegex,
-		ForgeType:                other.ForgeType,
-		GitHubConnectorType:      other.GitHubConnectorType,
-		GitHubToken:              other.GitHubToken,
-		GitLabConnectorType:      other.GitLabConnectorType,
-		GitLabToken:              other.GitLabToken,
-		GiteaToken:               other.GiteaToken,
-		HostingOriginHostname:    other.HostingOriginHostname,
+		FeatureRegex:             other.FeatureRegex.Or(self.FeatureRegex),
+		ForgeType:                other.ForgeType.Or(self.ForgeType),
+		GitHubConnectorType:      other.GitHubConnectorType.Or(self.GitHubConnectorType),
+		GitHubToken:              other.GitHubToken.Or(self.GitHubToken),
+		GitLabConnectorType:      other.GitLabConnectorType.Or(self.GitLabConnectorType),
+		GitLabToken:              other.GitLabToken.Or(self.GitLabToken),
+		GiteaToken:               other.GiteaToken.Or(self.GiteaToken),
+		HostingOriginHostname:    other.HostingOriginHostname.Or(self.HostingOriginHostname),
 		Lineage:                  other.Lineage.Merge(self.Lineage),
-		NewBranchType:            other.NewBranchType,
-		ObservedRegex:            other.ObservedRegex,
+		NewBranchType:            other.NewBranchType.Or(self.NewBranchType),
+		ObservedRegex:            other.ObservedRegex.Or(self.ObservedRegex),
 		Offline:                  other.Offline.GetOrElse(self.Offline),
-		PerennialBranches:        other.PerennialBranches,
-		PerennialRegex:           other.PerennialRegex,
+		PerennialBranches:        other.PerennialBranches.AppendAllMissing(self.PerennialBranches...),
+		PerennialRegex:           other.PerennialRegex.Or(self.PerennialRegex),
 		ProposalsShowLineage:     other.ProposalsShowLineage.GetOrElse(self.ProposalsShowLineage),
 		PushHook:                 other.PushHook.GetOrElse(self.PushHook),
 		ShareNewBranches:         other.ShareNewBranches.GetOrElse(self.ShareNewBranches),
@@ -245,7 +245,7 @@ func DefaultNormalConfig() NormalConfig {
 		Offline:                  false,
 		PerennialBranches:        gitdomain.LocalBranchNames{},
 		PerennialRegex:           None[configdomain.PerennialRegex](),
-		ProposalsShowLineage:     configdomain.ProposalsShowLineageNone,
+		ProposalsShowLineage:     forgedomain.ProposalsShowLineageNone,
 		PushHook:                 true,
 		ShareNewBranches:         configdomain.ShareNewBranchesNone,
 		ShipDeleteTrackingBranch: true,

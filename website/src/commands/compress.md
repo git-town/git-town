@@ -135,3 +135,8 @@ that would be run but doesn't execute them.
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.
+
+## See also
+
+- the [compress sync strategy](../preferences/sync-feature-strategy.md#compress)
+  automatically compresses branches when they get synced

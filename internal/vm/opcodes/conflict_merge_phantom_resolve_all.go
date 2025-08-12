@@ -46,7 +46,7 @@ func (self *ConflictMergePhantomResolveAll) Run(args shared.RunArgs) error {
 	phantomMergeConflicts := git.DetectPhantomMergeConflicts(mergeConflits, self.ParentBranch, rootBranch)
 	newOpcodes := []shared.Opcode{}
 	for _, phantomMergeConflict := range phantomMergeConflicts {
-		newOpcodes = append(newOpcodes, &ConflictPhantomResolve{
+		newOpcodes = append(newOpcodes, &ConflictResolve{
 			FilePath:   phantomMergeConflict.FilePath,
 			Resolution: phantomMergeConflict.Resolution,
 		})
