@@ -16,7 +16,6 @@ type RebaseParentsUntilLocal struct {
 }
 
 func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
-	fmt.Println("22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222")
 	fmt.Println("RebaseParentsUntilLocal")
 	program := []shared.Opcode{}
 	branchInfos, hasBranchInfos := args.BranchInfos.Get()
@@ -29,14 +28,12 @@ func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
 		if !hasParent {
 			break
 		}
-		fmt.Println("3333333333333333333333333333333333333333333333333333333333333333333333", parent)
 		parentIsPerennial := args.Config.Value.IsMainOrPerennialBranch(parent)
 		if args.Detached.IsTrue() && parentIsPerennial {
 			break
 		}
 		parentIsLocal := branchInfos.HasLocalBranch(parent)
 		if !parentIsLocal {
-			fmt.Println("4444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444 PARENT IS NOT LOCAL")
 			// here the parent isn't local --> sync with its tracking branch, then try again with the grandparent until we find a local ancestor
 			parentTrackingName := parent.AtRemote(args.Config.Value.NormalConfig.DevRemote).BranchName()
 			isInSync, err := args.Git.BranchInSyncWithParent(args.Backend, self.Branch, parentTrackingName)
@@ -65,7 +62,7 @@ func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
 			fmt.Println("55555555555555555555555555555555555555555555555555555555555 HAS PREVIOUS RUN", branchToRebase)
 			program = append(program, &RebaseOnto{
 				BranchToRebaseOnto: branchToRebaseOnto,
-				CommitsToRemove:    parentSHAPreviousRun.Location(),
+				CommitsToRemove:    commitsToRemove,
 			})
 		} else {
 			isInSync, err := args.Git.BranchInSyncWithParent(args.Backend, self.Branch, branchToRebaseOnto)

@@ -1,8 +1,6 @@
 package opcodes
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
@@ -19,8 +17,6 @@ type SyncFeatureBranchRebase struct {
 }
 
 func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
-	fmt.Println("111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111")
-	fmt.Println("SyncFeatureBranchRebase")
 	program := []shared.Opcode{}
 	syncTracking, _, trackingBranch, err := self.shouldSyncWithTracking(args)
 	if err != nil {
