@@ -683,13 +683,8 @@ func (self *Commands) Rebase(runner subshelldomain.Runner, target gitdomain.Bran
 }
 
 // Rebase initiates a Git rebase of the current branch onto the given branch.
-func (self *Commands) RebaseOnto(runner subshelldomain.Runner, branchToRebaseOnto gitdomain.Location, commitsToRemove gitdomain.Location, upstream Option[gitdomain.LocalBranchName]) error {
-	args := []string{"-c", "rebase.updateRefs=false", "rebase", "--onto", branchToRebaseOnto.String()}
-	if upstream, hasUpstream := upstream.Get(); hasUpstream {
-		args = append(args, upstream.String())
-	}
-	args = append(args, commitsToRemove.String())
-	return runner.Run("git", args...)
+func (self *Commands) RebaseOnto(runner subshelldomain.Runner, branchToRebaseOnto gitdomain.Location, commitsToRemove gitdomain.Location) error {
+	return runner.Run("git", "-c", "rebase.updateRefs=false", "rebase", "--onto", branchToRebaseOnto.String(), commitsToRemove.String())
 }
 
 func (self *Commands) Remotes(querier subshelldomain.Querier) (gitdomain.Remotes, error) {

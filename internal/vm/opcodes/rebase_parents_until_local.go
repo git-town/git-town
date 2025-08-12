@@ -59,7 +59,6 @@ func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
 			program = append(program, &RebaseOnto{
 				BranchToRebaseOnto: branchToRebaseOnto,
 				CommitsToRemove:    parentSHAPreviousRun.Location(),
-				Upstream:           None[gitdomain.LocalBranchName](),
 			})
 		} else {
 			isInSync, err := args.Git.BranchInSyncWithParent(args.Backend, self.Branch, branchToRebaseOnto)
