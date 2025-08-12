@@ -46,29 +46,29 @@ func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
 			continue
 		}
 		// here the parent is local
-		var branchToRebase gitdomain.BranchName
+		var branchToRebaseOnto gitdomain.BranchName
 		if branchInfos.BranchIsActiveInAnotherWorktree(parent) {
-			branchToRebase = parent.TrackingBranch(args.Config.Value.NormalConfig.DevRemote).BranchName()
+			branchToRebaseOnto = parent.TrackingBranch(args.Config.Value.NormalConfig.DevRemote).BranchName()
 		} else {
-			branchToRebase = parent.BranchName()
+			branchToRebaseOnto = parent.BranchName()
 		}
 		if parentSHAPreviousRun, hasParentSHAPreviousRun := self.ParentSHAPreviousRun.Get(); hasParentSHAPreviousRun {
 			// Here we rebase onto the new parent, while removing the commits that the parent had in the last run.
 			// This removes old versions of commits that were amended by the user.
 			// The new commits of the parent get added back during the rebase.
 			program = append(program, &RebaseOnto{
-				BranchToRebaseOnto: branchToRebase,
+				BranchToRebaseOnto: branchToRebaseOnto,
 				CommitsToRemove:    parentSHAPreviousRun.Location(),
 				Upstream:           None[gitdomain.LocalBranchName](),
 			})
 		} else {
-			isInSync, err := args.Git.BranchInSyncWithParent(args.Backend, self.Branch, branchToRebase)
+			isInSync, err := args.Git.BranchInSyncWithParent(args.Backend, self.Branch, branchToRebaseOnto)
 			if err != nil {
 				return err
 			}
 			if !isInSync {
 				program = append(program, &RebaseBranch{
-					Branch: branchToRebase,
+					Branch: branchToRebaseOnto,
 				})
 			}
 		}
