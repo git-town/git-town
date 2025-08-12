@@ -79,7 +79,7 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 type LoadRepoSnapshotArgs struct {
 	Backend               subshelldomain.RunnerQuerier
 	CommandsCounter       Mutable[gohacks.Counter]
-	ConfigSnapshot        undoconfig.ConfigSnapshot
+	ConfigSnapshot        undoconfig.BeginConfigSnapshot
 	Connector             Option[forgedomain.Connector]
 	Detached              configdomain.Detached
 	Fetch                 bool

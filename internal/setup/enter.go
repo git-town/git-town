@@ -260,7 +260,7 @@ type UserInput struct {
 	ValidatedConfig     configdomain.ValidatedConfigData
 }
 
-func determineExistingScope(configSnapshot undoconfig.ConfigSnapshot, key configdomain.Key, oldValue fmt.Stringer) configdomain.ConfigScope {
+func determineExistingScope(configSnapshot undoconfig.BeginConfigSnapshot, key configdomain.Key, oldValue fmt.Stringer) configdomain.ConfigScope {
 	switch {
 	case oldValue.String() == "":
 		return configdomain.ConfigScopeLocal

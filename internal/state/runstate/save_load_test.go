@@ -39,13 +39,13 @@ func TestLoadSave(t *testing.T) {
 		runState := runstate.RunState{
 			AbortProgram:          program.Program{},
 			BeginBranchesSnapshot: gitdomain.EmptyBranchesSnapshot(),
-			BeginConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
+			BeginConfigSnapshot:   undoconfig.EmptyBeginConfigSnapshot(),
 			BeginStashSize:        0,
 			BranchInfosLastRun:    None[gitdomain.BranchInfos](),
 			Command:               "command",
 			DryRun:                true,
 			EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
-			EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
+			EndConfigSnapshot:     None[undoconfig.EndConfigSnapshot](),
 			EndStashSize:          Some(gitdomain.StashSize(1)),
 			RunProgram: program.Program{
 				&opcodes.BranchCreate{Branch: "branch", StartingPoint: "123456"},

@@ -18,7 +18,7 @@ import (
 type FinishedArgs struct {
 	Backend               subshelldomain.RunnerQuerier
 	BeginBranchesSnapshot Option[gitdomain.BranchesSnapshot]
-	BeginConfigSnapshot   undoconfig.ConfigSnapshot
+	BeginConfigSnapshot   undoconfig.BeginConfigSnapshot
 	Command               string
 	CommandsCounter       Mutable[gohacks.Counter]
 	FinalMessages         stringslice.Collector
@@ -46,7 +46,7 @@ func Finished(args FinishedArgs) error {
 	if err != nil {
 		return err
 	}
-	configSnapshot := undoconfig.ConfigSnapshot{
+	configSnapshot := undoconfig.EndConfigSnapshot{
 		Global: globalSnapshot,
 		Local:  localSnapshot,
 	}
