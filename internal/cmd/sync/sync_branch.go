@@ -188,6 +188,7 @@ func pushFeatureBranchProgram(prog Mutable[program.Program], branch gitdomain.Lo
 }
 
 func RemoveAncestorCommits(args RemoveAncestorCommitsArgs) {
+	// HERE IT RUNS THE REBASE AGAINST THE WRONG PARENT
 	args.Program.Value.Add(
 		&opcodes.CheckoutIfNeeded{Branch: args.Branch},
 	)
