@@ -29,15 +29,15 @@ Feature: remove a branch and all its children from a stack with independent chan
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                                                 |
-      | branch-2 | git pull                                                                |
-      |          | git -c rebase.updateRefs=false rebase --onto main branch-1              |
-      |          | git push --force-with-lease --force-if-includes                         |
-      |          | git checkout branch-3                                                   |
-      | branch-3 | git pull                                                                |
-      |          | git -c rebase.updateRefs=false rebase --onto branch-2 branch-1 branch-3 |
-      |          | git push --force-with-lease --force-if-includes                         |
-      |          | git checkout branch-2                                                   |
+      | BRANCH   | COMMAND                                                        |
+      | branch-2 | git pull                                                       |
+      |          | git -c rebase.updateRefs=false rebase --onto main branch-1     |
+      |          | git push --force-with-lease --force-if-includes                |
+      |          | git checkout branch-3                                          |
+      | branch-3 | git pull                                                       |
+      |          | git -c rebase.updateRefs=false rebase --onto branch-2 branch-1 |
+      |          | git push --force-with-lease --force-if-includes                |
+      |          | git checkout branch-2                                          |
     And Git Town prints:
       """
       branch "branch-2" is now a child of "main"

@@ -58,7 +58,6 @@ func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
 		program = append(program, &RebaseOnto{
 			BranchToRebaseOnto: branchToRebaseOnto,
 			CommitsToRemove:    commitsToRemove,
-			Upstream:           None[gitdomain.LocalBranchName](),
 		})
 		break
 	}
