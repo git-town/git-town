@@ -13,10 +13,10 @@ type ConfigDiffs struct {
 	Local  ConfigDiff
 }
 
-func NewConfigDiffs(before, after ConfigSnapshot) ConfigDiffs {
+func NewConfigDiffs(begin BeginConfigSnapshot, end EndConfigSnapshot) ConfigDiffs {
 	return ConfigDiffs{
-		Global: SingleCacheDiff(before.Global, after.Global),
-		Local:  SingleCacheDiff(before.Local, after.Local),
+		Global: SingleCacheDiff(begin.Global, end.Global),
+		Local:  SingleCacheDiff(begin.Local, end.Local),
 	}
 }
 
