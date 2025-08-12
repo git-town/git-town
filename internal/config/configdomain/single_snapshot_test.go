@@ -13,12 +13,13 @@ import (
 )
 
 func TestSingleSnapshot(t *testing.T) {
+	t.Parallel()
 	t.Run("DefaultBranch", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		runtime.SetDefaultGitBranch("custom")
 		snapshot := asserts.NoError1(gitconfig.LoadSnapshot(runtime.TestRunner, Some(configdomain.ConfigScopeLocal), configdomain.UpdateOutdatedNo))
-		have := snapshot.DefaultBranch(runtime)
+		have := snapshot.DefaultBranch()
 		want := gitdomain.NewLocalBranchNameOption("main")
 		must.Eq(t, want, have)
 	})

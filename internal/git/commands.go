@@ -797,7 +797,7 @@ func (self *Commands) StageFiles(runner subshelldomain.Runner, names ...string) 
 
 // determines the branch that is configured in Git as the default branch
 func (self *Commands) StandardBranch(querier subshelldomain.Querier, snapshot configdomain.SingleSnapshot) Option[gitdomain.LocalBranchName] {
-	if defaultBranch, has := snapshot.DefaultBranch(querier).Get(); has {
+	if defaultBranch, has := snapshot.DefaultBranch().Get(); has {
 		return Some(defaultBranch)
 	}
 	return self.OriginHead(querier)

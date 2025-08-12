@@ -2,7 +2,6 @@ package configdomain
 
 import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -41,7 +40,7 @@ func (self SingleSnapshot) BranchTypeOverrideEntries() map[BranchTypeOverrideKey
 	return result
 }
 
-func (self SingleSnapshot) DefaultBranch(querier subshelldomain.Querier) Option[gitdomain.LocalBranchName] {
+func (self SingleSnapshot) DefaultBranch() Option[gitdomain.LocalBranchName] {
 	text, has := self["init.defaultbranch"]
 	if !has {
 		return None[gitdomain.LocalBranchName]()
