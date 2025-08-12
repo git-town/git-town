@@ -5,13 +5,13 @@ import (
 )
 
 // ConfigSnapshot is a snapshot of the entire Git configuration at a particular point in time.
-type ConfigSnapshot struct {
+type AfterConfigSnapshot struct {
 	Global configdomain.SingleSnapshot
 	Local  configdomain.SingleSnapshot
 }
 
-func EmptyConfigSnapshot() ConfigSnapshot {
-	return ConfigSnapshot{
+func EmptyAfterConfigSnapshot() AfterConfigSnapshot {
+	return AfterConfigSnapshot{
 		Global: map[configdomain.Key]string{},
 		Local:  map[configdomain.Key]string{},
 	}
