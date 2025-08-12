@@ -526,8 +526,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		parsedScope := asserts.NoError1(configdomain.ParseConfigScope(scope))
-		parsedKey := configdomain.ParseKey(name).GetOrPanic()
-		return gitconfig.SetConfigValue(devRepo.TestRunner, parsedScope, parsedKey, value)
+		key := configdomain.ParseKey(name).GetOrPanic()
+		return gitconfig.SetConfigValue(devRepo.TestRunner, parsedScope, key, value)
 	})
 
 	sc.Step(`^(global |local |)Git setting "([^"]+)" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, scope, name, want string) error {
