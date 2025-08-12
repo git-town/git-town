@@ -341,7 +341,6 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 		&opcodes.RebaseOnto{
 			BranchToRebaseOnto: data.grandParentBranch.BranchName(),
 			CommitsToRemove:    data.parentBranch.Location(),
-			Upstream:           None[gitdomain.LocalBranchName](),
 		},
 	)
 	if data.branchToSwapInfo.HasTrackingBranch() {
@@ -356,7 +355,6 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 		&opcodes.RebaseOnto{
 			BranchToRebaseOnto: data.branchToSwapName.BranchName(),
 			CommitsToRemove:    data.grandParentBranch.Location(),
-			Upstream:           None[gitdomain.LocalBranchName](),
 		},
 	)
 	if data.parentBranchInfo.HasTrackingBranch() {
@@ -378,7 +376,6 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 			&opcodes.RebaseOnto{
 				BranchToRebaseOnto: data.parentBranch.BranchName(),
 				CommitsToRemove:    oldBranchSHA.Location(),
-				Upstream:           None[gitdomain.LocalBranchName](),
 			},
 		)
 		if child.info.HasTrackingBranch() {
