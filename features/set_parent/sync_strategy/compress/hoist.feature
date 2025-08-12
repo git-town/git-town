@@ -24,21 +24,22 @@ Feature: remove a branch from a stack
     And local Git setting "git-town.sync-feature-strategy" is "compress"
     When I run "git-town set-parent main"
 
+  @this
   Scenario: result
     Then Git Town prints:
       """
       branch "branch-2" is now a child of "main"
       """
     And Git Town runs the commands
-      | BRANCH   | COMMAND                                                                 |
-      | branch-2 | git pull                                                                |
-      |          | git -c rebase.updateRefs=false rebase --onto main branch-1              |
-      |          | git push --force-with-lease --force-if-includes                         |
-      |          | git checkout branch-3                                                   |
-      | branch-3 | git pull                                                                |
-      |          | git -c rebase.updateRefs=false rebase --onto branch-2 branch-1 branch-3 |
-      |          | git push --force-with-lease --force-if-includes                         |
-      |          | git checkout branch-2                                                   |
+      | BRANCH   | COMMAND                                                        |
+      | branch-2 | git pull                                                       |
+      |          | git -c rebase.updateRefs=false rebase --onto main branch-1     |
+      |          | git push --force-with-lease --force-if-includes                |
+      |          | git checkout branch-3                                          |
+      | branch-3 | git pull                                                       |
+      |          | git -c rebase.updateRefs=false rebase --onto branch-2 branch-1 |
+      |          | git push --force-with-lease --force-if-includes                |
+      |          | git checkout branch-2                                          |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE  |
       | branch-1 | local, origin | commit 1 |
