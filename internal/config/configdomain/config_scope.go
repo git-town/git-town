@@ -1,6 +1,7 @@
 package configdomain
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -29,13 +30,13 @@ func (self ConfigScope) String() string {
 	return string(self)
 }
 
-func ParseConfigScope(text string) ConfigScope {
+func ParseConfigScope(text string) (ConfigScope, error) {
 	switch strings.TrimSpace(text) {
 	case "local", "":
-		return ConfigScopeLocal
+		return ConfigScopeLocal, nil
 	case "global":
-		return ConfigScopeGlobal
+		return ConfigScopeGlobal, nil
 	default:
-		panic(messages.ConfigScopeUnknown)
+		return "", fmt.Errorf("unknown config scope: %q", text)
 	}
 }
