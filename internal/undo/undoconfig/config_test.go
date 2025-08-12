@@ -23,7 +23,7 @@ func TestConfigUndo(t *testing.T) {
 			Local:    configdomain.SingleSnapshot{},
 			Unscoped: configdomain.SingleSnapshot{},
 		}
-		after := undoconfig.EndConfigSnapshot{
+		after := configdomain.EndConfigSnapshot{
 			Global: configdomain.SingleSnapshot{
 				configdomain.KeyOffline:               "0",
 				configdomain.KeySyncPerennialStrategy: "1",
@@ -60,7 +60,7 @@ func TestConfigUndo(t *testing.T) {
 				configdomain.KeyOffline: "0",
 			},
 		}
-		after := undoconfig.EndConfigSnapshot{
+		after := configdomain.EndConfigSnapshot{
 			Global: configdomain.SingleSnapshot{},
 			Local: configdomain.SingleSnapshot{
 				configdomain.KeyOffline:               "0",
@@ -97,7 +97,7 @@ func TestConfigUndo(t *testing.T) {
 			},
 			Local: configdomain.SingleSnapshot{},
 		}
-		after := undoconfig.EndConfigSnapshot{
+		after := configdomain.EndConfigSnapshot{
 			Global: configdomain.SingleSnapshot{
 				configdomain.KeyOffline: "1",
 			},
@@ -141,7 +141,7 @@ func TestConfigUndo(t *testing.T) {
 				configdomain.KeyOffline: "0",
 			},
 		}
-		after := undoconfig.EndConfigSnapshot{
+		after := configdomain.EndConfigSnapshot{
 			Global: configdomain.SingleSnapshot{},
 			Local: configdomain.SingleSnapshot{
 				configdomain.KeyOffline: "1",
@@ -189,7 +189,7 @@ func TestConfigUndo(t *testing.T) {
 				configdomain.KeyGitHubToken:       "token",
 			},
 		}
-		after := undoconfig.EndConfigSnapshot{
+		after := configdomain.EndConfigSnapshot{
 			Global: configdomain.SingleSnapshot{
 				configdomain.KeyOffline:               "1",
 				configdomain.KeySyncPerennialStrategy: "1",
@@ -274,7 +274,7 @@ func TestConfigUndo(t *testing.T) {
 			},
 			Local: configdomain.SingleSnapshot{},
 		}
-		after := undoconfig.EndConfigSnapshot{
+		after := configdomain.EndConfigSnapshot{
 			Global: configdomain.SingleSnapshot{
 				configdomain.KeyOffline: "0",
 			},
@@ -316,7 +316,7 @@ func TestConfigUndo(t *testing.T) {
 				configdomain.KeySyncPerennialStrategy: "1",
 			},
 		}
-		after := undoconfig.EndConfigSnapshot{
+		after := configdomain.EndConfigSnapshot{
 			Global: configdomain.SingleSnapshot{},
 			Local: configdomain.SingleSnapshot{
 				configdomain.KeyOffline: "0",

@@ -5,6 +5,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/vm/program"
 )
 
-func DetermineUndoConfigProgram(begin configdomain.BeginConfigSnapshot, end EndConfigSnapshot) program.Program {
+func DetermineUndoConfigProgram(begin configdomain.BeginConfigSnapshot, end configdomain.EndConfigSnapshot) program.Program {
 	return NewConfigDiffs(begin, end).UndoProgram()
 }

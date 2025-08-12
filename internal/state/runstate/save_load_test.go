@@ -11,7 +11,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/state"
 	"github.com/git-town/git-town/v21/internal/state/runstate"
-	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/vm/opcodes"
 	"github.com/git-town/git-town/v21/internal/vm/program"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -49,7 +48,7 @@ func TestLoadSave(t *testing.T) {
 			Command:             "command",
 			DryRun:              true,
 			EndBranchesSnapshot: None[gitdomain.BranchesSnapshot](),
-			EndConfigSnapshot:   None[undoconfig.EndConfigSnapshot](),
+			EndConfigSnapshot:   None[configdomain.EndConfigSnapshot](),
 			EndStashSize:        Some(gitdomain.StashSize(1)),
 			RunProgram: program.Program{
 				&opcodes.BranchCreate{Branch: "branch", StartingPoint: "123456"},

@@ -13,7 +13,7 @@ type ConfigDiffs struct {
 	Local  ConfigDiff
 }
 
-func NewConfigDiffs(begin configdomain.BeginConfigSnapshot, end EndConfigSnapshot) ConfigDiffs {
+func NewConfigDiffs(begin configdomain.BeginConfigSnapshot, end configdomain.EndConfigSnapshot) ConfigDiffs {
 	return ConfigDiffs{
 		Global: SingleCacheDiff(begin.Global, end.Global),
 		Local:  SingleCacheDiff(begin.Local, end.Local),
