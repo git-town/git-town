@@ -1,4 +1,4 @@
-package configdomain
+package forge
 
 import (
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"

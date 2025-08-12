@@ -52,7 +52,7 @@ type NormalConfig struct {
 	Offline                  configdomain.Offline
 	PerennialBranches        gitdomain.LocalBranchNames
 	PerennialRegex           Option[configdomain.PerennialRegex]
-	ProposalsShowLineage     configdomain.ProposalsShowLineage
+	ProposalsShowLineage     forgedomain.ProposalsShowLineage
 	PushHook                 configdomain.PushHook
 	ShareNewBranches         configdomain.ShareNewBranches
 	ShipDeleteTrackingBranch configdomain.ShipDeleteTrackingBranch
@@ -245,7 +245,7 @@ func DefaultNormalConfig() NormalConfig {
 		Offline:                  false,
 		PerennialBranches:        gitdomain.LocalBranchNames{},
 		PerennialRegex:           None[configdomain.PerennialRegex](),
-		ProposalsShowLineage:     configdomain.ProposalsShowLineageNone,
+		ProposalsShowLineage:     forgedomain.ProposalsShowLineageNone,
 		PushHook:                 true,
 		ShareNewBranches:         configdomain.ShareNewBranchesNone,
 		ShipDeleteTrackingBranch: true,

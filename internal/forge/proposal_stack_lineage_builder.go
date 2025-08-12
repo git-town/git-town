@@ -1,9 +1,10 @@
-package configdomain
+package forge
 
 import (
 	"fmt"
 	"strings"
 
+	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -14,7 +15,7 @@ const indentMarker = "-"
 type ProposalStackLineageArgs struct {
 	Connector                forgedomain.Connector
 	CurrentBranch            gitdomain.LocalBranchName
-	Lineage                  Lineage
+	Lineage                  configdomain.Lineage
 	MainAndPerennialBranches gitdomain.LocalBranchNames
 }
 
