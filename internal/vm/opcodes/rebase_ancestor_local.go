@@ -17,17 +17,15 @@ type RebaseAncestorLocal struct {
 
 // TODO: new sync architecture
 //
-// Currently, Git Town syncs a branch like so:
-// 1. rebase the branch onto main to remove all old commits
-//   - this is unnecessarily reductive, we should rebase onto its new parent
+// Currently, Git Town syncs a branch like this:
+//  1. rebase the branch onto main to remove all old commits.
+//     This is unnecessarily reductive, we should rebase onto its new parent and remove old commits.
+//  2. rebase the branch against its new parent
 //
-// 2. rebase the branch against its new parent
-//
-// It should be possible to perform both in one operation:
-// - rebase onto the new parent, removing the commits of the old parent.
-// - the old parent is determined this way:
-//   - previous parent deleted --> SHA of the branch that got deleted
-//   - previous parent not deleted --> SHA of that branch at the last run
+// It should be possible to perform both in one operation: rebase onto the new parent, removing the old commits in the branch
+// The old commits are determined this way:
+//   - original parent deleted during this sync --> SHA of the local parent branch
+//   - original parent not deleted --> SHA of that branch at the last run
 func (self *RebaseAncestorLocal) Run(args shared.RunArgs) error {
 	branchInfos, hasBranchInfos := args.BranchInfos.Get()
 	if !hasBranchInfos {
