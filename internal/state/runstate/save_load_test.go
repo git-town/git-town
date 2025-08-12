@@ -87,11 +87,13 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.ConfigSet{Key: configdomain.KeyOffline, Scope: configdomain.ConfigScopeLocal, Value: "1"},
 				&opcodes.ConflictMergePhantomFinalize{},
 				&opcodes.ConflictMergePhantomResolveAll{CurrentBranch: "current", ParentBranch: gitdomain.NewLocalBranchNameOption("parent"), ParentSHA: Some(gitdomain.NewSHA("123456"))},
-				&opcodes.ConflictPhantomResolve{FilePath: "file", Resolution: gitdomain.ConflictResolutionOurs},
+				&opcodes.ConflictResolve{FilePath: "file", Resolution: gitdomain.ConflictResolutionOurs},
 				&opcodes.ConnectorProposalMerge{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Proposal: forgedomain.Proposal{Data: forgedomain.BitbucketCloudProposalData{ProposalData: forgedomain.ProposalData{Body: Some("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}}, ForgeType: forgedomain.ForgeTypeBitbucket}},
 				&opcodes.ExecuteShellCommand{Args: []string{"arg1", "arg2"}, Executable: "executable"},
 				&opcodes.ExitToShell{},
 				&opcodes.FetchUpstream{Branch: "branch"},
+				&opcodes.FileRemove{FilePath: "file"},
+				&opcodes.FileStage{FilePath: "file"},
 				&opcodes.LineageBranchRemove{Branch: "branch"},
 				&opcodes.LineageParentRemove{Branch: "branch"},
 				&opcodes.LineageParentSet{Branch: "branch", Parent: "parent"},
@@ -122,7 +124,6 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.RebaseBranch{Branch: "branch"},
 				&opcodes.RebaseContinue{},
 				&opcodes.RebaseContinueIfNeeded{},
-				&opcodes.RebaseOntoKeepDeleted{BranchToRebaseOnto: "branch-2", CommitsToRemove: "branch-1"},
 				&opcodes.RebaseOntoRemoveDeleted{BranchToRebaseOnto: "branch-2", CommitsToRemove: "branch-1", Upstream: gitdomain.NewLocalBranchNameOption("upstream")},
 				&opcodes.RebaseParentsUntilLocal{Branch: "branch", ParentSHAPreviousRun: Some(gitdomain.SHA("123456"))},
 				&opcodes.RebaseTrackingBranch{RemoteBranch: "origin/branch", PushBranches: true},
@@ -424,7 +425,7 @@ func TestLoadSave(t *testing.T) {
         "FilePath": "file",
         "Resolution": "ours"
       },
-      "type": "ConflictPhantomResolve"
+      "type": "ConflictResolve"
     },
     {
       "data": {
@@ -466,6 +467,18 @@ func TestLoadSave(t *testing.T) {
         "Branch": "branch"
       },
       "type": "FetchUpstream"
+    },
+    {
+      "data": {
+        "FilePath": "file"
+      },
+      "type": "FileRemove"
+    },
+    {
+      "data": {
+        "FilePath": "file"
+      },
+      "type": "FileStage"
     },
     {
       "data": {
@@ -685,14 +698,6 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "RebaseContinueIfNeeded"
-    },
-    {
-      "data": {
-        "BranchToRebaseOnto": "branch-2",
-        "CommitsToRemove": "branch-1",
-        "Upstream": null
-      },
-      "type": "RebaseOntoKeepDeleted"
     },
     {
       "data": {

@@ -118,3 +118,17 @@ run of `git town sync` will create the remote tracking branch.
 If the configuration setting
 [new-branch-type](../preferences/new-branch-type.md) is set, `git town hack`
 creates a branch with the given [type](../branch-types.md).
+
+## See also
+
+When using this command to create branches:
+
+- [append](append.md) creates the new branch as a child of the current branch
+- [prepend](prepend.md) creates the new branch as a parent of the current branch
+
+When using this command to change the branch type:
+
+- [contribute](contribute.md) makes the chosen branches contribution branches
+- [observe](observe.md) makes the chosen branches observed
+- [prototype](prototype.md) makes the chosen branches prototype branches
+- [park](park.md) makes the chosen branches parked

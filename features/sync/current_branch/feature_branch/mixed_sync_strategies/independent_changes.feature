@@ -83,25 +83,45 @@ Feature: compatibility between different sync-feature-strategy settings when edi
       | MESSAGE          | FILE NAME | FILE CONTENT                   |
       | my second commit | file.txt  | line 1: my content 2\n\nline 2 |
     When I run "git-town sync"
-    # TODO: the conflict below isn't a phantom conflict.
-    # Git Town leaves my repository without the coworker changes.
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                      |
       | feature | git fetch --prune --tags                                                     |
       |         | git push --force-with-lease --force-if-includes                              |
       |         | git -c rebase.updateRefs=false rebase origin/feature                         |
       |         | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
-      |         | git checkout --theirs file.txt                                               |
-      |         | git add file.txt                                                             |
-      |         | GIT_EDITOR=true git rebase --continue                                        |
-      |         | git push --force-with-lease --force-if-includes                              |
+    And a rebase is now in progress
+    And Git Town prints the error:
+      """
+      CONFLICT (content): Merge conflict in file.txt
+      """
+    And file "file.txt" now has content:
+      """
+      <<<<<<< HEAD
+      line 1:
+      =======
+      line 1: my content 1
+      >>>>>>> {{ sha-short 'my first commit' }} (my first commit)
+
+      line 2: coworker content 1
+      """
+    When I resolve the conflict in "file.txt" with:
+      """
+      line 1: my content 1
+
+      line 2: coworker content 1
+      """
+    And I run "git-town continue"
+    Then Git Town runs the commands
+      | BRANCH  | COMMAND                                         |
+      | feature | GIT_EDITOR=true git rebase --continue           |
+      |         | git push --force-with-lease --force-if-includes |
     And no rebase is now in progress
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME | FILE CONTENT                                       |
       | feature | local, coworker, origin | set up file                                                | file.txt  | line 1\n\nline 2                                   |
       |         |                         | coworker first commit                                      | file.txt  | line 1:\n\nline 2: coworker content 1              |
-      |         | local, origin           | my first commit                                            | file.txt  | line 1: my content 1\n\nline 2                     |
-      |         |                         | my second commit                                           | file.txt  | line 1: my content 2\n\nline 2                     |
+      |         | local, origin           | my first commit                                            | file.txt  | line 1: my content 1\n\nline 2: coworker content 1 |
+      |         |                         | my second commit                                           | file.txt  | line 1: my content 2\n\nline 2: coworker content 1 |
       |         | coworker                | my first commit                                            | file.txt  | line 1: my content 1\n\nline 2                     |
       |         |                         | Merge remote-tracking branch 'origin/feature' into feature | file.txt  | line 1: my content 1\n\nline 2: coworker content 1 |

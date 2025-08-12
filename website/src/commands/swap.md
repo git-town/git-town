@@ -61,3 +61,10 @@ determine the repository state.
 
 Disables automatic resolution of
 [phantom merge conflicts](../stacked-changes.md#avoid-phantom-conflicts).
+
+## See also
+
+- [set-parent](set-parent.md) moves the current branch and its descendents under
+  a different parent
+- [detach](detach.md) extracts the current branch from a stack, leaving its
+  children in the stack.

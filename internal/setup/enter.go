@@ -230,7 +230,7 @@ EnterForgeData:
 		Offline:                  None[configdomain.Offline](), // the setup assistant doesn't ask for this
 		PerennialBranches:        perennialBranches,
 		PerennialRegex:           perennialRegex,
-		ProposalsShowLineage:     None[configdomain.ProposalsShowLineage](), // TODO: populate this in the setup assistant once https://github.com/git-town/git-town/issues/3003 is shipped
+		ProposalsShowLineage:     None[forgedomain.ProposalsShowLineage](), // TODO: populate this in the setup assistant once https://github.com/git-town/git-town/issues/3003 is shipped
 		PushHook:                 pushHook,
 		ShareNewBranches:         shareNewBranches,
 		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,

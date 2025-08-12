@@ -21,3 +21,29 @@ func TestEscapeNewLines(t *testing.T) {
 		must.EqOp(t, want, have)
 	}
 }
+
+func TestIndent(t *testing.T) {
+	t.Parallel()
+
+	t.Run("empty", func(t *testing.T) {
+		t.Parallel()
+		have := gohacks.IndentLines("", 2)
+		must.EqOp(t, "  ", have)
+	})
+
+	t.Run("indent by 2 spaces", func(t *testing.T) {
+		t.Parallel()
+		give := "one\ntwo\nthree"
+		have := gohacks.IndentLines(give, 2)
+		want := "  one\n  two\n  three"
+		must.EqOp(t, want, have)
+	})
+
+	t.Run("indent by 4 spaces", func(t *testing.T) {
+		t.Parallel()
+		give := "one\ntwo\nthree"
+		have := gohacks.IndentLines(give, 4)
+		want := "    one\n    two\n    three"
+		must.EqOp(t, want, have)
+	})
+}

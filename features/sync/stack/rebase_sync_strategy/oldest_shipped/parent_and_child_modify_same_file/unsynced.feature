@@ -1,4 +1,4 @@
-Feature: auto-resolve phantom merge conflicts in an unsynced stack where parent modifies a file and gets shipped, and the child modifies the same file
+Feature: let the user resolve the merge conflict in an unsynced stack where the parent modifies a file and gets shipped, and the child modifies the same file
 
   Background:
     Given a Git repo with origin
@@ -24,28 +24,54 @@ Feature: auto-resolve phantom merge conflicts in an unsynced stack where parent 
       |          | git checkout branch-2                                      |
       | branch-2 | git pull                                                   |
       |          | git -c rebase.updateRefs=false rebase --onto main branch-1 |
-      |          | git checkout --theirs file                                 |
-      |          | git add file                                               |
-      |          | GIT_EDITOR=true git rebase --continue                      |
-      |          | git push --force-with-lease                                |
-      |          | git branch -D branch-1                                     |
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                         |
-      | main     | local, origin | branch-1 commit | file      | line 1 changed by branch-1\n\nline 2 |
-      | branch-2 | local, origin | branch-2 commit | file      | line 1\n\nline 2 changed by branch-2 |
-    # TODO: Fix this bug related to https://github.com/git-town/git-town/issues/5156
-    # In this test, branch-1 and branch-2 change the same file.
-    # After shipping branch-1 and syncing branch-2, branch-2 does not contain the changes made by branch-1.
-    And no rebase is now in progress
+    And Git Town prints the error:
+      """
+      CONFLICT (add/add): Merge conflict in file
+      """
+    And Git Town prints the error:
+      """
+      To continue after having resolved conflicts, run "git town continue".
+      """
+    And a rebase is now in progress
+    And file "file" now has content:
+      """
+      <<<<<<< HEAD
+      line 1 changed by branch-1
+
+      line 2
+      =======
+      line 1
+
+      line 2 changed by branch-2
+      >>>>>>> {{ sha-short 'branch-2 commit' }} (branch-2 commit)
+      """
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                                                |
-      | branch-2 | git reset --hard {{ sha-initial 'branch-2 commit' }}                   |
-      |          | git push --force-with-lease origin {{ sha 'initial commit' }}:branch-2 |
-      |          | git checkout main                                                      |
-      | main     | git reset --hard {{ sha 'initial commit' }}                            |
-      |          | git branch branch-1 {{ sha-initial 'branch-1 commit' }}                |
-      |          | git checkout branch-2                                                  |
+      | BRANCH   | COMMAND                                     |
+      | branch-2 | git rebase --abort                          |
+      |          | git checkout main                           |
+      | main     | git reset --hard {{ sha 'initial commit' }} |
+      |          | git checkout branch-2                       |
     And the initial branches and lineage exist now
+
+  Scenario: resolve and continue
+    When I resolve the conflict in "file" with:
+      """
+      line 1 changed by branch-1
+
+      line 2 changed by branch-2
+      """
+    And I run "git-town continue"
+    Then Git Town runs the commands
+      | BRANCH   | COMMAND                               |
+      | branch-2 | GIT_EDITOR=true git rebase --continue |
+      |          | git push --force-with-lease           |
+      |          | git branch -D branch-1                |
+    And these commits exist now
+      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                             |
+      | main     | local, origin | branch-1 commit | file      | line 1 changed by branch-1\n\nline 2                     |
+      | branch-2 | local, origin | branch-2 commit | file      | line 1 changed by branch-1\n\nline 2 changed by branch-2 |
+    And no rebase is now in progress
+    And all branches are now synchronized

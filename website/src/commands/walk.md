@@ -65,3 +65,10 @@ execute them.
 
 Print all Git commands executed under the hood to determine the repository
 state.
+
+## See also
+
+- [branch](branch.md) displays the branch hierarchy and highlights the currently
+  checked out branch in it
+- [switch](switch.md) displays the branch hierarchy and lets you select a branch
+  to switch to
