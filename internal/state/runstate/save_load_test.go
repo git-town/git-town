@@ -128,7 +128,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.RebaseContinue{},
 				&opcodes.RebaseContinueIfNeeded{},
 				&opcodes.RebaseOntoRemoveDeleted{BranchToRebaseOnto: "branch-2", CommitsToRemove: "branch-1"},
-				&opcodes.RebaseParentsUntilLocal{Branch: "branch", ParentSHAPreviousRun: Some(gitdomain.SHA("123456"))},
+				&opcodes.RebaseAncestorsUntilLocal{Branch: "branch", ParentSHAPreviousRun: Some(gitdomain.SHA("123456"))},
 				&opcodes.RebaseTrackingBranch{RemoteBranch: "origin/branch", PushBranches: true},
 				&opcodes.RegisterUndoablePerennialCommit{Parent: "parent"},
 				&opcodes.SnapshotInitialUpdateLocalSHA{Branch: "branch", SHA: "111111"},

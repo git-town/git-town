@@ -7,14 +7,15 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-type RebaseParentLocal struct {
+// rebases a feature branch against its local ancestor branch
+type RebaseAncestorLocal struct {
 	Branch                  gitdomain.LocalBranchName
 	Parent                  gitdomain.LocalBranchName
 	ParentSHAPreviousRun    Option[gitdomain.SHA]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *RebaseParentLocal) Run(args shared.RunArgs) error {
+func (self *RebaseAncestorLocal) Run(args shared.RunArgs) error {
 	branchInfos, hasBranchInfos := args.BranchInfos.Get()
 	if !hasBranchInfos {
 		panic(messages.BranchInfosNotProvided)

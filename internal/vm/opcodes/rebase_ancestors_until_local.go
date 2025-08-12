@@ -7,13 +7,13 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-type RebaseParentsUntilLocal struct {
+type RebaseAncestorsUntilLocal struct {
 	Branch                  gitdomain.LocalBranchName
 	ParentSHAPreviousRun    Option[gitdomain.SHA]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
+func (self *RebaseAncestorsUntilLocal) Run(args shared.RunArgs) error {
 	program := []shared.Opcode{}
 	branchInfos, hasBranchInfos := args.BranchInfos.Get()
 	if !hasBranchInfos {
@@ -32,7 +32,7 @@ func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
 		parentIsLocal := branchInfos.HasLocalBranch(parent)
 		if !parentIsLocal {
 			// here the parent isn't local --> sync with its tracking branch, then try again with the grandparent until we find a local ancestor
-			program = append(program, &RebaseParentRemote{
+			program = append(program, &RebaseAncestorRemote{
 				Branch: self.Branch,
 				Parent: parent.AtRemote(args.Config.Value.NormalConfig.DevRemote),
 			})
@@ -40,7 +40,7 @@ func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
 			continue
 		}
 		// here we found a local parent
-		program = append(program, &RebaseParentLocal{
+		program = append(program, &RebaseAncestorLocal{
 			Branch:               self.Branch,
 			Parent:               parent,
 			ParentSHAPreviousRun: self.ParentSHAPreviousRun,

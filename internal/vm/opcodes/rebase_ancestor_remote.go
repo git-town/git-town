@@ -6,13 +6,13 @@ import (
 )
 
 // rebases the current branch against its parent, which exists only remotely
-type RebaseParentRemote struct {
+type RebaseAncestorRemote struct {
 	Branch                  gitdomain.LocalBranchName
 	Parent                  gitdomain.RemoteBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *RebaseParentRemote) Run(args shared.RunArgs) error {
+func (self *RebaseAncestorRemote) Run(args shared.RunArgs) error {
 	isInSync, err := args.Git.BranchInSyncWithParent(args.Backend, self.Branch, self.Parent.BranchName())
 	if err != nil {
 		return err

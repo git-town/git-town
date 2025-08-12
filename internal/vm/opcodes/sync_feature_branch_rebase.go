@@ -31,7 +31,7 @@ func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
 		)
 	}
 	program = append(program,
-		&RebaseParentsUntilLocal{
+		&RebaseAncestorsUntilLocal{
 			Branch:               self.Branch,
 			ParentSHAPreviousRun: self.ParentSHAPreviousRun,
 		},
