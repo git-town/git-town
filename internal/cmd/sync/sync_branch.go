@@ -160,9 +160,9 @@ func pullParentBranchOfCurrentFeatureBranchOpcode(args pullParentBranchOfCurrent
 			TrackingBranch:    args.trackingBranch,
 		})
 	case configdomain.SyncFeatureStrategyRebase:
-		args.program.Value.Add(&opcodes.RebaseParentsUntilLocal{
-			Branch:               args.branch,
-			ParentSHAPreviousRun: args.parentSHAPreviousRun,
+		args.program.Value.Add(&opcodes.RebaseAncestorsUntilLocal{
+			Branch:          args.branch,
+			CommitsToRemove: args.parentSHAPreviousRun,
 		})
 	}
 }
