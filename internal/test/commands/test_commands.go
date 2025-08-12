@@ -442,9 +442,9 @@ func (self *TestCommands) RebaseAgainstBranch(branch gitdomain.LocalBranchName) 
 }
 
 func (self *TestCommands) Reload() {
-	globalConfigSnapshot, localConfigSnapshot, _ := self.Config.Reload(self.TestRunner)
-	self.SnapShots[configdomain.ConfigScopeGlobal] = globalConfigSnapshot
-	self.SnapShots[configdomain.ConfigScopeLocal] = localConfigSnapshot
+	snapshots := self.Config.Reload(self.TestRunner)
+	self.SnapShots[configdomain.ConfigScopeGlobal] = snapshots.Global
+	self.SnapShots[configdomain.ConfigScopeLocal] = snapshots.Local
 }
 
 // RemoveBranch deletes the branch with the given name from this repo.
