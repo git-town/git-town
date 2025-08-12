@@ -28,14 +28,12 @@ func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
 		if !hasParent {
 			break
 		}
-		fmt.Println("3333333333333333333333333333333333333333333333333333333333333333333333", parent)
 		parentIsPerennial := args.Config.Value.IsMainOrPerennialBranch(parent)
 		if args.Detached.IsTrue() && parentIsPerennial {
 			break
 		}
 		parentIsLocal := branchInfos.HasLocalBranch(parent)
 		if !parentIsLocal {
-			fmt.Println("4444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444 PARENT IS NOT LOCAL")
 			// here the parent isn't local --> sync with its tracking branch, then try again with the grandparent until we find a local ancestor
 			parentTrackingName := parent.AtRemote(args.Config.Value.NormalConfig.DevRemote).BranchName()
 			isInSync, err := args.Git.BranchInSyncWithParent(args.Backend, self.Branch, parentTrackingName)
@@ -61,7 +59,6 @@ func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
 			// Here we rebase onto the new parent, while removing the commits that the parent had in the last run.
 			// This removes old versions of commits that were amended by the user.
 			// The new commits of the parent get added back during the rebase.
-			fmt.Println("55555555555555555555555555555555555555555555555555555555555 HAS PREVIOUS RUN", branchToRebase)
 			program = append(program, &RebaseOnto{
 				BranchToRebaseOnto: branchToRebaseOnto,
 				CommitsToRemove:    parentSHAPreviousRun.Location(),
@@ -73,7 +70,6 @@ func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
 				return err
 			}
 			if !isInSync {
-				fmt.Println("666666666666666666666666666666666666666666666666 NOT IN SYNC")
 				program = append(program, &RebaseBranch{
 					Branch: branchToRebaseOnto,
 				})
