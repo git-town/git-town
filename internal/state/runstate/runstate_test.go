@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/state/runstate"
-	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/vm/opcodes"
 	"github.com/git-town/git-town/v21/internal/vm/program"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -62,10 +61,10 @@ func TestRunState(t *testing.T) {
 					},
 				},
 			}),
-			EndConfigSnapshot:     None[undoconfig.EndConfigSnapshot](),
+			EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
 			EndStashSize:          Some(gitdomain.StashSize(1)),
 			BeginBranchesSnapshot: gitdomain.EmptyBranchesSnapshot(),
-			BeginConfigSnapshot: undoconfig.BeginConfigSnapshot{
+			BeginConfigSnapshot: configdomain.BeginConfigSnapshot{
 				Global:   configdomain.SingleSnapshot{},
 				Local:    configdomain.SingleSnapshot{},
 				Unscoped: configdomain.SingleSnapshot{},

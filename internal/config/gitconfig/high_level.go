@@ -11,7 +11,6 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-// TODO: make this a method of SingleSnapshot?
 func DefaultBranch(querier subshelldomain.Querier) Option[gitdomain.LocalBranchName] {
 	name, err := querier.QueryTrim("git", "config", "--get", "init.defaultbranch")
 	if err != nil {
@@ -24,7 +23,6 @@ func DefaultBranch(querier subshelldomain.Querier) Option[gitdomain.LocalBranchN
 	return Some(gitdomain.LocalBranchName(name))
 }
 
-// TODO: make this a method of SingleSnapshot?
 func DefaultRemote(querier subshelldomain.Querier) gitdomain.Remote {
 	output, err := querier.QueryTrim("git", "config", "--get", "clone.defaultRemoteName")
 	if err != nil {
