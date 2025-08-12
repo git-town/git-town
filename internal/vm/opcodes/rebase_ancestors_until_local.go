@@ -8,7 +8,11 @@ import (
 )
 
 type RebaseAncestorsUntilLocal struct {
-	Branch                  gitdomain.LocalBranchName
+	Branch gitdomain.LocalBranchName
+	// TODO: this is most likely not the correct SHA.
+	// We don't even know which parent we are going to rebase against
+	// until we find a local ancestor at runtime.
+	// This data can only be determined dynamically at runtime.
 	ParentSHAPreviousRun    Option[gitdomain.SHA]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
