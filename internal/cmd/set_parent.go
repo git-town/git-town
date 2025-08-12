@@ -383,7 +383,7 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 				prog.Add(
 					&opcodes.RebaseOnto{
 						BranchToRebaseOnto: data.initialBranch.BranchName(),
-						CommitsToRemove:    descendent.Location(),
+						CommitsToRemove:    parent.Location(),
 					},
 				)
 				if hasDescendentBranchInfo && descendentBranchInfo.HasTrackingBranch() {
