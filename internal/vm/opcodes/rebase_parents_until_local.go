@@ -16,7 +16,6 @@ type RebaseParentsUntilLocal struct {
 }
 
 func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
-	fmt.Println("22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222")
 	fmt.Println("RebaseParentsUntilLocal")
 	program := []shared.Opcode{}
 	branchInfos, hasBranchInfos := args.BranchInfos.Get()

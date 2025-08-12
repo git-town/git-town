@@ -26,13 +26,14 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	usesRebaseSyncStrategy := args.Config.NormalConfig.SyncFeatureStrategy == configdomain.SyncFeatureStrategyRebase
 	hasDescendents := args.Config.NormalConfig.Lineage.HasDescendents(localName)
 	parentToRemove, hasParentToRemove := args.Config.NormalConfig.Lineage.LatestAncestor(localName, args.BranchesToDelete.Value.Values()).Get()
+	actualParent := args.Config.NormalConfig.Lineage.Parent(localName).GetOrElse(args.Config.ValidatedConfigData.MainBranch)
 	if hasParentToRemove && usesRebaseSyncStrategy {
 		RemoveAncestorCommits(RemoveAncestorCommitsArgs{
 			Ancestor:          parentToRemove.BranchName(),
 			Branch:            localName,
 			HasTrackingBranch: branchInfo.HasTrackingBranch(),
 			Program:           args.Program,
-			RebaseOnto:        args.Config.ValidatedConfigData.MainBranch, // TODO: RebaseOnto the latest existing parent, which isn't always main
+			RebaseOnto:        actualParent,
 		})
 	}
 	parentSHAPreviousRun := None[gitdomain.SHA]()
