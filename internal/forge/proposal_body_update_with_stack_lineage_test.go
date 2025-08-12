@@ -135,45 +135,45 @@ Please check the box that apply
 - [ ] Fixed Infra
 `,
 		},
-		// 		{
-		// 			description: "Proposal existing proposal lineage at the end of the body",
-		// 			currentBody: `
-		// Git-town is a town of Gitters.
-		// Please check the box that apply
-		// 	- [ ] Add Tests
-		// 	- [ ] Wrote Documentation
-		// 	- [ ] Fixed Infra
-		// <!-- branch-stack -->
+		{
+			description: "Proposal existing proposal lineage at the end of the body",
+			currentBody: `
+Git-town is a town of Gitters.
+Please check the box that apply
+- [ ] Add Tests
+- [ ] Wrote Documentation
+- [ ] Fixed Infra
+<!-- branch-stack -->
 
-		// 			main
-		// 				feat-a
+main
+	feat-a
 
-		// <!-- branch-stack-end -->
-		// 			`,
-		// 			lineage: `
-		// 			main
-		// 				feat-a
-		// 					feat-b
-		// 						feat-c
-		// 							feat-d
-		// 			`,
-		// 			want: `
-		// Git-town is a town of Gitters.
-		// Please check the box that apply
-		// 	- [ ] Add Tests
-		// 	- [ ] Wrote Documentation
-		// 	- [ ] Fixed Infra
-		// <!-- branch-stack -->
+<!-- branch-stack-end -->
+`,
+			lineage: `
+main
+	feat-a
+		feat-b
+			feat-c
+				feat-d
+`,
+			want: `
+Git-town is a town of Gitters.
+Please check the box that apply
+- [ ] Add Tests
+- [ ] Wrote Documentation
+- [ ] Fixed Infra
+<!-- branch-stack -->
 
-		// 			main
-		// 				feat-a
-		// 					feat-b
-		// 						feat-c
-		// 							feat-d
+main
+	feat-a
+		feat-b
+			feat-c
+				feat-d
 
-		// <!-- branch-stack-end -->
-		// 			`,
-		// 		},
+<!-- branch-stack-end -->
+`,
+		},
 	} {
 		t.Run(tc.description, func(t *testing.T) {
 			t.Parallel()
