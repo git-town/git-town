@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks"
@@ -970,15 +969,6 @@ func TestBackendCommands(t *testing.T) {
 			have := repo.Git.CurrentBranchHasTrackingBranch(repo)
 			must.False(t, have)
 		})
-	})
-
-	t.Run("DefaultBranch", func(t *testing.T) {
-		t.Parallel()
-		runtime := testruntime.Create(t)
-		runtime.SetDefaultGitBranch("main")
-		have := gitconfig.DefaultBranch(runtime)
-		want := gitdomain.NewLocalBranchNameOption("main")
-		must.Eq(t, want, have)
 	})
 
 	t.Run("DetectPhantomMergeConflicts", func(t *testing.T) {

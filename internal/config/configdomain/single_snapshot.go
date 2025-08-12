@@ -1,5 +1,11 @@
 package configdomain
 
+import (
+	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
+)
+
 // SingleSnapshot contains all of the local or global Git metadata config settings.
 type SingleSnapshot map[Key]string
 
@@ -33,6 +39,15 @@ func (self SingleSnapshot) BranchTypeOverrideEntries() map[BranchTypeOverrideKey
 		}
 	}
 	return result
+}
+
+// TODO: make this a method of SingleSnapshot?
+func (self SingleSnapshot) DefaultBranch(querier subshelldomain.Querier) Option[gitdomain.LocalBranchName] {
+	text, has := self["init.defaultbranch"]
+	if !has {
+		return None[gitdomain.LocalBranchName]()
+	}
+	return Some(gitdomain.LocalBranchName(text))
 }
 
 // provides all the keys that describe lineage entries

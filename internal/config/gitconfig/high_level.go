@@ -2,27 +2,12 @@ package gitconfig
 
 import (
 	"strconv"
-	"strings"
 
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
-
-// TODO: make this a method of SingleSnapshot?
-func DefaultBranch(querier subshelldomain.Querier) Option[gitdomain.LocalBranchName] {
-	name, err := querier.QueryTrim("git", "config", "--get", "init.defaultbranch")
-	if err != nil {
-		return None[gitdomain.LocalBranchName]()
-	}
-	name = strings.TrimSpace(name)
-	if name == "" {
-		return None[gitdomain.LocalBranchName]()
-	}
-	return Some(gitdomain.LocalBranchName(name))
-}
 
 // TODO: make this a method of SingleSnapshot?
 func DefaultRemote(querier subshelldomain.Querier) gitdomain.Remote {

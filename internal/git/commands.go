@@ -11,7 +11,6 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks"
 	"github.com/git-town/git-town/v21/internal/gohacks/cache"
@@ -797,8 +796,8 @@ func (self *Commands) StageFiles(runner subshelldomain.Runner, names ...string) 
 }
 
 // determines the branch that is configured in Git as the default branch
-func (self *Commands) StandardBranch(querier subshelldomain.Querier) Option[gitdomain.LocalBranchName] {
-	if defaultBranch, has := gitconfig.DefaultBranch(querier).Get(); has {
+func (self *Commands) StandardBranch(querier subshelldomain.Querier, snapshot configdomain.SingleSnapshot) Option[gitdomain.LocalBranchName] {
+	if defaultBranch, has := snapshot.DefaultBranch(querier).Get(); has {
 		return Some(defaultBranch)
 	}
 	return self.OriginHead(querier)

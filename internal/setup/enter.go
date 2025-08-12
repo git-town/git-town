@@ -423,7 +423,7 @@ func enterMainBranch(data Data) (userChoice Option[gitdomain.LocalBranchName], a
 		Inputs:         data.Inputs,
 		Local:          data.Config.GitLocal.MainBranch,
 		LocalBranches:  data.LocalBranches,
-		StandardBranch: data.Git.StandardBranch(data.Backend),
+		StandardBranch: data.Git.StandardBranch(data.Backend, data.Snapshot),
 		Unscoped:       data.Config.GitUnscoped.MainBranch,
 	})
 }
