@@ -345,8 +345,7 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 					&opcodes.PullCurrentBranch{},
 				)
 			}
-			parentOpt := data.config.NormalConfig.Lineage.Parent(data.initialBranch)
-			parent, hasParent := parentOpt.Get()
+			parent, hasParent := data.config.NormalConfig.Lineage.Parent(data.initialBranch).Get()
 			if hasParent {
 				prog.Add(
 					&opcodes.RebaseOnto{
@@ -367,29 +366,31 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 				)
 			}
 			// remove commits from descendents
-			descendents := data.config.NormalConfig.Lineage.Descendants(data.initialBranch)
-			for _, descendent := range descendents {
-				prog.Add(
-					&opcodes.CheckoutIfNeeded{
-						Branch: descendent,
-					},
-				)
-				descendentBranchInfo, hasDescendentBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(descendent).Get()
-				if hasDescendentBranchInfo && descendentBranchInfo.HasTrackingBranch() {
+			if hasParent {
+				descendents := data.config.NormalConfig.Lineage.Descendants(data.initialBranch)
+				for _, descendent := range descendents {
 					prog.Add(
-						&opcodes.PullCurrentBranch{},
+						&opcodes.CheckoutIfNeeded{
+							Branch: descendent,
+						},
 					)
-				}
-				prog.Add(
-					&opcodes.RebaseOnto{
-						BranchToRebaseOnto: data.initialBranch.BranchName(),
-						CommitsToRemove:    parent.Location(),
-					},
-				)
-				if hasDescendentBranchInfo && descendentBranchInfo.HasTrackingBranch() {
+					descendentBranchInfo, hasDescendentBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(descendent).Get()
+					if hasDescendentBranchInfo && descendentBranchInfo.HasTrackingBranch() {
+						prog.Add(
+							&opcodes.PullCurrentBranch{},
+						)
+					}
 					prog.Add(
-						&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
+						&opcodes.RebaseOnto{
+							BranchToRebaseOnto: data.initialBranch.BranchName(),
+							CommitsToRemove:    parent.Location(),
+						},
 					)
+					if hasDescendentBranchInfo && descendentBranchInfo.HasTrackingBranch() {
+						prog.Add(
+							&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
+						)
+					}
 				}
 			}
 			prog.Add(
