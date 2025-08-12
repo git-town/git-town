@@ -23,7 +23,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/state/runstate"
-	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/validate"
 	"github.com/git-town/git-town/v21/internal/vm/interpreter/fullinterpreter"
 	"github.com/git-town/git-town/v21/internal/vm/opcodes"
@@ -168,7 +167,7 @@ func executeSetParent(args []string, cliConfig configdomain.PartialConfig) error
 		Command:               "set-parent",
 		DryRun:                false,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
-		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
+		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
 		RunProgram:            runProgram,
 		TouchedBranches:       runProgram.TouchedBranches(),
@@ -345,14 +344,12 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 					&opcodes.PullCurrentBranch{},
 				)
 			}
-			parentOpt := data.config.NormalConfig.Lineage.Parent(data.initialBranch)
-			parent, hasParent := parentOpt.Get()
+			parent, hasParent := data.config.NormalConfig.Lineage.Parent(data.initialBranch).Get()
 			if hasParent {
 				prog.Add(
 					&opcodes.RebaseOnto{
 						BranchToRebaseOnto: newParent.BranchName(),
 						CommitsToRemove:    parent.Location(),
-						Upstream:           None[gitdomain.LocalBranchName](),
 					},
 				)
 			} else {
@@ -368,30 +365,31 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 				)
 			}
 			// remove commits from descendents
-			descendents := data.config.NormalConfig.Lineage.Descendants(data.initialBranch)
-			for _, descendent := range descendents {
-				prog.Add(
-					&opcodes.CheckoutIfNeeded{
-						Branch: descendent,
-					},
-				)
-				descendentBranchInfo, hasDescendentBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(descendent).Get()
-				if hasDescendentBranchInfo && descendentBranchInfo.HasTrackingBranch() {
+			if hasParent {
+				descendents := data.config.NormalConfig.Lineage.Descendants(data.initialBranch)
+				for _, descendent := range descendents {
 					prog.Add(
-						&opcodes.PullCurrentBranch{},
+						&opcodes.CheckoutIfNeeded{
+							Branch: descendent,
+						},
 					)
-				}
-				prog.Add(
-					&opcodes.RebaseOnto{
-						BranchToRebaseOnto: data.initialBranch.BranchName(),
-						CommitsToRemove:    descendent.BranchName().Location(),
-						Upstream:           parentOpt,
-					},
-				)
-				if hasDescendentBranchInfo && descendentBranchInfo.HasTrackingBranch() {
+					descendentBranchInfo, hasDescendentBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(descendent).Get()
+					if hasDescendentBranchInfo && descendentBranchInfo.HasTrackingBranch() {
+						prog.Add(
+							&opcodes.PullCurrentBranch{},
+						)
+					}
 					prog.Add(
-						&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
+						&opcodes.RebaseOnto{
+							BranchToRebaseOnto: data.initialBranch.BranchName(),
+							CommitsToRemove:    parent.Location(),
+						},
 					)
+					if hasDescendentBranchInfo && descendentBranchInfo.HasTrackingBranch() {
+						prog.Add(
+							&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
+						)
+					}
 				}
 			}
 			prog.Add(

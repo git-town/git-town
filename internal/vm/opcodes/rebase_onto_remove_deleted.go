@@ -5,7 +5,6 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 // RebaseOntoRemoveDeleted rebases the current branch against the target branch, while moving the target branch onto the Onto branch.
@@ -13,7 +12,6 @@ import (
 type RebaseOntoRemoveDeleted struct {
 	BranchToRebaseOnto      gitdomain.LocalBranchName
 	CommitsToRemove         gitdomain.BranchName
-	Upstream                Option[gitdomain.LocalBranchName]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
@@ -30,7 +28,7 @@ func (self *RebaseOntoRemoveDeleted) Continue() []shared.Opcode {
 }
 
 func (self *RebaseOntoRemoveDeleted) Run(args shared.RunArgs) error {
-	err := args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseOnto.Location(), self.CommitsToRemove.Location(), self.Upstream)
+	err := args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseOnto.Location(), self.CommitsToRemove.Location())
 	if err != nil || args.Config.Value.NormalConfig.AutoResolve.NoAutoResolve() {
 		return err
 	}

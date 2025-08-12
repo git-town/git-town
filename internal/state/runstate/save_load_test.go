@@ -11,7 +11,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/state"
 	"github.com/git-town/git-town/v21/internal/state/runstate"
-	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/vm/opcodes"
 	"github.com/git-town/git-town/v21/internal/vm/program"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -39,14 +38,18 @@ func TestLoadSave(t *testing.T) {
 		runState := runstate.RunState{
 			AbortProgram:          program.Program{},
 			BeginBranchesSnapshot: gitdomain.EmptyBranchesSnapshot(),
-			BeginConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
-			BeginStashSize:        0,
-			BranchInfosLastRun:    None[gitdomain.BranchInfos](),
-			Command:               "command",
-			DryRun:                true,
-			EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
-			EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
-			EndStashSize:          Some(gitdomain.StashSize(1)),
+			BeginConfigSnapshot: configdomain.BeginConfigSnapshot{
+				Global:   configdomain.SingleSnapshot{},
+				Local:    configdomain.SingleSnapshot{},
+				Unscoped: configdomain.SingleSnapshot{},
+			},
+			BeginStashSize:      0,
+			BranchInfosLastRun:  None[gitdomain.BranchInfos](),
+			Command:             "command",
+			DryRun:              true,
+			EndBranchesSnapshot: None[gitdomain.BranchesSnapshot](),
+			EndConfigSnapshot:   None[configdomain.EndConfigSnapshot](),
+			EndStashSize:        Some(gitdomain.StashSize(1)),
 			RunProgram: program.Program{
 				&opcodes.BranchCreate{Branch: "branch", StartingPoint: "123456"},
 				&opcodes.BranchCreateAndCheckoutExistingParent{Ancestors: gitdomain.NewLocalBranchNames("one", "two", "three"), Branch: "branch"},
@@ -124,7 +127,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.RebaseBranch{Branch: "branch"},
 				&opcodes.RebaseContinue{},
 				&opcodes.RebaseContinueIfNeeded{},
-				&opcodes.RebaseOntoRemoveDeleted{BranchToRebaseOnto: "branch-2", CommitsToRemove: "branch-1", Upstream: gitdomain.NewLocalBranchNameOption("upstream")},
+				&opcodes.RebaseOntoRemoveDeleted{BranchToRebaseOnto: "branch-2", CommitsToRemove: "branch-1"},
 				&opcodes.RebaseParentsUntilLocal{Branch: "branch", ParentSHAPreviousRun: Some(gitdomain.SHA("123456"))},
 				&opcodes.RebaseTrackingBranch{RemoteBranch: "origin/branch", PushBranches: true},
 				&opcodes.RegisterUndoablePerennialCommit{Parent: "parent"},
@@ -159,7 +162,8 @@ func TestLoadSave(t *testing.T) {
   },
   "BeginConfigSnapshot": {
     "Global": {},
-    "Local": {}
+    "Local": {},
+    "Unscoped": {}
   },
   "BeginStashSize": 0,
   "BranchInfosLastRun": null,
@@ -702,8 +706,7 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "BranchToRebaseOnto": "branch-2",
-        "CommitsToRemove": "branch-1",
-        "Upstream": "upstream"
+        "CommitsToRemove": "branch-1"
       },
       "type": "RebaseOntoRemoveDeleted"
     },

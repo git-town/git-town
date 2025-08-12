@@ -22,7 +22,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/state/runstate"
-	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/validate"
 	"github.com/git-town/git-town/v21/internal/vm/interpreter/fullinterpreter"
 	"github.com/git-town/git-town/v21/internal/vm/opcodes"
@@ -123,7 +122,7 @@ func executeSwap(args []string, cliConfig configdomain.PartialConfig) error {
 		Command:               swapCommandName,
 		DryRun:                data.config.NormalConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
-		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
+		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
 		RunProgram:            runProgram,
 		TouchedBranches:       runProgram.TouchedBranches(),
@@ -341,7 +340,6 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 		&opcodes.RebaseOnto{
 			BranchToRebaseOnto: data.grandParentBranch.BranchName(),
 			CommitsToRemove:    data.parentBranch.Location(),
-			Upstream:           None[gitdomain.LocalBranchName](),
 		},
 	)
 	if data.branchToSwapInfo.HasTrackingBranch() {
@@ -356,7 +354,6 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 		&opcodes.RebaseOnto{
 			BranchToRebaseOnto: data.branchToSwapName.BranchName(),
 			CommitsToRemove:    data.grandParentBranch.Location(),
-			Upstream:           None[gitdomain.LocalBranchName](),
 		},
 	)
 	if data.parentBranchInfo.HasTrackingBranch() {
@@ -378,7 +375,6 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 			&opcodes.RebaseOnto{
 				BranchToRebaseOnto: data.parentBranch.BranchName(),
 				CommitsToRemove:    oldBranchSHA.Location(),
-				Upstream:           None[gitdomain.LocalBranchName](),
 			},
 		)
 		if child.info.HasTrackingBranch() {
