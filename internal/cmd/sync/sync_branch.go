@@ -54,7 +54,15 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// cannot sync branches that are active in another worktree
 	default:
-		LocalBranchProgram(localName, branchInfo, initialParentName, initialParentSHA, parentSHAPreviousRun, firstCommitMessage, args)
+		LocalBranchProgram(LocalBranchProgramArgs{
+			BranchProgramArgs:    args,
+			branchInfo:           branchInfo,
+			firstCommitMessage:   firstCommitMessage,
+			initialParentName:    initialParentName,
+			initialParentSHA:     initialParentSHA,
+			localName:            localName,
+			parentSHAPreviousRun: parentSHAPreviousRun,
+		})
 	}
 	args.Program.Value.Add(&opcodes.ProgramEndOfBranch{})
 }
@@ -72,75 +80,85 @@ type BranchProgramArgs struct {
 	Remotes             gitdomain.Remotes
 }
 
+type LocalBranchProgramArgs struct {
+	BranchProgramArgs
+	branchInfo           gitdomain.BranchInfo
+	firstCommitMessage   Option[gitdomain.CommitMessage]
+	initialParentName    Option[gitdomain.LocalBranchName]
+	initialParentSHA     Option[gitdomain.SHA]
+	localName            gitdomain.LocalBranchName
+	parentSHAPreviousRun Option[gitdomain.SHA]
+}
+
 // LocalBranchProgram provides the program to sync a local branch.
-func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.BranchInfo, initialParentName Option[gitdomain.LocalBranchName], initialParentSHA, parentSHAPreviousRun Option[gitdomain.SHA], firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
-	branchType := args.Config.BranchType(localName)
+func LocalBranchProgram(args LocalBranchProgramArgs) {
+	branchType := args.Config.BranchType(args.localName)
 	isMainOrPerennialBranch := branchType == configdomain.BranchTypeMainBranch || branchType == configdomain.BranchTypePerennialBranch
 	if isMainOrPerennialBranch && !args.Remotes.HasRemote(args.Config.NormalConfig.DevRemote) {
 		// perennial branch but no remote --> this branch cannot be synced
 		return
 	}
-	args.Program.Value.Add(&opcodes.CheckoutIfNeeded{Branch: localName})
+	args.Program.Value.Add(&opcodes.CheckoutIfNeeded{Branch: args.localName})
 	switch branchType {
 	case configdomain.BranchTypeFeatureBranch:
 		FeatureBranchProgram(args.Config.NormalConfig.SyncFeatureStrategy.SyncStrategy(), featureBranchArgs{
-			firstCommitMessage:   firstCommitMessage,
-			initialParentName:    initialParentName,
-			initialParentSHA:     initialParentSHA,
-			localName:            localName,
+			firstCommitMessage:   args.firstCommitMessage,
+			initialParentName:    args.initialParentName,
+			initialParentSHA:     args.initialParentSHA,
+			localName:            args.localName,
 			offline:              args.Config.NormalConfig.Offline,
-			parentSHAPreviousRun: parentSHAPreviousRun,
+			parentSHAPreviousRun: args.parentSHAPreviousRun,
 			program:              args.Program,
 			prune:                args.Prune,
 			pushBranches:         args.PushBranches,
-			trackingBranch:       branchInfo.RemoteName,
+			trackingBranch:       args.branchInfo.RemoteName,
 		})
 	case configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch:
-		PerennialBranchProgram(branchInfo, args)
+		PerennialBranchProgram(args.branchInfo, args.BranchProgramArgs)
 	case configdomain.BranchTypeParkedBranch:
 		ParkedBranchProgram(args.Config.NormalConfig.SyncFeatureStrategy.SyncStrategy(), args.InitialBranch, featureBranchArgs{
-			firstCommitMessage:   firstCommitMessage,
-			initialParentName:    initialParentName,
-			initialParentSHA:     initialParentSHA,
-			localName:            localName,
+			firstCommitMessage:   args.firstCommitMessage,
+			initialParentName:    args.initialParentName,
+			initialParentSHA:     args.initialParentSHA,
+			localName:            args.localName,
 			offline:              args.Config.NormalConfig.Offline,
-			parentSHAPreviousRun: parentSHAPreviousRun,
+			parentSHAPreviousRun: args.parentSHAPreviousRun,
 			program:              args.Program,
 			prune:                args.Prune,
 			pushBranches:         args.PushBranches,
-			trackingBranch:       branchInfo.RemoteName,
+			trackingBranch:       args.branchInfo.RemoteName,
 		})
 	case configdomain.BranchTypeContributionBranch:
-		ContributionBranchProgram(args.Program, branchInfo)
+		ContributionBranchProgram(args.Program, args.branchInfo)
 	case configdomain.BranchTypeObservedBranch:
-		ObservedBranchProgram(branchInfo, args.Program)
+		ObservedBranchProgram(args.branchInfo, args.Program)
 	case configdomain.BranchTypePrototypeBranch:
 		FeatureBranchProgram(args.Config.NormalConfig.SyncPrototypeStrategy.SyncStrategy(), featureBranchArgs{
-			firstCommitMessage:   firstCommitMessage,
-			initialParentName:    initialParentName,
-			initialParentSHA:     initialParentSHA,
-			localName:            localName,
+			firstCommitMessage:   args.firstCommitMessage,
+			initialParentName:    args.initialParentName,
+			initialParentSHA:     args.initialParentSHA,
+			localName:            args.localName,
 			offline:              args.Config.NormalConfig.Offline,
-			parentSHAPreviousRun: parentSHAPreviousRun,
+			parentSHAPreviousRun: args.parentSHAPreviousRun,
 			program:              args.Program,
 			prune:                args.Prune,
-			pushBranches:         configdomain.PushBranches(branchInfo.HasTrackingBranch()),
-			trackingBranch:       branchInfo.RemoteName,
+			pushBranches:         configdomain.PushBranches(args.branchInfo.HasTrackingBranch()),
+			trackingBranch:       args.branchInfo.RemoteName,
 		})
 	}
-	if args.PushBranches.IsTrue() && args.Remotes.HasRemote(args.Config.NormalConfig.DevRemote) && args.Config.NormalConfig.Offline.IsOnline() && branchType.ShouldPush(localName == args.InitialBranch) {
+	if args.PushBranches.IsTrue() && args.Remotes.HasRemote(args.Config.NormalConfig.DevRemote) && args.Config.NormalConfig.Offline.IsOnline() && branchType.ShouldPush(args.localName == args.InitialBranch) {
 		isMainBranch := branchType == configdomain.BranchTypeMainBranch
 		switch {
-		case !branchInfo.HasTrackingBranch():
-			args.Program.Value.Add(&opcodes.BranchTrackingCreate{Branch: localName})
+		case !args.branchInfo.HasTrackingBranch():
+			args.Program.Value.Add(&opcodes.BranchTrackingCreate{Branch: args.localName})
 		case isMainBranch && args.Remotes.HasUpstream() && args.Config.NormalConfig.SyncUpstream.IsTrue():
-			args.Program.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: localName})
-		case isMainOrPerennialBranch && !shouldPushPerennialBranch(branchInfo.SyncStatus):
+			args.Program.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: args.localName})
+		case isMainOrPerennialBranch && !shouldPushPerennialBranch(args.branchInfo.SyncStatus):
 			// don't push if its a perennial branch that doesn't need pushing
 		case isMainOrPerennialBranch:
-			args.Program.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: localName})
+			args.Program.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: args.localName})
 		default:
-			pushFeatureBranchProgram(args.Program, localName, args.Config.NormalConfig.SyncFeatureStrategy)
+			pushFeatureBranchProgram(args.Program, args.localName, args.Config.NormalConfig.SyncFeatureStrategy)
 		}
 	}
 }
