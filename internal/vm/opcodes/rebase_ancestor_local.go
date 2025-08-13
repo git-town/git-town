@@ -24,8 +24,9 @@ type RebaseAncestorLocal struct {
 //
 // It should be possible to perform both in one operation: rebase onto the new parent, removing the old commits in the branch
 // The old commits are determined this way:
-//   - original parent deleted during this sync --> SHA of the local parent branch
-//   - original parent not deleted --> SHA of that branch at the last run
+//   - original parent deleted during this sync --> SHA of the local parent branch before it was deleted
+//   - original parent not deleted and has a SHA at the last run --> SHA of this branch at the last run
+//   - original parent not deleted and has no SHA at the last run --> just do a normal rebase?
 func (self *RebaseAncestorLocal) Run(args shared.RunArgs) error {
 	branchInfos, hasBranchInfos := args.BranchInfos.Get()
 	if !hasBranchInfos {
