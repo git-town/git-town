@@ -32,11 +32,16 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 			RebaseOnto:        actualParent,
 		})
 	}
-	parentSHAPreviousRun := None[gitdomain.SHA]()
-	if parent, has := initialParentName.Get(); has {
-		if branchInfosLastRun, has := args.BranchInfosLastRun.Get(); has {
-			if parentInfoLastRun, has := branchInfosLastRun.FindByLocalName(parent).Get(); has {
-				parentSHAPreviousRun = Some(parentInfoLastRun.GetLocalOrRemoteSHA())
+	commitsToRemove := None[gitdomain.SHA]()
+	if hasAncestorToRemove && ancestorToRemove == parentName {
+		commitsToRemove = initialParentSHA
+	}
+	if commitsToRemove.IsNone() {
+		if parent, has := initialParentName.Get(); has {
+			if branchInfosLastRun, has := args.BranchInfosLastRun.Get(); has {
+				if parentInfoLastRun, has := branchInfosLastRun.FindByLocalName(parent).Get(); has {
+					commitsToRemove = Some(parentInfoLastRun.GetLocalOrRemoteSHA())
+				}
 			}
 		}
 	}
@@ -50,18 +55,18 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	case usesRebaseSyncStrategy && trackingBranchGone && hasDescendents:
 		args.BranchesToDelete.Value.Add(localName)
 	case trackingBranchGone:
-		deletedBranchProgram(args.Program, localName, initialParentName, initialParentSHA, parentSHAPreviousRun, args)
+		deletedBranchProgram(args.Program, localName, initialParentName, initialParentSHA, commitsToRemove, args)
 	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// cannot sync branches that are active in another worktree
 	default:
 		localBranchProgram(localBranchProgramArgs{
-			BranchProgramArgs:    args,
-			branchInfo:           branchInfo,
-			firstCommitMessage:   firstCommitMessage,
-			initialParentName:    initialParentName,
-			initialParentSHA:     initialParentSHA,
-			localName:            localName,
-			parentSHAPreviousRun: parentSHAPreviousRun,
+			BranchProgramArgs:  args,
+			branchInfo:         branchInfo,
+			firstCommitMessage: firstCommitMessage,
+			initialParentName:  initialParentName,
+			initialParentSHA:   initialParentSHA,
+			localName:          localName,
+			commitsToRemove:    commitsToRemove,
 		})
 	}
 	args.Program.Value.Add(&opcodes.ProgramEndOfBranch{})
@@ -82,12 +87,12 @@ type BranchProgramArgs struct {
 
 type localBranchProgramArgs struct {
 	BranchProgramArgs
-	branchInfo           gitdomain.BranchInfo
-	firstCommitMessage   Option[gitdomain.CommitMessage]
-	initialParentName    Option[gitdomain.LocalBranchName]
-	initialParentSHA     Option[gitdomain.SHA]
-	localName            gitdomain.LocalBranchName
-	parentSHAPreviousRun Option[gitdomain.SHA]
+	branchInfo         gitdomain.BranchInfo
+	firstCommitMessage Option[gitdomain.CommitMessage]
+	initialParentName  Option[gitdomain.LocalBranchName]
+	initialParentSHA   Option[gitdomain.SHA]
+	localName          gitdomain.LocalBranchName
+	commitsToRemove    Option[gitdomain.SHA]
 }
 
 // localBranchProgram provides the program to sync a local branch.
@@ -102,31 +107,31 @@ func localBranchProgram(args localBranchProgramArgs) {
 	switch branchType {
 	case configdomain.BranchTypeFeatureBranch:
 		FeatureBranchProgram(args.Config.NormalConfig.SyncFeatureStrategy.SyncStrategy(), featureBranchArgs{
-			firstCommitMessage:   args.firstCommitMessage,
-			initialParentName:    args.initialParentName,
-			initialParentSHA:     args.initialParentSHA,
-			localName:            args.localName,
-			offline:              args.Config.NormalConfig.Offline,
-			parentSHAPreviousRun: args.parentSHAPreviousRun,
-			program:              args.Program,
-			prune:                args.Prune,
-			pushBranches:         args.PushBranches,
-			trackingBranch:       args.branchInfo.RemoteName,
+			firstCommitMessage: args.firstCommitMessage,
+			initialParentName:  args.initialParentName,
+			initialParentSHA:   args.initialParentSHA,
+			localName:          args.localName,
+			offline:            args.Config.NormalConfig.Offline,
+			commitsToRemove:    args.commitsToRemove,
+			program:            args.Program,
+			prune:              args.Prune,
+			pushBranches:       args.PushBranches,
+			trackingBranch:     args.branchInfo.RemoteName,
 		})
 	case configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch:
 		PerennialBranchProgram(args.branchInfo, args.BranchProgramArgs)
 	case configdomain.BranchTypeParkedBranch:
 		ParkedBranchProgram(args.Config.NormalConfig.SyncFeatureStrategy.SyncStrategy(), args.InitialBranch, featureBranchArgs{
-			firstCommitMessage:   args.firstCommitMessage,
-			initialParentName:    args.initialParentName,
-			initialParentSHA:     args.initialParentSHA,
-			localName:            args.localName,
-			offline:              args.Config.NormalConfig.Offline,
-			parentSHAPreviousRun: args.parentSHAPreviousRun,
-			program:              args.Program,
-			prune:                args.Prune,
-			pushBranches:         args.PushBranches,
-			trackingBranch:       args.branchInfo.RemoteName,
+			firstCommitMessage: args.firstCommitMessage,
+			initialParentName:  args.initialParentName,
+			initialParentSHA:   args.initialParentSHA,
+			localName:          args.localName,
+			offline:            args.Config.NormalConfig.Offline,
+			commitsToRemove:    args.commitsToRemove,
+			program:            args.Program,
+			prune:              args.Prune,
+			pushBranches:       args.PushBranches,
+			trackingBranch:     args.branchInfo.RemoteName,
 		})
 	case configdomain.BranchTypeContributionBranch:
 		ContributionBranchProgram(args.Program, args.branchInfo)
@@ -134,16 +139,16 @@ func localBranchProgram(args localBranchProgramArgs) {
 		ObservedBranchProgram(args.branchInfo, args.Program)
 	case configdomain.BranchTypePrototypeBranch:
 		FeatureBranchProgram(args.Config.NormalConfig.SyncPrototypeStrategy.SyncStrategy(), featureBranchArgs{
-			firstCommitMessage:   args.firstCommitMessage,
-			initialParentName:    args.initialParentName,
-			initialParentSHA:     args.initialParentSHA,
-			localName:            args.localName,
-			offline:              args.Config.NormalConfig.Offline,
-			parentSHAPreviousRun: args.parentSHAPreviousRun,
-			program:              args.Program,
-			prune:                args.Prune,
-			pushBranches:         configdomain.PushBranches(args.branchInfo.HasTrackingBranch()),
-			trackingBranch:       args.branchInfo.RemoteName,
+			firstCommitMessage: args.firstCommitMessage,
+			initialParentName:  args.initialParentName,
+			initialParentSHA:   args.initialParentSHA,
+			localName:          args.localName,
+			offline:            args.Config.NormalConfig.Offline,
+			commitsToRemove:    args.commitsToRemove,
+			program:            args.Program,
+			prune:              args.Prune,
+			pushBranches:       configdomain.PushBranches(args.branchInfo.HasTrackingBranch()),
+			trackingBranch:     args.branchInfo.RemoteName,
 		})
 	}
 	if args.PushBranches.IsTrue() && args.Remotes.HasRemote(args.Config.NormalConfig.DevRemote) && args.Config.NormalConfig.Offline.IsOnline() && branchType.ShouldPush(args.localName == args.InitialBranch) {
