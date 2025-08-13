@@ -15,14 +15,12 @@ Feature: shipped parent branches in a stacked change
     And the commits
       | BRANCH    | LOCATION      | MESSAGE          | FILE NAME      | FILE CONTENT      |
       | feature-2 | local, origin | feature-2 commit | feature-2-file | feature 2 content |
-    And wait 1 second to ensure new Git timestamps
     And the branches
       | NAME      | TYPE    | PARENT    | LOCATIONS     |
       | feature-3 | feature | feature-2 | local, origin |
     And the commits
       | BRANCH    | LOCATION      | MESSAGE          | FILE NAME      | FILE CONTENT      |
       | feature-3 | local, origin | feature-3 commit | feature-3-file | feature 3 content |
-    And wait 1 second to ensure new Git timestamps
     And the branches
       | NAME      | TYPE    | PARENT    | LOCATIONS     |
       | feature-4 | feature | feature-3 | local, origin |
@@ -32,7 +30,6 @@ Feature: shipped parent branches in a stacked change
     And origin ships the "feature-1" branch using the "squash-merge" ship-strategy
     And origin ships the "feature-2" branch using the "squash-merge" ship-strategy as "feature-2 commit"
     And the current branch is "feature-4"
-    And wait 1 second to ensure new Git timestamps
     When I run "git-town sync"
 
   Scenario: result
@@ -41,8 +38,6 @@ Feature: shipped parent branches in a stacked change
       | feature-4 | git fetch --prune --tags                                    |
       |           | git checkout main                                           |
       | main      | git -c rebase.updateRefs=false rebase origin/main           |
-      |           | git checkout feature-2                                      |
-      | feature-2 | git -c rebase.updateRefs=false rebase --onto main feature-1 |
       |           | git checkout feature-3                                      |
       | feature-3 | git pull                                                    |
       |           | git -c rebase.updateRefs=false rebase --onto main feature-2 |
