@@ -174,20 +174,6 @@ func (self Lineage) IsEmpty() bool {
 	return self.data == nil || self.Len() == 0
 }
 
-// provides the branch from candidates that is the youngest ancestor of the given branch
-func (self Lineage) LatestAncestor(branch gitdomain.LocalBranchName, candidates gitdomain.LocalBranchNames) Option[gitdomain.LocalBranchName] {
-	for {
-		if candidates.Contains(branch) {
-			return Some(branch)
-		}
-		if parent, hasParent := self.Parent(branch).Get(); hasParent {
-			branch = parent
-		} else {
-			return None[gitdomain.LocalBranchName]()
-		}
-	}
-}
-
 func (self Lineage) Len() int {
 	return len(self.data)
 }
@@ -254,6 +240,20 @@ func (self Lineage) Set(branch, parent gitdomain.LocalBranchName) Lineage {
 	self = self.initializeIfNeeded()
 	self.data[branch] = parent
 	return self
+}
+
+// provides the branch from candidates that is the youngest ancestor of the given branch
+func (self Lineage) YoungestAncestor(branch gitdomain.LocalBranchName, candidates gitdomain.LocalBranchNames) Option[gitdomain.LocalBranchName] {
+	for {
+		if candidates.Contains(branch) {
+			return Some(branch)
+		}
+		if parent, hasParent := self.Parent(branch).Get(); hasParent {
+			branch = parent
+		} else {
+			return None[gitdomain.LocalBranchName]()
+		}
+	}
 }
 
 func (self Lineage) addChildrenHierarchically(result *gitdomain.LocalBranchNames, currentBranch gitdomain.LocalBranchName, allBranches gitdomain.LocalBranchNames) {
