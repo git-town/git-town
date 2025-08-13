@@ -62,11 +62,11 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 		localBranchProgram(localBranchProgramArgs{
 			BranchProgramArgs:  args,
 			branchInfo:         branchInfo,
+			commitsToRemove:    commitsToRemove,
 			firstCommitMessage: firstCommitMessage,
 			initialParentName:  initialParentName,
 			initialParentSHA:   initialParentSHA,
 			localName:          localName,
-			commitsToRemove:    commitsToRemove,
 		})
 	}
 	args.Program.Value.Add(&opcodes.ProgramEndOfBranch{})
@@ -88,11 +88,11 @@ type BranchProgramArgs struct {
 type localBranchProgramArgs struct {
 	BranchProgramArgs
 	branchInfo         gitdomain.BranchInfo
+	commitsToRemove    Option[gitdomain.SHA]
 	firstCommitMessage Option[gitdomain.CommitMessage]
 	initialParentName  Option[gitdomain.LocalBranchName]
 	initialParentSHA   Option[gitdomain.SHA]
 	localName          gitdomain.LocalBranchName
-	commitsToRemove    Option[gitdomain.SHA]
 }
 
 // localBranchProgram provides the program to sync a local branch.
@@ -107,12 +107,12 @@ func localBranchProgram(args localBranchProgramArgs) {
 	switch branchType {
 	case configdomain.BranchTypeFeatureBranch:
 		FeatureBranchProgram(args.Config.NormalConfig.SyncFeatureStrategy.SyncStrategy(), featureBranchArgs{
+			commitsToRemove:    args.commitsToRemove,
 			firstCommitMessage: args.firstCommitMessage,
 			initialParentName:  args.initialParentName,
 			initialParentSHA:   args.initialParentSHA,
 			localName:          args.localName,
 			offline:            args.Config.NormalConfig.Offline,
-			commitsToRemove:    args.commitsToRemove,
 			program:            args.Program,
 			prune:              args.Prune,
 			pushBranches:       args.PushBranches,
@@ -122,12 +122,12 @@ func localBranchProgram(args localBranchProgramArgs) {
 		PerennialBranchProgram(args.branchInfo, args.BranchProgramArgs)
 	case configdomain.BranchTypeParkedBranch:
 		ParkedBranchProgram(args.Config.NormalConfig.SyncFeatureStrategy.SyncStrategy(), args.InitialBranch, featureBranchArgs{
+			commitsToRemove:    args.commitsToRemove,
 			firstCommitMessage: args.firstCommitMessage,
 			initialParentName:  args.initialParentName,
 			initialParentSHA:   args.initialParentSHA,
 			localName:          args.localName,
 			offline:            args.Config.NormalConfig.Offline,
-			commitsToRemove:    args.commitsToRemove,
 			program:            args.Program,
 			prune:              args.Prune,
 			pushBranches:       args.PushBranches,
@@ -139,12 +139,12 @@ func localBranchProgram(args localBranchProgramArgs) {
 		ObservedBranchProgram(args.branchInfo, args.Program)
 	case configdomain.BranchTypePrototypeBranch:
 		FeatureBranchProgram(args.Config.NormalConfig.SyncPrototypeStrategy.SyncStrategy(), featureBranchArgs{
+			commitsToRemove:    args.commitsToRemove,
 			firstCommitMessage: args.firstCommitMessage,
 			initialParentName:  args.initialParentName,
 			initialParentSHA:   args.initialParentSHA,
 			localName:          args.localName,
 			offline:            args.Config.NormalConfig.Offline,
-			commitsToRemove:    args.commitsToRemove,
 			program:            args.Program,
 			prune:              args.Prune,
 			pushBranches:       configdomain.PushBranches(args.branchInfo.HasTrackingBranch()),
