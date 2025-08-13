@@ -22,15 +22,6 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	}
 	usesRebaseSyncStrategy := args.Config.NormalConfig.SyncFeatureStrategy == configdomain.SyncFeatureStrategyRebase
 	parentToRemove, hasParentToRemove := args.Config.NormalConfig.Lineage.LatestAncestor(localName, args.BranchesToDelete.Value.Values()).Get()
-	if hasParentToRemove && usesRebaseSyncStrategy {
-		RemoveAncestorCommits(RemoveAncestorCommitsArgs{
-			Ancestor:          parentToRemove.BranchName(),
-			Branch:            localName,
-			HasTrackingBranch: branchInfo.HasTrackingBranch(),
-			Program:           args.Program,
-			RebaseOnto:        args.Config.ValidatedConfigData.MainBranch, // TODO: RebaseOnto the latest existing parent, which isn't always main
-		})
-	}
 	parentSHAPreviousRun := None[gitdomain.SHA]()
 	if parent, has := initialParentName.Get(); has {
 		if branchInfosLastRun, has := args.BranchInfosLastRun.Get(); has {
@@ -43,16 +34,60 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	hasDescendents := args.Config.NormalConfig.Lineage.HasDescendents(localName)
 	switch {
 	case hasParentToRemove && parentToRemove == parentName && trackingBranchGone && hasDescendents:
+		if usesRebaseSyncStrategy {
+			RemoveAncestorCommits(RemoveAncestorCommitsArgs{
+				Ancestor:          parentToRemove.BranchName(),
+				Branch:            localName,
+				HasTrackingBranch: branchInfo.HasTrackingBranch(),
+				Program:           args.Program,
+				RebaseOnto:        args.Config.ValidatedConfigData.MainBranch, // TODO: RebaseOnto the latest existing parent, which isn't always main
+			})
+		}
 		args.BranchesToDelete.Value.Add(localName)
 	case hasParentToRemove && parentToRemove == parentName:
-		// nothing to do here, we already synced with the parent by calling RemoveAncestorCommits above
+		if usesRebaseSyncStrategy {
+			RemoveAncestorCommits(RemoveAncestorCommitsArgs{
+				Ancestor:          parentToRemove.BranchName(),
+				Branch:            localName,
+				HasTrackingBranch: branchInfo.HasTrackingBranch(),
+				Program:           args.Program,
+				RebaseOnto:        args.Config.ValidatedConfigData.MainBranch, // TODO: RebaseOnto the latest existing parent, which isn't always main
+			})
+		}
 	case usesRebaseSyncStrategy && trackingBranchGone && hasDescendents:
+		if hasParentToRemove {
+			RemoveAncestorCommits(RemoveAncestorCommitsArgs{
+				Ancestor:          parentToRemove.BranchName(),
+				Branch:            localName,
+				HasTrackingBranch: branchInfo.HasTrackingBranch(),
+				Program:           args.Program,
+				RebaseOnto:        args.Config.ValidatedConfigData.MainBranch, // TODO: RebaseOnto the latest existing parent, which isn't always main
+			})
+		}
 		args.BranchesToDelete.Value.Add(localName)
 	case trackingBranchGone:
+		if hasParentToRemove && usesRebaseSyncStrategy {
+			RemoveAncestorCommits(RemoveAncestorCommitsArgs{
+				Ancestor:          parentToRemove.BranchName(),
+				Branch:            localName,
+				HasTrackingBranch: branchInfo.HasTrackingBranch(),
+				Program:           args.Program,
+				RebaseOnto:        args.Config.ValidatedConfigData.MainBranch, // TODO: RebaseOnto the latest existing parent, which isn't always main
+			})
+		}
 		deletedBranchProgram(args.Program, localName, initialParentName, initialParentSHA, parentSHAPreviousRun, args)
 	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// cannot sync branches that are active in another worktree
 	default:
+		if hasParentToRemove && usesRebaseSyncStrategy {
+			RemoveAncestorCommits(RemoveAncestorCommitsArgs{
+				Ancestor:          parentToRemove.BranchName(),
+				Branch:            localName,
+				HasTrackingBranch: branchInfo.HasTrackingBranch(),
+				Program:           args.Program,
+				RebaseOnto:        args.Config.ValidatedConfigData.MainBranch, // TODO: RebaseOnto the latest existing parent, which isn't always main
+			})
+		}
 		LocalBranchProgram(localName, branchInfo, initialParentName, initialParentSHA, parentSHAPreviousRun, firstCommitMessage, args)
 	}
 	args.Program.Value.Add(&opcodes.ProgramEndOfBranch{})
