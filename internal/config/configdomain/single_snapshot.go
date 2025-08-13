@@ -23,18 +23,6 @@ func (self SingleSnapshot) Aliases() Aliases {
 	return result
 }
 
-// provides all the configuration entries that describe branch type overrides
-// TODO: remove this, use NewBranchTypeOverridesInSnapshot
-func (self SingleSnapshot) BranchTypeOverrideEntries() map[BranchTypeOverrideKey]string {
-	result := map[BranchTypeOverrideKey]string{}
-	for key, value := range self {
-		if branchTypeKey, isBranchTypeKey := ParseBranchTypeOverrideKey(key).Get(); isBranchTypeKey {
-			result[branchTypeKey] = value
-		}
-	}
-	return result
-}
-
 // provides all the keys that describe lineage entries
 func (self SingleSnapshot) LineageEntries() map[LineageKey]string {
 	result := map[LineageKey]string{}

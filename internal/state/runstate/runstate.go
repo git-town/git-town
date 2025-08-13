@@ -9,7 +9,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
-	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/vm/opcodes"
 	"github.com/git-town/git-town/v21/internal/vm/program"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -21,13 +20,13 @@ import (
 type RunState struct {
 	AbortProgram             program.Program                            `exhaustruct:"optional"` // opcodes to abort the currently pending Git operation
 	BeginBranchesSnapshot    gitdomain.BranchesSnapshot                 // snapshot of the Git branches before the Git Town command that this RunState is for ran
-	BeginConfigSnapshot      undoconfig.ConfigSnapshot                  // snapshot of the Git configuration before the Git Town command that this RunState is for ran
+	BeginConfigSnapshot      configdomain.BeginConfigSnapshot           // snapshot of the Git configuration before the Git Town command that this RunState is for ran
 	BeginStashSize           gitdomain.StashSize                        // size of the Git stash before the Git Town command that this RunState is for ran
 	BranchInfosLastRun       Option[gitdomain.BranchInfos]              // branch infos when the last Git Town command ended
 	Command                  string                                     // name of the Git Town command that this RunState is for
 	DryRun                   configdomain.DryRun                        // whether the Git Town command that this RunState is for operated in dry-run mode
 	EndBranchesSnapshot      Option[gitdomain.BranchesSnapshot]         // snapshot of the Git branches after the Git Town command that this RunState is for ran
-	EndConfigSnapshot        Option[undoconfig.ConfigSnapshot]          // snapshot of the Git configuration after the Git Town command that this RunState is for ran
+	EndConfigSnapshot        Option[configdomain.EndConfigSnapshot]     // snapshot of the Git configuration after the Git Town command that this RunState is for ran
 	EndStashSize             Option[gitdomain.StashSize]                // size of the Git stash after the Git Town command that this RunState is for ran
 	FinalUndoProgram         program.Program                            `exhaustruct:"optional"` // additional opcodes to run after this RunState was undone
 	RunProgram               program.Program                            // remaining opcodes of the Git Town command that this RunState is for

@@ -78,7 +78,7 @@ func (self *Fixture) AddSecondWorktree(branch gitdomain.LocalBranchName) {
 		TestRunner: &runner,
 		Git:        &gitCommands,
 		Config:     devRepo.Config,
-		SnapShots:  map[configdomain.ConfigScope]configdomain.SingleSnapshot{},
+		SnapShots:  devRepo.SnapShots,
 	})
 }
 

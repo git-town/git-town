@@ -12,7 +12,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/state/runlog"
 	"github.com/git-town/git-town/v21/internal/state/runstate"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
-	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/vm/opcodes"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -30,7 +29,7 @@ type ExecuteArgs struct {
 	HasOpenChanges          bool
 	InitialBranch           gitdomain.LocalBranchName
 	InitialBranchesSnapshot gitdomain.BranchesSnapshot
-	InitialConfigSnapshot   undoconfig.ConfigSnapshot
+	InitialConfigSnapshot   configdomain.BeginConfigSnapshot
 	InitialStashSize        gitdomain.StashSize
 	Inputs                  dialogcomponents.Inputs
 	PendingCommand          Option[string]
