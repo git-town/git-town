@@ -70,7 +70,7 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 				RebaseOnto:        args.Config.ValidatedConfigData.MainBranch, // TODO: RebaseOnto the latest existing parent, which isn't always main
 			})
 		}
-		LocalBranchProgram(LocalBranchProgramArgs{
+		localBranchProgram(localBranchProgramArgs{
 			BranchProgramArgs:    args,
 			branchInfo:           branchInfo,
 			firstCommitMessage:   firstCommitMessage,
@@ -96,7 +96,7 @@ type BranchProgramArgs struct {
 	Remotes             gitdomain.Remotes
 }
 
-type LocalBranchProgramArgs struct {
+type localBranchProgramArgs struct {
 	BranchProgramArgs
 	branchInfo           gitdomain.BranchInfo
 	firstCommitMessage   Option[gitdomain.CommitMessage]
@@ -106,8 +106,8 @@ type LocalBranchProgramArgs struct {
 	parentSHAPreviousRun Option[gitdomain.SHA]
 }
 
-// LocalBranchProgram provides the program to sync a local branch.
-func LocalBranchProgram(args LocalBranchProgramArgs) {
+// localBranchProgram provides the program to sync a local branch.
+func localBranchProgram(args localBranchProgramArgs) {
 	branchType := args.Config.BranchType(args.localName)
 	isMainOrPerennialBranch := branchType == configdomain.BranchTypeMainBranch || branchType == configdomain.BranchTypePerennialBranch
 	if isMainOrPerennialBranch && !args.Remotes.HasRemote(args.Config.NormalConfig.DevRemote) {
