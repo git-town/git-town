@@ -1,22 +1,21 @@
 package opcodes
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-type RebaseParentsUntilLocal struct {
-	Branch                  gitdomain.LocalBranchName
-	ParentSHAPreviousRun    Option[gitdomain.SHA]
+type RebaseAncestorsUntilLocal struct {
+	Branch gitdomain.LocalBranchName
+	// SHA of the direct parent at the previous run.
+	// These are the commits we need to remove from this branch.
+	CommitsToRemove         Option[gitdomain.SHA]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
-	fmt.Println("RebaseParentsUntilLocal")
+func (self *RebaseAncestorsUntilLocal) Run(args shared.RunArgs) error {
 	program := []shared.Opcode{}
 	branchInfos, hasBranchInfos := args.BranchInfos.Get()
 	if !hasBranchInfos {
@@ -35,29 +34,18 @@ func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
 		parentIsLocal := branchInfos.HasLocalBranch(parent)
 		if !parentIsLocal {
 			// here the parent isn't local --> sync with its tracking branch, then try again with the grandparent until we find a local ancestor
-			parentTrackingName := parent.AtRemote(args.Config.Value.NormalConfig.DevRemote).BranchName()
-			isInSync, err := args.Git.BranchInSyncWithParent(args.Backend, self.Branch, parentTrackingName)
-			if err != nil {
-				return err
-			}
-			if !isInSync {
-				program = append(program, &RebaseBranch{
-					Branch: parentTrackingName,
-				})
-			}
+			program = append(program, &RebaseAncestorRemote{
+				Ancestor: parent.AtRemote(args.Config.Value.NormalConfig.DevRemote),
+				Branch:   self.Branch,
+			})
 			branch = parent
 			continue
 		}
-		// here the parent is local
-		var branchToRebaseOnto gitdomain.BranchName
-		if branchInfos.BranchIsActiveInAnotherWorktree(parent) {
-			branchToRebaseOnto = parent.TrackingBranch(args.Config.Value.NormalConfig.DevRemote).BranchName()
-		} else {
-			branchToRebaseOnto = parent.BranchName()
-		}
-		program = append(program, &RebaseOnto{
-			BranchToRebaseOnto: branchToRebaseOnto,
-			CommitsToRemove:    commitsToRemove,
+		// here we found a local parent
+		program = append(program, &RebaseAncestorLocal{
+			Ancestor:        parent,
+			Branch:          self.Branch,
+			CommitsToRemove: self.CommitsToRemove,
 		})
 		break
 	}

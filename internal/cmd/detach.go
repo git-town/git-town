@@ -23,7 +23,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/state/runstate"
-	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/validate"
 	"github.com/git-town/git-town/v21/internal/vm/interpreter/fullinterpreter"
 	"github.com/git-town/git-town/v21/internal/vm/opcodes"
@@ -124,7 +123,7 @@ func executeDetach(args []string, cliConfig configdomain.PartialConfig) error {
 		Command:               detachCommandName,
 		DryRun:                data.config.NormalConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
-		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
+		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
 		BranchInfosLastRun:    data.branchInfosLastRun,
 		RunProgram:            runProgram,

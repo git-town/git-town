@@ -21,7 +21,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/state/runstate"
-	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/validate"
 	"github.com/git-town/git-town/v21/internal/vm/interpreter/fullinterpreter"
 	"github.com/git-town/git-town/v21/internal/vm/opcodes"
@@ -166,21 +165,18 @@ func executeSync(args executeSyncArgs) error {
 
 	connector, hasConnector := data.connector.Get()
 	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI && hasConnector {
-		proposalStackLineageArgs := forge.ProposalStackLineageArgs{
-			Connector:                connector,
-			CurrentBranch:            data.initialBranch,
-			Lineage:                  data.config.NormalConfig.Lineage,
-			MainAndPerennialBranches: data.config.MainAndPerennials(),
-		}
-		proposalStackLineageBuilder := forge.NewProposalStackLineageBuilder(proposalStackLineageArgs)
-		if builder, hasBuilder := proposalStackLineageBuilder.Get(); hasBuilder {
-			if branchProposal, hasBranchProposalData := builder.GetProposal(data.initialBranch).Get(); hasBranchProposalData {
-				runProgram.Value.Add(&opcodes.ProposalUpdateBody{
-					Proposal:    branchProposal,
-					UpdatedBody: forge.ProposalBodyUpdateWithStackLineage(branchProposal.Data.Data().Body.GetOrDefault(), builder.Build(proposalStackLineageArgs)),
-				})
-			}
-		}
+		BranchProposalsProgram(
+			data.branchesToSync,
+			BranchProposalsProgramArgs{
+				Program: runProgram,
+				ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
+					Connector:                connector,
+					CurrentBranch:            data.initialBranch,
+					Lineage:                  data.config.NormalConfig.Lineage,
+					MainAndPerennialBranches: data.config.MainAndPerennials(),
+				},
+			},
+		)
 	}
 
 	cmdhelpers.Wrap(runProgram, cmdhelpers.WrapOptions{
@@ -198,7 +194,7 @@ func executeSync(args executeSyncArgs) error {
 		Command:               syncCommand,
 		DryRun:                data.config.NormalConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
-		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
+		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
 		BranchInfosLastRun:    data.previousBranchInfos,
 		RunProgram:            optimizedProgram,

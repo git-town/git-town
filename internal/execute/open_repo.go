@@ -20,7 +20,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/subshell"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
-	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -74,9 +73,10 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
-	configSnapshot := undoconfig.ConfigSnapshot{
-		Global: globalSnapshot,
-		Local:  localSnapshot,
+	configSnapshot := configdomain.BeginConfigSnapshot{
+		Global:   globalSnapshot,
+		Local:    localSnapshot,
+		Unscoped: unscopedSnapshot,
 	}
 	finalMessages := stringslice.NewCollector()
 	configFile, hasConfigFile, err := configfile.Load(rootDir, configfile.FileName, finalMessages)
@@ -159,7 +159,7 @@ type OpenRepoArgs struct {
 type OpenRepoResult struct {
 	Backend           subshelldomain.RunnerQuerier
 	CommandsCounter   Mutable[gohacks.Counter]
-	ConfigSnapshot    undoconfig.ConfigSnapshot
+	ConfigSnapshot    configdomain.BeginConfigSnapshot
 	FinalMessages     stringslice.Collector
 	Frontend          subshelldomain.Runner
 	Git               git.Commands

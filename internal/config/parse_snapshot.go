@@ -18,7 +18,11 @@ import (
 // provides the branch type overrides stored in the given Git metadata snapshot
 func NewBranchTypeOverridesInSnapshot(snapshot configdomain.SingleSnapshot, runner subshelldomain.Runner) (configdomain.BranchTypeOverrides, error) {
 	result := configdomain.BranchTypeOverrides{}
-	for key, value := range snapshot.BranchTypeOverrideEntries() {
+	for key, value := range snapshot {
+		key, isBranchTypeKey := configdomain.ParseBranchTypeOverrideKey(key).Get()
+		if !isBranchTypeKey {
+			continue
+		}
 		branch := key.Branch()
 		if branch == "" {
 			// empty branch name --> delete it
