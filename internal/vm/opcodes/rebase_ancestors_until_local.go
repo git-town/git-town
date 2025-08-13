@@ -8,9 +8,7 @@ import (
 )
 
 type RebaseAncestorsUntilLocal struct {
-	Branch gitdomain.LocalBranchName
-	// SHA of the direct parent at the previous run.
-	// These are the commits we need to remove from this branch.
+	Branch                  gitdomain.LocalBranchName
 	CommitsToRemove         Option[gitdomain.SHA]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
