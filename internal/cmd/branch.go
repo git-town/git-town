@@ -143,7 +143,7 @@ func branchLayout(entries dialog.SwitchBranchEntries, data branchData) string {
 			s.WriteString(data.colors.Initial.Styled("* " + entry.String()))
 		case entry.OtherWorktree:
 			s.WriteString("+ ")
-			s.WriteString(colors.Cyan().Styled(entry.String()))
+			s.WriteString(colors.Faint().Styled(entry.String()))
 		default:
 			s.WriteString("  ")
 			s.WriteString(entry.String())
