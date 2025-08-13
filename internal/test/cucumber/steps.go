@@ -525,15 +525,16 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^(global |local |)Git setting "([^"]+)" is "([^"]*)"$`, func(ctx context.Context, scope, key, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		parsedScope := configdomain.ParseConfigScope(scope)
+		parsedScope := asserts.NoError1(configdomain.ParseConfigScope(scope))
 		return gitconfig.SetConfigValue(devRepo.TestRunner, parsedScope, configdomain.Key(key), value)
 	})
 
 	sc.Step(`^(global |local |)Git setting "([^"]+)" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, scope, name, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		parsedScope := configdomain.ParseConfigScope(scope)
-		have := devRepo.SnapShots[parsedScope][configdomain.Key(name)]
+		parsedScope := asserts.NoError1(configdomain.ParseConfigScope(scope))
+		snapshot := devRepo.SnapShots.ByScope(parsedScope)
+		have := snapshot[configdomain.Key(name)]
 		if have != want {
 			return fmt.Errorf("unexpected value for key %q: want %q have %q", name, want, have)
 		}
@@ -543,8 +544,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^(global |local |)Git setting "([^"]+)" (?:now|still) doesn't exist$`, func(ctx context.Context, scope, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		parsedScope := configdomain.ParseConfigScope(scope)
-		have, has := devRepo.SnapShots[parsedScope][configdomain.Key(name)]
+		parsedScope := asserts.NoError1(configdomain.ParseConfigScope(scope))
+		snapshot := devRepo.SnapShots.ByScope(parsedScope)
+		have, has := snapshot[configdomain.Key(name)]
 		if has {
 			return fmt.Errorf("unexpected value for %q: %q", name, have)
 		}

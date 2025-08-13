@@ -31,9 +31,9 @@ func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
 		)
 	}
 	program = append(program,
-		&RebaseParentsUntilLocal{
-			Branch:               self.Branch,
-			ParentSHAPreviousRun: self.ParentSHAPreviousRun,
+		&RebaseAncestorsUntilLocal{
+			Branch:          self.Branch,
+			CommitsToRemove: self.ParentSHAPreviousRun,
 		},
 	)
 	syncTracking, hasTrackingBranch, _, err := self.shouldSyncWithTracking(args)
