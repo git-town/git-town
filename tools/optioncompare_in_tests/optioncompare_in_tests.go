@@ -100,7 +100,7 @@ func (self *somePatternFinder) transformToEqualSome(mustEqCall *ast.CallExpr, so
 
 // isTestFile checks if the file is a unit test file
 func isTestFile(filePath string) bool {
-	return strings.HasSuffix(filePath, "_test.go")
+	return strings.HasSuffix(filePath, "_test.go") || filePath == "internal/test/cucumber/steps.go"
 }
 
 // parses the given Go file and walks its AST nodes to transform the pattern
