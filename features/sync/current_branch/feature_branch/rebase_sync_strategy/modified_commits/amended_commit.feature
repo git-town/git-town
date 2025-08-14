@@ -25,7 +25,6 @@ Feature: rebase a branch that contains amended commits
       | feature-2 | git fetch --prune --tags                                                             |
       |           | git checkout feature-1                                                               |
       | feature-1 | git push --force-with-lease --force-if-includes                                      |
-      |           | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }}         |
       |           | git checkout feature-2                                                               |
       | feature-2 | git -c rebase.updateRefs=false rebase --onto feature-1 {{ sha-initial 'commit 1a' }} |
       |           | git push --force-with-lease --force-if-includes                                      |

@@ -164,10 +164,9 @@ Feature: beam a commit from a stack with dependent changes into a prepended bran
   Scenario: first sync after prepend
     When I run "git-town sync"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                                                   |
-      | new    | git fetch --prune --tags                                                  |
-      |        | git -c rebase.updateRefs=false rebase --onto main {{ sha 'main commit' }} |
-      |        | git push -u origin new                                                    |
+      | BRANCH | COMMAND                  |
+      | new    | git fetch --prune --tags |
+      |        | git push -u origin new   |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
@@ -186,8 +185,7 @@ Feature: beam a commit from a stack with dependent changes into a prepended bran
       | BRANCH | COMMAND                                                                          |
       | old    | git fetch --prune --tags                                                         |
       |        | git checkout new                                                                 |
-      | new    | git -c rebase.updateRefs=false rebase --onto main {{ sha 'main commit' }}        |
-      |        | git push -u origin new                                                           |
+      | new    | git push -u origin new                                                           |
       |        | git checkout old                                                                 |
       | old    | git -c rebase.updateRefs=false rebase --onto new {{ sha-before-run 'commit 2' }} |
     And Git Town prints the error:

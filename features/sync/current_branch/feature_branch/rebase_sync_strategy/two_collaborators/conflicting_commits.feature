@@ -77,10 +77,9 @@ Feature: two people using rebase make conflicting changes to a branch
     When I resolve the conflict in "file.txt" with "my new and coworker content"
     And I run "git-town continue" and close the editor
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                                             |
-      | feature | GIT_EDITOR=true git rebase --continue                                               |
-      |         | git -c rebase.updateRefs=false rebase --onto main {{ sha 'persisted config file' }} |
-      |         | git push --force-with-lease --force-if-includes                                     |
+      | BRANCH  | COMMAND                                         |
+      | feature | GIT_EDITOR=true git rebase --continue           |
+      |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE               | FILE NAME | FILE CONTENT                |
