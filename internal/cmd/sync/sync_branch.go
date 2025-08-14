@@ -16,8 +16,9 @@ import (
 func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.BranchInfo, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
 	fmt.Println("2222222222222222222222222222222222222222222222222 BranchProgram for", localName)
 	parentNameOpt := args.Config.NormalConfig.Lineage.Parent(localName)
-	initialParentSHA := None[gitdomain.SHA]()
 	parentName, hasParentName := parentNameOpt.Get()
+	previousParentSHA := None[gitdomain.SHA]
+	initialParentSHA := None[gitdomain.SHA]()
 	if hasParentName {
 		if parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindLocalOrRemote(parentName, args.Config.NormalConfig.DevRemote).Get(); hasParentBranchInfo {
 			initialParentSHA = parentBranchInfo.LocalSHA.Or(parentBranchInfo.RemoteSHA)
