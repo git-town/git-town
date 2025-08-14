@@ -37,7 +37,6 @@ Feature: syncing a branch with independent changes where a commit was amended
     And the current branch is "branch-2"
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                             |
