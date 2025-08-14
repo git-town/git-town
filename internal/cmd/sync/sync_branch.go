@@ -45,6 +45,7 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	trackingBranchGone := branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote
 	switch {
 	case trackingBranchGone:
+		deletedBranchProgram(localName, initialParentName, initialParentSHA, parentSHAPreviousRun, args)
 		args.BranchesToDelete.Value.Add(localName)
 	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// cannot sync branches that are active in another worktree
