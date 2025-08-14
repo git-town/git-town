@@ -1,6 +1,8 @@
 package opcodes
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
@@ -9,11 +11,12 @@ import (
 
 type RebaseAncestorsUntilLocal struct {
 	Branch                  gitdomain.LocalBranchName
-	CommitsToRemove         Option[gitdomain.SHA]
+	CommitsToRemove         Option[gitdomain.Location]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *RebaseAncestorsUntilLocal) Run(args shared.RunArgs) error {
+	fmt.Println("333333333333333333333333333333333333 RebaseAncestorsUntilLocal for", self.Branch)
 	program := []shared.Opcode{}
 	branchInfos, hasBranchInfos := args.BranchInfos.Get()
 	if !hasBranchInfos {

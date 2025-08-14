@@ -10,7 +10,7 @@ import (
 // SyncFeatureBranchMerge merges the parent branches of the given branch until a local parent is found.
 type SyncFeatureBranchRebase struct {
 	Branch                  gitdomain.LocalBranchName
-	CommitsToRemove         Option[gitdomain.SHA]
+	CommitsToRemove         Option[gitdomain.Location]
 	PushBranches            configdomain.PushBranches
 	TrackingBranch          Option[gitdomain.RemoteBranchName]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`

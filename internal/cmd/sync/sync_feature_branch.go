@@ -56,7 +56,7 @@ func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBr
 }
 
 type featureBranchArgs struct {
-	commitsToRemove    Option[gitdomain.SHA] // the parent at the end of the last Git Town command
+	commitsToRemove    Option[gitdomain.Location]
 	firstCommitMessage Option[gitdomain.CommitMessage]
 	initialParentName  Option[gitdomain.LocalBranchName] // the parent when Git Town started
 	initialParentSHA   Option[gitdomain.SHA]             // the parent when Git Town started

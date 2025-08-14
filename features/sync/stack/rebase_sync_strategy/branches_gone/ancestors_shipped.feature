@@ -32,7 +32,7 @@ Feature: shipped parent branches in a stacked change
     And the current branch is "feature-4"
     When I run "git-town sync"
 
-  @this
+  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                                          |

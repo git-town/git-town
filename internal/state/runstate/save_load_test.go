@@ -128,7 +128,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.RebaseContinue{},
 				&opcodes.RebaseContinueIfNeeded{},
 				&opcodes.RebaseOntoRemoveDeleted{BranchToRebaseOnto: "branch-2", CommitsToRemove: "branch-1"},
-				&opcodes.RebaseAncestorsUntilLocal{Branch: "branch", CommitsToRemove: Some(gitdomain.SHA("123456"))},
+				&opcodes.RebaseAncestorsUntilLocal{Branch: "branch", CommitsToRemove: Some(gitdomain.Location("123456"))},
 				&opcodes.RebaseTrackingBranch{RemoteBranch: "origin/branch", PushBranches: true},
 				&opcodes.RegisterUndoablePerennialCommit{Parent: "parent"},
 				&opcodes.SnapshotInitialUpdateLocalSHA{Branch: "branch", SHA: "111111"},
@@ -140,7 +140,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.StashOpenChanges{},
 				&opcodes.SyncFeatureBranchCompress{CommitMessage: Some(gitdomain.CommitMessage("commit message")), CurrentBranch: "branch", Offline: true, InitialParentName: gitdomain.NewLocalBranchNameOption("parent"), InitialParentSHA: Some(gitdomain.NewSHA("111111")), TrackingBranch: Some(gitdomain.NewRemoteBranchName("origin/branch")), PushBranches: true},
 				&opcodes.SyncFeatureBranchMerge{Branch: "branch", InitialParentName: gitdomain.NewLocalBranchNameOption("original-parent"), InitialParentSHA: Some(gitdomain.NewSHA("123456")), TrackingBranch: Some(gitdomain.NewRemoteBranchName("origin/branch"))},
-				&opcodes.SyncFeatureBranchRebase{Branch: "branch", CommitsToRemove: Some(gitdomain.NewSHA("111111")), PushBranches: true, TrackingBranch: Some(gitdomain.NewRemoteBranchName("origin/branch"))},
+				&opcodes.SyncFeatureBranchRebase{Branch: "branch", CommitsToRemove: Some(gitdomain.Location("111111")), PushBranches: true, TrackingBranch: Some(gitdomain.NewRemoteBranchName("origin/branch"))},
 			},
 			TouchedBranches: []gitdomain.BranchName{"branch-1", "branch-2"},
 			UnfinishedDetails: MutableSome(&runstate.UnfinishedRunStateDetails{
@@ -789,7 +789,7 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "Branch": "branch",
-        "ParentSHAPreviousRun": "111111",
+        "CommitsToRemove": "111111",
         "PushBranches": true,
         "TrackingBranch": "origin/branch"
       },
