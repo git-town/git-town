@@ -50,11 +50,10 @@ Feature: two people with rebase strategy sync changes made by them
     Given the current branch is "feature"
     When I run "git-town sync"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                                             |
-      | feature | git fetch --prune --tags                                                            |
-      |         | git push --force-with-lease --force-if-includes                                     |
-      |         | git -c rebase.updateRefs=false rebase origin/feature                                |
-      |         | git -c rebase.updateRefs=false rebase --onto main {{ sha 'persisted config file' }} |
+      | BRANCH  | COMMAND                                              |
+      | feature | git fetch --prune --tags                             |
+      |         | git push --force-with-lease --force-if-includes      |
+      |         | git -c rebase.updateRefs=false rebase origin/feature |
     And no rebase is now in progress
     And all branches are now synchronized
     And these commits exist now
