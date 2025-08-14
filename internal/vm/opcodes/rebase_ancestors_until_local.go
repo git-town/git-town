@@ -29,7 +29,7 @@ func (self *RebaseAncestorsUntilLocal) Run(args shared.RunArgs) error {
 			break
 		}
 		parentIsPerennial := args.Config.Value.IsMainOrPerennialBranch(parent)
-		if args.Detached.IsTrue() && parentIsPerennial {
+		if parentIsPerennial && args.Detached.IsTrue() {
 			break
 		}
 		parentIsLocal := branchInfos.HasLocalBranch(parent)
