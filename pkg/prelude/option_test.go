@@ -177,7 +177,7 @@ func TestOption(t *testing.T) {
 			value := None[int]()
 			err := value.UnmarshalJSON([]byte(json))
 			must.NoError(t, err)
-			must.Eq(t, Some(12), value)
+			must.True(t, value.EqualSome(12))
 		})
 		t.Run("None", func(t *testing.T) {
 			t.Parallel()
