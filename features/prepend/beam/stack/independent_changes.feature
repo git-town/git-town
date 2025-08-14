@@ -55,10 +55,9 @@ Feature: beam a commit from a stack with independent changes into a prepended br
   Scenario: first sync after prepend
     When I run "git-town sync"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                                                   |
-      | new    | git fetch --prune --tags                                                  |
-      |        | git -c rebase.updateRefs=false rebase --onto main {{ sha 'main commit' }} |
-      |        | git push -u origin new                                                    |
+      | BRANCH | COMMAND                  |
+      | new    | git fetch --prune --tags |
+      |        | git push -u origin new   |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
@@ -77,8 +76,7 @@ Feature: beam a commit from a stack with independent changes into a prepended br
       | BRANCH | COMMAND                                                                          |
       | old    | git fetch --prune --tags                                                         |
       |        | git checkout new                                                                 |
-      | new    | git -c rebase.updateRefs=false rebase --onto main {{ sha 'main commit' }}        |
-      |        | git push -u origin new                                                           |
+      | new    | git push -u origin new                                                           |
       |        | git checkout old                                                                 |
       | old    | git -c rebase.updateRefs=false rebase --onto new {{ sha-before-run 'commit 2' }} |
       |        | git push --force-with-lease --force-if-includes                                  |

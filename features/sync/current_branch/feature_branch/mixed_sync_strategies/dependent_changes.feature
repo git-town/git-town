@@ -109,47 +109,15 @@ Feature: compatibility between different sync-feature-strategy settings when edi
       """
     And I run "git-town continue" and close the editor
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                                      |
-      | feature | GIT_EDITOR=true git rebase --continue                                        |
-      |         | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
-    And Git Town prints the error:
-      """
-      CONFLICT (add/add): Merge conflict in file.txt
-      """
-    # Note: strange that Git tries to apply "my second commit" first, and after that "my first commit".
-    # In this case, the correct resolution is to use the version from "my second commit",
-    # which the user has already resolved above.
-    And Git Town prints something like:
-      """
-      could not apply \S+ my first commit
-      """
-    And file "file.txt" now has content:
-      """
-      <<<<<<< HEAD
-      line 1:
-      line 2: coworker content 1
-      =======
-      line 1: my content 1
-      line 2:
-      >>>>>>> {{ sha-short 'my first commit' }} (my first commit)
-      """
-    And a rebase is now in progress
-    When I resolve the conflict in "file.txt" with:
-      """
-      line 1: my content 1
-      line 2: coworker content 1
-      """
-    And I run "git-town continue" and close the editor
-    Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | GIT_EDITOR=true git rebase --continue           |
       |         | git push --force-with-lease --force-if-includes |
+    And no rebase is now in progress
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME | FILE CONTENT                                     |
       | feature | local, coworker, origin | coworker first commit                                      | file.txt  | line 1:\nline 2: coworker content 1              |
-      |         | local, origin           | my first commit                                            | file.txt  | line 1: my content 1\nline 2: coworker content 1 |
-      |         |                         | my second commit                                           | file.txt  | line 1: my content 2\nline 2: coworker content 1 |
-      |         | coworker                | my first commit                                            | file.txt  | line 1: my content 1\nline 2:                    |
+      |         |                         | my first commit                                            | file.txt  | line 1: my content 1\nline 2:                    |
       |         |                         | Merge remote-tracking branch 'origin/feature' into feature | file.txt  | line 1: my content 1\nline 2: coworker content 1 |
+      |         | local, origin           | my second commit                                           | file.txt  | line 1: my content 2\nline 2: coworker content 1 |
     And no rebase is now in progress
