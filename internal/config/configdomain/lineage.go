@@ -249,8 +249,8 @@ func (self Lineage) YoungestAncestorWithin(branch gitdomain.LocalBranchName, whi
 		if !hasParent {
 			return None[gitdomain.LocalBranchName]()
 		}
-		if whitelist.Contains(branch) {
-			return Some(branch)
+		if whitelist.Contains(parent) {
+			return Some(parent)
 		}
 		branch = parent
 	}
