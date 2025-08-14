@@ -12,15 +12,15 @@ import (
 	"strings"
 )
 
-// somePatternFinder implements the ast.Visitor interface to find and transform calls to "must.Eq(t, Some(x), y)".
-type somePatternFinder struct {
+// wrongCompareFinder implements the ast.Visitor interface to find and transform calls to "must.Eq(t, Some(x), y)".
+type wrongCompareFinder struct {
 	filePath string         // path of the file being currently visited
 	fileSet  *token.FileSet // position information for AST nodes in the current file
 	modified bool           // tracks whether any modifications were made
 }
 
 // Visit is called by ast.Walk for each node in the AST.
-func (self *somePatternFinder) Visit(node ast.Node) ast.Visitor {
+func (self *wrongCompareFinder) Visit(node ast.Node) ast.Visitor {
 	// ensure the AST node is a function call expression
 	callExpr, ok := node.(*ast.CallExpr)
 	if !ok {
@@ -40,23 +40,30 @@ func (self *somePatternFinder) Visit(node ast.Node) ast.Visitor {
 	}
 
 	// ensure the package name is "must" and the function name is "Eq"
-	if pkgIdent.Name == "must" && selectorExpr.Sel.Name == "Eq" {
-		// check if we have at least 3 arguments
-		if len(callExpr.Args) >= 3 {
-			// check if the second argument is a call to "Some"
-			if someCallExpr := self.getSomeCall(callExpr.Args[1]); someCallExpr != nil {
-				// Transform must.Eq(t, Some(x), y) to must.True(t, y.EqualSome(x))
-				self.transformToEqualSome(callExpr, someCallExpr, callExpr.Args[2])
-				self.modified = true
-			}
-		}
+	if pkgIdent.Name != "must" || selectorExpr.Sel.Name != "Eq" {
+		return self
 	}
+
+	// ensure if we have at least 3 arguments
+	if len(callExpr.Args) < 3 {
+		return self
+	}
+
+	// ensure if the second argument is a call to "Some"
+	someCallExpr := self.getSomeCall(callExpr.Args[1])
+	if someCallExpr == nil {
+		return self
+	}
+
+	// Transform must.Eq(t, Some(x), y) to must.True(t, y.EqualSome(x))
+	self.transformToEqualSome(callExpr, someCallExpr, callExpr.Args[2])
+	self.modified = true
 
 	return self
 }
 
 // getSomeCall checks if the given expression is a call to "Some" and returns the call expression if so
-func (self *somePatternFinder) getSomeCall(expr ast.Expr) *ast.CallExpr {
+func (self *wrongCompareFinder) getSomeCall(expr ast.Expr) *ast.CallExpr {
 	callExpr, ok := expr.(*ast.CallExpr)
 	if !ok {
 		return nil
@@ -75,7 +82,7 @@ func (self *somePatternFinder) getSomeCall(expr ast.Expr) *ast.CallExpr {
 }
 
 // transformToEqualSome transforms must.Eq(t, Some(x), y) to must.True(t, y.EqualSome(x))
-func (self *somePatternFinder) transformToEqualSome(mustEqCall *ast.CallExpr, someCall *ast.CallExpr, yArg ast.Expr) {
+func (self *wrongCompareFinder) transformToEqualSome(mustEqCall *ast.CallExpr, someCall *ast.CallExpr, yArg ast.Expr) {
 	// Change the selector from "Eq" to "True"
 	selectorExpr := mustEqCall.Fun.(*ast.SelectorExpr)
 	selectorExpr.Sel.Name = "True"
@@ -110,7 +117,7 @@ func lintFile(filePath string) error {
 	if err != nil {
 		return fmt.Errorf("error parsing file %s: %w", filePath, err)
 	}
-	visitor := &somePatternFinder{
+	visitor := &wrongCompareFinder{
 		filePath: filePath,
 		fileSet:  fileSet,
 		modified: false,
