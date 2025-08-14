@@ -8,13 +8,13 @@ Feature: stacked changes where each branch makes independent changes
       | parent | feature | main   | local, origin |
       | child  | feature | parent | local, origin |
     And the commits
-      | BRANCH | LOCATION | MESSAGE              |
-      | main   | local    | local main commit    |
-      |        | origin   | origin main commit   |
-      | parent | local    | local parent commit  |
-      |        | origin   | origin parent commit |
-      | child  | local    | local child commit   |
-      |        | origin   | origin child commit  |
+      | BRANCH | LOCATION | MESSAGE              | FILE NAME | FILE CONTENT |
+      | main   | local    | local main commit    | file      |              |
+      |        | origin   | origin main commit   | file      |              |
+      | parent | local    | local parent commit  | file      |              |
+      |        | origin   | origin parent commit | file      |              |
+      | child  | local    | local child commit   | file      |              |
+      |        | origin   | origin child commit  | file      |              |
     And the current branch is "child"
     When I run "git-town sync"
 
