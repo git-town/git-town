@@ -44,10 +44,9 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
       | parent | main   |
     When I run "git-town sync"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                                                      |
-      | parent | git fetch --prune --tags                                                     |
-      |        | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
-      |        | git push -u origin parent                                                    |
+      | BRANCH | COMMAND                   |
+      | parent | git fetch --prune --tags  |
+      |        | git push -u origin parent |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE  |
       | old    | local, origin | commit 2 |
@@ -73,14 +72,13 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
     And the current branch is "old"
     When I run "git-town sync"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                                                      |
-      | old    | git fetch --prune --tags                                                     |
-      |        | git checkout parent                                                          |
-      | parent | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
-      |        | git push -u origin parent                                                    |
-      |        | git checkout old                                                             |
-      | old    | git -c rebase.updateRefs=false rebase --onto parent {{ sha 'commit 4' }}     |
-      |        | git push --force-with-lease --force-if-includes                              |
+      | BRANCH | COMMAND                                                                  |
+      | old    | git fetch --prune --tags                                                 |
+      |        | git checkout parent                                                      |
+      | parent | git push -u origin parent                                                |
+      |        | git checkout old                                                         |
+      | old    | git -c rebase.updateRefs=false rebase --onto parent {{ sha 'commit 4' }} |
+      |        | git push --force-with-lease --force-if-includes                          |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE   |
       | old    | local, origin | commit 2  |
