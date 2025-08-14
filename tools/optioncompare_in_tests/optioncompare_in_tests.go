@@ -63,7 +63,7 @@ func (self *wrongCompareFinder) Visit(node ast.Node) ast.Visitor {
 	return self
 }
 
-// getSomeCall checks if the given expression is a call to "Some" and returns the call expression if so
+// getSomeCall checks if the given expression is a call to "Some" or "Some[T]" and returns the call expression if so
 func getSomeCall(expr ast.Expr) *ast.CallExpr {
 	callExpr, ok := expr.(*ast.CallExpr)
 	if !ok {
@@ -72,13 +72,18 @@ func getSomeCall(expr ast.Expr) *ast.CallExpr {
 
 	// check if the function being called is an identifier "Some"
 	ident, ok := callExpr.Fun.(*ast.Ident)
-	if !ok {
-		return nil
-	}
-
-	if ident.Name == "Some" {
+	if ok && ident.Name == "Some" {
 		return callExpr
 	}
+
+	// check if the function being called is a generic type "Some[T]"
+	if indexExpr, ok := callExpr.Fun.(*ast.IndexExpr); ok {
+		ident, ok := indexExpr.X.(*ast.Ident)
+		if ok && ident.Name == "Some" {
+			return callExpr
+		}
+	}
+
 	return nil
 }
 

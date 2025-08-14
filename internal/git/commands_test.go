@@ -346,7 +346,7 @@ func TestBackendCommands(t *testing.T) {
 				runtime.CreateBranch("second-branch", initial.BranchName())
 				runtime.CheckoutBranch("first-branch")
 				snapshot := asserts.NoError1(runtime.Git.BranchesSnapshot(runtime))
-				must.Eq(t, Some[gitdomain.LocalBranchName]("first-branch"), snapshot.Active)
+				must.True(t, snapshot.Active.EqualSome("first-branch"))
 			})
 
 			t.Run("second branch is checked out", func(t *testing.T) {
@@ -356,7 +356,7 @@ func TestBackendCommands(t *testing.T) {
 				runtime.CreateBranch("second-branch", initial.BranchName())
 				runtime.CheckoutBranch("second-branch")
 				snapshot := asserts.NoError1(runtime.Git.BranchesSnapshot(runtime))
-				must.Eq(t, Some[gitdomain.LocalBranchName]("second-branch"), snapshot.Active)
+				must.True(t, snapshot.Active.EqualSome("second-branch"))
 			})
 
 			t.Run("in the middle of a rebase", func(t *testing.T) {
