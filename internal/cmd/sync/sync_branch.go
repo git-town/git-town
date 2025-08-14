@@ -12,9 +12,9 @@ import (
 
 // BranchProgram syncs the given branch.
 func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.BranchInfo, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
-	initialParentName := args.Config.NormalConfig.Lineage.Parent(localName)
+	parentNameOpt := args.Config.NormalConfig.Lineage.Parent(localName)
 	initialParentSHA := None[gitdomain.SHA]()
-	parentName, hasParentName := initialParentName.Get()
+	parentName, hasParentName := parentNameOpt.Get()
 	if hasParentName {
 		if parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindLocalOrRemote(parentName, args.Config.NormalConfig.DevRemote).Get(); hasParentBranchInfo {
 			initialParentSHA = parentBranchInfo.LocalSHA.Or(parentBranchInfo.RemoteSHA)
@@ -23,7 +23,7 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	usesRebaseSyncStrategy := args.Config.NormalConfig.SyncFeatureStrategy == configdomain.SyncFeatureStrategyRebase
 	ancestorToRemove, hasAncestorToRemove := args.Config.NormalConfig.Lineage.YoungestAncestorWithin(localName, args.BranchesToDelete.Value.Values()).Get()
 	parentSHAPreviousRun := None[gitdomain.SHA]()
-	if parent, has := initialParentName.Get(); has {
+	if parent, has := parentNameOpt.Get(); has {
 		if branchInfosLastRun, has := args.BranchInfosLastRun.Get(); has {
 			if parentInfoLastRun, has := branchInfosLastRun.FindByLocalName(parent).Get(); has {
 				parentSHAPreviousRun = Some(parentInfoLastRun.GetLocalOrRemoteSHA())
@@ -48,7 +48,7 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	case usesRebaseSyncStrategy && trackingBranchGone && hasDescendents:
 		args.BranchesToDelete.Value.Add(localName)
 	case trackingBranchGone:
-		deletedBranchProgram(localName, initialParentName, initialParentSHA, parentSHAPreviousRun, args)
+		deletedBranchProgram(localName, parentNameOpt, initialParentSHA, parentSHAPreviousRun, args)
 	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// cannot sync branches that are active in another worktree
 	default:
@@ -65,7 +65,7 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 			BranchProgramArgs:    args,
 			branchInfo:           branchInfo,
 			firstCommitMessage:   firstCommitMessage,
-			initialParentName:    initialParentName,
+			initialParentName:    parentNameOpt,
 			initialParentSHA:     initialParentSHA,
 			localName:            localName,
 			parentSHAPreviousRun: parentSHAPreviousRun,
