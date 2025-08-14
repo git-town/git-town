@@ -32,8 +32,7 @@ Feature: syncing a branch with dependent changes that received a new commit sinc
       | BRANCH   | COMMAND                                                                             |
       | branch-2 | git fetch --prune --tags                                                            |
       |          | git checkout branch-1                                                               |
-      | branch-1 | git -c rebase.updateRefs=false rebase --onto main {{ sha 'main commit' }}           |
-      |          | git checkout branch-2                                                               |
+      | branch-1 | git checkout branch-2                                                               |
       | branch-2 | git -c rebase.updateRefs=false rebase --onto branch-1 {{ sha 'branch-1 commit A' }} |
     # TODO:
     # Rebasing branch-1 onto main while removing the 'main commit' is pointless.
