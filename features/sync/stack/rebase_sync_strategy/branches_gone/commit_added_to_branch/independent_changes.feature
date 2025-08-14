@@ -1,4 +1,4 @@
-Feature: syncing a branch that received a new commit since the last sync
+Feature: syncing a branch with independent changes that received a new commit since the last sync
 
   Background:
     Given a Git repo with origin
