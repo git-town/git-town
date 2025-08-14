@@ -4,15 +4,14 @@ import (
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/vm/opcodes"
-	"github.com/git-town/git-town/v21/internal/vm/program"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 // deletedBranchProgram adds opcodes that sync a branch that was deleted at origin to the given program.
-func deletedBranchProgram(prog Mutable[program.Program], branch gitdomain.LocalBranchName, initialParentName Option[gitdomain.LocalBranchName], initialParentSHA, parentSHAPreviousRun Option[gitdomain.SHA], args BranchProgramArgs) {
+func deletedBranchProgram(branch gitdomain.LocalBranchName, initialParentName Option[gitdomain.LocalBranchName], initialParentSHA, parentSHAPreviousRun Option[gitdomain.SHA], args BranchProgramArgs) {
 	switch args.Config.BranchType(branch) {
 	case configdomain.BranchTypeFeatureBranch:
-		syncDeletedFeatureBranchProgram(prog, branch, initialParentName, initialParentSHA, parentSHAPreviousRun, args)
+		syncDeletedFeatureBranchProgram(branch, initialParentName, initialParentSHA, parentSHAPreviousRun, args)
 	case
 		configdomain.BranchTypePerennialBranch,
 		configdomain.BranchTypeMainBranch,
@@ -20,10 +19,10 @@ func deletedBranchProgram(prog Mutable[program.Program], branch gitdomain.LocalB
 		configdomain.BranchTypeContributionBranch,
 		configdomain.BranchTypeParkedBranch,
 		configdomain.BranchTypePrototypeBranch:
-		syncDeleteLocalBranchProgram(prog, branch, args)
+		syncDeleteLocalBranchProgram(branch, args)
 	}
 	if _, hasOverride := args.Config.NormalConfig.BranchTypeOverrides[branch]; hasOverride {
-		prog.Value.Add(&opcodes.BranchTypeOverrideRemove{
+		args.Program.Value.Add(&opcodes.BranchTypeOverrideRemove{
 			Branch: branch,
 		})
 	}
@@ -31,7 +30,7 @@ func deletedBranchProgram(prog Mutable[program.Program], branch gitdomain.LocalB
 
 // syncDeletedFeatureBranchProgram syncs a feare branch whose remote has been deleted.
 // The parent branch must have been fully synced before calling this function.
-func syncDeletedFeatureBranchProgram(prog Mutable[program.Program], branch gitdomain.LocalBranchName, initialParentName Option[gitdomain.LocalBranchName], initialParentSHA, parentSHAPreviousRun Option[gitdomain.SHA], args BranchProgramArgs) {
+func syncDeletedFeatureBranchProgram(branch gitdomain.LocalBranchName, initialParentName Option[gitdomain.LocalBranchName], initialParentSHA, parentSHAPreviousRun Option[gitdomain.SHA], args BranchProgramArgs) {
 	var syncStatus gitdomain.SyncStatus
 	if preFetchBranchInfo, has := args.PrefetchBranchInfos.FindByLocalName(branch).Get(); has {
 		syncStatus = preFetchBranchInfo.SyncStatus
@@ -43,7 +42,7 @@ func syncDeletedFeatureBranchProgram(prog Mutable[program.Program], branch gitdo
 		gitdomain.SyncStatusUpToDate,
 		gitdomain.SyncStatusBehind,
 		gitdomain.SyncStatusLocalOnly:
-		syncDeleteLocalBranchProgram(prog, branch, args)
+		syncDeleteLocalBranchProgram(branch, args)
 	case
 		gitdomain.SyncStatusOtherWorktree,
 		gitdomain.SyncStatusRemoteOnly:
@@ -52,24 +51,24 @@ func syncDeletedFeatureBranchProgram(prog Mutable[program.Program], branch gitdo
 		gitdomain.SyncStatusAhead,
 		gitdomain.SyncStatusDeletedAtRemote,
 		gitdomain.SyncStatusNotInSync:
-		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: branch})
+		args.Program.Value.Add(&opcodes.CheckoutIfNeeded{Branch: branch})
 		pullParentBranchOfCurrentFeatureBranchOpcode(pullParentBranchOfCurrentFeatureBranchOpcodeArgs{
 			branch:               branch,
 			initialParentName:    initialParentName,
 			initialParentSHA:     initialParentSHA,
 			parentSHAPreviousRun: parentSHAPreviousRun,
-			program:              prog,
+			program:              args.Program,
 			syncStrategy:         args.Config.NormalConfig.SyncFeatureStrategy,
 			// this function syncs a branch whose remote was deleted --> we know for sure there is no tracking branch
 			trackingBranch: None[gitdomain.RemoteBranchName](),
 		})
-		prog.Value.Add(&opcodes.BranchWithRemoteGoneDeleteIfEmptyAtRuntime{Branch: branch})
+		args.Program.Value.Add(&opcodes.BranchWithRemoteGoneDeleteIfEmptyAtRuntime{Branch: branch})
 	}
 }
 
 // deletes the given local branch as part of syncing it
-func syncDeleteLocalBranchProgram(prog Mutable[program.Program], branch gitdomain.LocalBranchName, args BranchProgramArgs) {
-	prog.Value.Add(
+func syncDeleteLocalBranchProgram(branch gitdomain.LocalBranchName, args BranchProgramArgs) {
+	args.Program.Value.Add(
 		&opcodes.CheckoutParentOrMain{
 			Branch: branch,
 		},
@@ -81,6 +80,6 @@ func syncDeleteLocalBranchProgram(prog Mutable[program.Program], branch gitdomai
 	RemoveBranchConfiguration(RemoveBranchConfigurationArgs{
 		Branch:  branch,
 		Lineage: args.Config.NormalConfig.Lineage,
-		Program: prog,
+		Program: args.Program,
 	})
 }
