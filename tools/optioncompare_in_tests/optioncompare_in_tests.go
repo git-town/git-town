@@ -124,7 +124,7 @@ func lintFile(filePath string) error {
 			return fmt.Errorf("error formatting modified file %s: %w", filePath, err)
 		}
 
-		if err := os.WriteFile(filePath, buf.Bytes(), 0644); err != nil {
+		if err := os.WriteFile(filePath, buf.Bytes(), 0o600); err != nil {
 			return fmt.Errorf("error writing modified file %s: %w", filePath, err)
 		}
 
