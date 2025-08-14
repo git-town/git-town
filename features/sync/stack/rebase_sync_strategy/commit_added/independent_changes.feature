@@ -32,13 +32,9 @@ Feature: syncing a branch with independent changes that received a new commit si
       | BRANCH   | COMMAND                                                                             |
       | branch-2 | git fetch --prune --tags                                                            |
       |          | git checkout branch-1                                                               |
-      | branch-1 | git -c rebase.updateRefs=false rebase --onto main {{ sha 'main commit' }}           |
-      |          | git checkout branch-2                                                               |
+      | branch-1 | git checkout branch-2                                                               |
       | branch-2 | git -c rebase.updateRefs=false rebase --onto branch-1 {{ sha 'branch-1 commit A' }} |
       |          | git push --force-with-lease --force-if-includes                                     |
-    # TODO:
-    # Rebasing branch-1 onto main while removing the 'main commit' is pointless.
-    # Just do a normal rebase here. The "main" branch hasn't encountered any changes.
     And no rebase is now in progress
     And all branches are now synchronized
     And these commits exist now
