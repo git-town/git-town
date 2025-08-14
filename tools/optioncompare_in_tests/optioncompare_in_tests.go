@@ -7,6 +7,7 @@ import (
 	"go/format"
 	"go/parser"
 	"go/token"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -152,19 +153,15 @@ func transformToEqualSome(mustEqCall *ast.CallExpr, someCall *ast.CallExpr, yArg
 
 func main() {
 	err := filepath.Walk(".", func(path string, fileInfo os.FileInfo, err error) error {
-		if err != nil || shouldSkipPath(path) || fileInfo.IsDir() || !strings.HasSuffix(path, ".go") {
+		if err != nil || shouldSkipPath(path) || fileInfo.IsDir() || !strings.HasSuffix(path, ".go") || !isTestFile(path) {
 			return err
 		}
-		// only lint test files
-		if !isTestFile(path) {
-			return nil
-		}
 		if err := lintFile(path); err != nil {
-			fmt.Fprintf(os.Stderr, "Error linting file %s: %v\n", path, err)
+			return fmt.Errorf("Error linting file %s: %v\n", path, err)
 		}
 		return nil
 	})
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error walking current directory: %v\n", err)
+		log.Fatalf("Error walking current directory: %v\n", err)
 	}
 }
