@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"go/ast"
+	"go/format"
 	"go/parser"
 	"go/token"
 	"os"
@@ -10,10 +12,11 @@ import (
 	"strings"
 )
 
-// somePatternFinder implements the ast.Visitor interface to find calls to "must.Eq(t, Some(x), y)".
+// somePatternFinder implements the ast.Visitor interface to find and transform calls to "must.Eq(t, Some(x), y)".
 type somePatternFinder struct {
 	filePath string         // path of the file being currently visited
 	fileSet  *token.FileSet // position information for AST nodes in the current file
+	modified bool           // tracks whether any modifications were made
 }
 
 // Visit is called by ast.Walk for each node in the AST.
@@ -41,9 +44,10 @@ func (self *somePatternFinder) Visit(node ast.Node) ast.Visitor {
 		// check if we have at least 3 arguments
 		if len(callExpr.Args) >= 3 {
 			// check if the second argument is a call to "Some"
-			if self.isSomeCall(callExpr.Args[1]) {
-				position := self.fileSet.Position(callExpr.Pos())
-				fmt.Printf("%s:%d: must.Eq(t, Some(x), y) pattern detected\n", self.filePath, position.Line)
+			if someCallExpr := self.getSomeCall(callExpr.Args[1]); someCallExpr != nil {
+				// Transform must.Eq(t, Some(x), y) to must.True(t, y.EqualSome(x))
+				self.transformToEqualSome(callExpr, someCallExpr, callExpr.Args[2])
+				self.modified = true
 			}
 		}
 	}
@@ -51,20 +55,47 @@ func (self *somePatternFinder) Visit(node ast.Node) ast.Visitor {
 	return self
 }
 
-// isSomeCall checks if the given expression is a call to "Some"
-func (self *somePatternFinder) isSomeCall(expr ast.Expr) bool {
+// getSomeCall checks if the given expression is a call to "Some" and returns the call expression if so
+func (self *somePatternFinder) getSomeCall(expr ast.Expr) *ast.CallExpr {
 	callExpr, ok := expr.(*ast.CallExpr)
 	if !ok {
-		return false
+		return nil
 	}
 
 	// check if the function being called is an identifier "Some"
 	ident, ok := callExpr.Fun.(*ast.Ident)
 	if !ok {
-		return false
+		return nil
 	}
 
-	return ident.Name == "Some"
+	if ident.Name == "Some" {
+		return callExpr
+	}
+	return nil
+}
+
+// transformToEqualSome transforms must.Eq(t, Some(x), y) to must.True(t, y.EqualSome(x))
+func (self *somePatternFinder) transformToEqualSome(mustEqCall *ast.CallExpr, someCall *ast.CallExpr, yArg ast.Expr) {
+	// Change the selector from "Eq" to "True"
+	selectorExpr := mustEqCall.Fun.(*ast.SelectorExpr)
+	selectorExpr.Sel.Name = "True"
+
+	// Create y.EqualSome(x) where x is the argument to Some
+	equalSomeCall := &ast.CallExpr{
+		Fun: &ast.SelectorExpr{
+			X: yArg,
+			Sel: &ast.Ident{
+				Name: "EqualSome",
+			},
+		},
+		Args: someCall.Args, // Use the arguments from the Some() call
+	}
+
+	// Replace the arguments: keep t (first arg), replace second and third with y.EqualSome(x)
+	mustEqCall.Args = []ast.Expr{
+		mustEqCall.Args[0], // keep t
+		equalSomeCall,      // y.EqualSome(x)
+	}
 }
 
 // isTestFile checks if the file is a unit test file
@@ -72,7 +103,7 @@ func isTestFile(filePath string) bool {
 	return strings.HasSuffix(filePath, "_test.go")
 }
 
-// parses the given Go file and walks its AST nodes to find the pattern
+// parses the given Go file and walks its AST nodes to transform the pattern
 func lintFile(filePath string) error {
 	fileSet := token.NewFileSet() // holds position information
 	fileAST, err := parser.ParseFile(fileSet, filePath, nil, parser.ParseComments)
@@ -82,8 +113,24 @@ func lintFile(filePath string) error {
 	visitor := &somePatternFinder{
 		filePath: filePath,
 		fileSet:  fileSet,
+		modified: false,
 	}
 	ast.Walk(visitor, fileAST)
+
+	// If modifications were made, write the modified AST back to the file
+	if visitor.modified {
+		var buf bytes.Buffer
+		if err := format.Node(&buf, fileSet, fileAST); err != nil {
+			return fmt.Errorf("error formatting modified file %s: %w", filePath, err)
+		}
+
+		if err := os.WriteFile(filePath, buf.Bytes(), 0644); err != nil {
+			return fmt.Errorf("error writing modified file %s: %w", filePath, err)
+		}
+
+		fmt.Printf("Fixed must.Eq(t, Some(x), y) patterns in %s\n", filePath)
+	}
+
 	return nil
 }
 
