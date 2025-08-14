@@ -39,18 +39,13 @@ Feature: shipped parent branches in a stacked change
       | feature-4 | git fetch --prune --tags                                         |
       |           | git checkout main                                                |
       | main      | git -c rebase.updateRefs=false rebase origin/main                |
-      |           | git checkout feature-2                                           |
-      | feature-2 | git -c rebase.updateRefs=false rebase --onto feature-1 feature-1 |
       |           | git checkout feature-3                                           |
-      | feature-3 | git pull                                                         |
-      |           | git -c rebase.updateRefs=false rebase --onto feature-2 feature-2 |
-      |           | git push --force-with-lease                                      |
+      | feature-3 | git -c rebase.updateRefs=false rebase --onto feature-2 feature-2 |
       |           | git checkout feature-4                                           |
-      | feature-4 | git pull                                                         |
-      |           | git -c rebase.updateRefs=false rebase --onto feature-3 feature-2 |
-      |           | git push --force-with-lease                                      |
+      | feature-4 | git -c rebase.updateRefs=false rebase --onto feature-3 feature-2 |
       |           | git branch -D feature-1                                          |
       |           | git branch -D feature-2                                          |
+      # TODO: rebase feature-3 onto main, not feature-2
     And Git Town prints:
       """
       deleted branch "feature-1"
