@@ -37,6 +37,7 @@ docs: install tools/node_modules  # tests the documentation
 	@tools/rta node tools/node_modules/.bin/text-runner --offline
 
 fix: tools/rta@${RTA_VERSION}  # runs all linters and auto-fixes
+	make --no-print-directory fix-optioncompare-in-tests
 	go run tools/format_unittests/format_unittests.go
 	go run tools/format_self/format_self.go
 	tools/rta gofumpt -l -w .
@@ -59,7 +60,6 @@ lint: tools/node_modules tools/rta@${RTA_VERSION}  # lints the main codebase con
 	make --no-print-directory lint-messages-sorted
 	make --no-print-directory lint-messy-output
 	make --no-print-directory lint-optioncompare
-	make --no-print-directory lint-optioncompare-in-tests
 	make --no-print-directory lint-print-config
 	make --no-print-directory lint-structs-sorted
 	make --no-print-directory lint-tests-sorted
@@ -105,6 +105,9 @@ lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 alphavet:
 	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v internal/cmd)
 
+fix-optioncompare-in-tests:
+	@(cd tools/optioncompare_in_tests && go build) && ./tools/optioncompare_in_tests/optioncompare_in_tests github.com/git-town/git-town/v21/...
+
 lint-messages-sorted:
 	@(cd tools/messages_sorted && go build) && ./tools/messages_sorted/messages_sorted
 
@@ -113,9 +116,6 @@ lint-messy-output:
 
 lint-print-config:
 	@(cd tools/print_config_exhaustive && go build) && ./tools/print_config_exhaustive/print_config_exhaustive
-
-lint-optioncompare-in-tests:
-	@(cd tools/optioncompare_in_tests && go build) && ./tools/optioncompare_in_tests/optioncompare_in_tests github.com/git-town/git-town/v21/...
 
 lint-optioncompare:
 	@(cd tools/optioncompare && go build) && ./tools/optioncompare/optioncompare github.com/git-town/git-town/v21/...
