@@ -34,9 +34,6 @@ Feature: syncing a branch with dependent changes that received a new commit sinc
       |          | git checkout branch-1                                                               |
       | branch-1 | git checkout branch-2                                                               |
       | branch-2 | git -c rebase.updateRefs=false rebase --onto branch-1 {{ sha 'branch-1 commit A' }} |
-    # TODO:
-    # Rebasing branch-1 onto main while removing the 'main commit' is pointless.
-    # Just do a normal rebase here. The "main" branch hasn't encountered any changes.
     And Git Town prints the error:
       """
       CONFLICT (content): Merge conflict in file
