@@ -21,7 +21,7 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 		}
 	}
 	usesRebaseSyncStrategy := args.Config.NormalConfig.SyncFeatureStrategy == configdomain.SyncFeatureStrategyRebase
-	ancestorToRemove, hasAncestorToRemove := args.Config.NormalConfig.Lineage.YoungestAncestor(localName, args.BranchesToDelete.Value.Values()).Get()
+	ancestorToRemove, hasAncestorToRemove := args.Config.NormalConfig.Lineage.YoungestAncestorWithin(localName, args.BranchesToDelete.Value.Values()).Get()
 	parentSHAPreviousRun := None[gitdomain.SHA]()
 	if parent, has := initialParentName.Get(); has {
 		if branchInfosLastRun, has := args.BranchInfosLastRun.Get(); has {
