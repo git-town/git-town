@@ -24,7 +24,7 @@ func (self *RebaseAncestorsUntilLocal) Run(args shared.RunArgs) error {
 	}
 	branch := self.Branch
 	for {
-		parent, hasParent := args.Config.Value.NormalConfig.Lineage.Parent(branch).Get()
+		parent, hasParent := args.Config.Value.NormalConfig.Lineage.YoungestAncestorWithout(branch).Get()
 		if !hasParent {
 			break
 		}
