@@ -43,12 +43,9 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	// }
 	fmt.Println("2222222222222222222222222222222222222222222222222 commitsToRemove", commitsToRemove)
 	trackingBranchGone := branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote
-	hasDescendents := args.Config.NormalConfig.Lineage.HasDescendents(localName)
 	switch {
-	case trackingBranchGone && hasDescendents:
-		args.BranchesToDelete.Value.Add(localName)
 	case trackingBranchGone:
-		deletedBranchProgram(args.Program, localName, initialParentName, initialParentSHA, commitsToRemove, args)
+		args.BranchesToDelete.Value.Add(localName)
 	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// cannot sync branches that are active in another worktree
 	default:
