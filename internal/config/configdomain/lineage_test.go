@@ -725,7 +725,7 @@ func TestLineage(t *testing.T) {
 				three: two,
 			})
 			have := lineage.YoungestAncestorWithin(three, gitdomain.LocalBranchNames{one, two})
-			must.Eq(t, Some(two), have)
+			must.True(t, have.EqualSome(two))
 		})
 		t.Run("no candidates", func(t *testing.T) {
 			t.Parallel()
@@ -735,7 +735,7 @@ func TestLineage(t *testing.T) {
 				three: two,
 			})
 			have := lineage.YoungestAncestorWithin(three, gitdomain.LocalBranchNames{})
-			must.Eq(t, None[gitdomain.LocalBranchName](), have)
+			must.True(t, have.IsNone())
 		})
 		t.Run("candidates contains branch", func(t *testing.T) {
 			t.Parallel()
@@ -745,7 +745,7 @@ func TestLineage(t *testing.T) {
 				three: two,
 			})
 			have := lineage.YoungestAncestorWithin(three, gitdomain.LocalBranchNames{two, three})
-			must.Eq(t, Some(three), have)
+			must.True(t, have.EqualSome(three))
 		})
 		t.Run("candidates not in lineage", func(t *testing.T) {
 			t.Parallel()
@@ -753,7 +753,7 @@ func TestLineage(t *testing.T) {
 				one: main,
 			})
 			have := lineage.YoungestAncestorWithin(two, gitdomain.LocalBranchNames{three})
-			must.Eq(t, None[gitdomain.LocalBranchName](), have)
+			must.True(t, have.IsNone())
 		})
 	})
 }
