@@ -157,7 +157,7 @@ func main() {
 			return err
 		}
 		if err := lintFile(path); err != nil {
-			return fmt.Errorf("Error linting file %s: %v\n", path, err)
+			return fmt.Errorf("error linting file %s: %w", path, err)
 		}
 		return nil
 	})
