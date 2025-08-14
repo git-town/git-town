@@ -259,9 +259,10 @@ func (self Lineage) YoungestAncestorWithin(branch gitdomain.LocalBranchName, whi
 // provides the branch within the given branch list that is the youngest ancestor of the given branch
 func (self Lineage) YoungestAncestorWithout(branch gitdomain.LocalBranchName, blacklist gitdomain.LocalBranchNames) Option[gitdomain.LocalBranchName] {
 	for {
-		if candidates.Contains(branch) {
-			return Some(branch)
+		if blacklist.Contains(branch) {
+			continue
 		}
+		// return Some(branch)
 		if parent, hasParent := self.Parent(branch).Get(); hasParent {
 			branch = parent
 		} else {
