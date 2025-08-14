@@ -128,7 +128,7 @@ func lintFile(filePath string) error {
 			return fmt.Errorf("error writing modified file %s: %w", filePath, err)
 		}
 
-		fmt.Printf("Fixed must.Eq(t, Some(x), y) patterns in %s\n", filePath)
+		fmt.Printf("%s: fixed must.Eq(t, Some(x), y) patterns\n", filePath)
 	}
 
 	return nil
