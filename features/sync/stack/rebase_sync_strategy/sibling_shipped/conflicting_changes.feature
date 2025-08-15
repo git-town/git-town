@@ -60,7 +60,6 @@ Feature: conflicting sibling branches, one gets shipped, the other syncs afterwa
       |          |               | commit 1    | file      | line 1: branch-1 content\nline 2                   |
       | branch-1 | local         | commit 1    | file      | line 1: branch-1 content\nline 2                   |
       | branch-2 | local, origin | commit 2    | file      | line 1: branch-1 content\nline 2: branch-2 content |
-    # TODO: this should remove the local branch-1, but doesn't
     And this lineage exists now
       | BRANCH   | PARENT |
       | branch-1 | main   |
