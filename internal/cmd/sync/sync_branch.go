@@ -17,11 +17,10 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	fmt.Println("2222222222222222222222222222222222222222222222222 BranchProgram for", localName)
 	parentNameOpt := args.Config.NormalConfig.Lineage.Parent(localName)
 	parentName, hasParentName := parentNameOpt.Get()
-	// previousParentSHA := None[gitdomain.SHA]
-	initialParentSHA := None[gitdomain.SHA]()
+	parentSHAInitial := None[gitdomain.SHA]()
 	if hasParentName {
 		if parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindLocalOrRemote(parentName, args.Config.NormalConfig.DevRemote).Get(); hasParentBranchInfo {
-			initialParentSHA = parentBranchInfo.LocalSHA.Or(parentBranchInfo.RemoteSHA)
+			parentSHAInitial = parentBranchInfo.LocalSHA.Or(parentBranchInfo.RemoteSHA)
 		}
 	}
 	ancestorToRemove, hasAncestorToRemove := args.Config.NormalConfig.Lineage.YoungestAncestorWithin(localName, args.BranchesToDelete.Value.Values()).Get()
@@ -46,7 +45,7 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	trackingBranchGone := branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote
 	switch {
 	case trackingBranchGone:
-		deletedBranchProgram(localName, parentNameOpt, initialParentSHA, commitsToRemove, args)
+		deletedBranchProgram(localName, parentNameOpt, parentSHAInitial, parentSHAPrevious, args)
 		args.BranchesToDelete.Value.Add(localName)
 	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// cannot sync branches that are active in another worktree
@@ -66,7 +65,7 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 
 type BranchProgramArgs struct {
 	BranchInfos         gitdomain.BranchInfos                       // the initial BranchInfos, after "git fetch" ran
-	BranchInfosLastRun  Option[gitdomain.BranchInfos]               // the BranchInfos at the end of the previous Git Town command
+	BranchInfosPrevious Option[gitdomain.BranchInfos]               // the BranchInfos at the end of the previous Git Town command
 	BranchesToDelete    Mutable[set.Set[gitdomain.LocalBranchName]] // branches that should be deleted after the branches are all synced
 	Config              config.ValidatedConfig
 	InitialBranch       gitdomain.LocalBranchName
@@ -166,8 +165,8 @@ func pullParentBranchOfCurrentFeatureBranchOpcode(args pullParentBranchOfCurrent
 	case configdomain.SyncFeatureStrategyMerge, configdomain.SyncFeatureStrategyCompress:
 		args.program.Value.Add(&opcodes.SyncFeatureBranchMerge{
 			Branch:            args.branch,
-			InitialParentName: args.initialParentName,
-			InitialParentSHA:  args.initialParentSHA,
+			InitialParentName: args.parentNameInitial,
+			InitialParentSHA:  args.parentSHAInitial,
 			TrackingBranch:    args.trackingBranch,
 		})
 	case configdomain.SyncFeatureStrategyRebase:
