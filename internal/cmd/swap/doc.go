@@ -1,2 +1,2 @@
-// Package swap provides functionality around swap Git branches.
+// Package swap implements the Git Town command to change the position of a Git branch within its stack.
 package swap
