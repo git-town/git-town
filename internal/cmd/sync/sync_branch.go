@@ -22,15 +22,6 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	}
 	usesRebaseSyncStrategy := args.Config.NormalConfig.SyncFeatureStrategy == configdomain.SyncFeatureStrategyRebase
 	ancestorToRemove, hasAncestorToRemove := args.Config.NormalConfig.Lineage.YoungestAncestorWithin(localName, args.BranchesToDelete.Value.Values()).Get()
-	if hasAncestorToRemove && usesRebaseSyncStrategy {
-		RemoveAncestorCommits(RemoveAncestorCommitsArgs{
-			Ancestor:          ancestorToRemove.BranchName(),
-			Branch:            localName,
-			HasTrackingBranch: branchInfo.HasTrackingBranch(),
-			Program:           args.Program,
-			RebaseOnto:        args.Config.ValidatedConfigData.MainBranch, // TODO: RebaseOnto the latest existing parent, which isn't always main
-		})
-	}
 	parentSHAPreviousRun := None[gitdomain.SHA]()
 	if parent, has := parentNameOpt.Get(); has {
 		if branchInfosLastRun, has := args.BranchInfosLastRun.Get(); has {
@@ -45,7 +36,15 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	case hasAncestorToRemove && ancestorToRemove == parentName && trackingBranchGone && hasDescendents:
 		args.BranchesToDelete.Value.Add(localName)
 	case hasAncestorToRemove && ancestorToRemove == parentName:
-		// nothing to do here, we already synced with the parent by calling RemoveAncestorCommits above
+		if usesRebaseSyncStrategy {
+			RemoveAncestorCommits(RemoveAncestorCommitsArgs{
+				Ancestor:          ancestorToRemove.BranchName(),
+				Branch:            localName,
+				HasTrackingBranch: branchInfo.HasTrackingBranch(),
+				Program:           args.Program,
+				RebaseOnto:        args.Config.ValidatedConfigData.MainBranch, // TODO: RebaseOnto the latest existing parent, which isn't always main
+			})
+		}
 	case usesRebaseSyncStrategy && trackingBranchGone && hasDescendents:
 		args.BranchesToDelete.Value.Add(localName)
 	case trackingBranchGone:
@@ -53,6 +52,15 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// cannot sync branches that are active in another worktree
 	default:
+		if hasAncestorToRemove && usesRebaseSyncStrategy {
+			RemoveAncestorCommits(RemoveAncestorCommitsArgs{
+				Ancestor:          ancestorToRemove.BranchName(),
+				Branch:            localName,
+				HasTrackingBranch: branchInfo.HasTrackingBranch(),
+				Program:           args.Program,
+				RebaseOnto:        args.Config.ValidatedConfigData.MainBranch, // TODO: RebaseOnto the latest existing parent, which isn't always main
+			})
+		}
 		localBranchProgram(localBranchProgramArgs{
 			BranchProgramArgs:    args,
 			branchInfo:           branchInfo,
