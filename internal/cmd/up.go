@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"cmp"
 	"fmt"
 	"regexp"
 
@@ -19,6 +20,7 @@ import (
 const upDesc = "Move one position up in the current stack"
 
 func upCmd() *cobra.Command {
+	addMergeFlag, readMergeFlag := flags.Merge()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "up",
@@ -27,8 +29,9 @@ func upCmd() *cobra.Command {
 		Short:   upDesc,
 		Long:    cmdhelpers.Long(upDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			verbose, err := readVerboseFlag(cmd)
-			if err != nil {
+			merge, errMerge := readMergeFlag(cmd)
+			verbose, errVerbose := readVerboseFlag(cmd)
+			if err := cmp.Or(errMerge, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -36,16 +39,25 @@ func upCmd() *cobra.Command {
 				DryRun:      None[configdomain.DryRun](),
 				Verbose:     verbose,
 			})
-			return executeUp(cliConfig)
+			return executeUp(executeUpArgs{
+				cliConfig: cliConfig,
+				merge:     merge,
+			})
 		},
 	}
+	addMergeFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeUp(cliConfig configdomain.PartialConfig) error {
+type executeUpArgs struct {
+	cliConfig configdomain.PartialConfig
+	merge     configdomain.SwitchUsingMerge
+}
+
+func executeUp(args executeUpArgs) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		CliConfig:        cliConfig,
+		CliConfig:        args.cliConfig,
 		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
@@ -68,7 +80,7 @@ func executeUp(cliConfig configdomain.PartialConfig) error {
 	}
 
 	// Check out the parent branch
-	err = repo.Git.CheckoutBranch(repo.Frontend, parent, false)
+	err = repo.Git.CheckoutBranch(repo.Frontend, parent, args.merge)
 	if err != nil {
 		return err
 	}
