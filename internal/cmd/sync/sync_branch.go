@@ -65,9 +65,9 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 			BranchProgramArgs:  args,
 			branchInfo:         branchInfo,
 			firstCommitMessage: firstCommitMessage,
+			localName:          localName,
 			parentNameInitial:  parentNameOpt,
 			parentSHAInitial:   parentSHAInitial,
-			localName:          localName,
 			parentSHAPrevious:  parentSHAPrevious,
 		})
 	}
