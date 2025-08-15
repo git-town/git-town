@@ -19,7 +19,7 @@ To run all unit tests for the project, use this command:
 make unit
 ```
 
-To run an end-to-end test for the project, use this command:
+To run a single Cucumber test, also called end-to-end test, use this command:
 
 ```bash
 make install
