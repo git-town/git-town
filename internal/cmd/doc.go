@@ -42,6 +42,7 @@ func Execute() error {
 	rootCmd.AddCommand(switchCmd())
 	rootCmd.AddCommand(sync.Cmd())
 	rootCmd.AddCommand(undoCmd())
+	rootCmd.AddCommand(upCmd())
 	rootCmd.AddCommand(walkCommand())
 	return rootCmd.Execute()
 }

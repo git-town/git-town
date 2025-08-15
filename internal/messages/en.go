@@ -333,6 +333,7 @@ and will be removed in future versions of Git Town.`
 	UnfinishedRunStateUndo                  = "Undo the previous \"%s\" command"
 	UnknownBranchType                       = "Unknown branch type: %s\n"
 	UpdateProposalBodyUnsupported           = "the Git Town driver for your forge does not support updating the proposal body"
+	UpNoParent                              = "branch %q has no parent"
 	ValueInvalid                            = "invalid value for %s: %q. Please provide either \"yes\" or \"no\""
 	WalkAllOrStack                          = "please provide either --all or --stack"
 	WalkDone                                = "Branch walk done."
