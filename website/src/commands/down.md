@@ -54,14 +54,6 @@ to move them down to a child branch.
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.
 
-## Error Cases
-
-If the current branch has no children, `git town down` displays an error:
-
-```
-branch "branch-name" has no children
-```
-
 ## See also
 
 - [branch](branch.md) displays the branch hierarchy
