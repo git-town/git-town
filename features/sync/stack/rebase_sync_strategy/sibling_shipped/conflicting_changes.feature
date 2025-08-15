@@ -1,21 +1,24 @@
 Feature: conflicting sibling branches, one gets shipped, the other syncs afterwards
-# TODO: this should remove the local branch-1, but doesn't
 
   Background:
     Given a Git repo with origin
     And Git setting "git-town.sync-feature-strategy" is "rebase"
+    And the commits
+      | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT   |
+      | main   | local, origin | main commit | file      | line 1\nline 2 |
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | branch-1 | feature | main   | local, origin |
       | branch-2 | feature | main   | local, origin |
     And the commits
-      | BRANCH   | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
-      | branch-1 | local, origin | commit 1 | file      | content 1    |
-      | branch-2 | local, origin | commit 2 | file      | content 2    |
+      | BRANCH   | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT                     |
+      | branch-1 | local, origin | commit 1 | file      | line 1: branch-1 content\nline 2 |
+      | branch-2 | local, origin | commit 2 | file      | line 1\nline 2: branch-2 content |
     And origin ships the "branch-1" branch using the "squash-merge" ship-strategy
     And the current branch is "branch-2"
     When I run "git-town sync"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                           |
@@ -26,17 +29,23 @@ Feature: conflicting sibling branches, one gets shipped, the other syncs afterwa
       | branch-2 | git -c rebase.updateRefs=false rebase main        |
     And Git Town prints the error:
       """
-      CONFLICT (add/add): Merge conflict in file
+      CONFLICT (content): Merge conflict in file
       """
     And file "file" now has content:
       """
       <<<<<<< HEAD
-      content 1
+      line 1: branch-1 content
+      line 2
       =======
-      content 2
+      line 1
+      line 2: branch-2 content
       >>>>>>> {{ sha-short 'commit 2' }} (commit 2)
       """
-    When I resolve the conflict in "file" with "content 1 and 2"
+    When I resolve the conflict in "file" with:
+      """
+      line 1: branch-1 content
+      line 2: branch-2 content
+      """
     And I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                         |
@@ -47,10 +56,12 @@ Feature: conflicting sibling branches, one gets shipped, the other syncs afterwa
       | local      | main, branch-1, branch-2 |
       | origin     | main, branch-2           |
     And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT    |
-      | main     | local, origin | commit 1 | file      | content 1       |
-      | branch-1 | local         | commit 1 | file      | content 1       |
-      | branch-2 | local, origin | commit 2 | file      | content 1 and 2 |
+      | BRANCH   | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT                                       |
+      | main     | local, origin | main commit | file      | line 1\nline 2                                     |
+      |          |               | commit 1    | file      | line 1: branch-1 content\nline 2                   |
+      | branch-1 | local         | commit 1    | file      | line 1: branch-1 content\nline 2                   |
+      | branch-2 | local, origin | commit 2    | file      | line 1: branch-1 content\nline 2: branch-2 content |
+    # TODO: this should remove the local branch-1, but doesn't
     And this lineage exists now
       | BRANCH   | PARENT |
       | branch-1 | main   |
