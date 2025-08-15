@@ -179,9 +179,9 @@ func pullParentBranchOfCurrentFeatureBranchOpcode(args pullParentBranchOfCurrent
 
 type pullParentBranchOfCurrentFeatureBranchOpcodeArgs struct {
 	branch            gitdomain.LocalBranchName
-	initialParentName Option[gitdomain.LocalBranchName]
-	initialParentSHA  Option[gitdomain.SHA]
 	commitsToRemove   Option[gitdomain.Location]
+	parentSHAInitial  Option[gitdomain.SHA]
+	parentNameInitial Option[gitdomain.LocalBranchName]
 	program           Mutable[program.Program]
 	syncStrategy      configdomain.SyncFeatureStrategy
 	trackingBranch    Option[gitdomain.RemoteBranchName]
