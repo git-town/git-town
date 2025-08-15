@@ -80,16 +80,14 @@ func executeDown(args executeDownArgs) error {
 
 	// Get the child branches from lineage
 	children := repo.UnvalidatedConfig.NormalConfig.Lineage.Children(currentBranch)
-	if len(children) == 0 {
-		return fmt.Errorf(messages.DownNoChild, currentBranch)
-	}
-
-	// Select the child branch
 	var child gitdomain.LocalBranchName
-	if len(children) == 1 {
+	switch len(children) {
+	case 0:
+		return fmt.Errorf(messages.DownNoChild, currentBranch)
+	case 1:
 		child = children[0]
-	} else {
-		// Let the user choose which child via a dialog
+	default:
+		// more than one child --> let the user choose
 		inputs := dialogcomponents.LoadInputs(os.Environ())
 		selectedChild, exit, err := dialog.ChildBranch(dialog.ChildBranchArgs{
 			ChildBranches: children,
@@ -100,6 +98,8 @@ func executeDown(args executeDownArgs) error {
 		}
 		child = selectedChild
 	}
+
+	// check out the child branch
 	err = repo.Git.CheckoutBranch(repo.Frontend, child, args.merge)
 	if err != nil {
 		return err
