@@ -3,10 +3,11 @@ package cmd
 import (
 	"cmp"
 	"fmt"
+	"os"
 	"regexp"
-	"strings"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v21/internal/config/cliconfig"
@@ -82,14 +83,23 @@ func executeDown(args executeDownArgs) error {
 	if len(children) == 0 {
 		return fmt.Errorf(messages.DownNoChild, currentBranch)
 	}
-	if len(children) > 1 {
-		// TODO: let the user choose which child via a dialog
-		childrenStr := strings.Join(children.Strings(), ", ")
-		return fmt.Errorf(messages.DownMultipleChildren, currentBranch, childrenStr)
-	}
 
-	// Check out the child branch
-	child := children[0]
+	// Select the child branch
+	var child gitdomain.LocalBranchName
+	if len(children) == 1 {
+		child = children[0]
+	} else {
+		// Let the user choose which child via a dialog
+		inputs := dialogcomponents.LoadInputs(os.Environ())
+		selectedChild, exit, err := dialog.ChildBranch(dialog.ChildBranchArgs{
+			ChildBranches: children,
+			Inputs:        inputs,
+		})
+		if err != nil || exit {
+			return err
+		}
+		child = selectedChild
+	}
 	err = repo.Git.CheckoutBranch(repo.Frontend, child, args.merge)
 	if err != nil {
 		return err
