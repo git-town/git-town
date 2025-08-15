@@ -46,7 +46,11 @@ branch and feature branches.
 
 The `--merge` aka `-m` flag has the same effect as the
 [git checkout -m](https://git-scm.com/docs/git-checkout#Documentation/git-checkout.txt--m)
-flag.
+flag. It attempts to merge uncommitted changes in your workspace into the target
+branch.
+
+This is useful when you have uncommitted changes in your current branch and want
+to move them to the new branch.
 
 #### `-t <name>`<br>`--type <name>`
 
