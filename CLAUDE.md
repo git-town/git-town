@@ -19,6 +19,13 @@ To run all unit tests for the project, use this command:
 make unit
 ```
 
+To run an end-to-end test for the project, use this command:
+
+```bash
+make install
+go test -- <test path>
+```
+
 ### Linters
 
 Please execute the linters after making changes to verify the correctness of

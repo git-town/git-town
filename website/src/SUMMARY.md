@@ -32,6 +32,7 @@
     - [prepend](commands/prepend.md)
     - [set-parent](commands/set-parent.md)
     - [swap](commands/swap.md)
+    - [up](commands/up.md)
     - [walk](commands/walk.md)
   - [Limit branch syncing](branch-types.md)
     - [contribute](commands/contribute.md)
