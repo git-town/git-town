@@ -352,7 +352,7 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 	branchesToDelete := set.New[gitdomain.LocalBranchName]()
 	sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 		BranchInfos:         data.branchInfos,
-		BranchInfosLastRun:  data.branchInfosLastRun,
+		BranchInfosPrevious: data.branchInfosLastRun,
 		BranchesToDelete:    NewMutable(&branchesToDelete),
 		Config:              data.config,
 		InitialBranch:       data.initialBranch,
