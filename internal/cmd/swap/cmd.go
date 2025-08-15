@@ -1,4 +1,4 @@
-package cmd
+package swap
 
 import (
 	"cmp"
@@ -24,7 +24,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/state/runstate"
 	"github.com/git-town/git-town/v21/internal/validate"
 	"github.com/git-town/git-town/v21/internal/vm/interpreter/fullinterpreter"
-	"github.com/git-town/git-town/v21/internal/vm/opcodes"
 	"github.com/git-town/git-town/v21/internal/vm/program"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/spf13/cobra"
@@ -63,7 +62,7 @@ main
 
 const swapCommandName = "swap"
 
-func swapCommand() *cobra.Command {
+func Cmd() *cobra.Command {
 	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
@@ -336,76 +335,21 @@ func determineSwapData(args []string, repo execute.OpenRepoResult) (data swapDat
 func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Frontend)
-	prog.Value.Add(
-		&opcodes.RebaseOnto{
-			BranchToRebaseOnto: data.grandParentBranch.BranchName(),
-			CommitsToRemove:    data.parentBranch.Location(),
-		},
-	)
-	if data.branchToSwapInfo.HasTrackingBranch() {
-		prog.Value.Add(
-			&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: data.branchToSwapName, ForceIfIncludes: true},
-		)
-	}
-	prog.Value.Add(
-		&opcodes.Checkout{
-			Branch: data.parentBranch,
-		},
-		&opcodes.RebaseOnto{
-			BranchToRebaseOnto: data.branchToSwapName.BranchName(),
-			CommitsToRemove:    data.grandParentBranch.Location(),
-		},
-	)
-	if data.parentBranchInfo.HasTrackingBranch() {
-		prog.Value.Add(
-			&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: data.parentBranch, ForceIfIncludes: true},
-		)
-	}
-	for _, child := range data.children {
-		prog.Value.Add(
-			&opcodes.Checkout{
-				Branch: child.name,
-			},
-		)
-		oldBranchSHA, hasOldBranchSHA := data.branchToSwapInfo.LocalSHA.Get()
-		if !hasOldBranchSHA {
-			oldBranchSHA = data.branchToSwapInfo.RemoteSHA.GetOrDefault()
-		}
-		prog.Value.Add(
-			&opcodes.RebaseOnto{
-				BranchToRebaseOnto: data.parentBranch.BranchName(),
-				CommitsToRemove:    oldBranchSHA.Location(),
-			},
-		)
-		if child.info.HasTrackingBranch() {
-			prog.Value.Add(
-				&opcodes.PushCurrentBranchForceIfNeeded{
-					CurrentBranch:   child.name,
-					ForceIfIncludes: true,
-				},
-			)
-		}
-	}
-	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.branchToSwapName})
+	swapGitOperationsProgram(swapGitOperationsProgramArgs{
+		branchToSwap:        data.branchToSwapInfo,
+		childBranchesToSwap: data.children,
+		grandParentBranch:   data.grandParentBranch,
+		parentBranch:        data.parentBranchInfo,
+		program:             prog,
+	})
 	if !data.config.NormalConfig.DryRun {
-		prog.Value.Add(
-			&opcodes.LineageParentSet{
-				Branch: data.branchToSwapName,
-				Parent: data.grandParentBranch,
-			},
-			&opcodes.LineageParentSet{
-				Branch: data.parentBranch,
-				Parent: data.branchToSwapName,
-			},
-		)
-		for _, child := range data.children {
-			prog.Value.Add(
-				&opcodes.LineageParentSet{
-					Branch: child.name,
-					Parent: data.parentBranch,
-				},
-			)
-		}
+		swapLineageParentSetsProgram(swapLineageParentSetsProgramArg{
+			branchToSwap:      data.branchToSwapName,
+			childBranches:     data.children,
+			grandParentBranch: data.grandParentBranch,
+			parentBranch:      data.parentBranch,
+			program:           prog,
+		})
 	}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.config.NormalConfig.DryRun,
