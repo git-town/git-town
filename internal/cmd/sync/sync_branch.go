@@ -17,7 +17,7 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	fmt.Println("2222222222222222222222222222222222222222222222222 BranchProgram for", localName)
 	parentNameOpt := args.Config.NormalConfig.Lineage.Parent(localName)
 	parentName, hasParentName := parentNameOpt.Get()
-	previousParentSHA := None[gitdomain.SHA]
+	// previousParentSHA := None[gitdomain.SHA]
 	initialParentSHA := None[gitdomain.SHA]()
 	if hasParentName {
 		if parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindLocalOrRemote(parentName, args.Config.NormalConfig.DevRemote).Get(); hasParentBranchInfo {
@@ -51,15 +51,6 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// cannot sync branches that are active in another worktree
 	default:
-		if hasAncestorToRemove && usesRebaseSyncStrategy {
-			RemoveAncestorCommits(RemoveAncestorCommitsArgs{
-				Ancestor:          ancestorToRemove.BranchName(),
-				Branch:            localName,
-				HasTrackingBranch: branchInfo.HasTrackingBranch(),
-				Program:           args.Program,
-				RebaseOnto:        args.Config.ValidatedConfigData.MainBranch, // TODO: RebaseOnto the latest existing parent, which isn't always main
-			})
-		}
 		localBranchProgram(localBranchProgramArgs{
 			BranchProgramArgs:  args,
 			branchInfo:         branchInfo,
