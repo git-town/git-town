@@ -23,6 +23,7 @@ func Execute() error {
 	rootCmd.AddCommand(hackCmd())
 	rootCmd.AddCommand(detachCommand())
 	rootCmd.AddCommand(deleteCommand())
+	rootCmd.AddCommand(downCmd())
 	rootCmd.AddCommand(killCommand())
 	rootCmd.AddCommand(mergeCommand())
 	rootCmd.AddCommand(observeCmd())
@@ -42,6 +43,7 @@ func Execute() error {
 	rootCmd.AddCommand(switchCmd())
 	rootCmd.AddCommand(sync.Cmd())
 	rootCmd.AddCommand(undoCmd())
+	rootCmd.AddCommand(upCmd())
 	rootCmd.AddCommand(walkCommand())
 	return rootCmd.Execute()
 }
