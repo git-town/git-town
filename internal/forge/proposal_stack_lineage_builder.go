@@ -65,6 +65,17 @@ func (self *ProposalStackLineageBuilder) GetProposal(branch gitdomain.LocalBranc
 	return proposal
 }
 
+// GetProposals returns all the open proposals in the stack lineage.
+func (self *ProposalStackLineageBuilder) GetProposals() []forgedomain.Proposal {
+	proposals := make([]forgedomain.Proposal, 0, len(self.tree.BranchToProposal))
+	for _, p := range self.tree.BranchToProposal {
+		if proposal, hasProposal := p.Get(); hasProposal {
+			proposals = append(proposals, proposal)
+		}
+	}
+	return proposals
+}
+
 func (self *ProposalStackLineageBuilder) build(node *ProposalStackLineageTreeNode, args ProposalStackLineageArgs) string {
 	var builder strings.Builder
 	indent := strings.Repeat(" ", node.depth*2)
