@@ -27,6 +27,7 @@
   - [Stacked changes](stacked-changes.md)
     - [append](commands/append.md)
     - [detach](commands/detach.md)
+    - [down](commands/down.md)
     - [diff-parent](commands/diff-parent.md)
     - [merge](commands/merge.md)
     - [prepend](commands/prepend.md)
