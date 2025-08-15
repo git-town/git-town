@@ -4,9 +4,12 @@
 
 #### Bug Fixes
 
-- sync: Git Town now performs a rebase-onto only if there are actual commits to remove. If there are no commits to remove, Git Town performs a regular rebase, or if there is no need to sync, no rebase at all. This prevents a number of phantom merge conflicts from happening. ([#5422](https://github.com/git-town/git-town/pull/5422))
-- branch: print branches in other worktrees de-emphasized ([#5405](https://github.com/git-town/git-town/pull/5405))
+- Fewer phantom merge conflicts: Git Town now performs a rebase-onto only if there are actual commits to remove. If there are no commits to remove, Git Town performs a regular rebase, or if there is no need to sync, no rebase at all. ([#5422](https://github.com/git-town/git-town/pull/5422))
+- "git town branch" prints branches in other worktrees de-emphasized ([#5405](https://github.com/git-town/git-town/pull/5405))
 
+#### Contributors
+
+Shoutout to @AmitJoki, @Ydot19, @avaz, @benmosher, @kevgo, @nebbles, @nekitk, @stephenwade, @tranhl for contributing feedback, ideas, and code to 47 shipped PRs and 3 resolved issues!
 
 ## 21.4.2 (2025-08-11)
 
