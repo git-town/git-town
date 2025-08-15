@@ -40,7 +40,6 @@ Feature: an ancestor in a stack with dependent changes was deleted remotely
 
   Scenario: undo
     When I run "git-town undo"
-    And inspect the commits
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                 |
       | branch-2 | git reset --hard {{ sha 'branch-2 commit' }}                            |
