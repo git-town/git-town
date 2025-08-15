@@ -104,6 +104,7 @@ func executeUp(args executeUpArgs) error {
 		ShowAllBranches:   false,
 		UnknownBranchType: repo.UnvalidatedConfig.NormalConfig.UnknownBranchType,
 	})
+	fmt.Println()
 	fmt.Print(branchLayout(entries, data))
 
 	return nil
