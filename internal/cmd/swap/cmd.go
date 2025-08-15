@@ -391,6 +391,18 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 		},
 		program: prog,
 	})
+	connector, hasConnector := data.connector.Get()
+	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI && hasConnector {
+		swapUpdateProposalStackLineagesProgram(swapUpdateProposalStackLineagesProgramArg{
+			program: prog,
+			proposalStackLineageArgs: forge.ProposalStackLineageArgs{
+				Connector:                connector,
+				CurrentBranch:            data.branchToSwapName,
+				Lineage:                  data.config.NormalConfig.Lineage,
+				MainAndPerennialBranches: data.config.MainAndPerennials(),
+			},
+		})
+	}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.config.NormalConfig.DryRun,
 		InitialStashSize:         data.stashSize,
