@@ -56,7 +56,6 @@ func syncDeletedFeatureBranchProgram(branch gitdomain.LocalBranchName, initialPa
 			branch:            branch,
 			parentNameInitial: initialParentName,
 			parentSHAInitial:  initialParentSHA,
-			parentSHAPrevious: parentSHAPrevious,
 			program:           args.Program,
 			syncStrategy:      args.Config.NormalConfig.SyncFeatureStrategy,
 			// this function syncs a branch whose remote was deleted --> we know for sure there is no tracking branch

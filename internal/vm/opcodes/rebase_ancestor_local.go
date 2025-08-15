@@ -30,13 +30,13 @@ func (self *RebaseAncestorLocal) Run(args shared.RunArgs) error {
 		branchToRebaseOnto = self.Ancestor.BranchName()
 	}
 	commitsToRemove, hasCommitsToRemove := self.CommitsToRemove.Get()
-	ancestorSHA := None[gitdomain.SHA]()
+	ancestorSHA := None[gitdomain.Location]()
 	if hasCommitsToRemove {
 		sha, err := args.Git.SHAForBranch(args.Backend, branchToRebaseOnto)
 		if err != nil {
 			return err
 		}
-		ancestorSHA = Some(sha)
+		ancestorSHA = Some(sha.Location())
 	}
 	if hasCommitsToRemove && !self.CommitsToRemove.Equal(ancestorSHA) {
 		// Here we rebase onto the new parent, while removing the commits that the parent had in the last run.
