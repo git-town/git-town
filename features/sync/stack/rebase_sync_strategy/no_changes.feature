@@ -1,4 +1,4 @@
-Feature: stack that changes the same file in multiple commits per branch
+Feature: syncing an already synced stack
 
   Background:
     Given a Git repo with origin
