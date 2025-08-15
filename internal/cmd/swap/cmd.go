@@ -149,27 +149,30 @@ func executeSwap(args []string, cliConfig configdomain.PartialConfig) error {
 }
 
 type swapData struct {
-	branchInfosLastRun  Option[gitdomain.BranchInfos]
-	branchToSwapInfo    gitdomain.BranchInfo
-	branchToSwapName    gitdomain.LocalBranchName
-	branchToSwapType    configdomain.BranchType
-	branchesSnapshot    gitdomain.BranchesSnapshot
-	children            []swapChildBranch
-	config              config.ValidatedConfig
-	connector           Option[forgedomain.Connector]
-	grandParentBranch   gitdomain.LocalBranchName
-	hasOpenChanges      bool
-	initialBranch       gitdomain.LocalBranchName
-	inputs              dialogcomponents.Inputs
-	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
-	parentBranch        gitdomain.LocalBranchName
-	parentBranchInfo    gitdomain.BranchInfo
-	parentBranchType    configdomain.BranchType
-	previousBranch      Option[gitdomain.LocalBranchName]
-	stashSize           gitdomain.StashSize
+	branchInfosLastRun    Option[gitdomain.BranchInfos]
+	branchToSwapInfo      gitdomain.BranchInfo
+	branchToSwapName      gitdomain.LocalBranchName
+	branchToSwapProposal  Option[forgedomain.Proposal]
+	branchToSwapType      configdomain.BranchType
+	branchesSnapshot      gitdomain.BranchesSnapshot
+	children              []swapBranch
+	config                config.ValidatedConfig
+	connector             Option[forgedomain.Connector]
+	grandParentBranch     gitdomain.LocalBranchName
+	grandParentBranchInfo gitdomain.BranchInfo
+	hasOpenChanges        bool
+	initialBranch         gitdomain.LocalBranchName
+	inputs                dialogcomponents.Inputs
+	nonExistingBranches   gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
+	parentBranch          gitdomain.LocalBranchName
+	parentBranchInfo      gitdomain.BranchInfo
+	parentBranchProposal  Option[forgedomain.Proposal]
+	parentBranchType      configdomain.BranchType
+	previousBranch        Option[gitdomain.LocalBranchName]
+	stashSize             gitdomain.StashSize
 }
 
-type swapChildBranch struct {
+type swapBranch struct {
 	info     gitdomain.BranchInfo
 	name     gitdomain.LocalBranchName
 	proposal Option[forgedomain.Proposal]
@@ -273,7 +276,7 @@ func determineSwapData(args []string, repo execute.OpenRepoResult) (data swapDat
 		return data, false, errors.New(messages.SwapNoGrandParent)
 	}
 	childBranches := validatedConfig.NormalConfig.Lineage.Children(branchNameToSwap)
-	children := make([]swapChildBranch, len(childBranches))
+	children := make([]swapBranch, len(childBranches))
 	for c, childBranch := range childBranches {
 		proposal := None[forgedomain.Proposal]()
 		if connector, hasConnector := connector.Get(); hasConnector {
@@ -288,11 +291,31 @@ func determineSwapData(args []string, repo execute.OpenRepoResult) (data swapDat
 		if !has {
 			return data, false, fmt.Errorf("cannot find branch info for %q", childBranch)
 		}
-		children[c] = swapChildBranch{
+		children[c] = swapBranch{
 			info:     *childInfo,
 			name:     childBranch,
 			proposal: proposal,
 		}
+	}
+	// Get proposals for branchToSwap and parentBranch
+	branchToSwapProposal := None[forgedomain.Proposal]()
+	parentBranchProposal := None[forgedomain.Proposal]()
+	if connector, hasConnector := connector.Get(); hasConnector {
+		if findProposal, canFindProposal := connector.FindProposalFn().Get(); canFindProposal {
+			branchToSwapProposal, err = findProposal(branchNameToSwap, initialBranch)
+			if err != nil {
+				return data, false, err
+			}
+			parentBranchProposal, err = findProposal(parentBranch, initialBranch)
+			if err != nil {
+				return data, false, err
+			}
+		}
+	}
+	// Get grandParentBranch info
+	grandParentBranchInfo, hasGrandParentBranchInfo := branchesSnapshot.Branches.FindByLocalName(grandParentBranch).Get()
+	if !hasGrandParentBranchInfo {
+		return data, false, fmt.Errorf("cannot find branch info for %q", grandParentBranch)
 	}
 	branchContainsMerges, err := repo.Git.BranchContainsMerges(repo.Backend, branchNameToSwap, parentBranch)
 	if err != nil {
@@ -311,24 +334,27 @@ func determineSwapData(args []string, repo execute.OpenRepoResult) (data swapDat
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
 	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
 	return swapData{
-		branchInfosLastRun:  branchInfosLastRun,
-		branchToSwapInfo:    *branchToSwapInfo,
-		branchToSwapName:    branchNameToSwap,
-		branchToSwapType:    branchTypeToSwap,
-		branchesSnapshot:    branchesSnapshot,
-		children:            children,
-		config:              validatedConfig,
-		connector:           connector,
-		grandParentBranch:   grandParentBranch,
-		hasOpenChanges:      repoStatus.OpenChanges,
-		initialBranch:       initialBranch,
-		inputs:              inputs,
-		nonExistingBranches: nonExistingBranches,
-		parentBranch:        parentBranch,
-		parentBranchInfo:    *parentBranchInfo,
-		parentBranchType:    parentBranchType,
-		previousBranch:      previousBranchOpt,
-		stashSize:           stashSize,
+		branchInfosLastRun:    branchInfosLastRun,
+		branchToSwapInfo:      *branchToSwapInfo,
+		branchToSwapName:      branchNameToSwap,
+		branchToSwapProposal:  branchToSwapProposal,
+		branchToSwapType:      branchTypeToSwap,
+		branchesSnapshot:      branchesSnapshot,
+		children:              children,
+		config:                validatedConfig,
+		connector:             connector,
+		grandParentBranch:     grandParentBranch,
+		grandParentBranchInfo: *grandParentBranchInfo,
+		hasOpenChanges:        repoStatus.OpenChanges,
+		initialBranch:         initialBranch,
+		inputs:                inputs,
+		nonExistingBranches:   nonExistingBranches,
+		parentBranch:          parentBranch,
+		parentBranchInfo:      *parentBranchInfo,
+		parentBranchProposal:  parentBranchProposal,
+		parentBranchType:      parentBranchType,
+		previousBranch:        previousBranchOpt,
+		stashSize:             stashSize,
 	}, false, nil
 }
 
@@ -351,6 +377,20 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 			program:           prog,
 		})
 	}
+	swapProposalTargetsProgram(swapProposalTargetsProgramArg{
+		branchToSwap: swapBranch{
+			info:     data.branchToSwapInfo,
+			name:     data.branchToSwapName,
+			proposal: data.branchToSwapProposal,
+		},
+		grandParentBranch: data.grandParentBranch,
+		parentBranch: swapBranch{
+			info:     data.parentBranchInfo,
+			name:     data.parentBranch,
+			proposal: data.parentBranchProposal,
+		},
+		program: prog,
+	})
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.config.NormalConfig.DryRun,
 		InitialStashSize:         data.stashSize,
