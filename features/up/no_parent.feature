@@ -5,7 +5,6 @@ Feature: switching when the branch has no parent
     And the current branch is "main"
     When I run "git-town up"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND |
