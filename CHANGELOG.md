@@ -1,5 +1,13 @@
 # Git Town Changelog
 
+## 21.4.3 (2025-08-15)
+
+#### Bug Fixes
+
+- sync: Git Town now performs a rebase-onto only if there are actual commits to remove. If there are no commits to remove, Git Town performs a regular rebase, or if there is no need to sync, no rebase at all. This prevents a number of phantom merge conflicts from happening. ([#5422](https://github.com/git-town/git-town/pull/5422))
+- branch: print branches in other worktrees de-emphasized ([#5405](https://github.com/git-town/git-town/pull/5405))
+
+
 ## 21.4.2 (2025-08-11)
 
 #### Bug Fixes
