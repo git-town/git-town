@@ -58,7 +58,7 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 				Branch:            localName,
 				HasTrackingBranch: branchInfo.HasTrackingBranch(),
 				Program:           args.Program,
-				RebaseOnto:        args.Config.ValidatedConfigData.MainBranch, // TODO: RebaseOnto the latest existing parent, which isn't always main
+				RebaseOnto:        parentName,
 			})
 		}
 		localBranchProgram(localBranchProgramArgs{
