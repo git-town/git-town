@@ -4,6 +4,7 @@ import (
 	"cmp"
 	"fmt"
 	"regexp"
+	"strings"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
 	"github.com/git-town/git-town/v21/internal/cli/flags"
@@ -18,19 +19,19 @@ import (
 )
 
 const (
-	upShort = "Switch to the parent branch"
-	upLong  = `Moves "up" in the stack by switching to the parent of the current branch.`
+	downShort = "Switch to the child branch"
+	downLong  = `Moves "down" in the stack by switching to the child of the current branch.`
 )
 
-func upCmd() *cobra.Command {
+func downCmd() *cobra.Command {
 	addMergeFlag, readMergeFlag := flags.Merge()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:     "up",
+		Use:     "down",
 		GroupID: cmdhelpers.GroupIDStack,
 		Args:    cobra.NoArgs,
-		Short:   upShort,
-		Long:    cmdhelpers.Long(upShort, upLong),
+		Short:   downShort,
+		Long:    cmdhelpers.Long(downShort, downLong),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			merge, errMerge := readMergeFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
@@ -42,7 +43,7 @@ func upCmd() *cobra.Command {
 				DryRun:      None[configdomain.DryRun](),
 				Verbose:     verbose,
 			})
-			return executeUp(executeUpArgs{
+			return executeDown(executeDownArgs{
 				cliConfig: cliConfig,
 				merge:     merge,
 			})
@@ -53,12 +54,12 @@ func upCmd() *cobra.Command {
 	return &cmd
 }
 
-type executeUpArgs struct {
+type executeDownArgs struct {
 	cliConfig configdomain.PartialConfig
 	merge     configdomain.SwitchUsingMerge
 }
 
-func executeUp(args executeUpArgs) error {
+func executeDown(args executeDownArgs) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        args.cliConfig,
 		PrintBranchNames: true,
@@ -76,14 +77,20 @@ func executeUp(args executeUpArgs) error {
 		return err
 	}
 
-	// Get the parent branch from lineage
-	parent, hasParent := repo.UnvalidatedConfig.NormalConfig.Lineage.Parent(currentBranch).Get()
-	if !hasParent {
-		return fmt.Errorf(messages.UpNoParent, currentBranch)
+	// Get the child branches from lineage
+	children := repo.UnvalidatedConfig.NormalConfig.Lineage.Children(currentBranch)
+	if len(children) == 0 {
+		return fmt.Errorf(messages.DownNoChild, currentBranch)
+	}
+	if len(children) > 1 {
+		// TODO: let the user choose which child via a dialog
+		childrenStr := strings.Join(children.Strings(), ", ")
+		return fmt.Errorf(messages.DownMultipleChildren, currentBranch, childrenStr)
 	}
 
-	// Check out the parent branch
-	err = repo.Git.CheckoutBranch(repo.Frontend, parent, args.merge)
+	// Check out the child branch
+	child := children[0]
+	err = repo.Git.CheckoutBranch(repo.Frontend, child, args.merge)
 	if err != nil {
 		return err
 	}
