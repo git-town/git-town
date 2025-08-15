@@ -23,6 +23,14 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 			parentSHAInitial = parentBranchInfo.LocalSHA.Or(parentBranchInfo.RemoteSHA)
 		}
 	}
+	parentSHAPrevious := None[gitdomain.Location]()
+	if hasParentName {
+		if branchInfosLastRun, has := args.BranchInfosPrevious.Get(); has {
+			if parentInfoLastRun, has := branchInfosLastRun.FindByLocalName(parentName).Get(); has {
+				parentSHAPrevious = Some(parentInfoLastRun.GetLocalOrRemoteSHA().Location())
+			}
+		}
+	}
 	ancestorToRemove, hasAncestorToRemove := args.Config.NormalConfig.Lineage.YoungestAncestorWithin(localName, args.BranchesToDelete.Value.Values()).Get()
 	fmt.Println("2222222222222222222222222222222222222222222222222 ancestorToRemove", hasAncestorToRemove, ancestorToRemove)
 	// determine commits to remove
@@ -56,7 +64,7 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 			commitsToRemove:    commitsToRemove,
 			firstCommitMessage: firstCommitMessage,
 			initialParentName:  parentNameOpt,
-			initialParentSHA:   initialParentSHA,
+			initialParentSHA:   parentSHAInitial,
 			localName:          localName,
 		})
 	}
