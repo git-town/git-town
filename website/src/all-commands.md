@@ -34,6 +34,7 @@ Run `git town` for an overview of all Git Town commands and
   branch
 - [git town swap](commands/swap.md) - swap the position of this branch with its
   parent
+- [git town up](commands/up.md) - switch to the parent of the current stack
 
 ### Limit branch syncing
 
