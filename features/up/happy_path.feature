@@ -1,7 +1,6 @@
-@messyoutput
 Feature: move up one position in the current stack
 
-  Scenario: switching to parent branch
+  Background:
     Given a Git repo with origin
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
@@ -9,6 +8,8 @@ Feature: move up one position in the current stack
       | beta  | feature | alpha  | local, origin |
     And the current branch is "beta"
     When I run "git-town up"
+
+  Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND            |
       | beta   | git checkout alpha |
