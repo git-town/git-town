@@ -4,8 +4,8 @@ Feature: auto-resolve phantom merge conflicts in a synced stack where the parent
     Given a Git repo with origin
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the commits
-      | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT     |
-      | main   | local, origin | main commit | file      | branch-1 content |
+      | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
+      | main   | local, origin | main commit | file      | main content |
     And I ran "git-town hack branch-1"
     And I ran "git rm file"
     And I ran "git commit -m branch-1-commit"
@@ -31,7 +31,8 @@ Feature: auto-resolve phantom merge conflicts in a synced stack where the parent
       |          | git -c rebase.updateRefs=false rebase --onto main branch-1 |
       |          | git push --force-with-lease                                |
       |          | git branch -D branch-1                                     |
-    And no merge is now in progress
+    And no rebase is now in progress
+    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

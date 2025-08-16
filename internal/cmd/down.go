@@ -3,11 +3,9 @@ package cmd
 import (
 	"cmp"
 	"fmt"
-	"os"
 	"regexp"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v21/internal/config/cliconfig"
@@ -20,8 +18,8 @@ import (
 )
 
 const (
-	downShort = "Switch to the child branch"
-	downLong  = `Moves "down" in the stack by switching to the child of the current branch.`
+	downShort = "Switch to the parent branch"
+	downLong  = `Moves "down" in the stack by switching to the parent of the current branch.`
 )
 
 func downCmd() *cobra.Command {
@@ -78,29 +76,14 @@ func executeDown(args executeDownArgs) error {
 		return err
 	}
 
-	// Get the child branches from lineage
-	children := repo.UnvalidatedConfig.NormalConfig.Lineage.Children(currentBranch)
-	var child gitdomain.LocalBranchName
-	switch len(children) {
-	case 0:
-		return fmt.Errorf(messages.DownNoChild, currentBranch)
-	case 1:
-		child = children[0]
-	default:
-		// more than one child --> let the user choose
-		inputs := dialogcomponents.LoadInputs(os.Environ())
-		selectedChild, exit, err := dialog.ChildBranch(dialog.ChildBranchArgs{
-			ChildBranches: children,
-			Inputs:        inputs,
-		})
-		if err != nil || exit {
-			return err
-		}
-		child = selectedChild
+	// Get the parent branch from lineage
+	parent, hasParent := repo.UnvalidatedConfig.NormalConfig.Lineage.Parent(currentBranch).Get()
+	if !hasParent {
+		return fmt.Errorf(messages.DownNoParent, currentBranch)
 	}
 
-	// check out the child branch
-	err = repo.Git.CheckoutBranch(repo.Frontend, child, args.merge)
+	// Check out the parent branch
+	err = repo.Git.CheckoutBranch(repo.Frontend, parent, args.merge)
 	if err != nil {
 		return err
 	}

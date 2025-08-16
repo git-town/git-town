@@ -1,5 +1,5 @@
 @messyoutput
-Feature: move down when branch has multiple children
+Feature: move up when branch has multiple children
 
   Background:
     Given a Git repo with origin
@@ -11,7 +11,7 @@ Feature: move down when branch has multiple children
     And the current branch is "branch-1"
 
   Scenario: select the first child
-    When I run "git-town down" and enter into the dialogs:
+    When I run "git-town up" and enter into the dialogs:
       | DIALOG       | KEYS  |
       | child-branch | enter |
     Then Git Town runs the commands
@@ -26,7 +26,7 @@ Feature: move down when branch has multiple children
       """
 
   Scenario: selecting the second child
-    When I run "git-town down" and enter into the dialogs:
+    When I run "git-town up" and enter into the dialogs:
       | DIALOG       | KEYS       |
       | child-branch | down enter |
     Then Git Town runs the commands
@@ -41,7 +41,7 @@ Feature: move down when branch has multiple children
       """
 
   Scenario: aborting the dialog
-    When I run "git-town down" and enter into the dialogs:
+    When I run "git-town up" and enter into the dialogs:
       | DIALOG       | KEYS |
       | child-branch | q    |
     Then Git Town runs no commands

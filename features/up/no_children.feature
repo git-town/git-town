@@ -6,7 +6,7 @@ Feature: switching when the branch has no children
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
     And the current branch is "alpha"
-    When I run "git-town down"
+    When I run "git-town up"
 
   Scenario: result
     Then Git Town runs no commands

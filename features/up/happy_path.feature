@@ -6,16 +6,16 @@ Feature: move up one position in the current stack
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
       | beta  | feature | alpha  | local, origin |
-    And the current branch is "beta"
+    And the current branch is "alpha"
     When I run "git-town up"
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND            |
-      | beta   | git checkout alpha |
+      | BRANCH | COMMAND           |
+      | alpha  | git checkout beta |
     And Git Town prints:
       """
         main
-      *   alpha
-            beta
+          alpha
+      *     beta
       """
