@@ -254,25 +254,11 @@ type NewConnectorArgs struct {
 }
 
 func NewConnector(args NewConnectorArgs) (Connector, error) {
-	// determine API token
-	apiTokenOpt := None[forgedomain.GitHubToken]()
-	if tokenType, hasTokenType := args.TokenType.Get(); hasTokenType {
-		switch tokenType {
-		case forgedomain.GitHubTokenTypeEnter:
-			apiTokenOpt = args.APIToken
-		case forgedomain.GitHubTokenTypeScript:
-			script, hasScript := args.TokenScript.Get()
-			if !hasScript {
-				return Connector{}, errors.New(`you have selected to load the GitHub API token via script, but no script is configured.\nPlease run "git-town config setup" or configure "git-town.github-token-scipt" manually.\nMore info at https://www.git-town.com/preferences/github-token-script.html`)
-			}
-			apiToken, err := loadGitHubAPIToken(script, args.Querier)
-			if err != nil {
-				return Connector{}, err
-			}
-			apiTokenOpt = Some(apiToken)
-		}
+	token, err := determineGitHubAPIToken(args)
+	if err != nil {
+		return Connector{}, err
 	}
-	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: apiTokenOpt.String()})
+	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: token.String()})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
 	githubClient := github.NewClient(httpClient)
 	if args.RemoteURL.Host != "github.com" {
@@ -297,6 +283,27 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 
 func RepositoryURL(hostNameWithStandardPort string, organization string, repository string) string {
 	return fmt.Sprintf("https://%s/%s/%s", hostNameWithStandardPort, organization, repository)
+}
+
+func determineGitHubAPIToken(args NewConnectorArgs) (Option[forgedomain.GitHubToken], error) {
+	result := None[forgedomain.GitHubToken]()
+	if tokenType, hasTokenType := args.TokenType.Get(); hasTokenType {
+		switch tokenType {
+		case forgedomain.GitHubTokenTypeEnter:
+			result = args.APIToken
+		case forgedomain.GitHubTokenTypeScript:
+			script, hasScript := args.TokenScript.Get()
+			if !hasScript {
+				return None[forgedomain.GitHubToken](), errors.New(`you have selected to load the GitHub API token via script, but no script is configured.\nPlease run "git-town config setup" or configure "git-town.github-token-scipt" manually.\nMore info at https://www.git-town.com/preferences/github-token-script.html`)
+			}
+			apiToken, err := loadGitHubAPIToken(script, args.Querier)
+			if err != nil {
+				return None[forgedomain.GitHubToken](), err
+			}
+			result = Some(apiToken)
+		}
+	}
+	return result, nil
 }
 
 func loadGitHubAPIToken(tokenScript forgedomain.GitHubTokenScript, querier subshelldomain.Querier) (forgedomain.GitHubToken, error) {
