@@ -11,8 +11,8 @@ import (
 type GitHubTokenType string
 
 const (
-	GitHubTokenTypeEnter GitHubTokenType = "enter" // user enters the token manually
-	GitHubTokenTypeCLI   GitHubTokenType = "cli"   // user provides a CLI call that loads the token
+	GitHubTokenTypeEnter  GitHubTokenType = "enter"  // user enters the token manually
+	GitHubTokenTypeScript GitHubTokenType = "script" // user provides a script that Git Town calls to get the GitHubToken
 )
 
 func (self GitHubTokenType) String() string {
@@ -23,7 +23,7 @@ func (self GitHubTokenType) String() string {
 func GitHubTokenTypes() []GitHubTokenType {
 	return []GitHubTokenType{
 		GitHubTokenTypeEnter,
-		GitHubTokenTypeCLI,
+		GitHubTokenTypeScript,
 	}
 }
 

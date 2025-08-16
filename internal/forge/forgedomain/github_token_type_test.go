@@ -20,7 +20,7 @@ func TestParseGitHubTokenType(t *testing.T) {
 			err: nil,
 		},
 		"cli": {
-			val: Some(forgedomain.GitHubTokenTypeCLI),
+			val: Some(forgedomain.GitHubTokenTypeScript),
 			err: nil,
 		},
 		"invalid": {

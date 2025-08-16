@@ -33,7 +33,7 @@ func GitHubTokenType(args Args[forgedomain.GitHubTokenType]) (Option[forgedomain
 			Text: "enter the token directly",
 		},
 		{
-			Data: Some(forgedomain.GitHubTokenTypeCLI),
+			Data: Some(forgedomain.GitHubTokenTypeScript),
 			Text: "enter a shell call that provides the token",
 		},
 	}...)

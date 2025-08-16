@@ -82,7 +82,8 @@ EnterForgeData:
 	codebergToken := None[forgedomain.CodebergToken]()
 	giteaToken := None[forgedomain.GiteaToken]()
 	githubConnectorTypeOpt := None[forgedomain.GitHubConnectorType]()
-	githubTokenType := None[forgedomain.GitHubTokenType]()
+	githubTokenScript := None[forgedomain.GitHubTokenScript]()
+	githubTokenTypeOpt := None[forgedomain.GitHubTokenType]()
 	githubToken := None[forgedomain.GitHubToken]()
 	gitlabConnectorTypeOpt := None[forgedomain.GitLabConnectorType]()
 	gitlabToken := None[forgedomain.GitLabToken]()
@@ -106,14 +107,20 @@ EnterForgeData:
 			if githubConnectorType, has := githubConnectorTypeOpt.Get(); has {
 				switch githubConnectorType {
 				case forgedomain.GitHubConnectorTypeAPI:
-					githubTokenType, exit, err = enterGitHubTokenType(data)
+					githubTokenTypeOpt, exit, err = enterGitHubTokenType(data)
 					if err != nil || exit {
 						return emptyResult, exit, err
 					}
-					switch githubTokenType {
+					if githubTokenType, hasGitHubTokenType := githubTokenTypeOpt.Get(); hasGitHubTokenType {
+						switch githubTokenType {
+						case forgedomain.GitHubTokenTypeScript:
+							githubTokenScript, exit, err = enterGitHubTokenScript(data)
+						case forgedomain.GitHubTokenTypeEnter:
+							githubToken, exit, err = enterGitHubToken(data)
+						}
 					}
-					githubToken, exit, err = enterGitHubToken(data)
 				case forgedomain.GitHubConnectorTypeGh:
+					// nothing to enter here
 				}
 			}
 		case forgedomain.ForgeTypeGitLab:
