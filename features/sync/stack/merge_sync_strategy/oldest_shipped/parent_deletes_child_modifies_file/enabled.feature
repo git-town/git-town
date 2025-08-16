@@ -43,7 +43,7 @@ Feature: auto-resolve phantom merge conflicts in a synced stack where the parent
     #
     # In the conflict, branch-2 modifies the file while the main branch deletes it.
     # Since branch-1 (which is in sync) also deletes it,
-    # it is safe to keep the version on branch-2 on branch-2.
+    # it is safe to keep the version on branch-2.
     And Git Town prints the error:
       """
       CONFLICT (modify/delete): file deleted in main and modified in HEAD.
