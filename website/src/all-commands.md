@@ -24,7 +24,7 @@ Run `git town` for an overview of all Git Town commands and
 
 - [git town append](commands/append.md) - create a new feature branch as a child
 - [git town detach](commands/detach.md) - move a branch out of a stack
-- [git town down](commands/up.md) - switch to a child of the current branch
+- [git town down](commands/down.md) - switch to a child of the current branch
 - [git town diff-parent](commands/diff-parent.md) - show the changes committed
   to a branch
 - [git town merge](commands/merge.md) - merges the current branch with its
@@ -35,7 +35,7 @@ Run `git town` for an overview of all Git Town commands and
   branch
 - [git town swap](commands/swap.md) - swap the position of this branch with its
   parent
-- [git town up](commands/down.md) - switch to the parent of the current stack
+- [git town up](commands/up.md) - switch to the parent of the current stack
 
 ### Limit branch syncing
 
