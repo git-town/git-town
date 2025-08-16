@@ -57,7 +57,7 @@ determine the repository state.
 ## See also
 
 - [branch](branch.md) displays the branch hierarchy
+- [down](down.md) moves one position up in the current stack
 - [switch](switch.md) interactively switch between branches
 - [swap](swap.md) changes the stack by swapping the position of current branch
   with its parent
-- [up](down.md) moves one position up in the current stack
