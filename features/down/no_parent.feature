@@ -3,7 +3,7 @@ Feature: switching when the branch has no parent
   Background:
     Given a Git repo with origin
     And the current branch is "main"
-    When I run "git-town up"
+    When I run "git-town down"
 
   Scenario: result
     Then Git Town runs the commands
