@@ -16,10 +16,12 @@ Feature: auto-resolve phantom merge conflicts in a synced stack where the parent
     And the commits
       | BRANCH   | LOCATION | MESSAGE     | FILE NAME | FILE CONTENT     |
       | branch-2 | local    | change file | file      | branch-2 content |
+    And I ran "git-town sync"
     And origin ships the "branch-1" branch using the "squash-merge" ship-strategy
     And the current branch is "branch-2"
     When I run "git-town sync"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                           |
@@ -29,15 +31,29 @@ Feature: auto-resolve phantom merge conflicts in a synced stack where the parent
       |          | git branch -D branch-1                            |
       |          | git checkout branch-2                             |
       | branch-2 | git merge --no-edit --ff main                     |
-    # TODO: auto-resolve this phantom merge conflict.
-    # Branch-1 deletes "file" and branch-2 creates it again.
-    # Branch-2 was properly synced with branch-1.
-    # When branch-1 got shipped, and the user syncs, they shouldn't need to tell Git again that branch-2 should re-create the "file".
+    # TODO: auto-resolve this phantom merge conflict
+    #
+    # This requires storing the SHA of branches after they were synced the last time.
+    #
+    # If Git Town stores this information.
+    # We know that at the beginning of the second sync call
+    # branch-2 is still in sync with its parent (branch-1).
+    # That's because the initial SHA of either branch is the same as
+    # their SHA was at the end of the last sync
+    # (when they were guaranteed to be in sync).
+    #
+    # In the conflict, branch-2 modifies the file while the main branch deletes it.
+    # Since branch-1 (which is in sync) also deletes it,
+    # it is safe to keep the version on branch-2 on branch-2.
     And Git Town prints the error:
       """
       CONFLICT (modify/delete): file deleted in main and modified in HEAD.
       """
     And a merge is now in progress
+    And file "file" now has content:
+      """
+      branch-2 content
+      """
 
   Scenario: undo
     When I run "git-town undo"
