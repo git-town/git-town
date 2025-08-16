@@ -263,7 +263,7 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 		case forgedomain.GitHubTokenTypeScript:
 			script, hasScript := args.TokenScript.Get()
 			if !hasScript {
-				return Connector{}, errors.New(`you have selected to load the GitHub API token via script, but no script is configured. Please run "git-town config setup" or configure "git-town.github-token-scipt" manually. More info at https://www.git-town.com/preferences/github-token-script.html.`)
+				return Connector{}, errors.New(`you have selected to load the GitHub API token via script, but no script is configured.\nPlease run "git-town config setup" or configure "git-town.github-token-scipt" manually.\nMore info at https://www.git-town.com/preferences/github-token-script.html`)
 			}
 			apiToken, err := loadGitHubAPIToken(script, args.Querier)
 			if err != nil {
