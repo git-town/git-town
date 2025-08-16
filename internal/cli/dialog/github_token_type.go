@@ -19,25 +19,29 @@ Git Town supports multiple ways to enter the GitHub token:
 `
 )
 
-func GitHubTokenType(existing Option[forgedomain.GitHubTokenType], inputs dialogcomponents.Inputs) (forgedomain.GitHubTokenType, dialogdomain.Exit, error) {
-	entries := list.Entries[forgedomain.GitHubTokenType]{
+func GitHubTokenType(args Args[forgedomain.GitHubTokenType]) (Option[forgedomain.GitHubTokenType], dialogdomain.Exit, error) {
+	entries := list.Entries[Option[forgedomain.GitHubTokenType]]{}
+	if global, hasGlobal := args.Global.Get(); hasGlobal {
+		entries = append(entries, list.Entry[Option[forgedomain.GitHubTokenType]]{
+			Data: None[forgedomain.GitHubTokenType](),
+			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
+		})
+	}
+	entries = append(entries, list.Entries[Option[forgedomain.GitHubTokenType]]{
 		{
-			Data: forgedomain.GitHubTokenTypeEnter,
+			Data: Some(forgedomain.GitHubTokenTypeEnter),
 			Text: "enter the token directly",
 		},
 		{
-			Data: forgedomain.GitHubTokenTypeCLI,
+			Data: Some(forgedomain.GitHubTokenTypeCLI),
 			Text: "enter a shell call that provides the token",
 		},
-	}
-	defaultPos := 0
-	if existingValue, hasExisting := existing.Get(); hasExisting {
-		defaultPos = entries.IndexOf(existingValue)
-	}
-	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, gitHubTokenTypeTitle, gitHubTokenTypeHelp, inputs, "github-token-type")
+	}...)
+	cursor := entries.IndexOf(args.Local)
+	selection, exit, err := dialogcomponents.RadioList(entries, cursor, gitHubTokenTypeTitle, gitHubTokenTypeHelp, args.Inputs, "github-token-type")
 	if err != nil || exit {
-		return forgedomain.GitHubTokenTypeEnter, exit, err
+		return None[forgedomain.GitHubTokenType](), exit, err
 	}
 	fmt.Printf(messages.GitHubTokenType, dialogcomponents.FormattedSelection(selection.String(), exit))
-	return selection, exit, err
+	return selection, false, nil
 }

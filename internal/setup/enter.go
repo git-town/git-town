@@ -390,12 +390,12 @@ func enterGitHubToken(data Data) (Option[forgedomain.GitHubToken], dialogdomain.
 
 func enterGitHubTokenType(data Data) (Option[forgedomain.GitHubTokenType], dialogdomain.Exit, error) {
 	if data.Config.File.GitHubTokenType.IsSome() {
-		return None[forgedomain.GitHubToken](), false, nil
+		return None[forgedomain.GitHubTokenType](), false, nil
 	}
-	return dialog.GitHubToken(dialog.Args[forgedomain.GitHubToken]{
-		Global: data.Config.GitGlobal.GitHubToken,
+	return dialog.GitHubTokenType(dialog.Args[forgedomain.GitHubTokenType]{
+		Global: data.Config.GitGlobal.GitHubTokenType,
 		Inputs: data.Inputs,
-		Local:  data.Config.GitLocal.GitHubToken,
+		Local:  data.Config.GitLocal.GitHubTokenType,
 	})
 }
 

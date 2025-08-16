@@ -95,7 +95,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		ForgeType:                other.ForgeType.Or(self.ForgeType),
 		GitHubConnectorType:      other.GitHubConnectorType.Or(self.GitHubConnectorType),
 		GitHubToken:              other.GitHubToken.Or(self.GitHubToken),
-		GitHubTokenType:          other.GitHubToken.Or(self.GitHubToken),
+		GitHubTokenType:          other.GitHubTokenType.Or(self.GitHubTokenType),
 		GitLabConnectorType:      other.GitLabConnectorType.Or(self.GitLabConnectorType),
 		GitLabToken:              other.GitLabToken.Or(self.GitLabToken),
 		GiteaToken:               other.GiteaToken.Or(self.GiteaToken),
