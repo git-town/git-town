@@ -82,7 +82,7 @@ EnterForgeData:
 	codebergToken := None[forgedomain.CodebergToken]()
 	giteaToken := None[forgedomain.GiteaToken]()
 	githubConnectorTypeOpt := None[forgedomain.GitHubConnectorType]()
-	githubTokenScript := None[forgedomain.GitHubTokenScript]()
+	githubTokenScriptOpt := None[forgedomain.GitHubTokenScript]()
 	githubTokenTypeOpt := None[forgedomain.GitHubTokenType]()
 	githubToken := None[forgedomain.GitHubToken]()
 	gitlabConnectorTypeOpt := None[forgedomain.GitLabConnectorType]()
@@ -114,7 +114,7 @@ EnterForgeData:
 					if githubTokenType, hasGitHubTokenType := githubTokenTypeOpt.Get(); hasGitHubTokenType {
 						switch githubTokenType {
 						case forgedomain.GitHubTokenTypeScript:
-							githubTokenScript, exit, err = enterGitHubTokenScript(data)
+							githubTokenScriptOpt, exit, err = enterGitHubTokenScript(data)
 						case forgedomain.GitHubTokenTypeEnter:
 							githubToken, exit, err = enterGitHubToken(data)
 						}
@@ -230,6 +230,8 @@ EnterForgeData:
 		ForgeType:                enteredForgeType,
 		GitHubConnectorType:      githubConnectorTypeOpt,
 		GitHubToken:              githubToken,
+		GitHubTokenType:          githubTokenTypeOpt,
+		GitHubTokenScript:        githubTokenScriptOpt,
 		GitLabConnectorType:      gitlabConnectorTypeOpt,
 		GitLabToken:              gitlabToken,
 		GitUserEmail:             None[gitdomain.GitUserEmail](),
@@ -392,6 +394,17 @@ func enterGitHubToken(data Data) (Option[forgedomain.GitHubToken], dialogdomain.
 		Global: data.Config.GitGlobal.GitHubToken,
 		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.GitHubToken,
+	})
+}
+
+func enterGitHubTokenScript(data Data) (Option[forgedomain.GitHubTokenScript], dialogdomain.Exit, error) {
+	if data.Config.File.GitHubTokenScript.IsSome() {
+		return None[forgedomain.GitHubTokenScript](), false, nil
+	}
+	return dialog.GitHubTokenScript(dialog.Args[forgedomain.GitHubTokenScript]{
+		Global: data.Config.GitGlobal.GitHubTokenScript,
+		Inputs: data.Inputs,
+		Local:  data.Config.GitLocal.GitHubTokenScript,
 	})
 }
 

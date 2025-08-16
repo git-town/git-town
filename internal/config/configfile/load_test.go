@@ -41,6 +41,8 @@ share-new-branches = "push"
 
 [hosting]
 forge-type = "github"
+github-token-type = "script"
+github-token-script = "op read op://vault/github/token"
 origin-hostname = "github.com"
 
 [propose]
@@ -83,8 +85,10 @@ prototype-branches = "compress"
 					ShareNewBranches: Ptr("push"),
 				},
 				Hosting: &configfile.Hosting{
-					ForgeType:      Ptr("github"),
-					OriginHostname: Ptr("github.com"),
+					ForgeType:         Ptr("github"),
+					GitHubTokenType:   Ptr("script"),
+					GitHubTokenScript: Ptr("op read op://vault/github/token"),
+					OriginHostname:    Ptr("github.com"),
 				},
 				Propose: &configfile.Propose{
 					Lineage: Ptr("ci"),

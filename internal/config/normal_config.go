@@ -42,6 +42,7 @@ type NormalConfig struct {
 	ForgeType                Option[forgedomain.ForgeType] // None = auto-detect
 	GitHubConnectorType      Option[forgedomain.GitHubConnectorType]
 	GitHubToken              Option[forgedomain.GitHubToken]
+	GitHubTokenScript        Option[forgedomain.GitHubTokenScript]
 	GitHubTokenType          Option[forgedomain.GitHubTokenType]
 	GitLabConnectorType      Option[forgedomain.GitLabConnectorType]
 	GitLabToken              Option[forgedomain.GitLabToken]
@@ -95,6 +96,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		ForgeType:                other.ForgeType.Or(self.ForgeType),
 		GitHubConnectorType:      other.GitHubConnectorType.Or(self.GitHubConnectorType),
 		GitHubToken:              other.GitHubToken.Or(self.GitHubToken),
+		GitHubTokenScript:        other.GitHubTokenScript.Or(self.GitHubTokenScript),
 		GitHubTokenType:          other.GitHubTokenType.Or(self.GitHubTokenType),
 		GitLabConnectorType:      other.GitLabConnectorType.Or(self.GitLabConnectorType),
 		GitLabToken:              other.GitLabToken.Or(self.GitLabToken),
@@ -237,6 +239,7 @@ func DefaultNormalConfig() NormalConfig {
 		ForgeType:                None[forgedomain.ForgeType](),
 		GitHubConnectorType:      None[forgedomain.GitHubConnectorType](),
 		GitHubToken:              None[forgedomain.GitHubToken](),
+		GitHubTokenScript:        None[forgedomain.GitHubTokenScript](),
 		GitLabConnectorType:      None[forgedomain.GitLabConnectorType](),
 		GitLabToken:              None[forgedomain.GitLabToken](),
 		GiteaToken:               None[forgedomain.GiteaToken](),
@@ -278,6 +281,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		ForgeType:                partial.ForgeType,
 		GitHubConnectorType:      partial.GitHubConnectorType,
 		GitHubToken:              partial.GitHubToken,
+		GitHubTokenScript:        partial.GitHubTokenScript,
 		GitLabConnectorType:      partial.GitLabConnectorType,
 		GitLabToken:              partial.GitLabToken,
 		GiteaToken:               partial.GiteaToken,
