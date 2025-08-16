@@ -8,7 +8,7 @@ Feature: move up using the "merge" flag
       | beta  | feature | alpha  | local, origin |
     And the current branch is "alpha"
     And an uncommitted file
-    When I run "git-town down <FLAG>"
+    When I run "git-town up <FLAG>"
     Then Git Town runs the commands
       | BRANCH | COMMAND              |
       | alpha  | git checkout beta -m |
