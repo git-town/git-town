@@ -21,7 +21,6 @@ Feature: auto-resolve phantom merge conflicts in a synced stack where the parent
     And the current branch is "branch-2"
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                           |
