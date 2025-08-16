@@ -79,10 +79,9 @@ Feature: auto-resolve phantom merge conflicts in a synced stack where the parent
     When I ran "git add file"
     And I ran "git town continue"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                  |
-      | branch-2 | git commit --no-edit                     |
-      |          | git merge --no-edit --ff origin/branch-2 |
-      |          | git push                                 |
+      | BRANCH   | COMMAND              |
+      | branch-2 | git commit --no-edit |
+      |          | git push             |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE                           | FILE NAME      | FILE CONTENT     |
       | main     | local, origin | create file                       | file           | main content     |
@@ -96,9 +95,8 @@ Feature: auto-resolve phantom merge conflicts in a synced stack where the parent
     And I ran "git commit --no-edit"
     And I ran "git town continue"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                  |
-      | branch-2 | git merge --no-edit --ff origin/branch-2 |
-      |          | git push                                 |
+      | BRANCH   | COMMAND  |
+      | branch-2 | git push |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE                           | FILE NAME      | FILE CONTENT     |
       | main     | local, origin | create file                       | file           | main content     |
