@@ -143,6 +143,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		ForgeType:                forgeType,
 		GitHubConnectorType:      githubConnectorType,
 		GitHubToken:              forgedomain.ParseGitHubToken(snapshot[configdomain.KeyGitHubToken]),
+		GitHubTokenScript:        forgedomain.ParseGitHubTokenScript(snapshot[configdomain.KeyGitHubTokenScript]),
 		GitHubTokenType:          githubTokenType,
 		GitLabConnectorType:      gitlabConnectorType,
 		GitLabToken:              forgedomain.ParseGitLabToken(snapshot[configdomain.KeyGitLabToken]),
