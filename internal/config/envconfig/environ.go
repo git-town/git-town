@@ -8,6 +8,7 @@ type Environment struct {
 	data map[string]string
 }
 
+// Get provides the environment variable with the first matching given name.
 func (self Environment) Get(name string, alternatives ...string) string {
 	if result, has := self.data[name]; has {
 		return result
