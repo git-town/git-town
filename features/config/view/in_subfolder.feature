@@ -50,6 +50,7 @@ Feature: show the configuration from a subfolder
         ship strategy: api
 
       Sync:
+        auto-resolve phantom conflicts: yes
         run pre-push hook: yes
         feature sync strategy: merge
         perennial sync strategy: rebase

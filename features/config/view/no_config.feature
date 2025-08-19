@@ -58,6 +58,7 @@ Feature: no configuration data
         ship strategy: api
 
       Sync:
+        auto-resolve phantom conflicts: yes
         run pre-push hook: yes
         feature sync strategy: merge
         perennial sync strategy: rebase

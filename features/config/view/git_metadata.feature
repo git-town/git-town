@@ -23,6 +23,7 @@ Feature: display configuration from Git metadata
     And Git setting "git-town.feature-regex" is "^user-.*$"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     And Git setting "git-town.unknown-branch-type" is "observed"
+    And Git setting "git-town.auto-resolve" is "false"
     When I run "git-town config"
     Then Git Town prints:
       """
@@ -64,6 +65,7 @@ Feature: display configuration from Git metadata
         ship strategy: squash-merge
 
       Sync:
+        auto-resolve phantom conflicts: no
         run pre-push hook: yes
         feature sync strategy: merge
         perennial sync strategy: rebase
@@ -122,6 +124,7 @@ Feature: display configuration from Git metadata
         ship strategy: api
 
       Sync:
+        auto-resolve phantom conflicts: yes
         run pre-push hook: yes
         feature sync strategy: merge
         perennial sync strategy: rebase
