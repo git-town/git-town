@@ -2,15 +2,15 @@ package envconfig
 
 import "strings"
 
-// Environment is an immutable representation of all environment variables.
+// EnvVars is an immutable representation of all environment variables.
 // It allows efficient lookup of environment variables in O(1) time
 // by multiple names.
-type Environment struct {
+type EnvVars struct {
 	data map[string]string
 }
 
 // Get provides the environment variable with the first matching given name.
-func (self Environment) Get(name string, alternatives ...string) string {
+func (self EnvVars) Get(name string, alternatives ...string) string {
 	if result, has := self.data[name]; has {
 		return result
 	}
@@ -22,11 +22,11 @@ func (self Environment) Get(name string, alternatives ...string) string {
 	return ""
 }
 
-func NewEnvironment(osEnv []string) Environment {
-	result := Environment{
+func NewEnvVars(entries []string) EnvVars {
+	result := EnvVars{
 		data: map[string]string{},
 	}
-	for _, entry := range osEnv {
+	for _, entry := range entries {
 		if name, value, isValid := strings.Cut(entry, "="); isValid {
 			result.data[name] = value
 		}
