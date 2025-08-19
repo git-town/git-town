@@ -68,6 +68,7 @@ Feature: show the configuration
         ship strategy: squash-merge
 
       Sync:
+        auto-resolve phantom conflicts: yes
         run pre-push hook: yes
         feature sync strategy: merge
         perennial sync strategy: rebase
@@ -149,6 +150,7 @@ Feature: show the configuration
         ship strategy: squash-merge
 
       Sync:
+        auto-resolve phantom conflicts: no
         run pre-push hook: yes
         feature sync strategy: rebase
         perennial sync strategy: ff-only
@@ -246,6 +248,7 @@ Feature: show the configuration
         ship strategy: squash-merge
 
       Sync:
+        auto-resolve phantom conflicts: no
         run pre-push hook: yes
         feature sync strategy: merge
         perennial sync strategy: ff-only
@@ -305,6 +308,7 @@ Feature: show the configuration
         ship strategy: api
 
       Sync:
+        auto-resolve phantom conflicts: yes
         run pre-push hook: yes
         feature sync strategy: merge
         perennial sync strategy: rebase
@@ -370,6 +374,7 @@ Feature: show the configuration
         ship strategy: api
 
       Sync:
+        auto-resolve phantom conflicts: yes
         run pre-push hook: yes
         feature sync strategy: merge
         perennial sync strategy: rebase
