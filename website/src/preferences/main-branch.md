@@ -25,3 +25,8 @@ git config [--global] git-town.main-branch <value>
 
 The optional `--global` flag applies this setting to all Git repositories on
 your machine. Without it, the setting applies only to the current repository.
+
+## environment variable
+
+You can configure the main branch by setting the `GIT_TOWN_MAIN_BRANCH`
+environment variable.

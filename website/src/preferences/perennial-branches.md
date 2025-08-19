@@ -35,3 +35,9 @@ If you have many perennial branches that follow the same naming schema, like
 `release-v4.0-rev.1`, `release-v4.0-rev.2`, etc, you can define a
 [regular expression](perennial-regex.md) for them instead of listing them one by
 one.
+
+## environment variable
+
+You can configure the perennial branches by setting the
+`GIT_TOWN_PERENNIAL_BRANCHES` environment variable to a value comparable to
+similar Git metadata.

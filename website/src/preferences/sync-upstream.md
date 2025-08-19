@@ -31,3 +31,8 @@ git config [--global] git-town.sync-upstream <true|false>
 
 The optional `--global` flag applies this setting to all Git repositories on
 your machine. Without it, the setting applies only to the current repository.
+
+## environment variable
+
+You can configure whether Git Town syncs with the upstream repo by setting the
+`GIT_TOWN_SYNC_UPSTREAM` environment variable.

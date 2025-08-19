@@ -5,6 +5,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cmd/config"
 	"github.com/git-town/git-town/v21/internal/cmd/ship"
 	"github.com/git-town/git-town/v21/internal/cmd/status"
+	"github.com/git-town/git-town/v21/internal/cmd/swap"
 	"github.com/git-town/git-town/v21/internal/cmd/sync"
 )
 
@@ -22,6 +23,7 @@ func Execute() error {
 	rootCmd.AddCommand(hackCmd())
 	rootCmd.AddCommand(detachCommand())
 	rootCmd.AddCommand(deleteCommand())
+	rootCmd.AddCommand(downCmd())
 	rootCmd.AddCommand(killCommand())
 	rootCmd.AddCommand(mergeCommand())
 	rootCmd.AddCommand(observeCmd())
@@ -37,10 +39,11 @@ func Execute() error {
 	rootCmd.AddCommand(setParentCommand())
 	rootCmd.AddCommand(ship.Cmd())
 	rootCmd.AddCommand(skipCmd())
-	rootCmd.AddCommand(swapCommand())
+	rootCmd.AddCommand(swap.Cmd())
 	rootCmd.AddCommand(switchCmd())
 	rootCmd.AddCommand(sync.Cmd())
 	rootCmd.AddCommand(undoCmd())
+	rootCmd.AddCommand(upCmd())
 	rootCmd.AddCommand(walkCommand())
 	return rootCmd.Execute()
 }

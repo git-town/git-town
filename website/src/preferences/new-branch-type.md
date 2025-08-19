@@ -43,3 +43,8 @@ git config [--global] git-town.new-branch-type <feature|parked|perennial|prototy
 
 The optional `--global` flag applies this setting to all Git repositories on
 your machine. Without it, the setting applies only to the current repository.
+
+## environment variable
+
+You can configure the new branch type by setting the `GIT_TOWN_NEW_BRANCH_TYPE`
+environment variable.

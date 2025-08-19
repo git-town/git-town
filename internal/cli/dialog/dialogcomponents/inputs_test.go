@@ -38,15 +38,15 @@ func TestInputs(t *testing.T) {
 			)
 			// request the first entry: A
 			have := inputs.Next()
-			must.Eq(t, Some(keyA), have)
+			must.True(t, have.EqualSome(keyA))
 			must.False(t, inputs.IsEmpty())
 			// request the next entry: B
 			have = inputs.Next()
-			must.Eq(t, Some(keyB), have)
+			must.True(t, have.EqualSome(keyB))
 			must.False(t, inputs.IsEmpty())
 			// request the next entry: C
 			have = inputs.Next()
-			must.Eq(t, Some(keyC), have)
+			must.True(t, have.EqualSome(keyC))
 			must.True(t, inputs.IsEmpty())
 		})
 		t.Run("not populated", func(t *testing.T) {
@@ -72,7 +72,7 @@ func TestInputs(t *testing.T) {
 			inputs := dialogcomponents.NewInputs(keyA)
 			// request the first entry
 			have := inputs.Next()
-			must.Eq(t, Some(keyA), have)
+			must.True(t, have.EqualSome(keyA))
 			must.True(t, inputs.IsEmpty())
 			// request the next entry
 			_ = inputs.Next()

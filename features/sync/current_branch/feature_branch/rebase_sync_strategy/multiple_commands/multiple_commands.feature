@@ -23,12 +23,10 @@ Feature: running a sync after running another Git Town command
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                                                             |
-      | child  | git fetch --prune --tags                                                            |
-      |        | git checkout parent                                                                 |
-      | parent | git -c rebase.updateRefs=false rebase --onto main {{ sha 'local main commit' }}     |
-      |        | git checkout child                                                                  |
-      | child  | git -c rebase.updateRefs=false rebase --onto parent {{ sha 'local parent commit' }} |
+      | BRANCH | COMMAND                  |
+      | child  | git fetch --prune --tags |
+      |        | git checkout parent      |
+      | parent | git checkout child       |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | origin main commit   |
