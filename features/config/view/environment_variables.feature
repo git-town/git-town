@@ -45,6 +45,8 @@ Feature: display configuration defined in environment variables
       | GIT_TOWN_SYNC_FEATURE_STRATEGY       | rebase             |
       | GIT_TOWN_SYNC_PERENNIAL_STRATEGY     | merge              |
       | GIT_TOWN_SYNC_PROTOTYPE_STRATEGY     | compress           |
+      | GIT_TOWN_SYNC_TAGS                   | false              |
+      | GIT_TOWN_SYNC_UPSTREAM               | off                |
     Then Git Town prints:
       """
       Branches:
@@ -89,6 +91,6 @@ Feature: display configuration defined in environment variables
         feature sync strategy: rebase
         perennial sync strategy: merge
         prototype sync strategy: compress
-        sync tags: yes
-        sync with upstream: yes
+        sync tags: no
+        sync with upstream: no
       """
