@@ -23,8 +23,8 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{}, // not loaded from env vars
 		CodebergToken:            forgedomain.ParseCodebergToken(env.Get("GIT_TOWN_CODEBERG_TOKEN")),
 		ContributionRegex:        contributionRegex,
-		DevRemote:                None[gitdomain.Remote](),
-		DryRun:                   None[configdomain.DryRun](),
+		DevRemote:                gitdomain.NewRemote(env.Get("GIT_TOWN_DEV_REMOTE")),
+		DryRun:                   configdomain.DryRun,
 		FeatureRegex:             None[configdomain.FeatureRegex](),
 		ForgeType:                None[forgedomain.ForgeType](),
 		GitHubConnectorType:      None[forgedomain.GitHubConnectorType](),
