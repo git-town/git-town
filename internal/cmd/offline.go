@@ -94,6 +94,6 @@ func setOfflineStatus(text string, runner subshelldomain.Runner) error {
 	if err != nil {
 		return fmt.Errorf(messages.ValueInvalid, configdomain.KeyOffline, text)
 	}
-	return gitconfig.SetOffline(runner, configdomain.Offline(value))
+	return gitconfig.SetOffline(runner, value)
 	// in the future, we could remove the offline setting here
 }
