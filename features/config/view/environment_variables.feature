@@ -2,6 +2,7 @@ Feature: display configuration defined in environment variables
 
   Background:
     Given a Git repo with origin
+    And Git Town is not configured
     And the branches
       | NAME           | TYPE         | PARENT | LOCATIONS |
       | contribution-1 | contribution |        | local     |
@@ -18,8 +19,8 @@ Feature: display configuration defined in environment variables
   Scenario: all configured in Git, no stacked changes
     When I run "git-town config" with these environment variables
       | GIT_TOWN_AUTO_RESOLVE                | false              |
-      | GIT_TOWN_BITBUCKET_USERNAME          | bitbucket-user     |
       | GIT_TOWN_BITBUCKET_APP_PASSWORD      | bitbucket-password |
+      | GIT_TOWN_BITBUCKET_USERNAME          | bitbucket-user     |
       | GIT_TOWN_CODEBERG_TOKEN              | codeberg-token     |
       | GIT_TOWN_CONTRIBUTION_REGEX          | ^renovate/         |
       | GIT_TOWN_DEV_REMOTE                  | my-fork            |
@@ -30,6 +31,7 @@ Feature: display configuration defined in environment variables
       | GIT_TOWN_GITHUB_TOKEN                | github-token       |
       | GIT_TOWN_GITLAB_CONNECTOR_TYPE       | glab               |
       | GIT_TOWN_GITLAB_TOKEN                | gitlab-token       |
+      | GIT_TOWN_MAIN_BRANCH                 | dev                |
       | GIT_TOWN_NEW_BRANCH_TYPE             | prototype          |
       | GIT_TOWN_OBSERVED_REGEX              | ^dependabot/       |
       | GIT_TOWN_ORIGIN_HOSTNAME             | codeforge          |
@@ -52,7 +54,7 @@ Feature: display configuration defined in environment variables
         contribution branches: contribution-1, contribution-2
         contribution regex: ^renovate/
         feature regex: ^user-.*$
-        main branch: main
+        main branch: dev
         observed branches: observed-1, observed-2
         observed regex: ^dependabot/
         parked branches: parked-1, parked-2
