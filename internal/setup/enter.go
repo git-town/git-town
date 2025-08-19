@@ -178,6 +178,10 @@ EnterForgeData:
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
+	detached, exit, err := enterDetached(data)
+	if err != nil || exit {
+		return emptyResult, exit, err
+	}
 	syncTags, exit, err := enterSyncTags(data)
 	if err != nil || exit {
 		return emptyResult, exit, err
@@ -210,6 +214,7 @@ EnterForgeData:
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{}, // the setup assistant doesn't ask for this
 		CodebergToken:            codebergToken,
 		ContributionRegex:        contributionRegex,
+		Detached:                 detached,
 		DevRemote:                devRemote,
 		DryRun:                   None[configdomain.DryRun](), // the setup assistant doesn't ask for this
 		FeatureRegex:             featureRegex,
@@ -323,6 +328,17 @@ func enterContributionRegex(data Data) (Option[configdomain.ContributionRegex], 
 		Global: data.Config.GitGlobal.ContributionRegex,
 		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.ContributionRegex,
+	})
+}
+
+func enterDetached(data Data) (Option[configdomain.Detached], dialogdomain.Exit, error) {
+	if data.Config.File.Detached.IsSome() {
+		return None[configdomain.Detached](), false, nil
+	}
+	return dialog.SyncDetached(dialog.Args[configdomain.Detached]{
+		Global: data.Config.GitGlobal.Detached,
+		Inputs: data.Inputs,
+		Local:  data.Config.GitLocal.Detached,
 	})
 }
 
