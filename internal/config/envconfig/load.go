@@ -10,9 +10,7 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-func Load() configdomain.PartialConfig {
-	autoResolve := load(configdomain.KeyAutoResolve, configdomain.ParseAutoResolve)
-	gitHubToken := GitHubAPIToken()
+func Load(env Environment) configdomain.PartialConfig {
 	return configdomain.PartialConfig{
 		Aliases:                  configdomain.Aliases{}, // aliases aren't loaded from env vars
 		AutoResolve:              None[configdomain.AutoResolve](),
@@ -26,7 +24,7 @@ func Load() configdomain.PartialConfig {
 		FeatureRegex:             None[configdomain.FeatureRegex](),
 		ForgeType:                None[forgedomain.ForgeType](),
 		GitHubConnectorType:      None[forgedomain.GitHubConnectorType](),
-		GitHubToken:              gitHubToken,
+		GitHubToken:              forgedomain.ParseGitHubToken(env.Get("GITHUB_TOKEN", "GITHUB_AUTH_TOKEN")),
 		GitLabConnectorType:      None[forgedomain.GitLabConnectorType](),
 		GitLabToken:              None[forgedomain.GitLabToken](),
 		GitUserEmail:             None[gitdomain.GitUserEmail](),
