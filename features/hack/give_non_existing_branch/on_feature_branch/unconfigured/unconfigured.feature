@@ -23,6 +23,7 @@ Feature: missing configuration
       | sync prototype strategy     | enter |
       | sync upstream               | enter |
       | sync tags                   | enter |
+      | detached                    | enter |
       | share new branches          | enter |
       | push hook                   | enter |
       | ship strategy               | enter |
@@ -33,6 +34,7 @@ Feature: missing configuration
     And Git Town runs the commands
       | BRANCH | COMMAND                                              |
       | main   | git fetch --prune --tags                             |
+      |        | git config git-town.detached false                   |
       |        | git config git-town.new-branch-type feature          |
       |        | git config git-town.main-branch main                 |
       |        | git config git-town.unknown-branch-type feature      |
