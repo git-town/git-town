@@ -15,14 +15,14 @@ func TestLoad(t *testing.T) {
 		t.Parallel()
 		t.Run("none set", func(t *testing.T) {
 			t.Parallel()
-			env := envconfig.NewEnvironment([]string{})
+			env := envconfig.NewEnvVars([]string{})
 			cfg, err := envconfig.Load(env)
 			must.NoError(t, err)
 			must.True(t, cfg.GitHubToken.IsNone())
 		})
 		t.Run("GITHUB_TOKEN is set", func(t *testing.T) {
 			t.Parallel()
-			env := envconfig.NewEnvironment([]string{"GITHUB_TOKEN=my-token"})
+			env := envconfig.NewEnvVars([]string{"GITHUB_TOKEN=my-token"})
 			cfg, err := envconfig.Load(env)
 			must.NoError(t, err)
 			token, has := cfg.GitHubToken.Get()
@@ -31,14 +31,14 @@ func TestLoad(t *testing.T) {
 		})
 		t.Run("GITHUB_AUTH_TOKEN is set", func(t *testing.T) {
 			t.Parallel()
-			env := envconfig.NewEnvironment([]string{"GITHUB_AUTH_TOKEN=my-auth-token"})
+			env := envconfig.NewEnvVars([]string{"GITHUB_AUTH_TOKEN=my-auth-token"})
 			cfg, err := envconfig.Load(env)
 			must.NoError(t, err)
 			must.True(t, cfg.GitHubToken.EqualSome("my-auth-token"))
 		})
 		t.Run("GITHUB_TOKEN and GITHUB_AUTH_TOKEN are set", func(t *testing.T) {
 			t.Parallel()
-			env := envconfig.NewEnvironment([]string{"GITHUB_AUTH_TOKEN=my-auth-token", "GITHUB_TOKEN=my-token"})
+			env := envconfig.NewEnvVars([]string{"GITHUB_AUTH_TOKEN=my-auth-token", "GITHUB_TOKEN=my-token"})
 			cfg, err := envconfig.Load(env)
 			must.NoError(t, err)
 			fmt.Println(cfg.GitHubToken)

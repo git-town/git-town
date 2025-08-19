@@ -25,7 +25,7 @@ import (
 
 func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	defaultConfig := config.DefaultNormalConfig()
-	envConfig, err := envconfig.Load(envconfig.NewEnvironment(os.Environ()))
+	envConfig, err := envconfig.Load(envconfig.NewEnvVars(os.Environ()))
 	if err != nil {
 		return emptyOpenRepoResult(), fmt.Errorf("error loading configuration from environment variables: %w", err)
 	}

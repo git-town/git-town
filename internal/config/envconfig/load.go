@@ -46,7 +46,7 @@ const (
 	verbose                  = "GIT_TOWN_VERBOSE"
 )
 
-func Load(env Environment) (configdomain.PartialConfig, error) {
+func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	autoResolve, errAutoResolve := gohacks.ParseBoolOpt[configdomain.AutoResolve](env.Get(autoResolve), autoResolve)
 	contributionRegex, errContribRegex := configdomain.ParseContributionRegex(env.Get(contributionRegex))
 	dryRun, errDryRun := gohacks.ParseBoolOpt[configdomain.DryRun](env.Get(dryRun), dryRun)
