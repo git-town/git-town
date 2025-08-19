@@ -27,6 +27,7 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 	observedRegex, errObservedRegex := configdomain.ParseObservedRegex(env.Get("GIT_TOWN_OBSERVED_REGEX"))
 	offline, errOffline := configdomain.ParseOffline(env.Get(offline), offline)
 	perennialRegex, errPerennialRegex := configdomain.ParsePerennialRegex(env.Get("GIT_TOWN_PERENNIAL_REGEX"))
+	proposalsShowLineage, errProposalsShowLineage := forgedomain.ParseProposalsShowLineage(env.Get("GIT_TOWN_PROPOSALS_SHOW_LINEAGE"))
 	err := cmp.Or(
 		errAutoResolve,
 		errContribRegex,
@@ -39,6 +40,7 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 		errObservedRegex,
 		errOffline,
 		errPerennialRegex,
+		errProposalsShowLineage,
 	)
 	return configdomain.PartialConfig{
 		Aliases:                  configdomain.Aliases{}, // aliases aren't loaded from env vars
@@ -67,7 +69,7 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 		Offline:                  offline,
 		PerennialBranches:        gitdomain.ParseLocalBranchNames(env.Get("GIT_TOWN_PERENNIAL_BRANCHES")),
 		PerennialRegex:           perennialRegex,
-		ProposalsShowLineage:     None[forgedomain.ProposalsShowLineage](),
+		ProposalsShowLineage:     proposalsShowLineage,
 		PushHook:                 None[configdomain.PushHook](),
 		ShareNewBranches:         None[configdomain.ShareNewBranches](),
 		ShipDeleteTrackingBranch: None[configdomain.ShipDeleteTrackingBranch](),
