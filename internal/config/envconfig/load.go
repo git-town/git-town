@@ -63,7 +63,7 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 		NewBranchType:            configdomain.NewBranchTypeOpt(newBranchType),
 		ObservedRegex:            observedRegex,
 		Offline:                  offline,
-		PerennialBranches:        gitdomain.LocalBranchNames{},
+		PerennialBranches:        gitdomain.ParseLocalBranchNames(env.Get("GIT_TOWN_PERENNIAL_BRANCHES")),
 		PerennialRegex:           None[configdomain.PerennialRegex](),
 		ProposalsShowLineage:     None[forgedomain.ProposalsShowLineage](),
 		PushHook:                 None[configdomain.PushHook](),
