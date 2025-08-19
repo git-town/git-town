@@ -14,15 +14,23 @@ const (
 	autoResolve              = "GIT_TOWN_GITHUB_AUTO_RESOLVE"
 	bitbucketAppPassword     = "GIT_TOWN_BITBUCKET_APP_PASSWORD"
 	bitbucketUserName        = "GIT_TOWN_BITBUCKET_USERNAME"
+	codebergToken            = "GIT_TOWN_CODEBERG_TOKEN"
 	contributionRegex        = "GIT_TOWN_CONTRIBUTION_REGEX"
+	devRemote                = "GIT_TOWN_DEV_REMOTE"
 	dryRun                   = "GIT_TOWN_DRY_RUN"
 	featureRegex             = "GIT_TOWN_FEATURE_REGEX"
 	forgeType                = "GIT_TOWN_FORGE_TYPE"
+	giteaToken               = "GIT_TOWN_GITEA_TOKEN"
 	githubConnectorType      = "GIT_TOWN_GITHUB_CONNECTOR_TYPE"
+	githubToken              = "GIT_TOWN_GITHUB_TOKEN"
 	gitlabConnectorType      = "GIT_TOWN_GITLAB_CONNECTOR_TYPE"
+	gitlabToken              = "GIT_TOWN_GITLAB_TOKEN"
+	mainBranch               = "GIT_TOWN_MAIN_BRANCH"
 	newBranchType            = "GIT_TOWN_NEW_BRANCH_TYPE"
+	originHostname           = "GIT_TOWN_ORIGIN_HOSTNAME"
 	observedRegex            = "GIT_TOWN_OBSERVED_REGEX"
 	offline                  = "GIT_TOWN_OFFLINE"
+	perennialBranches        = "GIT_TOWN_PERENNIAL_BRANCHES"
 	perennialRegex           = "GIT_TOWN_PERENNIAL_REGEX"
 	proposalsShowLineage     = "GIT_TOWN_PROPOSALS_SHOW_LINEAGE"
 	pushHook                 = "GIT_TOWN_PUSH_HOOK"
@@ -93,26 +101,26 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 		BitbucketAppPassword:     forgedomain.ParseBitbucketAppPassword(env.Get(bitbucketAppPassword)),
 		BitbucketUsername:        forgedomain.ParseBitbucketUsername(env.Get(bitbucketUserName)),
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{}, // not loaded from env vars
-		CodebergToken:            forgedomain.ParseCodebergToken(env.Get("GIT_TOWN_CODEBERG_TOKEN")),
+		CodebergToken:            forgedomain.ParseCodebergToken(env.Get(codebergToken)),
 		ContributionRegex:        contributionRegex,
-		DevRemote:                gitdomain.NewRemote(env.Get("GIT_TOWN_DEV_REMOTE")),
+		DevRemote:                gitdomain.NewRemote(env.Get(devRemote)),
 		DryRun:                   dryRun,
 		FeatureRegex:             featureRegex,
 		ForgeType:                forgeType,
 		GitHubConnectorType:      githubConnectorType,
-		GitHubToken:              forgedomain.ParseGitHubToken(env.Get("GIT_TOWN_GITHUB_TOKEN", "GITHUB_TOKEN", "GITHUB_AUTH_TOKEN")),
+		GitHubToken:              forgedomain.ParseGitHubToken(env.Get(githubToken, "GITHUB_TOKEN", "GITHUB_AUTH_TOKEN")),
 		GitLabConnectorType:      gitlabConnectorType,
-		GitLabToken:              forgedomain.ParseGitLabToken(env.Get("GIT_TOWN_GITLAB_TOKEN")),
+		GitLabToken:              forgedomain.ParseGitLabToken(env.Get(gitlabToken)),
 		GitUserEmail:             None[gitdomain.GitUserEmail](), // not loaded from env vars
 		GitUserName:              None[gitdomain.GitUserName](),  // not loaded from env vars
-		GiteaToken:               forgedomain.ParseGiteaToken(env.Get("GIT_TOWN_GITEA_TOKEN")),
-		HostingOriginHostname:    configdomain.ParseHostingOriginHostname(env.Get("GIT_TOWN_ORIGIN_HOSTNAME")),
+		GiteaToken:               forgedomain.ParseGiteaToken(env.Get(giteaToken)),
+		HostingOriginHostname:    configdomain.ParseHostingOriginHostname(env.Get(originHostname)),
 		Lineage:                  configdomain.NewLineage(), // not loaded from env vars
-		MainBranch:               gitdomain.NewLocalBranchNameOption(env.Get("GIT_TOWN_MAIN_BRANCH")),
+		MainBranch:               gitdomain.NewLocalBranchNameOption(env.Get(mainBranch)),
 		NewBranchType:            configdomain.NewBranchTypeOpt(newBranchType),
 		ObservedRegex:            observedRegex,
 		Offline:                  offline,
-		PerennialBranches:        gitdomain.ParseLocalBranchNames(env.Get("GIT_TOWN_PERENNIAL_BRANCHES")),
+		PerennialBranches:        gitdomain.ParseLocalBranchNames(env.Get(perennialBranches)),
 		PerennialRegex:           perennialRegex,
 		ProposalsShowLineage:     proposalsShowLineage,
 		PushHook:                 pushHook,
