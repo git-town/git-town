@@ -26,6 +26,8 @@ Feature: display configuration defined in environment variables
       | GIT_TOWN_SHIP_STRATEGY       | squash-merge |
       | GIT_TOWN_UNKNOWN_BRANCH_TYPE | observed     |
       | GIT_TOWN_OFFLINE             |            1 |
+      | GIT_TOWN_NEW_BRANCH_TYPE     | prototype    |
+      | GIT_TOWN_SHARE_NEW_BRANCHES  | push         |
     Then Git Town prints:
       """
       Branches:
@@ -45,8 +47,8 @@ Feature: display configuration defined in environment variables
         offline: yes
       
       Create:
-        new branch type: (not set)
-        share new branches: no
+        new branch type: prototype
+        share new branches: push
       
       Hosting:
         development remote: origin
