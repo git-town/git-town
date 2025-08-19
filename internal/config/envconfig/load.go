@@ -7,7 +7,7 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-func Load(env Environment) configdomain.PartialConfig {
+func Load(env EnvVars) configdomain.PartialConfig {
 	return configdomain.PartialConfig{
 		Aliases:                  configdomain.Aliases{},
 		AutoResolve:              None[configdomain.AutoResolve](),
