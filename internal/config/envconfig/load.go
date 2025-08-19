@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/gohacks"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -18,6 +19,7 @@ const (
 	shipDeleteTrackingBranch = "GIT_TOWN_SHIP_DELETE_TRACKING_BRANCH"
 	syncTags                 = "GIT_TOWN_SYNC_TAGS"
 	syncUpstream             = "GIT_TOWN_SYNC_UPSTREAM"
+	verbose                  = "GIT_TOWN_VERBOSE"
 )
 
 func Load(env Environment) (configdomain.PartialConfig, error) {
@@ -43,6 +45,7 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 	syncTags, errSyncTags := configdomain.ParseSyncTags(env.Get(syncTags), syncTags)
 	syncUpstream, errSyncUpstream := configdomain.ParseSyncUpstream(env.Get(syncUpstream), syncUpstream)
 	unknownBranchType, errUnknownBranchType := configdomain.ParseBranchType(env.Get("GIT_TOWN_UNKNOWN_BRANCH_TYPE"))
+	verbose, errVerbose := gohacks.ParseVerbose(env.Get(verbose), verbose)
 	err := cmp.Or(
 		errAutoResolve,
 		errContribRegex,
@@ -66,6 +69,7 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 		errSyncTags,
 		errSyncUpstream,
 		errUnknownBranchType,
+		errVerbose,
 	)
 	return configdomain.PartialConfig{
 		Aliases:                  configdomain.Aliases{}, // aliases aren't loaded from env vars
@@ -105,6 +109,6 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 		SyncTags:                 syncTags,
 		SyncUpstream:             syncUpstream,
 		UnknownBranchType:        configdomain.UnknownBranchTypeOpt(unknownBranchType),
-		Verbose:                  None[configdomain.Verbose](),
+		Verbose:                  verbose,
 	}, err
 }
