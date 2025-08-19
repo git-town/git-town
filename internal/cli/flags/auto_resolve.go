@@ -29,7 +29,6 @@ func AutoResolve() (AddFunc, ReadAutoResolveFlagFunc) {
 		if err != nil {
 			return None[configdomain.AutoResolve](), err
 		}
-
 		return Some(configdomain.AutoResolve(value)), nil
 	}
 	return addFlag, readFlag
