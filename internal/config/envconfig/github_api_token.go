@@ -6,9 +6,9 @@ import (
 )
 
 func GitHubAPIToken(env Environment) Option[forgedomain.GitHubToken] {
-	githubToken := forgedomain.ParseGitHubToken(env["GITHUB_TOKEN"])
+	githubToken := forgedomain.ParseGitHubToken(env.Get("GITHUB_TOKEN"))
 	if githubToken.IsSome() {
 		return githubToken
 	}
-	return forgedomain.ParseGitHubToken(env["GITHUB_AUTH_TOKEN"])
+	return forgedomain.ParseGitHubToken(env.Get("GITHUB_AUTH_TOKEN"))
 }

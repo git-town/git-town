@@ -11,17 +11,27 @@ func TestEnviron(t *testing.T) {
 	t.Parallel()
 	t.Run("Get", func(t *testing.T) {
 		t.Parallel()
-		env := envconfig.NewEnvironment([]string{
-			"GITHUB_TOKEN=github-token",
-			"GITHUB_AUTH_TOKEN=github-auth-token",
+		t.Run("contains the element", func(t *testing.T) {
+			env := envconfig.NewEnvironment([]string{
+				"GITHUB_TOKEN=github-token",
+				"GITHUB_AUTH_TOKEN=github-auth-token",
+			})
+			have := env.Get("GITHUB_TOKEN")
+			must.EqOp(t, "github-token", have)
+			have = env.Get("GITHUB_AUTH_TOKEN")
+			must.EqOp(t, "github-auth-token", have)
 		})
-		have, has := env["GITHUB_TOKEN"]
-		must.True(t, has)
-		must.EqOp(t, "github-token", have)
-		have, has = env["GITHUB_AUTH_TOKEN"]
-		must.True(t, has)
-		must.EqOp(t, "github-auth-token", have)
-		_, has = env["NON_EXISTING"]
-		must.False(t, has)
+		t.Run("lookup by alternative name", func(t *testing.T) {
+			env := envconfig.NewEnvironment([]string{
+				"GITHUB_AUTH_TOKEN=github-auth-token",
+			})
+			have := env.Get("GITHUB_TOKEN", "GITHUB_AUTH_TOKEN")
+			must.EqOp(t, "github-auth-token", have)
+		})
+	})
+	t.Run("does not contain the element", func(t *testing.T) {
+		env := envconfig.NewEnvironment([]string{})
+		have := env.Get("NON_EXISTING")
+		must.EqOp(t, "", have)
 	})
 }

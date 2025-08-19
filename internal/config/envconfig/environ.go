@@ -4,13 +4,31 @@ import "strings"
 
 // Environment is an immutable representation of all environment variables.
 // It allows lookup by name in O(1) time.
-type Environment map[string]string
+type Environment struct {
+	data map[string]string
+}
+
+func (self Environment) Get(name string, alternatives ...string) string {
+	result, has := self.data[name]
+	if has {
+		return result
+	}
+	for _, alternative := range alternatives {
+		result, has = self.data[alternative]
+		if has {
+			return result
+		}
+	}
+	return ""
+}
 
 func NewEnvironment(osEnv []string) Environment {
-	result := Environment{}
+	result := Environment{
+		data: map[string]string{},
+	}
 	for _, entry := range osEnv {
 		if name, value, isValid := strings.Cut(entry, "="); isValid {
-			result[name] = value
+			result.data[name] = value
 		}
 	}
 	return result
