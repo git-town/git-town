@@ -27,6 +27,7 @@ Feature: show the configuration
     And Git setting "git-town.ship-strategy" is "squash-merge"
     And Git setting "git-town.github-connector" is "api"
     And Git setting "git-town.gitlab-connector" is "api"
+    And Git setting "git-town.detached" is "true"
     When I run "git-town config"
     Then Git Town prints:
       """
@@ -42,14 +43,14 @@ Feature: show the configuration
         perennial regex: ^release-
         prototype branches: prototype-1, prototype-2
         unknown branch type: observed
-
+      
       Configuration:
         offline: no
-
+      
       Create:
         new branch type: (not set)
         share new branches: no
-
+      
       Hosting:
         development remote: origin
         forge type: (not set)
@@ -62,13 +63,14 @@ Feature: show the configuration
         GitHub token: (not set)
         GitLab connector type: api
         GitLab token: (not set)
-
+      
       Ship:
         delete tracking branch: yes
         ship strategy: squash-merge
-
+      
       Sync:
         auto-resolve phantom conflicts: yes
+        run detached: yes
         run pre-push hook: yes
         feature sync strategy: merge
         perennial sync strategy: rebase
@@ -89,19 +91,20 @@ Feature: show the configuration
       contribution-regex = "^renovate/"
       observed-regex = "^dependabot/"
       unknown-type = "observed"
-
+      
       [create]
       share-new-branches = "push"
-
+      
       [hosting]
       forge-type = "github"
       origin-hostname = "github.com"
-
+      
       [ship]
       delete-tracking-branch = true
       strategy = "squash-merge"
-
+      
       [sync]
+      detached = true
       feature-strategy = "rebase"
       perennial-strategy = "ff-only"
       prototype-strategy = "compress"
@@ -124,14 +127,14 @@ Feature: show the configuration
         perennial regex: ^release-
         prototype branches: prototype-1, prototype-2
         unknown branch type: observed
-
+      
       Configuration:
         offline: no
-
+      
       Create:
         new branch type: (not set)
         share new branches: push
-
+      
       Hosting:
         development remote: origin
         forge type: github
@@ -144,13 +147,14 @@ Feature: show the configuration
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
-
+      
       Ship:
         delete tracking branch: yes
         ship strategy: squash-merge
-
+      
       Sync:
         auto-resolve phantom conflicts: no
+        run detached: yes
         run pre-push hook: yes
         feature sync strategy: rebase
         perennial sync strategy: ff-only
@@ -177,6 +181,7 @@ Feature: show the configuration
     And Git setting "git-town.sync-prototype-strategy" is "compress"
     And Git setting "git-town.unknown-branch-type" is "observed"
     And Git setting "git-town.auto-resolve" is "false"
+    And Git setting "git-town.detached" is "true"
     And the configuration file:
       """
       [branches]
@@ -187,19 +192,20 @@ Feature: show the configuration
       contribution-regex = "^config-contribution-regex"
       observed-regex = "^config-observed-regex"
       unknown-type = "contribution"
-
+      
       [create]
       share-new-branches = "push"
-
+      
       [hosting]
       forge-type = "github"
       origin-hostname = "github.com"
-
+      
       [ship]
       delete-tracking-branch = true
       strategy = "api"
-
+      
       [sync]
+      detached = false
       feature-strategy = "merge"
       perennial-strategy = "rebase"
       prototype-strategy = "rebase"
@@ -222,14 +228,14 @@ Feature: show the configuration
         perennial regex: ^git-perennial-
         prototype branches: prototype-1, prototype-2
         unknown branch type: observed
-
+      
       Configuration:
         offline: no
-
+      
       Create:
         new branch type: (not set)
         share new branches: no
-
+      
       Hosting:
         development remote: origin
         forge type: github
@@ -242,13 +248,14 @@ Feature: show the configuration
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
-
+      
       Ship:
         delete tracking branch: no
         ship strategy: squash-merge
-
+      
       Sync:
         auto-resolve phantom conflicts: no
+        run detached: yes
         run pre-push hook: yes
         feature sync strategy: merge
         perennial sync strategy: ff-only
@@ -282,14 +289,14 @@ Feature: show the configuration
         perennial regex: (not set)
         prototype branches: prototype-1, prototype-2
         unknown branch type: feature
-
+      
       Configuration:
         offline: no
-
+      
       Create:
         new branch type: (not set)
         share new branches: no
-
+      
       Hosting:
         development remote: origin
         forge type: (not set)
@@ -302,13 +309,14 @@ Feature: show the configuration
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
-
+      
       Ship:
         delete tracking branch: yes
         ship strategy: api
-
+      
       Sync:
         auto-resolve phantom conflicts: yes
+        run detached: no
         run pre-push hook: yes
         feature sync strategy: merge
         perennial sync strategy: rebase
@@ -316,7 +324,7 @@ Feature: show the configuration
         sync tags: yes
         sync with upstream: yes
         auto-resolve phantom conflicts: yes
-
+      
       Branch Lineage:
         main
           alpha
@@ -326,7 +334,7 @@ Feature: show the configuration
           parked-2
           prototype-1
           prototype-2
-
+      
         qa
           hotfix
       """
@@ -348,14 +356,14 @@ Feature: show the configuration
         perennial regex: (not set)
         prototype branches: prototype-1, prototype-2
         unknown branch type: feature
-
+      
       Configuration:
         offline: no
-
+      
       Create:
         new branch type: (not set)
         share new branches: no
-
+      
       Hosting:
         development remote: origin
         forge type: (not set)
@@ -368,13 +376,14 @@ Feature: show the configuration
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
-
+      
       Ship:
         delete tracking branch: yes
         ship strategy: api
-
+      
       Sync:
         auto-resolve phantom conflicts: yes
+        run detached: no
         run pre-push hook: yes
         feature sync strategy: merge
         perennial sync strategy: rebase
