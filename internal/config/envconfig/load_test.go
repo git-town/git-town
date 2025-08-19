@@ -6,7 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/config/envconfig"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v21/pkg/prelude"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -16,33 +16,33 @@ func TestLoad(t *testing.T) {
 
 	tests := []struct {
 		name        string
-		githubToken *string
-		authToken   *string
-		want        prelude.Option[forgedomain.GitHubToken]
+		githubToken Option[string]
+		authToken   Option[string]
+		want        Option[forgedomain.GitHubToken]
 	}{
 		{
 			name:        "loads from GITHUB_TOKEN when both are set",
-			githubToken: &tokenText,
-			authToken:   &authTokenText,
-			want:        prelude.Some(forgedomain.GitHubToken(tokenText)),
+			githubToken: Some(tokenText),
+			authToken:   Some(authTokenText),
+			want:        Some(forgedomain.GitHubToken(tokenText)),
 		},
 		{
 			name:        "loads from GITHUB_AUTH_TOKEN if GITHUB_TOKEN is empty",
-			githubToken: ptr(""),
-			authToken:   &authTokenText,
-			want:        prelude.Some(forgedomain.GitHubToken(authTokenText)),
+			githubToken: None[string](),
+			authToken:   Some(authTokenText),
+			want:        Some(forgedomain.GitHubToken(authTokenText)),
 		},
 		{
 			name:        "loads from GITHUB_TOKEN only",
-			githubToken: &tokenText,
-			authToken:   nil,
-			want:        prelude.Some(forgedomain.GitHubToken(tokenText)),
+			githubToken: Some(tokenText),
+			authToken:   None[string](),
+			want:        Some(forgedomain.GitHubToken(tokenText)),
 		},
 		{
 			name:        "returns none when no env is set",
-			githubToken: nil,
-			authToken:   nil,
-			want:        prelude.None[forgedomain.GitHubToken](),
+			githubToken: None[string](),
+			authToken:   None[string](),
+			want:        None[forgedomain.GitHubToken](),
 		},
 	}
 
@@ -51,20 +51,14 @@ func TestLoad(t *testing.T) {
 			// Clear environment
 			os.Unsetenv("GITHUB_TOKEN")
 			os.Unsetenv("GITHUB_AUTH_TOKEN")
-
-			if tt.githubToken != nil {
-				t.Setenv("GITHUB_TOKEN", *tt.githubToken)
+			if githubToken, has := tt.githubToken.Get(); has {
+				t.Setenv("GITHUB_TOKEN", githubToken)
 			}
-			if tt.authToken != nil {
-				t.Setenv("GITHUB_AUTH_TOKEN", *tt.authToken)
+			if authToken, has := tt.authToken.Get(); has {
+				t.Setenv("GITHUB_AUTH_TOKEN", authToken)
 			}
-
 			cfg := envconfig.Load()
 			must.Eq(t, tt.want, cfg.GitHubToken)
 		})
 	}
-}
-
-func ptr(s string) *string {
-	return &s
 }
