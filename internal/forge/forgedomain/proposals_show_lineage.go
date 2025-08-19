@@ -33,7 +33,7 @@ func ParseProposalsShowLineage(value string) (Option[ProposalsShowLineage], erro
 	case ProposalsShowLineageCLI.String():
 		return Some(ProposalsShowLineageCLI), nil
 	}
-	parsedOpt, err := gohacks.ParseBoolOpt(value, "proposals-show-lineage")
+	parsedOpt, err := gohacks.ParseBoolOpt[bool](value, "proposals-show-lineage")
 	if err != nil {
 		return None[ProposalsShowLineage](), fmt.Errorf(messages.ProposalsShowLineageInvalid, value)
 	}

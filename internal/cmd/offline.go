@@ -90,10 +90,10 @@ func displayOfflineStatus(config config.UnvalidatedConfig) {
 }
 
 func setOfflineStatus(text string, runner subshelldomain.Runner) error {
-	value, err := gohacks.ParseBool(text, "offline status")
+	value, err := gohacks.ParseBool[configdomain.Offline](text, "offline status")
 	if err != nil {
 		return fmt.Errorf(messages.ValueInvalid, configdomain.KeyOffline, text)
 	}
-	return gitconfig.SetOffline(runner, configdomain.Offline(value))
+	return gitconfig.SetOffline(runner, value)
 	// in the future, we could remove the offline setting here
 }

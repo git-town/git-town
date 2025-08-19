@@ -2,9 +2,6 @@ package configdomain
 
 import (
 	"strconv"
-
-	"github.com/git-town/git-town/v21/internal/gohacks"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 // Offline is a new-type for the "offline" configuration setting.
@@ -20,12 +17,4 @@ func (self Offline) IsOnline() bool {
 
 func (self Offline) String() string {
 	return strconv.FormatBool(self.IsOffline())
-}
-
-func ParseOffline(value, source string) (Option[Offline], error) {
-	parsedOpt, err := gohacks.ParseBoolOpt(value, source)
-	if parsed, has := parsedOpt.Get(); has {
-		return Some(Offline(parsed)), err
-	}
-	return None[Offline](), err
 }
