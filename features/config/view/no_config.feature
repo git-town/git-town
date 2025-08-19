@@ -1,0 +1,67 @@
+Feature: no configuration data
+
+  Background:
+    Given a Git repo with origin
+    And Git Town is not configured
+    And the branches
+      | NAME           | TYPE         | PARENT | LOCATIONS |
+      | contribution-1 | contribution |        | local     |
+      | contribution-2 | contribution |        | local     |
+      | observed-1     | observed     |        | local     |
+      | observed-2     | observed     |        | local     |
+      | parked-1       | parked       | main   | local     |
+      | parked-2       | parked       | main   | local     |
+      | perennial-1    | perennial    |        | local     |
+      | perennial-2    | perennial    |        | local     |
+      | prototype-1    | prototype    | main   | local     |
+      | prototype-2    | prototype    | main   | local     |
+
+  Scenario: no configuration data
+    When I run "git-town config"
+    Then Git Town prints:
+      """
+      Branches:
+        contribution branches: contribution-1, contribution-2
+        contribution regex: (not set)
+        feature regex: (not set)
+        main branch: (not set)
+        observed branches: observed-1, observed-2
+        observed regex: (not set)
+        parked branches: parked-1, parked-2
+        perennial branches: (none)
+        perennial regex: (not set)
+        prototype branches: prototype-1, prototype-2
+        unknown branch type: feature
+      
+      Configuration:
+        offline: no
+      
+      Create:
+        new branch type: (not set)
+        share new branches: no
+      
+      Hosting:
+        development remote: origin
+        forge type: (not set)
+        origin hostname: (not set)
+        Bitbucket username: (not set)
+        Bitbucket app password: (not set)
+        Codeberg token: (not set)
+        Gitea token: (not set)
+        GitHub connector type: (not set)
+        GitHub token: (not set)
+        GitLab connector type: (not set)
+        GitLab token: (not set)
+      
+      Ship:
+        delete tracking branch: yes
+        ship strategy: api
+      
+      Sync:
+        run pre-push hook: yes
+        feature sync strategy: merge
+        perennial sync strategy: rebase
+        prototype sync strategy: merge
+        sync tags: yes
+        sync with upstream: yes
+      """
