@@ -35,6 +35,7 @@ Feature: display configuration defined in environment variables
       | GIT_TOWN_BITBUCKET_APP_PASSWORD | bitbucket-password |
       | GIT_TOWN_CODEBERG_TOKEN         | codeberg-token     |
       | GIT_TOWN_GITEA_TOKEN            | gitea-token        |
+      | GIT_TOWN_GITHUB_CONNECTOR_TYPE  | gh                 |
     Then Git Town prints:
       """
       Branches:
@@ -65,7 +66,7 @@ Feature: display configuration defined in environment variables
         Bitbucket app password: bitbucket-password
         Codeberg token: codeberg-token
         Gitea token: gitea-token
-        GitHub connector type: (not set)
+        GitHub connector type: gh
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
