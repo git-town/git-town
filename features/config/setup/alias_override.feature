@@ -23,6 +23,7 @@ Feature: override an existing Git alias
       | sync perennial strategy     | enter      |
       | sync prototype strategy     | enter      |
       | sync upstream               | enter      |
+      | detached                    | enter      |
       | sync tags                   | enter      |
       | share new branches          | enter      |
       | push hook                   | enter      |
