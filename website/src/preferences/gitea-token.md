@@ -24,3 +24,8 @@ git config [--global] git-town.gitea-token <token>
 
 The optional `--global` flag applies this setting to all Git repositories on
 your machine. Without it, the setting applies only to the current repository.
+
+## environment variable
+
+You can configure the Gitea token by setting the `GIT_TOWN_GITEA_TOKEN`
+environment variable.
