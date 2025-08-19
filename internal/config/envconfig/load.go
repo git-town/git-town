@@ -6,7 +6,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/gohacks"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -45,7 +44,7 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 	syncTags, errSyncTags := configdomain.ParseSyncTags(env.Get(syncTags), syncTags)
 	syncUpstream, errSyncUpstream := configdomain.ParseSyncUpstream(env.Get(syncUpstream), syncUpstream)
 	unknownBranchType, errUnknownBranchType := configdomain.ParseBranchType(env.Get("GIT_TOWN_UNKNOWN_BRANCH_TYPE"))
-	verbose, errVerbose := gohacks.ParseVerbose(env.Get(verbose), verbose)
+	verbose, errVerbose := configdomain.ParseVerbose(env.Get(verbose), verbose)
 	err := cmp.Or(
 		errAutoResolve,
 		errContribRegex,
