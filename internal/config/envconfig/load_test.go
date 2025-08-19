@@ -48,7 +48,6 @@ func TestLoad(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			// Clear environment
 			os.Unsetenv("GITHUB_TOKEN")
 			os.Unsetenv("GITHUB_AUTH_TOKEN")
 			if githubToken, has := tt.githubToken.Get(); has {
