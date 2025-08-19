@@ -43,19 +43,19 @@ Feature: show the configuration
       contribution-regex = "^config-contribution-regex"
       observed-regex = "^config-observed-regex"
       unknown-type = "contribution"
-
+      
       [create]
       share-new-branches = "push"
-
+      
       [hosting]
       forge-type = "github"
       github-connector = "gh"
       origin-hostname = "github.com"
-
+      
       [ship]
       delete-tracking-branch = true
       strategy = "api"
-
+      
       [sync]
       feature-strategy = "merge"
       perennial-strategy = "rebase"
@@ -78,14 +78,14 @@ Feature: show the configuration
         perennial regex: ^git-perennial-
         prototype branches: prototype-1, prototype-2
         unknown branch type: observed
-
+      
       Configuration:
         offline: no
-
+      
       Create:
         new branch type: (not set)
         share new branches: no
-
+      
       Hosting:
         development remote: origin
         forge type: github
@@ -98,12 +98,13 @@ Feature: show the configuration
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
-
+      
       Ship:
         delete tracking branch: no
         ship strategy: squash-merge
-
+      
       Sync:
+        auto-resolve phantom conflicts: yes
         run pre-push hook: yes
         feature sync strategy: merge
         perennial sync strategy: ff-only
