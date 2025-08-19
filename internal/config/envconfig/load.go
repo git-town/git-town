@@ -20,12 +20,14 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 	dryRun, errDryRun := configdomain.ParseDryRun(env.Get(dryRun), dryRun)
 	featureRegex, errFeatureRegex := configdomain.ParseFeatureRegex(env.Get("GIT_TOWN_FEATURE_REGEX"))
 	forgeType, errForgeType := forgedomain.ParseForgeType(env.Get("GIT_TOWN_FORGE_TYPE"))
+	githubConnectorType, errGitHubConnectorType := forgedomain.ParseGitHubConnectorType(env.Get("GIT_TOWN_GITHUB_CONNECTOR_TYPE"))
 	err := cmp.Or(
 		errAutoResolve,
 		errContribRegex,
 		errDryRun,
 		errFeatureRegex,
 		errForgeType,
+		errGitHubConnectorType,
 	)
 	return configdomain.PartialConfig{
 		Aliases:                  configdomain.Aliases{}, // aliases aren't loaded from env vars
@@ -39,7 +41,7 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 		DryRun:                   dryRun,
 		FeatureRegex:             featureRegex,
 		ForgeType:                forgeType,
-		GitHubConnectorType:      None[forgedomain.GitHubConnectorType](),
+		GitHubConnectorType:      githubConnectorType,
 		GitHubToken:              forgedomain.ParseGitHubToken(env.Get("GIT_TOWN_GITHUB_TOKEN", "GITHUB_TOKEN", "GITHUB_AUTH_TOKEN")),
 		GitLabConnectorType:      None[forgedomain.GitLabConnectorType](),
 		GitLabToken:              None[forgedomain.GitLabToken](),
