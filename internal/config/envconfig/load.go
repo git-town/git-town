@@ -13,15 +13,16 @@ const autoResolve = "GITHUB_AUTO_RESOLVE"
 
 func Load(env Environment) (configdomain.PartialConfig, error) {
 	autoResolve, errAutoResolve := configdomain.ParseAutoResolve(env.Get(autoResolve), autoResolve)
-	err := cmp.Or(errAutoResolve)
+	contributionRegex, errContribRegex := configdomain.ParseContributionRegex(env.Get("GIT_TOWN_CONTRIBUTION_REGEX"))
+	err := cmp.Or(errAutoResolve, errContribRegex)
 	return configdomain.PartialConfig{
 		Aliases:                  configdomain.Aliases{}, // aliases aren't loaded from env vars
 		AutoResolve:              autoResolve,
 		BitbucketAppPassword:     forgedomain.ParseBitbucketAppPassword(env.Get("GIT_TOWN_BITBUCKET_APP_PASSWORD")),
-		BitbucketUsername:        None[forgedomain.BitbucketUsername](),
-		BranchTypeOverrides:      configdomain.BranchTypeOverrides{},
-		CodebergToken:            None[forgedomain.CodebergToken](),
-		ContributionRegex:        None[configdomain.ContributionRegex](),
+		BitbucketUsername:        forgedomain.ParseBitbucketUsername(env.Get("GIT_TOWN_BITBUCKET_USERNAME")),
+		BranchTypeOverrides:      configdomain.BranchTypeOverrides{}, // not loaded from env vars
+		CodebergToken:            forgedomain.ParseCodebergToken(env.Get("GIT_TOWN_CODEBERG_TOKEN")),
+		ContributionRegex:        contributionRegex,
 		DevRemote:                None[gitdomain.Remote](),
 		DryRun:                   None[configdomain.DryRun](),
 		FeatureRegex:             None[configdomain.FeatureRegex](),
