@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	autoResolve              = "GIT_TOWN_GITHUB_AUTO_RESOLVE"
+	autoResolve              = "GIT_TOWN_AUTO_RESOLVE"
 	bitbucketAppPassword     = "GIT_TOWN_BITBUCKET_APP_PASSWORD"
 	bitbucketUserName        = "GIT_TOWN_BITBUCKET_USERNAME"
 	codebergToken            = "GIT_TOWN_CODEBERG_TOKEN"

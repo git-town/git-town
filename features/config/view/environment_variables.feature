@@ -17,6 +17,7 @@ Feature: display configuration defined in environment variables
 
   Scenario: all configured in Git, no stacked changes
     When I run "git-town config" with these environment variables
+      | GIT_TOWN_AUTO_RESOLVE                | false              |
       | GIT_TOWN_BITBUCKET_USERNAME          | bitbucket-user     |
       | GIT_TOWN_BITBUCKET_APP_PASSWORD      | bitbucket-password |
       | GIT_TOWN_CODEBERG_TOKEN              | codeberg-token     |
@@ -85,6 +86,7 @@ Feature: display configuration defined in environment variables
         ship strategy: fast-forward
       
       Sync:
+        auto-resolve phantom conflicts: no
         run pre-push hook: no
         feature sync strategy: rebase
         perennial sync strategy: merge
