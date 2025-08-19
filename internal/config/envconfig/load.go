@@ -21,6 +21,7 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 	featureRegex, errFeatureRegex := configdomain.ParseFeatureRegex(env.Get("GIT_TOWN_FEATURE_REGEX"))
 	forgeType, errForgeType := forgedomain.ParseForgeType(env.Get("GIT_TOWN_FORGE_TYPE"))
 	githubConnectorType, errGitHubConnectorType := forgedomain.ParseGitHubConnectorType(env.Get("GIT_TOWN_GITHUB_CONNECTOR_TYPE"))
+	gitlabConnectorType, errGitLabConnectorType := forgedomain.ParseGitLabConnectorType(env.Get("GIT_TOWN_GITLAB_CONNECTOR_TYPE"))
 	err := cmp.Or(
 		errAutoResolve,
 		errContribRegex,
@@ -28,6 +29,7 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 		errFeatureRegex,
 		errForgeType,
 		errGitHubConnectorType,
+		errGitLabConnectorType,
 	)
 	return configdomain.PartialConfig{
 		Aliases:                  configdomain.Aliases{}, // aliases aren't loaded from env vars
@@ -43,8 +45,8 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 		ForgeType:                forgeType,
 		GitHubConnectorType:      githubConnectorType,
 		GitHubToken:              forgedomain.ParseGitHubToken(env.Get("GIT_TOWN_GITHUB_TOKEN", "GITHUB_TOKEN", "GITHUB_AUTH_TOKEN")),
-		GitLabConnectorType:      None[forgedomain.GitLabConnectorType](),
-		GitLabToken:              None[forgedomain.GitLabToken](),
+		GitLabConnectorType:      gitlabConnectorType,
+		GitLabToken:              forgedomain.ParseGitLabToken(env.Get("GIT_TOWN_GITLAB_TOKEN")),
 		GitUserEmail:             None[gitdomain.GitUserEmail](),
 		GitUserName:              None[gitdomain.GitUserName](),
 		GiteaToken:               None[forgedomain.GiteaToken](),
