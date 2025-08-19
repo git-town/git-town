@@ -1,20 +1,15 @@
 package envconfig
 
 import (
-	"os"
-
+	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-func GitHubAPIToken() Option[forgedomain.GitHubToken] {
-	apiToken := os.Getenv("GITHUB_TOKEN")
-	if len(apiToken) > 0 {
-		return Some(forgedomain.GitHubToken(apiToken))
+func GitHubAPIToken(env ImmutableEnvironment) Option[forgedomain.GitHubToken] {
+	githubToken := forgedomain.ParseGitHubToken(env.LoadKey(configdomain.KeyGitHubToken))
+	if githubToken.IsSome() {
+		return githubToken
 	}
-	apiToken = os.Getenv("GITHUB_AUTH_TOKEN")
-	if len(apiToken) > 0 {
-		return Some(forgedomain.GitHubToken(apiToken))
-	}
-	return None[forgedomain.GitHubToken]()
+	return forgedomain.ParseGitHubToken(env.LoadString("GITHUB_AUTH_TOKEN"))
 }

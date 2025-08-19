@@ -25,7 +25,7 @@ import (
 
 func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	defaultConfig := config.DefaultNormalConfig()
-	envConfig := envconfig.Load(os.Environ())
+	envConfig := envconfig.Load(envconfig.NewImmutableEnvironment(os.Environ()))
 	commandsCounter := NewMutable(new(gohacks.Counter))
 	backendRunner := subshell.BackendRunner{
 		Dir:             None[string](),
