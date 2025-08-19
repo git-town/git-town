@@ -24,7 +24,7 @@ func AutoResolve() (AddFunc, ReadAutoResolveFlagFunc) {
 		if err != nil {
 			return None[configdomain.AutoResolve](), err
 		}
-		parsed, err := gohacks.ParseBool(text, autoResolveLong)
+		parsed, err := gohacks.ParseBool[configdomain.AutoResolve](text, autoResolveLong)
 		return Some(configdomain.AutoResolve(parsed)), err
 	}
 	return addFlag, readFlag
