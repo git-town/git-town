@@ -62,6 +62,7 @@ Feature: change existing information in Git metadata
       | git config --global alias.ship "town ship"               |
       | git config --global alias.sync "town sync"               |
       | git config git-town.github-token gh-tok                  |
+      | git config git-town.detached true                        |
       | git config git-town.new-branch-type prototype            |
       | git config git-town.forge-type github                    |
       | git config git-town.github-connector api                 |
