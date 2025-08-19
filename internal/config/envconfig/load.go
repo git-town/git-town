@@ -17,6 +17,7 @@ const (
 	shareNewBranches         = "GIT_TOWN_SHARE_NEW_BRANCHES"
 	shipDeleteTrackingBranch = "GIT_TOWN_SHIP_DELETE_TRACKING_BRANCH"
 	syncTags                 = "GIT_TOWN_SYNC_TAGS"
+	syncUpstream             = "GIT_TOWN_SYNC_UPSTREAM"
 )
 
 func Load(env Environment) (configdomain.PartialConfig, error) {
@@ -40,6 +41,7 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 	syncPerennialStrategy, errSyncPerennialStrategy := configdomain.ParseSyncPerennialStrategy(env.Get("GIT_TOWN_SYNC_PERENNIAL_STRATEGY"))
 	syncPrototypeStrategy, errSyncPrototypeStrategy := configdomain.ParseSyncPrototypeStrategy(env.Get("GIT_TOWN_SYNC_PROTOTYPE_STRATEGY"))
 	syncTags, errSyncTags := configdomain.ParseSyncTags(env.Get(syncTags), syncTags)
+	syncUpstream, errSyncUpstream := configdomain.ParseSyncUpstream(env.Get(syncUpstream), syncUpstream)
 	err := cmp.Or(
 		errAutoResolve,
 		errContribRegex,
@@ -61,6 +63,7 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 		errSyncPerennialStrategy,
 		errSyncPrototypeStrategy,
 		errSyncTags,
+		errSyncUpstream,
 	)
 	return configdomain.PartialConfig{
 		Aliases:                  configdomain.Aliases{}, // aliases aren't loaded from env vars
@@ -98,7 +101,7 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 		SyncPerennialStrategy:    syncPerennialStrategy,
 		SyncPrototypeStrategy:    syncPrototypeStrategy,
 		SyncTags:                 syncTags,
-		SyncUpstream:             None[configdomain.SyncUpstream](),
+		SyncUpstream:             syncUpstream,
 		UnknownBranchType:        None[configdomain.UnknownBranchType](),
 		Verbose:                  None[configdomain.Verbose](),
 	}, err
