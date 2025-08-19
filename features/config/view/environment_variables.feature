@@ -41,6 +41,10 @@ Feature: display configuration defined in environment variables
       | GIT_TOWN_GITLAB_TOKEN                | gitlab-token       |
       | GIT_TOWN_SHIP_DELETE_TRACKING_BRANCH |                  0 |
       | GIT_TOWN_SHIP_STRATEGY               | fast-forward       |
+      | GIT_TOWN_PUSH_HOOK                   | no                 |
+      | GIT_TOWN_SYNC_FEATURE_STRATEGY       | rebase             |
+      | GIT_TOWN_SYNC_PERENNIAL_STRATEGY     | merge              |
+      | GIT_TOWN_SYNC_PROTOTYPE_STRATEGY     | compress           |
     Then Git Town prints:
       """
       Branches:
@@ -81,10 +85,10 @@ Feature: display configuration defined in environment variables
         ship strategy: fast-forward
       
       Sync:
-        run pre-push hook: yes
-        feature sync strategy: merge
-        perennial sync strategy: rebase
-        prototype sync strategy: merge
+        run pre-push hook: no
+        feature sync strategy: rebase
+        perennial sync strategy: merge
+        prototype sync strategy: compress
         sync tags: yes
         sync with upstream: yes
       """
