@@ -12,6 +12,7 @@ import (
 const (
 	autoResolve = "GITHUB_AUTO_RESOLVE"
 	dryRun      = "GIT_TOWN_DRY_RUN"
+	offline     = "GIT_TOWN_OFFLINE"
 )
 
 func Load(env Environment) (configdomain.PartialConfig, error) {
@@ -24,6 +25,7 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 	gitlabConnectorType, errGitLabConnectorType := forgedomain.ParseGitLabConnectorType(env.Get("GIT_TOWN_GITLAB_CONNECTOR_TYPE"))
 	newBranchType, errNewBranchType := configdomain.ParseBranchType(env.Get("GIT_TOWN_NEW_BRANCH_TYPE"))
 	observedRegex, errObservedRegex := configdomain.ParseObservedRegex(env.Get("GIT_TOWN_OBSERVED_REGEX"))
+	offline, errOffline := configdomain.ParseOffline(env.Get(offline), offline)
 	err := cmp.Or(
 		errAutoResolve,
 		errContribRegex,
@@ -34,6 +36,7 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 		errGitLabConnectorType,
 		errNewBranchType,
 		errObservedRegex,
+		errOffline,
 	)
 	return configdomain.PartialConfig{
 		Aliases:                  configdomain.Aliases{}, // aliases aren't loaded from env vars
@@ -59,7 +62,7 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 		MainBranch:               gitdomain.NewLocalBranchNameOption(env.Get("GIT_TOWN_MAIN_BRANCH")),
 		NewBranchType:            configdomain.NewBranchTypeOpt(newBranchType),
 		ObservedRegex:            observedRegex,
-		Offline:                  None[configdomain.Offline](),
+		Offline:                  offline,
 		PerennialBranches:        gitdomain.LocalBranchNames{},
 		PerennialRegex:           None[configdomain.PerennialRegex](),
 		ProposalsShowLineage:     None[forgedomain.ProposalsShowLineage](),

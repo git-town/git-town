@@ -22,8 +22,8 @@ func (self Offline) String() string {
 	return strconv.FormatBool(self.IsOffline())
 }
 
-func ParseOffline(value string, source Key) (Option[Offline], error) {
-	parsedOpt, err := gohacks.ParseBoolOpt(value, source.String())
+func ParseOffline(value, source string) (Option[Offline], error) {
+	parsedOpt, err := gohacks.ParseBoolOpt(value, source)
 	if parsed, has := parsedOpt.Get(); has {
 		return Some(Offline(parsed)), err
 	}

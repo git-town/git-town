@@ -88,7 +88,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	newBranchTypeValue, errNewBranchType := configdomain.ParseBranchType(snapshot[configdomain.KeyNewBranchType])
 	newBranchType := configdomain.NewBranchTypeOpt(newBranchTypeValue)
 	observedRegex, errObservedRegex := configdomain.ParseObservedRegex(snapshot[configdomain.KeyObservedRegex])
-	offline, errOffline := configdomain.ParseOffline(snapshot[configdomain.KeyOffline], configdomain.KeyOffline)
+	offline, errOffline := configdomain.ParseOffline(snapshot[configdomain.KeyOffline], configdomain.KeyOffline.String())
 	perennialRegex, errPerennialRegex := configdomain.ParsePerennialRegex(snapshot[configdomain.KeyPerennialRegex])
 	proposalsShowLineage, errProposalsShowLineage := forgedomain.ParseProposalsShowLineage(snapshot[configdomain.KeyProposalsShowLineage])
 	pushHook, errPushHook := configdomain.ParsePushHook(snapshot[configdomain.KeyPushHook], configdomain.KeyPushHook)
