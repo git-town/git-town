@@ -1,70 +1,44 @@
 package envconfig_test
 
 import (
-	"os"
+	"fmt"
 	"testing"
 
 	"github.com/git-town/git-town/v21/internal/config/envconfig"
-	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
 func TestLoad(t *testing.T) {
-	tokenText := "my-github-token"
-	authTokenText := "my-github-auth-token"
+	t.Parallel()
 
-	tests := []struct {
-		name        string
-		githubToken *string
-		authToken   *string
-		want        prelude.Option[forgedomain.GitHubToken]
-	}{
-		{
-			name:        "loads from GITHUB_TOKEN when both are set",
-			githubToken: &tokenText,
-			authToken:   &authTokenText,
-			want:        prelude.Some(forgedomain.GitHubToken(tokenText)),
-		},
-		{
-			name:        "loads from GITHUB_AUTH_TOKEN if GITHUB_TOKEN is empty",
-			githubToken: ptr(""),
-			authToken:   &authTokenText,
-			want:        prelude.Some(forgedomain.GitHubToken(authTokenText)),
-		},
-		{
-			name:        "loads from GITHUB_TOKEN only",
-			githubToken: &tokenText,
-			authToken:   nil,
-			want:        prelude.Some(forgedomain.GitHubToken(tokenText)),
-		},
-		{
-			name:        "returns none when no env is set",
-			githubToken: nil,
-			authToken:   nil,
-			want:        prelude.None[forgedomain.GitHubToken](),
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			// Clear environment
-			os.Unsetenv("GITHUB_TOKEN")
-			os.Unsetenv("GITHUB_AUTH_TOKEN")
-
-			if tt.githubToken != nil {
-				t.Setenv("GITHUB_TOKEN", *tt.githubToken)
-			}
-			if tt.authToken != nil {
-				t.Setenv("GITHUB_AUTH_TOKEN", *tt.authToken)
-			}
-
-			cfg := envconfig.Load()
-			must.Eq(t, tt.want, cfg.GitHubToken)
+	t.Run("GitHub Token", func(t *testing.T) {
+		t.Parallel()
+		t.Run("none set", func(t *testing.T) {
+			t.Parallel()
+			env := envconfig.NewEnvironment([]string{})
+			have := envconfig.Load(env)
+			must.True(t, have.GitHubToken.IsNone())
 		})
-	}
-}
-
-func ptr(s string) *string {
-	return &s
+		t.Run("GITHUB_TOKEN is set", func(t *testing.T) {
+			t.Parallel()
+			env := envconfig.NewEnvironment([]string{"GITHUB_TOKEN=my-token"})
+			envCfg := envconfig.Load(env)
+			token, has := envCfg.GitHubToken.Get()
+			must.True(t, has)
+			must.Eq(t, token, "my-token")
+		})
+		t.Run("GITHUB_AUTH_TOKEN is set", func(t *testing.T) {
+			t.Parallel()
+			env := envconfig.NewEnvironment([]string{"GITHUB_AUTH_TOKEN=my-auth-token"})
+			have := envconfig.Load(env)
+			must.True(t, have.GitHubToken.EqualSome("my-auth-token"))
+		})
+		t.Run("GITHUB_TOKEN and GITHUB_AUTH_TOKEN are set", func(t *testing.T) {
+			t.Parallel()
+			env := envconfig.NewEnvironment([]string{"GITHUB_AUTH_TOKEN=my-auth-token", "GITHUB_TOKEN=my-token"})
+			have := envconfig.Load(env)
+			fmt.Println(have.GitHubToken)
+			must.True(t, have.GitHubToken.EqualSome("my-token"))
+		})
+	})
 }
