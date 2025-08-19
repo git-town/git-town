@@ -9,13 +9,11 @@ type Environment struct {
 }
 
 func (self Environment) Get(name string, alternatives ...string) string {
-	result, has := self.data[name]
-	if has {
+	if result, has := self.data[name]; has {
 		return result
 	}
 	for _, alternative := range alternatives {
-		result, has = self.data[alternative]
-		if has {
+		if result, has := self.data[alternative]; has {
 			return result
 		}
 	}
