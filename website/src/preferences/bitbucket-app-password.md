@@ -50,5 +50,5 @@ your machine. Without it, the setting applies only to the current repository.
 
 ## environment variable
 
-You can configure the Bitbucket username by setting the
+You can configure the Bitbucket application password by setting the
 `GIT_TOWN_BITBUCKET_USERNAME` environment variable.
