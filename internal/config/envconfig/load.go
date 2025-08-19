@@ -50,8 +50,8 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 		GitUserEmail:             None[gitdomain.GitUserEmail](), // not loaded from env vars
 		GitUserName:              None[gitdomain.GitUserName](),  // not loaded from env vars
 		GiteaToken:               forgedomain.ParseGiteaToken(env.Get("GIT_TOWN_GITEA_TOKEN")),
-		HostingOriginHostname:    None[configdomain.HostingOriginHostname](),
-		Lineage:                  configdomain.NewLineage(),
+		HostingOriginHostname:    configdomain.ParseHostingOriginHostname(env.Get("GIT_TOWN_ORIGIN_HOSTNAME")),
+		Lineage:                  configdomain.NewLineage(), // not loaded from env vars
 		MainBranch:               None[gitdomain.LocalBranchName](),
 		NewBranchType:            None[configdomain.NewBranchType](),
 		ObservedRegex:            None[configdomain.ObservedRegex](),
