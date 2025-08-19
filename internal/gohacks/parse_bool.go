@@ -9,7 +9,7 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-func ParseBool(text, source string) (bool, error) {
+func ParseBool[T ~bool](text, source string) (T, error) { //nolint:ireturn
 	switch strings.ToLower(text) {
 	case "":
 		return false, fmt.Errorf(messages.ValueInvalid, source, text)
@@ -18,17 +18,17 @@ func ParseBool(text, source string) (bool, error) {
 	case "no", "n", "off", "disable", "disabled":
 		return false, nil
 	}
-	result, err := strconv.ParseBool(text)
+	parsed, err := strconv.ParseBool(text)
 	if err != nil {
 		return false, fmt.Errorf(messages.ValueInvalid, source, text)
 	}
-	return result, nil
+	return T(parsed), nil
 }
 
-func ParseBoolOpt(text, source string) (Option[bool], error) {
+func ParseBoolOpt[T ~bool](text, source string) (Option[T], error) {
 	if text == "" {
-		return None[bool](), nil
+		return None[T](), nil
 	}
-	result, err := ParseBool(text, source)
-	return Some(result), err
+	parsed, err := ParseBool[T](text, source)
+	return Some(parsed), err
 }

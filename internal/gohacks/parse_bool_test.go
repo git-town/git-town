@@ -8,6 +8,8 @@ import (
 	"github.com/shoenig/test/must"
 )
 
+type MyBool bool
+
 func TestParseBool(t *testing.T) {
 	t.Parallel()
 
@@ -15,7 +17,7 @@ func TestParseBool(t *testing.T) {
 		t.Parallel()
 		t.Run("valid inputs", func(t *testing.T) {
 			t.Parallel()
-			tests := map[string]bool{
+			tests := map[string]MyBool{
 				"y":        true,
 				"Y":        true,
 				"yes":      true,
@@ -36,7 +38,7 @@ func TestParseBool(t *testing.T) {
 				"0":        false,
 			}
 			for give, want := range tests {
-				have, err := gohacks.ParseBool(give, "test")
+				have, err := gohacks.ParseBool[MyBool](give, "test")
 				must.NoError(t, err)
 				must.Eq(t, want, have)
 			}
@@ -46,7 +48,7 @@ func TestParseBool(t *testing.T) {
 			t.Parallel()
 			tests := []string{"", "zonk"}
 			for _, give := range tests {
-				_, err := gohacks.ParseBool(give, "test")
+				_, err := gohacks.ParseBool[MyBool](give, "test")
 				must.Error(t, err)
 			}
 		})
@@ -54,32 +56,32 @@ func TestParseBool(t *testing.T) {
 
 	t.Run("ParseBoolOpt", func(t *testing.T) {
 		t.Parallel()
-		tests := map[string]Option[bool]{
-			"":         None[bool](),
-			"yes":      Some(true),
-			"Yes":      Some(true),
-			"YES":      Some(true),
-			"no":       Some(false),
-			"on":       Some(true),
-			"off":      Some(false),
-			"true":     Some(true),
-			"false":    Some(false),
-			"enable":   Some(true),
-			"enabled":  Some(true),
-			"disable":  Some(false),
-			"disabled": Some(false),
-			"1":        Some(true),
-			"0":        Some(false),
+		tests := map[string]Option[MyBool]{
+			"":         None[MyBool](),
+			"yes":      Some(MyBool(true)),
+			"Yes":      Some(MyBool(true)),
+			"YES":      Some(MyBool(true)),
+			"no":       Some(MyBool(false)),
+			"on":       Some(MyBool(true)),
+			"off":      Some(MyBool(false)),
+			"true":     Some(MyBool(true)),
+			"false":    Some(MyBool(false)),
+			"enable":   Some(MyBool(true)),
+			"enabled":  Some(MyBool(true)),
+			"disable":  Some(MyBool(false)),
+			"disabled": Some(MyBool(false)),
+			"1":        Some(MyBool(true)),
+			"0":        Some(MyBool(false)),
 		}
 		for give, want := range tests {
-			have, err := gohacks.ParseBoolOpt(give, "test")
+			have, err := gohacks.ParseBoolOpt[MyBool](give, "test")
 			must.NoError(t, err)
 			must.Eq(t, want, have)
 		}
 
 		t.Run("invalid input", func(t *testing.T) {
 			t.Parallel()
-			_, err := gohacks.ParseBoolOpt("zonk", "test")
+			_, err := gohacks.ParseBoolOpt[MyBool]("zonk", "test")
 			must.Error(t, err)
 		})
 	})
