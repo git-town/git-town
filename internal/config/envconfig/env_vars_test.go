@@ -7,34 +7,36 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestEnvVars(t *testing.T) {
+func TestEnviron(t *testing.T) {
 	t.Parallel()
 
 	t.Run("Get", func(t *testing.T) {
 		t.Parallel()
-		t.Run("lookup by name", func(t *testing.T) {
+		t.Run("contains the element", func(t *testing.T) {
 			t.Parallel()
-			envVars := envconfig.NewEnvVars([]string{"SYNC_TAGS=yes"})
-			have := envVars.Get("SYNC_TAGS")
-			must.EqOp(t, "yes", have)
+			env := envconfig.NewEnvVars([]string{
+				"GITHUB_TOKEN=github-token",
+				"GITHUB_AUTH_TOKEN=github-auth-token",
+			})
+			have := env.Get("GITHUB_TOKEN")
+			must.EqOp(t, "github-token", have)
+			have = env.Get("GITHUB_AUTH_TOKEN")
+			must.EqOp(t, "github-auth-token", have)
 		})
 		t.Run("lookup by alternative name", func(t *testing.T) {
 			t.Parallel()
-			envVars := envconfig.NewEnvVars([]string{"SYNC_TAGS=yes"})
-			have := envVars.Get("OTHER_NAME", "OTHER_NAME_2", "SYNC_TAGS")
-			must.EqOp(t, "yes", have)
+			env := envconfig.NewEnvVars([]string{
+				"GITHUB_AUTH_TOKEN=github-auth-token",
+			})
+			have := env.Get("GITHUB_TOKEN", "GITHUB_AUTH_TOKEN")
+			must.EqOp(t, "github-auth-token", have)
 		})
-		t.Run("entry doesn't exist", func(t *testing.T) {
-			t.Parallel()
-			envVars := envconfig.NewEnvVars([]string{"SYNC_TAGS=yes"})
-			have := envVars.Get("OTHER_NAME")
-			must.EqOp(t, "", have)
-		})
-		t.Run("empty entry", func(t *testing.T) {
-			t.Parallel()
-			envVars := envconfig.NewEnvVars([]string{"SYNC_TAGS="})
-			have := envVars.Get("SYNC_TAGS")
-			must.EqOp(t, "", have)
-		})
+	})
+
+	t.Run("does not contain the element", func(t *testing.T) {
+		t.Parallel()
+		env := envconfig.NewEnvVars([]string{})
+		have := env.Get("NON_EXISTING")
+		must.EqOp(t, "", have)
 	})
 }
