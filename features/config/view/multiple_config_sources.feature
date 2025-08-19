@@ -104,6 +104,7 @@ Feature: show the configuration
         ship strategy: squash-merge
 
       Sync:
+        auto-resolve phantom conflicts: yes
         run pre-push hook: yes
         feature sync strategy: merge
         perennial sync strategy: ff-only

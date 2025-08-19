@@ -40,6 +40,7 @@ Feature: display information from config file
       strategy = "squash-merge"
 
       [sync]
+      auto-resolve = false
       feature-strategy = "rebase"
       perennial-strategy = "ff-only"
       prototype-strategy = "compress"
@@ -87,6 +88,7 @@ Feature: display information from config file
         ship strategy: squash-merge
 
       Sync:
+        auto-resolve phantom conflicts: no
         run pre-push hook: yes
         feature sync strategy: rebase
         perennial sync strategy: ff-only
