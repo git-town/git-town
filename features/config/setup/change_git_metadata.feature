@@ -35,8 +35,8 @@ Feature: change existing information in Git metadata
       | sync perennial strategy     | down enter             |
       | sync prototype strategy     | down enter             |
       | sync upstream               | down enter             |
-      | detached                    | up enter               |
       | sync tags                   | down enter             |
+      | detached                    | up enter               |
       | share-new-branches          | down enter             |
       | push hook                   | down enter             |
       | ship strategy               | down down enter        |
