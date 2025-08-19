@@ -91,7 +91,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	offline, errOffline := configdomain.ParseOffline(snapshot[configdomain.KeyOffline], configdomain.KeyOffline.String())
 	perennialRegex, errPerennialRegex := configdomain.ParsePerennialRegex(snapshot[configdomain.KeyPerennialRegex])
 	proposalsShowLineage, errProposalsShowLineage := forgedomain.ParseProposalsShowLineage(snapshot[configdomain.KeyProposalsShowLineage])
-	pushHook, errPushHook := configdomain.ParsePushHook(snapshot[configdomain.KeyPushHook], configdomain.KeyPushHook)
+	pushHook, errPushHook := configdomain.ParsePushHook(snapshot[configdomain.KeyPushHook], configdomain.KeyPushHook.String())
 	shareNewBranches, errShareNewBranches := configdomain.ParseShareNewBranches(snapshot[configdomain.KeyShareNewBranches], configdomain.KeyShareNewBranches)
 	shipDeleteTrackingBranch, errShipDeleteTrackingBranch := configdomain.ParseShipDeleteTrackingBranch(snapshot[configdomain.KeyShipDeleteTrackingBranch], configdomain.KeyShipDeleteTrackingBranch)
 	shipStrategy, errShipStrategy := configdomain.ParseShipStrategy(snapshot[configdomain.KeyShipStrategy])
