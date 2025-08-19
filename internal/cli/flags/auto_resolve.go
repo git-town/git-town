@@ -14,7 +14,7 @@ func AutoResolve() (AddFunc, ReadAutoResolveFlagFunc) {
 		// Defining a string flag here, even though this is technically a bool flag,
 		// so that we can parse it using our expanded bool syntax.
 		flags := cmd.Flags()
-		flags.Bool("[no-]"+autoResolveLong, true, "whether to auto-resolve phantom merge conflicts")
+		flags.Bool(autoResolveLong, true, "whether to auto-resolve phantom merge conflicts")
 		noText := "no-" + autoResolveLong
 		flags.Bool(noText, false, "")
 		flags.MarkHidden(noText)
