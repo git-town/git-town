@@ -17,7 +17,9 @@ func AutoResolve() (AddFunc, ReadAutoResolveFlagFunc) {
 		flags.Bool(autoResolveLong, true, "whether to auto-resolve phantom merge conflicts")
 		noText := "no-" + autoResolveLong
 		flags.Bool(noText, false, "")
-		flags.MarkHidden(noText)
+		if err := flags.MarkHidden(noText); err != nil {
+			panic(err)
+		}
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.AutoResolve], error) {
 		if !cmd.Flags().Changed(autoResolveLong) {
