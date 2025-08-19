@@ -27,6 +27,7 @@ Feature: a global API token of another forge exists
       | sync prototype strategy     | enter           |                                             |
       | sync upstream               | enter           |                                             |
       | sync tags                   | enter           |                                             |
+      | detached                    | enter           |                                             |
       | share new branches          | enter           |                                             |
       | push hook                   | enter           |                                             |
       | ship strategy               | enter           |                                             |
