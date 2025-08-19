@@ -26,7 +26,7 @@ func AutoResolve() (AddFunc, ReadAutoResolveFlagFunc) {
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.AutoResolve], error) {
 		flags := cmd.Flags()
 		if flags.Changed(autoResolveLong) {
-			value, err := cmd.Flags().GetBool(autoResolveLong)
+			value, err := flags.GetBool(autoResolveLong)
 			if err != nil {
 				return None[configdomain.AutoResolve](), err
 			}
