@@ -3,7 +3,8 @@ package envconfig
 import "strings"
 
 // Environment is an immutable representation of all environment variables.
-// It allows lookup by name in O(1) time.
+// It allows efficient lookup of environment variables in O(1) time
+// by multiple names.
 type Environment struct {
 	data map[string]string
 }
