@@ -16,6 +16,7 @@ const (
 	bitbucketUserName        = "GIT_TOWN_BITBUCKET_USERNAME"
 	codebergToken            = "GIT_TOWN_CODEBERG_TOKEN"
 	contributionRegex        = "GIT_TOWN_CONTRIBUTION_REGEX"
+	detached                 = "GIT_TOWN_DETACHED"
 	devRemote                = "GIT_TOWN_DEV_REMOTE"
 	dryRun                   = "GIT_TOWN_DRY_RUN"
 	featureRegex             = "GIT_TOWN_FEATURE_REGEX"
@@ -49,6 +50,7 @@ const (
 func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	autoResolve, errAutoResolve := gohacks.ParseBoolOpt[configdomain.AutoResolve](env.Get(autoResolve), autoResolve)
 	contributionRegex, errContribRegex := configdomain.ParseContributionRegex(env.Get(contributionRegex))
+	detached, errDetached := gohacks.ParseBoolOpt[configdomain.Detached](env.Get(detached), detached)
 	dryRun, errDryRun := gohacks.ParseBoolOpt[configdomain.DryRun](env.Get(dryRun), dryRun)
 	featureRegex, errFeatureRegex := configdomain.ParseFeatureRegex(env.Get(featureRegex))
 	forgeType, errForgeType := forgedomain.ParseForgeType(env.Get(forgeType))
@@ -73,6 +75,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	err := cmp.Or(
 		errAutoResolve,
 		errContribRegex,
+		errDetached,
 		errDryRun,
 		errFeatureRegex,
 		errForgeType,
@@ -103,6 +106,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{}, // not loaded from env vars
 		CodebergToken:            forgedomain.ParseCodebergToken(env.Get(codebergToken)),
 		ContributionRegex:        contributionRegex,
+		Detached:                 detached,
 		DevRemote:                gitdomain.NewRemote(env.Get(devRemote)),
 		DryRun:                   dryRun,
 		FeatureRegex:             featureRegex,
