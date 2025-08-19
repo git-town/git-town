@@ -33,7 +33,7 @@ Feature: remove an existing forge type override
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                              |
-      | git config git-town.detached true                    |
+      | git config git-town.detached false                   |
       | git config git-town.new-branch-type feature          |
       | git config --unset git-town.forge-type               |
       | git config git-town.unknown-branch-type feature      |
