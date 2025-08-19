@@ -22,6 +22,7 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 	forgeType, errForgeType := forgedomain.ParseForgeType(env.Get("GIT_TOWN_FORGE_TYPE"))
 	githubConnectorType, errGitHubConnectorType := forgedomain.ParseGitHubConnectorType(env.Get("GIT_TOWN_GITHUB_CONNECTOR_TYPE"))
 	gitlabConnectorType, errGitLabConnectorType := forgedomain.ParseGitLabConnectorType(env.Get("GIT_TOWN_GITLAB_CONNECTOR_TYPE"))
+	newBranchType, errNewBranchType := configdomain.ParseBranchType(env.Get("GIT_TOWN_NEW_BRANCH_TYPE"))
 	err := cmp.Or(
 		errAutoResolve,
 		errContribRegex,
@@ -30,6 +31,7 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 		errForgeType,
 		errGitHubConnectorType,
 		errGitLabConnectorType,
+		errNewBranchType,
 	)
 	return configdomain.PartialConfig{
 		Aliases:                  configdomain.Aliases{}, // aliases aren't loaded from env vars
@@ -53,7 +55,7 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 		HostingOriginHostname:    configdomain.ParseHostingOriginHostname(env.Get("GIT_TOWN_ORIGIN_HOSTNAME")),
 		Lineage:                  configdomain.NewLineage(), // not loaded from env vars
 		MainBranch:               gitdomain.NewLocalBranchNameOption(env.Get("GIT_TOWN_MAIN_BRANCH")),
-		NewBranchType:            None[configdomain.NewBranchType](),
+		NewBranchType:            configdomain.NewBranchTypeOpt(newBranchType),
 		ObservedRegex:            None[configdomain.ObservedRegex](),
 		Offline:                  None[configdomain.Offline](),
 		PerennialBranches:        gitdomain.LocalBranchNames{},
