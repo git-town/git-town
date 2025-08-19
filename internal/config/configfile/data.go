@@ -63,6 +63,7 @@ type Ship struct {
 
 type Sync struct {
 	AutoResolve       *bool   `toml:"auto-resolve"`
+	Detached          *bool   `toml:"detached"`
 	FeatureStrategy   *string `toml:"feature-strategy"`
 	PerennialStrategy *string `toml:"perennial-strategy"`
 	PrototypeStrategy *string `toml:"prototype-strategy"`
