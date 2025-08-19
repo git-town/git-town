@@ -81,6 +81,7 @@ func proposeCommand() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve: autoResolve,
+				Detached:    None[configdomain.Detached](),
 				DryRun:      dryRun,
 				Verbose:     verbose,
 			})

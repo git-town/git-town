@@ -70,6 +70,7 @@ func Cmd() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve: None[configdomain.AutoResolve](),
+				Detached:    None[configdomain.Detached](),
 				DryRun:      dryRun,
 				Verbose:     verbose,
 			})
@@ -177,7 +178,6 @@ func executeShip(args executeShipArgs) error {
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  sharedData.config,
 		Connector:               sharedData.connector,
-		Detached:                false,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,

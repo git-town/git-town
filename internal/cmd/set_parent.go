@@ -76,6 +76,7 @@ func setParentCommand() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve: autoResolve,
+				Detached:    None[configdomain.Detached](),
 				DryRun:      None[configdomain.DryRun](),
 				Verbose:     verbose,
 			})

@@ -106,6 +106,7 @@ func prependCommand() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve: autoResolve,
+				Detached:    Some(detached),
 				DryRun:      dryRun,
 				Verbose:     verbose,
 			})
@@ -115,7 +116,6 @@ func prependCommand() *cobra.Command {
 				cliConfig:     cliConfig,
 				commit:        commit,
 				commitMessage: commitMessage,
-				detached:      detached,
 				proposalBody:  bodyText,
 				proposalTitle: title,
 				propose:       propose,
@@ -143,7 +143,6 @@ type prependArgs struct {
 	cliConfig     configdomain.PartialConfig
 	commit        configdomain.Commit
 	commitMessage Option[gitdomain.CommitMessage]
-	detached      configdomain.Detached
 	proposalBody  Option[gitdomain.ProposalBody]
 	proposalTitle Option[gitdomain.ProposalTitle]
 	propose       configdomain.Propose
@@ -185,7 +184,6 @@ func executePrepend(args prependArgs) error {
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               data.connector,
-		Detached:                args.detached,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -265,7 +263,6 @@ func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (data p
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
-		Detached:              args.detached,
 		Fetch:                 !repoStatus.OpenChanges && args.beam.IsFalse() && args.commit.IsFalse(),
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
@@ -338,7 +335,7 @@ func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (data p
 		}
 	}
 	branchNamesToSync := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(initialBranch)
-	if args.detached {
+	if repo.UnvalidatedConfig.NormalConfig.Detached {
 		branchNamesToSync = validatedConfig.RemovePerennials(branchNamesToSync)
 	}
 	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, branchNamesToSync...)

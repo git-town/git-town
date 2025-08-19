@@ -5,7 +5,6 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/config"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
@@ -24,7 +23,6 @@ type ExecuteArgs struct {
 	CommandsCounter  Mutable[gohacks.Counter]
 	Config           config.ValidatedConfig
 	Connector        Option[forgedomain.Connector]
-	Detached         configdomain.Detached
 	FinalMessages    stringslice.Collector
 	Frontend         subshelldomain.Runner
 	Git              git.Commands
@@ -53,7 +51,6 @@ func Execute(args ExecuteArgs) error {
 		Backend:       args.Backend,
 		Config:        args.Config,
 		Connector:     args.Connector,
-		Detached:      args.Detached,
 		FinalMessages: args.FinalMessages,
 		Frontend:      args.Frontend,
 		Git:           args.Git,

@@ -32,6 +32,7 @@ func killCommand() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve: None[configdomain.AutoResolve](),
+				Detached:    None[configdomain.Detached](),
 				DryRun:      dryRun,
 				Verbose:     verbose,
 			})

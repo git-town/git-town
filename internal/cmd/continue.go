@@ -43,6 +43,7 @@ func continueCmd() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve: None[configdomain.AutoResolve](),
+				Detached:    None[configdomain.Detached](),
 				DryRun:      None[configdomain.DryRun](),
 				Verbose:     verbose,
 			})
@@ -77,7 +78,6 @@ func executeContinue(cliConfig configdomain.PartialConfig) error {
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               data.connector,
-		Detached:                false,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -123,7 +123,6 @@ func determineContinueData(repo execute.OpenRepoResult) (data continueData, exit
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
-		Detached:              false,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,

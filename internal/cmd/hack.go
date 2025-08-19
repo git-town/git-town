@@ -99,6 +99,7 @@ func hackCmd() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve: autoResolve,
+				Detached:    Some(detached),
 				DryRun:      dryRun,
 				Verbose:     verbose,
 			})
@@ -108,7 +109,6 @@ func hackCmd() *cobra.Command {
 				cliConfig:     cliConfig,
 				commit:        commit,
 				commitMessage: commitMessage,
-				detached:      detached,
 				propose:       propose,
 				prototype:     prototype,
 			})
@@ -132,7 +132,6 @@ type hackArgs struct {
 	cliConfig     configdomain.PartialConfig
 	commit        configdomain.Commit
 	commitMessage Option[gitdomain.CommitMessage]
-	detached      configdomain.Detached
 	propose       configdomain.Propose
 	prototype     configdomain.Prototype
 }
@@ -226,7 +225,6 @@ func createFeatureBranch(args createFeatureBranchArgs) error {
 		CommandsCounter:         args.commandsCounter,
 		Config:                  args.appendData.config,
 		Connector:               args.appendData.connector,
-		Detached:                args.appendData.detached,
 		FinalMessages:           args.finalMessages,
 		Frontend:                args.frontend,
 		Git:                     args.git,
@@ -279,7 +277,6 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data hackDat
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
-		Detached:              args.detached,
 		Fetch:                 len(args.argv) == 1 && !repoStatus.OpenChanges && args.beam.IsFalse() && args.commit.IsFalse(),
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
@@ -356,7 +353,7 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data hackDat
 		return data, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	branchNamesToSync := gitdomain.LocalBranchNames{validatedConfig.ValidatedConfigData.MainBranch}
-	if args.detached {
+	if validatedConfig.NormalConfig.Detached {
 		branchNamesToSync = validatedConfig.RemovePerennials(branchNamesToSync)
 	}
 	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, branchNamesToSync...)
@@ -390,7 +387,6 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data hackDat
 		commitsToBeam:             commitsToBeam,
 		config:                    validatedConfig,
 		connector:                 connector,
-		detached:                  args.detached,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             initialBranch,
 		initialBranchInfo:         initialBranchInfo,
