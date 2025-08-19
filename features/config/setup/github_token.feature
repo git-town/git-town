@@ -85,6 +85,7 @@ Feature: enter the GitHub API token
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config git-town.github-token gh-tok              |
+      | git config git-town.detached true                    |
       | git config git-town.new-branch-type feature          |
       | git config git-town.forge-type github                |
       | git config git-town.github-connector api             |
@@ -134,6 +135,7 @@ Feature: enter the GitHub API token
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config --unset git-town.github-token             |
+      | git config git-town.detached true                    |
       | git config git-town.new-branch-type feature          |
       | git config git-town.github-connector api             |
       | git config git-town.unknown-branch-type feature      |
@@ -149,6 +151,7 @@ Feature: enter the GitHub API token
     And local Git setting "git-town.forge-type" still doesn't exist
     And local Git setting "git-town.github-token" now doesn't exist
 
+  @this
   Scenario: store GitHub token globally
     Given my repo's "origin" remote is "git@github.com:git-town/git-town.git"
     When I run "git-town config setup" and enter into the dialog:
