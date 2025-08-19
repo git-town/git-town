@@ -2,7 +2,6 @@ package flags
 
 import (
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/gohacks"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/spf13/cobra"
 )
@@ -14,17 +13,22 @@ func AutoResolve() (AddFunc, ReadAutoResolveFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		// Defining a string flag here, even though this is technically a bool flag,
 		// so that we can parse it using our expanded bool syntax.
-		cmd.Flags().StringP(autoResolveLong, "", "yes", "whether to auto-resolve phantom merge conflicts")
+		flags := cmd.Flags()
+		flags.Bool("[no-]"+autoResolveLong, true, "whether to auto-resolve phantom merge conflicts")
+		noText := "no-" + autoResolveLong
+		flags.Bool(noText, false, "")
+		flags.MarkHidden(noText)
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.AutoResolve], error) {
 		if !cmd.Flags().Changed(autoResolveLong) {
 			return None[configdomain.AutoResolve](), nil
 		}
-		text, err := cmd.Flags().GetString(autoResolveLong)
+		value, err := cmd.Flags().GetBool(autoResolveLong)
 		if err != nil {
 			return None[configdomain.AutoResolve](), err
 		}
-		return gohacks.ParseBoolOpt[configdomain.AutoResolve](text, autoResolveLong)
+
+		return Some(configdomain.AutoResolve(value)), nil
 	}
 	return addFlag, readFlag
 }
