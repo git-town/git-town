@@ -89,7 +89,7 @@ func walkCommand() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve: None[configdomain.AutoResolve](),
-				Detached:    None[configdomain.Detached](),
+				Detached:    Some(configdomain.Detached(true)),
 				DryRun:      dryRun,
 				Verbose:     verbose,
 			})
@@ -156,7 +156,6 @@ func executeWalk(args executeWalkArgs) error {
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               data.connector,
-		Detached:                true,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -215,7 +214,6 @@ func determineWalkData(repo execute.OpenRepoResult, all configdomain.AllBranches
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
-		Detached:              true,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
