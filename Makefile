@@ -2,7 +2,7 @@ RTA_VERSION = 0.17.0  # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
-RELEASE_VERSION := "21.4.2"
+RELEASE_VERSION := "21.4.3"
 GO_TEST_ARGS = LANG=C GOGC=off BROWSER=
 
 cuke: install  # runs all end-to-end tests in a way that looks nice during development
@@ -37,6 +37,7 @@ docs: install tools/node_modules  # tests the documentation
 	@tools/rta node tools/node_modules/.bin/text-runner --offline
 
 fix: tools/rta@${RTA_VERSION}  # runs all linters and auto-fixes
+	make --no-print-directory fix-optioncompare-in-tests
 	go run tools/format_unittests/format_unittests.go
 	go run tools/format_self/format_self.go
 	tools/rta gofumpt -l -w .
@@ -103,6 +104,9 @@ lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 
 alphavet:
 	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v internal/cmd)
+
+fix-optioncompare-in-tests:
+	@(cd tools/optioncompare_in_tests && go build) && ./tools/optioncompare_in_tests/optioncompare_in_tests github.com/git-town/git-town/v21/...
 
 lint-messages-sorted:
 	@(cd tools/messages_sorted && go build) && ./tools/messages_sorted/messages_sorted

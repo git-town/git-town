@@ -25,3 +25,8 @@ git config [--global] git-town.observed-regex '^renovate/'
 
 The optional `--global` flag applies this setting to all Git repositories on
 your local machine. When not present, the setting applies to the current repo.
+
+## environment variable
+
+You can configure the observed regex by setting the `GIT_TOWN_OBSERVED_REGEX`
+environment variable.

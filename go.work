@@ -8,6 +8,7 @@ use (
 	./tools/messages_sorted
 	./tools/messy_output
 	./tools/optioncompare
+	./tools/optioncompare_in_tests
 	./tools/print_config_exhaustive
 	./tools/stats_release
 	./tools/structs_sorted

@@ -26,7 +26,16 @@ func (self *RebaseAncestorLocal) Run(args shared.RunArgs) error {
 	} else {
 		branchToRebaseOnto = self.Ancestor.BranchName()
 	}
-	if commitsToRemove, hasCommitsToRemove := self.CommitsToRemove.Get(); hasCommitsToRemove {
+	commitsToRemove, hasCommitsToRemove := self.CommitsToRemove.Get()
+	ancestorSHA := None[gitdomain.SHA]()
+	if hasCommitsToRemove {
+		sha, err := args.Git.SHAForBranch(args.Backend, branchToRebaseOnto)
+		if err != nil {
+			return err
+		}
+		ancestorSHA = Some(sha)
+	}
+	if hasCommitsToRemove && !self.CommitsToRemove.Equal(ancestorSHA) {
 		// Here we rebase onto the new parent, while removing the commits that the parent had in the last run.
 		// This removes old versions of commits that were amended by the user.
 		// The new commits of the parent get added back during the rebase.

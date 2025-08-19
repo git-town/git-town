@@ -20,7 +20,7 @@ Feature: disable auto-resolution of phantom merge conflicts via CLI flag when pa
       | branch-2 | local    | branch-2 commit | file      | line 1 changed by branch-1\nline 2 changed by branch-2 |
     And origin ships the "branch-1" branch using the "squash-merge" ship-strategy
     And the current branch is "branch-2"
-    When I run "git-town sync --auto-resolve=0"
+    When I run "git-town sync --no-auto-resolve"
 
   Scenario: result
     Then Git Town runs the commands

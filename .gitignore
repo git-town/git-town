@@ -12,6 +12,7 @@ tools/lint_steps/lint_steps
 tools/messages_sorted/messages_sorted
 tools/messy_output/messy_output
 tools/optioncompare/optioncompare
+tools/optioncompare_in_tests/optioncompare_in_tests
 tools/print_config_exhaustive/print_config_exhaustive
 tools/stats_release/stats_release
 tools/structs_sorted/structs_sorted
