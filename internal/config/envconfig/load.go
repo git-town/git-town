@@ -9,12 +9,16 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-const autoResolve = "GITHUB_AUTO_RESOLVE"
+const (
+	autoResolve = "GITHUB_AUTO_RESOLVE"
+	dryRun      = "GIT_TOWN_DRY_RUN"
+)
 
 func Load(env Environment) (configdomain.PartialConfig, error) {
 	autoResolve, errAutoResolve := configdomain.ParseAutoResolve(env.Get(autoResolve), autoResolve)
 	contributionRegex, errContribRegex := configdomain.ParseContributionRegex(env.Get("GIT_TOWN_CONTRIBUTION_REGEX"))
-	err := cmp.Or(errAutoResolve, errContribRegex)
+	dryRun, errDryRun := configdomain.ParseDryRun(env.Get(dryRun), dryRun)
+	err := cmp.Or(errAutoResolve, errContribRegex, errDryRun)
 	return configdomain.PartialConfig{
 		Aliases:                  configdomain.Aliases{}, // aliases aren't loaded from env vars
 		AutoResolve:              autoResolve,
@@ -24,7 +28,7 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 		CodebergToken:            forgedomain.ParseCodebergToken(env.Get("GIT_TOWN_CODEBERG_TOKEN")),
 		ContributionRegex:        contributionRegex,
 		DevRemote:                gitdomain.NewRemote(env.Get("GIT_TOWN_DEV_REMOTE")),
-		DryRun:                   configdomain.DryRun,
+		DryRun:                   dryRun,
 		FeatureRegex:             None[configdomain.FeatureRegex](),
 		ForgeType:                None[forgedomain.ForgeType](),
 		GitHubConnectorType:      None[forgedomain.GitHubConnectorType](),
