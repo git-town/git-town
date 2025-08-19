@@ -16,6 +16,7 @@ const (
 	pushHook                 = "GIT_TOWN_PUSH_HOOK"
 	shareNewBranches         = "GIT_TOWN_SHARE_NEW_BRANCHES"
 	shipDeleteTrackingBranch = "GIT_TOWN_SHIP_DELETE_TRACKING_BRANCH"
+	syncTags                 = "GIT_TOWN_SYNC_TAGS"
 )
 
 func Load(env Environment) (configdomain.PartialConfig, error) {
@@ -38,6 +39,7 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 	syncFeatureStrategy, errSyncFeatureStrategy := configdomain.ParseSyncFeatureStrategy(env.Get("GIT_TOWN_SYNC_FEATURE_STRATEGY"))
 	syncPerennialStrategy, errSyncPerennialStrategy := configdomain.ParseSyncPerennialStrategy(env.Get("GIT_TOWN_SYNC_PERENNIAL_STRATEGY"))
 	syncPrototypeStrategy, errSyncPrototypeStrategy := configdomain.ParseSyncPrototypeStrategy(env.Get("GIT_TOWN_SYNC_PROTOTYPE_STRATEGY"))
+	syncTags, errSyncTags := configdomain.ParseSyncTags(env.Get(syncTags), syncTags)
 	err := cmp.Or(
 		errAutoResolve,
 		errContribRegex,
@@ -58,6 +60,7 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 		errSyncFeatureStrategy,
 		errSyncPerennialStrategy,
 		errSyncPrototypeStrategy,
+		errSyncTags,
 	)
 	return configdomain.PartialConfig{
 		Aliases:                  configdomain.Aliases{}, // aliases aren't loaded from env vars
@@ -94,7 +97,7 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 		SyncFeatureStrategy:      syncFeatureStrategy,
 		SyncPerennialStrategy:    syncPerennialStrategy,
 		SyncPrototypeStrategy:    syncPrototypeStrategy,
-		SyncTags:                 None[configdomain.SyncTags](),
+		SyncTags:                 syncTags,
 		SyncUpstream:             None[configdomain.SyncUpstream](),
 		UnknownBranchType:        None[configdomain.UnknownBranchType](),
 		Verbose:                  None[configdomain.Verbose](),
