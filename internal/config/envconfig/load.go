@@ -10,10 +10,11 @@ import (
 )
 
 const (
-	autoResolve = "GITHUB_AUTO_RESOLVE"
-	dryRun      = "GIT_TOWN_DRY_RUN"
-	offline     = "GIT_TOWN_OFFLINE"
-	pushHook    = "GIT_TOWN_PUSH_HOOK"
+	autoResolve      = "GITHUB_AUTO_RESOLVE"
+	dryRun           = "GIT_TOWN_DRY_RUN"
+	offline          = "GIT_TOWN_OFFLINE"
+	pushHook         = "GIT_TOWN_PUSH_HOOK"
+	shareNewBranches = "GIT_TOWN_SHARE_NEW_BRANCHES"
 )
 
 func Load(env Environment) (configdomain.PartialConfig, error) {
@@ -30,6 +31,7 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 	perennialRegex, errPerennialRegex := configdomain.ParsePerennialRegex(env.Get("GIT_TOWN_PERENNIAL_REGEX"))
 	proposalsShowLineage, errProposalsShowLineage := forgedomain.ParseProposalsShowLineage(env.Get("GIT_TOWN_PROPOSALS_SHOW_LINEAGE"))
 	pushHook, errPushHook := configdomain.ParsePushHook(env.Get(pushHook), pushHook)
+	shareNewBranches, errShareNewBranches := configdomain.ParseShareNewBranches(env.Get(shareNewBranches), shareNewBranches)
 	err := cmp.Or(
 		errAutoResolve,
 		errContribRegex,
@@ -44,6 +46,7 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 		errPerennialRegex,
 		errProposalsShowLineage,
 		errPushHook,
+		errShareNewBranches,
 	)
 	return configdomain.PartialConfig{
 		Aliases:                  configdomain.Aliases{}, // aliases aren't loaded from env vars
@@ -74,7 +77,7 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 		PerennialRegex:           perennialRegex,
 		ProposalsShowLineage:     proposalsShowLineage,
 		PushHook:                 pushHook,
-		ShareNewBranches:         None[configdomain.ShareNewBranches](),
+		ShareNewBranches:         shareNewBranches,
 		ShipDeleteTrackingBranch: None[configdomain.ShipDeleteTrackingBranch](),
 		ShipStrategy:             None[configdomain.ShipStrategy](),
 		SyncFeatureStrategy:      None[configdomain.SyncFeatureStrategy](),
