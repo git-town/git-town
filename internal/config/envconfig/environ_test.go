@@ -9,16 +9,14 @@ import (
 
 func TestEnviron(t *testing.T) {
 	t.Parallel()
-	t.Run("Env2Key", func(t *testing.T) {
+	t.Run("Get", func(t *testing.T) {
 		t.Parallel()
-		tests := map[string]string{
-			"GITHUB_TOKEN":          "github-token",
-			"GITHUB_AUTH_TOKEN":     "github-auth-token",
-			"GIT_TOWN_GITHUB_TOKEN": "git-town.github-token",
-		}
-		for give, want := range tests {
-			have := envconfig.Env2Key(give)
-			must.EqOp(t, want, have)
-		}
+		env := envconfig.NewEnvironment([]string{
+			"GITHUB_TOKEN=github-token",
+			"GITHUB_AUTH_TOKEN=github-auth-token",
+		})
+		have, has := env["GITHUB_TOKEN"]
+		must.True(t, has)
+		must.EqOp(t, "github-token", have)
 	})
 }

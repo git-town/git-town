@@ -7,7 +7,7 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-func Load(env ImmutableEnvironment) configdomain.PartialConfig {
+func Load(env Environment) configdomain.PartialConfig {
 	gitHubToken := GitHubAPIToken(env)
 	return configdomain.PartialConfig{
 		Aliases:                  configdomain.Aliases{},
