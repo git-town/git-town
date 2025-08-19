@@ -37,6 +37,7 @@ Feature: enter the GitHub API token
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config git-town.github-token gh-tok              |
+      | git config git-town.detached true                    |
       | git config git-town.new-branch-type feature          |
       | git config git-town.github-connector api             |
       | git config git-town.unknown-branch-type feature      |
