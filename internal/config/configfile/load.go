@@ -51,6 +51,8 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	var featureRegex Option[configdomain.FeatureRegex]
 	var forgeType Option[forgedomain.ForgeType]
 	var githubConnectorType Option[forgedomain.GitHubConnectorType]
+	var githubTokenScript Option[forgedomain.GitHubTokenScript]
+	var githubTokenType Option[forgedomain.GitHubTokenType]
 	var gitLabConnectorType Option[forgedomain.GitLabConnectorType]
 	var hostingOriginHostname Option[configdomain.HostingOriginHostname]
 	var mainBranch Option[gitdomain.LocalBranchName]
@@ -167,6 +169,17 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			githubConnectorType, err = forgedomain.ParseGitHubConnectorType(*data.Hosting.GitHubConnectorType)
 			ec.Check(err)
 		}
+		if data.Hosting.GitHubTokenScript != nil {
+			githubTokenScript = forgedomain.ParseGitHubTokenScript(*data.Hosting.GitHubTokenScript)
+			ec.Check(err)
+		}
+		if data.Hosting.GitHubTokenType != nil {
+			githubTokenType, err = forgedomain.ParseGitHubTokenType(*data.Hosting.GitHubTokenType)
+			ec.Check(err)
+		}
+		if data.Hosting.GitHubTokenScript != nil {
+			githubTokenScript = forgedomain.ParseGitHubTokenScript(*data.Hosting.GitHubTokenScript)
+		}
 		if data.Hosting.GitLabConnectorType != nil {
 			gitLabConnectorType, err = forgedomain.ParseGitLabConnectorType(*data.Hosting.GitLabConnectorType)
 			ec.Check(err)
@@ -243,6 +256,8 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		ForgeType:                forgeType,
 		GitHubConnectorType:      githubConnectorType,
 		GitHubToken:              None[forgedomain.GitHubToken](),
+		GitHubTokenScript:        githubTokenScript,
+		GitHubTokenType:          githubTokenType,
 		GitLabConnectorType:      gitLabConnectorType,
 		GitLabToken:              None[forgedomain.GitLabToken](),
 		GitUserEmail:             None[gitdomain.GitUserEmail](),

@@ -49,6 +49,8 @@ func TestSave(t *testing.T) {
 				AutoResolve:              Some(configdomain.AutoResolve(false)),
 				DevRemote:                Some(gitdomain.RemoteOrigin),
 				ForgeType:                asserts.NoError1(forgedomain.ParseForgeType("github")),
+				GitHubTokenType:          Some(forgedomain.GitHubTokenTypeScript),
+				GitHubTokenScript:        Some(forgedomain.GitHubTokenScript("op read op://vault/github/token")),
 				HostingOriginHostname:    configdomain.ParseHostingOriginHostname("forge"),
 				MainBranch:               Some(gitdomain.NewLocalBranchName("main")),
 				NewBranchType:            Some(configdomain.NewBranchType(configdomain.BranchTypePrototypeBranch)),
@@ -80,6 +82,8 @@ share-new-branches = "propose"
 [hosting]
 dev-remote = "origin"
 forge-type = "github"
+github-token-type = "script"
+github-token-script = "op read op://vault/github/token"
 origin-hostname = "forge"
 
 [propose]

@@ -82,7 +82,8 @@ EnterForgeData:
 	codebergToken := None[forgedomain.CodebergToken]()
 	giteaToken := None[forgedomain.GiteaToken]()
 	githubConnectorTypeOpt := None[forgedomain.GitHubConnectorType]()
-	githubTokenType := None[forgedomain.GitHubTokenType]()
+	githubTokenScriptOpt := None[forgedomain.GitHubTokenScript]()
+	githubTokenTypeOpt := None[forgedomain.GitHubTokenType]()
 	githubToken := None[forgedomain.GitHubToken]()
 	gitlabConnectorTypeOpt := None[forgedomain.GitLabConnectorType]()
 	gitlabToken := None[forgedomain.GitLabToken]()
@@ -106,14 +107,20 @@ EnterForgeData:
 			if githubConnectorType, has := githubConnectorTypeOpt.Get(); has {
 				switch githubConnectorType {
 				case forgedomain.GitHubConnectorTypeAPI:
-					githubTokenType, exit, err = enterGitHubTokenType(data)
+					githubTokenTypeOpt, exit, err = enterGitHubTokenType(data)
 					if err != nil || exit {
 						return emptyResult, exit, err
 					}
-					switch githubTokenType {
+					if githubTokenType, hasGitHubTokenType := githubTokenTypeOpt.Get(); hasGitHubTokenType {
+						switch githubTokenType {
+						case forgedomain.GitHubTokenTypeScript:
+							githubTokenScriptOpt, exit, err = enterGitHubTokenScript(data)
+						case forgedomain.GitHubTokenTypeEnter:
+							githubToken, exit, err = enterGitHubToken(data)
+						}
 					}
-					githubToken, exit, err = enterGitHubToken(data)
 				case forgedomain.GitHubConnectorTypeGh:
+					// nothing to enter here
 				}
 			}
 		case forgedomain.ForgeTypeGitLab:
@@ -223,6 +230,8 @@ EnterForgeData:
 		ForgeType:                enteredForgeType,
 		GitHubConnectorType:      githubConnectorTypeOpt,
 		GitHubToken:              githubToken,
+		GitHubTokenType:          githubTokenTypeOpt,
+		GitHubTokenScript:        githubTokenScriptOpt,
 		GitLabConnectorType:      gitlabConnectorTypeOpt,
 		GitLabToken:              gitlabToken,
 		GitUserEmail:             None[gitdomain.GitUserEmail](),
@@ -388,14 +397,25 @@ func enterGitHubToken(data Data) (Option[forgedomain.GitHubToken], dialogdomain.
 	})
 }
 
+func enterGitHubTokenScript(data Data) (Option[forgedomain.GitHubTokenScript], dialogdomain.Exit, error) {
+	if data.Config.File.GitHubTokenScript.IsSome() {
+		return None[forgedomain.GitHubTokenScript](), false, nil
+	}
+	return dialog.GitHubTokenScript(dialog.Args[forgedomain.GitHubTokenScript]{
+		Global: data.Config.GitGlobal.GitHubTokenScript,
+		Inputs: data.Inputs,
+		Local:  data.Config.GitLocal.GitHubTokenScript,
+	})
+}
+
 func enterGitHubTokenType(data Data) (Option[forgedomain.GitHubTokenType], dialogdomain.Exit, error) {
 	if data.Config.File.GitHubTokenType.IsSome() {
-		return None[forgedomain.GitHubToken](), false, nil
+		return None[forgedomain.GitHubTokenType](), false, nil
 	}
-	return dialog.GitHubToken(dialog.Args[forgedomain.GitHubToken]{
-		Global: data.Config.GitGlobal.GitHubToken,
+	return dialog.GitHubTokenType(dialog.Args[forgedomain.GitHubTokenType]{
+		Global: data.Config.GitGlobal.GitHubTokenType,
 		Inputs: data.Inputs,
-		Local:  data.Config.GitLocal.GitHubToken,
+		Local:  data.Config.GitLocal.GitHubTokenType,
 	})
 }
 

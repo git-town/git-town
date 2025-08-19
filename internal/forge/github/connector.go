@@ -16,6 +16,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/git/giturl"
 	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/subshell"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	"github.com/git-town/git-town/v21/pkg/colors"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -244,13 +245,20 @@ func DefaultProposalMessage(data forgedomain.ProposalData) string {
 }
 
 type NewConnectorArgs struct {
-	APIToken  Option[forgedomain.GitHubToken]
-	Log       print.Logger
-	RemoteURL giturl.Parts
+	APIToken    Option[forgedomain.GitHubToken]
+	TokenType   Option[forgedomain.GitHubTokenType]
+	TokenScript Option[forgedomain.GitHubTokenScript]
+	Log         print.Logger
+	Querier     subshelldomain.Querier
+	RemoteURL   giturl.Parts
 }
 
 func NewConnector(args NewConnectorArgs) (Connector, error) {
-	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: args.APIToken.String()})
+	token, err := determineGitHubAPIToken(args)
+	if err != nil {
+		return Connector{}, err
+	}
+	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: token.String()})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
 	githubClient := github.NewClient(httpClient)
 	if args.RemoteURL.Host != "github.com" {
@@ -275,6 +283,43 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 
 func RepositoryURL(hostNameWithStandardPort string, organization string, repository string) string {
 	return fmt.Sprintf("https://%s/%s/%s", hostNameWithStandardPort, organization, repository)
+}
+
+func determineGitHubAPIToken(args NewConnectorArgs) (Option[forgedomain.GitHubToken], error) {
+	result := None[forgedomain.GitHubToken]()
+	if tokenType, hasTokenType := args.TokenType.Get(); hasTokenType {
+		switch tokenType {
+		case forgedomain.GitHubTokenTypeEnter:
+			result = args.APIToken
+		case forgedomain.GitHubTokenTypeScript:
+			script, hasScript := args.TokenScript.Get()
+			if !hasScript {
+				return None[forgedomain.GitHubToken](), errors.New(`you have selected to load the GitHub API token via script, but no script is configured.\nPlease run "git-town config setup" or configure "git-town.github-token-scipt" manually.\nMore info at https://www.git-town.com/preferences/github-token-script.html`)
+			}
+			apiToken, err := loadGitHubAPIToken(script, args.Querier)
+			if err != nil {
+				return None[forgedomain.GitHubToken](), err
+			}
+			result = Some(apiToken)
+		}
+	}
+	return result, nil
+}
+
+func loadGitHubAPIToken(tokenScript forgedomain.GitHubTokenScript, querier subshelldomain.Querier) (forgedomain.GitHubToken, error) {
+	executable, args, err := subshell.Split(tokenScript.String())
+	if err != nil {
+		return "", fmt.Errorf("cannot split GitHub token script (%s): %w", tokenScript, err)
+	}
+	tokenText, err := querier.Query(executable, args...)
+	if err != nil {
+		return "", fmt.Errorf("error executing GitHub token script (%s): %w", tokenScript, err)
+	}
+	token, hasToken := forgedomain.ParseGitHubToken(tokenText).Get()
+	if !hasToken {
+		return "", fmt.Errorf("GitHub token script (%s) provided empty GitHub API token", tokenScript)
+	}
+	return token, nil
 }
 
 // parsePullRequest extracts standardized proposal data from the given GitHub pull-request.

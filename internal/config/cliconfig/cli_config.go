@@ -28,6 +28,8 @@ func New(args NewArgs) configdomain.PartialConfig {
 		ForgeType:                None[forgedomain.ForgeType](),
 		GitHubConnectorType:      None[forgedomain.GitHubConnectorType](),
 		GitHubToken:              None[forgedomain.GitHubToken](),
+		GitHubTokenScript:        None[forgedomain.GitHubTokenScript](),
+		GitHubTokenType:          None[forgedomain.GitHubTokenType](),
 		GitLabConnectorType:      None[forgedomain.GitLabConnectorType](),
 		GitLabToken:              None[forgedomain.GitLabToken](),
 		GitUserEmail:             None[gitdomain.GitUserEmail](),
