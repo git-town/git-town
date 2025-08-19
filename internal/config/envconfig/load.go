@@ -34,6 +34,8 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 	pushHook, errPushHook := configdomain.ParsePushHook(env.Get(pushHook), pushHook)
 	shareNewBranches, errShareNewBranches := configdomain.ParseShareNewBranches(env.Get(shareNewBranches), shareNewBranches)
 	shipDeleteTrackingBranch, errShipDeleteTrackingBranch := configdomain.ParseShipDeleteTrackingBranch(env.Get(shipDeleteTrackingBranch), shipDeleteTrackingBranch)
+	shipStrategy, errShipStrategy := configdomain.ParseShipStrategy(env.Get("GIT_TOWN_SHIP_STRATEGY"))
+	syncFeatureStrategy, errSyncFeatureStrategy := configdomain.ParseSyncFeatureStrategy(env.Get("GIT_TOWN_SYNC_FEATURE_STRATEGY"))
 	err := cmp.Or(
 		errAutoResolve,
 		errContribRegex,
@@ -50,6 +52,8 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 		errPushHook,
 		errShareNewBranches,
 		errShipDeleteTrackingBranch,
+		errShipStrategy,
+		errSyncFeatureStrategy,
 	)
 	return configdomain.PartialConfig{
 		Aliases:                  configdomain.Aliases{}, // aliases aren't loaded from env vars
@@ -82,8 +86,8 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 		PushHook:                 pushHook,
 		ShareNewBranches:         shareNewBranches,
 		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,
-		ShipStrategy:             None[configdomain.ShipStrategy](),
-		SyncFeatureStrategy:      None[configdomain.SyncFeatureStrategy](),
+		ShipStrategy:             shipStrategy,
+		SyncFeatureStrategy:      syncFeatureStrategy,
 		SyncPerennialStrategy:    None[configdomain.SyncPerennialStrategy](),
 		SyncPrototypeStrategy:    None[configdomain.SyncPrototypeStrategy](),
 		SyncTags:                 None[configdomain.SyncTags](),
