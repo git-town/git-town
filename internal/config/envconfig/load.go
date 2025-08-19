@@ -18,7 +18,8 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 	autoResolve, errAutoResolve := configdomain.ParseAutoResolve(env.Get(autoResolve), autoResolve)
 	contributionRegex, errContribRegex := configdomain.ParseContributionRegex(env.Get("GIT_TOWN_CONTRIBUTION_REGEX"))
 	dryRun, errDryRun := configdomain.ParseDryRun(env.Get(dryRun), dryRun)
-	err := cmp.Or(errAutoResolve, errContribRegex, errDryRun)
+	featureRegex, errFeatureRegex := configdomain.ParseFeatureRegex(env.Get("GIT_TOWN_FEATURE_REGEX"))
+	err := cmp.Or(errAutoResolve, errContribRegex, errDryRun, errFeatureRegex)
 	return configdomain.PartialConfig{
 		Aliases:                  configdomain.Aliases{}, // aliases aren't loaded from env vars
 		AutoResolve:              autoResolve,
@@ -29,7 +30,7 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 		ContributionRegex:        contributionRegex,
 		DevRemote:                gitdomain.NewRemote(env.Get("GIT_TOWN_DEV_REMOTE")),
 		DryRun:                   dryRun,
-		FeatureRegex:             None[configdomain.FeatureRegex](),
+		FeatureRegex:             featureRegex,
 		ForgeType:                None[forgedomain.ForgeType](),
 		GitHubConnectorType:      None[forgedomain.GitHubConnectorType](),
 		GitHubToken:              forgedomain.ParseGitHubToken(env.Get("GIT_TOWN_GITHUB_TOKEN", "GITHUB_TOKEN", "GITHUB_AUTH_TOKEN")),
