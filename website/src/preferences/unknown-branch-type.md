@@ -50,4 +50,4 @@ your machine. Without it, the setting applies only to the current repository.
 ## environment variable
 
 You can configure the branch type Git Town should assume for unknown existing
-branches by setting the `GIT_TOWN_SYNC_FEATURE_STRATEGY` environment variable.
+branches by setting the `GIT_TOWN_UNKNOWN_BRANCH_TYPE` environment variable.
