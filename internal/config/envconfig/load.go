@@ -47,9 +47,9 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 		GitHubToken:              forgedomain.ParseGitHubToken(env.Get("GIT_TOWN_GITHUB_TOKEN", "GITHUB_TOKEN", "GITHUB_AUTH_TOKEN")),
 		GitLabConnectorType:      gitlabConnectorType,
 		GitLabToken:              forgedomain.ParseGitLabToken(env.Get("GIT_TOWN_GITLAB_TOKEN")),
-		GitUserEmail:             None[gitdomain.GitUserEmail](),
-		GitUserName:              None[gitdomain.GitUserName](),
-		GiteaToken:               None[forgedomain.GiteaToken](),
+		GitUserEmail:             None[gitdomain.GitUserEmail](), // not loaded from env vars
+		GitUserName:              None[gitdomain.GitUserName](),  // not loaded from env vars
+		GiteaToken:               forgedomain.ParseGiteaToken(env.Get("GIT_TOWN_GITEA_TOKEN")),
 		HostingOriginHostname:    None[configdomain.HostingOriginHostname](),
 		Lineage:                  configdomain.NewLineage(),
 		MainBranch:               None[gitdomain.LocalBranchName](),
