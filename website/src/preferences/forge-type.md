@@ -40,3 +40,8 @@ git config [--global] git-town.forge-type <value>
 
 The optional `--global` flag applies this setting to all Git repositories on
 your machine. Without it, this setting applies to the current Git repo.
+
+## environment variable
+
+You can configure the forge type by setting the `GIT_TOWN_FORGE_TYPE`
+environment variable.

@@ -33,3 +33,8 @@ git config [--global] git-town.auto-resolve <true|false>
 
 The optional `--global` flag applies this setting to all Git repositories on
 your machine. Without it, the setting applies only to the current repository.
+
+## environment variable
+
+You can configure auto-resolving of phantom merge conflicts by setting the
+`GIT_TOWN_AUTO_RESOLVE` environment variable.

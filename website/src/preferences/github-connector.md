@@ -35,3 +35,8 @@ git config [--global] git-town.github-connector <api|gh>
 
 The optional `--global` flag applies this setting to all Git repositories on
 your machine. Without it, the setting applies only to the current repository.
+
+## environment variable
+
+You can configure the GithubConnector by setting the `GIT_TOWN_GITHUB_CONNECTOR`
+environment variable.

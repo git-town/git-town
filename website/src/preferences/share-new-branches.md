@@ -29,3 +29,8 @@ git config [--global] git-town.share-new-branches <push|propose>
 
 The optional `--global` flag applies this setting to all Git repositories on
 your machine. Without it, this setting applies to the current Git repo.
+
+## environment variable
+
+You can configure how new branches get shared by setting the
+`GIT_TOWN_SHARE_NEW_BRANCHES` environment variable.

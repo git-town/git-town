@@ -32,3 +32,8 @@ git config [--global] git-town.ship-delete-tracking-branch <true|false>
 
 The optional `--global` flag applies this setting to all Git repositories on
 your machine. Without it, the setting applies only to the current repository.
+
+## environment variable
+
+You can configure whether ship deletes the tracking branch by setting the
+`GIT_TOWN_SHIP_DELETE_TRACKING_BRANCH` environment variable.

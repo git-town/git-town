@@ -25,3 +25,8 @@ git config [--global] git-town.dev-remote <remote name>
 
 The optional `--global` flag applies this setting to all Git repositories on
 your machine. Without it, the setting applies only to the current repository.
+
+## environment variable
+
+You can configure the development remote by setting the `GIT_TOWN_DEV_REMOTE`
+environment variable.

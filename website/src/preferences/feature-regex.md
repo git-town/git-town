@@ -24,3 +24,8 @@ git config [--global] git-town.feature-regex '^user-.*'
 
 The optional `--global` flag applies this setting to all Git repositories on
 your local machine. When not present, the setting applies to the current repo.
+
+## environment variable
+
+You can configure the feature regex by setting the `GIT_TOWN_FEATURE_REGEX`
+environment variable.
