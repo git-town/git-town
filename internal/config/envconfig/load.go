@@ -11,7 +11,9 @@ import (
 )
 
 const (
-	autoResolve              = "GITHUB_AUTO_RESOLVE"
+	autoResolve              = "GIT_TOWN_GITHUB_AUTO_RESOLVE"
+	bitbucketAppPassword     = "GIT_TOWN_BITBUCKET_APP_PASSWORD"
+	bitbucketUserName        = "GIT_TOWN_BITBUCKET_USERNAME"
 	contributionRegex        = "GIT_TOWN_CONTRIBUTION_REGEX"
 	dryRun                   = "GIT_TOWN_DRY_RUN"
 	featureRegex             = "GIT_TOWN_FEATURE_REGEX"
@@ -27,8 +29,12 @@ const (
 	shareNewBranches         = "GIT_TOWN_SHARE_NEW_BRANCHES"
 	shipDeleteTrackingBranch = "GIT_TOWN_SHIP_DELETE_TRACKING_BRANCH"
 	shipStrategy             = "GIT_TOWN_SHIP_STRATEGY"
+	syncFeatureStrategy      = "GIT_TOWN_SYNC_FEATURE_STRATEGY"
+	syncPerennialStrategy    = "GIT_TOWN_SYNC_PERENNIAL_STRATEGY"
+	syncPrototypeStrategy    = "GIT_TOWN_SYNC_PROTOTYPE_STRATEGY"
 	syncTags                 = "GIT_TOWN_SYNC_TAGS"
 	syncUpstream             = "GIT_TOWN_SYNC_UPSTREAM"
+	unknownBranchType        = "GIT_TOWN_UNKNOWN_BRANCH_TYPE"
 	verbose                  = "GIT_TOWN_VERBOSE"
 )
 
@@ -49,12 +55,12 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 	shareNewBranches, errShareNewBranches := configdomain.ParseShareNewBranches(env.Get(shareNewBranches), shareNewBranches)
 	shipDeleteTrackingBranch, errShipDeleteTrackingBranch := gohacks.ParseBoolOpt[configdomain.ShipDeleteTrackingBranch](env.Get(shipDeleteTrackingBranch), shipDeleteTrackingBranch)
 	shipStrategy, errShipStrategy := configdomain.ParseShipStrategy(env.Get(shipStrategy))
-	syncFeatureStrategy, errSyncFeatureStrategy := configdomain.ParseSyncFeatureStrategy(env.Get("GIT_TOWN_SYNC_FEATURE_STRATEGY"))
-	syncPerennialStrategy, errSyncPerennialStrategy := configdomain.ParseSyncPerennialStrategy(env.Get("GIT_TOWN_SYNC_PERENNIAL_STRATEGY"))
-	syncPrototypeStrategy, errSyncPrototypeStrategy := configdomain.ParseSyncPrototypeStrategy(env.Get("GIT_TOWN_SYNC_PROTOTYPE_STRATEGY"))
+	syncFeatureStrategy, errSyncFeatureStrategy := configdomain.ParseSyncFeatureStrategy(env.Get(syncFeatureStrategy))
+	syncPerennialStrategy, errSyncPerennialStrategy := configdomain.ParseSyncPerennialStrategy(env.Get(syncPerennialStrategy))
+	syncPrototypeStrategy, errSyncPrototypeStrategy := configdomain.ParseSyncPrototypeStrategy(env.Get(syncPrototypeStrategy))
 	syncTags, errSyncTags := gohacks.ParseBoolOpt[configdomain.SyncTags](env.Get(syncTags), syncTags)
 	syncUpstream, errSyncUpstream := gohacks.ParseBoolOpt[configdomain.SyncUpstream](env.Get(syncUpstream), syncUpstream)
-	unknownBranchType, errUnknownBranchType := configdomain.ParseBranchType(env.Get("GIT_TOWN_UNKNOWN_BRANCH_TYPE"))
+	unknownBranchType, errUnknownBranchType := configdomain.ParseBranchType(env.Get(unknownBranchType))
 	verbose, errVerbose := gohacks.ParseBoolOpt[configdomain.Verbose](env.Get(verbose), verbose)
 	err := cmp.Or(
 		errAutoResolve,
@@ -84,8 +90,8 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 	return configdomain.PartialConfig{
 		Aliases:                  configdomain.Aliases{}, // aliases aren't loaded from env vars
 		AutoResolve:              autoResolve,
-		BitbucketAppPassword:     forgedomain.ParseBitbucketAppPassword(env.Get("GIT_TOWN_BITBUCKET_APP_PASSWORD")),
-		BitbucketUsername:        forgedomain.ParseBitbucketUsername(env.Get("GIT_TOWN_BITBUCKET_USERNAME")),
+		BitbucketAppPassword:     forgedomain.ParseBitbucketAppPassword(env.Get(bitbucketAppPassword)),
+		BitbucketUsername:        forgedomain.ParseBitbucketUsername(env.Get(bitbucketUserName)),
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{}, // not loaded from env vars
 		CodebergToken:            forgedomain.ParseCodebergToken(env.Get("GIT_TOWN_CODEBERG_TOKEN")),
 		ContributionRegex:        contributionRegex,
