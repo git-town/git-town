@@ -1,6 +1,9 @@
 package envconfig
 
 import (
+	"os"
+	"strings"
+
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
@@ -8,9 +11,10 @@ import (
 )
 
 func Load() configdomain.PartialConfig {
+	autoResolve := load(configdomain.KeyAutoResolve, configdomain.ParseAutoResolve)
 	gitHubToken := GitHubAPIToken()
 	return configdomain.PartialConfig{
-		Aliases:                  configdomain.Aliases{},
+		Aliases:                  configdomain.Aliases{}, // aliases aren't loaded from env vars
 		AutoResolve:              None[configdomain.AutoResolve](),
 		BitbucketAppPassword:     None[forgedomain.BitbucketAppPassword](),
 		BitbucketUsername:        None[forgedomain.BitbucketUsername](),
@@ -49,4 +53,17 @@ func Load() configdomain.PartialConfig {
 		UnknownBranchType:        None[configdomain.UnknownBranchType](),
 		Verbose:                  None[configdomain.Verbose](),
 	}
+}
+
+func load[T any](key configdomain.Key, parser func(string) (Option[T], error)) (Option[T], error) {
+	envName := Key2Env(key)
+	value := os.Getenv(envName)
+	return parser(value)
+}
+
+func Key2Env(key configdomain.Key) string {
+	result := strings.ToUpper(key.String())
+	result = strings.ReplaceAll(result, ".", "_")
+	result = strings.ReplaceAll(result, "-", "_")
+	return result
 }
