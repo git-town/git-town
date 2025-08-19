@@ -12,15 +12,15 @@ Feature: ask for information not provided by the config file
       [branches]
       main = "main"
       perennials = ["public"]
-
+      
       [hosting]
       dev-remote = "something"
       forge-type = "github"
       origin-hostname = "github.com"
-
+      
       [ship]
       delete-tracking-branch = false
-
+      
       [sync]
       tags = false
       upstream = false
@@ -50,6 +50,7 @@ Feature: ask for information not provided by the config file
     Then Git Town runs the commands
       | COMMAND                                             |
       | git config git-town.github-token gh-token           |
+      | git config git-town.detached false                  |
       | git config git-town.new-branch-type feature         |
       | git config git-town.github-connector api            |
       | git config git-town.perennial-branches branch-1     |
