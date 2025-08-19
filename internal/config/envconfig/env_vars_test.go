@@ -30,5 +30,11 @@ func TestEnvVars(t *testing.T) {
 			have := envVars.Get("OTHER_NAME")
 			must.EqOp(t, "", have)
 		})
+		t.Run("empty entry", func(t *testing.T) {
+			t.Parallel()
+			envVars := envconfig.NewEnvVars([]string{"SYNC_TAGS="})
+			have := envVars.Get("SYNC_TAGS")
+			must.EqOp(t, "", have)
+		})
 	})
 }
