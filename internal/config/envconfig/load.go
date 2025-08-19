@@ -1,16 +1,22 @@
 package envconfig
 
 import (
+	"cmp"
+
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-func Load(env Environment) configdomain.PartialConfig {
+const autoResolve = "GITHUB_AUTO_RESOLVE"
+
+func Load(env Environment) (configdomain.PartialConfig, error) {
+	autoResolve, errAutoResolve := configdomain.ParseAutoResolve(env.Get(autoResolve), autoResolve)
+	err := cmp.Or(errAutoResolve)
 	return configdomain.PartialConfig{
 		Aliases:                  configdomain.Aliases{}, // aliases aren't loaded from env vars
-		AutoResolve:              None[configdomain.AutoResolve](),
+		AutoResolve:              autoResolve,
 		BitbucketAppPassword:     None[forgedomain.BitbucketAppPassword](),
 		BitbucketUsername:        None[forgedomain.BitbucketUsername](),
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{},
@@ -47,5 +53,5 @@ func Load(env Environment) configdomain.PartialConfig {
 		SyncUpstream:             None[configdomain.SyncUpstream](),
 		UnknownBranchType:        None[configdomain.UnknownBranchType](),
 		Verbose:                  None[configdomain.Verbose](),
-	}
+	}, err
 }
