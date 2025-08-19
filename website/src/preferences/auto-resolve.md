@@ -36,5 +36,5 @@ your machine. Without it, the setting applies only to the current repository.
 
 ## environment variable
 
-You can configure auto-resolving by setting the `GIT_TOWN_AUTO_RESOLVE`
-environment variable.
+You can configure auto-resolving of phantom merge conflicts by setting the
+`GIT_TOWN_AUTO_RESOLVE` environment variable.
