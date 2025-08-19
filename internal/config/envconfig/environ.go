@@ -1,8 +1,6 @@
 package envconfig
 
-import (
-	"strings"
-)
+import "strings"
 
 // Environment is an immutable representation of all environment variables.
 // It allows lookup by name in O(1) time.

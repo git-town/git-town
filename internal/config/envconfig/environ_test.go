@@ -18,5 +18,10 @@ func TestEnviron(t *testing.T) {
 		have, has := env["GITHUB_TOKEN"]
 		must.True(t, has)
 		must.EqOp(t, "github-token", have)
+		have, has = env["GITHUB_AUTH_TOKEN"]
+		must.True(t, has)
+		must.EqOp(t, "github-auth-token", have)
+		_, has = env["NON_EXISTING"]
+		must.False(t, has)
 	})
 }
