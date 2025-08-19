@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/gohacks"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -22,29 +23,29 @@ const (
 )
 
 func Load(env Environment) (configdomain.PartialConfig, error) {
-	autoResolve, errAutoResolve := configdomain.ParseAutoResolve(env.Get(autoResolve), autoResolve)
+	autoResolve, errAutoResolve := gohacks.ParseBoolOpt[configdomain.AutoResolve](env.Get(autoResolve), autoResolve)
 	contributionRegex, errContribRegex := configdomain.ParseContributionRegex(env.Get("GIT_TOWN_CONTRIBUTION_REGEX"))
-	dryRun, errDryRun := configdomain.ParseDryRun(env.Get(dryRun), dryRun)
+	dryRun, errDryRun := gohacks.ParseBoolOpt[configdomain.DryRun](env.Get(dryRun), dryRun)
 	featureRegex, errFeatureRegex := configdomain.ParseFeatureRegex(env.Get("GIT_TOWN_FEATURE_REGEX"))
 	forgeType, errForgeType := forgedomain.ParseForgeType(env.Get("GIT_TOWN_FORGE_TYPE"))
 	githubConnectorType, errGitHubConnectorType := forgedomain.ParseGitHubConnectorType(env.Get("GIT_TOWN_GITHUB_CONNECTOR_TYPE"))
 	gitlabConnectorType, errGitLabConnectorType := forgedomain.ParseGitLabConnectorType(env.Get("GIT_TOWN_GITLAB_CONNECTOR_TYPE"))
 	newBranchType, errNewBranchType := configdomain.ParseBranchType(env.Get("GIT_TOWN_NEW_BRANCH_TYPE"))
 	observedRegex, errObservedRegex := configdomain.ParseObservedRegex(env.Get("GIT_TOWN_OBSERVED_REGEX"))
-	offline, errOffline := configdomain.ParseOffline(env.Get(offline), offline)
+	offline, errOffline := gohacks.ParseBoolOpt[configdomain.Offline](env.Get(offline), offline)
 	perennialRegex, errPerennialRegex := configdomain.ParsePerennialRegex(env.Get("GIT_TOWN_PERENNIAL_REGEX"))
 	proposalsShowLineage, errProposalsShowLineage := forgedomain.ParseProposalsShowLineage(env.Get("GIT_TOWN_PROPOSALS_SHOW_LINEAGE"))
-	pushHook, errPushHook := configdomain.ParsePushHook(env.Get(pushHook), pushHook)
+	pushHook, errPushHook := gohacks.ParseBoolOpt[configdomain.PushHook](env.Get(pushHook), pushHook)
 	shareNewBranches, errShareNewBranches := configdomain.ParseShareNewBranches(env.Get(shareNewBranches), shareNewBranches)
-	shipDeleteTrackingBranch, errShipDeleteTrackingBranch := configdomain.ParseShipDeleteTrackingBranch(env.Get(shipDeleteTrackingBranch), shipDeleteTrackingBranch)
+	shipDeleteTrackingBranch, errShipDeleteTrackingBranch := gohacks.ParseBoolOpt[configdomain.ShipDeleteTrackingBranch](env.Get(shipDeleteTrackingBranch), shipDeleteTrackingBranch)
 	shipStrategy, errShipStrategy := configdomain.ParseShipStrategy(env.Get("GIT_TOWN_SHIP_STRATEGY"))
 	syncFeatureStrategy, errSyncFeatureStrategy := configdomain.ParseSyncFeatureStrategy(env.Get("GIT_TOWN_SYNC_FEATURE_STRATEGY"))
 	syncPerennialStrategy, errSyncPerennialStrategy := configdomain.ParseSyncPerennialStrategy(env.Get("GIT_TOWN_SYNC_PERENNIAL_STRATEGY"))
 	syncPrototypeStrategy, errSyncPrototypeStrategy := configdomain.ParseSyncPrototypeStrategy(env.Get("GIT_TOWN_SYNC_PROTOTYPE_STRATEGY"))
-	syncTags, errSyncTags := configdomain.ParseSyncTags(env.Get(syncTags), syncTags)
-	syncUpstream, errSyncUpstream := configdomain.ParseSyncUpstream(env.Get(syncUpstream), syncUpstream)
+	syncTags, errSyncTags := gohacks.ParseBoolOpt[configdomain.SyncTags](env.Get(syncTags), syncTags)
+	syncUpstream, errSyncUpstream := gohacks.ParseBoolOpt[configdomain.SyncUpstream](env.Get(syncUpstream), syncUpstream)
 	unknownBranchType, errUnknownBranchType := configdomain.ParseBranchType(env.Get("GIT_TOWN_UNKNOWN_BRANCH_TYPE"))
-	verbose, errVerbose := configdomain.ParseVerbose(env.Get(verbose), verbose)
+	verbose, errVerbose := gohacks.ParseBoolOpt[configdomain.Verbose](env.Get(verbose), verbose)
 	err := cmp.Or(
 		errAutoResolve,
 		errContribRegex,
