@@ -9,6 +9,7 @@ import (
 
 func TestEnviron(t *testing.T) {
 	t.Parallel()
+
 	t.Run("Get", func(t *testing.T) {
 		t.Parallel()
 		t.Run("contains the element", func(t *testing.T) {
@@ -31,6 +32,7 @@ func TestEnviron(t *testing.T) {
 			must.EqOp(t, "github-auth-token", have)
 		})
 	})
+
 	t.Run("does not contain the element", func(t *testing.T) {
 		t.Parallel()
 		env := envconfig.NewEnvironment([]string{})

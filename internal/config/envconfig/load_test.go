@@ -10,6 +10,7 @@ import (
 
 func TestLoad(t *testing.T) {
 	t.Parallel()
+
 	t.Run("GitHub Token", func(t *testing.T) {
 		t.Parallel()
 		t.Run("none set", func(t *testing.T) {
