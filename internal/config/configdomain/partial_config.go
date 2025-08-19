@@ -74,7 +74,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		BranchTypeOverrides:      other.BranchTypeOverrides.Concat(self.BranchTypeOverrides),
 		CodebergToken:            other.CodebergToken.Or(self.CodebergToken),
 		ContributionRegex:        other.ContributionRegex.Or(self.ContributionRegex),
-		Detached: other.Detached.Or(self.Detached)
+		Detached:                 other.Detached.Or(self.Detached),
 		DevRemote:                other.DevRemote.Or(self.DevRemote),
 		DryRun:                   other.DryRun.Or(self.DryRun),
 		FeatureRegex:             other.FeatureRegex.Or(self.FeatureRegex),
