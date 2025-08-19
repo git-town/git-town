@@ -52,7 +52,7 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 		GiteaToken:               forgedomain.ParseGiteaToken(env.Get("GIT_TOWN_GITEA_TOKEN")),
 		HostingOriginHostname:    configdomain.ParseHostingOriginHostname(env.Get("GIT_TOWN_ORIGIN_HOSTNAME")),
 		Lineage:                  configdomain.NewLineage(), // not loaded from env vars
-		MainBranch:               None[gitdomain.LocalBranchName](),
+		MainBranch:               gitdomain.NewLocalBranchNameOption(env.Get("GIT_TOWN_MAIN_BRANCH")),
 		NewBranchType:            None[configdomain.NewBranchType](),
 		ObservedRegex:            None[configdomain.ObservedRegex](),
 		Offline:                  None[configdomain.Offline](),
