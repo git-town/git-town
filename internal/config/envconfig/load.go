@@ -42,6 +42,7 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 	syncPrototypeStrategy, errSyncPrototypeStrategy := configdomain.ParseSyncPrototypeStrategy(env.Get("GIT_TOWN_SYNC_PROTOTYPE_STRATEGY"))
 	syncTags, errSyncTags := configdomain.ParseSyncTags(env.Get(syncTags), syncTags)
 	syncUpstream, errSyncUpstream := configdomain.ParseSyncUpstream(env.Get(syncUpstream), syncUpstream)
+	unknownBranchType, errUnknownBranchType := configdomain.ParseBranchType(env.Get("GIT_TOWN_UNKNOWN_BRANCH_TYPE"))
 	err := cmp.Or(
 		errAutoResolve,
 		errContribRegex,
@@ -64,6 +65,7 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 		errSyncPrototypeStrategy,
 		errSyncTags,
 		errSyncUpstream,
+		errUnknownBranchType,
 	)
 	return configdomain.PartialConfig{
 		Aliases:                  configdomain.Aliases{}, // aliases aren't loaded from env vars
@@ -102,7 +104,7 @@ func Load(env Environment) (configdomain.PartialConfig, error) {
 		SyncPrototypeStrategy:    syncPrototypeStrategy,
 		SyncTags:                 syncTags,
 		SyncUpstream:             syncUpstream,
-		UnknownBranchType:        None[configdomain.UnknownBranchType](),
+		UnknownBranchType:        configdomain.UnknownBranchTypeOpt(unknownBranchType),
 		Verbose:                  None[configdomain.Verbose](),
 	}, err
 }
