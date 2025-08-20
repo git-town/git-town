@@ -178,11 +178,11 @@ EnterForgeData:
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	detached, exit, err := enterDetached(data)
+	syncTags, exit, err := enterSyncTags(data)
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	syncTags, exit, err := enterSyncTags(data)
+	detached, exit, err := enterDetached(data)
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}

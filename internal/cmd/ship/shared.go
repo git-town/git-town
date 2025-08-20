@@ -70,7 +70,6 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, shipStr
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
-		Detached:              false,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,

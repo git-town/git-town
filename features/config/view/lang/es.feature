@@ -66,6 +66,7 @@ Feature: show the configuration in Spanish
 
       Sync:
         auto-resolve phantom conflicts: yes
+        run detached: no
         run pre-push hook: yes
         feature sync strategy: merge
         perennial sync strategy: rebase

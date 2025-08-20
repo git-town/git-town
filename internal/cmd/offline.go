@@ -41,6 +41,7 @@ func offlineCmd() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve: None[configdomain.AutoResolve](),
+				Detached:    None[configdomain.Detached](),
 				DryRun:      None[configdomain.DryRun](),
 				Verbose:     verbose,
 			})

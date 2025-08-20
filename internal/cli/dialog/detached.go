@@ -14,19 +14,17 @@ import (
 const (
 	detachedTitle = `Sync detached`
 	detachedHelp  = `
-Should "git town sync" fetch
-updates from the main branch?
+Should "git town sync" pull
+updates from the main branch
+into feature branches?
 
-When disabled, Git Town does not pull
-new commits from the main branch
-into your feature branches.
-
-You would then need to pull updates
-manually by running
-git town sync --detached=0
-
-Only change this if too frequent unrelated updates
+Disabling this makes sense if
+too frequent unrelated updates
 in busy monorepos are a problem.
+
+When disabled, you would then need to
+pull updates manually by running
+git town sync --detached=0
 
 `
 )
@@ -41,11 +39,11 @@ func SyncDetached(args Args[configdomain.Detached]) (Option[configdomain.Detache
 	}
 	entries = append(entries, list.Entries[Option[configdomain.Detached]]{
 		{
-			Data: Some(configdomain.Detached(true)),
+			Data: Some(configdomain.Detached(false)),
 			Text: "yes, pull updates from the main branch when syncing",
 		},
 		{
-			Data: Some(configdomain.Detached(false)),
+			Data: Some(configdomain.Detached(true)),
 			Text: "no, I will pull updates from main manually",
 		},
 	}...)

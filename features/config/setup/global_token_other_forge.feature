@@ -27,6 +27,7 @@ Feature: a global API token of another forge exists
       | sync prototype strategy     | enter           |                                             |
       | sync upstream               | enter           |                                             |
       | sync tags                   | enter           |                                             |
+      | detached                    | enter           |                                             |
       | share new branches          | enter           |                                             |
       | push hook                   | enter           |                                             |
       | ship strategy               | enter           |                                             |
@@ -35,6 +36,7 @@ Feature: a global API token of another forge exists
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config git-town.github-token ghtok               |
+      | git config git-town.detached false                   |
       | git config git-town.new-branch-type feature          |
       | git config git-town.github-connector api             |
       | git config git-town.unknown-branch-type feature      |

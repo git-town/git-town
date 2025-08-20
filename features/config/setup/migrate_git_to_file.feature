@@ -40,6 +40,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | sync prototype strategy     | enter      |
       | sync upstream               | enter      |
       | sync tags                   | enter      |
+      | detached                    | enter      |
       | share new branches          | enter      |
       | push hook                   | enter      |
       | ship strategy               | enter      |
