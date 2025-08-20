@@ -10,8 +10,11 @@ the issue is addressed.
 ## CLI flag
 
 In one-off situations you can call commands that update branches with the
-`--auto-resolve=no` flag to disable automatic resolution of phantom merge
+`--no-auto-resolve` flag to disable automatic resolution of phantom merge
 conflicts.
+
+If you have automatic resolution disabled permanently via the config file or Git
+metadata (see below), you can enable it with the `--auto-resolve` flag.
 
 ## config file
 
