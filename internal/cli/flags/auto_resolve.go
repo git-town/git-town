@@ -6,13 +6,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const autoResolveLong = "auto-resolve"
+const (
+	autoResolveLong    = "auto-resolve"
+	autoResolveDefault = true
+)
 
 // type-safe access to the CLI arguments of type configdomain.AutoResolve
 func AutoResolve() (AddFunc, ReadAutoResolveFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.Flags().Bool(autoResolveLong, true, "whether to auto-resolve phantom merge conflicts")
-		defineNegatedFlag(cmd.Flags(), autoResolveLong)
+		cmd.Flags().Bool(autoResolveLong, autoResolveDefault, "whether to auto-resolve phantom merge conflicts")
+		defineNegatedFlag(cmd.Flags(), autoResolveLong, autoResolveDefault)
 
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.AutoResolve], error) {

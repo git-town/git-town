@@ -7,15 +7,16 @@ import (
 )
 
 const (
-	detachedLong = "detached"
-	noDetached   = "no-" + detachedLong
+	detachedLong    = "detached"
+	noDetached      = "no-" + detachedLong
+	detachedDefault = false
 )
 
 // type-safe access to the CLI arguments of type configdomain.Detached
 func Detached() (AddFunc, ReadDetachedFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.Flags().BoolP(detachedLong, "d", false, "don't update the perennial root branch")
-		cmd.Flags().Bool(noDetached, true, "")
+		cmd.Flags().BoolP(detachedLong, "d", detachedDefault, "don't update the perennial root branch")
+		defineNegatedFlag(cmd.Flags(), detachedLong, detachedDefault)
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.Detached], error) {
 		if cmd.Flags().Changed(detachedLong) {
