@@ -68,7 +68,8 @@ mode is enabled through [configuration data](../preferences/detached.md), the
 `--no-detached` flag disables detached mode for the current command.
 
 In detached mode, feature branches don't receive updates from the perennial
-branch at the root of your branch hierarchy.
+branch at the root of your branch hierarchy. This can be useful in busy
+monorepos.
 
 #### `-c`<br>`--commit`
 
