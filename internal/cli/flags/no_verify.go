@@ -13,6 +13,7 @@ func NoVerify() (AddFunc, ReadNoVerifyFlagFunc) {
 		cmd.Flags().BoolP(noVerifyLong, "", false, "do not run pre-commit hooks")
 	}
 	readFlag := func(cmd *cobra.Command) (configdomain.CommitHook, error) {
+
 		value, err := cmd.Flags().GetBool(noVerifyLong)
 		if value {
 			return configdomain.CommitHookDisabled, err
