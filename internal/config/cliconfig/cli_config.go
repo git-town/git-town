@@ -9,6 +9,7 @@ import (
 
 type NewArgs struct {
 	AutoResolve Option[configdomain.AutoResolve]
+	Detached    Option[configdomain.Detached]
 	DryRun      Option[configdomain.DryRun]
 	Verbose     Option[configdomain.Verbose]
 }
@@ -22,6 +23,7 @@ func New(args NewArgs) configdomain.PartialConfig {
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{},
 		CodebergToken:            None[forgedomain.CodebergToken](),
 		ContributionRegex:        None[configdomain.ContributionRegex](),
+		Detached:                 args.Detached,
 		DevRemote:                None[gitdomain.Remote](),
 		DryRun:                   args.DryRun,
 		FeatureRegex:             None[configdomain.FeatureRegex](),

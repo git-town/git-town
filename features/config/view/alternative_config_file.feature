@@ -2,6 +2,7 @@ Feature: show the configuration when using an alternative config file
 
   Scenario: all configured in config file with alternative filename
     Given a Git repo with origin
+    # TODO: change the filename to ".git-branches.toml"
     And file ".git-town.toml" with content
       """
       [branches]
@@ -50,6 +51,7 @@ Feature: show the configuration when using an alternative config file
 
       Sync:
         auto-resolve phantom conflicts: yes
+        run detached: no
         run pre-push hook: yes
         feature sync strategy: merge
         perennial sync strategy: rebase

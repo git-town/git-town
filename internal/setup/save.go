@@ -84,6 +84,9 @@ func saveAllToFile(userInput UserInput, gitConfig configdomain.PartialConfig, ru
 	if gitConfig.ContributionRegex.IsSome() {
 		_ = gitconfig.RemoveContributionRegex(runner)
 	}
+	if gitConfig.Detached.IsSome() {
+		_ = gitconfig.RemoveDetached(runner)
+	}
 	if gitConfig.DevRemote.IsSome() {
 		_ = gitconfig.RemoveDevRemote(runner)
 	}
@@ -143,6 +146,11 @@ func saveAllToFile(userInput UserInput, gitConfig configdomain.PartialConfig, ru
 
 func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialConfig, configFile configdomain.PartialConfig, data Data, frontend subshelldomain.Runner) error {
 	fc := gohacks.ErrorCollector{}
+	if configFile.Detached.IsNone() {
+		fc.Check(
+			saveDetached(userInput.Data.Detached, existingGitConfig.Detached, frontend),
+		)
+	}
 	if configFile.NewBranchType.IsNone() {
 		fc.Check(
 			saveNewBranchType(userInput.Data.NewBranchType, existingGitConfig.NewBranchType, frontend),
@@ -292,6 +300,17 @@ func saveContributionRegex(valueToWriteToGit Option[configdomain.ContributionReg
 		return gitconfig.SetContributionRegex(runner, value, configdomain.ConfigScopeLocal)
 	}
 	_ = gitconfig.RemoveContributionRegex(runner)
+	return nil
+}
+
+func saveDetached(valueToWriteToGit Option[configdomain.Detached], valueAlreadyInGit Option[configdomain.Detached], runner subshelldomain.Runner) error {
+	if valueToWriteToGit.Equal(valueAlreadyInGit) {
+		return nil
+	}
+	if value, hasValue := valueToWriteToGit.Get(); hasValue {
+		return gitconfig.SetDetached(runner, value, configdomain.ConfigScopeLocal)
+	}
+	_ = gitconfig.RemoveDetached(runner)
 	return nil
 }
 

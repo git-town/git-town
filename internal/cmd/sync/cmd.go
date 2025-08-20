@@ -80,12 +80,12 @@ func Cmd() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve: autoResolve,
+				Detached:    detached,
 				DryRun:      dryRun,
 				Verbose:     verbose,
 			})
 			return executeSync(executeSyncArgs{
 				cliConfig:       cliConfig,
-				detached:        detached,
 				prune:           prune,
 				pushBranches:    pushBranches,
 				stack:           stack,
@@ -106,7 +106,6 @@ func Cmd() *cobra.Command {
 
 type executeSyncArgs struct {
 	cliConfig       configdomain.PartialConfig
-	detached        configdomain.Detached
 	prune           configdomain.Prune
 	pushBranches    configdomain.PushBranches
 	stack           configdomain.FullStack
@@ -125,7 +124,6 @@ func executeSync(args executeSyncArgs) error {
 		return err
 	}
 	data, exit, err := determineSyncData(repo, determineSyncDataArgs{
-		detached:        args.detached,
 		syncAllBranches: args.syncAllBranches,
 		syncStack:       args.stack,
 	})
@@ -206,7 +204,6 @@ func executeSync(args executeSyncArgs) error {
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               data.connector,
-		Detached:                args.detached,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -228,7 +225,6 @@ type syncData struct {
 	branchesToSync           configdomain.BranchesToSync
 	config                   config.ValidatedConfig
 	connector                Option[forgedomain.Connector]
-	detached                 configdomain.Detached
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
 	inputs                   dialogcomponents.Inputs
@@ -242,7 +238,6 @@ type syncData struct {
 }
 
 type determineSyncDataArgs struct {
-	detached        configdomain.Detached
 	syncAllBranches configdomain.AllBranches
 	syncStack       configdomain.FullStack
 }
@@ -281,7 +276,6 @@ func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) 
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
-		Detached:              args.detached,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
@@ -350,7 +344,7 @@ func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) 
 	perennialAndMain := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
 	var branchNamesToSync gitdomain.LocalBranchNames
 	switch {
-	case args.syncAllBranches.Enabled() && args.detached.IsTrue():
+	case args.syncAllBranches.Enabled() && repo.UnvalidatedConfig.NormalConfig.Detached.IsTrue():
 		branchNamesToSync = localBranches.Remove(perennialAndMain...)
 	case args.syncAllBranches.Enabled():
 		branchNamesToSync = localBranches
@@ -388,7 +382,7 @@ func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) 
 		shouldPushTags = validatedConfig.IsMainOrPerennialBranch(initialBranch)
 	}
 	allBranchNamesToSync := validatedConfig.NormalConfig.Lineage.BranchesAndAncestors(branchNamesToSync)
-	if args.detached {
+	if repo.UnvalidatedConfig.NormalConfig.Detached {
 		allBranchNamesToSync = allBranchNamesToSync.Remove(perennialAndMain...)
 	}
 	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, allBranchNamesToSync...)
@@ -402,7 +396,6 @@ func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) 
 		branchesToSync:           branchesToSync,
 		config:                   validatedConfig,
 		connector:                connector,
-		detached:                 args.detached,
 		hasOpenChanges:           repoStatus.OpenChanges,
 		initialBranch:            initialBranch,
 		inputs:                   inputs,

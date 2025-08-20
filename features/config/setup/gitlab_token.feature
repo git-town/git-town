@@ -28,6 +28,7 @@ Feature: enter the GitLab API token
       | sync prototype strategy     | enter             |                                             |
       | sync upstream               | enter             |                                             |
       | sync tags                   | enter             |                                             |
+      | detached                    | enter             |                                             |
       | share new branches          | enter             |                                             |
       | push hook                   | enter             |                                             |
       | ship strategy               | enter             |                                             |
@@ -36,6 +37,7 @@ Feature: enter the GitLab API token
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config git-town.gitlab-token gl-tok              |
+      | git config git-town.detached false                   |
       | git config git-town.new-branch-type feature          |
       | git config git-town.gitlab-connector api             |
       | git config git-town.unknown-branch-type feature      |
@@ -73,6 +75,7 @@ Feature: enter the GitLab API token
       | sync prototype strategy     | enter             |                                             |
       | sync upstream               | enter             |                                             |
       | sync tags                   | enter             |                                             |
+      | detached                    | enter             |                                             |
       | share new branches          | enter             |                                             |
       | push hook                   | enter             |                                             |
       | ship strategy               | enter             |                                             |
@@ -81,6 +84,7 @@ Feature: enter the GitLab API token
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config git-town.gitlab-token gl-tok              |
+      | git config git-town.detached false                   |
       | git config git-town.new-branch-type feature          |
       | git config git-town.forge-type gitlab                |
       | git config git-town.gitlab-connector api             |
@@ -121,6 +125,7 @@ Feature: enter the GitLab API token
       | sync prototype strategy     | enter           |                                             |
       | sync upstream               | enter           |                                             |
       | sync tags                   | enter           |                                             |
+      | detached                    | enter           |                                             |
       | share new branches          | enter           |                                             |
       | push hook                   | enter           |                                             |
       | ship strategy               | enter           |                                             |
@@ -129,6 +134,7 @@ Feature: enter the GitLab API token
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config --global git-town.gitlab-token gltok      |
+      | git config git-town.detached false                   |
       | git config git-town.new-branch-type feature          |
       | git config git-town.gitlab-connector api             |
       | git config git-town.unknown-branch-type feature      |
@@ -168,6 +174,7 @@ Feature: enter the GitLab API token
       | sync prototype strategy     | enter                                     |                                             |
       | sync upstream               | enter                                     |                                             |
       | sync tags                   | enter                                     |                                             |
+      | detached                    | enter                                     |                                             |
       | share new branches          | enter                                     |                                             |
       | push hook                   | enter                                     |                                             |
       | ship strategy               | enter                                     |                                             |
@@ -176,6 +183,7 @@ Feature: enter the GitLab API token
     Then Git Town runs the commands
       | COMMAND                                              |
       | git config --global git-town.gitlab-token 456        |
+      | git config git-town.detached false                   |
       | git config git-town.new-branch-type feature          |
       | git config git-town.gitlab-connector api             |
       | git config git-town.unknown-branch-type feature      |

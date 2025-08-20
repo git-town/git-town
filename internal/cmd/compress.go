@@ -83,6 +83,7 @@ func compressCmd() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve: None[configdomain.AutoResolve](),
+				Detached:    Some(configdomain.Detached(true)),
 				DryRun:      dryRun,
 				Verbose:     verbose,
 			})
@@ -136,7 +137,6 @@ func executeCompress(cliConfig configdomain.PartialConfig, message Option[gitdom
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               None[forgedomain.Connector](),
-		Detached:                true,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -204,7 +204,6 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, message Option[g
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
-		Detached:              true,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,

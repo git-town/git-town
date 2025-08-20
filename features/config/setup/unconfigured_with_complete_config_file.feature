@@ -29,6 +29,7 @@ Feature: don't ask for information already provided by the config file
       strategy = "api"
 
       [sync]
+      detached = false
       feature-strategy = "merge"
       perennial-strategy = "rebase"
       push-hook = true

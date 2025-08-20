@@ -22,7 +22,6 @@ type ExecuteArgs struct {
 	CommandsCounter         Mutable[gohacks.Counter]
 	Config                  config.ValidatedConfig
 	Connector               Option[forgedomain.Connector]
-	Detached                configdomain.Detached
 	FinalMessages           stringslice.Collector
 	Frontend                subshelldomain.Runner
 	Git                     git.Commands
@@ -64,7 +63,6 @@ func Execute(args ExecuteArgs) error {
 			BranchInfos:                     Some(args.InitialBranchesSnapshot.Branches),
 			Config:                          NewMutable(&args.Config),
 			Connector:                       args.Connector,
-			Detached:                        args.Detached,
 			FinalMessages:                   args.FinalMessages,
 			Frontend:                        args.Frontend,
 			Git:                             args.Git,
