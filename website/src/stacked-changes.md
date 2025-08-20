@@ -266,7 +266,7 @@ Here are some best practices to minimize phantom merge conflicts:
    especially when they touch the same files.
 
    If you are hesitant to sync because it takes too long, use the
-   [--detached](commands/sync.md#-d--detached) and
+   [--detached](commands/sync.md#-d--detached--no-detached) and
    [--no-push](commands/sync.md#--no-push) flags to speed it up.
 
 2. Enable Git's [rerere](https://git-scm.com/book/en/v2/Git-Tools-Rerere)

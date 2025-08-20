@@ -35,7 +35,7 @@ without losing changes, even in edge cases.
 If you don't sync because:
 
 - you don't want to pull in new changes from the main branch:
-  [sync detached](sync.md#-d--detached).
+  [sync detached](sync.md#-d--detached--no-detached).
 - you don't want to increase pressure on your CI server:
   [sync without pushing](sync.md#--no-push) or indicate in your commit messages
   to CI to skip test runs

@@ -8,7 +8,7 @@ The _propose_ command helps create a new pull request (also known as merge
 request) for the current feature branch. It opens your forge's website to create
 a new proposal in your browser and pre-populates information like branch and
 source/target repository. It also [syncs](sync.md) the branch to merge before
-opening the pull request in [detached](sync.md#-d--detached) mode.
+opening the pull request in [detached](sync.md#-d--detached--no-detached) mode.
 
 Proposing prototype and parked branches makes them feature branches.
 
