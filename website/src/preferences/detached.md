@@ -1,13 +1,14 @@
 # Detached
 
-This setting configures whether Git Town pulls new commits from the main branch
-into feature branches. When enabled, it does not update the
+This setting configures whether Git Town pulls new commits from the perennial
+branch at the root of every stack. This helps avoid pulling in too many updates
+in busy monorepos.
 
 ## options
 
-When set to `true` (the default value), `git town sync` also pulls and pushes
-Git tags in addition to branches and commits. When set to `false`,
-`git town sync` does not change Git tags at the local or remote Git repository.
+When set to `false` (the default value), `git town sync` pulls updates from the
+perennial root branch of your stack. When set to `true`, `git town sync` does
+not pull in changes from the perennial root.
 
 ## in config file
 
@@ -16,7 +17,7 @@ this:
 
 ```toml
 [sync]
-tags = true
+detached = true
 ```
 
 ## in Git metadata
@@ -24,7 +25,7 @@ tags = true
 To manually configure syncing tags in Git, run this command:
 
 ```wrap
-git config [--global] git-town.sync-tags <true|false>
+git config [--global] git-town.detached <true|false>
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on
@@ -33,4 +34,4 @@ your machine. Without it, the setting applies only to the current repository.
 ## environment variable
 
 You can configure whether Git Town syncs Git tags by setting the
-`GIT_TOWN_SYNC_TAGS` environment variable.
+`GIT_TOWN_DETACHED` environment variable.

@@ -1,6 +1,8 @@
 package opcodes
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
@@ -29,6 +31,7 @@ func (self *SyncFeatureBranchMerge) Run(args shared.RunArgs) error {
 			break
 		}
 		parentIsPerennial := args.Config.Value.IsMainOrPerennialBranch(parent)
+		fmt.Println("22222222222222222222222222222222222222222222", args.Config.Value.NormalConfig.Detached)
 		if args.Config.Value.NormalConfig.Detached.IsTrue() && parentIsPerennial {
 			break
 		}
