@@ -14,6 +14,8 @@ const negate = "no-"
 // AddFunc defines the type signature for helper functions that add a CLI flag to a Cobra command.
 type AddFunc func(*cobra.Command)
 
+// defines the negated form of the flag with the given name and default value
+// You must define the non-negated version yourself, because there are too many things to configure there
 func defineNegatedFlag(flags *pflag.FlagSet, name string, nonNegatedDefault bool) {
 	negateName := negate + name
 	flags.Bool(negateName, !nonNegatedDefault, "")
@@ -22,11 +24,13 @@ func defineNegatedFlag(flags *pflag.FlagSet, name string, nonNegatedDefault bool
 	}
 }
 
+// provides the value of the CLI flag with the given name and bool-based type
 func readBoolFlag[T ~bool](cmd *cobra.Command, name string) (T, error) { //nolint:ireturn
 	value, err := cmd.Flags().GetBool(name)
 	return T(value), err
 }
 
+// provides the value of the CLI flag with the given name and optional bool-based type
 func readBoolOptFlag[T ~bool](flags *pflag.FlagSet, name string) (Option[T], error) {
 	if flags.Changed(name) {
 		value, err := flags.GetBool(name)
@@ -35,6 +39,7 @@ func readBoolOptFlag[T ~bool](flags *pflag.FlagSet, name string) (Option[T], err
 	return None[T](), nil
 }
 
+// provides the value of the CLI flag with the given name and optional negatable bool-based type
 func readNegatableFlag[T ~bool](flags *pflag.FlagSet, name string) (Option[T], error) {
 	if value, err := readBoolOptFlag[T](flags, name); value.IsSome() || err != nil {
 		return value, err
@@ -46,6 +51,7 @@ func readNegatableFlag[T ~bool](flags *pflag.FlagSet, name string) (Option[T], e
 	return None[T](), err
 }
 
+// provides the value of the CLI flag with the given name and optional string-based type
 func readStringOptFlag[T ~string](flags *pflag.FlagSet, name string) (Option[T], error) {
 	value, err := flags.GetString(name)
 	return NewOption(T(value)), err
