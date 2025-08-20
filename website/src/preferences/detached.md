@@ -1,14 +1,19 @@
 # Detached
 
-This setting configures whether Git Town pulls new commits from the perennial
-branch at the root of every stack. This helps avoid pulling in too many updates
-in busy monorepos.
+This setting configures whether Git Town pulls new commits from the main or
+perennial branch at the root of your branch hierarchy. This helps avoid pulling
+in too many updates in busy monorepos.
 
 ## options
 
 When set to `false` (the default value), `git town sync` pulls updates from the
 perennial root branch of your stack. When set to `true`, `git town sync` does
 not pull in changes from the perennial root.
+
+## via CLI flag
+
+Commands that sync branches have a `--detached` flag that your can set to
+perform that sync in detached mode.
 
 ## in config file
 
