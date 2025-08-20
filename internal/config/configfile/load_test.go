@@ -54,6 +54,7 @@ strategy = "api"
 
 [sync]
 auto-resolve = false
+detached = true
 feature-strategy = "merge"
 perennial-strategy = "rebase"
 prototype-strategy = "compress"
@@ -99,6 +100,7 @@ prototype-branches = "compress"
 				},
 				Sync: &configfile.Sync{
 					AutoResolve:       Ptr(false),
+					Detached:          Ptr(true),
 					FeatureStrategy:   Ptr("merge"),
 					PerennialStrategy: Ptr("rebase"),
 					PrototypeStrategy: Ptr("compress"),

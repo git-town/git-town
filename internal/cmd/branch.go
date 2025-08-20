@@ -42,6 +42,7 @@ func branchCmd() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve: None[configdomain.AutoResolve](),
+				Detached:    None[configdomain.Detached](),
 				DryRun:      None[configdomain.DryRun](),
 				Verbose:     verbose,
 			})
@@ -93,7 +94,6 @@ func determineBranchData(repo execute.OpenRepoResult) (data branchData, exit dia
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             None[forgedomain.Connector](),
-		Detached:              true,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,

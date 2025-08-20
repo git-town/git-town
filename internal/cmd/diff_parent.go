@@ -45,6 +45,7 @@ func diffParentCommand() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve: None[configdomain.AutoResolve](),
+				Detached:    Some(configdomain.Detached(true)),
 				DryRun:      None[configdomain.DryRun](),
 				Verbose:     verbose,
 			})
@@ -114,7 +115,6 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult) (data d
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
-		Detached:              true,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,

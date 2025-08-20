@@ -58,6 +58,7 @@ func renameCommand() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve: None[configdomain.AutoResolve](),
+				Detached:    Some(configdomain.Detached(true)),
 				DryRun:      dryRun,
 				Verbose:     verbose,
 			})
@@ -105,7 +106,6 @@ func executeRename(args []string, cliConfig configdomain.PartialConfig, force co
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               data.connector,
-		Detached:                true,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -169,7 +169,6 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
-		Detached:              true,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,

@@ -25,6 +25,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
     And global Git setting "git-town.sync-prototype-strategy" is "compress"
     And global Git setting "git-town.sync-tags" is "false"
     And global Git setting "git-town.sync-upstream" is "false"
+    And global Git setting "git-town.detached" is "false"
     And global Git setting "git-town.unknown-branch-type" is "observed"
     When I run "git-town config setup" and enter into the dialogs:
       | DIALOG                      | KEYS        |
@@ -45,6 +46,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | sync prototype strategy     | enter       |
       | sync upstream               | enter       |
       | sync tags                   | enter       |
+      | detached                    | enter       |
       | share new branches          | enter       |
       | push hook                   | enter       |
       | ship strategy               | enter       |
