@@ -13,7 +13,6 @@ Feature: sync the current feature branch with a tracking branch in detached mode
     And Git setting "git-town.detached" is "true"
     When I run "git-town sync"
 
-  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                  |
