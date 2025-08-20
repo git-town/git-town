@@ -12,6 +12,7 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.share-new-branches" is "no"
     And local Git setting "git-town.push-hook" is "false"
     And local Git setting "git-town.sync-tags" is "false"
+    And local Git setting "git-town.detached" is "false"
     And local Git setting "git-town.ship-delete-tracking-branch" is "false"
     When I run "git-town config setup" and enter into the dialogs:
       | DIALOG                      | KEYS                   |
@@ -35,6 +36,7 @@ Feature: change existing information in Git metadata
       | sync prototype strategy     | down enter             |
       | sync upstream               | down enter             |
       | sync tags                   | down enter             |
+      | detached                    | up enter               |
       | share-new-branches          | down enter             |
       | push hook                   | down enter             |
       | ship strategy               | down down enter        |
@@ -60,6 +62,7 @@ Feature: change existing information in Git metadata
       | git config --global alias.ship "town ship"               |
       | git config --global alias.sync "town sync"               |
       | git config git-town.github-token gh-tok                  |
+      | git config git-town.detached true                        |
       | git config git-town.new-branch-type prototype            |
       | git config git-town.forge-type github                    |
       | git config git-town.github-connector api                 |

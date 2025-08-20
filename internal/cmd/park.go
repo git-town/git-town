@@ -44,6 +44,7 @@ func parkCmd() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve: None[configdomain.AutoResolve](),
+				Detached:    Some(configdomain.Detached(true)),
 				DryRun:      None[configdomain.DryRun](),
 				Verbose:     verbose,
 			})

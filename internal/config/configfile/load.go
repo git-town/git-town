@@ -47,6 +47,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	var err error
 	var contributionRegex Option[configdomain.ContributionRegex]
 	var unknownBranchType Option[configdomain.UnknownBranchType]
+	var detached Option[configdomain.Detached]
 	var devRemote Option[gitdomain.Remote]
 	var featureRegex Option[configdomain.FeatureRegex]
 	var forgeType Option[forgedomain.ForgeType]
@@ -207,6 +208,9 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		if data.Sync.AutoResolve != nil {
 			autoResolve = Some(configdomain.AutoResolve(*data.Sync.AutoResolve))
 		}
+		if data.Sync.Detached != nil {
+			detached = Some(configdomain.Detached(*data.Sync.Detached))
+		}
 		if data.Sync.FeatureStrategy != nil {
 			syncFeatureStrategy, err = configdomain.ParseSyncFeatureStrategy(*data.Sync.FeatureStrategy)
 			ec.Check(err)
@@ -236,6 +240,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{},
 		CodebergToken:            None[forgedomain.CodebergToken](),
 		ContributionRegex:        contributionRegex,
+		Detached:                 detached,
 		DryRun:                   None[configdomain.DryRun](),
 		UnknownBranchType:        unknownBranchType,
 		DevRemote:                devRemote,

@@ -35,6 +35,7 @@ func SetupCommand() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve: None[configdomain.AutoResolve](),
+				Detached:    None[configdomain.Detached](),
 				DryRun:      None[configdomain.DryRun](),
 				Verbose:     verbose,
 			})
@@ -92,7 +93,6 @@ func LoadData(repo execute.OpenRepoResult) (data setup.Data, exit dialogdomain.E
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             None[forgedomain.Connector](),
-		Detached:              false,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,

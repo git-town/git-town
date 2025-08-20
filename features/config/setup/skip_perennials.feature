@@ -23,6 +23,7 @@ Feature: don't ask for perennial branches if no branches that could be perennial
       | sync prototype strategy     | enter      |                                             |
       | sync upstream               | enter      |                                             |
       | sync tags                   | enter      |                                             |
+      | detached                    | enter      |                                             |
       | share new branches          | enter      |                                             |
       | push hook                   | enter      |                                             |
       | ship strategy               | enter      |                                             |

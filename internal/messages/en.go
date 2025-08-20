@@ -103,6 +103,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 
 	DeleteCannotDeleteMainBranch        = "you cannot delete the main branch"
 	DeleteCannotDeletePerennialBranches = "you cannot delete perennial branches"
+	DetachedResult                      = "Detached: %s\n"
 	DetachNeedsSync                     = "please sync this stack before detaching branches from it"
 	DetachNoParent                      = "cannot detach branches without parent"
 	DetachOtherWorkTree                 = "cannot detach because branch %q it is active in another worktree"

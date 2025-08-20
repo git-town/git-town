@@ -27,6 +27,7 @@ Feature: show the configuration
     And Git setting "git-town.ship-strategy" is "squash-merge"
     And Git setting "git-town.github-connector" is "api"
     And Git setting "git-town.gitlab-connector" is "api"
+    And Git setting "git-town.detached" is "true"
     When I run "git-town config"
     Then Git Town prints:
       """
@@ -69,6 +70,7 @@ Feature: show the configuration
 
       Sync:
         auto-resolve phantom conflicts: yes
+        run detached: yes
         run pre-push hook: yes
         feature sync strategy: merge
         perennial sync strategy: rebase
@@ -102,6 +104,7 @@ Feature: show the configuration
       strategy = "squash-merge"
 
       [sync]
+      detached = true
       feature-strategy = "rebase"
       perennial-strategy = "ff-only"
       prototype-strategy = "compress"
@@ -151,6 +154,7 @@ Feature: show the configuration
 
       Sync:
         auto-resolve phantom conflicts: no
+        run detached: yes
         run pre-push hook: yes
         feature sync strategy: rebase
         perennial sync strategy: ff-only
@@ -177,6 +181,7 @@ Feature: show the configuration
     And Git setting "git-town.sync-prototype-strategy" is "compress"
     And Git setting "git-town.unknown-branch-type" is "observed"
     And Git setting "git-town.auto-resolve" is "false"
+    And Git setting "git-town.detached" is "true"
     And the configuration file:
       """
       [branches]
@@ -200,6 +205,7 @@ Feature: show the configuration
       strategy = "api"
 
       [sync]
+      detached = false
       feature-strategy = "merge"
       perennial-strategy = "rebase"
       prototype-strategy = "rebase"
@@ -249,6 +255,7 @@ Feature: show the configuration
 
       Sync:
         auto-resolve phantom conflicts: no
+        run detached: yes
         run pre-push hook: yes
         feature sync strategy: merge
         perennial sync strategy: ff-only
@@ -309,6 +316,7 @@ Feature: show the configuration
 
       Sync:
         auto-resolve phantom conflicts: yes
+        run detached: no
         run pre-push hook: yes
         feature sync strategy: merge
         perennial sync strategy: rebase
@@ -375,6 +383,7 @@ Feature: show the configuration
 
       Sync:
         auto-resolve phantom conflicts: yes
+        run detached: no
         run pre-push hook: yes
         feature sync strategy: merge
         perennial sync strategy: rebase

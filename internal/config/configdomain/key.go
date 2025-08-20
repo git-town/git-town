@@ -79,6 +79,7 @@ const (
 	KeyDeprecatedPushVerify                = Key("git-town.push-verify")
 	KeyDeprecatedShipDeleteRemoteBranch    = Key("git-town.ship-delete-remote-branch")
 	KeyDeprecatedSyncStrategy              = Key("git-town.sync-strategy")
+	KeyDetached                            = Key("git-town.detached")
 	KeyDevRemote                           = Key("git-town.dev-remote")
 	KeyFeatureRegex                        = Key("git-town.feature-regex")
 	KeyForgeType                           = Key("git-town.forge-type")
@@ -136,6 +137,7 @@ var keys = []Key{
 	KeyDeprecatedPushVerify,
 	KeyDeprecatedShipDeleteRemoteBranch,
 	KeyDeprecatedSyncStrategy,
+	KeyDetached,
 	KeyDevRemote,
 	KeyFeatureRegex,
 	KeyForgeType,

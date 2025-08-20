@@ -49,6 +49,7 @@ func switchCmd() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve: None[configdomain.AutoResolve](),
+				Detached:    Some(configdomain.Detached(true)),
 				DryRun:      None[configdomain.DryRun](),
 				Verbose:     verbose,
 			})
@@ -161,7 +162,6 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult) (data switc
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             None[forgedomain.Connector](),
-		Detached:              true,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,

@@ -36,6 +36,7 @@ type NormalConfig struct {
 	BranchTypeOverrides      configdomain.BranchTypeOverrides
 	CodebergToken            Option[forgedomain.CodebergToken]
 	ContributionRegex        Option[configdomain.ContributionRegex]
+	Detached                 configdomain.Detached
 	DevRemote                gitdomain.Remote
 	DryRun                   configdomain.DryRun // whether to only print the Git commands but not execute them
 	FeatureRegex             Option[configdomain.FeatureRegex]
@@ -88,6 +89,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		BranchTypeOverrides:      other.BranchTypeOverrides.Concat(self.BranchTypeOverrides),
 		CodebergToken:            other.CodebergToken.Or(self.CodebergToken),
 		ContributionRegex:        other.ContributionRegex.Or(self.ContributionRegex),
+		Detached:                 other.Detached.GetOrElse(self.Detached),
 		DevRemote:                other.DevRemote.GetOrElse(self.DevRemote),
 		DryRun:                   other.DryRun.GetOrElse(self.DryRun),
 		FeatureRegex:             other.FeatureRegex.Or(self.FeatureRegex),
@@ -229,6 +231,7 @@ func DefaultNormalConfig() NormalConfig {
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{},
 		CodebergToken:            None[forgedomain.CodebergToken](),
 		ContributionRegex:        None[configdomain.ContributionRegex](),
+		Detached:                 false,
 		DevRemote:                gitdomain.RemoteOrigin,
 		DryRun:                   false,
 		FeatureRegex:             None[configdomain.FeatureRegex](),
@@ -270,6 +273,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		BranchTypeOverrides:      partial.BranchTypeOverrides,
 		CodebergToken:            partial.CodebergToken,
 		ContributionRegex:        partial.ContributionRegex,
+		Detached:                 partial.Detached.GetOrElse(defaults.Detached),
 		DevRemote:                partial.DevRemote.GetOrElse(defaults.DevRemote),
 		DryRun:                   partial.DryRun.GetOrDefault(),
 		FeatureRegex:             partial.FeatureRegex,
