@@ -13,7 +13,7 @@ func All(desc string) (AddFunc, ReadAllFlagFunc) {
 		cmd.Flags().BoolP(allLong, "a", false, desc)
 	}
 	readFlag := func(cmd *cobra.Command) (configdomain.AllBranches, error) {
-		return readBoolFlag[configdomain.AllBranches](cmd.Flags(), allLong)
+		return readBoolFlag[configdomain.AllBranches](cmd, allLong)
 	}
 	return addFlag, readFlag
 }

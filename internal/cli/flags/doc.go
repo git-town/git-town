@@ -21,8 +21,8 @@ func defineNegatableBoolFlag(flags *pflag.FlagSet, name string) {
 	_ = flags.MarkHidden(negateName)
 }
 
-func readBoolFlag[T ~bool](flags *pflag.FlagSet, name string) (T, error) { //nolint:ireturn
-	value, err := flags.GetBool(name)
+func readBoolFlag[T ~bool](cmd *cobra.Command, name string) (T, error) { //nolint:ireturn
+	value, err := cmd.Flags().GetBool(name)
 	return T(value), err
 }
 
