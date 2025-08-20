@@ -14,10 +14,9 @@ not pull in changes from the perennial root.
 ## via CLI flag
 
 Commands that sync branches have a `--detached` flag that your can set to
-perform that sync in detached mode. If you have enabled detached mode through
-this setting, you can use the `--no-detached` CLI flag to disable detached mode
-for the current command and pull in updated commits from the perennial root
-once.
+perform that sync in detached mode. If you have enabled detached mode
+permenantly through the configuration setting described on this page, you can
+use the `--no-detached` CLI flag to disable detached mode for that command.
 
 ## in config file
 
