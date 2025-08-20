@@ -6,5 +6,5 @@ you might want to avoid pulling the latest changes—like when you're reorganizi
 your stack or trying to dodge costly rebuilds triggered by upstream updates.
 
 In those cases, use
-[git town sync --detached](../commands/sync.md#-d--detached). It syncs your
-stack without touching the main branch.
+[git town sync --detached](../commands/sync.md#-d--detached--no-detached). It
+syncs your stack without touching the main branch.

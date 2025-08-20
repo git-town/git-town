@@ -5,7 +5,6 @@ import (
 	"slices"
 
 	"github.com/git-town/git-town/v21/internal/config"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -201,7 +200,6 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 type BranchChangesUndoProgramArgs struct {
 	BeginBranch              gitdomain.LocalBranchName
 	Config                   config.ValidatedConfig
-	Detached                 configdomain.Detached
 	EndBranch                gitdomain.LocalBranchName
 	FinalMessages            stringslice.Collector
 	UndoAPIProgram           program.Program

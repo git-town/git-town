@@ -24,6 +24,7 @@ Feature: display configuration from Git metadata
     And Git setting "git-town.ship-strategy" is "squash-merge"
     And Git setting "git-town.unknown-branch-type" is "observed"
     And Git setting "git-town.auto-resolve" is "false"
+    And Git setting "git-town.detached" is "true"
     When I run "git-town config"
     Then Git Town prints:
       """
@@ -66,6 +67,7 @@ Feature: display configuration from Git metadata
 
       Sync:
         auto-resolve phantom conflicts: no
+        run detached: yes
         run pre-push hook: yes
         feature sync strategy: merge
         perennial sync strategy: rebase
@@ -125,6 +127,7 @@ Feature: display configuration from Git metadata
 
       Sync:
         auto-resolve phantom conflicts: yes
+        run detached: no
         run pre-push hook: yes
         feature sync strategy: merge
         perennial sync strategy: rebase

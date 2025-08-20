@@ -81,6 +81,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	autoResolve, errAutoResolve := gohacks.ParseBoolOpt[configdomain.AutoResolve](snapshot[configdomain.KeyAutoResolve], configdomain.KeyAutoResolve.String())
 	branchTypeOverrides, errBranchTypeOverride := NewBranchTypeOverridesInSnapshot(snapshot, runner)
 	contributionRegex, errContributionRegex := configdomain.ParseContributionRegex(snapshot[configdomain.KeyContributionRegex])
+	detached, errDetached := gohacks.ParseBoolOpt[configdomain.Detached](snapshot[configdomain.KeyDetached], configdomain.KeyDetached.String())
 	featureRegex, errFeatureRegex := configdomain.ParseFeatureRegex(snapshot[configdomain.KeyFeatureRegex])
 	forgeType, errForgeType := forgedomain.ParseForgeType(snapshot[configdomain.KeyForgeType])
 	githubConnectorType, errGitHubConnectorType := forgedomain.ParseGitHubConnectorType(snapshot[configdomain.KeyGitHubConnectorType])
@@ -108,6 +109,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		errAutoResolve,
 		errBranchTypeOverride,
 		errContributionRegex,
+		errDetached,
 		errFeatureRegex,
 		errForgeType,
 		errGitHubConnectorType,
@@ -138,6 +140,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		BranchTypeOverrides:      branchTypeOverrides,
 		CodebergToken:            forgedomain.ParseCodebergToken(snapshot[configdomain.KeyCodebergToken]),
 		ContributionRegex:        contributionRegex,
+		Detached:                 detached,
 		DevRemote:                gitdomain.NewRemote(snapshot[configdomain.KeyDevRemote]),
 		DryRun:                   None[configdomain.DryRun](),
 		FeatureRegex:             featureRegex,

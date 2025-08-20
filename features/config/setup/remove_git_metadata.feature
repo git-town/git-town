@@ -24,6 +24,7 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.set-parent" is "town set-parent"
     And global Git setting "alias.ship" is "town ship"
     And global Git setting "alias.sync" is "town sync"
+    And local Git setting "git-town.detached" is "true"
     And local Git setting "git-town.forge-type" is "github"
     And local Git setting "git-town.perennial-branches" is "qa"
     And local Git setting "git-town.perennial-regex" is "qa.*"
@@ -63,6 +64,7 @@ Feature: remove existing configuration in Git metadata
       | sync prototype strategy     | up enter                                                                    |                     |
       | sync upstream               | down enter                                                                  |                     |
       | sync tags                   | down enter                                                                  |                     |
+      | detached                    | down enter                                                                  |                     |
       | share new branches          | up enter                                                                    | enable              |
       | push hook                   | down enter                                                                  | enable              |
       | ship strategy               | down enter                                                                  |                     |
@@ -87,6 +89,7 @@ Feature: remove existing configuration in Git metadata
       | git config --global --unset alias.set-parent         |
       | git config --global --unset alias.ship               |
       | git config --global --unset alias.sync               |
+      | git config git-town.detached false                   |
       | git config git-town.new-branch-type feature          |
       | git config --unset git-town.forge-type               |
       | git config --unset git-town.hosting-origin-hostname  |

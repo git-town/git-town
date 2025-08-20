@@ -41,6 +41,7 @@ Feature: display information from config file
 
       [sync]
       auto-resolve = false
+      detached = true
       feature-strategy = "rebase"
       perennial-strategy = "ff-only"
       prototype-strategy = "compress"
@@ -89,6 +90,7 @@ Feature: display information from config file
 
       Sync:
         auto-resolve phantom conflicts: no
+        run detached: yes
         run pre-push hook: yes
         feature sync strategy: rebase
         perennial sync strategy: ff-only

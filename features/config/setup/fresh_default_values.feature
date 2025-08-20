@@ -22,6 +22,7 @@ Feature: Accepting all default values in a brand-new Git repo leads to a working
       | sync prototype strategy     | enter      |
       | sync upstream               | enter      |
       | sync tags                   | enter      |
+      | detached                    | enter      |
       | share new branches          | enter      |
       | push hook                   | enter      |
       | ship strategy               | enter      |

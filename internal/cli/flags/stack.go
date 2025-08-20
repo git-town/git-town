@@ -13,8 +13,7 @@ func Stack(description string) (AddFunc, ReadStackFlagFunc) {
 		cmd.Flags().BoolP(stackLong, "s", false, description)
 	}
 	readFlag := func(cmd *cobra.Command) (configdomain.FullStack, error) {
-		value, err := cmd.Flags().GetBool(stackLong)
-		return configdomain.FullStack(value), err
+		return readBoolFlag[configdomain.FullStack](cmd, stackLong)
 	}
 	return addFlag, readFlag
 }

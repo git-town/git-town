@@ -23,6 +23,7 @@ Feature: display configuration defined in environment variables
       | GIT_TOWN_BITBUCKET_USERNAME          | bitbucket-user     |
       | GIT_TOWN_CODEBERG_TOKEN              | codeberg-token     |
       | GIT_TOWN_CONTRIBUTION_REGEX          | ^renovate/         |
+      | GIT_TOWN_DETACHED                    | true               |
       | GIT_TOWN_DEV_REMOTE                  | my-fork            |
       | GIT_TOWN_FEATURE_REGEX               | ^user-.*$          |
       | GIT_TOWN_FORGE_TYPE                  | gitlab             |
@@ -89,6 +90,7 @@ Feature: display configuration defined in environment variables
 
       Sync:
         auto-resolve phantom conflicts: no
+        run detached: yes
         run pre-push hook: no
         feature sync strategy: rebase
         perennial sync strategy: merge

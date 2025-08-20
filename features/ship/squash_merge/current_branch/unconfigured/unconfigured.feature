@@ -24,6 +24,7 @@ Feature: ask for missing configuration information
       | sync prototype strategy     | enter |
       | sync upstream               | enter |
       | sync tags                   | enter |
+      | detached                    | enter |
       | share new branches          | enter |
       | push hook                   | enter |
       | ship strategy               | enter |

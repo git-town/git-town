@@ -41,6 +41,7 @@ func undoCmd() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve: None[configdomain.AutoResolve](),
+				Detached:    None[configdomain.Detached](),
 				DryRun:      None[configdomain.DryRun](),
 				Verbose:     verbose,
 			})
@@ -80,7 +81,6 @@ func executeUndo(cliConfig configdomain.PartialConfig) error {
 		CommandsCounter:  repo.CommandsCounter,
 		Config:           data.config,
 		Connector:        data.connector,
-		Detached:         true,
 		FinalMessages:    repo.FinalMessages,
 		Frontend:         repo.Frontend,
 		Git:              repo.Git,
@@ -131,7 +131,6 @@ func determineUndoData(repo execute.OpenRepoResult) (data undoData, exit dialogd
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
-		Detached:              true,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
