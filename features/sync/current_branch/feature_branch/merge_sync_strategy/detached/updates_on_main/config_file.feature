@@ -10,14 +10,13 @@ Feature: sync the current feature branch with a tracking branch in detached mode
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
     And the current branch is "beta"
-    And the configuration file:
+    And the committed configuration file:
       """
       [sync]
       detached = true
       """
     When I run "git-town sync"
 
-  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                  |
