@@ -14,8 +14,7 @@ const negate = "no-"
 // AddFunc defines the type signature for helper functions that add a CLI flag to a Cobra command.
 type AddFunc func(*cobra.Command)
 
-func defineNegatableBoolFlag(flags *pflag.FlagSet, name string) {
-	flags.Bool(name, true, "whether to auto-resolve phantom merge conflicts")
+func defineNegatedFlag(flags *pflag.FlagSet, name string) {
 	negateName := negate + name
 	flags.Bool(negateName, false, "")
 	if err := flags.MarkHidden(negateName); err != nil {
@@ -36,7 +35,7 @@ func readBoolOptFlag[T ~bool](flags *pflag.FlagSet, name string) (Option[T], err
 	return None[T](), nil
 }
 
-func readNegatableBoolFlag[T ~bool](flags *pflag.FlagSet, name string) (Option[T], error) {
+func readNegatableFlag[T ~bool](flags *pflag.FlagSet, name string) (Option[T], error) {
 	if value, err := readBoolOptFlag[T](flags, name); value.IsSome() || err != nil {
 		return value, err
 	}
