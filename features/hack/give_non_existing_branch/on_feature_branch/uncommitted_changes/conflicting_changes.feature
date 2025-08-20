@@ -1,4 +1,4 @@
-Feature: conflicts between uncommitted changes and the main branch
+Feature: unmergeable conflict between uncommitted changes and the main branch
 
   Background:
     Given a Git repo with origin
@@ -10,6 +10,7 @@ Feature: conflicts between uncommitted changes and the main branch
       | main   | local, origin | conflicting commit | conflicting_file | main content |
     And the current branch is "existing"
     And an uncommitted file with name "conflicting_file" and content "conflicting content"
+    # And inspect the repo
     When I run "git-town hack new"
 
   Scenario: result
