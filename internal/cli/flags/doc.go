@@ -18,7 +18,9 @@ func defineNegatableBoolFlag(flags *pflag.FlagSet, name string) {
 	flags.Bool(name, true, "whether to auto-resolve phantom merge conflicts")
 	negateName := negate + name
 	flags.Bool(negateName, false, "")
-	_ = flags.MarkHidden(negateName)
+	if err := flags.MarkHidden(negateName); err != nil {
+		panic(err)
+	}
 }
 
 func readBoolFlag[T ~bool](cmd *cobra.Command, name string) (T, error) { //nolint:ireturn
