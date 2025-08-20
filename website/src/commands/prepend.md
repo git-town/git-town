@@ -60,13 +60,17 @@ Adding the `--prototype` aka `-p` switch creates a
 Pre-populate the title of the pull request to create with the given text.
 Requires `--propose`.
 
-#### `-d`<br>`--detached`
+#### `-d`<br>`--detached`<br>`--no-detached`
 
 The `--detached` aka `-d` flag enables
 [detached mode](../preferences/detached.md) for the current command. Detached
 mode does not pull updates from the main or perennial branch at the root of your
 branch hierarchy. This allows you to keep your branches in sync with each other
 and decide when to pull in changes from other developers.
+
+If detached mode is enabled through
+[configuration data](../preferences/detached.md), the `--no-detached` flag
+disables detached mode for the current command.
 
 #### `-c`<br>`--commit`
 

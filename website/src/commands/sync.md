@@ -84,13 +84,17 @@ branch.
 The `--stack` aka `-s` parameter makes Git Town sync all branches in the stack
 that the current branch belongs to.
 
-#### `-d`<br>`--detached`
+#### `-d`<br>`--detached`<br>`--no-detached`
 
 The `--detached` aka `-d` flag enables
 [detached mode](../preferences/detached.md) for the current command. Detached
 mode does not pull updates from the main or perennial branch at the root of your
 branch hierarchy. This allows you to keep your branches in sync with each other
 and decide when to pull in changes from other developers.
+
+If detached mode is enabled through
+[configuration data](../preferences/detached.md), the `--no-detached` flag
+disables detached mode for the current command.
 
 #### `-p`<br>`--prune`
 
