@@ -1,4 +1,3 @@
-@this
 Feature: sync the current feature branch with a tracking branch in detached mode with updates on main
 
   Background:
@@ -24,7 +23,6 @@ Feature: sync the current feature branch with a tracking branch in detached mode
       |        | git push                       |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
-      | main   | local, origin | main commit  |
       | main   | local, origin | main commit  |
       | alpha  | local, origin | alpha commit |
 
