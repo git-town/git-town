@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	detachedTitle = `Sync in detached mode`
+	detachedTitle = `Sync in detached mode?`
 	detachedHelp  = `
 By default, "git town sync" pulls
 the latest commits from the main branch
@@ -39,11 +39,11 @@ func SyncDetached(args Args[configdomain.Detached]) (Option[configdomain.Detache
 	entries = append(entries, list.Entries[Option[configdomain.Detached]]{
 		{
 			Data: Some(configdomain.Detached(false)),
-			Text: "yes, pull updates from the main branch when syncing",
+			Text: "disabled, sync pulls updates from the perennial root",
 		},
 		{
 			Data: Some(configdomain.Detached(true)),
-			Text: "no, I will pull updates from main manually",
+			Text: "enabled, sync does not pull pull updates from the perennial root",
 		},
 	}...)
 	defaultPos := entries.IndexOf(args.Local)
