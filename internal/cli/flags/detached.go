@@ -8,7 +8,6 @@ import (
 
 const (
 	detachedLong    = "detached"
-	noDetached      = "no-" + detachedLong
 	detachedDefault = false
 )
 
@@ -19,15 +18,7 @@ func Detached() (AddFunc, ReadDetachedFlagFunc) {
 		defineNegatedFlag(cmd.Flags(), detachedLong, detachedDefault)
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.Detached], error) {
-		if cmd.Flags().Changed(detachedLong) {
-			value, err := cmd.Flags().GetBool(detachedLong)
-			return Some(configdomain.Detached(value)), err
-		}
-		if cmd.Flags().Changed(noDetached) {
-			value, err := cmd.Flags().GetBool(noDetached)
-			return Some(configdomain.Detached(!value)), err
-		}
-		return None[configdomain.Detached](), nil
+		return readNegatableFlag[configdomain.Detached](cmd.Flags(), detachedLong)
 	}
 	return addFlag, readFlag
 }
