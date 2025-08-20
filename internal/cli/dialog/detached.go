@@ -19,7 +19,7 @@ the latest commits from the main branch
 into your feature branches.
 
 Detached mode prevents this.  When enabled,
-feature branches only sync with their tracking
+feature branches sync only with their tracking
 and non-perennial parent branches.
 
 To manually pull new commits from the main branch
