@@ -43,7 +43,7 @@ func SyncDetached(args Args[configdomain.Detached]) (Option[configdomain.Detache
 		},
 		{
 			Data: Some(configdomain.Detached(true)),
-			Text: "enabled, sync does not pull pull updates from the perennial root",
+			Text: "enabled, sync does not pull updates from the perennial root",
 		},
 	}...)
 	defaultPos := entries.IndexOf(args.Local)
