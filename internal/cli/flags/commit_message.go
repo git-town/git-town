@@ -17,11 +17,7 @@ func CommitMessage(desc string) (AddFunc, ReadCommitMessageFlagFunc) {
 		cmd.Flags().StringP(commitMessageLong, commitMessageShort, "", desc)
 	}
 	readFlag := func(cmd *cobra.Command) (Option[gitdomain.CommitMessage], error) {
-		value, err := cmd.Flags().GetString(commitMessageLong)
-		if err != nil || value == "" {
-			return None[gitdomain.CommitMessage](), err
-		}
-		return Some(gitdomain.CommitMessage(value)), nil
+		return readStringOptFlag[gitdomain.CommitMessage](cmd.Flags(), commitMessageLong)
 	}
 	return addFlag, readFlag
 }
