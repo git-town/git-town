@@ -29,8 +29,11 @@ func readBoolFlag[T ~bool](cmd *cobra.Command, name string) (T, error) { //nolin
 }
 
 func readBoolOptFlag[T ~bool](flags *pflag.FlagSet, name string) (Option[T], error) {
-	value, err := flags.GetBool(name)
-	return NewOption(T(value)), err
+	if flags.Changed(name) {
+		value, err := flags.GetBool(name)
+		return Some(T(value)), err
+	}
+	return None[T](), nil
 }
 
 func readNegatableBoolFlag[T ~bool](flags *pflag.FlagSet, name string) (Option[T], error) {

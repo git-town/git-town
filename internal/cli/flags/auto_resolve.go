@@ -6,10 +6,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const (
-	autoResolveLong = "auto-resolve"
-	noAutoResolve   = "no-" + autoResolveLong
-)
+const autoResolveLong = "auto-resolve"
 
 // type-safe access to the CLI arguments of type configdomain.AutoResolve
 func AutoResolve() (AddFunc, ReadAutoResolveFlagFunc) {
@@ -17,22 +14,7 @@ func AutoResolve() (AddFunc, ReadAutoResolveFlagFunc) {
 		defineNegatableBoolFlag(cmd.Flags(), autoResolveLong)
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.AutoResolve], error) {
-		flags := cmd.Flags()
-		if flags.Changed(autoResolveLong) {
-			value, err := flags.GetBool(autoResolveLong)
-			if err != nil {
-				return None[configdomain.AutoResolve](), err
-			}
-			return Some(configdomain.AutoResolve(value)), nil
-		}
-		if flags.Changed(noAutoResolve) {
-			value, err := flags.GetBool(noAutoResolve)
-			if err != nil {
-				return None[configdomain.AutoResolve](), err
-			}
-			return Some(configdomain.AutoResolve(!value)), nil
-		}
-		return None[configdomain.AutoResolve](), nil
+		return readNegatableBoolFlag[configdomain.AutoResolve](cmd.Flags(), autoResolveLong)
 	}
 	return addFlag, readFlag
 }
