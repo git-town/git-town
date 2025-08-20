@@ -17,11 +17,7 @@ func Verbose() (AddFunc, ReadVerboseFlagFunc) {
 		cmd.Flags().BoolP(verboseLong, verboseShort, false, "display all Git commands run under the hood")
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.Verbose], error) {
-		if !cmd.Flags().Changed(verboseLong) {
-			return None[configdomain.Verbose](), nil
-		}
-		value, err := cmd.Flags().GetBool(verboseLong)
-		return Some(configdomain.Verbose(value)), err
+		return readBoolOptFlag[configdomain.Verbose](cmd.Flags(), verboseLong)
 	}
 	return addFlag, readFlag
 }
