@@ -58,6 +58,10 @@ func RemoveContributionRegex(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyContributionRegex)
 }
 
+func RemoveDetached(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyDetached)
+}
+
 func RemoveDevRemote(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyDevRemote)
 }
@@ -185,6 +189,10 @@ func SetCodebergToken(runner subshelldomain.Runner, value forgedomain.CodebergTo
 
 func SetContributionRegex(runner subshelldomain.Runner, regex configdomain.ContributionRegex, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyContributionRegex, regex.String())
+}
+
+func SetDetached(runner subshelldomain.Runner, value configdomain.Detached, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyDetached, value.String())
 }
 
 func SetDevRemote(runner subshelldomain.Runner, remote gitdomain.Remote, scope configdomain.ConfigScope) error {

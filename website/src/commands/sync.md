@@ -35,7 +35,7 @@ without losing changes, even in edge cases.
 If you don't sync because:
 
 - you don't want to pull in new changes from the main branch:
-  [sync detached](sync.md#-d--detached).
+  [sync detached](sync.md#-d--detached--no-detached).
 - you don't want to increase pressure on your CI server:
   [sync without pushing](sync.md#--no-push) or indicate in your commit messages
   to CI to skip test runs
@@ -84,12 +84,16 @@ branch.
 The `--stack` aka `-s` parameter makes Git Town sync all branches in the stack
 that the current branch belongs to.
 
-#### `-d`<br>`--detached`
+#### `-d`<br>`--detached`<br>`--no-detached`
 
-The `--detached` aka `-d` flag does not pull updates from the main or perennial
-branch at the root of your branch hierarchy. This allows you to keep your
-branches in sync with each other and decide when to pull in changes from other
-developers.
+The `--detached` aka `-d` flag enables
+[detached mode](../preferences/detached.md) for the current command. If detached
+mode is enabled through [configuration data](../preferences/detached.md), the
+`--no-detached` flag disables detached mode for the current command.
+
+In detached mode, feature branches don't receive updates from the perennial
+branch at the root of your branch hierarchy. This can be useful in busy
+monorepos.
 
 #### `-p`<br>`--prune`
 

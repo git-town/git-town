@@ -20,6 +20,7 @@ Feature: show the configuration
     Given the main branch is "git-main"
     And Git setting "git-town.perennial-branches" is "git-perennial-1 git-perennial-2"
     And Git setting "git-town.contribution-regex" is "^git-contribution-regex"
+    And Git setting "git-town.detached" is "true"
     And Git setting "git-town.observed-regex" is "^git-observed-regex"
     And Git setting "git-town.perennial-regex" is "^git-perennial-"
     And Git setting "git-town.feature-regex" is "git-feature-.*"
@@ -57,6 +58,7 @@ Feature: show the configuration
       strategy = "api"
 
       [sync]
+      detached = false
       feature-strategy = "merge"
       perennial-strategy = "rebase"
       prototype-strategy = "rebase"
@@ -105,6 +107,7 @@ Feature: show the configuration
 
       Sync:
         auto-resolve phantom conflicts: yes
+        run detached: yes
         run pre-push hook: yes
         feature sync strategy: merge
         perennial sync strategy: ff-only

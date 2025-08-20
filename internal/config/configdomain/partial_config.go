@@ -23,6 +23,7 @@ type PartialConfig struct {
 	BranchTypeOverrides      BranchTypeOverrides
 	CodebergToken            Option[forgedomain.CodebergToken]
 	ContributionRegex        Option[ContributionRegex]
+	Detached                 Option[Detached]
 	DevRemote                Option[gitdomain.Remote]
 	DryRun                   Option[DryRun]
 	FeatureRegex             Option[FeatureRegex]
@@ -73,6 +74,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		BranchTypeOverrides:      other.BranchTypeOverrides.Concat(self.BranchTypeOverrides),
 		CodebergToken:            other.CodebergToken.Or(self.CodebergToken),
 		ContributionRegex:        other.ContributionRegex.Or(self.ContributionRegex),
+		Detached:                 other.Detached.Or(self.Detached),
 		DevRemote:                other.DevRemote.Or(self.DevRemote),
 		DryRun:                   other.DryRun.Or(self.DryRun),
 		FeatureRegex:             other.FeatureRegex.Or(self.FeatureRegex),

@@ -80,6 +80,7 @@ func mergeCommand() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve: None[configdomain.AutoResolve](),
+				Detached:    Some(configdomain.Detached(true)),
 				DryRun:      dryRun,
 				Verbose:     verbose,
 			})
@@ -129,7 +130,6 @@ func executeMerge(cliConfig configdomain.PartialConfig) error {
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               None[forgedomain.Connector](),
-		Detached:                true,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -193,7 +193,6 @@ func determineMergeData(repo execute.OpenRepoResult) (mergeData, dialogdomain.Ex
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
-		Detached:              true,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,

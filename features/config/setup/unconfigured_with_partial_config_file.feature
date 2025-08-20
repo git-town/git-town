@@ -42,6 +42,7 @@ Feature: ask for information not provided by the config file
       | sync feature strategy   | enter                 |
       | sync perennial strategy | enter                 |
       | sync prototype strategy | enter                 |
+      | detached                | enter                 |
       | share new branches      | enter                 |
       | push hook               | enter                 |
       | ship strategy           | enter                 |
@@ -49,6 +50,7 @@ Feature: ask for information not provided by the config file
     Then Git Town runs the commands
       | COMMAND                                             |
       | git config git-town.github-token gh-token           |
+      | git config git-town.detached false                  |
       | git config git-town.new-branch-type feature         |
       | git config git-town.github-connector api            |
       | git config git-town.perennial-branches branch-1     |

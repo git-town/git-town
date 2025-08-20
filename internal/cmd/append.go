@@ -97,6 +97,7 @@ func appendCmd() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve: autoResolve,
+				Detached:    detached,
 				DryRun:      dryRun,
 				Verbose:     verbose,
 			})
@@ -106,7 +107,6 @@ func appendCmd() *cobra.Command {
 				cliConfig:     cliConfig,
 				commit:        commit,
 				commitMessage: commitMessage,
-				detached:      detached,
 				propose:       propose,
 				prototype:     prototype,
 			})
@@ -130,7 +130,6 @@ type executeAppendArgs struct {
 	cliConfig     configdomain.PartialConfig
 	commit        configdomain.Commit
 	commitMessage Option[gitdomain.CommitMessage]
-	detached      configdomain.Detached
 	propose       configdomain.Propose
 	prototype     configdomain.Prototype
 }
@@ -150,7 +149,6 @@ func executeAppend(args executeAppendArgs) error {
 		beam:          args.beam,
 		commit:        args.commit,
 		commitMessage: args.commitMessage,
-		detached:      args.detached,
 		propose:       args.propose,
 		prototype:     args.prototype,
 		targetBranch:  gitdomain.NewLocalBranchName(args.arg),
@@ -178,7 +176,6 @@ func executeAppend(args executeAppendArgs) error {
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               data.connector,
-		Detached:                args.detached,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -205,7 +202,6 @@ type appendFeatureData struct {
 	commitsToBeam             gitdomain.Commits
 	config                    config.ValidatedConfig
 	connector                 Option[forgedomain.Connector]
-	detached                  configdomain.Detached
 	hasOpenChanges            bool
 	initialBranch             gitdomain.LocalBranchName
 	initialBranchInfo         *gitdomain.BranchInfo
@@ -255,7 +251,6 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
-		Detached:              args.detached,
 		Fetch:                 !repoStatus.OpenChanges && args.beam.IsFalse() && args.commit.IsFalse(),
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
@@ -310,7 +305,7 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 		return data, exit, err
 	}
 	branchNamesToSync := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(initialBranch)
-	if args.detached {
+	if repo.UnvalidatedConfig.NormalConfig.Detached {
 		branchNamesToSync = validatedConfig.RemovePerennials(branchNamesToSync)
 	}
 	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, branchNamesToSync...)
@@ -346,7 +341,6 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 		commitsToBeam:             commitsToBeam,
 		config:                    validatedConfig,
 		connector:                 connector,
-		detached:                  args.detached,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             initialBranch,
 		initialBranchInfo:         initialBranchInfo,
@@ -367,7 +361,6 @@ type determineAppendDataArgs struct {
 	beam          configdomain.Beam
 	commit        configdomain.Commit
 	commitMessage Option[gitdomain.CommitMessage]
-	detached      configdomain.Detached
 	propose       configdomain.Propose
 	prototype     configdomain.Prototype
 	targetBranch  gitdomain.LocalBranchName

@@ -29,7 +29,7 @@ func (self *SyncFeatureBranchMerge) Run(args shared.RunArgs) error {
 			break
 		}
 		parentIsPerennial := args.Config.Value.IsMainOrPerennialBranch(parent)
-		if args.Detached.IsTrue() && parentIsPerennial {
+		if args.Config.Value.NormalConfig.Detached.IsTrue() && parentIsPerennial {
 			break
 		}
 		if parentBranchInfo, hasParentInfo := branchInfos.FindLocalOrRemote(parent, args.Config.Value.NormalConfig.DevRemote).Get(); hasParentInfo {

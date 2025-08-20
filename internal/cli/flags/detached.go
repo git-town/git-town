@@ -6,15 +6,25 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const detachedLong = "detached"
+const (
+	detachedLong = "detached"
+	noDetached   = "no-" + detachedLong
+)
 
 // type-safe access to the CLI arguments of type configdomain.Detached
 func Detached() (AddFunc, ReadDetachedFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.Flags().BoolP(detachedLong, "d", false, "don't update the perennial root branch")
+		cmd.Flags().Bool(noDetached, true, "")
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.Detached], error) {
-		return readBool[configdomain.Detached](cmd.Flags(), detachedLong)
+		if value, err := readBool[configdomain.Detached](cmd.Flags(), detachedLong); value.IsSome() {
+			return value, err
+		}
+		if value, err := readBool[configdomain.Detached](cmd.Flags(), noDetached); value.IsSome() {
+			return value, err
+		}
+		return None[configdomain.Detached](), nil
 	}
 	return addFlag, readFlag
 }

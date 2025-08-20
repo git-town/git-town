@@ -81,6 +81,7 @@ func proposeCommand() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve: autoResolve,
+				Detached:    Some(configdomain.Detached(true)),
 				DryRun:      dryRun,
 				Verbose:     verbose,
 			})
@@ -146,7 +147,6 @@ func executePropose(args proposeArgs) error {
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               data.connector,
-		Detached:                true,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -223,7 +223,6 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (data p
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connectorOpt,
-		Detached:              true,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
