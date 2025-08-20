@@ -20,8 +20,8 @@ run by with the `--no-detached` flag.
 
 ## in config file
 
-In the [config file](../configuration-file.md) syncing tags can be set like
-this:
+The [config file](../configuration-file.md) can enable detached mode permanently
+for all commands like this:
 
 ```toml
 [sync]
@@ -30,7 +30,7 @@ detached = true
 
 ## in Git metadata
 
-To manually configure syncing tags in Git, run this command:
+To enable detached mode permanently for all commands using Git metadata:
 
 ```wrap
 git config [--global] git-town.detached <true|false>
