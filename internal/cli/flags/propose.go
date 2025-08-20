@@ -13,8 +13,7 @@ func Propose() (AddFunc, ReadProposeFlagFunc) {
 		cmd.Flags().BoolP(proposeLong, "", false, "propose the new branch")
 	}
 	readFlag := func(cmd *cobra.Command) (configdomain.Propose, error) {
-		value, err := cmd.Flags().GetBool(proposeLong)
-		return configdomain.Propose(value), err
+		return readBoolFlag[configdomain.Propose](cmd, proposeLong)
 	}
 	return addFlag, readFlag
 }
