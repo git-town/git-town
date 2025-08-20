@@ -20,6 +20,8 @@ func defineNegatedFlag(flags *pflag.FlagSet, name string, nonNegatedDefault bool
 	negateName := negate + name
 	flags.Bool(negateName, !nonNegatedDefault, "")
 	if err := flags.MarkHidden(negateName); err != nil {
+		// this will never panic in production,
+		// since our tests will catch when we provide a wrong flag name
 		panic(err)
 	}
 }
