@@ -13,10 +13,10 @@ not pull in changes from the perennial root.
 
 ## via CLI flag
 
-Commands that sync branches have a `--detached` flag that your can set to
-perform that sync in detached mode. If you have enabled detached mode
-permenantly through the configuration setting described on this page, you can
-use the `--no-detached` CLI flag to disable detached mode for that command.
+Commands that sync branches support a `--detached` flag to run the sync in
+detached mode. If detached mode is enabled for all commands via the
+configuration setting described on this page, you can override it for a single
+run by with the `--no-detached` flag.
 
 ## in config file
 
