@@ -12,19 +12,18 @@ import (
 )
 
 const (
-	detachedTitle = `Sync detached`
+	detachedTitle = `Sync in detached mode`
 	detachedHelp  = `
-Should "git town sync" pull
-updates from the main branch
-into feature branches?
+By default, "git town sync" pulls
+the latest commits from the main branch
+into your feature branches.
 
-Disabling this makes sense if
-too frequent unrelated updates
-in busy monorepos are a problem.
+Detached mode prevents this.  When enabled,
+feature branches only sync with their tracking
+and non-perennial parent branches.
 
-When disabled, you would then need to
-pull updates manually by running
-git town sync --detached=0
+To manually pull new commits from the main branch
+in detached mode, run "git town sync --no-detached".
 
 `
 )
