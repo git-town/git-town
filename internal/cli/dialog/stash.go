@@ -20,7 +20,7 @@ before creating and switching to a new branch?
 
 Stashing ensures these commands work reliably,
 even if the uncommitted changes conflict
-with the new branch.  The downside is that
+with the new branch. The downside is that
 stashing and unstashing alters your Git index.
 
 If you'd rather keep your index untouched,
