@@ -1,4 +1,4 @@
-Feature: conflicts between uncommitted changes and the main branch
+Feature: unmergeable conflict between uncommitted changes and the main branch
 
   Background:
     Given a Git repo with origin

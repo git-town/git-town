@@ -6,16 +6,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const (
-	detachedLong    = "detached"
-	detachedDefault = false
-)
+const detachedLong = "detached"
 
 // type-safe access to the CLI arguments of type configdomain.Detached
 func Detached() (AddFunc, ReadDetachedFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.Flags().BoolP(detachedLong, "d", detachedDefault, "don't update the perennial root branch")
-		defineNegatedFlag(cmd.Flags(), detachedLong, detachedDefault)
+		cmd.Flags().BoolP(detachedLong, "d", false, "don't update the perennial root branch")
+		defineNegatedFlag(cmd.Flags(), detachedLong)
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.Detached], error) {
 		return readNegatableFlag[configdomain.Detached](cmd.Flags(), detachedLong)
