@@ -1,4 +1,4 @@
-Feature: delete another than the current branch
+Feature: delete another branch while having conflicting open changes
 
   Background:
     Given a Git repo with origin
