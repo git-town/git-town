@@ -14,7 +14,7 @@ const (
 // type-safe access to the CLI arguments of type configdomain.Stash
 func Stash() (AddFunc, ReadStashFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.Flags().Bool(stashLong, stashDefault, "stash uncommitted changes")
+		cmd.Flags().Bool(stashLong, stashDefault, "stash uncommitted changes when creating branches")
 		defineNegatedFlag(cmd.Flags(), stashLong, stashDefault)
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.Stash], error) {
