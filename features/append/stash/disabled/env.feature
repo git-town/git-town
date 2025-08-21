@@ -1,4 +1,4 @@
-Feature: permanently disable stashing via an environment variable
+Feature: disable stashing via the environment variable
 
   Background:
     Given a Git repo with origin
