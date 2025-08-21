@@ -8,7 +8,7 @@ import (
 
 const (
 	stashLong    = "stash"
-	stashDefault = true
+	stashDefault = false
 )
 
 // type-safe access to the CLI arguments of type configdomain.Stash
