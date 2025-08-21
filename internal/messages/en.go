@@ -302,6 +302,7 @@ and will be removed in future versions of Git Town.`
 	SquashCommitAuthorQuery               = "Please choose an author for the squash commit:"
 	SquashCommitAuthorSelection           = "Selected squash commit author: %s\n"
 	SquashMessageProblem                  = "cannot comment out the squash commit message: %w"
+	StashResult                           = "Stash: %s\n"
 	StatusFileNotFound                    = "No status file found for this repository."
 	SwapNeedsCompress                     = "cannot swap because branch %q contains merge commits - please compress and try again"
 	SwapNeedsSync                         = "please sync your branches before swapping"
