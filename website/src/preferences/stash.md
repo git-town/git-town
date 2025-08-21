@@ -44,4 +44,4 @@ your machine. Without it, the setting applies only to the current repository.
 
 ## environment variable
 
-The `GIT_TOWN_STASH` environment variable configures this behavior.
+The `GIT_TOWN_STASH` environment variable also configures this behavior.
