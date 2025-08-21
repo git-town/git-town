@@ -17,14 +17,10 @@ Feature: delete another than the current branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                     |
-      | good   | git fetch --prune --tags    |
-      |        | git add -A                  |
-      |        | git stash -m "Git Town WIP" |
-      |        | git push origin :dead       |
-      |        | git branch -D dead          |
-      |        | git stash pop               |
-      |        | git restore --staged .      |
+      | BRANCH | COMMAND                  |
+      | good   | git fetch --prune --tags |
+      |        | git push origin :dead    |
+      |        | git branch -D dead       |
     And the uncommitted file has content:
       """
       conflicting content
