@@ -198,8 +198,15 @@ func (self *TestCommands) CreateCommit(commit testgit.Commit) {
 
 // creates a feature branch with the given name in this repository
 func (self *TestCommands) CreateFeatureBranch(name gitdomain.LocalBranchName, parent gitdomain.BranchName) {
-	self.CreateBranch(name, parent)
-	asserts.NoError(self.Config.NormalConfig.SetParent(self.TestRunner, name, parent.LocalName()))
+	if parent == self.Config.UnvalidatedConfig.MainBranch.GetOrPanic().BranchName() {
+		self.MustRun("git-town", "hack", name.String())
+		return
+	}
+	currentBranch := asserts.NoError1(self.Git.CurrentBranch(self.TestRunner))
+	if currentBranch.BranchName() != parent {
+		self.CheckoutBranch(parent.LocalName())
+	}
+	self.MustRun("git-town", "append", name.String())
 }
 
 // creates a file with the given name and content in this repository
