@@ -1,8 +1,9 @@
 # Stash uncommitted changes
 
 This setting controls whether Git Town stashes uncommitted changes away before
-creating and switching to a new branch, i.e. the ([hack](../commands/hack.md),
-[append](../commands/append.md), and [prepend](../commands/prepend.md) command.
+creating and switching to a new branch, i.e. affects the
+[hack](../commands/hack.md), [append](../commands/append.md), and
+[prepend](../commands/prepend.md) commands.
 
 ## options
 
