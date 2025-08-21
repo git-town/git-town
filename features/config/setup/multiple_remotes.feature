@@ -25,6 +25,7 @@ Feature: Configure a different development remote
       | sync upstream               | enter      |
       | sync tags                   | enter      |
       | detached                    | enter      |
+      | stash                       | enter      |
       | share new branches          | enter      |
       | push hook                   | enter      |
       | ship strategy               | enter      |
