@@ -200,6 +200,10 @@ EnterForgeData:
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
+	stash, exit, err := enterStash(data)
+	if err != nil || exit {
+		return emptyResult, exit, err
+	}
 	shareNewBranches, exit, err := enterShareNewBranches(data)
 	if err != nil || exit {
 		return emptyResult, exit, err
@@ -255,6 +259,7 @@ EnterForgeData:
 		ShareNewBranches:         shareNewBranches,
 		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,
 		ShipStrategy:             shipStrategy,
+		Stash:                    stash,
 		SyncFeatureStrategy:      syncFeatureStrategy,
 		SyncPerennialStrategy:    syncPerennialStrategy,
 		SyncPrototypeStrategy:    syncPrototypeStrategy,
@@ -579,6 +584,17 @@ func enterShipStrategy(data Data) (Option[configdomain.ShipStrategy], dialogdoma
 		Global: data.Config.GitGlobal.ShipStrategy,
 		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.ShipStrategy,
+	})
+}
+
+func enterStash(data Data) (Option[configdomain.Stash], dialogdomain.Exit, error) {
+	if data.Config.File.Stash.IsSome() {
+		return None[configdomain.Stash](), false, nil
+	}
+	return dialog.Stash(dialog.Args[configdomain.Stash]{
+		Global: data.Config.GitGlobal.Stash,
+		Inputs: data.Inputs,
+		Local:  data.Config.GitLocal.Stash,
 	})
 }
 

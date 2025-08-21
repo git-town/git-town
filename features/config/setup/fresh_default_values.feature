@@ -23,6 +23,7 @@ Feature: Accepting all default values in a brand-new Git repo leads to a working
       | sync upstream               | enter      |
       | sync tags                   | enter      |
       | detached                    | enter      |
+      | stash                       | enter      |
       | share new branches          | enter      |
       | push hook                   | enter      |
       | ship strategy               | enter      |
@@ -46,6 +47,7 @@ Feature: Accepting all default values in a brand-new Git repo leads to a working
     And local Git setting "git-town.forge-type" still doesn't exist
     And local Git setting "git-town.share-new-branches" still doesn't exist
     And local Git setting "git-town.push-hook" still doesn't exist
+    And local Git setting "git-town.stash" still doesn't exist
     And local Git setting "git-town.sync-feature-strategy" still doesn't exist
     And local Git setting "git-town.sync-perennial-strategy" still doesn't exist
     And local Git setting "git-town.sync-upstream" still doesn't exist
@@ -62,6 +64,7 @@ Feature: Accepting all default values in a brand-new Git repo leads to a working
       [create]
       new-branch-type = "feature"
       share-new-branches = "no"
+      stash = true
 
       [hosting]
       dev-remote = "origin"
@@ -109,5 +112,6 @@ Feature: Accepting all default values in a brand-new Git repo leads to a working
     And local Git setting "git-town.perennial-regex" still doesn't exist
     And local Git setting "git-town.share-new-branches" still doesn't exist
     And local Git setting "git-town.push-hook" still doesn't exist
+    And local Git setting "git-town.stash" still doesn't exist
     And local Git setting "git-town.ship-strategy" still doesn't exist
     And local Git setting "git-town.ship-delete-tracking-branch" still doesn't exist

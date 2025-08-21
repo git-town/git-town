@@ -83,6 +83,7 @@ func Cmd() *cobra.Command {
 				AutoResolve: autoResolve,
 				Detached:    Some(configdomain.Detached(true)),
 				DryRun:      dryRun,
+				Stash:       None[configdomain.Stash](),
 				Verbose:     verbose,
 			})
 			return executeSwap(args, cliConfig)
@@ -154,7 +155,7 @@ type swapData struct {
 	branchToSwapName    gitdomain.LocalBranchName
 	branchToSwapType    configdomain.BranchType
 	branchesSnapshot    gitdomain.BranchesSnapshot
-	children            []swapChildBranch
+	children            []swapBranch
 	config              config.ValidatedConfig
 	connector           Option[forgedomain.Connector]
 	grandParentBranch   gitdomain.LocalBranchName
@@ -169,7 +170,7 @@ type swapData struct {
 	stashSize           gitdomain.StashSize
 }
 
-type swapChildBranch struct {
+type swapBranch struct {
 	info     gitdomain.BranchInfo
 	name     gitdomain.LocalBranchName
 	proposal Option[forgedomain.Proposal]
@@ -272,7 +273,7 @@ func determineSwapData(args []string, repo execute.OpenRepoResult) (data swapDat
 		return data, false, errors.New(messages.SwapNoGrandParent)
 	}
 	childBranches := validatedConfig.NormalConfig.Lineage.Children(branchNameToSwap)
-	children := make([]swapChildBranch, len(childBranches))
+	children := make([]swapBranch, len(childBranches))
 	for c, childBranch := range childBranches {
 		proposal := None[forgedomain.Proposal]()
 		if connector, hasConnector := connector.Get(); hasConnector {
@@ -287,7 +288,7 @@ func determineSwapData(args []string, repo execute.OpenRepoResult) (data swapDat
 		if !has {
 			return data, false, fmt.Errorf("cannot find branch info for %q", childBranch)
 		}
-		children[c] = swapChildBranch{
+		children[c] = swapBranch{
 			info:     *childInfo,
 			name:     childBranch,
 			proposal: proposal,
@@ -354,7 +355,7 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 		DryRun:                   data.config.NormalConfig.DryRun,
 		InitialStashSize:         data.stashSize,
 		RunInGitRoot:             true,
-		StashOpenChanges:         false,
+		StashOpenChanges:         false, // TODO: stash if open changes here?
 		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch},
 	})
 	return prog.Immutable()

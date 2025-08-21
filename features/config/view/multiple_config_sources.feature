@@ -28,6 +28,7 @@ Feature: show the configuration
     And Git setting "git-town.share-new-branches" is "no"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     And Git setting "git-town.ship-delete-tracking-branch" is "false"
+    And Git setting "git-town.stash" is "false"
     And Git setting "git-town.sync-upstream" is "false"
     And Git setting "git-town.sync-tags" is "false"
     And Git setting "git-town.sync-perennial-strategy" is "ff-only"
@@ -47,6 +48,7 @@ Feature: show the configuration
 
       [create]
       share-new-branches = "push"
+      stash = true
 
       [hosting]
       forge-type = "github"
@@ -87,6 +89,7 @@ Feature: show the configuration
       Create:
         new branch type: (not set)
         share new branches: no
+        stash uncommitted changes: no
 
       Hosting:
         development remote: origin

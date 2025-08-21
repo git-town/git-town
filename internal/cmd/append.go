@@ -72,6 +72,7 @@ func appendCmd() *cobra.Command {
 	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
 	addProposeFlag, readProposeFlag := flags.Propose()
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
+	addStashFlag, readStashFlag := flags.Stash()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "append <branch>",
@@ -88,8 +89,9 @@ func appendCmd() *cobra.Command {
 			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
 			propose, errPropose := readProposeFlag(cmd)
 			prototype, errPrototype := readPrototypeFlag(cmd)
+			stash, errStash := readStashFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errBeam, errCommit, errCommitMessage, errDetached, errDryRun, errAutoResolve, errPropose, errPrototype, errVerbose); err != nil {
+			if err := cmp.Or(errBeam, errCommit, errCommitMessage, errDetached, errDryRun, errAutoResolve, errPropose, errPrototype, errStash, errVerbose); err != nil {
 				return err
 			}
 			if commitMessage.IsSome() || propose.IsTrue() {
@@ -99,6 +101,7 @@ func appendCmd() *cobra.Command {
 				AutoResolve: autoResolve,
 				Detached:    detached,
 				DryRun:      dryRun,
+				Stash:       stash,
 				Verbose:     verbose,
 			})
 			return executeAppend(executeAppendArgs{
@@ -120,6 +123,7 @@ func appendCmd() *cobra.Command {
 	addAutoResolveFlag(&cmd)
 	addProposeFlag(&cmd)
 	addPrototypeFlag(&cmd)
+	addStashFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
@@ -449,7 +453,7 @@ func appendProgram(frontend subshelldomain.Runner, data appendFeatureData, final
 			DryRun:                   data.config.NormalConfig.DryRun,
 			InitialStashSize:         data.stashSize,
 			RunInGitRoot:             true,
-			StashOpenChanges:         data.hasOpenChanges,
+			StashOpenChanges:         data.hasOpenChanges && data.config.NormalConfig.Stash.IsTrue(),
 			PreviousBranchCandidates: previousBranchCandidates,
 		})
 	}

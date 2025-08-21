@@ -9,7 +9,7 @@ import (
 
 type swapGitOperationsProgramArgs struct {
 	branchToSwap        gitdomain.BranchInfo
-	childBranchesToSwap []swapChildBranch
+	childBranchesToSwap []swapBranch
 	grandParentBranch   gitdomain.LocalBranchName
 	parentBranch        gitdomain.BranchInfo
 	program             Mutable[program.Program]
