@@ -115,7 +115,6 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.ship-strategy" is now "fast-forward"
     And local Git setting "git-town.ship-delete-tracking-branch" is now "true"
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
