@@ -117,7 +117,8 @@ Feature: change existing information in Git metadata
 
   Scenario: undo
     When I run "git-town undo"
-    Then global Git setting "alias.append" now doesn't exist
+    Then Git Town runs no commands
+    And global Git setting "alias.append" now doesn't exist
     And global Git setting "alias.diff-parent" now doesn't exist
     And global Git setting "alias.hack" now doesn't exist
     And global Git setting "alias.delete" now doesn't exist
