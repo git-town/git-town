@@ -14,11 +14,7 @@ func DryRun() (AddFunc, ReadDryRunFlagFunc) {
 		cmd.Flags().BoolP(dryRunLong, "", false, "print but do not run the Git commands")
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.DryRun], error) {
-		if !cmd.Flags().Changed(dryRunLong) {
-			return None[configdomain.DryRun](), nil
-		}
-		value, err := cmd.Flags().GetBool(dryRunLong)
-		return Some(configdomain.DryRun(value)), err
+		return readBoolOptFlag[configdomain.DryRun](cmd.Flags(), dryRunLong)
 	}
 	return addFlag, readFlag
 }

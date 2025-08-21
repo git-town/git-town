@@ -13,8 +13,7 @@ func Displaytypes() (AddFunc, ReadDisplayTypesFlagFunc) {
 		cmd.Flags().BoolP(displayTypesLong, "d", false, "display the branch types")
 	}
 	readFlag := func(cmd *cobra.Command) (configdomain.DisplayTypes, error) {
-		value, err := cmd.Flags().GetBool(displayTypesLong)
-		return configdomain.DisplayTypes(value), err
+		return readBoolFlag[configdomain.DisplayTypes](cmd, displayTypesLong)
 	}
 	return addFlag, readFlag
 }
