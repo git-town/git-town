@@ -1,10 +1,11 @@
-Feature: don't stash uncommitted changes
+Feature: don't stash uncommitted changes via Git metadata
 
   Background:
     Given a Git repo with origin
     And the current branch is "main"
     And an uncommitted file
-    When I run "git-town append new --no-stash"
+    And Git setting "git-town.stash" is "false"
+    When I run "git-town append new"
 
   Scenario: result
     Then Git Town runs the commands
