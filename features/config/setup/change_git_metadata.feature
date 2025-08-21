@@ -14,7 +14,6 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.sync-tags" is "false"
     And local Git setting "git-town.detached" is "false"
     And local Git setting "git-town.ship-delete-tracking-branch" is "false"
-    And local Git setting "git-town.stash" is "true"
     When I run "git-town config setup" and enter into the dialogs:
       | DIALOG                      | KEYS                   |
       | welcome                     | enter                  |
@@ -119,7 +118,6 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.ship-strategy" is now "fast-forward"
     And local Git setting "git-town.ship-delete-tracking-branch" is now "true"
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then global Git setting "alias.append" now doesn't exist
@@ -139,6 +137,7 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.forge-type" now doesn't exist
     And local Git setting "git-town.github-token" now doesn't exist
     And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
+    And local Git setting "git-town.stash" now doesn't exist
     And local Git setting "git-town.sync-feature-strategy" now doesn't exist
     And local Git setting "git-town.sync-perennial-strategy" now doesn't exist
     And local Git setting "git-town.sync-prototype-strategy" now doesn't exist
