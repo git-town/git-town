@@ -45,7 +45,6 @@ Feature: change existing information in Git metadata
       | ship delete tracking branch | down enter             |
       | config storage              | enter                  |
 
-  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                                  |
@@ -80,6 +79,7 @@ Feature: change existing information in Git metadata
       | git config git-town.share-new-branches push              |
       | git config git-town.ship-strategy fast-forward           |
       | git config git-town.ship-delete-tracking-branch true     |
+      | git config git-town.stash false                          |
       | git config git-town.sync-feature-strategy rebase         |
       | git config git-town.sync-perennial-strategy rebase       |
       | git config git-town.sync-prototype-strategy rebase       |
@@ -103,6 +103,7 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.forge-type" is now "github"
     And local Git setting "git-town.github-token" is now "gh-tok"
     And local Git setting "git-town.hosting-origin-hostname" is now "code"
+    And local Git setting "git-town.stash" is now "false"
     And local Git setting "git-town.sync-feature-strategy" is now "rebase"
     And local Git setting "git-town.sync-perennial-strategy" is now "rebase"
     And local Git setting "git-town.sync-prototype-strategy" is now "rebase"
@@ -118,6 +119,7 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.ship-strategy" is now "fast-forward"
     And local Git setting "git-town.ship-delete-tracking-branch" is now "true"
 
+  @this
   Scenario: undo
     When I run "git-town undo"
     Then global Git setting "alias.append" now doesn't exist
