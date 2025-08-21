@@ -13,8 +13,7 @@ func Merge() (AddFunc, ReadMergeFlagFunc) {
 		cmd.Flags().BoolP(mergeLong, "m", false, "merge uncommitted changes into the target branch")
 	}
 	readFlag := func(cmd *cobra.Command) (configdomain.SwitchUsingMerge, error) {
-		value, err := cmd.Flags().GetBool(mergeLong)
-		return configdomain.SwitchUsingMerge(value), err
+		return readBoolFlag[configdomain.SwitchUsingMerge](cmd, mergeLong)
 	}
 	return addFlag, readFlag
 }

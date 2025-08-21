@@ -17,8 +17,7 @@ func CommitMessageFile() (AddFunc, ReadCommitMessageFileFlagFunc) {
 		cmd.Flags().StringP(commitMessageFileLong, commitMessageFileShort, "", "Read the commit message from the given file (use \"-\" to read from STDIN)")
 	}
 	readFlag := func(cmd *cobra.Command) (Option[gitdomain.CommitMessageFile], error) {
-		value, err := cmd.Flags().GetString(commitMessageFileLong)
-		return NewOption(gitdomain.CommitMessageFile(value)), err
+		return readStringOptFlag[gitdomain.CommitMessageFile](cmd.Flags(), commitMessageFileLong)
 	}
 	return addFlag, readFlag
 }

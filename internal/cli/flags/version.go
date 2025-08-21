@@ -11,8 +11,7 @@ func Version() (AddFunc, ReadBoolFlagFunc) {
 		cmd.Flags().BoolP(versionLong, "V", false, "display the version number")
 	}
 	readFlag := func(cmd *cobra.Command) (bool, error) {
-		value, err := cmd.Flags().GetBool(versionLong)
-		return value, err
+		return cmd.Flags().GetBool(versionLong)
 	}
 	return addFlag, readFlag
 }

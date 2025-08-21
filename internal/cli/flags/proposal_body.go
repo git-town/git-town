@@ -16,8 +16,7 @@ func ProposalBody(short string) (AddFunc, ReadProposalBodyFlagFunc) {
 		cmd.Flags().StringP(bodyLong, short, "", "provide a body for the proposal")
 	}
 	readFlag := func(cmd *cobra.Command) (Option[gitdomain.ProposalBody], error) {
-		value, err := cmd.Flags().GetString(bodyLong)
-		return NewOption(gitdomain.ProposalBody(value)), err
+		return readStringOptFlag[gitdomain.ProposalBody](cmd.Flags(), bodyLong)
 	}
 	return addFlag, readFlag
 }

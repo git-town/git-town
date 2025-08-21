@@ -17,8 +17,7 @@ func ProposalTitle() (AddFunc, ReadProposalTitleFlagFunc) {
 		cmd.Flags().StringP(titleLong, titleShort, "", "provide a title for the proposal")
 	}
 	readFlag := func(cmd *cobra.Command) (Option[gitdomain.ProposalTitle], error) {
-		value, err := cmd.Flags().GetString(titleLong)
-		return NewOption(gitdomain.ProposalTitle(value)), err
+		return readStringOptFlag[gitdomain.ProposalTitle](cmd.Flags(), titleLong)
 	}
 	return addFlag, readFlag
 }
