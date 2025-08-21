@@ -58,6 +58,7 @@ type NormalConfig struct {
 	ShareNewBranches         configdomain.ShareNewBranches
 	ShipDeleteTrackingBranch configdomain.ShipDeleteTrackingBranch
 	ShipStrategy             configdomain.ShipStrategy
+	Stash                    configdomain.Stash
 	SyncFeatureStrategy      configdomain.SyncFeatureStrategy
 	SyncPerennialStrategy    configdomain.SyncPerennialStrategy
 	SyncPrototypeStrategy    configdomain.SyncPrototypeStrategy
@@ -111,6 +112,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		ShareNewBranches:         other.ShareNewBranches.GetOrElse(self.ShareNewBranches),
 		ShipDeleteTrackingBranch: other.ShipDeleteTrackingBranch.GetOrElse(self.ShipDeleteTrackingBranch),
 		ShipStrategy:             other.ShipStrategy.GetOrElse(self.ShipStrategy),
+		Stash:                    other.Stash.GetOrElse(self.Stash),
 		SyncFeatureStrategy:      other.SyncFeatureStrategy.GetOrElse(self.SyncFeatureStrategy),
 		SyncPerennialStrategy:    other.SyncPerennialStrategy.GetOrElse(self.SyncPerennialStrategy),
 		SyncPrototypeStrategy:    other.SyncPrototypeStrategy.GetOrElse(self.SyncPrototypeStrategy),
@@ -253,6 +255,7 @@ func DefaultNormalConfig() NormalConfig {
 		ShareNewBranches:         configdomain.ShareNewBranchesNone,
 		ShipDeleteTrackingBranch: true,
 		ShipStrategy:             configdomain.ShipStrategyAPI,
+		Stash:                    true,
 		SyncFeatureStrategy:      configdomain.SyncFeatureStrategyMerge,
 		SyncPerennialStrategy:    configdomain.SyncPerennialStrategyRebase,
 		SyncPrototypeStrategy:    configdomain.SyncPrototypeStrategyRebase,
@@ -295,6 +298,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		ShareNewBranches:         partial.ShareNewBranches.GetOrElse(defaults.ShareNewBranches),
 		ShipDeleteTrackingBranch: partial.ShipDeleteTrackingBranch.GetOrElse(defaults.ShipDeleteTrackingBranch),
 		ShipStrategy:             partial.ShipStrategy.GetOrElse(defaults.ShipStrategy),
+		Stash:                    partial.Stash.GetOrElse(defaults.Stash),
 		SyncFeatureStrategy:      syncFeatureStrategy,
 		SyncPerennialStrategy:    partial.SyncPerennialStrategy.GetOrElse(defaults.SyncPerennialStrategy),
 		SyncPrototypeStrategy:    partial.SyncPrototypeStrategy.GetOrElse(configdomain.NewSyncPrototypeStrategyFromSyncFeatureStrategy(syncFeatureStrategy)),
