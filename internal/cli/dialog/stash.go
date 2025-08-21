@@ -12,20 +12,24 @@ import (
 )
 
 const (
-	stashTitle = `Stash uncommitted changes`
+	stashTitle = `Stash uncommitted changes when creating branches`
 	stashHelp  = `
-Should the "hack", "append", and "prepend" commands
-stash away uncommitted changes
-before creating the new branch?
+Should the hack, append, and prepend commands
+automatically stash uncommitted changes
+before creating and switching to a new branch?
 
-Stashing uncommitted changes makes these commands work
-even if the uncommitted changes conflict with other branches.
-But it changes your Git index.
-So if you carefully stage your files before creating new branches,
-you could disable this setting to keep your index as is.
+Stashing ensures these commands work reliably,
+even if the uncommitted changes conflict
+with the new branch. The downside is that
+stashing and unstashing alters your Git index.
 
-You can always enable or disable stashing when needed using the
---stash and --no-stash CLI flags.
+If you'd rather keep your index untouched,
+at the cost of potentially dealing with more merge conflicts,
+you can disable stashing.
+
+You can also override the default on a case-by-case basis
+with the --stash and --no-stash CLI flags.
+
 `
 )
 

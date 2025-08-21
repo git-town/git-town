@@ -67,7 +67,6 @@ main
 
 func deleteCommand() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
-	addStashFlag, readStashFlag := flags.Stash()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "delete [<branch>]",
@@ -76,23 +75,21 @@ func deleteCommand() *cobra.Command {
 		Long:  cmdhelpers.Long(deleteDesc, deleteHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			dryRun, errDryRun := readDryRunFlag(cmd)
-			stash, errStash := readStashFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errDryRun, errStash, errVerbose); err != nil {
+			if err := cmp.Or(errDryRun, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve: None[configdomain.AutoResolve](),
 				Detached:    Some(configdomain.Detached(true)),
 				DryRun:      dryRun,
-				Stash:       stash,
+				Stash:       None[configdomain.Stash](),
 				Verbose:     verbose,
 			})
 			return executeDelete(args, cliConfig)
 		},
 	}
 	addDryRunFlag(&cmd)
-	addStashFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
