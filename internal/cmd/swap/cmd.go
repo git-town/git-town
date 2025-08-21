@@ -83,6 +83,7 @@ func Cmd() *cobra.Command {
 				AutoResolve: autoResolve,
 				Detached:    Some(configdomain.Detached(true)),
 				DryRun:      dryRun,
+				Stash:       None[configdomain.Stash](),
 				Verbose:     verbose,
 			})
 			return executeSwap(args, cliConfig)
@@ -354,7 +355,7 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 		DryRun:                   data.config.NormalConfig.DryRun,
 		InitialStashSize:         data.stashSize,
 		RunInGitRoot:             true,
-		StashOpenChanges:         false,
+		StashOpenChanges:         false, // TODO: stash if open changes here?
 		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch},
 	})
 	return prog.Immutable()

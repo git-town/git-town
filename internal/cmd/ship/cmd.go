@@ -72,6 +72,7 @@ func Cmd() *cobra.Command {
 				AutoResolve: None[configdomain.AutoResolve](),
 				Detached:    None[configdomain.Detached](),
 				DryRun:      dryRun,
+				Stash:       None[configdomain.Stash](),
 				Verbose:     verbose,
 			})
 			return executeShip(executeShipArgs{

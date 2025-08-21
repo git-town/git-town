@@ -75,6 +75,7 @@ func prependCommand() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addProposeFlag, readProposeFlag := flags.Propose()
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
+	addStashFlag, readStashFlag := flags.Stash()
 	addTitleFlag, readTitleFlag := flags.ProposalTitle()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
@@ -93,9 +94,10 @@ func prependCommand() *cobra.Command {
 			dryRun, errDryRun := readDryRunFlag(cmd)
 			propose, errPropose := readProposeFlag(cmd)
 			prototype, errPrototype := readPrototypeFlag(cmd)
+			stash, errStash := readStashFlag(cmd)
 			title, errTitle := readTitleFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errAutoResolve, errBeam, errBodyText, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errTitle, errVerbose); err != nil {
+			if err := cmp.Or(errAutoResolve, errBeam, errBodyText, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errStash, errTitle, errVerbose); err != nil {
 				return err
 			}
 			if commitMessage.IsSome() {
@@ -108,6 +110,7 @@ func prependCommand() *cobra.Command {
 				AutoResolve: autoResolve,
 				Detached:    detached,
 				DryRun:      dryRun,
+				Stash:       stash,
 				Verbose:     verbose,
 			})
 			return executePrepend(prependArgs{
@@ -132,6 +135,7 @@ func prependCommand() *cobra.Command {
 	addDryRunFlag(&cmd)
 	addProposeFlag(&cmd)
 	addPrototypeFlag(&cmd)
+	addStashFlag(&cmd)
 	addTitleFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
@@ -466,7 +470,7 @@ func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages
 			DryRun:                   repo.UnvalidatedConfig.NormalConfig.DryRun,
 			InitialStashSize:         data.stashSize,
 			RunInGitRoot:             true,
-			StashOpenChanges:         data.hasOpenChanges,
+			StashOpenChanges:         data.hasOpenChanges && data.config.NormalConfig.Stash.IsTrue(),
 			PreviousBranchCandidates: previousBranchCandidates,
 		})
 	}

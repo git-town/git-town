@@ -67,6 +67,7 @@ main
 
 func deleteCommand() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addStashFlag, readStashFlag := flags.Stash()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "delete [<branch>]",
@@ -75,20 +76,23 @@ func deleteCommand() *cobra.Command {
 		Long:  cmdhelpers.Long(deleteDesc, deleteHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			dryRun, errDryRun := readDryRunFlag(cmd)
+			stash, errStash := readStashFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errDryRun, errVerbose); err != nil {
+			if err := cmp.Or(errDryRun, errStash, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve: None[configdomain.AutoResolve](),
 				Detached:    Some(configdomain.Detached(true)),
 				DryRun:      dryRun,
+				Stash:       stash,
 				Verbose:     verbose,
 			})
 			return executeDelete(args, cliConfig)
 		},
 	}
 	addDryRunFlag(&cmd)
+	addStashFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
@@ -312,7 +316,7 @@ func deleteProgram(repo execute.OpenRepoResult, data deleteData, finalMessages s
 		DryRun:                   data.config.NormalConfig.DryRun,
 		InitialStashSize:         data.stashSize,
 		RunInGitRoot:             true,
-		StashOpenChanges:         hasLocalBranchToDelete && data.initialBranch != localBranchNameToDelete && data.hasOpenChanges,
+		StashOpenChanges:         hasLocalBranchToDelete && data.initialBranch != localBranchNameToDelete && data.hasOpenChanges && data.config.NormalConfig.Stash.IsTrue(),
 		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch, Some(data.initialBranch)},
 	})
 	return optimizer.Optimize(prog.Immutable()), undoProg.Immutable()
