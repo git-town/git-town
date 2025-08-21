@@ -44,5 +44,4 @@ your machine. Without it, the setting applies only to the current repository.
 
 ## environment variable
 
-The `GIT_TOWN_STASH` environment variable also controls whether Git Town stashes
-uncommitted changes.
+The `GIT_TOWN_STASH` environment variable configures this behavior.
