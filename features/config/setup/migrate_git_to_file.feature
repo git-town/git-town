@@ -92,24 +92,24 @@ Feature: migrate existing configuration in Git metadata to a config file
     And the configuration file is now:
       """
       # More info around this file at https://www.git-town.com/configuration-file
-      
+
       [branches]
       main = "main"
       perennials = ["qa"]
       perennial-regex = "release-.*"
-      
+
       [create]
       new-branch-type = "prototype"
       share-new-branches = "no"
       stash = false
-      
+
       [hosting]
       dev-remote = "fork"
-      
+
       [ship]
       delete-tracking-branch = false
       strategy = "squash-merge"
-      
+
       [sync]
       feature-strategy = "merge"
       perennial-strategy = "rebase"
