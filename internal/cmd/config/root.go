@@ -84,6 +84,7 @@ func printConfig(config config.UnvalidatedConfig) {
 	print.Header("Create")
 	print.Entry("new branch type", format.OptionalStringerSetting(config.NormalConfig.NewBranchType))
 	print.Entry("share new branches", config.NormalConfig.ShareNewBranches.String())
+	print.Entry("stash uncommitted changes", config.NormalConfig.Stash.String())
 	fmt.Println()
 	print.Header("Hosting")
 	print.Entry("development remote", config.NormalConfig.DevRemote.String())
