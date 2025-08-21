@@ -2,22 +2,26 @@ Feature: don't stash uncommitted changes via Git metadata
 
   Background:
     Given a Git repo with origin
-    And the current branch is "main"
+    And the branches
+      | NAME | TYPE    | PARENT | LOCATIONS     |
+      | old  | feature | main   | local, origin |
+    And the current branch is "old"
     And an uncommitted file
     And Git setting "git-town.stash" is "false"
-    When I run "git-town append new --stash"
+    When I run "git-town prepend new --stash"
 
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                     |
-      | main   | git add -A                  |
+      | old    | git add -A                  |
       |        | git stash -m "Git Town WIP" |
-      |        | git checkout -b new         |
+      |        | git checkout -b new main    |
       | new    | git stash pop               |
       |        | git restore --staged .      |
     And this lineage exists now
       | BRANCH | PARENT |
       | new    | main   |
+      | old    | new    |
 
   Scenario: undo
     When I run "git-town undo"
@@ -25,8 +29,8 @@ Feature: don't stash uncommitted changes via Git metadata
       | BRANCH | COMMAND                     |
       | new    | git add -A                  |
       |        | git stash -m "Git Town WIP" |
-      |        | git checkout main           |
-      | main   | git branch -D new           |
+      |        | git checkout old            |
+      | old    | git branch -D new           |
       |        | git stash pop               |
       |        | git restore --staged .      |
     And the initial commits exist now
