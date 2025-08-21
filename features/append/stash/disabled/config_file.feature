@@ -1,4 +1,4 @@
-Feature: don't stash uncommitted changes via Git metadata
+Feature: permanently disable stashing via config file
 
   Background:
     Given a Git repo with origin
