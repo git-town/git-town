@@ -308,7 +308,6 @@ func deleteProgram(repo execute.OpenRepoResult, data deleteData, finalMessages s
 			Branch: localBranchNameToDelete,
 		})
 	}
-	localBranchNameToDelete, _ = data.branchToDeleteInfo.LocalName.Get()
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.config.NormalConfig.DryRun,
 		InitialStashSize:         data.stashSize,
