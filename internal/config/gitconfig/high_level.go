@@ -138,6 +138,10 @@ func RemoveShipStrategy(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyShipStrategy)
 }
 
+func RemoveStash(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyStash)
+}
+
 func RemoveSyncFeatureStrategy(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncFeatureStrategy)
 }
@@ -273,6 +277,10 @@ func SetShipDeleteTrackingBranch(runner subshelldomain.Runner, value configdomai
 
 func SetShipStrategy(runner subshelldomain.Runner, value configdomain.ShipStrategy, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyShipStrategy, value.String())
+}
+
+func SetStash(runner subshelldomain.Runner, value configdomain.Stash, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyStash, value.String())
 }
 
 func SetSyncFeatureStrategy(runner subshelldomain.Runner, value configdomain.SyncFeatureStrategy, scope configdomain.ConfigScope) error {

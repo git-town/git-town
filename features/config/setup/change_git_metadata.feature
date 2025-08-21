@@ -14,6 +14,7 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.sync-tags" is "false"
     And local Git setting "git-town.detached" is "false"
     And local Git setting "git-town.ship-delete-tracking-branch" is "false"
+    And local Git setting "git-town.stash" is "true"
     When I run "git-town config setup" and enter into the dialogs:
       | DIALOG                      | KEYS                   |
       | welcome                     | enter                  |
@@ -37,12 +38,14 @@ Feature: change existing information in Git metadata
       | sync upstream               | down enter             |
       | sync tags                   | down enter             |
       | detached                    | up enter               |
+      | stash                       | down enter             |
       | share-new-branches          | down enter             |
       | push hook                   | down enter             |
       | ship strategy               | down down enter        |
       | ship delete tracking branch | down enter             |
       | config storage              | enter                  |
 
+  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                                  |
