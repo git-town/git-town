@@ -32,14 +32,15 @@ Feature: no configuration data
         perennial regex: (not set)
         prototype branches: prototype-1, prototype-2
         unknown branch type: feature
-
+      
       Configuration:
         offline: no
-
+      
       Create:
         new branch type: (not set)
         share new branches: no
-
+        stash uncommitted changes: yes
+      
       Hosting:
         development remote: origin
         forge type: (not set)
@@ -52,11 +53,11 @@ Feature: no configuration data
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
-
+      
       Ship:
         delete tracking branch: yes
         ship strategy: api
-
+      
       Sync:
         auto-resolve phantom conflicts: yes
         run detached: no
