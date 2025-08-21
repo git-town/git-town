@@ -29,6 +29,7 @@ Feature: enter the GitLab API token
       | sync upstream               | enter             |                                             |
       | sync tags                   | enter             |                                             |
       | detached                    | enter             |                                             |
+      | stash                       | enter             |                                             |
       | share new branches          | enter             |                                             |
       | push hook                   | enter             |                                             |
       | ship strategy               | enter             |                                             |
@@ -45,6 +46,7 @@ Feature: enter the GitLab API token
       | git config git-town.share-new-branches no            |
       | git config git-town.ship-strategy api                |
       | git config git-town.ship-delete-tracking-branch true |
+      | git config git-town.stash true                       |
       | git config git-town.sync-feature-strategy merge      |
       | git config git-town.sync-perennial-strategy ff-only  |
       | git config git-town.sync-prototype-strategy merge    |
@@ -76,6 +78,7 @@ Feature: enter the GitLab API token
       | sync upstream               | enter             |                                             |
       | sync tags                   | enter             |                                             |
       | detached                    | enter             |                                             |
+      | stash                       | enter             |                                             |
       | share new branches          | enter             |                                             |
       | push hook                   | enter             |                                             |
       | ship strategy               | enter             |                                             |
@@ -93,6 +96,7 @@ Feature: enter the GitLab API token
       | git config git-town.share-new-branches no            |
       | git config git-town.ship-strategy api                |
       | git config git-town.ship-delete-tracking-branch true |
+      | git config git-town.stash true                       |
       | git config git-town.sync-feature-strategy merge      |
       | git config git-town.sync-perennial-strategy ff-only  |
       | git config git-town.sync-prototype-strategy merge    |
@@ -126,6 +130,7 @@ Feature: enter the GitLab API token
       | sync upstream               | enter           |                                             |
       | sync tags                   | enter           |                                             |
       | detached                    | enter           |                                             |
+      | stash                       | enter           |                                             |
       | share new branches          | enter           |                                             |
       | push hook                   | enter           |                                             |
       | ship strategy               | enter           |                                             |
@@ -142,6 +147,7 @@ Feature: enter the GitLab API token
       | git config git-town.share-new-branches no            |
       | git config git-town.ship-strategy api                |
       | git config git-town.ship-delete-tracking-branch true |
+      | git config git-town.stash true                       |
       | git config git-town.sync-feature-strategy merge      |
       | git config git-town.sync-perennial-strategy ff-only  |
       | git config git-town.sync-prototype-strategy merge    |
@@ -175,6 +181,7 @@ Feature: enter the GitLab API token
       | sync upstream               | enter                                     |                                             |
       | sync tags                   | enter                                     |                                             |
       | detached                    | enter                                     |                                             |
+      | stash                       | enter                                     |                                             |
       | share new branches          | enter                                     |                                             |
       | push hook                   | enter                                     |                                             |
       | ship strategy               | enter                                     |                                             |
@@ -191,6 +198,7 @@ Feature: enter the GitLab API token
       | git config git-town.share-new-branches no            |
       | git config git-town.ship-strategy api                |
       | git config git-town.ship-delete-tracking-branch true |
+      | git config git-town.stash true                       |
       | git config git-town.sync-feature-strategy merge      |
       | git config git-town.sync-perennial-strategy ff-only  |
       | git config git-town.sync-prototype-strategy merge    |
