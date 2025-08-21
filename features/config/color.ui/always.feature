@@ -17,6 +17,7 @@ Feature: show the configuration
       | prototype-2    | prototype    | main   | local     |
     And local Git setting "color.ui" is "always"
 
+  @this
   Scenario: all configured in Git, no stacked changes
     Given Git setting "git-town.perennial-branches" is "qa staging"
     And Git setting "git-town.perennial-regex" is "^release-"
@@ -28,6 +29,7 @@ Feature: show the configuration
     And Git setting "git-town.github-connector" is "api"
     And Git setting "git-town.gitlab-connector" is "api"
     And Git setting "git-town.detached" is "true"
+    And Git setting "git-town.stash" is "false"
     When I run "git-town config"
     Then Git Town prints:
       """
@@ -50,7 +52,7 @@ Feature: show the configuration
       Create:
         new branch type: (not set)
         share new branches: no
-        stash uncommitted changes: true
+        stash uncommitted changes: no
       
       Hosting:
         development remote: origin
