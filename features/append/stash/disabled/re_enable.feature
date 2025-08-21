@@ -1,4 +1,4 @@
-Feature: don't stash uncommitted changes via Git metadata
+Feature: enforce stashing via CLI flag
 
   Background:
     Given a Git repo with origin

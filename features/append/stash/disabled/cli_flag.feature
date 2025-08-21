@@ -1,4 +1,4 @@
-Feature: enforce stashing via CLI flag
+Feature: enforce non-stashing via CLI flag
 
   Background:
     Given a Git repo with origin
