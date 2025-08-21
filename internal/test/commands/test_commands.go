@@ -198,6 +198,9 @@ func (self *TestCommands) CreateCommit(commit testgit.Commit) {
 
 // creates a feature branch with the given name in this repository
 func (self *TestCommands) CreateFeatureBranch(name gitdomain.LocalBranchName, parent gitdomain.BranchName) {
+	// NOTE: we need to execute Git Town to set up branches because that makes the tests more realistic.
+	// In the past, there were false test results because a repo with branches set up manually in tests
+	// didn't behave as a regular repo would.
 	if parent == self.Config.UnvalidatedConfig.MainBranch.GetOrPanic().BranchName() {
 		self.MustRun("git-town", "hack", name.String())
 		return

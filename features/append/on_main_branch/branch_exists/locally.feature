@@ -5,6 +5,7 @@ Feature: already existing local branch
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS |
       | existing | feature | main   | local     |
+    And the current branch is "main"
     When I run "git-town append existing"
 
   Scenario: result
@@ -15,9 +16,5 @@ Feature: already existing local branch
       """
       there is already a branch "existing"
       """
-
-  Scenario: undo
-    When I run "git-town undo"
-    Then Git Town runs no commands
-    And the initial commits exist now
-    And the initial branches and lineage exist now
+# The last "append" command didn't leave runstate that could be undone.
+# When the user runs "undo", it would undo the Git Town command that executed before.
