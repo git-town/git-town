@@ -37,6 +37,7 @@ Feature: change existing information in Git metadata
       | sync upstream               | down enter             |
       | sync tags                   | down enter             |
       | detached                    | up enter               |
+      | stash                       | down enter             |
       | share-new-branches          | down enter             |
       | push hook                   | down enter             |
       | ship strategy               | down down enter        |
@@ -77,6 +78,7 @@ Feature: change existing information in Git metadata
       | git config git-town.share-new-branches push              |
       | git config git-town.ship-strategy fast-forward           |
       | git config git-town.ship-delete-tracking-branch true     |
+      | git config git-town.stash false                          |
       | git config git-town.sync-feature-strategy rebase         |
       | git config git-town.sync-perennial-strategy rebase       |
       | git config git-town.sync-prototype-strategy rebase       |
@@ -100,6 +102,7 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.forge-type" is now "github"
     And local Git setting "git-town.github-token" is now "gh-tok"
     And local Git setting "git-town.hosting-origin-hostname" is now "code"
+    And local Git setting "git-town.stash" is now "false"
     And local Git setting "git-town.sync-feature-strategy" is now "rebase"
     And local Git setting "git-town.sync-perennial-strategy" is now "rebase"
     And local Git setting "git-town.sync-prototype-strategy" is now "rebase"
@@ -135,6 +138,7 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.forge-type" now doesn't exist
     And local Git setting "git-town.github-token" now doesn't exist
     And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
+    And local Git setting "git-town.stash" now doesn't exist
     And local Git setting "git-town.sync-feature-strategy" now doesn't exist
     And local Git setting "git-town.sync-perennial-strategy" now doesn't exist
     And local Git setting "git-town.sync-prototype-strategy" now doesn't exist

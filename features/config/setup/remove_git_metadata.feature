@@ -35,6 +35,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.dev-remote" is "fork"
     And local Git setting "git-town.push-hook" is "false"
     And local Git setting "git-town.hosting-origin-hostname" is "code"
+    And local Git setting "git-town.stash" is "false"
     And local Git setting "git-town.sync-feature-strategy" is "rebase"
     And local Git setting "git-town.sync-perennial-strategy" is "ff-only"
     And local Git setting "git-town.sync-prototype-strategy" is "rebase"
@@ -65,6 +66,7 @@ Feature: remove existing configuration in Git metadata
       | sync upstream               | down enter                                                                  |                     |
       | sync tags                   | down enter                                                                  |                     |
       | detached                    | down enter                                                                  |                     |
+      | stash                       | up enter                                                                    |                     |
       | share new branches          | up enter                                                                    | enable              |
       | push hook                   | down enter                                                                  | enable              |
       | ship strategy               | down enter                                                                  |                     |
@@ -103,6 +105,7 @@ Feature: remove existing configuration in Git metadata
       | git config git-town.share-new-branches no            |
       | git config git-town.ship-strategy api                |
       | git config git-town.ship-delete-tracking-branch true |
+      | git config git-town.stash true                       |
       | git config git-town.sync-feature-strategy merge      |
       | git config git-town.sync-perennial-strategy rebase   |
       | git config git-town.sync-prototype-strategy merge    |
@@ -139,6 +142,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.push-hook" is now "true"
     And local Git setting "git-town.ship-strategy" is now "api"
     And local Git setting "git-town.ship-delete-tracking-branch" is now "true"
+    And local Git setting "git-town.stash" is now "true"
 
   Scenario: undo
     When I run "git-town undo"
@@ -175,3 +179,4 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.push-hook" is now "false"
     And local Git setting "git-town.ship-strategy" is now "squash-merge"
     And local Git setting "git-town.ship-delete-tracking-branch" is now "false"
+    And local Git setting "git-town.stash" is now "false"

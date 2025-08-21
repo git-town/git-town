@@ -25,6 +25,7 @@ Feature: override an existing Git alias
       | sync upstream               | enter      |
       | sync tags                   | enter      |
       | detached                    | enter      |
+      | stash                       | enter      |
       | share new branches          | enter      |
       | push hook                   | enter      |
       | ship strategy               | enter      |

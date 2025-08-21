@@ -46,6 +46,7 @@ Feature: show the configuration in Spanish
       Create:
         new branch type: (not set)
         share new branches: no
+        stash uncommitted changes: yes
 
       Hosting:
         development remote: origin

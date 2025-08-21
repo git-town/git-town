@@ -120,6 +120,9 @@ func saveAllToFile(userInput UserInput, gitConfig configdomain.PartialConfig, ru
 	if gitConfig.ShipDeleteTrackingBranch.IsSome() {
 		_ = gitconfig.RemoveShipDeleteTrackingBranch(runner)
 	}
+	if gitConfig.Stash.IsSome() {
+		_ = gitconfig.RemoveStash(runner)
+	}
 	if gitConfig.SyncFeatureStrategy.IsSome() {
 		_ = gitconfig.RemoveSyncFeatureStrategy(runner)
 	}
@@ -232,6 +235,11 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 	if configFile.ShipDeleteTrackingBranch.IsNone() {
 		fc.Check(
 			saveShipDeleteTrackingBranch(userInput.Data.ShipDeleteTrackingBranch, existingGitConfig.ShipDeleteTrackingBranch, frontend),
+		)
+	}
+	if configFile.Stash.IsNone() {
+		fc.Check(
+			saveStash(userInput.Data.Stash, existingGitConfig.Stash, frontend),
 		)
 	}
 	if configFile.SyncFeatureStrategy.IsNone() {
@@ -508,6 +516,16 @@ func saveShipStrategy(valueToWriteToGit Option[configdomain.ShipStrategy], value
 		return gitconfig.SetShipStrategy(runner, value, configdomain.ConfigScopeLocal)
 	}
 	return gitconfig.RemoveShipStrategy(runner)
+}
+
+func saveStash(valueToWriteToGit Option[configdomain.Stash], valueAlreadyInGit Option[configdomain.Stash], runner subshelldomain.Runner) error {
+	if valueAlreadyInGit.Equal(valueToWriteToGit) {
+		return nil
+	}
+	if value, has := valueToWriteToGit.Get(); has {
+		return gitconfig.SetStash(runner, value, configdomain.ConfigScopeLocal)
+	}
+	return gitconfig.RemoveStash(runner)
 }
 
 func saveSyncFeatureStrategy(valueToWriteToGit Option[configdomain.SyncFeatureStrategy], valueAlreadyInGit Option[configdomain.SyncFeatureStrategy], runner subshelldomain.Runner) error {

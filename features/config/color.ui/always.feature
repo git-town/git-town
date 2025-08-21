@@ -28,6 +28,7 @@ Feature: show the configuration
     And Git setting "git-town.github-connector" is "api"
     And Git setting "git-town.gitlab-connector" is "api"
     And Git setting "git-town.detached" is "true"
+    And Git setting "git-town.stash" is "false"
     When I run "git-town config"
     Then Git Town prints:
       """
@@ -50,6 +51,7 @@ Feature: show the configuration
       Create:
         new branch type: (not set)
         share new branches: no
+        stash uncommitted changes: no
 
       Hosting:
         development remote: origin
@@ -94,6 +96,7 @@ Feature: show the configuration
 
       [create]
       share-new-branches = "push"
+      stash = false
 
       [hosting]
       forge-type = "github"
@@ -134,6 +137,7 @@ Feature: show the configuration
       Create:
         new branch type: (not set)
         share new branches: push
+        stash uncommitted changes: no
 
       Hosting:
         development remote: origin
@@ -182,6 +186,7 @@ Feature: show the configuration
     And Git setting "git-town.unknown-branch-type" is "observed"
     And Git setting "git-town.auto-resolve" is "false"
     And Git setting "git-town.detached" is "true"
+    And Git setting "git-town.stash" is "false"
     And the configuration file:
       """
       [branches]
@@ -195,6 +200,7 @@ Feature: show the configuration
 
       [create]
       share-new-branches = "push"
+      stash = true
 
       [hosting]
       forge-type = "github"
@@ -235,6 +241,7 @@ Feature: show the configuration
       Create:
         new branch type: (not set)
         share new branches: no
+        stash uncommitted changes: no
 
       Hosting:
         development remote: origin
@@ -296,6 +303,7 @@ Feature: show the configuration
       Create:
         new branch type: (not set)
         share new branches: no
+        stash uncommitted changes: yes
 
       Hosting:
         development remote: origin
@@ -363,6 +371,7 @@ Feature: show the configuration
       Create:
         new branch type: (not set)
         share new branches: no
+        stash uncommitted changes: yes
 
       Hosting:
         development remote: origin

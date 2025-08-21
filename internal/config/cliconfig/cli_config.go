@@ -11,6 +11,7 @@ type NewArgs struct {
 	AutoResolve Option[configdomain.AutoResolve]
 	Detached    Option[configdomain.Detached]
 	DryRun      Option[configdomain.DryRun]
+	Stash       Option[configdomain.Stash]
 	Verbose     Option[configdomain.Verbose]
 }
 
@@ -48,6 +49,7 @@ func New(args NewArgs) configdomain.PartialConfig {
 		ShareNewBranches:         None[configdomain.ShareNewBranches](),
 		ShipDeleteTrackingBranch: None[configdomain.ShipDeleteTrackingBranch](),
 		ShipStrategy:             None[configdomain.ShipStrategy](),
+		Stash:                    args.Stash,
 		SyncFeatureStrategy:      None[configdomain.SyncFeatureStrategy](),
 		SyncPerennialStrategy:    None[configdomain.SyncPerennialStrategy](),
 		SyncPrototypeStrategy:    None[configdomain.SyncPrototypeStrategy](),

@@ -7,7 +7,7 @@ default. If you run into a bug related to auto-resolution, please
 configuration setting to disable auto-resolution as a temporary workaround until
 the issue is addressed.
 
-## CLI flag
+## CLI flags
 
 In one-off situations you can call commands that update branches with the
 `--no-auto-resolve` flag to disable automatic resolution of phantom merge

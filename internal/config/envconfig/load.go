@@ -38,6 +38,7 @@ const (
 	shareNewBranches         = "GIT_TOWN_SHARE_NEW_BRANCHES"
 	shipDeleteTrackingBranch = "GIT_TOWN_SHIP_DELETE_TRACKING_BRANCH"
 	shipStrategy             = "GIT_TOWN_SHIP_STRATEGY"
+	stash                    = "GIT_TOWN_STASH"
 	syncFeatureStrategy      = "GIT_TOWN_SYNC_FEATURE_STRATEGY"
 	syncPerennialStrategy    = "GIT_TOWN_SYNC_PERENNIAL_STRATEGY"
 	syncPrototypeStrategy    = "GIT_TOWN_SYNC_PROTOTYPE_STRATEGY"
@@ -65,6 +66,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	shareNewBranches, errShareNewBranches := configdomain.ParseShareNewBranches(env.Get(shareNewBranches), shareNewBranches)
 	shipDeleteTrackingBranch, errShipDeleteTrackingBranch := gohacks.ParseBoolOpt[configdomain.ShipDeleteTrackingBranch](env.Get(shipDeleteTrackingBranch), shipDeleteTrackingBranch)
 	shipStrategy, errShipStrategy := configdomain.ParseShipStrategy(env.Get(shipStrategy))
+	stash, errStash := gohacks.ParseBoolOpt[configdomain.Stash](env.Get(stash), stash)
 	syncFeatureStrategy, errSyncFeatureStrategy := configdomain.ParseSyncFeatureStrategy(env.Get(syncFeatureStrategy))
 	syncPerennialStrategy, errSyncPerennialStrategy := configdomain.ParseSyncPerennialStrategy(env.Get(syncPerennialStrategy))
 	syncPrototypeStrategy, errSyncPrototypeStrategy := configdomain.ParseSyncPrototypeStrategy(env.Get(syncPrototypeStrategy))
@@ -90,6 +92,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errShareNewBranches,
 		errShipDeleteTrackingBranch,
 		errShipStrategy,
+		errStash,
 		errSyncFeatureStrategy,
 		errSyncPerennialStrategy,
 		errSyncPrototypeStrategy,
@@ -131,6 +134,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		ShareNewBranches:         shareNewBranches,
 		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,
 		ShipStrategy:             shipStrategy,
+		Stash:                    stash,
 		SyncFeatureStrategy:      syncFeatureStrategy,
 		SyncPerennialStrategy:    syncPerennialStrategy,
 		SyncPrototypeStrategy:    syncPrototypeStrategy,

@@ -82,6 +82,7 @@ func Cmd() *cobra.Command {
 				AutoResolve: autoResolve,
 				Detached:    detached,
 				DryRun:      dryRun,
+				Stash:       None[configdomain.Stash](),
 				Verbose:     verbose,
 			})
 			return executeSync(executeSyncArgs{

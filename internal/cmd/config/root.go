@@ -35,6 +35,7 @@ func RootCmd() *cobra.Command {
 				AutoResolve: None[configdomain.AutoResolve](),
 				Detached:    None[configdomain.Detached](),
 				DryRun:      None[configdomain.DryRun](),
+				Stash:       None[configdomain.Stash](),
 				Verbose:     verbose,
 			})
 			return executeDisplayConfig(cliConfig)
@@ -83,6 +84,7 @@ func printConfig(config config.UnvalidatedConfig) {
 	print.Header("Create")
 	print.Entry("new branch type", format.OptionalStringerSetting(config.NormalConfig.NewBranchType))
 	print.Entry("share new branches", config.NormalConfig.ShareNewBranches.String())
+	print.Entry("stash uncommitted changes", format.Bool(config.NormalConfig.Stash.IsTrue()))
 	fmt.Println()
 	print.Header("Hosting")
 	print.Entry("development remote", config.NormalConfig.DevRemote.String())

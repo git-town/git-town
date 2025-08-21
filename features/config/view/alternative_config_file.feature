@@ -31,6 +31,7 @@ Feature: show the configuration when using an alternative config file
       Create:
         new branch type: (not set)
         share new branches: no
+        stash uncommitted changes: yes
 
       Hosting:
         development remote: origin
