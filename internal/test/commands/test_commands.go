@@ -97,7 +97,10 @@ func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.BranchNa
 	// NOTE: This method uses the provided lineage instead of self.Config.NormalConfig.Lineage
 	//       because it might determine the commits on a remote repo, and that repo has no lineage information.
 	//       We therefore always provide the lineage of the local repo.
+	fmt.Println("22222222222222222222222222222222222", lineage)
+	// TODO: this should sort the branches in a way that ancestors come before descendents
 	branches, branchesInOtherWorktree := asserts.NoError2(self.LocalBranchesMainFirst(mainBranch.LocalName()))
+	fmt.Println("3333333333333333333333333333333333", branches)
 	var result []testgit.Commit
 	for _, branch := range branches {
 		if slices.Contains(branchesInOtherWorktree, branch) {
