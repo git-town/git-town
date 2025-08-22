@@ -8,29 +8,29 @@ import (
 )
 
 type swapLineageParentSetsProgramArg struct {
-	branchToSwap      gitdomain.LocalBranchName
-	childBranches     []swapBranch
-	grandParentBranch gitdomain.LocalBranchName
-	parentBranch      gitdomain.LocalBranchName
-	program           Mutable[program.Program]
+	children    []swapBranch
+	current     gitdomain.LocalBranchName
+	grandParent gitdomain.LocalBranchName
+	parent      gitdomain.LocalBranchName
+	program     Mutable[program.Program]
 }
 
 func swapLineageParentSetsProgram(args swapLineageParentSetsProgramArg) {
 	args.program.Value.Add(
 		&opcodes.LineageParentSet{
-			Branch: args.branchToSwap,
-			Parent: args.grandParentBranch,
+			Branch: args.current,
+			Parent: args.grandParent,
 		},
 		&opcodes.LineageParentSet{
-			Branch: args.parentBranch,
-			Parent: args.branchToSwap,
+			Branch: args.parent,
+			Parent: args.current,
 		},
 	)
-	for _, child := range args.childBranches {
+	for _, child := range args.children {
 		args.program.Value.Add(
 			&opcodes.LineageParentSet{
 				Branch: child.name,
-				Parent: args.parentBranch,
+				Parent: args.parent,
 			},
 		)
 	}
