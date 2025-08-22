@@ -212,6 +212,13 @@ func (self *TestCommands) CreateFeatureBranch(name gitdomain.LocalBranchName, pa
 	self.MustRun("git-town", "append", name.String())
 }
 
+func (self *TestCommands) CreateBranchManually(name gitdomain.LocalBranchName, parent Option[gitdomain.BranchName]) {
+	self.CreateBranch(name, parent.GetOrElse("main"))
+	if parent, hasParent := parent.Get(); hasParent {
+		asserts.NoError(self.Config.NormalConfig.SetParent(self.TestRunner, name, parent.LocalName()))
+	}
+}
+
 // creates a file with the given name and content in this repository
 func (self *TestCommands) CreateFile(name, content string) {
 	filePath := filepath.Join(self.WorkingDir, name)

@@ -5,8 +5,10 @@ Feature: already existing unfetched remote branch
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS |
       | existing | feature | main   | origin    |
+    And inspect the repo
     When I run "git-town append existing"
 
+  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                  |
