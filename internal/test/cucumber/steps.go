@@ -1023,6 +1023,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		repo := state.fixture.DevRepo.GetOrPanic()
 		for _, branchSetup := range datatable.ParseBranchSetupTable(table) {
+			// step 1: create a branch in DEV if needed, using Git Town commands
+			// step 2: push the local branch to ORIGIN if needed
+			// step 3: create branch manually in ORIGIN or UPSTREAM if needed
 			var repoToCreateBranchIn *commands.TestCommands
 			switch {
 			case
