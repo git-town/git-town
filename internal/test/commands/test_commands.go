@@ -175,18 +175,21 @@ func (self *TestCommands) CreateBranch(name gitdomain.LocalBranchName, parent gi
 	self.MustRun("git", "branch", name.String(), parent.String())
 }
 
-func (self *TestCommands) CreateBranchUsingGitTown(name gitdomain.LocalBranchName, parent gitdomain.LocalBranchName, branchTypeOpt Option[configdomain.BranchType]) {
+func (self *TestCommands) CreateLocalBranchUsingGitTown(name gitdomain.LocalBranchName, parent gitdomain.LocalBranchName, locations testgit.Locations, branchTypeOpt Option[configdomain.BranchType]) {
+	// TODO: receive the branchSetup data directly
+	// step 1: create the local branch if one is needed
 	branchType, hasBranchType := branchTypeOpt.Get()
 	if hasBranchType {
 		switch branchType {
 		case configdomain.BranchTypeMainBranch:
 			panic("the main branch already exists")
-		case configdomain.BranchTypePerennialBranch:
+		case
+			configdomain.BranchTypePerennialBranch,
+			configdomain.BranchTypeContributionBranch,
+			configdomain.BranchTypeObservedBranch:
 			self.CreateBranch(name, parent.BranchName())
 		case
-			configdomain.BranchTypeContributionBranch,
 			configdomain.BranchTypeFeatureBranch,
-			configdomain.BranchTypeObservedBranch,
 			configdomain.BranchTypeParkedBranch,
 			configdomain.BranchTypePrototypeBranch:
 			if parent == "main" {
@@ -199,6 +202,14 @@ func (self *TestCommands) CreateBranchUsingGitTown(name gitdomain.LocalBranchNam
 	} else {
 		self.CreateBranch(name, parent.BranchName())
 	}
+	// step 2: create the tracking branch
+	if locations.Contains(testgit.LocationOrigin) {
+		self.PushBranchToRemote(name, gitdomain.RemoteOrigin)
+	}
+	if locations.Contains(testgit.LocationUpstream) {
+		self.PushBranchToRemote(name, gitdomain.RemoteUpstream)
+	}
+	// step 3: set the branch type
 	if hasBranchType {
 		switch branchType {
 		case configdomain.BranchTypeContributionBranch:
@@ -206,6 +217,7 @@ func (self *TestCommands) CreateBranchUsingGitTown(name gitdomain.LocalBranchNam
 		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeMainBranch:
 			// nothing to do
 		case configdomain.BranchTypePerennialBranch:
+			// TODO: create a "git town perennial" command to mark branches as perennial
 			asserts.NoError(gitconfig.SetBranchTypeOverride(self.TestRunner, branchType, name))
 		case configdomain.BranchTypeObservedBranch:
 			self.MustRun("git-town", "observe")
