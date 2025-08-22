@@ -175,6 +175,19 @@ func (self *TestCommands) CreateBranch(name gitdomain.LocalBranchName, parent gi
 	self.MustRun("git", "branch", name.String(), parent.String())
 }
 
+func (self *TestCommands) CreateBranchUsingGitTown(name gitdomain.LocalBranchName, parent gitdomain.LocalBranchName, branchType configdomain.BranchType) {
+	switch branchType {
+	case configdomain.BranchTypeContributionBranch:
+	case configdomain.BranchTypeFeatureBranch:
+		TODO
+	case configdomain.BranchTypeMainBranch:
+	case configdomain.BranchTypeObservedBranch:
+	case configdomain.BranchTypeParkedBranch:
+	case configdomain.BranchTypePerennialBranch:
+	case configdomain.BranchTypePrototypeBranch:
+	}
+}
+
 func (self *TestCommands) CreateBranchOfType(name gitdomain.LocalBranchName, parentOpt Option[gitdomain.LocalBranchName], branchType configdomain.BranchType) {
 	if parent, hasParent := parentOpt.Get(); hasParent {
 		self.CreateFeatureBranch(name, parent.BranchName())

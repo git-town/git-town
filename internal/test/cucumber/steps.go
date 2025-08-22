@@ -1023,49 +1023,23 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		repo := state.fixture.DevRepo.GetOrPanic()
 		for _, branchSetup := range datatable.ParseBranchSetupTable(table) {
-			// step 1: create a branch in DEV if needed, using Git Town commands
-			// step 2: push the local branch to ORIGIN if needed
-			// step 3: create branch manually in ORIGIN or UPSTREAM if needed
-			var repoToCreateBranchIn *commands.TestCommands
-			switch {
-			case
-				branchSetup.Locations.Is(testgit.LocationLocal),
-				branchSetup.Locations.Is(testgit.LocationLocal, testgit.LocationOrigin):
-				repoToCreateBranchIn = state.fixture.DevRepo.GetOrPanic()
-			case branchSetup.Locations.Is(testgit.LocationOrigin):
-				repoToCreateBranchIn = state.fixture.OriginRepo.GetOrPanic()
-			case branchSetup.Locations.Is(testgit.LocationUpstream):
-				repoToCreateBranchIn = state.fixture.UpstreamRepo.GetOrPanic()
-			default:
-				return errors.New("unhandled location to create the new branch: " + branchSetup.Locations.String())
-			}
-			branchType, hasBranchType := branchSetup.BranchType.Get()
-			if hasBranchType {
-				switch branchType {
-				case configdomain.BranchTypeMainBranch:
-					return errors.New("main branch exists already")
-				case configdomain.BranchTypeFeatureBranch:
-					repoToCreateBranchIn.CreateFeatureBranch(branchSetup.Name, branchSetup.Parent.GetOrPanic().BranchName())
-				case
-					configdomain.BranchTypePerennialBranch,
-					configdomain.BranchTypeContributionBranch,
-					configdomain.BranchTypeObservedBranch,
-					configdomain.BranchTypeParkedBranch,
-					configdomain.BranchTypePrototypeBranch:
-					repoToCreateBranchIn.CreateBranchOfType(branchSetup.Name, branchSetup.Parent, branchType)
+			// here the branch has a local counterpart --> create the local branch first using Git Town commands, then push it to remotes
+			if branchSetup.Locations.Contains(testgit.LocationLocal) {
+				repo.CreateBranchUsingGitTown(branchSetup.Name, branchSetup.Parent.GetOrElse("main"), branchSetup.BranchType.GetOrElse("feature"))
+				// step 2: push the local branch to ORIGIN if needed
+				if branchSetup.Locations.Contains(testgit.LocationOrigin) {
+					repo.PushBranchToRemote(branchSetup.Name, gitdomain.RemoteOrigin)
+				}
+				if branchSetup.Locations.Contains(testgit.LocationUpstream) {
+					repo.PushBranchToRemote(branchSetup.Name, gitdomain.RemoteUpstream)
 				}
 			} else {
-				repoToCreateBranchIn.CreateBranch(branchSetup.Name, "main")
-				if parent, hasParent := branchSetup.Parent.Get(); hasParent {
-					asserts.NoError(repoToCreateBranchIn.Config.NormalConfig.SetParent(repo.TestRunner, branchSetup.Name, parent))
+				// here the branch has no local counterpart --> create it manually in the remotes
+				if branchSetup.Locations.Contains(testgit.LocationOrigin) {
+					state.fixture.OriginRepo.Value.CreateBranch(branchSetup.Name, branchSetup.Parent.GetOrElse("main").BranchName())
 				}
-			}
-			if len(branchSetup.Locations) > 1 {
-				switch {
-				case branchSetup.Locations.Is(testgit.LocationLocal, testgit.LocationOrigin):
-					state.fixture.DevRepo.GetOrPanic().PushBranchToRemote(branchSetup.Name, gitdomain.RemoteOrigin)
-				default:
-					return errors.New("unhandled location to push the new branch to: " + branchSetup.Locations.String())
+				if branchSetup.Locations.Contains(testgit.LocationUpstream) {
+					state.fixture.UpstreamRepo.Value.CreateBranch(branchSetup.Name, branchSetup.Parent.GetOrElse("main").BranchName())
 				}
 			}
 		}
