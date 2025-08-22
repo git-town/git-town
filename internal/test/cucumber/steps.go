@@ -1023,8 +1023,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		repo := state.fixture.DevRepo.GetOrPanic()
 		for _, branchSetup := range datatable.ParseBranchSetupTable(table) {
-			// here the branch has a local counterpart --> create the local branch first using Git Town commands, then push it to remotes
 			if branchSetup.Locations.Contains(testgit.LocationLocal) {
+				// here the branch has a local counterpart --> create the local branch first using Git Town commands, then push it to remotes
 				repo.CreateBranchUsingGitTown(branchSetup.Name, branchSetup.Parent.GetOrElse("main"), branchSetup.BranchType.GetOrElse("feature"))
 				// step 2: push the local branch to ORIGIN if needed
 				if branchSetup.Locations.Contains(testgit.LocationOrigin) {
