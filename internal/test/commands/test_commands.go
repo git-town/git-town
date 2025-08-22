@@ -202,10 +202,9 @@ func (self *TestCommands) CreateLocalBranchUsingGitTown(name gitdomain.LocalBran
 			if parent == "main" {
 				self.MustRun("git-town", "hack", name.String())
 			} else {
-				if currentBranch, has := currentBranchOpt.Get(); has {
-					if currentBranch != parent {
-						self.CheckoutBranch(parent)
-					}
+				currentBranch, has := currentBranchOpt.Get()
+				if !has || currentBranch != parent {
+					self.CheckoutBranch(parent)
 				}
 				self.MustRun("git-town", "append", name.String())
 			}

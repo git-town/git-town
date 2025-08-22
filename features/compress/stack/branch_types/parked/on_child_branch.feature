@@ -17,8 +17,14 @@ Feature: does not compress non-active parked branches in the stack
       | child  | local, origin | child 1 | child_1   | child 1      |
       |        |               | child 2 | child_2   | child 2      |
     And the current branch is "child"
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE  |
+      | child  | local, origin | child 1  |
+      | parked | local, origin | parked 1 |
+      |        |               | parked 2 |
     When I run "git-town compress --stack"
 
+  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
