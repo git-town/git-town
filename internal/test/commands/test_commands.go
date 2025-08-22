@@ -175,7 +175,14 @@ func (self *TestCommands) CreateBranch(name gitdomain.LocalBranchName, parent gi
 	self.MustRun("git", "branch", name.String(), parent.String())
 }
 
-func (self *TestCommands) CreateLocalBranchUsingGitTown(name gitdomain.LocalBranchName, parent gitdomain.LocalBranchName, locations testgit.Locations, branchTypeOpt Option[configdomain.BranchType]) {
+// CreateBranch creates a new branch with the given name.
+// The created branch is a normal branch.
+// To create feature branches, use CreateFeatureBranch.
+func (self *TestCommands) CreateAndCheckoutBranch(name gitdomain.LocalBranchName, parent gitdomain.BranchName) {
+	self.MustRun("git", "checkout", "-b", name.String(), parent.String())
+}
+
+func (self *TestCommands) CreateLocalBranchUsingGitTown(name gitdomain.LocalBranchName, parent gitdomain.LocalBranchName, locations testgit.Locations, branchTypeOpt Option[configdomain.BranchType], currentBranchOpt Option[gitdomain.LocalBranchName]) {
 	// TODO: receive the branchSetup data directly
 	// step 1: create the local branch if one is needed
 	branchType, hasBranchType := branchTypeOpt.Get()
@@ -187,7 +194,7 @@ func (self *TestCommands) CreateLocalBranchUsingGitTown(name gitdomain.LocalBran
 			configdomain.BranchTypePerennialBranch,
 			configdomain.BranchTypeContributionBranch,
 			configdomain.BranchTypeObservedBranch:
-			self.CreateBranch(name, parent.BranchName())
+			self.CreateAndCheckoutBranch(name, parent.BranchName())
 		case
 			configdomain.BranchTypeFeatureBranch,
 			configdomain.BranchTypeParkedBranch,
@@ -195,7 +202,11 @@ func (self *TestCommands) CreateLocalBranchUsingGitTown(name gitdomain.LocalBran
 			if parent == "main" {
 				self.MustRun("git-town", "hack", name.String())
 			} else {
-				self.CheckoutBranch(parent)
+				if currentBranch, has := currentBranchOpt.Get(); has {
+					if currentBranch != parent {
+						self.CheckoutBranch(parent)
+					}
+				}
 				self.MustRun("git-town", "append", name.String())
 			}
 		}

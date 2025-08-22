@@ -1022,9 +1022,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the branches$`, func(ctx context.Context, table *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		repo := state.fixture.DevRepo.GetOrPanic()
+		lastBranch := None[gitdomain.LocalBranchName]()
 		for _, branchSetup := range datatable.ParseBranchSetupTable(table) {
 			if branchSetup.Locations.Contains(testgit.LocationLocal) {
-				repo.CreateLocalBranchUsingGitTown(branchSetup.Name, branchSetup.Parent.GetOrElse("main"), branchSetup.Locations, branchSetup.BranchType)
+				repo.CreateLocalBranchUsingGitTown(branchSetup.Name, branchSetup.Parent.GetOrElse("main"), branchSetup.Locations, branchSetup.BranchType, lastBranch)
+				lastBranch = Some(branchSetup.Name)
 			} else {
 				// here the branch has no local counterpart --> create it manually in the remotes
 				if branchSetup.Locations.Contains(testgit.LocationOrigin) {
