@@ -1025,7 +1025,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		for _, branchSetup := range datatable.ParseBranchSetupTable(table) {
 			if branchSetup.Locations.Contains(testgit.LocationLocal) {
 				// here the branch has a local counterpart --> create the local branch first using Git Town commands, then push it to remotes
-				repo.CreateBranchUsingGitTown(branchSetup.Name, branchSetup.Parent.GetOrElse("main"), branchSetup.BranchType.GetOrElse("feature"))
+				repo.CreateBranchUsingGitTown(branchSetup.Name, branchSetup.Parent.GetOrElse("main"), branchSetup.BranchType)
 				// step 2: push the local branch to ORIGIN if needed
 				if branchSetup.Locations.Contains(testgit.LocationOrigin) {
 					repo.PushBranchToRemote(branchSetup.Name, gitdomain.RemoteOrigin)

@@ -175,38 +175,45 @@ func (self *TestCommands) CreateBranch(name gitdomain.LocalBranchName, parent gi
 	self.MustRun("git", "branch", name.String(), parent.String())
 }
 
-func (self *TestCommands) CreateBranchUsingGitTown(name gitdomain.LocalBranchName, parent gitdomain.LocalBranchName, branchType configdomain.BranchType) {
-	switch branchType {
-	case configdomain.BranchTypeMainBranch:
-		panic("the main branch already exists")
-	case configdomain.BranchTypePerennialBranch:
-		self.CreateBranch(name, parent.BranchName())
-	case
-		configdomain.BranchTypeContributionBranch,
-		configdomain.BranchTypeFeatureBranch,
-		configdomain.BranchTypeObservedBranch,
-		configdomain.BranchTypeParkedBranch,
-		configdomain.BranchTypePrototypeBranch:
-		if parent == "main" {
-			self.MustRun("git-town", "hack", name.String())
-		} else {
-			self.CheckoutBranch(parent)
-			self.MustRun("git-town", "append", name.String())
+func (self *TestCommands) CreateBranchUsingGitTown(name gitdomain.LocalBranchName, parent gitdomain.LocalBranchName, branchTypeOpt Option[configdomain.BranchType]) {
+	branchType, hasBranchType := branchTypeOpt.Get()
+	if hasBranchType {
+		switch branchType {
+		case configdomain.BranchTypeMainBranch:
+			panic("the main branch already exists")
+		case configdomain.BranchTypePerennialBranch:
+			self.CreateBranch(name, parent.BranchName())
+		case
+			configdomain.BranchTypeContributionBranch,
+			configdomain.BranchTypeFeatureBranch,
+			configdomain.BranchTypeObservedBranch,
+			configdomain.BranchTypeParkedBranch,
+			configdomain.BranchTypePrototypeBranch:
+			if parent == "main" {
+				self.MustRun("git-town", "hack", name.String())
+			} else {
+				self.CheckoutBranch(parent)
+				self.MustRun("git-town", "append", name.String())
+			}
 		}
+	} else {
+		self.CreateBranch(name, parent.BranchName())
 	}
-	switch branchType {
-	case configdomain.BranchTypeContributionBranch:
-		self.MustRun("git-town", "contribute")
-	case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeMainBranch:
-		// nothing to do
-	case configdomain.BranchTypePerennialBranch:
-		asserts.NoError(gitconfig.SetBranchTypeOverride(self.TestRunner, branchType, name))
-	case configdomain.BranchTypeObservedBranch:
-		self.MustRun("git-town", "observe")
-	case configdomain.BranchTypeParkedBranch:
-		self.MustRun("git-town", "park")
-	case configdomain.BranchTypePrototypeBranch:
-		self.MustRun("git-town", "prototype")
+	if hasBranchType {
+		switch branchType {
+		case configdomain.BranchTypeContributionBranch:
+			self.MustRun("git-town", "contribute")
+		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeMainBranch:
+			// nothing to do
+		case configdomain.BranchTypePerennialBranch:
+			asserts.NoError(gitconfig.SetBranchTypeOverride(self.TestRunner, branchType, name))
+		case configdomain.BranchTypeObservedBranch:
+			self.MustRun("git-town", "observe")
+		case configdomain.BranchTypeParkedBranch:
+			self.MustRun("git-town", "park")
+		case configdomain.BranchTypePrototypeBranch:
+			self.MustRun("git-town", "prototype")
+		}
 	}
 }
 
