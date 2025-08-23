@@ -15,6 +15,7 @@ const (
 	AliasableCommandCompress   = AliasableCommand("compress")
 	AliasableCommandContribute = AliasableCommand("contribute")
 	AliasableCommandDiffParent = AliasableCommand("diff-parent")
+	AliasableCommandDown       = AliasableCommand("down")
 	AliasableCommandHack       = AliasableCommand("hack")
 	AliasableCommandDelete     = AliasableCommand("delete")
 	AliasableCommandObserve    = AliasableCommand("observe")
@@ -26,4 +27,5 @@ const (
 	AliasableCommandSetParent  = AliasableCommand("set-parent")
 	AliasableCommandShip       = AliasableCommand("ship")
 	AliasableCommandSync       = AliasableCommand("sync")
+	AliasableCommandUp         = AliasableCommand("up")
 )
