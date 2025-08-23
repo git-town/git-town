@@ -412,6 +412,8 @@ func (self *TestCommands) LocalBranches() (allBranches, branchesInOtherWorktrees
 			panic(fmt.Sprintf("unexpected marker %q in line %q", marker, line))
 		}
 	}
+	slice.NaturalSort(allBranches)
+	slice.NaturalSort(branchesInOtherWorktrees)
 	return allBranches, branchesInOtherWorktrees, nil
 }
 
