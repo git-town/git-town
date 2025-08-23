@@ -1340,7 +1340,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return errors.New("mismatching branches found, see diff above")
 		}
 		// verify initial lineage
-		currentLineage := devRepo.LineageTable()
+		currentLineage := devRepo.LineageTable(devRepo.Config.NormalConfig.Lineage)
 		diff, errCnt := currentLineage.EqualDataTable(state.initialLineage.GetOrPanic())
 		if errCnt > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the lineage\n\n", errCnt)
@@ -1380,7 +1380,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the initial lineage exists now$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.LineageTable()
+		have := devRepo.LineageTable(devRepo.Config.NormalConfig.Lineage)
 		diff, errCnt := have.EqualDataTable(state.initialLineage.GetOrPanic())
 		if errCnt > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the lineage\n\n", errCnt)
@@ -1553,7 +1553,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^this lineage exists now$`, func(ctx context.Context, input *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		table := devRepo.LineageTable()
+		table := devRepo.LineageTable(devRepo.Config.NormalConfig.Lineage)
 		diff, errCount := table.EqualGherkin(input)
 		if errCount > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the lineage\n\n", errCount)
