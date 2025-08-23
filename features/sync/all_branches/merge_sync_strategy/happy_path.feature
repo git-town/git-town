@@ -55,10 +55,10 @@ Feature: sync all feature branches
       |            |               | Merge branch 'main' into alpha |
       | beta       | local, origin | beta commit                    |
       |            |               | Merge branch 'main' into beta  |
-      | observed   | local, origin | origin observed commit         |
-      |            | local         | local observed commit          |
       | parked     | local         | local parked commit            |
       |            | origin        | origin parked commit           |
+      | observed   | local, origin | origin observed commit         |
+      |            | local         | local observed commit          |
       | production | local, origin | origin production commit       |
       |            |               | local production commit        |
       | qa         | local, origin | qa origin commit               |
@@ -93,10 +93,10 @@ Feature: sync all feature branches
       | main       | local, origin | main commit              |
       | alpha      | local, origin | alpha commit             |
       | beta       | local, origin | beta commit              |
-      | observed   | local, origin | origin observed commit   |
-      |            | local         | local observed commit    |
       | parked     | local         | local parked commit      |
       |            | origin        | origin parked commit     |
+      | observed   | local, origin | origin observed commit   |
+      |            | local         | local observed commit    |
       | production | local, origin | origin production commit |
       |            |               | local production commit  |
       | qa         | local, origin | qa origin commit         |

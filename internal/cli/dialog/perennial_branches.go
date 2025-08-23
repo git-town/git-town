@@ -35,7 +35,7 @@ Always selected in this list are:
 // PerennialBranches lets the user update the perennial branches.
 // This includes asking the user and updating the respective settings based on the user selection.
 func PerennialBranches(args PerennialBranchesArgs) (gitdomain.LocalBranchNames, dialogdomain.Exit, error) {
-	perennialCandidates := args.LocalBranches.AppendAllMissing(args.ImmutableGitPerennials...).AppendAllMissing(args.LocalGitPerennials...)
+	perennialCandidates := args.LocalBranches.AppendAllMissing(args.ImmutableGitPerennials).AppendAllMissing(args.LocalGitPerennials)
 	if len(perennialCandidates) < 2 {
 		// there is always the main branch in this list, so if that's the only one there is no branch to select --> don't display the dialog
 		return gitdomain.LocalBranchNames{}, false, nil

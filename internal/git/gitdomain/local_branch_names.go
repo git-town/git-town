@@ -32,8 +32,10 @@ func ParseLocalBranchNames(names string) LocalBranchNames {
 }
 
 // AppendAllMissing provides a LocalBranchNames list consisting of the sum of this and elements of other list that aren't in this list.
-func (self LocalBranchNames) AppendAllMissing(others ...LocalBranchName) LocalBranchNames {
-	return slice.AppendAllMissing(self, others...)
+func (self LocalBranchNames) AppendAllMissing(others LocalBranchNames) LocalBranchNames {
+	missing := slice.FindAllMissing(self, others)
+	slice.NaturalSort(missing)
+	return append(self, missing...)
 }
 
 func (self LocalBranchNames) BranchNames() []BranchName {

@@ -33,13 +33,13 @@ Feature: sync a branch whose parent is active in another worktree
       | BRANCH | LOCATION                | MESSAGE                                                 |
       | main   | local, origin, worktree | origin main commit                                      |
       |        |                         | local main commit                                       |
+      | parent | local                   | local parent commit                                     |
+      |        | origin                  | origin parent commit                                    |
       | child  | origin, worktree        | local child commit                                      |
       |        |                         | Merge remote-tracking branch 'origin/parent' into child |
       |        |                         | origin child commit                                     |
       |        |                         | Merge remote-tracking branch 'origin/child' into child  |
       |        | worktree                | origin parent commit                                    |
-      | parent | local                   | local parent commit                                     |
-      |        | origin                  | origin parent commit                                    |
     When I run "git-town undo" in the other worktree
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                            |
@@ -50,7 +50,7 @@ Feature: sync a branch whose parent is active in another worktree
       | BRANCH | LOCATION                | MESSAGE              |
       | main   | local, origin, worktree | origin main commit   |
       |        |                         | local main commit    |
-      | child  | origin                  | origin child commit  |
-      |        | worktree                | local child commit   |
       | parent | local                   | local parent commit  |
       |        | origin                  | origin parent commit |
+      | child  | origin                  | origin child commit  |
+      |        | worktree                | local child commit   |

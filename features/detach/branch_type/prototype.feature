@@ -41,10 +41,10 @@ Feature: detaching a prototoype branch
       | BRANCH   | LOCATION      | MESSAGE   |
       | branch-1 | local, origin | commit 1a |
       |          |               | commit 1b |
-      | branch-2 | local, origin | commit 2a |
-      |          |               | commit 2b |
       | branch-3 | local, origin | commit 3a |
       |          |               | commit 3b |
+      | branch-2 | local, origin | commit 2a |
+      |          |               | commit 2b |
     And this lineage exists now
       | BRANCH   | PARENT   |
       | branch-1 | main     |

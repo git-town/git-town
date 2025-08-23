@@ -32,11 +32,11 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
       |        | git checkout parent                                                                                     |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE  |
+      | parent | local         | commit 1 |
+      |        |               | commit 4 |
       | old    | local, origin | commit 2 |
       |        |               | commit 3 |
       |        | origin        | commit 1 |
-      |        |               | commit 4 |
-      | parent | local         | commit 1 |
       |        |               | commit 4 |
     And this lineage exists now
       | BRANCH | PARENT |
@@ -49,10 +49,10 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
       |        | git push -u origin parent |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE  |
-      | old    | local, origin | commit 2 |
-      |        |               | commit 3 |
       | parent | local, origin | commit 1 |
       |        |               | commit 4 |
+      | old    | local, origin | commit 2 |
+      |        |               | commit 3 |
 
   Scenario: undo
     When I run "git-town undo"
@@ -81,7 +81,7 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
       |        | git push --force-with-lease --force-if-includes                          |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE   |
-      | old    | local, origin | commit 2  |
-      |        |               | commit 3  |
       | parent | local, origin | commit 1  |
       |        |               | commit 4b |
+      | old    | local, origin | commit 2  |
+      |        |               | commit 3  |

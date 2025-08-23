@@ -27,8 +27,8 @@ Feature: delete the current contribution branch
       | origin     | main, contribution, feature |
     And these commits exist now
       | BRANCH       | LOCATION      | MESSAGE             |
-      | contribution | origin        | contribution commit |
       | feature      | local, origin | feature commit      |
+      | contribution | origin        | contribution commit |
     And this lineage exists now
       | BRANCH  | PARENT |
       | feature | main   |
