@@ -3,6 +3,7 @@ package datatable_test
 import (
 	"testing"
 
+	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/test/datatable"
 	"github.com/git-town/git-town/v21/internal/test/testgit"
 	"github.com/shoenig/test/must"
@@ -24,7 +25,12 @@ func TestCommitTableBuilder(t *testing.T) {
 	builder.Add(commit4, "origin")
 	builder.Add(commit4, "worktree")
 	builder.Add(commit5, "worktree")
-	table := builder.Table([]string{"BRANCH", "LOCATION", "MESSAGE"})
+	lineage := configdomain.NewLineageWith(configdomain.LineageData{
+		"branch1": "main",
+		"branch2": "branch1",
+		"branch3": "branch2",
+	})
+	table := builder.Table([]string{"BRANCH", "LOCATION", "MESSAGE"}, lineage)
 	expected := `
 | BRANCH  | LOCATION                | MESSAGE |
 | main    | local                   | commit2 |

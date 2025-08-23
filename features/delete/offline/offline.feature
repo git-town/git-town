@@ -26,8 +26,8 @@ Feature: offline mode
       | origin     | main, feature, other |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE        |
-      | feature | origin        | feature commit |
       | other   | local, origin | other commit   |
+      | feature | origin        | feature commit |
     And this lineage exists now
       | BRANCH | PARENT |
       | other  | main   |
