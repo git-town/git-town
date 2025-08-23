@@ -1341,7 +1341,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return errors.New("mismatching branches found, see diff above")
 		}
 		// verify initial lineage
-		currentLineage := devRepo.LineageText()
+		currentLineage := devRepo.LineageText(devRepo.Config.NormalConfig.Lineage)
 		if currentLineage != state.initialLineage.GetOrPanic() {
 			fmt.Println("INITIAL")
 			fmt.Println(state.initialLineage.GetOrPanic())
@@ -1382,7 +1382,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the initial lineage exists now$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.LineageText()
+		have := devRepo.LineageText(devRepo.Config.NormalConfig.Lineage)
 		if have != state.initialLineage.GetOrPanic() {
 			fmt.Println("INITIAL")
 			fmt.Println(state.initialLineage.GetOrPanic())
@@ -1554,7 +1554,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^this lineage exists now$`, func(ctx context.Context, want *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := format.BranchLineage(devRepo.Lineage())
+		have := format.BranchLineage(devRepo.Config.NormalConfig.Lineage)
 		if have != want.Content {
 			fmt.Println("WANT:\n", want)
 			fmt.Println("HAVE:\n", have)

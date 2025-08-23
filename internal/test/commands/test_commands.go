@@ -368,8 +368,8 @@ func (self *TestCommands) Lineage() configdomain.Lineage {
 	return localGitConfig.Lineage
 }
 
-func (self *TestCommands) LineageText() string {
-	return format.BranchLineage(self.Lineage())
+func (self *TestCommands) LineageText(lineage configdomain.Lineage) string {
+	return format.BranchLineage(lineage)
 }
 
 // LocalBranches provides the names of all branches in the local repository,
