@@ -32,10 +32,10 @@ Feature: swap a local branch
     And these commits exist now
       | BRANCH   | LOCATION | MESSAGE     |
       | main     | local    | main commit |
-      | branch-1 | local    | commit 1a   |
-      |          |          | commit 1b   |
       | branch-2 | local    | commit 2a   |
       |          |          | commit 2b   |
+      | branch-1 | local    | commit 1a   |
+      |          |          | commit 1b   |
       | branch-3 | local    | commit 3a   |
       |          |          | commit 3b   |
     And this lineage exists now
