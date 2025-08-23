@@ -52,9 +52,9 @@ Feature: detaching a branch from a stack with independent changes
       | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                                                       |
       | main     | local, origin | main commit     | file      | line 0: main content\n\nline 1\n\nline 2\n\nline 3\n\nline 4                                                       |
       | branch-1 | local, origin | branch-1 commit | file      | line 0: main content\n\nline 1: branch-1 content\n\nline 2\n\nline 3\n\nline 4                                     |
-      | branch-2 | local, origin | branch-2 commit | file      | line 0: main content\n\nline 1\n\nline 2: branch-2 content\n\nline 3\n\nline 4                                     |
       | branch-3 | local, origin | branch-3 commit | file      | line 0: main content\n\nline 1: branch-1 content\n\nline 2\n\nline 3: branch-3 content\n\nline 4                   |
       | branch-4 | local, origin | branch-4 commit | file      | line 0: main content\n\nline 1: branch-1 content\n\nline 2\n\nline 3: branch-3 content\n\nline 4: branch-4 content |
+      | branch-2 | local, origin | branch-2 commit | file      | line 0: main content\n\nline 1\n\nline 2: branch-2 content\n\nline 3\n\nline 4                                     |
     And this lineage exists now
       | BRANCH   | PARENT   |
       | branch-1 | main     |

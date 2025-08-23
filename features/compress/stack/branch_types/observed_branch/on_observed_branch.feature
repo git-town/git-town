@@ -31,9 +31,9 @@ Feature: does not compress an active observed branch
     And all branches are now synchronized
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE    |
-      | child    | local, origin | child 1    |
       | observed | local, origin | observed 1 |
       |          |               | observed 2 |
+      | child    | local, origin | child 1    |
     And file "observed_1" still has content "observed 1"
     And file "observed_2" still has content "observed 2"
 

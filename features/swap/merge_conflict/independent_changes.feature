@@ -42,8 +42,8 @@ Feature: swapping a feature branch in a stack with independent changes
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                     |
       | main     | local, origin | main commit     | file      | line 1\n\nline 2\n\nline 3                                                       |
-      | branch-1 | local, origin | branch-1 commit | file      | line 1: branch-1 changes\n\nline 2: branch-2 changes\n\nline 3                   |
       | branch-2 | local, origin | branch-2 commit | file      | line 1\n\nline 2: branch-2 changes\n\nline 3                                     |
+      | branch-1 | local, origin | branch-1 commit | file      | line 1: branch-1 changes\n\nline 2: branch-2 changes\n\nline 3                   |
       | branch-3 | local, origin | branch-3 commit | file      | line 1: branch-1 changes\n\nline 2: branch-2 changes\n\nline 3: branch-3 changes |
     And this lineage exists now
       | BRANCH   | PARENT   |

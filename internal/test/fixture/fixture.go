@@ -147,7 +147,7 @@ func (self *Fixture) CommitTable(fields []string) datatable.DataTable {
 		secondWorktreeCommits := secondWorkTree.Commits(fields, lineage)
 		builder.AddMany(secondWorktreeCommits, "worktree")
 	}
-	return builder.Table(fields)
+	return builder.Table(fields, lineage)
 }
 
 // CreateCommits creates the commits described by the given Gherkin table in this Git repository.

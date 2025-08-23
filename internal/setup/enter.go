@@ -483,8 +483,8 @@ func enterOriginHostName(data Data) (Option[configdomain.HostingOriginHostname],
 
 func enterPerennialBranches(data Data, mainBranch gitdomain.LocalBranchName) (gitdomain.LocalBranchNames, dialogdomain.Exit, error) {
 	immutablePerennials := gitdomain.LocalBranchNames{mainBranch}.
-		AppendAllMissing(data.Config.File.PerennialBranches...).
-		AppendAllMissing(data.Config.GitGlobal.PerennialBranches...)
+		AppendAllMissing(data.Config.File.PerennialBranches).
+		AppendAllMissing(data.Config.GitGlobal.PerennialBranches)
 	return dialog.PerennialBranches(dialog.PerennialBranchesArgs{
 		ImmutableGitPerennials: immutablePerennials,
 		Inputs:                 data.Inputs,

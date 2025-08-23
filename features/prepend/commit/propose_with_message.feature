@@ -27,8 +27,8 @@ Feature: propose uncommitted changes via a separate parent branch with message
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |
       | main     | origin        | main commit     |
-      | existing | local, origin | existing commit |
       | new      | local, origin | unrelated       |
+      | existing | local, origin | existing commit |
     And this lineage exists now
       | BRANCH   | PARENT |
       | existing | new    |

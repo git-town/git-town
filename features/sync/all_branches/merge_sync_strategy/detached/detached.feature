@@ -46,12 +46,12 @@ Feature: sync all feature branches
       | main         | origin        | main commit                |
       | alpha        | local, origin | alpha commit               |
       | beta         | local, origin | beta commit                |
+      | parked       | local         | local parked commit        |
+      |              | origin        | origin parked commit       |
       | contribution | local, origin | origin contribution commit |
       |              |               | local contribution commit  |
       | observed     | local, origin | origin observed commit     |
       |              | local         | local observed commit      |
-      | parked       | local         | local parked commit        |
-      |              | origin        | origin parked commit       |
       | production   | local         | local production commit    |
       |              | origin        | origin production commit   |
       | qa           | local         | qa local commit            |
@@ -72,12 +72,12 @@ Feature: sync all feature branches
       | main         | origin        | main commit                |
       | alpha        | local, origin | alpha commit               |
       | beta         | local, origin | beta commit                |
+      | parked       | local         | local parked commit        |
+      |              | origin        | origin parked commit       |
       | contribution | local         | local contribution commit  |
       |              | origin        | origin contribution commit |
       | observed     | local         | local observed commit      |
       |              | origin        | origin observed commit     |
-      | parked       | local         | local parked commit        |
-      |              | origin        | origin parked commit       |
       | production   | local         | local production commit    |
       |              | origin        | origin production commit   |
       | qa           | local         | qa local commit            |

@@ -34,8 +34,8 @@ Feature: compresses active prototype branches
     And all branches are now synchronized
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE     |
-      | child     | local, origin | child 1     |
       | prototype | local, origin | prototype 1 |
+      | child     | local, origin | child 1     |
     And file "parked_1" still has content "prototype 1"
     And file "parked_2" still has content "prototype 2"
 

@@ -3,8 +3,8 @@ package datatable
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/gohacks/slice"
 	"github.com/git-town/git-town/v21/internal/test/helpers"
 	"github.com/git-town/git-town/v21/internal/test/testgit"
 )
@@ -71,12 +71,12 @@ func (self *CommitTableBuilder) AddMany(commits []testgit.Commit, location strin
 }
 
 // Table provides the data accumulated by this CommitTableBuilder as a DataTable.
-func (self *CommitTableBuilder) Table(fields []string) DataTable {
+func (self *CommitTableBuilder) Table(fields []string, lineage configdomain.Lineage) DataTable {
 	result := DataTable{}
 	result.AddRow(fields...)
 	var lastBranch gitdomain.LocalBranchName
 	lastLocation := ""
-	for _, branch := range self.branches() {
+	for _, branch := range self.branches(lineage) {
 		SHAs := self.commitsInBranch[branch]
 		for _, SHA := range SHAs.Elements() {
 			commit := self.commits[SHA]
@@ -118,7 +118,7 @@ func (self *CommitTableBuilder) Table(fields []string) DataTable {
 
 // branches provides the names of the all branches known to this CommitTableBuilder,
 // sorted alphabetically, with the main branch first.
-func (self *CommitTableBuilder) branches() gitdomain.LocalBranchNames {
+func (self *CommitTableBuilder) branches(lineage configdomain.Lineage) gitdomain.LocalBranchNames {
 	result := make(gitdomain.LocalBranchNames, 0, len(self.commitsInBranch))
 	hasMain := false
 	for branch := range self.commitsInBranch {
@@ -128,7 +128,7 @@ func (self *CommitTableBuilder) branches() gitdomain.LocalBranchNames {
 			result = append(result, branch)
 		}
 	}
-	slice.NaturalSort(result)
+	result = lineage.OrderHierarchically(result)
 	if hasMain {
 		return append(gitdomain.NewLocalBranchNames("main"), result...)
 	}

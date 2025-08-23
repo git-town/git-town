@@ -35,10 +35,10 @@ Feature: swapping a prototype branch
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE     |
       | main     | local, origin | main commit |
-      | branch-1 | local, origin | commit 1a   |
-      |          |               | commit 1b   |
       | branch-2 | local, origin | commit 2a   |
       |          |               | commit 2b   |
+      | branch-1 | local, origin | commit 1a   |
+      |          |               | commit 1b   |
       | branch-3 | local, origin | commit 3a   |
       |          |               | commit 3b   |
     And this lineage exists now

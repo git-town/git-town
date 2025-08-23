@@ -31,10 +31,10 @@ Feature: running a sync after running another Git Town command
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | origin main commit   |
       |        |               | local main commit    |
-      | child  | local, origin | origin child commit  |
-      |        |               | local child commit   |
       | parent | local, origin | origin parent commit |
       |        |               | local parent commit  |
+      | child  | local, origin | origin child commit  |
+      |        |               | local child commit   |
     And these branches exist now
       | REPOSITORY | BRANCHES                 |
       | local      | main, child, new, parent |
@@ -47,10 +47,10 @@ Feature: running a sync after running another Git Town command
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | origin main commit   |
       |        |               | local main commit    |
-      | child  | local, origin | origin child commit  |
-      |        |               | local child commit   |
       | parent | local, origin | origin parent commit |
       |        |               | local parent commit  |
+      | child  | local, origin | origin child commit  |
+      |        |               | local child commit   |
     And these branches exist now
       | REPOSITORY | BRANCHES                 |
       | local      | main, child, new, parent |

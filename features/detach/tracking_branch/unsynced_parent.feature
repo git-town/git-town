@@ -41,11 +41,11 @@ Feature: detaching a branch whose parent is unsynced
       | BRANCH   | LOCATION      | MESSAGE   |
       | branch-1 | local         | commit 1a |
       |          | origin        | commit 1b |
-      | branch-2 | local, origin | commit 2a |
-      |          |               | commit 2b |
       | branch-3 | local, origin | commit 3a |
       |          |               | commit 3b |
       |          | origin        | commit 1a |
+      | branch-2 | local, origin | commit 2a |
+      |          |               | commit 2b |
     And this lineage exists now
       | BRANCH   | PARENT   |
       | branch-1 | main     |

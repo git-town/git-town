@@ -97,8 +97,8 @@ Feature: swapping a feature branch in a stack with dependent changes
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                 |
       | main     | local, origin | main commit     | file      | line 1\nline 2\nline 3                                                       |
-      | branch-1 | local, origin | branch-1 commit | file      | line 1: branch-1 changes\nline 2: branch-2 changes\nline 3                   |
       | branch-2 | local, origin | branch-2 commit | file      | line 1\nline 2: branch-2 changes\nline 3                                     |
+      | branch-1 | local, origin | branch-1 commit | file      | line 1: branch-1 changes\nline 2: branch-2 changes\nline 3                   |
       | branch-3 | local, origin | branch-3 commit | file      | line 1: branch-1 changes\nline 2: branch-2 changes\nline 3: branch-3 changes |
     And this lineage exists now
       | BRANCH   | PARENT   |
