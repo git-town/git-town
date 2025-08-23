@@ -4,7 +4,7 @@ import (
 	"slices"
 )
 
-func Intersection[S ~[]C, C comparable](existing S, additional ...C) S { //nolint:ireturn
+func Intersection[S ~[]C, C comparable](existing, additional S) S { //nolint:ireturn
 	result := S{}
 	for a := range additional {
 		if !slices.Contains(existing, additional[a]) {

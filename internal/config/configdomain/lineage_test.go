@@ -531,7 +531,7 @@ func TestLineage(t *testing.T) {
 			t.Parallel()
 			lineage := configdomain.Lineage{}
 			give := gitdomain.LocalBranchNames{one, two, main}
-			want := gitdomain.LocalBranchNames{one, two, main}
+			want := gitdomain.LocalBranchNames{main, one, two}
 			have := lineage.OrderHierarchically(give)
 			must.Eq(t, want, have)
 		})

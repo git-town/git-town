@@ -15,14 +15,14 @@ func TestLocalBranchNames(t *testing.T) {
 		t.Run("append some new elements", func(t *testing.T) {
 			t.Parallel()
 			give := gitdomain.NewLocalBranchNames("one", "two")
-			have := give.AppendAllMissing("two", "three", "four")
-			want := gitdomain.NewLocalBranchNames("one", "two", "three", "four")
+			have := give.AppendAllMissing(gitdomain.NewLocalBranchNames("two", "three", "four"))
+			want := gitdomain.NewLocalBranchNames("one", "two", "four", "three")
 			must.Eq(t, want, have)
 		})
 		t.Run("append no new elements", func(t *testing.T) {
 			t.Parallel()
 			give := gitdomain.NewLocalBranchNames("one", "two")
-			have := give.AppendAllMissing("one", "two")
+			have := give.AppendAllMissing(gitdomain.NewLocalBranchNames("one", "two"))
 			want := gitdomain.NewLocalBranchNames("one", "two")
 			must.Eq(t, want, have)
 		})

@@ -192,7 +192,7 @@ func (self Lineage) OrderHierarchically(branches gitdomain.LocalBranchNames) git
 	for _, root := range self.Roots() {
 		self.addChildrenHierarchically(&result, root, branches)
 	}
-	return result.AppendAllMissing(branches...)
+	return result.AppendAllMissing(branches)
 }
 
 // Parent provides the name of the parent branch for the given branch or nil if the branch has no parent.
