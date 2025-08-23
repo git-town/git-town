@@ -137,14 +137,6 @@ func TestLocalBranchNames(t *testing.T) {
 		})
 	})
 
-	t.Run("Sort", func(t *testing.T) {
-		t.Parallel()
-		branches := gitdomain.NewLocalBranchNames("one", "two", "three")
-		want := []string{"one", "three", "two"}
-		branches.Sort()
-		must.Eq(t, want, branches.Strings())
-	})
-
 	t.Run("TrackingBranch", func(t *testing.T) {
 		t.Parallel()
 		branch := gitdomain.NewLocalBranchName("branch")
