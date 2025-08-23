@@ -2,6 +2,7 @@ package datatable
 
 import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/gohacks/slice"
 	"github.com/git-town/git-town/v21/internal/test/helpers"
 	"github.com/git-town/git-town/v21/internal/test/testgit"
 )
@@ -124,7 +125,7 @@ func (self *CommitTableBuilder) branches() gitdomain.LocalBranchNames {
 			result = append(result, branch)
 		}
 	}
-	result.Sort()
+	result = slice.NaturalSort(result)
 	if hasMain {
 		return append(gitdomain.NewLocalBranchNames("main"), result...)
 	}

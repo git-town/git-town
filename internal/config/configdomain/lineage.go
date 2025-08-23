@@ -89,8 +89,7 @@ func (self Lineage) BranchLineageWithoutRoot(branch gitdomain.LocalBranchName, p
 // BranchNames provides the names of all branches in this Lineage, sorted alphabetically.
 func (self Lineage) BranchNames() gitdomain.LocalBranchNames {
 	result := gitdomain.LocalBranchNames(slices.Collect(maps.Keys(self.data)))
-	result.Sort()
-	return result
+	return slice.NaturalSort(result)
 }
 
 // BranchesAndAncestors provides the full lineage for the branches with the given names,
@@ -105,9 +104,8 @@ func (self Lineage) BranchesAndAncestors(branchNames gitdomain.LocalBranchNames)
 
 // provides all branches for which the parent is known
 func (self Lineage) BranchesWithParents() gitdomain.LocalBranchNames {
-	var result gitdomain.LocalBranchNames = slices.Collect(maps.Keys(self.data))
-	result.Sort()
-	return result
+	result := slices.Collect(maps.Keys(self.data))
+	return slice.NaturalSort(result)
 }
 
 // Children provides the names of all branches that have the given branch as their parent.
@@ -232,8 +230,7 @@ func (self Lineage) Roots() gitdomain.LocalBranchNames {
 			roots = append(roots, parent)
 		}
 	}
-	roots.Sort()
-	return roots
+	return slice.NaturalSort(roots)
 }
 
 func (self Lineage) Set(branch, parent gitdomain.LocalBranchName) Lineage {

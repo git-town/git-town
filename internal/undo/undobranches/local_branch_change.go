@@ -2,6 +2,7 @@ package undobranches
 
 import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/gohacks/slice"
 	"github.com/git-town/git-town/v21/internal/undo/undodomain"
 )
 
@@ -15,6 +16,5 @@ func (self LocalBranchChange) BranchNames() gitdomain.LocalBranchNames {
 	for branch := range self {
 		result = append(result, branch)
 	}
-	result.Sort()
-	return result
+	return slice.NaturalSort(result)
 }
