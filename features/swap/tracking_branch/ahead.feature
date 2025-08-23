@@ -31,9 +31,9 @@ Feature: swapping a branch that is ahead of its tracking branch
       |          | git checkout branch-2                                                               |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE   |
-      | branch-1 | local, origin | commit 1  |
       | branch-2 | local, origin | commit 2a |
       |          |               | commit 2b |
+      | branch-1 | local, origin | commit 1  |
       | branch-3 | local, origin | commit 3  |
     And this lineage exists now
       | BRANCH   | PARENT   |
