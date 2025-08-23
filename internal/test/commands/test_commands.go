@@ -368,10 +368,10 @@ func (self *TestCommands) Lineage() configdomain.Lineage {
 }
 
 // LineageTable provides the currently configured lineage information as a DataTable.
-func (self *TestCommands) LineageTable() datatable.DataTable {
+func (self *TestCommands) LineageTable(lineage configdomain.Lineage) datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("BRANCH", "PARENT")
-	for _, entry := range self.Lineage().Entries() {
+	for _, entry := range lineage.Entries() {
 		result.AddRow(entry.Child.String(), entry.Parent.String())
 	}
 	result.Sort()
