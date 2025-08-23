@@ -50,16 +50,16 @@ Feature: sync the entire stack
       | alpha      | local, origin | alpha commit             |
       | beta       | local, origin | beta commit              |
       | gamma      | local, origin | gamma commit             |
-      | observed   | local         | local observed commit    |
-      |            | origin        | origin observed commit   |
       | one        | local, origin | one commit               |
+      | two        | local, origin | two commit               |
       | parked     | local         | local parked commit      |
       |            | origin        | origin parked commit     |
+      | observed   | local         | local observed commit    |
+      |            | origin        | origin observed commit   |
       | production | local         | local production commit  |
       |            | origin        | origin production commit |
       | qa         | local         | qa local commit          |
       |            | origin        | qa origin commit         |
-      | two        | local, origin | two commit               |
 
   Scenario: undo
     When I run "git-town undo"

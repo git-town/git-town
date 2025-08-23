@@ -41,10 +41,10 @@ Feature: stacked changes
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | origin main commit   |
       |        |               | local main commit    |
-      | child  | local, origin | origin child commit  |
-      |        |               | local child commit   |
       | parent | local, origin | origin parent commit |
       |        |               | local parent commit  |
+      | child  | local, origin | origin child commit  |
+      |        |               | local child commit   |
 
   Scenario: undo
     When I run "git-town undo"
@@ -60,8 +60,8 @@ Feature: stacked changes
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | origin main commit   |
       |        |               | local main commit    |
-      | child  | local         | local child commit   |
-      |        | origin        | origin child commit  |
       | parent | local         | local parent commit  |
       |        | origin        | origin parent commit |
+      | child  | local         | local child commit   |
+      |        | origin        | origin child commit  |
     And the initial branches and lineage exist now
