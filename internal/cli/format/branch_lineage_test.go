@@ -1,0 +1,27 @@
+package format_test
+
+import (
+	"testing"
+
+	"github.com/git-town/git-town/v21/internal/cli/format"
+	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/shoenig/test/must"
+)
+
+func TestBranchLineage(t *testing.T) {
+	t.Parallel()
+	lineage := configdomain.NewLineageWith(configdomain.LineageData{
+		"branch-1":  "main",
+		"branch-1A": "branch-1",
+		"branch-1B": "branch-1",
+		"branch-2":  "main",
+	})
+	have := format.BranchLineage(lineage)
+	want := `
+main
+  branch-1
+    branch-1A
+    branch-1B
+  branch-2`[1:]
+	must.EqOp(t, want, have)
+}
