@@ -361,14 +361,17 @@ func (self *TestCommands) HasFile(name, content string) string {
 	return ""
 }
 
+func (self *TestCommands) Lineage() configdomain.Lineage {
+	localSnapshot := asserts.NoError1(gitconfig.LoadSnapshot(self.TestRunner, Some(configdomain.ConfigScopeLocal), configdomain.UpdateOutdatedNo))
+	localGitConfig := asserts.NoError1(config.NewPartialConfigFromSnapshot(localSnapshot, false, nil))
+	return localGitConfig.Lineage
+}
+
 // LineageTable provides the currently configured lineage information as a DataTable.
 func (self *TestCommands) LineageTable() datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("BRANCH", "PARENT")
-	localSnapshot, _ := gitconfig.LoadSnapshot(self.TestRunner, Some(configdomain.ConfigScopeLocal), configdomain.UpdateOutdatedNo)
-	localGitConfig, _ := config.NewPartialConfigFromSnapshot(localSnapshot, false, nil)
-	lineage := localGitConfig.Lineage
-	for _, entry := range lineage.Entries() {
+	for _, entry := range self.Lineage().Entries() {
 		result.AddRow(entry.Child.String(), entry.Parent.String())
 	}
 	result.Sort()
