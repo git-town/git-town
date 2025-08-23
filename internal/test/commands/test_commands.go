@@ -362,8 +362,8 @@ func (self *TestCommands) HasFile(name, content string) string {
 }
 
 func (self *TestCommands) Lineage() configdomain.Lineage {
-	localSnapshot := asserts.NoError1(gitconfig.LoadSnapshot(self.TestRunner, Some(configdomain.ConfigScopeLocal), configdomain.UpdateOutdatedNo))
-	localGitConfig := asserts.NoError1(config.NewPartialConfigFromSnapshot(localSnapshot, false, nil))
+	localSnapshot, _ := gitconfig.LoadSnapshot(self.TestRunner, Some(configdomain.ConfigScopeLocal), configdomain.UpdateOutdatedNo)
+	localGitConfig, _ := config.NewPartialConfigFromSnapshot(localSnapshot, false, nil)
 	return localGitConfig.Lineage
 }
 

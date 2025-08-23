@@ -14,6 +14,7 @@ Feature: unknown ship strategy
     And a proposal for this branch does not exist
     When I run "git-town ship -m done"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND |
