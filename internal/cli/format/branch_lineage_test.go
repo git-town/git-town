@@ -10,6 +10,14 @@ import (
 
 func TestBranchLineage(t *testing.T) {
 	t.Parallel()
+
+	t.Run("empty", func(t *testing.T) {
+		lineage := configdomain.NewLineage()
+		have := format.BranchLineage(lineage)
+		want := ""
+		must.EqOp(t, want, have)
+	})
+
 	t.Run("normal", func(t *testing.T) {
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 			"branch-1":  "main",
@@ -24,12 +32,6 @@ main
     branch-1A
     branch-1B
   branch-2`[1:]
-		must.EqOp(t, want, have)
-	})
-	t.Run("empty", func(t *testing.T) {
-		lineage := configdomain.NewLineage()
-		have := format.BranchLineage(lineage)
-		want := ""
 		must.EqOp(t, want, have)
 	})
 }

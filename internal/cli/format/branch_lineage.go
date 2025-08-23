@@ -15,9 +15,9 @@ func BranchLineage(lineage configdomain.Lineage) string {
 	for _, root := range lineage.Roots() {
 		branchTree(branchTreeArgs{
 			branch:      root,
+			builder:     &result,
 			indentLevel: 0,
 			lineage:     lineage,
-			builder:     &result,
 		})
 	}
 	return result.String()
@@ -25,9 +25,9 @@ func BranchLineage(lineage configdomain.Lineage) string {
 
 type branchTreeArgs struct {
 	branch      gitdomain.LocalBranchName
+	builder     *strings.Builder
 	indentLevel int
 	lineage     configdomain.Lineage
-	builder     *strings.Builder
 }
 
 // branchTree provids a printable version of the given branch tree.
@@ -40,9 +40,9 @@ func branchTree(args branchTreeArgs) {
 		args.builder.WriteString("\n")
 		branchTree(branchTreeArgs{
 			branch:      child,
+			builder:     args.builder,
 			indentLevel: args.indentLevel + 1,
 			lineage:     args.lineage,
-			builder:     args.builder,
 		})
 	}
 }
