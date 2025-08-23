@@ -232,7 +232,7 @@ func (self Lineage) Roots() gitdomain.LocalBranchNames {
 			roots = append(roots, parent)
 		}
 	}
-	roots.Sort()
+	slice.NaturalSort(roots)
 	return roots
 }
 
@@ -260,9 +260,7 @@ func (self Lineage) addChildrenHierarchically(result *gitdomain.LocalBranchNames
 	if allBranches.Contains(currentBranch) {
 		*result = append(*result, currentBranch)
 	}
-	children := self.Children(currentBranch)
-	children.Sort()
-	for _, child := range children {
+	for _, child := range self.Children(currentBranch) {
 		self.addChildrenHierarchically(result, child, allBranches)
 	}
 }
