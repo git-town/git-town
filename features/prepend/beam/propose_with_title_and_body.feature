@@ -34,8 +34,8 @@ Feature: propose a newly prepended branch
       |          | open https://github.com/git-town/git-town/compare/new?expand=1&title=proposal+title&body=proposal+body                  |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE          |
-      | existing | local, origin | existing commit  |
       | new      | local, origin | unrelated commit |
+      | existing | local, origin | existing commit  |
     And this lineage exists now
       | BRANCH   | PARENT |
       | existing | new    |
