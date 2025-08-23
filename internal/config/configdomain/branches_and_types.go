@@ -5,6 +5,7 @@ import (
 	"slices"
 
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/gohacks/slice"
 )
 
 type BranchesAndTypes map[gitdomain.LocalBranchName]BranchType
@@ -35,6 +36,6 @@ func (self *BranchesAndTypes) BranchesOfTypes(branchTypes ...BranchType) gitdoma
 
 func (self *BranchesAndTypes) Keys() gitdomain.LocalBranchNames {
 	result := slices.Collect(maps.Keys(*self))
-	slices.Sort(result)
+	slice.NaturalSort(result)
 	return result
 }

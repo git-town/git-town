@@ -2,7 +2,6 @@ package gitdomain
 
 import (
 	"slices"
-	"sort"
 	"strings"
 
 	"github.com/git-town/git-town/v21/internal/gohacks/slice"
@@ -81,16 +80,6 @@ func (self LocalBranchNames) Remove(toRemove ...LocalBranchName) LocalBranchName
 		}
 	}
 	return result
-}
-
-// Sort orders the branches in this collection alphabetically.
-func (self LocalBranchNames) Sort() {
-	if len(self) < 2 {
-		return
-	}
-	sort.Slice(self, func(a, b int) bool {
-		return self[a] < self[b]
-	})
 }
 
 func (self LocalBranchNames) String() string {
