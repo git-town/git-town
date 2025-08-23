@@ -174,7 +174,7 @@ func (self SwitchModel) View() string {
 func NewSwitchBranchEntries(args NewSwitchBranchEntriesArgs) SwitchBranchEntries {
 	entries := make(SwitchBranchEntries, 0, args.Lineage.Len())
 	roots := args.Lineage.Roots()
-	roots = slice.NaturalSort(roots)
+	slice.NaturalSort(roots)
 	if mainBranch, hasMainBranch := args.MainBranch.Get(); hasMainBranch {
 		if !roots.Contains(mainBranch) {
 			roots = append(roots, mainBranch)
