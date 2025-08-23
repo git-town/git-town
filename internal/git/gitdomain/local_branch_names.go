@@ -85,6 +85,9 @@ func (self LocalBranchNames) Remove(toRemove ...LocalBranchName) LocalBranchName
 
 // Sort orders the branches in this collection alphabetically.
 func (self LocalBranchNames) Sort() {
+	if len(self) < 2 {
+		return
+	}
 	sort.Slice(self, func(a, b int) bool {
 		return self[a] < self[b]
 	})

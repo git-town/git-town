@@ -9,6 +9,9 @@ import (
 
 // sorts the given elements in natural sort order (https://en.wikipedia.org/wiki/Natural_sort_order)
 func NaturalSort[T fmt.Stringer](list []T) []T {
+	if len(list) < 2 {
+		return list
+	}
 	sortableList := newSortable(list)
 	sort.Sort(sortableList)
 	return sortableList
