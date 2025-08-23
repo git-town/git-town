@@ -11,6 +11,5 @@ import (
 type LocalBranchesSHAs map[gitdomain.LocalBranchName]gitdomain.SHA
 
 func (self LocalBranchesSHAs) BranchNames() gitdomain.LocalBranchNames {
-	result := gitdomain.LocalBranchNames(slices.Collect(maps.Keys(self)))
-	return slice.NaturalSort(result)
+	return slice.NaturalSort(slices.Collect(maps.Keys(self)))
 }
