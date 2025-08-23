@@ -40,7 +40,6 @@ Feature: detaching a feature branch
     And the current branch is "branch-2"
     When I run "git-town detach"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                        |
@@ -72,6 +71,7 @@ Feature: detaching a feature branch
       |          |               | commit 5b |
       | branch-2 | local, origin | commit 2a |
       |          |               | commit 2b |
+    # NOTE: branch-2 is detached from the lineage now
     And this lineage exists now
       | BRANCH   | PARENT   |
       | branch-1 | main     |
