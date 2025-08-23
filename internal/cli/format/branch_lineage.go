@@ -12,8 +12,13 @@ const indent = "  "
 
 // BranchLineage provides printable formatting of the given branch lineage.
 func BranchLineage(lineage configdomain.Lineage) string {
+	roots := lineage.Roots()
+	if len(roots) == 0 {
+		return ""
+	}
 	result := strings.Builder{}
-	for _, root := range lineage.Roots() {
+	for _, root := range roots {
+		result.WriteString("\n\n")
 		branchTree(branchTreeArgs{
 			branch:      root,
 			builder:     NewMutable(&result),
@@ -21,7 +26,7 @@ func BranchLineage(lineage configdomain.Lineage) string {
 			lineage:     lineage,
 		})
 	}
-	return result.String()
+	return result.String()[2:]
 }
 
 type branchTreeArgs struct {

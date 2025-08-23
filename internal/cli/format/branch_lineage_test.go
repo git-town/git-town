@@ -19,6 +19,28 @@ func TestBranchLineage(t *testing.T) {
 		must.EqOp(t, want, have)
 	})
 
+	t.Run("multiple roots", func(t *testing.T) {
+		t.Parallel()
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			"branch-1":  "main",
+			"branch-1A": "branch-1",
+			"branch-1B": "branch-1",
+			"branch-2":  "main",
+			"hotfix":    "qa",
+		})
+		have := format.BranchLineage(lineage)
+		want := `
+main
+  branch-1
+    branch-1A
+    branch-1B
+  branch-2
+
+qa
+  hotfix`[1:]
+		must.EqOp(t, want, have)
+	})
+
 	t.Run("normal", func(t *testing.T) {
 		t.Parallel()
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
