@@ -12,6 +12,7 @@ func TestBranchLineage(t *testing.T) {
 	t.Parallel()
 
 	t.Run("empty", func(t *testing.T) {
+		t.Parallel()
 		lineage := configdomain.NewLineage()
 		have := format.BranchLineage(lineage)
 		want := ""
@@ -19,6 +20,7 @@ func TestBranchLineage(t *testing.T) {
 	})
 
 	t.Run("normal", func(t *testing.T) {
+		t.Parallel()
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 			"branch-1":  "main",
 			"branch-1A": "branch-1",
