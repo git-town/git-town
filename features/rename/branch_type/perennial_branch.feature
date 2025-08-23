@@ -34,8 +34,8 @@ Feature: rename a perennial branch
     And the perennial branches are now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE           |
-      | hotfix | local, origin | hotfix commit     |
       | new    | local, origin | production commit |
+      | hotfix | local, origin | hotfix commit     |
     And this lineage exists now
       | BRANCH | PARENT |
       | hotfix | new    |

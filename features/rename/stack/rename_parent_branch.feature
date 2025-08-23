@@ -23,8 +23,8 @@ Feature: rename a parent branch
       |        | git push origin :parent      |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
-      | child  | local, origin | child commit  |
       | new    | local, origin | parent commit |
+      | child  | local, origin | child commit  |
     And this lineage exists now
       | BRANCH | PARENT |
       | child  | new    |
