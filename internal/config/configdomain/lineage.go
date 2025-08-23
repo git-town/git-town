@@ -261,7 +261,7 @@ func (self Lineage) addChildrenHierarchically(result *gitdomain.LocalBranchNames
 		*result = append(*result, currentBranch)
 	}
 	children := self.Children(currentBranch)
-	// children.Sort()
+	children.Sort()
 	for _, child := range children {
 		self.addChildrenHierarchically(result, child, allBranches)
 	}
