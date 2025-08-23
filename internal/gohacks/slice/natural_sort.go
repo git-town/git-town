@@ -8,13 +8,11 @@ import (
 )
 
 // sorts the given elements in natural sort order (https://en.wikipedia.org/wiki/Natural_sort_order)
-func NaturalSort[T fmt.Stringer](list []T) []T {
+func NaturalSort[T fmt.Stringer](list []T) {
 	if len(list) < 2 {
-		return list
+		return
 	}
-	sortableList := newSortable(list)
-	sort.Sort(sortableList)
-	return sortableList
+	sort.Sort(sortable[T](list))
 }
 
 // indicates whether text1 < text2 according to natural sort order
@@ -93,12 +91,6 @@ func (part part) toNumber() int {
 
 // wraps the given []fmt.Stringer with the sort.Interface methods so that we can sort it using the stdlib
 type sortable[T fmt.Stringer] []T
-
-func newSortable[T fmt.Stringer](elements []T) sortable[T] {
-	sortable := make(sortable[T], len(elements))
-	copy(sortable, elements)
-	return sortable
-}
 
 func (self sortable[T]) Len() int {
 	return len(self)
