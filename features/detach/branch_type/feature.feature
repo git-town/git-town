@@ -71,7 +71,6 @@ Feature: detaching a feature branch
       |          |               | commit 5b |
       | branch-2 | local, origin | commit 2a |
       |          |               | commit 2b |
-    # NOTE: branch-2 is detached from the lineage now
     And this lineage exists now
       | BRANCH   | PARENT   |
       | branch-1 | main     |
