@@ -8,6 +8,9 @@ import (
 type LocalBranchChange map[gitdomain.LocalBranchName]undodomain.Change[gitdomain.SHA]
 
 func (self LocalBranchChange) BranchNames() gitdomain.LocalBranchNames {
+	if len(self) == 0 {
+		return gitdomain.LocalBranchNames{}
+	}
 	result := make(gitdomain.LocalBranchNames, 0, len(self))
 	for branch := range self {
 		result = append(result, branch)
