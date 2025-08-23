@@ -42,7 +42,7 @@ Feature: ship hotfixes
       |            | git checkout hotfix                         |
     And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE              |
-      | hotfix     | local, origin | hotfix commit        |
       | production | local, origin | hotfix done          |
       |            |               | Revert "hotfix done" |
+      | hotfix     | local, origin | hotfix commit        |
     And the initial branches and lineage exist now
