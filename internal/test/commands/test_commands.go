@@ -4,11 +4,10 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"regexp"
 	"slices"
 	"strings"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog"
+	"github.com/git-town/git-town/v21/internal/cli/format"
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/gitconfig"
@@ -363,23 +362,14 @@ func (self *TestCommands) HasFile(name, content string) string {
 	return ""
 }
 
-// LineageTable provides the currently configured lineage information as a DataTable.
-func (self *TestCommands) LineageText() datatable.DataTable {
+func (self *TestCommands) Lineage() configdomain.Lineage {
 	localSnapshot, _ := gitconfig.LoadSnapshot(self.TestRunner, Some(configdomain.ConfigScopeLocal), configdomain.UpdateOutdatedNo)
 	localGitConfig, _ := config.NewPartialConfigFromSnapshot(localSnapshot, false, nil)
-	lineage := localGitConfig.Lineage
-	entries := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
-		BranchInfos:       data.branchInfos,
-		BranchTypes:       []configdomain.BranchType{},
-		BranchesAndTypes:  data.branchesAndTypes,
-		ExcludeBranches:   gitdomain.LocalBranchNames{},
-		Lineage:           lineage,
-		MainBranch:        self.Config.UnvalidatedConfig.MainBranch,
-		Regexes:           []*regexp.Regexp{},
-		ShowAllBranches:   false,
-		UnknownBranchType: repo.UnvalidatedConfig.NormalConfig.UnknownBranchType,
-	})
-	return branchLayout(entries, data)
+	return localGitConfig.Lineage
+}
+
+func (self *TestCommands) LineageText() string {
+	return format.BranchLineage(self.Lineage())
 }
 
 // LocalBranches provides the names of all branches in the local repository,

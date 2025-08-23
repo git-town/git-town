@@ -44,7 +44,7 @@ type ScenarioState struct {
 	initialDevSHAs Option[gitdomain.Commits]
 
 	// the lineage before the end-to-end test executed the first subshell command
-	initialLineage Option[datatable.DataTable]
+	initialLineage Option[string]
 
 	// commits that existed at the origin repo before the end-to-end test executed the first subshell command
 	initialOriginSHAs Option[gitdomain.Commits]
@@ -84,7 +84,7 @@ func (self *ScenarioState) CaptureState() {
 		self.initialBranches = Some(branches)
 	}
 	if self.initialLineage.IsNone() && self.insideGitRepo {
-		lineage := self.fixture.DevRepo.GetOrPanic().LineageTable()
+		lineage := self.fixture.DevRepo.GetOrPanic().LineageText()
 		self.initialLineage = Some(lineage)
 	}
 	if self.initialTags.IsNone() && self.insideGitRepo {
