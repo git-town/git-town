@@ -105,7 +105,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		NewBranchType:            other.NewBranchType.Or(self.NewBranchType),
 		ObservedRegex:            other.ObservedRegex.Or(self.ObservedRegex),
 		Offline:                  other.Offline.GetOrElse(self.Offline),
-		PerennialBranches:        other.PerennialBranches.AppendAllMissing(self.PerennialBranches...),
+		PerennialBranches:        other.PerennialBranches.AppendAllMissing(self.PerennialBranches),
 		PerennialRegex:           other.PerennialRegex.Or(self.PerennialRegex),
 		ProposalsShowLineage:     other.ProposalsShowLineage.GetOrElse(self.ProposalsShowLineage),
 		PushHook:                 other.PushHook.GetOrElse(self.PushHook),

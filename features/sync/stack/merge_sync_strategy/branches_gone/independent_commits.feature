@@ -37,14 +37,14 @@ Feature: stacked changes
       | BRANCH | LOCATION      | MESSAGE                                                  |
       | main   | local, origin | origin main commit                                       |
       |        |               | local main commit                                        |
-      | child  | local, origin | local child commit                                       |
-      |        |               | Merge branch 'parent' into child                         |
-      |        |               | origin child commit                                      |
-      |        |               | Merge remote-tracking branch 'origin/child' into child   |
       | parent | local, origin | local parent commit                                      |
       |        |               | Merge branch 'main' into parent                          |
       |        |               | origin parent commit                                     |
       |        |               | Merge remote-tracking branch 'origin/parent' into parent |
+      | child  | local, origin | local child commit                                       |
+      |        |               | Merge branch 'parent' into child                         |
+      |        |               | origin child commit                                      |
+      |        |               | Merge remote-tracking branch 'origin/child' into child   |
 
   Scenario: undo
     When I run "git-town undo"

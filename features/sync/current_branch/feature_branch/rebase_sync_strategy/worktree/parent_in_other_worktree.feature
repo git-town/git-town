@@ -35,11 +35,11 @@ Feature: sync a branch whose parent is active in another worktree
       | BRANCH | LOCATION                | MESSAGE              |
       | main   | local, origin, worktree | origin main commit   |
       |        |                         | local main commit    |
+      | parent | origin                  | origin parent commit |
+      |        | worktree                | local parent commit  |
       | child  | local                   | origin parent commit |
       |        | local, origin           | origin child commit  |
       |        |                         | local child commit   |
-      | parent | origin                  | origin parent commit |
-      |        | worktree                | local parent commit  |
 
   Scenario: undo
     When I run "git-town undo"
@@ -51,7 +51,7 @@ Feature: sync a branch whose parent is active in another worktree
       | BRANCH | LOCATION                | MESSAGE              |
       | main   | local, origin, worktree | origin main commit   |
       |        |                         | local main commit    |
-      | child  | local                   | local child commit   |
-      |        | origin                  | origin child commit  |
       | parent | origin                  | origin parent commit |
       |        | worktree                | local parent commit  |
+      | child  | local                   | local child commit   |
+      |        | origin                  | origin child commit  |

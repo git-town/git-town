@@ -34,14 +34,14 @@ Feature: syncing a stacked feature branch using --no-push
       | BRANCH | LOCATION      | MESSAGE                                                  |
       | main   | local, origin | origin main commit                                       |
       |        | local         | local main commit                                        |
-      | child  | local         | local child commit                                       |
-      |        |               | Merge branch 'parent' into child                         |
-      |        | local, origin | origin child commit                                      |
-      |        | local         | Merge remote-tracking branch 'origin/child' into child   |
       | parent | local         | local parent commit                                      |
       |        |               | Merge branch 'main' into parent                          |
       |        | local, origin | origin parent commit                                     |
       |        | local         | Merge remote-tracking branch 'origin/parent' into parent |
+      | child  | local         | local child commit                                       |
+      |        |               | Merge branch 'parent' into child                         |
+      |        | local, origin | origin child commit                                      |
+      |        | local         | Merge remote-tracking branch 'origin/child' into child   |
     And the initial branches and lineage exist now
 
   Scenario: undo

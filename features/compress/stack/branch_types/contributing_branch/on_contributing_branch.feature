@@ -31,9 +31,9 @@ Feature: does not compress the active contribution branch
     And all branches are now synchronized
     And these commits exist now
       | BRANCH       | LOCATION      | MESSAGE        |
-      | child        | local, origin | child 1        |
       | contribution | local, origin | contribution 1 |
       |              |               | contribution 2 |
+      | child        | local, origin | child 1        |
     And file "contribution_1" still has content "contribution 1"
     And file "contribution_2" still has content "contribution 2"
 

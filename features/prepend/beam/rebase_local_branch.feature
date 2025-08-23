@@ -28,8 +28,8 @@ Feature: prepend a branch to a local feature branch using the "rebase" sync stra
       |        | git checkout parent                                                                                     |
     And these commits exist now
       | BRANCH | LOCATION | MESSAGE  |
-      | old    | local    | commit 2 |
       | parent | local    | commit 1 |
+      | old    | local    | commit 2 |
     And this lineage exists now
       | BRANCH | PARENT |
       | old    | parent |
