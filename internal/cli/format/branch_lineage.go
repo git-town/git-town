@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 const indent = "  "
@@ -15,7 +16,7 @@ func BranchLineage(lineage configdomain.Lineage) string {
 	for _, root := range lineage.Roots() {
 		branchTree(branchTreeArgs{
 			branch:      root,
-			builder:     &result,
+			builder:     NewMutable(&result),
 			indentLevel: 0,
 			lineage:     lineage,
 		})
@@ -25,7 +26,7 @@ func BranchLineage(lineage configdomain.Lineage) string {
 
 type branchTreeArgs struct {
 	branch      gitdomain.LocalBranchName
-	builder     *strings.Builder
+	builder     Mutable[strings.Builder]
 	indentLevel int
 	lineage     configdomain.Lineage
 }
@@ -33,11 +34,11 @@ type branchTreeArgs struct {
 // branchTree provids a printable version of the given branch tree.
 func branchTree(args branchTreeArgs) {
 	for range args.indentLevel {
-		args.builder.WriteString(indent)
+		args.builder.Value.WriteString(indent)
 	}
-	args.builder.WriteString(args.branch.String())
+	args.builder.Value.WriteString(args.branch.String())
 	for _, child := range args.lineage.Children(args.branch) {
-		args.builder.WriteString("\n")
+		args.builder.Value.WriteString("\n")
 		branchTree(branchTreeArgs{
 			branch:      child,
 			builder:     args.builder,
