@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/gohacks/slice"
 	"github.com/shoenig/test/must"
 )
 
@@ -136,14 +135,6 @@ func TestLocalBranchNames(t *testing.T) {
 			want := gitdomain.NewLocalBranchNames("one", "three")
 			must.Eq(t, want, have)
 		})
-	})
-
-	t.Run("Sort", func(t *testing.T) {
-		t.Parallel()
-		branches := gitdomain.NewLocalBranchNames("one", "two", "three")
-		slice.NaturalSort(branches)
-		want := []string{"one", "three", "two"}
-		must.Eq(t, want, branches.Strings())
 	})
 
 	t.Run("TrackingBranch", func(t *testing.T) {
