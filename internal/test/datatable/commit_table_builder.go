@@ -125,7 +125,7 @@ func (self *CommitTableBuilder) branches(lineage configdomain.Lineage) gitdomain
 			result = append(result, branch)
 		}
 	}
-	// result = lineage.OrderHierarchically(result)
+	result = lineage.OrderHierarchically(result)
 	if hasMain {
 		return append(gitdomain.NewLocalBranchNames("main"), result...)
 	}
