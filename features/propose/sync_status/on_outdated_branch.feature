@@ -38,10 +38,10 @@ Feature: sync before proposing
       | BRANCH | LOCATION      | MESSAGE                                                  |
       | main   | local         | local main commit                                        |
       |        | origin        | origin main commit                                       |
+      | parent | local, origin | local parent commit                                      |
+      |        |               | origin parent commit                                     |
+      |        |               | Merge remote-tracking branch 'origin/parent' into parent |
       | child  | local, origin | local child commit                                       |
       |        |               | Merge branch 'parent' into child                         |
       |        |               | origin child commit                                      |
       |        |               | Merge remote-tracking branch 'origin/child' into child   |
-      | parent | local, origin | local parent commit                                      |
-      |        |               | origin parent commit                                     |
-      |        |               | Merge remote-tracking branch 'origin/parent' into parent |
