@@ -10,18 +10,26 @@ import (
 
 func TestBranchLineage(t *testing.T) {
 	t.Parallel()
-	lineage := configdomain.NewLineageWith(configdomain.LineageData{
-		"branch-1":  "main",
-		"branch-1A": "branch-1",
-		"branch-1B": "branch-1",
-		"branch-2":  "main",
-	})
-	have := format.BranchLineage(lineage)
-	want := `
+	t.Run("normal", func(t *testing.T) {
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			"branch-1":  "main",
+			"branch-1A": "branch-1",
+			"branch-1B": "branch-1",
+			"branch-2":  "main",
+		})
+		have := format.BranchLineage(lineage)
+		want := `
 main
   branch-1
     branch-1A
     branch-1B
   branch-2`[1:]
-	must.EqOp(t, want, have)
+		must.EqOp(t, want, have)
+	})
+	t.Run("empty", func(t *testing.T) {
+		lineage := configdomain.NewLineage()
+		have := format.BranchLineage(lineage)
+		want := ""
+		must.EqOp(t, want, have)
+	})
 }
