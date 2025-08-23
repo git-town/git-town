@@ -50,9 +50,11 @@ Feature: beam commits and uncommitted changes from a local branch onto a new chi
       |          |               | commit 3    |
       |          |               | commit 5    |
     And this lineage exists now
-      | BRANCH   | PARENT   |
-      | existing | main     |
-      | new      | existing |
+      """
+      main
+        existing
+          new
+      """
 
   Scenario: undo
     When I run "git-town undo"
