@@ -1550,15 +1550,14 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^this lineage exists now$`, func(ctx context.Context, input *godog.Table) error {
+	sc.Step(`^this lineage exists now$`, func(ctx context.Context, want *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		table := devRepo.LineageTable()
-		diff, errCount := table.EqualGherkin(input)
-		if errCount > 0 {
-			fmt.Printf("\nERROR! Found %d differences in the lineage\n\n", errCount)
-			fmt.Println(diff)
-			return errors.New("mismatching branches found, see the diff above")
+		have := devRepo.LineageText()
+		if have != want.Content {
+			fmt.Println("WANT:\n", want)
+			fmt.Println("HAVE:\n", have)
+			return errors.New("mismatching lineage")
 		}
 		return nil
 	})
