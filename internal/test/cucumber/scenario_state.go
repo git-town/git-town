@@ -84,7 +84,8 @@ func (self *ScenarioState) CaptureState() {
 		self.initialBranches = Some(branches)
 	}
 	if self.initialLineage.IsNone() && self.insideGitRepo {
-		lineage := self.fixture.DevRepo.GetOrPanic().LineageText(devRepo.Lineage())
+		devRepo := self.fixture.DevRepo.GetOrPanic()
+		lineage := devRepo.LineageText(devRepo.Lineage())
 		self.initialLineage = Some(lineage)
 	}
 	if self.initialTags.IsNone() && self.insideGitRepo {
