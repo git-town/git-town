@@ -1,6 +1,8 @@
 package swap
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v21/internal/forge"
 	"github.com/git-town/git-town/v21/internal/vm/opcodes"
 	"github.com/git-town/git-town/v21/internal/vm/program"
@@ -15,20 +17,16 @@ func swapUpdateProposalStackLineagesProgram(program Mutable[program.Program], pr
 	//
 	// NOTE: NewProposalStackLineageBuilder method stores all the proposals found in the stack lineage
 	// in map for fast retrieve through the GetProposals used below.
-	builder, hasBuilder := forge.NewProposalStackLineageBuilder(proposalStackLineageArgs).Get()
-	if !hasBuilder {
+	tree, err := forge.NewProposalStackLineageTree(proposalStackLineageArgs)
+	if err != nil {
+		fmt.Printf("failed to update proposal stack lineage: %s\n", err.Error())
 		return
 	}
-
-	for _, proposal := range builder.GetProposals() {
-		program.Value.Add(&opcodes.ProposalUpdateBody{
-			Proposal: proposal,
-			UpdatedBody: forge.ProposalBodyUpdateWithStackLineage(proposal.Data.Data().Body.GetOrDefault(), builder.Build(forge.ProposalStackLineageArgs{
-				Connector:                proposalStackLineageArgs.Connector,
-				CurrentBranch:            proposal.Data.Data().Source,
-				Lineage:                  proposalStackLineageArgs.Lineage,
-				MainAndPerennialBranches: proposalStackLineageArgs.MainAndPerennialBranches,
-			})),
+	for branch, proposal := range tree.BranchToProposal {
+		program.Value.Add(&opcodes.ProposalUpdateLineage{
+			Current:         branch,
+			CurrentProposal: proposal,
+			LineageTree:     MutableSome(tree),
 		})
 	}
 }
