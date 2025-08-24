@@ -22,12 +22,6 @@ func swapGitOperationsProgram(args swapGitOperationsProgramArgs) {
 			CommitsToRemove:    args.parent.LocalBranchName().Location(),
 		},
 	)
-
-	if args.current.HasTrackingBranch() {
-		args.program.Value.Add(
-			&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: args.current.LocalBranchName(), ForceIfIncludes: true},
-		)
-	}
 	args.program.Value.Add(
 		&opcodes.Checkout{
 			Branch: args.parent.LocalBranchName(),
@@ -68,4 +62,10 @@ func swapGitOperationsProgram(args swapGitOperationsProgramArgs) {
 		}
 	}
 	args.program.Value.Add(&opcodes.CheckoutIfNeeded{Branch: args.current.LocalBranchName()})
+	// push current branch after all rebases complete, otherwise proposals are marked as merged on Github
+	if args.current.HasTrackingBranch() {
+		args.program.Value.Add(
+			&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: args.current.LocalBranchName(), ForceIfIncludes: true},
+		)
+	}
 }

@@ -59,7 +59,6 @@ Feature: swapping a feature branch in a stack with dependent changes
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                    |
       | branch-2 | GIT_EDITOR=true git rebase --continue                      |
-      |          | git push --force-with-lease --force-if-includes            |
       |          | git checkout branch-1                                      |
       | branch-1 | git -c rebase.updateRefs=false rebase --onto branch-2 main |
     And Git Town prints the error:
@@ -93,6 +92,7 @@ Feature: swapping a feature branch in a stack with dependent changes
       | branch-3 | git -c rebase.updateRefs=false rebase --onto branch-1 {{ sha-initial 'branch-2 commit' }} |
       |          | git push --force-with-lease --force-if-includes                                           |
       |          | git checkout branch-2                                                                     |
+      | branch-2 | git push --force-with-lease --force-if-includes                                           |
     And no rebase is now in progress
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                 |
