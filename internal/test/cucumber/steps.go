@@ -1556,8 +1556,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		have := format.BranchLineage(devRepo.Config.NormalConfig.Lineage)
 		if have != want.Content {
-			fmt.Println("WANT:\n", want)
-			fmt.Println("HAVE:\n", have)
+			fmt.Println("WANT:\n" + want.Content)
+			fmt.Println("HAVE:\n" + have)
 			return errors.New("mismatching lineage")
 		}
 		return nil

@@ -40,7 +40,9 @@ Feature: prepend a branch to a branch that was shipped at the remote
       """
       main
         new
+          branch-2
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
