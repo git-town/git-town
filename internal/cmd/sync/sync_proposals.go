@@ -15,7 +15,7 @@ type BranchProposalsProgramArgs struct {
 
 // BranchProposalsProgram syncs all given proposals.
 func BranchProposalsProgram(branchesToSync configdomain.BranchesToSync, args BranchProposalsProgramArgs) {
-	builder, hasBuilder := forge.NewProposalStackLineageBuilder(args.ProposalStackLineageArgs).Get()
+	builder, hasBuilder := forge.NewProposalStackLineageBuilder(args.ProposalStackLineageArgs, MutableNone[forge.ProposalStackLineageTree]()).Get()
 	if !hasBuilder {
 		return
 	}
