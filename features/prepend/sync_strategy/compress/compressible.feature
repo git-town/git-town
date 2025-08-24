@@ -36,10 +36,12 @@ Feature: prepend a branch to a feature branch with compressible commits in a cle
       | branch-1 | local, origin | branch-1 commit 1 | file_1    | content 2    |
       | branch-2 | local, origin | branch-2 commit 1 | file_2    | content 4    |
     And this lineage exists now
-      | BRANCH    | PARENT    |
-      | branch-1  | main      |
-      | branch-1a | branch-1  |
-      | branch-2  | branch-1a |
+      """
+      main
+        branch-1
+          branch-1a
+            branch-2
+      """
 
   Scenario: undo
     When I run "git-town undo"

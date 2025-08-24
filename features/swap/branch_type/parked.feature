@@ -42,10 +42,12 @@ Feature: swapping a parked branch
       | branch-3 | local, origin | commit 3a   |
       |          |               | commit 3b   |
     And this lineage exists now
-      | BRANCH   | PARENT   |
-      | branch-1 | branch-2 |
-      | branch-2 | main     |
-      | branch-3 | branch-1 |
+      """
+      main
+        branch-2
+          branch-1
+            branch-3
+      """
 
   Scenario: undo
     When I run "git-town undo"

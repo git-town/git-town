@@ -25,10 +25,11 @@ Feature: append a new feature branch in a dirty workspace using the "compress" s
       |          | git restore --staged .      |
     And the initial commits exist now
     And this lineage exists now
-      | BRANCH   | PARENT   |
-      | existing | main     |
-      | new      | existing |
-
+      """
+      main
+        existing
+          new
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

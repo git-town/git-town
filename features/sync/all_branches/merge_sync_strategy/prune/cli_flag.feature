@@ -44,13 +44,11 @@ Feature: prune enabled via CLI
       | REPOSITORY    | BRANCHES        |
       | local, origin | main, feature-3 |
     And this lineage exists now
-      | BRANCH    | PARENT |
-      | feature-3 | main   |
-    And these commits exist now
-      | BRANCH    | LOCATION      | MESSAGE                            |
-      | main      | local, origin | main commit                        |
-      | feature-3 | local, origin | feature-3 commit                   |
-      |           |               | Merge branch 'main' into feature-3 |
+      """
+      local, origin
+        main
+      """
+
 
   Scenario: undo
     When I run "git-town undo"

@@ -41,8 +41,10 @@ Feature: multiple shipped branches
       | REPOSITORY    | BRANCHES        |
       | local, origin | main, feature-3 |
     And this lineage exists now
-      | BRANCH    | PARENT |
-      | feature-3 | main   |
+      """
+      main
+        feature-3
+      """
 
   Scenario: undo
     When I run "git-town undo"

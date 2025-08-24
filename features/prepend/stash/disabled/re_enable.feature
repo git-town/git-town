@@ -19,10 +19,11 @@ Feature: enforce stashing via CLI flag
       | new    | git stash pop               |
       |        | git restore --staged .      |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | new    | main   |
-      | old    | new    |
-
+      """
+      main
+        new
+          old
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

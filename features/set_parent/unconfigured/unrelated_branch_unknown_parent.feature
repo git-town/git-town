@@ -13,9 +13,11 @@ Feature: an unrelated branch has an unknown parent
   Scenario: result
     And Git Town runs no commands
     And this lineage exists now
-      | BRANCH   | PARENT   |
-      | branch-1 | main     |
-      | branch-2 | branch-1 |
+      """
+      main
+        branch-1
+          branch-2
+      """
 
   Scenario: undo
     When I run "git-town undo"

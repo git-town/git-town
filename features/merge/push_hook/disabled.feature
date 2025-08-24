@@ -28,8 +28,10 @@ Feature: merging a branch with disabled push-hook
       |        | git push --force-with-lease --force-if-includes --no-verify |
       |        | git push origin :beta                                       |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | alpha  | main   |
+      """
+      main
+        alpha
+      """
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, origin | alpha commit |

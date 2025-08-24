@@ -18,11 +18,12 @@ Feature: previous branch is checked out in another worktree
       |         | git checkout -b new main   |
     And the previous Git branch is now "new"
     And this lineage exists now
-      | BRANCH   | PARENT |
-      | current  | new    |
-      | new      | main   |
-      | previous | main   |
-
+      """
+      main
+        new
+          current
+        previous
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

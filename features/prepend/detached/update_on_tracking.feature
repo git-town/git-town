@@ -23,10 +23,11 @@ Feature: prepend a branch to a feature branch in detached mode with a new commit
       | branch | local, origin | local commit  |
       |        |               | origin commit |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | branch | parent |
-      | parent | main   |
-
+      """
+      main
+        parent
+          branch
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

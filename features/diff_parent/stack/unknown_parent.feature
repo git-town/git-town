@@ -14,5 +14,7 @@ Feature: ask for missing parent
       | BRANCH  | COMMAND                            |
       | feature | git diff --merge-base main feature |
     And this lineage exists now
-      | BRANCH  | PARENT |
-      | feature | main   |
+      """
+      main
+        feature
+      """

@@ -29,9 +29,10 @@ Feature: the branch to delete has a deleted tracking branch
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | other  | main   |
-
+      """
+      main
+        other
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

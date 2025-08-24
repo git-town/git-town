@@ -33,10 +33,12 @@ Feature: prepend a branch to a feature branch in a clean workspace using the "co
       |          | git checkout -b branch-1a branch-1 |
     And the initial commits exist now
     And this lineage exists now
-      | BRANCH    | PARENT    |
-      | branch-1  | main      |
-      | branch-1a | branch-1  |
-      | branch-2  | branch-1a |
+      """
+      main
+        branch-1
+          branch-1a
+            branch-2
+      """
 
   Scenario: undo
     When I run "git-town undo"

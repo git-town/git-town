@@ -31,9 +31,10 @@ Feature: provide the commit message via a CLI argument
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, origin | feature done |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | other  | main   |
-
+      """
+      main
+        other
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

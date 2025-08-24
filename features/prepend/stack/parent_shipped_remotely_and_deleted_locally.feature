@@ -30,10 +30,11 @@ Feature: prepending to a branch whose parent was shipped and the local branch de
       | local      | main, child, new |
       | origin     | main, child      |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | child  | new    |
-      | new    | main   |
-
+      """
+      main
+        new
+          child
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

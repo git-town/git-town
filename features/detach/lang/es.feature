@@ -36,9 +36,11 @@ Feature: detaching a branch in Spanish
       | branch-2 | local    | commit 2a |
       |          |          | commit 2b |
     And this lineage exists now
-      | BRANCH   | PARENT |
-      | branch-1 | main   |
-      | branch-2 | main   |
+      """
+      main
+        branch-1
+        branch-2
+      """
 
   Scenario: undo
     When I run "git-town undo" with these environment variables

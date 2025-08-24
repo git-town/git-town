@@ -37,10 +37,11 @@ Feature: beam a commit from a stack with independent changes into a prepended br
       |        |               | commit 3    | file      | line 1: commit-1 changes\n\nline 2: commit-2 changes\n\nline 3: commit-3 changes |
       |        | origin        | commit 2    | file      | line 1\n\nline 2: commit-2 changes\n\nline 3                                     |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | new    | main   |
-      | old    | new    |
-
+      """
+      main
+        new
+          old
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

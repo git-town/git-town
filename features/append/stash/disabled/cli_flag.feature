@@ -11,9 +11,10 @@ Feature: disable stashing via CLI flag
       | BRANCH | COMMAND             |
       | main   | git checkout -b new |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | new    | main   |
-
+      """
+      main
+        new
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

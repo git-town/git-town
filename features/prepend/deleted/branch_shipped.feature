@@ -34,10 +34,11 @@ Feature: prepend a branch to a branch that was shipped at the remote
       | local      | main, new, parent |
       | origin     | main, parent      |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | new    | parent |
-      | parent | main   |
-
+      """
+      main
+        parent
+          new
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

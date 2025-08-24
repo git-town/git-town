@@ -25,10 +25,11 @@ Feature: prepend a branch in Spanish
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | old    | parent |
-      | parent | main   |
-
+      """
+      main
+        parent
+          old
+      """
   Scenario: undo
     When I run "git-town undo" with these environment variables
       | LANG | es_ES.UTF-8 |

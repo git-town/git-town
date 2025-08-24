@@ -38,9 +38,11 @@ Feature: delete a parent branch
       | feature-3 | local, origin | feature-2 commit |
       |           |               | feature-3 commit |
     And this lineage exists now
-      | BRANCH    | PARENT    |
-      | feature-1 | main      |
-      | feature-3 | feature-1 |
+      """
+      main
+        feature-1
+          feature-3
+      """
 
   Scenario: undo
     When I run "git-town undo"

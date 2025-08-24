@@ -25,8 +25,10 @@ Feature: merging local branches
       | alpha  | git reset --hard {{ sha 'beta commit' }} |
       |        | git branch -D beta                       |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | alpha  | main   |
+      """
+      main
+        alpha
+      """
     And these commits exist now
       | BRANCH | LOCATION | MESSAGE      |
       | alpha  | local    | alpha commit |
