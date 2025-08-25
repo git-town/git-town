@@ -26,10 +26,11 @@ Feature: propose uncommitted changes via a separate parent branch, provide commi
       | new      | local    | unrelated       |
       | existing | local    | existing commit |
     And this lineage exists now
-      | BRANCH   | PARENT |
-      | existing | new    |
-      | new      | main   |
-
+      """
+      main
+        new
+          existing
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

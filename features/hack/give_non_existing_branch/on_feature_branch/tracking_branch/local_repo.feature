@@ -17,10 +17,11 @@ Feature: local repo
       | existing | git checkout -b new main |
     And the initial commits exist now
     And this lineage exists now
-      | BRANCH   | PARENT |
-      | existing | main   |
-      | new      | main   |
-
+      """
+      main
+        existing
+        new
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
@@ -29,5 +30,7 @@ Feature: local repo
       | existing | git branch -D new     |
     And the initial commits exist now
     And this lineage exists now
-      | BRANCH   | PARENT |
-      | existing | main   |
+      """
+      main
+        existing
+      """

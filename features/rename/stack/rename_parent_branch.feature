@@ -26,10 +26,11 @@ Feature: rename a parent branch
       | new    | local, origin | parent commit |
       | child  | local, origin | child commit  |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | child  | new    |
-      | new    | main   |
-
+      """
+      main
+        new
+          child
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

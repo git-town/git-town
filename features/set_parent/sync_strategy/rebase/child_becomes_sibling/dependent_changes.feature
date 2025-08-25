@@ -69,7 +69,9 @@ Feature: make a child branch a sibling in a stack with dependent changes
       | branch-3 | local, origin | branch-3 commit | file      | line 1: branch-1 changes\nline 2\nline 3: branch-3 changes |
     And no rebase is now in progress
     And this lineage exists now
-      | BRANCH   | PARENT   |
-      | branch-1 | main     |
-      | branch-2 | branch-1 |
-      | branch-3 | branch-1 |
+      """
+      main
+        branch-1
+          branch-2
+          branch-3
+      """

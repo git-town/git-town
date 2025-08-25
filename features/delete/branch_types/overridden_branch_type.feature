@@ -29,9 +29,10 @@ Feature: delete a branch that has an overridden branch type
       | BRANCH | LOCATION      | MESSAGE      |
       | other  | local, origin | other commit |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | other  | main   |
-
+      """
+      main
+        other
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

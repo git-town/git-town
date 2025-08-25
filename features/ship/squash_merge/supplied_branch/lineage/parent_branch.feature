@@ -30,9 +30,10 @@ Feature: ship a parent branch
       | main   | local, origin | parent done  |
       | child  | local, origin | child commit |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | child  | main   |
-
+      """
+      main
+        child
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

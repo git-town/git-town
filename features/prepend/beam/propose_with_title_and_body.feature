@@ -37,10 +37,11 @@ Feature: propose a newly prepended branch
       | new      | local, origin | unrelated commit |
       | existing | local, origin | existing commit  |
     And this lineage exists now
-      | BRANCH   | PARENT |
-      | existing | new    |
-      | new      | main   |
-
+      """
+      main
+        new
+          existing
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

@@ -46,9 +46,11 @@ Feature: deleting a branch from a stack with independent changes
       | REPOSITORY    | BRANCHES                 |
       | local, origin | main, branch-1, branch-3 |
     And this lineage exists now
-      | BRANCH   | PARENT   |
-      | branch-1 | main     |
-      | branch-3 | branch-1 |
+      """
+      main
+        branch-1
+          branch-3
+      """
 
   Scenario: undo
     When I run "git-town undo"

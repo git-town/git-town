@@ -146,10 +146,11 @@ Feature: beam a commit from a stack with dependent changes into a prepended bran
       |        |               | commit 3    | file      | line 1: commit-1 changes\nline 2: commit-2 changes\nline 3: commit-3 changes |
       |        | origin        | commit 2    | file      | line 1\nline 2: commit-2 changes\nline 3                                     |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | new    | main   |
-      | old    | new    |
-
+      """
+      main
+        new
+          old
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

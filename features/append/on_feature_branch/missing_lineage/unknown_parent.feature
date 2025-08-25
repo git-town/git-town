@@ -11,6 +11,8 @@ Feature: ask for missing parent branch information
       | DIALOG                     | KEYS  |
       | parent branch for "branch" | enter |
     Then this lineage exists now
-      | BRANCH | PARENT |
-      | branch | main   |
-      | new    | branch |
+      """
+      main
+        branch
+          new
+      """

@@ -19,9 +19,10 @@ Feature: append a new feature branch to the main branch using the "compress" syn
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | new    | main   |
-
+      """
+      main
+        new
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

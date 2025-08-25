@@ -51,6 +51,7 @@ Feature: change existing information in Git metadata
       | git config --global alias.compress "town compress"       |
       | git config --global alias.contribute "town contribute"   |
       | git config --global alias.diff-parent "town diff-parent" |
+      | git config --global alias.down "town down"               |
       | git config --global alias.hack "town hack"               |
       | git config --global alias.delete "town delete"           |
       | git config --global alias.observe "town observe"         |
@@ -62,6 +63,7 @@ Feature: change existing information in Git metadata
       | git config --global alias.set-parent "town set-parent"   |
       | git config --global alias.ship "town ship"               |
       | git config --global alias.sync "town sync"               |
+      | git config --global alias.up "town up"                   |
       | git config git-town.github-token gh-tok                  |
       | git config git-town.detached true                        |
       | git config git-town.new-branch-type prototype            |

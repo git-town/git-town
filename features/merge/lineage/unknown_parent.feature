@@ -17,8 +17,10 @@ Feature: merging with missing lineage
       |        | git checkout alpha       |
       | alpha  | git branch -D beta       |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | alpha  | main   |
+      """
+      main
+        alpha
+      """
     And these commits exist now
       | BRANCH | LOCATION | MESSAGE |
 

@@ -26,9 +26,10 @@ Feature: proposing a branch whose parent was shipped and the local branch delete
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, child |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | child  | main   |
-
+      """
+      main
+        child
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands

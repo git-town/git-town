@@ -28,9 +28,10 @@ Feature: delete the current prototype branch
       | BRANCH   | LOCATION      | MESSAGE         |
       | previous | local, origin | previous commit |
     And this lineage exists now
-      | BRANCH   | PARENT |
-      | previous | main   |
-
+      """
+      main
+        previous
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
