@@ -42,26 +42,6 @@ func Enter(data Data) (UserInput, dialogdomain.Exit, error) {
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	featureRegex, exit, err := enterFeatureRegex(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
-	contributionRegex, exit, err := enterContributionRegex(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
-	observedRegex, exit, err := enterObservedRegex(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
-	newBranchType, exit, err := enterNewBranchType(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
-	unknownBranchType, exit, err := enterUnknownBranchType(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
 	devRemote, exit, err := enterDevRemote(data)
 	if err != nil || exit {
 		return emptyResult, exit, err
@@ -159,6 +139,26 @@ EnterForgeData:
 		gitlabToken:          gitlabToken,
 		inputs:               data.Inputs,
 	})
+	if err != nil || exit {
+		return emptyResult, exit, err
+	}
+	featureRegex, exit, err := enterFeatureRegex(data)
+	if err != nil || exit {
+		return emptyResult, exit, err
+	}
+	contributionRegex, exit, err := enterContributionRegex(data)
+	if err != nil || exit {
+		return emptyResult, exit, err
+	}
+	observedRegex, exit, err := enterObservedRegex(data)
+	if err != nil || exit {
+		return emptyResult, exit, err
+	}
+	newBranchType, exit, err := enterNewBranchType(data)
+	if err != nil || exit {
+		return emptyResult, exit, err
+	}
+	unknownBranchType, exit, err := enterUnknownBranchType(data)
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
