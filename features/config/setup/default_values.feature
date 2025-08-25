@@ -48,9 +48,6 @@ Feature: Accepting all default values leads to a working setup
 
       [branches]
       main = "main"
-
-      [hosting]
-      dev-remote = "origin"
       """
 
   Scenario: undo
