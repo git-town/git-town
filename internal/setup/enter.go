@@ -42,11 +42,11 @@ func Enter(data Data) (UserInput, dialogdomain.Exit, error) {
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
+EnterForgeData:
 	devRemote, exit, err := enterDevRemote(data)
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-EnterForgeData:
 	hostingOriginHostName, exit, err := enterOriginHostName(data)
 	if err != nil || exit {
 		return emptyResult, exit, err
