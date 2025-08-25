@@ -20,18 +20,18 @@ func swapProposalTargetsProgram(args swapProposalTargetsProgramArg) {
 	if !currentBranchHasProposal && !parentBranchHasProposal {
 		return
 	}
-	if parentBranchHasProposal {
-		args.program.Value.Add(&opcodes.ProposalUpdateTarget{
-			NewBranch: args.current.name,
-			OldBranch: args.grandParent,
-			Proposal:  parentBranchProposal,
-		})
-	}
 	if currentBranchHasProposal {
 		args.program.Value.Add(&opcodes.ProposalUpdateTarget{
 			NewBranch: args.grandParent,
 			OldBranch: args.parent.name,
 			Proposal:  currentBranchProposal,
+		})
+	}
+	if parentBranchHasProposal {
+		args.program.Value.Add(&opcodes.ProposalUpdateTarget{
+			NewBranch: args.current.name,
+			OldBranch: args.grandParent,
+			Proposal:  parentBranchProposal,
 		})
 	}
 }
