@@ -5,6 +5,7 @@ import (
 	"slices"
 
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/gohacks/slice"
 	"github.com/git-town/git-town/v21/internal/undo/undodomain"
 )
 
@@ -12,6 +13,6 @@ type RemoteBranchChange map[gitdomain.RemoteBranchName]undodomain.Change[gitdoma
 
 func (self RemoteBranchChange) BranchNames() gitdomain.RemoteBranchNames {
 	result := gitdomain.RemoteBranchNames(slices.Collect(maps.Keys(self)))
-	result.Sort()
+	slice.NaturalSort(result)
 	return result
 }

@@ -20,6 +20,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
     And global Git setting "git-town.share-new-branches" is "push"
     And global Git setting "git-town.ship-strategy" is "api"
     And global Git setting "git-town.ship-delete-tracking-branch" is "false"
+    And global Git setting "git-town.stash" is "false"
     And global Git setting "git-town.sync-feature-strategy" is "rebase"
     And global Git setting "git-town.sync-perennial-strategy" is "ff-only"
     And global Git setting "git-town.sync-prototype-strategy" is "compress"
@@ -47,6 +48,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | sync upstream               | enter       |
       | sync tags                   | enter       |
       | detached                    | enter       |
+      | stash                       | enter       |
       | share new branches          | enter       |
       | push hook                   | enter       |
       | ship strategy               | enter       |

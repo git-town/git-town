@@ -83,6 +83,7 @@ func proposeCommand() *cobra.Command {
 				AutoResolve: autoResolve,
 				Detached:    Some(configdomain.Detached(true)),
 				DryRun:      dryRun,
+				Stash:       None[configdomain.Stash](),
 				Verbose:     verbose,
 			})
 			return executePropose(proposeArgs{

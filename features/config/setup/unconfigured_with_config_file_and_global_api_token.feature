@@ -19,6 +19,7 @@ Feature: don't ask for information already provided by the config file
       [create]
       new-branch-type = "feature"
       share-new-branches = "propose"
+      stash = true
 
       [hosting]
       dev-remote = "something"
@@ -62,6 +63,7 @@ Feature: don't ask for information already provided by the config file
     And global Git setting "git-town.github-token" is still "123456"
     And local Git setting "git-town.share-new-branches" still doesn't exist
     And local Git setting "git-town.push-hook" still doesn't exist
+    And local Git setting "git-town.stash" still doesn't exist
     And local Git setting "git-town.sync-feature-strategy" still doesn't exist
     And local Git setting "git-town.sync-perennial-strategy" still doesn't exist
     And local Git setting "git-town.sync-upstream" still doesn't exist

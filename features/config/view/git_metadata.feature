@@ -25,6 +25,7 @@ Feature: display configuration from Git metadata
     And Git setting "git-town.unknown-branch-type" is "observed"
     And Git setting "git-town.auto-resolve" is "false"
     And Git setting "git-town.detached" is "true"
+    And Git setting "git-town.stash" is "false"
     When I run "git-town config"
     Then Git Town prints:
       """
@@ -47,6 +48,7 @@ Feature: display configuration from Git metadata
       Create:
         new branch type: (not set)
         share new branches: no
+        stash uncommitted changes: no
 
       Hosting:
         development remote: origin
@@ -107,6 +109,7 @@ Feature: display configuration from Git metadata
       Create:
         new branch type: (not set)
         share new branches: no
+        stash uncommitted changes: yes
 
       Hosting:
         development remote: origin

@@ -2,7 +2,6 @@ package gitdomain
 
 import (
 	"slices"
-	"sort"
 	"strings"
 
 	"github.com/git-town/git-town/v21/internal/gohacks/slice"
@@ -33,8 +32,10 @@ func ParseLocalBranchNames(names string) LocalBranchNames {
 }
 
 // AppendAllMissing provides a LocalBranchNames list consisting of the sum of this and elements of other list that aren't in this list.
-func (self LocalBranchNames) AppendAllMissing(others ...LocalBranchName) LocalBranchNames {
-	return slice.AppendAllMissing(self, others...)
+func (self LocalBranchNames) AppendAllMissing(others LocalBranchNames) LocalBranchNames {
+	missing := slice.FindAllMissing(self, others)
+	slice.NaturalSort(missing)
+	return append(self, missing...)
 }
 
 func (self LocalBranchNames) BranchNames() []BranchName {
@@ -81,13 +82,6 @@ func (self LocalBranchNames) Remove(toRemove ...LocalBranchName) LocalBranchName
 		}
 	}
 	return result
-}
-
-// Sort orders the branches in this collection alphabetically.
-func (self LocalBranchNames) Sort() {
-	sort.Slice(self, func(a, b int) bool {
-		return self[a] < self[b]
-	})
 }
 
 func (self LocalBranchNames) String() string {

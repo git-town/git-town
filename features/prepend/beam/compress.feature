@@ -33,13 +33,13 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
       |        | git checkout parent                                                                                     |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        |
+      | parent | local         | commit 1                       |
+      |        |               | commit 4                       |
       | old    | local, origin | commit 1                       |
       |        |               | commit 2                       |
       |        |               | commit 3                       |
       |        |               | Merge branch 'parent' into old |
       |        | origin        | commit 1                       |
-      |        |               | commit 4                       |
-      | parent | local         | commit 1                       |
       |        |               | commit 4                       |
     And this lineage exists now
       | BRANCH | PARENT |
@@ -54,13 +54,13 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
       |        | git push -u origin parent |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        |
+      | parent | local, origin | commit 1                       |
       | old    | local, origin | commit 1                       |
       |        |               | commit 2                       |
       |        |               | commit 3                       |
       |        |               | commit 1                       |
       |        |               | commit 4                       |
       |        |               | Merge branch 'parent' into old |
-      | parent | local, origin | commit 1                       |
 
   Scenario: undo
     When I run "git-town undo"
@@ -93,5 +93,5 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
       |        | git push --force-with-lease     |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE  |
-      | old    | local, origin | commit 1 |
       | parent | local, origin | commit 1 |
+      | old    | local, origin | commit 1 |

@@ -29,9 +29,9 @@ Feature: does not compress contribution branches in the stack
     And all branches are now synchronized
     And these commits exist now
       | BRANCH       | LOCATION      | MESSAGE        |
-      | child        | local, origin | child 1        |
       | contribution | local, origin | contribution 1 |
       |              |               | contribution 2 |
+      | child        | local, origin | child 1        |
     And file "contribution_1" still has content "contribution 1"
     And file "contribution_2" still has content "contribution 2"
     And file "child_1" still has content "child 1"

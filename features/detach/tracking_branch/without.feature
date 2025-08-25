@@ -47,12 +47,12 @@ Feature: detaching a local branch
       | BRANCH   | LOCATION | MESSAGE   |
       | branch-1 | local    | commit 1a |
       |          |          | commit 1b |
-      | branch-2 | local    | commit 2a |
-      |          |          | commit 2b |
       | branch-3 | local    | commit 3a |
       |          |          | commit 3b |
       | branch-4 | local    | commit 4a |
       |          |          | commit 4b |
+      | branch-2 | local    | commit 2a |
+      |          |          | commit 2b |
     And this lineage exists now
       | BRANCH   | PARENT   |
       | branch-1 | main     |

@@ -24,6 +24,7 @@ Feature: don't ask for perennial branches if no branches that could be perennial
       | sync upstream               | enter      |                                             |
       | sync tags                   | enter      |                                             |
       | detached                    | enter      |                                             |
+      | stash                       | enter      |                                             |
       | share new branches          | enter      |                                             |
       | push hook                   | enter      |                                             |
       | ship strategy               | enter      |                                             |

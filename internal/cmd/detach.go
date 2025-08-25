@@ -87,6 +87,7 @@ func detachCommand() *cobra.Command {
 				AutoResolve: None[configdomain.AutoResolve](),
 				Detached:    Some(configdomain.Detached(true)),
 				DryRun:      dryRun,
+				Stash:       None[configdomain.Stash](),
 				Verbose:     verbose,
 			})
 			return executeDetach(args, cliConfig)

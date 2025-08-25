@@ -29,6 +29,7 @@ Feature: display information from config file
 
       [create]
       share-new-branches = "push"
+      stash = false
 
       [hosting]
       forge-type = "github"
@@ -70,6 +71,7 @@ Feature: display information from config file
       Create:
         new branch type: (not set)
         share new branches: push
+        stash uncommitted changes: no
 
       Hosting:
         development remote: origin

@@ -39,8 +39,8 @@ Feature: detaching a branch whose child contains merge commits
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE  |
       | branch-1 | local, origin | commit 1 |
-      | branch-2 | local, origin | commit 2 |
       | branch-3 | local, origin | commit 3 |
+      | branch-2 | local, origin | commit 2 |
     And this lineage exists now
       | BRANCH   | PARENT   |
       | branch-1 | main     |

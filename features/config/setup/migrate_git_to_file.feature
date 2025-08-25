@@ -15,6 +15,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.new-branch-type" is "prototype"
     And local Git setting "git-town.ship-strategy" is "squash-merge"
     And local Git setting "git-town.ship-delete-tracking-branch" is "false"
+    And local Git setting "git-town.stash" is "false"
     And local Git setting "git-town.sync-feature-strategy" is "merge"
     And local Git setting "git-town.sync-perennial-strategy" is "rebase"
     And local Git setting "git-town.sync-upstream" is "true"
@@ -41,6 +42,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | sync upstream               | enter      |
       | sync tags                   | enter      |
       | detached                    | enter      |
+      | stash                       | enter      |
       | share new branches          | enter      |
       | push hook                   | enter      |
       | ship strategy               | enter      |
@@ -62,6 +64,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | git config --unset git-town.push-hook                   |
       | git config --unset git-town.ship-strategy               |
       | git config --unset git-town.ship-delete-tracking-branch |
+      | git config --unset git-town.stash                       |
       | git config --unset git-town.sync-feature-strategy       |
       | git config --unset git-town.sync-perennial-strategy     |
       | git config --unset git-town.sync-upstream               |
@@ -85,6 +88,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.new-branch-type" now doesn't exist
     And local Git setting "git-town.ship-strategy" now doesn't exist
     And local Git setting "git-town.ship-delete-tracking-branch" now doesn't exist
+    And local Git setting "git-town.stash" now doesn't exist
     And the configuration file is now:
       """
       # More info around this file at https://www.git-town.com/configuration-file
@@ -97,6 +101,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       [create]
       new-branch-type = "prototype"
       share-new-branches = "no"
+      stash = false
 
       [hosting]
       dev-remote = "fork"
@@ -128,6 +133,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.push-hook" is now "true"
     And local Git setting "git-town.ship-strategy" is now "squash-merge"
     And local Git setting "git-town.ship-delete-tracking-branch" is now "false"
+    And local Git setting "git-town.stash" is now "false"
     And local Git setting "git-town.sync-feature-strategy" is now "merge"
     And local Git setting "git-town.sync-perennial-strategy" is now "rebase"
     And local Git setting "git-town.sync-upstream" is now "true"
