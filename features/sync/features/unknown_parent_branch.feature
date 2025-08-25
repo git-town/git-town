@@ -28,4 +28,3 @@ Feature: enter a parent branch name when prompted
         alpha
         beta
       """
-
