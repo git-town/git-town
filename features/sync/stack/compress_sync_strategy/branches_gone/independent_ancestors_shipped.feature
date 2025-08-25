@@ -46,8 +46,8 @@ Feature: sync a stack that contains shipped parent branches using the "compress"
       | local, origin | main, feature-3 |
     And this lineage exists now
       """
-      local, origin
-        main
+      main
+        feature-3
       """
 
   Scenario: undo
