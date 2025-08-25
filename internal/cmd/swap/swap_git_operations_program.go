@@ -63,6 +63,14 @@ func swapGitOperationsProgram(args swapGitOperationsProgramArgs) {
 
 	// Finally, update the child branches of current
 	for _, child := range args.children {
+		childBranchProposal, childBranchHasProposal := child.proposal.Get()
+		if childBranchHasProposal {
+			args.program.Value.Add(&opcodes.ProposalUpdateTarget{
+				NewBranch: args.parent.name,
+				OldBranch: args.current.name,
+				Proposal:  childBranchProposal,
+			})
+		}
 		args.program.Value.Add(
 			&opcodes.Checkout{
 				Branch: child.name,
