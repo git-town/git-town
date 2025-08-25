@@ -11,7 +11,6 @@ Feature: a global API token of another forge exists
       | aliases               | enter           |                                             |
       | main branch           | enter           |                                             |
       | perennial branches    |                 | no input here since the dialog doesn't show |
-      | perennial regex       | enter           |                                             |
       | origin hostname       | enter           |                                             |
       | forge type            | enter           |                                             |
       | github connector type | enter           |                                             |

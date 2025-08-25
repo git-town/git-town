@@ -9,7 +9,6 @@ Feature: Accepting all default values in a brand-new Git repo leads to a working
       | aliases            | enter      |
       | main branch        | enter      |
       | perennial branches |            |
-      | perennial regex    | enter      |
       | origin hostname    | enter      |
       | forge type         | enter      |
       | enter all          | enter      |

@@ -30,11 +30,11 @@ Feature: ask for information not provided by the config file
       | welcome                 | enter                 |
       | aliases                 | enter                 |
       | perennial branches      | space enter           |
-      | perennial regex         | p e r e n enter       |
       | github connector type   | enter                 |
       | github token            | g h - t o k e n enter |
       | token scope             | enter                 |
       | enter all               | down enter            |
+      | perennial regex         | p e r e n enter       |
       | feature regex           | f e a t enter         |
       | contribution regex      | c o n t enter         |
       | observed regex          | o b s enter           |

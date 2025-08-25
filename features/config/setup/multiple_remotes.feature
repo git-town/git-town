@@ -10,7 +10,6 @@ Feature: Configure a different development remote
       | aliases            | enter      |
       | main branch        | enter      |
       | perennial branches |            |
-      | perennial regex    | enter      |
       | dev-remote         | up enter   |
       | origin hostname    | enter      |
       | forge type         | enter      |

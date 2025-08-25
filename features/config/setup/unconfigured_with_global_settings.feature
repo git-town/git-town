@@ -34,10 +34,10 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | aliases                     | enter       |
       | main branch                 | enter       |
       | perennial branches          | space enter |
-      | perennial regex             | enter       |
       | origin hostname             | enter       |
       | forge type                  | enter       |
       | enter all                   | down enter  |
+      | perennial regex             | enter       |
       | feature regex               | enter       |
       | contribution regex          | enter       |
       | observed regex              | enter       |
