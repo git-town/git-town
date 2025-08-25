@@ -26,6 +26,7 @@ Feature: change existing information in Git metadata
       | github connector type       | enter                  |
       | github token                | g h - t o k enter      |
       | token scope                 | enter                  |
+      | enter all                   | down enter             |
       | feature regex               | f e a t enter          |
       | contribution regex          | c o n t enter          |
       | observed regex              | o b s enter            |

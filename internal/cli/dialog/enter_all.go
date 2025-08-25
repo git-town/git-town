@@ -20,11 +20,11 @@ You can always re-run this assistant later through "git town config setup".
 func EnterAll(inputs dialogcomponents.Inputs) (bool, dialogdomain.Exit, error) {
 	entries := list.Entries[bool]{
 		{
-			Data: true,
+			Data: false,
 			Text: `exit here`,
 		},
 		{
-			Data: false,
+			Data: true,
 			Text: `go through all configuration options`,
 		},
 	}

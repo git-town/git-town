@@ -10,43 +10,26 @@ Feature: Accepting all default values leads to a working setup
     And local Git setting "init.defaultbranch" is "main"
     And Git Town is not configured
     When I run "git-town config setup" and enter into the dialogs:
-      | DIALOG                      | KEYS       |
-      | welcome                     | enter      |
-      | aliases                     | enter      |
-      | main branch                 | enter      |
-      | perennial branches          | enter      |
-      | perennial regex             | enter      |
-      | origin hostname             | enter      |
-      | forge type                  | enter      |
-      | feature regex               | enter      |
-      | contribution regex          | enter      |
-      | observed regex              | enter      |
-      | new branch type             | enter      |
-      | unknown branch type         | enter      |
-      | sync feature strategy       | enter      |
-      | sync perennial strategy     | enter      |
-      | sync prototype strategy     | enter      |
-      | sync upstream               | enter      |
-      | sync tags                   | enter      |
-      | detached                    | enter      |
-      | stash                       | enter      |
-      | share new branches          | enter      |
-      | push hook                   | enter      |
-      | ship strategy               | enter      |
-      | ship delete tracking branch | enter      |
-      | config storage              | down enter |
+      | DIALOG             | KEYS       |
+      | welcome            | enter      |
+      | aliases            | enter      |
+      | main branch        | enter      |
+      | perennial branches | enter      |
+      | perennial regex    | enter      |
+      | origin hostname    | enter      |
+      | forge type         | enter      |
+      | enter all          | enter      |
+      | config storage     | down enter |
 
   Scenario: result
-    Then Git Town runs the commands
-      | COMMAND                                         |
-      | git config git-town.unknown-branch-type feature |
+    Then Git Town runs no commands
     And the main branch is still not set
     And there are still no perennial branches
     And local Git setting "git-town.dev-remote" still doesn't exist
     And local Git setting "git-town.new-branch-type" still doesn't exist
     And local Git setting "git-town.main-branch" still doesn't exist
     And local Git setting "git-town.perennial-branches" still doesn't exist
-    And local Git setting "git-town.unknown-branch-type" is now "feature"
+    And local Git setting "git-town.unknown-branch-type" still doesn't exist
     And local Git setting "git-town.feature-regex" still doesn't exist
     And local Git setting "git-town.contribution-regex" still doesn't exist
     And local Git setting "git-town.observed-regex" still doesn't exist
@@ -67,27 +50,11 @@ Feature: Accepting all default values leads to a working setup
       [branches]
       main = "main"
       
-      [create]
-      new-branch-type = "feature"
-      share-new-branches = "no"
-      stash = true
-      
       [hosting]
       dev-remote = "origin"
-      
-      [ship]
-      delete-tracking-branch = true
-      strategy = "api"
-      
-      [sync]
-      feature-strategy = "merge"
-      perennial-strategy = "ff-only"
-      prototype-strategy = "merge"
-      push-hook = true
-      tags = true
-      upstream = true
       """
 
+  @debug @this
   Scenario: undo
     When I run "git-town undo"
     Then global Git setting "alias.append" still doesn't exist
