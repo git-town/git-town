@@ -104,16 +104,16 @@ EnterForgeData:
 	}
 	repeat, exit, err := testForgeAuth(testForgeAuthArgs{
 		backend:              data.Backend,
-		bitbucketAppPassword: bitbucketAppPassword,
-		bitbucketUsername:    bitbucketUsername,
-		codebergToken:        codebergToken,
+		bitbucketAppPassword: bitbucketAppPassword.Or(data.Config.GitGlobal.BitbucketAppPassword),
+		bitbucketUsername:    bitbucketUsername.Or(data.Config.GitGlobal.BitbucketUsername),
+		codebergToken:        codebergToken.Or(data.Config.GitGlobal.CodebergToken),
 		devURL:               devURL,
 		forgeTypeOpt:         actualForgeType,
-		giteaToken:           giteaToken,
-		githubConnectorType:  githubConnectorTypeOpt,
+		giteaToken:           giteaToken.Or(data.Config.GitGlobal.GiteaToken),
+		githubConnectorType:  githubConnectorTypeOpt.Or(data.Config.GitGlobal.GitHubConnectorType),
 		githubToken:          githubToken.Or(data.Config.GitGlobal.GitHubToken),
-		gitlabConnectorType:  gitlabConnectorTypeOpt,
-		gitlabToken:          gitlabToken,
+		gitlabConnectorType:  gitlabConnectorTypeOpt.Or(gitlabConnectorTypeOpt),
+		gitlabToken:          gitlabToken.Or(data.Config.GitGlobal.GitLabToken),
 		inputs:               data.Inputs,
 		remoteURL:            data.Config.NormalConfig.RemoteURL(data.Backend, devRemote.GetOrElse(config.DefaultNormalConfig().DevRemote)),
 	})
