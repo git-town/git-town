@@ -1,35 +1,32 @@
-# git town observe
+# git town feature
 
 ```command-summary
-git town observe [<branch-name>...] [-v | --verbose]
+git town feature [<branch-name>...] [-v | --verbose]
 ```
 
-The _observe_ command makes some of your branches
-[observed](../branch-types.md#observed-branches) branches.
-
-To convert an observed branch back into a feature branch, use the
-[feature](feature.md) command.
+The _feature_ command makes some of your branches
+[feature](../branch-types.md#feature-branches) branches.
 
 ## Positional arguments
 
-Observe the current branch:
+Make the current branch a feature branch:
 
 ```fish
-git town observe
+git town feature
 ```
 
-Observe branches "alpha" and "beta":
+Make branches "alpha" and "beta" feature branches:
 
 ```fish
-git town observe alpha beta
+git town feature alpha beta
 ```
 
 Check out a remote branch (that exists at the
 [development remote](../preferences/dev-remote.md) but not on your local
-machine) and make it observed:
+machine) and make it a feature branch:
 
 ```fish
-git town observe somebody-elses-branch
+git town feature somebody-elses-branch
 ```
 
 ## Options
@@ -42,6 +39,6 @@ determine the repository state.
 ## See also
 
 - [contribute](contribute.md) makes the chosen branches contribution branches
-- [feature](feature.md) makes the chosen branches feature branches
+- [observe](observe.md) makes the chosen branches feature branches
 - [prototype](prototype.md) makes the chosen branches prototype branches
 - [park](park.md) makes the chosen branches parked

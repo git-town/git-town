@@ -9,52 +9,72 @@ import (
 
 type swapGitOperationsProgramArgs struct {
 	children    []swapBranch
-	current     gitdomain.BranchInfo
+	current     swapBranch
 	grandParent gitdomain.LocalBranchName
-	parent      gitdomain.BranchInfo
+	parent      swapBranch
 	program     Mutable[program.Program]
 }
 
 func swapGitOperationsProgram(args swapGitOperationsProgramArgs) {
+	// first update the current branch proposal (if there is one) target, so the proposal is not closed.
+	currentBranchProposal, currentBranchHasProposal := args.current.proposal.Get()
+	if currentBranchHasProposal {
+		args.program.Value.Add(&opcodes.ProposalUpdateTarget{
+			NewBranch: args.grandParent,
+			OldBranch: args.parent.name,
+			Proposal:  currentBranchProposal,
+		})
+	}
 	args.program.Value.Add(
 		&opcodes.RebaseOnto{
 			BranchToRebaseOnto: args.grandParent.BranchName(),
-			CommitsToRemove:    args.parent.LocalBranchName().Location(),
+			CommitsToRemove:    args.parent.info.LocalBranchName().Location(),
 		},
 	)
-
-	if args.current.HasTrackingBranch() {
+	if args.current.info.HasTrackingBranch() {
 		args.program.Value.Add(
-			&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: args.current.LocalBranchName(), ForceIfIncludes: true},
+			&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: args.current.info.LocalBranchName(), ForceIfIncludes: true},
 		)
+	}
+
+	// next, update the parent proposal (if there is one), then rebase parent branch onto current
+	parentBranchProposal, parentBranchHasProposal := args.parent.proposal.Get()
+	if parentBranchHasProposal {
+		args.program.Value.Add(&opcodes.ProposalUpdateTarget{
+			NewBranch: args.current.name,
+			OldBranch: args.grandParent,
+			Proposal:  parentBranchProposal,
+		})
 	}
 	args.program.Value.Add(
 		&opcodes.Checkout{
-			Branch: args.parent.LocalBranchName(),
+			Branch: args.parent.info.LocalBranchName(),
 		},
 		&opcodes.RebaseOnto{
-			BranchToRebaseOnto: args.current.LocalBranchName().BranchName(),
+			BranchToRebaseOnto: args.current.info.LocalBranchName().BranchName(),
 			CommitsToRemove:    args.grandParent.Location(),
 		},
 	)
-	if args.parent.HasTrackingBranch() {
+	if args.parent.info.HasTrackingBranch() {
 		args.program.Value.Add(
-			&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: args.parent.LocalBranchName(), ForceIfIncludes: true},
+			&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: args.parent.info.LocalBranchName(), ForceIfIncludes: true},
 		)
 	}
+
+	// Finally, update the child branches of current
 	for _, child := range args.children {
 		args.program.Value.Add(
 			&opcodes.Checkout{
 				Branch: child.name,
 			},
 		)
-		oldBranchSHA, hasOldBranchSHA := args.current.LocalSHA.Get()
+		oldBranchSHA, hasOldBranchSHA := args.current.info.LocalSHA.Get()
 		if !hasOldBranchSHA {
-			oldBranchSHA = args.current.RemoteSHA.GetOrDefault()
+			oldBranchSHA = args.current.info.RemoteSHA.GetOrDefault()
 		}
 		args.program.Value.Add(
 			&opcodes.RebaseOnto{
-				BranchToRebaseOnto: args.parent.LocalBranchName().BranchName(),
+				BranchToRebaseOnto: args.parent.info.LocalBranchName().BranchName(),
 				CommitsToRemove:    oldBranchSHA.Location(),
 			},
 		)
@@ -67,5 +87,5 @@ func swapGitOperationsProgram(args swapGitOperationsProgramArgs) {
 			)
 		}
 	}
-	args.program.Value.Add(&opcodes.CheckoutIfNeeded{Branch: args.current.LocalBranchName()})
+	args.program.Value.Add(&opcodes.CheckoutIfNeeded{Branch: args.current.info.LocalBranchName()})
 }
