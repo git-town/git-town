@@ -111,7 +111,7 @@ EnterForgeData:
 		forgeTypeOpt:         actualForgeType,
 		giteaToken:           giteaToken,
 		githubConnectorType:  githubConnectorTypeOpt,
-		githubToken:          githubToken,
+		githubToken:          githubToken.Or(data.Config.GitGlobal.GitHubToken),
 		gitlabConnectorType:  gitlabConnectorTypeOpt,
 		gitlabToken:          gitlabToken,
 		inputs:               data.Inputs,
