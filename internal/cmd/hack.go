@@ -431,7 +431,7 @@ func convertToFeatureBranch(repo execute.OpenRepoResult, args convertToFeatureBr
 		case configdomain.BranchTypeMainBranch:
 			return errors.New(messages.MainBranchCannotMakeFeature)
 		case configdomain.BranchTypePerennialBranch:
-			return fmt.Errorf(messages.PerennialBranchCannotMakeFeature)
+			return errors.New(messages.PerennialBranchCannotMakeFeature)
 		}
 		fmt.Printf(messages.BranchIsNowFeature, branchName)
 	}
