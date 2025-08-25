@@ -33,11 +33,17 @@ func swapGitOperationsProgram(args swapGitOperationsProgramArgs) {
 	)
 	if args.current.HasTrackingBranch() {
 		args.program.Value.Add(
+			&opcodes.Checkout{
+				Branch: args.current.LocalBranchName(),
+			},
 			&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: args.current.LocalBranchName(), ForceIfIncludes: true},
 		)
 	}
 	if args.parent.HasTrackingBranch() {
 		args.program.Value.Add(
+			&opcodes.Checkout{
+				Branch: args.parent.LocalBranchName(),
+			},
 			&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: args.parent.LocalBranchName(), ForceIfIncludes: true},
 		)
 	}
@@ -66,5 +72,6 @@ func swapGitOperationsProgram(args swapGitOperationsProgramArgs) {
 			)
 		}
 	}
+
 	args.program.Value.Add(&opcodes.CheckoutIfNeeded{Branch: args.current.LocalBranchName()})
 }
