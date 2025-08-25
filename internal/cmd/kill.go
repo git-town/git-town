@@ -34,6 +34,7 @@ func killCommand() *cobra.Command {
 				AutoResolve: None[configdomain.AutoResolve](),
 				Detached:    None[configdomain.Detached](),
 				DryRun:      dryRun,
+				Stash:       None[configdomain.Stash](),
 				Verbose:     verbose,
 			})
 			result := executeDelete(args, cliConfig)

@@ -43,6 +43,7 @@ func offlineCmd() *cobra.Command {
 				AutoResolve: None[configdomain.AutoResolve](),
 				Detached:    None[configdomain.Detached](),
 				DryRun:      None[configdomain.DryRun](),
+				Stash:       None[configdomain.Stash](),
 				Verbose:     verbose,
 			})
 			return executeOffline(args, cliConfig)

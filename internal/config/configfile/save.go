@@ -38,6 +38,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 
 	newBranchType, hasNewBranchType := data.NewBranchType.Get()
 	shareNewBranches, hasShareNewBranches := data.ShareNewBranches.Get()
+	stash, hasStash := data.Stash.Get()
 	if hasNewBranchType || hasShareNewBranches {
 		result.WriteString("\n[create]\n")
 		if hasNewBranchType {
@@ -45,6 +46,9 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		}
 		if hasShareNewBranches {
 			result.WriteString(fmt.Sprintf("share-new-branches = %q\n", shareNewBranches))
+		}
+		if hasStash {
+			result.WriteString(fmt.Sprintf("stash = %s\n", stash))
 		}
 	}
 

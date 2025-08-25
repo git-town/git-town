@@ -32,13 +32,13 @@ Feature: prepend a branch to a feature branch using the "merge" sync strategy
       |        | git checkout parent                                                                                     |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        |
+      | parent | local         | commit 2                       |
+      |        |               | commit 4                       |
       | old    | local, origin | commit 1                       |
       |        |               | commit 2                       |
       |        |               | commit 3                       |
       |        |               | Merge branch 'parent' into old |
       |        | origin        | commit 2                       |
-      |        |               | commit 4                       |
-      | parent | local         | commit 2                       |
       |        |               | commit 4                       |
     And this lineage exists now
       | BRANCH | PARENT |
@@ -51,12 +51,12 @@ Feature: prepend a branch to a feature branch using the "merge" sync strategy
       |        | git push -u origin parent |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        |
+      | parent | local, origin | commit 2                       |
+      |        |               | commit 4                       |
       | old    | local, origin | commit 1                       |
       |        |               | commit 2                       |
       |        |               | commit 3                       |
       |        |               | Merge branch 'parent' into old |
-      | parent | local, origin | commit 2                       |
-      |        |               | commit 4                       |
 
   Scenario: undo
     When I run "git-town undo"
@@ -85,11 +85,11 @@ Feature: prepend a branch to a feature branch using the "merge" sync strategy
       |        | git push                        |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        |
+      | parent | local, origin | commit 2                       |
+      |        |               | commit 4b                      |
       | old    | local, origin | commit 1                       |
       |        |               | commit 2                       |
       |        |               | commit 3                       |
       |        |               | commit 4                       |
       |        |               | Merge branch 'parent' into old |
       |        |               | Merge branch 'parent' into old |
-      | parent | local, origin | commit 2                       |
-      |        |               | commit 4b                      |

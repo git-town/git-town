@@ -47,6 +47,7 @@ func diffParentCommand() *cobra.Command {
 				AutoResolve: None[configdomain.AutoResolve](),
 				Detached:    Some(configdomain.Detached(true)),
 				DryRun:      None[configdomain.DryRun](),
+				Stash:       None[configdomain.Stash](),
 				Verbose:     verbose,
 			})
 			return executeDiffParent(args, cliConfig)

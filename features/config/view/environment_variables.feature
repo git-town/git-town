@@ -43,6 +43,7 @@ Feature: display configuration defined in environment variables
       | GIT_TOWN_SHARE_NEW_BRANCHES          | push               |
       | GIT_TOWN_SHIP_DELETE_TRACKING_BRANCH | 0                  |
       | GIT_TOWN_SHIP_STRATEGY               | fast-forward       |
+      | GIT_TOWN_STASH                       | false              |
       | GIT_TOWN_SYNC_FEATURE_STRATEGY       | rebase             |
       | GIT_TOWN_SYNC_PERENNIAL_STRATEGY     | merge              |
       | GIT_TOWN_SYNC_PROTOTYPE_STRATEGY     | compress           |
@@ -70,6 +71,7 @@ Feature: display configuration defined in environment variables
       Create:
         new branch type: prototype
         share new branches: push
+        stash uncommitted changes: no
 
       Hosting:
         development remote: my-fork

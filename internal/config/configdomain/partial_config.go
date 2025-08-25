@@ -48,6 +48,7 @@ type PartialConfig struct {
 	ShareNewBranches         Option[ShareNewBranches]
 	ShipDeleteTrackingBranch Option[ShipDeleteTrackingBranch]
 	ShipStrategy             Option[ShipStrategy]
+	Stash                    Option[Stash]
 	SyncFeatureStrategy      Option[SyncFeatureStrategy]
 	SyncPerennialStrategy    Option[SyncPerennialStrategy]
 	SyncPrototypeStrategy    Option[SyncPrototypeStrategy]
@@ -99,6 +100,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		ShareNewBranches:         other.ShareNewBranches.Or(self.ShareNewBranches),
 		ShipDeleteTrackingBranch: other.ShipDeleteTrackingBranch.Or(self.ShipDeleteTrackingBranch),
 		ShipStrategy:             other.ShipStrategy.Or(self.ShipStrategy),
+		Stash:                    other.Stash.Or(self.Stash),
 		SyncFeatureStrategy:      other.SyncFeatureStrategy.Or(self.SyncFeatureStrategy),
 		SyncPerennialStrategy:    other.SyncPerennialStrategy.Or(self.SyncPerennialStrategy),
 		SyncPrototypeStrategy:    other.SyncPrototypeStrategy.Or(self.SyncPrototypeStrategy),

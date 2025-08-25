@@ -90,6 +90,10 @@ while beaming arise from moving the beamed commits.
 
 Commit message to use together with `--commit`. Implies `--commit`.
 
+#### `--stash`<br>`--no-stash`
+
+Enables or disables [stashing](../preferences/stash.md) for this invocation.
+
 #### `--dry-run`
 
 Use the `--dry-run` flag to test-drive this command. It prints the Git commands

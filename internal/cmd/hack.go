@@ -74,6 +74,7 @@ func hackCmd() *cobra.Command {
 	addCommitMessageFlag, readCommitMessageFlag := flags.CommitMessage("the commit message")
 	addProposeFlag, readProposeFlag := flags.Propose()
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
+	addStashFlag, readStashFlag := flags.Stash()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "hack <branch>",
@@ -90,8 +91,9 @@ func hackCmd() *cobra.Command {
 			dryRun, errDryRun := readDryRunFlag(cmd)
 			propose, errPropose := readProposeFlag(cmd)
 			prototype, errPrototype := readPrototypeFlag(cmd)
+			stash, errStash := readStashFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errAutoResolve, errBeam, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errVerbose); err != nil {
+			if err := cmp.Or(errAutoResolve, errBeam, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errStash, errVerbose); err != nil {
 				return err
 			}
 			if commitMessage.IsSome() || propose.IsTrue() {
@@ -101,6 +103,7 @@ func hackCmd() *cobra.Command {
 				AutoResolve: autoResolve,
 				Detached:    detached,
 				DryRun:      dryRun,
+				Stash:       stash,
 				Verbose:     verbose,
 			})
 			return executeHack(hackArgs{
@@ -122,6 +125,7 @@ func hackCmd() *cobra.Command {
 	addAutoResolveFlag(&cmd)
 	addProposeFlag(&cmd)
 	addPrototypeFlag(&cmd)
+	addStashFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }

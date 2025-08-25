@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/execute"
+	"github.com/git-town/git-town/v21/internal/gohacks/slice"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/spf13/cobra"
 )
@@ -33,6 +34,7 @@ func removeConfigCommand() *cobra.Command {
 				AutoResolve: None[configdomain.AutoResolve](),
 				Detached:    None[configdomain.Detached](),
 				DryRun:      None[configdomain.DryRun](),
+				Stash:       None[configdomain.Stash](),
 				Verbose:     verbose,
 			})
 			return executeRemoveConfig(cliConfig)
@@ -57,7 +59,7 @@ func executeRemoveConfig(cliConfig configdomain.PartialConfig) error {
 		return err
 	}
 	aliasNames := slices.Collect(maps.Keys(repo.UnvalidatedConfig.NormalConfig.Aliases))
-	slices.Sort(aliasNames)
+	slice.NaturalSort(aliasNames)
 	for _, aliasName := range aliasNames {
 		if strings.HasPrefix(repo.UnvalidatedConfig.NormalConfig.Aliases[aliasName], "town ") {
 			if err = gitconfig.RemoveAlias(repo.Frontend, aliasName); err != nil {

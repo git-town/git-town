@@ -68,6 +68,7 @@
   - [Create]()
     - [New branch type](preferences/new-branch-type.md)
     - [Share new branches](preferences/share-new-branches.md)
+    - [Stash](preferences/stash.md)
   - [Hosting]()
     - [Development remote](preferences/dev-remote.md)
     - [Forge Type](preferences/forge-type.md)

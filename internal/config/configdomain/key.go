@@ -101,6 +101,7 @@ const (
 	KeyShareNewBranches                    = Key("git-town.share-new-branches")
 	KeyShipDeleteTrackingBranch            = Key("git-town.ship-delete-tracking-branch")
 	KeyShipStrategy                        = Key("git-town.ship-strategy")
+	KeyStash                               = Key("git-town.stash")
 	KeySyncFeatureStrategy                 = Key("git-town.sync-feature-strategy")
 	KeySyncPerennialStrategy               = Key("git-town.sync-perennial-strategy")
 	KeySyncPrototypeStrategy               = Key("git-town.sync-prototype-strategy")
@@ -161,6 +162,7 @@ var keys = []Key{
 	KeyShareNewBranches,
 	KeyShipDeleteTrackingBranch,
 	KeyShipStrategy,
+	KeyStash,
 	KeySyncFeatureStrategy,
 	KeySyncPerennialStrategy,
 	KeySyncPrototypeStrategy,

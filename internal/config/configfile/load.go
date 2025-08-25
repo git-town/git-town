@@ -65,6 +65,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	var shareNewBranches Option[configdomain.ShareNewBranches]
 	var shipDeleteTrackingBranch Option[configdomain.ShipDeleteTrackingBranch]
 	var shipStrategy Option[configdomain.ShipStrategy]
+	var stash Option[configdomain.Stash]
 	var syncFeatureStrategy Option[configdomain.SyncFeatureStrategy]
 	var syncPerennialStrategy Option[configdomain.SyncPerennialStrategy]
 	var syncPrototypeStrategy Option[configdomain.SyncPrototypeStrategy]
@@ -150,6 +151,9 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		if data.Create.ShareNewBranches != nil {
 			shareNewBranches, err = configdomain.ParseShareNewBranches(*data.Create.ShareNewBranches, configdomain.KeyShareNewBranches)
 			ec.Check(err)
+		}
+		if data.Create.Stash != nil {
+			stash = Some(configdomain.Stash(*data.Create.Stash))
 		}
 	}
 	if data.Hosting != nil {
@@ -267,6 +271,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		ShareNewBranches:         shareNewBranches,
 		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,
 		ShipStrategy:             shipStrategy,
+		Stash:                    stash,
 		SyncFeatureStrategy:      syncFeatureStrategy,
 		SyncPerennialStrategy:    syncPerennialStrategy,
 		SyncPrototypeStrategy:    syncPrototypeStrategy,

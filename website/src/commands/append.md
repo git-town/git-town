@@ -82,6 +82,10 @@ Propose the created branch.
 To always propose new branches, set the
 [share new branches](../preferences/share-new-branches.md) setting to `propose`.
 
+#### `--stash`<br>`--no-stash`
+
+Enables or disables [stashing](../preferences/stash.md) for this invocation.
+
 #### `--dry-run`
 
 Use the `--dry-run` flag to test-drive this command. It prints the Git commands

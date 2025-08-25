@@ -39,6 +39,7 @@ Feature: no configuration data
       Create:
         new branch type: (not set)
         share new branches: no
+        stash uncommitted changes: yes
 
       Hosting:
         development remote: origin

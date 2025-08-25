@@ -18,6 +18,7 @@ Feature: don't ask for information already provided by the config file
       [create]
       new-branch-type = "feature"
       share-new-branches = "propose"
+      stash = true
 
       [hosting]
       dev-remote = "something"
