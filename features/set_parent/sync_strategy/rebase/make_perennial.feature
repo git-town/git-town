@@ -41,6 +41,9 @@ Feature: remove a branch from a stack
       | branch-1 | local, origin | commit 1 |
     And this lineage exists now
       """
+      branch-2
+        branch-3
+
       main
         branch-1
       """
