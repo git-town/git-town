@@ -355,22 +355,7 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Frontend)
 	swapGitOperationsProgram(swapGitOperationsProgramArgs{
-		children:    data.children,
-		current:     data.currentBranchInfo,
-		grandParent: data.grandParentBranch,
-		parent:      data.parentBranchInfo,
-		program:     prog,
-	})
-	if !data.config.NormalConfig.DryRun {
-		swapLineageParentSetsProgram(swapLineageParentSetsProgramArg{
-			children:    data.children,
-			current:     data.currentBranchName,
-			grandParent: data.grandParentBranch,
-			parent:      data.parentBranch,
-			program:     prog,
-		})
-	}
-	swapProposalTargetsProgram(swapProposalTargetsProgramArg{
+		children: data.children,
 		current: swapBranch{
 			info:     data.currentBranchInfo,
 			name:     data.currentBranchName,
@@ -384,6 +369,15 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 		},
 		program: prog,
 	})
+	if !data.config.NormalConfig.DryRun {
+		swapLineageParentSetsProgram(swapLineageParentSetsProgramArg{
+			children:    data.children,
+			current:     data.currentBranchName,
+			grandParent: data.grandParentBranch,
+			parent:      data.parentBranch,
+			program:     prog,
+		})
+	}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.config.NormalConfig.DryRun,
 		InitialStashSize:         data.stashSize,
