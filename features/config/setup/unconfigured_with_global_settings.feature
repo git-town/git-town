@@ -35,13 +35,14 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | main branch                 | enter       |
       | perennial branches          | space enter |
       | perennial regex             | enter       |
+      | origin hostname             | enter       |
+      | forge type                  | enter       |
+      | enter all                   | down enter  |
       | feature regex               | enter       |
       | contribution regex          | enter       |
       | observed regex              | enter       |
       | new branch type             | enter       |
       | unknown branch type         | enter       |
-      | origin hostname             | enter       |
-      | forge type                  | enter       |
       | sync feature strategy       | enter       |
       | sync perennial strategy     | enter       |
       | sync prototype strategy     | enter       |

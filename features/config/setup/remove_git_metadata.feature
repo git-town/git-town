@@ -53,13 +53,14 @@ Feature: remove existing configuration in Git metadata
       | main branch                 | enter                                                                       |                     |
       | perennial branches          | down space enter                                                            |                     |
       | perennial regex             | backspace backspace backspace backspace enter                               |                     |
+      | origin hostname             | backspace backspace backspace backspace enter                               | remove the override |
+      | forge type                  | up up up up up enter                                                        | remove the override |
+      | enter all                   | down enter                                                                  |                     |
       | feature regex               | backspace backspace backspace backspace backspace backspace enter           |                     |
       | contribution regex          | backspace backspace backspace backspace backspace backspace backspace enter |                     |
       | observed regex              | backspace backspace backspace backspace backspace enter                     |                     |
       | new branch type             | up enter                                                                    |                     |
       | unknown branch type         | up enter                                                                    |                     |
-      | origin hostname             | backspace backspace backspace backspace enter                               | remove the override |
-      | forge type                  | up up up up up enter                                                        | remove the override |
       | sync feature strategy       | up enter                                                                    |                     |
       | sync perennial strategy     | down enter                                                                  |                     |
       | sync prototype strategy     | up enter                                                                    |                     |
