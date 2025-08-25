@@ -10,7 +10,6 @@ Feature: Configure a different development remote
       | aliases            | enter      |
       | main branch        | enter      |
       | perennial branches |            |
-      | perennial regex    | enter      |
       | dev-remote         | up enter   |
       | origin hostname    | enter      |
       | forge type         | enter      |
@@ -24,10 +23,10 @@ Feature: Configure a different development remote
     And the configuration file is now:
       """
       # More info around this file at https://www.git-town.com/configuration-file
-
+      
       [branches]
       main = "main"
-
+      
       [hosting]
       dev-remote = "fork"
       """

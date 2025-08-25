@@ -52,10 +52,10 @@ Feature: remove existing configuration in Git metadata
       | aliases                     | n enter                                                                     | remove all aliases  |
       | main branch                 | enter                                                                       |                     |
       | perennial branches          | down space enter                                                            |                     |
-      | perennial regex             | backspace backspace backspace backspace enter                               |                     |
       | origin hostname             | backspace backspace backspace backspace enter                               | remove the override |
       | forge type                  | up up up up up enter                                                        | remove the override |
       | enter all                   | down enter                                                                  |                     |
+      | perennial regex             | backspace backspace backspace backspace enter                               |                     |
       | feature regex               | backspace backspace backspace backspace backspace backspace enter           |                     |
       | contribution regex          | backspace backspace backspace backspace backspace backspace backspace enter |                     |
       | observed regex              | backspace backspace backspace backspace backspace enter                     |                     |

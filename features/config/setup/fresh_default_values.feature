@@ -9,7 +9,6 @@ Feature: Accepting all default values in a brand-new Git repo leads to a working
       | aliases            | enter      |
       | main branch        | enter      |
       | perennial branches |            |
-      | perennial regex    | enter      |
       | origin hostname    | enter      |
       | forge type         | enter      |
       | enter all          | enter      |
@@ -40,10 +39,10 @@ Feature: Accepting all default values in a brand-new Git repo leads to a working
     And the configuration file is now:
       """
       # More info around this file at https://www.git-town.com/configuration-file
-
+      
       [branches]
       main = "initial"
-
+      
       [hosting]
       dev-remote = "origin"
       """

@@ -12,7 +12,6 @@ Feature: enter the GitHub API token
       | aliases               | enter             |                                             |
       | main branch           | enter             |                                             |
       | perennial branches    |                   | no input here since the dialog doesn't show |
-      | perennial regex       | enter             |                                             |
       | origin hostname       | enter             |                                             |
       | forge type            | enter             |                                             |
       | github connector type | enter             |                                             |
@@ -34,7 +33,6 @@ Feature: enter the GitHub API token
       | aliases               | enter                          |                                             |
       | main branch           | enter                          |                                             |
       | perennial branches    |                                | no input here since the dialog doesn't show |
-      | perennial regex       | enter                          |                                             |
       | origin hostname       | enter                          |                                             |
       | forge type            | down down down down down enter |                                             |
       | github connector type | enter                          |                                             |
@@ -59,7 +57,6 @@ Feature: enter the GitHub API token
       | aliases               | enter                               |                                             |
       | main branch           | enter                               |                                             |
       | perennial branches    |                                     | no input here since the dialog doesn't show |
-      | perennial regex       | enter                               |                                             |
       | origin hostname       | enter                               |                                             |
       | forge type            | enter                               |                                             |
       | github connector type | enter                               |                                             |
@@ -81,7 +78,6 @@ Feature: enter the GitHub API token
       | aliases               | enter           |                                             |
       | main branch           | enter           |                                             |
       | perennial branches    |                 | no input here since the dialog doesn't show |
-      | perennial regex       | enter           |                                             |
       | origin hostname       | enter           |                                             |
       | forge type            | enter           |                                             |
       | github connector type | enter           |                                             |
@@ -104,7 +100,6 @@ Feature: enter the GitHub API token
       | aliases               | enter                                     |                                             |
       | main branch           | enter                                     |                                             |
       | perennial branches    |                                           | no input here since the dialog doesn't show |
-      | perennial regex       | enter                                     |                                             |
       | origin hostname       | enter                                     |                                             |
       | forge type            | enter                                     |                                             |
       | github connector type | enter                                     |                                             |

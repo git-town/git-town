@@ -10,7 +10,7 @@ Feature: aborting the setup assistant
       | welcome         | enter |
       | aliases         | enter |
       | main branch     | enter |
-      | perennial regex | esc   |
+      | origin hostname | esc   |
 
   Scenario: result
     Then Git Town runs no commands
