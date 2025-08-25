@@ -38,10 +38,6 @@ func Enter(data Data) (UserInput, dialogdomain.Exit, error) {
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	perennialRegex, exit, err := enterPerennialRegex(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
 EnterForgeData:
 	devRemote, exit, err := enterDevRemote(data)
 	if err != nil || exit {
@@ -160,6 +156,7 @@ EnterForgeData:
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
+	perennialRegex := None[configdomain.PerennialRegex]()
 	featureRegex := None[configdomain.FeatureRegex]()
 	contributionRegex := None[configdomain.ContributionRegex]()
 	observedRegex := None[configdomain.ObservedRegex]()
@@ -177,6 +174,10 @@ EnterForgeData:
 	shipStrategy := None[configdomain.ShipStrategy]()
 	shipDeleteTrackingBranch := None[configdomain.ShipDeleteTrackingBranch]()
 	if enterAll {
+		perennialRegex, exit, err = enterPerennialRegex(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
 		featureRegex, exit, err = enterFeatureRegex(data)
 		if err != nil || exit {
 			return emptyResult, exit, err
@@ -269,7 +270,7 @@ EnterForgeData:
 		GitUserName:              None[gitdomain.GitUserName](),
 		GiteaToken:               giteaToken,
 		HostingOriginHostname:    hostingOriginHostName,
-		Lineage:                  configdomain.Lineage{}, // the setup assistant doesn't ask for this
+		Lineage:                  configdomain.NewLineage(), // the setup assistant doesn't ask for this
 		MainBranch:               mainBranchSetting,
 		NewBranchType:            newBranchType,
 		ObservedRegex:            observedRegex,

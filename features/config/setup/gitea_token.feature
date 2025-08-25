@@ -12,7 +12,6 @@ Feature: enter the Gitea API token
       | aliases            | enter                   |                                             |
       | main branch        | enter                   |                                             |
       | perennial branches |                         | no input here since the dialog doesn't show |
-      | perennial regex    | enter                   |                                             |
       | origin hostname    | enter                   |                                             |
       | forge type         | enter                   | auto-detect                                 |
       | gitea token        | g i t e a - t o k enter |                                             |
@@ -32,7 +31,6 @@ Feature: enter the Gitea API token
       | aliases            | enter                     |                                             |
       | main branch        | enter                     |                                             |
       | perennial branches |                           | no input here since the dialog doesn't show |
-      | perennial regex    | enter                     |                                             |
       | origin hostname    | enter                     |                                             |
       | forge type         | down down down down enter |                                             |
       | gitea token        | g i t e a - t o k enter   |                                             |
@@ -54,7 +52,6 @@ Feature: enter the Gitea API token
       | aliases            | enter                   |                                             |
       | main branch        | enter                   |                                             |
       | perennial branches |                         | no input here since the dialog doesn't show |
-      | perennial regex    | enter                   |                                             |
       | origin hostname    | enter                   |                                             |
       | forge type         | enter                   |                                             |
       | gitea token        | g i t e a - t o k enter |                                             |
@@ -75,7 +72,6 @@ Feature: enter the Gitea API token
       | aliases            | enter                                     |                                             |
       | main branch        | enter                                     |                                             |
       | perennial branches |                                           | no input here since the dialog doesn't show |
-      | perennial regex    | enter                                     |                                             |
       | origin hostname    | enter                                     |                                             |
       | forge type         | enter                                     |                                             |
       | gitea token        | backspace backspace backspace 4 5 6 enter |                                             |

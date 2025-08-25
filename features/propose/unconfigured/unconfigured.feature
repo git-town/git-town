@@ -11,7 +11,6 @@ Feature: ask for missing configuration
       | aliases               | enter           |
       | main branch           | enter           |
       | perennial branches    |                 |
-      | perennial regex       | enter           |
       | origin hostname       | enter           |
       | forge type            | enter           |
       | github connector type | enter           |
