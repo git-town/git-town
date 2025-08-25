@@ -14,7 +14,8 @@ Feature: setting the parent to a branch whose parent is unknown
     And Git Town runs no commands
     And this lineage exists now
       """
-      main
+      branch-1
+        branch-2
       """
 
   Scenario: undo
