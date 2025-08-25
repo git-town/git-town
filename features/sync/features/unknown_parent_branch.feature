@@ -14,8 +14,10 @@ Feature: enter a parent branch name when prompted
       | DIALOG                   | KEYS  |
       | parent branch for "beta" | enter |
     Then this lineage exists now
-      | BRANCH | PARENT |
-      | beta   | main   |
+      """
+      main
+        beta
+      """
 
   Scenario: choose other branches
     When I run "git-town sync" and enter into the dialog:
@@ -26,5 +28,5 @@ Feature: enter a parent branch name when prompted
       """
       main
         alpha
-        beta
+          beta
       """
