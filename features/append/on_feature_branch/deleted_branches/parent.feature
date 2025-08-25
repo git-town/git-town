@@ -34,9 +34,11 @@ Feature: append a branch to a branch whose parent was shipped on the remote
       | local      | main, child, new |
       | origin     | main, child      |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | child  | main   |
-      | new    | child  |
+      """
+      main
+        child
+          new
+      """
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        |
       | main   | local, origin | parent commit                  |

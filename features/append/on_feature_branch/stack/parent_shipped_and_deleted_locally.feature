@@ -30,10 +30,11 @@ Feature: appending to a branch whose parent was shipped and the local branch del
       | local      | main, child, new |
       | origin     | main, child      |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | child  | main   |
-      | new    | child  |
-
+      """
+      main
+        child
+          new
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

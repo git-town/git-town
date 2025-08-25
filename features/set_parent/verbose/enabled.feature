@@ -34,10 +34,11 @@ Feature: display all executed Git commands
       Ran 17 shell commands.
       """
     And this lineage exists now
-      | BRANCH | PARENT |
-      | child  | main   |
-      | parent | main   |
-
+      """
+      main
+        child
+        parent
+      """
   Scenario: undo
     When I run "git-town undo --verbose"
     Then Git Town runs the commands

@@ -26,10 +26,11 @@ Feature: create a new branch when prototype branches are configured via Git meta
       | main     | local, origin | main commit     |
       | existing | local         | existing commit |
     And this lineage exists now
-      | BRANCH   | PARENT |
-      | existing | main   |
-      | new      | main   |
-
+      """
+      main
+        existing
+        new
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

@@ -21,10 +21,11 @@ Feature: append a new branch when feature branches are configured
     And branch "new" now has type "feature"
     And the initial commits exist now
     And this lineage exists now
-      | BRANCH   | PARENT |
-      | existing | new    |
-      | new      | main   |
-
+      """
+      main
+        new
+          existing
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

@@ -24,9 +24,10 @@ Feature: rename an observed branch
       | BRANCH | LOCATION      | MESSAGE               |
       | new    | local, origin | somebody elses commit |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | new    | main   |
-
+      """
+      main
+        new
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

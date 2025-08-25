@@ -19,10 +19,11 @@ Feature: on a feature branch with a clean workspace in detached mode with update
       |          | git checkout -b new main |
     And the initial commits exist now
     And this lineage exists now
-      | BRANCH   | PARENT |
-      | existing | main   |
-      | new      | main   |
-
+      """
+      main
+        existing
+        new
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

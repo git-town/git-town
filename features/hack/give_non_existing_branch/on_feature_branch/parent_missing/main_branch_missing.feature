@@ -23,10 +23,11 @@ Feature: on a feature branch but without main branch
       | main     | origin   | main commit     |
       | existing | local    | existing commit |
     And this lineage exists now
-      | BRANCH   | PARENT |
-      | existing | main   |
-      | new      | main   |
-
+      """
+      main
+        existing
+        new
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

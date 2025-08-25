@@ -31,9 +31,10 @@ Feature: ship the supplied feature branch
       | main   | local, origin | feature commit         |
       |        |               | Merge branch 'feature' |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | other  | main   |
-
+      """
+      main
+        other
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

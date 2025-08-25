@@ -35,9 +35,11 @@ Feature: deleting a branch that conflicts with the main branch
       | REPOSITORY    | BRANCHES                   |
       | local, origin | main, feature-1, feature-3 |
     And this lineage exists now
-      | BRANCH    | PARENT    |
-      | feature-1 | main      |
-      | feature-3 | feature-1 |
+      """
+      main
+        feature-1
+          feature-3
+      """
 
   Scenario: undo
     When I run "git-town undo"

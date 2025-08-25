@@ -20,10 +20,11 @@ Feature: append a new branch when parked branches are configured
     And branch "new" now has type "parked"
     And the initial commits exist now
     And this lineage exists now
-      | BRANCH   | PARENT   |
-      | existing | main     |
-      | new      | existing |
-
+      """
+      main
+        existing
+          new
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

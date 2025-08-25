@@ -16,9 +16,10 @@ Feature: merging a feature branch with a parked branch
       |         | git checkout parent      |
       | parent  | git branch -D current    |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | parent | main   |
-
+      """
+      main
+        parent
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

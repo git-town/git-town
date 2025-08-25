@@ -28,9 +28,11 @@ Feature: sync inside a folder that doesn't exist on the main branch
       | alpha  | git push --tags                                 |
     And all branches are now synchronized
     And this lineage exists now
-      | BRANCH | PARENT |
-      | alpha  | main   |
-      | beta   | main   |
+      """
+      main
+        alpha
+        beta
+      """
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | main commit   |

@@ -22,9 +22,10 @@ Feature: the parent of the branch to delete was deleted remotely
       | local      | main, alpha |
       | origin     | main        |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | alpha  | main   |
-
+      """
+      main
+        alpha
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
