@@ -21,11 +21,11 @@ func EnterAll(inputs dialogcomponents.Inputs) (bool, dialogdomain.Exit, error) {
 	entries := list.Entries[bool]{
 		{
 			Data: false,
-			Text: `exit here`,
+			Text: `exit and save`,
 		},
 		{
 			Data: true,
-			Text: `go through all configuration options`,
+			Text: `continue to the advanced configuration options`,
 		},
 	}
 	selection, exit, err := dialogcomponents.RadioList(entries, 0, enterAllTitle, enterAllHelp, inputs, "enter-all")
