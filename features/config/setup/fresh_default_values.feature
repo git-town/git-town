@@ -42,9 +42,6 @@ Feature: Accepting all default values in a brand-new Git repo leads to a working
 
       [branches]
       main = "initial"
-
-      [hosting]
-      dev-remote = "origin"
       """
 
   Scenario: undo
