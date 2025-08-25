@@ -142,7 +142,7 @@ EnterForgeData:
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	enterAll, exit, err := askEnterAll()
+	enterAll, exit, err := dialog.EnterAll(data.Inputs)
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
@@ -289,10 +289,6 @@ type UserInput struct {
 	Scope               configdomain.ConfigScope
 	StorageLocation     dialog.ConfigStorageOption
 	ValidatedConfig     configdomain.ValidatedConfigData
-}
-
-func askEnterAll() bool {
-	return dialog.EnterAll()
 }
 
 func determineExistingScope(configSnapshot configdomain.BeginConfigSnapshot, key configdomain.Key, oldValue fmt.Stringer) configdomain.ConfigScope {
