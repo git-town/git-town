@@ -29,9 +29,10 @@ Feature: offline mode
       | other   | local, origin | other commit   |
       | feature | origin        | feature commit |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | other  | main   |
-
+      """
+      main
+        other
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

@@ -64,9 +64,11 @@ Feature: shipped branch with multiple descendents
       |            |               | feature-1b commit                   |
       |            |               | Merge branch 'main' into feature-1b |
     And this lineage exists now
-      | BRANCH     | PARENT |
-      | feature-1a | main   |
-      | feature-1b | main   |
+      """
+      main
+        feature-1a
+        feature-1b
+      """
 
   Scenario: undo
     When I run "git-town undo"

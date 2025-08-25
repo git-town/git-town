@@ -33,10 +33,12 @@ Feature: prepend a branch to a feature branch with remote updates in a clean wor
       | branch-1 | local, origin | branch-1 commit | file_1    | content 1    |
       | branch-2 | local, origin | branch-2 commit | file_2    | content 3    |
     And this lineage exists now
-      | BRANCH    | PARENT    |
-      | branch-1  | main      |
-      | branch-1a | branch-1  |
-      | branch-2  | branch-1a |
+      """
+      main
+        branch-1
+          branch-1a
+            branch-2
+      """
 
   Scenario: undo
     When I run "git-town undo"

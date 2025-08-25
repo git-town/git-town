@@ -19,9 +19,10 @@ Feature: create a branch in the presence of a symbolic reference
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | new    | main   |
-
+      """
+      main
+        new
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

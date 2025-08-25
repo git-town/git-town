@@ -29,9 +29,10 @@ Feature: append a branch to a branch whose tracking branch was deleted
       | local      | main, new |
       | origin     | main      |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | new    | main   |
-
+      """
+      main
+        new
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

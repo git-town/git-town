@@ -66,9 +66,11 @@ Feature: shipped parent branches in a stacked change
       | feature-3 | local, origin | feature-3 commit |
       | feature-4 | local, origin | feature-4 commit |
     And this lineage exists now
-      | BRANCH    | PARENT    |
-      | feature-3 | main      |
-      | feature-4 | feature-3 |
+      """
+      main
+        feature-3
+          feature-4
+      """
 
   Scenario: undo
     When I run "git-town undo"

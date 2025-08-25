@@ -20,9 +20,10 @@ Feature: on the main branch with uncommitted changes
     And the uncommitted file still exists
     And the initial commits exist now
     And this lineage exists now
-      | BRANCH | PARENT |
-      | new    | main   |
-
+      """
+      main
+        new
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

@@ -25,10 +25,11 @@ Feature: create a new top-level feature branch in a clean workspace using the "c
       | main    | local, origin | new commit         |
       | feature | local, origin | already compressed |
     And this lineage exists now
-      | BRANCH  | PARENT |
-      | feature | main   |
-      | new     | main   |
-
+      """
+      main
+        feature
+        new
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

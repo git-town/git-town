@@ -7,6 +7,7 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/git-town/git-town/v21/internal/cli/format"
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/gitconfig"
@@ -367,15 +368,8 @@ func (self *TestCommands) Lineage() configdomain.Lineage {
 	return localGitConfig.Lineage
 }
 
-// LineageTable provides the currently configured lineage information as a DataTable.
-func (self *TestCommands) LineageTable(lineage configdomain.Lineage) datatable.DataTable {
-	result := datatable.DataTable{}
-	result.AddRow("BRANCH", "PARENT")
-	for _, entry := range lineage.Entries() {
-		result.AddRow(entry.Child.String(), entry.Parent.String())
-	}
-	result.Sort()
-	return result
+func (self *TestCommands) LineageText(lineage configdomain.Lineage) string {
+	return format.BranchLineage(lineage)
 }
 
 // LocalBranches provides the names of all branches in the local repository,

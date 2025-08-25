@@ -28,8 +28,10 @@ Feature: merging a branch in a stack that is fully in sync
       |        | git push --force-with-lease --force-if-includes |
       |        | git push origin :beta                           |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | alpha  | main   |
+      """
+      main
+        alpha
+      """
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, origin | alpha commit |

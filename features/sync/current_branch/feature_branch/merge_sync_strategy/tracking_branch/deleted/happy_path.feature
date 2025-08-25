@@ -32,8 +32,10 @@ Feature: sync a branch whose tracking branch was shipped
       | REPOSITORY    | BRANCHES        |
       | local, origin | main, feature-2 |
     And this lineage exists now
-      | BRANCH    | PARENT |
-      | feature-2 | main   |
+      """
+      main
+        feature-2
+      """
 
   Scenario: undo
     When I run "git-town undo"

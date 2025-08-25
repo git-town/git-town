@@ -38,5 +38,7 @@ Feature: the branch was shipped manually on the local machine
       | local      | main, feature |
       | origin     | main          |
     And this lineage exists now
-      | BRANCH  | PARENT |
-      | feature | main   |
+      """
+      main
+        feature
+      """

@@ -27,9 +27,10 @@ Feature: renaming a branch whose parent was shipped and the local branch deleted
       | REPOSITORY    | BRANCHES  |
       | local, origin | main, new |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | new    | main   |
-
+      """
+      main
+        new
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

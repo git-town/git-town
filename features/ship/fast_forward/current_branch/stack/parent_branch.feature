@@ -32,9 +32,10 @@ Feature: ship a parent branch using the fast-forward strategy
       | main   | local, origin | parent commit |
       | child  | local, origin | child commit  |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | child  | main   |
-
+      """
+      main
+        child
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
