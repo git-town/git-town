@@ -8,7 +8,7 @@ Feature: cannot make the current main branch a feature branch
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      you are trying to convert the main branch to a feature branch. That's not possible. If you want to create a feature branch, did you forget to add the branch name?
+      cannot make the main branch a feature branch
       """
     And the main branch is still "main"
 
