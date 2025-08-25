@@ -28,14 +28,15 @@ Feature: migrate existing configuration in Git metadata to a config file
       | main branch                 | enter      |
       | perennial branches          | enter      |
       | perennial regex             | enter      |
+      | dev-remote                  | enter      |
+      | origin hostname             | enter      |
+      | forge type                  | enter      |
+      | enter all                   | down enter |
       | feature regex               | enter      |
       | contribution regex          | enter      |
       | observed regex              | enter      |
       | new branch type             | enter      |
       | unknown branch type         | enter      |
-      | dev-remote                  | enter      |
-      | origin hostname             | enter      |
-      | forge type                  | enter      |
       | sync feature strategy       | enter      |
       | sync perennial strategy     | enter      |
       | sync prototype strategy     | enter      |

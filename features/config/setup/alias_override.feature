@@ -6,31 +6,16 @@ Feature: override an existing Git alias
     And I ran "git config --global alias.append checkout"
     And global Git setting "git-town.unknown-branch-type" is "feature"
     When I run "git-town config setup" and enter into the dialogs:
-      | DIALOG                      | KEYS       |
-      | welcome                     | enter      |
-      | aliases                     | o enter    |
-      | main branch                 | enter      |
-      | perennial branches          |            |
-      | perennial regex             | enter      |
-      | feature regex               | enter      |
-      | contribution regex          | enter      |
-      | observed regex              | enter      |
-      | new branch type             | enter      |
-      | unknown branch type         | enter      |
-      | origin hostname             | enter      |
-      | forge type                  | enter      |
-      | sync feature strategy       | enter      |
-      | sync perennial strategy     | enter      |
-      | sync prototype strategy     | enter      |
-      | sync upstream               | enter      |
-      | sync tags                   | enter      |
-      | detached                    | enter      |
-      | stash                       | enter      |
-      | share new branches          | enter      |
-      | push hook                   | enter      |
-      | ship strategy               | enter      |
-      | ship delete tracking branch | enter      |
-      | config storage              | down enter |
+      | DIALOG             | KEYS       |
+      | welcome            | enter      |
+      | aliases            | o enter    |
+      | main branch        | enter      |
+      | perennial branches |            |
+      | perennial regex    | enter      |
+      | origin hostname    | enter      |
+      | forge type         | enter      |
+      | enter all          | enter      |
+      | config storage     | down enter |
 
   Scenario: result
     Then Git Town runs the commands
