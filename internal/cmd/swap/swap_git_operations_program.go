@@ -31,18 +31,14 @@ func swapGitOperationsProgram(args swapGitOperationsProgramArgs) {
 			CommitsToRemove:    args.grandParent.Location(),
 		},
 	)
+	if args.current.HasTrackingBranch() {
+		args.program.Value.Add(
+			&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: args.current.LocalBranchName(), ForceIfIncludes: true},
+		)
+	}
 	if args.parent.HasTrackingBranch() {
 		args.program.Value.Add(
 			&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: args.parent.LocalBranchName(), ForceIfIncludes: true},
-		)
-	}
-	// push current branch after all rebases complete, otherwise proposals are marked as merged on Github
-	if args.current.HasTrackingBranch() {
-		args.program.Value.Add(
-			&opcodes.Checkout{
-				Branch: args.current.LocalBranchName(),
-			},
-			&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: args.current.LocalBranchName(), ForceIfIncludes: true},
 		)
 	}
 	for _, child := range args.children {
