@@ -19,16 +19,21 @@ type ProposalStackLineageArgs struct {
 	MainAndPerennialBranches gitdomain.LocalBranchNames
 }
 
-func NewProposalStackLineageBuilder(args ProposalStackLineageArgs) Option[ProposalStackLineageBuilder] {
-	if args.MainAndPerennialBranches.Contains(args.CurrentBranch) {
+func NewProposalStackLineageBuilder(args ProposalStackLineageArgs, lineageTree OptionalMutable[ProposalStackLineageTree]) Option[ProposalStackLineageBuilder] {
+	if args.MainAndPerennialBranches.Contains(args.CurrentBranch) ||
+		args.Lineage.Len() == 0 {
 		// cannot create proposal stack lineage for main or perennial branch
 		return None[ProposalStackLineageBuilder]()
 	}
 
-	tree, err := NewProposalStackLineageTree(args)
-	if err != nil {
-		fmt.Printf("failed to build proposal stack lineage: %s", err.Error())
-		return None[ProposalStackLineageBuilder]()
+	tree, hasTree := lineageTree.Get()
+	if !hasTree {
+		var err error
+		tree, err = NewProposalStackLineageTree(args)
+		if err != nil {
+			fmt.Printf("failed to build proposal stack lineage: %s", err.Error())
+			return None[ProposalStackLineageBuilder]()
+		}
 	}
 
 	if tree == nil {
@@ -48,6 +53,7 @@ type ProposalStackLineageBuilder struct {
 	tree                     *ProposalStackLineageTree
 }
 
+// Build returns the proposal stack lineage as a string
 func (self *ProposalStackLineageBuilder) Build(args ProposalStackLineageArgs) string {
 	var builder strings.Builder
 	builder.WriteString("\n-------------------------\n")
@@ -63,6 +69,13 @@ func (self *ProposalStackLineageBuilder) GetProposal(branch gitdomain.LocalBranc
 	}
 
 	return proposal
+}
+
+// UpdateStack updates the underlying tree representation of the proposal stack. If proposal data was
+// fetched on a previous call to UpdateStack or during ProposalStackLineageBuilder, the underlying
+// data structure fetches that information from a map.
+func (self *ProposalStackLineageBuilder) UpdateStack(args ProposalStackLineageArgs) error {
+	return self.tree.Rebuild(args)
 }
 
 func (self *ProposalStackLineageBuilder) build(node *ProposalStackLineageTreeNode, args ProposalStackLineageArgs) string {

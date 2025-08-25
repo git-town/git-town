@@ -12,27 +12,37 @@ func NewProposalStackLineageTree(args ProposalStackLineageArgs) (*ProposalStackL
 		Node:             newProposalStackLineageTreeNode(""),
 	}
 
-	visited := make(map[gitdomain.LocalBranchName]*ProposalStackLineageTreeNode)
-
-	descendants, err := buildAncestorChain(args, tree, visited)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := buildDescendantChain(descendants, args, tree, visited); err != nil {
-		return nil, err
-	}
-
-	if len(tree.Node.childNodes) == 0 {
-		return nil, nil
-	}
-	tree.Node = tree.Node.childNodes[0]
-	return tree, nil
+	err := tree.build(args)
+	return tree, err
 }
 
 type ProposalStackLineageTree struct {
 	BranchToProposal map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]
 	Node             *ProposalStackLineageTreeNode
+}
+
+func (self *ProposalStackLineageTree) Rebuild(args ProposalStackLineageArgs) error {
+	self.Node = newProposalStackLineageTreeNode("")
+	return self.build(args)
+}
+
+func (self *ProposalStackLineageTree) build(args ProposalStackLineageArgs) error {
+	visited := make(map[gitdomain.LocalBranchName]*ProposalStackLineageTreeNode)
+
+	descendants, err := buildAncestorChain(args, self, visited)
+	if err != nil {
+		return err
+	}
+
+	if err := buildDescendantChain(descendants, args, self, visited); err != nil {
+		return err
+	}
+
+	if len(self.Node.childNodes) == 0 {
+		return nil
+	}
+	self.Node = self.Node.childNodes[0]
+	return nil
 }
 
 type ProposalStackLineageTreeNode struct {
