@@ -10,7 +10,6 @@ Feature: don't ask for perennial branches if no branches that could be perennial
       | aliases            | enter      |                                             |
       | main branch        | down enter |                                             |
       | perennial branches |            | no input here since the dialog doesn't show |
-      | perennial regex    | enter      |                                             |
       | origin hostname    | enter      |                                             |
       | forge type         | enter      |                                             |
       | enter all          | enter      |                                             |
