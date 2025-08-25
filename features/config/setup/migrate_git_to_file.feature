@@ -31,6 +31,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | dev-remote                  | enter      |
       | origin hostname             | enter      |
       | forge type                  | enter      |
+      | enter all                   | down enter |
       | feature regex               | enter      |
       | contribution regex          | enter      |
       | observed regex              | enter      |
