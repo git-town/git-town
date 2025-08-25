@@ -9,7 +9,6 @@ Feature: making multiple branches feature branches
       | parked       | parked       | main   | local     |
     When I run "git-town feature contribution observed parked"
 
-  @this
   Scenario: result
     Then Git Town runs no commands
     And Git Town prints:
