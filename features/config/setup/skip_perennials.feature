@@ -11,13 +11,13 @@ Feature: don't ask for perennial branches if no branches that could be perennial
       | main branch                 | down enter |                                             |
       | perennial branches          |            | no input here since the dialog doesn't show |
       | perennial regex             | enter      |                                             |
+      | origin hostname             | enter      |                                             |
+      | forge type                  | enter      |                                             |
       | feature regex               | enter      |                                             |
       | contribution regex          | enter      |                                             |
       | observed regex              | enter      |                                             |
       | new branch type             | enter      |                                             |
       | unknown branch type         | enter      |                                             |
-      | origin hostname             | enter      |                                             |
-      | forge type                  | enter      |                                             |
       | sync feature strategy       | enter      |                                             |
       | sync perennial strategy     | enter      |                                             |
       | sync prototype strategy     | enter      |                                             |

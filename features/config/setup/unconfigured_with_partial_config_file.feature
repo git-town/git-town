@@ -12,15 +12,15 @@ Feature: ask for information not provided by the config file
       [branches]
       main = "main"
       perennials = ["public"]
-
+      
       [hosting]
       dev-remote = "something"
       forge-type = "github"
       origin-hostname = "github.com"
-
+      
       [ship]
       delete-tracking-branch = false
-
+      
       [sync]
       tags = false
       upstream = false
@@ -31,14 +31,14 @@ Feature: ask for information not provided by the config file
       | aliases                 | enter                 |
       | perennial branches      | space enter           |
       | perennial regex         | p e r e n enter       |
+      | github connector type   | enter                 |
+      | github token            | g h - t o k e n enter |
+      | token scope             | enter                 |
       | feature regex           | f e a t enter         |
       | contribution regex      | c o n t enter         |
       | observed regex          | o b s enter           |
       | new branch type         | enter                 |
       | unknown branch type     | enter                 |
-      | github connector type   | enter                 |
-      | github token            | g h - t o k e n enter |
-      | token scope             | enter                 |
       | sync feature strategy   | enter                 |
       | sync perennial strategy | enter                 |
       | sync prototype strategy | enter                 |

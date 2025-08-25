@@ -16,13 +16,13 @@ Feature: Accepting all default values leads to a working setup
       | main branch                 | enter      |
       | perennial branches          | enter      |
       | perennial regex             | enter      |
+      | origin hostname             | enter      |
+      | forge type                  | enter      |
       | feature regex               | enter      |
       | contribution regex          | enter      |
       | observed regex              | enter      |
       | new branch type             | enter      |
       | unknown branch type         | enter      |
-      | origin hostname             | enter      |
-      | forge type                  | enter      |
       | sync feature strategy       | enter      |
       | sync perennial strategy     | enter      |
       | sync prototype strategy     | enter      |
@@ -63,22 +63,22 @@ Feature: Accepting all default values leads to a working setup
     And the configuration file is now:
       """
       # More info around this file at https://www.git-town.com/configuration-file
-
+      
       [branches]
       main = "main"
-
+      
       [create]
       new-branch-type = "feature"
       share-new-branches = "no"
       stash = true
-
+      
       [hosting]
       dev-remote = "origin"
-
+      
       [ship]
       delete-tracking-branch = true
       strategy = "api"
-
+      
       [sync]
       feature-strategy = "merge"
       perennial-strategy = "ff-only"

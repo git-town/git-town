@@ -11,13 +11,13 @@ Feature: remove an existing forge type override
       | main branch                 | enter                |                                             |
       | perennial branches          |                      | no input here since the dialog doesn't show |
       | perennial regex             | enter                |                                             |
+      | origin hostname             | enter                |                                             |
+      | forge type                  | up up up up up enter |                                             |
       | feature regex               | enter                |                                             |
       | contribution regex          | enter                |                                             |
       | observed regex              | enter                |                                             |
       | new branch type             | enter                |                                             |
       | unknown branch type         | enter                |                                             |
-      | origin hostname             | enter                |                                             |
-      | forge type                  | up up up up up enter |                                             |
       | sync feature strategy       | enter                |                                             |
       | sync perennial strategy     | enter                |                                             |
       | sync prototype strategy     | enter                |                                             |

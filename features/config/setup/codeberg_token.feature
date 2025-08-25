@@ -13,15 +13,15 @@ Feature: enter the Codeberg API token
       | main branch                 | enter                  |                                             |
       | perennial branches          |                        | no input here since the dialog doesn't show |
       | perennial regex             | enter                  |                                             |
+      | origin hostname             | enter                  |                                             |
+      | forge type                  | enter                  |                                             |
+      | codeberg token              | c o d e - t o k  enter |                                             |
+      | token scope                 | enter                  |                                             |
       | feature regex               | enter                  |                                             |
       | contribution regex          | enter                  |                                             |
       | observed regex              | enter                  |                                             |
       | new branch type             | enter                  |                                             |
       | unknown branch type         | enter                  |                                             |
-      | origin hostname             | enter                  |                                             |
-      | forge type                  | enter                  |                                             |
-      | codeberg token              | c o d e - t o k  enter |                                             |
-      | token scope                 | enter                  |                                             |
       | sync feature strategy       | enter                  |                                             |
       | sync perennial strategy     | enter                  |                                             |
       | sync prototype strategy     | enter                  |                                             |
@@ -61,15 +61,15 @@ Feature: enter the Codeberg API token
       | main branch                 | enter                  |                                             |
       | perennial branches          |                        | no input here since the dialog doesn't show |
       | perennial regex             | enter                  |                                             |
+      | origin hostname             | enter                  |                                             |
+      | forge type                  | down down down enter   |                                             |
+      | codeberg token              | c o d e - t o k  enter |                                             |
+      | token scope                 | enter                  |                                             |
       | feature regex               | enter                  |                                             |
       | contribution regex          | enter                  |                                             |
       | observed regex              | enter                  |                                             |
       | new branch type             | enter                  |                                             |
       | unknown branch type         | enter                  |                                             |
-      | origin hostname             | enter                  |                                             |
-      | forge type                  | down down down enter   |                                             |
-      | codeberg token              | c o d e - t o k  enter |                                             |
-      | token scope                 | enter                  |                                             |
       | sync feature strategy       | enter                  |                                             |
       | sync perennial strategy     | enter                  |                                             |
       | sync prototype strategy     | enter                  |                                             |
@@ -111,15 +111,15 @@ Feature: enter the Codeberg API token
       | main-branch                 | enter                  |                                             |
       | perennial branches          |                        | no input here since the dialog doesn't show |
       | perennial regex             | enter                  |                                             |
+      | origin hostname             | enter                  |                                             |
+      | forge type                  | enter                  |                                             |
+      | codeberg token              | c o d e - t o k  enter |                                             |
+      | token scope                 | down enter             |                                             |
       | feature regex               | enter                  |                                             |
       | contribution regex          | enter                  |                                             |
       | observed regex              | enter                  |                                             |
       | new branch type             | enter                  |                                             |
       | unknown branch type         | enter                  |                                             |
-      | origin hostname             | enter                  |                                             |
-      | forge type                  | enter                  |                                             |
-      | codeberg token              | c o d e - t o k  enter |                                             |
-      | token scope                 | down enter             |                                             |
       | sync feature strategy       | enter                  |                                             |
       | sync perennial strategy     | enter                  |                                             |
       | sync prototype strategy     | enter                  |                                             |
@@ -160,15 +160,15 @@ Feature: enter the Codeberg API token
       | main branch                 | enter                                     |                                             |
       | perennial branches          |                                           | no input here since the dialog doesn't show |
       | perennial regex             | enter                                     |                                             |
+      | origin hostname             | enter                                     |                                             |
+      | forge type                  | enter                                     |                                             |
+      | codeberg token              | backspace backspace backspace 4 5 6 enter |                                             |
+      | token scope                 | enter                                     |                                             |
       | feature regex               | enter                                     |                                             |
       | contribution regex          | enter                                     |                                             |
       | observed regex              | enter                                     |                                             |
       | new branch type             | enter                                     |                                             |
       | unknown branch type         | enter                                     |                                             |
-      | origin hostname             | enter                                     |                                             |
-      | forge type                  | enter                                     |                                             |
-      | codeberg token              | backspace backspace backspace 4 5 6 enter |                                             |
-      | token scope                 | enter                                     |                                             |
       | sync feature strategy       | enter                                     |                                             |
       | sync perennial strategy     | enter                                     |                                             |
       | sync prototype strategy     | enter                                     |                                             |

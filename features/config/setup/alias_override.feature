@@ -12,13 +12,13 @@ Feature: override an existing Git alias
       | main branch                 | enter      |
       | perennial branches          |            |
       | perennial regex             | enter      |
+      | origin hostname             | enter      |
+      | forge type                  | enter      |
       | feature regex               | enter      |
       | contribution regex          | enter      |
       | observed regex              | enter      |
       | new branch type             | enter      |
       | unknown branch type         | enter      |
-      | origin hostname             | enter      |
-      | forge type                  | enter      |
       | sync feature strategy       | enter      |
       | sync perennial strategy     | enter      |
       | sync prototype strategy     | enter      |

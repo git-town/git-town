@@ -21,16 +21,16 @@ Feature: change existing information in Git metadata
       | main branch                 | enter                  |
       | perennial branches          | space down space enter |
       | perennial regex             | p e r enter            |
-      | feature regex               | f e a t enter          |
-      | contribution regex          | c o n t enter          |
-      | observed regex              | o b s enter            |
-      | new branch type             | down enter             |
-      | unknown branch type         | down enter             |
       | origin hostname             | c o d e enter          |
       | forge type                  | up up enter            |
       | github connector type       | enter                  |
       | github token                | g h - t o k enter      |
       | token scope                 | enter                  |
+      | feature regex               | f e a t enter          |
+      | contribution regex          | c o n t enter          |
+      | observed regex              | o b s enter            |
+      | new branch type             | down enter             |
+      | unknown branch type         | down enter             |
       | sync feature strategy       | down enter             |
       | sync perennial strategy     | down enter             |
       | sync prototype strategy     | down enter             |

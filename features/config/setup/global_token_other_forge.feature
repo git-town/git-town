@@ -12,16 +12,16 @@ Feature: a global API token of another forge exists
       | main branch                 | enter           |                                             |
       | perennial branches          |                 | no input here since the dialog doesn't show |
       | perennial regex             | enter           |                                             |
-      | feature regex               | enter           |                                             |
-      | contribution regex          | enter           |                                             |
-      | observed regex              | enter           |                                             |
-      | new branch type             | enter           |                                             |
-      | unknown branch type         | enter           |                                             |
       | origin hostname             | enter           |                                             |
       | forge type                  | enter           |                                             |
       | github connector type       | enter           |                                             |
       | github token                | g h t o k enter |                                             |
       | token scope                 | enter           |                                             |
+      | feature regex               | enter           |                                             |
+      | contribution regex          | enter           |                                             |
+      | observed regex              | enter           |                                             |
+      | new branch type             | enter           |                                             |
+      | unknown branch type         | enter           |                                             |
       | sync feature strategy       | enter           |                                             |
       | sync perennial strategy     | enter           |                                             |
       | sync prototype strategy     | enter           |                                             |

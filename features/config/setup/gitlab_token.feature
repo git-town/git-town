@@ -13,16 +13,16 @@ Feature: enter the GitLab API token
       | main branch                 | enter             |                                             |
       | perennial branches          |                   | no input here since the dialog doesn't show |
       | perennial regex             | enter             |                                             |
-      | feature regex               | enter             |                                             |
-      | contribution regex          | enter             |                                             |
-      | observed regex              | enter             |                                             |
-      | new branch type             | enter             |                                             |
-      | unknown branch type         | enter             |                                             |
       | origin hostname             | enter             |                                             |
       | forge type                  | enter             |                                             |
       | gitlab connector type       | enter             |                                             |
       | gitlab token                | g l - t o k enter |                                             |
       | token scope                 | enter             |                                             |
+      | feature regex               | enter             |                                             |
+      | contribution regex          | enter             |                                             |
+      | observed regex              | enter             |                                             |
+      | new branch type             | enter             |                                             |
+      | unknown branch type         | enter             |                                             |
       | sync feature strategy       | enter             |                                             |
       | sync perennial strategy     | enter             |                                             |
       | sync prototype strategy     | enter             |                                             |
@@ -62,16 +62,16 @@ Feature: enter the GitLab API token
       | main branch                 | enter             |                                             |
       | perennial branches          |                   | no input here since the dialog doesn't show |
       | perennial regex             | enter             |                                             |
-      | feature regex               | enter             |                                             |
-      | contribution regex          | enter             |                                             |
-      | observed regex              | enter             |                                             |
-      | new branch type             | enter             |                                             |
-      | unknown branch type         | enter             |                                             |
       | origin hostname             | enter             |                                             |
       | forge type                  | up enter          |                                             |
       | gitlab connector type       | enter             |                                             |
       | gitlab token                | g l - t o k enter |                                             |
       | token scope                 | enter             |                                             |
+      | feature regex               | enter             |                                             |
+      | contribution regex          | enter             |                                             |
+      | observed regex              | enter             |                                             |
+      | new branch type             | enter             |                                             |
+      | unknown branch type         | enter             |                                             |
       | sync feature strategy       | enter             |                                             |
       | sync perennial strategy     | enter             |                                             |
       | sync prototype strategy     | enter             |                                             |
@@ -114,16 +114,16 @@ Feature: enter the GitLab API token
       | main branch                 | enter           |                                             |
       | perennial branches          |                 | no input here since the dialog doesn't show |
       | perennial regex             | enter           |                                             |
-      | feature regex               | enter           |                                             |
-      | contribution regex          | enter           |                                             |
-      | observed regex              | enter           |                                             |
-      | new branch type             | enter           |                                             |
-      | unknown branch type         | enter           |                                             |
       | origin hostname             | enter           |                                             |
       | forge type                  | enter           |                                             |
       | gitlab connector type       | enter           | api                                         |
       | gitlab token                | g l t o k enter |                                             |
       | token scope                 | down enter      |                                             |
+      | feature regex               | enter           |                                             |
+      | contribution regex          | enter           |                                             |
+      | observed regex              | enter           |                                             |
+      | new branch type             | enter           |                                             |
+      | unknown branch type         | enter           |                                             |
       | sync feature strategy       | enter           |                                             |
       | sync perennial strategy     | enter           |                                             |
       | sync prototype strategy     | enter           |                                             |
@@ -165,16 +165,16 @@ Feature: enter the GitLab API token
       | main branch                 | enter                                     |                                             |
       | perennial branches          |                                           | no input here since the dialog doesn't show |
       | perennial regex             | enter                                     |                                             |
-      | feature regex               | enter                                     |                                             |
-      | contribution regex          | enter                                     |                                             |
-      | observed regex              | enter                                     |                                             |
-      | new branch type             | enter                                     |                                             |
-      | unknown branch type         | enter                                     |                                             |
       | origin hostname             | enter                                     |                                             |
       | forge type                  | enter                                     |                                             |
       | gitlab connector type       | enter                                     |                                             |
       | gitlab token                | backspace backspace backspace 4 5 6 enter |                                             |
       | token scope                 | enter                                     |                                             |
+      | feature regex               | enter                                     |                                             |
+      | contribution regex          | enter                                     |                                             |
+      | observed regex              | enter                                     |                                             |
+      | new branch type             | enter                                     |                                             |
+      | unknown branch type         | enter                                     |                                             |
       | sync feature strategy       | enter                                     |                                             |
       | sync perennial strategy     | enter                                     |                                             |
       | sync prototype strategy     | enter                                     |                                             |
