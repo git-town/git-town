@@ -9,11 +9,11 @@ import (
 const (
 	enterAllTitle = `Go through all configuration options?`
 	enterAllHelp  = `
-You are good to go with a basic setup of Git Town
+You are good to go with the basic setup of Git Town,
 and could end the assistant here
-or go through all available configuration options and learn about them.
+or continue with the advanced configuration options.
 
-You can always re-run this assistant later through "git town config setup".
+You can re-run this assistant: git town config setup
 `
 )
 
