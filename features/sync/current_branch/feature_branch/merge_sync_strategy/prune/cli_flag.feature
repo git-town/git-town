@@ -34,8 +34,8 @@ Feature: prune enabled via CLI
       | local, origin | main, feature-2 |
     And this lineage exists now
       """
-      local, origin
-        main
+      main
+        feature-2
       """
 
   Scenario: undo
