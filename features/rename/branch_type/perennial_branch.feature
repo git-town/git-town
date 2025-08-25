@@ -42,7 +42,6 @@ Feature: rename a perennial branch
         hotfix
       """
 
-
   Scenario: undo
     Given I run "git-town rename --force production new"
     When I run "git-town undo"

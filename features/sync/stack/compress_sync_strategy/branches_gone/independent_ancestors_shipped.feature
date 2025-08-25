@@ -50,7 +50,6 @@ Feature: sync a stack that contains shipped parent branches using the "compress"
         main
       """
 
-
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

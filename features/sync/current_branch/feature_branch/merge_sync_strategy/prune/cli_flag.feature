@@ -38,7 +38,6 @@ Feature: prune enabled via CLI
         main
       """
 
-
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
