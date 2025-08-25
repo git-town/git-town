@@ -37,6 +37,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | perennial regex             | enter       |
       | origin hostname             | enter       |
       | forge type                  | enter       |
+      | enter all                   | down enter  |
       | feature regex               | enter       |
       | contribution regex          | enter       |
       | observed regex              | enter       |

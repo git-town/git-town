@@ -1,7 +1,6 @@
 @messyoutput
 Feature: don't ask for information already provided by the config file
 
-  @this
   Scenario:
     Given a Git repo with origin
     And Git Town is not configured
@@ -50,6 +49,7 @@ Feature: don't ask for information already provided by the config file
       | welcome            | enter |
       | aliases            | enter |
       | perennial branches | enter |
+      | enter all          | enter |
       | config storage     | enter |
     Then Git Town runs no commands
     And there are still no perennial branches
