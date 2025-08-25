@@ -12,7 +12,6 @@ Feature: enter the GitLab API token
       | aliases               | enter             |                                             |
       | main branch           | enter             |                                             |
       | perennial branches    |                   | no input here since the dialog doesn't show |
-      | perennial regex       | enter             |                                             |
       | origin hostname       | enter             |                                             |
       | forge type            | enter             |                                             |
       | gitlab connector type | enter             |                                             |
@@ -33,7 +32,6 @@ Feature: enter the GitLab API token
       | aliases               | enter             |                                             |
       | main branch           | enter             |                                             |
       | perennial branches    |                   | no input here since the dialog doesn't show |
-      | perennial regex       | enter             |                                             |
       | origin hostname       | enter             |                                             |
       | forge type            | up enter          |                                             |
       | gitlab connector type | enter             |                                             |
@@ -57,7 +55,6 @@ Feature: enter the GitLab API token
       | aliases               | enter           |                                             |
       | main branch           | enter           |                                             |
       | perennial branches    |                 | no input here since the dialog doesn't show |
-      | perennial regex       | enter           |                                             |
       | origin hostname       | enter           |                                             |
       | forge type            | enter           |                                             |
       | gitlab connector type | enter           | api                                         |
@@ -80,7 +77,6 @@ Feature: enter the GitLab API token
       | aliases               | enter                                     |                                             |
       | main branch           | enter                                     |                                             |
       | perennial branches    |                                           | no input here since the dialog doesn't show |
-      | perennial regex       | enter                                     |                                             |
       | origin hostname       | enter                                     |                                             |
       | forge type            | enter                                     |                                             |
       | gitlab connector type | enter                                     |                                             |

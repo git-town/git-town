@@ -10,7 +10,6 @@ Feature: remove an existing forge type override
       | aliases            | enter                |                                             |
       | main branch        | enter                |                                             |
       | perennial branches |                      | no input here since the dialog doesn't show |
-      | perennial regex    | enter                |                                             |
       | origin hostname    | enter                |                                             |
       | forge type         | up up up up up enter |                                             |
       | enter all          | enter                |                                             |

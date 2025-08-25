@@ -15,7 +15,6 @@ Feature: Accepting all default values leads to a working setup
       | aliases            | enter      |
       | main branch        | enter      |
       | perennial branches | enter      |
-      | perennial regex    | enter      |
       | origin hostname    | enter      |
       | forge type         | enter      |
       | enter all          | enter      |
