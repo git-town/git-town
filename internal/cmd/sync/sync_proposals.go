@@ -1,6 +1,8 @@
 package sync
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge"
 	"github.com/git-town/git-town/v21/internal/vm/opcodes"
@@ -15,8 +17,9 @@ type BranchProposalsProgramArgs struct {
 
 // BranchProposalsProgram syncs all given proposals.
 func BranchProposalsProgram(branchesToSync configdomain.BranchesToSync, args BranchProposalsProgramArgs) {
-	builder, hasBuilder := forge.NewProposalStackLineageBuilder(args.ProposalStackLineageArgs, MutableNone[forge.ProposalStackLineageTree]()).Get()
-	if !hasBuilder {
+	tree, err := forge.NewProposalStackLineageTree(args.ProposalStackLineageArgs)
+	if err != nil {
+		fmt.Printf("failed to update proposal stack lineage: %s\n", err.Error())
 		return
 	}
 
@@ -26,18 +29,14 @@ func BranchProposalsProgram(branchesToSync configdomain.BranchesToSync, args Bra
 		// extract an object that caches the already known proposals,
 		// i.e. which branch has which proposal,
 		// and loads missing proposal info on demand.
-		proposal, hasProposal := builder.GetProposal(branch.BranchInfo.LocalBranchName()).Get()
-		if !hasProposal {
+		proposal, ok := tree.BranchToProposal[branch.BranchInfo.LocalBranchName()]
+		if !ok {
 			continue
 		}
-		args.Program.Value.Add(&opcodes.ProposalUpdateBody{
-			Proposal: proposal,
-			UpdatedBody: forge.ProposalBodyUpdateWithStackLineage(proposal.Data.Data().Body.GetOrDefault(), builder.Build(forge.ProposalStackLineageArgs{
-				Connector:                args.ProposalStackLineageArgs.Connector,
-				CurrentBranch:            branch.BranchInfo.LocalBranchName(),
-				Lineage:                  args.ProposalStackLineageArgs.Lineage,
-				MainAndPerennialBranches: args.ProposalStackLineageArgs.MainAndPerennialBranches,
-			})),
+		args.Program.Value.Add(&opcodes.ProposalUpdateLineage{
+			Current:         branch.BranchInfo.LocalBranchName(),
+			CurrentProposal: proposal,
+			LineageTree:     MutableSome(tree),
 		})
 	}
 }
