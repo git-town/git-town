@@ -1,4 +1,4 @@
-Feature: hack an existing contribution branch
+Feature: make a perennial branch a feature branch
 
   Background:
     Given a Git repo with origin
@@ -6,12 +6,10 @@ Feature: hack an existing contribution branch
       | NAME     | TYPE      | PARENT | LOCATIONS |
       | existing | perennial | main   | local     |
     And the current branch is "main"
-    When I run "git-town hack existing"
+    When I run "git-town feature existing"
 
   Scenario: result
-    Then Git Town runs the commands
-      | BRANCH | COMMAND                  |
-      | main   | git fetch --prune --tags |
+    Then Git Town runs no commands
     And Git Town prints the error:
       """
       cannot make perennial branches feature branches

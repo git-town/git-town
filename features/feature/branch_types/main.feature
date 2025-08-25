@@ -1,14 +1,12 @@
-Feature: hack an existing contribution branch
+Feature: make the main branch a feature brancha
 
   Background:
     Given a Git repo with origin
     And the current branch is "main"
-    When I run "git-town hack main"
+    When I run "git-town feature main"
 
   Scenario: result
-    Then Git Town runs the commands
-      | BRANCH | COMMAND                  |
-      | main   | git fetch --prune --tags |
+    Then Git Town runs no commands
     And Git Town prints the error:
       """
       cannot make the main branch a feature branch
