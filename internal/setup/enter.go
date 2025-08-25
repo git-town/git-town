@@ -253,7 +253,7 @@ EnterForgeData:
 		GitUserName:              None[gitdomain.GitUserName](),
 		GiteaToken:               giteaToken,
 		HostingOriginHostname:    hostingOriginHostName,
-		Lineage:                  configdomain.Lineage{}, // the setup assistant doesn't ask for this
+		Lineage:                  configdomain.NewLineage(), // the setup assistant doesn't ask for this
 		MainBranch:               mainBranchSetting,
 		NewBranchType:            newBranchType,
 		ObservedRegex:            observedRegex,
