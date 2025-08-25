@@ -46,10 +46,10 @@ Feature: Accepting all default values leads to a working setup
     And the configuration file is now:
       """
       # More info around this file at https://www.git-town.com/configuration-file
-      
+
       [branches]
       main = "main"
-      
+
       [hosting]
       dev-remote = "origin"
       """

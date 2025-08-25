@@ -15,22 +15,22 @@ Feature: don't ask for information already provided by the config file
       perennial-regex = "release-"
       perennials = ["staging"]
       unknown-type = "observed"
-      
+
       [create]
       new-branch-type = "feature"
       share-new-branches = "propose"
       stash = true
-      
+
       [hosting]
       dev-remote = "something"
       origin-hostname = "github.com"
       forge-type = "github"
       github-connector = "gh"
-      
+
       [ship]
       delete-tracking-branch = true
       strategy = "api"
-      
+
       [sync]
       detached = false
       feature-strategy = "merge"
@@ -38,7 +38,7 @@ Feature: don't ask for information already provided by the config file
       push-hook = true
       tags = true
       upstream = true
-      
+
       [sync-strategy]
       feature-branches = "rebase"
       prototype-branches = "merge"
