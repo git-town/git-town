@@ -30,9 +30,10 @@ Feature: delete the current observed branch
       | feature  | local, origin | feature commit  |
       | observed | origin        | observed commit |
     And this lineage exists now
-      | BRANCH  | PARENT |
-      | feature | main   |
-
+      """
+      main
+        feature
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

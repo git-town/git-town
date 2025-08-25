@@ -11,7 +11,7 @@ Feature: hack an existing contribution branch
       | main   | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      you are trying to convert the main branch to a feature branch
+      cannot make the main branch a feature branch
       """
     And branch "main" still has type "main"
     And the initial branches and lineage exist now

@@ -42,7 +42,9 @@ Feature: swapping a feature branch with merge commits
       |          | origin        | commit 1 |
       |          |               | merging  |
     And this lineage exists now
-      | BRANCH   | PARENT   |
-      | branch-1 | main     |
-      | branch-2 | branch-1 |
-      | branch-3 | branch-2 |
+      """
+      main
+        branch-1
+          branch-2
+            branch-3
+      """

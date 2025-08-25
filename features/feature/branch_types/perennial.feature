@@ -1,0 +1,25 @@
+Feature: make a perennial branch a feature branch
+
+  Background:
+    Given a Git repo with origin
+    And the branches
+      | NAME     | TYPE      | PARENT | LOCATIONS |
+      | existing | perennial | main   | local     |
+    And the current branch is "main"
+    When I run "git-town feature existing"
+
+  Scenario: result
+    Then Git Town runs no commands
+    And Git Town prints the error:
+      """
+      cannot make perennial branches feature branches
+      """
+    And branch "existing" still has type "perennial"
+    And the initial branches and lineage exist now
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then Git Town runs no commands
+    And the initial commits exist now
+    And the initial branches and lineage exist now
+    And branch "existing" still has type "perennial"

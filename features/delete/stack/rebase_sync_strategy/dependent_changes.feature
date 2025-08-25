@@ -92,9 +92,11 @@ Feature: deleting a branch from a stack with dependent changes
       | branch-1 | local, origin | branch-1 commit | file      | line 0: main content\nline 1: branch-1 content\nline 2\nline 3                   |
       | branch-3 | local, origin | branch-3 commit | file      | line 0: main content\nline 1: branch-1 content\nline 2\nline 3: branch-3 content |
     And this lineage exists now
-      | BRANCH   | PARENT   |
-      | branch-1 | main     |
-      | branch-3 | branch-1 |
+      """
+      main
+        branch-1
+          branch-3
+      """
 
   Scenario: resolve, rebase, and continue
     When I resolve the conflict in "file" with:
@@ -119,6 +121,8 @@ Feature: deleting a branch from a stack with dependent changes
       | branch-1 | local, origin | branch-1 commit | file      | line 0: main content\nline 1: branch-1 content\nline 2\nline 3                   |
       | branch-3 | local, origin | branch-3 commit | file      | line 0: main content\nline 1: branch-1 content\nline 2\nline 3: branch-3 content |
     And this lineage exists now
-      | BRANCH   | PARENT   |
-      | branch-1 | main     |
-      | branch-3 | branch-1 |
+      """
+      main
+        branch-1
+          branch-3
+      """

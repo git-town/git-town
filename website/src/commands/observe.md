@@ -8,7 +8,7 @@ The _observe_ command makes some of your branches
 [observed](../branch-types.md#observed-branches) branches.
 
 To convert an observed branch back into a feature branch, use the
-[hack](hack.md) command.
+[feature](feature.md) command.
 
 ## Positional arguments
 
@@ -42,6 +42,6 @@ determine the repository state.
 ## See also
 
 - [contribute](contribute.md) makes the chosen branches contribution branches
-- [hack](hack.md) makes the chosen branches feature branches
+- [feature](feature.md) makes the chosen branches feature branches
 - [prototype](prototype.md) makes the chosen branches prototype branches
 - [park](park.md) makes the chosen branches parked

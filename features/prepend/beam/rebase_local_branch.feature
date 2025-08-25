@@ -31,10 +31,11 @@ Feature: prepend a branch to a local feature branch using the "rebase" sync stra
       | parent | local    | commit 1 |
       | old    | local    | commit 2 |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | old    | parent |
-      | parent | main   |
-
+      """
+      main
+        parent
+          old
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

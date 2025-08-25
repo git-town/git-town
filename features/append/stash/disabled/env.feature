@@ -12,9 +12,10 @@ Feature: disable stashing via the environment variable
       | BRANCH | COMMAND             |
       | main   | git checkout -b new |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | new    | main   |
-
+      """
+      main
+        new
+      """
   Scenario: undo
     When I run "git-town undo" with these environment variables
       | GIT_TOWN_STASH | false |

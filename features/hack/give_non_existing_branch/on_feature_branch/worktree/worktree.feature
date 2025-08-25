@@ -25,10 +25,11 @@ Feature: hack a new branch while the main branch is active in another worktree
       |          | worktree        | local main commit  |
       | existing | local, worktree | existing commit    |
     And this lineage exists now
-      | BRANCH   | PARENT |
-      | existing | main   |
-      | new      | main   |
-
+      """
+      main
+        existing
+        new
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

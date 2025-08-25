@@ -20,9 +20,10 @@ Feature: make a feature branch perennial
     And Git Town runs no commands
     And the perennial branches are now "child"
     And this lineage exists now
-      | BRANCH | PARENT |
-      | parent | main   |
-
+      """
+      main
+        parent
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands

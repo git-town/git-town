@@ -29,8 +29,10 @@ Feature: merging in Spanish
       Eliminada la rama beta
       """
     And this lineage exists now
-      | BRANCH | PARENT |
-      | alpha  | main   |
+      """
+      main
+        alpha
+      """
     And these commits exist now
       | BRANCH | LOCATION | MESSAGE      |
       | alpha  | local    | alpha commit |

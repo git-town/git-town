@@ -30,6 +30,7 @@ func AllAliasableCommands() AliasableCommands {
 		AliasableCommandCompress,
 		AliasableCommandContribute,
 		AliasableCommandDiffParent,
+		AliasableCommandDown,
 		AliasableCommandHack,
 		AliasableCommandDelete,
 		AliasableCommandObserve,
@@ -41,5 +42,6 @@ func AllAliasableCommands() AliasableCommands {
 		AliasableCommandSetParent,
 		AliasableCommandShip,
 		AliasableCommandSync,
+		AliasableCommandUp,
 	}
 }

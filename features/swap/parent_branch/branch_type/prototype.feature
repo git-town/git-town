@@ -27,10 +27,11 @@ Feature: swapping a branch with its prototype parent
       | current | local, origin | current commit |
       | parent  | local, origin | parent commit  |
     And this lineage exists now
-      | BRANCH  | PARENT  |
-      | current | main    |
-      | parent  | current |
-
+      """
+      main
+        current
+          parent
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

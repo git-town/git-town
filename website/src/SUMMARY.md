@@ -37,6 +37,7 @@
     - [walk](commands/walk.md)
   - [Limit branch syncing](branch-types.md)
     - [contribute](commands/contribute.md)
+    - [feature](commands/feature.md)
     - [observe](commands/observe.md)
     - [park](commands/park.md)
     - [prototype](commands/prototype.md)

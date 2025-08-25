@@ -29,9 +29,10 @@ Feature: allowing shiping into a feature branch
       | alpha  | local    | alpha commit |
       |        |          | done         |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | alpha  | main   |
-
+      """
+      main
+        alpha
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

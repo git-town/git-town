@@ -26,10 +26,11 @@ Feature: append a new feature branch to an existing feature branch with uncommit
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
     And this lineage exists now
-      | BRANCH   | PARENT   |
-      | existing | main     |
-      | new      | existing |
-
+      """
+      main
+        existing
+          new
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
