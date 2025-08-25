@@ -40,10 +40,12 @@ Feature: remove a branch from a stack
       | branch-2 | local, origin | commit 2 |
       | branch-3 | local, origin | commit 3 |
     And this lineage exists now
-      | BRANCH   | PARENT   |
-      | branch-1 | main     |
-      | branch-2 | branch-1 |
-      | branch-3 | branch-1 |
+      """
+      main
+        branch-1
+          branch-2
+          branch-3
+      """
     And the branches contain these files:
       | BRANCH   | NAME   |
       | branch-1 | file_1 |

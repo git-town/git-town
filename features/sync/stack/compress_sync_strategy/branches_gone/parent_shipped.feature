@@ -37,8 +37,10 @@ Feature: using the "compress" strategy, sync a branch whose parent was shipped
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, child |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | child  | main   |
+      """
+      main
+        child
+      """
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        |
       | main   | local, origin | parent commit  |

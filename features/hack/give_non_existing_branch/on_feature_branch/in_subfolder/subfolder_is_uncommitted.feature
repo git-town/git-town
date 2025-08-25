@@ -20,10 +20,11 @@ Feature: inside an uncommitted subfolder on the current feature branch
       | main     | git checkout -b new      |
     And the initial commits exist now
     And this lineage exists now
-      | BRANCH   | PARENT |
-      | existing | main   |
-      | new      | main   |
-
+      """
+      main
+        existing
+        new
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

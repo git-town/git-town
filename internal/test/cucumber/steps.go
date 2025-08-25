@@ -17,6 +17,7 @@ import (
 	messages "github.com/cucumber/messages/go/v21"
 	"github.com/git-town/git-town/v21/internal/browser"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v21/internal/cli/format"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/configfile"
@@ -109,7 +110,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			initialCommits:       None[datatable.DataTable](),
 			initialCurrentBranch: None[gitdomain.LocalBranchName](),
 			initialDevSHAs:       None[gitdomain.Commits](),
-			initialLineage:       None[datatable.DataTable](),
+			initialLineage:       None[string](),
 			initialOriginSHAs:    None[gitdomain.Commits](),
 			initialTags:          None[datatable.DataTable](),
 			initialWorktreeSHAs:  None[gitdomain.Commits](),
@@ -151,7 +152,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			initialCommits:       None[datatable.DataTable](),
 			initialCurrentBranch: None[gitdomain.LocalBranchName](),
 			initialDevSHAs:       None[gitdomain.Commits](),
-			initialLineage:       None[datatable.DataTable](),
+			initialLineage:       None[string](),
 			initialOriginSHAs:    None[gitdomain.Commits](),
 			initialTags:          None[datatable.DataTable](),
 			initialWorktreeSHAs:  None[gitdomain.Commits](),
@@ -194,7 +195,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			initialCommits:       None[datatable.DataTable](),
 			initialCurrentBranch: None[gitdomain.LocalBranchName](),
 			initialDevSHAs:       None[gitdomain.Commits](),
-			initialLineage:       None[datatable.DataTable](),
+			initialLineage:       None[string](),
 			initialOriginSHAs:    None[gitdomain.Commits](),
 			initialTags:          None[datatable.DataTable](),
 			initialWorktreeSHAs:  None[gitdomain.Commits](),
@@ -634,7 +635,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			initialCommits:       None[datatable.DataTable](),
 			initialCurrentBranch: None[gitdomain.LocalBranchName](),
 			initialDevSHAs:       None[gitdomain.Commits](),
-			initialLineage:       None[datatable.DataTable](),
+			initialLineage:       None[string](),
 			initialOriginSHAs:    None[gitdomain.Commits](),
 			initialTags:          None[datatable.DataTable](),
 			initialWorktreeSHAs:  None[gitdomain.Commits](),
@@ -1340,12 +1341,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return errors.New("mismatching branches found, see diff above")
 		}
 		// verify initial lineage
-		currentLineage := devRepo.LineageTable(devRepo.Config.NormalConfig.Lineage)
-		diff, errCnt := currentLineage.EqualDataTable(state.initialLineage.GetOrPanic())
-		if errCnt > 0 {
-			fmt.Printf("\nERROR! Found %d differences in the lineage\n\n", errCnt)
-			fmt.Println(diff)
-			return errors.New("mismatching lineage found, see the diff above")
+		currentLineage := devRepo.LineageText(devRepo.Config.NormalConfig.Lineage)
+		if currentLineage != state.initialLineage.GetOrPanic() {
+			fmt.Println("INITIAL")
+			fmt.Println(state.initialLineage.GetOrPanic())
+			fmt.Println("CURRENT")
+			fmt.Println(currentLineage)
+			return errors.New("mismatching lineage found")
 		}
 		return nil
 	})
@@ -1380,14 +1382,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the initial lineage exists now$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.LineageTable(devRepo.Config.NormalConfig.Lineage)
-		diff, errCnt := have.EqualDataTable(state.initialLineage.GetOrPanic())
-		if errCnt > 0 {
-			fmt.Printf("\nERROR! Found %d differences in the lineage\n\n", errCnt)
-			fmt.Printf("INITIAL LINEAGE:\n%s\n", state.initialLineage.String())
-			fmt.Printf("CURRENT LINEAGE:\n%s\n", have.String())
-			fmt.Println(diff)
-			return errors.New("mismatching branches found, see the diff above")
+		have := devRepo.LineageText(devRepo.Config.NormalConfig.Lineage)
+		if have != state.initialLineage.GetOrPanic() {
+			fmt.Println("INITIAL")
+			fmt.Println(state.initialLineage.GetOrPanic())
+			fmt.Println("CURRENT")
+			fmt.Println(have)
+			return errors.New("mismatching branches found")
 		}
 		return nil
 	})
@@ -1550,15 +1551,14 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^this lineage exists now$`, func(ctx context.Context, input *godog.Table) error {
+	sc.Step(`^this lineage exists now$`, func(ctx context.Context, want *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		table := devRepo.LineageTable(devRepo.Config.NormalConfig.Lineage)
-		diff, errCount := table.EqualGherkin(input)
-		if errCount > 0 {
-			fmt.Printf("\nERROR! Found %d differences in the lineage\n\n", errCount)
-			fmt.Println(diff)
-			return errors.New("mismatching branches found, see the diff above")
+		have := format.BranchLineage(devRepo.Config.NormalConfig.Lineage)
+		if have != want.Content {
+			fmt.Println("WANT:\n" + want.Content)
+			fmt.Println("HAVE:\n" + have)
+			return errors.New("mismatching lineage")
 		}
 		return nil
 	})

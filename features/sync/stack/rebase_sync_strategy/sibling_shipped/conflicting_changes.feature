@@ -61,9 +61,11 @@ Feature: conflicting sibling branches, one gets shipped, the other syncs afterwa
       | branch-1 | local         | commit 1    | file      | line 1: branch-1 content\nline 2                   |
       | branch-2 | local, origin | commit 2    | file      | line 1: branch-1 content\nline 2: branch-2 content |
     And this lineage exists now
-      | BRANCH   | PARENT |
-      | branch-1 | main   |
-      | branch-2 | main   |
+      """
+      main
+        branch-1
+        branch-2
+      """
 
   Scenario: undo
     When I run "git-town undo"

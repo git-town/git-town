@@ -72,12 +72,14 @@ Feature: detaching a feature branch
       | branch-2 | local, origin | commit 2a |
       |          |               | commit 2b |
     And this lineage exists now
-      | BRANCH   | PARENT   |
-      | branch-1 | main     |
-      | branch-2 | main     |
-      | branch-3 | branch-1 |
-      | branch-4 | branch-3 |
-      | branch-5 | branch-4 |
+      """
+      main
+        branch-1
+          branch-3
+            branch-4
+              branch-5
+        branch-2
+      """
 
   Scenario: undo
     When I run "git-town undo"

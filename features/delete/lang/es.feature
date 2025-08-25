@@ -33,9 +33,10 @@ Feature: delete the current feature branch in Spanish
       | BRANCH | LOCATION      | MESSAGE      |
       | other  | local, origin | other commit |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | other  | main   |
-
+      """
+      main
+        other
+      """
   Scenario: undo
     When I run "git-town undo" with these environment variables
       | LANG | es_ES.UTF-8 |

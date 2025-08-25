@@ -50,9 +50,10 @@ Feature: display all executed Git commands
       | REPOSITORY    | BRANCHES     |
       | local, origin | main, active |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | active | main   |
-
+      """
+      main
+        active
+      """
   Scenario: undo
     When I run "git-town undo --verbose"
     Then Git Town runs the commands

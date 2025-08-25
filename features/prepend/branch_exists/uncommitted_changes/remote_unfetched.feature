@@ -21,10 +21,11 @@ Feature: already existing remote branch
     And the uncommitted file still exists
     And the initial commits exist now
     And this lineage exists now
-      | BRANCH   | PARENT   |
-      | existing | main     |
-      | old      | existing |
-
+      """
+      main
+        existing
+          old
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

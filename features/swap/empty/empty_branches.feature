@@ -23,10 +23,12 @@ Feature: swapping empty branches
     And these commits exist now
       | BRANCH | LOCATION | MESSAGE |
     And this lineage exists now
-      | BRANCH   | PARENT   |
-      | branch-1 | branch-2 |
-      | branch-2 | main     |
-      | branch-3 | branch-1 |
+      """
+      main
+        branch-2
+          branch-1
+            branch-3
+      """
 
   Scenario: undo
     When I run "git-town undo"

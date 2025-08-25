@@ -34,9 +34,10 @@ Feature: skip deleting the remote branch when shipping another branch
       | main   | local, origin | feature done |
       | other  | local         | other commit |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | other  | main   |
-
+      """
+      main
+        other
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

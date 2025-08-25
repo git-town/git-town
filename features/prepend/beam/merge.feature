@@ -41,9 +41,11 @@ Feature: prepend a branch to a feature branch using the "merge" sync strategy
       |        | origin        | commit 2                       |
       |        |               | commit 4                       |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | old    | parent |
-      | parent | main   |
+      """
+      main
+        parent
+          old
+      """
     When I run "git-town sync"
     Then Git Town runs the commands
       | BRANCH | COMMAND                   |
