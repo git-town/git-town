@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	enterAllTitle = `Go throug all configuration options?`
+	enterAllTitle = `Go through all configuration options?`
 	enterAllHelp  = `
 You are good to go with a basic setup of Git Town
 and could end the assistant here
