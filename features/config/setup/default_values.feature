@@ -54,7 +54,6 @@ Feature: Accepting all default values leads to a working setup
       dev-remote = "origin"
       """
 
-  @debug @this
   Scenario: undo
     When I run "git-town undo"
     Then global Git setting "alias.append" still doesn't exist
