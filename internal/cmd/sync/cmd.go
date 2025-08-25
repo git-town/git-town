@@ -175,8 +175,8 @@ func executeSync(args executeSyncArgs) error {
 					Lineage:                  data.config.NormalConfig.Lineage,
 					MainAndPerennialBranches: data.config.MainAndPerennials(),
 				},
-			)
-		}
+			},
+		)
 	}
 
 	cmdhelpers.Wrap(runProgram, cmdhelpers.WrapOptions{
