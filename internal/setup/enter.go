@@ -142,69 +142,91 @@ EnterForgeData:
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	featureRegex, exit, err := enterFeatureRegex(data)
+	enterAll, exit, err := askEnterAll()
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	contributionRegex, exit, err := enterContributionRegex(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
-	observedRegex, exit, err := enterObservedRegex(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
-	newBranchType, exit, err := enterNewBranchType(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
-	unknownBranchType, exit, err := enterUnknownBranchType(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
-	syncFeatureStrategy, exit, err := enterSyncFeatureStrategy(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
-	syncPerennialStrategy, exit, err := enterSyncPerennialStrategy(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
-	syncPrototypeStrategy, exit, err := enterSyncPrototypeStrategy(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
-	syncUpstream, exit, err := enterSyncUpstream(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
-	syncTags, exit, err := enterSyncTags(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
-	detached, exit, err := enterDetached(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
-	stash, exit, err := enterStash(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
-	shareNewBranches, exit, err := enterShareNewBranches(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
-	pushHook, exit, err := enterPushHook(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
-	shipStrategy, exit, err := enterShipStrategy(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
-	shipDeleteTrackingBranch, exit, err := enterShipDeleteTrackingBranch(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
+	featureRegex := None[configdomain.FeatureRegex]()
+	contributionRegex := None[configdomain.ContributionRegex]()
+	observedRegex := None[configdomain.ObservedRegex]()
+	newBranchType := None[configdomain.NewBranchType]()
+	unknownBranchType := None[configdomain.UnknownBranchType]()
+	syncFeatureStrategy := None[configdomain.SyncFeatureStrategy]()
+	syncPerennialStrategy := None[configdomain.SyncPerennialStrategy]()
+	syncPrototypeStrategy := None[configdomain.SyncPrototypeStrategy]()
+	syncUpstream := None[configdomain.SyncUpstream]()
+	syncTags := None[configdomain.SyncTags]()
+	detached := None[configdomain.Detached]()
+	stash := None[configdomain.Stash]()
+	shareNewBranches := None[configdomain.ShareNewBranches]()
+	pushHook := None[configdomain.PushHook]()
+	shipStrategy := None[configdomain.ShipStrategy]()
+	shipDeleteTrackingBranch := None[configdomain.ShipDeleteTrackingBranch]()
+	if enterAll {
+		featureRegex, exit, err = enterFeatureRegex(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+		contributionRegex, exit, err = enterContributionRegex(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+		observedRegex, exit, err = enterObservedRegex(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+		newBranchType, exit, err = enterNewBranchType(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+		unknownBranchType, exit, err = enterUnknownBranchType(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+		syncFeatureStrategy, exit, err = enterSyncFeatureStrategy(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+		syncPerennialStrategy, exit, err = enterSyncPerennialStrategy(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+		syncPrototypeStrategy, exit, err = enterSyncPrototypeStrategy(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+		syncUpstream, exit, err = enterSyncUpstream(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+		syncTags, exit, err = enterSyncTags(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+		detached, exit, err = enterDetached(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+		stash, exit, err = enterStash(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+		shareNewBranches, exit, err = enterShareNewBranches(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+		pushHook, exit, err = enterPushHook(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+		shipStrategy, exit, err = enterShipStrategy(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+		shipDeleteTrackingBranch, exit, err = enterShipDeleteTrackingBranch(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
 	}
 	configStorage, exit, err := dialog.ConfigStorage(data.Inputs)
 	if err != nil || exit {
@@ -267,6 +289,10 @@ type UserInput struct {
 	Scope               configdomain.ConfigScope
 	StorageLocation     dialog.ConfigStorageOption
 	ValidatedConfig     configdomain.ValidatedConfigData
+}
+
+func askEnterAll() bool {
+	return dialog.EnterAll()
 }
 
 func determineExistingScope(configSnapshot configdomain.BeginConfigSnapshot, key configdomain.Key, oldValue fmt.Stringer) configdomain.ConfigScope {
