@@ -6,12 +6,10 @@ Feature: make the main branch a feature brancha
     When I run "git-town feature main"
 
   Scenario: result
-    Then Git Town runs the commands
-      | BRANCH | COMMAND                  |
-      | main   | git fetch --prune --tags |
+    Then Git Town runs no commands
     And Git Town prints the error:
       """
-      you are trying to convert the main branch to a feature branch
+      cannot make the main branch a feature branch
       """
     And branch "main" still has type "main"
     And the initial branches and lineage exist now

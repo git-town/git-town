@@ -164,10 +164,8 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	GitVersionTooLow                = "this app requires Git 2.30 or higher"
 	GitVersionUnexpectedOutput      = "'git version' returned unexpected output: %q.\nPlease open an issue and supply the output of running 'git version'"
 
-	HackBranchIsAlreadyFeature       = "branch %q is already a feature branch"
-	HackCannotFeatureMainBranch      = "you are trying to convert the main branch to a feature branch. That's not possible. If you want to create a feature branch, did you forget to add the branch name?"
-	HackCannotFeaturePerennialBranch = "branch %q is a perennial branch and cannot be a feature branch"
-	HackTooManyArguments             = "please provide only one branch to create"
+	HackBranchIsAlreadyFeature = "branch %q is already a feature branch"
+	HackTooManyArguments       = "please provide only one branch to create"
 
 	InputAddOrRemove    = `invalid argument %q. Please provide either "add" or "remove"`
 	InputYesOrNo        = `invalid argument: %q. Please provide either "yes" or "no".\n`

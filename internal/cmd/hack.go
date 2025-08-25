@@ -429,9 +429,9 @@ func convertToFeatureBranch(repo execute.OpenRepoResult, args convertToFeatureBr
 		case configdomain.BranchTypeFeatureBranch:
 			return fmt.Errorf(messages.HackBranchIsAlreadyFeature, branchName)
 		case configdomain.BranchTypeMainBranch:
-			return errors.New(messages.HackCannotFeatureMainBranch)
+			return errors.New(messages.MainBranchCannotMakeFeature)
 		case configdomain.BranchTypePerennialBranch:
-			return fmt.Errorf(messages.HackCannotFeaturePerennialBranch, branchName)
+			return fmt.Errorf(messages.PerennialBranchCannotMakeFeature)
 		}
 		fmt.Printf(messages.BranchIsNowFeature, branchName)
 	}

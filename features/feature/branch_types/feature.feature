@@ -8,9 +8,7 @@ Feature: already existing local branch
     When I run "git-town feature existing"
 
   Scenario: result
-    Then Git Town runs the commands
-      | BRANCH | COMMAND                  |
-      | main   | git fetch --prune --tags |
+    Then Git Town runs no commands
     And Git Town prints the error:
       """
       branch "existing" is already a feature branch

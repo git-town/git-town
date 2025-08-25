@@ -9,12 +9,10 @@ Feature: make a perennial branch a feature branch
     When I run "git-town feature existing"
 
   Scenario: result
-    Then Git Town runs the commands
-      | BRANCH | COMMAND                  |
-      | main   | git fetch --prune --tags |
+    Then Git Town runs no commands
     And Git Town prints the error:
       """
-      branch "existing" is a perennial branch and cannot be a feature branch
+      cannot make perennial branches feature branches
       """
     And branch "existing" still has type "perennial"
     And the initial branches and lineage exist now

@@ -1,4 +1,4 @@
-Feature: already existing local branch
+Feature: convert a branch to feature branch in the presence of uncommitted changes
 
   Background:
     Given a Git repo with origin
@@ -9,9 +9,7 @@ Feature: already existing local branch
     When I run "git-town feature existing"
 
   Scenario: result
-    Then Git Town runs the commands
-      | BRANCH | COMMAND                  |
-      | main   | git fetch --prune --tags |
+    Then Git Town runs no commands
     And Git Town prints:
       """
       branch "existing" is now a feature branch
@@ -21,7 +19,12 @@ Feature: already existing local branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then Git Town runs no commands
+    Then Git Town runs the commands
+      | BRANCH | COMMAND                     |
+      | main   | git add -A                  |
+      |        | git stash -m "Git Town WIP" |
+      |        | git stash pop               |
+      |        | git restore --staged .      |
     And the initial commits exist now
     And the initial branches and lineage exist now
     And branch "existing" now has type "parked"
