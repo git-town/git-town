@@ -26,10 +26,11 @@ Feature: append a new feature branch in a clean workspace using the "compress" s
       | BRANCH   | LOCATION      | MESSAGE           |
       | existing | local, origin | existing commit 1 |
     And this lineage exists now
-      | BRANCH   | PARENT   |
-      | existing | main     |
-      | new      | existing |
-
+      """
+      main
+        existing
+          new
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

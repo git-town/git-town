@@ -19,10 +19,11 @@ Feature: permanently disable stashing via config file
       | BRANCH | COMMAND                  |
       | old    | git checkout -b new main |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | new    | main   |
-      | old    | new    |
-
+      """
+      main
+        new
+          old
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

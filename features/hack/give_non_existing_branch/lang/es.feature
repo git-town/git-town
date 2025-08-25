@@ -23,9 +23,10 @@ Feature: hack in Spanish
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | new    | main   |
-
+      """
+      main
+        new
+      """
   Scenario: undo
     When I run "git-town undo" with these environment variables
       | LANG | es_ES.UTF-8 |

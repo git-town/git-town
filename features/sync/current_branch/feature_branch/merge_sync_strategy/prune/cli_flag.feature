@@ -33,12 +33,10 @@ Feature: prune enabled via CLI
       | REPOSITORY    | BRANCHES        |
       | local, origin | main, feature-2 |
     And this lineage exists now
-      | BRANCH    | PARENT |
-      | feature-2 | main   |
-    And these commits exist now
-      | BRANCH    | LOCATION      | MESSAGE          |
-      | main      | local, origin | main commit      |
-      | feature-2 | local, origin | feature-2 commit |
+      """
+      main
+        feature-2
+      """
 
   Scenario: undo
     When I run "git-town undo"

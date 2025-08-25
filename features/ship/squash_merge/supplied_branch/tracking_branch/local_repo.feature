@@ -28,9 +28,10 @@ Feature: ship the supplied feature branch in a local repo
       | BRANCH | LOCATION | MESSAGE      |
       | main   | local    | feature done |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | other  | main   |
-
+      """
+      main
+        other
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

@@ -11,7 +11,7 @@ When called without arguments, it makes the current branch a contribution
 branch.
 
 To convert a contribution branch back into a feature branch, use the
-[hack](hack.md) command.
+[feature](feature.md) command.
 
 To make the current branch a contribution branch:
 
@@ -47,7 +47,7 @@ determine the repository state.
 
 ## See also
 
-- [hack](hack.md) makes the chosen branches feature branches
+- [feature](feature.md) makes the chosen branches feature branches
 - [observe](observe.md) makes the chosen branches observed
 - [prototype](prototype.md) makes the chosen branches prototype branches
 - [park](park.md) makes the chosen branches parked

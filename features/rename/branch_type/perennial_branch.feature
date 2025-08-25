@@ -37,8 +37,10 @@ Feature: rename a perennial branch
       | new    | local, origin | production commit |
       | hotfix | local, origin | hotfix commit     |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | hotfix | new    |
+      """
+      new
+        hotfix
+      """
 
   Scenario: undo
     Given I run "git-town rename --force production new"

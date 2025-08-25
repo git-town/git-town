@@ -37,9 +37,11 @@ Feature: prepend a branch to a branch that was shipped at the remote
       | local      | main, branch-2, new |
       | origin     | main, branch-2      |
     And this lineage exists now
-      | BRANCH   | PARENT |
-      | branch-2 | new    |
-      | new      | main   |
+      """
+      main
+        new
+          branch-2
+      """
 
   Scenario: undo
     When I run "git-town undo"

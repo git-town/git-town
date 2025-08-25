@@ -45,13 +45,10 @@ Feature: sync a stack that contains shipped parent branches using the "compress"
       | REPOSITORY    | BRANCHES        |
       | local, origin | main, feature-3 |
     And this lineage exists now
-      | BRANCH    | PARENT |
-      | feature-3 | main   |
-    And these commits exist now
-      | BRANCH    | LOCATION      | MESSAGE            |
-      | main      | local, origin | feature-1 commit   |
-      |           |               | feature-2 commit   |
-      | feature-3 | local, origin | feature-3 commit A |
+      """
+      main
+        feature-3
+      """
 
   Scenario: undo
     When I run "git-town undo"

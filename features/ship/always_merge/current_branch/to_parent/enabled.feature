@@ -40,9 +40,10 @@ Feature: allowing shipping into a feature branch
       |        |               | beta 2                         |
       |        |               | Merge branch 'beta' into alpha |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | alpha  | main   |
-
+      """
+      main
+        alpha
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

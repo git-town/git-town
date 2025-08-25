@@ -13,7 +13,7 @@ Feature: cannot make the current perennial branch a feature branch
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      branch "perennial" is a perennial branch
+      cannot make perennial branches feature branches
       """
     And branch "perennial" still has type "perennial"
     And local Git setting "git-town-branch.perennial.branchtype" still doesn't exist

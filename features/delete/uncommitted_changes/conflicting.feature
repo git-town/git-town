@@ -33,9 +33,10 @@ Feature: delete another branch while having conflicting open changes
       | main   | local, origin | conflicting commit |
       | good   | local, origin | good commit        |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | good   | main   |
-
+      """
+      main
+        good
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

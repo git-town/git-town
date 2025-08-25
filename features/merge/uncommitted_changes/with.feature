@@ -32,8 +32,10 @@ Feature: merging a branch with uncommitted changes
       |        | git stash pop                                   |
       |        | git restore --staged .                          |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | alpha  | main   |
+      """
+      main
+        alpha
+      """
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME  | FILE CONTENT  |
       | alpha  | local, origin | alpha commit | alpha-file | alpha content |

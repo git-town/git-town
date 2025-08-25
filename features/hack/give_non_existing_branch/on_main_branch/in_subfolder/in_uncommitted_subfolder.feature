@@ -18,9 +18,10 @@ Feature: inside an uncommitted subfolder on the current feature branch
       |        | git restore --staged .      |
     And the initial commits exist now
     And this lineage exists now
-      | BRANCH | PARENT |
-      | new    | main   |
-
+      """
+      main
+        new
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

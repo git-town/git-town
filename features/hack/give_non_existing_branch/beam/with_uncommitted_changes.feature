@@ -38,10 +38,11 @@ Feature: beam a commit and uncommitted changes onto a new feature branch
       | new      | local         | uncommitted |
       |          |               | commit 2    |
     And this lineage exists now
-      | BRANCH   | PARENT |
-      | existing | main   |
-      | new      | main   |
-
+      """
+      main
+        existing
+        new
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

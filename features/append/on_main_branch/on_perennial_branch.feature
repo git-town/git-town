@@ -22,8 +22,10 @@ Feature: append to a perennial branch
       | BRANCH     | LOCATION      | MESSAGE           |
       | production | local, origin | production commit |
     And this lineage exists now
-      | BRANCH | PARENT     |
-      | new    | production |
+      """
+      production
+        new
+      """
 
   Scenario: undo
     When I run "git-town undo"

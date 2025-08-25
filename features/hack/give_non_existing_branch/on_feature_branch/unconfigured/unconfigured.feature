@@ -52,9 +52,10 @@ Feature: missing configuration
       |        | git checkout -b feature                              |
     And the main branch is now "main"
     And this lineage exists now
-      | BRANCH  | PARENT |
-      | feature | main   |
-
+      """
+      main
+        feature
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

@@ -29,9 +29,10 @@ Feature: delete the current parked branch
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
     And this lineage exists now
-      | BRANCH  | PARENT |
-      | feature | main   |
-
+      """
+      main
+        feature
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

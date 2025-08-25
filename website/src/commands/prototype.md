@@ -8,7 +8,7 @@ The _prototype_ command marks some of your branches as
 [prototype branches](../branch-types.md#prototype-branches).
 
 To convert a prototype branch back into a feature branch, use the
-[hack](hack.md) command.
+[feature](feature.md) command.
 
 ## Positional arguments
 
@@ -34,6 +34,6 @@ determine the repository state.
 ## See also
 
 - [contribute](contribute.md) makes the chosen branches contribution branches
-- [hack](hack.md) makes the chosen branches feature branches
+- [feature](feature.md) makes the chosen branches feature branches
 - [observe](observe.md) makes the chosen branches observed
 - [park](park.md) makes the chosen branches parked

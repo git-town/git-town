@@ -48,5 +48,7 @@ Feature: end-to-end workflow of creating a prototype branch, shipping, and pruni
       | local      | main, hooks |
       | origin     | main        |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | hooks  | main   |
+      """
+      main
+        hooks
+      """

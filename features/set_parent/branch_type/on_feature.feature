@@ -12,10 +12,11 @@ Feature: update the parent of a feature branch
   Scenario: result
     Then Git Town runs no commands
     And this lineage exists now
-      | BRANCH | PARENT |
-      | child  | main   |
-      | parent | main   |
-
+      """
+      main
+        child
+        parent
+      """
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
