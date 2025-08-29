@@ -18,7 +18,7 @@ func RenderPerennialBranches(perennials gitdomain.LocalBranchNames) string {
 
 func RenderTOML(data configdomain.PartialConfig) string {
 	result := strings.Builder{}
-	result.WriteString("# More info around this file at https://www.git-town.com/configuration-file\n")
+	result.WriteString("# See https://www.git-town.com/configuration-file for details\n")
 
 	main, hasMain := data.MainBranch.Get()
 	hasPerennialBranches := len(data.PerennialBranches) > 0
