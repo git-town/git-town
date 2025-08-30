@@ -1,145 +1,243 @@
-# dev tooling and versions
-DEPTH_VERSION = 1.2.1
-GOFUMPT_VERSION = 0.4.0
-GOLANGCILINT_VERSION = 1.53.3
-SCC_VERSION = 3.1.0
-SHELLCHECK_VERSION = 0.9.0
-SHFMT_VERSION = 3.6.0
+RTA_VERSION = 0.17.0  # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
-TODAY = $(shell date +'%Y-%m-%d')
-DEV_VERSION := $(shell git describe --tags 2> /dev/null || git rev-parse --short HEAD)
-RELEASE_VERSION := "9.0.0"
-GO_BUILD_ARGS = LANG=C GOGC=off
+RELEASE_VERSION := "21.4.3"
+GO_TEST_ARGS = LANG=C GOGC=off BROWSER=
 
-build:  # builds for the current platform
-	go install -ldflags "-X github.com/git-town/git-town/v9/src/cmd.version=${DEV_VERSION}-dev -X github.com/git-town/git-town/v9/src/cmd.buildDate=${TODAY}"
+cuke: install  # runs all end-to-end tests in a way that looks nice during development
+	@env $(GO_TEST_ARGS) messyoutput=0 go test -v
+	@env $(GO_TEST_ARGS) messyoutput=1 go test -v
 
-cuke: build   # runs all end-to-end tests
-	@env $(GO_BUILD_ARGS) go test . -v -count=1
+cukeall: install  # runs all end-to-end tests
+	@env $(GO_TEST_ARGS) go test -v
 
-cukethis: build   # runs the end-to-end tests that have a @this tag
-	@env $(GO_BUILD_ARGS) cukethis=1 go test . -v -count=1
+cukethis: install  # runs the end-to-end tests that have a @this tag
+	@env $(GO_TEST_ARGS) cukethis=1 go test . -v -count=1
 
-cuke-prof: build  # creates a flamegraph for the end-to-end tests
-	env $(GO_BUILD_ARGS) go test . -v -cpuprofile=godog.out
+cukethiswin:  # runs the end-to-end tests that have a @this tag on Windows
+	go install -ldflags "-X github.com/git-town/git-town/v21/internal/cmd.version=-dev -X github.com/git-town/git-town/v21/internal/cmd.buildDate=1/2/3"
+	powershell -Command '$$env:cukethis=1 ; go test . -v -count=1'
+
+cuke-prof: install  # creates a flamegraph for the end-to-end tests
+	env $(GO_TEST_ARGS) go test . -v -cpuprofile=godog.out
 	@rm git-town.test
 	@echo Please open https://www.speedscope.app and load the file godog.out
 
-dependencies: tools/depth_${DEPTH_VERSION}  # prints the dependencies between the internal Go packages as a tree
-	@tools/depth_${DEPTH_VERSION} . | grep git-town
+cukeverbose: install  # run all tests in "verbose.feature" files
+	@env $(GO_TEST_ARGS) verbose=1 go test . -v -count=1
 
-docs: build tools/node_modules  # tests the documentation
-	${CURDIR}/tools/node_modules/.bin/text-run --offline
+cukewin: install  # runs all end-to-end tests on Windows
+	go test . -v -count=1
 
-fix: tools/golangci_lint_${GOLANGCILINT_VERSION} tools/gofumpt_${GOFUMPT_VERSION} tools/node_modules tools/shellcheck_${SHELLCHECK_VERSION} tools/shfmt_${SHFMT_VERSION}  # auto-fixes lint issues in all languages
-	git diff --check
-	tools/gofumpt_${GOFUMPT_VERSION} -l -w .
-	${CURDIR}/tools/node_modules/.bin/dprint fmt
-	${CURDIR}/tools/node_modules/.bin/prettier --write '**/*.yml'
-	tools/shfmt_${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/shfmt_${SHFMT_VERSION} --write
-	tools/shfmt_${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/shellcheck_${SHELLCHECK_VERSION}
-	${CURDIR}/tools/node_modules/.bin/gherkin-lint
-	tools/golangci_lint_${GOLANGCILINT_VERSION} run
-	tools/ensure_no_files_with_dashes.sh
+dependencies: tools/rta@${RTA_VERSION}  # prints the dependencies between the internal Go packages as a tree
+	@tools/rta depth . | grep git-town
+
+docs: install tools/node_modules  # tests the documentation
+	@tools/rta node tools/node_modules/.bin/text-runner --offline
+
+fix: tools/rta@${RTA_VERSION}  # runs all linters and auto-fixes
+	make --no-print-directory fix-optioncompare-in-tests
+	go run tools/format_unittests/format_unittests.go
+	go run tools/format_self/format_self.go
+	tools/rta gofumpt -l -w .
+	tools/rta dprint fmt
+	tools/rta dprint fmt --config dprint-changelog.json
+	tools/rta shfmt -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/rta shfmt --write
+	tools/rta ghokin fmt replace features/
+	tools/generate_opcodes_all.sh
 
 help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-msi:  # compiles the MSI installer for Windows
-	rm -f git-town*.msi
-	go build -trimpath -ldflags "-X github.com/git-town/git-town/src/cmd.version=${RELEASE_VERSION} -X github.com/git-town/git-town/src/cmd.buildDate=${TODAY}"
-	go-msi make --msi dist/git-town_${RELEASE_VERSION}_windows_intel_64.msi --version ${RELEASE_VERSION} --src installer/templates/ --path installer/wix.json
-	@rm git-town.exe
+install:  # builds for the current platform
+	@go install -ldflags="-s -w"
 
-release-linux:  # creates a new release
-	# cross-compile the binaries
-	goreleaser --rm-dist
-	# create GitHub release with files in alphabetical order
-	hub release create --draft --browse --message "v${RELEASE_VERSION}" \
-		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.deb \
-		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.rpm \
-		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.tar.gz \
-		-a dist/git-town_${RELEASE_VERSION}_linux_arm_64.deb \
-		-a dist/git-town_${RELEASE_VERSION}_linux_arm_64.rpm \
-		-a dist/git-town_${RELEASE_VERSION}_linux_arm_64.tar.gz \
-		-a dist/git-town_${RELEASE_VERSION}_macos_intel_64.tar.gz \
-		-a dist/git-town_${RELEASE_VERSION}_macos_arm_64.tar.gz \
-		-a dist/git-town_${RELEASE_VERSION}_windows_intel_64.zip \
-		"v${RELEASE_VERSION}"
+lint: tools/node_modules tools/rta@${RTA_VERSION}  # lints the main codebase concurrently
+	make --no-print-directory lint-smoke
+	make --no-print-directory alphavet
+	make --no-print-directory deadcode
+	make --no-print-directory lint-messages-sorted
+	make --no-print-directory lint-messy-output
+	make --no-print-directory lint-optioncompare
+	make --no-print-directory lint-print-config
+	make --no-print-directory lint-structs-sorted
+	make --no-print-directory lint-tests-sorted
+	make --no-print-directory lint-use-equal
+	git diff --check
+	(cd tools/lint_steps && go build && ./lint_steps)
+	tools/rta actionlint
+	tools/rta --from-source staticcheck ./...
+	tools/ensure_no_files_with_dashes.sh
+	tools/rta shfmt -f . | grep -v 'tools/node_modules' | grep -v '^vendor/' | xargs tools/rta --optional shellcheck
+	tools/rta golangci-lint cache clean
+	tools/rta golangci-lint run
+	tools/rta node tools/node_modules/.bin/gherkin-lint
 
-release-win: msi  # adds the Windows installer to the release
-	hub release edit \
-		-a dist/git-town_${RELEASE_VERSION}_windows_intel_64.msi \
-		v${RELEASE_VERSION}
+lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
+	(cd website && make test)
+	tools/rta govulncheck ./...
+	@echo lint tools/format_self
+	@(cd tools/format_self && make test)
+	@echo lint tools/format_unittests
+	@(cd tools/format_unittests && make test)
+	@echo lint tools/lint_steps
+	@(cd tools/lint_steps && make test)
+	@echo lint tools/messages_sorted
+	@(cd tools/messages_sorted && make lint)
+	@echo lint tools/messy_output
+	@(cd tools/messy_output && make test)
+	@echo lint tools/optioncompare
+	@(cd tools/optioncompare && make test)
+	@echo lint tools/print_config_exhaustive
+	@(cd tools/print_config_exhaustive && make test)
+	@echo lint tools/stats_release
+	@(cd tools/stats_release && make test)
+	@echo lint tools/structs_sorted
+	@(cd tools/structs_sorted && make test)
+	@echo lint tools/tests_sorted
+	@(cd tools/tests_sorted && make test)
+	@echo lint tools/tests_sorted
+	@(cd tools/tests_sorted && make test)
+	@echo lint tools/use_equal
+	@(cd tools/use_equal && make test)
 
-stats: tools/scc_${SCC_VERSION}  # shows code statistics
-	@find . -type f | grep -v './tools/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs tools/scc_${SCC_VERSION}
+alphavet:
+	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v internal/cmd)
 
-test: fix docs unit cuke  # runs all the tests
+fix-optioncompare-in-tests:
+	@(cd tools/optioncompare_in_tests && go build) && ./tools/optioncompare_in_tests/optioncompare_in_tests github.com/git-town/git-town/v21/...
+
+lint-messages-sorted:
+	@(cd tools/messages_sorted && go build) && ./tools/messages_sorted/messages_sorted
+
+lint-messy-output:
+	@(cd tools/messy_output && go build) && ./tools/messy_output/messy_output
+
+lint-print-config:
+	@(cd tools/print_config_exhaustive && go build) && ./tools/print_config_exhaustive/print_config_exhaustive
+
+lint-optioncompare:
+	@(cd tools/optioncompare && go build) && ./tools/optioncompare/optioncompare github.com/git-town/git-town/v21/...
+
+lint-smoke: tools/rta@${RTA_VERSION}  # runs only the essential linters to get quick feedback after refactoring
+	@tools/rta exhaustruct -test=false "-i=github.com/git-town/git-town.*" github.com/git-town/git-town/...
+# @tools/rta ireturn --reject="github.com/git-town/git-town/v21/pkg/prelude.Option" github.com/git-town/git-town/...
+
+lint-structs-sorted:
+	@(cd tools/structs_sorted && go build) && ./tools/structs_sorted/structs_sorted
+
+lint-tests-sorted:
+	@(cd tools/tests_sorted && go build) && ./tools/tests_sorted/tests_sorted
+
+lint-use-equal:
+	@(cd tools/use_equal && go build) && ./tools/use_equal/use_equal
+
+smoke: install  # run the smoke tests
+	@env $(GO_TEST_ARGS) smoke=1 go test . -v -count=1
+
+smokewin: install  # runs the Windows smoke tests
+	@env smoke=1 go test . -v -count=1
+
+stats: tools/rta@${RTA_VERSION}  # shows code statistics
+	@find . -type f \
+		| grep -v './tools/node_modules' \
+		| grep -v '\./vendor/' \
+		| grep -v '\./.git/' \
+		| grep -v './website/book' \
+		| xargs tools/rta scc
+
+stats-release:  # displays statistics about the changes since the last release
+	@(cd tools/stats_release && go build && ./stats_release v${RELEASE_VERSION})
+
+test: fix docs unit lint-all cuke  # runs all the tests
 .PHONY: test
 
-test-go: tools/gofumpt_${GOFUMPT_VERSION} tools/golangci_lint_${GOLANGCILINT_VERSION}  # smoke tests for Go refactorings
-	tools/gofumpt_${GOFUMPT_VERSION} -l -w . &
-	make --no-print-directory unit &
-	make --no-print-directory build &
-	tools/golangci_lint_${GOLANGCILINT_VERSION} run
+test-go:  # smoke tests while working on the Go code
+	@make --no-print-directory install &
+	@make --no-print-directory unit &
+	@make --no-print-directory deadcode &
+	@make --no-print-directory lint
 
 todo:  # displays all TODO items
-	git grep --line-number -C1 TODO ':!vendor'
+	@git grep --color=always --line-number TODO ':!vendor' \
+		| grep -v Makefile \
+		| grep -v ':= context.'
 
-unit:  # runs only the unit tests for changed code
-	env GOGC=off go test -timeout 30s ./src/... ./test/...
+UNIT_TEST_DIRS = \
+	./internal/... \
+	./pkg/... \
+	./tools/format_self/... \
+	./tools/format_unittests/... \
+	./tools/lint_steps/... \
+	./tools/messages_sorted/... \
+	./tools/messy_output/... \
+	./tools/stats_release/... \
+	./tools/structs_sorted/... \
+	./tools/tests_sorted/...
 
-unit-all:  # runs all the unit tests
-	env GOGC=off go test -count=1 -timeout 60s ./src/... ./test/...
+unit: install  # runs only the unit tests for changed code
+	@env GOGC=off go test -timeout=30s $(UNIT_TEST_DIRS)
 
-unit-race:  # runs all the unit tests with race detector
-	env GOGC=off go test -count=1 -timeout 60s -race ./src/... ./test/...
+unit-all: install  # runs all the unit tests
+	env GOGC=off go test -count=1 -shuffle=on -timeout=60s $(UNIT_TEST_DIRS)
 
-update:  # updates all dependencies
+unit-race: install  # runs all the unit tests with race detector
+	env GOGC=off go test -count=1 -timeout 60s -race $(UNIT_TEST_DIRS)
+	cd website && make --no-print-directory unit
+
+update: tools/rta@${RTA_VERSION}  # updates all dependencies
 	go get -u ./...
+	(cd tools/optioncompare && go get -u ./...)
 	go mod tidy
-	go mod vendor
-	(cd tools && yarn upgrade --latest)
-	echo
-	echo Please update the third-party tooling in the Makefile manually.
+	go work vendor
+	rm -rf tools/node_modules package-lock.json
+	cd tools && ./rta npx -y npm-check-updates -u
+	cd tools && ./rta npm install
+	tools/rta --update
+	tools/rta dprint config update
+	tools/rta dprint config update --config dprint-changelog.json
 
 # --- HELPER TARGETS --------------------------------------------------------------------------------------------------------------------------------
 
-tools/depth_${DEPTH_VERSION}:
-	@echo "Installing depth ${DEPTH_VERSION} ..."
-	@env GOBIN="$(CURDIR)/tools" go install github.com/KyleBanks/depth/cmd/depth@v${DEPTH_VERSION}
-	@mv tools/depth tools/depth_${DEPTH_VERSION}
+deadcode: tools/rta@${RTA_VERSION}
+	@tput bold || true
+	@tput setaf 1 || true
+	@tools/rta deadcode github.com/git-town/git-town/tools/format_self &
+	@tools/rta deadcode github.com/git-town/git-town/tools/format_unittests &
+	@tools/rta deadcode github.com/git-town/git-town/tools/stats_release &
+	@tools/rta deadcode github.com/git-town/git-town/tools/structs_sorted &
+	@tools/rta deadcode github.com/git-town/git-town/tools/lint_steps &
+	@tools/rta deadcode -test github.com/git-town/git-town/v21 \
+		| grep -v BranchExists \
+		| grep -v 'Create$$' \
+		| grep -v CreateFile \
+		| grep -v CreateGitTown \
+		| grep -v EditDefaultMessage \
+		| grep -v EmptyConfigSnapshot \
+		| grep -v FileExists \
+		| grep -v FileHasContent \
+		| grep -v IsGitRepo \
+		| grep -v Memoized.AsFixture \
+		| grep -v NewCommitMessages \
+		| grep -v NewLineageWith \
+		| grep -v NewSHAs \
+		| grep -v pkg/prelude/ptr.go \
+		| grep -v Paniced \
+		| grep -v Set.Add \
+		| grep -v UseCustomMessageOr \
+		| grep -v UseDefaultMessage \
+		|| true
+	@tput sgr0 || true
 
-tools/gofumpt_${GOFUMPT_VERSION}:
-	@echo "Installing gofumpt ${GOFUMPT_VERSION} ..."
-	@env GOBIN="$(CURDIR)/tools" go install mvdan.cc/gofumpt@v${GOFUMPT_VERSION}
-	@mv tools/gofumpt tools/gofumpt_${GOFUMPT_VERSION}
+tools/rta@${RTA_VERSION}:
+	@rm -f tools/rta*
+	@(cd tools && curl https://raw.githubusercontent.com/kevgo/run-that-app/main/download.sh | sh)
+	@mv tools/rta tools/rta@${RTA_VERSION}
+	@ln -s rta@${RTA_VERSION} tools/rta
 
-tools/golangci_lint_${GOLANGCILINT_VERSION}:
-	@echo "Installing golangci-lint ${GOLANGCILINT_VERSION} ..."
-	@curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b tools v${GOLANGCILINT_VERSION}
-	@mv tools/golangci-lint tools/golangci_lint_${GOLANGCILINT_VERSION}
-
-tools/node_modules: tools/yarn.lock
+tools/node_modules: tools/package-lock.json tools/rta@${RTA_VERSION}
+	test -f tools/node_modules/.yarn-integrity && rm -rf tools/node_modules || true  # remove node_modules if installed with Yarn (TODO: remove after 2025-01-26)
 	@echo "Installing Node based tools"
-	@cd tools && yarn install
+	cd tools && ./rta npm ci
 	@touch tools/node_modules  # update timestamp of the node_modules folder so that Make doesn't re-install it on every command
-
-tools/scc_${SCC_VERSION}:
-	@echo "Installing scc ${SCC_VERSION} ..."
-	@env GOBIN=$(CURDIR)/tools go install github.com/boyter/scc/v3@v3.1.0
-	@mv tools/scc tools/scc_${SCC_VERSION}
-
-tools/shellcheck_${SHELLCHECK_VERSION}:
-	@echo installing Shellcheck ${SHELLCHECK_VERSION} ...
-	@curl -sSL https://github.com/koalaman/shellcheck/releases/download/v${SHELLCHECK_VERSION}/shellcheck-v${SHELLCHECK_VERSION}.$(shell go env GOOS).x86_64.tar.xz | tar xJ
-	@mv shellcheck-v${SHELLCHECK_VERSION}/shellcheck tools/shellcheck_${SHELLCHECK_VERSION}
-	@rm -rf shellcheck-v${SHELLCHECK_VERSION}
-
-tools/shfmt_${SHFMT_VERSION}:
-	@echo installing Shellfmt ${SHFMT_VERSION} ...
-	@env GOBIN="$(CURDIR)/tools" go install mvdan.cc/sh/v3/cmd/shfmt@v${SHFMT_VERSION}
-	@mv tools/shfmt tools/shfmt_${SHFMT_VERSION}

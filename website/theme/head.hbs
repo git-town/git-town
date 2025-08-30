@@ -1,0 +1,34 @@
+<style>
+  .gt-command-summary {
+    text-wrap: initial;
+    /*
+    `padding-left` and `text-indent` are set by the preprocessor on each
+    `.gt-command-summary` element to line up arguments with the command name.
+    */
+  }
+
+  .gt-code-wrap {
+    text-wrap: initial;
+    padding-left: 4ch;
+    text-indent: -4ch;
+  }
+
+  .gt-command-summary > *,
+  .gt-code-wrap > * {
+    display: inline-block;
+    /* text-indent is inherited, so we need to reset it. */
+    text-indent: initial;
+  }
+
+  .gt-command {
+    font-weight: bold;
+  }
+
+  @media (max-width: 500px) {
+    /* A smaller indent looks better on narrow screens. */
+    .gt-command-summary {
+      padding-left: 4ch !important;
+      text-indent: -4ch !important;
+    }
+  }
+</style>

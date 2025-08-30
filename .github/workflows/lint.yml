@@ -1,0 +1,20 @@
+name: linters
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - run: make fix
+      - name: Indicate formatting issues
+        run: git diff HEAD --exit-code --color
+      - run: make docs
+      - run: make lint-all

@@ -1,0 +1,8 @@
+name: Other
+description: Any other feedback
+body:
+  - type: textarea
+    attributes:
+      label: Your message to us
+    validations:
+      required: true

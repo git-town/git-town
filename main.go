@@ -7,19 +7,16 @@ package main
 
 import (
 	"os"
+	"runtime/debug"
 
-	"github.com/fatih/color"
-	"github.com/git-town/git-town/v9/src/cli"
-	"github.com/git-town/git-town/v9/src/cmd"
-	"github.com/git-town/git-town/v9/src/dialog"
+	"github.com/git-town/git-town/v21/internal/cli/print"
+	"github.com/git-town/git-town/v21/internal/cmd"
 )
 
 func main() {
-	dialog.Initialize()
-	color.NoColor = false // Prevent color from auto disable
-	err := cmd.Execute()
-	if err != nil {
-		cli.PrintError(err)
+	debug.SetGCPercent(-1)
+	if err := cmd.Execute(); err != nil {
+		print.Error(err)
 		os.Exit(1)
 	}
 }

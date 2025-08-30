@@ -1,0 +1,128 @@
+package config
+
+import (
+	"os"
+
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v21/internal/cli/flags"
+	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v21/internal/config/cliconfig"
+	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/config/gitconfig"
+	"github.com/git-town/git-town/v21/internal/execute"
+	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/setup"
+	"github.com/git-town/git-town/v21/internal/vm/interpreter/configinterpreter"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/spf13/cobra"
+)
+
+const setupConfigDesc = "Prompts to setup your Git Town configuration"
+
+func SetupCommand() *cobra.Command {
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	cmd := cobra.Command{
+		Use:   "setup",
+		Args:  cobra.NoArgs,
+		Short: setupConfigDesc,
+		Long:  cmdhelpers.Long(setupConfigDesc),
+		RunE: func(cmd *cobra.Command, _ []string) error {
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				AutoResolve: None[configdomain.AutoResolve](),
+				Detached:    None[configdomain.Detached](),
+				DryRun:      None[configdomain.DryRun](),
+				Stash:       None[configdomain.Stash](),
+				Verbose:     verbose,
+			})
+			return executeConfigSetup(cliConfig)
+		},
+	}
+	addVerboseFlag(&cmd)
+	return &cmd
+}
+
+func executeConfigSetup(cliConfig configdomain.PartialConfig) error {
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		CliConfig:        cliConfig,
+		PrintBranchNames: false,
+		PrintCommands:    true,
+		ValidateGitRepo:  true,
+		ValidateIsOnline: false,
+	})
+	if err != nil {
+		return err
+	}
+	data, exit, err := LoadData(repo)
+	if err != nil || exit {
+		return err
+	}
+	userInput, exit, err := setup.Enter(data)
+	if err != nil || exit {
+		return err
+	}
+	if err = setup.Save(userInput, repo.UnvalidatedConfig, data, repo.Frontend); err != nil {
+		return err
+	}
+	return configinterpreter.Finished(configinterpreter.FinishedArgs{
+		Backend:               repo.Backend,
+		BeginBranchesSnapshot: None[gitdomain.BranchesSnapshot](),
+		BeginConfigSnapshot:   repo.ConfigSnapshot,
+		Command:               "setup",
+		CommandsCounter:       repo.CommandsCounter,
+		FinalMessages:         repo.FinalMessages,
+		Git:                   repo.Git,
+		RootDir:               repo.RootDir,
+		TouchedBranches:       []gitdomain.BranchName{},
+		Verbose:               repo.UnvalidatedConfig.NormalConfig.Verbose,
+	})
+}
+
+func LoadData(repo execute.OpenRepoResult) (data setup.Data, exit dialogdomain.Exit, err error) {
+	inputs := dialogcomponents.LoadInputs(os.Environ())
+	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
+	if err != nil {
+		return data, false, err
+	}
+	branchesSnapshot, _, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+		Backend:               repo.Backend,
+		CommandsCounter:       repo.CommandsCounter,
+		ConfigSnapshot:        repo.ConfigSnapshot,
+		Connector:             None[forgedomain.Connector](),
+		Fetch:                 false,
+		FinalMessages:         repo.FinalMessages,
+		Frontend:              repo.Frontend,
+		Git:                   repo.Git,
+		HandleUnfinishedState: true,
+		Inputs:                inputs,
+		Repo:                  repo,
+		RepoStatus:            repoStatus,
+		RootDir:               repo.RootDir,
+		UnvalidatedConfig:     repo.UnvalidatedConfig,
+		ValidateNoOpenChanges: false,
+	})
+	if err != nil {
+		return data, exit, err
+	}
+	remotes, err := repo.Git.Remotes(repo.Backend)
+	if err != nil {
+		return data, exit, err
+	}
+	if len(remotes) == 0 {
+		remotes = gitdomain.Remotes{gitconfig.DefaultRemote(repo.Backend)}
+	}
+	return setup.Data{
+		Backend:       repo.Backend,
+		Config:        repo.UnvalidatedConfig,
+		Git:           repo.Git,
+		Inputs:        inputs,
+		LocalBranches: branchesSnapshot.Branches.LocalBranches().Names(),
+		Remotes:       remotes,
+		Snapshot:      repo.ConfigSnapshot,
+	}, exit, nil
+}

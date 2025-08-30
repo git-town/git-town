@@ -1,0 +1,70 @@
+version: "2"
+
+# Options for analysis running
+run:
+  concurrency: 4
+  issues-exit-code: 1
+  tests: true
+
+# Output configuration options
+output:
+  formats:
+    text:
+      path: stdout
+      colors: false
+      print-issued-lines: false
+    code-climate:
+      path: gl-code-quality-report.json
+linters:
+  enable:
+    - asciicheck
+    - dogsled
+    - errorlint
+    - goconst
+    - misspell
+    - nakedret
+    - nolintlint
+    - revive
+    - unconvert
+    - whitespace
+  disable:
+    - errcheck
+  settings:
+    misspell:
+      locale: US
+      ignore-rules:
+        - noteable
+    revive:
+      enable-all-rules: false
+      rules:
+        - name: deep-exit
+  
+  # List of regexps of issue texts to exclude.
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    rules:
+      - path: (.+)\.go$
+        text: ^.*, make it a constant$
+    paths:
+      - third_party$
+      - builtin$
+      - examples/*
+issues:
+  # Maximum issues count per one linter (set to 0 to disable)
+  max-issues-per-linter: 0
+  # Maximum count of issues with the same text (set to 0 to disable)  
+  max-same-issues: 0
+formatters:
+  enable:
+    - gofumpt
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$

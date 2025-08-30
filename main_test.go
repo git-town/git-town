@@ -1,43 +1,90 @@
 package main_test
 
 import (
+	"io/fs"
 	"os"
+	"path/filepath"
 	"runtime"
+	"strings"
 	"testing"
 
 	"github.com/cucumber/godog"
-	"github.com/git-town/git-town/v9/test/cucumber"
+	"github.com/git-town/git-town/v21/internal/test/cucumber"
+	"github.com/spf13/pflag"
 )
 
-func FeatureContext(suite *godog.Suite) {
-	// The current Godog implementation only provides a FeatureContext,
-	// no SuiteContext nor ScenarioContext.
-	// Hence we have to register the scenario state here (and reuse it for all scenarios in a feature)
-	// and register the steps here.
-	// It is initialized in SuiteSteps.BeforeScenario.
-	state := cucumber.ScenarioState{}
-	cucumber.Steps(suite, &state)
+func TestMain(_ *testing.M) {
+	options := godog.Options{
+		StopOnFailure: true,
+		Strict:        true,
+	}
+	godog.BindCommandLineFlags("godog.", &options)
+	pflag.Parse()
+	options.Paths = pflag.Args()
+	flagThis := len(os.Getenv("cukethis")) > 0
+	flagSmoke := len(os.Getenv("smoke")) > 0
+	flagMessyOutput := os.Getenv("messyoutput")
+	flagVerbose := len(os.Getenv("verbose")) > 0
+	switch {
+	case flagThis:
+		options.Format = "pretty"
+	case len(options.Paths) == 0:
+		options.Format = "progress"
+	case strings.HasSuffix(options.Paths[0], ".feature"):
+		options.Format = "pretty"
+	default:
+		options.Format = "progress"
+	}
+	// options.Format = "pretty"
+	if runtime.GOOS == "windows" {
+		options.Tags = "~@skipWindows"
+		options.Concurrency = runtime.NumCPU()
+	} else {
+		options.Concurrency = runtime.NumCPU() * 4
+	}
+	switch flagMessyOutput {
+	case "":
+	case "0":
+		options.Tags = "~@messyoutput"
+	case "1":
+		options.Tags = "@messyoutput"
+	default:
+		panic("unknown value for messyoutput")
+	}
+	if flagSmoke {
+		options.Tags = "@smoke"
+	}
+	if flagThis {
+		options.Tags = "@this"
+	}
+	if flagVerbose {
+		options.Paths = append(options.Paths, findVerboseFiles()...)
+	}
+	suite := godog.TestSuite{
+		Options:              &options,
+		ScenarioInitializer:  cucumber.InitializeScenario,
+		TestSuiteInitializer: cucumber.InitializeSuite,
+	}
+	status := suite.Run()
+	os.Exit(status)
 }
 
-//nolint:paralleltest
-func TestGodog(t *testing.T) {
-	tags := ""
-	if os.Getenv("cukethis") != "" {
-		tags = "@this"
-	}
-	if runtime.GOOS == "windows" {
-		tags = "~@skipWindows"
-	}
-	status := godog.RunWithOptions("godog", func(s *godog.Suite) {
-		FeatureContext(s)
-	}, godog.Options{
-		Format:      "progress",
-		Concurrency: runtime.NumCPU() * 4,
-		Strict:      true,
-		Paths:       []string{"features/"},
-		Tags:        tags,
+func findVerboseFiles() []string {
+	var result []string
+	err := filepath.WalkDir("features", func(path string, dir fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if strings.Contains(dir.Name(), "verbose") {
+			result = append(result, path)
+		}
+		return nil
 	})
-	if status > 0 {
-		t.FailNow()
+	if err != nil {
+		panic(err.Error())
 	}
+	if len(result) == 0 {
+		panic("no feature files found")
+	}
+	return result
 }

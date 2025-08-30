@@ -1,10 +1,20 @@
 Feature: continue after successful command
 
   Scenario Outline:
-    Given a feature branch "feature"
-    And I run "git-town <COMMAND>"
+    Given a Git repo with origin
+    And the origin is "git@github.com:git-town/git-town.git"
+    And tool "open" is installed
+    And local Git setting "git-town.ship-strategy" is "squash-merge"
+    And the branches
+      | NAME    | TYPE    | PARENT | LOCATIONS     |
+      | feature | feature | main   | local, origin |
+    And the commits
+      | BRANCH  | LOCATION      | MESSAGE |
+      | feature | local, origin | commit  |
+    And the current branch is "feature"
+    And I ran "git-town <COMMAND>"
     When I run "git-town continue"
-    Then it prints the error:
+    Then Git Town prints:
       """
       nothing to continue
       """
@@ -12,24 +22,18 @@ Feature: continue after successful command
     Examples:
       | COMMAND              |
       |                      |
-      | aliases true         |
       | append new           |
       | completions fish     |
       | config               |
       | diff-parent          |
       | hack new             |
       | help                 |
-      | kill feature         |
-      | main_branch          |
-      | push-new-branches    |
-      | new-pull-request     |
+      | delete feature       |
       | offline              |
-      | perennial-branches   |
       | prepend new          |
-      | prune-branches       |
-      | pull-branch-strategy |
-      | rename-branch        |
+      | propose              |
+      | rename foo           |
       | repo                 |
       | ship feature -m done |
       | sync                 |
-      | version              |
+      | --version            |

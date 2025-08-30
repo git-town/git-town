@@ -1,0 +1,42 @@
+Feature: sync a feature branch with new commits on the main branch in detached mode
+
+  Background:
+    Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "compress"
+    And the branches
+      | NAME  | TYPE    | PARENT | LOCATIONS     |
+      | alpha | feature | main   | local, origin |
+      | beta  | feature | alpha  | local, origin |
+    And the commits
+      | BRANCH | LOCATION      | MESSAGE      |
+      | main   | local, origin | new commit   |
+      | alpha  | local, origin | alpha commit |
+      | beta   | local, origin | beta commit  |
+    And wait 1 second to ensure new Git timestamps
+    And the current branch is "beta"
+    When I run "git-town sync --detached"
+
+  Scenario: result
+    Then Git Town runs the commands
+      | BRANCH | COMMAND                        |
+      | beta   | git fetch --prune --tags       |
+      |        | git checkout alpha             |
+      | alpha  | git checkout beta              |
+      | beta   | git merge --no-edit --ff alpha |
+      |        | git reset --soft alpha         |
+      |        | git commit -m "beta commit"    |
+      |        | git push --force-with-lease    |
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE      |
+      | main   | local, origin | new commit   |
+      | alpha  | local, origin | alpha commit |
+      | beta   | local, origin | beta commit  |
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then Git Town runs the commands
+      | BRANCH | COMMAND                                          |
+      | beta   | git reset --hard {{ sha-initial 'beta commit' }} |
+      |        | git push --force-with-lease --force-if-includes  |
+    And the initial commits exist now
+    And the initial branches and lineage exist now

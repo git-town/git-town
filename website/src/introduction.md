@@ -1,8 +1,23 @@
 # High-level CLI for Git
 
-Git Town adds Git commands that make software development more efficient by
-keeping Git branches better in sync with each other. This reduces merge
-conflicts and the number of Git commands you need to run.
+Git Town solves the problem that using the Git CLI correctly is cumbersome and
+repetitive, and therefore many developers don't use Git to its full potential.
+
+Git isn't just a version control system; it's a flexible framework for creating
+various version control workflows. This flexibility means that most of us end up
+using ad-hoc workflows, either in our heads or through custom Bash scripts
+tailored to our needs. These manual workflows often lack proper specifications
+and don't handle errors and edge cases well.
+
+Git Town is a reusable implementation of Git workflows for common usage
+scenarios like contributing to a centralized code repository on platforms like
+GitHub, GitLab, Bitbucket, Gitea, or Codeberg. Think of Git Town as your Bash
+scripts for Git, but fully engineered with rock-solid support for many use
+cases, edge cases, and error conditions.
+
+With Git Town you can keep using Git the way you do now, but with extra commands
+to create various branch types, keep them in sync, compress, review, and ship
+them efficiently.
 
 <br>
 <p align="center">
@@ -12,21 +27,13 @@ conflicts and the number of Git commands you need to run.
 </p>
 <br>
 
-Git is a flexible source code management system. The Git CLI (correctly)
-supports all possible ways of using Git equally well. It provides basic commands
-out of which Git users can implement their particular Git workflows. This
-generic design can make using the Git CLI repetitive in real life. As the
-screencast above demonstrates, typical development activities like creating,
-synchronizing, or shipping a feature branch require running multiple, sometimes
-dozens of Git commands.
-
-Git Town adds a high-level layer of Git commands for these activities. These
-commands are compatible with most common branching models like
+Git Town is compatible with most common branching models like
 [GitHub Flow](https://docs.github.com/en/get-started/quickstart/github-flow),
 [Git Flow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow),
 [GitLab Flow](https://docs.gitlab.com/ee/topics/gitlab_flow.html),
 [trunk-based development](https://trunkbaseddevelopment.com) and even committing
-straight into the main branch. See also this
+straight into the main branch. Git Town has special support for mono-repos and
+stacked changes. See also this
 [external review](https://www.softpedia.com/get/Programming/Other-Programming-Files/Git-Town.shtml).
 
 ## What our users say
@@ -70,16 +77,6 @@ straight into the main branch. See also this
   Similar to <a href="https://twitter.com/github">@github</a>’s “hub” but looks more powerful, and it logs the fit commands it runs under the hood.
   <a href="https://t.co/PxGs76TS5I">pic.twitter.com/PxGs76TS5I</a></p>
   &mdash; Gregor (<a href="https://twitter.com/gr2m/status/983913843351957504">@gr2m</a>)
-</blockquote>
-
-<blockquote class="twitter-tweet">
-  <p lang="en" dir="ltr">
-    2) if your project uses squash merges,
-    <a href="https://twitter.com/GitTown">@GitTown</a>
-    is a really great tool to automatically handle all the tedious steps to keep up good git hygiene
-    (and the docs are well-organized, informative, and concise)
-  </p>
-  &mdash; Aaron VonderHaar (<a href="https://twitter.com/avh4/status/1484648192230580225">@avh4</a>)
 </blockquote>
 
 <blockquote>

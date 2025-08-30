@@ -1,16 +1,30 @@
 package godog
 
 import (
+	"context"
+	"flag"
 	"fmt"
+	"go/build"
 	"io"
+	"io/fs"
+	"math/rand"
 	"os"
 	"path/filepath"
 	"runtime"
 	"strconv"
 	"strings"
 	"sync"
+	"testing"
+
+	messages "github.com/cucumber/messages/go/v21"
 
 	"github.com/cucumber/godog/colors"
+	"github.com/cucumber/godog/formatters"
+	ifmt "github.com/cucumber/godog/internal/formatters"
+	"github.com/cucumber/godog/internal/models"
+	"github.com/cucumber/godog/internal/parser"
+	"github.com/cucumber/godog/internal/storage"
+	"github.com/cucumber/godog/internal/utils"
 )
 
 const (
@@ -19,201 +33,255 @@ const (
 	exitOptionError
 )
 
-type initializer func(*Suite)
+type testSuiteInitializer func(*TestSuiteContext)
+type scenarioInitializer func(*ScenarioContext)
 
 type runner struct {
 	randomSeed            int64
 	stopOnFailure, strict bool
-	features              []*feature
-	fmt                   Formatter
-	initializer           initializer
+
+	defaultContext context.Context
+	testingT       *testing.T
+
+	features []*models.Feature
+
+	testSuiteInitializer testSuiteInitializer
+	scenarioInitializer  scenarioInitializer
+
+	storage *storage.Storage
+	fmt     Formatter
 }
 
-func (r *runner) concurrent(rate int, formatterFn func() Formatter) (failed bool) {
-	var useFmtCopy bool
+func (r *runner) concurrent(rate int) (failed bool) {
 	var copyLock sync.Mutex
 
-	// special mode for concurrent-formatter
-	if _, ok := r.fmt.(ConcurrentFormatter); ok {
-		useFmtCopy = true
+	if fmt, ok := r.fmt.(storageFormatter); ok {
+		fmt.SetStorage(r.storage)
+	}
+
+	testSuiteContext := TestSuiteContext{
+		suite: &suite{
+			fmt:            r.fmt,
+			randomSeed:     r.randomSeed,
+			strict:         r.strict,
+			storage:        r.storage,
+			defaultContext: r.defaultContext,
+			testingT:       r.testingT,
+		},
+	}
+	if r.testSuiteInitializer != nil {
+		r.testSuiteInitializer(&testSuiteContext)
+	}
+
+	testRunStarted := models.TestRunStarted{StartedAt: utils.TimeNowFunc()}
+	r.storage.MustInsertTestRunStarted(testRunStarted)
+	r.fmt.TestRunStarted()
+
+	// run before suite handlers
+	for _, f := range testSuiteContext.beforeSuiteHandlers {
+		f()
 	}
 
 	queue := make(chan int, rate)
-	for i, ft := range r.features {
-		queue <- i // reserve space in queue
-		ft := *ft
-
-		go func(fail *bool, feat *feature) {
-			var fmtCopy Formatter
-			defer func() {
-				<-queue // free a space in queue
-			}()
-			if r.stopOnFailure && *fail {
-				return
+	for _, ft := range r.features {
+		pickles := make([]*messages.Pickle, len(ft.Pickles))
+		if r.randomSeed != 0 {
+			r := rand.New(rand.NewSource(r.randomSeed))
+			perm := r.Perm(len(ft.Pickles))
+			for i, v := range perm {
+				pickles[v] = ft.Pickles[i]
 			}
-			suite := &Suite{
-				fmt:           r.fmt,
-				randomSeed:    r.randomSeed,
-				stopOnFailure: r.stopOnFailure,
-				strict:        r.strict,
-				features:      []*feature{feat},
+		} else {
+			copy(pickles, ft.Pickles)
+		}
+
+		for i, p := range pickles {
+			pickle := *p
+
+			queue <- i // reserve space in queue
+
+			if i == 0 {
+				r.fmt.Feature(ft.GherkinDocument, ft.Uri, ft.Content)
 			}
-			if useFmtCopy {
-				fmtCopy = formatterFn()
-				suite.fmt = fmtCopy
 
-				concurrentDestFmt, dOk := fmtCopy.(ConcurrentFormatter)
-				concurrentSourceFmt, sOk := r.fmt.(ConcurrentFormatter)
+			runPickle := func(fail *bool, pickle *messages.Pickle) {
+				defer func() {
+					<-queue // free a space in queue
+				}()
 
-				if dOk && sOk {
-					concurrentDestFmt.Sync(concurrentSourceFmt)
+				if r.stopOnFailure && *fail {
+					return
 				}
+
+				// Copy base suite.
+				suite := *testSuiteContext.suite
+
+				if r.scenarioInitializer != nil {
+					sc := ScenarioContext{suite: &suite}
+					r.scenarioInitializer(&sc)
+				}
+
+				err := suite.runPickle(pickle)
+				if suite.shouldFail(err) {
+					copyLock.Lock()
+					*fail = true
+					copyLock.Unlock()
+				}
+			}
+
+			if rate == 1 {
+				// Running within the same goroutine for concurrency 1
+				// to preserve original stacks and simplify debugging.
+				runPickle(&failed, &pickle)
 			} else {
-				suite.fmt = r.fmt
+				go runPickle(&failed, &pickle)
 			}
-
-			r.initializer(suite)
-			suite.run()
-			if suite.failed {
-				*fail = true
-			}
-			if useFmtCopy {
-				copyLock.Lock()
-
-				concurrentDestFmt, dOk := r.fmt.(ConcurrentFormatter)
-				concurrentSourceFmt, sOk := fmtCopy.(ConcurrentFormatter)
-
-				if dOk && sOk {
-					concurrentDestFmt.Copy(concurrentSourceFmt)
-				} else if !dOk {
-					panic("cant cast dest formatter to progress-typed")
-				} else if !sOk {
-					panic("cant cast source formatter to progress-typed")
-				}
-
-				copyLock.Unlock()
-			}
-		}(&failed, &ft)
+		}
 	}
+
 	// wait until last are processed
 	for i := 0; i < rate; i++ {
 		queue <- i
 	}
+
 	close(queue)
+
+	// run after suite handlers
+	for _, f := range testSuiteContext.afterSuiteHandlers {
+		f()
+	}
 
 	// print summary
 	r.fmt.Summary()
 	return
 }
 
-func (r *runner) run() bool {
-	suite := &Suite{
-		fmt:           r.fmt,
-		randomSeed:    r.randomSeed,
-		stopOnFailure: r.stopOnFailure,
-		strict:        r.strict,
-		features:      r.features,
-	}
-	r.initializer(suite)
-	suite.run()
-
-	r.fmt.Summary()
-	return suite.failed
-}
-
-// RunWithOptions is same as Run function, except
-// it uses Options provided in order to run the
-// test suite without parsing flags
-//
-// This method is useful in case if you run
-// godog in for example TestMain function together
-// with go tests
-//
-// The exit codes may vary from:
-//  0 - success
-//  1 - failed
-//  2 - command line usage error
-//  128 - or higher, os signal related error exit codes
-//
-// If there are flag related errors they will
-// be directed to os.Stderr
-func RunWithOptions(suite string, contextInitializer func(suite *Suite), opt Options) int {
+func runWithOptions(suiteName string, runner runner, opt Options) int {
 	var output io.Writer = os.Stdout
 	if nil != opt.Output {
 		output = opt.Output
 	}
 
-	if opt.NoColors {
-		output = colors.Uncolored(output)
-	} else {
-		output = colors.Colored(output)
+	multiFmt := ifmt.MultiFormatter{}
+
+	for _, formatter := range strings.Split(opt.Format, ",") {
+		out := output
+		formatterParts := strings.SplitN(formatter, ":", 2)
+
+		if len(formatterParts) > 1 {
+			f, err := os.Create(formatterParts[1])
+			if err != nil {
+				err = fmt.Errorf(
+					`couldn't create file with name: "%s", error: %s`,
+					formatterParts[1], err.Error(),
+				)
+				fmt.Fprintln(os.Stderr, err)
+
+				return exitOptionError
+			}
+
+			defer f.Close()
+
+			out = f
+		}
+
+		if opt.NoColors {
+			out = colors.Uncolored(out)
+		} else {
+			out = colors.Colored(out)
+		}
+
+		if nil == formatters.FindFmt(formatterParts[0]) {
+			var names []string
+			for name := range formatters.AvailableFormatters() {
+				names = append(names, name)
+			}
+			fmt.Fprintln(os.Stderr, fmt.Errorf(
+				`unregistered formatter name: "%s", use one of: %s`,
+				opt.Format,
+				strings.Join(names, ", "),
+			))
+			return exitOptionError
+		}
+
+		multiFmt.Add(formatterParts[0], out)
 	}
 
 	if opt.ShowStepDefinitions {
-		s := &Suite{}
-		contextInitializer(s)
-		s.printStepDefinitions(output)
+		s := suite{}
+		sc := ScenarioContext{suite: &s}
+		runner.scenarioInitializer(&sc)
+		printStepDefinitions(s.steps, output)
 		return exitOptionError
 	}
 
-	if len(opt.Paths) == 0 {
-		inf, err := os.Stat("features")
+	if len(opt.Paths) == 0 && len(opt.FeatureContents) == 0 {
+		inf, err := func() (fs.FileInfo, error) {
+			file, err := opt.FS.Open("features")
+			if err != nil {
+				return nil, err
+			}
+			defer file.Close()
+
+			return file.Stat()
+		}()
 		if err == nil && inf.IsDir() {
 			opt.Paths = []string{"features"}
 		}
 	}
 
-	if opt.Concurrency > 1 && !supportsConcurrency(opt.Format) {
-		fmt.Fprintln(os.Stderr, fmt.Errorf("format \"%s\" does not support concurrent execution", opt.Format))
-		return exitOptionError
-	}
-	formatter := FindFmt(opt.Format)
-	if nil == formatter {
-		var names []string
-		for name := range AvailableFormatters() {
-			names = append(names, name)
-		}
-		fmt.Fprintln(os.Stderr, fmt.Errorf(
-			`unregistered formatter name: "%s", use one of: %s`,
-			opt.Format,
-			strings.Join(names, ", "),
-		))
-		return exitOptionError
+	if opt.Concurrency < 1 {
+		opt.Concurrency = 1
 	}
 
-	features, err := parseFeatures(opt.Tags, opt.Paths)
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		return exitOptionError
+	runner.fmt = multiFmt.FormatterFunc(suiteName, output)
+	opt.FS = storage.FS{FS: opt.FS}
+
+	if len(opt.FeatureContents) > 0 {
+		features, err := parser.ParseFromBytes(opt.Tags, opt.FeatureContents)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			return exitOptionError
+		}
+		runner.features = append(runner.features, features...)
+	}
+
+	if len(opt.Paths) > 0 {
+		features, err := parser.ParseFeatures(opt.FS, opt.Tags, opt.Paths)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			return exitOptionError
+		}
+		runner.features = append(runner.features, features...)
+	}
+
+	runner.storage = storage.NewStorage()
+	for _, feat := range runner.features {
+		runner.storage.MustInsertFeature(feat)
+
+		for _, pickle := range feat.Pickles {
+			runner.storage.MustInsertPickle(pickle)
+		}
 	}
 
 	// user may have specified -1 option to create random seed
-	randomize := opt.Randomize
-	if randomize == -1 {
-		randomize = makeRandomSeed()
+	runner.randomSeed = opt.Randomize
+	if runner.randomSeed == -1 {
+		runner.randomSeed = makeRandomSeed()
 	}
 
-	r := runner{
-		fmt:           formatter(suite, output),
-		initializer:   contextInitializer,
-		features:      features,
-		randomSeed:    randomize,
-		stopOnFailure: opt.StopOnFailure,
-		strict:        opt.Strict,
-	}
+	runner.stopOnFailure = opt.StopOnFailure
+	runner.strict = opt.Strict
+	runner.defaultContext = opt.DefaultContext
+	runner.testingT = opt.TestingT
 
 	// store chosen seed in environment, so it could be seen in formatter summary report
-	os.Setenv("GODOG_SEED", strconv.FormatInt(r.randomSeed, 10))
+	os.Setenv("GODOG_SEED", strconv.FormatInt(runner.randomSeed, 10))
 	// determine tested package
 	_, filename, _, _ := runtime.Caller(1)
 	os.Setenv("GODOG_TESTED_PACKAGE", runsFromPackage(filename))
 
-	var failed bool
-	if opt.Concurrency > 1 {
-		failed = r.concurrent(opt.Concurrency, func() Formatter { return formatter(suite, output) })
-	} else {
-		failed = r.run()
-	}
+	failed := runner.concurrent(opt.Concurrency)
 
 	// @TODO: should prevent from having these
 	os.Setenv("GODOG_SEED", "")
@@ -226,6 +294,8 @@ func RunWithOptions(suite string, contextInitializer func(suite *Suite), opt Opt
 
 func runsFromPackage(fp string) string {
 	dir := filepath.Dir(fp)
+
+	gopaths := filepath.SplitList(build.Default.GOPATH)
 	for _, gp := range gopaths {
 		gp = filepath.Join(gp, "src")
 		if strings.Index(dir, gp) == 0 {
@@ -235,48 +305,96 @@ func runsFromPackage(fp string) string {
 	return dir
 }
 
-// Run creates and runs the feature suite.
-// Reads all configuration options from flags.
-// uses contextInitializer to register contexts
+// TestSuite allows for configuration
+// of the Test Suite Execution
+type TestSuite struct {
+	Name                 string
+	TestSuiteInitializer func(*TestSuiteContext)
+	ScenarioInitializer  func(*ScenarioContext)
+	Options              *Options
+}
+
+// Run will execute the test suite.
 //
-// the concurrency option allows runner to
-// initialize a number of suites to be run
-// separately. Only progress formatter
-// is supported when concurrency level is
-// higher than 1
-//
-// contextInitializer must be able to register
-// the step definitions and event handlers.
+// If options are not set, it will reads
+// all configuration options from flags.
 //
 // The exit codes may vary from:
-//  0 - success
-//  1 - failed
-//  2 - command line usage error
-//  128 - or higher, os signal related error exit codes
 //
-// If there are flag related errors they will
-// be directed to os.Stderr
-func Run(suite string, contextInitializer func(suite *Suite)) int {
-	var opt Options
+//	0 - success
+//	1 - failed
+//	2 - command line usage error
+//	128 - or higher, os signal related error exit codes
+//
+// If there are flag related errors they will be directed to os.Stderr
+func (ts TestSuite) Run() int {
+	if ts.Options == nil {
+		var err error
+		ts.Options, err = getDefaultOptions()
+		if err != nil {
+			return exitOptionError
+		}
+	}
+	if ts.Options.FS == nil {
+		ts.Options.FS = storage.FS{}
+	}
+	if ts.Options.ShowHelp {
+		flag.CommandLine.Usage()
+
+		return 0
+	}
+
+	r := runner{testSuiteInitializer: ts.TestSuiteInitializer, scenarioInitializer: ts.ScenarioInitializer}
+	return runWithOptions(ts.Name, r, *ts.Options)
+}
+
+// RetrieveFeatures will parse and return the features based on test suite option
+// Any modification on the parsed features will not have any impact on the next Run of the Test Suite
+func (ts TestSuite) RetrieveFeatures() ([]*models.Feature, error) {
+	opt := ts.Options
+
+	if opt == nil {
+		var err error
+		opt, err = getDefaultOptions()
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	if ts.Options.FS == nil {
+		ts.Options.FS = storage.FS{}
+	}
+
+	if len(opt.Paths) == 0 {
+		inf, err := func() (fs.FileInfo, error) {
+			file, err := opt.FS.Open("features")
+			if err != nil {
+				return nil, err
+			}
+			defer file.Close()
+
+			return file.Stat()
+		}()
+		if err == nil && inf.IsDir() {
+			opt.Paths = []string{"features"}
+		}
+	}
+
+	return parser.ParseFeatures(opt.FS, opt.Tags, opt.Paths)
+}
+
+func getDefaultOptions() (*Options, error) {
+	opt := &Options{}
 	opt.Output = colors.Colored(os.Stdout)
-	flagSet := FlagSet(&opt)
+
+	flagSet := flagSet(opt)
 	if err := flagSet.Parse(os.Args[1:]); err != nil {
 		fmt.Fprintln(os.Stderr, err)
-		return exitOptionError
+		return nil, err
 	}
 
 	opt.Paths = flagSet.Args()
+	opt.FS = storage.FS{}
 
-	return RunWithOptions(suite, contextInitializer, opt)
-}
-
-func supportsConcurrency(format string) bool {
-	switch format {
-	case "progress", "junit":
-		return true
-	case "events", "pretty", "cucumber":
-		return false
-	default:
-		return true // enables concurrent custom formatters to work
-	}
+	return opt, nil
 }

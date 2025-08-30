@@ -1,0 +1,22 @@
+{
+  "$schema": "https://raw.githubusercontent.com/contest-framework/server/refs/heads/main/documentation/schema.json",
+  "actions": [
+    {
+      "type": "test-file",
+      "files": "**/*_test.go",
+      "run": "go test {{file}}"
+    }
+  ],
+  "options": {
+    "beforeRun": {
+      "clearScreen": true,
+      "newlines": 0
+    },
+    "afterRun": {
+      "newlines": 1,
+      "indicatorLines": 3,
+      "indicatorBackground": true,
+      "printResult": false
+    }
+  }
+}
