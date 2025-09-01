@@ -57,7 +57,7 @@ func executeStatusShow(cliConfig configdomain.PartialConfig) error {
 		return err
 	}
 	showStatus(data)
-	print.Footer(repo.UnvalidatedConfig.NormalConfig.Verbose, *repo.CommandsCounter.Value(), []string{})
+	print.Footer(repo.UnvalidatedConfig.NormalConfig.Verbose, repo.CommandsCounter.Immutable(), []string{})
 	return nil
 }
 

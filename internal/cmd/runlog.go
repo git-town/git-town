@@ -75,7 +75,7 @@ func executeRunLog(cliConfig configdomain.PartialConfig) error {
 	if err = showRunLog(data); err != nil {
 		return err
 	}
-	print.Footer(repo.UnvalidatedConfig.NormalConfig.Verbose, *repo.CommandsCounter.Value(), []string{})
+	print.Footer(repo.UnvalidatedConfig.NormalConfig.Verbose, repo.CommandsCounter.Immutable(), []string{})
 	return nil
 }
 
