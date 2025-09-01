@@ -330,7 +330,7 @@ func compressProgram(data compressBranchesData, commitHook configdomain.CommitHo
 			prog:          prog,
 		})
 	}
-	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.initialBranch})
+	prog.Value().Add(&opcodes.CheckoutIfNeeded{Branch: data.initialBranch})
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.config.NormalConfig.DryRun,
@@ -354,15 +354,15 @@ func compressBranchProgram(args compressBranchProgramArgs) {
 	if !shouldCompressBranch(args.data.name, args.data.branchType, args.initialBranch) {
 		return
 	}
-	args.prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: args.data.name})
-	args.prog.Value.Add(&opcodes.BranchCurrentReset{Base: args.data.parentBranch.BranchName()})
-	args.prog.Value.Add(&opcodes.CommitWithMessage{
+	args.prog.Value().Add(&opcodes.CheckoutIfNeeded{Branch: args.data.name})
+	args.prog.Value().Add(&opcodes.BranchCurrentReset{Base: args.data.parentBranch.BranchName()})
+	args.prog.Value().Add(&opcodes.CommitWithMessage{
 		AuthorOverride: None[gitdomain.Author](),
 		CommitHook:     args.commitHook,
 		Message:        args.data.newCommitMessage,
 	})
 	if args.data.hasTracking && args.offline.IsOnline() {
-		args.prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: args.data.name, ForceIfIncludes: true})
+		args.prog.Value().Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: args.data.name, ForceIfIncludes: true})
 	}
 }
 

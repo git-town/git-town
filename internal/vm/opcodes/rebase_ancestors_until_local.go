@@ -23,19 +23,19 @@ func (self *RebaseAncestorsUntilLocal) Run(args shared.RunArgs) error {
 	}
 	branch := self.Branch
 	for {
-		ancestor, hasAncestor := args.Config.Value.NormalConfig.Lineage.Parent(branch).Get()
+		ancestor, hasAncestor := args.Config.Value().NormalConfig.Lineage.Parent(branch).Get()
 		if !hasAncestor {
 			break
 		}
-		ancestorIsPerennial := args.Config.Value.IsMainOrPerennialBranch(ancestor)
-		if ancestorIsPerennial && args.Config.Value.NormalConfig.Detached.IsTrue() {
+		ancestorIsPerennial := args.Config.Value().IsMainOrPerennialBranch(ancestor)
+		if ancestorIsPerennial && args.Config.Value().NormalConfig.Detached.IsTrue() {
 			break
 		}
 		ancestorIsLocal := branchInfos.HasLocalBranch(ancestor)
 		if !ancestorIsLocal {
 			// here the parent isn't local --> sync with its tracking branch, then try again with the grandparent until we find a local ancestor
 			program = append(program, &RebaseAncestorRemote{
-				Ancestor: ancestor.AtRemote(args.Config.Value.NormalConfig.DevRemote),
+				Ancestor: ancestor.AtRemote(args.Config.Value().NormalConfig.DevRemote),
 				Branch:   self.Branch,
 			})
 			branch = ancestor

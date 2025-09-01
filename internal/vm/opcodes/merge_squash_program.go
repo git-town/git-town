@@ -28,7 +28,7 @@ func (self *MergeSquashProgram) Run(args shared.RunArgs) error {
 	if exit {
 		return errors.New("aborted by user")
 	}
-	repoAuthor := args.Config.Value.ValidatedConfigData.Author()
+	repoAuthor := args.Config.Value().ValidatedConfigData.Author()
 	var authorOpt Option[gitdomain.Author]
 	if repoAuthor == author {
 		authorOpt = None[gitdomain.Author]()
@@ -40,7 +40,7 @@ func (self *MergeSquashProgram) Run(args shared.RunArgs) error {
 			Branch: self.Branch,
 		},
 	}
-	if !args.Config.Value.NormalConfig.DryRun {
+	if !args.Config.Value().NormalConfig.DryRun {
 		program = append(program, &CommitMessageCommentOut{})
 	}
 	program = append(program,

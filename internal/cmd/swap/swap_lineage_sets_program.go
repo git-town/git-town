@@ -16,7 +16,7 @@ type swapLineageParentSetsProgramArg struct {
 }
 
 func swapLineageParentSetsProgram(args swapLineageParentSetsProgramArg) {
-	args.program.Value.Add(
+	args.program.Value().Add(
 		&opcodes.LineageParentSet{
 			Branch: args.current,
 			Parent: args.grandParent,
@@ -27,7 +27,7 @@ func swapLineageParentSetsProgram(args swapLineageParentSetsProgramArg) {
 		},
 	)
 	for _, child := range args.children {
-		args.program.Value.Add(
+		args.program.Value().Add(
 			&opcodes.LineageParentSet{
 				Branch: child.name,
 				Parent: args.parent,

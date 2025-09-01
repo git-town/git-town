@@ -22,7 +22,7 @@ func (self *BranchCreateAndCheckoutExistingParent) Run(args shared.RunArgs) erro
 	if hasNearestAncestor {
 		ancestorToUse = nearestAncestor.BranchName()
 	} else {
-		ancestorToUse = args.Config.Value.ValidatedConfigData.MainBranch.AtRemote(args.Config.Value.NormalConfig.DevRemote).BranchName()
+		ancestorToUse = args.Config.Value().ValidatedConfigData.MainBranch.AtRemote(args.Config.Value().NormalConfig.DevRemote).BranchName()
 	}
 	if ancestorToUse == currentBranch.BranchName() {
 		return args.Git.CreateAndCheckoutBranch(args.Frontend, self.Branch)

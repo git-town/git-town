@@ -64,7 +64,7 @@ func (self *FrontendRunner) RunWithEnv(env []string, cmd string, args ...string)
 
 // runs the given command in this ShellRunner's directory.
 func (self *FrontendRunner) execute(env []string, cmd string, args ...string) (err error) {
-	self.CommandsCounter.Value.Inc()
+	self.CommandsCounter.Value().Inc()
 	var branchName gitdomain.LocalBranchName
 	if self.PrintBranchNames {
 		branchName, err = self.GetCurrentBranch(self.Backend)

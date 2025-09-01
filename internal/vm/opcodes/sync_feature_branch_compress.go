@@ -22,14 +22,14 @@ type SyncFeatureBranchCompress struct {
 func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 	opcodes := []shared.Opcode{}
 	commitsInBranch := gitdomain.Commits{}
-	if parentLocalName, hasParent := args.Config.Value.NormalConfig.Lineage.Parent(self.CurrentBranch).Get(); hasParent {
-		parentName := determineParentBranchName(parentLocalName, args.BranchInfos, args.Config.Value.NormalConfig.DevRemote)
+	if parentLocalName, hasParent := args.Config.Value().NormalConfig.Lineage.Parent(self.CurrentBranch).Get(); hasParent {
+		parentName := determineParentBranchName(parentLocalName, args.BranchInfos, args.Config.Value().NormalConfig.DevRemote)
 		inSyncWithParent, err := args.Git.BranchInSyncWithParent(args.Backend, self.CurrentBranch, parentName)
 		if err != nil {
 			return err
 		}
-		parentIsPerennial := args.Config.Value.IsMainOrPerennialBranch(parentLocalName)
-		skipParent := args.Config.Value.NormalConfig.Detached.IsTrue() && parentIsPerennial
+		parentIsPerennial := args.Config.Value().IsMainOrPerennialBranch(parentLocalName)
+		skipParent := args.Config.Value().NormalConfig.Detached.IsTrue() && parentIsPerennial
 		if !inSyncWithParent && !skipParent {
 			opcodes = append(opcodes, &SyncFeatureBranchMerge{
 				Branch:            self.CurrentBranch,
@@ -46,7 +46,7 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 		}
 	}
 	if trackingBranch, hasTrackingBranch := self.TrackingBranch.Get(); hasTrackingBranch {
-		inSyncWithTracking, err := args.Git.BranchInSyncWithTracking(args.Backend, self.CurrentBranch, args.Config.Value.NormalConfig.DevRemote)
+		inSyncWithTracking, err := args.Git.BranchInSyncWithTracking(args.Backend, self.CurrentBranch, args.Config.Value().NormalConfig.DevRemote)
 		if err != nil {
 			return err
 		}

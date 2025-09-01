@@ -24,20 +24,20 @@ func (self *SyncFeatureBranchMerge) Run(args shared.RunArgs) error {
 	}
 	branch := self.Branch
 	for {
-		parent, hasParent := args.Config.Value.NormalConfig.Lineage.Parent(branch).Get()
+		parent, hasParent := args.Config.Value().NormalConfig.Lineage.Parent(branch).Get()
 		if !hasParent {
 			break
 		}
-		parentIsPerennial := args.Config.Value.IsMainOrPerennialBranch(parent)
-		if args.Config.Value.NormalConfig.Detached.IsTrue() && parentIsPerennial {
+		parentIsPerennial := args.Config.Value().IsMainOrPerennialBranch(parent)
+		if args.Config.Value().NormalConfig.Detached.IsTrue() && parentIsPerennial {
 			break
 		}
-		if parentBranchInfo, hasParentInfo := branchInfos.FindLocalOrRemote(parent, args.Config.Value.NormalConfig.DevRemote).Get(); hasParentInfo {
+		if parentBranchInfo, hasParentInfo := branchInfos.FindLocalOrRemote(parent, args.Config.Value().NormalConfig.DevRemote).Get(); hasParentInfo {
 			parentIsLocal := parentBranchInfo.LocalName.IsSome()
 			if parentIsLocal {
 				var parentToMerge gitdomain.BranchName
 				if branchInfos.BranchIsActiveInAnotherWorktree(parent) {
-					parentToMerge = parent.TrackingBranch(args.Config.Value.NormalConfig.DevRemote).BranchName()
+					parentToMerge = parent.TrackingBranch(args.Config.Value().NormalConfig.DevRemote).BranchName()
 				} else {
 					parentToMerge = parent.BranchName()
 				}
@@ -74,7 +74,7 @@ func (self *SyncFeatureBranchMerge) Run(args shared.RunArgs) error {
 		branch = parent
 	}
 	if trackingBranch, hasTrackingBranch := self.TrackingBranch.Get(); hasTrackingBranch {
-		isInSync, err := args.Git.BranchInSyncWithTracking(args.Backend, self.Branch, args.Config.Value.NormalConfig.DevRemote)
+		isInSync, err := args.Git.BranchInSyncWithTracking(args.Backend, self.Branch, args.Config.Value().NormalConfig.DevRemote)
 		if err != nil {
 			return err
 		}

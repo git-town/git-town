@@ -10,17 +10,17 @@ import (
 
 // Wrap makes the given program perform housekeeping before and after it executes.
 func Wrap(program Mutable[program.Program], options WrapOptions) {
-	if program.Value.IsEmpty() {
+	if program.Value().IsEmpty() {
 		return
 	}
 	if !options.DryRun {
-		program.Value.Add(&opcodes.CheckoutHistoryPreserve{
+		program.Value().Add(&opcodes.CheckoutHistoryPreserve{
 			PreviousBranchCandidates: options.PreviousBranchCandidates,
 		})
 	}
 	if options.StashOpenChanges {
-		program.Value.Prepend(&opcodes.StashOpenChanges{})
-		program.Value.Add(&opcodes.StashPopIfNeeded{InitialStashSize: options.InitialStashSize})
+		program.Value().Prepend(&opcodes.StashOpenChanges{})
+		program.Value().Add(&opcodes.StashPopIfNeeded{InitialStashSize: options.InitialStashSize})
 	}
 }
 

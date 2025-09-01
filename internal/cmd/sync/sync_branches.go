@@ -12,8 +12,8 @@ func BranchesProgram(branchesToSync configdomain.BranchesToSync, args BranchProg
 			BranchProgram(localBranchName, branchToSync.BranchInfo, branchToSync.FirstCommitMessage, args)
 		}
 	}
-	for _, branchToDelete := range args.BranchesToDelete.Value.Values() {
-		args.Program.Value.Add(
+	for _, branchToDelete := range args.BranchesToDelete.Value().Values() {
+		args.Program.Value().Add(
 			&opcodes.BranchLocalDelete{Branch: branchToDelete},
 			&opcodes.LineageBranchRemove{Branch: branchToDelete},
 		)

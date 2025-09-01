@@ -13,7 +13,7 @@ type BranchCurrentResetToParent struct {
 }
 
 func (self *BranchCurrentResetToParent) Run(args shared.RunArgs) error {
-	parent, hasParent := args.Config.Value.NormalConfig.Lineage.Parent(self.CurrentBranch).Get()
+	parent, hasParent := args.Config.Value().NormalConfig.Lineage.Parent(self.CurrentBranch).Get()
 	if !hasParent {
 		return nil
 	}
@@ -26,7 +26,7 @@ func (self *BranchCurrentResetToParent) Run(args shared.RunArgs) error {
 	if parentIsLocal {
 		target = parent.BranchName()
 	} else {
-		target = parent.TrackingBranch(args.Config.Value.NormalConfig.DevRemote).BranchName()
+		target = parent.TrackingBranch(args.Config.Value().NormalConfig.DevRemote).BranchName()
 	}
 	args.PrependOpcodes(&BranchReset{Target: target})
 	return nil

@@ -11,9 +11,9 @@ import (
 func RemoveBranchConfiguration(args RemoveBranchConfigurationArgs) {
 	childBranches := args.Lineage.Children(args.Branch)
 	for _, child := range childBranches {
-		args.Program.Value.Add(&opcodes.LineageParentSetToGrandParent{Branch: child})
+		args.Program.Value().Add(&opcodes.LineageParentSetToGrandParent{Branch: child})
 	}
-	args.Program.Value.Add(&opcodes.LineageParentRemove{Branch: args.Branch})
+	args.Program.Value().Add(&opcodes.LineageParentRemove{Branch: args.Branch})
 }
 
 type RemoveBranchConfigurationArgs struct {

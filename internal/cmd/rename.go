@@ -285,13 +285,13 @@ func renameProgram(repo execute.OpenRepoResult, data renameData, finalMessages s
 	if !hasOldLocalBranch {
 		return prog.Immutable()
 	}
-	prog.Value.Add(&opcodes.BranchLocalRename{OldName: oldLocalBranch, NewName: data.newBranch})
+	prog.Value().Add(&opcodes.BranchLocalRename{OldName: oldLocalBranch, NewName: data.newBranch})
 	if data.initialBranch == oldLocalBranch {
-		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.newBranch})
+		prog.Value().Add(&opcodes.CheckoutIfNeeded{Branch: data.newBranch})
 	}
 	if !data.config.NormalConfig.DryRun {
 		if override, hasBranchTypeOverride := data.config.NormalConfig.BranchTypeOverrides[oldLocalBranch]; hasBranchTypeOverride {
-			prog.Value.Add(
+			prog.Value().Add(
 				&opcodes.BranchTypeOverrideSet{
 					Branch:     data.newBranch,
 					BranchType: override,
@@ -302,28 +302,28 @@ func renameProgram(repo execute.OpenRepoResult, data renameData, finalMessages s
 			)
 		}
 		if parentBranch, hasParent := data.config.NormalConfig.Lineage.Parent(oldLocalBranch).Get(); hasParent {
-			prog.Value.Add(&opcodes.LineageParentSet{Branch: data.newBranch, Parent: parentBranch})
+			prog.Value().Add(&opcodes.LineageParentSet{Branch: data.newBranch, Parent: parentBranch})
 		}
-		prog.Value.Add(&opcodes.LineageParentRemove{Branch: oldLocalBranch})
+		prog.Value().Add(&opcodes.LineageParentRemove{Branch: oldLocalBranch})
 	}
 	for _, child := range data.config.NormalConfig.Lineage.Children(oldLocalBranch) {
-		prog.Value.Add(&opcodes.LineageParentSet{Branch: child, Parent: data.newBranch})
+		prog.Value().Add(&opcodes.LineageParentSet{Branch: child, Parent: data.newBranch})
 	}
 	if oldTrackingBranch, hasOldTrackingBranch := data.oldBranch.RemoteName.Get(); hasOldTrackingBranch {
 		if data.oldBranch.HasTrackingBranch() && data.config.NormalConfig.Offline.IsOnline() {
-			prog.Value.Add(&opcodes.BranchTrackingCreate{Branch: data.newBranch})
-			updateChildBranchProposalsToBranch(prog.Value, data.proposalsOfChildBranches, data.newBranch)
+			prog.Value().Add(&opcodes.BranchTrackingCreate{Branch: data.newBranch})
+			updateChildBranchProposalsToBranch(prog.Value(), data.proposalsOfChildBranches, data.newBranch)
 			proposal, hasProposal := data.proposal.Get()
 			connector, hasConnector := data.connector.Get()
 			connectorCanUpdateProposalSource := hasConnector && connector.UpdateProposalSourceFn().IsSome()
 			if hasProposal && hasConnector && connectorCanUpdateProposalSource {
-				prog.Value.Add(&opcodes.ProposalUpdateSource{
+				prog.Value().Add(&opcodes.ProposalUpdateSource{
 					NewBranch: data.newBranch,
 					OldBranch: data.oldBranch.LocalBranchName(),
 					Proposal:  proposal,
 				})
 			}
-			prog.Value.Add(&opcodes.BranchTrackingDelete{Branch: oldTrackingBranch})
+			prog.Value().Add(&opcodes.BranchTrackingDelete{Branch: oldTrackingBranch})
 		}
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.newBranch), data.previousBranch}

@@ -14,10 +14,10 @@ type BranchLocalDeleteContent struct {
 }
 
 func (self *BranchLocalDeleteContent) Run(args shared.RunArgs) error {
-	switch args.Config.Value.NormalConfig.SyncFeatureStrategy {
+	switch args.Config.Value().NormalConfig.SyncFeatureStrategy {
 	case configdomain.SyncFeatureStrategyRebase:
 		opcodes := []shared.Opcode{}
-		descendents := args.Config.Value.NormalConfig.Lineage.Descendants(self.BranchToDelete)
+		descendents := args.Config.Value().NormalConfig.Lineage.Descendants(self.BranchToDelete)
 		if len(descendents) > 0 {
 			opcodes = append(opcodes, &RebaseOntoRemoveDeleted{
 				BranchToRebaseOnto: self.BranchToRebaseOnto,

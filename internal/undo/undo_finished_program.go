@@ -15,31 +15,31 @@ import (
 // creates the program for undoing a program that finished
 func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 	result := NewMutable(&program.Program{})
-	result.Value.AddProgram(args.RunState.AbortProgram)
+	result.Value().AddProgram(args.RunState.AbortProgram)
 	if !args.RunState.IsFinished() && args.HasOpenChanges {
 		// Open changes in the middle of an unfinished command will be undone as well.
 		// To achieve this, we commit them here so that they are gone when the branch is reset to the original SHA.
-		result.Value.Add(&opcodes.ChangesStage{})
-		result.Value.Add(&opcodes.CommitWithMessage{
+		result.Value().Add(&opcodes.ChangesStage{})
+		result.Value().Add(&opcodes.CommitWithMessage{
 			AuthorOverride: None[gitdomain.Author](),
 			CommitHook:     configdomain.CommitHookEnabled,
 			Message:        "Committing open changes to undo them",
 		})
 	}
 	if endBranchesSnapshot, hasEndBranchesSnapshot := args.RunState.EndBranchesSnapshot.Get(); hasEndBranchesSnapshot {
-		result.Value.AddProgram(undobranches.DetermineUndoBranchesProgram(args.RunState.BeginBranchesSnapshot, endBranchesSnapshot, args.RunState.UndoablePerennialCommits, args.Config, args.RunState.TouchedBranches, args.RunState.UndoAPIProgram, args.FinalMessages))
+		result.Value().AddProgram(undobranches.DetermineUndoBranchesProgram(args.RunState.BeginBranchesSnapshot, endBranchesSnapshot, args.RunState.UndoablePerennialCommits, args.Config, args.RunState.TouchedBranches, args.RunState.UndoAPIProgram, args.FinalMessages))
 	}
 	if endConfigSnapshot, hasEndConfigSnapshot := args.RunState.EndConfigSnapshot.Get(); hasEndConfigSnapshot {
-		result.Value.AddProgram(undoconfig.DetermineUndoConfigProgram(args.RunState.BeginConfigSnapshot, endConfigSnapshot))
+		result.Value().AddProgram(undoconfig.DetermineUndoConfigProgram(args.RunState.BeginConfigSnapshot, endConfigSnapshot))
 	}
 	if endStashSize, hasEndStashsize := args.RunState.EndStashSize.Get(); hasEndStashsize {
-		result.Value.AddProgram(undostash.DetermineUndoStashProgram(args.RunState.BeginStashSize, endStashSize))
+		result.Value().AddProgram(undostash.DetermineUndoStashProgram(args.RunState.BeginStashSize, endStashSize))
 	}
-	result.Value.AddProgram(args.RunState.FinalUndoProgram)
+	result.Value().AddProgram(args.RunState.FinalUndoProgram)
 	initialBranchOpt := args.RunState.BeginBranchesSnapshot.Active
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{initialBranchOpt}
 	if initialBranch, hasInitialBranch := initialBranchOpt.Get(); hasInitialBranch {
-		result.Value.Add(&opcodes.CheckoutIfNeeded{Branch: initialBranch})
+		result.Value().Add(&opcodes.CheckoutIfNeeded{Branch: initialBranch})
 	}
 	cmdhelpers.Wrap(result, cmdhelpers.WrapOptions{
 		DryRun:                   args.RunState.DryRun,

@@ -17,7 +17,7 @@ type ProposalUpdateTargetToGrandParent struct {
 }
 
 func (self *ProposalUpdateTargetToGrandParent) Run(args shared.RunArgs) error {
-	parent, hasParent := args.Config.Value.NormalConfig.Lineage.Parent(self.OldTarget).Get()
+	parent, hasParent := args.Config.Value().NormalConfig.Lineage.Parent(self.OldTarget).Get()
 	if !hasParent {
 		return fmt.Errorf("branch %q has no parent", self.Branch)
 	}

@@ -11,7 +11,7 @@ import (
 func ObservedBranchProgram(branchInfo gitdomain.BranchInfo, prog Mutable[program.Program]) {
 	if remoteBranch, hasRemoteBranch := branchInfo.RemoteName.Get(); hasRemoteBranch {
 		if branchInfo.SyncStatus != gitdomain.SyncStatusUpToDate {
-			prog.Value.Add(&opcodes.RebaseBranch{Branch: remoteBranch.BranchName()})
+			prog.Value().Add(&opcodes.RebaseBranch{Branch: remoteBranch.BranchName()})
 		}
 	}
 }

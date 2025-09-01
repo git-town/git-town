@@ -16,7 +16,7 @@ func (self *StashPopIfNeeded) Run(args shared.RunArgs) error {
 	if err != nil {
 		return err
 	}
-	if stashSize <= self.InitialStashSize && !args.Config.Value.NormalConfig.DryRun {
+	if stashSize <= self.InitialStashSize && !args.Config.Value().NormalConfig.DryRun {
 		return nil
 	}
 	args.PrependOpcodes(

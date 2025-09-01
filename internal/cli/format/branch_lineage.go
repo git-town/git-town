@@ -39,11 +39,11 @@ type branchTreeArgs struct {
 // branchTree provids a printable version of the given branch tree.
 func branchTree(args branchTreeArgs) {
 	for range args.indentLevel {
-		args.builder.Value.WriteString(indent)
+		args.builder.Value().WriteString(indent)
 	}
-	args.builder.Value.WriteString(args.branch.String())
+	args.builder.Value().WriteString(args.branch.String())
 	for _, child := range args.lineage.Children(args.branch) {
-		args.builder.Value.WriteString("\n")
+		args.builder.Value().WriteString("\n")
 		branchTree(branchTreeArgs{
 			branch:      child,
 			builder:     args.builder,

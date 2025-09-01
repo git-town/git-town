@@ -15,7 +15,7 @@ type BranchWithRemoteGoneDeleteIfEmptyAtRuntime struct {
 }
 
 func (self *BranchWithRemoteGoneDeleteIfEmptyAtRuntime) Run(args shared.RunArgs) error {
-	parent, hasParent := args.Config.Value.NormalConfig.Lineage.Parent(self.Branch).Get()
+	parent, hasParent := args.Config.Value().NormalConfig.Lineage.Parent(self.Branch).Get()
 	if !hasParent {
 		return nil
 	}
@@ -34,7 +34,7 @@ func (self *BranchWithRemoteGoneDeleteIfEmptyAtRuntime) Run(args shared.RunArgs)
 			},
 			&BranchLocalDeleteContent{
 				BranchToDelete:     self.Branch,
-				BranchToRebaseOnto: args.Config.Value.ValidatedConfigData.MainBranch,
+				BranchToRebaseOnto: args.Config.Value().ValidatedConfigData.MainBranch,
 			},
 			&LineageBranchRemove{
 				Branch: self.Branch,

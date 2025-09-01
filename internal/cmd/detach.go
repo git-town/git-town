@@ -343,14 +343,14 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 			RebaseOnto:        lastParent,
 		})
 		if descendent.info.HasTrackingBranch() {
-			prog.Value.Add(
+			prog.Value().Add(
 				&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: descendent.name, ForceIfIncludes: true},
 			)
 		}
 		lastParent = descendent.name
 	}
 	// step 2: delete the commits of parent branches from the detached branch
-	prog.Value.Add(
+	prog.Value().Add(
 		&opcodes.CheckoutIfNeeded{
 			Branch: data.branchToDetachName,
 		},
@@ -360,20 +360,20 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 		},
 	)
 	if data.branchToDetachInfo.HasTrackingBranch() {
-		prog.Value.Add(
+		prog.Value().Add(
 			&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: data.branchToDetachName, ForceIfIncludes: true},
 		)
 	}
-	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.initialBranch})
+	prog.Value().Add(&opcodes.CheckoutIfNeeded{Branch: data.initialBranch})
 	if !data.config.NormalConfig.DryRun {
-		prog.Value.Add(
+		prog.Value().Add(
 			&opcodes.LineageParentSet{
 				Branch: data.branchToDetachName,
 				Parent: data.config.ValidatedConfigData.MainBranch,
 			},
 		)
 		for _, child := range data.config.NormalConfig.Lineage.Children(data.branchToDetachName) {
-			prog.Value.Add(
+			prog.Value().Add(
 				&opcodes.LineageParentSet{
 					Branch: child,
 					Parent: data.parentBranch,

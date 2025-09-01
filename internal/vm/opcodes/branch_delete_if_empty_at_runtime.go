@@ -12,7 +12,7 @@ type BranchDeleteIfEmptyAtRuntime struct {
 }
 
 func (self *BranchDeleteIfEmptyAtRuntime) Run(args shared.RunArgs) error {
-	parent, hasParent := args.Config.Value.NormalConfig.Lineage.Parent(self.Branch).Get()
+	parent, hasParent := args.Config.Value().NormalConfig.Lineage.Parent(self.Branch).Get()
 	if !hasParent {
 		return nil
 	}
@@ -26,11 +26,11 @@ func (self *BranchDeleteIfEmptyAtRuntime) Run(args shared.RunArgs) error {
 				Branch: self.Branch,
 			},
 			&BranchTrackingDelete{
-				Branch: self.Branch.TrackingBranch(args.Config.Value.NormalConfig.DevRemote),
+				Branch: self.Branch.TrackingBranch(args.Config.Value().NormalConfig.DevRemote),
 			},
 			&BranchLocalDeleteContent{
 				BranchToDelete:     self.Branch,
-				BranchToRebaseOnto: args.Config.Value.ValidatedConfigData.MainBranch,
+				BranchToRebaseOnto: args.Config.Value().ValidatedConfigData.MainBranch,
 			},
 			&LineageBranchRemove{
 				Branch: self.Branch,

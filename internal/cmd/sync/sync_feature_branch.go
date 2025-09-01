@@ -12,7 +12,7 @@ import (
 func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBranchArgs) {
 	switch syncStrategy {
 	case configdomain.SyncStrategyCompress:
-		args.program.Value.Add(
+		args.program.Value().Add(
 			&opcodes.SyncFeatureBranchCompress{
 				CurrentBranch:     args.localName,
 				CommitMessage:     args.firstCommitMessage,
@@ -28,11 +28,11 @@ func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBr
 		// It is intended for perennial branches only.
 		if args.offline.IsOnline() {
 			if trackingBranch, hasTrackingBranch := args.trackingBranch.Get(); hasTrackingBranch {
-				args.program.Value.Add(&opcodes.MergeFastForward{Branch: trackingBranch.BranchName()})
+				args.program.Value().Add(&opcodes.MergeFastForward{Branch: trackingBranch.BranchName()})
 			}
 		}
 	case configdomain.SyncStrategyMerge:
-		args.program.Value.Add(
+		args.program.Value().Add(
 			&opcodes.SyncFeatureBranchMerge{
 				Branch:            args.localName,
 				InitialParentName: args.initialParentName,
@@ -41,7 +41,7 @@ func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBr
 			},
 		)
 	case configdomain.SyncStrategyRebase:
-		args.program.Value.Add(
+		args.program.Value().Add(
 			&opcodes.SyncFeatureBranchRebase{
 				Branch:               args.localName,
 				ParentSHAPreviousRun: args.parentSHAPreviousRun,
@@ -51,7 +51,7 @@ func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBr
 		)
 	}
 	if args.prune {
-		args.program.Value.Add(&opcodes.BranchDeleteIfEmptyAtRuntime{Branch: args.localName})
+		args.program.Value().Add(&opcodes.BranchDeleteIfEmptyAtRuntime{Branch: args.localName})
 	}
 }
 

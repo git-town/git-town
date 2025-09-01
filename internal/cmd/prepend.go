@@ -406,33 +406,33 @@ func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages
 			Remotes:             data.remotes,
 		})
 	}
-	prog.Value.Add(&opcodes.BranchCreateAndCheckoutExistingParent{
+	prog.Value().Add(&opcodes.BranchCreateAndCheckoutExistingParent{
 		Ancestors: data.newParentCandidates,
 		Branch:    data.targetBranch,
 	})
 	// set the parent of the newly created branch
-	prog.Value.Add(&opcodes.LineageParentSetFirstExisting{
+	prog.Value().Add(&opcodes.LineageParentSetFirstExisting{
 		Branch:    data.targetBranch,
 		Ancestors: data.newParentCandidates,
 	})
 	// set the parent of the branch prepended to
-	prog.Value.Add(&opcodes.LineageParentSetIfExists{
+	prog.Value().Add(&opcodes.LineageParentSetIfExists{
 		Branch: data.initialBranch,
 		Parent: data.targetBranch,
 	})
 	if data.prototype {
-		prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: configdomain.BranchTypePrototypeBranch})
+		prog.Value().Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: configdomain.BranchTypePrototypeBranch})
 	} else if newBranchType, hasNewBranchType := data.config.NormalConfig.NewBranchType.Get(); hasNewBranchType {
-		prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: newBranchType.BranchType()})
+		prog.Value().Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: newBranchType.BranchType()})
 	}
 	proposal, hasProposal := data.proposal.Get()
 	if data.remotes.HasRemote(data.config.NormalConfig.DevRemote) && data.config.NormalConfig.Offline.IsOnline() && (data.config.NormalConfig.ShareNewBranches == configdomain.ShareNewBranchesPush || hasProposal) {
-		prog.Value.Add(&opcodes.BranchTrackingCreate{Branch: data.targetBranch})
+		prog.Value().Add(&opcodes.BranchTrackingCreate{Branch: data.targetBranch})
 	}
 	connector, hasConnector := data.connector.Get()
 	connectorCanUpdateProposalTargets := hasConnector && connector.UpdateProposalTargetFn().IsSome()
 	if hasProposal && hasConnector && connectorCanUpdateProposalTargets {
-		prog.Value.Add(&opcodes.ProposalUpdateTarget{
+		prog.Value().Add(&opcodes.ProposalUpdateTarget{
 			NewBranch: data.targetBranch,
 			OldBranch: data.existingParent,
 			Proposal:  proposal,
@@ -440,7 +440,7 @@ func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages
 	}
 	moveCommitsToPrependedBranch(prog, data)
 	if data.commit {
-		prog.Value.Add(
+		prog.Value().Add(
 			&opcodes.Commit{
 				AuthorOverride:                 None[gitdomain.Author](),
 				FallbackToDefaultCommitMessage: false,
@@ -449,7 +449,7 @@ func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages
 		)
 	}
 	if data.propose {
-		prog.Value.Add(
+		prog.Value().Add(
 			&opcodes.BranchTrackingCreate{
 				Branch: data.targetBranch,
 			},
@@ -461,7 +461,7 @@ func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages
 			})
 	}
 	if data.commit {
-		prog.Value.Add(
+		prog.Value().Add(
 			&opcodes.Checkout{Branch: data.initialBranch},
 		)
 	} else {
@@ -517,16 +517,16 @@ func moveCommitsToPrependedBranch(prog Mutable[program.Program], data prependDat
 	}
 	// cherry-pick the commits into the new branch
 	for _, commitToBeam := range data.commitsToBeam {
-		prog.Value.Add(
+		prog.Value().Add(
 			&opcodes.CherryPick{SHA: commitToBeam.SHA},
 		)
 	}
 	// manually delete the beamed commits from the old branch
-	prog.Value.Add(
+	prog.Value().Add(
 		&opcodes.Checkout{Branch: data.initialBranch},
 	)
 	for _, commitToBeam := range data.commitsToBeam {
-		prog.Value.Add(
+		prog.Value().Add(
 			&opcodes.CommitRemove{SHA: commitToBeam.SHA},
 		)
 	}
@@ -534,7 +534,7 @@ func moveCommitsToPrependedBranch(prog Mutable[program.Program], data prependDat
 	initialBranchType := data.config.BranchType(data.initialBranch)
 	syncWithParent(prog, data.targetBranch, data.initialBranchInfo, initialBranchType, data.config.NormalConfig)
 	// go back to the target branch
-	prog.Value.Add(
+	prog.Value().Add(
 		&opcodes.Checkout{Branch: data.targetBranch},
 	)
 }
@@ -544,20 +544,20 @@ func syncWithParent(prog Mutable[program.Program], parentName gitdomain.LocalBra
 	if syncStrategy, hasSyncStrategy := afterBeamToParentSyncStrategy(initialBranchType, config).Get(); hasSyncStrategy {
 		switch syncStrategy {
 		case configdomain.SyncStrategyCompress, configdomain.SyncStrategyMerge:
-			prog.Value.Add(
+			prog.Value().Add(
 				&opcodes.MergeIntoCurrentBranch{BranchToMerge: parentName.BranchName()},
 			)
 			if initialBranchInfo.HasTrackingBranch() {
-				prog.Value.Add(
+				prog.Value().Add(
 					&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
 				)
 			}
 		case configdomain.SyncStrategyRebase:
-			prog.Value.Add(
+			prog.Value().Add(
 				&opcodes.RebaseBranch{Branch: parentName.BranchName()},
 			)
 			if initialBranchInfo.HasTrackingBranch() {
-				prog.Value.Add(
+				prog.Value().Add(
 					&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
 				)
 			}

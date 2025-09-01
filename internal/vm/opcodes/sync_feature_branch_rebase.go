@@ -41,7 +41,7 @@ func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
 		return err
 	}
 	// update the tracking branch
-	if syncTracking && self.PushBranches.IsTrue() && hasTrackingBranch && args.Config.Value.NormalConfig.Offline.IsOnline() {
+	if syncTracking && self.PushBranches.IsTrue() && hasTrackingBranch && args.Config.Value().NormalConfig.Offline.IsOnline() {
 		program = append(program,
 			&PushCurrentBranchForceIfNeeded{
 				CurrentBranch:   self.Branch,
@@ -55,9 +55,9 @@ func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
 
 func (self *SyncFeatureBranchRebase) shouldSyncWithTracking(args shared.RunArgs) (shouldSync bool, hasTrackingBranch bool, trackingBranch gitdomain.RemoteBranchName, err error) {
 	trackingBranch, hasTrackingBranch = self.TrackingBranch.Get()
-	if !hasTrackingBranch || args.Config.Value.NormalConfig.Offline.IsOffline() {
+	if !hasTrackingBranch || args.Config.Value().NormalConfig.Offline.IsOffline() {
 		return false, hasTrackingBranch, trackingBranch, nil
 	}
-	syncedWithTracking, err := args.Git.BranchInSyncWithTracking(args.Backend, self.Branch, args.Config.Value.NormalConfig.DevRemote)
+	syncedWithTracking, err := args.Git.BranchInSyncWithTracking(args.Backend, self.Branch, args.Config.Value().NormalConfig.DevRemote)
 	return !syncedWithTracking, hasTrackingBranch, trackingBranch, err
 }

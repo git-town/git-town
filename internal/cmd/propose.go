@@ -365,16 +365,16 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 	for _, branchToPropose := range data.branchesToPropose {
 		switch branchToPropose.branchType {
 		case configdomain.BranchTypePrototypeBranch:
-			prog.Value.Add(&opcodes.BranchTypeOverrideRemove{Branch: branchToPropose.name})
+			prog.Value().Add(&opcodes.BranchTypeOverrideRemove{Branch: branchToPropose.name})
 			repo.FinalMessages.Add(fmt.Sprintf(messages.PrototypeRemoved, branchToPropose.name))
 		case configdomain.BranchTypeParkedBranch:
-			prog.Value.Add(&opcodes.BranchTypeOverrideRemove{Branch: branchToPropose.name})
+			prog.Value().Add(&opcodes.BranchTypeOverrideRemove{Branch: branchToPropose.name})
 			repo.FinalMessages.Add(fmt.Sprintf(messages.ParkedRemoved, branchToPropose.name))
 		case configdomain.BranchTypeFeatureBranch:
 		case configdomain.BranchTypeContributionBranch, configdomain.BranchTypeMainBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypePerennialBranch:
 			continue
 		}
-		prog.Value.Add(&opcodes.PushCurrentBranchIfLocal{
+		prog.Value().Add(&opcodes.PushCurrentBranchIfLocal{
 			CurrentBranch: branchToPropose.name,
 		})
 		previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
@@ -390,13 +390,13 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 			return prog.Immutable()
 		}
 		if existingProposalURL, hasExistingProposal := branchToPropose.existingProposalURL.Get(); hasExistingProposal {
-			prog.Value.Add(
+			prog.Value().Add(
 				&opcodes.BrowserOpen{
 					URL: existingProposalURL,
 				},
 			)
 		} else {
-			prog.Value.Add(&opcodes.ProposalCreate{
+			prog.Value().Add(&opcodes.ProposalCreate{
 				Branch:        branchToPropose.name,
 				MainBranch:    data.config.ValidatedConfigData.MainBranch,
 				ProposalBody:  data.proposalBody,

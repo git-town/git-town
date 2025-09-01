@@ -22,7 +22,7 @@ func (self *RebaseAncestorLocal) Run(args shared.RunArgs) error {
 	}
 	var branchToRebaseOnto gitdomain.BranchName
 	if branchInfos.BranchIsActiveInAnotherWorktree(self.Ancestor) {
-		branchToRebaseOnto = self.Ancestor.TrackingBranch(args.Config.Value.NormalConfig.DevRemote).BranchName()
+		branchToRebaseOnto = self.Ancestor.TrackingBranch(args.Config.Value().NormalConfig.DevRemote).BranchName()
 	} else {
 		branchToRebaseOnto = self.Ancestor.BranchName()
 	}

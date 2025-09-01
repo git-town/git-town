@@ -304,7 +304,7 @@ func deleteProgram(repo execute.OpenRepoResult, data deleteData, finalMessages s
 	}
 	localBranchNameToDelete := data.branchToDeleteInfo.LocalBranchName()
 	if _, hasOverride := data.config.NormalConfig.BranchTypeOverrides[localBranchNameToDelete]; hasOverride {
-		prog.Value.Add(&opcodes.BranchTypeOverrideRemove{
+		prog.Value().Add(&opcodes.BranchTypeOverrideRemove{
 			Branch: localBranchNameToDelete,
 		})
 	}
@@ -321,8 +321,8 @@ func deleteProgram(repo execute.OpenRepoResult, data deleteData, finalMessages s
 func deleteFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data deleteData) {
 	trackingBranchToDelete, hasTrackingBranchToDelete := data.branchToDeleteInfo.RemoteName.Get()
 	if data.branchToDeleteInfo.SyncStatus != gitdomain.SyncStatusDeletedAtRemote && hasTrackingBranchToDelete && data.config.NormalConfig.Offline.IsOnline() {
-		ship.UpdateChildBranchProposalsToGrandParent(prog.Value, data.proposalsOfChildBranches)
-		prog.Value.Add(&opcodes.BranchTrackingDelete{Branch: trackingBranchToDelete})
+		ship.UpdateChildBranchProposalsToGrandParent(prog.Value(), data.proposalsOfChildBranches)
+		prog.Value().Add(&opcodes.BranchTrackingDelete{Branch: trackingBranchToDelete})
 	}
 	deleteLocalBranch(prog, finalUndoProgram, data)
 }
@@ -331,17 +331,17 @@ func deleteLocalBranch(prog, finalUndoProgram Mutable[program.Program], data del
 	if localBranchToDelete, hasLocalBranchToDelete := data.branchToDeleteInfo.LocalName.Get(); hasLocalBranchToDelete {
 		if data.initialBranch == localBranchToDelete {
 			if data.hasOpenChanges {
-				prog.Value.Add(&opcodes.ChangesStage{})
-				prog.Value.Add(&opcodes.CommitWithMessage{
+				prog.Value().Add(&opcodes.ChangesStage{})
+				prog.Value().Add(&opcodes.CommitWithMessage{
 					AuthorOverride: None[gitdomain.Author](),
 					CommitHook:     configdomain.CommitHookEnabled,
 					Message:        "Committing open changes on deleted branch",
 				})
 				// update the registered initial SHA for this branch so that undo restores the just committed changes
-				prog.Value.Add(&opcodes.SnapshotInitialUpdateLocalSHAIfNeeded{Branch: data.initialBranch})
+				prog.Value().Add(&opcodes.SnapshotInitialUpdateLocalSHAIfNeeded{Branch: data.initialBranch})
 				// when undoing, manually undo the just committed changes so that they are uncommitted again
-				finalUndoProgram.Value.Add(&opcodes.CheckoutIfNeeded{Branch: localBranchToDelete})
-				finalUndoProgram.Value.Add(&opcodes.UndoLastCommit{})
+				finalUndoProgram.Value().Add(&opcodes.CheckoutIfNeeded{Branch: localBranchToDelete})
+				finalUndoProgram.Value().Add(&opcodes.UndoLastCommit{})
 			}
 		}
 		// delete the commits of this branch from all descendents
@@ -363,8 +363,8 @@ func deleteLocalBranch(prog, finalUndoProgram Mutable[program.Program], data del
 				}
 			}
 		}
-		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.branchWhenDone})
-		prog.Value.Add(&opcodes.BranchLocalDelete{
+		prog.Value().Add(&opcodes.CheckoutIfNeeded{Branch: data.branchWhenDone})
+		prog.Value().Add(&opcodes.BranchLocalDelete{
 			Branch: localBranchToDelete,
 		})
 		if !data.config.NormalConfig.DryRun {

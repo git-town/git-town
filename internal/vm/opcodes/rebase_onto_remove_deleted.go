@@ -29,7 +29,7 @@ func (self *RebaseOntoRemoveDeleted) Continue() []shared.Opcode {
 
 func (self *RebaseOntoRemoveDeleted) Run(args shared.RunArgs) error {
 	err := args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseOnto.Location(), self.CommitsToRemove.Location())
-	if err != nil || args.Config.Value.NormalConfig.AutoResolve.NoAutoResolve() {
+	if err != nil || args.Config.Value().NormalConfig.AutoResolve.NoAutoResolve() {
 		return err
 	}
 	// Here the rebase-onto has failed.

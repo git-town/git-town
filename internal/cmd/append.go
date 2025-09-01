@@ -388,19 +388,19 @@ func appendProgram(frontend subshelldomain.Runner, data appendFeatureData, final
 			PushBranches:        true,
 		})
 	}
-	prog.Value.Add(&opcodes.BranchCreateAndCheckoutExistingParent{
+	prog.Value().Add(&opcodes.BranchCreateAndCheckoutExistingParent{
 		Ancestors: data.newBranchParentCandidates,
 		Branch:    data.targetBranch,
 	})
 	if data.remotes.HasRemote(data.config.NormalConfig.DevRemote) && data.config.NormalConfig.ShareNewBranches == configdomain.ShareNewBranchesPush && data.config.NormalConfig.Offline.IsOnline() {
-		prog.Value.Add(&opcodes.BranchTrackingCreate{Branch: data.targetBranch})
+		prog.Value().Add(&opcodes.BranchTrackingCreate{Branch: data.targetBranch})
 	}
-	prog.Value.Add(&opcodes.LineageParentSetFirstExisting{
+	prog.Value().Add(&opcodes.LineageParentSetFirstExisting{
 		Branch:    data.targetBranch,
 		Ancestors: data.newBranchParentCandidates,
 	})
 	if data.prototype {
-		prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: configdomain.BranchTypePrototypeBranch})
+		prog.Value().Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: configdomain.BranchTypePrototypeBranch})
 	} else {
 		if newBranchType, hasNewBranchType := data.config.NormalConfig.NewBranchType.Get(); hasNewBranchType {
 			switch newBranchType.BranchType() {
@@ -411,13 +411,13 @@ func appendProgram(frontend subshelldomain.Runner, data appendFeatureData, final
 				configdomain.BranchTypePerennialBranch,
 				configdomain.BranchTypePrototypeBranch,
 				configdomain.BranchTypeFeatureBranch:
-				prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: newBranchType.BranchType()})
+				prog.Value().Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: newBranchType.BranchType()})
 			case configdomain.BranchTypeMainBranch:
 			}
 		}
 	}
 	if data.commit {
-		prog.Value.Add(
+		prog.Value().Add(
 			&opcodes.Commit{
 				AuthorOverride:                 None[gitdomain.Author](),
 				FallbackToDefaultCommitMessage: false,
@@ -431,7 +431,7 @@ func appendProgram(frontend subshelldomain.Runner, data appendFeatureData, final
 		if commitMessage, has := data.commitMessage.Get(); has {
 			title = Some(gitdomain.ProposalTitle(string(commitMessage)))
 		}
-		prog.Value.Add(
+		prog.Value().Add(
 			&opcodes.BranchTrackingCreate{
 				Branch: data.targetBranch,
 			},
@@ -444,7 +444,7 @@ func appendProgram(frontend subshelldomain.Runner, data appendFeatureData, final
 		)
 	}
 	if data.commit {
-		prog.Value.Add(
+		prog.Value().Add(
 			&opcodes.Checkout{Branch: data.initialBranch},
 		)
 	} else {
@@ -466,36 +466,36 @@ func moveCommitsToAppendedBranch(prog Mutable[program.Program], data appendFeatu
 	}
 	if performCherryPick {
 		for _, commitToBeam := range data.commitsToBeam {
-			prog.Value.Add(
+			prog.Value().Add(
 				&opcodes.CherryPick{SHA: commitToBeam.SHA},
 			)
 		}
 	}
-	prog.Value.Add(
+	prog.Value().Add(
 		&opcodes.Checkout{
 			Branch: data.initialBranch,
 		},
 	)
 	for c := len(data.commitsToBeam) - 1; c >= 0; c-- {
 		commitToBeam := data.commitsToBeam[c]
-		prog.Value.Add(
+		prog.Value().Add(
 			&opcodes.CommitRemove{
 				SHA: commitToBeam.SHA,
 			},
 		)
 	}
 	if data.initialBranchInfo.HasTrackingBranch() {
-		prog.Value.Add(
+		prog.Value().Add(
 			&opcodes.PushCurrentBranchForceIgnoreError{},
 		)
 	}
-	prog.Value.Add(
+	prog.Value().Add(
 		&opcodes.Checkout{
 			Branch: data.targetBranch,
 		},
 	)
 	if !performCherryPick {
-		prog.Value.Add(
+		prog.Value().Add(
 			&opcodes.RebaseBranch{
 				Branch: data.initialBranch.BranchName(),
 			},

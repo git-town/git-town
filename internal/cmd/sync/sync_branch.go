@@ -21,7 +21,7 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 		}
 	}
 	usesRebaseSyncStrategy := args.Config.NormalConfig.SyncFeatureStrategy == configdomain.SyncFeatureStrategyRebase
-	ancestorToRemove, hasAncestorToRemove := args.Config.NormalConfig.Lineage.YoungestAncestorWithin(localName, args.BranchesToDelete.Value.Values()).Get()
+	ancestorToRemove, hasAncestorToRemove := args.Config.NormalConfig.Lineage.YoungestAncestorWithin(localName, args.BranchesToDelete.Value().Values()).Get()
 	parentSHAPrevious := None[gitdomain.SHA]()
 	if parent, has := parentNameOpt.Get(); has {
 		if branchInfosLastRun, has := args.BranchInfosPrevious.Get(); has {
@@ -34,7 +34,7 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	hasDescendents := args.Config.NormalConfig.Lineage.HasDescendents(localName)
 	switch {
 	case hasAncestorToRemove && ancestorToRemove == parentName && trackingBranchGone && hasDescendents:
-		args.BranchesToDelete.Value.Add(localName)
+		args.BranchesToDelete.Value().Add(localName)
 	case hasAncestorToRemove && ancestorToRemove == parentName:
 		if usesRebaseSyncStrategy {
 			RemoveAncestorCommits(RemoveAncestorCommitsArgs{
@@ -46,7 +46,7 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 			})
 		}
 	case usesRebaseSyncStrategy && trackingBranchGone && hasDescendents:
-		args.BranchesToDelete.Value.Add(localName)
+		args.BranchesToDelete.Value().Add(localName)
 	case trackingBranchGone:
 		deletedBranchProgram(localName, parentNameOpt, parentSHAInitial, parentSHAPrevious, args)
 	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
@@ -71,7 +71,7 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 			parentSHAPrevious:  parentSHAPrevious,
 		})
 	}
-	args.Program.Value.Add(&opcodes.ProgramEndOfBranch{})
+	args.Program.Value().Add(&opcodes.ProgramEndOfBranch{})
 }
 
 type BranchProgramArgs struct {
@@ -105,7 +105,7 @@ func localBranchProgram(args localBranchProgramArgs) {
 		// perennial branch but no remote --> this branch cannot be synced
 		return
 	}
-	args.Program.Value.Add(&opcodes.CheckoutIfNeeded{Branch: args.localName})
+	args.Program.Value().Add(&opcodes.CheckoutIfNeeded{Branch: args.localName})
 	switch branchType {
 	case configdomain.BranchTypeFeatureBranch:
 		FeatureBranchProgram(args.Config.NormalConfig.SyncFeatureStrategy.SyncStrategy(), featureBranchArgs{
@@ -157,13 +157,13 @@ func localBranchProgram(args localBranchProgramArgs) {
 		isMainBranch := branchType == configdomain.BranchTypeMainBranch
 		switch {
 		case !args.branchInfo.HasTrackingBranch():
-			args.Program.Value.Add(&opcodes.BranchTrackingCreate{Branch: args.localName})
+			args.Program.Value().Add(&opcodes.BranchTrackingCreate{Branch: args.localName})
 		case isMainBranch && args.Remotes.HasUpstream() && args.Config.NormalConfig.SyncUpstream.IsTrue():
-			args.Program.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: args.localName})
+			args.Program.Value().Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: args.localName})
 		case isMainOrPerennialBranch && !shouldPushPerennialBranch(args.branchInfo.SyncStatus):
 			// don't push if its a perennial branch that doesn't need pushing
 		case isMainOrPerennialBranch:
-			args.Program.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: args.localName})
+			args.Program.Value().Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: args.localName})
 		default:
 			pushFeatureBranchProgram(args.Program, args.localName, args.Config.NormalConfig.SyncFeatureStrategy)
 		}
@@ -174,14 +174,14 @@ func localBranchProgram(args localBranchProgramArgs) {
 func pullParentBranchOfCurrentFeatureBranchOpcode(args pullParentBranchOfCurrentFeatureBranchOpcodeArgs) {
 	switch args.syncStrategy {
 	case configdomain.SyncFeatureStrategyMerge, configdomain.SyncFeatureStrategyCompress:
-		args.program.Value.Add(&opcodes.SyncFeatureBranchMerge{
+		args.program.Value().Add(&opcodes.SyncFeatureBranchMerge{
 			Branch:            args.branch,
 			InitialParentName: args.parentNameInitial,
 			InitialParentSHA:  args.parentSHAInitial,
 			TrackingBranch:    args.trackingBranch,
 		})
 	case configdomain.SyncFeatureStrategyRebase:
-		args.program.Value.Add(&opcodes.RebaseAncestorsUntilLocal{
+		args.program.Value().Add(&opcodes.RebaseAncestorsUntilLocal{
 			Branch:          args.branch,
 			CommitsToRemove: args.parentSHAPrevious,
 		})
@@ -201,31 +201,31 @@ type pullParentBranchOfCurrentFeatureBranchOpcodeArgs struct {
 func pushFeatureBranchProgram(prog Mutable[program.Program], branch gitdomain.LocalBranchName, syncFeatureStrategy configdomain.SyncFeatureStrategy) {
 	switch syncFeatureStrategy {
 	case configdomain.SyncFeatureStrategyMerge:
-		prog.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branch})
+		prog.Value().Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branch})
 	case configdomain.SyncFeatureStrategyRebase:
-		prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: branch, ForceIfIncludes: true})
+		prog.Value().Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: branch, ForceIfIncludes: true})
 	case configdomain.SyncFeatureStrategyCompress:
-		prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: branch, ForceIfIncludes: false})
+		prog.Value().Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: branch, ForceIfIncludes: false})
 	}
 }
 
 func RemoveAncestorCommits(args RemoveAncestorCommitsArgs) {
-	args.Program.Value.Add(
+	args.Program.Value().Add(
 		&opcodes.CheckoutIfNeeded{Branch: args.Branch},
 	)
 	if args.HasTrackingBranch {
-		args.Program.Value.Add(
+		args.Program.Value().Add(
 			&opcodes.PullCurrentBranch{},
 		)
 	}
-	args.Program.Value.Add(
+	args.Program.Value().Add(
 		&opcodes.RebaseOnto{
 			BranchToRebaseOnto: args.RebaseOnto.BranchName(),
 			CommitsToRemove:    args.Ancestor.Location(),
 		},
 	)
 	if args.HasTrackingBranch {
-		args.Program.Value.Add(
+		args.Program.Value().Add(
 			&opcodes.PushCurrentBranchForce{ForceIfIncludes: false},
 		)
 	}
@@ -260,10 +260,10 @@ func shouldPushPerennialBranch(syncStatus gitdomain.SyncStatus) bool {
 func updateCurrentPerennialBranchOpcode(prog Mutable[program.Program], otherBranch gitdomain.RemoteBranchName, strategy configdomain.SyncPerennialStrategy) {
 	switch strategy {
 	case configdomain.SyncPerennialStrategyMerge:
-		prog.Value.Add(&opcodes.MergeIntoCurrentBranch{BranchToMerge: otherBranch.BranchName()})
+		prog.Value().Add(&opcodes.MergeIntoCurrentBranch{BranchToMerge: otherBranch.BranchName()})
 	case configdomain.SyncPerennialStrategyRebase:
-		prog.Value.Add(&opcodes.RebaseBranch{Branch: otherBranch.BranchName()})
+		prog.Value().Add(&opcodes.RebaseBranch{Branch: otherBranch.BranchName()})
 	case configdomain.SyncPerennialStrategyFFOnly:
-		prog.Value.Add(&opcodes.MergeFastForward{Branch: otherBranch.BranchName()})
+		prog.Value().Add(&opcodes.MergeFastForward{Branch: otherBranch.BranchName()})
 	}
 }

@@ -26,11 +26,11 @@ func (self Inputs) Next() Option[Input] {
 	if self.len == 0 {
 		return None[Input]()
 	}
-	if *self.cursor.Value == self.len {
+	if *self.cursor.Value() == self.len {
 		panic("not enough dialog inputs")
 	}
-	result := self.inputs[*self.cursor.Value]
-	*self.cursor.Value += 1
+	result := self.inputs[*self.cursor.Value()]
+	*self.cursor.Value() += 1
 	return Some(result)
 }
 

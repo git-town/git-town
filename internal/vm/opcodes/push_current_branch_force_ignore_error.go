@@ -10,6 +10,6 @@ type PushCurrentBranchForceIgnoreError struct {
 }
 
 func (self *PushCurrentBranchForceIgnoreError) Run(args shared.RunArgs) error {
-	_ = args.Git.ForcePushBranchSafely(args.Frontend, args.Config.Value.NormalConfig.NoPushHook(), true)
+	_ = args.Git.ForcePushBranchSafely(args.Frontend, args.Config.Value().NormalConfig.NoPushHook(), true)
 	return nil
 }

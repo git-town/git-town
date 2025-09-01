@@ -290,30 +290,30 @@ func mergeProgram(repo execute.OpenRepoResult, data mergeData) program.Program {
 	// The child branch proposal will get closed because the child branch gets deleted,
 	// and that's correct because it was from the child branch into the parent branch,
 	// and that doesn't make sense anymore because both branches are one now.
-	prog.Value.Add(&opcodes.Checkout{Branch: data.parentBranch})
+	prog.Value().Add(&opcodes.Checkout{Branch: data.parentBranch})
 	if data.initialBranchSHA != data.parentBranchSHA {
-		prog.Value.Add(&opcodes.BranchLocalSetToSHA{SHA: data.initialBranchSHA})
+		prog.Value().Add(&opcodes.BranchLocalSetToSHA{SHA: data.initialBranchSHA})
 	}
-	prog.Value.Add(&opcodes.LineageParentRemove{
+	prog.Value().Add(&opcodes.LineageParentRemove{
 		Branch: data.initialBranch,
 	})
-	prog.Value.Add(&opcodes.BranchLocalDelete{
+	prog.Value().Add(&opcodes.BranchLocalDelete{
 		Branch: data.initialBranch,
 	})
 	if data.parentBranchInfo.RemoteName.IsSome() && repo.IsOffline.IsOnline() {
-		prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{
+		prog.Value().Add(&opcodes.PushCurrentBranchForceIfNeeded{
 			CurrentBranch:   data.parentBranch,
 			ForceIfIncludes: true,
 		})
 	}
 	initialTrackingBranch, initialHasTrackingBranch := data.initialBranchInfo.RemoteName.Get()
 	if initialHasTrackingBranch && repo.IsOffline.IsOnline() {
-		prog.Value.Add(&opcodes.BranchTrackingDelete{
+		prog.Value().Add(&opcodes.BranchTrackingDelete{
 			Branch: initialTrackingBranch,
 		})
 	}
 	if _, hasOverride := data.config.NormalConfig.BranchTypeOverrides[data.initialBranch]; hasOverride {
-		prog.Value.Add(&opcodes.BranchTypeOverrideRemove{
+		prog.Value().Add(&opcodes.BranchTypeOverrideRemove{
 			Branch: data.initialBranch,
 		})
 	}

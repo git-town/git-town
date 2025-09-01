@@ -154,12 +154,12 @@ func executeSync(args executeSyncArgs) error {
 	if previousBranch, hasPreviousBranch := data.previousBranch.Get(); hasPreviousBranch {
 		finalBranchCandidates = append(finalBranchCandidates, previousBranch)
 	}
-	runProgram.Value.Add(&opcodes.CheckoutFirstExisting{
+	runProgram.Value().Add(&opcodes.CheckoutFirstExisting{
 		Branches:   finalBranchCandidates,
 		MainBranch: data.config.ValidatedConfigData.MainBranch,
 	})
 	if data.remotes.HasRemote(data.config.NormalConfig.DevRemote) && data.shouldPushTags && data.config.NormalConfig.Offline.IsOnline() {
-		runProgram.Value.Add(&opcodes.PushTags{})
+		runProgram.Value().Add(&opcodes.PushTags{})
 	}
 
 	connector, hasConnector := data.connector.Get()

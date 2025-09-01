@@ -144,7 +144,7 @@ func discardRunstate(rootDir gitdomain.RepoRootDir) (dialogdomain.Exit, error) {
 // It is expected that all data exists.
 // This doesn't change lineage since we are in the middle of an ongoing Git Town operation.
 func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) {
-	mainBranch, hasMain := args.unvalidated.Value.UnvalidatedConfig.MainBranch.Get()
+	mainBranch, hasMain := args.unvalidated.Value().UnvalidatedConfig.MainBranch.Get()
 	if !hasMain {
 		branchesSnapshot, err := args.git.BranchesSnapshot(args.backend)
 		if err != nil {
@@ -154,19 +154,19 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 		var exit dialogdomain.Exit
 		_, mainBranch, exit, err = dialog.MainBranch(dialog.MainBranchArgs{
 			Inputs:         args.inputs,
-			Local:          args.unvalidated.Value.GitGlobal.MainBranch,
+			Local:          args.unvalidated.Value().GitGlobal.MainBranch,
 			LocalBranches:  localBranches,
 			StandardBranch: args.git.StandardBranch(args.backend),
-			Unscoped:       args.unvalidated.Value.GitUnscoped.MainBranch,
+			Unscoped:       args.unvalidated.Value().GitUnscoped.MainBranch,
 		})
 		if err != nil || exit {
 			return config.EmptyValidatedConfig(), exit, err
 		}
-		if err = args.unvalidated.Value.SetMainBranch(mainBranch, args.backend); err != nil {
+		if err = args.unvalidated.Value().SetMainBranch(mainBranch, args.backend); err != nil {
 			return config.EmptyValidatedConfig(), false, err
 		}
 	}
-	gitUserEmail, gitUserName, err := GitUser(args.unvalidated.Value.UnvalidatedConfig)
+	gitUserEmail, gitUserName, err := GitUser(args.unvalidated.Value().UnvalidatedConfig)
 	if err != nil {
 		return config.EmptyValidatedConfig(), false, err
 	}
@@ -176,7 +176,7 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 			GitUserName:  gitUserName,
 			MainBranch:   mainBranch,
 		},
-		NormalConfig: args.unvalidated.Value.NormalConfig,
+		NormalConfig: args.unvalidated.Value().NormalConfig,
 	}, false, nil
 }
 

@@ -285,24 +285,24 @@ func walkProgram(args []string, data walkData) program.Program {
 	prog := NewMutable(&program.Program{})
 	hasCall, executable, callArgs := parseArgs(args)
 	for _, branchToWalk := range data.branchesToWalk {
-		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: branchToWalk})
+		prog.Value().Add(&opcodes.CheckoutIfNeeded{Branch: branchToWalk})
 		if hasCall {
-			prog.Value.Add(
+			prog.Value().Add(
 				&opcodes.ExecuteShellCommand{
 					Executable: executable,
 					Args:       callArgs,
 				},
 			)
 		} else {
-			prog.Value.Add(
+			prog.Value().Add(
 				&opcodes.ExitToShell{},
 			)
 		}
-		prog.Value.Add(
+		prog.Value().Add(
 			&opcodes.ProgramEndOfBranch{},
 		)
 	}
-	prog.Value.Add(
+	prog.Value().Add(
 		&opcodes.CheckoutIfNeeded{
 			Branch: data.initialBranch,
 		},
