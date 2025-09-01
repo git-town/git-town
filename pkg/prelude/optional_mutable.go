@@ -78,6 +78,11 @@ func (self *OptionalMutable[T]) UnmarshalJSON(b []byte) error {
 	return json.Unmarshal(b, &self.Value)
 }
 
+// MutableNone instantiates an empty MutableOption.
+func MutableNone[T any]() OptionalMutable[T] {
+	return OptionalMutable[T]{nil}
+}
+
 // MutableSome instantiates a new OptionP containing the given value.
 // The value must exist, i.e. the pointer must not be nil.
 func MutableSome[T any](value *T) OptionalMutable[T] {
@@ -85,9 +90,4 @@ func MutableSome[T any](value *T) OptionalMutable[T] {
 		panic("Cannot create a SomeP out of a nil pointer")
 	}
 	return OptionalMutable[T]{value}
-}
-
-// MutableNone instantiates an empty MutableOption.
-func MutableNone[T any]() OptionalMutable[T] {
-	return OptionalMutable[T]{nil}
 }

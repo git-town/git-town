@@ -14,18 +14,6 @@ func (self Mutable[T]) Immutable() T { //nolint:ireturn
 	return *self.value
 }
 
-// provides an non-mutable copy of the contained mutable value
-func (self Mutable[T]) Value() *T {
-	self.verify()
-	return self.value
-}
-
-func (self Mutable[T]) verify() {
-	if !self.initialized {
-		panic("Found a mutable that wasn't created by the NewMutable constructor function.")
-	}
-}
-
 func NewMutable[T any](value *T) Mutable[T] {
 	return Mutable[T]{value, true}
 }
