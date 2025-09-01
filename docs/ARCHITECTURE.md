@@ -102,8 +102,8 @@ cumbersome.
 Contrary to the wiki page, the method receiver is more than just another
 function argument. It is defined separately and serves as the central data
 element in the method. Without this special argument, the method should simply
-be a function. The method receiver is the only one that allows access to private
-properties without violating abstraction and encapsulation boundaries.
+be a function. The method receiver is the only argument that allows access to
+private properties without violating abstraction and encapsulation boundaries.
 
 Go does not provide a clear convention for naming method receivers. Various
 alternatives exist, each with its own pros and cons, but none are universally
