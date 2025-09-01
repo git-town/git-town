@@ -54,19 +54,9 @@ func (self Option[T]) Get() (value T, hasValue bool) { //nolint:ireturn
 	return empty, false
 }
 
-// GetOrDefault provides a copy of the contained value.
-// If this option contains nothing, you get the zero value of the contained type.
-func (self Option[T]) GetOrDefault() T { //nolint:ireturn
-	if value, has := self.Get(); has {
-		return value
-	}
-	var empty T
-	return empty
-}
-
-// GetOrElse provides a copy of the contained value.
+// GetOr provides a copy of the contained value.
 // If this option contains nothing, you get a copy of the given alternative value.
-func (self Option[T]) GetOrElse(other T) T { //nolint:ireturn
+func (self Option[T]) GetOr(other T) T { //nolint:ireturn
 	if value, has := self.Get(); has {
 		return value
 	}
@@ -80,6 +70,16 @@ func (self Option[T]) GetOrPanic() T { //nolint:ireturn
 		return value
 	}
 	panic("value not present")
+}
+
+// GetOrZero provides a copy of the contained value.
+// If this option contains nothing, you get the zero value of the contained type.
+func (self Option[T]) GetOrZero() T { //nolint:ireturn
+	if value, has := self.Get(); has {
+		return value
+	}
+	var empty T
+	return empty
 }
 
 // IsNone indicates whether this option instance contains nothing.

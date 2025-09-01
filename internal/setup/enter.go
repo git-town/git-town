@@ -115,7 +115,7 @@ EnterForgeData:
 		gitlabConnectorType:  gitlabConnectorTypeOpt.Or(gitlabConnectorTypeOpt),
 		gitlabToken:          gitlabToken.Or(data.Config.GitGlobal.GitLabToken),
 		inputs:               data.Inputs,
-		remoteURL:            data.Config.NormalConfig.RemoteURL(data.Backend, devRemote.GetOrElse(config.DefaultNormalConfig().DevRemote)),
+		remoteURL:            data.Config.NormalConfig.RemoteURL(data.Backend, devRemote.GetOr(config.DefaultNormalConfig().DevRemote)),
 	})
 	if err != nil || exit {
 		return emptyResult, exit, err
