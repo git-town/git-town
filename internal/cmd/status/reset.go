@@ -52,7 +52,7 @@ func executeStatusReset(cliConfig configdomain.PartialConfig) error {
 	backendRunner := subshell.BackendRunner{
 		Dir:             None[string](),
 		CommandsCounter: commandsCounter,
-		Verbose:         cliConfig.Verbose.GetOrDefault(),
+		Verbose:         cliConfig.Verbose.GetOr(false),
 	}
 	gitCommands := git.Commands{
 		CurrentBranchCache: &cache.WithPrevious[gitdomain.LocalBranchName]{},

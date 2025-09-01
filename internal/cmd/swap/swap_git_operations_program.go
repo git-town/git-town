@@ -73,10 +73,7 @@ func swapGitOperationsProgram(args swapGitOperationsProgramArgs) {
 				Branch: child.name,
 			},
 		)
-		oldBranchSHA, hasOldBranchSHA := args.current.info.LocalSHA.Get()
-		if !hasOldBranchSHA {
-			oldBranchSHA = args.current.info.RemoteSHA.GetOrDefault()
-		}
+		oldBranchSHA := args.current.info.GetLocalOrRemoteSHA()
 		args.program.Value.Add(
 			&opcodes.RebaseOnto{
 				BranchToRebaseOnto: args.parent.info.LocalBranchName().BranchName(),
