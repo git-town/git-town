@@ -51,7 +51,7 @@ func Finished(args FinishedArgs) error {
 	}
 	runState := runstate.RunState{
 		AbortProgram:             program.Program{},
-		BeginBranchesSnapshot:    args.BeginBranchesSnapshot.GetOrDefault(),
+		BeginBranchesSnapshot:    args.BeginBranchesSnapshot.GetOrZero(),
 		BeginConfigSnapshot:      args.BeginConfigSnapshot,
 		BeginStashSize:           0,
 		Command:                  args.Command,

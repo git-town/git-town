@@ -32,7 +32,7 @@ func BranchProposalsProgram(branchesToSync configdomain.BranchesToSync, args Bra
 		}
 		args.Program.Value.Add(&opcodes.ProposalUpdateBody{
 			Proposal: proposal,
-			UpdatedBody: forge.ProposalBodyUpdateWithStackLineage(proposal.Data.Data().Body.GetOrDefault(), builder.Build(forge.ProposalStackLineageArgs{
+			UpdatedBody: forge.ProposalBodyUpdateWithStackLineage(proposal.Data.Data().Body.GetOrZero(), builder.Build(forge.ProposalStackLineageArgs{
 				Connector:                args.ProposalStackLineageArgs.Connector,
 				CurrentBranch:            branch.BranchInfo.LocalBranchName(),
 				Lineage:                  args.ProposalStackLineageArgs.Lineage,
