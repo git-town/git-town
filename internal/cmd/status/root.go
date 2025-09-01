@@ -73,7 +73,7 @@ func executeStatus(cliConfig configdomain.PartialConfig, pending configdomain.Pe
 	}
 	displayStatus(data, pending)
 	if !pending {
-		print.Footer(repo.UnvalidatedConfig.NormalConfig.Verbose, *repo.CommandsCounter.Value, []string{})
+		print.Footer(repo.UnvalidatedConfig.NormalConfig.Verbose, repo.CommandsCounter.Immutable(), []string{})
 	}
 	return nil
 }
