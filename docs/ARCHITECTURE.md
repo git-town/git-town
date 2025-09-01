@@ -101,9 +101,9 @@ cumbersome.
 
 Contrary to the wiki page, the method receiver is more than just another
 function argument. It is defined separately and serves as the central data
-element in the method. Otherwise, the method should simply be a function. The
-method receiver is unique in that it allows safe access to private properties
-without violating abstraction and encapsulation boundaries.
+element in the method. Without this special argument, the method should simply
+be a function. The method receiver is the only one that allows access to private
+properties without violating abstraction and encapsulation boundaries.
 
 Go does not provide a clear convention for naming method receivers. Various
 alternatives exist, each with its own pros and cons, but none are universally
@@ -119,9 +119,15 @@ deterring the effort altogether. This outcome is detrimental to the codebase, as
 the ability to refactor efficiently is more important than strictly following
 debatable community standards.
 
-The name `self` is sufficiently concise, being only four characters long. For
-more background please refer to https://michaelwhatcott.com/receiver-names-in-go
-and https://dev.to/codypotter/the-case-for-self-receivers-in-go-3h7f.
+It feels like this convention exists solely to distinguish Go from Java and C++.
+The Git Town codebase is not concerned with this distinction.
+
+The name `self` is appropriately concise, being only four characters long but a
+properly readable English word.
+
+For more background please refer to
+https://michaelwhatcott.com/receiver-names-in-go and
+https://dev.to/codypotter/the-case-for-self-receivers-in-go-3h7f.
 
 #### Generic container types for Optionality and Mutability
 
