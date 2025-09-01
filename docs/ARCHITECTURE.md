@@ -102,8 +102,13 @@ cumbersome.
 Contrary to the wiki page, the method receiver is more than just another
 function argument. It is defined separately and serves as the central data
 element in the method. Without this special argument, the method should simply
-be a function. The method receiver is the only argument that allows access to
-private properties without violating abstraction and encapsulation boundaries.
+be a function. The method receiver is the only argument of which you can (and
+should) access private properties without violating abstraction and
+encapsulation boundaries.
+
+It appears this convention exists solely to distinguish Go from Java and C++.
+The Git Town project does not share this distinction with the same emphasis as
+Google does, since we don't have legacy codebases in Java or C++.
 
 Go does not provide a clear convention for naming method receivers. Various
 alternatives exist, each with its own pros and cons, but none are universally
@@ -118,9 +123,6 @@ to the lack of a standard convention, making refactoring costly and noisy, often
 deterring the effort altogether. This outcome is detrimental to the codebase, as
 the ability to refactor efficiently is more important than strictly following
 debatable community standards.
-
-It feels like this convention exists solely to distinguish Go from Java and C++.
-The Git Town codebase is not concerned with this distinction.
 
 The name `self` is appropriately concise, being only four characters long but a
 properly readable English word.
