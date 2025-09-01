@@ -130,47 +130,64 @@ The simplest way to create a variable that can either have a value or not is
 with a pointer. Here, `nil` signifies the absence of a value, while a non-nil
 pointer indicates the presence of a value. However, Go does not enforce checks
 for absent values, which leads to runtime panics when attempting to dereference
-a nil-pointer representing a variable with non-existing value. The Git Town
-codebase wraps optional values in a generic `Option` type. This approach makes
-it explicit whether a type is optional. It also enforces checks when using an
-optional value.
-
-Another use of pointers in Go is for performance optimization: if a variable is
-too large to pass by value, it can be passed by reference. The Git Town codebase
-does not employ this optimization as it is not necessary in our use case.
+a nil-pointer representing a variable with non-existing value.
 
 Pointers can also indicate mutability. To mutate variables passed as function
-arguments they must be pointers. The challenge here is that it can be unclear
-why a function argument is a pointer: it is optional, mutable, or simply too
-large to pass by value? To clarify this, the Git Town codebase wraps mutable
-function arguments and struct fields in the generic `Mutable` type to denote
-mutability. Any variable not wrapped in a `Mutable` should be considered
-immutable. Any variable wrapped in `Mutable` is guaranteed (by convention) to
-exist, i.e. a `Mutable` is never `nil`.
+arguments, they must be pointers.
+
+Another use of pointers in Go is for performance optimization: if a variable is
+too large to pass by value, it can be passed by reference.
+
+The challenge here is that it can be unclear why a variable or function argument
+is a pointer: it is optional, mutable, or too large to pass by value? Or some
+combination of the three? To clarify this, the Git Town codebase wraps mutable
+function arguments and struct fields in generic container types.
+
+The `Option` type (taken from Rust) makes it explicit whether a type is
+optional. It enforces checking whether an optional value is present when
+accessing it.
+
+`Mutable` type to denote mutability. Any variable not wrapped in a `Mutable`
+should be considered immutable. Any variable wrapped in `Mutable` is guaranteed
+(by convention) to exist, i.e. a `Mutable` is never `nil`. You can pass mutables
+around without pointers, they are still properly mutable.
 
 While this practice introduces a thin layer of additional complexity, a few more
 allocations, and more code to handle edge cases correctly, this complexity is
-justified by the drastically increased robustness of the codebase. It has
-eliminated entire categories of bugs that Git Town users encountered relatively
-frequently before. We have adopted the naming conventions from the Rust
-programming language as they have proven effective in that community.
+justified in our case because it drastically increases the robustness of the
+codebase. Both the `Option` and `Mutable` type have eliminated entire categories
+of bugs (nil pointer dereferences and lost updates due to mutating data provided
+by value) that Git Town encountered relatively frequently before.
 
-#### One concept per file
+We have adopted the naming conventions from the Rust programming language, as
+they have proven effective in that community.
 
-In the Git Town codebase each concept (such as type definitions, functions, or
-constants) is located in its own file. This organization simplifies the process
-of locating specific concepts by opening the file with the matching name.
+We don't say this is a pattern that every other Go codebase should adopt, but in
+this case it has served us surprisingly well, and the additional complexity has
+been well worth it.
+
+#### One type per file
+
+In the Git Town codebase each type is located in its own file. This makes it
+much easier to locate a type: just open the file with the corresponding name. It
+also keep files to often less than 100 lines of code, which makes it easy to get
+an overview what it does.
 
 #### Newtypes
 
-In earlier versions, the Git Town codebase used the built-in data types like
+In earlier versions, the Git Town codebase relied the built-in data types like
 `string` and `int` for struct fields. This led to
-[primitive-obsession](https://refactoring.guru/smells/primitive-obsession). Git
-Town's domain model includes so many distinct uses for `string` and other basic
-data types that it becomes too easy to mix them up. Git Town's codebase
-extensively employs the newtype pattern, i.e. defines distinct data types for
-each domain concept, even if they can be represented by a simple `string` or
-`int`. This ensures that only semantically correct data is used.
+[primitive-obsession](https://refactoring.guru/smells/primitive-obsession) and
+stringly-typed code. Git Town's domain model includes so many distinct uses for
+`string` and other basic data types that it becomes too easy to mix them up. Git
+Town's codebase employs the newtype pattern, i.e. defines distinct data types
+for each domain concept, even if they are represented by a simple `string` or
+`int` internally. This ensures that semantically correct data is used
+everywhere.
+
+This is another example where a concept adds complexity, but that complexity is
+well worth it because it eliminates an entire category of bugs (using the wrong
+data).
 
 #### Making invalid states unrepresentable
 
