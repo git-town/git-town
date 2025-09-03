@@ -4,7 +4,7 @@ package gohacks
 // The zero value is a valid empty counter.
 type Counter int
 
-// adds 1 to this counter
-func (self *Counter) Inc() {
+// Increment adds 1 to this counter
+func (self *Counter) Increment() {
 	*self += 1
 }

@@ -23,7 +23,7 @@ type Option[T any] struct {
 	value *T
 }
 
-// indicates whether the given other Option has the same value as this Option
+// Equal indicates whether the given other Option has the same value as this Option
 func (self Option[T]) Equal(other Option[T]) bool {
 	selfValue, hasSelfValue := self.Get()
 	otherValue, hasOtherValue := other.Get()
@@ -36,7 +36,7 @@ func (self Option[T]) Equal(other Option[T]) bool {
 	return reflect.DeepEqual(selfValue, otherValue)
 }
 
-// indicates whether this option contains the given value
+// EqualSome indicates whether this option contains the given value
 func (self Option[T]) EqualSome(other T) bool {
 	if value, hasValue := self.Get(); hasValue {
 		return reflect.DeepEqual(value, other)
@@ -100,7 +100,7 @@ func (self Option[T]) MarshalJSON() ([]byte, error) {
 	return json.Marshal(nil)
 }
 
-// Performs a logical OR operation on this option and the given option:
+// Or performs a logical OR operation on this option and the given option:
 // Returns this option if it is some, otherwise the given option.
 func (self Option[T]) Or(other Option[T]) Option[T] {
 	if self.IsSome() {
@@ -115,7 +115,7 @@ func (self Option[T]) String() string {
 	return self.StringOr("")
 }
 
-// StringOr provideds the string serialization of the contained value.
+// StringOr provides the string serialization of the contained value.
 // If this option contains nothing, you get the given alternative string representation.
 func (self Option[T]) StringOr(other string) string {
 	if self.IsSome() {
@@ -135,7 +135,7 @@ func (self *Option[T]) UnmarshalJSON(b []byte) error {
 	return json.Unmarshal(b, &self.value)
 }
 
-// Creates a new Option containing None if the given value is the zero value, otherwise Some.
+// NewOption creates a new Option containing None if the given value is the zero value, otherwise Some.
 func NewOption[T any](value T) Option[T] {
 	var zero T
 	if equal.Equal(value, zero) {
