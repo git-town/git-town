@@ -41,7 +41,7 @@ func (self *ProposalUpdateLineage) Run(args shared.RunArgs) error {
 	}
 	args.PrependOpcodes(&ProposalUpdateBody{
 		Proposal:    proposal,
-		UpdatedBody: forge.ProposalBodyUpdateWithStackLineage(proposal.Data.Data().Body.GetOrDefault(), builder.Build(lineageArgs)),
+		UpdatedBody: forge.ProposalBodyUpdateWithStackLineage(proposal.Data.Data().Body.GetOrZero(), builder.Build(lineageArgs)),
 	})
 	return nil
 }
