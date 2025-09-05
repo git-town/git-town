@@ -8,6 +8,7 @@
 - The setup assistant now allows a quick setup of only the essential settings ([#5484](https://github.com/git-town/git-town/issues/5484)).
 - The new "feature" command converts the given or current branch to a feature branch ([#5376](https://github.com/git-town/git-town/issues/5376)).
 - The [detached option for sync](https://www.git-town.com/commands/sync.html#-d--detached) is now also a proper [configuration option]() ([#5452](https://github.com/git-town/git-town/issues/5452)).
+- You can now disable [auto-resolving](https://www.git-town.com/commands/sync.html#--auto-resolve) also through its negative form `--no-auto-resolve` ([#5458](https://github.com/git-town/git-town/pull/5458)).
 
 #### Bug Fixes
 
