@@ -4,17 +4,23 @@
 
 #### New Features
 
-- The new [up](https://www.git-town.com/commands/up.html) and [down](https://www.git-town.com/commands/down.html) commands move to the child or parent of the current branch ([#5432](https://github.com/git-town/git-town/issues/5432)).
-- You can now provide all configuration settings through environment variables, in addition to the existing config file and Git metadata options. This allows you to derive settings through custom scripts. For example, to read the API token from 1password CLI: `GIT_TOWN_GITHUB_TOKEN=$(op read op://development/GitHub/credentials/personal_token) git town config` ([#5446](https://github.com/git-town/git-town/issues/5446)).
-- The `hack`, `append`, and `prepend` commands now have a [stash]() setting and CLI flag that makes them not touch staged changes at all. This is useful if you have a carefully crafted index that you want to commit to a new branch ([#5429](https://github.com/git-town/git-town/issues/5429)).
-- The setup assistant now allows a quick setup of only the essential settings ([#5484](https://github.com/git-town/git-town/issues/5484)).
-- The new "feature" command converts the given or current branch to a feature branch ([#5376](https://github.com/git-town/git-town/issues/5376)).
-- The [detached option for sync](https://www.git-town.com/commands/sync.html#-d--detached) is now also a proper [configuration option]() ([#5452](https://github.com/git-town/git-town/issues/5452)).
-- You can now disable [auto-resolving](https://www.git-town.com/commands/sync.html#--auto-resolve) also through its negative form `--no-auto-resolve` ([#5458](https://github.com/git-town/git-town/pull/5458)).
+* Added [up](https://www.git-town.com/commands/up.html) and [down](https://www.git-town.com/commands/down.html) commands to quickly move to the child or parent of the current branch ([#5432](https://github.com/git-town/git-town/issues/5432)).
+* All configuration settings can now be provided via environment variables, in addition to the config file and Git metadata. This makes it easy to use custom scripts that provide configuration data. For example, to load an API token from 1password CLI:
+
+  ```bash
+  GIT_TOWN_GITHUB_TOKEN=$(op read op://development/GitHub/credentials/personal_token) git town config
+  ```
+
+  ([#5446](https://github.com/git-town/git-town/issues/5446))
+* The `hack`, `append`, and `prepend` commands now support a [stash]() flag and config option to leave staged changes as-is. Handy if you've carefully prepared an index you want to commit to a new branch ([#5429](https://github.com/git-town/git-town/issues/5429)).
+* The setup assistant can now do a quick setup with only the essential settings ([#5484](https://github.com/git-town/git-town/issues/5484)).
+* Added a new `feature` command to convert the given or current branch into a feature branch ([#5376](https://github.com/git-town/git-town/issues/5376)).
+* The [detached sync](https://www.git-town.com/commands/sync.html#-d--detached) flag can now be permanently enabled through the new [detached configuration setting]() ([#5452](https://github.com/git-town/git-town/issues/5452)).
+* The [auto-resolve](https://www.git-town.com/commands/sync.html#--auto-resolve) flag can now be disabled with `--no-auto-resolve` ([#5458](https://github.com/git-town/git-town/pull/5458)).
 
 #### Bug Fixes
 
-- The setup assistant no longer stores the dev-remote if the user chose the default option ([#5492](https://github.com/git-town/git-town/issues/5492)).
+* The setup assistant no longer stores a dev-remote when the user selects the default option ([#5492](https://github.com/git-town/git-town/issues/5492)).
 
 ## 21.4.3 (2025-08-15)
 
