@@ -68,7 +68,7 @@ func TestSave(t *testing.T) {
 				SyncUpstream:             Some(configdomain.SyncUpstream(true)),
 			})
 			want := `
-# More info around this file at https://www.git-town.com/configuration-file
+# See https://www.git-town.com/configuration-file for details
 
 [branches]
 main = "main"
@@ -108,7 +108,7 @@ upstream = true
 			t.Parallel()
 			have := configfile.RenderTOML(configdomain.PartialConfig{})
 			want := `
-# More info around this file at https://www.git-town.com/configuration-file
+# See https://www.git-town.com/configuration-file for details
 `[1:]
 			must.EqOp(t, want, have)
 		})

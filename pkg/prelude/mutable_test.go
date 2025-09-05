@@ -21,5 +21,5 @@ func TestMutable(t *testing.T) {
 }
 
 func modify(byValue Mutable[gohacks.Counter]) {
-	byValue.Value.Inc()
+	byValue.Value.Increment()
 }

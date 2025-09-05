@@ -50,6 +50,7 @@ Feature: don't ask for information already provided by the config file
       | github connector type | enter             |
       | github token          | g h - t o k enter |
       | token scope           | enter             |
+      | enter all             | down enter        |
       | config storage        | enter             |
     Then Git Town runs the commands
       | COMMAND                                  |

@@ -27,15 +27,16 @@ Feature: migrate existing configuration in Git metadata to a config file
       | aliases                     | enter      |
       | main branch                 | enter      |
       | perennial branches          | enter      |
+      | dev-remote                  | enter      |
+      | origin hostname             | enter      |
+      | forge type                  | enter      |
+      | enter all                   | down enter |
       | perennial regex             | enter      |
       | feature regex               | enter      |
       | contribution regex          | enter      |
       | observed regex              | enter      |
       | new branch type             | enter      |
       | unknown branch type         | enter      |
-      | dev-remote                  | enter      |
-      | origin hostname             | enter      |
-      | forge type                  | enter      |
       | sync feature strategy       | enter      |
       | sync perennial strategy     | enter      |
       | sync prototype strategy     | enter      |
@@ -91,7 +92,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.stash" now doesn't exist
     And the configuration file is now:
       """
-      # More info around this file at https://www.git-town.com/configuration-file
+      # See https://www.git-town.com/configuration-file for details
 
       [branches]
       main = "main"

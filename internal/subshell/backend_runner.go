@@ -47,7 +47,7 @@ func (self BackendRunner) RunWithEnv(env []string, executable string, args ...st
 }
 
 func (self BackendRunner) execute(env []string, executable string, args ...string) (string, error) {
-	self.CommandsCounter.Value.Inc()
+	self.CommandsCounter.Value.Increment()
 	if self.Verbose {
 		printHeader(env, executable, args...)
 	}
