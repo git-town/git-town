@@ -1,5 +1,15 @@
 # Git Town Changelog
 
+## 21.5.0 (2025-09-05)
+
+#### New Features
+
+- The setup assistant now allows a quick setup of only the essential settings ([#5484](https://github.com/git-town/git-town/issues/5484)).
+
+#### Bug Fixes
+
+- The setup assistant no longer stores the dev-remote if the user chose the default option ([#5492](https://github.com/git-town/git-town/issues/5492)).
+
 ## 21.4.3 (2025-08-15)
 
 #### Bug Fixes
