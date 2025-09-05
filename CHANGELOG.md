@@ -4,6 +4,7 @@
 
 #### New Features
 
+- The new [up](https://www.git-town.com/commands/up.html) and [down](https://www.git-town.com/commands/down.html) commands move to the child or parent of the current branch ([#5432](https://github.com/git-town/git-town/issues/5432)).
 - You can now provide all configuration settings through environment variables, in addition to the existing config file and Git metadata options. This allows you to derive settings through custom scripts. For example, to read the API token from 1password CLI: `GIT_TOWN_GITHUB_TOKEN=$(op read op://development/GitHub/credentials/personal_token) git town config` ([#5446](https://github.com/git-town/git-town/issues/5446)).
 - The `hack`, `append`, and `prepend` commands now have a [stash]() setting and CLI flag that makes them not touch staged changes at all. This is useful if you have a carefully crafted index that you want to commit to a new branch ([#5429](https://github.com/git-town/git-town/issues/5429)).
 - The setup assistant now allows a quick setup of only the essential settings ([#5484](https://github.com/git-town/git-town/issues/5484)).
