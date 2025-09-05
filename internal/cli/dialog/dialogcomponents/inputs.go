@@ -26,10 +26,10 @@ func (self Inputs) Next() Option[Input] {
 	if self.len == 0 {
 		return None[Input]()
 	}
-	if *self.cursor.Value == self.len {
+	if self.cursor.Immutable() == self.len {
 		panic("not enough dialog inputs")
 	}
-	result := self.inputs[*self.cursor.Value]
+	result := self.inputs[self.cursor.Immutable()]
 	*self.cursor.Value += 1
 	return Some(result)
 }

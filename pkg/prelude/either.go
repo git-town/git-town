@@ -6,6 +6,7 @@ type Either[LEFT any, RIGHT any] struct {
 	right *RIGHT
 }
 
+// Left creates an Either containing the given left value
 func Left[LEFT any, RIGHT any](left LEFT) Either[LEFT, RIGHT] {
 	return Either[LEFT, RIGHT]{
 		left:  &left,
@@ -13,6 +14,7 @@ func Left[LEFT any, RIGHT any](left LEFT) Either[LEFT, RIGHT] {
 	}
 }
 
+// Right creates an Either containing the given right value
 func Right[LEFT any, RIGHT any](right RIGHT) Either[LEFT, RIGHT] {
 	return Either[LEFT, RIGHT]{
 		left:  nil,
@@ -20,6 +22,7 @@ func Right[LEFT any, RIGHT any](right RIGHT) Either[LEFT, RIGHT] {
 	}
 }
 
+// Get returns the contained value and indicates which side it is on
 func (self Either[LEFT, RIGHT]) Get() (left LEFT, hasLeft bool, right RIGHT, hasRight bool) { //nolint:ireturn
 	if self.left != nil {
 		left = *self.left

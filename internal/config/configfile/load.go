@@ -258,7 +258,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		GitUserName:              None[gitdomain.GitUserName](),
 		GiteaToken:               None[forgedomain.GiteaToken](),
 		HostingOriginHostname:    hostingOriginHostname,
-		Lineage:                  configdomain.Lineage{},
+		Lineage:                  configdomain.NewLineage(),
 		MainBranch:               mainBranch,
 		NewBranchType:            newBranchType,
 		AutoResolve:              autoResolve,

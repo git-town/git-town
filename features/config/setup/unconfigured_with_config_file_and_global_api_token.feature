@@ -49,6 +49,7 @@ Feature: don't ask for information already provided by the config file
       | welcome            | enter |
       | aliases            | enter |
       | perennial branches | enter |
+      | enter all          | enter |
       | config storage     | enter |
     Then Git Town runs no commands
     And there are still no perennial branches

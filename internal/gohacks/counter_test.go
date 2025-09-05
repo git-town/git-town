@@ -10,8 +10,8 @@ import (
 func TestCounter(t *testing.T) {
 	t.Parallel()
 	counter := gohacks.Counter(0)
-	counter.Inc()
+	counter.Increment()
 	must.EqOp(t, 1, counter)
-	counter.Inc()
+	counter.Increment()
 	must.EqOp(t, 2, counter)
 }

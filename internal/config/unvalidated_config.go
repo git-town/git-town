@@ -24,7 +24,7 @@ type UnvalidatedConfig struct {
 }
 
 func (self *UnvalidatedConfig) BranchType(branch gitdomain.LocalBranchName) configdomain.BranchType {
-	return self.UnvalidatedConfig.PartialBranchType(branch).GetOrElse(self.NormalConfig.PartialBranchType(branch))
+	return self.UnvalidatedConfig.PartialBranchType(branch).GetOr(self.NormalConfig.PartialBranchType(branch))
 }
 
 // IsMainOrPerennialBranch indicates whether the branch with the given name
@@ -77,7 +77,7 @@ func (self *UnvalidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName, r
 func (self *UnvalidatedConfig) UnvalidatedBranchesAndTypes(branches gitdomain.LocalBranchNames) configdomain.BranchesAndTypes {
 	result := make(configdomain.BranchesAndTypes, len(branches))
 	for _, branch := range branches {
-		result[branch] = self.UnvalidatedConfig.PartialBranchType(branch).GetOrElse(self.NormalConfig.PartialBranchType(branch))
+		result[branch] = self.UnvalidatedConfig.PartialBranchType(branch).GetOr(self.NormalConfig.PartialBranchType(branch))
 	}
 	return result
 }

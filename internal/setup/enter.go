@@ -38,35 +38,11 @@ func Enter(data Data) (UserInput, dialogdomain.Exit, error) {
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	perennialRegex, exit, err := enterPerennialRegex(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
-	featureRegex, exit, err := enterFeatureRegex(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
-	contributionRegex, exit, err := enterContributionRegex(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
-	observedRegex, exit, err := enterObservedRegex(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
-	newBranchType, exit, err := enterNewBranchType(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
-	unknownBranchType, exit, err := enterUnknownBranchType(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
+EnterForgeData:
 	devRemote, exit, err := enterDevRemote(data)
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-EnterForgeData:
 	hostingOriginHostName, exit, err := enterOriginHostName(data)
 	if err != nil || exit {
 		return emptyResult, exit, err
@@ -128,18 +104,18 @@ EnterForgeData:
 	}
 	repeat, exit, err := testForgeAuth(testForgeAuthArgs{
 		backend:              data.Backend,
-		bitbucketAppPassword: bitbucketAppPassword,
-		bitbucketUsername:    bitbucketUsername,
-		codebergToken:        codebergToken,
+		bitbucketAppPassword: bitbucketAppPassword.Or(data.Config.GitGlobal.BitbucketAppPassword),
+		bitbucketUsername:    bitbucketUsername.Or(data.Config.GitGlobal.BitbucketUsername),
+		codebergToken:        codebergToken.Or(data.Config.GitGlobal.CodebergToken),
 		devURL:               devURL,
 		forgeTypeOpt:         actualForgeType,
-		giteaToken:           giteaToken,
-		githubConnectorType:  githubConnectorTypeOpt,
-		githubToken:          githubToken,
-		gitlabConnectorType:  gitlabConnectorTypeOpt,
-		gitlabToken:          gitlabToken,
+		giteaToken:           giteaToken.Or(data.Config.GitGlobal.GiteaToken),
+		githubConnectorType:  githubConnectorTypeOpt.Or(data.Config.GitGlobal.GitHubConnectorType),
+		githubToken:          githubToken.Or(data.Config.GitGlobal.GitHubToken),
+		gitlabConnectorType:  gitlabConnectorTypeOpt.Or(gitlabConnectorTypeOpt),
+		gitlabToken:          gitlabToken.Or(data.Config.GitGlobal.GitLabToken),
 		inputs:               data.Inputs,
-		remoteURL:            data.Config.NormalConfig.RemoteURL(data.Backend, devRemote.GetOrElse(config.DefaultNormalConfig().DevRemote)),
+		remoteURL:            data.Config.NormalConfig.RemoteURL(data.Backend, devRemote.GetOr(config.DefaultNormalConfig().DevRemote)),
 	})
 	if err != nil || exit {
 		return emptyResult, exit, err
@@ -162,49 +138,96 @@ EnterForgeData:
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	syncFeatureStrategy, exit, err := enterSyncFeatureStrategy(data)
+	enterAll, exit, err := dialog.EnterAll(data.Inputs)
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	syncPerennialStrategy, exit, err := enterSyncPerennialStrategy(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
-	syncPrototypeStrategy, exit, err := enterSyncPrototypeStrategy(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
-	syncUpstream, exit, err := enterSyncUpstream(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
-	syncTags, exit, err := enterSyncTags(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
-	detached, exit, err := enterDetached(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
-	stash, exit, err := enterStash(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
-	shareNewBranches, exit, err := enterShareNewBranches(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
-	pushHook, exit, err := enterPushHook(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
-	shipStrategy, exit, err := enterShipStrategy(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
-	}
-	shipDeleteTrackingBranch, exit, err := enterShipDeleteTrackingBranch(data)
-	if err != nil || exit {
-		return emptyResult, exit, err
+	perennialRegex := None[configdomain.PerennialRegex]()
+	featureRegex := None[configdomain.FeatureRegex]()
+	contributionRegex := None[configdomain.ContributionRegex]()
+	observedRegex := None[configdomain.ObservedRegex]()
+	newBranchType := None[configdomain.NewBranchType]()
+	unknownBranchType := None[configdomain.UnknownBranchType]()
+	syncFeatureStrategy := None[configdomain.SyncFeatureStrategy]()
+	syncPerennialStrategy := None[configdomain.SyncPerennialStrategy]()
+	syncPrototypeStrategy := None[configdomain.SyncPrototypeStrategy]()
+	syncUpstream := None[configdomain.SyncUpstream]()
+	syncTags := None[configdomain.SyncTags]()
+	detached := None[configdomain.Detached]()
+	stash := None[configdomain.Stash]()
+	shareNewBranches := None[configdomain.ShareNewBranches]()
+	pushHook := None[configdomain.PushHook]()
+	shipStrategy := None[configdomain.ShipStrategy]()
+	shipDeleteTrackingBranch := None[configdomain.ShipDeleteTrackingBranch]()
+	if enterAll {
+		perennialRegex, exit, err = enterPerennialRegex(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+		featureRegex, exit, err = enterFeatureRegex(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+		contributionRegex, exit, err = enterContributionRegex(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+		observedRegex, exit, err = enterObservedRegex(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+		newBranchType, exit, err = enterNewBranchType(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+		unknownBranchType, exit, err = enterUnknownBranchType(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+		syncFeatureStrategy, exit, err = enterSyncFeatureStrategy(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+		syncPerennialStrategy, exit, err = enterSyncPerennialStrategy(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+		syncPrototypeStrategy, exit, err = enterSyncPrototypeStrategy(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+		syncUpstream, exit, err = enterSyncUpstream(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+		syncTags, exit, err = enterSyncTags(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+		detached, exit, err = enterDetached(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+		stash, exit, err = enterStash(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+		shareNewBranches, exit, err = enterShareNewBranches(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+		pushHook, exit, err = enterPushHook(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+		shipStrategy, exit, err = enterShipStrategy(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+		shipDeleteTrackingBranch, exit, err = enterShipDeleteTrackingBranch(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
 	}
 	configStorage, exit, err := dialog.ConfigStorage(data.Inputs)
 	if err != nil || exit {
@@ -231,7 +254,7 @@ EnterForgeData:
 		GitUserName:              None[gitdomain.GitUserName](),
 		GiteaToken:               giteaToken,
 		HostingOriginHostname:    hostingOriginHostName,
-		Lineage:                  configdomain.Lineage{}, // the setup assistant doesn't ask for this
+		Lineage:                  configdomain.NewLineage(), // the setup assistant doesn't ask for this
 		MainBranch:               mainBranchSetting,
 		NewBranchType:            newBranchType,
 		ObservedRegex:            observedRegex,

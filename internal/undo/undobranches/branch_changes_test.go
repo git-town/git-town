@@ -1073,7 +1073,7 @@ func TestChanges(t *testing.T) {
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
-			EndBranch:                after.Active.GetOrDefault(),
+			EndBranch:                after.Active.GetOrZero(),
 			FinalMessages:            stringslice.NewCollector(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
@@ -1164,7 +1164,7 @@ func TestChanges(t *testing.T) {
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
-			EndBranch:                after.Active.GetOrDefault(),
+			EndBranch:                after.Active.GetOrZero(),
 			FinalMessages:            stringslice.NewCollector(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
