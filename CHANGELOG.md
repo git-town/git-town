@@ -12,10 +12,10 @@
   ```
 
   ([#5446](https://github.com/git-town/git-town/issues/5446))
-- The `hack`, `append`, and `prepend` commands now support a [stash]() flag and config option to leave staged changes as-is. Handy if you've carefully prepared an index you want to commit to a new branch ([#5429](https://github.com/git-town/git-town/issues/5429)).
+- The `hack`, `append`, and `prepend` commands now support a [stash](https://www.git-town.com/commands/hack.html#--stash--no-stash) flag and config option to leave staged changes as-is. Handy if you've carefully prepared an index you want to commit to a new branch ([#5429](https://github.com/git-town/git-town/issues/5429)).
 - The setup assistant can now do a quick setup with only the essential settings ([#5484](https://github.com/git-town/git-town/issues/5484)).
 - Added a new `feature` command to convert the given or current branch into a feature branch ([#5376](https://github.com/git-town/git-town/issues/5376)).
-- The [detached sync](https://www.git-town.com/commands/sync.html#-d--detached) flag can now be permanently enabled through the new [detached configuration setting]() ([#5452](https://github.com/git-town/git-town/issues/5452)).
+- The [detached sync](https://www.git-town.com/commands/sync.html#-d--detached) flag can now be permanently enabled through the new [detached configuration setting](https://www.git-town.com/preferences/detached.html) ([#5452](https://github.com/git-town/git-town/issues/5452)).
 - The [auto-resolve](https://www.git-town.com/commands/sync.html#--auto-resolve) flag can now be disabled with `--no-auto-resolve` ([#5458](https://github.com/git-town/git-town/pull/5458)).
 
 #### Bug Fixes
