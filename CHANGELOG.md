@@ -22,6 +22,10 @@
 
 * The setup assistant no longer stores a dev-remote when the user selects the default option ([#5492](https://github.com/git-town/git-town/issues/5492)).
 
+#### Contributors
+
+Shoutout to @fuadsaud, @kevgo, @stefanfrede, @stephenwade, @yaadata for contributing code, feedback, and ideas to 65 shipped PRs and 10 resolved issues!
+
 ## 21.4.3 (2025-08-15)
 
 #### Bug Fixes
