@@ -5,6 +5,7 @@
 #### New Features
 
 - The setup assistant now allows a quick setup of only the essential settings ([#5484](https://github.com/git-town/git-town/issues/5484)).
+- The new "feature" command converts the given or current branch to a feature branch ([#5376](https://github.com/git-town/git-town/issues/5376)).
 
 #### Bug Fixes
 
