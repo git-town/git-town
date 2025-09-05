@@ -4,8 +4,10 @@
 
 #### New Features
 
+- The `hack`, `append`, and `prepend` commands now have a [stash]() setting and CLI flag that makes them not touch staged changes at all. This is useful if you have a carefully crafted index that you want to commit to a new branch ([#5429](https://github.com/git-town/git-town/issues/5429)).
 - The setup assistant now allows a quick setup of only the essential settings ([#5484](https://github.com/git-town/git-town/issues/5484)).
 - The new "feature" command converts the given or current branch to a feature branch ([#5376](https://github.com/git-town/git-town/issues/5376)).
+- The [detached option for sync](https://www.git-town.com/commands/sync.html#-d--detached) is now also a proper [configuration option]() ([#5452](https://github.com/git-town/git-town/issues/5452)).
 
 #### Bug Fixes
 
