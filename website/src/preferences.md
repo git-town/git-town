@@ -32,6 +32,6 @@ Configuration data exists on multiple levels:
    example, to read the [GitHub token](preferences/github-token.md) from
    1password CLI:
 
-   ```wrap
+   ```bash
    GIT_TOWN_GITHUB_TOKEN=$(op read op://development/GitHub/credentials/personal_token) git town config
    ```
