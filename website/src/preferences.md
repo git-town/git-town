@@ -28,9 +28,9 @@ Configuration data exists on multiple levels:
    git config git-town.sync-feature-strategy merge
    ```
 
-4. You can override any config setting through environment variables. For
-   example, to read the [GitHub token](preferences/github-token.md) from
-   1password CLI:
+4. All config settings can also be overridden via environment variables. For
+   example, to load your [GitHub token](preferences/github-token.md) from the
+   1Password CLI:
 
    ```bash
    GIT_TOWN_GITHUB_TOKEN=$(op read op://development/GitHub/credentials/personal_token) git town config
