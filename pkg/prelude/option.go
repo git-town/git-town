@@ -8,17 +8,22 @@ import (
 	"github.com/git-town/git-town/v21/pkg/equal"
 )
 
-// Option provides infrastructure for optional (nullable) values
-// that is fully enforced by the type checker.
-// Matching the data architecture of this codebase, this Option
-// provides copies of the optional value, i.e. works only for const and copyable values.
-// If you need direct access to the optional value, i.e. don't want a copy, use an OptionP instead.
+// Option encodes invariants around optional (nullable) immutable values in the type system.
 // The zero value is the None option.
 //
-// Option is worth the overhead because it removes one of the many possible meanings (optionality)
-// from pointer values. This means a pointer in this codebase implies mutability and nothing else.
+// For optional values that should not be copied, please use OptionalMutable.
+// Compare Options using their `Equal` or `EqualSome` methods,
+// direct comparison using == doesn't work.
 //
-// Compare Options using their .Equal method since direct comparison using == doesn't work properly.
+// Why pointers are not a good solution for optional values:
+//
+//  1. A pointer has many meanings: optional, mutable, too large to pass by value.
+//     The Option type documents that a value is optional (and immutable, or mutable when using OptionalMutable).
+//
+//  2. A pointer looks the same before and after you checked it for nil.
+//     Pointers therefore carry the risk of being checked too often or too little,
+//     leading to unnecessary boilerplate or bugs.
+//     Options get checked exactly once, leading to the least amount of boilerplate code.
 type Option[T any] struct {
 	value *T
 }
