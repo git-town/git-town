@@ -26,7 +26,6 @@ func Execute() error {
 	rootCmd.AddCommand(downCmd())
 	rootCmd.AddCommand(featureCmd())
 	rootCmd.AddCommand(initCommand())
-	rootCmd.AddCommand(killCommand())
 	rootCmd.AddCommand(mergeCommand())
 	rootCmd.AddCommand(observeCmd())
 	rootCmd.AddCommand(offlineCmd())
