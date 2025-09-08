@@ -8,8 +8,7 @@ import (
 // CommitRevert adds a commit to the current branch
 // that reverts the commit with the given SHA.
 type CommitRevert struct {
-	SHA                     gitdomain.SHA
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	SHA gitdomain.SHA
 }
 
 func (self *CommitRevert) Run(args shared.RunArgs) error {

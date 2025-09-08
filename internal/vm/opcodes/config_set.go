@@ -7,10 +7,9 @@ import (
 )
 
 type ConfigSet struct {
-	Key                     configdomain.Key
-	Scope                   configdomain.ConfigScope
-	Value                   string
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	Key   configdomain.Key
+	Scope configdomain.ConfigScope
+	Value string
 }
 
 func (self *ConfigSet) Run(args shared.RunArgs) error {

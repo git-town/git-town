@@ -10,10 +10,9 @@ import (
 
 // ProposalUpdateTargetToGrandParent updates the target of the proposal with the given number to the parent of the given branch.
 type ProposalUpdateTargetToGrandParent struct {
-	Branch                  gitdomain.LocalBranchName
-	OldTarget               gitdomain.LocalBranchName
-	Proposal                forgedomain.Proposal
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	Branch    gitdomain.LocalBranchName
+	OldTarget gitdomain.LocalBranchName
+	Proposal  forgedomain.Proposal
 }
 
 func (self *ProposalUpdateTargetToGrandParent) Run(args shared.RunArgs) error {

@@ -8,11 +8,10 @@ import (
 
 // MergeParentResolvePhantomConflicts merges the given parent branch into the current branch.
 type MergeParentResolvePhantomConflicts struct {
-	CurrentBranch           gitdomain.LocalBranchName
-	CurrentParent           gitdomain.BranchName              // the currently active parent, after all remotely deleted parents were removed
-	InitialParentName       Option[gitdomain.LocalBranchName] // name of the original parent when Git Town started
-	InitialParentSHA        Option[gitdomain.SHA]             // SHA of the original parent when Git Town started
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	CurrentBranch     gitdomain.LocalBranchName
+	CurrentParent     gitdomain.BranchName              // the currently active parent, after all remotely deleted parents were removed
+	InitialParentName Option[gitdomain.LocalBranchName] // name of the original parent when Git Town started
+	InitialParentSHA  Option[gitdomain.SHA]             // SHA of the original parent when Git Town started
 }
 
 func (self *MergeParentResolvePhantomConflicts) Abort() []shared.Opcode {

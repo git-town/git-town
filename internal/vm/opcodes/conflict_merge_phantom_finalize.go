@@ -9,9 +9,7 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-type ConflictMergePhantomFinalize struct {
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
-}
+type ConflictMergePhantomFinalize struct{}
 
 func (self *ConflictMergePhantomFinalize) Abort() []shared.Opcode {
 	return []shared.Opcode{

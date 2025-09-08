@@ -7,9 +7,8 @@ import (
 
 // rebases a branch against its ancestor branch, which exists only remotely
 type RebaseAncestorRemote struct {
-	Ancestor                gitdomain.RemoteBranchName
-	Branch                  gitdomain.LocalBranchName
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	Ancestor gitdomain.RemoteBranchName
+	Branch   gitdomain.LocalBranchName
 }
 
 func (self *RebaseAncestorRemote) Run(args shared.RunArgs) error {

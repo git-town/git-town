@@ -18,7 +18,6 @@ type ConnectorProposalMerge struct {
 	Proposal                  forgedomain.Proposal
 	enteredEmptyCommitMessage bool
 	mergeError                error
-	undeclaredOpcodeMethods   `exhaustruct:"optional"`
 }
 
 func (self *ConnectorProposalMerge) Abort() []shared.Opcode {

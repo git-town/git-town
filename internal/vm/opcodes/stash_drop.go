@@ -5,9 +5,7 @@ import (
 )
 
 // RestoreOpenChanges restores stashed away changes into the workspace.
-type StashDrop struct {
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
-}
+type StashDrop struct{}
 
 func (self *StashDrop) Run(args shared.RunArgs) error {
 	_ = args.Git.DropMostRecentStash(args.Frontend)

@@ -8,8 +8,7 @@ import (
 // PushCurrentBranchIfNeeded pushes the current branch to its existing tracking branch
 // if it has unpushed commits.
 type PushCurrentBranchIfNeeded struct {
-	CurrentBranch           gitdomain.LocalBranchName
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	CurrentBranch gitdomain.LocalBranchName
 }
 
 func (self *PushCurrentBranchIfNeeded) Run(args shared.RunArgs) error {

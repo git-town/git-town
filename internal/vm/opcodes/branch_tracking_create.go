@@ -8,8 +8,7 @@ import (
 // BranchTrackingCreate pushes the given local branch up to origin
 // and marks it as tracking the current branch.
 type BranchTrackingCreate struct {
-	Branch                  gitdomain.LocalBranchName
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	Branch gitdomain.LocalBranchName
 }
 
 func (self *BranchTrackingCreate) Run(args shared.RunArgs) error {

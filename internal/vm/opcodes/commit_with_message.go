@@ -9,10 +9,9 @@ import (
 
 // CommitWithMessage commits all open changes using the given commit message.
 type CommitWithMessage struct {
-	AuthorOverride          Option[gitdomain.Author]
-	CommitHook              configdomain.CommitHook
-	Message                 gitdomain.CommitMessage
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	AuthorOverride Option[gitdomain.Author]
+	CommitHook     configdomain.CommitHook
+	Message        gitdomain.CommitMessage
 }
 
 func (self *CommitWithMessage) Run(args shared.RunArgs) error {
