@@ -17,7 +17,7 @@ Running without a subcommand shows the current Git Town configuration.
   the current or given branch.
 - The [remove](config-remove.md) subcommand removes all Git Town related
   configuration from the current Git repository.
-- The [setup](init.md) subcommand launches Git Town's setup assistant.
+- The [init](init.md) subcommand launches Git Town's setup assistant.
 
 ## Options
 
