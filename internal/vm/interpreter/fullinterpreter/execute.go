@@ -58,25 +58,23 @@ func Execute(args ExecuteArgs) error {
 		if _, ok := nextStep.(*opcodes.ExitToShell); ok {
 			return exitToShell(args)
 		}
-		runnable, ok := nextStep.(shared.Runnable)
-		if !ok {
-			panic("found a non-runnable opcode: " + gohacks.TypeName(nextStep))
-		}
-		err := runnable.Run(shared.RunArgs{
-			Backend:                         args.Backend,
-			BranchInfos:                     Some(args.InitialBranchesSnapshot.Branches),
-			Config:                          NewMutable(&args.Config),
-			Connector:                       args.Connector,
-			FinalMessages:                   args.FinalMessages,
-			Frontend:                        args.Frontend,
-			Git:                             args.Git,
-			Inputs:                          args.Inputs,
-			PrependOpcodes:                  args.RunState.RunProgram.Prepend,
-			RegisterUndoablePerennialCommit: args.RunState.RegisterUndoablePerennialCommit,
-			UpdateInitialSnapshotLocalSHA:   args.InitialBranchesSnapshot.Branches.UpdateLocalSHA,
-		})
-		if err != nil {
-			return errored(nextStep, err, args)
+		if runnable, ok := nextStep.(shared.Runnable); ok {
+			err := runnable.Run(shared.RunArgs{
+				Backend:                         args.Backend,
+				BranchInfos:                     Some(args.InitialBranchesSnapshot.Branches),
+				Config:                          NewMutable(&args.Config),
+				Connector:                       args.Connector,
+				FinalMessages:                   args.FinalMessages,
+				Frontend:                        args.Frontend,
+				Git:                             args.Git,
+				Inputs:                          args.Inputs,
+				PrependOpcodes:                  args.RunState.RunProgram.Prepend,
+				RegisterUndoablePerennialCommit: args.RunState.RegisterUndoablePerennialCommit,
+				UpdateInitialSnapshotLocalSHA:   args.InitialBranchesSnapshot.Branches.UpdateLocalSHA,
+			})
+			if err != nil {
+				return errored(nextStep, err, args)
+			}
 		}
 		if undoExternal, shouldUndoExternalEffects := nextStep.(shared.ExternalEffects); shouldUndoExternalEffects {
 			args.RunState.UndoAPIProgram = append(args.RunState.UndoAPIProgram, undoExternal.UndoExternalChanges()...)
