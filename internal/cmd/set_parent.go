@@ -422,6 +422,26 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 					Branch: data.initialBranch,
 				},
 			)
+
+			if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI && hasConnector {
+				tree, err := forge.NewProposalStackLineageTree(forge.ProposalStackLineageArgs{
+					Connector:                connector,
+					CurrentBranch:            initialBranchInfo.LocalBranchName(),
+					Lineage:                  data.config.NormalConfig.Lineage,
+					MainAndPerennialBranches: data.config.MainAndPerennials(),
+				})
+				if err != nil {
+					fmt.Printf("failed to update proposal stack lineage: %s\n", err.Error())
+				} else {
+					for branch, proposal := range tree.BranchToProposal {
+						prog.Add(&opcodes.ProposalUpdateLineage{
+							Current:         branch,
+							CurrentProposal: proposal,
+							LineageTree:     MutableSome(tree),
+						})
+					}
+				}
+			}
 		}
 	}
 	return optimizer.Optimize(prog), false
