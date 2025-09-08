@@ -4,7 +4,7 @@ Feature: Configure a different development remote
   Background:
     Given a Git repo with origin
     And an additional "fork" remote with URL "https://github.com/forked/repo"
-    When I run "git-town config setup" and enter into the dialogs:
+    When I run "git-town init" and enter into the dialogs:
       | DIALOG             | KEYS       |
       | welcome            | enter      |
       | aliases            | enter      |

@@ -42,7 +42,7 @@ Feature: don't ask for information already provided by the config file
       prototype-branches = "merge"
       perennial-branches = "ff-only"
       """
-    When I run "git-town config setup" and enter into the dialogs:
+    When I run "git-town init" and enter into the dialogs:
       | DIALOG                | KEYS              |
       | welcome               | enter             |
       | aliases               | enter             |

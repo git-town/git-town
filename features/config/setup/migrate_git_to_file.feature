@@ -21,7 +21,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.sync-upstream" is "true"
     And local Git setting "git-town.sync-tags" is "false"
     And local Git setting "git-town.unknown-branch-type" is "observed"
-    When I run "git-town config setup" and enter into the dialogs:
+    When I run "git-town init" and enter into the dialogs:
       | DIALOG                      | KEYS       |
       | welcome                     | enter      |
       | aliases                     | enter      |
