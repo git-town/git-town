@@ -42,16 +42,15 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		return err
 	}
 	args.RunState.EndStashSize = Some(endStashSize)
-	recoverable, isRecoverable := failedOpcode.(shared.Recoverable)
-	if isRecoverable {
-		args.RunState.AbortProgram.Add(recoverable.Abort()...)
+	if abortable, isAbortable := failedOpcode.(shared.Abortable); isAbortable {
+		args.RunState.AbortProgram.Add(abortable.Abort()...)
 	}
 	autoUndoable, isAutoUndoable := failedOpcode.(shared.AutoUndoable)
 	if isAutoUndoable {
 		return autoUndo(autoUndoable, runErr, args)
 	}
-	if isRecoverable {
-		continueProgram := recoverable.Continue()
+	if continuable, isContinuable := failedOpcode.(shared.Continuable); isContinuable {
+		continueProgram := continuable.Continue()
 		if len(continueProgram) == 0 {
 			continueProgram = []shared.Opcode{failedOpcode}
 		}

@@ -15,10 +15,12 @@ type Runnable interface {
 }
 
 // Recoverable defines methods for opcodes that can encounter conflicts.
-type Recoverable interface {
+type Abortable interface {
 	// Abort provides the opcodes to abort this Opcode when it encounters an error.
 	Abort() []Opcode
+}
 
+type Continuable interface {
 	// Continue provides the opcodes continue this opcode
 	// after it encountered an error and the user has resolved the error.
 	Continue() []Opcode
