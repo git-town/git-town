@@ -337,17 +337,6 @@ func enterBitbucketUserName(data Data) (Option[forgedomain.BitbucketUsername], d
 	})
 }
 
-func enterForgejoToken(data Data) (Option[forgedomain.ForgejoToken], dialogdomain.Exit, error) {
-	if data.Config.File.ForgejoToken.IsSome() {
-		return None[forgedomain.ForgejoToken](), false, nil
-	}
-	return dialog.ForgejoToken(dialog.Args[forgedomain.ForgejoToken]{
-		Global: data.Config.GitGlobal.ForgejoToken,
-		Inputs: data.Inputs,
-		Local:  data.Config.GitLocal.ForgejoToken,
-	})
-}
-
 func enterContributionRegex(data Data) (Option[configdomain.ContributionRegex], dialogdomain.Exit, error) {
 	if data.Config.File.ContributionRegex.IsSome() {
 		return None[configdomain.ContributionRegex](), false, nil
@@ -400,6 +389,17 @@ func enterForgeType(data Data) (Option[forgedomain.ForgeType], dialogdomain.Exit
 		Global: data.Config.GitGlobal.ForgeType,
 		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.ForgeType,
+	})
+}
+
+func enterForgejoToken(data Data) (Option[forgedomain.ForgejoToken], dialogdomain.Exit, error) {
+	if data.Config.File.ForgejoToken.IsSome() {
+		return None[forgedomain.ForgejoToken](), false, nil
+	}
+	return dialog.ForgejoToken(dialog.Args[forgedomain.ForgejoToken]{
+		Global: data.Config.GitGlobal.ForgejoToken,
+		Inputs: data.Inputs,
+		Local:  data.Config.GitLocal.ForgejoToken,
 	})
 }
 
