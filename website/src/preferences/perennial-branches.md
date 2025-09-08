@@ -6,7 +6,7 @@ shipped. Typical perennial branches are `main`, `master`, `development`,
 
 You can see the configured perennial branches via the
 [config](../commands/config.md) command and change them via the
-[setup assistant](../commands/config-setup.md).
+[setup assistant](../commands/init.md).
 
 ## configure in config file
 

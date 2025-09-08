@@ -6,9 +6,8 @@ import (
 )
 
 type ConflictResolve struct {
-	FilePath                string
-	Resolution              gitdomain.ConflictResolution
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	FilePath   string
+	Resolution gitdomain.ConflictResolution
 }
 
 func (self *ConflictResolve) Run(args shared.RunArgs) error {

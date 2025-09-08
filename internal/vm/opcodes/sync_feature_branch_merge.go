@@ -9,11 +9,10 @@ import (
 
 // SyncFeatureBranchMerge merges the parent branches of the given branch until a local parent is found.
 type SyncFeatureBranchMerge struct {
-	Branch                  gitdomain.LocalBranchName
-	InitialParentName       Option[gitdomain.LocalBranchName]
-	InitialParentSHA        Option[gitdomain.SHA]
-	TrackingBranch          Option[gitdomain.RemoteBranchName]
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	Branch            gitdomain.LocalBranchName
+	InitialParentName Option[gitdomain.LocalBranchName]
+	InitialParentSHA  Option[gitdomain.SHA]
+	TrackingBranch    Option[gitdomain.RemoteBranchName]
 }
 
 func (self *SyncFeatureBranchMerge) Run(args shared.RunArgs) error {

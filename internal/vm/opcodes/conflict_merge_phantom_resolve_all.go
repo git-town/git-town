@@ -11,10 +11,9 @@ import (
 )
 
 type ConflictMergePhantomResolveAll struct {
-	CurrentBranch           gitdomain.LocalBranchName
-	ParentBranch            Option[gitdomain.LocalBranchName]
-	ParentSHA               Option[gitdomain.SHA]
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	CurrentBranch gitdomain.LocalBranchName
+	ParentBranch  Option[gitdomain.LocalBranchName]
+	ParentSHA     Option[gitdomain.SHA]
 }
 
 func (self *ConflictMergePhantomResolveAll) Abort() []shared.Opcode {

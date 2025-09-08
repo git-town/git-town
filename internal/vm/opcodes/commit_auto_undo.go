@@ -15,7 +15,6 @@ type CommitAutoUndo struct {
 	AuthorOverride                 Option[gitdomain.Author]
 	FallbackToDefaultCommitMessage bool
 	Message                        Option[gitdomain.CommitMessage]
-	undeclaredOpcodeMethods        `exhaustruct:"optional"`
 }
 
 func (self *CommitAutoUndo) Abort() []shared.Opcode {
@@ -30,8 +29,4 @@ func (self *CommitAutoUndo) AutomaticUndoError() error {
 
 func (self *CommitAutoUndo) Run(args shared.RunArgs) error {
 	return args.Git.Commit(args.Frontend, configdomain.UseMessageWithFallbackToDefault(self.Message, self.FallbackToDefaultCommitMessage), self.AuthorOverride, configdomain.CommitHookEnabled)
-}
-
-func (self *CommitAutoUndo) ShouldUndoOnError() bool {
-	return true
 }

@@ -11,10 +11,9 @@ import (
 // BranchRemoteSetToSHAIfNeeded sets the given remote branch to the given SHA,
 // but only if it currently has a particular SHA.
 type BranchRemoteSetToSHAIfNeeded struct {
-	Branch                  gitdomain.RemoteBranchName
-	MustHaveSHA             gitdomain.SHA
-	SetToSHA                gitdomain.SHA
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	Branch      gitdomain.RemoteBranchName
+	MustHaveSHA gitdomain.SHA
+	SetToSHA    gitdomain.SHA
 }
 
 func (self *BranchRemoteSetToSHAIfNeeded) Run(args shared.RunArgs) error {

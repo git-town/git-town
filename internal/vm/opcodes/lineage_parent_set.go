@@ -11,9 +11,8 @@ import (
 // LineageParentSet changes the parent of the given branch to the given parent.
 // Use SetParent to set the parent if no parent existed before.
 type LineageParentSet struct {
-	Branch                  gitdomain.LocalBranchName
-	Parent                  gitdomain.LocalBranchName
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	Branch gitdomain.LocalBranchName
+	Parent gitdomain.LocalBranchName
 }
 
 func (self *LineageParentSet) Run(args shared.RunArgs) error {

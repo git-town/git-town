@@ -54,7 +54,7 @@ Run `git town` for an overview of all Git Town commands and
   for Bash, zsh, fish & PowerShell.
 - [git town config](commands/config.md) - display or update your Git Town
   configuration
-- [git town config setup](commands/config-setup.md) - setup assistant
+- [git town init](commands/init.md) - setup assistant
 - [git town offline](commands/offline.md) - enable/disable offline mode
 
 ### Additional commands

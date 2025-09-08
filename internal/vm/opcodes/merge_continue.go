@@ -8,9 +8,7 @@ import (
 
 // MergeContinue finishes an ongoing merge conflict
 // assuming all conflicts have been resolved by the user.
-type MergeContinue struct {
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
-}
+type MergeContinue struct{}
 
 func (self *MergeContinue) Run(args shared.RunArgs) error {
 	if args.Git.HasMergeInProgress(args.Backend) {

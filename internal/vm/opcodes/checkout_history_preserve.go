@@ -10,7 +10,6 @@ import (
 // CheckoutHistoryPreserve does stuff.
 type CheckoutHistoryPreserve struct {
 	PreviousBranchCandidates []Option[gitdomain.LocalBranchName]
-	undeclaredOpcodeMethods  `exhaustruct:"optional"`
 }
 
 func (self *CheckoutHistoryPreserve) Run(args shared.RunArgs) error {

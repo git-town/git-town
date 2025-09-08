@@ -7,8 +7,7 @@ import (
 
 // Checkout checks out the given existing branch.
 type CherryPick struct {
-	SHA                     gitdomain.SHA
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	SHA gitdomain.SHA
 }
 
 func (self *CherryPick) Abort() []shared.Opcode {

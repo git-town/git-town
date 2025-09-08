@@ -6,7 +6,7 @@ Feature: enter the Codeberg API token
 
   Scenario: auto-detected Codeberg platform
     Given my repo's "origin" remote is "git@codeberg.org:git-town/docs.git"
-    When I run "git-town config setup" and enter into the dialog:
+    When I run "git-town init" and enter into the dialog:
       | DIALOG             | KEYS                   | DESCRIPTION                                 |
       | welcome            | enter                  |                                             |
       | aliases            | enter                  |                                             |
@@ -25,7 +25,7 @@ Feature: enter the Codeberg API token
     And local Git setting "git-town.codeberg-token" is now "code-tok"
 
   Scenario: select Codeberg manually
-    When I run "git-town config setup" and enter into the dialog:
+    When I run "git-town init" and enter into the dialog:
       | DIALOG             | KEYS                   | DESCRIPTION                                 |
       | welcome            | enter                  |                                             |
       | aliases            | enter                  |                                             |
@@ -46,7 +46,7 @@ Feature: enter the Codeberg API token
 
   Scenario: store Codeberge API token globally
     And my repo's "origin" remote is "git@codeberg.org:git-town/docs.git"
-    When I run "git-town config setup" and enter into the dialog:
+    When I run "git-town init" and enter into the dialog:
       | DIALOG             | KEYS                   | DESCRIPTION                                 |
       | welcome            | enter                  |                                             |
       | aliases            | enter                  |                                             |
@@ -66,7 +66,7 @@ Feature: enter the Codeberg API token
   Scenario: edit global Codeberge API token
     And my repo's "origin" remote is "git@codeberg.org:git-town/docs.git"
     Given global Git setting "git-town.codeberg-token" is "code123"
-    When I run "git-town config setup" and enter into the dialog:
+    When I run "git-town init" and enter into the dialog:
       | DIALOG             | KEYS                                      | DESCRIPTION                                 |
       | welcome            | enter                                     |                                             |
       | aliases            | enter                                     |                                             |

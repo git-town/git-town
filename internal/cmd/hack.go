@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"slices"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
@@ -14,10 +13,8 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v21/internal/cmd/sync"
-	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge"
 	"github.com/git-town/git-town/v21/internal/git"
@@ -28,7 +25,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/state/runstate"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	"github.com/git-town/git-town/v21/internal/validate"
-	"github.com/git-town/git-town/v21/internal/vm/interpreter/configinterpreter"
 	"github.com/git-town/git-town/v21/internal/vm/interpreter/fullinterpreter"
 	"github.com/git-town/git-town/v21/internal/vm/program"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -79,7 +75,7 @@ func hackCmd() *cobra.Command {
 	cmd := cobra.Command{
 		Use:     "hack <branch>",
 		GroupID: cmdhelpers.GroupIDBasic,
-		Args:    cobra.ArbitraryArgs,
+		Args:    cobra.ExactArgs(1),
 		Short:   hackDesc,
 		Long:    cmdhelpers.Long(hackDesc, hackHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -155,42 +151,20 @@ func executeHack(args hackArgs) error {
 	if err != nil || exit {
 		return err
 	}
-	createNewFeatureBranchData, doCreateNewFeatureBranch, convertToFeatureBranchData, doConvertToFeatureBranch := data.Get()
-	if doCreateNewFeatureBranch {
-		return createFeatureBranch(createFeatureBranchArgs{
-			appendData:            createNewFeatureBranchData,
-			backend:               repo.Backend,
-			beginBranchesSnapshot: createNewFeatureBranchData.branchesSnapshot,
-			beginConfigSnapshot:   repo.ConfigSnapshot,
-			beginStashSize:        createNewFeatureBranchData.stashSize,
-			branchInfosLastRun:    createNewFeatureBranchData.branchInfosLastRun,
-			commandsCounter:       repo.CommandsCounter,
-			dryRun:                createNewFeatureBranchData.config.NormalConfig.DryRun,
-			finalMessages:         repo.FinalMessages,
-			frontend:              repo.Frontend,
-			git:                   repo.Git,
-			rootDir:               repo.RootDir,
-		})
-	}
-	if doConvertToFeatureBranch {
-		return convertToFeatureBranch(repo, convertToFeatureBranchArgs{
-			beginConfigSnapshot: repo.ConfigSnapshot,
-			config:              convertToFeatureBranchData.config,
-			makeFeatureData:     convertToFeatureBranchData,
-			verbose:             convertToFeatureBranchData.config.NormalConfig.Verbose,
-		})
-	}
-	panic("both config arms were nil")
-}
-
-// If set to createNewFeatureData, the user wants to create a new feature branch.
-// If set to convertToFeatureData, the user wants to convert an already existing branch into a feature branch.
-type hackData = Either[appendFeatureData, convertToFeatureData]
-
-// this configuration is for when "git town hack" is used to make contribution, observed, or parked branches feature branches
-type convertToFeatureData struct {
-	config         config.ValidatedConfig
-	targetBranches configdomain.BranchesAndTypes
+	return createFeatureBranch(createFeatureBranchArgs{
+		appendData:            data,
+		backend:               repo.Backend,
+		beginBranchesSnapshot: data.branchesSnapshot,
+		beginConfigSnapshot:   repo.ConfigSnapshot,
+		beginStashSize:        data.stashSize,
+		branchInfosLastRun:    data.branchInfosLastRun,
+		commandsCounter:       repo.CommandsCounter,
+		dryRun:                data.config.NormalConfig.DryRun,
+		finalMessages:         repo.FinalMessages,
+		frontend:              repo.Frontend,
+		git:                   repo.Git,
+		rootDir:               repo.RootDir,
+	})
 }
 
 type createFeatureBranchArgs struct {
@@ -244,7 +218,7 @@ func createFeatureBranch(args createFeatureBranchArgs) error {
 	})
 }
 
-func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data hackData, exit dialogdomain.Exit, err error) {
+func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data appendFeatureData, exit dialogdomain.Exit, err error) {
 	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -297,8 +271,6 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data hackDat
 		return data, exit, err
 	}
 	localBranchNames := branchesSnapshot.Branches.LocalBranches().Names()
-	var branchesToValidate gitdomain.LocalBranchNames
-	shouldCreateBranch := len(targetBranches) == 1 && !slices.Contains(localBranchNames, targetBranches[0])
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
 		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
@@ -307,15 +279,7 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data hackDat
 	if !hasInitialBranchInfo {
 		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
-	if shouldCreateBranch {
-		branchesToValidate = gitdomain.LocalBranchNames{}
-	} else {
-		if len(targetBranches) == 0 {
-			branchesToValidate = gitdomain.LocalBranchNames{initialBranch}
-		} else {
-			branchesToValidate = targetBranches
-		}
-	}
+	branchesToValidate := gitdomain.LocalBranchNames{}
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(localBranchNames)
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
@@ -338,13 +302,6 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data hackDat
 	})
 	if err != nil || exit {
 		return data, exit, err
-	}
-	if !shouldCreateBranch {
-		data = Right[appendFeatureData](convertToFeatureData{
-			config:         validatedConfig,
-			targetBranches: validatedConfig.BranchesAndTypes(branchesToValidate),
-		})
-		return data, false, nil
 	}
 	if len(targetBranches) > 1 {
 		return data, false, errors.New(messages.HackTooManyArguments)
@@ -380,7 +337,7 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data hackDat
 	if validatedConfig.NormalConfig.ShareNewBranches == configdomain.ShareNewBranchesPropose {
 		args.propose = true
 	}
-	data = Left[appendFeatureData, convertToFeatureData](appendFeatureData{
+	data = appendFeatureData{
 		beam:                      args.beam,
 		branchInfos:               branchesSnapshot.Branches,
 		branchInfosLastRun:        branchInfosLastRun,
@@ -404,47 +361,6 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data hackDat
 		remotes:                   remotes,
 		stashSize:                 stashSize,
 		targetBranch:              targetBranch,
-	})
-	return data, false, err
-}
-
-type convertToFeatureBranchArgs struct {
-	beginConfigSnapshot configdomain.BeginConfigSnapshot
-	config              config.ValidatedConfig
-	makeFeatureData     convertToFeatureData
-	verbose             configdomain.Verbose
-}
-
-func convertToFeatureBranch(repo execute.OpenRepoResult, args convertToFeatureBranchArgs) error {
-	for branchName, branchType := range args.makeFeatureData.targetBranches {
-		switch branchType {
-		case
-			configdomain.BranchTypeContributionBranch,
-			configdomain.BranchTypeObservedBranch,
-			configdomain.BranchTypeParkedBranch,
-			configdomain.BranchTypePrototypeBranch:
-			if err := gitconfig.SetBranchTypeOverride(repo.Backend, configdomain.BranchTypeFeatureBranch, branchName); err != nil {
-				return err
-			}
-		case configdomain.BranchTypeFeatureBranch:
-			return fmt.Errorf(messages.HackBranchIsAlreadyFeature, branchName)
-		case configdomain.BranchTypeMainBranch:
-			return errors.New(messages.MainBranchCannotMakeFeature)
-		case configdomain.BranchTypePerennialBranch:
-			return errors.New(messages.PerennialBranchCannotMakeFeature)
-		}
-		fmt.Printf(messages.BranchIsNowFeature, branchName)
 	}
-	return configinterpreter.Finished(configinterpreter.FinishedArgs{
-		Backend:               repo.Backend,
-		BeginBranchesSnapshot: None[gitdomain.BranchesSnapshot](),
-		BeginConfigSnapshot:   args.beginConfigSnapshot,
-		Command:               "observe",
-		CommandsCounter:       repo.CommandsCounter,
-		FinalMessages:         repo.FinalMessages,
-		Git:                   repo.Git,
-		RootDir:               repo.RootDir,
-		TouchedBranches:       args.makeFeatureData.targetBranches.Keys().BranchNames(),
-		Verbose:               args.verbose,
-	})
+	return data, false, err
 }

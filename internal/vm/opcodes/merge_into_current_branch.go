@@ -7,8 +7,7 @@ import (
 
 // MergeIntoCurrentBranch merges the branch with the given name into the current branch.
 type MergeIntoCurrentBranch struct {
-	BranchToMerge           gitdomain.BranchName
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	BranchToMerge gitdomain.BranchName
 }
 
 func (self *MergeIntoCurrentBranch) Abort() []shared.Opcode {

@@ -28,7 +28,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
     And global Git setting "git-town.sync-upstream" is "false"
     And global Git setting "git-town.detached" is "false"
     And global Git setting "git-town.unknown-branch-type" is "observed"
-    When I run "git-town config setup" and enter into the dialogs:
+    When I run "git-town init" and enter into the dialogs:
       | DIALOG                      | KEYS        |
       | welcome                     | enter       |
       | aliases                     | enter       |

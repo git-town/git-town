@@ -13,21 +13,21 @@ Feature: require minimum Git version
       """
 
     Examples:
-      | COMMAND      |
-      | append foo   |
-      | config       |
-      | config setup |
-      | diff-parent  |
-      | hack foo     |
-      | delete       |
-      | offline      |
-      | propose      |
-      | prepend foo  |
-      | rename foo   |
-      | repo         |
-      | set-parent   |
-      | ship         |
-      | sync         |
+      | COMMAND     |
+      | append foo  |
+      | config      |
+      | delete      |
+      | diff-parent |
+      | hack foo    |
+      | init        |
+      | offline     |
+      | propose     |
+      | prepend foo |
+      | rename foo  |
+      | repo        |
+      | set-parent  |
+      | ship        |
+      | sync        |
 
   Scenario Outline: not requiring Git
     When I run "git-town <COMMAND>"

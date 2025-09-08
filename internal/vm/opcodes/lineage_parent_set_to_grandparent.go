@@ -7,8 +7,7 @@ import (
 
 // LineageParentSetToGrandParent sets the parent branch of the given branch to the grandparent of the given branch.
 type LineageParentSetToGrandParent struct {
-	Branch                  gitdomain.LocalBranchName
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	Branch gitdomain.LocalBranchName
 }
 
 func (self *LineageParentSetToGrandParent) Run(args shared.RunArgs) error {

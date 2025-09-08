@@ -14,7 +14,6 @@ import (
 type MergeAlwaysProgram struct {
 	Branch        gitdomain.LocalBranchName
 	CommitMessage Option[gitdomain.CommitMessage]
-	undeclaredOpcodeMethods
 }
 
 func (self *MergeAlwaysProgram) Abort() []shared.Opcode {

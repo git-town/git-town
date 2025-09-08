@@ -8,8 +8,7 @@ import (
 
 // ResetCurrentBranch resets all commits in the current branch.
 type BranchCurrentResetToParent struct {
-	CurrentBranch           gitdomain.LocalBranchName
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	CurrentBranch gitdomain.LocalBranchName
 }
 
 func (self *BranchCurrentResetToParent) Run(args shared.RunArgs) error {

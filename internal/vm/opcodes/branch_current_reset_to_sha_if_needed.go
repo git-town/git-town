@@ -11,9 +11,8 @@ import (
 // BranchCurrentResetToSHAIfNeeded undoes all commits on the current branch
 // all the way until the given SHA.
 type BranchCurrentResetToSHAIfNeeded struct {
-	MustHaveSHA             gitdomain.SHA
-	SetToSHA                gitdomain.SHA
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	MustHaveSHA gitdomain.SHA
+	SetToSHA    gitdomain.SHA
 }
 
 func (self *BranchCurrentResetToSHAIfNeeded) Run(args shared.RunArgs) error {

@@ -11,8 +11,7 @@ import (
 // CommitRevertIfNeeded adds a commit to the current branch
 // that reverts the commit with the given SHA.
 type CommitRevertIfNeeded struct {
-	SHA                     gitdomain.SHA
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	SHA gitdomain.SHA
 }
 
 func (self *CommitRevertIfNeeded) Run(args shared.RunArgs) error {

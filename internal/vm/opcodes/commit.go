@@ -15,7 +15,6 @@ type Commit struct {
 	AuthorOverride                 Option[gitdomain.Author]
 	FallbackToDefaultCommitMessage bool
 	Message                        Option[gitdomain.CommitMessage]
-	undeclaredOpcodeMethods        `exhaustruct:"optional"`
 }
 
 func (self *Commit) Run(args shared.RunArgs) error {

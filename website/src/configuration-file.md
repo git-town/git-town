@@ -4,7 +4,7 @@ Git Town can be configured through a configuration file named **.git-town.toml**
 or **.git-branches.toml**. To create one, run:
 
 ```
-git town config setup
+git town init
 ```
 
 Here is an example configuration file with the default settings:

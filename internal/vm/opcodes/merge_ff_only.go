@@ -11,7 +11,6 @@ import (
 // MergeFastForward fast-forwards the current branch to point to the commits on the given branch.
 type MergeFastForward struct {
 	Branch gitdomain.BranchName
-	undeclaredOpcodeMethods
 }
 
 func (self *MergeFastForward) Abort() []shared.Opcode {

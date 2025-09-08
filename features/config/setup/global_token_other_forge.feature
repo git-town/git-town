@@ -5,7 +5,7 @@ Feature: a global API token of another forge exists
     Given a Git repo with origin
     And my repo's "origin" remote is "git@github.com:git-town/git-town.git"
     And global Git setting "git-town.gitlab-token" is "987654"
-    When I run "git-town config setup" and enter into the dialog:
+    When I run "git-town init" and enter into the dialog:
       | DIALOG                | KEYS            | DESCRIPTION                                 |
       | welcome               | enter           |                                             |
       | aliases               | enter           |                                             |

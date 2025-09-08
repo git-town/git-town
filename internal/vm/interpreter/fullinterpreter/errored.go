@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/state/runlog"
 	"github.com/git-town/git-town/v21/internal/state/runstate"
+	"github.com/git-town/git-town/v21/internal/vm/program"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
@@ -42,12 +43,16 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		return err
 	}
 	args.RunState.EndStashSize = Some(endStashSize)
-	args.RunState.AbortProgram.Add(failedOpcode.Abort()...)
-	if failedOpcode.ShouldUndoOnError() {
-		return autoUndo(failedOpcode, runErr, args)
+	if abortable, isAbortable := failedOpcode.(shared.Abortable); isAbortable {
+		args.RunState.AbortProgram.Add(abortable.Abort()...)
 	}
-	continueProgram := failedOpcode.Continue()
-	if len(continueProgram) == 0 {
+	if autoUndoable, isAutoUndoable := failedOpcode.(shared.AutoUndoable); isAutoUndoable {
+		return autoUndo(autoUndoable, runErr, args)
+	}
+	var continueProgram program.Program
+	if continuable, isContinuable := failedOpcode.(shared.Continuable); isContinuable {
+		continueProgram = continuable.Continue()
+	} else {
 		continueProgram = []shared.Opcode{failedOpcode}
 	}
 	args.RunState.RunProgram.Prepend(continueProgram...)

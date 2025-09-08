@@ -7,8 +7,7 @@ import (
 
 // BranchCurrentReset resets all commits in the current branch.
 type BranchCurrentReset struct {
-	Base                    gitdomain.BranchName
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	Base gitdomain.BranchName
 }
 
 func (self *BranchCurrentReset) Run(args shared.RunArgs) error {

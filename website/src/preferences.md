@@ -1,7 +1,7 @@
 # Preferences
 
 You can see all preferences via the [config](commands/config.md) command and
-change them via the [setup assistant](commands/config-setup.md) or manually.
+change them via the [setup assistant](commands/init.md) or manually.
 Configuration data exists on multiple levels:
 
 1. Team-wide configuration settings go into the

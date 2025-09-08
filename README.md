@@ -75,8 +75,8 @@ development. Supports mono-repos and stacked changes. Check out
 
 - [config](https://www.git-town.com/commands/config.html) - display or update
   your Git Town configuration
-- [config setup](https://www.git-town.com/commands/config-setup) - run the
-  visual setup assistant
+- [init](https://www.git-town.com/commands/init) - run the visual setup
+  assistant
 - [offline](https://www.git-town.com/commands/offline.html) - start or stop
   running in offline mode
 - [completions](https://www.git-town.com/commands/completions) -

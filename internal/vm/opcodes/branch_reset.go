@@ -6,8 +6,7 @@ import (
 )
 
 type BranchReset struct {
-	Target                  gitdomain.BranchName
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	Target gitdomain.BranchName
 }
 
 func (self *BranchReset) Run(args shared.RunArgs) error {

@@ -7,8 +7,7 @@ import (
 
 // CheckoutIfNeeded checks out a new branch.
 type CheckoutUncached struct {
-	Branch                  gitdomain.LocalBranchName
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	Branch gitdomain.LocalBranchName
 }
 
 func (self *CheckoutUncached) Run(args shared.RunArgs) error {

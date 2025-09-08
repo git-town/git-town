@@ -7,8 +7,7 @@ import (
 
 // BranchTrackingDelete deletes the tracking branch of the given local branch.
 type BranchTrackingDelete struct {
-	Branch                  gitdomain.RemoteBranchName
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	Branch gitdomain.RemoteBranchName
 }
 
 func (self *BranchTrackingDelete) Run(args shared.RunArgs) error {

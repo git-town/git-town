@@ -9,8 +9,7 @@ import (
 )
 
 type MergeSquashAutoUndo struct {
-	Branch                  gitdomain.LocalBranchName
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	Branch gitdomain.LocalBranchName
 }
 
 func (self *MergeSquashAutoUndo) Abort() []shared.Opcode {

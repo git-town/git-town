@@ -4,7 +4,7 @@ Feature: remove an existing forge type override
   Background:
     Given a Git repo with origin
     And local Git setting "git-town.forge-type" is "github"
-    When I run "git-town config setup" and enter into the dialog:
+    When I run "git-town init" and enter into the dialog:
       | DIALOG             | KEYS                 | DESCRIPTION                                 |
       | welcome            | enter                |                                             |
       | aliases            | enter                |                                             |

@@ -13,7 +13,7 @@ You are good to go with the basic setup of Git Town,
 and could end the assistant here
 or continue with the advanced configuration options.
 
-You can re-run this assistant: git town config setup
+You can re-run this assistant: git town init
 `
 )
 

@@ -10,9 +10,8 @@ import (
 
 // BranchEnsureShippableChanges asserts that the branch has unique changes not on the main branch.
 type BranchEnsureShippableChanges struct {
-	Branch                  gitdomain.LocalBranchName
-	Parent                  gitdomain.LocalBranchName
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	Branch gitdomain.LocalBranchName
+	Parent gitdomain.LocalBranchName
 }
 
 func (self *BranchEnsureShippableChanges) AutomaticUndoError() error {
@@ -28,8 +27,4 @@ func (self *BranchEnsureShippableChanges) Run(args shared.RunArgs) error {
 		return fmt.Errorf(messages.ShipBranchNothingToDo, self.Branch)
 	}
 	return nil
-}
-
-func (self *BranchEnsureShippableChanges) ShouldUndoOnError() bool {
-	return true
 }

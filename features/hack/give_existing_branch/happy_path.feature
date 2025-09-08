@@ -11,11 +11,10 @@ Feature: making a branch a feature branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | main   | git fetch --prune --tags |
-    And Git Town prints:
+    And Git Town prints the error:
       """
-      branch "contribution" is now a feature branch
+      there is already a branch "contribution"
       """
-    And branch "contribution" now has type "feature"
 
   Scenario: undo
     When I run "git-town undo"

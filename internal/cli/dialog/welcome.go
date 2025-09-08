@@ -22,7 +22,7 @@ so feel free to explore.
 You can exit at any time with Q, ESC, or Ctrl-C.
 
 You can execute this setup assistant again by running
-"git town config setup" in your terminal.
+"git town init" in your terminal.
 
 When you're ready, press ENTER or O to continue.
 

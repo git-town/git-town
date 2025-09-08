@@ -7,9 +7,8 @@ import (
 
 // BranchRemoteCreate pushes the given local branch up to origin.
 type BranchRemoteCreate struct {
-	Branch                  gitdomain.LocalBranchName
-	SHA                     gitdomain.SHA
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	Branch gitdomain.LocalBranchName
+	SHA    gitdomain.SHA
 }
 
 func (self *BranchRemoteCreate) Run(args shared.RunArgs) error {

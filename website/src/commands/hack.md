@@ -43,17 +43,6 @@ If the repository contains a remote called `upstream`, it also syncs the main
 branch with its upstream counterpart. You can control this behavior with the
 [sync-upstream](../preferences/sync-upstream.md) flag.
 
-## Positional arguments
-
-When given a non-existing branch name, `git town hack` creates a new feature
-branch with the main branch as its parent.
-
-When given an existing contribution, observed, parked, or prototype branch,
-`git town hack` converts that branch to a feature branch.
-
-When given no arguments, `git town hack` converts the current contribution,
-observed, parked, or prototype branch into a feature branch.
-
 ## Options
 
 #### `-p`<br>`--prototype`
@@ -119,25 +108,17 @@ Disables automatic resolution of
 
 ## Configuration
 
-If [share-new-branches](../preferences/share-new-branches.md) is configured,
-`git town hack` creates a remote tracking branch for the new feature branch.
-This behavior is disabled by default to make `git town hack` run fast. The first
-run of `git town sync` will create the remote tracking branch.
-
 If the configuration setting
 [new-branch-type](../preferences/new-branch-type.md) is set, `git town hack`
 creates a branch with the given [type](../branch-types.md).
 
-## See also
+If [share-new-branches](../preferences/share-new-branches.md) is configured,
+`git town hack` creates a remote tracking branch and optionally a
+[proposal](propose.md) for the new feature branch. This behavior is disabled by
+default to make `git town hack` run fast. The first run of `git town sync` will
+create the remote tracking branch.
 
-When using this command to create branches:
+## See also
 
 - [append](append.md) creates the new branch as a child of the current branch
 - [prepend](prepend.md) creates the new branch as a parent of the current branch
-
-When using this command to change the branch type:
-
-- [contribute](contribute.md) makes the chosen branches contribution branches
-- [observe](observe.md) makes the chosen branches observed
-- [prototype](prototype.md) makes the chosen branches prototype branches
-- [park](park.md) makes the chosen branches parked

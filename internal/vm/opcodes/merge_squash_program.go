@@ -17,7 +17,6 @@ type MergeSquashProgram struct {
 	Branch        gitdomain.LocalBranchName
 	CommitMessage Option[gitdomain.CommitMessage]
 	Parent        gitdomain.LocalBranchName
-	undeclaredOpcodeMethods
 }
 
 func (self *MergeSquashProgram) Run(args shared.RunArgs) error {

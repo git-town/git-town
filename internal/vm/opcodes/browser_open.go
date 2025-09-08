@@ -7,8 +7,7 @@ import (
 
 // BrowserOpen displays the existing proposal with the given URL in the browser.
 type BrowserOpen struct {
-	URL                     string
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	URL string
 }
 
 func (self *BrowserOpen) Run(args shared.RunArgs) error {

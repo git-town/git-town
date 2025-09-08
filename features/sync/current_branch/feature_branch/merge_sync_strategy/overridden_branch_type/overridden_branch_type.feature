@@ -11,7 +11,7 @@ Feature: sync the current branch which has a branch-type override
       | main         | local, origin | main commit         |
       | contribution | local         | contribution commit |
     And the current branch is "contribution"
-    And I ran "git-town hack"
+    And I ran "git-town feature"
     When I run "git-town sync" and enter into the dialog:
       | DIALOG                           | KEYS  |
       | parent branch for "contribution" | enter |

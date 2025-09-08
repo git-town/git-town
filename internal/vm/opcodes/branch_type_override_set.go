@@ -13,9 +13,8 @@ import (
 
 // registers the branch with the given name as a contribution branch in the Git config
 type BranchTypeOverrideSet struct {
-	Branch                  gitdomain.LocalBranchName
-	BranchType              configdomain.BranchType
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	Branch     gitdomain.LocalBranchName
+	BranchType configdomain.BranchType
 }
 
 func (self *BranchTypeOverrideSet) Run(args shared.RunArgs) error {

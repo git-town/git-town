@@ -7,9 +7,8 @@ import (
 )
 
 type ConfigRemove struct {
-	Key                     configdomain.Key // the config key to remove
-	Scope                   configdomain.ConfigScope
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	Key   configdomain.Key // the config key to remove
+	Scope configdomain.ConfigScope
 }
 
 func (self *ConfigRemove) Run(args shared.RunArgs) error {

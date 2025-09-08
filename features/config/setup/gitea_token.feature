@@ -6,7 +6,7 @@ Feature: enter the Gitea API token
 
   Scenario: auto-detected Gitea platform
     And my repo's "origin" remote is "git@gitea.com:git-town/git-town.git"
-    When I run "git-town config setup" and enter into the dialog:
+    When I run "git-town init" and enter into the dialog:
       | DIALOG             | KEYS                    | DESCRIPTION                                 |
       | welcome            | enter                   |                                             |
       | aliases            | enter                   |                                             |
@@ -25,7 +25,7 @@ Feature: enter the Gitea API token
     And local Git setting "git-town.gitea-token" is now "gitea-tok"
 
   Scenario: select Gitea manually
-    When I run "git-town config setup" and enter into the dialog:
+    When I run "git-town init" and enter into the dialog:
       | DIALOG             | KEYS                      | DESCRIPTION                                 |
       | welcome            | enter                     |                                             |
       | aliases            | enter                     |                                             |
@@ -46,7 +46,7 @@ Feature: enter the Gitea API token
 
   Scenario: store Gitea API token globally
     And my repo's "origin" remote is "git@gitea.com:git-town/git-town.git"
-    When I run "git-town config setup" and enter into the dialog:
+    When I run "git-town init" and enter into the dialog:
       | DIALOG             | KEYS                    | DESCRIPTION                                 |
       | welcome            | enter                   |                                             |
       | aliases            | enter                   |                                             |
@@ -66,7 +66,7 @@ Feature: enter the Gitea API token
   Scenario: edit global Gitea token
     Given my repo's "origin" remote is "git@gitea.com:git-town/git-town.git"
     And global Git setting "git-town.gitea-token" is "123"
-    When I run "git-town config setup" and enter into the dialog:
+    When I run "git-town init" and enter into the dialog:
       | DIALOG             | KEYS                                      | DESCRIPTION                                 |
       | welcome            | enter                                     |                                             |
       | aliases            | enter                                     |                                             |

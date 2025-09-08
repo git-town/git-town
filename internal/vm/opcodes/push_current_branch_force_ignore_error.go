@@ -5,9 +5,7 @@ import (
 )
 
 // PushCurrentBranchForceIgnoreError attempts to force-push.
-type PushCurrentBranchForceIgnoreError struct {
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
-}
+type PushCurrentBranchForceIgnoreError struct{}
 
 func (self *PushCurrentBranchForceIgnoreError) Run(args shared.RunArgs) error {
 	_ = args.Git.ForcePushBranchSafely(args.Frontend, args.Config.Value.NormalConfig.NoPushHook(), true)

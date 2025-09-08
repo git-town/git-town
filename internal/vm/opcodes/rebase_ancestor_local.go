@@ -9,10 +9,9 @@ import (
 
 // rebases a branch against a local ancestor branch
 type RebaseAncestorLocal struct {
-	Ancestor                gitdomain.LocalBranchName
-	Branch                  gitdomain.LocalBranchName
-	CommitsToRemove         Option[gitdomain.SHA]
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	Ancestor        gitdomain.LocalBranchName
+	Branch          gitdomain.LocalBranchName
+	CommitsToRemove Option[gitdomain.SHA]
 }
 
 func (self *RebaseAncestorLocal) Run(args shared.RunArgs) error {

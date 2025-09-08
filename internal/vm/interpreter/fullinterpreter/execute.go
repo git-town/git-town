@@ -58,22 +58,26 @@ func Execute(args ExecuteArgs) error {
 		if _, ok := nextStep.(*opcodes.ExitToShell); ok {
 			return exitToShell(args)
 		}
-		err := nextStep.Run(shared.RunArgs{
-			Backend:                         args.Backend,
-			BranchInfos:                     Some(args.InitialBranchesSnapshot.Branches),
-			Config:                          NewMutable(&args.Config),
-			Connector:                       args.Connector,
-			FinalMessages:                   args.FinalMessages,
-			Frontend:                        args.Frontend,
-			Git:                             args.Git,
-			Inputs:                          args.Inputs,
-			PrependOpcodes:                  args.RunState.RunProgram.Prepend,
-			RegisterUndoablePerennialCommit: args.RunState.RegisterUndoablePerennialCommit,
-			UpdateInitialSnapshotLocalSHA:   args.InitialBranchesSnapshot.Branches.UpdateLocalSHA,
-		})
-		if err != nil {
-			return errored(nextStep, err, args)
+		if runnable, isRunnable := nextStep.(shared.Runnable); isRunnable {
+			err := runnable.Run(shared.RunArgs{
+				Backend:                         args.Backend,
+				BranchInfos:                     Some(args.InitialBranchesSnapshot.Branches),
+				Config:                          NewMutable(&args.Config),
+				Connector:                       args.Connector,
+				FinalMessages:                   args.FinalMessages,
+				Frontend:                        args.Frontend,
+				Git:                             args.Git,
+				Inputs:                          args.Inputs,
+				PrependOpcodes:                  args.RunState.RunProgram.Prepend,
+				RegisterUndoablePerennialCommit: args.RunState.RegisterUndoablePerennialCommit,
+				UpdateInitialSnapshotLocalSHA:   args.InitialBranchesSnapshot.Branches.UpdateLocalSHA,
+			})
+			if err != nil {
+				return errored(nextStep, err, args)
+			}
 		}
-		args.RunState.UndoAPIProgram = append(args.RunState.UndoAPIProgram, nextStep.UndoExternalChanges()...)
+		if undoExternal, canUndoExternal := nextStep.(shared.ExternalEffects); canUndoExternal {
+			args.RunState.UndoAPIProgram = append(args.RunState.UndoAPIProgram, undoExternal.UndoExternalChanges()...)
+		}
 	}
 }

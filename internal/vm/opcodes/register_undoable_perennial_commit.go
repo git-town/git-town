@@ -7,8 +7,7 @@ import (
 
 // registers the commit on the current perennial branch as undoable
 type RegisterUndoablePerennialCommit struct {
-	Parent                  gitdomain.BranchName
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	Parent gitdomain.BranchName
 }
 
 func (self *RegisterUndoablePerennialCommit) Run(args shared.RunArgs) error {

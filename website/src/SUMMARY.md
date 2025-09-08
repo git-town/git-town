@@ -46,7 +46,7 @@
     - [config](commands/config.md)
     - [config get-parent](commands/config-get-parent.md)
     - [config remove](commands/config-remove.md)
-    - [config setup](commands/config-setup.md)
+    - [init](commands/init.md)
     - [offline](commands/offline.md)
   - [Additional commands](additional-commands.md)
     - [branch](commands/branch.md)

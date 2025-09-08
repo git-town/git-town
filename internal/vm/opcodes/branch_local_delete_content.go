@@ -8,9 +8,8 @@ import (
 
 // deletes the given branch including all commits
 type BranchLocalDeleteContent struct {
-	BranchToDelete          gitdomain.LocalBranchName
-	BranchToRebaseOnto      gitdomain.LocalBranchName
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	BranchToDelete     gitdomain.LocalBranchName
+	BranchToRebaseOnto gitdomain.LocalBranchName
 }
 
 func (self *BranchLocalDeleteContent) Run(args shared.RunArgs) error {

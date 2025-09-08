@@ -6,9 +6,8 @@ import (
 )
 
 type SnapshotInitialUpdateLocalSHA struct {
-	Branch                  gitdomain.LocalBranchName
-	SHA                     gitdomain.SHA
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	Branch gitdomain.LocalBranchName
+	SHA    gitdomain.SHA
 }
 
 func (self *SnapshotInitialUpdateLocalSHA) Run(args shared.RunArgs) error {

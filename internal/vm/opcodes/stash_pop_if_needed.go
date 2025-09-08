@@ -7,8 +7,7 @@ import (
 
 // StashPopIfExists restores stashed away changes into the workspace.
 type StashPopIfNeeded struct {
-	InitialStashSize        gitdomain.StashSize
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	InitialStashSize gitdomain.StashSize
 }
 
 func (self *StashPopIfNeeded) Run(args shared.RunArgs) error {

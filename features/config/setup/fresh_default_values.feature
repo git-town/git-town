@@ -3,7 +3,7 @@ Feature: Accepting all default values in a brand-new Git repo leads to a working
 
   Background:
     Given a brand-new Git repo
-    When I run "git-town config setup" and enter into the dialogs:
+    When I run "git-town init" and enter into the dialogs:
       | DIALOG             | KEYS       |
       | welcome            | enter      |
       | aliases            | enter      |

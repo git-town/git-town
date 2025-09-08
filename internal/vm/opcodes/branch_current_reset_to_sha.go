@@ -8,8 +8,7 @@ import (
 // BranchCurrentResetToSHA undoes all commits on the current branch
 // all the way until the given SHA.
 type BranchCurrentResetToSHA struct {
-	SetToSHA                gitdomain.SHA
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	SetToSHA gitdomain.SHA
 }
 
 func (self *BranchCurrentResetToSHA) Run(args shared.RunArgs) error {

@@ -9,10 +9,9 @@ import (
 )
 
 type ProposalUpdateLineage struct {
-	Current                 gitdomain.LocalBranchName
-	CurrentProposal         Option[forgedomain.Proposal]
-	LineageTree             OptionalMutable[forge.ProposalStackLineageTree]
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	Current         gitdomain.LocalBranchName
+	CurrentProposal Option[forgedomain.Proposal]
+	LineageTree     OptionalMutable[forge.ProposalStackLineageTree]
 }
 
 func (self *ProposalUpdateLineage) Run(args shared.RunArgs) error {
