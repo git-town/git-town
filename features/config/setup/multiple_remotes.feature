@@ -22,7 +22,7 @@ Feature: Configure a different development remote
       | git config --unset git-town.main-branch |
     And the configuration file is now:
       """
-      # More info around this file at https://www.git-town.com/configuration-file
+      # See https://www.git-town.com/configuration-file for details
 
       [branches]
       main = "main"

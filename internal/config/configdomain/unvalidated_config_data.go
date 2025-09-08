@@ -33,8 +33,8 @@ func (self *UnvalidatedConfigData) PartialBranchType(branch gitdomain.LocalBranc
 
 func (self *UnvalidatedConfigData) ToValidatedConfig(defaults ValidatedConfigData) ValidatedConfigData {
 	return ValidatedConfigData{
-		GitUserEmail: self.GitUserEmail.GetOrElse(defaults.GitUserEmail),
-		GitUserName:  self.GitUserName.GetOrElse(defaults.GitUserName),
-		MainBranch:   self.MainBranch.GetOrElse(defaults.MainBranch),
+		GitUserEmail: self.GitUserEmail.GetOr(defaults.GitUserEmail),
+		GitUserName:  self.GitUserName.GetOr(defaults.GitUserName),
+		MainBranch:   self.MainBranch.GetOr(defaults.MainBranch),
 	}
 }

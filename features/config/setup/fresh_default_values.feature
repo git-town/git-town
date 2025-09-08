@@ -38,7 +38,7 @@ Feature: Accepting all default values in a brand-new Git repo leads to a working
     And local Git setting "git-town.ship-delete-tracking-branch" still doesn't exist
     And the configuration file is now:
       """
-      # More info around this file at https://www.git-town.com/configuration-file
+      # See https://www.git-town.com/configuration-file for details
 
       [branches]
       main = "initial"

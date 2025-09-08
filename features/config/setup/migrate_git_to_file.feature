@@ -92,7 +92,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.stash" now doesn't exist
     And the configuration file is now:
       """
-      # More info around this file at https://www.git-town.com/configuration-file
+      # See https://www.git-town.com/configuration-file for details
 
       [branches]
       main = "main"
