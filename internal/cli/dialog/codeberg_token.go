@@ -15,19 +15,19 @@ const (
 	forgejoTokenHelp  = `
 Git Town can update pull requests
 and ship branches on Forgejo-based forges for you.
-To enable this, please enter a codeberg API token.
+To enable this, please enter a Forgejo API token.
 More info at
 https://docs.codeberg.org/advanced/access-token.
 
 If you leave this empty,
-Git Town will not use the codeberg API.
+Git Town will not use the Forgejo API.
 
 `
 )
 
 func ForgejoToken(args Args[forgedomain.ForgejoToken]) (Option[forgedomain.ForgejoToken], dialogdomain.Exit, error) {
 	input, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
-		DialogName:    "codeberg-token",
+		DialogName:    "forgejo-token",
 		ExistingValue: args.Local.Or(args.Global).String(),
 		Help:          forgejoTokenHelp,
 		Inputs:        args.Inputs,
