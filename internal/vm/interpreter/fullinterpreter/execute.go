@@ -60,7 +60,7 @@ func Execute(args ExecuteArgs) error {
 		}
 		runnable, ok := nextStep.(shared.Runnable)
 		if !ok {
-			panic("found a non-runnable opcode") // TODO: print the name of the type of nextStep here
+			panic("found a non-runnable opcode: " + gohacks.TypeName(nextStep))
 		}
 		err := runnable.Run(shared.RunArgs{
 			Backend:                         args.Backend,

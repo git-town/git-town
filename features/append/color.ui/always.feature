@@ -9,6 +9,7 @@ Feature: on the main branch
     And local Git setting "color.ui" is "always"
     When I run "git-town append new"
 
+  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                           |
@@ -23,6 +24,7 @@ Feature: on the main branch
       main
         new
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
