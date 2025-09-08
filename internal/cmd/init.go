@@ -19,16 +19,19 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const setupConfigDesc = "Prompts to setup your Git Town configuration"
+const (
+	initCmd  = "init"
+	initDesc = "Prompts to setup your Git Town configuration"
+)
 
 func initCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:     "init",
+		Use:     initCmd,
 		Args:    cobra.NoArgs,
 		GroupID: cmdhelpers.GroupIDSetup,
-		Short:   setupConfigDesc,
-		Long:    cmdhelpers.Long(setupConfigDesc),
+		Short:   initDesc,
+		Long:    cmdhelpers.Long(initDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			verbose, err := readVerboseFlag(cmd)
 			if err != nil {
@@ -74,7 +77,7 @@ func executeConfigSetup(cliConfig configdomain.PartialConfig) error {
 		Backend:               repo.Backend,
 		BeginBranchesSnapshot: None[gitdomain.BranchesSnapshot](),
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
-		Command:               "init",
+		Command:               initCmd,
 		CommandsCounter:       repo.CommandsCounter,
 		FinalMessages:         repo.FinalMessages,
 		Git:                   repo.Git,
