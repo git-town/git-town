@@ -55,7 +55,7 @@ EnterForgeData:
 	actualForgeType := determineForgeType(enteredForgeType.Or(data.Config.File.ForgeType), devURL)
 	bitbucketUsername := None[forgedomain.BitbucketUsername]()
 	bitbucketAppPassword := None[forgedomain.BitbucketAppPassword]()
-	codebergToken := None[forgedomain.CodebergToken]()
+	codebergToken := None[forgedomain.ForgejoToken]()
 	giteaToken := None[forgedomain.GiteaToken]()
 	githubConnectorTypeOpt := None[forgedomain.GitHubConnectorType]()
 	githubToken := None[forgedomain.GitHubToken]()
@@ -337,11 +337,11 @@ func enterBitbucketUserName(data Data) (Option[forgedomain.BitbucketUsername], d
 	})
 }
 
-func enterCodebergToken(data Data) (Option[forgedomain.CodebergToken], dialogdomain.Exit, error) {
+func enterCodebergToken(data Data) (Option[forgedomain.ForgejoToken], dialogdomain.Exit, error) {
 	if data.Config.File.CodebergToken.IsSome() {
-		return None[forgedomain.CodebergToken](), false, nil
+		return None[forgedomain.ForgejoToken](), false, nil
 	}
-	return dialog.ForgejoToken(dialog.Args[forgedomain.CodebergToken]{
+	return dialog.ForgejoToken(dialog.Args[forgedomain.ForgejoToken]{
 		Global: data.Config.GitGlobal.CodebergToken,
 		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.CodebergToken,
@@ -648,7 +648,7 @@ func enterTokenScope(args enterTokenScopeArgs) (configdomain.ConfigScope, dialog
 type enterTokenScopeArgs struct {
 	bitbucketAppPassword Option[forgedomain.BitbucketAppPassword]
 	bitbucketUsername    Option[forgedomain.BitbucketUsername]
-	codebergToken        Option[forgedomain.CodebergToken]
+	codebergToken        Option[forgedomain.ForgejoToken]
 	data                 Data
 	determinedForgeType  Option[forgedomain.ForgeType]
 	existingConfig       config.NormalConfig
@@ -736,7 +736,7 @@ type testForgeAuthArgs struct {
 	backend              subshelldomain.RunnerQuerier
 	bitbucketAppPassword Option[forgedomain.BitbucketAppPassword]
 	bitbucketUsername    Option[forgedomain.BitbucketUsername]
-	codebergToken        Option[forgedomain.CodebergToken]
+	codebergToken        Option[forgedomain.ForgejoToken]
 	devURL               Option[giturl.Parts]
 	forgeTypeOpt         Option[forgedomain.ForgeType]
 	giteaToken           Option[forgedomain.GiteaToken]

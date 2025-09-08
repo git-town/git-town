@@ -21,7 +21,7 @@ type PartialConfig struct {
 	BitbucketAppPassword     Option[forgedomain.BitbucketAppPassword]
 	BitbucketUsername        Option[forgedomain.BitbucketUsername]
 	BranchTypeOverrides      BranchTypeOverrides
-	CodebergToken            Option[forgedomain.CodebergToken]
+	CodebergToken            Option[forgedomain.ForgejoToken]
 	ContributionRegex        Option[ContributionRegex]
 	Detached                 Option[Detached]
 	DevRemote                Option[gitdomain.Remote]

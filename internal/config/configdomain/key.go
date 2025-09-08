@@ -245,6 +245,16 @@ var ConfigUpdates = []ConfigUpdate{
 	},
 	{
 		Before: ConfigSetting{
+			Key:   KeyForgeType,
+			Value: "codeberg",
+		},
+		After: ConfigSetting{
+			Key:   KeyForgeType,
+			Value: "forgejo",
+		},
+	},
+	{
+		Before: ConfigSetting{
 			Key:   KeyDeprecatedCreatePrototypeBranches,
 			Value: "true",
 		},

@@ -107,7 +107,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		BitbucketAppPassword:     forgedomain.ParseBitbucketAppPassword(env.Get(bitbucketAppPassword)),
 		BitbucketUsername:        forgedomain.ParseBitbucketUsername(env.Get(bitbucketUserName)),
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{}, // not loaded from env vars
-		CodebergToken:            forgedomain.ParseCodebergToken(env.Get(codebergToken)),
+		CodebergToken:            forgedomain.ParseForgejoToken(env.Get(codebergToken)),
 		ContributionRegex:        contributionRegex,
 		Detached:                 detached,
 		DevRemote:                gitdomain.NewRemote(env.Get(devRemote)),

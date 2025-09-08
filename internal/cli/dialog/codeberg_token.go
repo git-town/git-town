@@ -25,20 +25,20 @@ Git Town will not use the codeberg API.
 `
 )
 
-func ForgejoToken(args Args[forgedomain.CodebergToken]) (Option[forgedomain.CodebergToken], dialogdomain.Exit, error) {
+func ForgejoToken(args Args[forgedomain.ForgejoToken]) (Option[forgedomain.ForgejoToken], dialogdomain.Exit, error) {
 	input, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "codeberg-token",
 		ExistingValue: args.Local.Or(args.Global).String(),
 		Help:          forgejoTokenHelp,
 		Inputs:        args.Inputs,
-		Prompt:        messages.CodebergTokenPrompt,
+		Prompt:        messages.ForgejoTokenPrompt,
 		Title:         forgejoTokenTitle,
 	})
-	newValue := forgedomain.ParseCodebergToken(input)
+	newValue := forgedomain.ParseForgejoToken(input)
 	if args.Global.Equal(newValue) {
 		// the user has entered the global value --> keep using the global value, don't store the local value
-		newValue = None[forgedomain.CodebergToken]()
+		newValue = None[forgedomain.ForgejoToken]()
 	}
-	fmt.Printf(messages.CodebergTokenResult, dialogcomponents.FormattedOption(newValue, args.Global.IsSome(), exit))
+	fmt.Printf(messages.ForgejoTokenResult, dialogcomponents.FormattedOption(newValue, args.Global.IsSome(), exit))
 	return newValue, exit, err
 }

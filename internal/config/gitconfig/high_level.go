@@ -187,7 +187,7 @@ func SetBranchTypeOverride(runner subshelldomain.Runner, branchType configdomain
 	return nil
 }
 
-func SetCodebergToken(runner subshelldomain.Runner, value forgedomain.CodebergToken, scope configdomain.ConfigScope) error {
+func SetCodebergToken(runner subshelldomain.Runner, value forgedomain.ForgejoToken, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyCodebergToken, value.String())
 }
 

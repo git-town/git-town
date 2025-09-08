@@ -22,7 +22,7 @@ import (
 // via the Codeberg API.
 type Connector struct {
 	forgedomain.Data
-	APIToken Option[forgedomain.CodebergToken]
+	APIToken Option[forgedomain.ForgejoToken]
 	client   *forgejo.Client
 	log      print.Logger
 }
@@ -256,7 +256,7 @@ func FilterPullRequests2(pullRequests []*forgejo.PullRequest, branch gitdomain.L
 }
 
 type NewConnectorArgs struct {
-	APIToken  Option[forgedomain.CodebergToken]
+	APIToken  Option[forgedomain.ForgejoToken]
 	Log       print.Logger
 	RemoteURL giturl.Parts
 }
