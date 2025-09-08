@@ -5,9 +5,11 @@ import (
 	"strings"
 )
 
-// Opcode defines the methods common to all opcoded types.
-// All opcodes implement this interface.
-type Opcode interface {
+// The common methods for all opcodes.
+type Opcode interface{}
+
+// Runnable allows an opcode to execute subshell commands.
+type Runnable interface {
 	// Run executes this opcodes.
 	Run(args RunArgs) error
 }

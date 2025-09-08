@@ -7,8 +7,7 @@ import (
 
 // Checkout checks out the given existing branch.
 type Checkout struct {
-	Branch                  gitdomain.LocalBranchName
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	Branch gitdomain.LocalBranchName
 }
 
 func (self *Checkout) Run(args shared.RunArgs) error {

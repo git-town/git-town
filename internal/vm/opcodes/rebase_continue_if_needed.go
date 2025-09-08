@@ -5,7 +5,6 @@ import "github.com/git-town/git-town/v21/internal/vm/shared"
 // RebaseContinueIfNeeded finishes an ongoing rebase operation
 // assuming all conflicts have been resolved by the user.
 type RebaseContinueIfNeeded struct {
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *RebaseContinueIfNeeded) Run(args shared.RunArgs) error {

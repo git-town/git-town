@@ -10,7 +10,6 @@ import (
 )
 
 type ConflictMergePhantomFinalize struct {
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *ConflictMergePhantomFinalize) Abort() []shared.Opcode {

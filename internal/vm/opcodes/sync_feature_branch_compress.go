@@ -9,14 +9,13 @@ import (
 
 // SyncFeatureBranchCompress expands to all opcodes needed to sync a feature branch using the "compress" sync strategy.
 type SyncFeatureBranchCompress struct {
-	CommitMessage           Option[gitdomain.CommitMessage]
-	CurrentBranch           gitdomain.LocalBranchName
-	InitialParentName       Option[gitdomain.LocalBranchName]
-	InitialParentSHA        Option[gitdomain.SHA]
-	Offline                 configdomain.Offline
-	PushBranches            configdomain.PushBranches
-	TrackingBranch          Option[gitdomain.RemoteBranchName]
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	CommitMessage     Option[gitdomain.CommitMessage]
+	CurrentBranch     gitdomain.LocalBranchName
+	InitialParentName Option[gitdomain.LocalBranchName]
+	InitialParentSHA  Option[gitdomain.SHA]
+	Offline           configdomain.Offline
+	PushBranches      configdomain.PushBranches
+	TrackingBranch    Option[gitdomain.RemoteBranchName]
 }
 
 func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {

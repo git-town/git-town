@@ -9,7 +9,6 @@ import (
 // MergeContinue finishes an ongoing merge conflict
 // assuming all conflicts have been resolved by the user.
 type MergeContinue struct {
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *MergeContinue) Run(args shared.RunArgs) error {

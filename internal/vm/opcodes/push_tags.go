@@ -4,7 +4,6 @@ import "github.com/git-town/git-town/v21/internal/vm/shared"
 
 // PushTags pushes newly created Git tags to origin.
 type PushTags struct {
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *PushTags) Run(args shared.RunArgs) error {

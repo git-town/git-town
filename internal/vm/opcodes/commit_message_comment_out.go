@@ -10,7 +10,6 @@ import (
 
 // comments out the currently active commit message
 type CommitMessageCommentOut struct {
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *CommitMessageCommentOut) Run(args shared.RunArgs) error {

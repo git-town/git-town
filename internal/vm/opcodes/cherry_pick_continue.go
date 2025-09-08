@@ -6,7 +6,6 @@ import (
 
 // Checkout checks out the given existing branch.
 type CherryPickContinue struct {
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *CherryPickContinue) Run(args shared.RunArgs) error {

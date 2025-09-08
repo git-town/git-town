@@ -6,7 +6,6 @@ import (
 
 // PushCurrentBranch pushes the current branch to its existing tracking branch.
 type PushCurrentBranch struct {
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *PushCurrentBranch) Run(args shared.RunArgs) error {

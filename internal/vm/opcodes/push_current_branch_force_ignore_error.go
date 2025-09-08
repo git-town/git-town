@@ -6,7 +6,6 @@ import (
 
 // PushCurrentBranchForceIgnoreError attempts to force-push.
 type PushCurrentBranchForceIgnoreError struct {
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *PushCurrentBranchForceIgnoreError) Run(args shared.RunArgs) error {

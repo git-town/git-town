@@ -7,7 +7,6 @@ import (
 
 // restores stashed away changes into the workspace
 type StashPop struct {
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *StashPop) Continue() []shared.Opcode {

@@ -9,9 +9,8 @@ import (
 )
 
 type ProposalUpdateBody struct {
-	Proposal                forgedomain.Proposal
-	UpdatedBody             string
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	Proposal    forgedomain.Proposal
+	UpdatedBody string
 }
 
 func (self *ProposalUpdateBody) Run(args shared.RunArgs) error {
