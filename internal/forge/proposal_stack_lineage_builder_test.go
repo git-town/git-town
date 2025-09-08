@@ -40,7 +40,7 @@ func (self *mockConnectorProposalStackLineageBuilder) FindProposalFn() Option[fu
 				Title:        "Test Mocker",
 				URL:          fmt.Sprintf("https://www.github.com/git-town/pull/%d", prNumber),
 			},
-			ForgeType: forgedomain.ForgeTypeCodeberg,
+			ForgeType: forgedomain.ForgeTypeForgejo,
 		}), nil
 	})
 }

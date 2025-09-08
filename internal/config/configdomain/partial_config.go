@@ -21,7 +21,7 @@ type PartialConfig struct {
 	BitbucketAppPassword     Option[forgedomain.BitbucketAppPassword]
 	BitbucketUsername        Option[forgedomain.BitbucketUsername]
 	BranchTypeOverrides      BranchTypeOverrides
-	CodebergToken            Option[forgedomain.ForgejoToken]
+	ForgejoToken             Option[forgedomain.ForgejoToken]
 	ContributionRegex        Option[ContributionRegex]
 	Detached                 Option[Detached]
 	DevRemote                Option[gitdomain.Remote]
@@ -73,7 +73,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		BitbucketAppPassword:     other.BitbucketAppPassword.Or(self.BitbucketAppPassword),
 		BitbucketUsername:        other.BitbucketUsername.Or(self.BitbucketUsername),
 		BranchTypeOverrides:      other.BranchTypeOverrides.Concat(self.BranchTypeOverrides),
-		CodebergToken:            other.CodebergToken.Or(self.CodebergToken),
+		ForgejoToken:             other.ForgejoToken.Or(self.ForgejoToken),
 		ContributionRegex:        other.ContributionRegex.Or(self.ContributionRegex),
 		Detached:                 other.Detached.Or(self.Detached),
 		DevRemote:                other.DevRemote.Or(self.DevRemote),

@@ -1,4 +1,4 @@
-package codeberg
+package forgejo
 
 import (
 	"errors"
@@ -18,8 +18,8 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-// Connector provides standardized connectivity for the given repository (codeberg.org/owner/repo)
-// via the Codeberg API.
+// Connector provides standardized connectivity for Forgejo-based repositories
+// via the Forgejo API.
 type Connector struct {
 	forgedomain.Data
 	APIToken Option[forgedomain.ForgejoToken]
@@ -130,7 +130,7 @@ func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchNam
 	case 1:
 		proposal := parsePullRequest(pullRequests[0])
 		self.log.Success(proposal.Target.String())
-		return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeCodeberg}), nil
+		return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeForgejo}), nil
 	default:
 		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(pullRequests), branch, target)
 	}
@@ -153,7 +153,7 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 			Title:        "title",
 			URL:          proposalURLOverride,
 		},
-		ForgeType: forgedomain.ForgeTypeCodeberg,
+		ForgeType: forgedomain.ForgeTypeForgejo,
 	}), nil
 }
 
@@ -178,7 +178,7 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[f
 		pullRequest := pullRequests[0]
 		proposal := parsePullRequest(pullRequest)
 		self.log.Success(proposal.Target.String())
-		return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeCodeberg}), nil
+		return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeForgejo}), nil
 	default:
 		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(pullRequests), branch)
 	}
@@ -189,7 +189,7 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
 	commitMessageParts := message.Parts()
-	self.log.Start(messages.ForgeCodebergMergingViaAPI, colors.BoldGreen().Styled(strconv.Itoa(number)))
+	self.log.Start(messages.ForgeForgejoMergingViaAPI, colors.BoldGreen().Styled(strconv.Itoa(number)))
 	_, _, err := self.client.MergePullRequest(self.Organization, self.Repository, int64(number), forgejo.MergePullRequestOption{
 		Style:   forgejo.MergeStyleSquash,
 		Title:   commitMessageParts.Subject,

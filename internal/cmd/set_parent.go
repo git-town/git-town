@@ -219,7 +219,7 @@ func determineSetParentData(repo execute.OpenRepoResult) (data setParentData, ex
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
-		CodebergToken:        config.CodebergToken,
+		ForgejoToken:         config.ForgejoToken,
 		ForgeType:            config.ForgeType,
 		Frontend:             repo.Frontend,
 		GitHubConnectorType:  config.GitHubConnectorType,

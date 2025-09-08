@@ -29,9 +29,9 @@ func Save(userInput UserInput, unvalidatedConfig config.UnvalidatedConfig, data 
 			fc.Check(
 				saveBitbucketAppPassword(userInput.Data.BitbucketAppPassword, unvalidatedConfig.GitLocal.BitbucketAppPassword, userInput.Scope, frontend),
 			)
-		case forgedomain.ForgeTypeCodeberg:
+		case forgedomain.ForgeTypeForgejo:
 			fc.Check(
-				saveCodebergToken(userInput.Data.CodebergToken, unvalidatedConfig.GitLocal.CodebergToken, userInput.Scope, frontend),
+				saveForgejoToken(userInput.Data.ForgejoToken, unvalidatedConfig.GitLocal.ForgejoToken, userInput.Scope, frontend),
 			)
 		case forgedomain.ForgeTypeGitHub:
 			fc.Check(
@@ -290,14 +290,14 @@ func saveBitbucketUsername(valueToWriteToGit Option[forgedomain.BitbucketUsernam
 	return gitconfig.RemoveBitbucketUsername(frontend)
 }
 
-func saveCodebergToken(valueToWriteToGit Option[forgedomain.ForgejoToken], valueAlreadyInGit Option[forgedomain.ForgejoToken], scope configdomain.ConfigScope, frontend subshelldomain.Runner) error {
+func saveForgejoToken(valueToWriteToGit Option[forgedomain.ForgejoToken], valueAlreadyInGit Option[forgedomain.ForgejoToken], scope configdomain.ConfigScope, frontend subshelldomain.Runner) error {
 	if valueToWriteToGit.Equal(valueAlreadyInGit) {
 		return nil
 	}
 	if value, has := valueToWriteToGit.Get(); has {
-		return gitconfig.SetCodebergToken(frontend, value, scope)
+		return gitconfig.SetForgejoToken(frontend, value, scope)
 	}
-	return gitconfig.RemoveCodebergToken(frontend)
+	return gitconfig.RemoveForgejoToken(frontend)
 }
 
 func saveContributionRegex(valueToWriteToGit Option[configdomain.ContributionRegex], valueAlreadyInGit Option[configdomain.ContributionRegex], runner subshelldomain.Runner) error {

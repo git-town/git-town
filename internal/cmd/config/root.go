@@ -91,7 +91,7 @@ func printConfig(config config.UnvalidatedConfig) {
 	print.Entry("origin hostname", format.OptionalStringerSetting(config.NormalConfig.HostingOriginHostname))
 	print.Entry("Bitbucket username", format.OptionalStringerSetting(config.NormalConfig.BitbucketUsername))
 	print.Entry("Bitbucket app password", format.OptionalStringerSetting(config.NormalConfig.BitbucketAppPassword))
-	print.Entry("Codeberg token", format.OptionalStringerSetting(config.NormalConfig.CodebergToken))
+	print.Entry("Forgejo token", format.OptionalStringerSetting(config.NormalConfig.ForgejoToken))
 	print.Entry("Gitea token", format.OptionalStringerSetting(config.NormalConfig.GiteaToken))
 	print.Entry("GitHub connector type", format.OptionalStringerSetting(config.NormalConfig.GitHubConnectorType))
 	print.Entry("GitHub token", format.OptionalStringerSetting(config.NormalConfig.GitHubToken))

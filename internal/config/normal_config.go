@@ -34,7 +34,7 @@ type NormalConfig struct {
 	BitbucketAppPassword     Option[forgedomain.BitbucketAppPassword]
 	BitbucketUsername        Option[forgedomain.BitbucketUsername]
 	BranchTypeOverrides      configdomain.BranchTypeOverrides
-	CodebergToken            Option[forgedomain.ForgejoToken]
+	ForgejoToken             Option[forgedomain.ForgejoToken]
 	ContributionRegex        Option[configdomain.ContributionRegex]
 	Detached                 configdomain.Detached
 	DevRemote                gitdomain.Remote
@@ -88,7 +88,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		BitbucketAppPassword:     other.BitbucketAppPassword.Or(self.BitbucketAppPassword),
 		BitbucketUsername:        other.BitbucketUsername.Or(self.BitbucketUsername),
 		BranchTypeOverrides:      other.BranchTypeOverrides.Concat(self.BranchTypeOverrides),
-		CodebergToken:            other.CodebergToken.Or(self.CodebergToken),
+		ForgejoToken:             other.ForgejoToken.Or(self.ForgejoToken),
 		ContributionRegex:        other.ContributionRegex.Or(self.ContributionRegex),
 		Detached:                 other.Detached.GetOr(self.Detached),
 		DevRemote:                other.DevRemote.GetOr(self.DevRemote),
@@ -231,7 +231,7 @@ func DefaultNormalConfig() NormalConfig {
 		BitbucketAppPassword:     None[forgedomain.BitbucketAppPassword](),
 		BitbucketUsername:        None[forgedomain.BitbucketUsername](),
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{},
-		CodebergToken:            None[forgedomain.ForgejoToken](),
+		ForgejoToken:             None[forgedomain.ForgejoToken](),
 		ContributionRegex:        None[configdomain.ContributionRegex](),
 		Detached:                 false,
 		DevRemote:                gitdomain.RemoteOrigin,
@@ -274,7 +274,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		BitbucketAppPassword:     partial.BitbucketAppPassword,
 		BitbucketUsername:        partial.BitbucketUsername,
 		BranchTypeOverrides:      partial.BranchTypeOverrides,
-		CodebergToken:            partial.CodebergToken,
+		ForgejoToken:             partial.ForgejoToken,
 		ContributionRegex:        partial.ContributionRegex,
 		Detached:                 partial.Detached.GetOr(defaults.Detached),
 		DevRemote:                partial.DevRemote.GetOr(defaults.DevRemote),

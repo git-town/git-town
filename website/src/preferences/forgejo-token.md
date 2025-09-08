@@ -1,8 +1,8 @@
-# Codeberg token
+# Forgejo token
 
-Git Town can interact with Codeberg in your name, for example to update pull
-requests as branches get created, shipped, or deleted. To do so, Git Town needs
-a personal access token for Codeberg.
+Git Town can interact with Forgejo-based forges (like Codeberg) in your name,
+for example to update pull requests as branches get created, shipped, or
+deleted. To do so, Git Town needs a personal access token.
 
 To create an API token, follow
 [these steps](https://docs.codeberg.org/advanced/access-token) You need an API
@@ -27,5 +27,5 @@ your machine. Without it, the setting applies only to the current repository.
 
 ## environment variable
 
-You can configure the Codeberg token by setting the `GIT_TOWN_CODEBERG_TOKEN`
+You can configure the Forgejo token by setting the `GIT_TOWN_CODEBERG_TOKEN`
 environment variable.

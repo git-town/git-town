@@ -151,7 +151,7 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
-		CodebergToken:        config.CodebergToken,
+		ForgejoToken:         config.ForgejoToken,
 		ForgeType:            config.ForgeType,
 		Frontend:             repo.Frontend,
 		GitHubConnectorType:  config.GitHubConnectorType,

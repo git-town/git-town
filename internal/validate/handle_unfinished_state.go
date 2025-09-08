@@ -56,7 +56,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (dialogdomain.Exit, error) 
 			Backend:              args.Backend,
 			BitbucketAppPassword: normalConfig.BitbucketAppPassword,
 			BitbucketUsername:    normalConfig.BitbucketUsername,
-			CodebergToken:        normalConfig.CodebergToken,
+			ForgejoToken:         normalConfig.ForgejoToken,
 			ForgeType:            normalConfig.ForgeType,
 			Frontend:             args.Frontend,
 			GitHubConnectorType:  normalConfig.GitHubConnectorType,

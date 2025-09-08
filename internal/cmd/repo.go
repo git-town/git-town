@@ -20,7 +20,7 @@ const (
 	repoDesc = "Open the repository homepage in the browser"
 	repoHelp = `
 Supported for repositories hosted on
-GitHub, GitLab, Gitea, Bitbucket, and Codeberg.
+GitHub, GitLab, Gitea, Bitbucket, and Forgejo.
 Derives the Git provider from the "origin" remote.
 You can override this detection with
 "git config %s <DRIVER>"
@@ -93,7 +93,7 @@ func determineRepoData(args []string, repo execute.OpenRepoResult) (data repoDat
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
-		CodebergToken:        config.CodebergToken,
+		ForgejoToken:         config.ForgejoToken,
 		ForgeType:            config.ForgeType,
 		Frontend:             repo.Frontend,
 		GitHubConnectorType:  config.GitHubConnectorType,

@@ -138,7 +138,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		BitbucketAppPassword:     forgedomain.ParseBitbucketAppPassword(snapshot[configdomain.KeyBitbucketAppPassword]),
 		BitbucketUsername:        forgedomain.ParseBitbucketUsername(snapshot[configdomain.KeyBitbucketUsername]),
 		BranchTypeOverrides:      branchTypeOverrides,
-		CodebergToken:            forgedomain.ParseForgejoToken(snapshot[configdomain.KeyCodebergToken]),
+		ForgejoToken:             forgedomain.ParseForgejoToken(snapshot[configdomain.KeyForgejoToken]),
 		ContributionRegex:        contributionRegex,
 		Detached:                 detached,
 		DevRemote:                gitdomain.NewRemote(snapshot[configdomain.KeyDevRemote]),

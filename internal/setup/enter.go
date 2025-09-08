@@ -69,8 +69,8 @@ EnterForgeData:
 				return emptyResult, exit, err
 			}
 			bitbucketAppPassword, exit, err = enterBitbucketAppPassword(data)
-		case forgedomain.ForgeTypeCodeberg:
-			codebergToken, exit, err = enterCodebergToken(data)
+		case forgedomain.ForgeTypeForgejo:
+			codebergToken, exit, err = enterForgejoToken(data)
 		case forgedomain.ForgeTypeGitea:
 			giteaToken, exit, err = enterGiteaToken(data)
 		case forgedomain.ForgeTypeGitHub:
@@ -106,7 +106,7 @@ EnterForgeData:
 		backend:              data.Backend,
 		bitbucketAppPassword: bitbucketAppPassword.Or(data.Config.GitGlobal.BitbucketAppPassword),
 		bitbucketUsername:    bitbucketUsername.Or(data.Config.GitGlobal.BitbucketUsername),
-		codebergToken:        codebergToken.Or(data.Config.GitGlobal.CodebergToken),
+		codebergToken:        codebergToken.Or(data.Config.GitGlobal.ForgejoToken),
 		devURL:               devURL,
 		forgeTypeOpt:         actualForgeType,
 		giteaToken:           giteaToken.Or(data.Config.GitGlobal.GiteaToken),
@@ -239,7 +239,7 @@ EnterForgeData:
 		BitbucketAppPassword:     bitbucketAppPassword,
 		BitbucketUsername:        bitbucketUsername,
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{}, // the setup assistant doesn't ask for this
-		CodebergToken:            codebergToken,
+		ForgejoToken:             codebergToken,
 		ContributionRegex:        contributionRegex,
 		Detached:                 detached,
 		DevRemote:                devRemote,
@@ -337,14 +337,14 @@ func enterBitbucketUserName(data Data) (Option[forgedomain.BitbucketUsername], d
 	})
 }
 
-func enterCodebergToken(data Data) (Option[forgedomain.ForgejoToken], dialogdomain.Exit, error) {
-	if data.Config.File.CodebergToken.IsSome() {
+func enterForgejoToken(data Data) (Option[forgedomain.ForgejoToken], dialogdomain.Exit, error) {
+	if data.Config.File.ForgejoToken.IsSome() {
 		return None[forgedomain.ForgejoToken](), false, nil
 	}
 	return dialog.ForgejoToken(dialog.Args[forgedomain.ForgejoToken]{
-		Global: data.Config.GitGlobal.CodebergToken,
+		Global: data.Config.GitGlobal.ForgejoToken,
 		Inputs: data.Inputs,
-		Local:  data.Config.GitLocal.CodebergToken,
+		Local:  data.Config.GitLocal.ForgejoToken,
 	})
 }
 
@@ -679,8 +679,8 @@ func shouldAskForScope(args enterTokenScopeArgs) bool {
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
 			return existsAndChanged(args.bitbucketUsername, args.existingConfig.BitbucketUsername) &&
 				existsAndChanged(args.bitbucketAppPassword, args.existingConfig.BitbucketAppPassword)
-		case forgedomain.ForgeTypeCodeberg:
-			return existsAndChanged(args.codebergToken, args.existingConfig.CodebergToken)
+		case forgedomain.ForgeTypeForgejo:
+			return existsAndChanged(args.codebergToken, args.existingConfig.ForgejoToken)
 		case forgedomain.ForgeTypeGitea:
 			return existsAndChanged(args.giteaToken, args.existingConfig.GiteaToken)
 		case forgedomain.ForgeTypeGitHub:
@@ -700,7 +700,7 @@ func testForgeAuth(args testForgeAuthArgs) (repeat bool, exit dialogdomain.Exit,
 		Backend:              args.backend,
 		BitbucketAppPassword: args.bitbucketAppPassword,
 		BitbucketUsername:    args.bitbucketUsername,
-		CodebergToken:        args.codebergToken,
+		ForgejoToken:         args.codebergToken,
 		ForgeType:            args.forgeTypeOpt,
 		Frontend:             args.backend,
 		GitHubConnectorType:  args.githubConnectorType,
@@ -754,8 +754,8 @@ func tokenScopeDialog(args enterTokenScopeArgs) (configdomain.ConfigScope, dialo
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
 			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyBitbucketUsername, args.data.Config.NormalConfig.BitbucketUsername)
 			return dialog.TokenScope(existingScope, args.inputs)
-		case forgedomain.ForgeTypeCodeberg:
-			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyCodebergToken, args.data.Config.NormalConfig.CodebergToken)
+		case forgedomain.ForgeTypeForgejo:
+			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyForgejoToken, args.data.Config.NormalConfig.ForgejoToken)
 			return dialog.TokenScope(existingScope, args.inputs)
 		case forgedomain.ForgeTypeGitea:
 			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyGiteaToken, args.data.Config.NormalConfig.GiteaToken)

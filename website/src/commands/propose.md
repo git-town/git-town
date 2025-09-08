@@ -15,7 +15,7 @@ Proposing prototype and parked branches makes them feature branches.
 You can create pull requests for repositories hosted on:
 
 - [Bitbucket](https://bitbucket.org)
-- [Codeberg](https://codeberg.org)
+- [Forgejo](https://forgejo.org)
 - [Gitea](https://gitea.com)
 - [GitHub](https://github.com)
 - [GitLab](https://gitlab.com)

@@ -51,7 +51,7 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, shipStr
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
-		CodebergToken:        config.CodebergToken,
+		ForgejoToken:         config.ForgejoToken,
 		ForgeType:            config.ForgeType,
 		Frontend:             repo.Frontend,
 		GitHubConnectorType:  config.GitHubConnectorType,

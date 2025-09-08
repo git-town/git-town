@@ -1,2 +1,2 @@
-// Package codeberg provides the forge connector for Codeberg.
-package codeberg
+// Package forgejo provides the forge connector for Forgejo-based platforms.
+package forgejo

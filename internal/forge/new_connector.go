@@ -4,8 +4,8 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/forge/bitbucketcloud"
 	"github.com/git-town/git-town/v21/internal/forge/bitbucketdatacenter"
-	"github.com/git-town/git-town/v21/internal/forge/codeberg"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v21/internal/forge/forgejo"
 	"github.com/git-town/git-town/v21/internal/forge/gh"
 	"github.com/git-town/git-town/v21/internal/forge/gitea"
 	"github.com/git-town/git-town/v21/internal/forge/github"
@@ -44,9 +44,9 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			UserName:    args.BitbucketUsername,
 		})
 		return Some(connector), nil
-	case forgedomain.ForgeTypeCodeberg:
-		connector, err = codeberg.NewConnector(codeberg.NewConnectorArgs{
-			APIToken:  args.CodebergToken,
+	case forgedomain.ForgeTypeForgejo:
+		connector, err = forgejo.NewConnector(forgejo.NewConnectorArgs{
+			APIToken:  args.ForgejoToken,
 			Log:       args.Log,
 			RemoteURL: remoteURL,
 		})
@@ -116,7 +116,7 @@ type NewConnectorArgs struct {
 	Backend              subshelldomain.Querier
 	BitbucketAppPassword Option[forgedomain.BitbucketAppPassword]
 	BitbucketUsername    Option[forgedomain.BitbucketUsername]
-	CodebergToken        Option[forgedomain.ForgejoToken]
+	ForgejoToken         Option[forgedomain.ForgejoToken]
 	ForgeType            Option[forgedomain.ForgeType]
 	Frontend             subshelldomain.Runner
 	GitHubConnectorType  Option[forgedomain.GitHubConnectorType]

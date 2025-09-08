@@ -50,8 +50,8 @@ func RemoveBranchTypeOverride(runner subshelldomain.Runner, branch gitdomain.Loc
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, key.Key)
 }
 
-func RemoveCodebergToken(runner subshelldomain.Runner) error {
-	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyCodebergToken)
+func RemoveForgejoToken(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyForgejoToken)
 }
 
 func RemoveContributionRegex(runner subshelldomain.Runner) error {
@@ -187,8 +187,8 @@ func SetBranchTypeOverride(runner subshelldomain.Runner, branchType configdomain
 	return nil
 }
 
-func SetCodebergToken(runner subshelldomain.Runner, value forgedomain.ForgejoToken, scope configdomain.ConfigScope) error {
-	return SetConfigValue(runner, scope, configdomain.KeyCodebergToken, value.String())
+func SetForgejoToken(runner subshelldomain.Runner, value forgedomain.ForgejoToken, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyForgejoToken, value.String())
 }
 
 func SetContributionRegex(runner subshelldomain.Runner, regex configdomain.ContributionRegex, scope configdomain.ConfigScope) error {
