@@ -5,6 +5,11 @@ import (
 	"strings"
 )
 
+type Runnable interface {
+	// Run executes this opcodes.
+	Run(args RunArgs) error
+}
+
 // Opcode is an atomic operation that the Git Town interpreter can execute.
 // Opcodes implement the command pattern (https://en.wikipedia.org/wiki/Command_pattern)
 // and provide opcodes to continue and abort them.
@@ -20,9 +25,6 @@ type Opcode interface {
 	// AutomaticUndoError provides the error message to display when this opcode
 	// cause the command to automatically undo.
 	AutomaticUndoError() error
-
-	// Run executes this opcodes.
-	Run(args RunArgs) error
 
 	// ShouldUndoOnError indicates whether this opcode should
 	// cause the command to automatically undo if it errors.

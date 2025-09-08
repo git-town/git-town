@@ -58,7 +58,12 @@ func Execute(args ExecuteArgs) error {
 		if _, ok := nextStep.(*opcodes.ExitToShell); ok {
 			return exitToShell(args)
 		}
-		err := nextStep.Run(shared.RunArgs{
+		runnable, ok := nextStep.(shared.Runnable)
+		if !ok {
+			// TODO: print the type that nextStep has here
+			panic("found a non-runnable opcode: " + nextStep)
+		}
+		err := runnable.Run(shared.RunArgs{
 			Backend:                         args.Backend,
 			BranchInfos:                     Some(args.InitialBranchesSnapshot.Branches),
 			Config:                          NewMutable(&args.Config),
