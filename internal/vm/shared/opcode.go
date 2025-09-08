@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+// This file defines the interfaces that opcodes can implement.
+
 // Opcode represents an opcode about which we know nothing except that it is an opcode.
 type Opcode interface{}
 
