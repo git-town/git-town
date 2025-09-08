@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/state/runlog"
 	"github.com/git-town/git-town/v21/internal/state/runstate"
+	"github.com/git-town/git-town/v21/internal/vm/program"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
@@ -49,13 +50,14 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	if isAutoUndoable {
 		return autoUndo(autoUndoable, runErr, args)
 	}
+	var continueProgram program.Program
 	if continuable, isContinuable := failedOpcode.(shared.Continuable); isContinuable {
-		continueProgram := continuable.Continue()
-		if len(continueProgram) == 0 {
-			continueProgram = []shared.Opcode{failedOpcode}
-		}
-		args.RunState.RunProgram.Prepend(continueProgram...)
+		continueProgram = continuable.Continue()
 	}
+	if len(continueProgram) == 0 {
+		continueProgram = []shared.Opcode{failedOpcode}
+	}
+	args.RunState.RunProgram.Prepend(continueProgram...)
 	currentBranch, err := args.Git.CurrentBranch(args.Backend)
 	if err != nil {
 		return err
