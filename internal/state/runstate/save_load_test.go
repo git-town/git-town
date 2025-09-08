@@ -639,7 +639,7 @@ func TestLoadSave(t *testing.T) {
             "Title": "title",
             "URL": "url"
           },
-          "forge-type": "codeberg"
+          "forge-type": "forgejo"
         }
       },
       "type": "ProposalUpdateSource"

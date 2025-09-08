@@ -55,7 +55,7 @@ EnterForgeData:
 	actualForgeType := determineForgeType(enteredForgeType.Or(data.Config.File.ForgeType), devURL)
 	bitbucketUsername := None[forgedomain.BitbucketUsername]()
 	bitbucketAppPassword := None[forgedomain.BitbucketAppPassword]()
-	codebergToken := None[forgedomain.ForgejoToken]()
+	forgejoToken := None[forgedomain.ForgejoToken]()
 	giteaToken := None[forgedomain.GiteaToken]()
 	githubConnectorTypeOpt := None[forgedomain.GitHubConnectorType]()
 	githubToken := None[forgedomain.GitHubToken]()
@@ -70,7 +70,7 @@ EnterForgeData:
 			}
 			bitbucketAppPassword, exit, err = enterBitbucketAppPassword(data)
 		case forgedomain.ForgeTypeForgejo:
-			codebergToken, exit, err = enterForgejoToken(data)
+			forgejoToken, exit, err = enterForgejoToken(data)
 		case forgedomain.ForgeTypeGitea:
 			giteaToken, exit, err = enterGiteaToken(data)
 		case forgedomain.ForgeTypeGitHub:
@@ -106,7 +106,7 @@ EnterForgeData:
 		backend:              data.Backend,
 		bitbucketAppPassword: bitbucketAppPassword.Or(data.Config.GitGlobal.BitbucketAppPassword),
 		bitbucketUsername:    bitbucketUsername.Or(data.Config.GitGlobal.BitbucketUsername),
-		codebergToken:        codebergToken.Or(data.Config.GitGlobal.ForgejoToken),
+		forgejoToken:         forgejoToken.Or(data.Config.GitGlobal.ForgejoToken),
 		devURL:               devURL,
 		forgeTypeOpt:         actualForgeType,
 		giteaToken:           giteaToken.Or(data.Config.GitGlobal.GiteaToken),
@@ -126,7 +126,7 @@ EnterForgeData:
 	tokenScope, exit, err := enterTokenScope(enterTokenScopeArgs{
 		bitbucketAppPassword: bitbucketAppPassword,
 		bitbucketUsername:    bitbucketUsername,
-		codebergToken:        codebergToken,
+		forgejoToken:         forgejoToken,
 		data:                 data,
 		determinedForgeType:  actualForgeType,
 		existingConfig:       data.Config.NormalConfig,
@@ -239,7 +239,7 @@ EnterForgeData:
 		BitbucketAppPassword:     bitbucketAppPassword,
 		BitbucketUsername:        bitbucketUsername,
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{}, // the setup assistant doesn't ask for this
-		ForgejoToken:             codebergToken,
+		ForgejoToken:             forgejoToken,
 		ContributionRegex:        contributionRegex,
 		Detached:                 detached,
 		DevRemote:                devRemote,
@@ -648,7 +648,7 @@ func enterTokenScope(args enterTokenScopeArgs) (configdomain.ConfigScope, dialog
 type enterTokenScopeArgs struct {
 	bitbucketAppPassword Option[forgedomain.BitbucketAppPassword]
 	bitbucketUsername    Option[forgedomain.BitbucketUsername]
-	codebergToken        Option[forgedomain.ForgejoToken]
+	forgejoToken         Option[forgedomain.ForgejoToken]
 	data                 Data
 	determinedForgeType  Option[forgedomain.ForgeType]
 	existingConfig       config.NormalConfig
@@ -680,7 +680,7 @@ func shouldAskForScope(args enterTokenScopeArgs) bool {
 			return existsAndChanged(args.bitbucketUsername, args.existingConfig.BitbucketUsername) &&
 				existsAndChanged(args.bitbucketAppPassword, args.existingConfig.BitbucketAppPassword)
 		case forgedomain.ForgeTypeForgejo:
-			return existsAndChanged(args.codebergToken, args.existingConfig.ForgejoToken)
+			return existsAndChanged(args.forgejoToken, args.existingConfig.ForgejoToken)
 		case forgedomain.ForgeTypeGitea:
 			return existsAndChanged(args.giteaToken, args.existingConfig.GiteaToken)
 		case forgedomain.ForgeTypeGitHub:
@@ -700,7 +700,7 @@ func testForgeAuth(args testForgeAuthArgs) (repeat bool, exit dialogdomain.Exit,
 		Backend:              args.backend,
 		BitbucketAppPassword: args.bitbucketAppPassword,
 		BitbucketUsername:    args.bitbucketUsername,
-		ForgejoToken:         args.codebergToken,
+		ForgejoToken:         args.forgejoToken,
 		ForgeType:            args.forgeTypeOpt,
 		Frontend:             args.backend,
 		GitHubConnectorType:  args.githubConnectorType,
@@ -736,7 +736,7 @@ type testForgeAuthArgs struct {
 	backend              subshelldomain.RunnerQuerier
 	bitbucketAppPassword Option[forgedomain.BitbucketAppPassword]
 	bitbucketUsername    Option[forgedomain.BitbucketUsername]
-	codebergToken        Option[forgedomain.ForgejoToken]
+	forgejoToken         Option[forgedomain.ForgejoToken]
 	devURL               Option[giturl.Parts]
 	forgeTypeOpt         Option[forgedomain.ForgeType]
 	giteaToken           Option[forgedomain.GiteaToken]

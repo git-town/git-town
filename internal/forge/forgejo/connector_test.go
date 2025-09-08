@@ -3,9 +3,10 @@ package forgejo_test
 import (
 	"testing"
 
-	"codeberg.org/mvdkleijn/forgejo-sdk/forgejo/v2"
+	forgejoSDK "codeberg.org/mvdkleijn/forgejo-sdk/forgejo/v2"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v21/internal/forge/forgejo"
 	"github.com/git-town/git-town/v21/internal/forge/github"
 	"github.com/git-town/git-town/v21/internal/git/giturl"
 
@@ -80,27 +81,27 @@ func TestConnector(t *testing.T) {
 
 func TestFilterPullRequests(t *testing.T) {
 	t.Parallel()
-	give := []*forgejo.PullRequest{
+	give := []*forgejoSDK.PullRequest{
 		// matching branch
 		{
-			Head: &forgejo.PRBranchInfo{Name: "branch"},
-			Base: &forgejo.PRBranchInfo{Name: "target"},
+			Head: &forgejoSDK.PRBranchInfo{Name: "branch"},
+			Base: &forgejoSDK.PRBranchInfo{Name: "target"},
 		},
 		// branch with different name
 		{
-			Head: &forgejo.PRBranchInfo{Name: "other"},
-			Base: &forgejo.PRBranchInfo{Name: "target"},
+			Head: &forgejoSDK.PRBranchInfo{Name: "other"},
+			Base: &forgejoSDK.PRBranchInfo{Name: "target"},
 		},
 		// branch with different target
 		{
-			Head: &forgejo.PRBranchInfo{Name: "branch"},
-			Base: &forgejo.PRBranchInfo{Name: "other"},
+			Head: &forgejoSDK.PRBranchInfo{Name: "branch"},
+			Base: &forgejoSDK.PRBranchInfo{Name: "other"},
 		},
 	}
-	want := []*forgejo.PullRequest{
+	want := []*forgejoSDK.PullRequest{
 		{
-			Head: &forgejo.PRBranchInfo{Name: "branch"},
-			Base: &forgejo.PRBranchInfo{Name: "target"},
+			Head: &forgejoSDK.PRBranchInfo{Name: "branch"},
+			Base: &forgejoSDK.PRBranchInfo{Name: "target"},
 		},
 	}
 	have := forgejo.FilterPullRequests(give, "branch", "target")
@@ -116,7 +117,7 @@ func TestNewConnector(t *testing.T) {
 	//
 	// t.Run("Codeberg SaaS", func(t *testing.T) {
 	// 	t.Parallel()
-	// 	have, err := forgejo.NewConnector(codeberg.NewConnectorArgs{
+	// 	have, err := forgejo.NewConnector(forgejo.NewConnectorArgs{
 	// 		APIToken:  None[configdomain.ForgejoToken](),
 	// 		Log:       print.Logger{},
 	// 		RemoteURL: giturl.Parse("git@codeberg.org:git-town/docs.git").GetOrPanic(),

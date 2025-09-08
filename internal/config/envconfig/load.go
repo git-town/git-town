@@ -14,7 +14,7 @@ const (
 	autoResolve              = "GIT_TOWN_AUTO_RESOLVE"
 	bitbucketAppPassword     = "GIT_TOWN_BITBUCKET_APP_PASSWORD"
 	bitbucketUserName        = "GIT_TOWN_BITBUCKET_USERNAME"
-	codebergToken            = "GIT_TOWN_CODEBERG_TOKEN"
+	forgejoToken             = "GIT_TOWN_FORGEJO_TOKEN"
 	contributionRegex        = "GIT_TOWN_CONTRIBUTION_REGEX"
 	detached                 = "GIT_TOWN_DETACHED"
 	devRemote                = "GIT_TOWN_DEV_REMOTE"
@@ -107,7 +107,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		BitbucketAppPassword:     forgedomain.ParseBitbucketAppPassword(env.Get(bitbucketAppPassword)),
 		BitbucketUsername:        forgedomain.ParseBitbucketUsername(env.Get(bitbucketUserName)),
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{}, // not loaded from env vars
-		ForgejoToken:             forgedomain.ParseForgejoToken(env.Get(codebergToken)),
+		ForgejoToken:             forgedomain.ParseForgejoToken(env.Get(forgejoToken)),
 		ContributionRegex:        contributionRegex,
 		Detached:                 detached,
 		DevRemote:                gitdomain.NewRemote(env.Get(devRemote)),

@@ -18,7 +18,7 @@ You can use one of these values for the forge type setting:
 - `gitea`
 - `bitbucket`
 - `bitbucket-datacenter`
-- `codeberg`
+- `forgejo`
 
 ## config file
 
