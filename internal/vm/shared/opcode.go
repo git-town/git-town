@@ -17,7 +17,7 @@ type Runnable interface {
 }
 
 // Abortable allows an opcode that executes a Git command that can fail
-// to define custom steps that safely abort that Git command when it fails.
+// to define custom steps that abort that failing Git command.
 type Abortable interface {
 	Abort() []Opcode
 }
