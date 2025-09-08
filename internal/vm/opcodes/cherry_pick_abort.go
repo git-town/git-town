@@ -5,8 +5,7 @@ import (
 )
 
 // Checkout checks out the given existing branch.
-type CherryPickAbort struct {
-}
+type CherryPickAbort struct{}
 
 func (self *CherryPickAbort) Run(args shared.RunArgs) error {
 	return args.Git.CherryPickAbort(args.Frontend)

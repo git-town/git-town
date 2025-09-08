@@ -8,8 +8,7 @@ import (
 
 // MergeContinue finishes an ongoing merge conflict
 // assuming all conflicts have been resolved by the user.
-type MergeContinue struct {
-}
+type MergeContinue struct{}
 
 func (self *MergeContinue) Run(args shared.RunArgs) error {
 	if args.Git.HasMergeInProgress(args.Backend) {

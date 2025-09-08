@@ -6,8 +6,7 @@ import (
 )
 
 // restores stashed away changes into the workspace
-type StashPop struct {
-}
+type StashPop struct{}
 
 func (self *StashPop) Continue() []shared.Opcode {
 	return []shared.Opcode{&StashDrop{}}

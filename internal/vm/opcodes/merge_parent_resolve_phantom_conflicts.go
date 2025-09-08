@@ -12,7 +12,6 @@ type MergeParentResolvePhantomConflicts struct {
 	CurrentParent     gitdomain.BranchName              // the currently active parent, after all remotely deleted parents were removed
 	InitialParentName Option[gitdomain.LocalBranchName] // name of the original parent when Git Town started
 	InitialParentSHA  Option[gitdomain.SHA]             // SHA of the original parent when Git Town started
-
 }
 
 func (self *MergeParentResolvePhantomConflicts) Abort() []shared.Opcode {

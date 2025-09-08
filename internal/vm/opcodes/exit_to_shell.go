@@ -1,4 +1,3 @@
 package opcodes
 
-type ExitToShell struct {
-}
+type ExitToShell struct{}

@@ -9,8 +9,7 @@ import (
 )
 
 // comments out the currently active commit message
-type CommitMessageCommentOut struct {
-}
+type CommitMessageCommentOut struct{}
 
 func (self *CommitMessageCommentOut) Run(args shared.RunArgs) error {
 	if err := args.Git.CommentOutSquashCommitMessage(None[string]()); err != nil {
