@@ -10,33 +10,33 @@ import (
 // Opcode represents an opcode about which we know nothing except that it is an opcode.
 type Opcode interface{}
 
-// Runnable defines methods that an opcode needs to implement to execute subshell commands.
+// Runnable marks an opcode that can execute subshell commands.
 type Runnable interface {
 	// Run executes this opcode.
 	Run(args RunArgs) error
 }
 
-// Abortable allows an opcode that executes a Git command that can fail
-// to define custom steps that abort that failing Git command.
+// Abortable marks an opcode that can provide custom steps
+// to abort a failed Git command.
 type Abortable interface {
 	Abort() []Opcode
 }
 
-// Abortable allows an opcode that executes a Git command that can fail
-// to define custom steps that safely abort that Git command when it fails.
-// By default, opcodes continue by executing their Run method again.
+// Continuable marks an opcode that can provide custom steps
+// to safely continue after a failed Git command.
+// By default, opcodes retry by running their Run method again.
 type Continuable interface {
 	Continue() []Opcode
 }
 
-// AutoUndoable allows an opcode that exacutes a Git command that when it fails,
-// it should fail the entire Git Town command, to specify the error that Git Town displays.
+// AutoUndoable marks an opcode that should fail the entire Git Town command
+// when its Git command fails. It provides the error message Git Town displays.
 type AutoUndoable interface {
 	AutomaticUndoError() error
 }
 
-// UndoExternalChanges allows an opcodes that performs external changes,
-// for example at a forge, to undo them when there is an error.
+// ExternalEffects marks an opcode that performs side effects outside of Git,
+// such as changes on a code hosting service, and can undo them if needed.
 type ExternalEffects interface {
 	UndoExternalChanges() []Opcode
 }
