@@ -46,15 +46,13 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	if abortable, isAbortable := failedOpcode.(shared.Abortable); isAbortable {
 		args.RunState.AbortProgram.Add(abortable.Abort()...)
 	}
-	autoUndoable, isAutoUndoable := failedOpcode.(shared.AutoUndoable)
-	if isAutoUndoable {
+	if autoUndoable, isAutoUndoable := failedOpcode.(shared.AutoUndoable); isAutoUndoable {
 		return autoUndo(autoUndoable, runErr, args)
 	}
 	var continueProgram program.Program
 	if continuable, isContinuable := failedOpcode.(shared.Continuable); isContinuable {
 		continueProgram = continuable.Continue()
-	}
-	if len(continueProgram) == 0 {
+	} else {
 		continueProgram = []shared.Opcode{failedOpcode}
 	}
 	args.RunState.RunProgram.Prepend(continueProgram...)

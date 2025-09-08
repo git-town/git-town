@@ -5,27 +5,33 @@ import (
 	"strings"
 )
 
-// The common methods for all opcodes.
+// Opcode represents an opcode about which we know nothing except that it is an opcode.
 type Opcode interface{}
 
-// Runnable allows an opcode to execute subshell commands.
+// Runnable defines methods that an opcode needs to implement to execute subshell commands.
 type Runnable interface {
 	// Run executes this opcodes.
 	Run(args RunArgs) error
 }
 
-// Recoverable defines methods for opcodes that can encounter conflicts.
+// Abortable allows an opcode that executes a Git command that can fail
+// to define custom steps that safely abort that Git command when it fails.
 type Abortable interface {
 	// Abort provides the opcodes to abort this Opcode when it encounters an error.
 	Abort() []Opcode
 }
 
+// Abortable allows an opcode that executes a Git command that can fail
+// to define custom steps that safely abort that Git command when it fails.
+// By default, opcodes continue by executing their Run method again.
 type Continuable interface {
 	// Continue provides the opcodes continue this opcode
 	// after it encountered an error and the user has resolved the error.
 	Continue() []Opcode
 }
 
+// AutoUndoable allows an opcode that exacutes a Git command that can fail
+// to specify that it should
 type AutoUndoable interface {
 	// AutomaticUndoError provides the error message to display when this opcode
 	// cause the command to automatically undo.
