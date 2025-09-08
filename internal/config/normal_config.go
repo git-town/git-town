@@ -34,13 +34,13 @@ type NormalConfig struct {
 	BitbucketAppPassword     Option[forgedomain.BitbucketAppPassword]
 	BitbucketUsername        Option[forgedomain.BitbucketUsername]
 	BranchTypeOverrides      configdomain.BranchTypeOverrides
-	ForgejoToken             Option[forgedomain.ForgejoToken]
 	ContributionRegex        Option[configdomain.ContributionRegex]
 	Detached                 configdomain.Detached
 	DevRemote                gitdomain.Remote
 	DryRun                   configdomain.DryRun // whether to only print the Git commands but not execute them
 	FeatureRegex             Option[configdomain.FeatureRegex]
 	ForgeType                Option[forgedomain.ForgeType] // None = auto-detect
+	ForgejoToken             Option[forgedomain.ForgejoToken]
 	GitHubConnectorType      Option[forgedomain.GitHubConnectorType]
 	GitHubToken              Option[forgedomain.GitHubToken]
 	GitLabConnectorType      Option[forgedomain.GitLabConnectorType]
@@ -88,13 +88,13 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		BitbucketAppPassword:     other.BitbucketAppPassword.Or(self.BitbucketAppPassword),
 		BitbucketUsername:        other.BitbucketUsername.Or(self.BitbucketUsername),
 		BranchTypeOverrides:      other.BranchTypeOverrides.Concat(self.BranchTypeOverrides),
-		ForgejoToken:             other.ForgejoToken.Or(self.ForgejoToken),
 		ContributionRegex:        other.ContributionRegex.Or(self.ContributionRegex),
 		Detached:                 other.Detached.GetOr(self.Detached),
 		DevRemote:                other.DevRemote.GetOr(self.DevRemote),
 		DryRun:                   other.DryRun.GetOr(self.DryRun),
 		FeatureRegex:             other.FeatureRegex.Or(self.FeatureRegex),
 		ForgeType:                other.ForgeType.Or(self.ForgeType),
+		ForgejoToken:             other.ForgejoToken.Or(self.ForgejoToken),
 		GitHubConnectorType:      other.GitHubConnectorType.Or(self.GitHubConnectorType),
 		GitHubToken:              other.GitHubToken.Or(self.GitHubToken),
 		GitLabConnectorType:      other.GitLabConnectorType.Or(self.GitLabConnectorType),
@@ -231,13 +231,13 @@ func DefaultNormalConfig() NormalConfig {
 		BitbucketAppPassword:     None[forgedomain.BitbucketAppPassword](),
 		BitbucketUsername:        None[forgedomain.BitbucketUsername](),
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{},
-		ForgejoToken:             None[forgedomain.ForgejoToken](),
 		ContributionRegex:        None[configdomain.ContributionRegex](),
 		Detached:                 false,
 		DevRemote:                gitdomain.RemoteOrigin,
 		DryRun:                   false,
 		FeatureRegex:             None[configdomain.FeatureRegex](),
 		ForgeType:                None[forgedomain.ForgeType](),
+		ForgejoToken:             None[forgedomain.ForgejoToken](),
 		GitHubConnectorType:      None[forgedomain.GitHubConnectorType](),
 		GitHubToken:              None[forgedomain.GitHubToken](),
 		GitLabConnectorType:      None[forgedomain.GitLabConnectorType](),
@@ -274,13 +274,13 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		BitbucketAppPassword:     partial.BitbucketAppPassword,
 		BitbucketUsername:        partial.BitbucketUsername,
 		BranchTypeOverrides:      partial.BranchTypeOverrides,
-		ForgejoToken:             partial.ForgejoToken,
 		ContributionRegex:        partial.ContributionRegex,
 		Detached:                 partial.Detached.GetOr(defaults.Detached),
 		DevRemote:                partial.DevRemote.GetOr(defaults.DevRemote),
 		DryRun:                   partial.DryRun.GetOr(defaults.DryRun),
 		FeatureRegex:             partial.FeatureRegex,
 		ForgeType:                partial.ForgeType,
+		ForgejoToken:             partial.ForgejoToken,
 		GitHubConnectorType:      partial.GitHubConnectorType,
 		GitHubToken:              partial.GitHubToken,
 		GitLabConnectorType:      partial.GitLabConnectorType,

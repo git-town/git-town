@@ -106,9 +106,9 @@ EnterForgeData:
 		backend:              data.Backend,
 		bitbucketAppPassword: bitbucketAppPassword.Or(data.Config.GitGlobal.BitbucketAppPassword),
 		bitbucketUsername:    bitbucketUsername.Or(data.Config.GitGlobal.BitbucketUsername),
-		forgejoToken:         forgejoToken.Or(data.Config.GitGlobal.ForgejoToken),
 		devURL:               devURL,
 		forgeTypeOpt:         actualForgeType,
+		forgejoToken:         forgejoToken.Or(data.Config.GitGlobal.ForgejoToken),
 		giteaToken:           giteaToken.Or(data.Config.GitGlobal.GiteaToken),
 		githubConnectorType:  githubConnectorTypeOpt.Or(data.Config.GitGlobal.GitHubConnectorType),
 		githubToken:          githubToken.Or(data.Config.GitGlobal.GitHubToken),
@@ -126,10 +126,10 @@ EnterForgeData:
 	tokenScope, exit, err := enterTokenScope(enterTokenScopeArgs{
 		bitbucketAppPassword: bitbucketAppPassword,
 		bitbucketUsername:    bitbucketUsername,
-		forgejoToken:         forgejoToken,
 		data:                 data,
 		determinedForgeType:  actualForgeType,
 		existingConfig:       data.Config.NormalConfig,
+		forgejoToken:         forgejoToken,
 		giteaToken:           giteaToken,
 		githubToken:          githubToken,
 		gitlabToken:          gitlabToken,
@@ -648,10 +648,10 @@ func enterTokenScope(args enterTokenScopeArgs) (configdomain.ConfigScope, dialog
 type enterTokenScopeArgs struct {
 	bitbucketAppPassword Option[forgedomain.BitbucketAppPassword]
 	bitbucketUsername    Option[forgedomain.BitbucketUsername]
-	forgejoToken         Option[forgedomain.ForgejoToken]
 	data                 Data
 	determinedForgeType  Option[forgedomain.ForgeType]
 	existingConfig       config.NormalConfig
+	forgejoToken         Option[forgedomain.ForgejoToken]
 	giteaToken           Option[forgedomain.GiteaToken]
 	githubToken          Option[forgedomain.GitHubToken]
 	gitlabToken          Option[forgedomain.GitLabToken]
@@ -700,8 +700,8 @@ func testForgeAuth(args testForgeAuthArgs) (repeat bool, exit dialogdomain.Exit,
 		Backend:              args.backend,
 		BitbucketAppPassword: args.bitbucketAppPassword,
 		BitbucketUsername:    args.bitbucketUsername,
-		ForgejoToken:         args.forgejoToken,
 		ForgeType:            args.forgeTypeOpt,
+		ForgejoToken:         args.forgejoToken,
 		Frontend:             args.backend,
 		GitHubConnectorType:  args.githubConnectorType,
 		GitHubToken:          args.githubToken,
@@ -736,9 +736,9 @@ type testForgeAuthArgs struct {
 	backend              subshelldomain.RunnerQuerier
 	bitbucketAppPassword Option[forgedomain.BitbucketAppPassword]
 	bitbucketUsername    Option[forgedomain.BitbucketUsername]
-	forgejoToken         Option[forgedomain.ForgejoToken]
 	devURL               Option[giturl.Parts]
 	forgeTypeOpt         Option[forgedomain.ForgeType]
+	forgejoToken         Option[forgedomain.ForgejoToken]
 	giteaToken           Option[forgedomain.GiteaToken]
 	githubConnectorType  Option[forgedomain.GitHubConnectorType]
 	githubToken          Option[forgedomain.GitHubToken]
