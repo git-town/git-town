@@ -1,4 +1,4 @@
-package config
+package cmd
 
 import (
 	"os"
@@ -21,7 +21,7 @@ import (
 
 const setupConfigDesc = "Prompts to setup your Git Town configuration"
 
-func SetupCommand() *cobra.Command {
+func initCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "setup",
