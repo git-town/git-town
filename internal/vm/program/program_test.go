@@ -5,6 +5,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/vm/opcodes"
 	"github.com/git-town/git-town/v21/internal/vm/program"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
@@ -242,6 +243,21 @@ func TestProgram(t *testing.T) {
 			}
 			must.Eq(t, want, have)
 		})
+	})
+
+	t.Run("StringIndented", func(t *testing.T) {
+		t.Parallel()
+		give := program.Program{
+			&opcodes.MergeAbort{},
+			&opcodes.BranchTypeOverrideSet{Branch: "branch", BranchType: configdomain.BranchTypePerennialBranch},
+		}
+		have := give.StringIndented("")
+		want := `
+Program:
+1: &opcodes.MergeAbort{undeclaredOpcodeMethods:opcodes.undeclaredOpcodeMethods{}}
+2: &opcodes.BranchTypeOverrideSet{Branch:"branch", BranchType:"perennial", undeclaredOpcodeMethods:opcodes.undeclaredOpcodeMethods{}}
+`[1:]
+		must.EqOp(t, want, have)
 	})
 
 	t.Run("UnmarshalJSON", func(t *testing.T) {
