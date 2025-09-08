@@ -50,10 +50,6 @@ func RemoveBranchTypeOverride(runner subshelldomain.Runner, branch gitdomain.Loc
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, key.Key)
 }
 
-func RemoveForgejoToken(runner subshelldomain.Runner) error {
-	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyForgejoToken)
-}
-
 func RemoveContributionRegex(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyContributionRegex)
 }
@@ -72,6 +68,10 @@ func RemoveFeatureRegex(runner subshelldomain.Runner) error {
 
 func RemoveForgeType(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyForgeType)
+}
+
+func RemoveForgejoToken(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyForgejoToken)
 }
 
 func RemoveGitHubConnectorType(runner subshelldomain.Runner) error {
@@ -187,10 +187,6 @@ func SetBranchTypeOverride(runner subshelldomain.Runner, branchType configdomain
 	return nil
 }
 
-func SetForgejoToken(runner subshelldomain.Runner, value forgedomain.ForgejoToken, scope configdomain.ConfigScope) error {
-	return SetConfigValue(runner, scope, configdomain.KeyForgejoToken, value.String())
-}
-
 func SetContributionRegex(runner subshelldomain.Runner, regex configdomain.ContributionRegex, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyContributionRegex, regex.String())
 }
@@ -209,6 +205,10 @@ func SetFeatureRegex(runner subshelldomain.Runner, regex configdomain.FeatureReg
 
 func SetForgeType(runner subshelldomain.Runner, forgeType forgedomain.ForgeType, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyForgeType, forgeType.String())
+}
+
+func SetForgejoToken(runner subshelldomain.Runner, value forgedomain.ForgejoToken, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyForgejoToken, value.String())
 }
 
 func SetGitHubConnectorType(runner subshelldomain.Runner, value forgedomain.GitHubConnectorType, scope configdomain.ConfigScope) error {
