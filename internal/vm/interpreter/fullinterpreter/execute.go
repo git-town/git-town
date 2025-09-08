@@ -58,12 +58,7 @@ func Execute(args ExecuteArgs) error {
 		if _, ok := nextStep.(*opcodes.ExitToShell); ok {
 			return exitToShell(args)
 		}
-		runnable, ok := nextStep.(shared.Runnable)
-		if !ok {
-			// TODO: print the type that nextStep has here
-			panic("found a non-runnable opcode: " + nextStep)
-		}
-		err := runnable.Run(shared.RunArgs{
+		err := nextStep.Run(shared.RunArgs{
 			Backend:                         args.Backend,
 			BranchInfos:                     Some(args.InitialBranchesSnapshot.Branches),
 			Config:                          NewMutable(&args.Config),
@@ -79,6 +74,8 @@ func Execute(args ExecuteArgs) error {
 		if err != nil {
 			return errored(nextStep, err, args)
 		}
-		args.RunState.UndoAPIProgram = append(args.RunState.UndoAPIProgram, nextStep.UndoExternalChanges()...)
+		if undoExternal, shouldUndoExternalEffects := nextStep.(shared.ExternalEffects); shouldUndoExternalEffects {
+			args.RunState.UndoAPIProgram = append(args.RunState.UndoAPIProgram, undoExternal.UndoExternalChanges()...)
+		}
 	}
 }

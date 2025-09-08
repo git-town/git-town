@@ -42,15 +42,21 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		return err
 	}
 	args.RunState.EndStashSize = Some(endStashSize)
-	args.RunState.AbortProgram.Add(failedOpcode.Abort()...)
-	if failedOpcode.ShouldUndoOnError() {
-		return autoUndo(failedOpcode, runErr, args)
+	recoverable, isRecoverable := failedOpcode.(shared.Recoverable)
+	if isRecoverable {
+		args.RunState.AbortProgram.Add(recoverable.Abort()...)
 	}
-	continueProgram := failedOpcode.Continue()
-	if len(continueProgram) == 0 {
-		continueProgram = []shared.Opcode{failedOpcode}
+	autoUndoable, isAutoUndoable := failedOpcode.(shared.AutoUndoable)
+	if isAutoUndoable {
+		return autoUndo(autoUndoable, runErr, args)
 	}
-	args.RunState.RunProgram.Prepend(continueProgram...)
+	if isRecoverable {
+		continueProgram := recoverable.Continue()
+		if len(continueProgram) == 0 {
+			continueProgram = []shared.Opcode{failedOpcode}
+		}
+		args.RunState.RunProgram.Prepend(continueProgram...)
+	}
 	currentBranch, err := args.Git.CurrentBranch(args.Backend)
 	if err != nil {
 		return err
