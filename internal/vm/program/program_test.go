@@ -254,8 +254,8 @@ func TestProgram(t *testing.T) {
 		have := give.StringIndented("")
 		want := `
 Program:
-1: &opcodes.MergeAbort{undeclaredOpcodeMethods:opcodes.undeclaredOpcodeMethods{}}
-2: &opcodes.BranchTypeOverrideSet{Branch:"branch", BranchType:"perennial", undeclaredOpcodeMethods:opcodes.undeclaredOpcodeMethods{}}
+1: &opcodes.MergeAbort{}
+2: &opcodes.BranchTypeOverrideSet{Branch:"branch", BranchType:"perennial"}
 `[1:]
 		must.EqOp(t, want, have)
 	})
