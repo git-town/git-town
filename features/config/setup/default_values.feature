@@ -9,7 +9,7 @@ Feature: Accepting all default values leads to a working setup
       | production | (none) | local, origin |
     And local Git setting "init.defaultbranch" is "main"
     And Git Town is not configured
-    When I run "git-town config setup" and enter into the dialogs:
+    When I run "git-town init" and enter into the dialogs:
       | DIALOG             | KEYS       |
       | welcome            | enter      |
       | aliases            | enter      |
@@ -45,7 +45,7 @@ Feature: Accepting all default values leads to a working setup
     And the configuration file is now:
       """
       # See https://www.git-town.com/configuration-file for details
-
+      
       [branches]
       main = "main"
       """

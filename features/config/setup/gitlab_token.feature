@@ -6,7 +6,7 @@ Feature: enter the GitLab API token
 
   Scenario: auto-detected GitLab platform
     Given my repo's "origin" remote is "git@gitlab.com:git-town/git-town.git"
-    When I run "git-town config setup" and enter into the dialog:
+    When I run "git-town init" and enter into the dialog:
       | DIALOG                | KEYS              | DESCRIPTION                                 |
       | welcome               | enter             |                                             |
       | aliases               | enter             |                                             |
@@ -26,7 +26,7 @@ Feature: enter the GitLab API token
     And local Git setting "git-town.forge-type" still doesn't exist
 
   Scenario: select GitLab manually
-    When I run "git-town config setup" and enter into the dialog:
+    When I run "git-town init" and enter into the dialog:
       | DIALOG                | KEYS              | DESCRIPTION                                 |
       | welcome               | enter             |                                             |
       | aliases               | enter             |                                             |
@@ -49,7 +49,7 @@ Feature: enter the GitLab API token
 
   Scenario: store GitLab API token globally
     Given my repo's "origin" remote is "git@gitlab.com:git-town/git-town.git"
-    When I run "git-town config setup" and enter into the dialog:
+    When I run "git-town init" and enter into the dialog:
       | DIALOG                | KEYS            | DESCRIPTION                                 |
       | welcome               | enter           |                                             |
       | aliases               | enter           |                                             |
@@ -71,7 +71,7 @@ Feature: enter the GitLab API token
   Scenario: edit global GitLab token
     Given my repo's "origin" remote is "git@gitlab.com:git-town/git-town.git"
     And global Git setting "git-town.gitlab-token" is "123"
-    When I run "git-town config setup" and enter into the dialog:
+    When I run "git-town init" and enter into the dialog:
       | DIALOG                | KEYS                                      | DESCRIPTION                                 |
       | welcome               | enter                                     |                                             |
       | aliases               | enter                                     |                                             |
