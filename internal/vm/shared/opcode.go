@@ -1,34 +1,41 @@
 package shared
 
+// This file defines the interfaces that opcodes can implement.
+
+// Opcode represents an opcode about which we know nothing except that it is an opcode.
 // Opcode is an atomic operation that the Git Town interpreter can execute.
 // Opcodes implement the command pattern (https://en.wikipedia.org/wiki/Command_pattern)
 // and provide opcodes to continue and abort them.
 // Undoing an opcode is done via the undo package.
-type Opcode interface {
-	// Abort provides the opcodes to abort this Opcode when it encounters an error.
-	Abort() []Opcode
+type Opcode interface{}
 
-	// Continue provides the opcodes continue this opcode
-	// after it encountered an error and the user has resolved the error.
-	Continue() []Opcode
-
-	// AutomaticUndoError provides the error message to display when this opcode
-	// cause the command to automatically undo.
-	AutomaticUndoError() error
-
-	// Run executes this opcodes.
+// Runnable marks an opcode that can execute subshell commands.
+type Runnable interface {
+	// Run executes this opcode.
 	Run(args RunArgs) error
+}
 
-	// ShouldUndoOnError indicates whether this opcode should
-	// cause the command to automatically undo if it errors.
-	// When true, automatically runs the abort and undo logic and leaves the user where they started.
-	// When false, stops execution to let the user fix the issue and continue or manually undo.
-	ShouldUndoOnError() bool
+// Abortable marks an opcode that can provide custom steps
+// to abort a failed Git command.
+type Abortable interface {
+	Abort() []Opcode
+}
 
-	// UndoExternalChanges provides the opcodes to undo this operation.
-	// All Git changes are automatically undone by the snapshot-based undo engine
-	// and don't need to be undone here.
-	// The undo program returned here is only for external changes
-	// like updating proposals at the forge.
+// Continuable marks an opcode that can provide custom steps
+// to safely continue after a failed Git command.
+// By default, opcodes retry by running their Run method again.
+type Continuable interface {
+	Continue() []Opcode
+}
+
+// AutoUndoable marks an opcode that should fail the entire Git Town command
+// when its Git command fails. It provides the error message Git Town displays.
+type AutoUndoable interface {
+	AutomaticUndoError() error
+}
+
+// ExternalEffects marks an opcode that performs side effects outside of Git,
+// such as changes on a code hosting service, and can undo them if needed.
+type ExternalEffects interface {
 	UndoExternalChanges() []Opcode
 }

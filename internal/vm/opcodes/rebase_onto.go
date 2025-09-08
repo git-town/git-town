@@ -10,9 +10,8 @@ import (
 
 // rebases the current branch against the target branch while executing "git town swap", while moving the target branch onto the Onto branch.
 type RebaseOnto struct {
-	BranchToRebaseOnto      gitdomain.BranchName
-	CommitsToRemove         gitdomain.Location
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	BranchToRebaseOnto gitdomain.BranchName
+	CommitsToRemove    gitdomain.Location
 }
 
 func (self *RebaseOnto) Abort() []shared.Opcode {

@@ -7,9 +7,8 @@ import (
 
 // PushCurrentBranchForceIfNeeded force-pushes the branch with the given name to the origin remote.
 type PushCurrentBranchForceIfNeeded struct {
-	CurrentBranch           gitdomain.LocalBranchName
-	ForceIfIncludes         bool
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	CurrentBranch   gitdomain.LocalBranchName
+	ForceIfIncludes bool
 }
 
 func (self *PushCurrentBranchForceIfNeeded) Run(args shared.RunArgs) error {

@@ -10,8 +10,7 @@ import (
 
 // BranchWithRemoteGoneDeleteIfEmptyAtRuntime deletes the given branch if it has no content at runtime.
 type BranchWithRemoteGoneDeleteIfEmptyAtRuntime struct {
-	Branch                  gitdomain.LocalBranchName
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	Branch gitdomain.LocalBranchName
 }
 
 func (self *BranchWithRemoteGoneDeleteIfEmptyAtRuntime) Run(args shared.RunArgs) error {

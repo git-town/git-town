@@ -7,9 +7,8 @@ import (
 
 // BranchRemoteSetToSHA sets the given remote branch to the given SHA.
 type BranchRemoteSetToSHA struct {
-	Branch                  gitdomain.RemoteBranchName
-	SetToSHA                gitdomain.SHA
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	Branch   gitdomain.RemoteBranchName
+	SetToSHA gitdomain.SHA
 }
 
 func (self *BranchRemoteSetToSHA) Run(args shared.RunArgs) error {

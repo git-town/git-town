@@ -12,11 +12,10 @@ import (
 
 // ProposalCreate creates a new proposal for the current branch.
 type ProposalCreate struct {
-	Branch                  gitdomain.LocalBranchName
-	MainBranch              gitdomain.LocalBranchName
-	ProposalBody            Option[gitdomain.ProposalBody]
-	ProposalTitle           Option[gitdomain.ProposalTitle]
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	Branch        gitdomain.LocalBranchName
+	MainBranch    gitdomain.LocalBranchName
+	ProposalBody  Option[gitdomain.ProposalBody]
+	ProposalTitle Option[gitdomain.ProposalTitle]
 }
 
 func (self *ProposalCreate) Run(args shared.RunArgs) error {

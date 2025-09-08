@@ -7,9 +7,8 @@ import (
 
 // LineageParentSetFirstExisting sets the first existing entry in the given ancestor list as the parent branch of the given branch.
 type LineageParentSetFirstExisting struct {
-	Ancestors               gitdomain.LocalBranchNames
-	Branch                  gitdomain.LocalBranchName
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	Ancestors gitdomain.LocalBranchNames
+	Branch    gitdomain.LocalBranchName
 }
 
 func (self *LineageParentSetFirstExisting) Run(args shared.RunArgs) error {
