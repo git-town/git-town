@@ -44,15 +44,15 @@ Feature: show the configuration
         perennial regex: ^release-
         prototype branches: prototype-1, prototype-2
         unknown branch type: observed
-      
+
       Configuration:
         offline: no
-      
+
       Create:
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: no
-      
+
       Hosting:
         development remote: origin
         forge type: (not set)
@@ -65,11 +65,11 @@ Feature: show the configuration
         GitHub token: (not set)
         GitLab connector type: api
         GitLab token: (not set)
-      
+
       Ship:
         delete tracking branch: yes
         ship strategy: squash-merge
-      
+
       Sync:
         auto-resolve phantom conflicts: yes
         run detached: yes
@@ -93,19 +93,19 @@ Feature: show the configuration
       contribution-regex = "^renovate/"
       observed-regex = "^dependabot/"
       unknown-type = "observed"
-      
+
       [create]
       share-new-branches = "push"
       stash = false
-      
+
       [hosting]
       forge-type = "github"
       origin-hostname = "github.com"
-      
+
       [ship]
       delete-tracking-branch = true
       strategy = "squash-merge"
-      
+
       [sync]
       detached = true
       feature-strategy = "rebase"
@@ -130,15 +130,15 @@ Feature: show the configuration
         perennial regex: ^release-
         prototype branches: prototype-1, prototype-2
         unknown branch type: observed
-      
+
       Configuration:
         offline: no
-      
+
       Create:
         new branch type: (not set)
         share new branches: push
         stash uncommitted changes: no
-      
+
       Hosting:
         development remote: origin
         forge type: github
@@ -151,11 +151,11 @@ Feature: show the configuration
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
-      
+
       Ship:
         delete tracking branch: yes
         ship strategy: squash-merge
-      
+
       Sync:
         auto-resolve phantom conflicts: no
         run detached: yes
@@ -197,19 +197,19 @@ Feature: show the configuration
       contribution-regex = "^config-contribution-regex"
       observed-regex = "^config-observed-regex"
       unknown-type = "contribution"
-      
+
       [create]
       share-new-branches = "push"
       stash = true
-      
+
       [hosting]
       forge-type = "github"
       origin-hostname = "github.com"
-      
+
       [ship]
       delete-tracking-branch = true
       strategy = "api"
-      
+
       [sync]
       detached = false
       feature-strategy = "merge"
@@ -234,15 +234,15 @@ Feature: show the configuration
         perennial regex: ^git-perennial-
         prototype branches: prototype-1, prototype-2
         unknown branch type: observed
-      
+
       Configuration:
         offline: no
-      
+
       Create:
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: no
-      
+
       Hosting:
         development remote: origin
         forge type: github
@@ -255,11 +255,11 @@ Feature: show the configuration
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
-      
+
       Ship:
         delete tracking branch: no
         ship strategy: squash-merge
-      
+
       Sync:
         auto-resolve phantom conflicts: no
         run detached: yes
@@ -296,15 +296,15 @@ Feature: show the configuration
         perennial regex: (not set)
         prototype branches: prototype-1, prototype-2
         unknown branch type: feature
-      
+
       Configuration:
         offline: no
-      
+
       Create:
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: yes
-      
+
       Hosting:
         development remote: origin
         forge type: (not set)
@@ -317,11 +317,11 @@ Feature: show the configuration
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
-      
+
       Ship:
         delete tracking branch: yes
         ship strategy: api
-      
+
       Sync:
         auto-resolve phantom conflicts: yes
         run detached: no
@@ -332,7 +332,7 @@ Feature: show the configuration
         sync tags: yes
         sync with upstream: yes
         auto-resolve phantom conflicts: yes
-      
+
       Branch Lineage:
         main
           alpha
@@ -342,7 +342,7 @@ Feature: show the configuration
           parked-2
           prototype-1
           prototype-2
-      
+
         qa
           hotfix
       """
@@ -364,15 +364,15 @@ Feature: show the configuration
         perennial regex: (not set)
         prototype branches: prototype-1, prototype-2
         unknown branch type: feature
-      
+
       Configuration:
         offline: no
-      
+
       Create:
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: yes
-      
+
       Hosting:
         development remote: origin
         forge type: (not set)
@@ -385,11 +385,11 @@ Feature: show the configuration
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
-      
+
       Ship:
         delete tracking branch: yes
         ship strategy: api
-      
+
       Sync:
         auto-resolve phantom conflicts: yes
         run detached: no

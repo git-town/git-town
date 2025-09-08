@@ -12,7 +12,7 @@ Feature: unsupported forge type
     Then Git Town prints the error:
       """
       unsupported forge type
-      
+
       This command requires hosting on one of these services:
       * Bitbucket
       * Bitbucket Data Center
