@@ -7,8 +7,7 @@ import (
 
 // removes the commit with the given SHA from the given branch
 type CommitRemove struct {
-	SHA                     gitdomain.SHA
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	SHA gitdomain.SHA
 }
 
 func (self *CommitRemove) Abort() []shared.Opcode {

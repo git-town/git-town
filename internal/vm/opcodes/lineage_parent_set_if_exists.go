@@ -8,9 +8,8 @@ import (
 // LineageParentSetIfExists sets the given parent branch as the parent of the given branch,
 // but only the latter exists.
 type LineageParentSetIfExists struct {
-	Branch                  gitdomain.LocalBranchName
-	Parent                  gitdomain.LocalBranchName
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	Branch gitdomain.LocalBranchName
+	Parent gitdomain.LocalBranchName
 }
 
 func (self *LineageParentSetIfExists) Run(args shared.RunArgs) error {

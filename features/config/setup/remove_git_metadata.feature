@@ -46,7 +46,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.new-branch-type" is "parked"
     And local Git setting "git-town.ship-strategy" is "squash-merge"
     And local Git setting "git-town.ship-delete-tracking-branch" is "false"
-    When I run "git-town config setup" and enter into the dialogs:
+    When I run "git-town init" and enter into the dialogs:
       | DIALOG                      | KEYS                                                                        | DESCRIPTION         |
       | welcome                     | enter                                                                       |                     |
       | aliases                     | n enter                                                                     | remove all aliases  |

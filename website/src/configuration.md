@@ -6,7 +6,7 @@ Town provides an interactive that guides you through the entire configuration
 process. Just run:
 
 ```
-git town config setup
+git town init
 ```
 
 This command walks you through all available configuration options, explains

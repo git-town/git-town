@@ -6,7 +6,7 @@ Feature: enter the GitHub API token
 
   Scenario: auto-detected GitHub platform
     Given my repo's "origin" remote is "git@github.com:git-town/git-town.git"
-    When I run "git-town config setup" and enter into the dialog:
+    When I run "git-town init" and enter into the dialog:
       | DIALOG                | KEYS              | DESCRIPTION                                 |
       | welcome               | enter             |                                             |
       | aliases               | enter             |                                             |
@@ -27,7 +27,7 @@ Feature: enter the GitHub API token
     And local Git setting "git-town.github-token" is now "gh-tok"
 
   Scenario: manually selected GitHub
-    When I run "git-town config setup" and enter into the dialog:
+    When I run "git-town init" and enter into the dialog:
       | DIALOG                | KEYS                           | DESCRIPTION                                 |
       | welcome               | enter                          |                                             |
       | aliases               | enter                          |                                             |
@@ -51,7 +51,7 @@ Feature: enter the GitHub API token
   Scenario: remove existing GitHub token
     Given my repo's "origin" remote is "git@github.com:git-town/git-town.git"
     And local Git setting "git-town.github-token" is "123"
-    When I run "git-town config setup" and enter into the dialog:
+    When I run "git-town init" and enter into the dialog:
       | DIALOG                | KEYS                                | DESCRIPTION                                 |
       | welcome               | enter                               |                                             |
       | aliases               | enter                               |                                             |
@@ -72,7 +72,7 @@ Feature: enter the GitHub API token
 
   Scenario: store GitHub token globally
     Given my repo's "origin" remote is "git@github.com:git-town/git-town.git"
-    When I run "git-town config setup" and enter into the dialog:
+    When I run "git-town init" and enter into the dialog:
       | DIALOG                | KEYS            | DESCRIPTION                                 |
       | welcome               | enter           |                                             |
       | aliases               | enter           |                                             |
@@ -94,7 +94,7 @@ Feature: enter the GitHub API token
   Scenario: edit global GitHub token
     Given my repo's "origin" remote is "git@github.com:git-town/git-town.git"
     And global Git setting "git-town.github-token" is "123"
-    When I run "git-town config setup" and enter into the dialog:
+    When I run "git-town init" and enter into the dialog:
       | DIALOG                | KEYS                                      | DESCRIPTION                                 |
       | welcome               | enter                                     |                                             |
       | aliases               | enter                                     |                                             |

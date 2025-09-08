@@ -14,7 +14,7 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.sync-tags" is "false"
     And local Git setting "git-town.detached" is "false"
     And local Git setting "git-town.ship-delete-tracking-branch" is "false"
-    When I run "git-town config setup" and enter into the dialogs:
+    When I run "git-town init" and enter into the dialogs:
       | DIALOG                      | KEYS                   |
       | welcome                     | enter                  |
       | aliases                     | a enter                |

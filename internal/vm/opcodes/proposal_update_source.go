@@ -12,10 +12,9 @@ import (
 
 // ProposalUpdateSource updates the source branch of the proposal with the given number at the forge.
 type ProposalUpdateSource struct {
-	NewBranch               gitdomain.LocalBranchName
-	OldBranch               gitdomain.LocalBranchName
-	Proposal                forgedomain.Proposal
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	NewBranch gitdomain.LocalBranchName
+	OldBranch gitdomain.LocalBranchName
+	Proposal  forgedomain.Proposal
 }
 
 func (self *ProposalUpdateSource) AutomaticUndoError() error {

@@ -8,8 +8,7 @@ import (
 // FetchUpstream brings the Git history of the local repository
 // up to speed with activities that happened in the upstream remote.
 type FetchUpstream struct {
-	Branch                  gitdomain.LocalBranchName
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	Branch gitdomain.LocalBranchName
 }
 
 func (self *FetchUpstream) Run(args shared.RunArgs) error {

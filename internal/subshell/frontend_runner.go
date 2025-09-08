@@ -95,12 +95,12 @@ func (self *FrontendRunner) execute(env []string, cmd string, args ...string) (e
 		go func() {
 			<-interrupt
 			if err := subProcess.Process.Release(); err == nil {
-				// process has already finished, no need to kill
+				// process has already finished, no need to stop it
 				return
 			}
 			fmt.Printf("Abort detected, shutting down %q gracefully ...", strings.Join(append([]string{cmd}, args...), " "))
 			if err := subProcess.Process.Kill(); err != nil {
-				fmt.Println("Error killing subprocess:", err)
+				fmt.Println("Error stopping subprocess:", err)
 			}
 		}()
 		if err = subProcess.Wait(); err == nil {

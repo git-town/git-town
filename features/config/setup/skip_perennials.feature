@@ -4,7 +4,7 @@ Feature: don't ask for perennial branches if no branches that could be perennial
   Background:
     Given a Git repo with origin
     And Git Town is not configured
-    When I run "git-town config setup" and enter into the dialog:
+    When I run "git-town init" and enter into the dialog:
       | DIALOG             | KEYS       | DESCRIPTION                                 |
       | welcome            | enter      |                                             |
       | aliases            | enter      |                                             |

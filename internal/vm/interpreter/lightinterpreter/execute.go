@@ -22,21 +22,23 @@ func Execute(args ExecuteArgs) {
 		if !hasNextStep {
 			return
 		}
-		err := nextStep.Run(shared.RunArgs{
-			Backend:                         args.Backend,
-			BranchInfos:                     None[gitdomain.BranchInfos](),
-			Config:                          NewMutable(&args.Config),
-			Connector:                       args.Connector,
-			FinalMessages:                   args.FinalMessages,
-			Frontend:                        args.Frontend,
-			Git:                             args.Git,
-			Inputs:                          dialogcomponents.NewInputs(),
-			PrependOpcodes:                  args.Prog.Prepend,
-			RegisterUndoablePerennialCommit: nil,
-			UpdateInitialSnapshotLocalSHA:   nil,
-		})
-		if err != nil {
-			fmt.Println(colors.Red().Styled("NOTICE: " + err.Error()))
+		if runnable, isRunnable := nextStep.(shared.Runnable); isRunnable {
+			err := runnable.Run(shared.RunArgs{
+				Backend:                         args.Backend,
+				BranchInfos:                     None[gitdomain.BranchInfos](),
+				Config:                          NewMutable(&args.Config),
+				Connector:                       args.Connector,
+				FinalMessages:                   args.FinalMessages,
+				Frontend:                        args.Frontend,
+				Git:                             args.Git,
+				Inputs:                          dialogcomponents.NewInputs(),
+				PrependOpcodes:                  args.Prog.Prepend,
+				RegisterUndoablePerennialCommit: nil,
+				UpdateInitialSnapshotLocalSHA:   nil,
+			})
+			if err != nil {
+				fmt.Println(colors.Red().Styled("NOTICE: " + err.Error()))
+			}
 		}
 	}
 }

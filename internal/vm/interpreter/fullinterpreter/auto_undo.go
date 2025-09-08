@@ -14,7 +14,7 @@ import (
 //
 // Some Git Town opcodes can indicate that they auto-undo the entire Git Town command that they are a part of
 // should they fail.
-func autoUndo(opcode shared.Opcode, runErr error, args ExecuteArgs) error {
+func autoUndo(opcode shared.AutoUndoable, runErr error, args ExecuteArgs) error {
 	print.Error(fmt.Errorf(messages.RunAutoUndo, runErr.Error()))
 	undoProgram, err := undo.CreateUndoForRunningProgram(undo.CreateUndoProgramArgs{
 		Backend:        args.Backend,

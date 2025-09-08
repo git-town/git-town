@@ -5,8 +5,7 @@ import (
 )
 
 type PushCurrentBranchForce struct {
-	ForceIfIncludes         bool
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	ForceIfIncludes bool
 }
 
 func (self *PushCurrentBranchForce) Run(args shared.RunArgs) error {

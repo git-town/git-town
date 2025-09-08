@@ -8,8 +8,7 @@ import (
 
 // removes the branch with the given name from the contribution branches list in the Git config
 type BranchTypeOverrideRemove struct {
-	Branch                  gitdomain.LocalBranchName
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	Branch gitdomain.LocalBranchName
 }
 
 func (self *BranchTypeOverrideRemove) Run(args shared.RunArgs) error {
