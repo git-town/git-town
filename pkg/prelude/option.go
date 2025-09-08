@@ -8,22 +8,27 @@ import (
 	"github.com/git-town/git-town/v21/pkg/equal"
 )
 
-// Option provides infrastructure for optional (nullable) values
-// that is fully enforced by the type checker.
-// Matching the data architecture of this codebase, this Option
-// provides copies of the optional value, i.e. works only for const and copyable values.
-// If you need direct access to the optional value, i.e. don't want a copy, use an OptionP instead.
+// Option encodes invariants around optional (nullable) immutable values in the type system.
 // The zero value is the None option.
 //
-// Option is worth the overhead because it removes one of the many possible meanings (optionality)
-// from pointer values. This means a pointer in this codebase implies mutability and nothing else.
+// For optional values that should not be copied, please use OptionalMutable.
+// Compare Options using their `Equal` or `EqualSome` methods,
+// direct comparison using == doesn't work.
 //
-// Compare Options using their .Equal method since direct comparison using == doesn't work properly.
+// Why pointers are not a good solution for optional values:
+//
+//  1. A pointer has many meanings: optional, mutable, too large to pass by value.
+//     The Option type documents that a value is optional (and immutable, or mutable when using OptionalMutable).
+//
+//  2. A pointer looks the same before and after you checked it for nil.
+//     Pointers therefore carry the risk of being checked too often or too little,
+//     leading to unnecessary boilerplate or bugs.
+//     Options get checked exactly once, leading to the least amount of boilerplate code.
 type Option[T any] struct {
 	value *T
 }
 
-// indicates whether the given other Option has the same value as this Option
+// Equal indicates whether the given other Option has the same value as this Option
 func (self Option[T]) Equal(other Option[T]) bool {
 	selfValue, hasSelfValue := self.Get()
 	otherValue, hasOtherValue := other.Get()
@@ -36,7 +41,7 @@ func (self Option[T]) Equal(other Option[T]) bool {
 	return reflect.DeepEqual(selfValue, otherValue)
 }
 
-// indicates whether this option contains the given value
+// EqualSome indicates whether this option contains the given value
 func (self Option[T]) EqualSome(other T) bool {
 	if value, hasValue := self.Get(); hasValue {
 		return reflect.DeepEqual(value, other)
@@ -54,19 +59,9 @@ func (self Option[T]) Get() (value T, hasValue bool) { //nolint:ireturn
 	return empty, false
 }
 
-// GetOrDefault provides a copy of the contained value.
-// If this option contains nothing, you get the zero value of the contained type.
-func (self Option[T]) GetOrDefault() T { //nolint:ireturn
-	if value, has := self.Get(); has {
-		return value
-	}
-	var empty T
-	return empty
-}
-
-// GetOrElse provides a copy of the contained value.
+// GetOr provides a copy of the contained value.
 // If this option contains nothing, you get a copy of the given alternative value.
-func (self Option[T]) GetOrElse(other T) T { //nolint:ireturn
+func (self Option[T]) GetOr(other T) T { //nolint:ireturn
 	if value, has := self.Get(); has {
 		return value
 	}
@@ -80,6 +75,16 @@ func (self Option[T]) GetOrPanic() T { //nolint:ireturn
 		return value
 	}
 	panic("value not present")
+}
+
+// GetOrZero provides a copy of the contained value.
+// If this option contains nothing, you get the zero value of the contained type.
+func (self Option[T]) GetOrZero() T { //nolint:ireturn
+	if value, has := self.Get(); has {
+		return value
+	}
+	var empty T
+	return empty
 }
 
 // IsNone indicates whether this option instance contains nothing.
@@ -100,7 +105,7 @@ func (self Option[T]) MarshalJSON() ([]byte, error) {
 	return json.Marshal(nil)
 }
 
-// Performs a logical OR operation on this option and the given option:
+// Or performs a logical OR operation on this option and the given option:
 // Returns this option if it is some, otherwise the given option.
 func (self Option[T]) Or(other Option[T]) Option[T] {
 	if self.IsSome() {
@@ -115,7 +120,7 @@ func (self Option[T]) String() string {
 	return self.StringOr("")
 }
 
-// StringOr provideds the string serialization of the contained value.
+// StringOr provides the string serialization of the contained value.
 // If this option contains nothing, you get the given alternative string representation.
 func (self Option[T]) StringOr(other string) string {
 	if self.IsSome() {
@@ -135,7 +140,7 @@ func (self *Option[T]) UnmarshalJSON(b []byte) error {
 	return json.Unmarshal(b, &self.value)
 }
 
-// Creates a new Option containing None if the given value is the zero value, otherwise Some.
+// NewOption creates a new Option containing None if the given value is the zero value, otherwise Some.
 func NewOption[T any](value T) Option[T] {
 	var zero T
 	if equal.Equal(value, zero) {

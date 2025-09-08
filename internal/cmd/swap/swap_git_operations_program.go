@@ -17,8 +17,7 @@ type swapGitOperationsProgramArgs struct {
 
 func swapGitOperationsProgram(args swapGitOperationsProgramArgs) {
 	// first update the current branch proposal (if there is one) target, so the proposal is not closed.
-	currentBranchProposal, currentBranchHasProposal := args.current.proposal.Get()
-	if currentBranchHasProposal {
+	if currentBranchProposal, currentBranchHasProposal := args.current.proposal.Get(); currentBranchHasProposal {
 		args.program.Value.Add(&opcodes.ProposalUpdateTarget{
 			NewBranch: args.grandParent,
 			OldBranch: args.parent.name,
@@ -38,8 +37,7 @@ func swapGitOperationsProgram(args swapGitOperationsProgramArgs) {
 	}
 
 	// next, update the parent proposal (if there is one), then rebase parent branch onto current
-	parentBranchProposal, parentBranchHasProposal := args.parent.proposal.Get()
-	if parentBranchHasProposal {
+	if parentBranchProposal, parentBranchHasProposal := args.parent.proposal.Get(); parentBranchHasProposal {
 		args.program.Value.Add(&opcodes.ProposalUpdateTarget{
 			NewBranch: args.current.name,
 			OldBranch: args.grandParent,
@@ -63,15 +61,19 @@ func swapGitOperationsProgram(args swapGitOperationsProgramArgs) {
 
 	// Finally, update the child branches of current
 	for _, child := range args.children {
+		if childBranchProposal, childBranchHasProposal := child.proposal.Get(); childBranchHasProposal {
+			args.program.Value.Add(&opcodes.ProposalUpdateTarget{
+				NewBranch: args.parent.name,
+				OldBranch: args.current.name,
+				Proposal:  childBranchProposal,
+			})
+		}
 		args.program.Value.Add(
 			&opcodes.Checkout{
 				Branch: child.name,
 			},
 		)
-		oldBranchSHA, hasOldBranchSHA := args.current.info.LocalSHA.Get()
-		if !hasOldBranchSHA {
-			oldBranchSHA = args.current.info.RemoteSHA.GetOrDefault()
-		}
+		oldBranchSHA := args.current.info.GetLocalOrRemoteSHA()
 		args.program.Value.Add(
 			&opcodes.RebaseOnto{
 				BranchToRebaseOnto: args.parent.info.LocalBranchName().BranchName(),

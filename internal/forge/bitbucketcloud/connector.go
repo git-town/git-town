@@ -324,7 +324,7 @@ func (self Connector) updateProposalSource(proposalData forgedomain.ProposalInte
 		SourceBranch:      source.String(),
 		DestinationBranch: data.Target.String(),
 		Title:             data.Title,
-		Description:       data.Body.GetOrDefault(),
+		Description:       data.Body.GetOrZero(),
 		Draft:             data.Draft,
 		CloseSourceBranch: data.CloseSourceBranch,
 	})
@@ -346,7 +346,7 @@ func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInte
 		SourceBranch:      data.Source.String(),
 		DestinationBranch: target.String(),
 		Title:             data.Title,
-		Description:       data.Body.GetOrDefault(),
+		Description:       data.Body.GetOrZero(),
 		Draft:             data.Draft,
 		CloseSourceBranch: data.CloseSourceBranch,
 	})
