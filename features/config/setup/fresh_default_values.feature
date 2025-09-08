@@ -39,7 +39,7 @@ Feature: Accepting all default values in a brand-new Git repo leads to a working
     And the configuration file is now:
       """
       # See https://www.git-town.com/configuration-file for details
-      
+
       [branches]
       main = "initial"
       """

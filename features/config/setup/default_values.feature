@@ -45,7 +45,7 @@ Feature: Accepting all default values leads to a working setup
     And the configuration file is now:
       """
       # See https://www.git-town.com/configuration-file for details
-      
+
       [branches]
       main = "main"
       """
