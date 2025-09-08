@@ -76,7 +76,7 @@ func Execute(args ExecuteArgs) error {
 				return errored(nextStep, err, args)
 			}
 		}
-		if undoExternal, shouldUndoExternalEffects := nextStep.(shared.ExternalEffects); shouldUndoExternalEffects {
+		if undoExternal, canUndoExternal := nextStep.(shared.ExternalEffects); canUndoExternal {
 			args.RunState.UndoAPIProgram = append(args.RunState.UndoAPIProgram, undoExternal.UndoExternalChanges()...)
 		}
 	}
