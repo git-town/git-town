@@ -39,14 +39,13 @@ type Opcode interface {
 }
 
 func RenderOpcodes(opcodes []Opcode, indent string) string {
-	sb := strings.Builder{}
 	if len(opcodes) == 0 {
-		sb.WriteString("(empty program)\n")
-	} else {
-		sb.WriteString("Program:\n")
-		for o, opcode := range opcodes {
-			sb.WriteString(fmt.Sprintf("%s%d: %#v\n", indent, o+1, opcode))
-		}
+		return "(empty program)\n"
+	}
+	sb := strings.Builder{}
+	sb.WriteString("Program:\n")
+	for o, opcode := range opcodes {
+		sb.WriteString(fmt.Sprintf("%s%d: %#v\n", indent, o+1, opcode))
 	}
 	return sb.String()
 }
