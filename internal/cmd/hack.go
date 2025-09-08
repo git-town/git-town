@@ -75,7 +75,7 @@ func hackCmd() *cobra.Command {
 	cmd := cobra.Command{
 		Use:     "hack <branch>",
 		GroupID: cmdhelpers.GroupIDBasic,
-		Args:    cobra.ArbitraryArgs,
+		Args:    cobra.ExactArgs(1),
 		Short:   hackDesc,
 		Long:    cmdhelpers.Long(hackDesc, hackHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
