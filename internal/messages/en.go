@@ -53,7 +53,7 @@ const (
 	BrowserOpen                        = "Please open in a browser: %s\n"
 	CacheUnitialized                   = "using a cached value before initialization"
 	CodebergTokenPrompt                = "Codeberg API token: "
-	CodebergTokenResult                = "Codeberg token: %s\n"
+	CodebergTokenResult                = "Forgejo token: %s\n"
 	CommandsRun                        = "Ran %d shell commands."
 	CommitMessageProblem               = "cannot determine last commit message: %w"
 	CommitsSelected                    = "%d commits selected"

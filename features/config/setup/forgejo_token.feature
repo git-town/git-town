@@ -1,10 +1,10 @@
 @messyoutput
-Feature: enter the Codeberg API token
+Feature: enter the Forgejo API token
 
   Background:
     Given a Git repo with origin
 
-  Scenario: auto-detected Codeberg platform
+  Scenario: auto-detected Forgejo platform
     Given my repo's "origin" remote is "git@codeberg.org:git-town/docs.git"
     When I run "git-town init" and enter into the dialog:
       | DIALOG             | KEYS                   | DESCRIPTION                                 |
@@ -24,7 +24,7 @@ Feature: enter the Codeberg API token
     And local Git setting "git-town.forge-type" still doesn't exist
     And local Git setting "git-town.codeberg-token" is now "code-tok"
 
-  Scenario: select Codeberg manually
+  Scenario: select Forgejo manually
     When I run "git-town init" and enter into the dialog:
       | DIALOG             | KEYS                   | DESCRIPTION                                 |
       | welcome            | enter                  |                                             |
@@ -44,7 +44,7 @@ Feature: enter the Codeberg API token
     And local Git setting "git-town.forge-type" is now "codeberg"
     And local Git setting "git-town.codeberg-token" is now "code-tok"
 
-  Scenario: store Codeberge API token globally
+  Scenario: store Forgejo API token globally
     And my repo's "origin" remote is "git@codeberg.org:git-town/docs.git"
     When I run "git-town init" and enter into the dialog:
       | DIALOG             | KEYS                   | DESCRIPTION                                 |
@@ -63,7 +63,7 @@ Feature: enter the Codeberg API token
       | git config --global git-town.codeberg-token code-tok |
     And global Git setting "git-town.codeberg-token" is now "code-tok"
 
-  Scenario: edit global Codeberge API token
+  Scenario: edit global Forgejo API token
     And my repo's "origin" remote is "git@codeberg.org:git-town/docs.git"
     Given global Git setting "git-town.codeberg-token" is "code123"
     When I run "git-town init" and enter into the dialog:

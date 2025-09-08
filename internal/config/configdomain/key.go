@@ -57,8 +57,8 @@ const (
 	KeyAutoResolve                         = Key("git-town.auto-resolve")
 	KeyBitbucketAppPassword                = Key("git-town.bitbucket-app-password")
 	KeyBitbucketUsername                   = Key("git-town.bitbucket-username")
-	KeyCodebergToken                       = Key("git-town.codeberg-token")
 	KeyContributionRegex                   = Key("git-town.contribution-regex")
+	KeyDeprecatedCodebergToken             = Key("git-town.codeberg-token")
 	KeyDeprecatedCodeHostingDriver         = Key("git-town.code-hosting-driver")
 	KeyDeprecatedCodeHostingOriginHostname = Key("git-town.code-hosting-origin-hostname")
 	KeyDeprecatedCodeHostingPlatform       = Key("git-town.code-hosting-platform")
@@ -82,6 +82,7 @@ const (
 	KeyDetached                            = Key("git-town.detached")
 	KeyDevRemote                           = Key("git-town.dev-remote")
 	KeyFeatureRegex                        = Key("git-town.feature-regex")
+	KeyForgejoToken                        = Key("git-town.forgejo-token")
 	KeyForgeType                           = Key("git-town.forge-type")
 	KeyGiteaToken                          = Key("git-town.gitea-token")
 	KeyGitHubConnectorType                 = Key("git-town.github-connector")
@@ -116,10 +117,10 @@ var keys = []Key{
 	KeyAutoResolve,
 	KeyBitbucketAppPassword,
 	KeyBitbucketUsername,
-	KeyCodebergToken,
 	KeyContributionRegex,
 	KeyDeprecatedAliasKill,
 	KeyDeprecatedAliasRenameBranch,
+	KeyDeprecatedCodebergToken,
 	KeyDeprecatedCodeHostingDriver,
 	KeyDeprecatedCodeHostingOriginHostname,
 	KeyDeprecatedCodeHostingPlatform,
@@ -141,6 +142,7 @@ var keys = []Key{
 	KeyDetached,
 	KeyDevRemote,
 	KeyFeatureRegex,
+	KeyForgejoToken,
 	KeyForgeType,
 	KeyGiteaToken,
 	KeyGitHubConnectorType,
@@ -192,6 +194,7 @@ func ParseKey(name string) Option[Key] {
 
 // DeprecatedKeys defines the up-to-date counterparts to deprecated configuration settings.
 var DeprecatedKeys = map[Key]Key{
+	KeyDeprecatedCodebergToken:             KeyForgejoToken,
 	KeyDeprecatedCodeHostingDriver:         KeyForgeType,
 	KeyDeprecatedCodeHostingOriginHostname: KeyHostingOriginHostname,
 	KeyDeprecatedCodeHostingPlatform:       KeyForgeType,

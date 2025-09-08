@@ -21,7 +21,7 @@ Feature: display configuration defined in environment variables
       | GIT_TOWN_AUTO_RESOLVE                | false              |
       | GIT_TOWN_BITBUCKET_APP_PASSWORD      | bitbucket-password |
       | GIT_TOWN_BITBUCKET_USERNAME          | bitbucket-user     |
-      | GIT_TOWN_CODEBERG_TOKEN              | codeberg-token     |
+      | GIT_TOWN_FORGEJO_TOKEN               | forgejo-token      |
       | GIT_TOWN_CONTRIBUTION_REGEX          | ^renovate/         |
       | GIT_TOWN_DETACHED                    | true               |
       | GIT_TOWN_DEV_REMOTE                  | my-fork            |
@@ -36,12 +36,12 @@ Feature: display configuration defined in environment variables
       | GIT_TOWN_NEW_BRANCH_TYPE             | prototype          |
       | GIT_TOWN_OBSERVED_REGEX              | ^dependabot/       |
       | GIT_TOWN_ORIGIN_HOSTNAME             | codeforge          |
-      | GIT_TOWN_OFFLINE                     | 1                  |
+      | GIT_TOWN_OFFLINE                     |                  1 |
       | GIT_TOWN_PERENNIAL_BRANCHES          | qa staging         |
       | GIT_TOWN_PERENNIAL_REGEX             | ^release-          |
       | GIT_TOWN_PUSH_HOOK                   | no                 |
       | GIT_TOWN_SHARE_NEW_BRANCHES          | push               |
-      | GIT_TOWN_SHIP_DELETE_TRACKING_BRANCH | 0                  |
+      | GIT_TOWN_SHIP_DELETE_TRACKING_BRANCH |                  0 |
       | GIT_TOWN_SHIP_STRATEGY               | fast-forward       |
       | GIT_TOWN_STASH                       | false              |
       | GIT_TOWN_SYNC_FEATURE_STRATEGY       | rebase             |
@@ -64,32 +64,32 @@ Feature: display configuration defined in environment variables
         perennial regex: ^release-
         prototype branches: prototype-1, prototype-2
         unknown branch type: observed
-
+      
       Configuration:
         offline: yes
-
+      
       Create:
         new branch type: prototype
         share new branches: push
         stash uncommitted changes: no
-
+      
       Hosting:
         development remote: my-fork
         forge type: gitlab
         origin hostname: codeforge
         Bitbucket username: bitbucket-user
         Bitbucket app password: bitbucket-password
-        Codeberg token: codeberg-token
+        Forgejo token: forgejo-token
         Gitea token: gitea-token
         GitHub connector type: gh
         GitHub token: github-token
         GitLab connector type: glab
         GitLab token: gitlab-token
-
+      
       Ship:
         delete tracking branch: no
         ship strategy: fast-forward
-
+      
       Sync:
         auto-resolve phantom conflicts: no
         run detached: yes

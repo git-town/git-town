@@ -341,7 +341,7 @@ func enterCodebergToken(data Data) (Option[forgedomain.CodebergToken], dialogdom
 	if data.Config.File.CodebergToken.IsSome() {
 		return None[forgedomain.CodebergToken](), false, nil
 	}
-	return dialog.CodebergToken(dialog.Args[forgedomain.CodebergToken]{
+	return dialog.ForgejoToken(dialog.Args[forgedomain.CodebergToken]{
 		Global: data.Config.GitGlobal.CodebergToken,
 		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.CodebergToken,

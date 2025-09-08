@@ -11,10 +11,10 @@ import (
 )
 
 const (
-	codebergTokenTitle = `Codeberg API token`
-	codebergTokenHelp  = `
+	forgejoTokenTitle = `Forgejo API token`
+	forgejoTokenHelp  = `
 Git Town can update pull requests
-and ship branches on codeberg-based forges for you.
+and ship branches on Forgejo-based forges for you.
 To enable this, please enter a codeberg API token.
 More info at
 https://docs.codeberg.org/advanced/access-token.
@@ -25,14 +25,14 @@ Git Town will not use the codeberg API.
 `
 )
 
-func CodebergToken(args Args[forgedomain.CodebergToken]) (Option[forgedomain.CodebergToken], dialogdomain.Exit, error) {
+func ForgejoToken(args Args[forgedomain.CodebergToken]) (Option[forgedomain.CodebergToken], dialogdomain.Exit, error) {
 	input, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "codeberg-token",
 		ExistingValue: args.Local.Or(args.Global).String(),
-		Help:          codebergTokenHelp,
+		Help:          forgejoTokenHelp,
 		Inputs:        args.Inputs,
 		Prompt:        messages.CodebergTokenPrompt,
-		Title:         codebergTokenTitle,
+		Title:         forgejoTokenTitle,
 	})
 	newValue := forgedomain.ParseCodebergToken(input)
 	if args.Global.Equal(newValue) {
