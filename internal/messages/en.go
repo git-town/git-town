@@ -134,11 +134,11 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	ForgeForgejoMergingViaAPI    = "Forgejo API: merging PR %s ... "
 	ForgejoTokenPrompt           = "Forgejo API token: "
 	ForgejoTokenResult           = "Forgejo token: %s\n"
-	ForgeGiteaNotImplemented     = "shipping pull requests via the Gitea API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues"
-	ForgeGiteaUpdatePRViaAPI     = "Gitea API: Updating base branch for PR #%d to #%s"
 	ForgeGitHubMergingViaAPI     = "GitHub API: merging PR %s ... "
 	ForgeGitLabMergingViaAPI     = "Merging MR !%d ... "
 	ForgeGitLabUpdateMRViaAPI    = "Updating target branch for MR !%d to %q ... "
+	ForgeGiteaNotImplemented     = "shipping pull requests via the Gitea API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues"
+	ForgeGiteaUpdatePRViaAPI     = "Gitea API: Updating base branch for PR #%d to #%s"
 	ForgeTypeUnknown             = "unknown forge type: %q"
 
 	GitAnotherProcessIsRunningRetry = "another git process seems to be running in this repository, retrying in 1 sec ..."
