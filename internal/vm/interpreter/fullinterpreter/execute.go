@@ -58,7 +58,7 @@ func Execute(args ExecuteArgs) error {
 		if _, ok := nextStep.(*opcodes.ExitToShell); ok {
 			return exitToShell(args)
 		}
-		if runnable, ok := nextStep.(shared.Runnable); ok {
+		if runnable, isRunnable := nextStep.(shared.Runnable); isRunnable {
 			err := runnable.Run(shared.RunArgs{
 				Backend:                         args.Backend,
 				BranchInfos:                     Some(args.InitialBranchesSnapshot.Branches),
