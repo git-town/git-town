@@ -279,8 +279,8 @@ func determineSwapData(args []string, repo execute.OpenRepoResult) (data swapDat
 	for c, childBranch := range childBranches {
 		proposal := None[forgedomain.Proposal]()
 		if connector, hasConnector := connector.Get(); hasConnector {
-			if findProposal, canFindProposal := connector.FindProposalFn().Get(); canFindProposal {
-				proposal, err = findProposal(childBranch, initialBranch)
+			if apiConnector, isAPIConnector := connector.(forgedomain.APIConnector); isAPIConnector {
+				proposal, err = apiConnector.FindProposal(childBranch, initialBranch)
 				if err != nil {
 					return data, false, err
 				}
@@ -300,12 +300,12 @@ func determineSwapData(args []string, repo execute.OpenRepoResult) (data swapDat
 	parentBranchProposal := None[forgedomain.Proposal]()
 	if connector, hasConnector := connector.Get(); hasConnector {
 		// TODO: load these two proposals concurrently
-		if findProposal, canFindProposal := connector.FindProposalFn().Get(); canFindProposal {
-			currentbranchProposal, err = findProposal(currentBranch, parentBranch)
+		if apiConnector, isAPIConnector := connector.(forgedomain.APIConnector); isAPIConnector {
+			currentbranchProposal, err = apiConnector.FindProposal(currentBranch, parentBranch)
 			if err != nil {
 				return data, false, err
 			}
-			parentBranchProposal, err = findProposal(parentBranch, grandParentBranch)
+			parentBranchProposal, err = apiConnector.FindProposal(parentBranch, grandParentBranch)
 			if err != nil {
 				return data, false, err
 			}
