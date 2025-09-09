@@ -2,13 +2,27 @@ package forgejo
 
 import (
 	"codeberg.org/mvdkleijn/forgejo-sdk/forgejo/v2"
+	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-var _ forgedomain.APIConnector = forgejoConnector
+// type-check to ensure conformance to the Connector interface
+var (
+	forgejoAPIConnector APIConnector
+	_                   forgedomain.APIConnector = forgejoAPIConnector
+	_                   forgedomain.Connector    = forgejoAPIConnector
+)
 
-func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
+// APIConnector connects to the API of Forgejo instances.
+type APIConnector struct {
+	WebConnector
+	APIToken Option[forgedomain.ForgejoToken]
+	client   *forgejo.Client
+	log      print.Logger
+}
+
+func (self APIConnector) VerifyConnection() forgedomain.VerifyConnectionResult {
 	user, _, err := self.client.GetMyUserInfo()
 	if err != nil {
 		return forgedomain.VerifyConnectionResult{

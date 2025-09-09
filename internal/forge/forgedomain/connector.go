@@ -16,6 +16,8 @@ type CreateProposalArgs struct {
 }
 
 // Connector describes the activities that all connectors can perform on forges.
+//
+// This file defines an interface for every capability that a forge and connector implementation can support.
 type Connector interface {
 	// CreateProposal creates a proposal at the forge.
 	CreateProposal(CreateProposalArgs) error
@@ -28,17 +30,17 @@ type Connector interface {
 	OpenRepository(runner subshelldomain.Runner) error
 }
 
-type VerifyConnectionResult struct {
-	AuthenticatedUser   Option[string] // the authenticated username
-	AuthenticationError error          // error while verifying to verify authentication
-	AuthorizationError  error          // error while verifying authorization, nil == user is authenticated
-}
-
 // APIConnector describes additional functionality
 // that connectors which can talk to the API of a forge can perform.
 type APIConnector interface {
 	// VerifyConnection checks whether this connector can make successful requests to the forge.
 	VerifyConnection() VerifyConnectionResult
+}
+
+type VerifyConnectionResult struct {
+	AuthenticatedUser   Option[string] // the authenticated username
+	AuthenticationError error          // error while verifying to verify authentication
+	AuthorizationError  error          // error while verifying authorization, nil == user is authenticated
 }
 
 // ProposalFinder describes methods that connectors need to implement
