@@ -79,7 +79,7 @@ Feature: display information from config file
         origin hostname: github.com
         Bitbucket username: (not set)
         Bitbucket app password: (not set)
-        Codeberg token: (not set)
+        Forgejo token: (not set)
         Gitea token: (not set)
         GitHub connector type: gh
         GitHub token: (not set)

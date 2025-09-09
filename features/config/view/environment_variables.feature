@@ -21,7 +21,7 @@ Feature: display configuration defined in environment variables
       | GIT_TOWN_AUTO_RESOLVE                | false              |
       | GIT_TOWN_BITBUCKET_APP_PASSWORD      | bitbucket-password |
       | GIT_TOWN_BITBUCKET_USERNAME          | bitbucket-user     |
-      | GIT_TOWN_CODEBERG_TOKEN              | codeberg-token     |
+      | GIT_TOWN_FORGEJO_TOKEN               | forgejo-token      |
       | GIT_TOWN_CONTRIBUTION_REGEX          | ^renovate/         |
       | GIT_TOWN_DETACHED                    | true               |
       | GIT_TOWN_DEV_REMOTE                  | my-fork            |
@@ -79,7 +79,7 @@ Feature: display configuration defined in environment variables
         origin hostname: codeforge
         Bitbucket username: bitbucket-user
         Bitbucket app password: bitbucket-password
-        Codeberg token: codeberg-token
+        Forgejo token: forgejo-token
         Gitea token: gitea-token
         GitHub connector type: gh
         GitHub token: github-token

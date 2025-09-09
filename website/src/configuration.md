@@ -40,4 +40,4 @@ platforms:
 - Bitbucket: requires a [username](preferences/bitbucket-username.md) and
   [app password](preferences/bitbucket-app-password.md)
 - Gitea: requires an [access token](preferences/gitea-token.md)
-- Codeberg: requires an [access token](preferences/codeberg-token.md)
+- Forgejo: requires an [access token](preferences/forgejo-token.md)

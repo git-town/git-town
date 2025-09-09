@@ -21,13 +21,13 @@ type PartialConfig struct {
 	BitbucketAppPassword     Option[forgedomain.BitbucketAppPassword]
 	BitbucketUsername        Option[forgedomain.BitbucketUsername]
 	BranchTypeOverrides      BranchTypeOverrides
-	CodebergToken            Option[forgedomain.CodebergToken]
 	ContributionRegex        Option[ContributionRegex]
 	Detached                 Option[Detached]
 	DevRemote                Option[gitdomain.Remote]
 	DryRun                   Option[DryRun]
 	FeatureRegex             Option[FeatureRegex]
 	ForgeType                Option[forgedomain.ForgeType]
+	ForgejoToken             Option[forgedomain.ForgejoToken]
 	GitHubConnectorType      Option[forgedomain.GitHubConnectorType]
 	GitHubToken              Option[forgedomain.GitHubToken]
 	GitLabConnectorType      Option[forgedomain.GitLabConnectorType]
@@ -73,13 +73,13 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		BitbucketAppPassword:     other.BitbucketAppPassword.Or(self.BitbucketAppPassword),
 		BitbucketUsername:        other.BitbucketUsername.Or(self.BitbucketUsername),
 		BranchTypeOverrides:      other.BranchTypeOverrides.Concat(self.BranchTypeOverrides),
-		CodebergToken:            other.CodebergToken.Or(self.CodebergToken),
 		ContributionRegex:        other.ContributionRegex.Or(self.ContributionRegex),
 		Detached:                 other.Detached.Or(self.Detached),
 		DevRemote:                other.DevRemote.Or(self.DevRemote),
 		DryRun:                   other.DryRun.Or(self.DryRun),
 		FeatureRegex:             other.FeatureRegex.Or(self.FeatureRegex),
 		ForgeType:                other.ForgeType.Or(self.ForgeType),
+		ForgejoToken:             other.ForgejoToken.Or(self.ForgejoToken),
 		GitHubConnectorType:      other.GitHubConnectorType.Or(self.GitHubConnectorType),
 		GitHubToken:              other.GitHubToken.Or(self.GitHubToken),
 		GitLabConnectorType:      other.GitLabConnectorType.Or(self.GitLabConnectorType),

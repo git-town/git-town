@@ -55,7 +55,7 @@ EnterForgeData:
 	actualForgeType := determineForgeType(enteredForgeType.Or(data.Config.File.ForgeType), devURL)
 	bitbucketUsername := None[forgedomain.BitbucketUsername]()
 	bitbucketAppPassword := None[forgedomain.BitbucketAppPassword]()
-	codebergToken := None[forgedomain.CodebergToken]()
+	forgejoToken := None[forgedomain.ForgejoToken]()
 	giteaToken := None[forgedomain.GiteaToken]()
 	githubConnectorTypeOpt := None[forgedomain.GitHubConnectorType]()
 	githubToken := None[forgedomain.GitHubToken]()
@@ -69,8 +69,8 @@ EnterForgeData:
 				return emptyResult, exit, err
 			}
 			bitbucketAppPassword, exit, err = enterBitbucketAppPassword(data)
-		case forgedomain.ForgeTypeCodeberg:
-			codebergToken, exit, err = enterCodebergToken(data)
+		case forgedomain.ForgeTypeForgejo:
+			forgejoToken, exit, err = enterForgejoToken(data)
 		case forgedomain.ForgeTypeGitea:
 			giteaToken, exit, err = enterGiteaToken(data)
 		case forgedomain.ForgeTypeGitHub:
@@ -106,9 +106,9 @@ EnterForgeData:
 		backend:              data.Backend,
 		bitbucketAppPassword: bitbucketAppPassword.Or(data.Config.GitGlobal.BitbucketAppPassword),
 		bitbucketUsername:    bitbucketUsername.Or(data.Config.GitGlobal.BitbucketUsername),
-		codebergToken:        codebergToken.Or(data.Config.GitGlobal.CodebergToken),
 		devURL:               devURL,
 		forgeTypeOpt:         actualForgeType,
+		forgejoToken:         forgejoToken.Or(data.Config.GitGlobal.ForgejoToken),
 		giteaToken:           giteaToken.Or(data.Config.GitGlobal.GiteaToken),
 		githubConnectorType:  githubConnectorTypeOpt.Or(data.Config.GitGlobal.GitHubConnectorType),
 		githubToken:          githubToken.Or(data.Config.GitGlobal.GitHubToken),
@@ -126,10 +126,10 @@ EnterForgeData:
 	tokenScope, exit, err := enterTokenScope(enterTokenScopeArgs{
 		bitbucketAppPassword: bitbucketAppPassword,
 		bitbucketUsername:    bitbucketUsername,
-		codebergToken:        codebergToken,
 		data:                 data,
 		determinedForgeType:  actualForgeType,
 		existingConfig:       data.Config.NormalConfig,
+		forgejoToken:         forgejoToken,
 		giteaToken:           giteaToken,
 		githubToken:          githubToken,
 		gitlabToken:          gitlabToken,
@@ -239,7 +239,7 @@ EnterForgeData:
 		BitbucketAppPassword:     bitbucketAppPassword,
 		BitbucketUsername:        bitbucketUsername,
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{}, // the setup assistant doesn't ask for this
-		CodebergToken:            codebergToken,
+		ForgejoToken:             forgejoToken,
 		ContributionRegex:        contributionRegex,
 		Detached:                 detached,
 		DevRemote:                devRemote,
@@ -337,17 +337,6 @@ func enterBitbucketUserName(data Data) (Option[forgedomain.BitbucketUsername], d
 	})
 }
 
-func enterCodebergToken(data Data) (Option[forgedomain.CodebergToken], dialogdomain.Exit, error) {
-	if data.Config.File.CodebergToken.IsSome() {
-		return None[forgedomain.CodebergToken](), false, nil
-	}
-	return dialog.CodebergToken(dialog.Args[forgedomain.CodebergToken]{
-		Global: data.Config.GitGlobal.CodebergToken,
-		Inputs: data.Inputs,
-		Local:  data.Config.GitLocal.CodebergToken,
-	})
-}
-
 func enterContributionRegex(data Data) (Option[configdomain.ContributionRegex], dialogdomain.Exit, error) {
 	if data.Config.File.ContributionRegex.IsSome() {
 		return None[configdomain.ContributionRegex](), false, nil
@@ -400,6 +389,17 @@ func enterForgeType(data Data) (Option[forgedomain.ForgeType], dialogdomain.Exit
 		Global: data.Config.GitGlobal.ForgeType,
 		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.ForgeType,
+	})
+}
+
+func enterForgejoToken(data Data) (Option[forgedomain.ForgejoToken], dialogdomain.Exit, error) {
+	if data.Config.File.ForgejoToken.IsSome() {
+		return None[forgedomain.ForgejoToken](), false, nil
+	}
+	return dialog.ForgejoToken(dialog.Args[forgedomain.ForgejoToken]{
+		Global: data.Config.GitGlobal.ForgejoToken,
+		Inputs: data.Inputs,
+		Local:  data.Config.GitLocal.ForgejoToken,
 	})
 }
 
@@ -648,10 +648,10 @@ func enterTokenScope(args enterTokenScopeArgs) (configdomain.ConfigScope, dialog
 type enterTokenScopeArgs struct {
 	bitbucketAppPassword Option[forgedomain.BitbucketAppPassword]
 	bitbucketUsername    Option[forgedomain.BitbucketUsername]
-	codebergToken        Option[forgedomain.CodebergToken]
 	data                 Data
 	determinedForgeType  Option[forgedomain.ForgeType]
 	existingConfig       config.NormalConfig
+	forgejoToken         Option[forgedomain.ForgejoToken]
 	giteaToken           Option[forgedomain.GiteaToken]
 	githubToken          Option[forgedomain.GitHubToken]
 	gitlabToken          Option[forgedomain.GitLabToken]
@@ -679,8 +679,8 @@ func shouldAskForScope(args enterTokenScopeArgs) bool {
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
 			return existsAndChanged(args.bitbucketUsername, args.existingConfig.BitbucketUsername) &&
 				existsAndChanged(args.bitbucketAppPassword, args.existingConfig.BitbucketAppPassword)
-		case forgedomain.ForgeTypeCodeberg:
-			return existsAndChanged(args.codebergToken, args.existingConfig.CodebergToken)
+		case forgedomain.ForgeTypeForgejo:
+			return existsAndChanged(args.forgejoToken, args.existingConfig.ForgejoToken)
 		case forgedomain.ForgeTypeGitea:
 			return existsAndChanged(args.giteaToken, args.existingConfig.GiteaToken)
 		case forgedomain.ForgeTypeGitHub:
@@ -700,8 +700,8 @@ func testForgeAuth(args testForgeAuthArgs) (repeat bool, exit dialogdomain.Exit,
 		Backend:              args.backend,
 		BitbucketAppPassword: args.bitbucketAppPassword,
 		BitbucketUsername:    args.bitbucketUsername,
-		CodebergToken:        args.codebergToken,
 		ForgeType:            args.forgeTypeOpt,
+		ForgejoToken:         args.forgejoToken,
 		Frontend:             args.backend,
 		GitHubConnectorType:  args.githubConnectorType,
 		GitHubToken:          args.githubToken,
@@ -736,9 +736,9 @@ type testForgeAuthArgs struct {
 	backend              subshelldomain.RunnerQuerier
 	bitbucketAppPassword Option[forgedomain.BitbucketAppPassword]
 	bitbucketUsername    Option[forgedomain.BitbucketUsername]
-	codebergToken        Option[forgedomain.CodebergToken]
 	devURL               Option[giturl.Parts]
 	forgeTypeOpt         Option[forgedomain.ForgeType]
+	forgejoToken         Option[forgedomain.ForgejoToken]
 	giteaToken           Option[forgedomain.GiteaToken]
 	githubConnectorType  Option[forgedomain.GitHubConnectorType]
 	githubToken          Option[forgedomain.GitHubToken]
@@ -754,8 +754,8 @@ func tokenScopeDialog(args enterTokenScopeArgs) (configdomain.ConfigScope, dialo
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
 			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyBitbucketUsername, args.data.Config.NormalConfig.BitbucketUsername)
 			return dialog.TokenScope(existingScope, args.inputs)
-		case forgedomain.ForgeTypeCodeberg:
-			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyCodebergToken, args.data.Config.NormalConfig.CodebergToken)
+		case forgedomain.ForgeTypeForgejo:
+			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyForgejoToken, args.data.Config.NormalConfig.ForgejoToken)
 			return dialog.TokenScope(existingScope, args.inputs)
 		case forgedomain.ForgeTypeGitea:
 			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyGiteaToken, args.data.Config.NormalConfig.GiteaToken)

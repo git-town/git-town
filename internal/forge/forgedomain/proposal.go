@@ -43,7 +43,7 @@ func (self *Proposal) UnmarshalJSON(b []byte) error {
 		var data BitbucketCloudProposalData
 		err = json.Unmarshal(mapping["data"], &data)
 		self.Data = data
-	case ForgeTypeBitbucketDatacenter, ForgeTypeCodeberg, ForgeTypeGitHub, ForgeTypeGitLab, ForgeTypeGitea:
+	case ForgeTypeBitbucketDatacenter, ForgeTypeForgejo, ForgeTypeGitHub, ForgeTypeGitLab, ForgeTypeGitea:
 		var data ProposalData
 		err = json.Unmarshal(mapping["data"], &data)
 		self.Data = data
