@@ -64,11 +64,11 @@ func (self *ConnectorProposalMerge) Run(args shared.RunArgs) error {
 	if !hasConnector {
 		return forgedomain.UnsupportedServiceError()
 	}
-	apiConnector, isAPIConnector := connector.(forgedomain.APIConnector)
-	if !isAPIConnector {
+	proposalMerger, canMergeProposals := connector.(forgedomain.ProposalMerger)
+	if !canMergeProposals {
 		return errors.New(messages.ShipAPIConnectorUnsupported)
 	}
-	self.mergeError = apiConnector.SquashMergeProposal(proposalData.Number, commitMessage)
+	self.mergeError = proposalMerger.SquashMergeProposal(proposalData.Number, commitMessage)
 	return self.mergeError
 }
 
