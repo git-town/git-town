@@ -94,6 +94,14 @@ type PullRequestResponse struct {
 	Values        []PullRequest `json:"values"`
 }
 
+type Participant struct {
+	Approved           bool   `json:"approved"`
+	LastReviewedCommit string `json:"lastReviewedCommit"`
+	Role               string `json:"role"`
+	Status             string `json:"status"`
+	User               User   `json:"user"`
+}
+
 type User struct {
 	Active       bool   `json:"active"`
 	DisplayName  string `json:"displayName"`
@@ -102,14 +110,6 @@ type User struct {
 	Name         string `json:"name"`
 	Slug         string `json:"slug"`
 	Type         string `json:"type"`
-}
-
-type Participant struct {
-	Approved           bool   `json:"approved"`
-	LastReviewedCommit string `json:"lastReviewedCommit"`
-	Role               string `json:"role"`
-	Status             string `json:"status"`
-	User               User   `json:"user"`
 }
 
 type PullRequest struct {
