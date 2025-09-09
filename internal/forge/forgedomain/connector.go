@@ -88,7 +88,7 @@ type ProposalUpdater interface {
 }
 
 // ProposalSourceUpdater describes methods that connectors need to implement
-// to enable Git Town to update the source branch of for proposals at the active forge.
+// to enable Git Town to update the source branch of proposals at the active forge.
 type ProposalSourceUpdater interface {
 	// If this connector instance supports loading proposals via the API,
 	// calling this function returns a function that you can call
