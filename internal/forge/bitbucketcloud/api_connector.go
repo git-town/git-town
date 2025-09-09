@@ -1,14 +1,24 @@
 package bitbucketcloud
 
 import (
+	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/ktrysmt/go-bitbucket"
 )
 
-var _ forgedomain.APIConnector = bbclConnector
+var bbclAPIConnector APIConnector
+var _ forgedomain.APIConnector = bbclAPIConnector
+var _ forgedomain.Connector = bbclAPIConnector
 
-func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
+// APIConnector implements the connector functionality if API credentials are available.
+type APIConnector struct {
+	WebConnector
+	client *bitbucket.Client
+	log    print.Logger
+}
+
+func (self APIConnector) VerifyConnection() forgedomain.VerifyConnectionResult {
 	user, err := self.client.User.Profile()
 	if err != nil {
 		return forgedomain.VerifyConnectionResult{

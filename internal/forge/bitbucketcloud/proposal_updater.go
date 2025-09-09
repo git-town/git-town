@@ -10,9 +10,9 @@ import (
 	"github.com/ktrysmt/go-bitbucket"
 )
 
-var _ forgedomain.ProposalUpdater = bbclConnector
+var _ forgedomain.ProposalUpdater = bbclAPIConnector
 
-func (self Connector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, newBody string) error {
+func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, newBody string) error {
 	data := proposalData.(forgedomain.BitbucketCloudProposalData)
 	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)))
 	_, err := self.client.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
@@ -34,7 +34,7 @@ func (self Connector) UpdateProposalBody(proposalData forgedomain.ProposalInterf
 	return nil
 }
 
-func (self Connector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
+func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	data := proposalData.(forgedomain.BitbucketCloudProposalData)
 	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)), colors.BoldCyan().Styled(target.String()))
 	_, err := self.client.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
