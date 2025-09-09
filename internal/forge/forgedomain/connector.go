@@ -26,37 +26,37 @@ type APIConnector interface {
 	// calling this function returns a function that you can call
 	// to load details about the proposal for the given branch into the given target branch.
 	// A None return value indicates that this connector does not support this feature (yet).
-	FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[Proposal], error)]
+	FindProposal(branch, target gitdomain.LocalBranchName) (Option[Proposal], error)
 
 	// If this connector instance supports loading proposals via the API,
 	// calling this function returns a function that you can call
 	// to search for a proposal that has the given branch as its source branch.
 	// A None return value indicates that this connector does not support this feature (yet).
-	SearchProposalFn() Option[func(branch gitdomain.LocalBranchName) (Option[Proposal], error)]
+	SearchProposal(branch gitdomain.LocalBranchName) (Option[Proposal], error)
 
 	// If this connector instance supports loading proposals via the API,
 	// calling this function returns a function that you can call
 	// to merge the proposal with the given number using the given message.
 	// A None return value indicates that this connector does not support this feature (yet).
-	SquashMergeProposalFn() Option[func(number int, message gitdomain.CommitMessage) error]
+	SquashMergeProposal(number int, message gitdomain.CommitMessage) error
 
 	// If the connector instance supports loading proposals via the API,
 	// calling this function returns a function that you can call
 	// to update the body (description) of the given proposal to the given value.
 	// A None return value indicates that this connector does not support this feature (yet).
-	UpdateProposalBodyFn() Option[func(proposal ProposalInterface, newBody string) error]
+	UpdateProposalBody(proposal ProposalInterface, newBody string) error
 
 	// If this connector instance supports loading proposals via the API,
 	// calling this function returns a function that you can call
 	// to update the source branch of the proposal with the given number.
 	// A None return value indicates that this connector does not support this feature (yet).
-	UpdateProposalSourceFn() Option[func(proposal ProposalInterface, newSource gitdomain.LocalBranchName) error]
+	UpdateProposalSource(proposal ProposalInterface, newSource gitdomain.LocalBranchName) error
 
 	// If this connector instance supports loading proposals via the API,
 	// calling this function returns a function that you can call
 	// to update the target branch of the proposal with the given number.
 	// A None return value indicates that this connector does not support this feature (yet).
-	UpdateProposalTargetFn() Option[func(proposal ProposalInterface, newTarget gitdomain.LocalBranchName) error]
+	UpdateProposalTarget(proposal ProposalInterface, newTarget gitdomain.LocalBranchName) error
 
 	// VerifyConnection checks whether this connector can make successful requests to the forge.
 	VerifyConnection() VerifyConnectionResult

@@ -430,8 +430,8 @@ func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages
 		prog.Value.Add(&opcodes.BranchTrackingCreate{Branch: data.targetBranch})
 	}
 	connector, hasConnector := data.connector.Get()
-	connectorCanUpdateProposalTargets := hasConnector && connector.UpdateProposalTargetFn().IsSome()
-	if hasProposal && hasConnector && connectorCanUpdateProposalTargets {
+	_, isAPIConnector := connector.(forgedomain.APIConnector)
+	if hasProposal && hasConnector && isAPIConnector {
 		prog.Value.Add(&opcodes.ProposalUpdateTarget{
 			NewBranch: data.targetBranch,
 			OldBranch: data.existingParent,
