@@ -12,9 +12,9 @@ import (
 )
 
 // type-check to enforce conformance to the ProposalFinder interface
-var _ forgedomain.ProposalFinder = bbdcConnector
+var _ forgedomain.ProposalFinder = bbdcAPIConnector
 
-func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	proposalURLOverride := forgedomain.ReadProposalOverride()
 	if len(proposalURLOverride) > 0 {
 		return self.findProposalViaOverride(branch, target)
@@ -22,7 +22,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 	return self.findProposalViaAPI(branch, target)
 }
 
-func (self Connector) apiBaseURL() string {
+func (self APIConnector) apiBaseURL() string {
 	return fmt.Sprintf(
 		"https://%s/rest/api/latest/projects/%s/repos/%s/pull-requests",
 		self.Hostname,
@@ -31,7 +31,7 @@ func (self Connector) apiBaseURL() string {
 	)
 }
 
-func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self APIConnector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	ctx := context.TODO()
 	fromRefID := fmt.Sprintf("refs/heads/%v", branch)
@@ -66,7 +66,7 @@ func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchNam
 	return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeBitbucketDatacenter}), nil
 }
 
-func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self APIConnector) findProposalViaOverride(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	proposalURLOverride := forgedomain.ReadProposalOverride()
 	self.log.Ok()
