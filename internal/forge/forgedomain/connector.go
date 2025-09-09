@@ -33,13 +33,16 @@ type VerifyConnectionResult struct {
 	AuthenticationError error          // error while verifying to verify authentication
 	AuthorizationError  error          // error while verifying authorization, nil == user is authenticated
 }
+
+// APIConnector describes additional functionality
+// that connectors which can talk to the API of a forge can perform.
 type APIConnector interface {
 	// VerifyConnection checks whether this connector can make successful requests to the forge.
 	VerifyConnection() VerifyConnectionResult
 }
 
-// APIConnector describes additional functionality
-// that connectors which can talk to the API of a forge can perform.
+// ProposalFinder describes methods that connectors need to implement
+// to enable Git Town to find proposals at the active forge.
 type ProposalFinder interface {
 	// If this connector instance supports loading proposals via the API,
 	// calling this function returns a function that you can call
@@ -48,6 +51,8 @@ type ProposalFinder interface {
 	FindProposal(branch, target gitdomain.LocalBranchName) (Option[Proposal], error)
 }
 
+// ProposalSearcher describes methods that connectors need to implement
+// to enable Git Town to search for proposals at the active forge.
 type ProposalSearcher interface {
 	// If this connector instance supports loading proposals via the API,
 	// calling this function returns a function that you can call
@@ -56,6 +61,8 @@ type ProposalSearcher interface {
 	SearchProposal(branch gitdomain.LocalBranchName) (Option[Proposal], error)
 }
 
+// ProposalMerger describes methods that connectors need to implement
+// to enable Git Town to merge for proposals at the active forge.
 type ProposalMerger interface {
 	// If this connector instance supports loading proposals via the API,
 	// calling this function returns a function that you can call
@@ -64,6 +71,8 @@ type ProposalMerger interface {
 	SquashMergeProposal(number int, message gitdomain.CommitMessage) error
 }
 
+// ProposalUpdater describes methods that connectors need to implement
+// to enable Git Town to update proposals at the active forge.
 type ProposalUpdater interface {
 	// If the connector instance supports loading proposals via the API,
 	// calling this function returns a function that you can call
@@ -78,6 +87,8 @@ type ProposalUpdater interface {
 	UpdateProposalTarget(proposal ProposalInterface, newTarget gitdomain.LocalBranchName) error
 }
 
+// ProposalSourceUpdater describes methods that connectors need to implement
+// to enable Git Town to update the source branch of for proposals at the active forge.
 type ProposalSourceUpdater interface {
 	// If this connector instance supports loading proposals via the API,
 	// calling this function returns a function that you can call
