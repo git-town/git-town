@@ -45,7 +45,7 @@ Feature: enter the Forgejo API token
     And local Git setting "git-town.forgejo-token" is now "code-tok"
 
   Scenario: store Forgejo API token globally
-    And my repo's "origin" remote is "git@forgejo.org:git-town/docs.git"
+    And my repo's "origin" remote is "git@codeberg.org:git-town/docs.git"
     When I run "git-town init" and enter into the dialog:
       | DIALOG             | KEYS                   | DESCRIPTION                                 |
       | welcome            | enter                  |                                             |
@@ -64,7 +64,7 @@ Feature: enter the Forgejo API token
     And global Git setting "git-town.forgejo-token" is now "code-tok"
 
   Scenario: edit global Forgejo API token
-    And my repo's "origin" remote is "git@forgejo.org:git-town/docs.git"
+    And my repo's "origin" remote is "git@codeberg.org:git-town/docs.git"
     Given global Git setting "git-town.forgejo-token" is "code123"
     When I run "git-town init" and enter into the dialog:
       | DIALOG             | KEYS                                      | DESCRIPTION                                 |
