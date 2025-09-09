@@ -25,11 +25,11 @@ func (self *ProposalUpdateTarget) Run(args shared.RunArgs) error {
 	if !hasConnector {
 		return forgedomain.UnsupportedServiceError()
 	}
-	apiConnector, isAPIConnector := connector.(forgedomain.APIConnector)
-	if !isAPIConnector {
+	proposalUpdater, canUpdateProposals := connector.(forgedomain.ProposalUpdater)
+	if !canUpdateProposals {
 		return forgedomain.UnsupportedServiceError()
 	}
-	return apiConnector.UpdateProposalTarget(self.Proposal.Data, self.NewBranch)
+	return proposalUpdater.UpdateProposalTarget(self.Proposal.Data, self.NewBranch)
 }
 
 func (self *ProposalUpdateTarget) ShouldUndoOnError() bool {
