@@ -155,11 +155,11 @@ func findProposal(
 	targetBranch gitdomain.LocalBranchName,
 	connector forgedomain.Connector,
 ) (Option[forgedomain.Proposal], error) {
-	apiConnector, isAPIConnector := connector.(forgedomain.APIConnector)
-	if !isAPIConnector {
+	proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder)
+	if !canFindProposals {
 		return None[forgedomain.Proposal](), nil
 	}
-	return apiConnector.FindProposal(childBranch, targetBranch)
+	return proposalFinder.FindProposal(childBranch, targetBranch)
 }
 
 func findRelevantChildren(
