@@ -6,32 +6,7 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-// Connector describes the activities that Git Town can perform on forges.
-// Individual implementations exist to talk to specific forge types.
-// Functions that might or might not be supported by a connector are implemented as higher-level functions,
-// i.e. they return an option of the function to call.
-// A `None` value implies that the respective functionality isn't supported by this connector implementation.
-//
-// A more idiomatic way to implement this would be to define a specific interface for each optional method of the constructor,
-// and then checking whether a specific connector implements the specific interface via a type assertion.
-// Example:
-//
-//	type ProposalFinder interface {
-//	  FindProposal(branch, target gitdomain.LocalBranchName) (Option[Proposal], error)
-//	}
-//
-// We decided against this approach because:
-//
-//  1. This makes it too easy to forget to implement a new optional feature in all connector implementations.
-//     When adding a new optional feature, or changing an existing one, our implementation results in a compiler error
-//     if a connector doesn't provide an answer whether this functionality is implemented or not.
-//     The idiomatic interface-based solution leaves it up to you to remember to implement the new feature,
-//     and then find all connector implementations and update them.
-//
-//  2. This doesn't provide an idiomatic way to document why a connector doesn't implement optional functionality.
-//     With our approach, the connector provides `None`, together with documentation (links to open tickets) why.
-//     With the idiomatic interface-based implementation, we could add a comment somewhere in the connector implementation,
-//     but that's hard to find, and sorting cannot be verified by linters.
+// Connector describes the activities that all connectors can perform on forges.
 type Connector interface {
 	// CreateProposal creates a proposal at the forge.
 	CreateProposal(CreateProposalArgs) error
@@ -40,14 +15,18 @@ type Connector interface {
 	// on the respective forge type is prepopulated with.
 	DefaultProposalMessage(proposal ProposalData) string
 
+	// OpenRepository opens this repository in the associated application, typically the browser.
+	OpenRepository(runner subshelldomain.Runner) error
+}
+
+// APIConnector describes additional functionality
+// that connectors which can talk to the API of a forge can perform.
+type APIConnector interface {
 	// If this connector instance supports loading proposals via the API,
 	// calling this function returns a function that you can call
 	// to load details about the proposal for the given branch into the given target branch.
 	// A None return value indicates that this connector does not support this feature (yet).
 	FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[Proposal], error)]
-
-	// OpenRepository opens this repository in the associated application, typically the browser.
-	OpenRepository(runner subshelldomain.Runner) error
 
 	// If this connector instance supports loading proposals via the API,
 	// calling this function returns a function that you can call
