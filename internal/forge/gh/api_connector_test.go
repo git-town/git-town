@@ -10,7 +10,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestParseStatusOutput(t *testing.T) {
+func TestParsePermissionsOutput(t *testing.T) {
 	t.Parallel()
 
 	t.Run("logged into github.com with correct scopes", func(t *testing.T) {
