@@ -106,6 +106,7 @@ func determineContinueData(repo execute.OpenRepoResult) (data continueData, exit
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
 		Frontend:             repo.Frontend,
+		ForgejoToken:         config.ForgejoToken,
 		ForgeType:            config.ForgeType,
 		GitHubConnectorType:  config.GitHubConnectorType,
 		GitHubToken:          config.GitHubToken,
