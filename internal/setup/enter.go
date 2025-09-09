@@ -718,17 +718,19 @@ func testForgeAuth(args testForgeAuthArgs) (repeat bool, exit dialogdomain.Exit,
 	if !hasConnector {
 		return false, false, nil
 	}
-	verifyResult := connector.VerifyConnection()
-	if verifyResult.AuthenticationError != nil {
-		return dialog.CredentialsNoAccess(verifyResult.AuthenticationError, args.inputs)
+	if apiConnector, isAPIConnector := connector.(forgedomain.APIConnector); isAPIConnector {
+		verifyResult := apiConnector.VerifyConnection()
+		if verifyResult.AuthenticationError != nil {
+			return dialog.CredentialsNoAccess(verifyResult.AuthenticationError, args.inputs)
+		}
+		if user, hasUser := verifyResult.AuthenticatedUser.Get(); hasUser {
+			fmt.Printf(messages.CredentialsForgeUserName, dialogcomponents.FormattedSelection(user, exit))
+		}
+		if verifyResult.AuthorizationError != nil {
+			return dialog.CredentialsNoProposalAccess(verifyResult.AuthorizationError, args.inputs)
+		}
+		fmt.Println(messages.CredentialsAccess)
 	}
-	if user, hasUser := verifyResult.AuthenticatedUser.Get(); hasUser {
-		fmt.Printf(messages.CredentialsForgeUserName, dialogcomponents.FormattedSelection(user, exit))
-	}
-	if verifyResult.AuthorizationError != nil {
-		return dialog.CredentialsNoProposalAccess(verifyResult.AuthorizationError, args.inputs)
-	}
-	fmt.Println(messages.CredentialsAccess)
 	return false, false, nil
 }
 
