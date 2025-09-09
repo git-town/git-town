@@ -181,8 +181,8 @@ func LoadProposalsOfChildBranches(args LoadProposalsOfChildBranchesArgs) []forge
 	if !hasConnector {
 		return []forgedomain.Proposal{}
 	}
-	findProposal, canFindProposal := connector.FindProposalFn().Get()
-	if !canFindProposal {
+	apiConnector, isAPIConnector := connector.(forgedomain.APIConnector)
+	if !isAPIConnector {
 		return []forgedomain.Proposal{}
 	}
 	if args.Offline.IsOffline() {
@@ -194,7 +194,7 @@ func LoadProposalsOfChildBranches(args LoadProposalsOfChildBranchesArgs) []forge
 	childBranches := args.Lineage.Children(args.OldBranch)
 	result := make([]forgedomain.Proposal, 0, len(childBranches))
 	for _, childBranch := range childBranches {
-		childProposalOpt, err := findProposal(childBranch, args.OldBranch)
+		childProposalOpt, err := apiConnector.FindProposal(childBranch, args.OldBranch)
 		if err != nil {
 			print.Error(err)
 			continue
@@ -225,11 +225,11 @@ func FindProposal(connectorOpt Option[forgedomain.Connector], sourceBranch gitdo
 	if !hasTarget {
 		return None[forgedomain.Proposal]()
 	}
-	findProposal, canFindProposal := connector.FindProposalFn().Get()
-	if !canFindProposal {
+	apiConnector, isAPIConnector := connector.(forgedomain.APIConnector)
+	if !isAPIConnector {
 		return None[forgedomain.Proposal]()
 	}
-	proposal, err := findProposal(sourceBranch, target)
+	proposal, err := apiConnector.FindProposal(sourceBranch, target)
 	if err != nil {
 		print.Error(err)
 		return None[forgedomain.Proposal]()

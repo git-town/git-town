@@ -30,11 +30,11 @@ func determineAPIData(sharedData sharedShipData) (result shipDataAPI, err error)
 	if !hasConnector {
 		return result, errors.New(messages.ShipAPIConnectorRequired)
 	}
-	findProposal, canFindProposal := connector.FindProposalFn().Get()
-	if !canFindProposal {
+	apiConnector, isAPIConnector := connector.(forgedomain.APIConnector)
+	if !isAPIConnector {
 		return result, errors.New(messages.ShipAPIConnectorUnsupported)
 	}
-	proposalOpt, err := findProposal(sharedData.branchNameToShip, sharedData.targetBranchName)
+	proposalOpt, err := apiConnector.FindProposal(sharedData.branchNameToShip, sharedData.targetBranchName)
 	proposal, hasProposal := proposalOpt.Get()
 	if !hasProposal {
 		return result, fmt.Errorf(messages.ShipAPINoProposal, sharedData.branchNameToShip)
@@ -54,7 +54,8 @@ func shipAPIProgram(prog Mutable[program.Program], repo execute.OpenRepoResult, 
 	if !hasConnector {
 		return errors.New(messages.ShipAPIConnectorRequired)
 	}
-	if connector.SquashMergeProposalFn().IsNone() {
+	_, isAPIConnector := connector.(forgedomain.APIConnector)
+	if !isAPIConnector {
 		return errors.New(messages.ShipAPIConnectorUnsupported)
 	}
 	prog.Value.Add(&opcodes.ConnectorProposalMerge{
