@@ -47,22 +47,13 @@ type NewConnectorArgs struct {
 	UserName    Option[forgedomain.BitbucketUsername]
 }
 
+// Connector implementation
+var bbdcConnector Connector                 // type-check
+var _ forgedomain.Connector = bbdcConnector // type-check
+
 func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error {
 	browser.Open(self.NewProposalURL(data), data.FrontendRunner)
 	return nil
-}
-
-func (self Connector) DefaultProposalMessage(proposalData forgedomain.ProposalData) string {
-	data := proposalData.Data()
-	return forgedomain.CommitBody(data, fmt.Sprintf("%s (#%d)", data.Title, data.Number))
-}
-
-func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
-	proposalURLOverride := forgedomain.ReadProposalOverride()
-	if len(proposalURLOverride) > 0 {
-		return Some(self.findProposalViaOverride)
-	}
-	return Some(self.findProposalViaAPI)
 }
 
 func (self Connector) NewProposalURL(data forgedomain.CreateProposalArgs) string {
@@ -70,6 +61,11 @@ func (self Connector) NewProposalURL(data forgedomain.CreateProposalArgs) string
 		self.RepositoryURL(),
 		url.QueryEscape(data.Branch.String()),
 		url.QueryEscape(data.ParentBranch.String()))
+}
+
+func (self Connector) DefaultProposalMessage(proposalData forgedomain.ProposalData) string {
+	data := proposalData.Data()
+	return forgedomain.CommitBody(data, fmt.Sprintf("%s (#%d)", data.Title, data.Number))
 }
 
 func (self Connector) OpenRepository(runner subshelldomain.Runner) error {
@@ -81,32 +77,15 @@ func (self Connector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/projects/%s/repos/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
 }
 
-func (self Connector) SearchProposalFn() Option[func(gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
-	return Some(self.searchProposal)
-}
+// ProposalFinder implementation
+var _ forgedomain.ProposalFinder = bbdcConnector // type-check
 
-func (self Connector) SquashMergeProposalFn() Option[func(int, gitdomain.CommitMessage) error] {
-	return None[func(int, gitdomain.CommitMessage) error]()
-}
-
-func (self Connector) UpdateProposalBodyFn() Option[func(forgedomain.ProposalInterface, string) error] {
-	return None[func(forgedomain.ProposalInterface, string) error]()
-}
-
-func (self Connector) UpdateProposalSourceFn() Option[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName) error] {
-	return None[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName) error]()
-}
-
-func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName) error] {
-	return None[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName) error]()
-}
-
-func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
-	return forgedomain.VerifyConnectionResult{
-		AuthenticatedUser:   None[string](),
-		AuthenticationError: nil,
-		AuthorizationError:  nil,
+func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+	proposalURLOverride := forgedomain.ReadProposalOverride()
+	if len(proposalURLOverride) > 0 {
+		return self.findProposalViaOverride(branch, target)
 	}
+	return self.findProposalViaAPI(branch, target)
 }
 
 func (self Connector) apiBaseURL() string {
@@ -172,7 +151,10 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 	return Some(forgedomain.Proposal{Data: data, ForgeType: forgedomain.ForgeTypeBitbucketDatacenter}), nil
 }
 
-func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+// ProposalSearcher implementation
+var _ forgedomain.ProposalSearcher = bbdcConnector
+
+func (self Connector) SearchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	ctx := context.TODO()
 	fromRefID := fmt.Sprintf("refs/heads/%v", branch)
