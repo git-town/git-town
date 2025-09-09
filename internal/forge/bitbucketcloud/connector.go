@@ -28,8 +28,10 @@ type NewConnectorArgs struct {
 	UserName    Option[forgedomain.BitbucketUsername]
 }
 
-var bbclConnector Connector
-var _ forgedomain.Connector = bbclConnector
+var (
+	bbclConnector Connector
+	_             forgedomain.Connector = bbclConnector
+)
 
 // NewConnector provides a Bitbucket connector instance if the current repo is hosted on Bitbucket,
 // otherwise nil.

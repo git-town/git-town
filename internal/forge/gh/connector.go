@@ -6,8 +6,10 @@ import (
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 )
 
-var ghConnector Connector
-var _ forgedomain.Connector = ghConnector
+var (
+	ghConnector Connector
+	_           forgedomain.Connector = ghConnector
+)
 
 // Connector provides standardized connectivity for the given repository (github.com/owner/repo)
 // via the GitHub API.

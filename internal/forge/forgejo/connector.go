@@ -13,8 +13,10 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-var forgejoConnector Connector
-var _ forgedomain.Connector = forgejoConnector
+var (
+	forgejoConnector Connector
+	_                forgedomain.Connector = forgejoConnector
+)
 
 // Connector provides standardized connectivity for Forgejo-based repositories
 // via the Forgejo API.
