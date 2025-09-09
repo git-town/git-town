@@ -3,57 +3,11 @@ package gitea_test
 import (
 	"testing"
 
-	giteasdk "code.gitea.io/sdk/gitea"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/forge/gitea"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
-
-func TestFilterGiteaPullRequests(t *testing.T) {
-	t.Parallel()
-	give := []*giteasdk.PullRequest{
-		// matching branch
-		{
-			Head: &giteasdk.PRBranchInfo{
-				Name: "branch",
-			},
-			Base: &giteasdk.PRBranchInfo{
-				Name: "target",
-			},
-		},
-		// branch with different name
-		{
-			Head: &giteasdk.PRBranchInfo{
-				Name: "other",
-			},
-			Base: &giteasdk.PRBranchInfo{
-				Name: "target",
-			},
-		},
-		// branch with different target
-		{
-			Head: &giteasdk.PRBranchInfo{
-				Name: "branch",
-			},
-			Base: &giteasdk.PRBranchInfo{
-				Name: "other",
-			},
-		},
-	}
-	want := []*giteasdk.PullRequest{
-		{
-			Head: &giteasdk.PRBranchInfo{
-				Name: "branch",
-			},
-			Base: &giteasdk.PRBranchInfo{
-				Name: "target",
-			},
-		},
-	}
-	have := gitea.FilterPullRequests(give, "branch", "target")
-	must.Eq(t, want, have)
-}
 
 //nolint:paralleltest  // mocks HTTP
 func TestGitea(t *testing.T) {
