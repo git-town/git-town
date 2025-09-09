@@ -21,8 +21,10 @@ type Connector struct {
 }
 
 // type-check to ensure conformance to the Connector interface
-var bbdcConnector Connector
-var _ forgedomain.Connector = bbdcConnector
+var (
+	bbdcConnector Connector
+	_             forgedomain.Connector = bbdcConnector
+)
 
 // NewConnector provides a Bitbucket connector instance if the current repo is hosted on Bitbucket,
 // otherwise nil.
