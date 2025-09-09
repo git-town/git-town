@@ -52,16 +52,16 @@ func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error 
 	return nil
 }
 
+func (self Connector) DefaultProposalMessage(proposalData forgedomain.ProposalData) string {
+	data := proposalData.Data()
+	return forgedomain.CommitBody(data, fmt.Sprintf("%s (#%d)", data.Title, data.Number))
+}
+
 func (self Connector) NewProposalURL(data forgedomain.CreateProposalArgs) string {
 	return fmt.Sprintf("%s/pull-requests?create&sourceBranch=%s&targetBranch=%s",
 		self.RepositoryURL(),
 		url.QueryEscape(data.Branch.String()),
 		url.QueryEscape(data.ParentBranch.String()))
-}
-
-func (self Connector) DefaultProposalMessage(proposalData forgedomain.ProposalData) string {
-	data := proposalData.Data()
-	return forgedomain.CommitBody(data, fmt.Sprintf("%s (#%d)", data.Title, data.Number))
 }
 
 func (self Connector) OpenRepository(runner subshelldomain.Runner) error {
