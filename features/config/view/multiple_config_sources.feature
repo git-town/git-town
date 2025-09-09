@@ -97,7 +97,7 @@ Feature: show the configuration
         origin hostname: github.com
         Bitbucket username: (not set)
         Bitbucket app password: (not set)
-        Codeberg token: (not set)
+        Forgejo token: (not set)
         Gitea token: (not set)
         GitHub connector type: api
         GitHub token: (not set)

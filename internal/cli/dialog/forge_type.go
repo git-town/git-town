@@ -46,8 +46,8 @@ func ForgeType(args Args[forgedomain.ForgeType]) (Option[forgedomain.ForgeType],
 			Text: "Bitbucket Data Center",
 		},
 		{
-			Data: Some(forgedomain.ForgeTypeCodeberg),
-			Text: "Codeberg",
+			Data: Some(forgedomain.ForgeTypeForgejo),
+			Text: "Forgejo",
 		},
 		{
 			Data: Some(forgedomain.ForgeTypeGitea),

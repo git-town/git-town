@@ -1,13 +1,12 @@
 package shared
 
-import (
-	"fmt"
-	"strings"
-)
-
 // This file defines the interfaces that opcodes can implement.
 
 // Opcode represents an opcode about which we know nothing except that it is an opcode.
+// Opcode is an atomic operation that the Git Town interpreter can execute.
+// Opcodes implement the command pattern (https://en.wikipedia.org/wiki/Command_pattern)
+// and provide opcodes to continue and abort them.
+// Undoing an opcode is done via the undo package.
 type Opcode interface{}
 
 // Runnable marks an opcode that can execute subshell commands.
@@ -39,16 +38,4 @@ type AutoUndoable interface {
 // such as changes on a code hosting service, and can undo them if needed.
 type ExternalEffects interface {
 	UndoExternalChanges() []Opcode
-}
-
-func RenderOpcodes(opcodes []Opcode, indent string) string {
-	if len(opcodes) == 0 {
-		return "(empty program)\n"
-	}
-	sb := strings.Builder{}
-	sb.WriteString("Program:\n")
-	for o, opcode := range opcodes {
-		sb.WriteString(fmt.Sprintf("%s%d: %#v\n", indent, o+1, opcode))
-	}
-	return sb.String()
 }
