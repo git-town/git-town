@@ -6,6 +6,8 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
+var _ forgedomain.APIConnector = forgejoConnector
+
 func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
 	user, _, err := self.client.GetMyUserInfo()
 	if err != nil {

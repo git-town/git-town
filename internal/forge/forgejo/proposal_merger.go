@@ -5,20 +5,15 @@ import (
 	"strconv"
 
 	"codeberg.org/mvdkleijn/forgejo-sdk/forgejo/v2"
+	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/pkg/colors"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-func (self Connector) SquashMergeProposalFn() Option[func(int, gitdomain.CommitMessage) error] {
-	if self.APIToken.IsSome() {
-		return Some(self.squashMergeProposal)
-	}
-	return None[func(int, gitdomain.CommitMessage) error]()
-}
+var _ forgedomain.ProposalMerger = forgejoConnector
 
-func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMessage) error {
+func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}

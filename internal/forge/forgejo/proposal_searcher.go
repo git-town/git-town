@@ -10,14 +10,9 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-func (self Connector) SearchProposalFn() Option[func(gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
-	if self.APIToken.IsSome() {
-		return Some(self.searchProposal)
-	}
-	return None[func(gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)]()
-}
+var _ forgedomain.ProposalSearcher = forgejoConnector
 
-func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self Connector) SearchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
 	openPullRequests, _, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, forgejo.ListPullRequestsOptions{
 		ListOptions: forgejo.ListOptions{
@@ -29,7 +24,7 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[f
 		self.log.Failed(err.Error())
 		return None[forgedomain.Proposal](), err
 	}
-	pullRequests := FilterPullRequests2(openPullRequests, branch)
+	pullRequests := filterPullRequests2(openPullRequests, branch)
 	switch len(pullRequests) {
 	case 0:
 		self.log.Success("none")
@@ -44,7 +39,7 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[f
 	}
 }
 
-func FilterPullRequests2(pullRequests []*forgejo.PullRequest, branch gitdomain.LocalBranchName) []*forgejo.PullRequest {
+func filterPullRequests2(pullRequests []*forgejo.PullRequest, branch gitdomain.LocalBranchName) []*forgejo.PullRequest {
 	result := []*forgejo.PullRequest{}
 	for _, pullRequest := range pullRequests {
 		if pullRequest.Head.Name == branch.String() {

@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/pkg/colors"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 var _ forgedomain.ProposalUpdater = forgejoConnector
@@ -27,14 +26,7 @@ func (self Connector) UpdateProposalBody(proposalData forgedomain.ProposalInterf
 	return nil
 }
 
-func (self Connector) UpdateProposalTarget(forgedomain.ProposalInterface, gitdomain.LocalBranchName) error {
-	if self.APIToken.IsSome() {
-		return Some(self.updateProposalTarget)
-	}
-	return None[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName) error]()
-}
-
-func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
+func (self Connector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	data := proposalData.Data()
 	targetName := target.String()
 	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)), colors.BoldCyan().Styled(targetName))

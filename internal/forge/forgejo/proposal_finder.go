@@ -10,14 +10,13 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
+var _ forgedomain.ProposalFinder = forgejoConnector
+
+func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	if len(forgedomain.ReadProposalOverride()) > 0 {
-		return Some(self.findProposalViaOverride)
+		return self.findProposalViaOverride(branch, target)
 	}
-	if self.APIToken.IsSome() {
-		return Some(self.findProposalViaAPI)
-	}
-	return None[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)]()
+	return self.findProposalViaAPI(branch, target)
 }
 
 func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
