@@ -1,12 +1,12 @@
-package codeberg_test
+package forgejo_test
 
 import (
 	"testing"
 
-	"codeberg.org/mvdkleijn/forgejo-sdk/forgejo/v2"
+	forgejoSDK "codeberg.org/mvdkleijn/forgejo-sdk/forgejo/v2"
 	"github.com/git-town/git-town/v21/internal/cli/print"
-	"github.com/git-town/git-town/v21/internal/forge/codeberg"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v21/internal/forge/forgejo"
 	"github.com/git-town/git-town/v21/internal/forge/github"
 	"github.com/git-town/git-town/v21/internal/git/giturl"
 
@@ -27,7 +27,7 @@ func TestConnector(t *testing.T) {
 				Title:  "my title",
 			}
 			want := "my title (#123)\n\nbody"
-			connector := codeberg.Connector{}
+			connector := forgejo.Connector{}
 			have := connector.DefaultProposalMessage(give)
 			must.EqOp(t, want, have)
 		})
@@ -39,7 +39,7 @@ func TestConnector(t *testing.T) {
 				Title:  "my title",
 			}
 			want := "my title (#123)"
-			connector := codeberg.Connector{}
+			connector := forgejo.Connector{}
 			have := connector.DefaultProposalMessage(give)
 			must.EqOp(t, want, have)
 		})
@@ -51,8 +51,8 @@ func TestConnector(t *testing.T) {
 	//
 	// t.Run("NewProposalURL", func(t *testing.T) {
 	// 	t.Parallel()
-	// 	connector, err := codeberg.NewConnector(codeberg.NewConnectorArgs{
-	// 		APIToken:  None[configdomain.CodebergToken](),
+	// 	connector, err := forgejo.NewConnector(forgejo.NewConnectorArgs{
+	// 		APIToken:  None[configdomain.ForgejoToken](),
 	// 		Log:       print.Logger{},
 	// 		RemoteURL: giturl.Parse("git@codeberg.org:git-town/docs.git").GetOrPanic(),
 	// 	})
@@ -68,8 +68,8 @@ func TestConnector(t *testing.T) {
 	//
 	// t.Run("RepositoryURL", func(t *testing.T) {
 	// 	t.Parallel()
-	// 	connector, err := codeberg.NewConnector(codeberg.NewConnectorArgs{
-	// 		APIToken:  None[configdomain.CodebergToken](),
+	// 	connector, err := forgejo.NewConnector(forgejo.NewConnectorArgs{
+	// 		APIToken:  None[configdomain.ForgejoToken](),
 	// 		Log:       print.Logger{},
 	// 		RemoteURL: giturl.Parse("git@codeberg.org:git-town/docs.git").GetOrPanic(),
 	// 	})
@@ -81,30 +81,30 @@ func TestConnector(t *testing.T) {
 
 func TestFilterPullRequests(t *testing.T) {
 	t.Parallel()
-	give := []*forgejo.PullRequest{
+	give := []*forgejoSDK.PullRequest{
 		// matching branch
 		{
-			Head: &forgejo.PRBranchInfo{Name: "branch"},
-			Base: &forgejo.PRBranchInfo{Name: "target"},
+			Head: &forgejoSDK.PRBranchInfo{Name: "branch"},
+			Base: &forgejoSDK.PRBranchInfo{Name: "target"},
 		},
 		// branch with different name
 		{
-			Head: &forgejo.PRBranchInfo{Name: "other"},
-			Base: &forgejo.PRBranchInfo{Name: "target"},
+			Head: &forgejoSDK.PRBranchInfo{Name: "other"},
+			Base: &forgejoSDK.PRBranchInfo{Name: "target"},
 		},
 		// branch with different target
 		{
-			Head: &forgejo.PRBranchInfo{Name: "branch"},
-			Base: &forgejo.PRBranchInfo{Name: "other"},
+			Head: &forgejoSDK.PRBranchInfo{Name: "branch"},
+			Base: &forgejoSDK.PRBranchInfo{Name: "other"},
 		},
 	}
-	want := []*forgejo.PullRequest{
+	want := []*forgejoSDK.PullRequest{
 		{
-			Head: &forgejo.PRBranchInfo{Name: "branch"},
-			Base: &forgejo.PRBranchInfo{Name: "target"},
+			Head: &forgejoSDK.PRBranchInfo{Name: "branch"},
+			Base: &forgejoSDK.PRBranchInfo{Name: "target"},
 		},
 	}
-	have := codeberg.FilterPullRequests(give, "branch", "target")
+	have := forgejo.FilterPullRequests(give, "branch", "target")
 	must.Eq(t, want, have)
 }
 
@@ -117,8 +117,8 @@ func TestNewConnector(t *testing.T) {
 	//
 	// t.Run("Codeberg SaaS", func(t *testing.T) {
 	// 	t.Parallel()
-	// 	have, err := codeberg.NewConnector(codeberg.NewConnectorArgs{
-	// 		APIToken:  None[configdomain.CodebergToken](),
+	// 	have, err := forgejo.NewConnector(forgejo.NewConnectorArgs{
+	// 		APIToken:  None[configdomain.ForgejoToken](),
 	// 		Log:       print.Logger{},
 	// 		RemoteURL: giturl.Parse("git@codeberg.org:git-town/docs.git").GetOrPanic(),
 	// 	})

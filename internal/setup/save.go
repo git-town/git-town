@@ -29,9 +29,9 @@ func Save(userInput UserInput, unvalidatedConfig config.UnvalidatedConfig, data 
 			fc.Check(
 				saveBitbucketAppPassword(userInput.Data.BitbucketAppPassword, unvalidatedConfig.GitLocal.BitbucketAppPassword, userInput.Scope, frontend),
 			)
-		case forgedomain.ForgeTypeCodeberg:
+		case forgedomain.ForgeTypeForgejo:
 			fc.Check(
-				saveCodebergToken(userInput.Data.CodebergToken, unvalidatedConfig.GitLocal.CodebergToken, userInput.Scope, frontend),
+				saveForgejoToken(userInput.Data.ForgejoToken, unvalidatedConfig.GitLocal.ForgejoToken, userInput.Scope, frontend),
 			)
 		case forgedomain.ForgeTypeGitHub:
 			fc.Check(
@@ -290,16 +290,6 @@ func saveBitbucketUsername(valueToWriteToGit Option[forgedomain.BitbucketUsernam
 	return gitconfig.RemoveBitbucketUsername(frontend)
 }
 
-func saveCodebergToken(valueToWriteToGit Option[forgedomain.CodebergToken], valueAlreadyInGit Option[forgedomain.CodebergToken], scope configdomain.ConfigScope, frontend subshelldomain.Runner) error {
-	if valueToWriteToGit.Equal(valueAlreadyInGit) {
-		return nil
-	}
-	if value, has := valueToWriteToGit.Get(); has {
-		return gitconfig.SetCodebergToken(frontend, value, scope)
-	}
-	return gitconfig.RemoveCodebergToken(frontend)
-}
-
 func saveContributionRegex(valueToWriteToGit Option[configdomain.ContributionRegex], valueAlreadyInGit Option[configdomain.ContributionRegex], runner subshelldomain.Runner) error {
 	if valueToWriteToGit.Equal(valueAlreadyInGit) {
 		return nil
@@ -356,6 +346,16 @@ func saveForgeType(valueToWriteToGit Option[forgedomain.ForgeType], valueAlready
 		return gitconfig.SetForgeType(frontend, newValue, configdomain.ConfigScopeLocal)
 	}
 	return gitconfig.RemoveForgeType(frontend)
+}
+
+func saveForgejoToken(valueToWriteToGit Option[forgedomain.ForgejoToken], valueAlreadyInGit Option[forgedomain.ForgejoToken], scope configdomain.ConfigScope, frontend subshelldomain.Runner) error {
+	if valueToWriteToGit.Equal(valueAlreadyInGit) {
+		return nil
+	}
+	if value, has := valueToWriteToGit.Get(); has {
+		return gitconfig.SetForgejoToken(frontend, value, scope)
+	}
+	return gitconfig.RemoveForgejoToken(frontend)
 }
 
 func saveGitHubConnectorType(valueToWriteToGit Option[forgedomain.GitHubConnectorType], valueAlreadyInGit Option[forgedomain.GitHubConnectorType], frontend subshelldomain.Runner) error {

@@ -8,7 +8,7 @@ The _repo_ command ("show me the repository") opens the homepage of the current
 repository in your browser. Git Town can display repositories hosted on
 [GitHub](https://github.com), [GitLab](https://gitlab.com),
 [Gitea](https://gitea.com), [Bitbucket](https://bitbucket.org), and
-[Codeberg](https://codeberg.org).
+[Forgejo](https://forgejo.org).
 
 You can configure the browser which Git Town opens using the
 [BROWSER environment variable](../preferences/browser.md).

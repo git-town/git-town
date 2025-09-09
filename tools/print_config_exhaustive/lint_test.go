@@ -29,10 +29,10 @@ type NormalConfig struct {
 	BitbucketAppPassword     Option[forgedomain.BitbucketAppPassword]
 	BitbucketUsername        Option[forgedomain.BitbucketUsername]
 	BranchTypeOverrides      BranchTypeOverrides
-	CodebergToken            Option[forgedomain.CodebergToken]
 	ContributionRegex        Option[ContributionRegex]
 	DevRemote                gitdomain.Remote
 	FeatureRegex             Option[FeatureRegex]
+	ForgejoToken            Option[forgedomain.ForgejoToken]
 	ForgeType                Option[forgedomain.ForgeType] // None = auto-detect
 	GitHubConnectorType      Option[forgedomain.GitHubConnectorType]
 	GitHubToken              Option[forgedomain.GitHubToken]
@@ -68,10 +68,10 @@ func (self *NormalConfig) NoPushHook() NoPushHook {
 		"BitbucketAppPassword",
 		"BitbucketUsername",
 		"BranchTypeOverrides",
-		"CodebergToken",
 		"ContributionRegex",
 		"DevRemote",
 		"FeatureRegex",
+		"ForgejoToken",
 		"ForgeType",
 		"GitHubConnectorType",
 		"GitHubToken",

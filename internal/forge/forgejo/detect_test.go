@@ -1,9 +1,9 @@
-package codeberg_test
+package forgejo_test
 
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v21/internal/forge/codeberg"
+	"github.com/git-town/git-town/v21/internal/forge/forgejo"
 	"github.com/git-town/git-town/v21/internal/git/giturl"
 	"github.com/shoenig/test/must"
 )
@@ -18,7 +18,7 @@ func TestDetect(t *testing.T) {
 	for give, want := range tests {
 		url, has := giturl.Parse(give).Get()
 		must.True(t, has)
-		have := codeberg.Detect(url)
+		have := forgejo.Detect(url)
 		must.EqOp(t, want, have)
 	}
 }
