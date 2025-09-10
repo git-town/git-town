@@ -10,7 +10,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestWebConnector(t *testing.T) {
+func TestAnonConnector(t *testing.T) {
 	t.Parallel()
 
 	t.Run("NewProposalURL", func(t *testing.T) {
