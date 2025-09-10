@@ -10,7 +10,7 @@ import (
 // NewConnector provides a Bitbucket connector instance if the current repo is hosted on Bitbucket,
 // otherwise nil.
 func NewConnector(args NewConnectorArgs) forgedomain.Connector {
-	webConnector := WebConnector{
+	webConnector := AnonConnector{
 		Data: forgedomain.Data{
 			Hostname:     args.RemoteURL.Host,
 			Organization: args.RemoteURL.Org,
@@ -21,11 +21,11 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector {
 	if !hasAuth {
 		return webConnector
 	}
-	return APIConnector{
-		WebConnector: webConnector,
-		log:          args.Log,
-		token:        args.AppPassword.String(),
-		username:     args.UserName.String(),
+	return AuthConnector{
+		AnonConnector: webConnector,
+		log:           args.Log,
+		token:         args.AppPassword.String(),
+		username:      args.UserName.String(),
 	}
 }
 

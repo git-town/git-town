@@ -9,20 +9,20 @@ import (
 
 // type-check to ensure conformance to the Connector interface
 var (
-	forgejoAPIConnector APIConnector
+	forgejoAPIConnector AuthConnector
 	_                   forgedomain.APIConnector = forgejoAPIConnector
 	_                   forgedomain.Connector    = forgejoAPIConnector
 )
 
-// APIConnector connects to the API of Forgejo instances.
-type APIConnector struct {
-	WebConnector
+// AuthConnector connects to the API of Forgejo instances.
+type AuthConnector struct {
+	AnonConnector
 	APIToken Option[forgedomain.ForgejoToken]
 	client   *forgejo.Client
 	log      print.Logger
 }
 
-func (self APIConnector) VerifyConnection() forgedomain.VerifyConnectionResult {
+func (self AuthConnector) VerifyConnection() forgedomain.VerifyConnectionResult {
 	user, _, err := self.client.GetMyUserInfo()
 	if err != nil {
 		return forgedomain.VerifyConnectionResult{

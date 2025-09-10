@@ -12,14 +12,14 @@ import (
 
 var _ forgedomain.ProposalFinder = forgejoAPIConnector
 
-func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self AuthConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	if len(forgedomain.ReadProposalOverride()) > 0 {
 		return self.findProposalViaOverride(branch, target)
 	}
 	return self.findProposalViaAPI(branch, target)
 }
 
-func (self APIConnector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self AuthConnector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	openPullRequests, _, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, forgejo.ListPullRequestsOptions{
 		ListOptions: forgejo.ListOptions{
@@ -45,7 +45,7 @@ func (self APIConnector) findProposalViaAPI(branch, target gitdomain.LocalBranch
 	}
 }
 
-func (self APIConnector) findProposalViaOverride(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self AuthConnector) findProposalViaOverride(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	self.log.Ok()
 	proposalURLOverride := forgedomain.ReadProposalOverride()

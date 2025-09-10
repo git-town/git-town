@@ -12,7 +12,7 @@ import (
 
 var _ forgedomain.ProposalUpdater = forgejoAPIConnector
 
-func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, newBody string) error {
+func (self AuthConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, newBody string) error {
 	data := proposalData.Data()
 	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)))
 	_, _, err := self.client.EditPullRequest(self.Organization, self.Repository, int64(data.Number), forgejo.EditPullRequestOption{
@@ -26,7 +26,7 @@ func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInt
 	return nil
 }
 
-func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
+func (self AuthConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	data := proposalData.Data()
 	targetName := target.String()
 	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)), colors.BoldCyan().Styled(targetName))

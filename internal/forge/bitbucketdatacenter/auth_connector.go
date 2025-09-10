@@ -8,21 +8,21 @@ import (
 
 // type-check to ensure conformance to the Connector interface
 var (
-	bbdcAPIConnector APIConnector
+	bbdcAPIConnector AuthConnector
 	_                forgedomain.APIConnector = bbdcAPIConnector
 	_                forgedomain.Connector    = bbdcAPIConnector
 )
 
-// APIConnector provides access to the API of Bitbucket installations.
-type APIConnector struct {
-	WebConnector
+// AuthConnector provides access to the API of Bitbucket installations.
+type AuthConnector struct {
+	AnonConnector
 	log      print.Logger
 	token    string
 	username string
 }
 
 // TODO: delete this, it doesn't do anything
-func (self APIConnector) VerifyConnection() forgedomain.VerifyConnectionResult {
+func (self AuthConnector) VerifyConnection() forgedomain.VerifyConnectionResult {
 	return forgedomain.VerifyConnectionResult{
 		AuthenticatedUser:   None[string](),
 		AuthenticationError: nil,

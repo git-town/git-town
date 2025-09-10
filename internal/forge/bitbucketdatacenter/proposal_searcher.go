@@ -14,7 +14,7 @@ import (
 // ProposalSearcher implementation
 var _ forgedomain.ProposalSearcher = bbdcAPIConnector
 
-func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self AuthConnector) SearchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	ctx := context.TODO()
 	fromRefID := fmt.Sprintf("refs/heads/%v", branch)

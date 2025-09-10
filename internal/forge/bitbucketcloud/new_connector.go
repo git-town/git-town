@@ -18,7 +18,7 @@ type NewConnectorArgs struct {
 
 // NewConnector provides the correct connector for talking to Bitbucket Cloud.
 func NewConnector(args NewConnectorArgs) forgedomain.Connector {
-	webConnector := WebConnector{
+	webConnector := AnonConnector{
 		Data: forgedomain.Data{
 			Hostname:     args.RemoteURL.Host,
 			Organization: args.RemoteURL.Org,
@@ -30,9 +30,9 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector {
 		return webConnector
 	}
 	client := bitbucket.NewBasicAuth(args.UserName.String(), args.AppPassword.String())
-	return APIConnector{
-		WebConnector: webConnector,
-		client:       client,
-		log:          args.Log,
+	return AuthConnector{
+		AnonConnector: webConnector,
+		client:        client,
+		log:           args.Log,
 	}
 }

@@ -13,7 +13,7 @@ import (
 
 var _ forgedomain.ProposalMerger = forgejoAPIConnector
 
-func (self APIConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
+func (self AuthConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}

@@ -13,7 +13,7 @@ import (
 func TestWebConnector(t *testing.T) {
 	t.Run("NewProposalURL", func(t *testing.T) {
 		t.Parallel()
-		connector := bitbucketcloud.WebConnector{
+		connector := bitbucketcloud.AnonConnector{
 			Data: forgedomain.Data{
 				Hostname:     "bitbucket.org",
 				Organization: "org",

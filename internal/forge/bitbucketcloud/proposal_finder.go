@@ -13,7 +13,7 @@ import (
 
 var _ forgedomain.ProposalFinder = bbclAPIConnector
 
-func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self AuthConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	proposalURLOverride := forgedomain.ReadProposalOverride()
 	if len(proposalURLOverride) > 0 {
 		return self.findProposalViaOverride(branch, target)
@@ -21,7 +21,7 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 	return self.findProposalViaAPI(branch, target)
 }
 
-func (self APIConnector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self AuthConnector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	query := fmt.Sprintf("source.branch.name = %q AND destination.branch.name = %q", branch, target)
 	result1, err := self.client.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
@@ -90,7 +90,7 @@ func (self APIConnector) findProposalViaAPI(branch, target gitdomain.LocalBranch
 	return Some(forgedomain.Proposal{Data: proposal4, ForgeType: forgedomain.ForgeTypeBitbucket}), nil
 }
 
-func (self APIConnector) findProposalViaOverride(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self AuthConnector) findProposalViaOverride(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	proposalURLOverride := forgedomain.ReadProposalOverride()
 	self.log.Ok()

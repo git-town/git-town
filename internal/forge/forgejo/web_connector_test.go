@@ -23,7 +23,7 @@ func TestWebConnector(t *testing.T) {
 				Title:  "my title",
 			}
 			want := "my title (#123)\n\nbody"
-			connector := forgejo.WebConnector{}
+			connector := forgejo.AnonConnector{}
 			have := connector.DefaultProposalMessage(give)
 			must.EqOp(t, want, have)
 		})
@@ -35,7 +35,7 @@ func TestWebConnector(t *testing.T) {
 				Title:  "my title",
 			}
 			want := "my title (#123)"
-			connector := forgejo.WebConnector{}
+			connector := forgejo.AnonConnector{}
 			have := connector.DefaultProposalMessage(give)
 			must.EqOp(t, want, have)
 		})
@@ -43,7 +43,7 @@ func TestWebConnector(t *testing.T) {
 
 	t.Run("NewProposalURL", func(t *testing.T) {
 		t.Parallel()
-		connector := forgejo.WebConnector{
+		connector := forgejo.AnonConnector{
 			Data: forgedomain.Data{
 				Hostname:     "codeberg.org",
 				Organization: "org",

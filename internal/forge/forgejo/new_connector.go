@@ -16,7 +16,7 @@ type NewConnectorArgs struct {
 
 // NewConnector provides a new connector instance.
 func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) {
-	webConnector := WebConnector{
+	webConnector := AnonConnector{
 		Data: forgedomain.Data{
 			Hostname:     args.RemoteURL.Host,
 			Organization: args.RemoteURL.Org,
@@ -28,10 +28,10 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) {
 		return webConnector, nil
 	}
 	forgejoClient, err := forgejo.NewClient("https://"+args.RemoteURL.Host, forgejo.SetToken(args.APIToken.String()))
-	return APIConnector{
-		WebConnector: webConnector,
-		APIToken:     args.APIToken,
-		client:       forgejoClient,
-		log:          args.Log,
+	return AuthConnector{
+		AnonConnector: webConnector,
+		APIToken:      args.APIToken,
+		client:        forgejoClient,
+		log:           args.Log,
 	}, err
 }

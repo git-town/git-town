@@ -7,18 +7,18 @@ import (
 	"github.com/ktrysmt/go-bitbucket"
 )
 
-var bbclAPIConnector APIConnector
+var bbclAPIConnector AuthConnector
 var _ forgedomain.APIConnector = bbclAPIConnector
 var _ forgedomain.Connector = bbclAPIConnector
 
-// APIConnector implements the connector functionality if API credentials are available.
-type APIConnector struct {
-	WebConnector
+// AuthConnector implements the connector functionality if API credentials are available.
+type AuthConnector struct {
+	AnonConnector
 	client *bitbucket.Client
 	log    print.Logger
 }
 
-func (self APIConnector) VerifyConnection() forgedomain.VerifyConnectionResult {
+func (self AuthConnector) VerifyConnection() forgedomain.VerifyConnectionResult {
 	user, err := self.client.User.Profile()
 	if err != nil {
 		return forgedomain.VerifyConnectionResult{

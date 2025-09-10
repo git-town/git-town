@@ -10,25 +10,25 @@ import (
 )
 
 var (
-	bbclWebConnector WebConnector
+	bbclWebConnector AnonConnector
 	_                forgedomain.Connector = bbclWebConnector
 )
 
-// WebConnector implements the connector functionality if no API credentials are available.
-type WebConnector struct {
+// AnonConnector implements the connector functionality if no API credentials are available.
+type AnonConnector struct {
 	forgedomain.Data
 }
 
-func (self WebConnector) CreateProposal(data forgedomain.CreateProposalArgs) error {
+func (self AnonConnector) CreateProposal(data forgedomain.CreateProposalArgs) error {
 	browser.Open(self.NewProposalURL(data), data.FrontendRunner)
 	return nil
 }
 
-func (self WebConnector) DefaultProposalMessage(data forgedomain.ProposalData) string {
+func (self AnonConnector) DefaultProposalMessage(data forgedomain.ProposalData) string {
 	return forgedomain.CommitBody(data, fmt.Sprintf("%s (#%d)", data.Title, data.Number))
 }
 
-func (self WebConnector) NewProposalURL(data forgedomain.CreateProposalArgs) string {
+func (self AnonConnector) NewProposalURL(data forgedomain.CreateProposalArgs) string {
 	return fmt.Sprintf("%s/pull-requests/new?source=%s&dest=%s%%2F%s%%3A%s",
 		self.RepositoryURL(),
 		url.QueryEscape(data.Branch.String()),
@@ -37,11 +37,11 @@ func (self WebConnector) NewProposalURL(data forgedomain.CreateProposalArgs) str
 		url.QueryEscape(data.ParentBranch.String()))
 }
 
-func (self WebConnector) OpenRepository(runner subshelldomain.Runner) error {
+func (self AnonConnector) OpenRepository(runner subshelldomain.Runner) error {
 	browser.Open(self.RepositoryURL(), runner)
 	return nil
 }
 
-func (self WebConnector) RepositoryURL() string {
+func (self AnonConnector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
 }
