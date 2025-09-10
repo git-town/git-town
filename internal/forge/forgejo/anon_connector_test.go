@@ -12,6 +12,7 @@ import (
 
 func TestAnonConnector(t *testing.T) {
 	t.Parallel()
+
 	t.Run("DefaultProposalMessage", func(t *testing.T) {
 		t.Parallel()
 		t.Run("with body", func(t *testing.T) {

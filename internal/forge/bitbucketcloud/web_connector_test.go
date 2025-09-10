@@ -12,6 +12,7 @@ import (
 
 func TestWebConnector(t *testing.T) {
 	t.Parallel()
+
 	t.Run("NewProposalURL", func(t *testing.T) {
 		t.Parallel()
 		connector := bitbucketcloud.AnonConnector{
