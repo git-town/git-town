@@ -10,9 +10,9 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-var _ forgedomain.ProposalSearcher = giteaConnector
+var _ forgedomain.ProposalSearcher = giteaAuthConnector
 
-func (self Connector) SearchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self AuthConnector) SearchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
 	openPullRequests, _, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{

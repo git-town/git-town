@@ -11,9 +11,9 @@ import (
 	"github.com/git-town/git-town/v21/pkg/colors"
 )
 
-var _ forgedomain.ProposalMerger = giteaConnector
+var _ forgedomain.ProposalMerger = giteaAuthConnector
 
-func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
+func (self AuthConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}

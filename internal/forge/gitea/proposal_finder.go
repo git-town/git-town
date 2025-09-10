@@ -10,16 +10,16 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-var _ forgedomain.ProposalFinder = giteaConnector
+var _ forgedomain.ProposalFinder = giteaAuthConnector
 
-func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self AuthConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	if len(forgedomain.ReadProposalOverride()) > 0 {
 		return self.findProposalViaOverride(branch, target)
 	}
 	return self.findProposalViaAPI(branch, target)
 }
 
-func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self AuthConnector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	openPullRequests, _, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
@@ -45,7 +45,7 @@ func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchNam
 	}
 }
 
-func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self AuthConnector) findProposalViaOverride(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	self.log.Ok()
 	proposalURLOverride := forgedomain.ReadProposalOverride()
