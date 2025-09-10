@@ -1,4 +1,4 @@
-package bitbucketcloud
+package gitea
 
 import (
 	"github.com/git-town/git-town/v21/internal/cli/print"
@@ -13,18 +13,12 @@ var (
 	_             forgedomain.Connector = testConnector
 )
 
-// TestConnector simulates interacting with the Bitbucket Cloud API in tests.
+// TestConnector simulates interacting with the gitea API in tests.
 type TestConnector struct {
 	WebConnector
 	log      print.Logger
 	override forgedomain.ProposalOverride
 }
-
-// ============================================================================
-// find proposals
-// ============================================================================
-
-var _ forgedomain.ProposalFinder = testConnector
 
 func (self TestConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
@@ -32,8 +26,8 @@ func (self TestConnector) FindProposal(branch, target gitdomain.LocalBranchName)
 	if self.override == forgedomain.OverrideNoProposal {
 		return None[forgedomain.Proposal](), nil
 	}
-	proposal := forgedomain.BitbucketCloudProposalData{
-		ProposalData: forgedomain.ProposalData{
+	return Some(forgedomain.Proposal{
+		Data: forgedomain.ProposalData{
 			Body:         None[string](),
 			MergeWithAPI: true,
 			Number:       123,
@@ -42,8 +36,6 @@ func (self TestConnector) FindProposal(branch, target gitdomain.LocalBranchName)
 			Title:        "title",
 			URL:          self.override.String(),
 		},
-		CloseSourceBranch: false,
-		Draft:             false,
-	}
-	return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeBitbucket}), nil
+		ForgeType: forgedomain.ForgeTypeGitea,
+	}), nil
 }

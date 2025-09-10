@@ -36,7 +36,7 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 		},
 	}
 	if proposalURLOverride, hasProposalOverride := args.ProposalOverride.Get(); hasProposalOverride {
-		return OverrideConnector{
+		return TestConnector{
 			WebConnector: anonConnector,
 			log:          args.Log,
 			override:     proposalURLOverride,

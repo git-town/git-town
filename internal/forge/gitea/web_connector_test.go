@@ -20,7 +20,7 @@ func TestGitea(t *testing.T) {
 				Title:  "my title",
 			}
 			want := "my title (#123)"
-			connector := gitea.AnonConnector{}
+			connector := gitea.WebConnector{}
 			have := connector.DefaultProposalMessage(give)
 			must.EqOp(t, want, have)
 		})
@@ -31,14 +31,14 @@ func TestGitea(t *testing.T) {
 				Title:  "my title",
 			}
 			want := "my title (#123)\n\nbody"
-			connector := gitea.AnonConnector{}
+			connector := gitea.WebConnector{}
 			have := connector.DefaultProposalMessage(give)
 			must.EqOp(t, want, have)
 		})
 	})
 
 	t.Run("NewProposalURL", func(t *testing.T) {
-		connector := gitea.AnonConnector{
+		connector := gitea.WebConnector{
 			Data: forgedomain.Data{
 				Hostname:     "gitea.com",
 				Organization: "org",
@@ -56,7 +56,7 @@ func TestGitea(t *testing.T) {
 	})
 
 	t.Run("RepositoryURL", func(t *testing.T) {
-		connector := gitea.AnonConnector{
+		connector := gitea.WebConnector{
 			Data: forgedomain.Data{
 				Hostname:     "gitea.com",
 				Organization: "org",

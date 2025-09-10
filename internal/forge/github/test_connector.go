@@ -10,12 +10,12 @@ import (
 
 // type-check to ensure conformance to the Connector interface
 var (
-	githubOverrideConnector OverrideConnector
+	githubOverrideConnector TestConnector
 	_                       forgedomain.Connector = githubOverrideConnector
 )
 
-// OverrideConnector simulates interacting with the GitHub API in tests.
-type OverrideConnector struct {
+// TestConnector simulates interacting with the GitHub API in tests.
+type TestConnector struct {
 	WebConnector
 	log      print.Logger
 	override forgedomain.ProposalOverride
@@ -25,7 +25,7 @@ type OverrideConnector struct {
 
 var _ forgedomain.ProposalFinder = githubOverrideConnector
 
-func (self OverrideConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self TestConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	self.log.Ok()
 	if self.override == forgedomain.OverrideNoProposal {

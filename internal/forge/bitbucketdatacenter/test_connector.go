@@ -13,6 +13,7 @@ var (
 	_             forgedomain.Connector = testConnector
 )
 
+// TestConnector simulates interacting with the Bitbucket DataCenter API in tests.
 type TestConnector struct {
 	WebConnector
 	log      print.Logger

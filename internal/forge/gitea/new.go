@@ -11,6 +11,11 @@ import (
 	"golang.org/x/oauth2"
 )
 
+// Detect indicates whether the current repository is hosted on a gitea server.
+func Detect(remoteURL giturl.Parts) bool {
+	return remoteURL.Host == "gitea.com"
+}
+
 type NewConnectorArgs struct {
 	APIToken  Option[forgedomain.GiteaToken]
 	Log       print.Logger
@@ -20,7 +25,7 @@ type NewConnectorArgs struct {
 // NewGiteaConfig provides Gitea configuration data if the current repo is hosted on Gitea,
 // otherwise nil.
 func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:ireturn
-	anonConnector := AnonConnector{
+	anonConnector := WebConnector{
 		Data: forgedomain.Data{
 			Hostname:     args.RemoteURL.Host,
 			Organization: args.RemoteURL.Org,
@@ -35,9 +40,9 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:iretur
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
 	giteaClient := gitea.NewClientWithHTTP("https://"+args.RemoteURL.Host, httpClient)
 	return AuthConnector{
-		APIToken:      args.APIToken,
-		AnonConnector: anonConnector,
-		client:        giteaClient,
-		log:           args.Log,
+		APIToken:     args.APIToken,
+		WebConnector: anonConnector,
+		client:       giteaClient,
+		log:          args.Log,
 	}
 }
