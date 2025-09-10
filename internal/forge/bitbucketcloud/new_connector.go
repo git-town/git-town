@@ -25,14 +25,15 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector {
 			Repository:   args.RemoteURL.Repo,
 		},
 	}
-	hasAuth := args.UserName.IsSome() && args.AppPassword.IsSome()
-	if !hasAuth {
-		return webConnector
+	userName, hasUserName := args.UserName.Get()
+	appPassword, hasAppPassword := args.AppPassword.Get()
+	hasAuth := hasUserName && hasAppPassword
+	if hasAuth {
+		return AuthConnector{
+			AnonConnector: webConnector,
+			client:        bitbucket.NewBasicAuth(userName.String(), appPassword.String()),
+			log:           args.Log,
+		}
 	}
-	client := bitbucket.NewBasicAuth(args.UserName.String(), args.AppPassword.String())
-	return AuthConnector{
-		AnonConnector: webConnector,
-		client:        client,
-		log:           args.Log,
-	}
+	return webConnector
 }
