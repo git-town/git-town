@@ -9,8 +9,10 @@ import (
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 )
 
-var gitlabAnonConnector AnonConnector
-var _ forgedomain.Connector = gitlabAnonConnector
+var (
+	gitlabAnonConnector AnonConnector
+	_                   forgedomain.Connector = gitlabAnonConnector
+)
 
 // AnonConnector provides connectivity to GitLab without authentication data.
 type AnonConnector struct {

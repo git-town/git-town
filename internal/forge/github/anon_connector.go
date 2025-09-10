@@ -9,8 +9,10 @@ import (
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 )
 
-var githubAnonConnector AnonConnector
-var _ forgedomain.Connector = githubAnonConnector
+var (
+	githubAnonConnector AnonConnector
+	_                   forgedomain.Connector = githubAnonConnector
+)
 
 // AnonConnector provides connectivity to GitHub without authentication.
 type AnonConnector struct {
@@ -45,6 +47,7 @@ func (self AnonConnector) OpenRepository(runner subshelldomain.Runner) error {
 	browser.Open(self.RepositoryURL(), runner)
 	return nil
 }
+
 func (self AnonConnector) RepositoryURL() string {
 	return RepositoryURL(self.HostnameWithStandardPort(), self.Organization, self.Repository)
 }

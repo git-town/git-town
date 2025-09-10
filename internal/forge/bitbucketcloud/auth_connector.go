@@ -7,9 +7,11 @@ import (
 	"github.com/ktrysmt/go-bitbucket"
 )
 
-var bbclAPIConnector AuthConnector
-var _ forgedomain.AuthVerifier = bbclAPIConnector
-var _ forgedomain.Connector = bbclAPIConnector
+var (
+	bbclAPIConnector AuthConnector
+	_                forgedomain.AuthVerifier = bbclAPIConnector
+	_                forgedomain.Connector    = bbclAPIConnector
+)
 
 // AuthConnector implements the connector functionality if API credentials are available.
 type AuthConnector struct {

@@ -9,8 +9,10 @@ import (
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 )
 
-var giteaAnonConnector AnonConnector
-var _ forgedomain.Connector = giteaAnonConnector
+var (
+	giteaAnonConnector AnonConnector
+	_                  forgedomain.Connector = giteaAnonConnector
+)
 
 // AnonConnector provides connectivity to gitea without authentication.
 type AnonConnector struct {
