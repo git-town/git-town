@@ -26,8 +26,8 @@ func TestAnonConnector(t *testing.T) {
 			Branch:        "branch",
 			MainBranch:    "main",
 			ParentBranch:  "parent-branch",
-			ProposalBody:  None[gitdomain.ProposalBody](),
-			ProposalTitle: None[gitdomain.ProposalTitle](),
+			ProposalBody:  Some(gitdomain.ProposalBody("body")),
+			ProposalTitle: Some(gitdomain.ProposalTitle("title")),
 		})
 		want := "https://bitbucket.org/org/repo/pull-requests/new?source=branch&dest=org%2Frepo%3Aparent-branch"
 		must.EqOp(t, want, have)
