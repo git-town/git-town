@@ -29,7 +29,7 @@ func ParseJSONOutput(output string, branch gitdomain.LocalBranchName) (Option[fo
 	if len(parsed) > 1 {
 		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(parsed), branch)
 	}
-	return Some(parsed[0].ToProposal()), nil
+	return Some(createProposal(parsed[0])), nil
 }
 
 type jsonData struct {
@@ -42,16 +42,16 @@ type jsonData struct {
 	URL          string `json:"web_url"` //nolint:tagliatelle
 }
 
-func (self jsonData) ToProposal() forgedomain.Proposal {
+func createProposal(data jsonData) forgedomain.Proposal {
 	return forgedomain.Proposal{
 		Data: forgedomain.ProposalData{
-			Body:         NewOption(self.Description),
-			MergeWithAPI: self.Mergeable == "mergeable",
-			Number:       self.Number,
-			Source:       gitdomain.NewLocalBranchName(self.SourceBranch),
-			Target:       gitdomain.NewLocalBranchName(self.TargetBranch),
-			Title:        self.Title,
-			URL:          self.URL,
+			Body:         NewOption(data.Description),
+			MergeWithAPI: data.Mergeable == "mergeable",
+			Number:       data.Number,
+			Source:       gitdomain.NewLocalBranchName(data.SourceBranch),
+			Target:       gitdomain.NewLocalBranchName(data.TargetBranch),
+			Title:        data.Title,
+			URL:          data.URL,
 		},
 		ForgeType: forgedomain.ForgeTypeGitLab,
 	}
