@@ -54,8 +54,8 @@ func shipAPIProgram(prog Mutable[program.Program], repo execute.OpenRepoResult, 
 	if !hasConnector {
 		return errors.New(messages.ShipAPIConnectorRequired)
 	}
-	_, isAPIConnector := connector.(forgedomain.AuthVerifier)
-	if !isAPIConnector {
+	_, canMergeProposals := connector.(forgedomain.ProposalMerger)
+	if !canMergeProposals {
 		return errors.New(messages.ShipAPIConnectorUnsupported)
 	}
 	prog.Value.Add(&opcodes.ConnectorProposalMerge{
