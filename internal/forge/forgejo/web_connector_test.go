@@ -10,7 +10,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestAnonConnector(t *testing.T) {
+func TestWebConnector(t *testing.T) {
 	t.Parallel()
 
 	t.Run("DefaultProposalMessage", func(t *testing.T) {
@@ -23,7 +23,7 @@ func TestAnonConnector(t *testing.T) {
 				Title:  "my title",
 			}
 			want := "my title (#123)\n\nbody"
-			connector := forgejo.AnonConnector{}
+			connector := forgejo.WebConnector{}
 			have := connector.DefaultProposalMessage(give)
 			must.EqOp(t, want, have)
 		})
@@ -35,7 +35,7 @@ func TestAnonConnector(t *testing.T) {
 				Title:  "my title",
 			}
 			want := "my title (#123)"
-			connector := forgejo.AnonConnector{}
+			connector := forgejo.WebConnector{}
 			have := connector.DefaultProposalMessage(give)
 			must.EqOp(t, want, have)
 		})
@@ -43,7 +43,7 @@ func TestAnonConnector(t *testing.T) {
 
 	t.Run("NewProposalURL", func(t *testing.T) {
 		t.Parallel()
-		connector := forgejo.AnonConnector{
+		connector := forgejo.WebConnector{
 			Data: forgedomain.Data{
 				Hostname:     "codeberg.org",
 				Organization: "org",
@@ -62,7 +62,7 @@ func TestAnonConnector(t *testing.T) {
 
 	t.Run("RepositoryURL", func(t *testing.T) {
 		t.Parallel()
-		connector := forgejo.AnonConnector{
+		connector := forgejo.WebConnector{
 			Data: forgedomain.Data{
 				Hostname:     "codeberg.org",
 				Organization: "org",

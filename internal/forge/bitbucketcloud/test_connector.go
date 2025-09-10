@@ -9,11 +9,11 @@ import (
 )
 
 var (
-	bbclOverrideConnector OverrideConnector
-	_                     forgedomain.Connector = bbclOverrideConnector
+	testConnector TestConnector
+	_             forgedomain.Connector = testConnector
 )
 
-type OverrideConnector struct {
+type TestConnector struct {
 	WebConnector
 	log      print.Logger
 	override forgedomain.ProposalOverride
@@ -23,9 +23,9 @@ type OverrideConnector struct {
 // find proposals
 // ============================================================================
 
-var _ forgedomain.ProposalFinder = bbclOverrideConnector
+var _ forgedomain.ProposalFinder = testConnector
 
-func (self OverrideConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self TestConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	self.log.Ok()
 	if self.override == forgedomain.OverrideNoProposal {

@@ -8,6 +8,11 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
+// Detect indicates whether the current repository is hosted on a Forgejo server.
+func Detect(remoteURL giturl.Parts) bool {
+	return remoteURL.Host == "codeberg.org"
+}
+
 type NewConnectorArgs struct {
 	APIToken  Option[forgedomain.ForgejoToken]
 	Log       print.Logger
@@ -16,7 +21,7 @@ type NewConnectorArgs struct {
 
 // NewConnector provides a new connector instance.
 func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //nolint:ireturn
-	webConnector := AnonConnector{
+	webConnector := WebConnector{
 		Data: forgedomain.Data{
 			Hostname:     args.RemoteURL.Host,
 			Organization: args.RemoteURL.Org,
@@ -29,9 +34,9 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 	}
 	forgejoClient, err := forgejo.NewClient("https://"+args.RemoteURL.Host, forgejo.SetToken(args.APIToken.String()))
 	return AuthConnector{
-		APIToken:      args.APIToken,
-		AnonConnector: webConnector,
-		client:        forgejoClient,
-		log:           args.Log,
+		APIToken:     args.APIToken,
+		WebConnector: webConnector,
+		client:       forgejoClient,
+		log:          args.Log,
 	}, err
 }

@@ -11,7 +11,7 @@ import (
 	"github.com/git-town/git-town/v21/pkg/colors"
 )
 
-var _ forgedomain.ProposalMerger = forgejoAuthConnector
+var _ forgedomain.ProposalMerger = authConnector
 
 func (self AuthConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
 	if number <= 0 {

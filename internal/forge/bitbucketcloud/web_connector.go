@@ -10,8 +10,8 @@ import (
 )
 
 var (
-	bbclWebConnector WebConnector
-	_                forgedomain.Connector = bbclWebConnector
+	webConnector WebConnector
+	_            forgedomain.Connector = webConnector
 )
 
 // WebConnector provides connectivity to Bitbucket Cloud without authentication.

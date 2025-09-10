@@ -15,8 +15,8 @@ import (
 )
 
 var (
-	bbclAPIConnector APIConnector
-	_                forgedomain.Connector = bbclAPIConnector
+	apiConnector APIConnector
+	_            forgedomain.Connector = apiConnector
 )
 
 // APIConnector provides access to the Bitbucket Cloud API.
@@ -30,7 +30,7 @@ type APIConnector struct {
 // find proposals
 // ============================================================================
 
-var _ forgedomain.ProposalFinder = bbclAPIConnector
+var _ forgedomain.ProposalFinder = apiConnector
 
 func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
@@ -105,7 +105,7 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 // merge proposals
 // ============================================================================
 
-var _ forgedomain.ProposalMerger = bbclAPIConnector
+var _ forgedomain.ProposalMerger = apiConnector
 
 func (self APIConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
 	if number <= 0 {
@@ -130,7 +130,7 @@ func (self APIConnector) SquashMergeProposal(number int, message gitdomain.Commi
 // search proposals
 // ============================================================================
 
-var _ forgedomain.ProposalSearcher = bbclAPIConnector
+var _ forgedomain.ProposalSearcher = apiConnector
 
 func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
@@ -192,7 +192,7 @@ func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Optio
 // udpate proposal source
 // ============================================================================
 
-var _ forgedomain.ProposalSourceUpdater = bbclAPIConnector
+var _ forgedomain.ProposalSourceUpdater = apiConnector
 
 func (self APIConnector) UpdateProposalSource(proposalData forgedomain.ProposalInterface, source gitdomain.LocalBranchName) error {
 	data := proposalData.(forgedomain.BitbucketCloudProposalData)
@@ -220,7 +220,7 @@ func (self APIConnector) UpdateProposalSource(proposalData forgedomain.ProposalI
 // update proposals
 // ============================================================================
 
-var _ forgedomain.ProposalUpdater = bbclAPIConnector
+var _ forgedomain.ProposalUpdater = apiConnector
 
 func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, newBody string) error {
 	data := proposalData.(forgedomain.BitbucketCloudProposalData)
@@ -270,7 +270,7 @@ func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalI
 // verify authentication
 // ============================================================================
 
-var _ forgedomain.AuthVerifier = bbclAPIConnector
+var _ forgedomain.AuthVerifier = apiConnector
 
 func (self APIConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
 	user, err := self.client.Value.User.Profile()

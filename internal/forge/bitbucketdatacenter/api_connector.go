@@ -14,8 +14,8 @@ import (
 
 // type-check to ensure conformance to the Connector interface
 var (
-	bbdcAPIConnector APIConnector
-	_                forgedomain.Connector = bbdcAPIConnector
+	apiConnector APIConnector
+	_            forgedomain.Connector = apiConnector
 )
 
 // APIConnector provides access to the Bitbucket DataCenter API.
@@ -40,7 +40,7 @@ func (self APIConnector) apiBaseURL() string {
 // ============================================================================
 
 // type-check to enforce conformance to the ProposalFinder interface
-var _ forgedomain.ProposalFinder = bbdcAPIConnector
+var _ forgedomain.ProposalFinder = apiConnector
 
 func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
@@ -82,7 +82,7 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 // ============================================================================
 
 // ProposalSearcher implementation
-var _ forgedomain.ProposalSearcher = bbdcAPIConnector
+var _ forgedomain.ProposalSearcher = apiConnector
 
 func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)

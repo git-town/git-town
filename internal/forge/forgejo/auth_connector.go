@@ -9,14 +9,14 @@ import (
 
 // type-check to ensure conformance to the Connector interface
 var (
-	forgejoAuthConnector AuthConnector
-	_                    forgedomain.AuthVerifier = forgejoAuthConnector
-	_                    forgedomain.Connector    = forgejoAuthConnector
+	authConnector AuthConnector
+	_             forgedomain.AuthVerifier = authConnector
+	_             forgedomain.Connector    = authConnector
 )
 
 // AuthConnector provides access to the Forgejo API.
 type AuthConnector struct {
-	AnonConnector
+	WebConnector
 	APIToken Option[forgedomain.ForgejoToken]
 	client   *forgejo.Client
 	log      print.Logger

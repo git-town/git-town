@@ -11,8 +11,8 @@ import (
 
 // type-check to ensure conformance to the Connector interface
 var (
-	bbdcWebConnector WebConnector
-	_                forgedomain.Connector = bbdcWebConnector
+	webConnector WebConnector
+	_            forgedomain.Connector = webConnector
 )
 
 // WebConnector provides connectivity to Bitbucket DataCenter without authentication.
