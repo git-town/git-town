@@ -26,7 +26,7 @@ type NewConnectorArgs struct {
 // NewGiteaConfig provides Gitea configuration data if the current repo is hosted on Gitea,
 // otherwise nil.
 func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:ireturn
-	anonConnector := WebConnector{
+	webConnector := WebConnector{
 		Data: forgedomain.Data{
 			Hostname:     args.RemoteURL.Host,
 			Organization: args.RemoteURL.Org,
@@ -42,14 +42,14 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:iretur
 	}
 	apiToken, hasAPIToken := args.APIToken.Get()
 	if !hasAPIToken {
-		return anonConnector
+		return webConnector
 	}
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: apiToken.String()})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
 	giteaClient := gitea.NewClientWithHTTP("https://"+args.RemoteURL.Host, httpClient)
 	return AuthConnector{
 		APIToken:     args.APIToken,
-		WebConnector: anonConnector,
+		WebConnector: webConnector,
 		client:       giteaClient,
 		log:          args.Log,
 	}
