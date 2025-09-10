@@ -89,7 +89,13 @@ func TestGitLabAnonConnector(t *testing.T) {
 		for name, tt := range tests {
 			t.Run(name, func(t *testing.T) {
 				t.Parallel()
-				connector := gitlab.AnonConnector{}
+				connector := gitlab.AnonConnector{
+					Data: forgedomain.Data{
+						Hostname:     "gitlab.com",
+						Organization: "organization",
+						Repository:   "repo",
+					},
+				}
 				have := connector.NewProposalURL(forgedomain.CreateProposalArgs{
 					Branch:        tt.branch,
 					MainBranch:    "main",
