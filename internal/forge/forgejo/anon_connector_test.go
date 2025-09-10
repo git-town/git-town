@@ -56,7 +56,7 @@ func TestAnonConnector(t *testing.T) {
 			ProposalBody:  Some(gitdomain.ProposalBody("body")),
 			ProposalTitle: Some(gitdomain.ProposalTitle("title")),
 		})
-		must.EqOp(t, "https://codeberg.org/git-town/docs/compare/parent...feature", have)
+		must.EqOp(t, "https://codeberg.org/org/repo/compare/parent...feature", have)
 	})
 
 	t.Run("RepositoryURL", func(t *testing.T) {
