@@ -13,13 +13,6 @@ import (
 var _ forgedomain.ProposalFinder = authConnector
 
 func (self AuthConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
-	if len(forgedomain.ReadProposalOverride()) > 0 {
-		return self.findProposalViaOverride(branch, target)
-	}
-	return self.findProposalViaAPI(branch, target)
-}
-
-func (self AuthConnector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	openPullRequests, _, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, forgejo.ListPullRequestsOptions{
 		ListOptions: forgejo.ListOptions{
@@ -43,27 +36,6 @@ func (self AuthConnector) findProposalViaAPI(branch, target gitdomain.LocalBranc
 	default:
 		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(pullRequests), branch, target)
 	}
-}
-
-func (self AuthConnector) findProposalViaOverride(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
-	self.log.Start(messages.APIProposalLookupStart)
-	self.log.Ok()
-	proposalURLOverride := forgedomain.ReadProposalOverride()
-	if proposalURLOverride == forgedomain.OverrideNoProposal {
-		return None[forgedomain.Proposal](), nil
-	}
-	return Some(forgedomain.Proposal{
-		Data: forgedomain.ProposalData{
-			Body:         None[string](),
-			MergeWithAPI: true,
-			Number:       123,
-			Source:       branch,
-			Target:       target,
-			Title:        "title",
-			URL:          proposalURLOverride,
-		},
-		ForgeType: forgedomain.ForgeTypeForgejo,
-	}), nil
 }
 
 func FilterPullRequests(pullRequests []*forgejo.PullRequest, branch, target gitdomain.LocalBranchName) []*forgejo.PullRequest {

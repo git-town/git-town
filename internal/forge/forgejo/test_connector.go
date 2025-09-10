@@ -3,11 +3,14 @@ package forgejo
 import (
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/messages"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 var (
-	bbclTestConnector TestConnector
-	_                 forgedomain.Connector = bbclTestConnector
+	testConnector TestConnector
+	_             forgedomain.Connector = testConnector
 )
 
 type TestConnector struct {
@@ -19,3 +22,26 @@ type TestConnector struct {
 // ============================================================================
 // find proposals
 // ============================================================================
+
+// type-check to enforce conformance to the ProposalFinder interface
+var _ forgedomain.ProposalFinder = testConnector
+
+func (self TestConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+	self.log.Start(messages.APIProposalLookupStart)
+	self.log.Ok()
+	if self.override == forgedomain.OverrideNoProposal {
+		return None[forgedomain.Proposal](), nil
+	}
+	return Some(forgedomain.Proposal{
+		Data: forgedomain.ProposalData{
+			Body:         None[string](),
+			MergeWithAPI: true,
+			Number:       123,
+			Source:       branch,
+			Target:       target,
+			Title:        "title",
+			URL:          self.override.String(),
+		},
+		ForgeType: forgedomain.ForgeTypeForgejo,
+	}), nil
+}
