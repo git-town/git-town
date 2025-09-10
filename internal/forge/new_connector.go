@@ -29,31 +29,35 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 	switch forgeType {
 	case forgedomain.ForgeTypeBitbucket:
 		connector = bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
-			AppPassword: args.BitbucketAppPassword,
-			ForgeType:   args.ForgeType,
-			Log:         args.Log,
-			RemoteURL:   remoteURL,
-			UserName:    args.BitbucketUsername,
+			AppPassword:      args.BitbucketAppPassword,
+			ForgeType:        args.ForgeType,
+			Log:              args.Log,
+			ProposalOverride: proposalOverride,
+			RemoteURL:        remoteURL,
+			UserName:         args.BitbucketUsername,
 		})
 	case forgedomain.ForgeTypeBitbucketDatacenter:
 		connector = bitbucketdatacenter.NewConnector(bitbucketdatacenter.NewConnectorArgs{
-			AppPassword: args.BitbucketAppPassword,
-			ForgeType:   args.ForgeType,
-			Log:         args.Log,
-			RemoteURL:   remoteURL,
-			UserName:    args.BitbucketUsername,
+			AppPassword:      args.BitbucketAppPassword,
+			ForgeType:        args.ForgeType,
+			Log:              args.Log,
+			ProposalOverride: proposalOverride,
+			RemoteURL:        remoteURL,
+			UserName:         args.BitbucketUsername,
 		})
 	case forgedomain.ForgeTypeForgejo:
 		connector, err = forgejo.NewConnector(forgejo.NewConnectorArgs{
-			APIToken:  args.ForgejoToken,
-			Log:       args.Log,
-			RemoteURL: remoteURL,
+			APIToken:         args.ForgejoToken,
+			Log:              args.Log,
+			ProposalOverride: proposalOverride,
+			RemoteURL:        remoteURL,
 		})
 	case forgedomain.ForgeTypeGitea:
 		connector = gitea.NewConnector(gitea.NewConnectorArgs{
-			APIToken:  args.GiteaToken,
-			Log:       args.Log,
-			RemoteURL: remoteURL,
+			APIToken:         args.GiteaToken,
+			Log:              args.Log,
+			ProposalOverride: proposalOverride,
+			RemoteURL:        remoteURL,
 		})
 	case forgedomain.ForgeTypeGitHub:
 		if githubConnectorType, hasGitHubConnectorType := args.GitHubConnectorType.Get(); hasGitHubConnectorType {
