@@ -62,34 +62,6 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 }
 
 // ============================================================================
-// merge proposals
-// ============================================================================
-
-var _ forgedomain.ProposalMerger = apiConnector
-
-func (self APIConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
-	if number <= 0 {
-		return errors.New(messages.ProposalNoNumberGiven)
-	}
-	commitMessageParts := message.Parts()
-	self.log.Start(messages.ForgeForgejoMergingViaAPI, colors.BoldGreen().Styled(strconv.Itoa(number)))
-	_, _, err := self.client.MergePullRequest(self.Organization, self.Repository, int64(number), forgejo.MergePullRequestOption{
-		Style:   forgejo.MergeStyleSquash,
-		Title:   commitMessageParts.Subject,
-		Message: commitMessageParts.Text,
-	})
-	if err != nil {
-		self.log.Failed(err.Error())
-		return err
-	}
-	self.log.Ok()
-	self.log.Start(messages.APIProposalLookupStart)
-	_, _, err = self.client.GetPullRequest(self.Organization, self.Repository, int64(number))
-	self.log.Ok()
-	return err
-}
-
-// ============================================================================
 // search proposals
 // ============================================================================
 
@@ -120,6 +92,34 @@ func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Optio
 	default:
 		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(pullRequests), branch)
 	}
+}
+
+// ============================================================================
+// squash-merge proposals
+// ============================================================================
+
+var _ forgedomain.ProposalMerger = apiConnector
+
+func (self APIConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
+	if number <= 0 {
+		return errors.New(messages.ProposalNoNumberGiven)
+	}
+	commitMessageParts := message.Parts()
+	self.log.Start(messages.ForgeForgejoMergingViaAPI, colors.BoldGreen().Styled(strconv.Itoa(number)))
+	_, _, err := self.client.MergePullRequest(self.Organization, self.Repository, int64(number), forgejo.MergePullRequestOption{
+		Style:   forgejo.MergeStyleSquash,
+		Title:   commitMessageParts.Subject,
+		Message: commitMessageParts.Text,
+	})
+	if err != nil {
+		self.log.Failed(err.Error())
+		return err
+	}
+	self.log.Ok()
+	self.log.Start(messages.APIProposalLookupStart)
+	_, _, err = self.client.GetPullRequest(self.Organization, self.Repository, int64(number))
+	self.log.Ok()
+	return err
 }
 
 // ============================================================================
@@ -200,6 +200,16 @@ func FilterPullRequests(pullRequests []*forgejo.PullRequest, branch, target gitd
 	return result
 }
 
+func filterPullRequests2(pullRequests []*forgejo.PullRequest, branch gitdomain.LocalBranchName) []*forgejo.PullRequest {
+	result := []*forgejo.PullRequest{}
+	for _, pullRequest := range pullRequests {
+		if pullRequest.Head.Name == branch.String() {
+			result = append(result, pullRequest)
+		}
+	}
+	return result
+}
+
 func parsePullRequest(pullRequest *forgejo.PullRequest) forgedomain.ProposalData {
 	return forgedomain.ProposalData{
 		MergeWithAPI: pullRequest.Mergeable,
@@ -210,14 +220,4 @@ func parsePullRequest(pullRequest *forgejo.PullRequest) forgedomain.ProposalData
 		Body:         NewOption(pullRequest.Body),
 		URL:          pullRequest.HTMLURL,
 	}
-}
-
-func filterPullRequests2(pullRequests []*forgejo.PullRequest, branch gitdomain.LocalBranchName) []*forgejo.PullRequest {
-	result := []*forgejo.PullRequest{}
-	for _, pullRequest := range pullRequests {
-		if pullRequest.Head.Name == branch.String() {
-			result = append(result, pullRequest)
-		}
-	}
-	return result
 }

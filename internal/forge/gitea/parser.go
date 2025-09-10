@@ -17,6 +17,16 @@ func FilterPullRequests(pullRequests []*gitea.PullRequest, branch, target gitdom
 	return result
 }
 
+func FilterPullRequests2(pullRequests []*gitea.PullRequest, branch gitdomain.LocalBranchName) []*gitea.PullRequest {
+	result := []*gitea.PullRequest{}
+	for _, pullRequest := range pullRequests {
+		if pullRequest.Head.Name == branch.String() {
+			result = append(result, pullRequest)
+		}
+	}
+	return result
+}
+
 func parsePullRequest(pullRequest *gitea.PullRequest) forgedomain.ProposalData {
 	return forgedomain.ProposalData{
 		MergeWithAPI: pullRequest.Mergeable,
@@ -27,14 +37,4 @@ func parsePullRequest(pullRequest *gitea.PullRequest) forgedomain.ProposalData {
 		Body:         NewOption(pullRequest.Body),
 		URL:          pullRequest.HTMLURL,
 	}
-}
-
-func FilterPullRequests2(pullRequests []*gitea.PullRequest, branch gitdomain.LocalBranchName) []*gitea.PullRequest {
-	result := []*gitea.PullRequest{}
-	for _, pullRequest := range pullRequests {
-		if pullRequest.Head.Name == branch.String() {
-			result = append(result, pullRequest)
-		}
-	}
-	return result
 }

@@ -26,15 +26,6 @@ type APIConnector struct {
 	username string
 }
 
-func (self APIConnector) apiBaseURL() string {
-	return fmt.Sprintf(
-		"https://%s/rest/api/latest/projects/%s/repos/%s/pull-requests",
-		self.Hostname,
-		self.Organization,
-		self.Repository,
-	)
-}
-
 // ============================================================================
 // find proposals
 // ============================================================================
@@ -115,4 +106,13 @@ func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Optio
 	proposal := parsePullRequest(*needle, self.RepositoryURL())
 	self.log.Success(fmt.Sprintf("#%d", proposal.Number))
 	return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeBitbucketDatacenter}), nil
+}
+
+func (self APIConnector) apiBaseURL() string {
+	return fmt.Sprintf(
+		"https://%s/rest/api/latest/projects/%s/repos/%s/pull-requests",
+		self.Hostname,
+		self.Organization,
+		self.Repository,
+	)
 }

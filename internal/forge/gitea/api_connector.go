@@ -62,34 +62,6 @@ func (self AuthConnector) FindProposal(branch, target gitdomain.LocalBranchName)
 }
 
 // ============================================================================
-// merge proposals
-// ============================================================================
-
-var _ forgedomain.ProposalMerger = apiConnector
-
-func (self AuthConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
-	if number <= 0 {
-		return errors.New(messages.ProposalNoNumberGiven)
-	}
-	commitMessageParts := message.Parts()
-	self.log.Start(messages.ForgeGitHubMergingViaAPI, colors.BoldGreen().Styled(strconv.Itoa(number)))
-	_, _, err := self.client.MergePullRequest(self.Organization, self.Repository, int64(number), gitea.MergePullRequestOption{
-		Style:   gitea.MergeStyleSquash,
-		Title:   commitMessageParts.Subject,
-		Message: commitMessageParts.Text,
-	})
-	if err != nil {
-		self.log.Failed(err.Error())
-		return err
-	}
-	self.log.Ok()
-	self.log.Start(messages.APIProposalLookupStart)
-	_, _, err = self.client.GetPullRequest(self.Organization, self.Repository, int64(number))
-	self.log.Ok()
-	return err
-}
-
-// ============================================================================
 // search proposals
 // ============================================================================
 
@@ -120,6 +92,34 @@ func (self AuthConnector) SearchProposal(branch gitdomain.LocalBranchName) (Opti
 	default:
 		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(pullRequests), branch)
 	}
+}
+
+// ============================================================================
+// squash-merge proposals
+// ============================================================================
+
+var _ forgedomain.ProposalMerger = apiConnector
+
+func (self AuthConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
+	if number <= 0 {
+		return errors.New(messages.ProposalNoNumberGiven)
+	}
+	commitMessageParts := message.Parts()
+	self.log.Start(messages.ForgeGitHubMergingViaAPI, colors.BoldGreen().Styled(strconv.Itoa(number)))
+	_, _, err := self.client.MergePullRequest(self.Organization, self.Repository, int64(number), gitea.MergePullRequestOption{
+		Style:   gitea.MergeStyleSquash,
+		Title:   commitMessageParts.Subject,
+		Message: commitMessageParts.Text,
+	})
+	if err != nil {
+		self.log.Failed(err.Error())
+		return err
+	}
+	self.log.Ok()
+	self.log.Start(messages.APIProposalLookupStart)
+	_, _, err = self.client.GetPullRequest(self.Organization, self.Repository, int64(number))
+	self.log.Ok()
+	return err
 }
 
 // ============================================================================

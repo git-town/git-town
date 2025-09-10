@@ -59,28 +59,6 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 }
 
 // ============================================================================
-// merge proposals
-// ============================================================================
-
-var _ forgedomain.ProposalMerger = githubAuthConnector
-
-func (self APIConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
-	if number <= 0 {
-		return errors.New(messages.ProposalNoNumberGiven)
-	}
-	self.log.Start(messages.ForgeGitHubMergingViaAPI, colors.BoldGreen().Styled("#"+strconv.Itoa(number)))
-	commitMessageParts := message.Parts()
-	_, _, err := self.client.Value.PullRequests.Merge(context.Background(), self.Organization, self.Repository, number, commitMessageParts.Text, &github.PullRequestOptions{
-		MergeMethod: "squash",
-		CommitTitle: commitMessageParts.Subject,
-	})
-	if err != nil {
-		self.log.Ok()
-	}
-	return err
-}
-
-// ============================================================================
 // search proposals
 // ============================================================================
 
@@ -106,6 +84,28 @@ func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Optio
 	proposal := parsePullRequest(pullRequests[0])
 	self.log.Success(proposal.Target.String())
 	return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeGitHub}), nil
+}
+
+// ============================================================================
+// squash-merge proposals
+// ============================================================================
+
+var _ forgedomain.ProposalMerger = githubAuthConnector
+
+func (self APIConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
+	if number <= 0 {
+		return errors.New(messages.ProposalNoNumberGiven)
+	}
+	self.log.Start(messages.ForgeGitHubMergingViaAPI, colors.BoldGreen().Styled("#"+strconv.Itoa(number)))
+	commitMessageParts := message.Parts()
+	_, _, err := self.client.Value.PullRequests.Merge(context.Background(), self.Organization, self.Repository, number, commitMessageParts.Text, &github.PullRequestOptions{
+		MergeMethod: "squash",
+		CommitTitle: commitMessageParts.Subject,
+	})
+	if err != nil {
+		self.log.Ok()
+	}
+	return err
 }
 
 // ============================================================================

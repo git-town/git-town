@@ -59,30 +59,6 @@ func (self AuthConnector) FindProposal(branch, target gitdomain.LocalBranchName)
 }
 
 // ============================================================================
-// merge proposals
-// ============================================================================
-
-func (self AuthConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
-	if number <= 0 {
-		return errors.New(messages.ProposalNoNumberGiven)
-	}
-	self.log.Start(messages.ForgeGitLabMergingViaAPI, number)
-	// the GitLab API wants the full commit message in the body
-	_, _, err := self.client.MergeRequests.AcceptMergeRequest(self.projectPath(), number, &gitlab.AcceptMergeRequestOptions{
-		SquashCommitMessage: gitlab.Ptr(message.String()),
-		Squash:              gitlab.Ptr(true),
-		// the branch will be deleted by Git Town
-		ShouldRemoveSourceBranch: gitlab.Ptr(false),
-	})
-	if err != nil {
-		self.log.Failed(err.Error())
-		return err
-	}
-	self.log.Ok()
-	return nil
-}
-
-// ============================================================================
 // search proposals
 // ============================================================================
 
@@ -108,6 +84,30 @@ func (self AuthConnector) SearchProposal(branch gitdomain.LocalBranchName) (Opti
 	default:
 		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(mergeRequests), branch)
 	}
+}
+
+// ============================================================================
+// merge proposals
+// ============================================================================
+
+func (self AuthConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
+	if number <= 0 {
+		return errors.New(messages.ProposalNoNumberGiven)
+	}
+	self.log.Start(messages.ForgeGitLabMergingViaAPI, number)
+	// the GitLab API wants the full commit message in the body
+	_, _, err := self.client.MergeRequests.AcceptMergeRequest(self.projectPath(), number, &gitlab.AcceptMergeRequestOptions{
+		SquashCommitMessage: gitlab.Ptr(message.String()),
+		Squash:              gitlab.Ptr(true),
+		// the branch will be deleted by Git Town
+		ShouldRemoveSourceBranch: gitlab.Ptr(false),
+	})
+	if err != nil {
+		self.log.Failed(err.Error())
+		return err
+	}
+	self.log.Ok()
+	return nil
 }
 
 // ============================================================================

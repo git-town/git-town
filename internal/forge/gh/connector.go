@@ -54,7 +54,7 @@ func (self Connector) OpenRepository(runner subshelldomain.Runner) error {
 // find proposals
 // ============================================================================
 
-var _ forgedomain.ProposalFinder = ghConnector
+var _ forgedomain.ProposalFinder = ghConnector // type-check
 
 func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	out, err := self.Backend.Query("gh", "pr", "list", "--head="+branch.String(), "--base="+target.String(), "--json=number,title,body,mergeable,headRefName,baseRefName,url")
@@ -65,10 +65,10 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 }
 
 // ============================================================================
-// merge proposals
+// squash-merge proposals
 // ============================================================================
 
-var _ forgedomain.ProposalMerger = ghConnector
+var _ forgedomain.ProposalMerger = ghConnector // type-check
 
 func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
 	return self.Frontend.Run("gh", "pr", "merge", "--squash", "--body="+message.String(), strconv.Itoa(number))
@@ -78,7 +78,7 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 // search proposals
 // ============================================================================
 
-var _ forgedomain.ProposalSearcher = ghConnector
+var _ forgedomain.ProposalSearcher = ghConnector // type-check
 
 func (self Connector) SearchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	out, err := self.Backend.Query("gh", "--head="+branch.String(), "--json=number,title,body,mergeable,headRefName,baseRefName,url")
@@ -92,17 +92,17 @@ func (self Connector) SearchProposal(branch gitdomain.LocalBranchName) (Option[f
 // update proposal body
 // ============================================================================
 
-var _ forgedomain.ProposalBodyUpdater = ghConnector
+var _ forgedomain.ProposalBodyUpdater = ghConnector // type-check
 
 func (self Connector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody string) error {
 	return self.Frontend.Run("gh", "pr", "edit", strconv.Itoa(proposalData.Data().Number), "--body="+updatedBody)
 }
 
 // ============================================================================
-// update proposal body
+// update proposal target
 // ============================================================================
 
-var _ forgedomain.ProposalTargetUpdater = ghConnector
+var _ forgedomain.ProposalTargetUpdater = ghConnector // type-check
 
 func (self Connector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	return self.Frontend.Run("gh", "pr", "edit", strconv.Itoa(proposalData.Data().Number), "--base="+target.String())
