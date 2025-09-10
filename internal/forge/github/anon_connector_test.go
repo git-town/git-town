@@ -3,11 +3,9 @@ package github_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/forge/github"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/git/giturl"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
@@ -19,7 +17,7 @@ func TestConnector(t *testing.T) {
 		t.Parallel()
 		t.Run("without body", func(t *testing.T) {
 			t.Parallel()
-			connector := github.Connector{}
+			connector := github.AnonConnector{}
 			give := forgedomain.ProposalData{
 				Number: 123,
 				Title:  "my title",
@@ -30,7 +28,7 @@ func TestConnector(t *testing.T) {
 		})
 		t.Run("with body", func(t *testing.T) {
 			t.Parallel()
-			connector := github.Connector{}
+			connector := github.AnonConnector{}
 			give := forgedomain.ProposalData{
 				Number: 123,
 				Title:  "my title",
@@ -97,13 +95,12 @@ func TestConnector(t *testing.T) {
 		for name, tt := range tests {
 			t.Run(name, func(t *testing.T) {
 				t.Parallel()
-				connector := github.Connector{
+				connector := github.AnonConnector{
 					Data: forgedomain.Data{
 						Hostname:     "github.com",
 						Organization: "organization",
 						Repository:   "repo",
 					},
-					APIToken: None[forgedomain.GitHubToken](),
 				}
 				have := connector.NewProposalURL(forgedomain.CreateProposalArgs{
 					Branch:        tt.branch,
@@ -119,7 +116,7 @@ func TestConnector(t *testing.T) {
 
 	t.Run("RepositoryURL", func(t *testing.T) {
 		t.Parallel()
-		connector := github.Connector{
+		connector := github.AnonConnector{
 			Data: forgedomain.Data{
 				Hostname:     "github.com",
 				Organization: "organization",
@@ -129,41 +126,5 @@ func TestConnector(t *testing.T) {
 		have := connector.RepositoryURL()
 		want := "https://github.com/organization/repo"
 		must.EqOp(t, want, have)
-	})
-}
-
-func TestNewConnector(t *testing.T) {
-	t.Parallel()
-
-	t.Run("GitHub SaaS", func(t *testing.T) {
-		t.Parallel()
-		have, err := github.NewConnector(github.NewConnectorArgs{
-			APIToken:  None[forgedomain.GitHubToken](),
-			Log:       print.Logger{},
-			RemoteURL: giturl.Parse("git@github.com:git-town/docs.git").GetOrPanic(),
-		})
-		must.NoError(t, err)
-		wantConfig := forgedomain.Data{
-			Hostname:     "github.com",
-			Organization: "git-town",
-			Repository:   "docs",
-		}
-		must.EqOp(t, wantConfig, have.Data)
-	})
-
-	t.Run("custom URL", func(t *testing.T) {
-		t.Parallel()
-		have, err := github.NewConnector(github.NewConnectorArgs{
-			APIToken:  None[forgedomain.GitHubToken](),
-			Log:       print.Logger{},
-			RemoteURL: giturl.Parse("git@custom-url.com:git-town/docs.git").GetOrPanic(),
-		})
-		must.NoError(t, err)
-		wantConfig := forgedomain.Data{
-			Hostname:     "custom-url.com",
-			Organization: "git-town",
-			Repository:   "docs",
-		}
-		must.EqOp(t, wantConfig, have.Data)
 	})
 }
