@@ -21,12 +21,12 @@ var (
 type AuthConnector struct {
 	AnonConnector
 	APIToken Option[forgedomain.GitHubToken]
-	client   *github.Client
+	client   Mutable[github.Client]
 	log      print.Logger
 }
 
 func (self AuthConnector) VerifyConnection() forgedomain.VerifyConnectionResult {
-	user, _, err := self.client.Users.Get(context.Background(), "")
+	user, _, err := self.client.Value.Users.Get(context.Background(), "")
 	if err != nil {
 		return forgedomain.VerifyConnectionResult{
 			AuthenticatedUser:   None[string](),
@@ -34,7 +34,7 @@ func (self AuthConnector) VerifyConnection() forgedomain.VerifyConnectionResult 
 			AuthorizationError:  nil,
 		}
 	}
-	_, _, err = self.client.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
+	_, _, err = self.client.Value.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
 		ListOptions: github.ListOptions{
 			PerPage: 1,
 		},

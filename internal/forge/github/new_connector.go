@@ -47,7 +47,7 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 	return AuthConnector{
 		APIToken:      args.APIToken,
 		AnonConnector: anonConnector,
-		client:        githubClient,
+		client:        NewMutable(githubClient),
 		log:           args.Log,
 	}, nil
 }

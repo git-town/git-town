@@ -17,7 +17,7 @@ func (self AuthConnector) SquashMergeProposal(number int, message gitdomain.Comm
 	}
 	self.log.Start(messages.ForgeGitHubMergingViaAPI, colors.BoldGreen().Styled("#"+strconv.Itoa(number)))
 	commitMessageParts := message.Parts()
-	_, _, err := self.client.PullRequests.Merge(context.Background(), self.Organization, self.Repository, number, commitMessageParts.Text, &github.PullRequestOptions{
+	_, _, err := self.client.Value.PullRequests.Merge(context.Background(), self.Organization, self.Repository, number, commitMessageParts.Text, &github.PullRequestOptions{
 		MergeMethod: "squash",
 		CommitTitle: commitMessageParts.Subject,
 	})

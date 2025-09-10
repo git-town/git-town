@@ -15,7 +15,7 @@ import (
 func (self AuthConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody string) error {
 	data := proposalData.Data()
 	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)))
-	_, _, err := self.client.PullRequests.Edit(context.Background(), self.Organization, self.Repository, data.Number, &github.PullRequest{
+	_, _, err := self.client.Value.PullRequests.Edit(context.Background(), self.Organization, self.Repository, data.Number, &github.PullRequest{
 		Body: Ptr(updatedBody),
 	})
 	if err != nil {
@@ -30,7 +30,7 @@ func (self AuthConnector) UpdateProposalTarget(proposalData forgedomain.Proposal
 	data := proposalData.Data()
 	targetName := target.String()
 	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)), colors.BoldCyan().Styled(targetName))
-	_, _, err := self.client.PullRequests.Edit(context.Background(), self.Organization, self.Repository, data.Number, &github.PullRequest{
+	_, _, err := self.client.Value.PullRequests.Edit(context.Background(), self.Organization, self.Repository, data.Number, &github.PullRequest{
 		Base: &github.PullRequestBranch{
 			Ref: &(targetName),
 		},
