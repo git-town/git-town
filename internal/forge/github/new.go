@@ -16,9 +16,10 @@ import (
 )
 
 type NewConnectorArgs struct {
-	APIToken  Option[forgedomain.GitHubToken]
-	Log       print.Logger
-	RemoteURL giturl.Parts
+	APIToken         Option[forgedomain.GitHubToken]
+	Log              print.Logger
+	ProposalOverride Option[forgedomain.ProposalOverride]
+	RemoteURL        giturl.Parts
 }
 
 func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //nolint: ireturn
@@ -28,6 +29,13 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 			Organization: args.RemoteURL.Org,
 			Repository:   args.RemoteURL.Repo,
 		},
+	}
+	if proposalURLOverride, hasProposalOverride := args.ProposalOverride.Get(); hasProposalOverride {
+		return OverrideConnector{
+			AnonConnector: anonConnector,
+			log:           args.Log,
+			override:      proposalURLOverride,
+		}, nil
 	}
 	apiToken, hasAPIToken := args.APIToken.Get()
 	if !hasAPIToken {
