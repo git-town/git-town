@@ -21,6 +21,10 @@ type Connector struct {
 	Frontend subshelldomain.Runner
 }
 
+func (self Connector) BrowseRepository(runner subshelldomain.Runner) error {
+	return runner.Run("glab", "repo", "view", "--web")
+}
+
 func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error {
 	args := []string{"mr", "create", "--source-branch=" + data.Branch.String(), "--target-branch=" + data.ParentBranch.String()}
 	title, hasTitle := data.ProposalTitle.Get()
@@ -44,10 +48,6 @@ func (self Connector) DefaultProposalMessage(data forgedomain.ProposalData) stri
 
 func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
 	return Some(self.findProposal)
-}
-
-func (self Connector) OpenRepository(runner subshelldomain.Runner) error {
-	return runner.Run("glab", "repo", "view", "--web")
 }
 
 func (self Connector) SearchProposalFn() Option[func(gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {

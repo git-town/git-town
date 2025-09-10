@@ -30,6 +30,11 @@ type Connector struct {
 	log      print.Logger
 }
 
+func (self Connector) BrowseRepository(runner subshelldomain.Runner) error {
+	browser.Open(self.RepositoryURL(), runner)
+	return nil
+}
+
 func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error {
 	browser.Open(self.NewProposalURL(data), data.FrontendRunner)
 	return nil
@@ -62,11 +67,6 @@ func (self Connector) NewProposalURL(data forgedomain.CreateProposalArgs) string
 		result += "&body=" + url.QueryEscape(body.String())
 	}
 	return result
-}
-
-func (self Connector) OpenRepository(runner subshelldomain.Runner) error {
-	browser.Open(self.RepositoryURL(), runner)
-	return nil
 }
 
 func (self Connector) RepositoryURL() string {
