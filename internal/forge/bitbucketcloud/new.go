@@ -8,6 +8,11 @@ import (
 	"github.com/ktrysmt/go-bitbucket"
 )
 
+// Detect indicates whether the current repository is hosted on a Bitbucket server.
+func Detect(remoteURL giturl.Parts) bool {
+	return remoteURL.Host == "bitbucket.org"
+}
+
 type NewConnectorArgs struct {
 	AppPassword Option[forgedomain.BitbucketAppPassword]
 	ForgeType   Option[forgedomain.ForgeType]
@@ -18,7 +23,7 @@ type NewConnectorArgs struct {
 
 // NewConnector provides the correct connector for talking to Bitbucket Cloud.
 func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint: ireturn
-	webConnector := AnonConnector{
+	webConnector := WebConnector{
 		Data: forgedomain.Data{
 			Hostname:     args.RemoteURL.Host,
 			Organization: args.RemoteURL.Org,
@@ -29,10 +34,10 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint: iretu
 	appPassword, hasAppPassword := args.AppPassword.Get()
 	hasAuth := hasUserName && hasAppPassword
 	if hasAuth {
-		return AuthConnector{
-			AnonConnector: webConnector,
-			client:        NewMutable(bitbucket.NewBasicAuth(userName.String(), appPassword.String())),
-			log:           args.Log,
+		return APIConnector{
+			WebConnector: webConnector,
+			client:       NewMutable(bitbucket.NewBasicAuth(userName.String(), appPassword.String())),
+			log:          args.Log,
 		}
 	}
 	return webConnector

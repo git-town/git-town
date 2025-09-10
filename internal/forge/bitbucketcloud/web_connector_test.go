@@ -10,12 +10,12 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestAnonConnector(t *testing.T) {
+func TestWebConnector(t *testing.T) {
 	t.Parallel()
 
 	t.Run("NewProposalURL", func(t *testing.T) {
 		t.Parallel()
-		connector := bitbucketcloud.AnonConnector{
+		connector := bitbucketcloud.WebConnector{
 			Data: forgedomain.Data{
 				Hostname:     "bitbucket.org",
 				Organization: "org",
