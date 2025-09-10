@@ -65,16 +65,6 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 }
 
 // ============================================================================
-// squash-merge proposals
-// ============================================================================
-
-var _ forgedomain.ProposalMerger = ghConnector // type-check
-
-func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
-	return self.Frontend.Run("gh", "pr", "merge", "--squash", "--body="+message.String(), strconv.Itoa(number))
-}
-
-// ============================================================================
 // search proposals
 // ============================================================================
 
@@ -86,6 +76,16 @@ func (self Connector) SearchProposal(branch gitdomain.LocalBranchName) (Option[f
 		return None[forgedomain.Proposal](), err
 	}
 	return ParseJSONOutput(out, branch)
+}
+
+// ============================================================================
+// squash-merge proposals
+// ============================================================================
+
+var _ forgedomain.ProposalMerger = ghConnector // type-check
+
+func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
+	return self.Frontend.Run("gh", "pr", "merge", "--squash", "--body="+message.String(), strconv.Itoa(number))
 }
 
 // ============================================================================

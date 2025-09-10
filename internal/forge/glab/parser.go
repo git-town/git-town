@@ -13,6 +13,18 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
+func ParseJSONOutput(output string, branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+	var parsed []jsonData
+	err := json.Unmarshal([]byte(output), &parsed)
+	if err != nil || len(parsed) == 0 {
+		return None[forgedomain.Proposal](), err
+	}
+	if len(parsed) > 1 {
+		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(parsed), branch)
+	}
+	return Some(createProposal(parsed[0])), nil
+}
+
 func ParsePermissionsOutput(output string) forgedomain.VerifyCredentialsResult {
 	result := forgedomain.VerifyCredentialsResult{
 		AuthenticatedUser:   None[string](),
@@ -32,18 +44,6 @@ func ParsePermissionsOutput(output string) forgedomain.VerifyCredentialsResult {
 		result.AuthenticationError = errors.New(messages.AuthenticationMissing)
 	}
 	return result
-}
-
-func ParseJSONOutput(output string, branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
-	var parsed []jsonData
-	err := json.Unmarshal([]byte(output), &parsed)
-	if err != nil || len(parsed) == 0 {
-		return None[forgedomain.Proposal](), err
-	}
-	if len(parsed) > 1 {
-		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(parsed), branch)
-	}
-	return Some(createProposal(parsed[0])), nil
 }
 
 type jsonData struct {
