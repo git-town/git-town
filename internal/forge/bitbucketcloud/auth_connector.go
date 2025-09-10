@@ -13,7 +13,7 @@ var (
 	_                 forgedomain.Connector    = bbclAuthConnector
 )
 
-// AuthConnector implements the connector functionality if API credentials are available.
+// AuthConnector provides connectivity to the Bitbucket Cloud API with authentication.
 type AuthConnector struct {
 	AnonConnector
 	client Mutable[bitbucket.Client]
