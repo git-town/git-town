@@ -20,7 +20,7 @@ var (
 type AuthConnector struct {
 	AnonConnector
 	client   *gitlab.Client
-	APIToken Option[forgedomain.GitLabToken]
+	APIToken forgedomain.GitLabToken
 	log      print.Logger
 }
 

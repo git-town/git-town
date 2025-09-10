@@ -32,6 +32,7 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) {
 	}
 	return AuthConnector{
 		AnonConnector: anonConnector,
+		APIToken:      apiToken,
 		client:        client,
 		log:           args.Log,
 	}, nil

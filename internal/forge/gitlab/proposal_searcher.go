@@ -10,14 +10,7 @@ import (
 	gitlab "gitlab.com/gitlab-org/api/client-go"
 )
 
-func (self AuthConnector) SearchProposalFn() Option[func(gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
-	if self.APIToken.IsNone() {
-		return None[func(gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)]()
-	}
-	return Some(self.searchProposal)
-}
-
-func (self AuthConnector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self AuthConnector) SearchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
 	opts := &gitlab.ListProjectMergeRequestsOptions{
 		State:        gitlab.Ptr("opened"),
