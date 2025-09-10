@@ -28,7 +28,7 @@ type NewConnectorArgs struct {
 }
 
 func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //nolint: ireturn
-	anonConnector := AnonConnector{
+	anonConnector := WebConnector{
 		Data: forgedomain.Data{
 			Hostname:     args.RemoteURL.Host,
 			Organization: args.RemoteURL.Org,
@@ -37,9 +37,9 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 	}
 	if proposalURLOverride, hasProposalOverride := args.ProposalOverride.Get(); hasProposalOverride {
 		return OverrideConnector{
-			AnonConnector: anonConnector,
-			log:           args.Log,
-			override:      proposalURLOverride,
+			WebConnector: anonConnector,
+			log:          args.Log,
+			override:     proposalURLOverride,
 		}, nil
 	}
 	apiToken, hasAPIToken := args.APIToken.Get()
@@ -58,10 +58,10 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 		}
 	}
 	return APIConnector{
-		APIToken:      args.APIToken,
-		AnonConnector: anonConnector,
-		client:        NewMutable(githubClient),
-		log:           args.Log,
+		APIToken:     args.APIToken,
+		WebConnector: anonConnector,
+		client:       NewMutable(githubClient),
+		log:          args.Log,
 	}, nil
 }
 

@@ -10,14 +10,14 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestConnector(t *testing.T) {
+func TestWebConnector(t *testing.T) {
 	t.Parallel()
 
 	t.Run("DefaultProposalMessage", func(t *testing.T) {
 		t.Parallel()
 		t.Run("without body", func(t *testing.T) {
 			t.Parallel()
-			connector := github.AnonConnector{}
+			connector := github.WebConnector{}
 			give := forgedomain.ProposalData{
 				Number: 123,
 				Title:  "my title",
@@ -28,7 +28,7 @@ func TestConnector(t *testing.T) {
 		})
 		t.Run("with body", func(t *testing.T) {
 			t.Parallel()
-			connector := github.AnonConnector{}
+			connector := github.WebConnector{}
 			give := forgedomain.ProposalData{
 				Number: 123,
 				Title:  "my title",
@@ -95,7 +95,7 @@ func TestConnector(t *testing.T) {
 		for name, tt := range tests {
 			t.Run(name, func(t *testing.T) {
 				t.Parallel()
-				connector := github.AnonConnector{
+				connector := github.WebConnector{
 					Data: forgedomain.Data{
 						Hostname:     "github.com",
 						Organization: "organization",
@@ -116,7 +116,7 @@ func TestConnector(t *testing.T) {
 
 	t.Run("RepositoryURL", func(t *testing.T) {
 		t.Parallel()
-		connector := github.AnonConnector{
+		connector := github.WebConnector{
 			Data: forgedomain.Data{
 				Hostname:     "github.com",
 				Organization: "organization",

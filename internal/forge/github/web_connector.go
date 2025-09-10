@@ -10,25 +10,25 @@ import (
 )
 
 var (
-	githubAnonConnector AnonConnector
+	githubAnonConnector WebConnector
 	_                   forgedomain.Connector = githubAnonConnector
 )
 
-// AnonConnector provides connectivity to GitHub without authentication.
-type AnonConnector struct {
+// WebConnector provides connectivity to GitHub through the GitHub website.
+type WebConnector struct {
 	forgedomain.Data
 }
 
-func (self AnonConnector) CreateProposal(data forgedomain.CreateProposalArgs) error {
+func (self WebConnector) CreateProposal(data forgedomain.CreateProposalArgs) error {
 	browser.Open(self.NewProposalURL(data), data.FrontendRunner)
 	return nil
 }
 
-func (self AnonConnector) DefaultProposalMessage(data forgedomain.ProposalData) string {
+func (self WebConnector) DefaultProposalMessage(data forgedomain.ProposalData) string {
 	return DefaultProposalMessage(data)
 }
 
-func (self AnonConnector) NewProposalURL(data forgedomain.CreateProposalArgs) string {
+func (self WebConnector) NewProposalURL(data forgedomain.CreateProposalArgs) string {
 	toCompare := data.Branch.String()
 	if data.ParentBranch != data.MainBranch {
 		toCompare = data.ParentBranch.String() + "..." + data.Branch.String()
@@ -43,12 +43,12 @@ func (self AnonConnector) NewProposalURL(data forgedomain.CreateProposalArgs) st
 	return result
 }
 
-func (self AnonConnector) OpenRepository(runner subshelldomain.Runner) error {
+func (self WebConnector) OpenRepository(runner subshelldomain.Runner) error {
 	browser.Open(self.RepositoryURL(), runner)
 	return nil
 }
 
-func (self AnonConnector) RepositoryURL() string {
+func (self WebConnector) RepositoryURL() string {
 	return RepositoryURL(self.HostnameWithStandardPort(), self.Organization, self.Repository)
 }
 

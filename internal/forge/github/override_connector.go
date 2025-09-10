@@ -16,7 +16,7 @@ var (
 
 // OverrideConnector simulates interacting with the GitHub API in tests.
 type OverrideConnector struct {
-	AnonConnector
+	WebConnector
 	log      print.Logger
 	override forgedomain.ProposalOverride
 }
