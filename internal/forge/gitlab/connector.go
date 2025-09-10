@@ -25,6 +25,11 @@ type Connector struct {
 	log print.Logger
 }
 
+func (self Connector) BrowseRepository(runner subshelldomain.Runner) error {
+	browser.Open(self.RepositoryURL(), runner)
+	return nil
+}
+
 func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error {
 	url := self.Data.NewProposalURL(data)
 	browser.Open(url, data.FrontendRunner)
@@ -39,11 +44,6 @@ func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.Loca
 		return Some(self.findProposalViaAPI)
 	}
 	return None[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)]()
-}
-
-func (self Connector) BrowseRepository(runner subshelldomain.Runner) error {
-	browser.Open(self.RepositoryURL(), runner)
-	return nil
 }
 
 func (self Connector) SearchProposalFn() Option[func(gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {

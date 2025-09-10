@@ -16,6 +16,10 @@ import (
 
 type mockConnectorProposalStackLineageBuilder struct{}
 
+func (self *mockConnectorProposalStackLineageBuilder) BrowseRepository(_ subshelldomain.Runner) error {
+	return nil
+}
+
 func (self *mockConnectorProposalStackLineageBuilder) CreateProposal(_ forgedomain.CreateProposalArgs) error {
 	return nil
 }
@@ -43,10 +47,6 @@ func (self *mockConnectorProposalStackLineageBuilder) FindProposalFn() Option[fu
 			ForgeType: forgedomain.ForgeTypeForgejo,
 		}), nil
 	})
-}
-
-func (self *mockConnectorProposalStackLineageBuilder) BrowseRepository(_ subshelldomain.Runner) error {
-	return nil
 }
 
 func (self *mockConnectorProposalStackLineageBuilder) SearchProposalFn() Option[func(_ gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
