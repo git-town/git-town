@@ -19,8 +19,8 @@ var (
 // via the GitLab API.
 type AuthConnector struct {
 	AnonConnector
-	client   *gitlab.Client
 	APIToken forgedomain.GitLabToken
+	client   *gitlab.Client
 	log      print.Logger
 }
 

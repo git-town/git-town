@@ -35,8 +35,8 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector {
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
 	giteaClient := gitea.NewClientWithHTTP("https://"+args.RemoteURL.Host, httpClient)
 	return AuthConnector{
-		AnonConnector: anonConnector,
 		APIToken:      args.APIToken,
+		AnonConnector: anonConnector,
 		client:        giteaClient,
 		log:           args.Log,
 	}

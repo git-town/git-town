@@ -28,6 +28,11 @@ func (self AnonConnector) DefaultProposalMessage(data forgedomain.ProposalData) 
 	return forgedomain.CommitBody(data, fmt.Sprintf("%s (#%d)", data.Title, data.Number))
 }
 
+func (self AnonConnector) NewProposalURL(data forgedomain.CreateProposalArgs) string {
+	toCompare := data.ParentBranch.String() + "..." + data.Branch.String()
+	return fmt.Sprintf("%s/compare/%s", self.RepositoryURL(), url.PathEscape(toCompare))
+}
+
 func (self AnonConnector) OpenRepository(runner subshelldomain.Runner) error {
 	browser.Open(self.RepositoryURL(), runner)
 	return nil
@@ -35,9 +40,4 @@ func (self AnonConnector) OpenRepository(runner subshelldomain.Runner) error {
 
 func (self AnonConnector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
-}
-
-func (self AnonConnector) NewProposalURL(data forgedomain.CreateProposalArgs) string {
-	toCompare := data.ParentBranch.String() + "..." + data.Branch.String()
-	return fmt.Sprintf("%s/compare/%s", self.RepositoryURL(), url.PathEscape(toCompare))
 }

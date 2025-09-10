@@ -29,8 +29,8 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) {
 	}
 	forgejoClient, err := forgejo.NewClient("https://"+args.RemoteURL.Host, forgejo.SetToken(args.APIToken.String()))
 	return AuthConnector{
-		AnonConnector: webConnector,
 		APIToken:      args.APIToken,
+		AnonConnector: webConnector,
 		client:        forgejoClient,
 		log:           args.Log,
 	}, err
