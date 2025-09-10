@@ -50,10 +50,6 @@ func (self Connector) DefaultProposalMessage(data forgedomain.ProposalData) stri
 	return github.DefaultProposalMessage(data)
 }
 
-func (self Connector) OpenRepository(runner subshelldomain.Runner) error {
-	return runner.Run("gh", "browse")
-}
-
 // ============================================================================
 // find proposals
 // ============================================================================

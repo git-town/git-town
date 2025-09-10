@@ -48,10 +48,6 @@ func (self Connector) DefaultProposalMessage(data forgedomain.ProposalData) stri
 	return gitlab.DefaultProposalMessage(data)
 }
 
-func (self Connector) OpenRepository(runner subshelldomain.Runner) error {
-	return runner.Run("glab", "repo", "view", "--web")
-}
-
 // ============================================================================
 // find proposals
 // ============================================================================
