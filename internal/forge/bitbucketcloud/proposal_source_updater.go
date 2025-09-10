@@ -10,7 +10,7 @@ import (
 	"github.com/ktrysmt/go-bitbucket"
 )
 
-var _ forgedomain.ProposalSourceUpdater = bbclAPIConnector
+var _ forgedomain.ProposalSourceUpdater = bbclAuthConnector
 
 func (self AuthConnector) UpdateProposalSource(proposalData forgedomain.ProposalInterface, source gitdomain.LocalBranchName) error {
 	data := proposalData.(forgedomain.BitbucketCloudProposalData)

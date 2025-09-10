@@ -11,7 +11,7 @@ import (
 	"github.com/ktrysmt/go-bitbucket"
 )
 
-var _ forgedomain.ProposalFinder = bbclAPIConnector
+var _ forgedomain.ProposalFinder = bbclAuthConnector
 
 func (self AuthConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	proposalURLOverride := forgedomain.ReadProposalOverride()

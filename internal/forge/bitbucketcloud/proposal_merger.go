@@ -11,7 +11,7 @@ import (
 	"github.com/ktrysmt/go-bitbucket"
 )
 
-var _ forgedomain.ProposalMerger = bbclAPIConnector
+var _ forgedomain.ProposalMerger = bbclAuthConnector
 
 func (self AuthConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
 	if number <= 0 {

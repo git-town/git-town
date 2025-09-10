@@ -10,7 +10,7 @@ import (
 	"github.com/ktrysmt/go-bitbucket"
 )
 
-var _ forgedomain.ProposalSearcher = bbclAPIConnector
+var _ forgedomain.ProposalSearcher = bbclAuthConnector
 
 func (self AuthConnector) SearchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
