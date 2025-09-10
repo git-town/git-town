@@ -74,7 +74,7 @@ func (self Connector) NewProposalURL(data forgedomain.CreateProposalArgs) string
 		url.QueryEscape(data.ParentBranch.String()))
 }
 
-func (self Connector) OpenRepository(runner subshelldomain.Runner) error {
+func (self Connector) BrowseRepository(runner subshelldomain.Runner) error {
 	browser.Open(self.RepositoryURL(), runner)
 	return nil
 }

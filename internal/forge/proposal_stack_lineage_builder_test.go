@@ -45,7 +45,7 @@ func (self *mockConnectorProposalStackLineageBuilder) FindProposalFn() Option[fu
 	})
 }
 
-func (self *mockConnectorProposalStackLineageBuilder) OpenRepository(_ subshelldomain.Runner) error {
+func (self *mockConnectorProposalStackLineageBuilder) BrowseRepository(_ subshelldomain.Runner) error {
 	return nil
 }
 

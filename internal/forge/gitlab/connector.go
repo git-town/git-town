@@ -41,7 +41,7 @@ func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.Loca
 	return None[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)]()
 }
 
-func (self Connector) OpenRepository(runner subshelldomain.Runner) error {
+func (self Connector) BrowseRepository(runner subshelldomain.Runner) error {
 	browser.Open(self.RepositoryURL(), runner)
 	return nil
 }

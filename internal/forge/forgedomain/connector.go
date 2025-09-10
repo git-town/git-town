@@ -46,8 +46,8 @@ type Connector interface {
 	// A None return value indicates that this connector does not support this feature (yet).
 	FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[Proposal], error)]
 
-	// OpenRepository opens this repository in the associated application, typically the browser.
-	OpenRepository(runner subshelldomain.Runner) error
+	// BrowseRepository opens this repository in the associated application, typically the browser.
+	BrowseRepository(runner subshelldomain.Runner) error
 
 	// If this connector instance supports loading proposals via the API,
 	// calling this function returns a function that you can call

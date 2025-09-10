@@ -46,7 +46,7 @@ func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.Loca
 	return Some(self.findProposal)
 }
 
-func (self Connector) OpenRepository(runner subshelldomain.Runner) error {
+func (self Connector) BrowseRepository(runner subshelldomain.Runner) error {
 	return runner.Run("glab", "repo", "view", "--web")
 }
 
