@@ -21,7 +21,7 @@ type NewConnectorArgs struct {
 	RemoteURL giturl.Parts
 }
 
-func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) {
+func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //nolint: ireturn
 	anonConnector := AnonConnector{
 		Data: forgedomain.Data{
 			Hostname:     args.RemoteURL.Host,
