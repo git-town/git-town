@@ -17,12 +17,12 @@ import (
 
 // type-check to ensure conformance to the Connector interface
 var (
-	githubAuthConnector AuthConnector
+	githubAuthConnector APIConnector
 	_                   forgedomain.Connector = githubAuthConnector
 )
 
-// AuthConnector provides access to the GitHub API.
-type AuthConnector struct {
+// APIConnector provides access to the GitHub API.
+type APIConnector struct {
 	AnonConnector
 	APIToken Option[forgedomain.GitHubToken]
 	client   Mutable[github.Client]
@@ -33,7 +33,7 @@ type AuthConnector struct {
 
 var _ forgedomain.ProposalFinder = githubAuthConnector
 
-func (self AuthConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	pullRequests, _, err := self.client.Value.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
 		Head:  self.Organization + ":" + branch.String(),
@@ -60,7 +60,7 @@ func (self AuthConnector) FindProposal(branch, target gitdomain.LocalBranchName)
 
 var _ forgedomain.ProposalMerger = githubAuthConnector
 
-func (self AuthConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
+func (self APIConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
@@ -80,7 +80,7 @@ func (self AuthConnector) SquashMergeProposal(number int, message gitdomain.Comm
 
 var _ forgedomain.ProposalSearcher = githubAuthConnector
 
-func (self AuthConnector) SearchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
 	pullRequests, _, err := self.client.Value.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
 		Head:  self.Organization + ":" + branch.String(),
@@ -106,7 +106,7 @@ func (self AuthConnector) SearchProposal(branch gitdomain.LocalBranchName) (Opti
 
 var _ forgedomain.ProposalUpdater = githubAuthConnector
 
-func (self AuthConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody string) error {
+func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody string) error {
 	data := proposalData.Data()
 	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)))
 	_, _, err := self.client.Value.PullRequests.Edit(context.Background(), self.Organization, self.Repository, data.Number, &github.PullRequest{
@@ -120,7 +120,7 @@ func (self AuthConnector) UpdateProposalBody(proposalData forgedomain.ProposalIn
 	return nil
 }
 
-func (self AuthConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
+func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	data := proposalData.Data()
 	targetName := target.String()
 	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)), colors.BoldCyan().Styled(targetName))
@@ -141,7 +141,7 @@ func (self AuthConnector) UpdateProposalTarget(proposalData forgedomain.Proposal
 
 var _ forgedomain.AuthVerifier = githubAuthConnector
 
-func (self AuthConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
+func (self APIConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
 	user, _, err := self.client.Value.Users.Get(context.Background(), "")
 	if err != nil {
 		return forgedomain.VerifyCredentialsResult{

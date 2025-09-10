@@ -52,7 +52,7 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 			return anonConnector, fmt.Errorf(messages.GitHubEnterpriseInitializeError, err)
 		}
 	}
-	return AuthConnector{
+	return APIConnector{
 		APIToken:      args.APIToken,
 		AnonConnector: anonConnector,
 		client:        NewMutable(githubClient),

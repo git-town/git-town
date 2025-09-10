@@ -8,11 +8,22 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
+// type-check to ensure conformance to the Connector interface
+var (
+	githubOverrideConnector OverrideConnector
+	_                       forgedomain.Connector = githubOverrideConnector
+)
+
+// OverrideConnector simulates interacting with the GitHub API in tests.
 type OverrideConnector struct {
 	AnonConnector
 	log      print.Logger
 	override forgedomain.ProposalOverride
 }
+
+// FIND PROPOSALS
+
+var _ forgedomain.ProposalFinder = githubOverrideConnector
 
 func (self OverrideConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
