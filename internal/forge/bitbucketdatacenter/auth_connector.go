@@ -11,7 +11,7 @@ var (
 	_                forgedomain.Connector = bbdcAPIConnector
 )
 
-// AuthConnector provides access to the API of Bitbucket installations.
+// AuthConnector provides access to the Bitbucket DataCenter API.
 type AuthConnector struct {
 	AnonConnector
 	log      print.Logger

@@ -16,8 +16,7 @@ var (
 	_                   forgedomain.Connector    = githubAuthConnector
 )
 
-// Connector provides standardized connectivity for the given repository (github.com/owner/repo)
-// via the GitHub API.
+// AuthConnector provides access to the GitHub API.
 type AuthConnector struct {
 	AnonConnector
 	APIToken Option[forgedomain.GitHubToken]

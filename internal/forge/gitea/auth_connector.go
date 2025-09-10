@@ -14,6 +14,7 @@ var (
 	_                  forgedomain.Connector    = giteaAuthConnector
 )
 
+// AuthConnector provides access to the gitea API.
 type AuthConnector struct {
 	AnonConnector
 	APIToken Option[forgedomain.GiteaToken]

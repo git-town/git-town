@@ -14,8 +14,7 @@ var (
 	_                   forgedomain.Connector    = gitlabAuthConnector
 )
 
-// Connector provides standardized connectivity for the given repository (gitlab.com/owner/repo)
-// via the GitLab API.
+// AuthConnector provides access to the GitLab API.
 type AuthConnector struct {
 	AnonConnector
 	APIToken forgedomain.GitLabToken

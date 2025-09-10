@@ -14,7 +14,7 @@ var (
 	_                    forgedomain.Connector    = forgejoAuthConnector
 )
 
-// AuthConnector connects to the API of Forgejo instances.
+// AuthConnector provides access to the Forgejo API.
 type AuthConnector struct {
 	AnonConnector
 	APIToken Option[forgedomain.ForgejoToken]
