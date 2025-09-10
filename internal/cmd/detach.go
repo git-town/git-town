@@ -276,7 +276,7 @@ func determineDetachData(args []string, repo execute.OpenRepoResult) (data detac
 	for c, childBranch := range childBranches {
 		proposal := None[forgedomain.Proposal]()
 		if connector, hasConnector := connector.Get(); hasConnector {
-			if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
+			if proposalFinder, canFindProposal := connector.(forgedomain.ProposalFinder); canFindProposal {
 				proposal, err = proposalFinder.FindProposal(childBranch, initialBranch)
 				if err != nil {
 					return data, false, err
