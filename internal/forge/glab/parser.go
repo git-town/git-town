@@ -2,7 +2,10 @@ package glab
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	"regexp"
+	"strings"
 
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
@@ -10,14 +13,25 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-var _ forgedomain.ProposalFinder = glabConnector
-
-func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
-	out, err := self.Backend.Query("glab", "mr", "list", "--source-branch="+branch.String(), "--target-branch="+target.String(), "--output=json")
-	if err != nil {
-		return None[forgedomain.Proposal](), err
+func ParsePermissionsOutput(output string) forgedomain.VerifyCredentialsResult {
+	result := forgedomain.VerifyCredentialsResult{
+		AuthenticatedUser:   None[string](),
+		AuthenticationError: nil,
+		AuthorizationError:  nil,
 	}
-	return ParseJSONOutput(out, branch)
+	lines := strings.Split(output, "\n")
+	regex := regexp.MustCompile(`Logged in to \S+ as (\S+) `)
+	for _, line := range lines {
+		matches := regex.FindStringSubmatch(line)
+		if matches != nil {
+			result.AuthenticatedUser = NewOption(matches[1])
+			break
+		}
+	}
+	if result.AuthenticatedUser.IsNone() {
+		result.AuthenticationError = errors.New(messages.AuthenticationMissing)
+	}
+	return result
 }
 
 func ParseJSONOutput(output string, branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {

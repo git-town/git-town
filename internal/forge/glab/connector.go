@@ -1,13 +1,11 @@
 package glab
 
 import (
-	"errors"
-	"regexp"
-	"strings"
+	"strconv"
 
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/forge/gitlab"
-	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
@@ -50,6 +48,62 @@ func (self Connector) OpenRepository(runner subshelldomain.Runner) error {
 	return runner.Run("glab", "repo", "view", "--web")
 }
 
+// ============================================================================
+// find proposals
+// ============================================================================
+
+var _ forgedomain.ProposalFinder = glabConnector
+
+func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+	out, err := self.Backend.Query("glab", "mr", "list", "--source-branch="+branch.String(), "--target-branch="+target.String(), "--output=json")
+	if err != nil {
+		return None[forgedomain.Proposal](), err
+	}
+	return ParseJSONOutput(out, branch)
+}
+
+// ============================================================================
+// merge proposals
+// ============================================================================
+
+var _ forgedomain.ProposalMerger = glabConnector
+
+func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
+	return self.Frontend.Run("glab", "mr", "merge", "--squash", "--body="+message.String(), strconv.Itoa(number))
+}
+
+// ============================================================================
+// search proposals
+// ============================================================================
+
+var _ forgedomain.ProposalSearcher = glabConnector
+
+func (self Connector) SearchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+	out, err := self.Backend.Query("glab", "--source-branch="+branch.String(), "--output=json")
+	if err != nil {
+		return None[forgedomain.Proposal](), err
+	}
+	return ParseJSONOutput(out, branch)
+}
+
+// ============================================================================
+// update proposals
+// ============================================================================
+
+var _ forgedomain.ProposalUpdater = glabConnector
+
+func (self Connector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedDescription string) error {
+	return self.Frontend.Run("glab", "mr", "update", strconv.Itoa(proposalData.Data().Number), "--description="+updatedDescription)
+}
+
+func (self Connector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
+	return self.Frontend.Run("glab", "mr", "update", strconv.Itoa(proposalData.Data().Number), "--target-branch="+target.String())
+}
+
+// ============================================================================
+// verify credentials
+// ============================================================================
+
 func (self Connector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
 	output, err := self.Backend.Query("glab", "auth", "status")
 	if err != nil {
@@ -60,25 +114,4 @@ func (self Connector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
 		}
 	}
 	return ParsePermissionsOutput(output)
-}
-
-func ParsePermissionsOutput(output string) forgedomain.VerifyCredentialsResult {
-	result := forgedomain.VerifyCredentialsResult{
-		AuthenticatedUser:   None[string](),
-		AuthenticationError: nil,
-		AuthorizationError:  nil,
-	}
-	lines := strings.Split(output, "\n")
-	regex := regexp.MustCompile(`Logged in to \S+ as (\S+) `)
-	for _, line := range lines {
-		matches := regex.FindStringSubmatch(line)
-		if matches != nil {
-			result.AuthenticatedUser = NewOption(matches[1])
-			break
-		}
-	}
-	if result.AuthenticatedUser.IsNone() {
-		result.AuthenticationError = errors.New(messages.AuthenticationMissing)
-	}
-	return result
 }
