@@ -13,8 +13,6 @@ import (
 	"github.com/google/go-github/v58/github"
 )
 
-// TODO: make sure all AuthConnector instances use the pointer receiver, so that we don't copy the connector instance.
-// Or use a Mutable for it.
 func (self AuthConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	if len(forgedomain.ReadProposalOverride()) > 0 {
 		return self.findProposalViaOverride(branch, target)
