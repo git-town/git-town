@@ -63,3 +63,15 @@ func (self AuthConnector) findProposalViaOverride(branch, target gitdomain.Local
 		ForgeType: forgedomain.ForgeTypeGitLab,
 	}), nil
 }
+
+func parseMergeRequest(mergeRequest *gitlab.BasicMergeRequest) forgedomain.ProposalData {
+	return forgedomain.ProposalData{
+		MergeWithAPI: true,
+		Number:       mergeRequest.IID,
+		Source:       gitdomain.NewLocalBranchName(mergeRequest.SourceBranch),
+		Target:       gitdomain.NewLocalBranchName(mergeRequest.TargetBranch),
+		Title:        mergeRequest.Title,
+		Body:         NewOption(mergeRequest.Description),
+		URL:          mergeRequest.WebURL,
+	}
+}
