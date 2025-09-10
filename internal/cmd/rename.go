@@ -315,7 +315,7 @@ func renameProgram(repo execute.OpenRepoResult, data renameData, finalMessages s
 			updateChildBranchProposalsToBranch(prog.Value, data.proposalsOfChildBranches, data.newBranch)
 			proposal, hasProposal := data.proposal.Get()
 			connector, hasConnector := data.connector.Get()
-			_, isAPIConnector := connector.(forgedomain.APIConnector)
+			_, isAPIConnector := connector.(forgedomain.AuthVerifier)
 			if hasProposal && hasConnector && isAPIConnector {
 				prog.Value.Add(&opcodes.ProposalUpdateSource{
 					NewBranch: data.newBranch,

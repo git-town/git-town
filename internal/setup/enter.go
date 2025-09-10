@@ -718,7 +718,7 @@ func testForgeAuth(args testForgeAuthArgs) (repeat bool, exit dialogdomain.Exit,
 	if !hasConnector {
 		return false, false, nil
 	}
-	if apiConnector, isAPIConnector := connector.(forgedomain.APIConnector); isAPIConnector {
+	if apiConnector, isAPIConnector := connector.(forgedomain.AuthVerifier); isAPIConnector {
 		verifyResult := apiConnector.VerifyConnection()
 		if verifyResult.AuthenticationError != nil {
 			return dialog.CredentialsNoAccess(verifyResult.AuthenticationError, args.inputs)

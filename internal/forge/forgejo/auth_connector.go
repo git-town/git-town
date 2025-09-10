@@ -10,7 +10,7 @@ import (
 // type-check to ensure conformance to the Connector interface
 var (
 	forgejoAPIConnector AuthConnector
-	_                   forgedomain.APIConnector = forgejoAPIConnector
+	_                   forgedomain.AuthVerifier = forgejoAPIConnector
 	_                   forgedomain.Connector    = forgejoAPIConnector
 )
 

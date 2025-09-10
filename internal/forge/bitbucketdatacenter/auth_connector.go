@@ -9,7 +9,7 @@ import (
 // type-check to ensure conformance to the Connector interface
 var (
 	bbdcAPIConnector AuthConnector
-	_                forgedomain.APIConnector = bbdcAPIConnector
+	_                forgedomain.AuthVerifier = bbdcAPIConnector
 	_                forgedomain.Connector    = bbdcAPIConnector
 )
 

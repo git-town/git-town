@@ -6,18 +6,9 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-type CreateProposalArgs struct {
-	Branch         gitdomain.LocalBranchName
-	FrontendRunner subshelldomain.Runner
-	MainBranch     gitdomain.LocalBranchName
-	ParentBranch   gitdomain.LocalBranchName
-	ProposalBody   Option[gitdomain.ProposalBody]
-	ProposalTitle  Option[gitdomain.ProposalTitle]
-}
-
-// Connector describes the activities that all connectors can perform on forges.
-//
 // This file defines an interface for every capability that a forge and connector implementation can support.
+
+// Connector describes the capabilities that all connectors can perform on forges.
 type Connector interface {
 	// CreateProposal creates a proposal at the forge.
 	CreateProposal(CreateProposalArgs) error
@@ -30,10 +21,19 @@ type Connector interface {
 	OpenRepository(runner subshelldomain.Runner) error
 }
 
-// APIConnector describes additional functionality
-// that connectors which can talk to the API of a forge can perform.
-type APIConnector interface {
+type CreateProposalArgs struct {
+	Branch         gitdomain.LocalBranchName
+	FrontendRunner subshelldomain.Runner
+	MainBranch     gitdomain.LocalBranchName
+	ParentBranch   gitdomain.LocalBranchName
+	ProposalBody   Option[gitdomain.ProposalBody]
+	ProposalTitle  Option[gitdomain.ProposalTitle]
+}
+
+// AuthVerifier describes capabilities to verify credentials.
+type AuthVerifier interface {
 	// VerifyConnection checks whether this connector can make successful requests to the forge.
+	// TODO: rename to VerifyCredentials and VerifyCredentialsResult
 	VerifyConnection() VerifyConnectionResult
 }
 

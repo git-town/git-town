@@ -8,7 +8,7 @@ import (
 )
 
 var bbclAPIConnector AuthConnector
-var _ forgedomain.APIConnector = bbclAPIConnector
+var _ forgedomain.AuthVerifier = bbclAPIConnector
 var _ forgedomain.Connector = bbclAPIConnector
 
 // AuthConnector implements the connector functionality if API credentials are available.
