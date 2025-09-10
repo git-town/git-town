@@ -34,7 +34,6 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			RemoteURL:   remoteURL,
 			UserName:    args.BitbucketUsername,
 		})
-		return Some(connector), nil
 	case forgedomain.ForgeTypeBitbucketDatacenter:
 		connector = bitbucketdatacenter.NewConnector(bitbucketdatacenter.NewConnectorArgs{
 			AppPassword: args.BitbucketAppPassword,
@@ -43,21 +42,18 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			RemoteURL:   remoteURL,
 			UserName:    args.BitbucketUsername,
 		})
-		return Some(connector), nil
 	case forgedomain.ForgeTypeForgejo:
 		connector, err = forgejo.NewConnector(forgejo.NewConnectorArgs{
 			APIToken:  args.ForgejoToken,
 			Log:       args.Log,
 			RemoteURL: remoteURL,
 		})
-		return Some(connector), err
 	case forgedomain.ForgeTypeGitea:
 		connector = gitea.NewConnector(gitea.NewConnectorArgs{
 			APIToken:  args.GiteaToken,
 			Log:       args.Log,
 			RemoteURL: remoteURL,
 		})
-		return Some(connector), nil
 	case forgedomain.ForgeTypeGitHub:
 		if githubConnectorType, hasGitHubConnectorType := args.GitHubConnectorType.Get(); hasGitHubConnectorType {
 			switch githubConnectorType {
@@ -67,22 +63,20 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 					Log:       args.Log,
 					RemoteURL: remoteURL,
 				})
-				return Some(connector), err
 			case forgedomain.GitHubConnectorTypeGh:
 				connector = gh.Connector{
 					Backend:  args.Backend,
 					Frontend: args.Frontend,
 				}
-				return Some(connector), err
 			}
+		} else {
+			// no GitHubConnectorType specified --> use the API connector
+			connector, err = github.NewConnector(github.NewConnectorArgs{
+				APIToken:  args.GitHubToken,
+				Log:       args.Log,
+				RemoteURL: remoteURL,
+			})
 		}
-		// no GitHubConnectorType specified --> use the API connector
-		connector, err = github.NewConnector(github.NewConnectorArgs{
-			APIToken:  args.GitHubToken,
-			Log:       args.Log,
-			RemoteURL: remoteURL,
-		})
-		return Some(connector), err
 	case forgedomain.ForgeTypeGitLab:
 		if gitLabConnectorType, hasGitLabConnectorType := args.GitLabConnectorType.Get(); hasGitLabConnectorType {
 			switch gitLabConnectorType {
@@ -92,24 +86,22 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 					Log:       args.Log,
 					RemoteURL: remoteURL,
 				})
-				return Some(connector), err
 			case forgedomain.GitLabConnectorTypeGlab:
 				connector = glab.Connector{
 					Backend:  args.Backend,
 					Frontend: args.Frontend,
 				}
-				return Some(connector), err
 			}
+		} else {
+			// no GitLabConnectorType specified --> use the API connector
+			connector, err = gitlab.NewConnector(gitlab.NewConnectorArgs{
+				APIToken:  args.GitLabToken,
+				Log:       args.Log,
+				RemoteURL: remoteURL,
+			})
 		}
-		// no GitLabConnectorType specified --> use the API connector
-		connector, err = gitlab.NewConnector(gitlab.NewConnectorArgs{
-			APIToken:  args.GitLabToken,
-			Log:       args.Log,
-			RemoteURL: remoteURL,
-		})
-		return Some(connector), err
 	}
-	return None[forgedomain.Connector](), nil
+	return NewOption(connector), err
 }
 
 type NewConnectorArgs struct {
