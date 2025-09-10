@@ -50,10 +50,10 @@ func (self Connector) OpenRepository(runner subshelldomain.Runner) error {
 	return runner.Run("glab", "repo", "view", "--web")
 }
 
-func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
+func (self Connector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
 	output, err := self.Backend.Query("glab", "auth", "status")
 	if err != nil {
-		return forgedomain.VerifyConnectionResult{
+		return forgedomain.VerifyCredentialsResult{
 			AuthenticatedUser:   None[string](),
 			AuthenticationError: err,
 			AuthorizationError:  nil,
@@ -62,8 +62,8 @@ func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
 	return ParsePermissionsOutput(output)
 }
 
-func ParsePermissionsOutput(output string) forgedomain.VerifyConnectionResult {
-	result := forgedomain.VerifyConnectionResult{
+func ParsePermissionsOutput(output string) forgedomain.VerifyCredentialsResult {
+	result := forgedomain.VerifyCredentialsResult{
 		AuthenticatedUser:   None[string](),
 		AuthenticationError: nil,
 		AuthorizationError:  nil,

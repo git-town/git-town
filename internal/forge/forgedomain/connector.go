@@ -34,10 +34,10 @@ type CreateProposalArgs struct {
 type AuthVerifier interface {
 	// VerifyConnection checks whether this connector can make successful requests to the forge.
 	// TODO: rename to VerifyCredentials and VerifyCredentialsResult
-	VerifyConnection() VerifyConnectionResult
+	VerifyCredentials() VerifyCredentialsResult
 }
 
-type VerifyConnectionResult struct {
+type VerifyCredentialsResult struct {
 	AuthenticatedUser   Option[string] // the authenticated username
 	AuthenticationError error          // error while verifying to verify authentication
 	AuthorizationError  error          // error while verifying authorization, nil == user is authenticated

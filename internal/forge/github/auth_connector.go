@@ -25,10 +25,10 @@ type AuthConnector struct {
 	log      print.Logger
 }
 
-func (self AuthConnector) VerifyConnection() forgedomain.VerifyConnectionResult {
+func (self AuthConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
 	user, _, err := self.client.Value.Users.Get(context.Background(), "")
 	if err != nil {
-		return forgedomain.VerifyConnectionResult{
+		return forgedomain.VerifyCredentialsResult{
 			AuthenticatedUser:   None[string](),
 			AuthenticationError: err,
 			AuthorizationError:  nil,
@@ -39,7 +39,7 @@ func (self AuthConnector) VerifyConnection() forgedomain.VerifyConnectionResult 
 			PerPage: 1,
 		},
 	})
-	return forgedomain.VerifyConnectionResult{
+	return forgedomain.VerifyCredentialsResult{
 		AuthenticatedUser:   NewOption(*user.Login),
 		AuthenticationError: nil,
 		AuthorizationError:  err,

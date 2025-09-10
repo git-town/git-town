@@ -21,10 +21,10 @@ type AuthConnector struct {
 	log      print.Logger
 }
 
-func (self AuthConnector) VerifyConnection() forgedomain.VerifyConnectionResult {
+func (self AuthConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
 	user, _, err := self.client.GetMyUserInfo()
 	if err != nil {
-		return forgedomain.VerifyConnectionResult{
+		return forgedomain.VerifyCredentialsResult{
 			AuthenticatedUser:   None[string](),
 			AuthenticationError: err,
 			AuthorizationError:  nil,
@@ -35,7 +35,7 @@ func (self AuthConnector) VerifyConnection() forgedomain.VerifyConnectionResult 
 			PageSize: 1,
 		},
 	})
-	return forgedomain.VerifyConnectionResult{
+	return forgedomain.VerifyCredentialsResult{
 		AuthenticatedUser:   NewOption(user.UserName),
 		AuthenticationError: nil,
 		AuthorizationError:  err,
