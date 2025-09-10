@@ -33,7 +33,6 @@ type CreateProposalArgs struct {
 // AuthVerifier describes capabilities to verify credentials.
 type AuthVerifier interface {
 	// VerifyConnection checks whether this connector can make successful requests to the forge.
-	// TODO: rename to VerifyCredentials and VerifyCredentialsResult
 	VerifyCredentials() VerifyCredentialsResult
 }
 
