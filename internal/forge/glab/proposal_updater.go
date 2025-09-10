@@ -7,6 +7,8 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 )
 
+var _ forgedomain.ProposalUpdater = glabConnector
+
 func (self Connector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedDescription string) error {
 	return self.Frontend.Run("glab", "mr", "update", strconv.Itoa(proposalData.Data().Number), "--description="+updatedDescription)
 }

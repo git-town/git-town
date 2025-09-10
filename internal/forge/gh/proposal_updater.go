@@ -7,6 +7,8 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 )
 
+var _ forgedomain.ProposalUpdater = ghConnector
+
 func (self Connector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody string) error {
 	return self.Frontend.Run("gh", "pr", "edit", strconv.Itoa(proposalData.Data().Number), "--body="+updatedBody)
 }
