@@ -9,9 +9,9 @@ import (
 
 // type-check to ensure conformance to the Connector interface
 var (
-	forgejoAPIConnector AuthConnector
-	_                   forgedomain.AuthVerifier = forgejoAPIConnector
-	_                   forgedomain.Connector    = forgejoAPIConnector
+	forgejoAuthConnector AuthConnector
+	_                    forgedomain.AuthVerifier = forgejoAuthConnector
+	_                    forgedomain.Connector    = forgejoAuthConnector
 )
 
 // AuthConnector connects to the API of Forgejo instances.

@@ -10,7 +10,7 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-var _ forgedomain.ProposalFinder = forgejoAPIConnector
+var _ forgedomain.ProposalFinder = forgejoAuthConnector
 
 func (self AuthConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	if len(forgedomain.ReadProposalOverride()) > 0 {

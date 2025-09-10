@@ -10,7 +10,7 @@ import (
 	"github.com/git-town/git-town/v21/pkg/colors"
 )
 
-var _ forgedomain.ProposalUpdater = forgejoAPIConnector
+var _ forgedomain.ProposalUpdater = forgejoAuthConnector
 
 func (self AuthConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, newBody string) error {
 	data := proposalData.Data()
