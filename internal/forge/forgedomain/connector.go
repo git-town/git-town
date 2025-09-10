@@ -33,6 +33,9 @@ import (
 //     With the idiomatic interface-based implementation, we could add a comment somewhere in the connector implementation,
 //     but that's hard to find, and sorting cannot be verified by linters.
 type Connector interface {
+	// BrowseRepository opens this repository in the associated application, typically the browser.
+	BrowseRepository(runner subshelldomain.Runner) error
+
 	// CreateProposal creates a proposal at the forge.
 	CreateProposal(CreateProposalArgs) error
 
@@ -45,9 +48,6 @@ type Connector interface {
 	// to load details about the proposal for the given branch into the given target branch.
 	// A None return value indicates that this connector does not support this feature (yet).
 	FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[Proposal], error)]
-
-	// OpenRepository opens this repository in the associated application, typically the browser.
-	OpenRepository(runner subshelldomain.Runner) error
 
 	// If this connector instance supports loading proposals via the API,
 	// calling this function returns a function that you can call

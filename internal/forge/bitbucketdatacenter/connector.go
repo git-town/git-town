@@ -47,6 +47,11 @@ type NewConnectorArgs struct {
 	UserName    Option[forgedomain.BitbucketUsername]
 }
 
+func (self Connector) BrowseRepository(runner subshelldomain.Runner) error {
+	browser.Open(self.RepositoryURL(), runner)
+	return nil
+}
+
 func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error {
 	browser.Open(self.NewProposalURL(data), data.FrontendRunner)
 	return nil
@@ -70,11 +75,6 @@ func (self Connector) NewProposalURL(data forgedomain.CreateProposalArgs) string
 		self.RepositoryURL(),
 		url.QueryEscape(data.Branch.String()),
 		url.QueryEscape(data.ParentBranch.String()))
-}
-
-func (self Connector) OpenRepository(runner subshelldomain.Runner) error {
-	browser.Open(self.RepositoryURL(), runner)
-	return nil
 }
 
 func (self Connector) RepositoryURL() string {
