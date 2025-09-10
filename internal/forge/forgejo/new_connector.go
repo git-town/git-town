@@ -15,7 +15,7 @@ type NewConnectorArgs struct {
 }
 
 // NewConnector provides a new connector instance.
-func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) {
+func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //nolint:ireturn
 	webConnector := AnonConnector{
 		Data: forgedomain.Data{
 			Hostname:     args.RemoteURL.Host,

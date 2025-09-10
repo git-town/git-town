@@ -19,7 +19,7 @@ type NewConnectorArgs struct {
 
 // NewGiteaConfig provides Gitea configuration data if the current repo is hosted on Gitea,
 // otherwise nil.
-func NewConnector(args NewConnectorArgs) forgedomain.Connector {
+func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:ireturn
 	anonConnector := AnonConnector{
 		Data: forgedomain.Data{
 			Hostname:     args.RemoteURL.Host,
