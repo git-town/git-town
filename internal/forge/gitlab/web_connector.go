@@ -10,26 +10,26 @@ import (
 )
 
 var (
-	gitlabAnonConnector AnonConnector
-	_                   forgedomain.Connector = gitlabAnonConnector
+	webConnector WebConnector
+	_            forgedomain.Connector = webConnector
 )
 
-// AnonConnector provides connectivity to GitLab without authentication data.
-type AnonConnector struct {
+// WebConnector provides connectivity to GitLab without authentication data.
+type WebConnector struct {
 	forgedomain.Data
 }
 
-func (self AnonConnector) CreateProposal(data forgedomain.CreateProposalArgs) error {
+func (self WebConnector) CreateProposal(data forgedomain.CreateProposalArgs) error {
 	url := self.NewProposalURL(data)
 	browser.Open(url, data.FrontendRunner)
 	return nil
 }
 
-func (self AnonConnector) DefaultProposalMessage(data forgedomain.ProposalData) string {
+func (self WebConnector) DefaultProposalMessage(data forgedomain.ProposalData) string {
 	return DefaultProposalMessage(data)
 }
 
-func (self AnonConnector) NewProposalURL(data forgedomain.CreateProposalArgs) string {
+func (self WebConnector) NewProposalURL(data forgedomain.CreateProposalArgs) string {
 	query := url.Values{}
 	query.Add("merge_request[source_branch]", data.Branch.String())
 	query.Add("merge_request[target_branch]", data.ParentBranch.String())
@@ -42,20 +42,20 @@ func (self AnonConnector) NewProposalURL(data forgedomain.CreateProposalArgs) st
 	return fmt.Sprintf("%s/-/merge_requests/new?%s", self.RepositoryURL(), query.Encode())
 }
 
-func (self AnonConnector) OpenRepository(runner subshelldomain.Runner) error {
+func (self WebConnector) OpenRepository(runner subshelldomain.Runner) error {
 	browser.Open(self.RepositoryURL(), runner)
 	return nil
 }
 
-func (self AnonConnector) RepositoryURL() string {
+func (self WebConnector) RepositoryURL() string {
 	return fmt.Sprintf("%s/%s", self.baseURL(), self.projectPath())
 }
 
-func (self AnonConnector) baseURL() string {
+func (self WebConnector) baseURL() string {
 	return "https://" + self.HostnameWithStandardPort()
 }
 
-func (self AnonConnector) projectPath() string {
+func (self WebConnector) projectPath() string {
 	return fmt.Sprintf("%s/%s", self.Organization, self.Repository)
 }
 

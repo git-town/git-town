@@ -1,4 +1,4 @@
-package github
+package gitlab
 
 import (
 	"github.com/git-town/git-town/v21/internal/cli/print"
@@ -25,8 +25,6 @@ type TestConnector struct {
 // find proposals
 // ============================================================================
 
-var _ forgedomain.ProposalFinder = githubOverrideConnector
-
 func (self TestConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	self.log.Ok()
@@ -43,6 +41,6 @@ func (self TestConnector) FindProposal(branch, target gitdomain.LocalBranchName)
 			Title:        "title",
 			URL:          self.override.String(),
 		},
-		ForgeType: forgedomain.ForgeTypeGitHub,
+		ForgeType: forgedomain.ForgeTypeGitLab,
 	}), nil
 }

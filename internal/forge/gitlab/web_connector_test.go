@@ -17,7 +17,7 @@ func TestGitLabAnonConnector(t *testing.T) {
 		t.Parallel()
 		t.Run("without body", func(t *testing.T) {
 			t.Parallel()
-			connector := gitlab.AnonConnector{}
+			connector := gitlab.WebConnector{}
 			give := forgedomain.ProposalData{
 				Number: 123,
 				Title:  "my title",
@@ -28,7 +28,7 @@ func TestGitLabAnonConnector(t *testing.T) {
 		})
 		t.Run("with body", func(t *testing.T) {
 			t.Parallel()
-			connector := gitlab.AnonConnector{}
+			connector := gitlab.WebConnector{}
 			give := forgedomain.ProposalData{
 				Number: 123,
 				Title:  "my title",
@@ -89,7 +89,7 @@ func TestGitLabAnonConnector(t *testing.T) {
 		for name, tt := range tests {
 			t.Run(name, func(t *testing.T) {
 				t.Parallel()
-				connector := gitlab.AnonConnector{
+				connector := gitlab.WebConnector{
 					Data: forgedomain.Data{
 						Hostname:     "gitlab.com",
 						Organization: "organization",

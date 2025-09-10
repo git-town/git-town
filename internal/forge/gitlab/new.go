@@ -8,6 +8,11 @@ import (
 	gitlab "gitlab.com/gitlab-org/api/client-go"
 )
 
+// Detect indicates whether the current repository is hosted on a GitLab server.
+func Detect(remoteURL giturl.Parts) bool {
+	return remoteURL.Host == "gitlab.com"
+}
+
 type NewConnectorArgs struct {
 	APIToken  Option[forgedomain.GitLabToken]
 	Log       print.Logger
@@ -15,7 +20,7 @@ type NewConnectorArgs struct {
 }
 
 func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //nolint: ireturn
-	anonConnector := AnonConnector{
+	anonConnector := WebConnector{
 		Data: forgedomain.Data{
 			Hostname:     args.RemoteURL.Host,
 			Organization: args.RemoteURL.Org,
@@ -31,9 +36,9 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 		return anonConnector, err
 	}
 	return AuthConnector{
-		APIToken:      apiToken,
-		AnonConnector: anonConnector,
-		client:        client,
-		log:           args.Log,
+		APIToken:     apiToken,
+		WebConnector: anonConnector,
+		client:       client,
+		log:          args.Log,
 	}, nil
 }
