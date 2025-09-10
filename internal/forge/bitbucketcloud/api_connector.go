@@ -189,34 +189,6 @@ func (self APIConnector) SquashMergeProposal(number int, message gitdomain.Commi
 }
 
 // ============================================================================
-// udpate proposal source
-// ============================================================================
-
-var _ forgedomain.ProposalSourceUpdater = apiConnector
-
-func (self APIConnector) UpdateProposalSource(proposalData forgedomain.ProposalInterface, source gitdomain.LocalBranchName) error {
-	data := proposalData.(forgedomain.BitbucketCloudProposalData)
-	self.log.Start(messages.APIUpdateProposalSource, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)), colors.BoldCyan().Styled(source.String()))
-	_, err := self.client.Value.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
-		ID:                strconv.Itoa(data.Number),
-		Owner:             self.Organization,
-		RepoSlug:          self.Repository,
-		SourceBranch:      source.String(),
-		DestinationBranch: data.Target.String(),
-		Title:             data.Title,
-		Description:       data.Body.GetOrZero(),
-		Draft:             data.Draft,
-		CloseSourceBranch: data.CloseSourceBranch,
-	})
-	if err != nil {
-		self.log.Failed(err.Error())
-		return err
-	}
-	self.log.Ok()
-	return nil
-}
-
-// ============================================================================
 // update proposal body
 // ============================================================================
 
@@ -233,6 +205,34 @@ func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInt
 		DestinationBranch: data.Target.String(),
 		Title:             data.Title,
 		Description:       newBody,
+		Draft:             data.Draft,
+		CloseSourceBranch: data.CloseSourceBranch,
+	})
+	if err != nil {
+		self.log.Failed(err.Error())
+		return err
+	}
+	self.log.Ok()
+	return nil
+}
+
+// ============================================================================
+// udpate proposal source
+// ============================================================================
+
+var _ forgedomain.ProposalSourceUpdater = apiConnector
+
+func (self APIConnector) UpdateProposalSource(proposalData forgedomain.ProposalInterface, source gitdomain.LocalBranchName) error {
+	data := proposalData.(forgedomain.BitbucketCloudProposalData)
+	self.log.Start(messages.APIUpdateProposalSource, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)), colors.BoldCyan().Styled(source.String()))
+	_, err := self.client.Value.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
+		ID:                strconv.Itoa(data.Number),
+		Owner:             self.Organization,
+		RepoSlug:          self.Repository,
+		SourceBranch:      source.String(),
+		DestinationBranch: data.Target.String(),
+		Title:             data.Title,
+		Description:       data.Body.GetOrZero(),
 		Draft:             data.Draft,
 		CloseSourceBranch: data.CloseSourceBranch,
 	})

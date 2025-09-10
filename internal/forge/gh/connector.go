@@ -89,14 +89,20 @@ func (self Connector) SearchProposal(branch gitdomain.LocalBranchName) (Option[f
 }
 
 // ============================================================================
-// update proposals
+// update proposal body
 // ============================================================================
 
-var _ forgedomain.ProposalUpdater = ghConnector
+var _ forgedomain.ProposalBodyUpdater = ghConnector
 
 func (self Connector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody string) error {
 	return self.Frontend.Run("gh", "pr", "edit", strconv.Itoa(proposalData.Data().Number), "--body="+updatedBody)
 }
+
+// ============================================================================
+// update proposal body
+// ============================================================================
+
+var _ forgedomain.ProposalTargetUpdater = ghConnector
 
 func (self Connector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	return self.Frontend.Run("gh", "pr", "edit", strconv.Itoa(proposalData.Data().Number), "--base="+target.String())

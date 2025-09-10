@@ -18,9 +18,9 @@ func (self *ProposalUpdateBody) Run(args shared.RunArgs) error {
 	if !hasConnector {
 		return forgedomain.UnsupportedServiceError()
 	}
-	proposalUpdater, canUpdateProposals := connector.(forgedomain.ProposalUpdater)
-	if !canUpdateProposals {
+	proposalBodyUpdater, canUpdateProposalBody := connector.(forgedomain.ProposalBodyUpdater)
+	if !canUpdateProposalBody {
 		return errors.New(messages.UpdateProposalBodyUnsupported)
 	}
-	return proposalUpdater.UpdateProposalBody(self.Proposal.Data, self.UpdatedBody)
+	return proposalBodyUpdater.UpdateProposalBody(self.Proposal.Data, self.UpdatedBody)
 }

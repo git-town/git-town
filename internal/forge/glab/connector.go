@@ -87,14 +87,20 @@ func (self Connector) SearchProposal(branch gitdomain.LocalBranchName) (Option[f
 }
 
 // ============================================================================
-// update proposals
+// update proposal body
 // ============================================================================
 
-var _ forgedomain.ProposalUpdater = glabConnector
+var _ forgedomain.ProposalBodyUpdater = glabConnector
 
 func (self Connector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedDescription string) error {
 	return self.Frontend.Run("glab", "mr", "update", strconv.Itoa(proposalData.Data().Number), "--description="+updatedDescription)
 }
+
+// ============================================================================
+// update proposal target
+// ============================================================================
+
+var _ forgedomain.ProposalTargetUpdater = glabConnector
 
 func (self Connector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	return self.Frontend.Run("glab", "mr", "update", strconv.Itoa(proposalData.Data().Number), "--target-branch="+target.String())
