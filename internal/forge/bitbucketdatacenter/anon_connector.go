@@ -15,7 +15,7 @@ var (
 	_                forgedomain.Connector = bbdcWebConnector
 )
 
-// AnonConnector provides access to the API of Bitbucket installations.
+// AnonConnector provides connectivity to Bitbucket DataCenter without authentication.
 type AnonConnector struct {
 	forgedomain.Data
 }

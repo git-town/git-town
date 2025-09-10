@@ -14,7 +14,7 @@ var (
 	_                    forgedomain.Connector = forgejoAnonConnector
 )
 
-// AnonConnector connects to the website of Forgejo instances.
+// AnonConnector provides connectivity to Forgejo without authentication.
 type AnonConnector struct {
 	forgedomain.Data
 }

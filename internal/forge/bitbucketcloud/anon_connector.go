@@ -14,7 +14,7 @@ var (
 	_                forgedomain.Connector = bbclWebConnector
 )
 
-// AnonConnector implements the connector functionality if no API credentials are available.
+// AnonConnector provides connectivity to Bitbucket Cloud without authentication.
 type AnonConnector struct {
 	forgedomain.Data
 }

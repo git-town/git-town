@@ -12,6 +12,7 @@ import (
 var giteaAnonConnector AnonConnector
 var _ forgedomain.Connector = giteaAnonConnector
 
+// AnonConnector provides connectivity to gitea without authentication.
 type AnonConnector struct {
 	forgedomain.Data
 }

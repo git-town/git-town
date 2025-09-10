@@ -12,6 +12,7 @@ import (
 var githubAnonConnector AnonConnector
 var _ forgedomain.Connector = githubAnonConnector
 
+// AnonConnector provides connectivity to GitHub without authentication.
 type AnonConnector struct {
 	forgedomain.Data
 }
