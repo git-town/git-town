@@ -72,7 +72,7 @@ func executeRepo(args []string, cliConfig configdomain.PartialConfig) error {
 	if err != nil {
 		return err
 	}
-	err = data.connector.OpenRepository(repo.Frontend)
+	err = data.connector.BrowseRepository(repo.Frontend)
 	print.Footer(repo.UnvalidatedConfig.NormalConfig.Verbose, repo.CommandsCounter.Immutable(), repo.FinalMessages.Result())
 	return err
 }

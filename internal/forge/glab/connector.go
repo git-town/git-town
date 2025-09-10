@@ -23,6 +23,10 @@ type Connector struct {
 	Frontend subshelldomain.Runner
 }
 
+func (self Connector) BrowseRepository(runner subshelldomain.Runner) error {
+	return runner.Run("glab", "repo", "view", "--web")
+}
+
 func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error {
 	args := []string{"mr", "create", "--source-branch=" + data.Branch.String(), "--target-branch=" + data.ParentBranch.String()}
 	title, hasTitle := data.ProposalTitle.Get()

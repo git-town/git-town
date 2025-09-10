@@ -10,6 +10,9 @@ import (
 
 // Connector describes the capabilities that all connectors can perform on forges.
 type Connector interface {
+	// BrowseRepository opens this repository in the associated application, typically the browser.
+	BrowseRepository(runner subshelldomain.Runner) error
+
 	// CreateProposal creates a proposal at the forge.
 	CreateProposal(CreateProposalArgs) error
 
