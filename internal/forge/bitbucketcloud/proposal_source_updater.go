@@ -15,7 +15,7 @@ var _ forgedomain.ProposalSourceUpdater = bbclAuthConnector
 func (self AuthConnector) UpdateProposalSource(proposalData forgedomain.ProposalInterface, source gitdomain.LocalBranchName) error {
 	data := proposalData.(forgedomain.BitbucketCloudProposalData)
 	self.log.Start(messages.APIUpdateProposalSource, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)), colors.BoldCyan().Styled(source.String()))
-	_, err := self.client.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
+	_, err := self.client.Value.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
 		ID:                strconv.Itoa(data.Number),
 		Owner:             self.Organization,
 		RepoSlug:          self.Repository,

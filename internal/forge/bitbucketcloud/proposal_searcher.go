@@ -14,7 +14,7 @@ var _ forgedomain.ProposalSearcher = bbclAuthConnector
 
 func (self AuthConnector) SearchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
-	response1, err := self.client.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
+	response1, err := self.client.Value.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
 		Owner:    self.Organization,
 		RepoSlug: self.Repository,
 		Query:    fmt.Sprintf("source.branch.name = %q", branch),

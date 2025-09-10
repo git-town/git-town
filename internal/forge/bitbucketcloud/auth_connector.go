@@ -16,12 +16,12 @@ var (
 // AuthConnector implements the connector functionality if API credentials are available.
 type AuthConnector struct {
 	AnonConnector
-	client *bitbucket.Client
+	client Mutable[bitbucket.Client]
 	log    print.Logger
 }
 
 func (self AuthConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
-	user, err := self.client.User.Profile()
+	user, err := self.client.Value.User.Profile()
 	if err != nil {
 		return forgedomain.VerifyCredentialsResult{
 			AuthenticatedUser:   None[string](),
@@ -29,7 +29,7 @@ func (self AuthConnector) VerifyCredentials() forgedomain.VerifyCredentialsResul
 			AuthorizationError:  nil,
 		}
 	}
-	_, err = self.client.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
+	_, err = self.client.Value.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
 		Owner:    self.Organization,
 		RepoSlug: self.Repository,
 		Query:    "",

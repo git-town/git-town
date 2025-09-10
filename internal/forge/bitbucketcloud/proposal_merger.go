@@ -18,7 +18,7 @@ func (self AuthConnector) SquashMergeProposal(number int, message gitdomain.Comm
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
 	self.log.Start(messages.ForgeBitbucketMergingViaAPI, colors.BoldGreen().Styled("#"+strconv.Itoa(number)))
-	_, err := self.client.Repositories.PullRequests.Merge(&bitbucket.PullRequestsOptions{
+	_, err := self.client.Value.Repositories.PullRequests.Merge(&bitbucket.PullRequestsOptions{
 		ID:       strconv.Itoa(number),
 		Owner:    self.Organization,
 		RepoSlug: self.Repository,

@@ -24,7 +24,7 @@ func (self AuthConnector) FindProposal(branch, target gitdomain.LocalBranchName)
 func (self AuthConnector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	query := fmt.Sprintf("source.branch.name = %q AND destination.branch.name = %q", branch, target)
-	result1, err := self.client.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
+	result1, err := self.client.Value.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
 		Owner:    self.Organization,
 		RepoSlug: self.Repository,
 		Query:    query,

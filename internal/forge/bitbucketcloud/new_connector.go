@@ -31,7 +31,7 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint: iretu
 	if hasAuth {
 		return AuthConnector{
 			AnonConnector: webConnector,
-			client:        bitbucket.NewBasicAuth(userName.String(), appPassword.String()),
+			client:        NewMutable(bitbucket.NewBasicAuth(userName.String(), appPassword.String())),
 			log:           args.Log,
 		}
 	}
