@@ -15,11 +15,11 @@ Feature: Create proposals for parked branches
     And a proposal for this branch does not exist
     When I run "git-town propose"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                           |
       | parked | git fetch --prune --tags                                          |
+      |        | Looking for proposal online ... ok                                |
       |        | git merge --no-edit --ff origin/parked                            |
       |        | git push                                                          |
       |        | open https://github.com/git-town/git-town/compare/parked?expand=1 |
