@@ -11,37 +11,37 @@ import (
 
 // type-check to ensure conformance to the Connector interface
 var (
-	bbdcWebConnector AnonConnector
+	bbdcWebConnector WebConnector
 	_                forgedomain.Connector = bbdcWebConnector
 )
 
-// AnonConnector provides connectivity to Bitbucket DataCenter without authentication.
-type AnonConnector struct {
+// WebConnector provides connectivity to Bitbucket DataCenter without authentication.
+type WebConnector struct {
 	forgedomain.Data
 }
 
-func (self AnonConnector) CreateProposal(data forgedomain.CreateProposalArgs) error {
+func (self WebConnector) CreateProposal(data forgedomain.CreateProposalArgs) error {
 	browser.Open(self.NewProposalURL(data), data.FrontendRunner)
 	return nil
 }
 
-func (self AnonConnector) DefaultProposalMessage(proposalData forgedomain.ProposalData) string {
+func (self WebConnector) DefaultProposalMessage(proposalData forgedomain.ProposalData) string {
 	data := proposalData.Data()
 	return forgedomain.CommitBody(data, fmt.Sprintf("%s (#%d)", data.Title, data.Number))
 }
 
-func (self AnonConnector) NewProposalURL(data forgedomain.CreateProposalArgs) string {
+func (self WebConnector) NewProposalURL(data forgedomain.CreateProposalArgs) string {
 	return fmt.Sprintf("%s/pull-requests?create&sourceBranch=%s&targetBranch=%s",
 		self.RepositoryURL(),
 		url.QueryEscape(data.Branch.String()),
 		url.QueryEscape(data.ParentBranch.String()))
 }
 
-func (self AnonConnector) OpenRepository(runner subshelldomain.Runner) error {
+func (self WebConnector) OpenRepository(runner subshelldomain.Runner) error {
 	browser.Open(self.RepositoryURL(), runner)
 	return nil
 }
 
-func (self AnonConnector) RepositoryURL() string {
+func (self WebConnector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/projects/%s/repos/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
 }

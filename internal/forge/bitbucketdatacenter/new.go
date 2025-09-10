@@ -7,10 +7,15 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
+// Detect always return false because we can't guess a self-hosted URL.
+func Detect(_ giturl.Parts) bool {
+	return false
+}
+
 // NewConnector provides a Bitbucket connector instance if the current repo is hosted on Bitbucket,
 // otherwise nil.
 func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:ireturn
-	webConnector := AnonConnector{
+	webConnector := WebConnector{
 		Data: forgedomain.Data{
 			Hostname:     args.RemoteURL.Host,
 			Organization: args.RemoteURL.Org,
@@ -21,11 +26,11 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:iretur
 	if !hasAuth {
 		return webConnector
 	}
-	return AuthConnector{
-		AnonConnector: webConnector,
-		log:           args.Log,
-		token:         args.AppPassword.String(),
-		username:      args.UserName.String(),
+	return APIConnector{
+		WebConnector: webConnector,
+		log:          args.Log,
+		token:        args.AppPassword.String(),
+		username:     args.UserName.String(),
 	}
 }
 

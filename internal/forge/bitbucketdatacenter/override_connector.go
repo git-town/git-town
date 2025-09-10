@@ -1,4 +1,4 @@
-package bitbucketcloud
+package bitbucketdatacenter
 
 import (
 	"github.com/git-town/git-town/v21/internal/cli/print"
@@ -23,7 +23,8 @@ type OverrideConnector struct {
 // find proposals
 // ============================================================================
 
-var _ forgedomain.ProposalFinder = bbclOverrideConnector
+// type-check to enforce conformance to the ProposalFinder interface
+var _ forgedomain.ProposalFinder = bbdcAPIConnector
 
 func (self OverrideConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
@@ -31,18 +32,14 @@ func (self OverrideConnector) FindProposal(branch, target gitdomain.LocalBranchN
 	if self.override == forgedomain.OverrideNoProposal {
 		return None[forgedomain.Proposal](), nil
 	}
-	proposal := forgedomain.BitbucketCloudProposalData{
-		ProposalData: forgedomain.ProposalData{
-			Body:         None[string](),
-			MergeWithAPI: true,
-			Number:       123,
-			Source:       branch,
-			Target:       target,
-			Title:        "title",
-			URL:          self.override.String(),
-		},
-		CloseSourceBranch: false,
-		Draft:             false,
+	data := forgedomain.ProposalData{
+		Body:         None[string](),
+		MergeWithAPI: true,
+		Number:       123,
+		Source:       branch,
+		Target:       target,
+		Title:        "title",
+		URL:          self.override.String(),
 	}
-	return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeBitbucket}), nil
+	return Some(forgedomain.Proposal{Data: data, ForgeType: forgedomain.ForgeTypeBitbucketDatacenter}), nil
 }
