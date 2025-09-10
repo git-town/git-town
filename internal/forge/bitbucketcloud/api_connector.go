@@ -267,7 +267,7 @@ func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalI
 }
 
 // ============================================================================
-// verify authentication
+// verify credentials
 // ============================================================================
 
 var _ forgedomain.AuthVerifier = apiConnector
