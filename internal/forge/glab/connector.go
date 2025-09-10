@@ -12,8 +12,8 @@ import (
 
 var (
 	glabConnector Connector
-	_             forgedomain.AuthVerifier = glabConnector
-	_             forgedomain.Connector    = glabConnector
+	_             forgedomain.CredentialVerifier = glabConnector
+	_             forgedomain.Connector          = glabConnector
 )
 
 // Connector provides standardized connectivity for the given repository (github.com/owner/repo)

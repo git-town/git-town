@@ -102,31 +102,6 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 }
 
 // ============================================================================
-// merge proposals
-// ============================================================================
-
-var _ forgedomain.ProposalMerger = apiConnector
-
-func (self APIConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
-	if number <= 0 {
-		return errors.New(messages.ProposalNoNumberGiven)
-	}
-	self.log.Start(messages.ForgeBitbucketMergingViaAPI, colors.BoldGreen().Styled("#"+strconv.Itoa(number)))
-	_, err := self.client.Value.Repositories.PullRequests.Merge(&bitbucket.PullRequestsOptions{
-		ID:       strconv.Itoa(number),
-		Owner:    self.Organization,
-		RepoSlug: self.Repository,
-		Message:  message.String(),
-	})
-	if err != nil {
-		self.log.Failed(err.Error())
-		return err
-	}
-	self.log.Ok()
-	return nil
-}
-
-// ============================================================================
 // search proposals
 // ============================================================================
 
@@ -189,6 +164,31 @@ func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Optio
 }
 
 // ============================================================================
+// merge proposals
+// ============================================================================
+
+var _ forgedomain.ProposalMerger = apiConnector
+
+func (self APIConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
+	if number <= 0 {
+		return errors.New(messages.ProposalNoNumberGiven)
+	}
+	self.log.Start(messages.ForgeBitbucketMergingViaAPI, colors.BoldGreen().Styled("#"+strconv.Itoa(number)))
+	_, err := self.client.Value.Repositories.PullRequests.Merge(&bitbucket.PullRequestsOptions{
+		ID:       strconv.Itoa(number),
+		Owner:    self.Organization,
+		RepoSlug: self.Repository,
+		Message:  message.String(),
+	})
+	if err != nil {
+		self.log.Failed(err.Error())
+		return err
+	}
+	self.log.Ok()
+	return nil
+}
+
+// ============================================================================
 // udpate proposal source
 // ============================================================================
 
@@ -217,10 +217,10 @@ func (self APIConnector) UpdateProposalSource(proposalData forgedomain.ProposalI
 }
 
 // ============================================================================
-// update proposals
+// update proposal body
 // ============================================================================
 
-var _ forgedomain.ProposalUpdater = apiConnector
+var _ forgedomain.ProposalBodyUpdater = apiConnector
 
 func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, newBody string) error {
 	data := proposalData.(forgedomain.BitbucketCloudProposalData)
@@ -243,6 +243,12 @@ func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInt
 	self.log.Ok()
 	return nil
 }
+
+// ============================================================================
+// update proposal target
+// ============================================================================
+
+var _ forgedomain.ProposalTargetUpdater = apiConnector
 
 func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	data := proposalData.(forgedomain.BitbucketCloudProposalData)
@@ -270,7 +276,7 @@ func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalI
 // verify credentials
 // ============================================================================
 
-var _ forgedomain.AuthVerifier = apiConnector
+var _ forgedomain.CredentialVerifier = apiConnector
 
 func (self APIConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
 	user, err := self.client.Value.User.Profile()

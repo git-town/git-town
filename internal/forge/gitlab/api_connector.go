@@ -17,8 +17,8 @@ import (
 // type-check to ensure conformance to the Connector interface
 var (
 	gitlabAuthConnector AuthConnector
-	_                   forgedomain.AuthVerifier = gitlabAuthConnector
-	_                   forgedomain.Connector    = gitlabAuthConnector
+	_                   forgedomain.CredentialVerifier = gitlabAuthConnector
+	_                   forgedomain.Connector          = gitlabAuthConnector
 )
 
 // AuthConnector provides access to the GitLab API.

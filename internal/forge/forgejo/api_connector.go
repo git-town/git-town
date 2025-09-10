@@ -17,8 +17,8 @@ import (
 // type-check to ensure conformance to the Connector interface
 var (
 	apiConnector APIConnector
-	_            forgedomain.AuthVerifier = apiConnector
-	_            forgedomain.Connector    = apiConnector
+	_            forgedomain.CredentialVerifier = apiConnector
+	_            forgedomain.Connector          = apiConnector
 )
 
 // APIConnector provides access to the Forgejo API.
@@ -123,10 +123,10 @@ func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Optio
 }
 
 // ============================================================================
-// update proposals
+// update proposal body
 // ============================================================================
 
-var _ forgedomain.ProposalUpdater = apiConnector
+var _ forgedomain.ProposalBodyUpdater = apiConnector
 
 func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, newBody string) error {
 	data := proposalData.Data()
@@ -141,6 +141,12 @@ func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInt
 	self.log.Ok()
 	return nil
 }
+
+// ============================================================================
+// update proposal target
+// ============================================================================
+
+var _ forgedomain.ProposalTargetUpdater = apiConnector
 
 func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	data := proposalData.Data()
@@ -161,7 +167,7 @@ func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalI
 // verify credentials
 // ============================================================================
 
-var _ forgedomain.AuthVerifier = apiConnector
+var _ forgedomain.CredentialVerifier = apiConnector
 
 func (self APIConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
 	user, _, err := self.client.GetMyUserInfo()

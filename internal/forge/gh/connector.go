@@ -18,8 +18,8 @@ import (
 
 var (
 	ghConnector Connector
-	_           forgedomain.Connector    = ghConnector
-	_           forgedomain.AuthVerifier = ghConnector
+	_           forgedomain.Connector          = ghConnector
+	_           forgedomain.CredentialVerifier = ghConnector
 )
 
 // Connector talks to the GitHub API through the "gh" executable.

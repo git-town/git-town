@@ -30,8 +30,8 @@ type CreateProposalArgs struct {
 	ProposalTitle  Option[gitdomain.ProposalTitle]
 }
 
-// AuthVerifier describes capabilities to verify credentials.
-type AuthVerifier interface {
+// CredentialVerifier describes capabilities to verify credentials.
+type CredentialVerifier interface {
 	// VerifyConnection checks whether this connector can make successful requests to the forge.
 	VerifyCredentials() VerifyCredentialsResult
 }
@@ -74,18 +74,12 @@ type ProposalMerger interface {
 
 // ProposalUpdater describes methods that connectors need to implement
 // to enable Git Town to update proposals at the active forge.
-type ProposalUpdater interface {
+type ProposalBodyUpdater interface {
 	// If the connector instance supports loading proposals via the API,
 	// calling this function returns a function that you can call
 	// to update the body (description) of the given proposal to the given value.
 	// A None return value indicates that this connector does not support this feature (yet).
 	UpdateProposalBody(proposal ProposalInterface, newBody string) error
-
-	// If this connector instance supports loading proposals via the API,
-	// calling this function returns a function that you can call
-	// to update the target branch of the proposal with the given number.
-	// A None return value indicates that this connector does not support this feature (yet).
-	UpdateProposalTarget(proposal ProposalInterface, newTarget gitdomain.LocalBranchName) error
 }
 
 // ProposalSourceUpdater describes methods that connectors need to implement
@@ -96,4 +90,12 @@ type ProposalSourceUpdater interface {
 	// to update the source branch of the proposal with the given number.
 	// A None return value indicates that this connector does not support this feature (yet).
 	UpdateProposalSource(proposal ProposalInterface, newSource gitdomain.LocalBranchName) error
+}
+
+type ProposalTargetUpdater interface {
+	// If this connector instance supports loading proposals via the API,
+	// calling this function returns a function that you can call
+	// to update the target branch of the proposal with the given number.
+	// A None return value indicates that this connector does not support this feature (yet).
+	UpdateProposalTarget(proposal ProposalInterface, newTarget gitdomain.LocalBranchName) error
 }

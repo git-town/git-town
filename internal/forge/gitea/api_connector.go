@@ -17,8 +17,8 @@ import (
 // type-check to ensure conformance to the Connector interface
 var (
 	apiConnector AuthConnector
-	_            forgedomain.AuthVerifier = apiConnector
-	_            forgedomain.Connector    = apiConnector
+	_            forgedomain.CredentialVerifier = apiConnector
+	_            forgedomain.Connector          = apiConnector
 )
 
 // AuthConnector provides access to the gitea API.
@@ -123,10 +123,10 @@ func (self AuthConnector) SearchProposal(branch gitdomain.LocalBranchName) (Opti
 }
 
 // ============================================================================
-// update proposals
+// update proposal body
 // ============================================================================
 
-var _ forgedomain.ProposalUpdater = apiConnector
+var _ forgedomain.ProposalBodyUpdater = apiConnector
 
 func (self AuthConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody string) error {
 	data := proposalData.Data()
@@ -141,6 +141,12 @@ func (self AuthConnector) UpdateProposalBody(proposalData forgedomain.ProposalIn
 	self.log.Ok()
 	return nil
 }
+
+// ============================================================================
+// update proposal target
+// ============================================================================
+
+var _ forgedomain.ProposalTargetUpdater = apiConnector
 
 func (self AuthConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	data := proposalData.Data()
