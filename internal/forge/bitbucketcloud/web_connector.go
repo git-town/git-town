@@ -19,6 +19,11 @@ type WebConnector struct {
 	forgedomain.Data
 }
 
+func (self WebConnector) BrowseRepository(runner subshelldomain.Runner) error {
+	browser.Open(self.RepositoryURL(), runner)
+	return nil
+}
+
 func (self WebConnector) CreateProposal(data forgedomain.CreateProposalArgs) error {
 	browser.Open(self.NewProposalURL(data), data.FrontendRunner)
 	return nil
@@ -35,11 +40,6 @@ func (self WebConnector) NewProposalURL(data forgedomain.CreateProposalArgs) str
 		url.QueryEscape(self.Organization),
 		url.QueryEscape(self.Repository),
 		url.QueryEscape(data.ParentBranch.String()))
-}
-
-func (self WebConnector) OpenRepository(runner subshelldomain.Runner) error {
-	browser.Open(self.RepositoryURL(), runner)
-	return nil
 }
 
 func (self WebConnector) RepositoryURL() string {

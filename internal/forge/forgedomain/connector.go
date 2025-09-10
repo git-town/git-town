@@ -19,9 +19,6 @@ type Connector interface {
 	// DefaultProposalMessage provides the text that the form for creating new proposals
 	// on the respective forge type is prepopulated with.
 	DefaultProposalMessage(proposal ProposalData) string
-
-	// OpenRepository opens this repository in the associated application, typically the browser.
-	OpenRepository(runner subshelldomain.Runner) error
 }
 
 type CreateProposalArgs struct {

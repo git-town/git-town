@@ -19,6 +19,11 @@ type WebConnector struct {
 	forgedomain.Data
 }
 
+func (self WebConnector) BrowseRepository(runner subshelldomain.Runner) error {
+	browser.Open(self.RepositoryURL(), runner)
+	return nil
+}
+
 func (self WebConnector) CreateProposal(data forgedomain.CreateProposalArgs) error {
 	url := self.NewProposalURL(data)
 	browser.Open(url, data.FrontendRunner)
@@ -40,11 +45,6 @@ func (self WebConnector) NewProposalURL(data forgedomain.CreateProposalArgs) str
 		query.Add("merge_request[description]", body.String())
 	}
 	return fmt.Sprintf("%s/-/merge_requests/new?%s", self.RepositoryURL(), query.Encode())
-}
-
-func (self WebConnector) OpenRepository(runner subshelldomain.Runner) error {
-	browser.Open(self.RepositoryURL(), runner)
-	return nil
 }
 
 func (self WebConnector) RepositoryURL() string {
