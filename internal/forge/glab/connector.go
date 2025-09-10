@@ -3,15 +3,19 @@ package glab
 import (
 	"errors"
 	"regexp"
-	"strconv"
 	"strings"
 
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/forge/gitlab"
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
+)
+
+var (
+	glabConnector Connector
+	_             forgedomain.AuthVerifier = glabConnector
+	_             forgedomain.Connector    = glabConnector
 )
 
 // Connector provides standardized connectivity for the given repository (github.com/owner/repo)
@@ -42,32 +46,8 @@ func (self Connector) DefaultProposalMessage(data forgedomain.ProposalData) stri
 	return gitlab.DefaultProposalMessage(data)
 }
 
-func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
-	return Some(self.findProposal)
-}
-
 func (self Connector) OpenRepository(runner subshelldomain.Runner) error {
 	return runner.Run("glab", "repo", "view", "--web")
-}
-
-func (self Connector) SearchProposalFn() Option[func(gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
-	return Some(self.searchProposal)
-}
-
-func (self Connector) SquashMergeProposalFn() Option[func(int, gitdomain.CommitMessage) error] {
-	return Some(self.squashMergeProposal)
-}
-
-func (self Connector) UpdateProposalBodyFn() Option[func(forgedomain.ProposalInterface, string) error] {
-	return Some(self.updateProposalBody)
-}
-
-func (self Connector) UpdateProposalSourceFn() Option[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName) error] {
-	return None[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName) error]()
-}
-
-func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName) error] {
-	return Some(self.updateProposalTarget)
 }
 
 func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
@@ -80,34 +60,6 @@ func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
 		}
 	}
 	return ParsePermissionsOutput(output)
-}
-
-func (self Connector) findProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
-	out, err := self.Backend.Query("glab", "mr", "list", "--source-branch="+branch.String(), "--target-branch="+target.String(), "--output=json")
-	if err != nil {
-		return None[forgedomain.Proposal](), err
-	}
-	return ParseJSONOutput(out, branch)
-}
-
-func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
-	out, err := self.Backend.Query("glab", "--source-branch="+branch.String(), "--output=json")
-	if err != nil {
-		return None[forgedomain.Proposal](), err
-	}
-	return ParseJSONOutput(out, branch)
-}
-
-func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMessage) error {
-	return self.Frontend.Run("glab", "mr", "merge", "--squash", "--body="+message.String(), strconv.Itoa(number))
-}
-
-func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterface, updatedDescription string) error {
-	return self.Frontend.Run("glab", "mr", "update", strconv.Itoa(proposalData.Data().Number), "--description="+updatedDescription)
-}
-
-func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
-	return self.Frontend.Run("glab", "mr", "update", strconv.Itoa(proposalData.Data().Number), "--target-branch="+target.String())
 }
 
 func ParsePermissionsOutput(output string) forgedomain.VerifyConnectionResult {
