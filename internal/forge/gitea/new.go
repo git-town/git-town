@@ -17,9 +17,10 @@ func Detect(remoteURL giturl.Parts) bool {
 }
 
 type NewConnectorArgs struct {
-	APIToken  Option[forgedomain.GiteaToken]
-	Log       print.Logger
-	RemoteURL giturl.Parts
+	APIToken         Option[forgedomain.GiteaToken]
+	Log              print.Logger
+	ProposalOverride Option[forgedomain.ProposalOverride]
+	RemoteURL        giturl.Parts
 }
 
 // NewGiteaConfig provides Gitea configuration data if the current repo is hosted on Gitea,
@@ -31,6 +32,13 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:iretur
 			Organization: args.RemoteURL.Org,
 			Repository:   args.RemoteURL.Repo,
 		},
+	}
+	if proposalURLOverride, hasProposalOverride := args.ProposalOverride.Get(); hasProposalOverride {
+		return TestConnector{
+			WebConnector: webConnector,
+			log:          args.Log,
+			override:     proposalURLOverride,
+		}
 	}
 	apiToken, hasAPIToken := args.APIToken.Get()
 	if !hasAPIToken {

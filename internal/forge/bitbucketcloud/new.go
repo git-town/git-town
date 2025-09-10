@@ -14,11 +14,12 @@ func Detect(remoteURL giturl.Parts) bool {
 }
 
 type NewConnectorArgs struct {
-	AppPassword Option[forgedomain.BitbucketAppPassword]
-	ForgeType   Option[forgedomain.ForgeType]
-	Log         print.Logger
-	RemoteURL   giturl.Parts
-	UserName    Option[forgedomain.BitbucketUsername]
+	AppPassword      Option[forgedomain.BitbucketAppPassword]
+	ForgeType        Option[forgedomain.ForgeType]
+	Log              print.Logger
+	ProposalOverride Option[forgedomain.ProposalOverride]
+	RemoteURL        giturl.Parts
+	UserName         Option[forgedomain.BitbucketUsername]
 }
 
 // NewConnector provides the correct connector for talking to Bitbucket Cloud.
@@ -29,6 +30,13 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint: iretu
 			Organization: args.RemoteURL.Org,
 			Repository:   args.RemoteURL.Repo,
 		},
+	}
+	if proposalURLOverride, hasProposalOverride := args.ProposalOverride.Get(); hasProposalOverride {
+		return TestConnector{
+			WebConnector: webConnector,
+			log:          args.Log,
+			override:     proposalURLOverride,
+		}
 	}
 	userName, hasUserName := args.UserName.Get()
 	appPassword, hasAppPassword := args.AppPassword.Get()

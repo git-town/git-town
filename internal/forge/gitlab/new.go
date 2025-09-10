@@ -14,30 +14,38 @@ func Detect(remoteURL giturl.Parts) bool {
 }
 
 type NewConnectorArgs struct {
-	APIToken  Option[forgedomain.GitLabToken]
-	Log       print.Logger
-	RemoteURL giturl.Parts
+	APIToken         Option[forgedomain.GitLabToken]
+	Log              print.Logger
+	ProposalOverride Option[forgedomain.ProposalOverride]
+	RemoteURL        giturl.Parts
 }
 
 func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //nolint: ireturn
-	anonConnector := WebConnector{
+	webConnector := WebConnector{
 		Data: forgedomain.Data{
 			Hostname:     args.RemoteURL.Host,
 			Organization: args.RemoteURL.Org,
 			Repository:   args.RemoteURL.Repo,
 		},
 	}
+	if proposalURLOverride, hasProposalOverride := args.ProposalOverride.Get(); hasProposalOverride {
+		return TestConnector{
+			WebConnector: webConnector,
+			log:          args.Log,
+			override:     proposalURLOverride,
+		}, nil
+	}
 	apiToken, hasAPIToken := args.APIToken.Get()
 	if !hasAPIToken {
-		return anonConnector, nil
+		return webConnector, nil
 	}
-	client, err := gitlab.NewClient(apiToken.String(), gitlab.WithBaseURL(anonConnector.baseURL()))
+	client, err := gitlab.NewClient(apiToken.String(), gitlab.WithBaseURL(webConnector.baseURL()))
 	if err != nil {
-		return anonConnector, err
+		return webConnector, err
 	}
 	return AuthConnector{
 		APIToken:     apiToken,
-		WebConnector: anonConnector,
+		WebConnector: webConnector,
 		client:       client,
 		log:          args.Log,
 	}, nil

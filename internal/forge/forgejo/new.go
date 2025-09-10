@@ -14,9 +14,10 @@ func Detect(remoteURL giturl.Parts) bool {
 }
 
 type NewConnectorArgs struct {
-	APIToken  Option[forgedomain.ForgejoToken]
-	Log       print.Logger
-	RemoteURL giturl.Parts
+	APIToken         Option[forgedomain.ForgejoToken]
+	Log              print.Logger
+	ProposalOverride Option[forgedomain.ProposalOverride]
+	RemoteURL        giturl.Parts
 }
 
 // NewConnector provides a new connector instance.
@@ -27,6 +28,13 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 			Organization: args.RemoteURL.Org,
 			Repository:   args.RemoteURL.Repo,
 		},
+	}
+	if proposalURLOverride, hasProposalOverride := args.ProposalOverride.Get(); hasProposalOverride {
+		return TestConnector{
+			WebConnector: webConnector,
+			log:          args.Log,
+			override:     proposalURLOverride,
+		}, nil
 	}
 	hasAuth := args.APIToken.IsSome()
 	if !hasAuth {

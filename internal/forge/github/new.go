@@ -28,7 +28,7 @@ type NewConnectorArgs struct {
 }
 
 func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //nolint: ireturn
-	anonConnector := WebConnector{
+	webConnector := WebConnector{
 		Data: forgedomain.Data{
 			Hostname:     args.RemoteURL.Host,
 			Organization: args.RemoteURL.Org,
@@ -37,14 +37,14 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 	}
 	if proposalURLOverride, hasProposalOverride := args.ProposalOverride.Get(); hasProposalOverride {
 		return TestConnector{
-			WebConnector: anonConnector,
+			WebConnector: webConnector,
 			log:          args.Log,
 			override:     proposalURLOverride,
 		}, nil
 	}
 	apiToken, hasAPIToken := args.APIToken.Get()
 	if !hasAPIToken {
-		return anonConnector, nil
+		return webConnector, nil
 	}
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: apiToken.String()})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
@@ -54,12 +54,12 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 		var err error
 		githubClient, err = githubClient.WithEnterpriseURLs(url, url)
 		if err != nil {
-			return anonConnector, fmt.Errorf(messages.GitHubEnterpriseInitializeError, err)
+			return webConnector, fmt.Errorf(messages.GitHubEnterpriseInitializeError, err)
 		}
 	}
 	return APIConnector{
 		APIToken:     args.APIToken,
-		WebConnector: anonConnector,
+		WebConnector: webConnector,
 		client:       NewMutable(githubClient),
 		log:          args.Log,
 	}, nil

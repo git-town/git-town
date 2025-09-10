@@ -23,6 +23,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 	if !hasRemoteURL || !hasForgeType {
 		return None[forgedomain.Connector](), nil
 	}
+	proposalOverride := forgedomain.ReadProposalOverride()
 	var connector forgedomain.Connector
 	var err error
 	switch forgeType {
@@ -59,9 +60,10 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			switch githubConnectorType {
 			case forgedomain.GitHubConnectorTypeAPI:
 				connector, err = github.NewConnector(github.NewConnectorArgs{
-					APIToken:  args.GitHubToken,
-					Log:       args.Log,
-					RemoteURL: remoteURL,
+					APIToken:         args.GitHubToken,
+					Log:              args.Log,
+					ProposalOverride: proposalOverride,
+					RemoteURL:        remoteURL,
 				})
 			case forgedomain.GitHubConnectorTypeGh:
 				connector = gh.Connector{
@@ -72,9 +74,10 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 		} else {
 			// no GitHubConnectorType specified --> use the API connector
 			connector, err = github.NewConnector(github.NewConnectorArgs{
-				APIToken:  args.GitHubToken,
-				Log:       args.Log,
-				RemoteURL: remoteURL,
+				APIToken:         args.GitHubToken,
+				Log:              args.Log,
+				ProposalOverride: proposalOverride,
+				RemoteURL:        remoteURL,
 			})
 		}
 	case forgedomain.ForgeTypeGitLab:
@@ -82,9 +85,10 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			switch gitLabConnectorType {
 			case forgedomain.GitLabConnectorTypeAPI:
 				connector, err = gitlab.NewConnector(gitlab.NewConnectorArgs{
-					APIToken:  args.GitLabToken,
-					Log:       args.Log,
-					RemoteURL: remoteURL,
+					APIToken:         args.GitLabToken,
+					Log:              args.Log,
+					ProposalOverride: proposalOverride,
+					RemoteURL:        remoteURL,
 				})
 			case forgedomain.GitLabConnectorTypeGlab:
 				connector = glab.Connector{
@@ -95,9 +99,10 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 		} else {
 			// no GitLabConnectorType specified --> use the API connector
 			connector, err = gitlab.NewConnector(gitlab.NewConnectorArgs{
-				APIToken:  args.GitLabToken,
-				Log:       args.Log,
-				RemoteURL: remoteURL,
+				APIToken:         args.GitLabToken,
+				Log:              args.Log,
+				ProposalOverride: proposalOverride,
+				RemoteURL:        remoteURL,
 			})
 		}
 	}

@@ -22,6 +22,13 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:iretur
 			Repository:   args.RemoteURL.Repo,
 		},
 	}
+	if proposalURLOverride, hasProposalOverride := args.ProposalOverride.Get(); hasProposalOverride {
+		return TestConnector{
+			WebConnector: webConnector,
+			log:          args.Log,
+			override:     proposalURLOverride,
+		}
+	}
 	hasAuth := args.UserName.IsSome() && args.AppPassword.IsSome()
 	if !hasAuth {
 		return webConnector
@@ -35,9 +42,10 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:iretur
 }
 
 type NewConnectorArgs struct {
-	AppPassword Option[forgedomain.BitbucketAppPassword]
-	ForgeType   Option[forgedomain.ForgeType]
-	Log         print.Logger
-	RemoteURL   giturl.Parts
-	UserName    Option[forgedomain.BitbucketUsername]
+	AppPassword      Option[forgedomain.BitbucketAppPassword]
+	ForgeType        Option[forgedomain.ForgeType]
+	Log              print.Logger
+	ProposalOverride Option[forgedomain.ProposalOverride]
+	RemoteURL        giturl.Parts
+	UserName         Option[forgedomain.BitbucketUsername]
 }
