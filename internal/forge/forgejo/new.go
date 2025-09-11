@@ -20,7 +20,7 @@ type NewConnectorArgs struct {
 	RemoteURL        giturl.Parts
 }
 
-// NewConnector provides a new connector instance.
+// NewConnector provides a new connector instance for the Forgejo API.
 func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //nolint:ireturn
 	webConnector := WebConnector{
 		Data: forgedomain.Data{
