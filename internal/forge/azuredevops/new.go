@@ -8,7 +8,7 @@ import (
 
 // Detect indicates whether the current repository is hosted on Azure DevOps.
 func Detect(remoteURL giturl.Parts) bool {
-	return remoteURL.Host == "dev.azure.com"
+	return remoteURL.Host == "dev.azure.com" || remoteURL.Host == "ssh.dev.azure.com"
 }
 
 type NewConnectorArgs struct {
