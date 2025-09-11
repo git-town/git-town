@@ -13,7 +13,7 @@ func Prototype() (AddFunc, ReadPrototypeFlagFunc) {
 		cmd.Flags().BoolP(prototypeLong, "p", false, "create a prototype branch")
 	}
 	readFlag := func(cmd *cobra.Command) (configdomain.Prototype, error) {
-		return readBoolFlag[configdomain.Prototype](cmd, prototypeLong)
+		return readBoolFlag[configdomain.Prototype](cmd.Flags(), prototypeLong)
 	}
 	return addFlag, readFlag
 }
