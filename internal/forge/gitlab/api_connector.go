@@ -31,6 +31,8 @@ type APIConnector struct {
 // find proposals
 // ============================================================================
 
+var _ forgedomain.ProposalFinder = apiConnector
+
 func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	opts := &gitlab.ListProjectMergeRequestsOptions{
@@ -60,6 +62,8 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 // search proposals
 // ============================================================================
 
+var _ forgedomain.ProposalSearcher = apiConnector
+
 func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
 	opts := &gitlab.ListProjectMergeRequestsOptions{
@@ -88,6 +92,8 @@ func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Optio
 // squash-merge proposals
 // ============================================================================
 
+var _ forgedomain.ProposalMerger = apiConnector
+
 func (self APIConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
@@ -109,8 +115,10 @@ func (self APIConnector) SquashMergeProposal(number int, message gitdomain.Commi
 }
 
 // ============================================================================
-// update proposals
+// update proposal body
 // ============================================================================
+
+var _ forgedomain.ProposalBodyUpdater = apiConnector
 
 func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedDescription string) error {
 	data := proposalData.Data()
@@ -125,6 +133,12 @@ func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInt
 	self.log.Ok()
 	return nil
 }
+
+// ============================================================================
+// update proposal target
+// ============================================================================
+
+var _ forgedomain.ProposalTargetUpdater = apiConnector
 
 func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	data := proposalData.Data()
