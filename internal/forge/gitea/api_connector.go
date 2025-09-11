@@ -14,7 +14,7 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-// type-check to ensure conformance to the Connector interface
+// type checks
 var (
 	apiConnector AuthConnector
 	_            forgedomain.CredentialVerifier = apiConnector

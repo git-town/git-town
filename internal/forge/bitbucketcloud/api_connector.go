@@ -14,6 +14,7 @@ import (
 	"github.com/ktrysmt/go-bitbucket"
 )
 
+// type checks
 var (
 	apiConnector APIConnector
 	_            forgedomain.Connector = apiConnector

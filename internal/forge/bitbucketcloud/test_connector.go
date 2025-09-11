@@ -8,6 +8,7 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
+// type checks
 var (
 	testConnector TestConnector
 	_             forgedomain.Connector = testConnector

@@ -10,6 +10,7 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
+// type checks
 var (
 	glabConnector Connector
 	_             forgedomain.CredentialVerifier = glabConnector

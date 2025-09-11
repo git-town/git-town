@@ -15,7 +15,7 @@ import (
 	"github.com/google/go-github/v58/github"
 )
 
-// type-check to ensure conformance to the Connector interface
+// type checks
 var (
 	githubAuthConnector APIConnector
 	_                   forgedomain.Connector = githubAuthConnector

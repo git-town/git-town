@@ -16,6 +16,7 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
+// type checks
 var (
 	ghConnector Connector
 	_           forgedomain.Connector          = ghConnector
