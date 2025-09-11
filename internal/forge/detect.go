@@ -1,6 +1,7 @@
 package forge
 
 import (
+	"github.com/git-town/git-town/v21/internal/forge/azuredevops"
 	"github.com/git-town/git-town/v21/internal/forge/bitbucketcloud"
 	"github.com/git-town/git-town/v21/internal/forge/bitbucketdatacenter"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
@@ -17,6 +18,7 @@ func Detect(remoteURL giturl.Parts, userOverride Option[forgedomain.ForgeType]) 
 		return userOverride
 	}
 	detectors := map[forgedomain.ForgeType]func(giturl.Parts) bool{
+		forgedomain.ForgeTypeAzureDevOps:         azuredevops.Detect,
 		forgedomain.ForgeTypeBitbucket:           bitbucketcloud.Detect,
 		forgedomain.ForgeTypeBitbucketDatacenter: bitbucketdatacenter.Detect,
 		forgedomain.ForgeTypeForgejo:             forgejo.Detect,

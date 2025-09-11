@@ -1,2 +1,2 @@
-// Package gh implements a forge connector that uses the "gh" tool from GitHub for API access.
+// Package gh connects to GitHub via the "gh" CLI tool.
 package gh

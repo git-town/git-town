@@ -1,2 +1,2 @@
-// Package forgejo provides the forge connector for Forgejo-based platforms.
+// Package forgejo connects to Forgejo instances including codeberg.org.
 package forgejo

@@ -1,2 +1,2 @@
-// Package bitbucketcloud implements connectivity to the Bitbucket Cloud API.
+// Package bitbucketcloud connects to Bitbucket Cloud.
 package bitbucketcloud

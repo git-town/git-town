@@ -26,17 +26,17 @@ Feature: enter the Gitea API token
 
   Scenario: select Gitea manually
     When I run "git-town init" and enter into the dialog:
-      | DIALOG             | KEYS                      | DESCRIPTION                                 |
-      | welcome            | enter                     |                                             |
-      | aliases            | enter                     |                                             |
-      | main branch        | enter                     |                                             |
-      | perennial branches |                           | no input here since the dialog doesn't show |
-      | origin hostname    | enter                     |                                             |
-      | forge type         | down down down down enter |                                             |
-      | gitea token        | g i t e a - t o k enter   |                                             |
-      | token scope        | enter                     |                                             |
-      | enter all          | enter                     |                                             |
-      | config storage     | enter                     | git metadata                                |
+      | DIALOG             | KEYS                           | DESCRIPTION                                 |
+      | welcome            | enter                          |                                             |
+      | aliases            | enter                          |                                             |
+      | main branch        | enter                          |                                             |
+      | perennial branches |                                | no input here since the dialog doesn't show |
+      | origin hostname    | enter                          |                                             |
+      | forge type         | down down down down down enter |                                             |
+      | gitea token        | g i t e a - t o k enter        |                                             |
+      | token scope        | enter                          |                                             |
+      | enter all          | enter                          |                                             |
+      | config storage     | enter                          | git metadata                                |
     Then Git Town runs the commands
       | COMMAND                                   |
       | git config git-town.gitea-token gitea-tok |

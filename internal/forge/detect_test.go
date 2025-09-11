@@ -13,6 +13,15 @@ import (
 func TestDetect(t *testing.T) {
 	t.Parallel()
 
+	t.Run("Azure DevOps", func(t *testing.T) {
+		t.Parallel()
+		url, has := giturl.Parse("username@ssh.dev.azure.com:v3/kevingoslar/tikibase/tikibase").Get()
+		must.True(t, has)
+		have := forge.Detect(url, None[forgedomain.ForgeType]())
+		want := Some(forgedomain.ForgeTypeAzureDevOps)
+		must.Eq(t, want, have)
+	})
+
 	t.Run("BitBucket SAAS, no override", func(t *testing.T) {
 		t.Parallel()
 		url, has := giturl.Parse("username@bitbucket.org:git-town/docs.git").Get()
