@@ -17,8 +17,7 @@ import (
 // type checks
 var (
 	apiConnector AuthConnector
-	_            forgedomain.CredentialVerifier = apiConnector
-	_            forgedomain.Connector          = apiConnector
+	_            forgedomain.Connector = apiConnector
 )
 
 // AuthConnector provides access to the gitea API.
@@ -166,6 +165,8 @@ func (self AuthConnector) UpdateProposalTarget(proposalData forgedomain.Proposal
 // ============================================================================
 // verify credentials
 // ============================================================================
+
+var _ forgedomain.CredentialVerifier = apiConnector
 
 func (self AuthConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
 	user, _, err := self.client.GetMyUserInfo()

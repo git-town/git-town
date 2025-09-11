@@ -17,8 +17,7 @@ import (
 // type-check to ensure conformance to the Connector interface
 var (
 	gitlabAuthConnector AuthConnector
-	_                   forgedomain.CredentialVerifier = gitlabAuthConnector
-	_                   forgedomain.Connector          = gitlabAuthConnector
+	_                   forgedomain.Connector = gitlabAuthConnector
 )
 
 // AuthConnector provides access to the GitLab API.
@@ -145,6 +144,8 @@ func (self AuthConnector) UpdateProposalTarget(proposalData forgedomain.Proposal
 // ============================================================================
 // verify credentials
 // ============================================================================
+
+var _ forgedomain.CredentialVerifier = gitlabAuthConnector
 
 func (self AuthConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
 	user, _, err := self.client.Users.CurrentUser()

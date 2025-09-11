@@ -17,8 +17,7 @@ import (
 // type checks
 var (
 	apiConnector APIConnector
-	_            forgedomain.CredentialVerifier = apiConnector
-	_            forgedomain.Connector          = apiConnector
+	_            forgedomain.Connector = apiConnector
 )
 
 // APIConnector provides access to the Forgejo API.
