@@ -177,9 +177,9 @@ main
 		t.Run(tc.description, func(t *testing.T) {
 			t.Parallel()
 			// act
-			actual := forge.ProposalBodyUpdateWithStackLineage(tc.currentBody, tc.lineage)
+			have := forge.ProposalBodyUpdateWithStackLineage(tc.currentBody, tc.lineage)
 			// assert
-			must.EqOp(t, tc.want, actual)
+			must.EqOp(t, tc.want, have)
 		})
 	}
 }
