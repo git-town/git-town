@@ -40,8 +40,7 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint: iretu
 	}
 	userName, hasUserName := args.UserName.Get()
 	appPassword, hasAppPassword := args.AppPassword.Get()
-	hasAuth := hasUserName && hasAppPassword
-	if hasAuth {
+	if hasUserName && hasAppPassword {
 		return APIConnector{
 			WebConnector: webConnector,
 			client:       NewMutable(bitbucket.NewBasicAuth(userName.String(), appPassword.String())),
