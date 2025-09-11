@@ -15,7 +15,6 @@ func Detect(remoteURL giturl.Parts) bool {
 
 type NewConnectorArgs struct {
 	AppPassword      Option[forgedomain.BitbucketAppPassword]
-	ForgeType        Option[forgedomain.ForgeType]
 	Log              print.Logger
 	ProposalOverride Option[forgedomain.ProposalOverride]
 	RemoteURL        giturl.Parts

@@ -30,7 +30,6 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 	case forgedomain.ForgeTypeBitbucket:
 		connector = bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
 			AppPassword:      args.BitbucketAppPassword,
-			ForgeType:        args.ForgeType,
 			Log:              args.Log,
 			ProposalOverride: proposalOverride,
 			RemoteURL:        remoteURL,
@@ -39,7 +38,6 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 	case forgedomain.ForgeTypeBitbucketDatacenter:
 		connector = bitbucketdatacenter.NewConnector(bitbucketdatacenter.NewConnectorArgs{
 			AppPassword:      args.BitbucketAppPassword,
-			ForgeType:        args.ForgeType,
 			Log:              args.Log,
 			ProposalOverride: proposalOverride,
 			RemoteURL:        remoteURL,
