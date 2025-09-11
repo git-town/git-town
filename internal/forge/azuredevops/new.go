@@ -6,7 +6,7 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-// Detect indicates whether the current repository is hosted on Bitbucket Cloud.
+// Detect indicates whether the current repository is hosted on Azure DevOps.
 func Detect(remoteURL giturl.Parts) bool {
 	return remoteURL.Host == "dev.azure.com"
 }
@@ -16,7 +16,7 @@ type NewConnectorArgs struct {
 	RemoteURL        giturl.Parts
 }
 
-// NewConnector provides the correct connector for talking to Bitbucket Cloud.
+// NewConnector provides the correct connector for talking to Azure DevOps.
 func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint: ireturn
 	return WebConnector{
 		Data: forgedomain.Data{
