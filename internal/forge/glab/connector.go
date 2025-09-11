@@ -52,7 +52,7 @@ func (self Connector) DefaultProposalMessage(data forgedomain.ProposalData) stri
 // find proposals
 // ============================================================================
 
-var _ forgedomain.ProposalFinder = glabConnector
+var _ forgedomain.ProposalFinder = glabConnector // type check
 
 func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	out, err := self.Backend.Query("glab", "mr", "list", "--source-branch="+branch.String(), "--target-branch="+target.String(), "--output=json")
@@ -66,7 +66,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 // search proposals
 // ============================================================================
 
-var _ forgedomain.ProposalSearcher = glabConnector
+var _ forgedomain.ProposalSearcher = glabConnector // type check
 
 func (self Connector) SearchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	out, err := self.Backend.Query("glab", "--source-branch="+branch.String(), "--output=json")
@@ -80,7 +80,7 @@ func (self Connector) SearchProposal(branch gitdomain.LocalBranchName) (Option[f
 // merge proposals
 // ============================================================================
 
-var _ forgedomain.ProposalMerger = glabConnector
+var _ forgedomain.ProposalMerger = glabConnector // type check
 
 func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
 	return self.Frontend.Run("glab", "mr", "merge", "--squash", "--body="+message.String(), strconv.Itoa(number))
@@ -90,7 +90,7 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 // update proposal body
 // ============================================================================
 
-var _ forgedomain.ProposalBodyUpdater = glabConnector
+var _ forgedomain.ProposalBodyUpdater = glabConnector // type check
 
 func (self Connector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedDescription string) error {
 	return self.Frontend.Run("glab", "mr", "update", strconv.Itoa(proposalData.Data().Number), "--description="+updatedDescription)
@@ -100,7 +100,7 @@ func (self Connector) UpdateProposalBody(proposalData forgedomain.ProposalInterf
 // update proposal target
 // ============================================================================
 
-var _ forgedomain.ProposalTargetUpdater = glabConnector
+var _ forgedomain.ProposalTargetUpdater = glabConnector // type check
 
 func (self Connector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	return self.Frontend.Run("glab", "mr", "update", strconv.Itoa(proposalData.Data().Number), "--target-branch="+target.String())

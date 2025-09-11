@@ -25,7 +25,7 @@ type TestConnector struct {
 // find proposals
 // ============================================================================
 
-var _ forgedomain.ProposalFinder = githubOverrideConnector
+var _ forgedomain.ProposalFinder = githubOverrideConnector // type check
 
 func (self TestConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)

@@ -33,7 +33,7 @@ type APIConnector struct {
 // find proposals
 // ============================================================================
 
-var _ forgedomain.ProposalFinder = githubAuthConnector
+var _ forgedomain.ProposalFinder = githubAuthConnector // type check
 
 func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
@@ -62,7 +62,7 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 // search proposals
 // ============================================================================
 
-var _ forgedomain.ProposalSearcher = githubAuthConnector
+var _ forgedomain.ProposalSearcher = githubAuthConnector // type check
 
 func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
@@ -90,7 +90,7 @@ func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Optio
 // squash-merge proposals
 // ============================================================================
 
-var _ forgedomain.ProposalMerger = githubAuthConnector
+var _ forgedomain.ProposalMerger = githubAuthConnector // type check
 
 func (self APIConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
 	if number <= 0 {
@@ -112,7 +112,7 @@ func (self APIConnector) SquashMergeProposal(number int, message gitdomain.Commi
 // update proposal body
 // ============================================================================
 
-var _ forgedomain.ProposalBodyUpdater = githubAuthConnector
+var _ forgedomain.ProposalBodyUpdater = githubAuthConnector // type check
 
 func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody string) error {
 	data := proposalData.Data()
@@ -132,7 +132,7 @@ func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInt
 // update proposal target
 // ============================================================================
 
-var _ forgedomain.ProposalTargetUpdater = githubAuthConnector
+var _ forgedomain.ProposalTargetUpdater = githubAuthConnector // type check
 
 func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	data := proposalData.Data()
@@ -155,7 +155,7 @@ func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalI
 // verify credentials
 // ============================================================================
 
-var _ forgedomain.CredentialVerifier = githubAuthConnector
+var _ forgedomain.CredentialVerifier = githubAuthConnector // type check
 
 func (self APIConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
 	user, _, err := self.client.Value.Users.Get(context.Background(), "")

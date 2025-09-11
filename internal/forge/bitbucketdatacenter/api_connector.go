@@ -31,7 +31,7 @@ type APIConnector struct {
 // ============================================================================
 
 // type-check to enforce conformance to the ProposalFinder interface
-var _ forgedomain.ProposalFinder = apiConnector
+var _ forgedomain.ProposalFinder = apiConnector // type check
 
 func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
@@ -73,7 +73,7 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 // ============================================================================
 
 // ProposalSearcher implementation
-var _ forgedomain.ProposalSearcher = apiConnector
+var _ forgedomain.ProposalSearcher = apiConnector // type check
 
 func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)

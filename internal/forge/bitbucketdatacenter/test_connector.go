@@ -25,7 +25,7 @@ type TestConnector struct {
 // ============================================================================
 
 // type-check to enforce conformance to the ProposalFinder interface
-var _ forgedomain.ProposalFinder = testConnector
+var _ forgedomain.ProposalFinder = testConnector // type check
 
 func (self TestConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
