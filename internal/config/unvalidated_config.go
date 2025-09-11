@@ -15,7 +15,7 @@ import (
 type UnvalidatedConfig struct {
 	CLI               configdomain.PartialConfig // configuration received via CLI flags
 	Defaults          NormalConfig               // default values
-	Env               configdomain.PartialConfig // environment values
+	Env               configdomain.PartialConfig // environment variables
 	File              configdomain.PartialConfig // content of git-town.toml
 	GitGlobal         configdomain.PartialConfig // global Git metadata
 	GitLocal          configdomain.PartialConfig // local Git metadata
