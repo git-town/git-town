@@ -13,8 +13,7 @@ import (
 // type checks
 var (
 	glabConnector Connector
-	_             forgedomain.CredentialVerifier = glabConnector
-	_             forgedomain.Connector          = glabConnector
+	_             forgedomain.Connector = glabConnector
 )
 
 // Connector provides standardized connectivity for the given repository (github.com/owner/repo)
@@ -110,6 +109,8 @@ func (self Connector) UpdateProposalTarget(proposalData forgedomain.ProposalInte
 // ============================================================================
 // verify credentials
 // ============================================================================
+
+var _ forgedomain.CredentialVerifier = glabConnector
 
 func (self Connector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
 	output, err := self.Backend.Query("glab", "auth", "status")
