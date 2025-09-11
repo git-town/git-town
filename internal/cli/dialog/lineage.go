@@ -43,8 +43,8 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 		}
 		// look for parent in proposals
 		if connector, hasConnector := args.Connector.Get(); hasConnector {
-			if searchProposals, canSearchProposals := connector.SearchProposalFn().Get(); canSearchProposals {
-				proposalOpt, _ := searchProposals(branchToVerify)
+			if proposalSearcher, canSearchProposals := connector.(forgedomain.ProposalSearcher); canSearchProposals {
+				proposalOpt, _ := proposalSearcher.SearchProposal(branchToVerify)
 				if proposal, hasProposal := proposalOpt.Get(); hasProposal {
 					parent := proposal.Data.Data().Target
 					additionalLineage = additionalLineage.Set(branchToVerify, parent)

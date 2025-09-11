@@ -1,5 +1,25 @@
 package bitbucketdatacenter
 
+import (
+	"fmt"
+
+	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
+)
+
+func parsePullRequest(pullRequest PullRequest, repoURL string) forgedomain.ProposalData {
+	return forgedomain.ProposalData{
+		MergeWithAPI: false,
+		Number:       pullRequest.ID,
+		Source:       gitdomain.NewLocalBranchName(pullRequest.FromRef.DisplayID),
+		Target:       gitdomain.NewLocalBranchName(pullRequest.ToRef.DisplayID),
+		Title:        pullRequest.Title,
+		Body:         NewOption(pullRequest.Description),
+		URL:          fmt.Sprintf("%s/pull-requests/%v/overview", repoURL, pullRequest.ID),
+	}
+}
+
 type PullRequestResponse struct {
 	IsLastPage    bool          `json:"isLastPage"`
 	Limit         int           `json:"limit"`
@@ -7,6 +27,14 @@ type PullRequestResponse struct {
 	Size          int           `json:"size"`
 	Start         int           `json:"start"`
 	Values        []PullRequest `json:"values"`
+}
+
+type Participant struct {
+	Approved           bool   `json:"approved"`
+	LastReviewedCommit string `json:"lastReviewedCommit"`
+	Role               string `json:"role"`
+	Status             string `json:"status"`
+	User               User   `json:"user"`
 }
 
 type User struct {
@@ -17,14 +45,6 @@ type User struct {
 	Name         string `json:"name"`
 	Slug         string `json:"slug"`
 	Type         string `json:"type"`
-}
-
-type Participant struct {
-	Approved           bool   `json:"approved"`
-	LastReviewedCommit string `json:"lastReviewedCommit"`
-	Role               string `json:"role"`
-	Status             string `json:"status"`
-	User               User   `json:"user"`
 }
 
 type PullRequest struct {
