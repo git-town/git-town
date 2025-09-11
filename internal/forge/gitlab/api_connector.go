@@ -23,9 +23,8 @@ var (
 // APIConnector provides access to the GitLab API.
 type APIConnector struct {
 	WebConnector
-	APIToken forgedomain.GitLabToken
-	client   *gitlab.Client
-	log      print.Logger
+	client *gitlab.Client
+	log    print.Logger
 }
 
 // ============================================================================

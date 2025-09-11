@@ -35,18 +35,16 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 			override:     proposalURLOverride,
 		}, nil
 	}
-	apiToken, hasAPIToken := args.APIToken.Get()
-	if !hasAPIToken {
-		return webConnector, nil
+	if apiToken, hasAPIToken := args.APIToken.Get(); hasAPIToken {
+		client, err := gitlab.NewClient(apiToken.String(), gitlab.WithBaseURL(webConnector.baseURL()))
+		if err != nil {
+			return webConnector, err
+		}
+		return APIConnector{
+			WebConnector: webConnector,
+			client:       client,
+			log:          args.Log,
+		}, nil
 	}
-	client, err := gitlab.NewClient(apiToken.String(), gitlab.WithBaseURL(webConnector.baseURL()))
-	if err != nil {
-		return webConnector, err
-	}
-	return APIConnector{
-		APIToken:     apiToken,
-		WebConnector: webConnector,
-		client:       client,
-		log:          args.Log,
-	}, nil
+	return webConnector, nil
 }
