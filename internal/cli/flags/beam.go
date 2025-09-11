@@ -13,7 +13,7 @@ func Beam() (AddFunc, ReadBeamFlagFunc) {
 		cmd.Flags().BoolP(beamLong, "b", false, "beam some commits from this branch to the new branch")
 	}
 	readFlag := func(cmd *cobra.Command) (configdomain.Beam, error) {
-		return readBoolFlag[configdomain.Beam](cmd, beamLong)
+		return readBoolFlag[configdomain.Beam](cmd.Flags(), beamLong)
 	}
 	return addFlag, readFlag
 }
