@@ -42,27 +42,26 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 			override:     proposalURLOverride,
 		}, nil
 	}
-	apiToken, hasAPIToken := args.APIToken.Get()
-	if !hasAPIToken {
-		return webConnector, nil
-	}
-	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: apiToken.String()})
-	httpClient := oauth2.NewClient(context.Background(), tokenSource)
-	githubClient := github.NewClient(httpClient)
-	if args.RemoteURL.Host != "github.com" {
-		url := "https://" + args.RemoteURL.Host
-		var err error
-		githubClient, err = githubClient.WithEnterpriseURLs(url, url)
-		if err != nil {
-			return webConnector, fmt.Errorf(messages.GitHubEnterpriseInitializeError, err)
+	if apiToken, hasAPIToken := args.APIToken.Get(); hasAPIToken {
+		tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: apiToken.String()})
+		httpClient := oauth2.NewClient(context.Background(), tokenSource)
+		githubClient := github.NewClient(httpClient)
+		if args.RemoteURL.Host != "github.com" {
+			url := "https://" + args.RemoteURL.Host
+			var err error
+			githubClient, err = githubClient.WithEnterpriseURLs(url, url)
+			if err != nil {
+				return webConnector, fmt.Errorf(messages.GitHubEnterpriseInitializeError, err)
+			}
 		}
+		return APIConnector{
+			APIToken:     args.APIToken,
+			WebConnector: webConnector,
+			client:       NewMutable(githubClient),
+			log:          args.Log,
+		}, nil
 	}
-	return APIConnector{
-		APIToken:     args.APIToken,
-		WebConnector: webConnector,
-		client:       NewMutable(githubClient),
-		log:          args.Log,
-	}, nil
+	return webConnector, nil
 }
 
 func RepositoryURL(hostNameWithStandardPort string, organization string, repository string) string {
