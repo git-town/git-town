@@ -1,7 +1,6 @@
 package forge_test
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/git-town/git-town/v21/internal/forge"
@@ -178,11 +177,9 @@ main
 		t.Run(tc.description, func(t *testing.T) {
 			t.Parallel()
 			// act
-			actual := forge.ProposalBodyUpdateWithStackLineage(tc.currentBody, tc.lineage)
+			have := forge.ProposalBodyUpdateWithStackLineage(tc.currentBody, tc.lineage)
 			// assert
-			fmt.Println(tc.want)
-			fmt.Println(actual)
-			must.EqOp(t, tc.want, actual)
+			must.EqOp(t, tc.want, have)
 		})
 	}
 }
