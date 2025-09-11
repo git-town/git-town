@@ -24,9 +24,8 @@ var (
 // APIConnector provides access to the GitHub API.
 type APIConnector struct {
 	WebConnector
-	APIToken Option[forgedomain.GitHubToken]
-	client   Mutable[github.Client]
-	log      print.Logger
+	client Mutable[github.Client]
+	log    print.Logger
 }
 
 // ============================================================================

@@ -55,7 +55,6 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 			}
 		}
 		return APIConnector{
-			APIToken:     args.APIToken,
 			WebConnector: webConnector,
 			client:       NewMutable(githubClient),
 			log:          args.Log,
