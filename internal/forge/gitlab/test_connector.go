@@ -8,7 +8,7 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-// type-check to ensure conformance to the Connector interface
+// type checks
 var (
 	testConnector TestConnector
 	_             forgedomain.Connector = testConnector
@@ -24,6 +24,8 @@ type TestConnector struct {
 // ============================================================================
 // find proposals
 // ============================================================================
+
+var _ forgedomain.ProposalFinder = testConnector
 
 func (self TestConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
