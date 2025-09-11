@@ -17,7 +17,7 @@ type NewConnectorArgs struct {
 }
 
 // NewConnector provides the correct connector for talking to Azure DevOps.
-func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint: ireturn
+func NewConnector(args NewConnectorArgs) WebConnector {
 	return WebConnector{
 		Data: forgedomain.Data{
 			Hostname:     args.RemoteURL.Host,
