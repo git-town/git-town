@@ -39,17 +39,16 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:iretur
 			override:     proposalURLOverride,
 		}
 	}
-	apiToken, hasAPIToken := args.APIToken.Get()
-	if !hasAPIToken {
-		return webConnector
+	if apiToken, hasAPIToken := args.APIToken.Get(); hasAPIToken {
+		tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: apiToken.String()})
+		httpClient := oauth2.NewClient(context.Background(), tokenSource)
+		giteaClient := gitea.NewClientWithHTTP("https://"+args.RemoteURL.Host, httpClient)
+		return AuthConnector{
+			APIToken:     args.APIToken,
+			WebConnector: webConnector,
+			client:       giteaClient,
+			log:          args.Log,
+		}
 	}
-	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: apiToken.String()})
-	httpClient := oauth2.NewClient(context.Background(), tokenSource)
-	giteaClient := gitea.NewClientWithHTTP("https://"+args.RemoteURL.Host, httpClient)
-	return AuthConnector{
-		APIToken:     args.APIToken,
-		WebConnector: webConnector,
-		client:       giteaClient,
-		log:          args.Log,
-	}
+	return webConnector
 }
