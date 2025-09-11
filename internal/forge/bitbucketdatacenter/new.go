@@ -12,8 +12,7 @@ func Detect(_ giturl.Parts) bool {
 	return false
 }
 
-// NewConnector provides a Bitbucket connector instance if the current repo is hosted on Bitbucket,
-// otherwise nil.
+// NewConnector provides the Bitbucket connector instance to use.
 func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:ireturn
 	webConnector := WebConnector{
 		Data: forgedomain.Data{
