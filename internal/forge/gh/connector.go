@@ -19,8 +19,7 @@ import (
 // type checks
 var (
 	ghConnector Connector
-	_           forgedomain.Connector          = ghConnector
-	_           forgedomain.CredentialVerifier = ghConnector
+	_           forgedomain.Connector = ghConnector
 )
 
 // Connector talks to the GitHub API through the "gh" executable.
@@ -112,6 +111,8 @@ func (self Connector) UpdateProposalTarget(proposalData forgedomain.ProposalInte
 // ============================================================================
 // verify credentials
 // ============================================================================
+
+var _ forgedomain.CredentialVerifier = ghConnector // type check
 
 func (self Connector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
 	output, err := self.Backend.Query("gh", "auth", "status", "--active")
