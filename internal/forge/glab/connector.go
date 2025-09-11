@@ -78,7 +78,7 @@ func (self Connector) SearchProposal(branch gitdomain.LocalBranchName) (Option[f
 }
 
 // ============================================================================
-// merge proposals
+// squash-merge proposals
 // ============================================================================
 
 var _ forgedomain.ProposalMerger = glabConnector // type check

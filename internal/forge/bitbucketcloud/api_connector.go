@@ -165,7 +165,7 @@ func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Optio
 }
 
 // ============================================================================
-// merge proposals
+// squash-merge proposals
 // ============================================================================
 
 var _ forgedomain.ProposalMerger = apiConnector // type check

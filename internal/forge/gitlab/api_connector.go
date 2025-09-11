@@ -87,7 +87,7 @@ func (self AuthConnector) SearchProposal(branch gitdomain.LocalBranchName) (Opti
 }
 
 // ============================================================================
-// merge proposals
+// squash-merge proposals
 // ============================================================================
 
 func (self AuthConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
