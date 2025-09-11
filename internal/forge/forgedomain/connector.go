@@ -42,6 +42,16 @@ type VerifyCredentialsResult struct {
 	AuthorizationError  error          // error while verifying authorization, nil == user is authenticated
 }
 
+// ProposalUpdater describes methods that connectors need to implement
+// to enable Git Town to update proposals at the active forge.
+type ProposalBodyUpdater interface {
+	// If the connector instance supports loading proposals via the API,
+	// calling this function returns a function that you can call
+	// to update the body (description) of the given proposal to the given value.
+	// A None return value indicates that this connector does not support this feature (yet).
+	UpdateProposalBody(proposal ProposalInterface, newBody string) error
+}
+
 // ProposalFinder describes methods that connectors need to implement
 // to enable Git Town to find proposals at the active forge.
 type ProposalFinder interface {
@@ -50,16 +60,6 @@ type ProposalFinder interface {
 	// to load details about the proposal for the given branch into the given target branch.
 	// A None return value indicates that this connector does not support this feature (yet).
 	FindProposal(branch, target gitdomain.LocalBranchName) (Option[Proposal], error)
-}
-
-// ProposalSearcher describes methods that connectors need to implement
-// to enable Git Town to search for proposals at the active forge.
-type ProposalSearcher interface {
-	// If this connector instance supports loading proposals via the API,
-	// calling this function returns a function that you can call
-	// to search for a proposal that has the given branch as its source branch.
-	// A None return value indicates that this connector does not support this feature (yet).
-	SearchProposal(branch gitdomain.LocalBranchName) (Option[Proposal], error)
 }
 
 // ProposalMerger describes methods that connectors need to implement
@@ -72,14 +72,14 @@ type ProposalMerger interface {
 	SquashMergeProposal(number int, message gitdomain.CommitMessage) error
 }
 
-// ProposalUpdater describes methods that connectors need to implement
-// to enable Git Town to update proposals at the active forge.
-type ProposalBodyUpdater interface {
-	// If the connector instance supports loading proposals via the API,
+// ProposalSearcher describes methods that connectors need to implement
+// to enable Git Town to search for proposals at the active forge.
+type ProposalSearcher interface {
+	// If this connector instance supports loading proposals via the API,
 	// calling this function returns a function that you can call
-	// to update the body (description) of the given proposal to the given value.
+	// to search for a proposal that has the given branch as its source branch.
 	// A None return value indicates that this connector does not support this feature (yet).
-	UpdateProposalBody(proposal ProposalInterface, newBody string) error
+	SearchProposal(branch gitdomain.LocalBranchName) (Option[Proposal], error)
 }
 
 // ProposalSourceUpdater describes methods that connectors need to implement
