@@ -19,14 +19,16 @@ func (self *ProposalUpdateLineage) Run(args shared.RunArgs) error {
 	if !hasConnector {
 		return nil
 	}
-
 	proposal, hasProposal := self.CurrentProposal.Get()
 	if !hasProposal {
 		return nil
 	}
-
+	proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder)
+	if !canFindProposals {
+		return nil
+	}
 	lineageArgs := forge.ProposalStackLineageArgs{
-		Connector:                connector,
+		Connector:                proposalFinder,
 		CurrentBranch:            self.Current,
 		Lineage:                  args.Config.Value.NormalConfig.Lineage,
 		MainAndPerennialBranches: args.Config.Value.MainAndPerennials(),

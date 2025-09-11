@@ -10,7 +10,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestParseStatusOutput(t *testing.T) {
+func TestParsePermissionsOutput(t *testing.T) {
 	t.Parallel()
 
 	t.Run("logged into github.com with correct scopes", func(t *testing.T) {
@@ -23,7 +23,7 @@ github.com
   - Token: gho_************************************
   - Token scopes: 'gist', 'read:org', 'repo'`[1:]
 		have := gh.ParsePermissionsOutput(give)
-		want := forgedomain.VerifyConnectionResult{
+		want := forgedomain.VerifyCredentialsResult{
 			AuthenticatedUser:   Some("kevgo"),
 			AuthenticationError: nil,
 			AuthorizationError:  nil,
@@ -41,7 +41,7 @@ github.com
   - Token: gho_************************************
   - Token scopes: 'gist', 'read:org'`[1:]
 		have := gh.ParsePermissionsOutput(give)
-		want := forgedomain.VerifyConnectionResult{
+		want := forgedomain.VerifyCredentialsResult{
 			AuthenticatedUser:   Some("kevgo"),
 			AuthenticationError: nil,
 			AuthorizationError:  errors.New(`cannot find "repo" scope: ['gist' 'read:org']`),
@@ -53,7 +53,7 @@ github.com
 		t.Parallel()
 		give := "You are not logged into any GitHub hosts. To log in, run: gh auth login"
 		have := gh.ParsePermissionsOutput(give)
-		want := forgedomain.VerifyConnectionResult{
+		want := forgedomain.VerifyCredentialsResult{
 			AuthenticatedUser:   None[string](),
 			AuthenticationError: errors.New("not logged in"),
 			AuthorizationError:  nil,

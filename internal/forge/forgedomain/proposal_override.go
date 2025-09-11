@@ -1,6 +1,10 @@
 package forgedomain
 
-import "os"
+import (
+	"os"
+
+	. "github.com/git-town/git-town/v21/pkg/prelude"
+)
 
 const (
 	// the key under which the proposal API lookup override gets stored in the environment variables
@@ -10,6 +14,12 @@ const (
 	OverrideNoProposal = "(no proposal)"
 )
 
-func ReadProposalOverride() string {
-	return os.Getenv(OverrideKey)
+type ProposalOverride string
+
+func (self ProposalOverride) String() string {
+	return string(self)
+}
+
+func ReadProposalOverride() Option[ProposalOverride] {
+	return NewOption(ProposalOverride(os.Getenv(OverrideKey)))
 }

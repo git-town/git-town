@@ -1,17 +1,19 @@
 package glab
 
 import (
-	"errors"
-	"regexp"
 	"strconv"
-	"strings"
 
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/forge/gitlab"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
+)
+
+// type checks
+var (
+	glabConnector Connector
+	_             forgedomain.Connector = glabConnector
 )
 
 // Connector provides standardized connectivity for the given repository (github.com/owner/repo)
@@ -46,43 +48,13 @@ func (self Connector) DefaultProposalMessage(data forgedomain.ProposalData) stri
 	return gitlab.DefaultProposalMessage(data)
 }
 
-func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
-	return Some(self.findProposal)
-}
+// ============================================================================
+// find proposals
+// ============================================================================
 
-func (self Connector) SearchProposalFn() Option[func(gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
-	return Some(self.searchProposal)
-}
+var _ forgedomain.ProposalFinder = glabConnector // type check
 
-func (self Connector) SquashMergeProposalFn() Option[func(int, gitdomain.CommitMessage) error] {
-	return Some(self.squashMergeProposal)
-}
-
-func (self Connector) UpdateProposalBodyFn() Option[func(forgedomain.ProposalInterface, string) error] {
-	return Some(self.updateProposalBody)
-}
-
-func (self Connector) UpdateProposalSourceFn() Option[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName) error] {
-	return None[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName) error]()
-}
-
-func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName) error] {
-	return Some(self.updateProposalTarget)
-}
-
-func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
-	output, err := self.Backend.Query("glab", "auth", "status")
-	if err != nil {
-		return forgedomain.VerifyConnectionResult{
-			AuthenticatedUser:   None[string](),
-			AuthenticationError: err,
-			AuthorizationError:  nil,
-		}
-	}
-	return ParsePermissionsOutput(output)
-}
-
-func (self Connector) findProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	out, err := self.Backend.Query("glab", "mr", "list", "--source-branch="+branch.String(), "--target-branch="+target.String(), "--output=json")
 	if err != nil {
 		return None[forgedomain.Proposal](), err
@@ -90,7 +62,13 @@ func (self Connector) findProposal(branch, target gitdomain.LocalBranchName) (Op
 	return ParseJSONOutput(out, branch)
 }
 
-func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+// ============================================================================
+// search proposals
+// ============================================================================
+
+var _ forgedomain.ProposalSearcher = glabConnector // type check
+
+func (self Connector) SearchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	out, err := self.Backend.Query("glab", "--source-branch="+branch.String(), "--output=json")
 	if err != nil {
 		return None[forgedomain.Proposal](), err
@@ -98,35 +76,50 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[f
 	return ParseJSONOutput(out, branch)
 }
 
-func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMessage) error {
+// ============================================================================
+// squash-merge proposals
+// ============================================================================
+
+var _ forgedomain.ProposalMerger = glabConnector // type check
+
+func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
 	return self.Frontend.Run("glab", "mr", "merge", "--squash", "--body="+message.String(), strconv.Itoa(number))
 }
 
-func (self Connector) updateProposalBody(proposalData forgedomain.ProposalInterface, updatedDescription string) error {
+// ============================================================================
+// update proposal body
+// ============================================================================
+
+var _ forgedomain.ProposalBodyUpdater = glabConnector // type check
+
+func (self Connector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedDescription string) error {
 	return self.Frontend.Run("glab", "mr", "update", strconv.Itoa(proposalData.Data().Number), "--description="+updatedDescription)
 }
 
-func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
+// ============================================================================
+// update proposal target
+// ============================================================================
+
+var _ forgedomain.ProposalTargetUpdater = glabConnector // type check
+
+func (self Connector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	return self.Frontend.Run("glab", "mr", "update", strconv.Itoa(proposalData.Data().Number), "--target-branch="+target.String())
 }
 
-func ParsePermissionsOutput(output string) forgedomain.VerifyConnectionResult {
-	result := forgedomain.VerifyConnectionResult{
-		AuthenticatedUser:   None[string](),
-		AuthenticationError: nil,
-		AuthorizationError:  nil,
-	}
-	lines := strings.Split(output, "\n")
-	regex := regexp.MustCompile(`Logged in to \S+ as (\S+) `)
-	for _, line := range lines {
-		matches := regex.FindStringSubmatch(line)
-		if matches != nil {
-			result.AuthenticatedUser = NewOption(matches[1])
-			break
+// ============================================================================
+// verify credentials
+// ============================================================================
+
+var _ forgedomain.CredentialVerifier = glabConnector
+
+func (self Connector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
+	output, err := self.Backend.Query("glab", "auth", "status")
+	if err != nil {
+		return forgedomain.VerifyCredentialsResult{
+			AuthenticatedUser:   None[string](),
+			AuthenticationError: err,
+			AuthorizationError:  nil,
 		}
 	}
-	if result.AuthenticatedUser.IsNone() {
-		result.AuthenticationError = errors.New(messages.AuthenticationMissing)
-	}
-	return result
+	return ParsePermissionsOutput(output)
 }

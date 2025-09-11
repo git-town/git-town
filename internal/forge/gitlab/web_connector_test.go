@@ -3,23 +3,21 @@ package gitlab_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/forge/gitlab"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/git/giturl"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
-func TestGitLabConnector(t *testing.T) {
+func TestGitLabWebConnector(t *testing.T) {
 	t.Parallel()
 
 	t.Run("DefaultProposalMessage", func(t *testing.T) {
 		t.Parallel()
 		t.Run("without body", func(t *testing.T) {
 			t.Parallel()
-			connector := gitlab.Connector{}
+			connector := gitlab.WebConnector{}
 			give := forgedomain.ProposalData{
 				Number: 123,
 				Title:  "my title",
@@ -30,7 +28,7 @@ func TestGitLabConnector(t *testing.T) {
 		})
 		t.Run("with body", func(t *testing.T) {
 			t.Parallel()
-			connector := gitlab.Connector{}
+			connector := gitlab.WebConnector{}
 			give := forgedomain.ProposalData{
 				Number: 123,
 				Title:  "my title",
@@ -91,14 +89,11 @@ func TestGitLabConnector(t *testing.T) {
 		for name, tt := range tests {
 			t.Run(name, func(t *testing.T) {
 				t.Parallel()
-				connector := gitlab.Connector{
-					Data: gitlab.Data{
-						APIToken: None[forgedomain.GitLabToken](),
-						Data: forgedomain.Data{
-							Hostname:     "gitlab.com",
-							Organization: "organization",
-							Repository:   "repo",
-						},
+				connector := gitlab.WebConnector{
+					Data: forgedomain.Data{
+						Hostname:     "gitlab.com",
+						Organization: "organization",
+						Repository:   "repo",
 					},
 				}
 				have := connector.NewProposalURL(forgedomain.CreateProposalArgs{
@@ -111,72 +106,5 @@ func TestGitLabConnector(t *testing.T) {
 				must.EqOp(t, tt.want, have)
 			})
 		}
-	})
-}
-
-func TestNewGitLabConnector(t *testing.T) {
-	t.Parallel()
-
-	t.Run("GitLab SaaS", func(t *testing.T) {
-		t.Parallel()
-		remoteURL, has := giturl.Parse("git@gitlab.com:git-town/docs.git").Get()
-		must.True(t, has)
-		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
-			APIToken:  None[forgedomain.GitLabToken](),
-			Log:       print.Logger{},
-			RemoteURL: remoteURL,
-		})
-		must.NoError(t, err)
-		wantConfig := gitlab.Data{
-			Data: forgedomain.Data{
-				Hostname:     "gitlab.com",
-				Organization: "git-town",
-				Repository:   "docs",
-			},
-			APIToken: None[forgedomain.GitLabToken](),
-		}
-		must.Eq(t, wantConfig, have.Data)
-	})
-
-	t.Run("custom URL", func(t *testing.T) {
-		t.Parallel()
-		remoteURL, has := giturl.Parse("git@custom-url.com:git-town/docs.git").Get()
-		must.True(t, has)
-		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
-			APIToken:  None[forgedomain.GitLabToken](),
-			Log:       print.Logger{},
-			RemoteURL: remoteURL,
-		})
-		must.NoError(t, err)
-		wantConfig := gitlab.Data{
-			Data: forgedomain.Data{
-				Hostname:     "custom-url.com",
-				Organization: "git-town",
-				Repository:   "docs",
-			},
-			APIToken: None[forgedomain.GitLabToken](),
-		}
-		must.Eq(t, wantConfig, have.Data)
-	})
-
-	t.Run("hosted GitLab instance with custom SSH port", func(t *testing.T) {
-		t.Parallel()
-		remoteURL, has := giturl.Parse("git@gitlab.domain:1234/group/project").Get()
-		must.True(t, has)
-		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
-			APIToken:  None[forgedomain.GitLabToken](),
-			Log:       print.Logger{},
-			RemoteURL: remoteURL,
-		})
-		must.NoError(t, err)
-		wantConfig := gitlab.Data{
-			Data: forgedomain.Data{
-				Hostname:     "gitlab.domain",
-				Organization: "group",
-				Repository:   "project",
-			},
-			APIToken: None[forgedomain.GitLabToken](),
-		}
-		must.Eq(t, wantConfig, have.Data)
 	})
 }

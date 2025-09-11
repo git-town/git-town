@@ -289,7 +289,7 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (data p
 	if !hasConnector {
 		return data, false, forgedomain.UnsupportedServiceError()
 	}
-	findProposal, canFindProposals := connector.FindProposalFn().Get()
+	proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder)
 	branchesToPropose := make([]branchToProposeData, len(branchNamesToPropose))
 	for b, branchNameToPropose := range branchNamesToPropose {
 		branchType, has := branchesAndTypes[branchNameToPropose]
@@ -299,7 +299,7 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (data p
 		existingProposalURL := None[string]()
 		if canFindProposals {
 			if parent, hasParent := validatedConfig.NormalConfig.Lineage.Parent(branchNameToPropose).Get(); hasParent {
-				existingProposalOpt, err := findProposal(branchNameToPropose, parent)
+				existingProposalOpt, err := proposalFinder.FindProposal(branchNameToPropose, parent)
 				if err != nil {
 					print.Error(err)
 				}

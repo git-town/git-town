@@ -2,7 +2,10 @@ package glab
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	"regexp"
+	"strings"
 
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
@@ -19,7 +22,28 @@ func ParseJSONOutput(output string, branch gitdomain.LocalBranchName) (Option[fo
 	if len(parsed) > 1 {
 		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(parsed), branch)
 	}
-	return Some(parsed[0].ToProposal()), nil
+	return Some(createProposal(parsed[0])), nil
+}
+
+func ParsePermissionsOutput(output string) forgedomain.VerifyCredentialsResult {
+	result := forgedomain.VerifyCredentialsResult{
+		AuthenticatedUser:   None[string](),
+		AuthenticationError: nil,
+		AuthorizationError:  nil,
+	}
+	lines := strings.Split(output, "\n")
+	regex := regexp.MustCompile(`Logged in to \S+ as (\S+) `)
+	for _, line := range lines {
+		matches := regex.FindStringSubmatch(line)
+		if matches != nil {
+			result.AuthenticatedUser = NewOption(matches[1])
+			break
+		}
+	}
+	if result.AuthenticatedUser.IsNone() {
+		result.AuthenticationError = errors.New(messages.AuthenticationMissing)
+	}
+	return result
 }
 
 type jsonData struct {
@@ -32,16 +56,16 @@ type jsonData struct {
 	URL          string `json:"web_url"` //nolint:tagliatelle
 }
 
-func (self jsonData) ToProposal() forgedomain.Proposal {
+func createProposal(data jsonData) forgedomain.Proposal {
 	return forgedomain.Proposal{
 		Data: forgedomain.ProposalData{
-			Body:         NewOption(self.Description),
-			MergeWithAPI: self.Mergeable == "mergeable",
-			Number:       self.Number,
-			Source:       gitdomain.NewLocalBranchName(self.SourceBranch),
-			Target:       gitdomain.NewLocalBranchName(self.TargetBranch),
-			Title:        self.Title,
-			URL:          self.URL,
+			Body:         NewOption(data.Description),
+			MergeWithAPI: data.Mergeable == "mergeable",
+			Number:       data.Number,
+			Source:       gitdomain.NewLocalBranchName(data.SourceBranch),
+			Target:       gitdomain.NewLocalBranchName(data.TargetBranch),
+			Title:        data.Title,
+			URL:          data.URL,
 		},
 		ForgeType: forgedomain.ForgeTypeGitLab,
 	}

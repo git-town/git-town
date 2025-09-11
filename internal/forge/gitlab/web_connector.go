@@ -4,20 +4,37 @@ import (
 	"fmt"
 	"net/url"
 
+	"github.com/git-town/git-town/v21/internal/browser"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 )
 
-type Data struct {
+var (
+	webConnector WebConnector
+	_            forgedomain.Connector = webConnector
+)
+
+// WebConnector provides connectivity to GitLab through the browser.
+type WebConnector struct {
 	forgedomain.Data
-	APIToken Option[forgedomain.GitLabToken]
 }
 
-func (self Data) DefaultProposalMessage(data forgedomain.ProposalData) string {
+func (self WebConnector) BrowseRepository(runner subshelldomain.Runner) error {
+	browser.Open(self.RepositoryURL(), runner)
+	return nil
+}
+
+func (self WebConnector) CreateProposal(data forgedomain.CreateProposalArgs) error {
+	url := self.NewProposalURL(data)
+	browser.Open(url, data.FrontendRunner)
+	return nil
+}
+
+func (self WebConnector) DefaultProposalMessage(data forgedomain.ProposalData) string {
 	return DefaultProposalMessage(data)
 }
 
-func (self Data) NewProposalURL(data forgedomain.CreateProposalArgs) string {
+func (self WebConnector) NewProposalURL(data forgedomain.CreateProposalArgs) string {
 	query := url.Values{}
 	query.Add("merge_request[source_branch]", data.Branch.String())
 	query.Add("merge_request[target_branch]", data.ParentBranch.String())
@@ -30,15 +47,15 @@ func (self Data) NewProposalURL(data forgedomain.CreateProposalArgs) string {
 	return fmt.Sprintf("%s/-/merge_requests/new?%s", self.RepositoryURL(), query.Encode())
 }
 
-func (self Data) RepositoryURL() string {
+func (self WebConnector) RepositoryURL() string {
 	return fmt.Sprintf("%s/%s", self.baseURL(), self.projectPath())
 }
 
-func (self Data) baseURL() string {
+func (self WebConnector) baseURL() string {
 	return "https://" + self.HostnameWithStandardPort()
 }
 
-func (self Data) projectPath() string {
+func (self WebConnector) projectPath() string {
 	return fmt.Sprintf("%s/%s", self.Organization, self.Repository)
 }
 

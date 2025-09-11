@@ -1,5 +1,3 @@
-// Package forge provides support for interacting with forges.
-// Commands like "propose", "repo", and "ship" use this package
-// to know how to perform Git Town operations on GitHub, GitLab, Bitbucket, Gitea, Forgejo.
-// Implementations of connectors for particular forges conform to the Connector interface.
+// Package forge enables Git Town to interact with forges like
+// GitHub, GitLab, Bitbucket, Gitea, or Forgejo.
 package forge

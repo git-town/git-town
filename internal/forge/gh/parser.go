@@ -19,7 +19,19 @@ func ParseJSONOutput(output string, branch gitdomain.LocalBranchName) (Option[fo
 	if len(parsed) > 1 {
 		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(parsed), branch)
 	}
-	return Some(parsed[0].ToProposal()), nil
+	data := parsed[0]
+	return Some(forgedomain.Proposal{
+		Data: forgedomain.ProposalData{
+			Body:         NewOption(data.Body),
+			MergeWithAPI: data.Mergeable == "MERGEABLE",
+			Number:       data.Number,
+			Source:       gitdomain.NewLocalBranchName(data.HeadRefName),
+			Target:       gitdomain.NewLocalBranchName(data.BaseRefName),
+			Title:        data.Title,
+			URL:          data.URL,
+		},
+		ForgeType: forgedomain.ForgeTypeGitHub,
+	}), nil
 }
 
 // data returned by glab in JSON mode
@@ -31,19 +43,4 @@ type jsonData struct {
 	Number      int    `json:"number"`
 	Title       string `json:"title"`
 	URL         string `json:"url"`
-}
-
-func (self jsonData) ToProposal() forgedomain.Proposal {
-	return forgedomain.Proposal{
-		Data: forgedomain.ProposalData{
-			Body:         NewOption(self.Body),
-			MergeWithAPI: self.Mergeable == "MERGEABLE",
-			Number:       self.Number,
-			Source:       gitdomain.NewLocalBranchName(self.HeadRefName),
-			Target:       gitdomain.NewLocalBranchName(self.BaseRefName),
-			Title:        self.Title,
-			URL:          self.URL,
-		},
-		ForgeType: forgedomain.ForgeTypeGitHub,
-	}
 }
