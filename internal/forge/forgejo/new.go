@@ -36,15 +36,14 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 			override:     proposalURLOverride,
 		}, nil
 	}
-	hasAuth := args.APIToken.IsSome()
-	if !hasAuth {
-		return webConnector, nil
+	if args.APIToken.IsSome() {
+		forgejoClient, err := forgejo.NewClient("https://"+args.RemoteURL.Host, forgejo.SetToken(args.APIToken.String()))
+		return APIConnector{
+			APIToken:     args.APIToken,
+			WebConnector: webConnector,
+			client:       forgejoClient,
+			log:          args.Log,
+		}, err
 	}
-	forgejoClient, err := forgejo.NewClient("https://"+args.RemoteURL.Host, forgejo.SetToken(args.APIToken.String()))
-	return APIConnector{
-		APIToken:     args.APIToken,
-		WebConnector: webConnector,
-		client:       forgejoClient,
-		log:          args.Log,
-	}, err
+	return webConnector, nil
 }
