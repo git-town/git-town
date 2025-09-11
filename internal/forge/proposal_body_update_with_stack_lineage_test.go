@@ -1,7 +1,6 @@
 package forge_test
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/git-town/git-town/v21/internal/forge"
@@ -180,8 +179,6 @@ main
 			// act
 			actual := forge.ProposalBodyUpdateWithStackLineage(tc.currentBody, tc.lineage)
 			// assert
-			fmt.Println(tc.want)
-			fmt.Println(actual)
 			must.EqOp(t, tc.want, actual)
 		})
 	}
