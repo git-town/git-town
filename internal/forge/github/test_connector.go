@@ -10,8 +10,8 @@ import (
 
 // type checks
 var (
-	githubOverrideConnector TestConnector
-	_                       forgedomain.Connector = githubOverrideConnector
+	testConnector TestConnector
+	_             forgedomain.Connector = testConnector
 )
 
 // TestConnector simulates interacting with the GitHub API in tests.
@@ -25,7 +25,7 @@ type TestConnector struct {
 // find proposals
 // ============================================================================
 
-var _ forgedomain.ProposalFinder = githubOverrideConnector // type check
+var _ forgedomain.ProposalFinder = testConnector // type check
 
 func (self TestConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)

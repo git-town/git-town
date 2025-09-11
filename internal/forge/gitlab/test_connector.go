@@ -10,8 +10,8 @@ import (
 
 // type-check to ensure conformance to the Connector interface
 var (
-	githubOverrideConnector TestConnector
-	_                       forgedomain.Connector = githubOverrideConnector
+	testConnector TestConnector
+	_             forgedomain.Connector = testConnector
 )
 
 // TestConnector simulates interacting with the GitHub API in tests.

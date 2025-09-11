@@ -43,7 +43,7 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 	if err != nil {
 		return webConnector, err
 	}
-	return AuthConnector{
+	return APIConnector{
 		APIToken:     apiToken,
 		WebConnector: webConnector,
 		client:       client,

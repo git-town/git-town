@@ -10,8 +10,8 @@ import (
 )
 
 var (
-	forgejoAnonConnector WebConnector
-	_                    forgedomain.Connector = forgejoAnonConnector
+	webConnector WebConnector
+	_            forgedomain.Connector = webConnector
 )
 
 // WebConnector provides connectivity to Forgejo through the web browser.

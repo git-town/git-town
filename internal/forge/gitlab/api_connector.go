@@ -16,12 +16,12 @@ import (
 
 // type-check to ensure conformance to the Connector interface
 var (
-	gitlabAuthConnector AuthConnector
-	_                   forgedomain.Connector = gitlabAuthConnector
+	apiConnector APIConnector
+	_            forgedomain.Connector = apiConnector
 )
 
-// AuthConnector provides access to the GitLab API.
-type AuthConnector struct {
+// APIConnector provides access to the GitLab API.
+type APIConnector struct {
 	WebConnector
 	APIToken forgedomain.GitLabToken
 	client   *gitlab.Client
@@ -32,7 +32,7 @@ type AuthConnector struct {
 // find proposals
 // ============================================================================
 
-func (self AuthConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	opts := &gitlab.ListProjectMergeRequestsOptions{
 		State:        gitlab.Ptr("opened"),
@@ -61,7 +61,7 @@ func (self AuthConnector) FindProposal(branch, target gitdomain.LocalBranchName)
 // search proposals
 // ============================================================================
 
-func (self AuthConnector) SearchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
 	opts := &gitlab.ListProjectMergeRequestsOptions{
 		State:        gitlab.Ptr("opened"),
@@ -89,7 +89,7 @@ func (self AuthConnector) SearchProposal(branch gitdomain.LocalBranchName) (Opti
 // squash-merge proposals
 // ============================================================================
 
-func (self AuthConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
+func (self APIConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
@@ -113,7 +113,7 @@ func (self AuthConnector) SquashMergeProposal(number int, message gitdomain.Comm
 // update proposals
 // ============================================================================
 
-func (self AuthConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedDescription string) error {
+func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedDescription string) error {
 	data := proposalData.Data()
 	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)))
 	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), data.Number, &gitlab.UpdateMergeRequestOptions{
@@ -127,7 +127,7 @@ func (self AuthConnector) UpdateProposalBody(proposalData forgedomain.ProposalIn
 	return nil
 }
 
-func (self AuthConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
+func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	data := proposalData.Data()
 	self.log.Start(messages.ForgeGitLabUpdateMRViaAPI, data.Number, target)
 	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), data.Number, &gitlab.UpdateMergeRequestOptions{
@@ -145,9 +145,9 @@ func (self AuthConnector) UpdateProposalTarget(proposalData forgedomain.Proposal
 // verify credentials
 // ============================================================================
 
-var _ forgedomain.CredentialVerifier = gitlabAuthConnector
+var _ forgedomain.CredentialVerifier = apiConnector
 
-func (self AuthConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
+func (self APIConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
 	user, _, err := self.client.Users.CurrentUser()
 	if err != nil {
 		return forgedomain.VerifyCredentialsResult{

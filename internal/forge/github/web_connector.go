@@ -10,8 +10,8 @@ import (
 )
 
 var (
-	githubAnonConnector WebConnector
-	_                   forgedomain.Connector = githubAnonConnector
+	webConnector WebConnector
+	_            forgedomain.Connector = webConnector
 )
 
 // WebConnector provides connectivity to GitHub through the GitHub website.
