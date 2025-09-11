@@ -27,8 +27,8 @@ func defineNegatedFlag(flags *pflag.FlagSet, name string) {
 }
 
 // provides the value of the CLI flag with the given name and bool-based type
-func readBoolFlag[T ~bool](cmd *cobra.Command, name string) (T, error) { //nolint:ireturn
-	value, err := cmd.Flags().GetBool(name)
+func readBoolFlag[T ~bool](flags *pflag.FlagSet, name string) (T, error) { //nolint:ireturn
+	value, err := flags.GetBool(name)
 	return T(value), err
 }
 

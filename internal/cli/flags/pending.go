@@ -16,7 +16,7 @@ func Pending() (AddFunc, ReadPendingFlagFunc) {
 		cmd.Flags().BoolP(pendingLong, pendingShort, false, "display just the name of the pending Git Town command")
 	}
 	readFlag := func(cmd *cobra.Command) (configdomain.Pending, error) {
-		return readBoolFlag[configdomain.Pending](cmd, pendingLong)
+		return readBoolFlag[configdomain.Pending](cmd.Flags(), pendingLong)
 	}
 	return addFlag, readFlag
 }
