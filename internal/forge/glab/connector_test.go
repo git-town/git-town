@@ -24,7 +24,7 @@ func TestParseStatusOutput(t *testing.T) {
   ✓ GraphQL Endpoint: https://gitlab.com/api/graphql/
   ✓ Token: **************************`[1:]
 		have := glab.ParsePermissionsOutput(give)
-		want := forgedomain.VerifyConnectionResult{
+		want := forgedomain.VerifyCredentialsResult{
 			AuthenticatedUser:   Some("kev.lar"),
 			AuthenticationError: nil,
 			AuthorizationError:  nil,
@@ -45,7 +45,7 @@ gitlab.com
 
 x could not authenticate to one or more of the configured GitLab instances.`[1:]
 		have := glab.ParsePermissionsOutput(give)
-		want := forgedomain.VerifyConnectionResult{
+		want := forgedomain.VerifyCredentialsResult{
 			AuthenticatedUser:   None[string](),
 			AuthenticationError: errors.New("not logged in"),
 			AuthorizationError:  nil,

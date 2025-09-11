@@ -13,7 +13,7 @@ import (
 const indentMarker = "-"
 
 type ProposalStackLineageArgs struct {
-	Connector                forgedomain.Connector
+	Connector                forgedomain.ProposalFinder
 	CurrentBranch            gitdomain.LocalBranchName
 	Lineage                  configdomain.Lineage
 	MainAndPerennialBranches gitdomain.LocalBranchNames

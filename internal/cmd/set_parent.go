@@ -325,8 +325,8 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 	} else {
 		prog.Add(&opcodes.LineageParentSet{Branch: data.initialBranch, Parent: newParent})
 		connector, hasConnector := data.connector.Get()
-		connectorCanUpdateProposalTarget := hasConnector && connector.UpdateProposalTargetFn().IsSome()
-		if hasProposal && hasConnector && connectorCanUpdateProposalTarget {
+		_, canUpdateProposalTarget := connector.(forgedomain.ProposalTargetUpdater)
+		if hasProposal && hasConnector && canUpdateProposalTarget {
 			prog.Add(&opcodes.ProposalUpdateTarget{
 				NewBranch: newParent,
 				OldBranch: proposal.Data.Data().Target,

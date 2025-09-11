@@ -153,13 +153,9 @@ func createAncestorNode(
 func findProposal(
 	childBranch gitdomain.LocalBranchName,
 	targetBranch gitdomain.LocalBranchName,
-	connector forgedomain.Connector,
+	connector forgedomain.ProposalFinder,
 ) (Option[forgedomain.Proposal], error) {
-	findProposalFn, hasFindProposalFn := connector.FindProposalFn().Get()
-	if !hasFindProposalFn {
-		return None[forgedomain.Proposal](), nil
-	}
-	return findProposalFn(childBranch, targetBranch)
+	return connector.FindProposal(childBranch, targetBranch)
 }
 
 func findRelevantChildren(

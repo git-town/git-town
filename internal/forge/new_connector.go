@@ -23,45 +23,49 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 	if !hasRemoteURL || !hasForgeType {
 		return None[forgedomain.Connector](), nil
 	}
+	proposalOverride := forgedomain.ReadProposalOverride()
 	var connector forgedomain.Connector
 	var err error
 	switch forgeType {
 	case forgedomain.ForgeTypeBitbucket:
 		connector = bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
-			AppPassword: args.BitbucketAppPassword,
-			ForgeType:   args.ForgeType,
-			Log:         args.Log,
-			RemoteURL:   remoteURL,
-			UserName:    args.BitbucketUsername,
+			AppPassword:      args.BitbucketAppPassword,
+			Log:              args.Log,
+			ProposalOverride: proposalOverride,
+			RemoteURL:        remoteURL,
+			UserName:         args.BitbucketUsername,
 		})
 	case forgedomain.ForgeTypeBitbucketDatacenter:
 		connector = bitbucketdatacenter.NewConnector(bitbucketdatacenter.NewConnectorArgs{
-			AppPassword: args.BitbucketAppPassword,
-			ForgeType:   args.ForgeType,
-			Log:         args.Log,
-			RemoteURL:   remoteURL,
-			UserName:    args.BitbucketUsername,
+			AppPassword:      args.BitbucketAppPassword,
+			Log:              args.Log,
+			ProposalOverride: proposalOverride,
+			RemoteURL:        remoteURL,
+			UserName:         args.BitbucketUsername,
 		})
 	case forgedomain.ForgeTypeForgejo:
 		connector, err = forgejo.NewConnector(forgejo.NewConnectorArgs{
-			APIToken:  args.ForgejoToken,
-			Log:       args.Log,
-			RemoteURL: remoteURL,
+			APIToken:         args.ForgejoToken,
+			Log:              args.Log,
+			ProposalOverride: proposalOverride,
+			RemoteURL:        remoteURL,
 		})
 	case forgedomain.ForgeTypeGitea:
 		connector = gitea.NewConnector(gitea.NewConnectorArgs{
-			APIToken:  args.GiteaToken,
-			Log:       args.Log,
-			RemoteURL: remoteURL,
+			APIToken:         args.GiteaToken,
+			Log:              args.Log,
+			ProposalOverride: proposalOverride,
+			RemoteURL:        remoteURL,
 		})
 	case forgedomain.ForgeTypeGitHub:
 		if githubConnectorType, hasGitHubConnectorType := args.GitHubConnectorType.Get(); hasGitHubConnectorType {
 			switch githubConnectorType {
 			case forgedomain.GitHubConnectorTypeAPI:
 				connector, err = github.NewConnector(github.NewConnectorArgs{
-					APIToken:  args.GitHubToken,
-					Log:       args.Log,
-					RemoteURL: remoteURL,
+					APIToken:         args.GitHubToken,
+					Log:              args.Log,
+					ProposalOverride: proposalOverride,
+					RemoteURL:        remoteURL,
 				})
 			case forgedomain.GitHubConnectorTypeGh:
 				connector = gh.Connector{
@@ -72,9 +76,10 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 		} else {
 			// no GitHubConnectorType specified --> use the API connector
 			connector, err = github.NewConnector(github.NewConnectorArgs{
-				APIToken:  args.GitHubToken,
-				Log:       args.Log,
-				RemoteURL: remoteURL,
+				APIToken:         args.GitHubToken,
+				Log:              args.Log,
+				ProposalOverride: proposalOverride,
+				RemoteURL:        remoteURL,
 			})
 		}
 	case forgedomain.ForgeTypeGitLab:
@@ -82,9 +87,10 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			switch gitLabConnectorType {
 			case forgedomain.GitLabConnectorTypeAPI:
 				connector, err = gitlab.NewConnector(gitlab.NewConnectorArgs{
-					APIToken:  args.GitLabToken,
-					Log:       args.Log,
-					RemoteURL: remoteURL,
+					APIToken:         args.GitLabToken,
+					Log:              args.Log,
+					ProposalOverride: proposalOverride,
+					RemoteURL:        remoteURL,
 				})
 			case forgedomain.GitLabConnectorTypeGlab:
 				connector = glab.Connector{
@@ -95,9 +101,10 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 		} else {
 			// no GitLabConnectorType specified --> use the API connector
 			connector, err = gitlab.NewConnector(gitlab.NewConnectorArgs{
-				APIToken:  args.GitLabToken,
-				Log:       args.Log,
-				RemoteURL: remoteURL,
+				APIToken:         args.GitLabToken,
+				Log:              args.Log,
+				ProposalOverride: proposalOverride,
+				RemoteURL:        remoteURL,
 			})
 		}
 	}
