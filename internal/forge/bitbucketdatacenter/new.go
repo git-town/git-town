@@ -28,16 +28,15 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:iretur
 			override:     proposalURLOverride,
 		}
 	}
-	hasAuth := args.UserName.IsSome() && args.AppPassword.IsSome()
-	if !hasAuth {
-		return webConnector
+	if args.UserName.IsSome() && args.AppPassword.IsSome() {
+		return APIConnector{
+			WebConnector: webConnector,
+			log:          args.Log,
+			token:        args.AppPassword.String(),
+			username:     args.UserName.String(),
+		}
 	}
-	return APIConnector{
-		WebConnector: webConnector,
-		log:          args.Log,
-		token:        args.AppPassword.String(),
-		username:     args.UserName.String(),
-	}
+	return webConnector
 }
 
 type NewConnectorArgs struct {
