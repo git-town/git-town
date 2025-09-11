@@ -19,6 +19,7 @@ You can use one of these values for the forge type setting:
 - `bitbucket`
 - `bitbucket-datacenter`
 - `forgejo`
+- `azuredevops`
 
 ## config file
 
