@@ -8,7 +8,7 @@ import (
 	"github.com/ktrysmt/go-bitbucket"
 )
 
-// Detect indicates whether the current repository is hosted on a Bitbucket server.
+// Detect indicates whether the current repository is hosted on Bitbucket Cloud.
 func Detect(remoteURL giturl.Parts) bool {
 	return remoteURL.Host == "bitbucket.org"
 }
