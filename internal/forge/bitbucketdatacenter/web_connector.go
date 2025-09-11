@@ -9,7 +9,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 )
 
-// type-check to ensure conformance to the Connector interface
+// type check
 var (
 	webConnector WebConnector
 	_            forgedomain.Connector = webConnector
