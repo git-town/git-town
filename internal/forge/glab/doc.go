@@ -1,2 +1,2 @@
-// Package glab provides connection to GitLab using the "glab" CLI app.
+// Package glab connects to GitLab via the "glab" CLI app.
 package glab
