@@ -14,7 +14,7 @@ import (
 	gitlab "gitlab.com/gitlab-org/api/client-go"
 )
 
-// type-check to ensure conformance to the Connector interface
+// type checks
 var (
 	apiConnector APIConnector
 	_            forgedomain.Connector = apiConnector
