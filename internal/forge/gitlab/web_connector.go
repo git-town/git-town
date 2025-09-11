@@ -14,7 +14,7 @@ var (
 	_            forgedomain.Connector = webConnector
 )
 
-// WebConnector provides connectivity to GitLab without authentication data.
+// WebConnector provides connectivity to GitLab through the browser.
 type WebConnector struct {
 	forgedomain.Data
 }

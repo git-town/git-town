@@ -14,7 +14,7 @@ var (
 	_            forgedomain.Connector = webConnector
 )
 
-// WebConnector provides connectivity to gitea without authentication.
+// WebConnector provides connectivity to gitea through the browser.
 type WebConnector struct {
 	forgedomain.Data
 }

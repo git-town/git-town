@@ -15,7 +15,7 @@ var (
 	_            forgedomain.Connector = webConnector
 )
 
-// WebConnector provides connectivity to Bitbucket DataCenter without authentication.
+// WebConnector provides connectivity to Bitbucket DataCenter through the web browser.
 type WebConnector struct {
 	forgedomain.Data
 }
