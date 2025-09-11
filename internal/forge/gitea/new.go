@@ -23,8 +23,7 @@ type NewConnectorArgs struct {
 	RemoteURL        giturl.Parts
 }
 
-// NewGiteaConfig provides Gitea configuration data if the current repo is hosted on Gitea,
-// otherwise nil.
+// NewConnector provides a connector instance that talks to the gitea API.
 func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:ireturn
 	webConnector := WebConnector{
 		Data: forgedomain.Data{
