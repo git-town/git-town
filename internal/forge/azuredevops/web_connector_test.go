@@ -28,7 +28,7 @@ func TestWebConnector(t *testing.T) {
 			ProposalBody:   Some(gitdomain.ProposalBody("body")),
 			ProposalTitle:  Some(gitdomain.ProposalTitle("title")),
 		})
-		want := "https://dev.azure.com/kevingoslar/tikibase/_git/tikibase/pullrequestcreate?sourceRef=kg-test&targetRef=main"
+		want := "https://dev.azure.com/kevingoslar/tikibase/_git/tikibase/pullrequestcreate?sourceRef=feature&targetRef=parent"
 		must.EqOp(t, want, have)
 	})
 
