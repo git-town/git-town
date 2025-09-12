@@ -1026,7 +1026,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		lastBranch := None[gitdomain.LocalBranchName]()
 		for _, branchSetup := range datatable.ParseBranchSetupTable(table) {
 			if branchSetup.Locations.Contains(testgit.LocationLocal) {
-				repo.CreateLocalBranchUsingGitTown(branchSetup.Name, branchSetup.Parent.GetOr("main"), branchSetup.Locations, branchSetup.BranchType, lastBranch)
+				repo.CreateLocalBranchUsingGitTown(branchSetup.Name, branchSetup.Parent, branchSetup.Locations, branchSetup.BranchType, lastBranch)
 				lastBranch = Some(branchSetup.Name)
 			} else {
 				// here the branch has no local counterpart --> create it manually in the remotes
