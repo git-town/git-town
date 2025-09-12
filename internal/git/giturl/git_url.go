@@ -25,8 +25,9 @@ func Parse(url string) Option[Parts] {
 			path := strings.TrimSuffix(matches[3], ".git")
 			return parsePathAndCreateParts(matches[1], matches[2], path)
 		}
+		return None[Parts]()
 	}
-	
+
 	// Handle SSH URLs with ssh:// prefix
 	if strings.HasPrefix(url, "ssh://") {
 		sshPattern := regexp.MustCompile(`^ssh://(?:([^@]+)@)?([^/:]+)(?::(\d+))?/(.*)$`)
@@ -35,14 +36,14 @@ func Parse(url string) Option[Parts] {
 			return parsePathAndCreateParts(matches[1], matches[2], path)
 		}
 	}
-	
+
 	// Handle SSH URLs with colon separator (e.g., git@github.com:user/repo)
 	// This includes both regular SSH and cases with ports
 	colonPattern := regexp.MustCompile(`^(?:([^@]+)@)?([^:]+):(.*)$`)
 	if matches := colonPattern.FindStringSubmatch(url); matches != nil {
 		host := matches[2]
 		path := matches[3]
-		
+
 		// Handle port numbers in path (e.g., git@git.example.com:4022/a/b.git)
 		if portSlashMatch := regexp.MustCompile(`^(\d+)/(.*)$`).FindStringSubmatch(path); portSlashMatch != nil {
 			path = portSlashMatch[2]
@@ -50,14 +51,14 @@ func Parse(url string) Option[Parts] {
 		path = strings.TrimSuffix(path, ".git")
 		return parsePathAndCreateParts(matches[1], host, path)
 	}
-	
+
 	// Handle SSH URLs with slash separator (e.g., git@bitbucket.org/user/repo)
 	slashPattern := regexp.MustCompile(`^(?:([^@]+)@)?([^/]+)/(.*)$`)
 	if matches := slashPattern.FindStringSubmatch(url); matches != nil {
 		path := strings.TrimSuffix(matches[3], ".git")
 		return parsePathAndCreateParts(matches[1], matches[2], path)
 	}
-	
+
 	// NOTE: if we can't parse a Git URL, we simply ignore it.
 	// This is because the URLs might be on the filesystem.
 	// Remotes on the filesystem are not an error condition.
@@ -69,14 +70,14 @@ func parsePathAndCreateParts(userMatch, host, path string) Option[Parts] {
 	if len(parts) < 2 {
 		return None[Parts]()
 	}
-	
+
 	var user Option[string]
 	if userMatch != "" {
 		user = Some(strings.TrimSuffix(userMatch, "@"))
 	} else {
 		user = None[string]()
 	}
-	
+
 	// Handle Azure DevOps special case with v3 prefix
 	if host == "ssh.dev.azure.com" && len(parts) >= 4 && parts[0] == "v3" {
 		// For Azure DevOps URLs like v3/project/org/repo
@@ -90,17 +91,17 @@ func parsePathAndCreateParts(userMatch, host, path string) Option[Parts] {
 			Supergroup: Some("project"),
 		})
 	}
-	
+
 	var supergroup Option[string]
 	var org string
 	var repo string
-	
+
 	// General rule: join all but the last part as org, last part as repo
 	// No supergroup unless special cases
 	supergroup = None[string]()
 	org = strings.Join(parts[:len(parts)-1], "/")
 	repo = parts[len(parts)-1]
-	
+
 	return Some(Parts{
 		User:       user,
 		Host:       host,
@@ -108,14 +109,4 @@ func parsePathAndCreateParts(userMatch, host, path string) Option[Parts] {
 		Repo:       repo,
 		Supergroup: supergroup,
 	})
-}
-
-// trimLast trims the last character of the given text.
-// Handles empty strings gracefully.
-func trimLast(text string) string {
-	textLen := len(text)
-	if textLen == 0 {
-		return text
-	}
-	return text[:textLen-1]
 }
