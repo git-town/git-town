@@ -57,7 +57,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			RemoteURL:        remoteURL,
 		})
 	case forgedomain.ForgeTypeGitea:
-		connector, err = gitea.NewConnector(gitea.NewConnectorArgs{
+		connector = gitea.NewConnector(gitea.NewConnectorArgs{
 			APIToken:         args.GiteaToken,
 			Log:              args.Log,
 			ProposalOverride: proposalOverride,
