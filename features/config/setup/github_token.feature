@@ -28,18 +28,18 @@ Feature: enter the GitHub API token
 
   Scenario: manually selected GitHub
     When I run "git-town init" and enter into the dialog:
-      | DIALOG                | KEYS                           | DESCRIPTION                                 |
-      | welcome               | enter                          |                                             |
-      | aliases               | enter                          |                                             |
-      | main branch           | enter                          |                                             |
-      | perennial branches    |                                | no input here since the dialog doesn't show |
-      | origin hostname       | enter                          |                                             |
-      | forge type            | down down down down down enter |                                             |
-      | github connector type | enter                          |                                             |
-      | github token          | g h - t o k enter              |                                             |
-      | token scope           | enter                          |                                             |
-      | enter all             | enter                          |                                             |
-      | config storage        | enter                          |                                             |
+      | DIALOG                | KEYS                                | DESCRIPTION                                 |
+      | welcome               | enter                               |                                             |
+      | aliases               | enter                               |                                             |
+      | main branch           | enter                               |                                             |
+      | perennial branches    |                                     | no input here since the dialog doesn't show |
+      | origin hostname       | enter                               |                                             |
+      | forge type            | down down down down down down enter |                                             |
+      | github connector type | enter                               |                                             |
+      | github token          | g h - t o k enter                   |                                             |
+      | token scope           | enter                               |                                             |
+      | enter all             | enter                               |                                             |
+      | config storage        | enter                               |                                             |
     Then Git Town runs the commands
       | COMMAND                                  |
       | git config git-town.github-token gh-tok  |

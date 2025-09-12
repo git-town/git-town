@@ -13,7 +13,7 @@ func Force(desc string) (AddFunc, ReadForceFlagFunc) {
 		cmd.Flags().BoolP(forceLong, "f", false, desc)
 	}
 	readFlag := func(cmd *cobra.Command) (configdomain.Force, error) {
-		return readBoolFlag[configdomain.Force](cmd, forceLong)
+		return readBoolFlag[configdomain.Force](cmd.Flags(), forceLong)
 	}
 	return addFlag, readFlag
 }

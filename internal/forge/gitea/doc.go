@@ -1,2 +1,2 @@
-// Package gitea provides the forge connector for Gitea.
+// Package gitea connects to gitea instances.
 package gitea

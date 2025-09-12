@@ -2,6 +2,7 @@ package forge
 
 import (
 	"github.com/git-town/git-town/v21/internal/cli/print"
+	"github.com/git-town/git-town/v21/internal/forge/azuredevops"
 	"github.com/git-town/git-town/v21/internal/forge/bitbucketcloud"
 	"github.com/git-town/git-town/v21/internal/forge/bitbucketdatacenter"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
@@ -27,6 +28,11 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 	var connector forgedomain.Connector
 	var err error
 	switch forgeType {
+	case forgedomain.ForgeTypeAzureDevOps:
+		connector = azuredevops.NewConnector(azuredevops.NewConnectorArgs{
+			ProposalOverride: proposalOverride,
+			RemoteURL:        remoteURL,
+		})
 	case forgedomain.ForgeTypeBitbucket:
 		connector = bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
 			AppPassword:      args.BitbucketAppPassword,
@@ -51,7 +57,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			RemoteURL:        remoteURL,
 		})
 	case forgedomain.ForgeTypeGitea:
-		connector = gitea.NewConnector(gitea.NewConnectorArgs{
+		connector, err = gitea.NewConnector(gitea.NewConnectorArgs{
 			APIToken:         args.GiteaToken,
 			Log:              args.Log,
 			ProposalOverride: proposalOverride,

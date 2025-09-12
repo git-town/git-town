@@ -17,8 +17,7 @@ func ProposalBodyFile() (AddFunc, ReadProposalBodyFileFlagFunc) {
 		cmd.Flags().StringP(bodyFileLong, bodyFileShort, "", "Read the proposal body from the given file (use \"-\" to read from STDIN)")
 	}
 	readFlag := func(cmd *cobra.Command) (Option[gitdomain.ProposalBodyFile], error) {
-		value, err := cmd.Flags().GetString(bodyFileLong)
-		return NewOption(gitdomain.ProposalBodyFile(value)), err
+		return readStringOptFlag[gitdomain.ProposalBodyFile](cmd.Flags(), bodyFileLong)
 	}
 	return addFlag, readFlag
 }

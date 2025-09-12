@@ -13,8 +13,8 @@ func NoPush() (AddFunc, ReadNoPushFlagFunc) {
 		cmd.Flags().BoolP(noPushLong, "", false, "do not push local branches")
 	}
 	readFlag := func(cmd *cobra.Command) (configdomain.PushBranches, error) {
-		value, err := cmd.Flags().GetBool(noPushLong)
-		return configdomain.PushBranches(!value), err
+		result, err := readBoolFlag[configdomain.PushBranches](cmd.Flags(), noPushLong)
+		return !result, err
 	}
 	return addFlag, readFlag
 }

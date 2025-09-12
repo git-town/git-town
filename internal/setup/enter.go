@@ -63,6 +63,8 @@ EnterForgeData:
 	gitlabToken := None[forgedomain.GitLabToken]()
 	if forgeType, hasForgeType := actualForgeType.Get(); hasForgeType {
 		switch forgeType {
+		case forgedomain.ForgeTypeAzureDevOps:
+			// the Azure DevOps connector doesn't have connectivity to the API implemented for now
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
 			bitbucketUsername, exit, err = enterBitbucketUserName(data)
 			if err != nil || exit {
@@ -676,6 +678,8 @@ func existsAndChanged[T fmt.Stringer](input, existing T) bool {
 func shouldAskForScope(args enterTokenScopeArgs) bool {
 	if forgeType, hasForgeType := args.determinedForgeType.Get(); hasForgeType {
 		switch forgeType {
+		case forgedomain.ForgeTypeAzureDevOps:
+			return false
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
 			return existsAndChanged(args.bitbucketUsername, args.existingConfig.BitbucketUsername) &&
 				existsAndChanged(args.bitbucketAppPassword, args.existingConfig.BitbucketAppPassword)
@@ -753,6 +757,8 @@ type testForgeAuthArgs struct {
 func tokenScopeDialog(args enterTokenScopeArgs) (configdomain.ConfigScope, dialogdomain.Exit, error) {
 	if forgeType, hasForgeType := args.determinedForgeType.Get(); hasForgeType {
 		switch forgeType {
+		case forgedomain.ForgeTypeAzureDevOps:
+			return configdomain.ConfigScopeLocal, false, nil
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
 			existingScope := determineExistingScope(args.data.Snapshot, configdomain.KeyBitbucketUsername, args.data.Config.NormalConfig.BitbucketUsername)
 			return dialog.TokenScope(existingScope, args.inputs)

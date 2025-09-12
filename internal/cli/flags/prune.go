@@ -13,7 +13,7 @@ func Prune() (AddFunc, ReadPruneFlagFunc) {
 		cmd.Flags().BoolP(pruneLong, "p", false, "prune empty branches")
 	}
 	readFlag := func(cmd *cobra.Command) (configdomain.Prune, error) {
-		return readBoolFlag[configdomain.Prune](cmd, pruneLong)
+		return readBoolFlag[configdomain.Prune](cmd.Flags(), pruneLong)
 	}
 	return addFlag, readFlag
 }

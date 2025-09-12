@@ -13,7 +13,7 @@ func Commit() (AddFunc, ReadCommitFlagFunc) {
 		cmd.Flags().BoolP(commitLong, "c", false, "commit the stashed changes into the new branch")
 	}
 	readFlag := func(cmd *cobra.Command) (configdomain.Commit, error) {
-		return readBoolFlag[configdomain.Commit](cmd, commitLong)
+		return readBoolFlag[configdomain.Commit](cmd.Flags(), commitLong)
 	}
 	return addFlag, readFlag
 }

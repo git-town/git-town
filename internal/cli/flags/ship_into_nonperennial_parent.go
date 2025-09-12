@@ -13,7 +13,7 @@ func ShipIntoNonPerennialParent() (AddFunc, ReadShipIntoNonPerennialParentFlagFu
 		cmd.Flags().BoolP(shipIntoNonPerennialParentLong, "p", false, "allow shipping into non-perennial parent")
 	}
 	readFlag := func(cmd *cobra.Command) (configdomain.ShipIntoNonperennialParent, error) {
-		return readBoolFlag[configdomain.ShipIntoNonperennialParent](cmd, shipIntoNonPerennialParentLong)
+		return readBoolFlag[configdomain.ShipIntoNonperennialParent](cmd.Flags(), shipIntoNonPerennialParentLong)
 	}
 	return addFlag, readFlag
 }

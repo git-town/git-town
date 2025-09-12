@@ -15,6 +15,9 @@ func TestParseForgeType(t *testing.T) {
 		t.Parallel()
 		tests := map[string]Option[forgedomain.ForgeType]{
 			"":                     None[forgedomain.ForgeType](),
+			"azuredevops":          Some(forgedomain.ForgeTypeAzureDevOps),
+			"AzureDevOps":          Some(forgedomain.ForgeTypeAzureDevOps),
+			"AZUREDEVOPS":          Some(forgedomain.ForgeTypeAzureDevOps),
 			"bitbucket":            Some(forgedomain.ForgeTypeBitbucket),
 			"BitBucket":            Some(forgedomain.ForgeTypeBitbucket),
 			"BITBUCKET":            Some(forgedomain.ForgeTypeBitbucket),

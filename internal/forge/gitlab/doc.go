@@ -1,2 +1,2 @@
-// Package gitlab provides the forge connector for GitLab.
+// Package gitlab connects to GitLab.
 package gitlab
