@@ -80,13 +80,23 @@ func finalize(userMatch, host, path string) Option[Parts] {
 
 	var org string
 	var repo string
-	org = strings.Join(parts[:len(parts)-1], "/") // all but the last part are org, last part is repo
-	repo = parts[len(parts)-1]
+	var supergroup Option[string]
+
+	// Handle Azure DevOps format: v3/project/org/repo
+	if len(parts) >= 4 && parts[0] == "v3" {
+		supergroup = Some(parts[1]) // project
+		org = parts[2]              // org
+		repo = parts[3]             // repo
+	} else {
+		org = strings.Join(parts[:len(parts)-1], "/") // all but the last part are org, last part is repo
+		repo = parts[len(parts)-1]
+	}
 
 	return Some(Parts{
-		Host: host,
-		Org:  org,
-		Repo: repo,
-		User: user,
+		Host:       host,
+		Org:        org,
+		Repo:       repo,
+		User:       user,
+		Supergroup: supergroup,
 	})
 }
