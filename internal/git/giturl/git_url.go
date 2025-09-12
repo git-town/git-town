@@ -22,7 +22,7 @@ func Parse(url string) Option[Parts] {
 		httpPattern := regexp.MustCompile(`^https?://(?:([^@]+)@)?([^/]+)/(.*)$`)
 		if matches := httpPattern.FindStringSubmatch(url); matches != nil {
 			path := strings.TrimSuffix(matches[3], ".git")
-			return parsePathAndCreateParts(matches[1], matches[2], path)
+			return finalize(matches[1], matches[2], path)
 		}
 		return None[Parts]()
 	}
@@ -32,7 +32,7 @@ func Parse(url string) Option[Parts] {
 		sshPattern := regexp.MustCompile(`^ssh://(?:([^@]+)@)?([^/:]+)(?::(\d+))?/(.*)$`)
 		if matches := sshPattern.FindStringSubmatch(url); matches != nil {
 			path := strings.TrimSuffix(matches[4], ".git")
-			return parsePathAndCreateParts(matches[1], matches[2], path)
+			return finalize(matches[1], matches[2], path)
 		}
 		return None[Parts]()
 	}
@@ -49,14 +49,14 @@ func Parse(url string) Option[Parts] {
 			path = portSlashMatch[2]
 		}
 		path = strings.TrimSuffix(path, ".git")
-		return parsePathAndCreateParts(matches[1], host, path)
+		return finalize(matches[1], host, path)
 	}
 
 	// Handle SSH URLs with slash separator (e.g., git@bitbucket.org/user/repo)
 	slashPattern := regexp.MustCompile(`^(?:([^@]+)@)?([^/]+)/(.*)$`)
 	if matches := slashPattern.FindStringSubmatch(url); matches != nil {
 		path := strings.TrimSuffix(matches[3], ".git")
-		return parsePathAndCreateParts(matches[1], matches[2], path)
+		return finalize(matches[1], matches[2], path)
 	}
 
 	// NOTE: if we can't parse a Git URL, we simply ignore it.
@@ -65,7 +65,7 @@ func Parse(url string) Option[Parts] {
 	return None[Parts]()
 }
 
-func parsePathAndCreateParts(userMatch, host, path string) Option[Parts] {
+func finalize(userMatch, host, path string) Option[Parts] {
 	parts := strings.Split(path, "/")
 	if len(parts) < 2 {
 		return None[Parts]()
@@ -78,9 +78,7 @@ func parsePathAndCreateParts(userMatch, host, path string) Option[Parts] {
 
 	var org string
 	var repo string
-
-	// General rule: join all but the last part as org, last part as repo
-	org = strings.Join(parts[:len(parts)-1], "/")
+	org = strings.Join(parts[:len(parts)-1], "/") // all but the last part are org, last part is repo
 	repo = parts[len(parts)-1]
 
 	return Some(Parts{
