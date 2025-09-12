@@ -1,2 +1,2 @@
-// Package github provides the forge connector for GitHub.
+// Package github connects to GitHub.
 package github
