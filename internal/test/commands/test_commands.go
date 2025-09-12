@@ -184,7 +184,7 @@ func (self *TestCommands) CreateAndCheckoutBranch(name gitdomain.LocalBranchName
 }
 
 func (self *TestCommands) CreateLocalBranchUsingGitTown(name gitdomain.LocalBranchName, parentOpt Option[gitdomain.LocalBranchName], locations testgit.Locations, branchTypeOpt Option[configdomain.BranchType], currentBranchOpt Option[gitdomain.LocalBranchName]) {
-	// TODO: receive the branchSetup data directly
+	// TODO: receive the branchSetup data directly, rather than 4 separate variables
 	// step 1: create the local branch if one is needed
 	if parent, hasParent := parentOpt.Get(); hasParent {
 		currentBranch, has := currentBranchOpt.Get()
