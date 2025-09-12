@@ -23,7 +23,7 @@ type NewConnectorArgs struct {
 // NewConnector provides a new connector instance for the Forgejo API.
 func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:ireturn
 	webConnector := WebConnector{
-		Data: forgedomain.Data{
+		HostedRepoInfo: forgedomain.HostedRepoInfo{
 			Hostname:     args.RemoteURL.Host,
 			Organization: args.RemoteURL.Org,
 			Repository:   args.RemoteURL.Repo,

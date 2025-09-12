@@ -2,19 +2,19 @@ package forgedomain
 
 import "strings"
 
-// Data contains data needed by all forge connectors.
-type Data struct {
-	// Hostname override
+// HostedRepoInfo provides information about a repository hosted at a forge.
+type HostedRepoInfo struct {
+	// hostname of the server that hosts the repo
 	Hostname string
 
 	// the Organization within the forge that owns the repo
 	Organization string
 
-	// repo name within the organization
+	// name of the repo on the server
 	Repository string
 }
 
-func (self Data) HostnameWithStandardPort() string {
+func (self HostedRepoInfo) HostnameWithStandardPort() string {
 	index := strings.IndexRune(self.Hostname, ':')
 	if index == -1 {
 		return self.Hostname

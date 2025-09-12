@@ -44,7 +44,7 @@ func TestWebConnector(t *testing.T) {
 	t.Run("NewProposalURL", func(t *testing.T) {
 		t.Parallel()
 		connector := forgejo.WebConnector{
-			Data: forgedomain.Data{
+			HostedRepoInfo: forgedomain.HostedRepoInfo{
 				Hostname:     "codeberg.org",
 				Organization: "org",
 				Repository:   "repo",
@@ -63,7 +63,7 @@ func TestWebConnector(t *testing.T) {
 	t.Run("RepositoryURL", func(t *testing.T) {
 		t.Parallel()
 		connector := forgejo.WebConnector{
-			Data: forgedomain.Data{
+			HostedRepoInfo: forgedomain.HostedRepoInfo{
 				Hostname:     "codeberg.org",
 				Organization: "org",
 				Repository:   "repo",
