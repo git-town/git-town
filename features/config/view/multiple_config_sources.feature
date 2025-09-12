@@ -4,17 +4,13 @@ Feature: show the configuration
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME           | TYPE         | PARENT | LOCATIONS |
-      | contribution-1 | contribution |        | local     |
-      | contribution-2 | contribution |        | local     |
-      | observed-1     | observed     |        | local     |
-      | observed-2     | observed     |        | local     |
-      | parked-1       | parked       | main   | local     |
-      | parked-2       | parked       | main   | local     |
-      | perennial-1    | perennial    |        | local     |
-      | perennial-2    | perennial    |        | local     |
-      | prototype-1    | prototype    | main   | local     |
-      | prototype-2    | prototype    | main   | local     |
+      | NAME           | TYPE         | PARENT | LOCATIONS     |
+      | contribution-1 | contribution |        | local, origin |
+      | contribution-2 | contribution |        | local, origin |
+      | observed-1     | observed     |        | local, origin |
+      | observed-2     | observed     |        | local, origin |
+      | perennial-1    | perennial    |        | local         |
+      | perennial-2    | perennial    |        | local         |
 
   Scenario: configured in both Git and config file
     Given the main branch is "git-main"
@@ -77,10 +73,10 @@ Feature: show the configuration
         main branch: git-main
         observed branches: observed-1, observed-2
         observed regex: ^git-observed-regex
-        parked branches: parked-1, parked-2
+        parked branches: (none)
         perennial branches: git-perennial-1, git-perennial-2, config-perennial-1, config-perennial-2
         perennial regex: ^git-perennial-
-        prototype branches: prototype-1, prototype-2
+        prototype branches: (none)
         unknown branch type: observed
 
       Configuration:
