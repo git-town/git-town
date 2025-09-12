@@ -35,7 +35,6 @@ Feature: does not compress non-active parked branches in the stack
     And file "parked_1" still has content "parked 1"
     And file "parked_2" still has content "parked 2"
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
