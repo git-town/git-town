@@ -19,7 +19,7 @@ type NewConnectorArgs struct {
 // NewConnector provides the correct connector for talking to Azure DevOps.
 func NewConnector(args NewConnectorArgs) WebConnector {
 	return WebConnector{
-		Data: forgedomain.Data{
+		HostedRepoInfo: forgedomain.HostedRepoInfo{
 			Hostname:     args.RemoteURL.Host,
 			Organization: args.RemoteURL.Org,
 			Repository:   args.RemoteURL.Repo,
