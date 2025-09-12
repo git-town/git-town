@@ -1026,15 +1026,15 @@ func defineSteps(sc *godog.ScenarioContext) {
 		lastBranch := None[gitdomain.LocalBranchName]()
 		for _, branchSetup := range datatable.ParseBranchSetupTable(table) {
 			if branchSetup.Locations.Contains(testgit.LocationLocal) {
-				repo.CreateLocalBranchUsingGitTown(branchSetup.Name, branchSetup.Parent.GetOrElse("main"), branchSetup.Locations, branchSetup.BranchType, lastBranch)
+				repo.CreateLocalBranchUsingGitTown(branchSetup.Name, branchSetup.Parent.GetOr("main"), branchSetup.Locations, branchSetup.BranchType, lastBranch)
 				lastBranch = Some(branchSetup.Name)
 			} else {
 				// here the branch has no local counterpart --> create it manually in the remotes
 				if branchSetup.Locations.Contains(testgit.LocationOrigin) {
-					state.fixture.OriginRepo.Value.CreateBranch(branchSetup.Name, branchSetup.Parent.GetOrElse("main").BranchName())
+					state.fixture.OriginRepo.Value.CreateBranch(branchSetup.Name, branchSetup.Parent.GetOr("main").BranchName())
 				}
 				if branchSetup.Locations.Contains(testgit.LocationUpstream) {
-					state.fixture.UpstreamRepo.Value.CreateBranch(branchSetup.Name, branchSetup.Parent.GetOrElse("main").BranchName())
+					state.fixture.UpstreamRepo.Value.CreateBranch(branchSetup.Name, branchSetup.Parent.GetOr("main").BranchName())
 				}
 			}
 		}
