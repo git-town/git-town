@@ -21,7 +21,7 @@ type NewConnectorArgs struct {
 }
 
 // NewConnector provides a new connector instance for the Forgejo API.
-func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //nolint:ireturn
+func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:ireturn
 	webConnector := WebConnector{
 		Data: forgedomain.Data{
 			Hostname:     args.RemoteURL.Host,
@@ -34,16 +34,16 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 			WebConnector: webConnector,
 			log:          args.Log,
 			override:     proposalURLOverride,
-		}, nil
+		}
 	}
 	if args.APIToken.IsSome() {
-		forgejoClient, err := forgejo.NewClient("https://"+args.RemoteURL.Host, forgejo.SetToken(args.APIToken.String()))
 		return APIConnector{
 			APIToken:     args.APIToken,
 			WebConnector: webConnector,
-			client:       forgejoClient,
+			_client:      MutableNone[forgejo.Client](),
 			log:          args.Log,
-		}, err
+			remoteURL:    args.RemoteURL,
+		}
 	}
-	return webConnector, nil
+	return webConnector
 }
