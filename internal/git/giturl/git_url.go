@@ -17,7 +17,11 @@ type Parts struct {
 }
 
 func Parse(url string) Option[Parts] {
-	// Handle HTTP/HTTPS URLs
+	// NOTE: if we can't parse a Git URL, we simply ignore it.
+	// This is because the URLs might be on the filesystem.
+	// Remotes on the filesystem are not an error condition.
+
+	// handle HTTP/HTTPS URLs
 	if strings.HasPrefix(url, "http://") || strings.HasPrefix(url, "https://") {
 		httpPattern := regexp.MustCompile(`^https?://(?:([^@]+)@)?([^/]+)/(.*)$`)
 		if matches := httpPattern.FindStringSubmatch(url); matches != nil {
@@ -27,7 +31,7 @@ func Parse(url string) Option[Parts] {
 		return None[Parts]()
 	}
 
-	// Handle SSH URLs with ssh:// prefix
+	// handle SSH URLs with ssh:// prefix
 	if strings.HasPrefix(url, "ssh://") {
 		sshPattern := regexp.MustCompile(`^ssh://(?:([^@]+)@)?([^/:]+)(?::(\d+))?/(.*)$`)
 		if matches := sshPattern.FindStringSubmatch(url); matches != nil {
@@ -37,14 +41,14 @@ func Parse(url string) Option[Parts] {
 		return None[Parts]()
 	}
 
-	// Handle SSH URLs with colon separator (e.g., git@github.com:user/repo)
-	// This includes both regular SSH and cases with ports
+	// handle SSH URLs with colon separator (e.g., git@github.com:user/repo),
+	// with and without ports
 	colonPattern := regexp.MustCompile(`^(?:([^@]+)@)?([^:]+):(.*)$`)
 	if matches := colonPattern.FindStringSubmatch(url); matches != nil {
 		host := matches[2]
 		path := matches[3]
 
-		// Handle port numbers in path (e.g., git@git.example.com:4022/a/b.git)
+		// handle port numbers in path (e.g., git@git.example.com:4022/a/b.git)
 		if portSlashMatch := regexp.MustCompile(`^(\d+)/(.*)$`).FindStringSubmatch(path); portSlashMatch != nil {
 			path = portSlashMatch[2]
 		}
@@ -52,16 +56,13 @@ func Parse(url string) Option[Parts] {
 		return finalize(matches[1], host, path)
 	}
 
-	// Handle SSH URLs with slash separator (e.g., git@bitbucket.org/user/repo)
+	// handle SSH URLs with slash separator (e.g., git@bitbucket.org/user/repo)
 	slashPattern := regexp.MustCompile(`^(?:([^@]+)@)?([^/]+)/(.*)$`)
 	if matches := slashPattern.FindStringSubmatch(url); matches != nil {
 		path := strings.TrimSuffix(matches[3], ".git")
 		return finalize(matches[1], matches[2], path)
 	}
 
-	// NOTE: if we can't parse a Git URL, we simply ignore it.
-	// This is because the URLs might be on the filesystem.
-	// Remotes on the filesystem are not an error condition.
 	return None[Parts]()
 }
 
