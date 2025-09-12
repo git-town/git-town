@@ -4,18 +4,17 @@ Feature: display configuration defined in environment variables
     Given a Git repo with origin
     And Git Town is not configured
     And the branches
-      | NAME           | TYPE         | PARENT | LOCATIONS |
-      | contribution-1 | contribution |        | local     |
-      | contribution-2 | contribution |        | local     |
-      | observed-1     | observed     |        | local     |
-      | observed-2     | observed     |        | local     |
-      | parked-1       | parked       | main   | local     |
-      | parked-2       | parked       | main   | local     |
-      | perennial-1    | perennial    |        | local     |
-      | perennial-2    | perennial    |        | local     |
-      | prototype-1    | prototype    | main   | local     |
-      | prototype-2    | prototype    | main   | local     |
+      | NAME           | TYPE         | PARENT | LOCATIONS     |
+      | contribution-1 | contribution |        | local, origin |
+      | contribution-2 | contribution |        | local, origin |
+      | observed-1     | observed     |        | local, origin |
+      | observed-2     | observed     |        | local, origin |
+      | perennial-1    | perennial    |        | local         |
+      | perennial-2    | perennial    |        | local         |
+      | prototype-1    | prototype    | main   | local         |
+      | prototype-2    | prototype    | main   | local         |
 
+  @debug @this
   Scenario: all configured in Git, no stacked changes
     When I run "git-town config" with these environment variables
       | GIT_TOWN_AUTO_RESOLVE                | false              |
