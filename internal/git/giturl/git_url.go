@@ -83,9 +83,9 @@ func finalize(userMatch, host, path string) Option[Parts] {
 	repo = parts[len(parts)-1]
 
 	return Some(Parts{
-		User: user,
 		Host: host,
 		Org:  org,
 		Repo: repo,
+		User: user,
 	})
 }
