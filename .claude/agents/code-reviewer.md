@@ -11,7 +11,7 @@ security.
 
 When invoked:
 
-1. Run "git diff" to see recent changes
+1. Run "gdm" to see the changes to review
 2. Focus on modified files
 3. Begin review immediately
 
