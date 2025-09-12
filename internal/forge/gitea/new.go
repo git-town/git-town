@@ -24,7 +24,7 @@ type NewConnectorArgs struct {
 }
 
 // NewConnector provides a connector instance that talks to the gitea API.
-func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:ireturn
+func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //nolint:ireturn
 	webConnector := WebConnector{
 		Data: forgedomain.Data{
 			Hostname:     args.RemoteURL.Host,
@@ -37,18 +37,18 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:iretur
 			WebConnector: webConnector,
 			log:          args.Log,
 			override:     proposalURLOverride,
-		}
+		}, nil
 	}
 	if apiToken, hasAPIToken := args.APIToken.Get(); hasAPIToken {
 		tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: apiToken.String()})
 		httpClient := oauth2.NewClient(context.Background(), tokenSource)
-		giteaClient := gitea.NewClientWithHTTP("https://"+args.RemoteURL.Host, httpClient)
+		giteaClient, err := gitea.NewClient("https://"+args.RemoteURL.Host, gitea.SetHTTPClient(httpClient))
 		return AuthConnector{
 			APIToken:     args.APIToken,
 			WebConnector: webConnector,
 			client:       giteaClient,
 			log:          args.Log,
-		}
+		}, err
 	}
-	return webConnector
+	return webConnector, nil
 }
