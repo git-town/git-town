@@ -18,6 +18,7 @@ func TestWebConnector(t *testing.T) {
 		ProposalOverride: None[forgedomain.ProposalOverride](),
 		RemoteURL:        url,
 	})
+
 	t.Run("NewProposalURL", func(t *testing.T) {
 		t.Parallel()
 		have := connector.NewProposalURL(forgedomain.CreateProposalArgs{
