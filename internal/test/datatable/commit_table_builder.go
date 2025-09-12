@@ -1,8 +1,6 @@
 package datatable
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/test/helpers"
@@ -46,7 +44,6 @@ func NewCommitTableBuilder() CommitTableBuilder {
 
 // Add registers the given commit from the given location into this table.
 func (self *CommitTableBuilder) Add(commit testgit.Commit, location string) {
-	fmt.Println("11111111111111111111111111111", commit.Message)
 	self.commits[commit.SHA] = commit
 	commitsInBranch, exists := self.commitsInBranch[commit.Branch]
 	if exists {

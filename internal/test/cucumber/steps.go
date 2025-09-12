@@ -1341,11 +1341,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the initial commits exist now$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		currentCommits := state.fixture.CommitTable(state.initialCommits.GetOrPanic().Cells[0])
-		fmt.Println("222222222222222222222222222222222222222222")
-		fmt.Println(currentCommits.String())
 		initialCommits := state.initialCommits.GetOrPanic()
-		fmt.Println("333333333333333333333333333333333333333333")
-		fmt.Println(initialCommits.String())
 		errDiff, errCount := initialCommits.EqualDataTable(currentCommits)
 		if errCount == 0 {
 			return nil
