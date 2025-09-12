@@ -1,6 +1,7 @@
 package gitea
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"strconv"
@@ -12,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/pkg/colors"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"golang.org/x/oauth2"
 )
 
 // type checks
@@ -24,7 +26,7 @@ var (
 type AuthConnector struct {
 	WebConnector
 	APIToken Option[forgedomain.GiteaToken]
-	client   *gitea.Client
+	_client  OptionalMutable[gitea.Client] // don't use directly, call .getClient()
 	log      print.Logger
 }
 
@@ -187,4 +189,11 @@ func (self AuthConnector) VerifyCredentials() forgedomain.VerifyCredentialsResul
 		AuthenticationError: nil,
 		AuthorizationError:  err,
 	}
+}
+
+func (self AuthConnector) getClient() (*gitea.Client, error) {
+	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: self.apiToken.String()})
+	httpClient := oauth2.NewClient(context.Background(), tokenSource)
+	self._client = gitea.NewClientWithHTTP("https://"+args.RemoteURL.Host, httpClient)
+	return self._client.Value, nil
 }
