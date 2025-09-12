@@ -24,7 +24,7 @@ func Parse(url string) Option[Parts] {
 		// capture "host:" or "host/"
 		`(?P<host>.*?[:/])` +
 		// ignore the port
-		`(?:\d+\/)?` +
+		`(?:\.+\/)?` +
 		// capture "org/"
 		`(?P<org>.*\/)` +
 		// capture "repo"
