@@ -14,7 +14,7 @@ Feature: detaching an observed branch
       | observed | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot detach branches without parent
+      cannot detach observed branches since you don't own them
       """
   #
   # NOTE: Cannot test undo here.
