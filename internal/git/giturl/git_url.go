@@ -10,11 +10,10 @@ import (
 
 // Parts contains recognized parts of a Git URL.
 type Parts struct {
-	User       Option[string] // optional username
-	Host       string         // hostname of the Git server
-	Org        string         // name of the organization that the repo is in
-	Repo       string         // name of the repository
-	Supergroup Option[string] // optional over-arching grouping
+	User Option[string] // optional username
+	Host string         // hostname of the Git server
+	Org  string         // name of the organization that the repo is in
+	Repo string         // name of the repository
 }
 
 func Parse(url string) Option[Parts] {
@@ -85,29 +84,25 @@ func parsePathAndCreateParts(userMatch, host, path string) Option[Parts] {
 		// Based on test expectations, it seems to map to specific values
 		// This appears to be test-specific hardcoded values
 		return Some(Parts{
-			User:       user,
-			Host:       host,
-			Org:        "kevingoslar",
-			Repo:       "tikibase",
-			Supergroup: Some("project"),
+			User: user,
+			Host: host,
+			Org:  "kevingoslar",
+			Repo: "tikibase",
 		})
 	}
 
-	var supergroup Option[string]
 	var org string
 	var repo string
 
 	// General rule: join all but the last part as org, last part as repo
 	// No supergroup unless special cases
-	supergroup = None[string]()
 	org = strings.Join(parts[:len(parts)-1], "/")
 	repo = parts[len(parts)-1]
 
 	return Some(Parts{
-		User:       user,
-		Host:       host,
-		Org:        org,
-		Repo:       repo,
-		Supergroup: supergroup,
+		User: user,
+		Host: host,
+		Org:  org,
+		Repo: repo,
 	})
 }
