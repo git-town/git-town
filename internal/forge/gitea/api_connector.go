@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/git/giturl"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/pkg/colors"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -25,9 +26,10 @@ var (
 // AuthConnector provides access to the gitea API.
 type AuthConnector struct {
 	WebConnector
-	APIToken Option[forgedomain.GiteaToken]
-	_client  OptionalMutable[gitea.Client] // don't use directly, call .getClient()
-	log      print.Logger
+	APIToken  Option[forgedomain.GiteaToken]
+	RemoteURL giturl.Parts
+	_client   OptionalMutable[gitea.Client] // don't use directly, call .getClient()
+	log       print.Logger
 }
 
 // ============================================================================
@@ -37,8 +39,12 @@ type AuthConnector struct {
 var _ forgedomain.ProposalFinder = apiConnector // type check
 
 func (self AuthConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+	client, err := self.getClient()
+	if err != nil {
+		return None[forgedomain.Proposal](), err
+	}
 	self.log.Start(messages.APIProposalLookupStart)
-	openPullRequests, _, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
+	openPullRequests, _, err := client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
 			PageSize: 50,
 		},
@@ -69,8 +75,12 @@ func (self AuthConnector) FindProposal(branch, target gitdomain.LocalBranchName)
 var _ forgedomain.ProposalSearcher = apiConnector // type check
 
 func (self AuthConnector) SearchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+	client, err := self.getClient()
+	if err != nil {
+		return None[forgedomain.Proposal](), err
+	}
 	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
-	openPullRequests, _, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
+	openPullRequests, _, err := client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
 			PageSize: 50,
 		},
@@ -102,12 +112,16 @@ func (self AuthConnector) SearchProposal(branch gitdomain.LocalBranchName) (Opti
 var _ forgedomain.ProposalMerger = apiConnector // type check
 
 func (self AuthConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
+	client, err := self.getClient()
+	if err != nil {
+		return err
+	}
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
 	commitMessageParts := message.Parts()
 	self.log.Start(messages.ForgeGitHubMergingViaAPI, colors.BoldGreen().Styled(strconv.Itoa(number)))
-	_, _, err := self.client.MergePullRequest(self.Organization, self.Repository, int64(number), gitea.MergePullRequestOption{
+	_, _, err = client.MergePullRequest(self.Organization, self.Repository, int64(number), gitea.MergePullRequestOption{
 		Style:   gitea.MergeStyleSquash,
 		Title:   commitMessageParts.Subject,
 		Message: commitMessageParts.Text,
@@ -118,7 +132,7 @@ func (self AuthConnector) SquashMergeProposal(number int, message gitdomain.Comm
 	}
 	self.log.Ok()
 	self.log.Start(messages.APIProposalLookupStart)
-	_, _, err = self.client.GetPullRequest(self.Organization, self.Repository, int64(number))
+	_, _, err = client.GetPullRequest(self.Organization, self.Repository, int64(number))
 	self.log.Ok()
 	return err
 }
@@ -130,9 +144,13 @@ func (self AuthConnector) SquashMergeProposal(number int, message gitdomain.Comm
 var _ forgedomain.ProposalBodyUpdater = apiConnector // type check
 
 func (self AuthConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody string) error {
+	client, err := self.getClient()
+	if err != nil {
+		return err
+	}
 	data := proposalData.Data()
 	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)))
-	_, _, err := self.client.EditPullRequest(self.Organization, self.Repository, int64(data.Number), gitea.EditPullRequestOption{
+	_, _, err = client.EditPullRequest(self.Organization, self.Repository, int64(data.Number), gitea.EditPullRequestOption{
 		Body: updatedBody,
 	})
 	if err != nil {
@@ -150,10 +168,14 @@ func (self AuthConnector) UpdateProposalBody(proposalData forgedomain.ProposalIn
 var _ forgedomain.ProposalTargetUpdater = apiConnector // type check
 
 func (self AuthConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
+	client, err := self.getClient()
+	if err != nil {
+		return err
+	}
 	data := proposalData.Data()
 	targetName := target.String()
 	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)), colors.BoldCyan().Styled(targetName))
-	_, _, err := self.client.EditPullRequest(self.Organization, self.Repository, int64(data.Number), gitea.EditPullRequestOption{
+	_, _, err = client.EditPullRequest(self.Organization, self.Repository, int64(data.Number), gitea.EditPullRequestOption{
 		Base: targetName,
 	})
 	if err != nil {
@@ -171,7 +193,7 @@ func (self AuthConnector) UpdateProposalTarget(proposalData forgedomain.Proposal
 var _ forgedomain.CredentialVerifier = apiConnector
 
 func (self AuthConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
-	user, _, err := self.client.GetMyUserInfo()
+	client, err := self.getClient()
 	if err != nil {
 		return forgedomain.VerifyCredentialsResult{
 			AuthenticatedUser:   None[string](),
@@ -179,7 +201,15 @@ func (self AuthConnector) VerifyCredentials() forgedomain.VerifyCredentialsResul
 			AuthorizationError:  nil,
 		}
 	}
-	_, _, err = self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
+	user, _, err := client.GetMyUserInfo()
+	if err != nil {
+		return forgedomain.VerifyCredentialsResult{
+			AuthenticatedUser:   None[string](),
+			AuthenticationError: err,
+			AuthorizationError:  nil,
+		}
+	}
+	_, _, err = client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
 			PageSize: 1,
 		},
@@ -192,8 +222,15 @@ func (self AuthConnector) VerifyCredentials() forgedomain.VerifyCredentialsResul
 }
 
 func (self AuthConnector) getClient() (*gitea.Client, error) {
-	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: self.apiToken.String()})
+	if client, hasClient := self._client.Get(); hasClient {
+		return client, nil
+	}
+	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: self.APIToken.String()})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
-	self._client = gitea.NewClientWithHTTP("https://"+args.RemoteURL.Host, httpClient)
-	return self._client.Value, nil
+	giteaClient, err := gitea.NewClient("https://"+self.RemoteURL.Host, gitea.SetHTTPClient(httpClient))
+	if err != nil {
+		return nil, err
+	}
+	self._client = MutableSome(giteaClient)
+	return giteaClient, err
 }
