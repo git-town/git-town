@@ -90,7 +90,7 @@ func TestGitLabWebConnector(t *testing.T) {
 			t.Run(name, func(t *testing.T) {
 				t.Parallel()
 				connector := gitlab.WebConnector{
-					Data: forgedomain.Data{
+					HostedRepoInfo: forgedomain.HostedRepoInfo{
 						Hostname:     "gitlab.com",
 						Organization: "organization",
 						Repository:   "repo",

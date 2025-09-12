@@ -23,7 +23,7 @@ type NewConnectorArgs struct {
 // NewConnector provides a connector instance that talks to the gitea API.
 func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:ireturn
 	webConnector := WebConnector{
-		Data: forgedomain.Data{
+		HostedRepoInfo: forgedomain.HostedRepoInfo{
 			Hostname:     args.RemoteURL.Host,
 			Organization: args.RemoteURL.Org,
 			Repository:   args.RemoteURL.Repo,
