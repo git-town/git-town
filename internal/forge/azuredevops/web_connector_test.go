@@ -35,7 +35,7 @@ func TestWebConnector(t *testing.T) {
 	t.Run("RepositoryURL", func(t *testing.T) {
 		t.Parallel()
 		have := connector.RepositoryURL()
-		want := "https://dev.azure.com/kevingoslar/tikibase"
+		want := "https://dev.azure.com/kevingoslar/tikibase/_git/tikibase"
 		must.EqOp(t, want, have)
 	})
 }

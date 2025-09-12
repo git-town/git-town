@@ -1,6 +1,10 @@
 package forgedomain
 
-import "strings"
+import (
+	"strings"
+
+	. "github.com/git-town/git-town/v21/pkg/prelude"
+)
 
 // HostedRepoInfo provides information about a repository hosted at a forge.
 type HostedRepoInfo struct {
@@ -12,6 +16,8 @@ type HostedRepoInfo struct {
 
 	// name of the repo on the server
 	Repository string
+
+	Supergroup Option[string]
 }
 
 func (self HostedRepoInfo) HostnameWithStandardPort() string {
