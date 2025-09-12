@@ -34,16 +34,13 @@ func (self WebConnector) DefaultProposalMessage(data forgedomain.ProposalData) s
 }
 
 func (self WebConnector) NewProposalURL(data forgedomain.CreateProposalArgs) string {
-	// https://dev.azure.com/kevingoslar/tikibase/_git/tikibase/pullrequestcreate?sourceRef=kg-test&targetRef=main
-	return fmt.Sprintf("%s/_git/%s/pullrequestcreate?sourceRef=%s&targetRef=%s",
+	return fmt.Sprintf("%s/pullrequestcreate?sourceRef=%s&targetRef=%s",
 		self.RepositoryURL(),
-		url.QueryEscape(self.Repository),
 		url.QueryEscape(data.Branch.String()),
 		url.QueryEscape(data.ParentBranch.String()),
 	)
 }
 
 func (self WebConnector) RepositoryURL() string {
-	// https://dev.azure.com/kevingoslar/_git/tikibase
 	return fmt.Sprintf("https://dev.azure.com/%s/_git/%s", self.Organization, self.Repository)
 }
