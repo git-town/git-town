@@ -8,7 +8,6 @@ Feature: detaching a contribution branch
     And the current branch is "contribution"
     When I run "git-town detach"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH       | COMMAND                  |
