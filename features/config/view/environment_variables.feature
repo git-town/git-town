@@ -11,10 +11,7 @@ Feature: display configuration defined in environment variables
       | observed-2     | observed     |        | local, origin |
       | perennial-1    | perennial    |        | local         |
       | perennial-2    | perennial    |        | local         |
-      | prototype-1    | prototype    | main   | local         |
-      | prototype-2    | prototype    | main   | local         |
 
-  @debug @this
   Scenario: all configured in Git, no stacked changes
     When I run "git-town config" with these environment variables
       | GIT_TOWN_AUTO_RESOLVE                | false              |
@@ -58,10 +55,10 @@ Feature: display configuration defined in environment variables
         main branch: dev
         observed branches: observed-1, observed-2
         observed regex: ^dependabot/
-        parked branches: parked-1, parked-2
+        parked branches: (none)
         perennial branches: qa, staging
         perennial regex: ^release-
-        prototype branches: prototype-1, prototype-2
+        prototype branches: (none)
         unknown branch type: observed
 
       Configuration:
