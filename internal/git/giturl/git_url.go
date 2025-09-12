@@ -35,6 +35,7 @@ func Parse(url string) Option[Parts] {
 			path := strings.TrimSuffix(matches[4], ".git")
 			return parsePathAndCreateParts(matches[1], matches[2], path)
 		}
+		return None[Parts]()
 	}
 
 	// Handle SSH URLs with colon separator (e.g., git@github.com:user/repo)
