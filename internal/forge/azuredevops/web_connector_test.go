@@ -13,13 +13,13 @@ import (
 
 func TestWebConnector(t *testing.T) {
 	t.Parallel()
+	url := giturl.Parse("git@ssh.dev.azure.com:v3/kevingoslar/tikibase/tikibase").GetOrPanic()
+	connector := azuredevops.NewConnector(azuredevops.NewConnectorArgs{
+		ProposalOverride: None[forgedomain.ProposalOverride](),
+		RemoteURL:        url,
+	})
 	t.Run("NewProposalURL", func(t *testing.T) {
 		t.Parallel()
-		url := giturl.Parse("git@ssh.dev.azure.com:v3/kevingoslar/tikibase/tikibase").GetOrPanic()
-		connector := azuredevops.NewConnector(azuredevops.NewConnectorArgs{
-			ProposalOverride: None[forgedomain.ProposalOverride](),
-			RemoteURL:        url,
-		})
 		have := connector.NewProposalURL(forgedomain.CreateProposalArgs{
 			Branch:         "feature",
 			FrontendRunner: nil,
@@ -28,7 +28,14 @@ func TestWebConnector(t *testing.T) {
 			ProposalBody:   Some(gitdomain.ProposalBody("body")),
 			ProposalTitle:  Some(gitdomain.ProposalTitle("title")),
 		})
-		want := "https://dev.azure.com/kevingoslar/tikibase/_git/tikibase/pullrequestcreate?sourceRef=kg-test&targetRef=main"
+		want := "https://dev.azure.com/kevingoslar/tikibase/_git/tikibase/pullrequestcreate?sourceRef=feature&targetRef=parent"
+		must.EqOp(t, want, have)
+	})
+
+	t.Run("RepositoryURL", func(t *testing.T) {
+		t.Parallel()
+		have := connector.RepositoryURL()
+		want := "https://dev.azure.com/kevingoslar/tikibase/_git/tikibase"
 		must.EqOp(t, want, have)
 	})
 }
