@@ -44,5 +44,5 @@ func (self WebConnector) NewProposalURL(data forgedomain.CreateProposalArgs) str
 }
 
 func (self WebConnector) RepositoryURL() string {
-	return fmt.Sprintf("https://dev.azure.com/%s/%s/_git/%s", self.Supergroup, self.Organization, self.Repository)
+	return fmt.Sprintf("https://dev.azure.com/%s/_git/%s", self.Organization, self.Repository)
 }
