@@ -74,28 +74,12 @@ func parsePathAndCreateParts(userMatch, host, path string) Option[Parts] {
 	var user Option[string]
 	if userMatch != "" {
 		user = Some(strings.TrimSuffix(userMatch, "@"))
-	} else {
-		user = None[string]()
-	}
-
-	// Handle Azure DevOps special case with v3 prefix
-	if host == "ssh.dev.azure.com" && len(parts) >= 4 && parts[0] == "v3" {
-		// For Azure DevOps URLs like v3/project/org/repo
-		// Based on test expectations, it seems to map to specific values
-		// This appears to be test-specific hardcoded values
-		return Some(Parts{
-			User: user,
-			Host: host,
-			Org:  "kevingoslar",
-			Repo: "tikibase",
-		})
 	}
 
 	var org string
 	var repo string
 
 	// General rule: join all but the last part as org, last part as repo
-	// No supergroup unless special cases
 	org = strings.Join(parts[:len(parts)-1], "/")
 	repo = parts[len(parts)-1]
 
