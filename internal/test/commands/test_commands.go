@@ -192,7 +192,7 @@ func (self *TestCommands) CreateLocalBranchUsingGitTown(branchSetup datatable.Br
 		}
 		self.MustRun("git-town", "append", branchSetup.Name.String())
 	} else {
-		self.CreateBranch(branchSetup.Name, branchSetup.Parent.GetOr("main").BranchName())
+		self.CreateAndCheckoutBranch(branchSetup.Name, branchSetup.Parent.GetOr("main").BranchName())
 	}
 	// step 2: create the tracking branch
 	if branchSetup.Locations.Contains(testgit.LocationOrigin) {
