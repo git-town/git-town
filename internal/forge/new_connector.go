@@ -50,14 +50,14 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			UserName:         args.BitbucketUsername,
 		})
 	case forgedomain.ForgeTypeForgejo:
-		connector, err = forgejo.NewConnector(forgejo.NewConnectorArgs{
+		connector = forgejo.NewConnector(forgejo.NewConnectorArgs{
 			APIToken:         args.ForgejoToken,
 			Log:              args.Log,
 			ProposalOverride: proposalOverride,
 			RemoteURL:        remoteURL,
 		})
 	case forgedomain.ForgeTypeGitea:
-		connector, err = gitea.NewConnector(gitea.NewConnectorArgs{
+		connector = gitea.NewConnector(gitea.NewConnectorArgs{
 			APIToken:         args.GiteaToken,
 			Log:              args.Log,
 			ProposalOverride: proposalOverride,
