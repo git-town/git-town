@@ -80,6 +80,11 @@ func finalize(userMatch, host, path string) Option[Parts] {
 	var org string
 	var repo string
 
+	// Special case for Azure DevOps URLs: remove "v3" prefix from path
+	if host == "ssh.dev.azure.com" && len(parts) >= 3 && parts[0] == "v3" {
+		parts = parts[1:] // remove the "v3" prefix
+	}
+
 	org = strings.Join(parts[:len(parts)-1], "/") // all but the last part are org, last part is repo
 	repo = parts[len(parts)-1]
 
