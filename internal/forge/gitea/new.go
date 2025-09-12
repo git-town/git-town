@@ -39,10 +39,10 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:iretur
 	if apiToken, hasAPIToken := args.APIToken.Get(); hasAPIToken {
 		return AuthConnector{
 			APIToken:     apiToken,
+			RemoteURL:    args.RemoteURL,
 			WebConnector: webConnector,
 			_client:      MutableNone[gitea.Client](),
 			log:          args.Log,
-			RemoteURL:    args.RemoteURL,
 		}
 	}
 	return webConnector

@@ -42,6 +42,7 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:iretur
 			WebConnector: webConnector,
 			_client:      MutableNone[forgejo.Client](),
 			log:          args.Log,
+			remoteURL:    args.RemoteURL,
 		}
 	}
 	return webConnector
