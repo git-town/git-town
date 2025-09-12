@@ -39,7 +39,7 @@ func TestGitea(t *testing.T) {
 
 	t.Run("NewProposalURL", func(t *testing.T) {
 		connector := gitea.WebConnector{
-			Data: forgedomain.Data{
+			HostedRepoInfo: forgedomain.HostedRepoInfo{
 				Hostname:     "gitea.com",
 				Organization: "org",
 				Repository:   "repo",
@@ -57,7 +57,7 @@ func TestGitea(t *testing.T) {
 
 	t.Run("RepositoryURL", func(t *testing.T) {
 		connector := gitea.WebConnector{
-			Data: forgedomain.Data{
+			HostedRepoInfo: forgedomain.HostedRepoInfo{
 				Hostname:     "gitea.com",
 				Organization: "org",
 				Repository:   "repo",

@@ -16,7 +16,7 @@ func TestWebConnector(t *testing.T) {
 	t.Run("NewProposalURL", func(t *testing.T) {
 		t.Parallel()
 		connector := bitbucketcloud.WebConnector{
-			Data: forgedomain.Data{
+			HostedRepoInfo: forgedomain.HostedRepoInfo{
 				Hostname:     "bitbucket.org",
 				Organization: "org",
 				Repository:   "repo",

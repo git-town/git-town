@@ -29,7 +29,7 @@ type NewConnectorArgs struct {
 
 func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //nolint: ireturn
 	webConnector := WebConnector{
-		Data: forgedomain.Data{
+		HostedRepoInfo: forgedomain.HostedRepoInfo{
 			Hostname:     args.RemoteURL.Host,
 			Organization: args.RemoteURL.Org,
 			Repository:   args.RemoteURL.Repo,
