@@ -13,12 +13,12 @@ type CheckoutHistoryPreserve struct {
 }
 
 func (self *CheckoutHistoryPreserve) Run(args shared.RunArgs) error {
-	cachedCurrentBranch, hasCachedCurrentBranch := args.Git.CurrentBranchCache.Value()
+	cachedCurrentBranch, hasCachedCurrentBranch := args.Git.CurrentBranchCache.Get()
 	if !hasCachedCurrentBranch {
 		// the branch cache is not initialized --> there were no branch changes --> no need to restore the branch history
 		return nil
 	}
-	cachedPreviousBranch, hasCachedPreviousBranch := args.Git.CurrentBranchCache.Previous()
+	cachedPreviousBranch, hasCachedPreviousBranch := args.Git.CurrentBranchCache.GetPrevious()
 	// remove the current branch from the list of previous branch candidates because the current branch should never also be the previous branch
 	candidates := slice.GetAll(self.PreviousBranchCandidates)
 	candidatesWithoutCurrent := slice.Remove(candidates, cachedCurrentBranch)

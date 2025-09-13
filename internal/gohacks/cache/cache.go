@@ -8,6 +8,11 @@ type Cache[T any] struct {
 	value Option[T]
 }
 
+// Get provides the current value.
+func (self *Cache[T]) Get() (T, bool) {
+	return self.value.Get()
+}
+
 // Invalidate removes the cached value.
 func (self *Cache[T]) Invalidate() {
 	self.value = None[T]()
@@ -16,9 +21,4 @@ func (self *Cache[T]) Invalidate() {
 // Set allows collaborators to signal when the current branch has changed.
 func (self *Cache[T]) Set(newValue T) {
 	self.value = Some(newValue)
-}
-
-// Value provides the current value.
-func (self *Cache[T]) Value() (T, bool) {
-	return self.value.Get()
 }

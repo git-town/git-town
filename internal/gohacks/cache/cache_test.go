@@ -10,11 +10,11 @@ import (
 func TestStringSliceCache(t *testing.T) {
 	t.Parallel()
 	cache := cache.Cache[[]string]{}
-	_, hasValue := cache.Value()
+	_, hasValue := cache.Get()
 	must.False(t, hasValue)
 	data := []string{"foo"}
 	cache.Set(data)
-	value, hasValue := cache.Value()
+	value, hasValue := cache.Get()
 	must.True(t, hasValue)
 	must.Eq(t, data, value)
 }

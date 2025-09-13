@@ -652,7 +652,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^in a separate terminal I create branch "([^"]+)" with commits$`, func(ctx context.Context, branchName string, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		existingBranch, hasExistingBranch := devRepo.Git.CurrentBranchCache.Value()
+		existingBranch, hasExistingBranch := devRepo.Git.CurrentBranchCache.Get()
 		if !hasExistingBranch {
 			panic("no existing branch")
 		}
