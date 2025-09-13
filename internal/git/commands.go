@@ -689,11 +689,11 @@ func (self *Commands) RebaseOnto(runner subshelldomain.Runner, branchToRebaseOnt
 
 func (self *Commands) Remotes(querier subshelldomain.Querier) (gitdomain.Remotes, error) {
 	if cachedRemotes, hasCachedRemotes := self.RemotesCache.Value().Get(); hasCachedRemotes {
-		return *cachedRemotes, nil
+		return cachedRemotes, nil
 	}
 	remotes, err := self.RemotesUncached(querier)
 	if err == nil {
-		self.RemotesCache.Set(&remotes)
+		self.RemotesCache.Set(remotes)
 	}
 	return remotes, err
 }

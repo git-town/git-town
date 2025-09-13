@@ -12,8 +12,8 @@ func TestStringSliceCache(t *testing.T) {
 	cache := cache.Cache[[]string]{}
 	must.True(t, cache.Value().IsNone())
 	data := []string{"foo"}
-	cache.Set(&data)
+	cache.Set(data)
 	value, hasValue := cache.Value().Get()
 	must.True(t, hasValue)
-	must.Eq(t, &data, value)
+	must.Eq(t, data, value)
 }

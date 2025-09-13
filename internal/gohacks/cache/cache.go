@@ -5,23 +5,23 @@ import . "github.com/git-town/git-town/v21/pkg/prelude"
 // Cache is a cache implementation for arbitrary data structures that ensures it is initialized.
 // The zero value is an empty cache.
 type Cache[T any] struct {
-	value OptionalMutable[T]
+	value Option[T]
 }
 
 // Invalidate removes the cached value.
 func (self *Cache[T]) Invalidate() {
-	self.value = MutableNone[T]()
+	self.value = None[T]()
 }
 
 // Set allows collaborators to signal when the current branch has changed.
-func (self *Cache[T]) Set(newValue *T) {
-	self.value = MutableSome(newValue)
+func (self *Cache[T]) Set(newValue T) {
+	self.value = Some(newValue)
 }
 
 // Value provides the current value.
-func (self *Cache[T]) Value() Option[*T] {
+func (self *Cache[T]) Value() Option[T] {
 	if value, hasValue := self.value.Get(); hasValue {
 		return Some(value)
 	}
-	return None[*T]()
+	return None[T]()
 }
