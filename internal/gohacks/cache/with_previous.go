@@ -9,7 +9,7 @@ type WithPrevious[T any] struct {
 	value    Option[T] // the current value
 }
 
-// Invalidate removes the cached value.
+// Invalidate removes all cached values.
 func (self *WithPrevious[T]) Invalidate() {
 	self.previous = None[T]()
 	self.value = None[T]()
@@ -20,7 +20,7 @@ func (self *WithPrevious[T]) Previous() Option[T] {
 	return self.previous
 }
 
-// Set allows collaborators to signal when the current branch has changed.
+// Sets a new current value.
 func (self *WithPrevious[T]) Set(newValue T) {
 	self.previous = self.value
 	self.value = Some(newValue)
