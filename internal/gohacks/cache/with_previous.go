@@ -16,8 +16,8 @@ func (self *WithPrevious[T]) Invalidate() {
 }
 
 // Previous provides the previous value.
-func (self *WithPrevious[T]) Previous() Option[T] {
-	return self.previous
+func (self *WithPrevious[T]) Previous() (T, bool) {
+	return self.previous.Get()
 }
 
 // Sets a new current value.
@@ -27,6 +27,6 @@ func (self *WithPrevious[T]) Set(newValue T) {
 }
 
 // Value provides the current value.
-func (self *WithPrevious[T]) Value() Option[T] {
-	return self.value
+func (self *WithPrevious[T]) Value() (T, bool) {
+	return self.value.Get()
 }

@@ -380,7 +380,7 @@ func (self *Commands) CreateTrackingBranch(runner subshelldomain.Runner, branch 
 }
 
 func (self *Commands) CurrentBranch(querier subshelldomain.Querier) (gitdomain.LocalBranchName, error) {
-	if cachedCurrentBranch, hasCachedCurrentBranch := self.CurrentBranchCache.Value().Get(); hasCachedCurrentBranch {
+	if cachedCurrentBranch, hasCachedCurrentBranch := self.CurrentBranchCache.Value(); hasCachedCurrentBranch {
 		return cachedCurrentBranch, nil
 	}
 	currentBranch, err := self.CurrentBranchUncached(querier)
