@@ -193,11 +193,6 @@ func (self *Commands) CheckoutBranch(runner subshelldomain.Runner, name gitdomai
 	if err := self.CheckoutBranchUncached(runner, name, merge); err != nil {
 		return err
 	}
-	if name.String() != "-" {
-		self.CurrentBranchCache.Set(name)
-	} else {
-		self.CurrentBranchCache.Invalidate()
-	}
 	return nil
 }
 
@@ -208,6 +203,11 @@ func (self *Commands) CheckoutBranchUncached(runner subshelldomain.Runner, name 
 	}
 	if err := runner.Run("git", args...); err != nil {
 		return fmt.Errorf(messages.BranchCheckoutProblem, name, err)
+	}
+	if name.String() != "-" {
+		self.CurrentBranchCache.Set(name)
+	} else {
+		self.CurrentBranchCache.Invalidate()
 	}
 	return nil
 }
@@ -345,7 +345,9 @@ func (self *Commands) ContinueRebase(runner subshelldomain.Runner) error {
 // To create feature branches, use CreateFeatureBranch.
 func (self *Commands) CreateAndCheckoutBranch(runner subshelldomain.Runner, name gitdomain.LocalBranchName) error {
 	err := runner.Run("git", "checkout", "-b", name.String())
-	self.CurrentBranchCache.Set(name)
+	if err == nil {
+		self.CurrentBranchCache.Set(name)
+	}
 	return err
 }
 
