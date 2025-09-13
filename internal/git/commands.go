@@ -380,14 +380,14 @@ func (self *Commands) CreateTrackingBranch(runner subshelldomain.Runner, branch 
 }
 
 func (self *Commands) CurrentBranch(querier subshelldomain.Querier) (gitdomain.LocalBranchName, error) {
-	if !self.CurrentBranchCache.Initialized() {
-		currentBranch, err := self.CurrentBranchUncached(querier)
-		if err != nil {
-			return currentBranch, err
-		}
+	if cachedCurrentBranch, hasCachedCurrentBranch := self.CurrentBranchCache.Get(); hasCachedCurrentBranch {
+		return cachedCurrentBranch, nil
+	}
+	currentBranch, err := self.CurrentBranchUncached(querier)
+	if err == nil {
 		self.CurrentBranchCache.Set(currentBranch)
 	}
-	return self.CurrentBranchCache.Value(), nil
+	return currentBranch, err
 }
 
 func (self *Commands) CurrentBranchDuringRebase(querier subshelldomain.Querier) (gitdomain.LocalBranchName, error) {
@@ -688,14 +688,14 @@ func (self *Commands) RebaseOnto(runner subshelldomain.Runner, branchToRebaseOnt
 }
 
 func (self *Commands) Remotes(querier subshelldomain.Querier) (gitdomain.Remotes, error) {
-	if !self.RemotesCache.Initialized() {
-		remotes, err := self.RemotesUncached(querier)
-		if err != nil {
-			return remotes, err
-		}
-		self.RemotesCache.Set(&remotes)
+	if cachedRemotes, hasCachedRemotes := self.RemotesCache.Get(); hasCachedRemotes {
+		return cachedRemotes, nil
 	}
-	return *self.RemotesCache.Value(), nil
+	remotes, err := self.RemotesUncached(querier)
+	if err == nil {
+		self.RemotesCache.Set(remotes)
+	}
+	return remotes, err
 }
 
 func (self *Commands) RemotesUncached(querier subshelldomain.Querier) (gitdomain.Remotes, error) {
