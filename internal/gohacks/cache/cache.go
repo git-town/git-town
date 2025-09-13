@@ -19,9 +19,6 @@ func (self *Cache[T]) Set(newValue T) {
 }
 
 // Value provides the current value.
-func (self *Cache[T]) Value() Option[T] {
-	if value, hasValue := self.value.Get(); hasValue {
-		return Some(value)
-	}
-	return None[T]()
+func (self *Cache[T]) Value() (T, bool) {
+	return self.value.Get()
 }
