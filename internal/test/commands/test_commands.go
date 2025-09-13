@@ -59,6 +59,7 @@ func (self *TestCommands) AmendCommit() {
 
 // CheckoutBranch checks out the Git branch with the given name in this repo.
 func (self *TestCommands) CheckoutBranch(branch gitdomain.LocalBranchName) {
+	self.Git.CurrentBranchCache.Set(branch)
 	asserts.NoError(self.Git.CheckoutBranch(self.TestRunner, branch, false))
 }
 
@@ -180,6 +181,7 @@ func (self *TestCommands) CreateBranch(name gitdomain.LocalBranchName, parent gi
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
 func (self *TestCommands) CreateAndCheckoutBranch(name gitdomain.LocalBranchName, parent gitdomain.BranchName) {
+	self.Git.CurrentBranchCache.Set(name)
 	self.MustRun("git", "checkout", "-b", name.String(), parent.String())
 }
 
