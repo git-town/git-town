@@ -105,6 +105,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	syncUpstream, errSyncUpstream := gohacks.ParseBoolOpt[configdomain.SyncUpstream](snapshot[configdomain.KeySyncUpstream], configdomain.KeySyncUpstream.String())
 	unknownBranchTypeValue, errUnknownBranchType := configdomain.ParseBranchType(snapshot[configdomain.KeyUnknownBranchType])
 	unknownBranchType := configdomain.UnknownBranchTypeOpt(unknownBranchTypeValue)
+	updateCheck, errUpdateCheck := gohacks.ParseBoolOpt[configdomain.UpdateCheck](snapshot[configdomain.KeyUpdateCheck], configdomain.KeyUpdateCheck.String())
 	err := cmp.Or(
 		errAutoResolve,
 		errBranchTypeOverride,
@@ -131,6 +132,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		errSyncTags,
 		errSyncUpstream,
 		errUnknownBranchType,
+		errUpdateCheck,
 	)
 	return configdomain.PartialConfig{
 		Aliases:                  aliases,
@@ -172,6 +174,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		SyncTags:                 syncTags,
 		SyncUpstream:             syncUpstream,
 		UnknownBranchType:        unknownBranchType,
+		UpdateCheck:              updateCheck,
 		Verbose:                  None[configdomain.Verbose](),
 	}, err
 }

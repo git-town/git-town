@@ -141,6 +141,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		SyncTags:                 syncTags,
 		SyncUpstream:             syncUpstream,
 		UnknownBranchType:        configdomain.UnknownBranchTypeOpt(unknownBranchType),
+		UpdateCheck:              None[configdomain.UpdateCheck](), // not loaded from env vars
 		Verbose:                  verbose,
 	}, err
 }

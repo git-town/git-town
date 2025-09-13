@@ -65,6 +65,7 @@ type NormalConfig struct {
 	SyncTags                 configdomain.SyncTags
 	SyncUpstream             configdomain.SyncUpstream
 	UnknownBranchType        configdomain.UnknownBranchType
+	UpdateCheck              configdomain.UpdateCheck
 	Verbose                  configdomain.Verbose
 }
 
@@ -119,6 +120,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		SyncTags:                 other.SyncTags.GetOr(self.SyncTags),
 		SyncUpstream:             other.SyncUpstream.GetOr(self.SyncUpstream),
 		UnknownBranchType:        other.UnknownBranchType.GetOr(self.UnknownBranchType),
+		UpdateCheck:              other.UpdateCheck.GetOr(self.UpdateCheck),
 		Verbose:                  other.Verbose.GetOr(self.Verbose),
 	}
 }
@@ -262,6 +264,7 @@ func DefaultNormalConfig() NormalConfig {
 		SyncTags:                 true,
 		SyncUpstream:             true,
 		UnknownBranchType:        configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch),
+		UpdateCheck:              true,
 		Verbose:                  false,
 	}
 }
@@ -305,6 +308,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		SyncTags:                 partial.SyncTags.GetOr(defaults.SyncTags),
 		SyncUpstream:             partial.SyncUpstream.GetOr(defaults.SyncUpstream),
 		UnknownBranchType:        partial.UnknownBranchType.GetOr(configdomain.UnknownBranchType(configdomain.BranchTypeFeatureBranch)),
+		UpdateCheck:              partial.UpdateCheck.GetOr(defaults.UpdateCheck),
 		Verbose:                  partial.Verbose.GetOr(defaults.Verbose),
 	}
 }

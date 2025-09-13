@@ -109,6 +109,7 @@ const (
 	KeySyncTags                            = Key("git-town.sync-tags")
 	KeySyncUpstream                        = Key("git-town.sync-upstream")
 	KeyUnknownBranchType                   = Key("git-town.unknown-branch-type")
+	KeyUpdateCheck                         = Key("git-town.update-check")
 	KeyGitUserEmail                        = Key("user.email")
 	KeyGitUserName                         = Key("user.name")
 )
@@ -171,6 +172,7 @@ var keys = []Key{
 	KeySyncTags,
 	KeySyncUpstream,
 	KeyUnknownBranchType,
+	KeyUpdateCheck,
 }
 
 func NewParentKey(branch gitdomain.LocalBranchName) Key {

@@ -56,6 +56,7 @@ func New(args NewArgs) configdomain.PartialConfig {
 		SyncTags:                 None[configdomain.SyncTags](),
 		SyncUpstream:             None[configdomain.SyncUpstream](),
 		UnknownBranchType:        None[configdomain.UnknownBranchType](),
+		UpdateCheck:              None[configdomain.UpdateCheck](),
 		Verbose:                  args.Verbose,
 	}
 }

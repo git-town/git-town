@@ -275,7 +275,8 @@ EnterForgeData:
 		SyncTags:                 syncTags,
 		SyncUpstream:             syncUpstream,
 		UnknownBranchType:        unknownBranchType,
-		Verbose:                  None[configdomain.Verbose](), // the setup assistant doesn't ask for this
+		UpdateCheck:              None[configdomain.UpdateCheck](), // the setup assistant doesn't ask for this
+		Verbose:                  None[configdomain.Verbose](),     // the setup assistant doesn't ask for this
 	}
 	validatedData := configdomain.ValidatedConfigData{
 		GitUserEmail: "", // the setup assistant doesn't ask for this

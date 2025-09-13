@@ -55,6 +55,7 @@ type PartialConfig struct {
 	SyncTags                 Option[SyncTags]
 	SyncUpstream             Option[SyncUpstream]
 	UnknownBranchType        Option[UnknownBranchType]
+	UpdateCheck              Option[UpdateCheck]
 	Verbose                  Option[Verbose]
 }
 
@@ -107,6 +108,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		SyncTags:                 other.SyncTags.Or(self.SyncTags),
 		SyncUpstream:             other.SyncUpstream.Or(self.SyncUpstream),
 		UnknownBranchType:        other.UnknownBranchType.Or(self.UnknownBranchType),
+		UpdateCheck:              other.UpdateCheck.Or(self.UpdateCheck),
 		Verbose:                  other.Verbose.Or(self.Verbose),
 	}
 }

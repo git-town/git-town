@@ -277,6 +277,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		SyncPrototypeStrategy:    syncPrototypeStrategy,
 		SyncTags:                 syncTags,
 		SyncUpstream:             syncUpstream,
+		UpdateCheck:              None[configdomain.UpdateCheck](),
 		Verbose:                  None[configdomain.Verbose](),
 	}, ec.Err
 }
