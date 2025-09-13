@@ -1,34 +1,27 @@
 package cache
 
-import "github.com/git-town/git-town/v21/internal/messages"
+import . "github.com/git-town/git-town/v21/pkg/prelude"
 
 // Cache is a cache implementation for arbitrary data structures that ensures it is initialized.
 // The zero value is an empty cache.
 type Cache[T any] struct {
-	initialized bool
-	value       *T
-}
-
-// Initialized indicates if we have a current branch.
-func (self *Cache[T]) Initialized() bool {
-	return self.initialized
+	value OptionalMutable[T]
 }
 
 // Invalidate removes the cached value.
 func (self *Cache[T]) Invalidate() {
-	self.initialized = false
+	self.value = MutableNone[T]()
 }
 
 // Set allows collaborators to signal when the current branch has changed.
 func (self *Cache[T]) Set(newValue *T) {
-	self.value = newValue
-	self.initialized = true
+	self.value = MutableSome(newValue)
 }
 
 // Value provides the current value.
-func (self *Cache[T]) Value() *T {
-	if !self.initialized {
-		panic(messages.CacheUnitialized)
+func (self *Cache[T]) Value() Option[*T] {
+	if value, hasValue := self.value.Get(); hasValue {
+		return Some(value)
 	}
-	return self.value
+	return None[*T]()
 }

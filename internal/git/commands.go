@@ -688,14 +688,14 @@ func (self *Commands) RebaseOnto(runner subshelldomain.Runner, branchToRebaseOnt
 }
 
 func (self *Commands) Remotes(querier subshelldomain.Querier) (gitdomain.Remotes, error) {
-	if !self.RemotesCache.Initialized() {
-		remotes, err := self.RemotesUncached(querier)
-		if err != nil {
-			return remotes, err
-		}
+	if cachedRemotes, hasCachedRemotes := self.RemotesCache.Value().Get(); hasCachedRemotes {
+		return *cachedRemotes, nil
+	}
+	remotes, err := self.RemotesUncached(querier)
+	if err == nil {
 		self.RemotesCache.Set(&remotes)
 	}
-	return *self.RemotesCache.Value(), nil
+	return remotes, err
 }
 
 func (self *Commands) RemotesUncached(querier subshelldomain.Querier) (gitdomain.Remotes, error) {
