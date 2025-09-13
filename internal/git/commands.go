@@ -190,10 +190,10 @@ func (self *Commands) ChangeDir(dir gitdomain.RepoRootDir) error {
 }
 
 func (self *Commands) CheckoutBranch(runner subshelldomain.Runner, name gitdomain.LocalBranchName, merge configdomain.SwitchUsingMerge) error {
-	currentBranch, hasCurrentBranch := self.CurrentBranchCache.Get()
-	if hasCurrentBranch && currentBranch == name {
-		return nil
-	}
+	// currentBranch, hasCurrentBranch := self.CurrentBranchCache.Get()
+	// if hasCurrentBranch && currentBranch == name {
+	// 	return nil
+	// }
 	return self.CheckoutBranchUncached(runner, name, merge)
 }
 
