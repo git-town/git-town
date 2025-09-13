@@ -380,14 +380,14 @@ func (self *Commands) CreateTrackingBranch(runner subshelldomain.Runner, branch 
 }
 
 func (self *Commands) CurrentBranch(querier subshelldomain.Querier) (gitdomain.LocalBranchName, error) {
-	if !self.CurrentBranchCache.Initialized() {
-		currentBranch, err := self.CurrentBranchUncached(querier)
-		if err != nil {
-			return currentBranch, err
-		}
+	if currentBranch, hasCurrentBranch := self.CurrentBranchCache.Value().Get(); hasCurrentBranch {
+		return currentBranch, nil
+	}
+	currentBranch, err := self.CurrentBranchUncached(querier)
+	if err == nil {
 		self.CurrentBranchCache.Set(currentBranch)
 	}
-	return self.CurrentBranchCache.Value(), nil
+	return currentBranch, err
 }
 
 func (self *Commands) CurrentBranchDuringRebase(querier subshelldomain.Querier) (gitdomain.LocalBranchName, error) {

@@ -13,17 +13,17 @@ type CheckoutHistoryPreserve struct {
 }
 
 func (self *CheckoutHistoryPreserve) Run(args shared.RunArgs) error {
-	if !args.Git.CurrentBranchCache.Initialized() {
+	cachedCurrentBranch, hasCachedCurrentBranch := args.Git.CurrentBranchCache.Value().Get()
+	if !hasCachedCurrentBranch {
 		// the branch cache is not initialized --> there were no branch changes --> no need to restore the branch history
 		return nil
 	}
-	currentBranch := args.Git.CurrentBranchCache.Value()
-	actualPreviousBranch := args.Git.CurrentBranchCache.Previous()
+	actualPreviousBranch, hasActualPreviousBranch := args.Git.CurrentBranchCache.Previous().Get()
 	// remove the current branch from the list of previous branch candidates because the current branch should never also be the previous branch
 	candidates := slice.GetAll(self.PreviousBranchCandidates)
-	candidatesWithoutCurrent := slice.Remove(candidates, currentBranch)
+	candidatesWithoutCurrent := slice.Remove(candidates, cachedCurrentBranch)
 	expectedPreviousBranch, hasExpectedPreviousBranch := args.Git.FirstExistingBranch(args.Backend, candidatesWithoutCurrent...).Get()
-	if !hasExpectedPreviousBranch || actualPreviousBranch == expectedPreviousBranch {
+	if !hasExpectedPreviousBranch || !hasActualPreviousBranch || actualPreviousBranch == expectedPreviousBranch {
 		return nil
 	}
 	// We	need to ignore errors here because failing to set the Git branch history
@@ -32,7 +32,7 @@ func (self *CheckoutHistoryPreserve) Run(args shared.RunArgs) error {
 	// checked out in another worktree, or concurrent Git access
 	args.PrependOpcodes(
 		&CheckoutUncached{Branch: expectedPreviousBranch},
-		&CheckoutUncached{Branch: currentBranch},
+		&CheckoutUncached{Branch: cachedCurrentBranch},
 	)
 	return nil
 }
