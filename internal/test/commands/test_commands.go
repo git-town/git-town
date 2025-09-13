@@ -59,7 +59,7 @@ func (self *TestCommands) AmendCommit() {
 
 // CheckoutBranch checks out the Git branch with the given name in this repo.
 func (self *TestCommands) CheckoutBranch(branch gitdomain.LocalBranchName) {
-	asserts.NoError(self.Git.CheckoutBranchUncached(self.TestRunner, branch, false))
+	asserts.NoError(self.Git.CheckoutBranch(self.TestRunner, branch, false))
 }
 
 func (self *TestCommands) CommitSHA(querier subshelldomain.Querier, title string, branch gitdomain.LocalBranchName, parent gitdomain.BranchName) gitdomain.SHA {
@@ -184,14 +184,10 @@ func (self *TestCommands) CreateAndCheckoutBranch(name gitdomain.LocalBranchName
 	self.MustRun("git", "checkout", "-b", name.String(), parent.String())
 }
 
-func (self *TestCommands) CreateLocalBranchUsingGitTown(branchSetup datatable.BranchSetup, currentBranchOpt Option[gitdomain.LocalBranchName]) {
+func (self *TestCommands) CreateLocalBranchUsingGitTown(branchSetup datatable.BranchSetup) {
 	// step 1: create the local branch if one is needed
 	if parent, hasParent := branchSetup.Parent.Get(); hasParent {
-		currentBranch, has := currentBranchOpt.Get()
-		if !has || currentBranch != parent {
-			self.CheckoutBranch(parent)
-		}
-		self.MustRun("git-town", "append", branchSetup.Name.String())
+		self.CreateChildBranch(branchSetup.Name, parent)
 	} else {
 		self.CreateAndCheckoutBranch(branchSetup.Name, branchSetup.Parent.GetOr("main").BranchName())
 	}
@@ -229,6 +225,12 @@ func (self *TestCommands) CreateBranchOfType(name gitdomain.LocalBranchName, par
 		self.CreateBranch(name, "main")
 	}
 	asserts.NoError(gitconfig.SetBranchTypeOverride(self.TestRunner, branchType, name))
+}
+
+func (self *TestCommands) CreateChildBranch(name, parent gitdomain.LocalBranchName) {
+	self.CheckoutBranch(parent)
+	self.MustRun("git-town", "append", name.String())
+	self.Git.CurrentBranchCache.Set(name)
 }
 
 // CreateCommit creates a commit with the given properties in this Git repo.

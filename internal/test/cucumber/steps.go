@@ -1026,11 +1026,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the branches$`, func(ctx context.Context, table *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		repo := state.fixture.DevRepo.GetOrPanic()
-		lastBranch := None[gitdomain.LocalBranchName]()
 		for _, branchSetup := range datatable.ParseBranchSetupTable(table) {
 			if branchSetup.Locations.Contains(testgit.LocationLocal) {
-				repo.CreateLocalBranchUsingGitTown(branchSetup, lastBranch)
-				lastBranch = Some(branchSetup.Name)
+				repo.CreateLocalBranchUsingGitTown(branchSetup)
 			} else {
 				// here the branch has no local counterpart --> create it manually in the remotes
 				if branchSetup.Locations.Contains(testgit.LocationOrigin) {
@@ -1248,9 +1246,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
 		state.initialCurrentBranch = Some(branch)
-		if !devRepo.Git.BranchExists(devRepo.TestRunner, branch) {
-			return fmt.Errorf("cannot check out non-existing branch: %q", branch)
-		}
+		// if !devRepo.Git.BranchExists(devRepo.TestRunner, branch) {
+		// 	return fmt.Errorf("cannot check out non-existing branch: %q", branch)
+		// }
 		devRepo.CheckoutBranch(branch)
 		return nil
 	})
