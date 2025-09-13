@@ -190,6 +190,7 @@ func (self *Commands) ChangeDir(dir gitdomain.RepoRootDir) error {
 }
 
 func (self *Commands) CheckoutBranch(runner subshelldomain.Runner, name gitdomain.LocalBranchName, merge configdomain.SwitchUsingMerge) error {
+	currentBranch := self.CurrentBranchCache.
 	if err := self.CheckoutBranchUncached(runner, name, merge); err != nil {
 		return err
 	}
@@ -360,7 +361,9 @@ func (self *Commands) CreateAndCheckoutBranchWithParent(runner subshelldomain.Ru
 		args = append(args, "--no-track")
 	}
 	err := runner.Run("git", args...)
-	self.CurrentBranchCache.Set(name)
+	if err == nil {
+		self.CurrentBranchCache.Set(name)
+	}
 	return err
 }
 
