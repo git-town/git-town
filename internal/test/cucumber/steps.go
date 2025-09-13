@@ -1559,7 +1559,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 func runCommand(state *ScenarioState, command string, captureState bool) {
 	devRepo, hasDevRepo := state.fixture.DevRepo.Get()
 	if captureState && hasDevRepo {
-		state.fixture.DevRepo.Value.Reload()
 		state.CaptureState()
 		updateInitialSHAs(state)
 	}
