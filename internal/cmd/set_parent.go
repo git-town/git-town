@@ -422,30 +422,56 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 					Branch: data.initialBranch,
 				},
 			)
-
-			if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI && hasConnector {
-				proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder)
-				if canFindProposals {
-					tree, err := forge.NewProposalStackLineageTree(forge.ProposalStackLineageArgs{
+		}
+		if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI && hasConnector {
+			proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder)
+			if canFindProposals {
+				// Update the stack belong to the initialBranch
+				tree, err := forge.NewProposalStackLineageTree(forge.ProposalStackLineageArgs{
+					Connector:                proposalFinder,
+					CurrentBranch:            data.initialBranch,
+					Lineage:                  data.config.NormalConfig.Lineage,
+					MainAndPerennialBranches: data.config.MainAndPerennials(),
+				})
+				if err == nil {
+					proposalsInStackOfInitialBranch := tree.BranchToProposal
+					for branch, proposal := range proposalsInStackOfInitialBranch {
+						prog.Add(&opcodes.ProposalUpdateLineage{
+							Current:         branch,
+							CurrentProposal: proposal,
+							LineageTree:     MutableSome(tree),
+						})
+					}
+					// If we are moving to parent that is part of a completely different stack,
+					// update the lineage of all members of this other stack
+					err = tree.Rebuild(forge.ProposalStackLineageArgs{
 						Connector:                proposalFinder,
-						CurrentBranch:            initialBranchInfo.LocalBranchName(),
+						CurrentBranch:            newParent,
 						Lineage:                  data.config.NormalConfig.Lineage,
 						MainAndPerennialBranches: data.config.MainAndPerennials(),
 					})
-					if err != nil {
-						fmt.Printf("failed to update proposal stack lineage: %s\n", err.Error())
-					} else {
+
+					if err == nil {
 						for branch, proposal := range tree.BranchToProposal {
-							prog.Add(&opcodes.ProposalUpdateLineage{
-								Current:         branch,
-								CurrentProposal: proposal,
-								LineageTree:     MutableSome(tree),
-							})
+							// Do not update the same proposal more than once because we updated
+							// it in a previous step
+							if _, ok := proposalsInStackOfInitialBranch[branch]; !ok {
+								prog.Add(&opcodes.ProposalUpdateLineage{
+									Current:         branch,
+									CurrentProposal: proposal,
+									LineageTree:     MutableSome(tree),
+								})
+							}
 						}
 					}
 				}
+
+				if err != nil {
+					fmt.Printf("failed to update proposal stack lineage: %s\n", err.Error())
+				}
 			}
 		}
+
 	}
 	return optimizer.Optimize(prog), false
 }
