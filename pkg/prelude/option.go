@@ -24,6 +24,8 @@ import (
 //     Pointers therefore carry the risk of being checked too often or too little,
 //     leading to unnecessary boilerplate or bugs.
 //     Options get checked exactly once, leading to the least amount of boilerplate code.
+//
+//  3. Less "!= nil" in your code.
 type Option[T any] struct {
 	value *T
 }

@@ -1,14 +1,11 @@
 package gitea
 
 import (
-	"context"
-
 	"code.gitea.io/sdk/gitea"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/giturl"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
-	"golang.org/x/oauth2"
 )
 
 // Detect indicates whether the current repository is hosted on a gitea server.
@@ -26,7 +23,7 @@ type NewConnectorArgs struct {
 // NewConnector provides a connector instance that talks to the gitea API.
 func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:ireturn
 	webConnector := WebConnector{
-		Data: forgedomain.Data{
+		HostedRepoInfo: forgedomain.HostedRepoInfo{
 			Hostname:     args.RemoteURL.Host,
 			Organization: args.RemoteURL.Org,
 			Repository:   args.RemoteURL.Repo,
@@ -40,13 +37,11 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:iretur
 		}
 	}
 	if apiToken, hasAPIToken := args.APIToken.Get(); hasAPIToken {
-		tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: apiToken.String()})
-		httpClient := oauth2.NewClient(context.Background(), tokenSource)
-		giteaClient := gitea.NewClientWithHTTP("https://"+args.RemoteURL.Host, httpClient)
 		return AuthConnector{
-			APIToken:     args.APIToken,
+			APIToken:     apiToken,
+			RemoteURL:    args.RemoteURL,
 			WebConnector: webConnector,
-			client:       giteaClient,
+			_client:      MutableNone[gitea.Client](),
 			log:          args.Log,
 		}
 	}

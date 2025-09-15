@@ -96,7 +96,7 @@ func TestWebConnector(t *testing.T) {
 			t.Run(name, func(t *testing.T) {
 				t.Parallel()
 				connector := github.WebConnector{
-					Data: forgedomain.Data{
+					HostedRepoInfo: forgedomain.HostedRepoInfo{
 						Hostname:     "github.com",
 						Organization: "organization",
 						Repository:   "repo",
@@ -117,7 +117,7 @@ func TestWebConnector(t *testing.T) {
 	t.Run("RepositoryURL", func(t *testing.T) {
 		t.Parallel()
 		connector := github.WebConnector{
-			Data: forgedomain.Data{
+			HostedRepoInfo: forgedomain.HostedRepoInfo{
 				Hostname:     "github.com",
 				Organization: "organization",
 				Repository:   "repo",
