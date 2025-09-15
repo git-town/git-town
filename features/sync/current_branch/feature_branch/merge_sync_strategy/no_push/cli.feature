@@ -3,18 +3,17 @@ Feature: syncing a stacked feature branch using --no-push
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME    | TYPE    | PARENT | LOCATIONS     |
-      | feature | (none)  |        | local, origin |
-      | parent  | feature | main   | local, origin |
-      | child   | feature | parent | local, origin |
+      | NAME   | TYPE    | PARENT | LOCATIONS     |
+      | parent | feature | main   | local, origin |
+      | child  | feature | parent | local, origin |
     And the commits
       | BRANCH | LOCATION | MESSAGE              |
       | main   | local    | local main commit    |
       |        | origin   | origin main commit   |
-      | child  | local    | local child commit   |
-      |        | origin   | origin child commit  |
       | parent | local    | local parent commit  |
       |        | origin   | origin parent commit |
+      | child  | local    | local child commit   |
+      |        | origin   | origin child commit  |
     And the current branch is "child"
     When I run "git-town sync --no-push"
 
