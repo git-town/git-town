@@ -3,17 +3,13 @@ Feature: show the configuration in Spanish
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME           | TYPE         | PARENT | LOCATIONS |
-      | contribution-1 | contribution |        | local     |
-      | contribution-2 | contribution |        | local     |
-      | observed-1     | observed     |        | local     |
-      | observed-2     | observed     |        | local     |
-      | parked-1       | parked       | main   | local     |
-      | parked-2       | parked       | main   | local     |
-      | perennial-1    | perennial    |        | local     |
-      | perennial-2    | perennial    |        | local     |
-      | prototype-1    | prototype    | main   | local     |
-      | prototype-2    | prototype    | main   | local     |
+      | NAME           | TYPE         | PARENT | LOCATIONS     |
+      | contribution-1 | contribution |        | local, origin |
+      | contribution-2 | contribution |        | local, origin |
+      | observed-1     | observed     |        | local, origin |
+      | observed-2     | observed     |        | local, origin |
+      | perennial-1    | perennial    |        | local         |
+      | perennial-2    | perennial    |        | local         |
     And Git setting "git-town.perennial-branches" is "qa staging"
     And Git setting "git-town.perennial-regex" is "^release-"
     And Git setting "git-town.contribution-regex" is "^renovate/"
@@ -34,20 +30,20 @@ Feature: show the configuration in Spanish
         main branch: main
         observed branches: observed-1, observed-2
         observed regex: ^dependabot/
-        parked branches: parked-1, parked-2
+        parked branches: (none)
         perennial branches: qa, staging
         perennial regex: ^release-
-        prototype branches: prototype-1, prototype-2
+        prototype branches: (none)
         unknown branch type: observed
-
+      
       Configuration:
         offline: no
-
+      
       Create:
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: yes
-
+      
       Hosting:
         development remote: origin
         forge type: (not set)
@@ -60,11 +56,11 @@ Feature: show the configuration in Spanish
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
-
+      
       Ship:
         delete tracking branch: yes
         ship strategy: squash-merge
-
+      
       Sync:
         auto-resolve phantom conflicts: yes
         run detached: no

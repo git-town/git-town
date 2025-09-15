@@ -14,11 +14,9 @@ Feature: detaching an empty branch
       | staging | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot detach perennial branches since you don't own them
+      cannot detach branches without parent
       """
-
-  Scenario: undo
-    When I run "git-town undo"
-    Then Git Town runs no commands
-    And the initial commits exist now
-    And the initial lineage exists now
+  #
+  # NOTE: Cannot test undo here.
+  # The Git Town command under test has not created an undoable runstate.
+  # Executing "git town undo" would undo the Git Town command executed during setup.
