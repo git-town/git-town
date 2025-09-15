@@ -18,7 +18,6 @@ Feature: syncing a stacked feature branch using the sync-push config option
     And the current branch is "child"
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                           |
