@@ -41,15 +41,15 @@ Feature: display configuration from Git metadata
         perennial regex: ^release-
         prototype branches: prototype-1, prototype-2
         unknown branch type: observed
-
+      
       Configuration:
         offline: no
-
+      
       Create:
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: no
-
+      
       Hosting:
         development remote: origin
         forge type: (not set)
@@ -62,11 +62,11 @@ Feature: display configuration from Git metadata
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
-
+      
       Ship:
         delete tracking branch: yes
         ship strategy: squash-merge
-
+      
       Sync:
         auto-resolve phantom conflicts: no
         run detached: yes
@@ -74,6 +74,7 @@ Feature: display configuration from Git metadata
         feature sync strategy: merge
         perennial sync strategy: rebase
         prototype sync strategy: merge
+        push branches: yes
         sync tags: yes
         sync with upstream: yes
       """
@@ -102,15 +103,15 @@ Feature: display configuration from Git metadata
         perennial regex: (not set)
         prototype branches: prototype-1, prototype-2
         unknown branch type: feature
-
+      
       Configuration:
         offline: no
-
+      
       Create:
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: yes
-
+      
       Hosting:
         development remote: origin
         forge type: (not set)
@@ -123,11 +124,11 @@ Feature: display configuration from Git metadata
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
-
+      
       Ship:
         delete tracking branch: yes
         ship strategy: api
-
+      
       Sync:
         auto-resolve phantom conflicts: yes
         run detached: no
@@ -135,10 +136,11 @@ Feature: display configuration from Git metadata
         feature sync strategy: merge
         perennial sync strategy: rebase
         prototype sync strategy: merge
+        push branches: yes
         sync tags: yes
         sync with upstream: yes
         auto-resolve phantom conflicts: yes
-
+      
       Branch Lineage:
         main
           alpha
@@ -148,7 +150,7 @@ Feature: display configuration from Git metadata
           parked-2
           prototype-1
           prototype-2
-
+      
         qa
           hotfix
       """

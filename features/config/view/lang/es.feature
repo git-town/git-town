@@ -39,15 +39,15 @@ Feature: show the configuration in Spanish
         perennial regex: ^release-
         prototype branches: prototype-1, prototype-2
         unknown branch type: observed
-
+      
       Configuration:
         offline: no
-
+      
       Create:
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: yes
-
+      
       Hosting:
         development remote: origin
         forge type: (not set)
@@ -60,11 +60,11 @@ Feature: show the configuration in Spanish
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
-
+      
       Ship:
         delete tracking branch: yes
         ship strategy: squash-merge
-
+      
       Sync:
         auto-resolve phantom conflicts: yes
         run detached: no
@@ -72,6 +72,7 @@ Feature: show the configuration in Spanish
         feature sync strategy: merge
         perennial sync strategy: rebase
         prototype sync strategy: merge
+        push branches: yes
         sync tags: yes
         sync with upstream: yes
       """
