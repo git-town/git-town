@@ -190,15 +190,11 @@ func (self *Commands) ChangeDir(dir gitdomain.RepoRootDir) error {
 }
 
 func (self *Commands) CheckoutBranch(runner subshelldomain.Runner, name gitdomain.LocalBranchName, merge configdomain.SwitchUsingMerge) error {
-	if err := self.CheckoutBranchUncached(runner, name, merge); err != nil {
-		return err
+	currentBranch, hasCurrentBranch := self.CurrentBranchCache.Get()
+	if hasCurrentBranch && currentBranch == name {
+		return nil
 	}
-	if name.String() != "-" {
-		self.CurrentBranchCache.Set(name)
-	} else {
-		self.CurrentBranchCache.Invalidate()
-	}
-	return nil
+	return self.CheckoutBranchUncached(runner, name, merge)
 }
 
 func (self *Commands) CheckoutBranchUncached(runner subshelldomain.Runner, name gitdomain.LocalBranchName, merge configdomain.SwitchUsingMerge) error {
@@ -208,6 +204,11 @@ func (self *Commands) CheckoutBranchUncached(runner subshelldomain.Runner, name 
 	}
 	if err := runner.Run("git", args...); err != nil {
 		return fmt.Errorf(messages.BranchCheckoutProblem, name, err)
+	}
+	if name.String() != "-" {
+		self.CurrentBranchCache.Set(name)
+	} else {
+		self.CurrentBranchCache.Invalidate()
 	}
 	return nil
 }
@@ -345,7 +346,9 @@ func (self *Commands) ContinueRebase(runner subshelldomain.Runner) error {
 // To create feature branches, use CreateFeatureBranch.
 func (self *Commands) CreateAndCheckoutBranch(runner subshelldomain.Runner, name gitdomain.LocalBranchName) error {
 	err := runner.Run("git", "checkout", "-b", name.String())
-	self.CurrentBranchCache.Set(name)
+	if err == nil {
+		self.CurrentBranchCache.Set(name)
+	}
 	return err
 }
 
@@ -358,7 +361,9 @@ func (self *Commands) CreateAndCheckoutBranchWithParent(runner subshelldomain.Ru
 		args = append(args, "--no-track")
 	}
 	err := runner.Run("git", args...)
-	self.CurrentBranchCache.Set(name)
+	if err == nil {
+		self.CurrentBranchCache.Set(name)
+	}
 	return err
 }
 
@@ -380,14 +385,14 @@ func (self *Commands) CreateTrackingBranch(runner subshelldomain.Runner, branch 
 }
 
 func (self *Commands) CurrentBranch(querier subshelldomain.Querier) (gitdomain.LocalBranchName, error) {
-	if !self.CurrentBranchCache.Initialized() {
-		currentBranch, err := self.CurrentBranchUncached(querier)
-		if err != nil {
-			return currentBranch, err
-		}
+	if cachedCurrentBranch, hasCachedCurrentBranch := self.CurrentBranchCache.Get(); hasCachedCurrentBranch {
+		return cachedCurrentBranch, nil
+	}
+	currentBranch, err := self.CurrentBranchUncached(querier)
+	if err == nil {
 		self.CurrentBranchCache.Set(currentBranch)
 	}
-	return self.CurrentBranchCache.Value(), nil
+	return currentBranch, err
 }
 
 func (self *Commands) CurrentBranchDuringRebase(querier subshelldomain.Querier) (gitdomain.LocalBranchName, error) {
@@ -688,14 +693,14 @@ func (self *Commands) RebaseOnto(runner subshelldomain.Runner, branchToRebaseOnt
 }
 
 func (self *Commands) Remotes(querier subshelldomain.Querier) (gitdomain.Remotes, error) {
-	if !self.RemotesCache.Initialized() {
-		remotes, err := self.RemotesUncached(querier)
-		if err != nil {
-			return remotes, err
-		}
-		self.RemotesCache.Set(&remotes)
+	if cachedRemotes, hasCachedRemotes := self.RemotesCache.Get(); hasCachedRemotes {
+		return cachedRemotes, nil
 	}
-	return *self.RemotesCache.Value(), nil
+	remotes, err := self.RemotesUncached(querier)
+	if err == nil {
+		self.RemotesCache.Set(remotes)
+	}
+	return remotes, err
 }
 
 func (self *Commands) RemotesUncached(querier subshelldomain.Querier) (gitdomain.Remotes, error) {

@@ -59,7 +59,7 @@ func (self *TestCommands) AmendCommit() {
 
 // CheckoutBranch checks out the Git branch with the given name in this repo.
 func (self *TestCommands) CheckoutBranch(branch gitdomain.LocalBranchName) {
-	asserts.NoError(self.Git.CheckoutBranch(self.TestRunner, branch, false))
+	asserts.NoError(self.Git.CheckoutBranchUncached(self.TestRunner, branch, false))
 }
 
 func (self *TestCommands) CommitSHA(querier subshelldomain.Querier, title string, branch gitdomain.LocalBranchName, parent gitdomain.BranchName) gitdomain.SHA {

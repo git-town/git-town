@@ -28,7 +28,6 @@ Feature: beam a commit and uncommitted changes onto a new feature branch
       |          | git checkout existing                                                                                   |
       | existing | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 2' }}^ {{ sha-initial 'commit 2' }} |
       |          | git push --force-with-lease --force-if-includes                                                         |
-      |          | git checkout existing                                                                                   |
     And no rebase is now in progress
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE     |
@@ -43,6 +42,7 @@ Feature: beam a commit and uncommitted changes onto a new feature branch
         existing
         new
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
