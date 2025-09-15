@@ -2,7 +2,7 @@ Feature: syncing a stacked feature branch using the sync-push config option
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-push" is "false"
+    And Git setting "git-town.push-branches" is "false"
     And the branches
       | NAME   | TYPE    | PARENT | LOCATIONS     |
       | parent | feature | main   | local, origin |
