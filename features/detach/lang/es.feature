@@ -25,8 +25,10 @@ Feature: detaching a branch in Spanish
       |          |          | commit 2b |
     When I run "git-town detach" with these environment variables
       | LANG | es_ES.UTF-8 |
+  # The problem here is that creating `branch-2` using `git town append`
+  # syncs the parent branch `branch-1`, thefore creating a hidden `origin` branch.
 
-  @debug @this
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                    |
