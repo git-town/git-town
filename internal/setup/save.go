@@ -219,6 +219,11 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 			saveObservedRegex(userInput.Data.ObservedRegex, existingGitConfig.ObservedRegex, frontend),
 		)
 	}
+	if configFile.PushBranches.IsNone() {
+		fc.Check(
+			savePushBranches(userInput.Data.PushBranches, existingGitConfig.PushBranches, frontend),
+		)
+	}
 	if configFile.PushHook.IsNone() {
 		fc.Check(
 			savePushHook(userInput.Data.PushHook, existingGitConfig.PushHook, frontend),
@@ -478,6 +483,16 @@ func savePerennialRegex(valueToWriteToGit Option[configdomain.PerennialRegex], v
 	}
 	_ = gitconfig.RemovePerennialRegex(runner)
 	return nil
+}
+
+func savePushBranches(valueToWriteToGit Option[configdomain.PushBranches], valueAlreadyInGit Option[configdomain.PushBranches], runner subshelldomain.Runner) error {
+	if valueAlreadyInGit.Equal(valueToWriteToGit) {
+		return nil
+	}
+	if value, has := valueToWriteToGit.Get(); has {
+		return gitconfig.SetPushBranches(runner, value, configdomain.ConfigScopeLocal)
+	}
+	return gitconfig.RemovePushBranches(runner)
 }
 
 func savePushHook(valueToWriteToGit Option[configdomain.PushHook], valueAlreadyInGit Option[configdomain.PushHook], runner subshelldomain.Runner) error {

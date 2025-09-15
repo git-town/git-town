@@ -1,6 +1,7 @@
 @messyoutput
 Feature: ask for information not provided by the config file
 
+  @this
   Scenario:
     Given a Git repo with origin
     And Git Town is not configured
@@ -46,6 +47,7 @@ Feature: ask for information not provided by the config file
       | detached                | enter                 |
       | stash                   | enter                 |
       | share new branches      | enter                 |
+      | push branches           | enter                 |
       | push hook               | enter                 |
       | ship strategy           | enter                 |
       | config storage          | enter                 |
@@ -61,6 +63,7 @@ Feature: ask for information not provided by the config file
       | git config git-town.feature-regex feat              |
       | git config git-town.contribution-regex cont         |
       | git config git-town.observed-regex obs              |
+      | git config git-town.push-branches true              |
       | git config git-town.push-hook true                  |
       | git config git-town.share-new-branches no           |
       | git config git-town.ship-strategy api               |
