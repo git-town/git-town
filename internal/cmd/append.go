@@ -98,11 +98,12 @@ func appendCmd() *cobra.Command {
 				commit = true
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve: autoResolve,
-				Detached:    detached,
-				DryRun:      dryRun,
-				Stash:       stash,
-				Verbose:     verbose,
+				AutoResolve:  autoResolve,
+				Detached:     detached,
+				DryRun:       dryRun,
+				PushBranches: None[configdomain.PushBranches](), // TODO: add CLI flag and use its value here
+				Stash:        stash,
+				Verbose:      verbose,
 			})
 			return executeAppend(executeAppendArgs{
 				arg:           args[0],

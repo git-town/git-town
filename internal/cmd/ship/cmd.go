@@ -69,11 +69,12 @@ func Cmd() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve: None[configdomain.AutoResolve](),
-				Detached:    None[configdomain.Detached](),
-				DryRun:      dryRun,
-				Stash:       None[configdomain.Stash](),
-				Verbose:     verbose,
+				AutoResolve:  None[configdomain.AutoResolve](),
+				Detached:     None[configdomain.Detached](),
+				DryRun:       dryRun,
+				PushBranches: None[configdomain.PushBranches](),
+				Stash:        None[configdomain.Stash](),
+				Verbose:      verbose,
 			})
 			return executeShip(executeShipArgs{
 				args:         args,
