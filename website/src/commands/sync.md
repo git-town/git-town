@@ -74,10 +74,10 @@ if it's going to be deleted right afterwards.
 By default this command syncs only the current branch. The `--all` aka `-a`
 parameter makes Git Town sync all local branches.
 
-#### `--no-push`
+#### `--push`<br>`--no-push`
 
-The `--no-push` argument disables all pushes of local commits to their tracking
-branch.
+The `--push`/`--no-push` argument overrides the
+[push-branches](../preferences/push_branches.md) config setting.
 
 #### `-s`<br>`--stack`
 
