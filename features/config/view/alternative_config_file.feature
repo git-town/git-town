@@ -2,8 +2,7 @@ Feature: show the configuration when using an alternative config file
 
   Scenario: all configured in config file with alternative filename
     Given a Git repo with origin
-    # TODO: change the filename to ".git-branches.toml"
-    And file ".git-town.toml" with content
+    And file ".git-branches.toml" with content
       """
       [branches]
       main = "main"
