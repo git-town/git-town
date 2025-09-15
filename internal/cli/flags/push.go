@@ -15,11 +15,7 @@ func Push() (AddFunc, ReadPushFlagFunc) {
 		defineNegatedFlag(cmd.Flags(), pushLong)
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.PushBranches], error) {
-		if !cmd.Flags().Changed(pushLong) {
-			return None[configdomain.PushBranches](), nil
-		}
-		result, err := readBoolFlag[configdomain.PushBranches](cmd.Flags(), pushLong)
-		return Some(result), err
+		return readNegatableFlag[configdomain.PushBranches](cmd.Flags(), pushLong)
 	}
 	return addFlag, readFlag
 }
