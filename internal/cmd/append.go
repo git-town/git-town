@@ -72,6 +72,7 @@ func appendCmd() *cobra.Command {
 	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
 	addProposeFlag, readProposeFlag := flags.Propose()
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
+	addPushFlag, readPushFlag := flags.Push()
 	addStashFlag, readStashFlag := flags.Stash()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
@@ -89,9 +90,10 @@ func appendCmd() *cobra.Command {
 			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
 			propose, errPropose := readProposeFlag(cmd)
 			prototype, errPrototype := readPrototypeFlag(cmd)
+			push, errPush := readPushFlag(cmd)
 			stash, errStash := readStashFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errBeam, errCommit, errCommitMessage, errDetached, errDryRun, errAutoResolve, errPropose, errPrototype, errStash, errVerbose); err != nil {
+			if err := cmp.Or(errBeam, errCommit, errCommitMessage, errDetached, errDryRun, errAutoResolve, errPropose, errPrototype, errPush, errStash, errVerbose); err != nil {
 				return err
 			}
 			if commitMessage.IsSome() || propose.IsTrue() {
@@ -101,7 +103,7 @@ func appendCmd() *cobra.Command {
 				AutoResolve:  autoResolve,
 				Detached:     detached,
 				DryRun:       dryRun,
-				PushBranches: None[configdomain.PushBranches](), // TODO: add CLI flag and use its value here
+				PushBranches: push,
 				Stash:        stash,
 				Verbose:      verbose,
 			})
@@ -124,6 +126,7 @@ func appendCmd() *cobra.Command {
 	addAutoResolveFlag(&cmd)
 	addProposeFlag(&cmd)
 	addPrototypeFlag(&cmd)
+	addPushFlag(&cmd)
 	addStashFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
@@ -386,7 +389,7 @@ func appendProgram(frontend subshelldomain.Runner, data appendFeatureData, final
 			Program:             prog,
 			Prune:               false,
 			Remotes:             data.remotes,
-			PushBranches:        true,
+			PushBranches:        data.config.NormalConfig.PushBranches,
 		})
 	}
 	prog.Value.Add(&opcodes.BranchCreateAndCheckoutExistingParent{
