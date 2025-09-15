@@ -33,6 +33,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.observed-regex" is "obs.*"
     And local Git setting "git-town.unknown-branch-type" is "observed"
     And local Git setting "git-town.dev-remote" is "fork"
+    And local Git setting "git-town.push-branches" is "false"
     And local Git setting "git-town.push-hook" is "false"
     And local Git setting "git-town.hosting-origin-hostname" is "code"
     And local Git setting "git-town.stash" is "false"
@@ -42,7 +43,6 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.sync-upstream" is "false"
     And local Git setting "git-town.sync-tags" is "false"
     And local Git setting "git-town.share-new-branches" is "push"
-    And local Git setting "git-town.push-hook" is "false"
     And local Git setting "git-town.new-branch-type" is "parked"
     And local Git setting "git-town.ship-strategy" is "squash-merge"
     And local Git setting "git-town.ship-delete-tracking-branch" is "false"
@@ -69,6 +69,7 @@ Feature: remove existing configuration in Git metadata
       | detached                    | down enter                                                                  |                     |
       | stash                       | up enter                                                                    |                     |
       | share new branches          | up enter                                                                    | enable              |
+      | push branches               | down enter                                                                  | enable              |
       | push hook                   | down enter                                                                  | enable              |
       | ship strategy               | down enter                                                                  |                     |
       | ship delete tracking branch | down enter                                                                  | disable             |
@@ -102,6 +103,7 @@ Feature: remove existing configuration in Git metadata
       | git config --unset git-town.feature-regex            |
       | git config --unset git-town.contribution-regex       |
       | git config --unset git-town.observed-regex           |
+      | git config git-town.push-branches true               |
       | git config git-town.push-hook true                   |
       | git config git-town.share-new-branches no            |
       | git config git-town.ship-strategy api                |
@@ -140,11 +142,13 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.observed-regex" now doesn't exist
     And local Git setting "git-town.unknown-branch-type" is now "feature"
     And local Git setting "git-town.share-new-branches" is now "no"
+    And local Git setting "git-town.push-branches" is now "true"
     And local Git setting "git-town.push-hook" is now "true"
     And local Git setting "git-town.ship-strategy" is now "api"
     And local Git setting "git-town.ship-delete-tracking-branch" is now "true"
     And local Git setting "git-town.stash" is now "true"
 
+  @this
   Scenario: undo
     When I run "git-town undo"
     Then the main branch is still "main"
@@ -169,6 +173,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.observed-regex" is now "obs.*"
     And local Git setting "git-town.unknown-branch-type" is now "observed"
     And local Git setting "git-town.share-new-branches" is now "push"
+    And local Git setting "git-town.push-branches" is now "false"
     And local Git setting "git-town.push-hook" is now "false"
     And local Git setting "git-town.hosting-origin-hostname" is now "code"
     And local Git setting "git-town.sync-feature-strategy" is now "rebase"
@@ -177,7 +182,6 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.sync-upstream" is now "false"
     And local Git setting "git-town.sync-tags" is now "false"
     And local Git setting "git-town.share-new-branches" is now "push"
-    And local Git setting "git-town.push-hook" is now "false"
     And local Git setting "git-town.ship-strategy" is now "squash-merge"
     And local Git setting "git-town.ship-delete-tracking-branch" is now "false"
     And local Git setting "git-town.stash" is now "false"
