@@ -75,6 +75,7 @@ func prependCommand() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addProposeFlag, readProposeFlag := flags.Propose()
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
+	addPushFlag, readPushFlag := flags.Push()
 	addStashFlag, readStashFlag := flags.Stash()
 	addTitleFlag, readTitleFlag := flags.ProposalTitle()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
@@ -94,10 +95,11 @@ func prependCommand() *cobra.Command {
 			dryRun, errDryRun := readDryRunFlag(cmd)
 			propose, errPropose := readProposeFlag(cmd)
 			prototype, errPrototype := readPrototypeFlag(cmd)
+			push, errPush := readPushFlag(cmd)
 			stash, errStash := readStashFlag(cmd)
 			title, errTitle := readTitleFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errAutoResolve, errBeam, errBodyText, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errStash, errTitle, errVerbose); err != nil {
+			if err := cmp.Or(errAutoResolve, errBeam, errBodyText, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errPush, errStash, errTitle, errVerbose); err != nil {
 				return err
 			}
 			if commitMessage.IsSome() {
@@ -110,7 +112,7 @@ func prependCommand() *cobra.Command {
 				AutoResolve:  autoResolve,
 				Detached:     detached,
 				DryRun:       dryRun,
-				PushBranches: None[configdomain.PushBranches](), // TODO: add and use the CLI flag here
+				PushBranches: push,
 				Stash:        stash,
 				Verbose:      verbose,
 			})
@@ -136,6 +138,7 @@ func prependCommand() *cobra.Command {
 	addDryRunFlag(&cmd)
 	addProposeFlag(&cmd)
 	addPrototypeFlag(&cmd)
+	addPushFlag(&cmd)
 	addStashFlag(&cmd)
 	addTitleFlag(&cmd)
 	addVerboseFlag(&cmd)
