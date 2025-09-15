@@ -6,7 +6,7 @@ Feature: sync the current feature branch using the "compress" strategy in no-pus
       """
       [branches]
       main = "main"
-      
+
       [sync]
       push-branches = false
       feature-strategy = "compress"

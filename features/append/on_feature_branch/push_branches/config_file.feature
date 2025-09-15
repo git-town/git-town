@@ -7,7 +7,7 @@ Feature: appending to a branch whose parent was shipped and the local branch del
       """
       [branches]
       main = "main"
-      
+
       [sync]
       push-branches = false
       """

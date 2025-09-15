@@ -26,20 +26,20 @@ Feature: display information from config file
       contribution-regex = "^renovate/"
       observed-regex = "^dependabot/"
       unknown-type = "observed"
-      
+
       [create]
       share-new-branches = "push"
       stash = false
-      
+
       [hosting]
       forge-type = "github"
       github-connector = "gh"
       origin-hostname = "github.com"
-      
+
       [ship]
       delete-tracking-branch = true
       strategy = "squash-merge"
-      
+
       [sync]
       auto-resolve = false
       detached = true
@@ -65,15 +65,15 @@ Feature: display information from config file
         perennial regex: ^release-
         prototype branches: prototype-1, prototype-2
         unknown branch type: observed
-      
+
       Configuration:
         offline: no
-      
+
       Create:
         new branch type: (not set)
         share new branches: push
         stash uncommitted changes: no
-      
+
       Hosting:
         development remote: origin
         forge type: github
@@ -86,11 +86,11 @@ Feature: display information from config file
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
-      
+
       Ship:
         delete tracking branch: yes
         ship strategy: squash-merge
-      
+
       Sync:
         auto-resolve phantom conflicts: no
         run detached: yes

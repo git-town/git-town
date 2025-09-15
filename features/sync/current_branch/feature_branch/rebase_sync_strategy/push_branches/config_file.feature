@@ -7,7 +7,7 @@ Feature: syncing a stacked feature branch using --no-push
       """
       [branches]
       main = "main"
-      
+
       [sync]
       push-branches = false
       feature-strategy = "rebase"

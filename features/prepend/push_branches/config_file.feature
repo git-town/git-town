@@ -7,7 +7,7 @@ Feature: don't push branches while prepending
       """
       [branches]
       main = "main"
-      
+
       [sync]
       push-branches = false
       """

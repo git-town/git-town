@@ -7,7 +7,7 @@ Feature: syncing a stacked feature branch using the sync-push config option
       """
       [branches]
       main = "main"
-      
+
       [sync]
       push-branches = false
       feature-strategy = "merge"
