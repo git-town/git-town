@@ -56,7 +56,7 @@ func Cmd() *cobra.Command {
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
-	addNoPushFlag, readNoPushFlag := flags.NoPush()
+	addNoPushFlag, readNoPushFlag := flags.Push()
 	addPruneFlag, readPruneFlag := flags.Prune()
 	addStackFlag, readStackFlag := flags.Stack("sync the stack that the current branch belongs to")
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
@@ -79,16 +79,16 @@ func Cmd() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve: autoResolve,
-				Detached:    detached,
-				DryRun:      dryRun,
-				Stash:       None[configdomain.Stash](),
-				Verbose:     verbose,
+				AutoResolve:  autoResolve,
+				Detached:     detached,
+				DryRun:       dryRun,
+				PushBranches: pushBranches,
+				Stash:        None[configdomain.Stash](),
+				Verbose:      verbose,
 			})
 			return executeSync(executeSyncArgs{
 				cliConfig:       cliConfig,
 				prune:           prune,
-				pushBranches:    pushBranches,
 				stack:           stack,
 				syncAllBranches: allBranches,
 			})
@@ -108,7 +108,6 @@ func Cmd() *cobra.Command {
 type executeSyncArgs struct {
 	cliConfig       configdomain.PartialConfig
 	prune           configdomain.Prune
-	pushBranches    configdomain.PushBranches
 	stack           configdomain.FullStack
 	syncAllBranches configdomain.AllBranches
 }
@@ -146,7 +145,7 @@ func executeSync(args executeSyncArgs) error {
 		PrefetchBranchInfos: data.prefetchBranchesSnapshot.Branches,
 		Program:             runProgram,
 		Prune:               args.prune,
-		PushBranches:        args.pushBranches,
+		PushBranches:        data.config.NormalConfig.PushBranches,
 		Remotes:             data.remotes,
 	})
 	previousbranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}

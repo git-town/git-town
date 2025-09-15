@@ -40,7 +40,7 @@ func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
 		return err
 	}
 	// update the tracking branch
-	if syncTracking && self.PushBranches.IsTrue() && hasTrackingBranch && args.Config.Value.NormalConfig.Offline.IsOnline() {
+	if syncTracking && self.PushBranches.ShouldPush() && hasTrackingBranch && args.Config.Value.NormalConfig.Offline.IsOnline() {
 		program = append(program,
 			&PushCurrentBranchForceIfNeeded{
 				CurrentBranch:   self.Branch,

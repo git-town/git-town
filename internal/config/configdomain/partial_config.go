@@ -52,6 +52,7 @@ type PartialConfig struct {
 	SyncFeatureStrategy      Option[SyncFeatureStrategy]
 	SyncPerennialStrategy    Option[SyncPerennialStrategy]
 	SyncPrototypeStrategy    Option[SyncPrototypeStrategy]
+	PushBranches             Option[PushBranches]
 	SyncTags                 Option[SyncTags]
 	SyncUpstream             Option[SyncUpstream]
 	UnknownBranchType        Option[UnknownBranchType]
