@@ -110,6 +110,7 @@ func printConfig(config config.UnvalidatedConfig) {
 	print.Entry("feature sync strategy", config.NormalConfig.SyncFeatureStrategy.String())
 	print.Entry("perennial sync strategy", config.NormalConfig.SyncPerennialStrategy.String())
 	print.Entry("prototype sync strategy", config.NormalConfig.SyncPrototypeStrategy.String())
+	print.Entry("push branches", format.Bool(config.NormalConfig.PushBranches.ShouldPush()))
 	print.Entry("sync tags", format.Bool(config.NormalConfig.SyncTags.IsTrue()))
 	print.Entry("sync with upstream", format.Bool(config.NormalConfig.SyncUpstream.IsTrue()))
 	print.Entry("auto-resolve phantom conflicts", format.Bool(config.NormalConfig.AutoResolve.ShouldAutoResolve()))
