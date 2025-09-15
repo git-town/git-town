@@ -10,6 +10,7 @@ Feature: syncing a stacked feature branch using the sync-push config option
       
       [sync]
       push-branches = false
+      feature-strategy = "merge"
       """
     And the branches
       | NAME   | TYPE    | PARENT | LOCATIONS     |
