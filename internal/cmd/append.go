@@ -158,6 +158,7 @@ func executeAppend(args executeAppendArgs) error {
 	if err != nil {
 		return err
 	}
+	fmt.Println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaaaaaaaaaaaaaaaaaa", args.sync)
 	data, exit, err := determineAppendData(determineAppendDataArgs{
 		beam:          args.beam,
 		commit:        args.commit,
@@ -259,6 +260,7 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 	if err != nil {
 		return data, false, err
 	}
+	fmt.Println("11111111111111111111111111111111111111111111111111111111111", config.AutoSync)
 	branchesSnapshot, stashSize, branchInfosLastRun, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
