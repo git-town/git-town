@@ -16,6 +16,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
     And global Git setting "git-town.hosting-origin-hostname" is "git"
     And global Git setting "git-town.perennial-branches" is "perennials"
     And global Git setting "git-town.perennial-regex" is "^per-"
+    And global Git setting "git-town.push-branches" is "false"
     And global Git setting "git-town.push-hook" is "false"
     And global Git setting "git-town.share-new-branches" is "push"
     And global Git setting "git-town.ship-strategy" is "api"
@@ -51,6 +52,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | detached                    | enter       |
       | stash                       | enter       |
       | share new branches          | enter       |
+      | push branches               | enter       |
       | push hook                   | enter       |
       | ship strategy               | enter       |
       | ship delete tracking branch | enter       |

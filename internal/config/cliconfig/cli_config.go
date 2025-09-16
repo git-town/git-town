@@ -8,11 +8,12 @@ import (
 )
 
 type NewArgs struct {
-	AutoResolve Option[configdomain.AutoResolve]
-	Detached    Option[configdomain.Detached]
-	DryRun      Option[configdomain.DryRun]
-	Stash       Option[configdomain.Stash]
-	Verbose     Option[configdomain.Verbose]
+	AutoResolve  Option[configdomain.AutoResolve]
+	Detached     Option[configdomain.Detached]
+	DryRun       Option[configdomain.DryRun]
+	PushBranches Option[configdomain.PushBranches]
+	Stash        Option[configdomain.Stash]
+	Verbose      Option[configdomain.Verbose]
 }
 
 func New(args NewArgs) configdomain.PartialConfig {
@@ -53,6 +54,7 @@ func New(args NewArgs) configdomain.PartialConfig {
 		SyncFeatureStrategy:      None[configdomain.SyncFeatureStrategy](),
 		SyncPerennialStrategy:    None[configdomain.SyncPerennialStrategy](),
 		SyncPrototypeStrategy:    None[configdomain.SyncPrototypeStrategy](),
+		PushBranches:             args.PushBranches,
 		SyncTags:                 None[configdomain.SyncTags](),
 		SyncUpstream:             None[configdomain.SyncUpstream](),
 		UnknownBranchType:        None[configdomain.UnknownBranchType](),

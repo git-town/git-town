@@ -72,6 +72,7 @@ Feature: show the configuration in Spanish
         feature sync strategy: merge
         perennial sync strategy: rebase
         prototype sync strategy: merge
+        push branches: yes
         sync tags: yes
         sync with upstream: yes
       """

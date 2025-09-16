@@ -153,7 +153,7 @@ func localBranchProgram(args localBranchProgramArgs) {
 			trackingBranch:       args.branchInfo.RemoteName,
 		})
 	}
-	if args.PushBranches.IsTrue() && args.Remotes.HasRemote(args.Config.NormalConfig.DevRemote) && args.Config.NormalConfig.Offline.IsOnline() && branchType.ShouldPush(args.localName == args.InitialBranch) {
+	if args.PushBranches.ShouldPush() && args.Remotes.HasRemote(args.Config.NormalConfig.DevRemote) && args.Config.NormalConfig.Offline.IsOnline() && branchType.ShouldPush(args.localName == args.InitialBranch) {
 		isMainBranch := branchType == configdomain.BranchTypeMainBranch
 		switch {
 		case !args.branchInfo.HasTrackingBranch():

@@ -115,6 +115,7 @@ Feature: show the configuration
         feature sync strategy: merge
         perennial sync strategy: ff-only
         prototype sync strategy: compress
+        push branches: yes
         sync tags: no
         sync with upstream: no
       """

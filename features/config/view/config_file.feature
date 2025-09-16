@@ -46,6 +46,7 @@ Feature: display information from config file
       feature-strategy = "rebase"
       perennial-strategy = "ff-only"
       prototype-strategy = "compress"
+      push-branches = false
       tags = false
       upstream = true
       """
@@ -97,6 +98,7 @@ Feature: display information from config file
         feature sync strategy: rebase
         perennial sync strategy: ff-only
         prototype sync strategy: compress
+        push branches: no
         sync tags: no
         sync with upstream: yes
       """

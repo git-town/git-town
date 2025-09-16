@@ -1,8 +1,9 @@
-Feature: syncing a stacked feature branch using --no-push
+Feature: disable pushing through the Git metadata
 
   Background:
     Given a Git repo with origin
     And Git setting "git-town.sync-feature-strategy" is "rebase"
+    And Git setting "git-town.push-branches" is "false"
     And the branches
       | NAME   | TYPE    | PARENT | LOCATIONS     |
       | parent | feature | main   | local, origin |
@@ -16,7 +17,7 @@ Feature: syncing a stacked feature branch using --no-push
       | parent | local    | local parent commit  |
       |        | origin   | origin parent commit |
     And the current branch is "child"
-    When I run "git-town sync --no-push"
+    When I run "git-town sync"
 
   Scenario: result
     Then Git Town runs the commands

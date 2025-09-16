@@ -82,6 +82,11 @@ Propose the created branch.
 To always propose new branches, set the
 [share new branches](../preferences/share-new-branches.md) setting to `propose`.
 
+#### `--push`<br>`--no-push`
+
+The `--push`/`--no-push` argument overrides the
+[push-branches](../preferences/push_branches.md) config setting.
+
 #### `--stash`<br>`--no-stash`
 
 Enables or disables [stashing](../preferences/stash.md) for this invocation.

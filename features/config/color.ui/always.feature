@@ -77,6 +77,7 @@ Feature: show the configuration
         feature sync strategy: merge
         perennial sync strategy: rebase
         prototype sync strategy: merge
+        push branches: yes
         sync tags: yes
         sync with upstream: yes
         auto-resolve phantom conflicts: yes
@@ -163,6 +164,7 @@ Feature: show the configuration
         feature sync strategy: rebase
         perennial sync strategy: ff-only
         prototype sync strategy: compress
+        push branches: yes
         sync tags: no
         sync with upstream: yes
         auto-resolve phantom conflicts: no
@@ -267,6 +269,7 @@ Feature: show the configuration
         feature sync strategy: merge
         perennial sync strategy: ff-only
         prototype sync strategy: compress
+        push branches: yes
         sync tags: no
         sync with upstream: no
         auto-resolve phantom conflicts: no
@@ -329,6 +332,7 @@ Feature: show the configuration
         feature sync strategy: merge
         perennial sync strategy: rebase
         prototype sync strategy: merge
+        push branches: yes
         sync tags: yes
         sync with upstream: yes
         auto-resolve phantom conflicts: yes
@@ -397,6 +401,7 @@ Feature: show the configuration
         feature sync strategy: merge
         perennial sync strategy: rebase
         prototype sync strategy: merge
+        push branches: yes
         sync tags: yes
         sync with upstream: yes
         auto-resolve phantom conflicts: yes

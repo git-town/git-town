@@ -229,6 +229,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 
 This command has been renamed to "git town propose"
 and will be removed in future versions of Git Town.`
+	PushBranches               = "Push branches: %s\n"
 	PushHook                   = "Push hook: %s\n"
 	PushNewBranchesDeprecation = `The Git Town configuration file contains the deprecated setting "push-new-branches".
 Please upgrade to the new format: share-new-branches = "push"`

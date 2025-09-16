@@ -57,6 +57,7 @@ Feature: show the configuration from a subfolder
         feature sync strategy: merge
         perennial sync strategy: rebase
         prototype sync strategy: merge
+        push branches: yes
         sync tags: yes
         sync with upstream: yes
       """
