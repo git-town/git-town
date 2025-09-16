@@ -1,7 +1,7 @@
 # push-branches
 
 This setting determines whether Git Town pushes local branches and commits to
-the [Development remote](dev-remote.md).
+the [development remote](dev-remote.md).
 
 ## config file
 
