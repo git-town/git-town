@@ -8,5 +8,5 @@ import (
 type PushCurrentBranch struct{}
 
 func (self *PushCurrentBranch) Run(args shared.RunArgs) error {
-	return args.Git.PushCurrentBranch(args.Frontend, args.Config.Value.NormalConfig.NoPushHook())
+	return args.Git.PushCurrentBranch(args.Frontend, args.Config.Value.NormalConfig.PushHook)
 }
