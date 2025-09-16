@@ -244,7 +244,6 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (data p
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 	})
-	fmt.Println("2222222222222222222222222222222222222222222222222222222222222222222222222222", exit)
 	if err != nil || exit {
 		return data, exit, err
 	}
