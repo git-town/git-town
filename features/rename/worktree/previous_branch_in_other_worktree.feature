@@ -25,4 +25,4 @@ Feature: rename the current branch to a branch that is active in another worktre
       | new     | git branch current {{ sha 'initial commit' }} |
       |         | git checkout current                          |
       | current | git branch -D new                             |
-    And the previous Git branch is now ""
+    And there is now no previous Git branch

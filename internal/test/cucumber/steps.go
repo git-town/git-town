@@ -1514,6 +1514,16 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^there is now no previous Git branch$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		_, has := devRepo.Git.PreviouslyCheckedOutBranch(devRepo.TestRunner).Get()
+		if has {
+			return fmt.Errorf("previous branch found")
+		}
+		return nil
+	})
+
 	sc.Step(`^these tags exist now$`, func(ctx context.Context, table *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		tagTable := state.fixture.TagTable()

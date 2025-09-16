@@ -25,7 +25,7 @@ Feature: preserve the previous Git branch
     And origin deletes the "current" branch
     When I run "git-town sync --all"
     Then the current branch is now "main"
-    And the previous Git branch is now ""
+    And there is now no previous Git branch
 
   Scenario: both branches exist
     When I run "git-town sync --all"
