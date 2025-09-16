@@ -1418,7 +1418,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the main branch is (?:now|still) "([^"]*)"$`, func(ctx context.Context, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.Config.UnvalidatedConfig.MainBranch
+		have, has := devRepo.Config.UnvalidatedConfig.MainBranch.Get()
+		if !has {
+			return fmt.Errorf("no main branch found")
+		}
 		if have.String() != want {
 			return fmt.Errorf("expected %q, got %q", want, have)
 		}
