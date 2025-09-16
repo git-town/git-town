@@ -376,7 +376,7 @@ func (self *Commands) CreateBranch(runner subshelldomain.Runner, name gitdomain.
 
 func (self *Commands) CreateTrackingBranch(runner subshelldomain.Runner, branch gitdomain.LocalBranchName, remote gitdomain.Remote, pushHook configdomain.PushHook) error {
 	args := []string{"push"}
-	if !pushHook.ShouldRunPushHook() {
+	if !pushHook {
 		args = append(args, "--no-verify")
 	}
 	args = append(args, "-u", remote.String())
