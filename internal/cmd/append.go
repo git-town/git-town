@@ -74,6 +74,7 @@ func appendCmd() *cobra.Command {
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
 	addPushFlag, readPushFlag := flags.Push()
 	addStashFlag, readStashFlag := flags.Stash()
+	addSyncFlag, readSyncFlag := flags.Sync()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "append <branch>",
@@ -92,8 +93,9 @@ func appendCmd() *cobra.Command {
 			prototype, errPrototype := readPrototypeFlag(cmd)
 			push, errPush := readPushFlag(cmd)
 			stash, errStash := readStashFlag(cmd)
+			sync, errSync := readSyncFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errBeam, errCommit, errCommitMessage, errDetached, errDryRun, errAutoResolve, errPropose, errPrototype, errPush, errStash, errVerbose); err != nil {
+			if err := cmp.Or(errBeam, errCommit, errCommitMessage, errDetached, errDryRun, errAutoResolve, errPropose, errPrototype, errPush, errStash, errSync, errVerbose); err != nil {
 				return err
 			}
 			if commitMessage.IsSome() || propose.IsTrue() {
@@ -115,6 +117,7 @@ func appendCmd() *cobra.Command {
 				commitMessage: commitMessage,
 				propose:       propose,
 				prototype:     prototype,
+				sync:          sync,
 			})
 		},
 	}
@@ -128,6 +131,7 @@ func appendCmd() *cobra.Command {
 	addPrototypeFlag(&cmd)
 	addPushFlag(&cmd)
 	addStashFlag(&cmd)
+	addSyncFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
@@ -140,6 +144,7 @@ type executeAppendArgs struct {
 	commitMessage Option[gitdomain.CommitMessage]
 	propose       configdomain.Propose
 	prototype     configdomain.Prototype
+	sync          Option[configdomain.AutoSync]
 }
 
 func executeAppend(args executeAppendArgs) error {
