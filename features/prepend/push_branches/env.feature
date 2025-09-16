@@ -2,7 +2,6 @@ Feature: disable pushing through the environment
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.push-branches" is "false"
     And the branches
       | NAME     | TYPE    | PARENT   | LOCATIONS |
       | branch-1 | feature | main     | local     |
