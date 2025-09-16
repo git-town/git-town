@@ -105,7 +105,7 @@ func prependCommand() *cobra.Command {
 			if commitMessage.IsSome() {
 				commit = true
 			}
-			if propose.IsTrue() && beam.IsFalse() {
+			if propose.IsTrue() && !beam.ShouldBeam() {
 				commit = true
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -271,7 +271,7 @@ func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (data p
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
-		Fetch:                 !repoStatus.OpenChanges && args.beam.IsFalse() && args.commit.IsFalse(),
+		Fetch:                 !repoStatus.OpenChanges && !args.beam.ShouldBeam() && !args.commit.ShouldCommit(),
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
@@ -394,7 +394,7 @@ func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (data p
 
 func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
-	if !data.hasOpenChanges && data.beam.IsFalse() && data.commit.IsFalse() {
+	if !data.hasOpenChanges && !data.beam.ShouldBeam() && !data.commit.ShouldCommit() {
 		data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages, repo.Backend)
 		branchesToDelete := set.New[gitdomain.LocalBranchName]()
 		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{

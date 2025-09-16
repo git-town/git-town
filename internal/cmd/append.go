@@ -259,7 +259,7 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
-		Fetch:                 !repoStatus.OpenChanges && args.beam.IsFalse() && args.commit.IsFalse(),
+		Fetch:                 !repoStatus.OpenChanges && !args.beam.ShouldBeam() && !args.commit.ShouldCommit(),
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
@@ -325,7 +325,7 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 	slices.Reverse(initialAndAncestors)
 	commitsToBeam := []gitdomain.Commit{}
 	ancestor, hasAncestor := latestExistingAncestor(initialBranch, branchesSnapshot.Branches, validatedConfig.NormalConfig.Lineage).Get()
-	if args.beam.IsTrue() && hasAncestor {
+	if args.beam.ShouldBeam() && hasAncestor {
 		commitsInBranch, err := repo.Git.CommitsInFeatureBranch(repo.Backend, initialBranch, ancestor.BranchName())
 		if err != nil {
 			return data, false, err
@@ -377,7 +377,7 @@ type determineAppendDataArgs struct {
 func appendProgram(frontend subshelldomain.Runner, data appendFeatureData, finalMessages stringslice.Collector, beamCherryPick bool) program.Program {
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages, frontend)
-	if !data.hasOpenChanges && data.beam.IsFalse() && data.commit.IsFalse() {
+	if !data.hasOpenChanges && !data.beam.ShouldBeam() && !data.commit.ShouldCommit() {
 		branchesToDelete := set.New[gitdomain.LocalBranchName]()
 		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 			BranchInfos:         data.branchInfos,
