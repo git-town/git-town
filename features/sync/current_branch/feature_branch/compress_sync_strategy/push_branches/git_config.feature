@@ -1,4 +1,4 @@
-Feature: sync the current feature branch using the "compress" strategy in no-push mode
+Feature: disable pushing through Git metadata
 
   Background:
     Given a Git repo with origin

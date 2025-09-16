@@ -1,4 +1,4 @@
-Feature: avoid pushing through the environment
+Feature: disable pushing through the environment
 
   Background:
     Given a Git repo with origin

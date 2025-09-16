@@ -1,4 +1,4 @@
-Feature: syncing a stacked feature branch using the sync-push config option
+Feature: disable pushing through Git metadata
 
   Background:
     Given a Git repo with origin

@@ -1,4 +1,4 @@
-Feature: don't push branches while prepending
+Feature: disable pushing through Git metadata
 
   Background:
     Given a Git repo with origin

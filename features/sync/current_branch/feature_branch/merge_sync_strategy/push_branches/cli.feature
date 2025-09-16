@@ -1,4 +1,4 @@
-Feature: syncing a stacked feature branch using --no-push
+Feature: disable pushing through the CLI
 
   Background:
     Given a Git repo with origin

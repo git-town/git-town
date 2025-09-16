@@ -1,4 +1,4 @@
-Feature: syncing a stacked feature branch using the sync-push config option
+Feature: disable pushing through the config file
 
   Background:
     Given a Git repo with origin
@@ -7,7 +7,7 @@ Feature: syncing a stacked feature branch using the sync-push config option
       """
       [branches]
       main = "main"
-
+      
       [sync]
       push-branches = false
       feature-strategy = "merge"

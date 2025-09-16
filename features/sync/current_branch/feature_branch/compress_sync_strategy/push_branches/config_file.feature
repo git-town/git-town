@@ -1,4 +1,4 @@
-Feature: sync the current feature branch using the "compress" strategy in no-push mode
+Feature: disable pushing through the config file
 
   Background:
     Given a Git repo with origin
@@ -6,7 +6,7 @@ Feature: sync the current feature branch using the "compress" strategy in no-pus
       """
       [branches]
       main = "main"
-
+      
       [sync]
       push-branches = false
       feature-strategy = "compress"

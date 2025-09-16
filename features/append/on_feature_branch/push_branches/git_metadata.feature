@@ -1,4 +1,4 @@
-Feature: appending to a branch whose parent was shipped and the local branch deleted manually
+Feature: disable pushing through Git metadata
 
   Background:
     Given a Git repo with origin
