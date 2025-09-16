@@ -1,4 +1,4 @@
-Feature: cannot delete if no branch checked out
+Feature: cannot delete in headless state
 
   Background:
     Given a Git repo with origin
