@@ -105,7 +105,7 @@ func printConfig(config config.UnvalidatedConfig) {
 	fmt.Println()
 	print.Header("Sync")
 	print.Entry("auto-resolve phantom conflicts", format.Bool(config.NormalConfig.AutoResolve.ShouldAutoResolve()))
-	print.Entry("run detached", format.Bool(config.NormalConfig.Detached.IsTrue()))
+	print.Entry("run detached", format.Bool(config.NormalConfig.Detached.ShouldWorkDetached()))
 	print.Entry("run pre-push hook", format.Bool(config.NormalConfig.PushHook.IsTrue()))
 	print.Entry("feature sync strategy", config.NormalConfig.SyncFeatureStrategy.String())
 	print.Entry("perennial sync strategy", config.NormalConfig.SyncPerennialStrategy.String())
