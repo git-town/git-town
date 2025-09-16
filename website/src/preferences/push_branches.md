@@ -23,5 +23,5 @@ your machine. Without it, the setting applies only to the current repository.
 
 ## environment variable
 
-You can configure the push hook by setting the `GIT_TOWN_PUSH_BRANCHES`
-environment variable.
+You can configure whether branches get pushed by setting the
+`GIT_TOWN_PUSH_BRANCHES` environment variable.
