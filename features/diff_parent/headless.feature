@@ -11,13 +11,12 @@ Feature: view changes in headless state
       | branch-1 | local    | commit 1a |
       |          |          | commit 1b |
     And the current branch is "branch-1"
-    # TODO: enable this line and fix the broken test
-    # And I ran "git checkout HEAD^"
-    When I run "git-town diff-parent" and enter into the dialog:
-      | DIALOG                       | KEYS  |
-      | parent branch for "branch-1" | enter |
+    And I ran "git checkout HEAD^"
+    When I run "git-town diff-parent"
 
   Scenario: feature branch
-    Then Git Town runs the commands
-      | BRANCH   | COMMAND                             |
-      | branch-1 | git diff --merge-base main branch-1 |
+    Then Git Town runs no commands
+    And Git Town prints the error:
+      """
+      cannot diff in detached head state
+      """

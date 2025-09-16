@@ -114,6 +114,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	DialogUnexpectedResponse            = "unexpected response: %s"
 	DialogUseGlobalValue                = "use global value (%s)"
 	DiffConflictWithMain                = "conflicts between your uncommmitted changes and the main branch"
+	DiffParentDetachedHead              = "cannot diff in detached head state"
 	DiffParentNoFeatureBranch           = "you can only diff-parent feature branches"
 	DiffProblem                         = "cannot list diff of %q and %q: %w"
 	DirCurrentProblem                   = "cannot determine the current directory"
