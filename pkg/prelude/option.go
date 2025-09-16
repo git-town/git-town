@@ -119,14 +119,17 @@ func (self Option[T]) Or(other Option[T]) Option[T] {
 // String provides the string serialization of the contained value.
 // If this option contains nothing, you get an empty string.
 func (self Option[T]) String() string {
-	return self.StringOr("")
+	if value, has := self.Get(); has {
+		return fmt.Sprintf("Some(%v)", value)
+	}
+	return "None"
 }
 
 // StringOr provides the string serialization of the contained value.
 // If this option contains nothing, you get the given alternative string representation.
 func (self Option[T]) StringOr(other string) string {
-	if self.IsSome() {
-		return fmt.Sprint(self.value)
+	if value, has := self.Get(); has {
+		return fmt.Sprint(value)
 	}
 	return other
 }
