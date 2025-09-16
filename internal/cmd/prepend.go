@@ -406,7 +406,7 @@ func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages
 			PrefetchBranchInfos: data.preFetchBranchInfos,
 			Program:             prog,
 			Prune:               false,
-			PushBranches:        true,
+			PushBranches:        data.config.NormalConfig.PushBranches,
 			Remotes:             data.remotes,
 		})
 	}

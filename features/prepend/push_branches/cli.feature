@@ -14,18 +14,16 @@ Feature: disable pushing through the CLI
       | BRANCH   | COMMAND                      |
       | branch-2 | git fetch --prune --tags     |
       |          | git checkout branch-1        |
-      | branch-1 | git push -u origin branch-1  |
-      |          | git checkout branch-2        |
-      | branch-2 | git push -u origin branch-2  |
-      |          | git checkout -b new branch-1 |
+      | branch-1 | git checkout branch-2        |
+      | branch-2 | git checkout -b new branch-1 |
     And the initial tags exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND           |
-      | new    | git checkout old  |
-      | old    | git branch -D new |
+      | BRANCH   | COMMAND               |
+      | new      | git checkout branch-2 |
+      | branch-2 | git branch -D new     |
     And the initial commits exist now
     And the initial lineage exists now
     And the initial tags exist now
