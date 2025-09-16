@@ -1,0 +1,22 @@
+Feature: open the repo in detached state
+
+  Background:
+    Given a Git repo with origin
+    And the origin is "git@github.com:git-town/git-town.git"
+    And the branches
+      | NAME   | TYPE    | PARENT | LOCATIONS |
+      | branch | feature | main   | local     |
+    And the commits
+      | BRANCH | LOCATION | MESSAGE  |
+      | branch | local    | commit 1 |
+      |        | local    | commit 2 |
+    And the current branch is "branch"
+    And I ran "git checkout HEAD^"
+    And tool "open" is installed
+    When I run "git-town repo"
+
+  @debug @this
+  Scenario: result
+    Then Git Town runs the commands
+      | BRANCH | TYPE     | COMMAND                                   |
+      | branch | frontend | open https://github.com/git-town/git-town |
