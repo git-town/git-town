@@ -21,7 +21,6 @@ Feature: park the current detached state
       branch .* is now parked
       """
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
