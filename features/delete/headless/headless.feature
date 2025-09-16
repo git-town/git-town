@@ -6,9 +6,9 @@ Feature: cannot delete in headless state
       | NAME   | TYPE    | PARENT | LOCATIONS     |
       | branch | feature | main   | local, origin |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE  |
-      | branch | local, origin | commit 1 |
-      | branch | local, origin | commit 2 |
+      | BRANCH | LOCATION | MESSAGE  |
+      | branch | local    | commit 1 |
+      | branch | local    | commit 2 |
     And the current branch is "branch"
     And I ran "git checkout HEAD^"
     When I run "git-town delete"
