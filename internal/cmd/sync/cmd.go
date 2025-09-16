@@ -166,9 +166,10 @@ func executeSync(args executeSyncArgs) error {
 		if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
 			if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
 				BranchProposalsProgram(
-					data.branchesToSync,
 					BranchProposalsProgramArgs{
-						Program: runProgram,
+						Current:   data.initialBranch,
+						FullStack: args.stack,
+						Program:   runProgram,
 						ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
 							Connector:                proposalFinder,
 							CurrentBranch:            data.initialBranch,
