@@ -15,11 +15,8 @@ Feature: disable syncing via CLI
   @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                  |
-      | branch-1 | git fetch --prune --tags                 |
-      |          | git merge --no-edit --ff origin/branch-1 |
-      |          | git push                                 |
-      |          | git checkout -b branch-2                 |
+      | BRANCH   | COMMAND                  |
+      | branch-1 | git checkout -b branch-2 |
     And the initial commits exist now
     And this lineage exists now
       """
