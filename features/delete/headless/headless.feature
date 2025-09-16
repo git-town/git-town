@@ -14,8 +14,7 @@ Feature: cannot delete in headless state
     When I run "git-town delete"
 
   Scenario: result
-    Then Git Town runs the commands
-      | BRANCH | COMMAND |
+    Then Git Town runs no commands
     And Git Town prints the error:
       """
       cannot determine current branch
