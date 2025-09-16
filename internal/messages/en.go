@@ -116,7 +116,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	DiffParentNoFeatureBranch           = "you can only diff-parent feature branches"
 	DiffProblem                         = "cannot list diff of %q and %q: %w"
 	DirCurrentProblem                   = "cannot determine the current directory"
-	DownNoCurrentBranch                 = "You need to be on a branch to go down"
+	DownNoCurrentBranch                 = "you need to be on a branch to go down"
 	DownNoParent                        = "branch %q has no parent"
 	DryRun                              = "In dry run mode. No commands will be run. When run in normal mode, the command output will appear beneath the command. Some commands will only be run if necessary. For example: 'git push' will run if and only if there are local commits not on origin."
 
@@ -333,7 +333,7 @@ and will be removed in future versions of Git Town.`
 	UnknownBranchType                       = "Unknown branch type: %s\n"
 	UpdateProposalBodyUnsupported           = "the Git Town driver for your forge does not support updating the proposal body"
 	UpNoChild                               = "branch %q has no children"
-	UpNoCurrentBranch                       = "You need to be on a branch to go up"
+	UpNoCurrentBranch                       = "you need to be on a branch to go up"
 	ValueInvalid                            = "invalid value for %s: %q. Please provide either \"yes\" or \"no\""
 	WalkAllOrStack                          = "please provide either --all or --stack"
 	WalkDone                                = "Branch walk done."

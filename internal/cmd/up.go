@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"cmp"
+	"errors"
 	"fmt"
 	"os"
 	"regexp"
@@ -82,7 +83,7 @@ func executeUp(args executeUpArgs) error {
 	}
 	currentBranch, hasCurrentBranch := currentBranchOpt.Get()
 	if !hasCurrentBranch {
-		return fmt.Errorf(messages.UpNoCurrentBranch)
+		return errors.New(messages.UpNoCurrentBranch)
 	}
 
 	// Get the child branches from lineage
