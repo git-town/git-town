@@ -223,7 +223,11 @@ func determineDetachData(args []string, repo execute.OpenRepoResult) (data detac
 	if err != nil || exit {
 		return data, exit, err
 	}
-	branchNameToDetach := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branchesSnapshot.Active.String()))
+	activeBranch, hasActiveBranch := branchesSnapshot.Active.Get()
+	if !hasActiveBranch {
+		return data, false, fmt.Errorf(messages.DetachNoActiveBranch)
+	}
+	branchNameToDetach := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, activeBranch.String()))
 	branchToDetachInfo, hasBranchToDetachInfo := branchesSnapshot.Branches.FindByLocalName(branchNameToDetach).Get()
 	if !hasBranchToDetachInfo {
 		return data, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToDetach)

@@ -104,6 +104,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	DeleteNoActiveBranch                = "please check out the branch to delete"
 	DetachedResult                      = "Detached: %s\n"
 	DetachNeedsSync                     = "please sync this stack before detaching branches from it"
+	DetachNoActiveBranch                = "please check out the branch to detach"
 	DetachNoParent                      = "cannot detach branches without parent"
 	DetachOtherWorkTree                 = "cannot detach because branch %q it is active in another worktree"
 	DetachRemoteBranch                  = "cannot detach a remote branch"
