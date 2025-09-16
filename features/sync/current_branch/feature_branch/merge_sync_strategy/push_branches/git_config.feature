@@ -2,7 +2,6 @@ Feature: disable pushing through Git metadata
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.push-branches" is "false"
     And the branches
       | NAME   | TYPE    | PARENT | LOCATIONS     |
       | parent | feature | main   | local, origin |
@@ -16,6 +15,7 @@ Feature: disable pushing through Git metadata
       | child  | local    | local child commit   |
       |        | origin   | origin child commit  |
     And the current branch is "child"
+    And Git setting "git-town.push-branches" is "false"
     When I run "git-town sync"
 
   Scenario: result

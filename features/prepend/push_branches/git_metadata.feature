@@ -2,12 +2,12 @@ Feature: disable pushing through Git metadata
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.push-branches" is "false"
     And the branches
       | NAME     | TYPE    | PARENT   | LOCATIONS |
       | branch-1 | feature | main     | local     |
       | branch-2 | feature | branch-1 | local     |
     And the current branch is "branch-2"
+    And Git setting "git-town.push-branches" is "false"
     When I run "git-town prepend new"
 
   Scenario: result
