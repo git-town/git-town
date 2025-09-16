@@ -12,14 +12,14 @@ Feature: park the current detached state
     And the current branch is "branch"
     And I ran "git checkout HEAD^"
     When I run "git-town park"
-  # TODO: fix the broken behavior: it should not park here
 
   Scenario: result
     Then Git Town runs no commands
-    And Git Town prints something like:
+    And Git Town prints the error:
       """
-      branch .* is now parked
+      cannot park in detached head state
       """
+    And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
