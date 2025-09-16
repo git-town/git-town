@@ -5,13 +5,13 @@ import "strconv"
 // PushHook contains the push-hook configuration setting.
 type PushHook bool
 
-func (self PushHook) ShouldRunPushHook() bool {
-	return bool(self)
-}
-
 func (self PushHook) Negate() NoPushHook {
 	boolValue := bool(self)
 	return NoPushHook(!boolValue)
+}
+
+func (self PushHook) ShouldRunPushHook() bool {
+	return bool(self)
 }
 
 func (self PushHook) String() string {
