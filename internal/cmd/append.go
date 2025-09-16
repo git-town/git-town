@@ -264,7 +264,7 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
-		Fetch:                 !repoStatus.OpenChanges && !args.beam.ShouldBeam() && !args.commit.ShouldCommit(),
+		Fetch:                 (!repoStatus.OpenChanges && !args.beam.ShouldBeam() && !args.commit.ShouldCommit()) || !config.AutoSync.ShouldSync(),
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
