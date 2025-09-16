@@ -7,7 +7,7 @@ Feature: disable pushing through the config file
       """
       [branches]
       main = "main"
-
+      
       [sync]
       push-branches = false
       """
