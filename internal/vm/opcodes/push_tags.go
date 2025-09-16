@@ -6,5 +6,5 @@ import "github.com/git-town/git-town/v21/internal/vm/shared"
 type PushTags struct{}
 
 func (self *PushTags) Run(args shared.RunArgs) error {
-	return args.Git.PushTags(args.Frontend, args.Config.Value.NormalConfig.NoPushHook())
+	return args.Git.PushTags(args.Frontend, args.Config.Value.NormalConfig.PushHook)
 }
