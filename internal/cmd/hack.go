@@ -92,7 +92,7 @@ func hackCmd() *cobra.Command {
 			if err := cmp.Or(errAutoResolve, errBeam, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errStash, errVerbose); err != nil {
 				return err
 			}
-			if commitMessage.IsSome() || propose.IsTrue() {
+			if commitMessage.IsSome() || propose.ShouldPropose() {
 				commit = true
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -256,7 +256,7 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data appendF
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
-		Fetch:                 len(args.argv) == 1 && !repoStatus.OpenChanges && args.beam.IsFalse() && args.commit.IsFalse(),
+		Fetch:                 len(args.argv) == 1 && !repoStatus.OpenChanges && !args.beam.ShouldBeam() && !args.commit.ShouldCommit(),
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
@@ -325,7 +325,7 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data appendF
 	}
 	commitsToBeam := []gitdomain.Commit{}
 	ancestor, hasAncestor := latestExistingAncestor(initialBranch, branchesSnapshot.Branches, validatedConfig.NormalConfig.Lineage).Get()
-	if args.beam.IsTrue() && hasAncestor {
+	if args.beam.ShouldBeam() && hasAncestor {
 		commitsInBranch, err := repo.Git.CommitsInFeatureBranch(repo.Backend, initialBranch, ancestor.BranchName())
 		if err != nil {
 			return data, false, err

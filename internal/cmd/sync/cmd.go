@@ -349,7 +349,7 @@ func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) 
 	perennialAndMain := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
 	var branchNamesToSync gitdomain.LocalBranchNames
 	switch {
-	case args.syncAllBranches.Enabled() && repo.UnvalidatedConfig.NormalConfig.Detached.IsTrue():
+	case args.syncAllBranches.Enabled() && repo.UnvalidatedConfig.NormalConfig.Detached.ShouldWorkDetached():
 		branchNamesToSync = localBranches.Remove(perennialAndMain...)
 	case args.syncAllBranches.Enabled():
 		branchNamesToSync = localBranches
@@ -379,7 +379,7 @@ func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) 
 	}
 	var shouldPushTags bool
 	switch {
-	case validatedConfig.NormalConfig.SyncTags.IsFalse():
+	case !validatedConfig.NormalConfig.SyncTags.ShouldSyncTags():
 		shouldPushTags = false
 	case args.syncAllBranches.Enabled():
 		shouldPushTags = true

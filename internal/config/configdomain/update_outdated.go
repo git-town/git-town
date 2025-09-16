@@ -2,7 +2,7 @@ package configdomain
 
 type UpdateOutdatedSettings bool
 
-func (self UpdateOutdatedSettings) IsTrue() bool {
+func (self UpdateOutdatedSettings) ShouldUpdateOutdatedSettings() bool {
 	return bool(self)
 }
 
