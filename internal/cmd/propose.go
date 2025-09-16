@@ -196,7 +196,9 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (data p
 	if err != nil {
 		return data, false, err
 	}
-	fmt.Println("11111111111111111111111111111111111111111111111111111111111111111111111111", preFetchBranchSnapshot.Active)
+	if preFetchBranchSnapshot.DetachedHead {
+		return data, false, errors.New(messages.ProposeDetached)
+	}
 	initialBranch, hasInitialBranch := preFetchBranchSnapshot.Active.Get()
 	if !hasInitialBranch {
 		return data, false, errors.New(messages.CurrentBranchCannotDetermine)

@@ -14,12 +14,9 @@ Feature: Cannot create proposals in detached mode
     And I ran "git checkout HEAD^"
     When I run "git-town propose"
 
-  @debug @this
   Scenario: result
-    Then Git Town runs the commands
-      | BRANCH | COMMAND                  |
-      | branch | git fetch --prune --tags |
+    Then Git Town runs no commands
     And Git Town prints the error:
       """
-      cannot propose contribution branches
+      cannot propose in detached head state
       """
