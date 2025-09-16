@@ -162,20 +162,22 @@ func executeSync(args executeSyncArgs) error {
 	}
 
 	connector, hasConnector := data.connector.Get()
-	if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
-		if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI && hasConnector {
-			BranchProposalsProgram(
-				data.branchesToSync,
-				BranchProposalsProgramArgs{
-					Program: runProgram,
-					ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
-						Connector:                proposalFinder,
-						CurrentBranch:            data.initialBranch,
-						Lineage:                  data.config.NormalConfig.Lineage,
-						MainAndPerennialBranches: data.config.MainAndPerennials(),
+	if hasConnector {
+		if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
+			if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
+				BranchProposalsProgram(
+					data.branchesToSync,
+					BranchProposalsProgramArgs{
+						Program: runProgram,
+						ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
+							Connector:                proposalFinder,
+							CurrentBranch:            data.initialBranch,
+							Lineage:                  data.config.NormalConfig.Lineage,
+							MainAndPerennialBranches: data.config.MainAndPerennials(),
+						},
 					},
-				},
-			)
+				)
+			}
 		}
 	}
 
