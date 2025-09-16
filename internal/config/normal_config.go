@@ -76,10 +76,6 @@ func (self *NormalConfig) DevURL(querier subshelldomain.Querier) Option[giturl.P
 	return self.RemoteURL(querier, self.DevRemote)
 }
 
-func (self *NormalConfig) NoPushHook() configdomain.NoPushHook {
-	return self.PushHook.Negate()
-}
-
 // provides a new NormalConfig that contains data from the given PartialConfig,
 // backfilled with data from this NormalConfig where missing
 func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) NormalConfig {
