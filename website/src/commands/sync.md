@@ -37,8 +37,8 @@ If you don't sync because:
 - you don't want to pull in new changes from the main branch:
   [sync detached](sync.md#-d--detached--no-detached).
 - you don't want to increase pressure on your CI server:
-  [sync without pushing](sync.md#--no-push) or indicate in your commit messages
-  to CI to skip test runs
+  [sync without pushing](sync.md#--push--no-push) or indicate in your commit
+  messages to CI to skip test runs
   - [BitBucket](https://support.atlassian.com/bitbucket-cloud/kb/how-to-skip-triggering-an-automatic-pipeline-build-using-skip-ci-label)
   - [Gitea](https://docs.gitea.com/administration/config-cheat-sheet#actions-actions)
   - [GitHub](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/skip-workflow-runs)
