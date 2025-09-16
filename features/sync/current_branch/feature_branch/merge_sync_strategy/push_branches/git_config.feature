@@ -1,4 +1,4 @@
-Feature: syncing a stacked feature branch using --no-push
+Feature: disable pushing through Git metadata
 
   Background:
     Given a Git repo with origin
@@ -15,7 +15,8 @@ Feature: syncing a stacked feature branch using --no-push
       | child  | local    | local child commit   |
       |        | origin   | origin child commit  |
     And the current branch is "child"
-    When I run "git-town sync --no-push"
+    And Git setting "git-town.push-branches" is "false"
+    When I run "git-town sync"
 
   Scenario: result
     Then Git Town runs the commands

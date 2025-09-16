@@ -56,6 +56,7 @@ Feature: show the configuration when using an alternative config file
         feature sync strategy: merge
         perennial sync strategy: rebase
         prototype sync strategy: merge
+        push branches: yes
         sync tags: yes
         sync with upstream: yes
       """

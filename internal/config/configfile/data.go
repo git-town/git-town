@@ -68,6 +68,7 @@ type Sync struct {
 	FeatureStrategy   *string `toml:"feature-strategy"`
 	PerennialStrategy *string `toml:"perennial-strategy"`
 	PrototypeStrategy *string `toml:"prototype-strategy"`
+	PushBranches      *bool   `toml:"push-branches"`
 	PushHook          *bool   `toml:"push-hook"`
 	Tags              *bool   `toml:"tags"`
 	Upstream          *bool   `toml:"upstream"`

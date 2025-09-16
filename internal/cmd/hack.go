@@ -96,11 +96,12 @@ func hackCmd() *cobra.Command {
 				commit = true
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve: autoResolve,
-				Detached:    detached,
-				DryRun:      dryRun,
-				Stash:       stash,
-				Verbose:     verbose,
+				AutoResolve:  autoResolve,
+				Detached:     detached,
+				DryRun:       dryRun,
+				PushBranches: None[configdomain.PushBranches](),
+				Stash:        stash,
+				Verbose:      verbose,
 			})
 			return executeHack(hackArgs{
 				argv:          args,

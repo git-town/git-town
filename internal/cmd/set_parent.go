@@ -75,11 +75,12 @@ func setParentCommand() *cobra.Command {
 				return errVerbose
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve: autoResolve,
-				Detached:    Some(configdomain.Detached(true)),
-				DryRun:      None[configdomain.DryRun](),
-				Stash:       None[configdomain.Stash](),
-				Verbose:     verbose,
+				AutoResolve:  autoResolve,
+				Detached:     Some(configdomain.Detached(true)),
+				DryRun:       None[configdomain.DryRun](),
+				PushBranches: None[configdomain.PushBranches](),
+				Stash:        None[configdomain.Stash](),
+				Verbose:      verbose,
 			})
 			return executeSetParent(args, cliConfig)
 		},
