@@ -26,7 +26,6 @@ Feature: override the push-branches setting
           branch-2
       """
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
