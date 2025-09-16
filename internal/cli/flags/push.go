@@ -11,7 +11,7 @@ const pushLong = "push"
 // type-safe access to the CLI arguments of type configdomain.PushBranches
 func Push() (AddFunc, ReadPushFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.Flags().BoolP(pushLong, "", false, "push local branches")
+		cmd.Flags().Bool(pushLong, false, "push local branches")
 		defineNegatedFlag(cmd.Flags(), pushLong)
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.PushBranches], error) {
