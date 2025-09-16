@@ -30,7 +30,7 @@ type FrontendRunner struct {
 	PrintCommands    bool
 }
 
-type GetCurrentBranchFunc func(subshelldomain.Querier) (gitdomain.LocalBranchName, error)
+type GetCurrentBranchFunc func(subshelldomain.Querier) (Option[gitdomain.LocalBranchName], error)
 
 func FormatCommand(currentBranch gitdomain.LocalBranchName, printBranch bool, env []string, executable string, args ...string) string {
 	result := ""
@@ -67,9 +67,12 @@ func (self *FrontendRunner) execute(env []string, cmd string, args ...string) (e
 	self.CommandsCounter.Value.Increment()
 	var branchName gitdomain.LocalBranchName
 	if self.PrintBranchNames {
-		branchName, err = self.GetCurrentBranch(self.Backend)
+		currentBranchOpt, err := self.GetCurrentBranch(self.Backend)
 		if err != nil {
 			return err
+		}
+		if currentBranch, has := currentBranchOpt.Get(); has {
+			branchName = currentBranch
 		}
 	}
 	if self.PrintCommands {
