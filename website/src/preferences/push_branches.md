@@ -12,7 +12,7 @@ push-branches = true
 
 ## Git metadata
 
-To configure running the push hook manually in Git, run this command:
+To configure whether branches get pushed manually in Git, run this command:
 
 ```wrap
 git config [--global] git-town.push-branches <true|false>
