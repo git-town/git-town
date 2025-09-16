@@ -93,6 +93,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	offline, errOffline := gohacks.ParseBoolOpt[configdomain.Offline](snapshot[configdomain.KeyOffline], configdomain.KeyOffline.String())
 	perennialRegex, errPerennialRegex := configdomain.ParsePerennialRegex(snapshot[configdomain.KeyPerennialRegex])
 	proposalsShowLineage, errProposalsShowLineage := forgedomain.ParseProposalsShowLineage(snapshot[configdomain.KeyProposalsShowLineage])
+	pushBranches, errPushBranches := gohacks.ParseBoolOpt[configdomain.PushBranches](snapshot[configdomain.KeyPushBranches], configdomain.KeyPushBranches.String())
 	pushHook, errPushHook := gohacks.ParseBoolOpt[configdomain.PushHook](snapshot[configdomain.KeyPushHook], configdomain.KeyPushHook.String())
 	shareNewBranches, errShareNewBranches := configdomain.ParseShareNewBranches(snapshot[configdomain.KeyShareNewBranches], configdomain.KeyShareNewBranches)
 	shipDeleteTrackingBranch, errShipDeleteTrackingBranch := gohacks.ParseBoolOpt[configdomain.ShipDeleteTrackingBranch](snapshot[configdomain.KeyShipDeleteTrackingBranch], configdomain.KeyShipDeleteTrackingBranch.String())
@@ -120,6 +121,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		errOffline,
 		errPerennialRegex,
 		errProposalsShowLineage,
+		errPushBranches,
 		errPushHook,
 		errShareNewBranches,
 		errShipDeleteTrackingBranch,
@@ -161,6 +163,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		PerennialBranches:        gitdomain.ParseLocalBranchNames(snapshot[configdomain.KeyPerennialBranches]),
 		PerennialRegex:           perennialRegex,
 		ProposalsShowLineage:     proposalsShowLineage,
+		PushBranches:             pushBranches,
 		PushHook:                 pushHook,
 		ShareNewBranches:         shareNewBranches,
 		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,

@@ -54,6 +54,7 @@ type NormalConfig struct {
 	PerennialBranches        gitdomain.LocalBranchNames
 	PerennialRegex           Option[configdomain.PerennialRegex]
 	ProposalsShowLineage     forgedomain.ProposalsShowLineage
+	PushBranches             configdomain.PushBranches
 	PushHook                 configdomain.PushHook
 	ShareNewBranches         configdomain.ShareNewBranches
 	ShipDeleteTrackingBranch configdomain.ShipDeleteTrackingBranch
@@ -108,6 +109,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		PerennialBranches:        other.PerennialBranches.AppendAllMissing(self.PerennialBranches),
 		PerennialRegex:           other.PerennialRegex.Or(self.PerennialRegex),
 		ProposalsShowLineage:     other.ProposalsShowLineage.GetOr(self.ProposalsShowLineage),
+		PushBranches:             other.PushBranches.GetOr(self.PushBranches),
 		PushHook:                 other.PushHook.GetOr(self.PushHook),
 		ShareNewBranches:         other.ShareNewBranches.GetOr(self.ShareNewBranches),
 		ShipDeleteTrackingBranch: other.ShipDeleteTrackingBranch.GetOr(self.ShipDeleteTrackingBranch),
@@ -251,6 +253,7 @@ func DefaultNormalConfig() NormalConfig {
 		PerennialBranches:        gitdomain.LocalBranchNames{},
 		PerennialRegex:           None[configdomain.PerennialRegex](),
 		ProposalsShowLineage:     forgedomain.ProposalsShowLineageNone,
+		PushBranches:             true,
 		PushHook:                 true,
 		ShareNewBranches:         configdomain.ShareNewBranchesNone,
 		ShipDeleteTrackingBranch: true,
@@ -294,6 +297,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		PerennialBranches:        partial.PerennialBranches,
 		PerennialRegex:           partial.PerennialRegex,
 		ProposalsShowLineage:     partial.ProposalsShowLineage.GetOr(defaults.ProposalsShowLineage),
+		PushBranches:             partial.PushBranches.GetOr(defaults.PushBranches),
 		PushHook:                 partial.PushHook.GetOr(defaults.PushHook),
 		ShareNewBranches:         partial.ShareNewBranches.GetOr(defaults.ShareNewBranches),
 		ShipDeleteTrackingBranch: partial.ShipDeleteTrackingBranch.GetOr(defaults.ShipDeleteTrackingBranch),

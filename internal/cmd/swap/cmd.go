@@ -80,11 +80,12 @@ func Cmd() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve: autoResolve,
-				Detached:    Some(configdomain.Detached(true)),
-				DryRun:      dryRun,
-				Stash:       None[configdomain.Stash](),
-				Verbose:     verbose,
+				AutoResolve:  autoResolve,
+				Detached:     Some(configdomain.Detached(true)),
+				DryRun:       dryRun,
+				PushBranches: None[configdomain.PushBranches](),
+				Stash:        None[configdomain.Stash](),
+				Verbose:      verbose,
 			})
 			return executeSwap(args, cliConfig)
 		},
@@ -377,6 +378,17 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 			parent:      data.parentBranch,
 			program:     prog,
 		})
+	}
+	connector, hasConnector := data.connector.Get()
+	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI && hasConnector {
+		if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
+			swapUpdateProposalStackLineagesProgram(prog, forge.ProposalStackLineageArgs{
+				Connector:                proposalFinder,
+				CurrentBranch:            data.currentBranchName,
+				Lineage:                  data.config.NormalConfig.Lineage,
+				MainAndPerennialBranches: data.config.MainAndPerennials(),
+			})
+		}
 	}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.config.NormalConfig.DryRun,

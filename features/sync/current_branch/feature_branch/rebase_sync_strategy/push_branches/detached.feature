@@ -2,7 +2,6 @@ Feature: detached syncing a stacked feature branch using --no-push
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
@@ -16,6 +15,7 @@ Feature: detached syncing a stacked feature branch using --no-push
       | beta   | local    | local beta commit   |
       |        | origin   | origin beta commit  |
     And the current branch is "beta"
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town sync --no-push --detached"
 
   Scenario: result

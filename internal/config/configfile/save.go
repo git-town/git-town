@@ -90,6 +90,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	syncFeatureStrategy, hasSyncFeatureStrategy := data.SyncFeatureStrategy.Get()
 	syncPerennialStrategy, hasSyncPerennialStrategy := data.SyncPerennialStrategy.Get()
 	syncPrototypeStrategy, hasSyncPrototypeStrategy := data.SyncPrototypeStrategy.Get()
+	pushBranches, hasPushBranches := data.PushBranches.Get()
 	pushHook, hasPushHook := data.PushHook.Get()
 	syncTags, hasSyncTags := data.SyncTags.Get()
 	syncUpstream, hasSyncUpstream := data.SyncUpstream.Get()
@@ -106,6 +107,9 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		}
 		if hasSyncPrototypeStrategy {
 			result.WriteString(fmt.Sprintf("prototype-strategy = %q\n", syncPrototypeStrategy))
+		}
+		if hasPushBranches {
+			result.WriteString(fmt.Sprintf("push-branches = %t\n", pushBranches))
 		}
 		if hasPushHook {
 			result.WriteString(fmt.Sprintf("push-hook = %t\n", pushHook))

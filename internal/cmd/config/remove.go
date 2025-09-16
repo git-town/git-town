@@ -31,11 +31,12 @@ func removeConfigCommand() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve: None[configdomain.AutoResolve](),
-				Detached:    None[configdomain.Detached](),
-				DryRun:      None[configdomain.DryRun](),
-				Stash:       None[configdomain.Stash](),
-				Verbose:     verbose,
+				AutoResolve:  None[configdomain.AutoResolve](),
+				Detached:     None[configdomain.Detached](),
+				DryRun:       None[configdomain.DryRun](),
+				PushBranches: None[configdomain.PushBranches](),
+				Stash:        None[configdomain.Stash](),
+				Verbose:      verbose,
 			})
 			return executeRemoveConfig(cliConfig)
 		},
