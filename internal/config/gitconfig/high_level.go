@@ -122,6 +122,10 @@ func RemovePerennialRegex(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyPerennialRegex)
 }
 
+func RemovePushBranches(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyPushBranches)
+}
+
 func RemovePushHook(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyPushHook)
 }
@@ -263,6 +267,10 @@ func SetPerennialRegex(runner subshelldomain.Runner, value configdomain.Perennia
 	return SetConfigValue(runner, scope, configdomain.KeyPerennialRegex, value.String())
 }
 
+func SetPushBranches(runner subshelldomain.Runner, value configdomain.PushBranches, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyPushBranches, strconv.FormatBool(bool(value)))
+}
+
 func SetPushHook(runner subshelldomain.Runner, value configdomain.PushHook, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyPushHook, strconv.FormatBool(bool(value)))
 }
@@ -272,7 +280,7 @@ func SetShareNewBranches(runner subshelldomain.Runner, value configdomain.ShareN
 }
 
 func SetShipDeleteTrackingBranch(runner subshelldomain.Runner, value configdomain.ShipDeleteTrackingBranch, scope configdomain.ConfigScope) error {
-	return SetConfigValue(runner, scope, configdomain.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.IsTrue()))
+	return SetConfigValue(runner, scope, configdomain.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.ShouldDeleteTrackingBranch()))
 }
 
 func SetShipStrategy(runner subshelldomain.Runner, value configdomain.ShipStrategy, scope configdomain.ConfigScope) error {
@@ -300,7 +308,7 @@ func SetSyncTags(runner subshelldomain.Runner, value configdomain.SyncTags, scop
 }
 
 func SetSyncUpstream(runner subshelldomain.Runner, value configdomain.SyncUpstream, scope configdomain.ConfigScope) error {
-	return SetConfigValue(runner, scope, configdomain.KeySyncUpstream, strconv.FormatBool(value.IsTrue()))
+	return SetConfigValue(runner, scope, configdomain.KeySyncUpstream, strconv.FormatBool(value.ShouldSyncUpstream()))
 }
 
 func SetUnknownBranchType(runner subshelldomain.Runner, value configdomain.UnknownBranchType, scope configdomain.ConfigScope) error {

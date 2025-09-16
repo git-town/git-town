@@ -153,12 +153,12 @@ func localBranchProgram(args localBranchProgramArgs) {
 			trackingBranch:       args.branchInfo.RemoteName,
 		})
 	}
-	if args.PushBranches.IsTrue() && args.Remotes.HasRemote(args.Config.NormalConfig.DevRemote) && args.Config.NormalConfig.Offline.IsOnline() && branchType.ShouldPush(args.localName == args.InitialBranch) {
+	if args.PushBranches.ShouldPush() && args.Remotes.HasRemote(args.Config.NormalConfig.DevRemote) && args.Config.NormalConfig.Offline.IsOnline() && branchType.ShouldPush(args.localName == args.InitialBranch) {
 		isMainBranch := branchType == configdomain.BranchTypeMainBranch
 		switch {
 		case !args.branchInfo.HasTrackingBranch():
 			args.Program.Value.Add(&opcodes.BranchTrackingCreate{Branch: args.localName})
-		case isMainBranch && args.Remotes.HasUpstream() && args.Config.NormalConfig.SyncUpstream.IsTrue():
+		case isMainBranch && args.Remotes.HasUpstream() && args.Config.NormalConfig.SyncUpstream.ShouldSyncUpstream():
 			args.Program.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: args.localName})
 		case isMainOrPerennialBranch && !shouldPushPerennialBranch(args.branchInfo.SyncStatus):
 			// don't push if its a perennial branch that doesn't need pushing

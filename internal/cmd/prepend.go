@@ -75,6 +75,7 @@ func prependCommand() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addProposeFlag, readProposeFlag := flags.Propose()
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
+	addPushFlag, readPushFlag := flags.Push()
 	addStashFlag, readStashFlag := flags.Stash()
 	addTitleFlag, readTitleFlag := flags.ProposalTitle()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
@@ -94,24 +95,26 @@ func prependCommand() *cobra.Command {
 			dryRun, errDryRun := readDryRunFlag(cmd)
 			propose, errPropose := readProposeFlag(cmd)
 			prototype, errPrototype := readPrototypeFlag(cmd)
+			push, errPush := readPushFlag(cmd)
 			stash, errStash := readStashFlag(cmd)
 			title, errTitle := readTitleFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errAutoResolve, errBeam, errBodyText, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errStash, errTitle, errVerbose); err != nil {
+			if err := cmp.Or(errAutoResolve, errBeam, errBodyText, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errPush, errStash, errTitle, errVerbose); err != nil {
 				return err
 			}
 			if commitMessage.IsSome() {
 				commit = true
 			}
-			if propose.IsTrue() && beam.IsFalse() {
+			if propose.ShouldPropose() && !beam.ShouldBeam() {
 				commit = true
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve: autoResolve,
-				Detached:    detached,
-				DryRun:      dryRun,
-				Stash:       stash,
-				Verbose:     verbose,
+				AutoResolve:  autoResolve,
+				Detached:     detached,
+				DryRun:       dryRun,
+				PushBranches: push,
+				Stash:        stash,
+				Verbose:      verbose,
 			})
 			return executePrepend(prependArgs{
 				argv:          args,
@@ -135,6 +138,7 @@ func prependCommand() *cobra.Command {
 	addDryRunFlag(&cmd)
 	addProposeFlag(&cmd)
 	addPrototypeFlag(&cmd)
+	addPushFlag(&cmd)
 	addStashFlag(&cmd)
 	addTitleFlag(&cmd)
 	addVerboseFlag(&cmd)
@@ -267,7 +271,7 @@ func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (data p
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
-		Fetch:                 !repoStatus.OpenChanges && args.beam.IsFalse() && args.commit.IsFalse(),
+		Fetch:                 !repoStatus.OpenChanges && !args.beam.ShouldBeam() && !args.commit.ShouldCommit(),
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
@@ -390,7 +394,7 @@ func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (data p
 
 func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
-	if !data.hasOpenChanges && data.beam.IsFalse() && data.commit.IsFalse() {
+	if !data.hasOpenChanges && !data.beam.ShouldBeam() && !data.commit.ShouldCommit() {
 		data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages, repo.Backend)
 		branchesToDelete := set.New[gitdomain.LocalBranchName]()
 		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
@@ -402,7 +406,7 @@ func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages
 			PrefetchBranchInfos: data.preFetchBranchInfos,
 			Program:             prog,
 			Prune:               false,
-			PushBranches:        true,
+			PushBranches:        data.config.NormalConfig.PushBranches,
 			Remotes:             data.remotes,
 		})
 	}
@@ -470,7 +474,7 @@ func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages
 			DryRun:                   repo.UnvalidatedConfig.NormalConfig.DryRun,
 			InitialStashSize:         data.stashSize,
 			RunInGitRoot:             true,
-			StashOpenChanges:         data.hasOpenChanges && data.config.NormalConfig.Stash.IsTrue(),
+			StashOpenChanges:         data.hasOpenChanges && data.config.NormalConfig.Stash.ShouldStash(),
 			PreviousBranchCandidates: previousBranchCandidates,
 		})
 	}

@@ -56,7 +56,7 @@ func Cmd() *cobra.Command {
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
-	addNoPushFlag, readNoPushFlag := flags.NoPush()
+	addPushFlag, readPushFlag := flags.Push()
 	addPruneFlag, readPruneFlag := flags.Prune()
 	addStackFlag, readStackFlag := flags.Stack("sync the stack that the current branch belongs to")
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
@@ -71,7 +71,7 @@ func Cmd() *cobra.Command {
 			detached, errDetached := readDetachedFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
 			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
-			pushBranches, errPushBranches := readNoPushFlag(cmd)
+			pushBranches, errPushBranches := readPushFlag(cmd)
 			prune, errPrune := readPruneFlag(cmd)
 			stack, errStack := readStackFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
@@ -79,16 +79,16 @@ func Cmd() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve: autoResolve,
-				Detached:    detached,
-				DryRun:      dryRun,
-				Stash:       None[configdomain.Stash](),
-				Verbose:     verbose,
+				AutoResolve:  autoResolve,
+				Detached:     detached,
+				DryRun:       dryRun,
+				PushBranches: pushBranches,
+				Stash:        None[configdomain.Stash](),
+				Verbose:      verbose,
 			})
 			return executeSync(executeSyncArgs{
 				cliConfig:       cliConfig,
 				prune:           prune,
-				pushBranches:    pushBranches,
 				stack:           stack,
 				syncAllBranches: allBranches,
 			})
@@ -98,7 +98,7 @@ func Cmd() *cobra.Command {
 	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
 	addAutoResolveFlag(&cmd)
-	addNoPushFlag(&cmd)
+	addPushFlag(&cmd)
 	addPruneFlag(&cmd)
 	addStackFlag(&cmd)
 	addVerboseFlag(&cmd)
@@ -108,7 +108,6 @@ func Cmd() *cobra.Command {
 type executeSyncArgs struct {
 	cliConfig       configdomain.PartialConfig
 	prune           configdomain.Prune
-	pushBranches    configdomain.PushBranches
 	stack           configdomain.FullStack
 	syncAllBranches configdomain.AllBranches
 }
@@ -146,7 +145,7 @@ func executeSync(args executeSyncArgs) error {
 		PrefetchBranchInfos: data.prefetchBranchesSnapshot.Branches,
 		Program:             runProgram,
 		Prune:               args.prune,
-		PushBranches:        args.pushBranches,
+		PushBranches:        data.config.NormalConfig.PushBranches,
 		Remotes:             data.remotes,
 	})
 	previousbranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
@@ -163,20 +162,23 @@ func executeSync(args executeSyncArgs) error {
 	}
 
 	connector, hasConnector := data.connector.Get()
-	if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
-		if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI && hasConnector {
-			BranchProposalsProgram(
-				data.branchesToSync,
-				BranchProposalsProgramArgs{
-					Program: runProgram,
-					ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
-						Connector:                proposalFinder,
-						CurrentBranch:            data.initialBranch,
-						Lineage:                  data.config.NormalConfig.Lineage,
-						MainAndPerennialBranches: data.config.MainAndPerennials(),
+	if hasConnector {
+		if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
+			if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
+				BranchProposalsProgram(
+					BranchProposalsProgramArgs{
+						Current:   data.initialBranch,
+						FullStack: args.stack,
+						Program:   runProgram,
+						ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
+							Connector:                proposalFinder,
+							CurrentBranch:            data.initialBranch,
+							Lineage:                  data.config.NormalConfig.Lineage,
+							MainAndPerennialBranches: data.config.MainAndPerennials(),
+						},
 					},
-				},
-			)
+				)
+			}
 		}
 	}
 
@@ -347,7 +349,7 @@ func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) 
 	perennialAndMain := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
 	var branchNamesToSync gitdomain.LocalBranchNames
 	switch {
-	case args.syncAllBranches.Enabled() && repo.UnvalidatedConfig.NormalConfig.Detached.IsTrue():
+	case args.syncAllBranches.Enabled() && repo.UnvalidatedConfig.NormalConfig.Detached.ShouldWorkDetached():
 		branchNamesToSync = localBranches.Remove(perennialAndMain...)
 	case args.syncAllBranches.Enabled():
 		branchNamesToSync = localBranches
@@ -377,7 +379,7 @@ func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) 
 	}
 	var shouldPushTags bool
 	switch {
-	case validatedConfig.NormalConfig.SyncTags.IsFalse():
+	case !validatedConfig.NormalConfig.SyncTags.ShouldSyncTags():
 		shouldPushTags = false
 	case args.syncAllBranches.Enabled():
 		shouldPushTags = true

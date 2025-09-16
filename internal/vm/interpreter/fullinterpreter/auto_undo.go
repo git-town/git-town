@@ -23,7 +23,7 @@ func autoUndo(opcode shared.AutoUndoable, runErr error, args ExecuteArgs) error 
 		FinalMessages:  args.FinalMessages,
 		Git:            args.Git,
 		HasOpenChanges: false,
-		NoPushHook:     args.Config.NormalConfig.NoPushHook(),
+		PushHook:       args.Config.NormalConfig.PushHook,
 		RunState:       args.RunState,
 	})
 	if err != nil {

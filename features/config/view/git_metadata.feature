@@ -70,6 +70,7 @@ Feature: display configuration from Git metadata
         feature sync strategy: merge
         perennial sync strategy: rebase
         prototype sync strategy: merge
+        push branches: yes
         sync tags: yes
         sync with upstream: yes
       """
@@ -131,6 +132,7 @@ Feature: display configuration from Git metadata
         feature sync strategy: merge
         perennial sync strategy: rebase
         prototype sync strategy: merge
+        push branches: yes
         sync tags: yes
         sync with upstream: yes
         auto-resolve phantom conflicts: yes

@@ -10,6 +10,7 @@ Feature: change existing information in Git metadata
     And the main branch is "main"
     And local Git setting "git-town.new-branch-type" is "parked"
     And local Git setting "git-town.share-new-branches" is "no"
+    And local Git setting "git-town.push-branches" is "false"
     And local Git setting "git-town.push-hook" is "false"
     And local Git setting "git-town.sync-tags" is "false"
     And local Git setting "git-town.detached" is "false"
@@ -40,6 +41,7 @@ Feature: change existing information in Git metadata
       | detached                    | up enter               |
       | stash                       | down enter             |
       | share-new-branches          | down enter             |
+      | push branches               | down enter             |
       | push hook                   | down enter             |
       | ship strategy               | down down enter        |
       | ship delete tracking branch | down enter             |
@@ -77,6 +79,7 @@ Feature: change existing information in Git metadata
       | git config git-town.feature-regex feat                   |
       | git config git-town.contribution-regex cont              |
       | git config git-town.observed-regex obs                   |
+      | git config git-town.push-branches true                   |
       | git config git-town.push-hook true                       |
       | git config git-town.share-new-branches push              |
       | git config git-town.ship-strategy fast-forward           |
@@ -117,6 +120,7 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.observed-regex" is now "obs"
     And local Git setting "git-town.unknown-branch-type" is now "observed"
     And local Git setting "git-town.share-new-branches" is now "push"
+    And local Git setting "git-town.push-branches" is now "true"
     And local Git setting "git-town.push-hook" is now "true"
     And local Git setting "git-town.ship-strategy" is now "fast-forward"
     And local Git setting "git-town.ship-delete-tracking-branch" is now "true"
@@ -152,6 +156,7 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.observed-regex" now doesn't exist
     And local Git setting "git-town.unknown-branch-type" now doesn't exist
     And local Git setting "git-town.share-new-branches" is now "no"
+    And local Git setting "git-town.push-branches" is now "false"
     And local Git setting "git-town.push-hook" is now "false"
     And local Git setting "git-town.ship-strategy" now doesn't exist
     And local Git setting "git-town.ship-delete-tracking-branch" is now "false"

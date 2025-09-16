@@ -374,9 +374,9 @@ func (self *Commands) CreateBranch(runner subshelldomain.Runner, name gitdomain.
 	return runner.Run("git", "branch", name.String(), parent.String())
 }
 
-func (self *Commands) CreateTrackingBranch(runner subshelldomain.Runner, branch gitdomain.LocalBranchName, remote gitdomain.Remote, noPushHook configdomain.NoPushHook) error {
+func (self *Commands) CreateTrackingBranch(runner subshelldomain.Runner, branch gitdomain.LocalBranchName, remote gitdomain.Remote, pushHook configdomain.PushHook) error {
 	args := []string{"push"}
-	if noPushHook {
+	if !pushHook {
 		args = append(args, "--no-verify")
 	}
 	args = append(args, "-u", remote.String())
@@ -468,7 +468,7 @@ func (self *Commands) DropMostRecentStash(runner subshelldomain.Runner) error {
 }
 
 func (self *Commands) Fetch(runner subshelldomain.Runner, syncTags configdomain.SyncTags) error {
-	if syncTags.IsTrue() {
+	if syncTags.ShouldSyncTags() {
 		return runner.Run("git", "fetch", "--prune", "--tags")
 	}
 	return runner.Run("git", "fetch", "--prune", "--no-tags")
@@ -509,12 +509,12 @@ func (self *Commands) FirstExistingBranch(runner subshelldomain.Runner, branches
 	return None[gitdomain.LocalBranchName]()
 }
 
-func (self *Commands) ForcePushBranchSafely(runner subshelldomain.Runner, noPushHook configdomain.NoPushHook, forceIfIncludes bool) error {
+func (self *Commands) ForcePushBranchSafely(runner subshelldomain.Runner, pushHook configdomain.PushHook, forceIfIncludes bool) error {
 	args := []string{"push", "--force-with-lease"}
 	if forceIfIncludes {
 		args = append(args, "--force-if-includes")
 	}
-	if noPushHook {
+	if !pushHook {
 		args = append(args, "--no-verify")
 	}
 	return runner.Run("git", args...)
@@ -656,17 +656,17 @@ func (self *Commands) Pull(runner subshelldomain.Runner) error {
 }
 
 // PushCurrentBranch pushes the current branch to its tracking branch.
-func (self *Commands) PushCurrentBranch(runner subshelldomain.Runner, noPushHook configdomain.NoPushHook) error {
+func (self *Commands) PushCurrentBranch(runner subshelldomain.Runner, pushHook configdomain.PushHook) error {
 	args := []string{"push"}
-	if noPushHook {
+	if !pushHook {
 		args = append(args, "--no-verify")
 	}
 	return runner.Run("git", args...)
 }
 
-func (self *Commands) PushLocalBranch(runner subshelldomain.Runner, localSHA gitdomain.SHA, branch gitdomain.LocalBranchName, remote gitdomain.Remote, noPushHook configdomain.NoPushHook) error {
+func (self *Commands) PushLocalBranch(runner subshelldomain.Runner, localSHA gitdomain.SHA, branch gitdomain.LocalBranchName, remote gitdomain.Remote, pushHook configdomain.PushHook) error {
 	args := []string{"push"}
-	if noPushHook {
+	if !pushHook {
 		args = append(args, "--no-verify")
 	}
 	args = append(args, remote.String(), localSHA.String()+":refs/heads/"+branch.String())
@@ -674,9 +674,9 @@ func (self *Commands) PushLocalBranch(runner subshelldomain.Runner, localSHA git
 }
 
 // PushTags pushes new the Git tags to origin.
-func (self *Commands) PushTags(runner subshelldomain.Runner, noPushHook configdomain.NoPushHook) error {
+func (self *Commands) PushTags(runner subshelldomain.Runner, pushHook configdomain.PushHook) error {
 	args := []string{"push", "--tags"}
-	if noPushHook {
+	if !pushHook {
 		args = append(args, "--no-verify")
 	}
 	return runner.Run("git", args...)

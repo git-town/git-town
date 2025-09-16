@@ -34,6 +34,7 @@ const (
 	perennialBranches        = "GIT_TOWN_PERENNIAL_BRANCHES"
 	perennialRegex           = "GIT_TOWN_PERENNIAL_REGEX"
 	proposalsShowLineage     = "GIT_TOWN_PROPOSALS_SHOW_LINEAGE"
+	pushBranches             = "GIT_TOWN_PUSH_BRANCHES"
 	pushHook                 = "GIT_TOWN_PUSH_HOOK"
 	shareNewBranches         = "GIT_TOWN_SHARE_NEW_BRANCHES"
 	shipDeleteTrackingBranch = "GIT_TOWN_SHIP_DELETE_TRACKING_BRANCH"
@@ -62,6 +63,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	offline, errOffline := gohacks.ParseBoolOpt[configdomain.Offline](env.Get(offline), offline)
 	perennialRegex, errPerennialRegex := configdomain.ParsePerennialRegex(env.Get(perennialRegex))
 	proposalsShowLineage, errProposalsShowLineage := forgedomain.ParseProposalsShowLineage(env.Get(proposalsShowLineage))
+	pushBranches, errPushBranches := gohacks.ParseBoolOpt[configdomain.PushBranches](env.Get(pushBranches), pushBranches)
 	pushHook, errPushHook := gohacks.ParseBoolOpt[configdomain.PushHook](env.Get(pushHook), pushHook)
 	shareNewBranches, errShareNewBranches := configdomain.ParseShareNewBranches(env.Get(shareNewBranches), shareNewBranches)
 	shipDeleteTrackingBranch, errShipDeleteTrackingBranch := gohacks.ParseBoolOpt[configdomain.ShipDeleteTrackingBranch](env.Get(shipDeleteTrackingBranch), shipDeleteTrackingBranch)
@@ -88,6 +90,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errOffline,
 		errPerennialRegex,
 		errProposalsShowLineage,
+		errPushBranches,
 		errPushHook,
 		errShareNewBranches,
 		errShipDeleteTrackingBranch,
@@ -130,6 +133,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		PerennialBranches:        gitdomain.ParseLocalBranchNames(env.Get(perennialBranches)),
 		PerennialRegex:           perennialRegex,
 		ProposalsShowLineage:     proposalsShowLineage,
+		PushBranches:             pushBranches,
 		PushHook:                 pushHook,
 		ShareNewBranches:         shareNewBranches,
 		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,

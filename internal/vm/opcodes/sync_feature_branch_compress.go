@@ -28,7 +28,7 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 			return err
 		}
 		parentIsPerennial := args.Config.Value.IsMainOrPerennialBranch(parentLocalName)
-		skipParent := args.Config.Value.NormalConfig.Detached.IsTrue() && parentIsPerennial
+		skipParent := args.Config.Value.NormalConfig.Detached.ShouldWorkDetached() && parentIsPerennial
 		if !inSyncWithParent && !skipParent {
 			opcodes = append(opcodes, &SyncFeatureBranchMerge{
 				Branch:            self.CurrentBranch,
@@ -67,7 +67,7 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 				Message:        commitMessage,
 			},
 		)
-		if self.Offline.IsOnline() && self.TrackingBranch.IsSome() && self.PushBranches.IsTrue() {
+		if self.Offline.IsOnline() && self.TrackingBranch.IsSome() && self.PushBranches.ShouldPush() {
 			opcodes = append(opcodes, &PushCurrentBranchForceIfNeeded{CurrentBranch: self.CurrentBranch, ForceIfIncludes: false})
 		}
 	}

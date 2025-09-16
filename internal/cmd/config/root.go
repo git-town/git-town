@@ -32,11 +32,12 @@ func RootCmd() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve: None[configdomain.AutoResolve](),
-				Detached:    None[configdomain.Detached](),
-				DryRun:      None[configdomain.DryRun](),
-				Stash:       None[configdomain.Stash](),
-				Verbose:     verbose,
+				AutoResolve:  None[configdomain.AutoResolve](),
+				Detached:     None[configdomain.Detached](),
+				DryRun:       None[configdomain.DryRun](),
+				PushBranches: None[configdomain.PushBranches](),
+				Stash:        None[configdomain.Stash](),
+				Verbose:      verbose,
 			})
 			return executeDisplayConfig(cliConfig)
 		},
@@ -83,7 +84,7 @@ func printConfig(config config.UnvalidatedConfig) {
 	print.Header("Create")
 	print.Entry("new branch type", format.OptionalStringerSetting(config.NormalConfig.NewBranchType))
 	print.Entry("share new branches", config.NormalConfig.ShareNewBranches.String())
-	print.Entry("stash uncommitted changes", format.Bool(config.NormalConfig.Stash.IsTrue()))
+	print.Entry("stash uncommitted changes", format.Bool(config.NormalConfig.Stash.ShouldStash()))
 	fmt.Println()
 	print.Header("Hosting")
 	print.Entry("development remote", config.NormalConfig.DevRemote.String())
@@ -99,18 +100,19 @@ func printConfig(config config.UnvalidatedConfig) {
 	print.Entry("GitLab token", format.OptionalStringerSetting(config.NormalConfig.GitLabToken))
 	fmt.Println()
 	print.Header("Ship")
-	print.Entry("delete tracking branch", format.Bool(config.NormalConfig.ShipDeleteTrackingBranch.IsTrue()))
+	print.Entry("delete tracking branch", format.Bool(config.NormalConfig.ShipDeleteTrackingBranch.ShouldDeleteTrackingBranch()))
 	print.Entry("ship strategy", config.NormalConfig.ShipStrategy.String())
 	fmt.Println()
 	print.Header("Sync")
 	print.Entry("auto-resolve phantom conflicts", format.Bool(config.NormalConfig.AutoResolve.ShouldAutoResolve()))
-	print.Entry("run detached", format.Bool(config.NormalConfig.Detached.IsTrue()))
-	print.Entry("run pre-push hook", format.Bool(config.NormalConfig.PushHook.IsTrue()))
+	print.Entry("run detached", format.Bool(config.NormalConfig.Detached.ShouldWorkDetached()))
+	print.Entry("run pre-push hook", format.Bool(config.NormalConfig.PushHook.ShouldRunPushHook()))
 	print.Entry("feature sync strategy", config.NormalConfig.SyncFeatureStrategy.String())
 	print.Entry("perennial sync strategy", config.NormalConfig.SyncPerennialStrategy.String())
 	print.Entry("prototype sync strategy", config.NormalConfig.SyncPrototypeStrategy.String())
-	print.Entry("sync tags", format.Bool(config.NormalConfig.SyncTags.IsTrue()))
-	print.Entry("sync with upstream", format.Bool(config.NormalConfig.SyncUpstream.IsTrue()))
+	print.Entry("push branches", format.Bool(config.NormalConfig.PushBranches.ShouldPush()))
+	print.Entry("sync tags", format.Bool(config.NormalConfig.SyncTags.ShouldSyncTags()))
+	print.Entry("sync with upstream", format.Bool(config.NormalConfig.SyncUpstream.ShouldSyncUpstream()))
 	print.Entry("auto-resolve phantom conflicts", format.Bool(config.NormalConfig.AutoResolve.ShouldAutoResolve()))
 	fmt.Println()
 	if config.NormalConfig.Lineage.Len() > 0 {

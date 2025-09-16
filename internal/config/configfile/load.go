@@ -61,6 +61,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	var perennialBranches gitdomain.LocalBranchNames
 	var perennialRegex Option[configdomain.PerennialRegex]
 	var proposalsShowLineage Option[forgedomain.ProposalsShowLineage]
+	var pushBranches Option[configdomain.PushBranches]
 	var pushHook Option[configdomain.PushHook]
 	var shareNewBranches Option[configdomain.ShareNewBranches]
 	var shipDeleteTrackingBranch Option[configdomain.ShipDeleteTrackingBranch]
@@ -227,6 +228,9 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			syncPrototypeStrategy, err = configdomain.ParseSyncPrototypeStrategy(*data.Sync.PrototypeStrategy)
 			ec.Check(err)
 		}
+		if data.Sync.PushBranches != nil {
+			pushBranches = Some(configdomain.PushBranches(*data.Sync.PushBranches))
+		}
 		if data.Sync.PushHook != nil {
 			pushHook = Some(configdomain.PushHook(*data.Sync.PushHook))
 		}
@@ -267,6 +271,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		PerennialBranches:        perennialBranches,
 		PerennialRegex:           perennialRegex,
 		ProposalsShowLineage:     proposalsShowLineage,
+		PushBranches:             pushBranches,
 		PushHook:                 pushHook,
 		ShareNewBranches:         shareNewBranches,
 		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,
