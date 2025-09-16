@@ -32,7 +32,7 @@ func LoadSnapshot(backend subshelldomain.RunnerQuerier, scopeOpt Option[configdo
 		}
 		key, value, _ := strings.Cut(line, "\n")
 		configKey, hasConfigKey := configdomain.ParseKey(key).Get()
-		if updateOutdated.IsTrue() && hasScope {
+		if updateOutdated.ShouldUpdateOutdatedSettings() && hasScope {
 			newKey, keyIsDeprecated := configdomain.DeprecatedKeys[configKey]
 			if keyIsDeprecated {
 				UpdateDeprecatedSetting(backend, scope, configKey, newKey, value)

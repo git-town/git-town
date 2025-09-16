@@ -10,13 +10,6 @@ import (
 func TestShipDeleteTrackingBranch(t *testing.T) {
 	t.Parallel()
 
-	t.Run("IsTrue", func(t *testing.T) {
-		t.Parallel()
-		give := configdomain.ShipDeleteTrackingBranch(true)
-		have := give.IsTrue()
-		must.True(t, have)
-	})
-
 	t.Run("String", func(t *testing.T) {
 		t.Parallel()
 		give := configdomain.ShipDeleteTrackingBranch(true)
