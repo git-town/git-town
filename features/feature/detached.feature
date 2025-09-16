@@ -10,14 +10,13 @@ Feature: cannot make detached state a feature branch
       | branch | local    | commit 1 |
       |        |          | commit 2 |
     And the current branch is "branch"
-    # TODO: uncomment and fix the broken behavior
-    # And I ran "git checkout HEAD^"
+    And I ran "git checkout HEAD^"
     When I run "git-town feature"
 
   Scenario: result
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      branch "branch" is already a feature branch
+      cannot make detached head a feature branch
       """
     And the initial branches and lineage exist now

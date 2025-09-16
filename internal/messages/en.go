@@ -121,6 +121,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	DownNoParent                        = "branch %q has no parent"
 	DryRun                              = "In dry run mode. No commands will be run. When run in normal mode, the command output will appear beneath the command. Some commands will only be run if necessary. For example: 'git push' will run if and only if there are local commits not on origin."
 
+	FeatureDetachedHead          = "cannot make detached head a feature branch"
 	FeatureRegexPrompt           = "Feature regex: "
 	FeatureRegexResult           = "Feature regex: %s\n"
 	FileContentInvalidJSON       = "cannot parse JSON content of file %q: %w"
