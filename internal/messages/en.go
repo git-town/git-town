@@ -191,6 +191,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	NewBranchType = "New branch type:"
 
 	ObserveBranchIsLocal        = "branch %q is local only - branches you want to observe must have a remote branch because they are per definition other people's branches"
+	ObserveDetachedHead         = "cannot observed in detached head state"
 	ObservedBranchCannotPark    = "cannot park observed branches"
 	ObservedBranchCannotPropose = "cannot propose observed branches"
 	ObservedBranchCannotShip    = "cannot ship observed branches"
