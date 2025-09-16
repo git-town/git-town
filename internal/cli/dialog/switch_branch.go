@@ -128,7 +128,7 @@ func (self SwitchModel) View() string {
 			}
 			s.WriteString(color.Styled("  " + entry.Text))
 		}
-		if self.DisplayBranchTypes.IsTrue() && ShouldDisplayBranchType(entry.Data.Type) {
+		if self.DisplayBranchTypes.ShouldDisplayTypes() && ShouldDisplayBranchType(entry.Data.Type) {
 			s.WriteString("  ")
 			s.WriteString(colors.Faint().Styled("(" + entry.Data.Type.String() + ")"))
 		}
