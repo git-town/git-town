@@ -11,6 +11,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.observed-regex" is "other-.*"
     And local Git setting "git-town.dev-remote" is "fork"
     And local Git setting "git-town.share-new-branches" is "no"
+    And local Git setting "git-town.push-branches" is "true"
     And local Git setting "git-town.push-hook" is "true"
     And local Git setting "git-town.new-branch-type" is "prototype"
     And local Git setting "git-town.ship-strategy" is "squash-merge"
@@ -45,6 +46,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | detached                    | enter      |
       | stash                       | enter      |
       | share new branches          | enter      |
+      | push branches               | enter      |
       | push hook                   | enter      |
       | ship strategy               | enter      |
       | ship delete tracking branch | enter      |
@@ -62,6 +64,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | git config --unset git-town.perennial-branches          |
       | git config --unset git-town.perennial-regex             |
       | git config --unset git-town.share-new-branches          |
+      | git config --unset git-town.push-branches               |
       | git config --unset git-town.push-hook                   |
       | git config --unset git-town.ship-strategy               |
       | git config --unset git-town.ship-delete-tracking-branch |
@@ -85,6 +88,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.observed-regex" now doesn't exist
     And local Git setting "git-town.unknown-branch-type" now doesn't exist
     And local Git setting "git-town.share-new-branches" now doesn't exist
+    And local Git setting "git-town.push-branches" now doesn't exist
     And local Git setting "git-town.push-hook" now doesn't exist
     And local Git setting "git-town.new-branch-type" now doesn't exist
     And local Git setting "git-town.ship-strategy" now doesn't exist
@@ -115,6 +119,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       feature-strategy = "merge"
       perennial-strategy = "rebase"
       prototype-strategy = "merge"
+      push-branches = true
       push-hook = true
       tags = false
       upstream = true
@@ -131,6 +136,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.observed-regex" is now "other-.*"
     And local Git setting "git-town.unknown-branch-type" is now "observed"
     And local Git setting "git-town.share-new-branches" is now "no"
+    And local Git setting "git-town.push-branches" is now "true"
     And local Git setting "git-town.push-hook" is now "true"
     And local Git setting "git-town.ship-strategy" is now "squash-merge"
     And local Git setting "git-town.ship-delete-tracking-branch" is now "false"

@@ -158,6 +158,7 @@ EnterForgeData:
 	detached := None[configdomain.Detached]()
 	stash := None[configdomain.Stash]()
 	shareNewBranches := None[configdomain.ShareNewBranches]()
+	pushBranches := None[configdomain.PushBranches]()
 	pushHook := None[configdomain.PushHook]()
 	shipStrategy := None[configdomain.ShipStrategy]()
 	shipDeleteTrackingBranch := None[configdomain.ShipDeleteTrackingBranch]()
@@ -218,6 +219,10 @@ EnterForgeData:
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}
+		pushBranches, exit, err = enterPushBranches(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
 		pushHook, exit, err = enterPushHook(data)
 		if err != nil || exit {
 			return emptyResult, exit, err
@@ -264,6 +269,7 @@ EnterForgeData:
 		PerennialBranches:        perennialBranches,
 		PerennialRegex:           perennialRegex,
 		ProposalsShowLineage:     None[forgedomain.ProposalsShowLineage](), // TODO: populate this in the setup assistant once https://github.com/git-town/git-town/issues/3003 is shipped
+		PushBranches:             pushBranches,
 		PushHook:                 pushHook,
 		ShareNewBranches:         shareNewBranches,
 		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,
@@ -527,6 +533,17 @@ func enterPerennialRegex(data Data) (Option[configdomain.PerennialRegex], dialog
 		Global: data.Config.GitGlobal.PerennialRegex,
 		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.PerennialRegex,
+	})
+}
+
+func enterPushBranches(data Data) (Option[configdomain.PushBranches], dialogdomain.Exit, error) {
+	if data.Config.File.PushBranches.IsSome() {
+		return None[configdomain.PushBranches](), false, nil
+	}
+	return dialog.PushBranches(dialog.Args[configdomain.PushBranches]{
+		Global: data.Config.GitGlobal.PushBranches,
+		Inputs: data.Inputs,
+		Local:  data.Config.GitLocal.PushBranches,
 	})
 }
 

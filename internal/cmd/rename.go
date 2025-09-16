@@ -57,11 +57,12 @@ func renameCommand() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve: None[configdomain.AutoResolve](),
-				Detached:    Some(configdomain.Detached(true)),
-				DryRun:      dryRun,
-				Stash:       None[configdomain.Stash](),
-				Verbose:     verbose,
+				AutoResolve:  None[configdomain.AutoResolve](),
+				Detached:     Some(configdomain.Detached(true)),
+				DryRun:       dryRun,
+				PushBranches: None[configdomain.PushBranches](),
+				Stash:        None[configdomain.Stash](),
+				Verbose:      verbose,
 			})
 			return executeRename(args, cliConfig, force)
 		},

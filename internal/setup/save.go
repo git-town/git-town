@@ -113,6 +113,9 @@ func saveAllToFile(userInput UserInput, gitConfig configdomain.PartialConfig, ru
 	if gitConfig.ShareNewBranches.IsSome() {
 		_ = gitconfig.RemoveShareNewBranches(runner)
 	}
+	if gitConfig.PushBranches.IsSome() {
+		_ = gitconfig.RemovePushBranches(runner)
+	}
 	if gitConfig.PushHook.IsSome() {
 		_ = gitconfig.RemovePushHook(runner)
 	}
@@ -217,6 +220,11 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 	if configFile.ObservedRegex.IsNone() {
 		fc.Check(
 			saveObservedRegex(userInput.Data.ObservedRegex, existingGitConfig.ObservedRegex, frontend),
+		)
+	}
+	if configFile.PushBranches.IsNone() {
+		fc.Check(
+			savePushBranches(userInput.Data.PushBranches, existingGitConfig.PushBranches, frontend),
 		)
 	}
 	if configFile.PushHook.IsNone() {
@@ -478,6 +486,16 @@ func savePerennialRegex(valueToWriteToGit Option[configdomain.PerennialRegex], v
 	}
 	_ = gitconfig.RemovePerennialRegex(runner)
 	return nil
+}
+
+func savePushBranches(valueToWriteToGit Option[configdomain.PushBranches], valueAlreadyInGit Option[configdomain.PushBranches], runner subshelldomain.Runner) error {
+	if valueAlreadyInGit.Equal(valueToWriteToGit) {
+		return nil
+	}
+	if value, has := valueToWriteToGit.Get(); has {
+		return gitconfig.SetPushBranches(runner, value, configdomain.ConfigScopeLocal)
+	}
+	return gitconfig.RemovePushBranches(runner)
 }
 
 func savePushHook(valueToWriteToGit Option[configdomain.PushHook], valueAlreadyInGit Option[configdomain.PushHook], runner subshelldomain.Runner) error {

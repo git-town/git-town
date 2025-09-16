@@ -35,6 +35,7 @@ Feature: display configuration defined in environment variables
       | GIT_TOWN_OFFLINE                     | 1                  |
       | GIT_TOWN_PERENNIAL_BRANCHES          | qa staging         |
       | GIT_TOWN_PERENNIAL_REGEX             | ^release-          |
+      | GIT_TOWN_PUSH_BRANCHES               | no                 |
       | GIT_TOWN_PUSH_HOOK                   | no                 |
       | GIT_TOWN_SHARE_NEW_BRANCHES          | push               |
       | GIT_TOWN_SHIP_DELETE_TRACKING_BRANCH | 0                  |
@@ -93,6 +94,7 @@ Feature: display configuration defined in environment variables
         feature sync strategy: rebase
         perennial sync strategy: merge
         prototype sync strategy: compress
+        push branches: no
         sync tags: no
         sync with upstream: no
       """
