@@ -24,9 +24,11 @@ Feature: override permanently configured pushing
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND           |
-      | new    | git checkout old  |
-      | old    | git branch -D new |
+      | BRANCH   | COMMAND                   |
+      | new      | git checkout branch-2     |
+      | branch-2 | git branch -D new         |
+      |          | git push origin :branch-1 |
+      |          | git push origin :branch-2 |
     And the initial commits exist now
     And the initial lineage exists now
     And the initial tags exist now
