@@ -229,6 +229,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	ProposalTargetBranchUpdateProblem       = "cannot update the target branch of proposal %d on your forge"
 	ProposalURLProblem                      = "cannot determine proposal URL from %q to %q: %w"
 	ProposeDetached                         = "cannot propose in detached head state"
+	PrototypeDetachedHead                   = "cannot make a detached head a prototype branch"
 	PrototypeRemoved                        = "branch %q is no longer a prototype branch"
 	PullRequestDeprecation                  = `DEPRECATION NOTICE
 
