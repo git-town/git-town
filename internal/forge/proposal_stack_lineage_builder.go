@@ -62,15 +62,6 @@ func (self *ProposalStackLineageBuilder) Build(args ProposalStackLineageArgs) st
 	return builder.String()
 }
 
-func (self *ProposalStackLineageBuilder) GetProposal(branch gitdomain.LocalBranchName) Option[forgedomain.Proposal] {
-	proposal, ok := self.tree.BranchToProposal[branch]
-	if !ok {
-		return None[forgedomain.Proposal]()
-	}
-
-	return proposal
-}
-
 // UpdateStack updates the underlying tree representation of the proposal stack. If proposal data was
 // fetched on a previous call to UpdateStack or during ProposalStackLineageBuilder, the underlying
 // data structure fetches that information from a map.
