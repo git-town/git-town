@@ -1,7 +1,7 @@
 Feature: detaching a local branch
 
   Background:
-    Given a Git repo with origin
+    Given a local Git repo
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS |
       | branch-1 | feature | main   | local     |
@@ -36,8 +36,7 @@ Feature: detaching a local branch
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                        |
-      | branch-2 | git fetch --prune --tags                                       |
-      |          | git checkout branch-3                                          |
+      | branch-2 | git checkout branch-3                                          |
       | branch-3 | git -c rebase.updateRefs=false rebase --onto branch-1 branch-2 |
       |          | git checkout branch-4                                          |
       | branch-4 | git -c rebase.updateRefs=false rebase --onto branch-3 branch-2 |
