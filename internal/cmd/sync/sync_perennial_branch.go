@@ -13,7 +13,7 @@ func PerennialBranchProgram(branchInfo gitdomain.BranchInfo, args BranchProgramA
 		}
 	}
 	if localBranch, hasLocalBranch := branchInfo.LocalName.Get(); hasLocalBranch {
-		if localBranch == args.Config.ValidatedConfigData.MainBranch && args.Remotes.HasUpstream() && args.Config.NormalConfig.SyncUpstream.IsTrue() {
+		if localBranch == args.Config.ValidatedConfigData.MainBranch && args.Remotes.HasUpstream() && args.Config.NormalConfig.SyncUpstream.ShouldSyncUpstream() {
 			args.Program.Value.Add(&opcodes.FetchUpstream{Branch: args.Config.ValidatedConfigData.MainBranch})
 			args.Program.Value.Add(&opcodes.RebaseBranch{Branch: gitdomain.NewBranchName("upstream/" + args.Config.ValidatedConfigData.MainBranch.String())})
 		}

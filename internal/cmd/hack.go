@@ -92,7 +92,7 @@ func hackCmd() *cobra.Command {
 			if err := cmp.Or(errAutoResolve, errBeam, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errStash, errVerbose); err != nil {
 				return err
 			}
-			if commitMessage.IsSome() || propose.IsTrue() {
+			if commitMessage.IsSome() || propose.ShouldPropose() {
 				commit = true
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{

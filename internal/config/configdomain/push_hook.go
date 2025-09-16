@@ -5,7 +5,7 @@ import "strconv"
 // PushHook contains the push-hook configuration setting.
 type PushHook bool
 
-func (self PushHook) IsTrue() bool {
+func (self PushHook) ShouldRunPushHook() bool {
 	return bool(self)
 }
 

@@ -105,7 +105,7 @@ func prependCommand() *cobra.Command {
 			if commitMessage.IsSome() {
 				commit = true
 			}
-			if propose.IsTrue() && !beam.ShouldBeam() {
+			if propose.ShouldPropose() && !beam.ShouldBeam() {
 				commit = true
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -474,7 +474,7 @@ func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages
 			DryRun:                   repo.UnvalidatedConfig.NormalConfig.DryRun,
 			InitialStashSize:         data.stashSize,
 			RunInGitRoot:             true,
-			StashOpenChanges:         data.hasOpenChanges && data.config.NormalConfig.Stash.IsTrue(),
+			StashOpenChanges:         data.hasOpenChanges && data.config.NormalConfig.Stash.ShouldStash(),
 			PreviousBranchCandidates: previousBranchCandidates,
 		})
 	}

@@ -96,7 +96,7 @@ func appendCmd() *cobra.Command {
 			if err := cmp.Or(errBeam, errCommit, errCommitMessage, errDetached, errDryRun, errAutoResolve, errPropose, errPrototype, errPush, errStash, errVerbose); err != nil {
 				return err
 			}
-			if commitMessage.IsSome() || propose.IsTrue() {
+			if commitMessage.IsSome() || propose.ShouldPropose() {
 				commit = true
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -457,7 +457,7 @@ func appendProgram(frontend subshelldomain.Runner, data appendFeatureData, final
 			DryRun:                   data.config.NormalConfig.DryRun,
 			InitialStashSize:         data.stashSize,
 			RunInGitRoot:             true,
-			StashOpenChanges:         data.hasOpenChanges && data.config.NormalConfig.Stash.IsTrue(),
+			StashOpenChanges:         data.hasOpenChanges && data.config.NormalConfig.Stash.ShouldStash(),
 			PreviousBranchCandidates: previousBranchCandidates,
 		})
 	}
