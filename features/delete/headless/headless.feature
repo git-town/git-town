@@ -13,8 +13,10 @@ Feature: cannot delete in headless state
     And I ran "git checkout HEAD^"
     When I run "git-town delete"
 
+  @this
   Scenario: result
-    Then Git Town runs no commands
+    Then Git Town runs the commands
+      | BRANCH | COMMAND |
     And Git Town prints the error:
       """
       cannot determine current branch
