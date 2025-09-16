@@ -19,7 +19,6 @@ Git Town pushes branches to the development remote
 while syncing.
 
 Pushing is enabled by default.
-
 More details: https://www.git-town.com/preferences/push-branches.
 
 `
