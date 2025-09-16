@@ -333,6 +333,7 @@ and will be removed in future versions of Git Town.`
 	UnknownBranchType                       = "Unknown branch type: %s\n"
 	UpdateProposalBodyUnsupported           = "the Git Town driver for your forge does not support updating the proposal body"
 	UpNoChild                               = "branch %q has no children"
+	UpNoCurrentBranch                       = "You need to be on a branch to go up"
 	ValueInvalid                            = "invalid value for %s: %q. Please provide either \"yes\" or \"no\""
 	WalkAllOrStack                          = "please provide either --all or --stack"
 	WalkDone                                = "Branch walk done."
