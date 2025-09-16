@@ -74,9 +74,13 @@ func executeDown(args executeDownArgs) error {
 	}
 
 	// Get the current branch
-	currentBranch, err := repo.Git.CurrentBranch(repo.Backend)
+	currentBranchOpt, err := repo.Git.CurrentBranch(repo.Backend)
 	if err != nil {
 		return err
+	}
+	currentBranch, hasCurrentBranch := currentBranchOpt.Get()
+	if !hasCurrentBranch {
+		return fmt.Errorf(messages.DownNoCurrentBranch)
 	}
 
 	// Get the parent branch from lineage
