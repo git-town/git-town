@@ -13,6 +13,7 @@ Feature: delete the current prototype branch
     And the current branch is "prototype" and the previous branch is "previous"
     When I run "git-town delete"
 
+  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH    | COMMAND                    |
@@ -32,6 +33,7 @@ Feature: delete the current prototype branch
       main
         previous
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
