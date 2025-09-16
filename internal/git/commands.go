@@ -468,7 +468,7 @@ func (self *Commands) DropMostRecentStash(runner subshelldomain.Runner) error {
 }
 
 func (self *Commands) Fetch(runner subshelldomain.Runner, syncTags configdomain.SyncTags) error {
-	if syncTags.IsTrue() {
+	if syncTags.ShouldSyncTags() {
 		return runner.Run("git", "fetch", "--prune", "--tags")
 	}
 	return runner.Run("git", "fetch", "--prune", "--no-tags")
