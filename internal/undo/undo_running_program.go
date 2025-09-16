@@ -38,6 +38,6 @@ type CreateUndoProgramArgs struct {
 	FinalMessages  stringslice.Collector
 	Git            git.Commands
 	HasOpenChanges bool
-	NoPushHook     configdomain.NoPushHook
+	PushHook       configdomain.PushHook
 	RunState       runstate.RunState
 }

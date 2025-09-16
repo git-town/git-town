@@ -57,10 +57,6 @@ type NormalConfig struct {
 	SyncUpstream             SyncUpstream
 	UnknownBranchType        BranchType
 }
-
-func (self *NormalConfig) NoPushHook() NoPushHook {
-	return self.PushHook.Negate()
-}
 `
 	have := main.FindDefinedFields(give)
 	want := []string{

@@ -44,7 +44,7 @@ func Execute(args ExecuteArgs) error {
 		FinalMessages:  args.FinalMessages,
 		Git:            args.Git,
 		HasOpenChanges: args.HasOpenChanges,
-		NoPushHook:     args.Config.NormalConfig.NoPushHook(),
+		PushHook:       args.Config.NormalConfig.PushHook,
 		RunState:       args.RunState,
 	})
 	lightinterpreter.Execute(lightinterpreter.ExecuteArgs{
