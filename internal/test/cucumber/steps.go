@@ -1463,7 +1463,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the previous Git branch is (?:now|still) "([^"]*)"$`, func(ctx context.Context, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.Git.PreviouslyCheckedOutBranch(devRepo.TestRunner)
+		have, has := devRepo.Git.PreviouslyCheckedOutBranch(devRepo.TestRunner).Get()
+		if !has {
+			return fmt.Errorf("no previous branch found")
+		}
 		if have.String() != want {
 			return fmt.Errorf("expected previous branch %q but got %q", want, have)
 		}
