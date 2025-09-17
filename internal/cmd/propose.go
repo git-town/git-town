@@ -196,6 +196,13 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (data p
 	if err != nil {
 		return data, false, err
 	}
+	if preFetchBranchSnapshot.DetachedHead {
+		return data, false, errors.New(messages.ProposeDetached)
+	}
+	initialBranch, hasInitialBranch := preFetchBranchSnapshot.Active.Get()
+	if !hasInitialBranch {
+		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
+	}
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -246,10 +253,6 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (data p
 		return data, false, err
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
-	if !hasInitialBranch {
-		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
-	}
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,

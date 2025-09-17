@@ -1,4 +1,4 @@
-Feature: move down in headless mode
+Feature: cannot merge a detached head
 
   Background:
     Given a Git repo with origin
@@ -8,15 +8,16 @@ Feature: move down in headless mode
     And the commits
       | BRANCH | LOCATION | MESSAGE  |
       | branch | local    | commit 1 |
-      | branch | local    | commit 2 |
+      |        | local    | commit 2 |
     And the current branch is "branch"
     And I ran "git checkout HEAD^"
-    When I run "git-town down"
+    When I run "git-town merge"
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND |
+      | BRANCH                     | COMMAND                  |
+      | {{ sha-short 'commit 1' }} | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      you need to be on a branch to go down
+      please check out the branch to merge
       """
