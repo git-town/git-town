@@ -15,8 +15,7 @@ Feature: open the repo in detached state
     And tool "open" is installed
     When I run "git-town repo"
 
-  @debug @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | TYPE     | COMMAND                                   |
-      | branch | frontend | open https://github.com/git-town/git-town |
+      | BRANCH                     | TYPE     | COMMAND                                   |
+      | {{ sha-short 'commit 1' }} | frontend | open https://github.com/git-town/git-town |
