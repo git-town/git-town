@@ -13,6 +13,7 @@ Feature: cannot detach a detached head
     And I run "git checkout HEAD^"
     When I run "git-town detach"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH                     | COMMAND                  |
