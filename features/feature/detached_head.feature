@@ -17,6 +17,6 @@ Feature: cannot convert a detached head to a feature branch
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      cannot make detached head a feature branch
+      cannot make a detached head a feature branch
       """
     And the initial branches and lineage exist now
