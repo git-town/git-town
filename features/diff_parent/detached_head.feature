@@ -1,4 +1,3 @@
-@smoke
 Feature: cannot diff a detached head
 
   Background:
