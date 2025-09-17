@@ -132,7 +132,7 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult) (data d
 	if err != nil || exit {
 		return data, exit, err
 	}
-	if branchesSnapshot.DetachedHead {
+	if branchesSnapshot.Headless {
 		return data, false, errors.New(messages.DiffParentDetachedHead)
 	}
 	currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()

@@ -164,9 +164,8 @@ func (self *Commands) BranchesSnapshot(querier subshelldomain.Querier) (gitdomai
 			return gitdomain.EmptyBranchesSnapshot(), err
 		}
 		if !rebaseInProgress {
-			headless = true
 			// We are in a detached HEAD state. Use the current HEAD location as the branch name.
-			detachedHead = true
+			headless = true
 			headSHA, err := self.CurrentSHA(querier)
 			if err != nil {
 				return gitdomain.EmptyBranchesSnapshot(), err
