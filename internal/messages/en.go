@@ -270,6 +270,7 @@ and will be removed in future versions of Git Town.`
 	RunstateSaveProblem            = "cannot save run state: %w"
 	RunstateSerializeProblem       = "cannot encode run-state: %w"
 
+	SetParentHeadless                     = "please check out the branch for which to set the parent"
 	SetParentNoFeatureBranch              = "the branch %q is not a feature branch. Only feature branches can have parent branches"
 	SetParentNoneOption                   = "<none> (make perennial)"
 	SettingCannotRemove                   = "ERROR: cannot remove %s Git setting %q: %v"
@@ -291,6 +292,7 @@ and will be removed in future versions of Git Town.`
 	ShipChildBranch                       = "shipping this branch would ship %s as well,\nplease ship %q first"
 	ShipDeletesTrackingBranches           = "Ship deletes tracking branches: %s\n"
 	ShipExitMergeError                    = "aborted because merge exited with error"
+	ShipHeadless                          = "please check out the branch to ship"
 	ShipMessageWithFastForward            = "shipping with the fast-forward strategy does not use the given commit message"
 	ShipOpenChanges                       = "you have uncommitted changes. Did you mean to commit them before shipping?"
 	ShipStrategy                          = "Ship strategy: %s\n"
