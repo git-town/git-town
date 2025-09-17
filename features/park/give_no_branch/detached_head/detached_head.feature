@@ -17,6 +17,6 @@ Feature: cannot park a detached head
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      cannot park a detached head
+      please check out the branch to park
       """
     And the initial branches and lineage exist now

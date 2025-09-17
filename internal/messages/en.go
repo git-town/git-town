@@ -207,7 +207,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 
 	ParentBranchTitle                       = `Parent branch for %s`
 	ParkedRemoved                           = "branch %q is no longer parked"
-	ParkDetachedHead                        = "cannot park a detached head"
+	ParkDetachedHead                        = "please check out the branch to park"
 	PerennialBranchCannotMakeContribution   = "cannot make perennial branches contribution branches"
 	PerennialBranchCannotMakeFeature        = "cannot make perennial branches feature branches"
 	PerennialBranchCannotObserve            = "cannot observe perennial branches"
