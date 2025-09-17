@@ -41,7 +41,7 @@ func (self *FrontendDryRunner) execute(env []string, executable string, args ...
 		}
 	}
 	if self.PrintCommands {
-		PrintCommand(currentBranch, self.PrintBranchNames, env, executable, args...)
+		PrintCommand(currentBranch.Location(), self.PrintBranchNames, env, executable, args...)
 		fmt.Println("(dry run)")
 	}
 	return nil

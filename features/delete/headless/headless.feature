@@ -15,8 +15,8 @@ Feature: cannot delete in headless state
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                  |
-      |        | git fetch --prune --tags |
+      | BRANCH                     | COMMAND                  |
+      | {{ sha-short 'commit 1' }} | git fetch --prune --tags |
     And Git Town prints the error:
       """
       please check out the branch to delete

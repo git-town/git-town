@@ -26,16 +26,20 @@ type FrontendRunner struct {
 	Backend          subshelldomain.Querier
 	CommandsCounter  Mutable[gohacks.Counter]
 	GetCurrentBranch GetCurrentBranchFunc
+	GetCurrentSHA    GetCurrentSHAFunc
 	PrintBranchNames bool
 	PrintCommands    bool
 }
 
-type GetCurrentBranchFunc func(subshelldomain.Querier) (Option[gitdomain.LocalBranchName], error)
+type (
+	GetCurrentBranchFunc func(subshelldomain.Querier) (Option[gitdomain.LocalBranchName], error)
+	GetCurrentSHAFunc    func(subshelldomain.Querier) (gitdomain.SHA, error)
+)
 
-func FormatCommand(currentBranch gitdomain.LocalBranchName, printBranch bool, env []string, executable string, args ...string) string {
+func FormatCommand(location gitdomain.Location, printBranch bool, env []string, executable string, args ...string) string {
 	result := ""
 	if printBranch {
-		result += "[" + currentBranch.String() + "] "
+		result += "[" + location.String() + "] "
 	}
 	if len(env) > 0 {
 		result += strings.Join(env, " ") + " "
@@ -48,8 +52,8 @@ func FormatCommand(currentBranch gitdomain.LocalBranchName, printBranch bool, en
 }
 
 // PrintCommand prints the given command-line operation on the console.
-func PrintCommand(branch gitdomain.LocalBranchName, printBranch bool, env []string, cmd string, args ...string) {
-	header := FormatCommand(branch, printBranch, env, cmd, args...)
+func PrintCommand(location gitdomain.Location, printBranch bool, env []string, cmd string, args ...string) {
+	header := FormatCommand(location, printBranch, env, cmd, args...)
 	fmt.Println()
 	fmt.Println(colors.Bold().Styled(header))
 }
@@ -65,18 +69,24 @@ func (self *FrontendRunner) RunWithEnv(env []string, cmd string, args ...string)
 // runs the given command in this ShellRunner's directory.
 func (self *FrontendRunner) execute(env []string, cmd string, args ...string) (err error) {
 	self.CommandsCounter.Value.Increment()
-	var branchName gitdomain.LocalBranchName
+	var location gitdomain.Location
 	if self.PrintBranchNames {
 		currentBranchOpt, err := self.GetCurrentBranch(self.Backend)
 		if err != nil {
 			return err
 		}
 		if currentBranch, has := currentBranchOpt.Get(); has {
-			branchName = currentBranch
+			location = currentBranch.Location()
+		} else {
+			currentSHA, err := self.GetCurrentSHA(self.Backend)
+			if err != nil {
+				return err
+			}
+			location = currentSHA.Truncate(7).Location()
 		}
 	}
 	if self.PrintCommands {
-		PrintCommand(branchName, self.PrintBranchNames, env, cmd, args...)
+		PrintCommand(location, self.PrintBranchNames, env, cmd, args...)
 	}
 	if runtime.GOOS == "windows" && cmd == "start" {
 		args = append([]string{"/C", cmd}, args...)
