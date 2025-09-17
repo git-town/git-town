@@ -113,9 +113,9 @@ func determineBranchData(repo execute.OpenRepoResult) (data branchData, exit dia
 	}
 	initialBranchOpt := branchesSnapshot.Active
 	if initialBranchOpt.IsNone() {
-		if initialBranchOpt2, err := repo.Git.CurrentBranchUncached(repo.Backend); err == nil {
-			if initialBranchOpt2.IsSome() {
-				initialBranchOpt = initialBranchOpt2
+		if currentBranchOpt, err := repo.Git.CurrentBranchUncached(repo.Backend); err == nil {
+			if currentBranchOpt.IsSome() {
+				initialBranchOpt = currentBranchOpt
 			}
 		}
 	}
