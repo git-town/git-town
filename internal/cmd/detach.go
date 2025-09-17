@@ -223,6 +223,9 @@ func determineDetachData(args []string, repo execute.OpenRepoResult) (data detac
 	if err != nil || exit {
 		return data, exit, err
 	}
+	if branchesSnapshot.Headless {
+		return data, false, errors.New(messages.DetachHeadless)
+	}
 	activeBranch, hasActiveBranch := branchesSnapshot.Active.Get()
 	if !hasActiveBranch {
 		return data, false, fmt.Errorf(messages.DetachNoActiveBranch)

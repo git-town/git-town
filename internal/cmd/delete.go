@@ -212,6 +212,9 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (data delet
 	if err != nil || exit {
 		return data, exit, err
 	}
+	if branchesSnapshot.Headless {
+		return data, false, errors.New(messages.DeleteHeadless)
+	}
 	activeBranch, hasActiveBranch := branchesSnapshot.Active.Get()
 	if !hasActiveBranch {
 		return data, false, fmt.Errorf(messages.DeleteNoActiveBranch)

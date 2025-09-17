@@ -18,11 +18,11 @@ func TestNewStandardFixture(t *testing.T) {
 	asserts.IsGitRepo(t, filepath.Join(gitEnvRootDir, "origin"))
 	branch, err := result.OriginRepo.GetOrPanic().Git.CurrentBranch(devRepo.TestRunner)
 	must.NoError(t, err)
-	must.EqOp(t, "main", branch)
+	must.EqOp(t, "main", branch.GetOrPanic())
 	// verify the developer repo
 	asserts.IsGitRepo(t, filepath.Join(gitEnvRootDir, "developer"))
 	assertHasGitConfiguration(t, gitEnvRootDir)
 	branch, err = devRepo.Git.CurrentBranch(devRepo.TestRunner)
 	must.NoError(t, err)
-	must.EqOp(t, "main", branch)
+	must.EqOp(t, "main", branch.GetOrPanic())
 }
