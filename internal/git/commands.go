@@ -1,7 +1,6 @@
 package git
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -104,9 +103,13 @@ func (self *Commands) BranchesSnapshot(querier subshelldomain.Querier) (gitdomai
 	if len(branches) == 0 {
 		// We are in a brand-new repo.
 		// Report the initial branch name (reported by `git branch --show-current`) as the current branch.
-		currentBranch, err := self.CurrentBranchUncached(querier)
+		currentBranchOpt, err := self.CurrentBranchUncached(querier)
 		if err != nil {
 			return gitdomain.EmptyBranchesSnapshot(), err
+		}
+		currentBranch, hasCurrentBranch := currentBranchOpt.Get()
+		if !hasCurrentBranch {
+			return gitdomain.EmptyBranchesSnapshot(), nil
 		}
 		return makeBranchesSnapshotNewRepo(currentBranch), nil
 	}
@@ -154,13 +157,14 @@ func (self *Commands) BranchesSnapshot(querier subshelldomain.Querier) (gitdomai
 			}
 		}
 	}
-	detachedHead := false
+	headless := false
 	if currentBranchOpt.IsNone() {
 		rebaseInProgress, err := self.HasRebaseInProgress(querier)
 		if err != nil {
 			return gitdomain.EmptyBranchesSnapshot(), err
 		}
 		if !rebaseInProgress {
+			headless = true
 			// We are in a detached HEAD state. Use the current HEAD location as the branch name.
 			detachedHead = true
 			headSHA, err := self.CurrentSHA(querier)
@@ -182,9 +186,9 @@ func (self *Commands) BranchesSnapshot(querier subshelldomain.Querier) (gitdomai
 		self.CurrentBranchCache.Set(currentBranch)
 	}
 	return gitdomain.BranchesSnapshot{
-		Active:       currentBranchOpt,
-		Branches:     result,
-		DetachedHead: detachedHead,
+		Branches: result,
+		Active:   currentBranchOpt,
+		Headless: headless,
 	}, nil
 }
 
@@ -387,21 +391,23 @@ func (self *Commands) CreateTrackingBranch(runner subshelldomain.Runner, branch 
 	return runner.Run("git", args...)
 }
 
-func (self *Commands) CurrentBranch(querier subshelldomain.Querier) (gitdomain.LocalBranchName, error) {
+// CurrentBranch provides the name of the current branch.
+// Provides (None, nil) if there is no current branch, e.g. in headless state.
+func (self *Commands) CurrentBranch(querier subshelldomain.Querier) (Option[gitdomain.LocalBranchName], error) {
 	if cachedCurrentBranch, hasCachedCurrentBranch := self.CurrentBranchCache.Get(); hasCachedCurrentBranch {
-		return cachedCurrentBranch, nil
+		return Some(cachedCurrentBranch), nil
 	}
-	currentBranch, err := self.CurrentBranchUncached(querier)
-	if err == nil {
+	currentBranchOpt, err := self.CurrentBranchUncached(querier)
+	if currentBranch, hasCurrentBranch := currentBranchOpt.Get(); hasCurrentBranch {
 		self.CurrentBranchCache.Set(currentBranch)
 	}
-	return currentBranch, err
+	return currentBranchOpt, err
 }
 
-func (self *Commands) CurrentBranchDuringRebase(querier subshelldomain.Querier) (gitdomain.LocalBranchName, error) {
+func (self *Commands) CurrentBranchDuringRebase(querier subshelldomain.Querier) (Option[gitdomain.LocalBranchName], error) {
 	gitDir, err := self.gitDirectory(querier)
 	if err != nil {
-		return "", err
+		return None[gitdomain.LocalBranchName](), err
 	}
 	for _, rebaseHeadFileName := range []string{"rebase-merge/head-name", "rebase-apply/head-name"} {
 		rebaseHeadFilePath := filepath.Join(gitDir, rebaseHeadFileName)
@@ -412,12 +418,12 @@ func (self *Commands) CurrentBranchDuringRebase(querier subshelldomain.Querier) 
 		refName := strings.TrimSpace(string(content))
 		if strings.HasPrefix(refName, "refs/heads/") {
 			branchName := strings.TrimPrefix(refName, "refs/heads/")
-			return gitdomain.NewLocalBranchName(branchName), nil
+			return Some(gitdomain.NewLocalBranchName(branchName)), nil
 		}
 		// rebase head name is not a branch name
 		break
 	}
-	return "", errors.New(messages.BranchCurrentProblemNoError)
+	return None[gitdomain.LocalBranchName](), nil
 }
 
 func (self *Commands) CurrentBranchHasTrackingBranch(runner subshelldomain.Runner) bool {
@@ -425,14 +431,14 @@ func (self *Commands) CurrentBranchHasTrackingBranch(runner subshelldomain.Runne
 	return err == nil
 }
 
-func (self *Commands) CurrentBranchUncached(querier subshelldomain.Querier) (gitdomain.LocalBranchName, error) {
+func (self *Commands) CurrentBranchUncached(querier subshelldomain.Querier) (Option[gitdomain.LocalBranchName], error) {
 	// first try to detect the current branch the normal way
 	output, err := querier.QueryTrim("git", "branch", "--show-current")
 	if err != nil {
-		return "", fmt.Errorf(messages.BranchCurrentProblem, err)
+		return None[gitdomain.LocalBranchName](), fmt.Errorf(messages.BranchCurrentProblem, err)
 	}
 	if output != "" {
-		return gitdomain.NewLocalBranchName(output), nil
+		return Some(gitdomain.NewLocalBranchName(output)), nil
 	}
 	// here we couldn't detect the current branch the normal way --> assume we are in a rebase and try the rebase way
 	return self.CurrentBranchDuringRebase(querier)
@@ -962,7 +968,7 @@ func makeBranchesSnapshotNewRepo(branch gitdomain.LocalBranchName) gitdomain.Bra
 				RemoteSHA:  None[gitdomain.SHA](),
 			},
 		},
-		DetachedHead: false,
+		Headless: false,
 	}
 }
 

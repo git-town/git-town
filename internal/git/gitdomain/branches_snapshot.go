@@ -12,14 +12,14 @@ type BranchesSnapshot struct {
 	// as it adds or removes branches.
 	Branches BranchInfos
 
-	// DetachedHead indicates whether the repo is in detached head state.
-	DetachedHead bool
+	// Headless indicates whether the repo was in a headless state at the time this snapshot was taken.
+	Headless bool
 }
 
 func EmptyBranchesSnapshot() BranchesSnapshot {
 	return BranchesSnapshot{
-		Active:       None[LocalBranchName](),
-		Branches:     BranchInfos{},
-		DetachedHead: false,
+		Active:   None[LocalBranchName](),
+		Branches: BranchInfos{},
+		Headless: false,
 	}
 }
