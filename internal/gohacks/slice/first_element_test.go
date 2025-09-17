@@ -30,5 +30,4 @@ func TestFirstElement(t *testing.T) {
 		have := slice.FirstElement(list)
 		must.True(t, have.EqualSome(1))
 	})
-
 }
