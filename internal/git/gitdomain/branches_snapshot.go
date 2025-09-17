@@ -13,6 +13,9 @@ type BranchesSnapshot struct {
 	Branches BranchInfos
 
 	// Headless indicates whether the repo was in a headless state at the time this snapshot was taken.
+	//
+	// In this codebase we use the term "headless" instead of the more accurate term "detached head"
+	// to distinguish this concept from Git Town's "detached" config setting and the "detach" command.
 	Headless bool
 }
 
