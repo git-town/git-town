@@ -227,8 +227,12 @@ func determineSwapData(args []string, repo execute.OpenRepoResult) (data swapDat
 	if branchesSnapshot.DetachedHead {
 		return data, false, errors.New(messages.SwapRepoHasDetachedHead)
 	}
-	currentBranch := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branchesSnapshot.Active.String()))
-	currentBranchInfo, hasBranchToSwapInfo := branchesSnapshot.Branches.FindByLocalName(currentBranch).Get()
+	currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
+	if !hasCurrentBranch {
+		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
+	}
+	currentBranchName := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, currentBranch.String()))
+	currentBranchInfo, hasBranchToSwapInfo := branchesSnapshot.Branches.FindByLocalName(currentBranchName).Get()
 	if !hasBranchToSwapInfo {
 		return data, false, fmt.Errorf(messages.BranchDoesntExist, currentBranch)
 	}

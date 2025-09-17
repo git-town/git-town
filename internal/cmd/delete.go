@@ -215,7 +215,11 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (data delet
 	if branchesSnapshot.DetachedHead {
 		return data, false, errors.New(messages.DeleteRepoHasDetachedHead)
 	}
-	branchNameToDelete := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branchesSnapshot.Active.String()))
+	currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
+	if !hasCurrentBranch {
+		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
+	}
+	branchNameToDelete := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, currentBranch.String()))
 	branchToDelete, hasBranchToDelete := branchesSnapshot.Branches.FindByLocalName(branchNameToDelete).Get()
 	if !hasBranchToDelete {
 		return data, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToDelete)
