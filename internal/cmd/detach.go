@@ -76,7 +76,7 @@ func detachCommand() *cobra.Command {
 		Short:   detachDesc,
 		GroupID: cmdhelpers.GroupIDStack,
 		Long:    cmdhelpers.Long(detachDesc, detachHelp),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			dryRun, errDryRun := readDryRunFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
 			if err := cmp.Or(errDryRun, errVerbose); err != nil {

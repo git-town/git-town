@@ -18,7 +18,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/forge"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/gohacks/slice"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/state/runstate"
@@ -72,7 +71,7 @@ func Cmd() *cobra.Command {
 		Short:   swapDesc,
 		GroupID: cmdhelpers.GroupIDStack,
 		Long:    cmdhelpers.Long(swapDesc, swapHelp),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
@@ -87,7 +86,7 @@ func Cmd() *cobra.Command {
 				Stash:        None[configdomain.Stash](),
 				Verbose:      verbose,
 			})
-			return executeSwap(args, cliConfig)
+			return executeSwap(cliConfig)
 		},
 	}
 	addAutoResolveFlag(&cmd)
@@ -96,7 +95,7 @@ func Cmd() *cobra.Command {
 	return &cmd
 }
 
-func executeSwap(args []string, cliConfig configdomain.PartialConfig) error {
+func executeSwap(cliConfig configdomain.PartialConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,
@@ -107,7 +106,7 @@ func executeSwap(args []string, cliConfig configdomain.PartialConfig) error {
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineSwapData(args, repo)
+	data, exit, err := determineSwapData(repo)
 	if err != nil || exit {
 		return err
 	}
@@ -179,7 +178,7 @@ type swapBranch struct {
 	proposal Option[forgedomain.Proposal]
 }
 
-func determineSwapData(args []string, repo execute.OpenRepoResult) (data swapData, exit dialogdomain.Exit, err error) {
+func determineSwapData(repo execute.OpenRepoResult) (data swapData, exit dialogdomain.Exit, err error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -227,7 +226,10 @@ func determineSwapData(args []string, repo execute.OpenRepoResult) (data swapDat
 	if branchesSnapshot.DetachedHead {
 		return data, false, errors.New(messages.SwapRepoHasDetachedHead)
 	}
-	currentBranch := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branchesSnapshot.Active.String()))
+	currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
+	if !hasCurrentBranch {
+		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
+	}
 	currentBranchInfo, hasBranchToSwapInfo := branchesSnapshot.Branches.FindByLocalName(currentBranch).Get()
 	if !hasBranchToSwapInfo {
 		return data, false, fmt.Errorf(messages.BranchDoesntExist, currentBranch)
