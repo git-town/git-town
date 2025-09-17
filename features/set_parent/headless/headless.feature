@@ -1,4 +1,4 @@
-Feature: remove a branch from a stack
+Feature: set the parent in headless mode
 
   Background:
     Given a Git repo with origin
