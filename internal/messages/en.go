@@ -100,14 +100,14 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 
 	DeleteCannotDeleteMainBranch        = "you cannot delete the main branch"
 	DeleteCannotDeletePerennialBranches = "you cannot delete perennial branches"
-	DeleteHeadless                      = "please check out the branch to delete"
+	DeleteRepoHasDetachedHead           = "please check out the branch to delete"
 	DetachedResult                      = "Detached: %s\n"
-	DetachHeadless                      = "please check out the branch to detach"
 	DetachNeedsSync                     = "please sync this stack before detaching branches from it"
 	DetachNoActiveBranch                = "please check out the branch to detach"
 	DetachNoParent                      = "cannot detach branches without parent"
 	DetachOtherWorkTree                 = "cannot detach because branch %q it is active in another worktree"
 	DetachRemoteBranch                  = "cannot detach a remote branch"
+	DetachRepoHasDetachedHead           = "please check out the branch to detach"
 	DetachUnsupportedBranchType         = "cannot detach %s branches since you don't own them"
 	DevRemote                           = "Development remote: %s\n"
 	DialogResultAll                     = "(all)"
@@ -116,6 +116,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	DialogUnexpectedResponse            = "unexpected response: %s"
 	DialogUseGlobalValue                = "use global value (%s)"
 	DiffConflictWithMain                = "conflicts between your uncommmitted changes and the main branch"
+	DiffParentDetachedHead              = "please check out the branch to diff"
 	DiffParentNoFeatureBranch           = "you can only diff-parent feature branches"
 	DiffProblem                         = "cannot list diff of %q and %q: %w"
 	DirCurrentProblem                   = "cannot determine the current directory"
@@ -123,6 +124,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	DownNoParent                        = "branch %q has no parent"
 	DryRun                              = "In dry run mode. No commands will be run. When run in normal mode, the command output will appear beneath the command. Some commands will only be run if necessary. For example: 'git push' will run if and only if there are local commits not on origin."
 
+	FeatureDetachedHead          = "please check out the branch to make a feature branch"
 	FeatureRegexPrompt           = "Feature regex: "
 	FeatureRegexResult           = "Feature regex: %s\n"
 	FileContentInvalidJSON       = "cannot parse JSON content of file %q: %w"
@@ -183,6 +185,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	MainBranchCannotPrototype        = "cannot prototype the main branch"
 	MainBranchCannotShip             = "cannot ship the main branch"
 	MergeBranchNotLocal              = "cannot merge: branch %q is not local"
+	MergeDetachedHead                = "please check out the branch to merge"
 	MergeNoGrandParent               = "cannot merge branch %q because its parent branch (%s) has no parent"
 	MergeNoParent                    = "cannot merge branch %q because it has no parent"
 	MergeNotInSyncWithTracking       = `branch %q is not in sync with its tracking branch, please run "git town sync" and try again`
@@ -195,6 +198,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	ObservedBranchCannotPark    = "cannot park observed branches"
 	ObservedBranchCannotPropose = "cannot propose observed branches"
 	ObservedBranchCannotShip    = "cannot ship observed branches"
+	ObserveDetachedHead         = "please check out the branch to make observed"
 	ObservedRegexPrompt         = "Observed regex: "
 	ObservedRegexResult         = "Observed regex: %s\n"
 	OfflineNotAllowed           = "this command requires an active internet connection"
@@ -204,6 +208,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	OriginHostnameResult        = "Origin hostname: %s\n"
 
 	ParentBranchTitle                       = `Parent branch for %s`
+	ParkDetachedHead                        = "please check out the branch to park"
 	ParkedRemoved                           = "branch %q is no longer parked"
 	PerennialBranchCannotMakeContribution   = "cannot make perennial branches contribution branches"
 	PerennialBranchCannotMakeFeature        = "cannot make perennial branches feature branches"
@@ -227,6 +232,8 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	ProposalsShowLineageInvalid             = "invalid value for whether proposals should show the lineage: %q. Valid values are: none, ci, cli"
 	ProposalTargetBranchUpdateProblem       = "cannot update the target branch of proposal %d on your forge"
 	ProposalURLProblem                      = "cannot determine proposal URL from %q to %q: %w"
+	ProposeDetached                         = "please check out the branch to propose"
+	PrototypeDetachedHead                   = "please check out the branch to make a prototype branch"
 	PrototypeRemoved                        = "branch %q is no longer a prototype branch"
 	PullRequestDeprecation                  = `DEPRECATION NOTICE
 
@@ -244,6 +251,7 @@ Please upgrade to the new format: share-new-branches = "push"`
 
 This command has been renamed to "git town rename"
 and will be removed in future versions of Git Town.`
+	RenameDetachedHead             = "please check out the branch to rename"
 	RenameMainBranch               = "the main branch cannot be renamed"
 	RenamePerennialBranchWarning   = "%q is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'"
 	RenameToSameName               = "cannot rename branch to current name"
@@ -267,6 +275,7 @@ and will be removed in future versions of Git Town.`
 
 	SetParentNoFeatureBranch              = "the branch %q is not a feature branch. Only feature branches can have parent branches"
 	SetParentNoneOption                   = "<none> (make perennial)"
+	SetParentRepoHasDetachedHead          = "please check out the branch for which to set the parent"
 	SettingCannotRemove                   = "ERROR: cannot remove %s Git setting %q: %v"
 	SettingCannotWrite                    = "ERROR: cannot write %s Git setting %q: %v"
 	SettingDeprecatedMessage              = "Upgrading deprecated %s setting %q to %q."
@@ -288,6 +297,7 @@ and will be removed in future versions of Git Town.`
 	ShipExitMergeError                    = "aborted because merge exited with error"
 	ShipMessageWithFastForward            = "shipping with the fast-forward strategy does not use the given commit message"
 	ShipOpenChanges                       = "you have uncommitted changes. Did you mean to commit them before shipping?"
+	ShipRepoHasDetachedHead               = "please check out the branch to ship"
 	ShipStrategy                          = "Ship strategy: %s\n"
 	ShipStrategyMissing                   = "no ship strategy provided"
 	SkipBranchHasConflicts                = "cannot skip branch that resulted in conflicts"
@@ -311,6 +321,7 @@ and will be removed in future versions of Git Town.`
 	SwapParentNotLocal                    = "cannot swap: parent branch %q is not available locally"
 	SwapParentWrongBranchType             = "cannot swap: branch %q is a %s branch"
 	SwapRemoteBranch                      = "cannot swap: branch %q is remote"
+	SwapRepoHasDetachedHead               = "please check out the branch to swap"
 	SwapUnsupportedBranchType             = "cannot swap: branch %q is a %s branch"
 	SwitchNoBranches                      = "no branches to switch to"
 	SwitchUncommittedChanges              = "uncommitted changes"
@@ -318,6 +329,7 @@ and will be removed in future versions of Git Town.`
 	SyncPerennialBranches                 = "Sync perennial branches: %s\n"
 	SyncPerennialBranchHasUnpushedCommits = `cannot sync branch %q because it has unpushed local commits`
 	SyncPrototypeBranches                 = "Sync prototype branches: %s\n"
+	SyncRepoHasDetachedHead               = "please check out the branch to sync"
 	SyncStatusNotRecognized               = "cannot determine the sync status for Git remote %q and branch name %q"
 	SyncTags                              = "Sync tags: %s\n"
 	SyncWithUpstream                      = "Sync with upstream: %s\n"
