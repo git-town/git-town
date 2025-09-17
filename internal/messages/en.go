@@ -323,10 +323,10 @@ and will be removed in future versions of Git Town.`
 	SwitchNoBranches                      = "no branches to switch to"
 	SwitchUncommittedChanges              = "uncommitted changes"
 	SyncFeatureBranches                   = "Sync feature branches: %s\n"
-	SyncRepoHasDetachedHead               = "please check out the branch to sync"
 	SyncPerennialBranches                 = "Sync perennial branches: %s\n"
 	SyncPerennialBranchHasUnpushedCommits = `cannot sync branch %q because it has unpushed local commits`
 	SyncPrototypeBranches                 = "Sync prototype branches: %s\n"
+	SyncRepoHasDetachedHead               = "please check out the branch to sync"
 	SyncStatusNotRecognized               = "cannot determine the sync status for Git remote %q and branch name %q"
 	SyncTags                              = "Sync tags: %s\n"
 	SyncWithUpstream                      = "Sync with upstream: %s\n"
