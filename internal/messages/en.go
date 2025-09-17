@@ -184,6 +184,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	MainBranchCannotPrototype        = "cannot prototype the main branch"
 	MainBranchCannotShip             = "cannot ship the main branch"
 	MergeBranchNotLocal              = "cannot merge: branch %q is not local"
+	MergeDetachedHead                = "please check out the branch to merge"
 	MergeNoGrandParent               = "cannot merge branch %q because its parent branch (%s) has no parent"
 	MergeNoParent                    = "cannot merge branch %q because it has no parent"
 	MergeNotInSyncWithTracking       = `branch %q is not in sync with its tracking branch, please run "git town sync" and try again`
@@ -249,6 +250,7 @@ Please upgrade to the new format: share-new-branches = "push"`
 
 This command has been renamed to "git town rename"
 and will be removed in future versions of Git Town.`
+	RenameDetachedHead             = "please check out the branch to rename"
 	RenameMainBranch               = "the main branch cannot be renamed"
 	RenamePerennialBranchWarning   = "%q is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'"
 	RenameToSameName               = "cannot rename branch to current name"

@@ -14,9 +14,11 @@ Feature: rename a detached head
     When I run "git-town rename new"
 
   Scenario: result
-    Then Git Town runs no commands
+    Then Git Town runs the commands
+      | BRANCH                     | COMMAND                  |
+      | {{ sha-short 'commit 1' }} | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot determine current branch
+      please check out the branch to rename
       """
     And the initial branches and lineage exist now

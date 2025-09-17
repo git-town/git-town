@@ -14,8 +14,10 @@ Feature: cannot merge a detached head
     When I run "git-town merge"
 
   Scenario: result
-    Then Git Town runs no commands
+    Then Git Town runs the commands
+      | BRANCH                     | COMMAND                  |
+      | {{ sha-short 'commit 1' }} | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot determine current branch
+      please check out the branch to merge
       """
