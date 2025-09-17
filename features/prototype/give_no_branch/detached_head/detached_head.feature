@@ -17,6 +17,6 @@ Feature: cannot prototype a detached head
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      cannot make a detached head a prototype branch
+      please check out the branch to make a prototype branch
       """
     And the initial branches and lineage exist now

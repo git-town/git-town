@@ -17,5 +17,5 @@ Feature: cannot observed a detached head
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      cannot observed a detached head
+      please check out the branch to make observed
       """
