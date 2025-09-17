@@ -1,7 +1,10 @@
 package opcodes
 
 import (
+	"errors"
+
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
 )
 
@@ -12,11 +15,15 @@ type CheckoutIfExists struct {
 }
 
 func (self *CheckoutIfExists) Run(args shared.RunArgs) error {
-	existingBranch, err := args.Git.CurrentBranch(args.Backend)
+	currentBranchOpt, err := args.Git.CurrentBranch(args.Backend)
 	if err != nil {
 		return err
 	}
-	if existingBranch == self.Branch {
+	currentBranch, hasCurrentBranch := currentBranchOpt.Get()
+	if !hasCurrentBranch {
+		return errors.New(messages.CurrentBranchCannotDetermine)
+	}
+	if currentBranch == self.Branch {
 		return nil
 	}
 	if !args.Git.BranchExists(args.Backend, self.Branch) {

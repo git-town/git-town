@@ -106,11 +106,14 @@ func executeSkip(cliConfig configdomain.PartialConfig) error {
 	if err != nil || exit {
 		return err
 	}
-	currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
+	activeBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
 	if !hasCurrentBranch {
-		currentBranch, err = repo.Git.CurrentBranch(repo.Backend)
+		currentBranchOpt, err := repo.Git.CurrentBranch(repo.Backend)
 		if err != nil {
 			return err
+		}
+		if currentBranch, has := currentBranchOpt.Get(); has {
+			activeBranch = currentBranch
 		}
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
@@ -159,7 +162,7 @@ func executeSkip(cliConfig configdomain.PartialConfig) error {
 		Frontend:        repo.Frontend,
 		Git:             repo.Git,
 		HasOpenChanges:  repoStatus.OpenChanges,
-		InitialBranch:   currentBranch,
+		InitialBranch:   activeBranch,
 		Inputs:          inputs,
 		RootDir:         repo.RootDir,
 		RunState:        runState,

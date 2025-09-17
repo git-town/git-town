@@ -15,8 +15,7 @@ Feature: unknown ship strategy
     When I run "git-town ship -m done"
 
   Scenario: result
-    Then Git Town runs the commands
-      | BRANCH | COMMAND |
+    Then Git Town runs no commands
     And Git Town prints the error:
       """
       unknown ship strategy: "zonk"

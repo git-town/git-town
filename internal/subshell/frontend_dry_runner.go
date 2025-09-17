@@ -32,13 +32,16 @@ func (self *FrontendDryRunner) execute(env []string, executable string, args ...
 	var currentBranch gitdomain.LocalBranchName
 	if self.PrintBranchNames {
 		var err error
-		currentBranch, err = self.GetCurrentBranch(self.Backend)
+		currentBranchOpt, err := self.GetCurrentBranch(self.Backend)
 		if err != nil {
 			return err
 		}
+		if unpacked, has := currentBranchOpt.Get(); has {
+			currentBranch = unpacked
+		}
 	}
 	if self.PrintCommands {
-		PrintCommand(currentBranch, self.PrintBranchNames, env, executable, args...)
+		PrintCommand(currentBranch.Location(), self.PrintBranchNames, env, executable, args...)
 		fmt.Println("(dry run)")
 	}
 	return nil

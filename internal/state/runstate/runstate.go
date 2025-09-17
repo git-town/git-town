@@ -48,11 +48,13 @@ func (self *RunState) AddPushBranchAfterCurrentBranchProgram(gitCommands git.Com
 		if hasNextOpcode && !opcodes.IsEndOfBranchProgramOpcode(nextOpcode) {
 			popped.Add(nextOpcode)
 		} else {
-			currentBranch, err := gitCommands.CurrentBranch(backend)
+			currentBranchOpt, err := gitCommands.CurrentBranch(backend)
 			if err != nil {
 				return err
 			}
-			self.RunProgram.Prepend(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: currentBranch})
+			if currentBranch, hasCurrentBranch := currentBranchOpt.Get(); hasCurrentBranch {
+				self.RunProgram.Prepend(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: currentBranch})
+			}
 			self.RunProgram.PrependProgram(popped)
 			break
 		}
@@ -81,15 +83,17 @@ func (self *RunState) MarkAsFinished(endBranchesSnapshot gitdomain.BranchesSnaps
 
 // MarkAsUnfinished updates the run state to be marked as unfinished and populates informational fields.
 func (self *RunState) MarkAsUnfinished(gitCommands git.Commands, backend subshelldomain.Querier, canSkip bool) error {
-	currentBranch, err := gitCommands.CurrentBranch(backend)
+	currentBranchOpt, err := gitCommands.CurrentBranch(backend)
 	if err != nil {
 		return err
 	}
-	self.UnfinishedDetails = MutableSome(&UnfinishedRunStateDetails{
-		CanSkip:   canSkip,
-		EndBranch: currentBranch,
-		EndTime:   time.Now(),
-	})
+	if currentBranch, hasCurrentBranch := currentBranchOpt.Get(); hasCurrentBranch {
+		self.UnfinishedDetails = MutableSome(&UnfinishedRunStateDetails{
+			CanSkip:   canSkip,
+			EndBranch: currentBranch,
+			EndTime:   time.Now(),
+		})
+	}
 	return nil
 }
 

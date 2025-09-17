@@ -1,7 +1,10 @@
 package opcodes
 
 import (
+	"errors"
+
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
 )
 
@@ -12,9 +15,13 @@ type BranchCreateAndCheckoutExistingParent struct {
 }
 
 func (self *BranchCreateAndCheckoutExistingParent) Run(args shared.RunArgs) error {
-	currentBranch, err := args.Git.CurrentBranch(args.Backend)
+	currentBranchOpt, err := args.Git.CurrentBranch(args.Backend)
 	if err != nil {
 		return err
+	}
+	currentBranch, hasCurrentBranch := currentBranchOpt.Get()
+	if !hasCurrentBranch {
+		return errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	var ancestorToUse gitdomain.BranchName
 	nearestAncestor, hasNearestAncestor := args.Git.FirstExistingBranch(args.Backend, self.Ancestors...).Get()

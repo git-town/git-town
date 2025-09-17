@@ -123,6 +123,9 @@ func determineObserveData(args []string, repo execute.OpenRepoResult) (observeDa
 	if err != nil {
 		return observeData{}, err
 	}
+	if branchesSnapshot.DetachedHead {
+		return observeData{}, errors.New(messages.ObserveDetachedHead)
+	}
 	branchesToObserve, branchToCheckout, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
 	return observeData{
 		branchInfos:       branchesSnapshot.Branches,

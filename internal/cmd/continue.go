@@ -172,9 +172,12 @@ func determineContinueData(repo execute.OpenRepoResult) (data continueData, exit
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		initialBranch, err = repo.Git.CurrentBranch(repo.Backend)
+		currentBranchOpt, err := repo.Git.CurrentBranch(repo.Backend)
 		if err != nil {
 			return data, false, errors.New(messages.CurrentBranchCannotDetermine)
+		}
+		if currentBranch, has := currentBranchOpt.Get(); has {
+			initialBranch = currentBranch
 		}
 	}
 	return continueData{

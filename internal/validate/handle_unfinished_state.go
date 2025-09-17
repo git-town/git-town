@@ -181,9 +181,13 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 }
 
 func skipRunstate(args UnfinishedStateArgs, runState runstate.RunState) (dialogdomain.Exit, error) {
-	currentBranch, err := args.Git.CurrentBranch(args.Backend)
+	currentBranchOpt, err := args.Git.CurrentBranch(args.Backend)
 	if err != nil {
 		return false, err
+	}
+	currentBranch, hasCurrentBranch := currentBranchOpt.Get()
+	if !hasCurrentBranch {
+		return false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	validatedConfig, exit, err := quickValidateConfig(quickValidateConfigArgs{
 		backend:     args.Backend,

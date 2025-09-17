@@ -296,6 +296,9 @@ func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) 
 	if err != nil || exit {
 		return data, exit, err
 	}
+	if branchesSnapshot.DetachedHead {
+		return data, false, errors.New(messages.SyncRepoHasDetachedHead)
+	}
 	previousBranch, hasPreviousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend).Get()
 	var previousBranchOpt Option[gitdomain.LocalBranchName]
 	if hasPreviousBranch {
