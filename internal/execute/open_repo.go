@@ -108,6 +108,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		counter:          commandsCounter,
 		dryRun:           unvalidatedConfig.NormalConfig.DryRun,
 		getCurrentBranch: gitCommands.CurrentBranch,
+		getCurrentSHA:    gitCommands.CurrentSHA,
 		printBranchNames: args.PrintBranchNames,
 		printCommands:    args.PrintCommands,
 	})
@@ -189,6 +190,7 @@ func newFrontendRunner(args newFrontendRunnerArgs) subshelldomain.Runner { //nol
 	return &subshell.FrontendRunner{
 		Backend:          args.backend,
 		GetCurrentBranch: args.getCurrentBranch,
+		GetCurrentSHA:    args.getCurrentSHA,
 		PrintBranchNames: args.printBranchNames,
 		PrintCommands:    args.printCommands,
 		CommandsCounter:  args.counter,
@@ -200,6 +202,7 @@ type newFrontendRunnerArgs struct {
 	counter          Mutable[gohacks.Counter]
 	dryRun           configdomain.DryRun
 	getCurrentBranch subshell.GetCurrentBranchFunc
+	getCurrentSHA    subshell.GetCurrentSHAFunc
 	printBranchNames bool
 	printCommands    bool
 }

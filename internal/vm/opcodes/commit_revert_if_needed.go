@@ -1,6 +1,7 @@
 package opcodes
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
@@ -15,9 +16,13 @@ type CommitRevertIfNeeded struct {
 }
 
 func (self *CommitRevertIfNeeded) Run(args shared.RunArgs) error {
-	currentBranch, err := args.Git.CurrentBranch(args.Backend)
+	currentBranchOpt, err := args.Git.CurrentBranch(args.Backend)
 	if err != nil {
 		return err
+	}
+	currentBranch, hasCurrentBranch := currentBranchOpt.Get()
+	if !hasCurrentBranch {
+		return errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	parent := args.Config.Value.NormalConfig.Lineage.Parent(currentBranch)
 	commitsInCurrentBranch, err := args.Git.CommitsInBranch(args.Backend, currentBranch, parent)

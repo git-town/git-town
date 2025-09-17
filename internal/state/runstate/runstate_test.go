@@ -60,6 +60,7 @@ func TestRunState(t *testing.T) {
 						SyncStatus: gitdomain.SyncStatusLocalOnly,
 					},
 				},
+				DetachedHead: true,
 			}),
 			EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
 			EndStashSize:          Some(gitdomain.StashSize(1)),
@@ -88,7 +89,8 @@ func TestRunState(t *testing.T) {
   ],
   "BeginBranchesSnapshot": {
     "Active": null,
-    "Branches": []
+    "Branches": [],
+    "DetachedHead": false
   },
   "BeginConfigSnapshot": {
     "Global": {},
@@ -124,7 +126,8 @@ func TestRunState(t *testing.T) {
         "RemoteSHA": null,
         "SyncStatus": "local only"
       }
-    ]
+    ],
+    "DetachedHead": true
   },
   "EndConfigSnapshot": null,
   "EndStashSize": 1,
