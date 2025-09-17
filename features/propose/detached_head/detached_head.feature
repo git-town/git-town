@@ -1,4 +1,4 @@
-Feature: Cannot create proposals in detached mode
+Feature: cannot propose a detached head
 
   Background:
     Given a Git repo with origin
@@ -17,5 +17,5 @@ Feature: Cannot create proposals in detached mode
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      cannot propose in detached head state
+      cannot propose a detached head
       """
