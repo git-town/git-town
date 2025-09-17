@@ -1,4 +1,4 @@
-Feature: change offline mode in detached mode
+Feature: change offline mode at detached head
 
   Background:
     Given a Git repo with origin
