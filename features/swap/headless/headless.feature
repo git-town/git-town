@@ -1,4 +1,4 @@
-Feature: swap in headless mode
+Feature: cannot swap a detached head
 
   Background:
     Given a Git repo with origin

@@ -1,4 +1,4 @@
-Feature: cannot delete in headless state
+Feature: cannot delete a detached head
 
   Background:
     Given a Git repo with origin

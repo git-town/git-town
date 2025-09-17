@@ -1,4 +1,4 @@
-Feature: sync in headless mode
+Feature: cannot sync a detached head
 
   Background:
     Given a Git repo with origin

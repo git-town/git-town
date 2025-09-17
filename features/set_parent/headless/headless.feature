@@ -1,4 +1,4 @@
-Feature: set the parent in headless mode
+Feature: cannot set the parent for a detached head
 
   Background:
     Given a Git repo with origin

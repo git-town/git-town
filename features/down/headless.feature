@@ -1,4 +1,4 @@
-Feature: move down in headless mode
+Feature: cannot move a detached head down
 
   Background:
     Given a Git repo with origin

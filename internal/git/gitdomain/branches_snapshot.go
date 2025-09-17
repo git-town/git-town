@@ -12,17 +12,14 @@ type BranchesSnapshot struct {
 	// as it adds or removes branches.
 	Branches BranchInfos
 
-	// Headless indicates whether the repo was in a headless state at the time this snapshot was taken.
-	//
-	// In this codebase we use the term "headless" instead of the more accurate term "detached head"
-	// to distinguish this concept from Git Town's "detached" config setting and the "detach" command.
-	Headless bool
+	// DetachedHead indicates whether the repo had a detached head at the time this snapshot was taken.
+	DetachedHead bool
 }
 
 func EmptyBranchesSnapshot() BranchesSnapshot {
 	return BranchesSnapshot{
-		Active:   None[LocalBranchName](),
-		Branches: BranchInfos{},
-		Headless: false,
+		Active:       None[LocalBranchName](),
+		Branches:     BranchInfos{},
+		DetachedHead: false,
 	}
 }

@@ -1,5 +1,5 @@
 @smoke
-Feature: view changes in headless state
+Feature: cannot diff a detached head
 
   Background:
     Given a Git repo with origin

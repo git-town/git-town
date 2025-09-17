@@ -116,7 +116,7 @@ func determineFeatureData(args []string, repo execute.OpenRepoResult) (featureDa
 	if err != nil {
 		return featureData{}, err
 	}
-	if branchesSnapshot.Headless {
+	if branchesSnapshot.DetachedHead {
 		return featureData{}, errors.New(messages.FeatureDetachedHead)
 	}
 	branchesToFeature, branchToCheckout, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)

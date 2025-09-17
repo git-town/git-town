@@ -1,4 +1,4 @@
-Feature: ship a branch in headless mode
+Feature: cannot ship a detached head
 
   Background:
     Given a Git repo with origin

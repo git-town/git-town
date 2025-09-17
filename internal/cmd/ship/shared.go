@@ -85,7 +85,7 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, shipStr
 	if err != nil || exit {
 		return data, exit, err
 	}
-	if branchesSnapshot.Headless {
+	if branchesSnapshot.DetachedHead {
 		return data, false, errors.New(messages.ShipHeadless)
 	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)

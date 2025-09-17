@@ -1,4 +1,4 @@
-Feature: describe the status in headless mode
+Feature: describe the status of a detached head
 
   Background:
     Given a Git repo with origin

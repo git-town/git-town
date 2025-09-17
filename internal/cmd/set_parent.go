@@ -254,7 +254,7 @@ func determineSetParentData(repo execute.OpenRepoResult) (data setParentData, ex
 	if err != nil || exit {
 		return data, exit, err
 	}
-	if branchesSnapshot.Headless {
+	if branchesSnapshot.DetachedHead {
 		return data, false, errors.New(messages.SetParentHeadless)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
