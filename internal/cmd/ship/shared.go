@@ -29,7 +29,7 @@ type sharedShipData struct {
 	config                   config.ValidatedConfig
 	connector                Option[forgedomain.Connector]
 	hasOpenChanges           bool
-	initialBranch            gitdomain.LocalBranchName
+	initialBranch            Option[gitdomain.LocalBranchName]
 	inputs                   dialogcomponents.Inputs
 	isShippingInitialBranch  bool
 	previousBranch           Option[gitdomain.LocalBranchName]
@@ -85,26 +85,24 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, shipStr
 	if err != nil || exit {
 		return data, exit, err
 	}
-	if branchesSnapshot.DetachedHead {
-		return data, false, errors.New(messages.ShipRepoHasDetachedHead)
-	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
-	currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
+	currentBranchOpt := branchesSnapshot.Active
+	currentBranch, hasCurrentBranch := currentBranchOpt.Get()
 	if !hasCurrentBranch {
 		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
-	branchNameToShip := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, currentBranch.String()))
-	branchToShip, hasBranchToShip := branchesSnapshot.Branches.FindByLocalName(branchNameToShip).Get()
-	if hasBranchToShip && branchToShip.SyncStatus == gitdomain.SyncStatusOtherWorktree {
-		return data, false, fmt.Errorf(messages.ShipBranchOtherWorktree, branchNameToShip)
+	var branchToShip gitdomain.LocalBranchName
+	if givenBranch, userGaveBranch := slice.FirstElement(args).Get(); userGaveBranch {
+		branchToShip = gitdomain.LocalBranchName(givenBranch)
+	} else {
+		branchToShip = currentBranch
 	}
-	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
-	if !hasInitialBranch {
-		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
+	branchToShipInfo, hasBranchToShipInfo := branchesSnapshot.Branches.FindByLocalName(branchToShip).Get()
+	if !hasBranchToShipInfo {
+		return data, false, fmt.Errorf(messages.BranchDoesntExist, branchToShip)
 	}
-	isShippingInitialBranch := branchNameToShip == initialBranch
-	if !hasBranchToShip {
-		return data, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
+	if branchToShipInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree {
+		return data, false, fmt.Errorf(messages.ShipBranchOtherWorktree, branchToShip)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
@@ -116,7 +114,7 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, shipStr
 		Backend:            repo.Backend,
 		BranchInfos:        branchesSnapshot.Branches,
 		BranchesAndTypes:   branchesAndTypes,
-		BranchesToValidate: gitdomain.LocalBranchNames{branchNameToShip},
+		BranchesToValidate: gitdomain.LocalBranchNames{branchToShip},
 		ConfigSnapshot:     repo.ConfigSnapshot,
 		Connector:          data.connector,
 		Frontend:           repo.Frontend,
@@ -133,7 +131,7 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, shipStr
 	if shipStrategyOverride, hasShipStrategyOverride := shipStrategyOverride.Get(); hasShipStrategyOverride {
 		validatedConfig.NormalConfig.ShipStrategy = shipStrategyOverride
 	}
-	switch validatedConfig.BranchType(branchNameToShip) {
+	switch validatedConfig.BranchType(branchToShip) {
 	case configdomain.BranchTypeContributionBranch:
 		return data, false, errors.New(messages.ContributionBranchCannotShip)
 	case configdomain.BranchTypeMainBranch:
@@ -147,31 +145,31 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, shipStr
 		configdomain.BranchTypeParkedBranch,
 		configdomain.BranchTypePrototypeBranch:
 	}
-	targetBranchName, hasTargetBranch := validatedConfig.NormalConfig.Lineage.Parent(branchNameToShip).Get()
+	targetBranchName, hasTargetBranch := validatedConfig.NormalConfig.Lineage.Parent(branchToShip).Get()
 	if !hasTargetBranch {
-		return data, false, fmt.Errorf(messages.ShipBranchHasNoParent, branchNameToShip)
+		return data, false, fmt.Errorf(messages.ShipBranchHasNoParent, branchToShip)
 	}
 	targetBranch, hasTargetBranch := branchesSnapshot.Branches.FindByLocalName(targetBranchName).Get()
 	if !hasTargetBranch {
 		return data, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
-	childBranches := validatedConfig.NormalConfig.Lineage.Children(branchNameToShip)
+	childBranches := validatedConfig.NormalConfig.Lineage.Children(branchToShip)
 	proposalsOfChildBranches := LoadProposalsOfChildBranches(LoadProposalsOfChildBranchesArgs{
 		ConnectorOpt:               connector,
 		Lineage:                    validatedConfig.NormalConfig.Lineage,
 		Offline:                    repo.IsOffline,
-		OldBranch:                  branchNameToShip,
-		OldBranchHasTrackingBranch: branchToShip.HasTrackingBranch(),
+		OldBranch:                  branchToShip,
+		OldBranchHasTrackingBranch: branchToShipInfo.HasTrackingBranch(),
 	})
 	return sharedShipData{
-		branchNameToShip:         branchNameToShip,
-		branchToShip:             *branchToShip,
+		branchNameToShip:         branchToShip,
+		branchToShip:             *branchToShipInfo,
 		branchesSnapshot:         branchesSnapshot,
 		childBranches:            childBranches,
 		config:                   validatedConfig,
 		connector:                connector,
 		hasOpenChanges:           repoStatus.OpenChanges,
-		initialBranch:            initialBranch,
+		initialBranch:            currentBranchOpt,
 		inputs:                   inputs,
 		isShippingInitialBranch:  isShippingInitialBranch,
 		previousBranch:           previousBranch,
