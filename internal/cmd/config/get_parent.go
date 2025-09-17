@@ -56,9 +56,12 @@ func executeGetParent(args []string, cliConfig configdomain.PartialConfig) error
 	}
 	var childBranch gitdomain.LocalBranchName
 	if len(args) == 0 {
-		childBranch, err = repo.Git.CurrentBranch(repo.Backend)
+		currentBranchOpt, err := repo.Git.CurrentBranch(repo.Backend)
 		if err != nil {
 			return err
+		}
+		if currentBranch, has := currentBranchOpt.Get(); has {
+			childBranch = currentBranch
 		}
 	} else {
 		childBranch = gitdomain.NewLocalBranchName(args[0])

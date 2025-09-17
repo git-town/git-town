@@ -185,7 +185,7 @@ func TestFixture(t *testing.T) {
 		// verify origin is at "initial" branch
 		branch, err := cloned.OriginRepo.GetOrPanic().Git.CurrentBranch(cloned.DevRepo.GetOrPanic().TestRunner)
 		must.NoError(t, err)
-		must.EqOp(t, "initial", branch)
+		must.EqOp(t, "initial", branch.GetOrPanic())
 	})
 
 	t.Run("CreateOriginBranch", func(t *testing.T) {

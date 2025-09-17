@@ -16,7 +16,6 @@ func TestNewFreshFixture(t *testing.T) {
 	devRepo := result.DevRepo.GetOrPanic()
 	// verify the developer repo
 	asserts.IsGitRepo(t, filepath.Join(gitEnvRootDir, "developer"))
-	branch, err := devRepo.Git.CurrentBranch(devRepo.TestRunner)
-	must.NoError(t, err)
+	branch := asserts.NoError1(devRepo.Git.CurrentBranch(devRepo.TestRunner)).GetOrPanic()
 	must.EqOp(t, "initial", branch)
 }
