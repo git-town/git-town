@@ -1,4 +1,4 @@
-Feature: merging a branch in detached state
+Feature: cannot merge a detached head
 
   Background:
     Given a Git repo with origin
