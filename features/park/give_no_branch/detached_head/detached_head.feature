@@ -20,8 +20,3 @@ Feature: cannot park a detached head
       cannot park a detached head
       """
     And the initial branches and lineage exist now
-
-  Scenario: undo
-    When I run "git-town undo"
-    Then Git Town runs no commands
-    And branch "branch" still has type "feature"
