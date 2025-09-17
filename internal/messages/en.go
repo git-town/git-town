@@ -310,6 +310,7 @@ and will be removed in future versions of Git Town.`
 	SquashMessageProblem                  = "cannot comment out the squash commit message: %w"
 	StashResult                           = "Stash: %s\n"
 	StatusFileNotFound                    = "No status file found for this repository."
+	SwapHeadless                          = "please check out the branch to swap"
 	SwapNeedsCompress                     = "cannot swap because branch %q contains merge commits - please compress and try again"
 	SwapNeedsSync                         = "please sync your branches before swapping"
 	SwapNoGrandParent                     = "cannot swap a branch without grand-parent"

@@ -1,4 +1,4 @@
-Feature: ship a branch in headless mode
+Feature: swap a branch in headless mode
 
   Background:
     Given a Git repo with origin
@@ -11,7 +11,7 @@ Feature: ship a branch in headless mode
       |        | local    | commit 2 |
     And the current branch is "branch"
     And I ran "git checkout HEAD^"
-    When I run "git-town ship"
+    When I run "git-town swap"
 
   Scenario: result
     Then Git Town runs the commands
@@ -19,5 +19,5 @@ Feature: ship a branch in headless mode
       | {{ sha-short 'commit 1' }} | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      please check out the branch to ship
+      please check out the branch to swap
       """
