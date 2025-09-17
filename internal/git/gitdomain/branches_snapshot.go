@@ -11,11 +11,15 @@ type BranchesSnapshot struct {
 	// Don't use these branches for business logic since businss logic might want to modify its in-memory cache of branches
 	// as it adds or removes branches.
 	Branches BranchInfos
+
+	// Headless indicates whether the repo was in a headless state at the time this snapshot was taken.
+	Headless bool
 }
 
 func EmptyBranchesSnapshot() BranchesSnapshot {
 	return BranchesSnapshot{
 		Active:   None[LocalBranchName](),
 		Branches: BranchInfos{},
+		Headless: false,
 	}
 }

@@ -157,12 +157,14 @@ func (self *Commands) BranchesSnapshot(querier subshelldomain.Querier) (gitdomai
 			}
 		}
 	}
+	headless := false
 	if currentBranchOpt.IsNone() {
 		rebaseInProgress, err := self.HasRebaseInProgress(querier)
 		if err != nil {
 			return gitdomain.EmptyBranchesSnapshot(), err
 		}
 		if !rebaseInProgress {
+			headless = true
 			// We are in a detached HEAD state. Use the current HEAD location as the branch name.
 			headSHA, err := self.CurrentSHA(querier)
 			if err != nil {
@@ -185,6 +187,7 @@ func (self *Commands) BranchesSnapshot(querier subshelldomain.Querier) (gitdomai
 	return gitdomain.BranchesSnapshot{
 		Branches: result,
 		Active:   currentBranchOpt,
+		Headless: headless,
 	}, nil
 }
 
@@ -964,6 +967,7 @@ func makeBranchesSnapshotNewRepo(branch gitdomain.LocalBranchName) gitdomain.Bra
 				RemoteSHA:  None[gitdomain.SHA](),
 			},
 		},
+		Headless: false,
 	}
 }
 

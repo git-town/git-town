@@ -13,13 +13,13 @@ Feature: cannot delete in headless state
     And I ran "git checkout HEAD^"
     When I run "git-town delete"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND |
+      | BRANCH | COMMAND                  |
+      |        | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot determine current branch
+      please check out the branch to delete
       """
     And the initial commits exist now
     And the initial branches and lineage exist now
