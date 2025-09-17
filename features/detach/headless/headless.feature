@@ -14,9 +14,11 @@ Feature: detaching in headless state
     When I run "git-town detach"
 
   Scenario: result
-    Then Git Town runs no commands
+    Then Git Town runs the commands
+      | BRANCH | COMMAND                  |
+      |        | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot determine current branch
+      please check out the branch to detach
       """
     And the initial lineage exists now
