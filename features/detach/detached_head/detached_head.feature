@@ -1,4 +1,4 @@
-Feature: detaching in headless state
+Feature: cannot detach a detached head
 
   Background:
     Given a Git repo with origin
