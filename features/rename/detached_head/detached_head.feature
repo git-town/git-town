@@ -1,4 +1,4 @@
-Feature: rename in detached head state
+Feature: rename a detached head
 
   Background:
     Given a Git repo with origin

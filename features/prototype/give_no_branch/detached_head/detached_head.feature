@@ -1,4 +1,4 @@
-Feature: prototype the current feature branch
+Feature: cannot prototype a detached head
 
   Background:
     Given a Git repo with origin
