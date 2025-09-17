@@ -1,4 +1,4 @@
-Feature: park the current detached state
+Feature: cannot park a detached head
 
   Background:
     Given a local Git repo
@@ -17,7 +17,7 @@ Feature: park the current detached state
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      cannot park in detached head state
+      cannot park a detached head
       """
     And the initial branches and lineage exist now
 
