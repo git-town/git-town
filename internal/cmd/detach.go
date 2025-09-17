@@ -227,7 +227,7 @@ func determineDetachData(repo execute.OpenRepoResult) (data detachData, exit dia
 	}
 	currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
 	if !hasCurrentBranch {
-		return data, false, errors.New(messages.DetachRepoHasDetachedHead)
+		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	branchNameToDetach := currentBranch
 	branchToDetachInfo, hasBranchToDetachInfo := branchesSnapshot.Branches.FindByLocalName(branchNameToDetach).Get()
