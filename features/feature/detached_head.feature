@@ -1,4 +1,4 @@
-Feature: cannot make detached state a feature branch
+Feature: cannot convert a detached head to a feature branch
 
   Background:
     Given a Git repo with origin
