@@ -1,4 +1,4 @@
-Feature: describe the status of a detached head
+Feature: describe the Git Town status when the head is detached
 
   Background:
     Given a Git repo with origin
