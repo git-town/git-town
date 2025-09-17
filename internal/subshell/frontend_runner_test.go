@@ -11,7 +11,7 @@ import (
 func TestFormat(t *testing.T) {
 	t.Parallel()
 	tests := map[string]struct {
-		branch      gitdomain.LocalBranchName
+		branch      gitdomain.Location
 		printBranch bool
 		executable  string
 		args        []string

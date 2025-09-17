@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/test/fixture"
 	"github.com/git-town/git-town/v21/internal/test/testgit"
 	"github.com/git-town/git-town/v21/internal/test/testruntime"
+	"github.com/git-town/git-town/v21/pkg/asserts"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
@@ -78,8 +79,7 @@ func TestTestCommands(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
 			runtime.CreateBranch("branch1", "initial")
-			currentBranch, err := runtime.Git.CurrentBranch(runtime)
-			must.NoError(t, err)
+			currentBranch := asserts.NoError1(runtime.Git.CurrentBranch(runtime)).GetOrPanic()
 			must.EqOp(t, "initial", currentBranch)
 			branches, _, err := runtime.LocalBranchesMainFirst("initial")
 			must.NoError(t, err)
@@ -91,8 +91,7 @@ func TestTestCommands(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
 			runtime.CreateBranch("my/feature", "initial")
-			currentBranch, err := runtime.Git.CurrentBranch(runtime)
-			must.NoError(t, err)
+			currentBranch := asserts.NoError1(runtime.Git.CurrentBranch(runtime)).GetOrPanic()
 			must.EqOp(t, "initial", currentBranch)
 			branches, _, err := runtime.LocalBranchesMainFirst("initial")
 			must.NoError(t, err)

@@ -1,4 +1,4 @@
-Feature: cannot delete in headless state
+Feature: move down in headless mode
 
   Background:
     Given a Git repo with origin
@@ -11,15 +11,12 @@ Feature: cannot delete in headless state
       | branch | local    | commit 2 |
     And the current branch is "branch"
     And I ran "git checkout HEAD^"
-    When I run "git-town delete"
+    When I run "git-town down"
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH                     | COMMAND                  |
-      | {{ sha-short 'commit 1' }} | git fetch --prune --tags |
+      | BRANCH | COMMAND |
     And Git Town prints the error:
       """
-      please check out the branch to delete
+      you need to be on a branch to go down
       """
-    And the initial commits exist now
-    And the initial branches and lineage exist now

@@ -56,16 +56,17 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		continueProgram = []shared.Opcode{failedOpcode}
 	}
 	args.RunState.RunProgram.Prepend(continueProgram...)
-	currentBranch, err := args.Git.CurrentBranch(args.Backend)
+	currentBranchOpt, err := args.Git.CurrentBranch(args.Backend)
 	if err != nil {
 		return err
 	}
+	currentBranch, hasCurrentBranch := currentBranchOpt.Get()
 	repoStatus, err := args.Git.RepoStatus(args.Backend)
 	if err != nil {
 		return err
 	}
 	canSkip := false
-	if args.RunState.Command == "sync" && !(repoStatus.RebaseInProgress && args.Config.ValidatedConfigData.IsMainBranch(currentBranch)) {
+	if args.RunState.Command == "sync" && !(repoStatus.RebaseInProgress && hasCurrentBranch && args.Config.ValidatedConfigData.IsMainBranch(currentBranch)) {
 		canSkip = true
 	}
 	if args.RunState.Command == "walk" {

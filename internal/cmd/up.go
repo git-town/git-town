@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"cmp"
+	"errors"
 	"fmt"
 	"os"
 	"regexp"
@@ -76,9 +77,13 @@ func executeUp(args executeUpArgs) error {
 	}
 
 	// Get the current branch
-	currentBranch, err := repo.Git.CurrentBranch(repo.Backend)
+	currentBranchOpt, err := repo.Git.CurrentBranch(repo.Backend)
 	if err != nil {
 		return err
+	}
+	currentBranch, hasCurrentBranch := currentBranchOpt.Get()
+	if !hasCurrentBranch {
+		return errors.New(messages.UpNoCurrentBranch)
 	}
 
 	// Get the child branches from lineage
