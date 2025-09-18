@@ -214,20 +214,20 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (data delet
 	if branchesSnapshot.DetachedHead {
 		return data, false, errors.New(messages.DeleteRepoHasDetachedHead)
 	}
-	var branchNameToDelete gitdomain.LocalBranchName
+	var branchToDelete gitdomain.LocalBranchName
 	if len(args) > 0 {
-		branchNameToDelete = gitdomain.NewLocalBranchName(args[0])
+		branchToDelete = gitdomain.NewLocalBranchName(args[0])
 	} else if activeBranch, hasActiveBranch := branchesSnapshot.Active.Get(); hasActiveBranch {
-		branchNameToDelete = activeBranch
+		branchToDelete = activeBranch
 	} else {
 		return data, false, errors.New(messages.DeleteNoActiveBranch)
 	}
-	branchToDelete, hasBranchToDelete := branchesSnapshot.Branches.FindByLocalName(branchNameToDelete).Get()
-	if !hasBranchToDelete {
-		return data, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToDelete)
+	branchToDeleteInfo, hasBranchToDeleteInfo := branchesSnapshot.Branches.FindByLocalName(branchToDelete).Get()
+	if !hasBranchToDeleteInfo {
+		return data, false, fmt.Errorf(messages.BranchDoesntExist, branchToDelete)
 	}
-	if branchToDelete.SyncStatus == gitdomain.SyncStatusOtherWorktree {
-		return data, exit, fmt.Errorf(messages.BranchOtherWorktree, branchNameToDelete)
+	if branchToDeleteInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree {
+		return data, exit, fmt.Errorf(messages.BranchOtherWorktree, branchToDelete)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
@@ -253,31 +253,31 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (data delet
 	if err != nil || exit {
 		return data, exit, err
 	}
-	branchTypeToDelete := validatedConfig.BranchType(branchNameToDelete)
+	branchTypeToDelete := validatedConfig.BranchType(branchToDelete)
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
 		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	previousBranchOpt := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	branchWhenDone := determineBranchWhenDone(branchWhenDoneArgs{
-		branchNameToDelete: branchNameToDelete,
-		branches:           branchesSnapshot.Branches,
-		initialBranch:      initialBranch,
-		mainBranch:         validatedConfig.ValidatedConfigData.MainBranch,
-		previousBranch:     previousBranchOpt,
+		branchToDelete: branchToDelete,
+		branches:       branchesSnapshot.Branches,
+		initialBranch:  initialBranch,
+		mainBranch:     validatedConfig.ValidatedConfigData.MainBranch,
+		previousBranch: previousBranchOpt,
 	})
 	proposalsOfChildBranches := ship.LoadProposalsOfChildBranches(ship.LoadProposalsOfChildBranchesArgs{
 		ConnectorOpt:               connector,
 		Lineage:                    validatedConfig.NormalConfig.Lineage,
 		Offline:                    repo.IsOffline,
-		OldBranch:                  branchNameToDelete,
-		OldBranchHasTrackingBranch: branchToDelete.HasTrackingBranch(),
+		OldBranch:                  branchToDelete,
+		OldBranchHasTrackingBranch: branchToDeleteInfo.HasTrackingBranch(),
 	})
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
 	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
 	return deleteData{
 		branchInfosLastRun:       branchInfosLastRun,
-		branchToDeleteInfo:       *branchToDelete,
+		branchToDeleteInfo:       *branchToDeleteInfo,
 		branchToDeleteType:       branchTypeToDelete,
 		branchWhenDone:           branchWhenDone,
 		branchesSnapshot:         branchesSnapshot,
@@ -388,7 +388,7 @@ func deleteLocalBranch(prog, finalUndoProgram Mutable[program.Program], data del
 }
 
 func determineBranchWhenDone(args branchWhenDoneArgs) gitdomain.LocalBranchName {
-	if args.branchNameToDelete != args.initialBranch {
+	if args.branchToDelete != args.initialBranch {
 		return args.initialBranch
 	}
 	// here we are deleting the initial branch
@@ -407,11 +407,11 @@ func determineBranchWhenDone(args branchWhenDoneArgs) gitdomain.LocalBranchName 
 }
 
 type branchWhenDoneArgs struct {
-	branchNameToDelete gitdomain.LocalBranchName
-	branches           gitdomain.BranchInfos
-	initialBranch      gitdomain.LocalBranchName
-	mainBranch         gitdomain.LocalBranchName
-	previousBranch     Option[gitdomain.LocalBranchName]
+	branchToDelete gitdomain.LocalBranchName
+	branches       gitdomain.BranchInfos
+	initialBranch  gitdomain.LocalBranchName
+	mainBranch     gitdomain.LocalBranchName
+	previousBranch Option[gitdomain.LocalBranchName]
 }
 
 func validateDeleteData(data deleteData) error {
