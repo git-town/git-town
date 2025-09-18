@@ -118,6 +118,10 @@ func determineBranchData(repo execute.OpenRepoResult) (data branchData, exit dia
 			branchesSnapshot.Branches = branchesSnapshot.Branches.Remove(initialBranch)
 		}
 		initialBranchOpt = None[gitdomain.LocalBranchName]()
+	} else if initialBranchOpt.IsNone() {
+		if currentBranchOpt, err := repo.Git.CurrentBranchUncached(repo.Backend); err == nil {
+			initialBranchOpt = currentBranchOpt
+		}
 	}
 	colors := dialogcolors.NewDialogColors()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.Names())
