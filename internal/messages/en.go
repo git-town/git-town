@@ -100,6 +100,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 
 	DeleteCannotDeleteMainBranch        = "you cannot delete the main branch"
 	DeleteCannotDeletePerennialBranches = "you cannot delete perennial branches"
+	DeleteNoActiveBranch                = "please check out the branch to delete"
 	DeleteRepoHasDetachedHead           = "please check out the branch to delete"
 	DetachedResult                      = "Detached: %s\n"
 	DetachNeedsSync                     = "please sync this stack before detaching branches from it"
