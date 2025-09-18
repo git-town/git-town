@@ -1483,8 +1483,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^there is now no previous Git branch$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		_, has := devRepo.Git.PreviouslyCheckedOutBranch(devRepo.TestRunner).Get()
-		if has {
+		previousBranch := devRepo.Git.PreviouslyCheckedOutBranch(devRepo.TestRunner)
+		if previousBranch.IsSome() {
 			return errors.New("previous branch found")
 		}
 		return nil
