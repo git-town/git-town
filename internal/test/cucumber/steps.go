@@ -1418,11 +1418,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the main branch is (?:now|still) "([^"]*)"$`, func(ctx context.Context, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have, has := devRepo.Config.UnvalidatedConfig.MainBranch.Get()
-		if !has {
-			return errors.New("no main branch found")
-		}
-		if have.String() != want {
+		have := devRepo.Config.UnvalidatedConfig.MainBranch
+		if !have.EqualSome(gitdomain.NewLocalBranchName(want)) {
 			return fmt.Errorf("expected %q, got %q", want, have)
 		}
 		return nil
@@ -1466,11 +1463,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the previous Git branch is (?:now|still) "([^"]*)"$`, func(ctx context.Context, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have, has := devRepo.Git.PreviouslyCheckedOutBranch(devRepo.TestRunner).Get()
-		if !has {
-			return errors.New("no previous branch found")
-		}
-		if have.String() != want {
+		have := devRepo.Git.PreviouslyCheckedOutBranch(devRepo.TestRunner)
+		if !have.EqualSome(gitdomain.NewLocalBranchName(want)) {
 			return fmt.Errorf("expected previous branch %q but got %q", want, have)
 		}
 		return nil
