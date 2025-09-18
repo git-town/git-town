@@ -13,8 +13,9 @@ Feature: append in detached head state
     And I ran "git checkout HEAD^"
     When I run "git-town append new"
 
-  @this
   Scenario: result
-    Then Git Town runs the commands
-      | BRANCH | COMMAND             |
-      | branch | git checkout -b new |
+    Then Git Town runs no commands
+    And Git Town prints the error:
+      """
+      please check out the branch to which you want to append a child
+      """
