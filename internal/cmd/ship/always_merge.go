@@ -18,7 +18,7 @@ type shipProgramAlwaysMergeArgs struct {
 
 func shipProgramAlwaysMerge(repo execute.OpenRepoResult, args shipProgramAlwaysMergeArgs) {
 	args.prog.Value.Add(&opcodes.BranchEnsureShippableChanges{Branch: args.sharedData.branchNameToShip, Parent: args.sharedData.targetBranchName})
-	if args.sharedData.initialBranch != args.sharedData.targetBranchName {
+	if !args.sharedData.initialBranch.EqualSome(args.sharedData.targetBranchName) {
 		args.prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: args.sharedData.targetBranchName})
 	}
 	if args.mergeData.remotes.HasRemote(args.sharedData.config.NormalConfig.DevRemote) && args.sharedData.config.NormalConfig.Offline.IsOnline() {
