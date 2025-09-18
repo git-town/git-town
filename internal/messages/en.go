@@ -9,6 +9,7 @@ const (
 	APIUnexpectedResultDataStructure = "unexpected result data structure"
 	APIUpdateProposalSource          = "Updating source branch of proposal %s to %s ... "
 	APIUpdateProposalTarget          = "Updating target branch of proposal %s to %s ... "
+	AppendDetachedHead               = "please check out the branch to which you want to append a child"
 	ArgumentUnknown                  = "unknown argument: %q"
 	AuthenticationMissing            = "not logged in"
 	AuthorizationMissing             = `cannot find "repo" scope: %v`
