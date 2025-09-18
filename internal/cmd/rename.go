@@ -186,6 +186,9 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 	if err != nil || exit {
 		return data, exit, err
 	}
+	if branchesSnapshot.DetachedHead {
+		return data, exit, errors.New(messages.RenameDetachedHead)
+	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
 		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)

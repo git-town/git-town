@@ -157,15 +157,15 @@ func (self *Commands) BranchesSnapshot(querier subshelldomain.Querier) (gitdomai
 			}
 		}
 	}
-	headless := false
+	detachedHead := false
 	if currentBranchOpt.IsNone() {
 		rebaseInProgress, err := self.HasRebaseInProgress(querier)
 		if err != nil {
 			return gitdomain.EmptyBranchesSnapshot(), err
 		}
 		if !rebaseInProgress {
-			headless = true
 			// We are in a detached HEAD state. Use the current HEAD location as the branch name.
+			detachedHead = true
 			headSHA, err := self.CurrentSHA(querier)
 			if err != nil {
 				return gitdomain.EmptyBranchesSnapshot(), err
@@ -185,9 +185,9 @@ func (self *Commands) BranchesSnapshot(querier subshelldomain.Querier) (gitdomai
 		self.CurrentBranchCache.Set(currentBranch)
 	}
 	return gitdomain.BranchesSnapshot{
-		Branches: result,
-		Active:   currentBranchOpt,
-		Headless: headless,
+		Branches:     result,
+		Active:       currentBranchOpt,
+		DetachedHead: detachedHead,
 	}, nil
 }
 
@@ -391,7 +391,7 @@ func (self *Commands) CreateTrackingBranch(runner subshelldomain.Runner, branch 
 }
 
 // CurrentBranch provides the name of the current branch.
-// Provides (None, nil) if there is no current branch, e.g. in headless state.
+// Provides (None, nil) if there is no current branch, e.g. when the Git HEAD is detached.
 func (self *Commands) CurrentBranch(querier subshelldomain.Querier) (Option[gitdomain.LocalBranchName], error) {
 	if cachedCurrentBranch, hasCachedCurrentBranch := self.CurrentBranchCache.Get(); hasCachedCurrentBranch {
 		return Some(cachedCurrentBranch), nil
@@ -967,7 +967,7 @@ func makeBranchesSnapshotNewRepo(branch gitdomain.LocalBranchName) gitdomain.Bra
 				RemoteSHA:  None[gitdomain.SHA](),
 			},
 		},
-		Headless: false,
+		DetachedHead: false,
 	}
 }
 

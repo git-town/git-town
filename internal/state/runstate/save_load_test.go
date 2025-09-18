@@ -159,7 +159,7 @@ func TestLoadSave(t *testing.T) {
   "BeginBranchesSnapshot": {
     "Active": null,
     "Branches": [],
-    "Headless": false
+    "DetachedHead": false
   },
   "BeginConfigSnapshot": {
     "Global": {},
