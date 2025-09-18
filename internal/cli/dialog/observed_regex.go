@@ -29,7 +29,7 @@ it's safe to leave it blank.
 func ObservedRegex(args Args[configdomain.ObservedRegex]) (Option[configdomain.ObservedRegex], dialogdomain.Exit, error) {
 	input, exit, errInput := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "observed-regex",
-		ExistingValue: args.Local.Or(args.Global).String(),
+		ExistingValue: args.Local.Or(args.Global).StringOr(""),
 		Help:          observedRegexHelp,
 		Inputs:        args.Inputs,
 		Prompt:        messages.ObservedRegexPrompt,

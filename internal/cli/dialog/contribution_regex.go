@@ -29,7 +29,7 @@ it's safe to leave it blank.
 func ContributionRegex(args Args[configdomain.ContributionRegex]) (Option[configdomain.ContributionRegex], dialogdomain.Exit, error) {
 	input, exit, errInput := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "contribution-regex",
-		ExistingValue: args.Local.Or(args.Global).String(),
+		ExistingValue: args.Local.Or(args.Global).StringOr(""),
 		Help:          contributionRegexHelp,
 		Inputs:        args.Inputs,
 		Prompt:        messages.ContributionRegexPrompt,

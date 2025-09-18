@@ -1266,8 +1266,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if err != nil {
 			return fmt.Errorf("cannot determine current branch of second worktree: %w", err)
 		}
-		if actual.String() != expected {
-			return fmt.Errorf("expected active branch %q but is %q", expected, actual)
+		if !actual.EqualSome(gitdomain.NewLocalBranchName(expected)) {
+			return fmt.Errorf("expected active branch %q but is %q", expected, actual.GetOrPanic())
 		}
 		return nil
 	})
@@ -1302,8 +1302,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if err != nil {
 			return fmt.Errorf("cannot determine current branch of developer repo: %w", err)
 		}
-		if actual.String() != expected {
-			return fmt.Errorf("expected active branch %q but is %q", expected, actual)
+		if !actual.EqualSome(gitdomain.NewLocalBranchName(expected)) {
+			return fmt.Errorf("expected active branch %q but is %q", expected, actual.GetOrPanic())
 		}
 		return nil
 	})
@@ -1419,7 +1419,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		have := devRepo.Config.UnvalidatedConfig.MainBranch
-		if have.String() != want {
+		if !have.EqualSome(gitdomain.NewLocalBranchName(want)) {
 			return fmt.Errorf("expected %q, got %q", want, have)
 		}
 		return nil
@@ -1464,7 +1464,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		have := devRepo.Git.PreviouslyCheckedOutBranch(devRepo.TestRunner)
-		if have.String() != want {
+		if !have.EqualSome(gitdomain.NewLocalBranchName(want)) {
 			return fmt.Errorf("expected previous branch %q but got %q", want, have)
 		}
 		return nil
@@ -1476,6 +1476,16 @@ func defineSteps(sc *godog.ScenarioContext) {
 		branches := devRepo.Config.GitUnscoped.PerennialBranches
 		if len(branches) > 0 {
 			return fmt.Errorf("expected no perennial branches, got %q", branches)
+		}
+		return nil
+	})
+
+	sc.Step(`^there is now no previous Git branch$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		previousBranch := devRepo.Git.PreviouslyCheckedOutBranch(devRepo.TestRunner)
+		if previousBranch.IsSome() {
+			return errors.New("previous branch found")
 		}
 		return nil
 	})
