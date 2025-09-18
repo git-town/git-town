@@ -1298,12 +1298,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		devRepo.Git.CurrentBranchCache.Invalidate()
-		actual, err := devRepo.Git.CurrentBranch(devRepo.TestRunner)
+		actualOpt, err := devRepo.Git.CurrentBranch(devRepo.TestRunner)
 		if err != nil {
 			return fmt.Errorf("cannot determine current branch of developer repo: %w", err)
 		}
-		if actual.String() != expected {
-			return fmt.Errorf("expected active branch %q but is %q", expected, actual)
+		expectedBranch := gitdomain.NewLocalBranchName(expected)
+		if !actualOpt.EqualSome(expectedBranch) {
+			return fmt.Errorf("expected active branch %q but is %q", expected, actualOpt.GetOrPanic())
 		}
 		return nil
 	})
