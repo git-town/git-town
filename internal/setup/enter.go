@@ -300,17 +300,14 @@ type UserInput struct {
 	ValidatedConfig     configdomain.ValidatedConfigData
 }
 
-func determineExistingScope(configSnapshot configdomain.BeginConfigSnapshot, key configdomain.Key, oldValue fmt.Stringer) configdomain.ConfigScope {
-	switch {
-	case oldValue.String() == "":
-		return configdomain.ConfigScopeLocal
-	case configSnapshot.Global[key] == oldValue.String():
+func determineExistingScope[T ~string](configSnapshot configdomain.BeginConfigSnapshot, key configdomain.Key, oldValueOpt Option[T]) configdomain.ConfigScope {
+	oldValue, hasOldValue := oldValueOpt.Get()
+	globalStr, hasGlobal := configSnapshot.Global[key]
+	globalValue := T(globalStr)
+	if hasOldValue && hasGlobal && globalValue == oldValue {
 		return configdomain.ConfigScopeGlobal
-	case configSnapshot.Local[key] == oldValue.String():
-		return configdomain.ConfigScopeLocal
-	default:
-		return configdomain.ConfigScopeLocal
 	}
+	return configdomain.ConfigScopeLocal
 }
 
 func determineForgeType(userChoice Option[forgedomain.ForgeType], devURL Option[giturl.Parts]) Option[forgedomain.ForgeType] {
