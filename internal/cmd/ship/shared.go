@@ -14,7 +14,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/forge"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/gohacks/slice"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/validate"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -96,20 +95,6 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, shipStr
 		branchToShip = activeBranch
 	} else {
 		return data, false, errors.New(messages.ShipNoBranchToShip)
-	}
-	branchToShipInfo, hasBranchToShipInfo := branchesSnapshot.Branches.FindByLocalName(branchToShip).Get()
-	if hasBranchToShipInfo && branchToShipInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree {
-		return data, false, fmt.Errorf(messages.ShipBranchOtherWorktree, branchToShip)
-	}
-	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
-	if !hasInitialBranch {
-		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
-	}
-	var branchToShip gitdomain.LocalBranchName
-	if givenBranch, userGaveBranch := slice.FirstElement(args).Get(); userGaveBranch {
-		branchToShip = gitdomain.LocalBranchName(givenBranch)
-	} else {
-		branchToShip = currentBranch
 	}
 	branchToShipInfo, hasBranchToShipInfo := branchesSnapshot.Branches.FindByLocalName(branchToShip).Get()
 	if !hasBranchToShipInfo {
