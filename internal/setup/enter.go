@@ -686,7 +686,7 @@ func enterUnknownBranchType(data Data) (Option[configdomain.UnknownBranchType], 
 }
 
 func existsAndChanged[T any](input, existing Option[T]) bool {
-	return input.StringOr("") != "" && input.StringOr("") != existing.String()
+	return input.IsSome() && !input.Equal(existing)
 }
 
 func shouldAskForScope(args enterTokenScopeArgs) bool {
