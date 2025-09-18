@@ -30,6 +30,7 @@ Feature: on a feature branch
         existing
         new
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

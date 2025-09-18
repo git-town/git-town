@@ -20,6 +20,7 @@ Feature: merging a prototype branch
       main
         parent
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

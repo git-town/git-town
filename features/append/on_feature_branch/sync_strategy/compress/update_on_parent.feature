@@ -33,6 +33,7 @@ Feature: append a new feature branch in a clean workspace using the "compress" s
         feature
           new
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

@@ -135,7 +135,7 @@ func TestOption(t *testing.T) {
 			text := "my token"
 			option := Some(forgedomain.GitHubToken(text))
 			have := option.String()
-			must.EqOp(t, text, have)
+			must.EqOp(t, "Some(my token)", have)
 		})
 		t.Run("Some(struct that doesn't implement fmt.Stringer)", func(t *testing.T) {
 			t.Parallel()
@@ -147,26 +147,26 @@ func TestOption(t *testing.T) {
 			}
 			option := Some(instance)
 			have := option.String()
-			want := "&{true}"
+			want := "Some({true})"
 			must.EqOp(t, want, have)
 		})
 		t.Run("None[int]", func(t *testing.T) {
 			t.Parallel()
 			option := None[int]()
 			have := option.String()
-			must.EqOp(t, "", have)
+			must.EqOp(t, "None", have)
 		})
 		t.Run("None[*int]", func(t *testing.T) {
 			t.Parallel()
 			option := None[*int]()
 			have := option.String()
-			must.EqOp(t, "", have)
+			must.EqOp(t, "None", have)
 		})
 		t.Run("None[string newtype]", func(t *testing.T) {
 			t.Parallel()
 			option := None[configdomain.VerifiedRegex]()
 			have := option.String()
-			must.EqOp(t, "", have)
+			must.EqOp(t, "None", have)
 		})
 	})
 

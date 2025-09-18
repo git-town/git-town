@@ -32,6 +32,7 @@ Feature: delete the current prototype branch
       main
         previous
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

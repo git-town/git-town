@@ -25,6 +25,7 @@ Feature: auto-push the new branch to origin without running Git push hooks
       main
         new
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

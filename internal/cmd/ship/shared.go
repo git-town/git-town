@@ -86,9 +86,20 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, shipStr
 		return data, exit, err
 	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
-	currentBranchOpt := branchesSnapshot.Active
-	currentBranch, hasCurrentBranch := currentBranchOpt.Get()
-	if !hasCurrentBranch {
+	var branchNameToShip gitdomain.LocalBranchName
+	if len(args) > 0 {
+		branchNameToShip = gitdomain.NewLocalBranchName(args[0])
+	} else if activeBranch, hasActiveBranch := branchesSnapshot.Active.Get(); hasActiveBranch {
+		branchNameToShip = activeBranch
+	} else {
+		return data, false, errors.New(messages.ShipNoBranchToShip)
+	}
+	branchToShip, hasBranchToShip := branchesSnapshot.Branches.FindByLocalName(branchNameToShip).Get()
+	if hasBranchToShip && branchToShip.SyncStatus == gitdomain.SyncStatusOtherWorktree {
+		return data, false, fmt.Errorf(messages.ShipBranchOtherWorktree, branchNameToShip)
+	}
+	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
+	if !hasInitialBranch {
 		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	var branchToShip gitdomain.LocalBranchName

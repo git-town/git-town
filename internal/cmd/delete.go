@@ -20,7 +20,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/forge"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/gohacks/slice"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/state/runstate"
@@ -216,14 +215,12 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (data delet
 		return data, false, errors.New(messages.DeleteRepoHasDetachedHead)
 	}
 	var branchToDelete gitdomain.LocalBranchName
-	if firstArg, hasFirstArg := slice.FirstElement(args).Get(); hasFirstArg {
-		branchToDelete = gitdomain.NewLocalBranchName(firstArg)
+	if len(args) > 0 {
+		branchToDelete = gitdomain.NewLocalBranchName(args[0])
+	} else if activeBranch, hasActiveBranch := branchesSnapshot.Active.Get(); hasActiveBranch {
+		branchToDelete = activeBranch
 	} else {
-		currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
-		if !hasCurrentBranch {
-			return data, false, errors.New(messages.CurrentBranchCannotDetermine)
-		}
-		branchToDelete = currentBranch
+		return data, false, errors.New(messages.DeleteNoActiveBranch)
 	}
 	branchToDeleteInfo, hasBranchToDeleteInfo := branchesSnapshot.Branches.FindByLocalName(branchToDelete).Get()
 	if !hasBranchToDeleteInfo {
