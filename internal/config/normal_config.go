@@ -270,6 +270,7 @@ func DefaultNormalConfig() NormalConfig {
 
 func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults NormalConfig) NormalConfig {
 	syncFeatureStrategy := partial.SyncFeatureStrategy.GetOr(defaults.SyncFeatureStrategy)
+	fmt.Println("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO", partial.AutoSync)
 	return NormalConfig{
 		Aliases:                  partial.Aliases,
 		AutoResolve:              partial.AutoResolve.GetOr(defaults.AutoResolve),

@@ -260,13 +260,27 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 	if err != nil {
 		return data, false, err
 	}
+	// THIS IS WRONG, AUTOSYNC SHOULD BE FALSE HERE
 	fmt.Println("11111111111111111111111111111111111111111111111111111111111", config.AutoSync)
+	shouldFetch := true
+	if repoStatus.OpenChanges {
+		shouldFetch = false
+	}
+	if args.beam.ShouldBeam() {
+		shouldFetch = false
+	}
+	if args.commit.ShouldCommit() {
+		shouldFetch = false
+	}
+	if !config.AutoSync.ShouldSync() {
+		shouldFetch = false
+	}
 	branchesSnapshot, stashSize, branchInfosLastRun, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
-		Fetch:                 (!repoStatus.OpenChanges && !args.beam.ShouldBeam() && !args.commit.ShouldCommit()) || !config.AutoSync.ShouldSync(),
+		Fetch:                 shouldFetch,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
@@ -384,7 +398,8 @@ type determineAppendDataArgs struct {
 func appendProgram(frontend subshelldomain.Runner, data appendFeatureData, finalMessages stringslice.Collector, beamCherryPick bool) program.Program {
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages, frontend)
-	if !data.hasOpenChanges && !data.beam.ShouldBeam() && !data.commit.ShouldCommit() {
+	fmt.Println("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB", data.config.NormalConfig.AutoSync)
+	if !data.hasOpenChanges && !data.beam.ShouldBeam() && !data.commit.ShouldCommit() && data.config.NormalConfig.AutoSync.ShouldSync() {
 		branchesToDelete := set.New[gitdomain.LocalBranchName]()
 		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 			BranchInfos:         data.branchInfos,
