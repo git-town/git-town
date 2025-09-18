@@ -32,6 +32,6 @@ Feature: previous branch is checked out in another worktree
       | new     | git checkout current     |
       | current | git branch -D new        |
       |         | git push origin :current |
-    And the previous Git branch is now ""
+    And there is now no previous Git branch
     And the initial commits exist now
     And the initial lineage exists now

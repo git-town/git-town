@@ -329,7 +329,7 @@ func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (data p
 	ancestorOpt := latestExistingAncestor(initialBranch, branchesSnapshot.Branches, validatedConfig.NormalConfig.Lineage)
 	ancestor, hasAncestor := ancestorOpt.Get()
 	if !hasAncestor {
-		return data, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branchesSnapshot.Active)
+		return data, false, fmt.Errorf(messages.SetParentNoFeatureBranch, initialBranch)
 	}
 	commitsToBeam := []gitdomain.Commit{}
 	if args.beam {
