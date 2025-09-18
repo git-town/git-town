@@ -1426,7 +1426,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		have, has := devRepo.Config.UnvalidatedConfig.MainBranch.Get()
 		if !has {
-			return fmt.Errorf("no main branch found")
+			return errors.New("no main branch found")
 		}
 		if have.String() != want {
 			return fmt.Errorf("expected %q, got %q", want, have)
@@ -1474,7 +1474,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		have, has := devRepo.Git.PreviouslyCheckedOutBranch(devRepo.TestRunner).Get()
 		if !has {
-			return fmt.Errorf("no previous branch found")
+			return errors.New("no previous branch found")
 		}
 		if have.String() != want {
 			return fmt.Errorf("expected previous branch %q but got %q", want, have)
@@ -1497,7 +1497,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		_, has := devRepo.Git.PreviouslyCheckedOutBranch(devRepo.TestRunner).Get()
 		if has {
-			return fmt.Errorf("previous branch found")
+			return errors.New("previous branch found")
 		}
 		return nil
 	})
