@@ -20,7 +20,6 @@ Feature: display the local branch hierarchy in detached head mode
     And I ran "git checkout HEAD^"
     When I run "git-town branch"
 
-  @this
   Scenario: result
     Then Git Town runs no commands
     And Git Town prints:
