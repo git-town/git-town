@@ -1262,11 +1262,16 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		secondWorkTree := state.fixture.SecondWorktree.GetOrPanic()
 		secondWorkTree.Git.CurrentBranchCache.Invalidate()
-		actual, err := secondWorkTree.Git.CurrentBranch(secondWorkTree)
+		expectedBranch := gitdomain.NewLocalBranchName(expected)
+		actualOpt, err := secondWorkTree.Git.CurrentBranch(secondWorkTree)
 		if err != nil {
 			return fmt.Errorf("cannot determine current branch of second worktree: %w", err)
 		}
-		if actual.String() != expected {
+		actual, hasActual := actualOpt.Get()
+		if !hasActual {
+			return fmt.Errorf("the other worktree has no active branch")
+		}
+		if actual != expectedBranch {
 			return fmt.Errorf("expected active branch %q but is %q", expected, actual)
 		}
 		return nil
