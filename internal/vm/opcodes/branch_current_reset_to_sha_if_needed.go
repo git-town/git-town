@@ -25,11 +25,11 @@ func (self *BranchCurrentResetToSHAIfNeeded) Run(args shared.RunArgs) error {
 		return nil
 	}
 	if currentSHA != self.MustHaveSHA {
-		currentBranchName, err := args.Git.CurrentBranch(args.Backend)
+		currentBranch, err := args.Git.CurrentBranch(args.Backend)
 		if err != nil {
 			return err
 		}
-		return fmt.Errorf(messages.BranchHasWrongSHA, currentBranchName, self.SetToSHA, self.MustHaveSHA, currentSHA)
+		return fmt.Errorf(messages.BranchHasWrongSHA, currentBranch.StringOr(currentSHA.Truncate(7).String()), self.SetToSHA, self.MustHaveSHA, currentSHA)
 	}
 	args.PrependOpcodes(&BranchCurrentResetToSHA{
 		SetToSHA: self.SetToSHA,

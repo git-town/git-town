@@ -24,4 +24,4 @@ Feature: previous branch is checked out in another worktree
       | BRANCH  | COMMAND              |
       | new     | git checkout current |
       | current | git branch -D new    |
-    And the previous Git branch is now ""
+    And there is now no previous Git branch
