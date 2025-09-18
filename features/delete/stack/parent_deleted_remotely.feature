@@ -26,6 +26,7 @@ Feature: the parent of the branch to delete was deleted remotely
       main
         alpha
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

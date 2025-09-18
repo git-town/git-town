@@ -38,6 +38,7 @@ Feature: skip deleting the remote branch when shipping another branch using the 
       main
         other
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

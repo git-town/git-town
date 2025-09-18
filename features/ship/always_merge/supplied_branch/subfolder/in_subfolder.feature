@@ -36,6 +36,7 @@ Feature: ship the supplied feature branch from a subfolder using the always-merg
       main
         other
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

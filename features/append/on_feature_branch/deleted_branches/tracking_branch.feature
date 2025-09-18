@@ -33,6 +33,7 @@ Feature: append a branch to a branch whose tracking branch was deleted
       main
         new
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

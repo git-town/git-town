@@ -24,6 +24,7 @@ Feature: on the main branch with uncommitted changes
       main
         new
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

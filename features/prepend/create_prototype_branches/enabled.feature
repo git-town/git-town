@@ -27,6 +27,7 @@ Feature: prepend a new branch when prototype branches are configured via Git met
         parent
           old
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

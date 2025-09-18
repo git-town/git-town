@@ -33,6 +33,7 @@ Feature: append a new branch when prototype branches are configured via a deprec
         existing
           new
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

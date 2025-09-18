@@ -33,6 +33,7 @@ Feature: delete the current feature branch
       main
         other
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
