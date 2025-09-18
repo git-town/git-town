@@ -27,7 +27,7 @@ Feature: display the local branch hierarchy in detached head mode
       """
         main
           alpha
-      *     beta
+            beta
               gamma
           parked  (parked)
           prototype  (prototype)
