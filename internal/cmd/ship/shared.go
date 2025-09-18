@@ -22,8 +22,8 @@ import (
 
 // data that all ship strategies use
 type sharedShipData struct {
-	branchNameToShip         gitdomain.LocalBranchName
-	branchToShip             gitdomain.BranchInfo
+	branchToShip             gitdomain.LocalBranchName
+	branchToShipInfo         gitdomain.BranchInfo
 	branchesSnapshot         gitdomain.BranchesSnapshot
 	childBranches            gitdomain.LocalBranchNames
 	config                   config.ValidatedConfig
@@ -86,17 +86,17 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, shipStr
 		return data, exit, err
 	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
-	var branchNameToShip gitdomain.LocalBranchName
+	var branchToShip gitdomain.LocalBranchName
 	if len(args) > 0 {
-		branchNameToShip = gitdomain.NewLocalBranchName(args[0])
+		branchToShip = gitdomain.NewLocalBranchName(args[0])
 	} else if activeBranch, hasActiveBranch := branchesSnapshot.Active.Get(); hasActiveBranch {
-		branchNameToShip = activeBranch
+		branchToShip = activeBranch
 	} else {
 		return data, false, errors.New(messages.ShipNoBranchToShip)
 	}
-	branchToShip, hasBranchToShip := branchesSnapshot.Branches.FindByLocalName(branchNameToShip).Get()
-	if hasBranchToShip && branchToShip.SyncStatus == gitdomain.SyncStatusOtherWorktree {
-		return data, false, fmt.Errorf(messages.ShipBranchOtherWorktree, branchNameToShip)
+	branchToShipInfo, hasBranchToShipInfo := branchesSnapshot.Branches.FindByLocalName(branchToShip).Get()
+	if hasBranchToShipInfo && branchToShipInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree {
+		return data, false, fmt.Errorf(messages.ShipBranchOtherWorktree, branchToShip)
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
@@ -173,8 +173,8 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, shipStr
 		OldBranchHasTrackingBranch: branchToShipInfo.HasTrackingBranch(),
 	})
 	return sharedShipData{
-		branchNameToShip:         branchToShip,
-		branchToShip:             *branchToShipInfo,
+		branchToShip:             branchToShip,
+		branchToShipInfo:         *branchToShipInfo,
 		branchesSnapshot:         branchesSnapshot,
 		childBranches:            childBranches,
 		config:                   validatedConfig,
