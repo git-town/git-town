@@ -103,6 +103,11 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, shipStr
 	if branchToShipInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree {
 		return data, false, fmt.Errorf(messages.ShipBranchOtherWorktree, branchToShip)
 	}
+	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
+	if !hasInitialBranch {
+		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
+	}
+	isShippingInitialBranch := branchToShip == initialBranch
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	remotes, err := repo.Git.Remotes(repo.Backend)
