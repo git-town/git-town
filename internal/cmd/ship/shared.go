@@ -97,7 +97,10 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, shipStr
 		return data, false, errors.New(messages.ShipNoBranchToShip)
 	}
 	branchToShipInfo, hasBranchToShipInfo := branchesSnapshot.Branches.FindByLocalName(branchToShip).Get()
-	if hasBranchToShipInfo && branchToShipInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree {
+	if !hasBranchToShipInfo {
+		return data, false, fmt.Errorf(messages.BranchDoesntExist, branchToShip)
+	}
+	if branchToShipInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree {
 		return data, false, fmt.Errorf(messages.ShipBranchOtherWorktree, branchToShip)
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
@@ -105,9 +108,6 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, shipStr
 		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	isShippingInitialBranch := branchToShip == initialBranch
-	if !hasBranchToShipInfo {
-		return data, false, fmt.Errorf(messages.BranchDoesntExist, branchToShip)
-	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	remotes, err := repo.Git.Remotes(repo.Backend)
