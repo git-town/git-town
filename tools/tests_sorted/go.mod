@@ -1,3 +1,3 @@
 module github.com/git-town/git-town/tools/tests_sorted
 
-go 1.24.4
+go 1.24.6
