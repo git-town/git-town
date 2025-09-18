@@ -94,7 +94,7 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, shipStr
 	} else if activeBranch, hasActiveBranch := branchesSnapshot.Active.Get(); hasActiveBranch {
 		branchNameToShip = activeBranch
 	} else {
-		return data, false, fmt.Errorf(messages.ShipNoBranchToShip)
+		return data, false, errors.New(messages.ShipNoBranchToShip)
 	}
 	branchToShip, hasBranchToShip := branchesSnapshot.Branches.FindByLocalName(branchNameToShip).Get()
 	if hasBranchToShip && branchToShip.SyncStatus == gitdomain.SyncStatusOtherWorktree {

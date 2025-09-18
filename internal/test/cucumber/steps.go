@@ -1269,7 +1269,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		}
 		actual, hasActual := actualOpt.Get()
 		if !hasActual {
-			return fmt.Errorf("the other worktree has no active branch")
+			return errors.New("the other worktree has no active branch")
 		}
 		if actual != expectedBranch {
 			return fmt.Errorf("expected active branch %q but is %q", expected, actual)

@@ -220,7 +220,7 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (data delet
 	} else if activeBranch, hasActiveBranch := branchesSnapshot.Active.Get(); hasActiveBranch {
 		branchNameToDelete = activeBranch
 	} else {
-		return data, false, fmt.Errorf(messages.DeleteNoActiveBranch)
+		return data, false, errors.New(messages.DeleteNoActiveBranch)
 	}
 	branchToDelete, hasBranchToDelete := branchesSnapshot.Branches.FindByLocalName(branchNameToDelete).Get()
 	if !hasBranchToDelete {
