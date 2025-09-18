@@ -51,6 +51,7 @@ Feature: beam commits and uncommitted changes from a local branch onto a new fea
         existing
         new
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

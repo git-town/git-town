@@ -23,6 +23,7 @@ Feature: on the main branch with a clean workspace
       main
         new
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

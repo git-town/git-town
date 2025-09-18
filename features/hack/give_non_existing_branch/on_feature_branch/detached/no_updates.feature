@@ -23,6 +23,7 @@ Feature: on a feature branch with a clean workspace in detached mode with no upd
         existing
         new
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

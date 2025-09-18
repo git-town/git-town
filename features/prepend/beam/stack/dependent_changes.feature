@@ -151,6 +151,7 @@ Feature: beam a commit from a stack with dependent changes into a prepended bran
         new
           old
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

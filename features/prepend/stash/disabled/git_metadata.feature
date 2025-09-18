@@ -20,6 +20,7 @@ Feature: permanently disable stashing via Git metadata
         new
           old
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

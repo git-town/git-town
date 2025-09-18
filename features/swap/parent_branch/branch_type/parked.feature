@@ -32,6 +32,7 @@ Feature: swapping a branch with its parked parent
         current
           parent
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

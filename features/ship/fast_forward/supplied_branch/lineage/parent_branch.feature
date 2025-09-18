@@ -37,6 +37,7 @@ Feature: ship a parent branch using the fast-forward strategy
       main
         child
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

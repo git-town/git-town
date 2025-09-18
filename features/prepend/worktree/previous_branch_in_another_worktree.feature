@@ -24,6 +24,7 @@ Feature: previous branch is checked out in another worktree
           current
         previous
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
