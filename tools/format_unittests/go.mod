@@ -1,3 +1,3 @@
 module github.com/git-town/git-town/tools/format_unittests
 
-go 1.23.12
+go 1.24.7
