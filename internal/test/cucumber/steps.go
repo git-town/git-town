@@ -1492,6 +1492,16 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^there is now no previous Git branch$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		_, has := devRepo.Git.PreviouslyCheckedOutBranch(devRepo.TestRunner).Get()
+		if has {
+			return fmt.Errorf("previous branch found")
+		}
+		return nil
+	})
+
 	sc.Step(`^these branches exist now$`, func(ctx context.Context, input *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		currentBranches := state.fixture.Branches()
@@ -1519,16 +1529,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 			fmt.Printf("\nERROR! Found %d differences in the existing files\n\n", errorCount)
 			fmt.Println(diff)
 			return errors.New("mismatching files found, see diff above")
-		}
-		return nil
-	})
-
-	sc.Step(`^there is now no previous Git branch$`, func(ctx context.Context) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		_, has := devRepo.Git.PreviouslyCheckedOutBranch(devRepo.TestRunner).Get()
-		if has {
-			return fmt.Errorf("previous branch found")
 		}
 		return nil
 	})
