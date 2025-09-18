@@ -295,6 +295,9 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 	if err != nil || exit {
 		return data, exit, err
 	}
+	if branchesSnapshot.DetachedHead {
+		return data, false, errors.New(messages.AppendDetachedHead)
+	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
