@@ -112,11 +112,15 @@ func determineBranchData(repo execute.OpenRepoResult) (data branchData, exit dia
 		return data, exit, err
 	}
 	initialBranchOpt := branchesSnapshot.Active
-	if initialBranchOpt.IsNone() {
+	if branchesSnapshot.DetachedHead {
+		initialBranch, hasInitialBranch := initialBranchOpt.Get()
+		if hasInitialBranch {
+			branchesSnapshot.Branches = branchesSnapshot.Branches.Remove(initialBranch)
+		}
+		initialBranchOpt = None[gitdomain.LocalBranchName]()
+	} else if initialBranchOpt.IsNone() {
 		if currentBranchOpt, err := repo.Git.CurrentBranchUncached(repo.Backend); err == nil {
-			if currentBranchOpt.IsSome() {
-				initialBranchOpt = currentBranchOpt
-			}
+			initialBranchOpt = currentBranchOpt
 		}
 	}
 	colors := dialogcolors.NewDialogColors()
