@@ -120,7 +120,7 @@ func (self Option[T]) Or(other Option[T]) Option[T] {
 // If this option contains nothing, you get an empty string.
 func (self Option[T]) String() string {
 	if value, has := self.Get(); has {
-		return fmt.Sprintf("Some(%v)", value)
+		return fmt.Sprint("Some(", value, ")")
 	}
 	return "None"
 }
