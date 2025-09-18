@@ -15,7 +15,6 @@ Feature: delete the given branch from a detached head
     And I ran "git checkout HEAD^"
     When I run "git-town delete branch-2"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH                      | COMMAND                  |
