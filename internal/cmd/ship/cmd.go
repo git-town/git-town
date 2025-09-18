@@ -137,7 +137,7 @@ func executeShip(args executeShipArgs) error {
 			return err
 		}
 	case configdomain.ShipStrategyAlwaysMerge:
-		mergeData, err := determineMergeData(repo, sharedData.branchNameToShip, sharedData.targetBranchName)
+		mergeData, err := determineMergeData(repo, sharedData.branchToShip, sharedData.targetBranchName)
 		if err != nil {
 			return err
 		}
@@ -148,13 +148,13 @@ func executeShip(args executeShipArgs) error {
 			sharedData:    sharedData,
 		})
 	case configdomain.ShipStrategyFastForward:
-		mergeData, err := determineMergeData(repo, sharedData.branchNameToShip, sharedData.targetBranchName)
+		mergeData, err := determineMergeData(repo, sharedData.branchToShip, sharedData.targetBranchName)
 		if err != nil {
 			return err
 		}
 		shipProgramFastForward(prog, repo, sharedData, mergeData)
 	case configdomain.ShipStrategySquashMerge:
-		squashMergeData, err := determineMergeData(repo, sharedData.branchNameToShip, sharedData.targetBranchName)
+		squashMergeData, err := determineMergeData(repo, sharedData.branchToShip, sharedData.targetBranchName)
 		if err != nil {
 			return err
 		}
@@ -211,7 +211,7 @@ func validateSharedData(data sharedShipData, toParent configdomain.ShipIntoNonpe
 		return errors.New(messages.ShipMessageWithFastForward)
 	}
 	if !toParent {
-		branch := data.branchToShip.LocalName.GetOrPanic()
+		branch := data.branchToShipInfo.LocalName.GetOrPanic()
 		parentBranch := data.targetBranch.LocalName.GetOrPanic()
 		if !data.config.IsMainOrPerennialBranch(parentBranch) {
 			ancestors := data.config.NormalConfig.Lineage.Ancestors(branch)
@@ -220,22 +220,22 @@ func validateSharedData(data sharedShipData, toParent configdomain.ShipIntoNonpe
 			return fmt.Errorf(messages.ShipChildBranch, stringslice.Connect(ancestorsWithoutMainOrPerennial.Strings()), oldestAncestor)
 		}
 	}
-	switch data.branchToShip.SyncStatus {
+	switch data.branchToShipInfo.SyncStatus {
 	case gitdomain.SyncStatusDeletedAtRemote:
-		return fmt.Errorf(messages.BranchDeletedAtRemote, data.branchNameToShip)
+		return fmt.Errorf(messages.BranchDeletedAtRemote, data.branchToShip)
 	case
 		gitdomain.SyncStatusNotInSync,
 		gitdomain.SyncStatusAhead,
 		gitdomain.SyncStatusBehind:
-		return fmt.Errorf(messages.BranchNotInSyncWithParent, data.branchNameToShip)
+		return fmt.Errorf(messages.BranchNotInSyncWithParent, data.branchToShip)
 	case gitdomain.SyncStatusOtherWorktree:
-		return fmt.Errorf(messages.ShipBranchIsInOtherWorktree, data.branchNameToShip)
+		return fmt.Errorf(messages.ShipBranchIsInOtherWorktree, data.branchToShip)
 	case
 		gitdomain.SyncStatusUpToDate,
 		gitdomain.SyncStatusRemoteOnly,
 		gitdomain.SyncStatusLocalOnly:
 	}
-	if localName, hasLocalName := data.branchToShip.LocalName.Get(); hasLocalName {
+	if localName, hasLocalName := data.branchToShipInfo.LocalName.Get(); hasLocalName {
 		if localName == data.initialBranch {
 			return validate.NoOpenChanges(data.hasOpenChanges)
 		}
