@@ -30,6 +30,7 @@ Feature: create a new top-level feature branch in a clean workspace using the "c
         feature
         new
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

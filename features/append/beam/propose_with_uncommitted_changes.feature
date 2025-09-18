@@ -53,6 +53,7 @@ Feature: beam a commit and uncommitted changes onto a new child branch and propo
         existing
           new
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

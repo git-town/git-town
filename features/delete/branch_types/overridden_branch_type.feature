@@ -33,6 +33,7 @@ Feature: delete a branch that has an overridden branch type
       main
         other
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

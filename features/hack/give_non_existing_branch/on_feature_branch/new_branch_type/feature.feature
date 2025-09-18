@@ -32,6 +32,7 @@ Feature: create a new branch when unknown-branch-type is set and feature-regex i
         existing
         new
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

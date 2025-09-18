@@ -54,6 +54,7 @@ Feature: display all executed Git commands
       main
         active
       """
+
   Scenario: undo
     When I run "git-town undo --verbose"
     Then Git Town runs the commands

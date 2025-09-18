@@ -41,6 +41,7 @@ Feature: delete a branch within a branch chain
         alpha
           gamma
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
