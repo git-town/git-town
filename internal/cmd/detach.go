@@ -19,7 +19,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/forge"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/gohacks/slice"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/state/runstate"
@@ -77,7 +76,7 @@ func detachCommand() *cobra.Command {
 		Short:   detachDesc,
 		GroupID: cmdhelpers.GroupIDStack,
 		Long:    cmdhelpers.Long(detachDesc, detachHelp),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			dryRun, errDryRun := readDryRunFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
 			if err := cmp.Or(errDryRun, errVerbose); err != nil {
@@ -91,7 +90,7 @@ func detachCommand() *cobra.Command {
 				Stash:        None[configdomain.Stash](),
 				Verbose:      verbose,
 			})
-			return executeDetach(args, cliConfig)
+			return executeDetach(cliConfig)
 		},
 	}
 	addDryRunFlag(&cmd)
@@ -99,7 +98,7 @@ func detachCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeDetach(args []string, cliConfig configdomain.PartialConfig) error {
+func executeDetach(cliConfig configdomain.PartialConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,
@@ -110,7 +109,7 @@ func executeDetach(args []string, cliConfig configdomain.PartialConfig) error {
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineDetachData(args, repo)
+	data, exit, err := determineDetachData(repo)
 	if err != nil || exit {
 		return err
 	}
@@ -178,7 +177,7 @@ type detachChildBranch struct {
 	proposal Option[forgedomain.Proposal]
 }
 
-func determineDetachData(args []string, repo execute.OpenRepoResult) (data detachData, exit dialogdomain.Exit, err error) {
+func determineDetachData(repo execute.OpenRepoResult) (data detachData, exit dialogdomain.Exit, err error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -223,10 +222,14 @@ func determineDetachData(args []string, repo execute.OpenRepoResult) (data detac
 	if err != nil || exit {
 		return data, exit, err
 	}
-	if branchesSnapshot.Headless {
-		return data, false, errors.New(messages.DetachHeadless)
+	if branchesSnapshot.DetachedHead {
+		return data, false, errors.New(messages.DetachRepoHasDetachedHead)
 	}
-	branchNameToDetach := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branchesSnapshot.Active.String()))
+	currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
+	if !hasCurrentBranch {
+		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
+	}
+	branchNameToDetach := currentBranch
 	branchToDetachInfo, hasBranchToDetachInfo := branchesSnapshot.Branches.FindByLocalName(branchNameToDetach).Get()
 	if !hasBranchToDetachInfo {
 		return data, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToDetach)

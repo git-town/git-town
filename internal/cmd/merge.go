@@ -210,6 +210,9 @@ func determineMergeData(repo execute.OpenRepoResult) (mergeData, dialogdomain.Ex
 	if err != nil || exit {
 		return mergeData{}, exit, err
 	}
+	if branchesSnapshot.DetachedHead {
+		return mergeData{}, false, errors.New(messages.MergeDetachedHead)
+	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
 		return mergeData{}, false, errors.New(messages.CurrentBranchCannotDetermine)
