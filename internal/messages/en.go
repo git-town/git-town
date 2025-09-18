@@ -297,6 +297,7 @@ and will be removed in future versions of Git Town.`
 	ShipDeletesTrackingBranches           = "Ship deletes tracking branches: %s\n"
 	ShipExitMergeError                    = "aborted because merge exited with error"
 	ShipMessageWithFastForward            = "shipping with the fast-forward strategy does not use the given commit message"
+	ShipNoBranchToShip                    = "please provide the branch to ship"
 	ShipOpenChanges                       = "you have uncommitted changes. Did you mean to commit them before shipping?"
 	ShipRepoHasDetachedHead               = "please check out the branch to ship"
 	ShipStrategy                          = "Ship strategy: %s\n"
