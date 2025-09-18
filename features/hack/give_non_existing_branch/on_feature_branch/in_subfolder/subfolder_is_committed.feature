@@ -24,6 +24,7 @@ Feature: inside a committed subfolder that exists only on the current feature br
         existing
         new
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

@@ -36,6 +36,7 @@ Feature: prepend a branch to a local feature branch using the "rebase" sync stra
         parent
           old
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

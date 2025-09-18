@@ -25,6 +25,7 @@ Feature: append a new branch when parked branches are configured
         existing
           new
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

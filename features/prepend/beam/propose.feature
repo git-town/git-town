@@ -44,6 +44,7 @@ Feature: propose a newly prepended branch
           new
             existing
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

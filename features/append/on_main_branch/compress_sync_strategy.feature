@@ -23,6 +23,7 @@ Feature: append a new feature branch to the main branch using the "compress" syn
       main
         new
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

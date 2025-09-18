@@ -27,6 +27,7 @@ Feature: append a branch in Spanish
       main
         new
       """
+
   Scenario: undo
     When I run "git-town undo" with these environment variables
       | LANG | es_ES.UTF-8 |

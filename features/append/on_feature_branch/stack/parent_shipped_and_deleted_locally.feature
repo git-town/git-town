@@ -35,6 +35,7 @@ Feature: appending to a branch whose parent was shipped and the local branch del
         child
           new
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
