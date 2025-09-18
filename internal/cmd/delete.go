@@ -260,11 +260,11 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (data delet
 	}
 	previousBranchOpt := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	branchWhenDone := determineBranchWhenDone(branchWhenDoneArgs{
-		branchNameToDelete: branchToDelete,
-		branches:           branchesSnapshot.Branches,
-		initialBranch:      initialBranch,
-		mainBranch:         validatedConfig.ValidatedConfigData.MainBranch,
-		previousBranch:     previousBranchOpt,
+		branchToDelete: branchToDelete,
+		branches:       branchesSnapshot.Branches,
+		initialBranch:  initialBranch,
+		mainBranch:     validatedConfig.ValidatedConfigData.MainBranch,
+		previousBranch: previousBranchOpt,
 	})
 	proposalsOfChildBranches := ship.LoadProposalsOfChildBranches(ship.LoadProposalsOfChildBranchesArgs{
 		ConnectorOpt:               connector,
@@ -388,7 +388,7 @@ func deleteLocalBranch(prog, finalUndoProgram Mutable[program.Program], data del
 }
 
 func determineBranchWhenDone(args branchWhenDoneArgs) gitdomain.LocalBranchName {
-	if args.branchNameToDelete != args.initialBranch {
+	if args.branchToDelete != args.initialBranch {
 		return args.initialBranch
 	}
 	// here we are deleting the initial branch
@@ -407,11 +407,11 @@ func determineBranchWhenDone(args branchWhenDoneArgs) gitdomain.LocalBranchName 
 }
 
 type branchWhenDoneArgs struct {
-	branchNameToDelete gitdomain.LocalBranchName
-	branches           gitdomain.BranchInfos
-	initialBranch      gitdomain.LocalBranchName
-	mainBranch         gitdomain.LocalBranchName
-	previousBranch     Option[gitdomain.LocalBranchName]
+	branchToDelete gitdomain.LocalBranchName
+	branches       gitdomain.BranchInfos
+	initialBranch  gitdomain.LocalBranchName
+	mainBranch     gitdomain.LocalBranchName
+	previousBranch Option[gitdomain.LocalBranchName]
 }
 
 func validateDeleteData(data deleteData) error {
