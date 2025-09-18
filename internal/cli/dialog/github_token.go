@@ -32,7 +32,7 @@ with the GitHub API.
 func GitHubToken(args Args[forgedomain.GitHubToken]) (Option[forgedomain.GitHubToken], dialogdomain.Exit, error) {
 	input, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "github-token",
-		ExistingValue: args.Local.Or(args.Global).String(),
+		ExistingValue: args.Local.Or(args.Global).StringOr(""),
 		Help:          gitHubTokenHelp,
 		Inputs:        args.Inputs,
 		Prompt:        messages.GitHubTokenPrompt,
