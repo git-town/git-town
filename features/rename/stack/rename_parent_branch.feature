@@ -31,6 +31,7 @@ Feature: rename a parent branch
         new
           child
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

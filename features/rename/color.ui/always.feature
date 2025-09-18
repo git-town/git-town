@@ -29,6 +29,7 @@ Feature: rename a contribution branch
       main
         new
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

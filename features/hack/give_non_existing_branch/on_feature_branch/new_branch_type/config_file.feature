@@ -35,6 +35,7 @@ Feature: create a new branch when prototype branches are configured via config f
         existing
         new
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

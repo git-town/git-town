@@ -23,6 +23,7 @@ Feature: in a subfolder on the main branch
       main
         new
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

@@ -42,6 +42,7 @@ Feature: beam a commit from a stack with independent changes into a prepended br
         new
           old
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

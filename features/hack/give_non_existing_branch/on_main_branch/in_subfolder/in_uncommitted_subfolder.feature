@@ -22,6 +22,7 @@ Feature: inside an uncommitted subfolder on the current feature branch
       main
         new
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
