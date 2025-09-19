@@ -17,13 +17,9 @@ import (
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge"
-	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/gohacks"
-	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/state/runstate"
-	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	"github.com/git-town/git-town/v21/internal/validate"
 	"github.com/git-town/git-town/v21/internal/vm/interpreter/fullinterpreter"
 	"github.com/git-town/git-town/v21/internal/vm/program"
@@ -185,21 +181,6 @@ func executeHack(args hackArgs) error {
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
 	})
-}
-
-type createFeatureBranchArgs struct {
-	appendData            appendFeatureData
-	backend               subshelldomain.RunnerQuerier
-	beginBranchesSnapshot gitdomain.BranchesSnapshot
-	beginConfigSnapshot   configdomain.BeginConfigSnapshot
-	beginStashSize        gitdomain.StashSize
-	branchInfosLastRun    Option[gitdomain.BranchInfos]
-	commandsCounter       Mutable[gohacks.Counter]
-	dryRun                configdomain.DryRun
-	finalMessages         stringslice.Collector
-	frontend              subshelldomain.Runner
-	git                   git.Commands
-	rootDir               gitdomain.RepoRootDir
 }
 
 func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data appendFeatureData, exit dialogdomain.Exit, err error) {
