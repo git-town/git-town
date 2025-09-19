@@ -57,6 +57,7 @@ Feature: migrate existing configuration in Git metadata to a config file
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                                 |
+      | git config --unset git-town.auto-sync                   |
       | git config --unset git-town.contribution-regex          |
       | git config --unset git-town.dev-remote                  |
       | git config --unset git-town.feature-regex               |
@@ -78,6 +79,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | git config --unset git-town.unknown-branch-type         |
     And the main branch is now not set
     And there are now no perennial branches
+    And local Git setting "git-town.auto-sync" now doesn't exist
     And local Git setting "git-town.forge-type" now doesn't exist
     And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
     And local Git setting "git-town.sync-feature-strategy" now doesn't exist
