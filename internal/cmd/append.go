@@ -262,10 +262,7 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 	if repoStatus.OpenChanges {
 		shouldFetch = false
 	}
-	if args.beam.ShouldBeam() {
-		shouldFetch = false
-	}
-	if args.commit.ShouldCommit() {
+	if args.beam.ShouldBeam() || args.commit.ShouldCommit() {
 		shouldFetch = false
 	}
 	if !config.AutoSync.ShouldSync() {
