@@ -76,9 +76,6 @@ func executePrototype(args []string, cliConfig configdomain.PartialConfig) error
 	if err != nil {
 		return err
 	}
-	if err = validatePrototypeData(data, repo); err != nil {
-		return err
-	}
 	branchNames := data.branchesToPrototype.Keys()
 	if err = gitconfig.SetBranchTypeOverride(repo.Backend, configdomain.BranchTypePrototypeBranch, branchNames...); err != nil {
 		return err
@@ -124,35 +121,33 @@ func determinePrototypeData(args []string, repo execute.OpenRepoResult) (prototy
 	if branchesSnapshot.DetachedHead {
 		return prototypeData{}, errors.New(messages.PrototypeDetachedHead)
 	}
-	branchesToPrototype, branchToCheckout, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
+	prototypeCandidates, branchToCheckout, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
+	branchesToPrototype := configdomain.BranchesAndTypes{}
+
+	for branchName, branchType := range prototypeCandidates {
+		if !branchesSnapshot.Branches.HasLocalBranch(branchName) && !branchesSnapshot.Branches.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote) {
+			return prototypeData{}, fmt.Errorf(messages.BranchDoesntExist, branchName)
+		}
+		switch branchType {
+		case configdomain.BranchTypeMainBranch:
+			return prototypeData{}, errors.New(messages.MainBranchCannotPrototype)
+		case configdomain.BranchTypePerennialBranch:
+			return prototypeData{}, errors.New(messages.PerennialBranchCannotPrototype)
+		case configdomain.BranchTypePrototypeBranch:
+			repo.FinalMessages.Add(fmt.Sprintf(messages.BranchIsAlreadyPrototype, branchName))
+		case
+			configdomain.BranchTypeFeatureBranch,
+			configdomain.BranchTypeContributionBranch,
+			configdomain.BranchTypeParkedBranch,
+			configdomain.BranchTypeObservedBranch:
+			branchesToPrototype.Add(branchName, branchType)
+		}
+	}
+
 	return prototypeData{
 		branchInfos:         branchesSnapshot.Branches,
 		branchesSnapshot:    branchesSnapshot,
 		branchesToPrototype: branchesToPrototype,
 		checkout:            branchToCheckout,
 	}, err
-}
-
-func validatePrototypeData(data prototypeData, repo execute.OpenRepoResult) error {
-	for branchName, branchType := range data.branchesToPrototype {
-		if !data.branchInfos.HasLocalBranch(branchName) && !data.branchInfos.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote) {
-			return fmt.Errorf(messages.BranchDoesntExist, branchName)
-		}
-		switch branchType {
-		case configdomain.BranchTypeMainBranch:
-			return errors.New(messages.MainBranchCannotPrototype)
-		case configdomain.BranchTypePerennialBranch:
-			return errors.New(messages.PerennialBranchCannotPrototype)
-		case configdomain.BranchTypePrototypeBranch:
-			return fmt.Errorf(messages.BranchIsAlreadyPrototype, branchName)
-		case
-			configdomain.BranchTypeFeatureBranch,
-			configdomain.BranchTypeContributionBranch,
-			configdomain.BranchTypeParkedBranch,
-			configdomain.BranchTypeObservedBranch:
-		default:
-			panic("unhandled branch type" + branchType.String())
-		}
-	}
-	return nil
 }
