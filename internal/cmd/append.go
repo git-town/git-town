@@ -159,7 +159,6 @@ func executeAppend(args executeAppendArgs) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaaaaaaaaaaaaaaaaaa", args.sync)
 	data, exit, err := determineAppendData(determineAppendDataArgs{
 		beam:          args.beam,
 		commit:        args.commit,
@@ -262,7 +261,6 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 		return data, false, err
 	}
 	// THIS IS WRONG, AUTOSYNC SHOULD BE FALSE HERE
-	fmt.Println("11111111111111111111111111111111111111111111111111111111111", config.AutoSync)
 	shouldFetch := true
 	if repoStatus.OpenChanges {
 		shouldFetch = false
@@ -402,7 +400,6 @@ type determineAppendDataArgs struct {
 func appendProgram(frontend subshelldomain.Runner, data appendFeatureData, finalMessages stringslice.Collector, beamCherryPick bool) program.Program {
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages, frontend)
-	fmt.Println("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB", data.config.NormalConfig.AutoSync)
 	if !data.hasOpenChanges && !data.beam.ShouldBeam() && !data.commit.ShouldCommit() && data.config.NormalConfig.AutoSync.ShouldSync() {
 		branchesToDelete := set.New[gitdomain.LocalBranchName]()
 		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
