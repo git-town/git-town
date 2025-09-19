@@ -125,7 +125,7 @@ func determineObserveData(args []string, repo execute.OpenRepoResult) (observeDa
 		return observeData{}, errors.New(messages.ObserveDetachedHead)
 	}
 	observeCandidates, branchToCheckout, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
-	var branchesToObserve configdomain.BranchesAndTypes
+	branchesToObserve := configdomain.BranchesAndTypes{}
 	for branchName, branchType := range observeCandidates {
 		switch branchType {
 		case configdomain.BranchTypeMainBranch:

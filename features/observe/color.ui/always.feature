@@ -9,7 +9,6 @@ Feature: make another remote feature branch an observed branch
     And local Git setting "color.ui" is "always"
     When I run "git-town observe remote-feature"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                     |
