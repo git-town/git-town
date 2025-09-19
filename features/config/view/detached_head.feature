@@ -41,15 +41,15 @@ Feature: display configuration from Git metadata in detached head state
         perennial regex: ^release-
         prototype branches: (none)
         unknown branch type: observed
-      
+
       Configuration:
         offline: no
-      
+
       Create:
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: no
-      
+
       Hosting:
         development remote: origin
         forge type: (not set)
@@ -62,11 +62,11 @@ Feature: display configuration from Git metadata in detached head state
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
-      
+
       Ship:
         delete tracking branch: yes
         ship strategy: squash-merge
-      
+
       Sync:
         auto-resolve phantom conflicts: no
         run detached: yes
@@ -78,7 +78,7 @@ Feature: display configuration from Git metadata in detached head state
         sync tags: yes
         sync with upstream: yes
         auto-resolve phantom conflicts: no
-      
+
       Branch Lineage:
         main
           branch
