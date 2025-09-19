@@ -12,19 +12,19 @@ Feature: disable syncing via environment variable
       | branch-1 | local    | local branch-1 commit  |
       | branch-1 | origin   | origin branch-1 commit |
     And the current branch is "branch-1"
-    When I run "git-town append branch-2" with these environment variables
+    When I run "git-town hack branch-2" with these environment variables
       | GIT_TOWN_AUTO_SYNC | false |
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                  |
-      | branch-1 | git checkout -b branch-2 |
+      | BRANCH   | COMMAND                       |
+      | branch-1 | git checkout -b branch-2 main |
     And the initial commits exist now
     And this lineage exists now
       """
       main
         branch-1
-          branch-2
+        branch-2
       """
 
   Scenario: undo

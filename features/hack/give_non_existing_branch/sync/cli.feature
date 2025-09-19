@@ -13,7 +13,6 @@ Feature: disable syncing via CLI
     And the current branch is "branch-1"
     When I run "git-town hack branch-2 --no-sync"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                       |

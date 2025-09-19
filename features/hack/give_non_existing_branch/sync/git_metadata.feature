@@ -13,18 +13,18 @@ Feature: disable syncing via CLI
       | branch-1 | origin   | origin branch-1 commit |
     And the current branch is "branch-1"
     And global Git setting "git-town.auto-sync" is "false"
-    When I run "git-town append branch-2"
+    When I run "git-town hack branch-2"
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                  |
-      | branch-1 | git checkout -b branch-2 |
+      | BRANCH   | COMMAND                       |
+      | branch-1 | git checkout -b branch-2 main |
     And the initial commits exist now
     And this lineage exists now
       """
       main
         branch-1
-          branch-2
+        branch-2
       """
 
   Scenario: undo
