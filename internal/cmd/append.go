@@ -118,7 +118,6 @@ func appendCmd() *cobra.Command {
 				commitMessage: commitMessage,
 				propose:       propose,
 				prototype:     prototype,
-				sync:          sync,
 			})
 		},
 	}
@@ -145,7 +144,6 @@ type executeAppendArgs struct {
 	commitMessage Option[gitdomain.CommitMessage]
 	propose       configdomain.Propose
 	prototype     configdomain.Prototype
-	sync          Option[configdomain.AutoSync]
 }
 
 func executeAppend(args executeAppendArgs) error {
