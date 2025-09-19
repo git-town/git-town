@@ -17,14 +17,14 @@ Feature: disable syncing via CLI
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                  |
-      | branch-1 | git checkout -b branch-2 |
+      | BRANCH   | COMMAND                       |
+      | branch-1 | git checkout -b branch-2 main |
     And the initial commits exist now
     And this lineage exists now
       """
       main
-        branch-1
-          branch-2
+        branch-2
+          branch-1
       """
 
   Scenario: undo

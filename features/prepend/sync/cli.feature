@@ -14,17 +14,16 @@ Feature: disable syncing via CLI
     And the current branch is "branch-1"
     When I run "git-town prepend branch-2 --no-sync"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                  |
-      | branch-1 | git checkout -b branch-2 |
+      | BRANCH   | COMMAND                       |
+      | branch-1 | git checkout -b branch-2 main |
     And the initial commits exist now
     And this lineage exists now
       """
       main
-        branch-1
-          branch-2
+        branch-2
+          branch-1
       """
 
   Scenario: undo
