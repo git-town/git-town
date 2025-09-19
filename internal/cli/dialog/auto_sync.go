@@ -17,6 +17,8 @@ const (
 Git Town can keep your branches in sync,
 for example before creating a new branch.
 
+If you disable this, branches only get synced
+if you run "git town sync" manually.
 `
 )
 
