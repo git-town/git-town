@@ -45,6 +45,7 @@ func Load(rootDir gitdomain.RepoRootDir, fileName string, finalMessages stringsl
 // Validate converts the given low-level configfile data into high-level config data.
 func Validate(data Data, finalMessages stringslice.Collector) (configdomain.PartialConfig, error) {
 	var err error
+	// TODO: add https://github.com/google/keep-sorted to RTA and run it as part of make fix
 	// keep-sorted start
 	var contributionRegex Option[configdomain.ContributionRegex]
 	var unknownBranchType Option[configdomain.UnknownBranchType]
