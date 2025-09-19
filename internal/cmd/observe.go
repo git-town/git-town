@@ -142,15 +142,14 @@ func determineObserveData(args []string, repo execute.OpenRepoResult) (observeDa
 			configdomain.BranchTypeContributionBranch,
 			configdomain.BranchTypeParkedBranch,
 			configdomain.BranchTypePrototypeBranch:
-			branchesToObserve.Add(branchName, branchType)
-		}
-		hasLocalBranch := data.branchInfos.HasLocalBranch(branchName)
-		hasRemoteBranch := data.branchInfos.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote)
-		if !hasLocalBranch && !hasRemoteBranch {
-			return fmt.Errorf(messages.BranchDoesntExist, branchName)
-		}
-		if hasLocalBranch && !hasRemoteBranch {
-			return fmt.Errorf(messages.ObserveBranchIsLocal, branchName)
+			hasLocalBranch := data.branchInfos.HasLocalBranch(branchName)
+			hasRemoteBranch := data.branchInfos.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote)
+			if !hasLocalBranch && !hasRemoteBranch {
+				return fmt.Errorf(messages.BranchDoesntExist, branchName)
+			}
+			if hasLocalBranch && !hasRemoteBranch {
+				return fmt.Errorf(messages.ObserveBranchIsLocal, branchName)
+			}
 		}
 	}
 	return observeData{
