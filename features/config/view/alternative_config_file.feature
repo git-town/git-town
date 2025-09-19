@@ -23,15 +23,15 @@ Feature: show the configuration when using an alternative config file
         perennial regex: (not set)
         prototype branches: (none)
         unknown branch type: feature
-      
+
       Configuration:
         offline: no
-      
+
       Create:
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: yes
-      
+
       Hosting:
         development remote: origin
         forge type: (not set)
@@ -44,11 +44,11 @@ Feature: show the configuration when using an alternative config file
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
-      
+
       Ship:
         delete tracking branch: yes
         ship strategy: api
-      
+
       Sync:
         auto-resolve phantom conflicts: yes
         auto-sync: yes
