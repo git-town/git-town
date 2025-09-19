@@ -231,6 +231,9 @@ func determineWalkData(repo execute.OpenRepoResult, all configdomain.AllBranches
 	if err != nil || exit {
 		return walkData{}, exit, err
 	}
+	if branchesSnapshot.DetachedHead {
+		return walkData{}, false, errors.New(messages.WalkDetachedHead)
+	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {

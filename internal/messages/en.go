@@ -356,8 +356,11 @@ and will be removed in future versions of Git Town.`
 	UpdateProposalBodyUnsupported           = "the Git Town driver for your forge does not support updating the proposal body"
 	UpNoChild                               = "branch %q has no children"
 	UpNoCurrentBranch                       = "you need to be on a branch to go up"
-	ValueInvalid                            = "invalid value for %s: %q. Please provide either \"yes\" or \"no\""
-	WalkAllOrStack                          = "please provide either --all or --stack"
-	WalkDone                                = "Branch walk done."
-	WalkNoDryRun                            = "there is no dry-run mode for walking through branches on your shell, please call with a command to run on each branch"
+
+	ValueInvalid = "invalid value for %s: %q. Please provide either \"yes\" or \"no\""
+
+	WalkAllOrStack   = "please provide either --all or --stack"
+	WalkDetachedHead = "please check out the branch from which to walk"
+	WalkDone         = "Branch walk done."
+	WalkNoDryRun     = "there is no dry-run mode for walking through branches on your shell, please call with a command to run on each branch"
 )
