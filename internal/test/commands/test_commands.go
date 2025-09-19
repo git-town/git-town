@@ -229,7 +229,7 @@ func (self *TestCommands) CreateBranchOfType(name gitdomain.LocalBranchName, par
 
 func (self *TestCommands) CreateChildBranch(name, parent gitdomain.LocalBranchName) {
 	self.CheckoutBranch(parent)
-	self.MustRun("git-town", "append", "--detached", name.String())
+	self.MustRun("git-town", "append", "--no-sync", name.String())
 	self.Git.CurrentBranchCache.Set(name)
 }
 
