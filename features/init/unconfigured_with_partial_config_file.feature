@@ -22,6 +22,7 @@ Feature: ask for information not provided by the config file
       delete-tracking-branch = false
 
       [sync]
+      auto-sync = false
       tags = false
       upstream = false
       """
