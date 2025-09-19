@@ -178,12 +178,12 @@ func SetAlias(runner subshelldomain.Runner, aliasableCommand configdomain.Aliasa
 	return SetConfigValue(runner, configdomain.ConfigScopeGlobal, aliasableCommand.Key().Key(), "town "+aliasableCommand.String())
 }
 
-func SetBitbucketAppPassword(runner subshelldomain.Runner, value forgedomain.BitbucketAppPassword, scope configdomain.ConfigScope) error {
-	return SetConfigValue(runner, scope, configdomain.KeyBitbucketAppPassword, value.String())
-}
-
 func SetAutoSync(runner subshelldomain.Runner, value configdomain.AutoSync, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyAutoSync, value.String())
+}
+
+func SetBitbucketAppPassword(runner subshelldomain.Runner, value forgedomain.BitbucketAppPassword, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyBitbucketAppPassword, value.String())
 }
 
 func SetBitbucketUsername(runner subshelldomain.Runner, value forgedomain.BitbucketUsername, scope configdomain.ConfigScope) error {
