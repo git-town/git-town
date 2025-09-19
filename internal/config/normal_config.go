@@ -31,6 +31,7 @@ import (
 type NormalConfig struct {
 	Aliases                  configdomain.Aliases
 	AutoResolve              configdomain.AutoResolve
+	AutoSync                 configdomain.AutoSync
 	BitbucketAppPassword     Option[forgedomain.BitbucketAppPassword]
 	BitbucketUsername        Option[forgedomain.BitbucketUsername]
 	BranchTypeOverrides      configdomain.BranchTypeOverrides
@@ -82,6 +83,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 	return NormalConfig{
 		Aliases:                  other.Aliases,
 		AutoResolve:              other.AutoResolve.GetOr(self.AutoResolve),
+		AutoSync:                 other.AutoSync.GetOr(self.AutoSync),
 		BitbucketAppPassword:     other.BitbucketAppPassword.Or(self.BitbucketAppPassword),
 		BitbucketUsername:        other.BitbucketUsername.Or(self.BitbucketUsername),
 		BranchTypeOverrides:      other.BranchTypeOverrides.Concat(self.BranchTypeOverrides),
@@ -226,6 +228,7 @@ func DefaultNormalConfig() NormalConfig {
 	return NormalConfig{
 		Aliases:                  configdomain.Aliases{},
 		AutoResolve:              true,
+		AutoSync:                 true,
 		BitbucketAppPassword:     None[forgedomain.BitbucketAppPassword](),
 		BitbucketUsername:        None[forgedomain.BitbucketUsername](),
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{},
@@ -270,6 +273,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 	return NormalConfig{
 		Aliases:                  partial.Aliases,
 		AutoResolve:              partial.AutoResolve.GetOr(defaults.AutoResolve),
+		AutoSync:                 partial.AutoSync.GetOr(defaults.AutoSync),
 		BitbucketAppPassword:     partial.BitbucketAppPassword,
 		BitbucketUsername:        partial.BitbucketUsername,
 		BranchTypeOverrides:      partial.BranchTypeOverrides,

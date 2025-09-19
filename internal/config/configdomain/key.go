@@ -55,6 +55,7 @@ const (
 	KeyAliasShip                           = Key("alias.ship")
 	KeyAliasSync                           = Key("alias.sync")
 	KeyAutoResolve                         = Key("git-town.auto-resolve")
+	KeyAutoSync                            = Key("git-town.auto-sync")
 	KeyBitbucketAppPassword                = Key("git-town.bitbucket-app-password")
 	KeyBitbucketUsername                   = Key("git-town.bitbucket-username")
 	KeyContributionRegex                   = Key("git-town.contribution-regex")
@@ -116,6 +117,7 @@ const (
 
 var keys = []Key{
 	KeyAutoResolve,
+	KeyAutoSync,
 	KeyBitbucketAppPassword,
 	KeyBitbucketUsername,
 	KeyContributionRegex,

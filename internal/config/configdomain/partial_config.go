@@ -18,6 +18,7 @@ import (
 type PartialConfig struct {
 	Aliases                  Aliases
 	AutoResolve              Option[AutoResolve]
+	AutoSync                 Option[AutoSync]
 	BitbucketAppPassword     Option[forgedomain.BitbucketAppPassword]
 	BitbucketUsername        Option[forgedomain.BitbucketUsername]
 	BranchTypeOverrides      BranchTypeOverrides
@@ -71,6 +72,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 	return PartialConfig{
 		Aliases:                  mapstools.Merge(other.Aliases, self.Aliases),
 		AutoResolve:              other.AutoResolve.Or(self.AutoResolve),
+		AutoSync:                 other.AutoSync.Or(self.AutoSync),
 		BitbucketAppPassword:     other.BitbucketAppPassword.Or(self.BitbucketAppPassword),
 		BitbucketUsername:        other.BitbucketUsername.Or(self.BitbucketUsername),
 		BranchTypeOverrides:      other.BranchTypeOverrides.Concat(self.BranchTypeOverrides),
