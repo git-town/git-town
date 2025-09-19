@@ -18,6 +18,7 @@ Feature: show the configuration
 
   Scenario: configured in both Git and config file
     Given the main branch is "git-main"
+    And Git setting "git-town.auto-sync" is "false"
     And Git setting "git-town.perennial-branches" is "git-perennial-1 git-perennial-2"
     And Git setting "git-town.contribution-regex" is "^git-contribution-regex"
     And Git setting "git-town.detached" is "true"
@@ -45,21 +46,22 @@ Feature: show the configuration
       contribution-regex = "^config-contribution-regex"
       observed-regex = "^config-observed-regex"
       unknown-type = "contribution"
-
+      
       [create]
       share-new-branches = "push"
       stash = true
-
+      
       [hosting]
       forge-type = "github"
       github-connector = "gh"
       origin-hostname = "github.com"
-
+      
       [ship]
       delete-tracking-branch = true
       strategy = "api"
-
+      
       [sync]
+      auto-sync = true
       detached = false
       feature-strategy = "merge"
       perennial-strategy = "rebase"
@@ -82,15 +84,15 @@ Feature: show the configuration
         perennial regex: ^git-perennial-
         prototype branches: prototype-1, prototype-2
         unknown branch type: observed
-
+      
       Configuration:
         offline: no
-
+      
       Create:
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: no
-
+      
       Hosting:
         development remote: origin
         forge type: github
@@ -103,13 +105,14 @@ Feature: show the configuration
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
-
+      
       Ship:
         delete tracking branch: no
         ship strategy: squash-merge
-
+      
       Sync:
         auto-resolve phantom conflicts: yes
+        auto-sync: no
         run detached: yes
         run pre-push hook: yes
         feature sync strategy: merge
