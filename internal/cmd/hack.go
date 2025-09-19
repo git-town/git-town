@@ -63,7 +63,6 @@ it also syncs all affected branches.
 
 func hackCmd() *cobra.Command {
 	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
-	addAutoSyncFlag, readAutoSyncFlag := flags.AutoSync()
 	addBeamFlag, readBeamFlag := flags.Beam()
 	addCommitFlag, readCommitFlag := flags.Commit()
 	addCommitMessageFlag, readCommitMessageFlag := flags.CommitMessage("the commit message")
@@ -72,6 +71,7 @@ func hackCmd() *cobra.Command {
 	addProposeFlag, readProposeFlag := flags.Propose()
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
 	addStashFlag, readStashFlag := flags.Stash()
+	addSyncFlag, readSyncFlag := flags.Sync()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "hack <branch>",
@@ -81,7 +81,6 @@ func hackCmd() *cobra.Command {
 		Long:    cmdhelpers.Long(hackDesc, hackHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
-			autoSync, errAutoSync := readAutoSyncFlag(cmd)
 			beam, errBeam := readBeamFlag(cmd)
 			commit, errCommit := readCommitFlag(cmd)
 			commitMessage, errCommitMessage := readCommitMessageFlag(cmd)
@@ -90,8 +89,9 @@ func hackCmd() *cobra.Command {
 			propose, errPropose := readProposeFlag(cmd)
 			prototype, errPrototype := readPrototypeFlag(cmd)
 			stash, errStash := readStashFlag(cmd)
+			sync, errSync := readSyncFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errAutoResolve, errAutoSync, errBeam, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errStash, errVerbose); err != nil {
+			if err := cmp.Or(errAutoResolve, errBeam, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errStash, errSync, errVerbose); err != nil {
 				return err
 			}
 			if commitMessage.IsSome() || propose.ShouldPropose() {
@@ -99,7 +99,7 @@ func hackCmd() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:  autoResolve,
-				AutoSync:     autoSync,
+				AutoSync:     sync,
 				Detached:     detached,
 				DryRun:       dryRun,
 				PushBranches: None[configdomain.PushBranches](),
@@ -118,7 +118,6 @@ func hackCmd() *cobra.Command {
 		},
 	}
 	addAutoResolveFlag(&cmd)
-	addAutoSyncFlag(&cmd)
 	addBeamFlag(&cmd)
 	addCommitFlag(&cmd)
 	addCommitMessageFlag(&cmd)
@@ -127,6 +126,7 @@ func hackCmd() *cobra.Command {
 	addProposeFlag(&cmd)
 	addPrototypeFlag(&cmd)
 	addStashFlag(&cmd)
+	addSyncFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }

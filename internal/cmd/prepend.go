@@ -67,7 +67,6 @@ main
 
 func prependCommand() *cobra.Command {
 	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
-	addAutoSyncFlag, readAutoSyncFlag := flags.AutoSync()
 	addBeamFlag, readBeamFlag := flags.Beam()
 	addBodyFlag, readBodyFlag := flags.ProposalBody("")
 	addCommitFlag, readCommitFlag := flags.Commit()
@@ -78,6 +77,7 @@ func prependCommand() *cobra.Command {
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
 	addPushFlag, readPushFlag := flags.Push()
 	addStashFlag, readStashFlag := flags.Stash()
+	addSyncFlag, readSyncFlag := flags.Sync()
 	addTitleFlag, readTitleFlag := flags.ProposalTitle()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
@@ -88,7 +88,6 @@ func prependCommand() *cobra.Command {
 		Long:    cmdhelpers.Long(prependDesc, prependHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
-			autoSync, errAutoSync := readAutoSyncFlag(cmd)
 			beam, errBeam := readBeamFlag(cmd)
 			bodyText, errBodyText := readBodyFlag(cmd)
 			commit, errCommit := readCommitFlag(cmd)
@@ -99,9 +98,10 @@ func prependCommand() *cobra.Command {
 			prototype, errPrototype := readPrototypeFlag(cmd)
 			push, errPush := readPushFlag(cmd)
 			stash, errStash := readStashFlag(cmd)
+			sync, errSync := readSyncFlag(cmd)
 			title, errTitle := readTitleFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errAutoResolve, errAutoSync, errBeam, errBodyText, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errPush, errStash, errTitle, errVerbose); err != nil {
+			if err := cmp.Or(errAutoResolve, errBeam, errBodyText, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errPush, errStash, errSync, errTitle, errVerbose); err != nil {
 				return err
 			}
 			if commitMessage.IsSome() {
@@ -112,7 +112,7 @@ func prependCommand() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:  autoResolve,
-				AutoSync:     autoSync,
+				AutoSync:     sync,
 				Detached:     detached,
 				DryRun:       dryRun,
 				PushBranches: push,
@@ -133,7 +133,6 @@ func prependCommand() *cobra.Command {
 		},
 	}
 	addAutoResolveFlag(&cmd)
-	addAutoSyncFlag(&cmd)
 	addBeamFlag(&cmd)
 	addBodyFlag(&cmd)
 	addCommitFlag(&cmd)
@@ -144,6 +143,7 @@ func prependCommand() *cobra.Command {
 	addPrototypeFlag(&cmd)
 	addPushFlag(&cmd)
 	addStashFlag(&cmd)
+	addSyncFlag(&cmd)
 	addTitleFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
