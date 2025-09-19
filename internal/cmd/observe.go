@@ -79,9 +79,6 @@ func executeObserve(args []string, cliConfig configdomain.PartialConfig) error {
 	if err != nil {
 		return err
 	}
-	if err = validateObserveData(data, repo); err != nil {
-		return err
-	}
 	branchNames := data.branchesToObserve.Keys()
 	if err = gitconfig.SetBranchTypeOverride(repo.Backend, configdomain.BranchTypeObservedBranch, branchNames...); err != nil {
 		return err
@@ -156,7 +153,7 @@ func determineObserveData(args []string, repo execute.OpenRepoResult) (observeDa
 	return observeData{
 		branchInfos:       branchesSnapshot.Branches,
 		branchesSnapshot:  branchesSnapshot,
-		branchesToObserve: observeCandidates,
+		branchesToObserve: branchesToObserve,
 		checkout:          branchToCheckout,
 	}, err
 }
