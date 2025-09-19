@@ -4,6 +4,7 @@ Feature: migrate existing configuration in Git metadata to a config file
   Background:
     Given a Git repo with origin
     And the main branch is "main"
+    And local Git setting "git-town.auto-sync" is "false"
     And local Git setting "git-town.perennial-regex" is "release-.*"
     And local Git setting "git-town.perennial-branches" is "qa"
     And local Git setting "git-town.feature-regex" is "user-.*"
@@ -42,6 +43,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | sync perennial strategy     | enter      |
       | sync prototype strategy     | enter      |
       | sync upstream               | enter      |
+      | auto sync                   | enter      |
       | sync tags                   | enter      |
       | detached                    | enter      |
       | stash                       | enter      |
@@ -97,25 +99,26 @@ Feature: migrate existing configuration in Git metadata to a config file
     And the configuration file is now:
       """
       # See https://www.git-town.com/configuration-file for details
-
+      
       [branches]
       main = "main"
       perennials = ["qa"]
       perennial-regex = "release-.*"
-
+      
       [create]
       new-branch-type = "prototype"
       share-new-branches = "no"
       stash = false
-
+      
       [hosting]
       dev-remote = "fork"
-
+      
       [ship]
       delete-tracking-branch = false
       strategy = "squash-merge"
-
+      
       [sync]
+      auto-sync = false
       feature-strategy = "merge"
       perennial-strategy = "rebase"
       prototype-strategy = "merge"
@@ -128,6 +131,7 @@ Feature: migrate existing configuration in Git metadata to a config file
   Scenario: undo
     When I run "git-town undo"
     Then the main branch is now "main"
+    And local Git setting "git-town.auto-sync" is now "false"
     And local Git setting "git-town.dev-remote" is now "fork"
     And local Git setting "git-town.new-branch-type" is now "prototype"
     And local Git setting "git-town.perennial-regex" is now "release-.*"
