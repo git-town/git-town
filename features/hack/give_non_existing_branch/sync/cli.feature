@@ -6,10 +6,8 @@ Feature: disable syncing via CLI
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | branch-1 | feature | main   | local, origin |
     And the commits
-      | BRANCH   | LOCATION | MESSAGE                |
-      | main     | origin   | origin main commit     |
-      | branch-1 | local    | local branch-1 commit  |
-      | branch-1 | origin   | origin branch-1 commit |
+      | BRANCH | LOCATION | MESSAGE            |
+      | main   | origin   | origin main commit |
     And the current branch is "branch-1"
     When I run "git-town hack branch-2 --no-sync"
 
