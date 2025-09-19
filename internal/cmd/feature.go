@@ -72,9 +72,6 @@ func executeFeature(args []string, cliConfig configdomain.PartialConfig) error {
 	if err != nil {
 		return err
 	}
-	if err = validateFeatureData(data, repo); err != nil {
-		return err
-	}
 	branchNames := data.branchesToFeature.Keys()
 	if err = gitconfig.SetBranchTypeOverride(repo.Backend, configdomain.BranchTypeFeatureBranch, branchNames...); err != nil {
 		return err
@@ -120,35 +117,34 @@ func determineFeatureData(args []string, repo execute.OpenRepoResult) (featureDa
 	if branchesSnapshot.DetachedHead {
 		return featureData{}, errors.New(messages.FeatureDetachedHead)
 	}
-	branchesToFeature, branchToCheckout, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
+	featureCandidates, branchToCheckout, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
+	branchesToFeature := configdomain.BranchesAndTypes{}
+	for branchName, branchType := range featureCandidates {
+		switch branchType {
+		case configdomain.BranchTypeMainBranch:
+			return featureData{}, errors.New(messages.MainBranchCannotMakeFeature)
+		case configdomain.BranchTypePerennialBranch:
+			return featureData{}, errors.New(messages.PerennialBranchCannotMakeFeature)
+		case configdomain.BranchTypeFeatureBranch:
+			repo.FinalMessages.Add(fmt.Sprintf(messages.HackBranchIsAlreadyFeature, branchName))
+		case
+			configdomain.BranchTypeObservedBranch,
+			configdomain.BranchTypeContributionBranch,
+			configdomain.BranchTypeParkedBranch,
+			configdomain.BranchTypePrototypeBranch:
+			hasLocalBranch := branchesSnapshot.Branches.HasLocalBranch(branchName)
+			hasRemoteBranch := branchesSnapshot.Branches.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote)
+			if !hasLocalBranch && !hasRemoteBranch {
+				return featureData{}, fmt.Errorf(messages.BranchDoesntExist, branchName)
+			}
+			branchesToFeature.Add(branchName, branchType)
+		}
+	}
+
 	return featureData{
 		branchInfos:       branchesSnapshot.Branches,
 		branchesSnapshot:  branchesSnapshot,
 		branchesToFeature: branchesToFeature,
 		checkout:          branchToCheckout,
 	}, err
-}
-
-func validateFeatureData(data featureData, repo execute.OpenRepoResult) error {
-	for branchName, branchType := range data.branchesToFeature {
-		switch branchType {
-		case configdomain.BranchTypeMainBranch:
-			return errors.New(messages.MainBranchCannotMakeFeature)
-		case configdomain.BranchTypePerennialBranch:
-			return errors.New(messages.PerennialBranchCannotMakeFeature)
-		case configdomain.BranchTypeFeatureBranch:
-			return fmt.Errorf(messages.HackBranchIsAlreadyFeature, branchName)
-		case
-			configdomain.BranchTypeObservedBranch,
-			configdomain.BranchTypeContributionBranch,
-			configdomain.BranchTypeParkedBranch,
-			configdomain.BranchTypePrototypeBranch:
-		}
-		hasLocalBranch := data.branchInfos.HasLocalBranch(branchName)
-		hasRemoteBranch := data.branchInfos.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote)
-		if !hasLocalBranch && !hasRemoteBranch {
-			return fmt.Errorf(messages.BranchDoesntExist, branchName)
-		}
-	}
-	return nil
 }
