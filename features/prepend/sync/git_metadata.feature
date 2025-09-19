@@ -8,7 +8,6 @@ Feature: disable syncing via CLI
     And the commits
       | BRANCH   | LOCATION | MESSAGE                |
       | main     | origin   | origin main commit     |
-      | branch-1 | local    | local branch-1 commit  |
       | branch-1 | origin   | origin branch-1 commit |
     And the current branch is "branch-1"
     And global Git setting "git-town.auto-sync" is "false"

@@ -8,7 +8,6 @@ Feature: disable syncing via environment variable
     And the commits
       | BRANCH   | LOCATION | MESSAGE                |
       | main     | origin   | origin main commit     |
-      | branch-1 | local    | local branch-1 commit  |
       | branch-1 | origin   | origin branch-1 commit |
     And the current branch is "branch-1"
     When I run "git-town prepend branch-2" with these environment variables
