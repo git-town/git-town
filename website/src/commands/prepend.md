@@ -99,6 +99,11 @@ The `--push`/`--no-push` argument overrides the
 
 Enables or disables [stashing](../preferences/stash.md) for this invocation.
 
+#### `--sync`
+
+Enables or disables [automatic syncing](../preferences/auto-sync.md) of the
+current branch before prepending the new one.
+
 #### `--dry-run`
 
 Use the `--dry-run` flag to test-drive this command. It prints the Git commands
