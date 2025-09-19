@@ -1,4 +1,4 @@
-Feature: disable syncing via CLI
+Feature: disable syncing via the configuration file
 
   Background:
     Given a Git repo with origin

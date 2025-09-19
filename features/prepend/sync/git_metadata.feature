@@ -1,4 +1,4 @@
-Feature: disable syncing via CLI
+Feature: disable syncing via Git metadata
 
   Background:
     Given a Git repo with origin
