@@ -53,11 +53,11 @@ If the repository contains an "upstream" remote, syncs the main branch with its 
 
 func Cmd() *cobra.Command {
 	addAllFlag, readAllFlag := flags.All("sync all local branches")
+	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
-	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
-	addPushFlag, readPushFlag := flags.Push()
 	addPruneFlag, readPruneFlag := flags.Prune()
+	addPushFlag, readPushFlag := flags.Push()
 	addStackFlag, readStackFlag := flags.Stack("sync the stack that the current branch belongs to")
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
@@ -68,11 +68,11 @@ func Cmd() *cobra.Command {
 		Long:    cmdhelpers.Long(syncDesc, fmt.Sprintf(syncHelp, configdomain.KeySyncUpstream)),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			allBranches, errAllBranches := readAllFlag(cmd)
+			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
 			detached, errDetached := readDetachedFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
-			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
-			pushBranches, errPushBranches := readPushFlag(cmd)
 			prune, errPrune := readPruneFlag(cmd)
+			pushBranches, errPushBranches := readPushFlag(cmd)
 			stack, errStack := readStackFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
 			if err := cmp.Or(errAllBranches, errDetached, errDryRun, errAutoResolve, errPushBranches, errPrune, errStack, errVerbose); err != nil {
@@ -95,11 +95,11 @@ func Cmd() *cobra.Command {
 		},
 	}
 	addAllFlag(&cmd)
+	addAutoResolveFlag(&cmd)
 	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
-	addAutoResolveFlag(&cmd)
-	addPushFlag(&cmd)
 	addPruneFlag(&cmd)
+	addPushFlag(&cmd)
 	addStackFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
