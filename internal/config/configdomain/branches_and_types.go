@@ -18,14 +18,14 @@ func (self *BranchesAndTypes) Add(branch gitdomain.LocalBranchName, branchType B
 	(*self)[branch] = branchType
 }
 
-func (self *BranchesAndTypes) AddTypeFor(branch gitdomain.LocalBranchName, fullConfig domainUnvalidatedConfig) {
-	self.Add(branch, fullConfig.BranchType(branch))
-}
-
 func (self *BranchesAndTypes) AddMany(branches gitdomain.LocalBranchNames, fullConfig domainUnvalidatedConfig) {
 	for _, branch := range branches {
 		self.AddTypeFor(branch, fullConfig)
 	}
+}
+
+func (self *BranchesAndTypes) AddTypeFor(branch gitdomain.LocalBranchName, fullConfig domainUnvalidatedConfig) {
+	self.Add(branch, fullConfig.BranchType(branch))
 }
 
 func (self *BranchesAndTypes) BranchesOfTypes(branchTypes ...BranchType) gitdomain.LocalBranchNames {
