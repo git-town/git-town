@@ -226,6 +226,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	PerennialBranchRemovedParentEntry       = "Removed parent entry for perennial branch %q\n"
 	PerennialRegexPrompt                    = "Perennial regex: "
 	PerennialRegexResult                    = "Perennial regex: %s\n"
+	PrependDetachedHead                     = "please check out the branch for which you want to prepend a parent"
 	PreviousCommandFinished                 = "The previous Git Town command (%s) finished successfully.\n"
 	PreviousCommandProblem                  = "The last Git Town command (%s) hit a problem %v ago.\n"
 	ProposalLineageUnsupportedForBranchType = "Proposal stack lineage unsupported for branch type %s"
