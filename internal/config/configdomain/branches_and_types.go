@@ -14,14 +14,18 @@ type domainUnvalidatedConfig interface {
 	BranchType(gitdomain.LocalBranchName) BranchType
 }
 
-func (self *BranchesAndTypes) Add(branch gitdomain.LocalBranchName, fullConfig domainUnvalidatedConfig) {
-	(*self)[branch] = fullConfig.BranchType(branch)
+func (self *BranchesAndTypes) Add(branch gitdomain.LocalBranchName, branchType BranchType) {
+	(*self)[branch] = branchType
 }
 
 func (self *BranchesAndTypes) AddMany(branches gitdomain.LocalBranchNames, fullConfig domainUnvalidatedConfig) {
 	for _, branch := range branches {
-		self.Add(branch, fullConfig)
+		self.AddTypeFor(branch, fullConfig)
 	}
+}
+
+func (self *BranchesAndTypes) AddTypeFor(branch gitdomain.LocalBranchName, fullConfig domainUnvalidatedConfig) {
+	self.Add(branch, fullConfig.BranchType(branch))
 }
 
 func (self *BranchesAndTypes) BranchesOfTypes(branchTypes ...BranchType) gitdomain.LocalBranchNames {
