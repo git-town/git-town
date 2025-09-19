@@ -258,7 +258,6 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 	if err != nil {
 		return data, false, err
 	}
-	// THIS IS WRONG, AUTOSYNC SHOULD BE FALSE HERE
 	shouldFetch := true
 	if repoStatus.OpenChanges {
 		shouldFetch = false
