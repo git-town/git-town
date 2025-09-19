@@ -289,6 +289,7 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 	return fc.Err
 }
 
+// TODO: simplify to shorter version: valueToWriteToGit, valueAlreadyInGit Option[configdomain.AutoSync]
 func saveAutoSync(valueToWriteToGit Option[configdomain.AutoSync], valueAlreadyInGit Option[configdomain.AutoSync], runner subshelldomain.Runner) error {
 	if valueToWriteToGit.Equal(valueAlreadyInGit) {
 		return nil
