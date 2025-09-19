@@ -69,10 +69,10 @@ func proposeCommand() *cobra.Command {
 		Short:   proposeDesc,
 		Long:    cmdhelpers.Long(proposeDesc, fmt.Sprintf(proposeHelp, configdomain.KeyForgeType, configdomain.KeyHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, _ []string) error {
+			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
 			bodyFile, errBodyFile := readBodyFileFlag(cmd)
 			bodyText, errBodyText := readBodyFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
-			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
 			stack, errStack := readStackFlag(cmd)
 			title, errTitle := readTitleFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
@@ -81,6 +81,7 @@ func proposeCommand() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:  autoResolve,
+				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     Some(configdomain.Detached(true)),
 				DryRun:       dryRun,
 				PushBranches: None[configdomain.PushBranches](),

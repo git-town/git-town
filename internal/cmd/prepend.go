@@ -67,6 +67,7 @@ main
 
 func prependCommand() *cobra.Command {
 	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
+	addAutoSyncFlag, readAutoSyncFlag := flags.AutoSync()
 	addBeamFlag, readBeamFlag := flags.Beam()
 	addBodyFlag, readBodyFlag := flags.ProposalBody("")
 	addCommitFlag, readCommitFlag := flags.Commit()
@@ -87,6 +88,7 @@ func prependCommand() *cobra.Command {
 		Long:    cmdhelpers.Long(prependDesc, prependHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
+			autoSync, errAutoSync := readAutoSyncFlag(cmd)
 			beam, errBeam := readBeamFlag(cmd)
 			bodyText, errBodyText := readBodyFlag(cmd)
 			commit, errCommit := readCommitFlag(cmd)
@@ -110,6 +112,7 @@ func prependCommand() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:  autoResolve,
+				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     detached,
 				DryRun:       dryRun,
 				PushBranches: push,
