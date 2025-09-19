@@ -1,6 +1,5 @@
 Feature: show the configuration from a subfolder
 
-  @this
   Scenario: running in a subfolder
     Given a Git repo with origin
     And the configuration file:
@@ -53,6 +52,7 @@ Feature: show the configuration from a subfolder
       
       Sync:
         auto-resolve phantom conflicts: yes
+        auto-sync: yes
         run detached: no
         run pre-push hook: yes
         feature sync strategy: merge

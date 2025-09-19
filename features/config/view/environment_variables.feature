@@ -19,6 +19,7 @@ Feature: display configuration defined in environment variables
   Scenario: all configured in Git, no stacked changes
     When I run "git-town config" with these environment variables
       | GIT_TOWN_AUTO_RESOLVE                | false              |
+      | GIT_TOWN_AUTO_SYNC                   | false              |
       | GIT_TOWN_BITBUCKET_APP_PASSWORD      | bitbucket-password |
       | GIT_TOWN_BITBUCKET_USERNAME          | bitbucket-user     |
       | GIT_TOWN_FORGEJO_TOKEN               | forgejo-token      |
@@ -36,13 +37,13 @@ Feature: display configuration defined in environment variables
       | GIT_TOWN_NEW_BRANCH_TYPE             | prototype          |
       | GIT_TOWN_OBSERVED_REGEX              | ^dependabot/       |
       | GIT_TOWN_ORIGIN_HOSTNAME             | codeforge          |
-      | GIT_TOWN_OFFLINE                     | 1                  |
+      | GIT_TOWN_OFFLINE                     |                  1 |
       | GIT_TOWN_PERENNIAL_BRANCHES          | qa staging         |
       | GIT_TOWN_PERENNIAL_REGEX             | ^release-          |
       | GIT_TOWN_PUSH_BRANCHES               | no                 |
       | GIT_TOWN_PUSH_HOOK                   | no                 |
       | GIT_TOWN_SHARE_NEW_BRANCHES          | push               |
-      | GIT_TOWN_SHIP_DELETE_TRACKING_BRANCH | 0                  |
+      | GIT_TOWN_SHIP_DELETE_TRACKING_BRANCH |                  0 |
       | GIT_TOWN_SHIP_STRATEGY               | fast-forward       |
       | GIT_TOWN_STASH                       | false              |
       | GIT_TOWN_SYNC_FEATURE_STRATEGY       | rebase             |
@@ -65,15 +66,15 @@ Feature: display configuration defined in environment variables
         perennial regex: ^release-
         prototype branches: prototype-1, prototype-2
         unknown branch type: observed
-
+      
       Configuration:
         offline: yes
-
+      
       Create:
         new branch type: prototype
         share new branches: push
         stash uncommitted changes: no
-
+      
       Hosting:
         development remote: my-fork
         forge type: gitlab
@@ -86,13 +87,14 @@ Feature: display configuration defined in environment variables
         GitHub token: github-token
         GitLab connector type: glab
         GitLab token: gitlab-token
-
+      
       Ship:
         delete tracking branch: no
         ship strategy: fast-forward
-
+      
       Sync:
         auto-resolve phantom conflicts: no
+        auto-sync: no
         run detached: yes
         run pre-push hook: no
         feature sync strategy: rebase
