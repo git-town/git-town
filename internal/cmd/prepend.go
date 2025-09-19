@@ -270,12 +270,22 @@ func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (data p
 	if err != nil {
 		return data, false, err
 	}
+	fetch := true
+	if repoStatus.OpenChanges {
+		fetch = false
+	}
+	if args.beam.ShouldBeam() || args.commit.ShouldCommit() {
+		fetch = false
+	}
+	if !config.AutoSync.ShouldSync() {
+		fetch = false
+	}
 	branchesSnapshot, stashSize, branchInfosLastRun, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
-		Fetch:                 !repoStatus.OpenChanges && !args.beam.ShouldBeam() && !args.commit.ShouldCommit(),
+		Fetch:                 fetch,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
@@ -401,7 +411,7 @@ func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (data p
 
 func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
-	if !data.hasOpenChanges && !data.beam.ShouldBeam() && !data.commit.ShouldCommit() {
+	if !data.hasOpenChanges && !data.beam.ShouldBeam() && !data.commit.ShouldCommit() && data.config.NormalConfig.AutoSync.ShouldSync() {
 		data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages, repo.Backend)
 		branchesToDelete := set.New[gitdomain.LocalBranchName]()
 		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
