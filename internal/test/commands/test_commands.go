@@ -229,7 +229,9 @@ func (self *TestCommands) CreateBranchOfType(name gitdomain.LocalBranchName, par
 
 func (self *TestCommands) CreateChildBranch(name, parent gitdomain.LocalBranchName) {
 	self.CheckoutBranch(parent)
-	self.MustRun("git-town", "append", "--no-sync", name.String())
+	env := os.Environ()
+	env = append(env, "GIT_TOWN_NEW_BRANCH_TYPE=feature")
+	self.RunWithEnv(env, "git-town", "append", "--no-sync", name.String())
 	self.Git.CurrentBranchCache.Set(name)
 }
 
