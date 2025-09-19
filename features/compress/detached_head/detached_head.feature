@@ -1,4 +1,4 @@
-Feature: cannot ship a detached head
+Feature: cannot compress a detached head
 
   Background:
     Given a Git repo with origin
