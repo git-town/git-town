@@ -76,6 +76,7 @@ func setParentCommand() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:  autoResolve,
+				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     Some(configdomain.Detached(true)),
 				DryRun:       None[configdomain.DryRun](),
 				PushBranches: None[configdomain.PushBranches](),
@@ -113,6 +114,7 @@ func executeSetParent(args []string, cliConfig configdomain.PartialConfig) error
 	newParentOpt := None[gitdomain.LocalBranchName]()
 	switch len(args) {
 	case 0:
+		// TODO: extract this logic into an "enterParent" function
 		excludeBranches := append(
 			gitdomain.LocalBranchNames{data.initialBranch},
 			data.config.NormalConfig.Lineage.Children(data.initialBranch)...,

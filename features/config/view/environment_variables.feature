@@ -15,6 +15,7 @@ Feature: display configuration defined in environment variables
   Scenario: all configured in Git, no stacked changes
     When I run "git-town config" with these environment variables
       | GIT_TOWN_AUTO_RESOLVE                | false              |
+      | GIT_TOWN_AUTO_SYNC                   | false              |
       | GIT_TOWN_BITBUCKET_APP_PASSWORD      | bitbucket-password |
       | GIT_TOWN_BITBUCKET_USERNAME          | bitbucket-user     |
       | GIT_TOWN_FORGEJO_TOKEN               | forgejo-token      |
@@ -89,6 +90,7 @@ Feature: display configuration defined in environment variables
 
       Sync:
         auto-resolve phantom conflicts: no
+        auto-sync: no
         run detached: yes
         run pre-push hook: no
         feature sync strategy: rebase

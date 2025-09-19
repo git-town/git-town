@@ -44,7 +44,9 @@ func Load(rootDir gitdomain.RepoRootDir, fileName string, finalMessages stringsl
 
 // Validate converts the given low-level configfile data into high-level config data.
 func Validate(data Data, finalMessages stringslice.Collector) (configdomain.PartialConfig, error) {
+	// TODO: use keep-sorted
 	var err error
+	var autoSync Option[configdomain.AutoSync]
 	var contributionRegex Option[configdomain.ContributionRegex]
 	var unknownBranchType Option[configdomain.UnknownBranchType]
 	var detached Option[configdomain.Detached]
@@ -213,6 +215,9 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		if data.Sync.AutoResolve != nil {
 			autoResolve = Some(configdomain.AutoResolve(*data.Sync.AutoResolve))
 		}
+		if data.Sync.AutoSync != nil {
+			autoSync = Some(configdomain.AutoSync(*data.Sync.AutoSync))
+		}
 		if data.Sync.Detached != nil {
 			detached = Some(configdomain.Detached(*data.Sync.Detached))
 		}
@@ -243,6 +248,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	}
 	return configdomain.PartialConfig{
 		Aliases:                  map[configdomain.AliasableCommand]string{},
+		AutoSync:                 autoSync,
 		BitbucketAppPassword:     None[forgedomain.BitbucketAppPassword](),
 		BitbucketUsername:        None[forgedomain.BitbucketUsername](),
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{},

@@ -12,6 +12,7 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.share-new-branches" is "no"
     And local Git setting "git-town.push-branches" is "false"
     And local Git setting "git-town.push-hook" is "false"
+    And local Git setting "git-town.auto-sync" is "false"
     And local Git setting "git-town.sync-tags" is "false"
     And local Git setting "git-town.detached" is "false"
     And local Git setting "git-town.ship-delete-tracking-branch" is "false"
@@ -37,6 +38,7 @@ Feature: change existing information in Git metadata
       | sync perennial strategy     | down enter             |
       | sync prototype strategy     | down enter             |
       | sync upstream               | down enter             |
+      | auto sync                   | down enter             |
       | sync tags                   | down enter             |
       | detached                    | up enter               |
       | stash                       | down enter             |
@@ -68,6 +70,7 @@ Feature: change existing information in Git metadata
       | git config --global alias.sync "town sync"               |
       | git config --global alias.up "town up"                   |
       | git config git-town.github-token gh-tok                  |
+      | git config git-town.auto-sync true                       |
       | git config git-town.detached true                        |
       | git config git-town.new-branch-type prototype            |
       | git config git-town.forge-type github                    |
@@ -141,6 +144,7 @@ Feature: change existing information in Git metadata
     And global Git setting "alias.sync" now doesn't exist
     And the main branch is now "main"
     And the perennial branches are now "qa"
+    And local Git setting "git-town.auto-sync" is now "false"
     And local Git setting "git-town.new-branch-type" is now "parked"
     And local Git setting "git-town.forge-type" now doesn't exist
     And local Git setting "git-town.github-token" now doesn't exist
