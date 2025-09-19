@@ -286,6 +286,9 @@ func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (data p
 	if err != nil || exit {
 		return data, exit, err
 	}
+	if branchesSnapshot.DetachedHead {
+		return data, false, errors.New(messages.PrependDetachedHead)
+	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
