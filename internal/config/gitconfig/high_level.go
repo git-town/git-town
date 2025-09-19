@@ -37,6 +37,10 @@ func RemoveAlias(runner subshelldomain.Runner, aliasableCommand configdomain.Ali
 	return RemoveConfigValue(runner, configdomain.ConfigScopeGlobal, aliasableCommand.Key().Key())
 }
 
+func RemoveAutoSync(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyAutoSync)
+}
+
 func RemoveBitbucketAppPassword(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyBitbucketAppPassword)
 }
@@ -176,6 +180,10 @@ func SetAlias(runner subshelldomain.Runner, aliasableCommand configdomain.Aliasa
 
 func SetBitbucketAppPassword(runner subshelldomain.Runner, value forgedomain.BitbucketAppPassword, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyBitbucketAppPassword, value.String())
+}
+
+func SetAutoSync(runner subshelldomain.Runner, value configdomain.AutoSync, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyAutoSync, value.String())
 }
 
 func SetBitbucketUsername(runner subshelldomain.Runner, value forgedomain.BitbucketUsername, scope configdomain.ConfigScope) error {

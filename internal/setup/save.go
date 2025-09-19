@@ -83,6 +83,9 @@ func saveAllToFile(userInput UserInput, gitConfig configdomain.PartialConfig, ru
 	if err := configfile.Save(userInput.Data); err != nil {
 		return err
 	}
+	if gitConfig.AutoSync.IsSome() {
+		_ = gitconfig.RemoveAutoSync(runner)
+	}
 	if gitConfig.ContributionRegex.IsSome() {
 		_ = gitconfig.RemoveContributionRegex(runner)
 	}
@@ -154,6 +157,12 @@ func saveAllToFile(userInput UserInput, gitConfig configdomain.PartialConfig, ru
 
 func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialConfig, configFile configdomain.PartialConfig, data Data, frontend subshelldomain.Runner) error {
 	fc := gohacks.ErrorCollector{}
+	// TODO: sort this alphabetically
+	if configFile.AutoSync.IsNone() {
+		fc.Check(
+			saveAutoSync(userInput.Data.AutoSync, existingGitConfig.AutoSync, frontend),
+		)
+	}
 	if configFile.Detached.IsNone() {
 		fc.Check(
 			saveDetached(userInput.Data.Detached, existingGitConfig.Detached, frontend),
@@ -278,6 +287,17 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 		)
 	}
 	return fc.Err
+}
+
+func saveAutoSync(valueToWriteToGit Option[configdomain.AutoSync], valueAlreadyInGit Option[configdomain.AutoSync], runner subshelldomain.Runner) error {
+	if valueToWriteToGit.Equal(valueAlreadyInGit) {
+		return nil
+	}
+	if value, hasValue := valueToWriteToGit.Get(); hasValue {
+		return gitconfig.SetAutoSync(runner, value, configdomain.ConfigScopeLocal)
+	}
+	_ = gitconfig.RemoveAutoSync(runner)
+	return nil
 }
 
 func saveBitbucketAppPassword(valueToWriteToGit Option[forgedomain.BitbucketAppPassword], valueAlreadyInGit Option[forgedomain.BitbucketAppPassword], scope configdomain.ConfigScope, runner subshelldomain.Runner) error {
