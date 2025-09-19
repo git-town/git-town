@@ -144,6 +144,7 @@ EnterForgeData:
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
+	autoSync := None[configdomain.AutoSync]()
 	perennialRegex := None[configdomain.PerennialRegex]()
 	featureRegex := None[configdomain.FeatureRegex]()
 	contributionRegex := None[configdomain.ContributionRegex]()
@@ -203,6 +204,10 @@ EnterForgeData:
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}
+		autoSync, exit, err = enterAutoSync(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
 		syncTags, exit, err = enterSyncTags(data)
 		if err != nil || exit {
 			return emptyResult, exit, err
@@ -243,7 +248,7 @@ EnterForgeData:
 	normalData := configdomain.PartialConfig{
 		Aliases:                  aliases,
 		AutoResolve:              None[configdomain.AutoResolve](),
-		AutoSync:                 None[configdomain.AutoSync](),
+		AutoSync:                 autoSync,
 		BitbucketAppPassword:     bitbucketAppPassword,
 		BitbucketUsername:        bitbucketUsername,
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{}, // the setup assistant doesn't ask for this
@@ -319,6 +324,17 @@ func determineForgeType(userChoice Option[forgedomain.ForgeType], devURL Option[
 		return forge.Detect(devURL, userChoice)
 	}
 	return None[forgedomain.ForgeType]()
+}
+
+func enterAutoSync(data Data) (Option[configdomain.AutoSync], dialogdomain.Exit, error) {
+	if data.Config.File.AutoSync.IsSome() {
+		return None[configdomain.AutoSync](), false, nil
+	}
+	return dialog.AutoSync(dialog.Args[configdomain.AutoSync]{
+		Global: data.Config.GitGlobal.AutoSync,
+		Inputs: data.Inputs,
+		Local:  data.Config.GitLocal.AutoSync,
+	})
 }
 
 func enterBitbucketAppPassword(data Data) (Option[forgedomain.BitbucketAppPassword], dialogdomain.Exit, error) {
