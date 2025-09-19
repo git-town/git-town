@@ -80,9 +80,6 @@ func executeContribute(args []string, cliConfig configdomain.PartialConfig) erro
 	if err != nil {
 		return err
 	}
-	if err = validateContributeData(data, repo); err != nil {
-		return err
-	}
 	branchNames := data.branchesToMakeContribution.Keys()
 	if err = gitconfig.SetBranchTypeOverride(repo.Backend, configdomain.BranchTypeContributionBranch, branchNames...); err != nil {
 		return err
