@@ -10,7 +10,7 @@ Feature: park the current parked branch
 
   Scenario: result
     Then Git Town runs no commands
-    And Git Town prints the error:
+    And Git Town prints:
       """
       branch "parked" is already parked
       """

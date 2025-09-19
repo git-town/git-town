@@ -79,9 +79,6 @@ func executeObserve(args []string, cliConfig configdomain.PartialConfig) error {
 	if err != nil {
 		return err
 	}
-	if err = validateObserveData(data, repo); err != nil {
-		return err
-	}
 	branchNames := data.branchesToObserve.Keys()
 	if err = gitconfig.SetBranchTypeOverride(repo.Backend, configdomain.BranchTypeObservedBranch, branchNames...); err != nil {
 		return err
@@ -127,38 +124,36 @@ func determineObserveData(args []string, repo execute.OpenRepoResult) (observeDa
 	if branchesSnapshot.DetachedHead {
 		return observeData{}, errors.New(messages.ObserveDetachedHead)
 	}
-	branchesToObserve, branchToCheckout, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
+	observeCandidates, branchToCheckout, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
+	branchesToObserve := configdomain.BranchesAndTypes{}
+	for branchName, branchType := range observeCandidates {
+		switch branchType {
+		case configdomain.BranchTypeMainBranch:
+			return observeData{}, errors.New(messages.MainBranchCannotObserve)
+		case configdomain.BranchTypePerennialBranch:
+			return observeData{}, errors.New(messages.PerennialBranchCannotObserve)
+		case configdomain.BranchTypeObservedBranch:
+			repo.FinalMessages.Add(fmt.Sprintf(messages.BranchIsAlreadyObserved, branchName))
+		case
+			configdomain.BranchTypeFeatureBranch,
+			configdomain.BranchTypeContributionBranch,
+			configdomain.BranchTypeParkedBranch,
+			configdomain.BranchTypePrototypeBranch:
+			hasLocalBranch := branchesSnapshot.Branches.HasLocalBranch(branchName)
+			hasRemoteBranch := branchesSnapshot.Branches.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote)
+			if !hasLocalBranch && !hasRemoteBranch {
+				return observeData{}, fmt.Errorf(messages.BranchDoesntExist, branchName)
+			}
+			if hasLocalBranch && !hasRemoteBranch {
+				return observeData{}, fmt.Errorf(messages.ObserveBranchIsLocal, branchName)
+			}
+			branchesToObserve.Add(branchName, branchType)
+		}
+	}
 	return observeData{
 		branchInfos:       branchesSnapshot.Branches,
 		branchesSnapshot:  branchesSnapshot,
 		branchesToObserve: branchesToObserve,
 		checkout:          branchToCheckout,
 	}, err
-}
-
-func validateObserveData(data observeData, repo execute.OpenRepoResult) error {
-	for branchName, branchType := range data.branchesToObserve {
-		switch branchType {
-		case configdomain.BranchTypeMainBranch:
-			return errors.New(messages.MainBranchCannotObserve)
-		case configdomain.BranchTypePerennialBranch:
-			return errors.New(messages.PerennialBranchCannotObserve)
-		case configdomain.BranchTypeObservedBranch:
-			return fmt.Errorf(messages.BranchIsAlreadyObserved, branchName)
-		case
-			configdomain.BranchTypeFeatureBranch,
-			configdomain.BranchTypeContributionBranch,
-			configdomain.BranchTypeParkedBranch,
-			configdomain.BranchTypePrototypeBranch:
-		}
-		hasLocalBranch := data.branchInfos.HasLocalBranch(branchName)
-		hasRemoteBranch := data.branchInfos.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote)
-		if !hasLocalBranch && !hasRemoteBranch {
-			return fmt.Errorf(messages.BranchDoesntExist, branchName)
-		}
-		if hasLocalBranch && !hasRemoteBranch {
-			return fmt.Errorf(messages.ObserveBranchIsLocal, branchName)
-		}
-	}
-	return nil
 }
