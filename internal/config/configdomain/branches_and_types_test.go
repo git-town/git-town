@@ -20,7 +20,7 @@ func TestBranchesAndTypes(t *testing.T) {
 				MainBranch: gitdomain.NewLocalBranchNameOption("main"),
 			},
 		}
-		have.Add("main", &unvalidatedConfig)
+		have.AddTypeFor("main", &unvalidatedConfig)
 		want := map[gitdomain.LocalBranchName]configdomain.BranchType{
 			"main": configdomain.BranchTypeMainBranch,
 		}
