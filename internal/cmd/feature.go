@@ -126,7 +126,7 @@ func determineFeatureData(args []string, repo execute.OpenRepoResult) (featureDa
 		case configdomain.BranchTypePerennialBranch:
 			return featureData{}, errors.New(messages.PerennialBranchCannotMakeFeature)
 		case configdomain.BranchTypeFeatureBranch:
-			return featureData{}, fmt.Errorf(messages.HackBranchIsAlreadyFeature, branchName)
+			repo.FinalMessages.Add(fmt.Sprintf(messages.HackBranchIsAlreadyFeature, branchName))
 		case
 			configdomain.BranchTypeObservedBranch,
 			configdomain.BranchTypeContributionBranch,
