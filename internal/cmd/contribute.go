@@ -83,7 +83,7 @@ func executeContribute(args []string, cliConfig configdomain.PartialConfig) erro
 	if err = validateContributeData(data, repo); err != nil {
 		return err
 	}
-	branchNames := data.branchesToMark.Keys()
+	branchNames := data.branchesToMakeContribution.Keys()
 	if err = gitconfig.SetBranchTypeOverride(repo.Backend, configdomain.BranchTypeContributionBranch, branchNames...); err != nil {
 		return err
 	}
@@ -102,16 +102,16 @@ func executeContribute(args []string, cliConfig configdomain.PartialConfig) erro
 		FinalMessages:         repo.FinalMessages,
 		Git:                   repo.Git,
 		RootDir:               repo.RootDir,
-		TouchedBranches:       data.branchesToMark.Keys().BranchNames(),
+		TouchedBranches:       data.branchesToMakeContribution.Keys().BranchNames(),
 		Verbose:               repo.UnvalidatedConfig.NormalConfig.Verbose,
 	})
 }
 
 type contributeData struct {
-	beginBranchesSnapshot gitdomain.BranchesSnapshot
-	branchInfos           gitdomain.BranchInfos
-	branchToCheckout      Option[gitdomain.LocalBranchName]
-	branchesToMark        configdomain.BranchesAndTypes
+	beginBranchesSnapshot      gitdomain.BranchesSnapshot
+	branchInfos                gitdomain.BranchInfos
+	branchToCheckout           Option[gitdomain.LocalBranchName]
+	branchesToMakeContribution configdomain.BranchesAndTypes
 }
 
 func printContributeBranches(branches gitdomain.LocalBranchNames) {
@@ -128,38 +128,36 @@ func determineContributeData(args []string, repo execute.OpenRepoResult) (contri
 	if branchesSnapshot.DetachedHead {
 		return contributeData{}, errors.New(messages.ContributeDetachedHead)
 	}
-	branchesToMakeContribution, branchToCheckout, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
-	return contributeData{
-		beginBranchesSnapshot: branchesSnapshot,
-		branchInfos:           branchesSnapshot.Branches,
-		branchToCheckout:      branchToCheckout,
-		branchesToMark:        branchesToMakeContribution,
-	}, err
-}
-
-func validateContributeData(data contributeData, repo execute.OpenRepoResult) error {
-	for branchName, branchType := range data.branchesToMark {
+	contributionCandidates, branchToCheckout, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
+	branchesToMakeContribution := configdomain.BranchesAndTypes{}
+	for branchName, branchType := range contributionCandidates {
 		switch branchType {
 		case configdomain.BranchTypeMainBranch:
-			return errors.New(messages.MainBranchCannotMakeContribution)
+			return contributeData{}, errors.New(messages.MainBranchCannotMakeContribution)
 		case configdomain.BranchTypePerennialBranch:
-			return errors.New(messages.PerennialBranchCannotMakeContribution)
+			return contributeData{}, errors.New(messages.PerennialBranchCannotMakeContribution)
 		case configdomain.BranchTypeContributionBranch:
-			return fmt.Errorf(messages.BranchIsAlreadyContribution, branchName)
+			return contributeData{}, fmt.Errorf(messages.BranchIsAlreadyContribution, branchName)
 		case
 			configdomain.BranchTypeFeatureBranch,
 			configdomain.BranchTypeObservedBranch,
 			configdomain.BranchTypeParkedBranch,
 			configdomain.BranchTypePrototypeBranch:
 		}
-		hasLocalBranch := data.branchInfos.HasLocalBranch(branchName)
-		hasRemoteBranch := data.branchInfos.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote)
+		hasLocalBranch := branchesSnapshot.Branches.HasLocalBranch(branchName)
+		hasRemoteBranch := branchesSnapshot.Branches.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote)
 		if !hasLocalBranch && !hasRemoteBranch {
-			return fmt.Errorf(messages.BranchDoesntExist, branchName)
+			return contributeData{}, fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}
 		if hasLocalBranch && !hasRemoteBranch {
-			return fmt.Errorf(messages.ContributeBranchIsLocal, branchName)
+			return contributeData{}, fmt.Errorf(messages.ContributeBranchIsLocal, branchName)
 		}
 	}
-	return nil
+
+	return contributeData{
+		beginBranchesSnapshot:      branchesSnapshot,
+		branchInfos:                branchesSnapshot.Branches,
+		branchToCheckout:           branchToCheckout,
+		branchesToMakeContribution: branchesToMakeContribution,
+	}, err
 }
