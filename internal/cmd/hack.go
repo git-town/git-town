@@ -255,12 +255,22 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data appendF
 	if err != nil {
 		return data, false, err
 	}
+	fetch := true
+	if repoStatus.OpenChanges {
+		fetch = false
+	}
+	if args.beam.ShouldBeam() || args.commit.ShouldCommit() {
+		fetch = false
+	}
+	if !config.AutoSync {
+		fetch = false
+	}
 	branchesSnapshot, stashSize, branchInfosLastRun, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
-		Fetch:                 len(args.argv) == 1 && !repoStatus.OpenChanges && !args.beam.ShouldBeam() && !args.commit.ShouldCommit(),
+		Fetch:                 fetch,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
