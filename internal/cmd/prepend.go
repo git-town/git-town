@@ -101,7 +101,7 @@ func prependCommand() *cobra.Command {
 			stash, errStash := readStashFlag(cmd)
 			title, errTitle := readTitleFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errAutoResolve, errBeam, errBodyText, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errPush, errStash, errTitle, errVerbose); err != nil {
+			if err := cmp.Or(errAutoResolve, errAutoSync, errBeam, errBodyText, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errPush, errStash, errTitle, errVerbose); err != nil {
 				return err
 			}
 			if commitMessage.IsSome() {
@@ -112,7 +112,7 @@ func prependCommand() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:  autoResolve,
-				AutoSync:     None[configdomain.AutoSync](),
+				AutoSync:     autoSync,
 				Detached:     detached,
 				DryRun:       dryRun,
 				PushBranches: push,
@@ -133,6 +133,7 @@ func prependCommand() *cobra.Command {
 		},
 	}
 	addAutoResolveFlag(&cmd)
+	addAutoSyncFlag(&cmd)
 	addBeamFlag(&cmd)
 	addBodyFlag(&cmd)
 	addCommitFlag(&cmd)

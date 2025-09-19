@@ -70,6 +70,7 @@ func Cmd() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:  None[configdomain.AutoResolve](),
+				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     None[configdomain.Detached](),
 				DryRun:       dryRun,
 				PushBranches: None[configdomain.PushBranches](),

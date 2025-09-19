@@ -51,6 +51,7 @@ func contributeCmd() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:  None[configdomain.AutoResolve](),
+				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     Some(configdomain.Detached(true)),
 				DryRun:       None[configdomain.DryRun](),
 				PushBranches: None[configdomain.PushBranches](),
