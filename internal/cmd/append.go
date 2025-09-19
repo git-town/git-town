@@ -65,6 +65,7 @@ it also syncs all affected branches.
 
 func appendCmd() *cobra.Command {
 	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
+	addAutoSyncFlag, readAutoSyncFlag := flags.AutoSync()
 	addBeamFlag, readBeamFlag := flags.Beam()
 	addCommitFlag, readCommitFlag := flags.Commit()
 	addCommitMessageFlag, readCommitMessageFlag := flags.CommitMessage("the commit message")
@@ -84,6 +85,7 @@ func appendCmd() *cobra.Command {
 		Long:    cmdhelpers.Long(appendDesc, appendHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
+			autoSync, errAutoSync := readAutoSyncFlag(cmd)
 			beam, errBeam := readBeamFlag(cmd)
 			commit, errCommit := readCommitFlag(cmd)
 			commitMessage, errCommitMessage := readCommitMessageFlag(cmd)
@@ -95,7 +97,7 @@ func appendCmd() *cobra.Command {
 			stash, errStash := readStashFlag(cmd)
 			sync, errSync := readSyncFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errBeam, errCommit, errCommitMessage, errDetached, errDryRun, errAutoResolve, errPropose, errPrototype, errPush, errStash, errSync, errVerbose); err != nil {
+			if err := cmp.Or(errAutoResolve, errAutoSync, errBeam, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errPush, errStash, errSync, errVerbose); err != nil {
 				return err
 			}
 			if commitMessage.IsSome() || propose.ShouldPropose() {
@@ -103,6 +105,7 @@ func appendCmd() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:  autoResolve,
+				AutoSync:     autoSync,
 				Detached:     detached,
 				DryRun:       dryRun,
 				PushBranches: push,
@@ -122,6 +125,7 @@ func appendCmd() *cobra.Command {
 		},
 	}
 	addAutoResolveFlag(&cmd)
+	addAutoSyncFlag(&cmd)
 	addBeamFlag(&cmd)
 	addCommitFlag(&cmd)
 	addCommitMessageFlag(&cmd)
