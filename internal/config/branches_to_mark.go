@@ -18,11 +18,11 @@ func BranchesToMark(args []string, branchesSnapshot gitdomain.BranchesSnapshot, 
 		if !hasCurrentBranch {
 			return branchesToMark, branchToCheckout, errors.New(messages.CurrentBranchCannotDetermine)
 		}
-		branchesToMark.Add(currentBranch, &config)
+		branchesToMark.AddTypeFor(currentBranch, &config)
 		branchToCheckout = None[gitdomain.LocalBranchName]()
 	case 1:
 		branch := gitdomain.NewLocalBranchName(args[0])
-		branchesToMark.Add(branch, &config)
+		branchesToMark.AddTypeFor(branch, &config)
 		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByRemoteName(branch.TrackingBranch(config.NormalConfig.DevRemote)).Get()
 		if hasBranchInfo && branchInfo.SyncStatus == gitdomain.SyncStatusRemoteOnly {
 			branchToCheckout = Some(branch)
