@@ -152,19 +152,38 @@ func executeHack(args hackArgs) error {
 	if err != nil || exit {
 		return err
 	}
-	return createFeatureBranch(createFeatureBranchArgs{
-		appendData:            data,
-		backend:               repo.Backend,
-		beginBranchesSnapshot: data.branchesSnapshot,
-		beginConfigSnapshot:   repo.ConfigSnapshot,
-		beginStashSize:        data.stashSize,
-		branchInfosLastRun:    data.branchInfosLastRun,
-		commandsCounter:       repo.CommandsCounter,
-		dryRun:                data.config.NormalConfig.DryRun,
-		finalMessages:         repo.FinalMessages,
-		frontend:              repo.Frontend,
-		git:                   repo.Git,
-		rootDir:               repo.RootDir,
+	runProgram := appendProgram(repo.Backend, data, repo.FinalMessages, true)
+	runState := runstate.RunState{
+		BeginBranchesSnapshot: data.branchesSnapshot,
+		BeginConfigSnapshot:   repo.ConfigSnapshot,
+		BeginStashSize:        data.stashSize,
+		BranchInfosLastRun:    data.branchInfosLastRun,
+		Command:               "hack",
+		DryRun:                data.config.NormalConfig.DryRun,
+		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
+		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
+		EndStashSize:          None[gitdomain.StashSize](),
+		RunProgram:            runProgram,
+		TouchedBranches:       runProgram.TouchedBranches(),
+		UndoAPIProgram:        program.Program{},
+	}
+	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
+		Backend:                 repo.Backend,
+		CommandsCounter:         repo.CommandsCounter,
+		Config:                  data.config,
+		Connector:               data.connector,
+		FinalMessages:           repo.FinalMessages,
+		Frontend:                repo.Frontend,
+		Git:                     repo.Git,
+		HasOpenChanges:          data.hasOpenChanges,
+		InitialBranch:           data.initialBranch,
+		InitialBranchesSnapshot: data.branchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSize:        data.stashSize,
+		Inputs:                  data.inputs,
+		PendingCommand:          None[string](),
+		RootDir:                 repo.RootDir,
+		RunState:                runState,
 	})
 }
 
@@ -181,42 +200,6 @@ type createFeatureBranchArgs struct {
 	frontend              subshelldomain.Runner
 	git                   git.Commands
 	rootDir               gitdomain.RepoRootDir
-}
-
-func createFeatureBranch(args createFeatureBranchArgs) error {
-	runProgram := appendProgram(args.backend, args.appendData, args.finalMessages, true)
-	runState := runstate.RunState{
-		BeginBranchesSnapshot: args.beginBranchesSnapshot,
-		BeginConfigSnapshot:   args.beginConfigSnapshot,
-		BeginStashSize:        args.beginStashSize,
-		BranchInfosLastRun:    args.branchInfosLastRun,
-		Command:               "hack",
-		DryRun:                args.dryRun,
-		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
-		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
-		EndStashSize:          None[gitdomain.StashSize](),
-		RunProgram:            runProgram,
-		TouchedBranches:       runProgram.TouchedBranches(),
-		UndoAPIProgram:        program.Program{},
-	}
-	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
-		Backend:                 args.backend,
-		CommandsCounter:         args.commandsCounter,
-		Config:                  args.appendData.config,
-		Connector:               args.appendData.connector,
-		FinalMessages:           args.finalMessages,
-		Frontend:                args.frontend,
-		Git:                     args.git,
-		HasOpenChanges:          args.appendData.hasOpenChanges,
-		InitialBranch:           args.appendData.initialBranch,
-		InitialBranchesSnapshot: args.beginBranchesSnapshot,
-		InitialConfigSnapshot:   args.beginConfigSnapshot,
-		InitialStashSize:        args.beginStashSize,
-		Inputs:                  args.appendData.inputs,
-		PendingCommand:          None[string](),
-		RootDir:                 args.rootDir,
-		RunState:                runState,
-	})
 }
 
 func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data appendFeatureData, exit dialogdomain.Exit, err error) {
