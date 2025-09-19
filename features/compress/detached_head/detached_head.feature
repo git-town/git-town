@@ -13,12 +13,11 @@ Feature: cannot ship a detached head
     And I ran "git checkout HEAD^"
     When I run "git-town compress"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH                     | COMMAND                  |
       | {{ sha-short 'commit 1' }} | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      please check out the branch to ship
+      please check out the branch to compress
       """

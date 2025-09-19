@@ -221,6 +221,9 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, message Option[g
 	if err != nil || exit {
 		return data, exit, err
 	}
+	if branchesSnapshot.DetachedHead {
+		return data, false, errors.New(messages.CompressDetachedHead)
+	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
 		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
