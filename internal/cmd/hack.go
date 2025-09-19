@@ -17,13 +17,9 @@ import (
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge"
-	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/gohacks"
-	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/state/runstate"
-	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	"github.com/git-town/git-town/v21/internal/validate"
 	"github.com/git-town/git-town/v21/internal/vm/interpreter/fullinterpreter"
 	"github.com/git-town/git-town/v21/internal/vm/program"
@@ -152,46 +148,14 @@ func executeHack(args hackArgs) error {
 	if err != nil || exit {
 		return err
 	}
-	return createFeatureBranch(createFeatureBranchArgs{
-		appendData:            data,
-		backend:               repo.Backend,
-		beginBranchesSnapshot: data.branchesSnapshot,
-		beginConfigSnapshot:   repo.ConfigSnapshot,
-		beginStashSize:        data.stashSize,
-		branchInfosLastRun:    data.branchInfosLastRun,
-		commandsCounter:       repo.CommandsCounter,
-		dryRun:                data.config.NormalConfig.DryRun,
-		finalMessages:         repo.FinalMessages,
-		frontend:              repo.Frontend,
-		git:                   repo.Git,
-		rootDir:               repo.RootDir,
-	})
-}
-
-type createFeatureBranchArgs struct {
-	appendData            appendFeatureData
-	backend               subshelldomain.RunnerQuerier
-	beginBranchesSnapshot gitdomain.BranchesSnapshot
-	beginConfigSnapshot   configdomain.BeginConfigSnapshot
-	beginStashSize        gitdomain.StashSize
-	branchInfosLastRun    Option[gitdomain.BranchInfos]
-	commandsCounter       Mutable[gohacks.Counter]
-	dryRun                configdomain.DryRun
-	finalMessages         stringslice.Collector
-	frontend              subshelldomain.Runner
-	git                   git.Commands
-	rootDir               gitdomain.RepoRootDir
-}
-
-func createFeatureBranch(args createFeatureBranchArgs) error {
-	runProgram := appendProgram(args.backend, args.appendData, args.finalMessages, true)
+	runProgram := appendProgram(repo.Backend, data, repo.FinalMessages, true)
 	runState := runstate.RunState{
-		BeginBranchesSnapshot: args.beginBranchesSnapshot,
-		BeginConfigSnapshot:   args.beginConfigSnapshot,
-		BeginStashSize:        args.beginStashSize,
-		BranchInfosLastRun:    args.branchInfosLastRun,
+		BeginBranchesSnapshot: data.branchesSnapshot,
+		BeginConfigSnapshot:   repo.ConfigSnapshot,
+		BeginStashSize:        data.stashSize,
+		BranchInfosLastRun:    data.branchInfosLastRun,
 		Command:               "hack",
-		DryRun:                args.dryRun,
+		DryRun:                data.config.NormalConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
@@ -200,21 +164,21 @@ func createFeatureBranch(args createFeatureBranchArgs) error {
 		UndoAPIProgram:        program.Program{},
 	}
 	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
-		Backend:                 args.backend,
-		CommandsCounter:         args.commandsCounter,
-		Config:                  args.appendData.config,
-		Connector:               args.appendData.connector,
-		FinalMessages:           args.finalMessages,
-		Frontend:                args.frontend,
-		Git:                     args.git,
-		HasOpenChanges:          args.appendData.hasOpenChanges,
-		InitialBranch:           args.appendData.initialBranch,
-		InitialBranchesSnapshot: args.beginBranchesSnapshot,
-		InitialConfigSnapshot:   args.beginConfigSnapshot,
-		InitialStashSize:        args.beginStashSize,
-		Inputs:                  args.appendData.inputs,
+		Backend:                 repo.Backend,
+		CommandsCounter:         repo.CommandsCounter,
+		Config:                  data.config,
+		Connector:               data.connector,
+		FinalMessages:           repo.FinalMessages,
+		Frontend:                repo.Frontend,
+		Git:                     repo.Git,
+		HasOpenChanges:          data.hasOpenChanges,
+		InitialBranch:           data.initialBranch,
+		InitialBranchesSnapshot: data.branchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSize:        data.stashSize,
+		Inputs:                  data.inputs,
 		PendingCommand:          None[string](),
-		RootDir:                 args.rootDir,
+		RootDir:                 repo.RootDir,
 		RunState:                runState,
 	})
 }
