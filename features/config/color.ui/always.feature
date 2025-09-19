@@ -20,6 +20,7 @@ Feature: show the configuration
   Scenario: all configured in Git, no stacked changes
     Given Git setting "git-town.perennial-branches" is "qa staging"
     And Git setting "git-town.perennial-regex" is "^release-"
+    And Git setting "git-town.auto-sync" is "false"
     And Git setting "git-town.contribution-regex" is "^renovate/"
     And Git setting "git-town.observed-regex" is "^dependabot/"
     And Git setting "git-town.unknown-branch-type" is "observed"
@@ -72,6 +73,7 @@ Feature: show the configuration
 
       Sync:
         auto-resolve phantom conflicts: yes
+        auto-sync: no
         run detached: yes
         run pre-push hook: yes
         feature sync strategy: merge
@@ -108,6 +110,7 @@ Feature: show the configuration
       strategy = "squash-merge"
 
       [sync]
+      auto-sync = false
       detached = true
       feature-strategy = "rebase"
       perennial-strategy = "ff-only"
@@ -159,6 +162,7 @@ Feature: show the configuration
 
       Sync:
         auto-resolve phantom conflicts: no
+        auto-sync: no
         run detached: yes
         run pre-push hook: yes
         feature sync strategy: rebase
@@ -172,6 +176,7 @@ Feature: show the configuration
 
   Scenario: configured in both Git and config file
     Given the main branch is "git-main"
+    And Git setting "git-town.auto-sync" is "false"
     And Git setting "git-town.perennial-branches" is "git-perennial-1 git-perennial-2"
     And Git setting "git-town.contribution-regex" is "^git-contribution-regex"
     And Git setting "git-town.observed-regex" is "^git-observed-regex"
@@ -213,6 +218,7 @@ Feature: show the configuration
       strategy = "api"
 
       [sync]
+      auto-sync = true
       detached = false
       feature-strategy = "merge"
       perennial-strategy = "rebase"
@@ -264,6 +270,7 @@ Feature: show the configuration
 
       Sync:
         auto-resolve phantom conflicts: no
+        auto-sync: no
         run detached: yes
         run pre-push hook: yes
         feature sync strategy: merge
@@ -327,6 +334,7 @@ Feature: show the configuration
 
       Sync:
         auto-resolve phantom conflicts: yes
+        auto-sync: yes
         run detached: no
         run pre-push hook: yes
         feature sync strategy: merge
@@ -396,6 +404,7 @@ Feature: show the configuration
 
       Sync:
         auto-resolve phantom conflicts: yes
+        auto-sync: yes
         run detached: no
         run pre-push hook: yes
         feature sync strategy: merge

@@ -33,6 +33,7 @@ delete-tracking-branch = true
 strategy = "api"
 
 [sync]
+auto-sync = true
 feature-strategy = "merge"
 perennial-strategy = "rebase"
 prototype-strategy = "rebase"

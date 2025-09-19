@@ -24,6 +24,7 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.set-parent" is "town set-parent"
     And global Git setting "alias.ship" is "town ship"
     And global Git setting "alias.sync" is "town sync"
+    And local Git setting "git-town.auto-sync" is "false"
     And local Git setting "git-town.contribution-regex" is "other.*"
     And local Git setting "git-town.detached" is "true"
     And local Git setting "git-town.dev-remote" is "fork"
@@ -65,6 +66,7 @@ Feature: remove existing configuration in Git metadata
       | sync perennial strategy     | down enter                                                                  |                     |
       | sync prototype strategy     | up enter                                                                    |                     |
       | sync upstream               | down enter                                                                  |                     |
+      | auto sync                   | up enter                                                                    |                     |
       | sync tags                   | down enter                                                                  |                     |
       | detached                    | down enter                                                                  |                     |
       | stash                       | up enter                                                                    |                     |
@@ -93,6 +95,7 @@ Feature: remove existing configuration in Git metadata
       | git config --global --unset alias.set-parent         |
       | git config --global --unset alias.ship               |
       | git config --global --unset alias.sync               |
+      | git config git-town.auto-sync true                   |
       | git config git-town.detached false                   |
       | git config git-town.new-branch-type feature          |
       | git config --unset git-town.forge-type               |
@@ -127,6 +130,7 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.sync" now doesn't exist
     And the main branch is still "main"
     And there are now no perennial branches
+    And local Git setting "git-town.auto-sync" is now "true"
     And local Git setting "git-town.contribution-regex" now doesn't exist
     And local Git setting "git-town.dev-remote" is now "fork"
     And local Git setting "git-town.feature-regex" now doesn't exist
@@ -163,6 +167,7 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.set-parent" is now "town set-parent"
     And global Git setting "alias.ship" is now "town ship"
     And global Git setting "alias.sync" is now "town sync"
+    And local Git setting "git-town.auto-sync" is now "false"
     And local Git setting "git-town.contribution-regex" is now "other.*"
     And local Git setting "git-town.dev-remote" is now "fork"
     And local Git setting "git-town.feature-regex" is now "user.*"

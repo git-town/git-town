@@ -14,6 +14,7 @@ const (
 	AuthenticationMissing            = "not logged in"
 	AuthorizationMissing             = `cannot find "repo" scope: %v`
 	AutoDetect                       = "auto-detect"
+	AutoSync                         = "auto-sync: %s\n"
 
 	BitBucketAppPasswordPrompt      = "Bitbucket App Password: "
 	BitBucketAppPasswordResult      = "Bitbucket App Password: %s"

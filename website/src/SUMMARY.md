@@ -87,6 +87,7 @@
     - [Ship strategy](preferences/ship-strategy.md)
   - [Sync]()
     - [Auto-resolve phantom conflicts](preferences/auto-resolve.md)
+    - [Auto-sync](preferences/auto-sync.md)
     - [Detached](preferences/detached.md)
     - [Feature sync strategy](preferences/sync-feature-strategy.md)
     - [Perennial sync strategy](preferences/sync-perennial-strategy.md)
