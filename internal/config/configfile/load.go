@@ -45,6 +45,7 @@ func Load(rootDir gitdomain.RepoRootDir, fileName string, finalMessages stringsl
 // Validate converts the given low-level configfile data into high-level config data.
 func Validate(data Data, finalMessages stringslice.Collector) (configdomain.PartialConfig, error) {
 	var err error
+	// keep-sorted start
 	var contributionRegex Option[configdomain.ContributionRegex]
 	var unknownBranchType Option[configdomain.UnknownBranchType]
 	var detached Option[configdomain.Detached]
@@ -72,6 +73,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	var syncPrototypeStrategy Option[configdomain.SyncPrototypeStrategy]
 	var syncTags Option[configdomain.SyncTags]
 	var syncUpstream Option[configdomain.SyncUpstream]
+	// keep-sorted end
 	// load legacy definitions first, so that the proper definitions loaded later override them
 	if data.CreatePrototypeBranches != nil {
 		newBranchType = Some(configdomain.NewBranchType(configdomain.BranchTypePrototypeBranch))
