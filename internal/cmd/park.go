@@ -118,16 +118,17 @@ func determineParkData(args []string, repo execute.OpenRepoResult) (parkData, er
 	if branchesSnapshot.DetachedHead {
 		return parkData{}, errors.New(messages.ParkDetachedHead)
 	}
-	branchesToPark, branchToCheckout, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
+	parkCandidates, branchToCheckout, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
+	branchesToPark := configdomain.BranchesAndTypes{}
 
-	for branchName, branchType := range branchesToPark {
+	for branchName, branchType := range parkCandidates {
 		switch branchType {
 		case configdomain.BranchTypeMainBranch:
 			return parkData{}, errors.New(messages.MainBranchCannotPark)
 		case configdomain.BranchTypePerennialBranch:
 			return parkData{}, errors.New(messages.PerennialBranchCannotPark)
 		case configdomain.BranchTypeParkedBranch:
-			return parkData{}, fmt.Errorf(messages.BranchIsAlreadyParked, branchName)
+			repo.FinalMessages.Add(fmt.Sprintf(messages.BranchIsAlreadyParked, branchName))
 		case
 			configdomain.BranchTypeFeatureBranch,
 			configdomain.BranchTypeContributionBranch,
@@ -139,12 +140,13 @@ func determineParkData(args []string, repo execute.OpenRepoResult) (parkData, er
 		if !hasLocalBranch && !hasRemoteBranch {
 			return parkData{}, fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}
+		branchesToPark.Add(branchName, branchType)
 	}
 
 	return parkData{
 		beginBranchesSnapshot: branchesSnapshot,
 		branchInfos:           branchesSnapshot.Branches,
 		branchToCheckout:      branchToCheckout,
-		branchesToPark:        branchesToPark,
+		branchesToPark:        parkCandidates,
 	}, err
 }
