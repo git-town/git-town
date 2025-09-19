@@ -134,7 +134,7 @@ func determineContributeData(args []string, repo execute.OpenRepoResult) (contri
 		case configdomain.BranchTypePerennialBranch:
 			return contributeData{}, errors.New(messages.PerennialBranchCannotMakeContribution)
 		case configdomain.BranchTypeContributionBranch:
-			return contributeData{}, fmt.Errorf(messages.BranchIsAlreadyContribution, branchName)
+			repo.FinalMessages.Add(fmt.Sprintf(messages.BranchIsAlreadyContribution, branchName))
 		case
 			configdomain.BranchTypeFeatureBranch,
 			configdomain.BranchTypeObservedBranch,
@@ -149,6 +149,7 @@ func determineContributeData(args []string, repo execute.OpenRepoResult) (contri
 		if hasLocalBranch && !hasRemoteBranch {
 			return contributeData{}, fmt.Errorf(messages.ContributeBranchIsLocal, branchName)
 		}
+		branchesToMakeContribution.Add(branchName, branchType)
 	}
 
 	return contributeData{
