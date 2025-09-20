@@ -80,6 +80,9 @@ func executeObserve(args []string, cliConfig configdomain.PartialConfig) error {
 		return err
 	}
 	err = validateObserveData(data, repo)
+	if err != nil {
+		return err
+	}
 	branchNames := data.branchesToObserve.Keys()
 	if err = gitconfig.SetBranchTypeOverride(repo.Backend, configdomain.BranchTypeObservedBranch, branchNames...); err != nil {
 		return err
