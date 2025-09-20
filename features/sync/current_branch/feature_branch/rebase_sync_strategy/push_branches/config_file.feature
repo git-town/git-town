@@ -28,7 +28,6 @@ Feature: disable pushing through the config file
     When I run "git-town sync"
 
   Scenario: result
-    And inspect the commits
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                               |
       | child  | git fetch --prune --tags                                                              |
