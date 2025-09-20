@@ -3,11 +3,11 @@ Feature: parking multiple other branches
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME         | TYPE         | PARENT | LOCATIONS |
-      | feature      | feature      | main   | local     |
-      | contribution | contribution |        | local     |
-      | observed     | observed     | main   | local     |
-      | prototype    | prototype    | main   | local     |
+      | NAME         | TYPE         | PARENT | LOCATIONS     |
+      | feature      | feature      | main   | local         |
+      | contribution | contribution |        | local, origin |
+      | observed     | observed     | main   | local, origin |
+      | prototype    | prototype    | main   | local         |
     When I run "git-town park feature contribution observed prototype"
 
   Scenario: result
