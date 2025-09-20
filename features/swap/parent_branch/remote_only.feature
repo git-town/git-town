@@ -27,14 +27,7 @@ Feature: swapping a branch with its remote parent
       """
       cannot swap: parent branch "branch-1" is not available locally
       """
-
-  Scenario: undo
-    When I run "git-town undo"
-    Then Git Town runs no commands
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE     |
-      | main     | local, origin | main commit |
-      | branch-1 | origin        | commit 1    |
-      | branch-2 | local, origin | commit 2    |
-      | branch-3 | local, origin | commit 3    |
-    And the initial lineage exists now
+#
+# NOTE: Cannot test undo here.
+# The Git Town command under test has not created an undoable runstate.
+# Executing "git town undo" would undo the Git Town command executed during setup.

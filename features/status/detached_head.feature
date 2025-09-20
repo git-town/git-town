@@ -2,7 +2,6 @@ Feature: describe the Git Town status when the head is detached
 
   Background:
     Given a Git repo with origin
-    And I ran "git-town sync"
     And the branches
       | NAME   | TYPE    | PARENT | LOCATIONS |
       | branch | feature | main   | local     |
@@ -11,6 +10,7 @@ Feature: describe the Git Town status when the head is detached
       | branch | local    | commit 1 |
       |        | local    | commit 2 |
     And the current branch is "branch"
+    And I ran "git-town sync"
     And I ran "git checkout HEAD^"
     When I run "git-town status"
 

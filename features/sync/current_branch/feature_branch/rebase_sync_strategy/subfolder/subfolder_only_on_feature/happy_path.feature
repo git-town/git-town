@@ -17,15 +17,15 @@ Feature: sync inside a folder that doesn't exist on the main branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                         |
-      | alpha  | git fetch --prune --tags                        |
-      |        | git -c rebase.updateRefs=false rebase main      |
-      |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout beta                               |
-      | beta   | git -c rebase.updateRefs=false rebase main      |
-      |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout alpha                              |
-      | alpha  | git push --tags                                 |
+      | BRANCH | COMMAND                                                                      |
+      | alpha  | git fetch --prune --tags                                                     |
+      |        | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
+      |        | git push --force-with-lease --force-if-includes                              |
+      |        | git checkout beta                                                            |
+      | beta   | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
+      |        | git push --force-with-lease --force-if-includes                              |
+      |        | git checkout alpha                                                           |
+      | alpha  | git push --tags                                                              |
     And all branches are now synchronized
     And this lineage exists now
       """

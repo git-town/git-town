@@ -7,7 +7,7 @@ Feature: disable pushing through the config file
       """
       [branches]
       main = "main"
-
+      
       [sync]
       push-branches = false
       feature-strategy = "rebase"
@@ -28,17 +28,18 @@ Feature: disable pushing through the config file
     When I run "git-town sync"
 
   Scenario: result
+    And inspect the commits
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                             |
-      | child  | git fetch --prune --tags                            |
-      |        | git checkout main                                   |
-      | main   | git -c rebase.updateRefs=false rebase origin/main   |
-      |        | git checkout parent                                 |
-      | parent | git -c rebase.updateRefs=false rebase origin/parent |
-      |        | git -c rebase.updateRefs=false rebase main          |
-      |        | git checkout child                                  |
-      | child  | git -c rebase.updateRefs=false rebase origin/child  |
-      |        | git -c rebase.updateRefs=false rebase parent        |
+      | BRANCH | COMMAND                                                                               |
+      | child  | git fetch --prune --tags                                                              |
+      |        | git checkout main                                                                     |
+      | main   | git -c rebase.updateRefs=false rebase origin/main                                     |
+      |        | git checkout parent                                                                   |
+      | parent | git -c rebase.updateRefs=false rebase origin/parent                                   |
+      |        | git -c rebase.updateRefs=false rebase --onto main {{ sha 'persisted config file' }}   |
+      |        | git checkout child                                                                    |
+      | child  | git -c rebase.updateRefs=false rebase origin/child                                    |
+      |        | git -c rebase.updateRefs=false rebase --onto parent {{ sha 'persisted config file' }} |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | origin main commit   |

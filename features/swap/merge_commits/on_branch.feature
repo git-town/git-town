@@ -29,22 +29,7 @@ Feature: swapping a feature branch with merge commits
       """
       cannot swap because branch "branch-2" contains merge commits - please compress and try again
       """
-
-  Scenario: undo
-    When I run "git-town undo"
-    Then Git Town runs no commands
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE  |
-      | branch-1 | local, origin | commit 1 |
-      | branch-2 | local, origin | commit 2 |
-      |          | local         | merging  |
-      | branch-3 | local, origin | commit 3 |
-      |          | origin        | commit 1 |
-      |          |               | merging  |
-    And this lineage exists now
-      """
-      main
-        branch-1
-          branch-2
-            branch-3
-      """
+#
+# NOTE: Cannot test undo here.
+# The Git Town command under test has not created an undoable runstate.
+# Executing "git town undo" would undo the Git Town command executed during setup.
