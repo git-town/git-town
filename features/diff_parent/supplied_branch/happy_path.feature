@@ -18,6 +18,7 @@ Feature: view changes made on another branch
     Given the branches
       | NAME | TYPE    | PARENT | LOCATIONS |
       | beta | feature | alpha  | local     |
+    And the current branch is "main"
     When I run "git-town diff-parent beta"
     Then Git Town runs the commands
       | BRANCH | COMMAND                          |
