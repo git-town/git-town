@@ -6,6 +6,7 @@ import (
 	"go/token"
 	"go/types"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"golang.org/x/tools/go/packages"
@@ -59,7 +60,17 @@ func (v *mapIterationVisitor) Visit(node ast.Node) ast.Visitor {
 
 	if v.isMapIteration(rangeStmt) {
 		pos := v.fset.Position(rangeStmt.Pos())
-		fmt.Printf("%s:%d\n", v.path, pos.Line)
+		workDir, err := os.Getwd()
+		if err != nil {
+			fmt.Printf("%s:%d\n", v.path, pos.Line)
+			*v.errors++
+			return v
+		}
+		relPath, err := filepath.Rel(workDir, v.path)
+		if err != nil {
+			relPath = v.path
+		}
+		fmt.Printf("%s:%d\n", relPath, pos.Line)
 		*v.errors++
 	}
 
@@ -90,7 +101,6 @@ func (v *mapIterationVisitor) isMapType(typ types.Type) bool {
 	}
 	return false
 }
-
 
 func shouldIgnorePath(path string) bool {
 	return strings.HasPrefix(path, "vendor/") ||
