@@ -1,3 +1,4 @@
+@skipWindows
 Feature: abort the ship via empty commit message
 
   Background:
@@ -14,7 +15,6 @@ Feature: abort the ship via empty commit message
     And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship feature" and enter an empty commit message
 
-  @skipWindows
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                         |

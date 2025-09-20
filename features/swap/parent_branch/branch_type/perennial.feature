@@ -8,6 +8,8 @@ Feature: swapping a branch with its perennial parent
       | current | feature   | parent | local, origin |
     And the current branch is "current"
     When I run "git-town swap"
+
+  Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                  |
       | current | git fetch --prune --tags |
