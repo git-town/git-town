@@ -6,6 +6,7 @@ Feature: view changes made on another branch
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS |
       | alpha | feature | main   | local     |
+    And the current branch is "main"
 
   Scenario: feature branch
     When I run "git-town diff-parent alpha"
