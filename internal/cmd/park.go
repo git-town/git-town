@@ -73,6 +73,9 @@ func executePark(args []string, cliConfig configdomain.PartialConfig) error {
 	if err != nil {
 		return err
 	}
+	if err = validateParkData(data, repo); err != nil {
+		return err
+	}
 	branchNames := data.branchesToPark.Keys()
 	if err = gitconfig.SetBranchTypeOverride(repo.Backend, configdomain.BranchTypeParkedBranch, branchNames...); err != nil {
 		return err
@@ -118,15 +121,23 @@ func determineParkData(args []string, repo execute.OpenRepoResult) (parkData, er
 	if branchesSnapshot.DetachedHead {
 		return parkData{}, errors.New(messages.ParkDetachedHead)
 	}
-	parkCandidates, branchToCheckout, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
-	branchesToPark := configdomain.BranchesAndTypes{}
+	branchesToPark, branchToCheckout, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
 
-	for branchName, branchType := range parkCandidates {
+	return parkData{
+		beginBranchesSnapshot: branchesSnapshot,
+		branchInfos:           branchesSnapshot.Branches,
+		branchToCheckout:      branchToCheckout,
+		branchesToPark:        branchesToPark,
+	}, err
+}
+
+func validateParkData(data parkData, repo execute.OpenRepoResult) error {
+	for branchName, branchType := range data.branchesToPark {
 		switch branchType {
 		case configdomain.BranchTypeMainBranch:
-			return parkData{}, errors.New(messages.MainBranchCannotPark)
+			return errors.New(messages.MainBranchCannotPark)
 		case configdomain.BranchTypePerennialBranch:
-			return parkData{}, errors.New(messages.PerennialBranchCannotPark)
+			return errors.New(messages.PerennialBranchCannotPark)
 		case configdomain.BranchTypeParkedBranch:
 			repo.FinalMessages.Add(fmt.Sprintf(messages.BranchIsAlreadyParked, branchName))
 		case
@@ -135,18 +146,12 @@ func determineParkData(args []string, repo execute.OpenRepoResult) (parkData, er
 			configdomain.BranchTypeObservedBranch,
 			configdomain.BranchTypePrototypeBranch:
 		}
-		hasLocalBranch := branchesSnapshot.Branches.HasLocalBranch(branchName)
-		hasRemoteBranch := branchesSnapshot.Branches.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote)
+		hasLocalBranch := data.beginBranchesSnapshot.Branches.HasLocalBranch(branchName)
+		hasRemoteBranch := data.beginBranchesSnapshot.Branches.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote)
 		if !hasLocalBranch && !hasRemoteBranch {
-			return parkData{}, fmt.Errorf(messages.BranchDoesntExist, branchName)
+			return fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}
-		branchesToPark.Add(branchName, branchType)
+		data.branchesToPark.Add(branchName, branchType)
 	}
-
-	return parkData{
-		beginBranchesSnapshot: branchesSnapshot,
-		branchInfos:           branchesSnapshot.Branches,
-		branchToCheckout:      branchToCheckout,
-		branchesToPark:        parkCandidates,
-	}, err
+	return nil
 }
