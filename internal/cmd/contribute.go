@@ -80,8 +80,7 @@ func executeContribute(args []string, cliConfig configdomain.PartialConfig) erro
 	if err != nil {
 		return err
 	}
-	err = validateContributeData(data, repo)
-	if err != nil {
+	if err = validateContributeData(data, repo); err != nil {
 		return err
 	}
 	branchNames := data.branchesToMakeContribution.Keys()
