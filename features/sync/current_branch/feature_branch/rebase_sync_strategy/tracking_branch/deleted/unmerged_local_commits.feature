@@ -16,12 +16,12 @@ Feature: sync a branch with unshipped local changes whose tracking branch was de
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                           |
-      | shipped | git fetch --prune --tags                          |
-      |         | git checkout main                                 |
-      | main    | git -c rebase.updateRefs=false rebase origin/main |
-      |         | git checkout shipped                              |
-      | shipped | git -c rebase.updateRefs=false rebase main        |
+      | BRANCH  | COMMAND                                                                      |
+      | shipped | git fetch --prune --tags                                                     |
+      |         | git checkout main                                                            |
+      | main    | git -c rebase.updateRefs=false rebase origin/main                            |
+      |         | git checkout shipped                                                         |
+      | shipped | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
     And Git Town prints:
       """
       Branch "shipped" was deleted at the remote but the local branch contains unshipped changes.

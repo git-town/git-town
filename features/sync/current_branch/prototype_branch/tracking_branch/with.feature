@@ -16,16 +16,16 @@ Feature: sync the current prototype branch that has a tracking branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                                                |
-      | prototype | git fetch --prune --tags                               |
-      |           | git checkout main                                      |
-      | main      | git -c rebase.updateRefs=false rebase origin/main      |
-      |           | git push                                               |
-      |           | git checkout prototype                                 |
-      | prototype | git push --force-with-lease --force-if-includes        |
-      |           | git -c rebase.updateRefs=false rebase origin/prototype |
-      |           | git -c rebase.updateRefs=false rebase main             |
-      |           | git push --force-with-lease --force-if-includes        |
+      | BRANCH    | COMMAND                                                                      |
+      | prototype | git fetch --prune --tags                                                     |
+      |           | git checkout main                                                            |
+      | main      | git -c rebase.updateRefs=false rebase origin/main                            |
+      |           | git push                                                                     |
+      |           | git checkout prototype                                                       |
+      | prototype | git push --force-with-lease --force-if-includes                              |
+      |           | git -c rebase.updateRefs=false rebase origin/prototype                       |
+      |           | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
+      |           | git push --force-with-lease --force-if-includes                              |
     And no rebase is now in progress
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE       |
