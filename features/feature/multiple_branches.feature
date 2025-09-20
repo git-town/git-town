@@ -3,10 +3,10 @@ Feature: making multiple branches feature branches
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME         | TYPE         | PARENT | LOCATIONS |
-      | contribution | contribution |        | local     |
-      | observed     | observed     |        | local     |
-      | parked       | parked       | main   | local     |
+      | NAME         | TYPE         | PARENT | LOCATIONS     |
+      | contribution | contribution |        | local, origin |
+      | observed     | observed     |        | local, origin |
+      | parked       | parked       | main   | local         |
     When I run "git-town feature contribution observed parked"
 
   Scenario: result
