@@ -80,6 +80,10 @@ func executeContribute(args []string, cliConfig configdomain.PartialConfig) erro
 	if err != nil {
 		return err
 	}
+	err = validateContributeData(data, repo)
+	if err != nil {
+		return err
+	}
 	branchNames := data.branchesToMakeContribution.Keys()
 	if err = gitconfig.SetBranchTypeOverride(repo.Backend, configdomain.BranchTypeContributionBranch, branchNames...); err != nil {
 		return err
@@ -125,14 +129,22 @@ func determineContributeData(args []string, repo execute.OpenRepoResult) (contri
 	if branchesSnapshot.DetachedHead {
 		return contributeData{}, errors.New(messages.ContributeDetachedHead)
 	}
-	contributionCandidates, branchToCheckout, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
-	branchesToMakeContribution := configdomain.BranchesAndTypes{}
-	for branchName, branchType := range contributionCandidates {
+	branchesToMakeContribution, branchToCheckout, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
+	return contributeData{
+		beginBranchesSnapshot:      branchesSnapshot,
+		branchInfos:                branchesSnapshot.Branches,
+		branchToCheckout:           branchToCheckout,
+		branchesToMakeContribution: branchesToMakeContribution,
+	}, err
+}
+
+func validateContributeData(data contributeData, repo execute.OpenRepoResult) error {
+	for branchName, branchType := range data.branchesToMakeContribution {
 		switch branchType {
 		case configdomain.BranchTypeMainBranch:
-			return contributeData{}, errors.New(messages.MainBranchCannotMakeContribution)
+			return errors.New(messages.MainBranchCannotMakeContribution)
 		case configdomain.BranchTypePerennialBranch:
-			return contributeData{}, errors.New(messages.PerennialBranchCannotMakeContribution)
+			return errors.New(messages.PerennialBranchCannotMakeContribution)
 		case configdomain.BranchTypeContributionBranch:
 			repo.FinalMessages.Add(fmt.Sprintf(messages.BranchIsAlreadyContribution, branchName))
 		case
@@ -141,21 +153,14 @@ func determineContributeData(args []string, repo execute.OpenRepoResult) (contri
 			configdomain.BranchTypeParkedBranch,
 			configdomain.BranchTypePrototypeBranch:
 		}
-		hasLocalBranch := branchesSnapshot.Branches.HasLocalBranch(branchName)
-		hasRemoteBranch := branchesSnapshot.Branches.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote)
+		hasLocalBranch := data.beginBranchesSnapshot.Branches.HasLocalBranch(branchName)
+		hasRemoteBranch := data.beginBranchesSnapshot.Branches.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote)
 		if !hasLocalBranch && !hasRemoteBranch {
-			return contributeData{}, fmt.Errorf(messages.BranchDoesntExist, branchName)
+			return fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}
 		if hasLocalBranch && !hasRemoteBranch {
-			return contributeData{}, fmt.Errorf(messages.ContributeBranchIsLocal, branchName)
+			return fmt.Errorf(messages.ContributeBranchIsLocal, branchName)
 		}
-		branchesToMakeContribution.Add(branchName, branchType)
 	}
-
-	return contributeData{
-		beginBranchesSnapshot:      branchesSnapshot,
-		branchInfos:                branchesSnapshot.Branches,
-		branchToCheckout:           branchToCheckout,
-		branchesToMakeContribution: branchesToMakeContribution,
-	}, err
+	return nil
 }
