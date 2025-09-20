@@ -8,8 +8,12 @@ Feature: display configuration from Git metadata
       | contribution-2 | contribution |        | local, origin |
       | observed-1     | observed     |        | local, origin |
       | observed-2     | observed     |        | local, origin |
+      | parked-1       | parked       | main   | local         |
+      | parked-2       | parked       | main   | local         |
       | perennial-1    | perennial    |        | local         |
       | perennial-2    | perennial    |        | local         |
+      | prototype-1    | prototype    | main   | local         |
+      | prototype-2    | prototype    | main   | local         |
 
   Scenario: all configured in Git, no stacked changes
     Given Git setting "git-town.perennial-branches" is "qa staging"
@@ -33,10 +37,10 @@ Feature: display configuration from Git metadata
         main branch: main
         observed branches: observed-1, observed-2
         observed regex: ^dependabot/
-        parked branches: (none)
+        parked branches: parked-1, parked-2
         perennial branches: qa, staging
         perennial regex: ^release-
-        prototype branches: (none)
+        prototype branches: prototype-1, prototype-2
         unknown branch type: observed
 
       Configuration:
