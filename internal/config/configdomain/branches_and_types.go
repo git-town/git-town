@@ -5,6 +5,7 @@ import (
 	"slices"
 
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/gohacks/mapstools"
 	"github.com/git-town/git-town/v21/internal/gohacks/slice"
 )
 
@@ -30,7 +31,7 @@ func (self *BranchesAndTypes) AddTypeFor(branch gitdomain.LocalBranchName, fullC
 
 func (self *BranchesAndTypes) BranchesOfTypes(branchTypes ...BranchType) gitdomain.LocalBranchNames {
 	result := gitdomain.LocalBranchNames{}
-	for branchName, branchType := range *self {
+	for branchName, branchType := range mapstools.SortedKeyValues(*self) {
 		if slices.Contains(branchTypes, branchType) {
 			result = append(result, branchName)
 		}
