@@ -57,6 +57,7 @@ lint: tools/node_modules tools/rta@${RTA_VERSION}  # lints the main codebase con
 	make --no-print-directory lint-smoke
 	make --no-print-directory alphavet
 	make --no-print-directory deadcode
+	make --no-print-directory lint-iterate-map
 	make --no-print-directory lint-messages-sorted
 	make --no-print-directory lint-messy-output
 	make --no-print-directory lint-optioncompare
@@ -107,6 +108,9 @@ alphavet:
 
 fix-optioncompare-in-tests:
 	@(cd tools/optioncompare_in_tests && go build) && ./tools/optioncompare_in_tests/optioncompare_in_tests github.com/git-town/git-town/v21/...
+
+lint-iterate-map:
+	@(cd tools/iterate_map && go build) && ./tools/iterate_map/iterate_map
 
 lint-messages-sorted:
 	@(cd tools/messages_sorted && go build) && ./tools/messages_sorted/messages_sorted
