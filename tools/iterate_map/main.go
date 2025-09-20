@@ -16,7 +16,6 @@ func main() {
 	cfg := &packages.Config{
 		Mode: packages.NeedFiles | packages.NeedSyntax | packages.NeedTypes | packages.NeedTypesInfo,
 	}
-
 	pkgs, err := packages.Load(cfg, "./...")
 	if err != nil {
 		fmt.Printf("ERROR loading packages: %s\n", err)
