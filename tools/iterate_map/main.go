@@ -57,23 +57,21 @@ func (v *mapIterationVisitor) Visit(node ast.Node) ast.Visitor {
 	if !ok {
 		return v
 	}
-
-	if v.isMapIteration(rangeStmt) {
-		pos := v.fset.Position(rangeStmt.Pos())
-		workDir, err := os.Getwd()
-		if err != nil {
-			fmt.Printf("%s:%d\n", v.path, pos.Line)
-			*v.errors++
-			return v
-		}
-		relPath, err := filepath.Rel(workDir, v.path)
-		if err != nil {
-			relPath = v.path
-		}
-		fmt.Printf("%s:%d\n", relPath, pos.Line)
-		*v.errors++
+	if !v.isMapIteration(rangeStmt) {
+		return v
 	}
-
+	*v.errors++
+	workDir, err := os.Getwd()
+	if err != nil {
+		fmt.Println(err.Error())
+		return v
+	}
+	relPath, err := filepath.Rel(workDir, v.path)
+	if err != nil {
+		relPath = v.path
+	}
+	pos := v.fset.Position(rangeStmt.Pos())
+	fmt.Printf("%s:%d\n", relPath, pos.Line)
 	return v
 }
 
