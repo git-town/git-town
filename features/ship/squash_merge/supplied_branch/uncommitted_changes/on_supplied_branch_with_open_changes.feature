@@ -19,7 +19,7 @@ Feature: does not ship a branch that has open changes
       you have uncommitted changes. Did you mean to commit them before shipping?
       """
     And the uncommitted file still exists
-#
-# NOTE: Cannot test undo here.
-# The Git Town command under test has not created an undoable runstate.
-# Executing "git town undo" would undo the Git Town command executed during setup.
+  #
+  # NOTE: Cannot test undo here.
+  # The Git Town command under test has not created an undoable runstate.
+  # Executing "git town undo" would undo the Git Town command executed during setup.

@@ -25,7 +25,7 @@ Feature: merging when the branch is not in sync with its tracking branch
       """
       branch "beta" is not in sync with its tracking branch, please run "git town sync" and try again
       """
-#
-# NOTE: Cannot test undo here.
-# The Git Town command under test has not created an undoable runstate.
-# Executing "git town undo" would undo the Git Town command executed during setup.
+  #
+  # NOTE: Cannot test undo here.
+  # The Git Town command under test has not created an undoable runstate.
+  # Executing "git town undo" would undo the Git Town command executed during setup.

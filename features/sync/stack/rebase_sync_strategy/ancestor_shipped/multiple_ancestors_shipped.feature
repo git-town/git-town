@@ -33,7 +33,6 @@ Feature: shipped parent branches in a stacked change
     When I run "git-town sync"
 
   Scenario: result
-    And inspect the commits
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                                                                     |
       | feature-4 | git fetch --prune --tags                                                                    |

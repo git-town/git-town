@@ -15,7 +15,7 @@ Feature: cannot park non-existing branches
       there is no branch "non-existing"
       """
     And branch "feature" still has type "feature"
-#
-# NOTE: Cannot test undo here.
-# The Git Town command under test has not created an undoable runstate.
-# Executing "git town undo" would undo the Git Town command executed during setup.
+  #
+  # NOTE: Cannot test undo here.
+  # The Git Town command under test has not created an undoable runstate.
+  # Executing "git town undo" would undo the Git Town command executed during setup.

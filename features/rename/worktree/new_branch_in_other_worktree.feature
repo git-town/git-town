@@ -23,7 +23,7 @@ Feature: rename the current branch to a branch that is active in another worktre
       """
       there is already a branch "other"
       """
-#
-# NOTE: Cannot test undo here.
-# The Git Town command under test has not created an undoable runstate.
-# Executing "git town undo" would undo the Git Town command executed during setup.
+  #
+  # NOTE: Cannot test undo here.
+  # The Git Town command under test has not created an undoable runstate.
+  # Executing "git town undo" would undo the Git Town command executed during setup.

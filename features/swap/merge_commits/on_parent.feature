@@ -26,7 +26,7 @@ Feature: swapping a feature branch with a branch that has merge commits
       """
       cannot swap because branch "branch-1" contains merge commits - please compress and try again
       """
-#
-# NOTE: Cannot test undo here.
-# The Git Town command under test has not created an undoable runstate.
-# Executing "git town undo" would undo the Git Town command executed during setup.
+  #
+  # NOTE: Cannot test undo here.
+  # The Git Town command under test has not created an undoable runstate.
+  # Executing "git town undo" would undo the Git Town command executed during setup.

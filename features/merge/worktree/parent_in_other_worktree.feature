@@ -28,7 +28,7 @@ Feature: merging a branch whose parent is active in another worktree
       """
     And the initial lineage exists now
     And the initial commits exist now
-#
-# NOTE: Cannot test undo here.
-# The Git Town command under test has not created an undoable runstate.
-# Executing "git town undo" would undo the Git Town command executed during setup.
+  #
+  # NOTE: Cannot test undo here.
+  # The Git Town command under test has not created an undoable runstate.
+  # Executing "git town undo" would undo the Git Town command executed during setup.

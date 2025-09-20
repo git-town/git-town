@@ -27,7 +27,7 @@ Feature: does not ship an unsynced feature branch using the fast-forward strateg
       aborted because merge exited with error
       """
     And no merge is now in progress
-#
-# NOTE: Cannot test undo here.
-# The Git Town command under test has not created an undoable runstate.
-# Executing "git town undo" would undo the Git Town command executed during setup.
+  #
+  # NOTE: Cannot test undo here.
+  # The Git Town command under test has not created an undoable runstate.
+  # Executing "git town undo" would undo the Git Town command executed during setup.

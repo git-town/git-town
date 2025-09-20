@@ -24,7 +24,7 @@ Feature: does not ship empty feature branches using the always-merge strategy
       """
     And the initial commits exist now
     And the initial branches and lineage exist now
-#
-# NOTE: Cannot test undo here.
-# The Git Town command under test has not created an undoable runstate.
-# Executing "git town undo" would undo the Git Town command executed during setup.
+  #
+  # NOTE: Cannot test undo here.
+  # The Git Town command under test has not created an undoable runstate.
+  # Executing "git town undo" would undo the Git Town command executed during setup.
