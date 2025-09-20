@@ -21,7 +21,7 @@ Feature: shipping a branch whose tracking branch is deleted using the fast-forwa
       """
       branch "feature" was deleted at the remote
       """
-
-  Scenario: undo
-    When I run "git-town undo"
-    Then Git Town runs no commands
+#
+# NOTE: Cannot test undo here.
+# The Git Town command under test has not created an undoable runstate.
+# Executing "git town undo" would undo the Git Town command executed during setup.
