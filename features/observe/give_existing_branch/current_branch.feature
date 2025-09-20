@@ -8,7 +8,6 @@ Feature: make the current observed branch an observed branch
     And the current branch is "observed"
     When I run "git-town observe observed"
 
-  @debug @this
   Scenario: result
     Then Git Town runs no commands
     And Git Town prints:
