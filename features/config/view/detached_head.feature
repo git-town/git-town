@@ -14,11 +14,11 @@ Feature: display configuration from Git metadata in detached head state
     And Git setting "git-town.detached" is "true"
     And Git setting "git-town.stash" is "false"
     And the branches
-      | NAME      | TYPE      | PARENT | LOCATIONS |
-      | branch    | feature   | main   | local     |
-      | observed  | observed  |        | local     |
-      | parked    | parked    | main   | local     |
-      | perennial | perennial |        | local     |
+      | NAME      | TYPE      | PARENT | LOCATIONS     |
+      | branch    | feature   | main   | local         |
+      | observed  | observed  |        | local, origin |
+      | parked    | parked    | main   | local         |
+      | perennial | perennial |        | local         |
     And the commits
       | BRANCH | LOCATION | MESSAGE  |
       | branch | local    | commit 1 |
@@ -27,7 +27,6 @@ Feature: display configuration from Git metadata in detached head state
     And I ran "git checkout HEAD^"
     When I run "git-town config"
 
-  @debug @this
   Scenario: result
     Then Git Town prints:
       """
