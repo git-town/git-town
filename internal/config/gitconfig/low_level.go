@@ -9,6 +9,7 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/gohacks/mapstools"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	"github.com/git-town/git-town/v21/pkg/colors"
@@ -54,7 +55,7 @@ func LoadSnapshot(backend subshelldomain.RunnerQuerier, scopeOpt Option[configdo
 					value = update.After.Value
 				}
 			}
-			for branchList, branchType := range configdomain.ObsoleteBranchLists {
+			for branchList, branchType := range mapstools.SortedKeyValues(configdomain.ObsoleteBranchLists) {
 				if configKey == branchList {
 					for _, branch := range strings.Split(value, " ") {
 						branchTypeKey := configdomain.Key(configdomain.BranchSpecificKeyPrefix + branch + configdomain.BranchTypeSuffix)

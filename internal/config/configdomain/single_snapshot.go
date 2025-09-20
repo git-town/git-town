@@ -1,5 +1,7 @@
 package configdomain
 
+import "github.com/git-town/git-town/v21/internal/gohacks/mapstools"
+
 // SingleSnapshot contains all of the local or global Git metadata config settings.
 type SingleSnapshot map[Key]string
 
@@ -17,7 +19,7 @@ func (self SingleSnapshot) AliasEntries() map[AliasKey]string {
 func (self SingleSnapshot) Aliases() Aliases {
 	aliasEntries := self.AliasEntries()
 	result := make(Aliases, len(aliasEntries))
-	for key, value := range aliasEntries {
+	for key, value := range mapstools.SortedKeyValues(aliasEntries) {
 		result[key.AliasableCommand()] = value
 	}
 	return result
