@@ -9,8 +9,12 @@ Feature: show the configuration
       | contribution-2 | contribution |        | local, origin |
       | observed-1     | observed     |        | local, origin |
       | observed-2     | observed     |        | local, origin |
+      | parked-1       | parked       | main   | local         |
+      | parked-2       | parked       | main   | local         |
       | perennial-1    | perennial    |        | local         |
       | perennial-2    | perennial    |        | local         |
+      | prototype-1    | prototype    | main   | local         |
+      | prototype-2    | prototype    | main   | local         |
 
   Scenario: configured in both Git and config file
     Given the main branch is "git-main"
@@ -75,10 +79,10 @@ Feature: show the configuration
         main branch: git-main
         observed branches: observed-1, observed-2
         observed regex: ^git-observed-regex
-        parked branches: (none)
+        parked branches: parked-1, parked-2
         perennial branches: git-perennial-1, git-perennial-2, config-perennial-1, config-perennial-2
         perennial regex: ^git-perennial-
-        prototype branches: (none)
+        prototype branches: prototype-1, prototype-2
         unknown branch type: observed
 
       Configuration:
