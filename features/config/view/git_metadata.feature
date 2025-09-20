@@ -100,10 +100,10 @@ Feature: display configuration from Git metadata
         main branch: main
         observed branches: observed-1, observed-2
         observed regex: (not set)
-        parked branches: (none)
+        parked branches: parked-1, parked-2
         perennial branches: qa
         perennial regex: (not set)
-        prototype branches: (none)
+        prototype branches: prototype-1, prototype-2
         unknown branch type: feature
 
       Configuration:
@@ -149,6 +149,10 @@ Feature: display configuration from Git metadata
           alpha
             child
           beta
+          parked-1
+          parked-2
+          prototype-1
+          prototype-2
 
         qa
           hotfix
