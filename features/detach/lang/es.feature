@@ -1,7 +1,7 @@
 Feature: detaching a branch in Spanish
 
   Background:
-    Given a local Git repo
+    Given a Git repo with origin
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS |
       | branch-1 | feature | main   | local     |
@@ -19,13 +19,12 @@ Feature: detaching a branch in Spanish
     And the current branch is "branch-2"
     When I run "git-town detach" with these environment variables
       | LANG | es_ES.UTF-8 |
-# The problem here is that creating `branch-2` using `git town append`
-# syncs the parent branch `branch-1`, thefore creating a hidden `origin` branch.
 
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                    |
-      | branch-2 | git -c rebase.updateRefs=false rebase --onto main branch-1 |
+      | branch-2 | git fetch --prune --tags                                   |
+      |          | git -c rebase.updateRefs=false rebase --onto main branch-1 |
     And Git Town prints:
       """
       Rebase aplicado satisfactoriamente y actualizado refs/heads/branch-2.
