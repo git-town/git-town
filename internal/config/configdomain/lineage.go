@@ -113,7 +113,7 @@ func (self Lineage) BranchesWithParents() gitdomain.LocalBranchNames {
 // Children provides the names of all branches that have the given branch as their parent.
 func (self Lineage) Children(branch gitdomain.LocalBranchName) gitdomain.LocalBranchNames {
 	result := gitdomain.LocalBranchNames{}
-	for child, parent := range self.data {
+	for child, parent := range mapstools.SortedKeyValues(self.data) {
 		if parent == branch {
 			result = append(result, child)
 		}
@@ -134,7 +134,7 @@ func (self Lineage) Descendants(branch gitdomain.LocalBranchName) gitdomain.Loca
 
 func (self Lineage) Entries() []LineageEntry {
 	result := make([]LineageEntry, 0, self.Len())
-	for branch, parent := range self.data {
+	for branch, parent := range mapstools.SortedKeyValues(self.data) {
 		result = append(result, LineageEntry{
 			Child:  branch,
 			Parent: parent,
@@ -147,7 +147,7 @@ func (self Lineage) Entries() []LineageEntry {
 }
 
 func (self Lineage) HasDescendents(branch gitdomain.LocalBranchName) bool {
-	for _, parent := range self.data {
+	for parent := range maps.Values(self.data) {
 		if parent == branch {
 			return true
 		}
@@ -226,7 +226,7 @@ func (self Lineage) Root(branch gitdomain.LocalBranchName) gitdomain.LocalBranch
 // Roots provides the branches with children and no parents.
 func (self Lineage) Roots() gitdomain.LocalBranchNames {
 	roots := gitdomain.LocalBranchNames{}
-	for _, parent := range self.data {
+	for parent := range maps.Values(self.data) {
 		_, found := self.data[parent]
 		if !found && !slices.Contains(roots, parent) {
 			roots = append(roots, parent)
