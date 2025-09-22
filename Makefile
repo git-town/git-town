@@ -111,9 +111,7 @@ fix-optioncompare-in-tests:
 	@(cd tools/optioncompare_in_tests && go build) && ./tools/optioncompare_in_tests/optioncompare_in_tests github.com/git-town/git-town/v21/...
 
 keep-sorted:
-	pwd
-	ls -la
-	tools/rta ripgrep -h
+	tools/rta ripgrep --version
 	tools/rta ripgrep -l lint
 	tools/rta ripgrep -l 'lint'
 	tools/rta keep-sorted $(shell tools/rta ripgrep -l 'keep-sorted end')
