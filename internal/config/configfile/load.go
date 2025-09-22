@@ -44,23 +44,20 @@ func Load(rootDir gitdomain.RepoRootDir, fileName string, finalMessages stringsl
 
 // Validate converts the given low-level configfile data into high-level config data.
 func Validate(data Data, finalMessages stringslice.Collector) (configdomain.PartialConfig, error) {
-	// TODO: use keep-sorted
 	var err error
-	// TODO: add https://github.com/google/keep-sorted to RTA and run it as part of make fix
 	// keep-sorted start
+	var autoResolve Option[configdomain.AutoResolve]
 	var autoSync Option[configdomain.AutoSync]
 	var contributionRegex Option[configdomain.ContributionRegex]
-	var unknownBranchType Option[configdomain.UnknownBranchType]
 	var detached Option[configdomain.Detached]
 	var devRemote Option[gitdomain.Remote]
 	var featureRegex Option[configdomain.FeatureRegex]
 	var forgeType Option[forgedomain.ForgeType]
-	var githubConnectorType Option[forgedomain.GitHubConnectorType]
 	var gitLabConnectorType Option[forgedomain.GitLabConnectorType]
+	var githubConnectorType Option[forgedomain.GitHubConnectorType]
 	var hostingOriginHostname Option[configdomain.HostingOriginHostname]
 	var mainBranch Option[gitdomain.LocalBranchName]
 	var newBranchType Option[configdomain.NewBranchType]
-	var autoResolve Option[configdomain.AutoResolve]
 	var observedRegex Option[configdomain.ObservedRegex]
 	var perennialBranches gitdomain.LocalBranchNames
 	var perennialRegex Option[configdomain.PerennialRegex]
@@ -76,6 +73,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	var syncPrototypeStrategy Option[configdomain.SyncPrototypeStrategy]
 	var syncTags Option[configdomain.SyncTags]
 	var syncUpstream Option[configdomain.SyncUpstream]
+	var unknownBranchType Option[configdomain.UnknownBranchType]
 	// keep-sorted end
 	// load legacy definitions first, so that the proper definitions loaded later override them
 	if data.CreatePrototypeBranches != nil {
