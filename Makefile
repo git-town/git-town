@@ -113,6 +113,7 @@ fix-optioncompare-in-tests:
 keep-sorted:
 	pwd
 	ls -la
+	tools/rta ripgrep -l 'smokewin'
 	tools/rta ripgrep -l 'keep-sorted end'
 	tools/rta keep-sorted $(shell tools/rta ripgrep -l 'keep-sorted end')
 
