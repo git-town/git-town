@@ -19,7 +19,7 @@ import (
 // provides the branch type overrides stored in the given Git metadata snapshot
 func NewBranchTypeOverridesInSnapshot(snapshot configdomain.SingleSnapshot, runner subshelldomain.Runner) (configdomain.BranchTypeOverrides, error) {
 	result := configdomain.BranchTypeOverrides{}
-	for key, value := range snapshot {
+	for key, value := range snapshot { // okay to iterate map in random order because we assign to a new map
 		key, isBranchTypeKey := configdomain.ParseBranchTypeOverrideKey(key).Get()
 		if !isBranchTypeKey {
 			continue
@@ -51,7 +51,7 @@ func NewBranchTypeOverridesInSnapshot(snapshot configdomain.SingleSnapshot, runn
 
 func NewLineageFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated bool, runner subshelldomain.Runner) (configdomain.Lineage, error) {
 	result := configdomain.NewLineage()
-	for key, value := range snapshot.LineageEntries() {
+	for key, value := range snapshot.LineageEntries() { // okay to iterate map in random order because we assign to a new map
 		child := key.ChildBranch()
 		if child == "" {
 			// empty lineage entries are invalid --> delete it

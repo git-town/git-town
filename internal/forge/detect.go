@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/forge/github"
 	"github.com/git-town/git-town/v21/internal/forge/gitlab"
 	"github.com/git-town/git-town/v21/internal/git/giturl"
+	"github.com/git-town/git-town/v21/internal/gohacks/mapstools"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -26,7 +27,8 @@ func Detect(remoteURL giturl.Parts, userOverride Option[forgedomain.ForgeType]) 
 		forgedomain.ForgeTypeGitHub:              github.Detect,
 		forgedomain.ForgeTypeGitLab:              gitlab.Detect,
 	}
-	for forgeType, detector := range detectors {
+	for forgeType := range mapstools.SortedKeys(detectors) {
+		detector := detectors[forgeType]
 		if detector(remoteURL) {
 			return Some(forgeType)
 		}
