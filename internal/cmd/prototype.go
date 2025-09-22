@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/gohacks/mapstools"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/vm/interpreter/configinterpreter"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -134,7 +135,7 @@ func determinePrototypeData(args []string, repo execute.OpenRepoResult) (prototy
 }
 
 func validatePrototypeData(data prototypeData, repo execute.OpenRepoResult) error {
-	for branchName, branchType := range data.branchesToPrototype {
+	for branchName, branchType := range mapstools.SortedKeyValues(data.branchesToPrototype) {
 		if !data.branchesSnapshot.Branches.HasLocalBranch(branchName) && !data.branchesSnapshot.Branches.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote) {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}

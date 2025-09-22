@@ -17,19 +17,24 @@ func Detect(remoteURL giturl.Parts, userOverride Option[forgedomain.ForgeType]) 
 	if userOverride.IsSome() {
 		return userOverride
 	}
-	detectors := map[forgedomain.ForgeType]func(giturl.Parts) bool{
-		forgedomain.ForgeTypeAzureDevOps:         azuredevops.Detect,
-		forgedomain.ForgeTypeBitbucket:           bitbucketcloud.Detect,
-		forgedomain.ForgeTypeBitbucketDatacenter: bitbucketdatacenter.Detect,
-		forgedomain.ForgeTypeForgejo:             forgejo.Detect,
-		forgedomain.ForgeTypeGitea:               gitea.Detect,
-		forgedomain.ForgeTypeGitHub:              github.Detect,
-		forgedomain.ForgeTypeGitLab:              gitlab.Detect,
+	detectors := []detector{
+		{forgedomain.ForgeTypeAzureDevOps, azuredevops.Detect},
+		{forgedomain.ForgeTypeBitbucket, bitbucketcloud.Detect},
+		{forgedomain.ForgeTypeBitbucketDatacenter, bitbucketdatacenter.Detect},
+		{forgedomain.ForgeTypeForgejo, forgejo.Detect},
+		{forgedomain.ForgeTypeGitea, gitea.Detect},
+		{forgedomain.ForgeTypeGitHub, github.Detect},
+		{forgedomain.ForgeTypeGitLab, gitlab.Detect},
 	}
-	for forgeType, detector := range detectors {
-		if detector(remoteURL) {
-			return Some(forgeType)
+	for _, detector := range detectors {
+		if detector.implementation(remoteURL) {
+			return Some(detector.forgeType)
 		}
 	}
 	return None[forgedomain.ForgeType]()
+}
+
+type detector struct {
+	forgeType      forgedomain.ForgeType
+	implementation func(giturl.Parts) bool
 }
