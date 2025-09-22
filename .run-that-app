@@ -18,6 +18,6 @@ npm 24.2.0
 npx 24.2.0
 ripgrep 14.1.1
 scc 3.5.0
-shellcheck system@* 0.10.0
+shellcheck system 0.10.0
 shfmt 3.11.0
 staticcheck 2025.1.1
