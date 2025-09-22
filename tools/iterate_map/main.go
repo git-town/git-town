@@ -58,38 +58,38 @@ type mapIterationVisitor struct {
 func (self *mapIterationVisitor) Visit(node ast.Node) ast.Visitor {
 	rangeStmt, isRangeStmt := node.(*ast.RangeStmt)
 	if !isRangeStmt {
-		return visitor
+		return self
 	}
-	if !visitor.isMapIteration(rangeStmt) {
-		return visitor
+	if !self.isMapIteration(rangeStmt) {
+		return self
 	}
-	if visitor.hasIgnoreComment(rangeStmt) {
-		return visitor
+	if self.hasIgnoreComment(rangeStmt) {
+		return self
 	}
-	*visitor.errors++
+	*self.errors++
 	workDir, err := os.Getwd()
 	if err != nil {
 		fmt.Println(err.Error())
-		return visitor
+		return self
 	}
-	relPath, err := filepath.Rel(workDir, visitor.path)
+	relPath, err := filepath.Rel(workDir, self.path)
 	if err != nil {
 		fmt.Println(err.Error())
-		return visitor
+		return self
 	}
-	position := visitor.fset.Position(rangeStmt.Pos())
+	position := self.fset.Position(rangeStmt.Pos())
 	fmt.Printf("%s:%d\n", relPath, position.Line)
-	return visitor
+	return self
 }
 
 func (self *mapIterationVisitor) hasIgnoreComment(rangeStmt *ast.RangeStmt) bool {
-	if visitor.file.Comments == nil {
+	if self.file.Comments == nil {
 		return false
 	}
-	rangePos := visitor.fset.Position(rangeStmt.Pos())
-	for _, commentGroup := range visitor.file.Comments {
+	rangePos := self.fset.Position(rangeStmt.Pos())
+	for _, commentGroup := range self.file.Comments {
 		for _, comment := range commentGroup.List {
-			commentPos := visitor.fset.Position(comment.Pos())
+			commentPos := self.fset.Position(comment.Pos())
 			if commentPos.Line == rangePos.Line && strings.HasPrefix(comment.Text, ignoreComment) {
 				return true
 			}
@@ -99,14 +99,14 @@ func (self *mapIterationVisitor) hasIgnoreComment(rangeStmt *ast.RangeStmt) bool
 }
 
 func (self *mapIterationVisitor) isMapIteration(rangeStmt *ast.RangeStmt) bool {
-	if visitor.typeInfo == nil {
+	if self.typeInfo == nil {
 		return false
 	}
-	typ := visitor.typeInfo.TypeOf(rangeStmt.X)
+	typ := self.typeInfo.TypeOf(rangeStmt.X)
 	if typ == nil {
 		return false
 	}
-	return visitor.isMapType(typ)
+	return self.isMapType(typ)
 }
 
 func (self *mapIterationVisitor) isMapType(typ types.Type) bool {
@@ -114,9 +114,9 @@ func (self *mapIterationVisitor) isMapType(typ types.Type) bool {
 	case *types.Map:
 		return true
 	case *types.Pointer:
-		return visitor.isMapType(t.Elem())
+		return self.isMapType(t.Elem())
 	case *types.Named:
-		return visitor.isMapType(t.Underlying())
+		return self.isMapType(t.Underlying())
 	}
 	return false
 }
