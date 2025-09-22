@@ -12,8 +12,9 @@ import (
 	"golang.org/x/tools/go/packages"
 )
 
-// append a comment starting with this text to a line
-// that this linter warns about to silence the warning
+// append a comment starting with this text
+// to a line that this linter warns about
+// to silence the warning
 const ignoreComment = "// okay to iterate the map in random order"
 
 func main() {
