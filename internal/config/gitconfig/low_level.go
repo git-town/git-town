@@ -3,7 +3,6 @@ package gitconfig
 import (
 	"errors"
 	"fmt"
-	"maps"
 	"os/exec"
 	"slices"
 	"strings"
@@ -107,7 +106,7 @@ func RemoveLocalGitConfiguration(runner subshelldomain.Runner, localSnapshot con
 		}
 		return fmt.Errorf(messages.ConfigRemoveError, err)
 	}
-	for _, key := range slices.Sorted(maps.Keys(localSnapshot)) {
+	for key := range mapstools.SortedKeys(localSnapshot) {
 		if strings.HasPrefix(key.String(), "git-town-branch.") {
 			if err := runner.Run("git", "config", "--unset", key.String()); err != nil {
 				return fmt.Errorf(messages.ConfigRemoveError, err)
