@@ -23,11 +23,7 @@ Feature: delete a branch that is active in another worktree
       """
       branch "dead" is active in another worktree
       """
-
-  Scenario: undo
-    When I run "git-town undo"
-    Then Git Town runs no commands
-    And Git Town prints:
-      """
-      nothing to undo
-      """
+  #
+  # NOTE: Cannot test undo here.
+  # The Git Town command under test has not created an undoable runstate.
+  # Executing "git town undo" would undo the Git Town command executed during setup.

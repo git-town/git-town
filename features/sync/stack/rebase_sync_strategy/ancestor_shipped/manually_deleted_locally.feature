@@ -18,13 +18,13 @@ Feature: syncing a branch whose parent was shipped and the local branch deleted 
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                           |
-      | child  | git fetch --prune --tags                          |
-      |        | git checkout main                                 |
-      | main   | git -c rebase.updateRefs=false rebase origin/main |
-      |        | git checkout child                                |
-      | child  | git -c rebase.updateRefs=false rebase main        |
-      |        | git push --force-with-lease --force-if-includes   |
+      | BRANCH | COMMAND                                                                      |
+      | child  | git fetch --prune --tags                                                     |
+      |        | git checkout main                                                            |
+      | main   | git -c rebase.updateRefs=false rebase origin/main                            |
+      |        | git checkout child                                                           |
+      | child  | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
+      |        | git push --force-with-lease --force-if-includes                              |
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, child |

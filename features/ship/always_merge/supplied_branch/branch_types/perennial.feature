@@ -5,6 +5,7 @@ Feature: does not ship perennial branches using the always-merge strategy
     And the branches
       | NAME       | TYPE      | PARENT | LOCATIONS     |
       | production | perennial |        | local, origin |
+    And the current branch is "main"
     And Git setting "git-town.ship-strategy" is "always-merge"
     When I run "git-town ship production"
 

@@ -5,8 +5,8 @@ Feature: ask for information not provided by the config file
     Given a Git repo with origin
     And Git Town is not configured
     And the branches
-      | NAME     | TYPE   | LOCATIONS |
-      | branch-1 | (none) | local     |
+      | NAME     | TYPE   | LOCATIONS     |
+      | branch-1 | (none) | local, origin |
     And the committed configuration file:
       """
       [branches]
