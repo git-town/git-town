@@ -113,8 +113,9 @@ fix-optioncompare-in-tests:
 keep-sorted:
 	pwd
 	ls -la
-	tools/rta ripgrep --version
-	tools/rta ripgrep -l 'keep-sorted end'
+	tools/rta ripgrep -h
+	tools/rta ripgrep -l lint
+	tools/rta ripgrep -l 'lint'
 	tools/rta keep-sorted $(shell tools/rta ripgrep -l 'keep-sorted end')
 
 lint-iterate-map:
