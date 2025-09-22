@@ -40,6 +40,7 @@ fix: tools/rta@${RTA_VERSION}  # runs all linters and auto-fixes
 	make --no-print-directory fix-optioncompare-in-tests
 	go run tools/format_unittests/format_unittests.go
 	go run tools/format_self/format_self.go
+	make --no-print-directory keep-sorted
 	tools/rta gofumpt -l -w .
 	tools/rta dprint fmt
 	tools/rta dprint fmt --config dprint-changelog.json
@@ -110,7 +111,7 @@ fix-optioncompare-in-tests:
 	@(cd tools/optioncompare_in_tests && go build) && ./tools/optioncompare_in_tests/optioncompare_in_tests github.com/git-town/git-town/v21/...
 
 keep-sorted:
-	@tools/rta keep-sorted $(shell tools/rta ripgrep -l '// keep-sorted')
+	tools/rta keep-sorted $(shell tools/rta ripgrep -l '// keep-sorted')
 
 lint-iterate-map:
 	@(cd tools/iterate_map && go build) && ./tools/iterate_map/iterate_map
