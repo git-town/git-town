@@ -55,7 +55,7 @@ type mapIterationVisitor struct {
 	typeInfo *types.Info
 }
 
-func (visitor *mapIterationVisitor) Visit(node ast.Node) ast.Visitor {
+func (self *mapIterationVisitor) Visit(node ast.Node) ast.Visitor {
 	rangeStmt, isRangeStmt := node.(*ast.RangeStmt)
 	if !isRangeStmt {
 		return visitor
@@ -82,7 +82,7 @@ func (visitor *mapIterationVisitor) Visit(node ast.Node) ast.Visitor {
 	return visitor
 }
 
-func (visitor *mapIterationVisitor) hasIgnoreComment(rangeStmt *ast.RangeStmt) bool {
+func (self *mapIterationVisitor) hasIgnoreComment(rangeStmt *ast.RangeStmt) bool {
 	if visitor.file.Comments == nil {
 		return false
 	}
@@ -98,7 +98,7 @@ func (visitor *mapIterationVisitor) hasIgnoreComment(rangeStmt *ast.RangeStmt) b
 	return false
 }
 
-func (visitor *mapIterationVisitor) isMapIteration(rangeStmt *ast.RangeStmt) bool {
+func (self *mapIterationVisitor) isMapIteration(rangeStmt *ast.RangeStmt) bool {
 	if visitor.typeInfo == nil {
 		return false
 	}
@@ -109,7 +109,7 @@ func (visitor *mapIterationVisitor) isMapIteration(rangeStmt *ast.RangeStmt) boo
 	return visitor.isMapType(typ)
 }
 
-func (visitor *mapIterationVisitor) isMapType(typ types.Type) bool {
+func (self *mapIterationVisitor) isMapType(typ types.Type) bool {
 	switch t := typ.Underlying().(type) {
 	case *types.Map:
 		return true
