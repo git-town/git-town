@@ -111,6 +111,7 @@ fix-optioncompare-in-tests:
 	@(cd tools/optioncompare_in_tests && go build) && ./tools/optioncompare_in_tests/optioncompare_in_tests github.com/git-town/git-town/v21/...
 
 keep-sorted:
+	# install ripgrep here before calling it twice in a single subshell below
 	tools/rta ripgrep --version
 	tools/rta keep-sorted $(shell tools/rta ripgrep -l 'keep-sorted end' ./ | tools/rta ripgrep -v Makefile)
 
