@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v21/internal/forge"
+	"github.com/git-town/git-town/v21/internal/gohacks/mapstools"
 	"github.com/git-town/git-town/v21/internal/vm/opcodes"
 	"github.com/git-town/git-town/v21/internal/vm/program"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -22,7 +23,7 @@ func swapUpdateProposalStackLineagesProgram(program Mutable[program.Program], pr
 		fmt.Printf("failed to update proposal stack lineage: %s\n", err.Error())
 		return
 	}
-	for branch, proposal := range tree.BranchToProposal {
+	for branch, proposal := range mapstools.SortedKeyValues(tree.BranchToProposal) {
 		program.Value.Add(&opcodes.ProposalUpdateLineage{
 			Current:         branch,
 			CurrentProposal: proposal,

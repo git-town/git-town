@@ -162,7 +162,7 @@ func (self *NormalConfig) PartialBranchesOfType(branchType configdomain.BranchTy
 		matching.Add(self.PerennialBranches...)
 	case configdomain.BranchTypePrototypeBranch:
 	}
-	for key, value := range self.BranchTypeOverrides { // okay to iterate map in random order here
+	for key, value := range self.BranchTypeOverrides { // okay to iterate the map in random order here
 		if value == branchType {
 			matching.Add(key)
 		}

@@ -13,7 +13,7 @@ import (
 )
 
 // append this comment to a line to ignore the problem
-const ignoreComment = "// okay to iterate map in random order"
+const ignoreComment = "// okay to iterate the map in random order"
 
 func main() {
 	cfg := &packages.Config{

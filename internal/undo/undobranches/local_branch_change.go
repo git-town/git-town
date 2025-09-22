@@ -13,7 +13,7 @@ func (self LocalBranchChange) BranchNames() gitdomain.LocalBranchNames {
 		return gitdomain.LocalBranchNames{}
 	}
 	result := make(gitdomain.LocalBranchNames, 0, len(self))
-	for branch := range self {
+	for branch := range self { // okay to iterate the map in random order because we sort the result below
 		result = append(result, branch)
 	}
 	slice.NaturalSort(result)

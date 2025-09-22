@@ -157,7 +157,7 @@ func (self Lineage) HasDescendents(branch gitdomain.LocalBranchName) bool {
 
 // HasParents returns whether or not the given branch has at least one parent.
 func (self Lineage) HasParents(branch gitdomain.LocalBranchName) bool {
-	for child := range self.data { // okay to iterate map in random order here
+	for child := range self.data { // okay to iterate the map in random order here
 		if child == branch {
 			return true
 		}
@@ -197,7 +197,7 @@ func (self Lineage) OrderHierarchically(branches gitdomain.LocalBranchNames) git
 
 // Parent provides the name of the parent branch for the given branch or nil if the branch has no parent.
 func (self Lineage) Parent(branch gitdomain.LocalBranchName) Option[gitdomain.LocalBranchName] {
-	for child, parent := range self.data { // okay to iterate map in random order here
+	for child, parent := range self.data { // okay to iterate the map in random order here
 		if child == branch {
 			return Some(parent)
 		}
