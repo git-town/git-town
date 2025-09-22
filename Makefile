@@ -111,11 +111,7 @@ fix-optioncompare-in-tests:
 	@(cd tools/optioncompare_in_tests && go build) && ./tools/optioncompare_in_tests/optioncompare_in_tests github.com/git-town/git-town/v21/...
 
 keep-sorted:
-	make -v
-	tools/rta ripgrep --version
-	echo two
-	tools/rta ripgrep -l 'lint' ./
-	tools/rta keep-sorted $(shell tools/rta ripgrep -l 'keep-sorted end' ./)
+	tools/rta keep-sorted $(shell tools/rta ripgrep -l 'keep-sorted end' ./ | tools/rta ripgrep -v Makefile)
 
 lint-iterate-map:
 	@(cd tools/iterate_map && go build) && ./tools/iterate_map/iterate_map
