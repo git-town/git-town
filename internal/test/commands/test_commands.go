@@ -164,6 +164,14 @@ func (self *TestCommands) ConnectTrackingBranch(name gitdomain.LocalBranchName) 
 	self.MustRun("git", "branch", "--set-upstream-to=origin/"+name.String(), name.String())
 }
 
+// CreateBranch creates a new branch with the given name.
+// The created branch is a normal branch.
+// To create feature branches, use CreateFeatureBranch.
+func (self *TestCommands) CreateAndCheckoutBranch(name gitdomain.LocalBranchName, parent gitdomain.BranchName) {
+	self.Git.CurrentBranchCache.Set(name)
+	self.MustRun("git", "checkout", "-b", name.String(), parent.String())
+}
+
 // creates a feature branch with the given name in this repository
 func (self *TestCommands) CreateAndCheckoutFeatureBranch(name gitdomain.LocalBranchName, parent gitdomain.LocalBranchName) {
 	asserts.NoError(self.Git.CreateAndCheckoutBranchWithParent(self, name, parent.Location()))
@@ -184,6 +192,13 @@ func (self *TestCommands) CreateBranchOfType(name gitdomain.LocalBranchName, par
 		self.CreateBranch(name, "main")
 	}
 	asserts.NoError(gitconfig.SetBranchTypeOverride(self.TestRunner, branchType, name))
+}
+
+func (self *TestCommands) CreateChildBranch(name, parent gitdomain.LocalBranchName) {
+	self.CheckoutBranch(parent)
+	env := append(os.Environ(), "GIT_TOWN_NEW_BRANCH_TYPE=feature")
+	asserts.NoError(self.RunWithEnv(env, "git-town", "append", "--no-sync", name.String()))
+	self.Git.CurrentBranchCache.Set(name)
 }
 
 // CreateCommit creates a commit with the given properties in this Git repo.
@@ -217,6 +232,40 @@ func (self *TestCommands) CreateFile(name, content string) {
 func (self *TestCommands) CreateFolder(name string) {
 	folderPath := filepath.Join(self.WorkingDir, name)
 	asserts.NoError(os.MkdirAll(folderPath, os.ModePerm))
+}
+
+func (self *TestCommands) CreateLocalBranchUsingGitTown(branchSetup datatable.BranchSetup) {
+	// step 1: create the local branch if one is needed
+	if parent, hasParent := branchSetup.Parent.Get(); hasParent {
+		self.CreateChildBranch(branchSetup.Name, parent)
+	} else {
+		self.CreateAndCheckoutBranch(branchSetup.Name, "main")
+	}
+	// step 2: create the tracking branch
+	if branchSetup.Locations.Contains(testgit.LocationOrigin) {
+		self.PushBranchToRemote(branchSetup.Name, gitdomain.RemoteOrigin)
+	}
+	if branchSetup.Locations.Contains(testgit.LocationUpstream) {
+		self.PushBranchToRemote(branchSetup.Name, gitdomain.RemoteUpstream)
+	}
+	// step 3: set the branch type
+	if branchType, hasBranchType := branchSetup.BranchType.Get(); hasBranchType {
+		switch branchType {
+		case configdomain.BranchTypeContributionBranch:
+			self.MustRun("git-town", "contribute")
+		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeMainBranch:
+			// nothing to do
+		case configdomain.BranchTypePerennialBranch:
+			// TODO: create a "git town perennial" command to mark branches as perennial
+			asserts.NoError(gitconfig.SetBranchTypeOverride(self.TestRunner, branchType, branchSetup.Name))
+		case configdomain.BranchTypeObservedBranch:
+			self.MustRun("git-town", "observe")
+		case configdomain.BranchTypeParkedBranch:
+			self.MustRun("git-town", "park")
+		case configdomain.BranchTypePrototypeBranch:
+			self.MustRun("git-town", "prototype")
+		}
+	}
 }
 
 // CreateStandaloneTag creates a tag not on a branch.

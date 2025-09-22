@@ -3,17 +3,17 @@ Feature: show the configuration in Spanish
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME           | TYPE         | PARENT | LOCATIONS |
-      | contribution-1 | contribution |        | local     |
-      | contribution-2 | contribution |        | local     |
-      | observed-1     | observed     |        | local     |
-      | observed-2     | observed     |        | local     |
-      | parked-1       | parked       | main   | local     |
-      | parked-2       | parked       | main   | local     |
-      | perennial-1    | perennial    |        | local     |
-      | perennial-2    | perennial    |        | local     |
-      | prototype-1    | prototype    | main   | local     |
-      | prototype-2    | prototype    | main   | local     |
+      | NAME           | TYPE         | PARENT | LOCATIONS     |
+      | contribution-1 | contribution |        | local, origin |
+      | contribution-2 | contribution |        | local, origin |
+      | observed-1     | observed     |        | local, origin |
+      | observed-2     | observed     |        | local, origin |
+      | parked-1       | parked       | main   | local         |
+      | parked-2       | parked       | main   | local         |
+      | perennial-1    | perennial    |        | local         |
+      | perennial-2    | perennial    |        | local         |
+      | prototype-1    | prototype    | main   | local         |
+      | prototype-2    | prototype    | main   | local         |
     And Git setting "git-town.perennial-branches" is "qa staging"
     And Git setting "git-town.perennial-regex" is "^release-"
     And Git setting "git-town.contribution-regex" is "^renovate/"

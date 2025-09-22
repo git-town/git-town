@@ -1027,46 +1027,15 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		repo := state.fixture.DevRepo.GetOrPanic()
 		for _, branchSetup := range datatable.ParseBranchSetupTable(table) {
-			var repoToCreateBranchIn *commands.TestCommands
-			switch {
-			case
-				branchSetup.Locations.Is(testgit.LocationLocal),
-				branchSetup.Locations.Is(testgit.LocationLocal, testgit.LocationOrigin):
-				repoToCreateBranchIn = state.fixture.DevRepo.GetOrPanic()
-			case branchSetup.Locations.Is(testgit.LocationOrigin):
-				repoToCreateBranchIn = state.fixture.OriginRepo.GetOrPanic()
-			case branchSetup.Locations.Is(testgit.LocationUpstream):
-				repoToCreateBranchIn = state.fixture.UpstreamRepo.GetOrPanic()
-			default:
-				return errors.New("unhandled location to create the new branch: " + branchSetup.Locations.String())
-			}
-			branchType, hasBranchType := branchSetup.BranchType.Get()
-			if hasBranchType {
-				switch branchType {
-				case configdomain.BranchTypeMainBranch:
-					return errors.New("main branch exists already")
-				case configdomain.BranchTypeFeatureBranch:
-					repoToCreateBranchIn.CreateFeatureBranch(branchSetup.Name, branchSetup.Parent.GetOrPanic().BranchName())
-				case
-					configdomain.BranchTypePerennialBranch,
-					configdomain.BranchTypeContributionBranch,
-					configdomain.BranchTypeObservedBranch,
-					configdomain.BranchTypeParkedBranch,
-					configdomain.BranchTypePrototypeBranch:
-					repoToCreateBranchIn.CreateBranchOfType(branchSetup.Name, branchSetup.Parent, branchType)
-				}
+			if branchSetup.Locations.Contains(testgit.LocationLocal) {
+				repo.CreateLocalBranchUsingGitTown(branchSetup)
 			} else {
-				repoToCreateBranchIn.CreateBranch(branchSetup.Name, "main")
-				if parent, hasParent := branchSetup.Parent.Get(); hasParent {
-					asserts.NoError(repoToCreateBranchIn.Config.NormalConfig.SetParent(repo.TestRunner, branchSetup.Name, parent))
+				// here the branch has no local counterpart --> create it manually in the remotes
+				if branchSetup.Locations.Contains(testgit.LocationOrigin) {
+					state.fixture.OriginRepo.Value.CreateBranch(branchSetup.Name, branchSetup.Parent.GetOr("main").BranchName())
 				}
-			}
-			if len(branchSetup.Locations) > 1 {
-				switch {
-				case branchSetup.Locations.Is(testgit.LocationLocal, testgit.LocationOrigin):
-					state.fixture.DevRepo.GetOrPanic().PushBranchToRemote(branchSetup.Name, gitdomain.RemoteOrigin)
-				default:
-					return errors.New("unhandled location to push the new branch to: " + branchSetup.Locations.String())
+				if branchSetup.Locations.Contains(testgit.LocationUpstream) {
+					state.fixture.UpstreamRepo.Value.CreateBranch(branchSetup.Name, branchSetup.Parent.GetOr("main").BranchName())
 				}
 			}
 		}
@@ -1277,9 +1246,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
 		state.initialCurrentBranch = Some(branch)
-		if !devRepo.Git.BranchExists(devRepo.TestRunner, branch) {
-			return fmt.Errorf("cannot check out non-existing branch: %q", branch)
-		}
 		devRepo.CheckoutBranch(branch)
 		return nil
 	})

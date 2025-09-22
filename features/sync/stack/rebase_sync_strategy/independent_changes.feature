@@ -20,21 +20,21 @@ Feature: stacked changes where each branch makes independent changes
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                             |
-      | child  | git fetch --prune --tags                            |
-      |        | git checkout main                                   |
-      | main   | git -c rebase.updateRefs=false rebase origin/main   |
-      |        | git push                                            |
-      |        | git checkout parent                                 |
-      | parent | git push --force-with-lease --force-if-includes     |
-      |        | git -c rebase.updateRefs=false rebase origin/parent |
-      |        | git -c rebase.updateRefs=false rebase main          |
-      |        | git push --force-with-lease --force-if-includes     |
-      |        | git checkout child                                  |
-      | child  | git push --force-with-lease --force-if-includes     |
-      |        | git -c rebase.updateRefs=false rebase origin/child  |
-      |        | git -c rebase.updateRefs=false rebase parent        |
-      |        | git push --force-with-lease --force-if-includes     |
+      | BRANCH | COMMAND                                                                        |
+      | child  | git fetch --prune --tags                                                       |
+      |        | git checkout main                                                              |
+      | main   | git -c rebase.updateRefs=false rebase origin/main                              |
+      |        | git push                                                                       |
+      |        | git checkout parent                                                            |
+      | parent | git push --force-with-lease --force-if-includes                                |
+      |        | git -c rebase.updateRefs=false rebase origin/parent                            |
+      |        | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }}   |
+      |        | git push --force-with-lease --force-if-includes                                |
+      |        | git checkout child                                                             |
+      | child  | git push --force-with-lease --force-if-includes                                |
+      |        | git -c rebase.updateRefs=false rebase origin/child                             |
+      |        | git -c rebase.updateRefs=false rebase --onto parent {{ sha 'initial commit' }} |
+      |        | git push --force-with-lease --force-if-includes                                |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |

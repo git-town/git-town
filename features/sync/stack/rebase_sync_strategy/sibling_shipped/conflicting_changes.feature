@@ -20,12 +20,12 @@ Feature: conflicting sibling branches, one gets shipped, the other syncs afterwa
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                           |
-      | branch-2 | git fetch --prune --tags                          |
-      |          | git checkout main                                 |
-      | main     | git -c rebase.updateRefs=false rebase origin/main |
-      |          | git checkout branch-2                             |
-      | branch-2 | git -c rebase.updateRefs=false rebase main        |
+      | BRANCH   | COMMAND                                                                   |
+      | branch-2 | git fetch --prune --tags                                                  |
+      |          | git checkout main                                                         |
+      | main     | git -c rebase.updateRefs=false rebase origin/main                         |
+      |          | git checkout branch-2                                                     |
+      | branch-2 | git -c rebase.updateRefs=false rebase --onto main {{ sha 'main commit' }} |
     And Git Town prints the error:
       """
       CONFLICT (content): Merge conflict in file

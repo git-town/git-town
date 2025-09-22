@@ -29,7 +29,7 @@ Feature: detaching a branch that contains merge commits
       """
       branch "branch-2" contains merge commits, please compress and try again
       """
-
-  Scenario: undo
-    When I run "git-town undo"
-    Then Git Town runs no commands
+  #
+  # NOTE: Cannot test undo here.
+  # The Git Town command under test has not created an undoable runstate.
+  # Executing "git town undo" would undo the Git Town command executed during setup.
