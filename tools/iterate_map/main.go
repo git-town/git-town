@@ -26,14 +26,12 @@ func main() {
 		fmt.Printf("ERROR loading packages: %s\n", err)
 		os.Exit(1)
 	}
-
 	errors := 0
 	for _, pkg := range pkgs {
 		for i, file := range pkg.Syntax {
 			if shouldIgnorePath(pkg.GoFiles[i]) {
 				continue
 			}
-
 			visitor := &mapIterationVisitor{
 				errors:   &errors,
 				file:     file,
@@ -44,7 +42,6 @@ func main() {
 			ast.Walk(visitor, file)
 		}
 	}
-
 	if errors > 0 {
 		os.Exit(1)
 	}
