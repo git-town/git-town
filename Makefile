@@ -113,8 +113,6 @@ fix-optioncompare-in-tests:
 keep-sorted:
 	make -v
 	tools/rta ripgrep --version
-	echo one
-	tools/rta ripgrep -l lint
 	echo two
 	tools/rta ripgrep -l 'lint'
 	tools/rta keep-sorted $(shell tools/rta ripgrep -l 'keep-sorted end')
