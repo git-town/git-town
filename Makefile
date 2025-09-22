@@ -115,7 +115,7 @@ keep-sorted:
 	tools/rta ripgrep --version
 	echo two
 	tools/rta ripgrep -l 'lint' ./
-	tools/rta keep-sorted $(shell tools/rta ripgrep -l 'keep-sorted end')
+	tools/rta keep-sorted $(shell tools/rta ripgrep -l 'keep-sorted end' ./)
 
 lint-iterate-map:
 	@(cd tools/iterate_map && go build) && ./tools/iterate_map/iterate_map
