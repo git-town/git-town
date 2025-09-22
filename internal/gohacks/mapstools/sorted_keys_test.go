@@ -9,6 +9,7 @@ import (
 
 func TestSortedKeys(t *testing.T) {
 	t.Parallel()
+
 	t.Run("normal map", func(t *testing.T) {
 		t.Parallel()
 		give := map[string]string{
