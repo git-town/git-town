@@ -12,6 +12,7 @@ import (
 	"golang.org/x/tools/go/packages"
 )
 
+// append this comment to a line to ignore the problem
 const ignoreComment = "// okay to iterate map in random order"
 
 func main() {
