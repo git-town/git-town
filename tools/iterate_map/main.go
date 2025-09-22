@@ -56,8 +56,8 @@ type mapIterationVisitor struct {
 }
 
 func (v *mapIterationVisitor) Visit(node ast.Node) ast.Visitor {
-	rangeStmt, ok := node.(*ast.RangeStmt)
-	if !ok {
+	rangeStmt, isRangeStmt := node.(*ast.RangeStmt)
+	if !isRangeStmt {
 		return v
 	}
 	if !v.isMapIteration(rangeStmt) {
