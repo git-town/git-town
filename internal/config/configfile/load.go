@@ -53,8 +53,8 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	var devRemote Option[gitdomain.Remote]
 	var featureRegex Option[configdomain.FeatureRegex]
 	var forgeType Option[forgedomain.ForgeType]
-	var gitLabConnectorType Option[forgedomain.GitLabConnectorType]
 	var githubConnectorType Option[forgedomain.GitHubConnectorType]
+	var gitlabConnectorType Option[forgedomain.GitLabConnectorType]
 	var hostingOriginHostname Option[configdomain.HostingOriginHostname]
 	var mainBranch Option[gitdomain.LocalBranchName]
 	var newBranchType Option[configdomain.NewBranchType]
@@ -177,7 +177,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			ec.Check(err)
 		}
 		if data.Hosting.GitLabConnectorType != nil {
-			gitLabConnectorType, err = forgedomain.ParseGitLabConnectorType(*data.Hosting.GitLabConnectorType)
+			gitlabConnectorType, err = forgedomain.ParseGitLabConnectorType(*data.Hosting.GitLabConnectorType)
 			ec.Check(err)
 		}
 		if data.Hosting.OriginHostname != nil {
@@ -263,7 +263,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		ForgeType:                forgeType,
 		GitHubConnectorType:      githubConnectorType,
 		GitHubToken:              None[forgedomain.GitHubToken](),
-		GitLabConnectorType:      gitLabConnectorType,
+		GitLabConnectorType:      gitlabConnectorType,
 		GitLabToken:              None[forgedomain.GitLabToken](),
 		GitUserEmail:             None[gitdomain.GitUserEmail](),
 		GitUserName:              None[gitdomain.GitUserName](),
