@@ -4,17 +4,17 @@ Feature: show the configuration
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME           | TYPE         | PARENT | LOCATIONS |
-      | contribution-1 | contribution |        | local     |
-      | contribution-2 | contribution |        | local     |
-      | observed-1     | observed     |        | local     |
-      | observed-2     | observed     |        | local     |
-      | parked-1       | parked       | main   | local     |
-      | parked-2       | parked       | main   | local     |
-      | perennial-1    | perennial    |        | local     |
-      | perennial-2    | perennial    |        | local     |
-      | prototype-1    | prototype    | main   | local     |
-      | prototype-2    | prototype    | main   | local     |
+      | NAME           | TYPE         | PARENT | LOCATIONS     |
+      | contribution-1 | contribution |        | local, origin |
+      | contribution-2 | contribution |        | local, origin |
+      | observed-1     | observed     |        | local, origin |
+      | observed-2     | observed     |        | local, origin |
+      | parked-1       | parked       | main   | local         |
+      | parked-2       | parked       | main   | local         |
+      | perennial-1    | perennial    |        | local         |
+      | perennial-2    | perennial    |        | local         |
+      | prototype-1    | prototype    | main   | local         |
+      | prototype-2    | prototype    | main   | local         |
     And local Git setting "color.ui" is "always"
 
   Scenario: all configured in Git, no stacked changes
@@ -283,14 +283,14 @@ Feature: show the configuration
       """
 
   Scenario: all configured, with stacked changes
-    Given the branches
+    Given Git setting "git-town.perennial-branches" is "qa"
+    And the branches
       | NAME   | TYPE    | PARENT | LOCATIONS |
       | alpha  | feature | main   | local     |
       | qa     | (none)  |        | local     |
       | beta   | feature | main   | local     |
       | child  | feature | alpha  | local     |
       | hotfix | feature | qa     | local     |
-    And Git setting "git-town.perennial-branches" is "qa"
     When I run "git-town config"
     Then Git Town prints:
       """

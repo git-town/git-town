@@ -8,7 +8,7 @@ Feature: sync perennial branch that was deleted at the remote
       | feature-1 | feature   | perennial | local, origin |
       | feature-2 | feature   | perennial | local, origin |
     And origin deletes the "perennial" branch
-    And the current branch is "perennial"
+    And the current branch is "perennial" and the previous branch is "main"
     When I run "git-town sync"
 
   Scenario: result

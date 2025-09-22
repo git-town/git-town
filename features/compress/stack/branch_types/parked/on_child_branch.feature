@@ -41,5 +41,5 @@ Feature: does not compress non-active parked branches in the stack
       | BRANCH | COMMAND                                         |
       | child  | git reset --hard {{ sha 'child 2' }}            |
       |        | git push --force-with-lease --force-if-includes |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

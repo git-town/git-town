@@ -3,9 +3,9 @@ Feature: does not merge observed branches
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME    | TYPE     | PARENT | LOCATIONS |
-      | parent  | feature  | main   | local     |
-      | current | observed | parent | local     |
+      | NAME    | TYPE     | PARENT | LOCATIONS     |
+      | parent  | feature  | main   | local         |
+      | current | observed | parent | local, origin |
     And the current branch is "current"
     When I run "git-town merge"
 

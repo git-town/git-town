@@ -19,16 +19,16 @@ Feature: sync the current feature branch using the "rebase" feature sync strateg
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                              |
-      | feature | git fetch --prune --tags                             |
-      |         | git checkout main                                    |
-      | main    | git -c rebase.updateRefs=false rebase origin/main    |
-      |         | git push                                             |
-      |         | git checkout feature                                 |
-      | feature | git push --force-with-lease --force-if-includes      |
-      |         | git -c rebase.updateRefs=false rebase origin/feature |
-      |         | git -c rebase.updateRefs=false rebase main           |
-      |         | git push --force-with-lease --force-if-includes      |
+      | BRANCH  | COMMAND                                                                                 |
+      | feature | git fetch --prune --tags                                                                |
+      |         | git checkout main                                                                       |
+      | main    | git -c rebase.updateRefs=false rebase origin/main                                       |
+      |         | git push                                                                                |
+      |         | git checkout feature                                                                    |
+      | feature | git push --force-with-lease --force-if-includes                                         |
+      |         | git -c rebase.updateRefs=false rebase origin/feature                                    |
+      |         | git -c rebase.updateRefs=false rebase --onto main {{ sha-initial 'local main commit' }} |
+      |         | git push --force-with-lease --force-if-includes                                         |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
