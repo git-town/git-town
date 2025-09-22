@@ -109,6 +109,9 @@ alphavet:
 fix-optioncompare-in-tests:
 	@(cd tools/optioncompare_in_tests && go build) && ./tools/optioncompare_in_tests/optioncompare_in_tests github.com/git-town/git-town/v21/...
 
+keep-sorted:
+	@tools/rta keep-sorted $(tools/rta ripgrep -l "// keep-sorted")
+
 lint-iterate-map:
 	@(cd tools/iterate_map && go build) && ./tools/iterate_map/iterate_map
 
