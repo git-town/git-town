@@ -8,7 +8,7 @@ type SingleSnapshot map[Key]string
 // provides all the keys that describe aliases for Git Town commands
 func (self SingleSnapshot) AliasEntries() map[AliasKey]string {
 	result := map[AliasKey]string{}
-	for key, value := range self {
+	for key, value := range self { // okay to iterate map in random order here
 		if aliasKey, isAliasKey := NewAliasKey(key).Get(); isAliasKey {
 			result[aliasKey] = value
 		}
@@ -28,7 +28,7 @@ func (self SingleSnapshot) Aliases() Aliases {
 // provides all the keys that describe lineage entries
 func (self SingleSnapshot) LineageEntries() map[LineageKey]string {
 	result := map[LineageKey]string{}
-	for key, value := range self {
+	for key, value := range self { // okay to iterate map in random order here
 		if lineageKey, isLineageKey := ParseLineageKey(key).Get(); isLineageKey {
 			result[lineageKey] = value
 		}
