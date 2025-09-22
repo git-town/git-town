@@ -82,17 +82,6 @@ func (visitor *mapIterationVisitor) Visit(node ast.Node) ast.Visitor {
 	return visitor
 }
 
-func (visitor *mapIterationVisitor) isMapIteration(rangeStmt *ast.RangeStmt) bool {
-	if visitor.typeInfo == nil {
-		return false
-	}
-	typ := visitor.typeInfo.TypeOf(rangeStmt.X)
-	if typ == nil {
-		return false
-	}
-	return visitor.isMapType(typ)
-}
-
 func (visitor *mapIterationVisitor) hasIgnoreComment(rangeStmt *ast.RangeStmt) bool {
 	if visitor.file.Comments == nil {
 		return false
@@ -107,6 +96,17 @@ func (visitor *mapIterationVisitor) hasIgnoreComment(rangeStmt *ast.RangeStmt) b
 		}
 	}
 	return false
+}
+
+func (visitor *mapIterationVisitor) isMapIteration(rangeStmt *ast.RangeStmt) bool {
+	if visitor.typeInfo == nil {
+		return false
+	}
+	typ := visitor.typeInfo.TypeOf(rangeStmt.X)
+	if typ == nil {
+		return false
+	}
+	return visitor.isMapType(typ)
 }
 
 func (visitor *mapIterationVisitor) isMapType(typ types.Type) bool {
