@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/gohacks/mapstools"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/vm/interpreter/configinterpreter"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -132,7 +133,7 @@ func determineParkData(args []string, repo execute.OpenRepoResult) (parkData, er
 }
 
 func validateParkData(data parkData, repo execute.OpenRepoResult) error {
-	for branchName, branchType := range data.branchesToPark {
+	for branchName, branchType := range mapstools.SortedKeyValues(data.branchesToPark) {
 		switch branchType {
 		case configdomain.BranchTypeMainBranch:
 			return errors.New(messages.MainBranchCannotPark)

@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	prodgit "github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/gohacks/mapstools"
 	"github.com/git-town/git-town/v21/internal/gohacks/slice"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
@@ -556,7 +557,7 @@ func (self *TestCommands) VerifyNoGitTownConfiguration() error {
 		return fmt.Errorf("unexpected Git Town configuration:\n%s", output)
 	}
 	self.Config.Reload(self.TestRunner)
-	for aliasName, aliasValue := range self.Config.NormalConfig.Aliases {
+	for aliasName, aliasValue := range mapstools.SortedKeyValues(self.Config.NormalConfig.Aliases) {
 		if strings.HasPrefix(aliasValue, "town ") {
 			return fmt.Errorf("unexpected Git Town alias %q with value %q. All aliases: %#v", aliasName, aliasValue, self.Config.NormalConfig.Aliases)
 		}

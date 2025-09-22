@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/gohacks/mapstools"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/vm/interpreter/configinterpreter"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -138,7 +139,7 @@ func determineObserveData(args []string, repo execute.OpenRepoResult) (observeDa
 }
 
 func validateObserveData(data observeData, repo execute.OpenRepoResult) error {
-	for branchName, branchType := range data.branchesToObserve {
+	for branchName, branchType := range mapstools.SortedKeyValues(data.branchesToObserve) {
 		switch branchType {
 		case configdomain.BranchTypeMainBranch:
 			return errors.New(messages.MainBranchCannotObserve)
