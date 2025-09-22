@@ -1,6 +1,8 @@
 package configdomain
 
 import (
+	"maps"
+
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 )
 
@@ -11,11 +13,7 @@ type BranchTypeOverrides map[gitdomain.LocalBranchName]BranchType
 // adds the given BranchTypeOverrides to this BranchTypeOverrides
 func (self BranchTypeOverrides) Concat(other BranchTypeOverrides) BranchTypeOverrides {
 	result := make(BranchTypeOverrides, len(self)+len(other))
-	for key, value := range self {
-		result[key] = value
-	}
-	for key, value := range other {
-		result[key] = value
-	}
+	maps.Copy(result, self)
+	maps.Copy(result, other)
 	return result
 }
