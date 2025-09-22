@@ -85,12 +85,10 @@ func (v *mapIterationVisitor) isMapIteration(rangeStmt *ast.RangeStmt) bool {
 	if v.typeInfo == nil {
 		return false
 	}
-
 	typ := v.typeInfo.TypeOf(rangeStmt.X)
 	if typ == nil {
 		return false
 	}
-
 	return v.isMapType(typ)
 }
 
@@ -98,19 +96,15 @@ func (v *mapIterationVisitor) hasIgnoreComment(rangeStmt *ast.RangeStmt) bool {
 	if v.file.Comments == nil {
 		return false
 	}
-
 	rangePos := v.fset.Position(rangeStmt.Pos())
-
 	for _, commentGroup := range v.file.Comments {
 		for _, comment := range commentGroup.List {
 			commentPos := v.fset.Position(comment.Pos())
-			if commentPos.Line == rangePos.Line &&
-				strings.HasPrefix(comment.Text, ignoreComment) {
+			if commentPos.Line == rangePos.Line && strings.HasPrefix(comment.Text, ignoreComment) {
 				return true
 			}
 		}
 	}
-
 	return false
 }
 
