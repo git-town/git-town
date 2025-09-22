@@ -12,6 +12,8 @@ import (
 	"golang.org/x/tools/go/packages"
 )
 
+const ignoreComment = "// okay to iterate map in random order"
+
 func main() {
 	cfg := &packages.Config{
 		Mode: packages.NeedFiles | packages.NeedSyntax | packages.NeedTypes | packages.NeedTypesInfo,
@@ -34,6 +36,7 @@ func main() {
 				path:     pkg.GoFiles[i],
 				typeInfo: pkg.TypesInfo,
 				errors:   &errors,
+				file:     file,
 			}
 			ast.Walk(visitor, file)
 		}
@@ -49,6 +52,7 @@ type mapIterationVisitor struct {
 	path     string
 	typeInfo *types.Info
 	errors   *int
+	file     *ast.File
 }
 
 func (v *mapIterationVisitor) Visit(node ast.Node) ast.Visitor {
@@ -57,6 +61,10 @@ func (v *mapIterationVisitor) Visit(node ast.Node) ast.Visitor {
 		return v
 	}
 	if !v.isMapIteration(rangeStmt) {
+		return v
+	}
+	pos := v.fset.Position(rangeStmt.Pos())
+	if v.hasIgnoreComment(rangeStmt) {
 		return v
 	}
 	*v.errors++
@@ -69,7 +77,6 @@ func (v *mapIterationVisitor) Visit(node ast.Node) ast.Visitor {
 	if err != nil {
 		relPath = v.path
 	}
-	pos := v.fset.Position(rangeStmt.Pos())
 	fmt.Printf("%s:%d\n", relPath, pos.Line)
 	return v
 }
@@ -85,6 +92,26 @@ func (v *mapIterationVisitor) isMapIteration(rangeStmt *ast.RangeStmt) bool {
 	}
 
 	return v.isMapType(typ)
+}
+
+func (v *mapIterationVisitor) hasIgnoreComment(rangeStmt *ast.RangeStmt) bool {
+	if v.file.Comments == nil {
+		return false
+	}
+
+	rangePos := v.fset.Position(rangeStmt.Pos())
+
+	for _, commentGroup := range v.file.Comments {
+		for _, comment := range commentGroup.List {
+			commentPos := v.fset.Position(comment.Pos())
+			if commentPos.Line == rangePos.Line &&
+				strings.HasPrefix(comment.Text, ignoreComment) {
+				return true
+			}
+		}
+	}
+
+	return false
 }
 
 func (v *mapIterationVisitor) isMapType(typ types.Type) bool {
