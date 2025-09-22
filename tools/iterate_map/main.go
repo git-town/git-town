@@ -33,11 +33,11 @@ func main() {
 			}
 
 			visitor := &mapIterationVisitor{
+				errors:   &errors,
+				file:     file,
 				fset:     pkg.Fset,
 				path:     pkg.GoFiles[i],
 				typeInfo: pkg.TypesInfo,
-				errors:   &errors,
-				file:     file,
 			}
 			ast.Walk(visitor, file)
 		}
@@ -49,11 +49,11 @@ func main() {
 }
 
 type mapIterationVisitor struct {
+	errors   *int
+	file     *ast.File
 	fset     *token.FileSet
 	path     string
 	typeInfo *types.Info
-	errors   *int
-	file     *ast.File
 }
 
 func (v *mapIterationVisitor) Visit(node ast.Node) ast.Visitor {
