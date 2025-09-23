@@ -15,7 +15,7 @@ Feature: swapping a branch with its perennial parent
       | current | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot swap: branch "parent" is a perennial branch
+      cannot swap a branch without grand-parent
       """
   #
   # NOTE: Cannot test undo here.
