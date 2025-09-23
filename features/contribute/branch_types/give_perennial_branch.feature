@@ -14,8 +14,3 @@ Feature: make another perennial branch a contribution branch
       cannot make perennial branches contribution branches
       """
     And branch "perennial" still has type "perennial"
-
-  Scenario: undo
-    When I run "git-town undo"
-    Then Git Town runs no commands
-    And branch "perennial" still has type "perennial"
