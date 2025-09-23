@@ -17,6 +17,7 @@ Feature: update the parent of a feature branch
         child
         parent
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands

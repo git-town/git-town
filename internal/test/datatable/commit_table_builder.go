@@ -1,10 +1,11 @@
 package datatable
 
 import (
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/test/helpers"
-	"github.com/git-town/git-town/v21/internal/test/testgit"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks/mapstools"
+	"github.com/git-town/git-town/v22/internal/test/helpers"
+	"github.com/git-town/git-town/v22/internal/test/testgit"
 )
 
 // CommitTableBuilder collects data about commits in Git repositories
@@ -118,7 +119,7 @@ func (self *CommitTableBuilder) Table(fields []string, lineage configdomain.Line
 func (self *CommitTableBuilder) branches(lineage configdomain.Lineage) gitdomain.LocalBranchNames {
 	result := make(gitdomain.LocalBranchNames, 0, len(self.commitsInBranch))
 	hasMain := false
-	for branch := range self.commitsInBranch {
+	for branch := range mapstools.SortedKeys(self.commitsInBranch) {
 		if branch == gitdomain.NewLocalBranchName("main") {
 			hasMain = true
 		} else {

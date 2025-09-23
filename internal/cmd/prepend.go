@@ -7,31 +7,31 @@ import (
 	"os"
 	"slices"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v21/internal/cli/flags"
-	"github.com/git-town/git-town/v21/internal/cli/print"
-	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v21/internal/cmd/ship"
-	"github.com/git-town/git-town/v21/internal/cmd/sync"
-	"github.com/git-town/git-town/v21/internal/config"
-	"github.com/git-town/git-town/v21/internal/config/cliconfig"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/execute"
-	"github.com/git-town/git-town/v21/internal/forge"
-	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v21/internal/messages"
-	"github.com/git-town/git-town/v21/internal/state/runstate"
-	"github.com/git-town/git-town/v21/internal/validate"
-	"github.com/git-town/git-town/v21/internal/vm/interpreter/fullinterpreter"
-	"github.com/git-town/git-town/v21/internal/vm/opcodes"
-	"github.com/git-town/git-town/v21/internal/vm/optimizer"
-	"github.com/git-town/git-town/v21/internal/vm/program"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
-	"github.com/git-town/git-town/v21/pkg/set"
+	"github.com/git-town/git-town/v22/internal/cli/dialog"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v22/internal/cli/flags"
+	"github.com/git-town/git-town/v22/internal/cli/print"
+	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v22/internal/cmd/ship"
+	"github.com/git-town/git-town/v22/internal/cmd/sync"
+	"github.com/git-town/git-town/v22/internal/config"
+	"github.com/git-town/git-town/v22/internal/config/cliconfig"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/execute"
+	"github.com/git-town/git-town/v22/internal/forge"
+	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/state/runstate"
+	"github.com/git-town/git-town/v22/internal/validate"
+	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
+	"github.com/git-town/git-town/v22/internal/vm/opcodes"
+	"github.com/git-town/git-town/v22/internal/vm/optimizer"
+	"github.com/git-town/git-town/v22/internal/vm/program"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
+	"github.com/git-town/git-town/v22/pkg/set"
 	"github.com/spf13/cobra"
 )
 
@@ -77,6 +77,7 @@ func prependCommand() *cobra.Command {
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
 	addPushFlag, readPushFlag := flags.Push()
 	addStashFlag, readStashFlag := flags.Stash()
+	addSyncFlag, readSyncFlag := flags.Sync()
 	addTitleFlag, readTitleFlag := flags.ProposalTitle()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
@@ -97,9 +98,10 @@ func prependCommand() *cobra.Command {
 			prototype, errPrototype := readPrototypeFlag(cmd)
 			push, errPush := readPushFlag(cmd)
 			stash, errStash := readStashFlag(cmd)
+			sync, errSync := readSyncFlag(cmd)
 			title, errTitle := readTitleFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errAutoResolve, errBeam, errBodyText, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errPush, errStash, errTitle, errVerbose); err != nil {
+			if err := cmp.Or(errAutoResolve, errBeam, errBodyText, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errPush, errStash, errSync, errTitle, errVerbose); err != nil {
 				return err
 			}
 			if commitMessage.IsSome() {
@@ -110,6 +112,7 @@ func prependCommand() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:  autoResolve,
+				AutoSync:     sync,
 				Detached:     detached,
 				DryRun:       dryRun,
 				PushBranches: push,
@@ -140,6 +143,7 @@ func prependCommand() *cobra.Command {
 	addPrototypeFlag(&cmd)
 	addPushFlag(&cmd)
 	addStashFlag(&cmd)
+	addSyncFlag(&cmd)
 	addTitleFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
@@ -266,12 +270,22 @@ func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (data p
 	if err != nil {
 		return data, false, err
 	}
+	fetch := true
+	if repoStatus.OpenChanges {
+		fetch = false
+	}
+	if args.beam.ShouldBeam() || args.commit.ShouldCommit() {
+		fetch = false
+	}
+	if !config.AutoSync.ShouldSync() {
+		fetch = false
+	}
 	branchesSnapshot, stashSize, branchInfosLastRun, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
-		Fetch:                 !repoStatus.OpenChanges && !args.beam.ShouldBeam() && !args.commit.ShouldCommit(),
+		Fetch:                 fetch,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
@@ -285,6 +299,9 @@ func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (data p
 	})
 	if err != nil || exit {
 		return data, exit, err
+	}
+	if branchesSnapshot.DetachedHead {
+		return data, false, errors.New(messages.PrependDetachedHead)
 	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	remotes, err := repo.Git.Remotes(repo.Backend)
@@ -329,7 +346,7 @@ func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (data p
 	ancestorOpt := latestExistingAncestor(initialBranch, branchesSnapshot.Branches, validatedConfig.NormalConfig.Lineage)
 	ancestor, hasAncestor := ancestorOpt.Get()
 	if !hasAncestor {
-		return data, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branchesSnapshot.Active)
+		return data, false, fmt.Errorf(messages.SetParentNoFeatureBranch, initialBranch)
 	}
 	commitsToBeam := []gitdomain.Commit{}
 	if args.beam {
@@ -394,7 +411,7 @@ func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (data p
 
 func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
-	if !data.hasOpenChanges && !data.beam.ShouldBeam() && !data.commit.ShouldCommit() {
+	if !data.hasOpenChanges && !data.beam.ShouldBeam() && !data.commit.ShouldCommit() && data.config.NormalConfig.AutoSync.ShouldSync() {
 		data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages, repo.Backend)
 		branchesToDelete := set.New[gitdomain.LocalBranchName]()
 		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{

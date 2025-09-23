@@ -5,26 +5,26 @@ import (
 	"errors"
 	"os"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v21/internal/cli/flags"
-	"github.com/git-town/git-town/v21/internal/cli/print"
-	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v21/internal/config"
-	"github.com/git-town/git-town/v21/internal/config/cliconfig"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/execute"
-	"github.com/git-town/git-town/v21/internal/forge"
-	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/messages"
-	"github.com/git-town/git-town/v21/internal/state/runstate"
-	"github.com/git-town/git-town/v21/internal/validate"
-	"github.com/git-town/git-town/v21/internal/vm/interpreter/fullinterpreter"
-	"github.com/git-town/git-town/v21/internal/vm/opcodes"
-	"github.com/git-town/git-town/v21/internal/vm/optimizer"
-	"github.com/git-town/git-town/v21/internal/vm/program"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v22/internal/cli/flags"
+	"github.com/git-town/git-town/v22/internal/cli/print"
+	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v22/internal/config"
+	"github.com/git-town/git-town/v22/internal/config/cliconfig"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/execute"
+	"github.com/git-town/git-town/v22/internal/forge"
+	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/state/runstate"
+	"github.com/git-town/git-town/v22/internal/validate"
+	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
+	"github.com/git-town/git-town/v22/internal/vm/opcodes"
+	"github.com/git-town/git-town/v22/internal/vm/optimizer"
+	"github.com/git-town/git-town/v22/internal/vm/program"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -89,6 +89,7 @@ func walkCommand() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:  None[configdomain.AutoResolve](),
+				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     Some(configdomain.Detached(true)),
 				DryRun:       dryRun,
 				PushBranches: None[configdomain.PushBranches](),
@@ -230,6 +231,9 @@ func determineWalkData(repo execute.OpenRepoResult, all configdomain.AllBranches
 	})
 	if err != nil || exit {
 		return walkData{}, exit, err
+	}
+	if branchesSnapshot.DetachedHead {
+		return walkData{}, false, errors.New(messages.WalkDetachedHead)
 	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()

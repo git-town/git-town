@@ -80,6 +80,11 @@ parent.
 
 ## Options
 
+#### `--none`
+
+The `--none` option assigns no parent (removes the assigned parent), making the
+branch a perennial branch.
+
 #### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to

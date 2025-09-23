@@ -4,14 +4,14 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v21/internal/execute"
-	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/messages"
-	"github.com/git-town/git-town/v21/internal/vm/opcodes"
-	"github.com/git-town/git-town/v21/internal/vm/program"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v22/internal/execute"
+	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/vm/opcodes"
+	"github.com/git-town/git-town/v22/internal/vm/program"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 // data only needed for shipping via the API
@@ -22,9 +22,9 @@ type shipDataAPI struct {
 }
 
 func determineAPIData(sharedData sharedShipData) (result shipDataAPI, err error) {
-	branchToShipRemoteName, hasRemoteBranchToShip := sharedData.branchToShip.RemoteName.Get()
+	branchToShipRemoteName, hasRemoteBranchToShip := sharedData.branchToShipInfo.RemoteName.Get()
 	if !hasRemoteBranchToShip {
-		return result, fmt.Errorf(messages.ShipAPINoRemoteBranch, sharedData.branchNameToShip)
+		return result, fmt.Errorf(messages.ShipAPINoRemoteBranch, sharedData.branchToShip)
 	}
 	connector, hasConnector := sharedData.connector.Get()
 	if !hasConnector {
@@ -34,10 +34,10 @@ func determineAPIData(sharedData sharedShipData) (result shipDataAPI, err error)
 	if !canFindProposals {
 		return result, errors.New(messages.ShipAPIConnectorUnsupported)
 	}
-	proposalOpt, err := proposalFinder.FindProposal(sharedData.branchNameToShip, sharedData.targetBranchName)
+	proposalOpt, err := proposalFinder.FindProposal(sharedData.branchToShip, sharedData.targetBranchName)
 	proposal, hasProposal := proposalOpt.Get()
 	if !hasProposal {
-		return result, fmt.Errorf(messages.ShipAPINoProposal, sharedData.branchNameToShip)
+		return result, fmt.Errorf(messages.ShipAPINoProposal, sharedData.branchToShip)
 	}
 	return shipDataAPI{
 		branchToShipRemoteName: branchToShipRemoteName,
@@ -47,7 +47,7 @@ func determineAPIData(sharedData sharedShipData) (result shipDataAPI, err error)
 }
 
 func shipAPIProgram(prog Mutable[program.Program], repo execute.OpenRepoResult, sharedData sharedShipData, apiData shipDataAPI, commitMessage Option[gitdomain.CommitMessage]) error {
-	branchToShipLocal, hasLocalBranchToShip := sharedData.branchToShip.LocalName.Get()
+	branchToShipLocal, hasLocalBranchToShip := sharedData.branchToShipInfo.LocalName.Get()
 	UpdateChildBranchProposalsToGrandParent(prog.Value, sharedData.proposalsOfChildBranches)
 	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: sharedData.targetBranchName})
 	connector, hasConnector := sharedData.connector.Get()

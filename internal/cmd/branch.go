@@ -6,19 +6,19 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcolors"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v21/internal/cli/flags"
-	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v21/internal/config/cliconfig"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/execute"
-	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/pkg/colors"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/cli/dialog"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcolors"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v22/internal/cli/flags"
+	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v22/internal/config/cliconfig"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/execute"
+	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/pkg/colors"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -42,6 +42,7 @@ func branchCmd() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:  None[configdomain.AutoResolve](),
+				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     None[configdomain.Detached](),
 				DryRun:       None[configdomain.DryRun](),
 				PushBranches: None[configdomain.PushBranches](),
@@ -112,11 +113,15 @@ func determineBranchData(repo execute.OpenRepoResult) (data branchData, exit dia
 		return data, exit, err
 	}
 	initialBranchOpt := branchesSnapshot.Active
-	if initialBranchOpt.IsNone() {
+	if branchesSnapshot.DetachedHead {
+		initialBranch, hasInitialBranch := initialBranchOpt.Get()
+		if hasInitialBranch {
+			branchesSnapshot.Branches = branchesSnapshot.Branches.Remove(initialBranch)
+		}
+		initialBranchOpt = None[gitdomain.LocalBranchName]()
+	} else if initialBranchOpt.IsNone() {
 		if currentBranchOpt, err := repo.Git.CurrentBranchUncached(repo.Backend); err == nil {
-			if currentBranchOpt.IsSome() {
-				initialBranchOpt = currentBranchOpt
-			}
+			initialBranchOpt = currentBranchOpt
 		}
 	}
 	colors := dialogcolors.NewDialogColors()

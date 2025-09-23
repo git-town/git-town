@@ -16,8 +16,8 @@ Feature: sync the current prototype branch in a local repo
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                                    |
-      | prototype | git -c rebase.updateRefs=false rebase main |
+      | BRANCH    | COMMAND                                                                      |
+      | prototype | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
     And these commits exist now
       | BRANCH    | LOCATION | MESSAGE      |
       | main      | local    | main commit  |

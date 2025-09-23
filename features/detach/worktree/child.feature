@@ -35,9 +35,7 @@ Feature: detaching a branch whose child is checked out in another worktree
       """
       cannot detach because branch "branch-3" it is active in another worktree
       """
-
-  Scenario: undo
-    When I run "git-town undo"
-    Then Git Town runs no commands
-    And the initial commits exist now
-    And the initial lineage exists now
+  #
+  # NOTE: Cannot test undo here.
+  # The Git Town command under test has not created an undoable runstate.
+  # Executing "git town undo" would undo the Git Town command executed during setup.

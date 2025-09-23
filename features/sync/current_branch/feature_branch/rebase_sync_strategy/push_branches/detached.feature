@@ -20,13 +20,13 @@ Feature: detached syncing a stacked feature branch using --no-push
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                            |
-      | beta   | git fetch --prune --tags                           |
-      |        | git checkout alpha                                 |
-      | alpha  | git -c rebase.updateRefs=false rebase origin/alpha |
-      |        | git checkout beta                                  |
-      | beta   | git -c rebase.updateRefs=false rebase origin/beta  |
-      |        | git -c rebase.updateRefs=false rebase alpha        |
+      | BRANCH | COMMAND                                                                       |
+      | beta   | git fetch --prune --tags                                                      |
+      |        | git checkout alpha                                                            |
+      | alpha  | git -c rebase.updateRefs=false rebase origin/alpha                            |
+      |        | git checkout beta                                                             |
+      | beta   | git -c rebase.updateRefs=false rebase origin/beta                             |
+      |        | git -c rebase.updateRefs=false rebase --onto alpha {{ sha 'initial commit' }} |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE             |
       | main   | local         | local main commit   |

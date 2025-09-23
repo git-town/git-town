@@ -4,17 +4,19 @@ deadcode 0.28.0
 depth 1.2.1
 dprint 0.50.0
 exhaustruct 3.3.1
-ireturn 0.4.0
 ghokin 3.8.0
 gofumpt 0.8.0
 golangci-lint 2.1.6
 goreleaser 1.26.2
 govulncheck 1.1.4
+ireturn 0.4.0
+keep-sorted 0.7.1
 mdbook 0.4.51
 mdbook-linkcheck 0.7.7
 node 24.2.0
 npm 24.2.0
 npx 24.2.0
+ripgrep 14.1.1
 scc 3.5.0
 shellcheck system 0.10.0
 shfmt 3.11.0

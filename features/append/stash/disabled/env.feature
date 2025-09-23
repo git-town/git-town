@@ -16,6 +16,7 @@ Feature: disable stashing via the environment variable
       main
         new
       """
+
   Scenario: undo
     When I run "git-town undo" with these environment variables
       | GIT_TOWN_STASH | false |

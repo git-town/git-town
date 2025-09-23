@@ -7,27 +7,27 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v21/internal/cli/flags"
-	"github.com/git-town/git-town/v21/internal/cli/print"
-	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v21/internal/config"
-	"github.com/git-town/git-town/v21/internal/config/cliconfig"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/execute"
-	"github.com/git-town/git-town/v21/internal/forge"
-	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/messages"
-	"github.com/git-town/git-town/v21/internal/state/runstate"
-	"github.com/git-town/git-town/v21/internal/validate"
-	"github.com/git-town/git-town/v21/internal/vm/interpreter/fullinterpreter"
-	"github.com/git-town/git-town/v21/internal/vm/opcodes"
-	"github.com/git-town/git-town/v21/internal/vm/optimizer"
-	"github.com/git-town/git-town/v21/internal/vm/program"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
-	"github.com/git-town/git-town/v21/pkg/set"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v22/internal/cli/flags"
+	"github.com/git-town/git-town/v22/internal/cli/print"
+	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v22/internal/config"
+	"github.com/git-town/git-town/v22/internal/config/cliconfig"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/execute"
+	"github.com/git-town/git-town/v22/internal/forge"
+	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/state/runstate"
+	"github.com/git-town/git-town/v22/internal/validate"
+	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
+	"github.com/git-town/git-town/v22/internal/vm/opcodes"
+	"github.com/git-town/git-town/v22/internal/vm/optimizer"
+	"github.com/git-town/git-town/v22/internal/vm/program"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
+	"github.com/git-town/git-town/v22/pkg/set"
 	"github.com/spf13/cobra"
 )
 
@@ -53,11 +53,11 @@ If the repository contains an "upstream" remote, syncs the main branch with its 
 
 func Cmd() *cobra.Command {
 	addAllFlag, readAllFlag := flags.All("sync all local branches")
+	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
-	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
-	addPushFlag, readPushFlag := flags.Push()
 	addPruneFlag, readPruneFlag := flags.Prune()
+	addPushFlag, readPushFlag := flags.Push()
 	addStackFlag, readStackFlag := flags.Stack("sync the stack that the current branch belongs to")
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
@@ -68,11 +68,11 @@ func Cmd() *cobra.Command {
 		Long:    cmdhelpers.Long(syncDesc, fmt.Sprintf(syncHelp, configdomain.KeySyncUpstream)),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			allBranches, errAllBranches := readAllFlag(cmd)
+			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
 			detached, errDetached := readDetachedFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
-			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
-			pushBranches, errPushBranches := readPushFlag(cmd)
 			prune, errPrune := readPruneFlag(cmd)
+			pushBranches, errPushBranches := readPushFlag(cmd)
 			stack, errStack := readStackFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
 			if err := cmp.Or(errAllBranches, errDetached, errDryRun, errAutoResolve, errPushBranches, errPrune, errStack, errVerbose); err != nil {
@@ -80,6 +80,7 @@ func Cmd() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:  autoResolve,
+				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     detached,
 				DryRun:       dryRun,
 				PushBranches: pushBranches,
@@ -95,11 +96,11 @@ func Cmd() *cobra.Command {
 		},
 	}
 	addAllFlag(&cmd)
+	addAutoResolveFlag(&cmd)
 	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
-	addAutoResolveFlag(&cmd)
-	addPushFlag(&cmd)
 	addPruneFlag(&cmd)
+	addPushFlag(&cmd)
 	addStackFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd

@@ -3,9 +3,9 @@ package configdomain
 import (
 	"encoding/json"
 
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/pkg"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/pkg"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 // Key contains all the keys used in Git Town's Git metadata configuration.
@@ -55,6 +55,7 @@ const (
 	KeyAliasShip                           = Key("alias.ship")
 	KeyAliasSync                           = Key("alias.sync")
 	KeyAutoResolve                         = Key("git-town.auto-resolve")
+	KeyAutoSync                            = Key("git-town.auto-sync")
 	KeyBitbucketAppPassword                = Key("git-town.bitbucket-app-password")
 	KeyBitbucketUsername                   = Key("git-town.bitbucket-username")
 	KeyContributionRegex                   = Key("git-town.contribution-regex")
@@ -117,6 +118,7 @@ const (
 
 var keys = []Key{
 	KeyAutoResolve,
+	KeyAutoSync,
 	KeyBitbucketAppPassword,
 	KeyBitbucketUsername,
 	KeyContributionRegex,

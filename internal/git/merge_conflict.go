@@ -3,8 +3,8 @@ package git
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 // Everything Git Town needs to know about a merge conflict to determine whether this is a phantom merge conflict.

@@ -6,28 +6,24 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v21/internal/cli/flags"
-	"github.com/git-town/git-town/v21/internal/cli/print"
-	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v21/internal/cmd/sync"
-	"github.com/git-town/git-town/v21/internal/config/cliconfig"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/execute"
-	"github.com/git-town/git-town/v21/internal/forge"
-	"github.com/git-town/git-town/v21/internal/git"
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/gohacks"
-	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v21/internal/messages"
-	"github.com/git-town/git-town/v21/internal/state/runstate"
-	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
-	"github.com/git-town/git-town/v21/internal/validate"
-	"github.com/git-town/git-town/v21/internal/vm/interpreter/fullinterpreter"
-	"github.com/git-town/git-town/v21/internal/vm/program"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/cli/dialog"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v22/internal/cli/flags"
+	"github.com/git-town/git-town/v22/internal/cli/print"
+	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v22/internal/cmd/sync"
+	"github.com/git-town/git-town/v22/internal/config/cliconfig"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/execute"
+	"github.com/git-town/git-town/v22/internal/forge"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/state/runstate"
+	"github.com/git-town/git-town/v22/internal/validate"
+	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
+	"github.com/git-town/git-town/v22/internal/vm/program"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -65,12 +61,13 @@ func hackCmd() *cobra.Command {
 	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
 	addBeamFlag, readBeamFlag := flags.Beam()
 	addCommitFlag, readCommitFlag := flags.Commit()
+	addCommitMessageFlag, readCommitMessageFlag := flags.CommitMessage("the commit message")
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
-	addCommitMessageFlag, readCommitMessageFlag := flags.CommitMessage("the commit message")
 	addProposeFlag, readProposeFlag := flags.Propose()
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
 	addStashFlag, readStashFlag := flags.Stash()
+	addSyncFlag, readSyncFlag := flags.Sync()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "hack <branch>",
@@ -88,8 +85,9 @@ func hackCmd() *cobra.Command {
 			propose, errPropose := readProposeFlag(cmd)
 			prototype, errPrototype := readPrototypeFlag(cmd)
 			stash, errStash := readStashFlag(cmd)
+			sync, errSync := readSyncFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errAutoResolve, errBeam, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errStash, errVerbose); err != nil {
+			if err := cmp.Or(errAutoResolve, errBeam, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errStash, errSync, errVerbose); err != nil {
 				return err
 			}
 			if commitMessage.IsSome() || propose.ShouldPropose() {
@@ -97,6 +95,7 @@ func hackCmd() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:  autoResolve,
+				AutoSync:     sync,
 				Detached:     detached,
 				DryRun:       dryRun,
 				PushBranches: None[configdomain.PushBranches](),
@@ -114,15 +113,16 @@ func hackCmd() *cobra.Command {
 			})
 		},
 	}
+	addAutoResolveFlag(&cmd)
 	addBeamFlag(&cmd)
 	addCommitFlag(&cmd)
 	addCommitMessageFlag(&cmd)
 	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
-	addAutoResolveFlag(&cmd)
 	addProposeFlag(&cmd)
 	addPrototypeFlag(&cmd)
 	addStashFlag(&cmd)
+	addSyncFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
@@ -152,46 +152,14 @@ func executeHack(args hackArgs) error {
 	if err != nil || exit {
 		return err
 	}
-	return createFeatureBranch(createFeatureBranchArgs{
-		appendData:            data,
-		backend:               repo.Backend,
-		beginBranchesSnapshot: data.branchesSnapshot,
-		beginConfigSnapshot:   repo.ConfigSnapshot,
-		beginStashSize:        data.stashSize,
-		branchInfosLastRun:    data.branchInfosLastRun,
-		commandsCounter:       repo.CommandsCounter,
-		dryRun:                data.config.NormalConfig.DryRun,
-		finalMessages:         repo.FinalMessages,
-		frontend:              repo.Frontend,
-		git:                   repo.Git,
-		rootDir:               repo.RootDir,
-	})
-}
-
-type createFeatureBranchArgs struct {
-	appendData            appendFeatureData
-	backend               subshelldomain.RunnerQuerier
-	beginBranchesSnapshot gitdomain.BranchesSnapshot
-	beginConfigSnapshot   configdomain.BeginConfigSnapshot
-	beginStashSize        gitdomain.StashSize
-	branchInfosLastRun    Option[gitdomain.BranchInfos]
-	commandsCounter       Mutable[gohacks.Counter]
-	dryRun                configdomain.DryRun
-	finalMessages         stringslice.Collector
-	frontend              subshelldomain.Runner
-	git                   git.Commands
-	rootDir               gitdomain.RepoRootDir
-}
-
-func createFeatureBranch(args createFeatureBranchArgs) error {
-	runProgram := appendProgram(args.backend, args.appendData, args.finalMessages, true)
+	runProgram := appendProgram(repo.Backend, data, repo.FinalMessages, true)
 	runState := runstate.RunState{
-		BeginBranchesSnapshot: args.beginBranchesSnapshot,
-		BeginConfigSnapshot:   args.beginConfigSnapshot,
-		BeginStashSize:        args.beginStashSize,
-		BranchInfosLastRun:    args.branchInfosLastRun,
+		BeginBranchesSnapshot: data.branchesSnapshot,
+		BeginConfigSnapshot:   repo.ConfigSnapshot,
+		BeginStashSize:        data.stashSize,
+		BranchInfosLastRun:    data.branchInfosLastRun,
 		Command:               "hack",
-		DryRun:                args.dryRun,
+		DryRun:                data.config.NormalConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
@@ -200,21 +168,21 @@ func createFeatureBranch(args createFeatureBranchArgs) error {
 		UndoAPIProgram:        program.Program{},
 	}
 	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
-		Backend:                 args.backend,
-		CommandsCounter:         args.commandsCounter,
-		Config:                  args.appendData.config,
-		Connector:               args.appendData.connector,
-		FinalMessages:           args.finalMessages,
-		Frontend:                args.frontend,
-		Git:                     args.git,
-		HasOpenChanges:          args.appendData.hasOpenChanges,
-		InitialBranch:           args.appendData.initialBranch,
-		InitialBranchesSnapshot: args.beginBranchesSnapshot,
-		InitialConfigSnapshot:   args.beginConfigSnapshot,
-		InitialStashSize:        args.beginStashSize,
-		Inputs:                  args.appendData.inputs,
+		Backend:                 repo.Backend,
+		CommandsCounter:         repo.CommandsCounter,
+		Config:                  data.config,
+		Connector:               data.connector,
+		FinalMessages:           repo.FinalMessages,
+		Frontend:                repo.Frontend,
+		Git:                     repo.Git,
+		HasOpenChanges:          data.hasOpenChanges,
+		InitialBranch:           data.initialBranch,
+		InitialBranchesSnapshot: data.branchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSize:        data.stashSize,
+		Inputs:                  data.inputs,
 		PendingCommand:          None[string](),
-		RootDir:                 args.rootDir,
+		RootDir:                 repo.RootDir,
 		RunState:                runState,
 	})
 }
@@ -251,12 +219,22 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data appendF
 	if err != nil {
 		return data, false, err
 	}
+	fetch := true
+	if repoStatus.OpenChanges {
+		fetch = false
+	}
+	if args.beam.ShouldBeam() || args.commit.ShouldCommit() {
+		fetch = false
+	}
+	if !config.AutoSync {
+		fetch = false
+	}
 	branchesSnapshot, stashSize, branchInfosLastRun, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Connector:             connector,
-		Fetch:                 len(args.argv) == 1 && !repoStatus.OpenChanges && !args.beam.ShouldBeam() && !args.commit.ShouldCommit(),
+		Fetch:                 fetch,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,

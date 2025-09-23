@@ -35,15 +35,15 @@ Feature: sync the entire stack
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                         |
-      | alpha  | git fetch --prune --tags                        |
-      |        | git checkout beta                               |
-      | beta   | git -c rebase.updateRefs=false rebase alpha     |
-      |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout gamma                              |
-      | gamma  | git -c rebase.updateRefs=false rebase beta      |
-      |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout alpha                              |
+      | BRANCH | COMMAND                                                                       |
+      | alpha  | git fetch --prune --tags                                                      |
+      |        | git checkout beta                                                             |
+      | beta   | git -c rebase.updateRefs=false rebase --onto alpha {{ sha 'initial commit' }} |
+      |        | git push --force-with-lease --force-if-includes                               |
+      |        | git checkout gamma                                                            |
+      | gamma  | git -c rebase.updateRefs=false rebase --onto beta {{ sha 'initial commit' }}  |
+      |        | git push --force-with-lease --force-if-includes                               |
+      |        | git checkout alpha                                                            |
     And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE                  |
       | main       | origin        | main commit              |

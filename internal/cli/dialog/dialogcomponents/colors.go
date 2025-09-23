@@ -3,9 +3,9 @@ package dialogcomponents
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v21/pkg/colors"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v22/pkg/colors"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 // FormattedOption provides the given optional dialog choice in a printable format.

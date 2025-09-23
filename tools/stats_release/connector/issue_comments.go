@@ -1,7 +1,7 @@
 package connector
 
 import (
-	"github.com/git-town/git-town/v21/pkg/asserts"
+	"github.com/git-town/git-town/v22/pkg/asserts"
 	"github.com/google/go-github/v58/github"
 )
 

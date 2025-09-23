@@ -31,6 +31,7 @@ Feature: renaming a branch whose parent was shipped and the local branch deleted
       main
         new
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

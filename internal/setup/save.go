@@ -3,16 +3,16 @@ package setup
 import (
 	"slices"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog"
-	"github.com/git-town/git-town/v21/internal/config"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/config/configfile"
-	"github.com/git-town/git-town/v21/internal/config/gitconfig"
-	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/gohacks"
-	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/cli/dialog"
+	"github.com/git-town/git-town/v22/internal/config"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/config/configfile"
+	"github.com/git-town/git-town/v22/internal/config/gitconfig"
+	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks"
+	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 func Save(userInput UserInput, unvalidatedConfig config.UnvalidatedConfig, data Data, frontend subshelldomain.Runner) error {
@@ -82,6 +82,9 @@ func saveAllToFile(userInput UserInput, gitConfig configdomain.PartialConfig, ru
 	userInput.Data.MainBranch = Some(userInput.ValidatedConfig.MainBranch)
 	if err := configfile.Save(userInput.Data); err != nil {
 		return err
+	}
+	if gitConfig.AutoSync.IsSome() {
+		_ = gitconfig.RemoveAutoSync(runner)
 	}
 	if gitConfig.ContributionRegex.IsSome() {
 		_ = gitconfig.RemoveContributionRegex(runner)
@@ -154,6 +157,12 @@ func saveAllToFile(userInput UserInput, gitConfig configdomain.PartialConfig, ru
 
 func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialConfig, configFile configdomain.PartialConfig, data Data, frontend subshelldomain.Runner) error {
 	fc := gohacks.ErrorCollector{}
+	// TODO: sort this alphabetically
+	if configFile.AutoSync.IsNone() {
+		fc.Check(
+			saveAutoSync(userInput.Data.AutoSync, existingGitConfig.AutoSync, frontend),
+		)
+	}
 	if configFile.Detached.IsNone() {
 		fc.Check(
 			saveDetached(userInput.Data.Detached, existingGitConfig.Detached, frontend),
@@ -278,6 +287,18 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 		)
 	}
 	return fc.Err
+}
+
+// TODO: simplify to shorter version: valueToWriteToGit, valueAlreadyInGit Option[configdomain.AutoSync]
+func saveAutoSync(valueToWriteToGit Option[configdomain.AutoSync], valueAlreadyInGit Option[configdomain.AutoSync], runner subshelldomain.Runner) error {
+	if valueToWriteToGit.Equal(valueAlreadyInGit) {
+		return nil
+	}
+	if value, hasValue := valueToWriteToGit.Get(); hasValue {
+		return gitconfig.SetAutoSync(runner, value, configdomain.ConfigScopeLocal)
+	}
+	_ = gitconfig.RemoveAutoSync(runner)
+	return nil
 }
 
 func saveBitbucketAppPassword(valueToWriteToGit Option[forgedomain.BitbucketAppPassword], valueAlreadyInGit Option[forgedomain.BitbucketAppPassword], scope configdomain.ConfigScope, runner subshelldomain.Runner) error {

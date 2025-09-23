@@ -5,21 +5,21 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/config/gitconfig"
-	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/gohacks"
-	"github.com/git-town/git-town/v21/internal/messages"
-	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
-	"github.com/git-town/git-town/v21/pkg/colors"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/config/gitconfig"
+	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks"
+	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
+	"github.com/git-town/git-town/v22/pkg/colors"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 // provides the branch type overrides stored in the given Git metadata snapshot
 func NewBranchTypeOverridesInSnapshot(snapshot configdomain.SingleSnapshot, runner subshelldomain.Runner) (configdomain.BranchTypeOverrides, error) {
 	result := configdomain.BranchTypeOverrides{}
-	for key, value := range snapshot {
+	for key, value := range snapshot { // okay to iterate the map in random order because we assign to a new map
 		key, isBranchTypeKey := configdomain.ParseBranchTypeOverrideKey(key).Get()
 		if !isBranchTypeKey {
 			continue
@@ -51,7 +51,7 @@ func NewBranchTypeOverridesInSnapshot(snapshot configdomain.SingleSnapshot, runn
 
 func NewLineageFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated bool, runner subshelldomain.Runner) (configdomain.Lineage, error) {
 	result := configdomain.NewLineage()
-	for key, value := range snapshot.LineageEntries() {
+	for key, value := range snapshot.LineageEntries() { // okay to iterate the map in random order because we assign to a new map
 		child := key.ChildBranch()
 		if child == "" {
 			// empty lineage entries are invalid --> delete it
@@ -79,6 +79,7 @@ func NewLineageFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated
 func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated bool, runner subshelldomain.Runner) (configdomain.PartialConfig, error) {
 	aliases := snapshot.Aliases()
 	autoResolve, errAutoResolve := gohacks.ParseBoolOpt[configdomain.AutoResolve](snapshot[configdomain.KeyAutoResolve], configdomain.KeyAutoResolve.String())
+	autoSync, errAutoSync := gohacks.ParseBoolOpt[configdomain.AutoSync](snapshot[configdomain.KeyAutoSync], configdomain.KeyAutoSync.String())
 	branchTypeOverrides, errBranchTypeOverride := NewBranchTypeOverridesInSnapshot(snapshot, runner)
 	contributionRegex, errContributionRegex := configdomain.ParseContributionRegex(snapshot[configdomain.KeyContributionRegex])
 	detached, errDetached := gohacks.ParseBoolOpt[configdomain.Detached](snapshot[configdomain.KeyDetached], configdomain.KeyDetached.String())
@@ -109,6 +110,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	updateCheck, errUpdateCheck := gohacks.ParseBoolOpt[configdomain.UpdateCheck](snapshot[configdomain.KeyUpdateCheck], configdomain.KeyUpdateCheck.String())
 	err := cmp.Or(
 		errAutoResolve,
+		errAutoSync,
 		errBranchTypeOverride,
 		errContributionRegex,
 		errDetached,
@@ -139,6 +141,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	return configdomain.PartialConfig{
 		Aliases:                  aliases,
 		AutoResolve:              autoResolve,
+		AutoSync:                 autoSync,
 		BitbucketAppPassword:     forgedomain.ParseBitbucketAppPassword(snapshot[configdomain.KeyBitbucketAppPassword]),
 		BitbucketUsername:        forgedomain.ParseBitbucketUsername(snapshot[configdomain.KeyBitbucketUsername]),
 		BranchTypeOverrides:      branchTypeOverrides,

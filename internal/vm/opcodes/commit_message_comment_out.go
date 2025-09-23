@@ -3,9 +3,9 @@ package opcodes
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/messages"
-	"github.com/git-town/git-town/v21/internal/vm/shared"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/vm/shared"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 // comments out the currently active commit message

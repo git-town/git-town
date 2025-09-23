@@ -35,6 +35,7 @@ Feature: ship the supplied feature branch from a subfolder using the fast-forwar
       main
         other
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

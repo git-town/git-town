@@ -25,6 +25,7 @@ Feature: prepend a branch to a feature branch in detached mode when there are no
         parent
           branch
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

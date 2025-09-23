@@ -63,12 +63,12 @@ Feature: handle conflicts between the main branch and its tracking branch
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                         |
-      | main    | GIT_EDITOR=true git rebase --continue           |
-      |         | git push                                        |
-      |         | git checkout feature                            |
-      | feature | git -c rebase.updateRefs=false rebase main      |
-      |         | git push --force-with-lease --force-if-includes |
+      | BRANCH  | COMMAND                                                                      |
+      | main    | GIT_EDITOR=true git rebase --continue                                        |
+      |         | git push                                                                     |
+      |         | git checkout feature                                                         |
+      | feature | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
+      |         | git push --force-with-lease --force-if-includes                              |
     And no rebase is now in progress
     And all branches are now synchronized
     And these committed files exist now
@@ -81,11 +81,11 @@ Feature: handle conflicts between the main branch and its tracking branch
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                         |
-      | main    | git push                                        |
-      |         | git checkout feature                            |
-      | feature | git -c rebase.updateRefs=false rebase main      |
-      |         | git push --force-with-lease --force-if-includes |
+      | BRANCH  | COMMAND                                                                      |
+      | main    | git push                                                                     |
+      |         | git checkout feature                                                         |
+      | feature | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
+      |         | git push --force-with-lease --force-if-includes                              |
     And no rebase is now in progress
     And all branches are now synchronized
     And these committed files exist now

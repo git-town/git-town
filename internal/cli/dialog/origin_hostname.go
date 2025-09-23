@@ -3,11 +3,11 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/messages"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/messages"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 const (
@@ -26,7 +26,7 @@ if Git Town's auto-detection doesn't work.
 func OriginHostname(args Args[configdomain.HostingOriginHostname]) (Option[configdomain.HostingOriginHostname], dialogdomain.Exit, error) {
 	input, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "origin-hostname",
-		ExistingValue: args.Local.Or(args.Global).String(),
+		ExistingValue: args.Local.Or(args.Global).StringOr(""),
 		Help:          OriginHostnameHelp,
 		Inputs:        args.Inputs,
 		Prompt:        messages.OriginHostnamePrompt,

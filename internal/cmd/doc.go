@@ -5,17 +5,16 @@ import (
 	"context"
 	"time"
 
-	"github.com/git-town/git-town/v21/internal/cli/print"
-	"github.com/git-town/git-town/v21/internal/cmd/config"
-	"github.com/git-town/git-town/v21/internal/cmd/ship"
-	"github.com/git-town/git-town/v21/internal/cmd/status"
-	"github.com/git-town/git-town/v21/internal/cmd/swap"
-	"github.com/git-town/git-town/v21/internal/cmd/sync"
-	"github.com/git-town/git-town/v21/internal/config/cliconfig"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/execute"
-	"github.com/git-town/git-town/v21/internal/update"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/cli/print"
+	"github.com/git-town/git-town/v22/internal/cmd/config"
+	"github.com/git-town/git-town/v22/internal/cmd/ship"
+	"github.com/git-town/git-town/v22/internal/cmd/status"
+	"github.com/git-town/git-town/v22/internal/cmd/swap"
+	"github.com/git-town/git-town/v22/internal/cmd/sync"
+	"github.com/git-town/git-town/v22/internal/config/cliconfig"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/execute"
+	"github.com/git-town/git-town/v22/internal/update"
 )
 
 // Execute runs the Cobra stack.
@@ -29,18 +28,18 @@ func Execute() error {
 	rootCmd.AddCommand(continueCmd())
 	rootCmd.AddCommand(contributeCmd())
 	rootCmd.AddCommand(diffParentCommand())
-	rootCmd.AddCommand(hackCmd())
 	rootCmd.AddCommand(detachCommand())
 	rootCmd.AddCommand(deleteCommand())
 	rootCmd.AddCommand(downCmd())
 	rootCmd.AddCommand(featureCmd())
+	rootCmd.AddCommand(hackCmd())
 	rootCmd.AddCommand(initCommand())
 	rootCmd.AddCommand(mergeCommand())
 	rootCmd.AddCommand(observeCmd())
 	rootCmd.AddCommand(offlineCmd())
 	rootCmd.AddCommand(parkCmd())
-	rootCmd.AddCommand(proposeCommand())
 	rootCmd.AddCommand(prependCommand())
+	rootCmd.AddCommand(proposeCommand())
 	rootCmd.AddCommand(prototypeCmd())
 	rootCmd.AddCommand(renameCommand())
 	rootCmd.AddCommand(repoCommand())

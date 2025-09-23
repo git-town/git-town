@@ -4,17 +4,18 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/cli/flags"
-	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v21/internal/config"
-	"github.com/git-town/git-town/v21/internal/config/cliconfig"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/config/gitconfig"
-	"github.com/git-town/git-town/v21/internal/execute"
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/messages"
-	"github.com/git-town/git-town/v21/internal/vm/interpreter/configinterpreter"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/cli/flags"
+	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v22/internal/config"
+	"github.com/git-town/git-town/v22/internal/config/cliconfig"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/config/gitconfig"
+	"github.com/git-town/git-town/v22/internal/execute"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks/mapstools"
+	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/vm/interpreter/configinterpreter"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -50,6 +51,7 @@ func observeCmd() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:  None[configdomain.AutoResolve](),
+				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     None[configdomain.Detached](),
 				DryRun:       None[configdomain.DryRun](),
 				PushBranches: None[configdomain.PushBranches](),
@@ -78,7 +80,8 @@ func executeObserve(args []string, cliConfig configdomain.PartialConfig) error {
 	if err != nil {
 		return err
 	}
-	if err = validateObserveData(data, repo); err != nil {
+	err = validateObserveData(data, repo)
+	if err != nil {
 		return err
 	}
 	branchNames := data.branchesToObserve.Keys()
@@ -136,22 +139,22 @@ func determineObserveData(args []string, repo execute.OpenRepoResult) (observeDa
 }
 
 func validateObserveData(data observeData, repo execute.OpenRepoResult) error {
-	for branchName, branchType := range data.branchesToObserve {
+	for branchName, branchType := range mapstools.SortedKeyValues(data.branchesToObserve) {
 		switch branchType {
 		case configdomain.BranchTypeMainBranch:
 			return errors.New(messages.MainBranchCannotObserve)
 		case configdomain.BranchTypePerennialBranch:
 			return errors.New(messages.PerennialBranchCannotObserve)
 		case configdomain.BranchTypeObservedBranch:
-			return fmt.Errorf(messages.BranchIsAlreadyObserved, branchName)
+			repo.FinalMessages.Add(fmt.Sprintf(messages.BranchIsAlreadyObserved, branchName))
 		case
 			configdomain.BranchTypeFeatureBranch,
 			configdomain.BranchTypeContributionBranch,
 			configdomain.BranchTypeParkedBranch,
 			configdomain.BranchTypePrototypeBranch:
 		}
-		hasLocalBranch := data.branchInfos.HasLocalBranch(branchName)
-		hasRemoteBranch := data.branchInfos.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote)
+		hasLocalBranch := data.branchesSnapshot.Branches.HasLocalBranch(branchName)
+		hasRemoteBranch := data.branchesSnapshot.Branches.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote)
 		if !hasLocalBranch && !hasRemoteBranch {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}

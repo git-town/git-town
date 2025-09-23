@@ -6,9 +6,9 @@ import (
 	"strings"
 
 	"github.com/cucumber/godog"
-	"github.com/git-town/git-town/v21/internal/gohacks"
-	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v21/internal/test/handlebars"
+	"github.com/git-town/git-town/v22/internal/gohacks"
+	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v22/internal/test/handlebars"
 	"github.com/sergi/go-diff/diffmatchpatch"
 )
 

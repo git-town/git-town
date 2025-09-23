@@ -6,11 +6,11 @@ import (
 
 	"github.com/cucumber/godog"
 
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/test/datatable"
-	"github.com/git-town/git-town/v21/internal/test/fixture"
-	"github.com/git-town/git-town/v21/internal/test/helpers"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/test/datatable"
+	"github.com/git-town/git-town/v22/internal/test/fixture"
+	"github.com/git-town/git-town/v22/internal/test/helpers"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 // ScenarioState constains the state that is shared by all steps within a scenario.
@@ -75,6 +75,7 @@ type ScenarioState struct {
 }
 
 func (self *ScenarioState) CaptureState() {
+	self.fixture.DevRepo.Value.Reload()
 	if self.initialCommits.IsNone() && self.insideGitRepo && self.fixture.SubmoduleRepo.IsNone() {
 		currentCommits := self.fixture.CommitTable([]string{"BRANCH", "LOCATION", "MESSAGE", "FILE NAME", "FILE CONTENT"})
 		self.initialCommits = Some(currentCommits)

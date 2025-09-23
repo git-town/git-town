@@ -9,7 +9,7 @@ import (
 	"testing"
 
 	"github.com/cucumber/godog"
-	"github.com/git-town/git-town/v21/internal/test/cucumber"
+	"github.com/git-town/git-town/v22/internal/test/cucumber"
 	"github.com/spf13/pflag"
 )
 

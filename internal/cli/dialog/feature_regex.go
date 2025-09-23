@@ -4,11 +4,11 @@ import (
 	"cmp"
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/messages"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/messages"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 const (
@@ -29,7 +29,7 @@ it's safe to leave it blank.
 func FeatureRegex(args Args[configdomain.FeatureRegex]) (Option[configdomain.FeatureRegex], dialogdomain.Exit, error) {
 	input, exit, errInput := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "feature-regex",
-		ExistingValue: args.Local.Or(args.Global).String(),
+		ExistingValue: args.Local.Or(args.Global).StringOr(""),
 		Help:          FeatureRegexHelp,
 		Inputs:        args.Inputs,
 		Prompt:        messages.FeatureRegexPrompt,

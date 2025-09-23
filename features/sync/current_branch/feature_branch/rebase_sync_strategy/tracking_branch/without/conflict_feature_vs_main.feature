@@ -16,14 +16,14 @@ Feature: handle conflicts between the current feature branch and the main branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                           |
-      | feature | git fetch --prune --tags                          |
-      |         | git checkout main                                 |
-      | main    | git -c rebase.updateRefs=false rebase origin/main |
-      |         | git push                                          |
-      |         | git checkout feature                              |
-      | feature | git push --force-with-lease --force-if-includes   |
-      |         | git -c rebase.updateRefs=false rebase main        |
+      | BRANCH  | COMMAND                                                                      |
+      | feature | git fetch --prune --tags                                                     |
+      |         | git checkout main                                                            |
+      | main    | git -c rebase.updateRefs=false rebase origin/main                            |
+      |         | git push                                                                     |
+      |         | git checkout feature                                                         |
+      | feature | git push --force-with-lease --force-if-includes                              |
+      |         | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file

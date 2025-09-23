@@ -1,3 +1,3 @@
 module github.com/git-town/git-town/tools/structs_sorted
 
-go 1.23.10
+go 1.24.6

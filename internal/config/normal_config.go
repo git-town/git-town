@@ -4,17 +4,17 @@ import (
 	"fmt"
 	"slices"
 
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/config/envconfig"
-	"github.com/git-town/git-town/v21/internal/config/gitconfig"
-	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/git/giturl"
-	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v21/internal/messages"
-	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
-	"github.com/git-town/git-town/v21/pkg/set"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/config/envconfig"
+	"github.com/git-town/git-town/v22/internal/config/gitconfig"
+	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/git/giturl"
+	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
+	"github.com/git-town/git-town/v22/pkg/set"
 )
 
 // NormalConfig contains the final configuration data to be used by Git Town,
@@ -31,6 +31,7 @@ import (
 type NormalConfig struct {
 	Aliases                  configdomain.Aliases
 	AutoResolve              configdomain.AutoResolve
+	AutoSync                 configdomain.AutoSync
 	BitbucketAppPassword     Option[forgedomain.BitbucketAppPassword]
 	BitbucketUsername        Option[forgedomain.BitbucketUsername]
 	BranchTypeOverrides      configdomain.BranchTypeOverrides
@@ -83,6 +84,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 	return NormalConfig{
 		Aliases:                  other.Aliases,
 		AutoResolve:              other.AutoResolve.GetOr(self.AutoResolve),
+		AutoSync:                 other.AutoSync.GetOr(self.AutoSync),
 		BitbucketAppPassword:     other.BitbucketAppPassword.Or(self.BitbucketAppPassword),
 		BitbucketUsername:        other.BitbucketUsername.Or(self.BitbucketUsername),
 		BranchTypeOverrides:      other.BranchTypeOverrides.Concat(self.BranchTypeOverrides),
@@ -162,7 +164,7 @@ func (self *NormalConfig) PartialBranchesOfType(branchType configdomain.BranchTy
 		matching.Add(self.PerennialBranches...)
 	case configdomain.BranchTypePrototypeBranch:
 	}
-	for key, value := range self.BranchTypeOverrides {
+	for key, value := range self.BranchTypeOverrides { // okay to iterate the map in random order here because we add to a set
 		if value == branchType {
 			matching.Add(key)
 		}
@@ -228,6 +230,7 @@ func DefaultNormalConfig() NormalConfig {
 	return NormalConfig{
 		Aliases:                  configdomain.Aliases{},
 		AutoResolve:              true,
+		AutoSync:                 true,
 		BitbucketAppPassword:     None[forgedomain.BitbucketAppPassword](),
 		BitbucketUsername:        None[forgedomain.BitbucketUsername](),
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{},
@@ -273,6 +276,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 	return NormalConfig{
 		Aliases:                  partial.Aliases,
 		AutoResolve:              partial.AutoResolve.GetOr(defaults.AutoResolve),
+		AutoSync:                 partial.AutoSync.GetOr(defaults.AutoSync),
 		BitbucketAppPassword:     partial.BitbucketAppPassword,
 		BitbucketUsername:        partial.BitbucketUsername,
 		BranchTypeOverrides:      partial.BranchTypeOverrides,

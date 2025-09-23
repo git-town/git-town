@@ -5,6 +5,7 @@ Feature: convert a branch to feature branch in the presence of uncommitted chang
     And the branches
       | NAME     | TYPE   | PARENT | LOCATIONS |
       | existing | parked | main   | local     |
+    And the current branch is "main"
     And an uncommitted file
     When I run "git-town feature existing"
 

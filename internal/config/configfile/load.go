@@ -7,13 +7,13 @@ import (
 	"path/filepath"
 
 	"github.com/BurntSushi/toml"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/gohacks"
-	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v21/internal/messages"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks"
+	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v22/internal/messages"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 // Decode converts the given config file TOML source into Go data.
@@ -44,19 +44,19 @@ func Load(rootDir gitdomain.RepoRootDir, fileName string, finalMessages stringsl
 
 // Validate converts the given low-level configfile data into high-level config data.
 func Validate(data Data, finalMessages stringslice.Collector) (configdomain.PartialConfig, error) {
-	var err error
+	// keep-sorted start
+	var autoResolve Option[configdomain.AutoResolve]
+	var autoSync Option[configdomain.AutoSync]
 	var contributionRegex Option[configdomain.ContributionRegex]
-	var unknownBranchType Option[configdomain.UnknownBranchType]
 	var detached Option[configdomain.Detached]
 	var devRemote Option[gitdomain.Remote]
 	var featureRegex Option[configdomain.FeatureRegex]
 	var forgeType Option[forgedomain.ForgeType]
 	var githubConnectorType Option[forgedomain.GitHubConnectorType]
-	var gitLabConnectorType Option[forgedomain.GitLabConnectorType]
+	var gitlabConnectorType Option[forgedomain.GitLabConnectorType]
 	var hostingOriginHostname Option[configdomain.HostingOriginHostname]
 	var mainBranch Option[gitdomain.LocalBranchName]
 	var newBranchType Option[configdomain.NewBranchType]
-	var autoResolve Option[configdomain.AutoResolve]
 	var observedRegex Option[configdomain.ObservedRegex]
 	var perennialBranches gitdomain.LocalBranchNames
 	var perennialRegex Option[configdomain.PerennialRegex]
@@ -72,6 +72,9 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	var syncPrototypeStrategy Option[configdomain.SyncPrototypeStrategy]
 	var syncTags Option[configdomain.SyncTags]
 	var syncUpstream Option[configdomain.SyncUpstream]
+	var unknownBranchType Option[configdomain.UnknownBranchType]
+	// keep-sorted end
+	var err error
 	// load legacy definitions first, so that the proper definitions loaded later override them
 	if data.CreatePrototypeBranches != nil {
 		newBranchType = Some(configdomain.NewBranchType(configdomain.BranchTypePrototypeBranch))
@@ -174,7 +177,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			ec.Check(err)
 		}
 		if data.Hosting.GitLabConnectorType != nil {
-			gitLabConnectorType, err = forgedomain.ParseGitLabConnectorType(*data.Hosting.GitLabConnectorType)
+			gitlabConnectorType, err = forgedomain.ParseGitLabConnectorType(*data.Hosting.GitLabConnectorType)
 			ec.Check(err)
 		}
 		if data.Hosting.OriginHostname != nil {
@@ -213,6 +216,9 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		if data.Sync.AutoResolve != nil {
 			autoResolve = Some(configdomain.AutoResolve(*data.Sync.AutoResolve))
 		}
+		if data.Sync.AutoSync != nil {
+			autoSync = Some(configdomain.AutoSync(*data.Sync.AutoSync))
+		}
 		if data.Sync.Detached != nil {
 			detached = Some(configdomain.Detached(*data.Sync.Detached))
 		}
@@ -243,6 +249,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	}
 	return configdomain.PartialConfig{
 		Aliases:                  map[configdomain.AliasableCommand]string{},
+		AutoSync:                 autoSync,
 		BitbucketAppPassword:     None[forgedomain.BitbucketAppPassword](),
 		BitbucketUsername:        None[forgedomain.BitbucketUsername](),
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{},
@@ -256,7 +263,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		ForgeType:                forgeType,
 		GitHubConnectorType:      githubConnectorType,
 		GitHubToken:              None[forgedomain.GitHubToken](),
-		GitLabConnectorType:      gitLabConnectorType,
+		GitLabConnectorType:      gitlabConnectorType,
 		GitLabToken:              None[forgedomain.GitLabToken](),
 		GitUserEmail:             None[gitdomain.GitUserEmail](),
 		GitUserName:              None[gitdomain.GitUserName](),

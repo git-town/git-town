@@ -11,12 +11,12 @@ Feature: preserve the previous Git branch
   Scenario: previous branch remains
     When I run "git-town delete"
     Then the current branch is now "previous"
-    And the previous Git branch is now ""
+    And there is now no previous Git branch
 
   Scenario: previous branch is gone
     When I run "git-town delete previous"
     Then the current branch is still "current"
-    And the previous Git branch is now ""
+    And there is now no previous Git branch
 
   Scenario: current and previous branch remain
     And the branches

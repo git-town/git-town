@@ -28,6 +28,7 @@ Feature: push without hooks
         new
           old
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

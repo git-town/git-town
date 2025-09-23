@@ -37,6 +37,7 @@ Feature: delete another branch while having conflicting open changes
       main
         good
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

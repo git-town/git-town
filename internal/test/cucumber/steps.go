@@ -15,27 +15,27 @@ import (
 	"github.com/acarl005/stripansi"
 	"github.com/cucumber/godog"
 	messages "github.com/cucumber/messages/go/v21"
-	"github.com/git-town/git-town/v21/internal/browser"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v21/internal/cli/format"
-	"github.com/git-town/git-town/v21/internal/cli/print"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/config/configfile"
-	"github.com/git-town/git-town/v21/internal/config/gitconfig"
-	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/test/commands"
-	"github.com/git-town/git-town/v21/internal/test/datatable"
-	"github.com/git-town/git-town/v21/internal/test/envvars"
-	"github.com/git-town/git-town/v21/internal/test/filesystem"
-	"github.com/git-town/git-town/v21/internal/test/fixture"
-	"github.com/git-town/git-town/v21/internal/test/handlebars"
-	"github.com/git-town/git-town/v21/internal/test/helpers"
-	"github.com/git-town/git-town/v21/internal/test/output"
-	"github.com/git-town/git-town/v21/internal/test/subshell"
-	"github.com/git-town/git-town/v21/internal/test/testgit"
-	"github.com/git-town/git-town/v21/pkg/asserts"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/browser"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v22/internal/cli/format"
+	"github.com/git-town/git-town/v22/internal/cli/print"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/config/configfile"
+	"github.com/git-town/git-town/v22/internal/config/gitconfig"
+	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/test/commands"
+	"github.com/git-town/git-town/v22/internal/test/datatable"
+	"github.com/git-town/git-town/v22/internal/test/envvars"
+	"github.com/git-town/git-town/v22/internal/test/filesystem"
+	"github.com/git-town/git-town/v22/internal/test/fixture"
+	"github.com/git-town/git-town/v22/internal/test/handlebars"
+	"github.com/git-town/git-town/v22/internal/test/helpers"
+	"github.com/git-town/git-town/v22/internal/test/output"
+	"github.com/git-town/git-town/v22/internal/test/subshell"
+	"github.com/git-town/git-town/v22/internal/test/testgit"
+	"github.com/git-town/git-town/v22/pkg/asserts"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/google/go-cmp/cmp"
 	"github.com/kballard/go-shellquote"
 )
@@ -1027,46 +1027,15 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		repo := state.fixture.DevRepo.GetOrPanic()
 		for _, branchSetup := range datatable.ParseBranchSetupTable(table) {
-			var repoToCreateBranchIn *commands.TestCommands
-			switch {
-			case
-				branchSetup.Locations.Is(testgit.LocationLocal),
-				branchSetup.Locations.Is(testgit.LocationLocal, testgit.LocationOrigin):
-				repoToCreateBranchIn = state.fixture.DevRepo.GetOrPanic()
-			case branchSetup.Locations.Is(testgit.LocationOrigin):
-				repoToCreateBranchIn = state.fixture.OriginRepo.GetOrPanic()
-			case branchSetup.Locations.Is(testgit.LocationUpstream):
-				repoToCreateBranchIn = state.fixture.UpstreamRepo.GetOrPanic()
-			default:
-				return errors.New("unhandled location to create the new branch: " + branchSetup.Locations.String())
-			}
-			branchType, hasBranchType := branchSetup.BranchType.Get()
-			if hasBranchType {
-				switch branchType {
-				case configdomain.BranchTypeMainBranch:
-					return errors.New("main branch exists already")
-				case configdomain.BranchTypeFeatureBranch:
-					repoToCreateBranchIn.CreateFeatureBranch(branchSetup.Name, branchSetup.Parent.GetOrPanic().BranchName())
-				case
-					configdomain.BranchTypePerennialBranch,
-					configdomain.BranchTypeContributionBranch,
-					configdomain.BranchTypeObservedBranch,
-					configdomain.BranchTypeParkedBranch,
-					configdomain.BranchTypePrototypeBranch:
-					repoToCreateBranchIn.CreateBranchOfType(branchSetup.Name, branchSetup.Parent, branchType)
-				}
+			if branchSetup.Locations.Contains(testgit.LocationLocal) {
+				repo.CreateLocalBranchUsingGitTown(branchSetup)
 			} else {
-				repoToCreateBranchIn.CreateBranch(branchSetup.Name, "main")
-				if parent, hasParent := branchSetup.Parent.Get(); hasParent {
-					asserts.NoError(repoToCreateBranchIn.Config.NormalConfig.SetParent(repo.TestRunner, branchSetup.Name, parent))
+				// here the branch has no local counterpart --> create it manually in the remotes
+				if branchSetup.Locations.Contains(testgit.LocationOrigin) {
+					state.fixture.OriginRepo.Value.CreateBranch(branchSetup.Name, branchSetup.Parent.GetOr("main").BranchName())
 				}
-			}
-			if len(branchSetup.Locations) > 1 {
-				switch {
-				case branchSetup.Locations.Is(testgit.LocationLocal, testgit.LocationOrigin):
-					state.fixture.DevRepo.GetOrPanic().PushBranchToRemote(branchSetup.Name, gitdomain.RemoteOrigin)
-				default:
-					return errors.New("unhandled location to push the new branch to: " + branchSetup.Locations.String())
+				if branchSetup.Locations.Contains(testgit.LocationUpstream) {
+					state.fixture.UpstreamRepo.Value.CreateBranch(branchSetup.Name, branchSetup.Parent.GetOr("main").BranchName())
 				}
 			}
 		}
@@ -1266,8 +1235,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if err != nil {
 			return fmt.Errorf("cannot determine current branch of second worktree: %w", err)
 		}
-		if actual.String() != expected {
-			return fmt.Errorf("expected active branch %q but is %q", expected, actual)
+		if !actual.EqualSome(gitdomain.NewLocalBranchName(expected)) {
+			return fmt.Errorf("expected active branch %q but is %q", expected, actual.GetOrPanic())
 		}
 		return nil
 	})
@@ -1277,9 +1246,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
 		state.initialCurrentBranch = Some(branch)
-		if !devRepo.Git.BranchExists(devRepo.TestRunner, branch) {
-			return fmt.Errorf("cannot check out non-existing branch: %q", branch)
-		}
 		devRepo.CheckoutBranch(branch)
 		return nil
 	})
@@ -1302,8 +1268,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if err != nil {
 			return fmt.Errorf("cannot determine current branch of developer repo: %w", err)
 		}
-		if actual.String() != expected {
-			return fmt.Errorf("expected active branch %q but is %q", expected, actual)
+		if !actual.EqualSome(gitdomain.NewLocalBranchName(expected)) {
+			return fmt.Errorf("expected active branch %q but is %q", expected, actual.GetOrPanic())
 		}
 		return nil
 	})
@@ -1419,7 +1385,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		have := devRepo.Config.UnvalidatedConfig.MainBranch
-		if have.String() != want {
+		if !have.EqualSome(gitdomain.NewLocalBranchName(want)) {
 			return fmt.Errorf("expected %q, got %q", want, have)
 		}
 		return nil
@@ -1464,7 +1430,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		have := devRepo.Git.PreviouslyCheckedOutBranch(devRepo.TestRunner)
-		if have.String() != want {
+		if !have.EqualSome(gitdomain.NewLocalBranchName(want)) {
 			return fmt.Errorf("expected previous branch %q but got %q", want, have)
 		}
 		return nil
@@ -1476,6 +1442,16 @@ func defineSteps(sc *godog.ScenarioContext) {
 		branches := devRepo.Config.GitUnscoped.PerennialBranches
 		if len(branches) > 0 {
 			return fmt.Errorf("expected no perennial branches, got %q", branches)
+		}
+		return nil
+	})
+
+	sc.Step(`^there is now no previous Git branch$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		previousBranch := devRepo.Git.PreviouslyCheckedOutBranch(devRepo.TestRunner)
+		if previousBranch.IsSome() {
+			return errors.New("previous branch found")
 		}
 		return nil
 	})

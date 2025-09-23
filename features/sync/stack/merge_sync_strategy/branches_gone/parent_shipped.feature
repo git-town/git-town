@@ -36,6 +36,7 @@ Feature: syncing a branch whose parent was shipped
       main
         child
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

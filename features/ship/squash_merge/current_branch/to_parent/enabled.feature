@@ -33,6 +33,7 @@ Feature: allowing shiping into a feature branch
       main
         alpha
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

@@ -33,6 +33,7 @@ Feature: the branch to delete has a deleted tracking branch
       main
         other
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

@@ -35,6 +35,7 @@ Feature: propose uncommitted changes via a separate parent branch with message
         new
           existing
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

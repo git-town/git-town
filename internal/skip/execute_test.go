@@ -3,9 +3,9 @@ package skip_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v21/internal/skip"
-	"github.com/git-town/git-town/v21/internal/vm/opcodes"
-	"github.com/git-town/git-town/v21/internal/vm/program"
+	"github.com/git-town/git-town/v22/internal/skip"
+	"github.com/git-town/git-town/v22/internal/vm/opcodes"
+	"github.com/git-town/git-town/v22/internal/vm/program"
 	"github.com/shoenig/test/must"
 )
 

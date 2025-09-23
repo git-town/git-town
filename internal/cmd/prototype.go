@@ -4,17 +4,18 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/cli/flags"
-	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v21/internal/config"
-	"github.com/git-town/git-town/v21/internal/config/cliconfig"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/config/gitconfig"
-	"github.com/git-town/git-town/v21/internal/execute"
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/messages"
-	"github.com/git-town/git-town/v21/internal/vm/interpreter/configinterpreter"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/cli/flags"
+	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v22/internal/config"
+	"github.com/git-town/git-town/v22/internal/config/cliconfig"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/config/gitconfig"
+	"github.com/git-town/git-town/v22/internal/execute"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks/mapstools"
+	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/vm/interpreter/configinterpreter"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -47,6 +48,7 @@ func prototypeCmd() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:  None[configdomain.AutoResolve](),
+				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     None[configdomain.Detached](),
 				DryRun:       None[configdomain.DryRun](),
 				PushBranches: None[configdomain.PushBranches](),
@@ -133,8 +135,8 @@ func determinePrototypeData(args []string, repo execute.OpenRepoResult) (prototy
 }
 
 func validatePrototypeData(data prototypeData, repo execute.OpenRepoResult) error {
-	for branchName, branchType := range data.branchesToPrototype {
-		if !data.branchInfos.HasLocalBranch(branchName) && !data.branchInfos.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote) {
+	for branchName, branchType := range mapstools.SortedKeyValues(data.branchesToPrototype) {
+		if !data.branchesSnapshot.Branches.HasLocalBranch(branchName) && !data.branchesSnapshot.Branches.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote) {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}
 		switch branchType {
@@ -143,14 +145,13 @@ func validatePrototypeData(data prototypeData, repo execute.OpenRepoResult) erro
 		case configdomain.BranchTypePerennialBranch:
 			return errors.New(messages.PerennialBranchCannotPrototype)
 		case configdomain.BranchTypePrototypeBranch:
-			return fmt.Errorf(messages.BranchIsAlreadyPrototype, branchName)
+			repo.FinalMessages.Add(fmt.Sprintf(messages.BranchIsAlreadyPrototype, branchName))
 		case
 			configdomain.BranchTypeFeatureBranch,
 			configdomain.BranchTypeContributionBranch,
 			configdomain.BranchTypeParkedBranch,
 			configdomain.BranchTypeObservedBranch:
-		default:
-			panic("unhandled branch type" + branchType.String())
+			data.branchesToPrototype.Add(branchName, branchType)
 		}
 	}
 	return nil

@@ -1,6 +1,6 @@
 module github.com/git-town/git-town/tools/optioncompare
 
-go 1.23.10
+go 1.24.6
 
 require golang.org/x/tools v0.34.0
 

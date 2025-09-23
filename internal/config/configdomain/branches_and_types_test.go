@@ -3,9 +3,9 @@ package configdomain_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v21/internal/config"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/config"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/shoenig/test/must"
 )
 
@@ -20,7 +20,7 @@ func TestBranchesAndTypes(t *testing.T) {
 				MainBranch: gitdomain.NewLocalBranchNameOption("main"),
 			},
 		}
-		have.Add("main", &unvalidatedConfig)
+		have.AddTypeFor("main", &unvalidatedConfig)
 		want := map[gitdomain.LocalBranchName]configdomain.BranchType{
 			"main": configdomain.BranchTypeMainBranch,
 		}

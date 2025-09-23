@@ -3,10 +3,10 @@ package config
 import (
 	"errors"
 
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/messages"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/messages"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 // provides the branches to make contribution, observed, parked, or prototype
@@ -18,11 +18,11 @@ func BranchesToMark(args []string, branchesSnapshot gitdomain.BranchesSnapshot, 
 		if !hasCurrentBranch {
 			return branchesToMark, branchToCheckout, errors.New(messages.CurrentBranchCannotDetermine)
 		}
-		branchesToMark.Add(currentBranch, &config)
+		branchesToMark.AddTypeFor(currentBranch, &config)
 		branchToCheckout = None[gitdomain.LocalBranchName]()
 	case 1:
 		branch := gitdomain.NewLocalBranchName(args[0])
-		branchesToMark.Add(branch, &config)
+		branchesToMark.AddTypeFor(branch, &config)
 		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByRemoteName(branch.TrackingBranch(config.NormalConfig.DevRemote)).Get()
 		if hasBranchInfo && branchInfo.SyncStatus == gitdomain.SyncStatusRemoteOnly {
 			branchToCheckout = Some(branch)

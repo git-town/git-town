@@ -3,9 +3,9 @@ package format_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v21/internal/cli/format"
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v22/internal/cli/format"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/shoenig/test/must"
 )
 

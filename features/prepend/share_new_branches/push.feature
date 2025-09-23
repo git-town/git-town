@@ -27,6 +27,7 @@ Feature: auto-push new branches
         new
           old
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

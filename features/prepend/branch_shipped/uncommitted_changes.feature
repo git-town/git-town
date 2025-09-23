@@ -43,6 +43,7 @@ Feature: prepend a branch to a branch that was shipped at the remote
           new
             child
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

@@ -6,26 +6,26 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v21/internal/cli/flags"
-	"github.com/git-town/git-town/v21/internal/cli/print"
-	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v21/internal/config"
-	"github.com/git-town/git-town/v21/internal/config/cliconfig"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/execute"
-	"github.com/git-town/git-town/v21/internal/forge"
-	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/messages"
-	"github.com/git-town/git-town/v21/internal/state/runstate"
-	"github.com/git-town/git-town/v21/internal/validate"
-	"github.com/git-town/git-town/v21/internal/vm/interpreter/fullinterpreter"
-	"github.com/git-town/git-town/v21/internal/vm/opcodes"
-	"github.com/git-town/git-town/v21/internal/vm/optimizer"
-	"github.com/git-town/git-town/v21/internal/vm/program"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v22/internal/cli/flags"
+	"github.com/git-town/git-town/v22/internal/cli/print"
+	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v22/internal/config"
+	"github.com/git-town/git-town/v22/internal/config/cliconfig"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/execute"
+	"github.com/git-town/git-town/v22/internal/forge"
+	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/state/runstate"
+	"github.com/git-town/git-town/v22/internal/validate"
+	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
+	"github.com/git-town/git-town/v22/internal/vm/opcodes"
+	"github.com/git-town/git-town/v22/internal/vm/optimizer"
+	"github.com/git-town/git-town/v22/internal/vm/program"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -73,9 +73,9 @@ func compressCmd() *cobra.Command {
 		Short: compressDesc,
 		Long:  cmdhelpers.Long(compressDesc, compressHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			message, errMessage := readMessageFlag(cmd)
-			dryRun, errDryRun := readDryRunFlag(cmd)
 			commitHook, errCommitHook := readNoVerifyFlag(cmd)
+			dryRun, errDryRun := readDryRunFlag(cmd)
+			message, errMessage := readMessageFlag(cmd)
 			stack, errStack := readStackFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
 			if err := cmp.Or(errMessage, errDryRun, errCommitHook, errStack, errVerbose); err != nil {
@@ -83,6 +83,7 @@ func compressCmd() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:  None[configdomain.AutoResolve](),
+				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     Some(configdomain.Detached(true)),
 				DryRun:       dryRun,
 				PushBranches: None[configdomain.PushBranches](),
@@ -111,11 +112,11 @@ func executeCompress(cliConfig configdomain.PartialConfig, message Option[gitdom
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineCompressBranchesData(repo, message, compressEntireStack)
+	data, exit, err := determineCompressData(repo, message, compressEntireStack)
 	if err != nil || exit {
 		return err
 	}
-	err = validateCompressBranchesData(data, repo)
+	err = validateCompressData(data, repo)
 	if err != nil {
 		return err
 	}
@@ -154,7 +155,7 @@ func executeCompress(cliConfig configdomain.PartialConfig, message Option[gitdom
 	})
 }
 
-type compressBranchesData struct {
+type compressData struct {
 	branchInfosLastRun Option[gitdomain.BranchInfos]
 	branchesSnapshot   gitdomain.BranchesSnapshot
 	branchesToCompress []compressBranchData
@@ -175,7 +176,7 @@ type compressBranchData struct {
 	parentBranch     gitdomain.LocalBranchName
 }
 
-func determineCompressBranchesData(repo execute.OpenRepoResult, message Option[gitdomain.CommitMessage], compressEntireStack configdomain.FullStack) (data compressBranchesData, exit dialogdomain.Exit, err error) {
+func determineCompressData(repo execute.OpenRepoResult, message Option[gitdomain.CommitMessage], compressEntireStack configdomain.FullStack) (data compressData, exit dialogdomain.Exit, err error) {
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
@@ -220,6 +221,9 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, message Option[g
 	})
 	if err != nil || exit {
 		return data, exit, err
+	}
+	if branchesSnapshot.DetachedHead {
+		return data, false, errors.New(messages.CompressDetachedHead)
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
@@ -307,7 +311,7 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, message Option[g
 	if len(branchesToCompress) == 0 {
 		return data, exit, fmt.Errorf(messages.CompressNoCommits, branchNamesToCompress[0])
 	}
-	return compressBranchesData{
+	return compressData{
 		branchInfosLastRun: branchInfosLastRun,
 		branchesSnapshot:   branchesSnapshot,
 		branchesToCompress: branchesToCompress,
@@ -320,7 +324,7 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, message Option[g
 	}, false, nil
 }
 
-func compressProgram(data compressBranchesData, commitHook configdomain.CommitHook) program.Program {
+func compressProgram(data compressData, commitHook configdomain.CommitHook) program.Program {
 	prog := NewMutable(&program.Program{})
 	for _, branchToCompress := range data.branchesToCompress {
 		compressBranchProgram(compressBranchProgramArgs{
@@ -411,7 +415,7 @@ func validateBranchIsSynced(branchName gitdomain.LocalBranchName, syncStatus git
 	panic("unhandled syncstatus: " + syncStatus.String())
 }
 
-func validateCompressBranchesData(data compressBranchesData, repo execute.OpenRepoResult) error {
+func validateCompressData(data compressData, repo execute.OpenRepoResult) error {
 	for _, branch := range data.branchesToCompress {
 		if parent, hasParent := data.config.NormalConfig.Lineage.Parent(branch.name).Get(); hasParent {
 			isInSyncWithParent, err := repo.Git.BranchInSyncWithParent(repo.Backend, branch.name, parent.BranchName())

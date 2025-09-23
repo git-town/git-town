@@ -20,6 +20,7 @@ Feature: enforce stashing via CLI flag
       main
         new
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

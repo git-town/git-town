@@ -4,17 +4,18 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/cli/flags"
-	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v21/internal/config"
-	"github.com/git-town/git-town/v21/internal/config/cliconfig"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/config/gitconfig"
-	"github.com/git-town/git-town/v21/internal/execute"
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/messages"
-	"github.com/git-town/git-town/v21/internal/vm/interpreter/configinterpreter"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/cli/flags"
+	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v22/internal/config"
+	"github.com/git-town/git-town/v22/internal/config/cliconfig"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/config/gitconfig"
+	"github.com/git-town/git-town/v22/internal/execute"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks/mapstools"
+	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/vm/interpreter/configinterpreter"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -43,6 +44,7 @@ func featureCmd() *cobra.Command {
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:  None[configdomain.AutoResolve](),
+				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     None[configdomain.Detached](),
 				DryRun:       None[configdomain.DryRun](),
 				PushBranches: None[configdomain.PushBranches](),
@@ -129,24 +131,24 @@ func determineFeatureData(args []string, repo execute.OpenRepoResult) (featureDa
 }
 
 func validateFeatureData(data featureData, repo execute.OpenRepoResult) error {
-	for branchName, branchType := range data.branchesToFeature {
+	for branchName, branchType := range mapstools.SortedKeyValues(data.branchesToFeature) {
 		switch branchType {
 		case configdomain.BranchTypeMainBranch:
 			return errors.New(messages.MainBranchCannotMakeFeature)
 		case configdomain.BranchTypePerennialBranch:
 			return errors.New(messages.PerennialBranchCannotMakeFeature)
 		case configdomain.BranchTypeFeatureBranch:
-			return fmt.Errorf(messages.HackBranchIsAlreadyFeature, branchName)
+			repo.FinalMessages.Add(fmt.Sprintf(messages.HackBranchIsAlreadyFeature, branchName))
 		case
 			configdomain.BranchTypeObservedBranch,
 			configdomain.BranchTypeContributionBranch,
 			configdomain.BranchTypeParkedBranch,
 			configdomain.BranchTypePrototypeBranch:
-		}
-		hasLocalBranch := data.branchInfos.HasLocalBranch(branchName)
-		hasRemoteBranch := data.branchInfos.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote)
-		if !hasLocalBranch && !hasRemoteBranch {
-			return fmt.Errorf(messages.BranchDoesntExist, branchName)
+			hasLocalBranch := data.branchesSnapshot.Branches.HasLocalBranch(branchName)
+			hasRemoteBranch := data.branchesSnapshot.Branches.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote)
+			if !hasLocalBranch && !hasRemoteBranch {
+				return fmt.Errorf(messages.BranchDoesntExist, branchName)
+			}
 		}
 	}
 	return nil

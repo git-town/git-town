@@ -28,6 +28,7 @@ Feature: rename an observed branch
       main
         new
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

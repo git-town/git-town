@@ -1,9 +1,10 @@
-go 1.23.10
+go 1.24.6
 
 use (
 	.
 	./tools/format_self
 	./tools/format_unittests
+	./tools/iterate_map
 	./tools/lint_steps
 	./tools/messages_sorted
 	./tools/messy_output

@@ -30,6 +30,7 @@ Feature: prepend a branch in Spanish
         parent
           old
       """
+
   Scenario: undo
     When I run "git-town undo" with these environment variables
       | LANG | es_ES.UTF-8 |

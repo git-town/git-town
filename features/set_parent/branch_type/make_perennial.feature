@@ -24,6 +24,7 @@ Feature: make a feature branch perennial
       main
         parent
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands

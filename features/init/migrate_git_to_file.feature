@@ -4,6 +4,7 @@ Feature: migrate existing configuration in Git metadata to a config file
   Background:
     Given a Git repo with origin
     And the main branch is "main"
+    And local Git setting "git-town.auto-sync" is "false"
     And local Git setting "git-town.perennial-regex" is "release-.*"
     And local Git setting "git-town.perennial-branches" is "qa"
     And local Git setting "git-town.feature-regex" is "user-.*"
@@ -42,6 +43,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | sync perennial strategy     | enter      |
       | sync prototype strategy     | enter      |
       | sync upstream               | enter      |
+      | auto sync                   | enter      |
       | sync tags                   | enter      |
       | detached                    | enter      |
       | stash                       | enter      |
@@ -55,6 +57,7 @@ Feature: migrate existing configuration in Git metadata to a config file
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                                 |
+      | git config --unset git-town.auto-sync                   |
       | git config --unset git-town.contribution-regex          |
       | git config --unset git-town.dev-remote                  |
       | git config --unset git-town.feature-regex               |
@@ -76,6 +79,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | git config --unset git-town.unknown-branch-type         |
     And the main branch is now not set
     And there are now no perennial branches
+    And local Git setting "git-town.auto-sync" now doesn't exist
     And local Git setting "git-town.forge-type" now doesn't exist
     And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
     And local Git setting "git-town.sync-feature-strategy" now doesn't exist
@@ -116,6 +120,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       strategy = "squash-merge"
 
       [sync]
+      auto-sync = false
       feature-strategy = "merge"
       perennial-strategy = "rebase"
       prototype-strategy = "merge"
@@ -128,6 +133,7 @@ Feature: migrate existing configuration in Git metadata to a config file
   Scenario: undo
     When I run "git-town undo"
     Then the main branch is now "main"
+    And local Git setting "git-town.auto-sync" is now "false"
     And local Git setting "git-town.dev-remote" is now "fork"
     And local Git setting "git-town.new-branch-type" is now "prototype"
     And local Git setting "git-town.perennial-regex" is now "release-.*"

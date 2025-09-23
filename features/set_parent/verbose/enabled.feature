@@ -39,6 +39,7 @@ Feature: display all executed Git commands
         child
         parent
       """
+
   Scenario: undo
     When I run "git-town undo --verbose"
     Then Git Town runs the commands

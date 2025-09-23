@@ -4,11 +4,11 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 func DefaultBranch(querier subshelldomain.Querier) Option[gitdomain.LocalBranchName] {
@@ -35,6 +35,10 @@ func DefaultRemote(querier subshelldomain.Querier) gitdomain.Remote {
 
 func RemoveAlias(runner subshelldomain.Runner, aliasableCommand configdomain.AliasableCommand) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeGlobal, aliasableCommand.Key().Key())
+}
+
+func RemoveAutoSync(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyAutoSync)
 }
 
 func RemoveBitbucketAppPassword(runner subshelldomain.Runner) error {
@@ -172,6 +176,10 @@ func RemoveUnknownBranchType(runner subshelldomain.Runner) error {
 
 func SetAlias(runner subshelldomain.Runner, aliasableCommand configdomain.AliasableCommand) error {
 	return SetConfigValue(runner, configdomain.ConfigScopeGlobal, aliasableCommand.Key().Key(), "town "+aliasableCommand.String())
+}
+
+func SetAutoSync(runner subshelldomain.Runner, value configdomain.AutoSync, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyAutoSync, value.String())
 }
 
 func SetBitbucketAppPassword(runner subshelldomain.Runner, value forgedomain.BitbucketAppPassword, scope configdomain.ConfigScope) error {

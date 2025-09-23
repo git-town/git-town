@@ -3,17 +3,17 @@ package git_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/config/gitconfig"
-	"github.com/git-town/git-town/v21/internal/git"
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/gohacks"
-	"github.com/git-town/git-town/v21/internal/gohacks/cache"
-	"github.com/git-town/git-town/v21/internal/subshell"
-	"github.com/git-town/git-town/v21/internal/test/testgit"
-	"github.com/git-town/git-town/v21/internal/test/testruntime"
-	"github.com/git-town/git-town/v21/pkg/asserts"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/config/gitconfig"
+	"github.com/git-town/git-town/v22/internal/git"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks"
+	"github.com/git-town/git-town/v22/internal/gohacks/cache"
+	"github.com/git-town/git-town/v22/internal/subshell"
+	"github.com/git-town/git-town/v22/internal/test/testgit"
+	"github.com/git-town/git-town/v22/internal/test/testruntime"
+	"github.com/git-town/git-town/v22/pkg/asserts"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 

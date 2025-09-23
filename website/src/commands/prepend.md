@@ -93,11 +93,16 @@ Commit message to use together with `--commit`. Implies `--commit`.
 #### `--push`<br>`--no-push`
 
 The `--push`/`--no-push` argument overrides the
-[push-branches](../preferences/push_branches.md) config setting.
+[push-branches](../preferences/push-branches.md) config setting.
 
 #### `--stash`<br>`--no-stash`
 
 Enables or disables [stashing](../preferences/stash.md) for this invocation.
+
+#### `--sync`
+
+Enables or disables [automatic syncing](../preferences/auto-sync.md) of the
+current branch before prepending the new one.
 
 #### `--dry-run`
 

@@ -1,10 +1,10 @@
 package configdomain
 
 import (
-	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/gohacks/mapstools"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks/mapstools"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 // PartialConfig contains configuration data as it is stored in one of the configuration sources for Git Town:
@@ -18,6 +18,7 @@ import (
 type PartialConfig struct {
 	Aliases                  Aliases
 	AutoResolve              Option[AutoResolve]
+	AutoSync                 Option[AutoSync]
 	BitbucketAppPassword     Option[forgedomain.BitbucketAppPassword]
 	BitbucketUsername        Option[forgedomain.BitbucketUsername]
 	BranchTypeOverrides      BranchTypeOverrides
@@ -72,6 +73,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 	return PartialConfig{
 		Aliases:                  mapstools.Merge(other.Aliases, self.Aliases),
 		AutoResolve:              other.AutoResolve.Or(self.AutoResolve),
+		AutoSync:                 other.AutoSync.Or(self.AutoSync),
 		BitbucketAppPassword:     other.BitbucketAppPassword.Or(self.BitbucketAppPassword),
 		BitbucketUsername:        other.BitbucketUsername.Or(self.BitbucketUsername),
 		BranchTypeOverrides:      other.BranchTypeOverrides.Concat(self.BranchTypeOverrides),

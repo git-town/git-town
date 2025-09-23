@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/git-town/git-town/v21/internal/browser"
-	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
+	"github.com/git-town/git-town/v22/internal/browser"
+	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
 )
 
 // type check

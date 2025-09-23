@@ -7,28 +7,28 @@ import (
 	"os"
 	"regexp"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v21/internal/cli/flags"
-	"github.com/git-town/git-town/v21/internal/cli/print"
-	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v21/internal/cmd/ship"
-	"github.com/git-town/git-town/v21/internal/config"
-	"github.com/git-town/git-town/v21/internal/config/cliconfig"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/execute"
-	"github.com/git-town/git-town/v21/internal/forge"
-	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/messages"
-	"github.com/git-town/git-town/v21/internal/state/runstate"
-	"github.com/git-town/git-town/v21/internal/validate"
-	"github.com/git-town/git-town/v21/internal/vm/interpreter/fullinterpreter"
-	"github.com/git-town/git-town/v21/internal/vm/opcodes"
-	"github.com/git-town/git-town/v21/internal/vm/optimizer"
-	"github.com/git-town/git-town/v21/internal/vm/program"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/cli/dialog"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v22/internal/cli/flags"
+	"github.com/git-town/git-town/v22/internal/cli/print"
+	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v22/internal/cmd/ship"
+	"github.com/git-town/git-town/v22/internal/config"
+	"github.com/git-town/git-town/v22/internal/config/cliconfig"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/execute"
+	"github.com/git-town/git-town/v22/internal/forge"
+	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/state/runstate"
+	"github.com/git-town/git-town/v22/internal/validate"
+	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
+	"github.com/git-town/git-town/v22/internal/vm/opcodes"
+	"github.com/git-town/git-town/v22/internal/vm/optimizer"
+	"github.com/git-town/git-town/v22/internal/vm/program"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -61,6 +61,7 @@ main
 
 func setParentCommand() *cobra.Command {
 	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
+	addNoParentFlag, readNoParentFlag := flags.NoParent()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "set-parent [branch]",
@@ -70,27 +71,30 @@ func setParentCommand() *cobra.Command {
 		Long:    cmdhelpers.Long(setParentDesc, setParentHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
+			noParent, errNoParent := readNoParentFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if cmp.Or(errAutoResolve, errVerbose) != nil {
+			if cmp.Or(errAutoResolve, errNoParent, errVerbose) != nil {
 				return errVerbose
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:  autoResolve,
+				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     Some(configdomain.Detached(true)),
 				DryRun:       None[configdomain.DryRun](),
 				PushBranches: None[configdomain.PushBranches](),
 				Stash:        None[configdomain.Stash](),
 				Verbose:      verbose,
 			})
-			return executeSetParent(args, cliConfig)
+			return executeSetParent(args, cliConfig, noParent)
 		},
 	}
 	addAutoResolveFlag(&cmd)
+	addNoParentFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeSetParent(args []string, cliConfig configdomain.PartialConfig) error {
+func executeSetParent(args []string, cliConfig configdomain.PartialConfig, noParent configdomain.NoParent) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,
@@ -111,52 +115,55 @@ func executeSetParent(args []string, cliConfig configdomain.PartialConfig) error
 	}
 	var selectedParent gitdomain.LocalBranchName
 	newParentOpt := None[gitdomain.LocalBranchName]()
-	switch len(args) {
-	case 0:
-		excludeBranches := append(
-			gitdomain.LocalBranchNames{data.initialBranch},
-			data.config.NormalConfig.Lineage.Children(data.initialBranch)...,
-		)
-		entries := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
-			BranchInfos:       data.branchesSnapshot.Branches,
-			BranchTypes:       []configdomain.BranchType{},
-			BranchesAndTypes:  repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchesSnapshot.Branches.Names()),
-			ExcludeBranches:   excludeBranches,
-			Lineage:           repo.UnvalidatedConfig.NormalConfig.Lineage,
-			MainBranch:        repo.UnvalidatedConfig.UnvalidatedConfig.MainBranch,
-			Regexes:           []*regexp.Regexp{},
-			ShowAllBranches:   false,
-			UnknownBranchType: repo.UnvalidatedConfig.NormalConfig.UnknownBranchType,
-		})
-		noneEntry := dialog.SwitchBranchEntry{
-			Branch:        messages.SetParentNoneOption,
-			Indentation:   "",
-			OtherWorktree: false,
-			Type:          configdomain.BranchTypeFeatureBranch,
-		}
-		entries = append(dialog.SwitchBranchEntries{noneEntry}, entries...)
-		selectedParent, exit, err = dialog.SwitchBranch(dialog.SwitchBranchArgs{
-			CurrentBranch:      None[gitdomain.LocalBranchName](),
-			Cursor:             entries.IndexOf(data.defaultChoice),
-			DisplayBranchTypes: true,
-			Entries:            entries,
-			InputName:          fmt.Sprintf("parent-branch-for-%q", data.initialBranch),
-			Inputs:             data.inputs,
-			Title:              Some(fmt.Sprintf(messages.ParentBranchTitle, data.initialBranch)),
-			UncommittedChanges: false,
-		})
-		if err != nil || exit {
-			return err
-		}
-		if selectedParent != messages.SetParentNoneOption {
+	if !noParent {
+		switch len(args) {
+		case 0:
+			// TODO: extract this logic into an "enterParent" function
+			excludeBranches := append(
+				gitdomain.LocalBranchNames{data.initialBranch},
+				data.config.NormalConfig.Lineage.Children(data.initialBranch)...,
+			)
+			entries := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
+				BranchInfos:       data.branchesSnapshot.Branches,
+				BranchTypes:       []configdomain.BranchType{},
+				BranchesAndTypes:  repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchesSnapshot.Branches.Names()),
+				ExcludeBranches:   excludeBranches,
+				Lineage:           repo.UnvalidatedConfig.NormalConfig.Lineage,
+				MainBranch:        repo.UnvalidatedConfig.UnvalidatedConfig.MainBranch,
+				Regexes:           []*regexp.Regexp{},
+				ShowAllBranches:   false,
+				UnknownBranchType: repo.UnvalidatedConfig.NormalConfig.UnknownBranchType,
+			})
+			noneEntry := dialog.SwitchBranchEntry{
+				Branch:        messages.SetParentNoneOption,
+				Indentation:   "",
+				OtherWorktree: false,
+				Type:          configdomain.BranchTypeFeatureBranch,
+			}
+			entries = append(dialog.SwitchBranchEntries{noneEntry}, entries...)
+			selectedParent, exit, err = dialog.SwitchBranch(dialog.SwitchBranchArgs{
+				CurrentBranch:      None[gitdomain.LocalBranchName](),
+				Cursor:             entries.IndexOf(data.defaultChoice),
+				DisplayBranchTypes: true,
+				Entries:            entries,
+				InputName:          fmt.Sprintf("parent-branch-for-%q", data.initialBranch),
+				Inputs:             data.inputs,
+				Title:              Some(fmt.Sprintf(messages.ParentBranchTitle, data.initialBranch)),
+				UncommittedChanges: false,
+			})
+			if err != nil || exit {
+				return err
+			}
+			if selectedParent != messages.SetParentNoneOption {
+				newParentOpt = Some(selectedParent)
+			}
+		case 1:
+			selectedParent = gitdomain.NewLocalBranchName(args[0])
+			if !data.branchesSnapshot.Branches.HasLocalBranch(selectedParent) {
+				return fmt.Errorf(messages.BranchDoesntExist, selectedParent)
+			}
 			newParentOpt = Some(selectedParent)
 		}
-	case 1:
-		selectedParent = gitdomain.NewLocalBranchName(args[0])
-		if !data.branchesSnapshot.Branches.HasLocalBranch(selectedParent) {
-			return fmt.Errorf(messages.BranchDoesntExist, selectedParent)
-		}
-		newParentOpt = Some(selectedParent)
 	}
 	runProgram, exit := setParentProgram(newParentOpt, data)
 	if exit {

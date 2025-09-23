@@ -3,7 +3,7 @@ package print
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v21/pkg/colors"
+	"github.com/git-town/git-town/v22/pkg/colors"
 )
 
 func Header(text string) {

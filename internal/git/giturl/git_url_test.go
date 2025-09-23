@@ -3,8 +3,8 @@ package giturl_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v21/internal/git/giturl"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/git/giturl"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 

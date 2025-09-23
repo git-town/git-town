@@ -35,6 +35,7 @@ Feature: prepending to a branch whose parent was shipped and the local branch de
         new
           child
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

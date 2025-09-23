@@ -3,7 +3,8 @@ package datatable
 import (
 	"sort"
 
-	"github.com/git-town/git-town/v21/internal/test/helpers"
+	"github.com/git-town/git-town/v22/internal/gohacks/mapstools"
+	"github.com/git-town/git-town/v22/internal/test/helpers"
 )
 
 // TagTableBuilder collects data about tags in Git repositories
@@ -47,7 +48,7 @@ func (self *TagTableBuilder) Table() DataTable {
 	result.AddRow("NAME", "LOCATION")
 	tags := make([]string, len(self.tagToLocations))
 	index := 0
-	for tag := range self.tagToLocations {
+	for tag := range mapstools.SortedKeys(self.tagToLocations) {
 		tags[index] = tag
 		index++
 	}

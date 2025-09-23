@@ -16,13 +16,13 @@ Feature: sync the current prototype branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                                           |
-      | prototype | git fetch --prune --tags                          |
-      |           | git checkout main                                 |
-      | main      | git -c rebase.updateRefs=false rebase origin/main |
-      |           | git push                                          |
-      |           | git checkout prototype                            |
-      | prototype | git -c rebase.updateRefs=false rebase main        |
+      | BRANCH    | COMMAND                                                                      |
+      | prototype | git fetch --prune --tags                                                     |
+      |           | git checkout main                                                            |
+      | main      | git -c rebase.updateRefs=false rebase origin/main                            |
+      |           | git push                                                                     |
+      |           | git checkout prototype                                                       |
+      | prototype | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE            |
       | main      | local, origin | main local commit  |

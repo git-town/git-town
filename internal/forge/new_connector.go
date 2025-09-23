@@ -1,20 +1,20 @@
 package forge
 
 import (
-	"github.com/git-town/git-town/v21/internal/cli/print"
-	"github.com/git-town/git-town/v21/internal/forge/azuredevops"
-	"github.com/git-town/git-town/v21/internal/forge/bitbucketcloud"
-	"github.com/git-town/git-town/v21/internal/forge/bitbucketdatacenter"
-	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v21/internal/forge/forgejo"
-	"github.com/git-town/git-town/v21/internal/forge/gh"
-	"github.com/git-town/git-town/v21/internal/forge/gitea"
-	"github.com/git-town/git-town/v21/internal/forge/github"
-	"github.com/git-town/git-town/v21/internal/forge/gitlab"
-	"github.com/git-town/git-town/v21/internal/forge/glab"
-	"github.com/git-town/git-town/v21/internal/git/giturl"
-	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/cli/print"
+	"github.com/git-town/git-town/v22/internal/forge/azuredevops"
+	"github.com/git-town/git-town/v22/internal/forge/bitbucketcloud"
+	"github.com/git-town/git-town/v22/internal/forge/bitbucketdatacenter"
+	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v22/internal/forge/forgejo"
+	"github.com/git-town/git-town/v22/internal/forge/gh"
+	"github.com/git-town/git-town/v22/internal/forge/gitea"
+	"github.com/git-town/git-town/v22/internal/forge/github"
+	"github.com/git-town/git-town/v22/internal/forge/gitlab"
+	"github.com/git-town/git-town/v22/internal/forge/glab"
+	"github.com/git-town/git-town/v22/internal/git/giturl"
+	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 // NewConnector provides an instance of the forge connector to use based on the given gitConfig.

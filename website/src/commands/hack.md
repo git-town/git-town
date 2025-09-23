@@ -91,6 +91,11 @@ To always propose new branches, set the
 
 Enables or disables [stashing](../preferences/stash.md) for this invocation.
 
+#### `--sync`
+
+Enables or disables [automatic syncing](../preferences/auto-sync.md) before
+creating the new branch.
+
 #### `--dry-run`
 
 Use the `--dry-run` flag to test-drive this command. It prints the Git commands

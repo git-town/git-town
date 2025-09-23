@@ -32,6 +32,7 @@ Feature: ship the supplied feature branch in a local repo using the always-merge
       main
         other
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

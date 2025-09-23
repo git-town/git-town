@@ -6,7 +6,7 @@ import (
 	"go/token"
 	"testing"
 
-	"github.com/git-town/git-town/v21/pkg/equal"
+	"github.com/git-town/git-town/v22/pkg/equal"
 	"github.com/google/go-cmp/cmp"
 	"github.com/shoenig/test/must"
 )

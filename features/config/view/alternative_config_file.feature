@@ -51,6 +51,7 @@ Feature: show the configuration when using an alternative config file
 
       Sync:
         auto-resolve phantom conflicts: yes
+        auto-sync: yes
         run detached: no
         run pre-push hook: yes
         feature sync strategy: merge

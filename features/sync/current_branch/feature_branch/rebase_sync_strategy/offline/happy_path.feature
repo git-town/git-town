@@ -18,11 +18,11 @@ Feature: offline mode
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                           |
-      | feature | git checkout main                                 |
-      | main    | git -c rebase.updateRefs=false rebase origin/main |
-      |         | git checkout feature                              |
-      | feature | git -c rebase.updateRefs=false rebase main        |
+      | BRANCH  | COMMAND                                                                      |
+      | feature | git checkout main                                                            |
+      | main    | git -c rebase.updateRefs=false rebase origin/main                            |
+      |         | git checkout feature                                                         |
+      | feature | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
     And these commits exist now
       | BRANCH  | LOCATION | MESSAGE               |
       | main    | local    | local main commit     |

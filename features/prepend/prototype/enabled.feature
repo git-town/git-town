@@ -28,6 +28,7 @@ Feature: prepend a prototype branch to a feature branch
         parent
           old
       """
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

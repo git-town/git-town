@@ -3,7 +3,7 @@ package forge_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v21/internal/forge"
+	"github.com/git-town/git-town/v22/internal/forge"
 	"github.com/shoenig/test/must"
 )
 

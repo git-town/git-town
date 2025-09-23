@@ -3,7 +3,7 @@ package envconfig_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v21/internal/config/envconfig"
+	"github.com/git-town/git-town/v22/internal/config/envconfig"
 	"github.com/shoenig/test/must"
 )
 

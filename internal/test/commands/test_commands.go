@@ -7,20 +7,21 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/git-town/git-town/v21/internal/cli/format"
-	"github.com/git-town/git-town/v21/internal/config"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/config/gitconfig"
-	prodgit "github.com/git-town/git-town/v21/internal/git"
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/gohacks/slice"
-	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
-	"github.com/git-town/git-town/v21/internal/test/datatable"
-	"github.com/git-town/git-town/v21/internal/test/subshell"
-	"github.com/git-town/git-town/v21/internal/test/testgit"
-	"github.com/git-town/git-town/v21/pkg/asserts"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/cli/format"
+	"github.com/git-town/git-town/v22/internal/config"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/config/gitconfig"
+	prodgit "github.com/git-town/git-town/v22/internal/git"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks/mapstools"
+	"github.com/git-town/git-town/v22/internal/gohacks/slice"
+	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
+	"github.com/git-town/git-town/v22/internal/test/datatable"
+	"github.com/git-town/git-town/v22/internal/test/subshell"
+	"github.com/git-town/git-town/v22/internal/test/testgit"
+	"github.com/git-town/git-town/v22/pkg/asserts"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 const (
@@ -163,6 +164,14 @@ func (self *TestCommands) ConnectTrackingBranch(name gitdomain.LocalBranchName) 
 	self.MustRun("git", "branch", "--set-upstream-to=origin/"+name.String(), name.String())
 }
 
+// CreateBranch creates a new branch with the given name.
+// The created branch is a normal branch.
+// To create feature branches, use CreateFeatureBranch.
+func (self *TestCommands) CreateAndCheckoutBranch(name gitdomain.LocalBranchName, parent gitdomain.BranchName) {
+	self.Git.CurrentBranchCache.Set(name)
+	self.MustRun("git", "checkout", "-b", name.String(), parent.String())
+}
+
 // creates a feature branch with the given name in this repository
 func (self *TestCommands) CreateAndCheckoutFeatureBranch(name gitdomain.LocalBranchName, parent gitdomain.LocalBranchName) {
 	asserts.NoError(self.Git.CreateAndCheckoutBranchWithParent(self, name, parent.Location()))
@@ -183,6 +192,13 @@ func (self *TestCommands) CreateBranchOfType(name gitdomain.LocalBranchName, par
 		self.CreateBranch(name, "main")
 	}
 	asserts.NoError(gitconfig.SetBranchTypeOverride(self.TestRunner, branchType, name))
+}
+
+func (self *TestCommands) CreateChildBranch(name, parent gitdomain.LocalBranchName) {
+	self.CheckoutBranch(parent)
+	env := append(os.Environ(), "GIT_TOWN_NEW_BRANCH_TYPE=feature")
+	asserts.NoError(self.RunWithEnv(env, "git-town", "append", "--no-sync", name.String()))
+	self.Git.CurrentBranchCache.Set(name)
 }
 
 // CreateCommit creates a commit with the given properties in this Git repo.
@@ -216,6 +232,39 @@ func (self *TestCommands) CreateFile(name, content string) {
 func (self *TestCommands) CreateFolder(name string) {
 	folderPath := filepath.Join(self.WorkingDir, name)
 	asserts.NoError(os.MkdirAll(folderPath, os.ModePerm))
+}
+
+func (self *TestCommands) CreateLocalBranchUsingGitTown(branchSetup datatable.BranchSetup) {
+	// step 1: create the local branch if one is needed
+	if parent, hasParent := branchSetup.Parent.Get(); hasParent {
+		self.CreateChildBranch(branchSetup.Name, parent)
+	} else {
+		self.CreateAndCheckoutBranch(branchSetup.Name, "main")
+	}
+	// step 2: create the tracking branch
+	if branchSetup.Locations.Contains(testgit.LocationOrigin) {
+		self.PushBranchToRemote(branchSetup.Name, gitdomain.RemoteOrigin)
+	}
+	if branchSetup.Locations.Contains(testgit.LocationUpstream) {
+		self.PushBranchToRemote(branchSetup.Name, gitdomain.RemoteUpstream)
+	}
+	// step 3: set the branch type
+	if branchType, hasBranchType := branchSetup.BranchType.Get(); hasBranchType {
+		switch branchType {
+		case configdomain.BranchTypeContributionBranch:
+			self.MustRun("git-town", "contribute")
+		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeMainBranch:
+			// nothing to do
+		case configdomain.BranchTypePerennialBranch:
+			self.MustRun("git-town", "set-parent", "--none")
+		case configdomain.BranchTypeObservedBranch:
+			self.MustRun("git-town", "observe")
+		case configdomain.BranchTypeParkedBranch:
+			self.MustRun("git-town", "park")
+		case configdomain.BranchTypePrototypeBranch:
+			self.MustRun("git-town", "prototype")
+		}
+	}
 }
 
 // CreateStandaloneTag creates a tag not on a branch.
@@ -556,7 +605,7 @@ func (self *TestCommands) VerifyNoGitTownConfiguration() error {
 		return fmt.Errorf("unexpected Git Town configuration:\n%s", output)
 	}
 	self.Config.Reload(self.TestRunner)
-	for aliasName, aliasValue := range self.Config.NormalConfig.Aliases {
+	for aliasName, aliasValue := range mapstools.SortedKeyValues(self.Config.NormalConfig.Aliases) {
 		if strings.HasPrefix(aliasValue, "town ") {
 			return fmt.Errorf("unexpected Git Town alias %q with value %q. All aliases: %#v", aliasName, aliasValue, self.Config.NormalConfig.Aliases)
 		}

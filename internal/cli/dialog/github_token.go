@@ -3,11 +3,11 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v21/internal/messages"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v22/internal/messages"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 const (
@@ -32,7 +32,7 @@ with the GitHub API.
 func GitHubToken(args Args[forgedomain.GitHubToken]) (Option[forgedomain.GitHubToken], dialogdomain.Exit, error) {
 	input, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		DialogName:    "github-token",
-		ExistingValue: args.Local.Or(args.Global).String(),
+		ExistingValue: args.Local.Or(args.Global).StringOr(""),
 		Help:          gitHubTokenHelp,
 		Inputs:        args.Inputs,
 		Prompt:        messages.GitHubTokenPrompt,
@@ -43,6 +43,6 @@ func GitHubToken(args Args[forgedomain.GitHubToken]) (Option[forgedomain.GitHubT
 		// the user has entered the global value --> keep using the global value, don't store the local value
 		newValue = None[forgedomain.GitHubToken]()
 	}
-	fmt.Printf(messages.GitHubTokenResult, dialogcomponents.FormattedSecret(newValue.String(), exit))
+	fmt.Printf(messages.GitHubTokenResult, dialogcomponents.FormattedSecret(newValue.StringOr(""), exit))
 	return newValue, exit, err
 }

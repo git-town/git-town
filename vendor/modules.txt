@@ -190,7 +190,9 @@ github.com/xo/terminfo
 ## explicit; go 1.23.0
 gitlab.com/gitlab-org/api/client-go
 # golang.org/x/crypto v0.39.0
-## explicit; go 1.23.0
+## explicit; go 1.24.0
+# golang.org/x/crypto v0.42.0
+## go 1.24.0
 golang.org/x/crypto/blake2b
 golang.org/x/crypto/blake2s
 golang.org/x/crypto/blowfish
@@ -205,10 +207,14 @@ golang.org/x/crypto/ssh
 golang.org/x/crypto/ssh/agent
 golang.org/x/crypto/ssh/internal/bcrypt_pbkdf
 # golang.org/x/mod v0.25.0
-## explicit; go 1.23.0
+## explicit; go 1.24.0
+# golang.org/x/mod v0.28.0
+## explicit; go 1.24.0
 golang.org/x/mod/semver
 # golang.org/x/net v0.41.0
-## explicit; go 1.23.0
+## explicit; go 1.24.0
+# golang.org/x/net v0.44.0
+## go 1.24.0
 golang.org/x/net/context
 golang.org/x/net/html
 golang.org/x/net/html/atom
@@ -220,21 +226,29 @@ golang.org/x/oauth2/bitbucket
 golang.org/x/oauth2/clientcredentials
 golang.org/x/oauth2/internal
 # golang.org/x/sync v0.15.0
-## explicit; go 1.23.0
+## explicit; go 1.24.0
+# golang.org/x/sync v0.17.0
+## explicit; go 1.24.0
 golang.org/x/sync/errgroup
 # golang.org/x/sys v0.33.0
-## explicit; go 1.23.0
+## explicit; go 1.24.0
+# golang.org/x/sys v0.36.0
+## go 1.24.0
 golang.org/x/sys/cpu
 golang.org/x/sys/unix
 golang.org/x/sys/windows
 # golang.org/x/text v0.26.0
-## explicit; go 1.23.0
+## explicit; go 1.24.0
+# golang.org/x/text v0.29.0
+## go 1.24.0
 golang.org/x/text/transform
 # golang.org/x/time v0.12.0
 ## explicit; go 1.23.0
 golang.org/x/time/rate
 # golang.org/x/tools v0.34.0
-## explicit; go 1.23.0
+## explicit; go 1.24.0
+# golang.org/x/tools v0.37.0
+## explicit; go 1.24.0
 golang.org/x/tools/go/analysis
 golang.org/x/tools/go/analysis/checker
 golang.org/x/tools/go/analysis/internal
@@ -260,6 +274,7 @@ golang.org/x/tools/internal/event/label
 golang.org/x/tools/internal/facts
 golang.org/x/tools/internal/gcimporter
 golang.org/x/tools/internal/gocommand
+golang.org/x/tools/internal/moreiters
 golang.org/x/tools/internal/packagesinternal
 golang.org/x/tools/internal/pkgbits
 golang.org/x/tools/internal/stdlib
