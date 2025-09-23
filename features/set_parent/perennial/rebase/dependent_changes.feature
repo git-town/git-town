@@ -27,7 +27,6 @@ Feature: remove a branch and all its children from a stack with dependent change
     And the current branch is "branch-2"
     When I run "git-town set-parent --none"
 
-  @this
   Scenario: result
     Then Git Town runs no commands
     And Git Town prints:
@@ -50,62 +49,9 @@ Feature: remove a branch and all its children from a stack with dependent change
       main
         branch-1
       """
-    And the branches contain these files:
-      | BRANCH   | NAME |
-      | branch-1 | file |
-      | branch-2 | file |
-      | branch-3 | file |
-      | main     | file |
 
-  Scenario: resolve and continue
-    When I resolve the conflict in "file" with:
-      """
-      line 1
-      line 2: branch-2 changes
-      line 3
-      """
-    And I run "git-town continue"
-    Then Git Town runs the commands
-      | BRANCH   | COMMAND                                                        |
-      | branch-2 | GIT_EDITOR=true git rebase --continue                          |
-      |          | git push --force-with-lease --force-if-includes                |
-      |          | git checkout branch-3                                          |
-      | branch-3 | git pull                                                       |
-      |          | git -c rebase.updateRefs=false rebase --onto branch-2 branch-1 |
-    And a rebase is now in progress
-    And file "file" now has content:
-      """
-      <<<<<<< HEAD
-      line 1
-      =======
-      line 1: branch-1 changes
-      >>>>>>> {{ sha-initial-short 'branch-2 commit' }} (branch-2 commit)
-      line 2: branch-2 changes
-      line 3
-      """
-    When I resolve the conflict in "file" with:
-      """
-      line 1
-      line 2: branch-2 changes
-      line 3
-      """
-    And I run "git-town continue"
-    Then Git Town runs the commands
-      | BRANCH   | COMMAND                                         |
-      | branch-3 | GIT_EDITOR=true git rebase --continue           |
-      |          | git push --force-with-lease --force-if-includes |
-      |          | git checkout branch-2                           |
-    And no rebase is now in progress
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                               |
-      | main     | local, origin | main commit     | file      | line 1\nline 2\nline 3                                     |
-      | branch-1 | local, origin | branch-1 commit | file      | line 1: branch-1 changes\nline 2\nline 3                   |
-      | branch-2 | local, origin | branch-2 commit | file      | line 1\nline 2: branch-2 changes\nline 3                   |
-      | branch-3 | local, origin | branch-3 commit | file      | line 1\nline 2: branch-2 changes\nline 3: branch-3 changes |
-    And this lineage exists now
-      """
-      main
-        branch-1
-        branch-2
-          branch-3
-      """
+  Scenario: undo
+    When I run "git-town undo"
+    And Git Town runs no commands
+    And the initial commits exist now
+    And the initial branches and lineage exist now
