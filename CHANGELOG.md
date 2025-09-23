@@ -1,5 +1,26 @@
 # Git Town Changelog
 
+## 22.0.0 (2025-09-23)
+
+#### BREAKING CHANGES
+
+- The `codeberg` connector now has the name [forgejo]() because it works for all Forgejo-based forges, and codeberg uses Forgejo under the hood ([#5447](https://github.com/git-town/git-town/issues/5447)).
+- You now start the [setup assistant]() using `git town init` instead of `git town config setup`. This matches how you set up Git through `git init` ([#5269](https://github.com/git-town/git-town/issues/5269)).
+- [git town hack](https://www.git-town.com/commands/hack.html) no longer changes the branch type of a given existing branch to feature branch. Use the new [feature](https://www.git-town.com/commands/feature.html) command instead ([#5516](https://github.com/git-town/git-town/pull/5516)).
+- The `contribute`, `feature`, `observe`, `park`, and `prototype` command no longer exit with an error code if you call that on a branch that already has the desired branch type.
+- This release removes the `kill` command, which had been deprecated for a long time. Use [delete](https://www.git-town.com/commands/delete.html) instead.
+
+#### New Features
+
+- Git Town now supports Azure DevOps ([#1657](https://github.com/git-town/git-town/issues/1657)).
+- The new [push-branches](https://www.git-town.com/preferences/push-branches.html) configuration setting determines whether Git Town commands push changes they make locally to the tracking branch. When disabled, you need to push your branches manually ([#5541](https://github.com/git-town/git-town/issues/5541)).
+- The new [auto-sync](https://www.git-town.com/preferences/auto-sync.html) configuration setting determines whether the [hack](https://www.git-town.com/commands/hack.html), [append](https://www.git-town.com/commands/append.html), and [prepend](https://www.git-town.com/commands/prepend.html) commands sync existing branches before creating the new branch ([#5540](https://github.com/git-town/git-town/issues/5540)).
+- set-parent: You can now create perennial branches programmatically with the new `--none` flag.
+
+#### Bug Fixes
+
+- `git town branch` now correctly works when running in a repo with detached head ([#5565](https://github.com/git-town/git-town/issues/5565)).
+
 ## 21.5.0 (2025-09-05)
 
 #### New Features
