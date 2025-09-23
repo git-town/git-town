@@ -15,8 +15,7 @@ Feature: observe the current perennial branch
       cannot observe perennial branches
       """
     And the perennial branches are still "perennial"
-
-  Scenario: undo
-    When I run "git-town undo"
-    Then Git Town runs no commands
-    And the perennial branches are still "perennial"
+  #
+  # NOTE: Cannot test undo here.
+  # The Git Town command under test has not created an undoable runstate.
+  # Executing "git town undo" would undo the Git Town command executed during setup.

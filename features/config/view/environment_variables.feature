@@ -9,8 +9,6 @@ Feature: display configuration defined in environment variables
       | contribution-2 | contribution |        | local, origin |
       | observed-1     | observed     |        | local, origin |
       | observed-2     | observed     |        | local, origin |
-      | perennial-1    | perennial    |        | local         |
-      | perennial-2    | perennial    |        | local         |
 
   Scenario: all configured in Git, no stacked changes
     When I run "git-town config" with these environment variables

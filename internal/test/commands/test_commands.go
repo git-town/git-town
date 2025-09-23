@@ -256,8 +256,7 @@ func (self *TestCommands) CreateLocalBranchUsingGitTown(branchSetup datatable.Br
 		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeMainBranch:
 			// nothing to do
 		case configdomain.BranchTypePerennialBranch:
-			// TODO: create a "git town perennial" command to mark branches as perennial
-			asserts.NoError(gitconfig.SetBranchTypeOverride(self.TestRunner, branchType, branchSetup.Name))
+			self.MustRun("git-town", "set-parent", "--none")
 		case configdomain.BranchTypeObservedBranch:
 			self.MustRun("git-town", "observe")
 		case configdomain.BranchTypeParkedBranch:
