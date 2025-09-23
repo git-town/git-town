@@ -4,7 +4,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/git-town/git-town/v21/internal/gohacks/slice"
+	"github.com/git-town/git-town/v22/internal/gohacks/slice"
 )
 
 type LocalBranchNames []LocalBranchName

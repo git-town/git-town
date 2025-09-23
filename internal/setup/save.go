@@ -3,16 +3,16 @@ package setup
 import (
 	"slices"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog"
-	"github.com/git-town/git-town/v21/internal/config"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/config/configfile"
-	"github.com/git-town/git-town/v21/internal/config/gitconfig"
-	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/gohacks"
-	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/cli/dialog"
+	"github.com/git-town/git-town/v22/internal/config"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/config/configfile"
+	"github.com/git-town/git-town/v22/internal/config/gitconfig"
+	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks"
+	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 func Save(userInput UserInput, unvalidatedConfig config.UnvalidatedConfig, data Data, frontend subshelldomain.Runner) error {

@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strings"
 
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 // Parts contains recognized parts of a Git URL.

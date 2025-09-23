@@ -3,13 +3,13 @@ package config
 import (
 	"os"
 
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/config/envconfig"
-	"github.com/git-town/git-town/v21/internal/config/gitconfig"
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/config/envconfig"
+	"github.com/git-town/git-town/v22/internal/config/gitconfig"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 type UnvalidatedConfig struct {

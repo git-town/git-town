@@ -7,9 +7,9 @@ import (
 	"os/exec"
 	"runtime"
 
-	"github.com/git-town/git-town/v21/internal/messages"
-	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 // Open opens a new window/tab in the default browser with the given URL.

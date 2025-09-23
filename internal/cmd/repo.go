@@ -3,16 +3,16 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/cli/flags"
-	"github.com/git-town/git-town/v21/internal/cli/print"
-	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v21/internal/config/cliconfig"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/execute"
-	"github.com/git-town/git-town/v21/internal/forge"
-	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/cli/flags"
+	"github.com/git-town/git-town/v22/internal/cli/print"
+	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v22/internal/config/cliconfig"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/execute"
+	"github.com/git-town/git-town/v22/internal/forge"
+	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 

@@ -2,8 +2,8 @@
 package dialog
 
 import (
-	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 // Args are arguments for dialogs that allow to enter a textual configuration value.

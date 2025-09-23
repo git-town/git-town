@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	packagePath = "github.com/git-town/git-town/v21/pkg/prelude"
+	packagePath = "github.com/git-town/git-town/v22/pkg/prelude"
 	typeName    = "Option"
 )
 

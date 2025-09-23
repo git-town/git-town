@@ -1,10 +1,10 @@
 package bitbucketdatacenter
 
 import (
-	"github.com/git-town/git-town/v21/internal/cli/print"
-	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v21/internal/git/giturl"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/cli/print"
+	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v22/internal/git/giturl"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 // Detect always return false because we can't guess a self-hosted URL.

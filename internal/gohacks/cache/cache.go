@@ -1,6 +1,6 @@
 package cache
 
-import . "github.com/git-town/git-town/v21/pkg/prelude"
+import . "github.com/git-town/git-town/v22/pkg/prelude"
 
 // Cache is a cache implementation for arbitrary data structures that ensures it is initialized.
 // The zero value is an empty cache.
