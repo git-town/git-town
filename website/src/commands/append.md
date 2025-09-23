@@ -85,7 +85,7 @@ To always propose new branches, set the
 #### `--push`<br>`--no-push`
 
 The `--push`/`--no-push` argument overrides the
-[push-branches](../preferences/push_branches.md) config setting.
+[push-branches](../preferences/push-branches.md) config setting.
 
 #### `--stash`<br>`--no-stash`
 
