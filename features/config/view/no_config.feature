@@ -9,8 +9,6 @@ Feature: no configuration data
       | contribution-2 | contribution |        | local, origin |
       | observed-1     | observed     |        | local, origin |
       | observed-2     | observed     |        | local, origin |
-      | perennial-1    | perennial    |        | local         |
-      | perennial-2    | perennial    |        | local         |
 
   Scenario: no configuration data
     When I run "git-town config"
