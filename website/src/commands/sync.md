@@ -77,7 +77,7 @@ parameter makes Git Town sync all local branches.
 #### `--push`<br>`--no-push`
 
 The `--push`/`--no-push` argument overrides the
-[push-branches](../preferences/push_branches.md) config setting.
+[push-branches](../preferences/push-branches.md) config setting.
 
 #### `-s`<br>`--stack`
 
