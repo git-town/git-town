@@ -66,6 +66,7 @@ type executeUpArgs struct {
 }
 
 func executeUp(args executeUpArgs) error {
+Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        args.cliConfig,
 		PrintBranchNames: true,
@@ -115,9 +116,16 @@ func executeUp(args executeUpArgs) error {
 	}
 
 	// Display the branch hierarchy
-	data, exit, err := determineBranchData(repo)
-	if err != nil || exit {
+	data, flow, err := determineBranchData(repo)
+	if err != nil {
 		return err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit:
+		return nil
+	case configdomain.ProgramFlowRestart:
+		goto Start
 	}
 	entries := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
 		BranchInfos:       data.branchInfos,

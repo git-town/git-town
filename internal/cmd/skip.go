@@ -53,6 +53,7 @@ func skipCmd() *cobra.Command {
 }
 
 func executeSkip(cliConfig configdomain.PartialConfig) error {
+Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,
@@ -87,7 +88,7 @@ func executeSkip(cliConfig configdomain.PartialConfig) error {
 	if err != nil {
 		return err
 	}
-	branchesSnapshot, _, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, _, _, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
@@ -104,8 +105,15 @@ func executeSkip(cliConfig configdomain.PartialConfig) error {
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 	})
-	if err != nil || exit {
+	if err != nil {
 		return err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit:
+		return nil
+	case configdomain.ProgramFlowRestart:
+		goto Start
 	}
 	activeBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
 	if !hasCurrentBranch {

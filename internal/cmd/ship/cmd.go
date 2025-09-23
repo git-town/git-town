@@ -106,6 +106,7 @@ type executeShipArgs struct {
 }
 
 func executeShip(args executeShipArgs) error {
+Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        args.cliConfig,
 		PrintBranchNames: true,
@@ -116,9 +117,16 @@ func executeShip(args executeShipArgs) error {
 	if err != nil {
 		return err
 	}
-	sharedData, exit, err := determineSharedShipData(args.args, repo, args.shipStrategy)
-	if err != nil || exit {
+	sharedData, flow, err := determineSharedShipData(args.args, repo, args.shipStrategy)
+	if err != nil {
 		return err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit:
+		return nil
+	case configdomain.ProgramFlowRestart:
+		goto Start
 	}
 	message, err := ReadFile(args.message, args.messageFile)
 	if err != nil {

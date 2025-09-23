@@ -4,7 +4,6 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v22/internal/cli/flags"
 	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v22/internal/config/cliconfig"
@@ -54,6 +53,7 @@ func initCommand() *cobra.Command {
 }
 
 func executeConfigSetup(cliConfig configdomain.PartialConfig) error {
+Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: false,
@@ -64,9 +64,16 @@ func executeConfigSetup(cliConfig configdomain.PartialConfig) error {
 	if err != nil {
 		return err
 	}
-	data, exit, err := LoadData(repo)
-	if err != nil || exit {
+	data, flow, err := LoadData(repo)
+	if err != nil {
 		return err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit:
+		return nil
+	case configdomain.ProgramFlowRestart:
+		goto Start
 	}
 	userInput, exit, err := setup.Enter(data)
 	if err != nil || exit {
@@ -89,13 +96,13 @@ func executeConfigSetup(cliConfig configdomain.PartialConfig) error {
 	})
 }
 
-func LoadData(repo execute.OpenRepoResult) (data setup.Data, exit dialogdomain.Exit, err error) {
+func LoadData(repo execute.OpenRepoResult) (data setup.Data, flow configdomain.ProgramFlow, err error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return data, false, err
+		return data, configdomain.ProgramFlowExit, err
 	}
-	branchesSnapshot, _, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, _, _, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
@@ -113,11 +120,16 @@ func LoadData(repo execute.OpenRepoResult) (data setup.Data, exit dialogdomain.E
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return data, exit, err
+		return data, flow, err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
+		return data, flow, nil
 	}
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return data, exit, err
+		return data, flow, err
 	}
 	if len(remotes) == 0 {
 		remotes = gitdomain.Remotes{gitconfig.DefaultRemote(repo.Backend)}
@@ -130,5 +142,5 @@ func LoadData(repo execute.OpenRepoResult) (data setup.Data, exit dialogdomain.E
 		LocalBranches: branchesSnapshot.Branches.LocalBranches().Names(),
 		Remotes:       remotes,
 		Snapshot:      repo.ConfigSnapshot,
-	}, exit, nil
+	}, flow, nil
 }

@@ -9,7 +9,6 @@ import (
 
 	"github.com/git-town/git-town/v22/internal/cli/dialog"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v22/internal/cli/flags"
 	"github.com/git-town/git-town/v22/internal/cli/print"
 	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
@@ -147,6 +146,7 @@ type executeAppendArgs struct {
 }
 
 func executeAppend(args executeAppendArgs) error {
+Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        args.cliConfig,
 		PrintBranchNames: true,
@@ -157,7 +157,7 @@ func executeAppend(args executeAppendArgs) error {
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineAppendData(determineAppendDataArgs{
+	data, flow, err := determineAppendData(determineAppendDataArgs{
 		beam:          args.beam,
 		commit:        args.commit,
 		commitMessage: args.commitMessage,
@@ -165,8 +165,15 @@ func executeAppend(args executeAppendArgs) error {
 		prototype:     args.prototype,
 		targetBranch:  gitdomain.NewLocalBranchName(args.arg),
 	}, repo)
-	if err != nil || exit {
+	if err != nil {
 		return err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit:
+		return nil
+	case configdomain.ProgramFlowRestart:
+		goto Start
 	}
 	runProgram := appendProgram(repo.Backend, data, repo.FinalMessages, false)
 	runState := runstate.RunState{
@@ -229,15 +236,15 @@ type appendFeatureData struct {
 	targetBranch              gitdomain.LocalBranchName
 }
 
-func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResult) (data appendFeatureData, exit dialogdomain.Exit, err error) {
+func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResult) (data appendFeatureData, flow configdomain.ProgramFlow, err error) {
 	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
-		return data, false, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return data, false, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
 	connector, err := forge.NewConnector(forge.NewConnectorArgs{
@@ -256,7 +263,7 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 		RemoteURL:            config.DevURL(repo.Backend),
 	})
 	if err != nil {
-		return data, false, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	shouldFetch := true
 	if repoStatus.OpenChanges {
@@ -268,7 +275,7 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 	if !config.AutoSync.ShouldSync() {
 		shouldFetch = false
 	}
-	branchesSnapshot, stashSize, branchInfosLastRun, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, branchInfosLastRun, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
@@ -285,30 +292,35 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 	})
-	if err != nil || exit {
-		return data, exit, err
+	if err != nil {
+		return data, configdomain.ProgramFlowExit, err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
+		return data, flow, err
 	}
 	if branchesSnapshot.DetachedHead {
-		return data, false, errors.New(messages.AppendDetachedHead)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.AppendDetachedHead)
 	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return data, false, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	if branchesSnapshot.Branches.HasLocalBranch(args.targetBranch) {
-		return data, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, args.targetBranch)
+		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsLocally, args.targetBranch)
 	}
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(args.targetBranch, repo.UnvalidatedConfig.NormalConfig.DevRemote) {
-		return data, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, args.targetBranch)
+		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsRemotely, args.targetBranch)
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	initialBranchInfo, hasInitialBranchInfo := branchesSnapshot.Branches.FindByLocalName(initialBranch).Get()
 	if !hasInitialBranchInfo {
-		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
@@ -327,7 +339,7 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return data, exit, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	branchNamesToSync := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(initialBranch)
 	if repo.UnvalidatedConfig.NormalConfig.Detached {
@@ -336,7 +348,7 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, branchNamesToSync...)
 	branchesToSync, err := sync.BranchesToSync(branchInfosToSync, branchesSnapshot.Branches, repo, validatedConfig.ValidatedConfigData.MainBranch)
 	if err != nil {
-		return data, false, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	initialAndAncestors := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(initialBranch)
 	slices.Reverse(initialAndAncestors)
@@ -345,11 +357,11 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 	if args.beam.ShouldBeam() && hasAncestor {
 		commitsInBranch, err := repo.Git.CommitsInFeatureBranch(repo.Backend, initialBranch, ancestor.BranchName())
 		if err != nil {
-			return data, false, err
+			return data, configdomain.ProgramFlowExit, err
 		}
 		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, args.targetBranch, repo.Git, repo.Backend, inputs)
 		if err != nil || exit {
-			return data, exit, err
+			return data, configdomain.ProgramFlowExit, err
 		}
 	}
 	if validatedConfig.NormalConfig.ShareNewBranches == configdomain.ShareNewBranchesPropose {
@@ -379,7 +391,7 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 		remotes:                   remotes,
 		stashSize:                 stashSize,
 		targetBranch:              args.targetBranch,
-	}, false, nil
+	}, configdomain.ProgramFlowContinue, nil
 }
 
 type determineAppendDataArgs struct {

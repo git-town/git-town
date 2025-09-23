@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v22/internal/cli/print"
 	"github.com/git-town/git-town/v22/internal/config"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
@@ -39,11 +38,11 @@ type sharedShipData struct {
 	targetBranchName         gitdomain.LocalBranchName
 }
 
-func determineSharedShipData(args []string, repo execute.OpenRepoResult, shipStrategyOverride Option[configdomain.ShipStrategy]) (data sharedShipData, exit dialogdomain.Exit, err error) {
+func determineSharedShipData(args []string, repo execute.OpenRepoResult, shipStrategyOverride Option[configdomain.ShipStrategy]) (data sharedShipData, flow configdomain.ProgramFlow, err error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return data, false, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
 	connector, err := forge.NewConnector(forge.NewConnectorArgs{
@@ -62,9 +61,9 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, shipStr
 		RemoteURL:            config.DevURL(repo.Backend),
 	})
 	if err != nil {
-		return data, false, err
+		return data, configdomain.ProgramFlowExit, err
 	}
-	branchesSnapshot, stashSize, previousBranchInfos, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, previousBranchInfos, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
@@ -81,11 +80,16 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, shipStr
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: len(args) == 0,
 	})
-	if err != nil || exit {
-		return data, exit, err
+	if err != nil {
+		return data, flow, err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
+		return data, flow, nil
 	}
 	if branchesSnapshot.DetachedHead {
-		return data, false, errors.New(messages.ShipRepoHasDetachedHead)
+		return data, flow, errors.New(messages.ShipRepoHasDetachedHead)
 	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	var branchToShip gitdomain.LocalBranchName
@@ -94,25 +98,25 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, shipStr
 	} else if activeBranch, hasActiveBranch := branchesSnapshot.Active.Get(); hasActiveBranch {
 		branchToShip = activeBranch
 	} else {
-		return data, false, errors.New(messages.ShipNoBranchToShip)
+		return data, flow, errors.New(messages.ShipNoBranchToShip)
 	}
 	branchToShipInfo, hasBranchToShipInfo := branchesSnapshot.Branches.FindByLocalName(branchToShip).Get()
 	if !hasBranchToShipInfo {
-		return data, false, fmt.Errorf(messages.BranchDoesntExist, branchToShip)
+		return data, flow, fmt.Errorf(messages.BranchDoesntExist, branchToShip)
 	}
 	if branchToShipInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree {
-		return data, false, fmt.Errorf(messages.ShipBranchOtherWorktree, branchToShip)
+		return data, flow, fmt.Errorf(messages.ShipBranchOtherWorktree, branchToShip)
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
+		return data, flow, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	isShippingInitialBranch := branchToShip == initialBranch
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return data, false, err
+		return data, flow, err
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -130,20 +134,20 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, shipStr
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return data, exit, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	if shipStrategyOverride, hasShipStrategyOverride := shipStrategyOverride.Get(); hasShipStrategyOverride {
 		validatedConfig.NormalConfig.ShipStrategy = shipStrategyOverride
 	}
 	switch validatedConfig.BranchType(branchToShip) {
 	case configdomain.BranchTypeContributionBranch:
-		return data, false, errors.New(messages.ContributionBranchCannotShip)
+		return data, flow, errors.New(messages.ContributionBranchCannotShip)
 	case configdomain.BranchTypeMainBranch:
-		return data, false, errors.New(messages.MainBranchCannotShip)
+		return data, flow, errors.New(messages.MainBranchCannotShip)
 	case configdomain.BranchTypeObservedBranch:
-		return data, false, errors.New(messages.ObservedBranchCannotShip)
+		return data, flow, errors.New(messages.ObservedBranchCannotShip)
 	case configdomain.BranchTypePerennialBranch:
-		return data, false, errors.New(messages.PerennialBranchCannotShip)
+		return data, flow, errors.New(messages.PerennialBranchCannotShip)
 	case
 		configdomain.BranchTypeFeatureBranch,
 		configdomain.BranchTypeParkedBranch,
@@ -151,11 +155,11 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, shipStr
 	}
 	targetBranchName, hasTargetBranch := validatedConfig.NormalConfig.Lineage.Parent(branchToShip).Get()
 	if !hasTargetBranch {
-		return data, false, fmt.Errorf(messages.ShipBranchHasNoParent, branchToShip)
+		return data, flow, fmt.Errorf(messages.ShipBranchHasNoParent, branchToShip)
 	}
 	targetBranch, hasTargetBranch := branchesSnapshot.Branches.FindByLocalName(targetBranchName).Get()
 	if !hasTargetBranch {
-		return data, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
+		return data, flow, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
 	childBranches := validatedConfig.NormalConfig.Lineage.Children(branchToShip)
 	proposalsOfChildBranches := LoadProposalsOfChildBranches(LoadProposalsOfChildBranchesArgs{
@@ -182,7 +186,7 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, shipStr
 		stashSize:                stashSize,
 		targetBranch:             *targetBranch,
 		targetBranchName:         targetBranchName,
-	}, false, nil
+	}, flow, nil
 }
 
 func LoadProposalsOfChildBranches(args LoadProposalsOfChildBranchesArgs) []forgedomain.Proposal {

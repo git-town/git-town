@@ -9,7 +9,6 @@ import (
 
 	"github.com/git-town/git-town/v22/internal/cli/dialog"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v22/internal/cli/flags"
 	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v22/internal/config"
@@ -84,6 +83,7 @@ type executeSwitchArgs struct {
 }
 
 func executeSwitch(args executeSwitchArgs) error {
+Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        args.cliConfig,
 		PrintBranchNames: true,
@@ -94,9 +94,16 @@ func executeSwitch(args executeSwitchArgs) error {
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineSwitchData(args.argv, repo)
-	if err != nil || exit {
+	data, flow, err := determineSwitchData(args.argv, repo)
+	if err != nil {
 		return err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit:
+		return nil
+	case configdomain.ProgramFlowRestart:
+		goto Start
 	}
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchNames)
 	unknownBranchType := repo.UnvalidatedConfig.NormalConfig.UnknownBranchType
@@ -154,13 +161,13 @@ type switchData struct {
 	uncommittedChanges bool
 }
 
-func determineSwitchData(args []string, repo execute.OpenRepoResult) (data switchData, exit dialogdomain.Exit, err error) {
+func determineSwitchData(args []string, repo execute.OpenRepoResult) (data switchData, flow configdomain.ProgramFlow, err error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return data, false, err
+		return data, configdomain.ProgramFlowExit, err
 	}
-	branchesSnapshot, _, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, _, _, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
@@ -177,16 +184,21 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult) (data switc
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 	})
-	if err != nil || exit {
-		return data, exit, err
+	if err != nil {
+		return data, flow, err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
+		return data, flow, nil
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
+		return data, flow, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	regexes, err := regexes.NewRegexes(args)
 	if err != nil {
-		return data, false, err
+		return data, flow, err
 	}
 	return switchData{
 		branchNames:        branchesSnapshot.Branches.Names(),
@@ -197,5 +209,5 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult) (data switc
 		lineage:            repo.UnvalidatedConfig.NormalConfig.Lineage,
 		regexes:            regexes,
 		uncommittedChanges: repoStatus.OpenChanges,
-	}, false, err
+	}, configdomain.ProgramFlowContinue, err
 }

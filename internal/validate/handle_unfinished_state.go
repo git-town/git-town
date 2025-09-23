@@ -27,14 +27,14 @@ import (
 )
 
 // HandleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
-func HandleUnfinishedState(args UnfinishedStateArgs) (dialogdomain.Exit, error) {
+func HandleUnfinishedState(args UnfinishedStateArgs) (configdomain.ProgramFlow, error) {
 	runState, hasRunState := args.RunState.Get()
 	if !hasRunState || runState.IsFinished() {
-		return false, nil
+		return configdomain.ProgramFlowContinue, nil
 	}
 	unfinishedDetails, hasUnfinishedDetails := runState.UnfinishedDetails.Get()
 	if !hasUnfinishedDetails {
-		return false, nil
+		return configdomain.ProgramFlowContinue, nil
 	}
 	response, exit, err := dialog.AskHowToHandleUnfinishedRunState(
 		runState.Command,
@@ -44,10 +44,10 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (dialogdomain.Exit, error) 
 		args.Inputs,
 	)
 	if err != nil {
-		return false, err
+		return configdomain.ProgramFlowExit, err
 	}
 	if exit {
-		return exit, errors.New("user aborted")
+		return configdomain.ProgramFlowExit, errors.New("user aborted")
 	}
 	// Create the connector now if the Git Town command hasn't provided one yet.
 	if args.Connector.IsNone() {
@@ -68,7 +68,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (dialogdomain.Exit, error) 
 			RemoteURL:            normalConfig.DevURL(args.Backend),
 		})
 		if err != nil {
-			return false, err
+			return configdomain.ProgramFlowExit, err
 		}
 	}
 	switch response {
@@ -81,9 +81,9 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (dialogdomain.Exit, error) 
 	case dialog.ResponseSkip:
 		return skipRunstate(args, runState)
 	case dialog.ResponseQuit:
-		return true, nil
+		return configdomain.ProgramFlowExit, nil
 	}
-	return false, fmt.Errorf(messages.DialogUnexpectedResponse, response)
+	return configdomain.ProgramFlowExit, fmt.Errorf(messages.DialogUnexpectedResponse, response)
 }
 
 type UnfinishedStateArgs struct {
@@ -102,9 +102,9 @@ type UnfinishedStateArgs struct {
 	UnvalidatedConfig config.UnvalidatedConfig
 }
 
-func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (dialogdomain.Exit, error) {
+func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (configdomain.ProgramFlow, error) {
 	if args.RepoStatus.Conflicts {
-		return false, errors.New(messages.ContinueUnresolvedConflicts)
+		return configdomain.ProgramFlowExit, errors.New(messages.ContinueUnresolvedConflicts)
 	}
 	validatedConfig, exit, err := quickValidateConfig(quickValidateConfigArgs{
 		backend:     args.Backend,
@@ -113,9 +113,9 @@ func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (dia
 		unvalidated: NewMutable(&args.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return exit, err
+		return configdomain.ProgramFlowExit, err
 	}
-	return true, fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
+	return configdomain.ProgramFlowExit, fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
 		Backend:                 args.Backend,
 		CommandsCounter:         args.CommandsCounter,
 		Config:                  validatedConfig,
@@ -135,9 +135,9 @@ func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (dia
 	})
 }
 
-func discardRunstate(rootDir gitdomain.RepoRootDir) (dialogdomain.Exit, error) {
+func discardRunstate(rootDir gitdomain.RepoRootDir) (configdomain.ProgramFlow, error) {
 	_, err := state.Delete(rootDir, state.FileTypeRunstate)
-	return false, err
+	return configdomain.ProgramFlowContinue, err
 }
 
 // quickly provides a ValidatedConfig instance in situations where we continue runstate.
@@ -180,14 +180,14 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 	}, false, nil
 }
 
-func skipRunstate(args UnfinishedStateArgs, runState runstate.RunState) (dialogdomain.Exit, error) {
+func skipRunstate(args UnfinishedStateArgs, runState runstate.RunState) (configdomain.ProgramFlow, error) {
 	currentBranchOpt, err := args.Git.CurrentBranch(args.Backend)
 	if err != nil {
-		return false, err
+		return configdomain.ProgramFlowExit, err
 	}
 	currentBranch, hasCurrentBranch := currentBranchOpt.Get()
 	if !hasCurrentBranch {
-		return false, errors.New(messages.CurrentBranchCannotDetermine)
+		return configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	validatedConfig, exit, err := quickValidateConfig(quickValidateConfigArgs{
 		backend:     args.Backend,
@@ -196,9 +196,9 @@ func skipRunstate(args UnfinishedStateArgs, runState runstate.RunState) (dialogd
 		unvalidated: NewMutable(&args.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return exit, err
+		return configdomain.ProgramFlowExit, err
 	}
-	return true, skip.Execute(skip.ExecuteArgs{
+	return configdomain.ProgramFlowExit, skip.Execute(skip.ExecuteArgs{
 		Backend:         args.Backend,
 		CommandsCounter: args.CommandsCounter,
 		Config:          validatedConfig,
@@ -214,7 +214,7 @@ func skipRunstate(args UnfinishedStateArgs, runState runstate.RunState) (dialogd
 	})
 }
 
-func undoRunState(args UnfinishedStateArgs, runState runstate.RunState) (dialogdomain.Exit, error) {
+func undoRunState(args UnfinishedStateArgs, runState runstate.RunState) (configdomain.ProgramFlow, error) {
 	validatedConfig, exit, err := quickValidateConfig(quickValidateConfigArgs{
 		backend:     args.Backend,
 		git:         args.Git,
@@ -222,9 +222,9 @@ func undoRunState(args UnfinishedStateArgs, runState runstate.RunState) (dialogd
 		unvalidated: NewMutable(&args.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return exit, err
+		return configdomain.ProgramFlowExit, err
 	}
-	return true, undo.Execute(undo.ExecuteArgs{
+	return configdomain.ProgramFlowExit, undo.Execute(undo.ExecuteArgs{
 		Backend:          args.Backend,
 		CommandsCounter:  args.CommandsCounter,
 		Config:           validatedConfig,

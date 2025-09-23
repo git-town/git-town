@@ -7,7 +7,6 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v22/internal/cli/flags"
 	"github.com/git-town/git-town/v22/internal/cli/print"
 	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
@@ -75,6 +74,7 @@ func renameCommand() *cobra.Command {
 }
 
 func executeRename(args []string, cliConfig configdomain.PartialConfig, force configdomain.Force) error {
+Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,
@@ -85,9 +85,16 @@ func executeRename(args []string, cliConfig configdomain.PartialConfig, force co
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineRenameData(args, force, repo)
-	if err != nil || exit {
+	data, flow, err := determineRenameData(args, force, repo)
+	if err != nil {
 		return err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit:
+		return nil
+	case configdomain.ProgramFlowRestart:
+		goto Start
 	}
 	runProgram := renameProgram(repo, data, repo.FinalMessages)
 	runState := runstate.RunState{
@@ -141,12 +148,12 @@ type renameData struct {
 	stashSize                gitdomain.StashSize
 }
 
-func determineRenameData(args []string, force configdomain.Force, repo execute.OpenRepoResult) (data renameData, exit dialogdomain.Exit, err error) {
+func determineRenameData(args []string, force configdomain.Force, repo execute.OpenRepoResult) (data renameData, flow configdomain.ProgramFlow, err error) {
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return data, false, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
 	connector, err := forge.NewConnector(forge.NewConnectorArgs{
@@ -165,9 +172,9 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 		RemoteURL:            config.DevURL(repo.Backend),
 	})
 	if err != nil {
-		return data, false, err
+		return data, configdomain.ProgramFlowExit, err
 	}
-	branchesSnapshot, stashSize, branchInfosLastRun, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, branchInfosLastRun, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
@@ -184,15 +191,20 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 	})
-	if err != nil || exit {
-		return data, exit, err
+	if err != nil {
+		return data, flow, err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
+		return data, flow, nil
 	}
 	if branchesSnapshot.DetachedHead {
-		return data, exit, errors.New(messages.RenameDetachedHead)
+		return data, flow, errors.New(messages.RenameDetachedHead)
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
+		return data, flow, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	var oldBranchName gitdomain.LocalBranchName
 	var newBranchName gitdomain.LocalBranchName
@@ -205,13 +217,13 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 	}
 	oldBranch, hasOldBranch := branchesSnapshot.Branches.FindByLocalName(oldBranchName).Get()
 	if !hasOldBranch {
-		return data, false, fmt.Errorf(messages.BranchDoesntExist, oldBranchName)
+		return data, flow, fmt.Errorf(messages.BranchDoesntExist, oldBranchName)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return data, false, err
+		return data, flow, err
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -229,27 +241,27 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return data, exit, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	if validatedConfig.ValidatedConfigData.IsMainBranch(oldBranchName) {
-		return data, false, errors.New(messages.RenameMainBranch)
+		return data, flow, errors.New(messages.RenameMainBranch)
 	}
 	if !force {
 		if validatedConfig.BranchType(oldBranchName) == configdomain.BranchTypePerennialBranch {
-			return data, false, fmt.Errorf(messages.RenamePerennialBranchWarning, oldBranchName)
+			return data, flow, fmt.Errorf(messages.RenamePerennialBranchWarning, oldBranchName)
 		}
 	}
 	if oldBranchName == newBranchName {
-		return data, false, errors.New(messages.RenameToSameName)
+		return data, flow, errors.New(messages.RenameToSameName)
 	}
 	if oldBranch.SyncStatus != gitdomain.SyncStatusUpToDate && oldBranch.SyncStatus != gitdomain.SyncStatusLocalOnly {
-		return data, false, fmt.Errorf(messages.BranchNotInSyncWithParent, oldBranchName)
+		return data, flow, fmt.Errorf(messages.BranchNotInSyncWithParent, oldBranchName)
 	}
 	if branchesSnapshot.Branches.HasLocalBranch(newBranchName) {
-		return data, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, newBranchName)
+		return data, flow, fmt.Errorf(messages.BranchAlreadyExistsLocally, newBranchName)
 	}
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(newBranchName, repo.UnvalidatedConfig.NormalConfig.DevRemote) {
-		return data, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
+		return data, flow, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
 	parentOpt := validatedConfig.NormalConfig.Lineage.Parent(initialBranch)
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
@@ -280,7 +292,7 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 		proposal:                 proposalOpt,
 		proposalsOfChildBranches: proposalsOfChildBranches,
 		stashSize:                stashSize,
-	}, false, err
+	}, configdomain.ProgramFlowContinue, err
 }
 
 func renameProgram(repo execute.OpenRepoResult, data renameData, finalMessages stringslice.Collector) program.Program {
