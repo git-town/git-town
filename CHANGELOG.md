@@ -21,6 +21,10 @@
 
 * Fixed `git town branch` in repos with a detached HEAD ([#5565](https://github.com/git-town/git-town/issues/5565)).
 
+#### Contributors
+
+Shoutout to @Phunky, @alexus37, @aximut, @bb010g, @benmosher, @blaggacao, @charlierudolph, @derekspelledcorrectly, @kevgo, @kinyat, @maruffahmed, @oludaara, @pradeepmurugesan, @sheldonhull, @stefanfrede, @stephenwade, @vectro, @whitebear-gh, @yaadata for contributiong code, feedback, and ideas to 78 shipped pull requests and 12 resolved issues!
+
 ## 21.5.0 (2025-09-05)
 
 #### New Features
