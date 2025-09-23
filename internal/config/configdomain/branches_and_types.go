@@ -4,9 +4,9 @@ import (
 	"maps"
 	"slices"
 
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/gohacks/mapstools"
-	"github.com/git-town/git-town/v21/internal/gohacks/slice"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks/mapstools"
+	"github.com/git-town/git-town/v22/internal/gohacks/slice"
 )
 
 type BranchesAndTypes map[gitdomain.LocalBranchName]BranchType

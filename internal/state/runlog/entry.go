@@ -4,9 +4,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 // Entry is an entry in the runlog.

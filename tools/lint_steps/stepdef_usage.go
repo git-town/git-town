@@ -7,8 +7,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/git-town/git-town/v21/pkg/asserts"
-	"github.com/git-town/git-town/v21/pkg/set"
+	"github.com/git-town/git-town/v22/pkg/asserts"
+	"github.com/git-town/git-town/v22/pkg/set"
 )
 
 var unusedWhitelist = []string{

@@ -3,7 +3,7 @@ package envvars_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v21/internal/test/envvars"
+	"github.com/git-town/git-town/v22/internal/test/envvars"
 	"github.com/shoenig/test/must"
 )
 

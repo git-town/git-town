@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/git-town/git-town/v21/pkg/equal"
+	"github.com/git-town/git-town/v22/pkg/equal"
 )
 
 // Option encodes invariants around optional (nullable) immutable values in the type system.

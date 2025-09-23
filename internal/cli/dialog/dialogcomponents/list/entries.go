@@ -3,7 +3,7 @@ package list
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v21/pkg/equal"
+	"github.com/git-town/git-town/v22/pkg/equal"
 )
 
 // Entries provides methods for a collection of Entry instances.

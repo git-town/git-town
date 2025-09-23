@@ -1,8 +1,8 @@
 package flags
 
 import (
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 

@@ -1,6 +1,6 @@
 package git
 
-import "github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
+import "github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
 
 type MergeConflicts []MergeConflict
 
