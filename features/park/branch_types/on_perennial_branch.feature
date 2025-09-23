@@ -16,9 +16,7 @@ Feature: park the current perennial branch
       """
     And the perennial branches are still "perennial"
     And branch "perennial" still has type "perennial"
-
-  Scenario: undo
-    When I run "git-town undo"
-    Then Git Town runs no commands
-    And the perennial branches are still "perennial"
-    And branch "perennial" still has type "perennial"
+  #
+  # NOTE: Cannot test undo here.
+  # The Git Town command under test has not created an undoable runstate.
+  # Executing "git town undo" would undo the Git Town command executed during setup.
