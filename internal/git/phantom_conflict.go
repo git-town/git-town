@@ -3,8 +3,8 @@ package git
 import (
 	"reflect"
 
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 // describes a file within an unresolved merge conflict that experiences a phantom merge conflict

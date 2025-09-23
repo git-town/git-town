@@ -3,8 +3,8 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v21/internal/gohacks"
-	"github.com/git-town/git-town/v21/internal/vm/shared"
+	"github.com/git-town/git-town/v22/internal/gohacks"
+	"github.com/git-town/git-town/v22/internal/vm/shared"
 )
 
 func IsCheckoutOpcode(opcode shared.Opcode) bool {

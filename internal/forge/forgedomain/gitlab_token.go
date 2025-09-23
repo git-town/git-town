@@ -3,7 +3,7 @@ package forgedomain
 import (
 	"strings"
 
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 // GitLabToken is a bearer token to use with the GitLab API.

@@ -3,9 +3,9 @@ package datatable_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/test/datatable"
-	"github.com/git-town/git-town/v21/internal/test/testgit"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/test/datatable"
+	"github.com/git-town/git-town/v22/internal/test/testgit"
 	"github.com/shoenig/test/must"
 )
 

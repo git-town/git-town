@@ -3,8 +3,8 @@ package gitdomain_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v21/pkg/prelude"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 

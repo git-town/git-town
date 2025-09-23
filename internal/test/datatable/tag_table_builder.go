@@ -3,8 +3,8 @@ package datatable
 import (
 	"sort"
 
-	"github.com/git-town/git-town/v21/internal/gohacks/mapstools"
-	"github.com/git-town/git-town/v21/internal/test/helpers"
+	"github.com/git-town/git-town/v22/internal/gohacks/mapstools"
+	"github.com/git-town/git-town/v22/internal/test/helpers"
 )
 
 // TagTableBuilder collects data about tags in Git repositories

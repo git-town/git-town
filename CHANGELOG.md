@@ -1,5 +1,30 @@
 # Git Town Changelog
 
+## 22.0.0 (2025-09-23)
+
+#### BREAKING CHANGES
+
+- Renamed the `codeberg` connector to `forgejo` since it supports all Forgejo-based forges. Codeberg itself runs on Forgejo ([#5447](https://github.com/git-town/git-town/issues/5447)).
+- Start the setup assistant with `git town init` instead of `git town config setup`, matching Git's `git init` ([#5269](https://github.com/git-town/git-town/issues/5269)).
+- [git town hack](https://www.git-town.com/commands/hack.html) no longer converts an existing branch into a feature branch. Use the new [feature](https://www.git-town.com/commands/feature.html) command instead ([#5516](https://github.com/git-town/git-town/pull/5516)).
+- The `contribute`, `feature`, `observe`, `park`, and `prototype` commands no longer signal a problem when you run them on a branch that already has the desired type.
+- Removed the long-deprecated `kill` command. Use [delete](https://www.git-town.com/commands/delete.html) instead.
+
+#### New Features
+
+- Added support for Azure DevOps ([#1657](https://github.com/git-town/git-town/issues/1657)).
+- Introduced the [push-branches](https://www.git-town.com/preferences/push-branches.html) setting to control whether Git Town pushes local changes to tracking branches automatically. Disable it if you prefer to push manually ([#5541](https://github.com/git-town/git-town/issues/5541)).
+- Introduced the [auto-sync](https://www.git-town.com/preferences/auto-sync.html) setting to control whether [hack](https://www.git-town.com/commands/hack.html), [append](https://www.git-town.com/commands/append.html), and [prepend](https://www.git-town.com/commands/prepend.html) sync existing branches before creating a new one ([#5540](https://github.com/git-town/git-town/issues/5540)).
+- `set-parent`: added the `--none` flag to create perennial branches programmatically.
+
+#### Bug Fixes
+
+- Fixed `git town branch` in repos with a detached HEAD ([#5565](https://github.com/git-town/git-town/issues/5565)).
+
+#### Contributors
+
+Shoutout to @Phunky, @alexus37, @aximut, @bb010g, @benmosher, @blaggacao, @charlierudolph, @derekspelledcorrectly, @kevgo, @kinyat, @maruffahmed, @oludaara, @pradeepmurugesan, @sheldonhull, @stefanfrede, @stephenwade, @vectro, @whitebear-gh, @yaadata for contributiong code, feedback, and ideas to 78 shipped pull requests and 12 resolved issues!
+
 ## 21.5.0 (2025-09-05)
 
 #### New Features

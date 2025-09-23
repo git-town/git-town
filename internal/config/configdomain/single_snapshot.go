@@ -1,6 +1,6 @@
 package configdomain
 
-import "github.com/git-town/git-town/v21/internal/gohacks/mapstools"
+import "github.com/git-town/git-town/v22/internal/gohacks/mapstools"
 
 // SingleSnapshot contains all of the local or global Git metadata config settings.
 type SingleSnapshot map[Key]string

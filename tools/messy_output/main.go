@@ -9,7 +9,7 @@ import (
 
 	gherkin "github.com/cucumber/gherkin/go/v26"
 	messages "github.com/cucumber/messages/go/v21"
-	"github.com/git-town/git-town/v21/pkg/asserts"
+	"github.com/git-town/git-town/v22/pkg/asserts"
 )
 
 const tag = "@messyoutput"

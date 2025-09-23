@@ -4,9 +4,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/git-town/git-town/v21/internal/test/filesystem"
-	"github.com/git-town/git-town/v21/internal/test/helpers"
-	"github.com/git-town/git-town/v21/pkg/asserts"
+	"github.com/git-town/git-town/v22/internal/test/filesystem"
+	"github.com/git-town/git-town/v22/internal/test/helpers"
+	"github.com/git-town/git-town/v22/pkg/asserts"
 )
 
 // Factory manages the Git setup for the entire test suite.
