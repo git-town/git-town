@@ -72,6 +72,9 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (configdomain.ProgramFlow, 
 		}
 	}
 	switch response {
+	case dialog.ResponseBoth:
+		_, err := continueRunstate(runState, args)
+		return configdomain.ProgramFlowContinue, err
 	case dialog.ResponseDiscard:
 		return discardRunstate(args.RootDir)
 	case dialog.ResponseContinue:

@@ -33,6 +33,7 @@ const (
 	ResponseQuit     = Response("quit")     // quit the program
 	ResponseSkip     = Response("skip")     // continue the unfinished run state by skipping the current branch
 	ResponseUndo     = Response("undo")     // undo the unfinished run state
+	ResponseBoth     = Response("both")     // continue the old runstate and run the new program
 )
 
 // AskHowToHandleUnfinishedRunState prompts the user for how to handle the unfinished run state.
@@ -61,6 +62,10 @@ func AskHowToHandleUnfinishedRunState(command string, endBranch gitdomain.LocalB
 		list.Entry[Response]{
 			Data: ResponseDiscard,
 			Text: messages.UnfinishedRunStateDiscard,
+		},
+		list.Entry[Response]{
+			Data: ResponseBoth,
+			Text: messages.UnfinishedRunStateBoth,
 		},
 	)
 	selection, exit, err := dialogcomponents.RadioList(entries, 0, unfinishedRunstateTitle, fmt.Sprintf(unfinishedRunstateHelp, command, endBranch, humanize.Time(endTime)), input, "unfinished-runstate")
