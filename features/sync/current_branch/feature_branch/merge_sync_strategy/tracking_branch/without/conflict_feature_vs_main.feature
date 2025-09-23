@@ -110,6 +110,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |
 
+  @messyoutput
   Scenario: resolve and continue+run another program
     When I resolve the conflict in "conflicting_file" with "feature content"
     When I run "git-town compress" and enter into the dialog:
