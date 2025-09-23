@@ -92,7 +92,7 @@
     - [Feature sync strategy](preferences/sync-feature-strategy.md)
     - [Perennial sync strategy](preferences/sync-perennial-strategy.md)
     - [Prototype sync strategy](preferences/sync-prototype-strategy.md)
-    - [Push branches](preferences/push_branches.md)
+    - [Push branches](preferences/push-branches.md)
     - [Run pre-push hook](preferences/push-hook.md)
     - [Sync tags](preferences/sync-tags.md)
     - [Sync with upstream](preferences/sync-upstream.md)
