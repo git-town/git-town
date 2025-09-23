@@ -109,3 +109,28 @@ Feature: handle conflicts between the current feature branch and the main branch
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |
+
+  Scenario: resolve and continue+run another program
+    When I resolve the conflict in "conflicting_file" with "feature content"
+    When I run "git-town compress" and enter into the dialog:
+      | DIALOG              | KEYS    |
+      | unfinished runstate | 5 enter |
+    Then Git Town prints:
+      """
+      Handle unfinished command: both
+      """
+    Then Git Town runs the commands
+      | BRANCH  | COMMAND                                         |
+      | feature | git commit --no-edit                            |
+      |         | git merge --no-edit --ff origin/feature         |
+      |         | git push                                        |
+      |         | git fetch --prune --tags                        |
+      |         | git reset --soft main                           |
+      |         | git commit -m "conflicting feature commit"      |
+      |         | git push --force-with-lease --force-if-includes |
+    And all branches are now synchronized
+    And no merge is now in progress
+    And these committed files exist now
+      | BRANCH  | NAME             | CONTENT         |
+      | main    | conflicting_file | main content    |
+      | feature | conflicting_file | feature content |
