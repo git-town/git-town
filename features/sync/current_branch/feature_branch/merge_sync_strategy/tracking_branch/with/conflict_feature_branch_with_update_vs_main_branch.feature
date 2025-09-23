@@ -95,7 +95,6 @@ Feature: handle conflicts between the current feature branch and the main branch
       | feature | git merge --no-edit --ff origin/feature |
       |         | git push                                |
 
-  @this
   Scenario: resolve and continue+run another program
     When I resolve the conflict in "conflicting_file" with "feature content"
     When I run "git-town compress" and enter into the dialog:
