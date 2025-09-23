@@ -112,7 +112,7 @@ Feature: handle conflicts between the current feature branch and the main branch
 
   @messyoutput
   Scenario: resolve and continue+run another program
-    When I resolve the conflict in "conflicting_file" with "feature content"
+    Given I resolve the conflict in "conflicting_file" with "feature content"
     When I run "git-town compress" and enter into the dialog:
       | DIALOG              | KEYS    |
       | unfinished runstate | 5 enter |
@@ -120,7 +120,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       """
       Handle unfinished command: both
       """
-    Then Git Town runs the commands
+    And Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git commit --no-edit                            |
       |         | git merge --no-edit --ff origin/feature         |
