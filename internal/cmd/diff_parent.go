@@ -180,7 +180,7 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult) (data d
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return data, flow, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	parentBranch, hasParent := validatedConfig.NormalConfig.Lineage.Parent(branch).Get()
 	if !hasParent {
