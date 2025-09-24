@@ -147,7 +147,7 @@ func determineContinueData(repo execute.OpenRepoResult) (data continueData, flow
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return data, flow, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
@@ -158,7 +158,7 @@ func determineContinueData(repo execute.OpenRepoResult) (data continueData, flow
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return data, flow, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -176,19 +176,19 @@ func determineContinueData(repo execute.OpenRepoResult) (data continueData, flow
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return data, flow, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	if repoStatus.Conflicts {
-		return data, flow, errors.New(messages.ContinueUnresolvedConflicts)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.ContinueUnresolvedConflicts)
 	}
 	if repoStatus.UntrackedChanges {
-		return data, flow, errors.New(messages.ContinueUntrackedChanges)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.ContinueUntrackedChanges)
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
 		currentBranchOpt, err := repo.Git.CurrentBranch(repo.Backend)
 		if err != nil {
-			return data, flow, errors.New(messages.CurrentBranchCannotDetermine)
+			return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 		}
 		if currentBranch, has := currentBranchOpt.Get(); has {
 			initialBranch = currentBranch
