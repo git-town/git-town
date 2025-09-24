@@ -50,7 +50,7 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 		switch flow {
 		case configdomain.ProgramFlowContinue:
 		case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
-			return gitdomain.EmptyBranchesSnapshot(), 0, previousBranchInfos, flow, err
+			return gitdomain.EmptyBranchesSnapshot(), 0, previousBranchInfos, flow, nil
 		}
 	}
 	if args.ValidateNoOpenChanges {
