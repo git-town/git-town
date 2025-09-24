@@ -1,5 +1,6 @@
 package configdomain
 
+// ProgramFlow indicates whether to exit or continue the program.
 type ProgramFlow int
 
 const (
