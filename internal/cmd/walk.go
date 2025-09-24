@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v22/internal/cli/flags"
 	"github.com/git-town/git-town/v22/internal/cli/print"
 	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
@@ -119,6 +118,7 @@ type executeWalkArgs struct {
 }
 
 func executeWalk(args executeWalkArgs) error {
+Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        args.cliConfig,
 		PrintBranchNames: true,
@@ -135,9 +135,16 @@ func executeWalk(args executeWalkArgs) error {
 	if err := validateArgs(args.allBranches, args.stack); err != nil {
 		return err
 	}
-	data, exit, err := determineWalkData(repo, args.allBranches, args.stack)
-	if err != nil || exit {
+	data, flow, err := determineWalkData(repo, args.allBranches, args.stack)
+	if err != nil {
 		return err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit:
+		return nil
+	case configdomain.ProgramFlowRestart:
+		goto Start
 	}
 	runProgram := walkProgram(args.argv, data)
 	runState := runstate.RunState{
@@ -187,11 +194,11 @@ type walkData struct {
 	stashSize          gitdomain.StashSize
 }
 
-func determineWalkData(repo execute.OpenRepoResult, all configdomain.AllBranches, stack configdomain.FullStack) (walkData, dialogdomain.Exit, error) {
+func determineWalkData(repo execute.OpenRepoResult, all configdomain.AllBranches, stack configdomain.FullStack) (data walkData, flow configdomain.ProgramFlow, err error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return walkData{}, false, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
 	connector, err := forge.NewConnector(forge.NewConnectorArgs{
@@ -210,9 +217,9 @@ func determineWalkData(repo execute.OpenRepoResult, all configdomain.AllBranches
 		RemoteURL:            config.DevURL(repo.Backend),
 	})
 	if err != nil {
-		return walkData{}, false, err
+		return data, configdomain.ProgramFlowExit, err
 	}
-	branchesSnapshot, stashSize, branchInfosLastRun, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, branchInfosLastRun, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
@@ -229,22 +236,27 @@ func determineWalkData(repo execute.OpenRepoResult, all configdomain.AllBranches
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 	})
-	if err != nil || exit {
-		return walkData{}, exit, err
+	if err != nil {
+		return data, configdomain.ProgramFlowExit, err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
+		return data, flow, nil
 	}
 	if branchesSnapshot.DetachedHead {
-		return walkData{}, false, errors.New(messages.WalkDetachedHead)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.WalkDetachedHead)
 	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return walkData{}, false, errors.New(messages.CurrentBranchCannotDetermine)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return walkData{}, false, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -262,7 +274,7 @@ func determineWalkData(repo execute.OpenRepoResult, all configdomain.AllBranches
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return walkData{}, exit, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	perennialBranchNames := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
 	branchesToWalk := gitdomain.LocalBranchNames{}
@@ -283,7 +295,7 @@ func determineWalkData(repo execute.OpenRepoResult, all configdomain.AllBranches
 		inputs:             inputs,
 		previousBranch:     previousBranch,
 		stashSize:          stashSize,
-	}, false, nil
+	}, configdomain.ProgramFlowContinue, nil
 }
 
 func walkProgram(args []string, data walkData) program.Program {

@@ -8,7 +8,6 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v22/internal/cli/flags"
 	"github.com/git-town/git-town/v22/internal/cli/print"
 	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
@@ -114,6 +113,7 @@ type executeSyncArgs struct {
 }
 
 func executeSync(args executeSyncArgs) error {
+Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        args.cliConfig,
 		PrintBranchNames: true,
@@ -124,12 +124,19 @@ func executeSync(args executeSyncArgs) error {
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineSyncData(repo, determineSyncDataArgs{
+	data, flow, err := determineSyncData(repo, determineSyncDataArgs{
 		syncAllBranches: args.syncAllBranches,
 		syncStack:       args.stack,
 	})
-	if err != nil || exit {
+	if err != nil {
 		return err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit:
+		return nil
+	case configdomain.ProgramFlowRestart:
+		goto Start
 	}
 	if err = validateSyncData(data); err != nil {
 		return err
@@ -248,15 +255,15 @@ type determineSyncDataArgs struct {
 	syncStack       configdomain.FullStack
 }
 
-func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) (data syncData, exit dialogdomain.Exit, err error) {
+func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) (data syncData, flow configdomain.ProgramFlow, err error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	preFetchBranchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
-		return data, false, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return data, false, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
 	connector, err := forge.NewConnector(forge.NewConnectorArgs{
@@ -275,9 +282,9 @@ func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) 
 		RemoteURL:            config.DevURL(repo.Backend),
 	})
 	if err != nil {
-		return data, false, err
+		return data, configdomain.ProgramFlowExit, err
 	}
-	branchesSnapshot, stashSize, previousBranchInfos, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, previousBranchInfos, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
@@ -294,11 +301,16 @@ func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) 
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 	})
-	if err != nil || exit {
-		return data, exit, err
+	if err != nil {
+		return data, configdomain.ProgramFlowExit, err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
+		return data, flow, nil
 	}
 	if branchesSnapshot.DetachedHead {
-		return data, false, errors.New(messages.SyncRepoHasDetachedHead)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.SyncRepoHasDetachedHead)
 	}
 	previousBranch, hasPreviousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend).Get()
 	var previousBranchOpt Option[gitdomain.LocalBranchName]
@@ -324,13 +336,13 @@ func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) 
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return data, false, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -348,7 +360,7 @@ func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) 
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return data, exit, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	perennialAndMain := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
 	var branchNamesToSync gitdomain.LocalBranchNames
@@ -379,7 +391,7 @@ func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) 
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return data, exit, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	var shouldPushTags bool
 	switch {
@@ -397,7 +409,7 @@ func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) 
 	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, allBranchNamesToSync...)
 	branchesToSync, err := BranchesToSync(branchInfosToSync, branchesSnapshot.Branches, repo, validatedConfig.ValidatedConfigData.MainBranch)
 	if err != nil {
-		return data, false, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	return syncData{
 		branchInfos:              branchesSnapshot.Branches,
@@ -415,7 +427,7 @@ func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) 
 		remotes:                  remotes,
 		shouldPushTags:           shouldPushTags,
 		stashSize:                stashSize,
-	}, false, err
+	}, configdomain.ProgramFlowContinue, err
 }
 
 func BranchesToSync(branchInfosToSync gitdomain.BranchInfos, allBranchInfos gitdomain.BranchInfos, repo execute.OpenRepoResult, mainBranch gitdomain.LocalBranchName) (configdomain.BranchesToSync, error) {

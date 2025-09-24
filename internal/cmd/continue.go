@@ -58,6 +58,7 @@ func continueCmd() *cobra.Command {
 }
 
 func executeContinue(cliConfig configdomain.PartialConfig) error {
+Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,
@@ -72,9 +73,16 @@ func executeContinue(cliConfig configdomain.PartialConfig) error {
 	if err != nil || exit {
 		return err
 	}
-	data, exit, err := determineContinueData(repo)
+	data, flow, err := determineContinueData(repo)
 	if err != nil || exit {
 		return err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit:
+		return nil
+	case configdomain.ProgramFlowRestart:
+		goto Start
 	}
 	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
 		Backend:                 repo.Backend,
@@ -96,11 +104,11 @@ func executeContinue(cliConfig configdomain.PartialConfig) error {
 	})
 }
 
-func determineContinueData(repo execute.OpenRepoResult) (data continueData, exit dialogdomain.Exit, err error) {
+func determineContinueData(repo execute.OpenRepoResult) (data continueData, flow configdomain.ProgramFlow, err error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return data, false, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
 	connector, err := forge.NewConnector(forge.NewConnectorArgs{
@@ -119,9 +127,9 @@ func determineContinueData(repo execute.OpenRepoResult) (data continueData, exit
 		RemoteURL:            config.DevURL(repo.Backend),
 	})
 	if err != nil {
-		return data, false, err
+		return data, configdomain.ProgramFlowExit, err
 	}
-	branchesSnapshot, stashSize, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, _, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
@@ -138,14 +146,19 @@ func determineContinueData(repo execute.OpenRepoResult) (data continueData, exit
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 	})
-	if err != nil || exit {
-		return data, exit, err
+	if err != nil {
+		return data, configdomain.ProgramFlowExit, err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
+		return data, flow, nil
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return data, false, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -163,19 +176,19 @@ func determineContinueData(repo execute.OpenRepoResult) (data continueData, exit
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return data, exit, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	if repoStatus.Conflicts {
-		return data, false, errors.New(messages.ContinueUnresolvedConflicts)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.ContinueUnresolvedConflicts)
 	}
 	if repoStatus.UntrackedChanges {
-		return data, false, errors.New(messages.ContinueUntrackedChanges)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.ContinueUntrackedChanges)
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
 		currentBranchOpt, err := repo.Git.CurrentBranch(repo.Backend)
 		if err != nil {
-			return data, false, errors.New(messages.CurrentBranchCannotDetermine)
+			return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 		}
 		if currentBranch, has := currentBranchOpt.Get(); has {
 			initialBranch = currentBranch
@@ -189,7 +202,7 @@ func determineContinueData(repo execute.OpenRepoResult) (data continueData, exit
 		initialBranch:    initialBranch,
 		inputs:           inputs,
 		stashSize:        stashSize,
-	}, false, err
+	}, configdomain.ProgramFlowContinue, err
 }
 
 type continueData struct {
