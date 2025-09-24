@@ -216,7 +216,7 @@ func determineMergeData(repo execute.OpenRepoResult) (data mergeData, flow confi
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return data, flow, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
@@ -224,17 +224,17 @@ func determineMergeData(repo execute.OpenRepoResult) (data mergeData, flow confi
 		return data, flow, nil
 	}
 	if branchesSnapshot.DetachedHead {
-		return data, flow, errors.New(messages.MergeDetachedHead)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.MergeDetachedHead)
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return data, flow, errors.New(messages.CurrentBranchCannotDetermine)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return data, flow, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -256,28 +256,28 @@ func determineMergeData(repo execute.OpenRepoResult) (data mergeData, flow confi
 	}
 	parentBranch, hasParentBranch := validatedConfig.NormalConfig.Lineage.Parent(initialBranch).Get()
 	if !hasParentBranch {
-		return data, flow, fmt.Errorf(messages.MergeNoParent, initialBranch)
+		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.MergeNoParent, initialBranch)
 	}
 	grandParentBranch := validatedConfig.NormalConfig.Lineage.Parent(parentBranch)
 	if grandParentBranch.IsNone() {
-		return data, flow, fmt.Errorf(messages.MergeNoGrandParent, initialBranch, parentBranch)
+		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.MergeNoGrandParent, initialBranch, parentBranch)
 	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	initialBranchInfo, hasInitialBranchInfo := branchesSnapshot.Branches.FindByLocalName(initialBranch).Get()
 	if !hasInitialBranchInfo {
-		return data, flow, fmt.Errorf(messages.BranchInfoNotFound, initialBranch)
+		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchInfoNotFound, initialBranch)
 	}
 	initialBranchSHA, hasInitialBranchSHA := initialBranchInfo.LocalSHA.Get()
 	if !hasInitialBranchSHA {
-		return data, flow, fmt.Errorf(messages.MergeBranchNotLocal, initialBranch)
+		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.MergeBranchNotLocal, initialBranch)
 	}
 	parentBranchInfo, hasParentBranchInfo := branchesSnapshot.Branches.FindByLocalName(parentBranch).Get()
 	if !hasParentBranchInfo {
-		return data, flow, fmt.Errorf(messages.BranchInfoNotFound, parentBranch)
+		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchInfoNotFound, parentBranch)
 	}
 	parentBranchSHA, hasParentBranchSHA := parentBranchInfo.LocalSHA.Get()
 	if !hasParentBranchSHA {
-		return data, flow, fmt.Errorf(messages.MergeBranchNotLocal, parentBranch)
+		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.MergeBranchNotLocal, parentBranch)
 	}
 	initialBranchType := validatedConfig.BranchType(initialBranch)
 	parentBranchType := validatedConfig.BranchType(parentBranch)

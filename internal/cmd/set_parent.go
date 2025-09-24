@@ -268,7 +268,7 @@ func determineSetParentData(repo execute.OpenRepoResult) (data setParentData, fl
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return data, flow, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
@@ -276,13 +276,13 @@ func determineSetParentData(repo execute.OpenRepoResult) (data setParentData, fl
 		return data, flow, nil
 	}
 	if branchesSnapshot.DetachedHead {
-		return data, flow, errors.New(messages.SetParentRepoHasDetachedHead)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.SetParentRepoHasDetachedHead)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return data, flow, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -305,7 +305,7 @@ func determineSetParentData(repo execute.OpenRepoResult) (data setParentData, fl
 	mainBranch := validatedConfig.ValidatedConfigData.MainBranch
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return data, flow, errors.New(messages.CurrentBranchCannotDetermine)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	parentOpt := validatedConfig.NormalConfig.Lineage.Parent(initialBranch)
 	existingParent, hasParent := parentOpt.Get()

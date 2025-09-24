@@ -120,7 +120,7 @@ func LoadData(repo execute.OpenRepoResult) (data setup.Data, flow configdomain.P
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return data, flow, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
@@ -129,7 +129,7 @@ func LoadData(repo execute.OpenRepoResult) (data setup.Data, flow configdomain.P
 	}
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return data, flow, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	if len(remotes) == 0 {
 		remotes = gitdomain.Remotes{gitconfig.DefaultRemote(repo.Backend)}

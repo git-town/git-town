@@ -192,7 +192,7 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return data, flow, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
@@ -200,11 +200,11 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 		return data, flow, nil
 	}
 	if branchesSnapshot.DetachedHead {
-		return data, flow, errors.New(messages.RenameDetachedHead)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.RenameDetachedHead)
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return data, flow, errors.New(messages.CurrentBranchCannotDetermine)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	var oldBranchName gitdomain.LocalBranchName
 	var newBranchName gitdomain.LocalBranchName
@@ -217,13 +217,13 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 	}
 	oldBranch, hasOldBranch := branchesSnapshot.Branches.FindByLocalName(oldBranchName).Get()
 	if !hasOldBranch {
-		return data, flow, fmt.Errorf(messages.BranchDoesntExist, oldBranchName)
+		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchDoesntExist, oldBranchName)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return data, flow, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -244,24 +244,24 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 		return data, configdomain.ProgramFlowExit, err
 	}
 	if validatedConfig.ValidatedConfigData.IsMainBranch(oldBranchName) {
-		return data, flow, errors.New(messages.RenameMainBranch)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.RenameMainBranch)
 	}
 	if !force {
 		if validatedConfig.BranchType(oldBranchName) == configdomain.BranchTypePerennialBranch {
-			return data, flow, fmt.Errorf(messages.RenamePerennialBranchWarning, oldBranchName)
+			return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.RenamePerennialBranchWarning, oldBranchName)
 		}
 	}
 	if oldBranchName == newBranchName {
-		return data, flow, errors.New(messages.RenameToSameName)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.RenameToSameName)
 	}
 	if oldBranch.SyncStatus != gitdomain.SyncStatusUpToDate && oldBranch.SyncStatus != gitdomain.SyncStatusLocalOnly {
-		return data, flow, fmt.Errorf(messages.BranchNotInSyncWithParent, oldBranchName)
+		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchNotInSyncWithParent, oldBranchName)
 	}
 	if branchesSnapshot.Branches.HasLocalBranch(newBranchName) {
-		return data, flow, fmt.Errorf(messages.BranchAlreadyExistsLocally, newBranchName)
+		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsLocally, newBranchName)
 	}
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(newBranchName, repo.UnvalidatedConfig.NormalConfig.DevRemote) {
-		return data, flow, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
+		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
 	parentOpt := validatedConfig.NormalConfig.Lineage.Parent(initialBranch)
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()

@@ -138,7 +138,7 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult) (data d
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return data, flow, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:

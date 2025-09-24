@@ -117,12 +117,12 @@ func determineBranchData(repo execute.OpenRepoResult) (data branchData, flow con
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return data, flow, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
 	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
-		return data, flow, err
+		return data, flow, nil
 	}
 	initialBranchOpt := branchesSnapshot.Active
 	if branchesSnapshot.DetachedHead {

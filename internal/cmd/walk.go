@@ -237,7 +237,7 @@ func determineWalkData(repo execute.OpenRepoResult, all configdomain.AllBranches
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return data, flow, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
@@ -245,18 +245,18 @@ func determineWalkData(repo execute.OpenRepoResult, all configdomain.AllBranches
 		return data, flow, nil
 	}
 	if branchesSnapshot.DetachedHead {
-		return data, flow, errors.New(messages.WalkDetachedHead)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.WalkDetachedHead)
 	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return data, flow, errors.New(messages.CurrentBranchCannotDetermine)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return data, flow, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -274,7 +274,7 @@ func determineWalkData(repo execute.OpenRepoResult, all configdomain.AllBranches
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return data, flow, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	perennialBranchNames := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
 	branchesToWalk := gitdomain.LocalBranchNames{}

@@ -185,7 +185,7 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult) (data switc
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return data, flow, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
@@ -194,11 +194,11 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult) (data switc
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return data, flow, errors.New(messages.CurrentBranchCannotDetermine)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	regexes, err := regexes.NewRegexes(args)
 	if err != nil {
-		return data, flow, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	return switchData{
 		branchNames:        branchesSnapshot.Branches.Names(),

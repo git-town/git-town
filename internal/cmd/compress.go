@@ -232,7 +232,7 @@ func determineCompressData(repo execute.OpenRepoResult, message Option[gitdomain
 	switch flow {
 	case configdomain.ProgramFlowContinue:
 	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
-		return data, flow, err
+		return data, flow, nil
 	}
 	if branchesSnapshot.DetachedHead {
 		return data, configdomain.ProgramFlowExit, errors.New(messages.CompressDetachedHead)

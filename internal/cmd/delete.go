@@ -217,7 +217,7 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (data delet
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return data, flow, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
@@ -225,7 +225,7 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (data delet
 		return data, flow, nil
 	}
 	if branchesSnapshot.DetachedHead {
-		return data, flow, errors.New(messages.DeleteRepoHasDetachedHead)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.DeleteRepoHasDetachedHead)
 	}
 	var branchToDelete gitdomain.LocalBranchName
 	if len(args) > 0 {
@@ -233,20 +233,20 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (data delet
 	} else if activeBranch, hasActiveBranch := branchesSnapshot.Active.Get(); hasActiveBranch {
 		branchToDelete = activeBranch
 	} else {
-		return data, flow, errors.New(messages.DeleteNoActiveBranch)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.DeleteNoActiveBranch)
 	}
 	branchToDeleteInfo, hasBranchToDeleteInfo := branchesSnapshot.Branches.FindByLocalName(branchToDelete).Get()
 	if !hasBranchToDeleteInfo {
-		return data, flow, fmt.Errorf(messages.BranchDoesntExist, branchToDelete)
+		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchDoesntExist, branchToDelete)
 	}
 	if branchToDeleteInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree {
-		return data, flow, fmt.Errorf(messages.BranchOtherWorktree, branchToDelete)
+		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchOtherWorktree, branchToDelete)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return data, flow, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -264,12 +264,12 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (data delet
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return data, flow, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	branchTypeToDelete := validatedConfig.BranchType(branchToDelete)
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return data, flow, errors.New(messages.CurrentBranchCannotDetermine)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	previousBranchOpt := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	branchWhenDone := determineBranchWhenDone(branchWhenDoneArgs{

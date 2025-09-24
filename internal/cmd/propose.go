@@ -253,7 +253,7 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (data p
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return data, flow, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
@@ -263,7 +263,7 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (data p
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return data, flow, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
@@ -296,22 +296,22 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (data p
 		branchNamesToSync = validatedConfig.NormalConfig.Lineage.BranchAndAncestorsWithoutRoot(initialBranch)
 		branchNamesToPropose = gitdomain.LocalBranchNames{initialBranch}
 		if err = validateBranchTypeToPropose(branchesAndTypes[initialBranch]); err != nil {
-			return data, flow, err
+			return data, configdomain.ProgramFlowExit, err
 		}
 		if validatedConfig.NormalConfig.Lineage.Parent(initialBranch).IsNone() {
-			return data, flow, fmt.Errorf(messages.ProposalNoParent, initialBranch)
+			return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.ProposalNoParent, initialBranch)
 		}
 	}
 	connector, hasConnector := connectorOpt.Get()
 	if !hasConnector {
-		return data, flow, forgedomain.UnsupportedServiceError()
+		return data, configdomain.ProgramFlowExit, forgedomain.UnsupportedServiceError()
 	}
 	proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder)
 	branchesToPropose := make([]branchToProposeData, len(branchNamesToPropose))
 	for b, branchNameToPropose := range branchNamesToPropose {
 		branchType, has := branchesAndTypes[branchNameToPropose]
 		if !has {
-			return data, flow, fmt.Errorf(messages.BranchTypeCannotDetermine, branchNameToPropose)
+			return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchTypeCannotDetermine, branchNameToPropose)
 		}
 		existingProposalURL := None[string]()
 		if canFindProposals {
@@ -327,7 +327,7 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (data p
 		}
 		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByLocalName(branchNameToPropose).Get()
 		if !hasBranchInfo {
-			return data, flow, fmt.Errorf(messages.BranchInfoNotFound, branchNameToPropose)
+			return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchInfoNotFound, branchNameToPropose)
 		}
 		branchesToPropose[b] = branchToProposeData{
 			branchType:          branchType,
@@ -339,7 +339,7 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (data p
 	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, branchNamesToSync...)
 	branchesToSync, err := sync.BranchesToSync(branchInfosToSync, branchesSnapshot.Branches, repo, validatedConfig.ValidatedConfigData.MainBranch)
 	if err != nil {
-		return data, flow, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	bodyText, err := ship.ReadFile(args.body, args.bodyFile)
 	return proposeData{

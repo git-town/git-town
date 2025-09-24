@@ -154,7 +154,7 @@ func determineUndoData(repo execute.OpenRepoResult) (data undoData, flow configd
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return data, flow, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	switch flow {
 	case configdomain.ProgramFlowContinue:
@@ -165,7 +165,7 @@ func determineUndoData(repo execute.OpenRepoResult) (data undoData, flow configd
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return data, flow, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -183,7 +183,7 @@ func determineUndoData(repo execute.OpenRepoResult) (data undoData, flow configd
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return data, flow, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	return undoData{
