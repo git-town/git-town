@@ -142,5 +142,5 @@ func LoadData(repo execute.OpenRepoResult) (data setup.Data, flow configdomain.P
 		LocalBranches: branchesSnapshot.Branches.LocalBranches().Names(),
 		Remotes:       remotes,
 		Snapshot:      repo.ConfigSnapshot,
-	}, flow, nil
+	}, configdomain.ProgramFlowContinue, nil
 }
