@@ -45,7 +45,7 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 			UnvalidatedConfig: args.UnvalidatedConfig,
 		})
 		if err != nil {
-			return gitdomain.EmptyBranchesSnapshot(), 0, previousBranchInfos, flow, err
+			return gitdomain.EmptyBranchesSnapshot(), 0, previousBranchInfos, configdomain.ProgramFlowExit, err
 		}
 		switch flow {
 		case configdomain.ProgramFlowContinue:
