@@ -55,24 +55,24 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 	}
 	if args.ValidateNoOpenChanges {
 		if err = validate.NoOpenChanges(args.RepoStatus.OpenChanges); err != nil {
-			return gitdomain.EmptyBranchesSnapshot(), 0, previousBranchInfos, configdomain.ProgramFlowContinue, err
+			return gitdomain.EmptyBranchesSnapshot(), 0, previousBranchInfos, configdomain.ProgramFlowExit, err
 		}
 	}
 	if args.Fetch {
 		var remotes gitdomain.Remotes
 		remotes, err := args.Git.Remotes(args.Repo.Backend)
 		if err != nil {
-			return gitdomain.EmptyBranchesSnapshot(), 0, previousBranchInfos, configdomain.ProgramFlowContinue, err
+			return gitdomain.EmptyBranchesSnapshot(), 0, previousBranchInfos, configdomain.ProgramFlowExit, err
 		}
 		if remotes.HasRemote(args.UnvalidatedConfig.NormalConfig.DevRemote) && args.Repo.IsOffline.IsOnline() {
 			if err = args.Git.Fetch(args.Frontend, args.UnvalidatedConfig.NormalConfig.SyncTags); err != nil {
-				return gitdomain.EmptyBranchesSnapshot(), 0, previousBranchInfos, configdomain.ProgramFlowContinue, err
+				return gitdomain.EmptyBranchesSnapshot(), 0, previousBranchInfos, configdomain.ProgramFlowExit, err
 			}
 		}
 	}
 	stashSize, err := args.Repo.Git.StashSize(args.Repo.Backend)
 	if err != nil {
-		return gitdomain.EmptyBranchesSnapshot(), stashSize, previousBranchInfos, configdomain.ProgramFlowContinue, err
+		return gitdomain.EmptyBranchesSnapshot(), stashSize, previousBranchInfos, configdomain.ProgramFlowExit, err
 	}
 	branchesSnapshot, err := args.Repo.Git.BranchesSnapshot(args.Repo.Backend)
 	return branchesSnapshot, stashSize, previousBranchInfos, configdomain.ProgramFlowContinue, err
