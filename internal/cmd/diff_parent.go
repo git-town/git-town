@@ -146,23 +146,23 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult) (data d
 		return data, flow, nil
 	}
 	if branchesSnapshot.DetachedHead {
-		return data, flow, errors.New(messages.DiffParentDetachedHead)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.DiffParentDetachedHead)
 	}
 	currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
 	if !hasCurrentBranch {
-		return data, flow, errors.New(messages.CurrentBranchCannotDetermine)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	branch := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, currentBranch.String()))
 	if branch != currentBranch {
 		if !branchesSnapshot.Branches.HasLocalBranch(branch) {
-			return data, flow, fmt.Errorf(messages.BranchDoesntExist, branch)
+			return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchDoesntExist, branch)
 		}
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return data, flow, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -184,7 +184,7 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult) (data d
 	}
 	parentBranch, hasParent := validatedConfig.NormalConfig.Lineage.Parent(branch).Get()
 	if !hasParent {
-		return data, flow, errors.New(messages.DiffParentNoFeatureBranch)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.DiffParentNoFeatureBranch)
 	}
 	return diffParentData{
 		branch:       branch,
