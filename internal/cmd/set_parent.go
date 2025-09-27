@@ -471,7 +471,6 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 				}
 			}
 		}
-
 	}
 	return optimizer.Optimize(prog), false
 }
