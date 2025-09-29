@@ -7,6 +7,8 @@ import (
 	"os"
 	"regexp"
 
+	"github.com/spf13/cobra"
+
 	"github.com/git-town/git-town/v22/internal/cli/dialog"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
@@ -29,7 +31,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/vm/optimizer"
 	"github.com/git-town/git-town/v22/internal/vm/program"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
-	"github.com/spf13/cobra"
+	"github.com/git-town/git-town/v22/pkg/set"
 )
 
 const (
@@ -453,15 +455,14 @@ func updateProposalLineage(prog *program.Program, newParentOpt Option[gitdomain.
 		fmt.Printf("failed to update proposal stack lineage: %s\n", err.Error())
 		return
 	}
-
-	proposalsInStackOfInitialBranch := tree.BranchToProposal
-
-	for branch, proposal := range proposalsInStackOfInitialBranch { // okay to iterate the map in random order
+	branchPropsalsUpdated := set.New[gitdomain.LocalBranchName]()
+	for branch, proposal := range tree.BranchToProposal { // okay to iterate the map in random order
 		prog.Add(&opcodes.ProposalUpdateLineage{
 			Current:         branch,
 			CurrentProposal: proposal,
 			LineageTree:     MutableSome(tree),
 		})
+		branchPropsalsUpdated.Add(branch)
 	}
 
 	// If we are moving to a parent that is part of a completely different stack,
@@ -479,12 +480,13 @@ func updateProposalLineage(prog *program.Program, newParentOpt Option[gitdomain.
 			for branch, proposal := range tree.BranchToProposal { // okay to iterate the map in random order
 				// Do not update the same proposal more than once because we updated
 				// it in a previous step
-				if _, ok := proposalsInStackOfInitialBranch[branch]; !ok {
+				if _, ok := branchPropsalsUpdated[branch]; !ok {
 					prog.Add(&opcodes.ProposalUpdateLineage{
 						Current:         branch,
 						CurrentProposal: proposal,
 						LineageTree:     MutableSome(tree),
 					})
+					branchPropsalsUpdated.Add(branch)
 				}
 			}
 		} else {
