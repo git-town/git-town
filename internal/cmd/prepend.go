@@ -515,11 +515,10 @@ func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages
 				Lineage:                  data.config.NormalConfig.Lineage,
 				MainAndPerennialBranches: data.config.MainAndPerennials(),
 			})
-
 			if err != nil {
 				fmt.Printf("failed to update proposal stack lineage: %s\n", err.Error())
 			} else {
-				for branch, proposal := range tree.BranchToProposal {
+				for branch, proposal := range tree.BranchToProposal { // okay to iterate the map in random order
 					prog.Value.Add(&opcodes.ProposalUpdateLineage{
 						Current:         branch,
 						CurrentProposal: proposal,
