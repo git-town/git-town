@@ -508,21 +508,24 @@ func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages
 		})
 	}
 	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI && hasConnector {
-		tree, err := forge.NewProposalStackLineageTree(forge.ProposalStackLineageArgs{
-			Connector:                connector,
-			CurrentBranch:            data.initialBranch,
-			Lineage:                  data.config.NormalConfig.Lineage,
-			MainAndPerennialBranches: data.config.MainAndPerennials(),
-		})
-		if err != nil {
-			fmt.Printf("failed to update proposal stack lineage: %s\n", err.Error())
-		} else {
-			for branch, proposal := range tree.BranchToProposal {
-				prog.Value.Add(&opcodes.ProposalUpdateLineage{
-					Current:         branch,
-					CurrentProposal: proposal,
-					LineageTree:     MutableSome(tree),
-				})
+		if proposalFinder, hasProposalFinder := connector.(forgedomain.ProposalFinder); hasProposalFinder {
+			tree, err := forge.NewProposalStackLineageTree(forge.ProposalStackLineageArgs{
+				Connector:                proposalFinder,
+				CurrentBranch:            data.initialBranch,
+				Lineage:                  data.config.NormalConfig.Lineage,
+				MainAndPerennialBranches: data.config.MainAndPerennials(),
+			})
+
+			if err != nil {
+				fmt.Printf("failed to update proposal stack lineage: %s\n", err.Error())
+			} else {
+				for branch, proposal := range tree.BranchToProposal {
+					prog.Value.Add(&opcodes.ProposalUpdateLineage{
+						Current:         branch,
+						CurrentProposal: proposal,
+						LineageTree:     MutableSome(tree),
+					})
+				}
 			}
 		}
 	}
