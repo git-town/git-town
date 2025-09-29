@@ -455,7 +455,8 @@ func updateProposalLineage(prog *program.Program, newParentOpt Option[gitdomain.
 	}
 
 	proposalsInStackOfInitialBranch := tree.BranchToProposal
-	for branch, proposal := range proposalsInStackOfInitialBranch {
+
+	for branch, proposal := range proposalsInStackOfInitialBranch { // okay to iterate the map in random order
 		prog.Add(&opcodes.ProposalUpdateLineage{
 			Current:         branch,
 			CurrentProposal: proposal,
@@ -475,7 +476,7 @@ func updateProposalLineage(prog *program.Program, newParentOpt Option[gitdomain.
 		})
 
 		if err == nil {
-			for branch, proposal := range tree.BranchToProposal {
+			for branch, proposal := range tree.BranchToProposal { // okay to iterate the map in random order
 				// Do not update the same proposal more than once because we updated
 				// it in a previous step
 				if _, ok := proposalsInStackOfInitialBranch[branch]; !ok {
