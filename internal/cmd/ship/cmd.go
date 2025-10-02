@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/config/cliconfig"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/execute"
+	"github.com/git-town/git-town/v22/internal/forge"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks"
@@ -168,6 +169,35 @@ Start:
 			return err
 		}
 		shipProgramSquashMerge(prog, repo, sharedData, squashMergeData, message)
+	}
+	if sharedData.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
+		if connector, hasConnector := sharedData.connector.Get(); hasConnector {
+			if proposalFinder, hasProposalFinder := connector.(forgedomain.ProposalFinder); hasProposalFinder {
+				tree, err := forge.NewProposalStackLineageTree(forge.ProposalStackLineageArgs{
+					Connector:                proposalFinder,
+					CurrentBranch:            sharedData.initialBranch,
+					Lineage:                  sharedData.config.NormalConfig.Lineage,
+					MainAndPerennialBranches: sharedData.config.MainAndPerennials(),
+				})
+				if err != nil {
+					fmt.Printf("failed to update proposal stack lineage: %s\n", err.Error())
+				} else {
+					for branch, proposal := range tree.BranchToProposal { // okay to iterate the map in random order
+						// Proposal has been shipped and its stack lineage
+						// information shouldn't need to be updated because
+						// proposal is not in a review state.
+						if branch == sharedData.initialBranch {
+							continue
+						}
+						prog.Value.Add(&opcodes.ProposalUpdateLineage{
+							Current:         branch,
+							CurrentProposal: proposal,
+							LineageTree:     MutableSome(tree),
+						})
+					}
+				}
+			}
+		}
 	}
 	optimizedProgram := optimizer.Optimize(prog.Immutable())
 	runState := runstate.RunState{
