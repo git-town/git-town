@@ -7,6 +7,8 @@ import (
 	"os"
 	"regexp"
 
+	"github.com/spf13/cobra"
+
 	"github.com/git-town/git-town/v22/internal/cli/dialog"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
@@ -29,7 +31,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/vm/optimizer"
 	"github.com/git-town/git-town/v22/internal/vm/program"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
-	"github.com/spf13/cobra"
+	"github.com/git-town/git-town/v22/pkg/set"
 )
 
 const (
@@ -95,6 +97,7 @@ func setParentCommand() *cobra.Command {
 }
 
 func executeSetParent(args []string, cliConfig configdomain.PartialConfig, noParent configdomain.NoParent) error {
+Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,
@@ -105,15 +108,23 @@ func executeSetParent(args []string, cliConfig configdomain.PartialConfig, noPar
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineSetParentData(repo)
-	if err != nil || exit {
+	data, flow, err := determineSetParentData(repo)
+	if err != nil {
 		return err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit:
+		return nil
+	case configdomain.ProgramFlowRestart:
+		goto Start
 	}
 	err = verifySetParentData(data)
 	if err != nil {
 		return err
 	}
 	var selectedParent gitdomain.LocalBranchName
+	var exit dialogdomain.Exit
 	newParentOpt := None[gitdomain.LocalBranchName]()
 	if !noParent {
 		switch len(args) {
@@ -216,11 +227,11 @@ type setParentData struct {
 	stashSize          gitdomain.StashSize
 }
 
-func determineSetParentData(repo execute.OpenRepoResult) (data setParentData, exit dialogdomain.Exit, err error) {
+func determineSetParentData(repo execute.OpenRepoResult) (data setParentData, flow configdomain.ProgramFlow, err error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return data, false, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
 	connector, err := forge.NewConnector(forge.NewConnectorArgs{
@@ -239,9 +250,9 @@ func determineSetParentData(repo execute.OpenRepoResult) (data setParentData, ex
 		RemoteURL:            config.DevURL(repo.Backend),
 	})
 	if err != nil {
-		return data, false, err
+		return data, configdomain.ProgramFlowExit, err
 	}
-	branchesSnapshot, stashSize, branchInfosLastRun, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, branchInfosLastRun, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
@@ -258,17 +269,22 @@ func determineSetParentData(repo execute.OpenRepoResult) (data setParentData, ex
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 	})
-	if err != nil || exit {
-		return data, exit, err
+	if err != nil {
+		return data, configdomain.ProgramFlowExit, err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
+		return data, flow, nil
 	}
 	if branchesSnapshot.DetachedHead {
-		return data, false, errors.New(messages.SetParentRepoHasDetachedHead)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.SetParentRepoHasDetachedHead)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return data, false, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -286,12 +302,12 @@ func determineSetParentData(repo execute.OpenRepoResult) (data setParentData, ex
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return data, exit, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	mainBranch := validatedConfig.ValidatedConfigData.MainBranch
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	parentOpt := validatedConfig.NormalConfig.Lineage.Parent(initialBranch)
 	existingParent, hasParent := parentOpt.Get()
@@ -316,7 +332,7 @@ func determineSetParentData(repo execute.OpenRepoResult) (data setParentData, ex
 		inputs:             inputs,
 		proposal:           proposalOpt,
 		stashSize:          stashSize,
-	}, false, nil
+	}, configdomain.ProgramFlowContinue, nil
 }
 
 func verifySetParentData(data setParentData) error {
@@ -410,5 +426,72 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 			)
 		}
 	}
+
+	// Update proposal lineage for both cases (removing parent or setting new parent)
+	updateProposalLineage(&prog, newParentOpt, data)
 	return optimizer.Optimize(prog), false
+}
+
+// updateProposalLineage updates the proposal stack lineage when changing the parent
+func updateProposalLineage(prog *program.Program, newParentOpt Option[gitdomain.LocalBranchName], data setParentData) {
+	if data.config.NormalConfig.ProposalsShowLineage != forgedomain.ProposalsShowLineageCLI {
+		return
+	}
+	connector, hasConnector := data.connector.Get()
+	if !hasConnector {
+		return
+	}
+	proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder)
+	if !canFindProposals {
+		return
+	}
+	// Update the stack belonging to the initialBranch
+	tree, err := forge.NewProposalStackLineageTree(forge.ProposalStackLineageArgs{
+		Connector:                proposalFinder,
+		CurrentBranch:            data.initialBranch,
+		Lineage:                  data.config.NormalConfig.Lineage,
+		MainAndPerennialBranches: data.config.MainAndPerennials(),
+	})
+	if err != nil {
+		fmt.Printf("failed to update proposal stack lineage: %s\n", err.Error())
+		return
+	}
+	branchPropsalsUpdated := set.New[gitdomain.LocalBranchName]()
+	for branch, proposal := range tree.BranchToProposal { // okay to iterate the map in random order
+		prog.Add(&opcodes.ProposalUpdateLineage{
+			Current:         branch,
+			CurrentProposal: proposal,
+			LineageTree:     MutableSome(tree),
+		})
+		branchPropsalsUpdated.Add(branch)
+	}
+
+	// If we are moving to a parent that is part of a completely different stack,
+	// update the lineage of all members of this other stack
+	newParent, hasNewParent := newParentOpt.Get()
+	if hasNewParent {
+		err = tree.Rebuild(forge.ProposalStackLineageArgs{
+			Connector:                proposalFinder,
+			CurrentBranch:            newParent,
+			Lineage:                  data.config.NormalConfig.Lineage,
+			MainAndPerennialBranches: data.config.MainAndPerennials(),
+		})
+
+		if err == nil {
+			for branch, proposal := range tree.BranchToProposal { // okay to iterate the map in random order
+				// Do not update the same proposal more than once because we updated
+				// it in a previous step
+				if _, ok := branchPropsalsUpdated[branch]; !ok {
+					prog.Add(&opcodes.ProposalUpdateLineage{
+						Current:         branch,
+						CurrentProposal: proposal,
+						LineageTree:     MutableSome(tree),
+					})
+					branchPropsalsUpdated.Add(branch)
+				}
+			}
+		} else {
+			fmt.Printf("failed to update proposal stack lineage for new parent: %s\n", err.Error())
+		}
+	}
 }

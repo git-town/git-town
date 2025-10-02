@@ -348,6 +348,7 @@ and will be removed in future versions of Git Town.`
 	UndoMessage                             = `You can run "git town undo" to go back to where you started.`
 	UndoNothingToDo                         = "nothing to undo"
 	UnfinishedCommandHandle                 = "Handle unfinished command: %s\n"
+	UnfinishedRunStateBoth                  = `Continue the old %q command and then run the current command`
 	UnfinishedRunStateContinue              = "Continue the \"%s\" command after having resolved conflicts"
 	UnfinishedRunStateDiscard               = "Discard the unfinished state and run the new command"
 	UnfinishedRunStateQuit                  = "Quit without running anything"

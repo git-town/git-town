@@ -48,7 +48,6 @@ func (self *ProposalStackLineageTree) build(args ProposalStackLineageArgs) error
 type ProposalStackLineageTreeNode struct {
 	branch     gitdomain.LocalBranchName
 	childNodes []*ProposalStackLineageTreeNode
-	depth      int
 	proposal   Option[forgedomain.Proposal]
 }
 
@@ -64,7 +63,6 @@ func addDescendantNodes(branch gitdomain.LocalBranchName, args ProposalStackLine
 	}
 	parentNode := visited[parentBranch]
 	branchNode := newProposalStackLineageTreeNode(branch)
-	branchNode.depth = parentNode.depth + 1
 	parentNode.childNodes = append(parentNode.childNodes, branchNode)
 	if proposal, ok := tree.BranchToProposal[branch]; ok {
 		branchNode.proposal = proposal
@@ -143,7 +141,6 @@ func createAncestorNode(
 ) *ProposalStackLineageTreeNode {
 	node := newProposalStackLineageTreeNode(ancestor)
 	parent.childNodes = append(parent.childNodes, node)
-	node.depth = parent.depth + 1
 	if proposal, ok := tree.BranchToProposal[ancestor]; ok {
 		node.proposal = proposal
 	}
@@ -186,7 +183,6 @@ func newProposalStackLineageTreeNode(branch gitdomain.LocalBranchName) *Proposal
 	return &ProposalStackLineageTreeNode{
 		branch:     branch,
 		childNodes: make([]*ProposalStackLineageTreeNode, 0),
-		depth:      -1,
 		proposal:   None[forgedomain.Proposal](),
 	}
 }

@@ -2,7 +2,6 @@ package execute
 
 import (
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v22/internal/config"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
@@ -17,10 +16,10 @@ import (
 )
 
 // LoadRepoSnapshot loads the initial snapshot of the Git repo.
-func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gitdomain.StashSize, Option[gitdomain.BranchInfos], dialogdomain.Exit, error) {
+func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gitdomain.StashSize, Option[gitdomain.BranchInfos], configdomain.ProgramFlow, error) {
 	runStateOpt, err := runstate.Load(args.RootDir)
 	if err != nil {
-		return gitdomain.EmptyBranchesSnapshot(), 0, None[gitdomain.BranchInfos](), false, err
+		return gitdomain.EmptyBranchesSnapshot(), 0, None[gitdomain.BranchInfos](), configdomain.ProgramFlowExit, err
 	}
 	previousBranchInfos := None[gitdomain.BranchInfos]()
 	if runstate, hasRunstate := runStateOpt.Get(); hasRunstate {
@@ -30,7 +29,7 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 		previousBranchInfos = runstate.BranchInfosLastRun
 	}
 	if args.HandleUnfinishedState {
-		exit, err := validate.HandleUnfinishedState(validate.UnfinishedStateArgs{
+		flow, err := validate.HandleUnfinishedState(validate.UnfinishedStateArgs{
 			Backend:           args.Repo.Backend,
 			CommandsCounter:   args.Repo.CommandsCounter,
 			Connector:         args.Connector,
@@ -45,33 +44,38 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 			RunState:          runStateOpt,
 			UnvalidatedConfig: args.UnvalidatedConfig,
 		})
-		if err != nil || exit {
-			return gitdomain.EmptyBranchesSnapshot(), 0, previousBranchInfos, exit, err
+		if err != nil {
+			return gitdomain.EmptyBranchesSnapshot(), 0, previousBranchInfos, configdomain.ProgramFlowExit, err
+		}
+		switch flow {
+		case configdomain.ProgramFlowContinue:
+		case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
+			return gitdomain.EmptyBranchesSnapshot(), 0, previousBranchInfos, flow, nil
 		}
 	}
 	if args.ValidateNoOpenChanges {
 		if err = validate.NoOpenChanges(args.RepoStatus.OpenChanges); err != nil {
-			return gitdomain.EmptyBranchesSnapshot(), 0, previousBranchInfos, false, err
+			return gitdomain.EmptyBranchesSnapshot(), 0, previousBranchInfos, configdomain.ProgramFlowExit, err
 		}
 	}
 	if args.Fetch {
 		var remotes gitdomain.Remotes
 		remotes, err := args.Git.Remotes(args.Repo.Backend)
 		if err != nil {
-			return gitdomain.EmptyBranchesSnapshot(), 0, previousBranchInfos, false, err
+			return gitdomain.EmptyBranchesSnapshot(), 0, previousBranchInfos, configdomain.ProgramFlowExit, err
 		}
 		if remotes.HasRemote(args.UnvalidatedConfig.NormalConfig.DevRemote) && args.Repo.IsOffline.IsOnline() {
 			if err = args.Git.Fetch(args.Frontend, args.UnvalidatedConfig.NormalConfig.SyncTags); err != nil {
-				return gitdomain.EmptyBranchesSnapshot(), 0, previousBranchInfos, false, err
+				return gitdomain.EmptyBranchesSnapshot(), 0, previousBranchInfos, configdomain.ProgramFlowExit, err
 			}
 		}
 	}
 	stashSize, err := args.Repo.Git.StashSize(args.Repo.Backend)
 	if err != nil {
-		return gitdomain.EmptyBranchesSnapshot(), stashSize, previousBranchInfos, false, err
+		return gitdomain.EmptyBranchesSnapshot(), stashSize, previousBranchInfos, configdomain.ProgramFlowExit, err
 	}
 	branchesSnapshot, err := args.Repo.Git.BranchesSnapshot(args.Repo.Backend)
-	return branchesSnapshot, stashSize, previousBranchInfos, false, err
+	return branchesSnapshot, stashSize, previousBranchInfos, configdomain.ProgramFlowContinue, err
 }
 
 type LoadRepoSnapshotArgs struct {

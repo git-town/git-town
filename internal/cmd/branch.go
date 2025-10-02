@@ -9,7 +9,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/cli/dialog"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcolors"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v22/internal/cli/flags"
 	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v22/internal/config/cliconfig"
@@ -57,6 +56,7 @@ func branchCmd() *cobra.Command {
 }
 
 func executeBranch(cliConfig configdomain.PartialConfig) error {
+Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,
@@ -67,9 +67,16 @@ func executeBranch(cliConfig configdomain.PartialConfig) error {
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineBranchData(repo)
-	if err != nil || exit {
+	data, flow, err := determineBranchData(repo)
+	if err != nil {
 		return err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit:
+		return nil
+	case configdomain.ProgramFlowRestart:
+		goto Start
 	}
 	entries := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
 		BranchInfos:       data.branchInfos,
@@ -86,13 +93,13 @@ func executeBranch(cliConfig configdomain.PartialConfig) error {
 	return nil
 }
 
-func determineBranchData(repo execute.OpenRepoResult) (data branchData, exit dialogdomain.Exit, err error) {
+func determineBranchData(repo execute.OpenRepoResult) (data branchData, flow configdomain.ProgramFlow, err error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return data, false, err
+		return data, configdomain.ProgramFlowExit, err
 	}
-	branchesSnapshot, _, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, _, _, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
@@ -109,8 +116,13 @@ func determineBranchData(repo execute.OpenRepoResult) (data branchData, exit dia
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 	})
-	if err != nil || exit {
-		return data, exit, err
+	if err != nil {
+		return data, configdomain.ProgramFlowExit, err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
+		return data, flow, nil
 	}
 	initialBranchOpt := branchesSnapshot.Active
 	if branchesSnapshot.DetachedHead {
@@ -131,7 +143,7 @@ func determineBranchData(repo execute.OpenRepoResult) (data branchData, exit dia
 		branchesAndTypes: branchesAndTypes,
 		colors:           colors,
 		initialBranchOpt: initialBranchOpt,
-	}, false, err
+	}, configdomain.ProgramFlowContinue, err
 }
 
 type branchData struct {

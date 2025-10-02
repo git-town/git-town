@@ -7,7 +7,6 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v22/internal/cli/flags"
 	"github.com/git-town/git-town/v22/internal/cli/print"
 	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
@@ -96,6 +95,7 @@ func mergeCommand() *cobra.Command {
 }
 
 func executeMerge(cliConfig configdomain.PartialConfig) error {
+Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		PrintBranchNames: true,
@@ -106,9 +106,16 @@ func executeMerge(cliConfig configdomain.PartialConfig) error {
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineMergeData(repo)
-	if err != nil || exit {
+	data, flow, err := determineMergeData(repo)
+	if err != nil {
 		return err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit:
+		return nil
+	case configdomain.ProgramFlowRestart:
+		goto Start
 	}
 	if err = validateMergeData(repo, data); err != nil {
 		return err
@@ -166,11 +173,11 @@ type mergeData struct {
 	stashSize          gitdomain.StashSize
 }
 
-func determineMergeData(repo execute.OpenRepoResult) (mergeData, dialogdomain.Exit, error) {
+func determineMergeData(repo execute.OpenRepoResult) (data mergeData, flow configdomain.ProgramFlow, err error) {
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return mergeData{}, false, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
 	connector, err := forge.NewConnector(forge.NewConnectorArgs{
@@ -189,9 +196,9 @@ func determineMergeData(repo execute.OpenRepoResult) (mergeData, dialogdomain.Ex
 		RemoteURL:            config.DevURL(repo.Backend),
 	})
 	if err != nil {
-		return mergeData{}, false, err
+		return data, configdomain.ProgramFlowExit, err
 	}
-	branchesSnapshot, stashSize, branchInfosLastRun, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, branchInfosLastRun, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
@@ -208,21 +215,26 @@ func determineMergeData(repo execute.OpenRepoResult) (mergeData, dialogdomain.Ex
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
 	})
-	if err != nil || exit {
-		return mergeData{}, exit, err
+	if err != nil {
+		return data, configdomain.ProgramFlowExit, err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
+		return data, flow, nil
 	}
 	if branchesSnapshot.DetachedHead {
-		return mergeData{}, false, errors.New(messages.MergeDetachedHead)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.MergeDetachedHead)
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return mergeData{}, false, errors.New(messages.CurrentBranchCannotDetermine)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
-		return mergeData{}, false, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -240,32 +252,32 @@ func determineMergeData(repo execute.OpenRepoResult) (mergeData, dialogdomain.Ex
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return mergeData{}, exit, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	parentBranch, hasParentBranch := validatedConfig.NormalConfig.Lineage.Parent(initialBranch).Get()
 	if !hasParentBranch {
-		return mergeData{}, false, fmt.Errorf(messages.MergeNoParent, initialBranch)
+		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.MergeNoParent, initialBranch)
 	}
 	grandParentBranch := validatedConfig.NormalConfig.Lineage.Parent(parentBranch)
 	if grandParentBranch.IsNone() {
-		return mergeData{}, false, fmt.Errorf(messages.MergeNoGrandParent, initialBranch, parentBranch)
+		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.MergeNoGrandParent, initialBranch, parentBranch)
 	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	initialBranchInfo, hasInitialBranchInfo := branchesSnapshot.Branches.FindByLocalName(initialBranch).Get()
 	if !hasInitialBranchInfo {
-		return mergeData{}, false, fmt.Errorf(messages.BranchInfoNotFound, initialBranch)
+		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchInfoNotFound, initialBranch)
 	}
 	initialBranchSHA, hasInitialBranchSHA := initialBranchInfo.LocalSHA.Get()
 	if !hasInitialBranchSHA {
-		return mergeData{}, false, fmt.Errorf(messages.MergeBranchNotLocal, initialBranch)
+		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.MergeBranchNotLocal, initialBranch)
 	}
 	parentBranchInfo, hasParentBranchInfo := branchesSnapshot.Branches.FindByLocalName(parentBranch).Get()
 	if !hasParentBranchInfo {
-		return mergeData{}, false, fmt.Errorf(messages.BranchInfoNotFound, parentBranch)
+		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchInfoNotFound, parentBranch)
 	}
 	parentBranchSHA, hasParentBranchSHA := parentBranchInfo.LocalSHA.Get()
 	if !hasParentBranchSHA {
-		return mergeData{}, false, fmt.Errorf(messages.MergeBranchNotLocal, parentBranch)
+		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.MergeBranchNotLocal, parentBranch)
 	}
 	initialBranchType := validatedConfig.BranchType(initialBranch)
 	parentBranchType := validatedConfig.BranchType(parentBranch)
@@ -285,7 +297,7 @@ func determineMergeData(repo execute.OpenRepoResult) (mergeData, dialogdomain.Ex
 		parentBranchType:   parentBranchType,
 		previousBranch:     previousBranch,
 		stashSize:          stashSize,
-	}, false, err
+	}, configdomain.ProgramFlowContinue, err
 }
 
 func mergeProgram(repo execute.OpenRepoResult, data mergeData) program.Program {
