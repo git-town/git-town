@@ -361,6 +361,13 @@ func deleteFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data d
 					fmt.Printf("failed to update proposal stack lineage: %s\n", err.Error())
 				} else {
 					for branch, proposal := range tree.BranchToProposal { // okay to iterate the map in random order
+						// Do not update the proposal of the deleted branch.
+						// At this point, a forge (like github) would close
+						// the proposal because there is no longer a remote
+						// branch.
+						if branch == data.initialBranch {
+							continue
+						}
 						prog.Value.Add(&opcodes.ProposalUpdateLineage{
 							Current:         branch,
 							CurrentProposal: proposal,
