@@ -30,6 +30,12 @@ Feature: beam multiple commits onto a new child branch
       |          | git checkout new                                                                                        |
       | new      | git -c rebase.updateRefs=false rebase existing                                                          |
     And no rebase is now in progress
+    And this lineage exists now
+      """
+      main
+        existing
+          new
+      """
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE     |
       | main     | origin        | main commit |
@@ -37,12 +43,6 @@ Feature: beam multiple commits onto a new child branch
       |          |               | commit 3    |
       | new      | local         | commit 1    |
       |          |               | commit 4    |
-    And this lineage exists now
-      """
-      main
-        existing
-          new
-      """
 
   Scenario: undo
     When I run "git-town undo"

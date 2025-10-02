@@ -21,6 +21,7 @@
 ^origin ships the .* branch using the .* ship-strategy$
 ^I amend this commit$
 ^the current branch is .*$
+^the currently checked out commit is .*$
 ^branch .* is active in another worktree$
 ^tool .*? is installed$
 ^an uncommitted file$
@@ -33,6 +34,7 @@
 
 # When
 ^I resolve the conflict in .* with:$
+^I resolve the conflict in ".*$
 ^I run .*$
 ^I run .* and enter into the dialog:$
 
@@ -48,13 +50,20 @@
 ^a rebase is now in progress$
 ^no rebase is now in progress$
 ^the branches are now$
+# TODO: aren't the steps above and below the same?
+^these branches exist now$
+^this lineage exists now$
+^no lineage exists now$
+^the initial lineage exists now$
 ^these commits exist now$
+^these committed files exist now$
 ^no commits exist now$
 ^commit .* on branch .* now has this full commit message$
 ^the uncommitted file has content:$
 ^file .* now has content:$
 ^file .* still has content .*$
 ^the main branch is now .*$
+^the main branch is still .*$
 ^.*Git setting .* now doesn't exist$
 ^Git setting .* still doesn't exist$
 ^the perennial branches are still .*$
@@ -65,11 +74,8 @@
 ^the uncommitted file still exists$
 ^no uncommitted files exist now$
 ^the initial commits exist now$
-^this lineage exists now$
-^no lineage exists now$
-^the initial lineage exists now$
 ^the initial branches and lineage exist now$
 ^all branches are now synchronized$
 
 # UNKNOWN STEPS
-^the main branch is still .*$
+^file .* still has content:$

@@ -20,17 +20,17 @@ Feature: commit with message
       | existing | git checkout -b new     |
       | new      | git commit -m unrelated |
       |          | git checkout existing   |
-    And these commits exist now
-      | BRANCH   | LOCATION | MESSAGE         |
-      | main     | origin   | main commit     |
-      | existing | local    | existing commit |
-      | new      | local    | unrelated       |
     And this lineage exists now
       """
       main
         existing
           new
       """
+    And these commits exist now
+      | BRANCH   | LOCATION | MESSAGE         |
+      | main     | origin   | main commit     |
+      | existing | local    | existing commit |
+      | new      | local    | unrelated       |
 
   Scenario: undo
     When I run "git-town undo"

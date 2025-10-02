@@ -2,13 +2,13 @@ Feature: show the configuration from a subfolder
 
   Scenario: running in a subfolder
     Given a Git repo with origin
+    And a folder "subfolder"
     And the configuration file:
       """
       [branches]
       main = "main"
       perennials = ["public"]
       """
-    And a folder "subfolder"
     When I run "git-town config" in the "subfolder" folder
     Then Git Town prints:
       """

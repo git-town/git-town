@@ -2,6 +2,13 @@ Feature: show the configuration in Spanish
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.perennial-branches" is "qa staging"
+    And Git setting "git-town.perennial-regex" is "^release-"
+    And Git setting "git-town.contribution-regex" is "^renovate/"
+    And Git setting "git-town.observed-regex" is "^dependabot/"
+    And Git setting "git-town.feature-regex" is "^user-.*$"
+    And Git setting "git-town.ship-strategy" is "squash-merge"
+    And Git setting "git-town.unknown-branch-type" is "observed"
     And the branches
       | NAME           | TYPE         | PARENT | LOCATIONS     |
       | contribution-1 | contribution |        | local, origin |
@@ -14,13 +21,6 @@ Feature: show the configuration in Spanish
       | perennial-2    | perennial    |        | local         |
       | prototype-1    | prototype    | main   | local         |
       | prototype-2    | prototype    | main   | local         |
-    And Git setting "git-town.perennial-branches" is "qa staging"
-    And Git setting "git-town.perennial-regex" is "^release-"
-    And Git setting "git-town.contribution-regex" is "^renovate/"
-    And Git setting "git-town.observed-regex" is "^dependabot/"
-    And Git setting "git-town.feature-regex" is "^user-.*$"
-    And Git setting "git-town.ship-strategy" is "squash-merge"
-    And Git setting "git-town.unknown-branch-type" is "observed"
     When I run "git-town config" with these environment variables
       | LANG | es_ES.UTF-8 |
 

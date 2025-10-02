@@ -3,6 +3,7 @@ Feature: beam commits and uncommitted changes from a local branch onto a new chi
 
   Background:
     Given a Git repo with origin
+    And the origin is "git@github.com:git-town/git-town.git"
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS |
       | existing | feature | main   | local     |
@@ -14,7 +15,6 @@ Feature: beam commits and uncommitted changes from a local branch onto a new chi
       | existing | local    | commit 3    |
       | existing | local    | commit 4    |
       | existing | local    | commit 5    |
-    And the origin is "git@github.com:git-town/git-town.git"
     And the current branch is "existing"
     And tool "open" is installed
     And an uncommitted file
@@ -37,6 +37,12 @@ Feature: beam commits and uncommitted changes from a local branch onto a new chi
       |          | open https://github.com/git-town/git-town/compare/existing...new?expand=1&title=uncommitted             |
       |          | git checkout existing                                                                                   |
     And no rebase is now in progress
+    And this lineage exists now
+      """
+      main
+        existing
+          new
+      """
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE     |
       | main     | origin        | main commit |
@@ -49,12 +55,6 @@ Feature: beam commits and uncommitted changes from a local branch onto a new chi
       |          | origin        | commit 2    |
       |          |               | commit 3    |
       |          |               | commit 5    |
-    And this lineage exists now
-      """
-      main
-        existing
-          new
-      """
 
   Scenario: undo
     When I run "git-town undo"

@@ -18,16 +18,16 @@ Feature: append a new feature branch to an existing feature branch in detached m
       | existing | git fetch --prune --tags                 |
       |          | git merge --no-edit --ff origin/existing |
       |          | git checkout -b new                      |
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE         |
-      | existing | local, origin | existing commit |
-      |          |               | origin commit   |
     And this lineage exists now
       """
       main
         existing
           new
       """
+    And these commits exist now
+      | BRANCH   | LOCATION      | MESSAGE         |
+      | existing | local, origin | existing commit |
+      |          |               | origin commit   |
 
   Scenario: undo
     When I run "git-town undo"
@@ -36,5 +36,5 @@ Feature: append a new feature branch to an existing feature branch in detached m
       | new      | git checkout existing                        |
       | existing | git reset --hard {{ sha 'existing commit' }} |
       |          | git branch -D new                            |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now
