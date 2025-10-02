@@ -1,35 +1,44 @@
 # More info at https://github.com/kevgo/cucumber-sort
 
-# prepare
+# Given
 ^a Git repo with origin$
+^a local Git repo$
+^Git Town is not configured$
+^the origin is .*$
 ^Git setting .* is .*$
+^global Git setting .* is .*$
 ^local Git setting .* is .*$
+^the committed configuration file:$
+^offline mode is enabled$
 ^the branches$
 ^the commits$
 ^origin ships the .* branch using the .* ship-strategy$
 ^I amend this commit$
 ^the current branch is .*$
-^the origin is .*$
 ^tool .*? is installed$
 ^an uncommitted file$
 ^an uncommitted file with name .* and content .*$
 ^I ran .*$
 
-# execute
+# When
 ^I run .*$
 ^I run .* and enter into the dialog:$
 
-# verify
+# Then
 ^Git Town runs the commands$
 ^Git Town runs no commands$
 ^Git Town prints:$
 ^Git Town prints the error:$
 ^no rebase is now in progress$
 ^the branches are now$
+^branch .* now has type .*$
 ^these commits exist now$
 ^the initial commits exist now$
 ^this lineage exists now$
+^the initial lineage exists now$
 ^the initial branches and lineage exist now$
+^Git setting .* now doesn't exist$
+^Git setting .* still doesn't exist$
 
 # UNKNOWN STEPS
-^the initial lineage exists now$
+^wait 1 second to ensure new Git timestamps$
