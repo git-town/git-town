@@ -2,8 +2,10 @@
 
 # prepare
 ^a Git repo with origin$
+^Git setting .* is .*$
 ^the branches$
 ^the commits$
+^I amend this commit$
 ^the current branch is .*$
 ^the origin is .*$
 ^tool .*? is installed$
