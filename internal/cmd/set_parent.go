@@ -434,16 +434,17 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 
 // updateProposalLineage updates the proposal stack lineage when changing the parent
 func updateProposalLineage(prog *program.Program, newParentOpt Option[gitdomain.LocalBranchName], data setParentData) {
-	connector, hasConnector := data.connector.Get()
-	if data.config.NormalConfig.ProposalsShowLineage != forgedomain.ProposalsShowLineageCLI || !hasConnector {
+	if data.config.NormalConfig.ProposalsShowLineage != forgedomain.ProposalsShowLineageCLI {
 		return
 	}
-
+	connector, hasConnector := data.connector.Get()
+	if !hasConnector {
+		return
+	}
 	proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder)
 	if !canFindProposals {
 		return
 	}
-
 	// Update the stack belonging to the initialBranch
 	tree, err := forge.NewProposalStackLineageTree(forge.ProposalStackLineageArgs{
 		Connector:                proposalFinder,
