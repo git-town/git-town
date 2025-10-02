@@ -14,8 +14,8 @@ Feature: beam a commit and uncommitted changes onto a new child branch and propo
       | existing | local, origin | commit 3    |
       | existing | local, origin | commit 4    |
       | existing | local, origin | commit 5    |
-    And the current branch is "existing"
     And the origin is "git@github.com:git-town/git-town.git"
+    And the current branch is "existing"
     And tool "open" is installed
     And an uncommitted file
     And I ran "git add ."

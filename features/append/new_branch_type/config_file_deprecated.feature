@@ -8,11 +8,11 @@ Feature: append a new branch when prototype branches are configured via a deprec
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
-    And the current branch is "existing"
     And the committed configuration file:
       """
       create-prototype-branches = true
       """
+    And the current branch is "existing"
     When I run "git-town append new"
 
   Scenario: result

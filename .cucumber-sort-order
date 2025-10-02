@@ -1,26 +1,38 @@
 # More info at https://github.com/kevgo/cucumber-sort
 
 # Given
+^I am outside a Git repo$
 ^a Git repo with origin$
 ^a local Git repo$
+^an upstream repo$
 ^Git Town is not configured$
 ^the origin is .*$
+^the main branch is .*$
 ^Git setting .* is .*$
-^global Git setting .* is .*$
-^local Git setting .* is .*$
+^.* Git setting .* is .*$
 ^the committed configuration file:$
 ^offline mode is enabled$
+^a folder .*$
 ^the branches$
+^Git Town parent setting for branch .* is .*$
 ^the commits$
+^the tags$
+^origin deletes the .* branch$
 ^origin ships the .* branch using the .* ship-strategy$
 ^I amend this commit$
 ^the current branch is .*$
+^branch .* is active in another worktree$
 ^tool .*? is installed$
 ^an uncommitted file$
 ^an uncommitted file with name .* and content .*$
+# TODO: aren't the steps above and below the same?
+^file .* with content$
+^the configuration file:$
+^wait 1 second to ensure new Git timestamps$
 ^I ran .*$
 
 # When
+^I resolve the conflict in .* with:$
 ^I run .*$
 ^I run .* and enter into the dialog:$
 
@@ -28,17 +40,36 @@
 ^Git Town runs the commands$
 ^Git Town runs no commands$
 ^Git Town prints:$
+^Git Town prints no output$
 ^Git Town prints the error:$
+^the previous Git branch is now .*$
+^the previous Git branch is still .*$
+^there is now no previous Git branch$
+^a rebase is now in progress$
 ^no rebase is now in progress$
 ^the branches are now$
 ^branch .* now has type .*$
+^branch .* still has type .*$
 ^these commits exist now$
+^no commits exist now$
+^commit .* on branch .* now has this full commit message$
 ^the initial commits exist now$
 ^this lineage exists now$
+^no lineage exists now$
 ^the initial lineage exists now$
 ^the initial branches and lineage exist now$
-^Git setting .* now doesn't exist$
+^all branches are now synchronized$
+^the uncommitted file has content:$
+^file .* now has content:$
+^file .* still has content .*$
+^.*Git setting .* now doesn't exist$
 ^Git setting .* still doesn't exist$
+^the perennial branches are still .*$
+^Git Town is no longer configured$
+^the initial tags exist now$
+^the uncommitted file still exists$
+^no uncommitted files exist now$
 
 # UNKNOWN STEPS
-^wait 1 second to ensure new Git timestamps$
+^I resolve the conflict in .*$
+^these committed files exist now$

@@ -5,8 +5,8 @@ Feature: on the main branch with a clean workspace
     And the commits
       | BRANCH | LOCATION | MESSAGE     |
       | main   | origin   | main commit |
-    And the current branch is "main"
     And local Git setting "color.ui" is "always"
+    And the current branch is "main"
     When I run "git-town hack new"
 
   Scenario: result

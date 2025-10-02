@@ -16,8 +16,8 @@ Feature: already existing remote branch
       |          | git checkout -b existing    |
       | existing | git stash pop               |
       |          | git restore --staged .      |
-    And the uncommitted file still exists
     And no commits exist now
+    And the uncommitted file still exists
     And this lineage exists now
       """
       main

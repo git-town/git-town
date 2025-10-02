@@ -13,8 +13,8 @@ Feature: beam commits and uncommitted changes from a local branch onto a new fea
       | existing | local    | commit 2    |
       | existing | local    | commit 3    |
       | existing | local    | commit 4    |
-    And the current branch is "existing"
     And the origin is "git@github.com:git-town/git-town.git"
+    And the current branch is "existing"
     And tool "open" is installed
     And an uncommitted file
     And I ran "git add ."

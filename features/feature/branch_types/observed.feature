@@ -20,6 +20,6 @@ Feature: make an observed branch a feature branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
+    And branch "existing" now has type "observed"
     And the initial commits exist now
     And the initial branches and lineage exist now
-    And branch "existing" now has type "observed"

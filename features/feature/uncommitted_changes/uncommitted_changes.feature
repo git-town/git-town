@@ -26,6 +26,6 @@ Feature: convert a branch to feature branch in the presence of uncommitted chang
       |        | git stash -m "Git Town WIP" |
       |        | git stash pop               |
       |        | git restore --staged .      |
+    And branch "existing" now has type "parked"
     And the initial commits exist now
     And the initial branches and lineage exist now
-    And branch "existing" now has type "parked"

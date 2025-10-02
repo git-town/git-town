@@ -14,8 +14,8 @@ Feature: beam commits and uncommitted changes from a local branch onto a new chi
       | existing | local    | commit 3    |
       | existing | local    | commit 4    |
       | existing | local    | commit 5    |
-    And the current branch is "existing"
     And the origin is "git@github.com:git-town/git-town.git"
+    And the current branch is "existing"
     And tool "open" is installed
     And an uncommitted file
     And I ran "git add ."
