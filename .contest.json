@@ -28,6 +28,12 @@
       "type": "test-file",
       "files": "**/*.md",
       "run": "bash -c 'cd tools && ./rta npm exec text-runner ../{{file}}'"
+    },
+
+    {
+      "type": "test-file",
+      "files": ".cucumber-sort-order",
+      "run": "cucumber-sort format"
     }
   ],
   "options": {

@@ -2,11 +2,11 @@ Feature: on the main branch
 
   Background:
     Given a Git repo with origin
+    And local Git setting "color.ui" is "always"
     And the commits
       | BRANCH | LOCATION | MESSAGE     |
       | main   | origin   | main commit |
     And the current branch is "main"
-    And local Git setting "color.ui" is "always"
     When I run "git-town append new"
 
   Scenario: result

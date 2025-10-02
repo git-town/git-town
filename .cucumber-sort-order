@@ -3,13 +3,16 @@
 # prepare
 ^a Git repo with origin$
 ^Git setting .* is .*$
+^local Git setting .* is .*$
 ^the branches$
 ^the commits$
+^origin ships the .* branch using the .* ship-strategy$
 ^I amend this commit$
 ^the current branch is .*$
 ^the origin is .*$
 ^tool .*? is installed$
 ^an uncommitted file$
+^an uncommitted file with name .* and content .*$
 ^I ran .*$
 
 # execute
@@ -18,17 +21,15 @@
 
 # verify
 ^Git Town runs the commands$
+^Git Town runs no commands$
+^Git Town prints:$
+^Git Town prints the error:$
 ^no rebase is now in progress$
+^the branches are now$
 ^these commits exist now$
 ^the initial commits exist now$
 ^this lineage exists now$
 ^the initial branches and lineage exist now$
 
 # UNKNOWN STEPS
-
-
-# UNKNOWN STEPS
-^Git Town prints the error:$
-
-# UNKNOWN STEPS
-^Git Town runs no commands$
+^the initial lineage exists now$
