@@ -1,10 +1,15 @@
 # More info at https://github.com/kevgo/cucumber-sort
 
 # Given
+^a brand-new Git repo$
 ^I am outside a Git repo$
 ^a Git repo with origin$
 ^a local Git repo$
 ^an upstream repo$
+^my repo's .* remote is .*$
+^an additional .* remote with URL .*$
+^I rename the .* remote to .*$
+^Git has version .*$
 ^Git Town is not configured$
 ^the origin is .*$
 ^the main branch is ".*"$
@@ -17,18 +22,29 @@
 ^Git Town parent setting for branch .* is .*$
 ^the commits$
 ^the tags$
+^a coworker clones the repository$
 ^origin deletes the .* branch$
 ^origin ships the .* branch using the .* ship-strategy$
 ^I amend this commit$
+^I add commit .* to the .* branch$
+^I add this commit to the current branch:$
 ^the current branch is .*$
 ^the currently checked out commit is .*$
 ^branch .* is active in another worktree$
+^in a separate terminal I create branch .* with commits$
+^a proposal for this branch exists at .*$
+^a proposal for this branch does not exist$
+^a proposal for this branch does not exists$
 ^tool .*? is installed$
+^tool .* is broken$
+^no tool to open browsers is installed$
+^the configuration file:$
 ^an uncommitted file$
 ^an uncommitted file with name .* and content .*$
 # TODO: aren't the steps above and below the same?
 ^file .* with content$
-^the configuration file:$
+^the committed file .*:$
+^I add an unrelated stash entry with file .*$
 ^wait 1 second to ensure new Git timestamps$
 ^I ran .*$
 
@@ -37,21 +53,30 @@
 ^I resolve the conflict in ".*$
 ^I run .*$
 ^I run .* and enter into the dialog:$
+^I pipe the following text into .*:$
 
 # Then
+^I am not prompted for any parent branches$
 ^Git Town runs the commands$
 ^Git Town runs no commands$
+^Git Town runs without errors$
 ^Git Town prints:$
+^Git Town prints something like:$
 ^Git Town prints no output$
 ^Git Town prints the error:$
+^Git Town does not print .*$
 ^the previous Git branch is now .*$
 ^the previous Git branch is still .*$
 ^there is now no previous Git branch$
 ^a rebase is now in progress$
 ^no rebase is now in progress$
+^a merge is now in progress$
+^no merge is now in progress$
+^the configuration file is now:$
 ^the branches are now$
 # TODO: aren't the steps above and below the same?
 ^these branches exist now$
+^the branches contain these files:$
 ^this lineage exists now$
 ^no lineage exists now$
 ^the initial lineage exists now$
@@ -61,21 +86,32 @@
 ^commit .* on branch .* now has this full commit message$
 ^the uncommitted file has content:$
 ^file .* now has content:$
+^file .* still has content:$
 ^file .* still has content .*$
 ^the main branch is now .*$
 ^the main branch is still .*$
 ^.*Git setting .* now doesn't exist$
 ^Git setting .* still doesn't exist$
+^global Git setting .* still doesn't exist$
+^local Git setting .* still doesn't exist$
+^the perennial branches are now .*$
 ^the perennial branches are still .*$
+^there are now no perennial branches$
+^there are still no perennial branches$
 ^branch .* now has type .*$
 ^branch .* still has type .*$
 ^Git Town is no longer configured$
-^the initial tags exist now$
 ^the uncommitted file still exists$
 ^no uncommitted files exist now$
+^an uncommitted file with name .* exists now$
+^the home directory contains file .* with content$
+^the initial branches exist now$
 ^the initial commits exist now$
 ^the initial branches and lineage exist now$
+^these tags exist now$
+^the initial tags exist now$
 ^all branches are now synchronized$
 
 # UNKNOWN STEPS
-^file .* still has content:$
+^the current branch in the other worktree is still .*$
+^the perennial branches are .*$
