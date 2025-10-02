@@ -2,9 +2,9 @@ Feature: enforce stashing via CLI flag
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.stash" is "false"
     And the current branch is "main"
     And an uncommitted file
-    And Git setting "git-town.stash" is "false"
     When I run "git-town append new --stash"
 
   Scenario: result

@@ -9,8 +9,8 @@ Feature: proposing uncommitted changes via a child branch and provide commit mes
       | BRANCH   | LOCATION      | MESSAGE         |
       | main     | origin        | main commit     |
       | existing | local, origin | existing commit |
-    And the current branch is "existing"
     And the origin is "git@github.com:git-town/git-town.git"
+    And the current branch is "existing"
     And tool "open" is installed
     And an uncommitted file with name "new_file" and content "new content"
     And I ran "git add new_file"

@@ -5,8 +5,8 @@ Feature: override the push-branches setting
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS |
       | branch-1 | feature | main   | local     |
-    And the current branch is "branch-1"
     And Git setting "git-town.push-branches" is "false"
+    And the current branch is "branch-1"
     When I run "git-town append branch-2 --push"
 
   Scenario: result

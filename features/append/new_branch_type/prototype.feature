@@ -8,8 +8,8 @@ Feature: append a new branch when prototype branches are configured
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
-    And the current branch is "existing"
     And Git setting "git-town.new-branch-type" is "prototype"
+    And the current branch is "existing"
     When I run "git-town append new"
 
   Scenario: result
