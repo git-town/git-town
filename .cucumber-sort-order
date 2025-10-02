@@ -7,7 +7,7 @@
 ^an upstream repo$
 ^Git Town is not configured$
 ^the origin is .*$
-^the main branch is .*$
+^the main branch is ".*"$
 ^Git setting .* is .*$
 ^.* Git setting .* is .*$
 ^the committed configuration file:$
@@ -48,28 +48,28 @@
 ^a rebase is now in progress$
 ^no rebase is now in progress$
 ^the branches are now$
-^branch .* now has type .*$
-^branch .* still has type .*$
 ^these commits exist now$
 ^no commits exist now$
 ^commit .* on branch .* now has this full commit message$
+^the uncommitted file has content:$
+^file .* now has content:$
+^file .* still has content .*$
+^the main branch is now .*$
+^.*Git setting .* now doesn't exist$
+^Git setting .* still doesn't exist$
+^the perennial branches are still .*$
+^branch .* now has type .*$
+^branch .* still has type .*$
+^Git Town is no longer configured$
+^the initial tags exist now$
+^the uncommitted file still exists$
+^no uncommitted files exist now$
 ^the initial commits exist now$
 ^this lineage exists now$
 ^no lineage exists now$
 ^the initial lineage exists now$
 ^the initial branches and lineage exist now$
 ^all branches are now synchronized$
-^the uncommitted file has content:$
-^file .* now has content:$
-^file .* still has content .*$
-^.*Git setting .* now doesn't exist$
-^Git setting .* still doesn't exist$
-^the perennial branches are still .*$
-^Git Town is no longer configured$
-^the initial tags exist now$
-^the uncommitted file still exists$
-^no uncommitted files exist now$
 
 # UNKNOWN STEPS
-^I resolve the conflict in .*$
-^these committed files exist now$
+^the main branch is still .*$
