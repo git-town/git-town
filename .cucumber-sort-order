@@ -1,1 +1,25 @@
 # More info at https://github.com/kevgo/cucumber-sort
+
+# prepare
+^a Git repo with origin$
+^the branches$
+^the commits$
+^the current branch is .*$
+^the origin is .*$
+^tool .*? is installed$
+^an uncommitted file$
+^I ran .*$
+
+# execute
+^I run .*$
+^I run .* and enter into the dialog:$
+
+# verify
+^Git Town runs the commands$
+^no rebase is now in progress$
+^these commits exist now$
+^the initial commits exist now$
+^this lineage exists now$
+^the initial branches and lineage exist now$
+
+# UNKNOWN STEPS
