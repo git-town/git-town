@@ -55,8 +55,15 @@
 # When
 ^I resolve the conflict in .* with:$
 ^I resolve the conflict in ".*$
-^I run .*$
+^I run ".*"$
 ^I run .* and enter into the dialog:$
+^I run .* and close the editor$
+^I run .* and enter .* for the commit message$
+^I run .* and enter an empty commit message$
+^I run .* and enter into the dialogs:$
+^I run .* in the .* folder$
+^I run .* in the other worktree$
+^I run .* with these environment variables$
 ^I pipe the following text into .*:$
 
 # Then
@@ -115,6 +122,3 @@
 ^these tags exist now$
 ^the initial tags exist now$
 ^all branches are now synchronized$
-
-# UNKNOWN STEPS
-^text$
