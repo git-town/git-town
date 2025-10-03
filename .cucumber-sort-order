@@ -85,6 +85,16 @@
 ^a merge is now in progress$
 ^a merge is still in progress$
 ^no merge is now in progress$
+^<LOCATION> Git setting ".*" is now ".*"$
+^global Git setting ".*" is now ".*"$
+^global Git setting ".*" is still ".*"$
+^local Git setting ".*" is now ".*"$
+^Git setting ".*" is now ".*"$
+^Git setting ".*" is still ".*"$
+^.*Git setting ".*" now doesn't exist$
+^Git setting ".*" still doesn't exist$
+^global Git setting ".*" still doesn't exist$
+^local Git setting ".*" still doesn't exist$
 ^the configuration file is now:$
 ^the branches are now$
 # TODO: aren't the steps above and below the same?
@@ -104,16 +114,6 @@
 ^the main branch is now .*$
 ^the main branch is still .*$
 ^the current branch in the other worktree is still .*$
-^<LOCATION> Git setting ".*" is now ".*"$
-^global Git setting ".*" is now ".*"$
-^global Git setting ".*" is still ".*"$
-^local Git setting ".*" is now ".*"$
-^Git setting ".*" is now ".*"$
-^Git setting ".*" is still ".*"$
-^.*Git setting ".*" now doesn't exist$
-^Git setting ".*" still doesn't exist$
-^global Git setting ".*" still doesn't exist$
-^local Git setting ".*" still doesn't exist$
 ^there are now no perennial branches$
 ^there are still no perennial branches$
 ^branch ".*" now has type .*$

@@ -2,16 +2,16 @@ Feature: append a new branch when prototype branches are configured via a deprec
 
   Background:
     Given a Git repo with origin
+    And the committed configuration file:
+      """
+      create-prototype-branches = true
+      """
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
-    And the committed configuration file:
-      """
-      create-prototype-branches = true
-      """
     And the current branch is "existing"
     When I run "git-town append new"
 
@@ -25,14 +25,14 @@ Feature: append a new branch when prototype branches are configured via a deprec
       The Git Town configuration file contains the deprecated setting "create-prototype-branches".
       Please upgrade to the new format: create.new-branch-type = "prototype"
       """
-    And branch "new" now has type "prototype"
-    And the initial commits exist now
     And this lineage exists now
       """
       main
         existing
           new
       """
+    And branch "new" now has type "prototype"
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -40,5 +40,5 @@ Feature: append a new branch when prototype branches are configured via a deprec
       | BRANCH   | COMMAND               |
       | new      | git checkout existing |
       | existing | git branch -D new     |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now
