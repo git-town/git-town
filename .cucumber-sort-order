@@ -26,7 +26,6 @@
 ^the tags$
 ^a remote tag .* not on a branch$
 ^the perennial branches are .*$
-^a coworker clones the repository$
 ^origin deletes the .* branch$
 ^origin ships the .* branch using the .* ship-strategy$
 ^origin ships the .* branch using the .* ship-strategy as .*$
@@ -40,7 +39,6 @@
 ^in a separate terminal I create branch .* with commits$
 ^a proposal for this branch exists at .*$
 ^a proposal for this branch does not exist$
-^a proposal for this branch does not exists$
 ^tool .*? is installed$
 ^tool .* is broken$
 ^no tool to open browsers is installed$
@@ -102,8 +100,6 @@
 ^Git setting .* still doesn't exist$
 ^global Git setting .* still doesn't exist$
 ^local Git setting .* still doesn't exist$
-^the perennial branches are now .*$
-^the perennial branches are still .*$
 ^there are now no perennial branches$
 ^there are still no perennial branches$
 ^branch .* now has type .*$
