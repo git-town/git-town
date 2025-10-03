@@ -9,6 +9,8 @@
 ^my repo's .* remote is .*$
 ^an additional .* remote with URL .*$
 ^I rename the .* remote to .*$
+^a remote .* pointing to .*$
+^my repo has a Git submodule$
 ^Git has version .*$
 ^Git Town is not configured$
 ^the origin is .*$
@@ -22,12 +24,16 @@
 ^Git Town parent setting for branch .* is .*$
 ^the commits$
 ^the tags$
+^a remote tag .* not on a branch$
+^the perennial branches are .*$
 ^a coworker clones the repository$
 ^origin deletes the .* branch$
 ^origin ships the .* branch using the .* ship-strategy$
+^origin ships the .* branch using the .* ship-strategy as .*$
 ^I amend this commit$
 ^I add commit .* to the .* branch$
 ^I add this commit to the current branch:$
+^I add this commit to the .* branch$
 ^the current branch is .*$
 ^the currently checked out commit is .*$
 ^branch .* is active in another worktree$
@@ -71,6 +77,7 @@
 ^a rebase is now in progress$
 ^no rebase is now in progress$
 ^a merge is now in progress$
+^a merge is still in progress$
 ^no merge is now in progress$
 ^the configuration file is now:$
 ^the branches are now$
@@ -90,6 +97,7 @@
 ^file .* still has content .*$
 ^the main branch is now .*$
 ^the main branch is still .*$
+^the current branch in the other worktree is still .*$
 ^.*Git setting .* now doesn't exist$
 ^Git setting .* still doesn't exist$
 ^global Git setting .* still doesn't exist$
@@ -113,5 +121,4 @@
 ^all branches are now synchronized$
 
 # UNKNOWN STEPS
-^the current branch in the other worktree is still .*$
-^the perennial branches are .*$
+^text$
