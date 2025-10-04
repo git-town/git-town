@@ -161,22 +161,23 @@ Start:
 }
 
 type detachData struct {
-	branchInfosLastRun  Option[gitdomain.BranchInfos]
-	branchToDetachInfo  gitdomain.BranchInfo
-	branchToDetachName  gitdomain.LocalBranchName
-	branchToDetachType  configdomain.BranchType
-	branchesSnapshot    gitdomain.BranchesSnapshot
-	children            []detachChildBranch
-	config              config.ValidatedConfig
-	connector           Option[forgedomain.Connector]
-	descendents         []detachChildBranch
-	hasOpenChanges      bool
-	initialBranch       gitdomain.LocalBranchName
-	inputs              dialogcomponents.Inputs
-	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
-	parentBranch        gitdomain.LocalBranchName
-	previousBranch      Option[gitdomain.LocalBranchName]
-	stashSize           gitdomain.StashSize
+	branchInfosLastRun     Option[gitdomain.BranchInfos]
+	branchToDetachInfo     gitdomain.BranchInfo
+	branchToDetachName     gitdomain.LocalBranchName
+	branchToDetachProposal Option[forgedomain.Proposal]
+	branchToDetachType     configdomain.BranchType
+	branchesSnapshot       gitdomain.BranchesSnapshot
+	children               []detachChildBranch
+	config                 config.ValidatedConfig
+	connector              Option[forgedomain.Connector]
+	descendents            []detachChildBranch
+	hasOpenChanges         bool
+	initialBranch          gitdomain.LocalBranchName
+	inputs                 dialogcomponents.Inputs
+	nonExistingBranches    gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
+	parentBranch           gitdomain.LocalBranchName
+	previousBranch         Option[gitdomain.LocalBranchName]
+	stashSize              gitdomain.StashSize
 }
 
 type detachChildBranch struct {
@@ -291,16 +292,25 @@ func determineDetachData(repo execute.OpenRepoResult) (data detachData, flow con
 	if branchHasMergeCommits {
 		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchContainsMergeCommits, branchNameToDetach)
 	}
+	connectorProposalFinder := None[forgedomain.ProposalFinder]()
+	branchToDetachPropsal := None[forgedomain.Proposal]()
+	if connector, hasConnector := connector.Get(); hasConnector {
+		if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
+			connectorProposalFinder = Some(proposalFinder)
+			branchToDetachPropsal, err = proposalFinder.FindProposal(branchNameToDetach, parentBranch)
+			if err != nil {
+				return data, configdomain.ProgramFlowExit, err
+			}
+		}
+	}
 	childBranches := validatedConfig.NormalConfig.Lineage.Children(branchNameToDetach)
 	children := make([]detachChildBranch, len(childBranches))
 	for c, childBranch := range childBranches {
 		proposal := None[forgedomain.Proposal]()
-		if connector, hasConnector := connector.Get(); hasConnector {
-			if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
-				proposal, err = proposalFinder.FindProposal(childBranch, initialBranch)
-				if err != nil {
-					return data, configdomain.ProgramFlowExit, err
-				}
+		if proposalFinder, hasProposalFinder := connectorProposalFinder.Get(); hasProposalFinder {
+			proposal, err = proposalFinder.FindProposal(childBranch, initialBranch)
+			if err != nil {
+				return data, configdomain.ProgramFlowExit, err
 			}
 		}
 		childInfo, has := branchesSnapshot.Branches.FindByLocalName(childBranch).Get()
@@ -329,22 +339,23 @@ func determineDetachData(repo execute.OpenRepoResult) (data detachData, flow con
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
 	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
 	return detachData{
-		branchInfosLastRun:  branchInfosLastRun,
-		branchToDetachInfo:  *branchToDetachInfo,
-		branchToDetachName:  branchNameToDetach,
-		branchToDetachType:  branchTypeToDetach,
-		branchesSnapshot:    branchesSnapshot,
-		children:            children,
-		config:              validatedConfig,
-		connector:           connector,
-		descendents:         descendents,
-		hasOpenChanges:      repoStatus.OpenChanges,
-		initialBranch:       initialBranch,
-		inputs:              inputs,
-		nonExistingBranches: nonExistingBranches,
-		parentBranch:        parentBranch,
-		previousBranch:      previousBranchOpt,
-		stashSize:           stashSize,
+		branchInfosLastRun:     branchInfosLastRun,
+		branchToDetachInfo:     *branchToDetachInfo,
+		branchToDetachName:     branchNameToDetach,
+		branchToDetachProposal: branchToDetachPropsal,
+		branchToDetachType:     branchTypeToDetach,
+		branchesSnapshot:       branchesSnapshot,
+		children:               children,
+		config:                 validatedConfig,
+		connector:              connector,
+		descendents:            descendents,
+		hasOpenChanges:         repoStatus.OpenChanges,
+		initialBranch:          initialBranch,
+		inputs:                 inputs,
+		nonExistingBranches:    nonExistingBranches,
+		parentBranch:           parentBranch,
+		previousBranch:         previousBranchOpt,
+		stashSize:              stashSize,
 	}, configdomain.ProgramFlowContinue, nil
 }
 
@@ -392,13 +403,32 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 				Parent: data.config.ValidatedConfigData.MainBranch,
 			},
 		)
-		for _, child := range data.config.NormalConfig.Lineage.Children(data.branchToDetachName) {
+		if proposal, hasProposal := data.branchToDetachProposal.Get(); hasProposal {
+			prog.Value.Add(
+				&opcodes.ProposalUpdateTarget{
+					NewBranch: data.parentBranch,
+					OldBranch: data.branchToDetachName,
+					Proposal:  proposal,
+				},
+			)
+		}
+		for _, child := range data.children {
 			prog.Value.Add(
 				&opcodes.LineageParentSet{
-					Branch: child,
+					Branch: child.name,
 					Parent: data.parentBranch,
 				},
 			)
+
+			if proposal, hasProposal := child.proposal.Get(); hasProposal {
+				prog.Value.Add(
+					&opcodes.ProposalUpdateTarget{
+						NewBranch: data.parentBranch,
+						OldBranch: data.branchToDetachName,
+						Proposal:  proposal,
+					},
+				)
+			}
 		}
 	}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
