@@ -52,14 +52,12 @@ func UpdateProposalStackLineageProgram(args UpdateProposalStackLineageProgramArg
 				LineageTree:     MutableSome(tree),
 			})
 		}
-	} else {
-		if !args.SkipUpdateForProposalsWithBaseBranch.Contains(args.Current) {
-			args.Program.Value.Add(&opcodes.ProposalUpdateLineage{
-				Current:         args.Current,
-				CurrentProposal: tree.BranchToProposal[args.Current],
-				LineageTree:     MutableSome(tree),
-			})
-		}
+	} else if !args.SkipUpdateForProposalsWithBaseBranch.Contains(args.Current) {
+		args.Program.Value.Add(&opcodes.ProposalUpdateLineage{
+			Current:         args.Current,
+			CurrentProposal: tree.BranchToProposal[args.Current],
+			LineageTree:     MutableSome(tree),
+		})
 	}
 
 	return Some(tree)
