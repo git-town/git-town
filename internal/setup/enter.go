@@ -163,6 +163,7 @@ EnterForgeData:
 	pushHook := None[configdomain.PushHook]()
 	shipStrategy := None[configdomain.ShipStrategy]()
 	shipDeleteTrackingBranch := None[configdomain.ShipDeleteTrackingBranch]()
+	proposalsShowLineage := None[forgedomain.ProposalsShowLineage]()
 	if enterAll {
 		perennialRegex, exit, err = enterPerennialRegex(data)
 		if err != nil || exit {
@@ -240,6 +241,10 @@ EnterForgeData:
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}
+		proposalsShowLineage, exit, err = enterProposalsShowLineage(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
 	}
 	configStorage, exit, err := dialog.ConfigStorage(data.Inputs)
 	if err != nil || exit {
@@ -274,7 +279,7 @@ EnterForgeData:
 		Offline:                  None[configdomain.Offline](), // the setup assistant doesn't ask for this
 		PerennialBranches:        perennialBranches,
 		PerennialRegex:           perennialRegex,
-		ProposalsShowLineage:     None[forgedomain.ProposalsShowLineage](), // TODO: populate this in the setup assistant once https://github.com/git-town/git-town/issues/3003 is shipped
+		ProposalsShowLineage:     proposalsShowLineage,
 		PushBranches:             pushBranches,
 		PushHook:                 pushHook,
 		ShareNewBranches:         shareNewBranches,
@@ -547,6 +552,17 @@ func enterPerennialRegex(data Data) (Option[configdomain.PerennialRegex], dialog
 		Global: data.Config.GitGlobal.PerennialRegex,
 		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.PerennialRegex,
+	})
+}
+
+func enterProposalsShowLineage(data Data) (Option[forgedomain.ProposalsShowLineage], dialogdomain.Exit, error) {
+	if data.Config.File.ProposalsShowLineage.IsSome() {
+		return None[forgedomain.ProposalsShowLineage](), false, nil
+	}
+	return dialog.ProposalsShowLineage(dialog.Args[forgedomain.ProposalsShowLineage]{
+		Global: data.Config.GitGlobal.ProposalsShowLineage,
+		Inputs: data.Inputs,
+		Local:  data.Config.GitLocal.ProposalsShowLineage,
 	})
 }
 
