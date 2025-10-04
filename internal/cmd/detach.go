@@ -435,6 +435,25 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 			)
 		}
 	}
+	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
+		if connector, hasConnector := data.connector.Get(); hasConnector {
+			if proposalFinder, hasProposalFinder := connector.(forgedomain.ProposalFinder); hasProposalFinder {
+				sync.BranchProposalsProgram(
+					sync.BranchProposalsProgramArgs{
+						Current:   data.initialBranch,
+						FullStack: true,
+						Program:   prog,
+						ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
+							Connector:                proposalFinder,
+							CurrentBranch:            data.initialBranch,
+							Lineage:                  data.config.NormalConfig.Lineage,
+							MainAndPerennialBranches: data.config.MainAndPerennials(),
+						},
+					},
+				)
+			}
+		}
+	}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.config.NormalConfig.DryRun,
 		InitialStashSize:         data.stashSize,
