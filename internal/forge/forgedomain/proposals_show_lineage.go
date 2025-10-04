@@ -46,3 +46,16 @@ func ParseProposalsShowLineage(value string) (Option[ProposalsShowLineage], erro
 	}
 	return None[ProposalsShowLineage](), fmt.Errorf(messages.ProposalsShowLineageInvalid, value)
 }
+
+// ProposalLineageCanBeUpdatedByCli returns a some type IF
+// Lineage can be updated by CLI AND has a connector implements FindProposal interface
+func ProposalLineageCanBeUpdatedByCli(config ProposalsShowLineage, forgeConnector Option[Connector]) Option[ProposalFinder] {
+	if config == ProposalsShowLineageCLI {
+		if connector, hasConnector := forgeConnector.Get(); hasConnector {
+			if proposalFinder, hasProposalFinder := connector.(ProposalFinder); hasProposalFinder {
+				return Some(proposalFinder)
+			}
+		}
+	}
+	return None[ProposalFinder]()
+}

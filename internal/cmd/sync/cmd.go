@@ -168,26 +168,22 @@ Start:
 	if data.remotes.HasRemote(data.config.NormalConfig.DevRemote) && data.shouldPushTags && data.config.NormalConfig.Offline.IsOnline() {
 		runProgram.Value.Add(&opcodes.PushTags{})
 	}
-
-	connector, hasConnector := data.connector.Get()
-	if hasConnector {
-		if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
-			if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
-				BranchProposalsProgram(
-					BranchProposalsProgramArgs{
-						Current:   data.initialBranch,
-						FullStack: args.stack,
-						Program:   runProgram,
-						ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
-							Connector:                proposalFinder,
-							CurrentBranch:            data.initialBranch,
-							Lineage:                  data.config.NormalConfig.Lineage,
-							MainAndPerennialBranches: data.config.MainAndPerennials(),
-						},
-					},
-				)
-			}
-		}
+	if proposalFinder, canUpdateProposalLineage := forgedomain.ProposalLineageCanBeUpdatedByCli(data.config.NormalConfig.ProposalsShowLineage, data.connector).Get(); canUpdateProposalLineage {
+		_ = UpdateProposalStackLineageProgram(
+			UpdateProposalStackLineageProgramArgs{
+				Current:   data.initialBranch,
+				FullStack: args.stack,
+				Program:   runProgram,
+				ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
+					Connector:                proposalFinder,
+					CurrentBranch:            data.initialBranch,
+					Lineage:                  data.config.NormalConfig.Lineage,
+					MainAndPerennialBranches: data.config.MainAndPerennials(),
+				},
+				ProposalStackLineageTree:             None[*forge.ProposalStackLineageTree](),
+				SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(),
+			},
+		)
 	}
 
 	cmdhelpers.Wrap(runProgram, cmdhelpers.WrapOptions{
