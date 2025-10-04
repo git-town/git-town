@@ -594,6 +594,13 @@ func enterShipDeleteTrackingBranch(data Data) (Option[configdomain.ShipDeleteTra
 	})
 }
 
+func enterProposalsShowLineage(data Data) (Option[forgedomain.ProposalsShowLineage], dialogdomain.Exit, error) {
+	if data.Config.File.ProposalsShowLineage.IsSome() {
+		return None[forgedomain.ProposalsShowLineage](), false, nil
+	}
+
+}
+
 func enterShipStrategy(data Data) (Option[configdomain.ShipStrategy], dialogdomain.Exit, error) {
 	if data.Config.File.ShipStrategy.IsSome() {
 		return None[configdomain.ShipStrategy](), false, nil
