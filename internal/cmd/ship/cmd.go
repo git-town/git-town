@@ -171,29 +171,25 @@ Start:
 		}
 		shipProgramSquashMerge(prog, repo, sharedData, squashMergeData, message)
 	}
-	if sharedData.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
-		if connector, hasConnector := sharedData.connector.Get(); hasConnector {
-			if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
-				_ = sync.UpdateProposalStackLineageProgram(
-					sync.UpdateProposalStackLineageProgramArgs{
-						Current:   sharedData.initialBranch,
-						FullStack: true,
-						Program:   prog,
-						ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
-							Connector:                proposalFinder,
-							CurrentBranch:            sharedData.initialBranch,
-							Lineage:                  sharedData.config.NormalConfig.Lineage,
-							MainAndPerennialBranches: sharedData.config.MainAndPerennials(),
-						},
-						ProposalStackLineageTree: None[*forge.ProposalStackLineageTree](),
-						// Proposal has been shipped and its stack lineage
-						// information shouldn't need to be updated because
-						// proposal is not in a review state.
-						SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(sharedData.initialBranch.String()),
-					},
-				)
-			}
-		}
+	if proposalFinder, canUpdateProposalLineage := forgedomain.ProposalLineageCanBeUpdatedByCli(sharedData.config.NormalConfig.ProposalsShowLineage, sharedData.connector).Get(); canUpdateProposalLineage {
+		_ = sync.UpdateProposalStackLineageProgram(
+			sync.UpdateProposalStackLineageProgramArgs{
+				Current:   sharedData.initialBranch,
+				FullStack: true,
+				Program:   prog,
+				ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
+					Connector:                proposalFinder,
+					CurrentBranch:            sharedData.initialBranch,
+					Lineage:                  sharedData.config.NormalConfig.Lineage,
+					MainAndPerennialBranches: sharedData.config.MainAndPerennials(),
+				},
+				ProposalStackLineageTree: None[*forge.ProposalStackLineageTree](),
+				// Proposal has been shipped and its stack lineage
+				// information shouldn't need to be updated because
+				// proposal is not in a review state.
+				SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(sharedData.initialBranch.String()),
+			},
+		)
 	}
 	optimizedProgram := optimizer.Optimize(prog.Immutable())
 	runState := runstate.RunState{

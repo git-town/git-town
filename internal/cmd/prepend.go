@@ -507,26 +507,22 @@ func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages
 			PreviousBranchCandidates: previousBranchCandidates,
 		})
 	}
-	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
-		if hasConnector {
-			if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
-				_ = sync.UpdateProposalStackLineageProgram(
-					sync.UpdateProposalStackLineageProgramArgs{
-						Current:   data.initialBranch,
-						FullStack: true,
-						Program:   prog,
-						ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
-							Connector:                proposalFinder,
-							CurrentBranch:            data.initialBranch,
-							Lineage:                  data.config.NormalConfig.Lineage,
-							MainAndPerennialBranches: data.config.MainAndPerennials(),
-						},
-						ProposalStackLineageTree:             None[*forge.ProposalStackLineageTree](),
-						SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(),
-					},
-				)
-			}
-		}
+	if proposalFinder, canUpdateProposalLineage := forgedomain.ProposalLineageCanBeUpdatedByCli(data.config.NormalConfig.ProposalsShowLineage, data.connector).Get(); canUpdateProposalLineage {
+		_ = sync.UpdateProposalStackLineageProgram(
+			sync.UpdateProposalStackLineageProgramArgs{
+				Current:   data.initialBranch,
+				FullStack: true,
+				Program:   prog,
+				ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
+					Connector:                proposalFinder,
+					CurrentBranch:            data.initialBranch,
+					Lineage:                  data.config.NormalConfig.Lineage,
+					MainAndPerennialBranches: data.config.MainAndPerennials(),
+				},
+				ProposalStackLineageTree:             None[*forge.ProposalStackLineageTree](),
+				SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(),
+			},
+		)
 	}
 	return optimizer.Optimize(prog.Immutable())
 }

@@ -348,30 +348,26 @@ func deleteFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data d
 		prog.Value.Add(&opcodes.BranchTrackingDelete{Branch: trackingBranchToDelete})
 	}
 	deleteLocalBranch(prog, finalUndoProgram, data)
-	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
-		if connector, hasConnector := data.connector.Get(); hasConnector {
-			if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
-				_ = sync.UpdateProposalStackLineageProgram(
-					sync.UpdateProposalStackLineageProgramArgs{
-						Current:   data.initialBranch,
-						FullStack: true,
-						Program:   prog,
-						ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
-							Connector:                proposalFinder,
-							CurrentBranch:            data.initialBranch,
-							Lineage:                  data.config.NormalConfig.Lineage,
-							MainAndPerennialBranches: data.config.MainAndPerennials(),
-						},
-						ProposalStackLineageTree: None[*forge.ProposalStackLineageTree](),
-						// Do not update the proposal of the deleted branch.
-						// At this point, a forge (like github) would close
-						// the proposal because there is no longer a remote
-						// branch.
-						SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(data.initialBranch.String()),
-					},
-				)
-			}
-		}
+	if proposalFinder, canUpdateProposalLineage := forgedomain.ProposalLineageCanBeUpdatedByCli(data.config.NormalConfig.ProposalsShowLineage, data.connector).Get(); canUpdateProposalLineage {
+		_ = sync.UpdateProposalStackLineageProgram(
+			sync.UpdateProposalStackLineageProgramArgs{
+				Current:   data.initialBranch,
+				FullStack: true,
+				Program:   prog,
+				ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
+					Connector:                proposalFinder,
+					CurrentBranch:            data.initialBranch,
+					Lineage:                  data.config.NormalConfig.Lineage,
+					MainAndPerennialBranches: data.config.MainAndPerennials(),
+				},
+				ProposalStackLineageTree: None[*forge.ProposalStackLineageTree](),
+				// Do not update the proposal of the deleted branch.
+				// At this point, a forge (like github) would close
+				// the proposal because there is no longer a remote
+				// branch.
+				SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(data.initialBranch.String()),
+			},
+		)
 	}
 }
 
