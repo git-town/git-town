@@ -9,6 +9,7 @@ import (
 
 	"github.com/git-town/git-town/v22/internal/cli/flags"
 	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v22/internal/cmd/sync"
 	"github.com/git-town/git-town/v22/internal/config/cliconfig"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/execute"
@@ -175,31 +176,26 @@ Start:
 	}
 	if sharedData.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
 		if connector, hasConnector := sharedData.connector.Get(); hasConnector {
-			if proposalFinder, hasProposalFinder := connector.(forgedomain.ProposalFinder); hasProposalFinder {
-				tree, err := forge.NewProposalStackLineageTree(forge.ProposalStackLineageArgs{
-					Connector:                proposalFinder,
-					CurrentBranch:            sharedData.initialBranch,
-					Lineage:                  sharedData.config.NormalConfig.Lineage,
-					MainAndPerennialBranches: sharedData.config.MainAndPerennials(),
-					Order:                    sharedData.config.NormalConfig.Order,
-				})
-				if err != nil {
-					fmt.Printf("failed to update proposal stack lineage: %s\n", err.Error())
-				} else {
-					for branch, proposal := range tree.BranchToProposal { // okay to iterate the map in random order
+			if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
+				_ = sync.UpdateProposalStackLineageProgram(
+					sync.UpdateProposalStackLineageProgramArgs{
+						Current:   sharedData.initialBranch,
+						FullStack: true,
+						Program:   prog,
+						ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
+							Connector:                proposalFinder,
+							CurrentBranch:            sharedData.initialBranch,
+							Lineage:                  sharedData.config.NormalConfig.Lineage,
+							MainAndPerennialBranches: sharedData.config.MainAndPerennials(),
+							Order:                    sharedData.config.NormalConfig.Order,
+						},
+						ProposalStackLineageTree: None[*forge.ProposalStackLineageTree](),
 						// Proposal has been shipped and its stack lineage
 						// information shouldn't need to be updated because
 						// proposal is not in a review state.
-						if branch == sharedData.initialBranch {
-							continue
-						}
-						prog.Value.Add(&opcodes.ProposalUpdateLineage{
-							Current:         branch,
-							CurrentProposal: proposal,
-							LineageTree:     MutableSome(tree),
-						})
-					}
-				}
+						SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(sharedData.initialBranch.String()),
+					},
+				)
 			}
 		}
 	}
