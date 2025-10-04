@@ -174,7 +174,7 @@ Start:
 	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
 		if connector, hasConnector := data.connector.Get(); hasConnector {
 			if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
-				_ = UpdateProposalStackLineageProgram(
+				_ = AddStackLineageUpdateOpcodes(
 					UpdateProposalStackLineageProgramArgs{
 						Current:   data.initialBranch,
 						FullStack: args.stack,

@@ -21,9 +21,9 @@ type UpdateProposalStackLineageProgramArgs struct {
 	SkipUpdateForProposalsWithBaseBranch gitdomain.LocalBranchNames
 }
 
-// UpdateProposalStackLineageProgram syncs all given proposals.
+// AddStackLineageUpdateOpcodes syncs all given proposals.
 // Returns the stack lineage tree if its needed to recall this function.
-func UpdateProposalStackLineageProgram(args UpdateProposalStackLineageProgramArgs) Option[*forge.ProposalStackLineageTree] {
+func AddStackLineageUpdateOpcodes(args UpdateProposalStackLineageProgramArgs) Option[*forge.ProposalStackLineageTree] {
 	// TODO: there are now multiple places that load and use proposals for branches.
 	// To avoid double-loading the same proposal data in one run,
 	// extract an object that caches the already known proposals,
@@ -52,14 +52,12 @@ func UpdateProposalStackLineageProgram(args UpdateProposalStackLineageProgramArg
 				LineageTree:     MutableSome(tree),
 			})
 		}
-	} else {
-		if !args.SkipUpdateForProposalsWithBaseBranch.Contains(args.Current) {
-			args.Program.Value.Add(&opcodes.ProposalUpdateLineage{
-				Current:         args.Current,
-				CurrentProposal: tree.BranchToProposal[args.Current],
-				LineageTree:     MutableSome(tree),
-			})
-		}
+	} else if !args.SkipUpdateForProposalsWithBaseBranch.Contains(args.Current) {
+		args.Program.Value.Add(&opcodes.ProposalUpdateLineage{
+			Current:         args.Current,
+			CurrentProposal: tree.BranchToProposal[args.Current],
+			LineageTree:     MutableSome(tree),
+		})
 	}
 
 	return Some(tree)

@@ -513,7 +513,7 @@ func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages
 	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
 		if hasConnector {
 			if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
-				_ = sync.UpdateProposalStackLineageProgram(
+				_ = sync.AddStackLineageUpdateOpcodes(
 					sync.UpdateProposalStackLineageProgramArgs{
 						Current:   data.initialBranch,
 						FullStack: true,
