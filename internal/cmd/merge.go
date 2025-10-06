@@ -6,10 +6,13 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/spf13/cobra"
+
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v22/internal/cli/flags"
 	"github.com/git-town/git-town/v22/internal/cli/print"
 	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v22/internal/cmd/sync"
 	"github.com/git-town/git-town/v22/internal/config"
 	"github.com/git-town/git-town/v22/internal/config/cliconfig"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
@@ -25,7 +28,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/vm/optimizer"
 	"github.com/git-town/git-town/v22/internal/vm/program"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
-	"github.com/spf13/cobra"
 )
 
 const (
@@ -162,6 +164,7 @@ type mergeData struct {
 	branchInfosLastRun Option[gitdomain.BranchInfos]
 	branchesSnapshot   gitdomain.BranchesSnapshot
 	config             config.ValidatedConfig
+	connector          Option[forgedomain.Connector]
 	hasOpenChanges     bool
 	initialBranch      gitdomain.LocalBranchName
 	initialBranchInfo  gitdomain.BranchInfo
@@ -288,6 +291,7 @@ func determineMergeData(repo execute.OpenRepoResult) (data mergeData, flow confi
 		branchInfosLastRun: branchInfosLastRun,
 		branchesSnapshot:   branchesSnapshot,
 		config:             validatedConfig,
+		connector:          connector,
 		hasOpenChanges:     repoStatus.OpenChanges,
 		initialBranch:      initialBranch,
 		initialBranchInfo:  *initialBranchInfo,
@@ -338,6 +342,23 @@ func mergeProgram(repo execute.OpenRepoResult, data mergeData) program.Program {
 		})
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
+	if connector, hasConnector := data.connector.Get(); hasConnector {
+		if proposalFinder, hasProposalFinder := connector.(forgedomain.ProposalFinder); hasProposalFinder {
+			_ = sync.UpdateProposalStackLineageProgram(sync.UpdateProposalStackLineageProgramArgs{
+				Current:   data.initialBranch,
+				FullStack: true,
+				Program:   prog,
+				ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
+					Connector:                proposalFinder,
+					CurrentBranch:            data.initialBranch,
+					Lineage:                  data.config.NormalConfig.Lineage,
+					MainAndPerennialBranches: data.config.MainAndPerennials(),
+				},
+				ProposalStackLineageTree:             None[*forge.ProposalStackLineageTree](),
+				SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(data.initialBranch.String()),
+			})
+		}
+	}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.config.NormalConfig.DryRun,
 		InitialStashSize:         data.stashSize,
