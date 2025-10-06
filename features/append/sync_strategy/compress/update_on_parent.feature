@@ -23,16 +23,16 @@ Feature: append a new feature branch in a clean workspace using the "compress" s
       |         | git commit -m "already compressed" |
       |         | git push --force-with-lease        |
       |         | git checkout -b new                |
-    And these commits exist now
-      | BRANCH  | LOCATION      | MESSAGE            |
-      | main    | local, origin | new commit         |
-      | feature | local, origin | already compressed |
     And this lineage exists now
       """
       main
         feature
           new
       """
+    And these commits exist now
+      | BRANCH  | LOCATION      | MESSAGE            |
+      | main    | local, origin | new commit         |
+      | feature | local, origin | already compressed |
 
   Scenario: undo
     When I run "git-town undo"
@@ -42,5 +42,5 @@ Feature: append a new feature branch in a clean workspace using the "compress" s
       | feature | git reset --hard {{ sha-initial 'already compressed' }} |
       |         | git push --force-with-lease --force-if-includes         |
       |         | git branch -D new                                       |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

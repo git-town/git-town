@@ -2,6 +2,7 @@ Feature: display the local branch hierarchy with types for unusual branches
 
   Background:
     Given a Git repo with origin
+    And local Git setting "color.ui" is "always"
     And the branches
       | NAME         | TYPE         | PARENT | LOCATIONS     |
       | alpha        | feature      | main   | local, origin |
@@ -13,7 +14,6 @@ Feature: display the local branch hierarchy with types for unusual branches
       | parked       | parked       | main   | local         |
       | perennial    | perennial    |        | local, origin |
     And the current branch is "beta"
-    And local Git setting "color.ui" is "always"
     When I run "git-town branch"
 
   Scenario: result

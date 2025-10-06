@@ -18,14 +18,14 @@ Feature: append to a perennial branch
       | production | git fetch --prune --tags                                |
       |            | git -c rebase.updateRefs=false rebase origin/production |
       |            | git checkout -b new                                     |
-    And these commits exist now
-      | BRANCH     | LOCATION      | MESSAGE           |
-      | production | local, origin | production commit |
     And this lineage exists now
       """
       production
         new
       """
+    And these commits exist now
+      | BRANCH     | LOCATION      | MESSAGE           |
+      | production | local, origin | production commit |
 
   Scenario: undo
     When I run "git-town undo"
@@ -34,5 +34,5 @@ Feature: append to a perennial branch
       | new        | git checkout production                     |
       | production | git reset --hard {{ sha 'initial commit' }} |
       |            | git branch -D new                           |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

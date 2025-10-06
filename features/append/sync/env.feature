@@ -18,13 +18,13 @@ Feature: disable syncing via environment variable
     Then Git Town runs the commands
       | BRANCH   | COMMAND                  |
       | branch-1 | git checkout -b branch-2 |
-    And the initial commits exist now
     And this lineage exists now
       """
       main
         branch-1
           branch-2
       """
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -32,5 +32,5 @@ Feature: disable syncing via environment variable
       | BRANCH   | COMMAND                |
       | branch-2 | git checkout branch-1  |
       | branch-1 | git branch -D branch-2 |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

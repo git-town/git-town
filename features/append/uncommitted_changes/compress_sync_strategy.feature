@@ -23,13 +23,13 @@ Feature: append a new feature branch in a dirty workspace using the "compress" s
       |          | git checkout -b new         |
       | new      | git stash pop               |
       |          | git restore --staged .      |
-    And the initial commits exist now
     And this lineage exists now
       """
       main
         existing
           new
       """
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -41,5 +41,5 @@ Feature: append a new feature branch in a dirty workspace using the "compress" s
       | existing | git branch -D new           |
       |          | git stash pop               |
       |          | git restore --staged .      |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

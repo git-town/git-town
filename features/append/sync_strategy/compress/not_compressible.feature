@@ -18,15 +18,15 @@ Feature: append a new feature branch in a clean workspace using the "compress" s
       | BRANCH  | COMMAND                  |
       | feature | git fetch --prune --tags |
       |         | git checkout -b new      |
-    And these commits exist now
-      | BRANCH  | LOCATION      | MESSAGE            |
-      | feature | local, origin | already compressed |
     And this lineage exists now
       """
       main
         feature
           new
       """
+    And these commits exist now
+      | BRANCH  | LOCATION      | MESSAGE            |
+      | feature | local, origin | already compressed |
 
   Scenario: undo
     When I run "git-town undo"
@@ -34,5 +34,5 @@ Feature: append a new feature branch in a clean workspace using the "compress" s
       | BRANCH  | COMMAND              |
       | new     | git checkout feature |
       | feature | git branch -D new    |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

@@ -2,6 +2,7 @@ Feature: proposing uncommitted changes via a child branch and provide commit mes
 
   Background:
     Given a Git repo with origin
+    And the origin is "git@github.com:git-town/git-town.git"
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
@@ -9,7 +10,6 @@ Feature: proposing uncommitted changes via a child branch and provide commit mes
       | BRANCH   | LOCATION      | MESSAGE         |
       | main     | origin        | main commit     |
       | existing | local, origin | existing commit |
-    And the origin is "git@github.com:git-town/git-town.git"
     And the current branch is "existing"
     And tool "open" is installed
     And an uncommitted file with name "new_file" and content "new content"
@@ -24,17 +24,17 @@ Feature: proposing uncommitted changes via a child branch and provide commit mes
       |          | git push -u origin new                                                                    |
       |          | open https://github.com/git-town/git-town/compare/existing...new?expand=1&title=unrelated |
       |          | git checkout existing                                                                     |
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE         |
-      | main     | origin        | main commit     |
-      | existing | local, origin | existing commit |
-      | new      | local, origin | unrelated       |
     And this lineage exists now
       """
       main
         existing
           new
       """
+    And these commits exist now
+      | BRANCH   | LOCATION      | MESSAGE         |
+      | main     | origin        | main commit     |
+      | existing | local, origin | existing commit |
+      | new      | local, origin | unrelated       |
 
   Scenario: undo
     When I run "git-town undo"
