@@ -28,7 +28,6 @@ Feature: does not compress an active observed branch
       |          | git commit -m "child 1"                         |
       |          | git push --force-with-lease --force-if-includes |
       |          | git checkout observed                           |
-    And all branches are now synchronized
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE    |
       | observed | local, origin | observed 1 |
@@ -36,6 +35,7 @@ Feature: does not compress an active observed branch
       | child    | local, origin | child 1    |
     And file "observed_1" still has content "observed 1"
     And file "observed_2" still has content "observed 2"
+    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

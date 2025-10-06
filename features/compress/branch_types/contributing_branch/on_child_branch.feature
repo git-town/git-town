@@ -26,7 +26,6 @@ Feature: does not compress contribution branches in the stack
       |        | git reset --soft contribution                   |
       |        | git commit -m "child 1"                         |
       |        | git push --force-with-lease --force-if-includes |
-    And all branches are now synchronized
     And these commits exist now
       | BRANCH       | LOCATION      | MESSAGE        |
       | contribution | local, origin | contribution 1 |
@@ -36,6 +35,7 @@ Feature: does not compress contribution branches in the stack
     And file "contribution_2" still has content "contribution 2"
     And file "child_1" still has content "child 1"
     And file "child_2" still has content "child 2"
+    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"
