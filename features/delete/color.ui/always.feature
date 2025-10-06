@@ -2,6 +2,7 @@ Feature: delete a branch within a branch chain
 
   Background:
     Given a Git repo with origin
+    And local Git setting "color.ui" is "always"
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
@@ -13,7 +14,6 @@ Feature: delete a branch within a branch chain
       | beta   | local, origin | beta commit  |
       | gamma  | local, origin | gamma commit |
     And the current branch is "beta" and the previous branch is "alpha"
-    And local Git setting "color.ui" is "always"
     When I run "git-town delete"
 
   Scenario: result
@@ -27,20 +27,20 @@ Feature: delete a branch within a branch chain
       """
       branch "gamma" is now a child of "alpha"
       """
-    And no uncommitted files exist now
     And the branches are now
       | REPOSITORY    | BRANCHES           |
       | local, origin | main, alpha, gamma |
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE      |
-      | alpha  | local, origin | alpha commit |
-      | gamma  | local, origin | gamma commit |
     And this lineage exists now
       """
       main
         alpha
           gamma
       """
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE      |
+      | alpha  | local, origin | alpha commit |
+      | gamma  | local, origin | gamma commit |
+    And no uncommitted files exist now
 
   Scenario: undo
     When I run "git-town undo"

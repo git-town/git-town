@@ -31,13 +31,13 @@ Feature: compresses active prototype branches
       |           | git commit -m "child 1"                         |
       |           | git push --force-with-lease --force-if-includes |
       |           | git checkout prototype                          |
-    And all branches are now synchronized
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE     |
       | prototype | local, origin | prototype 1 |
       | child     | local, origin | child 1     |
     And file "parked_1" still has content "prototype 1"
     And file "parked_2" still has content "prototype 2"
+    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

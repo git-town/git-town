@@ -19,12 +19,12 @@ Feature: compress while disabling the pre-commit hook
       |         | git reset --soft main                           |
       |         | git commit -m "commit 1" --no-verify            |
       |         | git push --force-with-lease --force-if-includes |
-    And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE  |
       | feature | local, origin | commit 1 |
     And file "file_1" still has content "content 1"
     And file "file_2" still has content "content 2"
+    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

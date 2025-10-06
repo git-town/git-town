@@ -20,19 +20,19 @@ Feature: deleting a branch without a useful previous branch setting
       | current | git fetch --prune --tags |
       |         | git checkout main        |
       | main    | git branch -D current    |
-    And no uncommitted files exist now
     And the branches are now
       | REPOSITORY | BRANCHES    |
       | local      | main, other |
       | origin     | main        |
-    And these commits exist now
-      | BRANCH | LOCATION | MESSAGE      |
-      | other  | local    | other commit |
     And this lineage exists now
       """
       main
         other
       """
+    And these commits exist now
+      | BRANCH | LOCATION | MESSAGE      |
+      | other  | local    | other commit |
+    And no uncommitted files exist now
 
   Scenario: undo
     When I run "git-town undo"

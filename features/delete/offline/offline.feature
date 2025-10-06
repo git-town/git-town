@@ -2,11 +2,11 @@ Feature: offline mode
 
   Background:
     Given a Git repo with origin
+    And offline mode is enabled
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
       | other   | feature | main   | local, origin |
-    And offline mode is enabled
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
@@ -19,20 +19,20 @@ Feature: offline mode
       | BRANCH  | COMMAND               |
       | feature | git checkout other    |
       | other   | git branch -D feature |
-    And no uncommitted files exist now
     And the branches are now
       | REPOSITORY | BRANCHES             |
       | local      | main, other          |
       | origin     | main, feature, other |
-    And these commits exist now
-      | BRANCH  | LOCATION      | MESSAGE        |
-      | other   | local, origin | other commit   |
-      | feature | origin        | feature commit |
     And this lineage exists now
       """
       main
         other
       """
+    And these commits exist now
+      | BRANCH  | LOCATION      | MESSAGE        |
+      | other   | local, origin | other commit   |
+      | feature | origin        | feature commit |
+    And no uncommitted files exist now
 
   Scenario: undo
     When I run "git-town undo"

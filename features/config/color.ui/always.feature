@@ -3,6 +3,7 @@ Feature: show the configuration
 
   Background:
     Given a Git repo with origin
+    And local Git setting "color.ui" is "always"
     And the branches
       | NAME           | TYPE         | PARENT | LOCATIONS     |
       | contribution-1 | contribution |        | local, origin |
@@ -15,7 +16,6 @@ Feature: show the configuration
       | perennial-2    | perennial    |        | local         |
       | prototype-1    | prototype    | main   | local         |
       | prototype-2    | prototype    | main   | local         |
-    And local Git setting "color.ui" is "always"
 
   Scenario: all configured in Git, no stacked changes
     Given Git setting "git-town.perennial-branches" is "qa staging"

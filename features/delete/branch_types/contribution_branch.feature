@@ -20,20 +20,20 @@ Feature: delete the current contribution branch
       | contribution | git fetch --prune --tags   |
       |              | git checkout feature       |
       | feature      | git branch -D contribution |
-    And no uncommitted files exist now
     And the branches are now
       | REPOSITORY | BRANCHES                    |
       | local      | main, feature               |
       | origin     | main, contribution, feature |
-    And these commits exist now
-      | BRANCH       | LOCATION      | MESSAGE             |
-      | feature      | local, origin | feature commit      |
-      | contribution | origin        | contribution commit |
     And this lineage exists now
       """
       main
         feature
       """
+    And these commits exist now
+      | BRANCH       | LOCATION      | MESSAGE             |
+      | feature      | local, origin | feature commit      |
+      | contribution | origin        | contribution commit |
+    And no uncommitted files exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -41,6 +41,6 @@ Feature: delete the current contribution branch
       | BRANCH  | COMMAND                                                 |
       | feature | git branch contribution {{ sha 'contribution commit' }} |
       |         | git checkout contribution                               |
+    And branch "contribution" now has type "contribution"
     And the initial commits exist now
     And the initial branches and lineage exist now
-    And branch "contribution" now has type "contribution"

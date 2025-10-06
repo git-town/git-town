@@ -19,13 +19,13 @@ Feature: compress the commits on a local feature branch
       | feature | git fetch --prune --tags |
       |         | git reset --soft main    |
       |         | git commit -m "commit 1" |
-    And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION | MESSAGE  |
       | feature | local    | commit 1 |
     And file "file_1" still has content "content 1"
     And file "file_2" still has content "content 2"
     And file "file_3" still has content "content 3"
+    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

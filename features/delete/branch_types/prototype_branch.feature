@@ -20,18 +20,18 @@ Feature: delete the current prototype branch
       |           | git push origin :prototype |
       |           | git checkout previous      |
       | previous  | git branch -D prototype    |
-    And no uncommitted files exist now
     And the branches are now
       | REPOSITORY    | BRANCHES       |
       | local, origin | main, previous |
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE         |
-      | previous | local, origin | previous commit |
     And this lineage exists now
       """
       main
         previous
       """
+    And these commits exist now
+      | BRANCH   | LOCATION      | MESSAGE         |
+      | previous | local, origin | previous commit |
+    And no uncommitted files exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -40,6 +40,6 @@ Feature: delete the current prototype branch
       | previous | git branch prototype {{ sha 'prototype commit' }} |
       |          | git push -u origin prototype                      |
       |          | git checkout prototype                            |
+    And branch "prototype" now has type "prototype"
     And the initial commits exist now
     And the initial branches and lineage exist now
-    And branch "prototype" now has type "prototype"

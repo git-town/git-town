@@ -2,6 +2,7 @@ Feature: compress keeps the full commit message of the first commit
 
   Background:
     Given a Git repo with origin
+    And local Git setting "color.ui" is "always"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
@@ -10,7 +11,6 @@ Feature: compress keeps the full commit message of the first commit
       | feature | local, origin | commit 1\n\nbody line 1\nbody line 2 | file_1    | content 1    |
       |         |               | commit 2                             | file_2    | content 2    |
     And the current branch is "feature"
-    And local Git setting "color.ui" is "always"
     When I run "git-town compress"
 
   Scenario: result
@@ -20,7 +20,6 @@ Feature: compress keeps the full commit message of the first commit
       |         | git reset --soft main                           |
       |         | git commit -m "commit 1                         |
       |         | git push --force-with-lease --force-if-includes |
-    And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE  |
       | feature | local, origin | commit 1 |
@@ -33,6 +32,7 @@ Feature: compress keeps the full commit message of the first commit
       """
     And file "file_1" still has content "content 1"
     And file "file_2" still has content "content 2"
+    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

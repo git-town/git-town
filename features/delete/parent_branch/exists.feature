@@ -26,20 +26,20 @@ Feature: delete a branch within a branch chain
       """
       branch "gamma" is now a child of "alpha"
       """
-    And no uncommitted files exist now
     And the branches are now
       | REPOSITORY    | BRANCHES           |
       | local, origin | main, alpha, gamma |
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE      |
-      | alpha  | local, origin | alpha commit |
-      | gamma  | local, origin | gamma commit |
     And this lineage exists now
       """
       main
         alpha
           gamma
       """
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE      |
+      | alpha  | local, origin | alpha commit |
+      | gamma  | local, origin | gamma commit |
+    And no uncommitted files exist now
 
   Scenario: undo
     When I run "git-town undo"

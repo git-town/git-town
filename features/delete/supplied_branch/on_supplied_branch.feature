@@ -20,18 +20,18 @@ Feature: delete the current branch
       |         | git push origin :current |
       |         | git checkout other       |
       | other   | git branch -D current    |
-    And no uncommitted files exist now
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE      |
-      | other  | local, origin | other commit |
     And this lineage exists now
       """
       main
         other
       """
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE      |
+      | other  | local, origin | other commit |
+    And no uncommitted files exist now
 
   Scenario: undo
     When I run "git-town undo"
