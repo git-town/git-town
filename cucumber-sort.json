@@ -20,8 +20,7 @@
   ],
   "record": true,
   "fail-fast": true,
-  "steps": [],
-  "unknown-steps": [
+  "steps": [
     "^a brand-new Git repo$",
     "^I am outside a Git repo$",
     "^a Git repo with origin$",
