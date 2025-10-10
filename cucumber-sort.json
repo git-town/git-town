@@ -40,7 +40,10 @@
     "^the committed configuration file:$",
     "^offline mode is enabled$",
     "^a folder .*$",
-    ["^the branches$", "^the commits$"],
+    [
+      "^the branches$",
+      "^the commits$"
+    ],
     "^Git Town parent setting for branch \".*\" is .*$",
     "^the tags$",
     "^a remote tag \".*\" not on a branch$",
@@ -146,6 +149,5 @@
     "^these tags exist now$",
     "^the initial tags exist now$",
     "^all branches are now synchronized$"
-  ],
-  "unknown-steps": []
+  ]
 }
