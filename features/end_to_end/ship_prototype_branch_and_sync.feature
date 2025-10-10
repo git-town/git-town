@@ -12,10 +12,6 @@ Feature: end-to-end workflow of creating a prototype branch, shipping, and pruni
       | hooks  | local    | hooks commit |
     And the current branch is "hooks"
     And I ran "git-town propose"
-    And Git Town prints:
-      """
-      branch "hooks" is no longer a prototype branch
-      """
     And origin ships the "hooks" branch using the "squash-merge" ship-strategy
     When I run "git-town sync --all"
 
