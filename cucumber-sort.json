@@ -41,6 +41,7 @@
     "^the committed configuration file:$",
     "^offline mode is enabled$",
     "^a folder .*$",
+    "And I ran \"git-town hack",
     [
       "^the branches$",
       "^the commits$"
