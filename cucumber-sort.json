@@ -1,8 +1,25 @@
 {
   "include": [],
-  "exclude": [],
-  "record": false,
-  "fail-fast": false,
+  "exclude": [
+    "features/sync/current_branch/feature_branch/compress_sync_strategy/two_collaborators/conflicting_changes_parallel.feature",
+    "features/sync/current_branch/feature_branch/compress_sync_strategy/two_collaborators/nonconflicting_changes_serial.feature",
+    "features/sync/current_branch/feature_branch/compress_sync_strategy/two_collaborators/conflicting_changes_serial.feature",
+    "features/sync/current_branch/feature_branch/mixed_sync_strategies/dependent_changes.feature",
+    "features/sync/current_branch/feature_branch/mixed_sync_strategies/independent_changes.feature",
+    "features/sync/current_branch/feature_branch/rebase_sync_strategy/two_collaborators/conflicting_commits.feature",
+    "features/sync/current_branch/feature_branch/fetch_in_between.feature",
+    "features/sync/current_branch/feature_branch/compress_sync_strategy/two_collaborators/conflicting_changes_parallel.feature",
+    "features/sync/current_branch/feature_branch/compress_sync_strategy/two_collaborators/conflicting_changes_serial.feature",
+    "features/sync/current_branch/feature_branch/compress_sync_strategy/two_collaborators/nonconflicting_changes_serial.feature",
+    "features/sync/current_branch/feature_branch/merge_sync_strategy/two_collaborators/happy_path.feature",
+    "features/sync/current_branch/feature_branch/mixed_sync_strategies/dependent_changes.feature",
+    "features/sync/current_branch/feature_branch/mixed_sync_strategies/independent_changes.feature",
+    "features/sync/current_branch/feature_branch/rebase_sync_strategy/two_collaborators/conflicting_commits.feature",
+    "features/sync/current_branch/feature_branch/rebase_sync_strategy/two_collaborators/happy_path.feature",
+    "vendor/**/*.feature"
+  ],
+  "record": true,
+  "fail-fast": true,
   "steps": [],
   "unknown-steps": [
     "^a brand-new Git repo$",
