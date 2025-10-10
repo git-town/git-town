@@ -76,7 +76,7 @@
 
     "^I resolve the conflict in \".*\"$",
     "^I resolve the conflict in \".*\" with:$",
-    "^I resolve the conflict in \".*\" in the other worktree$"
+    "^I resolve the conflict in \".*\" in the other worktree$",
     "^I run \".*\"$",
     "^I run \".*\" and enter into the dialog:$",
     "^I run \".*\" and close the editor$",
