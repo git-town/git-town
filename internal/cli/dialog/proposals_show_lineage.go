@@ -17,7 +17,7 @@ const (
 How should Git Town share stack lineage in proposals?
 
 Possible Options:
-	- none: (default) Git Town should should not share stack 
+	- none: (default) Git Town should not share stack 
 					lineage in proposals
 	- cli: Git Town shares or updates stack lineage in proposals
 				anytime your stack lineage changes via the cli
