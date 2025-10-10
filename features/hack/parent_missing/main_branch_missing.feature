@@ -36,7 +36,7 @@ Feature: on a feature branch but without main branch
       | new      | git checkout existing |
       | existing | git branch -D new     |
     And the initial commits exist now
-    And these branches exist now
+    And the branches are now
       | REPOSITORY | BRANCHES       |
       | local      | existing       |
       | origin     | main, existing |

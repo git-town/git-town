@@ -19,7 +19,7 @@ Feature: sync a branch to a custom dev-remote
       | branch | git fetch --prune --tags |
       |        | git push -u fork branch  |
     And all branches are now synchronized
-    And these branches exist now
+    And the branches are now
       | REPOSITORY  | BRANCHES     |
       | local, fork | main, branch |
     And these commits exist now
@@ -31,7 +31,7 @@ Feature: sync a branch to a custom dev-remote
     Then Git Town runs the commands
       | BRANCH | COMMAND               |
       | branch | git push fork :branch |
-    And these branches exist now
+    And the branches are now
       | REPOSITORY | BRANCHES     |
       | local      | main, branch |
       | fork       | main         |

@@ -49,7 +49,7 @@ Feature: skip deleting the remote branch when shipping another branch using the 
       | main   | local, origin | feature commit         |
       |        |               | Merge branch 'feature' |
       | other  | local         | other commit           |
-    And these branches exist now
+    And the branches are now
       | REPOSITORY | BRANCHES             |
       | local      | main, feature, other |
       | origin     | main, other          |

@@ -46,6 +46,6 @@ Feature: rebase a branch that contains amended commits
       |           | origin        | commit 1a |
       | feature-2 | local         | commit 1a |
       |           | local, origin | commit 2  |
-    And these branches exist now
+    And the branches are now
       | REPOSITORY    | BRANCHES                   |
       | local, origin | main, feature-1, feature-2 |

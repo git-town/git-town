@@ -1042,10 +1042,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^the branches are now$`, func(ctx context.Context, table *godog.Table) error {
+	sc.Step(`^the branches are now$`, func(ctx context.Context, want *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		existing := state.fixture.Branches()
-		diff, errCount := existing.EqualGherkin(table)
+		have := state.fixture.Branches()
+		diff, errCount := have.EqualGherkin(want)
 		if errCount > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the branches\n\n", errCount)
 			fmt.Println(diff)
@@ -1452,19 +1452,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		previousBranch := devRepo.Git.PreviouslyCheckedOutBranch(devRepo.TestRunner)
 		if previousBranch.IsSome() {
 			return errors.New("previous branch found")
-		}
-		return nil
-	})
-
-	sc.Step(`^these branches exist now$`, func(ctx context.Context, input *godog.Table) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		currentBranches := state.fixture.Branches()
-		// fmt.Printf("NOW:\n%s\n", currentBranches.String())
-		diff, errorCount := currentBranches.EqualGherkin(input)
-		if errorCount != 0 {
-			fmt.Printf("\nERROR! Found %d differences in the existing branches\n\n", errorCount)
-			fmt.Println(diff)
-			return errors.New("mismatching branches found, see diff above")
 		}
 		return nil
 	})

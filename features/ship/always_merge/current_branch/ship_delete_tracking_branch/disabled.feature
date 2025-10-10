@@ -41,7 +41,7 @@ Feature: ship-delete-tracking-branch disabled when using the always-merge strate
       | BRANCH | LOCATION      | MESSAGE                |
       | main   | local, origin | feature commit         |
       |        |               | Merge branch 'feature' |
-    And these branches exist now
+    And the branches are now
       | REPOSITORY | BRANCHES      |
       | local      | main, feature |
       | origin     | main          |

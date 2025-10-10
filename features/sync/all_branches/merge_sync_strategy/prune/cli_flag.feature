@@ -40,7 +40,7 @@ Feature: prune enabled via CLI
       |           | git push                                          |
       |           | git push --tags                                   |
     And all branches are now synchronized
-    And these branches exist now
+    And the branches are now
       | REPOSITORY    | BRANCHES        |
       | local, origin | main, feature-3 |
     And this lineage exists now
