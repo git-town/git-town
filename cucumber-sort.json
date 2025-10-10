@@ -72,6 +72,7 @@
     "^wait 1 second to ensure new Git timestamps$",
     "^I ran .*$",
 
+    "^I resolve the conflict in \".*\"$",
     "^I resolve the conflict in \".*\" with:$",
     "^I run \".*\"$",
     "^I run \".*\" and enter into the dialog:$",
@@ -146,5 +147,6 @@
     "^these tags exist now$",
     "^the initial tags exist now$",
     "^all branches are now synchronized$"
-  ]
+  ],
+  "unknown-steps": []
 }
