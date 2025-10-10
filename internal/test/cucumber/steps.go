@@ -237,6 +237,17 @@ func defineSteps(sc *godog.ScenarioContext) {
 		)
 	})
 
+	sc.Step(`^an uncommitted file "([^"]+)" exists now$`, func(ctx context.Context, filename string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		files := devRepo.UncommittedFiles()
+		want := []string{filename}
+		if !reflect.DeepEqual(files, want) {
+			return fmt.Errorf("expected %s but found %s", want, files)
+		}
+		return nil
+	})
+
 	sc.Step(`^an uncommitted file "([^"]+)" with content:$`, func(ctx context.Context, name string, content *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -251,17 +262,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.uncommittedFileName = Some(name)
 		state.uncommittedContent = Some(content)
 		devRepo.CreateFile(name, content)
-	})
-
-	sc.Step(`^an uncommitted file "([^"]+)" exists now$`, func(ctx context.Context, filename string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		files := devRepo.UncommittedFiles()
-		want := []string{filename}
-		if !reflect.DeepEqual(files, want) {
-			return fmt.Errorf("expected %s but found %s", want, files)
-		}
-		return nil
 	})
 
 	sc.Step(`^an upstream repo$`, func(ctx context.Context) {
