@@ -59,6 +59,15 @@ Feature: detaching a branch that is ahead of its tracking branch
       |          | git checkout branch-2                                          |
       | branch-2 | git -c rebase.updateRefs=false rebase --onto main branch-1     |
       |          | git push --force-with-lease --force-if-includes                |
+    And this lineage exists now
+      """
+      main
+        branch-1
+          branch-3
+            branch-4
+              branch-5
+        branch-2
+      """
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE   |
       | branch-1 | local, origin | commit 1a |
@@ -71,15 +80,6 @@ Feature: detaching a branch that is ahead of its tracking branch
       |          |               | commit 5b |
       | branch-2 | local, origin | commit 2a |
       |          |               | commit 2b |
-    And this lineage exists now
-      """
-      main
-        branch-1
-          branch-3
-            branch-4
-              branch-5
-        branch-2
-      """
 
   Scenario: undo
     When I run "git-town undo"
@@ -97,5 +97,5 @@ Feature: detaching a branch that is ahead of its tracking branch
       |          | git checkout branch-2                                                     |
       | branch-2 | git reset --hard {{ sha 'commit 2b' }}                                    |
       |          | git push --force-with-lease origin {{ sha-initial 'commit 2a' }}:branch-2 |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now
