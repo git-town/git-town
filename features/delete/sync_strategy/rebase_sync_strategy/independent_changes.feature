@@ -37,11 +37,6 @@ Feature: deleting a branch from a stack with independent changes
       |          | git -c rebase.updateRefs=false rebase --onto branch-1 branch-2 |
       |          | git push --force-with-lease                                    |
       |          | git branch -D branch-2                                         |
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                           |
-      | main     | local, origin | main commit     | file      | line 0: main content\n\nline 1\n\nline 2\n\nline 3                                     |
-      | branch-1 | local, origin | branch-1 commit | file      | line 0: main content\n\nline 1: branch-1 content\n\nline 2\n\nline 3                   |
-      | branch-3 | local, origin | branch-3 commit | file      | line 0: main content\n\nline 1: branch-1 content\n\nline 2\n\nline 3: branch-3 content |
     And the branches are now
       | REPOSITORY    | BRANCHES                 |
       | local, origin | main, branch-1, branch-3 |
@@ -51,6 +46,11 @@ Feature: deleting a branch from a stack with independent changes
         branch-1
           branch-3
       """
+    And these commits exist now
+      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                           |
+      | main     | local, origin | main commit     | file      | line 0: main content\n\nline 1\n\nline 2\n\nline 3                                     |
+      | branch-1 | local, origin | branch-1 commit | file      | line 0: main content\n\nline 1: branch-1 content\n\nline 2\n\nline 3                   |
+      | branch-3 | local, origin | branch-3 commit | file      | line 0: main content\n\nline 1: branch-1 content\n\nline 2\n\nline 3: branch-3 content |
 
   Scenario: undo
     When I run "git-town undo"
