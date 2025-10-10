@@ -20,7 +20,7 @@ Feature: sync the current perennial branch using the ff-only sync strategy after
       |            | git checkout main        |
       | main       | git branch -D production |
       |            | git push --tags          |
-    And these branches exist now
+    And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
 

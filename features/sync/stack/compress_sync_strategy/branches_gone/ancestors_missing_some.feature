@@ -58,7 +58,7 @@ Feature: stacked changes where an ancestor branch isn't local
       |        | git push --force-with-lease origin {{ sha-in-origin-initial 'origin gamma commit' }}:gamma |
     And the initial lineage exists now
     And the initial commits exist now
-    And these branches exist now
+    And the branches are now
       | REPOSITORY | BRANCHES                 |
       | local      | alpha, gamma             |
       | origin     | main, alpha, beta, gamma |

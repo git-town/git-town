@@ -35,7 +35,7 @@ Feature: running a sync after running another Git Town command
       |        |               | local parent commit  |
       | child  | local, origin | origin child commit  |
       |        |               | local child commit   |
-    And these branches exist now
+    And the branches are now
       | REPOSITORY | BRANCHES                 |
       | local      | main, child, new, parent |
       | origin     | main, child, parent      |
@@ -51,7 +51,7 @@ Feature: running a sync after running another Git Town command
       |        |               | local parent commit  |
       | child  | local, origin | origin child commit  |
       |        |               | local child commit   |
-    And these branches exist now
+    And the branches are now
       | REPOSITORY | BRANCHES                 |
       | local      | main, child, new, parent |
       | origin     | main, child, parent      |

@@ -39,7 +39,7 @@ Feature: ship-delete-tracking-branch disabled when using the fast-forward strate
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        |
       | main   | local, origin | feature commit |
-    And these branches exist now
+    And the branches are now
       | REPOSITORY | BRANCHES      |
       | local      | main, feature |
       | origin     | main          |

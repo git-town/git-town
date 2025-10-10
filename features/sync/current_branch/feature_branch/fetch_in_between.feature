@@ -48,7 +48,7 @@ Feature: do not undo branches that were pulled in through "git fetch" while reso
       | feature | git reset --hard {{ sha 'conflicting local commit' }}                                      |
       |         | git push --force-with-lease origin {{ sha-in-origin 'conflicting origin commit' }}:feature |
     And no merge is now in progress
-    And these branches exist now
+    And the branches are now
       | REPOSITORY | BRANCHES                              |
       | local      | main, feature                         |
       | origin     | main, coworker-1, coworker-2, feature |

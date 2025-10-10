@@ -44,7 +44,7 @@ Feature: ship-delete-tracking-branch disabled
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
       | feature | local         | feature commit        |
-    And these branches exist now
+    And the branches are now
       | REPOSITORY | BRANCHES      |
       | local      | main, feature |
       | origin     | main          |
