@@ -141,7 +141,7 @@
     "^Git Town is no longer configured$",
     "^the uncommitted file still exists$",
     "^no uncommitted files exist now$",
-    "^an uncommitted file with name \".*\" exists now$",
+    "^an uncommitted file \".*\" exists now$",
     "^the home directory contains file \".*\" with content$",
     "^the initial branches exist now$",
     "^the initial commits exist now$",
