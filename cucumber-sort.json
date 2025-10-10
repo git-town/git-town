@@ -69,6 +69,7 @@
     "^the configuration file:$",
     "^an uncommitted file$",
     "^an uncommitted file \".*\" with content \".*\"$",
+    "^an uncommitted file \".*\" with content:$",
     "^the committed file .*:$",
     "^I add an unrelated stash entry with file .*$",
     "^wait 1 second to ensure new Git timestamps$",
