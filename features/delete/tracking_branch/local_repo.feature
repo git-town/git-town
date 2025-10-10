@@ -21,14 +21,14 @@ Feature: in a local repo
     And the branches are now
       | REPOSITORY | BRANCHES    |
       | local      | main, other |
-    And these commits exist now
-      | BRANCH | LOCATION | MESSAGE      |
-      | other  | local    | other commit |
     And this lineage exists now
       """
       main
         other
       """
+    And these commits exist now
+      | BRANCH | LOCATION | MESSAGE      |
+      | other  | local    | other commit |
 
   Scenario: undo
     When I run "git-town undo"

@@ -21,21 +21,21 @@ Feature: delete another branch while having conflicting open changes
       | good   | git fetch --prune --tags |
       |        | git push origin :dead    |
       |        | git branch -D dead       |
-    And the uncommitted file has content:
-      """
-      conflicting content
-      """
     And the branches are now
       | REPOSITORY    | BRANCHES   |
       | local, origin | main, good |
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE            |
-      | main   | local, origin | conflicting commit |
-      | good   | local, origin | good commit        |
     And this lineage exists now
       """
       main
         good
+      """
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE            |
+      | main   | local, origin | conflicting commit |
+      | good   | local, origin | good commit        |
+    And the uncommitted file has content:
+      """
+      conflicting content
       """
 
   Scenario: undo
@@ -53,8 +53,8 @@ Feature: delete another branch while having conflicting open changes
       | main   | local, origin | conflicting commit |
       | dead   | local, origin | dead-end commit    |
       | good   | local, origin | good commit        |
-    And the initial branches and lineage exist now
     And the uncommitted file has content:
       """
       conflicting content
       """
+    And the initial branches and lineage exist now

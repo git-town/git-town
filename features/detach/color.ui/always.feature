@@ -2,6 +2,7 @@ Feature: detaching an omni-branch verbosely
 
   Background:
     Given a Git repo with origin
+    And local Git setting "color.ui" is "always"
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | branch-1 | feature | main   | local, origin |
@@ -30,7 +31,6 @@ Feature: detaching an omni-branch verbosely
       | BRANCH   | LOCATION      | MESSAGE   |
       | branch-4 | local, origin | commit 4a |
       | branch-4 | local, origin | commit 4b |
-    And local Git setting "color.ui" is "always"
     And the current branch is "branch-2"
     When I run "git-town detach --verbose"
 
@@ -78,6 +78,14 @@ Feature: detaching an omni-branch verbosely
       """
       Ran 37 shell commands.
       """
+    And this lineage exists now
+      """
+      main
+        branch-1
+          branch-3
+            branch-4
+        branch-2
+      """
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE   |
       | branch-1 | local, origin | commit 1a |
@@ -88,14 +96,6 @@ Feature: detaching an omni-branch verbosely
       |          |               | commit 4b |
       | branch-2 | local, origin | commit 2a |
       |          |               | commit 2b |
-    And this lineage exists now
-      """
-      main
-        branch-1
-          branch-3
-            branch-4
-        branch-2
-      """
 
   Scenario: undo
     When I run "git-town undo --verbose"
@@ -132,5 +132,5 @@ Feature: detaching an omni-branch verbosely
       |          | git checkout branch-2                                                                                                                                                                                                                                                                                                                            |
       |          | git config git-town-branch.branch-2.parent branch-1                                                                                                                                                                                                                                                                                              |
       |          | git config git-town-branch.branch-3.parent branch-2                                                                                                                                                                                                                                                                                              |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

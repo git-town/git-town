@@ -2,6 +2,7 @@ Feature: don't sync tags while deleting branches
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-tags" is "false"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | current | feature | main   | local, origin |
@@ -10,7 +11,6 @@ Feature: don't sync tags while deleting branches
       | local-tag  | local    |
       | origin-tag | origin   |
     And the current branch is "current"
-    And Git setting "git-town.sync-tags" is "false"
     When I run "git-town delete"
 
   Scenario: result
@@ -29,6 +29,6 @@ Feature: don't sync tags while deleting branches
       | main   | git branch current {{ sha 'initial commit' }} |
       |        | git push -u origin current                    |
       |        | git checkout current                          |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now
     And the initial tags exist now
