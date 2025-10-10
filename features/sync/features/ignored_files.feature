@@ -9,7 +9,7 @@ Feature: ignore files
       | BRANCH  | LOCATION | MESSAGE   | FILE NAME  | FILE CONTENT |
       | feature | local    | my commit | .gitignore | ignored      |
     And the current branch is "feature"
-    And an uncommitted file with name "test/ignored/important" and content "changed ignored file"
+    And an uncommitted file "test/ignored/important" with content "changed ignored file"
     When I run "git-town sync"
 
   Scenario: result

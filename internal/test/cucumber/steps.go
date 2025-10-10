@@ -237,7 +237,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		)
 	})
 
-	sc.Step(`^an uncommitted file with name "([^"]+)" and content:$`, func(ctx context.Context, name string, content *godog.DocString) error {
+	sc.Step(`^an uncommitted file "([^"]+)" with content:$`, func(ctx context.Context, name string, content *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		filePath := filepath.Join(devRepo.WorkingDir, name)
@@ -245,7 +245,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return os.WriteFile(filePath, []byte(content.Content), 0o700)
 	})
 
-	sc.Step(`^an uncommitted file with name "([^"]+)" and content "([^"]+)"$`, func(ctx context.Context, name, content string) {
+	sc.Step(`^an uncommitted file "([^"]+)" with content "([^"]+)"$`, func(ctx context.Context, name, content string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		state.uncommittedFileName = Some(name)
@@ -253,7 +253,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.CreateFile(name, content)
 	})
 
-	sc.Step(`^an uncommitted file with name "([^"]+)" exists now$`, func(ctx context.Context, filename string) error {
+	sc.Step(`^an uncommitted file "([^"]+)" exists now$`, func(ctx context.Context, filename string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		files := devRepo.UncommittedFiles()

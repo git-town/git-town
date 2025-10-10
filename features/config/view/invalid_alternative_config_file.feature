@@ -2,7 +2,7 @@ Feature: print nice error message for invalid alternative config file
 
   Scenario: Config file with alternative filename and invalid TOML content
     Given a Git repo with origin
-    And an uncommitted file with name ".git-town.toml" and content:
+    And an uncommitted file ".git-town.toml" with content:
       """
       wrong =
       """

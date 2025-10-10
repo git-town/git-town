@@ -7,7 +7,7 @@ Feature: on a feature branch in a repository with a submodule that has uncommitt
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
-    And an uncommitted file with name "submodule/file" and content "a change in the submodule"
+    And an uncommitted file "submodule/file" with content "a change in the submodule"
     When I run "git-town sync"
 
   Scenario: result
