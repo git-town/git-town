@@ -237,15 +237,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		)
 	})
 
-	sc.Step(`^an uncommitted file with name "([^"]+)" and content "([^"]+)"$`, func(ctx context.Context, name, content string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		state.uncommittedFileName = Some(name)
-		state.uncommittedContent = Some(content)
-		devRepo.CreateFile(name, content)
-	})
-
-	sc.Step(`^an uncommitted file with name "([^"]+)" exists now$`, func(ctx context.Context, filename string) error {
+	sc.Step(`^an uncommitted file "([^"]+)" exists now$`, func(ctx context.Context, filename string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		files := devRepo.UncommittedFiles()
@@ -254,6 +246,22 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return fmt.Errorf("expected %s but found %s", want, files)
 		}
 		return nil
+	})
+
+	sc.Step(`^an uncommitted file "([^"]+)" with content:$`, func(ctx context.Context, name string, content *godog.DocString) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		filePath := filepath.Join(devRepo.WorkingDir, name)
+		//nolint:gosec // need permission 700 here in order for tests to work
+		return os.WriteFile(filePath, []byte(content.Content), 0o700)
+	})
+
+	sc.Step(`^an uncommitted file "([^"]+)" with content "([^"]+)"$`, func(ctx context.Context, name, content string) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		state.uncommittedFileName = Some(name)
+		state.uncommittedContent = Some(content)
+		devRepo.CreateFile(name, content)
 	})
 
 	sc.Step(`^an upstream repo$`, func(ctx context.Context) {
@@ -365,14 +373,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return fmt.Errorf("file content does not match\n\nEXPECTED:\n%q\n\nACTUAL:\n\n%q\n----------------------------", expectedContent, actualContent)
 		}
 		return nil
-	})
-
-	sc.Step(`^file "([^"]+)" with content$`, func(ctx context.Context, name string, content *godog.DocString) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		filePath := filepath.Join(devRepo.WorkingDir, name)
-		//nolint:gosec // need permission 700 here in order for tests to work
-		return os.WriteFile(filePath, []byte(content.Content), 0o700)
 	})
 
 	sc.Step(`^Git has version "([^"]*)"$`, func(ctx context.Context, version string) {
@@ -1042,10 +1042,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^the branches are now$`, func(ctx context.Context, table *godog.Table) error {
+	sc.Step(`^the branches are now$`, func(ctx context.Context, want *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		existing := state.fixture.Branches()
-		diff, errCount := existing.EqualGherkin(table)
+		have := state.fixture.Branches()
+		diff, errCount := have.EqualGherkin(want)
 		if errCount > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the branches\n\n", errCount)
 			fmt.Println(diff)
@@ -1452,19 +1452,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		previousBranch := devRepo.Git.PreviouslyCheckedOutBranch(devRepo.TestRunner)
 		if previousBranch.IsSome() {
 			return errors.New("previous branch found")
-		}
-		return nil
-	})
-
-	sc.Step(`^these branches exist now$`, func(ctx context.Context, input *godog.Table) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		currentBranches := state.fixture.Branches()
-		// fmt.Printf("NOW:\n%s\n", currentBranches.String())
-		diff, errorCount := currentBranches.EqualGherkin(input)
-		if errorCount != 0 {
-			fmt.Printf("\nERROR! Found %d differences in the existing branches\n\n", errorCount)
-			fmt.Println(diff)
-			return errors.New("mismatching branches found, see diff above")
 		}
 		return nil
 	})

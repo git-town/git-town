@@ -2,7 +2,7 @@ Feature: show the configuration when using an alternative config file
 
   Scenario: all configured in config file with alternative filename
     Given a Git repo with origin
-    And file ".git-branches.toml" with content
+    And an uncommitted file ".git-branches.toml" with content:
       """
       [branches]
       main = "main"

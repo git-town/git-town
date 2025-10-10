@@ -10,7 +10,7 @@ Feature: propose uncommitted changes via a separate parent branch, let Git ask f
       | main     | origin   | main commit     |
       | existing | local    | existing commit |
     And the current branch is "existing"
-    And an uncommitted file with name "new_file" and content "new content"
+    And an uncommitted file "new_file" with content "new content"
     And I ran "git add new_file"
     And local Git setting "color.ui" is "always"
     When I run "git-town prepend new --commit" and enter "unrelated idea" for the commit message

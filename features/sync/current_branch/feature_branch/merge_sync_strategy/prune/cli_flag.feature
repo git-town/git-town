@@ -29,7 +29,7 @@ Feature: prune enabled via CLI
       |           | git branch -D feature-1                           |
       |           | git checkout feature-2                            |
     And all branches are now synchronized
-    And these branches exist now
+    And the branches are now
       | REPOSITORY    | BRANCHES        |
       | local, origin | main, feature-2 |
     And this lineage exists now

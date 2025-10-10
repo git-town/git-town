@@ -42,7 +42,7 @@ Feature: adding additional branches while resolving conflicts
       | feature-1 | git reset --hard {{ sha 'conflicting local commit' }}                                        |
       |           | git push --force-with-lease origin {{ sha-in-origin 'conflicting origin commit' }}:feature-1 |
     And no merge is now in progress
-    And these branches exist now
+    And the branches are now
       | REPOSITORY | BRANCHES                   |
       | local      | main, feature-1, feature-2 |
       | origin     | main, feature-1            |

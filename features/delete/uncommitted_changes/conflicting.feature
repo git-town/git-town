@@ -12,7 +12,7 @@ Feature: delete another branch while having conflicting open changes
       | dead   | local, origin | dead-end commit    | file             | dead content |
       | good   | local, origin | good commit        | file             | good content |
     And the current branch is "good"
-    And an uncommitted file with name "conflicting_file" and content "conflicting content"
+    And an uncommitted file "conflicting_file" with content "conflicting content"
     When I run "git-town delete dead"
 
   Scenario: result

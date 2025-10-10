@@ -36,7 +36,7 @@ Feature: Prepopulate title and body
       |         | open https://github.com/git-town/git-town/compare/feature?expand=1&body=my_body |
 
   Scenario: provide title via CLI and body via file
-    And file "body.txt" with content
+    And an uncommitted file "body.txt" with content:
       """
       Proposal
       body

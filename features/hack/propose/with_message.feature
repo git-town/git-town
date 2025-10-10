@@ -12,7 +12,7 @@ Feature: proposing uncommitted changes via a separate top-level branch,  provide
     And the current branch is "existing"
     And the origin is "git@github.com:git-town/git-town.git"
     And tool "open" is installed
-    And an uncommitted file with name "new_file" and content "new content"
+    And an uncommitted file "new_file" with content "new content"
     And I ran "git add new_file"
     When I run "git-town hack new --propose -m unrelated"
 

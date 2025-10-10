@@ -22,7 +22,7 @@ Feature: proposing a branch that was deleted at the remote
       """
       branch "feature" was deleted at the remote
       """
-    And these branches exist now
+    And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
     And no lineage exists now

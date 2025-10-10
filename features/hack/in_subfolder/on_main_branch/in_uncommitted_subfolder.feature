@@ -5,7 +5,7 @@ Feature: inside an uncommitted subfolder on the current feature branch
     And the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
-    And an uncommitted file with name "uncommitted_folder/uncommitted" and content "uncommitted"
+    And an uncommitted file "uncommitted_folder/uncommitted" with content "uncommitted"
     When I run "git-town hack new" in the "uncommitted_folder" folder
 
   Scenario: result

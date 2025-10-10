@@ -18,7 +18,7 @@ Feature: "ff-only" configured as sync-feature-strategy
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune --tags           |
       |         | git merge --ff-only origin/feature |
-    And these branches exist now
+    And the branches are now
       | REPOSITORY    | BRANCHES      |
       | local, origin | main, feature |
     And these commits exist now
