@@ -237,6 +237,14 @@ func defineSteps(sc *godog.ScenarioContext) {
 		)
 	})
 
+	sc.Step(`^an uncommitted file with name "([^"]+)" and content:$`, func(ctx context.Context, name string, content *godog.DocString) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		filePath := filepath.Join(devRepo.WorkingDir, name)
+		//nolint:gosec // need permission 700 here in order for tests to work
+		return os.WriteFile(filePath, []byte(content.Content), 0o700)
+	})
+
 	sc.Step(`^an uncommitted file with name "([^"]+)" and content "([^"]+)"$`, func(ctx context.Context, name, content string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -365,14 +373,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return fmt.Errorf("file content does not match\n\nEXPECTED:\n%q\n\nACTUAL:\n\n%q\n----------------------------", expectedContent, actualContent)
 		}
 		return nil
-	})
-
-	sc.Step(`^file "([^"]+)" with content$`, func(ctx context.Context, name string, content *godog.DocString) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		filePath := filepath.Join(devRepo.WorkingDir, name)
-		//nolint:gosec // need permission 700 here in order for tests to work
-		return os.WriteFile(filePath, []byte(content.Content), 0o700)
 	})
 
 	sc.Step(`^Git has version "([^"]*)"$`, func(ctx context.Context, version string) {
