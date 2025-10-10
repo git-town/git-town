@@ -9,7 +9,7 @@ Feature: non-conflicting uncommitted changes
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
     And the current branch is "existing"
-    And an uncommitted file with name "conflicting_file" and content "conflicting content"
+    And an uncommitted file "conflicting_file" with content "conflicting content"
     When I run "git-town hack new"
 
   Scenario: result

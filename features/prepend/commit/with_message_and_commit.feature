@@ -10,7 +10,7 @@ Feature: propose uncommitted changes via a separate parent branch, provide commi
       | main     | origin   | main commit     |
       | existing | local    | existing commit |
     And the current branch is "existing"
-    And an uncommitted file with name "new_file" and content "new content"
+    And an uncommitted file "new_file" with content "new content"
     And I ran "git add new_file"
     When I run "git-town prepend new --commit -m unrelated"
 
