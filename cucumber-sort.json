@@ -16,6 +16,7 @@
     "features/sync/current_branch/feature_branch/mixed_sync_strategies/independent_changes.feature",
     "features/sync/current_branch/feature_branch/rebase_sync_strategy/two_collaborators/conflicting_commits.feature",
     "features/sync/current_branch/feature_branch/rebase_sync_strategy/two_collaborators/happy_path.feature",
+    "features/detach/merge_conflict/dependent_changes.feature",
     "vendor/**/*.feature"
   ],
   "record": true,
