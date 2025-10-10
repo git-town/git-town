@@ -69,11 +69,11 @@ func shipAPIProgram(prog Mutable[program.Program], repo execute.OpenRepoResult, 
 	if hasLocalBranchToShip {
 		prog.Value.Add(&opcodes.BranchLocalDelete{Branch: branchToShipLocal})
 	}
-	if !repo.UnvalidatedConfig.NormalConfig.DryRun {
-		prog.Value.Add(&opcodes.LineageParentRemove{Branch: branchToShipLocal})
-	}
 	for _, child := range sharedData.childBranches {
 		prog.Value.Add(&opcodes.LineageParentSetToGrandParent{Branch: child})
+	}
+	if !repo.UnvalidatedConfig.NormalConfig.DryRun {
+		prog.Value.Add(&opcodes.LineageParentRemove{Branch: branchToShipLocal})
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{sharedData.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{

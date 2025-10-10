@@ -7,6 +7,8 @@ import (
 	"os"
 	"regexp"
 
+	"github.com/spf13/cobra"
+
 	"github.com/git-town/git-town/v22/internal/cli/dialog"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
@@ -29,7 +31,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/vm/optimizer"
 	"github.com/git-town/git-town/v22/internal/vm/program"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
-	"github.com/spf13/cobra"
+	"github.com/git-town/git-town/v22/pkg/set"
 )
 
 const (
@@ -424,5 +426,72 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 			)
 		}
 	}
+
+	// Update proposal lineage for both cases (removing parent or setting new parent)
+	updateProposalLineage(&prog, newParentOpt, data)
 	return optimizer.Optimize(prog), false
+}
+
+// updateProposalLineage updates the proposal stack lineage when changing the parent
+func updateProposalLineage(prog *program.Program, newParentOpt Option[gitdomain.LocalBranchName], data setParentData) {
+	if data.config.NormalConfig.ProposalsShowLineage != forgedomain.ProposalsShowLineageCLI {
+		return
+	}
+	connector, hasConnector := data.connector.Get()
+	if !hasConnector {
+		return
+	}
+	proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder)
+	if !canFindProposals {
+		return
+	}
+	// Update the stack belonging to the initialBranch
+	tree, err := forge.NewProposalStackLineageTree(forge.ProposalStackLineageArgs{
+		Connector:                proposalFinder,
+		CurrentBranch:            data.initialBranch,
+		Lineage:                  data.config.NormalConfig.Lineage,
+		MainAndPerennialBranches: data.config.MainAndPerennials(),
+	})
+	if err != nil {
+		fmt.Printf("failed to update proposal stack lineage: %s\n", err.Error())
+		return
+	}
+	branchPropsalsUpdated := set.New[gitdomain.LocalBranchName]()
+	for branch, proposal := range tree.BranchToProposal { // okay to iterate the map in random order
+		prog.Add(&opcodes.ProposalUpdateLineage{
+			Current:         branch,
+			CurrentProposal: proposal,
+			LineageTree:     MutableSome(tree),
+		})
+		branchPropsalsUpdated.Add(branch)
+	}
+
+	// If we are moving to a parent that is part of a completely different stack,
+	// update the lineage of all members of this other stack
+	newParent, hasNewParent := newParentOpt.Get()
+	if hasNewParent {
+		err = tree.Rebuild(forge.ProposalStackLineageArgs{
+			Connector:                proposalFinder,
+			CurrentBranch:            newParent,
+			Lineage:                  data.config.NormalConfig.Lineage,
+			MainAndPerennialBranches: data.config.MainAndPerennials(),
+		})
+
+		if err == nil {
+			for branch, proposal := range tree.BranchToProposal { // okay to iterate the map in random order
+				// Do not update the same proposal more than once because we updated
+				// it in a previous step
+				if _, ok := branchPropsalsUpdated[branch]; !ok {
+					prog.Add(&opcodes.ProposalUpdateLineage{
+						Current:         branch,
+						CurrentProposal: proposal,
+						LineageTree:     MutableSome(tree),
+					})
+					branchPropsalsUpdated.Add(branch)
+				}
+			}
+		} else {
+			fmt.Printf("failed to update proposal stack lineage for new parent: %s\n", err.Error())
+		}
+	}
 }
