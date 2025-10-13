@@ -73,7 +73,7 @@
     "^I add an unrelated stash entry with file .*$",
     "^wait 1 second to ensure new Git timestamps$",
     "^I ran .*$",
-    "^And <LOCATION> Git setting \"git-town.new-branch-push-flag\" is ",
+    "^<LOCATION> Git setting \"git-town.new-branch-push-flag\" is ",
 
     "^I resolve the conflict in \".*\"$",
     "^I resolve the conflict in \".*\" with:$",
