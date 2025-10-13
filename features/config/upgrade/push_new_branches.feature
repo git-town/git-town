@@ -5,8 +5,8 @@ Feature: automatically upgrade outdated configuration
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And <LOCATION> Git setting "git-town.push-new-branches" is "true"
     And the current branch is "feature"
+    And <LOCATION> Git setting "git-town.push-new-branches" is "true"
     When I run "git-town <COMMAND>"
     Then Git Town prints:
       """
