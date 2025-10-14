@@ -31,6 +31,12 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
       |        | git merge --no-edit --ff parent                                                                         |
       |        | git push --force-with-lease --force-if-includes                                                         |
       |        | git checkout parent                                                                                     |
+    And this lineage exists now
+      """
+      main
+        parent
+          old
+      """
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        |
       | parent | local         | commit 1                       |
@@ -41,12 +47,6 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
       |        |               | Merge branch 'parent' into old |
       |        | origin        | commit 1                       |
       |        |               | commit 4                       |
-    And this lineage exists now
-      """
-      main
-        parent
-          old
-      """
 
   Scenario: sync
     When I run "git-town sync"

@@ -3,7 +3,7 @@ Feature: propose a newly prepended branch
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
+    And the origin is "git@github.com:git-town/git-town.git"
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
@@ -11,10 +11,10 @@ Feature: propose a newly prepended branch
       | BRANCH   | LOCATION      | MESSAGE          |
       | existing | local, origin | existing commit  |
       |          |               | unrelated commit |
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "existing"
-    And the origin is "git@github.com:git-town/git-town.git"
-    And tool "open" is installed
     And a proposal for this branch does not exist
+    And tool "open" is installed
     When I run "git-town prepend new --beam --propose --title='proposal title' --body='proposal body'" and enter into the dialog:
       | DIALOG          | KEYS             |
       | commits to beam | down space enter |
@@ -32,16 +32,16 @@ Feature: propose a newly prepended branch
       |          | git checkout new                                                                                                        |
       | new      | git push -u origin new                                                                                                  |
       |          | open https://github.com/git-town/git-town/compare/new?expand=1&title=proposal+title&body=proposal+body                  |
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE          |
-      | new      | local, origin | unrelated commit |
-      | existing | local, origin | existing commit  |
     And this lineage exists now
       """
       main
         new
           existing
       """
+    And these commits exist now
+      | BRANCH   | LOCATION      | MESSAGE          |
+      | new      | local, origin | unrelated commit |
+      | existing | local, origin | existing commit  |
 
   Scenario: undo
     When I run "git-town undo"
@@ -52,5 +52,5 @@ Feature: propose a newly prepended branch
       |          | git push --force-with-lease --force-if-includes |
       |          | git branch -D new                               |
       |          | git push origin :new                            |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

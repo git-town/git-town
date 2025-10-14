@@ -3,7 +3,6 @@ Feature: prepend a branch to a feature branch using the "merge" sync strategy
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "merge"
     And the branches
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | old  | feature | main   | local, origin |
@@ -13,6 +12,7 @@ Feature: prepend a branch to a feature branch using the "merge" sync strategy
       | old    | local, origin | commit 2 | file 2    | content 2    |
       | old    | local, origin | commit 3 | file 3    | content 3    |
       | old    | local, origin | commit 4 | file 4    | content 4    |
+    And Git setting "git-town.sync-feature-strategy" is "merge"
     And the current branch is "old"
     When I run "git-town prepend parent --beam" and enter into the dialog:
       | DIALOG          | KEYS                             |
@@ -30,6 +30,12 @@ Feature: prepend a branch to a feature branch using the "merge" sync strategy
       |        | git merge --no-edit --ff parent                                                                         |
       |        | git push --force-with-lease --force-if-includes                                                         |
       |        | git checkout parent                                                                                     |
+    And this lineage exists now
+      """
+      main
+        parent
+          old
+      """
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        |
       | parent | local         | commit 2                       |
@@ -40,12 +46,6 @@ Feature: prepend a branch to a feature branch using the "merge" sync strategy
       |        |               | Merge branch 'parent' into old |
       |        | origin        | commit 2                       |
       |        |               | commit 4                       |
-    And this lineage exists now
-      """
-      main
-        parent
-          old
-      """
 
   Scenario: sync
     When I run "git-town sync"
@@ -95,5 +95,5 @@ Feature: prepend a branch to a feature branch using the "merge" sync strategy
       | old    | git reset --hard {{ sha 'commit 4' }}           |
       |        | git push --force-with-lease --force-if-includes |
       |        | git branch -D parent                            |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now
