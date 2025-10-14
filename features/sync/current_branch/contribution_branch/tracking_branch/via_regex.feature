@@ -10,8 +10,8 @@ Feature: sync the current branch that is contribution via regex
       | main       | local, origin | main commit   | main_file   |
       | renovate/1 | local         | local commit  | local_file  |
       |            | origin        | origin commit | origin_file |
-    And the current branch is "renovate/1"
     And Git setting "git-town.contribution-regex" is "^renovate"
+    And the current branch is "renovate/1"
     When I run "git-town sync"
 
   Scenario: result
