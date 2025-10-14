@@ -8,9 +8,9 @@ Feature: partially undo an offline ship using the always-merge strategy after ad
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
-    And the current branch is "feature"
-    And offline mode is enabled
     And Git setting "git-town.ship-strategy" is "always-merge"
+    And offline mode is enabled
+    And the current branch is "feature"
     And I run "git-town ship" and close the editor
 
   Scenario: undo
