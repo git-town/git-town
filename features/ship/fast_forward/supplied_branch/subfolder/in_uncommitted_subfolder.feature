@@ -9,8 +9,8 @@ Feature: ship the supplied feature branch from a subfolder using the fast-forwar
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | local    | feature commit |
-    And the current branch is "other"
     And Git setting "git-town.ship-strategy" is "fast-forward"
+    And the current branch is "other"
     And a folder "new_folder"
     When I run "git-town ship feature" in the "new_folder" folder
 
@@ -27,14 +27,14 @@ Feature: ship the supplied feature branch from a subfolder using the fast-forwar
       | REPOSITORY | BRANCHES    |
       | local      | main, other |
       | origin     | main        |
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE        |
-      | main   | local, origin | feature commit |
     And this lineage exists now
       """
       main
         other
       """
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE        |
+      | main   | local, origin | feature commit |
 
   Scenario: undo
     When I run "git-town undo"

@@ -9,8 +9,8 @@ Feature: ship the supplied local feature branch
     And the commits
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME        |
       | feature | local    | feature commit | conflicting_file |
-    And the current branch is "other"
     And Git setting "git-town.ship-strategy" is "fast-forward"
+    And the current branch is "other"
     When I run "git-town ship feature"
 
   Scenario: result
@@ -25,14 +25,14 @@ Feature: ship the supplied local feature branch
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE        |
-      | main   | local, origin | feature commit |
     And this lineage exists now
       """
       main
         other
       """
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE        |
+      | main   | local, origin | feature commit |
 
   Scenario: undo
     When I run "git-town undo"
