@@ -4,16 +4,16 @@ Feature: enable offline mode
     Given a Git repo with origin
 
   Scenario Outline: enable via CLI
-    When I run "git-town offline <GIVE>"
+    When I run "git-town offline <VALUE>"
     Then global Git setting "git-town.offline" is now "true"
 
     Examples:
-      | GIVE |
-      | true |
-      | t    |
-      | 1    |
-      | on   |
-      | yes  |
+      | VALUE |
+      | true  |
+      | t     |
+      | 1     |
+      | on    |
+      | yes   |
 
   Scenario: undo
     Given I ran "git-town offline 1"

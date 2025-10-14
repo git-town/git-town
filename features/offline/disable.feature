@@ -5,11 +5,11 @@ Feature: disable offline mode
 
   Scenario Outline: disable via CLI
     Given offline mode is enabled
-    When I run "git-town offline <GIVE>"
+    When I run "git-town offline <VALUE>"
     Then global Git setting "git-town.offline" is now "false"
 
     Examples:
-      | GIVE  |
+      | VALUE |
       | false |
       | f     |
       | 0     |
