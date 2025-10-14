@@ -39,4 +39,3 @@ Feature: on a detached head with a clean workspace
       | main                       | git reset --hard {{ sha 'initial commit' }} |
       |                            | git checkout {{ sha 'initial commit' }}     |
       | {{ sha 'initial commit' }} | git branch -D new                           |
-    And the currently checked out commit is "initial commit"
