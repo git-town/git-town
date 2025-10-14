@@ -10,8 +10,8 @@ Feature: ship a parent branch using the fast-forward strategy
       | BRANCH | LOCATION      | MESSAGE       |
       | parent | local, origin | parent commit |
       | child  | local, origin | child commit  |
-    And the current branch is "child"
     And Git setting "git-town.ship-strategy" is "fast-forward"
+    And the current branch is "child"
     When I run "git-town ship parent"
 
   Scenario: result
@@ -28,15 +28,15 @@ Feature: ship a parent branch using the fast-forward strategy
       """
       branch "child" is now a child of "main"
       """
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE       |
-      | main   | local, origin | parent commit |
-      | child  | local, origin | child commit  |
     And this lineage exists now
       """
       main
         child
       """
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE       |
+      | main   | local, origin | parent commit |
+      | child  | local, origin | child commit  |
 
   Scenario: undo
     When I run "git-town undo"

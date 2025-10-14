@@ -9,8 +9,8 @@ Feature: does not ship out-of-sync branches
       | BRANCH  | LOCATION | MESSAGE                |
       | feature | local    | unsynced local commit  |
       |         | origin   | unsynced origin commit |
-    And the current branch is "feature"
     And Git setting "git-town.ship-strategy" is "fast-forward"
+    And the current branch is "feature"
     When I run "git-town ship"
 
   Scenario: result

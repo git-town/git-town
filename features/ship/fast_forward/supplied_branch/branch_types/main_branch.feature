@@ -5,8 +5,8 @@ Feature: does not ship the main branch using the fast-forward strategy
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And the current branch is "feature"
     And Git setting "git-town.ship-strategy" is "fast-forward"
+    And the current branch is "feature"
     When I run "git-town ship main"
 
   Scenario: result

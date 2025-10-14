@@ -10,8 +10,8 @@ Feature: does not ship an unsynced feature branch using the fast-forward strateg
       | BRANCH  | LOCATION | MESSAGE                 |
       | main    | local    | main commit             |
       | feature | local    | unsynced feature commit |
-    And the current branch is "other"
     And Git setting "git-town.ship-strategy" is "fast-forward"
+    And the current branch is "other"
     And I run "git-town ship feature"
 
   Scenario: result
