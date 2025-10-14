@@ -22,8 +22,6 @@ Feature: Accepting all default values leads to a working setup
 
   Scenario: result
     Then Git Town runs no commands
-    And the main branch is still not set
-    And there are still no perennial branches
     And local Git setting "git-town.dev-remote" still doesn't exist
     And local Git setting "git-town.new-branch-type" still doesn't exist
     And local Git setting "git-town.main-branch" still doesn't exist
@@ -49,6 +47,8 @@ Feature: Accepting all default values leads to a working setup
       [branches]
       main = "main"
       """
+    And the main branch is still not set
+    And there are still no perennial branches
 
   Scenario: undo
     When I run "git-town undo"
