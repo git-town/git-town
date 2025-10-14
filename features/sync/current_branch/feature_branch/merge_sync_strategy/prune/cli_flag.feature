@@ -28,7 +28,6 @@ Feature: prune enabled via CLI
       | main      | git push origin :feature-1                        |
       |           | git branch -D feature-1                           |
       |           | git checkout feature-2                            |
-    And all branches are now synchronized
     And the branches are now
       | REPOSITORY    | BRANCHES        |
       | local, origin | main, feature-2 |
@@ -37,6 +36,7 @@ Feature: prune enabled via CLI
       main
         feature-2
       """
+    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"
@@ -45,9 +45,9 @@ Feature: prune enabled via CLI
       | feature-2 | git push origin {{ sha 'initial commit' }}:refs/heads/feature-1 |
       |           | git branch feature-1 {{ sha 'feature-1 commit' }}               |
       |           | git checkout feature-1                                          |
-    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE          |
       | main      | local, origin | main commit      |
       | feature-1 | local         | feature-1 commit |
       | feature-2 | local, origin | feature-2 commit |
+    And the initial branches and lineage exist now

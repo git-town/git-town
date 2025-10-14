@@ -14,8 +14,8 @@ Feature: disable pushing through Git metadata
       |        | origin   | origin parent commit |
       | child  | local    | local child commit   |
       |        | origin   | origin child commit  |
-    And the current branch is "child"
     And Git setting "git-town.push-branches" is "false"
+    And the current branch is "child"
     When I run "git-town sync"
 
   Scenario: result

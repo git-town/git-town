@@ -2,7 +2,6 @@ Feature: disable pushing through the config file
 
   Background:
     Given a Git repo with origin
-    And Git Town is not configured
     And the committed configuration file:
       """
       [branches]
@@ -24,6 +23,7 @@ Feature: disable pushing through the config file
       |        | origin   | origin parent commit |
       | child  | local    | local child commit   |
       |        | origin   | origin child commit  |
+    And Git Town is not configured
     And the current branch is "child"
     When I run "git-town sync"
 

@@ -25,7 +25,6 @@ Feature: sync inside a folder that doesn't exist on the main branch
       |        | git push                      |
       |        | git checkout alpha            |
       | alpha  | git push --tags               |
-    And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        |
       | main   | local, origin | main commit                    |
@@ -33,6 +32,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       |        |               | Merge branch 'main' into alpha |
       | beta   | local, origin | beta commit                    |
       |        |               | Merge branch 'main' into beta  |
+    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

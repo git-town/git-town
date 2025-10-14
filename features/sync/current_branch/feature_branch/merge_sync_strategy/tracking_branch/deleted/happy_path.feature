@@ -27,10 +27,10 @@ Feature: sync a branch whose tracking branch was shipped
       """
       deleted branch "feature-1"
       """
-    And the previous Git branch is now "main"
     And the branches are now
       | REPOSITORY    | BRANCHES        |
       | local, origin | main, feature-2 |
+    And the previous Git branch is now "main"
     And this lineage exists now
       """
       main

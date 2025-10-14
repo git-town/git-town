@@ -20,11 +20,11 @@ Feature: sync inside a folder that doesn't exist on the main branch
       | BRANCH  | COMMAND                       |
       | current | git fetch --prune --tags      |
       |         | git merge --no-edit --ff main |
-    And a merge is now in progress
     And Git Town prints the error:
       """
       git merge conflict
       """
+    And a merge is now in progress
 
   Scenario: undo
     When I run "git-town undo" in the "new_folder" folder
@@ -57,7 +57,6 @@ Feature: sync inside a folder that doesn't exist on the main branch
       |         | git push                                |
       |         | git checkout current                    |
       | current | git push --tags                         |
-    And all branches are now synchronized
     And no merge is now in progress
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                          |
@@ -74,3 +73,4 @@ Feature: sync inside a folder that doesn't exist on the main branch
       |         | new_folder/file1 |                  |
       | other   | conflicting_file | main content     |
       |         | file2            |                  |
+    And all branches are now synchronized
