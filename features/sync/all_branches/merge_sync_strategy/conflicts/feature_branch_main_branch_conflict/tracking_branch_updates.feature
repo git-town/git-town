@@ -100,7 +100,6 @@ Feature: handle merge conflicts between feature branch and main branch
       |        | git push                              |
       |        | git checkout main                     |
       | main   | git push --tags                       |
-    And all branches are now synchronized
     And no merge is now in progress
     And these committed files exist now
       | BRANCH | NAME                 | CONTENT             |
@@ -111,6 +110,7 @@ Feature: handle merge conflicts between feature branch and main branch
       |        | feature2_origin_file | origin beta content |
       | gamma  | conflicting_file     | main content        |
       |        | feature3_file        | gamma content       |
+    And all branches are now synchronized
 
   Scenario: resolve, commit, and continue
     When I resolve the conflict in "conflicting_file"
