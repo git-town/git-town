@@ -22,8 +22,8 @@ Feature: swapping a branch whole parent is not in sync
       """
       please sync your branches before swapping
       """
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now
   #
   # NOTE: Cannot test undo here.
   # The Git Town command under test has not created an undoable runstate.

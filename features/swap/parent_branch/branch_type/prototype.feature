@@ -22,16 +22,16 @@ Feature: swapping a branch with its prototype parent
       | parent  | git -c rebase.updateRefs=false rebase --onto current main |
       |         | git push --force-with-lease --force-if-includes           |
       |         | git checkout current                                      |
-    And these commits exist now
-      | BRANCH  | LOCATION      | MESSAGE        |
-      | current | local, origin | current commit |
-      | parent  | local, origin | parent commit  |
     And this lineage exists now
       """
       main
         current
           parent
       """
+    And these commits exist now
+      | BRANCH  | LOCATION      | MESSAGE        |
+      | current | local, origin | current commit |
+      | parent  | local, origin | parent commit  |
 
   Scenario: undo
     When I run "git-town undo"
@@ -41,5 +41,5 @@ Feature: swapping a branch with its prototype parent
       | parent  | git reset --hard {{ sha 'parent commit' }}      |
       |         | git push --force-with-lease --force-if-includes |
       |         | git checkout current                            |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now
