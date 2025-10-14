@@ -37,8 +37,8 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       |        | git checkout alpha                        |
       | alpha  | git reset --hard {{ sha 'alpha commit' }} |
       |        | git checkout main                         |
-    And the initial commits exist now
     And no merge is now in progress
+    And the initial commits exist now
 
   Scenario: skip
     When I run "git-town skip"
@@ -84,7 +84,6 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       |        | git checkout gamma            |
       | gamma  | git merge --no-edit --ff main |
       |        | git checkout main             |
-    And all branches are now synchronized
     And no merge is now in progress
     And these committed files exist now
       | BRANCH | NAME             | CONTENT          |
@@ -94,6 +93,7 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       | beta   | conflicting_file | resolved content |
       | gamma  | conflicting_file | main content     |
       |        | feature3_file    | gamma content    |
+    And all branches are now synchronized
 
   Scenario: resolve, commit, and continue
     When I resolve the conflict in "conflicting_file"

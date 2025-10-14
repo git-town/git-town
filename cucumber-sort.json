@@ -35,6 +35,7 @@
     "features/swap/merge_conflict/dependent_changes.feature",
     "features/sync/all_branches/merge_sync_strategy/conflicts/multiple_conflicting_branches.feature",
     "features/sync/all_branches/merge_sync_strategy/conflicts/feature_branch_main_branch_conflict/conflict_feature_branch_main_branch.feature",
+    "features/sync/all_branches/merge_sync_strategy/conflicts/feature_branch_main_branch_conflict/shipped_changes_conflict_with_existing_feature_branch.feature",
     "vendor/**/*.feature"
   ],
   "record": true,
