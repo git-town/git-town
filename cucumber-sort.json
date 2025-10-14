@@ -33,6 +33,7 @@
     "features/ship/squash_merge/current_branch/delete_tracking_branch/disabled.feature",
     "features/ship/squash_merge/supplied_branch/delete_tracking_branch/disabled.feature",
     "features/swap/merge_conflict/dependent_changes.feature",
+    "features/sync/all_branches/merge_sync_strategy/conflicts/multiple_conflicting_branches.feature",
     "vendor/**/*.feature"
   ],
   "record": true,
