@@ -32,8 +32,8 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:iretur
 		return APIConnector{
 			WebConnector: webConnector,
 			log:          args.Log,
-			token:        args.AppPassword.String(),
-			username:     args.UserName.String(),
+			token:        args.AppPassword.GetOrZero().String(),
+			username:     args.UserName.GetOrZero().String(),
 		}
 	}
 	return webConnector

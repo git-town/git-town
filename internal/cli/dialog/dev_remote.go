@@ -59,6 +59,6 @@ func DevRemote(remotes gitdomain.Remotes, args Args[gitdomain.Remote]) (Option[g
 		cursor = options.IndexOf(Some(config.DefaultNormalConfig().DevRemote))
 	}
 	selection, exit, err := dialogcomponents.RadioList(options, cursor, DevRemoteTypeTitle, DevRemoteHelp, args.Inputs, "dev-remote")
-	fmt.Printf(messages.DevRemote, dialogcomponents.FormattedSelection(selection.String(), exit))
+	fmt.Printf(messages.DevRemote, dialogcomponents.FormattedSelection(selection.GetOrZero().String(), exit))
 	return selection, exit, err
 }

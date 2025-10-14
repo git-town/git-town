@@ -223,7 +223,7 @@ func (self *APIConnector) getClient() (*forgejo.Client, error) {
 	if client, hasClient := self._client.Get(); hasClient {
 		return client, nil
 	}
-	forgejoClient, err := forgejo.NewClient("https://"+self.remoteURL.Host, forgejo.SetToken(self.APIToken.String()))
+	forgejoClient, err := forgejo.NewClient("https://"+self.remoteURL.Host, forgejo.SetToken(self.APIToken.GetOrZero().String()))
 	if err != nil {
 		return nil, err
 	}
