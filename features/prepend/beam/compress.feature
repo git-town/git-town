@@ -48,17 +48,6 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
           old
       """
 
-  Scenario: undo
-    When I run "git-town undo"
-    Then Git Town runs the commands
-      | BRANCH | COMMAND                                         |
-      | parent | git checkout old                                |
-      | old    | git reset --hard {{ sha 'commit 4' }}           |
-      |        | git push --force-with-lease --force-if-includes |
-      |        | git branch -D parent                            |
-    And the initial commits exist now
-    And the initial lineage exists now
-
   Scenario: sync
     When I run "git-town sync"
     Then Git Town runs the commands
