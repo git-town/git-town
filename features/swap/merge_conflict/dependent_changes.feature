@@ -113,5 +113,5 @@ Feature: swapping a feature branch in a stack with dependent changes
     Then Git Town runs the commands
       | BRANCH   | COMMAND            |
       | branch-2 | git rebase --abort |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

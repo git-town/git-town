@@ -32,6 +32,7 @@
     "features/ship/fast_forward/supplied_branch/ship_delete_tracking_branch/disabled.feature",
     "features/ship/squash_merge/current_branch/delete_tracking_branch/disabled.feature",
     "features/ship/squash_merge/supplied_branch/delete_tracking_branch/disabled.feature",
+    "features/swap/merge_conflict/dependent_changes.feature",
     "vendor/**/*.feature"
   ],
   "record": true,
