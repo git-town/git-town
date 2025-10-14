@@ -11,7 +11,7 @@ Feature: enable offline mode
       | GIVE |
       | true |
       | t    |
-      |    1 |
+      | 1    |
       | on   |
       | yes  |
 

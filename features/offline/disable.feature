@@ -12,7 +12,7 @@ Feature: disable offline mode
       | GIVE  |
       | false |
       | f     |
-      |     0 |
+      | 0     |
       | off   |
       | no    |
 
