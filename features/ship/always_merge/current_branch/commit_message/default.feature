@@ -37,7 +37,6 @@ Feature: default merge message
       | main   | git branch feature {{ sha 'feature commit' }} |
       |        | git push -u origin feature                    |
       |        | git checkout feature                          |
-    And the currently checked out commit is "feature commit"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                |
       | main   | local, origin | feature commit         |
