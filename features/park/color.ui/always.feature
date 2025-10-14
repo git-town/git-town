@@ -5,7 +5,7 @@ Feature: park another remote branch
     And the branches
       | NAME           | TYPE    | PARENT | LOCATIONS |
       | remote-feature | feature | main   | origin    |
-    And I run "git fetch"
+    And I ran "git fetch"
     And local Git setting "color.ui" is "always"
     When I run "git-town park remote-feature"
 
