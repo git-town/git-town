@@ -19,17 +19,17 @@ Feature: hack with --prototype flag
       |          | git checkout main                                 |
       | main     | git -c rebase.updateRefs=false rebase origin/main |
       |          | git checkout -b new                               |
-    And branch "new" now has type "prototype"
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE         |
-      | main     | local, origin | main commit     |
-      | existing | local         | existing commit |
     And this lineage exists now
       """
       main
         existing
         new
       """
+    And these commits exist now
+      | BRANCH   | LOCATION      | MESSAGE         |
+      | main     | local, origin | main commit     |
+      | existing | local         | existing commit |
+    And branch "new" now has type "prototype"
 
   Scenario: undo
     When I run "git-town undo"

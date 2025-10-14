@@ -16,13 +16,13 @@ Feature: already existing remote branch
       |          | git checkout -b existing    |
       | existing | git stash pop               |
       |          | git restore --staged .      |
-    And no commits exist now
-    And the uncommitted file still exists
     And this lineage exists now
       """
       main
         existing
       """
+    And no commits exist now
+    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"

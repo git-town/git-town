@@ -16,12 +16,12 @@ Feature: inside an uncommitted subfolder on the current feature branch
       |        | git checkout -b new         |
       | new    | git stash pop               |
       |        | git restore --staged .      |
-    And the initial commits exist now
     And this lineage exists now
       """
       main
         new
       """
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -33,5 +33,5 @@ Feature: inside an uncommitted subfolder on the current feature branch
       | main   | git branch -D new           |
       |        | git stash pop               |
       |        | git restore --staged .      |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

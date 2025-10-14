@@ -1,5 +1,5 @@
 {
-  "include": [],
+  "include": ["features/**/*.feature"],
   "exclude": [
     "features/sync/current_branch/feature_branch/compress_sync_strategy/two_collaborators/conflicting_changes_parallel.feature",
     "features/sync/current_branch/feature_branch/compress_sync_strategy/two_collaborators/nonconflicting_changes_serial.feature",
@@ -16,6 +16,7 @@
     "features/sync/current_branch/feature_branch/mixed_sync_strategies/independent_changes.feature",
     "features/sync/current_branch/feature_branch/rebase_sync_strategy/two_collaborators/conflicting_commits.feature",
     "features/sync/current_branch/feature_branch/rebase_sync_strategy/two_collaborators/happy_path.feature",
+    "features/end_to_end/ship_prototype_branch_and_sync.feature",
     "features/detach/merge_conflict/dependent_changes.feature",
     "vendor/**/*.feature"
   ],

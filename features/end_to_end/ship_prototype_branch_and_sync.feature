@@ -3,16 +3,10 @@ Feature: end-to-end workflow of creating a prototype branch, shipping, and pruni
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.unknown-branch-type" is "prototype"
     And the origin is "git@github.com:git-town/git-town.git"
-    And tool "open" is installed
+    And Git setting "git-town.unknown-branch-type" is "prototype"
     And I ran "git-town hack hooks"
-    And the commits
-      | BRANCH | LOCATION | MESSAGE      |
-      | hooks  | local    | hooks commit |
-    And the current branch is "hooks"
     And I ran "git-town propose"
-    And origin ships the "hooks" branch using the "squash-merge" ship-strategy
     When I run "git-town sync --all"
 
   Scenario: result
@@ -48,3 +42,9 @@ Feature: end-to-end workflow of creating a prototype branch, shipping, and pruni
       main
         hooks
       """
+    And the commits
+      | BRANCH | LOCATION | MESSAGE      |
+      | hooks  | local    | hooks commit |
+    And origin ships the "hooks" branch using the "squash-merge" ship-strategy
+    And the current branch is "hooks"
+    And tool "open" is installed

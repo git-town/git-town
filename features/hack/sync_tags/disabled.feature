@@ -2,11 +2,11 @@ Feature: don't sync tags while hacking
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-tags" is "false"
     And the tags
       | NAME       | LOCATION |
       | local-tag  | local    |
       | origin-tag | origin   |
-    And Git setting "git-town.sync-tags" is "false"
     When I run "git-town hack new"
 
   Scenario: result

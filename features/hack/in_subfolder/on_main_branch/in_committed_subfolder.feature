@@ -15,14 +15,14 @@ Feature: in a subfolder on the main branch
       |        | git -c rebase.updateRefs=false rebase origin/main |
       |        | git push                                          |
       |        | git checkout -b new                               |
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE       |
-      | main   | local, origin | folder commit |
     And this lineage exists now
       """
       main
         new
       """
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE       |
+      | main   | local, origin | folder commit |
 
   Scenario: undo
     When I run "git-town undo"
@@ -30,7 +30,7 @@ Feature: in a subfolder on the main branch
       | BRANCH | COMMAND           |
       | new    | git checkout main |
       | main   | git branch -D new |
+    And no lineage exists now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | folder commit |
-    And no lineage exists now

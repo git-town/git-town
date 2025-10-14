@@ -2,6 +2,7 @@ Feature: disable syncing via Git metadata
 
   Background:
     Given a Git repo with origin
+    And global Git setting "git-town.auto-sync" is "false"
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | branch-1 | feature | main   | local, origin |
@@ -9,20 +10,19 @@ Feature: disable syncing via Git metadata
       | BRANCH | LOCATION | MESSAGE            |
       | main   | origin   | origin main commit |
     And the current branch is "branch-1"
-    And global Git setting "git-town.auto-sync" is "false"
     When I run "git-town hack branch-2"
 
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                       |
       | branch-1 | git checkout -b branch-2 main |
-    And the initial commits exist now
     And this lineage exists now
       """
       main
         branch-1
         branch-2
       """
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -30,5 +30,5 @@ Feature: disable syncing via Git metadata
       | BRANCH   | COMMAND                |
       | branch-2 | git checkout branch-1  |
       | branch-1 | git branch -D branch-2 |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

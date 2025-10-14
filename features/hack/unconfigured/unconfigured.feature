@@ -21,12 +21,12 @@ Feature: missing configuration
       | main   | git fetch --prune --tags             |
       |        | git config git-town.main-branch main |
       |        | git checkout -b feature              |
-    And the main branch is now "main"
     And this lineage exists now
       """
       main
         feature
       """
+    And the main branch is now "main"
 
   Scenario: undo
     When I run "git-town undo"

@@ -19,14 +19,14 @@ Feature: hack in Spanish
       """
       Cambiado a nueva rama 'new'
       """
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE     |
-      | main   | local, origin | main commit |
     And this lineage exists now
       """
       main
         new
       """
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE     |
+      | main   | local, origin | main commit |
 
   Scenario: undo
     When I run "git-town undo" with these environment variables

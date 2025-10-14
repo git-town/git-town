@@ -15,13 +15,13 @@ Feature: local repo
     Then Git Town runs the commands
       | BRANCH   | COMMAND                  |
       | existing | git checkout -b new main |
-    And the initial commits exist now
     And this lineage exists now
       """
       main
         existing
         new
       """
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -29,9 +29,9 @@ Feature: local repo
       | BRANCH   | COMMAND               |
       | new      | git checkout existing |
       | existing | git branch -D new     |
-    And the initial commits exist now
     And this lineage exists now
       """
       main
         existing
       """
+    And the initial commits exist now

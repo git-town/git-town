@@ -20,16 +20,16 @@ Feature: create a new top-level feature branch in a clean workspace using the "c
       |         | git checkout main                                 |
       | main    | git -c rebase.updateRefs=false rebase origin/main |
       |         | git checkout -b new                               |
-    And these commits exist now
-      | BRANCH  | LOCATION      | MESSAGE            |
-      | main    | local, origin | new commit         |
-      | feature | local, origin | already compressed |
     And this lineage exists now
       """
       main
         feature
         new
       """
+    And these commits exist now
+      | BRANCH  | LOCATION      | MESSAGE            |
+      | main    | local, origin | new commit         |
+      | feature | local, origin | already compressed |
 
   Scenario: undo
     When I run "git-town undo"
