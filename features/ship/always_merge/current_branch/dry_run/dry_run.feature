@@ -8,8 +8,8 @@ Feature: dry-run shipping via the always-merge strategy
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
-    And the current branch is "feature"
     And Git setting "git-town.ship-strategy" is "always-merge"
+    And the current branch is "feature"
     When I run "git-town ship --dry-run"
 
   Scenario: result
