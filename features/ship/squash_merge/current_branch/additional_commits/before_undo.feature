@@ -11,10 +11,10 @@ Feature: can undo a ship even after additional commits to the main branch
     And the current branch is "feature"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship -m done"
-    And I add commit "additional commit" to the "main" branch
 
-  Scenario: undo
-    When I run "git-town undo"
+  Scenario: add commit and undo
+    When I add commit "additional commit" to the "main" branch
+    And I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | main   | git revert {{ sha 'done' }}                   |
