@@ -14,10 +14,10 @@ Feature: undo offline sync after additional commits to the feature branch
       |         | origin   | origin feature commit |
     And the current branch is "feature"
     When I run "git-town sync"
-    And I add commit "additional commit" to the "feature" branch
 
-  Scenario: undo
-    When I run "git-town undo"
+  Scenario: add commit and undo
+    When I add commit "additional commit" to the "feature" branch
+    And I run "git-town undo"
     Then Git Town prints:
       """
       cannot reset branch "feature"
