@@ -10,8 +10,8 @@ Feature: allowing shiping into a feature branch
       | BRANCH | LOCATION | MESSAGE      |
       | alpha  | local    | alpha commit |
       | beta   | local    | beta commit  |
-    And the current branch is "beta"
     And Git setting "git-town.ship-strategy" is "squash-merge"
+    And the current branch is "beta"
     When I run "git-town ship --to-parent -m done"
 
   Scenario: result
@@ -24,15 +24,15 @@ Feature: allowing shiping into a feature branch
     And the branches are now
       | REPOSITORY | BRANCHES    |
       | local      | main, alpha |
-    And these commits exist now
-      | BRANCH | LOCATION | MESSAGE      |
-      | alpha  | local    | alpha commit |
-      |        |          | done         |
     And this lineage exists now
       """
       main
         alpha
       """
+    And these commits exist now
+      | BRANCH | LOCATION | MESSAGE      |
+      | alpha  | local    | alpha commit |
+      |        |          | done         |
 
   Scenario: undo
     When I run "git-town undo"

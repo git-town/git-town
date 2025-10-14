@@ -9,8 +9,8 @@ Feature: enter the commit message interactively via the editor
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
-    And the current branch is "feature"
     And Git setting "git-town.ship-strategy" is "squash-merge"
+    And the current branch is "feature"
     When I run "git-town ship --dry-run" and enter "feature done" for the commit message
 
   Scenario: result

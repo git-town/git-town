@@ -5,8 +5,8 @@ Feature: does not ship perennial branches
     And the branches
       | NAME       | TYPE      | PARENT | LOCATIONS     |
       | production | perennial |        | local, origin |
-    And the current branch is "main"
     And Git setting "git-town.ship-strategy" is "squash-merge"
+    And the current branch is "main"
     When I run "git-town ship production"
 
   Scenario: result

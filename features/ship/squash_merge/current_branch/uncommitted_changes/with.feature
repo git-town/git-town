@@ -5,8 +5,8 @@ Feature: does not ship with uncommitted changes
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And the current branch is "feature"
     And Git setting "git-town.ship-strategy" is "squash-merge"
+    And the current branch is "feature"
     And an uncommitted file
     When I run "git-town ship"
 

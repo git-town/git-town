@@ -9,9 +9,9 @@ Feature: ship a feature branch in a local repo
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | current | local    | current commit |
+    And Git setting "git-town.ship-strategy" is "squash-merge"
     And the current branch is "current" and the previous branch is "previous"
     And branch "previous" is active in another worktree
-    And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship -m 'feature done'"
 
   Scenario: result

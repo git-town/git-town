@@ -9,8 +9,8 @@ Feature: does not ship an empty branch
       | BRANCH | LOCATION | MESSAGE      | FILE NAME   | FILE CONTENT   |
       | main   | local    | main commit  | common_file | common content |
       | empty  | local    | empty commit | common_file | common content |
-    And the current branch is "empty"
     And Git setting "git-town.ship-strategy" is "squash-merge"
+    And the current branch is "empty"
     When I run "git-town ship"
 
   Scenario: result
