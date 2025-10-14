@@ -118,6 +118,8 @@
     "^local Git setting \".*\" (now|still) doesn't exist$",
     "^Git setting \".*\" is (now|still) \".*\"$",
     "^Git setting \".*\" (now|still) doesn't exist$",
+    "Git setting \"git-town-branch.*.branchtype\" is (now|still) ",
+    "Git setting \"git-town-branch.*.branchtype\" now doesn't exist$",
     "^the configuration file is now:$",
     "^the branches are now$",
     "^the current branch is (now|still) ",

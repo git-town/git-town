@@ -25,14 +25,14 @@ Feature: delete a branch that has an overridden branch type
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE      |
-      | other  | local, origin | other commit |
     And this lineage exists now
       """
       main
         other
       """
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE      |
+      | other  | local, origin | other commit |
 
   Scenario: undo
     When I run "git-town undo"
