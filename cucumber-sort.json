@@ -133,6 +133,7 @@
     "^file \".*\" (now|still) has content:$",
     "^file \".*\" still has content .*$",
     "^the main branch is (now|still) .*$",
+    "^the perennial branches are (now|still) .*$",
     "^there is now no previous Git branch$",
     "^there are (now|still) no perennial branches$",
     "^branch \".*\" (now|still) has type .*$",

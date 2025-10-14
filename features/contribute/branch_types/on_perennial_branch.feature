@@ -9,12 +9,12 @@ Feature: cannot make the current perennial branch a contribution branch
     When I run "git-town contribute"
 
   Scenario: result
-    Then the perennial branches are still "perennial"
-    And Git Town runs no commands
+    Then Git Town runs no commands
     And Git Town prints the error:
       """
       cannot make perennial branches contribution branches
       """
+    And the perennial branches are still "perennial"
     And branch "perennial" still has type "perennial"
   #
   # NOTE: Cannot test undo here.

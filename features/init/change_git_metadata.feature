@@ -129,7 +129,6 @@ Feature: change existing information in Git metadata
     And the main branch is now "main"
 
   Scenario: undo
-    Then the perennial branches are now "qa"
     When I run "git-town undo"
     Then Git Town runs no commands
     And global Git setting "alias.append" now doesn't exist
@@ -164,3 +163,4 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.unknown-branch-type" now doesn't exist
     And local Git setting "git-town.ship-strategy" now doesn't exist
     And the main branch is now "main"
+    And the perennial branches are now "qa"

@@ -4,10 +4,6 @@ Feature: remove existing configuration in Git metadata
   Background:
     Given a Git repo with origin
     And I rename the "origin" remote to "fork"
-    And the branches
-      | NAME       | TYPE   | LOCATIONS |
-      | qa         | (none) | local     |
-      | production | (none) | local     |
     And the main branch is "main"
     And global Git setting "alias.append" is "town append"
     And global Git setting "alias.compress" is "town compress"
@@ -47,6 +43,10 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.sync-upstream" is "false"
     And local Git setting "git-town.sync-tags" is "false"
     And local Git setting "git-town.unknown-branch-type" is "observed"
+    And the branches
+      | NAME       | TYPE   | LOCATIONS |
+      | qa         | (none) | local     |
+      | production | (none) | local     |
     When I run "git-town init" and enter into the dialogs:
       | DIALOG                      | KEYS                                                                        | DESCRIPTION         |
       | welcome                     | enter                                                                       |                     |
@@ -128,18 +128,9 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.set-parent" now doesn't exist
     And global Git setting "alias.ship" now doesn't exist
     And global Git setting "alias.sync" now doesn't exist
-    And the main branch is still "main"
-    And there are now no perennial branches
     And local Git setting "git-town.auto-sync" is now "true"
-    And local Git setting "git-town.contribution-regex" now doesn't exist
     And local Git setting "git-town.dev-remote" is now "fork"
-    And local Git setting "git-town.feature-regex" now doesn't exist
-    And local Git setting "git-town.forge-type" now doesn't exist
-    And local Git setting "git-town.github-token" now doesn't exist
-    And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
     And local Git setting "git-town.new-branch-type" is now "feature"
-    And local Git setting "git-town.observed-regex" now doesn't exist
-    And local Git setting "git-town.perennial-regex" now doesn't exist
     And local Git setting "git-town.push-branches" is now "true"
     And local Git setting "git-town.push-hook" is now "true"
     And local Git setting "git-town.share-new-branches" is now "no"
@@ -151,12 +142,19 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.sync-upstream" is now "true"
     And local Git setting "git-town.sync-tags" is now "true"
     And local Git setting "git-town.unknown-branch-type" is now "feature"
+    And local Git setting "git-town.contribution-regex" now doesn't exist
+    And local Git setting "git-town.feature-regex" now doesn't exist
+    And local Git setting "git-town.forge-type" now doesn't exist
+    And local Git setting "git-town.github-token" now doesn't exist
+    And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
+    And local Git setting "git-town.observed-regex" now doesn't exist
+    And local Git setting "git-town.perennial-regex" now doesn't exist
+    And the main branch is still "main"
+    And there are now no perennial branches
 
   Scenario: undo
     When I run "git-town undo"
-    Then the main branch is still "main"
-    And the perennial branches are now "qa"
-    And global Git setting "alias.append" is now "town append"
+    Then global Git setting "alias.append" is now "town append"
     And global Git setting "alias.diff-parent" is now "town diff-parent"
     And global Git setting "alias.hack" is now "town hack"
     And global Git setting "alias.delete" is now "town delete"
@@ -188,3 +186,5 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.sync-tags" is now "false"
     And local Git setting "git-town.stash" is now "false"
     And local Git setting "git-town.unknown-branch-type" is now "observed"
+    And the main branch is still "main"
+    And the perennial branches are now "qa"

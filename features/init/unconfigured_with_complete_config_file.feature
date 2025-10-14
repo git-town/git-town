@@ -3,7 +3,6 @@ Feature: don't ask for information already provided by the config file
 
   Scenario:
     Given a Git repo with origin
-    And Git Town is not configured
     And the committed configuration file:
       """
       [branches]
@@ -44,6 +43,7 @@ Feature: don't ask for information already provided by the config file
       prototype-branches = "merge"
       perennial-branches = "ff-only"
       """
+    And Git Town is not configured
     When I run "git-town init" and enter into the dialogs:
       | DIALOG                | KEYS              |
       | welcome               | enter             |
