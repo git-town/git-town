@@ -12,10 +12,10 @@ Feature: undoing an offline ship with additional commits to main
       | feature | local, origin | feature commit |
     And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship -m 'feature done'"
-    And I add commit "additional commit" to the "main" branch
 
-  Scenario: undo
-    When I run "git-town undo"
+  Scenario: add commit and undo
+    When I add commit "additional commit" to the "main" branch
+    And I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | main   | git branch feature {{ sha 'feature commit' }} |
