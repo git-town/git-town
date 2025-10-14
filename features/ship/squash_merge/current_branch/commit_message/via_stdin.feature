@@ -8,8 +8,8 @@ Feature: ship the current feature branch with commit message via STDIN
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
-    And the current branch is "feature"
     And Git setting "git-town.ship-strategy" is "squash-merge"
+    And the current branch is "feature"
     When I pipe the following text into "git-town ship -f -":
       """
       Commit message via STDIN
@@ -28,10 +28,10 @@ Feature: ship the current feature branch with commit message via STDIN
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
+    And no lineage exists now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                  |
       | main   | local, origin | Commit message via STDIN |
-    And no lineage exists now
 
   Scenario: undo
     When I run "git-town undo"

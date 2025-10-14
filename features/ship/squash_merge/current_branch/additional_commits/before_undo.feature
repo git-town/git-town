@@ -8,8 +8,8 @@ Feature: can undo a ship even after additional commits to the main branch
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
-    And the current branch is "feature"
     And Git setting "git-town.ship-strategy" is "squash-merge"
+    And the current branch is "feature"
     When I run "git-town ship -m done"
 
   Scenario: add commit and undo
