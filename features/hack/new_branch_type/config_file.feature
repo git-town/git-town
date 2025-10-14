@@ -39,10 +39,10 @@ Feature: create a new branch when prototype branches are configured via config f
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                     |
-      | new      | git checkout main                           |
-      | main     | git reset --hard {{ sha 'initial commit' }} |
-      |          | git checkout existing                       |
-      | existing | git branch -D new                           |
+      | BRANCH   | COMMAND                                            |
+      | new      | git checkout main                                  |
+      | main     | git reset --hard {{ sha 'persisted config file' }} |
+      |          | git checkout existing                              |
+      | existing | git branch -D new                                  |
     And the initial commits exist now
     And the initial branches and lineage exist now
