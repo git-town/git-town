@@ -9,9 +9,9 @@ Feature: branch was deleted at the remote
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME        |
       | feature | local, origin | feature commit | conflicting_file |
-    And the current branch is "other"
-    And origin deletes the "feature" branch
     And Git setting "git-town.ship-strategy" is "always-merge"
+    And origin deletes the "feature" branch
+    And the current branch is "other"
     When I run "git-town ship feature"
 
   Scenario: result

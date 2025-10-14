@@ -10,8 +10,8 @@ Feature: does not ship the given out-of-sync branch using the always-merge strat
       | BRANCH  | LOCATION | MESSAGE       |
       | feature | local    | local commit  |
       |         | origin   | origin commit |
-    And the current branch is "other"
     And Git setting "git-town.ship-strategy" is "always-merge"
+    And the current branch is "other"
     And I run "git-town ship feature"
 
   Scenario: result

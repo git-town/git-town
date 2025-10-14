@@ -9,8 +9,8 @@ Feature: ship the supplied feature branch from a subfolder using the always-merg
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | local    | feature commit |
-    And the current branch is "other"
     And Git setting "git-town.ship-strategy" is "always-merge"
+    And the current branch is "other"
     And a folder "new_folder"
     When I run "git-town ship -m 'feature done' feature" in the "new_folder" folder
 
@@ -27,15 +27,15 @@ Feature: ship the supplied feature branch from a subfolder using the always-merg
       | REPOSITORY | BRANCHES    |
       | local      | main, other |
       | origin     | main        |
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE        |
-      | main   | local, origin | feature commit |
-      |        |               | feature done   |
     And this lineage exists now
       """
       main
         other
       """
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE        |
+      | main   | local, origin | feature commit |
+      |        |               | feature done   |
 
   Scenario: undo
     When I run "git-town undo"
