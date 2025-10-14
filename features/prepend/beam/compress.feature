@@ -77,17 +77,6 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
       |        |               | commit 4                       |
       |        |               | Merge branch 'parent' into old |
 
-  Scenario: undo
-    When I run "git-town undo"
-    Then Git Town runs the commands
-      | BRANCH | COMMAND                                         |
-      | parent | git checkout old                                |
-      | old    | git reset --hard {{ sha 'commit 4' }}           |
-      |        | git push --force-with-lease --force-if-includes |
-      |        | git branch -D parent                            |
-    And the initial lineage exists now
-    And the initial commits exist now
-
   Scenario: sync after amending the beamed commit
     And I amend this commit
       | BRANCH | LOCATION | MESSAGE   | FILE NAME | FILE CONTENT    |
@@ -110,3 +99,14 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
       | BRANCH | LOCATION      | MESSAGE  |
       | parent | local, origin | commit 1 |
       | old    | local, origin | commit 1 |
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then Git Town runs the commands
+      | BRANCH | COMMAND                                         |
+      | parent | git checkout old                                |
+      | old    | git reset --hard {{ sha 'commit 4' }}           |
+      |        | git push --force-with-lease --force-if-includes |
+      |        | git branch -D parent                            |
+    And the initial lineage exists now
+    And the initial commits exist now
