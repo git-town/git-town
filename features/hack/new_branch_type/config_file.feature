@@ -2,6 +2,11 @@ Feature: create a new branch when prototype branches are configured via config f
 
   Background:
     Given a Git repo with origin
+    And the committed configuration file:
+      """
+      [create]
+      new-branch-type = "prototype"
+      """
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
@@ -10,11 +15,6 @@ Feature: create a new branch when prototype branches are configured via config f
       | main     | origin   | main commit     |
       | existing | local    | existing commit |
     And the current branch is "existing"
-    And the committed configuration file:
-      """
-      [create]
-      new-branch-type = "prototype"
-      """
     When I run "git-town hack new"
 
   Scenario: result
@@ -24,17 +24,17 @@ Feature: create a new branch when prototype branches are configured via config f
       |          | git checkout main                                 |
       | main     | git -c rebase.updateRefs=false rebase origin/main |
       |          | git checkout -b new                               |
-    And branch "new" now has type "prototype"
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE         |
-      | main     | local, origin | main commit     |
-      | existing | local, origin | existing commit |
     And this lineage exists now
       """
       main
         existing
         new
       """
+    And these commits exist now
+      | BRANCH   | LOCATION      | MESSAGE         |
+      | main     | local, origin | main commit     |
+      | existing | local         | existing commit |
+    And branch "new" now has type "prototype"
 
   Scenario: undo
     When I run "git-town undo"
