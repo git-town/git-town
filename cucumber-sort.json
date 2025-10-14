@@ -38,6 +38,7 @@
     "features/sync/all_branches/merge_sync_strategy/conflicts/feature_branch_main_branch_conflict/shipped_changes_conflict_with_existing_feature_branch.feature",
     "features/sync/all_branches/merge_sync_strategy/stack/conflicting_changes.feature",
     "features/sync/current_branch/feature_branch/change_repo_in_between/add_stash.feature",
+    "features/sync/current_branch/feature_branch/change_repo_in_between/create_branch.feature",
     "vendor/**/*.feature"
   ],
   "record": true,
