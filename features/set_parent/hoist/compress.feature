@@ -20,16 +20,12 @@ Feature: remove a branch from a stack
     And the commits
       | BRANCH   | LOCATION      | MESSAGE  | FILE NAME |
       | branch-3 | local, origin | commit 3 | file_3    |
-    And the current branch is "branch-2"
     And local Git setting "git-town.sync-feature-strategy" is "compress"
+    And the current branch is "branch-2"
     When I run "git-town set-parent main"
 
   Scenario: result
-    Then Git Town prints:
-      """
-      branch "branch-2" is now a child of "main"
-      """
-    And Git Town runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                                                        |
       | branch-2 | git pull                                                       |
       |          | git -c rebase.updateRefs=false rebase --onto main branch-1     |
@@ -39,11 +35,10 @@ Feature: remove a branch from a stack
       |          | git -c rebase.updateRefs=false rebase --onto branch-2 branch-1 |
       |          | git push --force-with-lease --force-if-includes                |
       |          | git checkout branch-2                                          |
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE  |
-      | branch-1 | local, origin | commit 1 |
-      | branch-2 | local, origin | commit 2 |
-      | branch-3 | local, origin | commit 3 |
+    And Git Town prints:
+      """
+      branch "branch-2" is now a child of "main"
+      """
     And this lineage exists now
       """
       main
@@ -51,6 +46,11 @@ Feature: remove a branch from a stack
         branch-2
           branch-3
       """
+    And these commits exist now
+      | BRANCH   | LOCATION      | MESSAGE  |
+      | branch-1 | local, origin | commit 1 |
+      | branch-2 | local, origin | commit 2 |
+      | branch-3 | local, origin | commit 3 |
     And the branches contain these files:
       | BRANCH   | NAME   |
       | branch-1 | file_1 |
