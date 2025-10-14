@@ -47,4 +47,4 @@ Feature: enable offline mode
         """
         invalid value for git-town.offline: "zonk". Please provide either "yes" or "no"
         """
-      And global Git setting "git-town.offline" is still "false"
+      And global Git setting "git-town.offline" still doesn't exist
