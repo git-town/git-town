@@ -1,5 +1,19 @@
 # Git Town Changelog
 
+## 22.1.0 (2025-10-13)
+
+#### New Features
+
+- if you run a Git Town command while another is suspended, Git Town now offers the option to finish the suspended program and then run the new one ([#3337](https://github.com/git-town/git-town/issues/3337)).
+
+#### Bug Fixes
+
+- Fixes bugs resulting from the new Option serialization ([#5623](https://github.com/git-town/git-town/discussions/5623)).
+
+#### Contributors
+
+Shoutout to @DPirate, @IGassmann, @Mause, @derekspelledcorrectly, @ethankeshishian, @kevgo, @stephenwade, @yaadata, @Shmookoff for contributing code, bug reports, and ideas to 24 shipped pull requests and 4 resolved issues!
+
 ## 22.0.0 (2025-09-23)
 
 #### BREAKING CHANGES
