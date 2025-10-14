@@ -9,8 +9,8 @@ Feature: does not ship an empty branch using the fast-forward strategy
       | BRANCH | LOCATION | MESSAGE      | FILE NAME | FILE CONTENT |
       | main   | local    | main commit  | same_file | same content |
       | empty  | local    | empty commit | same_file | same content |
-    And the current branch is "empty"
     And Git setting "git-town.ship-strategy" is "fast-forward"
+    And the current branch is "empty"
     When I run "git-town ship"
 
   Scenario: result

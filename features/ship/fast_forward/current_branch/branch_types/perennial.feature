@@ -8,8 +8,8 @@ Feature: cannot ship perennial branches using the fast-forward strategy
     And the commits
       | BRANCH    | LOCATION      | MESSAGE          |
       | perennial | local, origin | perennial commit |
-    And the current branch is "perennial"
     And Git setting "git-town.ship-strategy" is "fast-forward"
+    And the current branch is "perennial"
     When I run "git-town ship"
 
   Scenario: result

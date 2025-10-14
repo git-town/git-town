@@ -8,8 +8,8 @@ Feature: cannot ship contribution branches
     And the commits
       | BRANCH       | LOCATION      | MESSAGE             |
       | contribution | local, origin | contribution commit |
-    And the current branch is "contribution"
     And Git setting "git-town.ship-strategy" is "fast-forward"
+    And the current branch is "contribution"
     When I run "git-town ship"
 
   Scenario: result

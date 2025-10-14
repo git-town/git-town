@@ -8,8 +8,8 @@ Feature: cannot ship observed branches using the fast-forward strategy
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         |
       | observed | local, origin | observed commit |
-    And the current branch is "observed"
     And Git setting "git-town.ship-strategy" is "fast-forward"
+    And the current branch is "observed"
     When I run "git-town ship"
 
   Scenario: result
