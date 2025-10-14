@@ -107,7 +107,6 @@
     "^the current branch is (now|still) ",
     "^the current branch in the other worktree is still .*$",
     "^the previous Git branch is (now|still)",
-    "^the branches contain these files:$",
     "^(this|no|the initial) lineage exists now$",
     "^(these|no) commits exist now$",
     "^these committed files exist now$",
@@ -127,6 +126,7 @@
     "^the initial branches exist now$",
     "^the initial commits exist now$",
     "^the initial branches and lineage exist now$",
+    "^the branches contain these files:$",
     "^these tags exist now$",
     "^the initial tags exist now$",
     "^all branches are now synchronized$"
