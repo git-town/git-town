@@ -2,7 +2,6 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "merge"
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
@@ -15,6 +14,7 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
     And the commits
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | beta   | local, origin | beta commit | file      | beta content |
+    And Git setting "git-town.sync-feature-strategy" is "merge"
     And origin ships the "alpha" branch using the "squash-merge" ship-strategy
     And I add commit "additional commit" to the "main" branch
     And the current branch is "beta"
@@ -34,7 +34,6 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
       |        | git add file                                      |
       |        | git commit --no-edit                              |
       |        | git push                                          |
-    And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                       | FILE NAME | FILE CONTENT  |
       | main   | local, origin | alpha commit                  | file      | alpha content |
@@ -42,6 +41,7 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
       | beta   | local, origin | alpha commit                  | file      | alpha content |
       |        |               | beta commit                   | file      | beta content  |
       |        |               | Merge branch 'main' into beta |           |               |
+    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"
