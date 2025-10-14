@@ -29,6 +29,7 @@
     "features/ship/fast_forward/current_branch/additional_commits/before_undo/offline.feature",
     "features/ship/fast_forward/current_branch/additional_commits/before_undo/online.feature",
     "features/ship/fast_forward/current_branch/ship_delete_tracking_branch/disabled.feature",
+    "features/ship/fast_forward/supplied_branch/ship_delete_tracking_branch/disabled.feature",
     "vendor/**/*.feature"
   ],
   "record": true,
