@@ -11,11 +11,11 @@ Feature: partially undo an offline ship using the always-merge strategy after ad
     And the current branch is "feature"
     And offline mode is enabled
     And Git setting "git-town.ship-strategy" is "always-merge"
-    When I run "git-town ship" and close the editor
-    And I add commit "additional commit" to the "main" branch
+    And I run "git-town ship" and close the editor
 
   Scenario: undo
-    When I run "git-town undo"
+    When I add commit "additional commit" to the "main" branch
+    And I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | main   | git branch feature {{ sha 'feature commit' }} |
