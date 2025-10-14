@@ -20,19 +20,18 @@ Feature: on a detached head with a clean workspace
       |                            | git checkout main                                 |
       | main                       | git -c rebase.updateRefs=false rebase origin/main |
       |                            | git checkout -b new                               |
+    And these commits exist now
+      | BRANCH   | LOCATION      | MESSAGE         |
+      | main     | local, origin | main commit     |
+      | existing | local         | existing commit |
     And this lineage exists now
       """
       main
         existing
         new
       """
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE         |
-      | main     | local, origin | main commit     |
-      | existing | local         | existing commit |
 
   Scenario: undo
-    Then the currently checked out commit is "initial commit"
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH                     | COMMAND                                     |
@@ -40,3 +39,4 @@ Feature: on a detached head with a clean workspace
       | main                       | git reset --hard {{ sha 'initial commit' }} |
       |                            | git checkout {{ sha 'initial commit' }}     |
       | {{ sha 'initial commit' }} | git branch -D new                           |
+    And the currently checked out commit is "initial commit"
