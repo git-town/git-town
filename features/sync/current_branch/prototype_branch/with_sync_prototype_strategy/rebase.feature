@@ -9,9 +9,9 @@ Feature: sync the current prototype branch in a local repo
       | BRANCH    | LOCATION | MESSAGE      | FILE NAME  |
       | main      | local    | main commit  | main_file  |
       | prototype | local    | local commit | local_file |
-    And the current branch is "prototype"
     And Git setting "git-town.sync-prototype-strategy" is "rebase"
     And Git setting "git-town.sync-feature-strategy" is "merge"
+    And the current branch is "prototype"
     When I run "git-town sync"
 
   Scenario: result
@@ -22,8 +22,8 @@ Feature: sync the current prototype branch in a local repo
       | BRANCH    | LOCATION | MESSAGE      |
       | main      | local    | main commit  |
       | prototype | local    | local commit |
-    And all branches are now synchronized
     And the initial branches and lineage exist now
+    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

@@ -53,11 +53,11 @@ Feature: handle conflicts between the current observed branch and its tracking b
     Then Git Town runs the commands
       | BRANCH   | COMMAND                               |
       | observed | GIT_EDITOR=true git rebase --continue |
+    And no rebase is now in progress
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE                   |
       | observed | local, origin | conflicting origin commit |
       |          | local         | conflicting local commit  |
-    And no rebase is now in progress
     And these committed files exist now
       | BRANCH   | NAME             | CONTENT          |
       | observed | conflicting_file | resolved content |
@@ -68,11 +68,11 @@ Feature: handle conflicts between the current observed branch and its tracking b
     And I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH | COMMAND |
+    And no rebase is now in progress
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE                   |
       | observed | local, origin | conflicting origin commit |
       |          | local         | conflicting local commit  |
-    And no rebase is now in progress
     And these committed files exist now
       | BRANCH   | NAME             | CONTENT          |
       | observed | conflicting_file | resolved content |

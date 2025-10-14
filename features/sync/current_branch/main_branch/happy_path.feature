@@ -15,11 +15,11 @@ Feature: sync the main branch
       |        | git -c rebase.updateRefs=false rebase origin/main |
       |        | git push                                          |
       |        | git push --tags                                   |
-    And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | origin commit |
       |        |               | local commit  |
+    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

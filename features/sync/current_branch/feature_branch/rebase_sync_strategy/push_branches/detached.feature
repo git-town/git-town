@@ -14,8 +14,8 @@ Feature: detached syncing a stacked feature branch using --no-push
       |        | origin   | origin alpha commit |
       | beta   | local    | local beta commit   |
       |        | origin   | origin beta commit  |
-    And the current branch is "beta"
     And Git setting "git-town.sync-feature-strategy" is "rebase"
+    And the current branch is "beta"
     When I run "git-town sync --no-push --detached"
 
   Scenario: result

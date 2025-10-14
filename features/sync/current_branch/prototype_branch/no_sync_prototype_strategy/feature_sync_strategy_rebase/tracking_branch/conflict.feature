@@ -2,7 +2,6 @@ Feature: handle conflicts between the current prototype branch and its tracking 
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME      | TYPE      | PARENT | LOCATIONS     |
       | prototype | prototype | main   | local, origin |
@@ -10,6 +9,7 @@ Feature: handle conflicts between the current prototype branch and its tracking 
       | BRANCH    | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | prototype | local    | conflicting local commit  | conflicting_file | local content  |
       |           | origin   | conflicting origin commit | conflicting_file | origin content |
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "prototype"
     When I run "git-town sync"
 
@@ -56,11 +56,11 @@ Feature: handle conflicts between the current prototype branch and its tracking 
       | BRANCH    | COMMAND                                         |
       | prototype | GIT_EDITOR=true git rebase --continue           |
       |           | git push --force-with-lease --force-if-includes |
+    And no rebase is now in progress
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE                   |
       | prototype | local, origin | conflicting origin commit |
       |           |               | conflicting local commit  |
-    And no rebase is now in progress
     And these committed files exist now
       | BRANCH    | NAME             | CONTENT          |
       | prototype | conflicting_file | resolved content |
@@ -72,11 +72,11 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                         |
       | prototype | git push --force-with-lease --force-if-includes |
+    And no rebase is now in progress
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE                   |
       | prototype | local, origin | conflicting origin commit |
       |           |               | conflicting local commit  |
-    And no rebase is now in progress
     And these committed files exist now
       | BRANCH    | NAME             | CONTENT          |
       | prototype | conflicting_file | resolved content |

@@ -8,8 +8,8 @@ Feature: on the main branch with an upstream repo
       | main   | local    | local commit    |
       |        | origin   | origin commit   |
       |        | upstream | upstream commit |
-    And the current branch is "main"
     And Git setting "git-town.sync-upstream" is "false"
+    And the current branch is "main"
     And I run "git-town sync"
 
   Scenario: result
@@ -19,12 +19,12 @@ Feature: on the main branch with an upstream repo
       |        | git -c rebase.updateRefs=false rebase origin/main |
       |        | git push                                          |
       |        | git push --tags                                   |
-    And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE         |
       | main   | local, origin | origin commit   |
       |        |               | local commit    |
       |        | upstream      | upstream commit |
+    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

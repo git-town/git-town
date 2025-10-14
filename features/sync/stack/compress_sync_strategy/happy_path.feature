@@ -2,7 +2,6 @@ Feature: sync a grandchild feature branch using the "compress" strategy
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the branches
       | NAME   | TYPE    | PARENT | LOCATIONS     |
       | parent | feature | main   | local, origin |
@@ -15,8 +14,9 @@ Feature: sync a grandchild feature branch using the "compress" strategy
       |        | origin   | origin parent commit |
       | child  | local    | local child commit   |
       |        | origin   | origin child commit  |
-    And wait 1 second to ensure new Git timestamps
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the current branch is "child"
+    And wait 1 second to ensure new Git timestamps
     When I run "git-town sync"
 
   Scenario: result
@@ -38,13 +38,13 @@ Feature: sync a grandchild feature branch using the "compress" strategy
       |        | git reset --soft parent                           |
       |        | git commit -m "local child commit"                |
       |        | git push --force-with-lease                       |
-    And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE             |
       | main   | local, origin | origin main commit  |
       |        |               | local main commit   |
       | parent | local, origin | local parent commit |
       | child  | local, origin | local child commit  |
+    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

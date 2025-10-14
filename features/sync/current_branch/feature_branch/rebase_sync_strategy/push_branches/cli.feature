@@ -2,7 +2,6 @@ Feature: disable pushing through the CLI
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME   | TYPE    | PARENT | LOCATIONS     |
       | parent | feature | main   | local, origin |
@@ -15,6 +14,7 @@ Feature: disable pushing through the CLI
       |        | origin   | origin child commit  |
       | parent | local    | local parent commit  |
       |        | origin   | origin parent commit |
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "child"
     When I run "git-town sync --no-push"
 

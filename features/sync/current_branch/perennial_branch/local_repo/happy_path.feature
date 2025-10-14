@@ -16,8 +16,8 @@ Feature: sync the current perennial branch in a local repo
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND |
-    And all branches are now synchronized
     And the initial commits exist now
+    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

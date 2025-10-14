@@ -2,7 +2,6 @@ Feature: remove a prototype branch as soon as its tracking branch is gone, even 
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME      | TYPE      | PARENT | LOCATIONS     |
       | prototype | prototype | main   | local, origin |
@@ -10,8 +9,9 @@ Feature: remove a prototype branch as soon as its tracking branch is gone, even 
       | BRANCH    | LOCATION      | MESSAGE      | FILE NAME  |
       | main      | local, origin | main commit  | main_file  |
       | prototype | local         | local commit | local_file |
-    And the current branch is "prototype"
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And origin deletes the "prototype" branch
+    And the current branch is "prototype"
     When I run "git-town sync"
 
   Scenario: result
@@ -20,13 +20,13 @@ Feature: remove a prototype branch as soon as its tracking branch is gone, even 
       | prototype | git fetch --prune --tags |
       |           | git checkout main        |
       | main      | git branch -D prototype  |
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE     |
-      | main   | local, origin | main commit |
     And Git Town prints:
       """
       deleted branch "prototype"
       """
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE     |
+      | main   | local, origin | main commit |
 
   Scenario: undo
     When I run "git-town undo"

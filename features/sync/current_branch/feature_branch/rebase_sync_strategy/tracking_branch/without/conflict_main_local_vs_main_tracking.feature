@@ -2,7 +2,6 @@ Feature: handle conflicts between the main branch and its tracking branch
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
@@ -10,6 +9,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | main   | local    | conflicting local commit  | conflicting_file | local content  |
       |        | origin   | conflicting origin commit | conflicting_file | origin content |
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "feature"
     When I run "git-town sync"
 
@@ -39,14 +39,14 @@ Feature: handle conflicts between the main branch and its tracking branch
     When I run "git-town sync" and enter into the dialog:
       | DIALOG              | KEYS    |
       | unfinished runstate | 2 enter |
-    Then Git Town prints:
-      """
-      Handle unfinished command: undo
-      """
-    And Git Town runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND              |
       | main   | git rebase --abort   |
       |        | git checkout feature |
+    And Git Town prints:
+      """
+      Handle unfinished command: undo
+      """
     And no rebase is now in progress
     And the initial commits exist now
 
@@ -70,11 +70,11 @@ Feature: handle conflicts between the main branch and its tracking branch
       | feature | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
       |         | git push --force-with-lease --force-if-includes                              |
     And no rebase is now in progress
-    And all branches are now synchronized
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |
       | feature | conflicting_file | resolved content |
+    And all branches are now synchronized
 
   Scenario: resolve, finish the rebase, and continue
     When I resolve the conflict in "conflicting_file"
@@ -87,8 +87,8 @@ Feature: handle conflicts between the main branch and its tracking branch
       | feature | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
       |         | git push --force-with-lease --force-if-includes                              |
     And no rebase is now in progress
-    And all branches are now synchronized
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |
       | feature | conflicting_file | resolved content |
+    And all branches are now synchronized

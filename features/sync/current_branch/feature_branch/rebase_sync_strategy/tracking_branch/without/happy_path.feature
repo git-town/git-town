@@ -2,7 +2,6 @@ Feature: sync the current feature branch without a tracking branch
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |
@@ -11,6 +10,7 @@ Feature: sync the current feature branch without a tracking branch
       | main    | local    | local main commit    |
       |         | origin   | origin main commit   |
       | feature | local    | local feature commit |
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "feature"
     When I run "git-town sync"
 
@@ -24,15 +24,15 @@ Feature: sync the current feature branch without a tracking branch
       |         | git checkout feature                                                         |
       | feature | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
       |         | git push -u origin feature                                                   |
-    And all branches are now synchronized
+    And the branches are now
+      | REPOSITORY    | BRANCHES      |
+      | local, origin | main, feature |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE              |
       | main    | local, origin | origin main commit   |
       |         |               | local main commit    |
       | feature | local, origin | local feature commit |
-    And the branches are now
-      | REPOSITORY    | BRANCHES      |
-      | local, origin | main, feature |
+    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

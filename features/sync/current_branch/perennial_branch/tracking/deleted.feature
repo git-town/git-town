@@ -33,5 +33,5 @@ Feature: sync perennial branch that was deleted at the remote
       | BRANCH | COMMAND                                         |
       | main   | git branch perennial {{ sha 'initial commit' }} |
       |        | git checkout perennial                          |
-    And the initial branches and lineage exist now
     And branch "perennial" now has type "perennial"
+    And the initial branches and lineage exist now

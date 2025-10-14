@@ -10,8 +10,8 @@ Feature: sync the current prototype branch that has a tracking branch
       | main      | local    | main commit   | main_file   |
       | prototype | local    | local commit  | local_file  |
       |           | origin   | origin commit | origin_file |
-    And the current branch is "prototype"
     And Git setting "git-town.sync-prototype-strategy" is "rebase"
+    And the current branch is "prototype"
     When I run "git-town sync"
 
   Scenario: result
@@ -32,8 +32,8 @@ Feature: sync the current prototype branch that has a tracking branch
       | main      | local, origin | main commit   |
       | prototype | local, origin | origin commit |
       |           |               | local commit  |
-    And all branches are now synchronized
     And the initial branches and lineage exist now
+    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

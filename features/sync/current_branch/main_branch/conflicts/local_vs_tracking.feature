@@ -49,10 +49,10 @@ Feature: handle conflicts between the main branch and its tracking branch when s
       | main   | GIT_EDITOR=true git rebase --continue |
       |        | git push                              |
       |        | git push --tags                       |
-    And all branches are now synchronized
     And these committed files exist now
       | BRANCH | NAME             | CONTENT          |
       | main   | conflicting_file | resolved content |
+    And all branches are now synchronized
 
   Scenario: resolve, finish the rebase, and continue
     When I resolve the conflict in "conflicting_file"
@@ -62,7 +62,7 @@ Feature: handle conflicts between the main branch and its tracking branch when s
       | BRANCH | COMMAND         |
       | main   | git push        |
       |        | git push --tags |
-    And all branches are now synchronized
     And these committed files exist now
       | BRANCH | NAME             | CONTENT          |
       | main   | conflicting_file | resolved content |
+    And all branches are now synchronized
