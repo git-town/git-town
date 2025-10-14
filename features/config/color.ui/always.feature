@@ -175,9 +175,9 @@ Feature: show the configuration
       """
 
   Scenario: configured in both Git and config file
-    Given the main branch is "git-main"
+    Given Git setting "git-town.perennial-branches" is "git-perennial-1 git-perennial-2"
+    And the main branch is "git-main"
     And Git setting "git-town.auto-sync" is "false"
-    And Git setting "git-town.perennial-branches" is "git-perennial-1 git-perennial-2"
     And Git setting "git-town.contribution-regex" is "^git-contribution-regex"
     And Git setting "git-town.observed-regex" is "^git-observed-regex"
     And Git setting "git-town.perennial-regex" is "^git-perennial-"
