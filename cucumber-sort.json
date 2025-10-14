@@ -39,6 +39,7 @@
     "features/sync/all_branches/merge_sync_strategy/stack/conflicting_changes.feature",
     "features/sync/current_branch/feature_branch/change_repo_in_between/add_stash.feature",
     "features/sync/current_branch/feature_branch/change_repo_in_between/create_branch.feature",
+    "features/sync/current_branch/feature_branch/rebase_sync_strategy/modified_commits/amended_commit.feature",
     "vendor/**/*.feature"
   ],
   "record": true,
