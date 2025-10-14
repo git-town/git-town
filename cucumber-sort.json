@@ -39,6 +39,7 @@
     "^the origin is .*$",
     "^a folder .*$",
     "^the committed configuration file:$",
+    "^Git setting \"git-town.perennial-branches\" is ",
     [
       "^the branches$",
       "^the commits$"
