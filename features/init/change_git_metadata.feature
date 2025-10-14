@@ -132,12 +132,6 @@ Feature: change existing information in Git metadata
     Then the perennial branches are now "qa"
     When I run "git-town undo"
     Then Git Town runs no commands
-    And local Git setting "git-town.auto-sync" is now "false"
-    And local Git setting "git-town.new-branch-type" is now "parked"
-    And local Git setting "git-town.share-new-branches" is now "no"
-    And local Git setting "git-town.push-branches" is now "false"
-    And local Git setting "git-town.push-hook" is now "false"
-    And local Git setting "git-town.ship-delete-tracking-branch" is now "false"
     And global Git setting "alias.append" now doesn't exist
     And global Git setting "alias.diff-parent" now doesn't exist
     And global Git setting "alias.hack" now doesn't exist
@@ -149,6 +143,12 @@ Feature: change existing information in Git metadata
     And global Git setting "alias.set-parent" now doesn't exist
     And global Git setting "alias.ship" now doesn't exist
     And global Git setting "alias.sync" now doesn't exist
+    And local Git setting "git-town.auto-sync" is now "false"
+    And local Git setting "git-town.new-branch-type" is now "parked"
+    And local Git setting "git-town.share-new-branches" is now "no"
+    And local Git setting "git-town.push-branches" is now "false"
+    And local Git setting "git-town.push-hook" is now "false"
+    And local Git setting "git-town.ship-delete-tracking-branch" is now "false"
     And local Git setting "git-town.forge-type" now doesn't exist
     And local Git setting "git-town.github-token" now doesn't exist
     And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
