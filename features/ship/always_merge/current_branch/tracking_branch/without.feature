@@ -8,8 +8,8 @@ Feature: ship a local feature branch using the always-merge strategy
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | local    | feature commit |
-    And the current branch is "feature"
     And Git setting "git-town.ship-strategy" is "always-merge"
+    And the current branch is "feature"
     When I run "git-town ship" and close the editor
 
   Scenario: result
@@ -23,11 +23,11 @@ Feature: ship a local feature branch using the always-merge strategy
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
+    And no lineage exists now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                |
       | main   | local, origin | feature commit         |
       |        |               | Merge branch 'feature' |
-    And no lineage exists now
 
   Scenario: undo
     When I run "git-town undo"

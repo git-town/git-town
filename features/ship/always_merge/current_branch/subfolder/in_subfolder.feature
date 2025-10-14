@@ -8,8 +8,8 @@ Feature: ship the current feature branch from a subfolder on the shipped branch
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME               |
       | feature | local, origin | feature commit | new_folder/feature_file |
-    And the current branch is "feature"
     And Git setting "git-town.ship-strategy" is "always-merge"
+    And the current branch is "feature"
     When I run "git-town ship -m 'feature done'" in the "new_folder" folder
 
   Scenario: result
@@ -24,11 +24,11 @@ Feature: ship the current feature branch from a subfolder on the shipped branch
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
+    And no lineage exists now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        |
       | main   | local, origin | feature commit |
       |        |               | feature done   |
-    And no lineage exists now
 
   Scenario: undo
     When I run "git-town undo"

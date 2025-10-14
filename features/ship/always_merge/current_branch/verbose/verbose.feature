@@ -8,8 +8,8 @@ Feature: display all executed Git commands when using the always-merge strategy
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
-    And the current branch is "feature"
     And Git setting "git-town.ship-strategy" is "always-merge"
+    And the current branch is "feature"
     When I run "git-town ship --verbose" and close the editor
 
   Scenario: result
