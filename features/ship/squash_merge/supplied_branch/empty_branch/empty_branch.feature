@@ -10,8 +10,8 @@ Feature: does not ship empty feature branches
       | BRANCH | LOCATION | MESSAGE        | FILE NAME   | FILE CONTENT   |
       | main   | local    | main commit    | common_file | common content |
       | empty  | local    | feature commit | common_file | common content |
-    And the current branch is "other"
     And Git setting "git-town.ship-strategy" is "squash-merge"
+    And the current branch is "other"
     When I run "git-town ship empty"
 
   Scenario: result

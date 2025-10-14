@@ -10,8 +10,8 @@ Feature: ship a parent branch
       | BRANCH | LOCATION      | MESSAGE       |
       | parent | local, origin | parent commit |
       | child  | local, origin | child commit  |
-    And the current branch is "child"
     And Git setting "git-town.ship-strategy" is "squash-merge"
+    And the current branch is "child"
     When I run "git-town ship parent -m 'parent done'"
 
   Scenario: result
@@ -25,15 +25,15 @@ Feature: ship a parent branch
       |        | git push origin :parent        |
       |        | git checkout child             |
       | child  | git branch -D parent           |
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE      |
-      | main   | local, origin | parent done  |
-      | child  | local, origin | child commit |
     And this lineage exists now
       """
       main
         child
       """
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE      |
+      | main   | local, origin | parent done  |
+      | child  | local, origin | child commit |
 
   Scenario: undo
     When I run "git-town undo"

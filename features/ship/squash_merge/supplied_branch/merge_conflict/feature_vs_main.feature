@@ -10,8 +10,8 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
-    And the current branch is "other"
     And Git setting "git-town.ship-strategy" is "squash-merge"
+    And the current branch is "other"
     And I run "git-town ship feature -m 'feature done'"
 
   Scenario: result

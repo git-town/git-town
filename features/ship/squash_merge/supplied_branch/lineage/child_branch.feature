@@ -12,8 +12,8 @@ Feature: does not ship a child branch
       | alpha  | local, origin | alpha commit |
       | beta   | local, origin | beta commit  |
       | gamma  | local, origin | gamma commit |
-    And the current branch is "alpha"
     And Git setting "git-town.ship-strategy" is "squash-merge"
+    And the current branch is "alpha"
     When I run "git-town ship gamma -m 'gamma done'"
 
   Scenario: result
@@ -25,8 +25,8 @@ Feature: does not ship a child branch
       shipping this branch would ship "alpha" and "beta" as well,
       please ship "alpha" first
       """
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now
   #
   # NOTE: Cannot test undo here.
   # The Git Town command under test has not created an undoable runstate.

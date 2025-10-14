@@ -14,8 +14,8 @@ Feature: swapping a feature branch with a branch that has merge commits
       | branch-2 | local, origin | commit 2    |
       | branch-3 | local, origin | commit 3    |
     And the current branch is "branch-1"
-    And I ran "git merge main --message merging"
     And the current branch is "branch-2"
+    And I ran "git merge main --message merging"
     When I run "git-town swap"
 
   Scenario: result

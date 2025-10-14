@@ -9,8 +9,8 @@ Feature: ship the supplied feature branch from a subfolder
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | local    | feature commit |
-    And the current branch is "other"
     And Git setting "git-town.ship-strategy" is "squash-merge"
+    And the current branch is "other"
     And a folder "new_folder"
     When I run "git-town ship feature -m 'feature done'" in the "new_folder" folder
 
@@ -28,14 +28,14 @@ Feature: ship the supplied feature branch from a subfolder
       | REPOSITORY | BRANCHES    |
       | local      | main, other |
       | origin     | main        |
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE      |
-      | main   | local, origin | feature done |
     And this lineage exists now
       """
       main
         other
       """
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE      |
+      | main   | local, origin | feature done |
 
   Scenario: undo
     When I run "git-town undo"

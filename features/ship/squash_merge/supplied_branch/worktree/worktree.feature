@@ -9,9 +9,9 @@ Feature: ship a feature branch that is active in another worktree
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME        |
       | feature | local, origin | feature commit | conflicting_file |
+    And Git setting "git-town.ship-strategy" is "squash-merge"
     And the current branch is "other"
     And branch "feature" is active in another worktree
-    And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship feature"
 
   Scenario: result

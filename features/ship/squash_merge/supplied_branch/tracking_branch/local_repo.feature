@@ -9,8 +9,8 @@ Feature: ship the supplied feature branch in a local repo
     And the commits
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME        |
       | feature | local    | feature commit | conflicting_file |
-    And the current branch is "other"
     And Git setting "git-town.ship-strategy" is "squash-merge"
+    And the current branch is "other"
     When I run "git-town ship feature -m 'feature done'"
 
   Scenario: result
@@ -24,14 +24,14 @@ Feature: ship the supplied feature branch in a local repo
     And the branches are now
       | REPOSITORY | BRANCHES    |
       | local      | main, other |
-    And these commits exist now
-      | BRANCH | LOCATION | MESSAGE      |
-      | main   | local    | feature done |
     And this lineage exists now
       """
       main
         other
       """
+    And these commits exist now
+      | BRANCH | LOCATION | MESSAGE      |
+      | main   | local    | feature done |
 
   Scenario: undo
     When I run "git-town undo"
