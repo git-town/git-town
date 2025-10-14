@@ -24,6 +24,7 @@
     "features/prepend/beam/stack/dependent_changes.feature",
     "features/set_parent/hoist/rebase/dependent_changes.feature",
     "features/ship/always_merge/current_branch/additional_commits/before_undo/online.feature",
+    "features/ship/always_merge/current_branch/ship_delete_tracking_branch/disabled.feature",
     "vendor/**/*.feature"
   ],
   "record": true,
