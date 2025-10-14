@@ -1,5 +1,11 @@
 # Git Town Changelog
 
+## 22.0.1 (2025-10-13)
+
+#### Bug Fixes
+
+- Fixes bugs resulting from the new Option serialization ([#5623](https://github.com/git-town/git-town/discussions/5623)).
+
 ## 22.0.0 (2025-09-23)
 
 #### BREAKING CHANGES
