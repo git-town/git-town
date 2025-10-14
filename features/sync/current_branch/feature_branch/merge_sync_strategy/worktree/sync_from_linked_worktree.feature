@@ -19,6 +19,7 @@ Feature: sync a branch whose parent is active in another worktree
     When I run "git-town sync" in the other worktree
 
   Scenario: result
+    When I run "git-town undo" in the other worktree
     Then Git Town runs the commands
       | BRANCH | COMMAND                                           |
       | child  | git fetch --prune --tags                          |
@@ -29,6 +30,11 @@ Feature: sync a branch whose parent is active in another worktree
       | child  | git merge --no-edit --ff origin/parent            |
       |        | git merge --no-edit --ff origin/child             |
       |        | git push                                          |
+    And Git Town runs the commands
+      | BRANCH | COMMAND                                                                            |
+      | child  | git reset --hard {{ sha 'local child commit' }}                                    |
+      |        | git push --force-with-lease origin {{ sha-in-origin 'origin child commit' }}:child |
+    And the current branch in the other worktree is still "child"
     And these commits exist now
       | BRANCH | LOCATION                | MESSAGE                                                 |
       | main   | local, origin, worktree | origin main commit                                      |
@@ -40,12 +46,6 @@ Feature: sync a branch whose parent is active in another worktree
       |        |                         | origin child commit                                     |
       |        |                         | Merge remote-tracking branch 'origin/child' into child  |
       |        | worktree                | origin parent commit                                    |
-    When I run "git-town undo" in the other worktree
-    Then Git Town runs the commands
-      | BRANCH | COMMAND                                                                            |
-      | child  | git reset --hard {{ sha 'local child commit' }}                                    |
-      |        | git push --force-with-lease origin {{ sha-in-origin 'origin child commit' }}:child |
-    And the current branch in the other worktree is still "child"
     And these commits exist now
       | BRANCH | LOCATION                | MESSAGE              |
       | main   | local, origin, worktree | origin main commit   |

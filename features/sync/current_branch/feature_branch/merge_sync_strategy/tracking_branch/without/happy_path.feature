@@ -23,16 +23,16 @@ Feature: sync the current feature branch without a tracking branch
       |         | git checkout feature                              |
       | feature | git merge --no-edit --ff main                     |
       |         | git push -u origin feature                        |
-    And all branches are now synchronized
+    And the branches are now
+      | REPOSITORY    | BRANCHES      |
+      | local, origin | main, feature |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, origin | origin main commit               |
       |         |               | local main commit                |
       | feature | local, origin | local feature commit             |
       |         |               | Merge branch 'main' into feature |
-    And the branches are now
-      | REPOSITORY    | BRANCHES      |
-      | local, origin | main, feature |
+    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

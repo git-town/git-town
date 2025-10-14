@@ -14,8 +14,8 @@ Feature: sync a branch whose parent is active in another worktree
       |        | origin   | origin parent commit |
       | child  | local    | local child commit   |
       |        | origin   | origin child commit  |
-    And branch "parent" is active in another worktree
     And the current branch is "child"
+    And branch "parent" is active in another worktree
     When I run "git-town sync"
 
   Scenario: result
