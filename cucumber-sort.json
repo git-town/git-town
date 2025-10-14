@@ -40,6 +40,7 @@
     "features/sync/current_branch/feature_branch/change_repo_in_between/add_stash.feature",
     "features/sync/current_branch/feature_branch/change_repo_in_between/create_branch.feature",
     "features/sync/current_branch/feature_branch/rebase_sync_strategy/modified_commits/amended_commit.feature",
+    "features/sync/stack/compress_sync_strategy/branches_gone/dependent_ancestor_shipped_and_related_change_on_main.feature",
     "vendor/**/*.feature"
   ],
   "record": true,
