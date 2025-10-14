@@ -10,18 +10,18 @@ Feature: ship a coworker's feature branch
       | feature | local, origin | developer commit 1 | developer <developer@example.com> |
       |         |               | developer commit 2 | developer <developer@example.com> |
       |         |               | coworker commit    | coworker <coworker@example.com>   |
-    And the current branch is "feature"
     And Git setting "git-town.ship-strategy" is "always-merge"
+    And the current branch is "feature"
     When I run "git-town ship" and close the editor
 
   Scenario: result
+    And no lineage exists now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                | AUTHOR                            |
       | main   | local, origin | developer commit 1     | developer <developer@example.com> |
       |        |               | developer commit 2     | developer <developer@example.com> |
       |        |               | coworker commit        | coworker <coworker@example.com>   |
       |        |               | Merge branch 'feature' | user <email@example.com>          |
-    And no lineage exists now
 
   Scenario: undo
     When I run "git-town undo"

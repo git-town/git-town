@@ -9,8 +9,8 @@ Feature: ship hotfixes
     And the commits
       | BRANCH | LOCATION      | MESSAGE       |
       | hotfix | local, origin | hotfix commit |
-    And the current branch is "hotfix"
     And Git setting "git-town.ship-strategy" is "always-merge"
+    And the current branch is "hotfix"
     When I run "git-town ship" and close the editor
 
   Scenario: result
@@ -25,11 +25,11 @@ Feature: ship hotfixes
     And the branches are now
       | REPOSITORY    | BRANCHES         |
       | local, origin | main, production |
+    And no lineage exists now
     And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE                               |
       | production | local, origin | hotfix commit                         |
       |            |               | Merge branch 'hotfix' into production |
-    And no lineage exists now
 
   Scenario: undo
     When I run "git-town undo"
