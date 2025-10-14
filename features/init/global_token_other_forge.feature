@@ -22,7 +22,7 @@ Feature: a global API token of another forge exists
       | COMMAND                                  |
       | git config git-town.github-token ghtok   |
       | git config git-town.github-connector api |
-    And local Git setting "git-town.forge-type" still doesn't exist
-    And local Git setting "git-town.github-token" is now "ghtok"
-    And local Git setting "git-town.gitlab-token" now doesn't exist
     And global Git setting "git-town.gitlab-token" is still "987654"
+    And local Git setting "git-town.github-token" is now "ghtok"
+    And local Git setting "git-town.forge-type" still doesn't exist
+    And local Git setting "git-town.gitlab-token" now doesn't exist

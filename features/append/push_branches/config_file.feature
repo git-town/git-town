@@ -2,7 +2,6 @@ Feature: disable pushing through the config file
 
   Background:
     Given a Git repo with origin
-    And Git Town is not configured
     And the committed configuration file:
       """
       [branches]
@@ -14,6 +13,7 @@ Feature: disable pushing through the config file
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS |
       | branch-1 | feature | main   | local     |
+    And Git Town is not configured
     And the current branch is "branch-1"
     When I run "git-town append branch-2"
 

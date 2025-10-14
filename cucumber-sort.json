@@ -36,7 +36,6 @@
     "^a remote \".*\" pointing to .*$",
     "^my repo has a Git submodule$",
     "^Git has version \".*\"$",
-    "^Git Town is not configured$",
     "^the origin is .*$",
     "^the main branch is \".*\"$",
     "^Git setting \".*\" is \".*\"$",
@@ -48,6 +47,7 @@
       "^the branches$",
       "^the commits$"
     ],
+    "^Git Town is not configured$",
     "^Git Town parent setting for branch \".*\" is .*$",
     "^the tags$",
     "^a remote tag \".*\" not on a branch$",

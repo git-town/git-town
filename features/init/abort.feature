@@ -3,8 +3,8 @@ Feature: aborting the setup assistant
 
   Background:
     Given a Git repo with origin
-    And Git Town is not configured
     And local Git setting "init.defaultbranch" is "main"
+    And Git Town is not configured
     When I run "git-town init" and enter into the dialogs:
       | DIALOG          | KEYS  |
       | welcome         | enter |
