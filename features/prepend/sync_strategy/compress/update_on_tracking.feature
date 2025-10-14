@@ -2,7 +2,6 @@ Feature: prepend a branch to a feature branch with remote updates in a clean wor
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the branches
       | NAME     | TYPE    | PARENT   | LOCATIONS     |
       | branch-1 | feature | main     | local, origin |
@@ -12,6 +11,7 @@ Feature: prepend a branch to a feature branch with remote updates in a clean wor
       | branch-1 | local, origin | branch-1 commit | file_1    | content 1    |
       | branch-2 | local, origin | branch-2 commit | file_2    | content 2    |
       |          | origin        | new commit      | file_2    | content 3    |
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the current branch is "branch-2"
     And wait 1 second to ensure new Git timestamps
     When I run "git-town prepend branch-1a"
@@ -28,10 +28,6 @@ Feature: prepend a branch to a feature branch with remote updates in a clean wor
       |          | git commit -m "branch-2 commit"          |
       |          | git push --force-with-lease              |
       |          | git checkout -b branch-1a branch-1       |
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT |
-      | branch-1 | local, origin | branch-1 commit | file_1    | content 1    |
-      | branch-2 | local, origin | branch-2 commit | file_2    | content 3    |
     And this lineage exists now
       """
       main
@@ -39,6 +35,10 @@ Feature: prepend a branch to a feature branch with remote updates in a clean wor
           branch-1a
             branch-2
       """
+    And these commits exist now
+      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT |
+      | branch-1 | local, origin | branch-1 commit | file_1    | content 1    |
+      | branch-2 | local, origin | branch-2 commit | file_2    | content 3    |
 
   Scenario: undo
     When I run "git-town undo"
@@ -48,5 +48,5 @@ Feature: prepend a branch to a feature branch with remote updates in a clean wor
       | branch-2  | git reset --hard {{ sha-initial 'branch-2 commit' }}                         |
       |           | git push --force-with-lease origin {{ sha-in-origin 'new commit' }}:branch-2 |
       |           | git branch -D branch-1a                                                      |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

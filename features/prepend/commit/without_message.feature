@@ -20,17 +20,17 @@ Feature: propose uncommitted changes via a separate parent branch, let Git ask f
       | existing | git checkout -b new main |
       | new      | git commit               |
       |          | git checkout existing    |
-    And these commits exist now
-      | BRANCH   | LOCATION | MESSAGE         |
-      | main     | origin   | main commit     |
-      | new      | local    | unrelated idea  |
-      | existing | local    | existing commit |
     And this lineage exists now
       """
       main
         new
           existing
       """
+    And these commits exist now
+      | BRANCH   | LOCATION | MESSAGE         |
+      | main     | origin   | main commit     |
+      | new      | local    | unrelated idea  |
+      | existing | local    | existing commit |
 
   Scenario: undo
     When I run "git-town undo"

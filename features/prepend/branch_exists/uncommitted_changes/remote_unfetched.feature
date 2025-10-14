@@ -18,14 +18,14 @@ Feature: already existing remote branch
       |          | git checkout -b existing main |
       | existing | git stash pop                 |
       |          | git restore --staged .        |
-    And the uncommitted file still exists
-    And the initial commits exist now
     And this lineage exists now
       """
       main
         existing
           old
       """
+    And the uncommitted file still exists
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -37,6 +37,6 @@ Feature: already existing remote branch
       | old      | git branch -D existing      |
       |          | git stash pop               |
       |          | git restore --staged .      |
+    And the initial lineage exists now
     And the uncommitted file still exists
     And the initial commits exist now
-    And the initial lineage exists now

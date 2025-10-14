@@ -21,16 +21,16 @@ Feature: rename a parent branch
       |        | git checkout new             |
       | new    | git push -u origin new       |
       |        | git push origin :parent      |
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE       |
-      | new    | local, origin | parent commit |
-      | child  | local, origin | child commit  |
     And this lineage exists now
       """
       main
         new
           child
       """
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE       |
+      | new    | local, origin | parent commit |
+      | child  | local, origin | child commit  |
 
   Scenario: undo
     When I run "git-town undo"

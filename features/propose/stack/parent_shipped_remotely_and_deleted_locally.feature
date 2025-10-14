@@ -2,6 +2,7 @@ Feature: proposing a branch whose parent was shipped and the local branch delete
 
   Background:
     Given a Git repo with origin
+    And the origin is "git@github.com:git-town/git-town.git"
     And the branches
       | NAME   | TYPE    | PARENT | LOCATIONS     |
       | parent | feature | main   | local, origin |
@@ -11,10 +12,9 @@ Feature: proposing a branch whose parent was shipped and the local branch delete
       | parent | local, origin | parent commit |
       | child  | local, origin | child commit  |
     And origin ships the "parent" branch using the "squash-merge" ship-strategy
-    And I ran "git branch -d parent"
     And the current branch is "child"
     And tool "open" is installed
-    And the origin is "git@github.com:git-town/git-town.git"
+    And I ran "git branch -d parent"
     When I run "git-town propose"
 
   Scenario: result

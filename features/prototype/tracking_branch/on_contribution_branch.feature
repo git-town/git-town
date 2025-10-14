@@ -19,5 +19,5 @@ Feature: prototype the current contribution branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the initial branches and lineage exist now
     And branch "contribution" now has type "contribution"
+    And the initial branches and lineage exist now

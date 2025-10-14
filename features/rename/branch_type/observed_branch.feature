@@ -19,15 +19,15 @@ Feature: rename an observed branch
       |          | git checkout new               |
       | new      | git push -u origin new         |
       |          | git push origin :observed      |
-    And branch "new" still has type "observed"
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE               |
-      | new    | local, origin | somebody elses commit |
     And this lineage exists now
       """
       main
         new
       """
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE               |
+      | new    | local, origin | somebody elses commit |
+    And branch "new" still has type "observed"
 
   Scenario: undo
     When I run "git-town undo"

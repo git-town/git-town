@@ -3,8 +3,8 @@ Feature: ask for missing configuration
 
   Background:
     Given a Git repo with origin
-    And Git Town is not configured
     And the origin is "https://github.com/git-town/git-town.git"
+    And Git Town is not configured
     When I run "git-town propose" and enter into the dialog:
       | DIALOG                | KEYS            |
       | welcome               | enter           |
@@ -20,8 +20,8 @@ Feature: ask for missing configuration
       | config storage        | enter           |
 
   Scenario: result
-    Then the main branch is now "main"
-    And Git Town prints the error:
+    Then Git Town prints the error:
       """
       cannot propose the main branch
       """
+    And the main branch is now "main"

@@ -2,6 +2,11 @@ Feature: prepend a new branch when prototype branches are configured via config 
 
   Background:
     Given a Git repo with origin
+    And the committed configuration file:
+      """
+      [create]
+      new-branch-type = "prototype"
+      """
     And the branches
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | old  | feature | main   | local, origin |
@@ -9,11 +14,6 @@ Feature: prepend a new branch when prototype branches are configured via config 
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
     And the current branch is "old"
-    And the committed configuration file:
-      """
-      [create]
-      new-branch-type = "prototype"
-      """
     When I run "git-town prepend parent"
 
   Scenario: result
@@ -21,16 +21,16 @@ Feature: prepend a new branch when prototype branches are configured via config 
       | BRANCH | COMMAND                     |
       | old    | git fetch --prune --tags    |
       |        | git checkout -b parent main |
-    And branch "parent" now has type "prototype"
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE    |
-      | old    | local, origin | old commit |
     And this lineage exists now
       """
       main
         parent
           old
       """
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE    |
+      | old    | local, origin | old commit |
+    And branch "parent" now has type "prototype"
 
   Scenario: undo
     When I run "git-town undo"
@@ -38,5 +38,5 @@ Feature: prepend a new branch when prototype branches are configured via config 
       | BRANCH | COMMAND              |
       | parent | git checkout old     |
       | old    | git branch -D parent |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

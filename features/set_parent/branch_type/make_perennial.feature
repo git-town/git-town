@@ -13,17 +13,17 @@ Feature: make a feature branch perennial
       | parent branch for "child" | down enter |
 
   Scenario: result
-    Then Git Town prints:
+    Then Git Town runs no commands
+    And Git Town prints:
       """
       branch "child" is now perennial
       """
-    And Git Town runs no commands
-    And the perennial branches are now "child"
     And this lineage exists now
       """
       main
         parent
       """
+    And the perennial branches are now "child"
 
   Scenario: undo
     When I run "git-town undo"

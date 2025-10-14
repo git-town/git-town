@@ -19,15 +19,15 @@ Feature: rename a parked branch
       |        | git checkout new             |
       | new    | git push -u origin new       |
       |        | git push origin :parked      |
-    And branch "new" still has type "parked"
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE             |
-      | new    | local, origin | low-priority commit |
     And this lineage exists now
       """
       main
         new
       """
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE             |
+      | new    | local, origin | low-priority commit |
+    And branch "new" still has type "parked"
 
   Scenario: undo
     When I run "git-town undo"

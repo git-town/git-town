@@ -5,9 +5,9 @@ Feature: enforce stashing via CLI flag
     And the branches
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | old  | feature | main   | local, origin |
+    And Git setting "git-town.stash" is "false"
     And the current branch is "old"
     And an uncommitted file
-    And Git setting "git-town.stash" is "false"
     When I run "git-town prepend new --stash"
 
   Scenario: result

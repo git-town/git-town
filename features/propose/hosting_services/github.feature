@@ -3,15 +3,15 @@ Feature: GitHub support
 
   Background:
     Given a Git repo with origin
-    And tool "open" is installed
     And a proposal for this branch does not exist
+    And tool "open" is installed
 
   Scenario Outline: normal origin
-    Given the branches
+    Given the origin is "<ORIGIN>"
+    And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
-    And the origin is "<ORIGIN>"
     When I run "git-town propose"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                            |
@@ -31,11 +31,11 @@ Feature: GitHub support
       | ssh://git@github.com/git-town/git-town     |
 
   Scenario Outline: origin contains path that looks like a URL
-    Given the branches
+    Given the origin is "<ORIGIN>"
+    And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
-    And the origin is "<ORIGIN>"
     When I run "git-town propose"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                       |
@@ -53,11 +53,11 @@ Feature: GitHub support
       | git@github.com:git-town/git-town.github.com         |
 
   Scenario: URL-encodes hashtag
-    Given the branches
+    Given the origin is "https://github.com/git-town/git-town"
+    And the branches
       | NAME   | TYPE    | PARENT | LOCATIONS     |
       | fix-#2 | feature | main   | local, origin |
     And the current branch is "fix-#2"
-    And the origin is "https://github.com/git-town/git-town"
     When I run "git-town propose"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                             |
@@ -66,11 +66,11 @@ Feature: GitHub support
       |        | open https://github.com/git-town/git-town/compare/fix-%232?expand=1 |
 
   Scenario: URL-encodes forward slashes
-    Given the branches
+    Given the origin is "https://github.com/git-town/git-town"
+    And the branches
       | NAME         | TYPE    | PARENT | LOCATIONS     |
       | test/feature | feature | main   | local, origin |
     And the current branch is "test/feature"
-    And the origin is "https://github.com/git-town/git-town"
     When I run "git-town propose"
     Then Git Town runs the commands
       | BRANCH       | COMMAND                                                                   |
@@ -79,11 +79,11 @@ Feature: GitHub support
       |              | open https://github.com/git-town/git-town/compare/test%2Ffeature?expand=1 |
 
   Scenario: stacked change with known parent
-    Given the branches
+    Given the origin is "git@github.com:git-town/git-town.git"
+    And the branches
       | NAME   | TYPE    | PARENT | LOCATIONS     |
       | parent | feature | main   | local, origin |
       | child  | feature | parent | local, origin |
-    And the origin is "git@github.com:git-town/git-town.git"
     And the current branch is "child"
     When I run "git-town propose"
     Then Git Town runs the commands

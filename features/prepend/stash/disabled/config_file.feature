@@ -2,16 +2,16 @@ Feature: permanently disable stashing via config file
 
   Background:
     Given a Git repo with origin
-    And the branches
-      | NAME | TYPE    | PARENT | LOCATIONS     |
-      | old  | feature | main   | local, origin |
-    And the current branch is "old"
-    And an uncommitted file
     And the committed configuration file:
       """
       [create]
       stash = false
       """
+    And the branches
+      | NAME | TYPE    | PARENT | LOCATIONS     |
+      | old  | feature | main   | local, origin |
+    And the current branch is "old"
+    And an uncommitted file
     When I run "git-town prepend new"
 
   Scenario: result

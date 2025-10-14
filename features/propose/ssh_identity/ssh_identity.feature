@@ -3,14 +3,14 @@ Feature: use a SSH identity
 
   Scenario Outline: ssh identity
     Given a Git repo with origin
+    And the origin is "git@my-ssh-identity:git-town/git-town.git"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And tool "open" is installed
-    And the origin is "git@my-ssh-identity:git-town/git-town.git"
     And Git setting "git-town.hosting-origin-hostname" is "<ORIGIN_HOSTNAME>"
-    And a proposal for this branch does not exist
     And the current branch is "feature"
+    And a proposal for this branch does not exist
+    And tool "open" is installed
     When I run "git-town propose"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                            |

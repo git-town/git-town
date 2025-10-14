@@ -21,15 +21,15 @@ Feature: prepend a branch in Spanish
       """
       Cambiado a nueva rama 'parent'
       """
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE    |
-      | old    | local, origin | old commit |
     And this lineage exists now
       """
       main
         parent
           old
       """
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE    |
+      | old    | local, origin | old commit |
 
   Scenario: undo
     When I run "git-town undo" with these environment variables
@@ -42,5 +42,5 @@ Feature: prepend a branch in Spanish
       """
       Eliminada la rama parent
       """
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

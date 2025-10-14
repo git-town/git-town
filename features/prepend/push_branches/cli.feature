@@ -24,6 +24,6 @@ Feature: disable pushing through the CLI
       | BRANCH   | COMMAND               |
       | new      | git checkout branch-2 |
       | branch-2 | git branch -D new     |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now
     And the initial tags exist now

@@ -2,7 +2,6 @@ Feature: prepend a branch to a feature branch that is already compressed in a cl
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the branches
       | NAME     | TYPE    | PARENT   | LOCATIONS     |
       | branch-1 | feature | main     | local, origin |
@@ -11,6 +10,7 @@ Feature: prepend a branch to a feature branch that is already compressed in a cl
       | BRANCH   | LOCATION      | MESSAGE         |
       | branch-1 | local, origin | branch-1 commit |
       | branch-2 | local, origin | branch-2 commit |
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the current branch is "branch-2"
     And wait 1 second to ensure new Git timestamps
     When I run "git-town prepend branch-1a"
@@ -26,7 +26,6 @@ Feature: prepend a branch to a feature branch that is already compressed in a cl
       |          | git commit -m "branch-2 commit"    |
       |          | git push --force-with-lease        |
       |          | git checkout -b branch-1a branch-1 |
-    And the initial commits exist now
     And this lineage exists now
       """
       main
@@ -34,6 +33,7 @@ Feature: prepend a branch to a feature branch that is already compressed in a cl
           branch-1a
             branch-2
       """
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -43,5 +43,5 @@ Feature: prepend a branch to a feature branch that is already compressed in a cl
       | branch-2  | git reset --hard {{ sha-initial 'branch-2 commit' }} |
       |           | git push --force-with-lease --force-if-includes      |
       |           | git branch -D branch-1a                              |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

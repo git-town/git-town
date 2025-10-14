@@ -2,11 +2,11 @@ Feature: Cannot create proposals for contribution branches
 
   Background:
     Given a Git repo with origin
+    And the origin is "git@github.com:git-town/git-town.git"
     And the branches
       | NAME         | TYPE         | LOCATIONS     |
       | contribution | contribution | local, origin |
     And the current branch is "contribution"
-    And the origin is "git@github.com:git-town/git-town.git"
     When I run "git-town propose"
 
   Scenario: result

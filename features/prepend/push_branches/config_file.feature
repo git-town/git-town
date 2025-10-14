@@ -2,7 +2,6 @@ Feature: disable pushing through the config file
 
   Background:
     Given a Git repo with origin
-    And Git Town is not configured
     And the committed configuration file:
       """
       [branches]
@@ -15,6 +14,7 @@ Feature: disable pushing through the config file
       | NAME     | TYPE    | PARENT   | LOCATIONS |
       | branch-1 | feature | main     | local     |
       | branch-2 | feature | branch-1 | local     |
+    And Git Town is not configured
     And the current branch is "branch-2"
     When I run "git-town prepend new"
 
@@ -33,6 +33,6 @@ Feature: disable pushing through the config file
       | BRANCH   | COMMAND               |
       | new      | git checkout branch-2 |
       | branch-2 | git branch -D new     |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now
     And the initial tags exist now

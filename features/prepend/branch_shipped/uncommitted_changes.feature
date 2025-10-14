@@ -31,7 +31,6 @@ Feature: prepend a branch to a branch that was shipped at the remote
       """
       branch "child" is now a child of "new"
       """
-    And the uncommitted file still exists
     And the branches are now
       | REPOSITORY | BRANCHES                 |
       | local      | main, child, new, parent |
@@ -43,6 +42,7 @@ Feature: prepend a branch to a branch that was shipped at the remote
           new
             child
       """
+    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -54,9 +54,9 @@ Feature: prepend a branch to a branch that was shipped at the remote
       | child  | git branch -D new           |
       |        | git stash pop               |
       |        | git restore --staged .      |
-    And the uncommitted file still exists
     And the branches are now
       | REPOSITORY | BRANCHES            |
       | local      | main, child, parent |
       | origin     | main, parent        |
     And the initial lineage exists now
+    And the uncommitted file still exists

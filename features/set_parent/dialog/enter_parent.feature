@@ -13,11 +13,11 @@ Feature: select the new parent via a visual dialog
       | parent branch for "branch-2" | down enter |
 
   Scenario: result
-    Then Git Town prints:
+    Then Git Town runs no commands
+    And Git Town prints:
       """
       branch "branch-2" is now a child of "branch-1"
       """
-    And Git Town runs no commands
     And this lineage exists now
       """
       main

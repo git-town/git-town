@@ -8,8 +8,8 @@ Feature: prepend a new branch when prototype branches are configured via Git met
     And the commits
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
-    And the current branch is "old"
     And Git setting "git-town.new-branch-type" is "prototype"
+    And the current branch is "old"
     When I run "git-town prepend parent"
 
   Scenario: result
@@ -17,16 +17,16 @@ Feature: prepend a new branch when prototype branches are configured via Git met
       | BRANCH | COMMAND                     |
       | old    | git fetch --prune --tags    |
       |        | git checkout -b parent main |
-    And branch "parent" now has type "prototype"
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE    |
-      | old    | local, origin | old commit |
     And this lineage exists now
       """
       main
         parent
           old
       """
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE    |
+      | old    | local, origin | old commit |
+    And branch "parent" now has type "prototype"
 
   Scenario: undo
     When I run "git-town undo"
@@ -34,5 +34,5 @@ Feature: prepend a new branch when prototype branches are configured via Git met
       | BRANCH | COMMAND              |
       | parent | git checkout old     |
       | old    | git branch -D parent |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

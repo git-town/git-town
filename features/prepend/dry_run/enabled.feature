@@ -22,5 +22,5 @@ Feature: dry-run prepending a branch to a feature branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

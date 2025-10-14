@@ -3,9 +3,9 @@ Feature: use an SSH identity
 
   Scenario Outline:
     Given a Git repo with origin
-    And tool "open" is installed
     And the origin is "git@my-ssh-identity:git-town/git-town.git"
     And Git setting "git-town.hosting-origin-hostname" is "<ORIGIN_HOSTNAME>"
+    And tool "open" is installed
     When I run "git-town repo"
     Then Git Town runs the commands
       | BRANCH | TYPE     | COMMAND         |
