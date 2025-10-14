@@ -2,7 +2,6 @@ Feature: inside an uncommitted subfolder on the current feature branch
 
   Background:
     Given a Git repo with origin
-    And a folder "uncommitted_folder"
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
@@ -10,6 +9,7 @@ Feature: inside an uncommitted subfolder on the current feature branch
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
     And the current branch is "existing"
+    And a folder "uncommitted_folder"
     When I run "git-town hack new" in the "uncommitted_folder" folder
 
   Scenario: result
