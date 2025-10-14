@@ -23,6 +23,7 @@
     "features/detach/merge_conflict/dependent_changes.feature",
     "features/prepend/beam/stack/dependent_changes.feature",
     "features/set_parent/hoist/rebase/dependent_changes.feature",
+    "features/ship/always_merge/current_branch/additional_commits/before_undo/online.feature",
     "vendor/**/*.feature"
   ],
   "record": true,
