@@ -2,7 +2,6 @@ Feature: deleting a branch that conflicts with the main branch
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "merge"
     And the branches
       | NAME      | TYPE    | PARENT | LOCATIONS     |
       | feature-1 | feature | main   | local, origin |
@@ -21,6 +20,7 @@ Feature: deleting a branch that conflicts with the main branch
     And the commits
       | BRANCH    | LOCATION      | MESSAGE          | FILE NAME | FILE CONTENT |
       | feature-3 | local, origin | feature-3 commit | file      | content 3    |
+    And Git setting "git-town.sync-feature-strategy" is "merge"
     And the current branch is "feature-2"
     When I run "git-town delete"
 

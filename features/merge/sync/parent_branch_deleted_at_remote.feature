@@ -14,8 +14,8 @@ Feature: merging a branch whose parent was deleted remotely
     And the commits
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | beta   | local, origin | beta commit | beta-file | beta content |
-    And the current branch is "beta"
     And origin deletes the "alpha" branch
+    And the current branch is "beta"
     When I run "git-town merge"
 
   Scenario: result

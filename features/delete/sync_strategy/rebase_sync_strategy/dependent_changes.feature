@@ -2,7 +2,6 @@ Feature: deleting a branch from a stack with dependent changes
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the commits
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT                                 |
       | main   | local, origin | main commit | file      | line 0: main content\nline 1\nline 2\nline 3 |
@@ -24,6 +23,7 @@ Feature: deleting a branch from a stack with dependent changes
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                                       |
       | branch-3 | local, origin | branch-3 commit | file      | line 0: main content\nline 1: branch-1 content\nline 2: branch-2 content\nline 3: branch-3 content |
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "branch-2"
     When I run "git-town delete"
 

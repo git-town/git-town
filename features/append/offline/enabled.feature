@@ -2,13 +2,13 @@ Feature: append in offline mode
 
   Background:
     Given a Git repo with origin
-    And offline mode is enabled
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
+    And offline mode is enabled
     And the current branch is "existing"
     When I run "git-town append new"
 

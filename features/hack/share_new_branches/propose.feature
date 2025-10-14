@@ -3,10 +3,10 @@ Feature: auto-propose new branches
   Background:
     Given a Git repo with origin
     And the origin is "git@github.com:git-town/git-town.git"
-    And Git setting "git-town.share-new-branches" is "propose"
     And the commits
       | BRANCH | LOCATION | MESSAGE     |
       | main   | origin   | main commit |
+    And Git setting "git-town.share-new-branches" is "propose"
     And the current branch is "main"
     And tool "open" is installed
     When I run "git-town hack new"

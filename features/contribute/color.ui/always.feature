@@ -2,10 +2,10 @@ Feature: make another remote branch a contribution branch
 
   Background:
     Given a Git repo with origin
-    And local Git setting "color.ui" is "always"
     And the branches
       | NAME           | TYPE    | PARENT | LOCATIONS |
       | remote-feature | feature | main   | origin    |
+    And local Git setting "color.ui" is "always"
     And I run "git fetch"
     When I run "git-town contribute remote-feature"
 

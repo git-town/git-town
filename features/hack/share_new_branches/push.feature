@@ -2,10 +2,10 @@ Feature: auto-push the new branch
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.share-new-branches" is "push"
     And the commits
       | BRANCH | LOCATION | MESSAGE       |
       | main   | origin   | origin commit |
+    And Git setting "git-town.share-new-branches" is "push"
     And the current branch is "main"
     When I run "git-town hack new"
 

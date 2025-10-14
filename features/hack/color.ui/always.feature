@@ -2,10 +2,10 @@ Feature: on the main branch with a clean workspace
 
   Background:
     Given a Git repo with origin
-    And local Git setting "color.ui" is "always"
     And the commits
       | BRANCH | LOCATION | MESSAGE     |
       | main   | origin   | main commit |
+    And local Git setting "color.ui" is "always"
     And the current branch is "main"
     When I run "git-town hack new"
 

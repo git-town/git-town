@@ -3,10 +3,6 @@ Feature: ask for information not provided by the config file
 
   Scenario:
     Given a Git repo with origin
-    And Git Town is not configured
-    And the branches
-      | NAME     | TYPE   | LOCATIONS     |
-      | branch-1 | (none) | local, origin |
     And the committed configuration file:
       """
       [branches]
@@ -26,6 +22,10 @@ Feature: ask for information not provided by the config file
       tags = false
       upstream = false
       """
+    And the branches
+      | NAME     | TYPE   | LOCATIONS     |
+      | branch-1 | (none) | local, origin |
+    And Git Town is not configured
     When I run "git-town init" and enter into the dialogs:
       | DIALOG                  | KEYS                  |
       | welcome                 | enter                 |

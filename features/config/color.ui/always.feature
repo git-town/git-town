@@ -3,7 +3,6 @@ Feature: show the configuration
 
   Background:
     Given a Git repo with origin
-    And local Git setting "color.ui" is "always"
     And the branches
       | NAME           | TYPE         | PARENT | LOCATIONS     |
       | contribution-1 | contribution |        | local, origin |
@@ -16,6 +15,7 @@ Feature: show the configuration
       | perennial-2    | perennial    |        | local         |
       | prototype-1    | prototype    | main   | local         |
       | prototype-2    | prototype    | main   | local         |
+    And local Git setting "color.ui" is "always"
 
   Scenario: all configured in Git, no stacked changes
     Given Git setting "git-town.perennial-branches" is "qa staging"
@@ -283,14 +283,14 @@ Feature: show the configuration
       """
 
   Scenario: all configured, with stacked changes
-    Given Git setting "git-town.perennial-branches" is "qa"
-    And the branches
+    Given the branches
       | NAME   | TYPE    | PARENT | LOCATIONS |
       | alpha  | feature | main   | local     |
       | qa     | (none)  |        | local     |
       | beta   | feature | main   | local     |
       | child  | feature | alpha  | local     |
       | hotfix | feature | qa     | local     |
+    And Git setting "git-town.perennial-branches" is "qa"
     When I run "git-town config"
     Then Git Town prints:
       """

@@ -14,8 +14,8 @@ Feature: merging a branch in a stack that is fully in sync
     And the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | beta   | local, origin | beta commit |
-    And the current branch is "beta"
     And local Git setting "color.ui" is "always"
+    And the current branch is "beta"
     When I run "git-town merge"
 
   Scenario: result
@@ -46,5 +46,5 @@ Feature: merging a branch in a stack that is fully in sync
       |        | git branch beta {{ sha 'beta commit' }}           |
       |        | git push -u origin beta                           |
       |        | git checkout beta                                 |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

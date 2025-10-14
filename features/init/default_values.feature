@@ -3,12 +3,12 @@ Feature: Accepting all default values leads to a working setup
 
   Background:
     Given a Git repo with origin
-    And local Git setting "init.defaultbranch" is "main"
     And the branches
       | NAME       | TYPE   | LOCATIONS     |
       | dev        | (none) | local, origin |
       | production | (none) | local, origin |
     And Git Town is not configured
+    And local Git setting "init.defaultbranch" is "main"
     When I run "git-town init" and enter into the dialogs:
       | DIALOG             | KEYS       |
       | welcome            | enter      |

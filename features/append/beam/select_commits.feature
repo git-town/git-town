@@ -3,7 +3,6 @@ Feature: beam multiple commits onto a new child branch
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
@@ -14,6 +13,7 @@ Feature: beam multiple commits onto a new child branch
       | existing | local    | commit 2    |
       | existing | local    | commit 3    |
       | existing | local    | commit 4    |
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "existing"
     When I run "git-town append new --beam" and enter into the dialog:
       | DIALOG          | KEYS                             |

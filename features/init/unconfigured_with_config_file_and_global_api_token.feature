@@ -3,7 +3,6 @@ Feature: don't ask for information already provided by the config file
 
   Scenario:
     Given a Git repo with origin
-    And global Git setting "git-town.github-token" is "123456"
     And the committed configuration file:
       """
       [branches]
@@ -44,6 +43,7 @@ Feature: don't ask for information already provided by the config file
       perennial-branches = "ff-only"
       """
     And Git Town is not configured
+    And global Git setting "git-town.github-token" is "123456"
     When I run "git-town init" and enter into the dialogs:
       | DIALOG             | KEYS  |
       | welcome            | enter |

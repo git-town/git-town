@@ -2,7 +2,6 @@ Feature: detaching an omni-branch verbosely
 
   Background:
     Given a Git repo with origin
-    And local Git setting "color.ui" is "always"
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | branch-1 | feature | main   | local, origin |
@@ -31,6 +30,7 @@ Feature: detaching an omni-branch verbosely
       | BRANCH   | LOCATION      | MESSAGE   |
       | branch-4 | local, origin | commit 4a |
       | branch-4 | local, origin | commit 4b |
+    And local Git setting "color.ui" is "always"
     And the current branch is "branch-2"
     When I run "git-town detach --verbose"
 

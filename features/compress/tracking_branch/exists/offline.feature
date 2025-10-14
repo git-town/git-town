@@ -2,7 +2,6 @@ Feature: compress the commits in offline mode
 
   Background:
     Given a Git repo with origin
-    And offline mode is enabled
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
@@ -10,6 +9,7 @@ Feature: compress the commits in offline mode
       | BRANCH  | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | feature | local, origin | commit 1 | file_1    | content 1    |
       |         |               | commit 2 | file_2    | content 2    |
+    And offline mode is enabled
     And the current branch is "feature"
     When I run "git-town compress"
 

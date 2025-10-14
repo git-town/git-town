@@ -4,6 +4,10 @@ Feature: remove existing configuration in Git metadata
   Background:
     Given a Git repo with origin
     And I rename the "origin" remote to "fork"
+    And the branches
+      | NAME       | TYPE   | LOCATIONS |
+      | qa         | (none) | local     |
+      | production | (none) | local     |
     And the main branch is "main"
     And global Git setting "alias.append" is "town append"
     And global Git setting "alias.compress" is "town compress"
@@ -43,10 +47,6 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.sync-upstream" is "false"
     And local Git setting "git-town.sync-tags" is "false"
     And local Git setting "git-town.unknown-branch-type" is "observed"
-    And the branches
-      | NAME       | TYPE   | LOCATIONS |
-      | qa         | (none) | local     |
-      | production | (none) | local     |
     When I run "git-town init" and enter into the dialogs:
       | DIALOG                      | KEYS                                                                        | DESCRIPTION         |
       | welcome                     | enter                                                                       |                     |

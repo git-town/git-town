@@ -2,13 +2,13 @@ Feature: append a new branch when prototype branches are configured
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.new-branch-type" is "prototype"
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
+    And Git setting "git-town.new-branch-type" is "prototype"
     And the current branch is "existing"
     When I run "git-town append new"
 

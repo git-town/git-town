@@ -2,7 +2,6 @@ Feature: disable syncing via Git metadata
 
   Background:
     Given a Git repo with origin
-    And global Git setting "git-town.auto-sync" is "false"
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | branch-1 | feature | main   | local, origin |
@@ -11,6 +10,7 @@ Feature: disable syncing via Git metadata
       | main     | local    | local main commit      |
       | main     | origin   | origin main commit     |
       | branch-1 | origin   | origin branch-1 commit |
+    And global Git setting "git-town.auto-sync" is "false"
     And the current branch is "branch-1"
     When I run "git-town append branch-2"
 

@@ -2,6 +2,16 @@ Feature: display configuration from Git metadata in detached head state
 
   Background:
     Given a Git repo with origin
+    And the branches
+      | NAME      | TYPE      | PARENT | LOCATIONS     |
+      | branch    | feature   | main   | local         |
+      | observed  | observed  |        | local, origin |
+      | parked    | parked    | main   | local         |
+      | perennial | perennial |        | local         |
+    And the commits
+      | BRANCH | LOCATION | MESSAGE  |
+      | branch | local    | commit 1 |
+      |        | local    | commit 2 |
     And Git setting "git-town.auto-sync" is "false"
     And Git setting "git-town.perennial-branches" is "qa staging"
     And Git setting "git-town.perennial-regex" is "^release-"
@@ -13,16 +23,6 @@ Feature: display configuration from Git metadata in detached head state
     And Git setting "git-town.auto-resolve" is "false"
     And Git setting "git-town.detached" is "true"
     And Git setting "git-town.stash" is "false"
-    And the branches
-      | NAME      | TYPE      | PARENT | LOCATIONS     |
-      | branch    | feature   | main   | local         |
-      | observed  | observed  |        | local, origin |
-      | parked    | parked    | main   | local         |
-      | perennial | perennial |        | local         |
-    And the commits
-      | BRANCH | LOCATION | MESSAGE  |
-      | branch | local    | commit 1 |
-      |        | local    | commit 2 |
     And the current branch is "branch"
     And I ran "git checkout HEAD^"
     When I run "git-town config"

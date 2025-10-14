@@ -2,13 +2,13 @@ Feature: disable syncing via Git metadata
 
   Background:
     Given a Git repo with origin
-    And global Git setting "git-town.auto-sync" is "false"
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | branch-1 | feature | main   | local, origin |
     And the commits
       | BRANCH | LOCATION | MESSAGE            |
       | main   | origin   | origin main commit |
+    And global Git setting "git-town.auto-sync" is "false"
     And the current branch is "branch-1"
     When I run "git-town hack branch-2"
 

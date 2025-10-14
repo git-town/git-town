@@ -2,8 +2,6 @@ Feature: create a new branch when unknown-branch-type is set and feature-regex i
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.new-branch-type" is "feature"
-    And Git setting "git-town.unknown-branch-type" is "contribution"
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
@@ -11,6 +9,8 @@ Feature: create a new branch when unknown-branch-type is set and feature-regex i
       | BRANCH   | LOCATION | MESSAGE         |
       | main     | origin   | main commit     |
       | existing | local    | existing commit |
+    And Git setting "git-town.new-branch-type" is "feature"
+    And Git setting "git-town.unknown-branch-type" is "contribution"
     And the current branch is "existing"
     When I run "git-town hack new"
 

@@ -2,7 +2,6 @@ Feature: offline mode
 
   Background:
     Given a Git repo with origin
-    And offline mode is enabled
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
@@ -11,6 +10,7 @@ Feature: offline mode
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
       | other   | local, origin | other commit   |
+    And offline mode is enabled
     And the current branch is "feature"
     When I run "git-town delete"
 

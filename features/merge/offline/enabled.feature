@@ -14,8 +14,8 @@ Feature: merging a branch in offline mode
     And the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | beta   | local, origin | beta commit |
-    And the current branch is "beta"
     And offline mode is enabled
+    And the current branch is "beta"
     When I run "git-town merge"
 
   Scenario: result
@@ -43,5 +43,5 @@ Feature: merging a branch in offline mode
       | alpha  | git reset --hard {{ sha 'alpha commit' }} |
       |        | git branch beta {{ sha 'beta commit' }}   |
       |        | git checkout beta                         |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

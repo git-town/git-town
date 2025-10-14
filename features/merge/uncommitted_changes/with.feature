@@ -59,6 +59,6 @@ Feature: merging a branch with uncommitted changes
       |        | git checkout beta                               |
       | beta   | git stash pop                                   |
       |        | git restore --staged .                          |
-    And the initial commits exist now
     And the initial lineage exists now
     And the uncommitted file still exists
+    And the initial commits exist now

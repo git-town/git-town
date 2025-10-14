@@ -2,7 +2,6 @@ Feature: create a new top-level feature branch in a clean workspace using the "c
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
@@ -10,6 +9,7 @@ Feature: create a new top-level feature branch in a clean workspace using the "c
       | BRANCH  | LOCATION      | MESSAGE            |
       | main    | origin        | new commit         |
       | feature | local, origin | already compressed |
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the current branch is "feature"
     When I run "git-town hack new"
 

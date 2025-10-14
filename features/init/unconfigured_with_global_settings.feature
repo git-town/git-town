@@ -3,7 +3,6 @@ Feature: setup a new repo when I have configured some things in global Git metad
 
   Scenario:
     Given a Git repo with origin
-    And Git Town is not configured
     And global Git setting "git-town.auto-sync" is "false"
     And global Git setting "git-town.feature-regex" is "^feat-"
     And global Git setting "git-town.contribution-regex" is "^cont-"
@@ -30,6 +29,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS |
       | branch-1 | feature | main   | local     |
+    And Git Town is not configured
     When I run "git-town init" and enter into the dialogs:
       | DIALOG                      | KEYS        |
       | welcome                     | enter       |

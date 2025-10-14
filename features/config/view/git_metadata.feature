@@ -82,14 +82,14 @@ Feature: display configuration from Git metadata
       """
 
   Scenario: all configured, with stacked changes
-    Given Git setting "git-town.perennial-branches" is "qa"
-    And the branches
+    Given the branches
       | NAME   | TYPE    | PARENT | LOCATIONS |
       | alpha  | feature | main   | local     |
       | qa     | (none)  |        | local     |
       | beta   | feature | main   | local     |
       | child  | feature | alpha  | local     |
       | hotfix | feature | qa     | local     |
+    And Git setting "git-town.perennial-branches" is "qa"
     When I run "git-town config"
     Then Git Town prints:
       """

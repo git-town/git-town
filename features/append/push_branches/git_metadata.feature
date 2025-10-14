@@ -2,10 +2,10 @@ Feature: disable pushing through Git metadata
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.push-branches" is "false"
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS |
       | branch-1 | feature | main   | local     |
+    And Git setting "git-town.push-branches" is "false"
     And the current branch is "branch-1"
     When I run "git-town append branch-2"
 

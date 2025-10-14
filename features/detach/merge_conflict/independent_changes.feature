@@ -2,7 +2,6 @@ Feature: detaching a branch from a stack with independent changes
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the commits
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT                                                 |
       | main   | local, origin | main commit | file      | line 0: main content\n\nline 1\n\nline 2\n\nline 3\n\nline 4 |
@@ -30,6 +29,7 @@ Feature: detaching a branch from a stack with independent changes
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                                                                         |
       | branch-4 | local, origin | branch-4 commit | file      | line 0: main content\n\nline 1: branch-1 content\n\nline 2: branch-2 content\n\nline 3: branch-3 content\n\nline 4: branch-4 content |
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "branch-2"
     When I run "git-town detach"
 
