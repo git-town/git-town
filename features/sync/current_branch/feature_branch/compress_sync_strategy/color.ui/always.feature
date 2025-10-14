@@ -56,11 +56,11 @@ Feature: one person making a series of commits and syncs in between
     And all branches are now synchronized
     #
     # I make a third change and sync
-    Given I add this commit to the current branch:
+    Given local Git setting "color.ui" is "always"
+    And I add this commit to the current branch:
       | MESSAGE          | FILE NAME | FILE CONTENT |
       | my second commit | file      | content 3    |
     And wait 1 second to ensure new Git timestamps
-    And local Git setting "color.ui" is "always"
     When I run "git-town sync"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |

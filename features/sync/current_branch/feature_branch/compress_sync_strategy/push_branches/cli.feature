@@ -2,7 +2,6 @@ Feature: disable pushing through the CLI
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
@@ -13,6 +12,7 @@ Feature: disable pushing through the CLI
       | feature | local    | local feature commit 1 |
       |         | local    | local feature commit 2 |
       |         | origin   | origin feature commit  |
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the current branch is "feature"
     And wait 1 second to ensure new Git timestamps
     When I run "git-town sync --no-push"

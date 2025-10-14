@@ -5,14 +5,14 @@ Feature: offline mode
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And the current branch is "feature"
-    And offline mode is enabled
     And the commits
       | BRANCH  | LOCATION | MESSAGE               |
       | main    | local    | local main commit     |
       |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
+    And offline mode is enabled
+    And the current branch is "feature"
     When I run "git-town sync"
 
   Scenario: result

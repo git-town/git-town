@@ -2,7 +2,6 @@ Feature: "compress" sync with upstream repo
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     And an upstream repo
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
@@ -11,6 +10,7 @@ Feature: "compress" sync with upstream repo
       | BRANCH  | LOCATION | MESSAGE         | FILE NAME     | FILE CONTENT     |
       | main    | upstream | upstream commit | upstream_file | upstream content |
       | feature | local    | local commit    | local file    | local content    |
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the current branch is "feature"
     And wait 1 second to ensure new Git timestamps
     When I run "git-town sync"
@@ -29,11 +29,11 @@ Feature: "compress" sync with upstream repo
       |         | git reset --soft main                               |
       |         | git commit -m "local commit"                        |
       |         | git push --force-with-lease                         |
-    And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE         | FILE NAME     | FILE CONTENT     |
       | main    | local, origin, upstream | upstream commit | upstream_file | upstream content |
       | feature | local, origin           | local commit    | local file    | local content    |
+    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

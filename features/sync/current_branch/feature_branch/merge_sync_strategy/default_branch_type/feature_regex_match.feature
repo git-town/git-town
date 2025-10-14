@@ -12,9 +12,9 @@ Feature: a unknown branch type is set, the feature-regex matches
       |           | origin   | origin main commit      |
       | my-branch | local    | local my-branch commit  |
       |           | origin   | origin my-branch commit |
-    And the current branch is "my-branch"
     And local Git setting "git-town.feature-regex" is "my-.*"
     And local Git setting "git-town.unknown-branch-type" is "observed"
+    And the current branch is "my-branch"
     When I run "git-town sync"
 
   Scenario: result
@@ -28,7 +28,6 @@ Feature: a unknown branch type is set, the feature-regex matches
       | my-branch | git merge --no-edit --ff main                     |
       |           | git merge --no-edit --ff origin/my-branch         |
       |           | git push                                          |
-    And all branches are now synchronized
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE                                                        |
       | main      | local, origin | origin main commit                                             |
@@ -37,6 +36,7 @@ Feature: a unknown branch type is set, the feature-regex matches
       |           |               | Merge branch 'main' into my-branch                             |
       |           |               | origin my-branch commit                                        |
       |           |               | Merge remote-tracking branch 'origin/my-branch' into my-branch |
+    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

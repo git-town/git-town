@@ -10,8 +10,8 @@ Feature: sync the current feature branch with a tracking branch in detached mode
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, origin | main commit  |
       | alpha  | local, origin | alpha commit |
-    And the current branch is "beta"
     And Git setting "git-town.detached" is "true"
+    And the current branch is "beta"
     When I run "git-town sync"
 
   Scenario: result

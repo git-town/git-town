@@ -2,6 +2,11 @@ Feature: sync the current feature branch with a tracking branch in detached mode
 
   Background:
     Given a Git repo with origin
+    And the committed configuration file:
+      """
+      [sync]
+      detached = true
+      """
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
@@ -11,11 +16,6 @@ Feature: sync the current feature branch with a tracking branch in detached mode
       | main   | local, origin | main commit  |
       | alpha  | local, origin | alpha commit |
     And the current branch is "beta"
-    And the committed configuration file:
-      """
-      [sync]
-      detached = true
-      """
     When I run "git-town sync"
 
   Scenario: result

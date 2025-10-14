@@ -16,12 +16,12 @@ Feature: sync the current feature branch (in a local repo)
     Then Git Town runs the commands
       | BRANCH  | COMMAND                       |
       | feature | git merge --no-edit --ff main |
-    And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION | MESSAGE                          |
       | main    | local    | main commit                      |
       | feature | local    | feature commit                   |
       |         |          | Merge branch 'main' into feature |
+    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

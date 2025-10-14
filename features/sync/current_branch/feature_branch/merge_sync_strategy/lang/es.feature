@@ -27,15 +27,15 @@ Feature: sync the current branch in Spanish
       """
       Cambiado a rama 'feature'
       """
-    And all branches are now synchronized
+    And the branches are now
+      | REPOSITORY    | BRANCHES      |
+      | local, origin | main, feature |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, origin | local main commit                |
       | feature | local, origin | local feature commit             |
       |         |               | Merge branch 'main' into feature |
-    And the branches are now
-      | REPOSITORY    | BRANCHES      |
-      | local, origin | main, feature |
+    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo" with these environment variables

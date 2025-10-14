@@ -2,17 +2,17 @@ Feature: the branch was shipped manually on the local machine
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.unknown-branch-type" is "prototype"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
+    And Git setting "git-town.unknown-branch-type" is "prototype"
+    And origin deletes the "feature" branch
     And the current branch is "main"
     And I ran "git merge feature --squash"
     And I ran "git commit -m merged"
-    And origin deletes the "feature" branch
     When I run "git-town sync --all"
 
   Scenario: result
