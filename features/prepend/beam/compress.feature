@@ -3,7 +3,6 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the branches
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | old  | feature | main   | local, origin |
@@ -13,6 +12,7 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
       | old    | local, origin | commit 2 | file 2    | content 2    |
       | old    | local, origin | commit 3 | file 3    | content 3    |
       | old    | local, origin | commit 4 | file 4    | content 4    |
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the current branch is "old"
     And wait 1 second to ensure new Git timestamps
     When I run "git-town prepend parent --beam" and enter into the dialog:
@@ -72,8 +72,8 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
       | old    | git reset --hard {{ sha 'commit 4' }}           |
       |        | git push --force-with-lease --force-if-includes |
       |        | git branch -D parent                            |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now
 
   Scenario: amend the beamed commit
     And I amend this commit
