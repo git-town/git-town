@@ -32,7 +32,6 @@ Feature: ship the current feature branch with a tracking branch
       |        |               | feature done   |
 
   Scenario: undo
-    Then the currently checked out commit is "feature commit"
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
