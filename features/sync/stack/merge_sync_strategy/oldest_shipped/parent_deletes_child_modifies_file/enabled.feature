@@ -63,8 +63,8 @@ Feature: auto-resolve phantom merge conflicts in a synced stack where the parent
       | main     | git reset --hard {{ sha 'create file' }}            |
       |          | git branch branch-1 {{ sha-initial 'delete-file' }} |
       |          | git checkout branch-2                               |
-    And the initial commits exist now
     And no merge is now in progress
+    And the initial commits exist now
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
