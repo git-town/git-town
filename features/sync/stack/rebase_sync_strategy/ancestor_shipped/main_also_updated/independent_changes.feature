@@ -2,7 +2,6 @@ Feature: shipped the head branch of a synced stack with inddependent changes tha
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the commits
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT               |
       | main   | local, origin | main commit | file      | line 0\n\nline 1\n\nline 2 |
@@ -18,6 +17,7 @@ Feature: shipped the head branch of a synced stack with inddependent changes tha
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                   |
       | branch-2 | local, origin | branch-2 commit | file      | line 0\n\nline 1: branch-1 content\n\nline 2: branch-2 content |
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And origin ships the "branch-1" branch using the "squash-merge" ship-strategy
     And I add this commit to the "main" branch
       | MESSAGE                    | FILE NAME | FILE CONTENT                                    |
@@ -38,13 +38,13 @@ Feature: shipped the head branch of a synced stack with inddependent changes tha
       |          | git push --force-with-lease                                |
       |          | git branch -D branch-1                                     |
     And no rebase is now in progress
-    And all branches are now synchronized
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE                    | FILE NAME | FILE CONTENT                                                                        |
       | main     | local, origin | main commit                | file      | line 0\n\nline 1\n\nline 2                                                          |
       |          |               | branch-1 commit            | file      | line 0\n\nline 1: branch-1 content\n\nline 2                                        |
       |          |               | independent commit on main | file      | line 0: independent content\n\nline 1: branch-1 content\n\nline 2                   |
       | branch-2 | local, origin | branch-2 commit            | file      | line 0: independent content\n\nline 1: branch-1 content\n\nline 2: branch-2 content |
+    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"
