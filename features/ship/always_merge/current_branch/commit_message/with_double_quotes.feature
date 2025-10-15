@@ -31,7 +31,6 @@ Feature: commit message with double-quotes
       |        |               | with "double quotes" |
     And no lineage exists now
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
