@@ -49,6 +49,8 @@
     "features/sync/stack/rebase_sync_strategy/ancestor_shipped/main_also_updated/dependent_changes.feature",
     "features/sync/stack/rebase_sync_strategy/ancestor_shipped/parent_deletes_child_modifies_file/dependent_changes.feature",
     "features/sync/stack/rebase_sync_strategy/branch_types/observed.feature",
+    "features/sync/stack/rebase_sync_strategy/commit_added/dependent_changes.feature",
+    "features/sync/stack/rebase_sync_strategy/commit_added/independent_changes.feature",
     "vendor/**/*.feature"
   ],
   "record": true,
