@@ -2,7 +2,6 @@ Feature: sync the entire stack
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME       | TYPE      | PARENT | LOCATIONS     |
       | alpha      | feature   | main   | local, origin |
@@ -30,6 +29,7 @@ Feature: sync the entire stack
       |            | origin        | origin production commit |
       | qa         | local         | qa local commit          |
       |            | origin        | qa origin commit         |
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "alpha"
     When I run "git-town sync --stack --detached"
 
