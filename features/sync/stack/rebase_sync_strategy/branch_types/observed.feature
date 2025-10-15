@@ -19,19 +19,19 @@ Feature: syncing a stack that contains an observed branch
       | BRANCH   | COMMAND                                               |
       | observed | git fetch --prune --tags                              |
       |          | git -c rebase.updateRefs=false rebase origin/observed |
-    And all branches are now synchronized
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE    |
       | observed | local, origin | new commit |
+    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                     |
       | observed | git reset --hard {{ sha 'initial commit' }} |
-    And these commits exist now
-      | BRANCH   | LOCATION | MESSAGE    |
-      | observed | origin   | new commit |
     And the branches are now
       | REPOSITORY    | BRANCHES       |
       | local, origin | main, observed |
+    And these commits exist now
+      | BRANCH   | LOCATION | MESSAGE    |
+      | observed | origin   | new commit |

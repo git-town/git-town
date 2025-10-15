@@ -2,7 +2,6 @@ Feature: stacked changes where all ancestor branches aren't local
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
@@ -15,6 +14,7 @@ Feature: stacked changes where all ancestor branches aren't local
       | beta   | origin   | origin beta commit  |
       | gamma  | local    | local gamma commit  |
       |        | origin   | origin gamma commit |
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "gamma"
     And I ran "git branch -d main"
     And I ran "git branch -d alpha"
@@ -31,7 +31,6 @@ Feature: stacked changes where all ancestor branches aren't local
       |        | git -c rebase.updateRefs=false rebase origin/alpha |
       |        | git -c rebase.updateRefs=false rebase origin/main  |
       |        | git push --force-with-lease --force-if-includes    |
-    And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE             |
       | main   | origin        | origin main commit  |
@@ -42,6 +41,7 @@ Feature: stacked changes where all ancestor branches aren't local
       |        |               | origin beta commit  |
       |        |               | origin gamma commit |
       |        |               | local gamma commit  |
+    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"
@@ -49,9 +49,9 @@ Feature: stacked changes where all ancestor branches aren't local
       | BRANCH | COMMAND                                                                                    |
       | gamma  | git reset --hard {{ sha-initial 'local gamma commit' }}                                    |
       |        | git push --force-with-lease origin {{ sha-in-origin-initial 'origin gamma commit' }}:gamma |
-    And the initial lineage exists now
-    And the initial commits exist now
     And the branches are now
       | REPOSITORY | BRANCHES                 |
       | local      | gamma                    |
       | origin     | main, alpha, beta, gamma |
+    And the initial lineage exists now
+    And the initial commits exist now
