@@ -2,7 +2,6 @@ Feature: let the user resolve the merge conflict in an unsynced stack where the 
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME     | TYPE    | PARENT   | LOCATIONS     |
       | branch-1 | feature | main     | local, origin |
@@ -11,6 +10,7 @@ Feature: let the user resolve the merge conflict in an unsynced stack where the 
       | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                         |
       | branch-1 | local, origin | branch-1 commit | file      | line 1 changed by branch-1\n\nline 2 |
       | branch-2 | local         | branch-2 commit | file      | line 1\n\nline 2 changed by branch-2 |
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And origin ships the "branch-1" branch using the "squash-merge" ship-strategy
     And the current branch is "branch-2"
     When I run "git-town sync"
@@ -69,9 +69,9 @@ Feature: let the user resolve the merge conflict in an unsynced stack where the 
       | branch-2 | GIT_EDITOR=true git rebase --continue |
       |          | git push --force-with-lease           |
       |          | git branch -D branch-1                |
+    And no rebase is now in progress
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                             |
       | main     | local, origin | branch-1 commit | file      | line 1 changed by branch-1\n\nline 2                     |
       | branch-2 | local, origin | branch-2 commit | file      | line 1 changed by branch-1\n\nline 2 changed by branch-2 |
-    And no rebase is now in progress
     And all branches are now synchronized

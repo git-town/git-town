@@ -2,7 +2,6 @@ Feature: an ancestor in a stack with dependent changes was deleted remotely
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the commits
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT       |
       | main   | local, origin | main commit | file      | line 1 \n\n line 2 |
@@ -18,6 +17,7 @@ Feature: an ancestor in a stack with dependent changes was deleted remotely
     And the commits
       | BRANCH   | LOCATION | MESSAGE         | FILE NAME | FILE CONTENT                                           |
       | branch-2 | local    | branch-2 commit | file      | line 1: branch-1 changes \n\n line 2: branch-2 changes |
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And origin deletes the "branch-1" branch
     And the current branch is "branch-1" and the previous branch is "branch-2"
     When I run "git-town sync --stack"
@@ -32,11 +32,11 @@ Feature: an ancestor in a stack with dependent changes was deleted remotely
       |          | git push --force-with-lease                                |
       |          | git branch -D branch-1                                     |
     And no rebase is now in progress
-    And all branches are now synchronized
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                         |
       | main     | local, origin | main commit     | file      | line 1 \n\n line 2                   |
       | branch-2 | local, origin | branch-2 commit | file      | line 1 \n\n line 2: branch-2 changes |
+    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"
