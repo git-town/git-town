@@ -45,6 +45,7 @@
     "features/sync/stack/merge_sync_strategy/oldest_shipped/parent_and_child_modify_same_file/no_auto_resolve_cli.feature",
     "features/sync/stack/merge_sync_strategy/oldest_shipped/parent_and_child_modify_same_file/no_auto_resolve_config.feature",
     "features/sync/stack/merge_sync_strategy/oldest_shipped/parent_deletes_child_modifies_file/enabled.feature",
+    "features/sync/stack/rebase_sync_strategy/ancestor_deleted/dependent_changes.feature",
     "vendor/**/*.feature"
   ],
   "record": true,
