@@ -43,6 +43,7 @@
     "features/sync/stack/compress_sync_strategy/branches_gone/dependent_ancestor_shipped_and_related_change_on_main.feature",
     "features/sync/stack/merge_sync_strategy/branches_gone/dependent_ancestor_shipped_and_main_updates_same_location.feature",
     "features/sync/stack/merge_sync_strategy/oldest_shipped/parent_and_child_modify_same_file/no_auto_resolve_cli.feature",
+    "features/sync/stack/merge_sync_strategy/oldest_shipped/parent_and_child_modify_same_file/no_auto_resolve_config.feature",
     "vendor/**/*.feature"
   ],
   "record": true,
