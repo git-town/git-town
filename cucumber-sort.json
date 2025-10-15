@@ -53,6 +53,7 @@
     "features/sync/stack/rebase_sync_strategy/commit_added/independent_changes.feature",
     "features/sync/stack/rebase_sync_strategy/commit_amended/dependent_changes.feature",
     "features/sync/stack/rebase_sync_strategy/commit_amended/independent_changes.feature",
+    "features/sync/stack/rebase_sync_strategy/sibling_shipped/conflicting_changes.feature",
     "vendor/**/*.feature"
   ],
   "record": true,

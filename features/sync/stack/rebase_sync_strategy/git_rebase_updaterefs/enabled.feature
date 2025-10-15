@@ -2,7 +2,6 @@ Feature: stacked changes
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME   | TYPE    | PARENT | LOCATIONS     |
       | parent | feature | main   | local, origin |
@@ -15,8 +14,9 @@ Feature: stacked changes
       |        | origin   | origin parent commit |
       | child  | local    | local child commit   |
       |        | origin   | origin child commit  |
-    And the current branch is "child"
     And global Git setting "rebase.updateRefs" is "true"
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
+    And the current branch is "child"
     When I run "git-town sync"
 
   Scenario: result
@@ -36,7 +36,6 @@ Feature: stacked changes
       |        | git -c rebase.updateRefs=false rebase origin/child                             |
       |        | git -c rebase.updateRefs=false rebase --onto parent {{ sha 'initial commit' }} |
       |        | git push --force-with-lease --force-if-includes                                |
-    And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | origin main commit   |
@@ -45,6 +44,7 @@ Feature: stacked changes
       |        |               | local parent commit  |
       | child  | local, origin | origin child commit  |
       |        |               | local child commit   |
+    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

@@ -2,7 +2,6 @@ Feature: conflicting sibling branches, one gets shipped, the other syncs afterwa
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the commits
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT   |
       | main   | local, origin | main commit | file      | line 1\nline 2 |
@@ -14,6 +13,7 @@ Feature: conflicting sibling branches, one gets shipped, the other syncs afterwa
       | BRANCH   | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT                     |
       | branch-1 | local, origin | commit 1 | file      | line 1: branch-1 content\nline 2 |
       | branch-2 | local, origin | commit 2 | file      | line 1\nline 2: branch-2 content |
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And origin ships the "branch-1" branch using the "squash-merge" ship-strategy
     And the current branch is "branch-2"
     When I run "git-town sync"
