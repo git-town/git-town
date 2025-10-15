@@ -16,8 +16,8 @@ Feature: shipped the head branch of a synced stack with dependent changes
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | beta   | local, origin | beta commit | file      | beta content |
     # | beta   | local, origin | beta commit 2 | file_2      | beta content |
-    And the current branch is "beta"
     And origin ships the "alpha" branch using the "squash-merge" ship-strategy
+    And the current branch is "beta"
     When I run "git-town sync"
 
   Scenario: result
@@ -33,13 +33,13 @@ Feature: shipped the head branch of a synced stack with dependent changes
       |        | git add file                                      |
       |        | git commit --no-edit                              |
       |        | git push                                          |
-    And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                       | FILE NAME | FILE CONTENT  |
       | main   | local, origin | alpha commit                  | file      | alpha content |
       | beta   | local, origin | alpha commit                  | file      | alpha content |
       |        |               | beta commit                   | file      | beta content  |
       |        |               | Merge branch 'main' into beta |           |               |
+    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

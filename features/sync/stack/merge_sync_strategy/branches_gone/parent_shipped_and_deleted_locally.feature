@@ -11,8 +11,8 @@ Feature: syncing a branch whose parent was shipped and the local branch deleted 
       | parent | local, origin | parent commit |
       | child  | local, origin | child commit  |
     And origin ships the "parent" branch using the "squash-merge" ship-strategy
-    And I ran "git branch -d parent"
     And the current branch is "child"
+    And I ran "git branch -d parent"
     When I run "git-town sync"
 
   Scenario: result
