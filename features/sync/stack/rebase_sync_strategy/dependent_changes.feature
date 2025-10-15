@@ -2,7 +2,6 @@ Feature: stack that changes the same file in multiple commits per branch
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
@@ -17,8 +16,9 @@ Feature: stack that changes the same file in multiple commits per branch
       | BRANCH | LOCATION      | MESSAGE       | FILE NAME      | FILE CONTENT |
       | beta   | local, origin | beta commit 1 | favorite-pizza | pepperoni    |
       | beta   | local, origin | beta commit 2 | favorite-pizza | pineapple    |
-    And the current branch is "beta"
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And origin ships the "alpha" branch using the "squash-merge" ship-strategy
+    And the current branch is "beta"
     When I run "git-town sync"
 
   Scenario: result
@@ -33,12 +33,12 @@ Feature: stack that changes the same file in multiple commits per branch
       |        | git push --force-with-lease                             |
       |        | git branch -D alpha                                     |
     And no rebase is now in progress
-    And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        | FILE NAME      | FILE CONTENT |
       | main   | local, origin | alpha commit 1 | favorite-fruit | peach        |
       | beta   | local, origin | beta commit 1  | favorite-pizza | pepperoni    |
       |        |               | beta commit 2  | favorite-pizza | pineapple    |
+    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

@@ -2,7 +2,6 @@ Feature: syncing an already synced stack
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | branch-1 | feature | main   | local, origin |
@@ -15,6 +14,7 @@ Feature: syncing an already synced stack
     And the commits
       | BRANCH   | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | branch-2 | local, origin | commit 2 | file      | content 2    |
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "branch-2"
     When I run "git-town sync"
 
@@ -25,8 +25,8 @@ Feature: syncing an already synced stack
       |          | git checkout branch-1    |
       | branch-1 | git checkout branch-2    |
     And no rebase is now in progress
-    And all branches are now synchronized
     And the initial commits exist now
+    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"
