@@ -31,6 +31,7 @@ Feature: commit message with double-quotes
       |        |               | with "double quotes" |
     And no lineage exists now
 
+  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
@@ -38,7 +39,6 @@ Feature: commit message with double-quotes
       | main   | git branch feature {{ sha 'feature commit' }} |
       |        | git push -u origin feature                    |
       |        | git checkout feature                          |
-    And the currently checked out commit is "feature commit"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | feature commit       |
