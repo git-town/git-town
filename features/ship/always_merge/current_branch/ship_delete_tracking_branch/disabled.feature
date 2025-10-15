@@ -10,7 +10,7 @@ Feature: ship-delete-tracking-branch disabled when using the always-merge strate
       | feature | local, origin | feature commit |
     And Git setting "git-town.ship-delete-tracking-branch" is "false"
     And Git setting "git-town.ship-strategy" is "always-merge"
-    Given the current branch is "feature"
+    And the current branch is "feature"
     When I run "git-town ship" and close the editor
     And origin deletes the "feature" branch
 

@@ -9,7 +9,7 @@ Feature: partially undo an online ship using the fast-forward strategy after add
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
     And Git setting "git-town.ship-strategy" is "fast-forward"
-    Given the current branch is "feature"
+    And the current branch is "feature"
     When I run "git-town ship"
     And I add commit "additional commit" to the "main" branch
 
