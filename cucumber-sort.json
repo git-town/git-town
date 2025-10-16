@@ -79,7 +79,6 @@
     "^the origin is .*$",
     "^the home directory contains file \".*\" with content$",
     "^the committed configuration file:$",
-    "^Git setting \"git-town.perennial-branches\" is ",
     [
       "^the branches$",
       "^the commits$"
@@ -87,6 +86,7 @@
     "^I rename the \".*\" remote to .*$",
     "^Git Town is not configured$",
     "^the main branch is \".*\"$",
+    "^Git setting \"git-town.perennial-branches\" is ",
     "Git setting \".*\" is \".*\"$",
     "^offline mode is enabled$",
     "^Git Town parent setting for branch \".*\" is .*$",

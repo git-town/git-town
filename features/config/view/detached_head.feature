@@ -2,7 +2,6 @@ Feature: display configuration from Git metadata in detached head state
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.perennial-branches" is "qa staging"
     And the branches
       | NAME      | TYPE      | PARENT | LOCATIONS     |
       | branch    | feature   | main   | local         |
@@ -13,6 +12,7 @@ Feature: display configuration from Git metadata in detached head state
       | BRANCH | LOCATION | MESSAGE  |
       | branch | local    | commit 1 |
       |        | local    | commit 2 |
+    And Git setting "git-town.perennial-branches" is "qa staging"
     And Git setting "git-town.auto-sync" is "false"
     And Git setting "git-town.perennial-regex" is "^release-"
     And Git setting "git-town.contribution-regex" is "^renovate/"
