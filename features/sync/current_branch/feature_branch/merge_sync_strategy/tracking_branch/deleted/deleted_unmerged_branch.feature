@@ -23,10 +23,7 @@ Feature: sync a branch with unmerged commits whose tracking branch was deleted
       Branch "branch-2" was deleted at the remote but the local branch contains unshipped changes.
       """
     And the initial branches and lineage exist now
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE         |
-      | branch-1 | local, origin | branch-1 commit |
-      | branch-2 | local         | branch-2 commit |
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
