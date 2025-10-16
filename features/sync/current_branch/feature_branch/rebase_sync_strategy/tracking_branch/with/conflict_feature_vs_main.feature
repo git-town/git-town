@@ -32,11 +32,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       | BRANCH  | COMMAND            |
       | feature | git rebase --abort |
     And no rebase is now in progress
-    And these commits exist now
-      | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
-      | main    | local, origin | conflicting main commit    | conflicting_file | main content    |
-      | feature | local, origin | conflicting feature commit | conflicting_file | feature content |
-      |         |               | feature commit             | feature_file     | feature content |
+    And the initial commits exist now
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
