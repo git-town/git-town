@@ -54,6 +54,7 @@
     "features/sync/stack/rebase_sync_strategy/commit_amended/dependent_changes.feature",
     "features/sync/stack/rebase_sync_strategy/commit_amended/independent_changes.feature",
     "features/sync/stack/rebase_sync_strategy/sibling_shipped/conflicting_changes.feature",
+    "features/sync/stack/compress_sync_strategy/conflicts/parent_deleted_grandchild_conflict.feature",
     "features/walk/all/no_args.feature",
     "features/walk/failing_script/failing_script.feature",
     "features/walk/stack/no_args.feature",
