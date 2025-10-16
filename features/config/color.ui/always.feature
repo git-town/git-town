@@ -282,7 +282,6 @@ Feature: show the configuration
         auto-resolve phantom conflicts: no
       """
 
-  @this
   Scenario: all configured, with stacked changes
     Given the branches
       | NAME   | TYPE      | PARENT | LOCATIONS |
