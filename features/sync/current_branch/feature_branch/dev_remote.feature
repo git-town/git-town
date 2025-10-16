@@ -35,6 +35,4 @@ Feature: sync a branch to a custom dev-remote
       | REPOSITORY | BRANCHES     |
       | local      | main, branch |
       | fork       | main         |
-    And these commits exist now
-      | BRANCH | LOCATION | MESSAGE |
-      | branch | local    | commit  |
+    And the initial commits exist now
