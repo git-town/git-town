@@ -27,9 +27,7 @@ Feature: append a new feature branch to an existing feature branch with uncommit
         existing
           new
       """
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE         |
-      | existing | local, origin | existing commit |
+    And the initial commits exist now
     And the uncommitted file still exists
 
   Scenario: undo
