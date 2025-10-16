@@ -27,9 +27,7 @@ Feature: auto-propose new branches
         new
           old
       """
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE        |
-      | old    | local, origin | feature commit |
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
