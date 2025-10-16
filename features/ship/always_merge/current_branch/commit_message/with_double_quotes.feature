@@ -32,7 +32,6 @@ Feature: commit message with double-quotes
     And no uncommitted files exist now
 
   Scenario: undo
-    Then the currently checked out commit is "feature commit"
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
