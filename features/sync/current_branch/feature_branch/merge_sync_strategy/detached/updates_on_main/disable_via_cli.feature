@@ -23,9 +23,7 @@ Feature: sync the current feature branch with a tracking branch in detached mode
       |        | git checkout beta              |
       | beta   | git merge --no-edit --ff alpha |
       |        | git push                       |
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE     |
-      | main   | local, origin | main commit |
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
