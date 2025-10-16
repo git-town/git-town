@@ -35,12 +35,7 @@ Feature: detaching a branch in Spanish
         branch-1
         branch-2
       """
-    And these commits exist now
-      | BRANCH   | LOCATION | MESSAGE   |
-      | branch-1 | local    | commit 1a |
-      |          |          | commit 1b |
-      | branch-2 | local    | commit 2a |
-      |          |          | commit 2b |
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo" with these environment variables

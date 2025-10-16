@@ -41,7 +41,4 @@ Feature: the branch to delete has a deleted tracking branch
       | other  | git branch old {{ sha 'old commit' }} |
       |        | git checkout old                      |
     And the initial branches and lineage exist now
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE      |
-      | old    | local         | old commit   |
-      | other  | local, origin | other commit |
+    And the initial commits exist now
