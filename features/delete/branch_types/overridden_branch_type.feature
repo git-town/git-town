@@ -10,8 +10,8 @@ Feature: delete a branch that has an overridden branch type
       | BRANCH       | LOCATION      | MESSAGE             |
       | contribution | local, origin | contribution commit |
       | other        | local, origin | other commit        |
-    And the current branch is "contribution"
     And Git setting "git-town-branch.contribution.branchtype" is "feature"
+    And the current branch is "contribution"
     When I run "git-town delete"
 
   Scenario: result
