@@ -70,11 +70,5 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       | BRANCH | COMMAND            |
       | main   | git rebase --abort |
       |        | git checkout beta  |
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE                    | FILE NAME | FILE CONTENT   |
-      | main   | local         | independent commit on main | file      | main content 1 |
-      |        | origin        | alpha commit               | file      | alpha content  |
-      | alpha  | local         | alpha commit               | file      | alpha content  |
-      | beta   | local, origin | beta commit                | file      | beta content   |
-      |        | origin        | alpha commit               | file      | alpha content  |
+    And the initial commits exist now
     And the initial branches and lineage exist now

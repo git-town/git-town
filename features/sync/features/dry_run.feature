@@ -32,9 +32,4 @@ Feature: dry run
     When I run "git-town undo"
     Then Git Town runs no commands
     And the initial branches and lineage exist now
-    And these commits exist now
-      | BRANCH  | LOCATION | MESSAGE               |
-      | main    | local    | local main commit     |
-      |         | origin   | origin main commit    |
-      | feature | local    | local feature commit  |
-      |         | origin   | origin feature commit |
+    And the initial commits exist now
