@@ -3,13 +3,13 @@ Feature: proposing a branch that was deleted at the remote
 
   Background:
     Given a Git repo with origin
+    And the origin is "git@github.com:git-town/git-town.git"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And tool "open" is installed
-    And the current branch is "feature"
-    And the origin is "git@github.com:git-town/git-town.git"
     And origin deletes the "feature" branch
+    And the current branch is "feature"
+    And tool "open" is installed
     When I run "git-town propose"
 
   Scenario: a PR for this branch exists already
@@ -22,10 +22,10 @@ Feature: proposing a branch that was deleted at the remote
       """
       branch "feature" was deleted at the remote
       """
+    And no lineage exists now
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
-    And no lineage exists now
 
   Scenario: undo
     When I run "git-town undo"

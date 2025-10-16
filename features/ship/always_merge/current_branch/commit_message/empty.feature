@@ -9,8 +9,8 @@ Feature: abort the ship by empty commit message
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | local    | feature commit |
-    And the current branch is "feature"
     And Git setting "git-town.ship-strategy" is "always-merge"
+    And the current branch is "feature"
     When I run "git-town ship" and enter an empty commit message
 
   Scenario: result
@@ -25,8 +25,8 @@ Feature: abort the ship by empty commit message
       """
       aborted because merge exited with error
       """
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now
   #
   # NOTE: Cannot test undo here.
   # The Git Town command under test has not created an undoable runstate.

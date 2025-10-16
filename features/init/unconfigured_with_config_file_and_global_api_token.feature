@@ -3,8 +3,6 @@ Feature: don't ask for information already provided by the config file
 
   Scenario:
     Given a Git repo with origin
-    And Git Town is not configured
-    And global Git setting "git-town.github-token" is "123456"
     And the committed configuration file:
       """
       [branches]
@@ -44,6 +42,8 @@ Feature: don't ask for information already provided by the config file
       prototype-branches = "merge"
       perennial-branches = "ff-only"
       """
+    And Git Town is not configured
+    And global Git setting "git-town.github-token" is "123456"
     When I run "git-town init" and enter into the dialogs:
       | DIALOG             | KEYS  |
       | welcome            | enter |
@@ -52,7 +52,7 @@ Feature: don't ask for information already provided by the config file
       | enter all          | enter |
       | config storage     | enter |
     Then Git Town runs no commands
-    And there are still no perennial branches
+    And global Git setting "git-town.github-token" is still "123456"
     And local Git setting "git-town.dev-remote" still doesn't exist
     And local Git setting "git-town.new-branch-type" still doesn't exist
     And local Git setting "git-town.main-branch" still doesn't exist
@@ -61,7 +61,6 @@ Feature: don't ask for information already provided by the config file
     And local Git setting "git-town.contribution-regex" still doesn't exist
     And local Git setting "git-town.forge-type" still doesn't exist
     And local Git setting "git-town.github-token" still doesn't exist
-    And global Git setting "git-town.github-token" is still "123456"
     And local Git setting "git-town.share-new-branches" still doesn't exist
     And local Git setting "git-town.push-hook" still doesn't exist
     And local Git setting "git-town.stash" still doesn't exist
@@ -72,3 +71,4 @@ Feature: don't ask for information already provided by the config file
     And local Git setting "git-town.ship-strategy" still doesn't exist
     And local Git setting "git-town.ship-delete-tracking-branch" still doesn't exist
     And local Git setting "git-town.unknown-branch-type" still doesn't exist
+    And there are still no perennial branches

@@ -2,7 +2,6 @@ Feature: sync the current prototype branch
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME      | TYPE      | PARENT | LOCATIONS |
       | prototype | prototype | main   | local     |
@@ -11,6 +10,7 @@ Feature: sync the current prototype branch
       | main      | local    | main local commit  |
       |           | local    | main origin commit |
       | prototype | local    | local commit       |
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "prototype"
     When I run "git-town sync"
 
@@ -34,9 +34,9 @@ Feature: sync the current prototype branch
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                           |
       | prototype | git reset --hard {{ sha-initial 'local commit' }} |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE            |
       | main      | local, origin | main local commit  |
       |           |               | main origin commit |
       | prototype | local         | local commit       |
-    And the initial branches and lineage exist now

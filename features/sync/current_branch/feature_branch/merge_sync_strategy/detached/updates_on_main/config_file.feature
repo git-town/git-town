@@ -11,12 +11,7 @@ Feature: sync the current feature branch with a tracking branch in detached mode
       | main   | local, origin | main commit  |
       | alpha  | local, origin | alpha commit |
     And the current branch is "beta"
-    And the committed configuration file:
-      """
-      [sync]
-      detached = true
-      """
-    When I run "git-town sync"
+    When I run "git-town sync --detached"
 
   Scenario: result
     Then Git Town runs the commands
@@ -27,16 +22,15 @@ Feature: sync the current feature branch with a tracking branch in detached mode
       | beta   | git merge --no-edit --ff alpha |
       |        | git push                       |
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE                        |
-      | main   | local, origin | main commit                    |
-      | alpha  | local, origin | alpha commit                   |
-      | beta   | local, origin | Merge branch 'alpha' into beta |
+      | BRANCH | LOCATION      | MESSAGE      |
+      | main   | local, origin | main commit  |
+      | alpha  | local, origin | alpha commit |
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                                    |
-      | beta   | git reset --hard {{ sha-initial 'persisted config file' }} |
-      |        | git push --force-with-lease --force-if-includes            |
-    And the initial commits exist now
+      | BRANCH | COMMAND                                             |
+      | beta   | git reset --hard {{ sha-initial 'initial commit' }} |
+      |        | git push --force-with-lease --force-if-includes     |
     And the initial branches and lineage exist now
+    And the initial commits exist now

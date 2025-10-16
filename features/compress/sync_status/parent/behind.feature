@@ -21,8 +21,8 @@ Feature: compressing a branch when its parent received additional commits
       """
       branch "feature" is not in sync with its parent, please run "git town sync" and try again
       """
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now
   #
   # NOTE: Cannot test undo here.
   # The Git Town command under test has not created an undoable runstate.

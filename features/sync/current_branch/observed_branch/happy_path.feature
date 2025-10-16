@@ -29,5 +29,5 @@ Feature: sync the current observed branch
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                           |
       | observed | git reset --hard {{ sha-initial 'local commit' }} |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

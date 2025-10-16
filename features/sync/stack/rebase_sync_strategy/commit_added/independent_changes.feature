@@ -36,7 +36,6 @@ Feature: syncing a branch with independent changes that received a new commit si
       | branch-2 | git -c rebase.updateRefs=false rebase --onto branch-1 {{ sha 'branch-1 commit A' }} |
       |          | git push --force-with-lease --force-if-includes                                     |
     And no rebase is now in progress
-    And all branches are now synchronized
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE           | FILE NAME | FILE CONTENT                                                       |
       | main     | local, origin | main commit       | file      | line 0\n\nline 1\n\nline 2                                         |
@@ -44,6 +43,7 @@ Feature: syncing a branch with independent changes that received a new commit si
       |          |               | branch-1 commit B | file      | line 0\n\nline 1: branch-1 content B\n\nline 2                     |
       | branch-2 | local, origin | branch-2 commit A | file      | line 0\n\nline 1: branch-1 content B\n\nline 2: branch-2 content A |
       |          |               | branch-2 commit B | file      | line 0\n\nline 1: branch-1 content B\n\nline 2: branch-2 content B |
+    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

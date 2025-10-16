@@ -15,15 +15,15 @@ Feature: in a local repo
     Then Git Town runs the commands
       | BRANCH   | COMMAND             |
       | existing | git checkout -b new |
-    And these commits exist now
-      | BRANCH   | LOCATION | MESSAGE         |
-      | existing | local    | existing commit |
     And this lineage exists now
       """
       main
         existing
           new
       """
+    And these commits exist now
+      | BRANCH   | LOCATION | MESSAGE         |
+      | existing | local    | existing commit |
 
   Scenario: undo
     When I run "git-town undo"
@@ -31,5 +31,5 @@ Feature: in a local repo
       | BRANCH   | COMMAND               |
       | new      | git checkout existing |
       | existing | git branch -D new     |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

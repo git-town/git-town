@@ -12,9 +12,9 @@ Feature: a unknown branch type is set, the feature-regex matches
       |           | origin   | origin main commit      |
       | my-branch | local    | local my-branch commit  |
       |           | origin   | origin my-branch commit |
-    And the current branch is "my-branch"
     And local Git setting "git-town.feature-regex" is "my-.*"
     And local Git setting "git-town.unknown-branch-type" is "observed"
+    And the current branch is "my-branch"
     When I run "git-town sync"
 
   Scenario: result
@@ -44,10 +44,10 @@ Feature: a unknown branch type is set, the feature-regex matches
       | BRANCH    | COMMAND                                                                                    |
       | my-branch | git reset --hard {{ sha 'local my-branch commit' }}                                        |
       |           | git push --force-with-lease origin {{ sha-in-origin 'origin my-branch commit' }}:my-branch |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE                 |
       | main      | local, origin | origin main commit      |
       |           |               | local main commit       |
       | my-branch | local         | local my-branch commit  |
       |           | origin        | origin my-branch commit |
-    And the initial branches and lineage exist now

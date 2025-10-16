@@ -3,14 +3,14 @@ Feature: display all executed Git commands
 
   Scenario: verbose mode enabled
     Given a Git repo with origin
+    And the origin is "git@github.com:git-town/git-town.git"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And tool "open" is installed
-    And the current branch is "feature"
-    And the origin is "git@github.com:git-town/git-town.git"
-    And a proposal for this branch does not exist
     And local Git setting "color.ui" is "always"
+    And the current branch is "feature"
+    And a proposal for this branch does not exist
+    And tool "open" is installed
     When I run "git-town propose --verbose"
     Then Git Town runs the commands
       | BRANCH  | TYPE     | COMMAND                                                                                                                                                                                                                                                                                                                                          |

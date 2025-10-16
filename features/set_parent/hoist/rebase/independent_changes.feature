@@ -2,7 +2,6 @@ Feature: remove a branch and all its children from a stack with independent chan
 
   Background:
     Given a Git repo with origin
-    And local Git setting "git-town.sync-feature-strategy" is "rebase"
     And the commits
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT               |
       | main   | local, origin | main commit | file      | line 1\n\nline 2\n\nline 3 |
@@ -24,6 +23,7 @@ Feature: remove a branch and all its children from a stack with independent chan
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                     |
       | branch-3 | local, origin | branch-3 commit | file      | line 1: branch-1 changes\n\nline 2: branch-2 changes\n\nline 3: branch-3 changes |
+    And local Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "branch-2"
     When I run "git-town set-parent main"
 
@@ -42,12 +42,6 @@ Feature: remove a branch and all its children from a stack with independent chan
       """
       branch "branch-2" is now a child of "main"
       """
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                   |
-      | main     | local, origin | main commit     | file      | line 1\n\nline 2\n\nline 3                                     |
-      | branch-1 | local, origin | branch-1 commit | file      | line 1: branch-1 changes\n\nline 2\n\nline 3                   |
-      | branch-2 | local, origin | branch-2 commit | file      | line 1\n\nline 2: branch-2 changes\n\nline 3                   |
-      | branch-3 | local, origin | branch-3 commit | file      | line 1\n\nline 2: branch-2 changes\n\nline 3: branch-3 changes |
     And this lineage exists now
       """
       main
@@ -55,6 +49,12 @@ Feature: remove a branch and all its children from a stack with independent chan
         branch-2
           branch-3
       """
+    And these commits exist now
+      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                   |
+      | main     | local, origin | main commit     | file      | line 1\n\nline 2\n\nline 3                                     |
+      | branch-1 | local, origin | branch-1 commit | file      | line 1: branch-1 changes\n\nline 2\n\nline 3                   |
+      | branch-2 | local, origin | branch-2 commit | file      | line 1\n\nline 2: branch-2 changes\n\nline 3                   |
+      | branch-3 | local, origin | branch-3 commit | file      | line 1\n\nline 2: branch-2 changes\n\nline 3: branch-3 changes |
 
   Scenario: undo
     When I run "git-town undo"
@@ -66,5 +66,5 @@ Feature: remove a branch and all its children from a stack with independent chan
       | branch-3 | git reset --hard {{ sha 'branch-3 commit' }}    |
       |          | git push --force-with-lease --force-if-includes |
       |          | git checkout branch-2                           |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

@@ -38,14 +38,14 @@ Feature: handle conflicts between the main branch and its tracking branch
     When I run "git-town sync" and enter into the dialog:
       | DIALOG              | KEYS    |
       | unfinished runstate | 2 enter |
-    Then Git Town prints:
-      """
-      Handle unfinished command: undo
-      """
-    And Git Town runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND              |
       | main   | git rebase --abort   |
       |        | git checkout feature |
+    And Git Town prints:
+      """
+      Handle unfinished command: undo
+      """
     And no rebase is now in progress
     And the initial commits exist now
 

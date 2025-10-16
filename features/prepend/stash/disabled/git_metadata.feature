@@ -5,9 +5,9 @@ Feature: permanently disable stashing via Git metadata
     And the branches
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | old  | feature | main   | local, origin |
+    And Git setting "git-town.stash" is "false"
     And the current branch is "old"
     And an uncommitted file
-    And Git setting "git-town.stash" is "false"
     When I run "git-town prepend new"
 
   Scenario: result
@@ -31,5 +31,5 @@ Feature: permanently disable stashing via Git metadata
       | old    | git branch -D new           |
       |        | git stash pop               |
       |        | git restore --staged .      |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

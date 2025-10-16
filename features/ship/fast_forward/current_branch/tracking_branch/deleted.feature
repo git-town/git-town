@@ -8,9 +8,9 @@ Feature: shipping a branch whose tracking branch is deleted using the fast-forwa
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
-    And the current branch is "feature"
     And Git setting "git-town.ship-strategy" is "fast-forward"
     And origin deletes the "feature" branch
+    And the current branch is "feature"
     When I run "git-town ship" and enter "feature done" for the commit message
 
   Scenario: result

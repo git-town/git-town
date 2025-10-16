@@ -2,8 +2,8 @@ Feature: does not ship a non-existing branch
 
   Background:
     Given a Git repo with origin
-    And the current branch is "main"
     And Git setting "git-town.ship-strategy" is "squash-merge"
+    And the current branch is "main"
     When I run "git-town ship non-existing-branch"
 
   Scenario: result

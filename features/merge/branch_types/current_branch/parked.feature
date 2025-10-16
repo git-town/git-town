@@ -27,5 +27,5 @@ Feature: merging a parked branch
       | BRANCH | COMMAND                                       |
       | parent | git branch current {{ sha 'initial commit' }} |
       |        | git checkout current                          |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

@@ -47,12 +47,12 @@ Feature: dry-running the detach command
       |          | git push --force-with-lease                                    |
       |          | git checkout branch-2                                          |
       | branch-2 | git -c rebase.updateRefs=false rebase --onto main branch-1     |
+    And the initial lineage exists now
+    And the initial lineage exists now
     And the initial commits exist now
-    And the initial lineage exists now
-    And the initial lineage exists now
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

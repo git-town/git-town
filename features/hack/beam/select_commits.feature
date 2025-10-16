@@ -30,6 +30,12 @@ Feature: beam multiple commits onto a new feature branch
       |          | git push --force-with-lease --force-if-includes                                                         |
       |          | git checkout new                                                                                        |
     And no rebase is now in progress
+    And this lineage exists now
+      """
+      main
+        existing
+        new
+      """
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE     |
       | main     | origin        | main commit |
@@ -37,12 +43,6 @@ Feature: beam multiple commits onto a new feature branch
       |          |               | commit 3    |
       | new      | local         | commit 1    |
       |          |               | commit 4    |
-    And this lineage exists now
-      """
-      main
-        existing
-        new
-      """
 
   Scenario: undo
     When I run "git-town undo"
@@ -52,8 +52,8 @@ Feature: beam multiple commits onto a new feature branch
       | existing | git reset --hard {{ sha-initial 'commit 4' }}                          |
       |          | git push --force-with-lease origin {{ sha 'initial commit' }}:existing |
       |          | git branch -D new                                                      |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now
 
   Scenario: amend the beamed commit
     And I amend this commit

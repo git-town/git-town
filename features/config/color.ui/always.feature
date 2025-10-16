@@ -176,8 +176,8 @@ Feature: show the configuration
 
   Scenario: configured in both Git and config file
     Given the main branch is "git-main"
-    And Git setting "git-town.auto-sync" is "false"
     And Git setting "git-town.perennial-branches" is "git-perennial-1 git-perennial-2"
+    And Git setting "git-town.auto-sync" is "false"
     And Git setting "git-town.contribution-regex" is "^git-contribution-regex"
     And Git setting "git-town.observed-regex" is "^git-observed-regex"
     And Git setting "git-town.perennial-regex" is "^git-perennial-"
@@ -283,14 +283,14 @@ Feature: show the configuration
       """
 
   Scenario: all configured, with stacked changes
-    Given Git setting "git-town.perennial-branches" is "qa"
-    And the branches
-      | NAME   | TYPE    | PARENT | LOCATIONS |
-      | alpha  | feature | main   | local     |
-      | qa     | (none)  |        | local     |
-      | beta   | feature | main   | local     |
-      | child  | feature | alpha  | local     |
-      | hotfix | feature | qa     | local     |
+    Given the branches
+      | NAME   | TYPE      | PARENT | LOCATIONS |
+      | alpha  | feature   | main   | local     |
+      | qa     | perennial |        | local     |
+      | beta   | feature   | main   | local     |
+      | child  | feature   | alpha  | local     |
+      | hotfix | feature   | qa     | local     |
+    And Git setting "git-town.perennial-branches" is "qa"
     When I run "git-town config"
     Then Git Town prints:
       """

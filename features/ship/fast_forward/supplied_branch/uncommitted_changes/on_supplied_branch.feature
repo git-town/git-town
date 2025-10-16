@@ -5,8 +5,8 @@ Feature: does not ship a branch that has open changes
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And the current branch is "feature"
     And Git setting "git-town.ship-strategy" is "fast-forward"
+    And the current branch is "feature"
     And an uncommitted file
     When I run "git-town ship feature"
 

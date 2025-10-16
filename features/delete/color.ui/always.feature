@@ -12,8 +12,8 @@ Feature: delete a branch within a branch chain
       | alpha  | local, origin | alpha commit |
       | beta   | local, origin | beta commit  |
       | gamma  | local, origin | gamma commit |
-    And the current branch is "beta" and the previous branch is "alpha"
     And local Git setting "color.ui" is "always"
+    And the current branch is "beta" and the previous branch is "alpha"
     When I run "git-town delete"
 
   Scenario: result
@@ -27,7 +27,12 @@ Feature: delete a branch within a branch chain
       """
       branch "gamma" is now a child of "alpha"
       """
-    And no uncommitted files exist now
+    And this lineage exists now
+      """
+      main
+        alpha
+          gamma
+      """
     And the branches are now
       | REPOSITORY    | BRANCHES           |
       | local, origin | main, alpha, gamma |
@@ -35,12 +40,7 @@ Feature: delete a branch within a branch chain
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, origin | alpha commit |
       | gamma  | local, origin | gamma commit |
-    And this lineage exists now
-      """
-      main
-        alpha
-          gamma
-      """
+    And no uncommitted files exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -49,5 +49,5 @@ Feature: delete a branch within a branch chain
       | alpha  | git branch beta {{ sha 'beta commit' }} |
       |        | git push -u origin beta                 |
       |        | git checkout beta                       |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

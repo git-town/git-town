@@ -39,5 +39,5 @@ Feature: sync all feature branches in the presence of uncommitted changes
       |           | git stash -m "Git Town WIP" |
       |           | git stash pop               |
       |           | git restore --staged .      |
-    And the initial commits exist now
     And the uncommitted file still exists
+    And the initial commits exist now

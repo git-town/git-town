@@ -3,6 +3,7 @@ Feature: beam commits and uncommitted changes from a local branch onto a new fea
 
   Background:
     Given a Git repo with origin
+    And the origin is "git@github.com:git-town/git-town.git"
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS |
       | existing | feature | main   | local     |
@@ -14,7 +15,6 @@ Feature: beam commits and uncommitted changes from a local branch onto a new fea
       | existing | local    | commit 3    |
       | existing | local    | commit 4    |
     And the current branch is "existing"
-    And the origin is "git@github.com:git-town/git-town.git"
     And tool "open" is installed
     And an uncommitted file
     And I ran "git add ."
@@ -37,6 +37,12 @@ Feature: beam commits and uncommitted changes from a local branch onto a new fea
       |          | open https://github.com/git-town/git-town/compare/new?expand=1&title=uncommitted                        |
       |          | git checkout existing                                                                                   |
     And no rebase is now in progress
+    And this lineage exists now
+      """
+      main
+        existing
+        new
+      """
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE     |
       | main     | origin        | main commit |
@@ -45,12 +51,6 @@ Feature: beam commits and uncommitted changes from a local branch onto a new fea
       | new      | local, origin | uncommitted |
       |          |               | commit 1    |
       |          |               | commit 4    |
-    And this lineage exists now
-      """
-      main
-        existing
-        new
-      """
 
   Scenario: undo
     When I run "git-town undo"
@@ -59,5 +59,5 @@ Feature: beam commits and uncommitted changes from a local branch onto a new fea
       | existing | git reset --hard {{ sha-initial 'commit 4' }} |
       |          | git branch -D new                             |
       |          | git push origin :new                          |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

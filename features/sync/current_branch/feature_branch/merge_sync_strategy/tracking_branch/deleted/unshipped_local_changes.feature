@@ -35,9 +35,9 @@ Feature: sync a branch with unshipped local changes whose tracking branch was de
       | main    | git reset --hard {{ sha 'initial commit' }}           |
       |         | git checkout shipped                                  |
       | shipped | git reset --hard {{ sha-initial 'unshipped commit' }} |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH  | LOCATION | MESSAGE          |
       | main    | origin   | shipped commit   |
       | shipped | local    | shipped commit   |
       |         |          | unshipped commit |
-    And the initial branches and lineage exist now

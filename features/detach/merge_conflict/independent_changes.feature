@@ -2,7 +2,6 @@ Feature: detaching a branch from a stack with independent changes
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the commits
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT                                                 |
       | main   | local, origin | main commit | file      | line 0: main content\n\nline 1\n\nline 2\n\nline 3\n\nline 4 |
@@ -30,6 +29,7 @@ Feature: detaching a branch from a stack with independent changes
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                                                                         |
       | branch-4 | local, origin | branch-4 commit | file      | line 0: main content\n\nline 1: branch-1 content\n\nline 2: branch-2 content\n\nline 3: branch-3 content\n\nline 4: branch-4 content |
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "branch-2"
     When I run "git-town detach"
 
@@ -48,13 +48,6 @@ Feature: detaching a branch from a stack with independent changes
       |          | git checkout branch-2                                          |
       | branch-2 | git -c rebase.updateRefs=false rebase --onto main branch-1     |
       |          | git push --force-with-lease --force-if-includes                |
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                                                       |
-      | main     | local, origin | main commit     | file      | line 0: main content\n\nline 1\n\nline 2\n\nline 3\n\nline 4                                                       |
-      | branch-1 | local, origin | branch-1 commit | file      | line 0: main content\n\nline 1: branch-1 content\n\nline 2\n\nline 3\n\nline 4                                     |
-      | branch-3 | local, origin | branch-3 commit | file      | line 0: main content\n\nline 1: branch-1 content\n\nline 2\n\nline 3: branch-3 content\n\nline 4                   |
-      | branch-4 | local, origin | branch-4 commit | file      | line 0: main content\n\nline 1: branch-1 content\n\nline 2\n\nline 3: branch-3 content\n\nline 4: branch-4 content |
-      | branch-2 | local, origin | branch-2 commit | file      | line 0: main content\n\nline 1\n\nline 2: branch-2 content\n\nline 3\n\nline 4                                     |
     And this lineage exists now
       """
       main
@@ -63,6 +56,13 @@ Feature: detaching a branch from a stack with independent changes
             branch-4
         branch-2
       """
+    And these commits exist now
+      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                                                       |
+      | main     | local, origin | main commit     | file      | line 0: main content\n\nline 1\n\nline 2\n\nline 3\n\nline 4                                                       |
+      | branch-1 | local, origin | branch-1 commit | file      | line 0: main content\n\nline 1: branch-1 content\n\nline 2\n\nline 3\n\nline 4                                     |
+      | branch-3 | local, origin | branch-3 commit | file      | line 0: main content\n\nline 1: branch-1 content\n\nline 2\n\nline 3: branch-3 content\n\nline 4                   |
+      | branch-4 | local, origin | branch-4 commit | file      | line 0: main content\n\nline 1: branch-1 content\n\nline 2\n\nline 3: branch-3 content\n\nline 4: branch-4 content |
+      | branch-2 | local, origin | branch-2 commit | file      | line 0: main content\n\nline 1\n\nline 2: branch-2 content\n\nline 3\n\nline 4                                     |
 
   Scenario: undo
     When I run "git-town undo"
@@ -77,5 +77,5 @@ Feature: detaching a branch from a stack with independent changes
       | branch-4 | git reset --hard {{ sha 'branch-4 commit' }}    |
       |          | git push --force-with-lease --force-if-includes |
       |          | git checkout branch-2                           |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

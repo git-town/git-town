@@ -2,7 +2,6 @@ Feature: with upstream repo
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And an upstream repo
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
@@ -11,6 +10,7 @@ Feature: with upstream repo
       | BRANCH  | LOCATION | MESSAGE         |
       | main    | upstream | upstream commit |
       | feature | local    | local commit    |
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "feature"
     When I run "git-town sync"
 
@@ -38,8 +38,8 @@ Feature: with upstream repo
       | BRANCH  | COMMAND                                                               |
       | feature | git reset --hard {{ sha-initial 'local commit' }}                     |
       |         | git push --force-with-lease origin {{ sha 'initial commit' }}:feature |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE         |
       | main    | local, origin, upstream | upstream commit |
       | feature | local                   | local commit    |
-    And the initial branches and lineage exist now

@@ -41,9 +41,9 @@ Feature: compress the commits on an entire stack when at the stack root
       | BRANCH | LOCATION      | MESSAGE |
       | alpha  | local, origin | alpha 1 |
       | beta   | local, origin | beta 1  |
-    And the uncommitted file still exists
     And file "alpha_1" still has content "alpha 1"
     And file "alpha_2" still has content "alpha 2"
+    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -59,5 +59,5 @@ Feature: compress the commits on an entire stack when at the stack root
       |        | git checkout alpha                              |
       | alpha  | git stash pop                                   |
       |        | git restore --staged .                          |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

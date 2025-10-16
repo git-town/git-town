@@ -2,15 +2,15 @@ Feature: cannot ship a branch without connector
 
   Background:
     Given a Git repo with origin
+    And the origin is "git@unknown.com:something/whatever.git"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
-    And the current branch is "feature"
     And Git setting "git-town.ship-strategy" is "api"
-    And the origin is "git@unknown.com:something/whatever.git"
+    And the current branch is "feature"
     And a proposal for this branch does not exist
     When I run "git-town ship -m done"
 

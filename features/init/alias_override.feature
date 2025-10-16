@@ -3,8 +3,8 @@ Feature: override an existing Git alias
 
   Background:
     Given a Git repo with origin
-    And I ran "git config --global alias.append checkout"
     And global Git setting "git-town.unknown-branch-type" is "feature"
+    And I ran "git config --global alias.append checkout"
     When I run "git-town init" and enter into the dialogs:
       | DIALOG             | KEYS       |
       | welcome            | enter      |

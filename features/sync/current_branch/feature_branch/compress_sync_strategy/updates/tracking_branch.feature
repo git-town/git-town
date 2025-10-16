@@ -2,7 +2,6 @@ Feature: sync a feature branch with new commits on the tracking branch
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
@@ -16,8 +15,9 @@ Feature: sync a feature branch with new commits on the tracking branch
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | beta   | local, origin | beta commit | beta_file | content 2    |
       | beta   | origin        | new commit  | beta_file | content 3    |
-    And wait 1 second to ensure new Git timestamps
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the current branch is "beta"
+    And wait 1 second to ensure new Git timestamps
     When I run "git-town sync --detached"
 
   Scenario: result
@@ -41,5 +41,5 @@ Feature: sync a feature branch with new commits on the tracking branch
       | BRANCH | COMMAND                                                                  |
       | beta   | git reset --hard {{ sha-initial 'beta commit' }}                         |
       |        | git push --force-with-lease origin {{ sha-in-origin 'new commit' }}:beta |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

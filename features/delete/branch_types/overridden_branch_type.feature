@@ -10,8 +10,8 @@ Feature: delete a branch that has an overridden branch type
       | BRANCH       | LOCATION      | MESSAGE             |
       | contribution | local, origin | contribution commit |
       | other        | local, origin | other commit        |
-    And the current branch is "contribution"
     And Git setting "git-town-branch.contribution.branchtype" is "feature"
+    And the current branch is "contribution"
     When I run "git-town delete"
 
   Scenario: result
@@ -22,17 +22,17 @@ Feature: delete a branch that has an overridden branch type
       |              | git checkout other            |
       | other        | git branch -D contribution    |
     And Git setting "git-town-branch.contribution.branchtype" now doesn't exist
+    And this lineage exists now
+      """
+      main
+        other
+      """
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
       | other  | local, origin | other commit |
-    And this lineage exists now
-      """
-      main
-        other
-      """
 
   Scenario: undo
     When I run "git-town undo"
@@ -42,5 +42,5 @@ Feature: delete a branch that has an overridden branch type
       |        | git push -u origin contribution                         |
       |        | git checkout contribution                               |
     And Git setting "git-town-branch.contribution.branchtype" is now "feature"
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

@@ -29,6 +29,7 @@ Feature: disable pushing through the CLI
       |        | git checkout child                                |
       | child  | git merge --no-edit --ff parent                   |
       |        | git merge --no-edit --ff origin/child             |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                                                  |
       | main   | local, origin | origin main commit                                       |
@@ -41,7 +42,6 @@ Feature: disable pushing through the CLI
       |        |               | Merge branch 'parent' into child                         |
       |        | local, origin | origin child commit                                      |
       |        | local         | Merge remote-tracking branch 'origin/child' into child   |
-    And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -53,5 +53,5 @@ Feature: disable pushing through the CLI
       |        | git checkout parent                              |
       | parent | git reset --hard {{ sha 'local parent commit' }} |
       |        | git checkout child                               |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

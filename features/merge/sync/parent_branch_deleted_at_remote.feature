@@ -14,8 +14,8 @@ Feature: merging a branch whose parent was deleted remotely
     And the commits
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | beta   | local, origin | beta commit | beta-file | beta content |
-    And the current branch is "beta"
     And origin deletes the "alpha" branch
+    And the current branch is "beta"
     When I run "git-town merge"
 
   Scenario: result
@@ -26,8 +26,8 @@ Feature: merging a branch whose parent was deleted remotely
       """
       branch "alpha" is not in sync with its parent, please run "git town sync" and try again
       """
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now
   #
   # NOTE: Cannot test undo here.
   # The Git Town command under test has not created an undoable runstate.

@@ -2,7 +2,6 @@ Feature: sync a feature branch with multiple commits using the "compress" sync s
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
@@ -13,8 +12,9 @@ Feature: sync a feature branch with multiple commits using the "compress" sync s
       |        |               | alpha commit 2 | alpha_file | content 2    |
       | beta   | local, origin | beta commit 1  | beta_file  | content 3    |
       |        |               | beta commit 2  | beta_file  | content 4    |
-    And wait 1 second to ensure new Git timestamps
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the current branch is "beta"
+    And wait 1 second to ensure new Git timestamps
     When I run "git-town sync"
 
   Scenario: result
@@ -45,5 +45,5 @@ Feature: sync a feature branch with multiple commits using the "compress" sync s
       |        | git checkout beta                                   |
       | beta   | git reset --hard {{ sha-initial 'beta commit 2' }}  |
       |        | git push --force-with-lease --force-if-includes     |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

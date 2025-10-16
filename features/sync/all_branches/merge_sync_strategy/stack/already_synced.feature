@@ -43,12 +43,12 @@ Feature: sync a stack making independent changes
       | gamma  | git checkout delta       |
       | delta  | git checkout main        |
       | main   | git push --tags          |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

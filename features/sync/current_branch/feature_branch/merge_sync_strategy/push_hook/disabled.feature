@@ -11,8 +11,8 @@ Feature: push-hook setting set to "false"
       |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
-    And the current branch is "feature"
     And Git setting "git-town.push-hook" is "false"
+    And the current branch is "feature"
     When I run "git-town sync"
 
   Scenario: result
@@ -42,10 +42,10 @@ Feature: push-hook setting set to "false"
       | BRANCH  | COMMAND                                                                                |
       | feature | git reset --hard {{ sha 'local feature commit' }}                                      |
       |         | git push --force-with-lease origin {{ sha-in-origin 'origin feature commit' }}:feature |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | origin main commit    |
       |         |               | local main commit     |
       | feature | local         | local feature commit  |
       |         | origin        | origin feature commit |
-    And the initial branches and lineage exist now

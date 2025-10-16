@@ -9,10 +9,10 @@ Feature: propose uncommitted changes via a separate parent branch, let Git ask f
       | BRANCH   | LOCATION | MESSAGE         |
       | main     | origin   | main commit     |
       | existing | local    | existing commit |
+    And local Git setting "color.ui" is "always"
     And the current branch is "existing"
     And an uncommitted file "new_file" with content "new content"
     And I ran "git add new_file"
-    And local Git setting "color.ui" is "always"
     When I run "git-town prepend new --commit" and enter "unrelated idea" for the commit message
 
   Scenario: result
@@ -21,22 +21,22 @@ Feature: propose uncommitted changes via a separate parent branch, let Git ask f
       | existing | git checkout -b new main |
       | new      | git commit               |
       |          | git checkout existing    |
-    And these commits exist now
-      | BRANCH   | LOCATION | MESSAGE         |
-      | main     | origin   | main commit     |
-      | new      | local    | unrelated idea  |
-      | existing | local    | existing commit |
     And this lineage exists now
       """
       main
         new
           existing
       """
+    And these commits exist now
+      | BRANCH   | LOCATION | MESSAGE         |
+      | main     | origin   | main commit     |
+      | new      | local    | unrelated idea  |
+      | existing | local    | existing commit |
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH   | COMMAND           |
       | existing | git branch -D new |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

@@ -24,10 +24,10 @@ Feature: sync a branch whose tracking branch was shipped
       """
       deleted branch "feature"
       """
+    And no lineage exists now
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
-    And no lineage exists now
 
   Scenario: undo
     When I run "git-town undo"

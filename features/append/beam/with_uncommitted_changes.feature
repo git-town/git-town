@@ -34,6 +34,12 @@ Feature: beam a commit and uncommitted changes onto a new child branch
       | new      | git -c rebase.updateRefs=false rebase existing                                                          |
       |          | git checkout existing                                                                                   |
     And no rebase is now in progress
+    And this lineage exists now
+      """
+      main
+        existing
+          new
+      """
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE     |
       | main     | origin        | main commit |
@@ -43,12 +49,6 @@ Feature: beam a commit and uncommitted changes onto a new child branch
       | new      | local         | commit 1    |
       |          |               | commit 4    |
       |          |               | uncommitted |
-    And this lineage exists now
-      """
-      main
-        existing
-          new
-      """
 
   Scenario: undo
     When I run "git-town undo"
@@ -57,5 +57,5 @@ Feature: beam a commit and uncommitted changes onto a new child branch
       | existing | git reset --hard {{ sha-initial 'commit 5' }}   |
       |          | git push --force-with-lease --force-if-includes |
       |          | git branch -D new                               |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

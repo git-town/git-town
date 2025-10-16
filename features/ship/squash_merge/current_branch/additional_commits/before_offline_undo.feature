@@ -5,12 +5,12 @@ Feature: undoing an offline ship with additional commits to main
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And the current branch is "feature"
-    And offline mode is enabled
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
     And Git setting "git-town.ship-strategy" is "squash-merge"
+    And offline mode is enabled
+    And the current branch is "feature"
     When I run "git-town ship -m 'feature done'"
 
   Scenario: add commit and undo
@@ -28,9 +28,9 @@ Feature: undoing an offline ship with additional commits to main
       """
       it received additional commits in the meantime
       """
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE           |
       | main    | local         | feature done      |
       |         |               | additional commit |
       | feature | local, origin | feature commit    |
-    And the initial branches and lineage exist now

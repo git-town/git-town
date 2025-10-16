@@ -2,7 +2,6 @@ Feature: disable auto-resolution of phantom merge conflicts via CLI flag when pa
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "merge"
     And the commits
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT   |
       | main   | local, origin | main commit | file      | line 1\nline 2 |
@@ -18,6 +17,7 @@ Feature: disable auto-resolution of phantom merge conflicts via CLI flag when pa
     And the commits
       | BRANCH   | LOCATION | MESSAGE         | FILE NAME | FILE CONTENT                                           |
       | branch-2 | local    | branch-2 commit | file      | line 1 changed by branch-1\nline 2 changed by branch-2 |
+    And Git setting "git-town.sync-feature-strategy" is "merge"
     And origin ships the "branch-1" branch using the "squash-merge" ship-strategy
     And the current branch is "branch-2"
     When I run "git-town sync --no-auto-resolve"
@@ -35,6 +35,7 @@ Feature: disable auto-resolution of phantom merge conflicts via CLI flag when pa
       """
       CONFLICT (content): Merge conflict in file
       """
+    And a merge is now in progress
     And file "file" now has content:
       """
       line 1 changed by branch-1
@@ -44,7 +45,6 @@ Feature: disable auto-resolution of phantom merge conflicts via CLI flag when pa
       line 2
       >>>>>>> main
       """
-    And a merge is now in progress
 
   Scenario: undo
     When I run "git-town undo"
@@ -55,6 +55,7 @@ Feature: disable auto-resolution of phantom merge conflicts via CLI flag when pa
       | main     | git reset --hard {{ sha 'main commit' }}                |
       |          | git branch branch-1 {{ sha-initial 'branch-1 commit' }} |
       |          | git checkout branch-2                                   |
+    And no merge is now in progress
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                           |
       | main     | local, origin | main commit     | file      | line 1\nline 2                                         |
@@ -62,7 +63,6 @@ Feature: disable auto-resolution of phantom merge conflicts via CLI flag when pa
       | branch-1 | local         | branch-1 commit | file      | line 1 changed by branch-1\nline 2                     |
       | branch-2 | local         | branch-2 commit | file      | line 1 changed by branch-1\nline 2 changed by branch-2 |
       |          | origin        | branch-1 commit | file      | line 1 changed by branch-1\nline 2                     |
-    And no merge is now in progress
 
   Scenario: run without resolving the conflicts
     When I run "git-town continue"

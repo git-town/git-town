@@ -2,7 +2,6 @@ Feature: sync a feature branch that is already compressed using the "compress" s
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
@@ -15,8 +14,9 @@ Feature: sync a feature branch that is already compressed using the "compress" s
     And the commits
       | BRANCH | LOCATION      | MESSAGE       |
       | beta   | local, origin | beta commit 1 |
-    And wait 1 second to ensure new Git timestamps
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the current branch is "beta"
+    And wait 1 second to ensure new Git timestamps
     When I run "git-town sync --detached"
 
   Scenario: result
@@ -33,5 +33,5 @@ Feature: sync a feature branch that is already compressed using the "compress" s
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

@@ -15,13 +15,13 @@ Feature: already existing remote branch
       """
       there is already a branch "existing" at the "origin" remote
       """
-    And no commits exist now
     And the initial branches and lineage exist now
+    And no commits exist now
     And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the initial commits exist now
     And the initial branches and lineage exist now
     And the uncommitted file still exists
+    And the initial commits exist now

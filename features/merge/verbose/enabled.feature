@@ -2,7 +2,6 @@ Feature: merging a branch verbosely
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "merge"
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
@@ -15,6 +14,7 @@ Feature: merging a branch verbosely
     And the commits
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | beta   | local, origin | beta commit | beta-file | beta content |
+    And Git setting "git-town.sync-feature-strategy" is "merge"
     And the current branch is "beta"
     When I run "git-town merge -v"
 
@@ -82,5 +82,5 @@ Feature: merging a branch verbosely
       |        | git checkout beta                                                                                                                                                                                                                                                                                                                                |
       |        | git config git-town-branch.beta.branchtype feature                                                                                                                                                                                                                                                                                               |
       |        | git config git-town-branch.beta.parent alpha                                                                                                                                                                                                                                                                                                     |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

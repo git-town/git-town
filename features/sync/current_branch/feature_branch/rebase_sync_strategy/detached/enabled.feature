@@ -2,7 +2,6 @@ Feature: detached sync the current feature branch using the "rebase" feature syn
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
@@ -12,6 +11,7 @@ Feature: detached sync the current feature branch using the "rebase" feature syn
       |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "feature"
     When I run "git-town sync --detached"
 
@@ -35,5 +35,5 @@ Feature: detached sync the current feature branch using the "rebase" feature syn
       | BRANCH  | COMMAND                                                                                        |
       | feature | git reset --hard {{ sha-initial 'local feature commit' }}                                      |
       |         | git push --force-with-lease origin {{ sha-in-origin-initial 'origin feature commit' }}:feature |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

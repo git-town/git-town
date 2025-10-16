@@ -25,8 +25,8 @@ Feature: sync the main branch
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | origin commit |
       |        |               | local commit  |
-    And the initial branches and lineage exist now

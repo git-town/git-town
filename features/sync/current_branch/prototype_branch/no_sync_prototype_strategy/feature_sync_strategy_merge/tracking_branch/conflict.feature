@@ -35,8 +35,8 @@ Feature: handle conflicts between the current prototype branch and its tracking 
       | BRANCH    | COMMAND           |
       | prototype | git merge --abort |
     And no rebase is now in progress
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
@@ -53,12 +53,12 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     Then Git Town runs the commands
       | BRANCH    | COMMAND              |
       | prototype | git commit --no-edit |
+    And no rebase is now in progress
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE                                                        |
       | prototype | local         | conflicting local commit                                       |
       |           | local, origin | conflicting origin commit                                      |
       |           | local         | Merge remote-tracking branch 'origin/prototype' into prototype |
-    And no rebase is now in progress
     And these committed files exist now
       | BRANCH    | NAME             | CONTENT          |
       | prototype | conflicting_file | resolved content |
@@ -70,12 +70,12 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     Then Git Town runs the commands
       | BRANCH    | COMMAND              |
       | prototype | git commit --no-edit |
+    And no rebase is now in progress
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE                                                        |
       | prototype | local         | conflicting local commit                                       |
       |           | local, origin | conflicting origin commit                                      |
       |           | local         | Merge remote-tracking branch 'origin/prototype' into prototype |
-    And no rebase is now in progress
     And these committed files exist now
       | BRANCH    | NAME             | CONTENT          |
       | prototype | conflicting_file | resolved content |

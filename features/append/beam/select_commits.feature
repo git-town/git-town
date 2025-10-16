@@ -3,7 +3,6 @@ Feature: beam multiple commits onto a new child branch
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
@@ -14,6 +13,7 @@ Feature: beam multiple commits onto a new child branch
       | existing | local    | commit 2    |
       | existing | local    | commit 3    |
       | existing | local    | commit 4    |
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "existing"
     When I run "git-town append new --beam" and enter into the dialog:
       | DIALOG          | KEYS                             |
@@ -30,6 +30,12 @@ Feature: beam multiple commits onto a new child branch
       |          | git checkout new                                                                                        |
       | new      | git -c rebase.updateRefs=false rebase existing                                                          |
     And no rebase is now in progress
+    And this lineage exists now
+      """
+      main
+        existing
+          new
+      """
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE     |
       | main     | origin        | main commit |
@@ -37,12 +43,6 @@ Feature: beam multiple commits onto a new child branch
       |          |               | commit 3    |
       | new      | local         | commit 1    |
       |          |               | commit 4    |
-    And this lineage exists now
-      """
-      main
-        existing
-          new
-      """
 
   Scenario: undo
     When I run "git-town undo"
@@ -52,8 +52,8 @@ Feature: beam multiple commits onto a new child branch
       | existing | git reset --hard {{ sha-initial 'commit 4' }}                          |
       |          | git push --force-with-lease origin {{ sha 'initial commit' }}:existing |
       |          | git branch -D new                                                      |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now
 
   Scenario: amend the beamed commit
     And I amend this commit

@@ -15,16 +15,16 @@ Feature: making multiple branches feature branches
       """
       branch "contribution" is now a feature branch
       """
-    And branch "contribution" now has type "feature"
     And Git Town prints:
       """
       branch "observed" is now a feature branch
       """
-    And branch "observed" now has type "feature"
     And Git Town prints:
       """
       branch "parked" is now a feature branch
       """
+    And branch "contribution" now has type "feature"
+    And branch "observed" now has type "feature"
     And branch "parked" now has type "feature"
 
   Scenario: undo

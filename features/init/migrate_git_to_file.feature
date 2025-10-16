@@ -77,8 +77,6 @@ Feature: migrate existing configuration in Git metadata to a config file
       | git config --unset git-town.sync-upstream               |
       | git config --unset git-town.sync-tags                   |
       | git config --unset git-town.unknown-branch-type         |
-    And the main branch is now not set
-    And there are now no perennial branches
     And local Git setting "git-town.auto-sync" now doesn't exist
     And local Git setting "git-town.forge-type" now doesn't exist
     And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
@@ -129,11 +127,12 @@ Feature: migrate existing configuration in Git metadata to a config file
       tags = false
       upstream = true
       """
+    And the main branch is now not set
+    And there are now no perennial branches
 
   Scenario: undo
     When I run "git-town undo"
-    Then the main branch is now "main"
-    And local Git setting "git-town.auto-sync" is now "false"
+    Then local Git setting "git-town.auto-sync" is now "false"
     And local Git setting "git-town.dev-remote" is now "fork"
     And local Git setting "git-town.new-branch-type" is now "prototype"
     And local Git setting "git-town.perennial-regex" is now "release-.*"
@@ -151,3 +150,4 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.sync-perennial-strategy" is now "rebase"
     And local Git setting "git-town.sync-upstream" is now "true"
     And local Git setting "git-town.sync-tags" is now "false"
+    And the main branch is now "main"

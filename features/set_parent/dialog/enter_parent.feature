@@ -13,11 +13,11 @@ Feature: select the new parent via a visual dialog
       | parent branch for "branch-2" | down enter |
 
   Scenario: result
-    Then Git Town prints:
+    Then Git Town runs no commands
+    And Git Town prints:
       """
       branch "branch-2" is now a child of "branch-1"
       """
-    And Git Town runs no commands
     And this lineage exists now
       """
       main
@@ -28,5 +28,5 @@ Feature: select the new parent via a visual dialog
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

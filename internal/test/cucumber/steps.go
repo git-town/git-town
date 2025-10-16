@@ -739,7 +739,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.Reload()
 	})
 
-	sc.Step(`^I ran "(.+)"$`, func(ctx context.Context, command string) error {
+	sc.Step(`^I ran "([^"]+)"$`, func(ctx context.Context, command string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		runCommand(state, command, false)
 		if exitCode, hasExitCode := state.runExitCode.Get(); hasExitCode {
@@ -758,6 +758,21 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if exitCode, hasExitCode := state.runExitCode.Get(); hasExitCode {
 			if exitCode == 0 {
 				return errors.New("this command should fail")
+			}
+		}
+		return nil
+	})
+
+	sc.Step(`^I ran "([^"]+)" on branch "([^"]+)"$`, func(ctx context.Context, command string, branch string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		devRepo.CheckoutBranch(gitdomain.LocalBranchName(branch))
+		runCommand(state, command, false)
+		if exitCode, hasExitCode := state.runExitCode.Get(); hasExitCode {
+			if exitCode != 0 {
+				fmt.Println("Output from failed command:")
+				fmt.Println(state.runOutput.GetOrZero())
+				return fmt.Errorf("unexpected exit code: %d", exitCode)
 			}
 		}
 		return nil

@@ -43,6 +43,14 @@ Feature: detaching a local branch
       | branch-4 | git -c rebase.updateRefs=false rebase --onto branch-3 branch-2 |
       |          | git checkout branch-2                                          |
       | branch-2 | git -c rebase.updateRefs=false rebase --onto main branch-1     |
+    And this lineage exists now
+      """
+      main
+        branch-1
+          branch-3
+            branch-4
+        branch-2
+      """
     And these commits exist now
       | BRANCH   | LOCATION | MESSAGE   |
       | branch-1 | local    | commit 1a |
@@ -53,14 +61,6 @@ Feature: detaching a local branch
       |          |          | commit 4b |
       | branch-2 | local    | commit 2a |
       |          |          | commit 2b |
-    And this lineage exists now
-      """
-      main
-        branch-1
-          branch-3
-            branch-4
-        branch-2
-      """
 
   Scenario: undo
     When I run "git-town undo"
@@ -72,5 +72,5 @@ Feature: detaching a local branch
       |          | git checkout branch-4                  |
       | branch-4 | git reset --hard {{ sha 'commit 4b' }} |
       |          | git checkout branch-2                  |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

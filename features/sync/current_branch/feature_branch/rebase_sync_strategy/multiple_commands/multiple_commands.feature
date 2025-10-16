@@ -30,15 +30,15 @@ Feature: running a sync after running another Git Town command
       | parent | git push --force-with-lease --force-if-includes |
       |        | git checkout child                              |
       | child  | git push --force-with-lease --force-if-includes |
+    And the branches are now
+      | REPOSITORY | BRANCHES                 |
+      | local      | main, child, new, parent |
+      | origin     | main, child, parent      |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | main commit   |
       | parent | local, origin | parent commit |
       | child  | local, origin | child commit  |
-    And the branches are now
-      | REPOSITORY | BRANCHES                 |
-      | local      | main, child, new, parent |
-      | origin     | main, child, parent      |
 
   Scenario: undo
     When I run "git-town undo"
@@ -46,13 +46,13 @@ Feature: running a sync after running another Git Town command
       | BRANCH | COMMAND                                                            |
       | child  | git push --force-with-lease origin {{ sha 'parent commit' }}:child |
       |        | git push --force-with-lease origin {{ sha 'main commit' }}:parent  |
+    And the branches are now
+      | REPOSITORY | BRANCHES                 |
+      | local      | main, child, new, parent |
+      | origin     | main, child, parent      |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | main commit   |
       | parent | local         | parent commit |
       | child  | local         | child commit  |
       |        | origin        | parent commit |
-    And the branches are now
-      | REPOSITORY | BRANCHES                 |
-      | local      | main, child, new, parent |
-      | origin     | main, child, parent      |

@@ -2,7 +2,6 @@ Feature: using the "compress" strategy, sync a branch whose parent was shipped
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the branches
       | NAME   | TYPE    | PARENT | LOCATIONS     |
       | parent | feature | main   | local, origin |
@@ -12,6 +11,7 @@ Feature: using the "compress" strategy, sync a branch whose parent was shipped
       | parent | local, origin | parent commit  |
       | child  | local, origin | child commit 1 |
       | child  | local, origin | child commit 2 |
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And origin ships the "parent" branch using the "squash-merge" ship-strategy
     And the current branch is "child"
     And wait 1 second to ensure new Git timestamps
@@ -33,14 +33,14 @@ Feature: using the "compress" strategy, sync a branch whose parent was shipped
       """
       deleted branch "parent"
       """
-    And the branches are now
-      | REPOSITORY    | BRANCHES    |
-      | local, origin | main, child |
     And this lineage exists now
       """
       main
         child
       """
+    And the branches are now
+      | REPOSITORY    | BRANCHES    |
+      | local, origin | main, child |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        |
       | main   | local, origin | parent commit  |

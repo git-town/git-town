@@ -2,7 +2,6 @@ Feature: sync a grandchild feature branch using the "compress" strategy
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the branches
       | NAME   | TYPE    | PARENT | LOCATIONS     |
       | parent | feature | main   | local, origin |
@@ -15,8 +14,9 @@ Feature: sync a grandchild feature branch using the "compress" strategy
       |        | origin   | origin parent commit |
       | child  | local    | local child commit   |
       |        | origin   | origin child commit  |
-    And wait 1 second to ensure new Git timestamps
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the current branch is "child"
+    And wait 1 second to ensure new Git timestamps
     When I run "git-town sync"
 
   Scenario: result
@@ -56,6 +56,7 @@ Feature: sync a grandchild feature branch using the "compress" strategy
       | parent | git reset --hard {{ sha-initial 'local parent commit' }}                                     |
       |        | git push --force-with-lease origin {{ sha-in-origin-initial 'origin parent commit' }}:parent |
       |        | git checkout child                                                                           |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | origin main commit   |
@@ -64,4 +65,3 @@ Feature: sync a grandchild feature branch using the "compress" strategy
       |        | origin        | origin parent commit |
       | child  | local         | local child commit   |
       |        | origin        | origin child commit  |
-    And the initial branches and lineage exist now

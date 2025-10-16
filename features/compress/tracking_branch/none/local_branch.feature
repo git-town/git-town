@@ -32,5 +32,5 @@ Feature: compress the commits on a local feature branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                               |
       | feature | git reset --hard {{ sha 'commit 3' }} |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

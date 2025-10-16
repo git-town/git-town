@@ -17,12 +17,12 @@ Feature: detaching a branch whose child contains merge commits
     And the branches
       | NAME     | TYPE    | PARENT   | LOCATIONS     |
       | branch-3 | feature | branch-2 | local, origin |
-    And the current branch is "branch-3"
-    And I ran "git merge branch-2 --no-edit"
     And the commits
       | BRANCH   | LOCATION      | MESSAGE  |
       | branch-3 | local, origin | commit 3 |
+    And the current branch is "branch-3"
     And the current branch is "branch-2"
+    And I ran "git merge branch-2 --no-edit"
     When I run "git-town detach"
 
   Scenario: result
@@ -36,11 +36,6 @@ Feature: detaching a branch whose child contains merge commits
       |          | git checkout branch-2                                          |
       | branch-2 | git -c rebase.updateRefs=false rebase --onto main branch-1     |
       |          | git push --force-with-lease --force-if-includes                |
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE  |
-      | branch-1 | local, origin | commit 1 |
-      | branch-3 | local, origin | commit 3 |
-      | branch-2 | local, origin | commit 2 |
     And this lineage exists now
       """
       main
@@ -48,6 +43,11 @@ Feature: detaching a branch whose child contains merge commits
           branch-3
         branch-2
       """
+    And these commits exist now
+      | BRANCH   | LOCATION      | MESSAGE  |
+      | branch-1 | local, origin | commit 1 |
+      | branch-3 | local, origin | commit 3 |
+      | branch-2 | local, origin | commit 2 |
 
   Scenario: undo
     When I run "git-town undo"
@@ -59,9 +59,9 @@ Feature: detaching a branch whose child contains merge commits
       | branch-3 | git reset --hard {{ sha 'commit 3' }}           |
       |          | git push --force-with-lease --force-if-includes |
       |          | git checkout branch-2                           |
+    And the initial lineage exists now
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE  |
       | branch-1 | local, origin | commit 1 |
       | branch-2 | local, origin | commit 2 |
       | branch-3 | local, origin | commit 3 |
-    And the initial lineage exists now

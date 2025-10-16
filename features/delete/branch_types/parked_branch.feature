@@ -21,18 +21,18 @@ Feature: delete the current parked branch
       |         | git push origin :parked  |
       |         | git checkout feature     |
       | feature | git branch -D parked     |
-    And no uncommitted files exist now
+    And this lineage exists now
+      """
+      main
+        feature
+      """
     And the branches are now
       | REPOSITORY    | BRANCHES      |
       | local, origin | main, feature |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
-    And this lineage exists now
-      """
-      main
-        feature
-      """
+    And no uncommitted files exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -41,6 +41,6 @@ Feature: delete the current parked branch
       | feature | git branch parked {{ sha 'parked commit' }} |
       |         | git push -u origin parked                   |
       |         | git checkout parked                         |
-    And the initial commits exist now
     And the initial branches and lineage exist now
     And branch "parked" now has type "parked"
+    And the initial commits exist now

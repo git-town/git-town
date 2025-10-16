@@ -20,7 +20,11 @@ Feature: deleting a branch without a useful previous branch setting
       | current | git fetch --prune --tags |
       |         | git checkout main        |
       | main    | git branch -D current    |
-    And no uncommitted files exist now
+    And this lineage exists now
+      """
+      main
+        other
+      """
     And the branches are now
       | REPOSITORY | BRANCHES    |
       | local      | main, other |
@@ -28,11 +32,7 @@ Feature: deleting a branch without a useful previous branch setting
     And these commits exist now
       | BRANCH | LOCATION | MESSAGE      |
       | other  | local    | other commit |
-    And this lineage exists now
-      """
-      main
-        other
-      """
+    And no uncommitted files exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -40,5 +40,5 @@ Feature: deleting a branch without a useful previous branch setting
       | BRANCH | COMMAND                                       |
       | main   | git branch current {{ sha 'current commit' }} |
       |        | git checkout current                          |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

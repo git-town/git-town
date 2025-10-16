@@ -9,8 +9,8 @@ Feature: compress keeps the full commit message of the first commit
       | BRANCH  | LOCATION      | MESSAGE                              | FILE NAME | FILE CONTENT |
       | feature | local, origin | commit 1\n\nbody line 1\nbody line 2 | file_1    | content 1    |
       |         |               | commit 2                             | file_2    | content 2    |
-    And the current branch is "feature"
     And local Git setting "color.ui" is "always"
+    And the current branch is "feature"
     When I run "git-town compress"
 
   Scenario: result
@@ -40,5 +40,5 @@ Feature: compress keeps the full commit message of the first commit
       | BRANCH  | COMMAND                                         |
       | feature | git reset --hard {{ sha 'commit 2' }}           |
       |         | git push --force-with-lease --force-if-includes |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

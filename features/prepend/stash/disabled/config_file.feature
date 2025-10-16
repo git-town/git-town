@@ -2,16 +2,16 @@ Feature: permanently disable stashing via config file
 
   Background:
     Given a Git repo with origin
-    And the branches
-      | NAME | TYPE    | PARENT | LOCATIONS     |
-      | old  | feature | main   | local, origin |
-    And the current branch is "old"
-    And an uncommitted file
     And the committed configuration file:
       """
       [create]
       stash = false
       """
+    And the branches
+      | NAME | TYPE    | PARENT | LOCATIONS     |
+      | old  | feature | main   | local, origin |
+    And the current branch is "old"
+    And an uncommitted file
     When I run "git-town prepend new"
 
   Scenario: result
@@ -35,5 +35,5 @@ Feature: permanently disable stashing via config file
       | old    | git branch -D new           |
       |        | git stash pop               |
       |        | git restore --staged .      |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

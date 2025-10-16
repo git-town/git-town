@@ -40,12 +40,12 @@ Feature: rebase a branch that contains amended commits
       | feature-2 | git reset --hard {{ sha 'commit 2' }}                                                |
       |           | git push --force-with-lease --force-if-includes                                      |
       |           | git push --force-with-lease origin {{ sha-in-origin-initial 'commit 1a' }}:feature-1 |
+    And the branches are now
+      | REPOSITORY    | BRANCHES                   |
+      | local, origin | main, feature-1, feature-2 |
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE   |
       | feature-1 | local         | commit 1b |
       |           | origin        | commit 1a |
       | feature-2 | local         | commit 1a |
       |           | local, origin | commit 2  |
-    And the branches are now
-      | REPOSITORY    | BRANCHES                   |
-      | local, origin | main, feature-1, feature-2 |

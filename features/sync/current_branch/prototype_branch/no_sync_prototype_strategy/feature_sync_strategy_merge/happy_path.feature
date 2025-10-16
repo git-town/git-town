@@ -38,10 +38,10 @@ Feature: sync the current prototype branch with tracking branch
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                           |
       | prototype | git reset --hard {{ sha-initial 'local commit' }} |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE            |
       | main      | local, origin | main local commit  |
       |           |               | main origin commit |
       | prototype | local         | local commit       |
       |           | origin        | origin commit      |
-    And the initial branches and lineage exist now

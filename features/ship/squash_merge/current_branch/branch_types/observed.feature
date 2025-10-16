@@ -8,8 +8,8 @@ Feature: cannot ship observed branches
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         |
       | observed | local, origin | observed commit |
-    And the current branch is "observed"
     And Git setting "git-town.ship-strategy" is "squash-merge"
+    And the current branch is "observed"
     When I run "git-town ship"
 
   Scenario: result
@@ -20,11 +20,11 @@ Feature: cannot ship observed branches
       """
       cannot ship observed branches
       """
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

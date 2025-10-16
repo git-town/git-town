@@ -27,15 +27,15 @@ Feature: sync the current branch in Spanish
       """
       Cambiado a rama 'feature'
       """
+    And the branches are now
+      | REPOSITORY    | BRANCHES      |
+      | local, origin | main, feature |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, origin | local main commit                |
       | feature | local, origin | local feature commit             |
       |         |               | Merge branch 'main' into feature |
-    And the branches are now
-      | REPOSITORY    | BRANCHES      |
-      | local, origin | main, feature |
 
   Scenario: undo
     When I run "git-town undo" with these environment variables
@@ -44,8 +44,8 @@ Feature: sync the current branch in Spanish
       | BRANCH  | COMMAND                                           |
       | feature | git reset --hard {{ sha 'local feature commit' }} |
       |         | git push origin :feature                          |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE              |
       | main    | local, origin | local main commit    |
       | feature | local         | local feature commit |
-    And the initial branches and lineage exist now

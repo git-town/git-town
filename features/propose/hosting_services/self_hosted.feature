@@ -10,9 +10,9 @@ Feature: self-hosted service
     And a proposal for this branch does not exist
 
   Scenario Outline: self hosted
-    Given tool "open" is installed
-    And the origin is "git@self-hosted:git-town/git-town.git"
+    Given the origin is "git@self-hosted:git-town/git-town.git"
     And Git setting "git-town.forge-type" is "<PLATFORM>"
+    And tool "open" is installed
     When I run "git-town propose"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                            |

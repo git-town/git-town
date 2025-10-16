@@ -2,7 +2,6 @@ Feature: sync the current feature branch without a tracking branch using the "co
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |
@@ -12,6 +11,7 @@ Feature: sync the current feature branch without a tracking branch using the "co
       |         | origin   | origin main commit     |
       | feature | local    | local feature commit 1 |
       | feature | local    | local feature commit 2 |
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the current branch is "feature"
     When I run "git-town sync"
 
@@ -27,15 +27,15 @@ Feature: sync the current feature branch without a tracking branch using the "co
       |         | git reset --soft main                             |
       |         | git commit -m "local feature commit 1"            |
       |         | git push -u origin feature                        |
+    And the branches are now
+      | REPOSITORY    | BRANCHES      |
+      | local, origin | main, feature |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                |
       | main    | local, origin | origin main commit     |
       |         |               | local main commit      |
       | feature | local, origin | local feature commit 1 |
-    And the branches are now
-      | REPOSITORY    | BRANCHES      |
-      | local, origin | main, feature |
 
   Scenario: undo
     When I run "git-town undo"
@@ -43,10 +43,10 @@ Feature: sync the current feature branch without a tracking branch using the "co
       | BRANCH  | COMMAND                                                     |
       | feature | git reset --hard {{ sha-initial 'local feature commit 2' }} |
       |         | git push origin :feature                                    |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                |
       | main    | local, origin | origin main commit     |
       |         |               | local main commit      |
       | feature | local         | local feature commit 1 |
       |         |               | local feature commit 2 |
-    And the initial branches and lineage exist now

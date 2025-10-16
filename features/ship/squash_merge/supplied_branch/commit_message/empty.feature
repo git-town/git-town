@@ -11,8 +11,8 @@ Feature: abort the ship via empty commit message
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME        | FILE CONTENT    |
       | main    | local, origin | main commit    | main_file        | main content    |
       | feature | local         | feature commit | conflicting_file | feature content |
-    And the current branch is "other"
     And Git setting "git-town.ship-strategy" is "squash-merge"
+    And the current branch is "other"
     When I run "git-town ship feature" and enter an empty commit message
 
   Scenario: result
@@ -28,8 +28,8 @@ Feature: abort the ship via empty commit message
       """
       aborted because merge exited with error
       """
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now
   #
   # NOTE: Cannot test undo here.
   # The Git Town command under test has not created an undoable runstate.

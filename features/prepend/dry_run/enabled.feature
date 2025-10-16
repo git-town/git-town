@@ -16,11 +16,11 @@ Feature: dry-run prepending a branch to a feature branch
       | BRANCH | COMMAND                     |
       | old    | git fetch --prune --tags    |
       |        | git checkout -b parent main |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

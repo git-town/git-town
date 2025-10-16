@@ -20,25 +20,20 @@ Feature: remove a branch from a stack
     And the commits
       | BRANCH   | LOCATION      | MESSAGE  | FILE NAME |
       | branch-3 | local, origin | commit 3 | file_3    |
-    And the current branch is "branch-3"
     And local Git setting "git-town.sync-feature-strategy" is "compress"
+    And the current branch is "branch-3"
     When I run "git-town set-parent branch-1"
 
   Scenario: result
-    And Git Town prints:
-      """
-      branch "branch-3" is now a child of "branch-1"
-      """
     And Git Town runs the commands
       | BRANCH   | COMMAND                                                        |
       | branch-3 | git pull                                                       |
       |          | git -c rebase.updateRefs=false rebase --onto branch-1 branch-2 |
       |          | git push --force-with-lease --force-if-includes                |
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE  |
-      | branch-1 | local, origin | commit 1 |
-      | branch-2 | local, origin | commit 2 |
-      | branch-3 | local, origin | commit 3 |
+    And Git Town prints:
+      """
+      branch "branch-3" is now a child of "branch-1"
+      """
     And this lineage exists now
       """
       main
@@ -46,6 +41,11 @@ Feature: remove a branch from a stack
           branch-2
           branch-3
       """
+    And these commits exist now
+      | BRANCH   | LOCATION      | MESSAGE  |
+      | branch-1 | local, origin | commit 1 |
+      | branch-2 | local, origin | commit 2 |
+      | branch-3 | local, origin | commit 3 |
     And the branches contain these files:
       | BRANCH   | NAME   |
       | branch-1 | file_1 |
@@ -60,5 +60,5 @@ Feature: remove a branch from a stack
       | BRANCH   | COMMAND                                         |
       | branch-3 | git reset --hard {{ sha 'commit 3' }}           |
       |          | git push --force-with-lease --force-if-includes |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

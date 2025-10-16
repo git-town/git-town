@@ -13,8 +13,8 @@ Feature: swapping a feature branch verbosely
       | branch-1 | local, origin | commit 1    |
       | branch-2 | local, origin | commit 2    |
       | branch-3 | local, origin | commit 3    |
-    And the current branch is "branch-2"
     And local Git setting "color.ui" is "always"
+    And the current branch is "branch-2"
     When I run "git-town swap --verbose"
 
   Scenario: result

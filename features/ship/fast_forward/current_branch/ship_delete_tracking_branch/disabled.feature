@@ -8,9 +8,9 @@ Feature: ship-delete-tracking-branch disabled when using the fast-forward strate
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
-    And the current branch is "feature"
     And Git setting "git-town.ship-delete-tracking-branch" is "false"
     And Git setting "git-town.ship-strategy" is "fast-forward"
+    And the current branch is "feature"
     When I run "git-town ship"
     And origin deletes the "feature" branch
 
@@ -25,10 +25,10 @@ Feature: ship-delete-tracking-branch disabled when using the fast-forward strate
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
+    And no lineage exists now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        |
       | main   | local, origin | feature commit |
-    And no lineage exists now
 
   Scenario: undo
     When I run "git-town undo"
@@ -36,11 +36,11 @@ Feature: ship-delete-tracking-branch disabled when using the fast-forward strate
       | BRANCH | COMMAND                                       |
       | main   | git branch feature {{ sha 'feature commit' }} |
       |        | git checkout feature                          |
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE        |
-      | main   | local, origin | feature commit |
     And the branches are now
       | REPOSITORY | BRANCHES      |
       | local      | main, feature |
       | origin     | main          |
     And the initial lineage exists now
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE        |
+      | main   | local, origin | feature commit |

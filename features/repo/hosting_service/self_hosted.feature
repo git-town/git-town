@@ -5,9 +5,9 @@ Feature: self hosted servie
     Given a Git repo with origin
 
   Scenario Outline:
-    Given tool "open" is installed
-    And the origin is "git@self-hosted:git-town/git-town.git"
+    Given the origin is "git@self-hosted:git-town/git-town.git"
     And Git setting "git-town.forge-type" is "<DRIVER>"
+    And tool "open" is installed
     When I run "git-town repo"
     Then Git Town runs the commands
       | BRANCH | TYPE     | COMMAND                                    |

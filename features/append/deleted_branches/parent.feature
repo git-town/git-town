@@ -29,16 +29,16 @@ Feature: append a branch to a branch whose parent was shipped on the remote
       """
       deleted branch "parent"
       """
-    And the branches are now
-      | REPOSITORY | BRANCHES         |
-      | local      | main, child, new |
-      | origin     | main, child      |
     And this lineage exists now
       """
       main
         child
           new
       """
+    And the branches are now
+      | REPOSITORY | BRANCHES         |
+      | local      | main, child, new |
+      | origin     | main, child      |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        |
       | main   | local, origin | parent commit                  |

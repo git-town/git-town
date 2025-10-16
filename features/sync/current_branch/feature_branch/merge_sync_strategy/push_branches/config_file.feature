@@ -2,7 +2,6 @@ Feature: disable pushing through the config file
 
   Background:
     Given a Git repo with origin
-    And Git Town is not configured
     And the committed configuration file:
       """
       [branches]
@@ -24,6 +23,7 @@ Feature: disable pushing through the config file
       |        | origin   | origin parent commit |
       | child  | local    | local child commit   |
       |        | origin   | origin child commit  |
+    And Git Town is not configured
     And the current branch is "child"
     When I run "git-town sync"
 
@@ -39,6 +39,7 @@ Feature: disable pushing through the config file
       |        | git checkout child                                |
       | child  | git merge --no-edit --ff parent                   |
       |        | git merge --no-edit --ff origin/child             |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                                                  |
       | main   | local, origin | origin main commit                                       |
@@ -51,7 +52,6 @@ Feature: disable pushing through the config file
       |        |               | Merge branch 'parent' into child                         |
       |        | local, origin | origin child commit                                      |
       |        | local         | Merge remote-tracking branch 'origin/child' into child   |
-    And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -63,5 +63,5 @@ Feature: disable pushing through the config file
       |        | git checkout parent                              |
       | parent | git reset --hard {{ sha 'local parent commit' }} |
       |        | git checkout child                               |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

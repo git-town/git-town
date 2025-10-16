@@ -19,5 +19,5 @@ Feature: prototype another prototype branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And branch "prototype" still has type "prototype"
     And the initial branches and lineage exist now
+    And branch "prototype" still has type "prototype"

@@ -2,6 +2,7 @@ Feature: propose uncommitted changes via a separate parent branch with message
 
   Background:
     Given a Git repo with origin
+    And the origin is "git@github.com:git-town/git-town.git"
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
@@ -10,7 +11,6 @@ Feature: propose uncommitted changes via a separate parent branch with message
       | main     | origin   | main commit     |
       | existing | local    | existing commit |
     And the current branch is "existing"
-    And the origin is "git@github.com:git-town/git-town.git"
     And tool "open" is installed
     And an uncommitted file "new_file" with content "new content"
     And I ran "git add new_file"
@@ -24,17 +24,17 @@ Feature: propose uncommitted changes via a separate parent branch with message
       |          | git push -u origin new                                         |
       |          | open https://github.com/git-town/git-town/compare/new?expand=1 |
       |          | git checkout existing                                          |
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE         |
-      | main     | origin        | main commit     |
-      | new      | local, origin | unrelated idea  |
-      | existing | local         | existing commit |
     And this lineage exists now
       """
       main
         new
           existing
       """
+    And these commits exist now
+      | BRANCH   | LOCATION      | MESSAGE         |
+      | main     | origin        | main commit     |
+      | new      | local, origin | unrelated idea  |
+      | existing | local         | existing commit |
 
   Scenario: undo
     When I run "git-town undo"
@@ -42,5 +42,5 @@ Feature: propose uncommitted changes via a separate parent branch with message
       | BRANCH   | COMMAND              |
       | existing | git branch -D new    |
       |          | git push origin :new |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

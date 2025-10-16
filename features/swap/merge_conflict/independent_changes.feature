@@ -39,12 +39,6 @@ Feature: swapping a feature branch in a stack with independent changes
       | branch-3 | git -c rebase.updateRefs=false rebase --onto branch-1 {{ sha-initial 'branch-2 commit' }} |
       |          | git push --force-with-lease --force-if-includes                                           |
       |          | git checkout branch-2                                                                     |
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                     |
-      | main     | local, origin | main commit     | file      | line 1\n\nline 2\n\nline 3                                                       |
-      | branch-2 | local, origin | branch-2 commit | file      | line 1\n\nline 2: branch-2 changes\n\nline 3                                     |
-      | branch-1 | local, origin | branch-1 commit | file      | line 1: branch-1 changes\n\nline 2: branch-2 changes\n\nline 3                   |
-      | branch-3 | local, origin | branch-3 commit | file      | line 1: branch-1 changes\n\nline 2: branch-2 changes\n\nline 3: branch-3 changes |
     And this lineage exists now
       """
       main
@@ -52,6 +46,12 @@ Feature: swapping a feature branch in a stack with independent changes
           branch-1
             branch-3
       """
+    And these commits exist now
+      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                     |
+      | main     | local, origin | main commit     | file      | line 1\n\nline 2\n\nline 3                                                       |
+      | branch-2 | local, origin | branch-2 commit | file      | line 1\n\nline 2: branch-2 changes\n\nline 3                                     |
+      | branch-1 | local, origin | branch-1 commit | file      | line 1: branch-1 changes\n\nline 2: branch-2 changes\n\nline 3                   |
+      | branch-3 | local, origin | branch-3 commit | file      | line 1: branch-1 changes\n\nline 2: branch-2 changes\n\nline 3: branch-3 changes |
 
   Scenario: undo
     When I run "git-town undo"
@@ -67,5 +67,5 @@ Feature: swapping a feature branch in a stack with independent changes
       | branch-3 | git reset --hard {{ sha 'branch-3 commit' }}    |
       |          | git push --force-with-lease --force-if-includes |
       |          | git checkout branch-2                           |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

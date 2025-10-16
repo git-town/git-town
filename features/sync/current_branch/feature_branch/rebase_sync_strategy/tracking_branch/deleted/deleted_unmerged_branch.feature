@@ -2,7 +2,6 @@ Feature: sync a branch with unmerged commits whose tracking branch was deleted
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | branch-1 | feature | main   | local, origin |
@@ -11,8 +10,9 @@ Feature: sync a branch with unmerged commits whose tracking branch was deleted
       | BRANCH   | LOCATION      | MESSAGE         |
       | branch-1 | local, origin | branch-1 commit |
       | branch-2 | local         | branch-2 commit |
-    And the current branch is "branch-2"
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And origin deletes the "branch-2" branch
+    And the current branch is "branch-2"
     When I run "git-town sync"
 
   Scenario: result
@@ -23,11 +23,11 @@ Feature: sync a branch with unmerged commits whose tracking branch was deleted
       """
       Branch "branch-2" was deleted at the remote but the local branch contains unshipped changes.
       """
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |
       | branch-1 | local, origin | branch-1 commit |
       | branch-2 | local         | branch-2 commit |
-    And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"

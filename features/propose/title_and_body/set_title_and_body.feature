@@ -3,11 +3,11 @@ Feature: Prepopulate title and body
 
   Background:
     Given a Git repo with origin
+    And the origin is "ssh://git@github.com/git-town/git-town.git"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
-    And the origin is "ssh://git@github.com/git-town/git-town.git"
     And a proposal for this branch does not exist
     And tool "open" is installed
 

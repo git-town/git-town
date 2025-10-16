@@ -21,16 +21,16 @@ Feature: append a new feature branch to an existing feature branch with uncommit
       |          | git checkout -b new         |
       | new      | git stash pop               |
       |          | git restore --staged .      |
-    And the uncommitted file still exists
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE         |
-      | existing | local, origin | existing commit |
     And this lineage exists now
       """
       main
         existing
           new
       """
+    And these commits exist now
+      | BRANCH   | LOCATION      | MESSAGE         |
+      | existing | local, origin | existing commit |
+    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -42,6 +42,6 @@ Feature: append a new feature branch to an existing feature branch with uncommit
       | existing | git branch -D new           |
       |          | git stash pop               |
       |          | git restore --staged .      |
+    And the initial lineage exists now
     And the uncommitted file still exists
     And the initial commits exist now
-    And the initial lineage exists now

@@ -8,8 +8,8 @@ Feature: cannot ship observed branches using the always-merge strategy
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         |
       | observed | local, origin | observed commit |
-    And the current branch is "observed"
     And Git setting "git-town.ship-strategy" is "always-merge"
+    And the current branch is "observed"
     When I run "git-town ship" and close the editor
 
   Scenario: result
@@ -20,11 +20,11 @@ Feature: cannot ship observed branches using the always-merge strategy
       """
       cannot ship observed branches
       """
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

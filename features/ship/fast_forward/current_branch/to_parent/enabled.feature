@@ -16,8 +16,8 @@ Feature: allowing shipping into a feature branch
       | BRANCH | LOCATION      | MESSAGE | FILE NAME | FILE CONTENT |
       | beta   | local, origin | beta 1  | beta_1    | beta 1       |
       |        |               | beta 2  | beta_2    | beta 2       |
-    And the current branch is "beta"
     And Git setting "git-town.ship-strategy" is "fast-forward"
+    And the current branch is "beta"
     When I run "git-town ship --to-parent"
 
   Scenario: result
@@ -29,6 +29,11 @@ Feature: allowing shipping into a feature branch
       |        | git push                 |
       |        | git push origin :beta    |
       |        | git branch -D beta       |
+    And this lineage exists now
+      """
+      main
+        alpha
+      """
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, alpha |
@@ -38,11 +43,6 @@ Feature: allowing shipping into a feature branch
       |        |               | alpha 2 |
       |        |               | beta 1  |
       |        |               | beta 2  |
-    And this lineage exists now
-      """
-      main
-        alpha
-      """
 
   Scenario: undo
     When I run "git-town undo"
@@ -53,5 +53,5 @@ Feature: allowing shipping into a feature branch
       |        | git branch beta {{ sha 'beta 2' }}              |
       |        | git push -u origin beta                         |
       |        | git checkout beta                               |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

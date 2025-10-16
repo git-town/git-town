@@ -15,8 +15,8 @@ Feature: ask for missing configuration information
       | forge type         | enter |
       | enter all          | enter |
       | config storage     | enter |
-    And the main branch is now "main"
     And Git Town prints the error:
       """
       cannot ship the main branch
       """
+    And the main branch is now "main"

@@ -27,7 +27,7 @@ Feature: on a forked repo
       | BRANCH | COMMAND           |
       | new    | git checkout main |
       | main   | git branch -D new |
+    And no lineage exists now
     And these commits exist now
       | BRANCH | LOCATION                | MESSAGE         |
       | main   | local, origin, upstream | upstream commit |
-    And no lineage exists now

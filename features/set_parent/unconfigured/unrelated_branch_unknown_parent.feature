@@ -22,5 +22,5 @@ Feature: an unrelated branch has an unknown parent
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

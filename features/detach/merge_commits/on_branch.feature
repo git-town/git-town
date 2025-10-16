@@ -10,8 +10,6 @@ Feature: detaching a branch that contains merge commits
       | BRANCH   | LOCATION      | MESSAGE  |
       | branch-1 | local, origin | commit 1 |
       | branch-2 | local, origin | commit 2 |
-    And the current branch is "branch-2"
-    And I ran "git merge branch-1 --no-edit"
     And the branches
       | NAME     | TYPE    | PARENT   | LOCATIONS     |
       | branch-3 | feature | branch-2 | local, origin |
@@ -19,6 +17,8 @@ Feature: detaching a branch that contains merge commits
       | BRANCH   | LOCATION      | MESSAGE  |
       | branch-3 | local, origin | commit 3 |
     And the current branch is "branch-2"
+    And the current branch is "branch-2"
+    And I ran "git merge branch-1 --no-edit"
     When I run "git-town detach"
 
   Scenario: result

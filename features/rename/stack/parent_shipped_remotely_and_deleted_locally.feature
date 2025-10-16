@@ -11,8 +11,8 @@ Feature: renaming a branch whose parent was shipped and the local branch deleted
       | parent | local, origin | parent commit |
       | child  | local, origin | child commit  |
     And origin ships the "parent" branch using the "squash-merge" ship-strategy
-    And I ran "git branch -d parent"
     And the current branch is "child"
+    And I ran "git branch -d parent"
     When I run "git-town rename new"
 
   Scenario: result
@@ -23,14 +23,14 @@ Feature: renaming a branch whose parent was shipped and the local branch deleted
       |        | git checkout new            |
       | new    | git push -u origin new      |
       |        | git push origin :child      |
-    And the branches are now
-      | REPOSITORY    | BRANCHES  |
-      | local, origin | main, new |
     And this lineage exists now
       """
       main
         new
       """
+    And the branches are now
+      | REPOSITORY    | BRANCHES  |
+      | local, origin | main, new |
 
   Scenario: undo
     When I run "git-town undo"
@@ -41,7 +41,7 @@ Feature: renaming a branch whose parent was shipped and the local branch deleted
       |        | git checkout child                        |
       | child  | git branch -D new                         |
       |        | git push origin :new                      |
+    And the initial lineage exists now
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, child |
-    And the initial lineage exists now

@@ -22,7 +22,7 @@ Feature: on a feature branch in a repository with a submodule that has uncommitt
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE         |
       | main   | local, origin | added submodule |
-    And the initial branches and lineage exist now

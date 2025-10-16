@@ -8,8 +8,8 @@ Feature: ship a coworker's feature branch
     And the commits
       | BRANCH  | LOCATION      | MESSAGE         | AUTHOR                          |
       | feature | local, origin | coworker commit | coworker <coworker@example.com> |
-    And the current branch is "feature"
     And Git setting "git-town.ship-strategy" is "squash-merge"
+    And the current branch is "feature"
 
   Scenario: result (commit message via CLI)
     When I run "git-town ship -m 'feature done'"
@@ -22,10 +22,10 @@ Feature: ship a coworker's feature branch
       |         | git push                                                                |
       |         | git push origin :feature                                                |
       |         | git branch -D feature                                                   |
+    And no lineage exists now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR                          |
       | main   | local, origin | feature done | coworker <coworker@example.com> |
-    And no lineage exists now
 
   @skipWindows
   Scenario: result (commit message via editor)
@@ -39,10 +39,10 @@ Feature: ship a coworker's feature branch
       |         | git push                                              |
       |         | git push origin :feature                              |
       |         | git branch -D feature                                 |
+    And no lineage exists now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR                          |
       | main   | local, origin | feature done | coworker <coworker@example.com> |
-    And no lineage exists now
 
   Scenario: undo
     Given I run "git-town ship -m 'feature done'"
@@ -54,9 +54,9 @@ Feature: ship a coworker's feature branch
       |        | git branch feature {{ sha 'coworker commit' }} |
       |        | git push -u origin feature                     |
       |        | git checkout feature                           |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
       | feature | local, origin | coworker commit       |
-    And the initial branches and lineage exist now

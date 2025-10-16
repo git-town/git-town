@@ -2,13 +2,13 @@ Feature: permanently disable stashing via config file
 
   Background:
     Given a Git repo with origin
-    And the current branch is "main"
-    And an uncommitted file
     And the committed configuration file:
       """
       [create]
       stash = false
       """
+    And the current branch is "main"
+    And an uncommitted file
     When I run "git-town hack new"
 
   Scenario: result
@@ -31,5 +31,5 @@ Feature: permanently disable stashing via config file
       | main   | git branch -D new           |
       |        | git stash pop               |
       |        | git restore --staged .      |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

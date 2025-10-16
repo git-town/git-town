@@ -8,8 +8,8 @@ Feature: shipping a parked branch using the fast-forward strategy
     And the commits
       | BRANCH | LOCATION      | MESSAGE       |
       | parked | local, origin | parked commit |
-    And the current branch is "parked"
     And Git setting "git-town.ship-strategy" is "fast-forward"
+    And the current branch is "parked"
     When I run "git-town ship"
 
   Scenario: result
@@ -21,13 +21,13 @@ Feature: shipping a parked branch using the fast-forward strategy
       |        | git push                   |
       |        | git push origin :parked    |
       |        | git branch -D parked       |
+    And no lineage exists now
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | parked commit |
-    And no lineage exists now
 
   Scenario: undo
     When I run "git-town undo"
@@ -36,8 +36,8 @@ Feature: shipping a parked branch using the fast-forward strategy
       | main   | git branch parked {{ sha 'parked commit' }} |
       |        | git push -u origin parked                   |
       |        | git checkout parked                         |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | parked commit |
-    And the initial branches and lineage exist now
     And branch "parked" now has type "parked"

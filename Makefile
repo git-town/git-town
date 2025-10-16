@@ -1,4 +1,4 @@
-RTA_VERSION = 0.22.0  # run-that-app version to use
+RTA_VERSION = 0.23.0  # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
@@ -47,6 +47,7 @@ fix: tools/rta@${RTA_VERSION}  # runs all linters and auto-fixes
 	tools/rta shfmt -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/rta shfmt --write
 	tools/rta ghokin fmt replace features/
 	tools/generate_opcodes_all.sh
+	tools/rta cucumber-sort format
 
 help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -75,6 +76,7 @@ lint: tools/node_modules tools/rta@${RTA_VERSION}  # lints the main codebase con
 	tools/rta golangci-lint cache clean
 	tools/rta golangci-lint run
 	tools/rta node tools/node_modules/.bin/gherkin-lint
+	tools/rta cucumber-sort check
 
 lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	(cd website && make test)

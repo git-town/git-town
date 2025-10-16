@@ -8,9 +8,9 @@ Feature: partially undo an offline ship using the fast-forward strategy after ad
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
-    And the current branch is "feature"
-    And offline mode is enabled
     And Git setting "git-town.ship-strategy" is "fast-forward"
+    And offline mode is enabled
+    And the current branch is "feature"
     When I run "git-town ship"
     And I add commit "additional commit" to the "main" branch
 

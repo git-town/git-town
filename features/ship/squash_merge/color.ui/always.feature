@@ -9,9 +9,9 @@ Feature: enter the commit message interactively via the editor
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
-    And the current branch is "feature"
-    And Git setting "git-town.ship-strategy" is "squash-merge"
     And local Git setting "color.ui" is "always"
+    And Git setting "git-town.ship-strategy" is "squash-merge"
+    And the current branch is "feature"
     When I run "git-town ship" and enter "feature done" for the commit message
 
   Scenario: result
@@ -24,13 +24,13 @@ Feature: enter the commit message interactively via the editor
       |         | git push                        |
       |         | git push origin :feature        |
       |         | git branch -D feature           |
+    And no lineage exists now
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, origin | feature done |
-    And no lineage exists now
 
   Scenario: undo
     When I run "git-town undo"
@@ -41,9 +41,9 @@ Feature: enter the commit message interactively via the editor
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git push -u origin feature                    |
       |        | git checkout feature                          |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
       | feature | local, origin | feature commit        |
-    And the initial branches and lineage exist now

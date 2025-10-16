@@ -10,8 +10,8 @@ Feature: sync the current feature branch with a tracking branch in detached mode
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, origin | main commit  |
       | alpha  | local, origin | alpha commit |
-    And the current branch is "beta"
     And Git setting "git-town.detached" is "true"
+    And the current branch is "beta"
     When I run "git-town sync"
 
   Scenario: result
@@ -33,5 +33,5 @@ Feature: sync the current feature branch with a tracking branch in detached mode
       | BRANCH | COMMAND                                         |
       | beta   | git reset --hard {{ sha 'initial commit' }}     |
       |        | git push --force-with-lease --force-if-includes |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

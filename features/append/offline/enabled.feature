@@ -8,8 +8,8 @@ Feature: append in offline mode
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
-    And the current branch is "existing"
     And offline mode is enabled
+    And the current branch is "existing"
     When I run "git-town append new"
 
   Scenario: result
@@ -24,5 +24,5 @@ Feature: append in offline mode
       | BRANCH   | COMMAND               |
       | new      | git checkout existing |
       | existing | git branch -D new     |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

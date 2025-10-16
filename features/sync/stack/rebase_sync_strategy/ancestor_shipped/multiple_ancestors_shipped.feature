@@ -2,7 +2,6 @@ Feature: shipped parent branches in a stacked change
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME      | TYPE    | PARENT | LOCATIONS     |
       | feature-1 | feature | main   | local, origin |
@@ -27,6 +26,7 @@ Feature: shipped parent branches in a stacked change
     And the commits
       | BRANCH    | LOCATION      | MESSAGE          | FILE NAME      | FILE CONTENT      |
       | feature-4 | local, origin | feature-4 commit | feature-4-file | feature 4 content |
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And origin ships the "feature-1" branch using the "squash-merge" ship-strategy
     And origin ships the "feature-2" branch using the "squash-merge" ship-strategy as "feature-2 commit"
     And the current branch is "feature-4"
@@ -57,6 +57,12 @@ Feature: shipped parent branches in a stacked change
       """
       deleted branch "feature-2"
       """
+    And this lineage exists now
+      """
+      main
+        feature-3
+          feature-4
+      """
     And the branches are now
       | REPOSITORY    | BRANCHES                   |
       | local, origin | main, feature-3, feature-4 |
@@ -66,12 +72,6 @@ Feature: shipped parent branches in a stacked change
       |           |               | feature-2 commit |
       | feature-3 | local, origin | feature-3 commit |
       | feature-4 | local, origin | feature-4 commit |
-    And this lineage exists now
-      """
-      main
-        feature-3
-          feature-4
-      """
 
   Scenario: undo
     When I run "git-town undo"

@@ -2,15 +2,15 @@ Feature: "ff-only" configured as sync-feature-strategy
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "ff-only"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the commits
       | BRANCH  | LOCATION | MESSAGE  |
       | feature | origin   | commit 1 |
-    And the current branch is "feature"
+    And Git setting "git-town.sync-feature-strategy" is "ff-only"
     And Git setting "git-town.sync-perennial-strategy" is "ff-only"
+    And the current branch is "feature"
     When I run "git-town sync"
 
   Scenario: result
@@ -30,5 +30,5 @@ Feature: "ff-only" configured as sync-feature-strategy
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                     |
       | feature | git reset --hard {{ sha 'initial commit' }} |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

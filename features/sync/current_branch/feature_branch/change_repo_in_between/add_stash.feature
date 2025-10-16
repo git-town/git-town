@@ -47,9 +47,9 @@ Feature: adding additional stash entries while resolving conflicts
       |         | git stash pop          |
       |         | git restore --staged . |
     And no merge is now in progress
-    And an uncommitted file "stashed_file" exists now
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                                                    | FILE NAME        | FILE CONTENT     |
       | feature | local         | conflicting local commit                                   | conflicting_file | local content    |
       |         | local, origin | conflicting origin commit                                  | conflicting_file | origin content   |
       |         | local         | Merge remote-tracking branch 'origin/feature' into feature | conflicting_file | resolved content |
+    And an uncommitted file "stashed_file" exists now

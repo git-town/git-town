@@ -11,8 +11,8 @@ Feature: syncing a branch whose parent was shipped and the local branch deleted 
       | parent | local, origin | parent commit |
       | child  | local, origin | child commit  |
     And origin ships the "parent" branch using the "squash-merge" ship-strategy
-    And I ran "git branch -d parent"
     And the current branch is "child"
+    And I ran "git branch -d parent"
     When I run "git-town sync"
 
   Scenario: result
@@ -24,14 +24,14 @@ Feature: syncing a branch whose parent was shipped and the local branch deleted 
       |        | git checkout child                                |
       | child  | git merge --no-edit --ff main                     |
       |        | git push                                          |
-    And the branches are now
-      | REPOSITORY    | BRANCHES    |
-      | local, origin | main, child |
     And this lineage exists now
       """
       main
         child
       """
+    And the branches are now
+      | REPOSITORY    | BRANCHES    |
+      | local, origin | main, child |
 
   Scenario: undo
     When I run "git-town undo"
@@ -42,7 +42,7 @@ Feature: syncing a branch whose parent was shipped and the local branch deleted 
       |        | git checkout main                               |
       | main   | git reset --hard {{ sha 'initial commit' }}     |
       |        | git checkout child                              |
+    And the initial lineage exists now
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, child |
-    And the initial lineage exists now

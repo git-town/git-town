@@ -29,18 +29,18 @@ Feature: detaching a branch in Spanish
       """
       Rebase aplicado satisfactoriamente y actualizado refs/heads/branch-2.
       """
-    And these commits exist now
-      | BRANCH   | LOCATION | MESSAGE   |
-      | branch-1 | local    | commit 1a |
-      |          |          | commit 1b |
-      | branch-2 | local    | commit 2a |
-      |          |          | commit 2b |
     And this lineage exists now
       """
       main
         branch-1
         branch-2
       """
+    And these commits exist now
+      | BRANCH   | LOCATION | MESSAGE   |
+      | branch-1 | local    | commit 1a |
+      |          |          | commit 1b |
+      | branch-2 | local    | commit 2a |
+      |          |          | commit 2b |
 
   Scenario: undo
     When I run "git-town undo" with these environment variables
@@ -52,5 +52,5 @@ Feature: detaching a branch in Spanish
       """
       HEAD está ahora
       """
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

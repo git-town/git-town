@@ -29,21 +29,21 @@ Feature: handle conflicts between the current feature branch and its tracking br
       | BRANCH  | COMMAND           |
       | feature | git merge --abort |
     And no merge is now in progress
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now
 
   @messyoutput
   Scenario: undo through another sync invocation
     When I run "git-town sync" and enter into the dialog:
       | DIALOG              | KEYS    |
       | unfinished runstate | 3 enter |
-    Then Git Town prints:
+    Then Git Town runs the commands
+      | BRANCH  | COMMAND           |
+      | feature | git merge --abort |
+    And Git Town prints:
       """
       Handle unfinished command: undo
       """
-    And Git Town runs the commands
-      | BRANCH  | COMMAND           |
-      | feature | git merge --abort |
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
@@ -61,8 +61,8 @@ Feature: handle conflicts between the current feature branch and its tracking br
       | BRANCH  | COMMAND              |
       | feature | git commit --no-edit |
       |         | git push             |
-    And all branches are now synchronized
     And no merge is now in progress
+    And all branches are now synchronized
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | feature | conflicting_file | resolved content |

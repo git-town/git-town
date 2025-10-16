@@ -32,6 +32,13 @@ Feature: swapping a prototype branch
       | branch-3 | git -c rebase.updateRefs=false rebase --onto branch-1 {{ sha-initial 'commit 2b' }} |
       |          | git push --force-with-lease --force-if-includes                                     |
       |          | git checkout branch-2                                                               |
+    And this lineage exists now
+      """
+      main
+        branch-2
+          branch-1
+            branch-3
+      """
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE     |
       | main     | local, origin | main commit |
@@ -41,13 +48,6 @@ Feature: swapping a prototype branch
       |          |               | commit 1b   |
       | branch-3 | local, origin | commit 3a   |
       |          |               | commit 3b   |
-    And this lineage exists now
-      """
-      main
-        branch-2
-          branch-1
-            branch-3
-      """
 
   Scenario: undo
     When I run "git-town undo"
@@ -63,5 +63,5 @@ Feature: swapping a prototype branch
       | branch-3 | git reset --hard {{ sha 'commit 3b' }}          |
       |          | git push --force-with-lease --force-if-includes |
       |          | git checkout branch-2                           |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

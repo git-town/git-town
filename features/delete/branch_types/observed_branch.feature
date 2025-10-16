@@ -20,7 +20,11 @@ Feature: delete the current observed branch
       | observed | git fetch --prune --tags |
       |          | git checkout feature     |
       | feature  | git branch -D observed   |
-    And no uncommitted files exist now
+    And this lineage exists now
+      """
+      main
+        feature
+      """
     And the branches are now
       | REPOSITORY | BRANCHES                |
       | local      | main, feature           |
@@ -29,11 +33,7 @@ Feature: delete the current observed branch
       | BRANCH   | LOCATION      | MESSAGE         |
       | feature  | local, origin | feature commit  |
       | observed | origin        | observed commit |
-    And this lineage exists now
-      """
-      main
-        feature
-      """
+    And no uncommitted files exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -41,6 +41,6 @@ Feature: delete the current observed branch
       | BRANCH  | COMMAND                                         |
       | feature | git branch observed {{ sha 'observed commit' }} |
       |         | git checkout observed                           |
-    And the initial commits exist now
     And the initial branches and lineage exist now
     And branch "observed" now has type "observed"
+    And the initial commits exist now

@@ -8,8 +8,8 @@ Feature: commit message with double-quotes
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
-    And the current branch is "feature"
     And Git setting "git-town.ship-strategy" is "squash-merge"
+    And the current branch is "feature"
     When I run "git-town ship -m 'with "double quotes"'"
 
   Scenario: result
@@ -22,14 +22,14 @@ Feature: commit message with double-quotes
       |         | git push                             |
       |         | git push origin :feature             |
       |         | git branch -D feature                |
+    And no lineage exists now
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
-    And no uncommitted files exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | with "double quotes" |
-    And no lineage exists now
+    And no uncommitted files exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -40,9 +40,9 @@ Feature: commit message with double-quotes
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git push -u origin feature                    |
       |        | git checkout feature                          |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                       |
       | main    | local, origin | with "double quotes"          |
       |         |               | Revert "with "double quotes"" |
       | feature | local, origin | feature commit                |
-    And the initial branches and lineage exist now

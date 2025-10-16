@@ -25,11 +25,11 @@ Feature: swapping a feature branch in dry-run mode
       |          | git checkout branch-3                                                              |
       | branch-3 | git -c rebase.updateRefs=false rebase --onto branch-1 {{ sha-initial 'commit 2' }} |
       |          | git checkout branch-2                                                              |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

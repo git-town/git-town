@@ -41,5 +41,5 @@ Feature: merging local branches
       | alpha  | git reset --hard {{ sha 'alpha commit' }}       |
       |        | git branch beta {{ sha-initial 'beta commit' }} |
       |        | git checkout beta                               |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

@@ -3,12 +3,12 @@ Feature: dry-run proposing changes
 
   Background:
     Given a Git repo with origin
+    And the origin is "git@github.com:git-town/git-town.git"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And tool "open" is installed
     And the current branch is "feature"
-    And the origin is "git@github.com:git-town/git-town.git"
+    And tool "open" is installed
 
   Scenario: a PR for this branch exists already
     Given a proposal for this branch exists at "https://github.com/git-town/git-town/pull/123"

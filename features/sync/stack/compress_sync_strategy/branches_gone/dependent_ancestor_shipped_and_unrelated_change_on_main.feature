@@ -2,7 +2,6 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
@@ -15,6 +14,7 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
     And the commits
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | beta   | local, origin | beta commit | file      | beta content |
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And origin ships the "alpha" branch using the "squash-merge" ship-strategy
     And I add commit "additional commit" to the "main" branch
     And the current branch is "beta"
@@ -50,6 +50,7 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
       | beta   | git reset --hard {{ sha-initial 'beta commit' }}  |
       |        | git push --force-with-lease --force-if-includes   |
       |        | git branch alpha {{ sha-initial 'alpha commit' }} |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE           | FILE NAME | FILE CONTENT  |
       | main   | local, origin | alpha commit      | file      | alpha content |
@@ -57,4 +58,3 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
       | alpha  | local         | alpha commit      | file      | alpha content |
       | beta   | local, origin | beta commit       | file      | beta content  |
       |        | origin        | alpha commit      | file      | alpha content |
-    And the initial branches and lineage exist now

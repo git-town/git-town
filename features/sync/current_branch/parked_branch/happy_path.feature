@@ -41,10 +41,10 @@ Feature: active parked branches get synced like normal feature branches
       | BRANCH | COMMAND                                                                              |
       | parked | git reset --hard {{ sha 'local parked commit' }}                                     |
       |        | git push --force-with-lease origin {{ sha-in-origin 'origin parked commit' }}:parked |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | origin main commit   |
       |        |               | local main commit    |
       | parked | local         | local parked commit  |
       |        | origin        | origin parked commit |
-    And the initial branches and lineage exist now

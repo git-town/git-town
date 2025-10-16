@@ -9,10 +9,10 @@ Feature: ship to a custom dev remote
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
-    And the current branch is "feature"
     And I rename the "origin" remote to "fork"
     And Git setting "git-town.dev-remote" is "fork"
     And Git setting "git-town.ship-strategy" is "squash-merge"
+    And the current branch is "feature"
     When I run "git-town ship" and enter "feature done" for the commit message
 
   Scenario: result
@@ -25,13 +25,13 @@ Feature: ship to a custom dev remote
       |         | git push                        |
       |         | git push fork :feature          |
       |         | git branch -D feature           |
+    And no lineage exists now
     And the branches are now
       | REPOSITORY  | BRANCHES |
       | local, fork | main     |
     And these commits exist now
       | BRANCH | LOCATION    | MESSAGE      |
       | main   | local, fork | feature done |
-    And no lineage exists now
 
   Scenario: undo
     When I run "git-town undo"
@@ -42,12 +42,12 @@ Feature: ship to a custom dev remote
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git push -u fork feature                      |
       |        | git checkout feature                          |
+    And the initial lineage exists now
+    And the branches are now
+      | REPOSITORY  | BRANCHES      |
+      | local, fork | main, feature |
     And these commits exist now
       | BRANCH  | LOCATION    | MESSAGE               |
       | main    | local, fork | feature done          |
       |         |             | Revert "feature done" |
       | feature | local, fork | feature commit        |
-    And the branches are now
-      | REPOSITORY  | BRANCHES      |
-      | local, fork | main, feature |
-    And the initial lineage exists now

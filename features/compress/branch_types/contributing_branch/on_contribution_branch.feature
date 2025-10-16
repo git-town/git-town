@@ -20,11 +20,11 @@ Feature: does not compress contribution branches
       """
       you are merely contributing to branch "contribution" and should leave compressing it to the branch owner
       """
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

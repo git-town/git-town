@@ -44,5 +44,5 @@ Feature: auto-resolve phantom merge conflicts in a synced stack where the parent
       | main     | git reset --hard {{ sha 'main commit' }}                                        |
       |          | git branch branch-1 {{ sha-initial 'branch-1-commit' }}                         |
       |          | git checkout branch-2                                                           |
-    And the initial commits exist now
     And no merge is now in progress
+    And the initial commits exist now

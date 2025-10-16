@@ -9,8 +9,8 @@ Feature: cannot ship not-up-to-date feature branches using the fast-forward stra
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
       | main    | local, origin | main commit    |
-    And the current branch is "feature"
     And Git setting "git-town.ship-strategy" is "fast-forward"
+    And the current branch is "feature"
     When I run "git-town ship"
 
   Scenario: result

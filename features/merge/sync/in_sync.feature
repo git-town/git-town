@@ -45,5 +45,5 @@ Feature: merging a branch in a stack that is fully in sync
       |        | git branch beta {{ sha 'beta commit' }}         |
       |        | git push -u origin beta                         |
       |        | git checkout beta                               |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

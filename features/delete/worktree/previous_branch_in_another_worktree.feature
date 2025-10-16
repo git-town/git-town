@@ -25,5 +25,5 @@ Feature: previous Git branch is in another worktree
       | main   | git branch current {{ sha 'initial commit' }} |
       |        | git checkout current                          |
     And the previous Git branch is now "main"
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

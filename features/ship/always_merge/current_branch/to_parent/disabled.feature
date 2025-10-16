@@ -25,8 +25,8 @@ Feature: does not ship a child branch
       shipping this branch would ship "alpha" and "beta" as well,
       please ship "alpha" first
       """
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now
   #
   # NOTE: Cannot test undo here.
   # The Git Town command under test has not created an undoable runstate.

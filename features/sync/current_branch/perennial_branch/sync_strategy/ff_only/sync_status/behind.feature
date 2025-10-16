@@ -8,8 +8,8 @@ Feature: sync the current perennial branch using the ff-only sync strategy when 
     And the commits
       | BRANCH     | LOCATION | MESSAGE      |
       | production | origin   | first commit |
-    And the current branch is "production"
     And Git setting "git-town.sync-perennial-strategy" is "ff-only"
+    And the current branch is "production"
     When I run "git-town sync"
 
   Scenario: result
@@ -28,5 +28,5 @@ Feature: sync the current perennial branch using the ff-only sync strategy when 
     Then Git Town runs the commands
       | BRANCH     | COMMAND                                     |
       | production | git reset --hard {{ sha 'initial commit' }} |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

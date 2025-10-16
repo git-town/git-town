@@ -31,16 +31,16 @@ Feature: rename a perennial branch
       |            | git checkout new                 |
       | new        | git push -u origin new           |
       |            | git push origin :production      |
-    And the perennial branches are now "new"
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE           |
-      | new    | local, origin | production commit |
-      | hotfix | local, origin | hotfix commit     |
     And this lineage exists now
       """
       new
         hotfix
       """
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE           |
+      | new    | local, origin | production commit |
+      | hotfix | local, origin | hotfix commit     |
+    And the perennial branches are now "new"
 
   Scenario: undo
     Given I run "git-town rename --force production new"
@@ -52,6 +52,6 @@ Feature: rename a perennial branch
       |            | git checkout production                             |
       | production | git branch -D new                                   |
       |            | git push origin :new                                |
+    And the initial branches and lineage exist now
     And the perennial branches are now "production"
     And the initial commits exist now
-    And the initial branches and lineage exist now

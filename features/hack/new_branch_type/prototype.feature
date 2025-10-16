@@ -9,8 +9,8 @@ Feature: create a new branch when prototype branches are configured via Git meta
       | BRANCH   | LOCATION | MESSAGE         |
       | main     | origin   | main commit     |
       | existing | local    | existing commit |
-    And the current branch is "existing"
     And Git setting "git-town.new-branch-type" is "prototype"
+    And the current branch is "existing"
     When I run "git-town hack new"
 
   Scenario: result
@@ -20,17 +20,17 @@ Feature: create a new branch when prototype branches are configured via Git meta
       |          | git checkout main                                 |
       | main     | git -c rebase.updateRefs=false rebase origin/main |
       |          | git checkout -b new                               |
-    And branch "new" now has type "prototype"
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE         |
-      | main     | local, origin | main commit     |
-      | existing | local         | existing commit |
     And this lineage exists now
       """
       main
         existing
         new
       """
+    And these commits exist now
+      | BRANCH   | LOCATION      | MESSAGE         |
+      | main     | local, origin | main commit     |
+      | existing | local         | existing commit |
+    And branch "new" now has type "prototype"
 
   Scenario: undo
     When I run "git-town undo"
@@ -40,5 +40,5 @@ Feature: create a new branch when prototype branches are configured via Git meta
       | main     | git reset --hard {{ sha 'initial commit' }} |
       |          | git checkout existing                       |
       | existing | git branch -D new                           |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

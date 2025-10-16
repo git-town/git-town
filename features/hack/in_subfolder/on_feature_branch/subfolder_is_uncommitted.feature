@@ -18,13 +18,13 @@ Feature: inside an uncommitted subfolder on the current feature branch
       | existing | git fetch --prune --tags |
       |          | git checkout main        |
       | main     | git checkout -b new      |
-    And the initial commits exist now
     And this lineage exists now
       """
       main
         existing
         new
       """
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -32,5 +32,5 @@ Feature: inside an uncommitted subfolder on the current feature branch
       | BRANCH   | COMMAND               |
       | new      | git checkout existing |
       | existing | git branch -D new     |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

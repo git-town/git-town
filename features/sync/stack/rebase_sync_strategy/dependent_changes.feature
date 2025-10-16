@@ -2,7 +2,6 @@ Feature: stack that changes the same file in multiple commits per branch
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
@@ -17,8 +16,9 @@ Feature: stack that changes the same file in multiple commits per branch
       | BRANCH | LOCATION      | MESSAGE       | FILE NAME      | FILE CONTENT |
       | beta   | local, origin | beta commit 1 | favorite-pizza | pepperoni    |
       | beta   | local, origin | beta commit 2 | favorite-pizza | pineapple    |
-    And the current branch is "beta"
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And origin ships the "alpha" branch using the "squash-merge" ship-strategy
+    And the current branch is "beta"
     When I run "git-town sync"
 
   Scenario: result
@@ -50,6 +50,7 @@ Feature: stack that changes the same file in multiple commits per branch
       | main   | git reset --hard {{ sha 'initial commit' }}         |
       |        | git branch alpha {{ sha-initial 'alpha commit 2' }} |
       |        | git checkout beta                                   |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        | FILE NAME      | FILE CONTENT |
       | main   | origin        | alpha commit 1 | favorite-fruit | peach        |
@@ -59,4 +60,3 @@ Feature: stack that changes the same file in multiple commits per branch
       |        |               | beta commit 2  | favorite-pizza | pineapple    |
       |        | origin        | alpha commit 1 | favorite-fruit | apple        |
       |        |               | alpha commit 2 | favorite-fruit | peach        |
-    And the initial branches and lineage exist now

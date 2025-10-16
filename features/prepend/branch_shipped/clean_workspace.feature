@@ -33,16 +33,16 @@ Feature: prepend a branch to a branch that was shipped at the remote
       """
       branch "new" is now a child of "parent"
       """
-    And the branches are now
-      | REPOSITORY | BRANCHES          |
-      | local      | main, new, parent |
-      | origin     | main, parent      |
     And this lineage exists now
       """
       main
         parent
           new
       """
+    And the branches are now
+      | REPOSITORY | BRANCHES          |
+      | local      | main, new, parent |
+      | origin     | main, parent      |
 
   Scenario: undo
     When I run "git-town undo"
@@ -56,8 +56,8 @@ Feature: prepend a branch to a branch that was shipped at the remote
       |        | git branch child {{ sha 'child commit' }}       |
       |        | git checkout child                              |
       | child  | git branch -D new                               |
+    And the initial lineage exists now
     And the branches are now
       | REPOSITORY | BRANCHES            |
       | local      | main, child, parent |
       | origin     | main, parent        |
-    And the initial lineage exists now

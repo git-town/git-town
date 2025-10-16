@@ -2,7 +2,6 @@ Feature: shipped the head branch of a synced stack with dependent changes
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
@@ -15,8 +14,9 @@ Feature: shipped the head branch of a synced stack with dependent changes
     And the commits
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | beta   | local, origin | beta commit | file      | beta content |
-    And the current branch is "beta"
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And origin ships the "alpha" branch using the "squash-merge" ship-strategy
+    And the current branch is "beta"
     When I run "git-town sync"
 
   Scenario: result
@@ -50,10 +50,10 @@ Feature: shipped the head branch of a synced stack with dependent changes
       | main   | git reset --hard {{ sha 'initial commit' }}       |
       |        | git branch alpha {{ sha-initial 'alpha commit' }} |
       |        | git checkout beta                                 |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME | FILE CONTENT  |
       | main   | origin        | alpha commit | file      | alpha content |
       | alpha  | local         | alpha commit | file      | alpha content |
       | beta   | local, origin | beta commit  | file      | beta content  |
       |        | origin        | alpha commit | file      | alpha content |
-    And the initial branches and lineage exist now

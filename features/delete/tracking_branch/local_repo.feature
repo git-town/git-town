@@ -18,17 +18,17 @@ Feature: in a local repo
       | BRANCH  | COMMAND               |
       | feature | git checkout other    |
       | other   | git branch -D feature |
+    And this lineage exists now
+      """
+      main
+        other
+      """
     And the branches are now
       | REPOSITORY | BRANCHES    |
       | local      | main, other |
     And these commits exist now
       | BRANCH | LOCATION | MESSAGE      |
       | other  | local    | other commit |
-    And this lineage exists now
-      """
-      main
-        other
-      """
 
   Scenario: undo
     When I run "git-town undo"
@@ -36,5 +36,5 @@ Feature: in a local repo
       | BRANCH | COMMAND                                       |
       | other  | git branch feature {{ sha 'feature commit' }} |
       |        | git checkout feature                          |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

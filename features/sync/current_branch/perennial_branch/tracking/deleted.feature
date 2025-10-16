@@ -22,10 +22,10 @@ Feature: sync perennial branch that was deleted at the remote
       """
       deleted branch "perennial"
       """
+    And no lineage exists now
     And the branches are now
       | REPOSITORY    | BRANCHES                   |
       | local, origin | main, feature-1, feature-2 |
-    And no lineage exists now
 
   Scenario: undo
     When I run "git-town undo"

@@ -20,13 +20,13 @@ Feature: dry-run compressing the commits on a feature branch
       |         | git reset --soft main    |
       |         | git commit -m "commit 1" |
     And all branches are now synchronized
-    And the initial commits exist now
     And file "file_1" still has content "content 1"
     And file "file_2" still has content "content 2"
     And file "file_3" still has content "content 3"
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

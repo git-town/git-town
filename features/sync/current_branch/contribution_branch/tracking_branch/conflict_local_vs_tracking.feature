@@ -29,8 +29,8 @@ Feature: handle conflicts between the current contribution branch and its tracki
       | BRANCH       | COMMAND            |
       | contribution | git rebase --abort |
     And no rebase is now in progress
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
@@ -48,11 +48,11 @@ Feature: handle conflicts between the current contribution branch and its tracki
       | BRANCH       | COMMAND                               |
       | contribution | GIT_EDITOR=true git rebase --continue |
       |              | git push                              |
+    And no rebase is now in progress
     And these commits exist now
       | BRANCH       | LOCATION      | MESSAGE                   |
       | contribution | local, origin | conflicting origin commit |
       |              |               | conflicting local commit  |
-    And no rebase is now in progress
     And these committed files exist now
       | BRANCH       | NAME             | CONTENT          |
       | contribution | conflicting_file | resolved content |
@@ -64,11 +64,11 @@ Feature: handle conflicts between the current contribution branch and its tracki
     Then Git Town runs the commands
       | BRANCH       | COMMAND  |
       | contribution | git push |
+    And no rebase is now in progress
     And these commits exist now
       | BRANCH       | LOCATION      | MESSAGE                   |
       | contribution | local, origin | conflicting origin commit |
       |              |               | conflicting local commit  |
-    And no rebase is now in progress
     And these committed files exist now
       | BRANCH       | NAME             | CONTENT          |
       | contribution | conflicting_file | resolved content |

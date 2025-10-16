@@ -2,7 +2,6 @@ Feature: using the "compress" strategy, sync a branch with unshipped local chang
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | shipped | feature | main   | local, origin |
@@ -10,8 +9,9 @@ Feature: using the "compress" strategy, sync a branch with unshipped local chang
       | BRANCH  | LOCATION      | MESSAGE          |
       | shipped | local, origin | shipped commit   |
       |         | local         | unshipped commit |
-    And the current branch is "shipped"
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And origin ships the "shipped" branch using the "squash-merge" ship-strategy
+    And the current branch is "shipped"
     When I run "git-town sync"
 
   Scenario: result
@@ -36,9 +36,9 @@ Feature: using the "compress" strategy, sync a branch with unshipped local chang
       | main    | git reset --hard {{ sha 'initial commit' }}           |
       |         | git checkout shipped                                  |
       | shipped | git reset --hard {{ sha-initial 'unshipped commit' }} |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH  | LOCATION | MESSAGE          |
       | main    | origin   | shipped commit   |
       | shipped | local    | shipped commit   |
       |         |          | unshipped commit |
-    And the initial branches and lineage exist now

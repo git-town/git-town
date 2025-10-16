@@ -25,11 +25,11 @@ Feature: dry-run merging branches
       | alpha  | git reset --hard {{ sha 'beta commit' }} |
       |        | git branch -D beta                       |
       |        | git push origin :beta                    |
-    And the initial commits exist now
     And the initial branches exist now
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
     And Git Town runs no commands
-    And the initial commits exist now
     And the initial branches exist now
+    And the initial commits exist now

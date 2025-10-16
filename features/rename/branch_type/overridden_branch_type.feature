@@ -10,8 +10,8 @@ Feature: rename a branch that has an overridden branch type
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
       | old    | local, origin | old commit  |
-    And the current branch is "old"
     And Git setting "git-town-branch.old.branchtype" is "feature"
+    And the current branch is "old"
     When I run "git-town rename new" and enter into the dialog:
       | DIALOG                  | KEYS  |
       | parent branch for "old" | enter |
@@ -40,6 +40,6 @@ Feature: rename a branch that has an overridden branch type
       |        | git checkout old                      |
       | old    | git branch -D new                     |
       |        | git push origin :new                  |
-    And Git setting "git-town-branch.new.branchtype" now doesn't exist
     And Git setting "git-town-branch.old.branchtype" is now "feature"
+    And Git setting "git-town-branch.new.branchtype" now doesn't exist
     And the initial branches and lineage exist now

@@ -2,7 +2,6 @@ Feature: shipped branch with multiple descendents
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the branches
       | NAME      | TYPE    | PARENT | LOCATIONS     |
       | feature-1 | feature | main   | local, origin |
@@ -21,6 +20,7 @@ Feature: shipped branch with multiple descendents
     And the commits
       | BRANCH     | LOCATION      | MESSAGE           | FILE NAME       | FILE CONTENT       |
       | feature-1b | local, origin | feature-1b commit | feature-1b-file | feature 1b content |
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And origin ships the "feature-1" branch using the "squash-merge" ship-strategy
     And the current branch is "feature-1"
     When I run "git-town sync --all"
@@ -55,6 +55,12 @@ Feature: shipped branch with multiple descendents
       """
       branch "feature-1b" is now a child of "main"
       """
+    And this lineage exists now
+      """
+      main
+        feature-1a
+        feature-1b
+      """
     And the branches are now
       | REPOSITORY    | BRANCHES                     |
       | local, origin | main, feature-1a, feature-1b |
@@ -63,12 +69,6 @@ Feature: shipped branch with multiple descendents
       | main       | local, origin | feature-1 commit  |
       | feature-1a | local, origin | feature-1a commit |
       | feature-1b | local, origin | feature-1b commit |
-    And this lineage exists now
-      """
-      main
-        feature-1a
-        feature-1b
-      """
 
   Scenario: undo
     When I run "git-town undo"

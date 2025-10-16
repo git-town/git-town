@@ -20,22 +20,22 @@ Feature: commit without message
       | existing | git checkout -b new main |
       | new      | git commit               |
       |          | git checkout existing    |
-    And these commits exist now
-      | BRANCH   | LOCATION | MESSAGE         |
-      | main     | origin   | main commit     |
-      | existing | local    | existing commit |
-      | new      | local    | unrelated idea  |
     And this lineage exists now
       """
       main
         existing
         new
       """
+    And these commits exist now
+      | BRANCH   | LOCATION | MESSAGE         |
+      | main     | origin   | main commit     |
+      | existing | local    | existing commit |
+      | new      | local    | unrelated idea  |
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH   | COMMAND           |
       | existing | git branch -D new |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

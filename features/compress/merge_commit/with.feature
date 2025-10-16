@@ -35,9 +35,9 @@ Feature: compress a branch with a merge commit
       | BRANCH  | COMMAND                                         |
       | feature | git reset --hard {{ sha 'merge' }}              |
       |         | git push --force-with-lease --force-if-includes |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | main    | local, origin | main commit | main_file | main content |
       | feature | local, origin | commit 1    | file_1    | content 1    |
       |         |               | merge       |           |              |
-    And the initial branches and lineage exist now

@@ -11,8 +11,8 @@ Feature: open the repo in detached state
       | branch | local    | commit 1 |
       |        | local    | commit 2 |
     And the current branch is "branch"
-    And I ran "git checkout HEAD^"
     And tool "open" is installed
+    And I ran "git checkout HEAD^"
     When I run "git-town repo"
 
   Scenario: result

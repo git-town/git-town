@@ -23,5 +23,5 @@ Feature: delete the given branch from a detached head
       """
       please check out the branch to delete
       """
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

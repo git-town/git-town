@@ -14,8 +14,8 @@ Feature: make a perennial branch a feature branch
       """
       cannot make perennial branches feature branches
       """
-    And branch "existing" still has type "perennial"
     And the initial branches and lineage exist now
+    And branch "existing" still has type "perennial"
   #
   # NOTE: Cannot test undo here.
   # The Git Town command under test has not created an undoable runstate.

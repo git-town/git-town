@@ -10,8 +10,8 @@ Feature: sync the current branch that is observed via regex
       | main       | local, origin | main commit   | main_file   |
       | renovate/1 | local         | local commit  | local_file  |
       |            | origin        | origin commit | origin_file |
-    And the current branch is "renovate/1"
     And Git setting "git-town.observed-regex" is "^renovate"
+    And the current branch is "renovate/1"
     When I run "git-town sync"
 
   Scenario: result
@@ -30,5 +30,5 @@ Feature: sync the current branch that is observed via regex
     Then Git Town runs the commands
       | BRANCH     | COMMAND                                           |
       | renovate/1 | git reset --hard {{ sha-initial 'local commit' }} |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

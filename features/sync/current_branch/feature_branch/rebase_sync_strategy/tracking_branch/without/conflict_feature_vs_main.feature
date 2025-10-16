@@ -3,7 +3,6 @@ Feature: handle conflicts between the current feature branch and the main branch
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
@@ -11,6 +10,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "feature"
     When I run "git-town sync"
 
@@ -72,8 +72,8 @@ Feature: handle conflicts between the current feature branch and the main branch
       | BRANCH  | COMMAND                                         |
       | feature | GIT_EDITOR=true git rebase --continue           |
       |         | git push --force-with-lease --force-if-includes |
-    And all branches are now synchronized
     And no merge is now in progress
+    And all branches are now synchronized
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT         |
       | main    | conflicting_file | main content    |
@@ -86,8 +86,8 @@ Feature: handle conflicts between the current feature branch and the main branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git push --force-with-lease --force-if-includes |
-    And all branches are now synchronized
     And no merge is now in progress
+    And all branches are now synchronized
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |

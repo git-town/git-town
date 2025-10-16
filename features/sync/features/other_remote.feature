@@ -2,6 +2,7 @@ Feature: ignores other Git remotes
 
   Background:
     Given a Git repo with origin
+    And a remote "other" pointing to "git@foo.com:bar/baz.git"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
@@ -10,7 +11,6 @@ Feature: ignores other Git remotes
       | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
     And the current branch is "feature"
-    And a remote "other" pointing to "git@foo.com:bar/baz.git"
     When I run "git-town sync"
 
   Scenario: result
@@ -26,5 +26,5 @@ Feature: ignores other Git remotes
       | BRANCH  | COMMAND                                                                                |
       | feature | git reset --hard {{ sha 'local feature commit' }}                                      |
       |         | git push --force-with-lease origin {{ sha-in-origin 'origin feature commit' }}:feature |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

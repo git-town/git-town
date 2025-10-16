@@ -9,8 +9,8 @@ Feature: does not ship an empty branch
       | BRANCH | LOCATION | MESSAGE      | FILE NAME   | FILE CONTENT   |
       | main   | local    | main commit  | common_file | common content |
       | empty  | local    | empty commit | common_file | common content |
-    And the current branch is "empty"
     And Git setting "git-town.ship-strategy" is "squash-merge"
+    And the current branch is "empty"
     When I run "git-town ship"
 
   Scenario: result
@@ -21,8 +21,8 @@ Feature: does not ship an empty branch
       """
       the branch "empty" has no shippable changes
       """
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now
   #
   # NOTE: Cannot test undo here.
   # The Git Town command under test has not created an undoable runstate.

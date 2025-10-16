@@ -3,6 +3,7 @@ Feature: sync before proposing
 
   Background:
     Given a Git repo with origin
+    And the origin is "git@github.com:git-town/git-town.git"
     And the branches
       | NAME   | TYPE    | PARENT | LOCATIONS     |
       | parent | feature | main   | local, origin |
@@ -15,10 +16,9 @@ Feature: sync before proposing
       |        | origin   | origin parent commit |
       | child  | local    | local child commit   |
       |        | origin   | origin child commit  |
-    And tool "open" is installed
-    And the origin is "git@github.com:git-town/git-town.git"
-    And a proposal for this branch does not exist
     And the current branch is "child"
+    And a proposal for this branch does not exist
+    And tool "open" is installed
     When I run "git-town propose"
 
   Scenario: result

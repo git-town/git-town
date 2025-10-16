@@ -30,5 +30,5 @@ Feature: merging with missing lineage
       | BRANCH | COMMAND                                    |
       | alpha  | git branch beta {{ sha 'initial commit' }} |
       |        | git checkout beta                          |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

@@ -67,6 +67,7 @@ Feature: sync all feature branches
       |              | git checkout observed                                                                            |
       | observed     | git reset --hard {{ sha 'local observed commit' }}                                               |
       |              | git checkout alpha                                                                               |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH       | LOCATION      | MESSAGE                    |
       | main         | origin        | main commit                |
@@ -82,4 +83,3 @@ Feature: sync all feature branches
       |              | origin        | origin production commit   |
       | qa           | local         | qa local commit            |
       |              | origin        | qa origin commit           |
-    And the initial branches and lineage exist now

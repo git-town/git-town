@@ -34,32 +34,32 @@ Feature: handle conflicts between the current feature branch and the main branch
       | BRANCH  | COMMAND           |
       | feature | git merge --abort |
     And no merge is now in progress
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local, origin | conflicting main commit    | conflicting_file | main content    |
       | feature | local         | conflicting feature commit | conflicting_file | feature content |
       |         | origin        | feature commit             | feature_file     | feature content |
-    And the initial branches and lineage exist now
 
   @messyoutput
   Scenario: undo through another sync invocation
     When I run "git-town sync" and enter into the dialog:
       | DIALOG              | KEYS    |
       | unfinished runstate | 3 enter |
-    Then Git Town prints:
+    Then Git Town runs the commands
+      | BRANCH  | COMMAND           |
+      | feature | git merge --abort |
+    And Git Town prints:
       """
       Handle unfinished command: undo
       """
-    And Git Town runs the commands
-      | BRANCH  | COMMAND           |
-      | feature | git merge --abort |
     And no merge is now in progress
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local, origin | conflicting main commit    | conflicting_file | main content    |
       | feature | local         | conflicting feature commit | conflicting_file | feature content |
       |         | origin        | feature commit             | feature_file     | feature content |
-    And the initial branches and lineage exist now
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
@@ -78,8 +78,8 @@ Feature: handle conflicts between the current feature branch and the main branch
       | feature | git commit --no-edit                    |
       |         | git merge --no-edit --ff origin/feature |
       |         | git push                                |
-    And all branches are now synchronized
     And no merge is now in progress
+    And all branches are now synchronized
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
@@ -101,11 +101,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     When I run "git-town compress" and enter into the dialog:
       | DIALOG              | KEYS    |
       | unfinished runstate | 5 enter |
-    Then Git Town prints:
-      """
-      Handle unfinished command: both
-      """
-    And Git Town runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git commit --no-edit                            |
       |         | git merge --no-edit --ff origin/feature         |
@@ -114,8 +110,12 @@ Feature: handle conflicts between the current feature branch and the main branch
       |         | git reset --soft main                           |
       |         | git commit -m "conflicting feature commit"      |
       |         | git push --force-with-lease --force-if-includes |
-    And all branches are now synchronized
+    And Git Town prints:
+      """
+      Handle unfinished command: both
+      """
     And no merge is now in progress
+    And all branches are now synchronized
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT         |
       | main    | conflicting_file | main content    |

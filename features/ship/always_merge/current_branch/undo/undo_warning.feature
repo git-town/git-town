@@ -8,8 +8,8 @@ Feature: git-town undo prints a warning message for a merge commit
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
-    And the current branch is "feature"
     And Git setting "git-town.ship-strategy" is "always-merge"
+    And the current branch is "feature"
     And I ran "git-town ship -m 'feature done'"
 
   Scenario: undo

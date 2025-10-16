@@ -9,9 +9,9 @@ Feature: ship while the previous branch is active in another worktree
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | current | local    | current commit |
+    And Git setting "git-town.ship-strategy" is "fast-forward"
     And the current branch is "current" and the previous branch is "previous"
     And branch "previous" is active in another worktree
-    And Git setting "git-town.ship-strategy" is "fast-forward"
     When I run "git-town ship"
 
   Scenario: result

@@ -2,7 +2,6 @@ Feature: sync inside a folder that doesn't exist on the main branch
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
@@ -12,6 +11,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       | main   | local, origin | main commit   | main_file        |
       | alpha  | local, origin | folder commit | new_folder/file1 |
       | beta   | local, origin | beta commit   | file2            |
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "alpha"
     When I run "git-town sync --all" in the "new_folder" folder
 
@@ -26,13 +26,13 @@ Feature: sync inside a folder that doesn't exist on the main branch
       |        | git push --force-with-lease --force-if-includes                              |
       |        | git checkout alpha                                                           |
       | alpha  | git push --tags                                                              |
-    And all branches are now synchronized
     And this lineage exists now
       """
       main
         alpha
         beta
       """
+    And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | main commit   |
@@ -49,5 +49,5 @@ Feature: sync inside a folder that doesn't exist on the main branch
       | beta   | git reset --hard {{ sha-initial 'beta commit' }}   |
       |        | git push --force-with-lease --force-if-includes    |
       |        | git checkout alpha                                 |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

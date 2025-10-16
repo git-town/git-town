@@ -3,6 +3,7 @@ Feature: merge conflict
 
   Background:
     Given a Git repo with origin
+    And the origin is "git@github.com:git-town/git-town.git"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
@@ -11,9 +12,8 @@ Feature: merge conflict
       | feature | local    | local commit  | conflicting_file | local content  |
       | feature | origin   | origin commit | conflicting_file | remote content |
     And the current branch is "feature"
-    And tool "open" is installed
-    And the origin is "git@github.com:git-town/git-town.git"
     And a proposal for this branch does not exist
+    And tool "open" is installed
     When I run "git-town propose"
 
   Scenario: result

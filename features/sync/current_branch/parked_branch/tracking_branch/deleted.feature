@@ -9,8 +9,8 @@ Feature: remove a parked branch as soon as the tracking branch is gone, even if 
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME  |
       | main   | local, origin | main commit  | main_file  |
       | parked | local         | local commit | local_file |
-    And the current branch is "parked"
     And origin deletes the "parked" branch
+    And the current branch is "parked"
     When I run "git-town sync"
 
   Scenario: result
@@ -19,13 +19,13 @@ Feature: remove a parked branch as soon as the tracking branch is gone, even if 
       | parked | git fetch --prune --tags |
       |        | git checkout main        |
       | main   | git branch -D parked     |
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE     |
-      | main   | local, origin | main commit |
     And Git Town prints:
       """
       deleted branch "parked"
       """
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE     |
+      | main   | local, origin | main commit |
 
   Scenario: undo
     When I run "git-town undo"
@@ -33,5 +33,5 @@ Feature: remove a parked branch as soon as the tracking branch is gone, even if 
       | BRANCH | COMMAND                                            |
       | main   | git branch parked {{ sha-initial 'local commit' }} |
       |        | git checkout parked                                |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

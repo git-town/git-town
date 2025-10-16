@@ -2,7 +2,6 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the commits
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT           |
       | main   | local, origin | main commit | file      | line 0\nline 1\nline 2 |
@@ -18,6 +17,7 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                               |
       | branch-2 | local, origin | branch-2 commit | file      | line 0\nline 1: branch-1 content\nline 2: branch-2 content |
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And origin ships the "branch-1" branch using the "squash-merge" ship-strategy
     And I add this commit to the "main" branch
       | MESSAGE                    | FILE NAME | FILE CONTENT                                |

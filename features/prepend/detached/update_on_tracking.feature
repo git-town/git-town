@@ -18,16 +18,16 @@ Feature: prepend a branch to a feature branch in detached mode with a new commit
       | branch | git fetch --prune --tags               |
       |        | git merge --no-edit --ff origin/branch |
       |        | git checkout -b parent main            |
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE       |
-      | branch | local, origin | local commit  |
-      |        |               | origin commit |
     And this lineage exists now
       """
       main
         parent
           branch
       """
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE       |
+      | branch | local, origin | local commit  |
+      |        |               | origin commit |
 
   Scenario: undo
     When I run "git-town undo"
@@ -36,5 +36,5 @@ Feature: prepend a branch to a feature branch in detached mode with a new commit
       | parent | git checkout branch                       |
       | branch | git reset --hard {{ sha 'local commit' }} |
       |        | git branch -D parent                      |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

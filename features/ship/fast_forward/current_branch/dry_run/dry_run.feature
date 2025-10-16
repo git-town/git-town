@@ -8,8 +8,8 @@ Feature: dry-run shipping via the fast-forward strategy
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
-    And the current branch is "feature"
     And Git setting "git-town.ship-strategy" is "fast-forward"
+    And the current branch is "feature"
     When I run "git-town ship --dry-run"
 
   Scenario: result
@@ -20,11 +20,11 @@ Feature: dry-run shipping via the fast-forward strategy
       | main    | git merge --ff-only feature |
       |         | git push origin :feature    |
       |         | git branch -D feature       |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

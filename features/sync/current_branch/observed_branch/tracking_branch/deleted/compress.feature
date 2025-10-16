@@ -2,7 +2,6 @@ Feature: remove an observed branch as soon as its tracking branch is gone, even 
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the branches
       | NAME     | TYPE     | LOCATIONS     |
       | observed | observed | local, origin |
@@ -11,8 +10,9 @@ Feature: remove an observed branch as soon as its tracking branch is gone, even 
       | BRANCH   | LOCATION      | MESSAGE      | FILE NAME  |
       | main     | local, origin | main commit  | main_file  |
       | observed | local         | local commit | local_file |
-    And the current branch is "observed"
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And origin deletes the "observed" branch
+    And the current branch is "observed"
     When I run "git-town sync"
 
   Scenario: result
@@ -21,13 +21,13 @@ Feature: remove an observed branch as soon as its tracking branch is gone, even 
       | observed | git fetch --prune --tags |
       |          | git checkout main        |
       | main     | git branch -D observed   |
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE     |
-      | main   | local, origin | main commit |
     And Git Town prints:
       """
       deleted branch "observed"
       """
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE     |
+      | main   | local, origin | main commit |
 
   Scenario: undo
     When I run "git-town undo"
@@ -35,5 +35,5 @@ Feature: remove an observed branch as soon as its tracking branch is gone, even 
       | BRANCH | COMMAND                                              |
       | main   | git branch observed {{ sha-initial 'local commit' }} |
       |        | git checkout observed                                |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

@@ -17,9 +17,9 @@ Feature: already existing remote branch
       """
       there is already a branch "existing"
       """
+    And the initial branches and lineage exist now
     And the uncommitted file still exists
     And the initial commits exist now
-    And the initial branches and lineage exist now
   #
   # NOTE: Cannot test undo here.
   # The Git Town command under test has not created an undoable runstate.

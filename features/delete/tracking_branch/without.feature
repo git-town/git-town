@@ -18,15 +18,15 @@ Feature: delete a local branch
       | current | git fetch --prune --tags |
       |         | git checkout other       |
       | other   | git branch -D current    |
-    And the branches are now
-      | REPOSITORY | BRANCHES    |
-      | local      | main, other |
-      | origin     | main        |
     And this lineage exists now
       """
       main
         other
       """
+    And the branches are now
+      | REPOSITORY | BRANCHES    |
+      | local      | main, other |
+      | origin     | main        |
 
   Scenario: undo
     When I run "git-town undo"
@@ -34,5 +34,5 @@ Feature: delete a local branch
       | BRANCH | COMMAND                                     |
       | other  | git branch current {{ sha 'local commit' }} |
       |        | git checkout current                        |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

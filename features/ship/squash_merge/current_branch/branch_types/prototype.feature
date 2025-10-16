@@ -9,8 +9,8 @@ Feature: shipping a prototype branch
     And the commits
       | BRANCH    | LOCATION      | MESSAGE          |
       | prototype | local, origin | prototype commit |
-    And the current branch is "prototype"
     And Git setting "git-town.ship-strategy" is "squash-merge"
+    And the current branch is "prototype"
     When I run "git-town ship" and enter "prototype done" for the commit message
 
   Scenario: result
@@ -23,13 +23,13 @@ Feature: shipping a prototype branch
       |           | git push                          |
       |           | git push origin :prototype        |
       |           | git branch -D prototype           |
+    And no lineage exists now
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        |
       | main   | local, origin | prototype done |
-    And no lineage exists now
 
   Scenario: undo
     When I run "git-town undo"
@@ -40,10 +40,10 @@ Feature: shipping a prototype branch
       |        | git branch prototype {{ sha 'prototype commit' }} |
       |        | git push -u origin prototype                      |
       |        | git checkout prototype                            |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE                 |
       | main      | local, origin | prototype done          |
       |           |               | Revert "prototype done" |
       | prototype | local, origin | prototype commit        |
-    And the initial branches and lineage exist now
     And branch "prototype" now has type "prototype"

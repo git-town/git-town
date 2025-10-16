@@ -14,8 +14,8 @@ Feature: merging a branch with disabled push-hook
     And the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | beta   | local, origin | beta commit |
-    And the current branch is "beta"
     And Git setting "git-town.push-hook" is "false"
+    And the current branch is "beta"
     When I run "git-town merge"
 
   Scenario: result
@@ -46,5 +46,5 @@ Feature: merging a branch with disabled push-hook
       |        | git branch beta {{ sha 'beta commit' }}                     |
       |        | git push --no-verify -u origin beta                         |
       |        | git checkout beta                                           |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

@@ -6,8 +6,8 @@ Feature: disable pushing through Git metadata
       | NAME     | TYPE    | PARENT   | LOCATIONS |
       | branch-1 | feature | main     | local     |
       | branch-2 | feature | branch-1 | local     |
-    And the current branch is "branch-2"
     And Git setting "git-town.push-branches" is "false"
+    And the current branch is "branch-2"
     When I run "git-town prepend new"
 
   Scenario: result
@@ -25,6 +25,6 @@ Feature: disable pushing through Git metadata
       | BRANCH   | COMMAND               |
       | new      | git checkout branch-2 |
       | branch-2 | git branch -D new     |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now
     And the initial tags exist now

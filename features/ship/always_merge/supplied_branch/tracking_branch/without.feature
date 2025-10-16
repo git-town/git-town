@@ -9,8 +9,8 @@ Feature: ship the supplied local feature branch
     And the commits
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME        |
       | feature | local    | feature commit | conflicting_file |
-    And the current branch is "other"
     And Git setting "git-town.ship-strategy" is "always-merge"
+    And the current branch is "other"
     When I run "git-town ship feature" and close the editor
 
   Scenario: result
@@ -22,6 +22,11 @@ Feature: ship the supplied local feature branch
       |        | git push                            |
       |        | git checkout other                  |
       | other  | git branch -D feature               |
+    And this lineage exists now
+      """
+      main
+        other
+      """
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
@@ -29,19 +34,14 @@ Feature: ship the supplied local feature branch
       | BRANCH | LOCATION      | MESSAGE                |
       | main   | local, origin | feature commit         |
       |        |               | Merge branch 'feature' |
-    And this lineage exists now
-      """
-      main
-        other
-      """
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | other  | git branch feature {{ sha 'feature commit' }} |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                |
       | main   | local, origin | feature commit         |
       |        |               | Merge branch 'feature' |
-    And the initial branches and lineage exist now

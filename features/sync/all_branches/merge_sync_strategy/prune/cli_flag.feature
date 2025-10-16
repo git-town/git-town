@@ -39,15 +39,15 @@ Feature: prune enabled via CLI
       | feature-3 | git merge --no-edit --ff main                     |
       |           | git push                                          |
       |           | git push --tags                                   |
-    And all branches are now synchronized
-    And the branches are now
-      | REPOSITORY    | BRANCHES        |
-      | local, origin | main, feature-3 |
     And this lineage exists now
       """
       main
         feature-3
       """
+    And the branches are now
+      | REPOSITORY    | BRANCHES        |
+      | local, origin | main, feature-3 |
+    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

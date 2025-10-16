@@ -21,9 +21,10 @@ Feature: delete another branch while having conflicting open changes
       | good   | git fetch --prune --tags |
       |        | git push origin :dead    |
       |        | git branch -D dead       |
-    And the uncommitted file has content:
+    And this lineage exists now
       """
-      conflicting content
+      main
+        good
       """
     And the branches are now
       | REPOSITORY    | BRANCHES   |
@@ -32,10 +33,9 @@ Feature: delete another branch while having conflicting open changes
       | BRANCH | LOCATION      | MESSAGE            |
       | main   | local, origin | conflicting commit |
       | good   | local, origin | good commit        |
-    And this lineage exists now
+    And the uncommitted file has content:
       """
-      main
-        good
+      conflicting content
       """
 
   Scenario: undo
@@ -48,12 +48,12 @@ Feature: delete another branch while having conflicting open changes
       |        | git push -u origin dead                     |
       |        | git stash pop                               |
       |        | git restore --staged .                      |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE            |
       | main   | local, origin | conflicting commit |
       | dead   | local, origin | dead-end commit    |
       | good   | local, origin | good commit        |
-    And the initial branches and lineage exist now
     And the uncommitted file has content:
       """
       conflicting content

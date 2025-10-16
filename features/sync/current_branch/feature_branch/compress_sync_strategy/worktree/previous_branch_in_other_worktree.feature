@@ -10,9 +10,9 @@ Feature: sync while the previous branch is checked out in another worktree
       | BRANCH  | LOCATION | MESSAGE   |
       | current | local    | current 1 |
       | current | local    | current 2 |
+    And Git setting "git-town.sync-strategy" is "compress"
     And the current branch is "current" and the previous branch is "previous"
     And branch "previous" is active in another worktree
-    And Git setting "git-town.sync-strategy" is "compress"
     When I run "git-town sync"
 
   Scenario: result
@@ -31,5 +31,5 @@ Feature: sync while the previous branch is checked out in another worktree
       | current | git reset --hard {{ sha 'current 2' }} |
       |         | git push origin :current               |
     And the previous Git branch is still "previous"
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

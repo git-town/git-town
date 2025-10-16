@@ -9,8 +9,8 @@ Feature: remove a prototype branch as soon as its tracking branch is gone, even 
       | BRANCH    | LOCATION      | MESSAGE      | FILE NAME  |
       | main      | local, origin | main commit  | main_file  |
       | prototype | local         | local commit | local_file |
-    And the current branch is "prototype"
     And origin deletes the "prototype" branch
+    And the current branch is "prototype"
     When I run "git-town sync"
 
   Scenario: result
@@ -19,13 +19,13 @@ Feature: remove a prototype branch as soon as its tracking branch is gone, even 
       | prototype | git fetch --prune --tags |
       |           | git checkout main        |
       | main      | git branch -D prototype  |
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE     |
-      | main   | local, origin | main commit |
     And Git Town prints:
       """
       deleted branch "prototype"
       """
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE     |
+      | main   | local, origin | main commit |
 
   Scenario: undo
     When I run "git-town undo"
@@ -33,5 +33,5 @@ Feature: remove a prototype branch as soon as its tracking branch is gone, even 
       | BRANCH | COMMAND                                               |
       | main   | git branch prototype {{ sha-initial 'local commit' }} |
       |        | git checkout prototype                                |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

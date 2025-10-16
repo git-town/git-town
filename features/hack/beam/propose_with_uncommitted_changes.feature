@@ -3,6 +3,7 @@ Feature: beam a commit and uncommitted changes onto a new feature branch and pro
 
   Background:
     Given a Git repo with origin
+    And the origin is "git@github.com:git-town/git-town.git"
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
@@ -14,7 +15,6 @@ Feature: beam a commit and uncommitted changes onto a new feature branch and pro
       | existing | local, origin | commit 3    |
       | existing | local, origin | commit 4    |
     And the current branch is "existing"
-    And the origin is "git@github.com:git-town/git-town.git"
     And tool "open" is installed
     And an uncommitted file
     And I ran "git add ."
@@ -38,6 +38,12 @@ Feature: beam a commit and uncommitted changes onto a new feature branch and pro
       |          | open https://github.com/git-town/git-town/compare/new?expand=1&title=uncommitted                        |
       |          | git checkout existing                                                                                   |
     And no rebase is now in progress
+    And this lineage exists now
+      """
+      main
+        existing
+        new
+      """
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE     |
       | main     | origin        | main commit |
@@ -46,12 +52,6 @@ Feature: beam a commit and uncommitted changes onto a new feature branch and pro
       | new      | local, origin | uncommitted |
       |          |               | commit 1    |
       |          |               | commit 4    |
-    And this lineage exists now
-      """
-      main
-        existing
-        new
-      """
 
   Scenario: undo
     When I run "git-town undo"
@@ -61,5 +61,5 @@ Feature: beam a commit and uncommitted changes onto a new feature branch and pro
       |          | git push --force-with-lease --force-if-includes |
       |          | git branch -D new                               |
       |          | git push origin :new                            |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

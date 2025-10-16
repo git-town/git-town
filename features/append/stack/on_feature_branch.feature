@@ -17,13 +17,13 @@ Feature: append a new feature branch to an existing feature branch
       | BRANCH   | COMMAND                  |
       | existing | git fetch --prune --tags |
       |          | git checkout -b new      |
-    And the initial commits exist now
     And this lineage exists now
       """
       main
         existing
           new
       """
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -31,5 +31,5 @@ Feature: append a new feature branch to an existing feature branch
       | BRANCH   | COMMAND               |
       | new      | git checkout existing |
       | existing | git branch -D new     |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

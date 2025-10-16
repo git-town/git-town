@@ -8,8 +8,8 @@ Feature: does not ship a branch that has open changes
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME        | FILE CONTENT    |
       | feature | local, origin | feature commit | conflicting_file | feature content |
-    And the current branch is "feature"
     And Git setting "git-town.ship-strategy" is "always-merge"
+    And the current branch is "feature"
     And an uncommitted file
     When I run "git-town ship feature"
 

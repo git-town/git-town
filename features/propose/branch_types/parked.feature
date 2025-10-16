@@ -3,6 +3,7 @@ Feature: Create proposals for parked branches
 
   Background:
     Given a Git repo with origin
+    And the origin is "git@github.com:git-town/git-town.git"
     And the branches
       | NAME   | TYPE   | PARENT | LOCATIONS     |
       | parked | parked | main   | local, origin |
@@ -10,9 +11,8 @@ Feature: Create proposals for parked branches
       | BRANCH | LOCATION | MESSAGE       |
       | parked | local    | parked commit |
     And the current branch is "parked"
-    And tool "open" is installed
-    And the origin is "git@github.com:git-town/git-town.git"
     And a proposal for this branch does not exist
+    And tool "open" is installed
     When I run "git-town propose"
 
   Scenario: result

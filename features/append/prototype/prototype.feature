@@ -14,15 +14,15 @@ Feature: on the main branch
       | main   | git fetch --prune --tags                          |
       |        | git -c rebase.updateRefs=false rebase origin/main |
       |        | git checkout -b new                               |
-    And branch "new" now has type "prototype"
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE     |
-      | main   | local, origin | main commit |
     And this lineage exists now
       """
       main
         new
       """
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE     |
+      | main   | local, origin | main commit |
+    And branch "new" now has type "prototype"
 
   Scenario: undo
     When I run "git-town undo"
@@ -31,5 +31,5 @@ Feature: on the main branch
       | new    | git checkout main                           |
       | main   | git reset --hard {{ sha 'initial commit' }} |
       |        | git branch -D new                           |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

@@ -2,7 +2,6 @@ Feature: append a new feature branch in a clean workspace using the "compress" s
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
@@ -10,6 +9,7 @@ Feature: append a new feature branch in a clean workspace using the "compress" s
       | BRANCH  | LOCATION      | MESSAGE            |
       | feature | local, origin | already compressed |
       | feature | origin        | new commit         |
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the current branch is "feature"
     And wait 1 second to ensure new Git timestamps
     When I run "git-town append new"
@@ -23,15 +23,15 @@ Feature: append a new feature branch in a clean workspace using the "compress" s
       |         | git commit -m "already compressed"      |
       |         | git push --force-with-lease             |
       |         | git checkout -b new                     |
-    And these commits exist now
-      | BRANCH  | LOCATION      | MESSAGE            |
-      | feature | local, origin | already compressed |
     And this lineage exists now
       """
       main
         feature
           new
       """
+    And these commits exist now
+      | BRANCH  | LOCATION      | MESSAGE            |
+      | feature | local, origin | already compressed |
 
   Scenario: undo
     When I run "git-town undo"
@@ -41,5 +41,5 @@ Feature: append a new feature branch in a clean workspace using the "compress" s
       | feature | git reset --hard {{ sha-initial 'already compressed' }}                     |
       |         | git push --force-with-lease origin {{ sha-in-origin 'new commit' }}:feature |
       |         | git branch -D new                                                           |
-    And the initial commits exist now
     And the initial lineage exists now
+    And the initial commits exist now

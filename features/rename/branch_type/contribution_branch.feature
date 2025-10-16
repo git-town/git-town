@@ -19,15 +19,15 @@ Feature: rename a contribution branch
       |              | git checkout new                   |
       | new          | git push -u origin new             |
       |              | git push origin :contribution      |
-    And branch "new" still has type "contribution"
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE               |
-      | new    | local, origin | somebody elses commit |
     And this lineage exists now
       """
       main
         new
       """
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE               |
+      | new    | local, origin | somebody elses commit |
+    And branch "new" still has type "contribution"
 
   Scenario: undo
     When I run "git-town undo"
@@ -38,6 +38,6 @@ Feature: rename a contribution branch
       |              | git checkout contribution                                 |
       | contribution | git branch -D new                                         |
       |              | git push origin :new                                      |
+    And the initial branches and lineage exist now
     And branch "contribution" still has type "contribution"
     And the initial commits exist now
-    And the initial branches and lineage exist now
