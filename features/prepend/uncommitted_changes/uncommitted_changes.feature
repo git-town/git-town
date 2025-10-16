@@ -27,9 +27,7 @@ Feature: prepend a branch to a feature branch
         parent
           old
       """
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE    |
-      | old    | local, origin | old commit |
+    And the initial commits exist now
     And the uncommitted file still exists
 
   Scenario: undo
