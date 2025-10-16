@@ -1465,7 +1465,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			initialCommits := state.initialCommits.GetOrPanic()
 			_, errCount := initialCommits.EqualDataTable(currentCommits)
 			if errCount == 0 {
-				return errors.New("the initial commits exist now")
+				return errors.New("Please use step 'the initial commits exist now' instead.")
 			}
 		}
 		return state.compareGherkinTable(table)
