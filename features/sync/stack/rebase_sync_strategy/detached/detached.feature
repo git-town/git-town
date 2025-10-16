@@ -44,22 +44,7 @@ Feature: sync the entire stack
       | gamma  | git -c rebase.updateRefs=false rebase --onto beta {{ sha 'initial commit' }}  |
       |        | git push --force-with-lease --force-if-includes                               |
       |        | git checkout alpha                                                            |
-    And these commits exist now
-      | BRANCH     | LOCATION      | MESSAGE                  |
-      | main       | origin        | main commit              |
-      | alpha      | local, origin | alpha commit             |
-      | beta       | local, origin | beta commit              |
-      | gamma      | local, origin | gamma commit             |
-      | one        | local, origin | one commit               |
-      | two        | local, origin | two commit               |
-      | parked     | local         | local parked commit      |
-      |            | origin        | origin parked commit     |
-      | observed   | local         | local observed commit    |
-      |            | origin        | origin observed commit   |
-      | production | local         | local production commit  |
-      |            | origin        | origin production commit |
-      | qa         | local         | qa local commit          |
-      |            | origin        | qa origin commit         |
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"

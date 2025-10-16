@@ -62,7 +62,4 @@ Feature: cannot compress branches that are out of sync
       please sync branch "feature" before compressing it
       """
     And the initial branches and lineage exist now
-    And these commits exist now
-      | BRANCH  | LOCATION | MESSAGE  | FILE NAME | FILE CONTENT |
-      | feature | local    | commit 1 | file_1    | content 1    |
-      |         |          | commit 2 | file_2    | content 2    |
+    And the initial commits exist now

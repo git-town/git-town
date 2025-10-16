@@ -46,11 +46,7 @@ Feature: remove a branch from a stack
         branch-2
           branch-3
       """
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE  |
-      | branch-1 | local, origin | commit 1 |
-      | branch-2 | local, origin | commit 2 |
-      | branch-3 | local, origin | commit 3 |
+    And the initial commits exist now
     And the branches contain these files:
       | BRANCH   | NAME   |
       | branch-1 | file_1 |

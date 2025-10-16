@@ -57,13 +57,7 @@ Feature: disable auto-resolution of phantom merge conflicts via config setting w
       |          | git branch branch-1 {{ sha-initial 'branch-1 commit' }} |
       |          | git checkout branch-2                                   |
     And no merge is now in progress
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                           |
-      | main     | local, origin | main commit     | file      | line 1\nline 2                                         |
-      |          | origin        | branch-1 commit | file      | line 1 changed by branch-1\nline 2                     |
-      | branch-1 | local         | branch-1 commit | file      | line 1 changed by branch-1\nline 2                     |
-      | branch-2 | local         | branch-2 commit | file      | line 1 changed by branch-1\nline 2 changed by branch-2 |
-      |          | origin        | branch-1 commit | file      | line 1 changed by branch-1\nline 2                     |
+    And the initial commits exist now
 
   Scenario: run without resolving the conflicts
     When I run "git-town continue"

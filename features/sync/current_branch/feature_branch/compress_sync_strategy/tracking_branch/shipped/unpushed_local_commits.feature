@@ -37,8 +37,4 @@ Feature: using the "compress" strategy, sync a branch with unshipped local chang
       |         | git checkout shipped                                  |
       | shipped | git reset --hard {{ sha-initial 'unshipped commit' }} |
     And the initial branches and lineage exist now
-    And these commits exist now
-      | BRANCH  | LOCATION | MESSAGE          |
-      | main    | origin   | shipped commit   |
-      | shipped | local    | shipped commit   |
-      |         |          | unshipped commit |
+    And the initial commits exist now

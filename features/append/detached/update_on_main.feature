@@ -23,10 +23,7 @@ Feature: append a new feature branch to an existing feature branch in detached m
         existing
           new
       """
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE         |
-      | main     | local, origin | main commit     |
-      | existing | local, origin | existing commit |
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"

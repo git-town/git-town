@@ -51,11 +51,5 @@ Feature: syncing a branch with independent changes that received a new commit si
       | BRANCH   | COMMAND                                         |
       | branch-2 | git reset --hard {{ sha 'branch-2 commit B' }}  |
       |          | git push --force-with-lease --force-if-includes |
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE           | FILE NAME | FILE CONTENT                                                       |
-      | main     | local, origin | main commit       | file      | line 0\n\nline 1\n\nline 2                                         |
-      | branch-1 | local, origin | branch-1 commit A | file      | line 0\n\nline 1: branch-1 content A\n\nline 2                     |
-      |          |               | branch-1 commit B | file      | line 0\n\nline 1: branch-1 content B\n\nline 2                     |
-      | branch-2 | local, origin | branch-2 commit A | file      | line 0\n\nline 1: branch-1 content A\n\nline 2: branch-2 content A |
-      |          |               | branch-2 commit B | file      | line 0\n\nline 1: branch-1 content A\n\nline 2: branch-2 content B |
+    And the initial commits exist now
     And the initial branches and lineage exist now

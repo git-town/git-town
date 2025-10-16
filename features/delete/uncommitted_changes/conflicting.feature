@@ -49,12 +49,8 @@ Feature: delete another branch while having conflicting open changes
       |        | git stash pop                               |
       |        | git restore --staged .                      |
     And the initial branches and lineage exist now
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE            |
-      | main   | local, origin | conflicting commit |
-      | dead   | local, origin | dead-end commit    |
-      | good   | local, origin | good commit        |
     And the uncommitted file has content:
       """
       conflicting content
       """
+    And the initial commits exist now

@@ -73,12 +73,5 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       | BRANCH | COMMAND               |
       | main   | git rebase --abort    |
       |        | git checkout branch-2 |
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE                    | FILE NAME | FILE CONTENT                                               |
-      | main     | local, origin | main commit                | file      | line 0\nline 1\nline 2                                     |
-      |          | local         | independent commit on main | file      | line 0: independent content\nline 1\nline 2                |
-      |          | origin        | branch-1 commit            | file      | line 0\nline 1: branch-1 content\nline 2                   |
-      | branch-1 | local         | branch-1 commit            | file      | line 0\nline 1: branch-1 content\nline 2                   |
-      | branch-2 | local, origin | branch-2 commit            | file      | line 0\nline 1: branch-1 content\nline 2: branch-2 content |
-      |          | origin        | branch-1 commit            | file      | line 0\nline 1: branch-1 content\nline 2                   |
+    And the initial commits exist now
     And the initial branches and lineage exist now

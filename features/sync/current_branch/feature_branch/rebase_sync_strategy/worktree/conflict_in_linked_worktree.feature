@@ -34,10 +34,7 @@ Feature: sync a branch in a "linked worktree" that has a merge conflict
       | feature | git rebase --abort                                                            |
       |         | git push --force-with-lease origin {{ sha-initial 'initial commit' }}:feature |
     And the current branch in the other worktree is still "feature"
-    And these commits exist now
-      | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
-      | main    | origin   | conflicting main commit    | conflicting_file | main content    |
-      | feature | worktree | conflicting feature commit | conflicting_file | feature content |
+    And the initial commits exist now
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue" in the other worktree

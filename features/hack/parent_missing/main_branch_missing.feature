@@ -24,10 +24,7 @@ Feature: on a feature branch but without main branch
         existing
         new
       """
-    And these commits exist now
-      | BRANCH   | LOCATION | MESSAGE         |
-      | main     | origin   | main commit     |
-      | existing | local    | existing commit |
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"

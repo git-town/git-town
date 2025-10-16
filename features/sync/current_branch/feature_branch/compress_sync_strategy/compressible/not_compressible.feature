@@ -25,10 +25,7 @@ Feature: sync a feature branch that is already compressed using the "compress" s
       | beta   | git fetch --prune --tags |
       |        | git checkout alpha       |
       | alpha  | git checkout beta        |
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE        |
-      | alpha  | local, origin | alpha commit 1 |
-      | beta   | local, origin | beta commit 1  |
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"

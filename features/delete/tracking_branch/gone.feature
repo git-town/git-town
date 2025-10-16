@@ -41,7 +41,4 @@ Feature: deleting a branch whose tracking branch is gone
       | other  | git branch current {{ sha 'current commit' }} |
       |        | git checkout current                          |
     And the initial branches and lineage exist now
-    And these commits exist now
-      | BRANCH  | LOCATION      | MESSAGE        |
-      | current | local         | current commit |
-      | other   | local, origin | other commit   |
+    And the initial commits exist now

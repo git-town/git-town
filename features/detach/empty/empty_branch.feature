@@ -45,14 +45,7 @@ Feature: detaching an empty branch
             branch-4
         branch-2
       """
-    And these commits exist now
-      | BRANCH   | LOCATION | MESSAGE   |
-      | branch-1 | local    | commit 1a |
-      |          |          | commit 1b |
-      | branch-3 | local    | commit 3a |
-      |          |          | commit 3b |
-      | branch-4 | local    | commit 4a |
-      |          |          | commit 4b |
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"

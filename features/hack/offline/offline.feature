@@ -17,9 +17,7 @@ Feature: offline mode
       main
         new
       """
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE     |
-      | main   | local, origin | main commit |
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"

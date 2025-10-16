@@ -27,10 +27,8 @@ Feature: prepend a new branch when prototype branches are configured via config 
         parent
           old
       """
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE    |
-      | old    | local, origin | old commit |
     And branch "parent" now has type "prototype"
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"

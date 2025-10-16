@@ -32,6 +32,4 @@ Feature: syncing a stack that contains an observed branch
     And the branches are now
       | REPOSITORY    | BRANCHES       |
       | local, origin | main, observed |
-    And these commits exist now
-      | BRANCH   | LOCATION | MESSAGE    |
-      | observed | origin   | new commit |
+    And the initial commits exist now

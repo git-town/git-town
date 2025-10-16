@@ -23,11 +23,9 @@ Feature: prepend a prototype branch to a feature branch
         parent
           old
       """
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE    |
-      | old    | local, origin | old commit |
     And branch "parent" now has type "prototype"
     And branch "old" still has type "feature"
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"

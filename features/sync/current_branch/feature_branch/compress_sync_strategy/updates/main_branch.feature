@@ -26,11 +26,7 @@ Feature: sync a feature branch with new commits on the main branch in detached m
       |        | git reset --soft alpha         |
       |        | git commit -m "beta commit"    |
       |        | git push --force-with-lease    |
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE      |
-      | main   | local, origin | new commit   |
-      | alpha  | local, origin | alpha commit |
-      | beta   | local, origin | beta commit  |
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"

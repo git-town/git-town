@@ -23,12 +23,7 @@ Feature: offline mode
       | main    | git -c rebase.updateRefs=false rebase origin/main                            |
       |         | git checkout feature                                                         |
       | feature | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
-    And these commits exist now
-      | BRANCH  | LOCATION | MESSAGE               |
-      | main    | local    | local main commit     |
-      |         | origin   | origin main commit    |
-      | feature | local    | local feature commit  |
-      |         | origin   | origin feature commit |
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"

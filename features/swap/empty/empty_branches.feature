@@ -27,8 +27,7 @@ Feature: swapping empty branches
           branch-1
             branch-3
       """
-    And these commits exist now
-      | BRANCH | LOCATION | MESSAGE |
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"

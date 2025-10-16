@@ -33,11 +33,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
         beta
       """
     And all branches are now synchronized
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE       |
-      | main   | local, origin | main commit   |
-      | alpha  | local, origin | folder commit |
-      | beta   | local, origin | beta commit   |
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
