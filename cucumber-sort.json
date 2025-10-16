@@ -100,6 +100,7 @@
     "^I amend this commit$",
     "^I add commit \".*\" to the \".*\" branch$",
     "^I add this commit to the .* branch",
+    "^I ran .* on branch",
     "^the current branch is \".*$",
     "^branch \".*\" is active in another worktree$",
     "^a proposal for this branch exists at .*$",
