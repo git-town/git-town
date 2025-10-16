@@ -17,8 +17,8 @@ Feature: reset the configuration
       | COMMAND                                |
       | git config --global --unset alias.hack |
       | git config --global --unset alias.sync |
-    And global Git setting "alias.append" is still "commit --amend"
     And Git Town is no longer configured
+    And global Git setting "alias.append" is still "commit --amend"
 
   Scenario: no configuration
     Given a Git repo with origin
