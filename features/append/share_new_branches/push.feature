@@ -21,7 +21,9 @@ Feature: auto-push the new branch to origin
       main
         new
       """
-    And the initial commits exist now
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE     |
+      | main   | local, origin | main commit |
 
   Scenario: undo
     When I run "git-town undo"
