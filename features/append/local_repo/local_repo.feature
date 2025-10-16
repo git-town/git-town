@@ -21,9 +21,7 @@ Feature: in a local repo
         existing
           new
       """
-    And these commits exist now
-      | BRANCH   | LOCATION | MESSAGE         |
-      | existing | local    | existing commit |
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
