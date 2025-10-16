@@ -22,9 +22,7 @@ Feature: prepend a branch to a feature branch in detached mode when there are ne
         parent
           old
       """
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE    |
-      | old    | local, origin | old commit |
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"

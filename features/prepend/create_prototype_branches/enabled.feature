@@ -23,9 +23,7 @@ Feature: prepend a new branch when prototype branches are configured via Git met
         parent
           old
       """
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE    |
-      | old    | local, origin | old commit |
+    And the initial commits exist now
     And branch "parent" now has type "prototype"
 
   Scenario: undo
