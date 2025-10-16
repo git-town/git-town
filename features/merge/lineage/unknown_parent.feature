@@ -21,8 +21,7 @@ Feature: merging with missing lineage
       main
         alpha
       """
-    And these commits exist now
-      | BRANCH | LOCATION | MESSAGE |
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
