@@ -25,8 +25,8 @@ Feature: sync all feature branches in the presence of uncommitted changes
       | feature-1 | git push --tags             |
       |           | git stash pop               |
       |           | git restore --staged .      |
-    And the initial commits exist now
     And the uncommitted file still exists
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"

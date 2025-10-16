@@ -27,8 +27,8 @@ Feature: prepend a branch to a feature branch
         parent
           old
       """
-    And the initial commits exist now
     And the uncommitted file still exists
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
