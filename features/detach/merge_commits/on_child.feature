@@ -60,8 +60,4 @@ Feature: detaching a branch whose child contains merge commits
       |          | git push --force-with-lease --force-if-includes |
       |          | git checkout branch-2                           |
     And the initial lineage exists now
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE  |
-      | branch-1 | local, origin | commit 1 |
-      | branch-2 | local, origin | commit 2 |
-      | branch-3 | local, origin | commit 3 |
+    And the initial commits exist now
