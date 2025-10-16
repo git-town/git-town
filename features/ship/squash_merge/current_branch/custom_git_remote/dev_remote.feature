@@ -3,13 +3,13 @@ Feature: ship to a custom dev remote
 
   Background:
     Given a Git repo with origin
-    And I rename the "origin" remote to "fork"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
+    And I rename the "origin" remote to "fork"
     And Git setting "git-town.dev-remote" is "fork"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     And the current branch is "feature"
