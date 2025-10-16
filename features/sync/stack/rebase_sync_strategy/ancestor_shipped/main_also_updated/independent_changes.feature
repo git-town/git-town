@@ -53,6 +53,7 @@ Feature: shipped the head branch of a synced stack with inddependent changes tha
       | branch-2 | git reset --hard {{ sha 'branch-2 commit' }}            |
       |          | git push --force-with-lease --force-if-includes         |
       |          | git branch branch-1 {{ sha-initial 'branch-1 commit' }} |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE                    | FILE NAME | FILE CONTENT                                                      |
       | main     | local, origin | main commit                | file      | line 0\n\nline 1\n\nline 2                                        |
@@ -61,4 +62,3 @@ Feature: shipped the head branch of a synced stack with inddependent changes tha
       | branch-1 | local         | branch-1 commit            | file      | line 0\n\nline 1: branch-1 content\n\nline 2                      |
       | branch-2 | local, origin | branch-2 commit            | file      | line 0\n\nline 1: branch-1 content\n\nline 2: branch-2 content    |
       |          | origin        | branch-1 commit            | file      | line 0\n\nline 1: branch-1 content\n\nline 2                      |
-    And the initial branches and lineage exist now

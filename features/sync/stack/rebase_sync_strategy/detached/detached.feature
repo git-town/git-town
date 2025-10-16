@@ -72,5 +72,5 @@ Feature: sync the entire stack
       | gamma  | git reset --hard {{ sha 'gamma commit' }}       |
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout alpha                              |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

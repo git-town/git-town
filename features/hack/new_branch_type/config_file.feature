@@ -44,5 +44,5 @@ Feature: create a new branch when prototype branches are configured via config f
       | main     | git reset --hard {{ sha 'persisted config file' }} |
       |          | git checkout existing                              |
       | existing | git branch -D new                                  |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

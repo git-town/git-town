@@ -46,8 +46,8 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       | beta   | git reset --hard {{ sha 'local beta commit' }}  |
       |        | git checkout main                               |
       | main   | git reset --hard {{ sha 'initial commit' }}     |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now
 
   Scenario: skip
     When I run "git-town skip"

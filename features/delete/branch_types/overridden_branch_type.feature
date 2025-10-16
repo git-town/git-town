@@ -42,5 +42,5 @@ Feature: delete a branch that has an overridden branch type
       |        | git push -u origin contribution                         |
       |        | git checkout contribution                               |
     And Git setting "git-town-branch.contribution.branchtype" is now "feature"
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

@@ -50,5 +50,5 @@ Feature: delete the current feature branch in Spanish
       """
       Cambiado a rama 'current'
       """
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

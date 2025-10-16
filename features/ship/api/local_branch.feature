@@ -22,8 +22,8 @@ Feature: cannot ship a local branch via API
       """
       cannot ship branch "feature" via API because it has no remote branch
       """
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now
   #
   # NOTE: Cannot test undo here.
   # The Git Town command under test has not created an undoable runstate.

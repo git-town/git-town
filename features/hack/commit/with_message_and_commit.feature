@@ -37,5 +37,5 @@ Feature: commit with message
     Then Git Town runs the commands
       | BRANCH   | COMMAND           |
       | existing | git branch -D new |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

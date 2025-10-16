@@ -28,5 +28,5 @@ Feature: unknown ship strategy
       """
       unknown ship strategy: "zonk"
       """
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

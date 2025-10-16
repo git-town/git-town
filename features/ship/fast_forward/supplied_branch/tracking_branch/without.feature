@@ -39,7 +39,7 @@ Feature: ship the supplied local feature branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | other  | git branch feature {{ sha 'feature commit' }} |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        |
       | main   | local, origin | feature commit |
-    And the initial branches and lineage exist now

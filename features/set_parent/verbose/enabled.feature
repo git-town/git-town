@@ -62,5 +62,5 @@ Feature: display all executed Git commands
       """
       Ran 14 shell commands.
       """
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

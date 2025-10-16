@@ -31,5 +31,5 @@ Feature: sync the current contribution branch
       | BRANCH       | COMMAND                                                                             |
       | contribution | git reset --hard {{ sha-initial 'local commit' }}                                   |
       |              | git push --force-with-lease origin {{ sha-in-origin 'origin commit' }}:contribution |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

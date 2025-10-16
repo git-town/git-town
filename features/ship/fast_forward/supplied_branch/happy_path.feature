@@ -41,7 +41,7 @@ Feature: ship the supplied feature branch
       | BRANCH | COMMAND                                       |
       | other  | git branch feature {{ sha 'feature commit' }} |
       |        | git push -u origin feature                    |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        |
       | main   | local, origin | feature commit |
-    And the initial branches and lineage exist now

@@ -21,8 +21,8 @@ Feature: undo deleting the current feature branch with disabled push-hook
       | other  | git branch current {{ sha 'current commit' }} |
       |        | git push --no-verify -u origin current        |
       |        | git checkout current                          |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now
 
   Scenario: set to "true"
     Given Git setting "git-town.push-hook" is "true"
@@ -33,5 +33,5 @@ Feature: undo deleting the current feature branch with disabled push-hook
       | other  | git branch current {{ sha 'current commit' }} |
       |        | git push -u origin current                    |
       |        | git checkout current                          |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

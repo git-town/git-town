@@ -24,5 +24,5 @@ Feature: append a branch when the previous branch is active in another worktree
       | BRANCH  | COMMAND              |
       | new     | git checkout current |
       | current | git branch -D new    |
-    And there is now no previous Git branch
     And the initial branches and lineage exist now
+    And there is now no previous Git branch

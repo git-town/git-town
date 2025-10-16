@@ -20,5 +20,5 @@ Feature: ignore files
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                               |
       | feature | git push --force-with-lease origin {{ sha 'initial commit' }}:feature |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

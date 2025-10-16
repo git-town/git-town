@@ -48,6 +48,7 @@ Feature: delete another branch while having conflicting open changes
       |        | git push -u origin dead                     |
       |        | git stash pop                               |
       |        | git restore --staged .                      |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE            |
       | main   | local, origin | conflicting commit |
@@ -57,4 +58,3 @@ Feature: delete another branch while having conflicting open changes
       """
       conflicting content
       """
-    And the initial branches and lineage exist now

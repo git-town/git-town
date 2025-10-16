@@ -44,9 +44,9 @@ Feature: ship the supplied feature branch without a tracking branch
       |        | git push                                      |
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git checkout other                            |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
       | feature | local         | feature commit        |
-    And the initial branches and lineage exist now

@@ -38,6 +38,6 @@ Feature: rename a prototype branch
       |           | git checkout prototype                               |
       | prototype | git branch -D new                                    |
       |           | git push origin :new                                 |
+    And the initial branches and lineage exist now
     And branch "prototype" still has type "prototype"
     And the initial commits exist now
-    And the initial branches and lineage exist now

@@ -40,5 +40,5 @@ Feature: sync the current feature branch using the "compress" strategy in offlin
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                     |
       | feature | git reset --hard {{ sha-initial 'local feature commit 2' }} |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

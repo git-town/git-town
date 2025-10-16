@@ -38,9 +38,9 @@ Feature: shipping a prototype branch using the always-merge strategy
       | main   | git branch prototype {{ sha 'prototype commit' }} |
       |        | git push -u origin prototype                      |
       |        | git checkout prototype                            |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                  |
       | main   | local, origin | prototype commit         |
       |        |               | Merge branch 'prototype' |
     And branch "prototype" now has type "prototype"
-    And the initial branches and lineage exist now

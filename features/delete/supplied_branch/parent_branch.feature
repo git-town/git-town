@@ -50,5 +50,5 @@ Feature: delete a parent branch
       | BRANCH    | COMMAND                                           |
       | feature-3 | git branch feature-2 {{ sha 'feature-2 commit' }} |
       |           | git push -u origin feature-2                      |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

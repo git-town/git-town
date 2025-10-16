@@ -57,5 +57,5 @@ Feature: make a child branch a sibling in a stack with independent changes
       | BRANCH   | COMMAND                                         |
       | branch-3 | git reset --hard {{ sha 'branch-3 commit' }}    |
       |          | git push --force-with-lease --force-if-includes |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

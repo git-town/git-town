@@ -30,5 +30,5 @@ Feature: sync the current perennial branch using the ff-only sync strategy after
       | BRANCH | COMMAND                                        |
       | main   | git branch production {{ sha 'first commit' }} |
       |        | git checkout production                        |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

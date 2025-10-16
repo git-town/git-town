@@ -41,5 +41,5 @@ Feature: delete the current feature branch
       | other  | git branch current {{ sha 'current commit' }} |
       |        | git push -u origin current                    |
       |        | git checkout current                          |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

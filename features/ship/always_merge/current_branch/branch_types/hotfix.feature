@@ -38,8 +38,8 @@ Feature: ship hotfixes
       | production | git branch hotfix {{ sha 'hotfix commit' }} |
       |            | git push -u origin hotfix                   |
       |            | git checkout hotfix                         |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE                               |
       | production | local, origin | hotfix commit                         |
       |            |               | Merge branch 'hotfix' into production |
-    And the initial branches and lineage exist now

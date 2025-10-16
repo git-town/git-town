@@ -74,5 +74,5 @@ Feature: compress the commits on an entire stack when at the stack root
       |        | git checkout gamma                              |
       | gamma  | git reset --hard {{ sha 'gamma 3' }}            |
       |        | git push --force-with-lease --force-if-includes |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

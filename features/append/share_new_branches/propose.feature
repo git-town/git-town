@@ -36,5 +36,5 @@ Feature: auto-propose new branches
       | main   | git reset --hard {{ sha 'initial commit' }} |
       |        | git branch -D new                           |
       |        | git push origin :new                        |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

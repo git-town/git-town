@@ -23,8 +23,8 @@ Feature: sync the current perennial branch in a local repo
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION | MESSAGE      |
       | main   | local    | main commit  |
       | qa     | local    | local commit |
-    And the initial branches and lineage exist now

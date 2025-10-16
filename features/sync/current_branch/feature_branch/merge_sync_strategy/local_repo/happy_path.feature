@@ -28,5 +28,5 @@ Feature: sync the current feature branch (in a local repo)
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                     |
       | feature | git reset --hard {{ sha 'feature commit' }} |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

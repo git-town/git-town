@@ -11,12 +11,12 @@ Feature: make the main branch a feature brancha
       """
       cannot make the main branch a feature branch
       """
-    And branch "main" still has type "main"
     And the initial branches and lineage exist now
+    And branch "main" still has type "main"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
+    And the initial branches and lineage exist now
     And branch "main" now has type "main"
     And the initial commits exist now
-    And the initial branches and lineage exist now

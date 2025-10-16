@@ -41,5 +41,5 @@ Feature: rename a parent branch
       |        | git checkout parent                         |
       | parent | git branch -D new                           |
       |        | git push origin :new                        |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

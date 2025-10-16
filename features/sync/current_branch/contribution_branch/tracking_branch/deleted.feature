@@ -33,5 +33,5 @@ Feature: remove a contribution branch as soon as its tracking branch is gone, ev
       | BRANCH | COMMAND                                                  |
       | main   | git branch contribution {{ sha-initial 'local commit' }} |
       |        | git checkout contribution                                |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

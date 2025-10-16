@@ -37,8 +37,8 @@ Feature: handle conflicts between the current prototype branch and its tracking 
       | BRANCH    | COMMAND            |
       | prototype | git rebase --abort |
     And no rebase is now in progress
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"

@@ -35,5 +35,5 @@ Feature: compress the commits in Spanish
       | BRANCH  | COMMAND                                         |
       | feature | git reset --hard {{ sha 'commit 3' }}           |
       |         | git push --force-with-lease --force-if-includes |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

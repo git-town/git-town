@@ -29,8 +29,8 @@ Feature: handle conflicts between the current feature branch and its tracking br
       | BRANCH  | COMMAND           |
       | feature | git merge --abort |
     And no merge is now in progress
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now
 
   @messyoutput
   Scenario: undo through another sync invocation

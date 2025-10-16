@@ -45,5 +45,5 @@ Feature: sync a feature branch with multiple commits using the "compress" sync s
       |        | git checkout beta                                   |
       | beta   | git reset --hard {{ sha-initial 'beta commit 2' }}  |
       |        | git push --force-with-lease --force-if-includes     |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

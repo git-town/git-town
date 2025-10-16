@@ -33,5 +33,5 @@ Feature: proposing a branch that was deleted at the remote
       | BRANCH | COMMAND                                       |
       | main   | git branch feature {{ sha 'initial commit' }} |
       |        | git checkout feature                          |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

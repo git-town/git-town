@@ -43,10 +43,10 @@ Feature: sync the current feature branch without a tracking branch using the "co
       | BRANCH  | COMMAND                                                     |
       | feature | git reset --hard {{ sha-initial 'local feature commit 2' }} |
       |         | git push origin :feature                                    |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                |
       | main    | local, origin | origin main commit     |
       |         |               | local main commit      |
       | feature | local         | local feature commit 1 |
       |         |               | local feature commit 2 |
-    And the initial branches and lineage exist now

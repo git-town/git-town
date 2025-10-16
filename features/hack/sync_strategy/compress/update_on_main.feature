@@ -39,5 +39,5 @@ Feature: create a new top-level feature branch in a clean workspace using the "c
       | main    | git reset --hard {{ sha 'initial commit' }} |
       |         | git checkout feature                        |
       | feature | git branch -D new                           |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

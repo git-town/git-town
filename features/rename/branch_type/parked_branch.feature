@@ -38,5 +38,5 @@ Feature: rename a parked branch
       |        | git checkout parked                               |
       | parked | git branch -D new                                 |
       |        | git push origin :new                              |
-    And branch "parked" still has type "parked"
     And the initial branches and lineage exist now
+    And branch "parked" still has type "parked"

@@ -41,6 +41,6 @@ Feature: delete the current parked branch
       | feature | git branch parked {{ sha 'parked commit' }} |
       |         | git push -u origin parked                   |
       |         | git checkout parked                         |
+    And the initial branches and lineage exist now
     And branch "parked" now has type "parked"
     And the initial commits exist now
-    And the initial branches and lineage exist now

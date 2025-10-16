@@ -33,5 +33,5 @@ Feature: ship a feature branch in a local repo using the fast-forward strategy
       | main   | git reset --hard {{ sha 'initial commit' }}   |
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git checkout feature                          |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

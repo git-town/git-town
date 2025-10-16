@@ -34,5 +34,5 @@ Feature: delete a local branch
       | BRANCH | COMMAND                                     |
       | other  | git branch current {{ sha 'local commit' }} |
       |        | git checkout current                        |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

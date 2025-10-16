@@ -62,5 +62,5 @@ Feature: beam a commit and uncommitted changes onto a new child branch and propo
       |          | git push --force-with-lease --force-if-includes |
       |          | git branch -D new                               |
       |          | git push origin :new                            |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

@@ -36,5 +36,5 @@ Feature: sync the current branch which has a branch-type override
       | BRANCH       | COMMAND                                                                    |
       | contribution | git reset --hard {{ sha 'contribution commit' }}                           |
       |              | git push --force-with-lease origin {{ sha 'initial commit' }}:contribution |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

@@ -31,5 +31,5 @@ Feature: ship a feature branch in a local repo
       |        | git branch current {{ sha 'current commit' }} |
       |        | git checkout current                          |
     And the previous Git branch is now "main"
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

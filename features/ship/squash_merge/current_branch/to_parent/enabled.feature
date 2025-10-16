@@ -41,5 +41,5 @@ Feature: allowing shiping into a feature branch
       | alpha  | git reset --hard {{ sha 'alpha commit' }} |
       |        | git branch beta {{ sha 'beta commit' }}   |
       |        | git checkout beta                         |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

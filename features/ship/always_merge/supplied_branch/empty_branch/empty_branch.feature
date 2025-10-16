@@ -22,8 +22,8 @@ Feature: does not ship empty feature branches using the always-merge strategy
       """
       the branch "empty" has no shippable changes
       """
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now
   #
   # NOTE: Cannot test undo here.
   # The Git Town command under test has not created an undoable runstate.

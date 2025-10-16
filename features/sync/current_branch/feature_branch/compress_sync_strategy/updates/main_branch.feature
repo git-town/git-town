@@ -38,5 +38,5 @@ Feature: sync a feature branch with new commits on the main branch in detached m
       | BRANCH | COMMAND                                          |
       | beta   | git reset --hard {{ sha-initial 'beta commit' }} |
       |        | git push --force-with-lease --force-if-includes  |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

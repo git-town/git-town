@@ -40,5 +40,5 @@ Feature: deleting a branch without a useful previous branch setting
       | BRANCH | COMMAND                                       |
       | main   | git branch current {{ sha 'current commit' }} |
       |        | git checkout current                          |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

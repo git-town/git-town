@@ -19,5 +19,5 @@ Feature: prototype the current feature branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And branch "feature" now has type "feature"
     And the initial branches and lineage exist now
+    And branch "feature" now has type "feature"

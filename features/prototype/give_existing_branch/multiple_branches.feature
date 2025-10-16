@@ -36,8 +36,8 @@ Feature: prototype multiple other branches
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
+    And the initial branches and lineage exist now
     And branch "feature" now has type "feature"
     And branch "contribution" now has type "contribution"
     And branch "observed" now has type "observed"
     And branch "parked" now has type "parked"
-    And the initial branches and lineage exist now

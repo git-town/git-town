@@ -27,7 +27,7 @@ Feature: proposing using the "compress" sync strategy
       |          | git commit -m "local existing commit 1"                             |
       |          | git push --force-with-lease                                         |
       |          | open https://github.com/git-town/git-town/compare/existing?expand=1 |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE                 |
       | existing | local, origin | local existing commit 1 |
-    And the initial branches and lineage exist now

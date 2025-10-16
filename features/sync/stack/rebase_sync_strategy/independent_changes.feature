@@ -55,6 +55,7 @@ Feature: stacked changes where each branch makes independent changes
       | parent | git reset --hard {{ sha-initial 'local parent commit' }}                                     |
       |        | git push --force-with-lease origin {{ sha-in-origin-initial 'origin parent commit' }}:parent |
       |        | git checkout child                                                                           |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | origin main commit   |
@@ -63,4 +64,3 @@ Feature: stacked changes where each branch makes independent changes
       |        | origin        | origin parent commit |
       | child  | local         | local child commit   |
       |        | origin        | origin child commit  |
-    And the initial branches and lineage exist now

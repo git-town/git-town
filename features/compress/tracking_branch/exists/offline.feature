@@ -31,5 +31,5 @@ Feature: compress the commits in offline mode
     Then Git Town runs the commands
       | BRANCH  | COMMAND                               |
       | feature | git reset --hard {{ sha 'commit 2' }} |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

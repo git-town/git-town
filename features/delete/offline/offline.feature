@@ -40,5 +40,5 @@ Feature: offline mode
       | BRANCH | COMMAND                                       |
       | other  | git branch feature {{ sha 'feature commit' }} |
       |        | git checkout feature                          |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

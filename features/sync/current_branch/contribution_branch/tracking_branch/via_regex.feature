@@ -32,5 +32,5 @@ Feature: sync the current branch that is contribution via regex
       | BRANCH     | COMMAND                                                                           |
       | renovate/1 | git reset --hard {{ sha-initial 'local commit' }}                                 |
       |            | git push --force-with-lease origin {{ sha-in-origin 'origin commit' }}:renovate/1 |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

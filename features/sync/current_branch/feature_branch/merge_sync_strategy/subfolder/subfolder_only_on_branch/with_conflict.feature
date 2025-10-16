@@ -32,8 +32,8 @@ Feature: sync inside a folder that doesn't exist on the main branch
       | BRANCH  | COMMAND           |
       | current | git merge --abort |
     And no merge is now in progress
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue" in the "new_folder" folder

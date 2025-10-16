@@ -38,5 +38,5 @@ Feature: sync the current feature branch with a tracking branch in detached mode
       |        | git checkout alpha                                                        |
       | alpha  | git reset --hard {{ sha 'initial commit' }}                               |
       |        | git checkout beta                                                         |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

@@ -27,5 +27,5 @@ Feature: permanently disable stashing via Git metadata
       | main   | git branch -D new           |
       |        | git stash pop               |
       |        | git restore --staged .      |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

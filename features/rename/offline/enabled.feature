@@ -35,5 +35,5 @@ Feature: offline mode
       | BRANCH | COMMAND                   |
       | new    | git branch --move new old |
       |        | git checkout old          |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

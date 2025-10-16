@@ -26,8 +26,8 @@ Feature: merging a branch whose parent was deleted remotely
       """
       branch "alpha" is not in sync with its parent, please run "git town sync" and try again
       """
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now
   #
   # NOTE: Cannot test undo here.
   # The Git Town command under test has not created an undoable runstate.

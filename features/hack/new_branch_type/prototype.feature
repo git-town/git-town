@@ -40,5 +40,5 @@ Feature: create a new branch when prototype branches are configured via Git meta
       | main     | git reset --hard {{ sha 'initial commit' }} |
       |          | git checkout existing                       |
       | existing | git branch -D new                           |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

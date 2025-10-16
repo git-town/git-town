@@ -40,6 +40,6 @@ Feature: delete the current prototype branch
       | previous | git branch prototype {{ sha 'prototype commit' }} |
       |          | git push -u origin prototype                      |
       |          | git checkout prototype                            |
+    And the initial branches and lineage exist now
     And branch "prototype" now has type "prototype"
     And the initial commits exist now
-    And the initial branches and lineage exist now

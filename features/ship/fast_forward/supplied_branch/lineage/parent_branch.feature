@@ -44,8 +44,8 @@ Feature: ship a parent branch using the fast-forward strategy
       | BRANCH | COMMAND                                     |
       | child  | git branch parent {{ sha 'parent commit' }} |
       |        | git push -u origin parent                   |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | parent commit |
       | child  | local, origin | child commit  |
-    And the initial branches and lineage exist now

@@ -34,6 +34,6 @@ Feature: already existing remote branch
       | main     | git branch -D existing      |
       |          | git stash pop               |
       |          | git restore --staged .      |
+    And the initial branches and lineage exist now
     And the uncommitted file still exists
     And the initial commits exist now
-    And the initial branches and lineage exist now

@@ -49,5 +49,5 @@ Feature: does not compress non-active prototype branches in the stack
       | prototype | git reset --hard {{ sha 'prototype 2' }}        |
       |           | git push --force-with-lease --force-if-includes |
       |           | git checkout child                              |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

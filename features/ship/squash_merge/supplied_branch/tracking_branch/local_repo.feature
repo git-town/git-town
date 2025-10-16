@@ -41,5 +41,5 @@ Feature: ship the supplied feature branch in a local repo
       | main   | git reset --hard {{ sha 'initial commit' }}   |
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git checkout other                            |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

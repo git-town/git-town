@@ -43,5 +43,5 @@ Feature: disable pushing through the CLI
       |         | git checkout main                                           |
       | main    | git reset --hard {{ sha 'local main commit' }}              |
       |         | git checkout feature                                        |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

@@ -34,12 +34,12 @@ Feature: handle conflicts between the current feature branch and the main branch
       | BRANCH  | COMMAND           |
       | feature | git merge --abort |
     And no merge is now in progress
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local, origin | conflicting main commit    | conflicting_file | main content    |
       | feature | local         | conflicting feature commit | conflicting_file | feature content |
       |         | origin        | feature commit             | feature_file     | feature content |
-    And the initial branches and lineage exist now
 
   @messyoutput
   Scenario: undo through another sync invocation
@@ -54,12 +54,12 @@ Feature: handle conflicts between the current feature branch and the main branch
       Handle unfinished command: undo
       """
     And no merge is now in progress
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local, origin | conflicting main commit    | conflicting_file | main content    |
       | feature | local         | conflicting feature commit | conflicting_file | feature content |
       |         | origin        | feature commit             | feature_file     | feature content |
-    And the initial branches and lineage exist now
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"

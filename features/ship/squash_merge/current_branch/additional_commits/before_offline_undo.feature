@@ -28,9 +28,9 @@ Feature: undoing an offline ship with additional commits to main
       """
       it received additional commits in the meantime
       """
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE           |
       | main    | local         | feature done      |
       |         |               | additional commit |
       | feature | local, origin | feature commit    |
-    And the initial branches and lineage exist now

@@ -31,5 +31,5 @@ Feature: sync while the previous branch is checked out in another worktree
       | current | git reset --hard {{ sha 'current 2' }} |
       |         | git push origin :current               |
     And the previous Git branch is still "previous"
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

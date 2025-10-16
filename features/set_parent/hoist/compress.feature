@@ -68,5 +68,5 @@ Feature: remove a branch from a stack
       | branch-3 | git reset --hard {{ sha 'commit 3' }}           |
       |          | git push --force-with-lease --force-if-includes |
       |          | git checkout branch-2                           |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

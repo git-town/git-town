@@ -52,8 +52,8 @@ Feature: beam multiple commits onto a new child branch
       | existing | git reset --hard {{ sha-initial 'commit 4' }}                          |
       |          | git push --force-with-lease origin {{ sha 'initial commit' }}:existing |
       |          | git branch -D new                                                      |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now
 
   Scenario: amend the beamed commit
     And I amend this commit

@@ -33,5 +33,5 @@ Feature: override the configured ship-strategy
       | main   | git reset --hard {{ sha 'initial commit' }}   |
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git checkout feature                          |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

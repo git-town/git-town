@@ -35,5 +35,5 @@ Feature: detached sync the current feature branch using the "rebase" feature syn
       | BRANCH  | COMMAND                                                                                        |
       | feature | git reset --hard {{ sha-initial 'local feature commit' }}                                      |
       |         | git push --force-with-lease origin {{ sha-in-origin-initial 'origin feature commit' }}:feature |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

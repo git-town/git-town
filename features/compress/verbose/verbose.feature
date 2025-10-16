@@ -75,5 +75,5 @@ Feature: compress the commits on a feature branch verbosely
       | feature | frontend | git reset --hard {{ sha 'commit 3' }}                                                                                                                                                                                                                                                                                                            |
       |         | backend  | git rev-parse feature origin/feature                                                                                                                                                                                                                                                                                                             |
       |         | frontend | git push --force-with-lease --force-if-includes                                                                                                                                                                                                                                                                                                  |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

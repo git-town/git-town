@@ -43,10 +43,10 @@ Feature: ship the current feature branch with commit message in file
       |        | git branch feature {{ sha 'persisted file' }} |
       |        | git push -u origin feature                    |
       |        | git checkout feature                          |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                         |
       | main    | local, origin | Commit message in file          |
       |         |               | Revert "Commit message in file" |
       | feature | local, origin | feature commit                  |
       |         |               | persisted file                  |
-    And the initial branches and lineage exist now

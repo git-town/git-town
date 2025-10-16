@@ -41,5 +41,5 @@ Feature: sync a feature branch with new commits on the tracking branch
       | BRANCH | COMMAND                                                                  |
       | beta   | git reset --hard {{ sha-initial 'beta commit' }}                         |
       |        | git push --force-with-lease origin {{ sha-in-origin 'new commit' }}:beta |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

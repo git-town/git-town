@@ -35,5 +35,5 @@ Feature: offline mode
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                   |
       | feature | git reset --hard {{ sha-initial 'local feature commit' }} |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

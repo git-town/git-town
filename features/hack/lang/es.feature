@@ -40,5 +40,5 @@ Feature: hack in Spanish
       """
       Eliminada la rama new
       """
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

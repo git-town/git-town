@@ -40,9 +40,9 @@ Feature: commit message with double-quotes
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git push -u origin feature                    |
       |        | git checkout feature                          |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                       |
       | main    | local, origin | with "double quotes"          |
       |         |               | Revert "with "double quotes"" |
       | feature | local, origin | feature commit                |
-    And the initial branches and lineage exist now

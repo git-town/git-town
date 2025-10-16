@@ -37,8 +37,8 @@ Feature: shipping a prototype branch using the fast-forward strategy
       | main   | git branch prototype {{ sha 'prototype commit' }} |
       |        | git push -u origin prototype                      |
       |        | git checkout prototype                            |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE          |
       | main   | local, origin | prototype commit |
     And branch "prototype" now has type "prototype"
-    And the initial branches and lineage exist now

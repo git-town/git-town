@@ -53,5 +53,5 @@ Feature: remove a branch and all its children from a stack with dependent change
   Scenario: undo
     When I run "git-town undo"
     And Git Town runs no commands
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

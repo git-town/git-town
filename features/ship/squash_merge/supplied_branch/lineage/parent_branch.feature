@@ -45,10 +45,10 @@ Feature: ship a parent branch
       |        | git branch parent {{ sha 'parent commit' }} |
       |        | git push -u origin parent                   |
       |        | git checkout child                          |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | parent done          |
       |        |               | Revert "parent done" |
       | parent | local, origin | parent commit        |
       | child  | local, origin | child commit         |
-    And the initial branches and lineage exist now

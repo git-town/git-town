@@ -37,9 +37,9 @@ Feature: ship a local feature branch
       |        | git push                                      |
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git checkout feature                          |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
       | feature | local         | feature commit        |
-    And the initial branches and lineage exist now

@@ -25,8 +25,8 @@ Feature: cannot ship not-up-to-date feature branches using the fast-forward stra
       """
       aborted because merge exited with error
       """
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now
   #
   # NOTE: Cannot test undo here.
   # The Git Town command under test has not created an undoable runstate.

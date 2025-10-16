@@ -41,6 +41,6 @@ Feature: delete the current observed branch
       | BRANCH  | COMMAND                                         |
       | feature | git branch observed {{ sha 'observed commit' }} |
       |         | git checkout observed                           |
+    And the initial branches and lineage exist now
     And branch "observed" now has type "observed"
     And the initial commits exist now
-    And the initial branches and lineage exist now

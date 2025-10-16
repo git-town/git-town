@@ -34,5 +34,5 @@ Feature: a unknown branch type is set, the feature-regex does not match
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                             |
       | my-branch | git reset --hard {{ sha 'local my-branch commit' }} |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

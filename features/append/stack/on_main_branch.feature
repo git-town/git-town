@@ -30,5 +30,5 @@ Feature: on the main branch
       | new    | git checkout main                           |
       | main   | git reset --hard {{ sha 'initial commit' }} |
       |        | git branch -D new                           |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

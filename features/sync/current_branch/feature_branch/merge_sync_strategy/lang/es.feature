@@ -44,8 +44,8 @@ Feature: sync the current branch in Spanish
       | BRANCH  | COMMAND                                           |
       | feature | git reset --hard {{ sha 'local feature commit' }} |
       |         | git push origin :feature                          |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE              |
       | main    | local, origin | local main commit    |
       | feature | local         | local feature commit |
-    And the initial branches and lineage exist now

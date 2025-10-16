@@ -39,6 +39,6 @@ Feature: rename a contribution branch
       |              | git checkout contribution                                 |
       | contribution | git branch -D new                                         |
       |              | git push origin :new                                      |
+    And the initial branches and lineage exist now
     And branch "contribution" still has type "contribution"
     And the initial commits exist now
-    And the initial branches and lineage exist now

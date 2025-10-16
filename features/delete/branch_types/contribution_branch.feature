@@ -41,6 +41,6 @@ Feature: delete the current contribution branch
       | BRANCH  | COMMAND                                                 |
       | feature | git branch contribution {{ sha 'contribution commit' }} |
       |         | git checkout contribution                               |
+    And the initial branches and lineage exist now
     And branch "contribution" now has type "contribution"
     And the initial commits exist now
-    And the initial branches and lineage exist now

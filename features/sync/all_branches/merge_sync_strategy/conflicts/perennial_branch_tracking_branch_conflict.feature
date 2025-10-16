@@ -36,8 +36,8 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       | BRANCH | COMMAND            |
       | beta   | git rebase --abort |
       |        | git checkout main  |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now
 
   Scenario: skip
     When I run "git-town skip"

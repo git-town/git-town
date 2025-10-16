@@ -59,5 +59,5 @@ Feature: beam commits and uncommitted changes from a local branch onto a new fea
       | existing | git reset --hard {{ sha-initial 'commit 4' }} |
       |          | git branch -D new                             |
       |          | git push origin :new                          |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

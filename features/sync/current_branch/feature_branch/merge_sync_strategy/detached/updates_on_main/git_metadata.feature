@@ -33,5 +33,5 @@ Feature: sync the current feature branch with a tracking branch in detached mode
       | BRANCH | COMMAND                                         |
       | beta   | git reset --hard {{ sha 'initial commit' }}     |
       |        | git push --force-with-lease --force-if-includes |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

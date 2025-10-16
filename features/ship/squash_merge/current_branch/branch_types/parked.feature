@@ -40,10 +40,10 @@ Feature: shipping a parked branch
       |        | git branch parked {{ sha 'parked commit' }} |
       |        | git push -u origin parked                   |
       |        | git checkout parked                         |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | parked done          |
       |        |               | Revert "parked done" |
       | parked | local, origin | parked commit        |
     And branch "parked" now has type "parked"
-    And the initial branches and lineage exist now

@@ -31,5 +31,5 @@ Feature: on a feature branch with a clean workspace in detached mode with update
       | BRANCH   | COMMAND               |
       | new      | git checkout existing |
       | existing | git branch -D new     |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

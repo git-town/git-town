@@ -29,9 +29,9 @@ Feature: ship a coworker's feature branch
       | main   | git branch feature {{ sha 'coworker commit' }} |
       |        | git push -u origin feature                     |
       |        | git checkout feature                           |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE            |
       | main   | local, origin | developer commit 1 |
       |        |               | developer commit 2 |
       |        |               | coworker commit    |
-    And the initial branches and lineage exist now

@@ -44,6 +44,7 @@ Feature: sync the current feature branch using the "rebase" feature sync strateg
       | BRANCH  | COMMAND                                                                                        |
       | feature | git reset --hard {{ sha-initial 'local feature commit' }}                                      |
       |         | git push --force-with-lease origin {{ sha-in-origin-initial 'origin feature commit' }}:feature |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | origin main commit    |
@@ -51,4 +52,3 @@ Feature: sync the current feature branch using the "rebase" feature sync strateg
       | feature | local, origin | local main commit     |
       |         | local         | local feature commit  |
       |         | origin        | origin feature commit |
-    And the initial branches and lineage exist now

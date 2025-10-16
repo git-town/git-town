@@ -41,8 +41,8 @@ Feature: "compress" sync with upstream repo
       | BRANCH  | COMMAND                                                               |
       | feature | git reset --hard {{ sha-initial 'local commit' }}                     |
       |         | git push --force-with-lease origin {{ sha 'initial commit' }}:feature |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE         |
       | main    | local, origin, upstream | upstream commit |
       | feature | local                   | local commit    |
-    And the initial branches and lineage exist now

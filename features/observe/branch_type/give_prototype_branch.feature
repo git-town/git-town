@@ -19,5 +19,5 @@ Feature: make another prototype branch an observed branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And branch "prototype" now has type "prototype"
     And the initial branches and lineage exist now
+    And branch "prototype" now has type "prototype"

@@ -42,5 +42,5 @@ Feature: propose uncommitted changes via a separate parent branch with message
       | BRANCH   | COMMAND              |
       | existing | git branch -D new    |
       |          | git push origin :new |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

@@ -36,7 +36,7 @@ Feature: ship an omni-branch via the fast-forward strategy
       | main   | git branch feature {{ sha-initial 'feature commit' }} |
       |        | git push -u origin feature                            |
       |        | git checkout feature                                  |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        |
       | main   | local, origin | feature commit |
-    And the initial branches and lineage exist now

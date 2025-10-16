@@ -18,15 +18,15 @@ Feature: sync the current perennial branch using the ff-only sync strategy when 
       | production | git fetch --prune --tags              |
       |            | git merge --ff-only origin/production |
       |            | git push --tags                       |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE      |
       | production | local, origin | first commit |
-    And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH     | COMMAND                                     |
       | production | git reset --hard {{ sha 'initial commit' }} |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now

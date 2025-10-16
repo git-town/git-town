@@ -28,10 +28,10 @@ Feature: partially undo an offline ship using the always-merge strategy after ad
       """
       it received additional commits in the meantime
       """
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH  | LOCATION | MESSAGE                |
       | main    | local    | feature commit         |
       |         |          | Merge branch 'feature' |
       |         |          | additional commit      |
       | feature | origin   | feature commit         |
-    And the initial branches and lineage exist now

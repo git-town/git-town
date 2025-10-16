@@ -50,6 +50,7 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
       | beta   | git reset --hard {{ sha-initial 'beta commit' }}  |
       |        | git push --force-with-lease --force-if-includes   |
       |        | git branch alpha {{ sha-initial 'alpha commit' }} |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE           | FILE NAME | FILE CONTENT  |
       | main   | local, origin | alpha commit      | file      | alpha content |
@@ -57,4 +58,3 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
       | alpha  | local         | alpha commit      | file      | alpha content |
       | beta   | local, origin | beta commit       | file      | beta content  |
       |        | origin        | alpha commit      | file      | alpha content |
-    And the initial branches and lineage exist now

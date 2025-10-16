@@ -27,6 +27,7 @@ Feature: detached syncing a stacked feature branch using --no-push
       |        | git checkout beta                                                             |
       | beta   | git -c rebase.updateRefs=false rebase origin/beta                             |
       |        | git -c rebase.updateRefs=false rebase --onto alpha {{ sha 'initial commit' }} |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE             |
       | main   | local         | local main commit   |
@@ -36,7 +37,6 @@ Feature: detached syncing a stacked feature branch using --no-push
       | beta   | local         | origin beta commit  |
       |        |               | local beta commit   |
       |        | origin        | origin beta commit  |
-    And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
@@ -46,5 +46,5 @@ Feature: detached syncing a stacked feature branch using --no-push
       | alpha  | git reset --hard {{ sha 'local alpha commit' }} |
       |        | git checkout beta                               |
       | beta   | git reset --hard {{ sha 'local beta commit' }}  |
-    And the initial commits exist now
     And the initial branches and lineage exist now
+    And the initial commits exist now
