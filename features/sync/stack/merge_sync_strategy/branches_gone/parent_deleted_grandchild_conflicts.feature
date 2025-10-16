@@ -37,7 +37,7 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
     And a merge is now in progress
 
   Scenario: skip the grandchild merge conflict and delete the grandchild branch
-    When I ran "git-town skip"
+    When I run "git-town skip"
     Then Git Town runs the commands
       | BRANCH     | COMMAND           |
       | grandchild | git merge --abort |
