@@ -2,6 +2,7 @@ Feature: running a sync after running another Git Town command
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the branches
       | NAME   | TYPE    | PARENT | LOCATIONS     |
       | parent | feature | main   | local, origin |
@@ -14,11 +15,10 @@ Feature: running a sync after running another Git Town command
       |        | origin   | origin child commit  |
       | parent | local    | local parent commit  |
       |        | origin   | origin parent commit |
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
-    And the current branch is "child"
     And the current branch is "child"
     And I ran "git-town sync"
     And I ran "git-town hack new"
+    And the current branch is "child"
     When I run "git-town sync"
 
   Scenario: result
@@ -27,10 +27,6 @@ Feature: running a sync after running another Git Town command
       | child  | git fetch --prune --tags |
       |        | git checkout parent      |
       | parent | git checkout child       |
-    And the branches are now
-      | REPOSITORY | BRANCHES                 |
-      | local      | main, child, new, parent |
-      | origin     | main, child, parent      |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | origin main commit   |
@@ -39,14 +35,14 @@ Feature: running a sync after running another Git Town command
       |        |               | local parent commit  |
       | child  | local, origin | origin child commit  |
       |        |               | local child commit   |
+    And the branches are now
+      | REPOSITORY | BRANCHES                 |
+      | local      | main, child, new, parent |
+      | origin     | main, child, parent      |
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the branches are now
-      | REPOSITORY | BRANCHES                 |
-      | local      | main, child, new, parent |
-      | origin     | main, child, parent      |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | origin main commit   |
@@ -55,3 +51,7 @@ Feature: running a sync after running another Git Town command
       |        |               | local parent commit  |
       | child  | local, origin | origin child commit  |
       |        |               | local child commit   |
+    And the branches are now
+      | REPOSITORY | BRANCHES                 |
+      | local      | main, child, new, parent |
+      | origin     | main, child, parent      |
