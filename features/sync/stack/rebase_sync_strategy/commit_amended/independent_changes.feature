@@ -62,12 +62,5 @@ Feature: syncing a branch with independent changes where a commit was amended
       | branch-2 | git reset --hard {{ sha 'branch-2 commit B' }}                            |
       |          | git push --force-with-lease origin {{ sha 'branch-2 commit A' }}:branch-2 |
       |          | git push --force-with-lease origin {{ sha 'branch-1 commit A' }}:branch-1 |
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE           | FILE NAME | FILE CONTENT                                                       |
-      | main     | local, origin | main commit       | file      | line 0\n\nline 1\n\nline 2                                         |
-      | branch-1 | local         | branch-1 commit B | file      | line 0\n\nline 1: branch-1 content B\n\nline 2                     |
-      |          | origin        | branch-1 commit A | file      | line 0\n\nline 1: branch-1 content A\n\nline 2                     |
-      | branch-2 | local         | branch-1 commit A | file      | line 0\n\nline 1: branch-1 content A\n\nline 2                     |
-      |          |               | branch-2 commit B | file      | line 0\n\nline 1: branch-1 content A\n\nline 2: branch-2 content B |
-      |          | origin        | branch-2 commit A | file      | line 0\n\nline 1: branch-1 content A\n\nline 2: branch-2 content A |
+    And the initial commits exist now
     And the initial branches and lineage exist now

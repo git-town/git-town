@@ -51,12 +51,4 @@ Feature: stack that changes the same file in multiple commits per branch
       |        | git branch alpha {{ sha-initial 'alpha commit 2' }} |
       |        | git checkout beta                                   |
     And the initial branches and lineage exist now
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE        | FILE NAME      | FILE CONTENT |
-      | main   | origin        | alpha commit 1 | favorite-fruit | peach        |
-      | alpha  | local         | alpha commit 1 | favorite-fruit | apple        |
-      |        |               | alpha commit 2 | favorite-fruit | peach        |
-      | beta   | local, origin | beta commit 1  | favorite-pizza | pepperoni    |
-      |        |               | beta commit 2  | favorite-pizza | pineapple    |
-      |        | origin        | alpha commit 1 | favorite-fruit | apple        |
-      |        |               | alpha commit 2 | favorite-fruit | peach        |
+    And the initial commits exist now
