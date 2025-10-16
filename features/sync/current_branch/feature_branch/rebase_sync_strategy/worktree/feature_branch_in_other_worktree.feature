@@ -41,9 +41,4 @@ Feature: Sync a feature branch that is in another worktree than the main branch
       |         | git push --force-with-lease origin {{ sha-in-origin 'origin feature commit' }}:feature |
     And the current branch in the other worktree is still "feature"
     And the initial branches and lineage exist now
-    And these commits exist now
-      | BRANCH  | LOCATION | MESSAGE               |
-      | main    | local    | local main commit     |
-      |         | origin   | origin main commit    |
-      | feature | origin   | origin feature commit |
-      |         | worktree | local feature commit  |
+    And the initial commits exist now
