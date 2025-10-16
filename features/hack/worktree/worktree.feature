@@ -38,8 +38,4 @@ Feature: hack a new branch while the main branch is active in another worktree
       | new      | git checkout existing |
       | existing | git branch -D new     |
     And the initial branches and lineage exist now
-    And these commits exist now
-      | BRANCH   | LOCATION | MESSAGE            |
-      | main     | origin   | origin main commit |
-      |          | worktree | local main commit  |
-      | existing | local    | existing commit    |
+    And the initial commits exist now
