@@ -29,6 +29,7 @@ Feature: stacked changes where all ancestor branches aren't local
       |        | git merge --no-edit --ff origin/main  |
       |        | git merge --no-edit --ff origin/gamma |
       |        | git push                              |
+    And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                                                |
       | main   | origin        | origin main commit                                     |
@@ -42,7 +43,6 @@ Feature: stacked changes where all ancestor branches aren't local
       |        |               | Merge remote-tracking branch 'origin/main' into gamma  |
       |        |               | origin gamma commit                                    |
       |        |               | Merge remote-tracking branch 'origin/gamma' into gamma |
-    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"
@@ -50,9 +50,9 @@ Feature: stacked changes where all ancestor branches aren't local
       | BRANCH | COMMAND                                                                                    |
       | gamma  | git reset --hard {{ sha-initial 'local gamma commit' }}                                    |
       |        | git push --force-with-lease origin {{ sha-in-origin-initial 'origin gamma commit' }}:gamma |
+    And the initial lineage exists now
     And the branches are now
       | REPOSITORY | BRANCHES                 |
       | local      | gamma                    |
       | origin     | main, alpha, beta, gamma |
-    And the initial lineage exists now
     And the initial commits exist now

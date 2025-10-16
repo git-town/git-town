@@ -32,10 +32,10 @@ Feature: one person making a series of commits and syncs in between
       |         | git reset --soft main                   |
       |         | git commit -m "the feature"             |
       |         | git push --force-with-lease             |
+    And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | feature | local, origin | the feature | file      | content 1    |
-    And all branches are now synchronized
     #
     # I make another change and sync
     Given I add this commit to the current branch:
@@ -50,10 +50,10 @@ Feature: one person making a series of commits and syncs in between
       |         | git reset --soft main                   |
       |         | git commit -m "the feature"             |
       |         | git push --force-with-lease             |
+    And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | feature | local, origin | the feature | file      | content 2    |
-    And all branches are now synchronized
     #
     # I make a third change and sync
     Given local Git setting "color.ui" is "always"
@@ -69,7 +69,7 @@ Feature: one person making a series of commits and syncs in between
       |         | git reset --soft main                   |
       |         | git commit -m "the feature"             |
       |         | git push --force-with-lease             |
+    And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | feature | local, origin | the feature | file      | content 3    |
-    And all branches are now synchronized

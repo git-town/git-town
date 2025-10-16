@@ -45,6 +45,7 @@ Feature: compress the commits on an entire stack when at the stack root
       |        | git commit -m "gamma 1"                         |
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout alpha                              |
+    And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE |
       | alpha  | local, origin | alpha 1 |
@@ -53,7 +54,6 @@ Feature: compress the commits on an entire stack when at the stack root
     And file "alpha_1" still has content "alpha 1"
     And file "alpha_2" still has content "alpha 2"
     And file "alpha_3" still has content "alpha 3"
-    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

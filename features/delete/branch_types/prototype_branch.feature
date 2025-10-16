@@ -20,14 +20,14 @@ Feature: delete the current prototype branch
       |           | git push origin :prototype |
       |           | git checkout previous      |
       | previous  | git branch -D prototype    |
-    And the branches are now
-      | REPOSITORY    | BRANCHES       |
-      | local, origin | main, previous |
     And this lineage exists now
       """
       main
         previous
       """
+    And the branches are now
+      | REPOSITORY    | BRANCHES       |
+      | local, origin | main, previous |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |
       | previous | local, origin | previous commit |

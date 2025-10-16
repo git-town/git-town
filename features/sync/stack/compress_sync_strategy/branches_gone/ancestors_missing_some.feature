@@ -38,13 +38,13 @@ Feature: stacked changes where an ancestor branch isn't local
       |        | git reset --soft origin/beta          |
       |        | git commit -m "local gamma commit"    |
       |        | git push --force-with-lease           |
+    And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE            |
       | main   | origin        | origin main commit |
       | alpha  | local, origin | local alpha commit |
       | beta   | origin        | origin beta commit |
       | gamma  | local, origin | local gamma commit |
-    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"
@@ -56,9 +56,9 @@ Feature: stacked changes where an ancestor branch isn't local
       |        | git checkout gamma                                                                         |
       | gamma  | git reset --hard {{ sha-initial 'local gamma commit' }}                                    |
       |        | git push --force-with-lease origin {{ sha-in-origin-initial 'origin gamma commit' }}:gamma |
+    And the initial lineage exists now
     And the branches are now
       | REPOSITORY | BRANCHES                 |
       | local      | alpha, gamma             |
       | origin     | main, alpha, beta, gamma |
-    And the initial lineage exists now
     And the initial commits exist now

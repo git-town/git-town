@@ -25,6 +25,7 @@ Feature: active parked branches get synced like normal feature branches
       | parked | git merge --no-edit --ff main                     |
       |        | git merge --no-edit --ff origin/parked            |
       |        | git push                                          |
+    And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                                                  |
       | main   | local, origin | origin main commit                                       |
@@ -33,7 +34,6 @@ Feature: active parked branches get synced like normal feature branches
       |        |               | Merge branch 'main' into parked                          |
       |        |               | origin parked commit                                     |
       |        |               | Merge remote-tracking branch 'origin/parked' into parked |
-    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

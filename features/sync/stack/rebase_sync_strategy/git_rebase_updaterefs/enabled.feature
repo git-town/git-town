@@ -36,6 +36,7 @@ Feature: stacked changes
       |        | git -c rebase.updateRefs=false rebase origin/child                             |
       |        | git -c rebase.updateRefs=false rebase --onto parent {{ sha 'initial commit' }} |
       |        | git push --force-with-lease --force-if-includes                                |
+    And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | origin main commit   |
@@ -44,7 +45,6 @@ Feature: stacked changes
       |        |               | local parent commit  |
       | child  | local, origin | origin child commit  |
       |        |               | local child commit   |
-    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

@@ -41,14 +41,14 @@ Feature: sync a stack that contains shipped parent branches using the "compress"
       """
       deleted branch "feature-2"
       """
-    And the branches are now
-      | REPOSITORY    | BRANCHES        |
-      | local, origin | main, feature-3 |
     And this lineage exists now
       """
       main
         feature-3
       """
+    And the branches are now
+      | REPOSITORY    | BRANCHES        |
+      | local, origin | main, feature-3 |
 
   Scenario: undo
     When I run "git-town undo"

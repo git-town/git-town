@@ -48,14 +48,14 @@ Feature: display all executed Git commands
       """
       Ran 27 shell commands.
       """
-    And the branches are now
-      | REPOSITORY    | BRANCHES       |
-      | local, origin | main, branch-1 |
     And this lineage exists now
       """
       main
         branch-1
       """
+    And the branches are now
+      | REPOSITORY    | BRANCHES       |
+      | local, origin | main, branch-1 |
 
   Scenario: undo
     When I run "git-town undo --verbose"

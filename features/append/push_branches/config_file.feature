@@ -22,16 +22,16 @@ Feature: disable pushing through the config file
       | BRANCH   | COMMAND                  |
       | branch-1 | git fetch --prune --tags |
       |          | git checkout -b branch-2 |
-    And the branches are now
-      | REPOSITORY | BRANCHES                 |
-      | local      | main, branch-1, branch-2 |
-      | origin     | main                     |
     And this lineage exists now
       """
       main
         branch-1
           branch-2
       """
+    And the branches are now
+      | REPOSITORY | BRANCHES                 |
+      | local      | main, branch-1, branch-2 |
+      | origin     | main                     |
 
   Scenario: undo
     When I run "git-town undo"
@@ -39,8 +39,8 @@ Feature: disable pushing through the config file
       | BRANCH   | COMMAND                |
       | branch-2 | git checkout branch-1  |
       | branch-1 | git branch -D branch-2 |
+    And the initial lineage exists now
     And the branches are now
       | REPOSITORY | BRANCHES       |
       | local      | main, branch-1 |
       | origin     | main           |
-    And the initial lineage exists now

@@ -33,14 +33,14 @@ Feature: using the "compress" strategy, sync a branch whose parent was shipped
       """
       deleted branch "parent"
       """
-    And the branches are now
-      | REPOSITORY    | BRANCHES    |
-      | local, origin | main, child |
     And this lineage exists now
       """
       main
         child
       """
+    And the branches are now
+      | REPOSITORY    | BRANCHES    |
+      | local, origin | main, child |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        |
       | main   | local, origin | parent commit  |

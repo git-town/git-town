@@ -33,12 +33,12 @@ Feature: stack that changes the same file in multiple commits per branch
       |        | git push --force-with-lease                             |
       |        | git branch -D alpha                                     |
     And no rebase is now in progress
+    And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        | FILE NAME      | FILE CONTENT |
       | main   | local, origin | alpha commit 1 | favorite-fruit | peach        |
       | beta   | local, origin | beta commit 1  | favorite-pizza | pepperoni    |
       |        |               | beta commit 2  | favorite-pizza | pineapple    |
-    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

@@ -28,14 +28,14 @@ Feature: syncing a branch whose parent was shipped
       """
       deleted branch "parent"
       """
-    And the branches are now
-      | REPOSITORY    | BRANCHES    |
-      | local, origin | main, child |
     And this lineage exists now
       """
       main
         child
       """
+    And the branches are now
+      | REPOSITORY    | BRANCHES    |
+      | local, origin | main, child |
 
   Scenario: undo
     When I run "git-town undo"

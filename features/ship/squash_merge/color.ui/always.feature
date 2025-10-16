@@ -24,10 +24,10 @@ Feature: enter the commit message interactively via the editor
       |         | git push                        |
       |         | git push origin :feature        |
       |         | git branch -D feature           |
+    And no lineage exists now
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
-    And no lineage exists now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, origin | feature done |

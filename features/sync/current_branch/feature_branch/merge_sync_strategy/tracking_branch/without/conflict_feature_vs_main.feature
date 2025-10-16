@@ -74,11 +74,11 @@ Feature: handle conflicts between the current feature branch and the main branch
       |         | git merge --no-edit --ff origin/feature |
       |         | git push                                |
     And no merge is now in progress
+    And all branches are now synchronized
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |
-    And all branches are now synchronized
 
   Scenario: resolve resulting in no changes and continue
     When I resolve the conflict in "conflicting_file" with "feature content"
@@ -89,11 +89,11 @@ Feature: handle conflicts between the current feature branch and the main branch
       |         | git merge --no-edit --ff origin/feature |
       |         | git push                                |
     And no merge is now in progress
+    And all branches are now synchronized
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT         |
       | main    | conflicting_file | main content    |
       | feature | conflicting_file | feature content |
-    And all branches are now synchronized
 
   Scenario: resolve, commit, and continue
     When I resolve the conflict in "conflicting_file"
@@ -104,11 +104,11 @@ Feature: handle conflicts between the current feature branch and the main branch
       | feature | git merge --no-edit --ff origin/feature |
       |         | git push                                |
     And no merge is now in progress
+    And all branches are now synchronized
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |
-    And all branches are now synchronized
 
   @messyoutput
   Scenario: resolve and continue+run another program
@@ -130,8 +130,8 @@ Feature: handle conflicts between the current feature branch and the main branch
       Handle unfinished command: both
       """
     And no merge is now in progress
+    And all branches are now synchronized
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT         |
       | main    | conflicting_file | main content    |
       | feature | conflicting_file | feature content |
-    And all branches are now synchronized

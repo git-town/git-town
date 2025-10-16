@@ -21,14 +21,14 @@ Feature: allowing shiping into a feature branch
       | alpha  | git merge --squash --ff beta |
       |        | git commit -m done           |
       |        | git branch -D beta           |
-    And the branches are now
-      | REPOSITORY | BRANCHES    |
-      | local      | main, alpha |
     And this lineage exists now
       """
       main
         alpha
       """
+    And the branches are now
+      | REPOSITORY | BRANCHES    |
+      | local      | main, alpha |
     And these commits exist now
       | BRANCH | LOCATION | MESSAGE      |
       | alpha  | local    | alpha commit |

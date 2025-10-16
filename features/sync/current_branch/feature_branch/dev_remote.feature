@@ -21,10 +21,10 @@ Feature: sync a branch to a custom dev-remote
     And the branches are now
       | REPOSITORY  | BRANCHES     |
       | local, fork | main, branch |
+    And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION    | MESSAGE |
       | branch | local, fork | commit  |
-    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

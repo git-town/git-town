@@ -59,11 +59,11 @@ Feature: handle conflicts between the current feature branch and the main branch
       | feature | GIT_EDITOR=true git rebase --continue           |
       |         | git push --force-with-lease --force-if-includes |
     And no rebase is now in progress
+    And all branches are now synchronized
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |
-    And all branches are now synchronized
 
   Scenario: resolve resulting in no changes and continue
     When I resolve the conflict in "conflicting_file" with "feature content"
@@ -73,11 +73,11 @@ Feature: handle conflicts between the current feature branch and the main branch
       | feature | GIT_EDITOR=true git rebase --continue           |
       |         | git push --force-with-lease --force-if-includes |
     And no merge is now in progress
+    And all branches are now synchronized
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT         |
       | main    | conflicting_file | main content    |
       | feature | conflicting_file | feature content |
-    And all branches are now synchronized
 
   Scenario: resolve, commit, and continue
     When I resolve the conflict in "conflicting_file"
@@ -87,8 +87,8 @@ Feature: handle conflicts between the current feature branch and the main branch
       | BRANCH  | COMMAND                                         |
       | feature | git push --force-with-lease --force-if-includes |
     And no merge is now in progress
+    And all branches are now synchronized
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |
-    And all branches are now synchronized

@@ -58,6 +58,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       |         | git checkout current                    |
       | current | git push --tags                         |
     And no merge is now in progress
+    And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, origin | conflicting main commit          |
@@ -73,4 +74,3 @@ Feature: sync inside a folder that doesn't exist on the main branch
       |         | new_folder/file1 |                  |
       | other   | conflicting_file | main content     |
       |         | file2            |                  |
-    And all branches are now synchronized

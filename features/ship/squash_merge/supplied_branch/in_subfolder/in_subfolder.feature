@@ -24,15 +24,15 @@ Feature: ship the supplied feature branch from a subfolder
       |        | git push                        |
       |        | git checkout other              |
       | other  | git branch -D feature           |
-    And the branches are now
-      | REPOSITORY | BRANCHES    |
-      | local      | main, other |
-      | origin     | main        |
     And this lineage exists now
       """
       main
         other
       """
+    And the branches are now
+      | REPOSITORY | BRANCHES    |
+      | local      | main, other |
+      | origin     | main        |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, origin | feature done |

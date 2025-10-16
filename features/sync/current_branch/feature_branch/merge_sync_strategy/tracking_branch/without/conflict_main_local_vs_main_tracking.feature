@@ -69,11 +69,11 @@ Feature: handle conflicts between the main branch and its tracking branch
       | feature | git merge --no-edit --ff main         |
       |         | git push                              |
     And no rebase is now in progress
+    And all branches are now synchronized
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |
       | feature | conflicting_file | resolved content |
-    And all branches are now synchronized
 
   Scenario: resolve, finish the rebase, and continue
     When I resolve the conflict in "conflicting_file"
@@ -86,8 +86,8 @@ Feature: handle conflicts between the main branch and its tracking branch
       | feature | git merge --no-edit --ff main |
       |         | git push                      |
     And no rebase is now in progress
+    And all branches are now synchronized
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |
       | feature | conflicting_file | resolved content |
-    And all branches are now synchronized

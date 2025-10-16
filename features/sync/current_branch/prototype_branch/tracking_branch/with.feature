@@ -27,13 +27,13 @@ Feature: sync the current prototype branch that has a tracking branch
       |           | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
       |           | git push --force-with-lease --force-if-includes                              |
     And no rebase is now in progress
+    And all branches are now synchronized
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE       |
       | main      | local, origin | main commit   |
       | prototype | local, origin | origin commit |
       |           |               | local commit  |
     And the initial branches and lineage exist now
-    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

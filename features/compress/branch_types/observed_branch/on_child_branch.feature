@@ -26,6 +26,7 @@ Feature: does not compress observed branches in the stack
       |        | git reset --soft observed                       |
       |        | git commit -m "child 1"                         |
       |        | git push --force-with-lease --force-if-includes |
+    And all branches are now synchronized
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE    |
       | observed | local, origin | observed 1 |
@@ -35,7 +36,6 @@ Feature: does not compress observed branches in the stack
     And file "observed_2" still has content "observed 2"
     And file "child_1" still has content "child 1"
     And file "child_2" still has content "child 2"
-    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

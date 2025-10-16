@@ -25,12 +25,12 @@ Feature: with upstream repo
       | feature | git merge --no-edit --ff main                       |
       |         | git merge --no-edit --ff origin/feature             |
       |         | git push                                            |
+    And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE                          |
       | main    | local, origin, upstream | upstream commit                  |
       | feature | local, origin           | local commit                     |
       |         |                         | Merge branch 'main' into feature |
-    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

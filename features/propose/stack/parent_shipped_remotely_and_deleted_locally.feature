@@ -22,19 +22,19 @@ Feature: proposing a branch whose parent was shipped and the local branch delete
       | BRANCH | COMMAND                                                          |
       | child  | git fetch --prune --tags                                         |
       |        | open https://github.com/git-town/git-town/compare/child?expand=1 |
-    And the branches are now
-      | REPOSITORY    | BRANCHES    |
-      | local, origin | main, child |
     And this lineage exists now
       """
       main
         child
       """
+    And the branches are now
+      | REPOSITORY    | BRANCHES    |
+      | local, origin | main, child |
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
+    And the initial lineage exists now
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, child |
-    And the initial lineage exists now

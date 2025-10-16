@@ -64,10 +64,10 @@ Feature: deleting a branch from a stack with dependent changes
       | branch-3 | git rebase --abort                                                      |
       |          | git push origin {{ sha-initial 'branch-2 commit' }}:refs/heads/branch-2 |
       |          | git checkout branch-2                                                   |
+    And the initial lineage exists now
     And the branches are now
       | REPOSITORY    | BRANCHES                           |
       | local, origin | main, branch-1, branch-2, branch-3 |
-    And the initial lineage exists now
 
   Scenario: resolve and continue
     When I resolve the conflict in "file" with:
@@ -83,15 +83,15 @@ Feature: deleting a branch from a stack with dependent changes
       | branch-3 | GIT_EDITOR=true git rebase --continue |
       |          | git push --force-with-lease           |
       |          | git branch -D branch-2                |
-    And the branches are now
-      | REPOSITORY    | BRANCHES                 |
-      | local, origin | main, branch-1, branch-3 |
     And this lineage exists now
       """
       main
         branch-1
           branch-3
       """
+    And the branches are now
+      | REPOSITORY    | BRANCHES                 |
+      | local, origin | main, branch-1, branch-3 |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                     |
       | main     | local, origin | main commit     | file      | line 0: main content\nline 1\nline 2\nline 3                                     |
@@ -112,15 +112,15 @@ Feature: deleting a branch from a stack with dependent changes
       | BRANCH   | COMMAND                     |
       | branch-3 | git push --force-with-lease |
       |          | git branch -D branch-2      |
-    And the branches are now
-      | REPOSITORY    | BRANCHES                 |
-      | local, origin | main, branch-1, branch-3 |
     And this lineage exists now
       """
       main
         branch-1
           branch-3
       """
+    And the branches are now
+      | REPOSITORY    | BRANCHES                 |
+      | local, origin | main, branch-1, branch-3 |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                                                     |
       | main     | local, origin | main commit     | file      | line 0: main content\nline 1\nline 2\nline 3                                     |

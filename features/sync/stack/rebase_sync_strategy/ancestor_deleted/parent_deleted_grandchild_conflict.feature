@@ -61,8 +61,8 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
       |          | git branch -D branch-1                |
       |          | git push --tags                       |
     And no rebase is now in progress
+    And all branches are now synchronized
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE                     | FILE NAME        | FILE CONTENT                         |
       | main     | local, origin | conflicting main commit     | conflicting_file | line 1\nline 2\nline 3: main content |
       | branch-2 | local, origin | conflicting branch-2 commit | conflicting_file | main and branch-2 content            |
-    And all branches are now synchronized

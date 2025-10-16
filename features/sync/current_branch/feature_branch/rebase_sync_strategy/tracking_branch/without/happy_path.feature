@@ -27,12 +27,12 @@ Feature: sync the current feature branch without a tracking branch
     And the branches are now
       | REPOSITORY    | BRANCHES      |
       | local, origin | main, feature |
+    And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE              |
       | main    | local, origin | origin main commit   |
       |         |               | local main commit    |
       | feature | local, origin | local feature commit |
-    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

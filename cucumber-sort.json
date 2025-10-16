@@ -136,11 +136,12 @@
     "Git setting \"git-town-branch.*.branchtype\" is (now|still) ",
     "Git setting \"git-town-branch.*.branchtype\" now doesn't exist$",
     "^the configuration file is now",
-    "^the branches are now",
     "^the current branch is (now|still) ",
     "^the current branch in the other worktree is still .*$",
     "^the previous Git branch is (now|still)",
     "^(this|no|the initial) lineage exists now$",
+    "^the branches are now",
+    "^all branches are now synchronized$",
     "^(these|no) commits exist now$",
     "^these committed files exist now$",
     "^commit \".*\" on branch \".*\" now has this full commit message$",
@@ -159,7 +160,6 @@
     "^the initial branches and lineage exist now$",
     "^the branches contain these files:$",
     "^these tags exist now$",
-    "^the initial tags exist now$",
-    "^all branches are now synchronized$"
+    "^the initial tags exist now$"
   ]
 }

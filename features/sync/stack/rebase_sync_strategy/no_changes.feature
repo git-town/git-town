@@ -25,8 +25,8 @@ Feature: syncing an already synced stack
       |          | git checkout branch-1    |
       | branch-1 | git checkout branch-2    |
     And no rebase is now in progress
-    And the initial commits exist now
     And all branches are now synchronized
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"

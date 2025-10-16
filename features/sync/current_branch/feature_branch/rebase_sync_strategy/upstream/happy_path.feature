@@ -26,11 +26,11 @@ Feature: with upstream repo
       | feature | git push --force-with-lease --force-if-includes                              |
       |         | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
       |         | git push --force-with-lease --force-if-includes                              |
+    And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE         |
       | main    | local, origin, upstream | upstream commit |
       | feature | local, origin           | local commit    |
-    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

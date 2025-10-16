@@ -28,14 +28,14 @@ Feature: prune enabled via CLI
       | main      | git push origin :feature-1                        |
       |           | git branch -D feature-1                           |
       |           | git checkout feature-2                            |
-    And the branches are now
-      | REPOSITORY    | BRANCHES        |
-      | local, origin | main, feature-2 |
     And this lineage exists now
       """
       main
         feature-2
       """
+    And the branches are now
+      | REPOSITORY    | BRANCHES        |
+      | local, origin | main, feature-2 |
     And all branches are now synchronized
 
   Scenario: undo

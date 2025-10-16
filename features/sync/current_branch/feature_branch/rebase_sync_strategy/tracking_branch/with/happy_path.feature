@@ -29,13 +29,13 @@ Feature: sync the current feature branch using the "rebase" feature sync strateg
       |         | git -c rebase.updateRefs=false rebase origin/feature                                    |
       |         | git -c rebase.updateRefs=false rebase --onto main {{ sha-initial 'local main commit' }} |
       |         | git push --force-with-lease --force-if-includes                                         |
+    And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | origin main commit    |
       |         |               | local main commit     |
       | feature | local, origin | origin feature commit |
       |         |               | local feature commit  |
-    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

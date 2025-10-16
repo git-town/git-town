@@ -62,12 +62,12 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
       |         | git commit -m "conflicting feature commit" |
       |         | git push --force-with-lease                |
     And no merge is now in progress
+    And all branches are now synchronized
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |
       |         | feature_file     | feature content  |
-    And all branches are now synchronized
 
   Scenario: resolve, commit, and continue
     When I resolve the conflict in "conflicting_file"
@@ -80,9 +80,9 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
       |         | git commit -m "conflicting feature commit" |
       |         | git push --force-with-lease                |
     And no merge is now in progress
+    And all branches are now synchronized
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |
       |         | feature_file     | feature content  |
-    And all branches are now synchronized

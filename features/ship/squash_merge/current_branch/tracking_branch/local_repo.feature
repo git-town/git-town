@@ -19,10 +19,10 @@ Feature: ship a feature branch in a local repo
       | main    | git merge --squash --ff feature |
       |         | git commit -m "feature done"    |
       |         | git branch -D feature           |
+    And no lineage exists now
     And the branches are now
       | REPOSITORY | BRANCHES |
       | local      | main     |
-    And no lineage exists now
     And these commits exist now
       | BRANCH | LOCATION | MESSAGE      |
       | main   | local    | feature done |

@@ -53,15 +53,15 @@ Feature: shipped branch with multiple descendents
       """
       branch "feature-1b" is now a child of "main"
       """
-    And the branches are now
-      | REPOSITORY    | BRANCHES                     |
-      | local, origin | main, feature-1a, feature-1b |
     And this lineage exists now
       """
       main
         feature-1a
         feature-1b
       """
+    And the branches are now
+      | REPOSITORY    | BRANCHES                     |
+      | local, origin | main, feature-1a, feature-1b |
     And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE           |
       | main       | local, origin | feature-1 commit  |

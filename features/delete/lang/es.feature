@@ -25,14 +25,14 @@ Feature: delete the current feature branch in Spanish
       """
       Eliminada la rama current
       """
-    And the branches are now
-      | REPOSITORY    | BRANCHES    |
-      | local, origin | main, other |
     And this lineage exists now
       """
       main
         other
       """
+    And the branches are now
+      | REPOSITORY    | BRANCHES    |
+      | local, origin | main, other |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
       | other  | local, origin | other commit |

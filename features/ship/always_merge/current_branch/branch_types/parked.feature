@@ -21,10 +21,10 @@ Feature: shipping a parked branch using the always-merge strategy
       |        | git push                           |
       |        | git push origin :parked            |
       |        | git branch -D parked               |
+    And no lineage exists now
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
-    And no lineage exists now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE               |
       | main   | local, origin | parked commit         |

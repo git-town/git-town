@@ -25,16 +25,16 @@ Feature: prepending to a branch whose parent was shipped and the local branch de
       | child  | git merge --no-edit --ff main                     |
       |        | git push                                          |
       |        | git checkout -b new main                          |
-    And the branches are now
-      | REPOSITORY | BRANCHES         |
-      | local      | main, child, new |
-      | origin     | main, child      |
     And this lineage exists now
       """
       main
         new
           child
       """
+    And the branches are now
+      | REPOSITORY | BRANCHES         |
+      | local      | main, child, new |
+      | origin     | main, child      |
 
   Scenario: undo
     When I run "git-town undo"
@@ -47,7 +47,7 @@ Feature: prepending to a branch whose parent was shipped and the local branch de
       | main   | git reset --hard {{ sha 'initial commit' }}     |
       |        | git checkout child                              |
       | child  | git branch -D new                               |
+    And the initial lineage exists now
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, child |
-    And the initial lineage exists now

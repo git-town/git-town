@@ -31,10 +31,6 @@ Feature: prepend a branch to a branch that was shipped at the remote
       """
       branch "child" is now a child of "new"
       """
-    And the branches are now
-      | REPOSITORY | BRANCHES                 |
-      | local      | main, child, new, parent |
-      | origin     | main, parent             |
     And this lineage exists now
       """
       main
@@ -42,6 +38,10 @@ Feature: prepend a branch to a branch that was shipped at the remote
           new
             child
       """
+    And the branches are now
+      | REPOSITORY | BRANCHES                 |
+      | local      | main, child, new, parent |
+      | origin     | main, parent             |
     And the uncommitted file still exists
 
   Scenario: undo
@@ -54,9 +54,9 @@ Feature: prepend a branch to a branch that was shipped at the remote
       | child  | git branch -D new           |
       |        | git stash pop               |
       |        | git restore --staged .      |
+    And the initial lineage exists now
     And the branches are now
       | REPOSITORY | BRANCHES            |
       | local      | main, child, parent |
       | origin     | main, parent        |
-    And the initial lineage exists now
     And the uncommitted file still exists

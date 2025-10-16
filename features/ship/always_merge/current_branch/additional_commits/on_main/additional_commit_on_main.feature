@@ -22,10 +22,10 @@ Feature: can ship not-up-to-date feature branches using the always-merge strateg
       |         | git push                            |
       |         | git push origin :feature            |
       |         | git branch -D feature               |
+    And no lineage exists now
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
-    And no lineage exists now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                |
       | main   | local, origin | main commit            |

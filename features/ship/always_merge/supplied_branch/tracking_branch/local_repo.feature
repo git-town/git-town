@@ -20,14 +20,14 @@ Feature: ship the supplied feature branch in a local repo using the always-merge
       | main   | git merge --no-ff --edit -- feature |
       |        | git checkout other                  |
       | other  | git branch -D feature               |
-    And the branches are now
-      | REPOSITORY | BRANCHES    |
-      | local      | main, other |
     And this lineage exists now
       """
       main
         other
       """
+    And the branches are now
+      | REPOSITORY | BRANCHES    |
+      | local      | main, other |
     And these commits exist now
       | BRANCH | LOCATION | MESSAGE                |
       | main   | local    | feature commit         |

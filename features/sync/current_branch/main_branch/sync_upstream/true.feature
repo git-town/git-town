@@ -18,10 +18,10 @@ Feature: on the main branch with an upstream repo
       |        | git -c rebase.updateRefs=false rebase upstream/main |
       |        | git push                                            |
       |        | git push --tags                                     |
+    And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION                | MESSAGE         |
       | main   | local, origin, upstream | upstream commit |
-    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

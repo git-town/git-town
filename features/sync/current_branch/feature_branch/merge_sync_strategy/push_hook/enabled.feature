@@ -26,6 +26,7 @@ Feature: push-hook setting set to "true"
       | feature | git merge --no-edit --ff main                     |
       |         | git merge --no-edit --ff origin/feature           |
       |         | git push                                          |
+    And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                                                    |
       | main    | local, origin | origin main commit                                         |
@@ -34,7 +35,6 @@ Feature: push-hook setting set to "true"
       |         |               | Merge branch 'main' into feature                           |
       |         |               | origin feature commit                                      |
       |         |               | Merge remote-tracking branch 'origin/feature' into feature |
-    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

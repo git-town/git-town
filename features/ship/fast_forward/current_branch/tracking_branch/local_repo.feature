@@ -18,10 +18,10 @@ Feature: ship a feature branch in a local repo using the fast-forward strategy
       | feature | git checkout main           |
       | main    | git merge --ff-only feature |
       |         | git branch -D feature       |
+    And no lineage exists now
     And the branches are now
       | REPOSITORY | BRANCHES |
       | local      | main     |
-    And no lineage exists now
     And these commits exist now
       | BRANCH | LOCATION | MESSAGE        |
       | main   | local    | feature commit |

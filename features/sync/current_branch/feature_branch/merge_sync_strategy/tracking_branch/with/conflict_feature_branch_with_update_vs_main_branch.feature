@@ -79,12 +79,12 @@ Feature: handle conflicts between the current feature branch and the main branch
       |         | git merge --no-edit --ff origin/feature |
       |         | git push                                |
     And no merge is now in progress
+    And all branches are now synchronized
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |
       |         | feature_file     | feature content  |
-    And all branches are now synchronized
 
   Scenario: resolve, commit, and continue
     When I resolve the conflict in "conflicting_file"
@@ -115,9 +115,9 @@ Feature: handle conflicts between the current feature branch and the main branch
       Handle unfinished command: both
       """
     And no merge is now in progress
+    And all branches are now synchronized
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT         |
       | main    | conflicting_file | main content    |
       | feature | conflicting_file | feature content |
       |         | feature_file     | feature content |
-    And all branches are now synchronized

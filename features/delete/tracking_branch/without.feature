@@ -18,15 +18,15 @@ Feature: delete a local branch
       | current | git fetch --prune --tags |
       |         | git checkout other       |
       | other   | git branch -D current    |
-    And the branches are now
-      | REPOSITORY | BRANCHES    |
-      | local      | main, other |
-      | origin     | main        |
     And this lineage exists now
       """
       main
         other
       """
+    And the branches are now
+      | REPOSITORY | BRANCHES    |
+      | local      | main, other |
+      | origin     | main        |
 
   Scenario: undo
     When I run "git-town undo"

@@ -70,11 +70,11 @@ Feature: handle conflicts between the main branch and its tracking branch
       | feature | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
       |         | git push --force-with-lease --force-if-includes                              |
     And no rebase is now in progress
+    And all branches are now synchronized
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |
       | feature | conflicting_file | resolved content |
-    And all branches are now synchronized
 
   Scenario: resolve, finish the rebase, and continue
     When I resolve the conflict in "conflicting_file"
@@ -87,8 +87,8 @@ Feature: handle conflicts between the main branch and its tracking branch
       | feature | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
       |         | git push --force-with-lease --force-if-includes                              |
     And no rebase is now in progress
+    And all branches are now synchronized
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |
       | feature | conflicting_file | resolved content |
-    And all branches are now synchronized

@@ -21,14 +21,14 @@ Feature: delete the current parked branch
       |         | git push origin :parked  |
       |         | git checkout feature     |
       | feature | git branch -D parked     |
-    And the branches are now
-      | REPOSITORY    | BRANCHES      |
-      | local, origin | main, feature |
     And this lineage exists now
       """
       main
         feature
       """
+    And the branches are now
+      | REPOSITORY    | BRANCHES      |
+      | local, origin | main, feature |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |

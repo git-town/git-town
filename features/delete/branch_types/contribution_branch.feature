@@ -20,15 +20,15 @@ Feature: delete the current contribution branch
       | contribution | git fetch --prune --tags   |
       |              | git checkout feature       |
       | feature      | git branch -D contribution |
-    And the branches are now
-      | REPOSITORY | BRANCHES                    |
-      | local      | main, feature               |
-      | origin     | main, contribution, feature |
     And this lineage exists now
       """
       main
         feature
       """
+    And the branches are now
+      | REPOSITORY | BRANCHES                    |
+      | local      | main, feature               |
+      | origin     | main, contribution, feature |
     And these commits exist now
       | BRANCH       | LOCATION      | MESSAGE             |
       | feature      | local, origin | feature commit      |

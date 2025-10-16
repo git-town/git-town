@@ -21,14 +21,14 @@ Feature: deleting a branch whose tracking branch is gone
       | current | git fetch --prune --tags |
       |         | git checkout other       |
       | other   | git branch -D current    |
-    And the branches are now
-      | REPOSITORY    | BRANCHES    |
-      | local, origin | main, other |
     And this lineage exists now
       """
       main
         other
       """
+    And the branches are now
+      | REPOSITORY    | BRANCHES    |
+      | local, origin | main, other |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
       | other  | local, origin | other commit |

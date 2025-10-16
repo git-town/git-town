@@ -54,12 +54,12 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       |         | git checkout main                       |
       | main    | git push --tags                         |
     And no rebase is now in progress
+    And all branches are now synchronized
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |
       | feature | conflicting_file | resolved content |
       |         | feature_file     | feature content  |
-    And all branches are now synchronized
 
   Scenario: resolve, finish the rebase, and continue
     When I resolve the conflict in "conflicting_file"

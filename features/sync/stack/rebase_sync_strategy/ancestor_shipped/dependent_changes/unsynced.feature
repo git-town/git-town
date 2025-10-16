@@ -70,8 +70,8 @@ Feature: let the user resolve the merge conflict in an unsynced stack where the 
       |          | git push --force-with-lease           |
       |          | git branch -D branch-1                |
     And no rebase is now in progress
+    And all branches are now synchronized
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                                             |
       | main     | local, origin | branch-1 commit | file      | line 1 changed by branch-1\n\nline 2                     |
       | branch-2 | local, origin | branch-2 commit | file      | line 1 changed by branch-1\n\nline 2 changed by branch-2 |
-    And all branches are now synchronized

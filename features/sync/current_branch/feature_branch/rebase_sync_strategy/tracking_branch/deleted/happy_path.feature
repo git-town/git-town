@@ -28,14 +28,14 @@ Feature: sync a branch whose tracking branch was shipped
       """
       deleted branch "feature-1"
       """
-    And the branches are now
-      | REPOSITORY    | BRANCHES        |
-      | local, origin | main, feature-2 |
     And this lineage exists now
       """
       main
         feature-2
       """
+    And the branches are now
+      | REPOSITORY    | BRANCHES        |
+      | local, origin | main, feature-2 |
 
   Scenario: undo
     When I run "git-town undo"

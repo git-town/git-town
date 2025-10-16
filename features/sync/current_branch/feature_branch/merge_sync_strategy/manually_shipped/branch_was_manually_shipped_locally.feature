@@ -23,22 +23,22 @@ Feature: the branch was shipped manually on the local machine
       |        | git push                                          |
       |        | git branch -D feature                             |
       |        | git push --tags                                   |
+    And no lineage exists now
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
-    And no lineage exists now
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | main   | git branch feature {{ sha 'feature commit' }} |
-    And the branches are now
-      | REPOSITORY | BRANCHES      |
-      | local      | main, feature |
-      | origin     | main          |
     And this lineage exists now
       """
       main
         feature
       """
+    And the branches are now
+      | REPOSITORY | BRANCHES      |
+      | local      | main, feature |
+      | origin     | main          |

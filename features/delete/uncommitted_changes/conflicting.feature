@@ -21,14 +21,14 @@ Feature: delete another branch while having conflicting open changes
       | good   | git fetch --prune --tags |
       |        | git push origin :dead    |
       |        | git branch -D dead       |
-    And the branches are now
-      | REPOSITORY    | BRANCHES   |
-      | local, origin | main, good |
     And this lineage exists now
       """
       main
         good
       """
+    And the branches are now
+      | REPOSITORY    | BRANCHES   |
+      | local, origin | main, good |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE            |
       | main   | local, origin | conflicting commit |

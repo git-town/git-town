@@ -31,13 +31,13 @@ Feature: compresses active parked branches
       |        | git commit -m "child 1"                         |
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout parked                             |
+    And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE  |
       | parked | local, origin | parked 1 |
       | child  | local, origin | child 1  |
     And file "parked_1" still has content "parked 1"
     And file "parked_2" still has content "parked 2"
-    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

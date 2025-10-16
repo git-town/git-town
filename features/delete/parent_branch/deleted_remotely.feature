@@ -17,15 +17,15 @@ Feature: the parent of the branch to delete was deleted remotely
       |        | git push origin :beta    |
       |        | git checkout alpha       |
       | alpha  | git branch -D beta       |
-    And the branches are now
-      | REPOSITORY | BRANCHES    |
-      | local      | main, alpha |
-      | origin     | main        |
     And this lineage exists now
       """
       main
         alpha
       """
+    And the branches are now
+      | REPOSITORY | BRANCHES    |
+      | local      | main, alpha |
+      | origin     | main        |
 
   Scenario: undo
     When I run "git-town undo"

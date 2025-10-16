@@ -23,10 +23,10 @@ Feature: ship hotfixes
       |            | git push                       |
       |            | git push origin :hotfix        |
       |            | git branch -D hotfix           |
+    And no lineage exists now
     And the branches are now
       | REPOSITORY    | BRANCHES         |
       | local, origin | main, production |
-    And no lineage exists now
     And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE     |
       | production | local, origin | hotfix done |

@@ -20,15 +20,15 @@ Feature: delete the current observed branch
       | observed | git fetch --prune --tags |
       |          | git checkout feature     |
       | feature  | git branch -D observed   |
-    And the branches are now
-      | REPOSITORY | BRANCHES                |
-      | local      | main, feature           |
-      | origin     | main, feature, observed |
     And this lineage exists now
       """
       main
         feature
       """
+    And the branches are now
+      | REPOSITORY | BRANCHES                |
+      | local      | main, feature           |
+      | origin     | main, feature, observed |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |
       | feature  | local, origin | feature commit  |

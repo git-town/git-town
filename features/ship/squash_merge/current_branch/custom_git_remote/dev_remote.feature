@@ -25,10 +25,10 @@ Feature: ship to a custom dev remote
       |         | git push                        |
       |         | git push fork :feature          |
       |         | git branch -D feature           |
+    And no lineage exists now
     And the branches are now
       | REPOSITORY  | BRANCHES |
       | local, fork | main     |
-    And no lineage exists now
     And these commits exist now
       | BRANCH | LOCATION    | MESSAGE      |
       | main   | local, fork | feature done |
@@ -42,10 +42,10 @@ Feature: ship to a custom dev remote
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git push -u fork feature                      |
       |        | git checkout feature                          |
+    And the initial lineage exists now
     And the branches are now
       | REPOSITORY  | BRANCHES      |
       | local, fork | main, feature |
-    And the initial lineage exists now
     And these commits exist now
       | BRANCH  | LOCATION    | MESSAGE               |
       | main    | local, fork | feature done          |

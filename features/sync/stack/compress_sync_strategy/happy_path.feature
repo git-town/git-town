@@ -38,13 +38,13 @@ Feature: sync a grandchild feature branch using the "compress" strategy
       |        | git reset --soft parent                           |
       |        | git commit -m "local child commit"                |
       |        | git push --force-with-lease                       |
+    And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE             |
       | main   | local, origin | origin main commit  |
       |        |               | local main commit   |
       | parent | local, origin | local parent commit |
       | child  | local, origin | local child commit  |
-    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

@@ -32,11 +32,11 @@ Feature: an ancestor in a stack with dependent changes was deleted remotely
       |          | git push --force-with-lease                                |
       |          | git branch -D branch-1                                     |
     And no rebase is now in progress
+    And all branches are now synchronized
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT                         |
       | main     | local, origin | main commit     | file      | line 1 \n\n line 2                   |
       | branch-2 | local, origin | branch-2 commit | file      | line 1 \n\n line 2: branch-2 changes |
-    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

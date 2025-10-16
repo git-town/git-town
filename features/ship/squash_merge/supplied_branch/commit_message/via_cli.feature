@@ -24,14 +24,14 @@ Feature: provide the commit message via a CLI argument
       |        | git push origin :feature        |
       |        | git checkout other              |
       | other  | git branch -D feature           |
-    And the branches are now
-      | REPOSITORY    | BRANCHES    |
-      | local, origin | main, other |
     And this lineage exists now
       """
       main
         other
       """
+    And the branches are now
+      | REPOSITORY    | BRANCHES    |
+      | local, origin | main, other |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, origin | feature done |

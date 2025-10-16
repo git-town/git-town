@@ -18,13 +18,13 @@ Feature: sync the current prototype branch in a local repo
     Then Git Town runs the commands
       | BRANCH    | COMMAND                       |
       | prototype | git merge --no-edit --ff main |
+    And all branches are now synchronized
     And these commits exist now
       | BRANCH    | LOCATION | MESSAGE                            |
       | main      | local    | main commit                        |
       | prototype | local    | local commit                       |
       |           |          | Merge branch 'main' into prototype |
     And the initial branches and lineage exist now
-    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"

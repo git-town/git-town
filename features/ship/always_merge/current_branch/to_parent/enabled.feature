@@ -29,14 +29,14 @@ Feature: allowing shipping into a feature branch
       |        | git push                         |
       |        | git push origin :beta            |
       |        | git branch -D beta               |
-    And the branches are now
-      | REPOSITORY    | BRANCHES    |
-      | local, origin | main, alpha |
     And this lineage exists now
       """
       main
         alpha
       """
+    And the branches are now
+      | REPOSITORY    | BRANCHES    |
+      | local, origin | main, alpha |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        |
       | alpha  | local, origin | alpha 1                        |

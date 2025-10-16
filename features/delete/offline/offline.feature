@@ -19,15 +19,15 @@ Feature: offline mode
       | BRANCH  | COMMAND               |
       | feature | git checkout other    |
       | other   | git branch -D feature |
-    And the branches are now
-      | REPOSITORY | BRANCHES             |
-      | local      | main, other          |
-      | origin     | main, feature, other |
     And this lineage exists now
       """
       main
         other
       """
+    And the branches are now
+      | REPOSITORY | BRANCHES             |
+      | local      | main, other          |
+      | origin     | main, feature, other |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE        |
       | other   | local, origin | other commit   |

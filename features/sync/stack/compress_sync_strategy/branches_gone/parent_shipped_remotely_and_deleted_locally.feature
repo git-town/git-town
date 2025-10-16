@@ -25,14 +25,14 @@ Feature: syncing a branch whose parent was shipped and the local branch deleted 
       |        | git checkout child                                |
       | child  | git merge --no-edit --ff main                     |
       |        | git push --force-with-lease                       |
-    And the branches are now
-      | REPOSITORY    | BRANCHES    |
-      | local, origin | main, child |
     And this lineage exists now
       """
       main
         child
       """
+    And the branches are now
+      | REPOSITORY    | BRANCHES    |
+      | local, origin | main, child |
 
   Scenario: undo
     When I run "git-town undo"
@@ -43,7 +43,7 @@ Feature: syncing a branch whose parent was shipped and the local branch deleted 
       |        | git checkout main                               |
       | main   | git reset --hard {{ sha 'initial commit' }}     |
       |        | git checkout child                              |
+    And the initial lineage exists now
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, child |
-    And the initial lineage exists now

@@ -24,15 +24,15 @@ Feature: append a branch to a branch whose tracking branch was deleted
       """
       deleted branch "shipped"
       """
-    And the branches are now
-      | REPOSITORY | BRANCHES  |
-      | local      | main, new |
-      | origin     | main      |
     And this lineage exists now
       """
       main
         new
       """
+    And the branches are now
+      | REPOSITORY | BRANCHES  |
+      | local      | main, new |
+      | origin     | main      |
 
   Scenario: undo
     When I run "git-town undo"

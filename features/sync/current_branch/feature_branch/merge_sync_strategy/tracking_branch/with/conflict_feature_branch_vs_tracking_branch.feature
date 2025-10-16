@@ -62,10 +62,10 @@ Feature: handle conflicts between the current feature branch and its tracking br
       | feature | git commit --no-edit |
       |         | git push             |
     And no merge is now in progress
+    And all branches are now synchronized
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | feature | conflicting_file | resolved content |
-    And all branches are now synchronized
 
   Scenario: resolve, commit, and continue
     When I resolve the conflict in "conflicting_file"

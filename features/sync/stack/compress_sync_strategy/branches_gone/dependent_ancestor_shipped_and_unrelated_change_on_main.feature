@@ -36,12 +36,12 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
       |        | git reset --soft main                             |
       |        | git commit -m "beta commit"                       |
       |        | git push --force-with-lease                       |
+    And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE           | FILE NAME | FILE CONTENT  |
       | main   | local, origin | alpha commit      | file      | alpha content |
       |        |               | additional commit | new_file  |               |
       | beta   | local, origin | beta commit       | file      | beta content  |
-    And all branches are now synchronized
 
   Scenario: undo
     When I run "git-town undo"
