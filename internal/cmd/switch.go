@@ -136,6 +136,7 @@ Start:
 		EntriesLocal:       entriesLocal,
 		InputName:          "switch-branch",
 		Inputs:             data.inputs,
+		ShowAllBranches:    args.allBranches,
 		Title:              None[string](),
 		UncommittedChanges: data.uncommittedChanges,
 	})

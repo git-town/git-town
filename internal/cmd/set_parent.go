@@ -162,7 +162,7 @@ Start:
 				ShowAllBranches:   false,
 				UnknownBranchType: repo.UnvalidatedConfig.NormalConfig.UnknownBranchType,
 			})
-			entriesAll = append(dialog.SwitchBranchEntries{noneEntry}, entriesLocal...)
+			entriesAll = append(dialog.SwitchBranchEntries{noneEntry}, entriesAll...)
 			entriesLocal = append(dialog.SwitchBranchEntries{noneEntry}, entriesLocal...)
 			selectedParent, exit, err = dialog.SwitchBranch(dialog.SwitchBranchArgs{
 				CurrentBranch:      None[gitdomain.LocalBranchName](),
@@ -172,6 +172,7 @@ Start:
 				EntriesLocal:       entriesLocal,
 				InputName:          fmt.Sprintf("parent-branch-for-%q", data.initialBranch),
 				Inputs:             data.inputs,
+				ShowAllBranches:    false,
 				Title:              Some(fmt.Sprintf(messages.ParentBranchTitle, data.initialBranch)),
 				UncommittedChanges: false,
 			})
