@@ -52,8 +52,10 @@ func (sbes SwitchBranchEntries) IndexOf(branch gitdomain.LocalBranchName) int {
 
 type SwitchModel struct {
 	list.List[SwitchBranchEntry]
+	AllBranches        bool // whether to show all or local branches
 	DisplayBranchTypes configdomain.DisplayTypes
-	EntriesArgs        NewSwitchBranchEntriesArgs
+	EntriesAll         SwitchBranchEntries
+	EntriesLocal       SwitchBranchEntries
 	InitialBranchPos   Option[int]    // position of the currently checked out branch in the list
 	Title              Option[string] // optional title to display above the branch tree
 	UncommittedChanges bool           // whether the workspace has uncommitted changes
@@ -80,9 +82,13 @@ func (self SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:iret
 		return self, tea.Quit
 	}
 	if keyMsg.String() == "a" {
-		self.EntriesArgs.ShowAllBranches = !self.EntriesArgs.ShowAllBranches
-		newEntries := NewSwitchBranchEntries(self.EntriesArgs)
-		self.List = list.NewList(newSwitchBranchListEntries(newEntries), min(self.Cursor, len(newEntries)-1))
+		if self.AllBranches {
+			self.AllBranches = false
+			self.List = list.NewList(newSwitchBranchListEntries(self.EntriesLocal), min(self.Cursor, len(self.EntriesLocal)-1))
+		} else {
+			self.AllBranches = true
+			self.List = list.NewList(newSwitchBranchListEntries(self.EntriesAll), self.Cursor)
+		}
 		return self, nil
 	}
 	return self, nil
@@ -269,13 +275,14 @@ func ShouldDisplayBranchType(branchType configdomain.BranchType) bool {
 func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomain.Exit, error) {
 	initialBranchPos := None[int]()
 	if currentBranch, has := args.CurrentBranch.Get(); has {
-		initialBranchPos = Some(args.Entries.IndexOf(currentBranch))
+		initialBranchPos = Some(args.EntriesLocal.IndexOf(currentBranch))
 	}
 	dialogProgram := tea.NewProgram(SwitchModel{
 		DisplayBranchTypes: args.DisplayBranchTypes,
-		EntriesArgs:        args.EntriesArgs,
+		EntriesAll:         args.EntriesAll,
+		EntriesLocal:       args.EntriesLocal,
 		InitialBranchPos:   initialBranchPos,
-		List:               list.NewList(newSwitchBranchListEntries(args.Entries), args.Cursor),
+		List:               list.NewList(newSwitchBranchListEntries(args.EntriesLocal), args.Cursor),
 		Title:              args.Title,
 		UncommittedChanges: args.UncommittedChanges,
 	})
@@ -290,8 +297,8 @@ type SwitchBranchArgs struct {
 	CurrentBranch      Option[gitdomain.LocalBranchName]
 	Cursor             int
 	DisplayBranchTypes configdomain.DisplayTypes
-	Entries            SwitchBranchEntries
-	EntriesArgs        NewSwitchBranchEntriesArgs
+	EntriesLocal       SwitchBranchEntries
+	EntriesAll         SwitchBranchEntries
 	InputName          string
 	Inputs             dialogcomponents.Inputs
 	Title              Option[string]
