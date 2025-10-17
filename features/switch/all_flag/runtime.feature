@@ -11,8 +11,8 @@ Feature: switch to a new remote branch while enabling to show all branches at ru
     And the current branch is "local-2"
     And I ran "git fetch"
     When I run "git-town switch" and enter into the dialogs:
-      | DIALOG        | KEYS       |
-      | switch-branch | a up enter |
+      | DIALOG        | KEYS              |
+      | switch-branch | a down down enter |
     Then Git Town runs the commands
       | BRANCH  | COMMAND               |
       | local-2 | git checkout remote-1 |
