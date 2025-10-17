@@ -53,12 +53,12 @@ func (sbes SwitchBranchEntries) IndexOf(branch gitdomain.LocalBranchName) int {
 type SwitchModel struct {
 	list.List[SwitchBranchEntry]
 	DisplayBranchTypes configdomain.DisplayTypes
-	EntriesAll         SwitchBranchEntries
-	EntriesLocal       SwitchBranchEntries
-	InitialBranchPos   Option[int] // position of the currently checked out branch in the list
-	ShowAllBranches    configdomain.AllBranches
-	Title              Option[string] // optional title to display above the branch tree
-	UncommittedChanges bool           // whether the workspace has uncommitted changes
+	EntriesAll         SwitchBranchEntries      // entries for the dialog when "show all branches" is enabled
+	EntriesLocal       SwitchBranchEntries      // entries for the dialog when "show all branches" is disabled
+	InitialBranchPos   Option[int]              // position of the currently checked out branch in the list
+	ShowAllBranches    configdomain.AllBranches // whether to show all branches or only local branches
+	Title              Option[string]           // optional title to display above the branch tree
+	UncommittedChanges bool                     // whether the workspace has uncommitted changes
 }
 
 func (self SwitchModel) Init() tea.Cmd {
