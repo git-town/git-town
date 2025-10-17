@@ -105,7 +105,7 @@ Start:
 	case configdomain.ProgramFlowRestart:
 		goto Start
 	}
-	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchNames)
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchesSnapshot.Branches.Names())
 	unknownBranchType := repo.UnvalidatedConfig.NormalConfig.UnknownBranchType
 	entries := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
 		BranchInfos:       data.branchesSnapshot.Branches,
@@ -151,7 +151,6 @@ Start:
 }
 
 type switchData struct {
-	branchNames        gitdomain.LocalBranchNames
 	branchesSnapshot   gitdomain.BranchesSnapshot
 	config             config.UnvalidatedConfig
 	initialBranch      gitdomain.LocalBranchName
@@ -201,7 +200,6 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult) (data switc
 		return data, configdomain.ProgramFlowExit, err
 	}
 	return switchData{
-		branchNames:        branchesSnapshot.Branches.Names(),
 		branchesSnapshot:   branchesSnapshot,
 		config:             repo.UnvalidatedConfig,
 		initialBranch:      initialBranch,
