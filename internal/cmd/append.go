@@ -432,23 +432,13 @@ func appendProgram(frontend subshelldomain.Runner, data appendFeatureData, final
 		Branch:    data.targetBranch,
 		Ancestors: data.newBranchParentCandidates,
 	})
+	var branchType configdomain.BranchType
 	if data.prototype {
-		prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: configdomain.BranchTypePrototypeBranch})
+		branchType = configdomain.BranchTypePrototypeBranch
 	} else {
-		if newBranchType, hasNewBranchType := data.config.NormalConfig.NewBranchType.Get(); hasNewBranchType {
-			switch newBranchType.BranchType() {
-			case
-				configdomain.BranchTypeContributionBranch,
-				configdomain.BranchTypeObservedBranch,
-				configdomain.BranchTypeParkedBranch,
-				configdomain.BranchTypePerennialBranch,
-				configdomain.BranchTypePrototypeBranch,
-				configdomain.BranchTypeFeatureBranch:
-				prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: newBranchType.BranchType()})
-			case configdomain.BranchTypeMainBranch:
-			}
-		}
+		branchType = data.config.NormalConfig.NewBranchType.GetOr(configdomain.NewBranchType(configdomain.BranchTypeFeatureBranch)).BranchType()
 	}
+	prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: branchType})
 	if data.commit {
 		prog.Value.Add(
 			&opcodes.Commit{
