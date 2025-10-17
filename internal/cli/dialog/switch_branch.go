@@ -52,7 +52,7 @@ func (sbes SwitchBranchEntries) IndexOf(branch gitdomain.LocalBranchName) int {
 
 type SwitchModel struct {
 	list.List[SwitchBranchEntry]
-	AllBranches        bool // whether to show all or local branches
+	AllBranches        configdomain.AllBranches
 	DisplayBranchTypes configdomain.DisplayTypes
 	EntriesAll         SwitchBranchEntries
 	EntriesLocal       SwitchBranchEntries
@@ -278,6 +278,7 @@ func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomai
 		initialBranchPos = Some(args.EntriesLocal.IndexOf(currentBranch))
 	}
 	dialogProgram := tea.NewProgram(SwitchModel{
+		AllBranches:        args.AllBranches,
 		DisplayBranchTypes: args.DisplayBranchTypes,
 		EntriesAll:         args.EntriesAll,
 		EntriesLocal:       args.EntriesLocal,
@@ -294,6 +295,7 @@ func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomai
 }
 
 type SwitchBranchArgs struct {
+	AllBranches        configdomain.AllBranches
 	CurrentBranch      Option[gitdomain.LocalBranchName]
 	Cursor             int
 	DisplayBranchTypes configdomain.DisplayTypes
