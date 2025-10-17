@@ -265,8 +265,8 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (data p
 	if err != nil {
 		return data, configdomain.ProgramFlowExit, err
 	}
-	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
+	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchInfos:        branchesSnapshot.Branches,

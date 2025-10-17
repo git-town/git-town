@@ -242,8 +242,8 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (data delet
 	if branchToDeleteInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree {
 		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchOtherWorktree, branchToDelete)
 	}
-	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
+	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
 		return data, configdomain.ProgramFlowExit, err

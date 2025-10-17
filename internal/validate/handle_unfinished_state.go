@@ -153,7 +153,7 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 		if err != nil {
 			return config.EmptyValidatedConfig(), false, err
 		}
-		localBranches := branchesSnapshot.Branches.LocalBranches().Names()
+		localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
 		var exit dialogdomain.Exit
 		_, mainBranch, exit, err = dialog.MainBranch(dialog.MainBranchArgs{
 			Inputs:         args.inputs,

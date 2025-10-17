@@ -137,7 +137,7 @@ func determineBranchData(repo execute.OpenRepoResult) (data branchData, flow con
 		}
 	}
 	colors := dialogcolors.NewDialogColors()
-	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.Names())
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.NamesLocalBranches())
 	return branchData{
 		branchInfos:      branchesSnapshot.Branches,
 		branchesAndTypes: branchesAndTypes,

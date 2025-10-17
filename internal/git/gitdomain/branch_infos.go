@@ -138,8 +138,17 @@ func (self BranchInfos) LocalBranchesWithDeletedTrackingBranches() BranchInfos {
 	return result
 }
 
-// Names provides the names of all local branches in this BranchesSyncStatus instance.
-func (self BranchInfos) Names() LocalBranchNames {
+// NamesAllBranches provides the local names for all branches in this BranchesSyncStatus instance.
+func (self BranchInfos) NamesAllBranches() LocalBranchNames {
+	result := make(LocalBranchNames, 0, len(self))
+	for _, bi := range self {
+		result = append(result, bi.GetLocalOrRemoteNameAsLocalName())
+	}
+	return result
+}
+
+// NamesLocalBranches provides the names of all local branches in this BranchesSyncStatus instance.
+func (self BranchInfos) NamesLocalBranches() LocalBranchNames {
 	result := make(LocalBranchNames, 0, len(self))
 	for _, bi := range self {
 		if localName, hasLocalName := bi.LocalName.Get(); hasLocalName {
