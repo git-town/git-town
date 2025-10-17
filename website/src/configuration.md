@@ -1,9 +1,9 @@
 # Set up configuration
 
-If your repository already contains a `.git-town.toml` or `.git-branches.toml`
-file, you're all set. If not - or if something isn't working as expected - Git
-Town provides an interactive that guides you through the entire configuration
-process. Just run:
+If your repository already contains a `git-town.toml`, `.git-town.toml`, or
+`.git-branches.toml` file, you're all set. If not - or if something isn't
+working as expected - Git Town provides an interactive that guides you through
+the entire configuration process. Just run:
 
 ```
 git town init
