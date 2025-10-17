@@ -284,12 +284,12 @@ func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomai
 		entries = args.EntriesLocal
 	}
 	dialogProgram := tea.NewProgram(SwitchModel{
-		ShowAllBranches:    args.ShowAllBranches,
 		DisplayBranchTypes: args.DisplayBranchTypes,
 		EntriesAll:         args.EntriesAll,
 		EntriesLocal:       args.EntriesLocal,
 		InitialBranchPos:   initialBranchPos,
 		List:               list.NewList(newSwitchBranchListEntries(entries), args.Cursor),
+		ShowAllBranches:    args.ShowAllBranches,
 		Title:              args.Title,
 		UncommittedChanges: args.UncommittedChanges,
 	})
