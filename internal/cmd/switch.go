@@ -115,7 +115,7 @@ Start:
 		Lineage:           data.config.NormalConfig.Lineage,
 		MainBranch:        repo.UnvalidatedConfig.UnvalidatedConfig.MainBranch,
 		Regexes:           data.regexes,
-		ShowAllBranches:   args.allBranches,
+		ShowAllBranches:   false,
 		UnknownBranchType: unknownBranchType,
 	}
 	entriesLocal := dialog.NewSwitchBranchEntries(entriesArgs)
