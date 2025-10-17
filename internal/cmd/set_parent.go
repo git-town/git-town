@@ -140,7 +140,7 @@ Start:
 				OtherWorktree: false,
 				Type:          configdomain.BranchTypeFeatureBranch,
 			}
-			entriesAll := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
+			args := dialog.NewSwitchBranchEntriesArgs{
 				BranchInfos:       data.branchesSnapshot.Branches,
 				BranchTypes:       []configdomain.BranchType{},
 				BranchesAndTypes:  repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchesSnapshot.Branches.NamesAllBranches()),
@@ -150,20 +150,10 @@ Start:
 				Regexes:           []*regexp.Regexp{},
 				ShowAllBranches:   true,
 				UnknownBranchType: repo.UnvalidatedConfig.NormalConfig.UnknownBranchType,
-			})
-			entriesLocal := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
-				BranchInfos:       data.branchesSnapshot.Branches,
-				BranchTypes:       []configdomain.BranchType{},
-				BranchesAndTypes:  repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchesSnapshot.Branches.NamesLocalBranches()),
-				ExcludeBranches:   excludeBranches,
-				Lineage:           repo.UnvalidatedConfig.NormalConfig.Lineage,
-				MainBranch:        repo.UnvalidatedConfig.UnvalidatedConfig.MainBranch,
-				Regexes:           []*regexp.Regexp{},
-				ShowAllBranches:   false,
-				UnknownBranchType: repo.UnvalidatedConfig.NormalConfig.UnknownBranchType,
-			})
-			entriesAll = append(dialog.SwitchBranchEntries{noneEntry}, entriesAll...)
-			entriesLocal = append(dialog.SwitchBranchEntries{noneEntry}, entriesLocal...)
+			}
+			entriesAll := append(dialog.SwitchBranchEntries{noneEntry}, dialog.NewSwitchBranchEntries(args)...)
+			args.ShowAllBranches = false
+			entriesLocal := append(dialog.SwitchBranchEntries{noneEntry}, dialog.NewSwitchBranchEntries(args)...)
 			selectedParent, exit, err = dialog.SwitchBranch(dialog.SwitchBranchArgs{
 				CurrentBranch:      None[gitdomain.LocalBranchName](),
 				Cursor:             entriesLocal.IndexOf(data.defaultChoice),
