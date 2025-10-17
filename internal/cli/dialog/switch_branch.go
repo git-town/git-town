@@ -122,10 +122,9 @@ func (self SwitchModel) View() string {
 		s.WriteString(colors.BoldCyan().Styled(messages.SwitchUncommittedChanges))
 		s.WriteString("\n\n")
 	}
-	entries := self.EntryData.entries()
 	window := slice.Window(slice.WindowArgs{
 		CursorPos:    self.Cursor,
-		ElementCount: len(entries),
+		ElementCount: len(self.Entries),
 		WindowSize:   dialogcomponents.WindowSize,
 	})
 	for i := window.StartRow; i < window.EndRow; i++ {
