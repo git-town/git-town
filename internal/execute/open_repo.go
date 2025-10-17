@@ -87,6 +87,12 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		return emptyOpenRepoResult(), err
 	}
 	if !hasConfigFile {
+		configFile, hasConfigFile, err = configfile.Load(rootDir, configfile.HiddenFileName, finalMessages)
+		if err != nil {
+			return emptyOpenRepoResult(), err
+		}
+	}
+	if !hasConfigFile {
 		configFile, _, err = configfile.Load(rootDir, configfile.AlternativeFileName, finalMessages)
 		if err != nil {
 			return emptyOpenRepoResult(), err
