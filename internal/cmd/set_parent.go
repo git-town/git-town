@@ -148,12 +148,12 @@ Start:
 				Lineage:           repo.UnvalidatedConfig.NormalConfig.Lineage,
 				MainBranch:        repo.UnvalidatedConfig.UnvalidatedConfig.MainBranch,
 				Regexes:           []*regexp.Regexp{},
-				ShowAllBranches:   true,
+				ShowAllBranches:   false,
 				UnknownBranchType: repo.UnvalidatedConfig.NormalConfig.UnknownBranchType,
 			}
-			entriesAll := append(dialog.SwitchBranchEntries{noneEntry}, dialog.NewSwitchBranchEntries(args)...)
-			args.ShowAllBranches = false
 			entriesLocal := append(dialog.SwitchBranchEntries{noneEntry}, dialog.NewSwitchBranchEntries(args)...)
+			args.ShowAllBranches = true
+			entriesAll := append(dialog.SwitchBranchEntries{noneEntry}, dialog.NewSwitchBranchEntries(args)...)
 			selectedParent, exit, err = dialog.SwitchBranch(dialog.SwitchBranchArgs{
 				CurrentBranch:      None[gitdomain.LocalBranchName](),
 				Cursor:             entriesLocal.IndexOf(data.defaultChoice),
