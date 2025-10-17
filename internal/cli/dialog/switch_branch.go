@@ -286,23 +286,19 @@ func ShouldDisplayBranchType(branchType configdomain.BranchType) bool {
 }
 
 func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomain.Exit, error) {
-	var entries SwitchBranchEntries
-	if args.ShowAllBranches {
-		entries = args.EntriesAll
-	} else {
-		entries = args.EntriesLocal
+	entryData := EntryData{
+		EntriesAll:      args.EntriesAll,
+		EntriesLocal:    args.EntriesLocal,
+		ShowAllBranches: args.ShowAllBranches,
 	}
+	entries := entryData.entries()
 	initialBranchPos := None[int]()
 	if currentBranch, has := args.CurrentBranch.Get(); has {
 		initialBranchPos = Some(entries.IndexOf(currentBranch))
 	}
 	dialogProgram := tea.NewProgram(SwitchModel{
 		DisplayBranchTypes: args.DisplayBranchTypes,
-		EntryData: EntryData{
-			EntriesAll:      args.EntriesAll,
-			EntriesLocal:    args.EntriesLocal,
-			ShowAllBranches: args.ShowAllBranches,
-		},
+		EntryData:          entryData,
 		InitialBranchPos:   initialBranchPos,
 		List:               list.NewList(newSwitchBranchListEntries(entries), args.Cursor),
 		Title:              args.Title,
