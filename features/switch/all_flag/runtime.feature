@@ -1,5 +1,5 @@
 @messyoutput
-Feature: switch to a new remote branch without --all flag
+Feature: switch to a new remote branch while enabling to show all branches at runtime
 
   Scenario: enable using 'a' key
     Given a Git repo with origin
