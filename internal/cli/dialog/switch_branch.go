@@ -83,8 +83,7 @@ func (self SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:iret
 	if keyMsg.String() == "a" {
 		self.EntriesArgs.ShowAllBranches = !self.EntriesArgs.ShowAllBranches
 		newEntries := NewSwitchBranchEntries(self.EntriesArgs)
-		oldCursor := self.Cursor
-		self.List = list.NewList(newSwitchBranchListEntries(newEntries), min(oldCursor, len(newEntries)-1))
+		self.List = list.NewList(newSwitchBranchListEntries(newEntries), min(self.Cursor, len(newEntries)-1))
 		return self, nil
 	}
 	return self, nil
