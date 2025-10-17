@@ -137,7 +137,7 @@ Start:
 			entriesArgs := dialog.NewSwitchBranchEntriesArgs{
 				BranchInfos:       data.branchesSnapshot.Branches,
 				BranchTypes:       []configdomain.BranchType{},
-				BranchesAndTypes:  repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchesSnapshot.Branches.NamesLocalBranches()),
+				BranchesAndTypes:  repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchesSnapshot.Branches.NamesAllBranches()),
 				ExcludeBranches:   excludeBranches,
 				Lineage:           repo.UnvalidatedConfig.NormalConfig.Lineage,
 				MainBranch:        repo.UnvalidatedConfig.UnvalidatedConfig.MainBranch,
