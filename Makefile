@@ -5,6 +5,9 @@ RTA_VERSION = 0.23.0  # run-that-app version to use
 RELEASE_VERSION := "22.1.0"
 GO_TEST_ARGS = LANG=C GOGC=off BROWSER=
 
+contest: tools/rta@${RTA_VERSION}  # run the Contest server
+	@tools/rta contest
+
 cuke: install  # runs all end-to-end tests in a way that looks nice during development
 	@env $(GO_TEST_ARGS) messyoutput=0 go test -v
 	@env $(GO_TEST_ARGS) messyoutput=1 go test -v
