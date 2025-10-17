@@ -50,15 +50,30 @@ func (sbes SwitchBranchEntries) IndexOf(branch gitdomain.LocalBranchName) int {
 	return 0
 }
 
+type SwitchableEntries struct {
+	EntriesAll      SwitchBranchEntries      // entries for the dialog when "show all branches" is enabled
+	EntriesLocal    SwitchBranchEntries      // entries for the dialog when "show all branches" is disabled
+	ShowAllBranches configdomain.AllBranches // whether to show all branches or only local branches
+}
+
+func (entries *SwitchableEntries) entries() SwitchBranchEntries {
+	if entries.ShowAllBranches {
+		return entries.EntriesAll
+	}
+	return entries.EntriesLocal
+}
+
+func (entries *SwitchableEntries) toggle() {
+	entries.ShowAllBranches = !entries.ShowAllBranches
+}
+
 type SwitchModel struct {
 	list.List[SwitchBranchEntry]
 	DisplayBranchTypes configdomain.DisplayTypes
-	EntriesAll         SwitchBranchEntries      // entries for the dialog when "show all branches" is enabled
-	EntriesLocal       SwitchBranchEntries      // entries for the dialog when "show all branches" is disabled
-	InitialBranchPos   Option[int]              // position of the currently checked out branch in the list
-	ShowAllBranches    configdomain.AllBranches // whether to show all branches or only local branches
-	Title              Option[string]           // optional title to display above the branch tree
-	UncommittedChanges bool                     // whether the workspace has uncommitted changes
+	Entries            SwitchableEntries
+	InitialBranchPos   Option[int]    // position of the currently checked out branch in the list
+	Title              Option[string] // optional title to display above the branch tree
+	UncommittedChanges bool           // whether the workspace has uncommitted changes
 }
 
 func (self SwitchModel) Init() tea.Cmd {
@@ -82,13 +97,8 @@ func (self SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:iret
 		return self, tea.Quit
 	}
 	if keyMsg.String() == "a" {
-		if self.ShowAllBranches {
-			self.ShowAllBranches = false
-			self.List = list.NewList(newSwitchBranchListEntries(self.EntriesLocal), min(self.Cursor, len(self.EntriesLocal)-1))
-		} else {
-			self.ShowAllBranches = true
-			self.List = list.NewList(newSwitchBranchListEntries(self.EntriesAll), self.Cursor)
-		}
+		self.Entries.toggle()
+		self.List = list.NewList(newSwitchBranchListEntries(self.Entries.entries()), min(self.Cursor, len(self.Entries.EntriesLocal)-1))
 		return self, nil
 	}
 	return self, nil
@@ -111,39 +121,39 @@ func (self SwitchModel) View() string {
 	}
 	window := slice.Window(slice.WindowArgs{
 		CursorPos:    self.Cursor,
-		ElementCount: len(self.Entries),
+		ElementCount: len(self.Entries.entries()),
 		WindowSize:   dialogcomponents.WindowSize,
 	})
 	for i := window.StartRow; i < window.EndRow; i++ {
-		entry := self.Entries[i]
+		entry := self.Entries.entries()[i]
 		isSelected := i == self.Cursor
 		initialBranchPos, hasInitialBranchPos := self.InitialBranchPos.Get()
 		isInitial := hasInitialBranchPos && i == initialBranchPos
 		switch {
 		case isSelected:
 			color := self.Colors.Selection
-			if entry.Data.OtherWorktree {
+			if entry.OtherWorktree {
 				color = color.Faint()
 			}
-			s.WriteString(color.Styled("> " + entry.Text))
+			s.WriteString(color.Styled("> " + entry.Branch.String()))
 		case isInitial:
 			color := self.Colors.Initial
-			if entry.Data.OtherWorktree {
+			if entry.OtherWorktree {
 				color = color.Faint()
 			}
-			s.WriteString(color.Styled("* " + entry.Text))
-		case entry.Data.OtherWorktree:
-			s.WriteString(colors.Faint().Styled("+ " + entry.Text))
+			s.WriteString(color.Styled("* " + entry.Branch.String()))
+		case entry.OtherWorktree:
+			s.WriteString(colors.Faint().Styled("+ " + entry.Branch.String()))
 		default:
 			color := termenv.String()
-			if entry.Data.OtherWorktree {
+			if entry.OtherWorktree {
 				color = color.Faint()
 			}
-			s.WriteString(color.Styled("  " + entry.Text))
+			s.WriteString(color.Styled("  " + entry.Branch.String()))
 		}
-		if self.DisplayBranchTypes.ShouldDisplayTypes() && ShouldDisplayBranchType(entry.Data.Type) {
+		if self.DisplayBranchTypes.ShouldDisplayTypes() && ShouldDisplayBranchType(entry.Type) {
 			s.WriteString("  ")
-			s.WriteString(colors.Faint().Styled("(" + entry.Data.Type.String() + ")"))
+			s.WriteString(colors.Faint().Styled("(" + entry.Type.String() + ")"))
 		}
 		s.WriteRune('\n')
 	}
@@ -285,11 +295,13 @@ func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomai
 	}
 	dialogProgram := tea.NewProgram(SwitchModel{
 		DisplayBranchTypes: args.DisplayBranchTypes,
-		EntriesAll:         args.EntriesAll,
-		EntriesLocal:       args.EntriesLocal,
+		Entries: SwitchableEntries{
+			EntriesAll:      args.EntriesAll,
+			EntriesLocal:    args.EntriesLocal,
+			ShowAllBranches: args.ShowAllBranches,
+		},
 		InitialBranchPos:   initialBranchPos,
 		List:               list.NewList(newSwitchBranchListEntries(entries), args.Cursor),
-		ShowAllBranches:    args.ShowAllBranches,
 		Title:              args.Title,
 		UncommittedChanges: args.UncommittedChanges,
 	})
