@@ -435,8 +435,10 @@ func appendProgram(frontend subshelldomain.Runner, data appendFeatureData, final
 	var branchType configdomain.BranchType
 	if data.prototype {
 		branchType = configdomain.BranchTypePrototypeBranch
+	} else if newBranchType, hasNewBranchType := data.config.NormalConfig.NewBranchType.Get(); hasNewBranchType {
+		branchType = newBranchType.BranchType()
 	} else {
-		branchType = data.config.NormalConfig.NewBranchType.GetOr(configdomain.NewBranchType(configdomain.BranchTypeFeatureBranch)).BranchType()
+		branchType = configdomain.BranchTypeFeatureBranch
 	}
 	prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: branchType})
 	if data.commit {
