@@ -87,11 +87,9 @@ func (self SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:iret
 		// Regenerate entries with the new ShowAllBranches setting
 		self.EntriesArgs.ShowAllBranches = self.ShowAllBranches
 		newEntries := NewSwitchBranchEntries(self.EntriesArgs)
+		oldCursor := self.Cursor
 		self.List = list.NewList(newSwitchBranchListEntries(newEntries), 0)
-		// Update initial branch position
-		if currentBranch, has := self.CurrentBranch.Get(); has {
-			self.InitialBranchPos = Some(newEntries.IndexOf(currentBranch))
-		}
+		self.Cursor = min(oldCursor, len(newEntries)-1)
 		return self, nil
 	}
 	return self, nil
