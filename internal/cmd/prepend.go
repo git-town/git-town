@@ -327,7 +327,7 @@ func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (data p
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch, repo.UnvalidatedConfig.NormalConfig.DevRemote) {
 		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
-	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
+	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
 		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
@@ -336,7 +336,7 @@ func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (data p
 	if !hasInitialBranchInfo {
 		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
-	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchInfos:        branchesSnapshot.Branches,

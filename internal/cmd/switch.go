@@ -105,7 +105,7 @@ Start:
 	case configdomain.ProgramFlowRestart:
 		goto Start
 	}
-	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchesSnapshot.Branches.Names())
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchesSnapshot.Branches.NamesAllBranches())
 	unknownBranchType := repo.UnvalidatedConfig.NormalConfig.UnknownBranchType
 	entries := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
 		BranchInfos:       data.branchesSnapshot.Branches,

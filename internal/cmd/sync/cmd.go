@@ -338,8 +338,8 @@ func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) 
 	if !hasInitialBranch {
 		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
-	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
+	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
 		return data, configdomain.ProgramFlowExit, err
@@ -374,7 +374,7 @@ func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) 
 	default:
 		branchNamesToSync = gitdomain.LocalBranchNames{initialBranch}
 	}
-	branchesAndTypes = repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
+	branchesAndTypes = repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
 	validatedConfig, exit, err = validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchInfos:        branchesSnapshot.Branches,

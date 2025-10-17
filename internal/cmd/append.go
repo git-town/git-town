@@ -322,7 +322,7 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 	if !hasInitialBranchInfo {
 		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
-	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchInfos:        branchesSnapshot.Branches,
@@ -333,7 +333,7 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
 		Inputs:             inputs,
-		LocalBranches:      branchesSnapshot.Branches.LocalBranches().Names(),
+		LocalBranches:      branchesSnapshot.Branches.LocalBranches().NamesLocalBranches(),
 		Remotes:            remotes,
 		RepoStatus:         repoStatus,
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),

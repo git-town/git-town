@@ -261,7 +261,7 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data appendF
 	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
 		return data, flow, nil
 	}
-	localBranchNames := branchesSnapshot.Branches.LocalBranches().Names()
+	localBranchNames := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
 		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)

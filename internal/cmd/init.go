@@ -139,7 +139,7 @@ func LoadData(repo execute.OpenRepoResult) (data setup.Data, flow configdomain.P
 		Config:        repo.UnvalidatedConfig,
 		Git:           repo.Git,
 		Inputs:        inputs,
-		LocalBranches: branchesSnapshot.Branches.LocalBranches().Names(),
+		LocalBranches: branchesSnapshot.Branches.LocalBranches().NamesLocalBranches(),
 		Remotes:       remotes,
 		Snapshot:      repo.ConfigSnapshot,
 	}, configdomain.ProgramFlowContinue, nil
