@@ -55,8 +55,7 @@ type SwitchModel struct {
 	CurrentBranch      Option[gitdomain.LocalBranchName]
 	DisplayBranchTypes configdomain.DisplayTypes
 	EntriesArgs        NewSwitchBranchEntriesArgs
-	InitialBranchPos   Option[int] // position of the currently checked out branch in the list
-	ShowAllBranches    configdomain.AllBranches
+	InitialBranchPos   Option[int]    // position of the currently checked out branch in the list
 	Title              Option[string] // optional title to display above the branch tree
 	UncommittedChanges bool           // whether the workspace has uncommitted changes
 }
@@ -82,10 +81,7 @@ func (self SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:iret
 		return self, tea.Quit
 	}
 	if keyMsg.String() == "a" {
-		// Toggle ShowAllBranches
-		self.ShowAllBranches = !self.ShowAllBranches
-		// Regenerate entries with the new ShowAllBranches setting
-		self.EntriesArgs.ShowAllBranches = self.ShowAllBranches
+		self.EntriesArgs.ShowAllBranches = !self.EntriesArgs.ShowAllBranches
 		newEntries := NewSwitchBranchEntries(self.EntriesArgs)
 		oldCursor := self.Cursor
 		self.List = list.NewList(newSwitchBranchListEntries(newEntries), 0)
@@ -284,7 +280,6 @@ func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomai
 		EntriesArgs:        args.EntriesArgs,
 		InitialBranchPos:   initialBranchPos,
 		List:               list.NewList(newSwitchBranchListEntries(args.Entries), args.Cursor),
-		ShowAllBranches:    args.EntriesArgs.ShowAllBranches,
 		Title:              args.Title,
 		UncommittedChanges: args.UncommittedChanges,
 	})
