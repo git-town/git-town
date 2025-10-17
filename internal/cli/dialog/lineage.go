@@ -82,11 +82,13 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 			CurrentBranch:      None[gitdomain.LocalBranchName](),
 			Cursor:             1, // select the "main branch" entry, below the "make perennial" entry
 			DisplayBranchTypes: false,
-			EntriesAll:         entriesAll,
-			EntriesLocal:       entriesLocal,
+			EntryData: EntryData{
+				EntriesAll:      entriesAll,
+				EntriesLocal:    entriesLocal,
+				ShowAllBranches: false,
+			},
 			InputName:          fmt.Sprintf("parent-branch-for-%q", branchToVerify),
 			Inputs:             args.Inputs,
-			ShowAllBranches:    false,
 			Title:              Some(fmt.Sprintf(messages.ParentBranchTitle, branchToVerify)),
 			UncommittedChanges: false,
 		})

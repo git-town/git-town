@@ -158,11 +158,13 @@ Start:
 				CurrentBranch:      None[gitdomain.LocalBranchName](),
 				Cursor:             entriesLocal.IndexOf(data.defaultChoice),
 				DisplayBranchTypes: true,
-				EntriesAll:         entriesAll,
-				EntriesLocal:       entriesLocal,
+				EntryData: dialog.EntryData{
+					EntriesAll:      entriesAll,
+					EntriesLocal:    entriesLocal,
+					ShowAllBranches: false,
+				},
 				InputName:          fmt.Sprintf("parent-branch-for-%q", data.initialBranch),
 				Inputs:             data.inputs,
-				ShowAllBranches:    false,
 				Title:              Some(fmt.Sprintf(messages.ParentBranchTitle, data.initialBranch)),
 				UncommittedChanges: false,
 			})

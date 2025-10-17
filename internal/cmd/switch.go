@@ -132,11 +132,13 @@ Start:
 		CurrentBranch:      Some(data.initialBranch),
 		Cursor:             cursor,
 		DisplayBranchTypes: args.displayTypes,
-		EntriesAll:         entriesAll,
-		EntriesLocal:       entriesLocal,
+		EntryData: dialog.EntryData{
+			EntriesAll:      entriesAll,
+			EntriesLocal:    entriesLocal,
+			ShowAllBranches: args.allBranches,
+		},
 		InputName:          "switch-branch",
 		Inputs:             data.inputs,
-		ShowAllBranches:    args.allBranches,
 		Title:              None[string](),
 		UncommittedChanges: data.uncommittedChanges,
 	})
