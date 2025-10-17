@@ -52,7 +52,6 @@ func (sbes SwitchBranchEntries) IndexOf(branch gitdomain.LocalBranchName) int {
 
 type SwitchModel struct {
 	list.List[SwitchBranchEntry]
-	CurrentBranch      Option[gitdomain.LocalBranchName]
 	DisplayBranchTypes configdomain.DisplayTypes
 	EntriesArgs        NewSwitchBranchEntriesArgs
 	InitialBranchPos   Option[int]    // position of the currently checked out branch in the list
@@ -273,7 +272,6 @@ func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomai
 		initialBranchPos = Some(args.Entries.IndexOf(currentBranch))
 	}
 	dialogProgram := tea.NewProgram(SwitchModel{
-		CurrentBranch:      args.CurrentBranch,
 		DisplayBranchTypes: args.DisplayBranchTypes,
 		EntriesArgs:        args.EntriesArgs,
 		InitialBranchPos:   initialBranchPos,
