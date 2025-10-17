@@ -107,7 +107,7 @@ Start:
 	}
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchesSnapshot.Branches.NamesAllBranches())
 	unknownBranchType := repo.UnvalidatedConfig.NormalConfig.UnknownBranchType
-	entries := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
+	entriesArgs := dialog.NewSwitchBranchEntriesArgs{
 		BranchInfos:       data.branchesSnapshot.Branches,
 		BranchTypes:       args.branchTypes,
 		BranchesAndTypes:  branchesAndTypes,
@@ -115,18 +115,28 @@ Start:
 		Lineage:           data.config.NormalConfig.Lineage,
 		MainBranch:        repo.UnvalidatedConfig.UnvalidatedConfig.MainBranch,
 		Regexes:           data.regexes,
-		ShowAllBranches:   args.allBranches,
+		ShowAllBranches:   false,
 		UnknownBranchType: unknownBranchType,
-	})
-	if len(entries) == 0 {
+	}
+	entriesLocal := dialog.NewSwitchBranchEntries(entriesArgs)
+	entriesArgs.ShowAllBranches = true
+	entriesAll := dialog.NewSwitchBranchEntries(entriesArgs)
+	if args.allBranches && len(entriesAll) == 0 {
 		return errors.New(messages.SwitchNoBranches)
 	}
-	cursor := entries.IndexOf(data.initialBranch)
+	if !args.allBranches && len(entriesLocal) == 0 {
+		return errors.New(messages.SwitchNoBranches)
+	}
+	cursor := entriesLocal.IndexOf(data.initialBranch)
 	branchToCheckout, exit, err := dialog.SwitchBranch(dialog.SwitchBranchArgs{
 		CurrentBranch:      Some(data.initialBranch),
 		Cursor:             cursor,
 		DisplayBranchTypes: args.displayTypes,
-		Entries:            entries,
+		EntryData: dialog.EntryData{
+			EntriesAll:      entriesAll,
+			EntriesLocal:    entriesLocal,
+			ShowAllBranches: args.allBranches,
+		},
 		InputName:          "switch-branch",
 		Inputs:             data.inputs,
 		Title:              None[string](),

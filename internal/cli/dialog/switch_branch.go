@@ -50,9 +50,30 @@ func (sbes SwitchBranchEntries) IndexOf(branch gitdomain.LocalBranchName) int {
 	return 0
 }
 
+// EntryData encapsulates logic around showing all or only local branches.
+type EntryData struct {
+	EntriesAll      SwitchBranchEntries      // entries for the dialog when "show all branches" is enabled
+	EntriesLocal    SwitchBranchEntries      // entries for the dialog when "show all branches" is disabled
+	ShowAllBranches configdomain.AllBranches // whether to show all branches or only local branches
+}
+
+// provides the correct entries for the current configuration
+func (entries *EntryData) entries() SwitchBranchEntries {
+	if entries.ShowAllBranches {
+		return entries.EntriesAll
+	}
+	return entries.EntriesLocal
+}
+
+// toggles between "show all branches" and "show local branches"
+func (entries *EntryData) toggle() {
+	entries.ShowAllBranches = !entries.ShowAllBranches
+}
+
 type SwitchModel struct {
 	list.List[SwitchBranchEntry]
 	DisplayBranchTypes configdomain.DisplayTypes
+	EntryData          EntryData
 	InitialBranchPos   Option[int]    // position of the currently checked out branch in the list
 	Title              Option[string] // optional title to display above the branch tree
 	UncommittedChanges bool           // whether the workspace has uncommitted changes
@@ -77,6 +98,11 @@ func (self SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:iret
 	if keyMsg.String() == "o" {
 		self.Status = list.StatusDone
 		return self, tea.Quit
+	}
+	if keyMsg.String() == "a" {
+		self.EntryData.toggle()
+		self.List = list.NewList(newSwitchBranchListEntries(self.EntryData.entries()), min(self.Cursor, len(self.EntryData.EntriesLocal)-1))
+		return self, nil
 	}
 	return self, nil
 }
@@ -155,6 +181,9 @@ func (self SwitchModel) View() string {
 	s.WriteString(self.Colors.Help.Styled("/"))
 	s.WriteString(self.Colors.HelpKey.Styled("d"))
 	s.WriteString(self.Colors.Help.Styled(" 10 down   "))
+	// toggle all branches
+	s.WriteString(self.Colors.HelpKey.Styled("a"))
+	s.WriteString(self.Colors.Help.Styled(" all   "))
 	// accept
 	s.WriteString(self.Colors.HelpKey.Styled("enter"))
 	s.WriteString(self.Colors.Help.Styled("/"))
@@ -257,14 +286,16 @@ func ShouldDisplayBranchType(branchType configdomain.BranchType) bool {
 }
 
 func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomain.Exit, error) {
+	entries := args.EntryData.entries()
 	initialBranchPos := None[int]()
 	if currentBranch, has := args.CurrentBranch.Get(); has {
-		initialBranchPos = Some(args.Entries.IndexOf(currentBranch))
+		initialBranchPos = Some(entries.IndexOf(currentBranch))
 	}
 	dialogProgram := tea.NewProgram(SwitchModel{
 		DisplayBranchTypes: args.DisplayBranchTypes,
+		EntryData:          args.EntryData,
 		InitialBranchPos:   initialBranchPos,
-		List:               list.NewList(newSwitchBranchListEntries(args.Entries), args.Cursor),
+		List:               list.NewList(newSwitchBranchListEntries(entries), args.Cursor),
 		Title:              args.Title,
 		UncommittedChanges: args.UncommittedChanges,
 	})
@@ -279,7 +310,7 @@ type SwitchBranchArgs struct {
 	CurrentBranch      Option[gitdomain.LocalBranchName]
 	Cursor             int
 	DisplayBranchTypes configdomain.DisplayTypes
-	Entries            SwitchBranchEntries
+	EntryData          EntryData
 	InputName          string
 	Inputs             dialogcomponents.Inputs
 	Title              Option[string]

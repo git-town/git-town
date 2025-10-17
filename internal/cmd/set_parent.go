@@ -134,29 +134,35 @@ Start:
 				gitdomain.LocalBranchNames{data.initialBranch},
 				data.config.NormalConfig.Lineage.Children(data.initialBranch)...,
 			)
-			entries := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
-				BranchInfos:       data.branchesSnapshot.Branches,
-				BranchTypes:       []configdomain.BranchType{},
-				BranchesAndTypes:  repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchesSnapshot.Branches.NamesLocalBranches()),
-				ExcludeBranches:   excludeBranches,
-				Lineage:           repo.UnvalidatedConfig.NormalConfig.Lineage,
-				MainBranch:        repo.UnvalidatedConfig.UnvalidatedConfig.MainBranch,
-				Regexes:           []*regexp.Regexp{},
-				ShowAllBranches:   false,
-				UnknownBranchType: repo.UnvalidatedConfig.NormalConfig.UnknownBranchType,
-			})
 			noneEntry := dialog.SwitchBranchEntry{
 				Branch:        messages.SetParentNoneOption,
 				Indentation:   "",
 				OtherWorktree: false,
 				Type:          configdomain.BranchTypeFeatureBranch,
 			}
-			entries = append(dialog.SwitchBranchEntries{noneEntry}, entries...)
+			args := dialog.NewSwitchBranchEntriesArgs{
+				BranchInfos:       data.branchesSnapshot.Branches,
+				BranchTypes:       []configdomain.BranchType{},
+				BranchesAndTypes:  repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchesSnapshot.Branches.NamesAllBranches()),
+				ExcludeBranches:   excludeBranches,
+				Lineage:           repo.UnvalidatedConfig.NormalConfig.Lineage,
+				MainBranch:        repo.UnvalidatedConfig.UnvalidatedConfig.MainBranch,
+				Regexes:           []*regexp.Regexp{},
+				ShowAllBranches:   false,
+				UnknownBranchType: repo.UnvalidatedConfig.NormalConfig.UnknownBranchType,
+			}
+			entriesLocal := append(dialog.SwitchBranchEntries{noneEntry}, dialog.NewSwitchBranchEntries(args)...)
+			args.ShowAllBranches = true
+			entriesAll := append(dialog.SwitchBranchEntries{noneEntry}, dialog.NewSwitchBranchEntries(args)...)
 			selectedParent, exit, err = dialog.SwitchBranch(dialog.SwitchBranchArgs{
 				CurrentBranch:      None[gitdomain.LocalBranchName](),
-				Cursor:             entries.IndexOf(data.defaultChoice),
+				Cursor:             entriesLocal.IndexOf(data.defaultChoice),
 				DisplayBranchTypes: true,
-				Entries:            entries,
+				EntryData: dialog.EntryData{
+					EntriesAll:      entriesAll,
+					EntriesLocal:    entriesLocal,
+					ShowAllBranches: false,
+				},
 				InputName:          fmt.Sprintf("parent-branch-for-%q", data.initialBranch),
 				Inputs:             data.inputs,
 				Title:              Some(fmt.Sprintf(messages.ParentBranchTitle, data.initialBranch)),

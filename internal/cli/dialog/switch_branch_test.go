@@ -480,7 +480,7 @@ func TestSwitchBranch(t *testing.T) {
 > main
 
 
-  ↑/k up   ↓/j down   ←/u 10 up   →/d 10 down   enter/o accept   q/esc/ctrl-c abort`[1:]
+  ↑/k up   ↓/j down   ←/u 10 up   →/d 10 down   a all   enter/o accept   q/esc/ctrl-c abort`[1:]
 			must.EqOp(t, want, have)
 		})
 
@@ -510,7 +510,7 @@ func TestSwitchBranch(t *testing.T) {
 ` + dim + `+ two` + reset + `
 
 
-  ↑/k up   ↓/j down   ←/u 10 up   →/d 10 down   enter/o accept   q/esc/ctrl-c abort`
+  ↑/k up   ↓/j down   ←/u 10 up   →/d 10 down   a all   enter/o accept   q/esc/ctrl-c abort`
 			want = want[1:]
 			must.EqOp(t, want, have)
 		})
@@ -549,7 +549,7 @@ func TestSwitchBranch(t *testing.T) {
   other
 
 
-  ↑/k up   ↓/j down   ←/u 10 up   →/d 10 down   enter/o accept   q/esc/ctrl-c abort`
+  ↑/k up   ↓/j down   ←/u 10 up   →/d 10 down   a all   enter/o accept   q/esc/ctrl-c abort`
 			want = want[1:]
 			must.EqOp(t, want, have)
 		})
@@ -588,7 +588,7 @@ func TestSwitchBranch(t *testing.T) {
   other  ` + dim + `(parked)` + reset + `
 
 
-  ↑/k up   ↓/j down   ←/u 10 up   →/d 10 down   enter/o accept   q/esc/ctrl-c abort`
+  ↑/k up   ↓/j down   ←/u 10 up   →/d 10 down   a all   enter/o accept   q/esc/ctrl-c abort`
 			want = want[1:]
 			must.EqOp(t, want, have)
 		})
@@ -618,7 +618,7 @@ func TestSwitchBranch(t *testing.T) {
 > main
 
 
-  ↑/k up   ↓/j down   ←/u 10 up   →/d 10 down   enter/o accept   q/esc/ctrl-c abort`[1:]
+  ↑/k up   ↓/j down   ←/u 10 up   →/d 10 down   a all   enter/o accept   q/esc/ctrl-c abort`[1:]
 			must.EqOp(t, want, have)
 		})
 	})

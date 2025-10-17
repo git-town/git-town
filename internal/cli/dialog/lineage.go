@@ -58,7 +58,13 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 			gitdomain.LocalBranchNames{branchToVerify},
 			args.Config.NormalConfig.Lineage.Children(branchToVerify)...,
 		)
-		entries := NewSwitchBranchEntries(NewSwitchBranchEntriesArgs{
+		noneEntry := SwitchBranchEntry{
+			Branch:        messages.SetParentNoneOption,
+			Indentation:   "",
+			OtherWorktree: false,
+			Type:          configdomain.BranchTypeFeatureBranch,
+		}
+		entriesArgs := NewSwitchBranchEntriesArgs{
 			BranchInfos:       args.BranchInfos,
 			BranchTypes:       []configdomain.BranchType{},
 			BranchesAndTypes:  args.BranchesAndTypes,
@@ -68,19 +74,19 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 			Regexes:           []*regexp.Regexp{},
 			ShowAllBranches:   true,
 			UnknownBranchType: args.Config.NormalConfig.UnknownBranchType,
-		})
-		noneEntry := SwitchBranchEntry{
-			Branch:        messages.SetParentNoneOption,
-			Indentation:   "",
-			OtherWorktree: false,
-			Type:          configdomain.BranchTypeFeatureBranch,
 		}
-		entries = append(SwitchBranchEntries{noneEntry}, entries...)
+		entriesAll := append(SwitchBranchEntries{noneEntry}, NewSwitchBranchEntries(entriesArgs)...)
+		entriesArgs.ShowAllBranches = false
+		entriesLocal := append(SwitchBranchEntries{noneEntry}, NewSwitchBranchEntries(entriesArgs)...)
 		newParent, exit, err := SwitchBranch(SwitchBranchArgs{
 			CurrentBranch:      None[gitdomain.LocalBranchName](),
 			Cursor:             1, // select the "main branch" entry, below the "make perennial" entry
 			DisplayBranchTypes: false,
-			Entries:            entries,
+			EntryData: EntryData{
+				EntriesAll:      entriesAll,
+				EntriesLocal:    entriesLocal,
+				ShowAllBranches: false,
+			},
 			InputName:          fmt.Sprintf("parent-branch-for-%q", branchToVerify),
 			Inputs:             args.Inputs,
 			Title:              Some(fmt.Sprintf(messages.ParentBranchTitle, branchToVerify)),

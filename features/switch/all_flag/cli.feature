@@ -1,5 +1,5 @@
 @messyoutput
-Feature: switch to a new remote branch
+Feature: switch to a new remote branch using the --all flag
 
   Scenario Outline: flag variations
     Given a Git repo with origin
