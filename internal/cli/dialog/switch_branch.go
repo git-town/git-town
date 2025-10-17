@@ -52,11 +52,11 @@ func (sbes SwitchBranchEntries) IndexOf(branch gitdomain.LocalBranchName) int {
 
 type SwitchModel struct {
 	list.List[SwitchBranchEntry]
-	AllBranches        configdomain.AllBranches
 	DisplayBranchTypes configdomain.DisplayTypes
 	EntriesAll         SwitchBranchEntries
 	EntriesLocal       SwitchBranchEntries
-	InitialBranchPos   Option[int]    // position of the currently checked out branch in the list
+	InitialBranchPos   Option[int] // position of the currently checked out branch in the list
+	ShowAllBranches    configdomain.AllBranches
 	Title              Option[string] // optional title to display above the branch tree
 	UncommittedChanges bool           // whether the workspace has uncommitted changes
 }
@@ -82,11 +82,11 @@ func (self SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:iret
 		return self, tea.Quit
 	}
 	if keyMsg.String() == "a" {
-		if self.AllBranches {
-			self.AllBranches = false
+		if self.ShowAllBranches {
+			self.ShowAllBranches = false
 			self.List = list.NewList(newSwitchBranchListEntries(self.EntriesLocal), min(self.Cursor, len(self.EntriesLocal)-1))
 		} else {
-			self.AllBranches = true
+			self.ShowAllBranches = true
 			self.List = list.NewList(newSwitchBranchListEntries(self.EntriesAll), self.Cursor)
 		}
 		return self, nil
@@ -284,7 +284,7 @@ func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomai
 		entries = args.EntriesLocal
 	}
 	dialogProgram := tea.NewProgram(SwitchModel{
-		AllBranches:        args.ShowAllBranches,
+		ShowAllBranches:    args.ShowAllBranches,
 		DisplayBranchTypes: args.DisplayBranchTypes,
 		EntriesAll:         args.EntriesAll,
 		EntriesLocal:       args.EntriesLocal,
