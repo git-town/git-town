@@ -149,7 +149,7 @@ func (self BranchInfos) NamesLocalBranches() LocalBranchNames {
 	return result
 }
 
-// NamesLocalBranches provides the names of all local branches in this BranchesSyncStatus instance.
+// NamesAllBranches provides the local names for all branches in this BranchesSyncStatus instance.
 func (self BranchInfos) NamesAllBranches() LocalBranchNames {
 	result := make(LocalBranchNames, 0, len(self))
 	for _, bi := range self {
