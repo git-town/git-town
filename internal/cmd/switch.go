@@ -107,7 +107,7 @@ Start:
 	}
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchNames)
 	unknownBranchType := repo.UnvalidatedConfig.NormalConfig.UnknownBranchType
-	entries := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
+	entriesArgs := dialog.NewSwitchBranchEntriesArgs{
 		BranchInfos:       data.branchesSnapshot.Branches,
 		BranchTypes:       args.branchTypes,
 		BranchesAndTypes:  branchesAndTypes,
@@ -117,7 +117,8 @@ Start:
 		Regexes:           data.regexes,
 		ShowAllBranches:   args.allBranches,
 		UnknownBranchType: unknownBranchType,
-	})
+	}
+	entries := dialog.NewSwitchBranchEntries(entriesArgs)
 	if len(entries) == 0 {
 		return errors.New(messages.SwitchNoBranches)
 	}
@@ -127,6 +128,7 @@ Start:
 		Cursor:             cursor,
 		DisplayBranchTypes: args.displayTypes,
 		Entries:            entries,
+		EntriesArgs:        entriesArgs,
 		InputName:          "switch-branch",
 		Inputs:             data.inputs,
 		Title:              None[string](),

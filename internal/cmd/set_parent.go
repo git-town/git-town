@@ -134,7 +134,7 @@ Start:
 				gitdomain.LocalBranchNames{data.initialBranch},
 				data.config.NormalConfig.Lineage.Children(data.initialBranch)...,
 			)
-			entries := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
+			entriesArgs := dialog.NewSwitchBranchEntriesArgs{
 				BranchInfos:       data.branchesSnapshot.Branches,
 				BranchTypes:       []configdomain.BranchType{},
 				BranchesAndTypes:  repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchesSnapshot.Branches.Names()),
@@ -144,7 +144,8 @@ Start:
 				Regexes:           []*regexp.Regexp{},
 				ShowAllBranches:   false,
 				UnknownBranchType: repo.UnvalidatedConfig.NormalConfig.UnknownBranchType,
-			})
+			}
+			entries := dialog.NewSwitchBranchEntries(entriesArgs)
 			noneEntry := dialog.SwitchBranchEntry{
 				Branch:        messages.SetParentNoneOption,
 				Indentation:   "",
@@ -157,6 +158,7 @@ Start:
 				Cursor:             entries.IndexOf(data.defaultChoice),
 				DisplayBranchTypes: true,
 				Entries:            entries,
+				EntriesArgs:        entriesArgs,
 				InputName:          fmt.Sprintf("parent-branch-for-%q", data.initialBranch),
 				Inputs:             data.inputs,
 				Title:              Some(fmt.Sprintf(messages.ParentBranchTitle, data.initialBranch)),
