@@ -151,7 +151,6 @@ Start:
 }
 
 type switchData struct {
-	branchNames        gitdomain.LocalBranchNames
 	branchesSnapshot   gitdomain.BranchesSnapshot
 	config             config.UnvalidatedConfig
 	initialBranch      gitdomain.LocalBranchName
@@ -201,7 +200,6 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult) (data switc
 		return data, configdomain.ProgramFlowExit, err
 	}
 	return switchData{
-		branchNames:        branchesSnapshot.Branches.NamesLocalBranches(),
 		branchesSnapshot:   branchesSnapshot,
 		config:             repo.UnvalidatedConfig,
 		initialBranch:      initialBranch,
