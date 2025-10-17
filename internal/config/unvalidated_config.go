@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
@@ -80,6 +81,8 @@ func (self *UnvalidatedConfig) UnvalidatedBranchesAndTypes(branches gitdomain.Lo
 	for _, branch := range branches {
 		result[branch] = self.UnvalidatedConfig.PartialBranchType(branch).GetOr(self.NormalConfig.PartialBranchType(branch))
 	}
+	fmt.Println("11111111111111111111111111111111111111111111111111111111111111111111111")
+	fmt.Println(result)
 	return result
 }
 

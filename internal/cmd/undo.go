@@ -161,8 +161,8 @@ func determineUndoData(repo execute.OpenRepoResult) (data undoData, flow configd
 	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
 		return data, flow, nil
 	}
-	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
+	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
 		return data, configdomain.ProgramFlowExit, err

@@ -323,7 +323,7 @@ func TestBranchInfos(t *testing.T) {
 				RemoteSHA:  None[gitdomain.SHA](),
 			},
 		}
-		have := bs.LocalBranches().Names()
+		have := bs.LocalBranches().NamesLocalBranches()
 		want := gitdomain.NewLocalBranchNames("up-to-date", "ahead", "behind", "local-only", "deleted-at-remote")
 		must.Eq(t, want, have)
 	})
@@ -374,7 +374,7 @@ func TestBranchInfos(t *testing.T) {
 				RemoteSHA:  None[gitdomain.SHA](),
 			},
 		}
-		have := bs.LocalBranchesWithDeletedTrackingBranches().Names()
+		have := bs.LocalBranchesWithDeletedTrackingBranches().NamesLocalBranches()
 		want := gitdomain.NewLocalBranchNames("deleted-at-remote")
 		must.Eq(t, want, have)
 	})
@@ -438,7 +438,7 @@ func TestBranchInfos(t *testing.T) {
 				RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 			},
 		}
-		have := bs.Names()
+		have := bs.NamesLocalBranches()
 		want := gitdomain.NewLocalBranchNames("one", "two")
 		must.Eq(t, want, have)
 	})

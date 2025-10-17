@@ -252,8 +252,8 @@ func determineWalkData(repo execute.OpenRepoResult, all configdomain.AllBranches
 	if !hasInitialBranch {
 		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
-	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
-	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
+	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
 	remotes, err := repo.Git.Remotes(repo.Backend)
 	if err != nil {
 		return data, configdomain.ProgramFlowExit, err

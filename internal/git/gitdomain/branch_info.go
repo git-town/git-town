@@ -41,6 +41,16 @@ func (self BranchInfo) GetLocalOrRemoteName() BranchName {
 	panic("BranchInfo has neither a local nor remote name")
 }
 
+func (self BranchInfo) GetLocalOrRemoteNameAsLocalName() LocalBranchName {
+	if localName, hasLocalName := self.LocalName.Get(); hasLocalName {
+		return localName
+	}
+	if remoteName, hasRemoteName := self.RemoteName.Get(); hasRemoteName {
+		return remoteName.LocalBranchName()
+	}
+	panic("BranchInfo has neither a local nor remote name")
+}
+
 func (self BranchInfo) GetLocalOrRemoteSHA() SHA {
 	if localSHA, has := self.LocalSHA.Get(); has {
 		return localSHA

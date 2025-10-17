@@ -105,7 +105,7 @@ Start:
 	case configdomain.ProgramFlowRestart:
 		goto Start
 	}
-	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchNames)
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(data.branchesSnapshot.Branches.NamesAllBranches())
 	unknownBranchType := repo.UnvalidatedConfig.NormalConfig.UnknownBranchType
 	entries := dialog.NewSwitchBranchEntries(dialog.NewSwitchBranchEntriesArgs{
 		BranchInfos:       data.branchesSnapshot.Branches,
@@ -201,7 +201,7 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult) (data switc
 		return data, configdomain.ProgramFlowExit, err
 	}
 	return switchData{
-		branchNames:        branchesSnapshot.Branches.Names(),
+		branchNames:        branchesSnapshot.Branches.NamesLocalBranches(),
 		branchesSnapshot:   branchesSnapshot,
 		config:             repo.UnvalidatedConfig,
 		initialBranch:      initialBranch,
