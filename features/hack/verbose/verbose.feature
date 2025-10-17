@@ -33,6 +33,7 @@ Feature: display all executed Git commands
       |        | frontend | git checkout -b new                                                                                                                                                                                                                                                                                                                              |
       |        | backend  | git rev-parse --verify -q refs/heads/main                                                                                                                                                                                                                                                                                                        |
       |        | backend  | git config git-town-branch.new.parent main                                                                                                                                                                                                                                                                                                       |
+      |        | backend  | git config git-town-branch.new.branchtype feature                                                                                                                                                                                                                                                                                                |
       |        | backend  | git rev-parse --verify -q refs/heads/main                                                                                                                                                                                                                                                                                                        |
       |        | backend  | git for-each-ref "--format=refname:%(refname) branchname:%(refname:lstrip=2) sha:%(objectname) head:%(if)%(HEAD)%(then)Y%(else)N%(end) worktree:%(if)%(worktreepath)%(then)Y%(else)N%(end) symref:%(if)%(symref)%(then)Y%(else)N%(end) upstream:%(upstream:lstrip=2) track:%(upstream:track,nobracket)" --sort=refname refs/heads/ refs/remotes/ |
       |        | backend  | git config -lz --global                                                                                                                                                                                                                                                                                                                          |
@@ -40,7 +41,7 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                                                                                                                                                                                                                                                                                                                                   |
     And Git Town prints:
       """
-      Ran 27 shell commands.
+      Ran 28 shell commands.
       """
 
   Scenario: undo
@@ -64,8 +65,9 @@ Feature: display all executed Git commands
       |        | backend  | git rev-parse HEAD                                                                                                                                                                                                                                                                                                                               |
       | main   | frontend | git reset --hard {{ sha 'initial commit' }}                                                                                                                                                                                                                                                                                                      |
       |        | frontend | git branch -D new                                                                                                                                                                                                                                                                                                                                |
+      |        | backend  | git config --unset git-town-branch.new.branchtype                                                                                                                                                                                                                                                                                                |
       |        | backend  | git config --unset git-town-branch.new.parent                                                                                                                                                                                                                                                                                                    |
     And Git Town prints:
       """
-      Ran 18 shell commands.
+      Ran 19 shell commands.
       """
