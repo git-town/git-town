@@ -17,13 +17,13 @@ Feature: beam from an observed branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                                                                 |
-      | branch-1 | git checkout -b branch-2 main                                                           |
-      | branch-2 | git cherry-pick {{ sha 'commit 1' }}                                                    |
-      |          | git checkout branch-1                                                                   |
-      | branch-1 | git -c rebase.updateRefs=false rebase --onto {{ sha 'commit 1' }}^ {{ sha 'commit 1' }} |
-      |          | git push --force-with-lease --force-if-includes                                         |
-      |          | git checkout branch-2                                                                   |
+      | BRANCH   | COMMAND                                                                                                 |
+      | branch-1 | git checkout -b branch-2 main                                                                           |
+      | branch-2 | git cherry-pick {{ sha-initial 'commit 1' }}                                                            |
+      |          | git checkout branch-1                                                                                   |
+      | branch-1 | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 1' }}^ {{ sha-initial 'commit 1' }} |
+      |          | git push --force-with-lease --force-if-includes                                                         |
+      |          | git checkout branch-2                                                                                   |
     And no rebase is now in progress
     And this lineage exists now
       """
@@ -39,10 +39,10 @@ Feature: beam from an observed branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                                          |
-      | branch-2 | git checkout branch-1                                            |
-      | branch-1 | git reset --hard {{ sha 'commit 2' }}                            |
-      |          | git push --force-with-lease origin {{ sha 'commit 1' }}:branch-1 |
-      |          | git branch -D branch-2                                           |
+      | BRANCH   | COMMAND                                                                  |
+      | branch-2 | git checkout branch-1                                                    |
+      | branch-1 | git reset --hard {{ sha 'commit 2' }}                                    |
+      |          | git push --force-with-lease origin {{ sha-initial 'commit 1' }}:branch-1 |
+      |          | git branch -D branch-2                                                   |
     And the initial branches and lineage exist now
     And the initial commits exist now

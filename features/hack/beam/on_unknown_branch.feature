@@ -3,7 +3,6 @@ Feature: beam from a branch without parent
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.unknown-branch-type" is "feature"
     And I ran "git checkout -b branch-1"
     And the commits
       | BRANCH   | LOCATION | MESSAGE  |
@@ -17,12 +16,12 @@ Feature: beam from a branch without parent
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                                                                 |
-      | branch-1 | git checkout -b branch-2 main                                                           |
-      | branch-2 | git cherry-pick {{ sha 'commit 1' }}                                                    |
-      |          | git checkout branch-1                                                                   |
-      | branch-1 | git -c rebase.updateRefs=false rebase --onto {{ sha 'commit 1' }}^ {{ sha 'commit 1' }} |
-      |          | git checkout branch-2                                                                   |
+      | BRANCH   | COMMAND                                                                                                 |
+      | branch-1 | git checkout -b branch-2 main                                                                           |
+      | branch-2 | git cherry-pick {{ sha-initial 'commit 1' }}                                                            |
+      |          | git checkout branch-1                                                                                   |
+      | branch-1 | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 1' }}^ {{ sha-initial 'commit 1' }} |
+      |          | git checkout branch-2                                                                                   |
     And no rebase is now in progress
     And this lineage exists now
       """
@@ -38,9 +37,9 @@ Feature: beam from a branch without parent
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                               |
-      | branch-2 | git checkout branch-1                 |
-      | branch-1 | git reset --hard {{ sha 'commit 2' }} |
-      |          | git branch -D branch-2                |
+      | BRANCH   | COMMAND                                       |
+      | branch-2 | git checkout branch-1                         |
+      | branch-1 | git reset --hard {{ sha-initial 'commit 2' }} |
+      |          | git branch -D branch-2                        |
     And the initial branches and lineage exist now
     And the initial commits exist now
