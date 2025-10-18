@@ -1,4 +1,3 @@
-@this
 Feature: display in reverse order
 
   Background:
