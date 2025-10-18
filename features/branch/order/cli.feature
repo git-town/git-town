@@ -7,9 +7,19 @@ Feature: display in reverse order
       | 2024-03 | feature | main   | local, origin |
       | 2025-06 | feature | main   | local, origin |
     And the current branch is "2025-06"
-    When I run "git-town branch --order=desc"
 
-  Scenario: result
+  Scenario: ascending
+    When I run "git-town branch --order=asc"
+    Then Git Town runs no commands
+    And Git Town prints:
+      """
+        main
+          2024-03
+      *   2025-06
+      """
+
+  Scenario: descending
+    When I run "git-town branch --order=desc"
     Then Git Town runs no commands
     And Git Town prints:
       """
