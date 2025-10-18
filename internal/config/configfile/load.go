@@ -138,7 +138,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			}
 		}
 		if data.Branches.Order != nil {
-			order, err = configdomain.ParseOrder(*data.Branches.Order, configdomain.KeyOrder)
+			order, err = configdomain.ParseOrder(*data.Branches.Order, "config file")
 			ec.Check(err)
 		}
 		if data.Branches.UnknownType != nil {

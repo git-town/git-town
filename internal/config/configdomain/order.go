@@ -33,6 +33,6 @@ func ParseOrder(value string, source Key) (Option[Order], error) {
 	case "d", "de", "des", "desc":
 		return Some(OrderDesc), nil
 	default:
-		return None[Order](), fmt.Errorf("invalid value for %q: %q", source, value)
+		return None[Order](), fmt.Errorf("invalid value for %s: %q", source, value)
 	}
 }
