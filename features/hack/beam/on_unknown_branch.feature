@@ -1,5 +1,5 @@
 @messyoutput
-Feature: beam multiple commits from an unknown branch
+Feature: beam from a branch without parent
 
   Background:
     Given a Git repo with origin
