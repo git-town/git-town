@@ -149,6 +149,7 @@ EnterForgeData:
 	featureRegex := None[configdomain.FeatureRegex]()
 	contributionRegex := None[configdomain.ContributionRegex]()
 	observedRegex := None[configdomain.ObservedRegex]()
+	order := None[configdomain.Order]()
 	newBranchType := None[configdomain.NewBranchType]()
 	unknownBranchType := None[configdomain.UnknownBranchType]()
 	syncFeatureStrategy := None[configdomain.SyncFeatureStrategy]()
@@ -240,6 +241,10 @@ EnterForgeData:
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}
+		order, exit, err = enterOrder(data)
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
 	}
 	configStorage, exit, err := dialog.ConfigStorage(data.Inputs)
 	if err != nil || exit {
@@ -272,6 +277,7 @@ EnterForgeData:
 		NewBranchType:            newBranchType,
 		ObservedRegex:            observedRegex,
 		Offline:                  None[configdomain.Offline](), // the setup assistant doesn't ask for this
+		Order:                    order,
 		PerennialBranches:        perennialBranches,
 		PerennialRegex:           perennialRegex,
 		ProposalsShowLineage:     None[forgedomain.ProposalsShowLineage](), // TODO: populate this in the setup assistant once https://github.com/git-town/git-town/issues/3003 is shipped
@@ -512,6 +518,17 @@ func enterObservedRegex(data Data) (Option[configdomain.ObservedRegex], dialogdo
 		Global: data.Config.GitGlobal.ObservedRegex,
 		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.ObservedRegex,
+	})
+}
+
+func enterOrder(data Data) (Option[configdomain.Order], dialogdomain.Exit, error) {
+	if data.Config.File.Order.IsSome() {
+		return None[configdomain.Order](), false, nil
+	}
+	return dialog.Order(dialog.Args[configdomain.Order]{
+		Global: data.Config.GitGlobal.Order,
+		Inputs: data.Inputs,
+		Local:  data.Config.GitLocal.Order,
 	})
 }
 
