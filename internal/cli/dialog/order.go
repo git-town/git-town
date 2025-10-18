@@ -14,12 +14,7 @@ import (
 const (
 	orderTitle = `Branch ordering`
 	orderHelp  = `
-How Git Town order branches it displays?
-
-Possible options:
-
-- asc:
--
+How should Git Town order branches it displays?
 
 `
 )
