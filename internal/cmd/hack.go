@@ -363,8 +363,6 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data appendF
 		if err = validatedConfig.NormalConfig.SetParent(repo.Backend, initialBranch, newParent); err != nil {
 			return data, configdomain.ProgramFlowContinue, err
 		}
-		// update the lineage
-		validatedConfig.NormalConfig.Lineage.Set(initialBranch, newParent)
 		ancestor = newParent
 		hasAncestor = true
 	}
