@@ -34,5 +34,5 @@ your machine. Without it, this setting applies to the current Git repo.
 
 ## environment variable
 
-You can configure how new branches get shared by setting the `GIT_TOWN_ORDER`
-environment variable.
+You can configure branches ordering by setting the `GIT_TOWN_ORDER` environment
+variable.
