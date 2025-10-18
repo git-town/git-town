@@ -184,6 +184,7 @@ Feature: show the configuration
     And Git setting "git-town.observed-regex" is "^git-observed-regex"
     And Git setting "git-town.perennial-regex" is "^git-perennial-"
     And Git setting "git-town.feature-regex" is "git-feature-.*"
+    And Git setting "git-town.order" is "desc"
     And Git setting "git-town.share-new-branches" is "no"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     And Git setting "git-town.ship-delete-tracking-branch" is "false"
@@ -206,6 +207,7 @@ Feature: show the configuration
       contribution-regex = "^config-contribution-regex"
       observed-regex = "^config-observed-regex"
       unknown-type = "contribution"
+      order = "asc"
 
       [create]
       share-new-branches = "push"
@@ -244,6 +246,7 @@ Feature: show the configuration
         perennial regex: ^git-perennial-
         prototype branches: prototype-1, prototype-2
         unknown branch type: observed
+        order: desc
 
       Configuration:
         offline: no
