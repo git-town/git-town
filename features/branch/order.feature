@@ -1,4 +1,4 @@
-Feature: display in reverse order
+Feature: change the display order
 
   Background:
     Given a Git repo with origin
