@@ -13,6 +13,7 @@ Feature: don't ask for information already provided by the config file
       perennial-regex = "release-"
       perennials = ["staging"]
       unknown-type = "observed"
+      order = "desc"
 
       [create]
       new-branch-type = "feature"
