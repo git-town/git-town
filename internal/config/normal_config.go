@@ -52,6 +52,7 @@ type NormalConfig struct {
 	NewBranchType            Option[configdomain.NewBranchType]
 	ObservedRegex            Option[configdomain.ObservedRegex]
 	Offline                  configdomain.Offline
+	Order                    configdomain.Order
 	PerennialBranches        gitdomain.LocalBranchNames
 	PerennialRegex           Option[configdomain.PerennialRegex]
 	ProposalsShowLineage     forgedomain.ProposalsShowLineage
@@ -104,6 +105,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		NewBranchType:            other.NewBranchType.Or(self.NewBranchType),
 		ObservedRegex:            other.ObservedRegex.Or(self.ObservedRegex),
 		Offline:                  other.Offline.GetOr(self.Offline),
+		Order:                    other.Order.GetOr(self.Order),
 		PerennialBranches:        other.PerennialBranches.AppendAllMissing(self.PerennialBranches),
 		PerennialRegex:           other.PerennialRegex.Or(self.PerennialRegex),
 		ProposalsShowLineage:     other.ProposalsShowLineage.GetOr(self.ProposalsShowLineage),
@@ -249,6 +251,7 @@ func DefaultNormalConfig() NormalConfig {
 		NewBranchType:            None[configdomain.NewBranchType](),
 		ObservedRegex:            None[configdomain.ObservedRegex](),
 		Offline:                  false,
+		Order:                    configdomain.OrderAsc,
 		PerennialBranches:        gitdomain.LocalBranchNames{},
 		PerennialRegex:           None[configdomain.PerennialRegex](),
 		ProposalsShowLineage:     forgedomain.ProposalsShowLineageNone,
@@ -294,6 +297,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		NewBranchType:            partial.NewBranchType.Or(defaults.NewBranchType),
 		ObservedRegex:            partial.ObservedRegex,
 		Offline:                  partial.Offline.GetOr(defaults.Offline),
+		Order:                    partial.Order.GetOr(defaults.Order),
 		PerennialBranches:        partial.PerennialBranches,
 		PerennialRegex:           partial.PerennialRegex,
 		ProposalsShowLineage:     partial.ProposalsShowLineage.GetOr(defaults.ProposalsShowLineage),

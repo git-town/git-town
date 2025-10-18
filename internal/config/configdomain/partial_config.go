@@ -42,6 +42,7 @@ type PartialConfig struct {
 	NewBranchType            Option[NewBranchType]
 	ObservedRegex            Option[ObservedRegex]
 	Offline                  Option[Offline]
+	Order                    Option[Order]
 	PerennialBranches        gitdomain.LocalBranchNames
 	PerennialRegex           Option[PerennialRegex]
 	ProposalsShowLineage     Option[forgedomain.ProposalsShowLineage]
@@ -96,6 +97,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		NewBranchType:            other.NewBranchType.Or(self.NewBranchType),
 		ObservedRegex:            other.ObservedRegex.Or(self.ObservedRegex),
 		Offline:                  other.Offline.Or(self.Offline),
+		Order:                    other.Order.Or(self.Order),
 		PerennialBranches:        append(other.PerennialBranches, self.PerennialBranches...),
 		PerennialRegex:           other.PerennialRegex.Or(self.PerennialRegex),
 		ProposalsShowLineage:     other.ProposalsShowLineage.Or(self.ProposalsShowLineage),

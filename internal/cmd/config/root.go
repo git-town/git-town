@@ -36,6 +36,7 @@ func RootCmd() *cobra.Command {
 				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     None[configdomain.Detached](),
 				DryRun:       None[configdomain.DryRun](),
+				Order:        None[configdomain.Order](),
 				PushBranches: None[configdomain.PushBranches](),
 				Stash:        None[configdomain.Stash](),
 				Verbose:      verbose,
@@ -78,6 +79,7 @@ func printConfig(config config.UnvalidatedConfig) {
 	print.Entry("perennial regex", format.OptionalStringerSetting(config.NormalConfig.PerennialRegex))
 	print.Entry("prototype branches", format.BranchNames(config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypePrototypeBranch)))
 	print.Entry("unknown branch type", config.NormalConfig.UnknownBranchType.String())
+	print.Entry("order", config.NormalConfig.Order.String())
 	fmt.Println()
 	print.Header("Configuration")
 	print.Entry("offline", format.Bool(config.NormalConfig.Offline.IsOffline()))

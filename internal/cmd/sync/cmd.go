@@ -82,6 +82,7 @@ func Cmd() *cobra.Command {
 				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     detached,
 				DryRun:       dryRun,
+				Order:        None[configdomain.Order](),
 				PushBranches: pushBranches,
 				Stash:        None[configdomain.Stash](),
 				Verbose:      verbose,

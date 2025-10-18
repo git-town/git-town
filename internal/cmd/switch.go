@@ -29,6 +29,7 @@ func switchCmd() *cobra.Command {
 	addAllFlag, readAllFlag := flags.All("list both remote-tracking and local branches")
 	addDisplayTypesFlag, readDisplayTypesFlag := flags.Displaytypes()
 	addMergeFlag, readMergeFlag := flags.Merge()
+	addOrderFlag, readOrderFlag := flags.Order()
 	addTypeFlag, readTypeFlag := flags.BranchType()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
@@ -41,9 +42,10 @@ func switchCmd() *cobra.Command {
 			branchTypes, errBranchTypes := readTypeFlag(cmd)
 			allBranches, errAllBranches := readAllFlag(cmd)
 			displayTypes, errDisplayTypes := readDisplayTypesFlag(cmd)
-			merge, err4 := readMergeFlag(cmd)
-			verbose, err5 := readVerboseFlag(cmd)
-			if err := cmp.Or(errBranchTypes, errAllBranches, errDisplayTypes, err4, err5); err != nil {
+			merge, errMerge := readMergeFlag(cmd)
+			order, errOrder := readOrderFlag(cmd)
+			verbose, errVerbose := readVerboseFlag(cmd)
+			if err := cmp.Or(errBranchTypes, errAllBranches, errDisplayTypes, errMerge, errOrder, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -51,6 +53,7 @@ func switchCmd() *cobra.Command {
 				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     Some(configdomain.Detached(true)),
 				DryRun:       None[configdomain.DryRun](),
+				Order:        order,
 				PushBranches: None[configdomain.PushBranches](),
 				Stash:        None[configdomain.Stash](),
 				Verbose:      verbose,
@@ -68,6 +71,7 @@ func switchCmd() *cobra.Command {
 	addAllFlag(&cmd)
 	addDisplayTypesFlag(&cmd)
 	addMergeFlag(&cmd)
+	addOrderFlag(&cmd)
 	addTypeFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
@@ -114,6 +118,7 @@ Start:
 		ExcludeBranches:   gitdomain.LocalBranchNames{},
 		Lineage:           data.config.NormalConfig.Lineage,
 		MainBranch:        repo.UnvalidatedConfig.UnvalidatedConfig.MainBranch,
+		Order:             data.config.NormalConfig.Order,
 		Regexes:           data.regexes,
 		ShowAllBranches:   false,
 		UnknownBranchType: unknownBranchType,

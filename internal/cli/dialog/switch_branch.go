@@ -203,7 +203,11 @@ func (self SwitchModel) View() string {
 func NewSwitchBranchEntries(args NewSwitchBranchEntriesArgs) SwitchBranchEntries {
 	entries := make(SwitchBranchEntries, 0, args.Lineage.Len())
 	roots := args.Lineage.Roots()
-	slice.NaturalSort(roots)
+	if args.Order == configdomain.OrderAsc {
+		slice.NaturalSort(roots)
+	} else {
+		slice.NaturalSortReverse(roots)
+	}
 	if mainBranch, hasMainBranch := args.MainBranch.Get(); hasMainBranch {
 		if !roots.Contains(mainBranch) {
 			roots = append(roots, mainBranch)
@@ -263,6 +267,7 @@ type NewSwitchBranchEntriesArgs struct {
 	ExcludeBranches   gitdomain.LocalBranchNames
 	Lineage           configdomain.Lineage
 	MainBranch        Option[gitdomain.LocalBranchName]
+	Order             configdomain.Order
 	Regexes           []*regexp.Regexp
 	ShowAllBranches   configdomain.AllBranches
 	UnknownBranchType configdomain.UnknownBranchType

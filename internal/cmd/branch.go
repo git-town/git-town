@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"cmp"
 	"fmt"
 	"os"
 	"regexp"
@@ -28,6 +29,7 @@ Git Town's equivalent of the "git branch" command.`
 )
 
 func branchCmd() *cobra.Command {
+	addOrderFlag, readOrderFlag := flags.Order()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "branch",
@@ -35,7 +37,9 @@ func branchCmd() *cobra.Command {
 		Short: branchDesc,
 		Long:  cmdhelpers.Long(branchDesc, branchHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			verbose, err := readVerboseFlag(cmd)
+			order, errOrder := readOrderFlag(cmd)
+			verbose, errVerbose := readVerboseFlag(cmd)
+			err := cmp.Or(errOrder, errVerbose)
 			if err != nil {
 				return err
 			}
@@ -44,6 +48,7 @@ func branchCmd() *cobra.Command {
 				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     None[configdomain.Detached](),
 				DryRun:       None[configdomain.DryRun](),
+				Order:        order,
 				PushBranches: None[configdomain.PushBranches](),
 				Stash:        None[configdomain.Stash](),
 				Verbose:      verbose,
@@ -85,6 +90,7 @@ Start:
 		ExcludeBranches:   gitdomain.LocalBranchNames{},
 		Lineage:           repo.UnvalidatedConfig.NormalConfig.Lineage,
 		MainBranch:        repo.UnvalidatedConfig.UnvalidatedConfig.MainBranch,
+		Order:             repo.UnvalidatedConfig.NormalConfig.Order,
 		Regexes:           []*regexp.Regexp{},
 		ShowAllBranches:   false,
 		UnknownBranchType: repo.UnvalidatedConfig.NormalConfig.UnknownBranchType,

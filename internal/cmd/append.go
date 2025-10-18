@@ -105,6 +105,7 @@ func appendCmd() *cobra.Command {
 				AutoSync:     sync,
 				Detached:     detached,
 				DryRun:       dryRun,
+				Order:        None[configdomain.Order](),
 				PushBranches: push,
 				Stash:        stash,
 				Verbose:      verbose,

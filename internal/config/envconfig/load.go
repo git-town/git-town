@@ -134,6 +134,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		NewBranchType:            configdomain.NewBranchTypeOpt(newBranchType),
 		ObservedRegex:            observedRegex,
 		Offline:                  offline,
+		Order:                    None[configdomain.Order](), // not loaded from env vars
 		PerennialBranches:        gitdomain.ParseLocalBranchNames(env.Get(perennialBranches)),
 		PerennialRegex:           perennialRegex,
 		ProposalsShowLineage:     proposalsShowLineage,

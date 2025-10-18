@@ -58,6 +58,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	var mainBranch Option[gitdomain.LocalBranchName]
 	var newBranchType Option[configdomain.NewBranchType]
 	var observedRegex Option[configdomain.ObservedRegex]
+	var order Option[configdomain.Order]
 	var perennialBranches gitdomain.LocalBranchNames
 	var perennialRegex Option[configdomain.PerennialRegex]
 	var proposalsShowLineage Option[forgedomain.ProposalsShowLineage]
@@ -135,6 +136,10 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			if verifiedRegex, hasVerifiedRegex := verifiedRegexOpt.Get(); hasVerifiedRegex {
 				observedRegex = Some(configdomain.ObservedRegex{VerifiedRegex: verifiedRegex})
 			}
+		}
+		if data.Branches.Order != nil {
+			order, err = configdomain.ParseOrder(*data.Branches.Order, configdomain.KeyOrder)
+			ec.Check(err)
 		}
 		if data.Branches.UnknownType != nil {
 			branchType, err := configdomain.ParseBranchType(*data.Branches.UnknownType)
@@ -275,6 +280,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		AutoResolve:              autoResolve,
 		ObservedRegex:            observedRegex,
 		Offline:                  None[configdomain.Offline](),
+		Order:                    order,
 		PerennialBranches:        perennialBranches,
 		PerennialRegex:           perennialRegex,
 		ProposalsShowLineage:     proposalsShowLineage,
