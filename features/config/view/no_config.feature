@@ -26,6 +26,7 @@ Feature: no configuration data
         perennial regex: (not set)
         prototype branches: (none)
         unknown branch type: feature
+        order: asc
 
       Configuration:
         offline: no
