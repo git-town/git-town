@@ -15,6 +15,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
     And global Git setting "git-town.new-branch-type" is "prototype"
     And global Git setting "git-town.unknown-branch-type" is "prototype"
     And global Git setting "git-town.hosting-origin-hostname" is "git"
+    And global Git setting "git-town.order" is "desc"
     And global Git setting "git-town.perennial-branches" is "perennials"
     And global Git setting "git-town.perennial-regex" is "^per-"
     And global Git setting "git-town.push-branches" is "false"
@@ -58,6 +59,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | push hook                   | enter       |
       | ship strategy               | enter       |
       | ship delete tracking branch | enter       |
+      | order                       | enter       |
       | config storage              | enter       |
     Then Git Town runs the commands
       | COMMAND                                         |
