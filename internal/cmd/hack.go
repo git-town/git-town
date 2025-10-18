@@ -315,9 +315,10 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data appendF
 	}
 	commitsToBeam := []gitdomain.Commit{}
 	ancestor, hasAncestor := latestExistingAncestor(initialBranch, branchesSnapshot.Branches, validatedConfig.NormalConfig.Lineage).Get()
-	branchType, hasBranchType := branchesAndTypes[initialBranch]
 	fmt.Println("111111111111111111111", args.beam.ShouldBeam(), hasAncestor, hasBranchType, branchType)
 	if args.beam.ShouldBeam() && !hasAncestor {
+		// ask the user for the parent branch
+		dialog.Par
 		return data, configdomain.ProgramFlowExit, errors.New("cannot beam from this branch because it has no ancestor")
 	}
 	if args.beam.ShouldBeam() && hasAncestor {
