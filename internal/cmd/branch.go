@@ -56,6 +56,7 @@ func branchCmd() *cobra.Command {
 			return executeBranch(cliConfig)
 		},
 	}
+	addOrderFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
