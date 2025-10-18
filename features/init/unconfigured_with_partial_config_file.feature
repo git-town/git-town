@@ -8,6 +8,7 @@ Feature: ask for information not provided by the config file
       [branches]
       main = "main"
       perennials = ["public"]
+      order = "desc"
 
       [hosting]
       dev-remote = "something"
