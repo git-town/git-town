@@ -3,8 +3,8 @@ Feature: prune a freshly created branch
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME    | TYPE    | PARENT | LOCATIONS     |
-      | feature | feature | main   | local, origin |
+      | NAME    | TYPE    | PARENT | LOCATIONS |
+      | feature | feature | main   | local     |
     And the current branch is "feature"
     When I run "git-town sync --prune"
 
