@@ -30,6 +30,7 @@ const (
 	mainBranch               = "GIT_TOWN_MAIN_BRANCH"
 	newBranchType            = "GIT_TOWN_NEW_BRANCH_TYPE"
 	observedRegex            = "GIT_TOWN_OBSERVED_REGEX"
+	order                    = "GIT_TOWN_ORDER"
 	originHostname           = "GIT_TOWN_ORIGIN_HOSTNAME"
 	offline                  = "GIT_TOWN_OFFLINE"
 	perennialBranches        = "GIT_TOWN_PERENNIAL_BRANCHES"
@@ -62,6 +63,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	gitlabConnectorType, errGitLabConnectorType := forgedomain.ParseGitLabConnectorType(env.Get(gitlabConnectorType))
 	newBranchType, errNewBranchType := configdomain.ParseBranchType(env.Get(newBranchType))
 	observedRegex, errObservedRegex := configdomain.ParseObservedRegex(env.Get(observedRegex))
+	order, errOrder := configdomain.ParseOrder(env.Get(order), order)
 	offline, errOffline := gohacks.ParseBoolOpt[configdomain.Offline](env.Get(offline), offline)
 	perennialRegex, errPerennialRegex := configdomain.ParsePerennialRegex(env.Get(perennialRegex))
 	proposalsShowLineage, errProposalsShowLineage := forgedomain.ParseProposalsShowLineage(env.Get(proposalsShowLineage))
@@ -91,6 +93,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errNewBranchType,
 		errObservedRegex,
 		errOffline,
+		errOrder,
 		errPerennialRegex,
 		errProposalsShowLineage,
 		errPushBranches,
@@ -134,7 +137,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		NewBranchType:            configdomain.NewBranchTypeOpt(newBranchType),
 		ObservedRegex:            observedRegex,
 		Offline:                  offline,
-		Order:                    None[configdomain.Order](), // not loaded from env vars
+		Order:                    order,
 		PerennialBranches:        gitdomain.ParseLocalBranchNames(env.Get(perennialBranches)),
 		PerennialRegex:           perennialRegex,
 		ProposalsShowLineage:     proposalsShowLineage,

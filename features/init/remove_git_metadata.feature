@@ -134,6 +134,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.auto-sync" is now "true"
     And local Git setting "git-town.dev-remote" is now "fork"
     And local Git setting "git-town.new-branch-type" is now "feature"
+    And local Git setting "git-town.order" is now "asc"
     And local Git setting "git-town.push-branches" is now "true"
     And local Git setting "git-town.push-hook" is now "true"
     And local Git setting "git-town.share-new-branches" is now "no"
@@ -151,7 +152,6 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.github-token" now doesn't exist
     And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
     And local Git setting "git-town.observed-regex" now doesn't exist
-    And local Git setting "git-town.order" is now "asc"
     And local Git setting "git-town.perennial-regex" now doesn't exist
     And the main branch is still "main"
     And there are now no perennial branches
