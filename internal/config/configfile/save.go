@@ -22,11 +22,15 @@ func RenderTOML(data configdomain.PartialConfig) string {
 
 	main, hasMain := data.MainBranch.Get()
 	hasPerennialBranches := len(data.PerennialBranches) > 0
+	order, hasOrder := data.Order.Get()
 	perennialRegex, hasPerennialRegex := data.PerennialRegex.Get()
 	if hasMain || hasPerennialBranches || hasPerennialRegex {
 		result.WriteString("\n[branches]\n")
 		if hasMain {
 			result.WriteString(fmt.Sprintf("main = %q\n", main))
+		}
+		if hasOrder {
+			result.WriteString(fmt.Sprintf("order = %q\n", order))
 		}
 		if hasPerennialBranches {
 			result.WriteString(fmt.Sprintf("perennials = %s\n", RenderPerennialBranches(data.PerennialBranches)))
