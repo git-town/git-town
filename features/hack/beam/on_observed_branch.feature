@@ -1,5 +1,5 @@
 @messyoutput
-Feature: beam multiple commits from an observed branch
+Feature: beam from an observed branch
 
   Background:
     Given a Git repo with origin
