@@ -106,6 +106,7 @@ Feature: display configuration from Git metadata
         perennial regex: (not set)
         prototype branches: prototype-1, prototype-2
         unknown branch type: feature
+        order: asc
 
       Configuration:
         offline: no
