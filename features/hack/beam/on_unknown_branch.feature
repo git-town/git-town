@@ -10,7 +10,6 @@ Feature: beam from a branch without parent
       | branch-1 | local    | commit 1 |
       | branch-1 | local    | commit 2 |
     And the current branch is "branch-1"
-    # When I run "git-town hack --beam branch-2"
     When I run "git-town hack --beam branch-2" and enter into the dialog:
       | DIALOG                       | KEYS        |
       | parent branch for "branch-1" | enter       |
