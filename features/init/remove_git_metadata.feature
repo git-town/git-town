@@ -151,7 +151,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.github-token" now doesn't exist
     And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
     And local Git setting "git-town.observed-regex" now doesn't exist
-    And local Git setting "git-town.order" now doesn't exist
+    And local Git setting "git-town.order" is now "asc"
     And local Git setting "git-town.perennial-regex" now doesn't exist
     And the main branch is still "main"
     And there are now no perennial branches
