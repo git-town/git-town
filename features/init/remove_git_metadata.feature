@@ -33,6 +33,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.hosting-origin-hostname" is "code"
     And local Git setting "git-town.new-branch-type" is "parked"
     And local Git setting "git-town.observed-regex" is "obs.*"
+    And local Git setting "git-town.order" is "desc"
     And local Git setting "git-town.perennial-branches" is "qa"
     And local Git setting "git-town.perennial-regex" is "qa.*"
     And local Git setting "git-town.push-branches" is "false"
@@ -75,6 +76,7 @@ Feature: remove existing configuration in Git metadata
       | push hook                   | down enter                                                                  | enable              |
       | ship strategy               | down enter                                                                  |                     |
       | ship delete tracking branch | down enter                                                                  | disable             |
+      | order                       | up enter                                                                    |                     |
       | config storage              | enter                                                                       | git metadata        |
 
   Scenario: result
@@ -106,6 +108,7 @@ Feature: remove existing configuration in Git metadata
       | git config --unset git-town.feature-regex            |
       | git config --unset git-town.contribution-regex       |
       | git config --unset git-town.observed-regex           |
+      | git config git-town.order asc                        |
       | git config git-town.push-branches true               |
       | git config git-town.push-hook true                   |
       | git config git-town.share-new-branches no            |
@@ -148,6 +151,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.github-token" now doesn't exist
     And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
     And local Git setting "git-town.observed-regex" now doesn't exist
+    And local Git setting "git-town.order" now doesn't exist
     And local Git setting "git-town.perennial-regex" now doesn't exist
     And the main branch is still "main"
     And there are now no perennial branches
@@ -173,6 +177,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.hosting-origin-hostname" is now "code"
     And local Git setting "git-town.new-branch-type" is now "parked"
     And local Git setting "git-town.observed-regex" is now "obs.*"
+    And local Git setting "git-town.order" is now "desc"
     And local Git setting "git-town.perennial-regex" is now "qa.*"
     And local Git setting "git-town.push-branches" is now "false"
     And local Git setting "git-town.push-hook" is now "false"
