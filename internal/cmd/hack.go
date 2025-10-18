@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"regexp"
 
 	"github.com/git-town/git-town/v22/internal/cli/dialog"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
@@ -315,6 +316,56 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data appendF
 	}
 	commitsToBeam := []gitdomain.Commit{}
 	ancestor, hasAncestor := latestExistingAncestor(initialBranch, branchesSnapshot.Branches, validatedConfig.NormalConfig.Lineage).Get()
+	if args.beam.ShouldBeam() && !hasAncestor {
+		// ask the user for the parent branch
+		excludeBranches := append(
+			gitdomain.LocalBranchNames{initialBranch},
+			validatedConfig.NormalConfig.Lineage.Children(initialBranch)...,
+		)
+		noneEntry := dialog.SwitchBranchEntry{
+			Branch:        messages.SetParentNoneOption,
+			Indentation:   "",
+			OtherWorktree: false,
+			Type:          configdomain.BranchTypeFeatureBranch,
+		}
+		entriesArgs := dialog.NewSwitchBranchEntriesArgs{
+			BranchInfos:       branchesSnapshot.Branches,
+			BranchTypes:       []configdomain.BranchType{},
+			BranchesAndTypes:  branchesAndTypes,
+			ExcludeBranches:   excludeBranches,
+			Lineage:           validatedConfig.NormalConfig.Lineage,
+			MainBranch:        Some(validatedConfig.ValidatedConfigData.MainBranch),
+			Regexes:           []*regexp.Regexp{},
+			ShowAllBranches:   true,
+			UnknownBranchType: validatedConfig.NormalConfig.UnknownBranchType,
+		}
+		entriesAll := append(dialog.SwitchBranchEntries{noneEntry}, dialog.NewSwitchBranchEntries(entriesArgs)...)
+		entriesArgs.ShowAllBranches = false
+		entriesLocal := append(dialog.SwitchBranchEntries{noneEntry}, dialog.NewSwitchBranchEntries(entriesArgs)...)
+		newParent, exit, err := dialog.SwitchBranch(dialog.SwitchBranchArgs{
+			CurrentBranch:      None[gitdomain.LocalBranchName](),
+			Cursor:             1, // select the "main branch" entry, below the "make perennial" entry
+			DisplayBranchTypes: false,
+			EntryData: dialog.EntryData{
+				EntriesAll:      entriesAll,
+				EntriesLocal:    entriesLocal,
+				ShowAllBranches: false,
+			},
+			InputName:          fmt.Sprintf("parent-branch-for-%q", initialBranch),
+			Inputs:             inputs,
+			Title:              Some(fmt.Sprintf(messages.ParentBranchTitle, initialBranch)),
+			UncommittedChanges: false,
+		})
+		if err != nil || exit {
+			return data, configdomain.ProgramFlowExit, err
+		}
+		// store the new parent
+		if err = validatedConfig.NormalConfig.SetParent(repo.Backend, initialBranch, newParent); err != nil {
+			return data, configdomain.ProgramFlowContinue, err
+		}
+		ancestor = newParent
+		hasAncestor = true
+	}
 	if args.beam.ShouldBeam() && hasAncestor {
 		commitsInBranch, err := repo.Git.CommitsInFeatureBranch(repo.Backend, initialBranch, ancestor.BranchName())
 		if err != nil {
