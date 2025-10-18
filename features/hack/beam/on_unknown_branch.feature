@@ -3,6 +3,7 @@ Feature: beam multiple commits from an unknown branch
 
   Background:
     Given a Git repo with origin
+    And Git setting "git-town.unknown-branch-type" is "feature"
     And I ran "git checkout -b branch-1"
     And the commits
       | BRANCH   | LOCATION | MESSAGE         |
@@ -15,6 +16,7 @@ Feature: beam multiple commits from an unknown branch
     #   | parent branch   | enter                  |
     #   | commits to beam | space down space enter |
 
+  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                       |
