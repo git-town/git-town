@@ -224,6 +224,7 @@ func NewSwitchBranchEntries(args NewSwitchBranchEntriesArgs) SwitchBranchEntries
 			excludeBranches:   args.ExcludeBranches,
 			indentation:       "",
 			lineage:           args.Lineage,
+			order:             args.Order,
 			regexes:           args.Regexes,
 			result:            &entries,
 			showAllBranches:   args.ShowAllBranches,
@@ -251,6 +252,7 @@ func NewSwitchBranchEntries(args NewSwitchBranchEntriesArgs) SwitchBranchEntries
 			excludeBranches:   args.ExcludeBranches,
 			indentation:       "",
 			lineage:           args.Lineage,
+			order:             args.Order,
 			regexes:           args.Regexes,
 			result:            &entries,
 			showAllBranches:   args.ShowAllBranches,
@@ -346,7 +348,11 @@ func layoutBranches(args layoutBranchesArgs) {
 			})
 		}
 	}
-	for _, child := range args.lineage.Children(args.branch) {
+	children := args.lineage.Children(args.branch)
+	if args.order == configdomain.OrderDesc {
+		slices.Reverse(children)
+	}
+	for _, child := range children {
 		layoutBranches(layoutBranchesArgs{
 			branch:            child,
 			branchInfos:       args.branchInfos,
@@ -355,6 +361,7 @@ func layoutBranches(args layoutBranchesArgs) {
 			excludeBranches:   args.excludeBranches,
 			indentation:       args.indentation + "  ",
 			lineage:           args.lineage,
+			order:             args.order,
 			regexes:           args.regexes,
 			result:            args.result,
 			showAllBranches:   args.showAllBranches,
@@ -371,6 +378,7 @@ type layoutBranchesArgs struct {
 	excludeBranches   gitdomain.LocalBranchNames
 	indentation       string
 	lineage           configdomain.Lineage
+	order             configdomain.Order
 	regexes           regexes.Regexes
 	result            *SwitchBranchEntries
 	showAllBranches   configdomain.AllBranches
