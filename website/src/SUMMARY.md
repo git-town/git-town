@@ -63,6 +63,7 @@
     - [Feature regex](preferences/feature-regex.md)
     - [Main branch](preferences/main-branch.md)
     - [Observed regex](preferences/observed-regex.md)
+    - [Order](preferences/order.md)
     - [Perennial branches](preferences/perennial-branches.md)
     - [Perennial regex](preferences/perennial-regex.md)
     - [Unknown branch type](preferences/unknown-branch-type.md)
