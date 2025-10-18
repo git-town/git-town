@@ -3,12 +3,14 @@ Feature: beam from a branch without parent
 
   Background:
     Given a Git repo with origin
+    And the branches
+      | NAME     | TYPE   | PARENT | LOCATIONS |
+      | branch-1 | (none) |        | local     |
     And the commits
       | BRANCH   | LOCATION | MESSAGE  |
       | branch-1 | local    | commit 1 |
       |          | local    | commit 2 |
     And the current branch is "branch-1"
-    And I ran "git checkout -b branch-1"
     When I run "git-town hack --beam branch-2" and enter into the dialog:
       | DIALOG                       | KEYS        |
       | parent branch for "branch-1" | enter       |
