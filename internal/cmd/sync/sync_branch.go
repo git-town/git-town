@@ -154,6 +154,7 @@ func localBranchProgram(args localBranchProgramArgs) {
 		})
 	}
 	if args.PushBranches.ShouldPush() && args.Remotes.HasRemote(args.Config.NormalConfig.DevRemote) && args.Config.NormalConfig.Offline.IsOnline() && branchType.ShouldPush(args.localName == args.InitialBranch) {
+		// TODO: don't push if the branch was just pruned
 		isMainBranch := branchType == configdomain.BranchTypeMainBranch
 		switch {
 		case !args.branchInfo.HasTrackingBranch():
