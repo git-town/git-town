@@ -24,6 +24,7 @@ func All() []shared.Opcode {
 		&BranchRemoteSetToSHAIfNeeded{},
 		&BranchRemoteSetToSHA{},
 		&BranchReset{},
+		&BranchTrackingCreateIfLocalExists{},
 		&BranchTrackingCreate{},
 		&BranchTrackingDelete{},
 		&BranchTypeOverrideRemove{},

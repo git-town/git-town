@@ -66,6 +66,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.BranchRemoteSetToSHAIfNeeded{Branch: "branch", MustHaveSHA: "111111", SetToSHA: "222222"},
 				&opcodes.BranchReset{Target: "branch"},
 				&opcodes.BranchTrackingCreate{Branch: "branch"},
+				&opcodes.BranchTrackingCreateIfLocalExists{Branch: "branch"},
 				&opcodes.BranchTrackingDelete{Branch: "origin/branch"},
 				&opcodes.BranchTypeOverrideSet{Branch: "branch", BranchType: configdomain.BranchTypeFeatureBranch},
 				&opcodes.BranchTypeOverrideRemove{Branch: "branch"},
@@ -278,6 +279,12 @@ func TestLoadSave(t *testing.T) {
         "Branch": "branch"
       },
       "type": "BranchTrackingCreate"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "BranchTrackingCreateIfLocalExists"
     },
     {
       "data": {
