@@ -42,6 +42,7 @@ Feature: display configuration from Git metadata in detached head state
         perennial regex: ^release-
         prototype branches: (none)
         unknown branch type: observed
+        order: asc
 
       Configuration:
         offline: no

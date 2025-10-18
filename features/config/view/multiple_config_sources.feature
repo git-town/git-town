@@ -46,6 +46,7 @@ Feature: show the configuration
       contribution-regex = "^config-contribution-regex"
       observed-regex = "^config-observed-regex"
       unknown-type = "contribution"
+      order: asc
 
       [create]
       share-new-branches = "push"

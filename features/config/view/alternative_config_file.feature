@@ -23,6 +23,7 @@ Feature: show the configuration when using an alternative config file
         perennial regex: (not set)
         prototype branches: (none)
         unknown branch type: feature
+        order: asc
 
       Configuration:
         offline: no

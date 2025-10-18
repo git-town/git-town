@@ -45,6 +45,7 @@ Feature: show the configuration
         perennial regex: ^release-
         prototype branches: prototype-1, prototype-2
         unknown branch type: observed
+        order: asc
 
       Configuration:
         offline: no

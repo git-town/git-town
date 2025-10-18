@@ -26,6 +26,7 @@ Feature: display information from config file
       contribution-regex = "^renovate/"
       observed-regex = "^dependabot/"
       unknown-type = "observed"
+      order: asc
 
       [create]
       share-new-branches = "push"

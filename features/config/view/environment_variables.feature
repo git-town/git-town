@@ -60,6 +60,7 @@ Feature: display configuration defined in environment variables
         perennial regex: ^release-
         prototype branches: (none)
         unknown branch type: observed
+        order: asc
 
       Configuration:
         offline: yes
