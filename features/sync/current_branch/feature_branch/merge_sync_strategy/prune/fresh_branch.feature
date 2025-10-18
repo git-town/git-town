@@ -8,7 +8,6 @@ Feature: prune a freshly created branch
     And the current branch is "feature"
     When I run "git-town sync --prune"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                  |
@@ -24,13 +23,8 @@ Feature: prune a freshly created branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                                                         |
-      | feature-2 | git push origin {{ sha 'initial commit' }}:refs/heads/feature-1 |
-      |           | git branch feature-1 {{ sha 'feature-1 commit' }}               |
-      |           | git checkout feature-1                                          |
+      | BRANCH | COMMAND                                       |
+      | main   | git branch feature {{ sha 'initial commit' }} |
+      |        | git checkout feature                          |
     And the initial branches and lineage exist now
-    And these commits exist now
-      | BRANCH    | LOCATION      | MESSAGE          |
-      | main      | local, origin | main commit      |
-      | feature-1 | local         | feature-1 commit |
-      | feature-2 | local, origin | feature-2 commit |
+    And the initial commits exist now
