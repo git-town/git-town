@@ -15,7 +15,6 @@ Feature: beam multiple commits from an unknown branch
     #   | parent branch   | enter                  |
     #   | commits to beam | space down space enter |
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                       |
