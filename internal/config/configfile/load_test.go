@@ -43,7 +43,7 @@ share-new-branches = "push"
 forge-type = "github"
 origin-hostname = "github.com"
 
-[proposal]
+[proposals]
 show-lineage = "cli"
 
 [ship]
@@ -87,7 +87,7 @@ prototype-branches = "compress"
 					ForgeType:      Ptr("github"),
 					OriginHostname: Ptr("github.com"),
 				},
-				Proposal: &configfile.Proposal{
+				Proposals: &configfile.Proposals{
 					Lineage: Ptr("cli"),
 				},
 				Ship: &configfile.Ship{

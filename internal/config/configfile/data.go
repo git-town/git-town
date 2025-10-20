@@ -6,7 +6,7 @@ type Data struct {
 	Create                   *Create       `toml:"create"`
 	CreatePrototypeBranches  *bool         `toml:"create-prototype-branches"`
 	Hosting                  *Hosting      `toml:"hosting"`
-	Proposal                 *Proposal     `toml:"proposal"`
+	Proposals                *Proposals    `toml:"proposals"`
 	PushHook                 *bool         `toml:"push-hook"`
 	PushNewbranches          *bool         `toml:"push-new-branches"`
 	Ship                     *Ship         `toml:"ship"`
@@ -53,7 +53,7 @@ func (self Hosting) IsEmpty() bool {
 	return self.ForgeType == nil && self.OriginHostname == nil && self.Platform == nil
 }
 
-type Proposal struct {
+type Proposals struct {
 	Lineage *string `toml:"show-lineage"`
 }
 

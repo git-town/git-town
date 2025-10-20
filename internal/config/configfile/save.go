@@ -70,7 +70,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 
 	proposalShowLineage, hasProposalShowLineage := data.ProposalsShowLineage.Get()
 	if hasProposalShowLineage {
-		result.WriteString("\n[proposal]\n")
+		result.WriteString("\n[proposals]\n")
 		result.WriteString(fmt.Sprintf("show-lineage = %q\n", proposalShowLineage))
 	}
 

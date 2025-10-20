@@ -82,7 +82,7 @@ dev-remote = "origin"
 forge-type = "github"
 origin-hostname = "forge"
 
-[proposal]
+[proposals]
 show-lineage = "cli"
 
 [ship]
