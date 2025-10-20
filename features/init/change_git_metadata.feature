@@ -49,7 +49,7 @@ Feature: change existing information in Git metadata
       | ship delete tracking branch | down enter             |
       | proposals show lineage      | down enter             |
       | config storage              | enter                  |
-  
+
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                                  |
