@@ -344,6 +344,7 @@ Feature: show the configuration
         sync tags: yes
         sync with upstream: yes
         auto-resolve phantom conflicts: yes
+        proposals show lineage: none
 
       Branch Lineage:
         main
@@ -414,4 +415,5 @@ Feature: show the configuration
         sync tags: yes
         sync with upstream: yes
         auto-resolve phantom conflicts: yes
+        proposals show lineage: none
       """

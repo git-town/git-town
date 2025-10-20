@@ -143,6 +143,7 @@ Feature: display configuration from Git metadata
         sync tags: yes
         sync with upstream: yes
         auto-resolve phantom conflicts: yes
+        proposals show lineage: none
 
       Branch Lineage:
         main

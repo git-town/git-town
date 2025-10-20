@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	proposalsShowLineageTitle = `Show Proposal Lineage`
+	proposalsShowLineageTitle = `Proposals Show Lineage`
 	proposalsShowLineageHelp  = `
 How should Git Town share stack lineage in proposals?
 
@@ -21,7 +21,8 @@ Possible Options:
 					lineage in proposals
 	- cli: Git Town shares or updates stack lineage in proposals
 				anytime your stack lineage changes via the cli
-	- ci: Git Town manages proposal lineage through {{GIT TOWN INTEGRATION}}
+	- ci: Git Town manages and shows proposal lineage through ci 
+	      integrations, with tools such as https://github.com/git-town/action
 `
 )
 
