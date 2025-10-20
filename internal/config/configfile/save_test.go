@@ -83,7 +83,7 @@ forge-type = "github"
 origin-hostname = "forge"
 
 [proposal]
-show-lineage = "ci"
+show-lineage = "cli"
 
 [ship]
 delete-tracking-branch = true
