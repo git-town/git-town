@@ -349,11 +349,7 @@ func layoutBranches(args layoutBranchesArgs) {
 			})
 		}
 	}
-	children := args.lineage.Children(args.branch, args.order)
-	if args.order == configdomain.OrderDesc {
-		slices.Reverse(children)
-	}
-	for _, child := range children {
+	for _, child := range args.lineage.Children(args.branch, args.order) {
 		layoutBranches(layoutBranchesArgs{
 			branch:            child,
 			branchInfos:       args.branchInfos,
