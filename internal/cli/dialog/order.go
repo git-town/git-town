@@ -30,11 +30,11 @@ func Order(args Args[configdomain.Order]) (Option[configdomain.Order], dialogdom
 	entries = append(entries, list.Entries[Option[configdomain.Order]]{
 		{
 			Data: Some(configdomain.OrderAsc),
-			Text: "asc: in natural sort order, ascending",
+			Text: "natural sorting (ascending)",
 		},
 		{
 			Data: Some(configdomain.OrderDesc),
-			Text: "desc: in natural sort order, descending",
+			Text: "natural sorting (descending)",
 		},
 	}...)
 	defaultPos := entries.IndexOf(args.Local)
