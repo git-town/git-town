@@ -43,8 +43,8 @@ share-new-branches = "push"
 forge-type = "github"
 origin-hostname = "github.com"
 
-[propose]
-lineage = "ci"
+[proposal]
+show-lineage = "ci"
 
 [ship]
 delete-tracking-branch = false
