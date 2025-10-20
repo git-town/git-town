@@ -203,9 +203,10 @@ func (self SwitchModel) View() string {
 func NewSwitchBranchEntries(args NewSwitchBranchEntriesArgs) SwitchBranchEntries {
 	entries := make(SwitchBranchEntries, 0, args.Lineage.Len())
 	roots := args.Lineage.Roots()
-	if args.Order == configdomain.OrderAsc {
+	switch args.Order {
+	case configdomain.OrderAsc:
 		slice.NaturalSort(roots)
-	} else {
+	case configdomain.OrderDesc:
 		slice.NaturalSortReverse(roots)
 	}
 	if mainBranch, hasMainBranch := args.MainBranch.Get(); hasMainBranch {
