@@ -108,7 +108,7 @@ func TestLineage(t *testing.T) {
 		t.Run("only root exists", func(t *testing.T) {
 			t.Parallel()
 			lineage := configdomain.NewLineage()
-			have := lineage.BranchLineageWithoutRoot(main, gitdomain.LocalBranchNames{main})
+			have := lineage.BranchLineageWithoutRoot(main, gitdomain.LocalBranchNames{main}, configdomain.OrderAsc)
 			want := gitdomain.LocalBranchNames{}
 			must.Eq(t, want, have)
 		})
@@ -117,7 +117,7 @@ func TestLineage(t *testing.T) {
 			lineage := configdomain.NewLineageWith(configdomain.LineageData{
 				one: main,
 			})
-			have := lineage.BranchLineageWithoutRoot(one, gitdomain.LocalBranchNames{main})
+			have := lineage.BranchLineageWithoutRoot(one, gitdomain.LocalBranchNames{main}, configdomain.OrderAsc)
 			want := gitdomain.LocalBranchNames{one}
 			must.Eq(t, want, have)
 		})
@@ -130,24 +130,24 @@ func TestLineage(t *testing.T) {
 			want := gitdomain.LocalBranchNames{one, two}
 			t.Run("given root", func(t *testing.T) {
 				t.Parallel()
-				have := lineage.BranchLineageWithoutRoot(main, gitdomain.LocalBranchNames{main})
+				have := lineage.BranchLineageWithoutRoot(main, gitdomain.LocalBranchNames{main}, configdomain.OrderAsc)
 				must.Eq(t, want, have)
 			})
 			t.Run("given middle branch", func(t *testing.T) {
 				t.Parallel()
-				have := lineage.BranchLineageWithoutRoot(one, gitdomain.LocalBranchNames{main})
+				have := lineage.BranchLineageWithoutRoot(one, gitdomain.LocalBranchNames{main}, configdomain.OrderAsc)
 				must.Eq(t, want, have)
 			})
 			t.Run("given leaf branch", func(t *testing.T) {
 				t.Parallel()
-				have := lineage.BranchLineageWithoutRoot(two, gitdomain.LocalBranchNames{main})
+				have := lineage.BranchLineageWithoutRoot(two, gitdomain.LocalBranchNames{main}, configdomain.OrderAsc)
 				must.Eq(t, want, have)
 			})
 		})
 		t.Run("branch without an ancestor", func(t *testing.T) {
 			t.Parallel()
 			lineage := configdomain.NewLineage()
-			have := lineage.BranchLineageWithoutRoot(one, gitdomain.LocalBranchNames{main})
+			have := lineage.BranchLineageWithoutRoot(one, gitdomain.LocalBranchNames{main}, configdomain.OrderAsc)
 			want := gitdomain.LocalBranchNames{one}
 			must.Eq(t, want, have)
 		})
@@ -175,7 +175,7 @@ func TestLineage(t *testing.T) {
 				three: two,
 			})
 			give := gitdomain.LocalBranchNames{two, one}
-			have := lineage.BranchesAndAncestors(give)
+			have := lineage.BranchesAndAncestors(give, configdomain.OrderAsc)
 			want := gitdomain.LocalBranchNames{main, one, two}
 			must.Eq(t, want, have)
 		})
@@ -187,7 +187,7 @@ func TestLineage(t *testing.T) {
 				three: two,
 			})
 			give := gitdomain.LocalBranchNames{one, two, main, three}
-			have := lineage.BranchesAndAncestors(give)
+			have := lineage.BranchesAndAncestors(give, configdomain.OrderAsc)
 			want := gitdomain.LocalBranchNames{main, one, two, three}
 			must.Eq(t, want, have)
 		})
@@ -199,7 +199,7 @@ func TestLineage(t *testing.T) {
 				three: two,
 			})
 			give := gitdomain.LocalBranchNames{three}
-			have := lineage.BranchesAndAncestors(give)
+			have := lineage.BranchesAndAncestors(give, configdomain.OrderAsc)
 			want := gitdomain.LocalBranchNames{main, one, two, three}
 			must.Eq(t, want, have)
 		})
@@ -217,7 +217,7 @@ func TestLineage(t *testing.T) {
 				third:  second,
 			})
 			give := gitdomain.LocalBranchNames{main, first, one, second, third, three, two}
-			have := lineage.BranchesAndAncestors(give)
+			have := lineage.BranchesAndAncestors(give, configdomain.OrderAsc)
 			want := gitdomain.LocalBranchNames{main, first, second, third, one, two, three}
 			must.Eq(t, want, have)
 		})
@@ -246,7 +246,7 @@ func TestLineage(t *testing.T) {
 
 	t.Run("Children", func(t *testing.T) {
 		t.Parallel()
-		t.Run("provides all children of the given branch, ordered alphabetically", func(t *testing.T) {
+		t.Run("provides all children of the given branch, ordered ascending", func(t *testing.T) {
 			t.Parallel()
 			twoA := gitdomain.NewLocalBranchName("twoA")
 			twoB := gitdomain.NewLocalBranchName("twoB")
@@ -254,8 +254,20 @@ func TestLineage(t *testing.T) {
 				twoA: one,
 				twoB: one,
 			})
-			have := lineage.Children(one)
+			have := lineage.Children(one, configdomain.OrderAsc)
 			want := gitdomain.LocalBranchNames{twoA, twoB}
+			must.Eq(t, want, have)
+		})
+		t.Run("provides all children of the given branch, ordered descending", func(t *testing.T) {
+			t.Parallel()
+			twoA := gitdomain.NewLocalBranchName("twoA")
+			twoB := gitdomain.NewLocalBranchName("twoB")
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				twoA: one,
+				twoB: one,
+			})
+			have := lineage.Children(one, configdomain.OrderDesc)
+			want := gitdomain.LocalBranchNames{twoB, twoA}
 			must.Eq(t, want, have)
 		})
 		t.Run("provides only the immediate children, i.e. no grandchildren", func(t *testing.T) {
@@ -264,14 +276,14 @@ func TestLineage(t *testing.T) {
 				two:   one,
 				three: two,
 			})
-			have := lineage.Children(one)
+			have := lineage.Children(one, configdomain.OrderAsc)
 			want := gitdomain.LocalBranchNames{two}
 			must.Eq(t, want, have)
 		})
 		t.Run("empty", func(t *testing.T) {
 			t.Parallel()
 			lineage := configdomain.NewLineage()
-			have := lineage.Children(one)
+			have := lineage.Children(one, configdomain.OrderAsc)
 			want := gitdomain.LocalBranchNames{}
 			must.Eq(t, want, have)
 		})
@@ -287,7 +299,7 @@ func TestLineage(t *testing.T) {
 				branch: main,
 				other:  main,
 			})
-			have := lineage.Descendants(branch)
+			have := lineage.Descendants(branch, configdomain.OrderAsc)
 			want := gitdomain.LocalBranchNames{}
 			must.Eq(t, want, have)
 		})
@@ -303,7 +315,7 @@ func TestLineage(t *testing.T) {
 				child2: branch,
 				other:  main,
 			})
-			have := lineage.Descendants(branch)
+			have := lineage.Descendants(branch, configdomain.OrderAsc)
 			want := gitdomain.LocalBranchNames{child1, child2}
 			must.Eq(t, want, have)
 		})
@@ -327,7 +339,7 @@ func TestLineage(t *testing.T) {
 				child2b: child2,
 				other:   main,
 			})
-			have := lineage.Descendants(branch)
+			have := lineage.Descendants(branch, configdomain.OrderAsc)
 			want := gitdomain.LocalBranchNames{child1, child1a, child1b, child2, child2a, child2b}
 			must.Eq(t, want, have)
 		})
@@ -498,7 +510,10 @@ func TestLineage(t *testing.T) {
 			})
 			give := lineage.BranchNames()
 			want := gitdomain.LocalBranchNames{first, second, third, one, two, three}
-			have := lineage.OrderHierarchically(give)
+			have := lineage.OrderHierarchically(give, configdomain.OrderAsc)
+			must.Eq(t, want, have)
+			want = gitdomain.LocalBranchNames{one, two, three, first, second, third}
+			have = lineage.OrderHierarchically(give, configdomain.OrderDesc)
 			must.Eq(t, want, have)
 		})
 		t.Run("single lineage", func(t *testing.T) {
@@ -512,7 +527,7 @@ func TestLineage(t *testing.T) {
 			})
 			give := gitdomain.LocalBranchNames{four, one}
 			want := gitdomain.LocalBranchNames{one, four}
-			have := lineage.OrderHierarchically(give)
+			have := lineage.OrderHierarchically(give, configdomain.OrderAsc)
 			must.Eq(t, want, have)
 		})
 		t.Run("elements out of order", func(t *testing.T) {
@@ -524,7 +539,7 @@ func TestLineage(t *testing.T) {
 			})
 			give := gitdomain.LocalBranchNames{one, two, main, three}
 			want := gitdomain.LocalBranchNames{main, one, two, three}
-			have := lineage.OrderHierarchically(give)
+			have := lineage.OrderHierarchically(give, configdomain.OrderAsc)
 			must.Eq(t, want, have)
 		})
 		t.Run("perennial branches", func(t *testing.T) {
@@ -532,14 +547,14 @@ func TestLineage(t *testing.T) {
 			lineage := configdomain.NewLineage()
 			give := gitdomain.LocalBranchNames{one, two, main}
 			want := gitdomain.LocalBranchNames{main, one, two}
-			have := lineage.OrderHierarchically(give)
+			have := lineage.OrderHierarchically(give, configdomain.OrderAsc)
 			must.Eq(t, want, have)
 		})
 		t.Run("empty", func(t *testing.T) {
 			t.Parallel()
 			lineage := configdomain.NewLineage()
 			give := gitdomain.LocalBranchNames{}
-			have := lineage.OrderHierarchically(give)
+			have := lineage.OrderHierarchically(give, configdomain.OrderAsc)
 			must.Eq(t, 0, len(have))
 		})
 	})

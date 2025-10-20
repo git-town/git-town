@@ -69,12 +69,12 @@ func (self *CommitTableBuilder) AddMany(commits []testgit.Commit, location strin
 }
 
 // Table provides the data accumulated by this CommitTableBuilder as a DataTable.
-func (self *CommitTableBuilder) Table(fields []string, lineage configdomain.Lineage) DataTable {
+func (self *CommitTableBuilder) Table(fields []string, lineage configdomain.Lineage, order configdomain.Order) DataTable {
 	result := DataTable{}
 	result.AddRow(fields...)
 	var lastBranch gitdomain.LocalBranchName
 	lastLocation := ""
-	for _, branch := range self.branches(lineage) {
+	for _, branch := range self.branches(lineage, order) {
 		SHAs := self.commitsInBranch[branch]
 		for _, SHA := range SHAs.Elements() {
 			commit := self.commits[SHA]
@@ -116,7 +116,7 @@ func (self *CommitTableBuilder) Table(fields []string, lineage configdomain.Line
 
 // branches provides the names of the all branches known to this CommitTableBuilder,
 // sorted alphabetically, with the main branch first.
-func (self *CommitTableBuilder) branches(lineage configdomain.Lineage) gitdomain.LocalBranchNames {
+func (self *CommitTableBuilder) branches(lineage configdomain.Lineage, order configdomain.Order) gitdomain.LocalBranchNames {
 	result := make(gitdomain.LocalBranchNames, 0, len(self.commitsInBranch))
 	hasMain := false
 	for branch := range mapstools.SortedKeys(self.commitsInBranch) {
@@ -126,7 +126,7 @@ func (self *CommitTableBuilder) branches(lineage configdomain.Lineage) gitdomain
 			result = append(result, branch)
 		}
 	}
-	result = lineage.OrderHierarchically(result)
+	result = lineage.OrderHierarchically(result, order)
 	if hasMain {
 		return append(gitdomain.NewLocalBranchNames("main"), result...)
 	}

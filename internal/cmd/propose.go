@@ -290,7 +290,7 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (data p
 	var branchNamesToPropose gitdomain.LocalBranchNames
 	var branchNamesToSync gitdomain.LocalBranchNames
 	if args.stack {
-		branchNamesToSync = validatedConfig.NormalConfig.Lineage.BranchLineageWithoutRoot(initialBranch, perennialAndMain)
+		branchNamesToSync = validatedConfig.NormalConfig.Lineage.BranchLineageWithoutRoot(initialBranch, perennialAndMain, validatedConfig.NormalConfig.Order)
 		branchNamesToPropose = make(gitdomain.LocalBranchNames, len(branchNamesToSync))
 		copy(branchNamesToPropose, branchNamesToSync)
 	} else {
@@ -366,7 +366,7 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (data p
 
 func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Program {
 	prog := NewMutable(&program.Program{})
-	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, repo.FinalMessages, repo.Backend)
+	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, repo.FinalMessages, repo.Backend, data.config.NormalConfig.Order)
 	branchesToDelete := set.New[gitdomain.LocalBranchName]()
 	sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 		BranchInfos:         data.branchInfos,

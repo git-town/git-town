@@ -90,7 +90,7 @@ Start:
 	}
 
 	// Get the child branches from lineage
-	children := repo.UnvalidatedConfig.NormalConfig.Lineage.Children(currentBranch)
+	children := repo.UnvalidatedConfig.NormalConfig.Lineage.Children(currentBranch, repo.UnvalidatedConfig.NormalConfig.Order)
 	var child gitdomain.LocalBranchName
 	switch len(children) {
 	case 0:

@@ -80,6 +80,7 @@ func syncDeleteLocalBranchProgram(branch gitdomain.LocalBranchName, args BranchP
 	RemoveBranchConfiguration(RemoveBranchConfigurationArgs{
 		Branch:  branch,
 		Lineage: args.Config.NormalConfig.Lineage,
+		Order:   args.Config.NormalConfig.Order,
 		Program: args.Program,
 	})
 }

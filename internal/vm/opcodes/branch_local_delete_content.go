@@ -16,7 +16,7 @@ func (self *BranchLocalDeleteContent) Run(args shared.RunArgs) error {
 	switch args.Config.Value.NormalConfig.SyncFeatureStrategy {
 	case configdomain.SyncFeatureStrategyRebase:
 		opcodes := []shared.Opcode{}
-		descendents := args.Config.Value.NormalConfig.Lineage.Descendants(self.BranchToDelete)
+		descendents := args.Config.Value.NormalConfig.Lineage.Descendants(self.BranchToDelete, args.Config.Value.NormalConfig.Order)
 		if len(descendents) > 0 {
 			opcodes = append(opcodes, &RebaseOntoRemoveDeleted{
 				BranchToRebaseOnto: self.BranchToRebaseOnto,

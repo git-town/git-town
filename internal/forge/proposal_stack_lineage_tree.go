@@ -76,7 +76,7 @@ func addDescendantNodes(branch gitdomain.LocalBranchName, args ProposalStackLine
 	}
 	visited[branch] = branchNode
 
-	children := args.Lineage.Children(branch)
+	children := args.Lineage.Children(branch, args.Order)
 	for _, child := range children {
 		if err := addDescendantNodes(child, args, visited, tree); err != nil {
 			return err
@@ -160,7 +160,7 @@ func findRelevantChildren(
 	args ProposalStackLineageArgs,
 	ancestors gitdomain.LocalBranchNames,
 ) ([]childWithProposal, error) {
-	children := args.Lineage.Children(ancestor)
+	children := args.Lineage.Children(ancestor, args.Order)
 	var relevantChildren []childWithProposal
 
 	for _, child := range children {

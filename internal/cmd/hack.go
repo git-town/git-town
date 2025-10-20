@@ -321,7 +321,7 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data appendF
 		// ask the user for the parent branch
 		excludeBranches := append(
 			gitdomain.LocalBranchNames{initialBranch},
-			validatedConfig.NormalConfig.Lineage.Children(initialBranch)...,
+			validatedConfig.NormalConfig.Lineage.Children(initialBranch, validatedConfig.NormalConfig.Order)...,
 		)
 		noneEntry := dialog.SwitchBranchEntry{
 			Branch:        messages.SetParentNoneOption,

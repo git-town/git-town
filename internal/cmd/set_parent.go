@@ -133,7 +133,7 @@ Start:
 			// TODO: extract this logic into an "enterParent" function
 			excludeBranches := append(
 				gitdomain.LocalBranchNames{data.initialBranch},
-				data.config.NormalConfig.Lineage.Children(data.initialBranch)...,
+				data.config.NormalConfig.Lineage.Children(data.initialBranch, data.config.NormalConfig.Order)...,
 			)
 			noneEntry := dialog.SwitchBranchEntry{
 				Branch:        messages.SetParentNoneOption,
@@ -401,7 +401,7 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 			}
 			// remove commits from descendents
 			if hasParent {
-				descendents := data.config.NormalConfig.Lineage.Descendants(data.initialBranch)
+				descendents := data.config.NormalConfig.Lineage.Descendants(data.initialBranch, data.config.NormalConfig.Order)
 				for _, descendent := range descendents {
 					prog.Add(
 						&opcodes.CheckoutIfNeeded{
@@ -459,6 +459,7 @@ func updateProposalLineage(prog *program.Program, newParentOpt Option[gitdomain.
 		CurrentBranch:            data.initialBranch,
 		Lineage:                  data.config.NormalConfig.Lineage,
 		MainAndPerennialBranches: data.config.MainAndPerennials(),
+		Order:                    data.config.NormalConfig.Order,
 	})
 	if err != nil {
 		fmt.Printf("failed to update proposal stack lineage: %s\n", err.Error())
@@ -483,6 +484,7 @@ func updateProposalLineage(prog *program.Program, newParentOpt Option[gitdomain.
 			CurrentBranch:            newParent,
 			Lineage:                  data.config.NormalConfig.Lineage,
 			MainAndPerennialBranches: data.config.MainAndPerennials(),
+			Order:                    data.config.NormalConfig.Order,
 		})
 
 		if err == nil {

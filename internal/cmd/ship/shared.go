@@ -161,13 +161,14 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, shipStr
 	if !hasTargetBranch {
 		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
-	childBranches := validatedConfig.NormalConfig.Lineage.Children(branchToShip)
+	childBranches := validatedConfig.NormalConfig.Lineage.Children(branchToShip, validatedConfig.NormalConfig.Order)
 	proposalsOfChildBranches := LoadProposalsOfChildBranches(LoadProposalsOfChildBranchesArgs{
 		ConnectorOpt:               connector,
 		Lineage:                    validatedConfig.NormalConfig.Lineage,
 		Offline:                    repo.IsOffline,
 		OldBranch:                  branchToShip,
 		OldBranchHasTrackingBranch: branchToShipInfo.HasTrackingBranch(),
+		Order:                      validatedConfig.NormalConfig.Order,
 	})
 	return sharedShipData{
 		branchToShip:             branchToShip,
@@ -204,7 +205,7 @@ func LoadProposalsOfChildBranches(args LoadProposalsOfChildBranchesArgs) []forge
 	if !args.OldBranchHasTrackingBranch {
 		return []forgedomain.Proposal{}
 	}
-	childBranches := args.Lineage.Children(args.OldBranch)
+	childBranches := args.Lineage.Children(args.OldBranch, args.Order)
 	result := make([]forgedomain.Proposal, 0, len(childBranches))
 	for _, childBranch := range childBranches {
 		childProposalOpt, err := proposalFinder.FindProposal(childBranch, args.OldBranch)
@@ -227,6 +228,7 @@ type LoadProposalsOfChildBranchesArgs struct {
 	Offline                    configdomain.Offline
 	OldBranch                  gitdomain.LocalBranchName
 	OldBranchHasTrackingBranch bool
+	Order                      configdomain.Order
 }
 
 func FindProposal(connectorOpt Option[forgedomain.Connector], sourceBranch gitdomain.LocalBranchName, targetBranch Option[gitdomain.LocalBranchName]) Option[forgedomain.Proposal] {

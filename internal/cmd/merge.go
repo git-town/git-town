@@ -377,7 +377,7 @@ func validateMergeData(repo execute.OpenRepoResult, data mergeData) error {
 	case gitdomain.SyncStatusOtherWorktree:
 		return fmt.Errorf(messages.BranchOtherWorktree, data.parentBranch)
 	}
-	children := data.config.NormalConfig.Lineage.Children(data.parentBranch)
+	children := data.config.NormalConfig.Lineage.Children(data.parentBranch, data.config.NormalConfig.Order)
 	if len(children) > 1 {
 		return fmt.Errorf("branch %q has more than one child", data.parentBranch)
 	}

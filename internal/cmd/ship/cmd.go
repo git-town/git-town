@@ -179,6 +179,7 @@ Start:
 					CurrentBranch:            sharedData.initialBranch,
 					Lineage:                  sharedData.config.NormalConfig.Lineage,
 					MainAndPerennialBranches: sharedData.config.MainAndPerennials(),
+					Order:                    sharedData.config.NormalConfig.Order,
 				})
 				if err != nil {
 					fmt.Printf("failed to update proposal stack lineage: %s\n", err.Error())
