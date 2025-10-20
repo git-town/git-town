@@ -57,7 +57,6 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 		Inputs:           args.Inputs,
 		LocalBranches:    args.LocalBranches,
 		MainBranch:       mainBranch,
-		Order:            args.Unvalidated.Value.NormalConfig.Order,
 	})
 	if err != nil || exit {
 		return config.EmptyValidatedConfig(), exit, err
