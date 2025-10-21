@@ -118,7 +118,7 @@ func TestBackendCommands(t *testing.T) {
 				Message:     "commit 2",
 			})
 			have := asserts.NoError1(runtime.Git.BranchHasUnmergedChanges(runtime.TestRunner, branch, initial))
-			must.True(t, have, must.Sprint("branch with commits that make changes"))
+			must.True(t, have)
 			runtime.CreateCommit(testgit.Commit{
 				Branch:      branch,
 				FileContent: "original content",
@@ -126,7 +126,27 @@ func TestBackendCommands(t *testing.T) {
 				Message:     "commit 3",
 			})
 			have = asserts.NoError1(runtime.Git.BranchHasUnmergedChanges(runtime.TestRunner, branch, initial))
-			must.False(t, have, must.Sprint("branch with commits that make no changes"))
+			must.False(t, have)
+		})
+		t.Run("branch with same name as folder", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      initial,
+				FileContent: "content 1",
+				FileName:    "test/file1",
+				Message:     "commit 1",
+			})
+			branch := gitdomain.NewLocalBranchName("test")
+			runtime.CreateBranch(branch, initial.BranchName())
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      branch,
+				FileContent: "content 2",
+				FileName:    "file2",
+				Message:     "commit 2",
+			})
+			have := asserts.NoError1(runtime.Git.BranchHasUnmergedChanges(runtime.TestRunner, branch, initial))
+			must.True(t, have, must.Sprint("branch with commits that make changes"))
 		})
 	})
 
