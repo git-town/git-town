@@ -1,4 +1,3 @@
-@skipWindows
 Feature: ship a branch that has the same name as a folder in the codebase
 
   Background:
