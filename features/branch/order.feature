@@ -4,10 +4,10 @@ Feature: change the display order
     Given a Git repo with origin
     And the branches
       | NAME       | TYPE    | PARENT  | LOCATIONS |
-      |    2024-03 | feature | main    | local     |
+      | 2024-03    | feature | main    | local     |
       | 2025-03-01 | feature | 2024-03 | local     |
       | 2025-03-02 | feature | 2024-03 | local     |
-      |    2025-06 | feature | main    | local     |
+      | 2025-06    | feature | main    | local     |
       | 2025-06-01 | feature | 2025-06 | local     |
       | 2025-06-02 | feature | 2025-06 | local     |
       | 2025-06-03 | feature | 2025-06 | local     |
