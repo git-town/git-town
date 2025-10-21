@@ -18,7 +18,7 @@ func Order() (AddFunc, ReadOrderFlagFunc) {
 		if err != nil {
 			return None[configdomain.Order](), err
 		}
-		order, err := configdomain.ParseOrder(value, "cli flag")
+		order, err := configdomain.ParseOrder(value, "--order flag")
 		return order, err
 	}
 	return addFlag, readFlag
