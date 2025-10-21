@@ -1,4 +1,4 @@
-RTA_VERSION = 0.23.0  # run-that-app version to use
+RTA_VERSION = 0.24.0  # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
@@ -115,10 +115,8 @@ alphavet:
 fix-optioncompare-in-tests:
 	@(cd tools/optioncompare_in_tests && go build) && ./tools/optioncompare_in_tests/optioncompare_in_tests github.com/git-town/git-town/v22/...
 
-install-ripgrep:
-	tools/rta ripgrep --version
-
-keep-sorted: install-ripgrep
+keep-sorted:
+	tools/rta --install ripgrep
 	tools/rta keep-sorted $(shell tools/rta ripgrep -l 'keep-sorted end' ./ | tools/rta ripgrep -v Makefile)
 
 lint-iterate-map:
@@ -219,7 +217,7 @@ update: tools/rta@${RTA_VERSION}  # updates all dependencies
 deadcode: tools/rta@${RTA_VERSION}
 	@tput bold || true
 	@tput setaf 1 || true
-	@tools/rta deadcode -h 2> /dev/null
+	@tools/rta --install deadcode
 	@tools/rta deadcode github.com/git-town/git-town/tools/format_self &
 	@tools/rta deadcode github.com/git-town/git-town/tools/format_unittests &
 	@tools/rta deadcode github.com/git-town/git-town/tools/stats_release &
