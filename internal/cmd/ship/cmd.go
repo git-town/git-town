@@ -74,6 +74,7 @@ func Cmd() *cobra.Command {
 				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     None[configdomain.Detached](),
 				DryRun:       dryRun,
+				Order:        None[configdomain.Order](),
 				PushBranches: None[configdomain.PushBranches](),
 				Stash:        None[configdomain.Stash](),
 				Verbose:      verbose,
@@ -178,6 +179,7 @@ Start:
 					CurrentBranch:            sharedData.initialBranch,
 					Lineage:                  sharedData.config.NormalConfig.Lineage,
 					MainAndPerennialBranches: sharedData.config.MainAndPerennials(),
+					Order:                    sharedData.config.NormalConfig.Order,
 				})
 				if err != nil {
 					fmt.Printf("failed to update proposal stack lineage: %s\n", err.Error())

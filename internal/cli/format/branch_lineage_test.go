@@ -14,7 +14,7 @@ func TestBranchLineage(t *testing.T) {
 	t.Run("empty", func(t *testing.T) {
 		t.Parallel()
 		lineage := configdomain.NewLineage()
-		have := format.BranchLineage(lineage)
+		have := format.BranchLineage(lineage, configdomain.OrderAsc)
 		want := ""
 		must.EqOp(t, want, have)
 	})
@@ -28,7 +28,7 @@ func TestBranchLineage(t *testing.T) {
 			"branch-2":  "main",
 			"hotfix":    "qa",
 		})
-		have := format.BranchLineage(lineage)
+		have := format.BranchLineage(lineage, configdomain.OrderAsc)
 		want := `
 main
   branch-1
@@ -49,7 +49,7 @@ qa
 			"branch-1B": "branch-1",
 			"branch-2":  "main",
 		})
-		have := format.BranchLineage(lineage)
+		have := format.BranchLineage(lineage, configdomain.OrderAsc)
 		want := `
 main
   branch-1

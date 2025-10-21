@@ -203,7 +203,12 @@ func (self SwitchModel) View() string {
 func NewSwitchBranchEntries(args NewSwitchBranchEntriesArgs) SwitchBranchEntries {
 	entries := make(SwitchBranchEntries, 0, args.Lineage.Len())
 	roots := args.Lineage.Roots()
-	slice.NaturalSort(roots)
+	switch args.Order {
+	case configdomain.OrderAsc:
+		slice.NaturalSort(roots)
+	case configdomain.OrderDesc:
+		slice.NaturalSortReverse(roots)
+	}
 	if mainBranch, hasMainBranch := args.MainBranch.Get(); hasMainBranch {
 		if !roots.Contains(mainBranch) {
 			roots = append(roots, mainBranch)
@@ -220,6 +225,7 @@ func NewSwitchBranchEntries(args NewSwitchBranchEntriesArgs) SwitchBranchEntries
 			excludeBranches:   args.ExcludeBranches,
 			indentation:       "",
 			lineage:           args.Lineage,
+			order:             args.Order,
 			regexes:           args.Regexes,
 			result:            &entries,
 			showAllBranches:   args.ShowAllBranches,
@@ -247,6 +253,7 @@ func NewSwitchBranchEntries(args NewSwitchBranchEntriesArgs) SwitchBranchEntries
 			excludeBranches:   args.ExcludeBranches,
 			indentation:       "",
 			lineage:           args.Lineage,
+			order:             args.Order,
 			regexes:           args.Regexes,
 			result:            &entries,
 			showAllBranches:   args.ShowAllBranches,
@@ -263,6 +270,7 @@ type NewSwitchBranchEntriesArgs struct {
 	ExcludeBranches   gitdomain.LocalBranchNames
 	Lineage           configdomain.Lineage
 	MainBranch        Option[gitdomain.LocalBranchName]
+	Order             configdomain.Order
 	Regexes           []*regexp.Regexp
 	ShowAllBranches   configdomain.AllBranches
 	UnknownBranchType configdomain.UnknownBranchType
@@ -341,7 +349,7 @@ func layoutBranches(args layoutBranchesArgs) {
 			})
 		}
 	}
-	for _, child := range args.lineage.Children(args.branch) {
+	for _, child := range args.lineage.Children(args.branch, args.order) {
 		layoutBranches(layoutBranchesArgs{
 			branch:            child,
 			branchInfos:       args.branchInfos,
@@ -350,6 +358,7 @@ func layoutBranches(args layoutBranchesArgs) {
 			excludeBranches:   args.excludeBranches,
 			indentation:       args.indentation + "  ",
 			lineage:           args.lineage,
+			order:             args.order,
 			regexes:           args.regexes,
 			result:            args.result,
 			showAllBranches:   args.showAllBranches,
@@ -366,6 +375,7 @@ type layoutBranchesArgs struct {
 	excludeBranches   gitdomain.LocalBranchNames
 	indentation       string
 	lineage           configdomain.Lineage
+	order             configdomain.Order
 	regexes           regexes.Regexes
 	result            *SwitchBranchEntries
 	showAllBranches   configdomain.AllBranches

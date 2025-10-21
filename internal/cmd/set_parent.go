@@ -83,6 +83,7 @@ func setParentCommand() *cobra.Command {
 				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     Some(configdomain.Detached(true)),
 				DryRun:       None[configdomain.DryRun](),
+				Order:        None[configdomain.Order](),
 				PushBranches: None[configdomain.PushBranches](),
 				Stash:        None[configdomain.Stash](),
 				Verbose:      verbose,
@@ -132,7 +133,7 @@ Start:
 			// TODO: extract this logic into an "enterParent" function
 			excludeBranches := append(
 				gitdomain.LocalBranchNames{data.initialBranch},
-				data.config.NormalConfig.Lineage.Children(data.initialBranch)...,
+				data.config.NormalConfig.Lineage.Children(data.initialBranch, data.config.NormalConfig.Order)...,
 			)
 			noneEntry := dialog.SwitchBranchEntry{
 				Branch:        messages.SetParentNoneOption,
@@ -147,6 +148,7 @@ Start:
 				ExcludeBranches:   excludeBranches,
 				Lineage:           repo.UnvalidatedConfig.NormalConfig.Lineage,
 				MainBranch:        repo.UnvalidatedConfig.UnvalidatedConfig.MainBranch,
+				Order:             data.config.NormalConfig.Order,
 				Regexes:           []*regexp.Regexp{},
 				ShowAllBranches:   false,
 				UnknownBranchType: repo.UnvalidatedConfig.NormalConfig.UnknownBranchType,
@@ -399,7 +401,7 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 			}
 			// remove commits from descendents
 			if hasParent {
-				descendents := data.config.NormalConfig.Lineage.Descendants(data.initialBranch)
+				descendents := data.config.NormalConfig.Lineage.Descendants(data.initialBranch, data.config.NormalConfig.Order)
 				for _, descendent := range descendents {
 					prog.Add(
 						&opcodes.CheckoutIfNeeded{
@@ -457,6 +459,7 @@ func updateProposalLineage(prog *program.Program, newParentOpt Option[gitdomain.
 		CurrentBranch:            data.initialBranch,
 		Lineage:                  data.config.NormalConfig.Lineage,
 		MainAndPerennialBranches: data.config.MainAndPerennials(),
+		Order:                    data.config.NormalConfig.Order,
 	})
 	if err != nil {
 		fmt.Printf("failed to update proposal stack lineage: %s\n", err.Error())
@@ -481,6 +484,7 @@ func updateProposalLineage(prog *program.Program, newParentOpt Option[gitdomain.
 			CurrentBranch:            newParent,
 			Lineage:                  data.config.NormalConfig.Lineage,
 			MainAndPerennialBranches: data.config.MainAndPerennials(),
+			Order:                    data.config.NormalConfig.Order,
 		})
 
 		if err == nil {

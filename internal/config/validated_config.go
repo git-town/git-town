@@ -45,9 +45,9 @@ func (self *ValidatedConfig) BranchesOfType(branches gitdomain.LocalBranchNames,
 }
 
 // removes the given branch from the lineage, and updates its children
-func (self *ValidatedConfig) CleanupBranchFromLineage(runner subshelldomain.Runner, branch gitdomain.LocalBranchName) {
+func (self *ValidatedConfig) CleanupBranchFromLineage(runner subshelldomain.Runner, branch gitdomain.LocalBranchName, order configdomain.Order) {
 	parent, hasParent := self.NormalConfig.Lineage.Parent(branch).Get()
-	children := self.NormalConfig.Lineage.Children(branch)
+	children := self.NormalConfig.Lineage.Children(branch, order)
 	for _, child := range children {
 		if hasParent {
 			self.NormalConfig.Lineage = self.NormalConfig.Lineage.Set(child, parent)
@@ -61,8 +61,8 @@ func (self *ValidatedConfig) CleanupBranchFromLineage(runner subshelldomain.Runn
 	_ = gitconfig.RemoveParent(runner, branch)
 }
 
-func (self *ValidatedConfig) CleanupLineage(branchInfos gitdomain.BranchInfos, nonExistingBranches gitdomain.LocalBranchNames, finalMessages stringslice.Collector, runner subshelldomain.Runner) {
-	self.RemoveDeletedBranchesFromLineage(branchInfos, nonExistingBranches, runner)
+func (self *ValidatedConfig) CleanupLineage(branchInfos gitdomain.BranchInfos, nonExistingBranches gitdomain.LocalBranchNames, finalMessages stringslice.Collector, runner subshelldomain.Runner, order configdomain.Order) {
+	self.RemoveDeletedBranchesFromLineage(branchInfos, nonExistingBranches, runner, order)
 	self.NormalConfig.RemovePerennialAncestors(runner, finalMessages)
 }
 
@@ -77,9 +77,9 @@ func (self *ValidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 	return append(gitdomain.LocalBranchNames{self.ValidatedConfigData.MainBranch}, self.NormalConfig.PerennialBranches...)
 }
 
-func (self *ValidatedConfig) RemoveDeletedBranchesFromLineage(branchInfos gitdomain.BranchInfos, nonExistingBranches gitdomain.LocalBranchNames, runner subshelldomain.Runner) {
+func (self *ValidatedConfig) RemoveDeletedBranchesFromLineage(branchInfos gitdomain.BranchInfos, nonExistingBranches gitdomain.LocalBranchNames, runner subshelldomain.Runner, order configdomain.Order) {
 	for _, nonExistingBranch := range nonExistingBranches {
-		self.CleanupBranchFromLineage(runner, nonExistingBranch)
+		self.CleanupBranchFromLineage(runner, nonExistingBranch, order)
 	}
 	for _, entry := range self.NormalConfig.Lineage.Entries() {
 		childDoesntExist := nonExistingBranches.Contains(entry.Child)

@@ -96,6 +96,7 @@ const (
 	KeyObservedRegex                       = Key("git-town.observed-regex")
 	KeyObsoleteSyncBeforeShip              = Key("git-town.sync-before-ship")
 	KeyOffline                             = Key("git-town.offline")
+	KeyOrder                               = Key("git-town.order")
 	KeyPerennialBranches                   = Key("git-town.perennial-branches")
 	KeyPerennialRegex                      = Key("git-town.perennial-regex")
 	KeyProposalsShowLineage                = Key("git-town.proposals-show-lineage")
@@ -160,6 +161,7 @@ var keys = []Key{
 	KeyObservedRegex,
 	KeyObsoleteSyncBeforeShip,
 	KeyOffline,
+	KeyOrder,
 	KeyPerennialBranches,
 	KeyPerennialRegex,
 	KeyProposalsShowLineage,

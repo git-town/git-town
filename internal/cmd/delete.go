@@ -82,6 +82,7 @@ func deleteCommand() *cobra.Command {
 				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     Some(configdomain.Detached(true)),
 				DryRun:       dryRun,
+				Order:        None[configdomain.Order](),
 				PushBranches: None[configdomain.PushBranches](),
 				Stash:        None[configdomain.Stash](),
 				Verbose:      verbose,
@@ -285,6 +286,7 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (data delet
 		Offline:                    repo.IsOffline,
 		OldBranch:                  branchToDelete,
 		OldBranchHasTrackingBranch: branchToDeleteInfo.HasTrackingBranch(),
+		Order:                      validatedConfig.NormalConfig.Order,
 	})
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
 	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
@@ -308,7 +310,7 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (data delet
 
 func deleteProgram(repo execute.OpenRepoResult, data deleteData, finalMessages stringslice.Collector) (runProgram, finalUndoProgram program.Program) {
 	prog := NewMutable(&program.Program{})
-	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Backend)
+	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Backend, data.config.NormalConfig.Order)
 	undoProg := NewMutable(&program.Program{})
 	switch data.branchToDeleteType {
 	case
@@ -356,6 +358,7 @@ func deleteFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data d
 					CurrentBranch:            data.initialBranch,
 					Lineage:                  data.config.NormalConfig.Lineage,
 					MainAndPerennialBranches: data.config.MainAndPerennials(),
+					Order:                    data.config.NormalConfig.Order,
 				})
 				if err != nil {
 					fmt.Printf("failed to update proposal stack lineage: %s\n", err.Error())
@@ -399,7 +402,7 @@ func deleteLocalBranch(prog, finalUndoProgram Mutable[program.Program], data del
 		}
 		// delete the commits of this branch from all descendents
 		if data.config.NormalConfig.SyncFeatureStrategy == configdomain.SyncFeatureStrategyRebase {
-			descendents := data.config.NormalConfig.Lineage.Descendants(localBranchToDelete)
+			descendents := data.config.NormalConfig.Lineage.Descendants(localBranchToDelete, data.config.NormalConfig.Order)
 			for _, descendent := range descendents {
 				if branchInfo, hasBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(descendent).Get(); hasBranchInfo {
 					parent := data.config.NormalConfig.Lineage.Parent(descendent).GetOr(data.config.ValidatedConfigData.MainBranch)
@@ -424,6 +427,7 @@ func deleteLocalBranch(prog, finalUndoProgram Mutable[program.Program], data del
 			sync.RemoveBranchConfiguration(sync.RemoveBranchConfigurationArgs{
 				Branch:  localBranchToDelete,
 				Lineage: data.config.NormalConfig.Lineage,
+				Order:   data.config.NormalConfig.Order,
 				Program: prog,
 			})
 		}

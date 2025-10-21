@@ -86,6 +86,7 @@ func detachCommand() *cobra.Command {
 				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     Some(configdomain.Detached(true)),
 				DryRun:       dryRun,
+				Order:        None[configdomain.Order](),
 				PushBranches: None[configdomain.PushBranches](),
 				Stash:        None[configdomain.Stash](),
 				Verbose:      verbose,
@@ -291,7 +292,7 @@ func determineDetachData(repo execute.OpenRepoResult) (data detachData, flow con
 	if branchHasMergeCommits {
 		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchContainsMergeCommits, branchNameToDetach)
 	}
-	childBranches := validatedConfig.NormalConfig.Lineage.Children(branchNameToDetach)
+	childBranches := validatedConfig.NormalConfig.Lineage.Children(branchNameToDetach, validatedConfig.NormalConfig.Order)
 	children := make([]detachChildBranch, len(childBranches))
 	for c, childBranch := range childBranches {
 		proposal := None[forgedomain.Proposal]()
@@ -313,7 +314,7 @@ func determineDetachData(repo execute.OpenRepoResult) (data detachData, flow con
 			proposal: proposal,
 		}
 	}
-	descendentNames := validatedConfig.NormalConfig.Lineage.Descendants(branchNameToDetach)
+	descendentNames := validatedConfig.NormalConfig.Lineage.Descendants(branchNameToDetach, validatedConfig.NormalConfig.Order)
 	descendents := make([]detachChildBranch, len(descendentNames))
 	for d, descendentName := range descendentNames {
 		info, has := branchesSnapshot.Branches.FindByLocalName(descendentName).Get()
@@ -350,7 +351,7 @@ func determineDetachData(repo execute.OpenRepoResult) (data detachData, flow con
 
 func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
-	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Frontend)
+	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Frontend, data.config.NormalConfig.Order)
 	// step 1: delete the commits of the branch to detach from all descendents,
 	// while that branch is still in the form it had inside the stack
 	lastParent := data.parentBranch
@@ -392,7 +393,7 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 				Parent: data.config.ValidatedConfigData.MainBranch,
 			},
 		)
-		for _, child := range data.config.NormalConfig.Lineage.Children(data.branchToDetachName) {
+		for _, child := range data.config.NormalConfig.Lineage.Children(data.branchToDetachName, data.config.NormalConfig.Order) {
 			prog.Value.Add(
 				&opcodes.LineageParentSet{
 					Branch: child,

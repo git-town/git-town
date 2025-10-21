@@ -15,6 +15,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.push-branches" is "true"
     And local Git setting "git-town.push-hook" is "true"
     And local Git setting "git-town.new-branch-type" is "prototype"
+    And local Git setting "git-town.order" is "desc"
     And local Git setting "git-town.ship-strategy" is "squash-merge"
     And local Git setting "git-town.ship-delete-tracking-branch" is "false"
     And local Git setting "git-town.stash" is "false"
@@ -52,6 +53,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | push hook                   | enter      |
       | ship strategy               | enter      |
       | ship delete tracking branch | enter      |
+      | order                       | enter      |
       | config storage              | down enter |
 
   Scenario: result
@@ -64,6 +66,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | git config --unset git-town.main-branch                 |
       | git config --unset git-town.new-branch-type             |
       | git config --unset git-town.observed-regex              |
+      | git config --unset git-town.order                       |
       | git config --unset git-town.perennial-branches          |
       | git config --unset git-town.perennial-regex             |
       | git config --unset git-town.share-new-branches          |
@@ -88,6 +91,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.feature-regex" now doesn't exist
     And local Git setting "git-town.contribution-regex" now doesn't exist
     And local Git setting "git-town.observed-regex" now doesn't exist
+    And local Git setting "git-town.order" now doesn't exist
     And local Git setting "git-town.unknown-branch-type" now doesn't exist
     And local Git setting "git-town.share-new-branches" now doesn't exist
     And local Git setting "git-town.push-branches" now doesn't exist
@@ -102,6 +106,7 @@ Feature: migrate existing configuration in Git metadata to a config file
 
       [branches]
       main = "main"
+      order = "desc"
       perennials = ["qa"]
       perennial-regex = "release-.*"
 
@@ -139,6 +144,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.feature-regex" is now "user-.*"
     And local Git setting "git-town.contribution-regex" is now "coworker-.*"
     And local Git setting "git-town.observed-regex" is now "other-.*"
+    And local Git setting "git-town.order" is now "desc"
     And local Git setting "git-town.unknown-branch-type" is now "observed"
     And local Git setting "git-town.share-new-branches" is now "no"
     And local Git setting "git-town.push-branches" is now "true"

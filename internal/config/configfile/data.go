@@ -24,6 +24,7 @@ type Branches struct {
 	FeatureRegex      *string  `toml:"feature-regex"`
 	Main              *string  `toml:"main"`
 	ObservedRegex     *string  `toml:"observed-regex"`
+	Order             *string  `toml:"order"`
 	PerennialRegex    *string  `toml:"perennial-regex"`
 	Perennials        []string `toml:"perennials"`
 	UnknownType       *string  `toml:"unknown-type"`

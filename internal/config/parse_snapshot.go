@@ -91,6 +91,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	newBranchTypeValue, errNewBranchType := configdomain.ParseBranchType(snapshot[configdomain.KeyNewBranchType])
 	newBranchType := configdomain.NewBranchTypeOpt(newBranchTypeValue)
 	observedRegex, errObservedRegex := configdomain.ParseObservedRegex(snapshot[configdomain.KeyObservedRegex])
+	order, errOrder := configdomain.ParseOrder(snapshot[configdomain.KeyOrder], configdomain.KeyOrder)
 	offline, errOffline := gohacks.ParseBoolOpt[configdomain.Offline](snapshot[configdomain.KeyOffline], configdomain.KeyOffline.String())
 	perennialRegex, errPerennialRegex := configdomain.ParsePerennialRegex(snapshot[configdomain.KeyPerennialRegex])
 	proposalsShowLineage, errProposalsShowLineage := forgedomain.ParseProposalsShowLineage(snapshot[configdomain.KeyProposalsShowLineage])
@@ -120,6 +121,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		errLineage,
 		errNewBranchType,
 		errObservedRegex,
+		errOrder,
 		errOffline,
 		errPerennialRegex,
 		errProposalsShowLineage,
@@ -162,6 +164,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		MainBranch:               gitdomain.NewLocalBranchNameOption(snapshot[configdomain.KeyMainBranch]),
 		NewBranchType:            newBranchType,
 		ObservedRegex:            observedRegex,
+		Order:                    order,
 		Offline:                  offline,
 		PerennialBranches:        gitdomain.ParseLocalBranchNames(snapshot[configdomain.KeyPerennialBranches]),
 		PerennialRegex:           perennialRegex,

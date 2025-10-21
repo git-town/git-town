@@ -26,6 +26,7 @@ Feature: display information from config file
       contribution-regex = "^renovate/"
       observed-regex = "^dependabot/"
       unknown-type = "observed"
+      order = "desc"
 
       [create]
       share-new-branches = "push"
@@ -66,6 +67,7 @@ Feature: display information from config file
         perennial regex: ^release-
         prototype branches: prototype-1, prototype-2
         unknown branch type: observed
+        order: desc
 
       Configuration:
         offline: no

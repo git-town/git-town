@@ -12,6 +12,7 @@ type NewArgs struct {
 	AutoSync     Option[configdomain.AutoSync]
 	Detached     Option[configdomain.Detached]
 	DryRun       Option[configdomain.DryRun]
+	Order        Option[configdomain.Order]
 	PushBranches Option[configdomain.PushBranches]
 	Stash        Option[configdomain.Stash]
 	Verbose      Option[configdomain.Verbose]
@@ -45,6 +46,7 @@ func New(args NewArgs) configdomain.PartialConfig {
 		NewBranchType:            None[configdomain.NewBranchType](),
 		ObservedRegex:            None[configdomain.ObservedRegex](),
 		Offline:                  None[configdomain.Offline](),
+		Order:                    args.Order,
 		PerennialBranches:        gitdomain.LocalBranchNames{},
 		PerennialRegex:           None[configdomain.PerennialRegex](),
 		ProposalsShowLineage:     None[forgedomain.ProposalsShowLineage](),

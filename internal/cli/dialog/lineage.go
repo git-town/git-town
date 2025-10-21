@@ -56,7 +56,7 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 		// ask for parent
 		excludeBranches := append(
 			gitdomain.LocalBranchNames{branchToVerify},
-			args.Config.NormalConfig.Lineage.Children(branchToVerify)...,
+			args.Config.NormalConfig.Lineage.Children(branchToVerify, args.Config.NormalConfig.Order)...,
 		)
 		noneEntry := SwitchBranchEntry{
 			Branch:        messages.SetParentNoneOption,
@@ -71,6 +71,7 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 			ExcludeBranches:   excludeBranches,
 			Lineage:           args.Config.NormalConfig.Lineage,
 			MainBranch:        Some(args.MainBranch),
+			Order:             args.Config.NormalConfig.Order,
 			Regexes:           []*regexp.Regexp{},
 			ShowAllBranches:   true,
 			UnknownBranchType: args.Config.NormalConfig.UnknownBranchType,

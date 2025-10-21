@@ -82,6 +82,7 @@ func Cmd() *cobra.Command {
 				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     detached,
 				DryRun:       dryRun,
+				Order:        None[configdomain.Order](),
 				PushBranches: pushBranches,
 				Stash:        None[configdomain.Stash](),
 				Verbose:      verbose,
@@ -141,7 +142,7 @@ Start:
 	if err = validateSyncData(data); err != nil {
 		return err
 	}
-	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, repo.FinalMessages, repo.Backend)
+	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, repo.FinalMessages, repo.Backend, data.config.NormalConfig.Order)
 	runProgram := NewMutable(&program.Program{})
 	branchesToDelete := set.New[gitdomain.LocalBranchName]()
 	BranchesProgram(data.branchesToSync, BranchProgramArgs{
@@ -183,6 +184,7 @@ Start:
 							CurrentBranch:            data.initialBranch,
 							Lineage:                  data.config.NormalConfig.Lineage,
 							MainAndPerennialBranches: data.config.MainAndPerennials(),
+							Order:                    data.config.NormalConfig.Order,
 						},
 					},
 				)
@@ -370,7 +372,7 @@ func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) 
 	case args.syncAllBranches.Enabled():
 		branchNamesToSync = localBranches
 	case args.syncStack.Enabled():
-		branchNamesToSync = validatedConfig.NormalConfig.Lineage.BranchLineageWithoutRoot(initialBranch, perennialAndMain)
+		branchNamesToSync = validatedConfig.NormalConfig.Lineage.BranchLineageWithoutRoot(initialBranch, perennialAndMain, validatedConfig.NormalConfig.Order)
 	default:
 		branchNamesToSync = gitdomain.LocalBranchNames{initialBranch}
 	}
@@ -402,7 +404,7 @@ func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) 
 	default:
 		shouldPushTags = validatedConfig.IsMainOrPerennialBranch(initialBranch)
 	}
-	allBranchNamesToSync := validatedConfig.NormalConfig.Lineage.BranchesAndAncestors(branchNamesToSync)
+	allBranchNamesToSync := validatedConfig.NormalConfig.Lineage.BranchesAndAncestors(branchNamesToSync, validatedConfig.NormalConfig.Order)
 	if repo.UnvalidatedConfig.NormalConfig.Detached {
 		allBranchNamesToSync = allBranchNamesToSync.Remove(perennialAndMain...)
 	}

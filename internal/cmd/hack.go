@@ -98,6 +98,7 @@ func hackCmd() *cobra.Command {
 				AutoSync:     sync,
 				Detached:     detached,
 				DryRun:       dryRun,
+				Order:        None[configdomain.Order](),
 				PushBranches: None[configdomain.PushBranches](),
 				Stash:        stash,
 				Verbose:      verbose,
@@ -320,7 +321,7 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data appendF
 		// ask the user for the parent branch
 		excludeBranches := append(
 			gitdomain.LocalBranchNames{initialBranch},
-			validatedConfig.NormalConfig.Lineage.Children(initialBranch)...,
+			validatedConfig.NormalConfig.Lineage.Children(initialBranch, validatedConfig.NormalConfig.Order)...,
 		)
 		noneEntry := dialog.SwitchBranchEntry{
 			Branch:        messages.SetParentNoneOption,
@@ -335,6 +336,7 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data appendF
 			ExcludeBranches:   excludeBranches,
 			Lineage:           validatedConfig.NormalConfig.Lineage,
 			MainBranch:        Some(validatedConfig.ValidatedConfigData.MainBranch),
+			Order:             validatedConfig.NormalConfig.Order,
 			Regexes:           []*regexp.Regexp{},
 			ShowAllBranches:   true,
 			UnknownBranchType: validatedConfig.NormalConfig.UnknownBranchType,

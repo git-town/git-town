@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/test/fixture"
 	"github.com/git-town/git-town/v22/internal/test/testgit"
@@ -165,7 +166,7 @@ func TestFixture(t *testing.T) {
 			},
 		})
 		// verify local commits
-		commits := cloned.DevRepo.GetOrPanic().Commits([]string{"FILE NAME", "FILE CONTENT"}, cloned.DevRepo.Value.Config.NormalConfig.Lineage)
+		commits := cloned.DevRepo.GetOrPanic().Commits([]string{"FILE NAME", "FILE CONTENT"}, cloned.DevRepo.Value.Config.NormalConfig.Lineage, configdomain.OrderAsc)
 		must.Len(t, 2, commits)
 		must.EqOp(t, "local and origin commit", commits[0].Message)
 		must.EqOp(t, "loc-rem-file", commits[0].FileName)
@@ -174,7 +175,7 @@ func TestFixture(t *testing.T) {
 		must.EqOp(t, "local-file", commits[1].FileName)
 		must.EqOp(t, "local content", commits[1].FileContent)
 		// verify origin commits
-		commits = cloned.OriginRepo.GetOrPanic().Commits([]string{"FILE NAME", "FILE CONTENT"}, cloned.DevRepo.Value.Config.NormalConfig.Lineage)
+		commits = cloned.OriginRepo.GetOrPanic().Commits([]string{"FILE NAME", "FILE CONTENT"}, cloned.DevRepo.Value.Config.NormalConfig.Lineage, configdomain.OrderAsc)
 		must.Len(t, 2, commits)
 		must.EqOp(t, "local and origin commit", commits[0].Message)
 		must.EqOp(t, "loc-rem-file", commits[0].FileName)

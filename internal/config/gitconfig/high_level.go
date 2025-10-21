@@ -110,6 +110,10 @@ func RemoveObservedRegex(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyObservedRegex)
 }
 
+func RemoveOrder(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyOrder)
+}
+
 func RemoveOriginHostname(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyHostingOriginHostname)
 }
@@ -257,6 +261,10 @@ func SetObservedRegex(runner subshelldomain.Runner, regex configdomain.ObservedR
 
 func SetOffline(runner subshelldomain.Runner, value configdomain.Offline) error {
 	return SetConfigValue(runner, configdomain.ConfigScopeGlobal, configdomain.KeyOffline, value.String())
+}
+
+func SetOrder(runner subshelldomain.Runner, value configdomain.Order, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyOrder, value.String())
 }
 
 func SetOriginHostname(runner subshelldomain.Runner, hostname configdomain.HostingOriginHostname, scope configdomain.ConfigScope) error {

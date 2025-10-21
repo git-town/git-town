@@ -30,6 +30,7 @@ contribution-regex = "^gittown-"
 default-type = "contribution"
 feature-regex = "^kg-"
 observed-regex = "^dependabot\\/"
+order = "desc"
 perennials = [ "public", "staging" ]
 perennial-regex = "release-.*"
 unknown-type = "prototype"
@@ -74,6 +75,7 @@ prototype-branches = "compress"
 					FeatureRegex:      Ptr("^kg-"),
 					Main:              Ptr("main"),
 					ObservedRegex:     Ptr(`^dependabot\/`),
+					Order:             Ptr("desc"),
 					PerennialRegex:    Ptr("release-.*"),
 					Perennials:        []string{"public", "staging"},
 					UnknownType:       Ptr("prototype"),

@@ -32,6 +32,7 @@ func (self *ProposalUpdateLineage) Run(args shared.RunArgs) error {
 		CurrentBranch:            self.Current,
 		Lineage:                  args.Config.Value.NormalConfig.Lineage,
 		MainAndPerennialBranches: args.Config.Value.MainAndPerennials(),
+		Order:                    args.Config.Value.NormalConfig.Order,
 	}
 	builder, hasBuilder := forge.NewProposalStackLineageBuilder(lineageArgs, self.LineageTree).Get()
 	if !hasBuilder {

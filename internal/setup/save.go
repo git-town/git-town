@@ -107,6 +107,9 @@ func saveAllToFile(userInput UserInput, gitConfig configdomain.PartialConfig, ru
 	if gitConfig.ObservedRegex.IsSome() {
 		_ = gitconfig.RemoveObservedRegex(runner)
 	}
+	if gitConfig.Order.IsSome() {
+		_ = gitconfig.RemoveOrder(runner)
+	}
 	if len(gitConfig.PerennialBranches) > 0 {
 		_ = gitconfig.RemovePerennialBranches(runner)
 	}
@@ -229,6 +232,11 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 	if configFile.ObservedRegex.IsNone() {
 		fc.Check(
 			saveObservedRegex(userInput.Data.ObservedRegex, existingGitConfig.ObservedRegex, frontend),
+		)
+	}
+	if configFile.Order.IsNone() {
+		fc.Check(
+			saveOrder(userInput.Data.Order, existingGitConfig.Order, frontend),
 		)
 	}
 	if configFile.PushBranches.IsNone() {
@@ -479,6 +487,16 @@ func saveObservedRegex(valueToWriteToGit Option[configdomain.ObservedRegex], val
 	}
 	_ = gitconfig.RemoveObservedRegex(runner)
 	return nil
+}
+
+func saveOrder(valueToWriteToGit Option[configdomain.Order], valueAlreadyInGit Option[configdomain.Order], runner subshelldomain.Runner) error {
+	if valueAlreadyInGit.Equal(valueToWriteToGit) {
+		return nil
+	}
+	if value, has := valueToWriteToGit.Get(); has {
+		return gitconfig.SetOrder(runner, value, configdomain.ConfigScopeLocal)
+	}
+	return gitconfig.RemoveOrder(runner)
 }
 
 func saveOriginHostname(valueToWriteToGit Option[configdomain.HostingOriginHostname], valueAlreadyInGit Option[configdomain.HostingOriginHostname], frontend subshelldomain.Runner) error {

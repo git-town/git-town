@@ -210,6 +210,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	OfflineNotAllowed           = "this command requires an active internet connection"
 	OpcodeUnknown               = "unknown opcode: %q, run \"git town status reset\" to reset it"
 	OpenChangesProblem          = "cannot determine open changes: %w"
+	Order                       = "Order: %s\n"
 	OriginHostnamePrompt        = "Origin hostname override: "
 	OriginHostnameResult        = "Origin hostname: %s\n"
 

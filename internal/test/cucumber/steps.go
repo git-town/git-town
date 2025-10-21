@@ -1530,7 +1530,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^this lineage exists now$`, func(ctx context.Context, want *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := format.BranchLineage(devRepo.Config.NormalConfig.Lineage)
+		have := format.BranchLineage(devRepo.Config.NormalConfig.Lineage, configdomain.OrderAsc)
 		if have != want.Content {
 			fmt.Println("WANT:\n" + want.Content)
 			fmt.Println("HAVE:\n" + have)

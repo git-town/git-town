@@ -129,25 +129,25 @@ func (self *Fixture) Branches() datatable.DataTable {
 func (self *Fixture) CommitTable(fields []string) datatable.DataTable {
 	builder := datatable.NewCommitTableBuilder()
 	lineage := self.DevRepo.Value.Config.NormalConfig.Lineage
-	localCommits := self.DevRepo.GetOrPanic().Commits(fields, lineage)
+	localCommits := self.DevRepo.GetOrPanic().Commits(fields, lineage, configdomain.OrderAsc)
 	builder.AddMany(localCommits, "local")
 	if coworkerRepo, hasCoworkerRepo := self.CoworkerRepo.Get(); hasCoworkerRepo {
-		coworkerCommits := coworkerRepo.Commits(fields, lineage)
+		coworkerCommits := coworkerRepo.Commits(fields, lineage, configdomain.OrderAsc)
 		builder.AddMany(coworkerCommits, "coworker")
 	}
 	if originRepo, hasOriginRepo := self.OriginRepo.Get(); hasOriginRepo {
-		originCommits := originRepo.Commits(fields, lineage)
+		originCommits := originRepo.Commits(fields, lineage, configdomain.OrderAsc)
 		builder.AddMany(originCommits, self.DevRepo.Value.Config.NormalConfig.DevRemote.String())
 	}
 	if upstreamRepo, hasUpstreamRepo := self.UpstreamRepo.Get(); hasUpstreamRepo {
-		upstreamCommits := upstreamRepo.Commits(fields, lineage)
+		upstreamCommits := upstreamRepo.Commits(fields, lineage, configdomain.OrderAsc)
 		builder.AddMany(upstreamCommits, "upstream")
 	}
 	if secondWorkTree, hasSecondWorkTree := self.SecondWorktree.Get(); hasSecondWorkTree {
-		secondWorktreeCommits := secondWorkTree.Commits(fields, lineage)
+		secondWorktreeCommits := secondWorkTree.Commits(fields, lineage, configdomain.OrderAsc)
 		builder.AddMany(secondWorktreeCommits, "worktree")
 	}
-	return builder.Table(fields, lineage)
+	return builder.Table(fields, lineage, configdomain.OrderAsc)
 }
 
 // CreateCommits creates the commits described by the given Gherkin table in this Git repository.

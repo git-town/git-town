@@ -10,6 +10,7 @@ Feature: change existing information in Git metadata
     And the main branch is "main"
     And local Git setting "git-town.new-branch-type" is "parked"
     And local Git setting "git-town.share-new-branches" is "no"
+    And local Git setting "git-town.order" is "desc"
     And local Git setting "git-town.push-branches" is "false"
     And local Git setting "git-town.push-hook" is "false"
     And local Git setting "git-town.auto-sync" is "false"
@@ -47,6 +48,7 @@ Feature: change existing information in Git metadata
       | push hook                   | down enter             |
       | ship strategy               | down down enter        |
       | ship delete tracking branch | down enter             |
+      | order                       | up enter               |
       | config storage              | enter                  |
 
   Scenario: result
@@ -82,6 +84,7 @@ Feature: change existing information in Git metadata
       | git config git-town.feature-regex feat                   |
       | git config git-town.contribution-regex cont              |
       | git config git-town.observed-regex obs                   |
+      | git config git-town.order asc                            |
       | git config git-town.push-branches true                   |
       | git config git-town.push-hook true                       |
       | git config git-town.share-new-branches push              |

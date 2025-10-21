@@ -45,6 +45,7 @@ func upCmd() *cobra.Command {
 				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     None[configdomain.Detached](),
 				DryRun:       None[configdomain.DryRun](),
+				Order:        None[configdomain.Order](),
 				PushBranches: None[configdomain.PushBranches](),
 				Stash:        None[configdomain.Stash](),
 				Verbose:      verbose,
@@ -89,7 +90,7 @@ Start:
 	}
 
 	// Get the child branches from lineage
-	children := repo.UnvalidatedConfig.NormalConfig.Lineage.Children(currentBranch)
+	children := repo.UnvalidatedConfig.NormalConfig.Lineage.Children(currentBranch, repo.UnvalidatedConfig.NormalConfig.Order)
 	var child gitdomain.LocalBranchName
 	switch len(children) {
 	case 0:
@@ -134,6 +135,7 @@ Start:
 		ExcludeBranches:   gitdomain.LocalBranchNames{},
 		Lineage:           repo.UnvalidatedConfig.NormalConfig.Lineage,
 		MainBranch:        repo.UnvalidatedConfig.UnvalidatedConfig.MainBranch,
+		Order:             repo.UnvalidatedConfig.NormalConfig.Order,
 		Regexes:           []*regexp.Regexp{},
 		ShowAllBranches:   false,
 		UnknownBranchType: repo.UnvalidatedConfig.NormalConfig.UnknownBranchType,

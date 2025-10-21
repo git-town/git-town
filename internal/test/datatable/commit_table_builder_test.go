@@ -30,7 +30,7 @@ func TestCommitTableBuilder(t *testing.T) {
 		"branch2": "branch1",
 		"branch3": "branch2",
 	})
-	table := builder.Table([]string{"BRANCH", "LOCATION", "MESSAGE"}, lineage)
+	table := builder.Table([]string{"BRANCH", "LOCATION", "MESSAGE"}, lineage, configdomain.OrderAsc)
 	expected := `
 | BRANCH  | LOCATION                | MESSAGE |
 | main    | local                   | commit2 |

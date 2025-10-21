@@ -30,6 +30,7 @@ Feature: display configuration defined in environment variables
       | GIT_TOWN_MAIN_BRANCH                 | dev                |
       | GIT_TOWN_NEW_BRANCH_TYPE             | prototype          |
       | GIT_TOWN_OBSERVED_REGEX              | ^dependabot/       |
+      | GIT_TOWN_ORDER                       | desc               |
       | GIT_TOWN_ORIGIN_HOSTNAME             | codeforge          |
       | GIT_TOWN_OFFLINE                     | 1                  |
       | GIT_TOWN_PERENNIAL_BRANCHES          | qa staging         |
@@ -60,6 +61,7 @@ Feature: display configuration defined in environment variables
         perennial regex: ^release-
         prototype branches: (none)
         unknown branch type: observed
+        order: desc
 
       Configuration:
         offline: yes

@@ -82,6 +82,7 @@ func Cmd() *cobra.Command {
 				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     Some(configdomain.Detached(true)),
 				DryRun:       dryRun,
+				Order:        None[configdomain.Order](),
 				PushBranches: None[configdomain.PushBranches](),
 				Stash:        None[configdomain.Stash](),
 				Verbose:      verbose,
@@ -293,7 +294,7 @@ func determineSwapData(repo execute.OpenRepoResult) (data swapData, flow configd
 	if !hasGrandParentBranch {
 		return data, configdomain.ProgramFlowExit, errors.New(messages.SwapNoGrandParent)
 	}
-	childBranches := validatedConfig.NormalConfig.Lineage.Children(currentBranch)
+	childBranches := validatedConfig.NormalConfig.Lineage.Children(currentBranch, validatedConfig.NormalConfig.Order)
 	children := make([]swapBranch, len(childBranches))
 	for c, childBranch := range childBranches {
 		proposal := None[forgedomain.Proposal]()
@@ -372,7 +373,7 @@ func determineSwapData(repo execute.OpenRepoResult) (data swapData, flow configd
 
 func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
-	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Frontend)
+	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Frontend, data.config.NormalConfig.Order)
 	swapGitOperationsProgram(swapGitOperationsProgramArgs{
 		children: data.children,
 		current: swapBranch{
@@ -405,6 +406,7 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 				CurrentBranch:            data.currentBranchName,
 				Lineage:                  data.config.NormalConfig.Lineage,
 				MainAndPerennialBranches: data.config.MainAndPerennials(),
+				Order:                    data.config.NormalConfig.Order,
 			})
 		}
 	}

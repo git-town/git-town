@@ -17,6 +17,7 @@ type ProposalStackLineageArgs struct {
 	CurrentBranch            gitdomain.LocalBranchName
 	Lineage                  configdomain.Lineage
 	MainAndPerennialBranches gitdomain.LocalBranchNames
+	Order                    configdomain.Order
 }
 
 func NewProposalStackLineageBuilder(args ProposalStackLineageArgs, lineageTree OptionalMutable[ProposalStackLineageTree]) Option[ProposalStackLineageBuilder] {

@@ -47,6 +47,7 @@ func diffParentCommand() *cobra.Command {
 				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     Some(configdomain.Detached(true)),
 				DryRun:       None[configdomain.DryRun](),
+				Order:        None[configdomain.Order](),
 				PushBranches: None[configdomain.PushBranches](),
 				Stash:        None[configdomain.Stash](),
 				Verbose:      verbose,

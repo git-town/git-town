@@ -85,6 +85,7 @@ func compressCmd() *cobra.Command {
 				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     Some(configdomain.Detached(true)),
 				DryRun:       dryRun,
+				Order:        None[configdomain.Order](),
 				PushBranches: None[configdomain.PushBranches](),
 				Stash:        None[configdomain.Stash](),
 				Verbose:      verbose,
@@ -268,7 +269,7 @@ func determineCompressData(repo execute.OpenRepoResult, message Option[gitdomain
 	perennialBranches := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
 	var branchNamesToCompress gitdomain.LocalBranchNames
 	if compressEntireStack {
-		branchNamesToCompress = validatedConfig.NormalConfig.Lineage.BranchLineageWithoutRoot(initialBranch, perennialBranches)
+		branchNamesToCompress = validatedConfig.NormalConfig.Lineage.BranchLineageWithoutRoot(initialBranch, perennialBranches, validatedConfig.NormalConfig.Order)
 	} else {
 		branchNamesToCompress = gitdomain.LocalBranchNames{initialBranch}
 	}

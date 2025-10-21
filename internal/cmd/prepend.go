@@ -114,6 +114,7 @@ func prependCommand() *cobra.Command {
 				AutoSync:     sync,
 				Detached:     detached,
 				DryRun:       dryRun,
+				Order:        None[configdomain.Order](),
 				PushBranches: push,
 				Stash:        stash,
 				Verbose:      verbose,
@@ -424,7 +425,7 @@ func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (data p
 func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
 	if !data.hasOpenChanges && !data.beam.ShouldBeam() && !data.commit.ShouldCommit() && data.config.NormalConfig.AutoSync.ShouldSync() {
-		data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages, repo.Backend)
+		data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages, repo.Backend, data.config.NormalConfig.Order)
 		branchesToDelete := set.New[gitdomain.LocalBranchName]()
 		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 			BranchInfos:         data.branchInfos,
@@ -516,6 +517,7 @@ func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages
 					CurrentBranch:            data.initialBranch,
 					Lineage:                  data.config.NormalConfig.Lineage,
 					MainAndPerennialBranches: data.config.MainAndPerennials(),
+					Order:                    data.config.NormalConfig.Order,
 				})
 				if err != nil {
 					fmt.Printf("failed to update proposal stack lineage: %s\n", err.Error())

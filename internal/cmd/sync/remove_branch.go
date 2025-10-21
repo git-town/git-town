@@ -9,7 +9,7 @@ import (
 )
 
 func RemoveBranchConfiguration(args RemoveBranchConfigurationArgs) {
-	childBranches := args.Lineage.Children(args.Branch)
+	childBranches := args.Lineage.Children(args.Branch, args.Order)
 	for _, child := range childBranches {
 		args.Program.Value.Add(&opcodes.LineageParentSetToGrandParent{Branch: child})
 	}
@@ -19,5 +19,6 @@ func RemoveBranchConfiguration(args RemoveBranchConfigurationArgs) {
 type RemoveBranchConfigurationArgs struct {
 	Branch  gitdomain.LocalBranchName
 	Lineage configdomain.Lineage
+	Order   configdomain.Order
 	Program Mutable[program.Program]
 }

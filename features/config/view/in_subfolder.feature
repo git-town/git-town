@@ -24,6 +24,7 @@ Feature: show the configuration from a subfolder
         perennial regex: (not set)
         prototype branches: (none)
         unknown branch type: feature
+        order: asc
 
       Configuration:
         offline: no

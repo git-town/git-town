@@ -60,6 +60,7 @@ func renameCommand() *cobra.Command {
 				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     Some(configdomain.Detached(true)),
 				DryRun:       dryRun,
+				Order:        None[configdomain.Order](),
 				PushBranches: None[configdomain.PushBranches](),
 				Stash:        None[configdomain.Stash](),
 				Verbose:      verbose,
@@ -276,6 +277,7 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 		Offline:                    false,
 		OldBranch:                  oldBranchName,
 		OldBranchHasTrackingBranch: oldBranch.HasTrackingBranch(),
+		Order:                      validatedConfig.NormalConfig.Order,
 	})
 	return renameData{
 		branchInfosLastRun:       branchInfosLastRun,
@@ -297,7 +299,7 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 
 func renameProgram(repo execute.OpenRepoResult, data renameData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
-	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Backend)
+	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Backend, data.config.NormalConfig.Order)
 	oldLocalBranch, hasOldLocalBranch := data.oldBranch.LocalName.Get()
 	if !hasOldLocalBranch {
 		return prog.Immutable()
@@ -323,7 +325,7 @@ func renameProgram(repo execute.OpenRepoResult, data renameData, finalMessages s
 		}
 		prog.Value.Add(&opcodes.LineageParentRemove{Branch: oldLocalBranch})
 	}
-	for _, child := range data.config.NormalConfig.Lineage.Children(oldLocalBranch) {
+	for _, child := range data.config.NormalConfig.Lineage.Children(oldLocalBranch, data.config.NormalConfig.Order) {
 		prog.Value.Add(&opcodes.LineageParentSet{Branch: child, Parent: data.newBranch})
 	}
 	if oldTrackingBranch, hasOldTrackingBranch := data.oldBranch.RemoteName.Get(); hasOldTrackingBranch {

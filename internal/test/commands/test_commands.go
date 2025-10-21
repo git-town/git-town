@@ -95,11 +95,11 @@ func (self *TestCommands) CommitStagedChanges(message gitdomain.CommitMessage) {
 }
 
 // Commits provides a list of the commits in this Git repository with the given fields.
-func (self *TestCommands) Commits(fields []string, lineage configdomain.Lineage) []testgit.Commit {
+func (self *TestCommands) Commits(fields []string, lineage configdomain.Lineage, order configdomain.Order) []testgit.Commit {
 	// NOTE: This method uses the provided lineage instead of self.Config.NormalConfig.Lineage
 	//       because it might determine the commits on a remote repo, and that repo has no lineage information.
 	//       We therefore always provide the lineage of the local repo.
-	branches, branchesInOtherWorktree := asserts.NoError2(self.LocalBranchesOrderedHierarchically(lineage))
+	branches, branchesInOtherWorktree := asserts.NoError2(self.LocalBranchesOrderedHierarchically(lineage, order))
 	var result []testgit.Commit
 	for _, branch := range branches {
 		if slices.Contains(branchesInOtherWorktree, branch) {
@@ -418,7 +418,7 @@ func (self *TestCommands) Lineage() configdomain.Lineage {
 }
 
 func (self *TestCommands) LineageText(lineage configdomain.Lineage) string {
-	return format.BranchLineage(lineage)
+	return format.BranchLineage(lineage, configdomain.OrderAsc)
 }
 
 // LocalBranches provides the names of all branches in the local repository,
@@ -474,12 +474,12 @@ func (self *TestCommands) LocalBranchesMainFirst(mainBranch gitdomain.LocalBranc
 }
 
 // LocalBranchesMainFirst provides the names of all local branches in this repo.
-func (self *TestCommands) LocalBranchesOrderedHierarchically(lineage configdomain.Lineage) (allBranches, branchesInOtherWorktrees gitdomain.LocalBranchNames, err error) {
+func (self *TestCommands) LocalBranchesOrderedHierarchically(lineage configdomain.Lineage, order configdomain.Order) (allBranches, branchesInOtherWorktrees gitdomain.LocalBranchNames, err error) {
 	allBranches, branchesInOtherWorktrees, err = self.LocalBranches()
 	if err != nil {
 		return
 	}
-	allBranches = lineage.OrderHierarchically(allBranches)
+	allBranches = lineage.OrderHierarchically(allBranches, order)
 	return
 }
 
