@@ -52,6 +52,7 @@ func TestSave(t *testing.T) {
 				HostingOriginHostname:    configdomain.ParseHostingOriginHostname("forge"),
 				MainBranch:               Some(gitdomain.NewLocalBranchName("main")),
 				NewBranchType:            Some(configdomain.NewBranchType(configdomain.BranchTypePrototypeBranch)),
+				Order:                    Some(configdomain.OrderDesc),
 				PerennialBranches:        gitdomain.NewLocalBranchNames("qa", "staging"),
 				PerennialRegex:           asserts.NoError1(configdomain.ParsePerennialRegex("perennial-")),
 				ProposalsShowLineage:     Some(forgedomain.ProposalsShowLineageCLI),
@@ -70,6 +71,7 @@ func TestSave(t *testing.T) {
 
 [branches]
 main = "main"
+order = "desc"
 perennials = ["qa", "staging"]
 perennial-regex = "perennial-"
 
