@@ -11,6 +11,12 @@ import (
 func TestWrapIfError(t *testing.T) {
 	t.Parallel()
 
+	t.Run("no error", func(t *testing.T) {
+		t.Parallel()
+		have := gohacks.WrapIfError(nil, "encountered error: %v")
+		must.Nil(t, have)
+	})
+
 	t.Run("only error", func(t *testing.T) {
 		t.Parallel()
 		err := errors.New("my error")
