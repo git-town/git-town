@@ -16,37 +16,39 @@ Feature: ship a branch that has the same name as a folder in the codebase
     And the current branch is "test"
     When I run "git-town ship -m testing"
 
-  @debug @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                         |
-      | feature | git fetch --prune --tags        |
-      |         | git checkout main               |
-      | main    | git merge --squash --ff feature |
-      |         | git commit                      |
-      |         | git push                        |
-      |         | git push origin :feature        |
-      |         | git branch -D feature           |
+      | BRANCH | COMMAND                      |
+      | test   | git fetch --prune --tags     |
+      |        | git checkout main            |
+      | main   | git merge --squash --ff test |
+      |        | git commit -m testing        |
+      |        | git push                     |
+      |        | git push origin :test        |
+      |        | git branch -D test           |
     And no lineage exists now
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE      |
-      | main   | local, origin | feature done |
+      | BRANCH | LOCATION      | MESSAGE        |
+      | main   | local, origin | feature commit |
+      |        |               | testing        |
 
   Scenario: undo
     When I run "git-town undo"
+    And inspect the commits
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                       |
-      | main   | git revert {{ sha 'feature done' }}           |
-      |        | git push                                      |
-      |        | git branch feature {{ sha 'feature commit' }} |
-      |        | git push -u origin feature                    |
-      |        | git checkout feature                          |
+      | BRANCH | COMMAND                              |
+      | main   | git revert {{ sha 'testing' }}       |
+      |        | git push                             |
+      |        | git branch test {{ sha 'commit 1' }} |
+      |        | git push -u origin test              |
+      |        | git checkout test                    |
     And the initial branches and lineage exist now
     And these commits exist now
-      | BRANCH  | LOCATION      | MESSAGE               |
-      | main    | local, origin | feature done          |
-      |         |               | Revert "feature done" |
-      | feature | local, origin | feature commit        |
+      | BRANCH | LOCATION      | MESSAGE          |
+      | main   | local, origin | feature commit   |
+      |        |               | testing          |
+      |        |               | Revert "testing" |
+      | test   | local, origin | commit 1         |
