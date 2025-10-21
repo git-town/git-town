@@ -14,7 +14,7 @@ Feature: ship a branch that has the same name as a folder in the codebase
       | test   | local, origin | commit 1 |
     And Git setting "git-town.ship-strategy" is "squash-merge"
     And the current branch is "test"
-    When I run "git-town ship -m testing"
+    When I run "git-town ship -m testing -v"
 
   @debug @this
   Scenario: result
