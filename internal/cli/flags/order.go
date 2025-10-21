@@ -1,6 +1,8 @@
 package flags
 
 import (
+	"cmp"
+
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/spf13/cobra"
@@ -14,12 +16,9 @@ func Order() (AddFunc, ReadOrderFlagFunc) {
 		cmd.Flags().StringP(orderLong, "o", "", "sort order for branch list (asc or desc)")
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.Order], error) {
-		value, err := cmd.Flags().GetString(orderLong)
-		if err != nil {
-			return None[configdomain.Order](), err
-		}
-		order, err := configdomain.ParseOrder(value, "--order flag")
-		return order, err
+		text, errFlag := cmd.Flags().GetString(orderLong)
+		order, errParse := configdomain.ParseOrder(text, "--order flag")
+		return order, cmp.Or(errFlag, errParse)
 	}
 	return addFlag, readFlag
 }
