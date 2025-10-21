@@ -10,8 +10,5 @@ func WrapIfError(err error, text string, a ...any) error {
 	if err == nil {
 		return nil
 	}
-	args := []any{text}
-	args = append(args, a...)
-	args = append(args, err)
-	return fmt.Errorf(text, args...)
+	return fmt.Errorf(text, append(a, err)...)
 }
