@@ -15,11 +15,8 @@ func Order() (AddFunc, ReadOrderFlagFunc) {
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.Order], error) {
 		value, err := cmd.Flags().GetString(orderLong)
-		if err != nil {
+		if err != nil || value == "" {
 			return None[configdomain.Order](), err
-		}
-		if value == "" {
-			return None[configdomain.Order](), nil
 		}
 		order, err := configdomain.ParseOrder(value, "cli flag")
 		return order, err
