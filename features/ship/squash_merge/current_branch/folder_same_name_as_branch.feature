@@ -37,7 +37,6 @@ Feature: ship a branch that has the same name as a folder in the codebase
 
   Scenario: undo
     When I run "git-town undo"
-    And inspect the commits
     Then Git Town runs the commands
       | BRANCH | COMMAND                              |
       | main   | git revert {{ sha 'testing' }}       |
