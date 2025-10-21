@@ -39,8 +39,7 @@ func branchCmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			order, errOrder := readOrderFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			err := cmp.Or(errOrder, errVerbose)
-			if err != nil {
+			if err := cmp.Or(errOrder, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
