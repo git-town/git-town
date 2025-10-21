@@ -41,9 +41,9 @@ func switchCmd() *cobra.Command {
 			branchTypes, errBranchTypes := readTypeFlag(cmd)
 			allBranches, errAllBranches := readAllFlag(cmd)
 			displayTypes, errDisplayTypes := readDisplayTypesFlag(cmd)
-			merge, err4 := readMergeFlag(cmd)
-			verbose, err5 := readVerboseFlag(cmd)
-			if err := cmp.Or(errBranchTypes, errAllBranches, errDisplayTypes, err4, err5); err != nil {
+			merge, errMerge := readMergeFlag(cmd)
+			verbose, errVerbose := readVerboseFlag(cmd)
+			if err := cmp.Or(errBranchTypes, errAllBranches, errDisplayTypes, errMerge, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
