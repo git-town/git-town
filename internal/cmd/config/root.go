@@ -116,6 +116,7 @@ func printConfig(config config.UnvalidatedConfig) {
 	print.Entry("sync tags", format.Bool(config.NormalConfig.SyncTags.ShouldSyncTags()))
 	print.Entry("sync with upstream", format.Bool(config.NormalConfig.SyncUpstream.ShouldSyncUpstream()))
 	print.Entry("auto-resolve phantom conflicts", format.Bool(config.NormalConfig.AutoResolve.ShouldAutoResolve()))
+	print.Entry("proposals show lineage", format.StringsSetting(config.NormalConfig.ProposalsShowLineage.String()))
 	fmt.Println()
 	if config.NormalConfig.Lineage.Len() > 0 {
 		print.LabelAndValue("Branch Lineage", format.BranchLineage(config.NormalConfig.Lineage))

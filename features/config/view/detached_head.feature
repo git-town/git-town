@@ -80,6 +80,7 @@ Feature: display configuration from Git metadata in detached head state
         sync tags: yes
         sync with upstream: yes
         auto-resolve phantom conflicts: no
+        proposals show lineage: none
 
       Branch Lineage:
         main

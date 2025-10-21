@@ -36,6 +36,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.perennial-branches" is "qa"
     And local Git setting "git-town.perennial-regex" is "qa.*"
     And local Git setting "git-town.push-branches" is "false"
+    And local Git setting "git-town.proposals-show-lineage" is "none"
     And local Git setting "git-town.push-hook" is "false"
     And local Git setting "git-town.share-new-branches" is "push"
     And local Git setting "git-town.ship-delete-tracking-branch" is "false"
@@ -75,6 +76,7 @@ Feature: remove existing configuration in Git metadata
       | push hook                   | down enter                                                                  | enable              |
       | ship strategy               | down enter                                                                  |                     |
       | ship delete tracking branch | down enter                                                                  | disable             |
+      | proposals show lineage      | down enter                                                                  |                     |
       | config storage              | enter                                                                       | git metadata        |
 
   Scenario: result
@@ -106,6 +108,7 @@ Feature: remove existing configuration in Git metadata
       | git config --unset git-town.feature-regex            |
       | git config --unset git-town.contribution-regex       |
       | git config --unset git-town.observed-regex           |
+      | git config git-town.proposals-show-lineage cli       |
       | git config git-town.push-branches true               |
       | git config git-town.push-hook true                   |
       | git config git-town.share-new-branches no            |
@@ -175,6 +178,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.observed-regex" is now "obs.*"
     And local Git setting "git-town.perennial-regex" is now "qa.*"
     And local Git setting "git-town.push-branches" is now "false"
+    And local Git setting "git-town.proposals-show-lineage" is now "none"
     And local Git setting "git-town.push-hook" is now "false"
     And local Git setting "git-town.share-new-branches" is now "push"
     And local Git setting "git-town.ship-delete-tracking-branch" is now "false"
