@@ -32,5 +32,4 @@ func TestWrapIfError(t *testing.T) {
 		want := `encountered error: my error`
 		must.EqOp(t, want, have)
 	})
-
 }
