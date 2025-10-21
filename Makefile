@@ -117,6 +117,7 @@ fix-optioncompare-in-tests:
 
 keep-sorted: tools/rta@${RTA_VERSION}
 	tools/rta --install ripgrep
+	tools/rta ripgrep -V
 	tools/rta keep-sorted $(shell tools/rta ripgrep -l 'keep-sorted end' ./ | tools/rta ripgrep -v Makefile)
 
 lint-iterate-map:
