@@ -161,5 +161,8 @@
     "^the branches contain these files:$",
     "^these tags exist now$",
     "^the initial tags exist now$"
+  ],
+  "unknown-steps": [
+    "^inspect the commits$"
   ]
 }
