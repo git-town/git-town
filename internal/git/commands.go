@@ -70,7 +70,7 @@ func (self *Commands) BranchExistsRemotely(runner subshelldomain.Runner, branch 
 // BranchHasUnmergedChanges indicates whether the branch with the given name
 // contains changes that were not merged into the main branch.
 func (self *Commands) BranchHasUnmergedChanges(querier subshelldomain.Querier, branch, parent gitdomain.LocalBranchName) (bool, error) {
-	out, err := querier.QueryTrim("git", "diff", "--shortstat", parent.String(), branch.String())
+	out, err := querier.QueryTrim("git", "diff", "--shortstat", parent.String(), branch.String(), "--")
 	return len(out) > 0, gohacks.WrapIfError(err, messages.BranchDiffProblem, branch)
 }
 

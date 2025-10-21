@@ -10,11 +10,11 @@ Feature: ship a branch that has the same name as a folder in the codebase
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | test | feature | main   | local, origin |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE  |
-      | test   | local, origin | commit 1 |
+      | BRANCH | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
+      | test   | local, origin | commit 1 | shippable | content      |
     And Git setting "git-town.ship-strategy" is "squash-merge"
     And the current branch is "test"
-    When I run "git-town ship -m testing -v"
+    When I run "git-town ship -m testing"
 
   @debug @this
   Scenario: result
