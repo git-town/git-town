@@ -169,15 +169,9 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 			return config.EmptyValidatedConfig(), false, err
 		}
 	}
-	gitUserEmail, gitUserName, err := GitUser(args.unvalidated.Value.UnvalidatedConfig)
-	if err != nil {
-		return config.EmptyValidatedConfig(), false, err
-	}
 	return config.ValidatedConfig{
 		ValidatedConfigData: configdomain.ValidatedConfigData{
-			GitUserEmail: gitUserEmail,
-			GitUserName:  gitUserName,
-			MainBranch:   mainBranch,
+			MainBranch: mainBranch,
 		},
 		NormalConfig: args.unvalidated.Value.NormalConfig,
 	}, false, nil

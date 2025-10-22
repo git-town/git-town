@@ -15,11 +15,6 @@ import (
 )
 
 func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) {
-	// check Git user data
-	gitUserEmail, gitUserName, err := GitUser(args.Unvalidated.Value.UnvalidatedConfig)
-	if err != nil {
-		return config.EmptyValidatedConfig(), false, err
-	}
 
 	// enter and save main and perennials
 	mainBranch, hasMain := args.Unvalidated.Value.UnvalidatedConfig.MainBranch.Get()
@@ -35,7 +30,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 			Snapshot:      args.ConfigSnapshot,
 		}
 		var exit dialogdomain.Exit
-		userInput, exit, err = setup.Enter(setupData)
+		userInput, exit, err := setup.Enter(setupData)
 		if err != nil || exit {
 			return config.EmptyValidatedConfig(), exit, err
 		}
@@ -81,9 +76,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 	}
 	validatedConfig := config.ValidatedConfig{
 		ValidatedConfigData: configdomain.ValidatedConfigData{
-			GitUserEmail: gitUserEmail,
-			GitUserName:  gitUserName,
-			MainBranch:   mainBranch,
+			MainBranch: mainBranch,
 		},
 		NormalConfig: args.Unvalidated.Value.NormalConfig,
 	}
