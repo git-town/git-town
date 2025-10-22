@@ -20,19 +20,19 @@ type MergeSquashProgram struct {
 }
 
 func (self *MergeSquashProgram) Run(args shared.RunArgs) error {
-	author, exit, err := dialog.SquashCommitAuthor(self.Branch, self.Authors, args.Inputs)
+	selectedGitUser, exit, err := dialog.SquashCommitAuthor(self.Branch, self.Authors, args.Inputs)
 	if err != nil {
 		return fmt.Errorf(messages.SquashCommitAuthorProblem, err)
 	}
 	if exit {
 		return errors.New("aborted by user")
 	}
-	repoAuthor := args.Config.Value.ValidatedConfigData.Author()
+	localGitUser := args.Config.Value.ValidatedConfigData.Author()
 	var authorOpt Option[gitdomain.Author]
-	if repoAuthor == author {
+	if selectedGitUser == localGitUser {
 		authorOpt = None[gitdomain.Author]()
 	} else {
-		authorOpt = Some(author)
+		authorOpt = Some(selectedGitUser)
 	}
 	program := []shared.Opcode{
 		&MergeSquashAutoUndo{
