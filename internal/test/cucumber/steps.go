@@ -891,25 +891,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		secondWorkTree.Reload()
 	})
 
-	sc.Step(`^I run "([^"]+)" with the environment variables "([^"]+)" and "([^"]+)" and enter into the dialogs?:$`, func(ctx context.Context, cmd string, envVar1, envVar2 string, input *godog.Table) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		state.CaptureState()
-		updateInitialSHAs(state)
-		env := os.Environ()
-		if browserPath, has := state.browserVariable.Get(); has {
-			env = envvars.Replace(env, browser.EnvVarName, browserPath)
-		}
-		env = append(env, envVar1, envVar2)
-		for a, answer := range helpers.TableToInputEnv(input) {
-			env = append(env, fmt.Sprintf("%s_%02d=%s", dialogcomponents.InputKey, a, answer))
-		}
-		output, exitCode := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
-		state.runOutput = Some(output)
-		state.runExitCode = Some(exitCode)
-		devRepo.Reload()
-	})
-
 	sc.Step(`^I run "([^"]+)" with the environment variables "([^"]+)" and "([^"]+)" and "([^"]+)" and "([^"]+)" and enter into the dialogs?:$`, func(ctx context.Context, cmd string, envVar1, envVar2, envVar3, envVar4 string, input *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
