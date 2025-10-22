@@ -3,8 +3,6 @@ Feature: ship a coworker's feature branch
 
   Background:
     Given a Git repo with origin
-    And Git Town is not configured
-    And local Git setting "git-town.main-branch" is "main"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
@@ -12,6 +10,8 @@ Feature: ship a coworker's feature branch
       | BRANCH  | LOCATION      | MESSAGE          | AUTHOR                            |
       | feature | local, origin | developer commit | developer <developer@example.com> |
       |         |               | coworker commit  | coworker <coworker@example.com>   |
+    And Git Town is not configured
+    And local Git setting "git-town.main-branch" is "main"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     And the current branch is "feature"
 
