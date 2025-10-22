@@ -381,7 +381,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.MockGit(version)
 	})
 
-	sc.Step(`^Git Town does not print "(.+)"$`, func(ctx context.Context, text string) error {
+	sc.Step(`^Git Town does not print "([^"]+)"$`, func(ctx context.Context, text string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		if strings.Contains(stripansi.Strip(state.runOutput.GetOrPanic()), text) {
 			return fmt.Errorf("text found: %q", text)
@@ -752,7 +752,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^I ran "(.+)" and ignore the error$`, func(ctx context.Context, command string) error {
+	sc.Step(`^I ran "([^"]+)" and ignore the error$`, func(ctx context.Context, command string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		runCommand(state, command, false)
 		if exitCode, hasExitCode := state.runExitCode.Get(); hasExitCode {
@@ -813,21 +813,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^I run "(.+)"$`, func(ctx context.Context, command string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		runCommand(state, command, true)
-	})
-
-	sc.Step(`^I run "(.+)" with these environment variables$`, func(ctx context.Context, command string, envVars *godog.Table) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		state.CaptureState()
-		updateInitialSHAs(state)
-		env := os.Environ()
-		for _, row := range envVars.Rows {
-			env = append(env, fmt.Sprintf("%s=%s", row.Cells[0].Value, row.Cells[1].Value))
-		}
-		output, exitCode := devRepo.MustQueryStringCodeWith(command, &subshell.Options{Env: env})
-		state.runOutput = Some(output)
-		state.runExitCode = Some(exitCode)
-		devRepo.Reload()
 	})
 
 	sc.Step(`^I run "([^"]*)" and close the editor$`, func(ctx context.Context, cmd string) {
@@ -904,6 +889,21 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 		secondWorkTree.Reload()
+	})
+
+	sc.Step(`^I run "([^"]+)" with these environment variables$`, func(ctx context.Context, command string, envVars *godog.Table) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		state.CaptureState()
+		updateInitialSHAs(state)
+		env := os.Environ()
+		for _, row := range envVars.Rows {
+			env = append(env, fmt.Sprintf("%s=%s", row.Cells[0].Value, row.Cells[1].Value))
+		}
+		output, exitCode := devRepo.MustQueryStringCodeWith(command, &subshell.Options{Env: env})
+		state.runOutput = Some(output)
+		state.runExitCode = Some(exitCode)
+		devRepo.Reload()
 	})
 
 	sc.Step(`^I (?:run|ran) "([^"]+)" and enter into the dialogs?:$`, func(ctx context.Context, cmd string, input *godog.Table) {
