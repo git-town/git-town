@@ -46,6 +46,8 @@ type NormalConfig struct {
 	GitHubToken              Option[forgedomain.GitHubToken]
 	GitLabConnectorType      Option[forgedomain.GitLabConnectorType]
 	GitLabToken              Option[forgedomain.GitLabToken]
+	GitUserEmail             Option[gitdomain.GitUserEmail]
+	GitUserName              Option[gitdomain.GitUserName]
 	GiteaToken               Option[forgedomain.GiteaToken]
 	HostingOriginHostname    Option[configdomain.HostingOriginHostname]
 	Lineage                  configdomain.Lineage
@@ -69,6 +71,16 @@ type NormalConfig struct {
 	SyncUpstream             configdomain.SyncUpstream
 	UnknownBranchType        configdomain.UnknownBranchType
 	Verbose                  configdomain.Verbose
+}
+
+// Author provides the locally Git configured user.
+func (self *NormalConfig) Author() Option[gitdomain.Author] {
+	email, hasEmail := self.GitUserEmail.Get()
+	name, hasName := self.GitUserName.Get()
+	if hasEmail && hasName {
+		return Some(gitdomain.Author(fmt.Sprintf("%s <%s>", name, email)))
+	}
+	return None[gitdomain.Author]()
 }
 
 // DevURL provides the URL for the development remote.
@@ -99,6 +111,8 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		GitHubToken:              other.GitHubToken.Or(self.GitHubToken),
 		GitLabConnectorType:      other.GitLabConnectorType.Or(self.GitLabConnectorType),
 		GitLabToken:              other.GitLabToken.Or(self.GitLabToken),
+		GitUserEmail:             other.GitUserEmail.Or(self.GitUserEmail),
+		GitUserName:              other.GitUserName.Or(self.GitUserName),
 		GiteaToken:               other.GiteaToken.Or(self.GiteaToken),
 		HostingOriginHostname:    other.HostingOriginHostname.Or(self.HostingOriginHostname),
 		Lineage:                  other.Lineage.Merge(self.Lineage),
@@ -245,6 +259,8 @@ func DefaultNormalConfig() NormalConfig {
 		GitHubToken:              None[forgedomain.GitHubToken](),
 		GitLabConnectorType:      None[forgedomain.GitLabConnectorType](),
 		GitLabToken:              None[forgedomain.GitLabToken](),
+		GitUserEmail:             None[gitdomain.GitUserEmail](),
+		GitUserName:              None[gitdomain.GitUserName](),
 		GiteaToken:               None[forgedomain.GiteaToken](),
 		HostingOriginHostname:    None[configdomain.HostingOriginHostname](),
 		Lineage:                  configdomain.NewLineage(),
@@ -291,6 +307,8 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		GitHubToken:              partial.GitHubToken,
 		GitLabConnectorType:      partial.GitLabConnectorType,
 		GitLabToken:              partial.GitLabToken,
+		GitUserEmail:             partial.GitUserEmail,
+		GitUserName:              partial.GitUserName,
 		GiteaToken:               partial.GiteaToken,
 		HostingOriginHostname:    partial.HostingOriginHostname,
 		Lineage:                  partial.Lineage,

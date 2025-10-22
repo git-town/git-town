@@ -83,6 +83,8 @@ func printConfig(config config.UnvalidatedConfig) {
 	fmt.Println()
 	print.Header("Configuration")
 	print.Entry("offline", format.Bool(config.NormalConfig.Offline.IsOffline()))
+	print.Entry("git user name", format.OptionalStringerSetting(config.NormalConfig.GitUserName))
+	print.Entry("git user email", format.OptionalStringerSetting(config.NormalConfig.GitUserEmail))
 	fmt.Println()
 	print.Header("Create")
 	print.Entry("new branch type", format.OptionalStringerSetting(config.NormalConfig.NewBranchType))

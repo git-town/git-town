@@ -296,9 +296,7 @@ EnterForgeData:
 		Verbose:                  None[configdomain.Verbose](), // the setup assistant doesn't ask for this
 	}
 	validatedData := configdomain.ValidatedConfigData{
-		GitUserEmail: "", // the setup assistant doesn't ask for this
-		GitUserName:  "", // the setup assistant doesn't ask for this
-		MainBranch:   actualMainBranch,
+		MainBranch: actualMainBranch,
 	}
 	return UserInput{normalData, actualForgeType, tokenScope, configStorage, validatedData}, false, nil
 }

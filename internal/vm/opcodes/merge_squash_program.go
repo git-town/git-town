@@ -27,9 +27,9 @@ func (self *MergeSquashProgram) Run(args shared.RunArgs) error {
 	if exit {
 		return errors.New("aborted by user")
 	}
-	localGitUser := args.Config.Value.ValidatedConfigData.Author()
+	localGitUser, hasLocalGitUser := args.Config.Value.NormalConfig.Author().Get()
 	var authorOpt Option[gitdomain.Author]
-	if selectedGitUser == localGitUser {
+	if hasLocalGitUser && selectedGitUser == localGitUser {
 		authorOpt = None[gitdomain.Author]()
 	} else {
 		authorOpt = Some(selectedGitUser)

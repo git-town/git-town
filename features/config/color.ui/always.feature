@@ -49,6 +49,8 @@ Feature: show the configuration
 
       Configuration:
         offline: no
+        git user name: user
+        git user email: email@example.com
 
       Create:
         new branch type: (not set)
@@ -139,6 +141,8 @@ Feature: show the configuration
 
       Configuration:
         offline: no
+        git user name: user
+        git user email: email@example.com
 
       Create:
         new branch type: (not set)
@@ -250,6 +254,8 @@ Feature: show the configuration
 
       Configuration:
         offline: no
+        git user name: user
+        git user email: email@example.com
 
       Create:
         new branch type: (not set)
@@ -315,6 +321,8 @@ Feature: show the configuration
 
       Configuration:
         offline: no
+        git user name: user
+        git user email: email@example.com
 
       Create:
         new branch type: (not set)
@@ -386,6 +394,8 @@ Feature: show the configuration
 
       Configuration:
         offline: no
+        git user name: user
+        git user email: email@example.com
 
       Create:
         new branch type: (not set)

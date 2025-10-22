@@ -1,24 +1,13 @@
 package configdomain
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 )
 
 // ValidatedConfigData is Git Town configuration where all essential values are guaranteed to exist and have meaningful values.
 // This is ensured by querying from the user if needed.
 type ValidatedConfigData struct {
-	GitUserEmail gitdomain.GitUserEmail
-	GitUserName  gitdomain.GitUserName
-	MainBranch   gitdomain.LocalBranchName
-}
-
-// Author provides the locally Git configured user.
-func (self *ValidatedConfigData) Author() gitdomain.Author {
-	email := self.GitUserEmail
-	name := self.GitUserName
-	return gitdomain.Author(fmt.Sprintf("%s <%s>", name, email))
+	MainBranch gitdomain.LocalBranchName
 }
 
 // IsMainBranch indicates whether the branch with the given name

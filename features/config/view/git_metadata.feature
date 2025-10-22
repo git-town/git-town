@@ -46,6 +46,8 @@ Feature: display configuration from Git metadata
 
       Configuration:
         offline: no
+        git user name: user
+        git user email: email@example.com
 
       Create:
         new branch type: (not set)
@@ -110,6 +112,8 @@ Feature: display configuration from Git metadata
 
       Configuration:
         offline: no
+        git user name: user
+        git user email: email@example.com
 
       Create:
         new branch type: (not set)
