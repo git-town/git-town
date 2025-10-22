@@ -28,6 +28,8 @@ Feature: show the configuration from a subfolder
 
       Configuration:
         offline: no
+        git user name: user
+        git user email: email@example.com
 
       Create:
         new branch type: (not set)

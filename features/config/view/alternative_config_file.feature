@@ -27,6 +27,8 @@ Feature: show the configuration when using an alternative config file
 
       Configuration:
         offline: no
+        git user name: user
+        git user email: email@example.com
 
       Create:
         new branch type: (not set)
