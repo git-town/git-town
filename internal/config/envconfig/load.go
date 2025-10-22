@@ -23,6 +23,10 @@ const (
 	featureRegex             = "GIT_TOWN_FEATURE_REGEX"
 	forgeType                = "GIT_TOWN_FORGE_TYPE"
 	giteaToken               = "GIT_TOWN_GITEA_TOKEN"
+	gitAuthorEmail           = "GIT_AUTHOR_EMAIL"
+	gitAuthorName            = "GIT_AUTHOR_NAME"
+	gitCommitterEmail        = "GIT_COMMITTER_EMAIL"
+	gitCommitterName         = "GIT_COMMITTER_NAME"
 	githubConnectorType      = "GIT_TOWN_GITHUB_CONNECTOR_TYPE"
 	githubToken              = "GIT_TOWN_GITHUB_TOKEN"
 	gitlabConnectorType      = "GIT_TOWN_GITLAB_CONNECTOR_TYPE"
@@ -59,6 +63,12 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	dryRun, errDryRun := gohacks.ParseBoolOpt[configdomain.DryRun](env.Get(dryRun), dryRun)
 	featureRegex, errFeatureRegex := configdomain.ParseFeatureRegex(env.Get(featureRegex))
 	forgeType, errForgeType := forgedomain.ParseForgeType(env.Get(forgeType))
+	gitAuthorEmailValue := NewOption(gitdomain.GitUserEmail(env.Get(gitAuthorEmail)))
+	gitCommitterEmailValue := NewOption(gitdomain.GitUserEmail(env.Get(gitCommitterEmail)))
+	gitUserEmail := gitAuthorEmailValue.Or(gitCommitterEmailValue)
+	gitAuthorNameValue := NewOption(gitdomain.GitUserName(env.Get(gitAuthorName)))
+	gitCommitterNameValue := NewOption(gitdomain.GitUserName(env.Get(gitCommitterName)))
+	gitUserName := gitAuthorNameValue.Or(gitCommitterNameValue)
 	githubConnectorType, errGitHubConnectorType := forgedomain.ParseGitHubConnectorType(env.Get(githubConnectorType))
 	gitlabConnectorType, errGitLabConnectorType := forgedomain.ParseGitLabConnectorType(env.Get(gitlabConnectorType))
 	newBranchType, errNewBranchType := configdomain.ParseBranchType(env.Get(newBranchType))
@@ -128,8 +138,8 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		GitHubToken:              forgedomain.ParseGitHubToken(env.Get(githubToken, "GITHUB_TOKEN", "GITHUB_AUTH_TOKEN")),
 		GitLabConnectorType:      gitlabConnectorType,
 		GitLabToken:              forgedomain.ParseGitLabToken(env.Get(gitlabToken)),
-		GitUserEmail:             None[gitdomain.GitUserEmail](), // not loaded from env vars
-		GitUserName:              None[gitdomain.GitUserName](),  // not loaded from env vars
+		GitUserEmail:             gitUserEmail,
+		GitUserName:              gitUserName,
 		GiteaToken:               forgedomain.ParseGiteaToken(env.Get(giteaToken)),
 		HostingOriginHostname:    configdomain.ParseHostingOriginHostname(env.Get(originHostname)),
 		Lineage:                  configdomain.NewLineage(), // not loaded from env vars
