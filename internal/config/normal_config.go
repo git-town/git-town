@@ -46,9 +46,9 @@ type NormalConfig struct {
 	GitHubToken              Option[forgedomain.GitHubToken]
 	GitLabConnectorType      Option[forgedomain.GitLabConnectorType]
 	GitLabToken              Option[forgedomain.GitLabToken]
-	GiteaToken               Option[forgedomain.GiteaToken]
 	GitUserEmail             Option[gitdomain.GitUserEmail]
 	GitUserName              Option[gitdomain.GitUserName]
+	GiteaToken               Option[forgedomain.GiteaToken]
 	HostingOriginHostname    Option[configdomain.HostingOriginHostname]
 	Lineage                  configdomain.Lineage
 	NewBranchType            Option[configdomain.NewBranchType]
