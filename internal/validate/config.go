@@ -15,7 +15,6 @@ import (
 )
 
 func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) {
-
 	// enter and save main and perennials
 	mainBranch, hasMain := args.Unvalidated.Value.UnvalidatedConfig.MainBranch.Get()
 	var userInput setup.UserInput

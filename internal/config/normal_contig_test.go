@@ -10,7 +10,6 @@ import (
 )
 
 func TestNormalConfig(t *testing.T) {
-
 	t.Run("Author", func(t *testing.T) {
 		t.Parallel()
 		config := config.NormalConfig{
@@ -21,5 +20,4 @@ func TestNormalConfig(t *testing.T) {
 		want := gitdomain.Author("name <email>")
 		must.EqOp(t, want, have)
 	})
-
 }
