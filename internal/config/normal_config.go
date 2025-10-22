@@ -47,6 +47,8 @@ type NormalConfig struct {
 	GitLabConnectorType      Option[forgedomain.GitLabConnectorType]
 	GitLabToken              Option[forgedomain.GitLabToken]
 	GiteaToken               Option[forgedomain.GiteaToken]
+	GitUserEmail             Option[gitdomain.GitUserEmail]
+	GitUserName              Option[gitdomain.GitUserName]
 	HostingOriginHostname    Option[configdomain.HostingOriginHostname]
 	Lineage                  configdomain.Lineage
 	NewBranchType            Option[configdomain.NewBranchType]
@@ -69,6 +71,16 @@ type NormalConfig struct {
 	SyncUpstream             configdomain.SyncUpstream
 	UnknownBranchType        configdomain.UnknownBranchType
 	Verbose                  configdomain.Verbose
+}
+
+// Author provides the locally Git configured user.
+func (self *NormalConfig) Author() Option[gitdomain.Author] {
+	email, hasEmail := self.GitUserEmail.Get()
+	name, hasName := self.GitUserName.Get()
+	if hasEmail && hasName {
+		return Some(gitdomain.Author(fmt.Sprintf("%s <%s>", name, email)))
+	}
+	return None[gitdomain.Author]()
 }
 
 // DevURL provides the URL for the development remote.
