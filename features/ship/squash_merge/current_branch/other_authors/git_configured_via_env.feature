@@ -50,3 +50,21 @@ Feature: ship a coworker's feature branch
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR                   |
       | main   | local, origin | feature done | user <email@example.com> |
+
+  Scenario: no Git user configured
+    When I run "git-town ship -m 'feature done'" and enter into the dialog:
+      | DIALOG               | KEYS       |
+      | squash commit author | down enter |
+    Then Git Town runs the commands
+      | BRANCH  | COMMAND                                                                   |
+      | feature | git fetch --prune --tags                                                  |
+      |         | git checkout main                                                         |
+      | main    | git merge --squash --ff feature                                           |
+      |         | git commit -m "feature done" --author "developer <developer@example.com>" |
+      |         | git push                                                                  |
+      |         | git push origin :feature                                                  |
+      |         | git branch -D feature                                                     |
+    And no lineage exists now
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE      | AUTHOR                            |
+      | main   | local, origin | feature done | developer <developer@example.com> |
