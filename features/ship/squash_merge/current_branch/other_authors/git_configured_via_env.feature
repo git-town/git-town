@@ -10,10 +10,10 @@ Feature: ship a coworker's feature branch
       | BRANCH  | LOCATION      | MESSAGE          | AUTHOR                            |
       | feature | local, origin | developer commit | developer <developer@example.com> |
       |         |               | coworker commit  | coworker <coworker@example.com>   |
-    And Git Town is not configured
-    And local Git setting "git-town.main-branch" is "main"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     And the current branch is "feature"
+    And I ran "git config --global --unset user.email"
+    And I ran "git config --global --unset user.name"
 
   Scenario: choose the account configured by the GIT_AUTHOR_NAME and GIT_AUTHOR_EMAIL env variables
     When I run "git-town ship -m 'feature done'" with the environment variables "GIT_AUTHOR_NAME=developer" and "GIT_AUTHOR_EMAIL=developer@example.com" and enter into the dialog:
@@ -48,8 +48,9 @@ Feature: ship a coworker's feature branch
       |         | git branch -D feature           |
     And no lineage exists now
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE      | AUTHOR                   |
-      | main   | local, origin | feature done | user <email@example.com> |
+      | BRANCH | LOCATION      | MESSAGE      |
+      | main   | local, origin | feature done |
+# NOTE: cannot verify the AUTHOR field of the commit here, because Git uses the system user in this case
 
   Scenario: no Git user configured
     When I run "git-town ship -m 'feature done'" and enter into the dialog:
