@@ -50,7 +50,7 @@ Feature: ship a coworker's feature branch
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, origin | feature done |
-# NOTE: cannot verify the AUTHOR field of the commit here, because Git uses the system user in this case
+# NOTE: cannot verify the AUTHOR field of the commit here because Git uses the system user in this case
 
   Scenario: no Git user configured
     When I run "git-town ship -m 'feature done'" and enter into the dialog:
