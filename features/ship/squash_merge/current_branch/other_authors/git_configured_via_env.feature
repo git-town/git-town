@@ -20,7 +20,7 @@ Feature: ship a coworker's feature branch
     When I run "git-town ship -m 'feature done'" with the environment variables "GIT_AUTHOR_NAME=developer" and "GIT_AUTHOR_EMAIL=developer@example.com" and enter into the dialog:
       | DIALOG               | KEYS       |
       | squash commit author | down enter |
-    Then Git Town prints:
+    Then Git Town prints the error:
       """
       xxx
       """
