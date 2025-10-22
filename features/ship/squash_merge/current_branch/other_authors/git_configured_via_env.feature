@@ -39,7 +39,7 @@ Feature: ship a coworker's feature branch
 
   @this
   Scenario: choose the account configured by the GIT_COMMITTER_NAME and GIT_COMMITTER_EMAIL env variables
-    When I run "git-town ship -m 'feature done'" with the environment variables "GIT_COMMITTER_NAME=developer" and "GIT_COMMITTER_EMAIL=developer@example.com" and enter into the dialog:
+    When I run "git-town ship -m 'feature done'" with the environment variables "GIT_COMMITTER_NAME=developer" and "GIT_COMMITTER_EMAIL=developer@example.com" and "GIT_AUTHOR_NAME=developer" and "GIT_AUTHOR_EMAIL=developer@example.com" and enter into the dialog:
       | DIALOG               | KEYS       |
       | squash commit author | down enter |
     Then Git Town prints the error:
