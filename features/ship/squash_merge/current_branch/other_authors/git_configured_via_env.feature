@@ -15,7 +15,6 @@ Feature: ship a coworker's feature branch
     And I ran "git config --global --unset user.email"
     And I ran "git config --global --unset user.name"
 
-  @this
   Scenario: choose the account configured by the GIT_AUTHOR_NAME and GIT_AUTHOR_EMAIL env variables
     When I run "git-town ship -m 'feature done'" with the environment variables "GIT_AUTHOR_NAME=developer" and "GIT_AUTHOR_EMAIL=developer@example.com" and enter into the dialog:
       | DIALOG               | KEYS       |
