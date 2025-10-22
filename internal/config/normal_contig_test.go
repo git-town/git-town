@@ -10,6 +10,7 @@ import (
 )
 
 func TestNormalConfig(t *testing.T) {
+	t.Parallel()
 	t.Run("Author", func(t *testing.T) {
 		t.Parallel()
 		config := config.NormalConfig{
