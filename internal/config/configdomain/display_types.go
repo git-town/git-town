@@ -40,23 +40,36 @@ func (self DisplayTypes) ShouldDisplayType(branchType BranchType) bool {
 }
 
 func (self DisplayTypes) String() string {
-	elements := []string{}
 	switch self.Quantifier {
 	case QuantifierAll:
-		elements = append(elements, "all branch types")
-	case QuantifierOnly:
-		elements = append(elements, "only the branch types")
+		return "all branch types"
 	case QuantifierNo:
 		if len(self.BranchTypes) == 0 {
-			elements = append(elements, "no branch types")
+			return "no branch types"
+		}
+		return "all branch types except " + formatBranchTypeList(self.BranchTypes)
+	case QuantifierOnly:
+		return "only the branch types " + formatBranchTypeList(self.BranchTypes)
+	}
+	panic("unhandled DisplayType state: " + self.Quantifier)
+}
+
+func formatBranchTypeList(branchTypes []BranchType) string {
+	if len(branchTypes) == 0 {
+		return ""
+	}
+	if len(branchTypes) == 1 {
+		return `"` + branchTypes[0].String() + `"`
+	}
+	var parts []string
+	for i, branchType := range branchTypes {
+		if i == len(branchTypes)-1 {
+			parts = append(parts, `and "`+branchType.String()+`"`)
 		} else {
-			elements = append(elements, "all branch types except")
+			parts = append(parts, `"`+branchType.String()+`"`)
 		}
 	}
-	for _, branchType := range self.BranchTypes {
-		elements = append(elements, branchType.String())
-	}
-	return strings.Join(elements, " ")
+	return strings.Join(parts, " ")
 }
 
 func ParseDisplayTypes(text, source string) (Option[DisplayTypes], error) {
