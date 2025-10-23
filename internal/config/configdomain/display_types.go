@@ -53,7 +53,7 @@ func (self DisplayTypes) String() string {
 	case QuantifierOnly:
 		return "only the branch types " + slice.JoinSentenceQuotes(self.BranchTypes)
 	}
-	panic("unhandled DisplayType state: " + self.Quantifier)
+	panic("unhandled DisplayType quantifier: " + self.Quantifier)
 }
 
 func ParseDisplayTypes(text, source string) (Option[DisplayTypes], error) {
