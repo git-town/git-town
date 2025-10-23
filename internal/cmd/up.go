@@ -26,6 +26,7 @@ const (
 )
 
 func upCmd() *cobra.Command {
+	addDisplayTypesFlag, readDisplayTypesFlag := flags.Displaytypes()
 	addMergeFlag, readMergeFlag := flags.Merge()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
@@ -35,15 +36,17 @@ func upCmd() *cobra.Command {
 		Short:   upShort,
 		Long:    cmdhelpers.Long(upShort, upLong),
 		RunE: func(cmd *cobra.Command, _ []string) error {
+			displayTypes, errDisplayTypes := readDisplayTypesFlag(cmd)
 			merge, errMerge := readMergeFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errMerge, errVerbose); err != nil {
+			if err := cmp.Or(errDisplayTypes, errMerge, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:  None[configdomain.AutoResolve](),
 				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     None[configdomain.Detached](),
+				DisplayTypes: displayTypes,
 				DryRun:       None[configdomain.DryRun](),
 				Order:        None[configdomain.Order](),
 				PushBranches: None[configdomain.PushBranches](),
@@ -56,6 +59,7 @@ func upCmd() *cobra.Command {
 			})
 		},
 	}
+	addDisplayTypesFlag(&cmd)
 	addMergeFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd

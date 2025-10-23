@@ -82,6 +82,7 @@ func proposeCommand() *cobra.Command {
 				AutoResolve:  autoResolve,
 				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     Some(configdomain.Detached(true)),
+				DisplayTypes: None[configdomain.DisplayTypes](),
 				DryRun:       dryRun,
 				Order:        None[configdomain.Order](),
 				PushBranches: None[configdomain.PushBranches](),
