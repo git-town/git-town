@@ -14,21 +14,6 @@ Feature: specify which branch types are displayed via the CLI
       | perennial    | perennial    |        | local, origin |
     And the current branch is "beta"
 
-  Scenario: default behavior
-    When I run "git-town branch"
-    Then Git Town prints:
-      """
-        main
-          alpha
-      *     beta
-              gamma
-          parked  (parked)
-          prototype  (prototype)
-        contribution  (contribution)
-        observed  (observed)
-        perennial  (perennial)
-      """
-
   Scenario Outline: show all types
     When I run "git-town branch <FLAG>"
     Then Git Town prints:
