@@ -1,4 +1,4 @@
-Feature: specify which branch types are displayed via the CLI
+Feature: specify which branch types are displayed via Git metadata
 
   Background:
     Given a Git repo with origin
@@ -14,23 +14,9 @@ Feature: specify which branch types are displayed via the CLI
       | perennial    | perennial    |        | local, origin |
     And the current branch is "beta"
 
-  Scenario: default behavior
-    When I run "git-town branch"
-    Then Git Town prints:
-      """
-        main
-          alpha
-      *     beta
-              gamma
-          parked  (parked)
-          prototype  (prototype)
-        contribution  (contribution)
-        observed  (observed)
-        perennial  (perennial)
-      """
-
   Scenario Outline: show all types
-    When I run "git-town branch <FLAG>"
+    Given Git setting "git-town.display-types" is "all"
+    When I run "git-town branch"
     Then Git Town prints:
       """
         main  (main)
@@ -44,15 +30,9 @@ Feature: specify which branch types are displayed via the CLI
         perennial  (perennial)
       """
 
-    Examples:
-      | FLAG                |
-      | --display-types     |
-      | --display-types=all |
-      | -d                  |
-      | -d=all              |
-
   Scenario Outline: show only the given branch types
-    When I run "git-town branch --display-types=<FLAG>"
+    Given Git setting "git-town.display-types" is "<VALUE>"
+    When I run "git-town branch"
     Then Git Town prints:
       """
         main
@@ -67,14 +47,16 @@ Feature: specify which branch types are displayed via the CLI
       """
 
     Examples:
-      | FLAG               |
+      | VALUE              |
+      | prototype observed |
       | prototype+observed |
       | prototype-observed |
       | prototype_observed |
       | prototype&observed |
 
   Scenario: show no types
-    When I run "git-town branch --display-types=no"
+    Given Git setting "git-town.display-types" is "no"
+    When I run "git-town branch"
     Then Git Town prints:
       """
         main
@@ -89,7 +71,8 @@ Feature: specify which branch types are displayed via the CLI
       """
 
   Scenario Outline: show all except the given branch types
-    When I run "git-town branch --display-types=<FLAG>"
+    Given Git setting "git-town.display-types" is "<VALUE>"
+    When I run "git-town branch"
     Then Git Town prints:
       """
         main  (main)
@@ -104,9 +87,10 @@ Feature: specify which branch types are displayed via the CLI
       """
 
     Examples:
-      | FLAG                  |
+      | VALUE                 |
+      | no prototype observed |
       | no+prototype+observed |
       | no-prototype-observed |
       | no&prototype&observed |
       | no_prototype_observed |
-      | no-prototype&observed |
+      | no prototype-observed |
