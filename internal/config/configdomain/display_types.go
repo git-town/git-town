@@ -15,8 +15,8 @@ type Quantifier string
 
 const (
 	QuantifierAll  = "all"
-	quantifierNo   = "no"
-	quantifierOnly = ""
+	QuantifierNo   = "no"
+	QuantifierOnly = ""
 )
 
 // indicates whether Git Town should display the given branch type
@@ -24,9 +24,9 @@ func (self DisplayTypes) ShouldDisplayType(branchType BranchType) bool {
 	switch self.Quantifier {
 	case QuantifierAll:
 		return true
-	case quantifierNo:
+	case QuantifierNo:
 		return !slices.Contains(self.BranchTypes, branchType)
-	case quantifierOnly:
+	case QuantifierOnly:
 		return slices.Contains(self.BranchTypes, branchType)
 	}
 	panic("unhandled DisplayType state: " + self.String())
@@ -34,11 +34,40 @@ func (self DisplayTypes) ShouldDisplayType(branchType BranchType) bool {
 
 func (self DisplayTypes) String() string {
 	elements := []string{}
-	if self.Quantifier != quantifierOnly {
+	if self.Quantifier != QuantifierOnly {
 		elements = append(elements, string(self.Quantifier))
 	}
 	for _, branchType := range self.BranchTypes {
 		elements = append(elements, branchType.String())
 	}
 	return strings.Join(elements, " ")
+}
+
+func ParseDisplayType(text string) (DisplayTypes, error) {
+	parts := strings.Split(text, " ")
+	var quantifier Quantifier
+	switch parts[0] {
+	case QuantifierAll:
+		quantifier = QuantifierAll
+		parts = parts[1:]
+	case QuantifierNo:
+		quantifier = QuantifierNo
+		parts = parts[1:]
+	default:
+		quantifier = QuantifierOnly
+	}
+	var branchTypes []BranchType
+	for _, part := range parts {
+		branchTypeOpt, err := ParseBranchType(part)
+		if err != nil {
+			return DisplayTypes{}, err
+		}
+		if branchType, hasBranchType := branchTypeOpt.Get(); hasBranchType {
+			branchTypes = append(branchTypes, branchType)
+		}
+	}
+	return DisplayTypes{
+		Quantifier:  quantifier,
+		BranchTypes: branchTypes,
+	}, nil
 }
