@@ -87,6 +87,7 @@ Feature: show the configuration
         prototype branches: prototype-1, prototype-2
         unknown branch type: observed
         order: desc
+        display types: no feature main
 
       Configuration:
         offline: no
