@@ -12,17 +12,16 @@ const displayTypesLong = "display-types"
 func Displaytypes() (AddFunc, ReadDisplayTypesFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.Flags().StringP(displayTypesLong, "d", "", "display the branch types")
+		cmd.Flags().Lookup(displayTypesLong).NoOptDefVal = "all"
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.DisplayTypes], error) {
+		// Check if the flag was actually provided by the user
+		if !cmd.Flags().Changed(displayTypesLong) {
+			return None[configdomain.DisplayTypes](), nil
+		}
 		text, err := cmd.Flags().GetString(displayTypesLong)
 		if err != nil {
 			return None[configdomain.DisplayTypes](), err
-		}
-		if text == "" {
-			return Some(configdomain.DisplayTypes{
-				BranchTypes: []configdomain.BranchType{},
-				Quantifier:  configdomain.QuantifierAll,
-			}), nil
 		}
 		return configdomain.ParseDisplayTypes(text, "CLI flag "+displayTypesLong)
 	}
