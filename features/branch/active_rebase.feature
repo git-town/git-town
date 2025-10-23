@@ -21,7 +21,6 @@ Feature: display the local branch hierarchy in the middle of an ongoing rebase
     And I ran "git pull --rebase" and ignore the error
     When I run "git-town branch"
 
-  @debug @this
   Scenario: result
     Then Git Town runs no commands
     And Git Town prints:
