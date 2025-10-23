@@ -26,6 +26,9 @@ func (self DisplayTypes) ShouldDisplayType(branchType BranchType) bool {
 	case QuantifierAll:
 		return true
 	case QuantifierNo:
+		if len(self.BranchTypes) == 0 {
+			return false
+		}
 		return !slices.Contains(self.BranchTypes, branchType)
 	case QuantifierOnly:
 		return slices.Contains(self.BranchTypes, branchType)

@@ -77,7 +77,9 @@ func TestDisplayTypes(t *testing.T) {
 				BranchTypes: []configdomain.BranchType{},
 			}
 			for _, branchType := range configdomain.AllBranchTypes() {
-				must.False(t, displayTypes.ShouldDisplayType(branchType))
+				t.Run(branchType.String(), func(t *testing.T) {
+					must.False(t, displayTypes.ShouldDisplayType(branchType))
+				})
 			}
 		})
 		t.Run("exclude specific types", func(t *testing.T) {
