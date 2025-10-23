@@ -12,8 +12,8 @@ import (
 
 // whether to display branch types in the CLI output
 type DisplayTypes struct {
-	BranchTypes []BranchType
-	Quantifier  Quantifier
+	BranchTypes []BranchType // the branch types for which the user has specified exceptions
+	Quantifier  Quantifier   // whether to include or exclude the listed branches
 }
 
 type Quantifier string
