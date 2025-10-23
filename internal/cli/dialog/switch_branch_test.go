@@ -619,7 +619,7 @@ func TestSwitchBranch(t *testing.T) {
 				InitialBranchPos:   Some(0),
 				UncommittedChanges: true,
 				DisplayBranchTypes: configdomain.DisplayTypes{
-					Quantifier:  configdomain.QuantifierAll,
+					Quantifier:  configdomain.QuantifierNo,
 					BranchTypes: []configdomain.BranchType{},
 				},
 			}
