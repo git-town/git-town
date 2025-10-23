@@ -170,10 +170,10 @@ func TestDisplayTypes(t *testing.T) {
 			t.Parallel()
 			give := configdomain.DisplayTypes{
 				Quantifier:  configdomain.QuantifierNo,
-				BranchTypes: []configdomain.BranchType{configdomain.BranchTypeFeatureBranch, configdomain.BranchTypePrototypeBranch},
+				BranchTypes: []configdomain.BranchType{configdomain.BranchTypeFeatureBranch, configdomain.BranchTypePrototypeBranch, configdomain.BranchTypeMainBranch},
 			}
 			have := give.String()
-			want := `all branch types except "feature" and "prototype"`
+			want := `all branch types except "feature", "prototype", and "main"`
 			must.EqOp(t, want, have)
 		})
 
