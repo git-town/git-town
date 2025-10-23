@@ -2,6 +2,7 @@ package configdomain
 
 import (
 	"fmt"
+	"regexp"
 	"slices"
 	"strings"
 
@@ -53,7 +54,8 @@ func ParseDisplayTypes(text, source string) (Option[DisplayTypes], error) {
 	if len(text) == 0 {
 		return None[DisplayTypes](), nil
 	}
-	parts := strings.Split(text, " ")
+	re := regexp.MustCompile(`[ +\-&_]`)
+	parts := re.Split(text, -1)
 	var quantifier Quantifier
 	switch parts[0] {
 	case QuantifierAll:
