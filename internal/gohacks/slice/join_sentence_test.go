@@ -33,6 +33,10 @@ func TestJoinSentenceQuotes(t *testing.T) {
 	})
 	t.Run("three", func(t *testing.T) {
 		t.Parallel()
+		give := []configdomain.BranchType{configdomain.BranchTypeMainBranch, configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeContributionBranch}
+		have := slice.JoinSentenceQuotes(give)
+		want := `"main", "feature", and "contribution"`
+		must.EqOp(t, want, have)
 	})
 	t.Run("four", func(t *testing.T) {
 		t.Parallel()
