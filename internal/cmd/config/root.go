@@ -2,6 +2,7 @@
 package config
 
 import (
+	"cmp"
 	"fmt"
 
 	"github.com/git-town/git-town/v22/internal/cli/flags"
@@ -19,6 +20,7 @@ import (
 const configDesc = "Display your Git Town configuration"
 
 func RootCmd() *cobra.Command {
+	addDisplayTypesFlag, readDisplayTypesFlag := flags.Displaytypes()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	configCmd := cobra.Command{
 		Use:     "config",
@@ -27,15 +29,16 @@ func RootCmd() *cobra.Command {
 		Short:   configDesc,
 		Long:    cmdhelpers.Long(configDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			verbose, err := readVerboseFlag(cmd)
-			if err != nil {
+			displayTypes, errDisplayTypes := readDisplayTypesFlag(cmd)
+			verbose, errVerbose := readVerboseFlag(cmd)
+			if err := cmp.Or(errDisplayTypes, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:  None[configdomain.AutoResolve](),
 				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     None[configdomain.Detached](),
-				DisplayTypes: None[configdomain.DisplayTypes](),
+				DisplayTypes: displayTypes,
 				DryRun:       None[configdomain.DryRun](),
 				Order:        None[configdomain.Order](),
 				PushBranches: None[configdomain.PushBranches](),
@@ -45,6 +48,7 @@ func RootCmd() *cobra.Command {
 			return executeDisplayConfig(cliConfig)
 		},
 	}
+	addDisplayTypesFlag(&configCmd)
 	addVerboseFlag(&configCmd)
 	configCmd.AddCommand(getParentCommand())
 	configCmd.AddCommand(removeConfigCommand())
