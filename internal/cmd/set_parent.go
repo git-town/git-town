@@ -158,12 +158,9 @@ Start:
 			args.ShowAllBranches = true
 			entriesAll := append(dialog.SwitchBranchEntries{noneEntry}, dialog.NewSwitchBranchEntries(args)...)
 			selectedParent, exit, err = dialog.SwitchBranch(dialog.SwitchBranchArgs{
-				CurrentBranch: None[gitdomain.LocalBranchName](),
-				Cursor:        entriesLocal.IndexOf(data.defaultChoice),
-				DisplayBranchTypes: configdomain.DisplayTypes{
-					Quantifier:  configdomain.QuantifierAll,
-					BranchTypes: []configdomain.BranchType{},
-				},
+				CurrentBranch:      None[gitdomain.LocalBranchName](),
+				Cursor:             entriesLocal.IndexOf(data.defaultChoice),
+				DisplayBranchTypes: data.config.NormalConfig.DisplayTypes,
 				EntryData: dialog.EntryData{
 					EntriesAll:      entriesAll,
 					EntriesLocal:    entriesLocal,
