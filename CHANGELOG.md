@@ -4,7 +4,7 @@
 
 #### New Features
 
-- the [branch](https://www.git-town.com/commands/branch.html) command now has a `--display-types` CLI flag that allows to configure which [branch types](https://www.git-town.com/branch-types.html) get displayed
+- the new display-types configuration setting allows configuring which branch types Git Town shows in lists of branches. This affects the [branch](https://www.git-town.com/commands/branch.html) commands.
 
 ## 22.1.0 (2025-10-13)
 
