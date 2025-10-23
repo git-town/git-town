@@ -1,5 +1,11 @@
 # Git Town Changelog
 
+## 22.2.0 (unreleased)
+
+#### New Features
+
+- the [branch](https://www.git-town.com/commands/branch.html) command now has a `--display-types` CLI flag that allows to configure which [branch types](https://www.git-town.com/branch-types.html) get displayed
+
 ## 22.1.0 (2025-10-13)
 
 #### New Features
