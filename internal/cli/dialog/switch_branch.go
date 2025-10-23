@@ -154,7 +154,7 @@ func (self SwitchModel) View() string {
 			}
 			s.WriteString(color.Styled("  " + entry.Text))
 		}
-		if self.DisplayBranchTypes.ShouldDisplayTypes() && ShouldDisplayBranchType(entry.Data.Type) {
+		if self.DisplayBranchTypes.ShouldDisplayType(entry.Data.Type) {
 			s.WriteString("  ")
 			s.WriteString(colors.Faint().Styled("(" + entry.Data.Type.String() + ")"))
 		}
@@ -274,23 +274,6 @@ type NewSwitchBranchEntriesArgs struct {
 	Regexes           []*regexp.Regexp
 	ShowAllBranches   configdomain.AllBranches
 	UnknownBranchType configdomain.UnknownBranchType
-}
-
-func ShouldDisplayBranchType(branchType configdomain.BranchType) bool {
-	switch branchType {
-	case
-		configdomain.BranchTypeMainBranch,
-		configdomain.BranchTypeFeatureBranch:
-		return false
-	case
-		configdomain.BranchTypeContributionBranch,
-		configdomain.BranchTypeObservedBranch,
-		configdomain.BranchTypeParkedBranch,
-		configdomain.BranchTypePerennialBranch,
-		configdomain.BranchTypePrototypeBranch:
-		return true
-	}
-	panic("unhandled branch type:" + branchType.String())
 }
 
 func SwitchBranch(args SwitchBranchArgs) (gitdomain.LocalBranchName, dialogdomain.Exit, error) {

@@ -141,7 +141,7 @@ Start:
 		UnknownBranchType: repo.UnvalidatedConfig.NormalConfig.UnknownBranchType,
 	})
 	fmt.Println()
-	fmt.Print(branchLayout(entries, data))
+	fmt.Print(branchLayout(entries, data, repo.UnvalidatedConfig.NormalConfig.DisplayTypes))
 
 	return nil
 }

@@ -95,7 +95,7 @@ Start:
 		ShowAllBranches:   false,
 		UnknownBranchType: repo.UnvalidatedConfig.NormalConfig.UnknownBranchType,
 	})
-	fmt.Print(branchLayout(entries, data))
+	fmt.Print(branchLayout(entries, data, repo.UnvalidatedConfig.NormalConfig.DisplayTypes))
 	return nil
 }
 
@@ -159,7 +159,7 @@ type branchData struct {
 	initialBranchOpt Option[gitdomain.LocalBranchName]
 }
 
-func branchLayout(entries dialog.SwitchBranchEntries, data branchData) string {
+func branchLayout(entries dialog.SwitchBranchEntries, data branchData, displayTypes configdomain.DisplayTypes) string {
 	s := strings.Builder{}
 	initialBranch, hasInitialBranch := data.initialBranchOpt.Get()
 	for _, entry := range entries {
@@ -174,7 +174,7 @@ func branchLayout(entries dialog.SwitchBranchEntries, data branchData) string {
 			s.WriteString("  ")
 			s.WriteString(entry.String())
 		}
-		if dialog.ShouldDisplayBranchType(entry.Type) {
+		if displayTypes.ShouldDisplayType(entry.Type) {
 			s.WriteString("  ")
 			s.WriteString(colors.Faint().Styled("(" + entry.Type.String() + ")"))
 		}
