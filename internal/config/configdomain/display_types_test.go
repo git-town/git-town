@@ -91,6 +91,7 @@ func TestDisplayTypes(t *testing.T) {
 			}
 			for _, branchType := range configdomain.AllBranchTypes() {
 				t.Run(branchType.String(), func(t *testing.T) {
+					t.Parallel()
 					must.False(t, displayTypes.ShouldDisplayType(branchType))
 				})
 			}
@@ -111,6 +112,7 @@ func TestDisplayTypes(t *testing.T) {
 			}
 			for give, want := range tests {
 				t.Run(fmt.Sprintf("%s ==> %t", give, want), func(t *testing.T) {
+					t.Parallel()
 					have := displayTypes.ShouldDisplayType(give)
 					must.EqOp(t, want, have)
 				})
@@ -132,6 +134,7 @@ func TestDisplayTypes(t *testing.T) {
 			}
 			for give, want := range tests {
 				t.Run(fmt.Sprintf("%s ==> %t", give, want), func(t *testing.T) {
+					t.Parallel()
 					have := displayTypes.ShouldDisplayType(give)
 					must.EqOp(t, want, have)
 				})

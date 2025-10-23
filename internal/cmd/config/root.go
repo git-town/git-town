@@ -81,6 +81,7 @@ func printConfig(config config.UnvalidatedConfig) {
 	print.Entry("prototype branches", format.BranchNames(config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypePrototypeBranch)))
 	print.Entry("unknown branch type", config.NormalConfig.UnknownBranchType.String())
 	print.Entry("order", config.NormalConfig.Order.String())
+	print.Entry("display types", config.NormalConfig.DisplayTypes.String())
 	fmt.Println()
 	print.Header("Configuration")
 	print.Entry("offline", format.Bool(config.NormalConfig.Offline.IsOffline()))

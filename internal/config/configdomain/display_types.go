@@ -10,8 +10,8 @@ import (
 
 // whether to display branch types in the CLI output
 type DisplayTypes struct {
-	Quantifier  Quantifier
 	BranchTypes []BranchType
+	Quantifier  Quantifier
 }
 
 type Quantifier string
@@ -60,7 +60,7 @@ func ParseDisplayTypes(text, source string) (Option[DisplayTypes], error) {
 		quantifier = QuantifierAll
 		parts = parts[1:]
 		if len(parts) > 0 {
-			return None[DisplayTypes](), fmt.Errorf(`the "all" quantifier for DisplayTypes does not accept branch types, you gave: %s`, parts)
+			return None[DisplayTypes](), fmt.Errorf(`the "all" quantifier for DisplayTypes does not accept branch types, in %q you gave: %s`, source, parts)
 		}
 	case QuantifierNo:
 		quantifier = QuantifierNo
@@ -79,7 +79,7 @@ func ParseDisplayTypes(text, source string) (Option[DisplayTypes], error) {
 		}
 	}
 	return Some(DisplayTypes{
-		Quantifier:  quantifier,
 		BranchTypes: branchTypes,
+		Quantifier:  quantifier,
 	}), nil
 }
