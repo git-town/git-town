@@ -11,7 +11,7 @@ const displayTypesLong = "display-types"
 // type-safe access to the CLI arguments of type configdomain.Displaytypes
 func Displaytypes() (AddFunc, ReadDisplayTypesFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.Flags().BoolP(displayTypesLong, "d", false, "display the branch types")
+		cmd.Flags().StringP(displayTypesLong, "d", "", "display the branch types")
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.DisplayTypes], error) {
 		text, err := cmd.Flags().GetString(displayTypesLong)
