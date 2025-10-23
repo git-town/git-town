@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+// JoinSentenceQuotes joins the given elements into a natural sentence
+// while surrounding each element with double-quotes.
 func JoinSentenceQuotes[T fmt.Stringer](elements []T) string {
 	if len(elements) == 0 {
 		return ""
