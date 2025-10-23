@@ -51,7 +51,7 @@ func (self DisplayTypes) String() string {
 
 func ParseDisplayTypes(text, source string) (Option[DisplayTypes], error) {
 	if len(text) == 0 {
-		return None[DisplayTypes](), fmt.Errorf("please provide a valid entry for %s", source)
+		return None[DisplayTypes](), nil
 	}
 	parts := strings.Split(text, " ")
 	var quantifier Quantifier

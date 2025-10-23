@@ -59,8 +59,9 @@ func TestDisplayTypes(t *testing.T) {
 
 		t.Run("empty string", func(t *testing.T) {
 			t.Parallel()
-			_, err := configdomain.ParseDisplayTypes("", "unit test")
-			must.NotNil(t, err)
+			have, err := configdomain.ParseDisplayTypes("", "unit test")
+			must.Nil(t, err)
+			must.True(t, have.IsNone())
 		})
 
 		t.Run("invalid string", func(t *testing.T) {
