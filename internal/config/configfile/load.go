@@ -50,6 +50,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	var contributionRegex Option[configdomain.ContributionRegex]
 	var detached Option[configdomain.Detached]
 	var devRemote Option[gitdomain.Remote]
+	var displayTypes Option[configdomain.DisplayTypes]
 	var featureRegex Option[configdomain.FeatureRegex]
 	var forgeType Option[forgedomain.ForgeType]
 	var githubConnectorType Option[forgedomain.GitHubConnectorType]
@@ -115,6 +116,14 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			branchType, err := configdomain.ParseBranchType(*data.Branches.DefaultType)
 			ec.Check(err)
 			unknownBranchType = configdomain.UnknownBranchTypeOpt(branchType)
+		}
+		if data.Branches.DisplayTypes != nil {
+			var displayTypesValue configdomain.DisplayTypes
+			displayTypesValue, err = configdomain.ParseDisplayTypes(*data.Branches.DisplayTypes, "config file")
+			ec.Check(err)
+			if err == nil {
+				displayTypes = Some(displayTypesValue)
+			}
 		}
 		if data.Branches.FeatureRegex != nil {
 			verifiedRegexOpt, err := configdomain.ParseRegex(*data.Branches.FeatureRegex)
@@ -261,6 +270,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		ForgejoToken:             None[forgedomain.ForgejoToken](),
 		ContributionRegex:        contributionRegex,
 		Detached:                 detached,
+		DisplayTypes:             displayTypes,
 		DryRun:                   None[configdomain.DryRun](),
 		UnknownBranchType:        unknownBranchType,
 		DevRemote:                devRemote,

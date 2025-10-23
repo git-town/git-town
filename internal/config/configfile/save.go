@@ -21,6 +21,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	result.WriteString("# See https://www.git-town.com/configuration-file for details\n")
 
 	main, hasMain := data.MainBranch.Get()
+	displayTypes, hasDisplayTypes := data.DisplayTypes.Get()
 	hasPerennialBranches := len(data.PerennialBranches) > 0
 	order, hasOrder := data.Order.Get()
 	perennialRegex, hasPerennialRegex := data.PerennialRegex.Get()
@@ -37,6 +38,9 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		}
 		if hasPerennialRegex {
 			result.WriteString(fmt.Sprintf("perennial-regex = %q\n", perennialRegex))
+		}
+		if hasDisplayTypes {
+			result.WriteString(fmt.Sprintf("display-types = %q\n", displayTypes))
 		}
 	}
 
