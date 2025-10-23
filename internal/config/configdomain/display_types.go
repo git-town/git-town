@@ -47,7 +47,10 @@ func (self DisplayTypes) String() string {
 	return strings.Join(elements, " ")
 }
 
-func ParseDisplayType(text string) (DisplayTypes, error) {
+func ParseDisplayTypes(text, source string) (DisplayTypes, error) {
+	if len(text) == 0 {
+		return DisplayTypes{}, fmt.Errorf("please provide a valid entry for %s", source)
+	}
 	parts := strings.Split(text, " ")
 	var quantifier Quantifier
 	switch parts[0] {

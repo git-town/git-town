@@ -16,7 +16,7 @@ func TestDisplayTypes(t *testing.T) {
 
 		t.Run("all", func(t *testing.T) {
 			t.Parallel()
-			have, err := configdomain.ParseDisplayType("all")
+			have, err := configdomain.ParseDisplayTypes("all", "unit test")
 			must.NoError(t, err)
 			want := configdomain.DisplayTypes{
 				Quantifier:  configdomain.QuantifierAll,
@@ -26,7 +26,7 @@ func TestDisplayTypes(t *testing.T) {
 		})
 		t.Run("no", func(t *testing.T) {
 			t.Parallel()
-			have, err := configdomain.ParseDisplayType("no")
+			have, err := configdomain.ParseDisplayTypes("no", "unit test")
 			must.NoError(t, err)
 			want := configdomain.DisplayTypes{
 				Quantifier:  configdomain.QuantifierNo,
@@ -37,7 +37,7 @@ func TestDisplayTypes(t *testing.T) {
 
 		t.Run("exclude branch types", func(t *testing.T) {
 			t.Parallel()
-			have, err := configdomain.ParseDisplayType("no feature prototype")
+			have, err := configdomain.ParseDisplayTypes("no feature prototype", "unit test")
 			must.NoError(t, err)
 			want := configdomain.DisplayTypes{
 				Quantifier:  configdomain.QuantifierNo,
@@ -48,13 +48,25 @@ func TestDisplayTypes(t *testing.T) {
 
 		t.Run("only branch types", func(t *testing.T) {
 			t.Parallel()
-			have, err := configdomain.ParseDisplayType("observed contribution")
+			have, err := configdomain.ParseDisplayTypes("observed contribution", "unit test")
 			must.NoError(t, err)
 			want := configdomain.DisplayTypes{
 				Quantifier:  configdomain.QuantifierOnly,
 				BranchTypes: []configdomain.BranchType{configdomain.BranchTypeObservedBranch, configdomain.BranchTypeContributionBranch},
 			}
 			must.Eq(t, want, have)
+		})
+
+		t.Run("empty string", func(t *testing.T) {
+			t.Parallel()
+			_, err := configdomain.ParseDisplayTypes("", "unit test")
+			must.NotNil(t, err)
+		})
+
+		t.Run("invalid string", func(t *testing.T) {
+			t.Parallel()
+			_, err := configdomain.ParseDisplayTypes("zonk", "unit test")
+			must.NotNil(t, err)
 		})
 	})
 
