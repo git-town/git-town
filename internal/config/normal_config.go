@@ -255,7 +255,7 @@ func DefaultNormalConfig() NormalConfig {
 		DevRemote:            gitdomain.RemoteOrigin,
 		DisplayTypes: configdomain.DisplayTypes{
 			Quantifier:  configdomain.QuantifierNo,
-			BranchTypes: []configdomain.BranchType{configdomain.BranchTypeFeatureBranch},
+			BranchTypes: []configdomain.BranchType{configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeMainBranch},
 		},
 		DryRun:                   false,
 		FeatureRegex:             None[configdomain.FeatureRegex](),
