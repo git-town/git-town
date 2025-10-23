@@ -61,6 +61,10 @@ func formatBranchTypeList(branchTypes []BranchType) string {
 	if len(branchTypes) == 1 {
 		return `"` + branchTypes[0].String() + `"`
 	}
+	if len(branchTypes) == 2 {
+		return `"` + branchTypes[0].String() + `" and "` + branchTypes[1].String() + `"`
+	}
+	// 3+ items: use Oxford comma style
 	var parts []string
 	for i, branchType := range branchTypes {
 		if i == len(branchTypes)-1 {
@@ -69,7 +73,7 @@ func formatBranchTypeList(branchTypes []BranchType) string {
 			parts = append(parts, `"`+branchType.String()+`"`)
 		}
 	}
-	return strings.Join(parts, " ")
+	return strings.Join(parts, ", ")
 }
 
 func ParseDisplayTypes(text, source string) (Option[DisplayTypes], error) {
