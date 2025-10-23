@@ -80,12 +80,9 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 		entriesArgs.ShowAllBranches = false
 		entriesLocal := append(SwitchBranchEntries{noneEntry}, NewSwitchBranchEntries(entriesArgs)...)
 		newParent, exit, err := SwitchBranch(SwitchBranchArgs{
-			CurrentBranch: None[gitdomain.LocalBranchName](),
-			Cursor:        1, // select the "main branch" entry, below the "make perennial" entry
-			DisplayBranchTypes: configdomain.DisplayTypes{
-				Quantifier:  configdomain.QuantifierNo,
-				BranchTypes: []configdomain.BranchType{},
-			},
+			CurrentBranch:      None[gitdomain.LocalBranchName](),
+			Cursor:             1, // select the "main branch" entry, below the "make perennial" entry
+			DisplayBranchTypes: args.Config.NormalConfig.DisplayTypes,
 			EntryData: EntryData{
 				EntriesAll:      entriesAll,
 				EntriesLocal:    entriesLocal,
