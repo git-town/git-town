@@ -10,6 +10,7 @@ import (
 
 func TestJoinSentenceQuotes(t *testing.T) {
 	t.Parallel()
+
 	t.Run("0 elements", func(t *testing.T) {
 		t.Parallel()
 		give := []configdomain.BranchType{}
@@ -17,6 +18,7 @@ func TestJoinSentenceQuotes(t *testing.T) {
 		want := ""
 		must.EqOp(t, want, have)
 	})
+
 	t.Run("1 element", func(t *testing.T) {
 		t.Parallel()
 		give := []configdomain.BranchType{configdomain.BranchTypeMainBranch}
@@ -24,6 +26,7 @@ func TestJoinSentenceQuotes(t *testing.T) {
 		want := `"main"`
 		must.EqOp(t, want, have)
 	})
+
 	t.Run("2 elements", func(t *testing.T) {
 		t.Parallel()
 		give := []configdomain.BranchType{configdomain.BranchTypeMainBranch, configdomain.BranchTypeFeatureBranch}
@@ -31,6 +34,7 @@ func TestJoinSentenceQuotes(t *testing.T) {
 		want := `"main" and "feature"`
 		must.EqOp(t, want, have)
 	})
+
 	t.Run("3 elements", func(t *testing.T) {
 		t.Parallel()
 		give := []configdomain.BranchType{configdomain.BranchTypeMainBranch, configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeContributionBranch}
@@ -38,6 +42,7 @@ func TestJoinSentenceQuotes(t *testing.T) {
 		want := `"main", "feature", and "contribution"`
 		must.EqOp(t, want, have)
 	})
+
 	t.Run("4 elements", func(t *testing.T) {
 		t.Parallel()
 		give := []configdomain.BranchType{configdomain.BranchTypeMainBranch, configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeContributionBranch, configdomain.BranchTypeObservedBranch}
