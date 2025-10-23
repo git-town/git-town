@@ -4,7 +4,7 @@
 
 #### New Features
 
-- the new display-types configuration setting allows configuring which branch types Git Town shows in lists of branches. This affects the [branch](https://www.git-town.com/commands/branch.html), [config](https://www.git-town.com/commands/config.html), [down](https://www.git-town.com/commands/down.html), [up](https://www.git-town.com/commands/up.html) commands and many internal dialog that ask to select a branches or branch parent.
+- the new display-types configuration setting allows configuring which branch types Git Town shows in lists of branches. This affects the [branch](https://www.git-town.com/commands/branch.html), [switch](https://www.git-town.com/commands/switch.html), [config](https://www.git-town.com/commands/config.html), [down](https://www.git-town.com/commands/down.html), [up](https://www.git-town.com/commands/up.html) commands and many internal dialog that ask to select a branches or branch parent.
 
 ## 22.1.0 (2025-10-13)
 
