@@ -55,7 +55,7 @@ func ParseDisplayTypes(text, source string) (Option[DisplayTypes], error) {
 		return None[DisplayTypes](), nil
 	}
 	re := regexp.MustCompile(`[ +\-&_]`)
-	parts := re.Split(text, -1)
+	parts := re.Split(strings.ToLower(text), -1)
 	var quantifier Quantifier
 	switch parts[0] {
 	case QuantifierAll:
