@@ -22,6 +22,7 @@ Feature: show the configuration
     And Git setting "git-town.perennial-regex" is "^release-"
     And Git setting "git-town.auto-sync" is "false"
     And Git setting "git-town.contribution-regex" is "^renovate/"
+    And Git setting "git-town.display-types" is "all"
     And Git setting "git-town.observed-regex" is "^dependabot/"
     And Git setting "git-town.unknown-branch-type" is "observed"
     And Git setting "git-town.feature-regex" is "^user-.*$"
@@ -46,6 +47,7 @@ Feature: show the configuration
         prototype branches: prototype-1, prototype-2
         unknown branch type: observed
         order: asc
+        display types: all
 
       Configuration:
         offline: no

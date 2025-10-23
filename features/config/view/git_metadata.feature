@@ -20,6 +20,7 @@ Feature: display configuration from Git metadata
     And Git setting "git-town.perennial-regex" is "^release-"
     And Git setting "git-town.auto-sync" is "false"
     And Git setting "git-town.contribution-regex" is "^renovate/"
+    And Git setting "git-town.display-types" is "all"
     And Git setting "git-town.observed-regex" is "^dependabot/"
     And Git setting "git-town.feature-regex" is "^user-.*$"
     And Git setting "git-town.ship-strategy" is "squash-merge"
@@ -43,6 +44,7 @@ Feature: display configuration from Git metadata
         prototype branches: prototype-1, prototype-2
         unknown branch type: observed
         order: asc
+        display types: all
 
       Configuration:
         offline: no

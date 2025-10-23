@@ -20,6 +20,7 @@ Feature: display configuration defined in environment variables
       | GIT_TOWN_CONTRIBUTION_REGEX          | ^renovate/         |
       | GIT_TOWN_DETACHED                    | true               |
       | GIT_TOWN_DEV_REMOTE                  | my-fork            |
+      | GIT_TOWN_DISPLAY_TYPES               | all                |
       | GIT_TOWN_FEATURE_REGEX               | ^user-.*$          |
       | GIT_TOWN_FORGE_TYPE                  | gitlab             |
       | GIT_TOWN_GITEA_TOKEN                 | gitea-token        |
@@ -62,6 +63,7 @@ Feature: display configuration defined in environment variables
         prototype branches: (none)
         unknown branch type: observed
         order: desc
+        display types: all
 
       Configuration:
         offline: yes
