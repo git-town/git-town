@@ -44,7 +44,7 @@ Feature: display configuration from Git metadata in detached head state
         prototype branches: (none)
         unknown branch type: observed
         order: asc
-        display types: all
+        display types: all branch types
 
       Configuration:
         offline: no

@@ -63,7 +63,7 @@ Feature: display configuration defined in environment variables
         prototype branches: (none)
         unknown branch type: observed
         order: desc
-        display types: all
+        display types: all branch types
 
       Configuration:
         offline: yes

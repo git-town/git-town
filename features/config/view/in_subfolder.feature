@@ -25,7 +25,7 @@ Feature: show the configuration from a subfolder
         prototype branches: (none)
         unknown branch type: feature
         order: asc
-        display types: no feature main
+        display types: all branch types except "feature" and "main"
 
       Configuration:
         offline: no

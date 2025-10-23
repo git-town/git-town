@@ -69,7 +69,7 @@ Feature: display information from config file
         prototype branches: prototype-1, prototype-2
         unknown branch type: observed
         order: desc
-        display types: all
+        display types: all branch types
 
       Configuration:
         offline: no

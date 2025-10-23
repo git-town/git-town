@@ -40,7 +40,7 @@ Feature: show the configuration in Spanish
         prototype branches: prototype-1, prototype-2
         unknown branch type: observed
         order: asc
-        display types: no feature main
+        display types: all branch types except "feature" and "main"
 
       Configuration:
         offline: no

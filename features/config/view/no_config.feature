@@ -27,7 +27,7 @@ Feature: no configuration data
         prototype branches: (none)
         unknown branch type: feature
         order: asc
-        display types: no feature main
+        display types: all branch types except "feature" and "main"
 
       Configuration:
         offline: no

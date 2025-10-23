@@ -44,7 +44,7 @@ Feature: display configuration from Git metadata
         prototype branches: prototype-1, prototype-2
         unknown branch type: observed
         order: asc
-        display types: all
+        display types: all branch types
 
       Configuration:
         offline: no
@@ -111,7 +111,7 @@ Feature: display configuration from Git metadata
         prototype branches: prototype-1, prototype-2
         unknown branch type: feature
         order: asc
-        display types: no feature main
+        display types: all branch types except "feature" and "main"
 
       Configuration:
         offline: no
