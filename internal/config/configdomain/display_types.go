@@ -63,14 +63,14 @@ func ParseDisplayType(text string) (DisplayTypes, error) {
 	default:
 		quantifier = QuantifierOnly
 	}
-	var branchTypes []BranchType
-	for _, part := range parts {
+	branchTypes := make([]BranchType, len(parts))
+	for p, part := range parts {
 		branchTypeOpt, err := ParseBranchType(part)
 		if err != nil {
 			return DisplayTypes{}, err
 		}
 		if branchType, hasBranchType := branchTypeOpt.Get(); hasBranchType {
-			branchTypes = append(branchTypes, branchType)
+			branchTypes[p] = branchType
 		}
 	}
 	return DisplayTypes{

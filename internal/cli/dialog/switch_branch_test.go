@@ -583,8 +583,8 @@ func TestSwitchBranch(t *testing.T) {
 				InitialBranchPos:   Some(0),
 				UncommittedChanges: false,
 				DisplayBranchTypes: configdomain.DisplayTypes{
-					Quantifier:  configdomain.QuantifierAll,
-					BranchTypes: []configdomain.BranchType{},
+					Quantifier:  configdomain.QuantifierNo,
+					BranchTypes: []configdomain.BranchType{configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeMainBranch},
 				},
 			}
 			have := model.View()

@@ -51,7 +51,7 @@ func TestDisplayTypes(t *testing.T) {
 			have, err := configdomain.ParseDisplayType("observed contribution")
 			must.NoError(t, err)
 			want := configdomain.DisplayTypes{
-				Quantifier:  configdomain.QuantifierNo,
+				Quantifier:  configdomain.QuantifierOnly,
 				BranchTypes: []configdomain.BranchType{configdomain.BranchTypeObservedBranch, configdomain.BranchTypeContributionBranch},
 			}
 			must.Eq(t, want, have)
@@ -168,7 +168,7 @@ func TestDisplayTypes(t *testing.T) {
 				BranchTypes: []configdomain.BranchType{configdomain.BranchTypeFeatureBranch, configdomain.BranchTypePrototypeBranch},
 			}
 			have := give.String()
-			want := "no feature prototype"
+			want := "feature prototype"
 			must.EqOp(t, want, have)
 		})
 	})
