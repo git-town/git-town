@@ -20,9 +20,9 @@ type DisplayTypes struct {
 type Quantifier string
 
 const (
-	QuantifierAll  = "all"
-	QuantifierNo   = "no"
-	QuantifierOnly = ""
+	QuantifierAll  = "all" // display all branches
+	QuantifierNo   = "no"  // display no or all except the specified branches
+	QuantifierOnly = ""    // display only the specified branches
 )
 
 // indicates whether Git Town should display the given branch type
