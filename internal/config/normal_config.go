@@ -305,6 +305,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		ContributionRegex:        partial.ContributionRegex,
 		Detached:                 partial.Detached.GetOr(defaults.Detached),
 		DevRemote:                partial.DevRemote.GetOr(defaults.DevRemote),
+		DisplayTypes:             partial.DisplayTypes.GetOr(defaults.DisplayTypes),
 		DryRun:                   partial.DryRun.GetOr(defaults.DryRun),
 		FeatureRegex:             partial.FeatureRegex,
 		ForgeType:                partial.ForgeType,
