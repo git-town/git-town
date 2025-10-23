@@ -41,8 +41,17 @@ func (self DisplayTypes) ShouldDisplayType(branchType BranchType) bool {
 
 func (self DisplayTypes) String() string {
 	elements := []string{}
-	if self.Quantifier != QuantifierOnly {
-		elements = append(elements, string(self.Quantifier))
+	switch self.Quantifier {
+	case QuantifierAll:
+		elements = append(elements, "all branch types")
+	case QuantifierOnly:
+		elements = append(elements, "only the branch types")
+	case QuantifierNo:
+		if len(self.BranchTypes) == 0 {
+			elements = append(elements, "no branch types")
+		} else {
+			elements = append(elements, "all branch types except")
+		}
 	}
 	for _, branchType := range self.BranchTypes {
 		elements = append(elements, branchType.String())

@@ -151,7 +151,7 @@ func TestDisplayTypes(t *testing.T) {
 				BranchTypes: []configdomain.BranchType{},
 			}
 			have := give.String()
-			want := "all"
+			want := "all branch types"
 			must.EqOp(t, want, have)
 		})
 
@@ -162,7 +162,7 @@ func TestDisplayTypes(t *testing.T) {
 				BranchTypes: []configdomain.BranchType{},
 			}
 			have := give.String()
-			want := "no"
+			want := "no branch types"
 			must.EqOp(t, want, have)
 		})
 
@@ -173,7 +173,7 @@ func TestDisplayTypes(t *testing.T) {
 				BranchTypes: []configdomain.BranchType{configdomain.BranchTypeFeatureBranch, configdomain.BranchTypePrototypeBranch},
 			}
 			have := give.String()
-			want := "no feature prototype"
+			want := `all branch types except "feature" and "prototype"`
 			must.EqOp(t, want, have)
 		})
 
@@ -184,7 +184,7 @@ func TestDisplayTypes(t *testing.T) {
 				BranchTypes: []configdomain.BranchType{configdomain.BranchTypeFeatureBranch, configdomain.BranchTypePrototypeBranch},
 			}
 			have := give.String()
-			want := "feature prototype"
+			want := `only the branch types "feature" and "prototype"`
 			must.EqOp(t, want, have)
 		})
 	})
