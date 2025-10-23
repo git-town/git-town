@@ -54,28 +54,6 @@ func (self DisplayTypes) String() string {
 	panic("unhandled DisplayType state: " + self.Quantifier)
 }
 
-func formatBranchTypeList(branchTypes []BranchType) string {
-	if len(branchTypes) == 0 {
-		return ""
-	}
-	if len(branchTypes) == 1 {
-		return `"` + branchTypes[0].String() + `"`
-	}
-	if len(branchTypes) == 2 {
-		return `"` + branchTypes[0].String() + `" and "` + branchTypes[1].String() + `"`
-	}
-	// 3+ items: use Oxford comma style
-	var parts []string
-	for i, branchType := range branchTypes {
-		if i == len(branchTypes)-1 {
-			parts = append(parts, `and "`+branchType.String()+`"`)
-		} else {
-			parts = append(parts, `"`+branchType.String()+`"`)
-		}
-	}
-	return strings.Join(parts, ", ")
-}
-
 func ParseDisplayTypes(text, source string) (Option[DisplayTypes], error) {
 	if len(text) == 0 {
 		return None[DisplayTypes](), nil
@@ -110,4 +88,26 @@ func ParseDisplayTypes(text, source string) (Option[DisplayTypes], error) {
 		BranchTypes: branchTypes,
 		Quantifier:  quantifier,
 	}), nil
+}
+
+func formatBranchTypeList(branchTypes []BranchType) string {
+	if len(branchTypes) == 0 {
+		return ""
+	}
+	if len(branchTypes) == 1 {
+		return `"` + branchTypes[0].String() + `"`
+	}
+	if len(branchTypes) == 2 {
+		return `"` + branchTypes[0].String() + `" and "` + branchTypes[1].String() + `"`
+	}
+	// 3+ items: use Oxford comma style
+	var parts []string
+	for i, branchType := range branchTypes {
+		if i == len(branchTypes)-1 {
+			parts = append(parts, `and "`+branchType.String()+`"`)
+		} else {
+			parts = append(parts, `"`+branchType.String()+`"`)
+		}
+	}
+	return strings.Join(parts, ", ")
 }

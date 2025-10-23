@@ -14,7 +14,7 @@ Feature: specify which branch types are displayed via the config file
       | perennial    | perennial    |        | local, origin |
     And the current branch is "beta"
 
-  Scenario Outline: show all types
+  Scenario: show all types
     Given the configuration file:
       """
       [branches]

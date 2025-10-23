@@ -14,7 +14,7 @@ Feature: specify which branch types are displayed via Git metadata
       | perennial    | perennial    |        | local, origin |
     And the current branch is "beta"
 
-  Scenario Outline: show all types
+  Scenario: show all types
     Given Git setting "git-town.display-types" is "all"
     When I run "git-town branch"
     Then Git Town prints:
