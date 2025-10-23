@@ -1,6 +1,7 @@
 package configdomain
 
 import (
+	"fmt"
 	"slices"
 	"strings"
 )
@@ -50,6 +51,9 @@ func ParseDisplayType(text string) (DisplayTypes, error) {
 	case QuantifierAll:
 		quantifier = QuantifierAll
 		parts = parts[1:]
+		if len(parts) > 0 {
+			return DisplayTypes{}, fmt.Errorf(`the "all" quantifier for DisplayTypes does not accept branch types, you gave: %s`, parts)
+		}
 	case QuantifierNo:
 		quantifier = QuantifierNo
 		parts = parts[1:]

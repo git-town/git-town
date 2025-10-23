@@ -473,7 +473,10 @@ func TestSwitchBranch(t *testing.T) {
 				},
 				InitialBranchPos:   Some(0),
 				UncommittedChanges: false,
-				DisplayBranchTypes: false,
+				DisplayBranchTypes: configdomain.DisplayTypes{
+					Quantifier:  configdomain.QuantifierNo,
+					BranchTypes: []configdomain.BranchType{},
+				},
 			}
 			have := model.View()
 			want := `
@@ -499,7 +502,10 @@ func TestSwitchBranch(t *testing.T) {
 				},
 				InitialBranchPos:   Some(0),
 				UncommittedChanges: false,
-				DisplayBranchTypes: false,
+				DisplayBranchTypes: configdomain.DisplayTypes{
+					Quantifier:  configdomain.QuantifierNo,
+					BranchTypes: []configdomain.BranchType{},
+				},
 			}
 			have := model.View()
 			dim := "\x1b[2m"
@@ -534,7 +540,10 @@ func TestSwitchBranch(t *testing.T) {
 				},
 				InitialBranchPos:   Some(0),
 				UncommittedChanges: false,
-				DisplayBranchTypes: false,
+				DisplayBranchTypes: configdomain.DisplayTypes{
+					Quantifier:  configdomain.QuantifierNo,
+					BranchTypes: []configdomain.BranchType{},
+				},
 			}
 			have := model.View()
 			dim := "\x1b[2m"
@@ -573,7 +582,10 @@ func TestSwitchBranch(t *testing.T) {
 				},
 				InitialBranchPos:   Some(0),
 				UncommittedChanges: false,
-				DisplayBranchTypes: true,
+				DisplayBranchTypes: configdomain.DisplayTypes{
+					Quantifier:  configdomain.QuantifierAll,
+					BranchTypes: []configdomain.BranchType{},
+				},
 			}
 			have := model.View()
 			dim := "\x1b[2m"
@@ -606,7 +618,10 @@ func TestSwitchBranch(t *testing.T) {
 				},
 				InitialBranchPos:   Some(0),
 				UncommittedChanges: true,
-				DisplayBranchTypes: false,
+				DisplayBranchTypes: configdomain.DisplayTypes{
+					Quantifier:  configdomain.QuantifierNo,
+					BranchTypes: []configdomain.BranchType{},
+				},
 			}
 			have := model.View()
 			cyanBold := "\x1b[36;1m"
