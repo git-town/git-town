@@ -18,6 +18,12 @@ func Displaytypes() (AddFunc, ReadDisplayTypesFlagFunc) {
 		if err != nil {
 			return None[configdomain.DisplayTypes](), err
 		}
+		if text == "" {
+			return Some(configdomain.DisplayTypes{
+				BranchTypes: []configdomain.BranchType{},
+				Quantifier:  configdomain.QuantifierAll,
+			}), nil
+		}
 		return configdomain.ParseDisplayTypes(text, "CLI flag "+displayTypesLong)
 	}
 	return addFlag, readFlag

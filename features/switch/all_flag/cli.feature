@@ -22,6 +22,7 @@ Feature: switch to a new remote branch using the --all flag
       | --all |
       | -a    |
 
+  @debug @this
   Scenario: combine with --display-types
     Given a Git repo with origin
     And the branches
