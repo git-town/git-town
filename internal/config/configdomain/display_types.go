@@ -16,6 +16,7 @@ type DisplayTypes struct {
 	Quantifier  Quantifier   // whether to include or exclude the listed branches
 }
 
+// Quantifier specifies whether to display or not display branches
 type Quantifier string
 
 const (
