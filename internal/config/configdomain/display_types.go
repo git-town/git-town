@@ -6,6 +6,7 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/git-town/git-town/v22/internal/gohacks/slice"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
@@ -47,9 +48,9 @@ func (self DisplayTypes) String() string {
 		if len(self.BranchTypes) == 0 {
 			return "no branch types"
 		}
-		return "all branch types except " + formatBranchTypeList(self.BranchTypes)
+		return "all branch types except " + slice.JoinSentenceQuotes(self.BranchTypes)
 	case QuantifierOnly:
-		return "only the branch types " + formatBranchTypeList(self.BranchTypes)
+		return "only the branch types " + slice.JoinSentenceQuotes(self.BranchTypes)
 	}
 	panic("unhandled DisplayType state: " + self.Quantifier)
 }
@@ -88,26 +89,4 @@ func ParseDisplayTypes(text, source string) (Option[DisplayTypes], error) {
 		BranchTypes: branchTypes,
 		Quantifier:  quantifier,
 	}), nil
-}
-
-func formatBranchTypeList(branchTypes []BranchType) string {
-	if len(branchTypes) == 0 {
-		return ""
-	}
-	if len(branchTypes) == 1 {
-		return `"` + branchTypes[0].String() + `"`
-	}
-	if len(branchTypes) == 2 {
-		return `"` + branchTypes[0].String() + `" and "` + branchTypes[1].String() + `"`
-	}
-	// 3+ items: use Oxford comma style
-	var parts []string
-	for i, branchType := range branchTypes {
-		if i == len(branchTypes)-1 {
-			parts = append(parts, `and "`+branchType.String()+`"`)
-		} else {
-			parts = append(parts, `"`+branchType.String()+`"`)
-		}
-	}
-	return strings.Join(parts, ", ")
 }
