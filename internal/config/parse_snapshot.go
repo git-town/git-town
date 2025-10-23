@@ -83,15 +83,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	branchTypeOverrides, errBranchTypeOverride := NewBranchTypeOverridesInSnapshot(snapshot, runner)
 	contributionRegex, errContributionRegex := configdomain.ParseContributionRegex(snapshot[configdomain.KeyContributionRegex])
 	detached, errDetached := gohacks.ParseBoolOpt[configdomain.Detached](snapshot[configdomain.KeyDetached], configdomain.KeyDetached.String())
-	displayTypesOpt := None[configdomain.DisplayTypes]()
-	var errDisplayTypes error
-	if displayTypesText, hasDisplayTypesText := snapshot[configdomain.KeyDisplayTypes]; hasDisplayTypesText {
-		var displayTypesValue configdomain.DisplayTypes
-		displayTypesValue, errDisplayTypes = configdomain.ParseDisplayTypes(displayTypesText, configdomain.KeyDisplayTypes.String())
-		if errDisplayTypes == nil {
-			displayTypesOpt = Some(displayTypesValue)
-		}
-	}
+	displayTypes, errDisplayTypes := configdomain.ParseDisplayTypes(snapshot[configdomain.KeyDisplayTypes], configdomain.KeyDisplayTypes.String())
 	featureRegex, errFeatureRegex := configdomain.ParseFeatureRegex(snapshot[configdomain.KeyFeatureRegex])
 	forgeType, errForgeType := forgedomain.ParseForgeType(snapshot[configdomain.KeyForgeType])
 	githubConnectorType, errGitHubConnectorType := forgedomain.ParseGitHubConnectorType(snapshot[configdomain.KeyGitHubConnectorType])
@@ -159,7 +151,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		ContributionRegex:        contributionRegex,
 		Detached:                 detached,
 		DevRemote:                gitdomain.NewRemote(snapshot[configdomain.KeyDevRemote]),
-		DisplayTypes:             displayTypesOpt,
+		DisplayTypes:             displayTypes,
 		DryRun:                   None[configdomain.DryRun](),
 		FeatureRegex:             featureRegex,
 		ForgeType:                forgeType,

@@ -29,6 +29,7 @@ Git Town's equivalent of the "git branch" command.`
 )
 
 func branchCmd() *cobra.Command {
+	addDisplayTypesFlag, readDisplayTypesFlag := flags.Displaytypes()
 	addOrderFlag, readOrderFlag := flags.Order()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
@@ -37,15 +38,17 @@ func branchCmd() *cobra.Command {
 		Short: branchDesc,
 		Long:  cmdhelpers.Long(branchDesc, branchHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
+			displayTypes, errDisplayTypes := readDisplayTypesFlag(cmd)
 			order, errOrder := readOrderFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errOrder, errVerbose); err != nil {
+			if err := cmp.Or(errDisplayTypes, errOrder, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
 				AutoResolve:  None[configdomain.AutoResolve](),
 				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     None[configdomain.Detached](),
+				DisplayTypes: displayTypes,
 				DryRun:       None[configdomain.DryRun](),
 				Order:        order,
 				PushBranches: None[configdomain.PushBranches](),
@@ -55,6 +58,7 @@ func branchCmd() *cobra.Command {
 			return executeBranch(cliConfig)
 		},
 	}
+	addDisplayTypesFlag(&cmd)
 	addOrderFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd

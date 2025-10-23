@@ -52,6 +52,7 @@ func switchCmd() *cobra.Command {
 				AutoResolve:  None[configdomain.AutoResolve](),
 				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     Some(configdomain.Detached(true)),
+				DisplayTypes: displayTypes,
 				DryRun:       None[configdomain.DryRun](),
 				Order:        order,
 				PushBranches: None[configdomain.PushBranches](),
@@ -59,12 +60,11 @@ func switchCmd() *cobra.Command {
 				Verbose:      verbose,
 			})
 			return executeSwitch(executeSwitchArgs{
-				allBranches:  allBranches,
-				argv:         args,
-				branchTypes:  branchTypes,
-				cliConfig:    cliConfig,
-				displayTypes: displayTypes,
-				merge:        merge,
+				allBranches: allBranches,
+				argv:        args,
+				branchTypes: branchTypes,
+				cliConfig:   cliConfig,
+				merge:       merge,
 			})
 		},
 	}
@@ -78,12 +78,11 @@ func switchCmd() *cobra.Command {
 }
 
 type executeSwitchArgs struct {
-	allBranches  configdomain.AllBranches
-	argv         []string
-	branchTypes  []configdomain.BranchType
-	cliConfig    configdomain.PartialConfig
-	displayTypes configdomain.DisplayTypes
-	merge        configdomain.SwitchUsingMerge
+	allBranches configdomain.AllBranches
+	argv        []string
+	branchTypes []configdomain.BranchType
+	cliConfig   configdomain.PartialConfig
+	merge       configdomain.SwitchUsingMerge
 }
 
 func executeSwitch(args executeSwitchArgs) error {
@@ -136,7 +135,7 @@ Start:
 	branchToCheckout, exit, err := dialog.SwitchBranch(dialog.SwitchBranchArgs{
 		CurrentBranch:      Some(data.initialBranch),
 		Cursor:             cursor,
-		DisplayBranchTypes: args.displayTypes,
+		DisplayBranchTypes: repo.UnvalidatedConfig.NormalConfig.DisplayTypes,
 		EntryData: dialog.EntryData{
 			EntriesAll:      entriesAll,
 			EntriesLocal:    entriesLocal,

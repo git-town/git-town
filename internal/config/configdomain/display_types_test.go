@@ -22,7 +22,7 @@ func TestDisplayTypes(t *testing.T) {
 				Quantifier:  configdomain.QuantifierAll,
 				BranchTypes: []configdomain.BranchType{},
 			}
-			must.Eq(t, want, have)
+			must.True(t, have.EqualSome(want))
 		})
 		t.Run("no", func(t *testing.T) {
 			t.Parallel()
@@ -32,7 +32,7 @@ func TestDisplayTypes(t *testing.T) {
 				Quantifier:  configdomain.QuantifierNo,
 				BranchTypes: []configdomain.BranchType{},
 			}
-			must.Eq(t, want, have)
+			must.True(t, have.EqualSome(want))
 		})
 
 		t.Run("exclude branch types", func(t *testing.T) {
@@ -43,7 +43,7 @@ func TestDisplayTypes(t *testing.T) {
 				Quantifier:  configdomain.QuantifierNo,
 				BranchTypes: []configdomain.BranchType{configdomain.BranchTypeFeatureBranch, configdomain.BranchTypePrototypeBranch},
 			}
-			must.Eq(t, want, have)
+			must.True(t, have.EqualSome(want))
 		})
 
 		t.Run("only branch types", func(t *testing.T) {
@@ -54,7 +54,7 @@ func TestDisplayTypes(t *testing.T) {
 				Quantifier:  configdomain.QuantifierOnly,
 				BranchTypes: []configdomain.BranchType{configdomain.BranchTypeObservedBranch, configdomain.BranchTypeContributionBranch},
 			}
-			must.Eq(t, want, have)
+			must.True(t, have.EqualSome(want))
 		})
 
 		t.Run("empty string", func(t *testing.T) {

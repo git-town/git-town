@@ -61,14 +61,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	autoSync, errAutoSync := gohacks.ParseBoolOpt[configdomain.AutoSync](env.Get(autoSync), autoSync)
 	contributionRegex, errContribRegex := configdomain.ParseContributionRegex(env.Get(contributionRegex))
 	detached, errDetached := gohacks.ParseBoolOpt[configdomain.Detached](env.Get(detached), detached)
-	displayTypesOpt := None[configdomain.DisplayTypes]()
-	var errDisplayTypes error
-	if displayTypesText := env.Get(displayTypes); len(displayTypesText) > 0 {
-		displayTypesResult, errDisplayTypes := configdomain.ParseDisplayTypes(displayTypesText, displayTypes)
-		if errDisplayTypes != nil {
-			displayTypesOpt = Some(displayTypesResult)
-		}
-	}
+	displayTypesOpt, errDisplayTypes := configdomain.ParseDisplayTypes(env.Get(displayTypes), displayTypes)
 	dryRun, errDryRun := gohacks.ParseBoolOpt[configdomain.DryRun](env.Get(dryRun), dryRun)
 	featureRegex, errFeatureRegex := configdomain.ParseFeatureRegex(env.Get(featureRegex))
 	forgeType, errForgeType := forgedomain.ParseForgeType(env.Get(forgeType))

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"slices"
 	"strings"
+
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 // whether to display branch types in the CLI output
@@ -47,9 +49,9 @@ func (self DisplayTypes) String() string {
 	return strings.Join(elements, " ")
 }
 
-func ParseDisplayTypes(text, source string) (DisplayTypes, error) {
+func ParseDisplayTypes(text, source string) (Option[DisplayTypes], error) {
 	if len(text) == 0 {
-		return DisplayTypes{}, fmt.Errorf("please provide a valid entry for %s", source)
+		return None[DisplayTypes](), fmt.Errorf("please provide a valid entry for %s", source)
 	}
 	parts := strings.Split(text, " ")
 	var quantifier Quantifier
@@ -58,7 +60,7 @@ func ParseDisplayTypes(text, source string) (DisplayTypes, error) {
 		quantifier = QuantifierAll
 		parts = parts[1:]
 		if len(parts) > 0 {
-			return DisplayTypes{}, fmt.Errorf(`the "all" quantifier for DisplayTypes does not accept branch types, you gave: %s`, parts)
+			return None[DisplayTypes](), fmt.Errorf(`the "all" quantifier for DisplayTypes does not accept branch types, you gave: %s`, parts)
 		}
 	case QuantifierNo:
 		quantifier = QuantifierNo
@@ -70,14 +72,14 @@ func ParseDisplayTypes(text, source string) (DisplayTypes, error) {
 	for p, part := range parts {
 		branchTypeOpt, err := ParseBranchType(part)
 		if err != nil {
-			return DisplayTypes{}, err
+			return None[DisplayTypes](), err
 		}
 		if branchType, hasBranchType := branchTypeOpt.Get(); hasBranchType {
 			branchTypes[p] = branchType
 		}
 	}
-	return DisplayTypes{
+	return Some(DisplayTypes{
 		Quantifier:  quantifier,
 		BranchTypes: branchTypes,
-	}, nil
+	}), nil
 }

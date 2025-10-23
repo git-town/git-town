@@ -118,12 +118,8 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			unknownBranchType = configdomain.UnknownBranchTypeOpt(branchType)
 		}
 		if data.Branches.DisplayTypes != nil {
-			var displayTypesValue configdomain.DisplayTypes
-			displayTypesValue, err = configdomain.ParseDisplayTypes(*data.Branches.DisplayTypes, "config file")
+			displayTypes, err = configdomain.ParseDisplayTypes(*data.Branches.DisplayTypes, "config file")
 			ec.Check(err)
-			if err == nil {
-				displayTypes = Some(displayTypesValue)
-			}
 		}
 		if data.Branches.FeatureRegex != nil {
 			verifiedRegexOpt, err := configdomain.ParseRegex(*data.Branches.FeatureRegex)
