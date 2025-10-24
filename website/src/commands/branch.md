@@ -19,8 +19,8 @@ addition to the branch name when showing a list of branches. More info
 
 #### `-o`<br>`--order`
 
-This flag allows customizing the order in which branches get displayed. More
-info [here](../preferences/order.md#cli-flag)
+The `--order` flag allows customizing the order in which branches get displayed.
+More info [here](../preferences/order.md#cli-flag)
 
 #### `-v`<br>`--verbose`
 

@@ -55,8 +55,8 @@ to move them to the new branch.
 
 #### `-o`<br>`--order`
 
-This flag allows customizing the order in which branches get displayed. More
-info [here](../preferences/order.md#cli-flag)
+The `--order` flag allows customizing the order in which branches get displayed.
+More info [here](../preferences/order.md#cli-flag)
 
 #### `-t <name>`<br>`--type <name>`
 
