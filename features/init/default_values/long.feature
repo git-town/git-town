@@ -65,7 +65,7 @@ Feature: Accepting all default values leads to a working setup
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    Then global Git setting "alias.append" still doesn't exist
+    And global Git setting "alias.append" still doesn't exist
     And global Git setting "alias.diff-parent" still doesn't exist
     And global Git setting "alias.hack" still doesn't exist
     And global Git setting "alias.delete" still doesn't exist
