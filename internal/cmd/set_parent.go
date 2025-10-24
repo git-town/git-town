@@ -386,7 +386,6 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 			case
 				configdomain.BranchTypePrototypeBranch,
 				configdomain.BranchTypeFeatureBranch:
-				// TODO: only do this if the branch isn't a contribution, observed, parked, or perennial branch
 				initialBranchInfo, hasInitialBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(data.initialBranch).Get()
 				hasRemoteBranch := hasInitialBranchInfo && initialBranchInfo.HasTrackingBranch()
 				if hasRemoteBranch {
