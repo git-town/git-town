@@ -380,6 +380,7 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 					&opcodes.PullCurrentBranch{},
 				)
 			}
+			// remove the old parent's changes from the moved branch
 			parent, hasParent := data.config.NormalConfig.Lineage.Parent(data.initialBranch).Get()
 			if hasParent {
 				prog.Add(
@@ -400,7 +401,7 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 					&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
 				)
 			}
-			// remove commits from descendents
+			// remove the old parent's changes from the descendents of the moved branch
 			if hasParent {
 				descendents := data.config.NormalConfig.Lineage.Descendants(data.initialBranch, data.config.NormalConfig.Order)
 				for _, descendent := range descendents {
