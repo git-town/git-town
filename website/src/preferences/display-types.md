@@ -1,21 +1,24 @@
 # Display types
 
-This setting allows you to change whether and how Git Town displays
-[branch types](../branch-types.md).
+This setting allows you to change whether Git Town also displays the
+[branch type](../branch-types.md) in addition to the branch name when showing a
+list of branches.
 
 ## Allowed values
 
-- **no** - display no branch types
-- **all** - display all branch types
-- **no &lt;branch types&gt;** - display all branch types except the given ones
-- **&lt;branch types&gt;** - display only the given branch types
+- **all** - display the type for all branches
+- **no** - never display the branch type
+- **no &lt;branch types&gt;** - display the type of all branches unless the
+  branch has one of the listed types
+- **&lt;branch types&gt;** - display the type of the branch only if it matches
+  one of the listed branch types
 
 ## Examples
 
-- `no feature main` displays all branch types except if the branch is a feature
-  branch or the main branch. This is the default setting.
-- `prototype observed contribution parked` displays only the given four branch
-  types
+- `no feature main` displays the type for all branches except for feature and
+  main branches. _(This is the default setting.)_
+- `prototype observed contribution parked` displays the type only for these four
+  branch types
 
 ## Config file
 
@@ -31,20 +34,21 @@ git config [--global] git-town.display-types <push|propose>
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on
-your machine. Without it, this setting applies to the current Git repo.
+your machine. Without it, this setting applies only to the current Git repo.
 
 ## Environment variable
 
-You can configure which branch types Git Town displays via the
-`GIT_TOWN_SHARE_NEW_BRANCHES` environment variable.
+You can configure the branch types display via the `GIT_TOWN_SHARE_NEW_BRANCHES`
+environment variable.
 
 ## CLI flags
 
 You can override this setting per command using:
 
-- `--display-types` / `-d` / `--display-types=all` displays all types
-- `--display-types=no` displays no types
-- `--display-types=contribution+observed` displays only the types for
+- `--display-types` / `-d` / `--display-types=all`: display the type for all
+  branches
+- `--display-types=no`: never display the branch type
+- `--display-types=contribution+observed`: display the type only for
   contribution and observed branches
-- `--display-types=no-main-feature` displays all branch types except for the
+- `--display-types=no-main-feature` displays the type for all branches except
   main and feature branches
