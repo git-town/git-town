@@ -25,22 +25,6 @@ const (
 	QuantifierOnly = ""    // display only the specified branches
 )
 
-// indicates whether Git Town should display the given branch type
-func (self DisplayTypes) ShouldDisplayType(branchType BranchType) bool {
-	switch self.Quantifier {
-	case QuantifierAll:
-		return true
-	case QuantifierNo:
-		if len(self.BranchTypes) == 0 {
-			return false
-		}
-		return !slices.Contains(self.BranchTypes, branchType)
-	case QuantifierOnly:
-		return slices.Contains(self.BranchTypes, branchType)
-	}
-	panic("unhandled DisplayType state: " + self.String())
-}
-
 // provides the serialized version to be used in configuration data
 func (self DisplayTypes) Serialize(delimiter string) string {
 	switch self.Quantifier {
@@ -55,6 +39,22 @@ func (self DisplayTypes) Serialize(delimiter string) string {
 		return strings.Join(slice.Stringify(self.BranchTypes), delimiter)
 	}
 	panic("unhandled DisplayType quantifier: " + self.Quantifier)
+}
+
+// indicates whether Git Town should display the given branch type
+func (self DisplayTypes) ShouldDisplayType(branchType BranchType) bool {
+	switch self.Quantifier {
+	case QuantifierAll:
+		return true
+	case QuantifierNo:
+		if len(self.BranchTypes) == 0 {
+			return false
+		}
+		return !slices.Contains(self.BranchTypes, branchType)
+	case QuantifierOnly:
+		return slices.Contains(self.BranchTypes, branchType)
+	}
+	panic("unhandled DisplayType state: " + self.String())
 }
 
 // provides a human-readable version of this DisplayTypes
