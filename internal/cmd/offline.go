@@ -43,6 +43,7 @@ func offlineCmd() *cobra.Command {
 				AutoResolve:  None[configdomain.AutoResolve](),
 				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     None[configdomain.Detached](),
+				DisplayTypes: None[configdomain.DisplayTypes](),
 				DryRun:       None[configdomain.DryRun](),
 				Order:        None[configdomain.Order](),
 				PushBranches: None[configdomain.PushBranches](),

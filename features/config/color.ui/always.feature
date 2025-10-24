@@ -22,6 +22,7 @@ Feature: show the configuration
     And Git setting "git-town.perennial-regex" is "^release-"
     And Git setting "git-town.auto-sync" is "false"
     And Git setting "git-town.contribution-regex" is "^renovate/"
+    And Git setting "git-town.display-types" is "all"
     And Git setting "git-town.observed-regex" is "^dependabot/"
     And Git setting "git-town.unknown-branch-type" is "observed"
     And Git setting "git-town.feature-regex" is "^user-.*$"
@@ -46,6 +47,7 @@ Feature: show the configuration
         prototype branches: prototype-1, prototype-2
         unknown branch type: observed
         order: asc
+        display types: all branch types
 
       Configuration:
         offline: no
@@ -99,6 +101,7 @@ Feature: show the configuration
       contribution-regex = "^renovate/"
       observed-regex = "^dependabot/"
       unknown-type = "observed"
+      display-types = "all"
 
       [create]
       share-new-branches = "push"
@@ -138,6 +141,7 @@ Feature: show the configuration
         prototype branches: prototype-1, prototype-2
         unknown branch type: observed
         order: asc
+        display types: all branch types
 
       Configuration:
         offline: no
@@ -185,6 +189,7 @@ Feature: show the configuration
     And Git setting "git-town.perennial-branches" is "git-perennial-1 git-perennial-2"
     And Git setting "git-town.auto-sync" is "false"
     And Git setting "git-town.contribution-regex" is "^git-contribution-regex"
+    And Git setting "git-town.display-types" is "all"
     And Git setting "git-town.observed-regex" is "^git-observed-regex"
     And Git setting "git-town.perennial-regex" is "^git-perennial-"
     And Git setting "git-town.feature-regex" is "git-feature-.*"
@@ -212,6 +217,7 @@ Feature: show the configuration
       observed-regex = "^config-observed-regex"
       unknown-type = "contribution"
       order = "asc"
+      display-types = "no"
 
       [create]
       share-new-branches = "push"
@@ -251,6 +257,7 @@ Feature: show the configuration
         prototype branches: prototype-1, prototype-2
         unknown branch type: observed
         order: desc
+        display types: all branch types
 
       Configuration:
         offline: no
@@ -318,6 +325,7 @@ Feature: show the configuration
         prototype branches: prototype-1, prototype-2
         unknown branch type: feature
         order: asc
+        display types: all branch types except "feature" and "main"
 
       Configuration:
         offline: no
@@ -391,6 +399,7 @@ Feature: show the configuration
         prototype branches: prototype-1, prototype-2
         unknown branch type: feature
         order: asc
+        display types: all branch types except "feature" and "main"
 
       Configuration:
         offline: no

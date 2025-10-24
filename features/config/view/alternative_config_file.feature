@@ -24,6 +24,7 @@ Feature: show the configuration when using an alternative config file
         prototype branches: (none)
         unknown branch type: feature
         order: asc
+        display types: all branch types except "feature" and "main"
 
       Configuration:
         offline: no

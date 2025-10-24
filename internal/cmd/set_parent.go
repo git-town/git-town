@@ -82,6 +82,7 @@ func setParentCommand() *cobra.Command {
 				AutoResolve:  autoResolve,
 				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     Some(configdomain.Detached(true)),
+				DisplayTypes: None[configdomain.DisplayTypes](),
 				DryRun:       None[configdomain.DryRun](),
 				Order:        None[configdomain.Order](),
 				PushBranches: None[configdomain.PushBranches](),
@@ -159,7 +160,7 @@ Start:
 			selectedParent, exit, err = dialog.SwitchBranch(dialog.SwitchBranchArgs{
 				CurrentBranch:      None[gitdomain.LocalBranchName](),
 				Cursor:             entriesLocal.IndexOf(data.defaultChoice),
-				DisplayBranchTypes: true,
+				DisplayBranchTypes: data.config.NormalConfig.DisplayTypes,
 				EntryData: dialog.EntryData{
 					EntriesAll:      entriesAll,
 					EntriesLocal:    entriesLocal,

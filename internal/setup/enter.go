@@ -261,6 +261,7 @@ EnterForgeData:
 		ContributionRegex:        contributionRegex,
 		Detached:                 detached,
 		DevRemote:                devRemote,
+		DisplayTypes:             None[configdomain.DisplayTypes](),
 		DryRun:                   None[configdomain.DryRun](), // the setup assistant doesn't ask for this
 		FeatureRegex:             featureRegex,
 		ForgeType:                enteredForgeType,

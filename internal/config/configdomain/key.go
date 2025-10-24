@@ -82,6 +82,7 @@ const (
 	KeyDeprecatedSyncStrategy              = Key("git-town.sync-strategy")
 	KeyDetached                            = Key("git-town.detached")
 	KeyDevRemote                           = Key("git-town.dev-remote")
+	KeyDisplayTypes                        = Key("git-town.display-types")
 	KeyFeatureRegex                        = Key("git-town.feature-regex")
 	KeyForgejoToken                        = Key("git-town.forgejo-token")
 	KeyForgeType                           = Key("git-town.forge-type")
@@ -145,6 +146,7 @@ var keys = []Key{
 	KeyDeprecatedSyncStrategy,
 	KeyDetached,
 	KeyDevRemote,
+	KeyDisplayTypes,
 	KeyFeatureRegex,
 	KeyForgejoToken,
 	KeyForgeType,
