@@ -39,8 +39,9 @@ The `--all` aka `-a` flag also displays both local and remote branches.
 
 #### `-d`<br>`--display-types`
 
-When enabled, this command displays the types for all branches except the main
-branch and feature branches.
+This flag allows customizing whether Git Town also displays the branch type in
+addition to the branch name when showing a list of branches. More info
+[here](../preferences/display-types.md#cli-flags).
 
 #### `-m`<br>`--merge`
 
@@ -51,6 +52,11 @@ branch.
 
 This is useful when you have uncommitted changes in your current branch and want
 to move them to the new branch.
+
+#### `-o`<br>`--order`
+
+This flag allows customizing the order in which branches get displayed. More
+info [here](../preferences/order.md#cli-flag)
 
 #### `-t <name>`<br>`--type <name>`
 

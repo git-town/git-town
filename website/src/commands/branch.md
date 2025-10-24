@@ -11,6 +11,17 @@ branches.
 
 ## Options
 
+#### `-d`<br>`--display-types`
+
+This flag allows customizing whether Git Town also displays the branch type in
+addition to the branch name when showing a list of branches. More info
+[here](../preferences/display-types.md#cli-flags).
+
+#### `-o`<br>`--order`
+
+This flag allows customizing the order in which branches get displayed. More
+info [here](../preferences/order.md#cli-flag)
+
 #### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to

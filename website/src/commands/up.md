@@ -39,6 +39,12 @@ main
 
 ## Options
 
+#### `-d`<br>`--display-types`
+
+This flag allows customizing whether Git Town also displays the branch type in
+addition to the branch name when showing a list of branches. More info
+[here](../preferences/display-types.md#cli-flags).
+
 #### `-m`<br>`--merge`
 
 The `--merge` aka `-m` flag has the same effect as the
