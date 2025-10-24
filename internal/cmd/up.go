@@ -28,6 +28,7 @@ const (
 func upCmd() *cobra.Command {
 	addDisplayTypesFlag, readDisplayTypesFlag := flags.Displaytypes()
 	addMergeFlag, readMergeFlag := flags.Merge()
+	addOrderFlag, readOrderFlag := flags.Order()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "up",
@@ -38,8 +39,9 @@ func upCmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			displayTypes, errDisplayTypes := readDisplayTypesFlag(cmd)
 			merge, errMerge := readMergeFlag(cmd)
+			order, errOrder := readOrderFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errDisplayTypes, errMerge, errVerbose); err != nil {
+			if err := cmp.Or(errDisplayTypes, errMerge, errOrder, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -48,7 +50,7 @@ func upCmd() *cobra.Command {
 				Detached:     None[configdomain.Detached](),
 				DisplayTypes: displayTypes,
 				DryRun:       None[configdomain.DryRun](),
-				Order:        None[configdomain.Order](),
+				Order:        order,
 				PushBranches: None[configdomain.PushBranches](),
 				Stash:        None[configdomain.Stash](),
 				Verbose:      verbose,
@@ -61,6 +63,7 @@ func upCmd() *cobra.Command {
 	}
 	addDisplayTypesFlag(&cmd)
 	addMergeFlag(&cmd)
+	addOrderFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
