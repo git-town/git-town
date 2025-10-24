@@ -4,9 +4,9 @@ Feature: change the display order
     Given a Git repo with origin
     And the branches
       | NAME       | TYPE    | PARENT  | LOCATIONS |
-      |    2024-03 | feature | main    | local     |
-      |    2024-04 | feature | main    | local     |
-      |    2025-06 | feature | main    | local     |
+      | 2024-03    | feature | main    | local     |
+      | 2024-04    | feature | main    | local     |
+      | 2025-06    | feature | main    | local     |
       | 2025-06-01 | feature | 2025-06 | local     |
     And the current branch is "2025-06"
 
