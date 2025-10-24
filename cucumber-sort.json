@@ -66,7 +66,6 @@
   "record": true,
   "fail-fast": true,
   "steps": [
-    "^a brand-new Git repo$",
     "^I am outside a Git repo$",
     "^a Git repo with origin$",
     "^a local Git repo$",
