@@ -3,14 +3,11 @@ Feature: Ignore invalid configuration data
 
   Background:
     Given a Git repo with origin
-    And the branches
-      | NAME       | TYPE   | LOCATIONS     |
-      | dev        | (none) | local, origin |
-      | production | (none) | local, origin |
     And Git Town is not configured
     And local Git setting "init.defaultbranch" is "main"
     And local Git setting "git-town.sync-feature-strategy" is "--help"
     When I run "git-town init" and enter into the dialogs:
+<<<<<<<< HEAD:features/init/invalid_config_data.feature
       | DIALOG             | KEYS       |
       | welcome            | enter      |
       | aliases            | enter      |
@@ -21,6 +18,16 @@ Feature: Ignore invalid configuration data
       | enter all          | enter      |
       | config storage     | down enter |
   # @this
+========
+      | DIALOG          | KEYS       |
+      | welcome         | enter      |
+      | aliases         | enter      |
+      | main branch     | enter      |
+      | origin hostname | enter      |
+      | forge type      | enter      |
+      | enter all       | enter      |
+      | config storage  | down enter |
+>>>>>>>> kg-setup-assistant-crash:features/init/default_values/short.feature
 
   Scenario: result
     Then Git Town runs no commands
