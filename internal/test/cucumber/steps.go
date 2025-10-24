@@ -94,36 +94,6 @@ func InitializeSuite(ctx *godog.TestSuiteContext) {
 }
 
 func defineSteps(sc *godog.ScenarioContext) {
-	sc.Step(`^a brand-new Git repo$`, func(ctx context.Context) (context.Context, error) {
-		scenarioName := ctx.Value(keyScenarioName).(string)
-		scenarioTags := ctx.Value(keyScenarioTags).([]*messages.PickleTag)
-		fixture := fixtureFactory.CreateEmptyFixture(scenarioName)
-		if helpers.HasTag(scenarioTags, "@debug") {
-			fixture.DevRepo.GetOrPanic().Verbose = true
-		}
-		state := ScenarioState{
-			beforeRunDevSHAs:     None[gitdomain.Commits](),
-			beforeRunOriginSHAs:  None[gitdomain.Commits](),
-			browserVariable:      None[string](),
-			fixture:              fixture,
-			initialBranches:      None[datatable.DataTable](),
-			initialCommits:       None[datatable.DataTable](),
-			initialCurrentBranch: None[gitdomain.LocalBranchName](),
-			initialDevSHAs:       None[gitdomain.Commits](),
-			initialLineage:       None[string](),
-			initialOriginSHAs:    None[gitdomain.Commits](),
-			initialTags:          None[datatable.DataTable](),
-			initialWorktreeSHAs:  None[gitdomain.Commits](),
-			insideGitRepo:        true,
-			runExitCode:          None[int](),
-			runExitCodeChecked:   false,
-			runOutput:            None[string](),
-			uncommittedContent:   None[string](),
-			uncommittedFileName:  None[string](),
-		}
-		return context.WithValue(ctx, keyScenarioState, &state), nil
-	})
-
 	sc.Step(`^a coworker clones the repository$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.fixture.AddCoworkerRepo()
