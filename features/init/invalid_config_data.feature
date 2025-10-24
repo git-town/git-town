@@ -39,7 +39,7 @@ Feature: Ignore invalid configuration data
     And the configuration file is now:
       """
       # See https://www.git-town.com/configuration-file for details
-      
+
       [branches]
       main = "main"
       """
