@@ -52,6 +52,11 @@ branch.
 This is useful when you have uncommitted changes in your current branch and want
 to move them down to the parent branch.
 
+#### `-o`<br>`--order`
+
+The `--order` flag allows customizing the order in which branches get displayed.
+More info [here](../preferences/order.md#cli-flag)
+
 #### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
