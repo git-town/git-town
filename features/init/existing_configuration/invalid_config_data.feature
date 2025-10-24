@@ -7,15 +7,36 @@ Feature: Ignore invalid configuration data
     And local Git setting "init.defaultbranch" is "main"
     And local Git setting "git-town.sync-feature-strategy" is "--help"
     When I run "git-town init" and enter into the dialogs:
-      | DIALOG          | KEYS       |
-      | welcome         | enter      |
-      | aliases         | enter      |
-      | main branch     | enter      |
-      | origin hostname | enter      |
-      | forge type      | enter      |
-      | enter all       | enter      |
-      | config storage  | down enter |
+      | DIALOG                      | KEYS       |
+      | welcome                     | enter      |
+      | aliases                     | enter      |
+      | main branch                 | enter      |
+      | origin hostname             | enter      |
+      | forge type                  | enter      |
+      | enter all                   | down enter |
+      | perennial regex             | enter      |
+      | feature regex               | enter      |
+      | contribution regex          | enter      |
+      | observed regex              | enter      |
+      | new branch type             | enter      |
+      | unknown branch type         | enter      |
+      | sync feature strategy       | enter      |
+      | sync perennial strategy     | enter      |
+      | sync prototype strategy     | enter      |
+      | sync upstream               | enter      |
+      | auto-sync                   | enter      |
+      | sync-tags                   | enter      |
+      | detached                    | enter      |
+      | stash                       | enter      |
+      | share-new-branches          | enter      |
+      | push-branches               | enter      |
+      | push-hook                   | enter      |
+      | ship-strategy               | enter      |
+      | ship-delete-tracking branch | enter      |
+      | order                       | enter      |
+      | config storage              | enter      |
 
+  @debug @this
   Scenario: result
     Then Git Town runs no commands
     And local Git setting "git-town.dev-remote" still doesn't exist
@@ -39,7 +60,7 @@ Feature: Ignore invalid configuration data
     And the configuration file is now:
       """
       # See https://www.git-town.com/configuration-file for details
-
+      
       [branches]
       main = "main"
       """
