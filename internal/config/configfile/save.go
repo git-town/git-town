@@ -40,7 +40,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 			result.WriteString(fmt.Sprintf("perennial-regex = %q\n", perennialRegex))
 		}
 		if hasDisplayTypes {
-			result.WriteString(fmt.Sprintf("display-types = %q\n", displayTypes))
+			result.WriteString(fmt.Sprintf("display-types = %q\n", displayTypes.Serialize()))
 		}
 	}
 

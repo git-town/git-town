@@ -41,6 +41,21 @@ func (self DisplayTypes) ShouldDisplayType(branchType BranchType) bool {
 	panic("unhandled DisplayType state: " + self.String())
 }
 
+func (self DisplayTypes) Serialize() string {
+	switch self.Quantifier {
+	case QuantifierAll:
+		return "all"
+	case QuantifierNo:
+		if len(self.BranchTypes) == 0 {
+			return "no"
+		}
+		return "no " + strings.Join(slice.Stringify(self.BranchTypes), " ")
+	case QuantifierOnly:
+		return strings.Join(slice.Stringify(self.BranchTypes), " ")
+	}
+	panic("unhandled DisplayType quantifier: " + self.Quantifier)
+}
+
 func (self DisplayTypes) String() string {
 	switch self.Quantifier {
 	case QuantifierAll:
