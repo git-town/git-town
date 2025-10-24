@@ -36,6 +36,12 @@ main
 
 ## Options
 
+#### `-d`<br>`--display-types`
+
+This flag allows customizing whether Git Town also displays the branch type in
+addition to the branch name when showing a list of branches. More info
+[here](../preferences/display-types.md#cli-flags).
+
 #### `-m`<br>`--merge`
 
 The `--merge` aka `-m` flag has the same effect as the
@@ -45,6 +51,11 @@ branch.
 
 This is useful when you have uncommitted changes in your current branch and want
 to move them down to the parent branch.
+
+#### `-o`<br>`--order`
+
+The `--order` flag allows customizing the order in which branches get displayed.
+More info [here](../preferences/order.md#cli-flag)
 
 #### `-v`<br>`--verbose`
 

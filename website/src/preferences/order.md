@@ -7,21 +7,21 @@ Allowed values:
 - **asc** sort branches in natural sort order, ascending (default)
 - **desc** sort branches in natural sort order, descending
 
-## via CLI flag
+## CLI flag
 
 You can override this setting per command using:
 
 - `--order=asc` to force ascending order
 - `--order=desc` to force descending order
 
-## in config file
+## config file
 
 ```toml
 [branches]
 order = "<asc|desc>"
 ```
 
-## in Git metadata
+## Git metadata
 
 To enable ordering branches in Git, run this command:
 
