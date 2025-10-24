@@ -370,41 +370,66 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 			})
 		}
 		// update commits
-		switch data.config.NormalConfig.SyncFeatureStrategy {
-		case configdomain.SyncFeatureStrategyMerge:
-		case configdomain.SyncFeatureStrategyCompress, configdomain.SyncFeatureStrategyRebase:
-			initialBranchInfo, hasInitialBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(data.initialBranch).Get()
-			hasRemoteBranch := hasInitialBranchInfo && initialBranchInfo.HasTrackingBranch()
-			if hasRemoteBranch {
-				prog.Add(
-					&opcodes.PullCurrentBranch{},
-				)
+		parent, hasParent := data.config.NormalConfig.Lineage.Parent(data.initialBranch).Get()
+		switch data.config.BranchType(data.initialBranch) {
+		case
+			configdomain.BranchTypeContributionBranch,
+			configdomain.BranchTypeMainBranch,
+			configdomain.BranchTypeObservedBranch,
+			configdomain.BranchTypeParkedBranch,
+			configdomain.BranchTypePerennialBranch:
+			// don't update the commits of these branch types
+		case
+			configdomain.BranchTypePrototypeBranch,
+			configdomain.BranchTypeFeatureBranch:
+			// TODO: only do this if the branch isn't a contribution, observed, parked, or perennial branch
+			switch data.config.NormalConfig.SyncFeatureStrategy {
+			case configdomain.SyncFeatureStrategyMerge:
+			case configdomain.SyncFeatureStrategyCompress, configdomain.SyncFeatureStrategyRebase:
+				initialBranchInfo, hasInitialBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(data.initialBranch).Get()
+				hasRemoteBranch := hasInitialBranchInfo && initialBranchInfo.HasTrackingBranch()
+				if hasRemoteBranch {
+					prog.Add(
+						&opcodes.PullCurrentBranch{},
+					)
+				}
+				// remove the old parent's changes from the moved branch
+				if hasParent {
+					prog.Add(
+						&opcodes.RebaseOnto{
+							BranchToRebaseOnto: newParent.BranchName(),
+							CommitsToRemove:    parent.Location(),
+						},
+					)
+				} else {
+					prog.Add(
+						&opcodes.RebaseBranch{
+							Branch: newParent.BranchName(),
+						},
+					)
+				}
+				if hasRemoteBranch {
+					prog.Add(
+						&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
+					)
+				}
 			}
-			// remove the old parent's changes from the moved branch
-			parent, hasParent := data.config.NormalConfig.Lineage.Parent(data.initialBranch).Get()
-			if hasParent {
-				prog.Add(
-					&opcodes.RebaseOnto{
-						BranchToRebaseOnto: newParent.BranchName(),
-						CommitsToRemove:    parent.Location(),
-					},
-				)
-			} else {
-				prog.Add(
-					&opcodes.RebaseBranch{
-						Branch: newParent.BranchName(),
-					},
-				)
-			}
-			if hasRemoteBranch {
-				prog.Add(
-					&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
-				)
-			}
-			// remove the old parent's changes from the descendents of the moved branch
-			if hasParent {
-				descendents := data.config.NormalConfig.Lineage.Descendants(data.initialBranch, data.config.NormalConfig.Order)
-				for _, descendent := range descendents {
+		}
+		// remove the old parent's changes from the descendents of the moved branch
+		if hasParent {
+			descendents := data.config.NormalConfig.Lineage.Descendants(data.initialBranch, data.config.NormalConfig.Order)
+			for _, descendent := range descendents {
+				switch data.config.BranchType(descendent) {
+				case
+					configdomain.BranchTypeContributionBranch,
+					configdomain.BranchTypeMainBranch,
+					configdomain.BranchTypeObservedBranch,
+					configdomain.BranchTypeParkedBranch,
+					configdomain.BranchTypePerennialBranch:
+					// don't update the commits on thes branch types
+				case
+					configdomain.BranchTypePrototypeBranch,
+					configdomain.BranchTypeFeatureBranch:
 					prog.Add(
 						&opcodes.CheckoutIfNeeded{
 							Branch: descendent,
@@ -429,12 +454,12 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 					}
 				}
 			}
-			prog.Add(
-				&opcodes.CheckoutIfNeeded{
-					Branch: data.initialBranch,
-				},
-			)
 		}
+		prog.Add(
+			&opcodes.CheckoutIfNeeded{
+				Branch: data.initialBranch,
+			},
+		)
 	}
 
 	// Update proposal lineage for both cases (removing parent or setting new parent)

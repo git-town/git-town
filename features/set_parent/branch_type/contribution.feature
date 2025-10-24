@@ -20,13 +20,8 @@ Feature: update the parent of a contribution branch
     And the current branch is "child"
     When I run "git-town set-parent new-parent"
 
-  @this
   Scenario: result
-    Then Git Town runs the commands
-      | BRANCH | COMMAND                                                            |
-      | child  | git pull                                                           |
-      |        | git -c rebase.updateRefs=false rebase --onto new-parent old-parent |
-      |        | git push --force-with-lease --force-if-includes                    |
+    Then Git Town runs no commands
     And this lineage exists now
       """
       main
@@ -37,9 +32,6 @@ Feature: update the parent of a contribution branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then Git Town runs the commands
-      | BRANCH | COMMAND                                                                |
-      | child  | git reset --hard {{ sha 'child commit' }}                              |
-      |        | git push --force-with-lease origin {{ sha 'old parent commit' }}:child |
+    Then Git Town runs no commands
     And the initial branches and lineage exist now
     And the initial commits exist now
