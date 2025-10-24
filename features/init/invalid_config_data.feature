@@ -1,18 +1,26 @@
 @messyoutput
-Feature: Accepting all default values in a brand-new Git repo leads to a working setup
+Feature: Ignore invalid configuration data
 
   Background:
-    Given a brand-new Git repo
+    Given a Git repo with origin
+    And the branches
+      | NAME       | TYPE   | LOCATIONS     |
+      | dev        | (none) | local, origin |
+      | production | (none) | local, origin |
+    And Git Town is not configured
+    And local Git setting "init.defaultbranch" is "main"
+    And local Git setting "git-town.sync-feature-strategy" is "--help"
     When I run "git-town init" and enter into the dialogs:
       | DIALOG             | KEYS       |
       | welcome            | enter      |
       | aliases            | enter      |
       | main branch        | enter      |
-      | perennial branches |            |
+      | perennial branches | enter      |
       | origin hostname    | enter      |
       | forge type         | enter      |
       | enter all          | enter      |
       | config storage     | down enter |
+  # @this
 
   Scenario: result
     Then Git Town runs no commands
@@ -37,9 +45,9 @@ Feature: Accepting all default values in a brand-new Git repo leads to a working
     And the configuration file is now:
       """
       # See https://www.git-town.com/configuration-file for details
-
+      
       [branches]
-      main = "initial"
+      main = "main"
       """
     And the main branch is still not set
     And there are still no perennial branches
@@ -67,6 +75,7 @@ Feature: Accepting all default values in a brand-new Git repo leads to a working
     And local Git setting "git-town.feature-regex" now doesn't exist
     And local Git setting "git-town.contribution-regex" now doesn't exist
     And local Git setting "git-town.observed-regex" now doesn't exist
+    And local Git setting "git-town.stash" still doesn't exist
     And local Git setting "git-town.sync-feature-strategy" still doesn't exist
     And local Git setting "git-town.sync-perennial-strategy" still doesn't exist
     And local Git setting "git-town.sync-upstream" still doesn't exist
@@ -74,6 +83,5 @@ Feature: Accepting all default values in a brand-new Git repo leads to a working
     And local Git setting "git-town.perennial-regex" still doesn't exist
     And local Git setting "git-town.share-new-branches" still doesn't exist
     And local Git setting "git-town.push-hook" still doesn't exist
-    And local Git setting "git-town.stash" still doesn't exist
     And local Git setting "git-town.ship-strategy" still doesn't exist
     And local Git setting "git-town.ship-delete-tracking-branch" still doesn't exist
