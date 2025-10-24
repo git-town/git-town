@@ -29,8 +29,9 @@ Feature: update the parent of a feature branch
     And this lineage exists now
       """
       main
-        parent
+        new-parent
           child
+        old-parent
       """
 
   Scenario: undo
