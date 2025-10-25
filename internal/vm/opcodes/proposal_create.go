@@ -57,11 +57,13 @@ func (self *ProposalCreate) Run(args shared.RunArgs) error {
 			if err != nil {
 				return err
 			}
-			args.PrependOpcodes(&ProposalUpdateLineage{
-				Current:         self.Branch,
-				CurrentProposal: proposalOpt,
-				LineageTree:     MutableSome(lineageTree),
-			})
+			if proposalOpt.IsSome() {
+				args.PrependOpcodes(&ProposalUpdateLineage{
+					Current:         self.Branch,
+					CurrentProposal: proposalOpt,
+					LineageTree:     MutableSome(lineageTree),
+				})
+			}
 		}
 	}
 	return nil
