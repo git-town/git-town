@@ -60,6 +60,7 @@
 - [Preferences](preferences.md)
   - [Branches](preferences/branches.md)
     - [Contribution regex](preferences/contribution-regex.md)
+    - [Display types](preferences/display-types.md)
     - [Feature regex](preferences/feature-regex.md)
     - [Main branch](preferences/main-branch.md)
     - [Observed regex](preferences/observed-regex.md)

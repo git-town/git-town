@@ -22,6 +22,7 @@ Feature: show the configuration
     And Git setting "git-town.auto-sync" is "false"
     And Git setting "git-town.contribution-regex" is "^git-contribution-regex"
     And Git setting "git-town.detached" is "true"
+    And Git setting "git-town.display-types" is "no"
     And Git setting "git-town.observed-regex" is "^git-observed-regex"
     And Git setting "git-town.perennial-regex" is "^git-perennial-"
     And Git setting "git-town.feature-regex" is "git-feature-.*"
@@ -48,6 +49,7 @@ Feature: show the configuration
       observed-regex = "^config-observed-regex"
       unknown-type = "contribution"
       order = "asc"
+      display-types = "all"
 
       [create]
       share-new-branches = "push"
@@ -87,6 +89,7 @@ Feature: show the configuration
         prototype branches: prototype-1, prototype-2
         unknown branch type: observed
         order: desc
+        display types: no branch types
 
       Configuration:
         offline: no

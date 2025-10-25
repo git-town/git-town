@@ -97,6 +97,7 @@ func hackCmd() *cobra.Command {
 				AutoResolve:  autoResolve,
 				AutoSync:     sync,
 				Detached:     detached,
+				DisplayTypes: None[configdomain.DisplayTypes](),
 				DryRun:       dryRun,
 				Order:        None[configdomain.Order](),
 				PushBranches: None[configdomain.PushBranches](),
@@ -347,7 +348,7 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data appendF
 		newParent, exit, err := dialog.SwitchBranch(dialog.SwitchBranchArgs{
 			CurrentBranch:      None[gitdomain.LocalBranchName](),
 			Cursor:             1, // select the "main branch" entry, below the "make perennial" entry
-			DisplayBranchTypes: false,
+			DisplayBranchTypes: validatedConfig.NormalConfig.DisplayTypes,
 			EntryData: dialog.EntryData{
 				EntriesAll:      entriesAll,
 				EntriesLocal:    entriesLocal,

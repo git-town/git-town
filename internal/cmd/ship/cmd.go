@@ -73,6 +73,7 @@ func Cmd() *cobra.Command {
 				AutoResolve:  None[configdomain.AutoResolve](),
 				AutoSync:     None[configdomain.AutoSync](),
 				Detached:     None[configdomain.Detached](),
+				DisplayTypes: None[configdomain.DisplayTypes](),
 				DryRun:       dryRun,
 				Order:        None[configdomain.Order](),
 				PushBranches: None[configdomain.PushBranches](),

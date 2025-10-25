@@ -11,6 +11,7 @@ type NewArgs struct {
 	AutoResolve  Option[configdomain.AutoResolve]
 	AutoSync     Option[configdomain.AutoSync]
 	Detached     Option[configdomain.Detached]
+	DisplayTypes Option[configdomain.DisplayTypes]
 	DryRun       Option[configdomain.DryRun]
 	Order        Option[configdomain.Order]
 	PushBranches Option[configdomain.PushBranches]
@@ -30,6 +31,7 @@ func New(args NewArgs) configdomain.PartialConfig {
 		ContributionRegex:        None[configdomain.ContributionRegex](),
 		Detached:                 args.Detached,
 		DevRemote:                None[gitdomain.Remote](),
+		DisplayTypes:             args.DisplayTypes,
 		DryRun:                   args.DryRun,
 		FeatureRegex:             None[configdomain.FeatureRegex](),
 		ForgeType:                None[forgedomain.ForgeType](),

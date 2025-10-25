@@ -19,6 +19,7 @@ const (
 	contributionRegex        = "GIT_TOWN_CONTRIBUTION_REGEX"
 	detached                 = "GIT_TOWN_DETACHED"
 	devRemote                = "GIT_TOWN_DEV_REMOTE"
+	displayTypes             = "GIT_TOWN_DISPLAY_TYPES"
 	dryRun                   = "GIT_TOWN_DRY_RUN"
 	featureRegex             = "GIT_TOWN_FEATURE_REGEX"
 	forgeType                = "GIT_TOWN_FORGE_TYPE"
@@ -60,6 +61,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	autoSync, errAutoSync := gohacks.ParseBoolOpt[configdomain.AutoSync](env.Get(autoSync), autoSync)
 	contributionRegex, errContribRegex := configdomain.ParseContributionRegex(env.Get(contributionRegex))
 	detached, errDetached := gohacks.ParseBoolOpt[configdomain.Detached](env.Get(detached), detached)
+	displayTypesOpt, errDisplayTypes := configdomain.ParseDisplayTypes(env.Get(displayTypes), displayTypes)
 	dryRun, errDryRun := gohacks.ParseBoolOpt[configdomain.DryRun](env.Get(dryRun), dryRun)
 	featureRegex, errFeatureRegex := configdomain.ParseFeatureRegex(env.Get(featureRegex))
 	forgeType, errForgeType := forgedomain.ParseForgeType(env.Get(forgeType))
@@ -95,6 +97,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errAutoSync,
 		errContribRegex,
 		errDetached,
+		errDisplayTypes,
 		errDryRun,
 		errFeatureRegex,
 		errForgeType,
@@ -131,6 +134,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		ContributionRegex:        contributionRegex,
 		Detached:                 detached,
 		DevRemote:                gitdomain.NewRemote(env.Get(devRemote)),
+		DisplayTypes:             displayTypesOpt,
 		DryRun:                   dryRun,
 		FeatureRegex:             featureRegex,
 		ForgeType:                forgeType,

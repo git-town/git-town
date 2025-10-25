@@ -113,6 +113,7 @@ func prependCommand() *cobra.Command {
 				AutoResolve:  autoResolve,
 				AutoSync:     sync,
 				Detached:     detached,
+				DisplayTypes: None[configdomain.DisplayTypes](),
 				DryRun:       dryRun,
 				Order:        None[configdomain.Order](),
 				PushBranches: push,

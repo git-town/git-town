@@ -27,6 +27,7 @@ Feature: display information from config file
       observed-regex = "^dependabot/"
       unknown-type = "observed"
       order = "desc"
+      display-types = "all"
 
       [create]
       share-new-branches = "push"
@@ -68,6 +69,7 @@ Feature: display information from config file
         prototype branches: prototype-1, prototype-2
         unknown branch type: observed
         order: desc
+        display types: all branch types
 
       Configuration:
         offline: no

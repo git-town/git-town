@@ -21,6 +21,7 @@ type Data struct {
 type Branches struct {
 	ContributionRegex *string  `toml:"contribution-regex"`
 	DefaultType       *string  `toml:"default-type"`
+	DisplayTypes      *string  `toml:"display-types"`
 	FeatureRegex      *string  `toml:"feature-regex"`
 	Main              *string  `toml:"main"`
 	ObservedRegex     *string  `toml:"observed-regex"`

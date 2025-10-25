@@ -38,6 +38,7 @@ type NormalConfig struct {
 	ContributionRegex        Option[configdomain.ContributionRegex]
 	Detached                 configdomain.Detached
 	DevRemote                gitdomain.Remote
+	DisplayTypes             configdomain.DisplayTypes
 	DryRun                   configdomain.DryRun // whether to only print the Git commands but not execute them
 	FeatureRegex             Option[configdomain.FeatureRegex]
 	ForgeType                Option[forgedomain.ForgeType] // None = auto-detect
@@ -103,6 +104,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		ContributionRegex:        other.ContributionRegex.Or(self.ContributionRegex),
 		Detached:                 other.Detached.GetOr(self.Detached),
 		DevRemote:                other.DevRemote.GetOr(self.DevRemote),
+		DisplayTypes:             other.DisplayTypes.GetOr(self.DisplayTypes),
 		DryRun:                   other.DryRun.GetOr(self.DryRun),
 		FeatureRegex:             other.FeatureRegex.Or(self.FeatureRegex),
 		ForgeType:                other.ForgeType.Or(self.ForgeType),
@@ -242,15 +244,19 @@ func (self *NormalConfig) SetPerennialBranches(runner subshelldomain.Runner, bra
 
 func DefaultNormalConfig() NormalConfig {
 	return NormalConfig{
-		Aliases:                  configdomain.Aliases{},
-		AutoResolve:              true,
-		AutoSync:                 true,
-		BitbucketAppPassword:     None[forgedomain.BitbucketAppPassword](),
-		BitbucketUsername:        None[forgedomain.BitbucketUsername](),
-		BranchTypeOverrides:      configdomain.BranchTypeOverrides{},
-		ContributionRegex:        None[configdomain.ContributionRegex](),
-		Detached:                 false,
-		DevRemote:                gitdomain.RemoteOrigin,
+		Aliases:              configdomain.Aliases{},
+		AutoResolve:          true,
+		AutoSync:             true,
+		BitbucketAppPassword: None[forgedomain.BitbucketAppPassword](),
+		BitbucketUsername:    None[forgedomain.BitbucketUsername](),
+		BranchTypeOverrides:  configdomain.BranchTypeOverrides{},
+		ContributionRegex:    None[configdomain.ContributionRegex](),
+		Detached:             false,
+		DevRemote:            gitdomain.RemoteOrigin,
+		DisplayTypes: configdomain.DisplayTypes{
+			Quantifier:  configdomain.QuantifierNo,
+			BranchTypes: []configdomain.BranchType{configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeMainBranch},
+		},
 		DryRun:                   false,
 		FeatureRegex:             None[configdomain.FeatureRegex](),
 		ForgeType:                None[forgedomain.ForgeType](),
@@ -299,6 +305,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		ContributionRegex:        partial.ContributionRegex,
 		Detached:                 partial.Detached.GetOr(defaults.Detached),
 		DevRemote:                partial.DevRemote.GetOr(defaults.DevRemote),
+		DisplayTypes:             partial.DisplayTypes.GetOr(defaults.DisplayTypes),
 		DryRun:                   partial.DryRun.GetOr(defaults.DryRun),
 		FeatureRegex:             partial.FeatureRegex,
 		ForgeType:                partial.ForgeType,

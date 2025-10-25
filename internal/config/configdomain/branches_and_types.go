@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks/mapstools"
 	"github.com/git-town/git-town/v22/internal/gohacks/slice"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 type BranchesAndTypes map[gitdomain.LocalBranchName]BranchType
@@ -37,6 +38,13 @@ func (self *BranchesAndTypes) BranchesOfTypes(branchTypes ...BranchType) gitdoma
 		}
 	}
 	return result
+}
+
+func (self *BranchesAndTypes) Get(branch gitdomain.LocalBranchName) Option[BranchType] {
+	if result, hasResult := (*self)[branch]; hasResult {
+		return Some(result)
+	}
+	return None[BranchType]()
 }
 
 func (self *BranchesAndTypes) Keys() gitdomain.LocalBranchNames {
