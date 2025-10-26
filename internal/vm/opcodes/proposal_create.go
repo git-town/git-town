@@ -51,6 +51,7 @@ func (self *ProposalCreate) Run(args shared.RunArgs) error {
 				Order:                    args.Config.Value.NormalConfig.Order,
 			})
 			if err != nil {
+				// TODO: make sure error message return from failing to construct lineage is consistent across all invocations
 				fmt.Printf("failed to construct proposal stack lineage: %s\n", err.Error())
 			}
 			proposalOpt, err := proposalFinder.FindProposal(self.Branch, parentBranch)
