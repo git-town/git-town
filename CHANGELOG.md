@@ -1528,7 +1528,7 @@ Version 7.4.0 sports a vastly overhauled internal architecture that provides mor
   - improved linux compatibility by trying `xdg-open` before `open`
 - improved error messages when run outside a git repository
 - improved setup wizard for initial configuration in a git repository
-- added [contribution guide](/docs/CONTRIBUTING.md)
+- added [contribution guide](CONTRIBUTING.md)
 - added tutorial
 
 ## 0.5.0 (2015-01-08)

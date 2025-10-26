@@ -9,7 +9,7 @@ Please [open an issue](https://github.com/git-town/git-town/issues/new).
 
 ### I want to fix a bug or add a feature
 
-- see our [developer guidelines](DEVELOPMENT.md) to get started
+- see our [developer guidelines](docs/DEVELOPMENT.md) to get started
 - if you plan a larger change or need guidance, connect with the maintainers by
   [opening an issue](https://github.com/git-town/git-town/issues/new)
 - otherwise, hack away and
