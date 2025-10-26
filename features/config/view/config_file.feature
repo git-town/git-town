@@ -94,6 +94,9 @@ Feature: display information from config file
         GitLab connector type: (not set)
         GitLab token: (not set)
 
+      Proposals:
+        show lineage: none
+
       Ship:
         delete tracking branch: yes
         ship strategy: squash-merge

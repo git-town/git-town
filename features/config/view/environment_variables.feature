@@ -88,6 +88,9 @@ Feature: display configuration defined in environment variables
         GitLab connector type: glab
         GitLab token: gitlab-token
 
+      Proposals:
+        show lineage: none
+
       Ship:
         delete tracking branch: no
         ship strategy: fast-forward

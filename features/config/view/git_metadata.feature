@@ -28,6 +28,7 @@ Feature: display configuration from Git metadata
     And Git setting "git-town.auto-resolve" is "false"
     And Git setting "git-town.detached" is "true"
     And Git setting "git-town.stash" is "false"
+    And Git setting "git-town.proposals-show-lineage" is "cli"
     When I run "git-town config"
     Then Git Town prints:
       """
@@ -68,6 +69,9 @@ Feature: display configuration from Git metadata
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
+
+      Proposals:
+        show lineage: cli
 
       Ship:
         delete tracking branch: yes
@@ -135,6 +139,9 @@ Feature: display configuration from Git metadata
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
+
+      Proposals:
+        show lineage: none
 
       Ship:
         delete tracking branch: yes
