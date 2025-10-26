@@ -37,6 +37,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.perennial-branches" is "qa"
     And local Git setting "git-town.perennial-regex" is "qa.*"
     And local Git setting "git-town.push-branches" is "false"
+    And local Git setting "git-town.proposals-show-lineage" is "none"
     And local Git setting "git-town.push-hook" is "false"
     And local Git setting "git-town.share-new-branches" is "push"
     And local Git setting "git-town.ship-delete-tracking-branch" is "false"
@@ -77,6 +78,7 @@ Feature: remove existing configuration in Git metadata
       | ship strategy               | down enter                                                                  |                     |
       | ship delete tracking branch | down enter                                                                  | disable             |
       | order                       | up enter                                                                    |                     |
+      | proposals show lineage      | down enter                                                                  |                     |
       | config storage              | enter                                                                       | git metadata        |
 
   Scenario: result
@@ -109,6 +111,7 @@ Feature: remove existing configuration in Git metadata
       | git config --unset git-town.contribution-regex       |
       | git config --unset git-town.observed-regex           |
       | git config git-town.order asc                        |
+      | git config git-town.proposals-show-lineage cli       |
       | git config git-town.push-branches true               |
       | git config git-town.push-hook true                   |
       | git config git-town.share-new-branches no            |
@@ -135,6 +138,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.dev-remote" is now "fork"
     And local Git setting "git-town.new-branch-type" is now "feature"
     And local Git setting "git-town.order" is now "asc"
+    And local Git setting "git-town.proposals-show-lineage" is now "cli"
     And local Git setting "git-town.push-branches" is now "true"
     And local Git setting "git-town.push-hook" is now "true"
     And local Git setting "git-town.share-new-branches" is now "no"
@@ -180,6 +184,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.order" is now "desc"
     And local Git setting "git-town.perennial-regex" is now "qa.*"
     And local Git setting "git-town.push-branches" is now "false"
+    And local Git setting "git-town.proposals-show-lineage" is now "none"
     And local Git setting "git-town.push-hook" is now "false"
     And local Git setting "git-town.share-new-branches" is now "push"
     And local Git setting "git-town.ship-delete-tracking-branch" is now "false"
