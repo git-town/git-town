@@ -352,6 +352,7 @@ func mergeProgram(repo execute.OpenRepoResult, data mergeData) program.Program {
 					CurrentBranch:            data.initialBranch,
 					Lineage:                  data.config.NormalConfig.Lineage,
 					MainAndPerennialBranches: data.config.MainAndPerennials(),
+					Order:                    data.config.NormalConfig.Order,
 				},
 				ProposalStackLineageTree:             None[*forge.ProposalStackLineageTree](),
 				SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(data.initialBranch.String()),
