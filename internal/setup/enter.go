@@ -267,6 +267,7 @@ EnterForgeData:
 		ForgeType:                enteredForgeType,
 		GitHubConnectorType:      githubConnectorTypeOpt,
 		GitHubToken:              githubToken,
+		GitHubUsername:           None[forgedomain.GitHubUsername](), // the setup assistant doesn't ask for this
 		GitLabConnectorType:      gitlabConnectorTypeOpt,
 		GitLabToken:              gitlabToken,
 		GitUserEmail:             None[gitdomain.GitUserEmail](),

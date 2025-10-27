@@ -274,6 +274,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		ForgeType:                forgeType,
 		GitHubConnectorType:      githubConnectorType,
 		GitHubToken:              None[forgedomain.GitHubToken](),
+		GitHubUsername:           None[forgedomain.GitHubUsername](), // GitHub username is not stored in config file
 		GitLabConnectorType:      gitlabConnectorType,
 		GitLabToken:              None[forgedomain.GitLabToken](),
 		GitUserEmail:             None[gitdomain.GitUserEmail](),

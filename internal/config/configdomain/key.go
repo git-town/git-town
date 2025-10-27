@@ -89,6 +89,7 @@ const (
 	KeyGiteaToken                          = Key("git-town.gitea-token")
 	KeyGitHubConnectorType                 = Key("git-town.github-connector")
 	KeyGitHubToken                         = Key(pkg.KeyGitHubToken)
+	KeyGitHubUsername                      = Key("git-town.github-username")
 	KeyGitLabConnectorType                 = Key("git-town.gitlab-connector")
 	KeyGitLabToken                         = Key("git-town.gitlab-token")
 	KeyHostingOriginHostname               = Key("git-town.hosting-origin-hostname")
@@ -153,6 +154,7 @@ var keys = []Key{
 	KeyGiteaToken,
 	KeyGitHubConnectorType,
 	KeyGitHubToken,
+	KeyGitHubUsername,
 	KeyGitLabConnectorType,
 	KeyGitLabToken,
 	KeyGitUserEmail,

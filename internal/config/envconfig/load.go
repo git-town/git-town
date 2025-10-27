@@ -140,6 +140,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		ForgeType:                forgeType,
 		GitHubConnectorType:      githubConnectorType,
 		GitHubToken:              forgedomain.ParseGitHubToken(env.Get(githubToken, "GITHUB_TOKEN", "GITHUB_AUTH_TOKEN")),
+		GitHubUsername:           None[forgedomain.GitHubUsername](), // GitHub username is not loaded from env vars
 		GitLabConnectorType:      gitlabConnectorType,
 		GitLabToken:              forgedomain.ParseGitLabToken(env.Get(gitlabToken)),
 		GitUserEmail:             gitUserEmail,

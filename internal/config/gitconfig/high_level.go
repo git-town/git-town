@@ -86,6 +86,10 @@ func RemoveGitHubToken(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGitHubToken)
 }
 
+func RemoveGitHubUsername(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGitHubUsername)
+}
+
 func RemoveGitLabConnectorType(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGitLabConnectorType)
 }
@@ -233,6 +237,10 @@ func SetGitHubConnectorType(runner subshelldomain.Runner, value forgedomain.GitH
 
 func SetGitHubToken(runner subshelldomain.Runner, value forgedomain.GitHubToken, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyGitHubToken, value.String())
+}
+
+func SetGitHubUsername(runner subshelldomain.Runner, value forgedomain.GitHubUsername, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyGitHubUsername, value.String())
 }
 
 func SetGitLabConnectorType(runner subshelldomain.Runner, value forgedomain.GitLabConnectorType, scope configdomain.ConfigScope) error {

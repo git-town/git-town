@@ -45,6 +45,7 @@ type NormalConfig struct {
 	ForgejoToken             Option[forgedomain.ForgejoToken]
 	GitHubConnectorType      Option[forgedomain.GitHubConnectorType]
 	GitHubToken              Option[forgedomain.GitHubToken]
+	GitHubUsername           Option[forgedomain.GitHubUsername]
 	GitLabConnectorType      Option[forgedomain.GitLabConnectorType]
 	GitLabToken              Option[forgedomain.GitLabToken]
 	GitUserEmail             Option[gitdomain.GitUserEmail]
@@ -111,6 +112,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		ForgejoToken:             other.ForgejoToken.Or(self.ForgejoToken),
 		GitHubConnectorType:      other.GitHubConnectorType.Or(self.GitHubConnectorType),
 		GitHubToken:              other.GitHubToken.Or(self.GitHubToken),
+		GitHubUsername:           other.GitHubUsername.Or(self.GitHubUsername),
 		GitLabConnectorType:      other.GitLabConnectorType.Or(self.GitLabConnectorType),
 		GitLabToken:              other.GitLabToken.Or(self.GitLabToken),
 		GitUserEmail:             other.GitUserEmail.Or(self.GitUserEmail),
@@ -263,6 +265,7 @@ func DefaultNormalConfig() NormalConfig {
 		ForgejoToken:             None[forgedomain.ForgejoToken](),
 		GitHubConnectorType:      None[forgedomain.GitHubConnectorType](),
 		GitHubToken:              None[forgedomain.GitHubToken](),
+		GitHubUsername:           None[forgedomain.GitHubUsername](),
 		GitLabConnectorType:      None[forgedomain.GitLabConnectorType](),
 		GitLabToken:              None[forgedomain.GitLabToken](),
 		GitUserEmail:             None[gitdomain.GitUserEmail](),
@@ -312,6 +315,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		ForgejoToken:             partial.ForgejoToken,
 		GitHubConnectorType:      partial.GitHubConnectorType,
 		GitHubToken:              partial.GitHubToken,
+		GitHubUsername:           partial.GitHubUsername,
 		GitLabConnectorType:      partial.GitLabConnectorType,
 		GitLabToken:              partial.GitLabToken,
 		GitUserEmail:             partial.GitUserEmail,
