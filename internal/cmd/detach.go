@@ -447,6 +447,7 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 							CurrentBranch:            data.initialBranch,
 							Lineage:                  data.config.NormalConfig.Lineage,
 							MainAndPerennialBranches: data.config.MainAndPerennials(),
+							Order:                    data.config.NormalConfig.Order,
 						},
 					},
 				)
