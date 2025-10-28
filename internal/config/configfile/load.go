@@ -210,11 +210,11 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	}
 	if data.SyncStrategy != nil {
 		if data.SyncStrategy.FeatureBranches != nil {
-			syncFeatureStrategy, err = configdomain.ParseSyncFeatureStrategy(*data.SyncStrategy.FeatureBranches)
+			syncFeatureStrategy, err = configdomain.ParseSyncFeatureStrategy(*data.SyncStrategy.FeatureBranches, "config file")
 			ec.Check(err)
 		}
 		if data.SyncStrategy.PerennialBranches != nil {
-			syncPerennialStrategy, err = configdomain.ParseSyncPerennialStrategy(*data.SyncStrategy.PerennialBranches)
+			syncPerennialStrategy, err = configdomain.ParseSyncPerennialStrategy(*data.SyncStrategy.PerennialBranches, "config file")
 			ec.Check(err)
 		}
 		if data.SyncStrategy.PrototypeBranches != nil {
@@ -233,11 +233,11 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			detached = Some(configdomain.Detached(*data.Sync.Detached))
 		}
 		if data.Sync.FeatureStrategy != nil {
-			syncFeatureStrategy, err = configdomain.ParseSyncFeatureStrategy(*data.Sync.FeatureStrategy)
+			syncFeatureStrategy, err = configdomain.ParseSyncFeatureStrategy(*data.Sync.FeatureStrategy, "config file")
 			ec.Check(err)
 		}
 		if data.Sync.PerennialStrategy != nil {
-			syncPerennialStrategy, err = configdomain.ParseSyncPerennialStrategy(*data.Sync.PerennialStrategy)
+			syncPerennialStrategy, err = configdomain.ParseSyncPerennialStrategy(*data.Sync.PerennialStrategy, "config file")
 			ec.Check(err)
 		}
 		if data.Sync.PrototypeStrategy != nil {

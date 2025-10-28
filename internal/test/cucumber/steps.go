@@ -1217,7 +1217,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the coworker sets the "sync-feature-strategy" to "(merge|rebase)"$`, func(ctx context.Context, value string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
-		syncFeatureStrategy := asserts.NoError1(configdomain.ParseSyncFeatureStrategy(value))
+		syncFeatureStrategy := asserts.NoError1(configdomain.ParseSyncFeatureStrategy(value, "test"))
 		_ = gitconfig.SetSyncFeatureStrategy(coworkerRepo.TestRunner, syncFeatureStrategy.GetOrPanic(), configdomain.ConfigScopeLocal)
 	})
 
