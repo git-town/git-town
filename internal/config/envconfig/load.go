@@ -57,6 +57,7 @@ const (
 )
 
 func Load(env EnvVars) (configdomain.PartialConfig, error) {
+	// TODO: reduce redundancy using a function similar to `loadField` in NewPartialConfigFromSnapshot
 	autoResolve, errAutoResolve := gohacks.ParseBoolOpt[configdomain.AutoResolve](env.Get(autoResolve), autoResolve)
 	autoSync, errAutoSync := gohacks.ParseBoolOpt[configdomain.AutoSync](env.Get(autoSync), autoSync)
 	contributionRegex, errContribRegex := configdomain.ParseContributionRegex(env.Get(contributionRegex), contributionRegex)
