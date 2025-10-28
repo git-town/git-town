@@ -56,10 +56,6 @@ const (
 	verbose                  = "GIT_TOWN_VERBOSE"
 )
 
-func load[T any](env EnvVars, varName string, parser func(string, string) (T, error)) (T, error) {
-	return parser(env.Get(varName), varName)
-}
-
 func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	autoResolve, errAutoResolve := load(env, autoResolve, gohacks.ParseBoolOpt[configdomain.AutoResolve])
 	autoSync, errAutoSync := load(env, autoSync, gohacks.ParseBoolOpt[configdomain.AutoSync])
@@ -173,4 +169,8 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		UnknownBranchType:        configdomain.UnknownBranchTypeOpt(unknownBranchType),
 		Verbose:                  verbose,
 	}, err
+}
+
+func load[T any](env EnvVars, varName string, parser func(string, string) (T, error)) (T, error) {
+	return parser(env.Get(varName), varName)
 }
