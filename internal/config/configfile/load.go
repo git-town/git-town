@@ -163,7 +163,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			finalMessages.Add(messages.PushNewBranchesDeprecation)
 		}
 		if data.Create.ShareNewBranches != nil {
-			shareNewBranches, err = configdomain.ParseShareNewBranches(*data.Create.ShareNewBranches, configdomain.KeyShareNewBranches)
+			shareNewBranches, err = configdomain.ParseShareNewBranches(*data.Create.ShareNewBranches, configdomain.KeyShareNewBranches.String())
 			ec.Check(err)
 		}
 		if data.Create.Stash != nil {

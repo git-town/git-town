@@ -28,7 +28,7 @@ func (self ShareNewBranches) String() string {
 	return string(self)
 }
 
-func ParseShareNewBranches(value string, source Key) (Option[ShareNewBranches], error) {
+func ParseShareNewBranches(value string, source string) (Option[ShareNewBranches], error) {
 	if value == "" {
 		return None[ShareNewBranches](), nil
 	}
