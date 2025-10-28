@@ -281,7 +281,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(branchName)
-		wantOpt := asserts.NoError1(configdomain.ParseBranchType(branchTypeName))
+		wantOpt := asserts.NoError1(configdomain.ParseBranchType(branchTypeName, "test"))
 		want := wantOpt.GetOrPanic()
 		have := devRepo.Config.BranchType(branch)
 		if have != want {

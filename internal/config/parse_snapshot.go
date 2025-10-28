@@ -38,7 +38,7 @@ func NewBranchTypeOverridesInSnapshot(snapshot configdomain.SingleSnapshot, runn
 			_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, key.Key)
 			continue
 		}
-		branchTypeOpt, err := configdomain.ParseBranchType(value)
+		branchTypeOpt, err := configdomain.ParseBranchType(value, key.String())
 		if err != nil {
 			return result, err
 		}
@@ -92,9 +92,9 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	githubConnectorType, errGitHubConnectorType := loadField(snapshot, configdomain.KeyGitHubConnectorType, forgedomain.ParseGitHubConnectorType)
 	gitlabConnectorType, errGitLabConnectorType := loadField(snapshot, configdomain.KeyGitLabConnectorType, forgedomain.ParseGitLabConnectorType)
 	lineage, errLineage := NewLineageFromSnapshot(snapshot, updateOutdated, runner)
-	newBranchTypeValue, errNewBranchType := configdomain.ParseBranchType(snapshot[configdomain.KeyNewBranchType])
+	newBranchTypeValue, errNewBranchType := loadField(snapshot, configdomain.KeyNewBranchType, configdomain.ParseBranchType)
 	newBranchType := configdomain.NewBranchTypeOpt(newBranchTypeValue)
-	observedRegex, errObservedRegex := configdomain.ParseObservedRegex(snapshot[configdomain.KeyObservedRegex])
+	observedRegex, errObservedRegex := loadField(snapshot, configdomain.KeyObservedRegex, configdomain.ParseObservedRegex)
 	order, errOrder := configdomain.ParseOrder(snapshot[configdomain.KeyOrder], configdomain.KeyOrder)
 	offline, errOffline := gohacks.ParseBoolOpt[configdomain.Offline](snapshot[configdomain.KeyOffline], configdomain.KeyOffline.String())
 	perennialRegex, errPerennialRegex := configdomain.ParsePerennialRegex(snapshot[configdomain.KeyPerennialRegex])
@@ -110,7 +110,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	syncPrototypeStrategy, errSyncPrototypeStrategy := configdomain.ParseSyncPrototypeStrategy(snapshot[configdomain.KeySyncPrototypeStrategy])
 	syncTags, errSyncTags := gohacks.ParseBoolOpt[configdomain.SyncTags](snapshot[configdomain.KeySyncTags], configdomain.KeySyncTags.String())
 	syncUpstream, errSyncUpstream := gohacks.ParseBoolOpt[configdomain.SyncUpstream](snapshot[configdomain.KeySyncUpstream], configdomain.KeySyncUpstream.String())
-	unknownBranchTypeValue, errUnknownBranchType := configdomain.ParseBranchType(snapshot[configdomain.KeyUnknownBranchType])
+	unknownBranchTypeValue, errUnknownBranchType := loadField(snapshot, configdomain.KeyUnknownBranchType, configdomain.ParseBranchType)
 	unknownBranchType := configdomain.UnknownBranchTypeOpt(unknownBranchTypeValue)
 	err := cmp.Or(
 		errAutoResolve,

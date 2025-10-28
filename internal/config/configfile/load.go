@@ -113,7 +113,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			ec.Check(err)
 		}
 		if data.Branches.DefaultType != nil {
-			branchType, err := configdomain.ParseBranchType(*data.Branches.DefaultType)
+			branchType, err := configdomain.ParseBranchType(*data.Branches.DefaultType, "config file")
 			ec.Check(err)
 			unknownBranchType = configdomain.UnknownBranchTypeOpt(branchType)
 		}
@@ -147,14 +147,14 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			ec.Check(err)
 		}
 		if data.Branches.UnknownType != nil {
-			branchType, err := configdomain.ParseBranchType(*data.Branches.UnknownType)
+			branchType, err := configdomain.ParseBranchType(*data.Branches.UnknownType, "config file")
 			ec.Check(err)
 			unknownBranchType = configdomain.UnknownBranchTypeOpt(branchType)
 		}
 	}
 	if data.Create != nil {
 		if data.Create.NewBranchType != nil {
-			branchType, err := configdomain.ParseBranchType(*data.Create.NewBranchType)
+			branchType, err := configdomain.ParseBranchType(*data.Create.NewBranchType, "config file")
 			ec.Check(err)
 			newBranchType = configdomain.NewBranchTypeOpt(branchType)
 		}
@@ -172,22 +172,22 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	}
 	if data.Hosting != nil {
 		if data.Hosting.Platform != nil {
-			forgeType, err = forgedomain.ParseForgeType(*data.Hosting.Platform)
+			forgeType, err = forgedomain.ParseForgeType(*data.Hosting.Platform, "config file")
 			ec.Check(err)
 		}
 		if data.Hosting.DevRemote != nil {
 			devRemote = gitdomain.NewRemote(*data.Hosting.DevRemote)
 		}
 		if data.Hosting.ForgeType != nil {
-			forgeType, err = forgedomain.ParseForgeType(*data.Hosting.ForgeType)
+			forgeType, err = forgedomain.ParseForgeType(*data.Hosting.ForgeType, "config file")
 			ec.Check(err)
 		}
 		if data.Hosting.GitHubConnectorType != nil {
-			githubConnectorType, err = forgedomain.ParseGitHubConnectorType(*data.Hosting.GitHubConnectorType)
+			githubConnectorType, err = forgedomain.ParseGitHubConnectorType(*data.Hosting.GitHubConnectorType, "config file")
 			ec.Check(err)
 		}
 		if data.Hosting.GitLabConnectorType != nil {
-			gitlabConnectorType, err = forgedomain.ParseGitLabConnectorType(*data.Hosting.GitLabConnectorType)
+			gitlabConnectorType, err = forgedomain.ParseGitLabConnectorType(*data.Hosting.GitLabConnectorType, "config file")
 			ec.Check(err)
 		}
 		if data.Hosting.OriginHostname != nil {

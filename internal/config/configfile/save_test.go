@@ -52,7 +52,7 @@ func TestSave(t *testing.T) {
 					BranchTypes: []configdomain.BranchType{configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch},
 					Quantifier:  configdomain.QuantifierNo,
 				}),
-				ForgeType:                asserts.NoError1(forgedomain.ParseForgeType("github")),
+				ForgeType:                asserts.NoError1(forgedomain.ParseForgeType("github", "test")),
 				HostingOriginHostname:    configdomain.ParseHostingOriginHostname("forge"),
 				MainBranch:               Some(gitdomain.NewLocalBranchName("main")),
 				NewBranchType:            Some(configdomain.NewBranchType(configdomain.BranchTypePrototypeBranch)),

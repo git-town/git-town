@@ -36,7 +36,7 @@ func TestParseForgeType(t *testing.T) {
 			"Gitea":                Some(forgedomain.ForgeTypeGitea),
 		}
 		for give, want := range tests {
-			have, err := forgedomain.ParseForgeType(give)
+			have, err := forgedomain.ParseForgeType(give, "test")
 			must.NoError(t, err)
 			must.Eq(t, want, have)
 		}
@@ -44,7 +44,7 @@ func TestParseForgeType(t *testing.T) {
 
 	t.Run("invalid content", func(t *testing.T) {
 		t.Parallel()
-		_, err := forgedomain.ParseForgeType("zonk")
+		_, err := forgedomain.ParseForgeType("zonk", "test")
 		must.Error(t, err)
 	})
 }
