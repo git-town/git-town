@@ -87,7 +87,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	contributionRegex, errContributionRegex := loadField(snapshot, configdomain.KeyContributionRegex, configdomain.ParseContributionRegex)
 	detached, errDetached := loadField(snapshot, configdomain.KeyDetached, gohacks.ParseBoolOpt[configdomain.Detached])
 	displayTypes, errDisplayTypes := loadField(snapshot, configdomain.KeyDisplayTypes, configdomain.ParseDisplayTypes)
-	featureRegex, errFeatureRegex := configdomain.ParseFeatureRegex(snapshot[configdomain.KeyFeatureRegex])
+	featureRegex, errFeatureRegex := loadField(snapshot, configdomain.KeyFeatureRegex, configdomain.ParseFeatureRegex)
 	forgeType, errForgeType := forgedomain.ParseForgeType(snapshot[configdomain.KeyForgeType])
 	githubConnectorType, errGitHubConnectorType := forgedomain.ParseGitHubConnectorType(snapshot[configdomain.KeyGitHubConnectorType])
 	gitlabConnectorType, errGitLabConnectorType := forgedomain.ParseGitLabConnectorType(snapshot[configdomain.KeyGitLabConnectorType])

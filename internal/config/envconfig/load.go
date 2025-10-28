@@ -63,7 +63,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	detached, errDetached := gohacks.ParseBoolOpt[configdomain.Detached](env.Get(detached), detached)
 	displayTypesOpt, errDisplayTypes := configdomain.ParseDisplayTypes(env.Get(displayTypes), displayTypes)
 	dryRun, errDryRun := gohacks.ParseBoolOpt[configdomain.DryRun](env.Get(dryRun), dryRun)
-	featureRegex, errFeatureRegex := configdomain.ParseFeatureRegex(env.Get(featureRegex))
+	featureRegex, errFeatureRegex := configdomain.ParseFeatureRegex(env.Get(featureRegex), featureRegex)
 	forgeType, errForgeType := forgedomain.ParseForgeType(env.Get(forgeType))
 	gitAuthorEmailValue := NewOption(gitdomain.GitUserEmail(env.Get(gitAuthorEmail)))
 	gitCommitterEmailValue := NewOption(gitdomain.GitUserEmail(env.Get(gitCommitterEmail)))
