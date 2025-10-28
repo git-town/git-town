@@ -103,7 +103,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	stash, errStash := loadField(snapshot, configdomain.KeyStash, gohacks.ParseBoolOpt[configdomain.Stash])
 	syncFeatureStrategy, errSyncFeatureStrategy := loadField(snapshot, configdomain.KeySyncFeatureStrategy, configdomain.ParseSyncFeatureStrategy)
 	syncPerennialStrategy, errSyncPerennialStrategy := loadField(snapshot, configdomain.KeySyncPerennialStrategy, configdomain.ParseSyncPerennialStrategy)
-	syncPrototypeStrategy, errSyncPrototypeStrategy := configdomain.ParseSyncPrototypeStrategy(snapshot[configdomain.KeySyncPrototypeStrategy])
+	syncPrototypeStrategy, errSyncPrototypeStrategy := loadField(snapshot, configdomain.KeySyncPrototypeStrategy, configdomain.ParseSyncPrototypeStrategy)
 	syncTags, errSyncTags := gohacks.ParseBoolOpt[configdomain.SyncTags](snapshot[configdomain.KeySyncTags], configdomain.KeySyncTags.String())
 	syncUpstream, errSyncUpstream := gohacks.ParseBoolOpt[configdomain.SyncUpstream](snapshot[configdomain.KeySyncUpstream], configdomain.KeySyncUpstream.String())
 	unknownBranchTypeValue, errUnknownBranchType := loadField(snapshot, configdomain.KeyUnknownBranchType, configdomain.ParseBranchType)

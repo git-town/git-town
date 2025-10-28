@@ -218,7 +218,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			ec.Check(err)
 		}
 		if data.SyncStrategy.PrototypeBranches != nil {
-			syncPrototypeStrategy, err = configdomain.ParseSyncPrototypeStrategy(*data.SyncStrategy.PrototypeBranches)
+			syncPrototypeStrategy, err = configdomain.ParseSyncPrototypeStrategy(*data.SyncStrategy.PrototypeBranches, "config file")
 			ec.Check(err)
 		}
 	}
@@ -241,7 +241,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			ec.Check(err)
 		}
 		if data.Sync.PrototypeStrategy != nil {
-			syncPrototypeStrategy, err = configdomain.ParseSyncPrototypeStrategy(*data.Sync.PrototypeStrategy)
+			syncPrototypeStrategy, err = configdomain.ParseSyncPrototypeStrategy(*data.Sync.PrototypeStrategy, "config file")
 			ec.Check(err)
 		}
 		if data.Sync.PushBranches != nil {

@@ -87,7 +87,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	stash, errStash := gohacks.ParseBoolOpt[configdomain.Stash](env.Get(stash), stash)
 	syncFeatureStrategy, errSyncFeatureStrategy := configdomain.ParseSyncFeatureStrategy(env.Get(syncFeatureStrategy), syncFeatureStrategy)
 	syncPerennialStrategy, errSyncPerennialStrategy := configdomain.ParseSyncPerennialStrategy(env.Get(syncPerennialStrategy), syncPerennialStrategy)
-	syncPrototypeStrategy, errSyncPrototypeStrategy := configdomain.ParseSyncPrototypeStrategy(env.Get(syncPrototypeStrategy))
+	syncPrototypeStrategy, errSyncPrototypeStrategy := configdomain.ParseSyncPrototypeStrategy(env.Get(syncPrototypeStrategy), syncPrototypeStrategy)
 	syncTags, errSyncTags := gohacks.ParseBoolOpt[configdomain.SyncTags](env.Get(syncTags), syncTags)
 	syncUpstream, errSyncUpstream := gohacks.ParseBoolOpt[configdomain.SyncUpstream](env.Get(syncUpstream), syncUpstream)
 	unknownBranchType, errUnknownBranchType := configdomain.ParseBranchType(env.Get(unknownBranchType), unknownBranchType)
