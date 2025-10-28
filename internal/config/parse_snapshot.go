@@ -104,8 +104,8 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	syncFeatureStrategy, errSyncFeatureStrategy := loadField(snapshot, configdomain.KeySyncFeatureStrategy, configdomain.ParseSyncFeatureStrategy)
 	syncPerennialStrategy, errSyncPerennialStrategy := loadField(snapshot, configdomain.KeySyncPerennialStrategy, configdomain.ParseSyncPerennialStrategy)
 	syncPrototypeStrategy, errSyncPrototypeStrategy := loadField(snapshot, configdomain.KeySyncPrototypeStrategy, configdomain.ParseSyncPrototypeStrategy)
-	syncTags, errSyncTags := gohacks.ParseBoolOpt[configdomain.SyncTags](snapshot[configdomain.KeySyncTags], configdomain.KeySyncTags.String())
-	syncUpstream, errSyncUpstream := gohacks.ParseBoolOpt[configdomain.SyncUpstream](snapshot[configdomain.KeySyncUpstream], configdomain.KeySyncUpstream.String())
+	syncTags, errSyncTags := loadField(snapshot, configdomain.KeySyncTags, gohacks.ParseBoolOpt[configdomain.SyncTags])
+	syncUpstream, errSyncUpstream := loadField(snapshot, configdomain.KeySyncUpstream, gohacks.ParseBoolOpt[configdomain.SyncUpstream])
 	unknownBranchTypeValue, errUnknownBranchType := loadField(snapshot, configdomain.KeyUnknownBranchType, configdomain.ParseBranchType)
 	unknownBranchType := configdomain.UnknownBranchTypeOpt(unknownBranchTypeValue)
 	err := cmp.Or(
