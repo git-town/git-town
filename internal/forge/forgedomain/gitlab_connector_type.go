@@ -27,7 +27,7 @@ func GitLabConnectorTypes() []GitLabConnectorType {
 	}
 }
 
-func ParseGitLabConnectorType(text string) (Option[GitLabConnectorType], error) {
+func ParseGitLabConnectorType(text string, source string) (Option[GitLabConnectorType], error) {
 	if text == "" {
 		return None[GitLabConnectorType](), nil
 	}
@@ -36,5 +36,5 @@ func ParseGitLabConnectorType(text string) (Option[GitLabConnectorType], error) 
 			return Some(connectorType), nil
 		}
 	}
-	return None[GitLabConnectorType](), fmt.Errorf(messages.GitLabConnectorTypeUnknown, text)
+	return None[GitLabConnectorType](), fmt.Errorf(messages.GitLabConnectorTypeUnknown, source, text)
 }
