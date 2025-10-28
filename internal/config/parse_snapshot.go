@@ -84,7 +84,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	autoResolve, errAutoResolve := loadField(snapshot, configdomain.KeyAutoResolve, gohacks.ParseBoolOpt[configdomain.AutoResolve])
 	autoSync, errAutoSync := loadField(snapshot, configdomain.KeyAutoSync, gohacks.ParseBoolOpt[configdomain.AutoSync])
 	branchTypeOverrides, errBranchTypeOverride := NewBranchTypeOverridesInSnapshot(snapshot, runner)
-	contributionRegex, errContributionRegex := configdomain.ParseContributionRegex(snapshot[configdomain.KeyContributionRegex])
+	contributionRegex, errContributionRegex := loadField(snapshot, configdomain.KeyContributionRegex, configdomain.ParseContributionRegex)
 	detached, errDetached := gohacks.ParseBoolOpt[configdomain.Detached](snapshot[configdomain.KeyDetached], configdomain.KeyDetached.String())
 	displayTypes, errDisplayTypes := configdomain.ParseDisplayTypes(snapshot[configdomain.KeyDisplayTypes], configdomain.KeyDisplayTypes.String())
 	featureRegex, errFeatureRegex := configdomain.ParseFeatureRegex(snapshot[configdomain.KeyFeatureRegex])

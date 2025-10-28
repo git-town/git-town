@@ -59,7 +59,7 @@ const (
 func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	autoResolve, errAutoResolve := gohacks.ParseBoolOpt[configdomain.AutoResolve](env.Get(autoResolve), autoResolve)
 	autoSync, errAutoSync := gohacks.ParseBoolOpt[configdomain.AutoSync](env.Get(autoSync), autoSync)
-	contributionRegex, errContribRegex := configdomain.ParseContributionRegex(env.Get(contributionRegex))
+	contributionRegex, errContribRegex := configdomain.ParseContributionRegex(env.Get(contributionRegex), contributionRegex)
 	detached, errDetached := gohacks.ParseBoolOpt[configdomain.Detached](env.Get(detached), detached)
 	displayTypesOpt, errDisplayTypes := configdomain.ParseDisplayTypes(env.Get(displayTypes), displayTypes)
 	dryRun, errDryRun := gohacks.ParseBoolOpt[configdomain.DryRun](env.Get(dryRun), dryRun)
