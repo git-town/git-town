@@ -92,7 +92,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	newBranchType := configdomain.NewBranchTypeOpt(newBranchTypeValue)
 	observedRegex, errObservedRegex := loadField(snapshot, configdomain.KeyObservedRegex, configdomain.ParseObservedRegex)
 	order, errOrder := loadField(snapshot, configdomain.KeyOrder, configdomain.ParseOrder)
-	offline, errOffline := gohacks.ParseBoolOpt[configdomain.Offline](snapshot[configdomain.KeyOffline], configdomain.KeyOffline.String())
+	offline, errOffline := loadField(snapshot, configdomain.KeyOffline, gohacks.ParseBoolOpt[configdomain.Offline])
 	perennialRegex, errPerennialRegex := configdomain.ParsePerennialRegex(snapshot[configdomain.KeyPerennialRegex])
 	proposalsShowLineage, errProposalsShowLineage := forgedomain.ParseProposalsShowLineage(snapshot[configdomain.KeyProposalsShowLineage])
 	pushBranches, errPushBranches := gohacks.ParseBoolOpt[configdomain.PushBranches](snapshot[configdomain.KeyPushBranches], configdomain.KeyPushBranches.String())
