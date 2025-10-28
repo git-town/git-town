@@ -1,11 +1,8 @@
 package fixture
 
 import (
-	"os"
-
 	"github.com/git-town/git-town/v22/internal/test/commands"
 	"github.com/git-town/git-town/v22/internal/test/testruntime"
-	"github.com/git-town/git-town/v22/pkg/asserts"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
@@ -13,21 +10,6 @@ import (
 // This is useful for scenarios that require testing the behavior of Git Town in a fresh repository.
 type Fresh struct {
 	Dir string
-}
-
-// NewFresh provides a Fresh instance in the given directory.
-//
-// The repo has no branches.
-func NewFresh(dir string) Fresh {
-	binPath := binPath(dir)
-	devRepoPath := developerRepoPath(dir)
-	// create the "developer" repo
-	err := os.MkdirAll(devRepoPath, 0o744)
-	asserts.NoError(err)
-	// initialize the repo in the folder
-	devRepo := testruntime.InitializeNoInitialCommit(devRepoPath, dir, binPath)
-	devRepo.RemoveUnnecessaryFiles()
-	return Fresh{dir}
 }
 
 // allows using this fresh environment as a Fixture
