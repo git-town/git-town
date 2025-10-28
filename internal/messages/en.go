@@ -77,7 +77,7 @@ const (
 	ConfigNeeded                       = "Git Town needs to be configured\n\n"
 	ConfigRemoveError                  = "unexpected error while removing the 'git-town' section from the Git configuration: %w"
 	ConfigScopeUnknown                 = "unknown configuration scope"
-	ConfigShipStrategyUnknown          = "unknown ship strategy: %q"
+	ConfigShipStrategyUnknown          = "unknown ship strategy in %q: %q"
 	ConfigStorage                      = "Config storage: %s\n"
 	ConfigSyncStrategyUnknown          = "unknown sync strategy: %q"
 	ConflictDetectionProblem           = "cannot determine conflicts: %w"

@@ -21,7 +21,7 @@ func (self ShipStrategy) String() string {
 	return string(self)
 }
 
-func ParseShipStrategy(text string) (Option[ShipStrategy], error) {
+func ParseShipStrategy(text string, source string) (Option[ShipStrategy], error) {
 	text = strings.TrimSpace(text)
 	if text == "" {
 		return None[ShipStrategy](), nil
@@ -32,7 +32,7 @@ func ParseShipStrategy(text string) (Option[ShipStrategy], error) {
 			return Some(shipStrategy), nil
 		}
 	}
-	return None[ShipStrategy](), fmt.Errorf(messages.ConfigShipStrategyUnknown, text)
+	return None[ShipStrategy](), fmt.Errorf(messages.ConfigShipStrategyUnknown, source, text)
 }
 
 func ShipStrategies() []ShipStrategy {
