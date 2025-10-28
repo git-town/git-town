@@ -102,7 +102,7 @@ func TestValidatedConfig(t *testing.T) {
 		observed := gitdomain.NewLocalBranchName("observed")
 		perennial1 := gitdomain.NewLocalBranchName("perennial-1")
 		perennial2 := gitdomain.NewLocalBranchName("perennial-2")
-		perennialRegexOpt, err := configdomain.ParsePerennialRegex("peren*")
+		perennialRegexOpt, err := configdomain.ParsePerennialRegex("peren*", "test")
 		must.NoError(t, err)
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{

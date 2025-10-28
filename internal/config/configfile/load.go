@@ -109,7 +109,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		}
 		perennialBranches = gitdomain.NewLocalBranchNames(data.Branches.Perennials...)
 		if data.Branches.PerennialRegex != nil {
-			perennialRegex, err = configdomain.ParsePerennialRegex(*data.Branches.PerennialRegex)
+			perennialRegex, err = configdomain.ParsePerennialRegex(*data.Branches.PerennialRegex, "config file")
 			ec.Check(err)
 		}
 		if data.Branches.DefaultType != nil {
@@ -196,7 +196,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	}
 	if data.Propose != nil {
 		if data.Propose.Lineage != nil {
-			proposalsShowLineage, err = forgedomain.ParseProposalsShowLineage(*data.Propose.Lineage)
+			proposalsShowLineage, err = forgedomain.ParseProposalsShowLineage(*data.Propose.Lineage, "config file")
 			ec.Check(err)
 		}
 	}

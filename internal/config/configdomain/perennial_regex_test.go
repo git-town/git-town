@@ -13,7 +13,7 @@ func TestPerennialRegex(t *testing.T) {
 
 	t.Run("only characters, no wildcards matches all branch names that contain that phrase", func(t *testing.T) {
 		t.Parallel()
-		perennialRegexOpt, err := configdomain.ParsePerennialRegex("release")
+		perennialRegexOpt, err := configdomain.ParsePerennialRegex("release", "test")
 		must.NoError(t, err)
 		perennialRegex := perennialRegexOpt.GetOrPanic()
 		tests := map[string]bool{
@@ -31,7 +31,7 @@ func TestPerennialRegex(t *testing.T) {
 
 	t.Run("with wildcards", func(t *testing.T) {
 		t.Parallel()
-		perennialRegexOpt, err := configdomain.ParsePerennialRegex("release-.*")
+		perennialRegexOpt, err := configdomain.ParsePerennialRegex("release-.*", "test")
 		must.NoError(t, err)
 		perennialRegex := perennialRegexOpt.GetOrPanic()
 		tests := map[string]bool{

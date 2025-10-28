@@ -82,7 +82,7 @@ func TestParseProposalsShowLineage(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		have, err := forgedomain.ParseProposalsShowLineage(tt.give)
+		have, err := forgedomain.ParseProposalsShowLineage(tt.give, "test")
 		must.EqOp(t, err != nil, tt.err)
 		must.True(t, have.Equal(tt.want))
 	}

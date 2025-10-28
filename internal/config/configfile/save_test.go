@@ -58,7 +58,7 @@ func TestSave(t *testing.T) {
 				NewBranchType:            Some(configdomain.NewBranchType(configdomain.BranchTypePrototypeBranch)),
 				Order:                    Some(configdomain.OrderDesc),
 				PerennialBranches:        gitdomain.NewLocalBranchNames("qa", "staging"),
-				PerennialRegex:           asserts.NoError1(configdomain.ParsePerennialRegex("perennial-")),
+				PerennialRegex:           asserts.NoError1(configdomain.ParsePerennialRegex("perennial-", "test")),
 				ProposalsShowLineage:     Some(forgedomain.ProposalsShowLineageCLI),
 				PushHook:                 Some(configdomain.PushHook(true)),
 				ShareNewBranches:         Some(configdomain.ShareNewBranchesPropose),

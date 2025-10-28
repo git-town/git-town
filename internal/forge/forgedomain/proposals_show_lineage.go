@@ -22,7 +22,7 @@ func (self ProposalsShowLineage) String() string {
 	return string(self)
 }
 
-func ParseProposalsShowLineage(value string) (Option[ProposalsShowLineage], error) {
+func ParseProposalsShowLineage(value string, source string) (Option[ProposalsShowLineage], error) {
 	switch strings.ToLower(strings.TrimSpace(value)) {
 	case "":
 		return None[ProposalsShowLineage](), nil
@@ -35,7 +35,7 @@ func ParseProposalsShowLineage(value string) (Option[ProposalsShowLineage], erro
 	}
 	parsedOpt, err := gohacks.ParseBoolOpt[bool](value, "proposals-show-lineage")
 	if err != nil {
-		return None[ProposalsShowLineage](), fmt.Errorf(messages.ProposalsShowLineageInvalid, value)
+		return None[ProposalsShowLineage](), fmt.Errorf(messages.ProposalsShowLineageInvalid, source, value)
 	}
 	if parsed, has := parsedOpt.Get(); has {
 		if parsed {
@@ -44,5 +44,5 @@ func ParseProposalsShowLineage(value string) (Option[ProposalsShowLineage], erro
 		}
 		return Some(ProposalsShowLineageNone), nil
 	}
-	return None[ProposalsShowLineage](), fmt.Errorf(messages.ProposalsShowLineageInvalid, value)
+	return None[ProposalsShowLineage](), fmt.Errorf(messages.ProposalsShowLineageInvalid, source, value)
 }
