@@ -76,9 +76,13 @@ func NewLineageFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated
 	return result, nil
 }
 
+func loadField[T any](snapshot configdomain.SingleSnapshot, key configdomain.Key, parseFunc func(string, string) (T, error)) (T, error) {
+	return parseFunc(snapshot[key], key.String())
+}
+
 func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated bool, runner subshelldomain.Runner) (configdomain.PartialConfig, error) {
-	autoResolve, errAutoResolve := gohacks.ParseBoolOpt[configdomain.AutoResolve](snapshot[configdomain.KeyAutoResolve], configdomain.KeyAutoResolve.String())
-	autoSync, errAutoSync := gohacks.ParseBoolOpt[configdomain.AutoSync](snapshot[configdomain.KeyAutoSync], configdomain.KeyAutoSync.String())
+	autoResolve, errAutoResolve := loadField(snapshot, configdomain.KeyAutoResolve, gohacks.ParseBoolOpt[configdomain.AutoResolve])
+	autoSync, errAutoSync := loadField(snapshot, configdomain.KeyAutoSync, gohacks.ParseBoolOpt[configdomain.AutoSync])
 	branchTypeOverrides, errBranchTypeOverride := NewBranchTypeOverridesInSnapshot(snapshot, runner)
 	contributionRegex, errContributionRegex := configdomain.ParseContributionRegex(snapshot[configdomain.KeyContributionRegex])
 	detached, errDetached := gohacks.ParseBoolOpt[configdomain.Detached](snapshot[configdomain.KeyDetached], configdomain.KeyDetached.String())
