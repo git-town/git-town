@@ -27,7 +27,7 @@ func GitHubConnectorTypes() []GitHubConnectorType {
 	}
 }
 
-func ParseGitHubConnectorType(text string) (Option[GitHubConnectorType], error) {
+func ParseGitHubConnectorType(text string, source string) (Option[GitHubConnectorType], error) {
 	if text == "" {
 		return None[GitHubConnectorType](), nil
 	}
@@ -36,5 +36,5 @@ func ParseGitHubConnectorType(text string) (Option[GitHubConnectorType], error) 
 			return Some(connectorType), nil
 		}
 	}
-	return None[GitHubConnectorType](), fmt.Errorf(messages.GitHubConnectorTypeUnknown, text)
+	return None[GitHubConnectorType](), fmt.Errorf(messages.GitHubConnectorTypeUnknown, source, text)
 }

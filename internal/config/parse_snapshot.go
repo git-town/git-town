@@ -89,7 +89,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	displayTypes, errDisplayTypes := loadField(snapshot, configdomain.KeyDisplayTypes, configdomain.ParseDisplayTypes)
 	featureRegex, errFeatureRegex := loadField(snapshot, configdomain.KeyFeatureRegex, configdomain.ParseFeatureRegex)
 	forgeType, errForgeType := loadField(snapshot, configdomain.KeyForgeType, forgedomain.ParseForgeType)
-	githubConnectorType, errGitHubConnectorType := forgedomain.ParseGitHubConnectorType(snapshot[configdomain.KeyGitHubConnectorType])
+	githubConnectorType, errGitHubConnectorType := loadField(snapshot, configdomain.KeyGitHubConnectorType, forgedomain.ParseGitHubConnectorType)
 	gitlabConnectorType, errGitLabConnectorType := forgedomain.ParseGitLabConnectorType(snapshot[configdomain.KeyGitLabConnectorType])
 	lineage, errLineage := NewLineageFromSnapshot(snapshot, updateOutdated, runner)
 	newBranchTypeValue, errNewBranchType := configdomain.ParseBranchType(snapshot[configdomain.KeyNewBranchType])
