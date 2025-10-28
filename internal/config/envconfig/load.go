@@ -56,13 +56,16 @@ const (
 	verbose                  = "GIT_TOWN_VERBOSE"
 )
 
+func load[T any](env EnvVars, varName string, parser func(string, string) (T, error)) (T, error) {
+	return parser(env.Get(varName), varName)
+}
+
 func Load(env EnvVars) (configdomain.PartialConfig, error) {
-	// TODO: reduce redundancy using a function similar to `loadField` in NewPartialConfigFromSnapshot
-	autoResolve, errAutoResolve := gohacks.ParseBoolOpt[configdomain.AutoResolve](env.Get(autoResolve), autoResolve)
-	autoSync, errAutoSync := gohacks.ParseBoolOpt[configdomain.AutoSync](env.Get(autoSync), autoSync)
-	contributionRegex, errContribRegex := configdomain.ParseContributionRegex(env.Get(contributionRegex), contributionRegex)
-	detached, errDetached := gohacks.ParseBoolOpt[configdomain.Detached](env.Get(detached), detached)
-	displayTypesOpt, errDisplayTypes := configdomain.ParseDisplayTypes(env.Get(displayTypes), displayTypes)
+	autoResolve, errAutoResolve := load(env, autoResolve, gohacks.ParseBoolOpt[configdomain.AutoResolve])
+	autoSync, errAutoSync := load(env, autoSync, gohacks.ParseBoolOpt[configdomain.AutoSync])
+	contributionRegex, errContribRegex := load(env, contributionRegex, configdomain.ParseContributionRegex)
+	detached, errDetached := load(env, detached, gohacks.ParseBoolOpt[configdomain.Detached])
+	displayTypesOpt, errDisplayTypes := load(env, displayTypes, configdomain.ParseDisplayTypes)
 	dryRun, errDryRun := gohacks.ParseBoolOpt[configdomain.DryRun](env.Get(dryRun), dryRun)
 	featureRegex, errFeatureRegex := configdomain.ParseFeatureRegex(env.Get(featureRegex), featureRegex)
 	forgeType, errForgeType := forgedomain.ParseForgeType(env.Get(forgeType), forgeType)
