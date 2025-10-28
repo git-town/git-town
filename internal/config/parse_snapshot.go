@@ -77,7 +77,6 @@ func NewLineageFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated
 }
 
 func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated bool, runner subshelldomain.Runner) (configdomain.PartialConfig, error) {
-	aliases := snapshot.Aliases()
 	autoResolve, errAutoResolve := gohacks.ParseBoolOpt[configdomain.AutoResolve](snapshot[configdomain.KeyAutoResolve], configdomain.KeyAutoResolve.String())
 	autoSync, errAutoSync := gohacks.ParseBoolOpt[configdomain.AutoSync](snapshot[configdomain.KeyAutoSync], configdomain.KeyAutoSync.String())
 	branchTypeOverrides, errBranchTypeOverride := NewBranchTypeOverridesInSnapshot(snapshot, runner)
@@ -141,7 +140,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		errUnknownBranchType,
 	)
 	return configdomain.PartialConfig{
-		Aliases:                  aliases,
+		Aliases:                  snapshot.Aliases(),
 		AutoResolve:              autoResolve,
 		AutoSync:                 autoSync,
 		BitbucketAppPassword:     forgedomain.ParseBitbucketAppPassword(snapshot[configdomain.KeyBitbucketAppPassword]),
