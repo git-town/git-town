@@ -14,7 +14,7 @@ type ContributionRegex struct {
 func ParseContributionRegex(value string, source string) (Option[ContributionRegex], error) {
 	verifiedRegexOpt, err := ParseRegex(value)
 	if err != nil {
-		return None[ContributionRegex](), fmt.Errorf("cannot parse contribution regex in %q: %v", source, err)
+		return None[ContributionRegex](), fmt.Errorf("cannot parse contribution regex in %q: %w", source, err)
 	}
 	if verifiedRegex, hasVerifiedRegex := verifiedRegexOpt.Get(); hasVerifiedRegex {
 		return Some(ContributionRegex{VerifiedRegex: verifiedRegex}), nil

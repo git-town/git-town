@@ -14,7 +14,7 @@ type ObservedRegex struct {
 func ParseObservedRegex(value string, source string) (Option[ObservedRegex], error) {
 	verifiedRegexOpt, err := ParseRegex(value)
 	if err != nil {
-		return None[ObservedRegex](), fmt.Errorf("unknown observed regex value (%q) defined in %q: %q", value, source, err)
+		return None[ObservedRegex](), fmt.Errorf("unknown observed regex value (%q) defined in %q: %w", value, source, err)
 	}
 	if verifiedRegex, hasVerifiedRegex := verifiedRegexOpt.Get(); hasVerifiedRegex {
 		return Some(ObservedRegex{VerifiedRegex: verifiedRegex}), nil
