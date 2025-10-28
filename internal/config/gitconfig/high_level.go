@@ -130,6 +130,10 @@ func RemovePerennialRegex(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyPerennialRegex)
 }
 
+func RemoveProposalsShowLineage(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyProposalsShowLineage)
+}
+
 func RemovePushBranches(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyPushBranches)
 }
@@ -281,6 +285,10 @@ func SetPerennialBranches(runner subshelldomain.Runner, branches gitdomain.Local
 
 func SetPerennialRegex(runner subshelldomain.Runner, value configdomain.PerennialRegex, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyPerennialRegex, value.String())
+}
+
+func SetProposalsShowLineage(runner subshelldomain.Runner, value forgedomain.ProposalsShowLineage, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyProposalsShowLineage, value.String())
 }
 
 func SetPushBranches(runner subshelldomain.Runner, value configdomain.PushBranches, scope configdomain.ConfigScope) error {

@@ -89,8 +89,8 @@ dev-remote = "origin"
 forge-type = "github"
 origin-hostname = "forge"
 
-[propose]
-lineage = "cli"
+[proposals]
+show-lineage = "cli"
 
 [ship]
 delete-tracking-branch = true

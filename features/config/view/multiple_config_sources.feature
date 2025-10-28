@@ -26,6 +26,7 @@ Feature: show the configuration
     And Git setting "git-town.observed-regex" is "^git-observed-regex"
     And Git setting "git-town.perennial-regex" is "^git-perennial-"
     And Git setting "git-town.feature-regex" is "git-feature-.*"
+    And Git setting "git-town.proposals-show-lineage" is "cli"
     And Git setting "git-town.github-connector" is "api"
     And Git setting "git-town.order" is "desc"
     And Git setting "git-town.share-new-branches" is "no"
@@ -113,6 +114,9 @@ Feature: show the configuration
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
+
+      Proposals:
+        show lineage: cli
 
       Ship:
         delete tracking branch: no

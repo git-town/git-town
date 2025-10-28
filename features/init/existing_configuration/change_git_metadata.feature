@@ -49,6 +49,7 @@ Feature: change existing information in Git metadata
       | ship strategy               | down down enter        |
       | ship delete tracking branch | down enter             |
       | order                       | up enter               |
+      | proposals show lineage      | down enter             |
       | config storage              | enter                  |
 
   Scenario: result
@@ -85,6 +86,7 @@ Feature: change existing information in Git metadata
       | git config git-town.contribution-regex cont              |
       | git config git-town.observed-regex obs                   |
       | git config git-town.order asc                            |
+      | git config git-town.proposals-show-lineage cli           |
       | git config git-town.push-branches true                   |
       | git config git-town.push-hook true                       |
       | git config git-town.share-new-branches push              |
@@ -128,6 +130,7 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.push-hook" is now "true"
     And local Git setting "git-town.ship-strategy" is now "fast-forward"
     And local Git setting "git-town.ship-delete-tracking-branch" is now "true"
+    And local Git setting "git-town.proposals-show-lineage" is now "cli"
     And local Git setting "git-town.dev-remote" still doesn't exist
     And the main branch is now "main"
 
@@ -165,5 +168,6 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.observed-regex" now doesn't exist
     And local Git setting "git-town.unknown-branch-type" now doesn't exist
     And local Git setting "git-town.ship-strategy" now doesn't exist
+    And local Git setting "git-town.proposals-show-lineage" now doesn't exist
     And the main branch is now "main"
     And the perennial branches are now "qa"
