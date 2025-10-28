@@ -24,7 +24,7 @@ func (self Order) String() string {
 	return string(self)
 }
 
-func ParseOrder(value string, source Key) (Option[Order], error) {
+func ParseOrder(value string, source string) (Option[Order], error) {
 	switch strings.ToLower(value) {
 	case "":
 		return None[Order](), nil
