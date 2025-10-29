@@ -3,6 +3,7 @@ package configdomain
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v22/internal/messages"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
@@ -13,7 +14,7 @@ type FeatureRegex struct {
 func ParseFeatureRegex(value string, source string) (Option[FeatureRegex], error) {
 	verifiedRegexOpt, err := ParseRegex(value)
 	if err != nil {
-		return None[FeatureRegex](), fmt.Errorf("cannot parse feature regex from %q: %w", source, err)
+		return None[FeatureRegex](), fmt.Errorf(messages.FeatureRegexCannotParse, value, source, err)
 	}
 	if verifiedRegex, hasVerifiedRegex := verifiedRegexOpt.Get(); hasVerifiedRegex {
 		return Some(FeatureRegex{VerifiedRegex: verifiedRegex}), err
