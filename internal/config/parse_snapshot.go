@@ -191,7 +191,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	}, err
 }
 
-func load[T any](snapshot configdomain.SingleSnapshot, key configdomain.Key, parseFunc func(string, string) (T, error), ignoreUnknown bool, defaults T) (T, error) {
+func load[T any](snapshot configdomain.SingleSnapshot, key configdomain.Key, parseFunc func(string, string) (T, error), ignoreUnknown bool, defaults T) (T, error) { //nolint:ireturn
 	value, err := parseFunc(snapshot[key], key.String())
 	if err != nil {
 		if ignoreUnknown {
