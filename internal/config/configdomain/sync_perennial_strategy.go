@@ -3,6 +3,7 @@ package configdomain
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v22/internal/messages"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
@@ -26,7 +27,7 @@ const (
 func ParseSyncPerennialStrategy(value string, source string) (Option[SyncPerennialStrategy], error) {
 	syncStrategyOpt, err := ParseSyncStrategy(value)
 	if err != nil {
-		return None[SyncPerennialStrategy](), fmt.Errorf("unknown sync-perennial strategy (%s) in %q: %w", value, source, err)
+		return None[SyncPerennialStrategy](), fmt.Errorf(messages.SyncPerennialStrategyInvalid, value, source, err)
 	}
 	if syncStrategy, has := syncStrategyOpt.Get(); has {
 		return Some(SyncPerennialStrategy(syncStrategy)), err
