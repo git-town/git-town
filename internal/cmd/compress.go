@@ -106,6 +106,7 @@ func executeCompress(cliConfig configdomain.PartialConfig, message Option[gitdom
 Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
+		IgnoreUnknown:    false,
 		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,

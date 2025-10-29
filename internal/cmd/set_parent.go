@@ -102,6 +102,7 @@ func executeSetParent(args []string, cliConfig configdomain.PartialConfig, noPar
 Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
+		IgnoreUnknown:    false,
 		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,

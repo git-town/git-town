@@ -31,7 +31,7 @@ func NewSyncPrototypeStrategyFromSyncFeatureStrategy(syncFeatureStrategy SyncFea
 func ParseSyncPrototypeStrategy(value string, source string) (Option[SyncPrototypeStrategy], error) {
 	syncStrategyOpt, err := ParseSyncStrategy(value)
 	if err != nil {
-		return None[SyncPrototypeStrategy](), fmt.Errorf(messages.SyncPrototypeStrategyInvalid, value, source, err)
+		return None[SyncPrototypeStrategy](), fmt.Errorf(messages.CannotParse, source, err)
 	}
 	if syncStrategy, has := syncStrategyOpt.Get(); has {
 		return Some(SyncPrototypeStrategy(syncStrategy)), err

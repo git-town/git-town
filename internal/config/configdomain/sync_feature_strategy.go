@@ -27,7 +27,7 @@ const (
 func ParseSyncFeatureStrategy(value string, source string) (Option[SyncFeatureStrategy], error) {
 	syncStrategyOpt, err := ParseSyncStrategy(value)
 	if err != nil {
-		return None[SyncFeatureStrategy](), fmt.Errorf(messages.SyncFeatureStrategyInvalid, value, source, err)
+		return None[SyncFeatureStrategy](), fmt.Errorf(messages.CannotParse, source, err)
 	}
 	if syncStrategy, has := syncStrategyOpt.Get(); has {
 		return Some(SyncFeatureStrategy(syncStrategy)), err

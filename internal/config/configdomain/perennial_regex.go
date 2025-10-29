@@ -14,7 +14,7 @@ type PerennialRegex struct {
 func ParsePerennialRegex(value string, source string) (Option[PerennialRegex], error) {
 	verifiedRegexOpt, err := ParseRegex(value)
 	if err != nil {
-		return None[PerennialRegex](), fmt.Errorf(messages.PerennialRegexInvalid, value, source, err)
+		return None[PerennialRegex](), fmt.Errorf(messages.CannotParse, source, err)
 	}
 	if verifiedRegex, hasVerifiedRegex := verifiedRegexOpt.Get(); hasVerifiedRegex {
 		return Some(PerennialRegex{VerifiedRegex: verifiedRegex}), err

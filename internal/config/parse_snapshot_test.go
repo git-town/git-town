@@ -16,7 +16,7 @@ func TestNewBranchTypeOverridesFromSnapshot(t *testing.T) {
 		"git-town-branch.branch-3.parent":     "main",
 		"git-town.prototype-branches":         "foo",
 	}
-	have, err := config.NewBranchTypeOverridesInSnapshot(snapshot, nil)
+	have, err := config.NewBranchTypeOverridesInSnapshot(snapshot, false, nil)
 	must.NoError(t, err)
 	want := configdomain.BranchTypeOverrides{
 		"branch-1": configdomain.BranchTypeFeatureBranch,

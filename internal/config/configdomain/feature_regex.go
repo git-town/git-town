@@ -14,7 +14,7 @@ type FeatureRegex struct {
 func ParseFeatureRegex(value string, source string) (Option[FeatureRegex], error) {
 	verifiedRegexOpt, err := ParseRegex(value)
 	if err != nil {
-		return None[FeatureRegex](), fmt.Errorf(messages.FeatureRegexCannotParse, value, source, err)
+		return None[FeatureRegex](), fmt.Errorf(messages.CannotParse, source, err)
 	}
 	if verifiedRegex, hasVerifiedRegex := verifiedRegexOpt.Get(); hasVerifiedRegex {
 		return Some(FeatureRegex{VerifiedRegex: verifiedRegex}), err
