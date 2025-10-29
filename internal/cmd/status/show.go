@@ -48,7 +48,7 @@ func showRunstateCommand() *cobra.Command {
 func executeStatusShow(cliConfig configdomain.PartialConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
-		IgnoreUnknown:    false,
+		IgnoreUnknown:    true,
 		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
