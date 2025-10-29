@@ -3,6 +3,7 @@ package configdomain
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v22/internal/messages"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
@@ -14,7 +15,7 @@ type ObservedRegex struct {
 func ParseObservedRegex(value string, source string) (Option[ObservedRegex], error) {
 	verifiedRegexOpt, err := ParseRegex(value)
 	if err != nil {
-		return None[ObservedRegex](), fmt.Errorf("unknown observed regex value (%q) defined in %q: %w", value, source, err)
+		return None[ObservedRegex](), fmt.Errorf(messages.ObservedRegexCannotParse, value, source, err)
 	}
 	if verifiedRegex, hasVerifiedRegex := verifiedRegexOpt.Get(); hasVerifiedRegex {
 		return Some(ObservedRegex{VerifiedRegex: verifiedRegex}), nil

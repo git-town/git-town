@@ -205,6 +205,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	ObservedBranchCannotPropose = "cannot propose observed branches"
 	ObservedBranchCannotShip    = "cannot ship observed branches"
 	ObserveDetachedHead         = "please check out the branch to make observed"
+	ObservedRegexCannotParse    = "unknown observed regex value (%q) defined in %q: %w"
 	ObservedRegexPrompt         = "Observed regex: "
 	ObservedRegexResult         = "Observed regex: %s\n"
 	OfflineNotAllowed           = "this command requires an active internet connection"
