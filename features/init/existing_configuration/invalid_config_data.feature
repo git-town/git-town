@@ -75,6 +75,7 @@ Feature: Ignore invalid configuration data
     And global Git setting "alias.set-parent" now doesn't exist
     And global Git setting "alias.ship" now doesn't exist
     And global Git setting "alias.sync" now doesn't exist
+    And local Git setting "git-town.sync-feature-strategy" is now "--help"
     And local Git setting "git-town.dev-remote" now doesn't exist
     And local Git setting "git-town.new-branch-type" now doesn't exist
     And local Git setting "git-town.main-branch" now doesn't exist
@@ -86,7 +87,6 @@ Feature: Ignore invalid configuration data
     And local Git setting "git-town.contribution-regex" now doesn't exist
     And local Git setting "git-town.observed-regex" now doesn't exist
     And local Git setting "git-town.stash" now doesn't exist
-    And local Git setting "git-town.sync-feature-strategy" is now "--help"
     And local Git setting "git-town.sync-perennial-strategy" now doesn't exist
     And local Git setting "git-town.sync-upstream" now doesn't exist
     And local Git setting "git-town.sync-tags" now doesn't exist
