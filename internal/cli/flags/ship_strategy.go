@@ -18,7 +18,7 @@ func ShipStrategy() (AddFunc, ReadShipStrategyFunc) {
 		if err != nil {
 			return None[configdomain.ShipStrategy](), err
 		}
-		return configdomain.ParseShipStrategy(value)
+		return configdomain.ParseShipStrategy(value, "--strategy CLI flag")
 	}
 	return addFlag, readFlag
 }

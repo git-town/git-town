@@ -32,7 +32,7 @@ func AllBranchTypes() []BranchType {
 	}
 }
 
-func ParseBranchType(text string) (Option[BranchType], error) {
+func ParseBranchType(text string, source string) (Option[BranchType], error) {
 	if len(text) == 0 || text == messages.DialogResultNone {
 		return None[BranchType](), nil
 	}
@@ -41,7 +41,7 @@ func ParseBranchType(text string) (Option[BranchType], error) {
 			return Some(branchType), nil
 		}
 	}
-	return None[BranchType](), fmt.Errorf(messages.DialogResultUnknownBranchType, text)
+	return None[BranchType](), fmt.Errorf(messages.DialogResultUnknownBranchType, source, text)
 }
 
 func (self BranchType) MustKnowParent() bool {

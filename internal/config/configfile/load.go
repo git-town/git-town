@@ -109,16 +109,16 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		}
 		perennialBranches = gitdomain.NewLocalBranchNames(data.Branches.Perennials...)
 		if data.Branches.PerennialRegex != nil {
-			perennialRegex, err = configdomain.ParsePerennialRegex(*data.Branches.PerennialRegex)
+			perennialRegex, err = configdomain.ParsePerennialRegex(*data.Branches.PerennialRegex, messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Branches.DefaultType != nil {
-			branchType, err := configdomain.ParseBranchType(*data.Branches.DefaultType)
+			branchType, err := configdomain.ParseBranchType(*data.Branches.DefaultType, messages.ConfigFile)
 			ec.Check(err)
 			unknownBranchType = configdomain.UnknownBranchTypeOpt(branchType)
 		}
 		if data.Branches.DisplayTypes != nil {
-			displayTypes, err = configdomain.ParseDisplayTypes(*data.Branches.DisplayTypes, "config file")
+			displayTypes, err = configdomain.ParseDisplayTypes(*data.Branches.DisplayTypes, messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Branches.FeatureRegex != nil {
@@ -143,18 +143,18 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			}
 		}
 		if data.Branches.Order != nil {
-			order, err = configdomain.ParseOrder(*data.Branches.Order, "config file")
+			order, err = configdomain.ParseOrder(*data.Branches.Order, messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Branches.UnknownType != nil {
-			branchType, err := configdomain.ParseBranchType(*data.Branches.UnknownType)
+			branchType, err := configdomain.ParseBranchType(*data.Branches.UnknownType, messages.ConfigFile)
 			ec.Check(err)
 			unknownBranchType = configdomain.UnknownBranchTypeOpt(branchType)
 		}
 	}
 	if data.Create != nil {
 		if data.Create.NewBranchType != nil {
-			branchType, err := configdomain.ParseBranchType(*data.Create.NewBranchType)
+			branchType, err := configdomain.ParseBranchType(*data.Create.NewBranchType, messages.ConfigFile)
 			ec.Check(err)
 			newBranchType = configdomain.NewBranchTypeOpt(branchType)
 		}
@@ -163,7 +163,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			finalMessages.Add(messages.PushNewBranchesDeprecation)
 		}
 		if data.Create.ShareNewBranches != nil {
-			shareNewBranches, err = configdomain.ParseShareNewBranches(*data.Create.ShareNewBranches, configdomain.KeyShareNewBranches)
+			shareNewBranches, err = configdomain.ParseShareNewBranches(*data.Create.ShareNewBranches, configdomain.KeyShareNewBranches.String())
 			ec.Check(err)
 		}
 		if data.Create.Stash != nil {
@@ -172,22 +172,22 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	}
 	if data.Hosting != nil {
 		if data.Hosting.Platform != nil {
-			forgeType, err = forgedomain.ParseForgeType(*data.Hosting.Platform)
+			forgeType, err = forgedomain.ParseForgeType(*data.Hosting.Platform, messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Hosting.DevRemote != nil {
 			devRemote = gitdomain.NewRemote(*data.Hosting.DevRemote)
 		}
 		if data.Hosting.ForgeType != nil {
-			forgeType, err = forgedomain.ParseForgeType(*data.Hosting.ForgeType)
+			forgeType, err = forgedomain.ParseForgeType(*data.Hosting.ForgeType, messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Hosting.GitHubConnectorType != nil {
-			githubConnectorType, err = forgedomain.ParseGitHubConnectorType(*data.Hosting.GitHubConnectorType)
+			githubConnectorType, err = forgedomain.ParseGitHubConnectorType(*data.Hosting.GitHubConnectorType, messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Hosting.GitLabConnectorType != nil {
-			gitlabConnectorType, err = forgedomain.ParseGitLabConnectorType(*data.Hosting.GitLabConnectorType)
+			gitlabConnectorType, err = forgedomain.ParseGitLabConnectorType(*data.Hosting.GitLabConnectorType, messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Hosting.OriginHostname != nil {
@@ -196,7 +196,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	}
 	if data.Propose != nil {
 		if data.Propose.Lineage != nil {
-			proposalsShowLineage, err = forgedomain.ParseProposalsShowLineage(*data.Propose.Lineage)
+			proposalsShowLineage, err = forgedomain.ParseProposalsShowLineage(*data.Propose.Lineage, messages.ConfigFile)
 			ec.Check(err)
 		}
 	}
@@ -210,15 +210,15 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	}
 	if data.SyncStrategy != nil {
 		if data.SyncStrategy.FeatureBranches != nil {
-			syncFeatureStrategy, err = configdomain.ParseSyncFeatureStrategy(*data.SyncStrategy.FeatureBranches)
+			syncFeatureStrategy, err = configdomain.ParseSyncFeatureStrategy(*data.SyncStrategy.FeatureBranches, messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.SyncStrategy.PerennialBranches != nil {
-			syncPerennialStrategy, err = configdomain.ParseSyncPerennialStrategy(*data.SyncStrategy.PerennialBranches)
+			syncPerennialStrategy, err = configdomain.ParseSyncPerennialStrategy(*data.SyncStrategy.PerennialBranches, messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.SyncStrategy.PrototypeBranches != nil {
-			syncPrototypeStrategy, err = configdomain.ParseSyncPrototypeStrategy(*data.SyncStrategy.PrototypeBranches)
+			syncPrototypeStrategy, err = configdomain.ParseSyncPrototypeStrategy(*data.SyncStrategy.PrototypeBranches, messages.ConfigFile)
 			ec.Check(err)
 		}
 	}
@@ -233,15 +233,15 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			detached = Some(configdomain.Detached(*data.Sync.Detached))
 		}
 		if data.Sync.FeatureStrategy != nil {
-			syncFeatureStrategy, err = configdomain.ParseSyncFeatureStrategy(*data.Sync.FeatureStrategy)
+			syncFeatureStrategy, err = configdomain.ParseSyncFeatureStrategy(*data.Sync.FeatureStrategy, messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Sync.PerennialStrategy != nil {
-			syncPerennialStrategy, err = configdomain.ParseSyncPerennialStrategy(*data.Sync.PerennialStrategy)
+			syncPerennialStrategy, err = configdomain.ParseSyncPerennialStrategy(*data.Sync.PerennialStrategy, messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Sync.PrototypeStrategy != nil {
-			syncPrototypeStrategy, err = configdomain.ParseSyncPrototypeStrategy(*data.Sync.PrototypeStrategy)
+			syncPrototypeStrategy, err = configdomain.ParseSyncPrototypeStrategy(*data.Sync.PrototypeStrategy, messages.ConfigFile)
 			ec.Check(err)
 		}
 		if data.Sync.PushBranches != nil {

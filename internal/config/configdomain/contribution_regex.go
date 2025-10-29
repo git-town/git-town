@@ -1,16 +1,21 @@
 package configdomain
 
-import . "github.com/git-town/git-town/v22/pkg/prelude"
+import (
+	"fmt"
+
+	"github.com/git-town/git-town/v22/internal/messages"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
+)
 
 // configuration setting that allows defining branches matching this regular expression as contribution branches
 type ContributionRegex struct {
 	VerifiedRegex
 }
 
-func ParseContributionRegex(value string) (Option[ContributionRegex], error) {
+func ParseContributionRegex(value string, source string) (Option[ContributionRegex], error) {
 	verifiedRegexOpt, err := ParseRegex(value)
 	if err != nil {
-		return None[ContributionRegex](), err
+		return None[ContributionRegex](), fmt.Errorf(messages.ContributionRegexCannotParse, value, source, err)
 	}
 	if verifiedRegex, hasVerifiedRegex := verifiedRegexOpt.Get(); hasVerifiedRegex {
 		return Some(ContributionRegex{VerifiedRegex: verifiedRegex}), nil

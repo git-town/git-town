@@ -35,7 +35,7 @@ func ContributionRegex(args Args[configdomain.ContributionRegex]) (Option[config
 		Prompt:        messages.ContributionRegexPrompt,
 		Title:         contributionRegexTitle,
 	})
-	newValue, errNewValue := configdomain.ParseContributionRegex(input)
+	newValue, errNewValue := configdomain.ParseContributionRegex(input, "dialog")
 	if args.Global.Equal(newValue) {
 		// the user has entered the global value --> keep using the global value, don't store the local value
 		newValue = None[configdomain.ContributionRegex]()

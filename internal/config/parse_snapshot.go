@@ -38,7 +38,7 @@ func NewBranchTypeOverridesInSnapshot(snapshot configdomain.SingleSnapshot, runn
 			_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, key.Key)
 			continue
 		}
-		branchTypeOpt, err := configdomain.ParseBranchType(value)
+		branchTypeOpt, err := configdomain.ParseBranchType(value, key.String())
 		if err != nil {
 			return result, err
 		}
@@ -77,36 +77,36 @@ func NewLineageFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated
 }
 
 func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated bool, runner subshelldomain.Runner) (configdomain.PartialConfig, error) {
-	autoResolve, errAutoResolve := gohacks.ParseBoolOpt[configdomain.AutoResolve](snapshot[configdomain.KeyAutoResolve], configdomain.KeyAutoResolve.String())
-	autoSync, errAutoSync := gohacks.ParseBoolOpt[configdomain.AutoSync](snapshot[configdomain.KeyAutoSync], configdomain.KeyAutoSync.String())
+	autoResolve, errAutoResolve := load(snapshot, configdomain.KeyAutoResolve, gohacks.ParseBoolOpt[configdomain.AutoResolve])
+	autoSync, errAutoSync := load(snapshot, configdomain.KeyAutoSync, gohacks.ParseBoolOpt[configdomain.AutoSync])
 	branchTypeOverrides, errBranchTypeOverride := NewBranchTypeOverridesInSnapshot(snapshot, runner)
-	contributionRegex, errContributionRegex := configdomain.ParseContributionRegex(snapshot[configdomain.KeyContributionRegex])
-	detached, errDetached := gohacks.ParseBoolOpt[configdomain.Detached](snapshot[configdomain.KeyDetached], configdomain.KeyDetached.String())
-	displayTypes, errDisplayTypes := configdomain.ParseDisplayTypes(snapshot[configdomain.KeyDisplayTypes], configdomain.KeyDisplayTypes.String())
-	featureRegex, errFeatureRegex := configdomain.ParseFeatureRegex(snapshot[configdomain.KeyFeatureRegex])
-	forgeType, errForgeType := forgedomain.ParseForgeType(snapshot[configdomain.KeyForgeType])
-	githubConnectorType, errGitHubConnectorType := forgedomain.ParseGitHubConnectorType(snapshot[configdomain.KeyGitHubConnectorType])
-	gitlabConnectorType, errGitLabConnectorType := forgedomain.ParseGitLabConnectorType(snapshot[configdomain.KeyGitLabConnectorType])
+	contributionRegex, errContributionRegex := load(snapshot, configdomain.KeyContributionRegex, configdomain.ParseContributionRegex)
+	detached, errDetached := load(snapshot, configdomain.KeyDetached, gohacks.ParseBoolOpt[configdomain.Detached])
+	displayTypes, errDisplayTypes := load(snapshot, configdomain.KeyDisplayTypes, configdomain.ParseDisplayTypes)
+	featureRegex, errFeatureRegex := load(snapshot, configdomain.KeyFeatureRegex, configdomain.ParseFeatureRegex)
+	forgeType, errForgeType := load(snapshot, configdomain.KeyForgeType, forgedomain.ParseForgeType)
+	githubConnectorType, errGitHubConnectorType := load(snapshot, configdomain.KeyGitHubConnectorType, forgedomain.ParseGitHubConnectorType)
+	gitlabConnectorType, errGitLabConnectorType := load(snapshot, configdomain.KeyGitLabConnectorType, forgedomain.ParseGitLabConnectorType)
 	lineage, errLineage := NewLineageFromSnapshot(snapshot, updateOutdated, runner)
-	newBranchTypeValue, errNewBranchType := configdomain.ParseBranchType(snapshot[configdomain.KeyNewBranchType])
+	newBranchTypeValue, errNewBranchType := load(snapshot, configdomain.KeyNewBranchType, configdomain.ParseBranchType)
 	newBranchType := configdomain.NewBranchTypeOpt(newBranchTypeValue)
-	observedRegex, errObservedRegex := configdomain.ParseObservedRegex(snapshot[configdomain.KeyObservedRegex])
-	order, errOrder := configdomain.ParseOrder(snapshot[configdomain.KeyOrder], configdomain.KeyOrder)
-	offline, errOffline := gohacks.ParseBoolOpt[configdomain.Offline](snapshot[configdomain.KeyOffline], configdomain.KeyOffline.String())
-	perennialRegex, errPerennialRegex := configdomain.ParsePerennialRegex(snapshot[configdomain.KeyPerennialRegex])
-	proposalsShowLineage, errProposalsShowLineage := forgedomain.ParseProposalsShowLineage(snapshot[configdomain.KeyProposalsShowLineage])
-	pushBranches, errPushBranches := gohacks.ParseBoolOpt[configdomain.PushBranches](snapshot[configdomain.KeyPushBranches], configdomain.KeyPushBranches.String())
-	pushHook, errPushHook := gohacks.ParseBoolOpt[configdomain.PushHook](snapshot[configdomain.KeyPushHook], configdomain.KeyPushHook.String())
-	shareNewBranches, errShareNewBranches := configdomain.ParseShareNewBranches(snapshot[configdomain.KeyShareNewBranches], configdomain.KeyShareNewBranches)
-	shipDeleteTrackingBranch, errShipDeleteTrackingBranch := gohacks.ParseBoolOpt[configdomain.ShipDeleteTrackingBranch](snapshot[configdomain.KeyShipDeleteTrackingBranch], configdomain.KeyShipDeleteTrackingBranch.String())
-	shipStrategy, errShipStrategy := configdomain.ParseShipStrategy(snapshot[configdomain.KeyShipStrategy])
-	stash, errStash := gohacks.ParseBoolOpt[configdomain.Stash](snapshot[configdomain.KeyStash], configdomain.KeyStash.String())
-	syncFeatureStrategy, errSyncFeatureStrategy := configdomain.ParseSyncFeatureStrategy(snapshot[configdomain.KeySyncFeatureStrategy])
-	syncPerennialStrategy, errSyncPerennialStrategy := configdomain.ParseSyncPerennialStrategy(snapshot[configdomain.KeySyncPerennialStrategy])
-	syncPrototypeStrategy, errSyncPrototypeStrategy := configdomain.ParseSyncPrototypeStrategy(snapshot[configdomain.KeySyncPrototypeStrategy])
-	syncTags, errSyncTags := gohacks.ParseBoolOpt[configdomain.SyncTags](snapshot[configdomain.KeySyncTags], configdomain.KeySyncTags.String())
-	syncUpstream, errSyncUpstream := gohacks.ParseBoolOpt[configdomain.SyncUpstream](snapshot[configdomain.KeySyncUpstream], configdomain.KeySyncUpstream.String())
-	unknownBranchTypeValue, errUnknownBranchType := configdomain.ParseBranchType(snapshot[configdomain.KeyUnknownBranchType])
+	observedRegex, errObservedRegex := load(snapshot, configdomain.KeyObservedRegex, configdomain.ParseObservedRegex)
+	order, errOrder := load(snapshot, configdomain.KeyOrder, configdomain.ParseOrder)
+	offline, errOffline := load(snapshot, configdomain.KeyOffline, gohacks.ParseBoolOpt[configdomain.Offline])
+	perennialRegex, errPerennialRegex := load(snapshot, configdomain.KeyPerennialRegex, configdomain.ParsePerennialRegex)
+	proposalsShowLineage, errProposalsShowLineage := load(snapshot, configdomain.KeyProposalsShowLineage, forgedomain.ParseProposalsShowLineage)
+	pushBranches, errPushBranches := load(snapshot, configdomain.KeyPushBranches, gohacks.ParseBoolOpt[configdomain.PushBranches])
+	pushHook, errPushHook := load(snapshot, configdomain.KeyPushHook, gohacks.ParseBoolOpt[configdomain.PushHook])
+	shareNewBranches, errShareNewBranches := load(snapshot, configdomain.KeyShareNewBranches, configdomain.ParseShareNewBranches)
+	shipDeleteTrackingBranch, errShipDeleteTrackingBranch := load(snapshot, configdomain.KeyShipDeleteTrackingBranch, gohacks.ParseBoolOpt[configdomain.ShipDeleteTrackingBranch])
+	shipStrategy, errShipStrategy := load(snapshot, configdomain.KeyShipStrategy, configdomain.ParseShipStrategy)
+	stash, errStash := load(snapshot, configdomain.KeyStash, gohacks.ParseBoolOpt[configdomain.Stash])
+	syncFeatureStrategy, errSyncFeatureStrategy := load(snapshot, configdomain.KeySyncFeatureStrategy, configdomain.ParseSyncFeatureStrategy)
+	syncPerennialStrategy, errSyncPerennialStrategy := load(snapshot, configdomain.KeySyncPerennialStrategy, configdomain.ParseSyncPerennialStrategy)
+	syncPrototypeStrategy, errSyncPrototypeStrategy := load(snapshot, configdomain.KeySyncPrototypeStrategy, configdomain.ParseSyncPrototypeStrategy)
+	syncTags, errSyncTags := load(snapshot, configdomain.KeySyncTags, gohacks.ParseBoolOpt[configdomain.SyncTags])
+	syncUpstream, errSyncUpstream := load(snapshot, configdomain.KeySyncUpstream, gohacks.ParseBoolOpt[configdomain.SyncUpstream])
+	unknownBranchTypeValue, errUnknownBranchType := load(snapshot, configdomain.KeyUnknownBranchType, configdomain.ParseBranchType)
 	unknownBranchType := configdomain.UnknownBranchTypeOpt(unknownBranchTypeValue)
 	err := cmp.Or(
 		errAutoResolve,
@@ -185,4 +185,8 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		UnknownBranchType:        unknownBranchType,
 		Verbose:                  None[configdomain.Verbose](),
 	}, err
+}
+
+func load[T any](snapshot configdomain.SingleSnapshot, key configdomain.Key, parser func(string, string) (T, error)) (T, error) { //nolint:ireturn
+	return parser(snapshot[key], key.String())
 }

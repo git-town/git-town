@@ -1,6 +1,11 @@
 package configdomain
 
-import . "github.com/git-town/git-town/v22/pkg/prelude"
+import (
+	"fmt"
+
+	"github.com/git-town/git-town/v22/internal/messages"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
+)
 
 // SyncPerennialStrategy defines legal values for the "sync-perennial-strategy" configuration setting.
 type SyncPerennialStrategy SyncStrategy
@@ -19,8 +24,11 @@ const (
 	SyncPerennialStrategyFFOnly = SyncPerennialStrategy(SyncStrategyFFOnly)
 )
 
-func ParseSyncPerennialStrategy(text string) (Option[SyncPerennialStrategy], error) {
-	syncStrategyOpt, err := ParseSyncStrategy(text)
+func ParseSyncPerennialStrategy(value string, source string) (Option[SyncPerennialStrategy], error) {
+	syncStrategyOpt, err := ParseSyncStrategy(value)
+	if err != nil {
+		return None[SyncPerennialStrategy](), fmt.Errorf(messages.SyncPerennialStrategyInvalid, value, source, err)
+	}
 	if syncStrategy, has := syncStrategyOpt.Get(); has {
 		return Some(SyncPerennialStrategy(syncStrategy)), err
 	}

@@ -34,7 +34,7 @@ func PerennialRegex(args Args[configdomain.PerennialRegex]) (Option[configdomain
 		Prompt:        messages.PerennialRegexPrompt,
 		Title:         perennialRegexTitle,
 	})
-	newValue, errNewValue := configdomain.ParsePerennialRegex(input)
+	newValue, errNewValue := configdomain.ParsePerennialRegex(input, "dialog")
 	if args.Global.Equal(newValue) {
 		// the user has entered the global value --> keep using the global value, don't store the local value
 		newValue = None[configdomain.PerennialRegex]()

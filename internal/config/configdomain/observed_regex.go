@@ -1,16 +1,21 @@
 package configdomain
 
-import . "github.com/git-town/git-town/v22/pkg/prelude"
+import (
+	"fmt"
+
+	"github.com/git-town/git-town/v22/internal/messages"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
+)
 
 // configuration setting that allows defining branches matching this regular expression as observed branches
 type ObservedRegex struct {
 	VerifiedRegex
 }
 
-func ParseObservedRegex(value string) (Option[ObservedRegex], error) {
+func ParseObservedRegex(value string, source string) (Option[ObservedRegex], error) {
 	verifiedRegexOpt, err := ParseRegex(value)
 	if err != nil {
-		return None[ObservedRegex](), err
+		return None[ObservedRegex](), fmt.Errorf(messages.ObservedRegexCannotParse, value, source, err)
 	}
 	if verifiedRegex, hasVerifiedRegex := verifiedRegexOpt.Get(); hasVerifiedRegex {
 		return Some(ObservedRegex{VerifiedRegex: verifiedRegex}), nil

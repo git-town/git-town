@@ -35,7 +35,7 @@ func ObservedRegex(args Args[configdomain.ObservedRegex]) (Option[configdomain.O
 		Prompt:        messages.ObservedRegexPrompt,
 		Title:         observedRegexTitle,
 	})
-	newValue, errNewValue := configdomain.ParseObservedRegex(input)
+	newValue, errNewValue := configdomain.ParseObservedRegex(input, "dialog")
 	if args.Global.Equal(newValue) {
 		// the user has entered the global value --> keep using the global value, don't store the local value
 		newValue = None[configdomain.ObservedRegex]()

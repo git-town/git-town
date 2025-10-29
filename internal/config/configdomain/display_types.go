@@ -95,7 +95,7 @@ func ParseDisplayTypes(text, source string) (Option[DisplayTypes], error) {
 	}
 	branchTypes := make([]BranchType, len(parts))
 	for p, part := range parts {
-		branchTypeOpt, err := ParseBranchType(part)
+		branchTypeOpt, err := ParseBranchType(part, source)
 		if err != nil {
 			return None[DisplayTypes](), err
 		}

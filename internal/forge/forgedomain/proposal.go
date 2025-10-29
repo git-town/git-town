@@ -30,13 +30,13 @@ func (self *Proposal) UnmarshalJSON(b []byte) error {
 	if err := json.Unmarshal(mapping["forge-type"], &forgeTypeName); err != nil {
 		return err
 	}
-	forgeTypeOpt, err := ParseForgeType(forgeTypeName)
+	forgeTypeOpt, err := ParseForgeType(forgeTypeName, "JSON")
 	if err != nil {
 		return err
 	}
 	forgeType, hasForgeType := forgeTypeOpt.Get()
 	if !hasForgeType {
-		return fmt.Errorf(messages.ForgeTypeUnknown, forgeTypeName)
+		return fmt.Errorf(messages.ForgeTypeUnknown, "JSON", forgeTypeName)
 	}
 	switch forgeType {
 	case ForgeTypeBitbucket:

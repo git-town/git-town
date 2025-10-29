@@ -35,7 +35,7 @@ func FeatureRegex(args Args[configdomain.FeatureRegex]) (Option[configdomain.Fea
 		Prompt:        messages.FeatureRegexPrompt,
 		Title:         featureRegexTitle,
 	})
-	newValue, errNewValue := configdomain.ParseFeatureRegex(input)
+	newValue, errNewValue := configdomain.ParseFeatureRegex(input, "dialog")
 	if args.Global.Equal(newValue) {
 		// the user has entered the global value --> keep using the global value, don't store the local value
 		newValue = None[configdomain.FeatureRegex]()

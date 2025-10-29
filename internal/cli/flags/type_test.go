@@ -41,7 +41,7 @@ func TestBranchTypeFlag(t *testing.T) {
 			"c,f,o":                 {configdomain.BranchTypeContributionBranch, configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeObservedBranch},
 		}
 		for give, want := range tests {
-			have, err := flags.ParseBranchTypes(give)
+			have, err := flags.ParseBranchTypes(give, "test")
 			must.NoError(t, err)
 			must.Eq(t, want, have)
 		}
