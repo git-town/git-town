@@ -38,7 +38,7 @@ func NewBranchTypeOverridesInSnapshot(snapshot configdomain.SingleSnapshot, igno
 			_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, key.Key)
 			continue
 		}
-		branchTypeOpt, err := configdomain.ParseBranchType(value)
+		branchTypeOpt, err := configdomain.ParseBranchType(value, key.String())
 		if err != nil {
 			if ignoreUnknown {
 				fmt.Printf("Ignoring unknown branch type override for %q: %s\n", branch, value)
