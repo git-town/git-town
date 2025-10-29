@@ -20,7 +20,7 @@ Feature: Ignore invalid configuration data
       | observed regex              | enter      |
       | new branch type             | enter      |
       | unknown branch type         | enter      |
-      | sync feature strategy       | enter      |
+      | sync feature strategy       | down enter |
       | sync perennial strategy     | enter      |
       | sync prototype strategy     | enter      |
       | sync upstream               | enter      |
@@ -38,10 +38,28 @@ Feature: Ignore invalid configuration data
 
   @debug @this
   Scenario: result
-    Then Git Town runs no commands
-    And Git Town prints the error:
+    Then Git Town runs the commands
+      | COMMAND                                              |
+      | git config git-town.auto-sync true                   |
+      | git config git-town.detached false                   |
+      | git config git-town.new-branch-type feature          |
+      | git config git-town.main-branch main                 |
+      | git config git-town.unknown-branch-type feature      |
+      | git config git-town.order asc                        |
+      | git config git-town.push-branches true               |
+      | git config git-town.push-hook true                   |
+      | git config git-town.share-new-branches no            |
+      | git config git-town.ship-strategy api                |
+      | git config git-town.ship-delete-tracking-branch true |
+      | git config git-town.stash true                       |
+      | git config git-town.sync-feature-strategy merge      |
+      | git config git-town.sync-perennial-strategy ff-only  |
+      | git config git-town.sync-prototype-strategy merge    |
+      | git config git-town.sync-upstream true               |
+      | git config git-town.sync-tags true                   |
+    And Git Town prints:
       """
-      xxx
+      Ignoring invalid value for "git-town.sync-feature-strategy": "--help"
       """
     And local Git setting "git-town.dev-remote" still doesn't exist
     And local Git setting "git-town.new-branch-type" still doesn't exist
