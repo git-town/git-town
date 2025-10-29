@@ -94,6 +94,7 @@ const (
 	ContributionBranchCannotPropose    = "cannot propose contribution branches"
 	ContributionBranchCannotShip       = "cannot ship contribution branches"
 	ContributionRegex                  = "Contribution regex: %s\n"
+	ContributionRegexCannotParse       = "cannot parse contribution regex (%s) in %q: %w"
 	ContributionRegexPrompt            = "Contribution regex: "
 	ContributionRegexResult            = "Contribution regex: %s\n"
 	CreatePrototypeBranchesDeprecation = `The Git Town configuration file contains the deprecated setting "create-prototype-branches".

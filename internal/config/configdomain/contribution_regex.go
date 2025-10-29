@@ -3,6 +3,7 @@ package configdomain
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v22/internal/messages"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
@@ -14,7 +15,7 @@ type ContributionRegex struct {
 func ParseContributionRegex(value string, source string) (Option[ContributionRegex], error) {
 	verifiedRegexOpt, err := ParseRegex(value)
 	if err != nil {
-		return None[ContributionRegex](), fmt.Errorf("cannot parse contribution regex in %q: %w", source, err)
+		return None[ContributionRegex](), fmt.Errorf(messages.ContributionRegexCannotParse, value, source, err)
 	}
 	if verifiedRegex, hasVerifiedRegex := verifiedRegexOpt.Get(); hasVerifiedRegex {
 		return Some(ContributionRegex{VerifiedRegex: verifiedRegex}), nil
