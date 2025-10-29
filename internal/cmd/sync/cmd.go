@@ -171,13 +171,11 @@ Start:
 	if data.remotes.HasRemote(data.config.NormalConfig.DevRemote) && data.shouldPushTags && data.config.NormalConfig.Offline.IsOnline() {
 		runProgram.Value.Add(&opcodes.PushTags{})
 	}
-
-	connector, hasConnector := data.connector.Get()
-	if hasConnector {
-		if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
-			if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
-				BranchProposalsProgram(
-					BranchProposalsProgramArgs{
+	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
+		if connector, hasConnector := data.connector.Get(); hasConnector {
+			if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
+				_ = UpdateProposalStackLineageProgram(
+					UpdateProposalStackLineageProgramArgs{
 						Current:   data.initialBranch,
 						FullStack: args.stack,
 						Program:   runProgram,
@@ -188,6 +186,8 @@ Start:
 							MainAndPerennialBranches: data.config.MainAndPerennials(),
 							Order:                    data.config.NormalConfig.Order,
 						},
+						ProposalStackLineageTree:             None[*forge.ProposalStackLineageTree](),
+						SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(),
 					},
 				)
 			}
