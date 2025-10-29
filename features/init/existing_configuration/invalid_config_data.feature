@@ -8,6 +8,7 @@ Feature: Fix invalid configuration data
     And local Git setting "git-town.feature-regex" is "(feat"
     And local Git setting "git-town.perennial-regex" is "(per"
     And local Git setting "git-town.contribution-regex" is "(cont"
+    And local Git setting "git-town.observed-regex" is "(obs"
     And local Git setting "git-town.sync-feature-strategy" is "--help"
     When I run "git-town init" and enter into the dialogs:
       | DIALOG                      | KEYS        |
@@ -65,6 +66,7 @@ Feature: Fix invalid configuration data
       """
       Ignoring invalid value for "git-town.contribution-regex": "(cont"
       Ignoring invalid value for "git-town.feature-regex": "(feat"
+      Ignoring invalid value for "git-town.observed-regex": "(obs"
       Ignoring invalid value for "git-town.perennial-regex": "(per"
       Ignoring invalid value for "git-town.sync-feature-strategy": "--help"
       """
