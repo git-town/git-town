@@ -343,6 +343,7 @@ and will be removed in future versions of Git Town.`
 	SyncPerennialBranchHasUnpushedCommits = `cannot sync branch %q because it has unpushed local commits`
 	SyncPerennialStrategyInvalid          = "unknown sync-perennial strategy (%s) in %q: %w"
 	SyncPrototypeBranches                 = "Sync prototype branches: %s\n"
+	SyncPrototypeStrategyInvalid          = "unknown sync-prototype-strategy (%s) in %q: %w"
 	SyncRepoHasDetachedHead               = "please check out the branch to sync"
 	SyncStatusNotRecognized               = "cannot determine the sync status for Git remote %q and branch name %q"
 	SyncTags                              = "Sync tags: %s\n"

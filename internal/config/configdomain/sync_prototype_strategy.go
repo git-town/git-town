@@ -3,6 +3,7 @@ package configdomain
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v22/internal/messages"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
@@ -30,7 +31,7 @@ func NewSyncPrototypeStrategyFromSyncFeatureStrategy(syncFeatureStrategy SyncFea
 func ParseSyncPrototypeStrategy(value string, source string) (Option[SyncPrototypeStrategy], error) {
 	syncStrategyOpt, err := ParseSyncStrategy(value)
 	if err != nil {
-		return None[SyncPrototypeStrategy](), fmt.Errorf("unknown sync-prototype-strategy (%s) in %q: %w", value, source, err)
+		return None[SyncPrototypeStrategy](), fmt.Errorf(messages.SyncPrototypeStrategyInvalid, value, source, err)
 	}
 	if syncStrategy, has := syncStrategyOpt.Get(); has {
 		return Some(SyncPrototypeStrategy(syncStrategy)), err
