@@ -17,7 +17,7 @@ import (
 )
 
 // provides the branch type overrides stored in the given Git metadata snapshot
-func NewBranchTypeOverridesInSnapshot(snapshot configdomain.SingleSnapshot, runner subshelldomain.Runner) (configdomain.BranchTypeOverrides, error) {
+func NewBranchTypeOverridesInSnapshot(snapshot configdomain.SingleSnapshot, ignoreUnknown bool, runner subshelldomain.Runner) (configdomain.BranchTypeOverrides, error) {
 	result := configdomain.BranchTypeOverrides{}
 	for key, value := range snapshot { // okay to iterate the map in random order because we assign to a new map
 		key, isBranchTypeKey := configdomain.ParseBranchTypeOverrideKey(key).Get()
@@ -38,9 +38,13 @@ func NewBranchTypeOverridesInSnapshot(snapshot configdomain.SingleSnapshot, runn
 			_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, key.Key)
 			continue
 		}
-		branchTypeOpt, err := configdomain.ParseBranchType(value, key.String())
+		branchTypeOpt, err := configdomain.ParseBranchType(value)
 		if err != nil {
-			return result, err
+			if ignoreUnknown {
+				fmt.Printf("Ignoring unknown branch type override for %q: %s\n", branch, value)
+			} else {
+				return result, err
+			}
 		}
 		if branchType, hasBranchType := branchTypeOpt.Get(); hasBranchType {
 			result[branch] = branchType
@@ -187,6 +191,13 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	}, err
 }
 
-func load[T any](snapshot configdomain.SingleSnapshot, key configdomain.Key, parser func(string, string) (T, error)) (T, error) { //nolint:ireturn
-	return parser(snapshot[key], key.String())
+func load[T any](snapshot configdomain.SingleSnapshot, key configdomain.Key, parseFunc func(string, string) (T, error), ignoreUnknown bool, defaults T) (T, error) {
+	value, err := parseFunc(snapshot[key], key.String())
+	if err != nil {
+		if ignoreUnknown {
+			return defaults, nil
+		}
+		return defaults, err
+	}
+	return value, nil
 }

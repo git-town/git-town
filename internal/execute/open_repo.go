@@ -56,7 +56,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
-	globalConfig, err := config.NewPartialConfigFromSnapshot(globalSnapshot, true, backendRunner)
+	globalConfig, err := config.NewPartialConfigFromSnapshot(globalSnapshot, true, args.IgnoreUnknown, backendRunner)
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
@@ -64,7 +64,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
-	localConfig, err := config.NewPartialConfigFromSnapshot(localSnapshot, true, backendRunner)
+	localConfig, err := config.NewPartialConfigFromSnapshot(localSnapshot, true, args.IgnoreUnknown, backendRunner)
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
@@ -72,7 +72,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
-	unscopedConfig, err := config.NewPartialConfigFromSnapshot(unscopedSnapshot, true, backendRunner)
+	unscopedConfig, err := config.NewPartialConfigFromSnapshot(unscopedSnapshot, true, args.IgnoreUnknown, backendRunner)
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
@@ -160,6 +160,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 
 type OpenRepoArgs struct {
 	CliConfig        configdomain.PartialConfig
+	IgnoreUnknown    bool
 	PrintBranchNames bool
 	PrintCommands    bool
 	ValidateGitRepo  bool
