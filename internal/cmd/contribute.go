@@ -71,6 +71,7 @@ func contributeCmd() *cobra.Command {
 func executeContribute(args []string, cliConfig configdomain.PartialConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
+		IgnoreUnknown:    false,
 		PrintBranchNames: false,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,

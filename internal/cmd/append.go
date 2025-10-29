@@ -151,6 +151,7 @@ func executeAppend(args executeAppendArgs) error {
 Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        args.cliConfig,
+		IgnoreUnknown:    false,
 		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,

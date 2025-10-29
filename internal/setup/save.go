@@ -1,6 +1,7 @@
 package setup
 
 import (
+	"fmt"
 	"slices"
 
 	"github.com/git-town/git-town/v22/internal/cli/dialog"
@@ -271,7 +272,7 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 	}
 	if configFile.SyncFeatureStrategy.IsNone() {
 		fc.Check(
-			saveSyncFeatureStrategy(userInput.Data.SyncFeatureStrategy, existingGitConfig.SyncFeatureStrategy, frontend),
+			saveSyncFeatureStrategy(userInput.Data.SyncFeatureStrategy, frontend),
 		)
 	}
 	if configFile.SyncPerennialStrategy.IsNone() {
@@ -587,10 +588,8 @@ func saveStash(valueToWriteToGit Option[configdomain.Stash], valueAlreadyInGit O
 	return gitconfig.RemoveStash(runner)
 }
 
-func saveSyncFeatureStrategy(valueToWriteToGit Option[configdomain.SyncFeatureStrategy], valueAlreadyInGit Option[configdomain.SyncFeatureStrategy], runner subshelldomain.Runner) error {
-	if valueAlreadyInGit.Equal(valueToWriteToGit) {
-		return nil
-	}
+func saveSyncFeatureStrategy(valueToWriteToGit Option[configdomain.SyncFeatureStrategy], runner subshelldomain.Runner) error {
+	fmt.Println("1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111")
 	if value, has := valueToWriteToGit.Get(); has {
 		return gitconfig.SetSyncFeatureStrategy(runner, value, configdomain.ConfigScopeLocal)
 	}

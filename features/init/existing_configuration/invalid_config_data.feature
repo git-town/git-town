@@ -39,6 +39,10 @@ Feature: Ignore invalid configuration data
   @debug @this
   Scenario: result
     Then Git Town runs no commands
+    And Git Town prints the error:
+      """
+      xxx
+      """
     And local Git setting "git-town.dev-remote" still doesn't exist
     And local Git setting "git-town.new-branch-type" still doesn't exist
     And local Git setting "git-town.main-branch" still doesn't exist
@@ -51,7 +55,7 @@ Feature: Ignore invalid configuration data
     And local Git setting "git-town.share-new-branches" still doesn't exist
     And local Git setting "git-town.push-hook" still doesn't exist
     And local Git setting "git-town.stash" still doesn't exist
-    And local Git setting "git-town.sync-feature-strategy" still doesn't exist
+    And local Git setting "git-town.sync-feature-strategy" now doesn't exist
     And local Git setting "git-town.sync-perennial-strategy" still doesn't exist
     And local Git setting "git-town.sync-upstream" still doesn't exist
     And local Git setting "git-town.sync-tags" still doesn't exist
@@ -60,7 +64,7 @@ Feature: Ignore invalid configuration data
     And the configuration file is now:
       """
       # See https://www.git-town.com/configuration-file for details
-
+      
       [branches]
       main = "main"
       """

@@ -58,6 +58,7 @@ func RootCmd() *cobra.Command {
 func executeDisplayConfig(cliConfig configdomain.PartialConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
+		IgnoreUnknown:    true,
 		PrintBranchNames: false,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,

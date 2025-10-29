@@ -60,6 +60,7 @@ func RootCommand() *cobra.Command {
 func executeStatus(cliConfig configdomain.PartialConfig, pending configdomain.Pending) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
+		IgnoreUnknown:    true,
 		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,

@@ -60,6 +60,7 @@ func offlineCmd() *cobra.Command {
 func executeOffline(args []string, cliConfig configdomain.PartialConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
+		IgnoreUnknown:    false,
 		PrintBranchNames: false,
 		PrintCommands:    true,
 		ValidateGitRepo:  false,

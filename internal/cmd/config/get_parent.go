@@ -49,6 +49,7 @@ func getParentCommand() *cobra.Command {
 func executeGetParent(args []string, cliConfig configdomain.PartialConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
+		IgnoreUnknown:    false,
 		PrintBranchNames: false,
 		PrintCommands:    false,
 		ValidateGitRepo:  true,

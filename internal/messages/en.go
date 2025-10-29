@@ -339,7 +339,7 @@ and will be removed in future versions of Git Town.`
 	SwitchNoBranches                      = "no branches to switch to"
 	SwitchUncommittedChanges              = "uncommitted changes"
 	SyncFeatureBranches                   = "Sync feature branches: %s\n"
-	SyncFeatureStrategyInvalid            = "invalid sync-feature-strategy (%s) in %q: %w"
+	SyncFeatureStrategySettingInvalid     = "cannot parse %q: %w"
 	SyncPerennialBranches                 = "Sync perennial branches: %s\n"
 	SyncPerennialBranchHasUnpushedCommits = `cannot sync branch %q because it has unpushed local commits`
 	SyncPerennialStrategyInvalid          = "unknown sync-perennial strategy (%s) in %q: %w"
