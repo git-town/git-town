@@ -137,13 +137,7 @@ Feature: Fix invalid configuration data
     And global Git setting "alias.ship" now doesn't exist
     And global Git setting "alias.sync" now doesn't exist
     And local Git setting "git-town.sync-feature-strategy" is now "--help"
-    And local Git setting "git-town.dev-remote" now doesn't exist
     And local Git setting "git-town.new-branch-type" is now "zonk"
-    And local Git setting "git-town.main-branch" now doesn't exist
-    And local Git setting "git-town.perennial-branches" now doesn't exist
-    And local Git setting "git-town.forge-type" now doesn't exist
-    And local Git setting "git-town.github-token" now doesn't exist
-    And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
     And local Git setting "git-town.feature-regex" is now "(feat"
     And local Git setting "git-town.contribution-regex" is now "(cont"
     And local Git setting "git-town.observed-regex" is now "(obs"
@@ -156,3 +150,9 @@ Feature: Fix invalid configuration data
     And local Git setting "git-town.push-hook" is now "zonk"
     And local Git setting "git-town.ship-strategy" is now "zonk"
     And local Git setting "git-town.ship-delete-tracking-branch" is now "zonk"
+    And local Git setting "git-town.dev-remote" now doesn't exist
+    And local Git setting "git-town.main-branch" now doesn't exist
+    And local Git setting "git-town.perennial-branches" now doesn't exist
+    And local Git setting "git-town.forge-type" now doesn't exist
+    And local Git setting "git-town.github-token" now doesn't exist
+    And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
