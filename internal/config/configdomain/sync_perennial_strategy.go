@@ -27,7 +27,7 @@ const (
 func ParseSyncPerennialStrategy(value string, source string) (Option[SyncPerennialStrategy], error) {
 	syncStrategyOpt, err := ParseSyncStrategy(value)
 	if err != nil {
-		return None[SyncPerennialStrategy](), fmt.Errorf(messages.SyncPerennialStrategyInvalid, value, source, err)
+		return None[SyncPerennialStrategy](), fmt.Errorf(messages.CannotParse, source, err)
 	}
 	if syncStrategy, has := syncStrategyOpt.Get(); has {
 		return Some(SyncPerennialStrategy(syncStrategy)), err

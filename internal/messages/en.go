@@ -54,6 +54,7 @@ const (
 	BrowserOpen                     = "Please open in a browser: %s\n"
 
 	CacheUnitialized                   = "using a cached value before initialization"
+	CannotParse                        = "cannot parse %q: %w"
 	CommandsRun                        = "Ran %d shell commands."
 	CommitMessageProblem               = "cannot determine last commit message: %w"
 	CommitsSelected                    = "%d commits selected"
@@ -95,7 +96,6 @@ const (
 	ContributionBranchCannotPropose    = "cannot propose contribution branches"
 	ContributionBranchCannotShip       = "cannot ship contribution branches"
 	ContributionRegex                  = "Contribution regex: %s\n"
-	ContributionRegexCannotParse       = "cannot parse contribution regex (%s) in %q: %w"
 	ContributionRegexPrompt            = "Contribution regex: "
 	ContributionRegexResult            = "Contribution regex: %s\n"
 	CreatePrototypeBranchesDeprecation = `The Git Town configuration file contains the deprecated setting "create-prototype-branches".
@@ -133,7 +133,6 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	DryRun                              = "In dry run mode. No commands will be run. When run in normal mode, the command output will appear beneath the command. Some commands will only be run if necessary. For example: 'git push' will run if and only if there are local commits not on origin."
 
 	FeatureDetachedHead          = "please check out the branch to make a feature branch"
-	FeatureRegexCannotParse      = "cannot parse feature regex (%s) from %q: %w"
 	FeatureRegexPrompt           = "Feature regex: "
 	FeatureRegexResult           = "Feature regex: %s\n"
 	FileContentInvalidJSON       = "cannot parse JSON content of file %q: %w"
@@ -229,7 +228,6 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	PerennialBranchCannotShip               = "cannot ship perennial branches"
 	PerennialBranches                       = "Perennial branches: %s\n"
 	PerennialBranchRemovedParentEntry       = "Removed parent entry for perennial branch %q\n"
-	PerennialRegexInvalid                   = "invalid perennial regex (%s) in %q: %w"
 	PerennialRegexPrompt                    = "Perennial regex: "
 	PerennialRegexResult                    = "Perennial regex: %s\n"
 	PrependDetachedHead                     = "please check out the branch for which you want to prepend a parent"
@@ -339,12 +337,9 @@ and will be removed in future versions of Git Town.`
 	SwitchNoBranches                      = "no branches to switch to"
 	SwitchUncommittedChanges              = "uncommitted changes"
 	SyncFeatureBranches                   = "Sync feature branches: %s\n"
-	SyncFeatureStrategyInvalid            = "cannot parse %q: %w"
 	SyncPerennialBranches                 = "Sync perennial branches: %s\n"
 	SyncPerennialBranchHasUnpushedCommits = `cannot sync branch %q because it has unpushed local commits`
-	SyncPerennialStrategyInvalid          = "unknown sync-perennial strategy (%s) in %q: %w"
 	SyncPrototypeBranches                 = "Sync prototype branches: %s\n"
-	SyncPrototypeStrategyInvalid          = "unknown sync-prototype-strategy (%s) in %q: %w"
 	SyncRepoHasDetachedHead               = "please check out the branch to sync"
 	SyncStatusNotRecognized               = "cannot determine the sync status for Git remote %q and branch name %q"
 	SyncTags                              = "Sync tags: %s\n"
