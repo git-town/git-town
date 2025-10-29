@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/git-town/git-town/v22/internal/messages"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
@@ -33,6 +34,6 @@ func ParseOrder(value string, source string) (Option[Order], error) {
 	case "d", "de", "des", "desc":
 		return Some(OrderDesc), nil
 	default:
-		return None[Order](), fmt.Errorf("invalid value for %s: %q", source, value)
+		return None[Order](), fmt.Errorf(messages.OrderInvalid, source, value)
 	}
 }
