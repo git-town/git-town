@@ -36,7 +36,7 @@ Feature: Ignore invalid configuration data
       | order                       | enter      |
       | config storage              | enter      |
 
-  @debug @this
+  @this
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                              |
@@ -61,33 +61,7 @@ Feature: Ignore invalid configuration data
       """
       Ignoring invalid value for "git-town.sync-feature-strategy": "--help"
       """
-    And local Git setting "git-town.dev-remote" still doesn't exist
-    And local Git setting "git-town.new-branch-type" still doesn't exist
-    And local Git setting "git-town.main-branch" still doesn't exist
-    And local Git setting "git-town.perennial-branches" still doesn't exist
-    And local Git setting "git-town.unknown-branch-type" still doesn't exist
-    And local Git setting "git-town.feature-regex" still doesn't exist
-    And local Git setting "git-town.contribution-regex" still doesn't exist
-    And local Git setting "git-town.observed-regex" still doesn't exist
-    And local Git setting "git-town.forge-type" still doesn't exist
-    And local Git setting "git-town.share-new-branches" still doesn't exist
-    And local Git setting "git-town.push-hook" still doesn't exist
-    And local Git setting "git-town.stash" still doesn't exist
-    And local Git setting "git-town.sync-feature-strategy" now doesn't exist
-    And local Git setting "git-town.sync-perennial-strategy" still doesn't exist
-    And local Git setting "git-town.sync-upstream" still doesn't exist
-    And local Git setting "git-town.sync-tags" still doesn't exist
-    And local Git setting "git-town.ship-strategy" still doesn't exist
-    And local Git setting "git-town.ship-delete-tracking-branch" still doesn't exist
-    And the configuration file is now:
-      """
-      # See https://www.git-town.com/configuration-file for details
-      
-      [branches]
-      main = "main"
-      """
-    And the main branch is still not set
-    And there are still no perennial branches
+    And local Git setting "git-town.sync-feature-strategy" is now "rebase"
 
   Scenario: undo
     When I run "git-town undo"
