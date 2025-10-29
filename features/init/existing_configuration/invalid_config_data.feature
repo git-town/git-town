@@ -1,5 +1,5 @@
 @messyoutput
-Feature: Ignore invalid configuration data
+Feature: Fix invalid configuration data
 
   Background:
     Given a Git repo with origin
