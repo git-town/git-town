@@ -7,7 +7,7 @@ Feature: display invalid Git metadata
     Then Git Town prints:
       """
       Ignoring invalid value for "git-town.sync-feature-strategy": "--help"
-      
+
       Branches:
         contribution branches: (none)
         contribution regex: (not set)
@@ -22,17 +22,17 @@ Feature: display invalid Git metadata
         unknown branch type: feature
         order: asc
         display types: all branch types except "feature" and "main"
-      
+
       Configuration:
         offline: no
         git user name: user
         git user email: email@example.com
-      
+
       Create:
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: yes
-      
+
       Hosting:
         development remote: origin
         forge type: (not set)
@@ -45,11 +45,11 @@ Feature: display invalid Git metadata
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
-      
+
       Ship:
         delete tracking branch: yes
         ship strategy: api
-      
+
       Sync:
         auto-resolve phantom conflicts: yes
         auto-sync: yes
