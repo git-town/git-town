@@ -36,7 +36,6 @@ Feature: Ignore invalid configuration data
       | order                       | enter      |
       | config storage              | enter      |
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                              |
