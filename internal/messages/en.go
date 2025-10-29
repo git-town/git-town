@@ -69,6 +69,7 @@ const (
 	CompressParkedBranch               = "branch %q and should not compress it"
 	CompressUnsynced                   = "please sync branch %q before compressing it"
 	ConfigBranchTypeOverrideEmpty      = "removing empty branch type entry"
+	ConfigFile                         = "config file"
 	ConfigFileCannotRead               = "cannot read the configuration file %q: %w"
 	ConfigFileInvalidContent           = "the configuration file %q does not contain TOML-formatted content: %w"
 	ConfigLineageEmptyChild            = "removing empty lineage entry"
