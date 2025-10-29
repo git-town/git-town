@@ -5,37 +5,39 @@ Feature: Fix invalid configuration data
     Given a Git repo with origin
     And Git Town is not configured
     And local Git setting "init.defaultbranch" is "main"
+    And local Git setting "git-town.perennial-regex" is "(zonk"
     And local Git setting "git-town.sync-feature-strategy" is "--help"
     When I run "git-town init" and enter into the dialogs:
-      | DIALOG                      | KEYS       |
-      | welcome                     | enter      |
-      | aliases                     | enter      |
-      | main branch                 | enter      |
-      | origin hostname             | enter      |
-      | forge type                  | enter      |
-      | enter all                   | down enter |
-      | perennial regex             | enter      |
-      | feature regex               | enter      |
-      | contribution regex          | enter      |
-      | observed regex              | enter      |
-      | new branch type             | enter      |
-      | unknown branch type         | enter      |
-      | sync feature strategy       | down enter |
-      | sync perennial strategy     | enter      |
-      | sync prototype strategy     | enter      |
-      | sync upstream               | enter      |
-      | auto-sync                   | enter      |
-      | sync-tags                   | enter      |
-      | detached                    | enter      |
-      | stash                       | enter      |
-      | share-new-branches          | enter      |
-      | push-branches               | enter      |
-      | push-hook                   | enter      |
-      | ship-strategy               | enter      |
-      | ship-delete-tracking branch | enter      |
-      | order                       | enter      |
-      | config storage              | enter      |
+      | DIALOG                      | KEYS        |
+      | welcome                     | enter       |
+      | aliases                     | enter       |
+      | main branch                 | enter       |
+      | origin hostname             | enter       |
+      | forge type                  | enter       |
+      | enter all                   | down enter  |
+      | perennial regex             | p e r enter |
+      | feature regex               | enter       |
+      | contribution regex          | enter       |
+      | observed regex              | enter       |
+      | new branch type             | enter       |
+      | unknown branch type         | enter       |
+      | sync feature strategy       | down enter  |
+      | sync perennial strategy     | enter       |
+      | sync prototype strategy     | enter       |
+      | sync upstream               | enter       |
+      | auto-sync                   | enter       |
+      | sync-tags                   | enter       |
+      | detached                    | enter       |
+      | stash                       | enter       |
+      | share-new-branches          | enter       |
+      | push-branches               | enter       |
+      | push-hook                   | enter       |
+      | ship-strategy               | enter       |
+      | ship-delete-tracking branch | enter       |
+      | order                       | enter       |
+      | config storage              | enter       |
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                              |
@@ -43,6 +45,7 @@ Feature: Fix invalid configuration data
       | git config git-town.detached false                   |
       | git config git-town.new-branch-type feature          |
       | git config git-town.main-branch main                 |
+      | git config git-town.perennial-regex per              |
       | git config git-town.unknown-branch-type feature      |
       | git config git-town.order asc                        |
       | git config git-town.push-branches true               |
@@ -58,6 +61,7 @@ Feature: Fix invalid configuration data
       | git config git-town.sync-tags true                   |
     And Git Town prints:
       """
+      Ignoring invalid value for "git-town.perennial-regex": "(zonk"
       Ignoring invalid value for "git-town.sync-feature-strategy": "--help"
       """
     And local Git setting "git-town.sync-feature-strategy" is now "rebase"
