@@ -228,6 +228,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	PerennialBranchCannotShip               = "cannot ship perennial branches"
 	PerennialBranches                       = "Perennial branches: %s\n"
 	PerennialBranchRemovedParentEntry       = "Removed parent entry for perennial branch %q\n"
+	PerennialRegexInvalid                   = "invalid perennial regex (%s) in %q: %w"
 	PerennialRegexPrompt                    = "Perennial regex: "
 	PerennialRegexResult                    = "Perennial regex: %s\n"
 	PrependDetachedHead                     = "please check out the branch for which you want to prepend a parent"

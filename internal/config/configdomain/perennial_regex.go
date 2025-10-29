@@ -3,6 +3,7 @@ package configdomain
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v22/internal/messages"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
@@ -13,7 +14,7 @@ type PerennialRegex struct {
 func ParsePerennialRegex(value string, source string) (Option[PerennialRegex], error) {
 	verifiedRegexOpt, err := ParseRegex(value)
 	if err != nil {
-		return None[PerennialRegex](), fmt.Errorf("invalid perennial regex in %q: %w", source, err)
+		return None[PerennialRegex](), fmt.Errorf(messages.PerennialRegexInvalid, value, source, err)
 	}
 	if verifiedRegex, hasVerifiedRegex := verifiedRegexOpt.Get(); hasVerifiedRegex {
 		return Some(PerennialRegex{VerifiedRegex: verifiedRegex}), err
