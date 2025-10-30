@@ -32,6 +32,6 @@ Feature: compress the branch that has the same name as a folder
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                               |
-      | feature | git reset --hard {{ sha 'commit 3' }} |
+      | feature | git reset --hard {{ sha 'commit 2' }} |
     And the initial branches and lineage exist now
     And the initial commits exist now
