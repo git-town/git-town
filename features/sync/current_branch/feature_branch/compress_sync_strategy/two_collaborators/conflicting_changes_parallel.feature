@@ -36,7 +36,7 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git merge --no-edit --ff origin/feature |
-      |         | git reset --soft main                   |
+      |         | git reset --soft main --                |
       |         | git commit -m "my first commit"         |
       |         | git push --force-with-lease             |
     And these commits exist now
@@ -63,7 +63,7 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                               |
       | feature | git commit --no-edit                  |
-      |         | git reset --soft main                 |
+      |         | git reset --soft main --              |
       |         | git commit -m "coworker first commit" |
       |         | git push --force-with-lease           |
     And all branches are now synchronized
@@ -91,7 +91,7 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                         |
       | feature | git commit --no-edit            |
-      |         | git reset --soft main           |
+      |         | git reset --soft main --        |
       |         | git commit -m "my first commit" |
       |         | git push --force-with-lease     |
     And all branches are now synchronized
@@ -119,7 +119,7 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                               |
       | feature | git commit --no-edit                  |
-      |         | git reset --soft main                 |
+      |         | git reset --soft main --              |
       |         | git commit -m "coworker first commit" |
       |         | git push --force-with-lease           |
     And all branches are now synchronized

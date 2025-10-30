@@ -35,7 +35,7 @@ Feature: two people make alternating conflicting changes to the same branch usin
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git merge --no-edit --ff origin/feature |
-      |         | git reset --soft main                   |
+      |         | git reset --soft main --                |
       |         | git commit -m "the feature"             |
       |         | git push --force-with-lease             |
     And these commits exist now
@@ -63,7 +63,7 @@ Feature: two people make alternating conflicting changes to the same branch usin
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git merge --no-edit --ff origin/feature |
-      |         | git reset --soft main                   |
+      |         | git reset --soft main --                |
       |         | git commit -m "the feature"             |
       |         | git push --force-with-lease             |
     And these commits exist now
@@ -88,7 +88,7 @@ Feature: two people make alternating conflicting changes to the same branch usin
     Then Git Town runs the commands
       | BRANCH  | COMMAND                     |
       | feature | git commit --no-edit        |
-      |         | git reset --soft main       |
+      |         | git reset --soft main --    |
       |         | git commit -m "the feature" |
       |         | git push --force-with-lease |
     And these commits exist now
@@ -105,7 +105,7 @@ Feature: two people make alternating conflicting changes to the same branch usin
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git merge --no-edit --ff origin/feature |
-      |         | git reset --soft main                   |
+      |         | git reset --soft main --                |
       |         | git commit -m "the feature"             |
       |         | git push --force-with-lease             |
     And these commits exist now
@@ -130,7 +130,7 @@ Feature: two people make alternating conflicting changes to the same branch usin
     Then Git Town runs the commands
       | BRANCH  | COMMAND                     |
       | feature | git commit --no-edit        |
-      |         | git reset --soft main       |
+      |         | git reset --soft main --    |
       |         | git commit -m "the feature" |
       |         | git push --force-with-lease |
     And these commits exist now
@@ -147,7 +147,7 @@ Feature: two people make alternating conflicting changes to the same branch usin
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git merge --no-edit --ff origin/feature |
-      |         | git reset --soft main                   |
+      |         | git reset --soft main --                |
       |         | git commit -m "the feature"             |
       |         | git push --force-with-lease             |
     And these commits exist now

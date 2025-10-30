@@ -18,7 +18,7 @@ Feature: append a new feature branch in a clean workspace using the "compress" s
     Then Git Town runs the commands
       | BRANCH   | COMMAND                           |
       | existing | git fetch --prune --tags          |
-      |          | git reset --soft main             |
+      |          | git reset --soft main --          |
       |          | git commit -m "existing commit 1" |
       |          | git push --force-with-lease       |
       |          | git checkout -b new               |

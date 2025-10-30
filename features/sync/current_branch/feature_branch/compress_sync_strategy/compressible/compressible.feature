@@ -22,12 +22,12 @@ Feature: sync a feature branch with multiple commits using the "compress" sync s
       | BRANCH | COMMAND                        |
       | beta   | git fetch --prune --tags       |
       |        | git checkout alpha             |
-      | alpha  | git reset --soft main          |
+      | alpha  | git reset --soft main --       |
       |        | git commit -m "alpha commit 1" |
       |        | git push --force-with-lease    |
       |        | git checkout beta              |
       | beta   | git merge --no-edit --ff alpha |
-      |        | git reset --soft alpha         |
+      |        | git reset --soft alpha --      |
       |        | git commit -m "beta commit 1"  |
       |        | git push --force-with-lease    |
     And these commits exist now

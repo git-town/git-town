@@ -24,7 +24,7 @@ Feature: prepend a branch to a feature branch with remote updates in a clean wor
       | branch-1 | git checkout branch-2                    |
       | branch-2 | git merge --no-edit --ff branch-1        |
       |          | git merge --no-edit --ff origin/branch-2 |
-      |          | git reset --soft branch-1                |
+      |          | git reset --soft branch-1 --             |
       |          | git commit -m "branch-2 commit"          |
       |          | git push --force-with-lease              |
       |          | git checkout -b branch-1a branch-1       |

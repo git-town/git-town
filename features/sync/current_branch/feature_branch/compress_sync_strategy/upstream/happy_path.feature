@@ -26,7 +26,7 @@ Feature: "compress" sync with upstream repo
       |         | git checkout feature                                |
       | feature | git merge --no-edit --ff main                       |
       |         | git merge --no-edit --ff origin/feature             |
-      |         | git reset --soft main                               |
+      |         | git reset --soft main --                            |
       |         | git commit -m "local commit"                        |
       |         | git push --force-with-lease                         |
     And all branches are now synchronized

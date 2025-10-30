@@ -18,7 +18,7 @@ Feature: compress the commits in Spanish
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
-      |         | git reset --soft main                           |
+      |         | git reset --soft main --                        |
       |         | git commit -m "commit 1"                        |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized

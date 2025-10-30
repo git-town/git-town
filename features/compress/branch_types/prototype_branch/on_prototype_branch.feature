@@ -23,11 +23,11 @@ Feature: compresses active prototype branches
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                         |
       | prototype | git fetch --prune --tags                        |
-      |           | git reset --soft main                           |
+      |           | git reset --soft main --                        |
       |           | git commit -m "prototype 1"                     |
       |           | git push --force-with-lease --force-if-includes |
       |           | git checkout child                              |
-      | child     | git reset --soft prototype                      |
+      | child     | git reset --soft prototype --                   |
       |           | git commit -m "child 1"                         |
       |           | git push --force-with-lease --force-if-includes |
       |           | git checkout prototype                          |

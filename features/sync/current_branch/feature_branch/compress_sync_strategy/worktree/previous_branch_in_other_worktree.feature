@@ -19,7 +19,7 @@ Feature: sync while the previous branch is checked out in another worktree
     Then Git Town runs the commands
       | BRANCH  | COMMAND                    |
       | current | git fetch --prune --tags   |
-      |         | git reset --soft main      |
+      |         | git reset --soft main --   |
       |         | git commit -m "current 1"  |
       |         | git push -u origin current |
     And the previous Git branch is still "previous"

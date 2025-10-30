@@ -23,7 +23,7 @@ Feature: sync a feature branch with new commits on the main branch in detached m
       |        | git checkout alpha             |
       | alpha  | git checkout beta              |
       | beta   | git merge --no-edit --ff alpha |
-      |        | git reset --soft alpha         |
+      |        | git reset --soft alpha --      |
       |        | git commit -m "beta commit"    |
       |        | git push --force-with-lease    |
     And the initial commits exist now

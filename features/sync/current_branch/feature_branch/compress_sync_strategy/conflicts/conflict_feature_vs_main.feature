@@ -58,7 +58,7 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
       | BRANCH  | COMMAND                                    |
       | feature | git commit --no-edit                       |
       |         | git merge --no-edit --ff origin/feature    |
-      |         | git reset --soft main                      |
+      |         | git reset --soft main --                   |
       |         | git commit -m "conflicting feature commit" |
       |         | git push --force-with-lease                |
     And no merge is now in progress
@@ -76,7 +76,7 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                    |
       | feature | git merge --no-edit --ff origin/feature    |
-      |         | git reset --soft main                      |
+      |         | git reset --soft main --                   |
       |         | git commit -m "conflicting feature commit" |
       |         | git push --force-with-lease                |
     And no merge is now in progress

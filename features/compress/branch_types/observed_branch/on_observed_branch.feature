@@ -24,7 +24,7 @@ Feature: does not compress an active observed branch
       | BRANCH   | COMMAND                                         |
       | observed | git fetch --prune --tags                        |
       |          | git checkout child                              |
-      | child    | git reset --soft observed                       |
+      | child    | git reset --soft observed --                    |
       |          | git commit -m "child 1"                         |
       |          | git push --force-with-lease --force-if-includes |
       |          | git checkout observed                           |

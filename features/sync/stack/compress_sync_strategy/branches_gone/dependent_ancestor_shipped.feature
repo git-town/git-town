@@ -31,7 +31,7 @@ Feature: shipped the head branch of a synced stack with dependent changes
       |        | git checkout --ours file                          |
       |        | git add file                                      |
       |        | git commit --no-edit                              |
-      |        | git reset --soft main                             |
+      |        | git reset --soft main --                          |
       |        | git commit -m "beta commit"                       |
       |        | git push --force-with-lease                       |
     And all branches are now synchronized

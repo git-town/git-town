@@ -27,7 +27,7 @@ Feature: disable pushing through Git metadata
       |         | git checkout feature                              |
       | feature | git merge --no-edit --ff main                     |
       |         | git merge --no-edit --ff origin/feature           |
-      |         | git reset --soft main                             |
+      |         | git reset --soft main --                          |
       |         | git commit -m "local feature commit 1"            |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                |

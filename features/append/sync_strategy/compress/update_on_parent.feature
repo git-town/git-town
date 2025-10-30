@@ -19,7 +19,7 @@ Feature: append a new feature branch in a clean workspace using the "compress" s
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune --tags           |
       |         | git merge --no-edit --ff main      |
-      |         | git reset --soft main              |
+      |         | git reset --soft main --           |
       |         | git commit -m "already compressed" |
       |         | git push --force-with-lease        |
       |         | git checkout -b new                |

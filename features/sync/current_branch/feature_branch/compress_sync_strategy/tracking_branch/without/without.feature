@@ -24,7 +24,7 @@ Feature: sync the current feature branch without a tracking branch using the "co
       |         | git push                                          |
       |         | git checkout feature                              |
       | feature | git merge --no-edit --ff main                     |
-      |         | git reset --soft main                             |
+      |         | git reset --soft main --                          |
       |         | git commit -m "local feature commit 1"            |
       |         | git push -u origin feature                        |
     And the branches are now

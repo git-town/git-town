@@ -24,11 +24,11 @@ Feature: does not compress non-active prototype branches in the stack
       | BRANCH    | COMMAND                                         |
       | child     | git fetch --prune --tags                        |
       |           | git checkout prototype                          |
-      | prototype | git reset --soft main                           |
+      | prototype | git reset --soft main --                        |
       |           | git commit -m "prototype 1"                     |
       |           | git push --force-with-lease --force-if-includes |
       |           | git checkout child                              |
-      | child     | git reset --soft prototype                      |
+      | child     | git reset --soft prototype --                   |
       |           | git commit -m "child 1"                         |
       |           | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized

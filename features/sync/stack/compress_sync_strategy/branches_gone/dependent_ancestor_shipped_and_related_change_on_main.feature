@@ -54,7 +54,7 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
     Then Git Town runs the commands
       | BRANCH | COMMAND                     |
       | beta   | git commit --no-edit        |
-      |        | git reset --soft main       |
+      |        | git reset --soft main --    |
       |        | git commit -m "beta commit" |
       |        | git push --force-with-lease |
     And all branches are now synchronized

@@ -29,7 +29,7 @@ Feature: one person making a series of commits and syncs in between
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git merge --no-edit --ff origin/feature |
-      |         | git reset --soft main                   |
+      |         | git reset --soft main --                |
       |         | git commit -m "the feature"             |
       |         | git push --force-with-lease             |
     And all branches are now synchronized
@@ -47,7 +47,7 @@ Feature: one person making a series of commits and syncs in between
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git merge --no-edit --ff origin/feature |
-      |         | git reset --soft main                   |
+      |         | git reset --soft main --                |
       |         | git commit -m "the feature"             |
       |         | git push --force-with-lease             |
     And all branches are now synchronized
@@ -65,7 +65,7 @@ Feature: one person making a series of commits and syncs in between
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git merge --no-edit --ff origin/feature |
-      |         | git reset --soft main                   |
+      |         | git reset --soft main --                |
       |         | git commit -m "the feature"             |
       |         | git push --force-with-lease             |
     And all branches are now synchronized

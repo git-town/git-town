@@ -18,7 +18,7 @@ Feature: compress a branch when the previous branch is active in another worktre
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | current | git fetch --prune --tags                        |
-      |         | git reset --soft main                           |
+      |         | git reset --soft main --                        |
       |         | git commit -m "commit 1"                        |
       |         | git push --force-with-lease --force-if-includes |
     And the previous Git branch is now "current"
