@@ -1,6 +1,6 @@
 module github.com/git-town/git-town/tools/iterate_map
 
-go 1.24.6
+go 1.24.9
 
 require golang.org/x/tools v0.37.0
 

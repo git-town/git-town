@@ -1,3 +1,3 @@
 module optioncompare_in_tests
 
-go 1.24.6
+go 1.24.9
