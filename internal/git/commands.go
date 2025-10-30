@@ -761,7 +761,7 @@ func (self *Commands) RepoStatus(backend subshelldomain.RunnerQuerier) (gitdomai
 }
 
 func (self *Commands) ResetBranch(runner subshelldomain.Runner, target gitdomain.BranchName) error {
-	return runner.Run("git", "reset", "--soft", target.String())
+	return runner.Run("git", "reset", "--soft", target.String(), "--")
 }
 
 func (self *Commands) ResetCurrentBranchToSHA(runner subshelldomain.Runner, sha gitdomain.SHA) error {

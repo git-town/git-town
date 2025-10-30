@@ -15,12 +15,11 @@ Feature: compress the branch that has the same name as a folder
     And the current branch is "feature"
     When I run "git-town compress"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                  |
       | feature | git fetch --prune --tags |
-      |         | git reset --soft main    |
+      |         | git reset --soft main -- |
       |         | git commit -m "commit 1" |
     And these commits exist now
       | BRANCH  | LOCATION | MESSAGE  |
