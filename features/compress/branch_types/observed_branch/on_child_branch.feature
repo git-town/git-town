@@ -23,7 +23,7 @@ Feature: does not compress observed branches in the stack
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | child  | git fetch --prune --tags                        |
-      |        | git reset --soft observed                       |
+      |        | git reset --soft observed --                    |
       |        | git commit -m "child 1"                         |
       |        | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized

@@ -22,12 +22,12 @@ Feature: prepend a branch to a feature branch with compressible commits in a cle
       | BRANCH   | COMMAND                            |
       | branch-2 | git fetch --prune --tags           |
       |          | git checkout branch-1              |
-      | branch-1 | git reset --soft main              |
+      | branch-1 | git reset --soft main --           |
       |          | git commit -m "branch-1 commit 1"  |
       |          | git push --force-with-lease        |
       |          | git checkout branch-2              |
       | branch-2 | git merge --no-edit --ff branch-1  |
-      |          | git reset --soft branch-1          |
+      |          | git reset --soft branch-1 --       |
       |          | git commit -m "branch-2 commit 1"  |
       |          | git push --force-with-lease        |
       |          | git checkout -b branch-1a branch-1 |

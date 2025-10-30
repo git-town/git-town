@@ -25,13 +25,13 @@ Feature: detached sync a grandchild feature branch using the "compress" strategy
       | beta   | git fetch --prune --tags              |
       |        | git checkout alpha                    |
       | alpha  | git merge --no-edit --ff origin/alpha |
-      |        | git reset --soft main                 |
+      |        | git reset --soft main --              |
       |        | git commit -m "local alpha commit"    |
       |        | git push --force-with-lease           |
       |        | git checkout beta                     |
       | beta   | git merge --no-edit --ff alpha        |
       |        | git merge --no-edit --ff origin/beta  |
-      |        | git reset --soft alpha                |
+      |        | git reset --soft alpha --             |
       |        | git commit -m "local beta commit"     |
       |        | git push --force-with-lease           |
     And these commits exist now

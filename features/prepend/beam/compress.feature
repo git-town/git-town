@@ -53,7 +53,7 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
     Then Git Town runs the commands
       | BRANCH | COMMAND                   |
       | parent | git fetch --prune --tags  |
-      |        | git reset --soft main     |
+      |        | git reset --soft main --  |
       |        | git commit -m "commit 1"  |
       |        | git push -u origin parent |
     And these commits exist now
@@ -76,12 +76,12 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
       | BRANCH | COMMAND                         |
       | old    | git fetch --prune --tags        |
       |        | git checkout parent             |
-      | parent | git reset --soft main           |
+      | parent | git reset --soft main --        |
       |        | git commit -m "commit 1"        |
       |        | git push -u origin parent       |
       |        | git checkout old                |
       | old    | git merge --no-edit --ff parent |
-      |        | git reset --soft parent         |
+      |        | git reset --soft parent --      |
       |        | git commit -m "commit 1"        |
       |        | git push --force-with-lease     |
     And these commits exist now

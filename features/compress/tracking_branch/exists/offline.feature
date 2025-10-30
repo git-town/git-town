@@ -16,7 +16,7 @@ Feature: compress the commits in offline mode
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                  |
-      | feature | git reset --soft main    |
+      | feature | git reset --soft main -- |
       |         | git commit -m "commit 1" |
     And these commits exist now
       | BRANCH  | LOCATION | MESSAGE  |

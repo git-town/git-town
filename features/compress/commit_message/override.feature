@@ -17,7 +17,7 @@ Feature: compress the commits on a feature branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
-      |         | git reset --soft main                           |
+      |         | git reset --soft main --                        |
       |         | git commit -m compressed                        |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized

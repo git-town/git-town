@@ -27,7 +27,7 @@ Feature: sync a feature branch with new commits on the tracking branch
       |        | git checkout alpha                   |
       | alpha  | git checkout beta                    |
       | beta   | git merge --no-edit --ff origin/beta |
-      |        | git reset --soft alpha               |
+      |        | git reset --soft alpha --            |
       |        | git commit -m "beta commit"          |
       |        | git push --force-with-lease          |
     And these commits exist now

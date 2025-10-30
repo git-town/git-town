@@ -17,7 +17,7 @@ Feature: compress the commits on a local feature branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                  |
       | feature | git fetch --prune --tags |
-      |         | git reset --soft main    |
+      |         | git reset --soft main -- |
       |         | git commit -m "commit 1" |
     And all branches are now synchronized
     And these commits exist now

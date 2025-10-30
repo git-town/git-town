@@ -28,14 +28,14 @@ Feature: stacked changes where an ancestor branch isn't local
       |        | git checkout alpha                    |
       | alpha  | git merge --no-edit --ff origin/main  |
       |        | git merge --no-edit --ff origin/alpha |
-      |        | git reset --soft origin/main          |
+      |        | git reset --soft origin/main --       |
       |        | git commit -m "local alpha commit"    |
       |        | git push --force-with-lease           |
       |        | git checkout gamma                    |
       | gamma  | git merge --no-edit --ff origin/beta  |
       |        | git merge --no-edit --ff alpha        |
       |        | git merge --no-edit --ff origin/gamma |
-      |        | git reset --soft origin/beta          |
+      |        | git reset --soft origin/beta --       |
       |        | git commit -m "local gamma commit"    |
       |        | git push --force-with-lease           |
     And all branches are now synchronized

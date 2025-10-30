@@ -23,7 +23,7 @@ Feature: compresses active parked branches
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | parked | git fetch --prune --tags                        |
-      |        | git reset --soft main                           |
+      |        | git reset --soft main --                        |
       |        | git commit -m "parked 1"                        |
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout child                              |

@@ -107,7 +107,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       |         | git merge --no-edit --ff origin/feature         |
       |         | git push                                        |
       |         | git fetch --prune --tags                        |
-      |         | git reset --soft main                           |
+      |         | git reset --soft main --                        |
       |         | git commit -m "conflicting feature commit"      |
       |         | git push --force-with-lease --force-if-includes |
     And Git Town prints:

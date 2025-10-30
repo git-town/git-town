@@ -47,7 +47,7 @@ Feature: handle conflicts between the current feature branch and its tracking br
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                  |
       | feature | git commit --no-edit                     |
-      |         | git reset --soft main                    |
+      |         | git reset --soft main --                 |
       |         | git commit -m "conflicting local commit" |
       |         | git push --force-with-lease              |
     And no merge is now in progress
@@ -62,6 +62,6 @@ Feature: handle conflicts between the current feature branch and its tracking br
     And I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                  |
-      | feature | git reset --soft main                    |
+      | feature | git reset --soft main --                 |
       |         | git commit -m "conflicting local commit" |
       |         | git push --force-with-lease              |

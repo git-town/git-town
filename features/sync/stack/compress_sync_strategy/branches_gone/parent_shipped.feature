@@ -26,7 +26,7 @@ Feature: using the "compress" strategy, sync a branch whose parent was shipped
       |        | git branch -D parent                              |
       |        | git checkout child                                |
       | child  | git merge --no-edit --ff main                     |
-      |        | git reset --soft main                             |
+      |        | git reset --soft main --                          |
       |        | git commit -m "child commit 1"                    |
       |        | git push --force-with-lease                       |
     And Git Town prints:
