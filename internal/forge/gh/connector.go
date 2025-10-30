@@ -28,9 +28,17 @@ type Connector struct {
 	Frontend subshelldomain.Runner
 }
 
+// ============================================================================
+// browse the repo
+// ============================================================================
+
 func (self Connector) BrowseRepository(runner subshelldomain.Runner) error {
 	return runner.Run("gh", "browse")
 }
+
+// ============================================================================
+// create proposals
+// ============================================================================
 
 func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error {
 	args := []string{"pr", "create", "--head=" + data.Branch.String(), "--base=" + data.ParentBranch.String()}
