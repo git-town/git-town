@@ -16,7 +16,14 @@ func ProposalBody(short string) (AddFunc, ReadProposalBodyFlagFunc) {
 		cmd.Flags().StringP(bodyLong, short, "", "provide a body for the proposal")
 	}
 	readFlag := func(cmd *cobra.Command) (Option[gitdomain.ProposalBody], error) {
-		return readStringOptFlag[gitdomain.ProposalBody](cmd.Flags(), bodyLong)
+		if !cmd.Flags().Changed(bodyLong) {
+			return None[gitdomain.ProposalBody](), nil
+		}
+		value, err := cmd.Flags().GetString(bodyLong)
+		if err != nil {
+			return None[gitdomain.ProposalBody](), err
+		}
+		return Some(gitdomain.ProposalBody(value)), nil
 	}
 	return addFlag, readFlag
 }
