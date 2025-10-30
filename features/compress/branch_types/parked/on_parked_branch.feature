@@ -27,7 +27,7 @@ Feature: compresses active parked branches
       |        | git commit -m "parked 1"                        |
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout child                              |
-      | child  | git reset --soft parked                         |
+      | child  | git reset --soft parked --                      |
       |        | git commit -m "child 1"                         |
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout parked                             |
