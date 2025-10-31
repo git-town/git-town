@@ -18,7 +18,7 @@
 - set-parent: only changes commits of feature or prototype branches ([#5605](https://github.com/git-town/git-town/issues/5605)).
 - propose: correctly passes on a `--body` tag without content ([#5496](https://github.com/git-town/git-town/issues/5496)).
 - propose: the `gh` connector no longer crashes if the user chooses `Continue in browser` ([#5681](https://github.com/git-town/git-town/issues/5681)).
-- sync: pruing a freshly created branch no longer crashes ([#5660](https://github.com/git-town/git-town/issues/5660)).
+- sync: pruning a freshly created branch no longer crashes ([#5660](https://github.com/git-town/git-town/issues/5660)).
 - hack: now always sets the correct branch type ([#5609](https://github.com/git-town/git-town/issues/5609)).
 - hack: `--beam` from a branch without parent now asks for the branch parent ([#5121](https://github.com/git-town/git-town/issues/5121)).
 - init: no longer crashes if if there are no remotes ([#5608](https://github.com/git-town/git-town/issues/5608)).
