@@ -4,7 +4,7 @@
 
 #### New Features
 
-- Git Town now allows a non-hidden config file, i.e. `git-town.toml` ([#5614](https://github.com/git-town/git-town/issues/5614)).
+- Git Town now supports a non-hidden config file, i.e. `git-town.toml`, in addition to the existing config file names ([#5614](https://github.com/git-town/git-town/issues/5614)).
 - The new [order]() configuration setting allows displaying lists of branches in reverse order, for example in [switch](https://www.git-town.com/commands/switch.html), [branch](https://www.git-town.com/commands/branch.html), [up](https://www.git-town.com/commands/up.html), and [down](https://www.git-town.com/commands/down.html), [config](https://www.git-town.com/commands/config.html). This is useful if you prefix your branches with the creation date like `YYYYMM` ([#5615](https://github.com/git-town/git-town/issues/5615)).
 - The new [display-types]() configuration setting allows configuring which branch types Git Town shows in lists of branches. This affects the [branch](https://www.git-town.com/commands/branch.html), [switch](https://www.git-town.com/commands/switch.html), [config](https://www.git-town.com/commands/config.html), [down](https://www.git-town.com/commands/down.html), and [up](https://www.git-town.com/commands/up.html) commands and all internal dialogs that ask to select a branch or parent branch ([#5659](https://github.com/git-town/git-town/issues/5659)).
 - switch: you can now toggle to show all branches on and off using the `a` hotkey ([#5624](https://github.com/git-town/git-town/issues/5624)).
