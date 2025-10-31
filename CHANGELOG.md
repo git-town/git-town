@@ -22,6 +22,7 @@
 - hack: now always sets the correct branch type ([#5609](https://github.com/git-town/git-town/issues/5609)).
 - hack: `--beam` from a branch without parent now asks for the branch parent ([#5121](https://github.com/git-town/git-town/issues/5121)).
 - init: no longer crashes if if there are no remotes ([#5608](https://github.com/git-town/git-town/issues/5608)).
+- switch: can now combine `--all` and `--display-types` ([#5648](https://github.com/git-town/git-town/issues/5648)).
 - dead links on the "Contributing" tab on GitHub are fixed ([#5679](https://github.com/git-town/git-town/pull/5679)).
 
 ## 22.1.0 (2025-10-13)
