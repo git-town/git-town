@@ -1,10 +1,33 @@
 # Git Town Changelog
 
-## 22.2.0 (unreleased)
+## 22.2.0 (2025-10-31)
 
 #### New Features
 
-- the new display-types configuration setting allows configuring which branch types Git Town shows in lists of branches. This affects the [branch](https://www.git-town.com/commands/branch.html), [switch](https://www.git-town.com/commands/switch.html), [config](https://www.git-town.com/commands/config.html), [down](https://www.git-town.com/commands/down.html), [up](https://www.git-town.com/commands/up.html) commands and all internal dialogs that ask to select a branch or parent branch.
+- Git Town now supports a non-hidden config file, i.e. `git-town.toml`, in addition to the existing config file names ([#5614](https://github.com/git-town/git-town/issues/5614)).
+- The new [order]() configuration setting allows displaying lists of branches in reverse order, for example in [switch](https://www.git-town.com/commands/switch.html), [branch](https://www.git-town.com/commands/branch.html), [up](https://www.git-town.com/commands/up.html), and [down](https://www.git-town.com/commands/down.html), [config](https://www.git-town.com/commands/config.html). This is useful if you prefix your branches with the creation date like `YYYYMM` and want to see the newest branches on top ([#5615](https://github.com/git-town/git-town/issues/5615)).
+- The new [display-types]() configuration setting allows configuring which branch types Git Town shows in lists of branches. This affects the [branch](https://www.git-town.com/commands/branch.html), [switch](https://www.git-town.com/commands/switch.html), [config](https://www.git-town.com/commands/config.html), [down](https://www.git-town.com/commands/down.html), and [up](https://www.git-town.com/commands/up.html) commands and all internal dialogs that ask to select a branch or parent branch ([#5659](https://github.com/git-town/git-town/issues/5659)).
+- switch: you can now toggle to show all branches on and off using the `a` hotkey ([#5624](https://github.com/git-town/git-town/issues/5624)).
+- setup assistant: now runs in the presence of invalid configuration data and overwrites it ([#5598](https://github.com/git-town/git-town/issues/5598)).
+- Git Town now uses the Git user name also from the environment variables `GIT_AUTHOR_EMAIL`, `GIT_COMMITTER_EMAIL`, `GIT_AUTHOR_NAME`, and `GIT_COMMITTER_NAME` if they aren't set in Git metadata `user.email` and `user.name` ([#5668](https://github.com/git-town/git-town/issues/5668)).
+
+#### Bug Fixes
+
+- compress: works if a folder has the same name as a branch ([#5594](https://github.com/git-town/git-town/issues/5594)).
+- ship: works if a folder has the same name as a branch ([#5657](https://github.com/git-town/git-town/issues/5657)).
+- set-parent: only changes commits of feature or prototype branches ([#5605](https://github.com/git-town/git-town/issues/5605)).
+- propose: correctly passes on a `--body` tag without content ([#5496](https://github.com/git-town/git-town/issues/5496)).
+- propose: the `gh` connector no longer crashes if the user chooses `Continue in browser` ([#5681](https://github.com/git-town/git-town/issues/5681)).
+- sync: pruning a freshly created branch no longer crashes ([#5660](https://github.com/git-town/git-town/issues/5660)).
+- hack: now always sets the correct branch type ([#5609](https://github.com/git-town/git-town/issues/5609)).
+- hack: `--beam` from a branch without parent now asks for the branch parent ([#5121](https://github.com/git-town/git-town/issues/5121)).
+- init: no longer crashes if if there are no remotes ([#5608](https://github.com/git-town/git-town/issues/5608)).
+- switch: can now combine `--all` and `--display-types` ([#5648](https://github.com/git-town/git-town/issues/5648)).
+- dead links on the "Contributing" tab on GitHub are fixed ([#5679](https://github.com/git-town/git-town/pull/5679)).
+
+#### Contributors
+
+Shoutout to @AmitJoki, @GamerGirlandCo, @Varedis, @caccavale, @derekspelledcorrectly, @j2fw, @james-harlyy, @kevgo, @kevinmichaelchen, @mrmarufpro, @nebbles, @ruudk, @stephenwade, @thattomperson, @tranhl, @tugrulates, @yaadata for contributing code, feedback, ideas, and bug fixes to 58 shipped pull requests and 24 resolved issues!
 
 ## 22.1.0 (2025-10-13)
 
