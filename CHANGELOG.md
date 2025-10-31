@@ -25,6 +25,10 @@
 - switch: can now combine `--all` and `--display-types` ([#5648](https://github.com/git-town/git-town/issues/5648)).
 - dead links on the "Contributing" tab on GitHub are fixed ([#5679](https://github.com/git-town/git-town/pull/5679)).
 
+#### Contributors
+
+Shoutout to @AmitJoki, @GamerGirlandCo, @Varedis, @caccavale, @derekspelledcorrectly, @j2fw, @james-harlyy, @kevgo, @kevinmichaelchen, @mrmarufpro, @nebbles, @ruudk, @stephenwade, @thattomperson, @tranhl, @tugrulates, @yaadata for contributing code, feedback, ideas, and bug fixes to 58 shipped pull requests and 24 resolved issues!
+
 ## 22.1.0 (2025-10-13)
 
 #### New Features
