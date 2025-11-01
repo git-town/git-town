@@ -63,10 +63,10 @@ func (self *TestCommands) CheckoutBranch(branch gitdomain.LocalBranchName) {
 	asserts.NoError(self.Git.CheckoutBranchUncached(self.TestRunner, branch, false))
 }
 
-func (self *TestCommands) CommitSHA(querier subshelldomain.Querier, title string, branch gitdomain.LocalBranchName, parent gitdomain.BranchName) gitdomain.SHA {
+func (self *TestCommands) CommitSHA(querier subshelldomain.Querier, title gitdomain.CommitTitle, branch gitdomain.LocalBranchName, parent gitdomain.BranchName) gitdomain.SHA {
 	commits := asserts.NoError1(self.Git.CommitsInFeatureBranch(querier, branch, parent))
 	for _, commit := range commits {
-		if commit.Message.Parts().Subject == title {
+		if commit.Message.Parts().Title == title {
 			return commit.SHA
 		}
 	}
