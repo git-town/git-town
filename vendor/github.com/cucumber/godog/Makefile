@@ -23,8 +23,8 @@ check-go-version:
 test: check-go-version
 	@echo "running all tests"
 	@go fmt ./...
-	@go run honnef.co/go/tools/cmd/staticcheck@v0.4.7 github.com/cucumber/godog
-	@go run honnef.co/go/tools/cmd/staticcheck@v0.4.7 github.com/cucumber/godog/cmd/godog
+	@go run honnef.co/go/tools/cmd/staticcheck@v0.5.1 github.com/cucumber/godog
+	@go run honnef.co/go/tools/cmd/staticcheck@v0.5.1 github.com/cucumber/godog/cmd/godog
 	go vet ./...
 	go test -race ./...
 	go run ./cmd/godog -f progress -c 4

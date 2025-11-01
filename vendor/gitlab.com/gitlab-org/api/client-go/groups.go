@@ -79,8 +79,11 @@ type (
 		// group_serviceaccounts.go
 		ListServiceAccounts(gid any, opt *ListServiceAccountsOptions, options ...RequestOptionFunc) ([]*GroupServiceAccount, *Response, error)
 		CreateServiceAccount(gid any, opt *CreateServiceAccountOptions, options ...RequestOptionFunc) (*GroupServiceAccount, *Response, error)
+		UpdateServiceAccount(gid any, serviceAccount int, opt *UpdateServiceAccountOptions, options ...RequestOptionFunc) (*GroupServiceAccount, *Response, error)
 		DeleteServiceAccount(gid any, serviceAccount int, opt *DeleteServiceAccountOptions, options ...RequestOptionFunc) (*Response, error)
+		ListServiceAccountPersonalAccessTokens(gid any, serviceAccount int, opt *ListServiceAccountPersonalAccessTokensOptions, options ...RequestOptionFunc) ([]*PersonalAccessToken, *Response, error)
 		CreateServiceAccountPersonalAccessToken(gid any, serviceAccount int, opt *CreateServiceAccountPersonalAccessTokenOptions, options ...RequestOptionFunc) (*PersonalAccessToken, *Response, error)
+		RevokeServiceAccountPersonalAccessToken(gid any, serviceAccount, token int, options ...RequestOptionFunc) (*Response, error)
 		RotateServiceAccountPersonalAccessToken(gid any, serviceAccount, token int, opt *RotateServiceAccountPersonalAccessTokenOptions, options ...RequestOptionFunc) (*PersonalAccessToken, *Response, error)
 
 		// group_members.go
@@ -776,7 +779,7 @@ func (s *GroupsService) DeleteGroup(gid any, opt *DeleteGroupOptions, options ..
 
 // RestoreGroup restores a previously deleted group
 //
-// GitLap API docs:
+// GitLab API docs:
 // https://docs.gitlab.com/api/groups/#restore-a-group-marked-for-deletion
 func (s *GroupsService) RestoreGroup(gid any, options ...RequestOptionFunc) (*Group, *Response, error) {
 	group, err := parseID(gid)

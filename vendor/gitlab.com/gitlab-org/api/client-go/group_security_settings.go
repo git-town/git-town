@@ -46,7 +46,7 @@ type GroupSecuritySettings struct {
 	Errors                      []string `json:"errors"`
 }
 
-// Gets a string representation of the GroupSecuritySettings data.
+// String gets a string representation of the GroupSecuritySettings data.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_security_settings/
@@ -54,7 +54,7 @@ func (s GroupSecuritySettings) String() string {
 	return Stringify(s)
 }
 
-// GetGroupSecuritySettingsOptions represent the request options for updating
+// UpdateGroupSecuritySettingsOptions represent the request options for updating
 // the group security settings.
 //
 // GitLab API docs:

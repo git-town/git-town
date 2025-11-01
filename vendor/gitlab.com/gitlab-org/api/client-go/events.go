@@ -78,7 +78,7 @@ type ContributionEvent struct {
 
 // ListContributionEventsOptions represents the options for GetUserContributionEvents
 //
-// GitLap API docs:
+// GitLab API docs:
 // https://docs.gitlab.com/api/events/#get-user-contribution-events
 type ListContributionEventsOptions struct {
 	ListOptions

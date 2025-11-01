@@ -21,7 +21,6 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-	"time"
 )
 
 type (
@@ -103,33 +102,7 @@ var _ ServicesServiceInterface = (*ServicesService)(nil)
 // Service represents a GitLab service.
 //
 // GitLab API docs: https://docs.gitlab.com/api/project_integrations/
-type Service struct {
-	ID                             int        `json:"id"`
-	Title                          string     `json:"title"`
-	Slug                           string     `json:"slug"`
-	CreatedAt                      *time.Time `json:"created_at"`
-	UpdatedAt                      *time.Time `json:"updated_at"`
-	Active                         bool       `json:"active"`
-	AlertEvents                    bool       `json:"alert_events"`
-	CommitEvents                   bool       `json:"commit_events"`
-	ConfidentialIssuesEvents       bool       `json:"confidential_issues_events"`
-	ConfidentialNoteEvents         bool       `json:"confidential_note_events"`
-	DeploymentEvents               bool       `json:"deployment_events"`
-	GroupConfidentialMentionEvents bool       `json:"group_confidential_mention_events"`
-	GroupMentionEvents             bool       `json:"group_mention_events"`
-	IncidentEvents                 bool       `json:"incident_events"`
-	IssuesEvents                   bool       `json:"issues_events"`
-	JobEvents                      bool       `json:"job_events"`
-	MergeRequestsEvents            bool       `json:"merge_requests_events"`
-	NoteEvents                     bool       `json:"note_events"`
-	PipelineEvents                 bool       `json:"pipeline_events"`
-	PushEvents                     bool       `json:"push_events"`
-	TagPushEvents                  bool       `json:"tag_push_events"`
-	VulnerabilityEvents            bool       `json:"vulnerability_events"`
-	WikiPageEvents                 bool       `json:"wiki_page_events"`
-	CommentOnEventEnabled          bool       `json:"comment_on_event_enabled"`
-	Inherited                      bool       `json:"inherited"`
-}
+type Service = Integration
 
 // ListServices gets a list of all active services.
 //
@@ -268,12 +241,14 @@ type DataDogService struct {
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#datadog
 type DataDogServiceProperties struct {
-	APIURL             string `url:"api_url,omitempty" json:"api_url,omitempty"`
-	DataDogEnv         string `url:"datadog_env,omitempty" json:"datadog_env,omitempty"`
-	DataDogService     string `url:"datadog_service,omitempty" json:"datadog_service,omitempty"`
-	DataDogSite        string `url:"datadog_site,omitempty" json:"datadog_site,omitempty"`
-	DataDogTags        string `url:"datadog_tags,omitempty" json:"datadog_tags,omitempty"`
-	ArchiveTraceEvents bool   `url:"archive_trace_events,omitempty" json:"archive_trace_events,omitempty"`
+	APIURL               string `url:"api_url,omitempty" json:"api_url,omitempty"`
+	DataDogEnv           string `url:"datadog_env,omitempty" json:"datadog_env,omitempty"`
+	DataDogService       string `url:"datadog_service,omitempty" json:"datadog_service,omitempty"`
+	DataDogSite          string `url:"datadog_site,omitempty" json:"datadog_site,omitempty"`
+	DataDogTags          string `url:"datadog_tags,omitempty" json:"datadog_tags,omitempty"`
+	ArchiveTraceEvents   bool   `url:"archive_trace_events,omitempty" json:"archive_trace_events,omitempty"`
+	DataDogCIVisibility  bool   `url:"datadog_ci_visibility,omitempty" json:"datadog_ci_visibility,omitempty"`
+	UseInheritedSettings bool   `url:"use_inherited_settings,omitempty" json:"use_inherited_settings,omitempty"`
 }
 
 // GetDataDogService gets DataDog service settings for a project.
@@ -285,7 +260,7 @@ func (s *ServicesService) GetDataDogService(pid any, options ...RequestOptionFun
 	if err != nil {
 		return nil, nil, err
 	}
-	u := fmt.Sprintf("projects/%s/services/datadog", PathEscape(project))
+	u := fmt.Sprintf("projects/%s/integrations/datadog", PathEscape(project))
 
 	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
 	if err != nil {
@@ -307,13 +282,15 @@ func (s *ServicesService) GetDataDogService(pid any, options ...RequestOptionFun
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#set-up-datadog
 type SetDataDogServiceOptions struct {
-	APIKey             *string `url:"api_key,omitempty" json:"api_key,omitempty"`
-	APIURL             *string `url:"api_url,omitempty" json:"api_url,omitempty"`
-	DataDogEnv         *string `url:"datadog_env,omitempty" json:"datadog_env,omitempty"`
-	DataDogService     *string `url:"datadog_service,omitempty" json:"datadog_service,omitempty"`
-	DataDogSite        *string `url:"datadog_site,omitempty" json:"datadog_site,omitempty"`
-	DataDogTags        *string `url:"datadog_tags,omitempty" json:"datadog_tags,omitempty"`
-	ArchiveTraceEvents *bool   `url:"archive_trace_events,omitempty" json:"archive_trace_events,omitempty"`
+	APIKey               *string `url:"api_key,omitempty" json:"api_key,omitempty"`
+	APIURL               *string `url:"api_url,omitempty" json:"api_url,omitempty"`
+	DataDogEnv           *string `url:"datadog_env,omitempty" json:"datadog_env,omitempty"`
+	DataDogService       *string `url:"datadog_service,omitempty" json:"datadog_service,omitempty"`
+	DataDogSite          *string `url:"datadog_site,omitempty" json:"datadog_site,omitempty"`
+	DataDogTags          *string `url:"datadog_tags,omitempty" json:"datadog_tags,omitempty"`
+	ArchiveTraceEvents   *bool   `url:"archive_trace_events,omitempty" json:"archive_trace_events,omitempty"`
+	DataDogCIVisibility  *bool   `url:"datadog_ci_visibility,omitempty" json:"datadog_ci_visibility,omitempty"`
+	UseInheritedSettings *bool   `url:"use_inherited_settings,omitempty" json:"use_inherited_settings,omitempty"`
 }
 
 // SetDataDogService sets DataDog service settings for a project.
@@ -325,7 +302,7 @@ func (s *ServicesService) SetDataDogService(pid any, opt *SetDataDogServiceOptio
 	if err != nil {
 		return nil, nil, err
 	}
-	u := fmt.Sprintf("projects/%s/services/datadog", PathEscape(project))
+	u := fmt.Sprintf("projects/%s/integrations/datadog", PathEscape(project))
 
 	req, err := s.client.NewRequest(http.MethodPut, u, opt, options)
 	if err != nil {
@@ -350,7 +327,7 @@ func (s *ServicesService) DeleteDataDogService(pid any, options ...RequestOption
 	if err != nil {
 		return nil, err
 	}
-	u := fmt.Sprintf("projects/%s/services/datadog", PathEscape(project))
+	u := fmt.Sprintf("projects/%s/integrations/datadog", PathEscape(project))
 
 	req, err := s.client.NewRequest(http.MethodDelete, u, nil, options)
 	if err != nil {
@@ -932,13 +909,7 @@ func (s *ServicesService) GetHarborService(pid any, options ...RequestOptionFunc
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#set-up-harbor
-type SetHarborServiceOptions struct {
-	URL                  *string `url:"url,omitempty" json:"url,omitempty"`
-	ProjectName          *string `url:"project_name,omitempty" json:"project_name,omitempty"`
-	Username             *string `url:"username,omitempty" json:"username,omitempty"`
-	Password             *string `url:"password,omitempty" json:"password,omitempty"`
-	UseInheritedSettings *bool   `url:"use_inherited_settings,omitempty" json:"use_inherited_settings,omitempty"`
-}
+type SetHarborServiceOptions = SetUpHarborOptions
 
 // SetHarborService sets Harbor service for a project.
 //

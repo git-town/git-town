@@ -21,6 +21,7 @@ import (
 	"math/big"
 	"net/http"
 	"net/url"
+	"time"
 )
 
 type (
@@ -53,6 +54,7 @@ type Tag struct {
 	Message   string       `json:"message"`
 	Protected bool         `json:"protected"`
 	Target    string       `json:"target"`
+	CreatedAt *time.Time   `json:"created_at"`
 }
 
 // X509Signature represents a GitLab Tag Signature object.

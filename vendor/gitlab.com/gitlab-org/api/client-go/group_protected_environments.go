@@ -53,7 +53,7 @@ type GroupProtectedEnvironment struct {
 	ApprovalRules         []*GroupEnvironmentApprovalRule      `json:"approval_rules"`
 }
 
-// GroupEnvironmentAccessDescription represents the access decription for a
+// GroupEnvironmentAccessDescription represents the access description for a
 // group-level protected environment.
 //
 // GitLab API docs:
@@ -153,7 +153,7 @@ type ProtectGroupEnvironmentOptions struct {
 	ApprovalRules         *[]*GroupEnvironmentApprovalRuleOptions `url:"approval_rules,omitempty" json:"approval_rules,omitempty"`
 }
 
-// GroupEnvironmentAccessOptions represents the options for an access decription
+// GroupEnvironmentAccessOptions represents the options for an access description
 // for a group-level protected environment.
 //
 // GitLab API docs:
@@ -217,7 +217,7 @@ type UpdateGroupProtectedEnvironmentOptions struct {
 }
 
 // UpdateGroupEnvironmentAccessOptions represents the options for updates to the
-// access decription for a group-level protected environment.
+// access description for a group-level protected environment.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_protected_environments/#update-a-protected-environment

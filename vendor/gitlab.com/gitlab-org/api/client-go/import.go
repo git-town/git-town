@@ -82,7 +82,7 @@ type ImportRepositoryFromGitHubOptions struct {
 	TimeoutStrategy *string `url:"timeout_strategy,omitempty" json:"timeout_strategy,omitempty"`
 }
 
-// Import a repository from GitHub.
+// ImportRepositoryFromGitHub imports a repository from GitHub.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/import/#import-repository-from-github
@@ -130,7 +130,7 @@ type CancelGitHubProjectImportOptions struct {
 	ProjectID *int `url:"project_id,omitempty" json:"project_id,omitempty"`
 }
 
-// Cancel an import of a repository from GitHub.
+// CancelGitHubProjectImport cancels an import of a repository from GitHub.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/import/#cancel-github-project-import
@@ -158,7 +158,7 @@ type ImportGitHubGistsIntoGitLabSnippetsOptions struct {
 	PersonalAccessToken *string `url:"personal_access_token,omitempty" json:"personal_access_token,omitempty"`
 }
 
-// Import personal GitHub Gists into personal GitLab Snippets.
+// ImportGitHubGistsIntoGitLabSnippets imports personal GitHub Gists into personal GitLab Snippets.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/import/#import-github-gists-into-gitlab-snippets
@@ -203,7 +203,7 @@ type ImportRepositoryFromBitbucketServerOptions struct {
 	TimeoutStrategy         *string `url:"timeout_strategy,omitempty" json:"timeout_strategy,omitempty"`
 }
 
-// Import a repository from Bitbucket Server.
+// ImportRepositoryFromBitbucketServer imports a repository from Bitbucket Server.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/import/#import-repository-from-bitbucket-server
@@ -258,7 +258,7 @@ type ImportRepositoryFromBitbucketCloudOptions struct {
 	NewName              *string `url:"new_name,omitempty" json:"new_name,omitempty"`
 }
 
-// Import a repository from Bitbucket Cloud.
+// ImportRepositoryFromBitbucketCloud imports a repository from Bitbucket Cloud.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/import/#import-repository-from-bitbucket-cloud

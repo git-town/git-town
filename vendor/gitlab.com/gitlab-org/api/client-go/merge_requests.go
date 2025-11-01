@@ -293,13 +293,13 @@ func (s *MergeRequestsService) ListMergeRequests(opt *ListMergeRequestsOptions, 
 		return nil, nil, err
 	}
 
-	var m []*BasicMergeRequest
-	resp, err := s.client.Do(req, &m)
+	var mrs []*MergeRequest
+	resp, err := s.client.Do(req, &mrs)
 	if err != nil {
 		return nil, resp, err
 	}
 
-	return m, resp, nil
+	return toBasic(mrs), resp, nil
 }
 
 // ListProjectMergeRequestsOptions represents the available ListMergeRequests()
@@ -356,13 +356,13 @@ func (s *MergeRequestsService) ListProjectMergeRequests(pid any, opt *ListProjec
 		return nil, nil, err
 	}
 
-	var m []*BasicMergeRequest
-	resp, err := s.client.Do(req, &m)
+	var mrs []*MergeRequest
+	resp, err := s.client.Do(req, &mrs)
 	if err != nil {
 		return nil, resp, err
 	}
 
-	return m, resp, nil
+	return toBasic(mrs), resp, nil
 }
 
 // ListGroupMergeRequestsOptions represents the available ListGroupMergeRequests()
@@ -419,13 +419,13 @@ func (s *MergeRequestsService) ListGroupMergeRequests(gid any, opt *ListGroupMer
 		return nil, nil, err
 	}
 
-	var m []*BasicMergeRequest
-	resp, err := s.client.Do(req, &m)
+	var mrs []*MergeRequest
+	resp, err := s.client.Do(req, &mrs)
 	if err != nil {
 		return nil, resp, err
 	}
 
-	return m, resp, nil
+	return toBasic(mrs), resp, nil
 }
 
 // GetMergeRequestsOptions represents the available GetMergeRequests()
@@ -930,12 +930,15 @@ func (s *MergeRequestsService) DeleteMergeRequest(pid any, mergeRequest int, opt
 // GitLab API docs:
 // https://docs.gitlab.com/api/merge_requests/#merge-a-merge-request
 type AcceptMergeRequestOptions struct {
-	MergeCommitMessage        *string `url:"merge_commit_message,omitempty" json:"merge_commit_message,omitempty"`
-	SquashCommitMessage       *string `url:"squash_commit_message,omitempty" json:"squash_commit_message,omitempty"`
-	Squash                    *bool   `url:"squash,omitempty" json:"squash,omitempty"`
-	ShouldRemoveSourceBranch  *bool   `url:"should_remove_source_branch,omitempty" json:"should_remove_source_branch,omitempty"`
-	MergeWhenPipelineSucceeds *bool   `url:"merge_when_pipeline_succeeds,omitempty" json:"merge_when_pipeline_succeeds,omitempty"`
-	SHA                       *string `url:"sha,omitempty" json:"sha,omitempty"`
+	AutoMerge                *bool   `url:"auto_merge,omitempty" json:"auto_merge,omitempty"`
+	MergeCommitMessage       *string `url:"merge_commit_message,omitempty" json:"merge_commit_message,omitempty"`
+	SquashCommitMessage      *string `url:"squash_commit_message,omitempty" json:"squash_commit_message,omitempty"`
+	Squash                   *bool   `url:"squash,omitempty" json:"squash,omitempty"`
+	ShouldRemoveSourceBranch *bool   `url:"should_remove_source_branch,omitempty" json:"should_remove_source_branch,omitempty"`
+	SHA                      *string `url:"sha,omitempty" json:"sha,omitempty"`
+
+	// Deprecated: use AutoMerge instead
+	MergeWhenPipelineSucceeds *bool `url:"merge_when_pipeline_succeeds,omitempty" json:"merge_when_pipeline_succeeds,omitempty"`
 }
 
 // AcceptMergeRequest merges changes submitted with MR using this API. If merge
@@ -1371,4 +1374,14 @@ func (s *MergeRequestsService) GetMergeRequestDependencies(pid any, mergeRequest
 	}
 
 	return mrd, resp, err
+}
+
+func toBasic(mrs []*MergeRequest) []*BasicMergeRequest {
+	ret := make([]*BasicMergeRequest, len(mrs))
+
+	for i, mr := range mrs {
+		ret[i] = &mr.BasicMergeRequest
+	}
+
+	return ret
 }

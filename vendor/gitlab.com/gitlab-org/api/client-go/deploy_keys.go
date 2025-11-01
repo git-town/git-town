@@ -24,14 +24,61 @@ import (
 
 type (
 	DeployKeysServiceInterface interface {
+		// ListAllDeployKeys gets a list of all deploy keys.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/deploy_keys/#list-all-deploy-keys
 		ListAllDeployKeys(opt *ListInstanceDeployKeysOptions, options ...RequestOptionFunc) ([]*InstanceDeployKey, *Response, error)
+
+		// AddInstanceDeployKey creates a deploy key for the GitLab instance.
+		// Requires administrator access.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/deploy_keys/#add-deploy-key
 		AddInstanceDeployKey(opt *AddInstanceDeployKeyOptions, options ...RequestOptionFunc) (*InstanceDeployKey, *Response, error)
+
+		// ListProjectDeployKeys gets a list of a project's deploy keys.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/deploy_keys/#list-deploy-keys-for-project
 		ListProjectDeployKeys(pid any, opt *ListProjectDeployKeysOptions, options ...RequestOptionFunc) ([]*ProjectDeployKey, *Response, error)
+
+		// ListUserProjectDeployKeys gets a list of a user's deploy keys.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/deploy_keys/#list-project-deploy-keys-for-user
 		ListUserProjectDeployKeys(uid any, opt *ListUserProjectDeployKeysOptions, options ...RequestOptionFunc) ([]*ProjectDeployKey, *Response, error)
+
+		// GetDeployKey gets a single deploy key.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/deploy_keys/#get-a-single-deploy-key
 		GetDeployKey(pid any, deployKey int, options ...RequestOptionFunc) (*ProjectDeployKey, *Response, error)
+
+		// AddDeployKey creates a new deploy key for a project. If the deploy key already
+		// exists in another project, it will be joined to the project but only if
+		// the original one is accessible by the same user.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/deploy_keys/#add-deploy-key-for-a-project
 		AddDeployKey(pid any, opt *AddDeployKeyOptions, options ...RequestOptionFunc) (*ProjectDeployKey, *Response, error)
+
+		// DeleteDeployKey deletes a deploy key from a project.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/deploy_keys/#delete-deploy-key
 		DeleteDeployKey(pid any, deployKey int, options ...RequestOptionFunc) (*Response, error)
+
+		// EnableDeployKey enables a deploy key.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/deploy_keys/#enable-a-deploy-key
 		EnableDeployKey(pid any, deployKey int, options ...RequestOptionFunc) (*ProjectDeployKey, *Response, error)
+
+		// UpdateDeployKey updates a deploy key for a project.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/deploy_keys/#update-deploy-key
 		UpdateDeployKey(pid any, deployKey int, opt *UpdateDeployKeyOptions, options ...RequestOptionFunc) (*ProjectDeployKey, *Response, error)
 	}
 
@@ -95,7 +142,7 @@ func (k ProjectDeployKey) String() string {
 	return Stringify(k)
 }
 
-// ListProjectDeployKeysOptions represents the available ListAllDeployKeys()
+// ListInstanceDeployKeysOptions represents the available ListAllDeployKeys()
 // options.
 //
 // GitLab API docs:
@@ -105,10 +152,6 @@ type ListInstanceDeployKeysOptions struct {
 	Public *bool `url:"public,omitempty" json:"public,omitempty"`
 }
 
-// ListAllDeployKeys gets a list of all deploy keys
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/deploy_keys/#list-all-deploy-keys
 func (s *DeployKeysService) ListAllDeployKeys(opt *ListInstanceDeployKeysOptions, options ...RequestOptionFunc) ([]*InstanceDeployKey, *Response, error) {
 	req, err := s.client.NewRequest(http.MethodGet, "deploy_keys", opt, options)
 	if err != nil {
@@ -135,11 +178,6 @@ type AddInstanceDeployKeyOptions struct {
 	ExpiresAt *time.Time `url:"expires_at,omitempty" json:"expires_at,omitempty"`
 }
 
-// AddInstanceDeployKey creates a deploy key for the GitLab instance.
-// Requires administrator access.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/deploy_keys/#add-deploy-key
 func (s *DeployKeysService) AddInstanceDeployKey(opt *AddInstanceDeployKeyOptions, options ...RequestOptionFunc) (*InstanceDeployKey, *Response, error) {
 	req, err := s.client.NewRequest(http.MethodPost, "deploy_keys", opt, options)
 	if err != nil {
@@ -162,10 +200,6 @@ func (s *DeployKeysService) AddInstanceDeployKey(opt *AddInstanceDeployKeyOption
 // https://docs.gitlab.com/api/deploy_keys/#list-deploy-keys-for-project
 type ListProjectDeployKeysOptions ListOptions
 
-// ListProjectDeployKeys gets a list of a project's deploy keys
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/deploy_keys/#list-deploy-keys-for-project
 func (s *DeployKeysService) ListProjectDeployKeys(pid any, opt *ListProjectDeployKeysOptions, options ...RequestOptionFunc) ([]*ProjectDeployKey, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -194,10 +228,6 @@ func (s *DeployKeysService) ListProjectDeployKeys(pid any, opt *ListProjectDeplo
 // https://docs.gitlab.com/api/deploy_keys/#list-project-deploy-keys-for-user
 type ListUserProjectDeployKeysOptions ListOptions
 
-// ListUserProjectDeployKeys gets a list of a user's deploy keys
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/deploy_keys/#list-project-deploy-keys-for-user
 func (s *DeployKeysService) ListUserProjectDeployKeys(uid any, opt *ListUserProjectDeployKeysOptions, options ...RequestOptionFunc) ([]*ProjectDeployKey, *Response, error) {
 	user, err := parseID(uid)
 	if err != nil {
@@ -219,10 +249,6 @@ func (s *DeployKeysService) ListUserProjectDeployKeys(uid any, opt *ListUserProj
 	return ks, resp, nil
 }
 
-// GetDeployKey gets a single deploy key.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/deploy_keys/#get-a-single-deploy-key
 func (s *DeployKeysService) GetDeployKey(pid any, deployKey int, options ...RequestOptionFunc) (*ProjectDeployKey, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -255,12 +281,6 @@ type AddDeployKeyOptions struct {
 	ExpiresAt *time.Time `url:"expires_at,omitempty" json:"expires_at,omitempty"`
 }
 
-// AddDeployKey creates a new deploy key for a project. If deploy key already
-// exists in another project - it will be joined to project but only if
-// original one is accessible by the same user.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/deploy_keys/#add-deploy-key-for-a-project
 func (s *DeployKeysService) AddDeployKey(pid any, opt *AddDeployKeyOptions, options ...RequestOptionFunc) (*ProjectDeployKey, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -282,10 +302,6 @@ func (s *DeployKeysService) AddDeployKey(pid any, opt *AddDeployKeyOptions, opti
 	return k, resp, nil
 }
 
-// DeleteDeployKey deletes a deploy key from a project.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/deploy_keys/#delete-deploy-key
 func (s *DeployKeysService) DeleteDeployKey(pid any, deployKey int, options ...RequestOptionFunc) (*Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -301,10 +317,6 @@ func (s *DeployKeysService) DeleteDeployKey(pid any, deployKey int, options ...R
 	return s.client.Do(req, nil)
 }
 
-// EnableDeployKey enables a deploy key.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/deploy_keys/#enable-a-deploy-key
 func (s *DeployKeysService) EnableDeployKey(pid any, deployKey int, options ...RequestOptionFunc) (*ProjectDeployKey, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -335,10 +347,6 @@ type UpdateDeployKeyOptions struct {
 	CanPush *bool   `url:"can_push,omitempty" json:"can_push,omitempty"`
 }
 
-// UpdateDeployKey updates a deploy key for a project.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/deploy_keys/#update-deploy-key
 func (s *DeployKeysService) UpdateDeployKey(pid any, deployKey int, opt *UpdateDeployKeyOptions, options ...RequestOptionFunc) (*ProjectDeployKey, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {

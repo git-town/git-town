@@ -269,7 +269,7 @@ func (s *RepositoriesService) Compare(pid any, opt *CompareOptions, options ...R
 	return c, resp, nil
 }
 
-// Contributor represents a GitLap contributor.
+// Contributor represents a GitLab contributor.
 //
 // GitLab API docs: https://docs.gitlab.com/api/repositories/#contributors
 type Contributor struct {

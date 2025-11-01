@@ -33,8 +33,10 @@ const (
 	exitOptionError
 )
 
-type testSuiteInitializer func(*TestSuiteContext)
-type scenarioInitializer func(*ScenarioContext)
+type (
+	testSuiteInitializer func(*TestSuiteContext)
+	scenarioInitializer  func(*ScenarioContext)
+)
 
 type runner struct {
 	randomSeed            int64
@@ -115,6 +117,13 @@ func (r *runner) concurrent(rate int) (failed bool) {
 
 				// Copy base suite.
 				suite := *testSuiteContext.suite
+				if rate > 1 {
+					// if running concurrently, only print at end of scenario to keep
+					// scenario logs segregated
+					ffmt := ifmt.WrapOnFlush(testSuiteContext.suite.fmt)
+					suite.fmt = ffmt
+					defer ffmt.Flush()
+				}
 
 				if r.scenarioInitializer != nil {
 					sc := ScenarioContext{suite: &suite}
@@ -238,7 +247,7 @@ func runWithOptions(suiteName string, runner runner, opt Options) int {
 	opt.FS = storage.FS{FS: opt.FS}
 
 	if len(opt.FeatureContents) > 0 {
-		features, err := parser.ParseFromBytes(opt.Tags, opt.FeatureContents)
+		features, err := parser.ParseFromBytes(opt.Tags, opt.Dialect, opt.FeatureContents)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			return exitOptionError
@@ -247,7 +256,7 @@ func runWithOptions(suiteName string, runner runner, opt Options) int {
 	}
 
 	if len(opt.Paths) > 0 {
-		features, err := parser.ParseFeatures(opt.FS, opt.Tags, opt.Paths)
+		features, err := parser.ParseFeatures(opt.FS, opt.Tags, opt.Dialect, opt.Paths)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			return exitOptionError
@@ -380,7 +389,7 @@ func (ts TestSuite) RetrieveFeatures() ([]*models.Feature, error) {
 		}
 	}
 
-	return parser.ParseFeatures(opt.FS, opt.Tags, opt.Paths)
+	return parser.ParseFeatures(opt.FS, opt.Tags, opt.Dialect, opt.Paths)
 }
 
 func getDefaultOptions() (*Options, error) {

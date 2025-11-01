@@ -58,7 +58,7 @@ type MergeTrainMergeRequest struct {
 
 // ListMergeTrainsOptions represents the available ListMergeTrain() options.
 //
-// Gitab API docs:
+// GitLab API docs:
 // https://docs.gitlab.com/api/merge_trains/#list-merge-trains-for-a-project
 type ListMergeTrainsOptions struct {
 	ListOptions

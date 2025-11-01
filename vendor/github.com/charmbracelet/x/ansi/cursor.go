@@ -358,8 +358,8 @@ func CHT(n int) string {
 	return CursorHorizontalForwardTab(n)
 }
 
-// EraseCharacter (ECH) returns a sequence for erasing n characters and moving
-// the cursor to the right. This doesn't affect other cell attributes.
+// EraseCharacter (ECH) returns a sequence for erasing n characters from the
+// screen. This doesn't affect other cell attributes.
 //
 // Default is 1.
 //
@@ -591,7 +591,7 @@ const ReverseIndex = "\x1bM"
 //
 // Default is 1.
 //
-//	CSI n `
+//	CSI n \`
 //
 // See: https://vt100.net/docs/vt510-rm/HPA.html
 func HorizontalPositionAbsolute(col int) string {

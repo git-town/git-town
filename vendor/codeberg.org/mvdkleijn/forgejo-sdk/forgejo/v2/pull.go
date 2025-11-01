@@ -151,6 +151,21 @@ func (c *Client) GetPullRequest(owner, repo string, index int64) (*PullRequest, 
 	return pr, resp, err
 }
 
+// GetPullRequestByBaseAndHead finds a pull request by base and head
+func (c *Client) GetPullRequestByBaseAndHead(owner, repo, base, head string) (*PullRequest, *Response, error) {
+	if err := escapeValidatePathSegments(&owner, &repo, &base, &head); err != nil {
+		return nil, nil, err
+	}
+	pr := new(PullRequest)
+	resp, err := c.getParsedResponse("GET", fmt.Sprintf("/repos/%s/%s/pulls/%s/%s", owner, repo, base, head), nil, nil, pr)
+	if c.checkServerVersionGreaterThanOrEqual(version1_14_0) != nil {
+		if err := fixPullHeadSha(c, pr); err != nil {
+			return pr, resp, err
+		}
+	}
+	return pr, resp, err
+}
+
 // CreatePullRequestOption options when creating a pull request
 type CreatePullRequestOption struct {
 	Head      string     `json:"head"`

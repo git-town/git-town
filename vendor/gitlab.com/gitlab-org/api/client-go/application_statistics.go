@@ -18,6 +18,10 @@ import "net/http"
 
 type (
 	ApplicationStatisticsServiceInterface interface {
+		// GetApplicationStatistics gets details on the current application statistics.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/statistics/#get-details-on-current-application-statistics
 		GetApplicationStatistics(options ...RequestOptionFunc) (*ApplicationStatistics, *Response, error)
 	}
 
@@ -49,10 +53,6 @@ type ApplicationStatistics struct {
 	ActiveUsers   int `url:"active_users" json:"active_users"`
 }
 
-// GetApplicationStatistics gets details on the current application statistics.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/statistics/#get-details-on-current-application-statistics
 func (s *ApplicationStatisticsService) GetApplicationStatistics(options ...RequestOptionFunc) (*ApplicationStatistics, *Response, error) {
 	req, err := s.client.NewRequest(http.MethodGet, "application/statistics", nil, options)
 	if err != nil {

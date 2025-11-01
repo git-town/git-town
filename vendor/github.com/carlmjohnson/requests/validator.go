@@ -5,8 +5,10 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"maps"
 	"mime"
 	"net/http"
+	"slices"
 )
 
 // DefaultValidator is the validator applied by Builder unless otherwise specified.
@@ -29,10 +31,8 @@ func (se *ResponseError) Error() string {
 // CheckStatus validates the response has an acceptable status code.
 func CheckStatus(acceptStatuses ...int) ResponseHandler {
 	return func(res *http.Response) error {
-		for _, code := range acceptStatuses {
-			if res.StatusCode == code {
-				return nil
-			}
+		if slices.Contains(acceptStatuses, res.StatusCode) {
+			return nil
 		}
 
 		return fmt.Errorf("%w: unexpected status: %d",
@@ -46,11 +46,7 @@ func HasStatusErr(err error, codes ...int) bool {
 		return false
 	}
 	if se := new(ResponseError); errors.As(err, &se) {
-		for _, code := range codes {
-			if se.StatusCode == code {
-				return true
-			}
-		}
+		return slices.Contains(codes, se.StatusCode)
 	}
 	return false
 }
@@ -63,10 +59,8 @@ func CheckContentType(cts ...string) ResponseHandler {
 			return fmt.Errorf("%w: problem matching Content-Type",
 				(*ResponseError)(res))
 		}
-		for _, ct := range cts {
-			if mt == ct {
-				return nil
-			}
+		if slices.Contains(cts, mt) {
+			return nil
 		}
 		return fmt.Errorf("%w: unexpected Content-Type: %s",
 			(*ResponseError)(res), mt)
@@ -101,9 +95,7 @@ func CheckPeek(n int, f func([]byte) error) ResponseHandler {
 // CopyHeaders copies the response headers to h.
 func CopyHeaders(h map[string][]string) ResponseHandler {
 	return func(res *http.Response) error {
-		for k, v := range res.Header {
-			h[k] = v
-		}
+		maps.Copy(h, res.Header)
 
 		return nil
 	}

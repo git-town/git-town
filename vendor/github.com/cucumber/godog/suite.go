@@ -159,7 +159,9 @@ func (s *suite) runStep(ctx context.Context, pickle *Scenario, step *Step, scena
 
 		// Check for any calls to Fail on dogT
 		if err == nil {
-			err = getTestingT(ctx).isFailed()
+			if t := getTestingT(ctx); t != nil {
+				err = t.isFailed()
+			}
 		}
 
 		status := StepUndefined
@@ -258,6 +260,8 @@ func (s *suite) runStep(ctx context.Context, pickle *Scenario, step *Step, scena
 				},
 				Args:         match.Args,
 				HandlerValue: match.HandlerValue,
+				File:         match.File,
+				Line:         match.Line,
 				Nested:       match.Nested,
 				Undefined:    undef,
 			}
@@ -270,7 +274,7 @@ func (s *suite) runStep(ctx context.Context, pickle *Scenario, step *Step, scena
 		s.storage.MustInsertPickleStepResult(sr)
 
 		s.fmt.Undefined(pickle, step, match.GetInternalStepDefinition())
-		return ctx, ErrUndefined
+		return ctx, fmt.Errorf("%w: %s", ErrUndefined, step.Text)
 	}
 
 	if scenarioErr != nil {
@@ -461,7 +465,7 @@ func (s *suite) maybeSubSteps(ctx context.Context, result interface{}) (context.
 		}
 
 		if def == nil {
-			return ctx, ErrUndefined
+			return ctx, fmt.Errorf("%w: %s", ErrUndefined, text)
 		} else {
 			ctx, err = s.runSubStep(ctx, text, def)
 			if err != nil {
@@ -530,6 +534,8 @@ func (s *suite) matchStepTextAndType(text string, stepType messages.PickleStepTy
 				},
 				Args:         args,
 				HandlerValue: h.HandlerValue,
+				File:         h.File,
+				Line:         h.Line,
 				Nested:       h.Nested,
 			}
 
@@ -609,7 +615,7 @@ func (s *suite) runPickle(pickle *messages.Pickle) (err error) {
 		s.storage.MustInsertPickleResult(pr)
 
 		s.fmt.Pickle(pickle)
-		return ErrUndefined
+		return fmt.Errorf("%w: no steps in scenario", ErrUndefined)
 	}
 
 	// Before scenario hooks are called in context of first evaluated step

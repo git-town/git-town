@@ -366,10 +366,9 @@ func (s *JobsService) DownloadSingleArtifactsFile(pid any, jobID int, artifactPa
 	return bytes.NewReader(artifactBuf.Bytes()), resp, err
 }
 
-// DownloadSingleArtifactsFile download a single artifact file for a specific
-// job of the latest successful pipeline for the given reference name from
-// inside the job’s artifacts archive. The file is extracted from the archive
-// and streamed to the client.
+// DownloadSingleArtifactsFileByTagOrBranch downloads a single file from
+// a job’s artifacts in the latest successful pipeline using the reference name.
+// The file is extracted from the archive and streamed to the client.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/job_artifacts/#download-a-single-artifact-file-from-specific-tag-or-branch

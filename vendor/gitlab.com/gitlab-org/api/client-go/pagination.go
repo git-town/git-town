@@ -6,6 +6,7 @@ package gitlab
 import (
 	"fmt"
 	"iter"
+	"slices"
 )
 
 type PaginationOptionFunc = RequestOptionFunc
@@ -156,4 +157,25 @@ func Must[T any](it iter.Seq2[T, error]) iter.Seq[T] {
 			}
 		}
 	}
+}
+
+// ScanAndCollect is a convenience function that collects all results and returns them as slice as well as an error if one happens.
+//
+//	opts := &ListProjectsOptions{}
+//	projects, err := ScanAndCollect(func(p PaginationOptionFunc) ([]*Project, *Response, error) {
+//		return c.Projects.ListProjects(opts, p)
+//	}))
+//	if err != nil {
+//		// handle the error
+//	}
+//	// do something with projects
+//
+// Attention: This API is experimental and may be subject to breaking changes to improve the API in the future.
+func ScanAndCollect[T any](f func(p PaginationOptionFunc) ([]T, *Response, error)) ([]T, error) {
+	it, hasErr := Scan(f)
+	allItems := slices.Collect(it)
+	if err := hasErr(); err != nil {
+		return nil, err
+	}
+	return allItems, nil
 }

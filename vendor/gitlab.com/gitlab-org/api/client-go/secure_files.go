@@ -90,7 +90,7 @@ type SecureFileSubject struct {
 	UID string `json:"UID"`
 }
 
-// Gets a string representation of a SecureFile.
+// String gets a string representation of a SecureFile.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/secure_files/

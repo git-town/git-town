@@ -39,10 +39,10 @@ func WithContext(ctx context.Context) RequestOptionFunc {
 
 // copyContextValues copy some context key and values in old context
 func copyContextValues(oldCtx context.Context, newCtx context.Context) context.Context {
-	cheryRetry := checkRetryFromContext(oldCtx)
+	checkRetry := checkRetryFromContext(oldCtx)
 
-	if cheryRetry != nil {
-		newCtx = contextWithCheckRetry(newCtx, cheryRetry)
+	if checkRetry != nil {
+		newCtx = contextWithCheckRetry(newCtx, checkRetry)
 	}
 
 	return newCtx
@@ -72,12 +72,12 @@ func WithHeaders(headers map[string]string) RequestOptionFunc {
 // query parameter in the request with its corresponding response parameter.
 func WithKeysetPaginationParameters(nextLink string) RequestOptionFunc {
 	return func(req *retryablehttp.Request) error {
-		nextUrl, err := url.Parse(nextLink)
+		nextURL, err := url.Parse(nextLink)
 		if err != nil {
 			return err
 		}
 		q := req.URL.Query()
-		for k, values := range nextUrl.Query() {
+		for k, values := range nextURL.Query() {
 			q.Del(k)
 			for _, v := range values {
 				q.Add(k, v)

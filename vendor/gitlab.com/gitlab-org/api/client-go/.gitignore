@@ -33,6 +33,9 @@ _testmain.go
 vendor
 .go/
 .golangci-lint/
+scripts/commitlint/node_modules
 
 # reports
 gl-code-quality-report.json
+
+.mise/

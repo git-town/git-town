@@ -32,7 +32,7 @@ type (
 		DeleteProjectMarkdownUploadBySecretAndFilename(pid any, secret string, filename string, options ...RequestOptionFunc) (*Response, error)
 	}
 
-	// MarkdownUploadsService handles communication with the project
+	// ProjectMarkdownUploadsService handles communication with the project
 	// markdown uploads related methods of the GitLab API.
 	//
 	// GitLab API docs:

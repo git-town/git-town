@@ -25,6 +25,7 @@ type (
 		ListEnterpriseUsers(gid any, opt *ListEnterpriseUsersOptions, options ...RequestOptionFunc) ([]*User, *Response, error)
 		GetEnterpriseUser(gid any, uid int, options ...RequestOptionFunc) (*User, *Response, error)
 		Disable2FAForEnterpriseUser(gid any, uid int, options ...RequestOptionFunc) (*Response, error)
+		DeleteEnterpriseUser(gid any, uid int, deleteOptions *DeleteEnterpriseUserOptions, options ...RequestOptionFunc) (*Response, error)
 	}
 
 	// EnterpriseUsersService handles communication with the enterprise users
@@ -117,6 +118,33 @@ func (s *EnterpriseUsersService) Disable2FAForEnterpriseUser(gid any, uid int, o
 	u := fmt.Sprintf("groups/%s/enterprise_users/%d/disable_two_factor", PathEscape(group), uid)
 
 	req, err := s.client.NewRequest(http.MethodPatch, u, nil, options)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.client.Do(req, nil)
+}
+
+// DeleteEnterpriseUserOptions represents the available DeleteEnterpriseUser options.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/api/group_enterprise_users/#delete-an-enterprise-user
+type DeleteEnterpriseUserOptions struct {
+	HardDelete *bool `url:"hard_delete,omitempty" json:"hard_delete,omitempty"`
+}
+
+// DeleteEnterpriseUser deletes an specified enterprise user.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/api/group_enterprise_users/#delete-an-enterprise-user
+func (s *EnterpriseUsersService) DeleteEnterpriseUser(gid any, uid int, opt *DeleteEnterpriseUserOptions, options ...RequestOptionFunc) (*Response, error) {
+	group, err := parseID(gid)
+	if err != nil {
+		return nil, err
+	}
+	u := fmt.Sprintf("groups/%s/enterprise_users/%d", PathEscape(group), uid)
+
+	req, err := s.client.NewRequest(http.MethodDelete, u, opt, options)
 	if err != nil {
 		return nil, err
 	}

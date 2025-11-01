@@ -71,7 +71,7 @@ type CreateGroupSSHCertificateOptions struct {
 	Title *string `url:"title,omitempty" json:"title,omitempty"`
 }
 
-// CreateMemberRole creates a new member role for a specified group.
+// CreateGroupSSHCertificate creates a new SSH certificate in the group.
 //
 // Gitlab API docs:
 // https://docs.gitlab.com/api/group_ssh_certificates/#create-ssh-certificate

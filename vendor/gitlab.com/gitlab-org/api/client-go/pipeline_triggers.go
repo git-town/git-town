@@ -207,6 +207,10 @@ type RunPipelineTriggerOptions struct {
 	Ref       *string           `url:"ref" json:"ref"`
 	Token     *string           `url:"token" json:"token"`
 	Variables map[string]string `url:"variables,omitempty" json:"variables,omitempty"`
+
+	// Inputs contains pipeline input parameters.
+	// See PipelineInputsOption for supported types and usage.
+	Inputs PipelineInputsOption `url:"inputs,omitempty" json:"inputs,omitempty"`
 }
 
 // RunPipelineTrigger starts a trigger from a project.

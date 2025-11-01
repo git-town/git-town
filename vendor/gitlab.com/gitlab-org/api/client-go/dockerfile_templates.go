@@ -25,7 +25,16 @@ import (
 type (
 	// DockerfileTemplatesServiceInterface defines all the API methods for the DockerfileTemplatesService
 	DockerfileTemplatesServiceInterface interface {
+		// ListTemplates get a list of available Dockerfile templates.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/templates/dockerfiles/#list-dockerfile-templates
 		ListTemplates(opt *ListDockerfileTemplatesOptions, options ...RequestOptionFunc) ([]*DockerfileTemplateListItem, *Response, error)
+
+		// GetTemplate get a single Dockerfile template.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/templates/dockerfiles/#single-dockerfile-template
 		GetTemplate(key string, options ...RequestOptionFunc) (*DockerfileTemplate, *Response, error)
 	}
 
@@ -62,10 +71,6 @@ type DockerfileTemplateListItem struct {
 // https://docs.gitlab.com/api/templates/dockerfiles/#list-dockerfile-templates
 type ListDockerfileTemplatesOptions ListOptions
 
-// ListTemplates get a list of available Dockerfile templates.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/templates/dockerfiles/#list-dockerfile-templates
 func (s *DockerfileTemplatesService) ListTemplates(opt *ListDockerfileTemplatesOptions, options ...RequestOptionFunc) ([]*DockerfileTemplateListItem, *Response, error) {
 	req, err := s.client.NewRequest(http.MethodGet, "templates/dockerfiles", opt, options)
 	if err != nil {
@@ -81,10 +86,6 @@ func (s *DockerfileTemplatesService) ListTemplates(opt *ListDockerfileTemplatesO
 	return gs, resp, nil
 }
 
-// GetTemplate get a single Dockerfile template.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/templates/dockerfiles/#single-dockerfile-template
 func (s *DockerfileTemplatesService) GetTemplate(key string, options ...RequestOptionFunc) (*DockerfileTemplate, *Response, error) {
 	u := fmt.Sprintf("templates/dockerfiles/%s", url.PathEscape(key))
 

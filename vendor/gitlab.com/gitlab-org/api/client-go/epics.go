@@ -97,6 +97,8 @@ type Epic struct {
 	URL                     string      `json:"url"`
 }
 
+// String gets a string representation of an Epic.
+//
 // Will be removed in v5 of the API, use Work Items API instead
 func (e Epic) String() string {
 	return Stringify(e)

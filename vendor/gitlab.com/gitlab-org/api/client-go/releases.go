@@ -138,7 +138,7 @@ type ListReleasesOptions struct {
 	IncludeHTMLDescription *bool   `url:"include_html_description,omitempty" json:"include_html_description,omitempty"`
 }
 
-// ListReleases gets a pagenated of releases accessible by the authenticated user.
+// ListReleases gets a paginated list of releases accessible by the authenticated user.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/releases/#list-releases
