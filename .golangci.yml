@@ -25,7 +25,7 @@ linters:
     - nakedret # not useful
     - nestif # we keep complexity under check with code reviews
     - nilnil # in our code returning nil, nil makes sense
-    - noinlineerr
+    - noinlineerr # inline errors are okay
     - nonamedreturns # they are useful in too many situations
     - nlreturn # this forces unnecessary empty lines in function bodies
     - staticcheck # we run this separately
