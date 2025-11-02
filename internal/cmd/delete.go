@@ -353,30 +353,26 @@ func deleteFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data d
 	}
 	deleteLocalBranch(prog, finalUndoProgram, data)
 	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
-		if connector, hasConnector := data.connector.Get(); hasConnector {
-			if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
-				_ = sync.AddStackLineageUpdateOpcodes(
-					sync.AddStackLineageUpdateOpcodesArgs{
-						Current:   data.initialBranch,
-						FullStack: true,
-						Program:   prog,
-						ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
-							Connector:                proposalFinder,
-							CurrentBranch:            data.initialBranch,
-							Lineage:                  data.config.NormalConfig.Lineage,
-							MainAndPerennialBranches: data.config.MainAndPerennials(),
-							Order:                    data.config.NormalConfig.Order,
-						},
-						ProposalStackLineageTree: None[*forge.ProposalStackLineageTree](),
-						// Do not update the proposal of the deleted branch.
-						// At this point, a forge (like github) would close
-						// the proposal because there is no longer a remote
-						// branch.
-						SkipUpdateForProposalsWithBaseBranch: gitdomain.LocalBranchNames{data.initialBranch},
-					},
-				)
-			}
-		}
+		_ = sync.AddStackLineageUpdateOpcodes(
+			sync.AddStackLineageUpdateOpcodesArgs{
+				Current:   data.initialBranch,
+				FullStack: true,
+				Program:   prog,
+				ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
+					Connector:                forgedomain.ProposalFinderFromConnector(data.connector),
+					CurrentBranch:            data.initialBranch,
+					Lineage:                  data.config.NormalConfig.Lineage,
+					MainAndPerennialBranches: data.config.MainAndPerennials(),
+					Order:                    data.config.NormalConfig.Order,
+				},
+				ProposalStackLineageTree: None[*forge.ProposalStackLineageTree](),
+				// Do not update the proposal of the deleted branch.
+				// At this point, a forge (like github) would close
+				// the proposal because there is no longer a remote
+				// branch.
+				SkipUpdateForProposalsWithBaseBranch: gitdomain.LocalBranchNames{data.initialBranch},
+			},
+		)
 	}
 }
 

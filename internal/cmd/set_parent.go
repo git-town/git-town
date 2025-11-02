@@ -473,79 +473,75 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 // updateProposalLineage updates the proposal stack lineage when changing the parent
 func updateProposalLineage(prog *program.Program, newParentOpt Option[gitdomain.LocalBranchName], data setParentData) {
 	if data.config.NormalConfig.ProposalsShowLineage != forgedomain.ProposalsShowLineageCLI {
-		if connector, hasConnector := data.connector.Get(); hasConnector {
-			if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
-				proposalStackTree := sync.AddStackLineageUpdateOpcodes(
-					sync.AddStackLineageUpdateOpcodesArgs{
-						Current:   data.initialBranch,
-						FullStack: true,
-						Program:   NewMutable(prog),
-						ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
-							Connector:                proposalFinder,
-							CurrentBranch:            data.initialBranch,
-							Lineage:                  data.config.NormalConfig.Lineage,
-							MainAndPerennialBranches: data.config.MainAndPerennials(),
-							Order:                    data.config.NormalConfig.Order,
-						},
-						ProposalStackLineageTree:             None[*forge.ProposalStackLineageTree](),
-						SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(),
-					},
-				)
+		proposalStackTree := sync.AddStackLineageUpdateOpcodes(
+			sync.AddStackLineageUpdateOpcodesArgs{
+				Current:   data.initialBranch,
+				FullStack: true,
+				Program:   NewMutable(prog),
+				ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
+					Connector:                forgedomain.ProposalFinderFromConnector(data.connector),
+					CurrentBranch:            data.initialBranch,
+					Lineage:                  data.config.NormalConfig.Lineage,
+					MainAndPerennialBranches: data.config.MainAndPerennials(),
+					Order:                    data.config.NormalConfig.Order,
+				},
+				ProposalStackLineageTree:             None[*forge.ProposalStackLineageTree](),
+				SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(),
+			},
+		)
 
-				branchPropsalsUpdated := set.New[gitdomain.LocalBranchName]()
-				// if the tree is a Some type, we know it will trigger program runs to update
-				// proposals belonging to the base branches iterated on below
-				if tree, hasProposalStackTree := proposalStackTree.Get(); hasProposalStackTree {
-					for b := range maps.Keys(tree.BranchToProposal) {
-						branchPropsalsUpdated.Add(b)
-					}
-				}
-
-				// If we are moving to a parent that is part of a completely different stack,
-				// update the lineage of all members of this other stack
-				_ = sync.AddStackLineageUpdateOpcodes(
-					sync.AddStackLineageUpdateOpcodesArgs{
-						Current:   data.initialBranch,
-						FullStack: true,
-						Program:   NewMutable(prog),
-						ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
-							Connector:                proposalFinder,
-							CurrentBranch:            data.initialBranch,
-							Lineage:                  data.config.NormalConfig.Lineage,
-							MainAndPerennialBranches: data.config.MainAndPerennials(),
-							Order:                    data.config.NormalConfig.Order,
-						},
-						ProposalStackLineageTree: proposalStackTree,
-						// Do not update the same proposal more than once because we updated
-						// it in a previous step
-						SkipUpdateForProposalsWithBaseBranch: branchPropsalsUpdated.Values(),
-					},
-				)
-
-				newParent, hasNewParent := newParentOpt.Get()
-				if hasNewParent {
-					// If we are moving to a parent that is part of a completely different stack,
-					// update the lineage of all members of this other stack
-					_ = sync.AddStackLineageUpdateOpcodes(
-						sync.AddStackLineageUpdateOpcodesArgs{
-							Current:   data.initialBranch,
-							FullStack: true,
-							Program:   NewMutable(prog),
-							ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
-								Connector:                proposalFinder,
-								CurrentBranch:            newParent,
-								Lineage:                  data.config.NormalConfig.Lineage,
-								MainAndPerennialBranches: data.config.MainAndPerennials(),
-								Order:                    data.config.NormalConfig.Order,
-							},
-							ProposalStackLineageTree: proposalStackTree,
-							// Do not update the same proposal more than once because we updated
-							// it in a previous step
-							SkipUpdateForProposalsWithBaseBranch: branchPropsalsUpdated.Values(),
-						},
-					)
-				}
+		branchPropsalsUpdated := set.New[gitdomain.LocalBranchName]()
+		// if the tree is a Some type, we know it will trigger program runs to update
+		// proposals belonging to the base branches iterated on below
+		if tree, hasProposalStackTree := proposalStackTree.Get(); hasProposalStackTree {
+			for b := range maps.Keys(tree.BranchToProposal) {
+				branchPropsalsUpdated.Add(b)
 			}
+		}
+
+		// If we are moving to a parent that is part of a completely different stack,
+		// update the lineage of all members of this other stack
+		_ = sync.AddStackLineageUpdateOpcodes(
+			sync.AddStackLineageUpdateOpcodesArgs{
+				Current:   data.initialBranch,
+				FullStack: true,
+				Program:   NewMutable(prog),
+				ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
+					Connector:                forgedomain.ProposalFinderFromConnector(data.connector),
+					CurrentBranch:            data.initialBranch,
+					Lineage:                  data.config.NormalConfig.Lineage,
+					MainAndPerennialBranches: data.config.MainAndPerennials(),
+					Order:                    data.config.NormalConfig.Order,
+				},
+				ProposalStackLineageTree: proposalStackTree,
+				// Do not update the same proposal more than once because we updated
+				// it in a previous step
+				SkipUpdateForProposalsWithBaseBranch: branchPropsalsUpdated.Values(),
+			},
+		)
+
+		newParent, hasNewParent := newParentOpt.Get()
+		if hasNewParent {
+			// If we are moving to a parent that is part of a completely different stack,
+			// update the lineage of all members of this other stack
+			_ = sync.AddStackLineageUpdateOpcodes(
+				sync.AddStackLineageUpdateOpcodesArgs{
+					Current:   data.initialBranch,
+					FullStack: true,
+					Program:   NewMutable(prog),
+					ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
+						Connector:                forgedomain.ProposalFinderFromConnector(data.connector),
+						CurrentBranch:            newParent,
+						Lineage:                  data.config.NormalConfig.Lineage,
+						MainAndPerennialBranches: data.config.MainAndPerennials(),
+						Order:                    data.config.NormalConfig.Order,
+					},
+					ProposalStackLineageTree: proposalStackTree,
+					// Do not update the same proposal more than once because we updated
+					// it in a previous step
+					SkipUpdateForProposalsWithBaseBranch: branchPropsalsUpdated.Values(),
+				},
+			)
 		}
 	}
 }
