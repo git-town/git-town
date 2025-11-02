@@ -86,11 +86,13 @@ The codebase is organized into orthogonal subsystems with `*domain` packages:
 - `tools/` - Custom linters and development tools
 - `website/` - Documentation website (mdBook)
 
-### Code Style Notes
+### Code Style
 
+- Write idiomatic Go except for the conditions listed below
 - Use descriptive naming over brevity
 - Method receivers use `self` instead of short abbreviations
-- Extensive use of domain-specific types in `*domain` packages
+- Use domain-specific types defined in the respective `*domain` packages if
+  applicable over the built-in basic type.
 
 ## Common Development Tasks
 
@@ -98,4 +100,4 @@ The codebase is organized into orthogonal subsystems with `*domain` packages:
 
 - Add the `@this` tag to a specific scenario and then run `make cukethis` to
   execute only the tagged scenario
-- Add the `@debug` tag to a scenario to see CLI output and Git commands
+- Add the `@debug` tag to a Cucumber scenario to see CLI output and Git commands
