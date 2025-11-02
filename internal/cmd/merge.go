@@ -342,23 +342,21 @@ func mergeProgram(repo execute.OpenRepoResult, data mergeData) program.Program {
 		})
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
-	if connector, hasConnector := data.connector.Get(); hasConnector {
-		if proposalFinder, hasProposalFinder := connector.(forgedomain.ProposalFinder); hasProposalFinder {
-			_ = sync.UpdateProposalStackLineageProgram(sync.UpdateProposalStackLineageProgramArgs{
-				Current:   data.initialBranch,
-				FullStack: true,
-				Program:   prog,
-				ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
-					Connector:                proposalFinder,
-					CurrentBranch:            data.initialBranch,
-					Lineage:                  data.config.NormalConfig.Lineage,
-					MainAndPerennialBranches: data.config.MainAndPerennials(),
-					Order:                    data.config.NormalConfig.Order,
-				},
-				ProposalStackLineageTree:             None[*forge.ProposalStackLineageTree](),
-				SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(data.initialBranch.String()),
-			})
-		}
+	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
+		_ = sync.AddStackLineageUpdateOpcodes(sync.AddStackLineageUpdateOpcodesArgs{
+			Current:   data.initialBranch,
+			FullStack: true,
+			Program:   prog,
+			ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
+				Connector:                forgedomain.ProposalFinderFromConnector(data.connector),
+				CurrentBranch:            data.initialBranch,
+				Lineage:                  data.config.NormalConfig.Lineage,
+				MainAndPerennialBranches: data.config.MainAndPerennials(),
+				Order:                    data.config.NormalConfig.Order,
+			},
+			ProposalStackLineageTree:             None[*forge.ProposalStackLineageTree](),
+			SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(data.initialBranch.String()),
+		})
 	}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.config.NormalConfig.DryRun,
