@@ -372,7 +372,7 @@ func deleteFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data d
 						// At this point, a forge (like github) would close
 						// the proposal because there is no longer a remote
 						// branch.
-						SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(data.initialBranch.String()),
+						SkipUpdateForProposalsWithBaseBranch: gitdomain.LocalBranchNames{data.initialBranch},
 					},
 				)
 			}

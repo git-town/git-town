@@ -92,7 +92,7 @@ func buildAncestorChain(
 	visited map[gitdomain.LocalBranchName]*ProposalStackLineageTreeNode,
 ) (gitdomain.LocalBranchNames, error) {
 	ancestors := args.Lineage.Ancestors(args.CurrentBranch)
-	descendants := gitdomain.NewLocalBranchNames(args.CurrentBranch.String())
+	descendants := gitdomain.LocalBranchNames{args.CurrentBranch}
 	previous := tree.Node
 
 	for _, ancestor := range ancestors {

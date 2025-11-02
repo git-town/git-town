@@ -193,7 +193,7 @@ Start:
 						// Proposal has been shipped and its stack lineage
 						// information shouldn't need to be updated because
 						// proposal is not in a review state.
-						SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(sharedData.initialBranch.String()),
+						SkipUpdateForProposalsWithBaseBranch: gitdomain.LocalBranchNames{sharedData.initialBranch},
 					},
 				)
 			}
