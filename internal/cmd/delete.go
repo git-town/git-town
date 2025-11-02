@@ -356,7 +356,7 @@ func deleteFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data d
 		if connector, hasConnector := data.connector.Get(); hasConnector {
 			if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
 				_ = sync.AddStackLineageUpdateOpcodes(
-					sync.UpdateProposalStackLineageProgramArgs{
+					sync.AddStackLineageUpdateOpcodesArgs{
 						Current:   data.initialBranch,
 						FullStack: true,
 						Program:   prog,

@@ -175,7 +175,7 @@ Start:
 		if connector, hasConnector := data.connector.Get(); hasConnector {
 			if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
 				_ = AddStackLineageUpdateOpcodes(
-					UpdateProposalStackLineageProgramArgs{
+					AddStackLineageUpdateOpcodesArgs{
 						Current:   data.initialBranch,
 						FullStack: args.stack,
 						Program:   runProgram,

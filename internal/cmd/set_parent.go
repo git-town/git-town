@@ -476,7 +476,7 @@ func updateProposalLineage(prog *program.Program, newParentOpt Option[gitdomain.
 		if connector, hasConnector := data.connector.Get(); hasConnector {
 			if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
 				proposalStackTree := sync.AddStackLineageUpdateOpcodes(
-					sync.UpdateProposalStackLineageProgramArgs{
+					sync.AddStackLineageUpdateOpcodesArgs{
 						Current:   data.initialBranch,
 						FullStack: true,
 						Program:   NewMutable(prog),
@@ -504,7 +504,7 @@ func updateProposalLineage(prog *program.Program, newParentOpt Option[gitdomain.
 				// If we are moving to a parent that is part of a completely different stack,
 				// update the lineage of all members of this other stack
 				_ = sync.AddStackLineageUpdateOpcodes(
-					sync.UpdateProposalStackLineageProgramArgs{
+					sync.AddStackLineageUpdateOpcodesArgs{
 						Current:   data.initialBranch,
 						FullStack: true,
 						Program:   NewMutable(prog),
@@ -527,7 +527,7 @@ func updateProposalLineage(prog *program.Program, newParentOpt Option[gitdomain.
 					// If we are moving to a parent that is part of a completely different stack,
 					// update the lineage of all members of this other stack
 					_ = sync.AddStackLineageUpdateOpcodes(
-						sync.UpdateProposalStackLineageProgramArgs{
+						sync.AddStackLineageUpdateOpcodesArgs{
 							Current:   data.initialBranch,
 							FullStack: true,
 							Program:   NewMutable(prog),

@@ -514,7 +514,7 @@ func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages
 		if hasConnector {
 			if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
 				_ = sync.AddStackLineageUpdateOpcodes(
-					sync.UpdateProposalStackLineageProgramArgs{
+					sync.AddStackLineageUpdateOpcodesArgs{
 						Current:   data.initialBranch,
 						FullStack: true,
 						Program:   prog,

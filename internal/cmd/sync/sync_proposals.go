@@ -12,7 +12,7 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-type UpdateProposalStackLineageProgramArgs struct {
+type AddStackLineageUpdateOpcodesArgs struct {
 	Current                              gitdomain.LocalBranchName
 	FullStack                            configdomain.FullStack
 	Program                              Mutable[program.Program]
@@ -23,7 +23,7 @@ type UpdateProposalStackLineageProgramArgs struct {
 
 // AddStackLineageUpdateOpcodes syncs all given proposals.
 // Returns the stack lineage tree if its needed to recall this function.
-func AddStackLineageUpdateOpcodes(args UpdateProposalStackLineageProgramArgs) Option[*forge.ProposalStackLineageTree] {
+func AddStackLineageUpdateOpcodes(args AddStackLineageUpdateOpcodesArgs) Option[*forge.ProposalStackLineageTree] {
 	// TODO: there are now multiple places that load and use proposals for branches.
 	// To avoid double-loading the same proposal data in one run,
 	// extract an object that caches the already known proposals,

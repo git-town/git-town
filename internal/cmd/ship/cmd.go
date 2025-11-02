@@ -178,7 +178,7 @@ Start:
 		if connector, hasConnector := sharedData.connector.Get(); hasConnector {
 			if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
 				_ = sync.AddStackLineageUpdateOpcodes(
-					sync.UpdateProposalStackLineageProgramArgs{
+					sync.AddStackLineageUpdateOpcodesArgs{
 						Current:   sharedData.initialBranch,
 						FullStack: true,
 						Program:   prog,

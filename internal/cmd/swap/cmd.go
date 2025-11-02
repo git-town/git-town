@@ -405,7 +405,7 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 		if connector, hasConnector := data.connector.Get(); hasConnector {
 			if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
 				_ = sync.AddStackLineageUpdateOpcodes(
-					sync.UpdateProposalStackLineageProgramArgs{
+					sync.AddStackLineageUpdateOpcodesArgs{
 						Current:   data.initialBranch,
 						FullStack: true,
 						Program:   prog,
