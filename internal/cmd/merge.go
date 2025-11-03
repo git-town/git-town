@@ -144,7 +144,7 @@ Start:
 		Backend:                 repo.Backend,
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
-		Connector:               None[forgedomain.Connector](),
+		Connector:               data.connector,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -355,7 +355,7 @@ func mergeProgram(repo execute.OpenRepoResult, data mergeData) program.Program {
 				Order:                    data.config.NormalConfig.Order,
 			},
 			ProposalStackLineageTree:             None[*forge.ProposalStackLineageTree](),
-			SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(data.initialBranch.String()),
+			SkipUpdateForProposalsWithBaseBranch: gitdomain.LocalBranchNames{data.initialBranch},
 		})
 	}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
