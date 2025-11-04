@@ -30,8 +30,8 @@ merge this quickly to minimize conflicts. The feature in (3) might take longer
 to build. Both changes should therefore live in separate branches.
 
 However, the feature in (3) depends on (1) and (2). We need to develop them
-together while reviewing them independently. The perfect use case for stacked
-branches.
+together while reviewing them independently. This is a perfect use case for
+stacked branches.
 
 ## Branch 1: refactor
 
