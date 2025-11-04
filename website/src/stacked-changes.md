@@ -148,7 +148,7 @@ git town sync --all
 
 ## Build the new feature
 
-We can now add the new feature on top of the cleanedl-up code base:
+We can now add the new feature on top of the cleaned-up code base:
 
 ```
 git town append 4-add-feature
