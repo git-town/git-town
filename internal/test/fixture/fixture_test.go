@@ -94,9 +94,7 @@ func TestFixture(t *testing.T) {
 			// get the CommitTable
 			table := cloned.CommitTable([]string{"LOCATION", "FILE NAME", "FILE CONTENT"})
 			must.Len(t, 3, table.Cells)
-			must.EqOp(t, table.Cells[1][0], "local, origin")
-			must.EqOp(t, table.Cells[1][1], "local-origin.md")
-			must.EqOp(t, table.Cells[1][2], "one")
+			must.Eq(t, table.Cells[1], []string{"local, origin", "local-origin.md", "one"})
 			must.EqOp(t, table.Cells[2][0], "origin")
 			must.EqOp(t, table.Cells[2][1], "origin.md")
 			must.EqOp(t, table.Cells[2][2], "two")
