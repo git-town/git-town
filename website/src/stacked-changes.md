@@ -100,8 +100,8 @@ git checkout 1-refactor
 git checkout 3-rename-bar
 ```
 
-Your new refactor changes exist only in `1-refactor`. To propagate them through
-the other branches in the stack, run:
+The additional architecture changes we just committed exist only in
+`1-refactor`. To propagate them through the other branches in the stack, run:
 
 ```
 git town sync --stack --detached
