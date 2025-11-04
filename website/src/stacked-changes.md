@@ -164,7 +164,8 @@ Now you have a clean, reviewable stack:
 - [git town append](https://www.git-town.com/commands/append.html) extends a
   stack by adding a branch to its end
 - You always ship the oldest branch in the stack
-- `git town sync` keeps the stacks current
+- `git town sync` keeps the stack up to date with other changes made to the
+  codebase
 
 ## Best practices
 
