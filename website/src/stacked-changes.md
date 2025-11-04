@@ -158,7 +158,7 @@ Now you have a clean, reviewable stack:
 
 - Each change lives in its own branch
 - Branches build on top of each other
-- All branches get be reviewed independently
+- All branches get reviewed independently
 - [git town hack](https://www.git-town.com/commands/hack.html) starts a stack by
   creating its first branch
 - [git town append](https://www.git-town.com/commands/append.html) extends a
