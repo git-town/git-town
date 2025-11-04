@@ -162,7 +162,7 @@ Now you have a clean, reviewable stack:
 - [git town hack](https://www.git-town.com/commands/hack.html) starts a stack by
   creating its first branch
 - [git town append](https://www.git-town.com/commands/append.html) extends a
-  stack by adding a branches to its end
+  stack by adding a branch to its end
 - You always ship the oldest branch in the stack
 - `git town sync` keeps the stacks current
 
