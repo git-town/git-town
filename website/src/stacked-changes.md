@@ -12,7 +12,7 @@ Key benefits of stacked changes:
   work still under review
 
 Implementing a complex change as a stack of branches requires running a lot more
-Git commands. Git Town provides first-class support for stacked changes, and
+Git commands. Git Town provides first-class support for stacked changes and
 automates this extra work for you.
 
 ## Example
