@@ -93,11 +93,9 @@ func TestFixture(t *testing.T) {
 			})
 			// get the CommitTable
 			table := cloned.CommitTable([]string{"LOCATION", "FILE NAME", "FILE CONTENT"})
-			must.Len(t, 3, table.Cells)
 			must.Eq(t, table.Cells[1], []string{"local, origin", "local-origin.md", "one"})
-			must.EqOp(t, table.Cells[2][0], "origin")
-			must.EqOp(t, table.Cells[2][1], "origin.md")
-			must.EqOp(t, table.Cells[2][2], "two")
+			must.Eq(t, table.Cells[2], []string{"origin", "origin.md", "two"})
+			must.Len(t, 3, table.Cells)
 		})
 
 		t.Run("with upstream repo", func(t *testing.T) {
@@ -122,13 +120,9 @@ func TestFixture(t *testing.T) {
 			})
 			// get the CommitTable
 			table := cloned.CommitTable([]string{"LOCATION", "FILE NAME", "FILE CONTENT"})
+			must.Eq(t, table.Cells[1], []string{"local", "local.md", "one"})
+			must.Eq(t, table.Cells[2], []string{"upstream", "upstream.md", "two"})
 			must.Len(t, 3, table.Cells)
-			must.EqOp(t, table.Cells[1][0], "local")
-			must.EqOp(t, table.Cells[1][1], "local.md")
-			must.EqOp(t, table.Cells[1][2], "one")
-			must.EqOp(t, table.Cells[2][0], "upstream")
-			must.EqOp(t, table.Cells[2][1], "upstream.md")
-			must.EqOp(t, table.Cells[2][2], "two")
 		})
 	})
 
