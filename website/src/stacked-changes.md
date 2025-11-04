@@ -138,7 +138,7 @@ workspace in sync with the rest of the universe!
 git town sync --all
 ```
 
-[git town sync](commands/sync.md) updates all branches in order:
+[git town sync](commands/sync.md) updates all branches:
 
 1. Pulls updates made by other people into our local `main` branch
 2. Deletes branch `1-refactor` from our local Git workspace because it was
