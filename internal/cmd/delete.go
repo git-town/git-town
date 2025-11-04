@@ -353,35 +353,26 @@ func deleteFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data d
 	}
 	deleteLocalBranch(prog, finalUndoProgram, data)
 	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
-		if connector, hasConnector := data.connector.Get(); hasConnector {
-			if proposalFinder, hasProposalFinder := connector.(forgedomain.ProposalFinder); hasProposalFinder {
-				tree, err := forge.NewProposalStackLineageTree(forge.ProposalStackLineageArgs{
-					Connector:                proposalFinder,
+		_ = sync.AddStackLineageUpdateOpcodes(
+			sync.AddStackLineageUpdateOpcodesArgs{
+				Current:   data.initialBranch,
+				FullStack: true,
+				Program:   prog,
+				ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
+					Connector:                forgedomain.ProposalFinderFromConnector(data.connector),
 					CurrentBranch:            data.initialBranch,
 					Lineage:                  data.config.NormalConfig.Lineage,
 					MainAndPerennialBranches: data.config.MainAndPerennials(),
 					Order:                    data.config.NormalConfig.Order,
-				})
-				if err != nil {
-					fmt.Printf("failed to update proposal stack lineage: %s\n", err.Error())
-				} else {
-					for branch, proposal := range tree.BranchToProposal { // okay to iterate the map in random order
-						// Do not update the proposal of the deleted branch.
-						// At this point, a forge (like github) would close
-						// the proposal because there is no longer a remote
-						// branch.
-						if branch == data.initialBranch {
-							continue
-						}
-						prog.Value.Add(&opcodes.ProposalUpdateLineage{
-							Current:         branch,
-							CurrentProposal: proposal,
-							LineageTree:     MutableSome(tree),
-						})
-					}
-				}
-			}
-		}
+				},
+				ProposalStackLineageTree: None[*forge.ProposalStackLineageTree](),
+				// Do not update the proposal of the deleted branch.
+				// At this point, a forge (like github) would close
+				// the proposal because there is no longer a remote
+				// branch.
+				SkipUpdateForProposalsWithBaseBranch: gitdomain.LocalBranchNames{data.initialBranch},
+			},
+		)
 	}
 }
 
