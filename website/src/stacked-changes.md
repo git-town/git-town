@@ -217,7 +217,7 @@ commands to navigate stacks:
 - [git town branch](commands/branch.md) shows you where you are in the stack
   hierarchy
 - [git town switch](commands/switch.md) allows you to jump to any branch using a
-  visual dialog with VIM hotkeys
+  visual dialog with VIM motions
 - [git town down](commands/up.md) switches to the parent branch
 - [git town up](commands/up.md) switches to the child branch
 - [git town walk](commands/walk.md) executes a CLI command or opens an
