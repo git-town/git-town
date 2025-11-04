@@ -267,7 +267,7 @@ To minimize phantom conflicts:
 
 3. **Ship using
    [fast-forward merges](https://git-scm.com/docs/git-merge#_fast_forward_merge).**
-   Fast-forwarding keeps commit history identical between your stack and `main`,
+   Fast-forwarding keeps commit history between your stack and `main` identical,
    avoiding synthetic differences that cause phantom conflicts.
 
    - [GitLab supports this natively](https://docs.gitlab.com/ee/user/project/merge_requests/methods/#fast-forward-merge).
