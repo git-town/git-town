@@ -107,7 +107,7 @@ The additional architecture changes we just committed exist only in
 git town sync --stack --detached
 ```
 
-This:
+This command does the following things:
 
 1. Pulls updates from `1-refactor` into `2-rename-foo`
 2. Pulls updates from `2-rename-foo` into `3-rename-bar`
