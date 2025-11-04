@@ -254,8 +254,8 @@ commits.
 To minimize phantom conflicts:
 
 1. **Sync frequently.** In a synced stack, each branch builds directly on top of
-   its parent, so changes are linear and easy for Git to reconcile. In an
-   unsynced stack, sibling branches drift apart, making conflicts more likely.
+   its parent, so changes are linear and easy for Git to reconcile. Branches in
+   an unsynced stack drift apart, making conflicts more likely.
 
    If syncing takes too long, use
    [--detached](commands/sync.md#-d--detached--no-detached) and
