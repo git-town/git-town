@@ -11,7 +11,9 @@ Key benefits of stacked changes:
 - Merge conflicts are reduced by shipping already approved parts separately from
   work still under review
 
-Git Town provides first-class support for stacked changes.
+Implementing a complex change as a stack of branches requires running a lot more
+Git commands. Git Town provides first-class support for stacked changes, and
+automates this extra work for you.
 
 ## Example
 
@@ -164,118 +166,117 @@ Now you have a clean, reviewable stack:
 - You always ship the oldest branch in the stack
 - `git town sync` keeps the stacks current
 
-Single-responsibility branches are easier to reason about, less likely to
-conflict, and allow shipping work faster. Implementing a complex change as a
-stack of branches requires running more Git commands. Git Town automates this
-extra work for you.
-
 ## Best practices
 
-#### One change per branch
+### One change per branch
 
 The
 [single responsibility principle](https://en.wikipedia.org/wiki/Single-responsibility_principle)
 applies to feature branches just as it does to functions, classes, and modules.
-Each branch should only make a single, consistent change. Such single-purpose
-branches are easier to implement, refactor, review, test and merge than branches
-that mix unrelated changes.
+Single-responsibility branches are easier to reason about, less likely to
+conflict, and allow shipping work faster.
 
 When you have an idea that is different from what you currently work on, resist
 the urge to code it in the current feature branch. Implement it in its own
 feature, parent, or child branch.
 
-If you can't create a new branch right now, write the idea down and implement it
-later.
+If you can't create a new branch right now, write your idea down and implement
+it later.
 
-#### Keep the stack in sync
+### Avoid unnecessary stacking
 
-Stacks are more susceptible to phantom merge conflicts than stand-alone
-branches. Don't forget to populate changes across all branches in your stack by
-running `git town sync --stack` or `git town sync --all`.
+Only stack changes that depend on each other. If they don't, create them as
+independent top-level feature branches that have `main` as their parent. This
+setup has the advantage that you can ship any branch in any order.
 
-#### Avoid unnecessary stacking
+It's okay to have multiple stacks.
 
-To reduce merge conflicts, feature branches should not diverge too much from the
-main development branch. Stacking multiple changes on top of each other
-amplifies this divergence. Overly "tall" stacks are therefore an anti-pattern to
-avoid. It's often better to work in independent top-level feature branches by
-default, and only stack branches if the changes they contain really depend on
-each other. This way you can get your changes reviewed and shipped concurrently
-and in any order, i.e. faster and with fewer merge conflicts.
+### Keep your stack organized
 
-#### Organize branch chains in the order you want to ship
+Branches must be shipped oldest-first. Git Town provides powerful commands to
+organize the branches in your stack:
 
-You always have to ship the oldest branch first. You can use
-[git town prepend](commands/prepend.md) to insert a feature branch as a parent
-of the current feature branch or [set parent](commands/set-parent.md) to change
-the order of branches.
+- [git town hack](commands/hack.md) starts a new stack
+- [git town append](commands/append.md) appends a new branch to the end of a
+  stack
+- [git town prepend](commands/prepend.md) inserts a new branch between the
+  current branch and its parent
+- [git town detach](commands/detach.md) extracts a branch from a stack and makes
+  its own independent stack
+- [git town swap](commands/swap.md) switches the position of the current branch
+  and its parent in the stack
+- [git town set-parent](commands/set-parent.md) changes the parent for the
+  current branch and all its descendents
 
-#### Minimize commit changes when shipping
+### Navigate your stack efficiently
 
-When using stacks, try to fast-forward your feature branches into the main
-branch to avoid empty merge conflicts when syncing the stack later. On GitLab
-that's
-[straightforward](https://docs.gitlab.com/ee/user/project/merge_requests/methods/#fast-forward-merge).
-GitHub does not provide a fast-forward merge option out of the box but you can
-achieve it with the
-[fast-forward ship strategy](preferences/ship-strategy.md#fast-forward) together
-with the [compress](preferences/sync-feature-strategy.md#compress) or
-[rebase](preferences/sync-feature-strategy.md#rebase) sync strategy. The
+To help commit the right changes to the right branch, Git Town provides powerful
+commands to navigate stacks:
+
+- [git town switch](commands/switch.md) allows you to jump to any branch using a
+  visual dialog with VIM hotkeys
+- [git town down](commands/up.md) switches to the parent branch
+- [git town up](commands/up.md) switches to the child branch
+- [git town walk](commands/walk.md) executes a CLI command or opens an
+  interactive shell on each branch of the stack
+
+### Embed the stack lineage into pull requests
+
+The
 [Git Town GitHub Action](https://github.com/marketplace/actions/git-town-github-action)
-adds a visual description of which branch of the stack the pull request is for.
+adds a visual graph of which branch of the stack the pull request is for. This
+provides context when reviewing changes.
 
-#### Avoid phantom conflicts
+### Keep the stack in sync
 
-_Phantom conflicts_ occur when Git reports a merge or rebase conflict that -
-when looked at with more context - isn't a real conflict. Phantom conflicts can
-occur when multiple branches in a stack modify the same line in the same file,
-and you ship using squash-merges.
+Stacks are more prone to phantom merge conflicts than stand-alone branches. Run
+`git town sync --stack` or `git town sync --all` regularly to propagate changes
+across your stacks.
 
-After you ship the oldest branch of such a stack, the main branch contains a new
-commit that makes the same changes as the shipped branch, but as a different
-commit than the one(s) on the shipped branch. As this new commit populates
-through the stack in the next sync, Git sees sees two changes to the same lines
-and assumes a conflict.
+### Avoid phantom conflicts
 
-Git Town can resolve these phantom conflicts because it tracks the branch
-hierarchy, can investigate such conflicts, and execute multiple Git commands to
-resolve them.
+_Phantom conflicts_ occur when Git reports a merge or rebase conflict that isn't
+a real conflict. They can occur when multiple branches in a stack modify the
+same line in the same file, and you ship using squash-merges.
 
-Here are some best practices to minimize phantom merge conflicts:
+After shipping the oldest branch from a stack using a squash-merge, `main`
+contains a new commit with the same changes as the shipped branch but a
+different hash. When syncing, Git sees the new commit on main and the commit on
+the shipped branch as conflicting edits to the same line.
 
-1. Sync frequently. In a synced stack, each branch builds directly on top of its
-   parent, so changes are linear and easy for Git to reconcile. In an unsynced
-   stack, sibling branches evolve concurrently, making conflicts more likely,
-   especially when they touch the same files.
+Git Town can detect and automatically resolve many of these phantom conflicts
+because it tracks the branch hierarchy and understands the relationships between
+commits.
 
-   If you are hesitant to sync because it takes too long, use the
+To minimize phantom conflicts:
+
+1. **Sync frequently.** In a synced stack, each branch builds directly on top of
+   its parent, so changes are linear and easy for Git to reconcile. In an
+   unsynced stack, sibling branches drift apart, making conflicts more likely.
+
+   If syncing takes too long, use
    [--detached](commands/sync.md#-d--detached--no-detached) and
-   [--no-push](commands/sync.md#--push--no-push) flags to speed it up.
+   [--no-push](commands/sync.md#--push--no-push) to speed it up.
 
-2. Enable Git's [rerere](https://git-scm.com/book/en/v2/Git-Tools-Rerere)
-   feature. This lets Git remember how you resolved past conflicts and applies
-   those resolutions in the future.
+2. **Enable [rerere](https://git-scm.com/book/en/v2/Git-Tools-Rerere).** Git
+   remembers how you resolved past conflicts and reuses those resolutions
+   automatically.
 
-3. Ship using a
-   [fast-forward merge](https://git-scm.com/docs/git-merge#_fast_forward_merge).
-   This ensures the commits on main are byte-for-byte identical to those on the
-   shipped branchs. This preserved shared history avoids unnecessary merges or
-   rebases that likely produce phantom conflicts.
+3. **Ship using
+   [fast-forward merges](https://git-scm.com/docs/git-merge#_fast_forward_merge).**
+   Fast-forwarding keeps commit history identical between your stack and `main`,
+   avoiding synthetic differences that cause phantom conflicts.
 
-   - GitLab supports this
-     [natively](https://docs.gitlab.com/ee/user/project/merge_requests/methods/#fast-forward-merge).
-   - GitHub doesn’t support fast-forward merges via the UI, but you can achieve
-     the same effect by [shipping locally](commands/ship.md) with Git Town's
-     [fast-forward strategy](preferences/ship-strategy.md#fast-forward) and then
-     pushing the result. See GitHub’s
+   - [GitLab supports this natively](https://docs.gitlab.com/ee/user/project/merge_requests/methods/#fast-forward-merge).
+   - On GitHub, use [git town ship](commands/ship.md) with the
+     [fast-forward strategy](preferences/ship-strategy.md#fast-forward) to
+     achieve the same effect. See GitHub’s
      [docs](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges#squashing-and-merging-a-long-running-branch)
      for details.
 
-4. If a feature branch has too many commits and you're resolving the same
-   conflicts repeatedly, [compress](commands/compress.md) it down to a single
+4. **Compress noisy branches.** If a branch has too many commits and keeps
+   hitting the same conflicts, [compress](commands/compress.md) it to a single
    commit.
 
-5. Focus your feature branches to implement only a single change. This reduces
-   the amount of context you need to process when resolving merge conflicts, and
-   makes it easier to see which branch makes which change and why, and what the
-   correct resolution is.
+5. **Keep branches focused.** Small, single-purpose branches make it easier to
+   understand and resolve conflicts, and to see what changed, why, and where.
