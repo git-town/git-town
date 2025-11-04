@@ -66,7 +66,7 @@ main
 
 Branch `2-rename-foo` now includes the refactor from branch 1. When you open a
 PR, Git Town will target `1-refactor` automatically, so reviewers see only the
-renames — not the refactor diff.
+renames, not the refactor diff.
 
 ## Branch 3: rename bar
 
