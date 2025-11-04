@@ -214,6 +214,8 @@ organize the branches in your stack:
 To help commit the right changes to the right branch, Git Town provides powerful
 commands to navigate stacks:
 
+- [git town branch](commands/branch.md) shows you where you are in the stack
+  hierarchy
 - [git town switch](commands/switch.md) allows you to jump to any branch using a
   visual dialog with VIM hotkeys
 - [git town down](commands/up.md) switches to the parent branch
