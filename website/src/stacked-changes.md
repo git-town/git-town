@@ -244,8 +244,8 @@ same line in the same file, and you ship using squash-merges.
 
 After shipping the oldest branch from a stack using a squash-merge, `main`
 contains a new commit with the same changes as the shipped branch but a
-different hash. When syncing, Git sees the new commit on main and the commit on
-the shipped branch as conflicting edits to the same line.
+different commit hash. When syncing, Git sees the new commit on main and the
+commit on the shipped branch as conflicting edits to the same line.
 
 Git Town can detect and automatically resolve many of these phantom conflicts
 because it tracks the branch hierarchy and understands the relationships between
