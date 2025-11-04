@@ -500,51 +500,6 @@ func updateProposalLineage(prog *program.Program, newParentOpt Option[gitdomain.
 		for b := range maps.Keys(tree.BranchToProposal) {
 			branchPropsalsUpdated.Add(b)
 		}
-
-		// If we are moving to a parent that is part of a completely different stack,
-		// update the lineage of all members of this other stack
-		_ = sync.AddStackLineageUpdateOpcodes(
-			sync.AddStackLineageUpdateOpcodesArgs{
-				Current:   data.initialBranch,
-				FullStack: true,
-				Program:   NewMutable(prog),
-				ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
-					Connector:                forgedomain.ProposalFinderFromConnector(data.connector),
-					CurrentBranch:            data.initialBranch,
-					Lineage:                  data.config.NormalConfig.Lineage,
-					MainAndPerennialBranches: data.config.MainAndPerennials(),
-					Order:                    data.config.NormalConfig.Order,
-				},
-				ProposalStackLineageTree: proposalStackTree,
-				// Do not update the same proposal more than once because we updated
-				// it in a previous step
-				SkipUpdateForProposalsWithBaseBranch: branchPropsalsUpdated.Values(),
-			},
-		)
-
-		newParent, hasNewParent := newParentOpt.Get()
-		if hasNewParent {
-			// If we are moving to a parent that is part of a completely different stack,
-			// update the lineage of all members of this other stack
-			_ = sync.AddStackLineageUpdateOpcodes(
-				sync.AddStackLineageUpdateOpcodesArgs{
-					Current:   data.initialBranch,
-					FullStack: true,
-					Program:   NewMutable(prog),
-					ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
-						Connector:                forgedomain.ProposalFinderFromConnector(data.connector),
-						CurrentBranch:            newParent,
-						Lineage:                  data.config.NormalConfig.Lineage,
-						MainAndPerennialBranches: data.config.MainAndPerennials(),
-						Order:                    data.config.NormalConfig.Order,
-					},
-					ProposalStackLineageTree: proposalStackTree,
-					// Do not update the same proposal more than once because we updated
-					// it in a previous step
-					SkipUpdateForProposalsWithBaseBranch: branchPropsalsUpdated.Values(),
-				},
-			)
-		}
 	}
 
 	// If we are moving to a parent that is part of a completely different stack,
