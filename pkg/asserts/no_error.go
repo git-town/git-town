@@ -13,7 +13,7 @@ func NoError1[T any](value T, err error) T { //nolint:ireturn
 	return value
 }
 
-// NoError1 verifies the given result consisting of two values and error.
+// NoError2 verifies the given result consisting of two values and error.
 // If the error is nil, it returns the values, otherwise it panics.
 func NoError2[A, B any](value1 A, value2 B, err error) (A, B) { //nolint:ireturn
 	NoError(err)
