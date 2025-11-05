@@ -2,7 +2,7 @@
   "type": "module",
   "dependencies": {
     "gherkin-lint": "4.2.4",
-    "text-runner": "7.1.2",
-    "textrun-make": "0.3.1"
+    "text-runner": "7.4.0",
+    "textrun-make": "0.6.0"
   }
 }
