@@ -7,7 +7,7 @@ type Mutable[T any] struct {
 	Value *T
 }
 
-// provides an non-mutable copy of the contained mutable value
+// Immutable provides an non-mutable copy of the contained mutable value.
 func (self Mutable[T]) Immutable() T { //nolint:ireturn
 	return *self.Value
 }
