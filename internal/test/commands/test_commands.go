@@ -133,12 +133,9 @@ func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, pare
 		args = append(args, branch.RefName())
 	}
 	output := self.MustQuery("git", args...)
-	lines := strings.Split(output, "\n")
+	lines := stringslice.NonEmptyLines(output)
 	result := make([]testgit.Commit, 0, len(lines))
 	for _, line := range lines {
-		if len(strings.TrimSpace(line)) == 0 {
-			continue
-		}
 		parts := strings.Split(line, "\x00")
 		commit := testgit.Commit{
 			Branch:  branch,
