@@ -189,11 +189,11 @@ func (self BranchInfos) Select(remote Remote, names ...LocalBranchName) (result 
 }
 
 func (self BranchInfos) String() string {
-	var result strings.Builder
+	result := strings.Builder{}
 	result.WriteString("BranchInfos:\n")
 	for _, bi := range self {
 		result.WriteString(bi.String())
-		result.WriteString("\n")
+		result.WriteRune('\n')
 	}
 	return result.String()
 }
