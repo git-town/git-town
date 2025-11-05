@@ -7,10 +7,10 @@ import (
 )
 
 const (
-	// OverrideKey is the key under which the proposal API lookup override gets stored in the environment variables.
+	// OverrideKey defines the environment variable to simulate proposals at the forge during end-to-end testing.
 	OverrideKey = "GIT_TOWN_TEST_PROPOSAL"
 
-	// OverrideNoProposal is the value to use in the OverrideKey environment variable to simulate no proposals at the forge.
+	// OverrideNoProposal is the value to use in OverrideKey to simulate the absence of proposals at the forge.
 	OverrideNoProposal = "(no proposal)"
 )
 
