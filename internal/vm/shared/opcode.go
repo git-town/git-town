@@ -7,7 +7,7 @@ package shared
 // Opcodes implement the command pattern (https://en.wikipedia.org/wiki/Command_pattern)
 // and provide opcodes to continue and abort them.
 // Undoing an opcode is done via the undo package.
-type Opcode interface{}
+type Opcode any
 
 // Runnable marks an opcode that can execute subshell commands.
 type Runnable interface {

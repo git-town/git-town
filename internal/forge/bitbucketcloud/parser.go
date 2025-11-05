@@ -9,7 +9,7 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-func parsePullRequest(pullRequest map[string]interface{}) (result forgedomain.BitbucketCloudProposalData, err error) {
+func parsePullRequest(pullRequest map[string]any) (result forgedomain.BitbucketCloudProposalData, err error) {
 	id1, has := pullRequest["id"]
 	if !has {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
