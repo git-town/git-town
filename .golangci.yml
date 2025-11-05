@@ -38,6 +38,8 @@ linters:
     - godoclint # TODO: enable
     - contextcheck # TODO: enable
     - noctx # TODO: enable
+    - perfsprint # TODO: enable
+    - modernize # TODO: enable
 
   settings:
     embeddedstructfieldcheck:
