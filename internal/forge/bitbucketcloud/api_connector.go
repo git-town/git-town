@@ -50,7 +50,7 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 		self.log.Success("none")
 		return None[forgedomain.Proposal](), nil
 	}
-	result2, ok := result1.(map[string]interface{})
+	result2, ok := result1.(map[string]any)
 	if !ok {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[forgedomain.Proposal](), nil
@@ -79,7 +79,7 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[forgedomain.Proposal](), nil
 	}
-	proposal2, ok := proposal1.([]interface{})
+	proposal2, ok := proposal1.([]any)
 	if !ok {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[forgedomain.Proposal](), nil
