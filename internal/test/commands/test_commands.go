@@ -376,7 +376,18 @@ func (self *TestCommands) FilesInBranches(mainBranch gitdomain.LocalBranchName) 
 // FilesInCommit provides the names of the files that the commit with the given SHA changes.
 func (self *TestCommands) FilesInCommit(sha gitdomain.SHA) []string {
 	output := self.MustQuery("git", "show", "--name-only", "--pretty=format:", sha.String())
-	return strings.Split(output, "\n")
+	if output == "" {
+		return []string{}
+	}
+	lines := strings.Split(output, "\n")
+	result := make([]string, 0, len(lines))
+	for _, line := range lines {
+		line = strings.TrimSpace(line)
+		if line != "" {
+			result = append(result, line)
+		}
+	}
+	return result
 }
 
 func (self *TestCommands) FilesInWorkspace() []string {
