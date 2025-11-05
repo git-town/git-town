@@ -72,9 +72,7 @@ func FindUsedStepsIn(fileContent string) []string {
 
 // indicates whether the given step definition is used anywhere in the given list of executed steps
 func IsStepDefUsed(definedStep StepRE, usedSteps []string) bool {
-	return slices.ContainsFunc(usedSteps, func(usedStep string) bool {
-		return definedStep.regex.MatchString(usedStep)
-	})
+	return slices.ContainsFunc(usedSteps, definedStep.regex.MatchString)
 }
 
 // provides all steps that are executed in .feature files
