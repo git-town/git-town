@@ -8,6 +8,7 @@ import (
 
 const syncLong = "sync"
 
+// Sync provides type-safe access to the CLI arguments of type configdomain.AutoSync.
 func Sync() (AddFunc, ReadSyncFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.Flags().Bool(syncLong, true, "sync branches")
