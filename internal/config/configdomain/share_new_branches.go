@@ -11,9 +11,9 @@ import (
 type ShareNewBranches string
 
 const (
-	ShareNewBranchesNone    ShareNewBranches = "no"      // ShareNewBranchesNone means don't share new branches
-	ShareNewBranchesPush    ShareNewBranches = "push"    // ShareNewBranchesPush means push new branches to the dev remote
-	ShareNewBranchesPropose ShareNewBranches = "propose" // ShareNewBranchesPropose means propose new branches
+	ShareNewBranchesNone    ShareNewBranches = "no"      // don't share new branches
+	ShareNewBranchesPush    ShareNewBranches = "push"    // push new branches to the dev remote
+	ShareNewBranchesPropose ShareNewBranches = "propose" // propose new branches
 )
 
 var ShareNewBranchValues = []ShareNewBranches{
