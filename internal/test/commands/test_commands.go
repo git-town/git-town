@@ -87,7 +87,9 @@ func (self *TestCommands) CommitSHAs() gitdomain.Commits {
 		}
 		sha, commitMessage, found := strings.Cut(line, " ")
 		if !found {
-			continue
+			// No space found means the entire line is the SHA (empty commit message)
+			sha = line
+			commitMessage = ""
 		}
 		result = append(result, gitdomain.Commit{
 			Message: gitdomain.CommitMessage(commitMessage),
