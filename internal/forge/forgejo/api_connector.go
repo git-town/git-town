@@ -121,8 +121,8 @@ func (self *APIConnector) SquashMergeProposal(number int, message gitdomain.Comm
 	}
 	_, _, err = client.MergePullRequest(self.Organization, self.Repository, int64(number), forgejo.MergePullRequestOption{
 		Style:   forgejo.MergeStyleSquash,
-		Title:   commitMessageParts.Subject,
-		Message: commitMessageParts.Text,
+		Title:   commitMessageParts.Title.String(),
+		Message: commitMessageParts.Body,
 	})
 	if err != nil {
 		self.log.Failed(err.Error())

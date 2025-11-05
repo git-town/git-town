@@ -33,6 +33,36 @@ func TestTestCommands(t *testing.T) {
 		must.Eq(t, gitdomain.Remotes{gitdomain.RemoteOrigin}, remotes)
 	})
 
+	t.Run("CommitSHAs", func(t *testing.T) {
+		t.Parallel()
+		t.Run("includes commits with empty messages", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			// Create a commit with a normal message
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      "initial",
+				FileContent: "content1",
+				FileName:    "file1",
+				Message:     "first commit",
+			})
+			// Create a commit with an empty message
+			runtime.CreateFile("file2", "content2")
+			runtime.StageFiles("file2")
+			runtime.MustRun("git", "commit", "--allow-empty-message", "-m", "")
+			// Get all commits
+			commits := runtime.CommitSHAs()
+			must.EqOp(t, "", commits[0].Message)
+			must.EqOp(t, "first commit", commits[1].Message)
+			must.EqOp(t, "initial commit", commits[2].Message)
+			must.EqOp(t, 40, len(commits[0].SHA.String()))
+			must.EqOp(t, 40, len(commits[1].SHA.String()))
+			must.EqOp(t, 40, len(commits[2].SHA.String()))
+			must.NotEqOp(t, commits[0].SHA.String(), commits[1].SHA.String())
+			must.NotEqOp(t, commits[0].SHA.String(), commits[2].SHA.String())
+			must.NotEqOp(t, commits[1].SHA.String(), commits[2].SHA.String())
+		})
+	})
+
 	t.Run("Commits", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
