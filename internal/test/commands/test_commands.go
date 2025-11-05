@@ -378,6 +378,7 @@ func (self *TestCommands) FilesInCommit(sha gitdomain.SHA) []string {
 	output := self.MustQuery("git", "show", "--name-only", "--pretty=format:", sha.String())
 	return splitNonEmptyLines(output)
 }
+
 func (self *TestCommands) FilesInWorkspace() []string {
 	files := asserts.NoError1(os.ReadDir(self.WorkingDir))
 	result := make([]string, 0, len(files))
