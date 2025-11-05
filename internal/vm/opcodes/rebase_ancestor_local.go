@@ -7,7 +7,7 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-// rebases a branch against a local ancestor branch
+// RebaseAncestorLocal rebases a branch against a local ancestor branch.
 type RebaseAncestorLocal struct {
 	Ancestor        gitdomain.LocalBranchName
 	Branch          gitdomain.LocalBranchName

@@ -8,7 +8,7 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-// comments out the currently active commit message
+// CommitMessageCommentOut comments out the currently active commit message.
 type CommitMessageCommentOut struct{}
 
 func (self *CommitMessageCommentOut) Run(args shared.RunArgs) error {

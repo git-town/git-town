@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/vm/shared"
 )
 
-// deletes the given branch including all commits
+// BranchLocalDeleteContent deletes the given branch including all commits.
 type BranchLocalDeleteContent struct {
 	BranchToDelete     gitdomain.LocalBranchName
 	BranchToRebaseOnto gitdomain.LocalBranchName

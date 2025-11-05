@@ -5,7 +5,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/vm/shared"
 )
 
-// CreateBranch creates a new branch but leaves the current branch unchanged.
+// BranchLocalRename renames a local branch.
 type BranchLocalRename struct {
 	NewName gitdomain.LocalBranchName
 	OldName gitdomain.LocalBranchName

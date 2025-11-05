@@ -5,7 +5,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/vm/shared"
 )
 
-// rebases a branch against its ancestor branch, which exists only remotely
+// RebaseAncestorRemote rebases a branch against its ancestor branch, which exists only remotely.
 type RebaseAncestorRemote struct {
 	Ancestor gitdomain.RemoteBranchName
 	Branch   gitdomain.LocalBranchName

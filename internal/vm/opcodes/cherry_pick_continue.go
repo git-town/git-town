@@ -4,7 +4,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/vm/shared"
 )
 
-// Checkout checks out the given existing branch.
+// CherryPickContinue continues a suspended cherry-pick operation.
 type CherryPickContinue struct{}
 
 func (self *CherryPickContinue) Run(args shared.RunArgs) error {

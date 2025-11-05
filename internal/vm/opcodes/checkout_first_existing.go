@@ -5,7 +5,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/vm/shared"
 )
 
-// CheckoutIfExists does the same as Checkout
+// CheckoutFirstExisting checks out the first existing branch,
 // but only if that branch actually exists.
 type CheckoutFirstExisting struct {
 	Branches   gitdomain.LocalBranchNames

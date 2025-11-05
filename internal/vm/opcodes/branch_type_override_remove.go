@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/vm/shared"
 )
 
-// removes the branch with the given name from the contribution branches list in the Git config
+// BranchTypeOverrideRemove removes the branch with the given name from the contribution branches list in the Git config.
 type BranchTypeOverrideRemove struct {
 	Branch gitdomain.LocalBranchName
 }

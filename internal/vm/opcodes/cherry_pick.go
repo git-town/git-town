@@ -5,7 +5,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/vm/shared"
 )
 
-// Checkout checks out the given existing branch.
+// CherryPick cherry-picks the given commit.
 type CherryPick struct {
 	SHA gitdomain.SHA
 }

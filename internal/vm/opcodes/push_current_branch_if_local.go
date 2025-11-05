@@ -5,7 +5,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/vm/shared"
 )
 
-// PushCurrentBranch pushes the current branch to its existing tracking branch.
+// PushCurrentBranchIfLocal pushes the current branch to its existing tracking branch.
 type PushCurrentBranchIfLocal struct {
 	CurrentBranch gitdomain.LocalBranchName
 }
