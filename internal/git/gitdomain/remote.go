@@ -17,7 +17,6 @@ func NewRemote(id string) Option[Remote] {
 	return Some(Remote(id))
 }
 
-// String is the implementation of the fmt.Stringer interface.
 func (self Remote) String() string {
 	return string(self)
 }
