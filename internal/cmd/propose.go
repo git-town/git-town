@@ -394,7 +394,7 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 		case configdomain.BranchTypeContributionBranch, configdomain.BranchTypeMainBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypePerennialBranch:
 			continue
 		}
-		prog.Value.Add(&opcodes.PushCurrentBranchIfLocal{
+		prog.Value.Add(&opcodes.BranchTrackingCreateIfNeeded{
 			CurrentBranch: branchToPropose.name,
 		})
 		previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}

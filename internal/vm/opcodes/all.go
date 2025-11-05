@@ -88,7 +88,7 @@ func All() []shared.Opcode {
 		&PushCurrentBranchForceIfNeeded{},
 		&PushCurrentBranchForceIgnoreError{},
 		&PushCurrentBranchForce{},
-		&PushCurrentBranchIfLocal{},
+		&BranchTrackingCreateIfNeeded{},
 		&PushCurrentBranchIfNeeded{},
 		&PushCurrentBranch{},
 		&PushTags{},
