@@ -346,18 +346,7 @@ func (self *TestCommands) FileContentInCommit(location gitdomain.Location, filen
 // FilesInBranch provides the list of the files present in the given branch.
 func (self *TestCommands) FilesInBranch(branch gitdomain.LocalBranchName) []string {
 	output := self.MustQuery("git", "ls-tree", "-r", "--name-only", branch.String())
-	if output == "" {
-		return []string{}
-	}
-	lines := strings.Split(output, "\n")
-	result := make([]string, 0, len(lines))
-	for _, line := range lines {
-		file := strings.TrimSpace(line)
-		if file != "" {
-			result = append(result, file)
-		}
-	}
-	return result
+	return splitNonEmptyLines(output)
 }
 
 // FilesInBranches provides a data table of files and their content in all branches.
@@ -387,20 +376,8 @@ func (self *TestCommands) FilesInBranches(mainBranch gitdomain.LocalBranchName) 
 // FilesInCommit provides the names of the files that the commit with the given SHA changes.
 func (self *TestCommands) FilesInCommit(sha gitdomain.SHA) []string {
 	output := self.MustQuery("git", "show", "--name-only", "--pretty=format:", sha.String())
-	if output == "" {
-		return []string{}
-	}
-	lines := strings.Split(output, "\n")
-	result := make([]string, 0, len(lines))
-	for _, line := range lines {
-		line = strings.TrimSpace(line)
-		if line != "" {
-			result = append(result, line)
-		}
-	}
-	return result
+	return splitNonEmptyLines(output)
 }
-
 func (self *TestCommands) FilesInWorkspace() []string {
 	files := asserts.NoError1(os.ReadDir(self.WorkingDir))
 	result := make([]string, 0, len(files))
@@ -597,18 +574,7 @@ func (self *TestCommands) StashOpenFiles() {
 // Tags provides a list of the tags in this repository.
 func (self *TestCommands) Tags() []string {
 	output := self.MustQuery("git", "tag")
-	if output == "" {
-		return []string{}
-	}
-	lines := strings.Split(output, "\n")
-	result := make([]string, 0, len(lines))
-	for _, line := range lines {
-		line = strings.TrimSpace(line)
-		if line != "" {
-			result = append(result, line)
-		}
-	}
-	return result
+	return splitNonEmptyLines(output)
 }
 
 // UncommittedFiles provides the names of the files not committed into Git.
@@ -640,4 +606,20 @@ func (self *TestCommands) VerifyNoGitTownConfiguration() error {
 		}
 	}
 	return nil
+}
+
+// splitNonEmptyLines splits the input by newlines and returns non-empty, trimmed lines.
+func splitNonEmptyLines(output string) []string {
+	if output == "" {
+		return []string{}
+	}
+	lines := strings.Split(output, "\n")
+	result := make([]string, 0, len(lines))
+	for _, line := range lines {
+		line = strings.TrimSpace(line)
+		if line != "" {
+			result = append(result, line)
+		}
+	}
+	return result
 }
