@@ -162,7 +162,7 @@ func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, pare
 // ConnectTrackingBranch connects the branch with the given name to its counterpart at origin.
 // The branch must exist.
 func (self *TestCommands) ConnectTrackingBranch(name gitdomain.LocalBranchName) {
-	self.MustRun("git", "branch", "--set-upstream-to=origin/"+name.String(), name.String())
+	self.MustRun("git", "branch", fmt.Sprintf("--set-upstream-to=origin/%s", name), name.String())
 }
 
 // CreateBranch creates a new branch with the given name.
