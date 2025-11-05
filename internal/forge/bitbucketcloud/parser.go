@@ -59,7 +59,7 @@ func parsePullRequest(pullRequest map[string]any) (result forgedomain.BitbucketC
 	if !ok {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
-	source1 := pullRequest["source"]
+	source1, has := pullRequest["source"]
 	if !has {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
