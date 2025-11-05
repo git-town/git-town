@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/config/gitconfig"
 	prodgit "github.com/git-town/git-town/v22/internal/git"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks"
 	"github.com/git-town/git-town/v22/internal/gohacks/mapstools"
 	"github.com/git-town/git-town/v22/internal/gohacks/slice"
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
@@ -346,7 +347,7 @@ func (self *TestCommands) FileContentInCommit(location gitdomain.Location, filen
 // FilesInBranch provides the list of the files present in the given branch.
 func (self *TestCommands) FilesInBranch(branch gitdomain.LocalBranchName) []string {
 	output := self.MustQuery("git", "ls-tree", "-r", "--name-only", branch.String())
-	return splitNonEmptyLines(output)
+	return gohacks.SplitNonEmptyLines(output)
 }
 
 // FilesInBranches provides a data table of files and their content in all branches.
@@ -376,7 +377,7 @@ func (self *TestCommands) FilesInBranches(mainBranch gitdomain.LocalBranchName) 
 // FilesInCommit provides the names of the files that the commit with the given SHA changes.
 func (self *TestCommands) FilesInCommit(sha gitdomain.SHA) []string {
 	output := self.MustQuery("git", "show", "--name-only", "--pretty=format:", sha.String())
-	return splitNonEmptyLines(output)
+	return gohacks.SplitNonEmptyLines(output)
 }
 
 func (self *TestCommands) FilesInWorkspace() []string {
@@ -576,7 +577,7 @@ func (self *TestCommands) StashOpenFiles() {
 // Tags provides a list of the tags in this repository.
 func (self *TestCommands) Tags() []string {
 	output := self.MustQuery("git", "tag")
-	return splitNonEmptyLines(output)
+	return gohacks.SplitNonEmptyLines(output)
 }
 
 // UncommittedFiles provides the names of the files not committed into Git.
@@ -608,20 +609,4 @@ func (self *TestCommands) VerifyNoGitTownConfiguration() error {
 		}
 	}
 	return nil
-}
-
-// splitNonEmptyLines splits the input by newlines and returns non-empty, trimmed lines.
-func splitNonEmptyLines(output string) []string {
-	if output == "" {
-		return []string{}
-	}
-	lines := strings.Split(output, "\n")
-	result := make([]string, 0, len(lines))
-	for _, line := range lines {
-		line = strings.TrimSpace(line)
-		if line != "" {
-			result = append(result, line)
-		}
-	}
-	return result
 }
