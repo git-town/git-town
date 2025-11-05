@@ -104,14 +104,14 @@ func (self *DataTable) String() string {
 		formatStrings[w] = fmt.Sprintf("| %%-%dv ", width)
 	}
 	// render the self using this format
-	result := ""
+	result := strings.Builder{}
 	for row := range self.Cells {
 		for col := range self.Cells[row] {
-			result += fmt.Sprintf(formatStrings[col], gohacks.EscapeNewLines(self.Cells[row][col]))
+			result.WriteString(fmt.Sprintf(formatStrings[col], gohacks.EscapeNewLines(self.Cells[row][col])))
 		}
-		result += "|\n"
+		result.WriteString("|\n")
 	}
-	return result
+	return result.String()
 }
 
 // columns provides the self data organized into columns.
