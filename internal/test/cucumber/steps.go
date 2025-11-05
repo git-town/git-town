@@ -1569,7 +1569,7 @@ func runCommand(state *ScenarioState, command string, captureState bool) {
 	} else {
 		parts := asserts.NoError1(shellquote.Split(command))
 		cmd, args := parts[0], parts[1:]
-		subProcess := exec.Command(cmd, args...) // #nosec
+		subProcess := exec.CommandContext(context.Background(), cmd, args...) // #nosec
 		subProcess.Dir = state.fixture.Dir
 		outputBytes, _ := subProcess.CombinedOutput()
 		runOutput = string(outputBytes)

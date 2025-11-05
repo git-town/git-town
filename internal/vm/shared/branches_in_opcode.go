@@ -21,7 +21,7 @@ func BranchesInOpcode(code Opcode) []gitdomain.BranchName {
 			localBranchName := field.Interface().(gitdomain.LocalBranchName)
 			result = append(result, localBranchName.BranchName())
 		}
-		if fieldType == reflect.TypeOf((*gitdomain.LocalBranchNames)(nil)).Elem() {
+		if fieldType == reflect.TypeFor[gitdomain.LocalBranchNames]() {
 			localBranchNames := field.Interface().(gitdomain.LocalBranchNames)
 			result = append(result, localBranchNames.BranchNames()...)
 		}
