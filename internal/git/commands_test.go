@@ -661,7 +661,7 @@ func TestBackendCommands(t *testing.T) {
 				runtime := testruntime.Create(t)
 				runtime.CreateBranch("branch", initial.BranchName())
 				worktreeDir := t.TempDir()
-				runtime.CreateWorktree(worktreeDir, "branch")
+				runtime.AddWorktree(worktreeDir, "branch")
 				commits := asserts.NoError1(runtime.Git.CommitsInBranch(runtime, initial, None[gitdomain.LocalBranchName]()))
 				want := gitdomain.BranchesSnapshot{
 					Active: Some[gitdomain.LocalBranchName]("initial"),

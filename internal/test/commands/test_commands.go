@@ -288,10 +288,6 @@ func (self *TestCommands) CreateTag(name string) {
 	self.MustRun("git", "tag", "-a", name, "-m", name)
 }
 
-func (self *TestCommands) CreateWorktree(path string, branch gitdomain.LocalBranchName) {
-	self.MustRun("git", "worktree", "add", path, branch.String())
-}
-
 // provides the first ancestor of the given branch that actually exists in the repo
 func (self *TestCommands) ExistingParent(branch gitdomain.LocalBranchName, lineage configdomain.Lineage) Option[gitdomain.BranchName] {
 	for {
