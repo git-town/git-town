@@ -42,6 +42,9 @@ linters:
     - modernize # TODO: enable
 
   settings:
+    embeddedstructfieldcheck:
+      empty-line: false
+      forbid-mutex: true
     funcorder:
       # Checks that constructors are placed after the structure declaration.
       # Enabling this is incompatible with alphavet.
