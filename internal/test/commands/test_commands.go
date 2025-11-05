@@ -128,7 +128,7 @@ func (self *TestCommands) Commits(fields []string, lineage configdomain.Lineage,
 func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, parentOpt Option[gitdomain.BranchName], fields []string) []testgit.Commit {
 	args := []string{"log", "--format=%H%x00%s%x00%an <%ae>", "--topo-order", "--reverse"}
 	if parent, hasParent := parentOpt.Get(); hasParent {
-		args = append(args, fmt.Sprintf("%s..%s", parent.RefName(), branch.RefName()))
+		args = append(args, parent.RefName()+".."+branch.RefName())
 	} else {
 		args = append(args, branch.RefName())
 	}
@@ -175,21 +175,21 @@ func (self *TestCommands) ConnectTrackingBranch(name gitdomain.LocalBranchName) 
 	self.MustRun("git", "branch", fmt.Sprintf("--set-upstream-to=origin/%s", name), name.String())
 }
 
-// CreateBranch creates a new branch with the given name.
+// CreateAndCheckoutBranch creates a new branch with the given name and checks it out.
 // The created branch is a normal branch.
-// To create feature branches, use CreateFeatureBranch.
+// To create feature branches, use CreateAndCheckoutFeatureBranch.
 func (self *TestCommands) CreateAndCheckoutBranch(name gitdomain.LocalBranchName, parent gitdomain.BranchName) {
 	self.Git.CurrentBranchCache.Set(name)
 	self.MustRun("git", "checkout", "-b", name.String(), parent.String())
 }
 
-// creates a feature branch with the given name in this repository
+// CreateAndCheckoutFeatureBranch creates a feature branch with the given name and checks it out.
 func (self *TestCommands) CreateAndCheckoutFeatureBranch(name gitdomain.LocalBranchName, parent gitdomain.LocalBranchName) {
 	asserts.NoError(self.Git.CreateAndCheckoutBranchWithParent(self, name, parent.Location()))
 	asserts.NoError(gitconfig.SetParent(self, name, parent))
 }
 
-// CreateBranch creates a new branch with the given name.
+// CreateBranch creates a new branch with the given name without checking it out.
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
 func (self *TestCommands) CreateBranch(name gitdomain.LocalBranchName, parent gitdomain.BranchName) {
@@ -224,13 +224,13 @@ func (self *TestCommands) CreateCommit(commit testgit.Commit) {
 	self.MustRun("git", commands...)
 }
 
-// creates a feature branch with the given name in this repository
+// CreateFeatureBranch creates a feature branch with the given name without checking it out.
 func (self *TestCommands) CreateFeatureBranch(name gitdomain.LocalBranchName, parent gitdomain.BranchName) {
 	self.CreateBranch(name, parent)
 	asserts.NoError(self.Config.NormalConfig.SetParent(self.TestRunner, name, parent.LocalName()))
 }
 
-// creates a file with the given name and content in this repository
+// CreateFile creates a file with the given name and content in this repository.
 func (self *TestCommands) CreateFile(name, content string) {
 	filePath := filepath.Join(self.WorkingDir, name)
 	folderPath := filepath.Dir(filePath)
@@ -299,7 +299,7 @@ func (self *TestCommands) CreateTag(name string) {
 	self.MustRun("git", "tag", "-a", name, "-m", name)
 }
 
-// provides the first ancestor of the given branch that actually exists in the repo
+// ExistingParent provides the first ancestor of the given branch that actually exists in the repo.
 func (self *TestCommands) ExistingParent(branch gitdomain.LocalBranchName, lineage configdomain.Lineage) Option[gitdomain.BranchName] {
 	for {
 		parentOpt := lineage.Parent(branch)
@@ -327,7 +327,7 @@ func (self *TestCommands) FileContent(filename string) string {
 	return asserts.NoError1(self.FileContentErr(filename))
 }
 
-// FileContent provides the current content of a file.
+// FileContentErr provides the current content of a file, returning an error if the file cannot be read.
 func (self *TestCommands) FileContentErr(filename string) (string, error) {
 	content, err := os.ReadFile(filepath.Join(self.WorkingDir, filename))
 	return string(content), err
@@ -417,6 +417,7 @@ func (self *TestCommands) Lineage() configdomain.Lineage {
 	return localGitConfig.Lineage
 }
 
+// LineageText formats the given lineage as a readable text representation.
 func (self *TestCommands) LineageText(lineage configdomain.Lineage) string {
 	return format.BranchLineage(lineage, configdomain.OrderAsc)
 }
@@ -532,7 +533,7 @@ func (self *TestCommands) RenameRemote(oldName, newName string) {
 	self.MustRun("git", "remote", "rename", oldName, newName)
 }
 
-// provides the SHA that the given branch points to
+// SHAforBranch provides the SHA that the given branch points to.
 func (self *TestCommands) SHAforBranch(branch gitdomain.LocalBranchName) gitdomain.SHA {
 	output := self.MustQuery("git", "rev-parse", branch.String())
 	return gitdomain.NewSHA(output)
