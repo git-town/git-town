@@ -3,7 +3,7 @@ package gohacks
 import "reflect"
 
 // TypeName provides the name of the type of the given variable.
-func TypeName(myvar interface{}) string {
+func TypeName(myvar any) string {
 	if myvar == nil {
 		return "nil"
 	}

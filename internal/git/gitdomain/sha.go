@@ -45,7 +45,7 @@ func (self SHA) Location() Location {
 	return Location(string(self))
 }
 
-// Implementation of the fmt.Stringer interface.
+// String is the implementation of the fmt.Stringer interface.
 func (self SHA) String() string {
 	return string(self)
 }

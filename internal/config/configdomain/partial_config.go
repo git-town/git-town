@@ -69,7 +69,7 @@ func EmptyPartialConfig() PartialConfig {
 	} //exhaustruct:ignore
 }
 
-// Merges the given PartialConfig into this configuration object.
+// Merge merges the given PartialConfig into this configuration object.
 func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 	return PartialConfig{
 		Aliases:                  mapstools.Merge(other.Aliases, self.Aliases),

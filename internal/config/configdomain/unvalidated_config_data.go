@@ -23,7 +23,7 @@ func (self *UnvalidatedConfigData) IsMainBranch(branch gitdomain.LocalBranchName
 	return false
 }
 
-// indicates the branch type of the given branch, if it can determine it
+// PartialBranchType indicates the branch type of the given branch, if it can determine it
 func (self *UnvalidatedConfigData) PartialBranchType(branch gitdomain.LocalBranchName) Option[BranchType] {
 	if self.IsMainBranch(branch) {
 		return Some(BranchTypeMainBranch)

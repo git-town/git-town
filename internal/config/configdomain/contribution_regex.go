@@ -7,7 +7,7 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-// configuration setting that allows defining branches matching this regular expression as contribution branches
+// ContributionRegex is a configuration setting that allows defining branches matching this regular expression as contribution branches.
 type ContributionRegex struct {
 	VerifiedRegex
 }

@@ -1,6 +1,9 @@
 package testgit
 
-import "strings"
+import (
+	"slices"
+	"strings"
+)
 
 type Locations []Location
 
@@ -15,12 +18,7 @@ func NewLocations(cucumberFormat string) Locations {
 
 // Contains indicates whether this Locations instance contains the given location.
 func (self Locations) Contains(location Location) bool {
-	for _, myLocation := range self {
-		if myLocation == location {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(self, location)
 }
 
 // indicates whetehr this Locations instance contains exactly the given elements

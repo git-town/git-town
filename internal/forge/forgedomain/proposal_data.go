@@ -21,6 +21,7 @@ func (self ProposalData) Data() ProposalData {
 
 type BitbucketCloudProposalData struct {
 	ProposalData
+
 	CloseSourceBranch bool
 	Draft             bool
 }

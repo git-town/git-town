@@ -22,7 +22,7 @@ func FormattedOption[T fmt.Stringer](userInput Option[T], hasGlobal bool, exit d
 	return colors.Green().Styled("(not provided)")
 }
 
-// FormattedToken provides the given API token in a printable format.
+// FormattedSecret provides the given API token in a printable format.
 func FormattedSecret(secret string, exit dialogdomain.Exit) string {
 	if exit {
 		return colors.Red().Styled("(aborted)")

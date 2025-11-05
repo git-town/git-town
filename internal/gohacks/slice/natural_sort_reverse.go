@@ -5,7 +5,7 @@ import (
 	"slices"
 )
 
-// sorts the given elements in reverse natural sort order
+// NaturalSortReverse sorts the given elements in reverse natural sort order
 func NaturalSortReverse[T fmt.Stringer](list []T) {
 	if len(list) < 2 {
 		return

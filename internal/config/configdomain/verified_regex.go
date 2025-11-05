@@ -7,7 +7,7 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-// a regular expression in the Git Town configuration
+// VerifiedRegex is a regular expression in the Git Town configuration
 type VerifiedRegex struct {
 	regex *regexp.Regexp
 	text  string

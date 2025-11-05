@@ -1,6 +1,6 @@
 package configdomain
 
-// indicates whether a Git Town command should not auto-resolve phantom merge conflicts
+// AutoResolve indicates whether a Git Town command should not auto-resolve phantom merge conflicts.
 type AutoResolve bool
 
 func (self AutoResolve) NoAutoResolve() bool {

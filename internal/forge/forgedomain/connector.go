@@ -42,7 +42,7 @@ type VerifyCredentialsResult struct {
 	AuthorizationError  error          // error while verifying authorization, nil == user is authenticated
 }
 
-// ProposalUpdater describes methods that connectors need to implement
+// ProposalBodyUpdater describes methods that connectors need to implement
 // to enable Git Town to update proposals at the active forge.
 type ProposalBodyUpdater interface {
 	// Updates the body (description) of the given proposal to the given value.

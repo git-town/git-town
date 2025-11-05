@@ -5,7 +5,7 @@ import "github.com/git-town/git-town/v22/internal/gohacks/mapstools"
 // SingleSnapshot contains all of the local or global Git metadata config settings.
 type SingleSnapshot map[Key]string
 
-// provides all the keys that describe aliases for Git Town commands
+// AliasEntries provides all the keys that describe aliases for Git Town commands
 func (self SingleSnapshot) AliasEntries() map[AliasKey]string {
 	result := map[AliasKey]string{}
 	for key, value := range self { // okay to iterate the map in random order here because we assign to a new map
@@ -25,7 +25,7 @@ func (self SingleSnapshot) Aliases() Aliases {
 	return result
 }
 
-// provides all the keys that describe lineage entries
+// LineageEntries provides all the keys that describe lineage entries
 func (self SingleSnapshot) LineageEntries() map[LineageKey]string {
 	result := map[LineageKey]string{}
 	for key, value := range self { // okay to iterate the map in random order here because we assign to a new map
