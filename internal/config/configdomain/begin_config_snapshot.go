@@ -2,7 +2,7 @@ package configdomain
 
 import "fmt"
 
-// BeginConfigSnapshot is a snapshot of the entire Git configuration at a particular point in time.
+// BeginConfigSnapshot is a snapshot of the entire Git configuration before a Git Town command starts.
 type BeginConfigSnapshot struct {
 	Global   SingleSnapshot
 	Local    SingleSnapshot
