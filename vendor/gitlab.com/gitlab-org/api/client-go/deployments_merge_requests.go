@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package gitlab
 
 import (
@@ -21,6 +22,10 @@ import (
 type (
 	// DeploymentMergeRequestsServiceInterface defines all the API methods for the DeploymentMergeRequestsService
 	DeploymentMergeRequestsServiceInterface interface {
+		// ListDeploymentMergeRequests get the merge requests associated with deployment.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/deployments/#list-of-merge-requests-associated-with-a-deployment
 		ListDeploymentMergeRequests(pid any, deployment int, opts *ListMergeRequestsOptions, options ...RequestOptionFunc) ([]*MergeRequest, *Response, error)
 	}
 
@@ -36,10 +41,6 @@ type (
 
 var _ DeploymentMergeRequestsServiceInterface = (*DeploymentMergeRequestsService)(nil)
 
-// ListDeploymentMergeRequests get the merge requests associated with deployment.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/deployments/#list-of-merge-requests-associated-with-a-deployment
 func (s *DeploymentMergeRequestsService) ListDeploymentMergeRequests(pid any, deployment int, opts *ListMergeRequestsOptions, options ...RequestOptionFunc) ([]*MergeRequest, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {

@@ -74,6 +74,12 @@ type Formatter interface {
 	Summary()
 }
 
+// FlushFormatter is a `Formatter` but can be flushed.
+type FlushFormatter interface {
+	Formatter
+	Flush()
+}
+
 // FormatterFunc builds a formatter with given
 // suite name and io.Writer to record output
 type FormatterFunc func(string, io.Writer) Formatter

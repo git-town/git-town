@@ -457,7 +457,7 @@ type GeoSiteStatus struct {
 	Links                                           GeoSiteStatusLink `json:"_links"`
 }
 
-// GeoSiteStatus represents the status of Geo Site.
+// GeoSiteStatusLink represents the links for a GitLab Geo Site status.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/geo_sites/#retrieve-status-about-all-geo-sites

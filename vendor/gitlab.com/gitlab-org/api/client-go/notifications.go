@@ -43,7 +43,7 @@ type (
 
 var _ NotificationSettingsServiceInterface = (*NotificationSettingsService)(nil)
 
-// NotificationSettings represents the Gitlab notification setting.
+// NotificationSettings represents the GitLab notification setting.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/notification_settings/#valid-notification-levels

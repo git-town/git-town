@@ -66,8 +66,8 @@ type ProjectFeatureFlagStrategyParameter struct {
 	UserIDs    string `json:"userIds,omitempty"`
 	Percentage string `json:"percentage,omitempty"`
 
-	// Following fields aren't documented in Gitlab API docs,
-	// but are present in Gitlab API since 13.5.
+	// Following fields aren't documented in GitLab API docs,
+	// but are present in GitLab API since 13.5.
 	// Docs: https://docs.getunleash.io/reference/activation-strategies#gradual-rollout
 	Rollout    string `json:"rollout,omitempty"`
 	Stickiness string `json:"stickiness,omitempty"`
@@ -139,7 +139,7 @@ func (s *ProjectFeatureFlagService) GetProjectFeatureFlag(pid any, name string, 
 // CreateProjectFeatureFlagOptions represents the available
 // CreateProjectFeatureFlag() options.
 //
-// Gitlab API docs:
+// GitLab API docs:
 // https://docs.gitlab.com/api/feature_flags/#create-a-feature-flag
 type CreateProjectFeatureFlagOptions struct {
 	Name        *string                        `url:"name,omitempty" json:"name,omitempty"`
@@ -152,7 +152,7 @@ type CreateProjectFeatureFlagOptions struct {
 // FeatureFlagStrategyOptions represents the available feature flag strategy
 // options.
 //
-// Gitlab API docs:
+// GitLab API docs:
 // https://docs.gitlab.com/api/feature_flags/#create-a-feature-flag
 type FeatureFlagStrategyOptions struct {
 	ID         *int                                 `url:"id,omitempty" json:"id,omitempty"`
@@ -164,7 +164,7 @@ type FeatureFlagStrategyOptions struct {
 // ProjectFeatureFlagScopeOptions represents the available feature flag scope
 // options.
 //
-// Gitlab API docs:
+// GitLab API docs:
 // https://docs.gitlab.com/api/feature_flags/#create-a-feature-flag
 type ProjectFeatureFlagScopeOptions struct {
 	ID               *int    `url:"id,omitempty" json:"id,omitempty"`
@@ -173,7 +173,7 @@ type ProjectFeatureFlagScopeOptions struct {
 
 // CreateProjectFeatureFlag creates a feature flag
 //
-// Gitlab API docs:
+// GitLab API docs:
 // https://docs.gitlab.com/api/feature_flags/#create-a-feature-flag
 func (s *ProjectFeatureFlagService) CreateProjectFeatureFlag(pid any, opt *CreateProjectFeatureFlagOptions, options ...RequestOptionFunc) (*ProjectFeatureFlag, *Response, error) {
 	project, err := parseID(pid)
@@ -201,7 +201,7 @@ func (s *ProjectFeatureFlagService) CreateProjectFeatureFlag(pid any, opt *Creat
 // UpdateProjectFeatureFlagOptions represents the available
 // UpdateProjectFeatureFlag() options.
 //
-// Gitlab API docs:
+// GitLab API docs:
 // https://docs.gitlab.com/api/feature_flags/#update-a-feature-flag
 type UpdateProjectFeatureFlagOptions struct {
 	Name        *string                        `url:"name,omitempty" json:"name,omitempty"`
@@ -212,7 +212,7 @@ type UpdateProjectFeatureFlagOptions struct {
 
 // UpdateProjectFeatureFlag updates a feature flag
 //
-// Gitlab API docs:
+// GitLab API docs:
 // https://docs.gitlab.com/api/feature_flags/#update-a-feature-flag
 func (s *ProjectFeatureFlagService) UpdateProjectFeatureFlag(pid any, name string, opt *UpdateProjectFeatureFlagOptions, options ...RequestOptionFunc) (*ProjectFeatureFlag, *Response, error) {
 	group, err := parseID(pid)
@@ -240,7 +240,7 @@ func (s *ProjectFeatureFlagService) UpdateProjectFeatureFlag(pid any, name strin
 
 // DeleteProjectFeatureFlag deletes a feature flag
 //
-// Gitlab API docs:
+// GitLab API docs:
 // https://docs.gitlab.com/api/feature_flags/#delete-a-feature-flag
 func (s *ProjectFeatureFlagService) DeleteProjectFeatureFlag(pid any, name string, options ...RequestOptionFunc) (*Response, error) {
 	project, err := parseID(pid)

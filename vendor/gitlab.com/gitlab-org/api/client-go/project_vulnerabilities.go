@@ -44,7 +44,7 @@ type (
 // Deprecated: use GraphQL Query.vulnerabilities instead
 var _ ProjectVulnerabilitiesServiceInterface = (*ProjectVulnerabilitiesService)(nil)
 
-// Project represents a GitLab project vulnerability.
+// ProjectVulnerability represents a GitLab project vulnerability.
 // Deprecated: use GraphQL Query.vulnerabilities instead
 //
 // GitLab API docs: https://docs.gitlab.com/api/project_vulnerabilities/
@@ -74,7 +74,7 @@ type ProjectVulnerability struct {
 	UpdatedByID             int        `json:"updated_by_id"`
 }
 
-// Project represents a GitLab project vulnerability finding.
+// Finding represents a GitLab project vulnerability finding.
 // Deprecated: use GraphQL Query.vulnerabilities instead
 //
 // GitLab API docs: https://docs.gitlab.com/api/project_vulnerabilities/

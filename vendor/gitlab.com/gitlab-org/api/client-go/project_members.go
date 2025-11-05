@@ -55,11 +55,21 @@ type ProjectMember struct {
 	Name        string           `json:"name"`
 	State       string           `json:"state"`
 	CreatedAt   *time.Time       `json:"created_at"`
+	CreatedBy   *MemberCreatedBy `json:"created_by"`
 	ExpiresAt   *ISOTime         `json:"expires_at"`
 	AccessLevel AccessLevelValue `json:"access_level"`
 	WebURL      string           `json:"web_url"`
 	AvatarURL   string           `json:"avatar_url"`
 	MemberRole  *MemberRole      `json:"member_role"`
+}
+
+type MemberCreatedBy struct {
+	ID        int    `json:"id"`
+	Username  string `json:"username"`
+	Name      string `json:"name"`
+	State     string `json:"state"`
+	AvatarURL string `json:"avatar_url"`
+	WebURL    string `json:"web_url"`
 }
 
 // ListProjectMembersOptions represents the available ListProjectMembers() and

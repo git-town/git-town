@@ -295,7 +295,7 @@ func (s *GroupMilestonesService) GetGroupMilestoneMergeRequests(gid any, milesto
 	return mr, resp, nil
 }
 
-// BurndownChartEvent reprensents a burnout chart event
+// BurndownChartEvent represents a burnout chart event.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_milestones/#get-all-burndown-chart-events-for-a-single-milestone

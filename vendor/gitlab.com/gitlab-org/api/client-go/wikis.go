@@ -33,7 +33,7 @@ type (
 	}
 
 	// WikisService handles communication with the wikis related methods of
-	// the Gitlab API.
+	// the GitLab API.
 	//
 	// GitLab API docs:
 	// https://docs.gitlab.com/api/wikis/

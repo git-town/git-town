@@ -486,6 +486,7 @@ type Settings struct {
 	UserEmailLookupLimit int `json:"user_email_lookup_limit"`
 }
 
+// UnmarshalJSON implements the json.Unmarshaler interface.
 // Settings requires a custom unmarshaller in order to properly unmarshal
 // `container_registry_import_created_before` which is either a time.Time or
 // an empty string if no value is set.
@@ -570,6 +571,7 @@ type UpdateSettingsOptions struct {
 	BulkImportEnabled                                     *bool                                   `url:"bulk_import_enabled,omitempty" json:"bulk_import_enabled,omitempty"`
 	BulkImportMaxDownloadFileSize                         *int                                    `url:"bulk_import_max_download_file_size,omitempty" json:"bulk_import_max_download_file_size,omitempty"`
 	CanCreateGroup                                        *bool                                   `url:"can_create_group,omitempty" json:"can_create_group,omitempty"`
+	CanCreateOrganization                                 *bool                                   `url:"can_create_organization,omitempty" json:"can_create_organization,omitempty"`
 	CheckNamespacePlan                                    *bool                                   `url:"check_namespace_plan,omitempty" json:"check_namespace_plan,omitempty"`
 	CIJobLiveTraceEnabled                                 *bool                                   `url:"ci_job_live_trace_enabled,omitempty" json:"ci_job_live_trace_enabled,omitempty"`
 	CIMaxIncludes                                         *int                                    `url:"ci_max_includes,omitempty" json:"ci_max_includes,omitempty"`

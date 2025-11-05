@@ -184,7 +184,7 @@ type ImportFileOptions struct {
 	OverrideParams *CreateProjectOptions `url:"override_params,omitempty" json:"override_params,omitempty"`
 }
 
-// Import a project from an archive file.
+// ImportFromFile imports a project from an archive file.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/project_import_export/#import-a-file

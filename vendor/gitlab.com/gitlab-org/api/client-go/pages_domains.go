@@ -209,7 +209,7 @@ func (s *PagesDomainsService) UpdatePagesDomain(pid any, domain string, opt *Upd
 	return pd, resp, nil
 }
 
-// DeletePagesDomain deletes an existing prject pages domain.
+// DeletePagesDomain deletes an existing project pages domain.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/pages_domains/#delete-pages-domain

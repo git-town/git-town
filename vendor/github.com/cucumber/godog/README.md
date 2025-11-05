@@ -26,7 +26,7 @@ Godog merges specification and test documentation into one cohesive whole.
 ### Living documentation
 
 Because they're automatically tested by Godog, your specifications are
-always bang up-to-date.
+always being up-to-date.
 
 ### Focus on the customer
 
