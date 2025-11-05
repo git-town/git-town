@@ -10,7 +10,7 @@ import (
 const BranchTypeSuffix = ".branchtype"
 
 // BranchTypeOverrideKey is a Key that contains a BranchTypeOverrides entry,
-// for example "git-town-branch.foo.branchtype"
+// for example "git-town-branch.foo.branchtype".
 type BranchTypeOverrideKey struct {
 	BranchSpecificKey
 }
