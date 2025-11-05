@@ -79,7 +79,7 @@ func (self *TestCommands) CommitSHAs() gitdomain.Commits {
 	if output == "" {
 		return gitdomain.Commits{}
 	}
-	lines := strings.Split(output, "\n")
+	lines := stringslice.NonEmptyLines(output)
 	result := make(gitdomain.Commits, 0, len(lines))
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
@@ -133,12 +133,9 @@ func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, pare
 		args = append(args, branch.RefName())
 	}
 	output := self.MustQuery("git", args...)
-	lines := strings.Split(output, "\n")
+	lines := stringslice.NonEmptyLines(output)
 	result := make([]testgit.Commit, 0, len(lines))
 	for _, line := range lines {
-		if len(strings.TrimSpace(line)) == 0 {
-			continue
-		}
 		parts := strings.Split(line, "\x00")
 		commit := testgit.Commit{
 			Branch:  branch,
@@ -346,18 +343,7 @@ func (self *TestCommands) FileContentInCommit(location gitdomain.Location, filen
 // FilesInBranch provides the list of the files present in the given branch.
 func (self *TestCommands) FilesInBranch(branch gitdomain.LocalBranchName) []string {
 	output := self.MustQuery("git", "ls-tree", "-r", "--name-only", branch.String())
-	if output == "" {
-		return []string{}
-	}
-	lines := strings.Split(output, "\n")
-	result := make([]string, 0, len(lines))
-	for _, line := range lines {
-		file := strings.TrimSpace(line)
-		if file != "" {
-			result = append(result, file)
-		}
-	}
-	return result
+	return stringslice.NonEmptyLines(output)
 }
 
 // FilesInBranches provides a data table of files and their content in all branches.
@@ -387,18 +373,7 @@ func (self *TestCommands) FilesInBranches(mainBranch gitdomain.LocalBranchName) 
 // FilesInCommit provides the names of the files that the commit with the given SHA changes.
 func (self *TestCommands) FilesInCommit(sha gitdomain.SHA) []string {
 	output := self.MustQuery("git", "show", "--name-only", "--pretty=format:", sha.String())
-	if output == "" {
-		return []string{}
-	}
-	lines := strings.Split(output, "\n")
-	result := make([]string, 0, len(lines))
-	for _, line := range lines {
-		line = strings.TrimSpace(line)
-		if line != "" {
-			result = append(result, line)
-		}
-	}
-	return result
+	return stringslice.NonEmptyLines(output)
 }
 
 func (self *TestCommands) FilesInWorkspace() []string {
@@ -598,18 +573,7 @@ func (self *TestCommands) StashOpenFiles() {
 // Tags provides a list of the tags in this repository.
 func (self *TestCommands) Tags() []string {
 	output := self.MustQuery("git", "tag")
-	if output == "" {
-		return []string{}
-	}
-	lines := strings.Split(output, "\n")
-	result := make([]string, 0, len(lines))
-	for _, line := range lines {
-		line = strings.TrimSpace(line)
-		if line != "" {
-			result = append(result, line)
-		}
-	}
-	return result
+	return stringslice.NonEmptyLines(output)
 }
 
 // UncommittedFiles provides the names of the files not committed into Git.
