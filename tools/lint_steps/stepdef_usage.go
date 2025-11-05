@@ -61,7 +61,7 @@ func FindUsedStepsIn(fileContent string) []string {
 		stepUsageRE = regexp.MustCompile(`^\s*(?:Given|When|Then|And) (.*)$`)
 	}
 	var result []string
-	for _, line := range strings.Split(fileContent, "\n") {
+	for line := range strings.SplitSeq(fileContent, "\n") {
 		matches := stepUsageRE.FindAllStringSubmatch(line, -1)
 		if len(matches) > 0 {
 			result = append(result, strings.TrimSpace(matches[0][1]))
@@ -72,12 +72,7 @@ func FindUsedStepsIn(fileContent string) []string {
 
 // indicates whether the given step definition is used anywhere in the given list of executed steps
 func IsStepDefUsed(definedStep StepRE, usedSteps []string) bool {
-	for _, usedStep := range usedSteps {
-		if definedStep.regex.MatchString(usedStep) {
-			return true
-		}
-	}
-	return false
+	return slices.ContainsFunc(usedSteps, definedStep.regex.MatchString)
 }
 
 // provides all steps that are executed in .feature files

@@ -105,9 +105,7 @@ func getDiffContextLines(filePath string, actualNames []string, expectedNames []
 
 		// Calculate context range
 		start := pos - contextSize
-		if start < 0 {
-			start = 0
-		}
+		start = max(start, 0)
 		end := pos + contextSize
 		if end >= len(actualNames) {
 			end = len(actualNames) - 1

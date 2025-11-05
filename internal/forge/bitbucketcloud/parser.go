@@ -9,7 +9,7 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-func parsePullRequest(pullRequest map[string]interface{}) (result forgedomain.BitbucketCloudProposalData, err error) {
+func parsePullRequest(pullRequest map[string]any) (result forgedomain.BitbucketCloudProposalData, err error) {
 	id1, has := pullRequest["id"]
 	if !has {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
@@ -39,7 +39,7 @@ func parsePullRequest(pullRequest map[string]interface{}) (result forgedomain.Bi
 	if !has {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
-	destination2, ok := destination1.(map[string]interface{})
+	destination2, ok := destination1.(map[string]any)
 	if !ok {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
@@ -47,7 +47,7 @@ func parsePullRequest(pullRequest map[string]interface{}) (result forgedomain.Bi
 	if !has {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
-	destination4, ok := destination3.(map[string]interface{})
+	destination4, ok := destination3.(map[string]any)
 	if !ok {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
@@ -63,7 +63,7 @@ func parsePullRequest(pullRequest map[string]interface{}) (result forgedomain.Bi
 	if !has {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
-	source2, ok := source1.(map[string]interface{})
+	source2, ok := source1.(map[string]any)
 	if !ok {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
@@ -71,7 +71,7 @@ func parsePullRequest(pullRequest map[string]interface{}) (result forgedomain.Bi
 	if !has {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
-	source4, ok := source3.(map[string]interface{})
+	source4, ok := source3.(map[string]any)
 	if !ok {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
@@ -87,7 +87,7 @@ func parsePullRequest(pullRequest map[string]interface{}) (result forgedomain.Bi
 	if !has {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
-	url2, ok := url1.(map[string]interface{})
+	url2, ok := url1.(map[string]any)
 	if !ok {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
@@ -95,7 +95,7 @@ func parsePullRequest(pullRequest map[string]interface{}) (result forgedomain.Bi
 	if !has {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
-	url4, ok := url3.(map[string]interface{})
+	url4, ok := url3.(map[string]any)
 	if !ok {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
