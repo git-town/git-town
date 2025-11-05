@@ -2,7 +2,6 @@ package subshell
 
 import (
 	"bytes"
-	"context"
 	"errors"
 	"fmt"
 	"io"
@@ -171,7 +170,7 @@ func (self *TestRunner) QueryWith(opts *Options, cmd string, args ...string) (st
 func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string) (output string, exitCode int, err error) {
 	currentBranchText := ""
 	if self.Verbose {
-		getBranchCmd := exec.CommandContext(context.Background(), "git", "rev-parse", "--abbrev-ref", "HEAD")
+		getBranchCmd := exec.Command("git", "rev-parse", "--abbrev-ref", "HEAD")
 		getBranchCmd.Dir = self.WorkingDir
 		currentBranch, _ := getBranchCmd.Output()
 		currentBranchText = strings.TrimSpace(string(currentBranch))
@@ -203,7 +202,7 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	// set the working dir
 	opts.Dir = filepath.Join(self.WorkingDir, opts.Dir)
 	// run the command inside the custom environment
-	subProcess := exec.CommandContext(context.Background(), cmd, args...) // #nosec
+	subProcess := exec.Command(cmd, args...) // #nosec
 	if len(opts.Dir) > 0 {
 		subProcess.Dir = opts.Dir
 	}
