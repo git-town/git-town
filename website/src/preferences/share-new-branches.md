@@ -6,9 +6,9 @@ This setting allows you to change how Git Town shares new branches created with
 
 Allowed values:
 
-- **no:** Keep new branches local on your machine until you
-  [sync](../commands/sync.md) or [propose](../commands/propose.md) them (default
-  behavior).
+- **no/false/0:** Don't share new branches, keep them local on your machine
+  until you [sync](../commands/sync.md) or [propose](../commands/propose.md)
+  them (default behavior).
 - **push:** Push new branches to the [development remote](dev-remote.md).
 - **propose:** Create a pull request for the new branch. This is similar to
   always adding the [propose flag](../commands/hack.md#--propose).
