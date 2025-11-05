@@ -37,6 +37,7 @@ linters:
 
     - godoclint # TODO: enable
     - contextcheck # TODO: enable
+    - noctx # TODO: enable
 
   settings:
     embeddedstructfieldcheck:
