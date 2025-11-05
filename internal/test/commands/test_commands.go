@@ -270,17 +270,18 @@ func (self *TestCommands) CreateLocalBranchUsingGitTown(branchSetup datatable.Br
 
 // CreateStandaloneTag creates a tag not on a branch.
 func (self *TestCommands) CreateStandaloneTag(name string) {
-	self.MustRun("git", "checkout", "-b", "temp")
+	const tempBranchName = "temp"
+	self.MustRun("git", "checkout", "-b", tempBranchName)
 	filePath := filepath.Join(self.WorkingDir, "a.txt")
 	file, err := os.Create(filePath)
 	asserts.NoError(err)
 	err = file.Close()
 	asserts.NoError(err)
 	self.MustRun("git", "add", "-A")
-	self.MustRun("git", "commit", "-m", "temp")
+	self.MustRun("git", "commit", "-m", tempBranchName)
 	self.MustRun("git", "tag", "-a", name, "-m", name)
 	self.MustRun("git", "checkout", "-")
-	self.MustRun("git", "branch", "-D", "temp")
+	self.MustRun("git", "branch", "-D", tempBranchName)
 }
 
 // CreateTag creates a tag with the given name.
