@@ -292,12 +292,9 @@ func (self *Commands) CommitsInFeatureBranch(querier subshelldomain.Querier, bra
 	if err != nil {
 		return gitdomain.Commits{}, err
 	}
-	lines := strings.Split(output, "\n")
+	lines := gohacks.SplitNonEmptyLines(output)
 	result := make(gitdomain.Commits, 0, len(lines))
 	for _, line := range lines {
-		if len(line) == 0 {
-			continue
-		}
 		sha, message, ok := strings.Cut(line, " ")
 		if !ok {
 			continue
