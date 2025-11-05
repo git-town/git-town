@@ -75,13 +75,23 @@ func (self *TestCommands) CommitSHA(querier subshelldomain.Querier, title gitdom
 }
 
 func (self *TestCommands) CommitSHAs() gitdomain.Commits {
-	result := gitdomain.Commits{}
 	output := self.MustQuery("git", "log", "--all", "--format=%H %s")
 	if output == "" {
-		return result
+		return gitdomain.Commits{}
 	}
-	for _, line := range strings.Split(output, "\n") {
-		sha, commitMessage, _ := strings.Cut(line, " ")
+	lines := strings.Split(output, "\n")
+	result := make(gitdomain.Commits, 0, len(lines))
+	for _, line := range lines {
+		line = strings.TrimSpace(line)
+		if line == "" {
+			continue
+		}
+		sha, commitMessage, found := strings.Cut(line, " ")
+		if !found {
+			// No space found means the entire line is the SHA (empty commit message)
+			sha = line
+			commitMessage = ""
+		}
 		result = append(result, gitdomain.Commit{
 			Message: gitdomain.CommitMessage(commitMessage),
 			SHA:     gitdomain.NewSHA(sha),
