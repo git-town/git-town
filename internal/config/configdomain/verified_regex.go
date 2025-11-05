@@ -8,6 +8,7 @@ import (
 )
 
 // VerifiedRegex is a regular expression in the Git Town configuration
+// that is known to be valid, and for which the original source is available.
 type VerifiedRegex struct {
 	regex *regexp.Regexp
 	text  string
