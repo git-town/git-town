@@ -1,13 +1,13 @@
-package gohacks_test
+package stringslice_test
 
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v22/internal/gohacks"
+	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 	"github.com/shoenig/test/must"
 )
 
-func TestSplitNonEmptyLines(t *testing.T) {
+func TestNonEmptyLines(t *testing.T) {
 	t.Parallel()
 	tests := map[string][]string{
 		"":                                {},
@@ -24,7 +24,7 @@ func TestSplitNonEmptyLines(t *testing.T) {
 	for input, expected := range tests {
 		t.Run(input, func(t *testing.T) {
 			t.Parallel()
-			have := gohacks.SplitNonEmptyLines(input)
+			have := stringslice.NonEmptyLines(input)
 			must.Eq(t, expected, have)
 		})
 	}
