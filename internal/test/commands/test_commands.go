@@ -29,6 +29,7 @@ const (
 	FileCommitMessage       = "persisted file"
 	MainBranchName          = "main"
 	deletedText             = " (deleted)"
+	nullByteSeparator       = "\x00"
 )
 
 // TestCommands defines Git commands used only in test code.
@@ -126,7 +127,7 @@ func (self *TestCommands) Commits(fields []string, lineage configdomain.Lineage,
 
 // CommitsInBranch provides all commits in the given Git branch.
 func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, parentOpt Option[gitdomain.BranchName], fields []string) []testgit.Commit {
-	args := []string{"log", "--format=%H%x00%s%x00%an <%ae>", "--topo-order", "--reverse"}
+	args := []string{"log", "--format=%H" + nullByteSeparator + "%s" + nullByteSeparator + "%an <%ae>", "--topo-order", "--reverse"}
 	if parent, hasParent := parentOpt.Get(); hasParent {
 		args = append(args, fmt.Sprintf("%s..%s", parent.RefName(), branch.RefName()))
 	} else {
@@ -139,7 +140,7 @@ func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, pare
 		if len(strings.TrimSpace(line)) == 0 {
 			continue
 		}
-		parts := strings.Split(line, "\x00")
+		parts := strings.Split(line, nullByteSeparator)
 		commit := testgit.Commit{
 			Branch:  branch,
 			SHA:     gitdomain.NewSHA(parts[0]),
