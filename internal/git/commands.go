@@ -412,7 +412,7 @@ func (self *Commands) CurrentBranchDuringRebase(querier subshelldomain.Querier) 
 			continue
 		}
 		refName := strings.TrimSpace(string(content))
-		if branchName, found := strings.CutPrefix(refName, "refs/heads/"); found {
+		if branchName, isBranchName := strings.CutPrefix(refName, "refs/heads/"); isBranchName {
 			return Some(gitdomain.NewLocalBranchName(branchName)), nil
 		}
 		// rebase head name is not a branch name
