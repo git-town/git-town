@@ -25,6 +25,7 @@ linters:
     - nakedret # not useful
     - nestif # we keep complexity under check with code reviews
     - nilnil # in our code returning nil, nil makes sense
+    - noctx # we aren't using contexts to cancel operations yet, might be interesting in the future
     - noinlineerr # inline errors are okay
     - nonamedreturns # they are useful in too many situations
     - nlreturn # this forces unnecessary empty lines in function bodies
@@ -37,7 +38,6 @@ linters:
 
     - godoclint # TODO: enable
     - contextcheck # TODO: enable
-    - noctx # TODO: enable
     - modernize # TODO: enable
 
   settings:
