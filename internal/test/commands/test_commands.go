@@ -338,10 +338,14 @@ func (self *TestCommands) FileContentInCommit(location gitdomain.Location, filen
 // FilesInBranch provides the list of the files present in the given branch.
 func (self *TestCommands) FilesInBranch(branch gitdomain.LocalBranchName) []string {
 	output := self.MustQuery("git", "ls-tree", "-r", "--name-only", branch.String())
-	var result []string
-	for _, line := range strings.Split(output, "\n") {
+	if output == "" {
+		return []string{}
+	}
+	lines := strings.Split(output, "\n")
+	result := make([]string, 0, len(lines))
+	for _, line := range lines {
 		file := strings.TrimSpace(line)
-		if len(file) > 0 {
+		if file != "" {
 			result = append(result, file)
 		}
 	}
