@@ -7,6 +7,7 @@ import (
 
 const stackLong = "stack"
 
+// Stack provides type-safe access to the CLI arguments of type configdomain.FullStack.
 func Stack(description string) (AddFunc, ReadStackFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.Flags().BoolP(stackLong, "s", false, description)
