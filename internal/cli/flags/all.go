@@ -7,7 +7,7 @@ import (
 
 const allLong = "all"
 
-// type-safe access to the CLI arguments of type configdomain.SyncAllBranches
+// All provides type-safe access to the CLI arguments of type configdomain.SyncAllBranches.
 func All(desc string) (AddFunc, ReadAllFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.Flags().BoolP(allLong, "a", false, desc)

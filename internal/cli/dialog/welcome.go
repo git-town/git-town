@@ -29,7 +29,7 @@ When you're ready, press ENTER or O to continue.
 `
 )
 
-// MainBranch lets the user select a new main branch for this repo.
+// Welcome displays the welcome message.
 func Welcome(inputs dialogcomponents.Inputs) (dialogdomain.Exit, error) {
 	return dialogcomponents.TextDisplay(welcomeTitle, welcomeText, inputs, "welcome")
 }

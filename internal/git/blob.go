@@ -10,7 +10,7 @@ import (
 	"github.com/git-town/git-town/v22/pkg/colors"
 )
 
-// describes the content of a file blob in Git
+// Blob describes the content of a file blob in Git.
 type Blob struct {
 	FilePath   string        // relative path of the file in the repo
 	Permission string        // permissions, in the form "100755"

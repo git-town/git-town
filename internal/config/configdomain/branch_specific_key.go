@@ -4,7 +4,7 @@ import (
 	"strings"
 )
 
-// a Git config key that contains a branch specific value
+// BranchSpecificKey is a Git config key that contains a branch specific value.
 type BranchSpecificKey struct {
 	Key
 }

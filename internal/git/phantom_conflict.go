@@ -7,7 +7,7 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-// describes a file within an unresolved merge conflict that experiences a phantom merge conflict
+// PhantomConflict describes a file within an unresolved merge conflict that experiences a phantom merge conflict.
 type PhantomConflict struct {
 	FilePath   string
 	Resolution gitdomain.ConflictResolution

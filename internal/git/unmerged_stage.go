@@ -1,6 +1,6 @@
 package git
 
-// describes the roles that a file can play in a merge conflict
+// UnmergedStage describes the roles that a file can play in a merge conflict.
 type UnmergedStage int
 
 const (
@@ -9,7 +9,7 @@ const (
 	UnmergedStageIncoming      UnmergedStage = 3 // the file on the branch getting merged in
 )
 
-// all possile UnmergedStages instances
+// UnmergedStages provides all possible UnmergedStage instances.
 var UnmergedStages = []UnmergedStage{
 	UnmergedStageBase,
 	UnmergedStageCurrentBranch,

@@ -2,7 +2,7 @@ package configdomain
 
 import "strconv"
 
-// indicates whether a Git Town command should sync branches
+// AutoSync indicates whether a Git Town command should sync branches
 // before performing its actual functionality
 type AutoSync bool
 

@@ -16,7 +16,7 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-// provides the branch type overrides stored in the given Git metadata snapshot
+// NewBranchTypeOverridesInSnapshot provides the branch type overrides stored in the given Git metadata snapshot.
 func NewBranchTypeOverridesInSnapshot(snapshot configdomain.SingleSnapshot, ignoreUnknown bool, runner subshelldomain.Runner) (configdomain.BranchTypeOverrides, error) {
 	result := configdomain.BranchTypeOverrides{}
 	for key, value := range snapshot { // okay to iterate the map in random order because we assign to a new map

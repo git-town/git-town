@@ -20,7 +20,7 @@ or for all Git repos on this machine?
 `
 )
 
-// GitHubToken lets the user enter the GitHub API token.
+// TokenScope lets the user enter the GitHub API token.
 func TokenScope(oldValue configdomain.ConfigScope, inputs dialogcomponents.Inputs) (configdomain.ConfigScope, dialogdomain.Exit, error) {
 	entries := list.Entries[configdomain.ConfigScope]{
 		{

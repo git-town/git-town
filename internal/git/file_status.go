@@ -9,7 +9,7 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-// information about each file reported by "git status -z"
+// FileStatus contains information about each file reported by "git status -z".
 type FileStatus struct {
 	OriginalPath Option[string] // if the file was renamed or copied, the old path of the file
 	Path         string         // the path to the file

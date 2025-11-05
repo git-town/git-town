@@ -36,6 +36,9 @@ linters:
     - wsl_v5 # this linter creates too many false positives, our policy is to not have any empty lines in code blocks
 
   settings:
+    embeddedstructfieldcheck:
+      empty-line: false
+      forbid-mutex: true
     funcorder:
       # Checks that constructors are placed after the structure declaration.
       # Enabling this is incompatible with alphavet.

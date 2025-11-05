@@ -4,7 +4,7 @@ import (
 	"strconv"
 )
 
-// PushHook contains the push-hook configuration setting.
+// CommitHook indicates whether commit-hooks are enabled.
 type CommitHook bool
 
 const (

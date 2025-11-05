@@ -490,7 +490,7 @@ func (self *Commands) FileConflicts(querier subshelldomain.Querier) (FileConflic
 	return ParseLsFilesUnmergedOutput(output)
 }
 
-// provides the commit message of the first commit in the branch with the given name
+// FirstCommitMessageInBranch provides the commit message of the first commit in the branch with the given name.
 func (self *Commands) FirstCommitMessageInBranch(runner subshelldomain.Querier, branch, parent gitdomain.BranchName) (Option[gitdomain.CommitMessage], error) {
 	output, err := runner.QueryTrim("git", "log", fmt.Sprintf("%s..%s", parent, branch), "--format=%s", "--reverse")
 	if err != nil {
@@ -503,7 +503,7 @@ func (self *Commands) FirstCommitMessageInBranch(runner subshelldomain.Querier, 
 	return Some(gitdomain.CommitMessage(lines[0])), nil
 }
 
-// provides the first branch in the given list of branch names that actually exists
+// FirstExistingBranch provides the first branch in the given list of branch names that actually exists.
 func (self *Commands) FirstExistingBranch(runner subshelldomain.Runner, branches ...gitdomain.LocalBranchName) Option[gitdomain.LocalBranchName] {
 	for _, branch := range branches {
 		if self.BranchExists(runner, branch) {
@@ -572,7 +572,7 @@ func (self *Commands) MergeBranchNoEdit(runner subshelldomain.Runner, branch git
 	return runner.Run("git", "merge", "--no-edit", "--ff", branch.String())
 }
 
-// loads the information needed to determine which of the given file conflicts are phantom merge conflicts
+// MergeConflicts loads the information needed to determine which of the given file conflicts are phantom merge conflicts.
 func (self *Commands) MergeConflicts(querier subshelldomain.Querier, fileConflicts FileConflicts, parentLocation gitdomain.Location, rootBranch gitdomain.LocalBranchName) (MergeConflicts, error) {
 	result := make(MergeConflicts, len(fileConflicts))
 	for f, fileConflict := range fileConflicts {
@@ -691,7 +691,7 @@ func (self *Commands) Rebase(runner subshelldomain.Runner, target gitdomain.Bran
 	return runner.Run("git", "-c", "rebase.updateRefs=false", "rebase", target.String())
 }
 
-// Rebase initiates a Git rebase of the current branch onto the given branch.
+// RebaseOnto initiates a Git rebase of the current branch onto the given branch.
 func (self *Commands) RebaseOnto(runner subshelldomain.Runner, branchToRebaseOnto gitdomain.Location, commitsToRemove gitdomain.Location) error {
 	return runner.Run("git", "-c", "rebase.updateRefs=false", "rebase", "--onto", branchToRebaseOnto.String(), commitsToRemove.String())
 }
@@ -805,7 +805,7 @@ func (self *Commands) StageFiles(runner subshelldomain.Runner, names ...string) 
 	return runner.Run("git", args...)
 }
 
-// determines the branch that is configured in Git as the default branch
+// StandardBranch determines the branch that is configured in Git as the default branch.
 func (self *Commands) StandardBranch(querier subshelldomain.Querier) Option[gitdomain.LocalBranchName] {
 	if defaultBranch, has := gitconfig.DefaultBranch(querier).Get(); has {
 		return Some(defaultBranch)

@@ -2,7 +2,7 @@ package regexes
 
 import "regexp"
 
-// allows filtering by one of multiple regular expressions
+// Regexes allows filtering by one of multiple regular expressions.
 type Regexes []*regexp.Regexp
 
 func NewRegexes(texts []string) (Regexes, error) {
@@ -17,7 +17,7 @@ func NewRegexes(texts []string) (Regexes, error) {
 	return result, nil
 }
 
-// indicates whether the given text matches any of the internal regexes
+// Matches indicates whether the given text matches any of the internal regexes.
 func (self Regexes) Matches(text string) bool {
 	if len(self) == 0 {
 		return true

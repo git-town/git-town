@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
 )
 
-// Config provides type-safe access to Git Town configuration settings
+// ValidatedConfig provides type-safe access to Git Town configuration settings
 // stored in the local and global Git configuration.
 type ValidatedConfig struct {
 	NormalConfig        NormalConfig
@@ -44,7 +44,7 @@ func (self *ValidatedConfig) BranchesOfType(branches gitdomain.LocalBranchNames,
 	return result
 }
 
-// removes the given branch from the lineage, and updates its children
+// CleanupBranchFromLineage removes the given branch from the lineage, and updates its children.
 func (self *ValidatedConfig) CleanupBranchFromLineage(runner subshelldomain.Runner, branch gitdomain.LocalBranchName, order configdomain.Order) {
 	parent, hasParent := self.NormalConfig.Lineage.Parent(branch).Get()
 	children := self.NormalConfig.Lineage.Children(branch, order)
@@ -95,7 +95,7 @@ func (self *ValidatedConfig) RemoveDeletedBranchesFromLineage(branchInfos gitdom
 	}
 }
 
-// provides this collection without the perennial branch at the root
+// RemovePerennials provides this collection without the perennial branch at the root.
 func (self *ValidatedConfig) RemovePerennials(stack gitdomain.LocalBranchNames) gitdomain.LocalBranchNames {
 	if len(stack) == 0 {
 		return stack

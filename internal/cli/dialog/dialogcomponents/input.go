@@ -24,7 +24,7 @@ func ParseInput(envData string) Input {
 	if !has {
 		panic(fmt.Sprintf("found test input without step name: %q", envData))
 	}
-	for _, input := range strings.Split(keys, "|") {
+	for input := range strings.SplitSeq(keys, "|") {
 		if len(input) > 0 {
 			messages = append(messages, recognizeInput(input))
 		}
