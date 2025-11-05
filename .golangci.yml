@@ -32,6 +32,7 @@ linters:
     - varnamelen # not really useful
     - wrapcheck # too many false positives for return values defined in internal packages
     - wsl # this linter creates too many false positives, our policy is to not have any empty lines in code blocks
+    - wsl_v5 # this linter creates too many false positives, our policy is to not have any empty lines in code blocks
 
     - godoclint # TODO: enable
     - contextcheck # TODO: enable
