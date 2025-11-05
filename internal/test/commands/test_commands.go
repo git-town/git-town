@@ -27,6 +27,7 @@ import (
 const (
 	ConfigFileCommitMessage = "persisted config file"
 	FileCommitMessage       = "persisted file"
+	MainBranchName          = "main"
 	deletedText             = " (deleted)"
 )
 
@@ -189,7 +190,7 @@ func (self *TestCommands) CreateBranchOfType(name gitdomain.LocalBranchName, par
 	if parent, hasParent := parentOpt.Get(); hasParent {
 		self.CreateFeatureBranch(name, parent.BranchName())
 	} else {
-		self.CreateBranch(name, "main")
+		self.CreateBranch(name, MainBranchName)
 	}
 	asserts.NoError(gitconfig.SetBranchTypeOverride(self.TestRunner, branchType, name))
 }
