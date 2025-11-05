@@ -50,7 +50,7 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 		self.log.Success("none")
 		return None[forgedomain.Proposal](), nil
 	}
-	result2, ok := result1.(map[string]interface{})
+	result2, ok := result1.(map[string]any)
 	if !ok {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[forgedomain.Proposal](), nil
@@ -79,7 +79,7 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[forgedomain.Proposal](), nil
 	}
-	proposal2, ok := proposal1.([]interface{})
+	proposal2, ok := proposal1.([]any)
 	if !ok {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[forgedomain.Proposal](), nil
@@ -88,7 +88,7 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[forgedomain.Proposal](), nil
 	}
-	proposal3, ok := proposal2[0].(map[string]interface{})
+	proposal3, ok := proposal2[0].(map[string]any)
 	if !ok {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[forgedomain.Proposal](), nil
@@ -120,7 +120,7 @@ func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Optio
 		self.log.Failed(err.Error())
 		return None[forgedomain.Proposal](), err
 	}
-	response2, ok := response1.(map[string]interface{})
+	response2, ok := response1.(map[string]any)
 	if !ok {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[forgedomain.Proposal](), nil
@@ -149,12 +149,12 @@ func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Optio
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[forgedomain.Proposal](), nil
 	}
-	values2, ok := values1.([]interface{})
+	values2, ok := values1.([]any)
 	if !ok {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[forgedomain.Proposal](), nil
 	}
-	proposal1 := values2[0].(map[string]interface{})
+	proposal1 := values2[0].(map[string]any)
 	proposal2, err := parsePullRequest(proposal1)
 	if err != nil {
 		self.log.Failed(err.Error())
