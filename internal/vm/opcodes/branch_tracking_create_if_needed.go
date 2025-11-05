@@ -5,12 +5,12 @@ import (
 	"github.com/git-town/git-town/v22/internal/vm/shared"
 )
 
-// PushCurrentBranchIfLocal pushes the current branch to its existing tracking branch.
-type PushCurrentBranchIfLocal struct {
+// BranchTrackingCreateIfNeeded creates the tracking branch for the current branch if it doesn't exist.
+type BranchTrackingCreateIfNeeded struct {
 	CurrentBranch gitdomain.LocalBranchName
 }
 
-func (self *PushCurrentBranchIfLocal) Run(args shared.RunArgs) error {
+func (self *BranchTrackingCreateIfNeeded) Run(args shared.RunArgs) error {
 	hasTrackingBranch := args.Git.CurrentBranchHasTrackingBranch(args.Backend)
 	if !hasTrackingBranch {
 		args.PrependOpcodes(&BranchTrackingCreate{
