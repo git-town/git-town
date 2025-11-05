@@ -67,6 +67,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.BranchReset{Target: "branch"},
 				&opcodes.BranchTrackingCreate{Branch: "branch"},
 				&opcodes.BranchTrackingCreateIfLocalExists{Branch: "branch"},
+				&opcodes.BranchTrackingCreateIfNeeded{CurrentBranch: "branch"},
 				&opcodes.BranchTrackingDelete{Branch: "origin/branch"},
 				&opcodes.BranchTypeOverrideSet{Branch: "branch", BranchType: configdomain.BranchTypeFeatureBranch},
 				&opcodes.BranchTypeOverrideRemove{Branch: "branch"},
@@ -121,7 +122,6 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
 				&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: "branch", ForceIfIncludes: true},
 				&opcodes.PushCurrentBranchForceIgnoreError{},
-				&opcodes.PushCurrentBranchIfLocal{CurrentBranch: "branch"},
 				&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: "branch"},
 				&opcodes.PushTags{},
 				&opcodes.RebaseAbort{},
@@ -285,6 +285,12 @@ func TestLoadSave(t *testing.T) {
         "Branch": "branch"
       },
       "type": "BranchTrackingCreateIfLocalExists"
+    },
+    {
+      "data": {
+        "CurrentBranch": "branch"
+      },
+      "type": "BranchTrackingCreateIfNeeded"
     },
     {
       "data": {
@@ -676,12 +682,6 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "PushCurrentBranchForceIgnoreError"
-    },
-    {
-      "data": {
-        "CurrentBranch": "branch"
-      },
-      "type": "PushCurrentBranchIfLocal"
     },
     {
       "data": {
