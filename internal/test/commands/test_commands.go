@@ -128,7 +128,7 @@ func (self *TestCommands) Commits(fields []string, lineage configdomain.Lineage,
 func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, parentOpt Option[gitdomain.BranchName], fields []string) []testgit.Commit {
 	args := []string{"log", "--format=%H%x00%s%x00%an <%ae>", "--topo-order", "--reverse"}
 	if parent, hasParent := parentOpt.Get(); hasParent {
-		args = append(args, fmt.Sprintf("%s..%s", parent.RefName(), branch.RefName()))
+		args = append(args, parent.RefName()+".."+branch.RefName())
 	} else {
 		args = append(args, branch.RefName())
 	}
