@@ -20,11 +20,11 @@ type BranchInfo struct {
 	// RemoteSHA contains the SHA of the tracking branch before Git Town ran.
 	RemoteSHA Option[SHA]
 
-	// SyncStatus of the branch
+	// SyncStatus of the branch.
 	SyncStatus SyncStatus
 }
 
-// provides both the name and SHA of the local branch
+// GetLocal provides both the name and SHA of the local branch.
 func (self BranchInfo) GetLocal() (bool, LocalBranchName, SHA) {
 	name, hasName := self.LocalName.Get()
 	sha, hasSHA := self.LocalSHA.Get()
@@ -61,14 +61,14 @@ func (self BranchInfo) GetLocalOrRemoteSHA() SHA {
 	panic("BranchInfo has neither a local nor remote SHA")
 }
 
-// provides both the name and SHA of the remote branch
+// GetRemoteBranch provides both the name and SHA of the remote branch.
 func (self BranchInfo) GetRemoteBranch() (bool, RemoteBranchName, SHA) {
 	name, hasName := self.RemoteName.Get()
 	sha, hasSHA := self.RemoteSHA.Get()
 	return hasName && hasSHA, name, sha
 }
 
-// provides the SHAs of the local and remote branch
+// GetSHAs provides the SHAs of the local and remote branch.
 func (self BranchInfo) GetSHAs() (hasBothSHA bool, localSHA, remoteSHA SHA) {
 	local, hasLocal := self.LocalSHA.Get()
 	remote, hasRemote := self.RemoteSHA.Get()
@@ -118,7 +118,7 @@ func (self BranchInfo) IsLocalOnlyBranch() (bool, LocalBranchName) {
 	return true, branchName
 }
 
-// Indicates whether the branch described by this BranchInfo is omni
+// IsOmniBranch indicates whether the branch described by this BranchInfo is omni
 // and provides all relevant data around this scenario.
 // An omni branch has the same SHA locally and remotely.
 func (self BranchInfo) IsOmniBranch() (isOmni bool, branch LocalBranchName, sha SHA) {
@@ -129,7 +129,7 @@ func (self BranchInfo) IsOmniBranch() (isOmni bool, branch LocalBranchName, sha 
 	return isOmni, branchName, localSHA
 }
 
-// provides the name of this branch as a local branch, independent of whether this branch is local or not
+// LocalBranchName provides the name of this branch as a local branch, independent of whether this branch is local or not.
 func (self BranchInfo) LocalBranchName() LocalBranchName {
 	if localName, hasLocalName := self.LocalName.Get(); hasLocalName {
 		return localName

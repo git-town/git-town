@@ -17,7 +17,7 @@ func NewLocalBranchNames(names ...string) LocalBranchNames {
 	return result
 }
 
-// ParseLocalBranchNamesRef constructs a LocalBranchNames instance
+// ParseLocalBranchNames constructs a LocalBranchNames instance
 // containing the branches listed in the given space-separated string.
 func ParseLocalBranchNames(names string) LocalBranchNames {
 	parts := strings.Split(names, " ")
