@@ -39,6 +39,7 @@ linters:
     - contextcheck # TODO: enable
     - noctx # TODO: enable
     - perfsprint # TODO: enable
+    - modernize # TODO: enable
 
   settings:
     funcorder:
