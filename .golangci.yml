@@ -37,7 +37,6 @@ linters:
     - wsl_v5 # this linter creates too many false positives, our policy is to not have any empty lines in code blocks
 
     - godoclint # TODO: enable
-    - modernize # TODO: enable
 
   settings:
     embeddedstructfieldcheck:
