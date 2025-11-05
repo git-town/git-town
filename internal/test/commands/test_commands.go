@@ -240,7 +240,7 @@ func (self *TestCommands) CreateLocalBranchUsingGitTown(branchSetup datatable.Br
 	if parent, hasParent := branchSetup.Parent.Get(); hasParent {
 		self.CreateChildBranch(branchSetup.Name, parent)
 	} else {
-		self.CreateAndCheckoutBranch(branchSetup.Name, "main")
+		self.CreateAndCheckoutBranch(branchSetup.Name, MainBranchName)
 	}
 	// step 2: create the tracking branch
 	if branchSetup.Locations.Contains(testgit.LocationOrigin) {
