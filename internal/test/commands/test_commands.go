@@ -28,6 +28,7 @@ const (
 	ConfigFileCommitMessage = "persisted config file"
 	FileCommitMessage       = "persisted file"
 	TempBranchName          = "temp"
+	MainBranchName          = "main"
 	deletedText             = " (deleted)"
 )
 
@@ -190,7 +191,7 @@ func (self *TestCommands) CreateBranchOfType(name gitdomain.LocalBranchName, par
 	if parent, hasParent := parentOpt.Get(); hasParent {
 		self.CreateFeatureBranch(name, parent.BranchName())
 	} else {
-		self.CreateBranch(name, "main")
+		self.CreateBranch(name, MainBranchName)
 	}
 	asserts.NoError(gitconfig.SetBranchTypeOverride(self.TestRunner, branchType, name))
 }
@@ -240,7 +241,7 @@ func (self *TestCommands) CreateLocalBranchUsingGitTown(branchSetup datatable.Br
 	if parent, hasParent := branchSetup.Parent.Get(); hasParent {
 		self.CreateChildBranch(branchSetup.Name, parent)
 	} else {
-		self.CreateAndCheckoutBranch(branchSetup.Name, "main")
+		self.CreateAndCheckoutBranch(branchSetup.Name, MainBranchName)
 	}
 	// step 2: create the tracking branch
 	if branchSetup.Locations.Contains(testgit.LocationOrigin) {
@@ -286,10 +287,6 @@ func (self *TestCommands) CreateStandaloneTag(name string) {
 // CreateTag creates a tag with the given name.
 func (self *TestCommands) CreateTag(name string) {
 	self.MustRun("git", "tag", "-a", name, "-m", name)
-}
-
-func (self *TestCommands) CreateWorktree(path string, branch gitdomain.LocalBranchName) {
-	self.MustRun("git", "worktree", "add", path, branch.String())
 }
 
 // provides the first ancestor of the given branch that actually exists in the repo
@@ -339,10 +336,14 @@ func (self *TestCommands) FileContentInCommit(location gitdomain.Location, filen
 // FilesInBranch provides the list of the files present in the given branch.
 func (self *TestCommands) FilesInBranch(branch gitdomain.LocalBranchName) []string {
 	output := self.MustQuery("git", "ls-tree", "-r", "--name-only", branch.String())
-	var result []string
-	for _, line := range strings.Split(output, "\n") {
+	if output == "" {
+		return []string{}
+	}
+	lines := strings.Split(output, "\n")
+	result := make([]string, 0, len(lines))
+	for _, line := range lines {
 		file := strings.TrimSpace(line)
-		if len(file) > 0 {
+		if file != "" {
 			result = append(result, file)
 		}
 	}
@@ -575,10 +576,16 @@ func (self *TestCommands) StashOpenFiles() {
 // Tags provides a list of the tags in this repository.
 func (self *TestCommands) Tags() []string {
 	output := self.MustQuery("git", "tag")
+	if output == "" {
+		return []string{}
+	}
 	lines := strings.Split(output, "\n")
-	result := make([]string, len(lines))
-	for l, line := range lines {
-		result[l] = strings.TrimSpace(line)
+	result := make([]string, 0, len(lines))
+	for _, line := range lines {
+		line = strings.TrimSpace(line)
+		if line != "" {
+			result = append(result, line)
+		}
 	}
 	return result
 }
