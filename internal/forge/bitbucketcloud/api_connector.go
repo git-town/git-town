@@ -77,6 +77,9 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 			self.log.Failed(err.Error())
 			return None[forgedomain.Proposal](), nil
 		}
+		if !proposal4.Active {
+			continue
+		}
 		self.log.Success(fmt.Sprintf("#%d", proposal4.Number))
 		fmt.Println("PROPOSAL", proposal4)
 		return Some(forgedomain.Proposal{Data: proposal4, ForgeType: forgedomain.ForgeTypeBitbucket}), nil
