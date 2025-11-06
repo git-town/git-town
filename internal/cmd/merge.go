@@ -316,7 +316,7 @@ func mergeProgram(repo execute.OpenRepoResult, data mergeData) program.Program {
 	// and that doesn't make sense anymore because both branches are one now.
 	prog.Value.Add(&opcodes.Checkout{Branch: data.parentBranch})
 	if data.initialBranchSHA != data.parentBranchSHA {
-		prog.Value.Add(&opcodes.BranchCurrentResetToSHA{SetToSHA: data.initialBranchSHA})
+		prog.Value.Add(&opcodes.BranchCurrentResetToSHA{SHA: data.initialBranchSHA})
 	}
 	prog.Value.Add(&opcodes.LineageParentRemove{
 		Branch: data.initialBranch,

@@ -32,7 +32,7 @@ func (self *BranchCurrentResetToSHAIfNeeded) Run(args shared.RunArgs) error {
 		return fmt.Errorf(messages.BranchHasWrongSHA, currentBranch.StringOr(currentSHA.Truncate(7).String()), self.SetToSHA, self.MustHaveSHA, currentSHA)
 	}
 	args.PrependOpcodes(&BranchCurrentResetToSHA{
-		SetToSHA: self.SetToSHA,
+		SHA: self.SetToSHA,
 	})
 	return nil
 }
