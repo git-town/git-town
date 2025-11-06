@@ -96,17 +96,6 @@ func TestTestCommands(t *testing.T) {
 		must.EqOp(t, 40, len(sha.String()))
 	})
 
-	t.Run("CommitStagedChanges", func(t *testing.T) {
-		t.Parallel()
-		runtime := testruntime.Create(t)
-		runtime.CreateFile("file1.txt", "content")
-		runtime.StageFiles("file1.txt")
-		runtime.CommitStagedChanges("test commit")
-		commits := runtime.Commits([]string{}, runtime.Config.NormalConfig.Lineage, configdomain.OrderAsc)
-		must.Len(t, 1, commits)
-		must.EqOp(t, "test commit", commits[0].Message)
-	})
-
 	t.Run("CommitSHAs", func(t *testing.T) {
 		t.Parallel()
 		t.Run("includes commits with empty messages", func(t *testing.T) {
@@ -135,6 +124,17 @@ func TestTestCommands(t *testing.T) {
 			must.NotEqOp(t, commits[0].SHA.String(), commits[2].SHA.String())
 			must.NotEqOp(t, commits[1].SHA.String(), commits[2].SHA.String())
 		})
+	})
+
+	t.Run("CommitStagedChanges", func(t *testing.T) {
+		t.Parallel()
+		runtime := testruntime.Create(t)
+		runtime.CreateFile("file1.txt", "content")
+		runtime.StageFiles("file1.txt")
+		runtime.CommitStagedChanges("test commit")
+		commits := runtime.Commits([]string{}, runtime.Config.NormalConfig.Lineage, configdomain.OrderAsc)
+		must.Len(t, 1, commits)
+		must.EqOp(t, "test commit", commits[0].Message)
 	})
 
 	t.Run("Commits", func(t *testing.T) {
@@ -504,15 +504,6 @@ func TestTestCommands(t *testing.T) {
 		must.Eq(t, want, table.String())
 	})
 
-	t.Run("FilesInWorkspace", func(t *testing.T) {
-		t.Parallel()
-		runtime := testruntime.Create(t)
-		runtime.CreateFile("file1.txt", "content")
-		runtime.CreateFile("file2.txt", "content")
-		files := runtime.FilesInWorkspace()
-		must.Eq(t, []string{"file1.txt", "file2.txt"}, files)
-	})
-
 	t.Run("FilesInCommit", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
@@ -530,6 +521,15 @@ func TestTestCommands(t *testing.T) {
 		must.Len(t, 2, commits)
 		fileNames := runtime.FilesInCommit(commits[1].SHA)
 		must.Eq(t, []string{"f1.txt", "f2.txt"}, fileNames)
+	})
+
+	t.Run("FilesInWorkspace", func(t *testing.T) {
+		t.Parallel()
+		runtime := testruntime.Create(t)
+		runtime.CreateFile("file1.txt", "content")
+		runtime.CreateFile("file2.txt", "content")
+		files := runtime.FilesInWorkspace()
+		must.Eq(t, []string{"file1.txt", "file2.txt"}, files)
 	})
 
 	t.Run("HasBranchesOutOfSync", func(t *testing.T) {
