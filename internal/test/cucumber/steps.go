@@ -43,6 +43,9 @@ import (
 // the global FixtureFactory instance.
 var fixtureFactory *fixture.Factory
 
+// CaptureGoldenMode indicates whether to update .feature files with actual command output when tests fail
+var CaptureGoldenMode bool
+
 // dedicated type for storing data in context.Context
 type key int
 
@@ -51,12 +54,14 @@ const (
 	keyScenarioState key = iota
 	keyScenarioName
 	keyScenarioTags
+	keyScenarioURI
 )
 
 func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 	scenarioContext.Before(func(ctx context.Context, scenario *godog.Scenario) (context.Context, error) {
 		ctx = context.WithValue(ctx, keyScenarioName, scenario.Name)
 		ctx = context.WithValue(ctx, keyScenarioTags, scenario.Tags)
+		ctx = context.WithValue(ctx, keyScenarioURI, scenario.Uri)
 		return ctx, nil
 	})
 
@@ -477,6 +482,15 @@ func defineSteps(sc *godog.ScenarioContext) {
 		})
 		diff, errorCount := table.EqualDataTable(expanded)
 		if errorCount != 0 {
+			if CaptureGoldenMode {
+				scenarioURI := ctx.Value(keyScenarioURI).(string)
+				if err := updateFeatureFileWithCommands(scenarioURI, expanded.String(), table.String()); err != nil {
+					fmt.Printf("\nERROR! Failed to update feature file: %v\n", err)
+				} else {
+					fmt.Printf("\nUpdated feature file %s with actual commands\n", scenarioURI)
+				}
+				return nil
+			}
 			fmt.Printf("\nERROR! Found %d differences in the commands run\n\n", errorCount)
 			fmt.Println(diff)
 			return errors.New("mismatching commands run, see diff above")
