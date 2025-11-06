@@ -9,7 +9,7 @@ import (
 // Entries provides methods for a collection of Entry instances.
 type Entries[S any] []Entry[S]
 
-// creates an Entries instance containing the given records
+// NewEntries creates an Entries instance containing the given records.
 func NewEntries[S fmt.Stringer](records ...S) Entries[S] {
 	result := make([]Entry[S], len(records))
 	for r, record := range records {
@@ -22,7 +22,7 @@ func NewEntries[S fmt.Stringer](records ...S) Entries[S] {
 	return result
 }
 
-// indicates whether all entries in this list are disabled
+// AllDisabled indicates whether all entries in this list are disabled.
 func (self Entries[S]) AllDisabled() bool {
 	for _, entry := range self {
 		if !entry.Disabled {
@@ -32,7 +32,7 @@ func (self Entries[S]) AllDisabled() bool {
 	return true
 }
 
-// provides the index of the first entry that is not disabled
+// FirstEnabled provides the index of the first entry that is not disabled.
 func (self Entries[S]) FirstEnabled() int {
 	for e, entry := range self {
 		if !entry.Disabled {
@@ -42,7 +42,7 @@ func (self Entries[S]) FirstEnabled() int {
 	return 0
 }
 
-// provides the position of the given needle in this list
+// IndexOf provides the position of the given needle in this list.
 func (self Entries[S]) IndexOf(needle S) int {
 	for e, entry := range self {
 		if equal.Equal(entry.Data, needle) {
@@ -52,7 +52,7 @@ func (self Entries[S]) IndexOf(needle S) int {
 	return 0
 }
 
-// provides the position of the given needle in this list
+// IndexOfFunc provides the position of the given needle in this list.
 func (self Entries[S]) IndexOfFunc(needle S, equalFn func(a, b S) bool) int {
 	for e, entry := range self {
 		if equalFn(entry.Data, needle) {

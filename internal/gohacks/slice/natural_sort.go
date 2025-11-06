@@ -7,7 +7,7 @@ import (
 	"unicode"
 )
 
-// sorts the given elements in natural sort order (https://en.wikipedia.org/wiki/Natural_sort_order)
+// NaturalSort sorts the given elements in natural sort order (https://en.wikipedia.org/wiki/Natural_sort_order).
 func NaturalSort[T fmt.Stringer](list []T) {
 	if len(list) < 2 {
 		return

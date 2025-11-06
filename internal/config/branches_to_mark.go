@@ -9,7 +9,7 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-// provides the branches to make contribution, observed, parked, or prototype
+// BranchesToMark provides the branches to make contribution, observed, parked, or prototype.
 func BranchesToMark(args []string, branchesSnapshot gitdomain.BranchesSnapshot, config UnvalidatedConfig) (branchesToMark configdomain.BranchesAndTypes, branchToCheckout Option[gitdomain.LocalBranchName], err error) {
 	branchesToMark = configdomain.BranchesAndTypes{}
 	switch len(args) {

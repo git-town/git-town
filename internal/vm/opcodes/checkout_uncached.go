@@ -5,7 +5,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/vm/shared"
 )
 
-// CheckoutIfNeeded checks out a new branch.
+// CheckoutUncached checks out a new branch ignoring the current-branch cache..
 type CheckoutUncached struct {
 	Branch gitdomain.LocalBranchName
 }

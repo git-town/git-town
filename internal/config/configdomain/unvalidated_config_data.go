@@ -23,7 +23,9 @@ func (self *UnvalidatedConfigData) IsMainBranch(branch gitdomain.LocalBranchName
 	return false
 }
 
-// indicates the branch type of the given branch, if it can determine it
+// PartialBranchType provides the type of the given branch,
+// based solely on the incomplete branch type information in this UnvalidatedConfigData.
+// For correct branch types, use ValidatedConfig.BranchType.
 func (self *UnvalidatedConfigData) PartialBranchType(branch gitdomain.LocalBranchName) Option[BranchType] {
 	if self.IsMainBranch(branch) {
 		return Some(BranchTypeMainBranch)

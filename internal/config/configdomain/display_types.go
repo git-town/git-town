@@ -10,7 +10,7 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-// whether to display branch types in the CLI output
+// DisplayTypes specifies whether to display branch types in the CLI output.
 type DisplayTypes struct {
 	BranchTypes []BranchType // the branch types for which the user has specified exceptions
 	Quantifier  Quantifier   // whether to include or exclude the listed branches
@@ -25,7 +25,7 @@ const (
 	QuantifierOnly = ""    // display only the specified branches
 )
 
-// provides the serialized version to be used in configuration data
+// Serialize provides the serialized version to be used in configuration data.
 func (self DisplayTypes) Serialize(delimiter string) string {
 	switch self.Quantifier {
 	case QuantifierAll:
@@ -41,7 +41,7 @@ func (self DisplayTypes) Serialize(delimiter string) string {
 	panic("unhandled DisplayType quantifier: " + self.Quantifier)
 }
 
-// indicates whether Git Town should display the given branch type
+// ShouldDisplayType indicates whether Git Town should display the given branch type.
 func (self DisplayTypes) ShouldDisplayType(branchType BranchType) bool {
 	switch self.Quantifier {
 	case QuantifierAll:
@@ -57,7 +57,7 @@ func (self DisplayTypes) ShouldDisplayType(branchType BranchType) bool {
 	panic("unhandled DisplayType state: " + self.String())
 }
 
-// provides a human-readable version of this DisplayTypes
+// String provides a human-readable version of this DisplayTypes.
 func (self DisplayTypes) String() string {
 	switch self.Quantifier {
 	case QuantifierAll:

@@ -34,7 +34,7 @@ func ParseSyncStrategy(text string) (Option[SyncStrategy], error) {
 	return None[SyncStrategy](), fmt.Errorf(messages.ConfigSyncStrategyUnknown, text)
 }
 
-// provides all valid sync strategies
+// SyncStrategies provides all valid sync strategies
 func SyncStrategies() []SyncStrategy {
 	return []SyncStrategy{
 		SyncStrategyMerge,

@@ -2,7 +2,7 @@ package slice
 
 import . "github.com/git-town/git-town/v22/pkg/prelude"
 
-// returns a copy of given slice where all options are unwrapped and None options are removed
+// GetAll returns a copy of given slice where all options are unwrapped and None options are removed.
 func GetAll[T any](slice []Option[T]) []T {
 	result := make([]T, 0, len(slice))
 	for _, elementOpt := range slice {

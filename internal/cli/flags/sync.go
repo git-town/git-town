@@ -8,7 +8,7 @@ import (
 
 const syncLong = "sync"
 
-// type-safe access to the CLI arguments of type configdomain.AutoSync
+// Sync provides type-safe access to the CLI arguments of type configdomain.AutoSync.
 func Sync() (AddFunc, ReadSyncFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.Flags().Bool(syncLong, true, "sync branches")
@@ -20,5 +20,4 @@ func Sync() (AddFunc, ReadSyncFlagFunc) {
 	return addFlag, readFlag
 }
 
-// ReadPrototypeFlagFunc is the type signature for the function that reads the "prototype" flag from the args to the given Cobra command.
 type ReadSyncFlagFunc func(*cobra.Command) (Option[configdomain.AutoSync], error)

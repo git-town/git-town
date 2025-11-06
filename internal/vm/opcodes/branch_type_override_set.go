@@ -11,7 +11,7 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-// registers the branch with the given name as a contribution branch in the Git config
+// BranchTypeOverrideSet registers the branch with the given name as a contribution branch in the Git config.
 type BranchTypeOverrideSet struct {
 	Branch     gitdomain.LocalBranchName
 	BranchType configdomain.BranchType

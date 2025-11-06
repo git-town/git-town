@@ -9,7 +9,7 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-// indicates whether and how proposals should display the stack lineage of the respective branch
+// ProposalsShowLineage indicates whether and how proposals should display the stack lineage of the respective branch.
 type ProposalsShowLineage string
 
 const (

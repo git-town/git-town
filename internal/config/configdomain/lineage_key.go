@@ -7,7 +7,7 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-// a Key that contains a lineage entry
+// LineageKey is a Key that contains a lineage entry.
 type LineageKey struct {
 	BranchSpecificKey
 }
@@ -20,7 +20,7 @@ func NewLineageKey(key Key) LineageKey {
 	}
 }
 
-// CheckLineage indicates using the returned option whether this key is a lineage key.
+// ParseLineageKey indicates using the returned option whether this key is a lineage key.
 func ParseLineageKey(key Key) Option[LineageKey] {
 	if isLineageKey(key.String()) {
 		return Some(NewLineageKey(key))
@@ -28,7 +28,7 @@ func ParseLineageKey(key Key) Option[LineageKey] {
 	return None[LineageKey]()
 }
 
-// provides the name of the child branch encoded in this LineageKey
+// ChildBranch provides the name of the child branch encoded in this LineageKey.
 func (self LineageKey) ChildBranch() gitdomain.LocalBranchName {
 	text := strings.TrimSuffix(strings.TrimPrefix(self.String(), BranchSpecificKeyPrefix), LineageKeySuffix)
 	return gitdomain.NewLocalBranchName(text)

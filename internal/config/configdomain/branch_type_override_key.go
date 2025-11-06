@@ -9,13 +9,13 @@ import (
 
 const BranchTypeSuffix = ".branchtype"
 
-// a Key that contains a BranchTypeOverrides entry,
-// for example "git-town-branch.foo.branchtype"
+// BranchTypeOverrideKey is a Key that contains a BranchTypeOverrides entry,
+// for example "git-town-branch.foo.branchtype".
 type BranchTypeOverrideKey struct {
 	BranchSpecificKey
 }
 
-// provides the name of the child branch encoded in this LineageKey
+// Branch provides the name of the child branch encoded in this LineageKey.
 func (self BranchTypeOverrideKey) Branch() gitdomain.LocalBranchName {
 	text := strings.TrimSuffix(strings.TrimPrefix(self.String(), BranchSpecificKeyPrefix), BranchTypeSuffix)
 	return gitdomain.NewLocalBranchName(text)

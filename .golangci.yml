@@ -3,6 +3,7 @@ linters:
   default: all
   disable:
     - cyclop # we keep a tab on function length ourselves
+    - contextcheck # we aren't using contexts to cancel operations yet, might be interesting in the future
     - depguard # we review our dependencies in pull requests
     - dogsled # nothing we can do about this one
     - dupl # too many false positives

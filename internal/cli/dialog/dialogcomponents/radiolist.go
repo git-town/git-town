@@ -9,7 +9,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/gohacks/slice"
 )
 
-// how many elements to display in the dialog
+// WindowSize defines the maximum number of elements to display at one time in the dialog.
 const WindowSize = 9
 
 // RadioList lets the user select one of the given entries.

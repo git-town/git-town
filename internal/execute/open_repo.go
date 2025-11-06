@@ -1,6 +1,7 @@
 package execute
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"os"
@@ -123,9 +124,9 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		fmt.Println("OS:", runtime.GOOS)
 		var cmd *exec.Cmd
 		if runtime.GOOS == "windows" {
-			cmd = exec.Command("cmd", "/c", "ver")
+			cmd = exec.CommandContext(context.Background(), "cmd", "/c", "ver")
 		} else {
-			cmd = exec.Command("uname", "-a")
+			cmd = exec.CommandContext(context.Background(), "uname", "-a")
 		}
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr

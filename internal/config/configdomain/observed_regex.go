@@ -7,7 +7,7 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-// configuration setting that allows defining branches matching this regular expression as observed branches
+// ObservedRegex allows marking branches as observed branches
 type ObservedRegex struct {
 	VerifiedRegex
 }

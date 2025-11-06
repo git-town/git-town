@@ -2,6 +2,7 @@ package subshell
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"os"
 	"os/exec"
@@ -51,7 +52,7 @@ func (self BackendRunner) execute(env []string, executable string, args ...strin
 	if self.Verbose {
 		printHeader(env, executable, args...)
 	}
-	subProcess := exec.Command(executable, args...) // #nosec
+	subProcess := exec.CommandContext(context.Background(), executable, args...) // #nosec
 	subProcess.Env = append(subProcess.Environ(), env...)
 	if dir, has := self.Dir.Get(); has {
 		subProcess.Dir = dir

@@ -1,4 +1,4 @@
 package configdomain
 
-// indicates whether to sync all branches or only the current branch
+// ShipIntoNonperennialParent indicates whether to allow shipping into another feature branch.
 type ShipIntoNonperennialParent bool
