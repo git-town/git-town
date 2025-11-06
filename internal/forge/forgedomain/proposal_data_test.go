@@ -34,7 +34,7 @@ func TestBitbucketCloudProposalData(t *testing.T) {
 		fmt.Println(string(serialized))
 		want := `
 {
-	"Active": true,
+  "Active": true,
   "Body": "body",
   "MergeWithAPI": true,
   "Number": 123,
