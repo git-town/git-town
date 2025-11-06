@@ -6,9 +6,9 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"slices"
 
 	"github.com/carlmjohnson/requests/internal/minitrue"
-	"github.com/carlmjohnson/requests/internal/slicex"
 )
 
 // nopCloser is like io.NopCloser(),
@@ -57,8 +57,8 @@ func (rb *requestBuilder) Body(src BodyGetter) {
 // Clone creates a new Builder suitable for independent mutation.
 func (rb *requestBuilder) Clone() *requestBuilder {
 	rb2 := *rb
-	slicex.Clip(&rb2.headers)
-	slicex.Clip(&rb2.cookies)
+	rb2.headers = slices.Clip(rb2.headers)
+	rb2.cookies = slices.Clip(rb2.cookies)
 	return &rb2
 }
 

@@ -212,7 +212,7 @@ type AvailabilityValue string
 
 // List of available availability values.
 //
-// Undocummented, see code at:
+// Undocumented, see code at:
 // https://gitlab.com/gitlab-org/gitlab-foss/-/blob/master/app/models/user_status.rb#L22
 const (
 	NotSet AvailabilityValue = "not_set"
@@ -299,7 +299,7 @@ const (
 	ProtectionRuleAccessLevelAdmin      ProtectionRuleAccessLevel = "admin"
 )
 
-// DeploymentApprovalStatus represents a Gitlab deployment approval status.
+// DeploymentApprovalStatus represents a GitLab deployment approval status.
 type DeploymentApprovalStatus string
 
 // These constants represent all valid deployment approval statuses.
@@ -308,7 +308,7 @@ const (
 	DeploymentApprovalStatusRejected DeploymentApprovalStatus = "rejected"
 )
 
-// DeploymentStatusValue represents a Gitlab deployment status.
+// DeploymentStatusValue represents a GitLab deployment status.
 type DeploymentStatusValue string
 
 // These constants represent all valid deployment statuses.
@@ -458,7 +458,7 @@ func (t ISOTime) MarshalJSON() ([]byte, error) {
 	}
 
 	if y := time.Time(t).Year(); y < 0 || y >= 10000 {
-		// ISO 8901 uses 4 digits for the years.
+		// ISO 8601 uses 4 digits for the years.
 		return nil, errors.New("json: ISOTime year outside of range [0,9999]")
 	}
 
@@ -718,9 +718,10 @@ type ResourceGroupProcessMode string
 // GitLab API docs:
 // https://docs.gitlab.com/ci/resource_groups/#process-modes
 const (
-	Unordered   ResourceGroupProcessMode = "unordered"
-	OldestFirst ResourceGroupProcessMode = "oldest_first"
-	NewestFirst ResourceGroupProcessMode = "newest_first"
+	Unordered        ResourceGroupProcessMode = "unordered"
+	OldestFirst      ResourceGroupProcessMode = "oldest_first"
+	NewestFirst      ResourceGroupProcessMode = "newest_first"
+	NewestReadyFirst ResourceGroupProcessMode = "newest_ready_first"
 )
 
 // SharedRunnersSettingValue determines whether shared runners are enabled for a

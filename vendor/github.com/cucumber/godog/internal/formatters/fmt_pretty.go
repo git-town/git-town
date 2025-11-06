@@ -243,7 +243,7 @@ func (f *Pretty) Summary() {
 	f.Base.Summary()
 }
 
-func (f *Pretty) printOutlineExample(pickle *messages.Pickle, backgroundSteps int) {
+func (f *Pretty) printOutlineExample(pickle *messages.Pickle, step *messages.PickleStep, backgroundSteps int) {
 	var errorMsg string
 	var clr = green
 
@@ -255,7 +255,7 @@ func (f *Pretty) printOutlineExample(pickle *messages.Pickle, backgroundSteps in
 	printExampleHeader := exampleTable.TableBody[0].Id == exampleRow.Id
 	firstExamplesTable := astScenario.Examples[0].Location.Line == exampleTable.Location.Line
 
-	pickleStepResults := f.Storage.MustGetPickleStepResultsByPickleID(pickle.Id)
+	pickleStepResults := f.Storage.MustGetPickleStepResultsByPickleIDUntilStep(pickle.Id, step.Id)
 
 	firstExecutedScenarioStep := len(pickleStepResults) == backgroundSteps+1
 	if firstExamplesTable && printExampleHeader && firstExecutedScenarioStep {
@@ -419,7 +419,7 @@ func (f *Pretty) printStep(pickle *messages.Pickle, pickleStep *messages.PickleS
 	}
 
 	if !astBackgroundStep && len(astScenario.Examples) > 0 {
-		f.printOutlineExample(pickle, backgroundSteps)
+		f.printOutlineExample(pickle, pickleStep, backgroundSteps)
 		return
 	}
 

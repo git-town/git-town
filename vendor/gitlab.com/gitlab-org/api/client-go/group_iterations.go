@@ -27,7 +27,7 @@ type (
 		ListGroupIterations(gid any, opt *ListGroupIterationsOptions, options ...RequestOptionFunc) ([]*GroupIteration, *Response, error)
 	}
 
-	// IterationsAPI handles communication with the iterations related methods
+	// GroupIterationsService handles communication with the iterations related methods
 	// of the GitLab API
 	//
 	// GitLab API docs: https://docs.gitlab.com/api/group_iterations/
@@ -38,7 +38,7 @@ type (
 
 var _ GroupIterationsServiceInterface = (*GroupIterationsService)(nil)
 
-// GroupInteration represents a GitLab iteration.
+// GroupIteration represents a GitLab iteration.
 //
 // GitLab API docs: https://docs.gitlab.com/api/group_iterations/
 type GroupIteration struct {

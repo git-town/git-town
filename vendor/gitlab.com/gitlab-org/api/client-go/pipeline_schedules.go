@@ -295,7 +295,7 @@ func (s *PipelineSchedulesService) DeletePipelineSchedule(pid any, schedule int,
 
 // RunPipelineSchedule triggers a new scheduled pipeline to run immediately.
 //
-// Gitlab API docs:
+// GitLab API docs:
 // https://docs.gitlab.com/api/pipeline_schedules/#run-a-scheduled-pipeline-immediately
 func (s *PipelineSchedulesService) RunPipelineSchedule(pid any, schedule int, options ...RequestOptionFunc) (*Response, error) {
 	project, err := parseID(pid)

@@ -21,9 +21,32 @@ import (
 
 type (
 	ContainerRegistryProtectionRulesServiceInterface interface {
+		// ListContainerRegistryProtectionRules gets a list of container repository
+		// protection rules from a project’s container registry.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/container_repository_protection_rules/#list-container-repository-protection-rules
 		ListContainerRegistryProtectionRules(pid any, options ...RequestOptionFunc) ([]*ContainerRegistryProtectionRule, *Response, error)
+
+		// CreateContainerRegistryProtectionRule creates a container repository
+		// protection rule for a project’s container registry.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/container_repository_protection_rules/#create-a-container-repository-protection-rule
 		CreateContainerRegistryProtectionRule(pid any, opt *CreateContainerRegistryProtectionRuleOptions, options ...RequestOptionFunc) (*ContainerRegistryProtectionRule, *Response, error)
+
+		// UpdateContainerRegistryProtectionRule updates a container repository protection
+		// rule for a project’s container registry.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/container_repository_protection_rules/#update-a-container-repository-protection-rule
 		UpdateContainerRegistryProtectionRule(pid any, ruleID int, opt *UpdateContainerRegistryProtectionRuleOptions, options ...RequestOptionFunc) (*ContainerRegistryProtectionRule, *Response, error)
+
+		// DeleteContainerRegistryProtectionRule deletes a container repository protection
+		// rule from a project’s container registry.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/container_repository_protection_rules/#delete-a-container-repository-protection-rule
 		DeleteContainerRegistryProtectionRule(pid any, ruleID int, options ...RequestOptionFunc) (*Response, error)
 	}
 
@@ -57,11 +80,6 @@ func (s ContainerRegistryProtectionRule) String() string {
 	return Stringify(s)
 }
 
-// ListContainerRegistryProtectionRules gets a list of container repository
-// protection rules from a project’s container registry.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/container_repository_protection_rules/#list-container-repository-protection-rules
 func (s *ContainerRegistryProtectionRulesService) ListContainerRegistryProtectionRules(pid any, options ...RequestOptionFunc) ([]*ContainerRegistryProtectionRule, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -94,11 +112,6 @@ type CreateContainerRegistryProtectionRuleOptions struct {
 	MinimumAccessLevelForDelete *ProtectionRuleAccessLevel `url:"minimum_access_level_for_delete,omitempty" json:"minimum_access_level_for_delete,omitempty"`
 }
 
-// CreateContainerRegistryProtectionRule creates a container repository
-// protection rule for a project’s container registry.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/container_repository_protection_rules/#create-a-container-repository-protection-rule
 func (s *ContainerRegistryProtectionRulesService) CreateContainerRegistryProtectionRule(pid any, opt *CreateContainerRegistryProtectionRuleOptions, options ...RequestOptionFunc) (*ContainerRegistryProtectionRule, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -131,11 +144,6 @@ type UpdateContainerRegistryProtectionRuleOptions struct {
 	MinimumAccessLevelForDelete *ProtectionRuleAccessLevel `url:"minimum_access_level_for_delete,omitempty" json:"minimum_access_level_for_delete,omitempty"`
 }
 
-// UpdateContainerRegistryProtectionRule updates a container repository protection
-// rule for a project’s container registry.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/container_repository_protection_rules/#update-a-container-repository-protection-rule
 func (s *ContainerRegistryProtectionRulesService) UpdateContainerRegistryProtectionRule(pid any, ruleID int, opt *UpdateContainerRegistryProtectionRuleOptions, options ...RequestOptionFunc) (*ContainerRegistryProtectionRule, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -157,11 +165,6 @@ func (s *ContainerRegistryProtectionRulesService) UpdateContainerRegistryProtect
 	return rule, resp, nil
 }
 
-// DeleteContainerRegistryProtectionRule deletes a container repository protection
-// rule from a project’s container registry.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/container_repository_protection_rules/#delete-a-container-repository-protection-rule
 func (s *ContainerRegistryProtectionRulesService) DeleteContainerRegistryProtectionRule(pid any, ruleID int, options ...RequestOptionFunc) (*Response, error) {
 	project, err := parseID(pid)
 	if err != nil {

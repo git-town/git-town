@@ -223,7 +223,7 @@ type UpdateProtectedBranchOptions struct {
 
 // UpdateProtectedBranch updates a protected branch.
 //
-// Gitlab API docs:
+// GitLab API docs:
 // https://docs.gitlab.com/api/protected_branches/#update-a-protected-branch
 func (s *ProtectedBranchesService) UpdateProtectedBranch(pid any, branch string, opt *UpdateProtectedBranchOptions, options ...RequestOptionFunc) (*ProtectedBranch, *Response, error) {
 	project, err := parseID(pid)

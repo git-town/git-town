@@ -55,6 +55,7 @@ type GroupMember struct {
 	AvatarURL         string                   `json:"avatar_url"`
 	WebURL            string                   `json:"web_url"`
 	CreatedAt         *time.Time               `json:"created_at"`
+	CreatedBy         *MemberCreatedBy         `json:"created_by"`
 	ExpiresAt         *ISOTime                 `json:"expires_at"`
 	AccessLevel       AccessLevelValue         `json:"access_level"`
 	Email             string                   `json:"email,omitempty"`

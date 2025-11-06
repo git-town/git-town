@@ -92,6 +92,139 @@ func main() {
 }
 ```
 
+#### Use OAuth2 helper package
+
+The following example demonstrates how to use the `gitlab.com/gitlab-org/api/client-go/oauth2` package:
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os/exec"
+
+	gitlab "gitlab.com/gitlab-org/api/client-go"
+	"gitlab.com/gitlab-org/api/client-go/gitlaboauth2"
+)
+
+func main() {
+	ctx := context.Background()
+	// Authorize with GitLab.com and OAuth2
+	clientID := "aaa"
+	redirectURL := "http://localhost:9999/auth/redirect"
+	scopes := []string{"read_api"}
+	config := gitlaboauth2.NewOAuth2Config("", clientID, redirectURL, scopes)
+
+	server := gitlaboauth2.NewCallbackServer(config, ":9999", func(url string) error {
+		return exec.Command("open", url).Start()
+	})
+
+	token, err := server.GetToken(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	client, err := gitlab.NewAuthSourceClient(gitlab.OAuthTokenSource{TokenSource: config.TokenSource(ctx, token)})
+	if err != nil {
+		panic(err)
+	}
+
+	user, _, err := client.Users.CurrentUser()
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("Current user: %s\n", user.Username)
+}
+```
+
+#### Use the `config` package (experimental)
+
+The `config` package defines a configuration file format (YAML) to configure GitLab instances
+and their associated authentication methods combined in contexts (similar to what you might know from Kubernetes).
+
+The configuration is located in the users config directory (e.g. XDG config dir), in `gitlab/config.yaml`.
+
+A basic example for an OAuth flow for GitLab.com that stores the credentials in the systems keyring, looks like this:
+
+```yaml
+version: gitlab.com/config/v1beta1
+
+instances:
+    - name: gitlab-com
+      server: https://gitlab.com
+
+auths:
+    - name: oauth-keyring
+      auth-info:
+        oauth2:
+            access-token-source:
+                keyring:
+                    service: client-go
+                    user: access-token
+            refresh-token-source:
+                keyring:
+                    service: client-go
+                    user: refresh-token
+contexts:
+    - name: gitlab-com-keyring
+      instance: gitlab-com
+      auth: oauth-keyring
+
+current-context: gitlab-com-keyring
+```
+
+An application with `client-go` is able to effortlessly create a new client using that configuration:
+
+```go
+package main
+
+import (
+	"fmt"
+	"log"
+
+	"gitlab.com/gitlab-org/api/client-go"
+	"gitlab.com/gitlab-org/api/client-go/config"
+)
+
+func main() {
+	// Create a config with default location (~/.config/gitlab/config.yaml)
+	cfg := config.New(
+		config.WithOAuth2Settings(config.OAuth2Settings{
+			AuthorizationFlowEnabled: true,
+			CallbackServerListenAddr: ":7171",
+			Browser: func(url string) error {
+				fmt.Printf("Open: %s\n", url)
+				return nil
+			},
+			ClientID:    "<your-client-id>",
+			RedirectURL: "http://localhost:7171/auth/redirect",
+			Scopes:      []string{"read_api"},
+		}),
+	)
+
+	// Load the configuration
+	if err := cfg.Load(); err != nil {
+		log.Printf("Failed to load config: %v", err)
+		return
+	}
+
+	client, err := cfg.NewClient(gitlab.WithUserAgent("my-app"))
+	if err != nil {
+		log.Fatalf("Failed to create client: %v", err)
+	}
+
+	// Use the client
+	user, _, err := client.Users.CurrentUser()
+	if err != nil {
+		log.Fatalf("Failed to get current user: %v", err)
+	}
+
+	fmt.Printf("Authenticated as: %s (%s)\n", user.Name, user.Username)
+}
+```
+
 For complete usage of go-gitlab, see the full [package docs](https://godoc.org/gitlab.com/gitlab-org/api/client-go).
 
 ## Installation

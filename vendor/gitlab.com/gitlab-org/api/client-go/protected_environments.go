@@ -53,7 +53,7 @@ type ProtectedEnvironment struct {
 	ApprovalRules         []*EnvironmentApprovalRule      `json:"approval_rules"`
 }
 
-// EnvironmentAccessDescription represents the access decription for a protected
+// EnvironmentAccessDescription represents the access description for a protected
 // environment.
 //
 // GitLab API docs:
@@ -153,7 +153,7 @@ type ProtectRepositoryEnvironmentsOptions struct {
 	ApprovalRules         *[]*EnvironmentApprovalRuleOptions `url:"approval_rules,omitempty" json:"approval_rules,omitempty"`
 }
 
-// EnvironmentAccessOptions represents the options for an access decription for
+// EnvironmentAccessOptions represents the options for an access description for
 // a protected environment.
 //
 // GitLab API docs:
@@ -218,7 +218,7 @@ type UpdateProtectedEnvironmentsOptions struct {
 }
 
 // UpdateEnvironmentAccessOptions represents the options for updates to an
-// access decription for a protected environment.
+// access description for a protected environment.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/protected_environments/#update-a-protected-environment

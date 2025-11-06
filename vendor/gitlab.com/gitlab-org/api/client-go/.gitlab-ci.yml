@@ -7,6 +7,7 @@ workflow:
 
 include:
   - template: Jobs/SAST.gitlab-ci.yml
+  - component: ${CI_SERVER_FQDN}/components/dependency-scanning/main@0.8.0
   - component: ${CI_SERVER_FQDN}/gitlab-org/components/danger-review/danger-review@2.0.0
     inputs:
       job_stage: lint
@@ -18,12 +19,30 @@ include:
   # groups. However, there is no easy way to conditionally set tags or even variables without
   # jeopardizing existing (complex) workflow:rules or job:rules. Thus, we resort to
   # this nasty conditionally include hack.
-  - local: '.gitlab/ci/gitlab-go-runner-tags.gitlab-ci.yml'
+  - local: ".gitlab/ci/gitlab-go-runner-tags.gitlab-ci.yml"
     rules:
       - if: $CI_PROJECT_ROOT_NAMESPACE == 'gitlab-org' || $CI_PROJECT_ROOT_NAMESPACE == 'gitlab-community'
-  - local: '.gitlab/ci/community-go-runner-tags.gitlab-ci.yml'
+  - local: ".gitlab/ci/community-go-runner-tags.gitlab-ci.yml"
     rules:
       - if: $CI_PROJECT_ROOT_NAMESPACE != 'gitlab-org' && $CI_PROJECT_ROOT_NAMESPACE != 'gitlab-community'
+
+  # Add Work Type Classification labels to merge requests,
+  # see https://gitlab.com/gitlab-com/gl-infra/common-ci-tasks/-/blob/main/autolabels.md
+  - project: "gitlab-com/gl-infra/common-ci-tasks"
+    ref: v2.93.0
+    file: "autolabels.yml"
+    inputs:
+      stage: lint
+
+  # Analyze commits to determine whether to cut a release
+  # see https://gitlab.com/gitlab-com/gl-infra/common-ci-tasks/-/blob/main/semantic-release.md
+  - project: "gitlab-com/gl-infra/common-ci-tasks"
+    ref: v2.93.0
+    file: "semantic-release.yml"
+    inputs:
+      stage: deploy
+      validate_stage: lint
+      vault: access_tokens/${VAULT_SECRETS_PATH}/semantic-release/token@ci
 
 stages:
   - lint
@@ -34,8 +53,8 @@ stages:
   parallel:
     matrix:
       - GOLANG_IMAGE_VERSION:
-        - '1.23'
-        - '1.24'
+          - "1.23"
+          - "1.24"
 
 .go:base:
   extends:
@@ -44,28 +63,43 @@ stages:
   variables:
     GOPATH: $CI_PROJECT_DIR/.go
     GOLANGCI_LINT_CACHE: $CI_PROJECT_DIR/.golangci-lint
+    MISE_VERSION: v2025.6.1
+    MISE_DATA_DIR: $CI_PROJECT_DIR/.mise/mise-data
   before_script:
     - mkdir -p "${GOPATH}" "${GOLANGCI_LINT_CACHE}"
     - export PATH="${GOPATH}/bin:$PATH"
+    # Install mise
+    - curl --retry 6 https://mise.run | MISE_VERSION=${MISE_VERSION} MISE_INSTALL_PATH=/usr/local/bin/mise sh
+    - eval "$(mise activate bash --shims)"
+    - mise install
   cache:
-    paths:
-      - $GOPATH/pkg/mod/
-      - $GOLANGCI_LINT_CACHE/
-    key:
-      files:
-        - go.sum
+    - key:
+        files:
+          - go.sum
+      paths:
+        - $GOPATH/pkg/mod/
+        - $GOLANGCI_LINT_CACHE/
+    - key:
+        prefix: mise-
+        files: [".tool-versions"]
+      paths:
+        - $MISE_DATA_DIR
+
   # We only need to run Go-related jobs when actual Go files changed
   # or when running either on the default branch or for a tag.
   rules:
-    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+    - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
     - if: $CI_COMMIT_TAG
     - changes:
-        - '**/*.go'
+        - "**/*.go"
         - testdata/**
         - go.mod
         - go.sum
         - .gitlab-ci.yml
         - .gitlab/ci/*.yml
+        - buf.yaml
+        - buf.gen.yaml
+        - buf.lock
 
 golangci-lint:
   extends:
@@ -73,8 +107,8 @@ golangci-lint:
   stage: lint
   needs: []
   variables:
-    REPORT_FILENAME: 'gl-code-quality-report.json'
-  image: golangci/golangci-lint:v2.1.6
+    REPORT_FILENAME: "gl-code-quality-report.json"
+  image: golangci/golangci-lint:v2.6.1
   script:
     - golangci-lint run
   artifacts:
@@ -83,12 +117,21 @@ golangci-lint:
     paths: [$REPORT_FILENAME]
     when: always
 
+buf-lint:
+  extends:
+    - .go:base
+  stage: lint
+  needs: []
+  script:
+    - buf format --diff --exit-code
+    - buf lint
+
 verify-generated-code:
   extends:
     - .go:base
   stage: lint
   needs: []
-  image: golang:1.24-bookworm
+  image: golang:1.25-bookworm
   script:
     - make generate
     - |
@@ -101,17 +144,6 @@ verify-generated-code:
         exit 1;
       }
 
-commitlint:
-  stage: lint
-  needs: []
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-  image:
-    name: commitlint/commitlint:19.8.1
-    entrypoint: [""]
-  script:
-    - commitlint --from ${CI_MERGE_REQUEST_DIFF_BASE_SHA} --to ${CI_COMMIT_SHA}
-
 tests:unit:
   extends:
     - .go:base
@@ -121,8 +153,8 @@ tests:unit:
   image: golang:$GOLANG_IMAGE_VERSION
   variables:
     # configure tooling versions
-    GOTESTSUM_VERSION: 'v1.12.0'
-    GOCOVER_COBERTURA_VERSION: 'v1.2.1-0.20240107185409-0818f3538137'
+    GOTESTSUM_VERSION: "v1.12.0"
+    GOCOVER_COBERTURA_VERSION: "v1.2.1-0.20240107185409-0818f3538137"
 
     # configure artifact files
     JUNIT_FILENAME: tests.xml
@@ -146,21 +178,6 @@ tests:unit:
         coverage_format: cobertura
     when: always
 
-release:
-  image: node:24-bookworm-slim
-  stage: deploy
-  before_script:
-    - apt-get update && apt-get install -y --no-install-recommends git-core ca-certificates
-    - npm install -g semantic-release @semantic-release/gitlab @semantic-release/git @semantic-release/changelog
-  script:
-    - semantic-release
-  rules:
-    - if: '$CI_SERVER_HOST != "gitlab.com" || $CI_PROJECT_PATH != "gitlab-org/api/client-go"'
-      when: never
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-      when: never
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-
 # Update rules on SAST to ensure the jobs show up in the pipeline
 # this prevents forks that don't have `ultimate` from skipping SAST scans
 # since gitlab-advaced-sast replaces semgrep.
@@ -168,3 +185,12 @@ semgrep-sast:
   needs: []
   rules:
     - when: always
+
+# Update rules on dependency scanning so that it only runs when on the 
+# canonical project or the community fork. This ensures that when people
+# use personal forks, it doesn't fail stating the forks are unlicensed.
+dependency-scanning:
+  rules:
+    - if: $CI_PROJECT_ID == "65271576" # Canonical repository
+    - if: $CI_PROJECT_ID == "65275361" # Community Fork
+    - when: never

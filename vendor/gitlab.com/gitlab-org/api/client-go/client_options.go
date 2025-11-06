@@ -17,6 +17,7 @@
 package gitlab
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -137,6 +138,34 @@ func WithoutRetries() ClientOptionFunc {
 func WithRequestOptions(options ...RequestOptionFunc) ClientOptionFunc {
 	return func(c *Client) error {
 		c.defaultRequestOptions = append(c.defaultRequestOptions, options...)
+		return nil
+	}
+}
+
+// WithUserAgent can be used to configure a custom user agent.
+func WithUserAgent(userAgent string) ClientOptionFunc {
+	return func(c *Client) error {
+		c.UserAgent = userAgent
+		return nil
+	}
+}
+
+// WithCookieJar can be used to configure a cookie jar.
+func WithCookieJar(jar http.CookieJar) ClientOptionFunc {
+	return func(c *Client) error {
+		c.jar = jar
+		return nil
+	}
+}
+
+// WithInterceptor registers an Interceptor in the client's http request call pipeline.
+// It returns a ClientOptionFunc that adds the interceptor to the client.
+func WithInterceptor(i Interceptor) ClientOptionFunc {
+	return func(c *Client) error {
+		if i == nil {
+			return fmt.Errorf("interceptor cannot be nil")
+		}
+		c.interceptors = append(c.interceptors, i)
 		return nil
 	}
 }

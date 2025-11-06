@@ -62,7 +62,7 @@ type MemberRole struct {
 // ListInstanceMemberRoles gets all member roles in an instance.
 // Authentication as Administrator is required.
 //
-// Gitlab API docs:
+// GitLab API docs:
 // https://docs.gitlab.com/api/member_roles/#get-all-instance-member-roles
 func (s *MemberRolesService) ListInstanceMemberRoles(options ...RequestOptionFunc) ([]*MemberRole, *Response, error) {
 	req, err := s.client.NewRequest(http.MethodGet, "member_roles", nil, options)
@@ -113,7 +113,7 @@ type CreateMemberRoleOptions struct {
 
 // CreateInstanceMemberRole creates an instance-wide member role.
 //
-// Gitlab API docs:
+// GitLab API docs:
 // https://docs.gitlab.com/api/member_roles/#create-a-instance-member-role
 func (s *MemberRolesService) CreateInstanceMemberRole(opt *CreateMemberRoleOptions, options ...RequestOptionFunc) (*MemberRole, *Response, error) {
 	req, err := s.client.NewRequest(http.MethodPost, "member_roles", opt, options)
@@ -132,7 +132,7 @@ func (s *MemberRolesService) CreateInstanceMemberRole(opt *CreateMemberRoleOptio
 
 // DeleteInstanceMemberRole deletes a member role from a specified group.
 //
-// Gitlab API docs:
+// GitLab API docs:
 // https://docs.gitlab.com/api/member_roles/#delete-an-instance-member-role
 func (s *MemberRolesService) DeleteInstanceMemberRole(memberRoleID int, options ...RequestOptionFunc) (*Response, error) {
 	u := fmt.Sprintf("member_roles/%d", memberRoleID)
@@ -147,7 +147,7 @@ func (s *MemberRolesService) DeleteInstanceMemberRole(memberRoleID int, options 
 
 // ListMemberRoles gets a list of member roles for a specified group.
 //
-// Gitlab API docs:
+// GitLab API docs:
 // https://docs.gitlab.com/api/member_roles/#get-all-group-member-roles
 func (s *MemberRolesService) ListMemberRoles(gid any, options ...RequestOptionFunc) ([]*MemberRole, *Response, error) {
 	group, err := parseID(gid)
@@ -172,7 +172,7 @@ func (s *MemberRolesService) ListMemberRoles(gid any, options ...RequestOptionFu
 
 // CreateMemberRole creates a new member role for a specified group.
 //
-// Gitlab API docs:
+// GitLab API docs:
 // https://docs.gitlab.com/api/member_roles/#add-a-member-role-to-a-group
 func (s *MemberRolesService) CreateMemberRole(gid any, opt *CreateMemberRoleOptions, options ...RequestOptionFunc) (*MemberRole, *Response, error) {
 	group, err := parseID(gid)
@@ -197,7 +197,7 @@ func (s *MemberRolesService) CreateMemberRole(gid any, opt *CreateMemberRoleOpti
 
 // DeleteMemberRole deletes a member role from a specified group.
 //
-// Gitlab API docs:
+// GitLab API docs:
 // https://docs.gitlab.com/api/member_roles/#remove-member-role-of-a-group
 func (s *MemberRolesService) DeleteMemberRole(gid any, memberRole int, options ...RequestOptionFunc) (*Response, error) {
 	group, err := parseID(gid)

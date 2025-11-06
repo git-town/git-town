@@ -84,10 +84,13 @@ type ListPersonalAccessTokensOptions struct {
 	ListOptions
 	CreatedAfter   *ISOTime `url:"created_after,omitempty" json:"created_after,omitempty"`
 	CreatedBefore  *ISOTime `url:"created_before,omitempty" json:"created_before,omitempty"`
+	ExpiresAfter   *ISOTime `url:"expires_after,omitempty" json:"expires_after,omitempty"`
+	ExpiresBefore  *ISOTime `url:"expires_before,omitempty" json:"expires_before,omitempty"`
 	LastUsedAfter  *ISOTime `url:"last_used_after,omitempty" json:"last_used_after,omitempty"`
 	LastUsedBefore *ISOTime `url:"last_used_before,omitempty" json:"last_used_before,omitempty"`
 	Revoked        *bool    `url:"revoked,omitempty" json:"revoked,omitempty"`
 	Search         *string  `url:"search,omitempty" json:"search,omitempty"`
+	Sort           *string  `url:"sort,omitempty" json:"sort,omitempty"`
 	State          *string  `url:"state,omitempty" json:"state,omitempty"`
 	UserID         *int     `url:"user_id,omitempty" json:"user_id,omitempty"`
 }

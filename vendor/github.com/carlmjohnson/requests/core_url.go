@@ -3,8 +3,7 @@ package requests
 import (
 	"cmp"
 	"net/url"
-
-	"github.com/carlmjohnson/requests/internal/slicex"
+	"slices"
 )
 
 type multimap struct {
@@ -51,8 +50,8 @@ func (ub *urlBuilder) ParamOptional(key string, values ...string) {
 
 func (ub *urlBuilder) Clone() *urlBuilder {
 	ub2 := *ub
-	slicex.Clip(&ub2.paths)
-	slicex.Clip(&ub2.params)
+	ub2.paths = slices.Clip(ub2.paths)
+	ub2.params = slices.Clip(ub2.params)
 	return &ub2
 }
 

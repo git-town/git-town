@@ -42,7 +42,7 @@ type (
 
 var _ ResourceGroupServiceInterface = (*ResourceGroupService)(nil)
 
-// ResourceGrouop represents a GitLab Project Resource Group.
+// ResourceGroup represents a GitLab Project Resource Group.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/resource_groups/
@@ -54,7 +54,7 @@ type ResourceGroup struct {
 	UpdatedAt   *time.Time `json:"updated_at"`
 }
 
-// Gets a string representation of a ResourceGroup
+// String gets a string representation of a ResourceGroup
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/resource_groups/
