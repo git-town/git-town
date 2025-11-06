@@ -34,8 +34,9 @@ type APIConnector struct {
 var _ forgedomain.ProposalFinder = apiConnector // type check
 
 func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+	fmt.Println("FINDING PROPOSAL")
 	self.log.Start(messages.APIProposalLookupStart)
-	query := fmt.Sprintf("source.branch.name = %q AND destination.branch.name = %q", branch, target)
+	query := fmt.Sprintf(`source.branch.name = %q AND destination.branch.name = %q AND (state = "open" OR state = "new")`, branch, target)
 	result1, err := self.client.Value.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
 		Owner:    self.Organization,
 		RepoSlug: self.Repository,
@@ -55,51 +56,33 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[forgedomain.Proposal](), nil
 	}
-	size1, has := result2["size"]
+	proposals1, has := result2["values"]
 	if !has {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[forgedomain.Proposal](), nil
 	}
-	size2, ok := size1.(float64)
+	proposals2, ok := proposals1.([]any)
 	if !ok {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[forgedomain.Proposal](), nil
 	}
-	size := int(size2)
-	if size == 0 {
-		self.log.Success("none")
-		return None[forgedomain.Proposal](), nil
+	for _, proposalJSON := range proposals2 {
+		proposal3, ok := proposalJSON.(map[string]any)
+		if !ok {
+			self.log.Failed(messages.APIUnexpectedResultDataStructure)
+			return None[forgedomain.Proposal](), nil
+		}
+		proposal4, err := parsePullRequest(proposal3)
+		if err != nil {
+			self.log.Failed(err.Error())
+			return None[forgedomain.Proposal](), nil
+		}
+		self.log.Success(fmt.Sprintf("#%d", proposal4.Number))
+		fmt.Println("PROPOSAL", proposal4)
+		return Some(forgedomain.Proposal{Data: proposal4, ForgeType: forgedomain.ForgeTypeBitbucket}), nil
 	}
-	if size > 1 {
-		self.log.Failed(fmt.Sprintf(messages.ProposalMultipleFromToFound, size, branch, target))
-		return None[forgedomain.Proposal](), nil
-	}
-	proposal1, has := result2["values"]
-	if !has {
-		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.Proposal](), nil
-	}
-	proposal2, ok := proposal1.([]any)
-	if !ok {
-		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.Proposal](), nil
-	}
-	if len(proposal2) == 0 {
-		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.Proposal](), nil
-	}
-	proposal3, ok := proposal2[0].(map[string]any)
-	if !ok {
-		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.Proposal](), nil
-	}
-	proposal4, err := parsePullRequest(proposal3)
-	if err != nil {
-		self.log.Failed(err.Error())
-		return None[forgedomain.Proposal](), nil
-	}
-	self.log.Success(fmt.Sprintf("#%d", proposal4.Number))
-	return Some(forgedomain.Proposal{Data: proposal4, ForgeType: forgedomain.ForgeTypeBitbucket}), nil
+	self.log.Success("none")
+	return None[forgedomain.Proposal](), nil
 }
 
 // ============================================================================
@@ -113,7 +96,7 @@ func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Optio
 	response1, err := self.client.Value.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
 		Owner:    self.Organization,
 		RepoSlug: self.Repository,
-		Query:    fmt.Sprintf("source.branch.name = %q", branch),
+		Query:    fmt.Sprintf(`source.branch.name = %q AND state = "open"`, branch),
 		States:   []string{"open"},
 	})
 	if err != nil {
