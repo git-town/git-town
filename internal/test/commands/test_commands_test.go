@@ -47,9 +47,9 @@ func TestTestCommands(t *testing.T) {
 	t.Run("AddWorktree", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
-		runtime.CreateBranch("branch1", "initial")
+		runtime.CreateBranch("branch-1", "initial")
 		worktreePath := filepath.Join(t.TempDir(), "worktree1")
-		runtime.AddWorktree(worktreePath, "branch1")
+		runtime.AddWorktree(worktreePath, "branch-1")
 		output := runtime.MustQuery("git", "worktree", "list")
 		must.StrContains(t, output, worktreePath)
 	})
@@ -75,10 +75,10 @@ func TestTestCommands(t *testing.T) {
 	t.Run("CheckoutBranch", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
-		runtime.CreateBranch("branch1", "initial")
-		runtime.CheckoutBranch("branch1")
+		runtime.CreateBranch("branch-1", "initial")
+		runtime.CheckoutBranch("branch-1")
 		currentBranch := asserts.NoError1(runtime.Git.CurrentBranch(runtime)).GetOrPanic()
-		must.EqOp(t, "branch1", currentBranch)
+		must.EqOp(t, "branch-1", currentBranch)
 	})
 
 	t.Run("CommitSHA", func(t *testing.T) {
@@ -537,12 +537,12 @@ func TestTestCommands(t *testing.T) {
 			t.Parallel()
 			fixture := fixture.NewMemoized(t.TempDir()).AsFixture()
 			devRepo := fixture.DevRepo.GetOrPanic()
-			devRepo.CreateBranch("branch1", "main")
-			devRepo.CheckoutBranch("branch1")
+			devRepo.CreateBranch("branch-1", "main")
+			devRepo.CheckoutBranch("branch-1")
 			devRepo.CreateFile("file1", "content")
 			devRepo.StageFiles("file1")
 			devRepo.CommitStagedChanges("stuff")
-			devRepo.PushBranchToRemote("branch1", gitdomain.RemoteOrigin)
+			devRepo.PushBranchToRemote("branch-1", gitdomain.RemoteOrigin)
 			have, _ := devRepo.HasBranchesOutOfSync()
 			must.False(t, have)
 		})
@@ -551,8 +551,8 @@ func TestTestCommands(t *testing.T) {
 			t.Parallel()
 			fixture := fixture.NewMemoized(t.TempDir()).AsFixture()
 			devRepo := fixture.DevRepo.GetOrPanic()
-			devRepo.CreateAndCheckoutBranch("branch1", "main")
-			devRepo.PushBranchToRemote("branch1", gitdomain.RemoteOrigin)
+			devRepo.CreateAndCheckoutBranch("branch-1", "main")
+			devRepo.PushBranchToRemote("branch-1", gitdomain.RemoteOrigin)
 			devRepo.CreateFile("file1", "content")
 			devRepo.StageFiles("file1")
 			devRepo.CommitStagedChanges("stuff")
@@ -564,7 +564,7 @@ func TestTestCommands(t *testing.T) {
 			t.Parallel()
 			fixture := fixture.NewMemoized(t.TempDir()).AsFixture()
 			devRepo := fixture.DevRepo.GetOrPanic()
-			devRepo.CreateBranch("branch1", "main")
+			devRepo.CreateBranch("branch-1", "main")
 			devRepo.PushBranch()
 			originRepo := fixture.OriginRepo.GetOrPanic()
 			originRepo.CheckoutBranch("main")
@@ -701,7 +701,7 @@ main
 			Branch:      "branch-1",
 			FileContent: "content",
 			FileName:    "file1.txt",
-			Message:     "commit on branch1",
+			Message:     "commit on branch-1",
 		})
 		runtime.CheckoutBranch("initial")
 		err := runtime.MergeBranch("branch-1")
