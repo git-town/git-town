@@ -1,7 +1,7 @@
 # git town propose
 
 ```command-summary
-git town propose [-b <text> | --body <text>] [-f <path> | --body-file <path>] [-t <text> | --title <text>] [-d | --detached] [--dry-run] [-v | --verbose]
+git town propose [-b <text> | --body <text>] [-f <path> | --body-file <path>] [-t <text> | --title <text>] [-s | --stack] [--auto-resolve] [--dry-run] [-v | --verbose]
 ```
 
 The _propose_ command helps create a new pull request (also known as merge

@@ -1,7 +1,7 @@
 # git town branch
 
 ```command-summary
-git town branch [-v | --verbose]
+git town branch [-d | --display-types] [-o | --order] [-v | --verbose]
 ```
 
 The _branch_ command is Git Town's equivalent of the
