@@ -411,8 +411,8 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 	if proposal, hasProposal := data.branchToDetachProposal.Get(); hasProposal {
 		prog.Value.Add(
 			&opcodes.ProposalUpdateTarget{
-				NewBranch: data.parentBranch,
-				OldBranch: data.branchToDetachName,
+				NewBranch: data.config.ValidatedConfigData.MainBranch,
+				OldBranch: data.parentBranch,
 				Proposal:  proposal,
 			},
 		)
