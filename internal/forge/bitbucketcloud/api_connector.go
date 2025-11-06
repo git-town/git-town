@@ -34,7 +34,6 @@ type APIConnector struct {
 var _ forgedomain.ProposalFinder = apiConnector // type check
 
 func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
-	fmt.Println("FINDING PROPOSAL")
 	self.log.Start(messages.APIProposalLookupStart)
 	query := fmt.Sprintf(`source.branch.name = %q AND destination.branch.name = %q AND (state = "open" OR state = "new")`, branch, target)
 	result1, err := self.client.Value.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
@@ -81,7 +80,6 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 			continue
 		}
 		self.log.Success(fmt.Sprintf("#%d", proposal4.Number))
-		fmt.Println("PROPOSAL", proposal4)
 		return Some(forgedomain.Proposal{Data: proposal4, ForgeType: forgedomain.ForgeTypeBitbucket}), nil
 	}
 	self.log.Success("none")
