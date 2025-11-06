@@ -1,6 +1,7 @@
 package cucumber
 
 import (
+	"context"
 	"errors"
 	"fmt"
 
@@ -96,11 +97,21 @@ func (self *ScenarioState) CaptureState() {
 
 // compareExistingCommits compares the commits in the Git environment of the given ScenarioState
 // against the given Gherkin table.
-func (self *ScenarioState) compareGherkinTable(table *godog.Table) error {
+func (self *ScenarioState) compareGherkinTable(ctx context.Context, table *godog.Table) error {
 	fields := helpers.TableFields(table)
 	commitTable := self.fixture.CommitTable(fields)
 	diff, errorCount := commitTable.EqualGherkin(table)
 	if errorCount != 0 {
+		if CaptureGoldenMode {
+			scenarioURI := ctx.Value(keyScenarioURI).(string)
+			expectedTable := datatable.FromGherkin(table)
+			if err := updateFeatureFileWithCommands(scenarioURI, expectedTable.String(), commitTable.String()); err != nil {
+				fmt.Printf("\nERROR! Failed to update feature file: %v\n", err)
+			} else {
+				fmt.Printf("\nUpdated feature file %s with actual commits\n", scenarioURI)
+			}
+			return nil
+		}
 		fmt.Printf("\nERROR! Found %d differences in the existing commits\n\n", errorCount)
 		fmt.Println(diff)
 		return errors.New("mismatching commits found, see diff above")
