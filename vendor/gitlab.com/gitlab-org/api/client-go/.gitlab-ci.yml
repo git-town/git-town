@@ -186,7 +186,7 @@ semgrep-sast:
   rules:
     - when: always
 
-# Update rules on dependency scanning so that it only runs when on the
+# Update rules on dependency scanning so that it only runs when on the 
 # canonical project or the community fork. This ensures that when people
 # use personal forks, it doesn't fail stating the forks are unlicensed.
 dependency-scanning:

@@ -54,7 +54,7 @@ func hardwrap(m Method, s string, limit int, preserveSpace bool) string {
 	i := 0
 	for i < len(b) {
 		state, action := parser.Table.Transition(pstate, b[i])
-		if state == parser.Utf8State { //nolint:nestif
+		if state == parser.Utf8State {
 			var width int
 			cluster, width = FirstGraphemeCluster(b[i:], m)
 			i += len(cluster)
