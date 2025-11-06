@@ -106,12 +106,8 @@ func (self APIConnector) SquashMergeProposal(number int, message gitdomain.Commi
 		// the branch will be deleted by Git Town
 		ShouldRemoveSourceBranch: gitlab.Ptr(false),
 	})
-	if err != nil {
-		self.log.Failed(err.Error())
-		return err
-	}
-	self.log.Ok()
-	return nil
+	self.log.Finished(err)
+	return err
 }
 
 // ============================================================================
@@ -126,12 +122,8 @@ func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInt
 	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), data.Number, &gitlab.UpdateMergeRequestOptions{
 		Description: Ptr(updatedDescription),
 	})
-	if err != nil {
-		self.log.Failed(err.Error())
-		return err
-	}
-	self.log.Ok()
-	return nil
+	self.log.Finished(err)
+	return err
 }
 
 // ============================================================================
@@ -146,12 +138,8 @@ func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalI
 	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), data.Number, &gitlab.UpdateMergeRequestOptions{
 		TargetBranch: gitlab.Ptr(target.String()),
 	})
-	if err != nil {
-		self.log.Failed(err.Error())
-		return err
-	}
-	self.log.Ok()
-	return nil
+	self.log.Finished(err)
+	return err
 }
 
 // ============================================================================

@@ -133,7 +133,7 @@ func (self *AuthConnector) SquashMergeProposal(number int, message gitdomain.Com
 	self.log.Ok()
 	self.log.Start(messages.APIProposalLookupStart)
 	_, _, err = client.GetPullRequest(self.Organization, self.Repository, int64(number))
-	self.log.Ok()
+	self.log.Finished(err)
 	return err
 }
 
@@ -153,12 +153,8 @@ func (self *AuthConnector) UpdateProposalBody(proposalData forgedomain.ProposalI
 	_, _, err = client.EditPullRequest(self.Organization, self.Repository, int64(data.Number), gitea.EditPullRequestOption{
 		Body: &updatedBody,
 	})
-	if err != nil {
-		self.log.Failed(err.Error())
-		return err
-	}
-	self.log.Ok()
-	return nil
+	self.log.Finished(err)
+	return err
 }
 
 // ============================================================================
@@ -178,12 +174,8 @@ func (self *AuthConnector) UpdateProposalTarget(proposalData forgedomain.Proposa
 	_, _, err = client.EditPullRequest(self.Organization, self.Repository, int64(data.Number), gitea.EditPullRequestOption{
 		Base: targetName,
 	})
-	if err != nil {
-		self.log.Failed(err.Error())
-		return err
-	}
-	self.log.Ok()
-	return nil
+	self.log.Finished(err)
+	return err
 }
 
 // ============================================================================

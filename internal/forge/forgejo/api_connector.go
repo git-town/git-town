@@ -131,7 +131,7 @@ func (self *APIConnector) SquashMergeProposal(number int, message gitdomain.Comm
 	self.log.Ok()
 	self.log.Start(messages.APIProposalLookupStart)
 	_, _, err = client.GetPullRequest(self.Organization, self.Repository, int64(number))
-	self.log.Ok()
+	self.log.Finished(err)
 	return err
 }
 
@@ -151,12 +151,8 @@ func (self *APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalIn
 	_, _, err = client.EditPullRequest(self.Organization, self.Repository, int64(data.Number), forgejo.EditPullRequestOption{
 		Body: newBody,
 	})
-	if err != nil {
-		self.log.Failed(err.Error())
-		return err
-	}
-	self.log.Ok()
-	return nil
+	self.log.Finished(err)
+	return err
 }
 
 // ============================================================================
@@ -176,12 +172,8 @@ func (self *APIConnector) UpdateProposalTarget(proposalData forgedomain.Proposal
 	_, _, err = client.EditPullRequest(self.Organization, self.Repository, int64(data.Number), forgejo.EditPullRequestOption{
 		Base: targetName,
 	})
-	if err != nil {
-		self.log.Failed(err.Error())
-		return err
-	}
-	self.log.Ok()
-	return nil
+	self.log.Finished(err)
+	return err
 }
 
 // ============================================================================
