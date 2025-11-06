@@ -41,6 +41,9 @@ const (
 	perennialBranches        = "GIT_TOWN_PERENNIAL_BRANCHES"
 	perennialRegex           = "GIT_TOWN_PERENNIAL_REGEX"
 	proposalsShowLineage     = "GIT_TOWN_PROPOSALS_SHOW_LINEAGE"
+	proposeBodyTemplate      = "GIT_TOWN_PROPOSE_BODY_TEMPLATE"
+	proposeBodyTemplateFile  = "GIT_TOWN_PROPOSE_BODY_TEMPLATE_FILE"
+	proposeTitle             = "GIT_TOWN_PROPOSE_TITLE"
 	pushBranches             = "GIT_TOWN_PUSH_BRANCHES"
 	pushHook                 = "GIT_TOWN_PUSH_HOOK"
 	shareNewBranches         = "GIT_TOWN_SHARE_NEW_BRANCHES"
@@ -79,6 +82,17 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	offline, errOffline := load(env, offline, gohacks.ParseBoolOpt[configdomain.Offline])
 	perennialRegex, errPerennialRegex := load(env, perennialRegex, configdomain.ParsePerennialRegex)
 	proposalsShowLineage, errProposalsShowLineage := load(env, proposalsShowLineage, forgedomain.ParseProposalsShowLineage)
+	proposeBodyTemplateValue := env.Get(proposeBodyTemplate)
+	var proposeBodyTemplate Option[gitdomain.ProposalBodyTemplate]
+	if proposeBodyTemplateValue != "" {
+		proposeBodyTemplate = Some(gitdomain.ProposalBodyTemplate(proposeBodyTemplateValue))
+	}
+	proposeBodyTemplateFileValue := env.Get(proposeBodyTemplateFile)
+	var proposeBodyTemplateFile Option[gitdomain.ProposalBodyTemplateFile]
+	if proposeBodyTemplateFileValue != "" {
+		proposeBodyTemplateFile = Some(gitdomain.ProposalBodyTemplateFile(proposeBodyTemplateFileValue))
+	}
+	proposeTitle, errProposeTitle := load(env, proposeTitle, configdomain.ParseProposeTitle)
 	pushBranches, errPushBranches := load(env, pushBranches, gohacks.ParseBoolOpt[configdomain.PushBranches])
 	pushHook, errPushHook := load(env, pushHook, gohacks.ParseBoolOpt[configdomain.PushHook])
 	shareNewBranches, errShareNewBranches := load(env, shareNewBranches, configdomain.ParseShareNewBranches)
@@ -109,6 +123,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errOrder,
 		errPerennialRegex,
 		errProposalsShowLineage,
+		errProposeTitle,
 		errPushBranches,
 		errPushHook,
 		errShareNewBranches,
@@ -155,6 +170,9 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		PerennialBranches:        gitdomain.ParseLocalBranchNames(env.Get(perennialBranches)),
 		PerennialRegex:           perennialRegex,
 		ProposalsShowLineage:     proposalsShowLineage,
+		ProposeBodyTemplate:      proposeBodyTemplate,
+		ProposeBodyTemplateFile:  proposeBodyTemplateFile,
+		ProposeTitle:             proposeTitle,
 		PushBranches:             pushBranches,
 		PushHook:                 pushHook,
 		ShareNewBranches:         shareNewBranches,

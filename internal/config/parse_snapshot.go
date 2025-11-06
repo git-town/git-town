@@ -99,6 +99,17 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	offline, errOffline := load(snapshot, configdomain.KeyOffline, gohacks.ParseBoolOpt[configdomain.Offline], ignoreUnknown)
 	perennialRegex, errPerennialRegex := load(snapshot, configdomain.KeyPerennialRegex, configdomain.ParsePerennialRegex, ignoreUnknown)
 	proposalsShowLineage, errProposalsShowLineage := load(snapshot, configdomain.KeyProposalsShowLineage, forgedomain.ParseProposalsShowLineage, ignoreUnknown)
+	proposeBodyTemplateValue := snapshot[configdomain.KeyProposeBodyTemplate]
+	var proposeBodyTemplate Option[gitdomain.ProposalBodyTemplate]
+	if proposeBodyTemplateValue != "" {
+		proposeBodyTemplate = Some(gitdomain.ProposalBodyTemplate(proposeBodyTemplateValue))
+	}
+	proposeBodyTemplateFileValue := snapshot[configdomain.KeyProposeBodyTemplateFile]
+	var proposeBodyTemplateFile Option[gitdomain.ProposalBodyTemplateFile]
+	if proposeBodyTemplateFileValue != "" {
+		proposeBodyTemplateFile = Some(gitdomain.ProposalBodyTemplateFile(proposeBodyTemplateFileValue))
+	}
+	proposeTitle, errProposeTitle := load(snapshot, configdomain.KeyProposeTitle, configdomain.ParseProposeTitle, ignoreUnknown)
 	pushBranches, errPushBranches := load(snapshot, configdomain.KeyPushBranches, gohacks.ParseBoolOpt[configdomain.PushBranches], ignoreUnknown)
 	pushHook, errPushHook := load(snapshot, configdomain.KeyPushHook, gohacks.ParseBoolOpt[configdomain.PushHook], ignoreUnknown)
 	shareNewBranches, errShareNewBranches := load(snapshot, configdomain.KeyShareNewBranches, configdomain.ParseShareNewBranches, ignoreUnknown)
@@ -130,6 +141,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		errOffline,
 		errPerennialRegex,
 		errProposalsShowLineage,
+		errProposeTitle,
 		errPushBranches,
 		errPushHook,
 		errShareNewBranches,
@@ -175,6 +187,9 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		PerennialBranches:        gitdomain.ParseLocalBranchNames(snapshot[configdomain.KeyPerennialBranches]),
 		PerennialRegex:           perennialRegex,
 		ProposalsShowLineage:     proposalsShowLineage,
+		ProposeBodyTemplate:      proposeBodyTemplate,
+		ProposeBodyTemplateFile:  proposeBodyTemplateFile,
+		ProposeTitle:             proposeTitle,
 		PushBranches:             pushBranches,
 		PushHook:                 pushHook,
 		ShareNewBranches:         shareNewBranches,

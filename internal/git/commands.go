@@ -311,6 +311,29 @@ func (self *Commands) CommitsInFeatureBranch(querier subshelldomain.Querier, bra
 	return result, nil
 }
 
+// CommitsInFeatureBranchWithMessages retrieves commits in a feature branch with full commit messages (not just subjects).
+// This is needed for proposal body template rendering and title selection.
+func (self *Commands) CommitsInFeatureBranchWithMessages(querier subshelldomain.Querier, branch gitdomain.LocalBranchName, parent gitdomain.BranchName) (gitdomain.Commits, error) {
+	// First get the SHAs and subject lines
+	commits, err := self.CommitsInFeatureBranch(querier, branch, parent)
+	if err != nil {
+		return gitdomain.Commits{}, err
+	}
+	// Then fetch full messages for each commit
+	result := make(gitdomain.Commits, 0, len(commits))
+	for _, commit := range commits {
+		fullMessage, err := self.CommitMessage(querier, commit.SHA)
+		if err != nil {
+			return gitdomain.Commits{}, err
+		}
+		result = append(result, gitdomain.Commit{
+			Message: fullMessage,
+			SHA:     commit.SHA,
+		})
+	}
+	return result, nil
+}
+
 func (self *Commands) CommitsInPerennialBranch(querier subshelldomain.Querier) (gitdomain.Commits, error) {
 	output, err := querier.QueryTrim("git", "log", "--format=%H %s", "-10")
 	if err != nil {

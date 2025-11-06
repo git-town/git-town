@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/git-town/git-town/v22/internal/cli/dialog"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v22/internal/cli/flags"
 	"github.com/git-town/git-town/v22/internal/cli/print"
@@ -18,9 +19,11 @@ import (
 	"github.com/git-town/git-town/v22/internal/execute"
 	"github.com/git-town/git-town/v22/internal/forge"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v22/internal/git"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
+	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
 	"github.com/git-town/git-town/v22/internal/validate"
 	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
 	"github.com/git-town/git-town/v22/internal/vm/opcodes"
@@ -202,6 +205,65 @@ type branchToProposeData struct {
 	syncStatus          gitdomain.SyncStatus
 }
 
+type determineProposalTitleArgs struct {
+	Title   Option[gitdomain.ProposalTitle]
+	Branch  gitdomain.LocalBranchName
+	Parent  gitdomain.LocalBranchName
+	Config  config.NormalConfig
+	Git     git.Commands
+	Inputs  dialogcomponents.Inputs
+	Backend subshelldomain.Querier
+}
+
+// determineProposalTitle determines the proposal title based on CLI args, commits, and config.
+func determineProposalTitle(args determineProposalTitleArgs) (Option[gitdomain.ProposalTitle], error) {
+	if args.Title.IsSome() {
+		return args.Title, nil
+	}
+	commits, err := args.Git.CommitsInFeatureBranch(args.Backend, args.Branch, args.Parent.BranchName())
+	if err != nil {
+		return None[gitdomain.ProposalTitle](), err
+	}
+	if len(commits) == 0 {
+		// No commits - fallback to native
+		return None[gitdomain.ProposalTitle](), nil
+	}
+	if len(commits) == 1 {
+		parts := commits[0].Message.Parts()
+		return Some(gitdomain.ProposalTitle(parts.Subject)), nil
+	}
+	proposeTitle := args.Config.ProposeTitle.GetOr(configdomain.ProposeTitleNative)
+	switch proposeTitle {
+	case configdomain.ProposeTitleFirst:
+		parts := commits[0].Message.Parts()
+		return Some(gitdomain.ProposalTitle(parts.Subject)), nil
+	case configdomain.ProposeTitleSelect:
+		commitsWithMessages, err := args.Git.CommitsInFeatureBranchWithMessages(args.Backend, args.Branch, args.Parent.BranchName())
+		if err != nil {
+			return None[gitdomain.ProposalTitle](), err
+		}
+		selectedTitle, exit, err := dialog.CommitTitle(commitsWithMessages, args.Inputs)
+		if err != nil {
+			return None[gitdomain.ProposalTitle](), err
+		}
+		if exit {
+			return None[gitdomain.ProposalTitle](), errors.New("commit title selection aborted")
+		}
+		if selected, has := selectedTitle.Get(); has {
+			parts := selected.Parts()
+			return Some(gitdomain.ProposalTitle(parts.Subject)), nil
+		}
+		// User selected "none" - fallback to native
+		return None[gitdomain.ProposalTitle](), nil
+	case configdomain.ProposeTitleNative:
+		// Fallback to native behavior
+		return None[gitdomain.ProposalTitle](), nil
+	default:
+		// Unknown value - fallback to native
+		return None[gitdomain.ProposalTitle](), nil
+	}
+}
+
 func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (data proposeData, flow configdomain.ProgramFlow, err error) {
 	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
@@ -345,6 +407,34 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (data p
 		return data, configdomain.ProgramFlowExit, err
 	}
 	bodyText, err := ship.ReadFile(args.body, args.bodyFile)
+	if err != nil {
+		return data, configdomain.ProgramFlowExit, err
+	}
+
+	// Determine proposal title (only for single branch proposals)
+	var proposalTitle Option[gitdomain.ProposalTitle] = args.title
+	if len(branchNamesToPropose) == 1 {
+		branchToPropose := branchNamesToPropose[0]
+		if parent, hasParent := validatedConfig.NormalConfig.Lineage.Parent(branchToPropose).Get(); hasParent {
+			determinedTitle, err := determineProposalTitle(determineProposalTitleArgs{
+				Title:   args.title,
+				Branch:  branchToPropose,
+				Parent:  parent,
+				Config:  validatedConfig.NormalConfig,
+				Git:     repo.Git,
+				Inputs:  inputs,
+				Backend: repo.Backend,
+			})
+			if err != nil {
+				return data, configdomain.ProgramFlowExit, err
+			}
+			// Only override if we determined a title (not if it's None)
+			if determinedTitle.IsSome() {
+				proposalTitle = determinedTitle
+			}
+		}
+	}
+
 	return proposeData{
 		branchInfos:         branchesSnapshot.Branches,
 		branchInfosLastRun:  branchInfosLastRun,
@@ -360,10 +450,10 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (data p
 		preFetchBranchInfos: preFetchBranchSnapshot.Branches,
 		previousBranch:      previousBranch,
 		proposalBody:        bodyText,
-		proposalTitle:       args.title,
+		proposalTitle:       proposalTitle,
 		remotes:             remotes,
 		stashSize:           stashSize,
-	}, configdomain.ProgramFlowContinue, err
+	}, configdomain.ProgramFlowContinue, nil
 }
 
 func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Program {

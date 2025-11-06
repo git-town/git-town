@@ -59,6 +59,9 @@ type NormalConfig struct {
 	PerennialBranches        gitdomain.LocalBranchNames
 	PerennialRegex           Option[configdomain.PerennialRegex]
 	ProposalsShowLineage     forgedomain.ProposalsShowLineage
+	ProposeBodyTemplate      Option[gitdomain.ProposalBodyTemplate]
+	ProposeBodyTemplateFile  Option[gitdomain.ProposalBodyTemplateFile]
+	ProposeTitle             Option[configdomain.ProposeTitle]
 	PushBranches             configdomain.PushBranches
 	PushHook                 configdomain.PushHook
 	ShareNewBranches         configdomain.ShareNewBranches
@@ -125,6 +128,9 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		PerennialBranches:        other.PerennialBranches.AppendAllMissing(self.PerennialBranches),
 		PerennialRegex:           other.PerennialRegex.Or(self.PerennialRegex),
 		ProposalsShowLineage:     other.ProposalsShowLineage.GetOr(self.ProposalsShowLineage),
+		ProposeBodyTemplate:      other.ProposeBodyTemplate.Or(self.ProposeBodyTemplate),
+		ProposeBodyTemplateFile:  other.ProposeBodyTemplateFile.Or(self.ProposeBodyTemplateFile),
+		ProposeTitle:             other.ProposeTitle.Or(self.ProposeTitle),
 		PushBranches:             other.PushBranches.GetOr(self.PushBranches),
 		PushHook:                 other.PushHook.GetOr(self.PushHook),
 		ShareNewBranches:         other.ShareNewBranches.GetOr(self.ShareNewBranches),
@@ -277,6 +283,9 @@ func DefaultNormalConfig() NormalConfig {
 		PerennialBranches:        gitdomain.LocalBranchNames{},
 		PerennialRegex:           None[configdomain.PerennialRegex](),
 		ProposalsShowLineage:     forgedomain.ProposalsShowLineageNone,
+		ProposeBodyTemplate:      None[gitdomain.ProposalBodyTemplate](),
+		ProposeBodyTemplateFile:  None[gitdomain.ProposalBodyTemplateFile](),
+		ProposeTitle:             None[configdomain.ProposeTitle](),
 		PushBranches:             true,
 		PushHook:                 true,
 		ShareNewBranches:         configdomain.ShareNewBranchesNone,
@@ -326,6 +335,9 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		PerennialBranches:        partial.PerennialBranches,
 		PerennialRegex:           partial.PerennialRegex,
 		ProposalsShowLineage:     partial.ProposalsShowLineage.GetOr(defaults.ProposalsShowLineage),
+		ProposeBodyTemplate:      partial.ProposeBodyTemplate.Or(defaults.ProposeBodyTemplate),
+		ProposeBodyTemplateFile:  partial.ProposeBodyTemplateFile.Or(defaults.ProposeBodyTemplateFile),
+		ProposeTitle:             partial.ProposeTitle.Or(defaults.ProposeTitle),
 		PushBranches:             partial.PushBranches.GetOr(defaults.PushBranches),
 		PushHook:                 partial.PushHook.GetOr(defaults.PushHook),
 		ShareNewBranches:         partial.ShareNewBranches.GetOr(defaults.ShareNewBranches),

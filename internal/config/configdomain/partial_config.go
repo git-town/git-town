@@ -47,6 +47,9 @@ type PartialConfig struct {
 	PerennialBranches        gitdomain.LocalBranchNames
 	PerennialRegex           Option[PerennialRegex]
 	ProposalsShowLineage     Option[forgedomain.ProposalsShowLineage]
+	ProposeBodyTemplate      Option[gitdomain.ProposalBodyTemplate]
+	ProposeBodyTemplateFile  Option[gitdomain.ProposalBodyTemplateFile]
+	ProposeTitle             Option[ProposeTitle]
 	PushBranches             Option[PushBranches]
 	PushHook                 Option[PushHook]
 	ShareNewBranches         Option[ShareNewBranches]
@@ -103,6 +106,9 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		PerennialBranches:        append(other.PerennialBranches, self.PerennialBranches...),
 		PerennialRegex:           other.PerennialRegex.Or(self.PerennialRegex),
 		ProposalsShowLineage:     other.ProposalsShowLineage.Or(self.ProposalsShowLineage),
+		ProposeBodyTemplate:      other.ProposeBodyTemplate.Or(self.ProposeBodyTemplate),
+		ProposeBodyTemplateFile:  other.ProposeBodyTemplateFile.Or(self.ProposeBodyTemplateFile),
+		ProposeTitle:             other.ProposeTitle.Or(self.ProposeTitle),
 		PushBranches:             other.PushBranches.Or(self.PushBranches),
 		PushHook:                 other.PushHook.Or(self.PushHook),
 		ShareNewBranches:         other.ShareNewBranches.Or(self.ShareNewBranches),
