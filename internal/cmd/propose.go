@@ -324,9 +324,7 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (data p
 					print.Error(err)
 				}
 				if existingProposal, has := existingProposalOpt.Get(); has {
-					if existingProposal.Data.Data().Active {
-						existingProposalURL = Some(existingProposal.Data.Data().URL)
-					}
+					existingProposalURL = Some(existingProposal.Data.Data().URL)
 				}
 			}
 		}
