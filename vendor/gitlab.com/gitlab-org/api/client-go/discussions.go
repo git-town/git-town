@@ -25,36 +25,189 @@ import (
 type (
 	// DiscussionsServiceInterface defines all the API methods for the DiscussionsService
 	DiscussionsServiceInterface interface {
+		// ListIssueDiscussions gets a list of all discussions for a single issue.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/discussions/#list-project-issue-discussion-items
 		ListIssueDiscussions(pid any, issue int, opt *ListIssueDiscussionsOptions, options ...RequestOptionFunc) ([]*Discussion, *Response, error)
+
+		// GetIssueDiscussion returns a single discussion for a specific project issue.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/discussions/#get-single-issue-discussion-item
 		GetIssueDiscussion(pid any, issue int, discussion string, options ...RequestOptionFunc) (*Discussion, *Response, error)
+
+		// CreateIssueDiscussion creates a new discussion to a single project issue.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/discussions/#create-new-issue-thread
 		CreateIssueDiscussion(pid any, issue int, opt *CreateIssueDiscussionOptions, options ...RequestOptionFunc) (*Discussion, *Response, error)
+
+		// AddIssueDiscussionNote creates a new note in an existing discussion of an issue.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/discussions/#add-note-to-existing-issue-thread
 		AddIssueDiscussionNote(pid any, issue int, discussion string, opt *AddIssueDiscussionNoteOptions, options ...RequestOptionFunc) (*Note, *Response, error)
+
+		// UpdateIssueDiscussionNote modifies an existing note in a discussion of an issue.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/discussions/#modify-existing-issue-thread-note
 		UpdateIssueDiscussionNote(pid any, issue int, discussion string, note int, opt *UpdateIssueDiscussionNoteOptions, options ...RequestOptionFunc) (*Note, *Response, error)
+
+		// DeleteIssueDiscussionNote deletes a note from a discussion of an issue.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/discussions/#delete-an-issue-thread-note
 		DeleteIssueDiscussionNote(pid any, issue int, discussion string, note int, options ...RequestOptionFunc) (*Response, error)
+
+		// ListSnippetDiscussions gets all discussions for a snippet.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/discussions/#list-project-snippet-discussion-items
 		ListSnippetDiscussions(pid any, snippet int, opt *ListSnippetDiscussionsOptions, options ...RequestOptionFunc) ([]*Discussion, *Response, error)
+
+		// GetSnippetDiscussion returns a single discussion for a snippet.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/discussions/#get-single-snippet-discussion-item
 		GetSnippetDiscussion(pid any, snippet int, discussion string, options ...RequestOptionFunc) (*Discussion, *Response, error)
+
+		// CreateSnippetDiscussion creates a new discussion for a snippet.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/discussions/#create-new-snippet-thread
 		CreateSnippetDiscussion(pid any, snippet int, opt *CreateSnippetDiscussionOptions, options ...RequestOptionFunc) (*Discussion, *Response, error)
+
+		// AddSnippetDiscussionNote adds a new note to a snippet discussion.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/discussions/#add-note-to-existing-snippet-thread
 		AddSnippetDiscussionNote(pid any, snippet int, discussion string, opt *AddSnippetDiscussionNoteOptions, options ...RequestOptionFunc) (*Note, *Response, error)
+
+		// UpdateSnippetDiscussionNote modifies an existing note in a snippet discussion.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/discussions/#modify-existing-snippet-thread-note
 		UpdateSnippetDiscussionNote(pid any, snippet int, discussion string, note int, opt *UpdateSnippetDiscussionNoteOptions, options ...RequestOptionFunc) (*Note, *Response, error)
+
+		// DeleteSnippetDiscussionNote deletes a note from a snippet discussion.
+		//
+		// GitLab API docs: https://docs.gitlab.com/api/discussions/#delete-a-snippet-thread-note
 		DeleteSnippetDiscussionNote(pid any, snippet int, discussion string, note int, options ...RequestOptionFunc) (*Response, error)
+
+		// ListGroupEpicDiscussions gets all discussions for a group epic.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/discussions/#list-group-epic-discussion-items
 		ListGroupEpicDiscussions(gid any, epic int, opt *ListGroupEpicDiscussionsOptions, options ...RequestOptionFunc) ([]*Discussion, *Response, error)
+
+		// GetEpicDiscussion returns a single discussion for a group epic.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/discussions/#get-single-epic-discussion-item
 		GetEpicDiscussion(gid any, epic int, discussion string, options ...RequestOptionFunc) (*Discussion, *Response, error)
+
+		// CreateEpicDiscussion creates a new discussion for a group epic.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/discussions/#create-new-epic-thread
 		CreateEpicDiscussion(gid any, epic int, opt *CreateEpicDiscussionOptions, options ...RequestOptionFunc) (*Discussion, *Response, error)
+
+		// AddEpicDiscussionNote adds a new note to an epic discussion.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/discussions/#add-note-to-existing-epic-thread
 		AddEpicDiscussionNote(gid any, epic int, discussion string, opt *AddEpicDiscussionNoteOptions, options ...RequestOptionFunc) (*Note, *Response, error)
+
+		// UpdateEpicDiscussionNote modifies an existing note in an epic discussion.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/discussions/#modify-existing-epic-thread-note
 		UpdateEpicDiscussionNote(gid any, epic int, discussion string, note int, opt *UpdateEpicDiscussionNoteOptions, options ...RequestOptionFunc) (*Note, *Response, error)
+
+		// DeleteEpicDiscussionNote deletes a note from an epic discussion.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/discussions/#delete-an-epic-thread-note
 		DeleteEpicDiscussionNote(gid any, epic int, discussion string, note int, options ...RequestOptionFunc) (*Response, error)
+
+		// ListMergeRequestDiscussions gets all discussions for a merge request.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/discussions/#list-project-merge-request-discussion-items
 		ListMergeRequestDiscussions(pid any, mergeRequest int, opt *ListMergeRequestDiscussionsOptions, options ...RequestOptionFunc) ([]*Discussion, *Response, error)
+
+		// GetMergeRequestDiscussion returns a single discussion for a merge request.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/discussions/#get-single-merge-request-discussion-item
 		GetMergeRequestDiscussion(pid any, mergeRequest int, discussion string, options ...RequestOptionFunc) (*Discussion, *Response, error)
+
+		// CreateMergeRequestDiscussion creates a new discussion for a merge request.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/discussions/#create-new-merge-request-thread
 		CreateMergeRequestDiscussion(pid any, mergeRequest int, opt *CreateMergeRequestDiscussionOptions, options ...RequestOptionFunc) (*Discussion, *Response, error)
+
+		// ResolveMergeRequestDiscussion resolves or unresolves a merge request discussion.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/discussions/#resolve-a-merge-request-thread
 		ResolveMergeRequestDiscussion(pid any, mergeRequest int, discussion string, opt *ResolveMergeRequestDiscussionOptions, options ...RequestOptionFunc) (*Discussion, *Response, error)
+
+		// AddMergeRequestDiscussionNote adds a new note to a merge request discussion.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/discussions/#add-note-to-existing-merge-request-thread
 		AddMergeRequestDiscussionNote(pid any, mergeRequest int, discussion string, opt *AddMergeRequestDiscussionNoteOptions, options ...RequestOptionFunc) (*Note, *Response, error)
+
+		// UpdateMergeRequestDiscussionNote modifies an existing note in a merge request discussion.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/discussions/#modify-an-existing-merge-request-thread-note
 		UpdateMergeRequestDiscussionNote(pid any, mergeRequest int, discussion string, note int, opt *UpdateMergeRequestDiscussionNoteOptions, options ...RequestOptionFunc) (*Note, *Response, error)
+
+		// DeleteMergeRequestDiscussionNote deletes a note from a merge request discussion.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/discussions/#delete-a-merge-request-thread-note
 		DeleteMergeRequestDiscussionNote(pid any, mergeRequest int, discussion string, note int, options ...RequestOptionFunc) (*Response, error)
+
+		// ListCommitDiscussions gets all discussions for a commit.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/discussions/#list-project-commit-discussion-items
 		ListCommitDiscussions(pid any, commit string, opt *ListCommitDiscussionsOptions, options ...RequestOptionFunc) ([]*Discussion, *Response, error)
+
+		// GetCommitDiscussion returns a single discussion for a commit.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/discussions/#get-single-commit-discussion-item
 		GetCommitDiscussion(pid any, commit string, discussion string, options ...RequestOptionFunc) (*Discussion, *Response, error)
+
+		// CreateCommitDiscussion creates a new discussion for a commit.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/discussions/#create-new-commit-thread
 		CreateCommitDiscussion(pid any, commit string, opt *CreateCommitDiscussionOptions, options ...RequestOptionFunc) (*Discussion, *Response, error)
+
+		// AddCommitDiscussionNote adds a new note to a commit discussion.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/discussions/#add-note-to-existing-commit-thread
 		AddCommitDiscussionNote(pid any, commit string, discussion string, opt *AddCommitDiscussionNoteOptions, options ...RequestOptionFunc) (*Note, *Response, error)
+
+		// UpdateCommitDiscussionNote modifies an existing note in a commit discussion.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/discussions/#modify-an-existing-commit-thread-note
 		UpdateCommitDiscussionNote(pid any, commit string, discussion string, note int, opt *UpdateCommitDiscussionNoteOptions, options ...RequestOptionFunc) (*Note, *Response, error)
+
+		// DeleteCommitDiscussionNote deletes a note from a commit discussion.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/discussions/#delete-a-commit-thread-note
 		DeleteCommitDiscussionNote(pid any, commit string, discussion string, note int, options ...RequestOptionFunc) (*Response, error)
 	}
 
@@ -89,11 +242,6 @@ func (d Discussion) String() string {
 // https://docs.gitlab.com/api/discussions/#list-project-issue-discussion-items
 type ListIssueDiscussionsOptions ListOptions
 
-// ListIssueDiscussions gets a list of all discussions for a single
-// issue.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/discussions/#list-project-issue-discussion-items
 func (s *DiscussionsService) ListIssueDiscussions(pid any, issue int, opt *ListIssueDiscussionsOptions, options ...RequestOptionFunc) ([]*Discussion, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -115,10 +263,6 @@ func (s *DiscussionsService) ListIssueDiscussions(pid any, issue int, opt *ListI
 	return ds, resp, nil
 }
 
-// GetIssueDiscussion returns a single discussion for a specific project issue.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/discussions/#get-single-issue-discussion-item
 func (s *DiscussionsService) GetIssueDiscussion(pid any, issue int, discussion string, options ...RequestOptionFunc) (*Discussion, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -154,10 +298,6 @@ type CreateIssueDiscussionOptions struct {
 	CreatedAt *time.Time `url:"created_at,omitempty" json:"created_at,omitempty"`
 }
 
-// CreateIssueDiscussion creates a new discussion to a single project issue.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/discussions/#create-new-issue-thread
 func (s *DiscussionsService) CreateIssueDiscussion(pid any, issue int, opt *CreateIssueDiscussionOptions, options ...RequestOptionFunc) (*Discussion, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -189,10 +329,6 @@ type AddIssueDiscussionNoteOptions struct {
 	CreatedAt *time.Time `url:"created_at,omitempty" json:"created_at,omitempty"`
 }
 
-// AddIssueDiscussionNote creates a new discussion to a single project issue.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/discussions/#add-note-to-existing-issue-thread
 func (s *DiscussionsService) AddIssueDiscussionNote(pid any, issue int, discussion string, opt *AddIssueDiscussionNoteOptions, options ...RequestOptionFunc) (*Note, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -228,10 +364,6 @@ type UpdateIssueDiscussionNoteOptions struct {
 	CreatedAt *time.Time `url:"created_at,omitempty" json:"created_at,omitempty"`
 }
 
-// UpdateIssueDiscussionNote modifies existing discussion of an issue.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/discussions/#modify-existing-issue-thread-note
 func (s *DiscussionsService) UpdateIssueDiscussionNote(pid any, issue int, discussion string, note int, opt *UpdateIssueDiscussionNoteOptions, options ...RequestOptionFunc) (*Note, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -258,10 +390,6 @@ func (s *DiscussionsService) UpdateIssueDiscussionNote(pid any, issue int, discu
 	return n, resp, nil
 }
 
-// DeleteIssueDiscussionNote deletes an existing discussion of an issue.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/discussions/#delete-an-issue-thread-note
 func (s *DiscussionsService) DeleteIssueDiscussionNote(pid any, issue int, discussion string, note int, options ...RequestOptionFunc) (*Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -289,11 +417,6 @@ func (s *DiscussionsService) DeleteIssueDiscussionNote(pid any, issue int, discu
 // https://docs.gitlab.com/api/discussions/#list-project-snippet-discussion-items
 type ListSnippetDiscussionsOptions ListOptions
 
-// ListSnippetDiscussions gets a list of all discussions for a single
-// snippet. Snippet discussions are comments users can post to a snippet.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/discussions/#list-project-snippet-discussion-items
 func (s *DiscussionsService) ListSnippetDiscussions(pid any, snippet int, opt *ListSnippetDiscussionsOptions, options ...RequestOptionFunc) ([]*Discussion, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -315,10 +438,6 @@ func (s *DiscussionsService) ListSnippetDiscussions(pid any, snippet int, opt *L
 	return ds, resp, nil
 }
 
-// GetSnippetDiscussion returns a single discussion for a given snippet.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/discussions/#get-single-snippet-discussion-item
 func (s *DiscussionsService) GetSnippetDiscussion(pid any, snippet int, discussion string, options ...RequestOptionFunc) (*Discussion, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -354,11 +473,6 @@ type CreateSnippetDiscussionOptions struct {
 	CreatedAt *time.Time `url:"created_at,omitempty" json:"created_at,omitempty"`
 }
 
-// CreateSnippetDiscussion creates a new discussion for a single snippet.
-// Snippet discussions are comments users can post to a snippet.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/discussions/#create-new-snippet-thread
 func (s *DiscussionsService) CreateSnippetDiscussion(pid any, snippet int, opt *CreateSnippetDiscussionOptions, options ...RequestOptionFunc) (*Discussion, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -390,11 +504,6 @@ type AddSnippetDiscussionNoteOptions struct {
 	CreatedAt *time.Time `url:"created_at,omitempty" json:"created_at,omitempty"`
 }
 
-// AddSnippetDiscussionNote creates a new discussion to a single project
-// snippet.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/discussions/#add-note-to-existing-snippet-thread
 func (s *DiscussionsService) AddSnippetDiscussionNote(pid any, snippet int, discussion string, opt *AddSnippetDiscussionNoteOptions, options ...RequestOptionFunc) (*Note, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -430,10 +539,6 @@ type UpdateSnippetDiscussionNoteOptions struct {
 	CreatedAt *time.Time `url:"created_at,omitempty" json:"created_at,omitempty"`
 }
 
-// UpdateSnippetDiscussionNote modifies existing discussion of a snippet.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/discussions/#modify-existing-snippet-thread-note
 func (s *DiscussionsService) UpdateSnippetDiscussionNote(pid any, snippet int, discussion string, note int, opt *UpdateSnippetDiscussionNoteOptions, options ...RequestOptionFunc) (*Note, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -460,10 +565,6 @@ func (s *DiscussionsService) UpdateSnippetDiscussionNote(pid any, snippet int, d
 	return n, resp, nil
 }
 
-// DeleteSnippetDiscussionNote deletes an existing discussion of a snippet.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/discussions/#delete-a-snippet-thread-note
 func (s *DiscussionsService) DeleteSnippetDiscussionNote(pid any, snippet int, discussion string, note int, options ...RequestOptionFunc) (*Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -491,11 +592,6 @@ func (s *DiscussionsService) DeleteSnippetDiscussionNote(pid any, snippet int, d
 // https://docs.gitlab.com/api/discussions/#list-group-epic-discussion-items
 type ListGroupEpicDiscussionsOptions ListOptions
 
-// ListGroupEpicDiscussions gets a list of all discussions for a single
-// epic. Epic discussions are comments users can post to a epic.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/discussions/#list-group-epic-discussion-items
 func (s *DiscussionsService) ListGroupEpicDiscussions(gid any, epic int, opt *ListGroupEpicDiscussionsOptions, options ...RequestOptionFunc) ([]*Discussion, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
@@ -520,10 +616,6 @@ func (s *DiscussionsService) ListGroupEpicDiscussions(gid any, epic int, opt *Li
 	return ds, resp, nil
 }
 
-// GetEpicDiscussion returns a single discussion for a given epic.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/discussions/#get-single-epic-discussion-item
 func (s *DiscussionsService) GetEpicDiscussion(gid any, epic int, discussion string, options ...RequestOptionFunc) (*Discussion, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
@@ -559,11 +651,6 @@ type CreateEpicDiscussionOptions struct {
 	CreatedAt *time.Time `url:"created_at,omitempty" json:"created_at,omitempty"`
 }
 
-// CreateEpicDiscussion creates a new discussion for a single epic. Epic
-// discussions are comments users can post to a epic.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/discussions/#create-new-epic-thread
 func (s *DiscussionsService) CreateEpicDiscussion(gid any, epic int, opt *CreateEpicDiscussionOptions, options ...RequestOptionFunc) (*Discussion, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
@@ -598,10 +685,6 @@ type AddEpicDiscussionNoteOptions struct {
 	CreatedAt *time.Time `url:"created_at,omitempty" json:"created_at,omitempty"`
 }
 
-// AddEpicDiscussionNote creates a new discussion to a single project epic.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/discussions/#add-note-to-existing-epic-thread
 func (s *DiscussionsService) AddEpicDiscussionNote(gid any, epic int, discussion string, opt *AddEpicDiscussionNoteOptions, options ...RequestOptionFunc) (*Note, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
@@ -637,10 +720,6 @@ type UpdateEpicDiscussionNoteOptions struct {
 	CreatedAt *time.Time `url:"created_at,omitempty" json:"created_at,omitempty"`
 }
 
-// UpdateEpicDiscussionNote modifies existing discussion of an epic.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/discussions/#modify-existing-epic-thread-note
 func (s *DiscussionsService) UpdateEpicDiscussionNote(gid any, epic int, discussion string, note int, opt *UpdateEpicDiscussionNoteOptions, options ...RequestOptionFunc) (*Note, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
@@ -667,10 +746,6 @@ func (s *DiscussionsService) UpdateEpicDiscussionNote(gid any, epic int, discuss
 	return n, resp, nil
 }
 
-// DeleteEpicDiscussionNote deletes an existing discussion of a epic.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/discussions/#delete-an-epic-thread-note
 func (s *DiscussionsService) DeleteEpicDiscussionNote(gid any, epic int, discussion string, note int, options ...RequestOptionFunc) (*Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
@@ -698,11 +773,6 @@ func (s *DiscussionsService) DeleteEpicDiscussionNote(gid any, epic int, discuss
 // https://docs.gitlab.com/api/discussions/#list-project-merge-request-discussion-items
 type ListMergeRequestDiscussionsOptions ListOptions
 
-// ListMergeRequestDiscussions gets a list of all discussions for a single
-// merge request.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/discussions/#list-project-merge-request-discussion-items
 func (s *DiscussionsService) ListMergeRequestDiscussions(pid any, mergeRequest int, opt *ListMergeRequestDiscussionsOptions, options ...RequestOptionFunc) ([]*Discussion, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -727,11 +797,6 @@ func (s *DiscussionsService) ListMergeRequestDiscussions(pid any, mergeRequest i
 	return ds, resp, nil
 }
 
-// GetMergeRequestDiscussion returns a single discussion for a given merge
-// request.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/discussions/#get-single-merge-request-discussion-item
 func (s *DiscussionsService) GetMergeRequestDiscussion(pid any, mergeRequest int, discussion string, options ...RequestOptionFunc) (*Discussion, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -800,11 +865,6 @@ type LinePositionOptions struct {
 	NewLine  *int    `url:"new_line,omitempty" json:"new_line,omitempty"`
 }
 
-// CreateMergeRequestDiscussion creates a new discussion for a single merge
-// request.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/discussions/#create-new-merge-request-thread
 func (s *DiscussionsService) CreateMergeRequestDiscussion(pid any, mergeRequest int, opt *CreateMergeRequestDiscussionOptions, options ...RequestOptionFunc) (*Discussion, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -838,11 +898,6 @@ type ResolveMergeRequestDiscussionOptions struct {
 	Resolved *bool `url:"resolved,omitempty" json:"resolved,omitempty"`
 }
 
-// ResolveMergeRequestDiscussion resolves/unresolves whole discussion of a merge
-// request.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/discussions/#resolve-a-merge-request-thread
 func (s *DiscussionsService) ResolveMergeRequestDiscussion(pid any, mergeRequest int, discussion string, opt *ResolveMergeRequestDiscussionOptions, options ...RequestOptionFunc) (*Discussion, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -878,11 +933,6 @@ type AddMergeRequestDiscussionNoteOptions struct {
 	CreatedAt *time.Time `url:"created_at,omitempty" json:"created_at,omitempty"`
 }
 
-// AddMergeRequestDiscussionNote creates a new discussion to a single project
-// merge request.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/discussions/#add-note-to-existing-merge-request-thread
 func (s *DiscussionsService) AddMergeRequestDiscussionNote(pid any, mergeRequest int, discussion string, opt *AddMergeRequestDiscussionNoteOptions, options ...RequestOptionFunc) (*Note, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -919,11 +969,6 @@ type UpdateMergeRequestDiscussionNoteOptions struct {
 	Resolved  *bool      `url:"resolved,omitempty" json:"resolved,omitempty"`
 }
 
-// UpdateMergeRequestDiscussionNote modifies existing discussion of a merge
-// request.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/discussions/#modify-an-existing-merge-request-thread-note
 func (s *DiscussionsService) UpdateMergeRequestDiscussionNote(pid any, mergeRequest int, discussion string, note int, opt *UpdateMergeRequestDiscussionNoteOptions, options ...RequestOptionFunc) (*Note, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -950,11 +995,6 @@ func (s *DiscussionsService) UpdateMergeRequestDiscussionNote(pid any, mergeRequ
 	return n, resp, nil
 }
 
-// DeleteMergeRequestDiscussionNote deletes an existing discussion of a merge
-// request.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/discussions/#delete-a-merge-request-thread-note
 func (s *DiscussionsService) DeleteMergeRequestDiscussionNote(pid any, mergeRequest int, discussion string, note int, options ...RequestOptionFunc) (*Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -982,11 +1022,6 @@ func (s *DiscussionsService) DeleteMergeRequestDiscussionNote(pid any, mergeRequ
 // https://docs.gitlab.com/api/discussions/#list-project-commit-discussion-items
 type ListCommitDiscussionsOptions ListOptions
 
-// ListCommitDiscussions gets a list of all discussions for a single
-// commit.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/discussions/#list-project-commit-discussion-items
 func (s *DiscussionsService) ListCommitDiscussions(pid any, commit string, opt *ListCommitDiscussionsOptions, options ...RequestOptionFunc) ([]*Discussion, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -1011,11 +1046,6 @@ func (s *DiscussionsService) ListCommitDiscussions(pid any, commit string, opt *
 	return ds, resp, nil
 }
 
-// GetCommitDiscussion returns a single discussion for a specific project
-// commit.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/discussions/#get-single-commit-discussion-item
 func (s *DiscussionsService) GetCommitDiscussion(pid any, commit string, discussion string, options ...RequestOptionFunc) (*Discussion, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -1052,10 +1082,6 @@ type CreateCommitDiscussionOptions struct {
 	Position  *NotePosition `url:"position,omitempty" json:"position,omitempty"`
 }
 
-// CreateCommitDiscussion creates a new discussion to a single project commit.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/discussions/#create-new-commit-thread
 func (s *DiscussionsService) CreateCommitDiscussion(pid any, commit string, opt *CreateCommitDiscussionOptions, options ...RequestOptionFunc) (*Discussion, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -1090,10 +1116,6 @@ type AddCommitDiscussionNoteOptions struct {
 	CreatedAt *time.Time `url:"created_at,omitempty" json:"created_at,omitempty"`
 }
 
-// AddCommitDiscussionNote creates a new discussion to a single project commit.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/discussions/#add-note-to-existing-commit-thread
 func (s *DiscussionsService) AddCommitDiscussionNote(pid any, commit string, discussion string, opt *AddCommitDiscussionNoteOptions, options ...RequestOptionFunc) (*Note, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -1129,10 +1151,6 @@ type UpdateCommitDiscussionNoteOptions struct {
 	CreatedAt *time.Time `url:"created_at,omitempty" json:"created_at,omitempty"`
 }
 
-// UpdateCommitDiscussionNote modifies existing discussion of a commit.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/discussions/#modify-an-existing-commit-thread-note
 func (s *DiscussionsService) UpdateCommitDiscussionNote(pid any, commit string, discussion string, note int, opt *UpdateCommitDiscussionNoteOptions, options ...RequestOptionFunc) (*Note, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -1159,10 +1177,6 @@ func (s *DiscussionsService) UpdateCommitDiscussionNote(pid any, commit string, 
 	return n, resp, nil
 }
 
-// DeleteCommitDiscussionNote deletes an existing discussion of an commit.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/discussions/#delete-a-commit-thread-note
 func (s *DiscussionsService) DeleteCommitDiscussionNote(pid any, commit string, discussion string, note int, options ...RequestOptionFunc) (*Response, error) {
 	project, err := parseID(pid)
 	if err != nil {

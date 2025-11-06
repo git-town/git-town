@@ -13,7 +13,7 @@ const (
 	typeShort = "t"
 )
 
-// type-safe access to the CLI arguments of type configdomain.BranchType
+// BranchType provides type-safe access to the CLI arguments of type configdomain.BranchType.
 func BranchType() (AddFunc, ReadTypeFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.PersistentFlags().StringP(typeLong, typeShort, "", "limit the list of branches to switch to the given branch type(s)")

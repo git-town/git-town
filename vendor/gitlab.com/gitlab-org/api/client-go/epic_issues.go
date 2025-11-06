@@ -26,12 +26,32 @@ type (
 	// Will be removed in v5 of the API, use Work Items API instead
 	EpicIssuesServiceInterface interface {
 		// Will be removed in v5 of the API, use Work Items API instead
+		// ListEpicIssues get a list of epic issues.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/epic_issues/#list-issues-for-an-epic
 		ListEpicIssues(gid any, epic int, opt *ListOptions, options ...RequestOptionFunc) ([]*Issue, *Response, error)
+
+		// AssignEpicIssue assigns an existing issue to an epic.
 		// Will be removed in v5 of the API, use Work Items API instead
+		//
+		// GitLab API Docs:
+		// https://docs.gitlab.com/api/epic_issues/#assign-an-issue-to-the-epic
 		AssignEpicIssue(gid any, epic, issue int, options ...RequestOptionFunc) (*EpicIssueAssignment, *Response, error)
+
+		// RemoveEpicIssue removes an issue from an epic.
 		// Will be removed in v5 of the API, use Work Items API instead
+		//
+		// GitLab API Docs:
+		// https://docs.gitlab.com/api/epic_issues/#remove-an-issue-from-the-epic
 		RemoveEpicIssue(gid any, epic, epicIssue int, options ...RequestOptionFunc) (*EpicIssueAssignment, *Response, error)
+
+		// UpdateEpicIssueAssignmentOptions describes the UpdateEpicIssueAssignment()
+		// options.
 		// Will be removed in v5 of the API, use Work Items API instead
+		//
+		// GitLab API Docs:
+		// https://docs.gitlab.com/api/epic_issues/#update-epic---issue-association
 		UpdateEpicIssueAssignment(gid any, epic, epicIssue int, opt *UpdateEpicIssueAssignmentOptions, options ...RequestOptionFunc) ([]*Issue, *Response, error)
 	}
 
@@ -49,7 +69,7 @@ type (
 var _ EpicIssuesServiceInterface = (*EpicIssuesService)(nil)
 
 // EpicIssueAssignment contains both the epic and issue objects returned from
-// Gitlab with the assignment ID.
+// GitLab with the assignment ID.
 // Will be removed in v5 of the API, use Work Items API instead
 //
 // GitLab API docs: https://docs.gitlab.com/api/epic_issues/
@@ -59,11 +79,6 @@ type EpicIssueAssignment struct {
 	Issue *Issue `json:"issue"`
 }
 
-// ListEpicIssues get a list of epic issues.
-// Will be removed in v5 of the API, use Work Items API instead
-//
-// Gitlab API docs:
-// https://docs.gitlab.com/api/epic_issues/#list-issues-for-an-epic
 func (s *EpicIssuesService) ListEpicIssues(gid any, epic int, opt *ListOptions, options ...RequestOptionFunc) ([]*Issue, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
@@ -85,11 +100,6 @@ func (s *EpicIssuesService) ListEpicIssues(gid any, epic int, opt *ListOptions, 
 	return is, resp, nil
 }
 
-// AssignEpicIssue assigns an existing issue to an epic.
-// Will be removed in v5 of the API, use Work Items API instead
-//
-// Gitlab API Docs:
-// https://docs.gitlab.com/api/epic_issues/#assign-an-issue-to-the-epic
 func (s *EpicIssuesService) AssignEpicIssue(gid any, epic, issue int, options ...RequestOptionFunc) (*EpicIssueAssignment, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
@@ -111,11 +121,6 @@ func (s *EpicIssuesService) AssignEpicIssue(gid any, epic, issue int, options ..
 	return a, resp, nil
 }
 
-// RemoveEpicIssue removes an issue from an epic.
-// Will be removed in v5 of the API, use Work Items API instead
-//
-// Gitlab API Docs:
-// https://docs.gitlab.com/api/epic_issues/#remove-an-issue-from-the-epic
 func (s *EpicIssuesService) RemoveEpicIssue(gid any, epic, epicIssue int, options ...RequestOptionFunc) (*EpicIssueAssignment, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
@@ -137,12 +142,6 @@ func (s *EpicIssuesService) RemoveEpicIssue(gid any, epic, epicIssue int, option
 	return a, resp, nil
 }
 
-// UpdateEpicIssueAssignmentOptions describes the UpdateEpicIssueAssignment()
-// options.
-// Will be removed in v5 of the API, use Work Items API instead
-//
-// Gitlab API Docs:
-// https://docs.gitlab.com/api/epic_issues/#update-epic---issue-association
 type UpdateEpicIssueAssignmentOptions struct {
 	*ListOptions
 	MoveBeforeID *int `url:"move_before_id,omitempty" json:"move_before_id,omitempty"`

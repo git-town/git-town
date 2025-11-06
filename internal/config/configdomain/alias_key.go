@@ -6,10 +6,10 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-// A key used for storing aliases in the Git configuration
+// AliasKey is a key used for storing aliases in the Git configuration.
 type AliasKey Key
 
-// tries to convert this Key into an AliasKey
+// NewAliasKey tries to convert this Key into an AliasKey.
 func NewAliasKey(key Key) Option[AliasKey] {
 	if strings.HasPrefix(key.String(), AliasKeyPrefix) {
 		return Some(AliasKey(key))
@@ -17,13 +17,13 @@ func NewAliasKey(key Key) Option[AliasKey] {
 	return None[AliasKey]()
 }
 
-// provides the AliasableCommand matching this AliasKey
+// AliasableCommand provides the AliasableCommand matching this AliasKey.
 func (self AliasKey) AliasableCommand() AliasableCommand {
 	commandName := strings.TrimPrefix(self.String(), AliasKeyPrefix)
 	return AliasableCommand(commandName)
 }
 
-// provides the generic Key that this AliasKey represents
+// Key provides the generic Key that this AliasKey represents.
 func (self AliasKey) Key() Key {
 	return Key(self)
 }

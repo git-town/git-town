@@ -39,7 +39,7 @@ func FindDefinedFields(text string) []string {
 		log.Fatalf("Error: Failed to find NormalConfig struct")
 	}
 	result := []string{}
-	for _, line := range strings.Split(strings.TrimSpace(match[1]), "\n") {
+	for line := range strings.SplitSeq(strings.TrimSpace(match[1]), "\n") {
 		trimmedLine := strings.TrimSpace(line)
 		if strings.HasPrefix(trimmedLine, "//") {
 			continue // skip comments

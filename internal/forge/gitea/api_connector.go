@@ -123,8 +123,8 @@ func (self *AuthConnector) SquashMergeProposal(number int, message gitdomain.Com
 	self.log.Start(messages.ForgeGitHubMergingViaAPI, colors.BoldGreen().Styled(strconv.Itoa(number)))
 	_, _, err = client.MergePullRequest(self.Organization, self.Repository, int64(number), gitea.MergePullRequestOption{
 		Style:   gitea.MergeStyleSquash,
-		Title:   commitMessageParts.Subject,
-		Message: commitMessageParts.Text,
+		Title:   commitMessageParts.Title.String(),
+		Message: commitMessageParts.Body,
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
@@ -133,7 +133,7 @@ func (self *AuthConnector) SquashMergeProposal(number int, message gitdomain.Com
 	self.log.Ok()
 	self.log.Start(messages.APIProposalLookupStart)
 	_, _, err = client.GetPullRequest(self.Organization, self.Repository, int64(number))
-	self.log.Ok()
+	self.log.Finished(err)
 	return err
 }
 
@@ -151,14 +151,10 @@ func (self *AuthConnector) UpdateProposalBody(proposalData forgedomain.ProposalI
 	data := proposalData.Data()
 	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)))
 	_, _, err = client.EditPullRequest(self.Organization, self.Repository, int64(data.Number), gitea.EditPullRequestOption{
-		Body: updatedBody,
+		Body: &updatedBody,
 	})
-	if err != nil {
-		self.log.Failed(err.Error())
-		return err
-	}
-	self.log.Ok()
-	return nil
+	self.log.Finished(err)
+	return err
 }
 
 // ============================================================================
@@ -178,12 +174,8 @@ func (self *AuthConnector) UpdateProposalTarget(proposalData forgedomain.Proposa
 	_, _, err = client.EditPullRequest(self.Organization, self.Repository, int64(data.Number), gitea.EditPullRequestOption{
 		Base: targetName,
 	})
-	if err != nil {
-		self.log.Failed(err.Error())
-		return err
-	}
-	self.log.Ok()
-	return nil
+	self.log.Finished(err)
+	return err
 }
 
 // ============================================================================

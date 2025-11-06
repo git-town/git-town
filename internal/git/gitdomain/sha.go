@@ -45,12 +45,11 @@ func (self SHA) Location() Location {
 	return Location(string(self))
 }
 
-// Implementation of the fmt.Stringer interface.
 func (self SHA) String() string {
 	return string(self)
 }
 
-// Truncates reduces the length of this SHA to the given length.
+// Truncate reduces the length of this SHA to the given length.
 // This is only for test code.
 // Please use git.Commands.ShortenSHA in production code.
 func (self SHA) Truncate(newLen int) SHA {

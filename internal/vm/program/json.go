@@ -17,7 +17,7 @@ type JSON struct {
 
 // MarshalJSON marshals the opcode to JSON.
 func (self *JSON) MarshalJSON() ([]byte, error) {
-	return json.Marshal(map[string]interface{}{
+	return json.Marshal(map[string]any{
 		"data": self.Opcode,
 		"type": gohacks.TypeName(self.Opcode),
 	})

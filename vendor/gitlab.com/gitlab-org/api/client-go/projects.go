@@ -50,6 +50,7 @@ type (
 		UnstarProject(pid any, options ...RequestOptionFunc) (*Project, *Response, error)
 		ArchiveProject(pid any, options ...RequestOptionFunc) (*Project, *Response, error)
 		UnarchiveProject(pid any, options ...RequestOptionFunc) (*Project, *Response, error)
+		RestoreProject(pid any, options ...RequestOptionFunc) (*Project, *Response, error)
 		DeleteProject(pid any, opt *DeleteProjectOptions, options ...RequestOptionFunc) (*Response, error)
 		ShareProjectWithGroup(pid any, opt *ShareWithGroupOptions, options ...RequestOptionFunc) (*Response, error)
 		DeleteSharedProjectFromGroup(pid any, groupID int, options ...RequestOptionFunc) (*Response, error)
@@ -61,6 +62,8 @@ type (
 		TriggerTestProjectHook(pid any, hook int, event ProjectHookEvent, options ...RequestOptionFunc) (*Response, error)
 		SetProjectCustomHeader(pid any, hook int, key string, opt *SetHookCustomHeaderOptions, options ...RequestOptionFunc) (*Response, error)
 		DeleteProjectCustomHeader(pid any, hook int, key string, options ...RequestOptionFunc) (*Response, error)
+		SetProjectWebhookURLVariable(pid any, hook int, key string, opt *SetProjectWebhookURLVariableOptions, options ...RequestOptionFunc) (*Response, error)
+		DeleteProjectWebhookURLVariable(pid any, hook int, key string, options ...RequestOptionFunc) (*Response, error)
 		CreateProjectForkRelation(pid any, fork int, options ...RequestOptionFunc) (*ProjectForkRelation, *Response, error)
 		DeleteProjectForkRelation(pid any, options ...RequestOptionFunc) (*Response, error)
 		UploadAvatar(pid any, avatar io.Reader, filename string, options ...RequestOptionFunc) (*Project, *Response, error)
@@ -83,6 +86,7 @@ type (
 		TransferProject(pid any, opt *TransferProjectOptions, options ...RequestOptionFunc) (*Project, *Response, error)
 		StartHousekeepingProject(pid any, options ...RequestOptionFunc) (*Response, error)
 		GetRepositoryStorage(pid any, options ...RequestOptionFunc) (*ProjectReposityStorage, *Response, error)
+		ListProjectStarrers(pid any, opts *ListProjectStarrersOptions, options ...RequestOptionFunc) ([]*ProjectStarrer, *Response, error)
 	}
 
 	// ProjectsService handles communication with the repositories related methods
@@ -133,6 +137,7 @@ type Project struct {
 	License                                   *ProjectLicense            `json:"license"`
 	SharedRunnersEnabled                      bool                       `json:"shared_runners_enabled"`
 	GroupRunnersEnabled                       bool                       `json:"group_runners_enabled"`
+	ResourceGroupDefaultProcessMode           ResourceGroupProcessMode   `json:"resource_group_default_process_mode"`
 	RunnerTokenExpirationInterval             int                        `json:"runner_token_expiration_interval"`
 	ForksCount                                int                        `json:"forks_count"`
 	StarCount                                 int                        `json:"star_count"`
@@ -627,7 +632,7 @@ func (s *ProjectsService) ListProjectsGroups(pid any, opt *ListProjectGroupOptio
 
 // ProjectLanguages is a map of strings because the response is arbitrary
 //
-// Gitlab API docs:
+// GitLab API docs:
 // https://docs.gitlab.com/api/projects/#list-programming-languages-used
 type ProjectLanguages map[string]float32
 
@@ -755,6 +760,7 @@ type CreateProjectOptions struct {
 	SecurityAndComplianceAccessLevel          *AccessControlValue                  `url:"security_and_compliance_access_level,omitempty" json:"security_and_compliance_access_level,omitempty"`
 	SharedRunnersEnabled                      *bool                                `url:"shared_runners_enabled,omitempty" json:"shared_runners_enabled,omitempty"`
 	GroupRunnersEnabled                       *bool                                `url:"group_runners_enabled,omitempty" json:"group_runners_enabled,omitempty"`
+	ResourceGroupDefaultProcessMode           *ResourceGroupProcessMode            `url:"resource_group_default_process_mode,omitempty" json:"resource_group_default_process_mode,omitempty"`
 	ShowDefaultAwardEmojis                    *bool                                `url:"show_default_award_emojis,omitempty" json:"show_default_award_emojis,omitempty"`
 	SnippetsAccessLevel                       *AccessControlValue                  `url:"snippets_access_level,omitempty" json:"snippets_access_level,omitempty"`
 	SquashCommitTemplate                      *string                              `url:"squash_commit_template,omitempty" json:"squash_commit_template,omitempty"`
@@ -1001,6 +1007,7 @@ type EditProjectOptions struct {
 	ServiceDeskEnabled                        *bool                                        `url:"service_desk_enabled,omitempty" json:"service_desk_enabled,omitempty"`
 	SharedRunnersEnabled                      *bool                                        `url:"shared_runners_enabled,omitempty" json:"shared_runners_enabled,omitempty"`
 	GroupRunnersEnabled                       *bool                                        `url:"group_runners_enabled,omitempty" json:"group_runners_enabled,omitempty"`
+	ResourceGroupDefaultProcessMode           *ResourceGroupProcessMode                    `url:"resource_group_default_process_mode,omitempty" json:"resource_group_default_process_mode,omitempty"`
 	ShowDefaultAwardEmojis                    *bool                                        `url:"show_default_award_emojis,omitempty" json:"show_default_award_emojis,omitempty"`
 	SnippetsAccessLevel                       *AccessControlValue                          `url:"snippets_access_level,omitempty" json:"snippets_access_level,omitempty"`
 	SquashCommitTemplate                      *string                                      `url:"squash_commit_template,omitempty" json:"squash_commit_template,omitempty"`
@@ -1147,18 +1154,23 @@ func (s *ProjectsService) StarProject(pid any, options ...RequestOptionFunc) (*P
 	return p, resp, nil
 }
 
-// ListProjectInvidedGroupOptions represents the available
+// ListProjectInvitedGroupOptions represents the available
 // ListProjectsInvitedGroups() options.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/projects/#list-a-projects-invited-groups
-type ListProjectInvidedGroupOptions struct {
+type ListProjectInvitedGroupOptions struct {
 	ListOptions
 	Search               *string           `url:"search,omitempty" json:"search,omitempty"`
 	MinAccessLevel       *AccessLevelValue `url:"min_access_level,omitempty" json:"min_access_level,omitempty"`
 	Relation             *[]string         `url:"relation,omitempty" json:"relation,omitempty"`
 	WithCustomAttributes *bool             `url:"with_custom_attributes,omitempty" json:"with_custom_attributes,omitempty"`
 }
+
+// ListProjectInvidedGroupOptions is kept for backwards compatibility.
+//
+// Deprecated: use ListProjectInvitedGroupOptions instead. The ListProjectInvidedGroupOptions type will be removed in the next release.
+type ListProjectInvidedGroupOptions = ListProjectInvitedGroupOptions
 
 // ListProjectsInvitedGroups lists invited groups of a project
 //
@@ -1262,6 +1274,31 @@ func (s *ProjectsService) UnarchiveProject(pid any, options ...RequestOptionFunc
 	return p, resp, nil
 }
 
+// RestoreProject restores a project that is marked for deletion.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/api/projects/#restore-a-project-marked-for-deletion
+func (s *ProjectsService) RestoreProject(pid any, options ...RequestOptionFunc) (*Project, *Response, error) {
+	project, err := parseID(pid)
+	if err != nil {
+		return nil, nil, err
+	}
+	u := fmt.Sprintf("projects/%s/restore", PathEscape(project))
+
+	req, err := s.client.NewRequest(http.MethodPost, u, nil, options)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	p := new(Project)
+	resp, err := s.client.Do(req, p)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return p, resp, nil
+}
+
 // DeleteProjectOptions represents the available DeleteProject() options.
 //
 // GitLab API docs:
@@ -1346,6 +1383,12 @@ type HookCustomHeader struct {
 	Value string `json:"value"`
 }
 
+// HookURLVariable represents a project or group hook URL variable
+type HookURLVariable struct {
+	Key   string `json:"key"`
+	Value string `json:"value"`
+}
+
 // ProjectHook represents a project hook.
 //
 // GitLab API docs:
@@ -1355,7 +1398,6 @@ type ProjectHook struct {
 	URL                       string              `json:"url"`
 	Name                      string              `json:"name"`
 	Description               string              `json:"description"`
-	ConfidentialNoteEvents    bool                `json:"confidential_note_events"`
 	ProjectID                 int                 `json:"project_id"`
 	PushEvents                bool                `json:"push_events"`
 	PushEventsBranchFilter    string              `json:"push_events_branch_filter"`
@@ -1364,13 +1406,19 @@ type ProjectHook struct {
 	MergeRequestsEvents       bool                `json:"merge_requests_events"`
 	TagPushEvents             bool                `json:"tag_push_events"`
 	NoteEvents                bool                `json:"note_events"`
+	ConfidentialNoteEvents    bool                `json:"confidential_note_events"`
 	JobEvents                 bool                `json:"job_events"`
 	PipelineEvents            bool                `json:"pipeline_events"`
 	WikiPageEvents            bool                `json:"wiki_page_events"`
 	DeploymentEvents          bool                `json:"deployment_events"`
 	ReleasesEvents            bool                `json:"releases_events"`
+	MilestoneEvents           bool                `json:"milestone_events"`
+	FeatureFlagEvents         bool                `json:"feature_flag_events"`
 	EnableSSLVerification     bool                `json:"enable_ssl_verification"`
+	RepositoryUpdateEvents    bool                `json:"repository_update_events"`
 	AlertStatus               string              `json:"alert_status"`
+	DisabledUntil             *time.Time          `json:"disabled_until"`
+	URLVariables              []HookURLVariable   `json:"url_variables"`
 	CreatedAt                 *time.Time          `json:"created_at"`
 	ResourceAccessTokenEvents bool                `json:"resource_access_token_events"`
 	CustomWebhookTemplate     string              `json:"custom_webhook_template"`
@@ -1624,6 +1672,53 @@ func (s *ProjectsService) DeleteProjectCustomHeader(pid any, hook int, key strin
 		return nil, err
 	}
 	u := fmt.Sprintf("projects/%s/hooks/%d/custom_headers/%s", PathEscape(project), hook, key)
+
+	req, err := s.client.NewRequest(http.MethodDelete, u, nil, options)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.client.Do(req, nil)
+}
+
+// SetProjectWebhookURLVariableOptions represents the available
+// SetProjectWebhookURLVariable() options.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/api/project_webhooks/#set-a-url-variable
+type SetProjectWebhookURLVariableOptions struct {
+	Value *string `json:"value,omitempty"`
+}
+
+// SetProjectWebhookURLVariable creates or updates a project webhook URL variable.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/api/project_webhooks/#set-a-url-variable
+func (s *ProjectsService) SetProjectWebhookURLVariable(pid any, hook int, key string, opt *SetProjectWebhookURLVariableOptions, options ...RequestOptionFunc) (*Response, error) {
+	project, err := parseID(pid)
+	if err != nil {
+		return nil, err
+	}
+	u := fmt.Sprintf("projects/%s/hooks/%d/url_variables/%s", PathEscape(project), hook, PathEscape(key))
+
+	req, err := s.client.NewRequest(http.MethodPut, u, opt, options)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.client.Do(req, nil)
+}
+
+// DeleteProjectWebhookURLVariable deletes a project webhook URL variable.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/api/project_webhooks/#delete-a-url-variable
+func (s *ProjectsService) DeleteProjectWebhookURLVariable(pid any, hook int, key string, options ...RequestOptionFunc) (*Response, error) {
+	project, err := parseID(pid)
+	if err != nil {
+		return nil, err
+	}
+	u := fmt.Sprintf("projects/%s/hooks/%d/url_variables/%s", PathEscape(project), hook, PathEscape(key))
 
 	req, err := s.client.NewRequest(http.MethodDelete, u, nil, options)
 	if err != nil {
@@ -2327,16 +2422,21 @@ func (s *ProjectsService) StartHousekeepingProject(pid any, options ...RequestOp
 	return s.client.Do(req, nil)
 }
 
-// GetRepositoryStorage Get the path to repository storage.
+// ProjectRepositoryStorage represents the repository storage information for a project.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/projects/#get-the-path-to-repository-storage
-type ProjectReposityStorage struct {
+type ProjectRepositoryStorage struct {
 	ProjectID         int        `json:"project_id"`
 	DiskPath          string     `json:"disk_path"`
 	CreatedAt         *time.Time `json:"created_at"`
 	RepositoryStorage string     `json:"repository_storage"`
 }
+
+// ProjectReposityStorage is kept for backwards compatibility.
+//
+// Deprecated: use ProjectRepositoryStorage instead. The ProjectReposityStorage type will be removed in the next release.
+type ProjectReposityStorage = ProjectRepositoryStorage
 
 // GetRepositoryStorage Get the path to repository storage.
 //
@@ -2361,4 +2461,48 @@ func (s *ProjectsService) GetRepositoryStorage(pid any, options ...RequestOption
 	}
 
 	return prs, resp, nil
+}
+
+// ProjectStarrer represents a user who starred a project.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/api/project_starring/#list-users-who-starred-a-project
+type ProjectStarrer struct {
+	StarredSince time.Time   `json:"starred_since"`
+	User         ProjectUser `json:"user"`
+}
+
+// ListProjectStarrersOptions represents the available ListProjectStarrers() options.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/api/project_starring/#list-users-who-starred-a-project
+type ListProjectStarrersOptions struct {
+	ListOptions
+	Search *string `url:"search,omitempty" json:"search,omitempty"`
+}
+
+// ListProjectStarrers gets users who starred a project.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/api/project_starring/#list-users-who-starred-a-project
+func (s *ProjectsService) ListProjectStarrers(pid any, opts *ListProjectStarrersOptions, options ...RequestOptionFunc) ([]*ProjectStarrer, *Response, error) {
+	project, err := parseID(pid)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	u := fmt.Sprintf("projects/%s/starrers", PathEscape(project))
+
+	req, err := s.client.NewRequest(http.MethodGet, u, opts, options)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var starrers []*ProjectStarrer
+	resp, err := s.client.Do(req, &starrers)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return starrers, resp, nil
 }

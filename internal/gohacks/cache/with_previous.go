@@ -25,7 +25,7 @@ func (self *WithPrevious[T]) Invalidate() {
 	self.value = None[T]()
 }
 
-// Sets a new current value.
+// Set assigns a new current value.
 func (self *WithPrevious[T]) Set(newValue T) {
 	self.previous = self.value
 	self.value = Some(newValue)

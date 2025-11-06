@@ -28,7 +28,7 @@ type (
 	// GroupSecuritySettingsService handles communication with the Group Security Settings
 	// related methods of the GitLab API.
 	//
-	// Gitlab API docs:
+	// GitLab API docs:
 	// https://docs.gitlab.com/api/group_security_settings/
 	GroupSecuritySettingsService struct {
 		client *Client
@@ -39,14 +39,14 @@ var _ GroupSecuritySettingsServiceInterface = (*GroupSecuritySettingsService)(ni
 
 // GroupSecuritySettings represents the group security settings data.
 //
-// Gitlab API docs:
+// GitLab API docs:
 // https://docs.gitlab.com/api/group_security_settings/
 type GroupSecuritySettings struct {
 	SecretPushProtectionEnabled bool     `json:"secret_push_protection_enabled"`
 	Errors                      []string `json:"errors"`
 }
 
-// Gets a string representation of the GroupSecuritySettings data.
+// String gets a string representation of the GroupSecuritySettings data.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_security_settings/
@@ -54,7 +54,7 @@ func (s GroupSecuritySettings) String() string {
 	return Stringify(s)
 }
 
-// GetGroupSecuritySettingsOptions represent the request options for updating
+// UpdateGroupSecuritySettingsOptions represent the request options for updating
 // the group security settings.
 //
 // GitLab API docs:

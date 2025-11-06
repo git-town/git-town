@@ -105,7 +105,7 @@ func (s *PagesService) GetPages(gid any, options ...RequestOptionFunc) (*Pages, 
 	return p, resp, nil
 }
 
-// UpdatePages represents the available UpdatePages() options.
+// UpdatePagesOptions represents the available UpdatePages() options.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/pages/#update-pages-settings-for-a-project

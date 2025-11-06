@@ -20,14 +20,14 @@ var _ MarkdownServiceInterface = (*MarkdownService)(nil)
 
 // Markdown represents a markdown document.
 //
-// Gitlab API docs: https://docs.gitlab.com/api/markdown/
+// GitLab API docs: https://docs.gitlab.com/api/markdown/
 type Markdown struct {
 	HTML string `json:"html"`
 }
 
 // RenderOptions represents the available Render() options.
 //
-// Gitlab API docs:
+// GitLab API docs:
 // https://docs.gitlab.com/api/markdown/#render-an-arbitrary-markdown-document
 type RenderOptions struct {
 	Text                    *string `url:"text,omitempty" json:"text,omitempty"`
@@ -37,7 +37,7 @@ type RenderOptions struct {
 
 // Render an arbitrary markdown document.
 //
-// Gitlab API docs:
+// GitLab API docs:
 // https://docs.gitlab.com/api/markdown/#render-an-arbitrary-markdown-document
 func (s *MarkdownService) Render(opt *RenderOptions, options ...RequestOptionFunc) (*Markdown, *Response, error) {
 	req, err := s.client.NewRequest(http.MethodPost, "markdown", opt, options)

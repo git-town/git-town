@@ -13,6 +13,14 @@ func (self Logger) Failed(failure string) {
 	self.Log(colors.BoldRed().Styled(fmt.Sprintf("%v\n", failure)))
 }
 
+func (self Logger) Finished(err error) {
+	if err != nil {
+		self.Failed(err.Error())
+	} else {
+		self.Ok()
+	}
+}
+
 func (self Logger) Log(text string) {
 	fmt.Println(text)
 }
@@ -21,7 +29,7 @@ func (self Logger) Ok() {
 	self.Success("ok")
 }
 
-func (self Logger) Start(template string, data ...interface{}) {
+func (self Logger) Start(template string, data ...any) {
 	fmt.Println()
 	fmt.Print(colors.Bold().Styled(fmt.Sprintf(template, data...)))
 }

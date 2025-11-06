@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/cli/flags"
 	"github.com/git-town/git-town/v22/internal/cli/print"
 	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v22/internal/cmd/sync"
 	"github.com/git-town/git-town/v22/internal/config"
 	"github.com/git-town/git-town/v22/internal/config/cliconfig"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
@@ -400,17 +401,24 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 			program:     prog,
 		})
 	}
-	connector, hasConnector := data.connector.Get()
-	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI && hasConnector {
-		if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
-			swapUpdateProposalStackLineagesProgram(prog, forge.ProposalStackLineageArgs{
-				Connector:                proposalFinder,
-				CurrentBranch:            data.currentBranchName,
-				Lineage:                  data.config.NormalConfig.Lineage,
-				MainAndPerennialBranches: data.config.MainAndPerennials(),
-				Order:                    data.config.NormalConfig.Order,
-			})
-		}
+	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
+		_ = sync.AddStackLineageUpdateOpcodes(
+			sync.AddStackLineageUpdateOpcodesArgs{
+				Current:   data.initialBranch,
+				FullStack: true,
+				Program:   prog,
+				ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
+					Connector:                forgedomain.ProposalFinderFromConnector(data.connector),
+					CurrentBranch:            data.initialBranch,
+					Lineage:                  data.config.NormalConfig.Lineage,
+					MainAndPerennialBranches: data.config.MainAndPerennials(),
+					Order:                    data.config.NormalConfig.Order,
+				},
+
+				ProposalStackLineageTree:             None[*forge.ProposalStackLineageTree](),
+				SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(),
+			},
+		)
 	}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.config.NormalConfig.DryRun,

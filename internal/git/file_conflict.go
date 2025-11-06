@@ -18,7 +18,7 @@ type FileConflict struct {
 	IncomingChange      Option[Blob] // info about the content of the file on the branch being merged in, None == file is being deleted here
 }
 
-// prints debug information
+// Debug prints debug information.
 func (self FileConflict) Debug(querier subshelldomain.Querier) {
 	base, hasBase := self.BaseChange.Get()
 	current, hasCurrent := self.CurrentBranchChange.Get()

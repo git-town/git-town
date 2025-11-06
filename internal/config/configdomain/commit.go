@@ -1,6 +1,6 @@
 package configdomain
 
-// when creating a new branch, whether to commit the currently staged changes into that new branch
+// Commit indicates whether to commit the currently staged changes into a new branch.
 type Commit bool
 
 func (self Commit) ShouldCommit() bool {

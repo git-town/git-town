@@ -14,7 +14,6 @@ func (self Location) IsRemoteBranchName() bool {
 	return strings.HasPrefix(self.String(), "origin/")
 }
 
-// Implementation of the fmt.Stringer interface.
 func (self Location) String() string {
 	return string(self)
 }

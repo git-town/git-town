@@ -15,20 +15,12 @@ type ProposalUpdateLineage struct {
 }
 
 func (self *ProposalUpdateLineage) Run(args shared.RunArgs) error {
-	connector, hasConnector := args.Connector.Get()
-	if !hasConnector {
-		return nil
-	}
 	proposal, hasProposal := self.CurrentProposal.Get()
 	if !hasProposal {
 		return nil
 	}
-	proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder)
-	if !canFindProposals {
-		return nil
-	}
 	lineageArgs := forge.ProposalStackLineageArgs{
-		Connector:                proposalFinder,
+		Connector:                forgedomain.ProposalFinderFromConnector(args.Connector),
 		CurrentBranch:            self.Current,
 		Lineage:                  args.Config.Value.NormalConfig.Lineage,
 		MainAndPerennialBranches: args.Config.Value.MainAndPerennials(),

@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"slices"
 
 	"github.com/carlmjohnson/requests/internal/minitrue"
-	"github.com/carlmjohnson/requests/internal/slicex"
 )
 
 // Builder is a convenient way to build, send, and handle HTTP requests.
@@ -208,7 +208,7 @@ func (rb *Builder) Clone() *Builder {
 	rb2 := *rb
 	rb2.ub = *rb.ub.Clone()
 	rb2.rb = *rb.rb.Clone()
-	slicex.Clip(&rb2.validators)
+	rb2.validators = slices.Clip(rb2.validators)
 	return &rb2
 }
 

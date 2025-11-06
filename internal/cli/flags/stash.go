@@ -8,7 +8,7 @@ import (
 
 const stashLong = "stash"
 
-// type-safe access to the CLI arguments of type configdomain.Stash
+// Stash provides type-safe access to the CLI arguments of type configdomain.Stash.
 func Stash() (AddFunc, ReadStashFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.Flags().Bool(stashLong, false, "stash uncommitted changes when creating branches")
@@ -20,5 +20,4 @@ func Stash() (AddFunc, ReadStashFlagFunc) {
 	return addFlag, readFlag
 }
 
-// ReadPrototypeFlagFunc is the type signature for the function that reads the "prototype" flag from the args to the given Cobra command.
 type ReadStashFlagFunc func(*cobra.Command) (Option[configdomain.Stash], error)

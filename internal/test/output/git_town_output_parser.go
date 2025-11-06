@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/acarl005/stripansi"
+	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
@@ -31,7 +32,7 @@ func (self CommandType) String() string { return string(self) }
 // GitCommandsInGitTownOutput provides the Git commands mentioned in the given Git Town output.
 func GitCommandsInGitTownOutput(output string) []ExecutedGitCommand {
 	var result []ExecutedGitCommand
-	for _, line := range strings.Split(output, "\n") {
+	for _, line := range stringslice.NonEmptyLines(output) {
 		if lineContainsFrontendCommand(line) {
 			if line, hasLine := parseFrontendLine(line).Get(); hasLine {
 				result = append(result, line)

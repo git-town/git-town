@@ -55,7 +55,6 @@ func (self RemoteBranchName) Remote() Remote {
 	return remote
 }
 
-// Implementation of the fmt.Stringer interface.
 func (self RemoteBranchName) String() string {
 	return string(self)
 }

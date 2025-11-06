@@ -48,6 +48,9 @@ type Options struct {
 	// from feature files
 	Tags string
 
+	// Dialect to be used to parse feature files. If not set, default to "en".
+	Dialect string
+
 	// The formatter name
 	Format string
 

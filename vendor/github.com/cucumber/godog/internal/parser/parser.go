@@ -33,7 +33,7 @@ func ExtractFeaturePathLine(p string) (string, int) {
 	return retPath, line
 }
 
-func parseFeatureFile(fsys fs.FS, path string, newIDFunc func() string) (*models.Feature, error) {
+func parseFeatureFile(fsys fs.FS, path, dialect string, newIDFunc func() string) (*models.Feature, error) {
 	reader, err := fsys.Open(path)
 	if err != nil {
 		return nil, err
@@ -42,7 +42,7 @@ func parseFeatureFile(fsys fs.FS, path string, newIDFunc func() string) (*models
 	defer reader.Close()
 
 	var buf bytes.Buffer
-	gherkinDocument, err := gherkin.ParseGherkinDocument(io.TeeReader(reader, &buf), newIDFunc)
+	gherkinDocument, err := gherkin.ParseGherkinDocumentForLanguage(io.TeeReader(reader, &buf), dialect, newIDFunc)
 	if err != nil {
 		return nil, fmt.Errorf("%s - %v", path, err)
 	}
@@ -54,11 +54,11 @@ func parseFeatureFile(fsys fs.FS, path string, newIDFunc func() string) (*models
 	return &f, nil
 }
 
-func parseBytes(path string, feature []byte, newIDFunc func() string) (*models.Feature, error) {
+func parseBytes(path string, feature []byte, dialect string, newIDFunc func() string) (*models.Feature, error) {
 	reader := bytes.NewReader(feature)
 
 	var buf bytes.Buffer
-	gherkinDocument, err := gherkin.ParseGherkinDocument(io.TeeReader(reader, &buf), newIDFunc)
+	gherkinDocument, err := gherkin.ParseGherkinDocumentForLanguage(io.TeeReader(reader, &buf), dialect, newIDFunc)
 	if err != nil {
 		return nil, fmt.Errorf("%s - %v", path, err)
 	}
@@ -70,7 +70,7 @@ func parseBytes(path string, feature []byte, newIDFunc func() string) (*models.F
 	return &f, nil
 }
 
-func parseFeatureDir(fsys fs.FS, dir string, newIDFunc func() string) ([]*models.Feature, error) {
+func parseFeatureDir(fsys fs.FS, dir, dialect string, newIDFunc func() string) ([]*models.Feature, error) {
 	var features []*models.Feature
 	return features, fs.WalkDir(fsys, dir, func(p string, f fs.DirEntry, err error) error {
 		if err != nil {
@@ -85,7 +85,7 @@ func parseFeatureDir(fsys fs.FS, dir string, newIDFunc func() string) ([]*models
 			return nil
 		}
 
-		feat, err := parseFeatureFile(fsys, p, newIDFunc)
+		feat, err := parseFeatureFile(fsys, p, dialect, newIDFunc)
 		if err != nil {
 			return err
 		}
@@ -95,7 +95,7 @@ func parseFeatureDir(fsys fs.FS, dir string, newIDFunc func() string) ([]*models
 	})
 }
 
-func parsePath(fsys fs.FS, path string, newIDFunc func() string) ([]*models.Feature, error) {
+func parsePath(fsys fs.FS, path, dialect string, newIDFunc func() string) ([]*models.Feature, error) {
 	var features []*models.Feature
 
 	path, line := ExtractFeaturePathLine(path)
@@ -114,10 +114,10 @@ func parsePath(fsys fs.FS, path string, newIDFunc func() string) ([]*models.Feat
 	}
 
 	if fi.IsDir() {
-		return parseFeatureDir(fsys, path, newIDFunc)
+		return parseFeatureDir(fsys, path, dialect, newIDFunc)
 	}
 
-	ft, err := parseFeatureFile(fsys, path, newIDFunc)
+	ft, err := parseFeatureFile(fsys, path, dialect, newIDFunc)
 	if err != nil {
 		return features, err
 	}
@@ -146,14 +146,18 @@ func parsePath(fsys fs.FS, path string, newIDFunc func() string) ([]*models.Feat
 }
 
 // ParseFeatures ...
-func ParseFeatures(fsys fs.FS, filter string, paths []string) ([]*models.Feature, error) {
+func ParseFeatures(fsys fs.FS, filter, dialect string, paths []string) ([]*models.Feature, error) {
 	var order int
+
+	if dialect == "" {
+		dialect = gherkin.DefaultDialect
+	}
 
 	featureIdxs := make(map[string]int)
 	uniqueFeatureURI := make(map[string]*models.Feature)
 	newIDFunc := (&messages.Incrementing{}).NewId
 	for _, path := range paths {
-		feats, err := parsePath(fsys, path, newIDFunc)
+		feats, err := parsePath(fsys, path, dialect, newIDFunc)
 
 		switch {
 		case os.IsNotExist(err):
@@ -189,14 +193,18 @@ func ParseFeatures(fsys fs.FS, filter string, paths []string) ([]*models.Feature
 
 type FeatureContent = flags.Feature
 
-func ParseFromBytes(filter string, featuresInputs []FeatureContent) ([]*models.Feature, error) {
+func ParseFromBytes(filter, dialect string, featuresInputs []FeatureContent) ([]*models.Feature, error) {
 	var order int
+
+	if dialect == "" {
+		dialect = gherkin.DefaultDialect
+	}
 
 	featureIdxs := make(map[string]int)
 	uniqueFeatureURI := make(map[string]*models.Feature)
 	newIDFunc := (&messages.Incrementing{}).NewId
 	for _, f := range featuresInputs {
-		ft, err := parseBytes(f.Name, f.Contents, newIDFunc)
+		ft, err := parseBytes(f.Name, f.Contents, dialect, newIDFunc)
 		if err != nil {
 			return nil, err
 		}

@@ -3,6 +3,7 @@ package configdomain
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v22/internal/gohacks"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
@@ -10,12 +11,9 @@ import (
 type ShareNewBranches string
 
 const (
-	// don't share new branches
-	ShareNewBranchesNone ShareNewBranches = "no"
-	// push new branches to the dev remote
-	ShareNewBranchesPush ShareNewBranches = "push"
-	// propose new branches
-	ShareNewBranchesPropose ShareNewBranches = "propose"
+	ShareNewBranchesNone    ShareNewBranches = "no"      // don't share new branches
+	ShareNewBranchesPush    ShareNewBranches = "push"    // push new branches to the dev remote
+	ShareNewBranchesPropose ShareNewBranches = "propose" // propose new branches
 )
 
 var ShareNewBranchValues = []ShareNewBranches{
@@ -31,6 +29,10 @@ func (self ShareNewBranches) String() string {
 func ParseShareNewBranches(value string, source string) (Option[ShareNewBranches], error) {
 	if value == "" {
 		return None[ShareNewBranches](), nil
+	}
+	parsed, err := gohacks.ParseBool[bool](value, source)
+	if err == nil && !parsed {
+		return Some(ShareNewBranchesNone), nil
 	}
 	for _, option := range ShareNewBranchValues {
 		if value == option.String() {

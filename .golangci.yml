@@ -3,6 +3,7 @@ linters:
   default: all
   disable:
     - cyclop # we keep a tab on function length ourselves
+    - contextcheck # we aren't using contexts to cancel operations yet, might be interesting in the future
     - depguard # we review our dependencies in pull requests
     - dogsled # nothing we can do about this one
     - dupl # too many false positives
@@ -25,6 +26,8 @@ linters:
     - nakedret # not useful
     - nestif # we keep complexity under check with code reviews
     - nilnil # in our code returning nil, nil makes sense
+    - noctx # we aren't using contexts to cancel operations yet, might be interesting in the future
+    - noinlineerr # inline errors are okay
     - nonamedreturns # they are useful in too many situations
     - nlreturn # this forces unnecessary empty lines in function bodies
     - staticcheck # we run this separately
@@ -32,8 +35,14 @@ linters:
     - varnamelen # not really useful
     - wrapcheck # too many false positives for return values defined in internal packages
     - wsl # this linter creates too many false positives, our policy is to not have any empty lines in code blocks
+    - wsl_v5 # this linter creates too many false positives, our policy is to not have any empty lines in code blocks
+
+    - godoclint # TODO: enable
 
   settings:
+    embeddedstructfieldcheck:
+      empty-line: false
+      forbid-mutex: true
     funcorder:
       # Checks that constructors are placed after the structure declaration.
       # Enabling this is incompatible with alphavet.

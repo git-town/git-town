@@ -14,30 +14,30 @@ func TestCommitMessage(t *testing.T) {
 		t.Parallel()
 		tests := map[gitdomain.CommitMessage]gitdomain.CommitMessageParts{
 			"title": {
-				Subject: "title",
-				Text:    "",
+				Title: "title",
+				Body:  "",
 			},
 			"title\nbody": {
-				Subject: "title",
-				Text:    "body",
+				Title: "title",
+				Body:  "body",
 			},
 			"title\n\nbody": {
-				Subject: "title",
-				Text:    "body",
+				Title: "title",
+				Body:  "body",
 			},
 			"title\n\n\nbody": {
-				Subject: "title",
-				Text:    "body",
+				Title: "title",
+				Body:  "body",
 			},
 			"title\nbody1\nbody2\n": {
-				Subject: "title",
-				Text:    "body1\nbody2\n",
+				Title: "title",
+				Body:  "body1\nbody2\n",
 			},
 		}
 		for give, want := range tests {
 			have := give.Parts()
-			must.EqOp(t, want.Subject, have.Subject)
-			must.EqOp(t, want.Text, have.Text)
+			must.EqOp(t, want.Title, have.Title)
+			must.EqOp(t, want.Body, have.Body)
 		}
 	})
 }

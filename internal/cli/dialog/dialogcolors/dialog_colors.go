@@ -5,7 +5,7 @@ import (
 	"github.com/muesli/termenv"
 )
 
-// Typical colors used in BubbleTea dialogs.
+// DialogColors defines the colors used in dialogs.
 type DialogColors struct {
 	EntryNumber termenv.Style // color for the number of entries
 	Help        termenv.Style // color of help text

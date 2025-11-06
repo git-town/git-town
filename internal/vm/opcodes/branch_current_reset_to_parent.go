@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/vm/shared"
 )
 
-// ResetCurrentBranch resets all commits in the current branch.
+// BranchCurrentResetToParent resets all commits in the current branch to the parent.
 type BranchCurrentResetToParent struct {
 	CurrentBranch gitdomain.LocalBranchName
 }

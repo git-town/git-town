@@ -51,6 +51,18 @@ func Unreachable(t T, settings ...Setting) {
 	invoke(t, assertions.Unreachable(), settings...)
 }
 
+// Panic asserts func f panics.
+func Panic(t T, f func(), settings ...Setting) {
+	t.Helper()
+	invoke(t, assertions.Panic(f), settings...)
+}
+
+// NotPanic asserts func f does not panic.
+func NotPanic(t T, f func(), settings ...Setting) {
+	t.Helper()
+	invoke(t, assertions.NotPanic(f), settings...)
+}
+
 // Error asserts err is a non-nil error.
 func Error(t T, err error, settings ...Setting) {
 	t.Helper()

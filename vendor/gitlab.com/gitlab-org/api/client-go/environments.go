@@ -25,11 +25,43 @@ import (
 type (
 	// EnvironmentsServiceInterface defines all the API methods for the EnvironmentsService
 	EnvironmentsServiceInterface interface {
+		// ListEnvironments gets a list of environments from a project, sorted by name
+		// alphabetically.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/environments/#list-environments
 		ListEnvironments(pid any, opts *ListEnvironmentsOptions, options ...RequestOptionFunc) ([]*Environment, *Response, error)
+
+		// GetEnvironment gets a specific environment from a project.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/environments/#get-a-specific-environment
 		GetEnvironment(pid any, environment int, options ...RequestOptionFunc) (*Environment, *Response, error)
+
+		// CreateEnvironment adds an environment to a project. This method is idempotent
+		// and can be called multiple times with the same parameters. Creating an environment
+		// that already exists does not affect the existing association.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/environments/#create-a-new-environment
 		CreateEnvironment(pid any, opt *CreateEnvironmentOptions, options ...RequestOptionFunc) (*Environment, *Response, error)
+
+		// EditEnvironment updates a project team environment to a specified access level.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/environments/#update-an-existing-environment
 		EditEnvironment(pid any, environment int, opt *EditEnvironmentOptions, options ...RequestOptionFunc) (*Environment, *Response, error)
+
+		// DeleteEnvironment removes an environment from a project team.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/environments/#delete-an-environment
 		DeleteEnvironment(pid any, environment int, options ...RequestOptionFunc) (*Response, error)
+
+		// StopEnvironment stops an environment within a specific project.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/environments/#stop-an-environment
 		StopEnvironment(pid any, environmentID int, opt *StopEnvironmentOptions, options ...RequestOptionFunc) (*Environment, *Response, error)
 	}
 
@@ -81,11 +113,6 @@ type ListEnvironmentsOptions struct {
 	States *string `url:"states,omitempty" json:"states,omitempty"`
 }
 
-// ListEnvironments gets a list of environments from a project, sorted by name
-// alphabetically.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/environments/#list-environments
 func (s *EnvironmentsService) ListEnvironments(pid any, opts *ListEnvironmentsOptions, options ...RequestOptionFunc) ([]*Environment, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -107,10 +134,6 @@ func (s *EnvironmentsService) ListEnvironments(pid any, opts *ListEnvironmentsOp
 	return envs, resp, nil
 }
 
-// GetEnvironment gets a specific environment from a project.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/environments/#get-a-specific-environment
 func (s *EnvironmentsService) GetEnvironment(pid any, environment int, options ...RequestOptionFunc) (*Environment, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -147,12 +170,6 @@ type CreateEnvironmentOptions struct {
 	AutoStopSetting     *string `url:"auto_stop_setting,omitempty" json:"auto_stop_setting,omitempty"`
 }
 
-// CreateEnvironment adds an environment to a project. This method is idempotent
-// and can be called multiple times with the same parameters. Creating an environment
-// that already exists does not affect the existing association.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/environments/#create-a-new-environment
 func (s *EnvironmentsService) CreateEnvironment(pid any, opt *CreateEnvironmentOptions, options ...RequestOptionFunc) (*Environment, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -189,10 +206,6 @@ type EditEnvironmentOptions struct {
 	AutoStopSetting     *string `url:"auto_stop_setting,omitempty" json:"auto_stop_setting,omitempty"`
 }
 
-// EditEnvironment updates a project team environment to a specified access level..
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/environments/#update-an-existing-environment
 func (s *EnvironmentsService) EditEnvironment(pid any, environment int, opt *EditEnvironmentOptions, options ...RequestOptionFunc) (*Environment, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -214,10 +227,6 @@ func (s *EnvironmentsService) EditEnvironment(pid any, environment int, opt *Edi
 	return env, resp, nil
 }
 
-// DeleteEnvironment removes an environment from a project team.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/environments/#delete-an-environment
 func (s *EnvironmentsService) DeleteEnvironment(pid any, environment int, options ...RequestOptionFunc) (*Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -241,10 +250,6 @@ type StopEnvironmentOptions struct {
 	Force *bool `url:"force,omitempty" json:"force,omitempty"`
 }
 
-// StopEnvironment stops an environment within a specific project.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/environments/#stop-an-environment
 func (s *EnvironmentsService) StopEnvironment(pid any, environmentID int, opt *StopEnvironmentOptions, options ...RequestOptionFunc) (*Environment, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {

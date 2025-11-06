@@ -2,14 +2,14 @@ package configdomain
 
 import "fmt"
 
-// ConfigSnapshot is a snapshot of the entire Git configuration at a particular point in time.
+// BeginConfigSnapshot is a snapshot of the entire Git configuration before a Git Town command starts.
 type BeginConfigSnapshot struct {
 	Global   SingleSnapshot
 	Local    SingleSnapshot
 	Unscoped SingleSnapshot
 }
 
-// looks up one of the contained SingleSnapshots by scope
+// ByScope looks up one of the contained SingleSnapshots by scope.
 func (self BeginConfigSnapshot) ByScope(scope ConfigScope) SingleSnapshot {
 	switch scope {
 	case ConfigScopeGlobal:

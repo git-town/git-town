@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/forge/github"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
@@ -148,7 +149,7 @@ func ParsePermissionsOutput(output string) forgedomain.VerifyCredentialsResult {
 		AuthenticationError: nil,
 		AuthorizationError:  nil,
 	}
-	lines := strings.Split(output, "\n")
+	lines := stringslice.NonEmptyLines(output)
 	regex := regexp.MustCompile(`Logged in to github.com account (\w+)`)
 	for _, line := range lines {
 		matches := regex.FindStringSubmatch(line)

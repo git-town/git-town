@@ -27,7 +27,7 @@ func LoadSnapshot(backend subshelldomain.RunnerQuerier, scopeOpt Option[configdo
 	if err != nil || output == "" {
 		return snapshot, nil //nolint:nilerr  // Git returns an error if there is no global Git config, assume empty config in this case
 	}
-	for _, line := range strings.Split(output, "\x00") {
+	for line := range strings.SplitSeq(output, "\x00") {
 		if len(line) == 0 {
 			continue
 		}
@@ -57,7 +57,7 @@ func LoadSnapshot(backend subshelldomain.RunnerQuerier, scopeOpt Option[configdo
 			}
 			for branchList, branchType := range mapstools.SortedKeyValues(configdomain.ObsoleteBranchLists) {
 				if configKey == branchList {
-					for _, branch := range strings.Split(value, " ") {
+					for branch := range strings.SplitSeq(value, " ") {
 						branchTypeKey := configdomain.Key(configdomain.BranchSpecificKeyPrefix + branch + configdomain.BranchTypeSuffix)
 						snapshot[branchTypeKey] = branchType.String()
 						_ = SetConfigValue(backend, configdomain.ConfigScopeLocal, branchTypeKey, branchType.String())

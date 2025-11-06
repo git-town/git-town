@@ -7,7 +7,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/messages"
 )
 
-// defines the type of Git configuration used
+// ConfigScope defines the type of Git configuration used.
 type ConfigScope string
 
 const (

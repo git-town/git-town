@@ -22,7 +22,7 @@ import (
 	"net/http"
 )
 
-// EventType represents a Gitlab event type.
+// EventType represents a GitLab event type.
 type EventType string
 
 // List of available event types.

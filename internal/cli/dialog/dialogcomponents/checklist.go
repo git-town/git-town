@@ -10,7 +10,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/gohacks/slice"
 )
 
-// lets the user select zero, one, or many of the given entries
+// CheckList lets the user select zero, one, or many of the given entries.
 func CheckList[S any](entries list.Entries[S], selections []int, title, help string, inputs Inputs, dialogName string) (selected []S, exit dialogdomain.Exit, err error) {
 	cursor := entries.FirstEnabled()
 	program := tea.NewProgram(CheckListModel[S]{
@@ -32,7 +32,7 @@ type CheckListModel[S any] struct {
 	title      string // title to display before the help text
 }
 
-// provides all checked list entries
+// CheckedEntries provides all checked list entries.
 func (self CheckListModel[S]) CheckedEntries() []S {
 	result := []S{}
 	for e, entry := range self.Entries {
@@ -43,13 +43,13 @@ func (self CheckListModel[S]) CheckedEntries() []S {
 	return result
 }
 
-// unchecks the currently selected list entry
+// DisableCurrentEntry unchecks the currently selected list entry.
 func (self CheckListModel[S]) DisableCurrentEntry() CheckListModel[S] {
 	self.Selections = slice.Remove(self.Selections, self.Cursor)
 	return self
 }
 
-// checks the currently selected list entry
+// EnableCurrentEntry checks the currently selected list entry.
 func (self CheckListModel[S]) EnableCurrentEntry() CheckListModel[S] {
 	self.Selections = slice.AppendAllMissing(self.Selections, self.Cursor)
 	return self
@@ -59,12 +59,12 @@ func (self CheckListModel[S]) Init() tea.Cmd {
 	return nil
 }
 
-// indicates whether the row with the given number is checked or not
+// IsRowChecked indicates whether the row with the given number is checked or not.
 func (self CheckListModel[S]) IsRowChecked(row int) bool {
 	return slices.Contains(self.Selections, row)
 }
 
-// unchecks the currently selected list entry if it is checked,
+// ToggleCurrentEntry unchecks the currently selected list entry if it is checked,
 // and checks it if it is unchecked
 func (self CheckListModel[S]) ToggleCurrentEntry() CheckListModel[S] {
 	if self.IsRowChecked(self.Cursor) {

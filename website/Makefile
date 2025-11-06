@@ -1,4 +1,4 @@
-RTA_VERSION = 0.17.0  # run-that-app version to use
+RTA_VERSION = 0.24.2  # run-that-app version to use
 
 .DEFAULT_GOAL := help
 
@@ -25,6 +25,6 @@ unit: ../tools/rta@${RTA_VERSION}  # runs the unit tests
 
 ../tools/rta@${RTA_VERSION}:
 	@rm -f ../tools/rta*
-	@(cd ../tools && curl https://raw.githubusercontent.com/kevgo/run-that-app/main/download.sh | sh)
+	@(cd ../tools && curl https://raw.githubusercontent.com/kevgo/run-that-app/main/download.sh | sh -s ${RTA_VERSION})
 	@mv ../tools/rta ../tools/rta@${RTA_VERSION}
 	@ln -s rta@${RTA_VERSION} ../tools/rta

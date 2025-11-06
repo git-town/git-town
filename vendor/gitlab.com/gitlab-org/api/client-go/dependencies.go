@@ -21,6 +21,12 @@ import (
 
 type (
 	DependenciesServiceInterface interface {
+		// ListProjectDependencies Get a list of project dependencies. This API partially
+		// mirroring Dependency List feature. This list can be generated only for languages
+		// and package managers supported by Gemnasium.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/dependencies/#list-project-dependencies
 		ListProjectDependencies(pid any, opt *ListProjectDependenciesOptions, options ...RequestOptionFunc) ([]*Dependency, *Response, error)
 	}
 
@@ -75,12 +81,6 @@ type ListProjectDependenciesOptions struct {
 	PackageManager []*DependencyPackageManagerValue `url:"package_manager,omitempty" json:"package_manager,omitempty"`
 }
 
-// ListProjectDependencies Get a list of project dependencies. This API partially
-// mirroring Dependency List feature. This list can be generated only for languages
-// and package managers supported by Gemnasium.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/dependencies/#list-project-dependencies
 func (s *DependenciesService) ListProjectDependencies(pid any, opt *ListProjectDependenciesOptions, options ...RequestOptionFunc) ([]*Dependency, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {

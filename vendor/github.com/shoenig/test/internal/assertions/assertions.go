@@ -142,6 +142,26 @@ func Unreachable() (s string) {
 	return
 }
 
+func Panic(f func()) (s string) {
+	defer func() {
+		if r := recover(); r == nil {
+			s = "expected panic; did not panic"
+		}
+	}()
+	f()
+	return
+}
+
+func NotPanic(f func()) (s string) {
+	defer func() {
+		if r := recover(); r != nil {
+			s = fmt.Sprintf("expected not to panic; panicked: %v", r)
+		}
+	}()
+	f()
+	return
+}
+
 func Error(err error) (s string) {
 	if err == nil {
 		s = "expected non-nil error; got nil\n"

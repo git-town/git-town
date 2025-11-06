@@ -510,30 +510,23 @@ func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages
 			PreviousBranchCandidates: previousBranchCandidates,
 		})
 	}
-
 	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
-		if hasConnector {
-			if proposalFinder, hasProposalFinder := connector.(forgedomain.ProposalFinder); hasProposalFinder {
-				tree, err := forge.NewProposalStackLineageTree(forge.ProposalStackLineageArgs{
-					Connector:                proposalFinder,
+		_ = sync.AddStackLineageUpdateOpcodes(
+			sync.AddStackLineageUpdateOpcodesArgs{
+				Current:   data.initialBranch,
+				FullStack: true,
+				Program:   prog,
+				ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
+					Connector:                forgedomain.ProposalFinderFromConnector(data.connector),
 					CurrentBranch:            data.initialBranch,
 					Lineage:                  data.config.NormalConfig.Lineage,
 					MainAndPerennialBranches: data.config.MainAndPerennials(),
 					Order:                    data.config.NormalConfig.Order,
-				})
-				if err != nil {
-					fmt.Printf("failed to update proposal stack lineage: %s\n", err.Error())
-				} else {
-					for branch, proposal := range tree.BranchToProposal { // okay to iterate the map in random order
-						prog.Value.Add(&opcodes.ProposalUpdateLineage{
-							Current:         branch,
-							CurrentProposal: proposal,
-							LineageTree:     MutableSome(tree),
-						})
-					}
-				}
-			}
-		}
+				},
+				ProposalStackLineageTree:             None[*forge.ProposalStackLineageTree](),
+				SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(),
+			},
+		)
 	}
 	return optimizer.Optimize(prog.Immutable())
 }

@@ -103,7 +103,7 @@ func (self Lineage) BranchesAndAncestors(branchNames gitdomain.LocalBranchNames,
 	return self.OrderHierarchically(result, order)
 }
 
-// provides all branches for which the parent is known
+// BranchesWithParents provides all branches for which the parent is known.
 func (self Lineage) BranchesWithParents() gitdomain.LocalBranchNames {
 	var result gitdomain.LocalBranchNames = slices.Collect(maps.Keys(self.data))
 	slice.NaturalSort(result)
@@ -184,7 +184,7 @@ func (self Lineage) Len() int {
 	return len(self.data)
 }
 
-// provides a new Lineage that consists of entries from both this and the given Lineage
+// Merge provides a new Lineage that consists of entries from both this and the given Lineage
 func (self Lineage) Merge(other Lineage) Lineage {
 	return Lineage{
 		data: mapstools.Merge(self.data, other.data),
@@ -247,7 +247,7 @@ func (self Lineage) Set(branch, parent gitdomain.LocalBranchName) Lineage {
 	return self
 }
 
-// provides the first branch from the given whitelist that is an ancestor of the given branch
+// YoungestAncestorWithin provides the first branch from the given whitelist that is an ancestor of the given branch
 func (self Lineage) YoungestAncestorWithin(branch gitdomain.LocalBranchName, whitelist gitdomain.LocalBranchNames) Option[gitdomain.LocalBranchName] {
 	for {
 		parent, hasParent := self.Parent(branch).Get()

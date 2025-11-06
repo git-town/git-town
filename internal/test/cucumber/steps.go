@@ -295,7 +295,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(branchText)
 		parent := devRepo.Config.NormalConfig.Lineage.Parent(branch).GetOrPanic()
-		sha := devRepo.CommitSHA(devRepo, title, branch, parent.BranchName())
+		sha := devRepo.CommitSHA(devRepo, gitdomain.CommitTitle(title), branch, parent.BranchName())
 		have := asserts.NoError1(devRepo.Git.CommitMessage(devRepo, sha)).String()
 		want := expected.Content
 		if have != want {
@@ -1569,7 +1569,7 @@ func runCommand(state *ScenarioState, command string, captureState bool) {
 	} else {
 		parts := asserts.NoError1(shellquote.Split(command))
 		cmd, args := parts[0], parts[1:]
-		subProcess := exec.Command(cmd, args...) // #nosec
+		subProcess := exec.CommandContext(context.Background(), cmd, args...) // #nosec
 		subProcess.Dir = state.fixture.Dir
 		outputBytes, _ := subProcess.CombinedOutput()
 		runOutput = string(outputBytes)

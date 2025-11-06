@@ -2,6 +2,7 @@ package subshell
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"io"
 	"os"
@@ -94,7 +95,7 @@ func (self *FrontendRunner) execute(env []string, cmd string, args ...string) (e
 	}
 	concurrentGitRetriesLeft := concurrentGitRetries
 	for {
-		subProcess := exec.Command(cmd, args...)
+		subProcess := exec.CommandContext(context.Background(), cmd, args...)
 		subProcess.Env = append(subProcess.Environ(), env...)
 		var stderrBuffer bytes.Buffer // we only need to look at STDERR since that's where Git will print error messages
 		subProcess.Stderr = io.MultiWriter(os.Stderr, &stderrBuffer)

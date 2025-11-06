@@ -9,8 +9,7 @@ import (
 // This function assumes there is only one PATH entry.
 func PrependPath(envVars []string, directory string) []string {
 	for e, envVar := range envVars {
-		if strings.HasPrefix(envVar, "PATH=") {
-			_, value, _ := strings.Cut(envVar, "=")
+		if value, isPath := strings.CutPrefix(envVar, "PATH="); isPath {
 			envVars[e] = "PATH=" + directory + string(os.PathListSeparator) + value
 			return envVars
 		}
