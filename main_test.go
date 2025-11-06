@@ -25,6 +25,7 @@ func TestMain(_ *testing.M) {
 	flagSmoke := len(os.Getenv("smoke")) > 0
 	flagMessyOutput := os.Getenv("messyoutput")
 	flagVerbose := len(os.Getenv("verbose")) > 0
+	cucumber.CaptureGoldenMode = len(os.Getenv("capturegolden")) > 0
 	switch {
 	case flagThis:
 		options.Format = "pretty"

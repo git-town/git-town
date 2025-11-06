@@ -43,6 +43,9 @@ import (
 // the global FixtureFactory instance.
 var fixtureFactory *fixture.Factory
 
+// CaptureGoldenMode indicates whether to update .feature files with actual command output when tests fail
+var CaptureGoldenMode bool
+
 // dedicated type for storing data in context.Context
 type key int
 
@@ -51,12 +54,14 @@ const (
 	keyScenarioState key = iota
 	keyScenarioName
 	keyScenarioTags
+	keyScenarioURI
 )
 
 func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 	scenarioContext.Before(func(ctx context.Context, scenario *godog.Scenario) (context.Context, error) {
 		ctx = context.WithValue(ctx, keyScenarioName, scenario.Name)
 		ctx = context.WithValue(ctx, keyScenarioTags, scenario.Tags)
+		ctx = context.WithValue(ctx, keyScenarioURI, scenario.Uri)
 		return ctx, nil
 	})
 
@@ -477,6 +482,15 @@ func defineSteps(sc *godog.ScenarioContext) {
 		})
 		diff, errorCount := table.EqualDataTable(expanded)
 		if errorCount != 0 {
+			if CaptureGoldenMode {
+				scenarioURI := ctx.Value(keyScenarioURI).(string)
+				if err := updateFeatureFileWithCommands(scenarioURI, expanded.String(), table.String()); err != nil {
+					fmt.Printf("\nERROR! Failed to update feature file: %v\n", err)
+				} else {
+					fmt.Printf("\nUpdated feature file %s with actual commands\n", scenarioURI)
+				}
+				return nil
+			}
 			fmt.Printf("\nERROR! Found %d differences in the commands run\n\n", errorCount)
 			fmt.Println(diff)
 			return errors.New("mismatching commands run, see diff above")
@@ -1547,6 +1561,99 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`wait 1 second to ensure new Git timestamps`, func() {
 		time.Sleep(1 * time.Second)
 	})
+}
+
+// updateFeatureFileWithCommands updates the feature file with the actual commands table
+func updateFeatureFileWithCommands(featureFilePath, oldTableStr, newTableStr string) error {
+	// Read the entire feature file
+	content, err := os.ReadFile(featureFilePath)
+	if err != nil {
+		return fmt.Errorf("failed to read feature file: %w", err)
+	}
+
+	// Split content into lines to find the table with indentation
+	lines := strings.Split(string(content), "\n")
+	oldTableLinesRaw := strings.Split(oldTableStr, "\n")
+	// Filter out trailing empty lines from the table string
+	oldTableLines := make([]string, 0, len(oldTableLinesRaw))
+	for _, line := range oldTableLinesRaw {
+		if strings.TrimSpace(line) != "" || len(oldTableLines) > 0 {
+			oldTableLines = append(oldTableLines, line)
+		}
+	}
+	// Trim trailing empty lines
+	for len(oldTableLines) > 0 && strings.TrimSpace(oldTableLines[len(oldTableLines)-1]) == "" {
+		oldTableLines = oldTableLines[:len(oldTableLines)-1]
+	}
+
+	// Find the table in the file by matching unindented content
+	startLine := -1
+	for i := 0; i <= len(lines)-len(oldTableLines); i++ {
+		matches := true
+		for j, oldLine := range oldTableLines {
+			fileLine := strings.TrimSpace(lines[i+j])
+			expectedLine := strings.TrimSpace(oldLine)
+			if fileLine != expectedLine {
+				matches = false
+				break
+			}
+		}
+		if matches {
+			startLine = i
+			break
+		}
+	}
+
+	if startLine == -1 {
+		return errors.New("could not find expected table in feature file")
+	}
+
+	// Get the indentation from the first line of the table in the file
+	indentation := ""
+	for _, ch := range lines[startLine] {
+		if ch == ' ' || ch == '\t' {
+			indentation += string(ch)
+		} else {
+			break
+		}
+	}
+
+	// Apply the same indentation to the new table
+	newTableLinesRaw := strings.Split(newTableStr, "\n")
+	// Filter out trailing empty lines from the new table string
+	newTableLines := make([]string, 0, len(newTableLinesRaw))
+	for _, line := range newTableLinesRaw {
+		if strings.TrimSpace(line) != "" || len(newTableLines) > 0 {
+			newTableLines = append(newTableLines, line)
+		}
+	}
+	// Trim trailing empty lines
+	for len(newTableLines) > 0 && strings.TrimSpace(newTableLines[len(newTableLines)-1]) == "" {
+		newTableLines = newTableLines[:len(newTableLines)-1]
+	}
+
+	indentedNewTableLines := make([]string, len(newTableLines))
+	for i, line := range newTableLines {
+		if strings.TrimSpace(line) != "" {
+			indentedNewTableLines[i] = indentation + strings.TrimLeft(line, " \t")
+		} else {
+			indentedNewTableLines[i] = line
+		}
+	}
+
+	// Replace the old table lines with the new ones
+	newLines := append([]string{}, lines[:startLine]...)
+	newLines = append(newLines, indentedNewTableLines...)
+	newLines = append(newLines, lines[startLine+len(oldTableLines):]...)
+
+	// Write back to the file
+	newContent := strings.Join(newLines, "\n")
+	//nolint:gosec // need permission 644 for feature files
+	if err := os.WriteFile(featureFilePath, []byte(newContent), 0o644); err != nil {
+		return fmt.Errorf("failed to write feature file: %w", err)
+	}
+
+	return nil
 }
 
 func runCommand(state *ScenarioState, command string, captureState bool) {

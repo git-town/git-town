@@ -18,6 +18,7 @@ Feature: merging a branch verbosely
     And the current branch is "beta"
     When I run "git-town merge -v"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                                                                                                                                                                                                                                                                                          |
