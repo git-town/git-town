@@ -297,11 +297,11 @@ func determineDetachData(repo execute.OpenRepoResult) (data detachData, flow con
 	}
 
 	connectorProposalFinder := None[forgedomain.ProposalFinder]()
-	branchToDetachPropsal := None[forgedomain.Proposal]()
+	branchToDetachProposal := None[forgedomain.Proposal]()
 	if connector, hasConnector := connector.Get(); hasConnector {
 		if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
 			connectorProposalFinder = Some(proposalFinder)
-			branchToDetachPropsal, err = proposalFinder.FindProposal(branchNameToDetach, parentBranch)
+			branchToDetachProposal, err = proposalFinder.FindProposal(branchNameToDetach, parentBranch)
 			if err != nil {
 				return data, configdomain.ProgramFlowExit, err
 			}
@@ -346,7 +346,7 @@ func determineDetachData(repo execute.OpenRepoResult) (data detachData, flow con
 		branchInfosLastRun:     branchInfosLastRun,
 		branchToDetachInfo:     *branchToDetachInfo,
 		branchToDetachName:     branchNameToDetach,
-		branchToDetachProposal: branchToDetachPropsal,
+		branchToDetachProposal: branchToDetachProposal,
 		branchToDetachType:     branchTypeToDetach,
 		branchesSnapshot:       branchesSnapshot,
 		children:               children,
