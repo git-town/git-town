@@ -34,6 +34,7 @@ func (self TestConnector) FindProposal(branch, target gitdomain.LocalBranchName)
 		return None[forgedomain.Proposal](), nil
 	}
 	data := forgedomain.ProposalData{
+		Active:       true,
 		Body:         None[string](),
 		MergeWithAPI: true,
 		Number:       123,

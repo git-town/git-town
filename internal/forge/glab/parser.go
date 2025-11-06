@@ -51,6 +51,7 @@ type jsonData struct {
 	Mergeable    string `json:"detailed_merge_status"` //nolint:tagliatelle
 	Number       int    `json:"iid"`                   //nolint:tagliatelle
 	SourceBranch string `json:"source_branch"`         //nolint:tagliatelle
+	State        string `json:"state"`                 //nolint:tagliatelle
 	TargetBranch string `json:"target_branch"`         //nolint:tagliatelle
 	Title        string `json:"title"`
 	URL          string `json:"web_url"` //nolint:tagliatelle
@@ -59,6 +60,7 @@ type jsonData struct {
 func createProposal(data jsonData) forgedomain.Proposal {
 	return forgedomain.Proposal{
 		Data: forgedomain.ProposalData{
+			Active:       data.State == "open",
 			Body:         NewOption(data.Description),
 			MergeWithAPI: data.Mergeable == "mergeable",
 			Number:       data.Number,

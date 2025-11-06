@@ -10,6 +10,7 @@ import (
 
 func parsePullRequest(pullRequest PullRequest, repoURL string) forgedomain.ProposalData {
 	return forgedomain.ProposalData{
+		Active:       !pullRequest.Closed,
 		MergeWithAPI: false,
 		Number:       pullRequest.ID,
 		Source:       gitdomain.NewLocalBranchName(pullRequest.FromRef.DisplayID),

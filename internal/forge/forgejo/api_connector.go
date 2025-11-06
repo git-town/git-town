@@ -245,6 +245,7 @@ func filterPullRequests2(pullRequests []*forgejo.PullRequest, branch gitdomain.L
 
 func parsePullRequest(pullRequest *forgejo.PullRequest) forgedomain.ProposalData {
 	return forgedomain.ProposalData{
+		Active:       pullRequest.State == forgejo.StateOpen,
 		MergeWithAPI: pullRequest.Mergeable,
 		Number:       int(pullRequest.Index),
 		Source:       gitdomain.NewLocalBranchName(pullRequest.Head.Ref),
