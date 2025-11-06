@@ -119,12 +119,8 @@ func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInt
 	_, _, err := self.client.Value.PullRequests.Edit(context.Background(), self.Organization, self.Repository, data.Number, &github.PullRequest{
 		Body: Ptr(updatedBody),
 	})
-	if err != nil {
-		self.log.Failed(err.Error())
-		return err
-	}
-	self.log.Ok()
-	return nil
+	self.log.Finished(err)
+	return err
 }
 
 // ============================================================================
@@ -142,12 +138,8 @@ func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalI
 			Ref: &(targetName),
 		},
 	})
-	if err != nil {
-		self.log.Failed(err.Error())
-		return err
-	}
-	self.log.Ok()
-	return nil
+	self.log.Finished(err)
+	return err
 }
 
 // ============================================================================

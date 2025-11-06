@@ -181,12 +181,8 @@ func (self APIConnector) SquashMergeProposal(number int, message gitdomain.Commi
 		RepoSlug: self.Repository,
 		Message:  message.String(),
 	})
-	if err != nil {
-		self.log.Failed(err.Error())
-		return err
-	}
-	self.log.Ok()
-	return nil
+	self.log.Finished(err)
+	return err
 }
 
 // ============================================================================
@@ -209,12 +205,8 @@ func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInt
 		Draft:             data.Draft,
 		CloseSourceBranch: data.CloseSourceBranch,
 	})
-	if err != nil {
-		self.log.Failed(err.Error())
-		return err
-	}
-	self.log.Ok()
-	return nil
+	self.log.Finished(err)
+	return err
 }
 
 // ============================================================================
@@ -237,12 +229,8 @@ func (self APIConnector) UpdateProposalSource(proposalData forgedomain.ProposalI
 		Draft:             data.Draft,
 		CloseSourceBranch: data.CloseSourceBranch,
 	})
-	if err != nil {
-		self.log.Failed(err.Error())
-		return err
-	}
-	self.log.Ok()
-	return nil
+	self.log.Finished(err)
+	return err
 }
 
 // ============================================================================
@@ -265,12 +253,8 @@ func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalI
 		Draft:             data.Draft,
 		CloseSourceBranch: data.CloseSourceBranch,
 	})
-	if err != nil {
-		self.log.Failed(err.Error())
-		return err
-	}
-	self.log.Ok()
-	return nil
+	self.log.Finished(err)
+	return err
 }
 
 // ============================================================================
