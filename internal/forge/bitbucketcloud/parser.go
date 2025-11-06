@@ -35,6 +35,14 @@ func parsePullRequest(pullRequest map[string]any) (result forgedomain.BitbucketC
 	if !ok {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
+	state1, has := pullRequest["state"]
+	if !has {
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
+	}
+	state2, ok := state1.(string)
+	if !ok {
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
+	}
 	destination1, has := pullRequest["destination"]
 	if !has {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
@@ -125,6 +133,7 @@ func parsePullRequest(pullRequest map[string]any) (result forgedomain.BitbucketC
 	}
 	return forgedomain.BitbucketCloudProposalData{
 		ProposalData: forgedomain.ProposalData{
+			Active:       state2 == "open",
 			MergeWithAPI: false,
 			Number:       number,
 			Source:       gitdomain.NewLocalBranchName(source6),

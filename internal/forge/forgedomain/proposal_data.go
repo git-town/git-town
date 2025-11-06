@@ -6,6 +6,7 @@ import (
 )
 
 type ProposalData struct {
+	Active       bool // whether the proposal is still open
 	Body         Option[string]
 	MergeWithAPI bool
 	Number       int
