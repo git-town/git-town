@@ -17,6 +17,7 @@ func TestBitbucketCloudProposalData(t *testing.T) {
 		t.Parallel()
 		data := forgedomain.BitbucketCloudProposalData{
 			ProposalData: forgedomain.ProposalData{
+				Active:       true,
 				Body:         Some("body"),
 				MergeWithAPI: true,
 				Number:       123,
@@ -33,6 +34,7 @@ func TestBitbucketCloudProposalData(t *testing.T) {
 		fmt.Println(string(serialized))
 		want := `
 {
+	"Active": true,
   "Body": "body",
   "MergeWithAPI": true,
   "Number": 123,
