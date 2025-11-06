@@ -632,7 +632,7 @@ func (s *ProjectsService) ListProjectsGroups(pid any, opt *ListProjectGroupOptio
 
 // ProjectLanguages is a map of strings because the response is arbitrary
 //
-// Gitlab API docs:
+// GitLab API docs:
 // https://docs.gitlab.com/api/projects/#list-programming-languages-used
 type ProjectLanguages map[string]float32
 

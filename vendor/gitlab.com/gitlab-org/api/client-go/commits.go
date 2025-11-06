@@ -620,7 +620,7 @@ func (s *CommitsService) RevertCommit(pid any, sha string, opt *RevertCommitOpti
 	return c, resp, nil
 }
 
-// GPGSignature represents a Gitlab commit's GPG Signature.
+// GPGSignature represents a GitLab commit's GPG Signature.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/commits/#get-signature-of-a-commit

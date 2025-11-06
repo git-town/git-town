@@ -30,7 +30,7 @@ type (
 	// ProjectSecuritySettingsService handles communication with the Project Security Settings
 	// related methods of the GitLab API.
 	//
-	// Gitlab API docs:
+	// GitLab API docs:
 	// https://docs.gitlab.com/api/project_security_settings/
 	ProjectSecuritySettingsService struct {
 		client *Client
@@ -41,7 +41,7 @@ var _ ProjectSecuritySettingsServiceInterface = (*ProjectSecuritySettingsService
 
 // ProjectSecuritySettings represents the project security settings data.
 //
-// Gitlab API docs:
+// GitLab API docs:
 // https://docs.gitlab.com/api/project_security_settings/
 type ProjectSecuritySettings struct {
 	ProjectID                           int64      `json:"project_id"`

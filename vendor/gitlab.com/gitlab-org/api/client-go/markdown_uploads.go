@@ -25,7 +25,7 @@ import (
 
 // MarkdownUpload represents a single markdown upload.
 //
-// Gitlab API docs:
+// GitLab API docs:
 // https://docs.gitlab.com/api/project_markdown_uploads/
 // https://docs.gitlab.com/api/group_markdown_uploads/
 type MarkdownUpload struct {
@@ -47,7 +47,7 @@ func (m MarkdownUpload) String() string {
 
 // MarkdownUploadedFile represents a single markdown uploaded file.
 //
-// Gitlab API docs:
+// GitLab API docs:
 // https://docs.gitlab.com/api/project_markdown_uploads/
 type MarkdownUploadedFile struct {
 	ID       int    `json:"id"`

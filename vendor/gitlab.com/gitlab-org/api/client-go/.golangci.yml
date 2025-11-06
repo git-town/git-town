@@ -68,6 +68,7 @@ linters:
         - error-nil
         - expected-actual
         - formatter
+        - go-require
         - len
         - negative-positive
         - nil-compare

@@ -108,7 +108,7 @@ func DECRST(modes ...Mode) string {
 
 func setMode(reset bool, modes ...Mode) (s string) {
 	if len(modes) == 0 {
-		return //nolint:nakedret
+		return s
 	}
 
 	cmd := "h"
@@ -142,7 +142,7 @@ func setMode(reset bool, modes ...Mode) (s string) {
 	if len(dec) > 0 {
 		s += seq + "?" + strings.Join(dec, ";") + cmd
 	}
-	return //nolint:nakedret
+	return s
 }
 
 // RequestMode (DECRQM) returns a sequence to request a mode from the terminal.

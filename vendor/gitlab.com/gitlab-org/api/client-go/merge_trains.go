@@ -25,7 +25,7 @@ type (
 
 var _ MergeTrainsServiceInterface = (*MergeTrainsService)(nil)
 
-// MergeTrain represents a Gitlab merge train.
+// MergeTrain represents a GitLab merge train.
 //
 // GitLab API docs: https://docs.gitlab.com/api/merge_trains/
 type MergeTrain struct {
@@ -41,7 +41,7 @@ type MergeTrain struct {
 	Duration     int                     `json:"duration"`
 }
 
-// MergeTrainMergeRequest represents a Gitlab merge request inside merge train.
+// MergeTrainMergeRequest represents a GitLab merge request inside merge train.
 //
 // GitLab API docs: https://docs.gitlab.com/api/merge_trains/
 type MergeTrainMergeRequest struct {

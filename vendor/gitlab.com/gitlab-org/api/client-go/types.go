@@ -299,7 +299,7 @@ const (
 	ProtectionRuleAccessLevelAdmin      ProtectionRuleAccessLevel = "admin"
 )
 
-// DeploymentApprovalStatus represents a Gitlab deployment approval status.
+// DeploymentApprovalStatus represents a GitLab deployment approval status.
 type DeploymentApprovalStatus string
 
 // These constants represent all valid deployment approval statuses.
@@ -308,7 +308,7 @@ const (
 	DeploymentApprovalStatusRejected DeploymentApprovalStatus = "rejected"
 )
 
-// DeploymentStatusValue represents a Gitlab deployment status.
+// DeploymentStatusValue represents a GitLab deployment status.
 type DeploymentStatusValue string
 
 // These constants represent all valid deployment statuses.

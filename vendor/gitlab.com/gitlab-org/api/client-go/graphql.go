@@ -22,7 +22,8 @@ type (
 	}
 
 	GraphQLQuery struct {
-		Query string `json:"query"`
+		Query     string         `json:"query"`
+		Variables map[string]any `json:"variables,omitempty"`
 	}
 
 	GenericGraphQLErrors struct {

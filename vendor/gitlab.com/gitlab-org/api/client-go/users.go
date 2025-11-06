@@ -549,7 +549,7 @@ func (s *UsersService) SetUserStatus(opt *UserStatusOptions, options ...RequestO
 
 // UserAssociationsCount represents the user associations count.
 //
-// Gitlab API docs:
+// GitLab API docs:
 // https://docs.gitlab.com/api/users/#get-a-count-of-a-users-projects-groups-issues-and-merge-requests
 type UserAssociationsCount struct {
 	GroupsCount        int `json:"groups_count"`
@@ -560,7 +560,7 @@ type UserAssociationsCount struct {
 
 // GetUserAssociationsCount gets a list of a specified user associations.
 //
-// Gitlab API docs:
+// GitLab API docs:
 // https://docs.gitlab.com/api/users/#get-a-count-of-a-users-projects-groups-issues-and-merge-requests
 func (s *UsersService) GetUserAssociationsCount(user int, options ...RequestOptionFunc) (*UserAssociationsCount, *Response, error) {
 	u := fmt.Sprintf("users/%d/associations_count", user)

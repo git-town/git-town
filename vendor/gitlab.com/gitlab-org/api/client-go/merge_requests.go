@@ -204,9 +204,9 @@ func (m *MergeRequest) UnmarshalJSON(data []byte) error {
 	return json.Unmarshal(data, (*alias)(m))
 }
 
-// MergeRequestDiff represents Gitlab merge request diff.
+// MergeRequestDiff represents GitLab merge request diff.
 //
-// Gitlab API docs:
+// GitLab API docs:
 // https://docs.gitlab.com/api/merge_requests/#list-merge-request-diffs
 type MergeRequestDiff struct {
 	OldPath       string `json:"old_path"`
@@ -220,9 +220,9 @@ type MergeRequestDiff struct {
 	GeneratedFile bool   `json:"generated_file"`
 }
 
-// MergeRequestDiffVersion represents Gitlab merge request version.
+// MergeRequestDiffVersion represents GitLab merge request version.
 //
-// Gitlab API docs:
+// GitLab API docs:
 // https://docs.gitlab.com/api/merge_requests/#get-merge-request-diff-versions
 type MergeRequestDiffVersion struct {
 	ID             int        `json:"id"`

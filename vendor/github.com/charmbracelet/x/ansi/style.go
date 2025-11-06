@@ -526,7 +526,7 @@ func underlineColorString(c Color) string {
 //  2. Support ignoring and omitting the color space id (second parameter) with respect to RGB colors
 //  3. Support ignoring and omitting the 6th parameter with respect to RGB and CMY colors
 //  4. Support reading RGBA colors
-func ReadStyleColor(params Params, co *color.Color) (n int) {
+func ReadStyleColor(params Params, co *color.Color) int {
 	if len(params) < 2 { // Need at least SGR type and color type
 		return 0
 	}
@@ -535,7 +535,7 @@ func ReadStyleColor(params Params, co *color.Color) (n int) {
 	s := params[0]
 	p := params[1]
 	colorType := p.Param(0)
-	n = 2
+	n := 2
 
 	paramsfn := func() (p1, p2, p3, p4 int) {
 		// Where should we start reading the color?
@@ -594,7 +594,7 @@ func ReadStyleColor(params Params, co *color.Color) (n int) {
 			B: uint8(b), //nolint:gosec
 			A: 0xff,
 		}
-		return //nolint:nakedret
+		return n
 
 	case 3: // CMY direct color
 		if len(params) < 5 {
@@ -612,7 +612,7 @@ func ReadStyleColor(params Params, co *color.Color) (n int) {
 			Y: uint8(y), //nolint:gosec
 			K: 0,
 		}
-		return //nolint:nakedret
+		return n
 
 	case 4: // CMYK direct color
 		if len(params) < 6 {
@@ -630,7 +630,7 @@ func ReadStyleColor(params Params, co *color.Color) (n int) {
 			Y: uint8(y), //nolint:gosec
 			K: uint8(k), //nolint:gosec
 		}
-		return //nolint:nakedret
+		return n
 
 	case 5: // indexed color
 		if len(params) < 3 {
@@ -665,7 +665,7 @@ func ReadStyleColor(params Params, co *color.Color) (n int) {
 			B: uint8(b), //nolint:gosec
 			A: uint8(a), //nolint:gosec
 		}
-		return //nolint:nakedret
+		return n
 
 	default:
 		return 0

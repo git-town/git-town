@@ -336,8 +336,8 @@ type IssueEvent struct {
 		AssigneeID          int      `json:"assignee_id"`
 		AuthorID            int      `json:"author_id"`
 		ProjectID           int      `json:"project_id"`
-		CreatedAt           string   `json:"created_at"` // Should be *time.Time (see Gitlab issue #21468)
-		UpdatedAt           string   `json:"updated_at"` // Should be *time.Time (see Gitlab issue #21468)
+		CreatedAt           string   `json:"created_at"` // Should be *time.Time (see GitLab issue #21468)
+		UpdatedAt           string   `json:"updated_at"` // Should be *time.Time (see GitLab issue #21468)
 		UpdatedByID         int      `json:"updated_by_id"`
 		LastEditedAt        string   `json:"last_edited_at"`
 		LastEditedByID      int      `json:"last_edited_by_id"`
@@ -645,8 +645,8 @@ type MergeEvent struct {
 		AssigneeIDs              []int        `json:"assignee_ids"`
 		ReviewerIDs              []int        `json:"reviewer_ids"`
 		Title                    string       `json:"title"`
-		CreatedAt                string       `json:"created_at"` // Should be *time.Time (see Gitlab issue #21468)
-		UpdatedAt                string       `json:"updated_at"` // Should be *time.Time (see Gitlab issue #21468)
+		CreatedAt                string       `json:"created_at"` // Should be *time.Time (see GitLab issue #21468)
+		UpdatedAt                string       `json:"updated_at"` // Should be *time.Time (see GitLab issue #21468)
 		StCommits                []*Commit    `json:"st_commits"`
 		StDiffs                  []*Diff      `json:"st_diffs"`
 		LastEditedAt             string       `json:"last_edited_at"`
@@ -1035,11 +1035,11 @@ type PushEvent struct {
 // https://docs.gitlab.com/user/project/integrations/webhook_events/#release-events
 type ReleaseEvent struct {
 	ID          int    `json:"id"`
-	CreatedAt   string `json:"created_at"` // Should be *time.Time (see Gitlab issue #21468)
+	CreatedAt   string `json:"created_at"` // Should be *time.Time (see GitLab issue #21468)
 	Description string `json:"description"`
 	Name        string `json:"name"`
 	Tag         string `json:"tag"`
-	ReleasedAt  string `json:"released_at"` // Should be *time.Time (see Gitlab issue #21468)
+	ReleasedAt  string `json:"released_at"` // Should be *time.Time (see GitLab issue #21468)
 	ObjectKind  string `json:"object_kind"`
 	Project     struct {
 		ID                int     `json:"id"`
@@ -1079,7 +1079,7 @@ type ReleaseEvent struct {
 		ID        string `json:"id"`
 		Message   string `json:"message"`
 		Title     string `json:"title"`
-		Timestamp string `json:"timestamp"` // Should be *time.Time (see Gitlab issue #21468)
+		Timestamp string `json:"timestamp"` // Should be *time.Time (see GitLab issue #21468)
 		URL       string `json:"url"`
 		Author    struct {
 			Name  string `json:"name"`

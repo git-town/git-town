@@ -72,7 +72,7 @@ type (
 
 var _ DeploymentsServiceInterface = (*DeploymentsService)(nil)
 
-// Deployment represents the Gitlab deployment
+// Deployment represents the GitLab deployment
 type Deployment struct {
 	ID          int          `json:"id"`
 	IID         int          `json:"iid"`
@@ -120,11 +120,11 @@ type ListProjectDeploymentsOptions struct {
 	Environment *string `url:"environment,omitempty" json:"environment,omitempty"`
 	Status      *string `url:"status,omitempty" json:"status,omitempty"`
 
-	// Only for Gitlab versions less than 14
+	// Only for GitLab versions less than 14
 	UpdatedAfter  *time.Time `url:"updated_after,omitempty" json:"updated_after,omitempty"`
 	UpdatedBefore *time.Time `url:"updated_before,omitempty" json:"updated_before,omitempty"`
 
-	// Only for Gitlab 14 or higher
+	// Only for GitLab 14 or higher
 	FinishedAfter  *time.Time `url:"finished_after,omitempty" json:"finished_after,omitempty"`
 	FinishedBefore *time.Time `url:"finished_before,omitempty" json:"finished_before,omitempty"`
 }

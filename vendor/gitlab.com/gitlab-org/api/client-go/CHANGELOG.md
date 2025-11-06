@@ -1,3 +1,41 @@
+## 0.159.0
+
+### 🚀 Features
+
+- feat(integrations): add group integration API endpoints for Jira ([!2563](https://gitlab.com/gitlab-org/api/client-go/-/merge_requests/2563)) by [Harsh Rai](https://gitlab.com/harshrai654)
+
+### 🔄 Other Changes
+
+- chore(deps): update golangci/golangci-lint docker tag to v2.6.1 ([!2564](https://gitlab.com/gitlab-org/api/client-go/-/merge_requests/2564)) by [GitLab Dependency Bot](https://gitlab.com/gitlab-dependency-update-bot)
+
+
+
+# [0.159.0](https://gitlab.com/gitlab-org/api/client-go/compare/v0.158.0...v0.159.0) (2025-11-04)
+
+
+### Features
+
+* **integrations:** add group integration API endpoints for Jira ([09e18ee](https://gitlab.com/gitlab-org/api/client-go/commit/09e18ee598bb7805ac8221f6a05426b1785f9011))
+
+## 0.158.0
+
+### 🚀 Features
+
+- Add support to send variables for GraphQL queries ([!2562](https://gitlab.com/gitlab-org/api/client-go/-/merge_requests/2562)) by [rafasf](https://gitlab.com/rafasf)
+
+### 🔄 Other Changes
+
+- chore(deps): update module cel.dev/expr to v0.25.0 ([!2560](https://gitlab.com/gitlab-org/api/client-go/-/merge_requests/2560)) by [GitLab Dependency Bot](https://gitlab.com/gitlab-dependency-update-bot)
+- chore(no-release): standardize GitLab name capitalization ([!2551](https://gitlab.com/gitlab-org/api/client-go/-/merge_requests/2551)) by [Zubeen](https://gitlab.com/syedzubeen)
+- chore(deps): update golangci/golangci-lint docker tag to v2.6.0 ([!2558](https://gitlab.com/gitlab-org/api/client-go/-/merge_requests/2558)) by [GitLab Dependency Bot](https://gitlab.com/gitlab-dependency-update-bot)
+- refactor: moved comments to interface 2 ([!2557](https://gitlab.com/gitlab-org/api/client-go/-/merge_requests/2557)) by [Zubeen](https://gitlab.com/syedzubeen)
+- refactor: moved comments to interface ([!2556](https://gitlab.com/gitlab-org/api/client-go/-/merge_requests/2556)) by [Zubeen](https://gitlab.com/syedzubeen)
+- refactor(test): avoid panic in tests with goroutines ([!2553](https://gitlab.com/gitlab-org/api/client-go/-/merge_requests/2553)) by [Oleksandr Redko](https://gitlab.com/alexandear)
+
+
+
+# [0.158.0](https://gitlab.com/gitlab-org/api/client-go/compare/v0.157.1...v0.158.0) (2025-11-03)
+
 ## 0.157.1
 
 ### 🐛 Bug Fixes

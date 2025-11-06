@@ -2149,7 +2149,7 @@ func (s *ServicesService) DeleteSlackSlashCommandsService(pid any, options ...Re
 
 // TelegramService represents Telegram service settings.
 //
-// Gitlab API docs:
+// GitLab API docs:
 // https://docs.gitlab.com/api/project_integrations/#telegram
 type TelegramService struct {
 	Service

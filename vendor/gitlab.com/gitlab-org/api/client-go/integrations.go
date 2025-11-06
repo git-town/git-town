@@ -14,20 +14,75 @@
 package gitlab
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 )
 
 type (
 	IntegrationsServiceInterface interface {
+		// ListActiveGroupIntegrations gets a list of all active group integrations.
+		// The vulnerability_events field is only available for GitLab Enterprise Edition.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/group_integrations/#list-all-active-integrations
 		ListActiveGroupIntegrations(gid any, opt *ListActiveIntegrationsOptions, options ...RequestOptionFunc) ([]*Integration, *Response, error)
+
+		// SetUpGroupHarbor sets up the Harbor integration for a group.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/group_integrations/#set-up-harbor
 		SetUpGroupHarbor(gid any, opt *SetUpHarborOptions, options ...RequestOptionFunc) (*Integration, *Response, error)
+
+		// DisableGroupHarbor disables the Harbor integration for a group.
+		// Integration settings are reset.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/group_integrations/#disable-harbor
 		DisableGroupHarbor(gid any, options ...RequestOptionFunc) (*Response, error)
+
+		// GetGroupHarborSettings gets the Harbor integration for a group.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/group_integrations/#get-harbor-settings
 		GetGroupHarborSettings(gid any, options ...RequestOptionFunc) (*Integration, *Response, error)
+
+		// SetGroupMicrosoftTeamsNotifications sets up Microsoft Teams notifications for a group.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/group_integrations/#set-up-microsoft-teams-notifications
 		SetGroupMicrosoftTeamsNotifications(gid any, opt *SetMicrosoftTeamsNotificationsOptions, options ...RequestOptionFunc) (*Integration, *Response, error)
+
+		// DisableGroupMicrosoftTeamsNotifications disables Microsoft Teams notifications
+		// for a group. Integration settings are reset.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/group_integrations/#disable-microsoft-teams-notifications
 		DisableGroupMicrosoftTeamsNotifications(gid any, options ...RequestOptionFunc) (*Response, error)
+
+		// GetGroupMicrosoftTeamsNotifications gets the Microsoft Teams notifications for a group.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/group_integrations/#get-microsoft-teams-notifications-settings
 		GetGroupMicrosoftTeamsNotifications(gid any, options ...RequestOptionFunc) (*Integration, *Response, error)
+
+		// SetUpGroupJira sets up the Jira integration for a group.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/group_integrations/#set-up-jira
+		SetUpGroupJira(gid any, opt *SetUpJiraOptions, options ...RequestOptionFunc) (*Integration, *Response, error)
+
+		// DisableGroupJira disables the Jira integration for a group.
+		// Integration settings are reset.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/group_integrations/#disable-jira
+		DisableGroupJira(gid any, options ...RequestOptionFunc) (*Response, error)
+
+		// GetGroupJiraSettings gets the Jira integration for a group.
+		//
+		// GitLab API docs:
+		// https://docs.gitlab.com/api/group_integrations/#get-jira-settings
+		GetGroupJiraSettings(gid any, options ...RequestOptionFunc) (*Integration, *Response, error)
 	}
 
 	// IntegrationsService handles communication with the group
@@ -83,30 +138,12 @@ type ListActiveIntegrationsOptions struct {
 	ListOptions
 }
 
-// ListActiveGroupIntegrations gets a list of all active group integrations.
-// The vulnerability_events field is only available for GitLab Enterprise Edition.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/group_integrations/#list-all-active-integrations
 func (s *IntegrationsService) ListActiveGroupIntegrations(gid any, opt *ListActiveIntegrationsOptions, options ...RequestOptionFunc) ([]*Integration, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
 	}
-	u := fmt.Sprintf("groups/%s/integrations", PathEscape(group))
-
-	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var integrations []*Integration
-	resp, err := s.client.Do(req, &integrations)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return integrations, resp, nil
+	return do[[]*Integration](s.client, withPath("groups/%s/integrations", group), withMethod(http.MethodGet), withAPIOpts(opt), withRequestOpts(options...))
 }
 
 // SetUpHarborOptions represents the available SetUpGroupHarbor()
@@ -122,76 +159,29 @@ type SetUpHarborOptions struct {
 	UseInheritedSettings *bool   `url:"use_inherited_settings,omitempty" json:"use_inherited_settings,omitempty"`
 }
 
-// SetUpGroupHarbor sets up the Harbor integration for a group.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/group_integrations/#set-up-harbor
 func (s *IntegrationsService) SetUpGroupHarbor(gid any, opt *SetUpHarborOptions, options ...RequestOptionFunc) (*Integration, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
 	}
-	u := fmt.Sprintf("groups/%s/integrations/harbor", PathEscape(group))
-
-	req, err := s.client.NewRequest(http.MethodPut, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	integration := new(Integration)
-	resp, err := s.client.Do(req, integration)
-	if err != nil {
-		return nil, resp, err
-	}
-	return integration, resp, nil
+	return do[*Integration](s.client, withPath("groups/%s/integrations/harbor", group), withMethod(http.MethodPut), withAPIOpts(opt), withRequestOpts(options...))
 }
 
-// DisableGroupHarbor disables the Harbor integration for a group.
-// Integration settings are reset.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/group_integrations/#disable-harbor
 func (s *IntegrationsService) DisableGroupHarbor(gid any, options ...RequestOptionFunc) (*Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, err
 	}
-	u := fmt.Sprintf("groups/%s/integrations/harbor", PathEscape(group))
-
-	req, err := s.client.NewRequest(http.MethodDelete, u, nil, options)
-	if err != nil {
-		return nil, err
-	}
-
-	resp, err := s.client.Do(req, nil)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
+	_, resp, err := do[none](s.client, withPath("groups/%s/integrations/harbor", group), withMethod(http.MethodDelete), withRequestOpts(options...))
+	return resp, err
 }
 
-// GetGroupHarborSettings gets the Harbor integration for a group.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/group_integrations/#get-harbor-settings
 func (s *IntegrationsService) GetGroupHarborSettings(gid any, options ...RequestOptionFunc) (*Integration, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
 	}
-	u := fmt.Sprintf("groups/%s/integrations/harbor", PathEscape(group))
-
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	integration := new(Integration)
-	resp, err := s.client.Do(req, integration)
-	if err != nil {
-		return nil, nil, err
-	}
-	return integration, resp, nil
+	return do[*Integration](s.client, withPath("groups/%s/integrations/harbor", group), withMethod(http.MethodGet), withRequestOpts(options...))
 }
 
 // SetMicrosoftTeamsNotificationsOptions represents the available
@@ -217,74 +207,75 @@ type SetMicrosoftTeamsNotificationsOptions struct {
 	UseInheritedSettings      *bool   `url:"use_inherited_settings,omitempty"`
 }
 
-// SetGroupMicrosoftTeamsNotifications sets up Microsoft Teams notifications for a group.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/group_integrations/#set-up-microsoft-teams-notifications
 func (s *IntegrationsService) SetGroupMicrosoftTeamsNotifications(gid any, opt *SetMicrosoftTeamsNotificationsOptions, options ...RequestOptionFunc) (*Integration, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
 	}
-	u := fmt.Sprintf("groups/%s/integrations/microsoft_teams", PathEscape(group))
-
-	req, err := s.client.NewRequest(http.MethodPut, u, opt, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	integration := new(Integration)
-	resp, err := s.client.Do(req, integration)
-	if err != nil {
-		return nil, resp, err
-	}
-	return integration, resp, nil
+	return do[*Integration](s.client, withPath("groups/%s/integrations/microsoft_teams", group), withMethod(http.MethodPut), withAPIOpts(opt), withRequestOpts(options...))
 }
 
-// DisableGroupMicrosoftTeamsNotifications disables Microsoft Teams notifications
-// for a group. Integration settings are reset.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/group_integrations/#disable-microsoft-teams-notifications
 func (s *IntegrationsService) DisableGroupMicrosoftTeamsNotifications(gid any, options ...RequestOptionFunc) (*Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, err
 	}
-	u := fmt.Sprintf("groups/%s/integrations/microsoft_teams", PathEscape(group))
-
-	req, err := s.client.NewRequest(http.MethodDelete, u, nil, options)
-	if err != nil {
-		return nil, err
-	}
-
-	resp, err := s.client.Do(req, nil)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
+	_, resp, err := do[none](s.client, withPath("groups/%s/integrations/microsoft_teams", group), withMethod(http.MethodDelete), withRequestOpts(options...))
+	return resp, err
 }
 
-// GetGroupMicrosoftTeamsNotifications gets the Microsoft Teams notifications for a group.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/group_integrations/#get-microsoft-teams-notifications-settings
 func (s *IntegrationsService) GetGroupMicrosoftTeamsNotifications(gid any, options ...RequestOptionFunc) (*Integration, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
 	}
-	u := fmt.Sprintf("groups/%s/integrations/microsoft_teams", PathEscape(group))
+	return do[*Integration](s.client, withPath("groups/%s/integrations/microsoft_teams", group), withMethod(http.MethodGet), withRequestOpts(options...))
+}
 
-	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
+// SetUpJiraOptions represents the available SetUpJira() options.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/api/group_integrations/#set-up-jira
+type SetUpJiraOptions struct {
+	URL                          *string   `url:"url,omitempty" json:"url,omitempty"`
+	APIURL                       *string   `url:"api_url,omitempty" json:"api_url,omitempty"`
+	Username                     *string   `url:"username,omitempty" json:"username,omitempty"`
+	Password                     *string   `url:"password,omitempty" json:"password,omitempty"`
+	Active                       *bool     `url:"active,omitempty" json:"active,omitempty"`
+	JiraAuthType                 *int64    `url:"jira_auth_type,omitempty" json:"jira_auth_type,omitempty"`
+	JiraIssuePrefix              *string   `url:"jira_issue_prefix,omitempty" json:"jira_issue_prefix,omitempty"`
+	JiraIssueRegex               *string   `url:"jira_issue_regex,omitempty" json:"jira_issue_regex,omitempty"`
+	JiraIssueTransitionAutomatic *bool     `url:"jira_issue_transition_automatic,omitempty" json:"jira_issue_transition_automatic,omitempty"`
+	JiraIssueTransitionID        *string   `url:"jira_issue_transition_id,omitempty" json:"jira_issue_transition_id,omitempty"`
+	CommitEvents                 *bool     `url:"commit_events,omitempty" json:"commit_events,omitempty"`
+	MergeRequestsEvents          *bool     `url:"merge_requests_events,omitempty" json:"merge_requests_events,omitempty"`
+	CommentOnEventEnabled        *bool     `url:"comment_on_event_enabled,omitempty" json:"comment_on_event_enabled,omitempty"`
+	IssuesEnabled                *bool     `url:"issues_enabled,omitempty" json:"issues_enabled,omitempty"`
+	ProjectKeys                  *[]string `url:"project_keys,omitempty" json:"project_keys,omitempty"`
+	UseInheritedSettings         *bool     `url:"use_inherited_settings,omitempty" json:"use_inherited_settings,omitempty"`
+}
+
+func (s *IntegrationsService) SetUpGroupJira(gid any, opt *SetUpJiraOptions, options ...RequestOptionFunc) (*Integration, *Response, error) {
+	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
 	}
+	return do[*Integration](s.client, withPath("groups/%s/integrations/jira", group), withMethod(http.MethodPut), withAPIOpts(opt), withRequestOpts(options...))
+}
 
-	integration := new(Integration)
-	resp, err := s.client.Do(req, integration)
+func (s *IntegrationsService) DisableGroupJira(gid any, options ...RequestOptionFunc) (*Response, error) {
+	group, err := parseID(gid)
+	if err != nil {
+		return nil, err
+	}
+	_, resp, err := do[none](s.client, withPath("groups/%s/integrations/jira", group), withMethod(http.MethodDelete), withRequestOpts(options...))
+	return resp, err
+}
+
+func (s *IntegrationsService) GetGroupJiraSettings(gid any, options ...RequestOptionFunc) (*Integration, *Response, error) {
+	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
 	}
-	return integration, resp, nil
+	return do[*Integration](s.client, withPath("groups/%s/integrations/jira", group), withMethod(http.MethodGet), withRequestOpts(options...))
 }
