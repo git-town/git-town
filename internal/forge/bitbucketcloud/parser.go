@@ -43,10 +43,6 @@ func parsePullRequest(pullRequest map[string]any) (result forgedomain.BitbucketC
 	if !ok {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
-	isActive := state2 == "open"
-	if !isActive {
-		return
-	}
 	destination1, has := pullRequest["destination"]
 	if !has {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
