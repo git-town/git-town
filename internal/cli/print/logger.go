@@ -10,7 +10,6 @@ import (
 type Logger struct{}
 
 func (self Logger) Failed(failure string) {
-	// TODO: receive an error here?
 	self.Log(colors.BoldRed().Styled(fmt.Sprintf("%v\n", failure)))
 }
 
