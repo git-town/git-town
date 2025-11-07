@@ -1471,7 +1471,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 				return errors.New(`please use the step "the initial commits exist now" instead`)
 			}
 		}
-		return state.compareGherkinTable(ctx, table)
+		scenarioURI := ctx.Value(keyScenarioURI).(string)
+		return state.compareGherkinTable(scenarioURI, table)
 	})
 
 	sc.Step(`^these committed files exist now$`, func(ctx context.Context, table *godog.Table) error {
