@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/cli/flags"
 	"github.com/git-town/git-town/v22/internal/cli/print"
 	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v22/internal/cmd/ship"
 	"github.com/git-town/git-town/v22/internal/cmd/sync"
 	"github.com/git-town/git-town/v22/internal/config"
 	"github.com/git-town/git-town/v22/internal/config/cliconfig"
@@ -161,22 +162,24 @@ Start:
 }
 
 type mergeData struct {
-	branchInfosLastRun Option[gitdomain.BranchInfos]
-	branchesSnapshot   gitdomain.BranchesSnapshot
-	config             config.ValidatedConfig
-	connector          Option[forgedomain.Connector]
-	hasOpenChanges     bool
-	initialBranch      gitdomain.LocalBranchName
-	initialBranchInfo  gitdomain.BranchInfo
-	initialBranchSHA   gitdomain.SHA
-	initialBranchType  configdomain.BranchType
-	inputs             dialogcomponents.Inputs
-	parentBranch       gitdomain.LocalBranchName
-	parentBranchInfo   gitdomain.BranchInfo
-	parentBranchSHA    gitdomain.SHA
-	parentBranchType   configdomain.BranchType
-	previousBranch     Option[gitdomain.LocalBranchName]
-	stashSize          gitdomain.StashSize
+	branchInfosLastRun       Option[gitdomain.BranchInfos]
+	branchesSnapshot         gitdomain.BranchesSnapshot
+	childBranches            gitdomain.LocalBranchNames
+	config                   config.ValidatedConfig
+	connector                Option[forgedomain.Connector]
+	hasOpenChanges           bool
+	initialBranch            gitdomain.LocalBranchName
+	initialBranchInfo        gitdomain.BranchInfo
+	initialBranchSHA         gitdomain.SHA
+	initialBranchType        configdomain.BranchType
+	inputs                   dialogcomponents.Inputs
+	parentBranch             gitdomain.LocalBranchName
+	parentBranchInfo         gitdomain.BranchInfo
+	parentBranchSHA          gitdomain.SHA
+	parentBranchType         configdomain.BranchType
+	previousBranch           Option[gitdomain.LocalBranchName]
+	proposalsOfChildBranches []forgedomain.Proposal
+	stashSize                gitdomain.StashSize
 }
 
 func determineMergeData(repo execute.OpenRepoResult) (data mergeData, flow configdomain.ProgramFlow, err error) {
@@ -287,40 +290,57 @@ func determineMergeData(repo execute.OpenRepoResult) (data mergeData, flow confi
 	}
 	initialBranchType := validatedConfig.BranchType(initialBranch)
 	parentBranchType := validatedConfig.BranchType(parentBranch)
+
+	childBranches := validatedConfig.NormalConfig.Lineage.Children(initialBranch, validatedConfig.NormalConfig.Order)
+	proposalsOfChildBranches := ship.LoadProposalsOfChildBranches(ship.LoadProposalsOfChildBranchesArgs{
+		ConnectorOpt:               connector,
+		Lineage:                    validatedConfig.NormalConfig.Lineage,
+		Offline:                    repo.IsOffline,
+		OldBranch:                  initialBranch,
+		OldBranchHasTrackingBranch: branchesSnapshot.Branches.FindByLocalName(initialBranch).IsSome(),
+		Order:                      validatedConfig.NormalConfig.Order,
+	})
 	return mergeData{
-		branchInfosLastRun: branchInfosLastRun,
-		branchesSnapshot:   branchesSnapshot,
-		config:             validatedConfig,
-		connector:          connector,
-		hasOpenChanges:     repoStatus.OpenChanges,
-		initialBranch:      initialBranch,
-		initialBranchInfo:  *initialBranchInfo,
-		initialBranchSHA:   initialBranchSHA,
-		initialBranchType:  initialBranchType,
-		inputs:             inputs,
-		parentBranch:       parentBranch,
-		parentBranchInfo:   *parentBranchInfo,
-		parentBranchSHA:    parentBranchSHA,
-		parentBranchType:   parentBranchType,
-		previousBranch:     previousBranch,
-		stashSize:          stashSize,
+		branchInfosLastRun:       branchInfosLastRun,
+		branchesSnapshot:         branchesSnapshot,
+		childBranches:            childBranches,
+		config:                   validatedConfig,
+		connector:                connector,
+		hasOpenChanges:           repoStatus.OpenChanges,
+		initialBranch:            initialBranch,
+		initialBranchInfo:        *initialBranchInfo,
+		initialBranchSHA:         initialBranchSHA,
+		initialBranchType:        initialBranchType,
+		inputs:                   inputs,
+		parentBranch:             parentBranch,
+		parentBranchInfo:         *parentBranchInfo,
+		parentBranchSHA:          parentBranchSHA,
+		parentBranchType:         parentBranchType,
+		previousBranch:           previousBranch,
+		proposalsOfChildBranches: proposalsOfChildBranches,
+		stashSize:                stashSize,
 	}, configdomain.ProgramFlowContinue, err
 }
 
 func mergeProgram(repo execute.OpenRepoResult, data mergeData) program.Program {
 	prog := NewMutable(&program.Program{})
-	// there is no point in updating proposals:
-	// If the parent branch has a proposal, it doesn't need to change.
-	// The child branch proposal will get closed because the child branch gets deleted,
-	// and that's correct because it was from the child branch into the parent branch,
-	// and that doesn't make sense anymore because both branches are one now.
+	ship.UpdateChildBranchProposalsToGrandParent(prog.Value, data.proposalsOfChildBranches)
 	prog.Value.Add(&opcodes.Checkout{Branch: data.parentBranch})
 	if data.initialBranchSHA != data.parentBranchSHA {
 		prog.Value.Add(&opcodes.BranchCurrentResetToSHA{SetToSHA: data.initialBranchSHA})
 	}
+	for _, child := range data.childBranches {
+		prog.Value.Add(&opcodes.LineageParentSetToGrandParent{Branch: child})
+	}
 	prog.Value.Add(&opcodes.LineageParentRemove{
 		Branch: data.initialBranch,
 	})
+	initialTrackingBranch, initialHasTrackingBranch := data.initialBranchInfo.RemoteName.Get()
+	if initialHasTrackingBranch && repo.IsOffline.IsOnline() {
+		prog.Value.Add(&opcodes.BranchTrackingDelete{
+			Branch: initialTrackingBranch,
+		})
+	}
 	prog.Value.Add(&opcodes.BranchLocalDelete{
 		Branch: data.initialBranch,
 	})
@@ -328,12 +348,6 @@ func mergeProgram(repo execute.OpenRepoResult, data mergeData) program.Program {
 		prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{
 			CurrentBranch:   data.parentBranch,
 			ForceIfIncludes: true,
-		})
-	}
-	initialTrackingBranch, initialHasTrackingBranch := data.initialBranchInfo.RemoteName.Get()
-	if initialHasTrackingBranch && repo.IsOffline.IsOnline() {
-		prog.Value.Add(&opcodes.BranchTrackingDelete{
-			Branch: initialTrackingBranch,
 		})
 	}
 	if _, hasOverride := data.config.NormalConfig.BranchTypeOverrides[data.initialBranch]; hasOverride {
