@@ -100,6 +100,12 @@ go test src/cmd/root_test.go -v -run TestIsAcceptableGitVersion
 
 ## End-to-end tests
 
+Git Town uses an extensive end-to-end test suite. These tests model a wide
+variety of situations in which Git Town can be used. The ensure Git Town behaves
+correct in these situations, and help debug Git Town in these situations.
+
+### Run all E2E tests
+
 Run the end-to-end tests during development (nicer output):
 
 <a type="make/command" dir="..">
@@ -119,6 +125,8 @@ make cukeall
 ```
 
 </a>
+
+### Run a subset of E2E tests
 
 Run all tests in the `features/append` folder or file:
 
@@ -146,16 +154,27 @@ Run all files named `es.feature`:
 find . -name es.feature | xargs go test --
 ```
 
+### Stubbing out forges in E2E tests
+
 Certain tests require that the Git remote points to an actual GitHub, Gitea,
-GitLab, Bitbucket, or Forgejo address. This causes `git push` operations in this
-test to also go to GitHub. To prevent this, set an environment variable
-`GIT_TOWN_REMOTE` with the desired value of the
-[development remote](../website/src/preferences/dev-remote.md), and Git Town
-will use that value instead of what is configured in the repo.
+GitLab, Bitbucket, or Forgejo address. An example is using this value to
+determine the forge type. Using such a setting would cause `git push` operations
+in this test to also go to GitHub. We want to avoid this, because it's slow,
+brittle, and stresses the external forges.
+
+To prevent this, keep the actual setting pointed to the local remote. Set an
+environment variable `GIT_TOWN_REMOTE` with the desired value of the
+[development remote](../website/src/preferences/dev-remote.md). Git Town will
+use that value for internal calculations, instead of what is configured in the
+repo.
+
+### Running on Windows
 
 If Cucumber tests produce garbled output on Windows, try running them inside Git
 Bash. See [this issue](https://github.com/cucumber/godog/issues/129) for
 details.
+
+### Pausing end-to-end tests
 
 To pause an end-to-end test so that you have time to inspect the status of the
 Git repository created by the test, add the step `And inspect the repo`. The
@@ -164,7 +183,14 @@ into that path in a separate terminal window and inspect the repos there. The
 developer's repo is in the `repo` folder. The remote repo (that would normally
 be on GitHub) is in the `origin` folder.
 
-To see all commit SHAs of the repo, add the `And inspect the commits` step.
+### Finding the right SHAs
+
+Some end-to-end tests contain placeholders for commit SHAs. To find the correct
+placeholder, add the step `And inspect the commits`. This displays all SHAs in
+the repo, together with the placeholder to be used.
+
+Possible placeholders are defined in
+[here](../internal/test/handlebars/expand.go).
 
 ## Inspecting variables
 
@@ -188,7 +214,7 @@ spew.Dump(variable)
 pretty.LDiff(t, var1, var2)
 ```
 
-## Debug end-to-end tests
+### Debug an E2E test on the CLI
 
 To see the CLI output of the shell commands in a Cucumber test, as well as the
 Git commands that the Git Town test suite runs under the hood, add a tag
@@ -213,6 +239,8 @@ To manually inspect the local and remote Git repositories used in an end-to-end
 test, insert the step `And inspect the repo`. This step will make Cucumber print
 the path of the workspace and wait until you hit ENTER.
 
+### Debug an E2E test in VSCode
+
 Debug a Godog Cucumber feature in [VSCode](https://code.visualstudio.com):
 
 - open `main_test.go`
@@ -220,10 +248,9 @@ Debug a Godog Cucumber feature in [VSCode](https://code.visualstudio.com):
 - set a breakpoint in your test code
 - run the `debug a test` configuration in the debugger
 
-## Triangulate a hanging end-to-end test
+### Triangulate a hanging end-to-end test
 
-End-to-end tests sometimes hang due to Git Town waiting for input that the test
-doesn't enter. To find the hanging test you can do a binary search by executing
+End-to-end tests sometimes hang. To find the hanging test, you can execute
 subsets of tests using `go test -- features/<path>` where path is either a
 subfolder or file inside the "features" folder.
 
@@ -231,7 +258,7 @@ Alternatively, open `main_test.go`, change `Format` to `pretty` and
 `Concurrency` to 1, and run the entire test suite. The detailed output will give
 you hints at which test fails.
 
-## Configure the Cucumber IDE extension
+### Configure the Cucumber IDE extension
 
 To configure the official
 [Cucumber extension](https://marketplace.visualstudio.com/items/?itemName=CucumberOpen.cucumber-official)
