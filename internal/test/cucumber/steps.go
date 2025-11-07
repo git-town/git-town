@@ -43,8 +43,8 @@ import (
 // the global FixtureFactory instance.
 var fixtureFactory *fixture.Factory
 
-// CaptureGoldenMode indicates whether to update .feature files with actual command output when tests fail
-var CaptureGoldenMode bool
+// CukeUpdate indicates whether to update .feature files with actual command output when tests fail
+var CukeUpdate bool
 
 // dedicated type for storing data in context.Context
 type key int
@@ -482,7 +482,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		})
 		diff, errorCount := table.EqualDataTable(expanded)
 		if errorCount != 0 {
-			if CaptureGoldenMode {
+			if CukeUpdate {
 				scenarioURI := ctx.Value(keyScenarioURI).(string)
 				if err := updateFeatureFileWithCommands(scenarioURI, expanded.String(), table.String()); err != nil {
 					fmt.Printf("\nERROR! Failed to update feature file: %v\n", err)

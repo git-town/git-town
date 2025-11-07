@@ -101,7 +101,7 @@ func (self *ScenarioState) compareGherkinTable(scenarioURI string, table *godog.
 	commitTable := self.fixture.CommitTable(fields)
 	diff, errorCount := commitTable.EqualGherkin(table)
 	if errorCount != 0 {
-		if CaptureGoldenMode {
+		if CukeUpdate {
 			expectedTable := datatable.FromGherkin(table)
 			if err := updateFeatureFileWithCommands(scenarioURI, expectedTable.String(), commitTable.String()); err != nil {
 				fmt.Printf("\nERROR! Failed to update feature file: %v\n", err)
