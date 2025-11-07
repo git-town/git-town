@@ -7,24 +7,24 @@ import (
 	"strings"
 )
 
-// updateFeatureFileWithCommands updates the feature file with the actual commands table
-func updateFeatureFileWithCommands(featureFilePath, oldTableStr, newTableStr string) {
+// updateFeatureFile updates the given section of the given feature file with the given new section.
+func updateFeatureFile(filePath, oldSection, newSection string) {
 	// Read the entire feature file
-	content, err := os.ReadFile(featureFilePath)
+	content, err := os.ReadFile(filePath)
 	if err != nil {
 		panic(fmt.Sprintf("failed to read feature file: %v", err))
 	}
 
 	// Split content into lines and prepare table lines
 	fileLines := strings.Split(string(content), "\n")
-	oldTableLines := trimTableLines(oldTableStr)
-	newTableLines := trimTableLines(newTableStr)
+	oldTableLines := trimTableLines(oldSection)
+	newTableLines := trimTableLines(newSection)
 
 	// Find the table in the file
 	startLine, err := findTableInFile(fileLines, oldTableLines)
 	if err != nil {
-		fmt.Println("ERROR! Could not find expected table in feature file: ", featureFilePath)
-		fmt.Println("Expected table:\n", oldTableStr)
+		fmt.Println("ERROR! Could not find expected table in feature file: ", filePath)
+		fmt.Println("Expected table:\n", oldSection)
 		return
 	}
 
@@ -40,7 +40,7 @@ func updateFeatureFileWithCommands(featureFilePath, oldTableStr, newTableStr str
 	// Write back to the file
 	newContent := strings.Join(newLines, "\n")
 	//nolint:gosec // need permission 644 for feature files
-	if err := os.WriteFile(featureFilePath, []byte(newContent), 0o644); err != nil {
+	if err := os.WriteFile(filePath, []byte(newContent), 0o644); err != nil {
 		panic(fmt.Sprintf("failed to write feature file: %v", err))
 	}
 }

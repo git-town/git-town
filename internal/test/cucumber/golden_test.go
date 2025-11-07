@@ -364,7 +364,7 @@ Feature: test
 			}
 
 			// Run the function
-			updateFeatureFileWithCommands(tmpFile, tt.oldTable, tt.newTable)
+			updateFeatureFile(tmpFile, tt.oldTable, tt.newTable)
 
 			// Read the result
 			result, err := os.ReadFile(tmpFile)
