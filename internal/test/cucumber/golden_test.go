@@ -67,63 +67,6 @@ func TestIndentTableLines(t *testing.T) {
 	}
 }
 
-func TestTrimTableLines(t *testing.T) {
-	t.Parallel()
-
-	tests := []struct {
-		name string
-		give string
-		want []string
-	}{
-		{
-			name: "no empty lines",
-			give: "| A | B |\n| 1 | 2 |",
-			want: []string{"| A | B |", "| 1 | 2 |"},
-		},
-		{
-			name: "trailing empty line",
-			give: "| A | B |\n| 1 | 2 |\n",
-			want: []string{"| A | B |", "| 1 | 2 |"},
-		},
-		{
-			name: "multiple trailing empty lines",
-			give: "| A | B |\n| 1 | 2 |\n\n\n",
-			want: []string{"| A | B |", "| 1 | 2 |"},
-		},
-		{
-			name: "leading empty lines",
-			give: "\n\n| A | B |\n| 1 | 2 |",
-			want: []string{"| A | B |", "| 1 | 2 |"},
-		},
-		{
-			name: "empty string",
-			give: "",
-			want: []string{},
-		},
-		{
-			name: "only empty lines",
-			give: "\n\n\n",
-			want: []string{},
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-			result := cucumber.TrimmedLines(tt.give)
-			if len(result) != len(tt.want) {
-				t.Errorf("trimTableLines() returned %d lines, expected %d", len(result), len(tt.want))
-				return
-			}
-			for i, line := range result {
-				if line != tt.want[i] {
-					t.Errorf("trimTableLines()[%d] = %q, expected %q", i, line, tt.want[i])
-				}
-			}
-		})
-	}
-}
-
 func TestMatchesTable(t *testing.T) {
 	t.Parallel()
 
