@@ -1,69 +1,13 @@
-package cucumber
+package cucumber_test
 
 import (
 	"os"
 	"path/filepath"
 	"testing"
 
+	"github.com/git-town/git-town/v22/internal/test/cucumber"
 	"github.com/shoenig/test/must"
 )
-
-func TestTrimTableLines(t *testing.T) {
-	t.Parallel()
-
-	tests := []struct {
-		name string
-		give string
-		want []string
-	}{
-		{
-			name: "no empty lines",
-			give: "| A | B |\n| 1 | 2 |",
-			want: []string{"| A | B |", "| 1 | 2 |"},
-		},
-		{
-			name: "trailing empty line",
-			give: "| A | B |\n| 1 | 2 |\n",
-			want: []string{"| A | B |", "| 1 | 2 |"},
-		},
-		{
-			name: "multiple trailing empty lines",
-			give: "| A | B |\n| 1 | 2 |\n\n\n",
-			want: []string{"| A | B |", "| 1 | 2 |"},
-		},
-		{
-			name: "leading empty lines",
-			give: "\n\n| A | B |\n| 1 | 2 |",
-			want: []string{"| A | B |", "| 1 | 2 |"},
-		},
-		{
-			name: "empty string",
-			give: "",
-			want: []string{},
-		},
-		{
-			name: "only empty lines",
-			give: "\n\n\n",
-			want: []string{},
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-			result := trimmedLines(tt.give)
-			if len(result) != len(tt.want) {
-				t.Errorf("trimTableLines() returned %d lines, expected %d", len(result), len(tt.want))
-				return
-			}
-			for i, line := range result {
-				if line != tt.want[i] {
-					t.Errorf("trimTableLines()[%d] = %q, expected %q", i, line, tt.want[i])
-				}
-			}
-		})
-	}
-}
 
 func TestIndentTableLines(t *testing.T) {
 	t.Parallel()
@@ -109,7 +53,7 @@ func TestIndentTableLines(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			result := indentTableLines(tt.lines, tt.indentation)
+			result := cucumber.IndentSection(tt.lines, tt.indentation)
 			if len(result) != len(tt.want) {
 				t.Errorf("indentTableLines() returned %d lines, expected %d", len(result), len(tt.want))
 				return
@@ -117,6 +61,63 @@ func TestIndentTableLines(t *testing.T) {
 			for i, line := range result {
 				if line != tt.want[i] {
 					t.Errorf("indentTableLines()[%d] = %q, expected %q", i, line, tt.want[i])
+				}
+			}
+		})
+	}
+}
+
+func TestTrimTableLines(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name string
+		give string
+		want []string
+	}{
+		{
+			name: "no empty lines",
+			give: "| A | B |\n| 1 | 2 |",
+			want: []string{"| A | B |", "| 1 | 2 |"},
+		},
+		{
+			name: "trailing empty line",
+			give: "| A | B |\n| 1 | 2 |\n",
+			want: []string{"| A | B |", "| 1 | 2 |"},
+		},
+		{
+			name: "multiple trailing empty lines",
+			give: "| A | B |\n| 1 | 2 |\n\n\n",
+			want: []string{"| A | B |", "| 1 | 2 |"},
+		},
+		{
+			name: "leading empty lines",
+			give: "\n\n| A | B |\n| 1 | 2 |",
+			want: []string{"| A | B |", "| 1 | 2 |"},
+		},
+		{
+			name: "empty string",
+			give: "",
+			want: []string{},
+		},
+		{
+			name: "only empty lines",
+			give: "\n\n\n",
+			want: []string{},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			result := cucumber.TrimmedLines(tt.give)
+			if len(result) != len(tt.want) {
+				t.Errorf("trimTableLines() returned %d lines, expected %d", len(result), len(tt.want))
+				return
+			}
+			for i, line := range result {
+				if line != tt.want[i] {
+					t.Errorf("trimTableLines()[%d] = %q, expected %q", i, line, tt.want[i])
 				}
 			}
 		})
@@ -167,7 +168,7 @@ func TestMatchesTable(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			result := matchesTable(tt.fileLines, tt.tableLines)
+			result := cucumber.MatchesTable(tt.fileLines, tt.tableLines)
 			if result != tt.want {
 				t.Errorf("matchesTable() = %v, expected %v", result, tt.want)
 			}
@@ -235,7 +236,7 @@ func TestFindTableInFile(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			haveIdx, haveFound := locateSection(tt.fileLines, tt.tableLines)
+			haveIdx, haveFound := cucumber.LocateSection(tt.fileLines, tt.tableLines)
 			must.EqOp(t, tt.wantIdx, haveIdx)
 			must.EqOp(t, tt.wantFound, haveFound)
 		})
@@ -305,7 +306,7 @@ Feature: test
 			}
 
 			// Run the function
-			updateFeatureFile(tmpFile, tt.oldTable, tt.newTable)
+			cucumber.UpdateFeatureFile(tmpFile, tt.oldTable, tt.newTable)
 
 			// Read the result
 			result, err := os.ReadFile(tmpFile)

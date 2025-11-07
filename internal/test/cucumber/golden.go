@@ -4,33 +4,35 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/git-town/git-town/v22/internal/gohacks"
 )
 
-// updateFeatureFile updates the given section of the given feature file with the given new section.
-func updateFeatureFile(filePath, oldSection, newSection string) {
+// UpdateFeatureFile updates the given section of the given feature file with the given new section.
+func UpdateFeatureFile(filePath, oldSection, newSection string) {
 	content, err := os.ReadFile(filePath)
 	if err != nil {
 		panic(fmt.Sprintf("failed to read feature file: %v", err))
 	}
 	fileLines := strings.Split(string(content), "\n")
-	oldSectionLines := trimmedLines(oldSection)
-	newSectionLines := trimmedLines(newSection)
+	oldSectionLines := TrimmedLines(oldSection)
+	newSectionLines := TrimmedLines(newSection)
 
-	// Find the section in the file
-	startLine, found := locateSection(fileLines, oldSectionLines)
+	// find the section in the file
+	startLine, found := LocateSection(fileLines, oldSectionLines)
 	if !found {
 		fmt.Println("ERROR! Could not find section in feature file: ", filePath)
 		fmt.Println("Expected section:\n", oldSection)
 		return
 	}
 
-	// indent the new section
-	indentation := getIndentation(fileLines[startLine])
-	indentedNewTableLines := indentTableLines(newSectionLines, indentation)
+	// indent the new section the same way the old one is indented in the file
+	indentation := gohacks.LeadingWhitespace(fileLines[startLine])
+	indentedNewSectionLines := IndentSection(newSectionLines, indentation)
 
-	// Replace the old table lines with the new ones
+	// replace the old section with the new one
 	newLines := append([]string{}, fileLines[:startLine]...)
-	newLines = append(newLines, indentedNewTableLines...)
+	newLines = append(newLines, indentedNewSectionLines...)
 	newLines = append(newLines, fileLines[startLine+len(oldSectionLines):]...)
 
 	// Write back to the file
@@ -41,8 +43,44 @@ func updateFeatureFile(filePath, oldSection, newSection string) {
 	}
 }
 
-// trimmedLines removes leading and trailing empty lines from a table string
-func trimmedLines(tableStr string) []string {
+// IndentSection applies indentation to each non-empty line
+func IndentSection(lines []string, indentation string) []string {
+	result := make([]string, len(lines))
+	for i, line := range lines {
+		if strings.TrimSpace(line) != "" {
+			result[i] = indentation + strings.TrimLeft(line, " \t")
+		} else {
+			result[i] = line
+		}
+	}
+	return result
+}
+
+// LocateSection locates a table in the file by matching unindented content
+func LocateSection(fileLines, tableLines []string) (int, bool) {
+	for i := 0; i <= len(fileLines)-len(tableLines); i++ {
+		if MatchesTable(fileLines[i:], tableLines) {
+			return i, true
+		}
+	}
+	return -1, false
+}
+
+// MatchesTable checks if the file lines match the table lines (ignoring indentation)
+func MatchesTable(fileLines, tableLines []string) bool {
+	if len(fileLines) < len(tableLines) {
+		return false
+	}
+	for j, tableLine := range tableLines {
+		if strings.TrimSpace(fileLines[j]) != strings.TrimSpace(tableLine) {
+			return false
+		}
+	}
+	return true
+}
+
+// TrimmedLines removes leading and trailing empty lines from a table string
+func TrimmedLines(tableStr string) []string {
 	linesRaw := strings.Split(tableStr, "\n")
 	// Filter out leading empty lines
 	lines := make([]string, 0, len(linesRaw))
@@ -56,53 +94,4 @@ func trimmedLines(tableStr string) []string {
 		lines = lines[:len(lines)-1]
 	}
 	return lines
-}
-
-// locateSection locates a table in the file by matching unindented content
-func locateSection(fileLines, tableLines []string) (int, bool) {
-	for i := 0; i <= len(fileLines)-len(tableLines); i++ {
-		if matchesTable(fileLines[i:], tableLines) {
-			return i, true
-		}
-	}
-	return -1, false
-}
-
-// matchesTable checks if the file lines match the table lines (ignoring indentation)
-func matchesTable(fileLines, tableLines []string) bool {
-	if len(fileLines) < len(tableLines) {
-		return false
-	}
-	for j, tableLine := range tableLines {
-		if strings.TrimSpace(fileLines[j]) != strings.TrimSpace(tableLine) {
-			return false
-		}
-	}
-	return true
-}
-
-// getIndentation extracts leading whitespace from a line
-func getIndentation(line string) string {
-	indentation := ""
-	for _, ch := range line {
-		if ch == ' ' || ch == '\t' {
-			indentation += string(ch)
-		} else {
-			break
-		}
-	}
-	return indentation
-}
-
-// indentTableLines applies indentation to each non-empty line
-func indentTableLines(lines []string, indentation string) []string {
-	result := make([]string, len(lines))
-	for i, line := range lines {
-		if strings.TrimSpace(line) != "" {
-			result[i] = indentation + strings.TrimLeft(line, " \t")
-		} else {
-			result[i] = line
-		}
-	}
-	return result
 }

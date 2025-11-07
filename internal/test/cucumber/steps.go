@@ -484,7 +484,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if errorCount != 0 {
 			if CukeUpdate {
 				scenarioURI := ctx.Value(keyScenarioURI).(string)
-				updateFeatureFile(scenarioURI, expanded.String(), table.String())
+				UpdateFeatureFile(scenarioURI, expanded.String(), table.String())
 				return nil
 			}
 			fmt.Printf("\nERROR! Found %d differences in the commands run\n\n", errorCount)
@@ -1480,7 +1480,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			if CukeUpdate {
 				scenarioURI := ctx.Value(keyScenarioURI).(string)
 				expectedTable := datatable.FromGherkin(table)
-				updateFeatureFile(scenarioURI, expectedTable.String(), fileTable.String())
+				UpdateFeatureFile(scenarioURI, expectedTable.String(), fileTable.String())
 				return nil
 			}
 			fmt.Printf("\nERROR! Found %d differences in the existing files\n\n", errorCount)

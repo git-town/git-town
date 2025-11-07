@@ -7,22 +7,6 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestGetIndentation(t *testing.T) {
-	t.Parallel()
-	tests := map[string]string{
-		"    text":   "    ",   // spaces
-		"\t\ttext":   "\t\t",   // tabs
-		"  \t  text": "  \t  ", // mixed spaces and tabs
-		"text":       "",       // no indentation
-		"":           "",       // empty string
-		"    ":       "    ",   // only whitespace
-	}
-	for give, want := range tests {
-		have := gohacks.GetIndentation(give)
-		must.EqOp(t, want, have)
-	}
-}
-
 func TestEscapeNewLines(t *testing.T) {
 	t.Parallel()
 	tests := map[string]string{
@@ -34,6 +18,22 @@ func TestEscapeNewLines(t *testing.T) {
 	}
 	for give, want := range tests {
 		have := gohacks.EscapeNewLines(give)
+		must.EqOp(t, want, have)
+	}
+}
+
+func TestGetIndentation(t *testing.T) {
+	t.Parallel()
+	tests := map[string]string{
+		"    text":   "    ",   // spaces
+		"\t\ttext":   "\t\t",   // tabs
+		"  \t  text": "  \t  ", // mixed spaces and tabs
+		"text":       "",       // no indentation
+		"":           "",       // empty string
+		"    ":       "    ",   // only whitespace
+	}
+	for give, want := range tests {
+		have := gohacks.LeadingWhitespace(give)
 		must.EqOp(t, want, have)
 	}
 }
