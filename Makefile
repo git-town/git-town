@@ -15,7 +15,7 @@ cuke: install  # runs all end-to-end tests in a way that looks nice during devel
 cukeall: install  # runs all end-to-end tests
 	@env $(GO_TEST_ARGS) go test -v
 
-cuke-update: install  # runs end-to-end tests and updates feature files with actual commands when tests fail
+cuke-update: install  # updates the E2E tests to document the actual behavior of Git Town
 	@env $(GO_TEST_ARGS) cukeupdate=1 go test . -v -count=1
 
 cukethis: install  # runs the end-to-end tests that have a @this tag
