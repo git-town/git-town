@@ -1481,6 +1481,16 @@ func defineSteps(sc *godog.ScenarioContext) {
 		fileTable := devRepo.FilesInBranches("main")
 		diff, errorCount := fileTable.EqualGherkin(table)
 		if errorCount != 0 {
+			if CukeUpdate {
+				scenarioURI := ctx.Value(keyScenarioURI).(string)
+				expectedTable := datatable.FromGherkin(table)
+				if err := updateFeatureFileWithCommands(scenarioURI, expectedTable.String(), fileTable.String()); err != nil {
+					fmt.Printf("\nERROR! Failed to update feature file: %v\n", err)
+				} else {
+					fmt.Printf("\nUpdated feature file %s with actual files\n", scenarioURI)
+				}
+				return nil
+			}
 			fmt.Printf("\nERROR! Found %d differences in the existing files\n\n", errorCount)
 			fmt.Println(diff)
 			return errors.New("mismatching files found, see diff above")
