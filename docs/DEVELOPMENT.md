@@ -248,7 +248,7 @@ Debug a Godog Cucumber feature in [VSCode](https://code.visualstudio.com):
 - set a breakpoint in your test code
 - run the `debug a test` configuration in the debugger
 
-### Triangulate a hanging end-to-end test
+### Locate a hanging end-to-end test
 
 End-to-end tests sometimes hang. To find the hanging test, you can execute
 subsets of tests using `go test -- features/<path>` where path is either a
@@ -257,6 +257,24 @@ subfolder or file inside the "features" folder.
 Alternatively, open `main_test.go`, change `Format` to `pretty` and
 `Concurrency` to 1, and run the entire test suite. The detailed output will give
 you hints at which test fails.
+
+### Automatically update E2E test files
+
+Our E2E tests act as
+[golden files](https://en.wikipedia.org/wiki/Characterization_test): they embody
+the expected output that all future test runs must match. When we intentionally
+change Git Town's behavior, we also need to update possibly hundreds of E2E
+tests.
+
+To streamline this, run:
+
+```bash
+make cuke-update
+```
+
+When running in this mode, and an E2E test fails, the test runner updates the
+`.feature` file, rather than failing the test. You must then inspect the test
+files to verify whether the updated tests are correct.
 
 ### Configure the Cucumber IDE extension
 
