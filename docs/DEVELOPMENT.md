@@ -100,9 +100,9 @@ go test src/cmd/root_test.go -v -run TestIsAcceptableGitVersion
 
 ## End-to-end tests
 
-Git Town uses an extensive end-to-end test suite. These tests model a wide
-variety of situations in which Git Town can be used. The ensure Git Town behaves
-correct in these situations, and help debug Git Town in these situations.
+Git Town uses an extensive end-to-end test suite that models a wide variety of
+situations in which Git Town can be used. This helps ensure Git Town behaves
+correct in these situations and debug Git Town when it doesn't.
 
 ### Run all E2E tests
 
