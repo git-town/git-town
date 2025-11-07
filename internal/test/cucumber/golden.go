@@ -8,11 +8,11 @@ import (
 )
 
 // updateFeatureFileWithCommands updates the feature file with the actual commands table
-func updateFeatureFileWithCommands(featureFilePath, oldTableStr, newTableStr string) error {
+func updateFeatureFileWithCommands(featureFilePath, oldTableStr, newTableStr string) {
 	// Read the entire feature file
 	content, err := os.ReadFile(featureFilePath)
 	if err != nil {
-		return fmt.Errorf("failed to read feature file: %w", err)
+		panic(fmt.Sprintf("failed to read feature file: %v", err))
 	}
 
 	// Split content into lines and prepare table lines
@@ -23,7 +23,9 @@ func updateFeatureFileWithCommands(featureFilePath, oldTableStr, newTableStr str
 	// Find the table in the file
 	startLine, err := findTableInFile(fileLines, oldTableLines)
 	if err != nil {
-		return err
+		fmt.Println("ERROR! Could not find expected table in feature file: ", featureFilePath)
+		fmt.Println("Expected table:\n", oldTableStr)
+		return
 	}
 
 	// Get indentation and apply it to the new table
@@ -39,10 +41,8 @@ func updateFeatureFileWithCommands(featureFilePath, oldTableStr, newTableStr str
 	newContent := strings.Join(newLines, "\n")
 	//nolint:gosec // need permission 644 for feature files
 	if err := os.WriteFile(featureFilePath, []byte(newContent), 0o644); err != nil {
-		return fmt.Errorf("failed to write feature file: %w", err)
+		panic(fmt.Sprintf("failed to write feature file: %v", err))
 	}
-
-	return nil
 }
 
 // trimTableLines removes leading and trailing empty lines from a table string

@@ -484,11 +484,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if errorCount != 0 {
 			if CukeUpdate {
 				scenarioURI := ctx.Value(keyScenarioURI).(string)
-				if err := updateFeatureFileWithCommands(scenarioURI, expanded.String(), table.String()); err != nil {
-					fmt.Printf("\nERROR! Failed to update feature file: %v\n", err)
-				} else {
-					fmt.Printf("\nUpdated feature file %s with actual commands\n", scenarioURI)
-				}
+				updateFeatureFileWithCommands(scenarioURI, expanded.String(), table.String())
 				return nil
 			}
 			fmt.Printf("\nERROR! Found %d differences in the commands run\n\n", errorCount)

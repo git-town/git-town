@@ -310,7 +310,6 @@ func TestUpdateFeatureFileWithCommands(t *testing.T) {
 		oldTable       string
 		newTable       string
 		wantResult     string
-		wantError      bool
 	}{
 		{
 			name: "replace table with proper indentation",
@@ -330,17 +329,6 @@ Feature: test
       | BRANCH | COMMAND |
       | main   | git pull |
     And some other step`[1:],
-			wantError: false,
-		},
-		{
-			name: "table not found",
-			initialContent: `
-Feature: test
-  Scenario: test
-    Then some step`[1:],
-			oldTable:  "| BRANCH | COMMAND |\n| main   | git fetch |",
-			newTable:  "| BRANCH | COMMAND |\n| main   | git pull |",
-			wantError: true,
 		},
 		{
 			name: "replace table with different number of rows",
@@ -361,7 +349,6 @@ Feature: test
       | main   | git init |
       | main   | git pull |
     And done`[1:],
-			wantError: false,
 		},
 	}
 
@@ -377,18 +364,7 @@ Feature: test
 			}
 
 			// Run the function
-			err := updateFeatureFileWithCommands(tmpFile, tt.oldTable, tt.newTable)
-
-			// Check error expectation
-			if tt.wantError {
-				if err == nil {
-					t.Errorf("updateFeatureFileWithCommands() expected error but got none")
-				}
-				return
-			}
-			if err != nil {
-				t.Fatalf("updateFeatureFileWithCommands() unexpected error: %v", err)
-			}
+			updateFeatureFileWithCommands(tmpFile, tt.oldTable, tt.newTable)
 
 			// Read the result
 			result, err := os.ReadFile(tmpFile)
