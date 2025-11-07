@@ -309,9 +309,10 @@ func determineDetachData(repo execute.OpenRepoResult) (data detachData, flow con
 	}
 	childBranches := validatedConfig.NormalConfig.Lineage.Children(branchNameToDetach, validatedConfig.NormalConfig.Order)
 	children := make([]detachChildBranch, len(childBranches))
+	proposalFinder, hasProposalFinder := connectorProposalFinder.Get()
 	for c, childBranch := range childBranches {
 		proposal := None[forgedomain.Proposal]()
-		if proposalFinder, hasProposalFinder := connectorProposalFinder.Get(); hasProposalFinder {
+		if hasProposalFinder {
 			proposal, err = proposalFinder.FindProposal(childBranch, initialBranch)
 			if err != nil {
 				return data, configdomain.ProgramFlowExit, err
@@ -436,22 +437,20 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 		}
 	}
 	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
-		_ = sync.AddStackLineageUpdateOpcodes(
-			sync.AddStackLineageUpdateOpcodesArgs{
-				Current:   data.initialBranch,
-				FullStack: true,
-				Program:   prog,
-				ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
-					Connector:                forgedomain.ProposalFinderFromConnector(data.connector),
-					CurrentBranch:            data.initialBranch,
-					Lineage:                  data.config.NormalConfig.Lineage,
-					MainAndPerennialBranches: data.config.MainAndPerennials(),
-					Order:                    data.config.NormalConfig.Order,
-				},
-				ProposalStackLineageTree:             None[*forge.ProposalStackLineageTree](),
-				SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(),
+		_ = sync.AddStackLineageUpdateOpcodes(sync.AddStackLineageUpdateOpcodesArgs{
+			Current:   data.initialBranch,
+			FullStack: true,
+			Program:   prog,
+			ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
+				Connector:                forgedomain.ProposalFinderFromConnector(data.connector),
+				CurrentBranch:            data.initialBranch,
+				Lineage:                  data.config.NormalConfig.Lineage,
+				MainAndPerennialBranches: data.config.MainAndPerennials(),
+				Order:                    data.config.NormalConfig.Order,
 			},
-		)
+			ProposalStackLineageTree:             None[*forge.ProposalStackLineageTree](),
+			SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(),
+		})
 	}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.config.NormalConfig.DryRun,
