@@ -1,7 +1,6 @@
 package cucumber
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -9,33 +8,30 @@ import (
 
 // updateFeatureFile updates the given section of the given feature file with the given new section.
 func updateFeatureFile(filePath, oldSection, newSection string) {
-	// Read the entire feature file
 	content, err := os.ReadFile(filePath)
 	if err != nil {
 		panic(fmt.Sprintf("failed to read feature file: %v", err))
 	}
-
-	// Split content into lines and prepare table lines
 	fileLines := strings.Split(string(content), "\n")
-	oldTableLines := trimTableLines(oldSection)
-	newTableLines := trimTableLines(newSection)
+	oldSectionLines := trimmedLines(oldSection)
+	newSectionLines := trimmedLines(newSection)
 
-	// Find the table in the file
-	startLine, err := findTableInFile(fileLines, oldTableLines)
-	if err != nil {
-		fmt.Println("ERROR! Could not find expected table in feature file: ", filePath)
-		fmt.Println("Expected table:\n", oldSection)
+	// Find the section in the file
+	startLine, found := locateSection(fileLines, oldSectionLines)
+	if !found {
+		fmt.Println("ERROR! Could not find section in feature file: ", filePath)
+		fmt.Println("Expected section:\n", oldSection)
 		return
 	}
 
-	// Get indentation and apply it to the new table
-	indentation := extractIndentation(fileLines[startLine])
-	indentedNewTableLines := indentTableLines(newTableLines, indentation)
+	// indent the new section
+	indentation := getIndentation(fileLines[startLine])
+	indentedNewTableLines := indentTableLines(newSectionLines, indentation)
 
 	// Replace the old table lines with the new ones
 	newLines := append([]string{}, fileLines[:startLine]...)
 	newLines = append(newLines, indentedNewTableLines...)
-	newLines = append(newLines, fileLines[startLine+len(oldTableLines):]...)
+	newLines = append(newLines, fileLines[startLine+len(oldSectionLines):]...)
 
 	// Write back to the file
 	newContent := strings.Join(newLines, "\n")
@@ -45,8 +41,8 @@ func updateFeatureFile(filePath, oldSection, newSection string) {
 	}
 }
 
-// trimTableLines removes leading and trailing empty lines from a table string
-func trimTableLines(tableStr string) []string {
+// trimmedLines removes leading and trailing empty lines from a table string
+func trimmedLines(tableStr string) []string {
 	linesRaw := strings.Split(tableStr, "\n")
 	// Filter out leading empty lines
 	lines := make([]string, 0, len(linesRaw))
@@ -62,14 +58,14 @@ func trimTableLines(tableStr string) []string {
 	return lines
 }
 
-// findTableInFile locates a table in the file by matching unindented content
-func findTableInFile(fileLines, tableLines []string) (int, error) {
+// locateSection locates a table in the file by matching unindented content
+func locateSection(fileLines, tableLines []string) (int, bool) {
 	for i := 0; i <= len(fileLines)-len(tableLines); i++ {
 		if matchesTable(fileLines[i:], tableLines) {
-			return i, nil
+			return i, true
 		}
 	}
-	return -1, errors.New("could not find expected table in feature file")
+	return -1, false
 }
 
 // matchesTable checks if the file lines match the table lines (ignoring indentation)
@@ -85,8 +81,8 @@ func matchesTable(fileLines, tableLines []string) bool {
 	return true
 }
 
-// extractIndentation extracts leading whitespace from a line
-func extractIndentation(line string) string {
+// getIndentation extracts leading whitespace from a line
+func getIndentation(line string) string {
 	indentation := ""
 	for _, ch := range line {
 		if ch == ' ' || ch == '\t' {

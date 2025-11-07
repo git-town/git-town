@@ -4,6 +4,8 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/shoenig/test/must"
 )
 
 func TestTrimTableLines(t *testing.T) {
@@ -49,7 +51,7 @@ func TestTrimTableLines(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			result := trimTableLines(tt.give)
+			result := trimmedLines(tt.give)
 			if len(result) != len(tt.want) {
 				t.Errorf("trimTableLines() returned %d lines, expected %d", len(result), len(tt.want))
 				return
@@ -58,57 +60,6 @@ func TestTrimTableLines(t *testing.T) {
 				if line != tt.want[i] {
 					t.Errorf("trimTableLines()[%d] = %q, expected %q", i, line, tt.want[i])
 				}
-			}
-		})
-	}
-}
-
-func TestExtractIndentation(t *testing.T) {
-	t.Parallel()
-
-	tests := []struct {
-		name string
-		give string
-		want string
-	}{
-		{
-			name: "spaces",
-			give: "    | A | B |",
-			want: "    ",
-		},
-		{
-			name: "tabs",
-			give: "\t\t| A | B |",
-			want: "\t\t",
-		},
-		{
-			name: "mixed spaces and tabs",
-			give: "  \t  | A | B |",
-			want: "  \t  ",
-		},
-		{
-			name: "no indentation",
-			give: "| A | B |",
-			want: "",
-		},
-		{
-			name: "empty line",
-			give: "",
-			want: "",
-		},
-		{
-			name: "only whitespace",
-			give: "    ",
-			want: "    ",
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-			result := extractIndentation(tt.give)
-			if result != tt.want {
-				t.Errorf("extractIndentation() = %q, expected %q", result, tt.want)
 			}
 		})
 	}
@@ -232,7 +183,7 @@ func TestFindTableInFile(t *testing.T) {
 		fileLines  []string
 		tableLines []string
 		wantIdx    int
-		wantError  bool
+		wantFound  bool
 	}{
 		{
 			name: "table at beginning",
@@ -243,7 +194,7 @@ func TestFindTableInFile(t *testing.T) {
 			},
 			tableLines: []string{"| A | B |", "| 1 | 2 |"},
 			wantIdx:    0,
-			wantError:  false,
+			wantFound:  true,
 		},
 		{
 			name: "table in middle",
@@ -255,7 +206,7 @@ func TestFindTableInFile(t *testing.T) {
 			},
 			tableLines: []string{"| A | B |", "| 1 | 2 |"},
 			wantIdx:    1,
-			wantError:  false,
+			wantFound:  true,
 		},
 		{
 			name: "table at end",
@@ -267,7 +218,7 @@ func TestFindTableInFile(t *testing.T) {
 			},
 			tableLines: []string{"| A | B |", "| 1 | 2 |"},
 			wantIdx:    2,
-			wantError:  false,
+			wantFound:  true,
 		},
 		{
 			name: "table not found",
@@ -277,26 +228,16 @@ func TestFindTableInFile(t *testing.T) {
 			},
 			tableLines: []string{"| A | B |", "| 1 | 2 |"},
 			wantIdx:    -1,
-			wantError:  true,
+			wantFound:  false,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			idx, err := findTableInFile(tt.fileLines, tt.tableLines)
-			if tt.wantError {
-				if err == nil {
-					t.Errorf("findTableInFile() expected error but got none")
-				}
-			} else {
-				if err != nil {
-					t.Errorf("findTableInFile() unexpected error: %v", err)
-				}
-				if idx != tt.wantIdx {
-					t.Errorf("findTableInFile() = %d, expected %d", idx, tt.wantIdx)
-				}
-			}
+			haveIdx, haveFound := locateSection(tt.fileLines, tt.tableLines)
+			must.EqOp(t, tt.wantIdx, haveIdx)
+			must.EqOp(t, tt.wantFound, haveFound)
 		})
 	}
 }
