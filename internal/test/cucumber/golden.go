@@ -22,7 +22,8 @@ func UpdateFeatureFile(filePath, oldSection, newSection string) error {
 	// find the section in the file
 	startLine, found := stringslice.LocateSection(fileLines, oldSectionLines)
 	if !found {
-		return fmt.Errorf("could not find section in feature file %q: %s", filePath, oldSection)
+		fmt.Println("Wanted section:\n", oldSection)
+		return fmt.Errorf("could not find section in feature file %q", filePath)
 	}
 
 	// indent the new section the same way the old one is indented in the file
