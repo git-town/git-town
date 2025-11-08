@@ -77,8 +77,10 @@ Feature: test
       | main   | git fetch |
     And done`[1:],
 			oldTable: `
+
 			| BRANCH | COMMAND |
 			| main   | git fetch |
+
 `,
 			newTable: `
 			| BRANCH | COMMAND |
@@ -106,6 +108,7 @@ Feature: test
 			| BRANCH | COMMAND |
 			| main   | git fetch |`[1:],
 			newTable: `
+
 			| BRANCH | COMMAND |
 			| main   | git init |
 			| main   | git pull |
