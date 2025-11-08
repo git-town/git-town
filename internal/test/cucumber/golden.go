@@ -26,7 +26,7 @@ func UpdateFeatureFile(filePath, oldSection, newSection string) error {
 		fmt.Println(oldSection)
 		fmt.Println("WANTED SECTION END")
 		fmt.Println("FILE CONTENT START")
-		fmt.Println(content)
+		fmt.Println(string(content))
 		fmt.Println("FILE CONTENT END")
 		return fmt.Errorf("could not find section in feature file %q", filePath)
 	}
