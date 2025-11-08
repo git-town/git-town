@@ -50,7 +50,7 @@ func TestMatches(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			result := stringslice.Matches(tt.fileLines, tt.tableLines)
+			result := stringslice.Equal(tt.fileLines, tt.tableLines)
 			if result != tt.want {
 				t.Errorf("matchesTable() = %v, expected %v", result, tt.want)
 			}

@@ -4,7 +4,7 @@ package stringslice
 func LocateSection(lines, section []string) (int, bool) {
 	sectionLength := len(section)
 	for i := 0; i <= len(lines)-sectionLength; i++ {
-		if Matches(lines[i:i+sectionLength], section) {
+		if Equal(lines[i:i+sectionLength], section) {
 			return i, true
 		}
 	}
