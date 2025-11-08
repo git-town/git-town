@@ -18,10 +18,10 @@ cukeall: install  # runs all end-to-end tests
 cukethis: install  # runs the end-to-end tests that have a @this tag
 	@env $(GO_TEST_ARGS) cukethis=1 go test . -v -count=1
 
-cuke-update: install  # updates the E2E tests to document the actual behavior of Git Town
+cuke-update: install  # updates the E2E tests based on the actual behavior of Git Town
 	@env $(GO_TEST_ARGS) cukeupdate=1 go test . -v -count=1
 
-cuke-update-this: install  # updates the E2E tests to document the actual behavior of Git Town
+cuke-update-this: install  # updates the E2E tests that have a @this tag
 	@env $(GO_TEST_ARGS) cukeupdate=1 cukethis=1 go test . -v -count=1
 
 cukethiswin:  # runs the end-to-end tests that have a @this tag on Windows
