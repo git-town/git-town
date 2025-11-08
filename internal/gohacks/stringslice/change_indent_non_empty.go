@@ -2,8 +2,8 @@ package stringslice
 
 import "strings"
 
-// IndentNonEmpty prepends the given indentation to each non-empty line.
-func IndentNonEmpty(lines []string, indentation string) []string {
+// ChangeIndentNonEmpty changes the indentation of each non-empty line to the given string.
+func ChangeIndentNonEmpty(lines []string, indentation string) []string {
 	result := make([]string, len(lines))
 	for i, line := range lines {
 		if strings.TrimSpace(line) != "" {

@@ -48,7 +48,7 @@ func TestIndentNonEmpty(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			result := stringslice.IndentNonEmpty(tt.giveLines, tt.giveIndent)
+			result := stringslice.ChangeIndentNonEmpty(tt.giveLines, tt.giveIndent)
 			if len(result) != len(tt.wantLines) {
 				t.Errorf("indentTableLines() returned %d lines, expected %d", len(result), len(tt.wantLines))
 				return
