@@ -1,6 +1,6 @@
 package stringslice
 
-// Collector accumulates strings one at a time.
+// Collector accumulates strings.
 type Collector struct {
 	data *[]string
 }
