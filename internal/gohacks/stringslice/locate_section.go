@@ -1,6 +1,6 @@
 package stringslice
 
-// LocateSection provides the line number where the given section start within the given lines.
+// LocateSection provides the line number where the given section starts within the given lines.
 func LocateSection(lines, section []string) (int, bool) {
 	sectionLength := len(section)
 	for i := 0; i <= len(lines)-sectionLength; i++ {
