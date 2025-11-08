@@ -25,7 +25,8 @@ func LeadingWhitespace(line string) string {
 
 // Indents provides the given text where each line is indented by the given amount of spaces.
 func IndentLines(text string, amount int) string {
-	lines := strings.Split(text, "\n")
-	lines = stringslice.Indent(lines, strings.Repeat(" ", amount))
+	indent := strings.Repeat(" ", amount)
+	lines := stringslice.Lines(text)
+	lines = stringslice.Indent(lines, indent)
 	return strings.Join(lines, "\n")
 }
