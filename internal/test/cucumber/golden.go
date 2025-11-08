@@ -15,7 +15,7 @@ func UpdateFeatureFile(filePath, oldSection, newSection string) {
 	if err != nil {
 		panic(fmt.Sprintf("failed to read feature file: %v", err))
 	}
-	fileLines := strings.Split(string(content), "\n")
+	fileLines := stringslice.Lines(string(content))
 	oldSectionLines := stringslice.TrimEmptyLines(stringslice.Lines(oldSection))
 	newSectionLines := stringslice.TrimEmptyLines(stringslice.Lines(newSection))
 
