@@ -29,7 +29,7 @@ func UpdateFeatureFile(filePath, oldSection, newSection string) {
 
 	// indent the new section the same way the old one is indented in the file
 	indentation := gohacks.LeadingWhitespace(fileLines[startLine])
-	indentedNewSectionLines := IndentSection(newSectionLines, indentation)
+	indentedNewSectionLines := stringslice.Indent(newSectionLines, indentation)
 
 	// replace the old section with the new one
 	newLines := append([]string{}, fileLines[:startLine]...)
@@ -42,19 +42,6 @@ func UpdateFeatureFile(filePath, oldSection, newSection string) {
 	if err := os.WriteFile(filePath, []byte(newContent), 0o644); err != nil {
 		panic(fmt.Sprintf("failed to write feature file: %v", err))
 	}
-}
-
-// IndentSection applies indentation to each non-empty line
-func IndentSection(lines []string, indentation string) []string {
-	result := make([]string, len(lines))
-	for i, line := range lines {
-		if strings.TrimSpace(line) != "" {
-			result[i] = indentation + strings.TrimLeft(line, " \t")
-		} else {
-			result[i] = line
-		}
-	}
-	return result
 }
 
 // trimmedLines removes leading and trailing empty lines from a table string
