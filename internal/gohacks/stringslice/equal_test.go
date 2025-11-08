@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 )
 
-func TestMatches(t *testing.T) {
+func TestEqual(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
