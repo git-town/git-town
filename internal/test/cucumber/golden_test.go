@@ -109,6 +109,7 @@ Feature: test
 			| BRANCH | COMMAND |
 			| main   | git init |
 			| main   | git pull |
+
 `,
 			want: `
 Feature: test
