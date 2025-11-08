@@ -29,7 +29,7 @@ func UpdateFeatureFile(filePath, oldSection, newSection string) {
 
 	// indent the new section the same way the old one is indented in the file
 	indentation := gohacks.LeadingWhitespace(fileLines[startLine])
-	indentedNewSectionLines := stringslice.Indent(newSectionLines, indentation)
+	indentedNewSectionLines := stringslice.IndentNonEmpty(newSectionLines, indentation)
 
 	// replace the old section with the new one
 	newLines := append([]string{}, fileLines[:startLine]...)
