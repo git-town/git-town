@@ -10,10 +10,10 @@ import (
 )
 
 // UpdateFeatureFile updates the given section of the given feature file with the given new section.
-func UpdateFeatureFile(filePath, oldSection, newSection string) {
+func UpdateFeatureFile(filePath, oldSection, newSection string) error {
 	content, err := os.ReadFile(filePath)
 	if err != nil {
-		panic(fmt.Sprintf("failed to read feature file: %v", err))
+		return fmt.Errorf("failed to read feature file: %w", err)
 	}
 	fileLines := stringslice.Lines(string(content))
 	oldSectionLines := stringslice.TrimEmptyLines(stringslice.Lines(oldSection))
@@ -22,7 +22,7 @@ func UpdateFeatureFile(filePath, oldSection, newSection string) {
 	// find the section in the file
 	startLine, found := stringslice.LocateSection(fileLines, oldSectionLines)
 	if !found {
-		panic(fmt.Sprintf("could not find section in feature file %q\n%s", filePath, oldSection))
+		return fmt.Errorf("could not find section in feature file %q: %s", filePath, oldSection)
 	}
 
 	// indent the new section the same way the old one is indented in the file
@@ -38,6 +38,7 @@ func UpdateFeatureFile(filePath, oldSection, newSection string) {
 	newContent := strings.Join(newLines, "\n")
 	//nolint:gosec // need permission 644 for feature files
 	if err := os.WriteFile(filePath, []byte(newContent), 0o644); err != nil {
-		panic(fmt.Sprintf("failed to write feature file: %v", err))
+		return fmt.Errorf("failed to write feature file: %w", err)
 	}
+	return nil
 }

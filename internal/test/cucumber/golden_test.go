@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v22/internal/test/cucumber"
+	"github.com/shoenig/test/must"
 )
 
 func TestUpdateFeatureFileWithCommands(t *testing.T) {
@@ -71,7 +72,8 @@ Feature: test
 			}
 
 			// Run the function
-			cucumber.UpdateFeatureFile(tmpFile, tt.oldTable, tt.newTable)
+			err := cucumber.UpdateFeatureFile(tmpFile, tt.oldTable, tt.newTable)
+			must.NoError(t, err)
 
 			// Read the result
 			result, err := os.ReadFile(tmpFile)
