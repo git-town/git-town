@@ -10,7 +10,7 @@ func EscapeNewLines(text string) string {
 	return strings.ReplaceAll(text, "\n", "\\n")
 }
 
-// Indents provides the given text where each line is indented by the given amount of spaces.
+// IndentLines provides the given text where each line is indented by the given amount of spaces.
 func IndentLines(text string, amount int) string {
 	indent := strings.Repeat(" ", amount)
 	lines := stringslice.Lines(text)
