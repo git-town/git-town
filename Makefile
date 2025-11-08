@@ -8,11 +8,11 @@ GO_TEST_ARGS = LANG=C GOGC=off BROWSER=
 contest: tools/rta@${RTA_VERSION}  # run the Contest server
 	@tools/rta contest
 
-cuke: install  # runs all end-to-end tests in a way that looks nice during development
+cuke: install  # runs all end-to-end tests with nice output
 	@env $(GO_TEST_ARGS) messyoutput=0 go test -v
 	@env $(GO_TEST_ARGS) messyoutput=1 go test -v
 
-cukeall: install  # runs all end-to-end tests
+cukeall: install  # runs all end-to-end tests on CI
 	@env $(GO_TEST_ARGS) go test -v
 
 cukethis: install  # runs the end-to-end tests that have a @this tag
@@ -33,7 +33,7 @@ cukeverbose: install  # run all tests in "verbose.feature" files
 cukewin: install  # runs all end-to-end tests on Windows
 	go test . -v -count=1
 
-dependencies: tools/rta@${RTA_VERSION}  # prints the dependencies between the internal Go packages as a tree
+dependencies: tools/rta@${RTA_VERSION}  # prints the dependencies between the internal Go packages
 	@tools/rta depth . | grep git-town
 
 docs: install tools/node_modules  # tests the documentation
@@ -134,7 +134,7 @@ lint-print-config:
 lint-optioncompare:
 	@(cd tools/optioncompare && go build) && ./tools/optioncompare/optioncompare github.com/git-town/git-town/v22/...
 
-lint-smoke: tools/rta@${RTA_VERSION}  # runs only the essential linters to get quick feedback after refactoring
+lint-smoke: tools/rta@${RTA_VERSION}  # runs only the essential linters
 	@tools/rta exhaustruct -test=false "-i=github.com/git-town/git-town.*" github.com/git-town/git-town/...
 # @tools/rta ireturn --reject="github.com/git-town/git-town/v22/pkg/prelude.Option" github.com/git-town/git-town/...
 
