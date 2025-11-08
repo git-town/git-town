@@ -16,8 +16,8 @@ func UpdateFeatureFile(filePath, oldSection, newSection string) {
 		panic(fmt.Sprintf("failed to read feature file: %v", err))
 	}
 	fileLines := strings.Split(string(content), "\n")
-	oldSectionLines := trimmedLines(oldSection)
-	newSectionLines := trimmedLines(newSection)
+	oldSectionLines := stringslice.TrimEmptyLines(stringslice.Lines(oldSection))
+	newSectionLines := stringslice.TrimEmptyLines(stringslice.Lines(newSection))
 
 	// find the section in the file
 	startLine, found := stringslice.LocateSection(fileLines, oldSectionLines)
@@ -42,10 +42,4 @@ func UpdateFeatureFile(filePath, oldSection, newSection string) {
 	if err := os.WriteFile(filePath, []byte(newContent), 0o644); err != nil {
 		panic(fmt.Sprintf("failed to write feature file: %v", err))
 	}
-}
-
-// trimmedLines removes leading and trailing empty lines from a table string
-func trimmedLines(tableStr string) []string {
-	linesRaw := strings.Split(tableStr, "\n")
-	return stringslice.TrimEmptyLines(linesRaw)
 }
