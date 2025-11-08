@@ -17,23 +17,23 @@ func TestTrimEmptyLines(t *testing.T) {
 	}{
 		{
 			name: "no empty lines",
-			give: []string{"| A | B |", "| 1 | 2 |"},
-			want: []string{"| A | B |", "| 1 | 2 |"},
+			give: []string{"one", "two"},
+			want: []string{"one", "two"},
 		},
 		{
 			name: "trailing empty line",
-			give: []string{"| A | B |", "| 1 | 2 |", ""},
-			want: []string{"| A | B |", "| 1 | 2 |"},
+			give: []string{"one", "two", ""},
+			want: []string{"one", "two"},
 		},
 		{
 			name: "multiple trailing empty lines",
-			give: []string{"| A | B |", "| 1 | 2 |", "", "", ""},
-			want: []string{"| A | B |", "| 1 | 2 |"},
+			give: []string{"one", "two", "", "", ""},
+			want: []string{"one", "two"},
 		},
 		{
 			name: "leading empty lines",
-			give: []string{"", "", "| A | B |", "| 1 | 2 |"},
-			want: []string{"| A | B |", "| 1 | 2 |"},
+			give: []string{"", "", "one", "two"},
+			want: []string{"one", "two"},
 		},
 		{
 			name: "empty string",
