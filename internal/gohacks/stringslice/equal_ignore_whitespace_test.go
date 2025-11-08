@@ -24,7 +24,7 @@ func TestEqualIgnoreWhitespace(t *testing.T) {
 		{
 			name:       "match with different indentation",
 			fileLines:  []string{"    one", "    two"},
-			tableLines: []string{"one", "two"},
+			tableLines: []string{"  one", "  two"},
 			want:       true,
 		},
 		{
