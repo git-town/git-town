@@ -14,7 +14,7 @@ func TestLocateSection(t *testing.T) {
 		name         string
 		giveHaystack []string
 		giveNeedle   []string
-		wantIdx      int
+		wantIndex    int
 		wantFound    bool
 	}{
 		{
@@ -28,7 +28,7 @@ func TestLocateSection(t *testing.T) {
 				"one",
 				"two",
 			},
-			wantIdx:   0,
+			wantIndex: 0,
 			wantFound: true,
 		},
 		{
@@ -43,7 +43,7 @@ func TestLocateSection(t *testing.T) {
 				"one",
 				"two",
 			},
-			wantIdx:   1,
+			wantIndex: 1,
 			wantFound: true,
 		},
 		{
@@ -58,7 +58,7 @@ func TestLocateSection(t *testing.T) {
 				"one",
 				"two",
 			},
-			wantIdx:   2,
+			wantIndex: 2,
 			wantFound: true,
 		},
 		{
@@ -71,7 +71,7 @@ func TestLocateSection(t *testing.T) {
 				"one",
 				"two",
 			},
-			wantIdx:   -1,
+			wantIndex: -1,
 			wantFound: false,
 		},
 	}
@@ -80,7 +80,7 @@ func TestLocateSection(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			haveIdx, haveFound := stringslice.LocateSection(tt.giveHaystack, tt.giveNeedle)
-			must.EqOp(t, tt.wantIdx, haveIdx)
+			must.EqOp(t, tt.wantIndex, haveIdx)
 			must.EqOp(t, tt.wantFound, haveFound)
 		})
 	}
