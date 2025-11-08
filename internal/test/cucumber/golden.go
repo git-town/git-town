@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v22/internal/gohacks"
+	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 )
 
 // UpdateFeatureFile updates the given section of the given feature file with the given new section.
@@ -15,11 +16,11 @@ func UpdateFeatureFile(filePath, oldSection, newSection string) {
 		panic(fmt.Sprintf("failed to read feature file: %v", err))
 	}
 	fileLines := strings.Split(string(content), "\n")
-	oldSectionLines := TrimmedLines(oldSection)
-	newSectionLines := TrimmedLines(newSection)
+	oldSectionLines := trimmedLines(oldSection)
+	newSectionLines := trimmedLines(newSection)
 
 	// find the section in the file
-	startLine, found := LocateSection(fileLines, oldSectionLines)
+	startLine, found := stringslice.LocateSection(fileLines, oldSectionLines)
 	if !found {
 		fmt.Println("ERROR! Could not find section in feature file: ", filePath)
 		fmt.Println("Expected section:\n", oldSection)
@@ -56,42 +57,8 @@ func IndentSection(lines []string, indentation string) []string {
 	return result
 }
 
-// LocateSection locates a table in the file by matching unindented content
-func LocateSection(fileLines, tableLines []string) (int, bool) {
-	for i := 0; i <= len(fileLines)-len(tableLines); i++ {
-		if MatchesTable(fileLines[i:], tableLines) {
-			return i, true
-		}
-	}
-	return -1, false
-}
-
-// MatchesTable checks if the file lines match the table lines (ignoring indentation)
-func MatchesTable(fileLines, tableLines []string) bool {
-	if len(fileLines) < len(tableLines) {
-		return false
-	}
-	for j, tableLine := range tableLines {
-		if strings.TrimSpace(fileLines[j]) != strings.TrimSpace(tableLine) {
-			return false
-		}
-	}
-	return true
-}
-
-// TrimmedLines removes leading and trailing empty lines from a table string
-func TrimmedLines(tableStr string) []string {
+// trimmedLines removes leading and trailing empty lines from a table string
+func trimmedLines(tableStr string) []string {
 	linesRaw := strings.Split(tableStr, "\n")
-	// Filter out leading empty lines
-	lines := make([]string, 0, len(linesRaw))
-	for _, line := range linesRaw {
-		if strings.TrimSpace(line) != "" || len(lines) > 0 {
-			lines = append(lines, line)
-		}
-	}
-	// Trim trailing empty lines
-	for len(lines) > 0 && strings.TrimSpace(lines[len(lines)-1]) == "" {
-		lines = lines[:len(lines)-1]
-	}
-	return lines
+	return stringslice.TrimEmptyLines(linesRaw)
 }

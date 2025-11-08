@@ -6,7 +6,6 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v22/internal/test/cucumber"
-	"github.com/shoenig/test/must"
 )
 
 func TestIndentTableLines(t *testing.T) {
@@ -63,125 +62,6 @@ func TestIndentTableLines(t *testing.T) {
 					t.Errorf("indentTableLines()[%d] = %q, expected %q", i, line, tt.want[i])
 				}
 			}
-		})
-	}
-}
-
-func TestMatchesTable(t *testing.T) {
-	t.Parallel()
-
-	tests := []struct {
-		name       string
-		fileLines  []string
-		tableLines []string
-		want       bool
-	}{
-		{
-			name:       "exact match",
-			fileLines:  []string{"| A | B |", "| 1 | 2 |"},
-			tableLines: []string{"| A | B |", "| 1 | 2 |"},
-			want:       true,
-		},
-		{
-			name:       "match with different indentation",
-			fileLines:  []string{"    | A | B |", "    | 1 | 2 |"},
-			tableLines: []string{"| A | B |", "| 1 | 2 |"},
-			want:       true,
-		},
-		{
-			name:       "no match - different content",
-			fileLines:  []string{"| A | B |", "| 3 | 4 |"},
-			tableLines: []string{"| A | B |", "| 1 | 2 |"},
-			want:       false,
-		},
-		{
-			name:       "no match - file too short",
-			fileLines:  []string{"| A | B |"},
-			tableLines: []string{"| A | B |", "| 1 | 2 |"},
-			want:       false,
-		},
-		{
-			name:       "match - file has extra lines",
-			fileLines:  []string{"| A | B |", "| 1 | 2 |", "| 3 | 4 |"},
-			tableLines: []string{"| A | B |", "| 1 | 2 |"},
-			want:       true,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-			result := cucumber.MatchesTable(tt.fileLines, tt.tableLines)
-			if result != tt.want {
-				t.Errorf("matchesTable() = %v, expected %v", result, tt.want)
-			}
-		})
-	}
-}
-
-func TestFindTableInFile(t *testing.T) {
-	t.Parallel()
-
-	tests := []struct {
-		name       string
-		fileLines  []string
-		tableLines []string
-		wantIdx    int
-		wantFound  bool
-	}{
-		{
-			name: "table at beginning",
-			fileLines: []string{
-				"| A | B |",
-				"| 1 | 2 |",
-				"Some text",
-			},
-			tableLines: []string{"| A | B |", "| 1 | 2 |"},
-			wantIdx:    0,
-			wantFound:  true,
-		},
-		{
-			name: "table in middle",
-			fileLines: []string{
-				"Some text",
-				"    | A | B |",
-				"    | 1 | 2 |",
-				"More text",
-			},
-			tableLines: []string{"| A | B |", "| 1 | 2 |"},
-			wantIdx:    1,
-			wantFound:  true,
-		},
-		{
-			name: "table at end",
-			fileLines: []string{
-				"Some text",
-				"More text",
-				"  | A | B |",
-				"  | 1 | 2 |",
-			},
-			tableLines: []string{"| A | B |", "| 1 | 2 |"},
-			wantIdx:    2,
-			wantFound:  true,
-		},
-		{
-			name: "table not found",
-			fileLines: []string{
-				"| A | B |",
-				"| 3 | 4 |",
-			},
-			tableLines: []string{"| A | B |", "| 1 | 2 |"},
-			wantIdx:    -1,
-			wantFound:  false,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-			haveIdx, haveFound := cucumber.LocateSection(tt.fileLines, tt.tableLines)
-			must.EqOp(t, tt.wantIdx, haveIdx)
-			must.EqOp(t, tt.wantFound, haveFound)
 		})
 	}
 }
