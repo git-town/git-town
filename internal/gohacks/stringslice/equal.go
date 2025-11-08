@@ -9,7 +9,7 @@ func EqualIgnoreWhitespace(strings1, strings2 []string) bool {
 		return false
 	}
 	for s, string1 := range strings1 {
-		if strings.TrimSpace(strings2[s]) != strings.TrimSpace(string1) {
+		if strings.TrimSpace(string1) != strings.TrimSpace(strings2[s]) {
 			return false
 		}
 	}
