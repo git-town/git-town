@@ -8,8 +8,8 @@ func EqualIgnoreWhitespace(strings1, strings2 []string) bool {
 	if len(strings1) != len(strings2) {
 		return false
 	}
-	for s, string2 := range strings2 {
-		if strings.TrimSpace(strings1[s]) != strings.TrimSpace(string2) {
+	for s, string1 := range strings1 {
+		if strings.TrimSpace(strings2[s]) != strings.TrimSpace(string1) {
 			return false
 		}
 	}
