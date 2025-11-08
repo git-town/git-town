@@ -34,13 +34,13 @@ func TestEqualIgnoreWhitespace(t *testing.T) {
 			want:       false,
 		},
 		{
-			name:       "no match - file too short",
+			name:       "no match - too short",
 			fileLines:  []string{"one"},
 			tableLines: []string{"one", "two"},
 			want:       false,
 		},
 		{
-			name:       "no match - file has extra lines",
+			name:       "no match - too long",
 			fileLines:  []string{"one", "two", "three"},
 			tableLines: []string{"one", "two"},
 			want:       false,
