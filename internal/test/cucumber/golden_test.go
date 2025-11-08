@@ -66,7 +66,7 @@ Feature: test
 			// Create temp file
 			tmpDir := t.TempDir()
 			tmpFile := filepath.Join(tmpDir, "test.feature")
-			if err := os.WriteFile(tmpFile, []byte(tt.initialContent), 0o644); err != nil {
+			if err := os.WriteFile(tmpFile, []byte(tt.initialContent), 0o600); err != nil {
 				t.Fatalf("Failed to create temp file: %v", err)
 			}
 
