@@ -28,8 +28,12 @@ Feature: test
       | BRANCH | COMMAND |
       | main   | git fetch |
     And some other step`[1:],
-			oldTable: "| BRANCH | COMMAND |\n| main   | git fetch |",
-			newTable: "| BRANCH | COMMAND |\n| main   | git pull |",
+			oldTable: `
+      | BRANCH | COMMAND |
+      | main   | git fetch |`[1:],
+			newTable: `
+| BRANCH | COMMAND |
+| main   | git pull |`[1:],
 			wantResult: `
 Feature: test
   Scenario: test
