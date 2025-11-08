@@ -67,6 +67,32 @@ Feature: test
       | main   | git pull |
     And done`[1:],
 		},
+		{
+			name: "old table has more empty lines",
+			file: `
+Feature: test
+  Scenario: test
+    Then Git Town runs the commands
+      | BRANCH | COMMAND |
+      | main   | git fetch |
+    And done`[1:],
+			oldTable: `
+			| BRANCH | COMMAND |
+			| main   | git fetch |
+`,
+			newTable: `
+			| BRANCH | COMMAND |
+			| main   | git init |
+			| main   | git pull |`[1:],
+			want: `
+Feature: test
+  Scenario: test
+    Then Git Town runs the commands
+      | BRANCH | COMMAND |
+      | main   | git init |
+      | main   | git pull |
+    And done`[1:],
+		},
 	}
 
 	for _, tt := range tests {
