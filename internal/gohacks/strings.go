@@ -12,10 +12,13 @@ func EscapeNewLines(text string) string {
 
 // IndentLines provides the given text where each line is indented by the given amount of spaces.
 func IndentLines(text string, amount int) string {
-	indent := strings.Repeat(" ", amount)
 	lines := stringslice.Lines(text)
-	lines = stringslice.IndentNonEmpty(lines, indent)
-	return strings.Join(lines, "\n")
+	result := make([]string, len(lines))
+	indent := strings.Repeat(" ", amount)
+	for l, line := range lines {
+		result[l] = indent + line
+	}
+	return strings.Join(result, "\n")
 }
 
 // LeadingWhitespace provides the leading whitespace in the given string.
