@@ -13,15 +13,15 @@ func TestUpdateFeatureFileWithCommands(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
-		name           string
-		initialContent string
-		oldTable       string
-		newTable       string
-		wantResult     string
+		name     string
+		file     string
+		oldTable string
+		newTable string
+		want     string
 	}{
 		{
 			name: "replace table with proper indentation",
-			initialContent: `
+			file: `
 Feature: test
   Scenario: test
     Then Git Town runs the commands
@@ -34,7 +34,7 @@ Feature: test
 			newTable: `
 | BRANCH | COMMAND |
 | main   | git pull |`[1:],
-			wantResult: `
+			want: `
 Feature: test
   Scenario: test
     Then Git Town runs the commands
@@ -44,16 +44,21 @@ Feature: test
 		},
 		{
 			name: "replace table with different number of rows",
-			initialContent: `
+			file: `
 Feature: test
   Scenario: test
     Then Git Town runs the commands
       | BRANCH | COMMAND |
       | main   | git fetch |
     And done`[1:],
-			oldTable: "| BRANCH | COMMAND |\n| main   | git fetch |",
-			newTable: "| BRANCH | COMMAND |\n| main   | git init |\n| main   | git pull |",
-			wantResult: `
+			oldTable: `
+			| BRANCH | COMMAND |
+			| main   | git fetch |`[1:],
+			newTable: `
+			| BRANCH | COMMAND |
+			| main   | git init |
+			| main   | git pull |`[1:],
+			want: `
 Feature: test
   Scenario: test
     Then Git Town runs the commands
@@ -67,27 +72,17 @@ Feature: test
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-
-			// Create temp file
 			tmpDir := t.TempDir()
 			tmpFile := filepath.Join(tmpDir, "test.feature")
-			if err := os.WriteFile(tmpFile, []byte(tt.initialContent), 0o600); err != nil {
-				t.Fatalf("Failed to create temp file: %v", err)
-			}
-
-			// Run the function
-			err := cucumber.UpdateFeatureFile(tmpFile, tt.oldTable, tt.newTable)
+			err := os.WriteFile(tmpFile, []byte(tt.file), 0o600)
 			must.NoError(t, err)
 
-			// Read the result
-			result, err := os.ReadFile(tmpFile)
-			if err != nil {
-				t.Fatalf("Failed to read result file: %v", err)
-			}
+			err = cucumber.UpdateFeatureFile(tmpFile, tt.oldTable, tt.newTable)
+			must.NoError(t, err)
 
-			if string(result) != tt.wantResult {
-				t.Errorf("updateFeatureFileWithCommands() result mismatch\nGot:\n%s\n\nExpected:\n%s", string(result), tt.wantResult)
-			}
+			result, err := os.ReadFile(tmpFile)
+			must.NoError(t, err)
+			must.EqOp(t, tt.want, string(result))
 		})
 	}
 }
