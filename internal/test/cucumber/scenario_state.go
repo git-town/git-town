@@ -103,8 +103,7 @@ func (self *ScenarioState) compareGherkinTable(scenarioURI string, table *godog.
 	if errorCount != 0 {
 		if CukeUpdate {
 			expectedTable := datatable.FromGherkin(table)
-			UpdateFeatureFile(scenarioURI, expectedTable.String(), commitTable.String())
-			return nil
+			return UpdateFeatureFile(scenarioURI, expectedTable.String(), commitTable.String())
 		}
 		fmt.Printf("\nERROR! Found %d differences in the existing commits\n\n", errorCount)
 		fmt.Println(diff)

@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
+	"github.com/shoenig/test/must"
 )
 
 func TestIndentNonEmpty(t *testing.T) {
@@ -48,16 +49,8 @@ func TestIndentNonEmpty(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			result := stringslice.IndentNonEmpty(tt.giveLines, tt.giveIndent)
-			if len(result) != len(tt.wantLines) {
-				t.Errorf("indentTableLines() returned %d lines, expected %d", len(result), len(tt.wantLines))
-				return
-			}
-			for i, line := range result {
-				if line != tt.wantLines[i] {
-					t.Errorf("indentTableLines()[%d] = %q, expected %q", i, line, tt.wantLines[i])
-				}
-			}
+			haveLines := stringslice.ChangeIndentNonEmpty(tt.giveLines, tt.giveIndent)
+			must.Eq(t, tt.wantLines, haveLines)
 		})
 	}
 }
