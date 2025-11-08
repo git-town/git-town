@@ -37,7 +37,6 @@ Feature: merging a branch with disabled push-hook
       | alpha  | local, origin | alpha commit |
       |        |               | beta commit  |
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
