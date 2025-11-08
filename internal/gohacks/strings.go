@@ -1,6 +1,10 @@
 package gohacks
 
-import "strings"
+import (
+	"strings"
+
+	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
+)
 
 func EscapeNewLines(text string) string {
 	return strings.ReplaceAll(text, "\n", "\\n")
@@ -22,9 +26,6 @@ func LeadingWhitespace(line string) string {
 // Indents provides the given text where each line is indented by the given amount of spaces.
 func IndentLines(text string, amount int) string {
 	lines := strings.Split(text, "\n")
-	result := make([]string, len(lines))
-	for l, line := range lines {
-		result[l] = strings.Repeat(" ", amount) + line
-	}
-	return strings.Join(result, "\n")
+	lines = stringslice.Indent(lines, strings.Repeat(" ", amount))
+	return strings.Join(lines, "\n")
 }
