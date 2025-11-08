@@ -14,7 +14,7 @@ func EscapeNewLines(text string) string {
 func IndentLines(text string, amount int) string {
 	indent := strings.Repeat(" ", amount)
 	lines := stringslice.Lines(text)
-	lines = stringslice.Indent(lines, indent)
+	lines = stringslice.IndentNonEmpty(lines, indent)
 	return strings.Join(lines, "\n")
 }
 
