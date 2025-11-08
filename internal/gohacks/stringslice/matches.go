@@ -2,7 +2,7 @@ package stringslice
 
 import "strings"
 
-// Matches indicates whether the given lines match.
+// Matches indicates whether the given string slices match.
 func Matches(lines1, lines2 []string) bool {
 	if len(lines1) != len(lines2) {
 		return false
