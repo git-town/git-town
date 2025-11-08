@@ -36,6 +36,11 @@ func TestTrimEmptyLines(t *testing.T) {
 			want: []string{"one", "two"},
 		},
 		{
+			name: "empty lines before, middle, and after",
+			give: []string{"", "one", "", "two", ""},
+			want: []string{"one", "", "two"},
+		},
+		{
 			name: "empty string",
 			give: []string{},
 			want: []string{},
