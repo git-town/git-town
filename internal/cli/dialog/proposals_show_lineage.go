@@ -42,7 +42,7 @@ func ProposalsShowLineage(args Args[forgedomain.ProposalsShowLineage]) (Option[f
 		},
 		{
 			Data: Some(forgedomain.ProposalsShowLineageCLI),
-			Text: "cli command execution show the latest stack lineage in a proposal(s)",
+			Text: "the Git Town CLI updates the stack lineage in proposals",
 		},
 		{
 			Data: Some(forgedomain.ProposalsShowLineageCI),
