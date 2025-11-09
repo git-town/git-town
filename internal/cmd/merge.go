@@ -335,6 +335,11 @@ func mergeProgram(repo execute.OpenRepoResult, data mergeData) program.Program {
 	prog.Value.Add(&opcodes.LineageParentRemove{
 		Branch: data.initialBranch,
 	})
+	// We need to delete the remote branch before updating the parent branch.
+	// This order will make sure that if there is a related proposal where
+	// the base is the branch being merged and the target is the parent branch
+	// then that proposal gets marked "closed" rather than "merged" by forges
+	// like GitHub.
 	initialTrackingBranch, initialHasTrackingBranch := data.initialBranchInfo.RemoteName.Get()
 	if initialHasTrackingBranch && repo.IsOffline.IsOnline() {
 		prog.Value.Add(&opcodes.BranchTrackingDelete{
