@@ -38,7 +38,7 @@ func ProposalsShowLineage(args Args[forgedomain.ProposalsShowLineage]) (Option[f
 	entries = append(entries, list.Entries[Option[forgedomain.ProposalsShowLineage]]{
 		{
 			Data: Some(forgedomain.ProposalsShowLineageNone),
-			Text: "do not show stack lineage in proposals",
+			Text: "do not display stack lineage in proposals",
 		},
 		{
 			Data: Some(forgedomain.ProposalsShowLineageCLI),
