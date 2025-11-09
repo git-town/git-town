@@ -51,6 +51,6 @@ func ProposalsShowLineage(args Args[forgedomain.ProposalsShowLineage]) (Option[f
 	}...)
 	defaultPos := entries.IndexOf(args.Local)
 	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, proposalsShowLineageTitle, proposalsShowLineageHelp, args.Inputs, "proposals-show-lineage")
-	fmt.Printf(messages.ProposalsShowLineage, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
+	fmt.Printf(messages.ProposalsLineage, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
 	return selection, exit, err
 }
