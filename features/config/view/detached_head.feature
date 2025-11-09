@@ -70,8 +70,8 @@ Feature: display configuration from Git metadata in detached head state
         GitLab connector type: (not set)
         GitLab token: (not set)
 
-      Proposals:
-        show lineage: cli
+      Propose:
+        lineage: cli
 
       Ship:
         delete tracking branch: yes

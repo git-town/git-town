@@ -72,8 +72,8 @@ Feature: show the configuration
         GitLab connector type: api
         GitLab token: (not set)
 
-      Proposals:
-        show lineage: none
+      Propose:
+        lineage: none
 
       Ship:
         delete tracking branch: yes
@@ -114,8 +114,8 @@ Feature: show the configuration
       forge-type = "github"
       origin-hostname = "github.com"
 
-      [proposals]
-      show-lineage = "cli"
+      [propose]
+      lineage = "cli"
 
       [ship]
       delete-tracking-branch = true
@@ -172,8 +172,8 @@ Feature: show the configuration
         GitLab connector type: (not set)
         GitLab token: (not set)
 
-      Proposals:
-        show lineage: cli
+      Propose:
+        lineage: cli
 
       Ship:
         delete tracking branch: yes
@@ -291,8 +291,8 @@ Feature: show the configuration
         GitLab connector type: (not set)
         GitLab token: (not set)
 
-      Proposals:
-        show lineage: none
+      Propose:
+        lineage: none
 
       Ship:
         delete tracking branch: no
@@ -362,8 +362,8 @@ Feature: show the configuration
         GitLab connector type: (not set)
         GitLab token: (not set)
 
-      Proposals:
-        show lineage: none
+      Propose:
+        lineage: none
 
       Ship:
         delete tracking branch: yes
@@ -439,8 +439,8 @@ Feature: show the configuration
         GitLab connector type: (not set)
         GitLab token: (not set)
 
-      Proposals:
-        show lineage: none
+      Propose:
+        lineage: none
 
       Ship:
         delete tracking branch: yes

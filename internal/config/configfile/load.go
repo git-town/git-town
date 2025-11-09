@@ -194,9 +194,9 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			hostingOriginHostname = configdomain.ParseHostingOriginHostname(*data.Hosting.OriginHostname)
 		}
 	}
-	if data.Proposals != nil {
-		if data.Proposals.Lineage != nil {
-			proposalsShowLineage, err = forgedomain.ParseProposalsShowLineage(*data.Proposals.Lineage)
+	if data.Propose != nil {
+		if data.Propose.Lineage != nil {
+			proposalsShowLineage, err = forgedomain.ParseProposalsShowLineage(*data.Propose.Lineage, messages.ConfigFile)
 			ec.Check(err)
 		}
 	}

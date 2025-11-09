@@ -70,8 +70,8 @@ Feature: display configuration from Git metadata
         GitLab connector type: (not set)
         GitLab token: (not set)
 
-      Proposals:
-        show lineage: cli
+      Propose:
+        lineage: cli
 
       Ship:
         delete tracking branch: yes
@@ -140,8 +140,8 @@ Feature: display configuration from Git metadata
         GitLab connector type: (not set)
         GitLab token: (not set)
 
-      Proposals:
-        show lineage: none
+      Propose:
+        lineage: none
 
       Ship:
         delete tracking branch: yes

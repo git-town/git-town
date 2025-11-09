@@ -115,8 +115,8 @@ Feature: show the configuration
         GitLab connector type: (not set)
         GitLab token: (not set)
 
-      Proposals:
-        show lineage: cli
+      Propose:
+        lineage: cli
 
       Ship:
         delete tracking branch: no

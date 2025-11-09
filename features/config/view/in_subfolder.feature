@@ -50,8 +50,8 @@ Feature: show the configuration from a subfolder
         GitLab connector type: (not set)
         GitLab token: (not set)
 
-      Proposals:
-        show lineage: none
+      Propose:
+        lineage: none
 
       Ship:
         delete tracking branch: yes

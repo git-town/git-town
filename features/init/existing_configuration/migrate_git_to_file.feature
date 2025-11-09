@@ -122,8 +122,8 @@ Feature: migrate existing configuration in Git metadata to a config file
       [hosting]
       dev-remote = "fork"
 
-      [proposals]
-      show-lineage = "cli"
+      [propose]
+      lineage = "cli"
 
       [ship]
       delete-tracking-branch = false

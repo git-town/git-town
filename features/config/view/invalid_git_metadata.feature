@@ -84,6 +84,9 @@ Feature: display invalid Git metadata
         GitLab connector type: (not set)
         GitLab token: (not set)
 
+      Propose:
+        lineage: none
+
       Ship:
         delete tracking branch: yes
         ship strategy: api

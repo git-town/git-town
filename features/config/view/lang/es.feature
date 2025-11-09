@@ -65,8 +65,8 @@ Feature: show the configuration in Spanish
         GitLab connector type: (not set)
         GitLab token: (not set)
 
-      Proposals:
-        show lineage: none
+      Propose:
+        lineage: none
 
       Ship:
         delete tracking branch: yes

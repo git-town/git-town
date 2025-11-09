@@ -49,8 +49,8 @@ Feature: show the configuration when using an alternative config file
         GitLab connector type: (not set)
         GitLab token: (not set)
 
-      Proposals:
-        show lineage: none
+      Propose:
+        lineage: none
 
       Ship:
         delete tracking branch: yes

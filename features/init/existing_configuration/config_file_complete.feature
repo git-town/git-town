@@ -25,8 +25,8 @@ Feature: don't ask for information already provided by the config file
       origin-hostname = "github.com"
       forge-type = "github"
 
-      [proposals]
-      show-lineage = "none"
+      [propose]
+      lineage = "none"
 
       [ship]
       delete-tracking-branch = true
