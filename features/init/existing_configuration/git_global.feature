@@ -1,5 +1,6 @@
 @messyoutput
 Feature: setup a new repo when I have configured some things in global Git metadata
+
   Scenario:
     Given a Git repo with origin
     And the branches
