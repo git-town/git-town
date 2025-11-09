@@ -46,7 +46,7 @@ func ProposalsShowLineage(args Args[forgedomain.ProposalsShowLineage]) (Option[f
 		},
 		{
 			Data: Some(forgedomain.ProposalsShowLineageCI),
-			Text: "ci process shows the latest  stack lineage in a proposal(s)",
+			Text: "github.com/git-town/action updates the stack lineage in proposals",
 		},
 	}...)
 	defaultPos := entries.IndexOf(args.Local)
