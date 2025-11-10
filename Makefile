@@ -18,7 +18,7 @@ cukeall: install  # runs all end-to-end tests on CI
 cukesmoke: install  # run the smoke E2E tests
 	@env $(GO_TEST_ARGS) smoke=1 go test . -v -count=1
 
-cukesmokewin: install  # runs the Windows smoke tests
+cukesmokewin: install  # runs the Windows smoke E2E tests
 	@env smoke=1 go test . -v -count=1
 
 cukethis: install  # runs the end-to-end tests that have a @this tag
