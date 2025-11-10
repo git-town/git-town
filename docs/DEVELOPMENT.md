@@ -248,7 +248,7 @@ Debug a Godog Cucumber feature in [VSCode](https://code.visualstudio.com):
 - set a breakpoint in your test code
 - run the `debug a test` configuration in the debugger
 
-### Triangulate a hanging end-to-end test
+### Locate a hanging end-to-end test
 
 End-to-end tests sometimes hang. To find the hanging test, you can execute
 subsets of tests using `go test -- features/<path>` where path is either a
