@@ -1,8 +1,6 @@
 package gohacks
 
-import (
-	"strings"
-)
+import "strings"
 
 func EscapeNewLines(text string) string {
 	return strings.ReplaceAll(text, "\n", "\\n")
