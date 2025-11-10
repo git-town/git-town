@@ -23,9 +23,9 @@ Feature: merging a branch in a stack that is fully in sync
       | beta   | git fetch --prune --tags                        |
       |        | git checkout alpha                              |
       | alpha  | git reset --hard {{ sha 'beta commit' }}        |
+      |        | git push origin :beta                           |
       |        | git branch -D beta                              |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git push origin :beta                           |
     And this lineage exists now
       """
       main

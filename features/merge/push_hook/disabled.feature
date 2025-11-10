@@ -24,9 +24,9 @@ Feature: merging a branch with disabled push-hook
       | beta   | git fetch --prune --tags                                    |
       |        | git checkout alpha                                          |
       | alpha  | git reset --hard {{ sha 'beta commit' }}                    |
+      |        | git push origin :beta                                       |
       |        | git branch -D beta                                          |
       |        | git push --force-with-lease --force-if-includes --no-verify |
-      |        | git push origin :beta                                       |
     And this lineage exists now
       """
       main
