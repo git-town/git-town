@@ -27,6 +27,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
     And global Git setting "git-town.sync-feature-strategy" is "rebase"
     And global Git setting "git-town.sync-perennial-strategy" is "ff-only"
     And global Git setting "git-town.sync-prototype-strategy" is "compress"
+    And global Git setting "git-town.proposals-show-lineage" is "cli"
     And global Git setting "git-town.sync-tags" is "false"
     And global Git setting "git-town.sync-upstream" is "false"
     And global Git setting "git-town.detached" is "false"
@@ -60,6 +61,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | ship strategy               | enter       |
       | ship delete tracking branch | enter       |
       | order                       | enter       |
+      | proposals show lineage      | enter       |
       | config storage              | enter       |
     Then Git Town runs the commands
       | COMMAND                                         |

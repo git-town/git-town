@@ -38,6 +38,7 @@ Feature: Accepting all default values leads to a working setup
       | ship-strategy               | enter      |
       | ship-delete-tracking branch | enter      |
       | order                       | enter      |
+      | proposals show lineage      | enter      |
       | config storage              | enter      |
 
   Scenario: result
@@ -49,6 +50,7 @@ Feature: Accepting all default values leads to a working setup
       | git config git-town.main-branch main                 |
       | git config git-town.unknown-branch-type feature      |
       | git config git-town.order asc                        |
+      | git config git-town.proposals-show-lineage none      |
       | git config git-town.push-branches true               |
       | git config git-town.push-hook true                   |
       | git config git-town.share-new-branches no            |
@@ -83,6 +85,7 @@ Feature: Accepting all default values leads to a working setup
     And local Git setting "git-town.forge-type" still doesn't exist
     And local Git setting "git-town.github-token" still doesn't exist
     And local Git setting "git-town.hosting-origin-hostname" still doesn't exist
+    And local Git setting "git-town.proposals-show-lineage" still doesn't exist
     And local Git setting "git-town.feature-regex" now doesn't exist
     And local Git setting "git-town.contribution-regex" now doesn't exist
     And local Git setting "git-town.observed-regex" now doesn't exist

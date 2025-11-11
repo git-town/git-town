@@ -23,8 +23,8 @@ Feature: dry-run merging branches
       | beta   | git fetch --prune --tags                 |
       |        | git checkout alpha                       |
       | alpha  | git reset --hard {{ sha 'beta commit' }} |
-      |        | git branch -D beta                       |
       |        | git push origin :beta                    |
+      |        | git branch -D beta                       |
     And the initial branches exist now
     And the initial commits exist now
 

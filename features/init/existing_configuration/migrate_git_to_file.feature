@@ -23,6 +23,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.sync-perennial-strategy" is "rebase"
     And local Git setting "git-town.sync-upstream" is "true"
     And local Git setting "git-town.sync-tags" is "false"
+    And local Git setting "git-town.proposals-show-lineage" is "cli"
     And local Git setting "git-town.unknown-branch-type" is "observed"
     When I run "git-town init" and enter into the dialogs:
       | DIALOG                      | KEYS       |
@@ -54,6 +55,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | ship strategy               | enter      |
       | ship delete tracking branch | enter      |
       | order                       | enter      |
+      | proposals show lineage      | enter      |
       | config storage              | down enter |
 
   Scenario: result
@@ -70,6 +72,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | git config --unset git-town.perennial-branches          |
       | git config --unset git-town.perennial-regex             |
       | git config --unset git-town.share-new-branches          |
+      | git config --unset git-town.proposals-show-lineage      |
       | git config --unset git-town.push-branches               |
       | git config --unset git-town.push-hook                   |
       | git config --unset git-town.ship-strategy               |
@@ -99,6 +102,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.new-branch-type" now doesn't exist
     And local Git setting "git-town.ship-strategy" now doesn't exist
     And local Git setting "git-town.ship-delete-tracking-branch" now doesn't exist
+    And local Git setting "git-town.proposals-show-lineage" now doesn't exist
     And local Git setting "git-town.stash" now doesn't exist
     And the configuration file is now:
       """
@@ -117,6 +121,9 @@ Feature: migrate existing configuration in Git metadata to a config file
 
       [hosting]
       dev-remote = "fork"
+
+      [propose]
+      lineage = "cli"
 
       [ship]
       delete-tracking-branch = false
@@ -147,6 +154,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.order" is now "desc"
     And local Git setting "git-town.unknown-branch-type" is now "observed"
     And local Git setting "git-town.share-new-branches" is now "no"
+    And local Git setting "git-town.proposals-show-lineage" is now "cli"
     And local Git setting "git-town.push-branches" is now "true"
     And local Git setting "git-town.push-hook" is now "true"
     And local Git setting "git-town.ship-strategy" is now "squash-merge"
