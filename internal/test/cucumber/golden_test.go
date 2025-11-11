@@ -9,6 +9,135 @@ import (
 	"github.com/shoenig/test/must"
 )
 
+func TestNormalizeWhitespace(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name string
+		give []string
+		want []string
+	}{
+		{
+			name: "multiple spaces",
+			give: []string{
+				"one    two",
+				"three     four",
+			},
+			want: []string{
+				"one two",
+				"three four",
+			},
+		},
+		{
+			name: "tabs",
+			give: []string{
+				"one\t\t\t\ttwo",
+				"three\t\tfour",
+			},
+			want: []string{
+				"one two",
+				"three four",
+			},
+		},
+		{
+			name: "mixed whitespace",
+			give: []string{
+				"one \t  \t two",
+				"three\t \tfour",
+			},
+			want: []string{
+				"one two",
+				"three four",
+			},
+		},
+		{
+			name: "single spaces unchanged",
+			give: []string{
+				"one two",
+				"three four five",
+			},
+			want: []string{
+				"one two",
+				"three four five",
+			},
+		},
+		{
+			name: "leading and trailing whitespace",
+			give: []string{
+				"  leading",
+				"trailing  ",
+				"  both  ",
+			},
+			want: []string{
+				" leading",
+				"trailing ",
+				" both ",
+			},
+		},
+		{
+			name: "no whitespace",
+			give: []string{
+				"nowhitespace",
+				"stillnone",
+			},
+			want: []string{
+				"nowhitespace",
+				"stillnone",
+			},
+		},
+		{
+			name: "empty strings",
+			give: []string{
+				"",
+				"not empty",
+				"",
+			},
+			want: []string{
+				"",
+				"not empty",
+				"",
+			},
+		},
+		{
+			name: "empty slice",
+			give: []string{},
+			want: []string{},
+		},
+		{
+			name: "newlines and other whitespace",
+			give: []string{
+				"one\n\n\ntwo",
+				"three\r\rfour",
+				"five\f\fsix",
+			},
+			want: []string{
+				"one two",
+				"three four",
+				"five six",
+			},
+		},
+		{
+			name: "real-world example with table formatting",
+			give: []string{
+				"      | BRANCH      | COMMAND   |",
+				"      | main   | git fetch |",
+			},
+			want: []string{
+				" | BRANCH | COMMAND |",
+				" | main | git fetch |",
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			have := cucumber.NormalizeWhitespace(tt.give)
+			must.Eq(t, tt.want, have)
+		})
+	}
+}
+
 func TestReplaceSHAPlaceholder(t *testing.T) {
 	t.Parallel()
 
