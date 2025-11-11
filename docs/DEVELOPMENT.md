@@ -270,7 +270,7 @@ To streamline this, run:
 
 <a type="make/command" dir="..">
 
-```
+```bash
 make cuke-update
 ```
 
