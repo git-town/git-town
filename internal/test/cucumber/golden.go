@@ -37,10 +37,10 @@ func UpdateFeatureFile(filePath, oldSection, newSection string) error {
 	startLine, found := stringslice.LocateSection(normalizedFileLines, oldSectionLines)
 	if !found {
 		fmt.Println("WANTED SECTION START")
-		fmt.Println(oldSection)
+		fmt.Println(strings.Join(oldSectionLines, "\n"))
 		fmt.Println("WANTED SECTION END")
 		fmt.Println("FILE CONTENT START")
-		fmt.Println(string(content))
+		fmt.Println(strings.Join(normalizedFileLines, "\n"))
 		fmt.Println("FILE CONTENT END")
 		return fmt.Errorf("could not find section in feature file %q", filePath)
 	}
