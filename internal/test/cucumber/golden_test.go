@@ -1,4 +1,4 @@
-package cucumber
+package cucumber //nolint:testpackage
 
 import (
 	"os"

@@ -96,7 +96,7 @@ func (self *ScenarioState) CaptureState() {
 
 // compareExistingCommits compares the commits in the Git environment of the given ScenarioState
 // against the given Gherkin table.
-func (self *ScenarioState) compareGherkinTable(scenarioURI string, table *godog.Table) error {
+func (self *ScenarioState) compareGherkinTable(table *godog.Table, scenarioURI string) error {
 	fields := helpers.TableFields(table)
 	commitTable := self.fixture.CommitTable(fields)
 	diff, errorCount := commitTable.EqualGherkin(table)

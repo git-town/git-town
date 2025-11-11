@@ -12,6 +12,7 @@ func TestReplaceRegex(t *testing.T) {
 	t.Parallel()
 
 	t.Run("has matches", func(t *testing.T) {
+		t.Parallel()
 		give := []string{"one", "two 123", "three"}
 		want := []string{"one", "two SHA", "three"}
 		have := stringslice.ReplaceRegex(give, regexp.MustCompile(`\d+`), "SHA")
@@ -19,6 +20,7 @@ func TestReplaceRegex(t *testing.T) {
 	})
 
 	t.Run("no matches", func(t *testing.T) {
+		t.Parallel()
 		give := []string{"one", "two"}
 		want := []string{"one", "two"}
 		have := stringslice.ReplaceRegex(give, regexp.MustCompile(`\d+`), "SHA")

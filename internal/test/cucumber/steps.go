@@ -1467,7 +1467,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			}
 		}
 		scenarioURI := ctx.Value(keyScenarioURI).(string)
-		return state.compareGherkinTable(scenarioURI, table)
+		return state.compareGherkinTable(table, scenarioURI)
 	})
 
 	sc.Step(`^these committed files exist now$`, func(ctx context.Context, table *godog.Table) error {
