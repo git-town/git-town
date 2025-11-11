@@ -9,6 +9,43 @@ import (
 	"github.com/shoenig/test/must"
 )
 
+func TestReplaceSHAPlaceholder(t *testing.T) {
+	t.Parallel()
+
+	give := []string{
+		"one {{ sha 'foo' }} two",
+		"one {{ sha-in-origin 'bar' }} two",
+		"git reset --hard {{ sha-initial 'alpha commit' }}",
+		"no placeholder",
+		"",
+	}
+	want := []string{
+		"one SHA two",
+		"one SHA two",
+		"git reset --hard SHA",
+		"no placeholder",
+		"",
+	}
+	have := cucumber.ReplaceSHAPlaceholder(give)
+	must.Eq(t, want, have)
+}
+
+func TestReplaceSHA(t *testing.T) {
+	t.Parallel()
+	give := []string{
+		"d721118fcd545d37e87100b22ef13169160bdb3c",
+		"no sha",
+		"",
+	}
+	want := []string{
+		"SHA",
+		"no sha",
+		"",
+	}
+	have := cucumber.ReplaceSHA(give)
+	must.Eq(t, want, have)
+}
+
 func TestUpdateFeatureFileWithCommands(t *testing.T) {
 	t.Parallel()
 
