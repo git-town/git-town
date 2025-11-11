@@ -40,11 +40,9 @@ Feature: merging a branch in a stack that is fully in sync
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                           |
-      | alpha  | git reset --hard {{ sha-initial 'alpha commit' }} |
-      |        | git push --force-with-lease --force-if-includes   |
-      |        | git branch beta {{ sha 'beta commit' }}           |
-      |        | git push -u origin beta                           |
-      |        | git checkout beta                                 |
+      | BRANCH | COMMAND |
+      | alpha | git branch beta ce56dc8c71194494a02b749c2c10ba739c9c3e10 |
+      | | git push -u origin beta |
+      | | git checkout beta |
     And the initial lineage exists now
     And the initial commits exist now

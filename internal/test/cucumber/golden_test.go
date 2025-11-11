@@ -9,6 +9,43 @@ import (
 	"github.com/shoenig/test/must"
 )
 
+func TestReplaceSHAPlaceholder(t *testing.T) {
+	t.Parallel()
+
+	give := []string{
+		"one {{ sha 'foo' }} two",
+		"one {{ sha-in-origin 'bar' }} two",
+		"git reset --hard {{ sha-initial 'alpha commit' }}",
+		"no placeholder",
+		"",
+	}
+	want := []string{
+		"one SHA two",
+		"one SHA two",
+		"git reset --hard SHA",
+		"no placeholder",
+		"",
+	}
+	have := cucumber.ReplaceSHAPlaceholder(give)
+	must.Eq(t, want, have)
+}
+
+func TestReplaceSHA(t *testing.T) {
+	t.Parallel()
+	give := []string{
+		"d721118fcd545d37e87100b22ef13169160bdb3c",
+		"no sha",
+		"",
+	}
+	want := []string{
+		"SHA",
+		"no sha",
+		"",
+	}
+	have := cucumber.ReplaceSHA(give)
+	must.Eq(t, want, have)
+}
+
 func TestUpdateFeatureFileWithCommands(t *testing.T) {
 	t.Parallel()
 
@@ -39,7 +76,7 @@ Feature: test
   Scenario: test
     Then Git Town runs the commands
       | BRANCH | COMMAND |
-      | main   | git pull |
+      | main | git pull |
     And some other step`[1:],
 		},
 		{
@@ -48,12 +85,12 @@ Feature: test
 Feature: test
   Scenario: test
     Then Git Town runs the commands
-      | BRANCH | COMMAND |
-      | main   | git fetch |
+      | BRANCH      | COMMAND   |
+      | development | git fetch |
     And done`[1:],
 			oldTable: `
-			| BRANCH | COMMAND |
-			| main   | git fetch |`[1:],
+			| BRANCH      | COMMAND |
+			| development | git fetch |`[1:],
 			newTable: `
 			| BRANCH | COMMAND |
 			| main   | git init |
@@ -63,8 +100,8 @@ Feature: test
   Scenario: test
     Then Git Town runs the commands
       | BRANCH | COMMAND |
-      | main   | git init |
-      | main   | git pull |
+      | main | git init |
+      | main | git pull |
     And done`[1:],
 		},
 		{
@@ -79,20 +116,20 @@ Feature: test
 			oldTable: `
 
 			| BRANCH | COMMAND |
-			| main   | git fetch |
+			| main | git fetch |
 
 `,
 			newTable: `
 			| BRANCH | COMMAND |
-			| main   | git init |
-			| main   | git pull |`[1:],
+			| main | git init |
+			| main | git pull |`[1:],
 			want: `
 Feature: test
   Scenario: test
     Then Git Town runs the commands
       | BRANCH | COMMAND |
-      | main   | git init |
-      | main   | git pull |
+      | main | git init |
+      | main | git pull |
     And done`[1:],
 		},
 		{
@@ -106,12 +143,12 @@ Feature: test
     And done`[1:],
 			oldTable: `
 			| BRANCH | COMMAND |
-			| main   | git fetch |`[1:],
+			| main | git fetch |`[1:],
 			newTable: `
 
 			| BRANCH | COMMAND |
-			| main   | git init |
-			| main   | git pull |
+			| main | git init |
+			| main | git pull |
 
 `,
 			want: `
@@ -119,8 +156,31 @@ Feature: test
   Scenario: test
     Then Git Town runs the commands
       | BRANCH | COMMAND |
-      | main   | git init |
-      | main   | git pull |
+      | main | git init |
+      | main | git pull |
+    And done`[1:],
+		},
+		{
+			name: "SHA placeholders",
+			file: `
+Feature: test
+  Scenario: test
+    Then Git Town runs the commands
+      | BRANCH | COMMAND |
+      | main   | git reset --hard {{ sha 'commit' }} |
+    And done`[1:],
+			oldTable: `
+      | BRANCH | COMMAND                                                   |
+      | main | git reset --hard d721118fcd545d37e87100b22ef13169160bdb3c |`[1:],
+			newTable: `
+			| BRANCH | COMMAND                                                   |
+			| main | git reset --soft d721118fcd545d37e87100b22ef13169160bdb3c |`[1:],
+			want: `
+Feature: test
+  Scenario: test
+    Then Git Town runs the commands
+      | BRANCH | COMMAND |
+      | main | git reset --soft d721118fcd545d37e87100b22ef13169160bdb3c |
     And done`[1:],
 		},
 	}
