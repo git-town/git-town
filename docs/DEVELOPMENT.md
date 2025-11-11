@@ -268,9 +268,13 @@ tests.
 
 To streamline this, run:
 
-```bash
+<a type="make/command" dir="..">
+
+```
 make cuke-update
 ```
+
+</a>
 
 When running in this mode, and an E2E test fails, the test runner updates the
 `.feature` file, rather than failing the test. You must then inspect the test
