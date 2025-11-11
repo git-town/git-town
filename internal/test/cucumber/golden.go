@@ -20,19 +20,19 @@ func UpdateFeatureFile(filePath, oldSection, newSection string) error {
 	fileLines := stringslice.Lines(string(content))
 
 	// normalize file lines for searching
-	normalizedFileLines := ReplaceSHAPlaceholder(fileLines)
-	normalizedFileLines = ReplaceSHA(normalizedFileLines)
-	normalizedFileLines = NormalizeWhitespace(normalizedFileLines)
+	normalizedFileLines := replaceSHAPlaceholder(fileLines)
+	normalizedFileLines = replaceSHA(normalizedFileLines)
+	normalizedFileLines = normalizeWhitespace(normalizedFileLines)
 
 	// normalize old section for searching
 	oldSectionLines := stringslice.TrimEmptyLines(stringslice.Lines(oldSection))
-	oldSectionLines = ReplaceSHAPlaceholder(oldSectionLines)
-	oldSectionLines = ReplaceSHA(oldSectionLines)
-	oldSectionLines = NormalizeWhitespace(oldSectionLines)
+	oldSectionLines = replaceSHAPlaceholder(oldSectionLines)
+	oldSectionLines = replaceSHA(oldSectionLines)
+	oldSectionLines = normalizeWhitespace(oldSectionLines)
 
 	// normalize new section
 	newSectionLines := stringslice.TrimEmptyLines(stringslice.Lines(newSection))
-	newSectionLines = NormalizeWhitespace(newSectionLines)
+	newSectionLines = normalizeWhitespace(newSectionLines)
 
 	// find the old section in the file
 	startLine, found := stringslice.LocateSection(normalizedFileLines, oldSectionLines)
@@ -64,16 +64,16 @@ func UpdateFeatureFile(filePath, oldSection, newSection string) error {
 	return nil
 }
 
-// NormalizeWhitespace collapses redundant whitespace in the given lines.
-func NormalizeWhitespace(lines []string) []string {
+// normalizeWhitespace collapses redundant whitespace in the given lines.
+func normalizeWhitespace(lines []string) []string {
 	return stringslice.ReplaceRegex(lines, regexp.MustCompile(`\s{2,}`), " ")
 }
 
-// ReplaceSHAPlaceholder replaces all placeholders like "{{ sha.* }}" with "SHA".
-func ReplaceSHAPlaceholder(lines []string) []string {
+// replaceSHAPlaceholder replaces all placeholders like "{{ sha.* }}" with "SHA".
+func replaceSHAPlaceholder(lines []string) []string {
 	return stringslice.ReplaceRegex(lines, regexp.MustCompile(`\{\{.*?\}\}`), "SHA")
 }
 
-func ReplaceSHA(lines []string) []string {
+func replaceSHA(lines []string) []string {
 	return stringslice.ReplaceRegex(lines, regexp.MustCompile(`[a-z0-f]{40}`), "SHA")
 }
