@@ -160,6 +160,29 @@ Feature: test
       | main   | git pull |
     And done`[1:],
 		},
+		{
+			name: "SHA placeholders",
+			file: `
+Feature: test
+  Scenario: test
+    Then Git Town runs the commands
+      | BRANCH | COMMAND |
+      | main   | git reset --hard {{ sha 'commit' }} |
+    And done`[1:],
+			oldTable: `
+      | BRANCH | COMMAND                                                   |
+      | main   | git reset --hard d721118fcd545d37e87100b22ef13169160bdb3c |`[1:],
+			newTable: `
+			| BRANCH | COMMAND                                                   |
+			| main   | git reset --soft d721118fcd545d37e87100b22ef13169160bdb3c |`[1:],
+			want: `
+Feature: test
+  Scenario: test
+    Then Git Town runs the commands
+      | BRANCH | COMMAND |
+      | main   | git reset --soft d721118fcd545d37e87100b22ef13169160bdb3c |
+    And done`[1:],
+		},
 	}
 
 	for _, tt := range tests {
