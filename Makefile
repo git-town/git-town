@@ -18,6 +18,12 @@ cukeall: install  # runs all end-to-end tests on CI
 cuke-capture-golden: install  # runs end-to-end tests and updates feature files with actual commands when tests fail
 	@env $(GO_TEST_ARGS) capturegolden=1 go test . -v -count=1
 
+cukesmoke: install  # run the smoke E2E tests
+	@env $(GO_TEST_ARGS) smoke=1 go test . -v -count=1
+
+cukesmokewin: install  # runs the smoke E2E tests on Windows
+	@env smoke=1 go test . -v -count=1
+
 cukethis: install  # runs the end-to-end tests that have a @this tag
 	@env $(GO_TEST_ARGS) cukethis=1 go test . -v -count=1
 
@@ -149,12 +155,6 @@ lint-tests-sorted:
 
 lint-use-equal:
 	@(cd tools/use_equal && go build) && ./tools/use_equal/use_equal
-
-smoke: install  # run the smoke tests
-	@env $(GO_TEST_ARGS) smoke=1 go test . -v -count=1
-
-smokewin: install  # runs the Windows smoke tests
-	@env smoke=1 go test . -v -count=1
 
 stats: tools/rta@${RTA_VERSION}  # shows code statistics
 	@find . -type f \

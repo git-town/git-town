@@ -26,9 +26,9 @@ Feature: merging a branch with uncommitted changes
       |        | git stash -m "Git Town WIP"                     |
       |        | git checkout alpha                              |
       | alpha  | git reset --hard {{ sha 'beta commit' }}        |
+      |        | git push origin :beta                           |
       |        | git branch -D beta                              |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git push origin :beta                           |
       |        | git stash pop                                   |
       |        | git restore --staged .                          |
     And this lineage exists now
