@@ -144,11 +144,15 @@ func TestReplaceSHA(t *testing.T) {
 		"d721118fcd545d37e87100b22ef13169160bdb3c",
 		"no sha",
 		"",
+		"gggggggggggggggggggggggggggggggggggggggg", // invalid hex (should not match)
+		"0123456789abcdef0123456789abcdef01234567", // valid hex (should match)
 	}
 	want := []string{
 		"SHA",
 		"no sha",
 		"",
+		"gggggggggggggggggggggggggggggggggggggggg", // invalid hex (should not be replaced)
+		"SHA",
 	}
 	have := cucumber.ReplaceSHA(give)
 	must.Eq(t, want, have)

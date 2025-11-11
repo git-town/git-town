@@ -70,7 +70,7 @@ func NormalizeWhitespace(lines []string) []string {
 }
 
 func ReplaceSHA(lines []string) []string {
-	return stringslice.ReplaceRegex(lines, regexp.MustCompile(`[a-z0-f]{40}`), "SHA")
+	return stringslice.ReplaceRegex(lines, regexp.MustCompile(`[0-9a-f]{40}`), "SHA")
 }
 
 // ReplaceSHAPlaceholder replaces all placeholders like "{{ sha.* }}" with "SHA".
