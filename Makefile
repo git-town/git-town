@@ -15,6 +15,11 @@ cuke: install  # runs all end-to-end tests with nice output
 cukeall: install  # runs all end-to-end tests on CI
 	@env $(GO_TEST_ARGS) go test -v
 
+cuke-prof: install  # creates a flamegraph for the end-to-end tests
+	env $(GO_TEST_ARGS) go test . -v -cpuprofile=godog.out
+	@rm git-town.test
+	@echo Please open https://www.speedscope.app and load the file godog.out
+
 cukesmoke: install  # run the smoke E2E tests
 	@env $(GO_TEST_ARGS) smoke=1 go test . -v -count=1
 
@@ -27,11 +32,6 @@ cukethis: install  # runs the end-to-end tests that have a @this tag
 cukethiswin:  # runs the end-to-end tests that have a @this tag on Windows
 	go install -ldflags "-X github.com/git-town/git-town/v22/internal/cmd.version=-dev -X github.com/git-town/git-town/v22/internal/cmd.buildDate=1/2/3"
 	powershell -Command '$$env:cukethis=1 ; go test . -v -count=1'
-
-cuke-prof: install  # creates a flamegraph for the end-to-end tests
-	env $(GO_TEST_ARGS) go test . -v -cpuprofile=godog.out
-	@rm git-town.test
-	@echo Please open https://www.speedscope.app and load the file godog.out
 
 cukeverbose: install  # run all tests in "verbose.feature" files
 	@env $(GO_TEST_ARGS) verbose=1 go test . -v -count=1
