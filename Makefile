@@ -24,12 +24,6 @@ cukesmokewin: install  # runs the smoke E2E tests on Windows
 cukethis: install  # runs the end-to-end tests that have a @this tag
 	@env $(GO_TEST_ARGS) cukethis=1 go test . -v -count=1
 
-cuke-update: install  # updates the E2E tests based on the actual behavior of Git Town
-	@env $(GO_TEST_ARGS) cukeupdate=1 go test . -v -count=1
-
-cuke-update-this: install  # updates the E2E tests that have a @this tag
-	@env $(GO_TEST_ARGS) cukeupdate=1 cukethis=1 go test . -v -count=1
-
 cukethiswin:  # runs the end-to-end tests that have a @this tag on Windows
 	go install -ldflags "-X github.com/git-town/git-town/v22/internal/cmd.version=-dev -X github.com/git-town/git-town/v22/internal/cmd.buildDate=1/2/3"
 	powershell -Command '$$env:cukethis=1 ; go test . -v -count=1'
@@ -38,6 +32,12 @@ cuke-prof: install  # creates a flamegraph for the end-to-end tests
 	env $(GO_TEST_ARGS) go test . -v -cpuprofile=godog.out
 	@rm git-town.test
 	@echo Please open https://www.speedscope.app and load the file godog.out
+
+cuke-update: install  # updates the E2E tests based on the actual behavior of Git Town
+	@env $(GO_TEST_ARGS) cukeupdate=1 go test . -v -count=1
+
+cuke-update-this: install  # updates the E2E tests that have a @this tag
+	@env $(GO_TEST_ARGS) cukeupdate=1 cukethis=1 go test . -v -count=1
 
 cukeverbose: install  # run all tests in "verbose.feature" files
 	@env $(GO_TEST_ARGS) verbose=1 go test . -v -count=1
