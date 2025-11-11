@@ -1,10 +1,11 @@
-package cucumber //nolint:testpackage
+package cucumber_test
 
 import (
 	"os"
 	"path/filepath"
 	"testing"
 
+	"github.com/git-town/git-town/v22/internal/test/cucumber"
 	"github.com/shoenig/test/must"
 )
 
@@ -131,7 +132,7 @@ func TestNormalizeWhitespace(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			have := normalizeWhitespace(tt.give)
+			have := cucumber.NormalizeWhitespace(tt.give)
 			must.Eq(t, tt.want, have)
 		})
 	}
@@ -149,7 +150,7 @@ func TestReplaceSHA(t *testing.T) {
 		"no sha",
 		"",
 	}
-	have := replaceSHA(give)
+	have := cucumber.ReplaceSHA(give)
 	must.Eq(t, want, have)
 }
 
@@ -170,7 +171,7 @@ func TestReplaceSHAPlaceholder(t *testing.T) {
 		"no placeholder",
 		"",
 	}
-	have := replaceSHAPlaceholder(give)
+	have := cucumber.ReplaceSHAPlaceholder(give)
 	must.Eq(t, want, have)
 }
 
@@ -321,7 +322,7 @@ Feature: test
 			err := os.WriteFile(tmpFile, []byte(tt.file), 0o600)
 			must.NoError(t, err)
 
-			err = UpdateFeatureFile(tmpFile, tt.oldTable, tt.newTable)
+			err = cucumber.ChangeFeatureFile(tmpFile, tt.oldTable, tt.newTable)
 			must.NoError(t, err)
 
 			result, err := os.ReadFile(tmpFile)

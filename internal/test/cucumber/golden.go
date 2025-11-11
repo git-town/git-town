@@ -10,8 +10,8 @@ import (
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 )
 
-// UpdateFeatureFile updates the given section of the given feature file with the given new section.
-func UpdateFeatureFile(filePath, oldSection, newSection string) error {
+// ChangeFeatureFile updates the given section of the given feature file with the given new section.
+func ChangeFeatureFile(filePath, oldSection, newSection string) error {
 	// read file
 	content, err := os.ReadFile(filePath)
 	if err != nil {
@@ -20,19 +20,19 @@ func UpdateFeatureFile(filePath, oldSection, newSection string) error {
 	fileLines := stringslice.Lines(string(content))
 
 	// normalize file lines for searching
-	normalizedFileLines := replaceSHAPlaceholder(fileLines)
-	normalizedFileLines = replaceSHA(normalizedFileLines)
-	normalizedFileLines = normalizeWhitespace(normalizedFileLines)
+	normalizedFileLines := ReplaceSHAPlaceholder(fileLines)
+	normalizedFileLines = ReplaceSHA(normalizedFileLines)
+	normalizedFileLines = NormalizeWhitespace(normalizedFileLines)
 
 	// normalize old section for searching
 	oldSectionLines := stringslice.TrimEmptyLines(stringslice.Lines(oldSection))
-	oldSectionLines = replaceSHAPlaceholder(oldSectionLines)
-	oldSectionLines = replaceSHA(oldSectionLines)
-	oldSectionLines = normalizeWhitespace(oldSectionLines)
+	oldSectionLines = ReplaceSHAPlaceholder(oldSectionLines)
+	oldSectionLines = ReplaceSHA(oldSectionLines)
+	oldSectionLines = NormalizeWhitespace(oldSectionLines)
 
 	// normalize new section
 	newSectionLines := stringslice.TrimEmptyLines(stringslice.Lines(newSection))
-	newSectionLines = normalizeWhitespace(newSectionLines)
+	newSectionLines = NormalizeWhitespace(newSectionLines)
 
 	// find the old section in the file
 	startLine, found := stringslice.LocateSection(normalizedFileLines, oldSectionLines)
@@ -64,16 +64,16 @@ func UpdateFeatureFile(filePath, oldSection, newSection string) error {
 	return nil
 }
 
-// normalizeWhitespace collapses redundant whitespace in the given lines.
-func normalizeWhitespace(lines []string) []string {
+// NormalizeWhitespace collapses redundant whitespace in the given lines.
+func NormalizeWhitespace(lines []string) []string {
 	return stringslice.ReplaceRegex(lines, regexp.MustCompile(`\s{2,}`), " ")
 }
 
-func replaceSHA(lines []string) []string {
+func ReplaceSHA(lines []string) []string {
 	return stringslice.ReplaceRegex(lines, regexp.MustCompile(`[a-z0-f]{40}`), "SHA")
 }
 
-// replaceSHAPlaceholder replaces all placeholders like "{{ sha.* }}" with "SHA".
-func replaceSHAPlaceholder(lines []string) []string {
+// ReplaceSHAPlaceholder replaces all placeholders like "{{ sha.* }}" with "SHA".
+func ReplaceSHAPlaceholder(lines []string) []string {
 	return stringslice.ReplaceRegex(lines, regexp.MustCompile(`\{\{.*?\}\}`), "SHA")
 }
