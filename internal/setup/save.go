@@ -119,6 +119,9 @@ func saveAllToFile(userInput UserInput, gitConfig configdomain.PartialConfig, ru
 	if gitConfig.ShareNewBranches.IsSome() {
 		_ = gitconfig.RemoveShareNewBranches(runner)
 	}
+	if gitConfig.ProposalsShowLineage.IsSome() {
+		_ = gitconfig.RemoveProposalsShowLineage(runner)
+	}
 	if gitConfig.PushBranches.IsSome() {
 		_ = gitconfig.RemovePushBranches(runner)
 	}
@@ -237,6 +240,11 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 	if configFile.Order.IsNone() {
 		fc.Check(
 			saveOrder(userInput.Data.Order, existingGitConfig.Order, frontend),
+		)
+	}
+	if configFile.ProposalsShowLineage.IsNone() {
+		fc.Check(
+			saveProposalsShowLineage(userInput.Data.ProposalsShowLineage, existingGitConfig.ProposalsShowLineage, frontend),
 		)
 	}
 	if configFile.PushBranches.IsNone() {
@@ -525,6 +533,16 @@ func savePerennialRegex(valueToWriteToGit Option[configdomain.PerennialRegex], v
 	}
 	_ = gitconfig.RemovePerennialRegex(runner)
 	return nil
+}
+
+func saveProposalsShowLineage(valueToWriteToGit Option[forgedomain.ProposalsShowLineage], valueAlreadyInGit Option[forgedomain.ProposalsShowLineage], runner subshelldomain.Runner) error {
+	if valueAlreadyInGit.Equal(valueToWriteToGit) {
+		return nil
+	}
+	if value, has := valueToWriteToGit.Get(); has {
+		return gitconfig.SetProposalsShowLineage(runner, value, configdomain.ConfigScopeLocal)
+	}
+	return gitconfig.RemoveProposalsShowLineage(runner)
 }
 
 func savePushBranches(valueToWriteToGit Option[configdomain.PushBranches], valueAlreadyInGit Option[configdomain.PushBranches], runner subshelldomain.Runner) error {
