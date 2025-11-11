@@ -15,6 +15,8 @@ const (
 	proposalsShowLineageTitle = `Proposals Show Lineage`
 	proposalsShowLineageHelp  = `
 	How should Git Town share stack lineage in proposals?
+
+	See https://www.git-town.com/how-to/github-actions-breadcrumb.html for details.
 `
 )
 
@@ -30,15 +32,15 @@ func ProposalsShowLineage(args Args[forgedomain.ProposalsShowLineage]) (Option[f
 	entries = append(entries, list.Entries[Option[forgedomain.ProposalsShowLineage]]{
 		{
 			Data: Some(forgedomain.ProposalsShowLineageNone),
-			Text: "stack lineage is not displayed in proposals",
+			Text: "no stack lineage in proposals",
 		},
 		{
 			Data: Some(forgedomain.ProposalsShowLineageCLI),
-			Text: "the Git Town CLI updates the stack lineage in proposals",
+			Text: "Git Town CLI embeds the stack lineage into proposals",
 		},
 		{
 			Data: Some(forgedomain.ProposalsShowLineageCI),
-			Text: "stack lineage is displayed and updated through ci integrations, with tools such as https://github.com/git-town/action",
+			Text: "CI server embeds the stack lineage into proposals",
 		},
 	}...)
 	defaultPos := entries.IndexOf(args.Local)
