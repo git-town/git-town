@@ -53,6 +53,7 @@ Feature: Fix invalid configuration data
       | ship-strategy               | down enter    |
       | ship-delete-tracking branch | down enter    |
       | order                       | down enter    |
+      | proposals show lineage      | enter         |
       | config storage              | enter         |
 
   Scenario: result
@@ -68,6 +69,7 @@ Feature: Fix invalid configuration data
       | git config git-town.contribution-regex cont           |
       | git config git-town.observed-regex obs                |
       | git config git-town.order desc                        |
+      | git config git-town.proposals-show-lineage none       |
       | git config git-town.push-branches false               |
       | git config git-town.push-hook false                   |
       | git config git-town.share-new-branches push           |

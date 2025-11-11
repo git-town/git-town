@@ -23,6 +23,7 @@ Feature: display configuration from Git metadata in detached head state
     And Git setting "git-town.unknown-branch-type" is "observed"
     And Git setting "git-town.auto-resolve" is "false"
     And Git setting "git-town.detached" is "true"
+    And Git setting "git-town.proposals-show-lineage" is "cli"
     And Git setting "git-town.stash" is "false"
     And the current branch is "branch"
     And I ran "git checkout HEAD^"
@@ -68,6 +69,9 @@ Feature: display configuration from Git metadata in detached head state
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
+
+      Propose:
+        lineage: cli
 
       Ship:
         delete tracking branch: yes
