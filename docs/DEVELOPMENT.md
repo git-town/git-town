@@ -276,6 +276,9 @@ When running in this mode, and an E2E test fails, the test runner updates the
 `.feature` file, rather than failing the test. You must then inspect the test
 files to verify whether the updated tests are correct.
 
+If needed, run <code type="make/command" dir="..">make fix</code> to format the
+recorded Gherkin code.
+
 ### Configure the Cucumber IDE extension
 
 To configure the official

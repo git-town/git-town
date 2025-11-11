@@ -35,6 +35,7 @@ cukethiswin:  # runs the end-to-end tests that have a @this tag on Windows
 
 cuke-update: install  # updates the E2E tests based on the actual behavior of Git Town
 	@env $(GO_TEST_ARGS) cukeupdate=1 go test . -v -count=1
+	make --no-print-directory fix
 
 cuke-update-this: install  # updates the E2E tests that have a @this tag
 	@env $(GO_TEST_ARGS) cukeupdate=1 cukethis=1 go test . -v -count=1
