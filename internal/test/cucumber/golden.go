@@ -22,17 +22,17 @@ func UpdateFeatureFile(filePath, oldSection, newSection string) error {
 	// normalize file lines for searching
 	normalizedFileLines := ReplaceSHAPlaceholder(fileLines)
 	normalizedFileLines = ReplaceSHA(normalizedFileLines)
-	normalizedFileLines = normalizeTableWhitespace(normalizedFileLines)
+	normalizedFileLines = NormalizeWhitespace(normalizedFileLines)
 
 	// normalize old section for searching
 	oldSectionLines := stringslice.TrimEmptyLines(stringslice.Lines(oldSection))
 	oldSectionLines = ReplaceSHAPlaceholder(oldSectionLines)
 	oldSectionLines = ReplaceSHA(oldSectionLines)
-	oldSectionLines = normalizeTableWhitespace(oldSectionLines)
+	oldSectionLines = NormalizeWhitespace(oldSectionLines)
 
 	// normalize new section
 	newSectionLines := stringslice.TrimEmptyLines(stringslice.Lines(newSection))
-	newSectionLines = normalizeTableWhitespace(newSectionLines)
+	newSectionLines = NormalizeWhitespace(newSectionLines)
 
 	// find the old section in the file
 	startLine, found := stringslice.LocateSection(normalizedFileLines, oldSectionLines)
@@ -64,10 +64,9 @@ func UpdateFeatureFile(filePath, oldSection, newSection string) error {
 	return nil
 }
 
-// normalizeTableWhitespace collapses redundant whitespace in the given lines.
-func normalizeTableWhitespace(lines []string) []string {
-	spaceRe := regexp.MustCompile(`\s{2,}`)
-	return stringslice.ReplaceRegex(lines, spaceRe, " ")
+// NormalizeWhitespace collapses redundant whitespace in the given lines.
+func NormalizeWhitespace(lines []string) []string {
+	return stringslice.ReplaceRegex(lines, regexp.MustCompile(`\s{2,}`), " ")
 }
 
 // ReplaceSHAPlaceholder replaces all placeholders like "{{ sha.* }}" with "SHA".
