@@ -17,23 +17,24 @@ func UpdateFeatureFile(filePath, oldSection, newSection string) error {
 	if err != nil {
 		return fmt.Errorf("failed to read feature file: %w", err)
 	}
-
-	// create lines
 	fileLines := stringslice.Lines(string(content))
-	// Normalize file lines for searching (replace SHA placeholders and actual SHAs with "SHA")
+
+	// normalize file lines for searching
 	normalizedFileLines := ReplaceSHAPlaceholder(fileLines)
 	normalizedFileLines = ReplaceSHA(normalizedFileLines)
 	normalizedFileLines = NormalizeTableWhitespace(normalizedFileLines)
-	// Normalize old section for searching
+
+	// normalize old section for searching
 	oldSectionLines := stringslice.TrimEmptyLines(stringslice.Lines(oldSection))
 	oldSectionLines = ReplaceSHAPlaceholder(oldSectionLines)
 	oldSectionLines = ReplaceSHA(oldSectionLines)
 	oldSectionLines = NormalizeTableWhitespace(oldSectionLines)
-	// Normalize new section (collapse excessive whitespace, preserve actual SHAs)
+
+	// normalize new section
 	newSectionLines := stringslice.TrimEmptyLines(stringslice.Lines(newSection))
 	newSectionLines = NormalizeTableWhitespace(newSectionLines)
 
-	// find the section in the file
+	// find the old section in the file
 	startLine, found := stringslice.LocateSection(normalizedFileLines, oldSectionLines)
 	if !found {
 		fmt.Println("WANTED SECTION START")
@@ -72,19 +73,8 @@ func ReplaceSHA(lines []string) []string {
 	return stringslice.ReplaceRegex(lines, regexp.MustCompile(`[a-z0-f]{40}`), "SHA")
 }
 
-// NormalizeTableWhitespace normalizes whitespace in Cucumber table rows by
-// collapsing excessive whitespace (6+ consecutive spaces) while preserving normal column alignment.
+// NormalizeTableWhitespace normalizes whitespace in Cucumber table rows by collapsing redundant whitespace.
 func NormalizeTableWhitespace(lines []string) []string {
-	excessiveSpaceRe := regexp.MustCompile(`\s{2,}`)
-	result := make([]string, len(lines))
-	for i, line := range lines {
-		trimmed := strings.TrimSpace(line)
-		if strings.HasPrefix(trimmed, "|") && strings.HasSuffix(trimmed, "|") {
-			// This is a table row - collapse excessive whitespace to single space
-			result[i] = excessiveSpaceRe.ReplaceAllString(trimmed, " ")
-		} else {
-			result[i] = trimmed
-		}
-	}
-	return result
+	spaceRe := regexp.MustCompile(`\s{2,}`)
+	return stringslice.ReplaceRegex(lines, spaceRe, " ")
 }
