@@ -75,7 +75,7 @@ func ReplaceSHA(lines []string) []string {
 // NormalizeTableWhitespace normalizes whitespace in Cucumber table rows by
 // collapsing excessive whitespace (6+ consecutive spaces) while preserving normal column alignment.
 func NormalizeTableWhitespace(lines []string) []string {
-	excessiveSpaceRe := regexp.MustCompile(`\s{6,}`)
+	excessiveSpaceRe := regexp.MustCompile(`\s{2,}`)
 	result := make([]string, len(lines))
 	for i, line := range lines {
 		trimmed := strings.TrimSpace(line)
