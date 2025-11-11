@@ -69,11 +69,11 @@ func normalizeWhitespace(lines []string) []string {
 	return stringslice.ReplaceRegex(lines, regexp.MustCompile(`\s{2,}`), " ")
 }
 
+func replaceSHA(lines []string) []string {
+	return stringslice.ReplaceRegex(lines, regexp.MustCompile(`[a-z0-f]{40}`), "SHA")
+}
+
 // replaceSHAPlaceholder replaces all placeholders like "{{ sha.* }}" with "SHA".
 func replaceSHAPlaceholder(lines []string) []string {
 	return stringslice.ReplaceRegex(lines, regexp.MustCompile(`\{\{.*?\}\}`), "SHA")
-}
-
-func replaceSHA(lines []string) []string {
-	return stringslice.ReplaceRegex(lines, regexp.MustCompile(`[a-z0-f]{40}`), "SHA")
 }

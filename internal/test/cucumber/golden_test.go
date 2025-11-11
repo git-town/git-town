@@ -137,6 +137,22 @@ func TestNormalizeWhitespace(t *testing.T) {
 	}
 }
 
+func TestReplaceSHA(t *testing.T) {
+	t.Parallel()
+	give := []string{
+		"d721118fcd545d37e87100b22ef13169160bdb3c",
+		"no sha",
+		"",
+	}
+	want := []string{
+		"SHA",
+		"no sha",
+		"",
+	}
+	have := replaceSHA(give)
+	must.Eq(t, want, have)
+}
+
 func TestReplaceSHAPlaceholder(t *testing.T) {
 	t.Parallel()
 
@@ -155,22 +171,6 @@ func TestReplaceSHAPlaceholder(t *testing.T) {
 		"",
 	}
 	have := replaceSHAPlaceholder(give)
-	must.Eq(t, want, have)
-}
-
-func TestReplaceSHA(t *testing.T) {
-	t.Parallel()
-	give := []string{
-		"d721118fcd545d37e87100b22ef13169160bdb3c",
-		"no sha",
-		"",
-	}
-	want := []string{
-		"SHA",
-		"no sha",
-		"",
-	}
-	have := replaceSHA(give)
 	must.Eq(t, want, have)
 }
 
