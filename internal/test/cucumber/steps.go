@@ -43,8 +43,8 @@ import (
 // the global FixtureFactory instance.
 var fixtureFactory *fixture.Factory
 
-// CaptureGoldenMode indicates whether to update .feature files with actual command output when tests fail
-var CaptureGoldenMode bool
+// CukeUpdate indicates whether to update .feature files with actual command output when tests fail
+var CukeUpdate bool
 
 // dedicated type for storing data in context.Context
 type key int
@@ -482,14 +482,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		})
 		diff, errorCount := table.EqualDataTable(expanded)
 		if errorCount != 0 {
-			if CaptureGoldenMode {
+			if CukeUpdate {
 				scenarioURI := ctx.Value(keyScenarioURI).(string)
-				if err := updateFeatureFileWithCommands(scenarioURI, expanded.String(), table.String()); err != nil {
-					fmt.Printf("\nERROR! Failed to update feature file: %v\n", err)
-				} else {
-					fmt.Printf("\nUpdated feature file %s with actual commands\n", scenarioURI)
-				}
-				return nil
+				return ChangeFeatureFile(scenarioURI, expanded.String(), table.String())
 			}
 			fmt.Printf("\nERROR! Found %d differences in the commands run\n\n", errorCount)
 			fmt.Println(diff)
@@ -1471,7 +1466,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 				return errors.New(`please use the step "the initial commits exist now" instead`)
 			}
 		}
-		return state.compareGherkinTable(table)
+		scenarioURI := ctx.Value(keyScenarioURI).(string)
+		return state.compareGherkinTable(table, scenarioURI)
 	})
 
 	sc.Step(`^these committed files exist now$`, func(ctx context.Context, table *godog.Table) error {
@@ -1480,6 +1476,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 		fileTable := devRepo.FilesInBranches("main")
 		diff, errorCount := fileTable.EqualGherkin(table)
 		if errorCount != 0 {
+			if CukeUpdate {
+				scenarioURI := ctx.Value(keyScenarioURI).(string)
+				expectedTable := datatable.FromGherkin(table)
+				return ChangeFeatureFile(scenarioURI, expectedTable.String(), fileTable.String())
+			}
 			fmt.Printf("\nERROR! Found %d differences in the existing files\n\n", errorCount)
 			fmt.Println(diff)
 			return errors.New("mismatching files found, see diff above")

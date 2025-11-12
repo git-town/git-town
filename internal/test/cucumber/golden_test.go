@@ -1,404 +1,337 @@
-package cucumber
+package cucumber_test
 
 import (
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/git-town/git-town/v22/internal/test/cucumber"
+	"github.com/shoenig/test/must"
 )
 
-func TestTrimTableLines(t *testing.T) {
+func TestNormalizeWhitespace(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
 		name string
-		give string
+		give []string
 		want []string
 	}{
 		{
-			name: "no empty lines",
-			give: "| A | B |\n| 1 | 2 |",
-			want: []string{"| A | B |", "| 1 | 2 |"},
-		},
-		{
-			name: "trailing empty line",
-			give: "| A | B |\n| 1 | 2 |\n",
-			want: []string{"| A | B |", "| 1 | 2 |"},
-		},
-		{
-			name: "multiple trailing empty lines",
-			give: "| A | B |\n| 1 | 2 |\n\n\n",
-			want: []string{"| A | B |", "| 1 | 2 |"},
-		},
-		{
-			name: "leading empty lines",
-			give: "\n\n| A | B |\n| 1 | 2 |",
-			want: []string{"| A | B |", "| 1 | 2 |"},
-		},
-		{
-			name: "empty string",
-			give: "",
-			want: []string{},
-		},
-		{
-			name: "only empty lines",
-			give: "\n\n\n",
-			want: []string{},
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-			result := trimTableLines(tt.give)
-			if len(result) != len(tt.want) {
-				t.Errorf("trimTableLines() returned %d lines, expected %d", len(result), len(tt.want))
-				return
-			}
-			for i, line := range result {
-				if line != tt.want[i] {
-					t.Errorf("trimTableLines()[%d] = %q, expected %q", i, line, tt.want[i])
-				}
-			}
-		})
-	}
-}
-
-func TestExtractIndentation(t *testing.T) {
-	t.Parallel()
-
-	tests := []struct {
-		name string
-		give string
-		want string
-	}{
-		{
-			name: "spaces",
-			give: "    | A | B |",
-			want: "    ",
+			name: "multiple spaces",
+			give: []string{
+				"one    two",
+				"three     four",
+			},
+			want: []string{
+				"one two",
+				"three four",
+			},
 		},
 		{
 			name: "tabs",
-			give: "\t\t| A | B |",
-			want: "\t\t",
+			give: []string{
+				"one\t\t\t\ttwo",
+				"three\t\tfour",
+			},
+			want: []string{
+				"one two",
+				"three four",
+			},
 		},
 		{
-			name: "mixed spaces and tabs",
-			give: "  \t  | A | B |",
-			want: "  \t  ",
+			name: "mixed whitespace",
+			give: []string{
+				"one \t  \t two",
+				"three\t \tfour",
+			},
+			want: []string{
+				"one two",
+				"three four",
+			},
 		},
 		{
-			name: "no indentation",
-			give: "| A | B |",
-			want: "",
+			name: "single spaces unchanged",
+			give: []string{
+				"one two",
+				"three four five",
+			},
+			want: []string{
+				"one two",
+				"three four five",
+			},
 		},
 		{
-			name: "empty line",
-			give: "",
-			want: "",
+			name: "leading and trailing whitespace",
+			give: []string{
+				"  leading",
+				"trailing  ",
+				"  both  ",
+			},
+			want: []string{
+				" leading",
+				"trailing ",
+				" both ",
+			},
 		},
 		{
-			name: "only whitespace",
-			give: "    ",
-			want: "    ",
+			name: "no whitespace",
+			give: []string{
+				"nowhitespace",
+				"stillnone",
+			},
+			want: []string{
+				"nowhitespace",
+				"stillnone",
+			},
+		},
+		{
+			name: "empty strings",
+			give: []string{
+				"",
+				"not empty",
+				"",
+			},
+			want: []string{
+				"",
+				"not empty",
+				"",
+			},
+		},
+		{
+			name: "empty slice",
+			give: []string{},
+			want: []string{},
+		},
+		{
+			name: "newlines and other whitespace",
+			give: []string{
+				"one\n\n\ntwo",
+				"three\r\rfour",
+				"five\f\fsix",
+			},
+			want: []string{
+				"one two",
+				"three four",
+				"five six",
+			},
+		},
+		{
+			name: "real-world example with table formatting",
+			give: []string{
+				"      | BRANCH      | COMMAND   |",
+				"      | main   | git fetch |",
+			},
+			want: []string{
+				" | BRANCH | COMMAND |",
+				" | main | git fetch |",
+			},
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			result := extractIndentation(tt.give)
-			if result != tt.want {
-				t.Errorf("extractIndentation() = %q, expected %q", result, tt.want)
-			}
+			have := cucumber.NormalizeWhitespace(tt.give)
+			must.Eq(t, tt.want, have)
 		})
 	}
 }
 
-func TestIndentTableLines(t *testing.T) {
+func TestReplaceSHA(t *testing.T) {
 	t.Parallel()
-
-	tests := []struct {
-		name        string
-		lines       []string
-		indentation string
-		want        []string
-	}{
-		{
-			name:        "add spaces",
-			lines:       []string{"| A | B |", "| 1 | 2 |"},
-			indentation: "    ",
-			want:        []string{"    | A | B |", "    | 1 | 2 |"},
-		},
-		{
-			name:        "add tabs",
-			lines:       []string{"| A | B |", "| 1 | 2 |"},
-			indentation: "\t\t",
-			want:        []string{"\t\t| A | B |", "\t\t| 1 | 2 |"},
-		},
-		{
-			name:        "no indentation",
-			lines:       []string{"| A | B |", "| 1 | 2 |"},
-			indentation: "",
-			want:        []string{"| A | B |", "| 1 | 2 |"},
-		},
-		{
-			name:        "preserve empty lines",
-			lines:       []string{"| A | B |", "", "| 1 | 2 |"},
-			indentation: "  ",
-			want:        []string{"  | A | B |", "", "  | 1 | 2 |"},
-		},
-		{
-			name:        "remove existing indentation and add new",
-			lines:       []string{"  | A | B |", "    | 1 | 2 |"},
-			indentation: "\t",
-			want:        []string{"\t| A | B |", "\t| 1 | 2 |"},
-		},
+	give := []string{
+		"d721118fcd545d37e87100b22ef13169160bdb3c",
+		"no sha",
+		"",
+		"gggggggggggggggggggggggggggggggggggggggg", // invalid hex (should not match)
+		"0123456789abcdef0123456789abcdef01234567", // valid hex (should match)
 	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-			result := indentTableLines(tt.lines, tt.indentation)
-			if len(result) != len(tt.want) {
-				t.Errorf("indentTableLines() returned %d lines, expected %d", len(result), len(tt.want))
-				return
-			}
-			for i, line := range result {
-				if line != tt.want[i] {
-					t.Errorf("indentTableLines()[%d] = %q, expected %q", i, line, tt.want[i])
-				}
-			}
-		})
+	want := []string{
+		"SHA",
+		"no sha",
+		"",
+		"gggggggggggggggggggggggggggggggggggggggg", // invalid hex (should not be replaced)
+		"SHA",
 	}
+	have := cucumber.ReplaceSHA(give)
+	must.Eq(t, want, have)
 }
 
-func TestMatchesTable(t *testing.T) {
+func TestReplaceSHAPlaceholder(t *testing.T) {
 	t.Parallel()
 
-	tests := []struct {
-		name       string
-		fileLines  []string
-		tableLines []string
-		want       bool
-	}{
-		{
-			name:       "exact match",
-			fileLines:  []string{"| A | B |", "| 1 | 2 |"},
-			tableLines: []string{"| A | B |", "| 1 | 2 |"},
-			want:       true,
-		},
-		{
-			name:       "match with different indentation",
-			fileLines:  []string{"    | A | B |", "    | 1 | 2 |"},
-			tableLines: []string{"| A | B |", "| 1 | 2 |"},
-			want:       true,
-		},
-		{
-			name:       "no match - different content",
-			fileLines:  []string{"| A | B |", "| 3 | 4 |"},
-			tableLines: []string{"| A | B |", "| 1 | 2 |"},
-			want:       false,
-		},
-		{
-			name:       "no match - file too short",
-			fileLines:  []string{"| A | B |"},
-			tableLines: []string{"| A | B |", "| 1 | 2 |"},
-			want:       false,
-		},
-		{
-			name:       "match - file has extra lines",
-			fileLines:  []string{"| A | B |", "| 1 | 2 |", "| 3 | 4 |"},
-			tableLines: []string{"| A | B |", "| 1 | 2 |"},
-			want:       true,
-		},
+	give := []string{
+		"one {{ sha 'foo' }} two",
+		"one {{ sha-in-origin 'bar' }} two",
+		"git reset --hard {{ sha-initial 'alpha commit' }}",
+		"no placeholder",
+		"",
 	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-			result := matchesTable(tt.fileLines, tt.tableLines)
-			if result != tt.want {
-				t.Errorf("matchesTable() = %v, expected %v", result, tt.want)
-			}
-		})
+	want := []string{
+		"one SHA two",
+		"one SHA two",
+		"git reset --hard SHA",
+		"no placeholder",
+		"",
 	}
-}
-
-func TestFindTableInFile(t *testing.T) {
-	t.Parallel()
-
-	tests := []struct {
-		name       string
-		fileLines  []string
-		tableLines []string
-		wantIdx    int
-		wantError  bool
-	}{
-		{
-			name: "table at beginning",
-			fileLines: []string{
-				"| A | B |",
-				"| 1 | 2 |",
-				"Some text",
-			},
-			tableLines: []string{"| A | B |", "| 1 | 2 |"},
-			wantIdx:    0,
-			wantError:  false,
-		},
-		{
-			name: "table in middle",
-			fileLines: []string{
-				"Some text",
-				"    | A | B |",
-				"    | 1 | 2 |",
-				"More text",
-			},
-			tableLines: []string{"| A | B |", "| 1 | 2 |"},
-			wantIdx:    1,
-			wantError:  false,
-		},
-		{
-			name: "table at end",
-			fileLines: []string{
-				"Some text",
-				"More text",
-				"  | A | B |",
-				"  | 1 | 2 |",
-			},
-			tableLines: []string{"| A | B |", "| 1 | 2 |"},
-			wantIdx:    2,
-			wantError:  false,
-		},
-		{
-			name: "table not found",
-			fileLines: []string{
-				"| A | B |",
-				"| 3 | 4 |",
-			},
-			tableLines: []string{"| A | B |", "| 1 | 2 |"},
-			wantIdx:    -1,
-			wantError:  true,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-			idx, err := findTableInFile(tt.fileLines, tt.tableLines)
-			if tt.wantError {
-				if err == nil {
-					t.Errorf("findTableInFile() expected error but got none")
-				}
-			} else {
-				if err != nil {
-					t.Errorf("findTableInFile() unexpected error: %v", err)
-				}
-				if idx != tt.wantIdx {
-					t.Errorf("findTableInFile() = %d, expected %d", idx, tt.wantIdx)
-				}
-			}
-		})
-	}
+	have := cucumber.ReplaceSHAPlaceholder(give)
+	must.Eq(t, want, have)
 }
 
 func TestUpdateFeatureFileWithCommands(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
-		name           string
-		initialContent string
-		oldTable       string
-		newTable       string
-		wantResult     string
-		wantError      bool
+		name     string
+		file     string
+		oldTable string
+		newTable string
+		want     string
 	}{
 		{
 			name: "replace table with proper indentation",
-			initialContent: `
+			file: `
 Feature: test
   Scenario: test
     Then Git Town runs the commands
       | BRANCH | COMMAND |
       | main   | git fetch |
     And some other step`[1:],
-			oldTable: "| BRANCH | COMMAND |\n| main   | git fetch |",
-			newTable: "| BRANCH | COMMAND |\n| main   | git pull |",
-			wantResult: `
+			oldTable: `
+      | BRANCH | COMMAND |
+      | main   | git fetch |`[1:],
+			newTable: `
+| BRANCH | COMMAND |
+| main   | git pull |`[1:],
+			want: `
 Feature: test
   Scenario: test
     Then Git Town runs the commands
       | BRANCH | COMMAND |
-      | main   | git pull |
+      | main | git pull |
     And some other step`[1:],
-			wantError: false,
-		},
-		{
-			name: "table not found",
-			initialContent: `
-Feature: test
-  Scenario: test
-    Then some step`[1:],
-			oldTable:  "| BRANCH | COMMAND |\n| main   | git fetch |",
-			newTable:  "| BRANCH | COMMAND |\n| main   | git pull |",
-			wantError: true,
 		},
 		{
 			name: "replace table with different number of rows",
-			initialContent: `
+			file: `
+Feature: test
+  Scenario: test
+    Then Git Town runs the commands
+      | BRANCH      | COMMAND   |
+      | development | git fetch |
+    And done`[1:],
+			oldTable: `
+			| BRANCH      | COMMAND |
+			| development | git fetch |`[1:],
+			newTable: `
+			| BRANCH | COMMAND |
+			| main   | git init |
+			| main   | git pull |`[1:],
+			want: `
+Feature: test
+  Scenario: test
+    Then Git Town runs the commands
+      | BRANCH | COMMAND |
+      | main | git init |
+      | main | git pull |
+    And done`[1:],
+		},
+		{
+			name: "old table has more empty lines",
+			file: `
 Feature: test
   Scenario: test
     Then Git Town runs the commands
       | BRANCH | COMMAND |
       | main   | git fetch |
     And done`[1:],
-			oldTable: "| BRANCH | COMMAND |\n| main   | git fetch |",
-			newTable: "| BRANCH | COMMAND |\n| main   | git init |\n| main   | git pull |",
-			wantResult: `
+			oldTable: `
+
+			| BRANCH | COMMAND |
+			| main | git fetch |
+
+`,
+			newTable: `
+			| BRANCH | COMMAND |
+			| main | git init |
+			| main | git pull |`[1:],
+			want: `
 Feature: test
   Scenario: test
     Then Git Town runs the commands
       | BRANCH | COMMAND |
-      | main   | git init |
-      | main   | git pull |
+      | main | git init |
+      | main | git pull |
     And done`[1:],
-			wantError: false,
+		},
+		{
+			name: "newTable has more empty lines",
+			file: `
+Feature: test
+  Scenario: test
+    Then Git Town runs the commands
+      | BRANCH | COMMAND |
+      | main   | git fetch |
+    And done`[1:],
+			oldTable: `
+			| BRANCH | COMMAND |
+			| main | git fetch |`[1:],
+			newTable: `
+
+			| BRANCH | COMMAND |
+			| main | git init |
+			| main | git pull |
+
+`,
+			want: `
+Feature: test
+  Scenario: test
+    Then Git Town runs the commands
+      | BRANCH | COMMAND |
+      | main | git init |
+      | main | git pull |
+    And done`[1:],
+		},
+		{
+			name: "SHA placeholders",
+			file: `
+Feature: test
+  Scenario: test
+    Then Git Town runs the commands
+      | BRANCH | COMMAND |
+      | main   | git reset --hard {{ sha 'commit' }} |
+    And done`[1:],
+			oldTable: `
+      | BRANCH | COMMAND                                                   |
+      | main | git reset --hard d721118fcd545d37e87100b22ef13169160bdb3c |`[1:],
+			newTable: `
+			| BRANCH | COMMAND                                                   |
+			| main | git reset --soft d721118fcd545d37e87100b22ef13169160bdb3c |`[1:],
+			want: `
+Feature: test
+  Scenario: test
+    Then Git Town runs the commands
+      | BRANCH | COMMAND |
+      | main | git reset --soft d721118fcd545d37e87100b22ef13169160bdb3c |
+    And done`[1:],
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-
-			// Create temp file
 			tmpDir := t.TempDir()
 			tmpFile := filepath.Join(tmpDir, "test.feature")
-			if err := os.WriteFile(tmpFile, []byte(tt.initialContent), 0o644); err != nil {
-				t.Fatalf("Failed to create temp file: %v", err)
-			}
+			err := os.WriteFile(tmpFile, []byte(tt.file), 0o600)
+			must.NoError(t, err)
 
-			// Run the function
-			err := updateFeatureFileWithCommands(tmpFile, tt.oldTable, tt.newTable)
+			err = cucumber.ChangeFeatureFile(tmpFile, tt.oldTable, tt.newTable)
+			must.NoError(t, err)
 
-			// Check error expectation
-			if tt.wantError {
-				if err == nil {
-					t.Errorf("updateFeatureFileWithCommands() expected error but got none")
-				}
-				return
-			}
-			if err != nil {
-				t.Fatalf("updateFeatureFileWithCommands() unexpected error: %v", err)
-			}
-
-			// Read the result
 			result, err := os.ReadFile(tmpFile)
-			if err != nil {
-				t.Fatalf("Failed to read result file: %v", err)
-			}
-
-			if string(result) != tt.wantResult {
-				t.Errorf("updateFeatureFileWithCommands() result mismatch\nGot:\n%s\n\nExpected:\n%s", string(result), tt.wantResult)
-			}
+			must.NoError(t, err)
+			must.EqOp(t, tt.want, string(result))
 		})
 	}
 }

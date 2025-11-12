@@ -1,112 +1,79 @@
 package cucumber
 
 import (
-	"errors"
 	"fmt"
 	"os"
+	"regexp"
 	"strings"
+
+	"github.com/git-town/git-town/v22/internal/gohacks"
+	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 )
 
-// updateFeatureFileWithCommands updates the feature file with the actual commands table
-func updateFeatureFileWithCommands(featureFilePath, oldTableStr, newTableStr string) error {
-	// Read the entire feature file
-	content, err := os.ReadFile(featureFilePath)
+// ChangeFeatureFile updates the given section of the given feature file with the given new section.
+func ChangeFeatureFile(filePath, oldSection, newSection string) error {
+	// read file
+	content, err := os.ReadFile(filePath)
 	if err != nil {
 		return fmt.Errorf("failed to read feature file: %w", err)
 	}
+	fileLines := stringslice.Lines(string(content))
 
-	// Split content into lines and prepare table lines
-	fileLines := strings.Split(string(content), "\n")
-	oldTableLines := trimTableLines(oldTableStr)
-	newTableLines := trimTableLines(newTableStr)
+	// normalize file lines for searching
+	normalizedFileLines := ReplaceSHAPlaceholder(fileLines)
+	normalizedFileLines = ReplaceSHA(normalizedFileLines)
+	normalizedFileLines = NormalizeWhitespace(normalizedFileLines)
 
-	// Find the table in the file
-	startLine, err := findTableInFile(fileLines, oldTableLines)
-	if err != nil {
-		return err
+	// normalize old section for searching
+	oldSectionLines := stringslice.TrimEmptyLines(stringslice.Lines(oldSection))
+	oldSectionLines = ReplaceSHAPlaceholder(oldSectionLines)
+	oldSectionLines = ReplaceSHA(oldSectionLines)
+	oldSectionLines = NormalizeWhitespace(oldSectionLines)
+
+	// normalize new section
+	newSectionLines := stringslice.TrimEmptyLines(stringslice.Lines(newSection))
+	newSectionLines = NormalizeWhitespace(newSectionLines)
+
+	// find the old section in the file
+	startLine, found := stringslice.LocateSection(normalizedFileLines, oldSectionLines)
+	if !found {
+		fmt.Println("WANTED SECTION START")
+		fmt.Println(strings.Join(oldSectionLines, "\n"))
+		fmt.Println("WANTED SECTION END")
+		fmt.Println("FILE CONTENT START")
+		fmt.Println(strings.Join(normalizedFileLines, "\n"))
+		fmt.Println("FILE CONTENT END")
+		return fmt.Errorf("could not find section in feature file %q", filePath)
 	}
 
-	// Get indentation and apply it to the new table
-	indentation := extractIndentation(fileLines[startLine])
-	indentedNewTableLines := indentTableLines(newTableLines, indentation)
+	// indent the new section the same way the old one is indented in the file
+	indentation := gohacks.LeadingWhitespace(fileLines[startLine])
+	indentedNewSectionLines := stringslice.ChangeIndentNonEmpty(newSectionLines, indentation)
 
-	// Replace the old table lines with the new ones
+	// replace the old section with the new one
 	newLines := append([]string{}, fileLines[:startLine]...)
-	newLines = append(newLines, indentedNewTableLines...)
-	newLines = append(newLines, fileLines[startLine+len(oldTableLines):]...)
+	newLines = append(newLines, indentedNewSectionLines...)
+	newLines = append(newLines, fileLines[startLine+len(oldSectionLines):]...)
 
 	// Write back to the file
 	newContent := strings.Join(newLines, "\n")
 	//nolint:gosec // need permission 644 for feature files
-	if err := os.WriteFile(featureFilePath, []byte(newContent), 0o644); err != nil {
+	if err := os.WriteFile(filePath, []byte(newContent), 0o644); err != nil {
 		return fmt.Errorf("failed to write feature file: %w", err)
 	}
-
 	return nil
 }
 
-// trimTableLines removes leading and trailing empty lines from a table string
-func trimTableLines(tableStr string) []string {
-	linesRaw := strings.Split(tableStr, "\n")
-	// Filter out leading empty lines
-	lines := make([]string, 0, len(linesRaw))
-	for _, line := range linesRaw {
-		if strings.TrimSpace(line) != "" || len(lines) > 0 {
-			lines = append(lines, line)
-		}
-	}
-	// Trim trailing empty lines
-	for len(lines) > 0 && strings.TrimSpace(lines[len(lines)-1]) == "" {
-		lines = lines[:len(lines)-1]
-	}
-	return lines
+// NormalizeWhitespace collapses redundant whitespace in the given lines.
+func NormalizeWhitespace(lines []string) []string {
+	return stringslice.ReplaceRegex(lines, regexp.MustCompile(`\s{2,}`), " ")
 }
 
-// findTableInFile locates a table in the file by matching unindented content
-func findTableInFile(fileLines, tableLines []string) (int, error) {
-	for i := 0; i <= len(fileLines)-len(tableLines); i++ {
-		if matchesTable(fileLines[i:], tableLines) {
-			return i, nil
-		}
-	}
-	return -1, errors.New("could not find expected table in feature file")
+func ReplaceSHA(lines []string) []string {
+	return stringslice.ReplaceRegex(lines, regexp.MustCompile(`[0-9a-f]{40}`), "SHA")
 }
 
-// matchesTable checks if the file lines match the table lines (ignoring indentation)
-func matchesTable(fileLines, tableLines []string) bool {
-	if len(fileLines) < len(tableLines) {
-		return false
-	}
-	for j, tableLine := range tableLines {
-		if strings.TrimSpace(fileLines[j]) != strings.TrimSpace(tableLine) {
-			return false
-		}
-	}
-	return true
-}
-
-// extractIndentation extracts leading whitespace from a line
-func extractIndentation(line string) string {
-	indentation := ""
-	for _, ch := range line {
-		if ch == ' ' || ch == '\t' {
-			indentation += string(ch)
-		} else {
-			break
-		}
-	}
-	return indentation
-}
-
-// indentTableLines applies indentation to each non-empty line
-func indentTableLines(lines []string, indentation string) []string {
-	result := make([]string, len(lines))
-	for i, line := range lines {
-		if strings.TrimSpace(line) != "" {
-			result[i] = indentation + strings.TrimLeft(line, " \t")
-		} else {
-			result[i] = line
-		}
-	}
-	return result
+// ReplaceSHAPlaceholder replaces all placeholders like "{{ sha.* }}" with "SHA".
+func ReplaceSHAPlaceholder(lines []string) []string {
+	return stringslice.ReplaceRegex(lines, regexp.MustCompile(`\{\{.*?\}\}`), "SHA")
 }
