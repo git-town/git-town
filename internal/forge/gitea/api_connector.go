@@ -98,7 +98,9 @@ func (self *AuthConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]
 		proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeGitea}
 		result[p] = proposal
 	}
-	self.log.Success("none")
+	if len(result) == 0 {
+		self.log.Success("none")
+	}
 	return result, nil
 }
 
