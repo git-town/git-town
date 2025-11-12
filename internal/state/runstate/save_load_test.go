@@ -208,7 +208,7 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "SetToSHA": "111111"
+        "SHA": "111111"
       },
       "type": "BranchCurrentResetToSHA"
     },
