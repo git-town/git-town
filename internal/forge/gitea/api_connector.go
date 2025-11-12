@@ -91,14 +91,15 @@ func (self *AuthConnector) SearchProposal(branch gitdomain.LocalBranchName) ([]f
 		return []forgedomain.Proposal{}, err
 	}
 	pullRequests := FilterPullRequests2(openPullRequests, branch)
-	result := []forgedomain.Proposal{}
-	for _, pullRequest := range pullRequests {
+	result := make([]forgedomain.Proposal, len(pullRequests))
+	for p, pullRequest := range pullRequests {
 		proposalData := parsePullRequest(pullRequest)
 		self.log.Success(proposalData.Target.String())
-		proposal := forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeGitea}
-		result = append(result, proposal)
+		proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeGitea}
+		result[p] = proposal
 	}
 	self.log.Success("none")
+	return result, nil
 }
 
 // ============================================================================
