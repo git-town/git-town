@@ -39,6 +39,7 @@ cuke-update: install  # updates the E2E tests based on the actual behavior of Gi
 
 cuke-update-this: install  # updates the E2E tests that have a @this tag
 	@env $(GO_TEST_ARGS) cukeupdate=1 cukethis=1 go test . -v -count=1
+	make --no-print-directory fix
 
 cukeverbose: install  # run all tests in "verbose.feature" files
 	@env $(GO_TEST_ARGS) verbose=1 go test . -v -count=1
