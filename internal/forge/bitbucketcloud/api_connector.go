@@ -35,7 +35,7 @@ var _ forgedomain.ProposalFinder = apiConnector // type check
 
 func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
-	query := fmt.Sprintf(`source.branch.name = %q AND destination.branch.name = %q AND (state = "open" OR state = "new")`, branch, target)
+	query := fmt.Sprintf("source.branch.name = %q AND destination.branch.name = %q", branch, target)
 	result1, err := self.client.Value.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
 		Owner:    self.Organization,
 		RepoSlug: self.Repository,
@@ -97,7 +97,7 @@ func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Optio
 	response1, err := self.client.Value.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
 		Owner:    self.Organization,
 		RepoSlug: self.Repository,
-		Query:    fmt.Sprintf(`source.branch.name = %q AND (state = "open" OR state = "new")`, branch),
+		Query:    fmt.Sprintf("source.branch.name = %q", branch),
 		States:   []string{"open", "new"},
 	})
 	if err != nil {
