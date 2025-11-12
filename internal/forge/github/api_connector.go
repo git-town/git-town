@@ -78,7 +78,6 @@ func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]fo
 		proposalData := parsePullRequest(pullRequest)
 		self.log.Success(proposalData.Target.String())
 		proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeGitHub}
-		self.log.Success(proposalData.Target.String())
 		result[p] = proposal
 	}
 	if len(pullRequests) == 0 {
