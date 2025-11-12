@@ -66,21 +66,21 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 		return None[forgedomain.Proposal](), nil
 	}
 	for _, proposalJSON := range proposals2 {
-		proposal3, ok := proposalJSON.(map[string]any)
+		proposal1, ok := proposalJSON.(map[string]any)
 		if !ok {
 			self.log.Failed(messages.APIUnexpectedResultDataStructure)
 			return None[forgedomain.Proposal](), nil
 		}
-		proposal4, err := parsePullRequest(proposal3)
+		proposal2, err := parsePullRequest(proposal1)
 		if err != nil {
 			self.log.Failed(err.Error())
 			return None[forgedomain.Proposal](), nil
 		}
-		if !proposal4.Active {
+		if !proposal2.Active {
 			continue
 		}
-		self.log.Success(fmt.Sprintf("#%d", proposal4.Number))
-		return Some(forgedomain.Proposal{Data: proposal4, ForgeType: forgedomain.ForgeTypeBitbucket}), nil
+		self.log.Success(fmt.Sprintf("#%d", proposal2.Number))
+		return Some(forgedomain.Proposal{Data: proposal2, ForgeType: forgedomain.ForgeTypeBitbucket}), nil
 	}
 	self.log.Success("none")
 	return None[forgedomain.Proposal](), nil
