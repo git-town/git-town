@@ -65,22 +65,22 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[forgedomain.Proposal](), nil
 	}
-	for _, proposalJSON := range proposals2 {
-		proposal1, ok := proposalJSON.(map[string]any)
+	for _, proposal1 := range proposals2 {
+		proposal2, ok := proposal1.(map[string]any)
 		if !ok {
 			self.log.Failed(messages.APIUnexpectedResultDataStructure)
 			return None[forgedomain.Proposal](), nil
 		}
-		proposal2, err := parsePullRequest(proposal1)
+		proposal3, err := parsePullRequest(proposal2)
 		if err != nil {
 			self.log.Failed(err.Error())
 			return None[forgedomain.Proposal](), nil
 		}
-		if !proposal2.Active {
+		if !proposal3.Active {
 			continue
 		}
-		self.log.Success(fmt.Sprintf("#%d", proposal2.Number))
-		return Some(forgedomain.Proposal{Data: proposal2, ForgeType: forgedomain.ForgeTypeBitbucket}), nil
+		self.log.Success(fmt.Sprintf("#%d", proposal3.Number))
+		return Some(forgedomain.Proposal{Data: proposal3, ForgeType: forgedomain.ForgeTypeBitbucket}), nil
 	}
 	self.log.Success("none")
 	return None[forgedomain.Proposal](), nil
@@ -109,36 +109,19 @@ func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Optio
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[forgedomain.Proposal](), nil
 	}
-	size1, has := response2["size"]
+	proposals1, has := response2["values"]
 	if !has {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[forgedomain.Proposal](), nil
 	}
-	size2, ok := size1.(float64)
+	proposals2, ok := proposals1.([]any)
 	if !ok {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[forgedomain.Proposal](), nil
 	}
-	size3 := int(size2)
-	if size3 == 0 {
-		self.log.Success("none")
-		return None[forgedomain.Proposal](), nil
+	for _, proposalJSON := range proposals2 {
 	}
-	if size3 > 1 {
-		self.log.Failed(fmt.Sprintf(messages.ProposalMultipleFromFound, size3, branch))
-		return None[forgedomain.Proposal](), nil
-	}
-	values1, has := response2["values"]
-	if !has {
-		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.Proposal](), nil
-	}
-	values2, ok := values1.([]any)
-	if !ok {
-		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.Proposal](), nil
-	}
-	proposal1 := values2[0].(map[string]any)
+	proposal1 := proposals2[0].(map[string]any)
 	proposal2, err := parsePullRequest(proposal1)
 	if err != nil {
 		self.log.Failed(err.Error())
