@@ -120,7 +120,7 @@ func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) ([]for
 		return []forgedomain.Proposal{}, nil
 	}
 	result := make([]forgedomain.Proposal, len(proposals2))
-	for _, proposal1 := range proposals2 {
+	for p, proposal1 := range proposals2 {
 		proposal2, ok := proposal1.(map[string]any)
 		if !ok {
 			self.log.Failed(messages.APIUnexpectedResultDataStructure)
@@ -135,7 +135,7 @@ func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) ([]for
 			continue
 		}
 		self.log.Success(fmt.Sprintf("#%d ", proposal3.Number))
-		result = append(result, forgedomain.Proposal{Data: proposal3, ForgeType: forgedomain.ForgeTypeBitbucket})
+		result[p] = forgedomain.Proposal{Data: proposal3, ForgeType: forgedomain.ForgeTypeBitbucket}
 	}
 	if len(result) == 0 {
 		self.log.Success("none")
