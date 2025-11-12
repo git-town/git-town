@@ -33,6 +33,14 @@ cukethiswin:  # runs the end-to-end tests that have a @this tag on Windows
 	go install -ldflags "-X github.com/git-town/git-town/v22/internal/cmd.version=-dev -X github.com/git-town/git-town/v22/internal/cmd.buildDate=1/2/3"
 	powershell -Command '$$env:cukethis=1 ; go test . -v -count=1'
 
+cuke-update: install  # updates the E2E tests based on the actual behavior of Git Town
+	@env $(GO_TEST_ARGS) cukeupdate=1 go test . -v -count=1
+	make --no-print-directory fix
+
+cuke-update-this: install  # updates the E2E tests that have a @this tag
+	@env $(GO_TEST_ARGS) cukeupdate=1 cukethis=1 go test . -v -count=1
+	make --no-print-directory fix
+
 cukeverbose: install  # run all tests in "verbose.feature" files
 	@env $(GO_TEST_ARGS) verbose=1 go test . -v -count=1
 
