@@ -97,7 +97,7 @@ func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Optio
 	response1, err := self.client.Value.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
 		Owner:    self.Organization,
 		RepoSlug: self.Repository,
-		Query:    fmt.Sprintf(`source.branch.name = %q AND state = "open" OR state = "new"`, branch),
+		Query:    fmt.Sprintf(`source.branch.name = %q AND (state = "open" OR state = "new")`, branch),
 		States:   []string{"open"},
 	})
 	if err != nil {
