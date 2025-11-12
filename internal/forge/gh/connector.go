@@ -78,7 +78,11 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 	if err != nil {
 		return None[forgedomain.Proposal](), err
 	}
-	return ParseJSONOutput(out, branch)
+	proposals, err := ParseJSONOutput(out, branch)
+	if err != nil || len(proposals) != 1 {
+		return None[forgedomain.Proposal](), err
+	}
+	return Some(proposals[0]), nil
 }
 
 // ============================================================================
@@ -87,10 +91,10 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 
 var _ forgedomain.ProposalSearcher = ghConnector // type-check
 
-func (self Connector) SearchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self Connector) SearchProposal(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	out, err := self.Backend.Query("gh", "--head="+branch.String(), "--json=number,title,body,mergeable,headRefName,baseRefName,url")
 	if err != nil {
-		return None[forgedomain.Proposal](), err
+		return []forgedomain.Proposal{}, err
 	}
 	return ParseJSONOutput(out, branch)
 }
