@@ -23,6 +23,7 @@ var (
 // APIConnector provides access to the Bitbucket Cloud API.
 type APIConnector struct {
 	WebConnector
+	cache  forgedomain.ProposalCache
 	client Mutable[bitbucket.Client]
 	log    print.Logger
 }
@@ -34,6 +35,9 @@ type APIConnector struct {
 var _ forgedomain.ProposalFinder = apiConnector // type check
 
 func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+	if proposal := self.cache.BySourceTarget(branch, target); proposal.IsSome() {
+		return proposal, nil
+	}
 	self.log.Start(messages.APIProposalLookupStart)
 	query := fmt.Sprintf("source.branch.name = %q AND destination.branch.name = %q", branch, target)
 	result1, err := self.client.Value.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
