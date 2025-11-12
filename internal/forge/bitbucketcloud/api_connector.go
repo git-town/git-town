@@ -88,6 +88,7 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 		proposal := forgedomain.Proposal{Data: proposal3, ForgeType: forgedomain.ForgeTypeBitbucket}
 		result = append(result, proposal)
 	}
+	self.cache.SetMany(result)
 	switch len(result) {
 	case 0:
 		self.log.Success("none")

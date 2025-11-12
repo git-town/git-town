@@ -21,6 +21,7 @@ var (
 // APIConnector provides access to the Bitbucket DataCenter API.
 type APIConnector struct {
 	WebConnector
+	cache    forgedomain.ProposalCache
 	log      print.Logger
 	token    string
 	username string
@@ -33,6 +34,9 @@ type APIConnector struct {
 var _ forgedomain.ProposalFinder = apiConnector // type check
 
 func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+	if proposal := self.cache.BySourceTarget(branch, target); proposal.IsSome() {
+		return proposal, nil
+	}
 	self.log.Start(messages.APIProposalLookupStart)
 	ctx := context.TODO()
 	fromRefID := fmt.Sprintf("refs/heads/%v", branch)
@@ -62,9 +66,11 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 		self.log.Success("no PR found matching source and target branch")
 		return None[forgedomain.Proposal](), nil
 	}
-	proposal := parsePullRequest(*needle, self.RepositoryURL())
-	self.log.Success(fmt.Sprintf("#%d", proposal.Number))
-	return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeBitbucketDatacenter}), nil
+	proposalData := parsePullRequest(*needle, self.RepositoryURL())
+	self.log.Success(fmt.Sprintf("#%d", proposalData.Number))
+	proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeBitbucketDatacenter}
+	self.cache.Set(proposal)
+	return Some(proposal), nil
 }
 
 // ============================================================================
@@ -74,6 +80,9 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 var _ forgedomain.ProposalSearcher = apiConnector // type check
 
 func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
+	if proposal := self.cache.BySourceTarget(branch, target); proposal.IsSome() {
+		return proposal, nil
+	}
 	self.log.Start(messages.APIProposalLookupStart)
 	ctx := context.TODO()
 	fromRefID := fmt.Sprintf("refs/heads/%v", branch)
