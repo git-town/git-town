@@ -63,7 +63,7 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 
 var _ forgedomain.ProposalSearcher = apiConnector // type check
 
-func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
 	pullRequests, _, err := self.client.Value.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
 		Head:  self.Organization + ":" + branch.String(),
@@ -71,18 +71,19 @@ func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Optio
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
-		return None[forgedomain.Proposal](), err
+		return []forgedomain.Proposal{}, err
+	}
+	result := make([]forgedomain.Proposal, len(pullRequests))
+	for p, pullRequest := range pullRequests {
+		proposalData := parsePullRequest(pullRequest)
+		self.log.Success(proposalData.Target.String())
+		proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeGitHub}
+		result[p] = proposal
 	}
 	if len(pullRequests) == 0 {
 		self.log.Success("none")
-		return None[forgedomain.Proposal](), nil
 	}
-	if len(pullRequests) > 1 {
-		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(pullRequests), branch)
-	}
-	proposal := parsePullRequest(pullRequests[0])
-	self.log.Success(proposal.Target.String())
-	return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeGitHub}), nil
+	return result, nil
 }
 
 // ============================================================================

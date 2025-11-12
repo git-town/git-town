@@ -1,11 +1,13 @@
 package glab
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/forge/gitlab"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
@@ -67,7 +69,18 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 	if err != nil {
 		return None[forgedomain.Proposal](), err
 	}
-	return ParseJSONOutput(out, branch)
+	proposals, err := ParseJSONOutput(out)
+	if err != nil {
+		return None[forgedomain.Proposal](), err
+	}
+	switch len(proposals) {
+	case 0:
+		return None[forgedomain.Proposal](), nil
+	case 1:
+		return Some(proposals[0]), nil
+	default:
+		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(proposals), branch)
+	}
 }
 
 // ============================================================================
@@ -76,12 +89,12 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 
 var _ forgedomain.ProposalSearcher = glabConnector // type check
 
-func (self Connector) SearchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	out, err := self.Backend.Query("glab", "--source-branch="+branch.String(), "--output=json")
 	if err != nil {
-		return None[forgedomain.Proposal](), err
+		return []forgedomain.Proposal{}, err
 	}
-	return ParseJSONOutput(out, branch)
+	return ParseJSONOutput(out)
 }
 
 // ============================================================================

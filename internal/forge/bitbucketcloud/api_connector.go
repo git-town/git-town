@@ -92,7 +92,7 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 
 var _ forgedomain.ProposalSearcher = apiConnector // type check
 
-func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
 	response1, err := self.client.Value.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
 		Owner:    self.Organization,
@@ -102,42 +102,46 @@ func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Optio
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
-		return None[forgedomain.Proposal](), err
+		return []forgedomain.Proposal{}, err
 	}
 	response2, ok := response1.(map[string]any)
 	if !ok {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.Proposal](), nil
+		return []forgedomain.Proposal{}, nil
 	}
 	proposals1, has := response2["values"]
 	if !has {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.Proposal](), nil
+		return []forgedomain.Proposal{}, nil
 	}
 	proposals2, ok := proposals1.([]any)
 	if !ok {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.Proposal](), nil
+		return []forgedomain.Proposal{}, nil
 	}
+	result := []forgedomain.Proposal{}
 	for _, proposal1 := range proposals2 {
 		proposal2, ok := proposal1.(map[string]any)
 		if !ok {
 			self.log.Failed(messages.APIUnexpectedResultDataStructure)
-			return None[forgedomain.Proposal](), nil
+			return []forgedomain.Proposal{}, nil
 		}
 		proposal3, err := parsePullRequest(proposal2)
 		if err != nil {
 			self.log.Failed(err.Error())
-			return None[forgedomain.Proposal](), nil
+			return []forgedomain.Proposal{}, nil
 		}
 		if !proposal3.Active {
 			continue
 		}
-		self.log.Success(fmt.Sprintf("#%d", proposal3.Number))
-		return Some(forgedomain.Proposal{Data: proposal3, ForgeType: forgedomain.ForgeTypeBitbucket}), nil
+		self.log.Success(fmt.Sprintf("#%d ", proposal3.Number))
+		proposal := forgedomain.Proposal{Data: proposal3, ForgeType: forgedomain.ForgeTypeBitbucket}
+		result = append(result, proposal)
 	}
-	self.log.Success("none")
-	return None[forgedomain.Proposal](), nil
+	if len(result) == 0 {
+		self.log.Success("none")
+	}
+	return result, nil
 }
 
 // ============================================================================
