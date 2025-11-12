@@ -24,6 +24,7 @@ var (
 // APIConnector provides access to the GitHub API.
 type APIConnector struct {
 	WebConnector
+	cache  forgedomain.ProposalCache
 	client Mutable[github.Client]
 	log    print.Logger
 }
@@ -36,6 +37,9 @@ var _ forgedomain.ProposalFinder = apiConnector // type check
 
 func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
+	if proposalOpt := self.cache.Get(branch, target); proposalOpt.IsSome() {
+		return proposalOpt, nil
+	}
 	pullRequests, _, err := self.client.Value.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
 		Head:  self.Organization + ":" + branch.String(),
 		Base:  target.String(),
@@ -52,9 +56,11 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 	if len(pullRequests) > 1 {
 		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(pullRequests), branch, target)
 	}
-	proposal := parsePullRequest(pullRequests[0])
-	self.log.Log(fmt.Sprintf("%s (%s)", colors.BoldGreen().Styled("#"+strconv.Itoa(proposal.Number)), proposal.Title))
-	return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeGitHub}), nil
+	proposalData := parsePullRequest(pullRequests[0])
+	self.log.Log(fmt.Sprintf("%s (%s)", colors.BoldGreen().Styled("#"+strconv.Itoa(proposalData.Number)), proposalData.Title))
+	proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeGitHub}
+	self.cache.Set(branch, target, proposal)
+	return Some(proposal), nil
 }
 
 // ============================================================================
