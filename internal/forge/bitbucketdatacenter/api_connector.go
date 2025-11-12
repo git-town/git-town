@@ -37,6 +37,12 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 	if cachedProposal := self.cache.BySourceTarget(branch, target); cachedProposal.IsSome() {
 		return cachedProposal, nil
 	}
+	result, err := self.findProposalAtForge(branch, target)
+	self.cache.SetOption(result)
+	return result, err
+}
+
+func (self APIConnector) findProposalAtForge(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	ctx := context.TODO()
 	fromRefID := fmt.Sprintf("refs/heads/%v", branch)
@@ -69,7 +75,6 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 	proposalData := parsePullRequest(*needle, self.RepositoryURL())
 	self.log.Success(fmt.Sprintf("#%d", proposalData.Number))
 	proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeBitbucketDatacenter}
-	self.cache.Set(proposal)
 	return Some(proposal), nil
 }
 
@@ -83,6 +88,12 @@ func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]fo
 	if cachedProposals := self.cache.BySource(branch); len(cachedProposals) > 0 {
 		return cachedProposals, nil
 	}
+	result, err := self.searchProposalsAtForge(branch)
+	self.cache.SetMany(result)
+	return result, err
+}
+
+func (self APIConnector) searchProposalsAtForge(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	ctx := context.TODO()
 	fromRefID := fmt.Sprintf("refs/heads/%v", branch)
@@ -107,7 +118,6 @@ func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]fo
 	if len(result) == 0 {
 		self.log.Success("none")
 	}
-	self.cache.SetMany(result)
 	return result, nil
 }
 
