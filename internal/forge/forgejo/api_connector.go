@@ -89,13 +89,12 @@ func (self *APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]f
 		return []forgedomain.Proposal{}, err
 	}
 	pullRequests := filterPullRequests2(openPullRequests, branch)
-	result := []forgedomain.Proposal{}
-	for _, pullRequest := range pullRequests {
+	result := make([]forgedomain.Proposal, len(pullRequests))
+	for p, pullRequest := range pullRequests {
 		proposalData := parsePullRequest(pullRequest)
 		self.log.Success(proposalData.Target.String())
 		proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeForgejo}
-		self.log.Success(fmt.Sprintf("#%d ", proposalData.Number))
-		result = append(result, proposal)
+		result[p] = proposal
 	}
 	if len(result) == 0 {
 		self.log.Success("none")
