@@ -128,6 +128,7 @@ func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Optio
 		proposal3, err := parsePullRequest(proposal2)
 		if err != nil {
 			self.log.Failed(err.Error())
+			return None[forgedomain.Proposal](), nil
 		}
 		if !proposal3.Active {
 			continue
