@@ -43,3 +43,9 @@ func (self *ProposalCache) Set(proposal Proposal) {
 func (self *ProposalCache) SetMany(proposals []Proposal) {
 	self.proposals = append(self.proposals, proposals...)
 }
+
+func (self *ProposalCache) SetOption(proposalOpt Option[Proposal]) {
+	if proposal, hasProposal := proposalOpt.Get(); hasProposal {
+		self.Set(proposal)
+	}
+}

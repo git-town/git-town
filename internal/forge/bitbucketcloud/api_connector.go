@@ -35,9 +35,15 @@ type APIConnector struct {
 var _ forgedomain.ProposalFinder = apiConnector // type check
 
 func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
-	if proposal := self.cache.BySourceTarget(branch, target); proposal.IsSome() {
-		return proposal, nil
+	if cachedProposal := self.cache.BySourceTarget(branch, target); cachedProposal.IsSome() {
+		return cachedProposal, nil
 	}
+	result, err := self.findProposalUncached(branch, target)
+	self.cache.SetOption(result)
+	return result, err
+}
+
+func (self APIConnector) findProposalUncached(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	query := fmt.Sprintf("source.branch.name = %q AND destination.branch.name = %q", branch, target)
 	result1, err := self.client.Value.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
@@ -88,7 +94,6 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 		proposal := forgedomain.Proposal{Data: proposal3, ForgeType: forgedomain.ForgeTypeBitbucket}
 		result = append(result, proposal)
 	}
-	self.cache.SetMany(result)
 	switch len(result) {
 	case 0:
 		self.log.Success("none")
@@ -107,6 +112,15 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 var _ forgedomain.ProposalSearcher = apiConnector // type check
 
 func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
+	if cachedProposals := self.cache.BySource(branch); len(cachedProposals) > 0 {
+		return cachedProposals, nil
+	}
+	result, err := self.searchProposalsUncached(branch)
+	self.cache.SetMany(result)
+	return result, err
+}
+
+func (self APIConnector) searchProposalsUncached(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
 	response1, err := self.client.Value.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
 		Owner:    self.Organization,

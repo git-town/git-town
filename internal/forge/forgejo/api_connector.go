@@ -25,6 +25,7 @@ var (
 type APIConnector struct {
 	WebConnector
 	APIToken  Option[forgedomain.ForgejoToken]
+	cache     forgedomain.ProposalCache
 	_client   OptionalMutable[forgejo.Client] // don't use directly, call .getClient()
 	log       print.Logger
 	remoteURL giturl.Parts
@@ -37,6 +38,9 @@ type APIConnector struct {
 var _ forgedomain.ProposalFinder = &apiConnector // type check
 
 func (self *APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+	if proposal := self.cache.BySourceTarget(branch, target); proposal.IsSome() {
+		return proposal, nil
+	}
 	self.log.Start(messages.APIProposalLookupStart)
 	client, err := self.getClient()
 	if err != nil {
@@ -53,7 +57,9 @@ func (self *APIConnector) FindProposal(branch, target gitdomain.LocalBranchName)
 		return None[forgedomain.Proposal](), err
 	}
 	pullRequests := FilterPullRequests(openPullRequests, branch, target)
-	switch len(pullRequests) {
+	proposalDatas := parsePullRequests(pullRequests)
+	self.cache.SetMany(proposalDatas)
+	switch len(proposalDatas) {
 	case 0:
 		self.log.Success("none")
 		return None[forgedomain.Proposal](), nil
@@ -253,4 +259,14 @@ func parsePullRequest(pullRequest *forgejo.PullRequest) forgedomain.ProposalData
 		Body:         NewOption(pullRequest.Body),
 		URL:          pullRequest.HTMLURL,
 	}
+}
+
+func parsePullRequests(pullRequests []*forgejo.PullRequest) []forgedomain.Proposal {
+	result := []forgedomain.Proposal{}
+	for _, pullRequest := range pullRequests {
+		proposalData := parsePullRequest(pullRequest)
+		proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeForgejo}
+		result = append(result, proposal)
+	}
+	return result
 }
