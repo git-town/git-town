@@ -24,14 +24,15 @@ func (self *ProposalCache) BySourceTarget(source, target gitdomain.LocalBranchNa
 	return None[Proposal]()
 }
 
-// BySource provides the cached proposal for the given source branch.
-func (self *ProposalCache) BySource(source gitdomain.LocalBranchName) Option[Proposal] {
+// BySource provides the cached proposals for the given source branch.
+func (self *ProposalCache) BySource(source gitdomain.LocalBranchName) []Proposal {
+	result := []Proposal{}
 	for _, proposal := range self.proposals {
 		if proposal.Data.Data().Source == source {
-			return Some(proposal)
+			result = append(result, proposal)
 		}
 	}
-	return None[Proposal]()
+	return result
 }
 
 // Set caches the given proposal.
