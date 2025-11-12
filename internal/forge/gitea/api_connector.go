@@ -74,10 +74,10 @@ func (self *AuthConnector) FindProposal(branch, target gitdomain.LocalBranchName
 
 var _ forgedomain.ProposalSearcher = &apiConnector // type check
 
-func (self *AuthConnector) SearchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self *AuthConnector) SearchProposal(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	client, err := self.getClient()
 	if err != nil {
-		return None[forgedomain.Proposal](), err
+		return []forgedomain.Proposal{}, err
 	}
 	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
 	openPullRequests, _, err := client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
@@ -88,21 +88,17 @@ func (self *AuthConnector) SearchProposal(branch gitdomain.LocalBranchName) (Opt
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
-		return None[forgedomain.Proposal](), err
+		return []forgedomain.Proposal{}, err
 	}
 	pullRequests := FilterPullRequests2(openPullRequests, branch)
-	switch len(pullRequests) {
-	case 0:
-		self.log.Success("none")
-		return None[forgedomain.Proposal](), nil
-	case 1:
-		pullRequest := pullRequests[0]
-		proposal := parsePullRequest(pullRequest)
-		self.log.Success(proposal.Target.String())
-		return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeGitea}), nil
-	default:
-		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(pullRequests), branch)
+	result := []forgedomain.Proposal{}
+	for _, pullRequest := range pullRequests {
+		proposalData := parsePullRequest(pullRequest)
+		self.log.Success(proposalData.Target.String())
+		proposal := forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeGitea}
+		result = append(result, proposal)
 	}
+	self.log.Success("none")
 }
 
 // ============================================================================
