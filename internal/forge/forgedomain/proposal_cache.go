@@ -1,6 +1,8 @@
 package forgedomain
 
 import (
+	"slices"
+
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
@@ -33,6 +35,12 @@ func (self *ProposalCache) BySource(source gitdomain.LocalBranchName) []Proposal
 		}
 	}
 	return result
+}
+
+func (self *ProposalCache) Delete(proposalNumber int) {
+	self.proposals = slices.DeleteFunc(self.proposals, func(proposal Proposal) bool {
+		return proposal.Data.Data().Number == proposalNumber
+	})
 }
 
 // Set caches the given proposal.

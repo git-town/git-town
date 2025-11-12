@@ -35,15 +35,6 @@ type APIConnector struct {
 var _ forgedomain.ProposalFinder = apiConnector // type check
 
 func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
-	if cachedProposal := self.cache.BySourceTarget(branch, target); cachedProposal.IsSome() {
-		return cachedProposal, nil
-	}
-	result, err := self.findProposalAtForge(branch, target)
-	self.cache.SetOption(result)
-	return result, err
-}
-
-func (self APIConnector) findProposalAtForge(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	query := fmt.Sprintf("source.branch.name = %q AND destination.branch.name = %q", branch, target)
 	result1, err := self.client.Value.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
@@ -112,15 +103,6 @@ func (self APIConnector) findProposalAtForge(branch, target gitdomain.LocalBranc
 var _ forgedomain.ProposalSearcher = apiConnector // type check
 
 func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
-	if cachedProposals := self.cache.BySource(branch); len(cachedProposals) > 0 {
-		return cachedProposals, nil
-	}
-	result, err := self.searchProposalsAtForge(branch)
-	self.cache.SetMany(result)
-	return result, err
-}
-
-func (self APIConnector) searchProposalsAtForge(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
 	response1, err := self.client.Value.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
 		Owner:    self.Organization,

@@ -41,6 +41,12 @@ func (self *APIConnector) FindProposal(branch, target gitdomain.LocalBranchName)
 	if proposal := self.cache.BySourceTarget(branch, target); proposal.IsSome() {
 		return proposal, nil
 	}
+	result, err := self.findProposalAtForge(branch, target)
+	self.cache.SetOption(result)
+	return result, err
+}
+
+func (self *APIConnector) findProposalAtForge(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	client, err := self.getClient()
 	if err != nil {
@@ -58,7 +64,6 @@ func (self *APIConnector) FindProposal(branch, target gitdomain.LocalBranchName)
 	}
 	pullRequests := FilterPullRequests(openPullRequests, branch, target)
 	proposalDatas := parsePullRequests(pullRequests)
-	self.cache.SetMany(proposalDatas)
 	switch len(proposalDatas) {
 	case 0:
 		self.log.Success("none")
