@@ -80,8 +80,8 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 var _ forgedomain.ProposalSearcher = apiConnector // type check
 
 func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
-	if proposal := self.cache.BySourceTarget(branch, target); proposal.IsSome() {
-		return proposal, nil
+	if proposals := self.cache.BySource(branch); len(proposals) > 0 {
+		return proposals, nil
 	}
 	self.log.Start(messages.APIProposalLookupStart)
 	ctx := context.TODO()
@@ -107,6 +107,7 @@ func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]fo
 	if len(result) == 0 {
 		self.log.Success("none")
 	}
+	self.cache.SetMany(result)
 	return result, nil
 }
 
