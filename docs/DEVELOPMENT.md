@@ -258,6 +258,31 @@ Alternatively, open `main_test.go`, change `Format` to `pretty` and
 `Concurrency` to 1, and run the entire test suite. The detailed output will give
 you hints at which test fails.
 
+### Automatically update E2E test files
+
+Our E2E tests act as
+[golden files](https://en.wikipedia.org/wiki/Characterization_test): they embody
+the expected output that all future test runs must match. When we intentionally
+change Git Town's behavior, we also need to update possibly hundreds of E2E
+tests.
+
+To streamline this, run:
+
+<a type="make/command" dir="..">
+
+```bash
+make cuke-update
+```
+
+</a>
+
+When running in this mode, and an E2E test fails, the test runner updates the
+`.feature` file, rather than failing the test. You must then inspect the test
+files to verify whether the updated tests are correct.
+
+If needed, run <code type="make/command" dir="..">make fix</code> to format the
+recorded Gherkin code.
+
 ### Configure the Cucumber IDE extension
 
 To configure the official
