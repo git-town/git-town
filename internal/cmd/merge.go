@@ -327,7 +327,7 @@ func mergeProgram(repo execute.OpenRepoResult, data mergeData) program.Program {
 	ship.UpdateChildBranchProposalsToGrandParent(prog.Value, data.proposalsOfChildBranches)
 	prog.Value.Add(&opcodes.Checkout{Branch: data.parentBranch})
 	if data.initialBranchSHA != data.parentBranchSHA {
-		prog.Value.Add(&opcodes.BranchCurrentResetToSHA{SetToSHA: data.initialBranchSHA})
+		prog.Value.Add(&opcodes.BranchCurrentResetToSHA{SHA: data.initialBranchSHA})
 	}
 	for _, child := range data.childBranches {
 		prog.Value.Add(&opcodes.LineageParentSetToGrandParent{Branch: child})
