@@ -40,7 +40,7 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 		Owner:    self.Organization,
 		RepoSlug: self.Repository,
 		Query:    query,
-		States:   []string{"open"},
+		States:   []string{"open", "new"},
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
@@ -98,7 +98,7 @@ func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Optio
 		Owner:    self.Organization,
 		RepoSlug: self.Repository,
 		Query:    fmt.Sprintf(`source.branch.name = %q AND (state = "open" OR state = "new")`, branch),
-		States:   []string{"open"},
+		States:   []string{"open", "new"},
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
