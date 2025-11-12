@@ -67,7 +67,7 @@ type ProposalMerger interface {
 // to enable Git Town to search for proposals at the active forge.
 type ProposalSearcher interface {
 	// Searches for a proposal that has the given branch as its source branch.
-	SearchProposal(branch gitdomain.LocalBranchName) ([]Proposal, error)
+	SearchProposals(branch gitdomain.LocalBranchName) ([]Proposal, error)
 }
 
 // ProposalSourceUpdater describes methods that connectors need to implement

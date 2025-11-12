@@ -73,7 +73,7 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 
 var _ forgedomain.ProposalSearcher = apiConnector // type check
 
-func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
+func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	ctx := context.TODO()
 	fromRefID := fmt.Sprintf("refs/heads/%v", branch)

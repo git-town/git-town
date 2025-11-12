@@ -74,7 +74,7 @@ func (self *AuthConnector) FindProposal(branch, target gitdomain.LocalBranchName
 
 var _ forgedomain.ProposalSearcher = &apiConnector // type check
 
-func (self *AuthConnector) SearchProposal(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
+func (self *AuthConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	client, err := self.getClient()
 	if err != nil {
 		return []forgedomain.Proposal{}, err

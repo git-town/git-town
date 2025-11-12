@@ -63,7 +63,7 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 
 var _ forgedomain.ProposalSearcher = apiConnector // type check
 
-func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
+func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
 	pullRequests, _, err := self.client.Value.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
 		Head:  self.Organization + ":" + branch.String(),
