@@ -79,10 +79,17 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 		return None[forgedomain.Proposal](), err
 	}
 	proposals, err := ParseJSONOutput(out)
-	if err != nil || len(proposals) != 1 {
+	if err != nil {
 		return None[forgedomain.Proposal](), err
 	}
-	return Some(proposals[0]), nil
+	switch len(proposals) {
+	case 0:
+		return None[forgedomain.Proposal](), nil
+	case 1:
+		return Some(proposals[0]), nil
+	default:
+		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(proposals), branch, target)
+	}
 }
 
 // ============================================================================
