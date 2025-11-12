@@ -64,7 +64,7 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 
 var _ forgedomain.ProposalSearcher = apiConnector
 
-func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
 	opts := &gitlab.ListProjectMergeRequestsOptions{
 		State:        gitlab.Ptr("opened"),
@@ -73,19 +73,19 @@ func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Optio
 	mergeRequests, _, err := self.client.MergeRequests.ListProjectMergeRequests(self.projectPath(), opts)
 	if err != nil {
 		self.log.Failed(err.Error())
-		return None[forgedomain.Proposal](), err
+		return []forgedomain.Proposal{}, err
 	}
-	switch len(mergeRequests) {
-	case 0:
+	result := make([]forgedomain.Proposal, len(mergeRequests))
+	for m, mergeRequest := range mergeRequests {
+		proposalData := parseMergeRequest(mergeRequest)
+		self.log.Success(proposalData.Target.String())
+		proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeGitLab}
+		result[m] = proposal
+	}
+	if len(result) == 0 {
 		self.log.Success("none")
-		return None[forgedomain.Proposal](), nil
-	case 1:
-		proposal := parseMergeRequest(mergeRequests[0])
-		self.log.Success(proposal.Target.String())
-		return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeGitLab}), nil
-	default:
-		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(mergeRequests), branch)
 	}
+	return result, nil
 }
 
 // ============================================================================
