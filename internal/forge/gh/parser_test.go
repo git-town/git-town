@@ -15,7 +15,7 @@ func TestParseJSONOutput(t *testing.T) {
 	t.Run("invalid JSON", func(t *testing.T) {
 		t.Parallel()
 		give := `[zonk`
-		_, err := gh.ParseJSONOutput(give, "branch")
+		_, err := gh.ParseJSONOutput(give)
 		must.Error(t, err)
 	})
 
@@ -42,14 +42,14 @@ func TestParseJSONOutput(t *testing.T) {
     "url": "https://github.com/git-town/git-town/pull/4871"
   }
 ]`
-		_, err := gh.ParseJSONOutput(give, "branch")
+		_, err := gh.ParseJSONOutput(give)
 		must.NoError(t, err)
 	})
 
 	t.Run("no results", func(t *testing.T) {
 		t.Parallel()
 		give := `[]`
-		have, err := gh.ParseJSONOutput(give, "branch")
+		have, err := gh.ParseJSONOutput(give)
 		must.NoError(t, err)
 		must.Eq(t, []forgedomain.Proposal{}, have)
 	})
@@ -68,7 +68,7 @@ func TestParseJSONOutput(t *testing.T) {
     "url": "https://github.com/git-town/git-town/pull/5079"
   }
 ]`
-		have, err := gh.ParseJSONOutput(give, "branch")
+		have, err := gh.ParseJSONOutput(give)
 		must.NoError(t, err)
 		want := []forgedomain.Proposal{
 			{

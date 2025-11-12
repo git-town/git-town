@@ -12,7 +12,7 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-func ParseJSONOutput(output string, branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
+func ParseJSONOutput(output string) ([]forgedomain.Proposal, error) {
 	var parsed []jsonData
 	err := json.Unmarshal([]byte(output), &parsed)
 	if err != nil || len(parsed) == 0 {

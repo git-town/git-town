@@ -78,7 +78,7 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 	if err != nil {
 		return None[forgedomain.Proposal](), err
 	}
-	proposals, err := ParseJSONOutput(out, branch)
+	proposals, err := ParseJSONOutput(out)
 	if err != nil || len(proposals) != 1 {
 		return None[forgedomain.Proposal](), err
 	}
@@ -96,7 +96,7 @@ func (self Connector) SearchProposal(branch gitdomain.LocalBranchName) ([]forged
 	if err != nil {
 		return []forgedomain.Proposal{}, err
 	}
-	return ParseJSONOutput(out, branch)
+	return ParseJSONOutput(out)
 }
 
 // ============================================================================
