@@ -22,6 +22,7 @@ func ParseJSONOutput(output string, branch gitdomain.LocalBranchName) (Option[fo
 	data := parsed[0]
 	return Some(forgedomain.Proposal{
 		Data: forgedomain.ProposalData{
+			Active:       data.State == "open",
 			Body:         NewOption(data.Body),
 			MergeWithAPI: data.Mergeable == "MERGEABLE",
 			Number:       data.Number,
@@ -41,6 +42,7 @@ type jsonData struct {
 	HeadRefName string `json:"headRefName"`
 	Mergeable   string `json:"mergeable"`
 	Number      int    `json:"number"`
+	State       string `json:"state"`
 	Title       string `json:"title"`
 	URL         string `json:"url"`
 }

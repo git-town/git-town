@@ -35,6 +35,7 @@ func (self TestConnector) FindProposal(branch, target gitdomain.LocalBranchName)
 	}
 	proposal := forgedomain.BitbucketCloudProposalData{
 		ProposalData: forgedomain.ProposalData{
+			Active:       true,
 			Body:         None[string](),
 			MergeWithAPI: true,
 			Number:       123,

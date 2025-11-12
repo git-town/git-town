@@ -9,6 +9,7 @@ import (
 
 func parseMergeRequest(mergeRequest *gitlab.BasicMergeRequest) forgedomain.ProposalData {
 	return forgedomain.ProposalData{
+		Active:       mergeRequest.State == "opened",
 		MergeWithAPI: true,
 		Number:       mergeRequest.IID,
 		Source:       gitdomain.NewLocalBranchName(mergeRequest.SourceBranch),

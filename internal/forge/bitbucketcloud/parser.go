@@ -2,6 +2,7 @@ package bitbucketcloud
 
 import (
 	"errors"
+	"strings"
 
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
@@ -35,6 +36,16 @@ func parsePullRequest(pullRequest map[string]any) (result forgedomain.BitbucketC
 	if !ok {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
+	state1, has := pullRequest["state"]
+	if !has {
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
+	}
+	state2, ok := state1.(string)
+	if !ok {
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
+	}
+	state3 := strings.ToLower(state2)
+	isActive := state3 == "open" || state3 == "new"
 	destination1, has := pullRequest["destination"]
 	if !has {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
@@ -125,6 +136,7 @@ func parsePullRequest(pullRequest map[string]any) (result forgedomain.BitbucketC
 	}
 	return forgedomain.BitbucketCloudProposalData{
 		ProposalData: forgedomain.ProposalData{
+			Active:       isActive,
 			MergeWithAPI: false,
 			Number:       number,
 			Source:       gitdomain.NewLocalBranchName(source6),

@@ -40,7 +40,7 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 		Owner:    self.Organization,
 		RepoSlug: self.Repository,
 		Query:    query,
-		States:   []string{"open"},
+		States:   []string{"open", "new"},
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
@@ -55,51 +55,35 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[forgedomain.Proposal](), nil
 	}
-	size1, has := result2["size"]
+	proposals1, has := result2["values"]
 	if !has {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[forgedomain.Proposal](), nil
 	}
-	size2, ok := size1.(float64)
+	proposals2, ok := proposals1.([]any)
 	if !ok {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[forgedomain.Proposal](), nil
 	}
-	size := int(size2)
-	if size == 0 {
-		self.log.Success("none")
-		return None[forgedomain.Proposal](), nil
+	for _, proposal1 := range proposals2 {
+		proposal2, ok := proposal1.(map[string]any)
+		if !ok {
+			self.log.Failed(messages.APIUnexpectedResultDataStructure)
+			return None[forgedomain.Proposal](), nil
+		}
+		proposal3, err := parsePullRequest(proposal2)
+		if err != nil {
+			self.log.Failed(err.Error())
+			return None[forgedomain.Proposal](), nil
+		}
+		if !proposal3.Active {
+			continue
+		}
+		self.log.Success(fmt.Sprintf("#%d", proposal3.Number))
+		return Some(forgedomain.Proposal{Data: proposal3, ForgeType: forgedomain.ForgeTypeBitbucket}), nil
 	}
-	if size > 1 {
-		self.log.Failed(fmt.Sprintf(messages.ProposalMultipleFromToFound, size, branch, target))
-		return None[forgedomain.Proposal](), nil
-	}
-	proposal1, has := result2["values"]
-	if !has {
-		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.Proposal](), nil
-	}
-	proposal2, ok := proposal1.([]any)
-	if !ok {
-		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.Proposal](), nil
-	}
-	if len(proposal2) == 0 {
-		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.Proposal](), nil
-	}
-	proposal3, ok := proposal2[0].(map[string]any)
-	if !ok {
-		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.Proposal](), nil
-	}
-	proposal4, err := parsePullRequest(proposal3)
-	if err != nil {
-		self.log.Failed(err.Error())
-		return None[forgedomain.Proposal](), nil
-	}
-	self.log.Success(fmt.Sprintf("#%d", proposal4.Number))
-	return Some(forgedomain.Proposal{Data: proposal4, ForgeType: forgedomain.ForgeTypeBitbucket}), nil
+	self.log.Success("none")
+	return None[forgedomain.Proposal](), nil
 }
 
 // ============================================================================
@@ -114,7 +98,7 @@ func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Optio
 		Owner:    self.Organization,
 		RepoSlug: self.Repository,
 		Query:    fmt.Sprintf("source.branch.name = %q", branch),
-		States:   []string{"open"},
+		States:   []string{"open", "new"},
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
@@ -125,43 +109,35 @@ func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Optio
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[forgedomain.Proposal](), nil
 	}
-	size1, has := response2["size"]
+	proposals1, has := response2["values"]
 	if !has {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[forgedomain.Proposal](), nil
 	}
-	size2, ok := size1.(float64)
+	proposals2, ok := proposals1.([]any)
 	if !ok {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[forgedomain.Proposal](), nil
 	}
-	size3 := int(size2)
-	if size3 == 0 {
-		self.log.Success("none")
-		return None[forgedomain.Proposal](), nil
+	for _, proposal1 := range proposals2 {
+		proposal2, ok := proposal1.(map[string]any)
+		if !ok {
+			self.log.Failed(messages.APIUnexpectedResultDataStructure)
+			return None[forgedomain.Proposal](), nil
+		}
+		proposal3, err := parsePullRequest(proposal2)
+		if err != nil {
+			self.log.Failed(err.Error())
+			return None[forgedomain.Proposal](), nil
+		}
+		if !proposal3.Active {
+			continue
+		}
+		self.log.Success(fmt.Sprintf("#%d", proposal3.Number))
+		return Some(forgedomain.Proposal{Data: proposal3, ForgeType: forgedomain.ForgeTypeBitbucket}), nil
 	}
-	if size3 > 1 {
-		self.log.Failed(fmt.Sprintf(messages.ProposalMultipleFromFound, size3, branch))
-		return None[forgedomain.Proposal](), nil
-	}
-	values1, has := response2["values"]
-	if !has {
-		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.Proposal](), nil
-	}
-	values2, ok := values1.([]any)
-	if !ok {
-		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.Proposal](), nil
-	}
-	proposal1 := values2[0].(map[string]any)
-	proposal2, err := parsePullRequest(proposal1)
-	if err != nil {
-		self.log.Failed(err.Error())
-		return None[forgedomain.Proposal](), nil
-	}
-	self.log.Success(proposal2.Target.String())
-	return Some(forgedomain.Proposal{Data: proposal2, ForgeType: forgedomain.ForgeTypeBitbucket}), nil
+	self.log.Success("none")
+	return None[forgedomain.Proposal](), nil
 }
 
 // ============================================================================
