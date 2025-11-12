@@ -92,7 +92,7 @@ func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]fo
 	if len(pullRequests) == 0 {
 		self.log.Success("none")
 	}
-	self.cache.Set(proposal)
+	self.cache.SetMany(result)
 	return result, nil
 }
 

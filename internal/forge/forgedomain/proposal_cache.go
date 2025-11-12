@@ -9,7 +9,7 @@ import (
 type ProposalCache struct {
 	// the cached proposals
 	//
-	// A simply list is fine here despite O(n) lookup time because the number of proposals is expected to be very small.
+	// A simple list is fine here despite O(n) lookup time because the number of proposals is expected to be very small.
 	proposals []Proposal
 }
 
@@ -37,4 +37,8 @@ func (self *ProposalCache) BySource(source gitdomain.LocalBranchName) Option[Pro
 // Set caches the given proposal.
 func (self *ProposalCache) Set(proposal Proposal) {
 	self.proposals = append(self.proposals, proposal)
+}
+
+func (self *ProposalCache) SetMany(proposals []Proposal) {
+	self.proposals = append(self.proposals, proposals...)
 }
