@@ -28,6 +28,8 @@ func TestParseJsonOutput(t *testing.T) {
 		have, err := glab.ParseJSONOutput(give)
 		must.NoError(t, err)
 		must.Len(t, 2, have)
+		must.EqOp(t, have[0].Data.Data().Number, 5)
+		must.EqOp(t, have[1].Data.Data().Number, 1)
 	})
 
 	t.Run("no results", func(t *testing.T) {
