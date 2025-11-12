@@ -119,7 +119,7 @@ func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) ([]for
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return []forgedomain.Proposal{}, nil
 	}
-	result := []forgedomain.Proposal{}
+	result := make([]forgedomain.Proposal, len(proposals2))
 	for _, proposal1 := range proposals2 {
 		proposal2, ok := proposal1.(map[string]any)
 		if !ok {
