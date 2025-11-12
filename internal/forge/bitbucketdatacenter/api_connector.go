@@ -86,13 +86,13 @@ func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) ([]for
 		self.log.Failed(err.Error())
 		return []forgedomain.Proposal{}, err
 	}
-	result := []forgedomain.Proposal{}
-	for _, pr := range resp.Values {
+	result := make([]forgedomain.Proposal, len(resp.Values))
+	for p, pr := range resp.Values {
 		if pr.FromRef.ID == fromRefID {
 			proposalData := parsePullRequest(pr, self.RepositoryURL())
 			self.log.Success(fmt.Sprintf("#%d ", proposalData.Number))
 			proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeBitbucketDatacenter}
-			result = append(result, proposal)
+			result[p] = proposal
 		}
 	}
 	if len(result) == 0 {
