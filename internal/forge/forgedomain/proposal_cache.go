@@ -19,15 +19,20 @@ type Result interface {
 
 // the result of a find operation
 type lookupResult struct {
+	proposal Option[Proposal]
 	source   gitdomain.LocalBranchName
 	target   gitdomain.LocalBranchName
-	proposal Option[Proposal]
 }
 
 // the result of a search operation
 type searchResult struct {
+	proposals []Proposal
 	source    gitdomain.LocalBranchName
-	Proposals []Proposal
+}
+
+// Clear removes all cached results.
+func (self *ProposalCache) Clear() {
+	self.results = []Result{}
 }
 
 // Lookup provides what this cache knows about the proposal for the given source and target branch.
@@ -43,7 +48,7 @@ func (self *ProposalCache) Lookup(source, target gitdomain.LocalBranchName) (pro
 			}
 		case searchResult:
 			if result.source == source {
-				for _, proposal := range result.Proposals {
+				for _, proposal := range result.proposals {
 					if proposal.Data.Data().Target == target {
 						return Some(proposal), true
 					}
@@ -65,25 +70,20 @@ func (self *ProposalCache) LookupSearch(source gitdomain.LocalBranchName) (propo
 	for _, result := range self.results {
 		if searchResult, ok := result.(searchResult); ok {
 			if searchResult.source == source {
-				return searchResult.Proposals, true
+				return searchResult.proposals, true
 			}
 		}
 	}
 	return []Proposal{}, false
 }
 
-// Clear removes all cached results.
-func (self *ProposalCache) Clear() {
-	self.results = []Result{}
-}
-
 // SaveLookupResult registers the given result of a lookup operation.
 func (self *ProposalCache) RegisterLookupResult(source, target gitdomain.LocalBranchName, proposal Option[Proposal]) {
 	self.removeLookupResult(source, target)
 	self.results = append(self.results, lookupResult{
+		proposal: proposal,
 		source:   source,
 		target:   target,
-		proposal: proposal,
 	})
 }
 
@@ -91,8 +91,8 @@ func (self *ProposalCache) RegisterLookupResult(source, target gitdomain.LocalBr
 func (self *ProposalCache) RegisterSearchResult(source gitdomain.LocalBranchName, proposals []Proposal) {
 	self.removeSearchResult(source)
 	self.results = append(self.results, searchResult{
+		proposals: proposals,
 		source:    source,
-		Proposals: proposals,
 	})
 }
 
