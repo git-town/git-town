@@ -74,9 +74,12 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 					RemoteURL:        remoteURL,
 				})
 			case forgedomain.GitHubConnectorTypeGh:
-				connector = gh.Connector{
-					Backend:  args.Backend,
-					Frontend: args.Frontend,
+				connector = gh.CachedConnector{
+					Connector: gh.Connector{
+						Backend:  args.Backend,
+						Frontend: args.Frontend,
+					},
+					Cache: forgedomain.ProposalCache{},
 				}
 			}
 		} else {
@@ -99,9 +102,12 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 					RemoteURL:        remoteURL,
 				})
 			case forgedomain.GitLabConnectorTypeGlab:
-				connector = glab.Connector{
-					Backend:  args.Backend,
-					Frontend: args.Frontend,
+				connector = glab.CachedConnector{
+					Connector: glab.Connector{
+						Backend:  args.Backend,
+						Frontend: args.Frontend,
+					},
+					Cache: forgedomain.ProposalCache{},
 				}
 			}
 		} else {
