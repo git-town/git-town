@@ -66,7 +66,7 @@ func (self *APICache) Lookup(source, target gitdomain.LocalBranchName) (proposal
 			panic(fmt.Sprintf("unknown result type: %T", result))
 		}
 	}
-	// we didn't run across any API results for the source branch
+	// we didn't cache any API results for the given source and target branch
 	return None[Proposal](), false
 }
 
