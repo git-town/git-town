@@ -31,6 +31,12 @@ func (self CachedAPIConnector) DefaultProposalMessage(proposalData forgedomain.P
 	return self.api.DefaultProposalMessage(proposalData)
 }
 
+// ============================================================================
+// find proposals
+// ============================================================================
+
+var _ forgedomain.ProposalFinder = cachedAPIConnector // type check
+
 func (self CachedAPIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	if cachedProposal := self.cache.BySourceTarget(branch, target); cachedProposal.IsSome() {
 		return cachedProposal, nil
@@ -39,6 +45,12 @@ func (self CachedAPIConnector) FindProposal(branch, target gitdomain.LocalBranch
 	self.cache.SetOption(result)
 	return result, err
 }
+
+// ============================================================================
+// search proposals
+// ============================================================================
+
+var _ forgedomain.ProposalSearcher = cachedAPIConnector // type check
 
 func (self CachedAPIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	if cachedProposals := self.cache.BySource(branch); len(cachedProposals) > 0 {
