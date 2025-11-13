@@ -12,6 +12,30 @@ import (
 func TestProposalCache(t *testing.T) {
 	t.Parallel()
 
+	t.Run("Clear", func(t *testing.T) {
+		t.Parallel()
+
+		t.Run("removes all cached results", func(t *testing.T) {
+			t.Parallel()
+			cache := &forgedomain.ProposalCache{}
+			proposal := forgedomain.Proposal{
+				Data: forgedomain.ProposalData{
+					Source: "source",
+					Target: "target",
+					Number: 123,
+				},
+				ForgeType: forgedomain.ForgeTypeGitHub,
+			}
+			cache.RegisterLookupResult("source", "target", Some(proposal))
+			cache.RegisterSearchResult("source", []forgedomain.Proposal{proposal})
+			cache.Clear()
+			_, has := cache.Lookup("source", "target")
+			must.False(t, has)
+			_, has = cache.LookupSearch("source")
+			must.False(t, has)
+		})
+	})
+
 	t.Run("Lookup", func(t *testing.T) {
 		t.Parallel()
 
@@ -243,30 +267,6 @@ func TestProposalCache(t *testing.T) {
 			cache.RegisterLookupResult("source", "target", Some(proposal))
 			_, knows := cache.LookupSearch("source")
 			must.False(t, knows)
-		})
-	})
-
-	t.Run("Clear", func(t *testing.T) {
-		t.Parallel()
-
-		t.Run("removes all cached results", func(t *testing.T) {
-			t.Parallel()
-			cache := &forgedomain.ProposalCache{}
-			proposal := forgedomain.Proposal{
-				Data: forgedomain.ProposalData{
-					Source: "source",
-					Target: "target",
-					Number: 123,
-				},
-				ForgeType: forgedomain.ForgeTypeGitHub,
-			}
-			cache.RegisterLookupResult("source", "target", Some(proposal))
-			cache.RegisterSearchResult("source", []forgedomain.Proposal{proposal})
-			cache.Clear()
-			_, has := cache.Lookup("source", "target")
-			must.False(t, has)
-			_, has = cache.LookupSearch("source")
-			must.False(t, has)
 		})
 	})
 

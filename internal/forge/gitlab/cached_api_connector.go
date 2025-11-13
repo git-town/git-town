@@ -52,7 +52,7 @@ func (self *CachedAPIConnector) FindProposal(source, target gitdomain.LocalBranc
 
 var _ forgedomain.ProposalSearcher = &cachedAPIConnector
 
-func (self CachedAPIConnector) SearchProposals(source gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
+func (self *CachedAPIConnector) SearchProposals(source gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	if cachedSearchResult, has := self.cache.LookupSearch(source); has {
 		return cachedSearchResult, nil
 	}
