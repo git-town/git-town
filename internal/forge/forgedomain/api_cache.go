@@ -39,11 +39,12 @@ func (self *APICache) Clear() {
 	self.results = []Result{}
 }
 
-// Lookup provides what this cache knows about the proposal for the given source and target branch.
-// If it has a cached proposal, returns (Some, true).
-// If it knowns that there is no proposal, returns (None, true).
-// If it has never heard about the given source and target branch, returns (None, false).
-func (self *APICache) Lookup(source, target gitdomain.LocalBranchName) (proposal Option[Proposal], knows bool) {
+// Lookup provides the proposal for the given source and target branch.
+// Since the absence of a proposal is a valid API result, the second return value is true if the cache is certain about the result.
+// If there is a cached proposal, returns (Some(proposal), true).
+// If it knows there is no proposal for the given source and target branch, returns (None, true).
+// If it has no records, returns (None, false).
+func (self *APICache) Lookup(source, target gitdomain.LocalBranchName) (proposal Option[Proposal], certain bool) {
 	for _, result := range self.results {
 		switch result := result.(type) {
 		case lookupResult:
