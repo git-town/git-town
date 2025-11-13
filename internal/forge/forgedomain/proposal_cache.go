@@ -14,8 +14,7 @@ type ProposalCache struct {
 	results []Result
 }
 
-type Result interface {
-}
+type Result interface{}
 
 // the result of a find operation
 type lookupResult struct {
