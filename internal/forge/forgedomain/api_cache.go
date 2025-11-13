@@ -14,7 +14,7 @@ type APICache struct {
 }
 
 type Result interface {
-	isAPIResult() // allow only lookupResult and searchResult
+	isAPIResult() // type safety to allow only lookupResult and searchResult
 }
 
 // the result of a find operation
