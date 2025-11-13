@@ -102,7 +102,7 @@ func TestProposalCache(t *testing.T) {
 		t.Run("cache contains existing search result", func(t *testing.T) {
 			t.Parallel()
 
-			t.Run("matching search result with matching content", func(t *testing.T) {
+			t.Run("matching search result that contains the target", func(t *testing.T) {
 				t.Parallel()
 				cache := &forgedomain.ProposalCache{}
 				proposal1 := forgedomain.Proposal{
@@ -122,7 +122,7 @@ func TestProposalCache(t *testing.T) {
 				must.EqOp(t, 123, haveProposal.Data.Data().Number)
 			})
 
-			t.Run("matching search result with mismatching content", func(t *testing.T) {
+			t.Run("matching search result that does not contain the target", func(t *testing.T) {
 				t.Parallel()
 				cache := &forgedomain.ProposalCache{}
 				proposal1 := forgedomain.Proposal{
@@ -140,7 +140,7 @@ func TestProposalCache(t *testing.T) {
 				must.True(t, lookupResult.IsNone())
 			})
 
-			t.Run("matching search result with no content", func(t *testing.T) {
+			t.Run("matching search result that contains no proposals", func(t *testing.T) {
 				t.Parallel()
 				cache := &forgedomain.ProposalCache{}
 				cache.RegisterSearchResult("source", []forgedomain.Proposal{})
@@ -150,15 +150,13 @@ func TestProposalCache(t *testing.T) {
 			})
 		})
 
-		t.Run("lookup result takes precedence over search result when registered first", func(t *testing.T) {
+		t.Run("cache contains both lookup and search result", func(t *testing.T) {
 			t.Parallel()
 			cache := &forgedomain.ProposalCache{}
-			source := gitdomain.NewLocalBranchName("feature")
-			target := gitdomain.NewLocalBranchName("main")
 			lookupProposal := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
-					Source: source,
-					Target: target,
+					Source: "source",
+					Target: "target",
 					Number: 123,
 					Title:  "Lookup PR",
 				},
@@ -166,22 +164,21 @@ func TestProposalCache(t *testing.T) {
 			}
 			searchProposal := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
-					Source: source,
-					Target: target,
+					Source: "source",
+					Target: "target",
 					Number: 456,
 					Title:  "Search PR",
 				},
 				ForgeType: forgedomain.ForgeTypeGitHub,
 			}
 			// Register lookup first so it's checked before search result in the loop
-			cache.RegisterLookupResult(source, target, Some(lookupProposal))
-			cache.RegisterSearchResult(source, []forgedomain.Proposal{searchProposal})
-			got, knows := cache.Lookup(source, target)
-			must.True(t, knows)
-			must.True(t, got.IsSome())
-			gotProposal, _ := got.Get()
-			must.EqOp(t, lookupProposal.Data.Data().Number, gotProposal.Data.Data().Number)
-			must.EqOp(t, "Lookup PR", gotProposal.Data.Data().Title)
+			cache.RegisterLookupResult("source", "target", Some(lookupProposal))
+			cache.RegisterSearchResult("source", []forgedomain.Proposal{searchProposal})
+			result, has := cache.Lookup("source", "target")
+			must.True(t, has)
+			haveProposal, has := result.Get()
+			must.True(t, has)
+			must.EqOp(t, "Lookup PR", haveProposal.Data.Data().Title)
 		})
 	})
 
@@ -192,68 +189,60 @@ func TestProposalCache(t *testing.T) {
 			t.Parallel()
 			cache := &forgedomain.ProposalCache{}
 			source := gitdomain.NewLocalBranchName("feature")
-			proposals, knows := cache.LookupSearch(source)
+			_, knows := cache.LookupSearch(source)
 			must.False(t, knows)
-			must.EqOp(t, 0, len(proposals))
 		})
 
-		t.Run("returns cached search result", func(t *testing.T) {
+		t.Run("contains matching search result", func(t *testing.T) {
 			t.Parallel()
 			cache := &forgedomain.ProposalCache{}
-			source := gitdomain.NewLocalBranchName("feature")
 			proposal1 := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
-					Source: source,
-					Target: gitdomain.NewLocalBranchName("main"),
+					Source: "source",
+					Target: "target",
 					Number: 123,
 				},
 				ForgeType: forgedomain.ForgeTypeGitHub,
 			}
 			proposal2 := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
-					Source: source,
-					Target: gitdomain.NewLocalBranchName("develop"),
+					Source: "source",
+					Target: "target",
 					Number: 456,
 				},
 				ForgeType: forgedomain.ForgeTypeGitHub,
 			}
-			expectedProposals := []forgedomain.Proposal{proposal1, proposal2}
-			cache.RegisterSearchResult(source, expectedProposals)
-			got, knows := cache.LookupSearch(source)
-			must.True(t, knows)
-			must.EqOp(t, 2, len(got))
-			must.EqOp(t, expectedProposals[0].Data.Data().Number, got[0].Data.Data().Number)
-			must.EqOp(t, expectedProposals[1].Data.Data().Number, got[1].Data.Data().Number)
+			giveProposals := []forgedomain.Proposal{proposal1, proposal2}
+			cache.RegisterSearchResult("source", giveProposals)
+			haveProposals, has := cache.LookupSearch("source")
+			must.True(t, has)
+			must.EqOp(t, 2, len(haveProposals))
+			must.EqOp(t, 123, haveProposals[0].Data.Data().Number)
+			must.EqOp(t, 456, haveProposals[1].Data.Data().Number)
 		})
 
-		t.Run("returns empty slice for source with no search result", func(t *testing.T) {
+		t.Run("contains mismatching search result", func(t *testing.T) {
 			t.Parallel()
 			cache := &forgedomain.ProposalCache{}
-			source := gitdomain.NewLocalBranchName("feature")
-			otherSource := gitdomain.NewLocalBranchName("other")
-			cache.RegisterSearchResult(otherSource, []forgedomain.Proposal{})
-			proposals, knows := cache.LookupSearch(source)
+			cache.RegisterSearchResult("other", []forgedomain.Proposal{})
+			_, knows := cache.LookupSearch("source")
 			must.False(t, knows)
-			must.EqOp(t, 0, len(proposals))
 		})
 
 		t.Run("ignores lookup results", func(t *testing.T) {
 			t.Parallel()
 			cache := &forgedomain.ProposalCache{}
-			source := gitdomain.NewLocalBranchName("feature")
-			target := gitdomain.NewLocalBranchName("main")
 			proposal := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
-					Source: source,
-					Target: target,
+					Source: "source",
+					Target: "target",
 					Number: 123,
 				},
 				ForgeType: forgedomain.ForgeTypeGitHub,
 			}
-			cache.RegisterLookupResult(source, target, Some(proposal))
-			proposals, knows := cache.LookupSearch(source)
+			cache.RegisterLookupResult("source", "target", Some(proposal))
+			_, knows := cache.LookupSearch("source")
 			must.False(t, knows)
-			must.EqOp(t, 0, len(proposals))
 		})
 	})
 
