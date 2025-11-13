@@ -37,13 +37,13 @@ func (self CachedAPIConnector) DefaultProposalMessage(proposalData forgedomain.P
 
 var _ forgedomain.ProposalFinder = cachedAPIConnector // type check
 
-func (self CachedAPIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
-	if cachedProposal := self.cache.BySourceTarget(branch, target); cachedProposal.IsSome() {
+func (self CachedAPIConnector) FindProposal(source, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+	if cachedProposal, has := self.cache.Lookup(source, target); has {
 		return cachedProposal, nil
 	}
-	result, err := self.api.FindProposal(branch, target)
-	self.cache.SetOption(result)
-	return result, err
+	loadedProposal, err := self.api.FindProposal(source, target)
+	self.cache.RegisterLookupResult(source, target, loadedProposal)
+	return loadedProposal, err
 }
 
 // ============================================================================
@@ -52,11 +52,11 @@ func (self CachedAPIConnector) FindProposal(branch, target gitdomain.LocalBranch
 
 var _ forgedomain.ProposalSearcher = cachedAPIConnector // type check
 
-func (self CachedAPIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
-	if cachedProposals := self.cache.BySource(branch); len(cachedProposals) > 0 {
-		return cachedProposals, nil
+func (self CachedAPIConnector) SearchProposals(source gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
+	if cachedSearchResult, has := self.cache.LookupSearch(source); has {
+		return cachedSearchResult, nil
 	}
-	result, err := self.api.SearchProposals(branch)
-	self.cache.SetMany(result)
-	return result, err
+	loadedSearchResult, err := self.api.SearchProposals(source)
+	self.cache.RegisterSearchResult(source, loadedSearchResult)
+	return loadedSearchResult, err
 }

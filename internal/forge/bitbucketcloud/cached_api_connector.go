@@ -56,9 +56,9 @@ func (self *CachedAPIConnector) SearchProposals(source gitdomain.LocalBranchName
 	if cachedSearchResult, has := self.cache.LookupSearch(source); has {
 		return cachedSearchResult, nil
 	}
-	searchResult, err := self.api.SearchProposals(source)
-	self.cache.RegisterSearchResult(source, searchResult)
-	return searchResult, err
+	loadedSearchResult, err := self.api.SearchProposals(source)
+	self.cache.RegisterSearchResult(source, loadedSearchResult)
+	return loadedSearchResult, err
 }
 
 // ============================================================================
