@@ -25,7 +25,6 @@ var (
 type APIConnector struct {
 	WebConnector
 	APIToken  Option[forgedomain.ForgejoToken]
-	cache     forgedomain.ProposalCache
 	_client   OptionalMutable[forgejo.Client] // don't use directly, call .getClient()
 	log       print.Logger
 	remoteURL giturl.Parts
@@ -38,15 +37,6 @@ type APIConnector struct {
 var _ forgedomain.ProposalFinder = &apiConnector // type check
 
 func (self *APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
-	if proposal := self.cache.BySourceTarget(branch, target); proposal.IsSome() {
-		return proposal, nil
-	}
-	result, err := self.findProposalAtForge(branch, target)
-	self.cache.SetOption(result)
-	return result, err
-}
-
-func (self *APIConnector) findProposalAtForge(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	client, err := self.getClient()
 	if err != nil {

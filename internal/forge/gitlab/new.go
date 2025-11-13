@@ -40,10 +40,14 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 		if err != nil {
 			return webConnector, err
 		}
-		return APIConnector{
+		apiConnector := APIConnector{
 			WebConnector: webConnector,
 			client:       client,
 			log:          args.Log,
+		}
+		return CachedAPIConnector{
+			api:   apiConnector,
+			cache: forgedomain.ProposalCache{},
 		}, nil
 	}
 	return webConnector, nil
