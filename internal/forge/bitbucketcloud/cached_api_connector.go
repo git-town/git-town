@@ -41,9 +41,9 @@ func (self *CachedAPIConnector) FindProposal(branch, target gitdomain.LocalBranc
 	if cachedProposal := self.cache.BySourceTarget(branch, target); cachedProposal.IsSome() {
 		return cachedProposal, nil
 	}
-	result, err := self.api.FindProposal(branch, target)
-	self.cache.SetOption(result)
-	return result, err
+	loadedProposal, err := self.api.FindProposal(branch, target)
+	self.cache.SetOption(loadedProposal)
+	return loadedProposal, err
 }
 
 // ============================================================================
@@ -56,9 +56,9 @@ func (self *CachedAPIConnector) SearchProposals(branch gitdomain.LocalBranchName
 	if cachedProposals := self.cache.BySource(branch); len(cachedProposals) > 0 {
 		return cachedProposals, nil
 	}
-	result, err := self.api.SearchProposals(branch)
-	self.cache.SetMany(result)
-	return result, err
+	loadedProposals, err := self.api.SearchProposals(branch)
+	self.cache.SetMany(loadedProposals)
+	return loadedProposals, err
 }
 
 // ============================================================================
@@ -67,9 +67,9 @@ func (self *CachedAPIConnector) SearchProposals(branch gitdomain.LocalBranchName
 
 var _ forgedomain.ProposalMerger = &cachedAPIConnector // type check
 
-func (self *CachedAPIConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
-	self.cache.Delete(number)
-	return self.api.SquashMergeProposal(number, message)
+func (self *CachedAPIConnector) SquashMergeProposal(proposalNumber int, message gitdomain.CommitMessage) error {
+	self.cache.Delete(proposalNumber)
+	return self.api.SquashMergeProposal(proposalNumber, message)
 }
 
 // ============================================================================
