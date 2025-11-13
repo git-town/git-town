@@ -405,34 +405,32 @@ func TestProposalCache(t *testing.T) {
 		t.Run("registers multiple different sources", func(t *testing.T) {
 			t.Parallel()
 			cache := &forgedomain.ProposalCache{}
-			source1 := gitdomain.NewLocalBranchName("feature1")
-			source2 := gitdomain.NewLocalBranchName("feature2")
 			proposal1 := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
-					Source: source1,
-					Target: gitdomain.NewLocalBranchName("main"),
+					Source: "source1",
+					Target: "target",
 					Number: 123,
 				},
 				ForgeType: forgedomain.ForgeTypeGitHub,
 			}
 			proposal2 := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
-					Source: source2,
-					Target: gitdomain.NewLocalBranchName("main"),
+					Source: "source2",
+					Target: "target",
 					Number: 456,
 				},
 				ForgeType: forgedomain.ForgeTypeGitHub,
 			}
-			cache.RegisterSearchResult(source1, []forgedomain.Proposal{proposal1})
-			cache.RegisterSearchResult(source2, []forgedomain.Proposal{proposal2})
-			got1, knows1 := cache.LookupSearch(source1)
-			must.True(t, knows1)
-			must.EqOp(t, 1, len(got1))
-			must.EqOp(t, proposal1.Data.Data().Number, got1[0].Data.Data().Number)
-			got2, knows2 := cache.LookupSearch(source2)
-			must.True(t, knows2)
-			must.EqOp(t, 1, len(got2))
-			must.EqOp(t, proposal2.Data.Data().Number, got2[0].Data.Data().Number)
+			cache.RegisterSearchResult("source1", []forgedomain.Proposal{proposal1})
+			cache.RegisterSearchResult("source2", []forgedomain.Proposal{proposal2})
+			haveProposals1, has := cache.LookupSearch("source1")
+			must.True(t, has)
+			must.EqOp(t, 1, len(haveProposals1))
+			must.EqOp(t, 123, haveProposals1[0].Data.Data().Number)
+			haveProposals2, has := cache.LookupSearch("source2")
+			must.True(t, has)
+			must.EqOp(t, 1, len(haveProposals2))
+			must.EqOp(t, 456, haveProposals2[0].Data.Data().Number)
 		})
 
 		t.Run("lookup result takes precedence over search result when both exist", func(t *testing.T) {
