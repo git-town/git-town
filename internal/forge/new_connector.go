@@ -102,7 +102,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 					RemoteURL:        remoteURL,
 				})
 			case forgedomain.GitLabConnectorTypeGlab:
-				connector = glab.CachedConnector{
+				connector = &glab.CachedConnector{
 					Connector: glab.Connector{
 						Backend:  args.Backend,
 						Frontend: args.Frontend,
