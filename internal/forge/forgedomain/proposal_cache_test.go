@@ -249,28 +249,24 @@ func TestProposalCache(t *testing.T) {
 	t.Run("Clear", func(t *testing.T) {
 		t.Parallel()
 
-		t.Run("clears all cached results", func(t *testing.T) {
+		t.Run("removes all cached results", func(t *testing.T) {
 			t.Parallel()
 			cache := &forgedomain.ProposalCache{}
-			source := gitdomain.NewLocalBranchName("feature")
-			target := gitdomain.NewLocalBranchName("main")
 			proposal := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
-					Source: source,
-					Target: target,
+					Source: "source",
+					Target: "target",
 					Number: 123,
 				},
 				ForgeType: forgedomain.ForgeTypeGitHub,
 			}
-			cache.RegisterLookupResult(source, target, Some(proposal))
-			cache.RegisterSearchResult(source, []forgedomain.Proposal{proposal})
+			cache.RegisterLookupResult("source", "target", Some(proposal))
+			cache.RegisterSearchResult("source", []forgedomain.Proposal{proposal})
 			cache.Clear()
-			got, knows := cache.Lookup(source, target)
-			must.False(t, knows)
-			must.True(t, got.IsNone())
-			proposals, knows := cache.LookupSearch(source)
-			must.False(t, knows)
-			must.EqOp(t, 0, len(proposals))
+			_, has := cache.Lookup("source", "target")
+			must.False(t, has)
+			_, has = cache.LookupSearch("source")
+			must.False(t, has)
 		})
 	})
 
@@ -280,31 +276,27 @@ func TestProposalCache(t *testing.T) {
 		t.Run("registers new lookup result", func(t *testing.T) {
 			t.Parallel()
 			cache := &forgedomain.ProposalCache{}
-			source := gitdomain.NewLocalBranchName("feature")
-			target := gitdomain.NewLocalBranchName("main")
 			proposal := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
-					Source: source,
-					Target: target,
+					Source: "source",
+					Target: "target",
 					Number: 123,
 				},
 				ForgeType: forgedomain.ForgeTypeGitHub,
 			}
-			cache.RegisterLookupResult(source, target, Some(proposal))
-			got, knows := cache.Lookup(source, target)
+			cache.RegisterLookupResult("source", "target", Some(proposal))
+			got, knows := cache.Lookup("source", "target")
 			must.True(t, knows)
 			must.True(t, got.IsSome())
 		})
 
-		t.Run("overwrites existing lookup result", func(t *testing.T) {
+		t.Run("overwrites an existing lookup result", func(t *testing.T) {
 			t.Parallel()
 			cache := &forgedomain.ProposalCache{}
-			source := gitdomain.NewLocalBranchName("feature")
-			target := gitdomain.NewLocalBranchName("main")
 			proposal1 := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
-					Source: source,
-					Target: target,
+					Source: "source",
+					Target: "target",
 					Number: 123,
 					Title:  "First PR",
 				},
@@ -312,55 +304,53 @@ func TestProposalCache(t *testing.T) {
 			}
 			proposal2 := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
-					Source: source,
-					Target: target,
+					Source: "source",
+					Target: "target",
 					Number: 456,
 					Title:  "Second PR",
 				},
 				ForgeType: forgedomain.ForgeTypeGitHub,
 			}
-			cache.RegisterLookupResult(source, target, Some(proposal1))
-			cache.RegisterLookupResult(source, target, Some(proposal2))
-			got, knows := cache.Lookup(source, target)
-			must.True(t, knows)
-			must.True(t, got.IsSome())
-			gotProposal, _ := got.Get()
-			must.EqOp(t, proposal2.Data.Data().Number, gotProposal.Data.Data().Number)
-			must.EqOp(t, "Second PR", gotProposal.Data.Data().Title)
+			cache.RegisterLookupResult("source", "target", Some(proposal1))
+			cache.RegisterLookupResult("source", "target", Some(proposal2))
+			result, has := cache.Lookup("source", "target")
+			must.True(t, has)
+			haveProposal, has := result.Get()
+			must.True(t, has)
+			must.EqOp(t, "Second PR", haveProposal.Data.Data().Title)
 		})
 
-		t.Run("can register multiple different source-target pairs", func(t *testing.T) {
+		t.Run("registers multiple different source-target pairs", func(t *testing.T) {
 			t.Parallel()
 			cache := &forgedomain.ProposalCache{}
-			source1 := gitdomain.NewLocalBranchName("feature1")
-			source2 := gitdomain.NewLocalBranchName("feature2")
-			target := gitdomain.NewLocalBranchName("main")
 			proposal1 := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
-					Source: source1,
-					Target: target,
+					Source: "source1",
+					Target: "target",
 					Number: 123,
 				},
 				ForgeType: forgedomain.ForgeTypeGitHub,
 			}
 			proposal2 := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
-					Source: source2,
-					Target: target,
+					Source: "source2",
+					Target: "target",
 					Number: 456,
 				},
 				ForgeType: forgedomain.ForgeTypeGitHub,
 			}
-			cache.RegisterLookupResult(source1, target, Some(proposal1))
-			cache.RegisterLookupResult(source2, target, Some(proposal2))
-			got1, knows1 := cache.Lookup(source1, target)
-			must.True(t, knows1)
-			gotProposal1, _ := got1.Get()
-			must.EqOp(t, proposal1.Data.Data().Number, gotProposal1.Data.Data().Number)
-			got2, knows2 := cache.Lookup(source2, target)
-			must.True(t, knows2)
-			gotProposal2, _ := got2.Get()
-			must.EqOp(t, proposal2.Data.Data().Number, gotProposal2.Data.Data().Number)
+			cache.RegisterLookupResult("source1", "target", Some(proposal1))
+			cache.RegisterLookupResult("source2", "target", Some(proposal2))
+			result1, has1 := cache.Lookup("source1", "target")
+			must.True(t, has1)
+			haveProposal1, has := result1.Get()
+			must.True(t, has)
+			must.EqOp(t, 123, haveProposal1.Data.Data().Number)
+			result2, has := cache.Lookup("source2", "target")
+			must.True(t, has)
+			haveProposal2, has := result2.Get()
+			must.True(t, has)
+			must.EqOp(t, 456, haveProposal2.Data.Data().Number)
 		})
 	})
 
