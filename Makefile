@@ -76,6 +76,7 @@ lint: tools/node_modules tools/rta@${RTA_VERSION}  # lints the main codebase con
 	make --no-print-directory lint-smoke
 	make --no-print-directory alphavet
 	make --no-print-directory deadcode
+	make --no-print-directory lint-cached-connectors
 	make --no-print-directory lint-iterate-map
 	make --no-print-directory lint-messages-sorted
 	make --no-print-directory lint-messy-output
@@ -102,6 +103,8 @@ lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	@(cd tools/format_self && make test)
 	@echo lint tools/format_unittests
 	@(cd tools/format_unittests && make test)
+	@echo lint tools/lint_cached_connectors
+	@(cd tools/lint_cached_connectors && make test)
 	@echo lint tools/lint_steps
 	@(cd tools/lint_steps && make test)
 	@echo lint tools/messages_sorted
@@ -132,6 +135,9 @@ fix-optioncompare-in-tests:
 keep-sorted: tools/rta@${RTA_VERSION}
 	tools/rta --install ripgrep
 	tools/rta keep-sorted $(shell tools/rta ripgrep -l 'keep-sorted end' ./ --glob '!Makefile')
+
+lint-cached-connectors:
+	@(cd tools/lint_cached_connectors && go build) && ./tools/lint_cached_connectors/lint_cached_connectors
 
 lint-iterate-map:
 	@(cd tools/iterate_map && go build) && ./tools/iterate_map/iterate_map
