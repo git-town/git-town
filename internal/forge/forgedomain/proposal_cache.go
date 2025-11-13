@@ -7,53 +7,87 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-// ProposalCache caches proposals by source and target branches.
+// ProposalCache caches known proposals and knowledge about non-existing proposals.
 type ProposalCache struct {
-	// the cached proposals
+	// the cached items
 	//
-	// A simple list is fine here despite O(n) lookup time because the number of proposals is expected to be very small.
-	proposals []Proposal
+	// A simple list is fine here despite O(n) lookup time because the number of items is expected to be very small.
+	items []proposalCacheItem
 }
 
-// BySource provides the cached proposals for the given source branch.
-func (self *ProposalCache) BySource(source gitdomain.LocalBranchName) []Proposal {
-	result := []Proposal{}
-	for _, proposal := range self.proposals {
-		if proposal.Data.Data().Source == source {
-			result = append(result, proposal)
+type proposalCacheItem struct {
+	Source   gitdomain.LocalBranchName
+	Target   gitdomain.LocalBranchName
+	Proposal Option[Proposal]
+}
+
+// Lookup provides what this cache knows about the proposal for the given source and target branch.
+// If it has a cached proposal, return (Some, true).
+// If it knowns that there is no proposal, return (None, true).
+// If it has never heard about the given source and target branch, return (None, false).
+func (self *ProposalCache) Lookup(source, target gitdomain.LocalBranchName) (proposal Option[Proposal], knows bool) {
+	for _, item := range self.items {
+		if item.Source == source && item.Target == target {
+			return item.Proposal, true
 		}
 	}
-	return result
+	return None[Proposal](), false
 }
 
-// BySourceTarget provides the cached proposal for the given source and target branch.
-func (self *ProposalCache) BySourceTarget(source, target gitdomain.LocalBranchName) Option[Proposal] {
-	for _, proposal := range self.proposals {
-		proposalData := proposal.Data.Data()
-		if proposalData.Source == source && proposalData.Target == target {
-			return Some(proposal)
-		}
-	}
-	return None[Proposal]()
-}
-
-func (self *ProposalCache) Delete(proposalNumber int) {
-	self.proposals = slices.DeleteFunc(self.proposals, func(proposal Proposal) bool {
-		return proposal.Data.Data().Number == proposalNumber
+// DeleteBySourceTarget removes the cached proposal for the given source and target branch.
+func (self *ProposalCache) DeleteBySourceTarget(source, target gitdomain.LocalBranchName) {
+	self.items = slices.DeleteFunc(self.items, func(item proposalCacheItem) bool {
+		return item.Source == source && item.Target == target
 	})
 }
 
-// Set caches the given proposal.
-func (self *ProposalCache) Set(proposal Proposal) {
-	self.proposals = append(self.proposals, proposal)
+// DeleteByNumber removes the cached proposal with the given number.
+func (self *ProposalCache) DeleteByNumber(proposalNumber int) {
+	self.items = slices.DeleteFunc(self.items, func(item proposalCacheItem) bool {
+		if proposal, hasProposal := item.Proposal.Get(); hasProposal {
+			return proposal.Data.Data().Number == proposalNumber
+		}
+		return false
+	})
 }
 
+func (self *ProposalCache) Delete(proposal ProposalInterface) {
+	proposalData := proposal.Data()
+	self.items = slices.DeleteFunc(self.items, func(item proposalCacheItem) bool {
+		return item.Source == proposalData.Source && item.Target == proposalData.Target
+	})
+}
+
+// Set registers knowledge about the proposal for the given source and target branch.
+// If you provide None for the proposal, it stores knowledge that there is no proposal for the given source and target branch.
+func (self *ProposalCache) Set(source, target gitdomain.LocalBranchName, proposal Option[Proposal]) {
+	self.DeleteBySourceTarget(source, target)
+	self.items = append(self.items, proposalCacheItem{
+		Source:   source,
+		Target:   target,
+		Proposal: proposal,
+	})
+}
+
+// SetMany caches knowledge about many proposals.
 func (self *ProposalCache) SetMany(proposals []Proposal) {
-	self.proposals = append(self.proposals, proposals...)
+	for _, proposal := range proposals {
+		proposalData := proposal.Data.Data()
+		self.Set(proposalData.Source, proposalData.Target, Some(proposal))
+	}
 }
 
-func (self *ProposalCache) SetOption(proposalOpt Option[Proposal]) {
-	if proposal, hasProposal := proposalOpt.Get(); hasProposal {
-		self.Set(proposal)
+// Search provides the cached proposals for the given source branch.
+// If it is known that the source branch has no proposals, return (empty, true).
+// If it isn't known whether this branch has proposals, return (empty, false).
+func (self *ProposalCache) Search(source gitdomain.LocalBranchName) (proposals []Proposal, knows bool) {
+	for _, item := range self.items {
+		if item.Source == source {
+			knows = true
+			if proposal, hasProposal := item.Proposal.Get(); hasProposal {
+				proposals = append(proposals, proposal)
+			}
+		}
 	}
+	return
 }
