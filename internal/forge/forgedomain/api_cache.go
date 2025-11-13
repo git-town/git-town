@@ -10,8 +10,7 @@ import (
 
 // APICache caches results of API calls to a forge.
 type APICache struct {
-	// the cached items
-	results []Result
+	results []Result // the cached items
 }
 
 type Result any
