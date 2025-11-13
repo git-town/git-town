@@ -10,7 +10,7 @@ import (
 // type checks
 var (
 	cachedAPIConnector CachedAPIConnector
-	_                  forgedomain.Connector = cachedAPIConnector
+	_                  forgedomain.Connector = &cachedAPIConnector
 )
 
 // APIConnector provides access to the Bitbucket DataCenter API.
@@ -19,15 +19,15 @@ type CachedAPIConnector struct {
 	cache forgedomain.ProposalCache
 }
 
-func (self CachedAPIConnector) BrowseRepository(runner subshelldomain.Runner) error {
+func (self *CachedAPIConnector) BrowseRepository(runner subshelldomain.Runner) error {
 	return self.api.BrowseRepository(runner)
 }
 
-func (self CachedAPIConnector) CreateProposal(data forgedomain.CreateProposalArgs) error {
+func (self *CachedAPIConnector) CreateProposal(data forgedomain.CreateProposalArgs) error {
 	return self.api.CreateProposal(data)
 }
 
-func (self CachedAPIConnector) DefaultProposalMessage(proposalData forgedomain.ProposalData) string {
+func (self *CachedAPIConnector) DefaultProposalMessage(proposalData forgedomain.ProposalData) string {
 	return self.api.DefaultProposalMessage(proposalData)
 }
 
@@ -35,9 +35,9 @@ func (self CachedAPIConnector) DefaultProposalMessage(proposalData forgedomain.P
 // find proposals
 // ============================================================================
 
-var _ forgedomain.ProposalFinder = cachedAPIConnector // type check
+var _ forgedomain.ProposalFinder = &cachedAPIConnector // type check
 
-func (self CachedAPIConnector) FindProposal(source, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self *CachedAPIConnector) FindProposal(source, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	if cachedProposal, has := self.cache.Lookup(source, target); has {
 		return cachedProposal, nil
 	}
@@ -50,9 +50,9 @@ func (self CachedAPIConnector) FindProposal(source, target gitdomain.LocalBranch
 // search proposals
 // ============================================================================
 
-var _ forgedomain.ProposalSearcher = cachedAPIConnector // type check
+var _ forgedomain.ProposalSearcher = &cachedAPIConnector // type check
 
-func (self CachedAPIConnector) SearchProposals(source gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
+func (self *CachedAPIConnector) SearchProposals(source gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	if cachedSearchResult, has := self.cache.LookupSearch(source); has {
 		return cachedSearchResult, nil
 	}
