@@ -45,13 +45,13 @@ func (self CachedConnector) DefaultProposalMessage(data forgedomain.ProposalData
 
 var _ forgedomain.ProposalFinder = cachedConnector // type-check
 
-func (self CachedConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
-	if cachedProposal := self.Cache.BySourceTarget(branch, target); cachedProposal.IsSome() {
+func (self CachedConnector) FindProposal(source, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+	if cachedProposal, has := self.Cache.Lookup(source, target); has {
 		return cachedProposal, nil
 	}
-	result, err := self.Connector.FindProposal(branch, target)
-	self.Cache.SetOption(result)
-	return result, err
+	loadedProposal, err := self.Connector.FindProposal(source, target)
+	self.Cache.RegisterLookupResult(source, target, loadedProposal)
+	return loadedProposal, err
 }
 
 // ============================================================================
@@ -60,13 +60,13 @@ func (self CachedConnector) FindProposal(branch, target gitdomain.LocalBranchNam
 
 var _ forgedomain.ProposalSearcher = cachedConnector // type-check
 
-func (self CachedConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
-	if cachedProposals := self.Cache.BySource(branch); len(cachedProposals) > 0 {
-		return cachedProposals, nil
+func (self CachedConnector) SearchProposals(source gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
+	if cachedSearchResult, has := self.Cache.LookupSearch(source); has {
+		return cachedSearchResult, nil
 	}
-	result, err := self.Connector.SearchProposals(branch)
-	self.Cache.SetMany(result)
-	return result, err
+	loadedSearchResult, err := self.Connector.SearchProposals(source)
+	self.Cache.RegisterSearchResult(source, loadedSearchResult)
+	return loadedSearchResult, err
 }
 
 // ============================================================================
@@ -76,7 +76,7 @@ func (self CachedConnector) SearchProposals(branch gitdomain.LocalBranchName) ([
 var _ forgedomain.ProposalMerger = cachedConnector // type-check
 
 func (self CachedConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
-	self.Cache.Delete(number)
+	self.Cache.Clear()
 	return self.Connector.SquashMergeProposal(number, message)
 }
 
@@ -87,7 +87,7 @@ func (self CachedConnector) SquashMergeProposal(number int, message gitdomain.Co
 var _ forgedomain.ProposalBodyUpdater = cachedConnector // type-check
 
 func (self CachedConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody string) error {
-	self.Cache.Delete(proposalData.Data().Number)
+	self.Cache.Clear()
 	return self.Connector.UpdateProposalBody(proposalData, updatedBody)
 }
 
@@ -98,7 +98,7 @@ func (self CachedConnector) UpdateProposalBody(proposalData forgedomain.Proposal
 var _ forgedomain.ProposalTargetUpdater = cachedConnector // type-check
 
 func (self CachedConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
-	self.Cache.Delete(proposalData.Data().Number)
+	self.Cache.Clear()
 	return self.Connector.UpdateProposalTarget(proposalData, target)
 }
 
