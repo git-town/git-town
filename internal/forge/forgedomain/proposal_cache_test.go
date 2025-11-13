@@ -53,8 +53,8 @@ func TestProposalCache(t *testing.T) {
 				t.Run("without proposal", func(t *testing.T) {
 					t.Parallel()
 					cache := &forgedomain.ProposalCache{}
-					cache.RegisterLookupResult(source, target, None[forgedomain.Proposal]())
-					lookupResult, has := cache.Lookup(source, target)
+					cache.RegisterLookupResult("source", "target", None[forgedomain.Proposal]())
+					lookupResult, has := cache.Lookup("source", "target")
 					must.True(t, has)
 					must.True(t, lookupResult.IsNone())
 				})
@@ -76,7 +76,7 @@ func TestProposalCache(t *testing.T) {
 						ForgeType: forgedomain.ForgeTypeGitHub,
 					}
 					cache.RegisterLookupResult("other", "target", Some(giveProposal))
-					lookupResult, has := cache.Lookup("source", "target")
+					_, has := cache.Lookup("source", "target")
 					must.False(t, has)
 				})
 
@@ -93,7 +93,7 @@ func TestProposalCache(t *testing.T) {
 						ForgeType: forgedomain.ForgeTypeGitHub,
 					}
 					cache.RegisterLookupResult("source", "other", Some(giveProposal))
-					lookupResult, has := cache.Lookup("source", "target")
+					_, has := cache.Lookup("source", "target")
 					must.False(t, has)
 				})
 			})
