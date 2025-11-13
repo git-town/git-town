@@ -15,16 +15,17 @@ type ProposalCache struct {
 	items []proposalCacheItem
 }
 
+// proposalCacheItem encodes knowledge whether a proposal for a given source and target branch exists.
 type proposalCacheItem struct {
 	Source   gitdomain.LocalBranchName
 	Target   gitdomain.LocalBranchName
-	Proposal Option[Proposal]
+	Proposal Option[Proposal] // Some if a proposal exists, None if it doesn't
 }
 
 // Lookup provides what this cache knows about the proposal for the given source and target branch.
-// If it has a cached proposal, return (Some, true).
-// If it knowns that there is no proposal, return (None, true).
-// If it has never heard about the given source and target branch, return (None, false).
+// If it has a cached proposal, returns (Some, true).
+// If it knowns that there is no proposal, returns (None, true).
+// If it has never heard about the given source and target branch, returns (None, false).
 func (self *ProposalCache) Lookup(source, target gitdomain.LocalBranchName) (proposal Option[Proposal], knows bool) {
 	for _, item := range self.items {
 		if item.Source == source && item.Target == target {
