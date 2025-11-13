@@ -35,7 +35,7 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:iretur
 			token:        args.AppPassword.GetOrZero().String(),
 			username:     args.UserName.GetOrZero().String(),
 		}
-		return CachedAPIConnector{
+		return &CachedAPIConnector{
 			api:   apiConnector,
 			cache: forgedomain.ProposalCache{},
 		}

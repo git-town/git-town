@@ -59,7 +59,7 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 			client:       NewMutable(githubClient),
 			log:          args.Log,
 		}
-		return CachedAPIConnector{
+		return &CachedAPIConnector{
 			api:   apiConnector,
 			cache: forgedomain.ProposalCache{},
 		}, nil

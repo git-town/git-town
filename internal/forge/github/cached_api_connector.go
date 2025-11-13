@@ -10,7 +10,7 @@ import (
 // type checks
 var (
 	cachedAPIConnector CachedAPIConnector
-	_                  forgedomain.Connector = cachedAPIConnector
+	_                  forgedomain.Connector = &cachedAPIConnector
 )
 
 // CachedAPIConnector provides access to the GitHub API with caching.
@@ -19,15 +19,15 @@ type CachedAPIConnector struct {
 	cache forgedomain.ProposalCache
 }
 
-func (self CachedAPIConnector) BrowseRepository(runner subshelldomain.Runner) error {
+func (self *CachedAPIConnector) BrowseRepository(runner subshelldomain.Runner) error {
 	return self.api.BrowseRepository(runner)
 }
 
-func (self CachedAPIConnector) CreateProposal(data forgedomain.CreateProposalArgs) error {
+func (self *CachedAPIConnector) CreateProposal(data forgedomain.CreateProposalArgs) error {
 	return self.api.CreateProposal(data)
 }
 
-func (self CachedAPIConnector) DefaultProposalMessage(proposalData forgedomain.ProposalData) string {
+func (self *CachedAPIConnector) DefaultProposalMessage(proposalData forgedomain.ProposalData) string {
 	return self.api.DefaultProposalMessage(proposalData)
 }
 
@@ -35,9 +35,9 @@ func (self CachedAPIConnector) DefaultProposalMessage(proposalData forgedomain.P
 // find proposals
 // ============================================================================
 
-var _ forgedomain.ProposalFinder = cachedAPIConnector // type check
+var _ forgedomain.ProposalFinder = &cachedAPIConnector // type check
 
-func (self CachedAPIConnector) FindProposal(source, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self *CachedAPIConnector) FindProposal(source, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	if cachedProposal, has := self.cache.Lookup(source, target); has {
 		return cachedProposal, nil
 	}
@@ -50,9 +50,9 @@ func (self CachedAPIConnector) FindProposal(source, target gitdomain.LocalBranch
 // search proposals
 // ============================================================================
 
-var _ forgedomain.ProposalSearcher = cachedAPIConnector // type check
+var _ forgedomain.ProposalSearcher = &cachedAPIConnector // type check
 
-func (self CachedAPIConnector) SearchProposals(source gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
+func (self *CachedAPIConnector) SearchProposals(source gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	if cachedSearchResult, has := self.cache.LookupSearch(source); has {
 		return cachedSearchResult, nil
 	}
@@ -65,9 +65,9 @@ func (self CachedAPIConnector) SearchProposals(source gitdomain.LocalBranchName)
 // squash-merge proposals
 // ============================================================================
 
-var _ forgedomain.ProposalMerger = cachedAPIConnector // type check
+var _ forgedomain.ProposalMerger = &cachedAPIConnector // type check
 
-func (self CachedAPIConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
+func (self *CachedAPIConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
 	self.cache.Clear()
 	return self.api.SquashMergeProposal(number, message)
 }
@@ -76,9 +76,9 @@ func (self CachedAPIConnector) SquashMergeProposal(number int, message gitdomain
 // update proposal body
 // ============================================================================
 
-var _ forgedomain.ProposalBodyUpdater = cachedAPIConnector // type check
+var _ forgedomain.ProposalBodyUpdater = &cachedAPIConnector // type check
 
-func (self CachedAPIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, newBody string) error {
+func (self *CachedAPIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, newBody string) error {
 	self.cache.Clear()
 	return self.api.UpdateProposalBody(proposalData, newBody)
 }
@@ -87,9 +87,9 @@ func (self CachedAPIConnector) UpdateProposalBody(proposalData forgedomain.Propo
 // update proposal target
 // ============================================================================
 
-var _ forgedomain.ProposalTargetUpdater = cachedAPIConnector // type check
+var _ forgedomain.ProposalTargetUpdater = &cachedAPIConnector // type check
 
-func (self CachedAPIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
+func (self *CachedAPIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	self.cache.Clear()
 	return self.api.UpdateProposalTarget(proposalData, target)
 }
@@ -98,8 +98,8 @@ func (self CachedAPIConnector) UpdateProposalTarget(proposalData forgedomain.Pro
 // verify credentials
 // ============================================================================
 
-var _ forgedomain.CredentialVerifier = cachedAPIConnector // type check
+var _ forgedomain.CredentialVerifier = &cachedAPIConnector // type check
 
-func (self CachedAPIConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
+func (self *CachedAPIConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
 	return self.api.VerifyCredentials()
 }

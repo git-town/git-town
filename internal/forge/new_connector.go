@@ -74,7 +74,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 					RemoteURL:        remoteURL,
 				})
 			case forgedomain.GitHubConnectorTypeGh:
-				connector = gh.CachedConnector{
+				connector = &gh.CachedConnector{
 					Connector: gh.Connector{
 						Backend:  args.Backend,
 						Frontend: args.Frontend,
