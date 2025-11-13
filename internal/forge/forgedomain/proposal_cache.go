@@ -15,17 +15,6 @@ type ProposalCache struct {
 	proposals []Proposal
 }
 
-// BySourceTarget provides the cached proposal for the given source and target branch.
-func (self *ProposalCache) BySourceTarget(source, target gitdomain.LocalBranchName) Option[Proposal] {
-	for _, proposal := range self.proposals {
-		proposalData := proposal.Data.Data()
-		if proposalData.Source == source && proposalData.Target == target {
-			return Some(proposal)
-		}
-	}
-	return None[Proposal]()
-}
-
 // BySource provides the cached proposals for the given source branch.
 func (self *ProposalCache) BySource(source gitdomain.LocalBranchName) []Proposal {
 	result := []Proposal{}
@@ -35,6 +24,17 @@ func (self *ProposalCache) BySource(source gitdomain.LocalBranchName) []Proposal
 		}
 	}
 	return result
+}
+
+// BySourceTarget provides the cached proposal for the given source and target branch.
+func (self *ProposalCache) BySourceTarget(source, target gitdomain.LocalBranchName) Option[Proposal] {
+	for _, proposal := range self.proposals {
+		proposalData := proposal.Data.Data()
+		if proposalData.Source == source && proposalData.Target == target {
+			return Some(proposal)
+		}
+	}
+	return None[Proposal]()
 }
 
 func (self *ProposalCache) Delete(proposalNumber int) {
