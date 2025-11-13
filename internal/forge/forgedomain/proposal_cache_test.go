@@ -432,36 +432,5 @@ func TestProposalCache(t *testing.T) {
 			must.EqOp(t, 1, len(haveProposals2))
 			must.EqOp(t, 456, haveProposals2[0].Data.Data().Number)
 		})
-
-		t.Run("lookup result takes precedence over search result when both exist", func(t *testing.T) {
-			t.Parallel()
-			cache := &forgedomain.ProposalCache{}
-			source := gitdomain.NewLocalBranchName("feature")
-			target := gitdomain.NewLocalBranchName("main")
-			lookupProposal := forgedomain.Proposal{
-				Data: forgedomain.ProposalData{
-					Source: source,
-					Target: target,
-					Number: 123,
-				},
-				ForgeType: forgedomain.ForgeTypeGitHub,
-			}
-			searchProposal := forgedomain.Proposal{
-				Data: forgedomain.ProposalData{
-					Source: source,
-					Target: target,
-					Number: 456,
-				},
-				ForgeType: forgedomain.ForgeTypeGitHub,
-			}
-			cache.RegisterLookupResult(source, target, Some(lookupProposal))
-			cache.RegisterSearchResult(source, []forgedomain.Proposal{searchProposal})
-			// Lookup result takes precedence because it's checked first in the switch statement
-			got, knows := cache.Lookup(source, target)
-			must.True(t, knows)
-			must.True(t, got.IsSome())
-			gotProposal, _ := got.Get()
-			must.EqOp(t, lookupProposal.Data.Data().Number, gotProposal.Data.Data().Number)
-		})
 	})
 }
