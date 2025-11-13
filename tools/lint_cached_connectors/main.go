@@ -131,11 +131,11 @@ func discoverConnectorPairs(forgeDir string) ([]ConnectorPair, error) {
 
 			if cachedType != "" && uncachedType != "" {
 				pairs = append(pairs, ConnectorPair{
+					CachedFile:   cachedFile,
+					CachedType:   cachedType,
 					Package:      pkgName,
 					UncachedFile: uncachedFile,
 					UncachedType: uncachedType,
-					CachedFile:   cachedFile,
-					CachedType:   cachedType,
 				})
 			}
 		}
