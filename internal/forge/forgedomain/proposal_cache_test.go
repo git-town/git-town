@@ -360,50 +360,49 @@ func TestProposalCache(t *testing.T) {
 		t.Run("registers new search result", func(t *testing.T) {
 			t.Parallel()
 			cache := &forgedomain.ProposalCache{}
-			source := gitdomain.NewLocalBranchName("feature")
 			proposal := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
-					Source: source,
-					Target: gitdomain.NewLocalBranchName("main"),
+					Source: "source",
+					Target: "target",
 					Number: 123,
 				},
 				ForgeType: forgedomain.ForgeTypeGitHub,
 			}
-			cache.RegisterSearchResult(source, []forgedomain.Proposal{proposal})
-			got, knows := cache.LookupSearch(source)
-			must.True(t, knows)
-			must.EqOp(t, 1, len(got))
+			cache.RegisterSearchResult("source", []forgedomain.Proposal{proposal})
+			result, has := cache.LookupSearch("source")
+			must.True(t, has)
+			must.EqOp(t, 1, len(result))
+			must.EqOp(t, 123, result[0].Data.Data().Number)
 		})
 
 		t.Run("overwrites existing search result", func(t *testing.T) {
 			t.Parallel()
 			cache := &forgedomain.ProposalCache{}
-			source := gitdomain.NewLocalBranchName("feature")
 			proposal1 := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
-					Source: source,
-					Target: gitdomain.NewLocalBranchName("main"),
+					Source: "source",
+					Target: "target",
 					Number: 123,
 				},
 				ForgeType: forgedomain.ForgeTypeGitHub,
 			}
 			proposal2 := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
-					Source: source,
-					Target: gitdomain.NewLocalBranchName("develop"),
+					Source: "source",
+					Target: "target",
 					Number: 456,
 				},
 				ForgeType: forgedomain.ForgeTypeGitHub,
 			}
-			cache.RegisterSearchResult(source, []forgedomain.Proposal{proposal1})
-			cache.RegisterSearchResult(source, []forgedomain.Proposal{proposal2})
-			got, knows := cache.LookupSearch(source)
-			must.True(t, knows)
-			must.EqOp(t, 1, len(got))
-			must.EqOp(t, proposal2.Data.Data().Number, got[0].Data.Data().Number)
+			cache.RegisterSearchResult("source", []forgedomain.Proposal{proposal1})
+			cache.RegisterSearchResult("source", []forgedomain.Proposal{proposal2})
+			haveProposals, has := cache.LookupSearch("source")
+			must.True(t, has)
+			must.EqOp(t, 1, len(haveProposals))
+			must.EqOp(t, 456, haveProposals[0].Data.Data().Number)
 		})
 
-		t.Run("can register multiple different sources", func(t *testing.T) {
+		t.Run("registers multiple different sources", func(t *testing.T) {
 			t.Parallel()
 			cache := &forgedomain.ProposalCache{}
 			source1 := gitdomain.NewLocalBranchName("feature1")
