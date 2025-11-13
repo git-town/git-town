@@ -45,7 +45,7 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 			client:       client,
 			log:          args.Log,
 		}
-		return CachedAPIConnector{
+		return &CachedAPIConnector{
 			api:   apiConnector,
 			cache: forgedomain.ProposalCache{},
 		}, nil
