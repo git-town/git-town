@@ -52,8 +52,9 @@ func (self *ProposalCache) Lookup(source, target gitdomain.LocalBranchName) (pro
 				// and the target branch was not in the result --> we know there is no proposal
 				return None[Proposal](), true
 			}
+		default:
+			panic(fmt.Sprintf("unknown result type: %T", result))
 		}
-		panic(fmt.Sprintf("unknown result type: %T", result))
 	}
 	// we didn't run across any API results for the source branch
 	return None[Proposal](), false
