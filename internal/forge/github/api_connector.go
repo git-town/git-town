@@ -24,7 +24,6 @@ var (
 // APIConnector provides access to the GitHub API.
 type APIConnector struct {
 	WebConnector
-	cache  forgedomain.ProposalCache
 	client Mutable[github.Client]
 	log    print.Logger
 }
@@ -36,9 +35,6 @@ type APIConnector struct {
 var _ forgedomain.ProposalFinder = apiConnector // type check
 
 func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
-	if proposal := self.cache.BySourceTarget(branch, target); proposal.IsSome() {
-		return proposal, nil
-	}
 	self.log.Start(messages.APIProposalLookupStart)
 	pullRequests, _, err := self.client.Value.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
 		Head:  self.Organization + ":" + branch.String(),
@@ -59,7 +55,6 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 	proposalData := parsePullRequest(pullRequests[0])
 	self.log.Log(fmt.Sprintf("%s (%s)", colors.BoldGreen().Styled("#"+strconv.Itoa(proposalData.Number)), proposalData.Title))
 	proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeGitHub}
-	self.cache.Set(proposal)
 	return Some(proposal), nil
 }
 

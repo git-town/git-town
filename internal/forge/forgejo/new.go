@@ -37,12 +37,16 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:iretur
 		}
 	}
 	if args.APIToken.IsSome() {
-		return APIConnector{
+		apiConnector := APIConnector{
 			APIToken:     args.APIToken,
 			WebConnector: webConnector,
 			_client:      MutableNone[forgejo.Client](),
 			log:          args.Log,
 			remoteURL:    args.RemoteURL,
+		}
+		return &CachedAPIConnector{
+			api:   &apiConnector,
+			cache: forgedomain.ProposalCache{},
 		}
 	}
 	return webConnector

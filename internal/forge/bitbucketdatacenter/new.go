@@ -29,11 +29,15 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:iretur
 		}
 	}
 	if args.UserName.IsSome() && args.AppPassword.IsSome() {
-		return APIConnector{
+		apiConnector := APIConnector{
 			WebConnector: webConnector,
 			log:          args.Log,
 			token:        args.AppPassword.GetOrZero().String(),
 			username:     args.UserName.GetOrZero().String(),
+		}
+		return CachedAPIConnector{
+			api:   apiConnector,
+			cache: forgedomain.ProposalCache{},
 		}
 	}
 	return webConnector
