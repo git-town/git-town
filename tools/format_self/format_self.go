@@ -70,7 +70,6 @@ func shouldIgnorePath(path string) bool {
 		// keep-sorted start
 		path == "internal/cli/dialog/switch_branch.go" ||
 		path == "internal/config/configdomain/offline.go" ||
-		path == "internal/forge/forgedomain/api_cache.go" ||
 		path == "internal/gohacks/slice/natural_sort.go" ||
 		path == "tools/tests_sorted/matcher/matcher.go" ||
 		// keep-sorted end

@@ -24,7 +24,6 @@ func TestAPICache(t *testing.T) {
 					Target: "target",
 					Number: 123,
 				},
-				ForgeType: forgedomain.ForgeTypeGitHub,
 			}
 			cache.RegisterLookupResult("source", "target", Some(proposal))
 			cache.RegisterSearchResult("source", []forgedomain.Proposal{proposal})
@@ -63,7 +62,6 @@ func TestAPICache(t *testing.T) {
 							Number: 123,
 							Title:  "Test PR",
 						},
-						ForgeType: forgedomain.ForgeTypeGitHub,
 					}
 					cache.RegisterLookupResult("source", "target", Some(giveProposal))
 					lookupResult, has := cache.Lookup("source", "target")
@@ -97,7 +95,6 @@ func TestAPICache(t *testing.T) {
 							Number: 123,
 							Title:  "Test PR",
 						},
-						ForgeType: forgedomain.ForgeTypeGitHub,
 					}
 					cache.RegisterLookupResult("other", "target", Some(giveProposal))
 					_, has := cache.Lookup("source", "target")
@@ -114,7 +111,6 @@ func TestAPICache(t *testing.T) {
 							Number: 123,
 							Title:  "Test PR",
 						},
-						ForgeType: forgedomain.ForgeTypeGitHub,
 					}
 					cache.RegisterLookupResult("source", "other", Some(giveProposal))
 					_, has := cache.Lookup("source", "target")
@@ -136,7 +132,6 @@ func TestAPICache(t *testing.T) {
 						Number: 123,
 						Title:  "Test PR",
 					},
-					ForgeType: forgedomain.ForgeTypeGitHub,
 				}
 				cache.RegisterSearchResult("source", []forgedomain.Proposal{proposal1})
 				lookupResult, has := cache.Lookup("source", "target")
@@ -156,7 +151,6 @@ func TestAPICache(t *testing.T) {
 						Number: 123,
 						Title:  "Test PR",
 					},
-					ForgeType: forgedomain.ForgeTypeGitHub,
 				}
 				cache.RegisterSearchResult("source", []forgedomain.Proposal{proposal1})
 				lookupResult, has := cache.Lookup("source", "target")
@@ -184,7 +178,6 @@ func TestAPICache(t *testing.T) {
 					Number: 123,
 					Title:  "Lookup PR",
 				},
-				ForgeType: forgedomain.ForgeTypeGitHub,
 			}
 			searchProposal := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
@@ -193,7 +186,6 @@ func TestAPICache(t *testing.T) {
 					Number: 456,
 					Title:  "Search PR",
 				},
-				ForgeType: forgedomain.ForgeTypeGitHub,
 			}
 			// Register lookup first so it's checked before search result in the loop
 			cache.RegisterLookupResult("source", "target", Some(lookupProposal))
@@ -226,7 +218,6 @@ func TestAPICache(t *testing.T) {
 					Target: "target",
 					Number: 123,
 				},
-				ForgeType: forgedomain.ForgeTypeGitHub,
 			}
 			proposal2 := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
@@ -234,7 +225,6 @@ func TestAPICache(t *testing.T) {
 					Target: "target",
 					Number: 456,
 				},
-				ForgeType: forgedomain.ForgeTypeGitHub,
 			}
 			giveProposals := []forgedomain.Proposal{proposal1, proposal2}
 			cache.RegisterSearchResult("source", giveProposals)
@@ -262,7 +252,6 @@ func TestAPICache(t *testing.T) {
 					Target: "target",
 					Number: 123,
 				},
-				ForgeType: forgedomain.ForgeTypeGitHub,
 			}
 			cache.RegisterLookupResult("source", "target", Some(proposal))
 			_, knows := cache.LookupSearch("source")
@@ -282,7 +271,6 @@ func TestAPICache(t *testing.T) {
 					Target: "target",
 					Number: 123,
 				},
-				ForgeType: forgedomain.ForgeTypeGitHub,
 			}
 			cache.RegisterLookupResult("source", "target", Some(proposal))
 			got, knows := cache.Lookup("source", "target")
@@ -300,7 +288,6 @@ func TestAPICache(t *testing.T) {
 					Number: 123,
 					Title:  "First PR",
 				},
-				ForgeType: forgedomain.ForgeTypeGitHub,
 			}
 			proposal2 := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
@@ -309,7 +296,6 @@ func TestAPICache(t *testing.T) {
 					Number: 456,
 					Title:  "Second PR",
 				},
-				ForgeType: forgedomain.ForgeTypeGitHub,
 			}
 			cache.RegisterLookupResult("source", "target", Some(proposal1))
 			cache.RegisterLookupResult("source", "target", Some(proposal2))
@@ -329,7 +315,6 @@ func TestAPICache(t *testing.T) {
 					Target: "target",
 					Number: 123,
 				},
-				ForgeType: forgedomain.ForgeTypeGitHub,
 			}
 			proposal2 := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
@@ -337,7 +322,6 @@ func TestAPICache(t *testing.T) {
 					Target: "target",
 					Number: 456,
 				},
-				ForgeType: forgedomain.ForgeTypeGitHub,
 			}
 			cache.RegisterLookupResult("source1", "target", Some(proposal1))
 			cache.RegisterLookupResult("source2", "target", Some(proposal2))
@@ -366,7 +350,6 @@ func TestAPICache(t *testing.T) {
 					Target: "target",
 					Number: 123,
 				},
-				ForgeType: forgedomain.ForgeTypeGitHub,
 			}
 			cache.RegisterSearchResult("source", []forgedomain.Proposal{proposal})
 			result, has := cache.LookupSearch("source")
@@ -384,7 +367,6 @@ func TestAPICache(t *testing.T) {
 					Target: "target",
 					Number: 123,
 				},
-				ForgeType: forgedomain.ForgeTypeGitHub,
 			}
 			proposal2 := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
@@ -392,7 +374,6 @@ func TestAPICache(t *testing.T) {
 					Target: "target",
 					Number: 456,
 				},
-				ForgeType: forgedomain.ForgeTypeGitHub,
 			}
 			cache.RegisterSearchResult("source", []forgedomain.Proposal{proposal1})
 			cache.RegisterSearchResult("source", []forgedomain.Proposal{proposal2})
@@ -411,7 +392,6 @@ func TestAPICache(t *testing.T) {
 					Target: "target",
 					Number: 123,
 				},
-				ForgeType: forgedomain.ForgeTypeGitHub,
 			}
 			proposal2 := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
@@ -419,7 +399,6 @@ func TestAPICache(t *testing.T) {
 					Target: "target",
 					Number: 456,
 				},
-				ForgeType: forgedomain.ForgeTypeGitHub,
 			}
 			cache.RegisterSearchResult("source1", []forgedomain.Proposal{proposal1})
 			cache.RegisterSearchResult("source2", []forgedomain.Proposal{proposal2})
