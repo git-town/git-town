@@ -82,7 +82,7 @@ func (self *APICache) LookupSearch(source gitdomain.LocalBranchName) (proposals 
 	return []Proposal{}, false
 }
 
-// SaveLookupResult registers the given result of a lookup operation.
+// RegisterLookupResult registers the given result of a lookup operation.
 func (self *APICache) RegisterLookupResult(source, target gitdomain.LocalBranchName, proposal Option[Proposal]) {
 	self.removeLookupResult(source, target)
 	self.results = append(self.results, lookupResult{
