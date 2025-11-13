@@ -68,8 +68,8 @@ func IsGoFile(path string) bool {
 func shouldIgnorePath(path string) bool {
 	return strings.HasPrefix(path, "vendor/") ||
 		// keep-sorted start
-		path == "internal/config/configdomain/offline.go" ||
 		path == "internal/cli/dialog/switch_branch.go" ||
+		path == "internal/config/configdomain/offline.go" ||
 		path == "internal/gohacks/slice/natural_sort.go" ||
 		path == "tools/tests_sorted/matcher/matcher.go" ||
 		// keep-sorted end
