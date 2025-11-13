@@ -23,7 +23,6 @@ var (
 // APIConnector provides access to the Bitbucket Cloud API.
 type APIConnector struct {
 	WebConnector
-	cache  forgedomain.ProposalCache
 	client Mutable[bitbucket.Client]
 	log    print.Logger
 }
