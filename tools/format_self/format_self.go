@@ -67,8 +67,8 @@ func IsGoFile(path string) bool {
 // shouldIgnorePath indicates whether the file with the given path should be ignored (not formatted).
 func shouldIgnorePath(path string) bool {
 	return strings.HasPrefix(path, "vendor/") ||
-		path == "internal/config/configdomain/offline.go" ||
 		path == "internal/cli/dialog/switch_branch.go" ||
+		path == "internal/config/configdomain/offline.go" ||
 		path == "internal/gohacks/slice/natural_sort.go" ||
 		path == "tools/tests_sorted/matcher/matcher.go" ||
 		strings.HasPrefix(path, "tools/stats_release")
