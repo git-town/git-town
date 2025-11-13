@@ -103,4 +103,3 @@ var _ forgedomain.CredentialVerifier = &cachedAPIConnector
 func (self *CachedAPIConnector) VerifyCredentials() forgedomain.VerifyCredentialsResult {
 	return self.api.VerifyCredentials()
 }
-
