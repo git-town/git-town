@@ -79,7 +79,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 						Backend:  args.Backend,
 						Frontend: args.Frontend,
 					},
-					Cache: forgedomain.ProposalCache{},
+					Cache: forgedomain.APICache{},
 				}
 			}
 		} else {
@@ -107,7 +107,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 						Backend:  args.Backend,
 						Frontend: args.Frontend,
 					},
-					Cache: forgedomain.ProposalCache{},
+					Cache: forgedomain.APICache{},
 				}
 			}
 		} else {

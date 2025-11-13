@@ -16,7 +16,7 @@ var (
 // CachedAPIConnector provides access to the Bitbucket Cloud API while caching proposal information.
 type CachedAPIConnector struct {
 	api   APIConnector
-	cache forgedomain.ProposalCache
+	cache forgedomain.APICache
 }
 
 func (self *CachedAPIConnector) BrowseRepository(runner subshelldomain.Runner) error {

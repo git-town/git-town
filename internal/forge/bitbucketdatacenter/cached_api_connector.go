@@ -16,7 +16,7 @@ var (
 // APIConnector provides access to the Bitbucket DataCenter API.
 type CachedAPIConnector struct {
 	api   APIConnector
-	cache forgedomain.ProposalCache
+	cache forgedomain.APICache
 }
 
 func (self *CachedAPIConnector) BrowseRepository(runner subshelldomain.Runner) error {

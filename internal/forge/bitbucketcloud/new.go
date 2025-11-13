@@ -47,7 +47,7 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint: iretu
 		}
 		return &CachedAPIConnector{
 			api:   apiConnector,
-			cache: forgedomain.ProposalCache{},
+			cache: forgedomain.APICache{},
 		}
 	}
 	return webConnector

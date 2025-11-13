@@ -16,7 +16,7 @@ var (
 // CachedAPIConnector provides access to the GitHub API with caching.
 type CachedAPIConnector struct {
 	api   APIConnector
-	cache forgedomain.ProposalCache
+	cache forgedomain.APICache
 }
 
 func (self *CachedAPIConnector) BrowseRepository(runner subshelldomain.Runner) error {

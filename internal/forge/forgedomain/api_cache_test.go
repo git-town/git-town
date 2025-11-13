@@ -9,7 +9,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestProposalCache(t *testing.T) {
+func TestAPICache(t *testing.T) {
 	t.Parallel()
 
 	t.Run("Clear", func(t *testing.T) {
@@ -17,7 +17,7 @@ func TestProposalCache(t *testing.T) {
 
 		t.Run("removes all cached results", func(t *testing.T) {
 			t.Parallel()
-			cache := &forgedomain.ProposalCache{}
+			cache := &forgedomain.APICache{}
 			proposal := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
 					Source: "source",
@@ -41,7 +41,7 @@ func TestProposalCache(t *testing.T) {
 
 		t.Run("empty cache returns unknown", func(t *testing.T) {
 			t.Parallel()
-			cache := &forgedomain.ProposalCache{}
+			cache := &forgedomain.APICache{}
 			have, has := cache.Lookup("source", "target")
 			must.False(t, has)
 			must.True(t, have.IsNone())
@@ -55,7 +55,7 @@ func TestProposalCache(t *testing.T) {
 
 				t.Run("has proposal", func(t *testing.T) {
 					t.Parallel()
-					cache := &forgedomain.ProposalCache{}
+					cache := &forgedomain.APICache{}
 					giveProposal := forgedomain.Proposal{
 						Data: forgedomain.ProposalData{
 							Source: "source",
@@ -76,7 +76,7 @@ func TestProposalCache(t *testing.T) {
 
 				t.Run("without proposal", func(t *testing.T) {
 					t.Parallel()
-					cache := &forgedomain.ProposalCache{}
+					cache := &forgedomain.APICache{}
 					cache.RegisterLookupResult("source", "target", None[forgedomain.Proposal]())
 					lookupResult, has := cache.Lookup("source", "target")
 					must.True(t, has)
@@ -89,7 +89,7 @@ func TestProposalCache(t *testing.T) {
 
 				t.Run("different source", func(t *testing.T) {
 					t.Parallel()
-					cache := &forgedomain.ProposalCache{}
+					cache := &forgedomain.APICache{}
 					giveProposal := forgedomain.Proposal{
 						Data: forgedomain.ProposalData{
 							Source: "other",
@@ -106,7 +106,7 @@ func TestProposalCache(t *testing.T) {
 
 				t.Run("different target", func(t *testing.T) {
 					t.Parallel()
-					cache := &forgedomain.ProposalCache{}
+					cache := &forgedomain.APICache{}
 					giveProposal := forgedomain.Proposal{
 						Data: forgedomain.ProposalData{
 							Source: "source",
@@ -128,7 +128,7 @@ func TestProposalCache(t *testing.T) {
 
 			t.Run("matching search result that contains the target", func(t *testing.T) {
 				t.Parallel()
-				cache := &forgedomain.ProposalCache{}
+				cache := &forgedomain.APICache{}
 				proposal1 := forgedomain.Proposal{
 					Data: forgedomain.ProposalData{
 						Source: "source",
@@ -148,7 +148,7 @@ func TestProposalCache(t *testing.T) {
 
 			t.Run("matching search result that does not contain the target", func(t *testing.T) {
 				t.Parallel()
-				cache := &forgedomain.ProposalCache{}
+				cache := &forgedomain.APICache{}
 				proposal1 := forgedomain.Proposal{
 					Data: forgedomain.ProposalData{
 						Source: "source",
@@ -166,7 +166,7 @@ func TestProposalCache(t *testing.T) {
 
 			t.Run("matching search result that contains no proposals", func(t *testing.T) {
 				t.Parallel()
-				cache := &forgedomain.ProposalCache{}
+				cache := &forgedomain.APICache{}
 				cache.RegisterSearchResult("source", []forgedomain.Proposal{})
 				lookupResult, has := cache.Lookup("source", "target")
 				must.True(t, has)
@@ -176,7 +176,7 @@ func TestProposalCache(t *testing.T) {
 
 		t.Run("cache contains both lookup and search result", func(t *testing.T) {
 			t.Parallel()
-			cache := &forgedomain.ProposalCache{}
+			cache := &forgedomain.APICache{}
 			lookupProposal := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
 					Source: "source",
@@ -211,7 +211,7 @@ func TestProposalCache(t *testing.T) {
 
 		t.Run("empty cache returns unknown", func(t *testing.T) {
 			t.Parallel()
-			cache := &forgedomain.ProposalCache{}
+			cache := &forgedomain.APICache{}
 			source := gitdomain.NewLocalBranchName("feature")
 			_, knows := cache.LookupSearch(source)
 			must.False(t, knows)
@@ -219,7 +219,7 @@ func TestProposalCache(t *testing.T) {
 
 		t.Run("contains matching search result", func(t *testing.T) {
 			t.Parallel()
-			cache := &forgedomain.ProposalCache{}
+			cache := &forgedomain.APICache{}
 			proposal1 := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
 					Source: "source",
@@ -247,7 +247,7 @@ func TestProposalCache(t *testing.T) {
 
 		t.Run("contains mismatching search result", func(t *testing.T) {
 			t.Parallel()
-			cache := &forgedomain.ProposalCache{}
+			cache := &forgedomain.APICache{}
 			cache.RegisterSearchResult("other", []forgedomain.Proposal{})
 			_, knows := cache.LookupSearch("source")
 			must.False(t, knows)
@@ -255,7 +255,7 @@ func TestProposalCache(t *testing.T) {
 
 		t.Run("ignores lookup results", func(t *testing.T) {
 			t.Parallel()
-			cache := &forgedomain.ProposalCache{}
+			cache := &forgedomain.APICache{}
 			proposal := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
 					Source: "source",
@@ -275,7 +275,7 @@ func TestProposalCache(t *testing.T) {
 
 		t.Run("registers new lookup result", func(t *testing.T) {
 			t.Parallel()
-			cache := &forgedomain.ProposalCache{}
+			cache := &forgedomain.APICache{}
 			proposal := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
 					Source: "source",
@@ -292,7 +292,7 @@ func TestProposalCache(t *testing.T) {
 
 		t.Run("overwrites an existing lookup result", func(t *testing.T) {
 			t.Parallel()
-			cache := &forgedomain.ProposalCache{}
+			cache := &forgedomain.APICache{}
 			proposal1 := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
 					Source: "source",
@@ -322,7 +322,7 @@ func TestProposalCache(t *testing.T) {
 
 		t.Run("registers multiple different source-target pairs", func(t *testing.T) {
 			t.Parallel()
-			cache := &forgedomain.ProposalCache{}
+			cache := &forgedomain.APICache{}
 			proposal1 := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
 					Source: "source1",
@@ -359,7 +359,7 @@ func TestProposalCache(t *testing.T) {
 
 		t.Run("registers new search result", func(t *testing.T) {
 			t.Parallel()
-			cache := &forgedomain.ProposalCache{}
+			cache := &forgedomain.APICache{}
 			proposal := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
 					Source: "source",
@@ -377,7 +377,7 @@ func TestProposalCache(t *testing.T) {
 
 		t.Run("overwrites existing search result", func(t *testing.T) {
 			t.Parallel()
-			cache := &forgedomain.ProposalCache{}
+			cache := &forgedomain.APICache{}
 			proposal1 := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
 					Source: "source",
@@ -404,7 +404,7 @@ func TestProposalCache(t *testing.T) {
 
 		t.Run("registers multiple different sources", func(t *testing.T) {
 			t.Parallel()
-			cache := &forgedomain.ProposalCache{}
+			cache := &forgedomain.APICache{}
 			proposal1 := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
 					Source: "source1",

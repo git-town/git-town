@@ -61,7 +61,7 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 		}
 		return &CachedAPIConnector{
 			api:   apiConnector,
-			cache: forgedomain.ProposalCache{},
+			cache: forgedomain.APICache{},
 		}, nil
 	}
 	return webConnector, nil

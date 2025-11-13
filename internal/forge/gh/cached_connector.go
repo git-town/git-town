@@ -15,7 +15,7 @@ var (
 
 // CachedConnector talks to the GitHub API through the "gh" executable with caching.
 type CachedConnector struct {
-	Cache     forgedomain.ProposalCache
+	Cache     forgedomain.APICache
 	Connector Connector
 }
 

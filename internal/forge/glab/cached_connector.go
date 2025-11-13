@@ -16,7 +16,7 @@ var (
 // CachedConnector provides standardized connectivity for the given repository
 // via the glab CLI with caching.
 type CachedConnector struct {
-	Cache     forgedomain.ProposalCache
+	Cache     forgedomain.APICache
 	Connector Connector
 }
 
