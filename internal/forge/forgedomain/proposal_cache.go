@@ -84,11 +84,8 @@ func (self *ProposalCache) SaveSearchResult(source gitdomain.LocalBranchName, pr
 // If it isn't known whether this branch has proposals, return (empty, false).
 func (self *ProposalCache) Search(source gitdomain.LocalBranchName) (proposals []Proposal, knows bool) {
 	for _, result := range self.results {
-		switch result := result.(type) {
-		case searchResult:
-			if result.source == source {
-				return result.Proposals, true
-			}
+		if result, ok := result.(searchResult); ok && result.source == source {
+			return result.Proposals, true
 		}
 	}
 	return []Proposal{}, false
