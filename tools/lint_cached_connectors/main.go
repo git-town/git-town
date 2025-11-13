@@ -6,7 +6,6 @@ import (
 	"go/parser"
 	"go/token"
 	"os"
-	"path/filepath"
 	"sort"
 	"strings"
 )
@@ -131,12 +130,8 @@ func main() {
 // extractInterfaceImplementations parses a Go file and extracts all interface implementations
 // for the given type name
 func extractInterfaceImplementations(filePath, typeName string) ([]InterfaceImplementation, error) {
-	// Get absolute path from repo root
-	repoRoot := "../.."
-	fullPath := filepath.Join(repoRoot, filePath)
-
 	fileSet := token.NewFileSet()
-	file, err := parser.ParseFile(fileSet, fullPath, nil, parser.ParseComments)
+	file, err := parser.ParseFile(fileSet, filePath, nil, parser.ParseComments)
 	if err != nil {
 		return nil, err
 	}
