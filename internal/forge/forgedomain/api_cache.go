@@ -13,7 +13,9 @@ type APICache struct {
 	results []Result // the cached items
 }
 
-type Result any
+type Result interface {
+	isResult() // for type safety
+}
 
 // the result of a find operation
 type lookupResult struct {
@@ -22,11 +24,15 @@ type lookupResult struct {
 	target   gitdomain.LocalBranchName
 }
 
+func (self lookupResult) isResult() {}
+
 // the result of a search operation
 type searchResult struct {
 	proposals []Proposal
 	source    gitdomain.LocalBranchName
 }
+
+func (self searchResult) isResult() {}
 
 // Clear removes all cached results.
 func (self *APICache) Clear() {
