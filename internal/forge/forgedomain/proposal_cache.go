@@ -98,8 +98,7 @@ func (self *ProposalCache) RegisterSearchResult(source gitdomain.LocalBranchName
 
 func (self *ProposalCache) removeLookupResult(source, target gitdomain.LocalBranchName) {
 	self.results = slices.DeleteFunc(self.results, func(result Result) bool {
-		switch result := result.(type) {
-		case lookupResult:
+		if result, ok := result.(lookupResult); ok {
 			return result.source == source && result.target == target
 		}
 		return false
@@ -108,8 +107,7 @@ func (self *ProposalCache) removeLookupResult(source, target gitdomain.LocalBran
 
 func (self *ProposalCache) removeSearchResult(source gitdomain.LocalBranchName) {
 	self.results = slices.DeleteFunc(self.results, func(result Result) bool {
-		switch result := result.(type) {
-		case searchResult:
+		if result, ok := result.(searchResult); ok {
 			return result.source == source
 		}
 		return false
