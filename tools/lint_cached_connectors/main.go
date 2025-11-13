@@ -6,6 +6,7 @@ import (
 	"go/parser"
 	"go/token"
 	"os"
+	"path/filepath"
 	"sort"
 	"strings"
 )
@@ -28,64 +29,16 @@ type InterfaceImplementation struct {
 }
 
 func main() {
-	// Define connector pairs to check
-	connectorPairs := []ConnectorPair{
-		{
-			Package:      "bitbucketcloud",
-			UncachedFile: "internal/forge/bitbucketcloud/api_connector.go",
-			UncachedType: "APIConnector",
-			CachedFile:   "internal/forge/bitbucketcloud/cached_api_connector.go",
-			CachedType:   "CachedAPIConnector",
-		},
-		{
-			Package:      "bitbucketdatacenter",
-			UncachedFile: "internal/forge/bitbucketdatacenter/api_connector.go",
-			UncachedType: "APIConnector",
-			CachedFile:   "internal/forge/bitbucketdatacenter/cached_api_connector.go",
-			CachedType:   "CachedAPIConnector",
-		},
-		{
-			Package:      "forgejo",
-			UncachedFile: "internal/forge/forgejo/api_connector.go",
-			UncachedType: "APIConnector",
-			CachedFile:   "internal/forge/forgejo/cached_api_connector.go",
-			CachedType:   "CachedAPIConnector",
-		},
-		{
-			Package:      "gitea",
-			UncachedFile: "internal/forge/gitea/api_connector.go",
-			UncachedType: "APIConnector",
-			CachedFile:   "internal/forge/gitea/cached_api_connector.go",
-			CachedType:   "CachedAPIConnector",
-		},
-		{
-			Package:      "github",
-			UncachedFile: "internal/forge/github/api_connector.go",
-			UncachedType: "APIConnector",
-			CachedFile:   "internal/forge/github/cached_api_connector.go",
-			CachedType:   "CachedAPIConnector",
-		},
-		{
-			Package:      "gitlab",
-			UncachedFile: "internal/forge/gitlab/api_connector.go",
-			UncachedType: "APIConnector",
-			CachedFile:   "internal/forge/gitlab/cached_api_connector.go",
-			CachedType:   "CachedAPIConnector",
-		},
-		{
-			Package:      "gh",
-			UncachedFile: "internal/forge/gh/connector.go",
-			UncachedType: "Connector",
-			CachedFile:   "internal/forge/gh/cached_connector.go",
-			CachedType:   "CachedConnector",
-		},
-		{
-			Package:      "glab",
-			UncachedFile: "internal/forge/glab/connector.go",
-			UncachedType: "Connector",
-			CachedFile:   "internal/forge/glab/cached_connector.go",
-			CachedType:   "CachedConnector",
-		},
+	// Discover connector pairs dynamically
+	connectorPairs, err := discoverConnectorPairs("internal/forge")
+	if err != nil {
+		fmt.Printf("Error discovering connector pairs: %v\n", err)
+		os.Exit(1)
+	}
+
+	if len(connectorPairs) == 0 {
+		fmt.Println("No connector pairs found")
+		os.Exit(1)
 	}
 
 	var allErrors []string
@@ -125,6 +78,107 @@ func main() {
 		}
 		os.Exit(1)
 	}
+}
+
+// discoverConnectorPairs scans the forge directory and dynamically discovers
+// all cached/uncached connector pairs
+func discoverConnectorPairs(forgeDir string) ([]ConnectorPair, error) {
+	var pairs []ConnectorPair
+
+	// Walk through all subdirectories in the forge directory
+	entries, err := os.ReadDir(forgeDir)
+	if err != nil {
+		return nil, fmt.Errorf("reading forge directory: %w", err)
+	}
+
+	for _, entry := range entries {
+		if !entry.IsDir() {
+			continue
+		}
+
+		pkgName := entry.Name()
+		pkgPath := filepath.Join(forgeDir, pkgName)
+
+		// Look for cached_*.go files
+		cachedFiles, err := filepath.Glob(filepath.Join(pkgPath, "cached_*.go"))
+		if err != nil {
+			return nil, fmt.Errorf("globbing cached files in %s: %w", pkgPath, err)
+		}
+
+		for _, cachedFile := range cachedFiles {
+			// Extract base name from cached file
+			// e.g., "cached_api_connector.go" -> "api_connector.go"
+			//       "cached_connector.go" -> "connector.go"
+			baseName := filepath.Base(cachedFile)
+			uncachedName := strings.TrimPrefix(baseName, "cached_")
+			uncachedFile := filepath.Join(pkgPath, uncachedName)
+
+			// Check if the uncached file exists
+			if _, err := os.Stat(uncachedFile); os.IsNotExist(err) {
+				continue
+			}
+
+			// Extract type names from the files
+			cachedType, err := extractPrimaryTypeName(cachedFile)
+			if err != nil {
+				return nil, fmt.Errorf("extracting cached type from %s: %w", cachedFile, err)
+			}
+
+			uncachedType, err := extractPrimaryTypeName(uncachedFile)
+			if err != nil {
+				return nil, fmt.Errorf("extracting uncached type from %s: %w", uncachedFile, err)
+			}
+
+			if cachedType != "" && uncachedType != "" {
+				pairs = append(pairs, ConnectorPair{
+					Package:      pkgName,
+					UncachedFile: uncachedFile,
+					UncachedType: uncachedType,
+					CachedFile:   cachedFile,
+					CachedType:   cachedType,
+				})
+			}
+		}
+	}
+
+	// Sort pairs by package name for consistent output
+	sort.Slice(pairs, func(i, j int) bool {
+		return pairs[i].Package < pairs[j].Package
+	})
+
+	return pairs, nil
+}
+
+// extractPrimaryTypeName parses a Go file and extracts the primary struct type name.
+// It looks for the first struct type declaration in the file.
+func extractPrimaryTypeName(filePath string) (string, error) {
+	fileSet := token.NewFileSet()
+	file, err := parser.ParseFile(fileSet, filePath, nil, 0)
+	if err != nil {
+		return "", err
+	}
+
+	// Look for struct type declarations
+	for _, decl := range file.Decls {
+		genDecl, ok := decl.(*ast.GenDecl)
+		if !ok || genDecl.Tok != token.TYPE {
+			continue
+		}
+
+		for _, spec := range genDecl.Specs {
+			typeSpec, ok := spec.(*ast.TypeSpec)
+			if !ok {
+				continue
+			}
+
+			// Check if it's a struct type
+			if _, ok := typeSpec.Type.(*ast.StructType); ok {
+				return typeSpec.Name.Name, nil
+			}
+		}
+	}
+
+	return "", fmt.Errorf("no struct type found in %s", filePath)
 }
 
 // extractInterfaceImplementations parses a Go file and extracts all interface implementations
