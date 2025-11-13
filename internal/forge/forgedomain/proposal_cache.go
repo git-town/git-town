@@ -1,6 +1,7 @@
 package forgedomain
 
 import (
+	"fmt"
 	"slices"
 
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
@@ -47,23 +48,37 @@ func (self *ProposalCache) Lookup(source, target gitdomain.LocalBranchName) (pro
 						return Some(proposal), true
 					}
 				}
-				// here we know that we searched for proposals for the source branch,
+				// here we know that there was a proposal search for the source branch,
 				// and the target branch was not in the result --> we know there is no proposal
 				return None[Proposal](), true
 			}
 		}
+		panic(fmt.Sprintf("unknown result type: %T", result))
 	}
 	// we didn't run across any API results for the source branch
 	return None[Proposal](), false
 }
 
+// LookupSearch provides the cached search result for the given source branch.
+func (self *ProposalCache) LookupSearch(source gitdomain.LocalBranchName) (proposals []Proposal, knows bool) {
+	for _, result := range self.results {
+		if searchResult, ok := result.(searchResult); ok {
+			if searchResult.source == source {
+				return searchResult.Proposals, true
+			}
+		}
+	}
+	return []Proposal{}, false
+}
+
+// Clear removes all cached results.
 func (self *ProposalCache) Clear() {
 	self.results = []Result{}
 }
 
 // SaveLookupResult registers the given result of a lookup operation.
-func (self *ProposalCache) SaveLookupResult(source, target gitdomain.LocalBranchName, proposal Option[Proposal]) {
-	self.deleteLookupResult(source, target)
+func (self *ProposalCache) RegisterLookupResult(source, target gitdomain.LocalBranchName, proposal Option[Proposal]) {
+	self.removeLookupResult(source, target)
 	self.results = append(self.results, lookupResult{
 		source:   source,
 		target:   target,
@@ -71,27 +86,16 @@ func (self *ProposalCache) SaveLookupResult(source, target gitdomain.LocalBranch
 	})
 }
 
-func (self *ProposalCache) SaveSearchResult(source gitdomain.LocalBranchName, proposals []Proposal) {
-	self.deleteSearchResult(source)
+// RegisterSearchResult registers the given result of a search operation.
+func (self *ProposalCache) RegisterSearchResult(source gitdomain.LocalBranchName, proposals []Proposal) {
+	self.removeSearchResult(source)
 	self.results = append(self.results, searchResult{
 		source:    source,
 		Proposals: proposals,
 	})
 }
 
-// Search provides the cached proposals for the given source branch.
-// If it is known that the source branch has no proposals, return (empty, true).
-// If it isn't known whether this branch has proposals, return (empty, false).
-func (self *ProposalCache) Search(source gitdomain.LocalBranchName) (proposals []Proposal, knows bool) {
-	for _, result := range self.results {
-		if result, ok := result.(searchResult); ok && result.source == source {
-			return result.Proposals, true
-		}
-	}
-	return []Proposal{}, false
-}
-
-func (self *ProposalCache) deleteLookupResult(source, target gitdomain.LocalBranchName) {
+func (self *ProposalCache) removeLookupResult(source, target gitdomain.LocalBranchName) {
 	self.results = slices.DeleteFunc(self.results, func(result Result) bool {
 		switch result := result.(type) {
 		case lookupResult:
@@ -101,7 +105,7 @@ func (self *ProposalCache) deleteLookupResult(source, target gitdomain.LocalBran
 	})
 }
 
-func (self *ProposalCache) deleteSearchResult(source gitdomain.LocalBranchName) {
+func (self *ProposalCache) removeSearchResult(source gitdomain.LocalBranchName) {
 	self.results = slices.DeleteFunc(self.results, func(result Result) bool {
 		switch result := result.(type) {
 		case searchResult:

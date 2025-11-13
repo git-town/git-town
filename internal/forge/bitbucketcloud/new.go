@@ -45,7 +45,7 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint: iretu
 			client:       NewMutable(bitbucket.NewBasicAuth(userName.String(), appPassword.String())),
 			log:          args.Log,
 		}
-		return CachedAPIConnector{
+		return &CachedAPIConnector{
 			api:   apiConnector,
 			cache: forgedomain.ProposalCache{},
 		}
