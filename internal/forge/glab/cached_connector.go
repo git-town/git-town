@@ -51,7 +51,7 @@ func (self *CachedConnector) FindProposal(source, target gitdomain.LocalBranchNa
 		return cachedProposal, nil
 	}
 	loadedProposal, err := self.Connector.FindProposal(source, target)
-	if err != nil {
+	if err == nil {
 		self.Cache.RegisterLookupResult(source, target, loadedProposal)
 	}
 	return loadedProposal, err
@@ -68,7 +68,7 @@ func (self *CachedConnector) SearchProposals(source gitdomain.LocalBranchName) (
 		return cachedSearchResult, nil
 	}
 	loadedSearchResult, err := self.Connector.SearchProposals(source)
-	if err != nil {
+	if err == nil {
 		self.Cache.RegisterSearchResult(source, loadedSearchResult)
 	}
 	return loadedSearchResult, err
