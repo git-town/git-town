@@ -59,9 +59,9 @@ func (self *APIConnector) FindProposal(branch, target gitdomain.LocalBranchName)
 		self.log.Success("none")
 		return None[forgedomain.Proposal](), nil
 	case 1:
-		proposal := parsePullRequest(pullRequests[0])
-		self.log.Success(proposal.Target.String())
-		return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeForgejo}), nil
+		proposal := proposalDatas[0]
+		self.log.Success(proposal.Data.Data().Target.String())
+		return Some(proposal), nil
 	default:
 		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(pullRequests), branch, target)
 	}
