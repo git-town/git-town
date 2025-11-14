@@ -197,6 +197,7 @@ UNIT_TEST_DIRS = \
 	./pkg/... \
 	./tools/format_self/... \
 	./tools/format_unittests/... \
+	./tools/lint_cached_connectors/... \
 	./tools/lint_steps/... \
 	./tools/messages_sorted/... \
 	./tools/messy_output/... \
