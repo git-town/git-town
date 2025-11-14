@@ -8,8 +8,5 @@ export function commandSummary(action: textRunner.actions.Args) {
 
 export function extractCommand(text: string): string {
   const match = text.match(/^git town (\w+)/);
-  if (!match) {
-    return "";
-  }
-  return match[1];
+  return match?.[1] ?? "";
 }
