@@ -91,7 +91,7 @@ func (self *CachedAPIConnector) UpdateProposalBody(proposalData forgedomain.Prop
 // update proposal target
 // ============================================================================
 
-// var _ forgedomain.ProposalTargetUpdater = &cachedAPIConnector
+var _ forgedomain.ProposalTargetUpdater = &cachedAPIConnector
 
 func (self *CachedAPIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	self.cache.Clear()
