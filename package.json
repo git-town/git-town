@@ -1,8 +1,11 @@
 {
   "type": "module",
-  "dependencies": {
+  "devDependencies": {
     "gherkin-lint": "4.2.4",
     "text-runner": "7.4.0",
     "textrun-make": "0.6.0"
+  },
+  "scripts": {
+    "test": "tools/rta node --test text-runner/command-summary.test.ts"
   }
 }

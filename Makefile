@@ -211,6 +211,9 @@ unit: install  # runs only the unit tests for changed code
 unit-all: install  # runs all the unit tests
 	env GOGC=off go test -count=1 -shuffle=on -timeout=60s $(UNIT_TEST_DIRS)
 
+unit-text-runner: tools/rta@${RTA_VERSION} node_modules
+	tools/rta node --test text-runner/*.test.ts
+
 unit-race: install  # runs all the unit tests with race detector
 	env GOGC=off go test -count=1 -timeout 60s -race $(UNIT_TEST_DIRS)
 	cd website && make --no-print-directory unit

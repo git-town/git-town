@@ -1,8 +1,15 @@
 import * as textRunner from "text-runner";
 
 export function commandSummary(action: textRunner.actions.Args) {
-  console.log("This is the implementation of the 'command-summary' action.");
-  console.log("Text inside the semantic document region:", action.region.text());
-  console.log("For more information see");
-  console.log("https://github.com/kevgo/text-runner/blob/main/documentation/user-defined-actions.md");
+  // git town append <branch-name> [-p | --prototype] [-d | --detached] [-c | --commit] [-m | --message <message>] [--propose] [--dry-run] [-v | --verbose]
+  const text = action.region.text();
+  const command = extractCommand(text);
+}
+
+export function extractCommand(text: string): string {
+  const match = text.match(/^git town (\w+)/);
+  if (!match) {
+    return "";
+  }
+  return match[1];
 }
