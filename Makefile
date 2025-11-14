@@ -268,7 +268,6 @@ tools/rta@${RTA_VERSION}:
 	@ln -s rta@${RTA_VERSION} tools/rta
 
 node_modules: package-lock.json tools/rta@${RTA_VERSION}
-	test -f node_modules/.yarn-integrity && rm -rf node_modules || true  # remove node_modules if installed with Yarn (TODO: remove after 2025-01-26)
 	@echo "Installing Node based tools"
 	tools/rta npm ci
 	@touch package-lock.json  # update timestamp so that Make doesn't re-install it on every command
