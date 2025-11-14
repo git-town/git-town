@@ -113,9 +113,8 @@ func connectorPairs(dir string) ([]ConnectorPair, error) {
 }
 
 // uncachedFilePath extracts the uncached file path from a cached file path.
-// It removes the "cached_" prefix from the base filename.
-// e.g., "cached_api_connector.go" -> "api_connector.go"
-// or	"cached_connector.go" -> "connector.go"
+// "cached_api_connector.go" -> "api_connector.go"
+// "cached_connector.go" -> "connector.go"
 func uncachedFilePath(cachedFile, pkgPath string) string {
 	baseName := filepath.Base(cachedFile)
 	uncachedName := strings.TrimPrefix(baseName, "cached_")
@@ -130,32 +129,26 @@ func primaryTypeName(filePath string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-
-	// Look for struct type declarations
 	for _, decl := range file.Decls {
 		genDecl, ok := decl.(*ast.GenDecl)
 		if !ok || genDecl.Tok != token.TYPE {
 			continue
 		}
-
 		for _, spec := range genDecl.Specs {
 			typeSpec, ok := spec.(*ast.TypeSpec)
 			if !ok {
 				continue
 			}
-
-			// Check if it's a struct type
 			if _, ok := typeSpec.Type.(*ast.StructType); ok {
 				return typeSpec.Name.Name, nil
 			}
 		}
 	}
-
 	return "", fmt.Errorf("no struct type found in %s", filePath)
 }
 
-// implementedInterfaces parses a Go file and extracts all interface implementations
-// for the given type name
+// implementedInterfaces parses a Go file and extracts all interfaces
+// that the given type name implements
 func implementedInterfaces(filePath, typeName string) ([]InterfaceImplementation, error) {
 	fileSet := token.NewFileSet()
 	file, err := parser.ParseFile(fileSet, filePath, nil, parser.ParseComments)
