@@ -9,6 +9,8 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+
+	"github.com/git-town/git-town/v22/pkg/set"
 )
 
 // ConnectorPair represents a pair of cached and uncached connectors
@@ -155,12 +157,11 @@ func implementedInterfaces(filePath, typeName string) ([]InterfaceImplementation
 	if err != nil {
 		return nil, err
 	}
-
 	var implementations []InterfaceImplementation
 
 	// First, find all variables of our target type
 	// Pattern: var myConnector MyConnectorType
-	typeVars := make(map[string]bool) // variable name -> true
+	typeVars := set.New[string]()
 	for _, decl := range file.Decls {
 		genDecl, ok := decl.(*ast.GenDecl)
 		if !ok || genDecl.Tok != token.VAR {
@@ -176,7 +177,7 @@ func implementedInterfaces(filePath, typeName string) ([]InterfaceImplementation
 			// Check if the type matches our target type
 			if getTypeName(valueSpec.Type) == typeName {
 				for _, name := range valueSpec.Names {
-					typeVars[name.Name] = true
+					typeVars.Add(name.Name)
 				}
 			}
 		}
@@ -204,7 +205,7 @@ func implementedInterfaces(filePath, typeName string) ([]InterfaceImplementation
 				// Check if the value is a variable of our target type
 				// Handle both: varName and &varName
 				valueName := valueVarName(valueSpec.Values[0])
-				if typeVars[valueName] {
+				if typeVars.Contains(valueName) {
 					position := fileSet.Position(valueSpec.Pos())
 					implementations = append(implementations, InterfaceImplementation{
 						Position:      position,
