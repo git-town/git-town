@@ -86,40 +86,29 @@ func connectorPairs(dir string) ([]ConnectorPair, error) {
 		}
 		for _, cachedFile := range cachedFiles {
 			uncachedFile := uncachedFilePath(cachedFile, pkgPath)
-
-			// Check if the uncached file exists
 			if _, err := os.Stat(uncachedFile); os.IsNotExist(err) {
-				continue
+				return nil, fmt.Errorf("uncached file %s does not exist", uncachedFile)
 			}
-
-			// Extract type names from the files
 			cachedType, err := primaryTypeName(cachedFile)
 			if err != nil {
 				return nil, fmt.Errorf("extracting type from %s: %w", cachedFile, err)
 			}
-
 			uncachedType, err := primaryTypeName(uncachedFile)
 			if err != nil {
 				return nil, fmt.Errorf("extracting type from %s: %w", uncachedFile, err)
 			}
-
-			if cachedType != "" && uncachedType != "" {
-				result = append(result, ConnectorPair{
-					CachedFile:   cachedFile,
-					CachedType:   cachedType,
-					Package:      pkgName,
-					UncachedFile: uncachedFile,
-					UncachedType: uncachedType,
-				})
-			}
+			result = append(result, ConnectorPair{
+				CachedFile:   cachedFile,
+				CachedType:   cachedType,
+				Package:      pkgName,
+				UncachedFile: uncachedFile,
+				UncachedType: uncachedType,
+			})
 		}
 	}
-
-	// Sort pairs by package name for consistent output
 	sort.Slice(result, func(i, j int) bool {
 		return result[i].Package < result[j].Package
 	})
-
 	return result, nil
 }
 
