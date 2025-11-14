@@ -13,19 +13,18 @@ import (
 
 // ConnectorPair represents a pair of cached and uncached connectors
 type ConnectorPair struct {
-	CachedFile   string
-	CachedType   string
-	Package      string
-	UncachedFile string
-	UncachedType string
+	CachedFile   string // file path of the cached connector
+	CachedType   string // type name of the cached connector
+	Package      string // package name of the connector pair
+	UncachedFile string // file path of the uncached connector
+	UncachedType string // type name of the uncached connector
 }
 
 // InterfaceImplementation represents a type implementing an interface
 type InterfaceImplementation struct {
-	FilePath      string
-	InterfaceName string
-	LineNumber    int
-	TypeName      string
+	InterfaceName string         // name of the interface that is implemented
+	Position      token.Position // file, line, and column where the interface is implemented
+	TypeName      string         // type of the connector that implements the interface
 }
 
 func main() {
@@ -66,8 +65,8 @@ func main() {
 				pair.CachedType,
 				iface.InterfaceName,
 				pair.UncachedType,
-				pair.UncachedFile,
-				iface.LineNumber,
+				iface.Position.Filename,
+				iface.Position.Line,
 			))
 		}
 	}
@@ -241,9 +240,8 @@ func extractInterfaceImplementations(filePath, typeName string) ([]InterfaceImpl
 				if typeVars[valueName] {
 					position := fileSet.Position(valueSpec.Pos())
 					implementations = append(implementations, InterfaceImplementation{
-						FilePath:      filePath,
+						Position:      position,
 						InterfaceName: interfaceName,
-						LineNumber:    position.Line,
 						TypeName:      typeName,
 					})
 				}
