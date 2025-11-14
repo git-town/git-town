@@ -28,54 +28,42 @@ type InterfaceImplementation struct {
 }
 
 func main() {
-	// Discover connector pairs dynamically
+	if err := check(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+}
+
+func check() error {
 	connectorPairs, err := connectorPairs("internal/forge")
 	if err != nil {
-		fmt.Printf("Error discovering connector pairs: %v\n", err)
-		os.Exit(1)
+		return fmt.Errorf("Error discovering connector pairs: %v\n", err)
 	}
-
 	if len(connectorPairs) == 0 {
-		fmt.Println("No connector pairs found")
-		os.Exit(1)
+		return fmt.Errorf("No connector pairs found")
 	}
-
-	var allErrors []string
-
 	for _, pair := range connectorPairs {
 		uncachedInterfaces, err := implementedInterfaces(pair.UncachedFile, pair.UncachedType)
 		if err != nil {
-			allErrors = append(allErrors, fmt.Sprintf("Error parsing %s: %v", pair.UncachedFile, err))
-			continue
+			return fmt.Errorf("Error parsing %s: %v", pair.UncachedFile, err)
 		}
-
 		cachedInterfaces, err := implementedInterfaces(pair.CachedFile, pair.CachedType)
 		if err != nil {
-			allErrors = append(allErrors, fmt.Sprintf("Error parsing %s: %v", pair.CachedFile, err))
-			continue
+			return fmt.Errorf("Error parsing %s: %v", pair.CachedFile, err)
 		}
-
-		// Check if cached connector implements all interfaces that uncached does
-		missing := missingInterfaces(uncachedInterfaces, cachedInterfaces)
-		for _, iface := range missing {
-			allErrors = append(allErrors, fmt.Sprintf(
+		for _, missing := range missingInterfaces(uncachedInterfaces, cachedInterfaces) {
+			return fmt.Errorf(
 				"%s:1  %s needs to implement %s\nbecause %s implements it in %s:%d",
 				pair.CachedFile,
 				pair.CachedType,
-				iface.InterfaceName,
+				missing.InterfaceName,
 				pair.UncachedType,
-				iface.Position.Filename,
-				iface.Position.Line,
-			))
+				missing.Position.Filename,
+				missing.Position.Line,
+			)
 		}
 	}
-
-	if len(allErrors) > 0 {
-		for _, err := range allErrors {
-			fmt.Println(err)
-		}
-		os.Exit(1)
-	}
+	return nil
 }
 
 // connectorPairs discovers all cached/uncached connector pairs in the given directory
