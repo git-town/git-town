@@ -263,11 +263,8 @@ func missingInterfaces(expected, actual []InterfaceImplementation) []InterfaceIm
 			missing = append(missing, impl)
 		}
 	}
-
-	// Sort for consistent output
 	sort.Slice(missing, func(i, j int) bool {
 		return strings.Compare(missing[i].InterfaceName, missing[j].InterfaceName) < 0
 	})
-
 	return missing
 }
