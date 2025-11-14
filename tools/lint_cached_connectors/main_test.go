@@ -49,7 +49,6 @@ func TestUncachedFilePath(t *testing.T) {
 			want:       "internal/forge/gitlab/cached_connector.go",
 		},
 	}
-
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
