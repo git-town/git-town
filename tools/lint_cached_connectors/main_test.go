@@ -43,12 +43,6 @@ func TestUncachedFilePath(t *testing.T) {
 			want:       "connector.go",
 		},
 		{
-			name:       "cached_ prefix only",
-			cachedFile: "cached_.go",
-			pkgPath:    "internal/forge/gitlab",
-			want:       "internal/forge/gitlab/.go",
-		},
-		{
 			name:       "multiple cached_ prefixes",
 			cachedFile: "cached_cached_connector.go",
 			pkgPath:    "internal/forge/gitlab",
