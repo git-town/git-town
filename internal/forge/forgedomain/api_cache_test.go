@@ -22,7 +22,6 @@ func TestAPICache(t *testing.T) {
 				Data: forgedomain.ProposalData{
 					Source: "source",
 					Target: "target",
-					Number: 123,
 				},
 			}
 			cache.RegisterLookupResult("source", "target", Some(proposal))
@@ -59,7 +58,6 @@ func TestAPICache(t *testing.T) {
 						Data: forgedomain.ProposalData{
 							Source: "source",
 							Target: "target",
-							Number: 123,
 							Title:  "Test PR",
 						},
 					}
@@ -68,7 +66,6 @@ func TestAPICache(t *testing.T) {
 					must.True(t, has)
 					haveProposal, has := lookupResult.Get()
 					must.True(t, has)
-					must.EqOp(t, 123, haveProposal.Data.Data().Number)
 					must.EqOp(t, "Test PR", haveProposal.Data.Data().Title)
 				})
 
@@ -92,8 +89,6 @@ func TestAPICache(t *testing.T) {
 						Data: forgedomain.ProposalData{
 							Source: "other",
 							Target: "target",
-							Number: 123,
-							Title:  "Test PR",
 						},
 					}
 					cache.RegisterLookupResult("other", "target", Some(giveProposal))
@@ -108,8 +103,6 @@ func TestAPICache(t *testing.T) {
 						Data: forgedomain.ProposalData{
 							Source: "source",
 							Target: "other",
-							Number: 123,
-							Title:  "Test PR",
 						},
 					}
 					cache.RegisterLookupResult("source", "other", Some(giveProposal))
@@ -129,7 +122,6 @@ func TestAPICache(t *testing.T) {
 					Data: forgedomain.ProposalData{
 						Source: "source",
 						Target: "target",
-						Number: 123,
 						Title:  "Test PR",
 					},
 				}
@@ -138,7 +130,7 @@ func TestAPICache(t *testing.T) {
 				must.True(t, has)
 				haveProposal, has := lookupResult.Get()
 				must.True(t, has)
-				must.EqOp(t, 123, haveProposal.Data.Data().Number)
+				must.EqOp(t, "Test PR", haveProposal.Data.Data().Title)
 			})
 
 			t.Run("matching search result that does not contain the target", func(t *testing.T) {
@@ -148,8 +140,6 @@ func TestAPICache(t *testing.T) {
 					Data: forgedomain.ProposalData{
 						Source: "source",
 						Target: "other",
-						Number: 123,
-						Title:  "Test PR",
 					},
 				}
 				cache.RegisterSearchResult("source", []forgedomain.Proposal{proposal1})
@@ -175,7 +165,6 @@ func TestAPICache(t *testing.T) {
 				Data: forgedomain.ProposalData{
 					Source: "source",
 					Target: "target",
-					Number: 123,
 					Title:  "Lookup PR",
 				},
 			}
@@ -183,7 +172,6 @@ func TestAPICache(t *testing.T) {
 				Data: forgedomain.ProposalData{
 					Source: "source",
 					Target: "target",
-					Number: 456,
 					Title:  "Search PR",
 				},
 			}
@@ -216,14 +204,14 @@ func TestAPICache(t *testing.T) {
 				Data: forgedomain.ProposalData{
 					Source: "source",
 					Target: "target",
-					Number: 123,
+					Title:  "PR 1",
 				},
 			}
 			proposal2 := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
 					Source: "source",
 					Target: "target",
-					Number: 456,
+					Title:  "PR 2",
 				},
 			}
 			giveProposals := []forgedomain.Proposal{proposal1, proposal2}
@@ -231,8 +219,8 @@ func TestAPICache(t *testing.T) {
 			haveProposals, has := cache.LookupSearch("source")
 			must.True(t, has)
 			must.EqOp(t, 2, len(haveProposals))
-			must.EqOp(t, 123, haveProposals[0].Data.Data().Number)
-			must.EqOp(t, 456, haveProposals[1].Data.Data().Number)
+			must.EqOp(t, "PR 1", haveProposals[0].Data.Data().Title)
+			must.EqOp(t, "PR 2", haveProposals[1].Data.Data().Title)
 		})
 
 		t.Run("contains mismatching search result", func(t *testing.T) {
@@ -250,7 +238,6 @@ func TestAPICache(t *testing.T) {
 				Data: forgedomain.ProposalData{
 					Source: "source",
 					Target: "target",
-					Number: 123,
 				},
 			}
 			cache.RegisterLookupResult("source", "target", Some(proposal))
@@ -269,7 +256,6 @@ func TestAPICache(t *testing.T) {
 				Data: forgedomain.ProposalData{
 					Source: "source",
 					Target: "target",
-					Number: 123,
 				},
 			}
 			cache.RegisterLookupResult("source", "target", Some(proposal))
@@ -285,7 +271,6 @@ func TestAPICache(t *testing.T) {
 				Data: forgedomain.ProposalData{
 					Source: "source",
 					Target: "target",
-					Number: 123,
 					Title:  "First PR",
 				},
 			}
@@ -293,7 +278,6 @@ func TestAPICache(t *testing.T) {
 				Data: forgedomain.ProposalData{
 					Source: "source",
 					Target: "target",
-					Number: 456,
 					Title:  "Second PR",
 				},
 			}
@@ -313,14 +297,14 @@ func TestAPICache(t *testing.T) {
 				Data: forgedomain.ProposalData{
 					Source: "source1",
 					Target: "target",
-					Number: 123,
+					Title:  "First PR",
 				},
 			}
 			proposal2 := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
 					Source: "source2",
 					Target: "target",
-					Number: 456,
+					Title:  "Second PR",
 				},
 			}
 			cache.RegisterLookupResult("source1", "target", Some(proposal1))
@@ -329,12 +313,12 @@ func TestAPICache(t *testing.T) {
 			must.True(t, has1)
 			haveProposal1, has := result1.Get()
 			must.True(t, has)
-			must.EqOp(t, 123, haveProposal1.Data.Data().Number)
+			must.EqOp(t, "First PR", haveProposal1.Data.Data().Title)
 			result2, has := cache.Lookup("source2", "target")
 			must.True(t, has)
 			haveProposal2, has := result2.Get()
 			must.True(t, has)
-			must.EqOp(t, 456, haveProposal2.Data.Data().Number)
+			must.EqOp(t, "Second PR", haveProposal2.Data.Data().Title)
 		})
 	})
 
