@@ -12,4 +12,7 @@ lint:  # runs all linters
 	../rta golangci-lint run
 	../rta deadcode github.com/git-town/git-town/tools/lint_cached_connectors
 
-test: lint fix  # runs the linter
+test: lint unit fix  # runs all tests
+
+unit:  # runs the unit tests
+	@env GOGC=off go test ./...

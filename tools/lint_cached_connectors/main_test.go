@@ -5,6 +5,7 @@ import (
 )
 
 func TestUncachedFilePath(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		name       string
 		cachedFile string
@@ -57,6 +58,7 @@ func TestUncachedFilePath(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			got := uncachedFilePath(tt.cachedFile, tt.pkgPath)
 			if got != tt.want {
 				t.Errorf("uncachedFilePath(%q, %q) = %q, want %q", tt.cachedFile, tt.pkgPath, got, tt.want)
