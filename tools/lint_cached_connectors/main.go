@@ -43,20 +43,20 @@ func main() {
 	var allErrors []string
 
 	for _, pair := range connectorPairs {
-		uncachedInterfaces, err := extractInterfaceImplementations(pair.UncachedFile, pair.UncachedType)
+		uncachedInterfaces, err := implementedInterfaces(pair.UncachedFile, pair.UncachedType)
 		if err != nil {
 			allErrors = append(allErrors, fmt.Sprintf("Error parsing %s: %v", pair.UncachedFile, err))
 			continue
 		}
 
-		cachedInterfaces, err := extractInterfaceImplementations(pair.CachedFile, pair.CachedType)
+		cachedInterfaces, err := implementedInterfaces(pair.CachedFile, pair.CachedType)
 		if err != nil {
 			allErrors = append(allErrors, fmt.Sprintf("Error parsing %s: %v", pair.CachedFile, err))
 			continue
 		}
 
 		// Check if cached connector implements all interfaces that uncached does
-		missing := findMissingInterfaces(uncachedInterfaces, cachedInterfaces)
+		missing := missingInterfaces(uncachedInterfaces, cachedInterfaces)
 		for _, iface := range missing {
 			allErrors = append(allErrors, fmt.Sprintf(
 				"%s:%d: %s does not implement interface %s (implemented by %s in %s:%d)",
@@ -118,12 +118,12 @@ func discoverConnectorPairs(forgeDir string) ([]ConnectorPair, error) {
 			}
 
 			// Extract type names from the files
-			cachedType, err := extractPrimaryTypeName(cachedFile)
+			cachedType, err := primaryTypeName(cachedFile)
 			if err != nil {
 				return nil, fmt.Errorf("extracting cached type from %s: %w", cachedFile, err)
 			}
 
-			uncachedType, err := extractPrimaryTypeName(uncachedFile)
+			uncachedType, err := primaryTypeName(uncachedFile)
 			if err != nil {
 				return nil, fmt.Errorf("extracting uncached type from %s: %w", uncachedFile, err)
 			}
@@ -148,9 +148,9 @@ func discoverConnectorPairs(forgeDir string) ([]ConnectorPair, error) {
 	return pairs, nil
 }
 
-// extractPrimaryTypeName parses a Go file and extracts the primary struct type name.
+// primaryTypeName parses a Go file and extracts the primary struct type name.
 // It looks for the first struct type declaration in the file.
-func extractPrimaryTypeName(filePath string) (string, error) {
+func primaryTypeName(filePath string) (string, error) {
 	fileSet := token.NewFileSet()
 	file, err := parser.ParseFile(fileSet, filePath, nil, 0)
 	if err != nil {
@@ -180,9 +180,9 @@ func extractPrimaryTypeName(filePath string) (string, error) {
 	return "", fmt.Errorf("no struct type found in %s", filePath)
 }
 
-// extractInterfaceImplementations parses a Go file and extracts all interface implementations
+// implementedInterfaces parses a Go file and extracts all interface implementations
 // for the given type name
-func extractInterfaceImplementations(filePath, typeName string) ([]InterfaceImplementation, error) {
+func implementedInterfaces(filePath, typeName string) ([]InterfaceImplementation, error) {
 	fileSet := token.NewFileSet()
 	file, err := parser.ParseFile(fileSet, filePath, nil, parser.ParseComments)
 	if err != nil {
@@ -236,7 +236,7 @@ func extractInterfaceImplementations(filePath, typeName string) ([]InterfaceImpl
 
 				// Check if the value is a variable of our target type
 				// Handle both: varName and &varName
-				valueName := getValueVarName(valueSpec.Values[0])
+				valueName := valueVarName(valueSpec.Values[0])
 				if typeVars[valueName] {
 					position := fileSet.Position(valueSpec.Pos())
 					implementations = append(implementations, InterfaceImplementation{
@@ -270,16 +270,16 @@ func getTypeName(expr ast.Expr) string {
 	}
 }
 
-// getValueVarName extracts the variable name from an expression, handling both
+// valueVarName extracts the variable name from an expression, handling both
 // direct references (varName) and pointer references (&varName)
-func getValueVarName(expr ast.Expr) string {
+func valueVarName(expr ast.Expr) string {
 	switch t := expr.(type) {
 	case *ast.Ident:
 		return t.Name
 	case *ast.UnaryExpr:
 		// Handle &varName
 		if t.Op == token.AND {
-			return getValueVarName(t.X)
+			return valueVarName(t.X)
 		}
 		return ""
 	default:
@@ -287,8 +287,8 @@ func getValueVarName(expr ast.Expr) string {
 	}
 }
 
-// findMissingInterfaces returns interfaces that are in 'expected' but not in 'actual'
-func findMissingInterfaces(expected, actual []InterfaceImplementation) []InterfaceImplementation {
+// missingInterfaces returns interfaces that are in 'expected' but not in 'actual'
+func missingInterfaces(expected, actual []InterfaceImplementation) []InterfaceImplementation {
 	actualSet := make(map[string]bool)
 	for _, impl := range actual {
 		actualSet[impl.InterfaceName] = true
