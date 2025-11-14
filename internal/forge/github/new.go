@@ -54,10 +54,14 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 				return webConnector, fmt.Errorf(messages.GitHubEnterpriseInitializeError, err)
 			}
 		}
-		return APIConnector{
+		apiConnector := APIConnector{
 			WebConnector: webConnector,
 			client:       NewMutable(githubClient),
 			log:          args.Log,
+		}
+		return &CachedAPIConnector{
+			api:   apiConnector,
+			cache: forgedomain.APICache{},
 		}, nil
 	}
 	return webConnector, nil

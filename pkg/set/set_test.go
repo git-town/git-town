@@ -29,6 +29,39 @@ func TestSet(t *testing.T) {
 		must.Eq(t, []int{1, 2, 3}, have.Values())
 	})
 
+	t.Run("Contains", func(t *testing.T) {
+		t.Parallel()
+
+		t.Run("returns false for empty set", func(t *testing.T) {
+			t.Parallel()
+			s := set.New[int]()
+			must.False(t, s.Contains(1))
+		})
+
+		t.Run("returns true when value exists", func(t *testing.T) {
+			t.Parallel()
+			s := set.New(1, 2, 3)
+			must.True(t, s.Contains(1))
+			must.True(t, s.Contains(2))
+			must.True(t, s.Contains(3))
+		})
+
+		t.Run("returns false when value does not exist", func(t *testing.T) {
+			t.Parallel()
+			s := set.New(1, 2, 3)
+			must.False(t, s.Contains(4))
+			must.False(t, s.Contains(0))
+		})
+
+		t.Run("works with string type", func(t *testing.T) {
+			t.Parallel()
+			s := set.New("a", "b", "c")
+			must.True(t, s.Contains("a"))
+			must.True(t, s.Contains("b"))
+			must.False(t, s.Contains("d"))
+		})
+	})
+
 	t.Run("New", func(t *testing.T) {
 		t.Parallel()
 

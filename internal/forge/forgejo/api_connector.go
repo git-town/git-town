@@ -53,16 +53,17 @@ func (self *APIConnector) FindProposal(branch, target gitdomain.LocalBranchName)
 		return None[forgedomain.Proposal](), err
 	}
 	pullRequests := FilterPullRequests(openPullRequests, branch, target)
-	switch len(pullRequests) {
+	proposalDatas := parsePullRequests(pullRequests)
+	switch len(proposalDatas) {
 	case 0:
 		self.log.Success("none")
 		return None[forgedomain.Proposal](), nil
 	case 1:
-		proposal := parsePullRequest(pullRequests[0])
-		self.log.Success(proposal.Target.String())
-		return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeForgejo}), nil
+		proposal := proposalDatas[0]
+		self.log.Success(proposal.Data.Data().Target.String())
+		return Some(proposal), nil
 	default:
-		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(pullRequests), branch, target)
+		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(proposalDatas), branch, target)
 	}
 }
 
@@ -253,4 +254,14 @@ func parsePullRequest(pullRequest *forgejo.PullRequest) forgedomain.ProposalData
 		Body:         NewOption(pullRequest.Body),
 		URL:          pullRequest.HTMLURL,
 	}
+}
+
+func parsePullRequests(pullRequests []*forgejo.PullRequest) []forgedomain.Proposal {
+	result := []forgedomain.Proposal{}
+	for _, pullRequest := range pullRequests {
+		proposalData := parsePullRequest(pullRequest)
+		proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeForgejo}
+		result = append(result, proposal)
+	}
+	return result
 }

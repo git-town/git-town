@@ -52,9 +52,10 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 	if len(pullRequests) > 1 {
 		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(pullRequests), branch, target)
 	}
-	proposal := parsePullRequest(pullRequests[0])
-	self.log.Log(fmt.Sprintf("%s (%s)", colors.BoldGreen().Styled("#"+strconv.Itoa(proposal.Number)), proposal.Title))
-	return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeGitHub}), nil
+	proposalData := parsePullRequest(pullRequests[0])
+	self.log.Log(fmt.Sprintf("%s (%s)", colors.BoldGreen().Styled("#"+strconv.Itoa(proposalData.Number)), proposalData.Title))
+	proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeGitHub}
+	return Some(proposal), nil
 }
 
 // ============================================================================
