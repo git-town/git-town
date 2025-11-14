@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"go/ast"
 	"go/parser"
@@ -39,19 +40,19 @@ func main() {
 func check() error {
 	connectorPairs, err := connectorPairs("internal/forge")
 	if err != nil {
-		return fmt.Errorf("Error discovering connector pairs: %v\n", err)
+		return fmt.Errorf("Error discovering connector pairs: %w\n", err)
 	}
 	if len(connectorPairs) == 0 {
-		return fmt.Errorf("No connector pairs found")
+		return errors.New("No connector pairs found")
 	}
 	for _, pair := range connectorPairs {
 		uncachedInterfaces, err := implementedInterfaces(pair.UncachedFile, pair.UncachedType)
 		if err != nil {
-			return fmt.Errorf("Error parsing %s: %v", pair.UncachedFile, err)
+			return fmt.Errorf("Error parsing %s: %w", pair.UncachedFile, err)
 		}
 		cachedInterfaces, err := implementedInterfaces(pair.CachedFile, pair.CachedType)
 		if err != nil {
-			return fmt.Errorf("Error parsing %s: %v", pair.CachedFile, err)
+			return fmt.Errorf("Error parsing %s: %w", pair.CachedFile, err)
 		}
 		for _, missing := range missingInterfaces(uncachedInterfaces, cachedInterfaces) {
 			return fmt.Errorf(
