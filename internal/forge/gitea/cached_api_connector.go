@@ -15,7 +15,7 @@ var (
 
 // CachedAPIConnector provides access to the Gitea API with caching.
 type CachedAPIConnector struct {
-	api   *AuthConnector
+	api   AuthConnector
 	cache forgedomain.APICache
 }
 

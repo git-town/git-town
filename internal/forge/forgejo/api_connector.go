@@ -63,7 +63,7 @@ func (self *APIConnector) FindProposal(branch, target gitdomain.LocalBranchName)
 		self.log.Success(proposal.Data.Data().Target.String())
 		return Some(proposal), nil
 	default:
-		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(pullRequests), branch, target)
+		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(proposalDatas), branch, target)
 	}
 }
 

@@ -45,7 +45,7 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:iretur
 			log:          args.Log,
 		}
 		return &CachedAPIConnector{
-			api:   &authConnector,
+			api:   authConnector,
 			cache: forgedomain.APICache{},
 		}
 	}
