@@ -167,14 +167,11 @@ func implementedInterfaces(filePath, typeName string) ([]InterfaceImplementation
 		if !ok || genDecl.Tok != token.VAR {
 			continue
 		}
-
 		for _, spec := range genDecl.Specs {
 			valueSpec, ok := spec.(*ast.ValueSpec)
 			if !ok || valueSpec.Type == nil {
 				continue
 			}
-
-			// Check if the type matches our target type
 			if getTypeName(valueSpec.Type) == typeName {
 				for _, name := range valueSpec.Names {
 					typeVars.Add(name.Name)
@@ -190,7 +187,6 @@ func implementedInterfaces(filePath, typeName string) ([]InterfaceImplementation
 		if !ok || genDecl.Tok != token.VAR {
 			continue
 		}
-
 		for _, spec := range genDecl.Specs {
 			valueSpec, ok := spec.(*ast.ValueSpec)
 			if !ok {
@@ -216,7 +212,6 @@ func implementedInterfaces(filePath, typeName string) ([]InterfaceImplementation
 			}
 		}
 	}
-
 	return implementations, nil
 }
 
