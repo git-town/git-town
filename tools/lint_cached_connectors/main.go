@@ -80,35 +80,24 @@ func main() {
 
 // connectorPairs discovers all cached/uncached connector pairs in the given directory
 func connectorPairs(dir string) ([]ConnectorPair, error) {
-	var pairs []ConnectorPair
-
-	// Walk through all subdirectories in the given directory
+	var result []ConnectorPair
 	entries, err := os.ReadDir(dir)
 	if err != nil {
 		return nil, fmt.Errorf("reading %s: %w", dir, err)
 	}
-
 	for _, entry := range entries {
 		if !entry.IsDir() {
 			continue
 		}
-
 		pkgName := entry.Name()
 		pkgPath := filepath.Join(dir, pkgName)
-
-		// Look for cached_*.go files
-		cachedFiles, err := filepath.Glob(filepath.Join(pkgPath, "cached_*.go"))
+		globPattern := filepath.Join(pkgPath, "cached_*.go")
+		cachedFiles, err := filepath.Glob(globPattern)
 		if err != nil {
-			return nil, fmt.Errorf("globbing %s: %w", pkgPath, err)
+			return nil, fmt.Errorf("globbing %s in %s: %w", globPattern, pkgPath, err)
 		}
-
 		for _, cachedFile := range cachedFiles {
-			// Extract base name from cached file
-			// e.g., "cached_api_connector.go" -> "api_connector.go"
-			//       "cached_connector.go" -> "connector.go"
-			baseName := filepath.Base(cachedFile)
-			uncachedName := strings.TrimPrefix(baseName, "cached_")
-			uncachedFile := filepath.Join(pkgPath, uncachedName)
+			uncachedFile := uncachedFilePath(cachedFile, pkgPath)
 
 			// Check if the uncached file exists
 			if _, err := os.Stat(uncachedFile); os.IsNotExist(err) {
@@ -127,7 +116,7 @@ func connectorPairs(dir string) ([]ConnectorPair, error) {
 			}
 
 			if cachedType != "" && uncachedType != "" {
-				pairs = append(pairs, ConnectorPair{
+				result = append(result, ConnectorPair{
 					CachedFile:   cachedFile,
 					CachedType:   cachedType,
 					Package:      pkgName,
@@ -139,11 +128,21 @@ func connectorPairs(dir string) ([]ConnectorPair, error) {
 	}
 
 	// Sort pairs by package name for consistent output
-	sort.Slice(pairs, func(i, j int) bool {
-		return pairs[i].Package < pairs[j].Package
+	sort.Slice(result, func(i, j int) bool {
+		return result[i].Package < result[j].Package
 	})
 
-	return pairs, nil
+	return result, nil
+}
+
+// uncachedFilePath extracts the uncached file path from a cached file path.
+// It removes the "cached_" prefix from the base filename.
+// e.g., "cached_api_connector.go" -> "api_connector.go"
+// or	"cached_connector.go" -> "connector.go"
+func uncachedFilePath(cachedFile, pkgPath string) string {
+	baseName := filepath.Base(cachedFile)
+	uncachedName := strings.TrimPrefix(baseName, "cached_")
+	return filepath.Join(pkgPath, uncachedName)
 }
 
 // primaryTypeName parses a Go file and extracts the primary struct type name.
