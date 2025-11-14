@@ -221,8 +221,8 @@ update: tools/rta@${RTA_VERSION}  # updates all dependencies
 	go mod tidy
 	go work vendor
 	rm -rf node_modules package-lock.json
-	cd tools && ./rta npx -y npm-check-updates -u
-	cd tools && ./rta npm install
+	tools/rta npx -y npm-check-updates -u
+	tools/rta npm install
 	tools/rta --update
 	tools/rta dprint config update
 	tools/rta dprint config update --config dprint-changelog.json
