@@ -62,9 +62,10 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 		self.log.Success("no PR found matching source and target branch")
 		return None[forgedomain.Proposal](), nil
 	}
-	proposal := parsePullRequest(*needle, self.RepositoryURL())
-	self.log.Success(fmt.Sprintf("#%d", proposal.Number))
-	return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeBitbucketDatacenter}), nil
+	proposalData := parsePullRequest(*needle, self.RepositoryURL())
+	self.log.Success(fmt.Sprintf("#%d", proposalData.Number))
+	proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeBitbucketDatacenter}
+	return Some(proposal), nil
 }
 
 // ============================================================================
