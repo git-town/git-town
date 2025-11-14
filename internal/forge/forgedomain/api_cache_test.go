@@ -332,14 +332,14 @@ func TestAPICache(t *testing.T) {
 				Data: forgedomain.ProposalData{
 					Source: "source",
 					Target: "target",
-					Number: 123,
+					Title:  "PR 1",
 				},
 			}
 			cache.RegisterSearchResult("source", []forgedomain.Proposal{proposal})
 			result, has := cache.LookupSearch("source")
 			must.True(t, has)
 			must.EqOp(t, 1, len(result))
-			must.EqOp(t, 123, result[0].Data.Data().Number)
+			must.EqOp(t, "PR 1", result[0].Data.Data().Title)
 		})
 
 		t.Run("overwrites existing search result", func(t *testing.T) {
@@ -349,14 +349,14 @@ func TestAPICache(t *testing.T) {
 				Data: forgedomain.ProposalData{
 					Source: "source",
 					Target: "target",
-					Number: 123,
+					Title:  "First PR",
 				},
 			}
 			proposal2 := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
 					Source: "source",
 					Target: "target",
-					Number: 456,
+					Title:  "Second PR",
 				},
 			}
 			cache.RegisterSearchResult("source", []forgedomain.Proposal{proposal1})
@@ -364,7 +364,7 @@ func TestAPICache(t *testing.T) {
 			haveProposals, has := cache.LookupSearch("source")
 			must.True(t, has)
 			must.EqOp(t, 1, len(haveProposals))
-			must.EqOp(t, 456, haveProposals[0].Data.Data().Number)
+			must.EqOp(t, "Second PR", haveProposals[0].Data.Data().Title)
 		})
 
 		t.Run("registers multiple different sources", func(t *testing.T) {
@@ -374,14 +374,14 @@ func TestAPICache(t *testing.T) {
 				Data: forgedomain.ProposalData{
 					Source: "source1",
 					Target: "target",
-					Number: 123,
+					Title:  "First PR",
 				},
 			}
 			proposal2 := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
 					Source: "source2",
 					Target: "target",
-					Number: 456,
+					Title:  "Second PR",
 				},
 			}
 			cache.RegisterSearchResult("source1", []forgedomain.Proposal{proposal1})
@@ -389,11 +389,11 @@ func TestAPICache(t *testing.T) {
 			haveProposals1, has := cache.LookupSearch("source1")
 			must.True(t, has)
 			must.EqOp(t, 1, len(haveProposals1))
-			must.EqOp(t, 123, haveProposals1[0].Data.Data().Number)
+			must.EqOp(t, "First PR", haveProposals1[0].Data.Data().Title)
 			haveProposals2, has := cache.LookupSearch("source2")
 			must.True(t, has)
 			must.EqOp(t, 1, len(haveProposals2))
-			must.EqOp(t, 456, haveProposals2[0].Data.Data().Number)
+			must.EqOp(t, "Second PR", haveProposals2[0].Data.Data().Title)
 		})
 	})
 }
