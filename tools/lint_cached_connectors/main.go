@@ -256,7 +256,6 @@ func missingInterfaces(expected, actual []InterfaceImplementation) []InterfaceIm
 	for _, impl := range actual {
 		actualSet[impl.InterfaceName] = true
 	}
-
 	var missing []InterfaceImplementation
 	for _, impl := range expected {
 		if !actualSet[impl.InterfaceName] {
