@@ -50,7 +50,7 @@ cukewin: install  # runs all end-to-end tests on Windows
 dependencies: tools/rta@${RTA_VERSION}  # prints the dependencies between the internal Go packages
 	@tools/rta depth . | grep git-town
 
-docs: install tools/node_modules  # tests the documentation
+docs: install node_modules  # tests the documentation
 	@tools/rta node node_modules/.bin/text-runner --offline
 
 fix: tools/rta@${RTA_VERSION}  # runs all linters and auto-fixes
@@ -267,7 +267,7 @@ tools/rta@${RTA_VERSION}:
 	@mv tools/rta tools/rta@${RTA_VERSION}
 	@ln -s rta@${RTA_VERSION} tools/rta
 
-node_modules: tools/package-lock.json tools/rta@${RTA_VERSION}
+node_modules: package-lock.json tools/rta@${RTA_VERSION}
 	test -f node_modules/.yarn-integrity && rm -rf node_modules || true  # remove node_modules if installed with Yarn (TODO: remove after 2025-01-26)
 	@echo "Installing Node based tools"
 	tools/rta npm ci
