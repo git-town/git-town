@@ -1,7 +1,6 @@
 package main
 
 import (
-	"path/filepath"
 	"testing"
 )
 
@@ -16,43 +15,43 @@ func TestUncachedFilePath(t *testing.T) {
 			name:       "cached_api_connector.go",
 			cachedFile: "cached_api_connector.go",
 			pkgPath:    "internal/forge/gitlab",
-			want:       filepath.Join("internal/forge/gitlab", "api_connector.go"),
+			want:       "internal/forge/gitlab/api_connector.go",
 		},
 		{
 			name:       "cached_connector.go",
 			cachedFile: "cached_connector.go",
 			pkgPath:    "internal/forge/glab",
-			want:       filepath.Join("internal/forge/glab", "connector.go"),
+			want:       "internal/forge/glab/connector.go",
 		},
 		{
 			name:       "full path with cached_api_connector.go",
 			cachedFile: "/home/user/project/internal/forge/gitlab/cached_api_connector.go",
 			pkgPath:    "internal/forge/gitlab",
-			want:       filepath.Join("internal/forge/gitlab", "api_connector.go"),
+			want:       "internal/forge/gitlab/api_connector.go",
 		},
 		{
 			name:       "file without cached_ prefix",
 			cachedFile: "api_connector.go",
 			pkgPath:    "internal/forge/gitlab",
-			want:       filepath.Join("internal/forge/gitlab", "api_connector.go"),
+			want:       "internal/forge/gitlab/api_connector.go",
 		},
 		{
 			name:       "empty package path",
 			cachedFile: "cached_connector.go",
 			pkgPath:    "",
-			want:       filepath.Join("", "connector.go"),
+			want:       "connector.go",
 		},
 		{
 			name:       "cached_ prefix only",
 			cachedFile: "cached_.go",
 			pkgPath:    "internal/forge/gitlab",
-			want:       filepath.Join("internal/forge/gitlab", ".go"),
+			want:       "internal/forge/gitlab/.go",
 		},
 		{
 			name:       "multiple cached_ prefixes",
 			cachedFile: "cached_cached_connector.go",
 			pkgPath:    "internal/forge/gitlab",
-			want:       filepath.Join("internal/forge/gitlab", "cached_connector.go"),
+			want:       "internal/forge/gitlab/cached_connector.go",
 		},
 	}
 
