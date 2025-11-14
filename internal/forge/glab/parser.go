@@ -3,7 +3,6 @@ package glab
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"regexp"
 
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
@@ -13,16 +12,17 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-func ParseJSONOutput(output string, branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func ParseJSONOutput(output string) ([]forgedomain.Proposal, error) {
 	var parsed []jsonData
 	err := json.Unmarshal([]byte(output), &parsed)
 	if err != nil || len(parsed) == 0 {
-		return None[forgedomain.Proposal](), err
+		return []forgedomain.Proposal{}, err
 	}
-	if len(parsed) > 1 {
-		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(parsed), branch)
+	result := make([]forgedomain.Proposal, len(parsed))
+	for d, data := range parsed {
+		result[d] = createProposal(data)
 	}
-	return Some(createProposal(parsed[0])), nil
+	return result, nil
 }
 
 func ParsePermissionsOutput(output string) forgedomain.VerifyCredentialsResult {
@@ -51,6 +51,7 @@ type jsonData struct {
 	Mergeable    string `json:"detailed_merge_status"` //nolint:tagliatelle
 	Number       int    `json:"iid"`                   //nolint:tagliatelle
 	SourceBranch string `json:"source_branch"`         //nolint:tagliatelle
+	State        string `json:"state"`                 //nolint:tagliatelle
 	TargetBranch string `json:"target_branch"`         //nolint:tagliatelle
 	Title        string `json:"title"`
 	URL          string `json:"web_url"` //nolint:tagliatelle
@@ -59,6 +60,7 @@ type jsonData struct {
 func createProposal(data jsonData) forgedomain.Proposal {
 	return forgedomain.Proposal{
 		Data: forgedomain.ProposalData{
+			Active:       data.State == "open",
 			Body:         NewOption(data.Description),
 			MergeWithAPI: data.Mergeable == "mergeable",
 			Number:       data.Number,

@@ -9,6 +9,7 @@ tools/depth*
 tools/gofumpt*
 tools/golangci_lint*
 tools/iterate_map/iterate_map*
+tools/lint_cached_connectors/lint_cached_connectors*
 tools/lint_steps/lint_steps
 tools/messages_sorted/messages_sorted
 tools/messy_output/messy_output

@@ -29,6 +29,7 @@ func FilterPullRequests2(pullRequests []*gitea.PullRequest, branch gitdomain.Loc
 
 func parsePullRequest(pullRequest *gitea.PullRequest) forgedomain.ProposalData {
 	return forgedomain.ProposalData{
+		Active:       pullRequest.State == "open",
 		MergeWithAPI: pullRequest.Mergeable,
 		Number:       int(pullRequest.Index),
 		Source:       gitdomain.NewLocalBranchName(pullRequest.Head.Ref),

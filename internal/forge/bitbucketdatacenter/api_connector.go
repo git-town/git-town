@@ -62,9 +62,10 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 		self.log.Success("no PR found matching source and target branch")
 		return None[forgedomain.Proposal](), nil
 	}
-	proposal := parsePullRequest(*needle, self.RepositoryURL())
-	self.log.Success(fmt.Sprintf("#%d", proposal.Number))
-	return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeBitbucketDatacenter}), nil
+	proposalData := parsePullRequest(*needle, self.RepositoryURL())
+	self.log.Success(fmt.Sprintf("#%d", proposalData.Number))
+	proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeBitbucketDatacenter}
+	return Some(proposal), nil
 }
 
 // ============================================================================
@@ -73,7 +74,7 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 
 var _ forgedomain.ProposalSearcher = apiConnector // type check
 
-func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	ctx := context.TODO()
 	fromRefID := fmt.Sprintf("refs/heads/%v", branch)
@@ -84,26 +85,21 @@ func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Optio
 		Fetch(ctx)
 	if err != nil {
 		self.log.Failed(err.Error())
-		return None[forgedomain.Proposal](), err
+		return []forgedomain.Proposal{}, err
 	}
-	if len(resp.Values) == 0 {
-		self.log.Success("none")
-		return None[forgedomain.Proposal](), nil
-	}
-	var needle *PullRequest
+	result := []forgedomain.Proposal{}
 	for _, pr := range resp.Values {
 		if pr.FromRef.ID == fromRefID {
-			needle = &pr
-			break
+			proposalData := parsePullRequest(pr, self.RepositoryURL())
+			self.log.Success(fmt.Sprintf("#%d ", proposalData.Number))
+			proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeBitbucketDatacenter}
+			result = append(result, proposal)
 		}
 	}
-	if needle == nil {
-		self.log.Success("no PR found matching source branch")
-		return None[forgedomain.Proposal](), nil
+	if len(result) == 0 {
+		self.log.Success("none")
 	}
-	proposal := parsePullRequest(*needle, self.RepositoryURL())
-	self.log.Success(fmt.Sprintf("#%d", proposal.Number))
-	return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeBitbucketDatacenter}), nil
+	return result, nil
 }
 
 func (self APIConnector) apiBaseURL() string {

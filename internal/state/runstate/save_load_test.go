@@ -55,7 +55,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.BranchCreateAndCheckoutExistingParent{Ancestors: gitdomain.NewLocalBranchNames("one", "two", "three"), Branch: "branch"},
 				&opcodes.BranchCurrentReset{Base: "branch"},
 				&opcodes.BranchCurrentResetToParent{CurrentBranch: "branch"},
-				&opcodes.BranchCurrentResetToSHA{SetToSHA: "111111"},
+				&opcodes.BranchCurrentResetToSHA{SHA: "111111"},
 				&opcodes.BranchCurrentResetToSHAIfNeeded{MustHaveSHA: "222222", SetToSHA: "111111"},
 				&opcodes.BranchEnsureShippableChanges{Branch: "branch", Parent: "parent"},
 				&opcodes.BranchLocalDelete{Branch: "branch"},
@@ -93,7 +93,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.ConflictMergePhantomFinalize{},
 				&opcodes.ConflictMergePhantomResolveAll{CurrentBranch: "current", ParentBranch: gitdomain.NewLocalBranchNameOption("parent"), ParentSHA: Some(gitdomain.NewSHA("123456"))},
 				&opcodes.ConflictResolve{FilePath: "file", Resolution: gitdomain.ConflictResolutionOurs},
-				&opcodes.ConnectorProposalMerge{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Proposal: forgedomain.Proposal{Data: forgedomain.BitbucketCloudProposalData{ProposalData: forgedomain.ProposalData{Body: Some("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}}, ForgeType: forgedomain.ForgeTypeBitbucket}},
+				&opcodes.ConnectorProposalMerge{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Proposal: forgedomain.Proposal{Data: forgedomain.BitbucketCloudProposalData{ProposalData: forgedomain.ProposalData{Active: true, Body: Some("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}}, ForgeType: forgedomain.ForgeTypeBitbucket}},
 				&opcodes.ExecuteShellCommand{Args: []string{"arg1", "arg2"}, Executable: "executable"},
 				&opcodes.ExitToShell{},
 				&opcodes.FetchUpstream{Branch: "branch"},
@@ -114,9 +114,9 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.MessageQueue{Message: "message"},
 				&opcodes.ProgramEndOfBranch{},
 				&opcodes.ProposalCreate{Branch: "branch", MainBranch: "main"},
-				&opcodes.ProposalUpdateTarget{Proposal: forgedomain.Proposal{Data: forgedomain.ProposalData{Body: Some("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, ForgeType: forgedomain.ForgeTypeGitLab}, NewBranch: "new-target", OldBranch: "old-target"},
-				&opcodes.ProposalUpdateTargetToGrandParent{Branch: "branch", Proposal: forgedomain.Proposal{Data: forgedomain.ProposalData{Body: Some("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, ForgeType: forgedomain.ForgeTypeGitea}, OldTarget: "old-target"},
-				&opcodes.ProposalUpdateSource{Proposal: forgedomain.Proposal{Data: forgedomain.ProposalData{Body: None[string](), MergeWithAPI: false, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, ForgeType: forgedomain.ForgeTypeForgejo}, NewBranch: "new-target", OldBranch: "old-target"},
+				&opcodes.ProposalUpdateTarget{Proposal: forgedomain.Proposal{Data: forgedomain.ProposalData{Active: true, Body: Some("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, ForgeType: forgedomain.ForgeTypeGitLab}, NewBranch: "new-target", OldBranch: "old-target"},
+				&opcodes.ProposalUpdateTargetToGrandParent{Branch: "branch", Proposal: forgedomain.Proposal{Data: forgedomain.ProposalData{Active: true, Body: Some("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, ForgeType: forgedomain.ForgeTypeGitea}, OldTarget: "old-target"},
+				&opcodes.ProposalUpdateSource{Proposal: forgedomain.Proposal{Data: forgedomain.ProposalData{Active: true, Body: None[string](), MergeWithAPI: false, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, ForgeType: forgedomain.ForgeTypeForgejo}, NewBranch: "new-target", OldBranch: "old-target"},
 				&opcodes.PullCurrentBranch{},
 				&opcodes.PushCurrentBranch{},
 				&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
@@ -208,7 +208,7 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "SetToSHA": "111111"
+        "SHA": "111111"
       },
       "type": "BranchCurrentResetToSHA"
     },
@@ -451,6 +451,7 @@ func TestLoadSave(t *testing.T) {
         "CommitMessage": "commit message",
         "Proposal": {
           "data": {
+            "Active": true,
             "Body": "body",
             "MergeWithAPI": true,
             "Number": 123,
@@ -607,6 +608,7 @@ func TestLoadSave(t *testing.T) {
         "OldBranch": "old-target",
         "Proposal": {
           "data": {
+            "Active": true,
             "Body": "body",
             "MergeWithAPI": true,
             "Number": 123,
@@ -626,6 +628,7 @@ func TestLoadSave(t *testing.T) {
         "OldTarget": "old-target",
         "Proposal": {
           "data": {
+            "Active": true,
             "Body": "body",
             "MergeWithAPI": true,
             "Number": 123,
@@ -645,6 +648,7 @@ func TestLoadSave(t *testing.T) {
         "OldBranch": "old-target",
         "Proposal": {
           "data": {
+            "Active": true,
             "Body": null,
             "MergeWithAPI": false,
             "Number": 123,

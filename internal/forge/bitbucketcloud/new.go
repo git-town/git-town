@@ -40,10 +40,14 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint: iretu
 	userName, hasUserName := args.UserName.Get()
 	appPassword, hasAppPassword := args.AppPassword.Get()
 	if hasUserName && hasAppPassword {
-		return APIConnector{
+		apiConnector := APIConnector{
 			WebConnector: webConnector,
 			client:       NewMutable(bitbucket.NewBasicAuth(userName.String(), appPassword.String())),
 			log:          args.Log,
+		}
+		return &CachedAPIConnector{
+			api:   apiConnector,
+			cache: forgedomain.APICache{},
 		}
 	}
 	return webConnector

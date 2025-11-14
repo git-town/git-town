@@ -53,16 +53,17 @@ func (self *APIConnector) FindProposal(branch, target gitdomain.LocalBranchName)
 		return None[forgedomain.Proposal](), err
 	}
 	pullRequests := FilterPullRequests(openPullRequests, branch, target)
-	switch len(pullRequests) {
+	proposalDatas := parsePullRequests(pullRequests)
+	switch len(proposalDatas) {
 	case 0:
 		self.log.Success("none")
 		return None[forgedomain.Proposal](), nil
 	case 1:
-		proposal := parsePullRequest(pullRequests[0])
-		self.log.Success(proposal.Target.String())
-		return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeForgejo}), nil
+		proposal := proposalDatas[0]
+		self.log.Success(proposal.Data.Data().Target.String())
+		return Some(proposal), nil
 	default:
-		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(pullRequests), branch, target)
+		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(proposalDatas), branch, target)
 	}
 }
 
@@ -72,11 +73,11 @@ func (self *APIConnector) FindProposal(branch, target gitdomain.LocalBranchName)
 
 var _ forgedomain.ProposalSearcher = &apiConnector // type check
 
-func (self *APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self *APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
 	client, err := self.getClient()
 	if err != nil {
-		return None[forgedomain.Proposal](), err
+		return []forgedomain.Proposal{}, err
 	}
 	openPullRequests, _, err := client.ListRepoPullRequests(self.Organization, self.Repository, forgejo.ListPullRequestsOptions{
 		ListOptions: forgejo.ListOptions{
@@ -86,21 +87,20 @@ func (self *APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Opti
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
-		return None[forgedomain.Proposal](), err
+		return []forgedomain.Proposal{}, err
 	}
 	pullRequests := filterPullRequests2(openPullRequests, branch)
-	switch len(pullRequests) {
-	case 0:
-		self.log.Success("none")
-		return None[forgedomain.Proposal](), nil
-	case 1:
-		pullRequest := pullRequests[0]
-		proposal := parsePullRequest(pullRequest)
-		self.log.Success(proposal.Target.String())
-		return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeForgejo}), nil
-	default:
-		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(pullRequests), branch)
+	result := make([]forgedomain.Proposal, len(pullRequests))
+	for p, pullRequest := range pullRequests {
+		proposalData := parsePullRequest(pullRequest)
+		self.log.Success(proposalData.Target.String())
+		proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeForgejo}
+		result[p] = proposal
 	}
+	if len(result) == 0 {
+		self.log.Success("none")
+	}
+	return result, nil
 }
 
 // ============================================================================
@@ -245,6 +245,7 @@ func filterPullRequests2(pullRequests []*forgejo.PullRequest, branch gitdomain.L
 
 func parsePullRequest(pullRequest *forgejo.PullRequest) forgedomain.ProposalData {
 	return forgedomain.ProposalData{
+		Active:       pullRequest.State == forgejo.StateOpen,
 		MergeWithAPI: pullRequest.Mergeable,
 		Number:       int(pullRequest.Index),
 		Source:       gitdomain.NewLocalBranchName(pullRequest.Head.Ref),
@@ -253,4 +254,14 @@ func parsePullRequest(pullRequest *forgejo.PullRequest) forgedomain.ProposalData
 		Body:         NewOption(pullRequest.Body),
 		URL:          pullRequest.HTMLURL,
 	}
+}
+
+func parsePullRequests(pullRequests []*forgejo.PullRequest) []forgedomain.Proposal {
+	result := []forgedomain.Proposal{}
+	for _, pullRequest := range pullRequests {
+		proposalData := parsePullRequest(pullRequest)
+		proposal := forgedomain.Proposal{Data: proposalData, ForgeType: forgedomain.ForgeTypeForgejo}
+		result = append(result, proposal)
+	}
+	return result
 }

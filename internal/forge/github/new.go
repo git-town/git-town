@@ -54,10 +54,14 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 				return webConnector, fmt.Errorf(messages.GitHubEnterpriseInitializeError, err)
 			}
 		}
-		return APIConnector{
+		apiConnector := APIConnector{
 			WebConnector: webConnector,
 			client:       NewMutable(githubClient),
 			log:          args.Log,
+		}
+		return &CachedAPIConnector{
+			api:   apiConnector,
+			cache: forgedomain.APICache{},
 		}, nil
 	}
 	return webConnector, nil
@@ -70,6 +74,7 @@ func RepositoryURL(hostNameWithStandardPort string, organization string, reposit
 // parsePullRequest extracts standardized proposal data from the given GitHub pull-request.
 func parsePullRequest(pullRequest *github.PullRequest) forgedomain.ProposalData {
 	return forgedomain.ProposalData{
+		Active:       pullRequest.GetState() == "open",
 		Body:         NewOption(pullRequest.GetBody()),
 		Number:       pullRequest.GetNumber(),
 		Source:       gitdomain.NewLocalBranchName(pullRequest.Head.GetRef()),

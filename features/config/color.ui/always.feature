@@ -72,6 +72,9 @@ Feature: show the configuration
         GitLab connector type: api
         GitLab token: (not set)
 
+      Propose:
+        lineage: none
+
       Ship:
         delete tracking branch: yes
         ship strategy: squash-merge
@@ -110,6 +113,9 @@ Feature: show the configuration
       [hosting]
       forge-type = "github"
       origin-hostname = "github.com"
+
+      [propose]
+      lineage = "cli"
 
       [ship]
       delete-tracking-branch = true
@@ -165,6 +171,9 @@ Feature: show the configuration
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
+
+      Propose:
+        lineage: cli
 
       Ship:
         delete tracking branch: yes
@@ -282,6 +291,9 @@ Feature: show the configuration
         GitLab connector type: (not set)
         GitLab token: (not set)
 
+      Propose:
+        lineage: none
+
       Ship:
         delete tracking branch: no
         ship strategy: squash-merge
@@ -349,6 +361,9 @@ Feature: show the configuration
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
+
+      Propose:
+        lineage: none
 
       Ship:
         delete tracking branch: yes
@@ -423,6 +438,9 @@ Feature: show the configuration
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
+
+      Propose:
+        lineage: none
 
       Ship:
         delete tracking branch: yes

@@ -4,6 +4,7 @@ Feature: display invalid Git metadata
     Given a Git repo with origin
     And local Git setting "git-town.feature-regex" is "(feat"
     And local Git setting "git-town.perennial-regex" is "(per"
+    And local Git setting "git-town.proposals-show-lineage" is "zonk"
     And local Git setting "git-town.contribution-regex" is "(cont"
     And local Git setting "git-town.observed-regex" is "(obs"
     And local Git setting "git-town.new-branch-type" is "zonk"
@@ -33,6 +34,7 @@ Feature: display invalid Git metadata
       Ignoring invalid value for "git-town.observed-regex": "(obs"
       Ignoring invalid value for "git-town.order": "zonk"
       Ignoring invalid value for "git-town.perennial-regex": "(per"
+      Ignoring invalid value for "git-town.proposals-show-lineage": "zonk"
       Ignoring invalid value for "git-town.push-branches": "zonk"
       Ignoring invalid value for "git-town.push-hook": "zonk"
       Ignoring invalid value for "git-town.share-new-branches": "zonk"
@@ -83,6 +85,9 @@ Feature: display invalid Git metadata
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
+
+      Propose:
+        lineage: none
 
       Ship:
         delete tracking branch: yes

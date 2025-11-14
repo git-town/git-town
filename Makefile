@@ -8,12 +8,23 @@ GO_TEST_ARGS = LANG=C GOGC=off BROWSER=
 contest: tools/rta@${RTA_VERSION}  # run the Contest server
 	@tools/rta contest
 
-cuke: install  # runs all end-to-end tests in a way that looks nice during development
+cuke: install  # runs all end-to-end tests with nice output
 	@env $(GO_TEST_ARGS) messyoutput=0 go test -v
 	@env $(GO_TEST_ARGS) messyoutput=1 go test -v
 
-cukeall: install  # runs all end-to-end tests
+cukeall: install  # runs all end-to-end tests on CI
 	@env $(GO_TEST_ARGS) go test -v
+
+cuke-prof: install  # creates a flamegraph for the end-to-end tests
+	env $(GO_TEST_ARGS) go test . -v -cpuprofile=godog.out
+	@rm git-town.test
+	@echo Please open https://www.speedscope.app and load the file godog.out
+
+cukesmoke: install  # run the smoke E2E tests
+	@env $(GO_TEST_ARGS) smoke=1 go test . -v -count=1
+
+cukesmokewin: install  # runs the smoke E2E tests on Windows
+	@env smoke=1 go test . -v -count=1
 
 cukethis: install  # runs the end-to-end tests that have a @this tag
 	@env $(GO_TEST_ARGS) cukethis=1 go test . -v -count=1
@@ -22,10 +33,13 @@ cukethiswin:  # runs the end-to-end tests that have a @this tag on Windows
 	go install -ldflags "-X github.com/git-town/git-town/v22/internal/cmd.version=-dev -X github.com/git-town/git-town/v22/internal/cmd.buildDate=1/2/3"
 	powershell -Command '$$env:cukethis=1 ; go test . -v -count=1'
 
-cuke-prof: install  # creates a flamegraph for the end-to-end tests
-	env $(GO_TEST_ARGS) go test . -v -cpuprofile=godog.out
-	@rm git-town.test
-	@echo Please open https://www.speedscope.app and load the file godog.out
+cuke-update: install  # updates the E2E tests based on the actual behavior of Git Town
+	@env $(GO_TEST_ARGS) cukeupdate=1 go test . -v -count=1
+	make --no-print-directory fix
+
+cuke-update-this: install  # updates the E2E tests that have a @this tag
+	@env $(GO_TEST_ARGS) cukeupdate=1 cukethis=1 go test . -v -count=1
+	make --no-print-directory fix
 
 cukeverbose: install  # run all tests in "verbose.feature" files
 	@env $(GO_TEST_ARGS) verbose=1 go test . -v -count=1
@@ -33,7 +47,7 @@ cukeverbose: install  # run all tests in "verbose.feature" files
 cukewin: install  # runs all end-to-end tests on Windows
 	go test . -v -count=1
 
-dependencies: tools/rta@${RTA_VERSION}  # prints the dependencies between the internal Go packages as a tree
+dependencies: tools/rta@${RTA_VERSION}  # prints the dependencies between the internal Go packages
 	@tools/rta depth . | grep git-town
 
 docs: install tools/node_modules  # tests the documentation
@@ -62,6 +76,7 @@ lint: tools/node_modules tools/rta@${RTA_VERSION}  # lints the main codebase con
 	make --no-print-directory lint-smoke
 	make --no-print-directory alphavet
 	make --no-print-directory deadcode
+	make --no-print-directory lint-cached-connectors
 	make --no-print-directory lint-iterate-map
 	make --no-print-directory lint-messages-sorted
 	make --no-print-directory lint-messy-output
@@ -88,6 +103,8 @@ lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	@(cd tools/format_self && make test)
 	@echo lint tools/format_unittests
 	@(cd tools/format_unittests && make test)
+	@echo lint tools/lint_cached_connectors
+	@(cd tools/lint_cached_connectors && make test)
 	@echo lint tools/lint_steps
 	@(cd tools/lint_steps && make test)
 	@echo lint tools/messages_sorted
@@ -119,6 +136,9 @@ keep-sorted: tools/rta@${RTA_VERSION}
 	tools/rta --install ripgrep
 	tools/rta keep-sorted $(shell tools/rta ripgrep -l 'keep-sorted end' ./ --glob '!Makefile')
 
+lint-cached-connectors:
+	@(cd tools/lint_cached_connectors && go build) && ./tools/lint_cached_connectors/lint_cached_connectors
+
 lint-iterate-map:
 	@(cd tools/iterate_map && go build) && ./tools/iterate_map/iterate_map
 
@@ -134,7 +154,7 @@ lint-print-config:
 lint-optioncompare:
 	@(cd tools/optioncompare && go build) && ./tools/optioncompare/optioncompare github.com/git-town/git-town/v22/...
 
-lint-smoke: tools/rta@${RTA_VERSION}  # runs only the essential linters to get quick feedback after refactoring
+lint-smoke: tools/rta@${RTA_VERSION}  # runs only the essential linters
 	@tools/rta exhaustruct -test=false "-i=github.com/git-town/git-town.*" github.com/git-town/git-town/...
 # @tools/rta ireturn --reject="github.com/git-town/git-town/v22/pkg/prelude.Option" github.com/git-town/git-town/...
 
@@ -146,12 +166,6 @@ lint-tests-sorted:
 
 lint-use-equal:
 	@(cd tools/use_equal && go build) && ./tools/use_equal/use_equal
-
-smoke: install  # run the smoke tests
-	@env $(GO_TEST_ARGS) smoke=1 go test . -v -count=1
-
-smokewin: install  # runs the Windows smoke tests
-	@env smoke=1 go test . -v -count=1
 
 stats: tools/rta@${RTA_VERSION}  # shows code statistics
 	@find . -type f \
@@ -183,6 +197,7 @@ UNIT_TEST_DIRS = \
 	./pkg/... \
 	./tools/format_self/... \
 	./tools/format_unittests/... \
+	./tools/lint_cached_connectors/... \
 	./tools/lint_steps/... \
 	./tools/messages_sorted/... \
 	./tools/messy_output/... \
@@ -240,6 +255,7 @@ deadcode: tools/rta@${RTA_VERSION}
 		| grep -v pkg/prelude/ptr.go \
 		| grep -v Paniced \
 		| grep -v Set.Add \
+		| grep -v Set.Contains \
 		| grep -v UseCustomMessageOr \
 		| grep -v UseDefaultMessage \
 		|| true

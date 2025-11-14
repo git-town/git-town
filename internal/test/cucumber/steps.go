@@ -43,6 +43,9 @@ import (
 // the global FixtureFactory instance.
 var fixtureFactory *fixture.Factory
 
+// CukeUpdate indicates whether to update .feature files with actual command output when tests fail
+var CukeUpdate bool
+
 // dedicated type for storing data in context.Context
 type key int
 
@@ -51,12 +54,14 @@ const (
 	keyScenarioState key = iota
 	keyScenarioName
 	keyScenarioTags
+	keyScenarioURI
 )
 
 func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 	scenarioContext.Before(func(ctx context.Context, scenario *godog.Scenario) (context.Context, error) {
 		ctx = context.WithValue(ctx, keyScenarioName, scenario.Name)
 		ctx = context.WithValue(ctx, keyScenarioTags, scenario.Tags)
+		ctx = context.WithValue(ctx, keyScenarioURI, scenario.Uri)
 		return ctx, nil
 	})
 
@@ -477,6 +482,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		})
 		diff, errorCount := table.EqualDataTable(expanded)
 		if errorCount != 0 {
+			if CukeUpdate {
+				scenarioURI := ctx.Value(keyScenarioURI).(string)
+				return ChangeFeatureFile(scenarioURI, expanded.String(), table.String())
+			}
 			fmt.Printf("\nERROR! Found %d differences in the commands run\n\n", errorCount)
 			fmt.Println(diff)
 			return errors.New("mismatching commands run, see diff above")
@@ -1457,7 +1466,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 				return errors.New(`please use the step "the initial commits exist now" instead`)
 			}
 		}
-		return state.compareGherkinTable(table)
+		scenarioURI := ctx.Value(keyScenarioURI).(string)
+		return state.compareGherkinTable(table, scenarioURI)
 	})
 
 	sc.Step(`^these committed files exist now$`, func(ctx context.Context, table *godog.Table) error {
@@ -1466,6 +1476,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 		fileTable := devRepo.FilesInBranches("main")
 		diff, errorCount := fileTable.EqualGherkin(table)
 		if errorCount != 0 {
+			if CukeUpdate {
+				scenarioURI := ctx.Value(keyScenarioURI).(string)
+				expectedTable := datatable.FromGherkin(table)
+				return ChangeFeatureFile(scenarioURI, expectedTable.String(), fileTable.String())
+			}
 			fmt.Printf("\nERROR! Found %d differences in the existing files\n\n", errorCount)
 			fmt.Println(diff)
 			return errors.New("mismatching files found, see diff above")

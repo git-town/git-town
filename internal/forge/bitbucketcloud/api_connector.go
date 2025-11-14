@@ -40,7 +40,7 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 		Owner:    self.Organization,
 		RepoSlug: self.Repository,
 		Query:    query,
-		States:   []string{"open"},
+		States:   []string{"open", "new"},
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
@@ -55,51 +55,44 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[forgedomain.Proposal](), nil
 	}
-	size1, has := result2["size"]
+	proposals1, has := result2["values"]
 	if !has {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[forgedomain.Proposal](), nil
 	}
-	size2, ok := size1.(float64)
+	proposals2, ok := proposals1.([]any)
 	if !ok {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
 		return None[forgedomain.Proposal](), nil
 	}
-	size := int(size2)
-	if size == 0 {
+	result := []forgedomain.Proposal{}
+	for _, proposal1 := range proposals2 {
+		proposal2, ok := proposal1.(map[string]any)
+		if !ok {
+			self.log.Failed(messages.APIUnexpectedResultDataStructure)
+			return None[forgedomain.Proposal](), nil
+		}
+		proposal3, err := parsePullRequest(proposal2)
+		if err != nil {
+			self.log.Failed(err.Error())
+			return None[forgedomain.Proposal](), nil
+		}
+		if !proposal3.Active {
+			continue
+		}
+		self.log.Success(fmt.Sprintf("#%d ", proposal3.Number))
+		proposal := forgedomain.Proposal{Data: proposal3, ForgeType: forgedomain.ForgeTypeBitbucket}
+		result = append(result, proposal)
+	}
+	switch len(result) {
+	case 0:
 		self.log.Success("none")
 		return None[forgedomain.Proposal](), nil
+	case 1:
+		return Some(result[0]), nil
+	default:
+		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(result), branch, target)
 	}
-	if size > 1 {
-		self.log.Failed(fmt.Sprintf(messages.ProposalMultipleFromToFound, size, branch, target))
-		return None[forgedomain.Proposal](), nil
-	}
-	proposal1, has := result2["values"]
-	if !has {
-		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.Proposal](), nil
-	}
-	proposal2, ok := proposal1.([]any)
-	if !ok {
-		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.Proposal](), nil
-	}
-	if len(proposal2) == 0 {
-		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.Proposal](), nil
-	}
-	proposal3, ok := proposal2[0].(map[string]any)
-	if !ok {
-		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.Proposal](), nil
-	}
-	proposal4, err := parsePullRequest(proposal3)
-	if err != nil {
-		self.log.Failed(err.Error())
-		return None[forgedomain.Proposal](), nil
-	}
-	self.log.Success(fmt.Sprintf("#%d", proposal4.Number))
-	return Some(forgedomain.Proposal{Data: proposal4, ForgeType: forgedomain.ForgeTypeBitbucket}), nil
 }
 
 // ============================================================================
@@ -108,60 +101,56 @@ func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) 
 
 var _ forgedomain.ProposalSearcher = apiConnector // type check
 
-func (self APIConnector) SearchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self APIConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
 	response1, err := self.client.Value.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
 		Owner:    self.Organization,
 		RepoSlug: self.Repository,
 		Query:    fmt.Sprintf("source.branch.name = %q", branch),
-		States:   []string{"open"},
+		States:   []string{"open", "new"},
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
-		return None[forgedomain.Proposal](), err
+		return []forgedomain.Proposal{}, err
 	}
 	response2, ok := response1.(map[string]any)
 	if !ok {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.Proposal](), nil
+		return []forgedomain.Proposal{}, nil
 	}
-	size1, has := response2["size"]
+	proposals1, has := response2["values"]
 	if !has {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.Proposal](), nil
+		return []forgedomain.Proposal{}, nil
 	}
-	size2, ok := size1.(float64)
+	proposals2, ok := proposals1.([]any)
 	if !ok {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.Proposal](), nil
+		return []forgedomain.Proposal{}, nil
 	}
-	size3 := int(size2)
-	if size3 == 0 {
+	result := []forgedomain.Proposal{}
+	for _, proposal1 := range proposals2 {
+		proposal2, ok := proposal1.(map[string]any)
+		if !ok {
+			self.log.Failed(messages.APIUnexpectedResultDataStructure)
+			return []forgedomain.Proposal{}, nil
+		}
+		proposal3, err := parsePullRequest(proposal2)
+		if err != nil {
+			self.log.Failed(err.Error())
+			return []forgedomain.Proposal{}, nil
+		}
+		if !proposal3.Active {
+			continue
+		}
+		self.log.Success(fmt.Sprintf("#%d ", proposal3.Number))
+		proposal := forgedomain.Proposal{Data: proposal3, ForgeType: forgedomain.ForgeTypeBitbucket}
+		result = append(result, proposal)
+	}
+	if len(result) == 0 {
 		self.log.Success("none")
-		return None[forgedomain.Proposal](), nil
 	}
-	if size3 > 1 {
-		self.log.Failed(fmt.Sprintf(messages.ProposalMultipleFromFound, size3, branch))
-		return None[forgedomain.Proposal](), nil
-	}
-	values1, has := response2["values"]
-	if !has {
-		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.Proposal](), nil
-	}
-	values2, ok := values1.([]any)
-	if !ok {
-		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.Proposal](), nil
-	}
-	proposal1 := values2[0].(map[string]any)
-	proposal2, err := parsePullRequest(proposal1)
-	if err != nil {
-		self.log.Failed(err.Error())
-		return None[forgedomain.Proposal](), nil
-	}
-	self.log.Success(proposal2.Target.String())
-	return Some(forgedomain.Proposal{Data: proposal2, ForgeType: forgedomain.ForgeTypeBitbucket}), nil
+	return result, nil
 }
 
 // ============================================================================

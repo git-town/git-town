@@ -96,11 +96,15 @@ func (self *ScenarioState) CaptureState() {
 
 // compareExistingCommits compares the commits in the Git environment of the given ScenarioState
 // against the given Gherkin table.
-func (self *ScenarioState) compareGherkinTable(table *godog.Table) error {
+func (self *ScenarioState) compareGherkinTable(table *godog.Table, scenarioURI string) error {
 	fields := helpers.TableFields(table)
 	commitTable := self.fixture.CommitTable(fields)
 	diff, errorCount := commitTable.EqualGherkin(table)
 	if errorCount != 0 {
+		if CukeUpdate {
+			expectedTable := datatable.FromGherkin(table)
+			return ChangeFeatureFile(scenarioURI, expectedTable.String(), commitTable.String())
+		}
 		fmt.Printf("\nERROR! Found %d differences in the existing commits\n\n", errorCount)
 		fmt.Println(diff)
 		return errors.New("mismatching commits found, see diff above")
