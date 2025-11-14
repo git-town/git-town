@@ -40,7 +40,7 @@ func main() {
 func check() error {
 	connectorPairs, err := connectorPairs("internal/forge")
 	if err != nil {
-		return fmt.Errorf("Error discovering connector pairs: %w\n", err)
+		return fmt.Errorf("error discovering connector pairs: %w", err)
 	}
 	if len(connectorPairs) == 0 {
 		return errors.New("No connector pairs found")
