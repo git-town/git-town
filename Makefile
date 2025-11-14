@@ -255,6 +255,7 @@ deadcode: tools/rta@${RTA_VERSION}
 		| grep -v pkg/prelude/ptr.go \
 		| grep -v Paniced \
 		| grep -v Set.Add \
+		| grep -v Set.Contains \
 		| grep -v UseCustomMessageOr \
 		| grep -v UseDefaultMessage \
 		|| true

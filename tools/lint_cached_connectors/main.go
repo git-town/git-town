@@ -204,8 +204,8 @@ func implementedInterfaces(filePath, typeName string) ([]InterfaceImplementation
 				if typeVars.Contains(valueName) {
 					position := fileSet.Position(valueSpec.Pos())
 					implementations = append(implementations, InterfaceImplementation{
-						Position:      position,
 						InterfaceName: interfaceName,
+						Position:      position,
 						TypeName:      typeName,
 					})
 				}
