@@ -17,3 +17,23 @@ suite("extractCommand", () => {
     });
   }
 });
+
+suite("extractArgs", () => {
+  const tests = {
+    "git town append <branch-name> [-p | --prototype] [-d | --detached] [-c | --commit] [-m | --message <message>] [--propose] [--dry-run] [-v | --verbose]":
+      [
+        ["-p", "--prototype"],
+        ["-d", "--detached"],
+        ["-c", "--commit"],
+        ["-m", "--message <message>"],
+        ["--propose"],
+        ["--dry-run"],
+        ["-v", "--verbose"],
+      ],
+  };
+  for (const [give, want] of Object.entries(tests)) {
+    test(`${give} -> ${want}`, () => {
+      equal(extractArgs(give), want);
+    });
+  }
+});
