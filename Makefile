@@ -51,7 +51,7 @@ dependencies: tools/rta@${RTA_VERSION}  # prints the dependencies between the in
 	@tools/rta depth . | grep git-town
 
 docs: install tools/node_modules  # tests the documentation
-	@tools/rta node tools/node_modules/.bin/text-runner --offline
+	@tools/rta node node_modules/.bin/text-runner --offline
 
 fix: tools/rta@${RTA_VERSION}  # runs all linters and auto-fixes
 	make --no-print-directory fix-optioncompare-in-tests
@@ -61,7 +61,7 @@ fix: tools/rta@${RTA_VERSION}  # runs all linters and auto-fixes
 	tools/rta gofumpt -l -w .
 	tools/rta dprint fmt
 	tools/rta dprint fmt --config dprint-changelog.json
-	tools/rta shfmt -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/rta shfmt --write
+	tools/rta shfmt -f . | grep -v node_modules | grep -v '^vendor/' | xargs tools/rta shfmt --write
 	tools/rta ghokin fmt replace features/
 	tools/generate_opcodes_all.sh
 	tools/rta cucumber-sort format
@@ -72,7 +72,7 @@ help:  # prints all available targets
 install:  # builds for the current platform
 	@go install -ldflags="-s -w"
 
-lint: tools/node_modules tools/rta@${RTA_VERSION}  # lints the main codebase concurrently
+lint: node_modules tools/rta@${RTA_VERSION}  # lints the main codebase concurrently
 	make --no-print-directory lint-smoke
 	make --no-print-directory alphavet
 	make --no-print-directory deadcode
@@ -90,10 +90,10 @@ lint: tools/node_modules tools/rta@${RTA_VERSION}  # lints the main codebase con
 	tools/rta actionlint
 	tools/rta --from-source staticcheck ./...
 	tools/ensure_no_files_with_dashes.sh
-	tools/rta shfmt -f . | grep -v 'tools/node_modules' | grep -v '^vendor/' | xargs tools/rta --optional shellcheck
+	tools/rta shfmt -f . | grep -v 'node_modules' | grep -v '^vendor/' | xargs tools/rta --optional shellcheck
 	tools/rta golangci-lint cache clean
 	tools/rta golangci-lint run
-	tools/rta node tools/node_modules/.bin/gherkin-lint
+	tools/rta node node_modules/.bin/gherkin-lint
 	tools/rta cucumber-sort check
 
 lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
@@ -169,7 +169,7 @@ lint-use-equal:
 
 stats: tools/rta@${RTA_VERSION}  # shows code statistics
 	@find . -type f \
-		| grep -v './tools/node_modules' \
+		| grep -v './node_modules' \
 		| grep -v '\./vendor/' \
 		| grep -v '\./.git/' \
 		| grep -v './website/book' \
@@ -220,7 +220,7 @@ update: tools/rta@${RTA_VERSION}  # updates all dependencies
 	(cd tools/optioncompare && go get -u ./...)
 	go mod tidy
 	go work vendor
-	rm -rf tools/node_modules package-lock.json
+	rm -rf node_modules package-lock.json
 	cd tools && ./rta npx -y npm-check-updates -u
 	cd tools && ./rta npm install
 	tools/rta --update
@@ -267,9 +267,9 @@ tools/rta@${RTA_VERSION}:
 	@mv tools/rta tools/rta@${RTA_VERSION}
 	@ln -s rta@${RTA_VERSION} tools/rta
 
-tools/node_modules: tools/package-lock.json tools/rta@${RTA_VERSION}
-	test -f tools/node_modules/.yarn-integrity && rm -rf tools/node_modules || true  # remove node_modules if installed with Yarn (TODO: remove after 2025-01-26)
+node_modules: tools/package-lock.json tools/rta@${RTA_VERSION}
+	test -f node_modules/.yarn-integrity && rm -rf node_modules || true  # remove node_modules if installed with Yarn (TODO: remove after 2025-01-26)
 	@echo "Installing Node based tools"
-	cd tools && ./rta npm ci
-	@touch tools/package-lock.json  # update timestamp so that Make doesn't re-install it on every command
-	@touch tools/node_modules  # update timestamp so that Make doesn't re-install it on every command
+	tools/rta npm ci
+	@touch package-lock.json  # update timestamp so that Make doesn't re-install it on every command
+	@touch node_modules  # update timestamp so that Make doesn't re-install it on every command
