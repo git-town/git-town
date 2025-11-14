@@ -59,9 +59,8 @@ func main() {
 		missing := missingInterfaces(uncachedInterfaces, cachedInterfaces)
 		for _, iface := range missing {
 			allErrors = append(allErrors, fmt.Sprintf(
-				"%s:%d: %s does not implement interface %s (implemented by %s in %s:%d)",
+				"%s:1  %s needs to implement %s\nbecause %s implements it in %s:%d",
 				pair.CachedFile,
-				1, // Could be improved to show actual line
 				pair.CachedType,
 				iface.InterfaceName,
 				pair.UncachedType,
