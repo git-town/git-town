@@ -29,7 +29,7 @@ type InterfaceImplementation struct {
 
 func main() {
 	// Discover connector pairs dynamically
-	connectorPairs, err := discoverConnectorPairs("internal/forge")
+	connectorPairs, err := connectorPairs("internal/forge")
 	if err != nil {
 		fmt.Printf("Error discovering connector pairs: %v\n", err)
 		os.Exit(1)
@@ -78,15 +78,14 @@ func main() {
 	}
 }
 
-// discoverConnectorPairs scans the forge directory and dynamically discovers
-// all cached/uncached connector pairs
-func discoverConnectorPairs(forgeDir string) ([]ConnectorPair, error) {
+// connectorPairs discovers all cached/uncached connector pairs in the given directory
+func connectorPairs(dir string) ([]ConnectorPair, error) {
 	var pairs []ConnectorPair
 
-	// Walk through all subdirectories in the forge directory
-	entries, err := os.ReadDir(forgeDir)
+	// Walk through all subdirectories in the given directory
+	entries, err := os.ReadDir(dir)
 	if err != nil {
-		return nil, fmt.Errorf("reading forge directory: %w", err)
+		return nil, fmt.Errorf("reading %s: %w", dir, err)
 	}
 
 	for _, entry := range entries {
@@ -95,12 +94,12 @@ func discoverConnectorPairs(forgeDir string) ([]ConnectorPair, error) {
 		}
 
 		pkgName := entry.Name()
-		pkgPath := filepath.Join(forgeDir, pkgName)
+		pkgPath := filepath.Join(dir, pkgName)
 
 		// Look for cached_*.go files
 		cachedFiles, err := filepath.Glob(filepath.Join(pkgPath, "cached_*.go"))
 		if err != nil {
-			return nil, fmt.Errorf("globbing cached files in %s: %w", pkgPath, err)
+			return nil, fmt.Errorf("globbing %s: %w", pkgPath, err)
 		}
 
 		for _, cachedFile := range cachedFiles {
@@ -119,12 +118,12 @@ func discoverConnectorPairs(forgeDir string) ([]ConnectorPair, error) {
 			// Extract type names from the files
 			cachedType, err := primaryTypeName(cachedFile)
 			if err != nil {
-				return nil, fmt.Errorf("extracting cached type from %s: %w", cachedFile, err)
+				return nil, fmt.Errorf("extracting type from %s: %w", cachedFile, err)
 			}
 
 			uncachedType, err := primaryTypeName(uncachedFile)
 			if err != nil {
-				return nil, fmt.Errorf("extracting uncached type from %s: %w", uncachedFile, err)
+				return nil, fmt.Errorf("extracting type from %s: %w", uncachedFile, err)
 			}
 
 			if cachedType != "" && uncachedType != "" {
