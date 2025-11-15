@@ -12,6 +12,7 @@ suite("extractCommand", () => {
     "git town sync --all": "sync",
     "git town ship --all": "ship",
     "git town completions (bash|fish|powershell|zsh) [--no-descriptions] [-h | --help]": "completions",
+    "git town config get-parent [<branch-name>] [-v | --verbose] [-h | --help]": "config get-parent",
   }
   for (const [give, want] of Object.entries(tests)) {
     test(`${give} -> ${want}`, () => {
@@ -32,6 +33,14 @@ suite("extractArgs", () => {
         ["-p", "--prototype"],
         ["-v", "--verbose"],
       ],
+    "git town completions (bash|fish|powershell|zsh) [--no-descriptions] [-h | --help]": [
+      ["--no-descriptions"],
+      ["-h", "--help"],
+    ],
+    "git town config get-parent [<branch-name>] [-v | --verbose] [-h | --help]": [
+      ["-h", "--help"],
+      ["-v", "--verbose"],
+    ],
   }
   for (const [give, want] of Object.entries(tests)) {
     test(`${give} -> ${want}`, () => {
