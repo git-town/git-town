@@ -11,6 +11,7 @@ suite("extractCommand", () => {
     "git town append <branch-name> [-p | --prototype]": "append",
     "git town sync --all": "sync",
     "git town ship --all": "ship",
+    "git town completions (bash|fish|powershell|zsh) [--no-descriptions] [-h | --help]": "completions",
   }
   for (const [give, want] of Object.entries(tests)) {
     test(`${give} -> ${want}`, () => {
