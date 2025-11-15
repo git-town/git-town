@@ -8,7 +8,7 @@ const execAsync = promisify(exec)
 export async function commandSummary(action: textRunner.actions.Args) {
   const text = action.region.text()
   const command = extractCommand(text)
-  action.name("arguments for ${command}")
+  action.name(`arguments for "${command}"`)
   const documentedArgs = extractArgs(text)
   const actualArgs = await commandArgs(command)
   const documentedText = JSON.stringify(documentedArgs, null, 2)
