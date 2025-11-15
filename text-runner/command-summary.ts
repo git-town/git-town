@@ -14,8 +14,8 @@ export async function commandSummary(action: textRunner.actions.Args) {
   const documentedText = JSON.stringify(documentedArgs, null, 2)
   const actualText = JSON.stringify(actualArgs, null, 2)
   if (documentedText !== actualText) {
-    action.log("DOCUMENTED:\n${documentedText}")
-    action.log("ACTUAL:\n${actualText}")
+    action.log(`DOCUMENTED:\n${documentedText}`)
+    action.log(`ACTUAL:\n${actualText}`)
     throw new Error("mismatching args")
   }
 }
@@ -35,7 +35,7 @@ export function extractArgs(text: string): string[][] {
     const variations = argText.split("|").map((v) => v.trim())
     args.push(variations)
   }
-  return args
+  return args.sort()
 }
 
 async function commandArgs(command: string): Promise<string[][]> {
@@ -76,5 +76,6 @@ export function parseCommandHelpOutput(help: string): string[][] {
       }
     }
   }
-  return result
+  // sort the result
+  return result.sort()
 }
