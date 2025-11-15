@@ -26,7 +26,7 @@ suite("extractArgs", () => {
         ["--propose"],
         ["-c", "--commit"],
         ["-d", "--detached"],
-        ["-m", "--message <message>"],
+        ["-m", "--message string"],
         ["-p", "--prototype"],
         ["-v", "--verbose"],
       ],

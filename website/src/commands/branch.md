@@ -1,8 +1,12 @@
 # git town branch
 
+<a type="command-summary">
+
 ```command-summary
 git town branch [-d | --display-types] [-o | --order] [-v | --verbose]
 ```
+
+</a>
 
 The _branch_ command is Git Town's equivalent of the
 [git branch](https://git-scm.com/docs/git-branch) command. It displays the local
