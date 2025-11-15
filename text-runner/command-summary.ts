@@ -1,4 +1,3 @@
-import { deepEqual } from "node:assert/strict"
 import { exec } from "node:child_process"
 import { promisify } from "node:util"
 import * as textRunner from "text-runner"

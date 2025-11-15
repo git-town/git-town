@@ -1,6 +1,6 @@
 import { deepEqual, equal } from "node:assert/strict"
 import { suite, test } from "node:test"
-import { extractArgs, extractCommand, parseCommandHelpOutput } from "./command-summary.ts"
+import { extractArgs, extractCommand, parseCommandHelpOutput } from "../text-runner/command-summary.ts"
 
 suite("extractCommand", () => {
   const tests = {
