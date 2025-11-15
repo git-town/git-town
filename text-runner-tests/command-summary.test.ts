@@ -102,4 +102,29 @@ Flags:
     ]
     deepEqual(have, want)
   })
+
+  test("branch", () => {
+    const give = `
+Display the local branch hierarchy and types.
+
+Git Town's equivalent of the "git branch" command.
+
+Usage:
+  git-town branch [flags]
+
+Flags:
+  -d, --display-types string[="all"]   display the branch types
+  -h, --help                           help for branch
+  -o, --order string                   sort order for branch list (asc or desc)
+  -v, --verbose                        display all Git commands run under the hood
+`
+    const have = parseCommandHelpOutput(give)
+    const want = [
+      ["-d", "--display-types string"],
+      ["-h", "--help"],
+      ["-o", "--order string"],
+      ["-v", "--verbose"],
+    ]
+    deepEqual(have, want)
+  })
 })
