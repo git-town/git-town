@@ -1,3 +1,4 @@
+import { deepEqual } from "node:assert/strict"
 import { exec } from "node:child_process"
 import { promisify } from "node:util"
 import * as textRunner from "text-runner"
@@ -7,8 +8,16 @@ const execAsync = promisify(exec)
 export async function commandSummary(action: textRunner.actions.Args) {
   const text = action.region.text()
   const command = extractCommand(text)
+  action.name("arguments for ${command}")
   const documentedArgs = extractArgs(text)
   const actualArgs = await commandArgs(command)
+  const documentedText = JSON.stringify(documentedArgs, null, 2)
+  const actualText = JSON.stringify(actualArgs, null, 2)
+  if (documentedText !== actualText) {
+    action.log("DOCUMENTED:\n${documentedText}")
+    action.log("ACTUAL:\n${actualText}")
+    throw new Error("mismatching args")
+  }
 }
 
 export function extractCommand(text: string): string {
