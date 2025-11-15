@@ -71,7 +71,10 @@ export function parseCommandHelpOutput(help: string): string[][] {
     const match = line.match(/^\s+(.+?)\s{2,}/)
     if (match) {
       const flagsPart = match[1].trim()
-      const flags = flagsPart.split(/,\s+/)
+      const flags = flagsPart.split(/,\s+/).map((flag) => {
+        // Remove default value notation like [="all"]
+        return flag.replace(/\[="[^"]*"\]/, "")
+      })
       if (flags.length > 0) {
         result.push(flags)
       }
