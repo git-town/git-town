@@ -41,4 +41,31 @@ async function commandHelp(command: string): Promise<string> {
 }
 
 export function parseCommandHelpOutput(help: string): string[][] {
+  const result: string[][] = [];
+  const lines = help.split("\n");
+  let inFlagsSection = false;
+  for (const line of lines) {
+    if (line.includes("Flags:")) {
+      inFlagsSection = true;
+      continue;
+    }
+    if (!inFlagsSection) {
+      continue;
+    }
+    // Stop if we hit an empty line (end of flags section)
+    if (line.trim() === "") {
+      break;
+    }
+    // Parse flag line - format: "  -b, --beam             description"
+    // The description starts after 2 or more spaces
+    const match = line.match(/^\s+(.+?)\s{2,}/);
+    if (match) {
+      const flagsPart = match[1].trim();
+      const flags = flagsPart.split(/,\s+/);
+      if (flags.length > 0) {
+        result.push(flags);
+      }
+    }
+  }
+  return result;
 }
