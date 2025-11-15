@@ -5,6 +5,7 @@ import { extractArgs, extractCommand, parseCommandHelpOutput } from "../text-run
 suite("extractCommand", () => {
   const tests = {
     "git town append": "append",
+    "git town config get-parent": "config get-parent",
     "git town sync": "sync",
     "git town ship": "ship",
     "git town append <branch-name> [-p | --prototype]": "append",
