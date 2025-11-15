@@ -12,6 +12,17 @@ export function extractCommand(text: string): string {
   return match?.[1] ?? "";
 }
 
-export function extractArgs(text: string): string[] {
-  // TODO: implement this
+export function extractArgs(text: string): string[][] {
+  const args: string[][] = [];
+  // Match all optional arguments in square brackets: [-p | --prototype]
+  const matches = text.matchAll(/\[([^\]]+)\]/g);
+
+  for (const match of matches) {
+    const argText = match[1];
+    // Split by | to get the different variations of the flag
+    const variations = argText.split("|").map((v) => v.trim());
+    args.push(variations);
+  }
+
+  return args;
 }

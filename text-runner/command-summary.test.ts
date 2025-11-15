@@ -1,6 +1,6 @@
-import { equal } from "node:assert/strict";
+import { deepEqual, equal } from "node:assert/strict";
 import { suite, test } from "node:test";
-import { extractCommand } from "./command-summary.ts";
+import { extractArgs, extractCommand } from "./command-summary.ts";
 
 suite("extractCommand", () => {
   const tests = {
@@ -33,7 +33,7 @@ suite("extractArgs", () => {
   };
   for (const [give, want] of Object.entries(tests)) {
     test(`${give} -> ${want}`, () => {
-      equal(extractArgs(give), want);
+      deepEqual(extractArgs(give), want);
     });
   }
 });
