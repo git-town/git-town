@@ -1,6 +1,6 @@
-import { deepEqual, equal } from "node:assert/strict";
-import { suite, test } from "node:test";
-import { extractArgs, extractCommand, parseCommandHelpOutput } from "./command-summary.ts";
+import { deepEqual, equal } from "node:assert/strict"
+import { suite, test } from "node:test"
+import { extractArgs, extractCommand, parseCommandHelpOutput } from "./command-summary.ts"
 
 suite("extractCommand", () => {
   const tests = {
@@ -10,13 +10,13 @@ suite("extractCommand", () => {
     "git town append <branch-name> [-p | --prototype]": "append",
     "git town sync --all": "sync",
     "git town ship --all": "ship",
-  };
+  }
   for (const [give, want] of Object.entries(tests)) {
     test(`${give} -> ${want}`, () => {
-      equal(extractCommand(give), want);
-    });
+      equal(extractCommand(give), want)
+    })
   }
-});
+})
 
 suite("extractArgs", () => {
   const tests = {
@@ -30,13 +30,13 @@ suite("extractArgs", () => {
         ["--dry-run"],
         ["-v", "--verbose"],
       ],
-  };
+  }
   for (const [give, want] of Object.entries(tests)) {
     test(`${give} -> ${want}`, () => {
-      deepEqual(extractArgs(give), want);
-    });
+      deepEqual(extractArgs(give), want)
+    })
   }
-});
+})
 
 suite("parseCommandHelpOutput", () => {
   test("append", () => {
@@ -83,8 +83,8 @@ Flags:
       --stash            stash uncommitted changes when creating branches
       --sync             sync branches (default true)
   -v, --verbose          display all Git commands run under the hood
-`;
-    const have = parseCommandHelpOutput(give);
+`
+    const have = parseCommandHelpOutput(give)
     const want = [
       ["--auto-resolve"],
       ["-b", "--beam"],
@@ -99,7 +99,7 @@ Flags:
       ["--stash"],
       ["--sync"],
       ["-v", "--verbose"],
-    ];
-    deepEqual(have, want);
-  });
-});
+    ]
+    deepEqual(have, want)
+  })
+})
