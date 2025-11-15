@@ -1,3 +1,4 @@
+import { deepEqual } from "node:assert/strict"
 import { exec } from "node:child_process"
 import { promisify } from "node:util"
 import * as textRunner from "text-runner"
@@ -15,7 +16,7 @@ export async function commandSummary(action: textRunner.actions.Args) {
   if (documentedText !== actualText) {
     action.log(`DOCUMENTED:\n${documentedText}`)
     action.log(`ACTUAL:\n${actualText}`)
-    throw new Error("mismatching args")
+    deepEqual(documentedArgs, actualArgs)
   }
 }
 
