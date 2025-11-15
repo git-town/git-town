@@ -1,10 +1,14 @@
+import { exec } from "node:child_process";
+import { promisify } from "node:util";
 import * as textRunner from "text-runner";
 
-export function commandSummary(action: textRunner.actions.Args) {
-  // git town append <branch-name> [-p | --prototype] [-d | --detached] [-c | --commit] [-m | --message <message>] [--propose] [--dry-run] [-v | --verbose]
+const execAsync = promisify(exec);
+
+export async function commandSummary(action: textRunner.actions.Args) {
   const text = action.region.text();
   const command = extractCommand(text);
-  const args = extractArgs(text);
+  const documentedArgs = extractArgs(text);
+  const actualArgs = await commandArgs(command);
 }
 
 export function extractCommand(text: string): string {
@@ -23,4 +27,18 @@ export function extractArgs(text: string): string[][] {
     args.push(variations);
   }
   return args;
+}
+
+async function commandArgs(command: string): Promise<string[][]> {
+  // run the command with --help and parse the output
+  const output = await commandHelp(command);
+  return parseCommandHelpOutput(output);
+}
+
+async function commandHelp(command: string): Promise<string> {
+  const result = await execAsync(`git town ${command} --help`);
+  return result.stdout;
+}
+
+export function parseCommandHelpOutput(help: string): string[][] {
 }

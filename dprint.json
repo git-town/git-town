@@ -3,6 +3,9 @@
   "markdown": {
     "textWrap": "always"
   },
+  "typescript": {
+    "semiColons": "asNeeded"
+  },
   "includes": ["**/*.{js,ts,json,md}"],
   "excludes": ["CHANGELOG.md", "vendor/**", "tools/node_modules/**", "website/book/**"],
   "plugins": [
