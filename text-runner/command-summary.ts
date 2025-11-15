@@ -21,8 +21,8 @@ export async function commandSummary(action: textRunner.actions.Args) {
 }
 
 export function extractCommand(text: string): string {
-  const match = text.match(/^git town (\w+)/)
-  return match?.[1] ?? ""
+  const match = text.match(/^git town ([^<[]+?)(?:\s+-|\s+<|\s+\[|$)/)
+  return match?.[1]?.trim() ?? ""
 }
 
 export function extractArgs(text: string): string[][] {
