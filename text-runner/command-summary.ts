@@ -31,8 +31,9 @@ export function extractArgs(text: string): string[][] {
   const matches = text.matchAll(/\[([^\]]+)\]/g)
   for (const match of matches) {
     const argText = match[1]
+    const normalizedArgText = argText.replace(/<.+?>/g, "string")
     // Split by | to get the different variations of the flag
-    const variations = argText.split("|").map((v) => v.trim())
+    const variations = normalizedArgText.split("|").map((v) => v.trim())
     args.push(variations)
   }
   return args.sort()
