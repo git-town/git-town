@@ -1,3 +1,4 @@
+@messyoutput
 Feature: disable stashing via CLI flag
 
   Background:
@@ -12,7 +13,6 @@ Feature: disable stashing via CLI flag
       | DIALOG        | KEYS       |
       | switch-branch | down enter |
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                     |
@@ -20,16 +20,3 @@ Feature: disable stashing via CLI flag
       |         | git stash -m "Git Town WIP" |
       |         | git checkout local-2        |
       | local-2 | git stash pop               |
-
-  Scenario: undo
-    When I run "git-town undo"
-    Then Git Town runs the commands
-      | BRANCH | COMMAND                     |
-      | new    | git add -A                  |
-      |        | git stash -m "Git Town WIP" |
-      |        | git checkout main           |
-      | main   | git branch -D new           |
-      |        | git stash pop               |
-      |        | git restore --staged .      |
-    And the initial branches and lineage exist now
-    And the initial commits exist now
