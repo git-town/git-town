@@ -1,8 +1,12 @@
 # git town set-parent
 
+<a type="command-summary">
+
 ```command-summary
-git town set-parent [<branch>] [-v | --verbose]
+git town set-parent [<branch>] [-v | --verbose] [-h | --help]
 ```
+
+</a>
 
 The _set-parent_ command moves a branch and all its children below another
 branch. Consider this stack:

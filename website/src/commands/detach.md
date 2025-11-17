@@ -1,8 +1,12 @@
 # git town detach
 
+<a type="command-summary">
+
 ```command-summary
-git town detach [--dry-run] [-v | --verbose]
+git town detach [--dry-run] [-v | --verbose] [-h | --help]
 ```
+
+</a>
 
 The _detach_ command removes the current branch from the stack it is in and
 makes it a stand-alone top-level branch that ships directly into your main

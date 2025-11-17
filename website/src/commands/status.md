@@ -1,9 +1,13 @@
 # git town status
 
+<a type="command-summary">
+
 ```command-summary
-git town status [-p | --pending] [-v | --verbose]
+git town status [-p | --pending] [-v | --verbose] [-h | --help]
 git town status reset [-v | --verbose]
 ```
+
+</a>
 
 The _status_ command indicates whether Git Town has encountered a merge conflict
 and which commands you can run to continue, skip, or undo it.

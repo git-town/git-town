@@ -1,8 +1,12 @@
 # git town runlog
 
+<a type="command-summary">
+
 ```command-summary
-git town runlog [-v | --verbose]
+git town runlog [-v | --verbose] [-h | --help]
 ```
+
+</a>
 
 Git Town records the SHA of all local and remote branches before and after each
 command runs into an immutable, append-only log file called the _runlog_.
