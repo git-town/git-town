@@ -5,7 +5,7 @@
     "website/src/SUMMARY.md",
     "vendor/"
   ],
-  "format": "detailed",
+  "format": "dot",
   // regex patterns for link targets to ignore
   "ignoreLinkTargets": [],
   // prefix that makes anchor tags active regions
