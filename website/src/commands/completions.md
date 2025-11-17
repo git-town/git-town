@@ -3,7 +3,7 @@
 <a type="command-summary">
 
 ```command-summary
-git town completions (bash|fish|powershell|zsh) [--no-descriptions] [-h | --help]
+git town completions (bash|fish|powershell|zsh) [-h | --help][--no-descriptions]
 ```
 
 </a>
