@@ -3,7 +3,7 @@
 <a type="command-summary">
 
 ```command-summary
-git town detach [--dry-run] [-v | --verbose] [-h | --help]
+git town detach [--dry-run] [-h | --help] [-v | --verbose]
 ```
 
 </a>
