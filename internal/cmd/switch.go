@@ -156,7 +156,7 @@ Start:
 	if branchToCheckout == data.initialBranch {
 		return nil
 	}
-	if err := performSwitch(branchToCheckout, args.cliConfig.Stash.GetOr(false), args.merge, repo); err != nil {
+	if err := performSwitch(branchToCheckout, args.cliConfig.Stash.GetOr(false), data.hasOpenChanges, args.merge, repo); err != nil {
 		exitCode := 1
 		var exitErr *exec.ExitError
 		if errors.As(err, &exitErr) {
@@ -170,6 +170,7 @@ Start:
 type switchData struct {
 	branchesSnapshot   gitdomain.BranchesSnapshot
 	config             config.UnvalidatedConfig
+	hasOpenChanges     bool
 	initialBranch      gitdomain.LocalBranchName
 	inputs             dialogcomponents.Inputs
 	lineage            configdomain.Lineage
@@ -177,8 +178,8 @@ type switchData struct {
 	uncommittedChanges bool
 }
 
-func performSwitch(branchToCheckout gitdomain.LocalBranchName, stash configdomain.Stash, merge configdomain.SwitchUsingMerge, repo execute.OpenRepoResult) error {
-	if stash.ShouldStash() {
+func performSwitch(branchToCheckout gitdomain.LocalBranchName, stash configdomain.Stash, hasOpenChanges bool, merge configdomain.SwitchUsingMerge, repo execute.OpenRepoResult) error {
+	if stash.ShouldStash() && hasOpenChanges {
 		return switchWithStash(branchToCheckout, merge, repo)
 	}
 	return repo.Git.CheckoutBranch(repo.Frontend, branchToCheckout, merge)
@@ -235,6 +236,7 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult) (data switc
 	return switchData{
 		branchesSnapshot:   branchesSnapshot,
 		config:             repo.UnvalidatedConfig,
+		hasOpenChanges:     repoStatus.OpenChanges,
 		initialBranch:      initialBranch,
 		inputs:             inputs,
 		lineage:            repo.UnvalidatedConfig.NormalConfig.Lineage,
