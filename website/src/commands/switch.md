@@ -62,6 +62,12 @@ to move them to the new branch.
 The `--order` flag allows customizing the order in which branches get displayed.
 More info [here](../preferences/order.md#cli-flag)
 
+#### `--stash`
+
+When set, Git Town stashes the open changes before switching to the new branch
+and then unstashes them. This guarantees that the switch will work, at the cost
+of resetting any stashed changes.
+
 #### `-t <name>`<br>`--type <name>`
 
 The `--type` aka `-t` flag reduces the list of branches to those that have the
