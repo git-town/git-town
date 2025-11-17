@@ -1,6 +1,6 @@
 // @ts-check
 
-const GROUP_CHARS = ["()", "<>", "[]"]
+const GROUP_CHARS = ["()", "<>", "[]"];
 
 /**
  * This function tokenizes a line of text into strings that should be kept
@@ -15,30 +15,30 @@ const GROUP_CHARS = ["()", "<>", "[]"]
  * @returns {string[]}
  */
 export function tokenize(line) {
-  const tokens = []
-  let token = ""
-  let group = undefined
+  const tokens = [];
+  let token = "";
+  let group = undefined;
   for (const char of line) {
     if (group) {
       if (char === group[1]) {
-        group = undefined
+        group = undefined;
       }
-      token += char
+      token += char;
     } else {
-      const nextGroup = GROUP_CHARS.find(group => group[0] === char)
+      const nextGroup = GROUP_CHARS.find(group => group[0] === char);
       if (nextGroup) {
-        group = nextGroup
-        token += char
+        group = nextGroup;
+        token += char;
       } else if (char === " ") {
-        tokens.push(token)
-        token = ""
+        tokens.push(token);
+        token = "";
       } else {
-        token += char
+        token += char;
       }
     }
   }
-  tokens.push(token)
-  return tokens
+  tokens.push(token);
+  return tokens;
 }
 
 /**
@@ -52,15 +52,15 @@ export function tokenize(line) {
  * @returns {{ command: string, otherTokens: string[] }}
  */
 export function extractCommand(tokens) {
-  const otherTokens = [...tokens]
+  const otherTokens = [...tokens];
 
-  const commandTokens = []
+  const commandTokens = [];
   while (otherTokens.length > 0 && otherTokens[0].match(/^[a-z]/i)) {
-    commandTokens.push(otherTokens[0])
-    otherTokens.shift()
+    commandTokens.push(otherTokens[0]);
+    otherTokens.shift();
   }
 
-  const command = commandTokens.join(" ")
+  const command = commandTokens.join(" ");
 
-  return { command, otherTokens }
+  return { command, otherTokens };
 }
