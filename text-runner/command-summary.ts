@@ -44,7 +44,6 @@ export function extractArgs(text: string): string[][] {
 }
 
 async function commandArgs(command: string): Promise<string[][]> {
-  // run the command with --help and parse the output
   const output = await commandHelp(command)
   return parseCommandHelpOutput(output)
 }
