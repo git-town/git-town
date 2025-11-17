@@ -31,8 +31,8 @@ export function extractArgs(text: string): string[][] {
   const matches = text.matchAll(/\[([^\]]+)\]/g)
   for (const match of matches) {
     const argText = match[1]
-    // Skip if this doesn't contain a flag (doesn't start with -)
     if (!argText.trim().startsWith("-")) {
+      // this element doesn't contain a flag (doesn't start with -)
       continue
     }
     const normalizedArgText = argText.replace(/<.+?>/g, "string")
