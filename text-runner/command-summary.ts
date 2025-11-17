@@ -83,6 +83,5 @@ export function parseCommandHelpOutput(help: string): string[][] {
       }
     }
   }
-  // sort the result
   return result.sort()
 }
