@@ -3,7 +3,7 @@
 <a type="command-summary">
 
 ```command-summary
-git town diff-parent [-v | --verbose] [-h | --help]
+git town diff-parent [-h | --help] [-v | --verbose]
 ```
 
 </a>

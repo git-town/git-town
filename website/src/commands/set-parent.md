@@ -3,7 +3,7 @@
 <a type="command-summary">
 
 ```command-summary
-git town set-parent [<branch>] [--auto-resolve] [--none] [-v | --verbose] [-h | --help]
+git town set-parent [<branch>] [--auto-resolve] [-h | --help] [--none] [-v | --verbose]
 ```
 
 </a>
