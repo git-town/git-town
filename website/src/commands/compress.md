@@ -3,7 +3,7 @@
 <a type="command-summary">
 
 ```command-summary
-git town compress [-m | --message <text>] [--no-verify] [-s | --stack] [--dry-run] [-v | --verbose] [-h | --help]
+git town compress [--dry-run] [-h | --help] [-m | --message <text>] [--no-verify] [-s | --stack] [-v | --verbose]
 ```
 
 </a>
