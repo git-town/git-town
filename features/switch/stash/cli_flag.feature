@@ -4,9 +4,9 @@ Feature: enable stashing via CLI flag
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME    | TYPE    | PARENT | LOCATIONS     |
-      | local-1 | feature | main   | local, origin |
-      | local-2 | feature | main   | local, origin |
+      | NAME    | TYPE    | PARENT | LOCATIONS |
+      | local-1 | feature | main   | local     |
+      | local-2 | feature | main   | local     |
     And the current branch is "local-1"
     And an uncommitted file
     When I run "git-town switch --stash" and enter into the dialogs:
