@@ -4,7 +4,6 @@
 
 ```command-summary
 git town status [-p | --pending] [-v | --verbose] [-h | --help]
-git town status reset [-v | --verbose]
 ```
 
 </a>

@@ -3,7 +3,7 @@
 <a type="command-summary">
 
 ```command-summary
-git town switch [<branch-name-regex>...] [-a | --all] [-d | --display-types] [-m | --merge] [-o | --order] [-t <name> | --type <name>] [-v | --verbose] [-h | --help]
+git town switch [<branch-name-regex>...] [-a | --all] [-d | --display-types <type>] [-m | --merge] [-o | --order <asc|desc>] [-t | --type <name>] [-v | --verbose] [-h | --help]
 ```
 
 </a>
