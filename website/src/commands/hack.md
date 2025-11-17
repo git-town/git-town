@@ -3,7 +3,7 @@
 <a type="command-summary">
 
 ```command-summary
-git town hack [<branch-name>...] [-b | --beam] [-p | --prototype] [-d | --detached] [-c | --commit] [-m | --message <message>] [--propose] [--stash | --no-stash] [--sync] [--auto-resolve] [--dry-run] [-v | --verbose] [-h | --help]
+git town hack [<branch-name>...] [-b | --beam] [-p | --prototype] [-d | --detached] [-c | --commit] [-m | --message <message>] [--propose] [--stash] [--sync] [--auto-resolve] [--dry-run] [-v | --verbose] [-h | --help]
 ```
 
 </a>
