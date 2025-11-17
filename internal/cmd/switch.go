@@ -30,6 +30,7 @@ func switchCmd() *cobra.Command {
 	addDisplayTypesFlag, readDisplayTypesFlag := flags.Displaytypes()
 	addMergeFlag, readMergeFlag := flags.Merge()
 	addOrderFlag, readOrderFlag := flags.Order()
+	addStashFlag, readStashFlag := flags.Stash()
 	addTypeFlag, readTypeFlag := flags.BranchType()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
@@ -44,8 +45,9 @@ func switchCmd() *cobra.Command {
 			displayTypes, errDisplayTypes := readDisplayTypesFlag(cmd)
 			merge, errMerge := readMergeFlag(cmd)
 			order, errOrder := readOrderFlag(cmd)
+			stash, errStash := readStashFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errBranchTypes, errAllBranches, errDisplayTypes, errMerge, errOrder, errVerbose); err != nil {
+			if err := cmp.Or(errBranchTypes, errAllBranches, errDisplayTypes, errMerge, errOrder, errStash, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -56,7 +58,7 @@ func switchCmd() *cobra.Command {
 				DryRun:       None[configdomain.DryRun](),
 				Order:        order,
 				PushBranches: None[configdomain.PushBranches](),
-				Stash:        None[configdomain.Stash](),
+				Stash:        stash,
 				Verbose:      verbose,
 			})
 			return executeSwitch(executeSwitchArgs{
@@ -72,6 +74,7 @@ func switchCmd() *cobra.Command {
 	addDisplayTypesFlag(&cmd)
 	addMergeFlag(&cmd)
 	addOrderFlag(&cmd)
+	addStashFlag(&cmd)
 	addTypeFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
@@ -152,6 +155,12 @@ Start:
 	}
 	if branchToCheckout == data.initialBranch {
 		return nil
+	}
+	if data.config.NormalConfig.Stash.ShouldStash() {
+		err = repo.Git.Stash(repo.Frontend)
+		if err != nil {
+			return err
+		}
 	}
 	err = repo.Git.CheckoutBranch(repo.Frontend, branchToCheckout, args.merge)
 	if err != nil {
