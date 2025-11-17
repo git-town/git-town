@@ -1,8 +1,12 @@
 # git town hack
 
+<a type="command-summary">
+
 ```command-summary
-git town hack [<branch-name>...] [-b | --beam] [-p | --prototype] [-d | --detached] [-c | --commit] [-m | --message <message>] [--propose] [--stash | --no-stash] [--sync] [--auto-resolve] [--dry-run] [-v | --verbose]
+git town hack [<branch-name>...] [-b | --beam] [-p | --prototype] [-d | --detached] [-c | --commit] [-m | --message <message>] [--propose] [--stash] [--sync] [--auto-resolve] [--dry-run] [-v | --verbose] [-h | --help]
 ```
+
+</a>
 
 The _hack_ command ("let's start hacking") creates a new feature branch with the
 given name off the [main branch](../preferences/main-branch.md) and brings all

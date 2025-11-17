@@ -1,8 +1,12 @@
 # git town continue
 
+<a type="command-summary">
+
 ```command-summary
-git town continue [-v | --verbose]
+git town continue [-h | --help] [-v | --verbose]
 ```
+
+</a>
 
 When a Git Town command encounters a problem that it cannot resolve, for example
 a merge conflict, it stops to give the user an opportunity to resolve the issue.

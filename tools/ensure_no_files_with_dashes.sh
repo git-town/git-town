@@ -14,6 +14,7 @@ files_with_dashes=$(find . -name '*-*' |
 	grep -v './dprint-changelog.json' |
 	grep -v './cucumber-sort.json' |
 	grep -v './.gherkin-*' |
+	grep -v './text-runner' |
 	grep -v 'tools(/|\\)rta')
 if [ -n "$files_with_dashes" ]; then
 	count=$(echo "$files_with_dashes" | wc -l)

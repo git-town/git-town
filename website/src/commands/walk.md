@@ -1,8 +1,12 @@
 # git town walk
 
+<a type="command-summary">
+
 ```command-summary
-git town walk [-a | --all] [-s | --stack] [--dry-run] [-v | --verbose] [<command and arguments>]
+git town walk [-a | --all] [-s | --stack] [--dry-run] [-v | --verbose] [<command and arguments>] [-h | --help]
 ```
+
+</a>
 
 The _walk_ command ("walking the branch hierarchy") executes a given command for
 each feature branch. It stops if the command exits with an error, giving you a
