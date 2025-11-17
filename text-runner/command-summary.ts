@@ -11,11 +11,11 @@ export async function commandSummary(action: textRunner.actions.Args) {
   action.name(`arguments for "${command}"`)
   const documentedArgs = extractArgs(text)
   const actualArgs = await commandArgs(command)
-  const documentedText = JSON.stringify(documentedArgs, null, 2)
-  const actualText = JSON.stringify(actualArgs, null, 2)
-  if (documentedText !== actualText) {
-    action.log(`DOCUMENTED:\n${documentedText}`)
-    action.log(`ACTUAL:\n${actualText}`)
+  const documentedArgsStr = JSON.stringify(documentedArgs, null, 2)
+  const actualArgsStr = JSON.stringify(actualArgs, null, 2)
+  if (documentedArgsStr !== actualArgsStr) {
+    action.log(`DOCUMENTED:\n${documentedArgsStr}`)
+    action.log(`ACTUAL:\n${actualArgsStr}`)
     deepEqual(documentedArgs, actualArgs)
   }
 }
