@@ -162,14 +162,26 @@ Start:
 			return err
 		}
 	}
-	err = repo.Git.CheckoutBranch(repo.Frontend, branchToCheckout, args.merge)
-	if err != nil {
-		exitCode := 1
-		var exitErr *exec.ExitError
-		if errors.As(err, &exitErr) {
-			exitCode = exitErr.ExitCode()
+	if data.config.NormalConfig.Stash.ShouldStash() {
+		if err := repo.Git.Stash(repo.Frontend); err != nil {
+			return err
 		}
-		os.Exit(exitCode)
+		if err = repo.Git.CheckoutBranch(repo.Frontend, branchToCheckout, args.merge); err != nil {
+			return err
+		}
+		if err = repo.Git.PopStash(repo.Frontend); err != nil {
+			return err
+		}
+	} else {
+		err = repo.Git.CheckoutBranch(repo.Frontend, branchToCheckout, args.merge)
+		if err != nil {
+			exitCode := 1
+			var exitErr *exec.ExitError
+			if errors.As(err, &exitErr) {
+				exitCode = exitErr.ExitCode()
+			}
+			os.Exit(exitCode)
+		}
 	}
 	return nil
 }
