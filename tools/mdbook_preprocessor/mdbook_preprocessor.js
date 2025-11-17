@@ -1,7 +1,7 @@
 // @ts-check
 /// <reference types="node" />
 
-import { extractCommand, tokenize } from "./util.js";
+import { extractCommand, tokenize } from "./util.js"
 
 /**
  * @typedef {import("./types").Book} Book
@@ -19,16 +19,16 @@ import { extractCommand, tokenize } from "./util.js";
  */
 
 if (process.argv.length > 2) {
-  handleSupports();
+  handleSupports()
 } else {
-  await handlePreprocess();
+  await handlePreprocess()
 }
 
 function handleSupports() {
   if (process.argv[2] === "supports" && process.argv[3] === "html") {
-    process.exit(0);
+    process.exit(0)
   }
-  process.exit(1);
+  process.exit(1)
 }
 
 /**
@@ -40,19 +40,19 @@ function handleSupports() {
  */
 async function handlePreprocess() {
   // Read from stdin
-  let stdin = "";
+  let stdin = ""
   for await (const chunk of process.stdin) {
-    stdin += chunk;
+    stdin += chunk
   }
 
   // We don't care about the context. Only process the book.
-  const [, book] = JSON.parse(stdin);
+  const [, book] = JSON.parse(stdin)
 
-  processBook(book);
+  processBook(book)
 
   // Write to stdout
-  const output = JSON.stringify(book);
-  process.stdout.write(output + "\n");
+  const output = JSON.stringify(book)
+  process.stdout.write(output + "\n")
 }
 
 /**
@@ -60,7 +60,7 @@ async function handlePreprocess() {
  */
 function processBook(book) {
   for (const bookItem of book.sections) {
-    processBookItem(bookItem);
+    processBookItem(bookItem)
   }
 }
 
@@ -70,15 +70,15 @@ function processBook(book) {
 function processBookItem(bookItem) {
   // bookItem is { "Chapter": Chapter }, "Separator", or { "PartTitle": string }
   if (bookItem === "Separator") {
-    return;
+    return
   }
   // bookItem is { "Chapter": Chapter } or { "PartTitle": string }
   if ("PartTitle" in bookItem) {
-    return;
+    return
   }
   // bookItem is { "Chapter": Chapter }
 
-  processChapter(bookItem.Chapter);
+  processChapter(bookItem.Chapter)
 }
 
 /**
@@ -86,10 +86,10 @@ function processBookItem(bookItem) {
  */
 function processChapter(chapter) {
   for (const subItem of chapter.sub_items) {
-    processBookItem(subItem);
+    processBookItem(subItem)
   }
 
-  chapter.content = processContent(chapter.content);
+  chapter.content = processContent(chapter.content)
 }
 
 /**
@@ -98,10 +98,10 @@ function processChapter(chapter) {
  */
 function processContent(content) {
   return content.replaceAll(/```command-summary\n([\s\S]*?)\n```/g, (_, code) => {
-    return processCommandSummary(code);
+    return processCommandSummary(code)
   }).replaceAll(/^( *)```wrap\n([\s\S]*?)\n\1```/gm, (_, indent, code) => {
-    return processCodeWrap(code, indent);
-  });
+    return processCodeWrap(code, indent)
+  })
 }
 
 /**
@@ -149,18 +149,18 @@ function processCommandSummary(code) {
     code
       .split("\n")
       .map(line => {
-        const tokens = tokenize(line);
-        const { command, otherTokens } = extractCommand(tokens);
+        const tokens = tokenize(line)
+        const { command, otherTokens } = extractCommand(tokens)
 
-        const indent = command.length + 1;
+        const indent = command.length + 1
         return `<div class="gt-command-summary" style="padding-left: ${indent}ch; text-indent: -${indent}ch"><span class="gt-command">${command}</span> ${
           otherTokens
             .map(token => `<span>${token.replaceAll("<", "&lt;").replaceAll(">", "&gt;")}</span>`)
             .join(" ")
-        }</div>`;
+        }</div>`
       })
       .join("")
-  }</pre></code>`;
+  }</pre></code>`
 }
 
 /**
@@ -208,14 +208,14 @@ function processCodeWrap(code, indent) {
     code
       .split("\n")
       .map(line => {
-        const tokens = tokenize(line.slice(indent.length));
+        const tokens = tokenize(line.slice(indent.length))
 
         return `<div class="gt-code-wrap">${
           tokens
             .map(token => `<span>${token.replaceAll("<", "&lt;").replaceAll(">", "&gt;")}</span>`)
             .join(" ")
-        }</div>`;
+        }</div>`
       })
       .join("")
-  }</pre></code>`;
+  }</pre></code>`
 }
