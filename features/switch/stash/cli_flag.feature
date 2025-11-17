@@ -1,5 +1,5 @@
 @messyoutput
-Feature: disable stashing via CLI flag
+Feature: enable stashing via CLI flag
 
   Background:
     Given a Git repo with origin
