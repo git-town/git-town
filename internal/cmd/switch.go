@@ -157,12 +157,6 @@ Start:
 		return nil
 	}
 	if data.config.NormalConfig.Stash.ShouldStash() {
-		err = repo.Git.Stash(repo.Frontend)
-		if err != nil {
-			return err
-		}
-	}
-	if data.config.NormalConfig.Stash.ShouldStash() {
 		if err := repo.Git.Stash(repo.Frontend); err != nil {
 			return err
 		}
