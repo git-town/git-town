@@ -18,8 +18,6 @@ Feature: disable stashing via CLI flag
       | BRANCH  | COMMAND                     |
       | local-1 | git add -A                  |
       |         | git stash -m "Git Town WIP" |
-      |         | git add -A                  |
-      |         | git stash -m "Git Town WIP" |
       |         | git checkout local-2        |
       | local-2 | git stash pop               |
 
