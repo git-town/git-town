@@ -3,7 +3,7 @@
 <a type="command-summary">
 
 ```command-summary
-git town ship [<branch-name>] [-m | --message <text>] [-f | --message-file <path>] [-s | --strategy <name>] [-p | --to-parent] [--dry-run] [-v | --verbose] [-h | --help]
+git town ship [<branch-name>] [--dry-run] [-h | --help] [-m | --message <text>] [-f | --message-file <path>] [-s | --strategy <name>] [-p | --to-parent] [-v | --verbose]
 ```
 
 </a>
