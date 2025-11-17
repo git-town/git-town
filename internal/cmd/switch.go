@@ -156,26 +156,13 @@ Start:
 	if branchToCheckout == data.initialBranch {
 		return nil
 	}
-	if data.config.NormalConfig.Stash.ShouldStash() {
-		if err := repo.Git.Stash(repo.Frontend); err != nil {
-			return err
+	if err := performSwitch(branchToCheckout, data.config.NormalConfig.Stash, args.merge, repo); err != nil {
+		exitCode := 1
+		var exitErr *exec.ExitError
+		if errors.As(err, &exitErr) {
+			exitCode = exitErr.ExitCode()
 		}
-		if err = repo.Git.CheckoutBranch(repo.Frontend, branchToCheckout, args.merge); err != nil {
-			return err
-		}
-		if err = repo.Git.PopStash(repo.Frontend); err != nil {
-			return err
-		}
-	} else {
-		err = repo.Git.CheckoutBranch(repo.Frontend, branchToCheckout, args.merge)
-		if err != nil {
-			exitCode := 1
-			var exitErr *exec.ExitError
-			if errors.As(err, &exitErr) {
-				exitCode = exitErr.ExitCode()
-			}
-			os.Exit(exitCode)
-		}
+		os.Exit(exitCode)
 	}
 	return nil
 }
@@ -188,6 +175,22 @@ type switchData struct {
 	lineage            configdomain.Lineage
 	regexes            []*regexp.Regexp
 	uncommittedChanges bool
+}
+
+func performSwitch(branchToCheckout gitdomain.LocalBranchName, stash configdomain.Stash, merge configdomain.SwitchUsingMerge, repo execute.OpenRepoResult) error {
+	if stash.ShouldStash() {
+		return switchWithStash(branchToCheckout, merge, repo)
+	}
+	return nil
+}
+
+func switchWithStash(branchToCheckout gitdomain.LocalBranchName, merge configdomain.SwitchUsingMerge, repo execute.OpenRepoResult) error {
+	if err := repo.Git.Stash(repo.Frontend); err != nil {
+		return err
+	}
+	errCheckout := repo.Git.CheckoutBranch(repo.Frontend, branchToCheckout, merge)
+	errPop := repo.Git.PopStash(repo.Frontend)
+	return cmp.Or(errCheckout, errPop)
 }
 
 func determineSwitchData(args []string, repo execute.OpenRepoResult) (data switchData, flow configdomain.ProgramFlow, err error) {
