@@ -156,7 +156,7 @@ Start:
 	if branchToCheckout == data.initialBranch {
 		return nil
 	}
-	if err := performSwitch(branchToCheckout, data.config.NormalConfig.Stash, args.merge, repo); err != nil {
+	if err := performSwitch(branchToCheckout, args.cliConfig.Stash.GetOr(false), args.merge, repo); err != nil {
 		exitCode := 1
 		var exitErr *exec.ExitError
 		if errors.As(err, &exitErr) {
@@ -181,7 +181,7 @@ func performSwitch(branchToCheckout gitdomain.LocalBranchName, stash configdomai
 	if stash.ShouldStash() {
 		return switchWithStash(branchToCheckout, merge, repo)
 	}
-	return nil
+	return repo.Git.CheckoutBranch(repo.Frontend, branchToCheckout, merge)
 }
 
 func switchWithStash(branchToCheckout gitdomain.LocalBranchName, merge configdomain.SwitchUsingMerge, repo execute.OpenRepoResult) error {
