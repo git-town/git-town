@@ -1,8 +1,12 @@
 # git town up
 
+<a type="command-summary">
+
 ```command-summary
-git town up [-m | --merge] [-v | --verbose]
+git town up [-d | --display-types <type>] [-m | --merge] [-o | --order <asc|desc>] [-v | --verbose] [-h | --help]
 ```
+
+</a>
 
 The _up_ command moves one position up in the current stack by switching to a
 child of the current branch. After successfully switching branches, it displays

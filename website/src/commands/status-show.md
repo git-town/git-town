@@ -1,8 +1,12 @@
 # git town status show
 
+<a type="command-summary">
+
 ```command-summary
-git town status show [-v | --verbose]
+git town status show [-v | --verbose] [-h | --help]
 ```
+
+</a>
 
 The _status show_ command displays Git Town's runstate, i.e. detailed
 information about the currently suspended or previously executed Git Town

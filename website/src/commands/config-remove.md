@@ -1,8 +1,12 @@
 # git town config remove
 
+<a type="command-summary">
+
 ```command-summary
-git town config remove [-v | --verbose]
+git town config remove [-v | --verbose] [-h | --help]
 ```
+
+</a>
 
 The _config remove_ command removes all Git Town related configuration from the
 current Git repository.

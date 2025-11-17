@@ -1,8 +1,12 @@
 # git town undo
 
+<a type="command-summary">
+
 ```command-summary
-git town undo [-v | --verbose]
+git town undo [-v | --verbose] [-h | --help]
 ```
+
+</a>
 
 The _undo_ command reverts the last fully executed Git Town command. It performs
 the opposite activities that the last command did and leaves your repository in

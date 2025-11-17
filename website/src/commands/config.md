@@ -1,11 +1,12 @@
 # git town config
 
+<a type="command-summary">
+
 ```command-summary
-git town config [-v | --verbose]
-git town config get-parent [<branch-name>] [-v | --verbose]
-git town config remove [-v | --verbose]
-git town init [-v | --verbose]
+git town config [-d | --display-types <type>] [-v | --verbose] [-h | --help]
 ```
+
+</a>
 
 The _config_ command displays and updates the local Git Town configuration.
 
