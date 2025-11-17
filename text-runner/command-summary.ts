@@ -40,6 +40,7 @@ export function extractArgs(text: string): string[][] {
     const variations = normalizedArgText.split("|").map((v) => v.trim())
     args.push(variations)
   }
+  return args
 }
 
 async function commandArgs(command: string): Promise<string[][]> {
@@ -82,4 +83,5 @@ export function parseCommandHelpOutput(help: string): string[][] {
       }
     }
   }
+  return result
 }
