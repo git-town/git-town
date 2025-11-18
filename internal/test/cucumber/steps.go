@@ -244,13 +244,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.fixture.AddUpstream()
 	})
 
-	sc.Step(`^a proposal for this branch does not exist`, func(ctx context.Context) {
+	sc.Step(`^a proposal for this branch does not exist$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		devRepo.TestRunner.ProposalOverride = Some(forgedomain.OverrideNoProposal)
 	})
 
-	sc.Step(`^a proposal for this branch exists at "([^"]+)"`, func(ctx context.Context, url string) {
+	sc.Step(`^a proposal for this branch exists at "([^"]+)"$`, func(ctx context.Context, url string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		devRepo.TestRunner.ProposalOverride = Some(url)
@@ -266,7 +266,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^a remote "([^"]+)" pointing to "([^"]+)"`, func(ctx context.Context, name, url string) {
+	sc.Step(`^a remote "([^"]+)" pointing to "([^"]+)"$`, func(ctx context.Context, name, url string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		devRepo.AddRemote(gitdomain.Remote(name), url)
@@ -277,7 +277,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.fixture.OriginRepo.GetOrPanic().CreateStandaloneTag(name)
 	})
 
-	sc.Step(`^branch "([^"]+)" is active in another worktree`, func(ctx context.Context, branch string) {
+	sc.Step(`^branch "([^"]+)" is active in another worktree$`, func(ctx context.Context, branch string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.fixture.AddSecondWorktree(gitdomain.NewLocalBranchName(branch))
 	})
@@ -295,7 +295,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^commit "([^"]+)" on branch "([^"]+)" now has this full commit message`, func(ctx context.Context, title, branchText string, expected *godog.DocString) error {
+	sc.Step(`^commit "([^"]+)" on branch "([^"]+)" now has this full commit message$`, func(ctx context.Context, title, branchText string, expected *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(branchText)
@@ -493,7 +493,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^Git Town runs without errors`, func(ctx context.Context) error {
+	sc.Step(`^Git Town runs without errors$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		exitCode := state.runExitCode.GetOrPanic()
 		if exitCode != 0 {
@@ -1559,7 +1559,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	// This step exists to avoid re-creating commits with the same SHA as existing commits
 	// because that can cause flaky tests.
-	sc.Step(`wait 1 second to ensure new Git timestamps`, func() {
+	sc.Step(`^wait 1 second to ensure new Git timestamps$`, func() {
 		time.Sleep(1 * time.Second)
 	})
 }

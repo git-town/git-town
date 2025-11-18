@@ -78,11 +78,11 @@ Start:
 	case configdomain.ProgramFlowRestart:
 		goto Start
 	}
-	userInput, exit, err := setup.Enter(data)
+	userInput, exit, enterAll, err := setup.Enter(data)
 	if err != nil || exit {
 		return err
 	}
-	if err = setup.Save(userInput, repo.UnvalidatedConfig, data, repo.Frontend); err != nil {
+	if err = setup.Save(userInput, repo.UnvalidatedConfig, data, enterAll, repo.Frontend); err != nil {
 		return err
 	}
 	return configinterpreter.Finished(configinterpreter.FinishedArgs{
