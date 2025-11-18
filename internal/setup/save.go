@@ -211,6 +211,7 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 		return fc.Err
 	}
 
+	// EXTENDED CONFIGURATION
 	// TODO: sort this alphabetically
 	if configFile.AutoSync.IsNone() {
 		fc.Check(
