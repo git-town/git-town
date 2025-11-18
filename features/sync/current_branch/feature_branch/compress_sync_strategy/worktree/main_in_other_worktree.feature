@@ -17,7 +17,6 @@ Feature: sync a branch when main is active in another worktree and has updates
     When I run "git-town sync"
 
   Scenario: result
-    And inspect the commits
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
