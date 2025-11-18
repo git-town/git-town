@@ -1,4 +1,3 @@
-@this
 Feature: sync a branch when main is active in another worktree and has updates
 
   Background:
