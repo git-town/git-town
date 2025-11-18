@@ -11,8 +11,8 @@ Feature: sync a branch when main is active in another worktree and has updates
       |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
-    And the current branch is "feature"
     And Git setting "git-town.sync-feature-strategy" is "compress"
+    And the current branch is "feature"
     And branch "main" is active in another worktree
     When I run "git-town sync"
 
