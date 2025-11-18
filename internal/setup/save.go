@@ -188,23 +188,15 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 			saveForgeType(userInput.Data.ForgeType, existingGitConfig.ForgeType, frontend),
 		)
 	}
-	if forgeType, hasForgeType := userInput.DeterminedForgeType.Get(); hasForgeType {
-		switch forgeType {
-		case forgedomain.ForgeTypeGitHub:
-			if configFile.GitHubConnectorType.IsNone() {
-				fc.Check(
-					saveGitHubConnectorType(userInput.Data.GitHubConnectorType, existingGitConfig.GitHubConnectorType, frontend),
-				)
-			}
-		case forgedomain.ForgeTypeGitLab:
-			if configFile.GitLabConnectorType.IsNone() {
-				fc.Check(
-					saveGitLabConnectorType(userInput.Data.GitLabConnectorType, existingGitConfig.GitLabConnectorType, frontend),
-				)
-			}
-		case forgedomain.ForgeTypeAzureDevOps, forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter, forgedomain.ForgeTypeForgejo, forgedomain.ForgeTypeGitea:
-			// these connectors have only one connector type
-		}
+	if configFile.GitHubConnectorType.IsNone() {
+		fc.Check(
+			saveGitHubConnectorType(userInput.Data.GitHubConnectorType, existingGitConfig.GitHubConnectorType, frontend),
+		)
+	}
+	if configFile.GitLabConnectorType.IsNone() {
+		fc.Check(
+			saveGitLabConnectorType(userInput.Data.GitLabConnectorType, existingGitConfig.GitLabConnectorType, frontend),
+		)
 	}
 
 	if !enterAll {
