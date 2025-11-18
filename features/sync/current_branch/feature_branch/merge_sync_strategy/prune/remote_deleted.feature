@@ -8,8 +8,8 @@ Feature: prune a branch with deleted remote
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
-    And the current branch is "feature"
     And origin deletes the "feature" branch
+    And the current branch is "feature"
     When I run "git-town sync --prune"
 
   Scenario: result
