@@ -277,7 +277,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.fixture.OriginRepo.GetOrPanic().CreateStandaloneTag(name)
 	})
 
-	sc.Step(`^branch "([^"]+)" is active in another worktree`, func(ctx context.Context, branch string) {
+	sc.Step(`^branch "([^"]+)" is active in another worktree$`, func(ctx context.Context, branch string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.fixture.AddSecondWorktree(gitdomain.NewLocalBranchName(branch))
 	})
