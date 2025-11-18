@@ -1,4 +1,4 @@
-Feature: walk each branch of a stack with arguments
+Feature: walk each branch of a stack with arguments when some branches are checked out in another worktree
 
   Scenario: iterate the full stack
     Given a Git repo with origin
