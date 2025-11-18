@@ -5,6 +5,9 @@ Feature: prune a branch with deleted remote
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
+    And the commits
+      | BRANCH  | LOCATION      | MESSAGE        | FILE NAME    |
+      | feature | local, origin | feature commit | feature_file |
     And the current branch is "feature"
     And origin deletes the "feature" branch
     When I run "git-town sync --prune"
