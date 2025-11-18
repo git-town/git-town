@@ -287,16 +287,16 @@ func determineWalkData(repo execute.OpenRepoResult, all configdomain.AllBranches
 	case stack.Enabled():
 		branchesToWalk = validatedConfig.NormalConfig.Lineage.BranchLineageWithoutRoot(initialBranch, perennialBranchNames, validatedConfig.NormalConfig.Order)
 	}
-	filteredBranchesToWalk := gitdomain.LocalBranchNames{}
+	branchesInCurrentWorktree := gitdomain.LocalBranchNames{}
 	for _, branch := range branchesToWalk {
 		if !branchesSnapshot.Branches.BranchIsActiveInAnotherWorktree(branch) {
-			filteredBranchesToWalk = append(filteredBranchesToWalk, branch)
+			branchesInCurrentWorktree = append(branchesInCurrentWorktree, branch)
 		}
 	}
 	return walkData{
 		branchInfosLastRun: branchInfosLastRun,
 		branchesSnapshot:   branchesSnapshot,
-		branchesToWalk:     filteredBranchesToWalk,
+		branchesToWalk:     branchesInCurrentWorktree,
 		config:             validatedConfig,
 		connector:          connector,
 		hasOpenChanges:     repoStatus.OpenChanges,
