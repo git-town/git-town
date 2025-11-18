@@ -76,10 +76,10 @@ Feature: change existing information in Git metadata
       | git config git-town.perennial-branches "production qa"   |
       | git config git-town.hosting-origin-hostname code         |
       | git config git-town.forge-type github                    |
+      | git config git-town.github-connector api                 |
       | git config git-town.auto-sync true                       |
       | git config git-town.detached true                        |
       | git config git-town.new-branch-type prototype            |
-      | git config git-town.github-connector api                 |
       | git config git-town.perennial-regex per                  |
       | git config git-town.unknown-branch-type observed         |
       | git config git-town.feature-regex feat                   |

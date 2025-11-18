@@ -20,8 +20,9 @@ Feature: enter the GitLab API token
       | enter all             | enter             |                                             |
       | config storage        | enter             |                                             |
     Then Git Town runs the commands
-      | COMMAND                                 |
-      | git config git-town.gitlab-token gl-tok |
+      | COMMAND                                  |
+      | git config git-town.gitlab-token gl-tok  |
+      | git config git-town.gitlab-connector api |
     And local Git setting "git-town.forge-type" still doesn't exist
 
   Scenario: select GitLab manually
@@ -39,9 +40,10 @@ Feature: enter the GitLab API token
       | enter all             | enter             |                                             |
       | config storage        | enter             |                                             |
     Then Git Town runs the commands
-      | COMMAND                                 |
-      | git config git-town.gitlab-token gl-tok |
-      | git config git-town.forge-type gitlab   |
+      | COMMAND                                  |
+      | git config git-town.gitlab-token gl-tok  |
+      | git config git-town.forge-type gitlab    |
+      | git config git-town.gitlab-connector api |
     And local Git setting "git-town.forge-type" is now "gitlab"
     And local Git setting "git-town.gitlab-token" is now "gl-tok"
 
@@ -63,6 +65,7 @@ Feature: enter the GitLab API token
     Then Git Town runs the commands
       | COMMAND                                         |
       | git config --global git-town.gitlab-token gltok |
+      | git config git-town.gitlab-connector api        |
     And global Git setting "git-town.gitlab-token" is now "gltok"
 
   Scenario: edit global GitLab token
@@ -84,4 +87,5 @@ Feature: enter the GitLab API token
     Then Git Town runs the commands
       | COMMAND                                       |
       | git config --global git-town.gitlab-token 456 |
+      | git config git-town.gitlab-connector api      |
     And global Git setting "git-town.gitlab-token" is now "456"
