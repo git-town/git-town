@@ -27,7 +27,7 @@ Feature: prune a branch with deleted remote
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
-      | main   | git branch feature {{ sha 'initial commit' }} |
+      | main   | git branch feature {{ sha 'feature commit' }} |
       |        | git checkout feature                          |
     And the initial branches and lineage exist now
     And the initial commits exist now
