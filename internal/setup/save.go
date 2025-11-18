@@ -1,7 +1,6 @@
 package setup
 
 import (
-	"fmt"
 	"slices"
 
 	"github.com/git-town/git-town/v22/internal/cli/dialog"
@@ -190,7 +189,6 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 		)
 	}
 
-	fmt.Println("11111111111111111111111111111111111", enterAll)
 	if !enterAll {
 		return fc.Err
 	}
