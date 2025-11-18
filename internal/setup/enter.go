@@ -114,7 +114,7 @@ EnterForgeData:
 		giteaToken:           giteaToken.Or(data.Config.GitGlobal.GiteaToken),
 		githubConnectorType:  githubConnectorTypeOpt.Or(data.Config.GitGlobal.GitHubConnectorType),
 		githubToken:          githubToken.Or(data.Config.GitGlobal.GitHubToken),
-		gitlabConnectorType:  gitlabConnectorTypeOpt.Or(gitlabConnectorTypeOpt),
+		gitlabConnectorType:  gitlabConnectorTypeOpt.Or(data.Config.GitGlobal.GitLabConnectorType),
 		gitlabToken:          gitlabToken.Or(data.Config.GitGlobal.GitLabToken),
 		inputs:               data.Inputs,
 		remoteURL:            data.Config.NormalConfig.RemoteURL(data.Backend, devRemote.GetOr(config.DefaultNormalConfig().DevRemote)),
