@@ -61,6 +61,7 @@
     "features/walk/failing_script/failing_script.feature",
     "features/walk/stack/no_args.feature",
     "features/walk/undo/manual.feature",
+    "features/walk/worktree/no_args.feature",
     "vendor/**/*.feature"
   ],
   "record": true,

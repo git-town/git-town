@@ -63,6 +63,131 @@ func TestBranchInfos(t *testing.T) {
 		})
 	})
 
+	t.Run("BranchesInOtherWorktrees", func(t *testing.T) {
+		t.Parallel()
+		t.Run("empty BranchInfos", func(t *testing.T) {
+			t.Parallel()
+			branchInfos := gitdomain.BranchInfos{}
+			have := branchInfos.BranchesInOtherWorktrees()
+			want := gitdomain.LocalBranchNames{}
+			must.Eq(t, want, have)
+		})
+		t.Run("no branches in other worktrees", func(t *testing.T) {
+			t.Parallel()
+			branchInfos := gitdomain.BranchInfos{
+				{
+					LocalName:  gitdomain.NewLocalBranchNameOption("branch-1"),
+					SyncStatus: gitdomain.SyncStatusLocalOnly,
+				},
+				{
+					LocalName:  gitdomain.NewLocalBranchNameOption("branch-2"),
+					SyncStatus: gitdomain.SyncStatusUpToDate,
+					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-2")),
+				},
+			}
+			have := branchInfos.BranchesInOtherWorktrees()
+			want := gitdomain.LocalBranchNames{}
+			must.Eq(t, want, have)
+		})
+		t.Run("one branch in another worktree with local name", func(t *testing.T) {
+			t.Parallel()
+			branchInfos := gitdomain.BranchInfos{
+				{
+					LocalName:  gitdomain.NewLocalBranchNameOption("branch-1"),
+					SyncStatus: gitdomain.SyncStatusLocalOnly,
+				},
+				{
+					LocalName:  gitdomain.NewLocalBranchNameOption("branch-2"),
+					SyncStatus: gitdomain.SyncStatusOtherWorktree,
+				},
+			}
+			have := branchInfos.BranchesInOtherWorktrees()
+			want := gitdomain.NewLocalBranchNames("branch-2")
+			must.Eq(t, want, have)
+		})
+		t.Run("one branch in another worktree with remote name only", func(t *testing.T) {
+			t.Parallel()
+			branchInfos := gitdomain.BranchInfos{
+				{
+					LocalName:  gitdomain.NewLocalBranchNameOption("branch-1"),
+					SyncStatus: gitdomain.SyncStatusLocalOnly,
+				},
+				{
+					LocalName:  None[gitdomain.LocalBranchName](),
+					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-2")),
+					SyncStatus: gitdomain.SyncStatusOtherWorktree,
+				},
+			}
+			have := branchInfos.BranchesInOtherWorktrees()
+			want := gitdomain.NewLocalBranchNames("branch-2")
+			must.Eq(t, want, have)
+		})
+		t.Run("multiple branches in other worktrees", func(t *testing.T) {
+			t.Parallel()
+			branchInfos := gitdomain.BranchInfos{
+				{
+					LocalName:  gitdomain.NewLocalBranchNameOption("branch-1"),
+					SyncStatus: gitdomain.SyncStatusLocalOnly,
+				},
+				{
+					LocalName:  gitdomain.NewLocalBranchNameOption("branch-2"),
+					SyncStatus: gitdomain.SyncStatusOtherWorktree,
+				},
+				{
+					LocalName:  gitdomain.NewLocalBranchNameOption("branch-3"),
+					SyncStatus: gitdomain.SyncStatusUpToDate,
+					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-3")),
+				},
+				{
+					LocalName:  gitdomain.NewLocalBranchNameOption("branch-4"),
+					SyncStatus: gitdomain.SyncStatusOtherWorktree,
+				},
+				{
+					LocalName:  None[gitdomain.LocalBranchName](),
+					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-5")),
+					SyncStatus: gitdomain.SyncStatusOtherWorktree,
+				},
+			}
+			have := branchInfos.BranchesInOtherWorktrees()
+			want := gitdomain.NewLocalBranchNames("branch-2", "branch-4", "branch-5")
+			must.Eq(t, want, have)
+		})
+		t.Run("mixed statuses including other worktrees", func(t *testing.T) {
+			t.Parallel()
+			branchInfos := gitdomain.BranchInfos{
+				{
+					LocalName:  gitdomain.NewLocalBranchNameOption("local-only"),
+					SyncStatus: gitdomain.SyncStatusLocalOnly,
+				},
+				{
+					LocalName:  gitdomain.NewLocalBranchNameOption("up-to-date"),
+					SyncStatus: gitdomain.SyncStatusUpToDate,
+					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/up-to-date")),
+				},
+				{
+					LocalName:  gitdomain.NewLocalBranchNameOption("other-worktree-1"),
+					SyncStatus: gitdomain.SyncStatusOtherWorktree,
+				},
+				{
+					LocalName:  gitdomain.NewLocalBranchNameOption("ahead"),
+					SyncStatus: gitdomain.SyncStatusAhead,
+					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/ahead")),
+				},
+				{
+					LocalName:  gitdomain.NewLocalBranchNameOption("other-worktree-2"),
+					SyncStatus: gitdomain.SyncStatusOtherWorktree,
+				},
+				{
+					LocalName:  gitdomain.NewLocalBranchNameOption("deleted-at-remote"),
+					SyncStatus: gitdomain.SyncStatusDeletedAtRemote,
+				},
+			}
+			have := branchInfos.BranchesInOtherWorktrees()
+			want := gitdomain.NewLocalBranchNames("other-worktree-1", "other-worktree-2")
+			must.Eq(t, want, have)
+		})
+	})
+
 	t.Run("FindByRemote", func(t *testing.T) {
 		t.Parallel()
 		t.Run("has a local branch with matching tracking branch", func(t *testing.T) {
