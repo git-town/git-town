@@ -44,10 +44,10 @@ Feature: Accepting all default values leads to a working setup
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                              |
+      | git config git-town.main-branch main                 |
       | git config git-town.auto-sync true                   |
       | git config git-town.detached false                   |
       | git config git-town.new-branch-type feature          |
-      | git config git-town.main-branch main                 |
       | git config git-town.unknown-branch-type feature      |
       | git config git-town.order asc                        |
       | git config git-town.proposals-show-lineage none      |
