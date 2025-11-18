@@ -81,17 +81,17 @@ Feature: don't change existing extended information when changing basic informat
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And global Git setting "alias.append" now doesn't exist
-    And global Git setting "alias.diff-parent" now doesn't exist
-    And global Git setting "alias.hack" now doesn't exist
-    And global Git setting "alias.delete" now doesn't exist
-    And global Git setting "alias.prepend" now doesn't exist
-    And global Git setting "alias.propose" now doesn't exist
-    And global Git setting "alias.rename" now doesn't exist
-    And global Git setting "alias.repo" now doesn't exist
-    And global Git setting "alias.set-parent" now doesn't exist
-    And global Git setting "alias.ship" now doesn't exist
-    And global Git setting "alias.sync" now doesn't exist
+    And global Git setting "alias.append" still doesn't exist
+    And global Git setting "alias.diff-parent" still doesn't exist
+    And global Git setting "alias.hack" still doesn't exist
+    And global Git setting "alias.delete" still doesn't exist
+    And global Git setting "alias.prepend" still doesn't exist
+    And global Git setting "alias.propose" still doesn't exist
+    And global Git setting "alias.rename" still doesn't exist
+    And global Git setting "alias.repo" still doesn't exist
+    And global Git setting "alias.set-parent" still doesn't exist
+    And global Git setting "alias.ship" still doesn't exist
+    And global Git setting "alias.sync" still doesn't exist
     And local Git setting "git-town.auto-sync" is now "false"
     And local Git setting "git-town.new-branch-type" is now "parked"
     And local Git setting "git-town.share-new-branches" is now "push"
