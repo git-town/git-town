@@ -29,11 +29,11 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 			Snapshot:      args.ConfigSnapshot,
 		}
 		var exit dialogdomain.Exit
-		userInput, exit, err := setup.Enter(setupData)
+		userInput, exit, partial, err := setup.Enter(setupData)
 		if err != nil || exit {
 			return config.EmptyValidatedConfig(), exit, err
 		}
-		err = setup.Save(userInput, args.Unvalidated.Immutable(), setupData, args.Frontend)
+		err = setup.Save(userInput, args.Unvalidated.Immutable(), setupData, partial, args.Frontend)
 		if err != nil {
 			return config.EmptyValidatedConfig(), exit, err
 		}

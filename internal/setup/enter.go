@@ -20,36 +20,36 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-func Enter(data Data) (UserInput, dialogdomain.Exit, error) {
+func Enter(data Data) (UserInput, dialogdomain.Exit, bool, error) {
 	var emptyResult UserInput
 	exit, err := dialog.Welcome(data.Inputs)
 	if err != nil || exit {
-		return emptyResult, exit, err
+		return emptyResult, exit, false, err
 	}
 	aliases, exit, err := dialog.Aliases(configdomain.AllAliasableCommands(), data.Config.NormalConfig.Aliases, data.Inputs)
 	if err != nil || exit {
-		return emptyResult, exit, err
+		return emptyResult, exit, false, err
 	}
 	mainBranchSetting, actualMainBranch, exit, err := enterMainBranch(data)
 	if err != nil || exit {
-		return emptyResult, exit, err
+		return emptyResult, exit, false, err
 	}
 	perennialBranches, exit, err := enterPerennialBranches(data, actualMainBranch)
 	if err != nil || exit {
-		return emptyResult, exit, err
+		return emptyResult, exit, false, err
 	}
 EnterForgeData:
 	devRemote, exit, err := enterDevRemote(data)
 	if err != nil || exit {
-		return emptyResult, exit, err
+		return emptyResult, exit, false, err
 	}
 	hostingOriginHostName, exit, err := enterOriginHostName(data)
 	if err != nil || exit {
-		return emptyResult, exit, err
+		return emptyResult, exit, false, err
 	}
 	enteredForgeType, exit, err := enterForgeType(data)
 	if err != nil || exit {
-		return emptyResult, exit, err
+		return emptyResult, exit, false, err
 	}
 	devURL := data.Config.NormalConfig.DevURL(data.Backend)
 	actualForgeType := determineForgeType(enteredForgeType.Or(data.Config.File.ForgeType), devURL)
@@ -68,7 +68,7 @@ EnterForgeData:
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
 			bitbucketUsername, exit, err = enterBitbucketUserName(data)
 			if err != nil || exit {
-				return emptyResult, exit, err
+				return emptyResult, exit, false, err
 			}
 			bitbucketAppPassword, exit, err = enterBitbucketAppPassword(data)
 		case forgedomain.ForgeTypeForgejo:
@@ -78,7 +78,7 @@ EnterForgeData:
 		case forgedomain.ForgeTypeGitHub:
 			githubConnectorTypeOpt, exit, err = enterGitHubConnectorType(data)
 			if err != nil || exit {
-				return emptyResult, exit, err
+				return emptyResult, exit, false, err
 			}
 			if githubConnectorType, has := githubConnectorTypeOpt.Get(); has {
 				switch githubConnectorType {
@@ -90,7 +90,7 @@ EnterForgeData:
 		case forgedomain.ForgeTypeGitLab:
 			gitlabConnectorTypeOpt, exit, err = enterGitLabConnectorType(data)
 			if err != nil || exit {
-				return emptyResult, exit, err
+				return emptyResult, exit, false, err
 			}
 			if gitlabConnectorType, has := gitlabConnectorTypeOpt.Get(); has {
 				switch gitlabConnectorType {
@@ -101,7 +101,7 @@ EnterForgeData:
 			}
 		}
 		if err != nil || exit {
-			return emptyResult, exit, err
+			return emptyResult, exit, false, err
 		}
 	}
 	repeat, exit, err := testForgeAuth(testForgeAuthArgs{
@@ -120,7 +120,7 @@ EnterForgeData:
 		remoteURL:            data.Config.NormalConfig.RemoteURL(data.Backend, devRemote.GetOr(config.DefaultNormalConfig().DevRemote)),
 	})
 	if err != nil || exit {
-		return emptyResult, exit, err
+		return emptyResult, exit, false, err
 	}
 	if repeat {
 		goto EnterForgeData
@@ -138,11 +138,11 @@ EnterForgeData:
 		inputs:               data.Inputs,
 	})
 	if err != nil || exit {
-		return emptyResult, exit, err
+		return emptyResult, exit, false, err
 	}
 	enterAll, exit, err := dialog.EnterAll(data.Inputs)
-	if err != nil || exit {
-		return emptyResult, exit, err
+	if err != nil || exit.ShouldExit() || !enterAll {
+		return emptyResult, exit, true, err
 	}
 	autoSync := None[configdomain.AutoSync]()
 	perennialRegex := None[configdomain.PerennialRegex]()
@@ -168,92 +168,92 @@ EnterForgeData:
 	if enterAll {
 		perennialRegex, exit, err = enterPerennialRegex(data)
 		if err != nil || exit {
-			return emptyResult, exit, err
+			return emptyResult, exit, false, err
 		}
 		featureRegex, exit, err = enterFeatureRegex(data)
 		if err != nil || exit {
-			return emptyResult, exit, err
+			return emptyResult, exit, false, err
 		}
 		contributionRegex, exit, err = enterContributionRegex(data)
 		if err != nil || exit {
-			return emptyResult, exit, err
+			return emptyResult, exit, false, err
 		}
 		observedRegex, exit, err = enterObservedRegex(data)
 		if err != nil || exit {
-			return emptyResult, exit, err
+			return emptyResult, exit, false, err
 		}
 		newBranchType, exit, err = enterNewBranchType(data)
 		if err != nil || exit {
-			return emptyResult, exit, err
+			return emptyResult, exit, false, err
 		}
 		unknownBranchType, exit, err = enterUnknownBranchType(data)
 		if err != nil || exit {
-			return emptyResult, exit, err
+			return emptyResult, exit, false, err
 		}
 		syncFeatureStrategy, exit, err = enterSyncFeatureStrategy(data)
 		if err != nil || exit {
-			return emptyResult, exit, err
+			return emptyResult, exit, false, err
 		}
 		syncPerennialStrategy, exit, err = enterSyncPerennialStrategy(data)
 		if err != nil || exit {
-			return emptyResult, exit, err
+			return emptyResult, exit, false, err
 		}
 		syncPrototypeStrategy, exit, err = enterSyncPrototypeStrategy(data)
 		if err != nil || exit {
-			return emptyResult, exit, err
+			return emptyResult, exit, false, err
 		}
 		syncUpstream, exit, err = enterSyncUpstream(data)
 		if err != nil || exit {
-			return emptyResult, exit, err
+			return emptyResult, exit, false, err
 		}
 		autoSync, exit, err = enterAutoSync(data)
 		if err != nil || exit {
-			return emptyResult, exit, err
+			return emptyResult, exit, false, err
 		}
 		syncTags, exit, err = enterSyncTags(data)
 		if err != nil || exit {
-			return emptyResult, exit, err
+			return emptyResult, exit, false, err
 		}
 		detached, exit, err = enterDetached(data)
 		if err != nil || exit {
-			return emptyResult, exit, err
+			return emptyResult, exit, false, err
 		}
 		stash, exit, err = enterStash(data)
 		if err != nil || exit {
-			return emptyResult, exit, err
+			return emptyResult, exit, false, err
 		}
 		shareNewBranches, exit, err = enterShareNewBranches(data)
 		if err != nil || exit {
-			return emptyResult, exit, err
+			return emptyResult, exit, false, err
 		}
 		pushBranches, exit, err = enterPushBranches(data)
 		if err != nil || exit {
-			return emptyResult, exit, err
+			return emptyResult, exit, false, err
 		}
 		pushHook, exit, err = enterPushHook(data)
 		if err != nil || exit {
-			return emptyResult, exit, err
+			return emptyResult, exit, false, err
 		}
 		shipStrategy, exit, err = enterShipStrategy(data)
 		if err != nil || exit {
-			return emptyResult, exit, err
+			return emptyResult, exit, false, err
 		}
 		shipDeleteTrackingBranch, exit, err = enterShipDeleteTrackingBranch(data)
 		if err != nil || exit {
-			return emptyResult, exit, err
+			return emptyResult, exit, false, err
 		}
 		order, exit, err = enterOrder(data)
 		if err != nil || exit {
-			return emptyResult, exit, err
+			return emptyResult, exit, false, err
 		}
 		proposalsShowLineage, exit, err = enterProposalsShowLineage(data)
 		if err != nil || exit {
-			return emptyResult, exit, err
+			return emptyResult, exit, false, err
 		}
 	}
 	configStorage, exit, err := dialog.ConfigStorage(data.Inputs)
 	if err != nil || exit {
-		return emptyResult, exit, err
+		return emptyResult, exit, false, err
 	}
 	normalData := configdomain.PartialConfig{
 		Aliases:                  aliases,
@@ -304,7 +304,7 @@ EnterForgeData:
 	validatedData := configdomain.ValidatedConfigData{
 		MainBranch: actualMainBranch,
 	}
-	return UserInput{normalData, actualForgeType, tokenScope, configStorage, validatedData}, false, nil
+	return UserInput{normalData, actualForgeType, tokenScope, configStorage, validatedData}, false, false, nil
 }
 
 // data entered by the user in the setup assistant

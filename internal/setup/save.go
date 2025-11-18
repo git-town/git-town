@@ -15,7 +15,7 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-func Save(userInput UserInput, unvalidatedConfig config.UnvalidatedConfig, data Data, frontend subshelldomain.Runner) error {
+func Save(userInput UserInput, unvalidatedConfig config.UnvalidatedConfig, data Data, partial bool, frontend subshelldomain.Runner) error {
 	fc := gohacks.ErrorCollector{}
 	fc.Check(
 		saveAliases(userInput.Data.Aliases, unvalidatedConfig.GitGlobal.Aliases, frontend),
@@ -56,7 +56,7 @@ func Save(userInput UserInput, unvalidatedConfig config.UnvalidatedConfig, data 
 	case dialog.ConfigStorageOptionFile:
 		return saveAllToFile(userInput, unvalidatedConfig.GitLocal, frontend)
 	case dialog.ConfigStorageOptionGit:
-		return saveAllToGit(userInput, unvalidatedConfig.GitLocal, unvalidatedConfig.File, data, frontend)
+		return saveAllToGit(userInput, unvalidatedConfig.GitLocal, unvalidatedConfig.File, data, partial, frontend)
 	}
 	return nil
 }
@@ -161,8 +161,37 @@ func saveAllToFile(userInput UserInput, gitConfig configdomain.PartialConfig, ru
 	return saveFeatureRegex(userInput.Data.FeatureRegex, gitConfig.FeatureRegex, runner)
 }
 
-func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialConfig, configFile configdomain.PartialConfig, data Data, frontend subshelldomain.Runner) error {
+func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialConfig, configFile configdomain.PartialConfig, data Data, partial bool, frontend subshelldomain.Runner) error {
 	fc := gohacks.ErrorCollector{}
+
+	// BASIC CONFIGURATION
+	if configFile.MainBranch.IsNone() {
+		fc.Check(
+			saveMainBranch(userInput.Data.MainBranch, existingGitConfig.MainBranch, frontend),
+		)
+	}
+	fc.Check(
+		savePerennialBranches(userInput.Data.PerennialBranches, existingGitConfig.PerennialBranches, frontend),
+	)
+	if len(data.Remotes) > 1 && configFile.DevRemote.IsNone() {
+		fc.Check(
+			saveDevRemote(userInput.Data.DevRemote, existingGitConfig.DevRemote, frontend),
+		)
+	}
+	if configFile.HostingOriginHostname.IsNone() {
+		fc.Check(
+			saveOriginHostname(userInput.Data.HostingOriginHostname, existingGitConfig.HostingOriginHostname, frontend),
+		)
+	}
+	if configFile.ForgeType.IsNone() {
+		fc.Check(
+			saveForgeType(userInput.Data.ForgeType, existingGitConfig.ForgeType, frontend),
+		)
+	}
+	if partial {
+		return fc.Err
+	}
+
 	// TODO: sort this alphabetically
 	if configFile.AutoSync.IsNone() {
 		fc.Check(
@@ -179,11 +208,6 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 			saveNewBranchType(userInput.Data.NewBranchType, existingGitConfig.NewBranchType, frontend),
 		)
 	}
-	if configFile.ForgeType.IsNone() {
-		fc.Check(
-			saveForgeType(userInput.Data.ForgeType, existingGitConfig.ForgeType, frontend),
-		)
-	}
 	if configFile.GitHubConnectorType.IsNone() {
 		fc.Check(
 			saveGitHubConnectorType(userInput.Data.GitHubConnectorType, existingGitConfig.GitHubConnectorType, frontend),
@@ -194,19 +218,6 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 			saveGitLabConnectorType(userInput.Data.GitLabConnectorType, existingGitConfig.GitLabConnectorType, frontend),
 		)
 	}
-	if configFile.HostingOriginHostname.IsNone() {
-		fc.Check(
-			saveOriginHostname(userInput.Data.HostingOriginHostname, existingGitConfig.HostingOriginHostname, frontend),
-		)
-	}
-	if configFile.MainBranch.IsNone() {
-		fc.Check(
-			saveMainBranch(userInput.Data.MainBranch, existingGitConfig.MainBranch, frontend),
-		)
-	}
-	fc.Check(
-		savePerennialBranches(userInput.Data.PerennialBranches, existingGitConfig.PerennialBranches, frontend),
-	)
 	if configFile.PerennialRegex.IsNone() {
 		fc.Check(
 			savePerennialRegex(userInput.Data.PerennialRegex, existingGitConfig.PerennialRegex, frontend),
@@ -215,11 +226,6 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 	if configFile.UnknownBranchType.IsNone() {
 		fc.Check(
 			saveUnknownBranchType(userInput.Data.UnknownBranchType, existingGitConfig.UnknownBranchType, frontend),
-		)
-	}
-	if len(data.Remotes) > 1 && configFile.DevRemote.IsNone() {
-		fc.Check(
-			saveDevRemote(userInput.Data.DevRemote, existingGitConfig.DevRemote, frontend),
 		)
 	}
 	if configFile.FeatureRegex.IsNone() {
