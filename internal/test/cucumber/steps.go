@@ -1559,7 +1559,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	// This step exists to avoid re-creating commits with the same SHA as existing commits
 	// because that can cause flaky tests.
-	sc.Step(`wait 1 second to ensure new Git timestamps$`, func() {
+	sc.Step(`^wait 1 second to ensure new Git timestamps$`, func() {
 		time.Sleep(1 * time.Second)
 	})
 }
