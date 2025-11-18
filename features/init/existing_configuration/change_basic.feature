@@ -53,6 +53,8 @@ Feature: don't change existing extended information when changing basic informat
       | git config git-town.perennial-branches "production qa" |
       | git config git-town.hosting-origin-hostname code       |
       | git config git-town.forge-type github                  |
+    And local Git setting "git-town.auto-sync" is still "false"
+    And local Git setting "git-town.detached" is still "false"
     And local Git setting "git-town.perennial-branches" is now "production qa"
     And local Git setting "git-town.new-branch-type" is still "parked"
     And local Git setting "git-town.forge-type" is now "github"
@@ -93,6 +95,7 @@ Feature: don't change existing extended information when changing basic informat
     And global Git setting "alias.ship" still doesn't exist
     And global Git setting "alias.sync" still doesn't exist
     And local Git setting "git-town.auto-sync" is now "false"
+    And local Git setting "git-town.detached" is still "false"
     And local Git setting "git-town.new-branch-type" is now "parked"
     And local Git setting "git-town.share-new-branches" is now "push"
     And local Git setting "git-town.push-branches" is now "true"
