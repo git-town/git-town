@@ -188,6 +188,22 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 			saveForgeType(userInput.Data.ForgeType, existingGitConfig.ForgeType, frontend),
 		)
 	}
+	if forgeType, hasForgeType := userInput.DeterminedForgeType.Get(); hasForgeType {
+		switch forgeType {
+		case forgedomain.ForgeTypeGitHub:
+			if configFile.GitHubConnectorType.IsNone() {
+				fc.Check(
+					saveGitHubConnectorType(userInput.Data.GitHubConnectorType, existingGitConfig.GitHubConnectorType, frontend),
+				)
+			}
+		case forgedomain.ForgeTypeGitLab:
+			if configFile.GitLabConnectorType.IsNone() {
+				fc.Check(
+					saveGitLabConnectorType(userInput.Data.GitLabConnectorType, existingGitConfig.GitLabConnectorType, frontend),
+				)
+			}
+		}
+	}
 
 	if !enterAll {
 		return fc.Err
@@ -207,16 +223,6 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 	if configFile.NewBranchType.IsNone() {
 		fc.Check(
 			saveNewBranchType(userInput.Data.NewBranchType, existingGitConfig.NewBranchType, frontend),
-		)
-	}
-	if configFile.GitHubConnectorType.IsNone() {
-		fc.Check(
-			saveGitHubConnectorType(userInput.Data.GitHubConnectorType, existingGitConfig.GitHubConnectorType, frontend),
-		)
-	}
-	if configFile.GitLabConnectorType.IsNone() {
-		fc.Check(
-			saveGitLabConnectorType(userInput.Data.GitLabConnectorType, existingGitConfig.GitLabConnectorType, frontend),
 		)
 	}
 	if configFile.PerennialRegex.IsNone() {
