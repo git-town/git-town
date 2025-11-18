@@ -13,17 +13,17 @@ Feature: beam commits onto a new feature branch when the parent branch is unknow
       | existing | local    | commit 2    |
     And the current branch is "existing"
     When I run "git-town hack new --beam" and enter into the dialog:
-      | DIALOG                       | KEYS        |
-      | parent branch for "existing" | enter       |
-      | commits to beam              | space enter |
+      | DIALOG                       | KEYS             |
+      | parent branch for "existing" | enter            |
+      | commits to beam              | down space enter |
 
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                                                 |
       | existing | git checkout -b new main                                                                                |
-      | new      | git cherry-pick {{ sha-initial 'commit 1' }}                                                            |
+      | new      | git cherry-pick {{ sha-initial 'commit 2' }}                                                            |
       |          | git checkout existing                                                                                   |
-      | existing | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 1' }}^ {{ sha-initial 'commit 1' }} |
+      | existing | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 2' }}^ {{ sha-initial 'commit 2' }} |
       |          | git push --force-with-lease --force-if-includes                                                         |
       |          | git checkout new                                                                                        |
     And no rebase is now in progress
@@ -36,8 +36,8 @@ Feature: beam commits onto a new feature branch when the parent branch is unknow
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE     |
       | main     | origin        | main commit |
-      | existing | local, origin | commit 2    |
-      | new      | local         | commit 1    |
+      | existing | local, origin | commit 1    |
+      | new      | local         | commit 2    |
 
   Scenario: undo
     When I run "git-town undo"
@@ -53,7 +53,7 @@ Feature: beam commits onto a new feature branch when the parent branch is unknow
   Scenario: amend the beamed commit
     And I amend this commit
       | BRANCH | LOCATION | MESSAGE   | FILE NAME | FILE CONTENT    |
-      | new    | local    | commit 1b | file_1    | amended content |
+      | new    | local    | commit 2b | file_2    | amended content |
     And the current branch is "new"
     When I run "git-town sync"
     Then Git Town runs the commands
@@ -67,6 +67,6 @@ Feature: beam commits onto a new feature branch when the parent branch is unknow
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE                      |
       | main     | local, origin | main commit                  |
-      | existing | local, origin | commit 2                     |
-      | new      | local, origin | commit 1b                    |
+      | existing | local, origin | commit 1                     |
+      | new      | local, origin | commit 2b                    |
       |          |               | Merge branch 'main' into new |
