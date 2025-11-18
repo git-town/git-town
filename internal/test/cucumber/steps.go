@@ -244,7 +244,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.fixture.AddUpstream()
 	})
 
-	sc.Step(`^a proposal for this branch does not exist`, func(ctx context.Context) {
+	sc.Step(`^a proposal for this branch does not exist$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		devRepo.TestRunner.ProposalOverride = Some(forgedomain.OverrideNoProposal)
