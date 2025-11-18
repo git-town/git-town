@@ -1,6 +1,5 @@
 Feature: walk each branch of a stack without arguments when some branches are checked out in another worktree
 
-  @this
   Scenario: action
     Given a Git repo with origin
     And the branches
