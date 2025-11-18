@@ -6,5 +6,5 @@ package dialogdomain
 type Exit bool
 
 func (self Exit) ShouldExit() bool {
-	return bool(e)
+	return bool(self)
 }
