@@ -21,28 +21,19 @@ func TestCheckStepRegexAnchors(t *testing.T) {
 		must.SliceEmpty(t, have)
 	})
 
-	t.Run("step missing start anchor", func(t *testing.T) {
+	t.Run("multiple unanchored steps", func(t *testing.T) {
 		t.Parallel()
 		give := []lintSteps.StepDefinition{
 			{Line: 1, Text: "^properly anchored step$"},
-			{Line: 2, Text: "missing start anchor$"},
+			{Line: 2, Text: "missing start$"},
+			{Line: 3, Text: "^missing end"},
+			{Line: 4, Text: "missing both"},
 		}
 		have := lintSteps.CheckStepRegexAnchors(give)
 		want := []lintSteps.StepDefinition{
-			{Line: 2, Text: "missing start anchor$"},
-		}
-		must.Eq(t, want, have)
-	})
-
-	t.Run("step missing end anchor", func(t *testing.T) {
-		t.Parallel()
-		give := []lintSteps.StepDefinition{
-			{Line: 1, Text: "^properly anchored step$"},
-			{Line: 2, Text: "^missing end anchor"},
-		}
-		have := lintSteps.CheckStepRegexAnchors(give)
-		want := []lintSteps.StepDefinition{
-			{Line: 2, Text: "^missing end anchor"},
+			{Line: 2, Text: "missing start$"},
+			{Line: 3, Text: "^missing end"},
+			{Line: 4, Text: "missing both"},
 		}
 		must.Eq(t, want, have)
 	})
@@ -60,19 +51,28 @@ func TestCheckStepRegexAnchors(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("multiple unanchored steps", func(t *testing.T) {
+	t.Run("step missing end anchor", func(t *testing.T) {
 		t.Parallel()
 		give := []lintSteps.StepDefinition{
 			{Line: 1, Text: "^properly anchored step$"},
-			{Line: 2, Text: "missing start$"},
-			{Line: 3, Text: "^missing end"},
-			{Line: 4, Text: "missing both"},
+			{Line: 2, Text: "^missing end anchor"},
 		}
 		have := lintSteps.CheckStepRegexAnchors(give)
 		want := []lintSteps.StepDefinition{
-			{Line: 2, Text: "missing start$"},
-			{Line: 3, Text: "^missing end"},
-			{Line: 4, Text: "missing both"},
+			{Line: 2, Text: "^missing end anchor"},
+		}
+		must.Eq(t, want, have)
+	})
+
+	t.Run("step missing start anchor", func(t *testing.T) {
+		t.Parallel()
+		give := []lintSteps.StepDefinition{
+			{Line: 1, Text: "^properly anchored step$"},
+			{Line: 2, Text: "missing start anchor$"},
+		}
+		have := lintSteps.CheckStepRegexAnchors(give)
+		want := []lintSteps.StepDefinition{
+			{Line: 2, Text: "missing start anchor$"},
 		}
 		must.Eq(t, want, have)
 	})
