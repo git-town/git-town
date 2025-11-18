@@ -59,10 +59,10 @@ Feature: Fix invalid configuration data
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                               |
+      | git config git-town.main-branch main                  |
       | git config git-town.auto-sync false                   |
       | git config git-town.detached true                     |
       | git config git-town.new-branch-type parked            |
-      | git config git-town.main-branch main                  |
       | git config git-town.perennial-regex per               |
       | git config git-town.unknown-branch-type observed      |
       | git config git-town.feature-regex feat                |

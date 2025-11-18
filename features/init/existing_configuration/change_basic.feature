@@ -58,7 +58,6 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.forge-type" is now "github"
     And local Git setting "git-town.github-token" is now "gh-tok"
     And local Git setting "git-town.hosting-origin-hostname" is now "code"
-    And local Git setting "git-town.stash" still doesn't exist
     And local Git setting "git-town.sync-feature-strategy" is still "rebase"
     And local Git setting "git-town.sync-perennial-strategy" is still "rebase"
     And local Git setting "git-town.sync-prototype-strategy" is still "rebase"
@@ -75,6 +74,7 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.ship-strategy" is still "fast-forward"
     And local Git setting "git-town.ship-delete-tracking-branch" is still "true"
     And local Git setting "git-town.proposals-show-lineage" is still "cli"
+    And local Git setting "git-town.stash" still doesn't exist
     And local Git setting "git-town.dev-remote" still doesn't exist
     And the main branch is now "main"
 
@@ -98,10 +98,6 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.push-branches" is now "true"
     And local Git setting "git-town.push-hook" is now "true"
     And local Git setting "git-town.ship-delete-tracking-branch" is now "true"
-    And local Git setting "git-town.forge-type" now doesn't exist
-    And local Git setting "git-town.github-token" now doesn't exist
-    And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
-    And local Git setting "git-town.stash" now doesn't exist
     And local Git setting "git-town.sync-feature-strategy" is still "rebase"
     And local Git setting "git-town.sync-perennial-strategy" is still "rebase"
     And local Git setting "git-town.sync-prototype-strategy" is still "rebase"
@@ -113,5 +109,9 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.unknown-branch-type" is still "observed"
     And local Git setting "git-town.ship-strategy" is still "fast-forward"
     And local Git setting "git-town.proposals-show-lineage" is still "cli"
+    And local Git setting "git-town.forge-type" now doesn't exist
+    And local Git setting "git-town.github-token" now doesn't exist
+    And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
+    And local Git setting "git-town.stash" now doesn't exist
     And the main branch is now "main"
     And the perennial branches are now "qa"

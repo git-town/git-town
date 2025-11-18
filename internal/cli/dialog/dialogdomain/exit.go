@@ -5,6 +5,6 @@ package dialogdomain
 // that displayed the dialog.
 type Exit bool
 
-func (e Exit) ShouldExit() bool {
+func (self Exit) ShouldExit() bool {
 	return bool(e)
 }

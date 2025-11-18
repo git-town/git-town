@@ -99,12 +99,12 @@ Feature: remove existing configuration in Git metadata
       | git config --global --unset alias.set-parent         |
       | git config --global --unset alias.ship               |
       | git config --global --unset alias.sync               |
+      | git config git-town.perennial-branches ""            |
+      | git config --unset git-town.hosting-origin-hostname  |
+      | git config --unset git-town.forge-type               |
       | git config git-town.auto-sync true                   |
       | git config git-town.detached false                   |
       | git config git-town.new-branch-type feature          |
-      | git config --unset git-town.forge-type               |
-      | git config --unset git-town.hosting-origin-hostname  |
-      | git config git-town.perennial-branches ""            |
       | git config --unset git-town.perennial-regex          |
       | git config git-town.unknown-branch-type feature      |
       | git config --unset git-town.feature-regex            |
