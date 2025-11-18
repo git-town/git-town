@@ -141,7 +141,7 @@ EnterForgeData:
 		return emptyResult, exit, false, err
 	}
 	enterAll, exit, err := dialog.EnterAll(data.Inputs)
-	if err != nil || exit.ShouldExit() || !enterAll {
+	if err != nil || exit.ShouldExit() {
 		return emptyResult, exit, true, err
 	}
 	autoSync := None[configdomain.AutoSync]()
@@ -304,7 +304,7 @@ EnterForgeData:
 	validatedData := configdomain.ValidatedConfigData{
 		MainBranch: actualMainBranch,
 	}
-	return UserInput{normalData, actualForgeType, tokenScope, configStorage, validatedData}, false, false, nil
+	return UserInput{normalData, actualForgeType, tokenScope, configStorage, validatedData}, false, enterAll, nil
 }
 
 // data entered by the user in the setup assistant

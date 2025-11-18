@@ -31,15 +31,15 @@ Feature: change existing information in Git metadata
       | enter all             | enter                  |
       | config storage        | enter                  |
 
-  @this
+  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                                |
       | git config git-town.github-token gh-tok                |
+      | git config git-town.perennial-branches "production qa" |
+      | git config git-town.hosting-origin-hostname code       |
       | git config git-town.forge-type github                  |
       | git config git-town.github-connector api               |
-      | git config git-town.hosting-origin-hostname code       |
-      | git config git-town.perennial-branches "production qa" |
     And global Git setting "alias.append" is now "town append"
     And global Git setting "alias.diff-parent" is now "town diff-parent"
     And global Git setting "alias.hack" is now "town hack"
