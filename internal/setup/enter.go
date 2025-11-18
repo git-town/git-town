@@ -141,7 +141,7 @@ EnterForgeData:
 		return emptyResult, exit, false, err
 	}
 	enterAll, exit, err := dialog.EnterAll(data.Inputs)
-	if err != nil || exit.ShouldExit() {
+	if err != nil || exit {
 		return emptyResult, exit, enterAll, err
 	}
 	autoSync := None[configdomain.AutoSync]()
