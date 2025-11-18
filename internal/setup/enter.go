@@ -142,7 +142,7 @@ EnterForgeData:
 	}
 	enterAll, exit, err := dialog.EnterAll(data.Inputs)
 	if err != nil || exit.ShouldExit() {
-		return emptyResult, exit, true, err
+		return emptyResult, exit, enterAll, err
 	}
 	autoSync := None[configdomain.AutoSync]()
 	perennialRegex := None[configdomain.PerennialRegex]()

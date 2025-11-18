@@ -16,7 +16,7 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-func Save(userInput UserInput, unvalidatedConfig config.UnvalidatedConfig, data Data, partial bool, frontend subshelldomain.Runner) error {
+func Save(userInput UserInput, unvalidatedConfig config.UnvalidatedConfig, data Data, enterAll bool, frontend subshelldomain.Runner) error {
 	fc := gohacks.ErrorCollector{}
 	fc.Check(
 		saveAliases(userInput.Data.Aliases, unvalidatedConfig.GitGlobal.Aliases, frontend),
@@ -57,7 +57,7 @@ func Save(userInput UserInput, unvalidatedConfig config.UnvalidatedConfig, data 
 	case dialog.ConfigStorageOptionFile:
 		return saveAllToFile(userInput, unvalidatedConfig.GitLocal, frontend)
 	case dialog.ConfigStorageOptionGit:
-		return saveAllToGit(userInput, unvalidatedConfig.GitLocal, unvalidatedConfig.File, data, partial, frontend)
+		return saveAllToGit(userInput, unvalidatedConfig.GitLocal, unvalidatedConfig.File, data, enterAll, frontend)
 	}
 	return nil
 }
@@ -162,7 +162,7 @@ func saveAllToFile(userInput UserInput, gitConfig configdomain.PartialConfig, ru
 	return saveFeatureRegex(userInput.Data.FeatureRegex, gitConfig.FeatureRegex, runner)
 }
 
-func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialConfig, configFile configdomain.PartialConfig, data Data, partial bool, frontend subshelldomain.Runner) error {
+func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialConfig, configFile configdomain.PartialConfig, data Data, enterAll bool, frontend subshelldomain.Runner) error {
 	fc := gohacks.ErrorCollector{}
 
 	// BASIC CONFIGURATION
@@ -190,8 +190,8 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 		)
 	}
 
-	fmt.Println("11111111111111111111111111111111111", partial)
-	if partial {
+	fmt.Println("11111111111111111111111111111111111", enterAll)
+	if !enterAll {
 		return fc.Err
 	}
 
