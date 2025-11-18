@@ -202,6 +202,8 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 					saveGitLabConnectorType(userInput.Data.GitLabConnectorType, existingGitConfig.GitLabConnectorType, frontend),
 				)
 			}
+		case forgedomain.ForgeTypeAzureDevOps, forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter, forgedomain.ForgeTypeForgejo, forgedomain.ForgeTypeGitea:
+			// these connectors have only one connector type
 		}
 	}
 
