@@ -53,7 +53,7 @@ Feature: beam commits onto a new feature branch when the parent branch is unknow
   Scenario: amend the beamed commit
     And I amend this commit
       | BRANCH | LOCATION | MESSAGE   | FILE NAME | FILE CONTENT    |
-      | new    | local    | commit 4b | file_4    | amended content |
+      | new    | local    | commit 1b | file_1    | amended content |
     And the current branch is "new"
     When I run "git-town sync"
     Then Git Town runs the commands
@@ -68,7 +68,5 @@ Feature: beam commits onto a new feature branch when the parent branch is unknow
       | BRANCH   | LOCATION      | MESSAGE                      |
       | main     | local, origin | main commit                  |
       | existing | local, origin | commit 2                     |
-      |          |               | commit 3                     |
-      | new      | local, origin | commit 1                     |
-      |          |               | commit 4b                    |
+      | new      | local, origin | commit 1b                    |
       |          |               | Merge branch 'main' into new |
