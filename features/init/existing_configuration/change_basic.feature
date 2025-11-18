@@ -1,5 +1,5 @@
 @messyoutput
-Feature: change existing information in Git metadata
+Feature: don't change existing extended information when changing basic information
 
   Background:
     Given a Git repo with origin
