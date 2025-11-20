@@ -2,7 +2,6 @@ package opcodes
 
 import (
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/vm/shared"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
@@ -15,16 +14,7 @@ type RebaseAncestorLocal struct {
 }
 
 func (self *RebaseAncestorLocal) Run(args shared.RunArgs) error {
-	branchInfos, hasBranchInfos := args.BranchInfos.Get()
-	if !hasBranchInfos {
-		panic(messages.BranchInfosNotProvided)
-	}
-	var branchToRebaseOnto gitdomain.BranchName
-	if branchInfos.BranchIsActiveInAnotherWorktree(self.Ancestor) {
-		branchToRebaseOnto = self.Ancestor.TrackingBranch(args.Config.Value.NormalConfig.DevRemote).BranchName()
-	} else {
-		branchToRebaseOnto = self.Ancestor.BranchName()
-	}
+	branchToRebaseOnto := self.Ancestor.BranchName()
 	commitsToRemove, hasCommitsToRemove := self.CommitsToRemove.Get()
 	ancestorSHA := None[gitdomain.SHA]()
 	if hasCommitsToRemove {
