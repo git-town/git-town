@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/git-town/git-town/v22/internal/config/configfile/data",
+  "$id": "https://www.git-town.com/git-town.toml",
   "$ref": "#/$defs/Data",
   "$defs": {
     "Branches": {
