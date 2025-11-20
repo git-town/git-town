@@ -40,19 +40,7 @@
         }
       },
       "additionalProperties": false,
-      "type": "object",
-      "required": [
-        "ContributionRegex",
-        "DefaultType",
-        "DisplayTypes",
-        "FeatureRegex",
-        "Main",
-        "ObservedRegex",
-        "Order",
-        "PerennialRegex",
-        "Perennials",
-        "UnknownType"
-      ]
+      "type": "object"
     },
     "Create": {
       "properties": {
@@ -70,13 +58,7 @@
         }
       },
       "additionalProperties": false,
-      "type": "object",
-      "required": [
-        "NewBranchType",
-        "PushNewbranches",
-        "ShareNewBranches",
-        "Stash"
-      ]
+      "type": "object"
     },
     "Data": {
       "properties": {
@@ -124,23 +106,7 @@
         }
       },
       "additionalProperties": false,
-      "type": "object",
-      "required": [
-        "Branches",
-        "Create",
-        "CreatePrototypeBranches",
-        "Hosting",
-        "Propose",
-        "PushHook",
-        "PushNewbranches",
-        "Ship",
-        "ShipDeleteTrackingBranch",
-        "ShipStrategy",
-        "Sync",
-        "SyncStrategy",
-        "SyncTags",
-        "SyncUpstream"
-      ]
+      "type": "object"
     },
     "Hosting": {
       "properties": {
@@ -164,15 +130,7 @@
         }
       },
       "additionalProperties": false,
-      "type": "object",
-      "required": [
-        "DevRemote",
-        "ForgeType",
-        "GitHubConnectorType",
-        "GitLabConnectorType",
-        "OriginHostname",
-        "Platform"
-      ]
+      "type": "object"
     },
     "Propose": {
       "properties": {
@@ -181,10 +139,7 @@
         }
       },
       "additionalProperties": false,
-      "type": "object",
-      "required": [
-        "Lineage"
-      ]
+      "type": "object"
     },
     "Ship": {
       "properties": {
@@ -196,11 +151,7 @@
         }
       },
       "additionalProperties": false,
-      "type": "object",
-      "required": [
-        "DeleteTrackingBranch",
-        "Strategy"
-      ]
+      "type": "object"
     },
     "Sync": {
       "properties": {
@@ -236,19 +187,7 @@
         }
       },
       "additionalProperties": false,
-      "type": "object",
-      "required": [
-        "AutoResolve",
-        "AutoSync",
-        "Detached",
-        "FeatureStrategy",
-        "PerennialStrategy",
-        "PrototypeStrategy",
-        "PushBranches",
-        "PushHook",
-        "Tags",
-        "Upstream"
-      ]
+      "type": "object"
     },
     "SyncStrategy": {
       "properties": {
@@ -263,12 +202,7 @@
         }
       },
       "additionalProperties": false,
-      "type": "object",
-      "required": [
-        "FeatureBranches",
-        "PerennialBranches",
-        "PrototypeBranches"
-      ]
+      "type": "object"
     }
   }
 }
