@@ -22,16 +22,16 @@ Feature: Sync a feature branch that is in another worktree than the main branch
       | feature | git fetch --prune --tags                             |
       |         | git push --force-with-lease --force-if-includes      |
       |         | git -c rebase.updateRefs=false rebase origin/feature |
-      |         | git -c rebase.updateRefs=false rebase origin/main    |
+      |         | git -c rebase.updateRefs=false rebase main           |
       |         | git push --force-with-lease --force-if-includes      |
     And the current branch in the other worktree is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION         | MESSAGE               |
       | main    | local            | local main commit     |
       |         | origin           | origin main commit    |
-      | feature | origin, worktree | origin feature commit |
+      | feature | origin           | local main commit     |
+      |         | origin, worktree | origin feature commit |
       |         |                  | local feature commit  |
-      |         | worktree         | origin main commit    |
 
   Scenario: undo
     When I run "git-town undo" in the other worktree

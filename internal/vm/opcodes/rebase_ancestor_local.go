@@ -2,7 +2,6 @@ package opcodes
 
 import (
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/vm/shared"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
@@ -15,20 +14,11 @@ type RebaseAncestorLocal struct {
 }
 
 func (self *RebaseAncestorLocal) Run(args shared.RunArgs) error {
-	branchInfos, hasBranchInfos := args.BranchInfos.Get()
-	if !hasBranchInfos {
-		panic(messages.BranchInfosNotProvided)
-	}
-	var branchToRebaseOnto gitdomain.BranchName
-	if branchInfos.BranchIsActiveInAnotherWorktree(self.Ancestor) {
-		branchToRebaseOnto = self.Ancestor.TrackingBranch(args.Config.Value.NormalConfig.DevRemote).BranchName()
-	} else {
-		branchToRebaseOnto = self.Ancestor.BranchName()
-	}
+	ancestorBranchName := self.Ancestor.BranchName()
 	commitsToRemove, hasCommitsToRemove := self.CommitsToRemove.Get()
 	ancestorSHA := None[gitdomain.SHA]()
 	if hasCommitsToRemove {
-		sha, err := args.Git.SHAForBranch(args.Backend, branchToRebaseOnto)
+		sha, err := args.Git.SHAForBranch(args.Backend, ancestorBranchName)
 		if err != nil {
 			return err
 		}
@@ -39,17 +29,17 @@ func (self *RebaseAncestorLocal) Run(args shared.RunArgs) error {
 		// This removes old versions of commits that were amended by the user.
 		// The new commits of the parent get added back during the rebase.
 		args.PrependOpcodes(&RebaseOnto{
-			BranchToRebaseOnto: branchToRebaseOnto,
+			BranchToRebaseOnto: ancestorBranchName,
 			CommitsToRemove:    commitsToRemove.Location(),
 		})
 	} else {
-		isInSync, err := args.Git.BranchInSyncWithParent(args.Backend, self.Branch, branchToRebaseOnto)
+		isInSync, err := args.Git.BranchInSyncWithParent(args.Backend, self.Branch, ancestorBranchName)
 		if err != nil {
 			return err
 		}
 		if !isInSync {
 			args.PrependOpcodes(&RebaseBranch{
-				Branch: branchToRebaseOnto,
+				Branch: ancestorBranchName,
 			})
 		}
 	}
