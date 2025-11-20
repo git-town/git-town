@@ -53,6 +53,9 @@ dependencies: tools/rta@${RTA_VERSION}  # prints the dependencies between the in
 docs: install node_modules  # tests the documentation
 	@tools/rta node node_modules/.bin/text-runner --offline
 
+export-config-schema:  # exports the JSON-Schema for the configuration file
+	@go run tools/generate_jsonschema.go > docs/git-town.schema.json
+
 fix: tools/rta@${RTA_VERSION}  # runs all linters and auto-fixes
 	make --no-print-directory fix-optioncompare-in-tests
 	go run tools/format_unittests/format_unittests.go
