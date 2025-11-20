@@ -11,7 +11,7 @@ import (
 
 func main() {
 	reflector := new(jsonschema.Reflector)
-	schema := reflector.Reflect(&configfile.Data{})
+	schema := reflector.Reflect(&configfile.Data{}) //exhaustruct:ignore
 	schema.ID = "https://www.git-town.com/git-town.toml"
 	schemaJSON, err := json.MarshalIndent(schema, "", "  ")
 	if err != nil {
