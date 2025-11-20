@@ -86,6 +86,9 @@ func saveAllToFile(userInput UserInput, gitConfig configdomain.PartialConfig, ru
 	if gitConfig.AutoSync.IsSome() {
 		_ = gitconfig.RemoveAutoSync(runner)
 	}
+	if gitConfig.BranchPrefix.IsSome() {
+		_ = gitconfig.RemoveBranchPrefix(runner)
+	}
 	if gitConfig.ContributionRegex.IsSome() {
 		_ = gitconfig.RemoveContributionRegex(runner)
 	}
@@ -208,6 +211,11 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 	if configFile.AutoSync.IsNone() {
 		fc.Check(
 			saveAutoSync(userInput.Data.AutoSync, existingGitConfig.AutoSync, frontend),
+		)
+	}
+	if configFile.BranchPrefix.IsNone() {
+		fc.Check(
+			saveBranchPrefix(userInput.Data.BranchPrefix, existingGitConfig.BranchPrefix, frontend),
 		)
 	}
 	if configFile.Detached.IsNone() {
@@ -343,6 +351,17 @@ func saveBitbucketUsername(valueToWriteToGit Option[forgedomain.BitbucketUsernam
 		return gitconfig.SetBitbucketUsername(frontend, value, scope)
 	}
 	return gitconfig.RemoveBitbucketUsername(frontend)
+}
+
+func saveBranchPrefix(valueToWriteToGit Option[configdomain.BranchPrefix], valueAlreadyInGit Option[configdomain.BranchPrefix], runner subshelldomain.Runner) error {
+	if valueToWriteToGit.Equal(valueAlreadyInGit) {
+		return nil
+	}
+	if value, has := valueToWriteToGit.Get(); has {
+		return gitconfig.SetBranchPrefix(runner, value, configdomain.ConfigScopeLocal)
+	}
+	_ = gitconfig.RemoveBranchPrefix(runner)
+	return nil
 }
 
 func saveContributionRegex(valueToWriteToGit Option[configdomain.ContributionRegex], valueAlreadyInGit Option[configdomain.ContributionRegex], runner subshelldomain.Runner) error {

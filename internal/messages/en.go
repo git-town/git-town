@@ -20,6 +20,8 @@ const (
 	BitBucketAppPasswordResult      = "Bitbucket App Password: %s"
 	BitBucketUsernamePrompt         = "Bitbucket username: "
 	BitBucketUsernameResult         = "Bitbucket username: %s"
+	BranchPrefixPrompt              = "Branch prefix: "
+	BranchPrefixResult              = "Branch prefix: %s\n"
 	BranchAlreadyExistsLocally      = "there is already a branch %q"
 	BranchAlreadyExistsRemotely     = "there is already a branch %q at the \"origin\" remote"
 	BranchAuthorMultiple            = "\nMultiple people authored the %q branch.\n\n"
