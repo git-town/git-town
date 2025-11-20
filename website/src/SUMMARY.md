@@ -10,6 +10,7 @@
   - [LazyGit](how-to/lazygit.md)
   - [Shell prompt](how-to/shell-prompt.md)
   - [Hotfixes](how-to/hotfixes.md)
+  - [Sync lineage](how-to/sync-lineage.md)
 - [Commands](all-commands.md)
   - [Basic workflow](basic-commands.md)
     - [hack](commands/hack.md)

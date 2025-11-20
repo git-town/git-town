@@ -18,3 +18,6 @@ Town. Learn how to:
 - Work with [stacked changes](stacked-changes.md)
 
 - Integrate Git Town with [LazyGit](how-to/lazygit.md)
+
+- [Sync branch lineage](how-to/sync-lineage.md) across different repository
+  clones
