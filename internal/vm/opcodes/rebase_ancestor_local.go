@@ -14,11 +14,11 @@ type RebaseAncestorLocal struct {
 }
 
 func (self *RebaseAncestorLocal) Run(args shared.RunArgs) error {
-	branchToRebaseOnto := self.Ancestor.BranchName()
+	ancestorBranchName := self.Ancestor.BranchName()
 	commitsToRemove, hasCommitsToRemove := self.CommitsToRemove.Get()
 	ancestorSHA := None[gitdomain.SHA]()
 	if hasCommitsToRemove {
-		sha, err := args.Git.SHAForBranch(args.Backend, branchToRebaseOnto)
+		sha, err := args.Git.SHAForBranch(args.Backend, ancestorBranchName)
 		if err != nil {
 			return err
 		}
@@ -29,17 +29,17 @@ func (self *RebaseAncestorLocal) Run(args shared.RunArgs) error {
 		// This removes old versions of commits that were amended by the user.
 		// The new commits of the parent get added back during the rebase.
 		args.PrependOpcodes(&RebaseOnto{
-			BranchToRebaseOnto: branchToRebaseOnto,
+			BranchToRebaseOnto: ancestorBranchName,
 			CommitsToRemove:    commitsToRemove.Location(),
 		})
 	} else {
-		isInSync, err := args.Git.BranchInSyncWithParent(args.Backend, self.Branch, branchToRebaseOnto)
+		isInSync, err := args.Git.BranchInSyncWithParent(args.Backend, self.Branch, ancestorBranchName)
 		if err != nil {
 			return err
 		}
 		if !isInSync {
 			args.PrependOpcodes(&RebaseBranch{
-				Branch: branchToRebaseOnto,
+				Branch: ancestorBranchName,
 			})
 		}
 	}
