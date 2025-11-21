@@ -5,7 +5,6 @@ Feature: prepend with configured branch-prefix via environment variable
     And the branches
       | NAME      | TYPE    | PARENT | LOCATIONS     |
       | feature-1 | feature | main   | local, origin |
-    And Git setting "git-town.branch-prefix" is "kg-"
     And the current branch is "feature-1"
 
   Scenario Outline:
