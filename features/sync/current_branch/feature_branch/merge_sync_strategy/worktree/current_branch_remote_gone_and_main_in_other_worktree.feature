@@ -3,22 +3,20 @@ Feature: sync a branch whose branch is gone while main is active in another work
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME    | TYPE    | PARENT | LOCATIONS     |
-      | feature | feature | main   | local, origin |
-    And the commits
-      | BRANCH  | LOCATION      | MESSAGE        |
-      | feature | local, origin | feature commit |
-    And the current branch is "feature"
-    And origin deletes the "feature" branch
+      | NAME      | TYPE    | PARENT | LOCATIONS     |
+      | feature-1 | feature | main   | local, origin |
+      | feature-2 | feature | main   | local, origin |
+    And the current branch is "feature-1"
+    And origin deletes the "feature-1" branch
     And branch "main" is active in another worktree
     When I run "git-town sync"
 
-  @this
+  @debug @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                  |
-      | feature | git fetch --prune --tags |
-      |         | git checkout main        |
+      | BRANCH    | COMMAND                  |
+      | feature-1 | git fetch --prune --tags |
+      |           | git checkout main        |
     And the initial commits exist now
 
   Scenario: undo
