@@ -95,6 +95,32 @@ func (self *Commands) BranchInSyncWithTracking(querier subshelldomain.Querier, b
 	return branchSHA == trackingSHA, nil
 }
 
+func (self *Commands) BranchesAvailableInCurrentWorktree(querier subshelldomain.Querier) (gitdomain.LocalBranchNames, error) {
+	branches, err := branchesQuery(querier)
+	if err != nil {
+		return gitdomain.LocalBranchNames{}, err
+	}
+	result := gitdomain.LocalBranchNames{}
+	for _, branch := range branches {
+		// Skip symbolic refs
+		if branch.Symref {
+			continue
+		}
+		// Only include local branches
+		if !isLocalRefName(branch.RefName) {
+			continue
+		}
+		// Include branches that are not checked out in other worktrees
+		// A branch is available in the current worktree if:
+		// - It's not checked out anywhere (!branch.Worktree), OR
+		// - It's checked out in the current worktree (branch.Head)
+		if !branch.Worktree || branch.Head {
+			result = append(result, branch.BranchName.LocalName())
+		}
+	}
+	return result, nil
+}
+
 func (self *Commands) BranchesSnapshot(querier subshelldomain.Querier) (gitdomain.BranchesSnapshot, error) {
 	branches, err := branchesQuery(querier)
 	if err != nil {
