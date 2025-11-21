@@ -5,8 +5,8 @@ Feature: hack with configured branch-prefix via Git metadata
     And the branches
       | NAME      | TYPE    | PARENT | LOCATIONS     |
       | feature-1 | feature | main   | local, origin |
+    And Git setting "git-town.branch-prefix" is "kg-"
     And the current branch is "feature-1"
-    Given Git setting "git-town.branch-prefix" is "kg-"
 
   Scenario Outline:
     When I run "git-town hack <BRANCH_NAME>"
@@ -30,7 +30,7 @@ Feature: hack with configured branch-prefix via Git metadata
 
   Scenario: undo
     When I run "git-town hack feature-2"
-    When I run "git-town undo"
+    And I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH       | COMMAND                    |
       | kg-feature-2 | git checkout feature-1     |
