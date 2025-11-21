@@ -2,14 +2,14 @@ Feature: hack with configured branch-prefix via config file
 
   Background:
     Given a Git repo with origin
-    And the branches
-      | NAME      | TYPE    | PARENT | LOCATIONS     |
-      | feature-1 | feature | main   | local, origin |
     And the committed configuration file:
       """
       [create]
       branch-prefix = "kg-"
       """
+    And the branches
+      | NAME      | TYPE    | PARENT | LOCATIONS     |
+      | feature-1 | feature | main   | local, origin |
     And the current branch is "feature-1"
 
   Scenario Outline:
