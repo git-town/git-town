@@ -20,8 +20,6 @@ const (
 	BitBucketAppPasswordResult      = "Bitbucket App Password: %s"
 	BitBucketUsernamePrompt         = "Bitbucket username: "
 	BitBucketUsernameResult         = "Bitbucket username: %s"
-	BranchPrefixPrompt              = "Branch prefix: "
-	BranchPrefixResult              = "Branch prefix: %s\n"
 	BranchAlreadyExistsLocally      = "there is already a branch %q"
 	BranchAlreadyExistsRemotely     = "there is already a branch %q at the \"origin\" remote"
 	BranchAuthorMultiple            = "\nMultiple people authored the %q branch.\n\n"
@@ -52,6 +50,8 @@ const (
 	BranchNotInSyncWithParent       = `branch %q is not in sync with its parent, please run "git town sync" and try again`
 	BranchOtherWorktree             = `branch %q is active in another worktree`
 	BranchParentChanged             = "branch %q is now a child of %q"
+	BranchPrefixPrompt              = "Branch prefix: "
+	BranchPrefixResult              = "Branch prefix: %s\n"
 	BranchTypeCannotDetermine       = "cannot determine type of branch %q"
 	BrowserOpen                     = "Please open in a browser: %s\n"
 
