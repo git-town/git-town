@@ -22,8 +22,5 @@ func (self BranchPrefix) String() string { return string(self) }
 
 // ParseBranchPrefix parses a branch prefix configuration value.
 func ParseBranchPrefix(value, _ string) (Option[BranchPrefix], error) {
-	if value == "" {
-		return None[BranchPrefix](), nil
-	}
-	return Some(BranchPrefix(value)), nil
+	return NewOption[BranchPrefix](BranchPrefix(value)), nil
 }
