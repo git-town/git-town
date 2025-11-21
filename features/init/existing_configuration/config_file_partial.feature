@@ -9,15 +9,15 @@ Feature: ask for information not provided by the config file
       main = "main"
       perennials = ["public"]
       order = "desc"
-
+      
       [hosting]
       dev-remote = "something"
       forge-type = "github"
       origin-hostname = "github.com"
-
+      
       [ship]
       delete-tracking-branch = false
-
+      
       [sync]
       auto-sync = false
       tags = false
@@ -40,6 +40,7 @@ Feature: ask for information not provided by the config file
       | feature regex           | f e a t enter         |
       | contribution regex      | c o n t enter         |
       | observed regex          | o b s enter           |
+      | branch prefix           | a c m e - enter       |
       | new branch type         | enter                 |
       | unknown branch type     | enter                 |
       | sync feature strategy   | enter                 |
@@ -58,6 +59,7 @@ Feature: ask for information not provided by the config file
       | git config git-town.github-token gh-token           |
       | git config git-town.perennial-branches branch-1     |
       | git config git-town.github-connector api            |
+      | git config git-town.branch-prefix acme-             |
       | git config git-town.detached false                  |
       | git config git-town.new-branch-type feature         |
       | git config git-town.perennial-regex peren           |
