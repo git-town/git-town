@@ -14,6 +14,7 @@ Feature: display configuration from Git metadata in detached head state
       |        | local    | commit 2 |
     And Git setting "git-town.perennial-branches" is "qa staging"
     And Git setting "git-town.auto-sync" is "false"
+    And Git setting "git-town.branch-prefix" is "acme-"
     And Git setting "git-town.display-types" is "all"
     And Git setting "git-town.perennial-regex" is "^release-"
     And Git setting "git-town.contribution-regex" is "^renovate/"
@@ -46,17 +47,18 @@ Feature: display configuration from Git metadata in detached head state
         unknown branch type: observed
         order: asc
         display types: all branch types
-
+      
       Configuration:
         offline: no
         git user name: user
         git user email: email@example.com
-
+      
       Create:
+        branch prefix: acme-
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: no
-
+      
       Hosting:
         development remote: origin
         forge type: (not set)
@@ -69,14 +71,14 @@ Feature: display configuration from Git metadata in detached head state
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
-
+      
       Propose:
         lineage: cli
-
+      
       Ship:
         delete tracking branch: yes
         ship strategy: squash-merge
-
+      
       Sync:
         auto-resolve phantom conflicts: no
         auto-sync: no
@@ -89,7 +91,7 @@ Feature: display configuration from Git metadata in detached head state
         sync tags: yes
         sync with upstream: yes
         auto-resolve phantom conflicts: no
-
+      
       Branch Lineage:
         main
           branch

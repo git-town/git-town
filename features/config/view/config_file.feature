@@ -28,20 +28,21 @@ Feature: display information from config file
       unknown-type = "observed"
       order = "desc"
       display-types = "all"
-
+      
       [create]
+      branch-prefix = "acme-"
       share-new-branches = "push"
       stash = false
-
+      
       [hosting]
       forge-type = "github"
       github-connector = "gh"
       origin-hostname = "github.com"
-
+      
       [ship]
       delete-tracking-branch = true
       strategy = "squash-merge"
-
+      
       [sync]
       auto-resolve = false
       auto-sync = false
@@ -70,17 +71,18 @@ Feature: display information from config file
         unknown branch type: observed
         order: desc
         display types: all branch types
-
+      
       Configuration:
         offline: no
         git user name: user
         git user email: email@example.com
-
+      
       Create:
+        branch prefix: acme-
         new branch type: (not set)
         share new branches: push
         stash uncommitted changes: no
-
+      
       Hosting:
         development remote: origin
         forge type: github
@@ -93,14 +95,14 @@ Feature: display information from config file
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
-
+      
       Propose:
         lineage: none
-
+      
       Ship:
         delete tracking branch: yes
         ship strategy: squash-merge
-
+      
       Sync:
         auto-resolve phantom conflicts: no
         auto-sync: no
