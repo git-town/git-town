@@ -1,15 +1,15 @@
-Feature: rename with configured branch-prefix via environment variable
+Feature: rename with configured branch-prefix via Git metadata
 
   Background:
     Given a Git repo with origin
     And the branches
       | NAME      | TYPE    | PARENT | LOCATIONS     |
       | feature-1 | feature | main   | local, origin |
+    And Git setting "git-town.branch-prefix" is "kg-"
     And the current branch is "feature-1"
 
   Scenario Outline:
-    When I run "git-town rename <BRANCH_NAME>" with these environment variables
-      | GIT_TOWN_BRANCH_PREFIX | kg- |
+    When I run "git-town rename <BRANCH_NAME>"
     Then Git Town runs the commands
       | BRANCH       | COMMAND                                  |
       | feature-1    | git fetch --prune --tags                 |
@@ -30,8 +30,7 @@ Feature: rename with configured branch-prefix via environment variable
       | kg-feature-2 |
 
   Scenario: undo
-    Given I run "git-town rename feature-2" with these environment variables
-      | GIT_TOWN_BRANCH_PREFIX | kg- |
+    Given I ran "git-town rename feature-2"
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH       | COMMAND                                         |

@@ -1,11 +1,15 @@
-Feature: rename with configured branch-prefix via Git metadata
+Feature: rename with configured branch-prefix via config file
 
   Background:
     Given a Git repo with origin
     And the branches
       | NAME      | TYPE    | PARENT | LOCATIONS     |
       | feature-1 | feature | main   | local, origin |
-    And Git setting "git-town.branch-prefix" is "kg-"
+    And the committed configuration file:
+      """
+      [create]
+      branch-prefix = "kg-"
+      """
     And the current branch is "feature-1"
 
   Scenario Outline:
@@ -30,15 +34,15 @@ Feature: rename with configured branch-prefix via Git metadata
       | kg-feature-2 |
 
   Scenario: undo
-    When I run "git-town rename feature-2"
-    And I run "git-town undo"
+    Given I ran "git-town rename feature-2"
+    When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH       | COMMAND                                         |
-      | kg-feature-2 | git branch feature-1 {{ sha 'initial commit' }} |
-      |              | git push -u origin feature-1                    |
-      |              | git checkout feature-1                          |
-      | feature-1    | git branch -D kg-feature-2                      |
-      |              | git push origin :kg-feature-2                   |
+      | BRANCH       | COMMAND                                                |
+      | kg-feature-2 | git branch feature-1 {{ sha 'persisted config file' }} |
+      |              | git push -u origin feature-1                           |
+      |              | git checkout feature-1                                 |
+      | feature-1    | git branch -D kg-feature-2                             |
+      |              | git push origin :kg-feature-2                          |
     And the current branch is now "feature-1"
     And this lineage exists now
       """

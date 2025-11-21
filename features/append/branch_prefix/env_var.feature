@@ -28,9 +28,9 @@ Feature: append with configured branch-prefix via environment variable
       | kg-feature-2 |
 
   Scenario: undo
-    When I run "git-town append feature-2" with these environment variables
+    Given I run "git-town append feature-2" with these environment variables
       | GIT_TOWN_BRANCH_PREFIX | kg- |
-    And I run "git-town undo"
+    When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH       | COMMAND                    |
       | kg-feature-2 | git checkout feature-1     |

@@ -33,8 +33,8 @@ Feature: hack with configured branch-prefix via config file
       | kg-feature-2 |
 
   Scenario: undo
-    When I run "git-town hack feature-2"
-    And I run "git-town undo"
+    Given I ran "git-town hack feature-2"
+    When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH       | COMMAND                    |
       | kg-feature-2 | git checkout feature-1     |
