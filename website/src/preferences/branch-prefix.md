@@ -40,8 +40,8 @@ your local machine. When not present, the setting applies to the current repo.
 You can configure the branch prefix by setting the `GIT_TOWN_BRANCH_PREFIX`
 environment variable.
 
-If you want to use your GitHub username as the branch prefix, please set this
-environment variable through something like this:
+If you want to use your GitHub username as the branch prefix, set this
+environment variable once with a call like this:
 
 ```bash
 export GIT_TOWN_BRANCH_PREFIX=$(gh api user --jq '.login')
