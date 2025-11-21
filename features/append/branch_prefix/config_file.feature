@@ -12,7 +12,6 @@ Feature: append with configured branch-prefix via config file
       """
     And the current branch is "feature-1"
 
-  @this
   Scenario Outline:
     When I run "git-town append <BRANCH_NAME>"
     Then Git Town runs the commands

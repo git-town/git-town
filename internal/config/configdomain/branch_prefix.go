@@ -21,7 +21,7 @@ func (self BranchPrefix) Apply(branch gitdomain.LocalBranchName) gitdomain.Local
 func (self BranchPrefix) String() string { return string(self) }
 
 // ParseBranchPrefix parses a branch prefix configuration value.
-func ParseBranchPrefix(value, key string) (Option[BranchPrefix], error) {
+func ParseBranchPrefix(value, _ string) (Option[BranchPrefix], error) {
 	if value == "" {
 		return None[BranchPrefix](), nil
 	}

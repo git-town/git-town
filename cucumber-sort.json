@@ -3,6 +3,7 @@
     "features/**/*.feature"
   ],
   "exclude": [
+    "features/append/branch_prefix/config_file.feature",
     "features/detach/merge_conflict/dependent_changes.feature",
     "features/end_to_end/ship_prototype_branch_and_sync.feature",
     "features/observe/give_existing_branch/multiple_branches.feature",
