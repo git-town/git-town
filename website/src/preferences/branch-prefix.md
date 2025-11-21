@@ -7,7 +7,7 @@ For example, with a branch prefix of `kevgo-`:
 - `git town hack example` creates branch `kevgo-example`
 - `git town append child` creates branch `kevgo-child`
 - `git town prepend parent` creates branch `kevgo-parent`
-- `git town rename other` renames to `kevgo-other`
+- `git town rename other` renames the current branch to `kevgo-other`
 
 If the branch name you provide already includes the configured prefix, Git Town
 won't add it again. For instance, with prefix `kevgo-`, running
