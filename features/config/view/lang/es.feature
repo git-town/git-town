@@ -41,18 +41,18 @@ Feature: show the configuration in Spanish
         unknown branch type: observed
         order: asc
         display types: all branch types except "feature" and "main"
-      
+
       Configuration:
         offline: no
         git user name: user
         git user email: email@example.com
-      
+
       Create:
         branch prefix: (not set)
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: yes
-      
+
       Hosting:
         development remote: origin
         forge type: (not set)
@@ -65,14 +65,14 @@ Feature: show the configuration in Spanish
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
-      
+
       Propose:
         lineage: none
-      
+
       Ship:
         delete tracking branch: yes
         ship strategy: squash-merge
-      
+
       Sync:
         auto-resolve phantom conflicts: yes
         auto-sync: yes
