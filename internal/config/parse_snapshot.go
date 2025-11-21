@@ -192,10 +192,8 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 }
 
 func load[T any](snapshot configdomain.SingleSnapshot, key configdomain.Key, parseFunc func(string, string) (T, error), ignoreUnknown bool) (T, error) { //nolint:ireturn
-	// Check if the key exists in the snapshot. If it doesn't exist, return the zero value.
-	// This distinguishes between "key not set" (zero value) and "key set to empty string" (parsed value).
-	valueStr, keyExists := snapshot[key]
-	if !keyExists {
+	valueStr, exists := snapshot[key]
+	if !exists {
 		var zero T
 		return zero, nil
 	}
