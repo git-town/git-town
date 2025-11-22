@@ -41,9 +41,9 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       | BRANCH | COMMAND                               |
       | main   | GIT_EDITOR=true git rebase --continue |
       |        | git push                              |
-      |        | git branch -D alpha                   |
       |        | git checkout beta                     |
-      | beta   | git merge --no-edit --ff main         |
+      | beta   | git branch -D alpha                   |
+      |        | git merge --no-edit --ff main         |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in file

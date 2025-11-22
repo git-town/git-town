@@ -25,9 +25,9 @@ Feature: shipped the head branch of a synced stack with dependent changes
       | beta   | git fetch --prune --tags                          |
       |        | git checkout main                                 |
       | main   | git -c rebase.updateRefs=false rebase origin/main |
-      |        | git branch -D alpha                               |
       |        | git checkout beta                                 |
-      | beta   | git merge --no-edit --ff main                     |
+      | beta   | git branch -D alpha                               |
+      |        | git merge --no-edit --ff main                     |
       |        | git checkout --ours file                          |
       |        | git add file                                      |
       |        | git commit --no-edit                              |

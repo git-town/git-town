@@ -84,6 +84,7 @@ Feature: remove existing configuration in Git metadata
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                              |
+      | Contribution branch regex                            |
       | git config --global --unset alias.append             |
       | git config --global --unset alias.compress           |
       | git config --global --unset alias.contribute         |
