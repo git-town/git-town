@@ -97,6 +97,7 @@ display-types = "no main perennial"
 [create]
 new-branch-type = "prototype"
 share-new-branches = "propose"
+stash = true
 
 [hosting]
 dev-remote = "origin"
@@ -115,6 +116,7 @@ auto-resolve = false
 feature-strategy = "merge"
 perennial-strategy = "rebase"
 prototype-strategy = "compress"
+push-branches = true
 push-hook = true
 tags = true
 upstream = true
