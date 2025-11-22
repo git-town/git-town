@@ -29,7 +29,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	order, hasOrder := data.Order.Get()
 	perennialRegex, hasPerennialRegex := data.PerennialRegex.Get()
 	unknownBranchType, hasUnknownBranchType := data.UnknownBranchType.Get()
-	if hasContributionRegex || hasFeatureRegex || hasMain || hasObservedRegex || hasOrder || hasPerennialBranches || hasPerennialRegex || hasDisplayTypes || hasUnknownBranchType {
+	if hasContributionRegex || hasDisplayTypes || hasFeatureRegex || hasMain || hasObservedRegex || hasOrder || hasPerennialBranches || hasPerennialRegex || hasUnknownBranchType {
 		result.WriteString("\n[branches]\n")
 		if hasContributionRegex {
 			result.WriteString(fmt.Sprintf("contribution-regex = %q\n", contributionRegex))
@@ -128,7 +128,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	pushHook, hasPushHook := data.PushHook.Get()
 	syncTags, hasSyncTags := data.SyncTags.Get()
 	syncUpstream, hasSyncUpstream := data.SyncUpstream.Get()
-	if hasAutoResolve || hasAutoSync || hasDetached || hasSyncFeatureStrategy || hasSyncPerennialStrategy || hasSyncPrototypeStrategy || hasPushHook || hasPushBranches || hasSyncTags || hasSyncUpstream {
+	if hasAutoResolve || hasAutoSync || hasDetached || hasSyncFeatureStrategy || hasSyncPerennialStrategy || hasSyncPrototypeStrategy || hasPushBranches || hasPushHook || hasSyncTags || hasSyncUpstream {
 		result.WriteString("\n[sync]\n")
 		if hasAutoResolve {
 			result.WriteString(fmt.Sprintf("auto-resolve = %t\n", autoResolve))
