@@ -120,6 +120,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 
 	autoResolve, hasAutoResolve := data.AutoResolve.Get()
 	autoSync, hasAutoSync := data.AutoSync.Get()
+	detached, hasDetached := data.Detached.Get()
 	syncFeatureStrategy, hasSyncFeatureStrategy := data.SyncFeatureStrategy.Get()
 	syncPerennialStrategy, hasSyncPerennialStrategy := data.SyncPerennialStrategy.Get()
 	syncPrototypeStrategy, hasSyncPrototypeStrategy := data.SyncPrototypeStrategy.Get()
@@ -127,13 +128,16 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	pushHook, hasPushHook := data.PushHook.Get()
 	syncTags, hasSyncTags := data.SyncTags.Get()
 	syncUpstream, hasSyncUpstream := data.SyncUpstream.Get()
-	if hasAutoResolve || hasSyncFeatureStrategy || hasSyncPerennialStrategy || hasSyncPrototypeStrategy || hasPushHook || hasSyncTags || hasSyncUpstream {
+	if hasAutoResolve || hasDetached || hasSyncFeatureStrategy || hasSyncPerennialStrategy || hasSyncPrototypeStrategy || hasPushHook || hasSyncTags || hasSyncUpstream {
 		result.WriteString("\n[sync]\n")
 		if hasAutoResolve {
 			result.WriteString(fmt.Sprintf("auto-resolve = %t\n", autoResolve))
 		}
 		if hasAutoSync {
 			result.WriteString(fmt.Sprintf("auto-sync = %t\n", autoSync))
+		}
+		if hasDetached {
+			result.WriteString(fmt.Sprintf("detached = %t\n", detached))
 		}
 		if hasSyncFeatureStrategy {
 			result.WriteString(fmt.Sprintf("feature-strategy = %q\n", syncFeatureStrategy))
