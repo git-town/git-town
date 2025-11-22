@@ -57,7 +57,7 @@ func (self LocalBranchNames) Hoist(branches ...LocalBranchName) LocalBranchNames
 	result := make(LocalBranchNames, 0, len(self))
 	// Add the hoisted branches first, in the order given
 	for _, branch := range branches {
-		if self.Contains(branch) {
+		if slices.Contains(self, branch) {
 			result = append(result, branch)
 		}
 	}
