@@ -82,17 +82,20 @@ func TestSave(t *testing.T) {
 				SyncTags:                 Some(configdomain.SyncTags(true)),
 				SyncUpstream:             Some(configdomain.SyncUpstream(true)),
 				UnknownBranchType:        Some(configdomain.UnknownBranchType(configdomain.BranchTypePrototypeBranch)),
-				Verbose:                  Some(configdomain.Verbose(true)),
 			})
 			want := `
 # See https://www.git-town.com/configuration-file for details
 
 [branches]
+contribution-regex = "contribution-"
+feature-regex = "feature-"
 main = "main"
 order = "desc"
 perennials = ["qa", "staging"]
 perennial-regex = "perennial-"
 display-types = "no main perennial"
+observed-regex = "observed-"
+unknown-branch-type = "prototype"
 
 [create]
 new-branch-type = "prototype"
@@ -102,6 +105,8 @@ stash = true
 [hosting]
 dev-remote = "origin"
 forge-type = "github"
+github-connector-type = "gh"
+gitlab-connector-type = "glab"
 origin-hostname = "forge"
 
 [propose]
@@ -113,6 +118,7 @@ strategy = "api"
 
 [sync]
 auto-resolve = false
+detached = true
 feature-strategy = "merge"
 perennial-strategy = "rebase"
 prototype-strategy = "compress"
