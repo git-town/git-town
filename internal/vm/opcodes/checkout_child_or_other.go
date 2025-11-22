@@ -19,8 +19,9 @@ func (self *CheckoutChildOrOther) Run(args shared.RunArgs) error {
 		return err
 	}
 	availableBranches = availableBranches.Remove(self.Branch)
-	ancestors := args.Config.Value.NormalConfig.Lineage.Descendants(self.Branch, args.Config.Value.NormalConfig.Order)
-	branches := availableBranches.Hoist(ancestors...)
+	descendents := args.Config.Value.NormalConfig.Lineage.Descendants(self.Branch, args.Config.Value.NormalConfig.Order)
+	ancestors := args.Config.Value.NormalConfig.Lineage.Ancestors(self.Branch)
+	branches := availableBranches.Hoist(descendents...).Hoist(ancestors...)
 	for _, branch := range branches {
 		args.PrependOpcodes(&CheckoutIfNeeded{Branch: branch})
 		return nil
