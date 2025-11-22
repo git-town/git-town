@@ -78,7 +78,7 @@ func saveAliases(valuesToWriteToGit configdomain.Aliases, valuesAlreadyInGit con
 	return nil
 }
 
-func saveAllToFile(userInput UserInput, gitConfig configdomain.PartialConfig, runner subshelldomain.Runner) error {
+func saveAllToFile(userInput UserInput, oldConfigFile configdomain.PartialConfig, gitConfig configdomain.PartialConfig, runner subshelldomain.Runner) error {
 	userInput.Data.MainBranch = Some(userInput.ValidatedConfig.MainBranch)
 	if err := configfile.Save(userInput.Data); err != nil {
 		return err

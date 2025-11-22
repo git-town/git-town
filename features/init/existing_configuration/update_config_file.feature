@@ -84,3 +84,4 @@ Feature: update information in the config file
       push-branches = true
       push-hook = true
       """
+# TODO: it deletes the branch prefix here
