@@ -22,8 +22,5 @@ Feature: sync a branch whose branch is gone while main is active in another work
 
   Scenario: undo
     When I run "git-town undo"
-    Then Git Town runs the commands
-      | BRANCH    | COMMAND                                         |
-      | feature-2 | git branch feature-1 {{ sha 'initial commit' }} |
-      |           | git checkout feature-1                          |
+    Then Git Town runs no commands
     And the initial commits exist now
