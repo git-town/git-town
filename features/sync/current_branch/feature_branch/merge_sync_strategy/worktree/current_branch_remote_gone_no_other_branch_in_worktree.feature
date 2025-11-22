@@ -1,4 +1,4 @@
-Feature: sync a branch whose branch is gone while no other branch is available in the current worktree
+Feature: sync a branch whose tracking branch is gone while no other branch is available in the current worktree
 
   Background:
     Given a Git repo with origin
