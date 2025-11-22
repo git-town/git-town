@@ -31,19 +31,6 @@ func ParseLocalBranchNames(names string) LocalBranchNames {
 	return result
 }
 
-// Intersect provides all branch names that occur in this list and the given list,
-// ordered the same as in this list.
-func (self LocalBranchNames) Intersect(branches LocalBranchNames) LocalBranchNames {
-	result := make(LocalBranchNames, 0, len(self))
-	for _, branch := range self {
-		if branches.Contains(branch) {
-			result = append(result, branch)
-
-		}
-	}
-	return result
-}
-
 // AppendAllMissing provides a LocalBranchNames list consisting of the sum of this and elements of other list that aren't in this list.
 func (self LocalBranchNames) AppendAllMissing(others LocalBranchNames) LocalBranchNames {
 	missing := slice.FindAllMissing(self, others)
