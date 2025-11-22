@@ -51,7 +51,7 @@ func (self LocalBranchNames) Contains(branch LocalBranchName) bool {
 	return slices.Contains(self, branch)
 }
 
-// Hoist returns the given list with the given needles moved to the front,
+// Hoist returns the given list with the given branches moved to the front,
 // in the order they are given.
 func (self LocalBranchNames) Hoist(branches ...LocalBranchName) LocalBranchNames {
 	matches := make(LocalBranchNames, 0, len(branches))
