@@ -109,10 +109,14 @@ Feature: migrate existing configuration in Git metadata to a config file
       # See https://www.git-town.com/configuration-file for details
 
       [branches]
+      contribution-regex = "coworker-.*"
+      feature-regex = "user-.*"
       main = "main"
+      observed-regex = "other-.*"
       order = "desc"
       perennials = ["qa"]
       perennial-regex = "release-.*"
+      unknown-branch-type = "observed"
 
       [create]
       new-branch-type = "prototype"
@@ -131,6 +135,7 @@ Feature: migrate existing configuration in Git metadata to a config file
 
       [sync]
       auto-sync = false
+      detached = false
       feature-strategy = "merge"
       perennial-strategy = "rebase"
       prototype-strategy = "merge"

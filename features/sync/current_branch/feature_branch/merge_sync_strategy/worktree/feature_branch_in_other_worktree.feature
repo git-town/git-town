@@ -20,7 +20,7 @@ Feature: Sync a feature branch that is in another worktree than the main branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | git merge --no-edit --ff origin/main    |
+      |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
       |         | git push                                |
     And the current branch in the other worktree is still "feature"
@@ -29,10 +29,10 @@ Feature: Sync a feature branch that is in another worktree than the main branch
       | main    | local            | local main commit                                          |
       |         | origin           | origin main commit                                         |
       | feature | origin, worktree | local feature commit                                       |
-      |         |                  | Merge remote-tracking branch 'origin/main' into feature    |
+      |         | origin           | local main commit                                          |
+      |         | origin, worktree | Merge branch 'main' into feature                           |
       |         |                  | origin feature commit                                      |
       |         |                  | Merge remote-tracking branch 'origin/feature' into feature |
-      |         | worktree         | origin main commit                                         |
 
   Scenario: undo
     When I run "git-town undo" in the other worktree

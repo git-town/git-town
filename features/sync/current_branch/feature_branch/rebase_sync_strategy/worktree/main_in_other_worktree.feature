@@ -18,19 +18,19 @@ Feature: sync a branch when main is active in another worktree and has updates
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                                             |
-      | feature | git fetch --prune --tags                                                            |
-      |         | git push --force-with-lease --force-if-includes                                     |
-      |         | git -c rebase.updateRefs=false rebase origin/feature                                |
-      |         | git -c rebase.updateRefs=false rebase --onto origin/main {{ sha 'initial commit' }} |
-      |         | git push --force-with-lease --force-if-includes                                     |
+      | BRANCH  | COMMAND                                                                      |
+      | feature | git fetch --prune --tags                                                     |
+      |         | git push --force-with-lease --force-if-includes                              |
+      |         | git -c rebase.updateRefs=false rebase origin/feature                         |
+      |         | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
+      |         | git push --force-with-lease --force-if-includes                              |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | origin        | origin main commit    |
       |         | worktree      | local main commit     |
-      | feature | local         | origin main commit    |
-      |         | local, origin | origin feature commit |
+      | feature | local, origin | origin feature commit |
       |         |               | local feature commit  |
+      |         | origin        | local main commit     |
 
   Scenario: undo
     When I run "git-town undo"

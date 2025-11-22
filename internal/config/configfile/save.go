@@ -1,6 +1,7 @@
 package configfile
 
 import (
+	"cmp"
 	"fmt"
 	"os"
 	"strings"
@@ -20,15 +21,45 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	result := strings.Builder{}
 	result.WriteString("# See https://www.git-town.com/configuration-file for details\n")
 
-	main, hasMain := data.MainBranch.Get()
+	// keep-sorted start
+	contributionRegex, hasContributionRegex := data.ContributionRegex.Get()
 	displayTypes, hasDisplayTypes := data.DisplayTypes.Get()
+	featureRegex, hasFeatureRegex := data.FeatureRegex.Get()
 	hasPerennialBranches := len(data.PerennialBranches) > 0
+	main, hasMain := data.MainBranch.Get()
+	observedRegex, hasObservedRegex := data.ObservedRegex.Get()
 	order, hasOrder := data.Order.Get()
 	perennialRegex, hasPerennialRegex := data.PerennialRegex.Get()
-	if hasMain || hasPerennialBranches || hasPerennialRegex {
+	unknownBranchType, hasUnknownBranchType := data.UnknownBranchType.Get()
+	// keep-sorted end
+	if cmp.Or(
+		// keep-sorted start
+		hasContributionRegex,
+		hasDisplayTypes,
+		hasFeatureRegex,
+		hasMain,
+		hasObservedRegex,
+		hasOrder,
+		hasPerennialBranches,
+		hasPerennialRegex,
+		hasUnknownBranchType,
+		// keep-sorted end
+	) {
 		result.WriteString("\n[branches]\n")
+		if hasContributionRegex {
+			result.WriteString(fmt.Sprintf("contribution-regex = %q\n", contributionRegex))
+		}
+		if hasDisplayTypes {
+			result.WriteString(fmt.Sprintf("display-types = %q\n", displayTypes.Serialize(" ")))
+		}
+		if hasFeatureRegex {
+			result.WriteString(fmt.Sprintf("feature-regex = %q\n", featureRegex))
+		}
 		if hasMain {
 			result.WriteString(fmt.Sprintf("main = %q\n", main))
+		}
+		if hasObservedRegex {
+			result.WriteString(fmt.Sprintf("observed-regex = %q\n", observedRegex))
 		}
 		if hasOrder {
 			result.WriteString(fmt.Sprintf("order = %q\n", order))
@@ -39,15 +70,15 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		if hasPerennialRegex {
 			result.WriteString(fmt.Sprintf("perennial-regex = %q\n", perennialRegex))
 		}
-		if hasDisplayTypes {
-			result.WriteString(fmt.Sprintf("display-types = %q\n", displayTypes.Serialize(" ")))
+		if hasUnknownBranchType {
+			result.WriteString(fmt.Sprintf("unknown-branch-type = %q\n", unknownBranchType))
 		}
 	}
 
 	newBranchType, hasNewBranchType := data.NewBranchType.Get()
 	shareNewBranches, hasShareNewBranches := data.ShareNewBranches.Get()
 	stash, hasStash := data.Stash.Get()
-	if hasNewBranchType || hasShareNewBranches {
+	if cmp.Or(hasNewBranchType, hasShareNewBranches, hasStash) {
 		result.WriteString("\n[create]\n")
 		if hasNewBranchType {
 			result.WriteString(fmt.Sprintf("new-branch-type = %q\n", newBranchType))
@@ -60,16 +91,34 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		}
 	}
 
+	// keep-sorted start
 	devRemote, hasDevRemote := data.DevRemote.Get()
 	forgeType, hasForgeType := data.ForgeType.Get()
+	githubConnectorType, hasGitHubConnectorType := data.GitHubConnectorType.Get()
+	gitlabConnectorType, hasGitLabConnectorType := data.GitLabConnectorType.Get()
 	originHostName, hasOriginHostName := data.HostingOriginHostname.Get()
-	if hasDevRemote || hasForgeType || hasOriginHostName {
+	// keep-sorted end
+	if cmp.Or(
+		// keep-sorted start
+		hasDevRemote,
+		hasForgeType,
+		hasGitHubConnectorType,
+		hasGitLabConnectorType,
+		hasOriginHostName,
+		// keep-sorted end
+	) {
 		result.WriteString("\n[hosting]\n")
 		if hasDevRemote {
 			result.WriteString(fmt.Sprintf("dev-remote = %q\n", devRemote))
 		}
 		if hasForgeType {
 			result.WriteString(fmt.Sprintf("forge-type = %q\n", forgeType))
+		}
+		if hasGitHubConnectorType {
+			result.WriteString(fmt.Sprintf("github-connector-type = %q\n", githubConnectorType))
+		}
+		if hasGitLabConnectorType {
+			result.WriteString(fmt.Sprintf("gitlab-connector-type = %q\n", gitlabConnectorType))
 		}
 		if hasOriginHostName {
 			result.WriteString(fmt.Sprintf("origin-hostname = %q\n", originHostName))
@@ -84,7 +133,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 
 	deleteTrackingBranch, hasDeleteTrackingBranch := data.ShipDeleteTrackingBranch.Get()
 	shipStrategy, hasShipStrategy := data.ShipStrategy.Get()
-	if hasDeleteTrackingBranch || hasShipStrategy {
+	if cmp.Or(hasDeleteTrackingBranch, hasShipStrategy) {
 		result.WriteString("\n[ship]\n")
 		if hasDeleteTrackingBranch {
 			result.WriteString(fmt.Sprintf("delete-tracking-branch = %t\n", deleteTrackingBranch))
@@ -94,22 +143,41 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		}
 	}
 
+	// keep-sorted start
 	autoResolve, hasAutoResolve := data.AutoResolve.Get()
 	autoSync, hasAutoSync := data.AutoSync.Get()
+	detached, hasDetached := data.Detached.Get()
+	pushBranches, hasPushBranches := data.PushBranches.Get()
+	pushHook, hasPushHook := data.PushHook.Get()
 	syncFeatureStrategy, hasSyncFeatureStrategy := data.SyncFeatureStrategy.Get()
 	syncPerennialStrategy, hasSyncPerennialStrategy := data.SyncPerennialStrategy.Get()
 	syncPrototypeStrategy, hasSyncPrototypeStrategy := data.SyncPrototypeStrategy.Get()
-	pushBranches, hasPushBranches := data.PushBranches.Get()
-	pushHook, hasPushHook := data.PushHook.Get()
 	syncTags, hasSyncTags := data.SyncTags.Get()
 	syncUpstream, hasSyncUpstream := data.SyncUpstream.Get()
-	if hasAutoResolve || hasSyncFeatureStrategy || hasSyncPerennialStrategy || hasSyncPrototypeStrategy || hasPushHook || hasSyncTags || hasSyncUpstream {
+	// keep-sorted end
+	if cmp.Or(
+		// keep-sorted start
+		hasAutoResolve,
+		hasAutoSync,
+		hasDetached,
+		hasPushBranches,
+		hasPushHook,
+		hasSyncFeatureStrategy,
+		hasSyncPerennialStrategy,
+		hasSyncPrototypeStrategy,
+		hasSyncTags,
+		hasSyncUpstream,
+		// keep-sorted end
+	) {
 		result.WriteString("\n[sync]\n")
 		if hasAutoResolve {
 			result.WriteString(fmt.Sprintf("auto-resolve = %t\n", autoResolve))
 		}
 		if hasAutoSync {
 			result.WriteString(fmt.Sprintf("auto-sync = %t\n", autoSync))
+		}
+		if hasDetached {
+			result.WriteString(fmt.Sprintf("detached = %t\n", detached))
 		}
 		if hasSyncFeatureStrategy {
 			result.WriteString(fmt.Sprintf("feature-strategy = %q\n", syncFeatureStrategy))

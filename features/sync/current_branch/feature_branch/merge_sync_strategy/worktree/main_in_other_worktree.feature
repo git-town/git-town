@@ -19,7 +19,7 @@ Feature: sync a branch when main is active in another worktree and has updates
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | git merge --no-edit --ff origin/main    |
+      |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
       |         | git push                                |
     And these commits exist now
@@ -27,10 +27,10 @@ Feature: sync a branch when main is active in another worktree and has updates
       | main    | origin        | origin main commit                                         |
       |         | worktree      | local main commit                                          |
       | feature | local, origin | local feature commit                                       |
-      |         | local         | origin main commit                                         |
-      |         | local, origin | Merge remote-tracking branch 'origin/main' into feature    |
+      |         |               | Merge branch 'main' into feature                           |
       |         |               | origin feature commit                                      |
       |         |               | Merge remote-tracking branch 'origin/feature' into feature |
+      |         | origin        | local main commit                                          |
 
   Scenario: undo
     When I run "git-town undo"

@@ -34,20 +34,14 @@ func (self *SyncFeatureBranchMerge) Run(args shared.RunArgs) error {
 		if parentBranchInfo, hasParentInfo := branchInfos.FindLocalOrRemote(parent, args.Config.Value.NormalConfig.DevRemote).Get(); hasParentInfo {
 			parentIsLocal := parentBranchInfo.LocalName.IsSome()
 			if parentIsLocal {
-				var parentToMerge gitdomain.BranchName
-				if branchInfos.BranchIsActiveInAnotherWorktree(parent) {
-					parentToMerge = parent.TrackingBranch(args.Config.Value.NormalConfig.DevRemote).BranchName()
-				} else {
-					parentToMerge = parent.BranchName()
-				}
-				isInSync, err := args.Git.BranchInSyncWithParent(args.Backend, self.Branch, parentToMerge)
+				isInSync, err := args.Git.BranchInSyncWithParent(args.Backend, self.Branch, parent.BranchName())
 				if err != nil {
 					return err
 				}
 				if !isInSync {
 					program = append(program, &MergeParentResolvePhantomConflicts{
 						CurrentBranch:     self.Branch,
-						CurrentParent:     parentToMerge,
+						CurrentParent:     parent.BranchName(),
 						InitialParentName: self.InitialParentName,
 						InitialParentSHA:  self.InitialParentSHA,
 					})
