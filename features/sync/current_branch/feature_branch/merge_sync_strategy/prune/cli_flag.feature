@@ -24,10 +24,9 @@ Feature: prune enabled via CLI
       |           | git checkout feature-1                            |
       | feature-1 | git merge --no-edit --ff main                     |
       |           | git merge --no-edit --ff origin/feature-1         |
-      |           | git checkout main                                 |
-      | main      | git push origin :feature-1                        |
-      |           | git branch -D feature-1                           |
       |           | git checkout feature-2                            |
+      | feature-2 | git push origin :feature-1                        |
+      |           | git branch -D feature-1                           |
     And this lineage exists now
       """
       main

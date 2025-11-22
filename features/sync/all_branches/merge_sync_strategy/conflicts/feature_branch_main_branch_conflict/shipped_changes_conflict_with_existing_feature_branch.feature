@@ -32,8 +32,7 @@ Feature: shipped changes conflict with multiple existing feature branches
       | BRANCH | COMMAND                       |
       | alpha  | git commit --no-edit          |
       |        | git push                      |
-      |        | git checkout main             |
-      | main   | git branch -D beta            |
+      |        | git branch -D beta            |
       |        | git checkout gamma            |
       | gamma  | git merge --no-edit --ff main |
     And Git Town prints the error:
