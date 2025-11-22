@@ -28,9 +28,9 @@ Feature: auto-resolve phantom merge conflicts when parent and child modify the s
       | branch-2 | git fetch --prune --tags                          |
       |          | git checkout main                                 |
       | main     | git -c rebase.updateRefs=false rebase origin/main |
-      |          | git branch -D branch-1                            |
       |          | git checkout branch-2                             |
-      | branch-2 | git merge --no-edit --ff main                     |
+      | branch-2 | git branch -D branch-1                            |
+      |          | git merge --no-edit --ff main                     |
       |          | git checkout --ours file                          |
       |          | git add file                                      |
       |          | git commit --no-edit                              |

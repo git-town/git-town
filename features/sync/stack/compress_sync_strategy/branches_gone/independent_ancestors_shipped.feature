@@ -26,10 +26,11 @@ Feature: sync a stack that contains shipped parent branches using the "compress"
       | feature-3 | git fetch --prune --tags                          |
       |           | git checkout main                                 |
       | main      | git -c rebase.updateRefs=false rebase origin/main |
-      |           | git branch -D feature-1                           |
-      |           | git branch -D feature-2                           |
+      |           | git checkout feature-2                            |
+      | feature-2 | git branch -D feature-1                           |
       |           | git checkout feature-3                            |
-      | feature-3 | git merge --no-edit --ff main                     |
+      | feature-3 | git branch -D feature-2                           |
+      |           | git merge --no-edit --ff main                     |
       |           | git reset --soft main --                          |
       |           | git commit -m "feature-3 commit A"                |
       |           | git push --force-with-lease                       |

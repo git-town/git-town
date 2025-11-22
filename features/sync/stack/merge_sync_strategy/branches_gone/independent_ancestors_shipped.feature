@@ -23,10 +23,11 @@ Feature: shipped parent of a stacked change with independent changes
       | feature-3 | git fetch --prune --tags                          |
       |           | git checkout main                                 |
       | main      | git -c rebase.updateRefs=false rebase origin/main |
-      |           | git branch -D feature-1                           |
-      |           | git branch -D feature-2                           |
+      |           | git checkout feature-2                            |
+      | feature-2 | git branch -D feature-1                           |
       |           | git checkout feature-3                            |
-      | feature-3 | git merge --no-edit --ff main                     |
+      | feature-3 | git branch -D feature-2                           |
+      |           | git merge --no-edit --ff main                     |
       |           | git push                                          |
     And Git Town prints:
       """
