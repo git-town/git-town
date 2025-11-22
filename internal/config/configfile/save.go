@@ -21,16 +21,19 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	result := strings.Builder{}
 	result.WriteString("# See https://www.git-town.com/configuration-file for details\n")
 
+	// keep-sorted start
 	contributionRegex, hasContributionRegex := data.ContributionRegex.Get()
 	displayTypes, hasDisplayTypes := data.DisplayTypes.Get()
 	featureRegex, hasFeatureRegex := data.FeatureRegex.Get()
+	hasPerennialBranches := len(data.PerennialBranches) > 0
 	main, hasMain := data.MainBranch.Get()
 	observedRegex, hasObservedRegex := data.ObservedRegex.Get()
 	order, hasOrder := data.Order.Get()
-	hasPerennialBranches := len(data.PerennialBranches) > 0
 	perennialRegex, hasPerennialRegex := data.PerennialRegex.Get()
 	unknownBranchType, hasUnknownBranchType := data.UnknownBranchType.Get()
+	// keep-sorted end
 	if cmp.Or(
+		// keep-sorted start
 		hasContributionRegex,
 		hasDisplayTypes,
 		hasFeatureRegex,
@@ -40,6 +43,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		hasPerennialBranches,
 		hasPerennialRegex,
 		hasUnknownBranchType,
+		// keep-sorted end
 	) {
 		result.WriteString("\n[branches]\n")
 		if hasContributionRegex {
@@ -91,17 +95,21 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		}
 	}
 
+	// keep-sorted start
 	devRemote, hasDevRemote := data.DevRemote.Get()
 	forgeType, hasForgeType := data.ForgeType.Get()
 	githubConnectorType, hasGitHubConnectorType := data.GitHubConnectorType.Get()
 	gitlabConnectorType, hasGitLabConnectorType := data.GitLabConnectorType.Get()
 	originHostName, hasOriginHostName := data.HostingOriginHostname.Get()
+	// keep-sorted end
 	if cmp.Or(
+		// keep-sorted start
 		hasDevRemote,
 		hasForgeType,
 		hasGitHubConnectorType,
 		hasGitLabConnectorType,
 		hasOriginHostName,
+		// keep-sorted end
 	) {
 		result.WriteString("\n[hosting]\n")
 		if hasDevRemote {
@@ -139,27 +147,31 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		}
 	}
 
+	// keep-sorted start
 	autoResolve, hasAutoResolve := data.AutoResolve.Get()
 	autoSync, hasAutoSync := data.AutoSync.Get()
 	detached, hasDetached := data.Detached.Get()
+	pushBranches, hasPushBranches := data.PushBranches.Get()
+	pushHook, hasPushHook := data.PushHook.Get()
 	syncFeatureStrategy, hasSyncFeatureStrategy := data.SyncFeatureStrategy.Get()
 	syncPerennialStrategy, hasSyncPerennialStrategy := data.SyncPerennialStrategy.Get()
 	syncPrototypeStrategy, hasSyncPrototypeStrategy := data.SyncPrototypeStrategy.Get()
-	pushBranches, hasPushBranches := data.PushBranches.Get()
-	pushHook, hasPushHook := data.PushHook.Get()
 	syncTags, hasSyncTags := data.SyncTags.Get()
 	syncUpstream, hasSyncUpstream := data.SyncUpstream.Get()
+	// keep-sorted end
 	if cmp.Or(
+		// keep-sorted start
 		hasAutoResolve,
 		hasAutoSync,
 		hasDetached,
+		hasPushBranches,
+		hasPushHook,
 		hasSyncFeatureStrategy,
 		hasSyncPerennialStrategy,
 		hasSyncPrototypeStrategy,
-		hasPushBranches,
-		hasPushHook,
 		hasSyncTags,
 		hasSyncUpstream,
+		// keep-sorted end
 	) {
 		result.WriteString("\n[sync]\n")
 		if hasAutoResolve {
