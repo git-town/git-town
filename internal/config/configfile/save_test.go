@@ -46,8 +46,9 @@ func TestSave(t *testing.T) {
 		t.Run("all options given", func(t *testing.T) {
 			t.Parallel()
 			have := configfile.RenderTOML(configdomain.PartialConfig{
-				AutoResolve: Some(configdomain.AutoResolve(false)),
-				DevRemote:   Some(gitdomain.RemoteOrigin),
+				AutoResolve:  Some(configdomain.AutoResolve(false)),
+				BranchPrefix: Some(configdomain.BranchPrefix("feature-")),
+				DevRemote:    Some(gitdomain.RemoteOrigin),
 				DisplayTypes: Some(configdomain.DisplayTypes{
 					BranchTypes: []configdomain.BranchType{configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch},
 					Quantifier:  configdomain.QuantifierNo,
@@ -81,6 +82,7 @@ perennial-regex = "perennial-"
 display-types = "no main perennial"
 
 [create]
+branch-prefix = "feature-"
 new-branch-type = "prototype"
 share-new-branches = "propose"
 

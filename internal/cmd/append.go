@@ -311,11 +311,15 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 	if err != nil {
 		return data, configdomain.ProgramFlowExit, err
 	}
-	if branchesSnapshot.Branches.HasLocalBranch(args.targetBranch) {
-		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsLocally, args.targetBranch)
+	targetBranch := args.targetBranch
+	if prefix, hasPrefix := config.BranchPrefix.Get(); hasPrefix {
+		targetBranch = prefix.Apply(targetBranch)
 	}
-	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(args.targetBranch, repo.UnvalidatedConfig.NormalConfig.DevRemote) {
-		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsRemotely, args.targetBranch)
+	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
+		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
+	}
+	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch, repo.UnvalidatedConfig.NormalConfig.DevRemote) {
+		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
@@ -362,7 +366,7 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 		if err != nil {
 			return data, configdomain.ProgramFlowExit, err
 		}
-		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, args.targetBranch, repo.Git, repo.Backend, inputs)
+		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, targetBranch, repo.Git, repo.Backend, inputs)
 		if err != nil || exit {
 			return data, configdomain.ProgramFlowExit, err
 		}
@@ -393,7 +397,7 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 		prototype:                 args.prototype,
 		remotes:                   remotes,
 		stashSize:                 stashSize,
-		targetBranch:              args.targetBranch,
+		targetBranch:              targetBranch,
 	}, configdomain.ProgramFlowContinue, nil
 }
 

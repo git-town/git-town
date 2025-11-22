@@ -149,6 +149,7 @@ EnterForgeData:
 	featureRegex := None[configdomain.FeatureRegex]()
 	contributionRegex := None[configdomain.ContributionRegex]()
 	observedRegex := None[configdomain.ObservedRegex]()
+	branchPrefix := None[configdomain.BranchPrefix]()
 	order := None[configdomain.Order]()
 	newBranchType := None[configdomain.NewBranchType]()
 	unknownBranchType := None[configdomain.UnknownBranchType]()
@@ -179,6 +180,10 @@ EnterForgeData:
 			return emptyResult, exit, false, err
 		}
 		observedRegex, exit, err = enterObservedRegex(data)
+		if err != nil || exit {
+			return emptyResult, exit, false, err
+		}
+		branchPrefix, exit, err = enterBranchPrefix(data)
 		if err != nil || exit {
 			return emptyResult, exit, false, err
 		}
@@ -261,6 +266,7 @@ EnterForgeData:
 		AutoSync:                 autoSync,
 		BitbucketAppPassword:     bitbucketAppPassword,
 		BitbucketUsername:        bitbucketUsername,
+		BranchPrefix:             branchPrefix,
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{}, // the setup assistant doesn't ask for this
 		ForgejoToken:             forgejoToken,
 		ContributionRegex:        contributionRegex,
@@ -366,6 +372,17 @@ func enterBitbucketUserName(data Data) (Option[forgedomain.BitbucketUsername], d
 		Global: data.Config.GitLocal.BitbucketUsername,
 		Inputs: data.Inputs,
 		Local:  data.Config.GitLocal.BitbucketUsername,
+	})
+}
+
+func enterBranchPrefix(data Data) (Option[configdomain.BranchPrefix], dialogdomain.Exit, error) {
+	if data.Config.File.BranchPrefix.IsSome() {
+		return None[configdomain.BranchPrefix](), false, nil
+	}
+	return dialog.BranchPrefix(dialog.Args[configdomain.BranchPrefix]{
+		Global: data.Config.GitGlobal.BranchPrefix,
+		Inputs: data.Inputs,
+		Local:  data.Config.GitLocal.BranchPrefix,
 	})
 }
 

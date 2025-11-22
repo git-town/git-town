@@ -26,6 +26,7 @@ func New(args NewArgs) configdomain.PartialConfig {
 		AutoSync:                 args.AutoSync,
 		BitbucketAppPassword:     None[forgedomain.BitbucketAppPassword](),
 		BitbucketUsername:        None[forgedomain.BitbucketUsername](),
+		BranchPrefix:             None[configdomain.BranchPrefix](),
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{},
 		ForgejoToken:             None[forgedomain.ForgejoToken](),
 		ContributionRegex:        None[configdomain.ContributionRegex](),

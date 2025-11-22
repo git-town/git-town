@@ -14,6 +14,7 @@ Feature: display configuration from Git metadata in detached head state
       |        | local    | commit 2 |
     And Git setting "git-town.perennial-branches" is "qa staging"
     And Git setting "git-town.auto-sync" is "false"
+    And Git setting "git-town.branch-prefix" is "acme-"
     And Git setting "git-town.display-types" is "all"
     And Git setting "git-town.perennial-regex" is "^release-"
     And Git setting "git-town.contribution-regex" is "^renovate/"
@@ -53,6 +54,7 @@ Feature: display configuration from Git metadata in detached head state
         git user email: email@example.com
 
       Create:
+        branch prefix: acme-
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: no

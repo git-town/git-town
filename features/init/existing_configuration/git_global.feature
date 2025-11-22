@@ -8,6 +8,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | branch-1 | feature | main   | local     |
     And Git Town is not configured
     And global Git setting "git-town.auto-sync" is "false"
+    And global Git setting "git-town.branch-prefix" is "kg-"
     And global Git setting "git-town.feature-regex" is "^feat-"
     And global Git setting "git-town.contribution-regex" is "^cont-"
     And global Git setting "git-town.observed-regex" is "^obs-"
@@ -45,6 +46,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | feature regex               | enter       |
       | contribution regex          | enter       |
       | observed regex              | enter       |
+      | branch prefix               | enter       |
       | new branch type             | enter       |
       | unknown branch type         | enter       |
       | sync feature strategy       | enter       |

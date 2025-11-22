@@ -218,6 +218,9 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 		oldBranchName = gitdomain.NewLocalBranchName(args[0])
 		newBranchName = gitdomain.NewLocalBranchName(args[1])
 	}
+	if prefix, hasPrefix := config.BranchPrefix.Get(); hasPrefix {
+		newBranchName = prefix.Apply(newBranchName)
+	}
 	oldBranch, hasOldBranch := branchesSnapshot.Branches.FindByLocalName(oldBranchName).Get()
 	if !hasOldBranch {
 		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchDoesntExist, oldBranchName)

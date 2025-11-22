@@ -22,6 +22,7 @@ Feature: Accepting all default values leads to a working setup
       | feature regex               | enter      |
       | contribution regex          | enter      |
       | observed regex              | enter      |
+      | branch prefix               | enter      |
       | new branch type             | enter      |
       | unknown branch type         | enter      |
       | sync feature strategy       | enter      |
@@ -85,6 +86,7 @@ Feature: Accepting all default values leads to a working setup
     And local Git setting "git-town.forge-type" still doesn't exist
     And local Git setting "git-town.github-token" still doesn't exist
     And local Git setting "git-town.hosting-origin-hostname" still doesn't exist
+    And local Git setting "git-town.branch-prefix" still doesn't exist
     And local Git setting "git-town.proposals-show-lineage" still doesn't exist
     And local Git setting "git-town.feature-regex" now doesn't exist
     And local Git setting "git-town.contribution-regex" now doesn't exist

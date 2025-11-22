@@ -47,6 +47,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	// keep-sorted start
 	var autoResolve Option[configdomain.AutoResolve]
 	var autoSync Option[configdomain.AutoSync]
+	var branchPrefix Option[configdomain.BranchPrefix]
 	var contributionRegex Option[configdomain.ContributionRegex]
 	var detached Option[configdomain.Detached]
 	var devRemote Option[gitdomain.Remote]
@@ -153,6 +154,10 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		}
 	}
 	if data.Create != nil {
+		if data.Create.BranchPrefix != nil {
+			branchPrefix, err = configdomain.ParseBranchPrefix(*data.Create.BranchPrefix, messages.ConfigFile)
+			ec.Check(err)
+		}
 		if data.Create.NewBranchType != nil {
 			branchType, err := configdomain.ParseBranchType(*data.Create.NewBranchType, messages.ConfigFile)
 			ec.Check(err)
@@ -262,6 +267,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		AutoSync:                 autoSync,
 		BitbucketAppPassword:     None[forgedomain.BitbucketAppPassword](),
 		BitbucketUsername:        None[forgedomain.BitbucketUsername](),
+		BranchPrefix:             branchPrefix,
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{},
 		ForgejoToken:             None[forgedomain.ForgejoToken](),
 		ContributionRegex:        contributionRegex,

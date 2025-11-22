@@ -58,6 +58,7 @@ const (
 	KeyAutoSync                            = Key("git-town.auto-sync")
 	KeyBitbucketAppPassword                = Key("git-town.bitbucket-app-password")
 	KeyBitbucketUsername                   = Key("git-town.bitbucket-username")
+	KeyBranchPrefix                        = Key("git-town.branch-prefix")
 	KeyContributionRegex                   = Key("git-town.contribution-regex")
 	KeyDeprecatedCodebergToken             = Key("git-town.codeberg-token")
 	KeyDeprecatedCodeHostingDriver         = Key("git-town.code-hosting-driver")
@@ -122,6 +123,7 @@ var keys = []Key{
 	KeyAutoSync,
 	KeyBitbucketAppPassword,
 	KeyBitbucketUsername,
+	KeyBranchPrefix,
 	KeyContributionRegex,
 	KeyDeprecatedAliasKill,
 	KeyDeprecatedAliasRenameBranch,

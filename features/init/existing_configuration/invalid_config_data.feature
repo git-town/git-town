@@ -10,6 +10,7 @@ Feature: Fix invalid configuration data
     And local Git setting "git-town.contribution-regex" is "(cont"
     And local Git setting "git-town.observed-regex" is "(obs"
     And local Git setting "git-town.new-branch-type" is "zonk"
+    And local Git setting "git-town.branch-prefix" is "xx"
     And local Git setting "git-town.unknown-branch-type" is "zonk"
     And local Git setting "git-town.sync-feature-strategy" is "--help"
     And local Git setting "git-town.sync-perennial-strategy" is "zonk"
@@ -26,41 +27,43 @@ Feature: Fix invalid configuration data
     And local Git setting "git-town.ship-delete-tracking-branch" is "zonk"
     And local Git setting "git-town.order" is "zonk"
     When I run "git-town init" and enter into the dialogs:
-      | DIALOG                      | KEYS          |
-      | welcome                     | enter         |
-      | aliases                     | enter         |
-      | main branch                 | enter         |
-      | origin hostname             | enter         |
-      | forge type                  | enter         |
-      | enter all                   | down enter    |
-      | perennial regex             | p e r enter   |
-      | feature regex               | f e a t enter |
-      | contribution regex          | c o n t enter |
-      | observed regex              | o b s enter   |
-      | new branch type             | down enter    |
-      | unknown branch type         | down enter    |
-      | sync feature strategy       | down enter    |
-      | sync perennial strategy     | down enter    |
-      | sync prototype strategy     | down enter    |
-      | sync upstream               | down enter    |
-      | auto-sync                   | down enter    |
-      | sync-tags                   | down enter    |
-      | detached                    | down enter    |
-      | stash                       | down enter    |
-      | share-new-branches          | down enter    |
-      | push-branches               | down enter    |
-      | push-hook                   | down enter    |
-      | ship-strategy               | down enter    |
-      | ship-delete-tracking branch | down enter    |
-      | order                       | down enter    |
-      | proposals show lineage      | enter         |
-      | config storage              | enter         |
+      | DIALOG                      | KEYS                          |
+      | welcome                     | enter                         |
+      | aliases                     | enter                         |
+      | main branch                 | enter                         |
+      | origin hostname             | enter                         |
+      | forge type                  | enter                         |
+      | enter all                   | down enter                    |
+      | perennial regex             | p e r enter                   |
+      | feature regex               | f e a t enter                 |
+      | contribution regex          | c o n t enter                 |
+      | observed regex              | o b s enter                   |
+      | branch prefix               | backspace backspace a b enter |
+      | new branch type             | down enter                    |
+      | unknown branch type         | down enter                    |
+      | sync feature strategy       | down enter                    |
+      | sync perennial strategy     | down enter                    |
+      | sync prototype strategy     | down enter                    |
+      | sync upstream               | down enter                    |
+      | auto-sync                   | down enter                    |
+      | sync-tags                   | down enter                    |
+      | detached                    | down enter                    |
+      | stash                       | down enter                    |
+      | share-new-branches          | down enter                    |
+      | push-branches               | down enter                    |
+      | push-hook                   | down enter                    |
+      | ship-strategy               | down enter                    |
+      | ship-delete-tracking branch | down enter                    |
+      | order                       | down enter                    |
+      | proposals show lineage      | enter                         |
+      | config storage              | enter                         |
 
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                               |
       | git config git-town.main-branch main                  |
       | git config git-town.auto-sync false                   |
+      | git config git-town.branch-prefix ab                  |
       | git config git-town.detached true                     |
       | git config git-town.new-branch-type parked            |
       | git config git-town.perennial-regex per               |
