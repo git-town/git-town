@@ -23,9 +23,8 @@ Feature: prepend a branch to a branch that was shipped at the remote
       |        | git checkout parent                               |
       | parent | git merge --no-edit --ff main                     |
       |        | git push                                          |
-      |        | git checkout main                                 |
-      | main   | git branch -D child                               |
-      |        | git checkout -b new parent                        |
+      |        | git branch -D child                               |
+      |        | git checkout -b new                               |
     And Git Town prints:
       """
       deleted branch "child"
