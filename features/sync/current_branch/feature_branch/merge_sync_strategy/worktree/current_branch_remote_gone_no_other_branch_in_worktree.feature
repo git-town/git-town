@@ -16,7 +16,7 @@ Feature: sync a branch whose branch is gone while no other branch is available i
       | feature-1 | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      no branch to switch to available
+      there is no other branch to switch to
       """
     And the initial commits exist now
 
