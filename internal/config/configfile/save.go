@@ -24,13 +24,22 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	contributionRegex, hasContributionRegex := data.ContributionRegex.Get()
 	displayTypes, hasDisplayTypes := data.DisplayTypes.Get()
 	featureRegex, hasFeatureRegex := data.FeatureRegex.Get()
-	hasPerennialBranches := len(data.PerennialBranches) > 0
 	main, hasMain := data.MainBranch.Get()
 	observedRegex, hasObservedRegex := data.ObservedRegex.Get()
 	order, hasOrder := data.Order.Get()
+	hasPerennialBranches := len(data.PerennialBranches) > 0
 	perennialRegex, hasPerennialRegex := data.PerennialRegex.Get()
 	unknownBranchType, hasUnknownBranchType := data.UnknownBranchType.Get()
-	if cmp.Or(hasContributionRegex, hasDisplayTypes, hasFeatureRegex, hasMain, hasObservedRegex, hasOrder, hasPerennialBranches, hasPerennialRegex, hasUnknownBranchType) {
+	if cmp.Or(
+		hasContributionRegex,
+		hasDisplayTypes,
+		hasFeatureRegex,
+		hasMain,
+		hasObservedRegex,
+		hasOrder,
+		hasPerennialBranches,
+		hasPerennialRegex,
+		hasUnknownBranchType) {
 		result.WriteString("\n[branches]\n")
 		if hasContributionRegex {
 			result.WriteString(fmt.Sprintf("contribution-regex = %q\n", contributionRegex))
