@@ -3,5 +3,9 @@ package print
 import "fmt"
 
 func Entry(label, value string) {
-	fmt.Printf("  %s: %s\n", label, value)
+	if value == "" {
+		fmt.Printf("  %s:\n", label)
+	} else {
+		fmt.Printf("  %s: %s\n", label, value)
+	}
 }
