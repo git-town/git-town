@@ -2,6 +2,7 @@ package opcodes
 
 import (
 	"errors"
+	"slices"
 
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
@@ -22,6 +23,7 @@ func (self *CheckoutChildOrOther) Run(args shared.RunArgs) error {
 	availableBranches = availableBranches.Remove(self.Branch)
 	descendents := args.Config.Value.NormalConfig.Lineage.Descendants(self.Branch, args.Config.Value.NormalConfig.Order)
 	ancestors := args.Config.Value.NormalConfig.Lineage.Ancestors(self.Branch)
+	slices.Reverse(ancestors)
 	branches := availableBranches.Hoist(ancestors...).Hoist(descendents...)
 	for _, branch := range branches {
 		args.PrependOpcodes(&CheckoutIfNeeded{Branch: branch})
