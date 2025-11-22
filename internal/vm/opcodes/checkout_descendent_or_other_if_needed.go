@@ -17,10 +17,13 @@ func (self *CheckoutDescendentOrOtherIfNeeded) Run(args shared.RunArgs) error {
 	if err != nil {
 		return err
 	}
-	if currentBranch, hasCurrentBranch := currentBranchOpt.Get(); hasCurrentBranch {
-		if currentBranch != self.Branch {
-			return nil
-		}
+	currentBranch, hasCurrentBranch := currentBranchOpt.Get()
+	if !hasCurrentBranch {
+		// Detached HEAD - not on the branch, so no need to checkout
+		return nil
+	}
+	if currentBranch != self.Branch {
+		return nil
 	}
 	args.PrependOpcodes(&CheckoutDescendentOrOther{Branch: self.Branch})
 	return nil
