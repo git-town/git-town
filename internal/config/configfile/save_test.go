@@ -45,30 +45,44 @@ func TestSave(t *testing.T) {
 		t.Parallel()
 		t.Run("all options given", func(t *testing.T) {
 			t.Parallel()
+			contributionRegex := asserts.NoError1(configdomain.ParseContributionRegex("contribution-", "test"))
+			featureRegex := asserts.NoError1(configdomain.ParseFeatureRegex("feature-", "test"))
+			observedRegex := asserts.NoError1(configdomain.ParseObservedRegex("observed-", "test"))
+			perennialRegex := asserts.NoError1(configdomain.ParsePerennialRegex("perennial-", "test"))
 			have := configfile.RenderTOML(configdomain.PartialConfig{
-				AutoResolve: Some(configdomain.AutoResolve(false)),
-				DevRemote:   Some(gitdomain.RemoteOrigin),
+				AutoResolve:       Some(configdomain.AutoResolve(false)),
+				ContributionRegex: contributionRegex,
+				Detached:          Some(configdomain.Detached(true)),
+				DevRemote:         Some(gitdomain.RemoteOrigin),
 				DisplayTypes: Some(configdomain.DisplayTypes{
 					BranchTypes: []configdomain.BranchType{configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch},
 					Quantifier:  configdomain.QuantifierNo,
 				}),
+				FeatureRegex:             featureRegex,
 				ForgeType:                asserts.NoError1(forgedomain.ParseForgeType("github", "test")),
+				GitHubConnectorType:      Some(forgedomain.GitHubConnectorTypeGh),
+				GitLabConnectorType:      Some(forgedomain.GitLabConnectorTypeGlab),
 				HostingOriginHostname:    configdomain.ParseHostingOriginHostname("forge"),
 				MainBranch:               Some(gitdomain.NewLocalBranchName("main")),
 				NewBranchType:            Some(configdomain.NewBranchType(configdomain.BranchTypePrototypeBranch)),
+				ObservedRegex:            observedRegex,
 				Order:                    Some(configdomain.OrderDesc),
 				PerennialBranches:        gitdomain.NewLocalBranchNames("qa", "staging"),
-				PerennialRegex:           asserts.NoError1(configdomain.ParsePerennialRegex("perennial-", "test")),
+				PerennialRegex:           perennialRegex,
 				ProposalsShowLineage:     Some(forgedomain.ProposalsShowLineageCLI),
+				PushBranches:             Some(configdomain.PushBranches(true)),
 				PushHook:                 Some(configdomain.PushHook(true)),
 				ShareNewBranches:         Some(configdomain.ShareNewBranchesPropose),
 				ShipDeleteTrackingBranch: Some(configdomain.ShipDeleteTrackingBranch(true)),
 				ShipStrategy:             Some(configdomain.ShipStrategyAPI),
+				Stash:                    Some(configdomain.Stash(true)),
 				SyncFeatureStrategy:      Some(configdomain.SyncFeatureStrategyMerge),
 				SyncPerennialStrategy:    Some(configdomain.SyncPerennialStrategyRebase),
 				SyncPrototypeStrategy:    Some(configdomain.SyncPrototypeStrategyCompress),
 				SyncTags:                 Some(configdomain.SyncTags(true)),
 				SyncUpstream:             Some(configdomain.SyncUpstream(true)),
+				UnknownBranchType:        Some(configdomain.UnknownBranchType(configdomain.BranchTypePrototypeBranch)),
+				Verbose:                  Some(configdomain.Verbose(true)),
 			})
 			want := `
 # See https://www.git-town.com/configuration-file for details
