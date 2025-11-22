@@ -10,18 +10,18 @@ Feature: update information in the config file
       main = "main"
       perennials = ["public"]
       order = "desc"
-      
+
       [create]
       branch-prefix = "acme-"
-      
+
       [hosting]
       dev-remote = "something"
       forge-type = "github"
       origin-hostname = "github.com"
-      
+
       [ship]
       delete-tracking-branch = false
-      
+
       [sync]
       auto-sync = false
       tags = false
@@ -60,23 +60,23 @@ Feature: update information in the config file
     Then the configuration file is now:
       """
       # See https://www.git-town.com/configuration-file for details
-      
+
       [branches]
       main = "main"
       perennials = ["branch-1"]
       perennial-regex = "peren"
-      
+
       [create]
       new-branch-type = "feature"
       share-new-branches = "no"
       stash = true
-      
+
       [propose]
       lineage = "none"
-      
+
       [ship]
       strategy = "api"
-      
+
       [sync]
       feature-strategy = "merge"
       perennial-strategy = "ff-only"
@@ -84,4 +84,4 @@ Feature: update information in the config file
       push-branches = true
       push-hook = true
       """
-# TODO: it deletes the branch prefix here
+  # TODO: it deletes the branch prefix here
