@@ -91,7 +91,12 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	githubConnectorType, hasGitHubConnectorType := data.GitHubConnectorType.Get()
 	gitlabConnectorType, hasGitLabConnectorType := data.GitLabConnectorType.Get()
 	originHostName, hasOriginHostName := data.HostingOriginHostname.Get()
-	if cmp.Or(hasDevRemote, hasForgeType, hasGitHubConnectorType, hasGitLabConnectorType, hasOriginHostName) {
+	if cmp.Or(
+		hasDevRemote,
+		hasForgeType,
+		hasGitHubConnectorType,
+		hasGitLabConnectorType,
+		hasOriginHostName) {
 		result.WriteString("\n[hosting]\n")
 		if hasDevRemote {
 			result.WriteString(fmt.Sprintf("dev-remote = %q\n", devRemote))
@@ -138,7 +143,17 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	pushHook, hasPushHook := data.PushHook.Get()
 	syncTags, hasSyncTags := data.SyncTags.Get()
 	syncUpstream, hasSyncUpstream := data.SyncUpstream.Get()
-	if cmp.Or(hasAutoResolve, hasAutoSync, hasDetached, hasSyncFeatureStrategy, hasSyncPerennialStrategy, hasSyncPrototypeStrategy, hasPushBranches, hasPushHook, hasSyncTags, hasSyncUpstream) {
+	if cmp.Or(
+		hasAutoResolve,
+		hasAutoSync,
+		hasDetached,
+		hasSyncFeatureStrategy,
+		hasSyncPerennialStrategy,
+		hasSyncPrototypeStrategy,
+		hasPushBranches,
+		hasPushHook,
+		hasSyncTags,
+		hasSyncUpstream) {
 		result.WriteString("\n[sync]\n")
 		if hasAutoResolve {
 			result.WriteString(fmt.Sprintf("auto-resolve = %t\n", autoResolve))
