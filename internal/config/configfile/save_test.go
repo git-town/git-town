@@ -88,13 +88,13 @@ func TestSave(t *testing.T) {
 
 [branches]
 contribution-regex = "contribution-"
+display-types = "no main perennial"
 feature-regex = "feature-"
 main = "main"
+observed-regex = "observed-"
 order = "desc"
 perennials = ["qa", "staging"]
 perennial-regex = "perennial-"
-display-types = "no main perennial"
-observed-regex = "observed-"
 unknown-branch-type = "prototype"
 
 [create]

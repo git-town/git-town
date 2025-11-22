@@ -28,10 +28,14 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	observedRegex, hasObservedRegex := data.ObservedRegex.Get()
 	order, hasOrder := data.Order.Get()
 	perennialRegex, hasPerennialRegex := data.PerennialRegex.Get()
+	unknownBranchType, hasUnknownBranchType := data.UnknownBranchType.Get()
 	if hasContributionRegex || hasFeatureRegex || hasMain || hasObservedRegex || hasOrder || hasPerennialBranches || hasPerennialRegex || hasDisplayTypes {
 		result.WriteString("\n[branches]\n")
 		if hasContributionRegex {
 			result.WriteString(fmt.Sprintf("contribution-regex = %q\n", contributionRegex))
+		}
+		if hasDisplayTypes {
+			result.WriteString(fmt.Sprintf("display-types = %q\n", displayTypes.Serialize(" ")))
 		}
 		if hasFeatureRegex {
 			result.WriteString(fmt.Sprintf("feature-regex = %q\n", featureRegex))
@@ -51,8 +55,8 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		if hasPerennialRegex {
 			result.WriteString(fmt.Sprintf("perennial-regex = %q\n", perennialRegex))
 		}
-		if hasDisplayTypes {
-			result.WriteString(fmt.Sprintf("display-types = %q\n", displayTypes.Serialize(" ")))
+		if hasUnknownBranchType {
+			result.WriteString(fmt.Sprintf("unknown-branch-type = %q\n", unknownBranchType))
 		}
 	}
 
@@ -74,14 +78,22 @@ func RenderTOML(data configdomain.PartialConfig) string {
 
 	devRemote, hasDevRemote := data.DevRemote.Get()
 	forgeType, hasForgeType := data.ForgeType.Get()
+	githubConnectorType, hasGitHubConnectorType := data.GitHubConnectorType.Get()
+	gitlabConnectorType, hasGitLabConnectorType := data.GitLabConnectorType.Get()
 	originHostName, hasOriginHostName := data.HostingOriginHostname.Get()
-	if hasDevRemote || hasForgeType || hasOriginHostName {
+	if hasDevRemote || hasForgeType || hasGitHubConnectorType || hasGitLabConnectorType || hasOriginHostName {
 		result.WriteString("\n[hosting]\n")
 		if hasDevRemote {
 			result.WriteString(fmt.Sprintf("dev-remote = %q\n", devRemote))
 		}
 		if hasForgeType {
 			result.WriteString(fmt.Sprintf("forge-type = %q\n", forgeType))
+		}
+		if hasGitHubConnectorType {
+			result.WriteString(fmt.Sprintf("github-connector-type = %q\n", githubConnectorType))
+		}
+		if hasGitLabConnectorType {
+			result.WriteString(fmt.Sprintf("gitlab-connector-type = %q\n", gitlabConnectorType))
 		}
 		if hasOriginHostName {
 			result.WriteString(fmt.Sprintf("origin-hostname = %q\n", originHostName))
