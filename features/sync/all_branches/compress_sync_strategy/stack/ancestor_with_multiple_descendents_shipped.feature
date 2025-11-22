@@ -27,22 +27,22 @@ Feature: shipped branch with multiple descendents
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND |
-      | feature-1 | git fetch --prune --tags |
-      | | git checkout main |
-      | main | git -c rebase.updateRefs=false rebase origin/main |
-      | | git branch -D feature-1 |
-      | | git checkout feature-1a |
-      | feature-1a | git merge --no-edit --ff main |
-      | | git reset --soft main -- |
-      | | git commit -m "feature-1a commit" |
-      | | git push --force-with-lease |
-      | | git checkout feature-1b |
-      | feature-1b | git merge --no-edit --ff main |
-      | | git reset --soft main -- |
-      | | git commit -m "feature-1b commit" |
-      | | git push --force-with-lease |
-      | | git push --tags |
+      | BRANCH     | COMMAND                                           |
+      | feature-1  | git fetch --prune --tags                          |
+      |            | git checkout main                                 |
+      | main       | git -c rebase.updateRefs=false rebase origin/main |
+      |            | git branch -D feature-1                           |
+      |            | git checkout feature-1a                           |
+      | feature-1a | git merge --no-edit --ff main                     |
+      |            | git reset --soft main --                          |
+      |            | git commit -m "feature-1a commit"                 |
+      |            | git push --force-with-lease                       |
+      |            | git checkout feature-1b                           |
+      | feature-1b | git merge --no-edit --ff main                     |
+      |            | git reset --soft main --                          |
+      |            | git commit -m "feature-1b commit"                 |
+      |            | git push --force-with-lease                       |
+      |            | git push --tags                                   |
     And Git Town prints:
       """
       deleted branch "feature-1"
