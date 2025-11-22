@@ -18,6 +18,7 @@ func (self *CheckoutChildOrOther) Run(args shared.RunArgs) error {
 	if err != nil {
 		return err
 	}
+	availableBranches = availableBranches.Remove(self.Branch)
 	ancestors := args.Config.Value.NormalConfig.Lineage.Descendants(self.Branch, args.Config.Value.NormalConfig.Order)
 	branches := availableBranches.Hoist(ancestors...)
 	for _, branch := range branches {

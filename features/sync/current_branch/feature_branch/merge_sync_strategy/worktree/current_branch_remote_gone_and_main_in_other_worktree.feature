@@ -11,7 +11,7 @@ Feature: sync a branch whose branch is gone while main is active in another work
     And branch "main" is active in another worktree
     When I run "git-town sync"
 
-  @debug @this
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH    | COMMAND                  |
