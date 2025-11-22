@@ -24,13 +24,23 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	contributionRegex, hasContributionRegex := data.ContributionRegex.Get()
 	displayTypes, hasDisplayTypes := data.DisplayTypes.Get()
 	featureRegex, hasFeatureRegex := data.FeatureRegex.Get()
-	hasPerennialBranches := len(data.PerennialBranches) > 0
 	main, hasMain := data.MainBranch.Get()
 	observedRegex, hasObservedRegex := data.ObservedRegex.Get()
 	order, hasOrder := data.Order.Get()
+	hasPerennialBranches := len(data.PerennialBranches) > 0
 	perennialRegex, hasPerennialRegex := data.PerennialRegex.Get()
 	unknownBranchType, hasUnknownBranchType := data.UnknownBranchType.Get()
-	if cmp.Or(hasContributionRegex, hasDisplayTypes, hasFeatureRegex, hasMain, hasObservedRegex, hasOrder, hasPerennialBranches, hasPerennialRegex, hasUnknownBranchType) {
+	if cmp.Or(
+		hasContributionRegex,
+		hasDisplayTypes,
+		hasFeatureRegex,
+		hasMain,
+		hasObservedRegex,
+		hasOrder,
+		hasPerennialBranches,
+		hasPerennialRegex,
+		hasUnknownBranchType,
+	) {
 		result.WriteString("\n[branches]\n")
 		if hasContributionRegex {
 			result.WriteString(fmt.Sprintf("contribution-regex = %q\n", contributionRegex))
@@ -86,7 +96,13 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	githubConnectorType, hasGitHubConnectorType := data.GitHubConnectorType.Get()
 	gitlabConnectorType, hasGitLabConnectorType := data.GitLabConnectorType.Get()
 	originHostName, hasOriginHostName := data.HostingOriginHostname.Get()
-	if cmp.Or(hasDevRemote, hasForgeType, hasGitHubConnectorType, hasGitLabConnectorType, hasOriginHostName) {
+	if cmp.Or(
+		hasDevRemote,
+		hasForgeType,
+		hasGitHubConnectorType,
+		hasGitLabConnectorType,
+		hasOriginHostName,
+	) {
 		result.WriteString("\n[hosting]\n")
 		if hasDevRemote {
 			result.WriteString(fmt.Sprintf("dev-remote = %q\n", devRemote))
@@ -133,7 +149,18 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	pushHook, hasPushHook := data.PushHook.Get()
 	syncTags, hasSyncTags := data.SyncTags.Get()
 	syncUpstream, hasSyncUpstream := data.SyncUpstream.Get()
-	if cmp.Or(hasAutoResolve, hasAutoSync, hasDetached, hasSyncFeatureStrategy, hasSyncPerennialStrategy, hasSyncPrototypeStrategy, hasPushBranches, hasPushHook, hasSyncTags, hasSyncUpstream) {
+	if cmp.Or(
+		hasAutoResolve,
+		hasAutoSync,
+		hasDetached,
+		hasSyncFeatureStrategy,
+		hasSyncPerennialStrategy,
+		hasSyncPrototypeStrategy,
+		hasPushBranches,
+		hasPushHook,
+		hasSyncTags,
+		hasSyncUpstream,
+	) {
 		result.WriteString("\n[sync]\n")
 		if hasAutoResolve {
 			result.WriteString(fmt.Sprintf("auto-resolve = %t\n", autoResolve))
