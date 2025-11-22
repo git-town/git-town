@@ -48,6 +48,7 @@ const (
 	BranchLocalProblem              = "cannot determine whether the local branch %q exists: %w"
 	BranchLocalSHAProblem           = "cannot determine SHA of local branch %q: %w"
 	BranchNotInSyncWithParent       = `branch %q is not in sync with its parent, please run "git town sync" and try again`
+	BranchNotAvailable              = "there is no other branch to switch to"
 	BranchOtherWorktree             = `branch %q is active in another worktree`
 	BranchParentChanged             = "branch %q is now a child of %q"
 	BranchTypeCannotDetermine       = "cannot determine type of branch %q"

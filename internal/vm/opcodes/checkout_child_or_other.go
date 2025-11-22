@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/vm/shared"
 )
 
@@ -26,5 +27,5 @@ func (self *CheckoutChildOrOther) Run(args shared.RunArgs) error {
 		args.PrependOpcodes(&CheckoutIfNeeded{Branch: branch})
 		return nil
 	}
-	return errors.New("no branch to switch to available")
+	return errors.New(messages.BranchNotAvailable)
 }
