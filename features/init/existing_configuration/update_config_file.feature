@@ -8,46 +8,24 @@ Feature: update information in the config file
       """
       [branches]
       main = "main"
-      contribution-regex = "contribute-"
-      feature-regex = "feat-"
-      observed-regex = "observed-"
-      perennial-regex = "release-"
-      perennials = ["staging"]
-      unknown-type = "observed"
+      perennials = ["public"]
       order = "desc"
       
       [create]
       branch-prefix = "acme-"
-      new-branch-type = "feature"
-      share-new-branches = "propose"
-      stash = true
       
       [hosting]
       dev-remote = "something"
-      origin-hostname = "github.com"
       forge-type = "github"
-      
-      [propose]
-      lineage = "none"
+      origin-hostname = "github.com"
       
       [ship]
-      delete-tracking-branch = true
-      strategy = "api"
+      delete-tracking-branch = false
       
       [sync]
       auto-sync = false
-      detached = false
-      feature-strategy = "merge"
-      perennial-strategy = "rebase"
-      push-branches = false
-      push-hook = true
-      tags = true
-      upstream = true
-      
-      [sync-strategy]
-      feature-branches = "rebase"
-      prototype-branches = "merge"
-      perennial-branches = "ff-only"
+      tags = false
+      upstream = false
       """
     And the branches
       | NAME     | TYPE   | LOCATIONS     |
