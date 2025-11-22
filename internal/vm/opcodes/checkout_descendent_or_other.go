@@ -12,20 +12,11 @@ import (
 // CheckoutAncestorOrOtherIfNeeded checks out the first available ancestor branch of the current branch
 // or any other branch available in the current worktree
 // if the current branch is the same as the given branch.
-type CheckoutAncestorOrOtherIfNeeded struct {
+type CheckoutDescendentOrOther struct {
 	Branch gitdomain.LocalBranchName
 }
 
-func (self *CheckoutAncestorOrOtherIfNeeded) Run(args shared.RunArgs) error {
-	currentBranchOpt, err := args.Git.CurrentBranch(args.Backend)
-	if err != nil {
-		return err
-	}
-	if currentBranch, hasCurrentBranch := currentBranchOpt.Get(); hasCurrentBranch {
-		if currentBranch != self.Branch {
-			return nil
-		}
-	}
+func (self *CheckoutDescendentOrOther) Run(args shared.RunArgs) error {
 	availableBranches, err := args.Git.BranchesAvailableInCurrentWorktree(args.Backend)
 	if err != nil {
 		return err

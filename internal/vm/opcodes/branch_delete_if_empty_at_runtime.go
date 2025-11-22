@@ -21,7 +21,7 @@ func (self *BranchDeleteIfEmptyAtRuntime) Run(args shared.RunArgs) error {
 	}
 	if !hasUnmergedChanges {
 		args.PrependOpcodes(
-			&CheckoutAncestorOrOtherIfNeeded{
+			&CheckoutDescendentOrOtherIfNeeded{
 				Branch: self.Branch,
 			},
 			&BranchTrackingDelete{
