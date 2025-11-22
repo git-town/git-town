@@ -28,7 +28,7 @@ func (self *BranchWithRemoteGoneDeleteIfEmptyAtRuntime) Run(args shared.RunArgs)
 		})
 	} else {
 		args.PrependOpcodes(
-			&CheckoutChildOrOtherIfNeeded{
+			&CheckoutAncestorOrOtherIfNeeded{
 				Branch: self.Branch,
 			},
 			&BranchLocalDeleteContent{

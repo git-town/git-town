@@ -34,7 +34,7 @@ func All() []shared.Opcode {
 		&ChangesDiscard{},
 		&ChangesStage{},
 		&ChangesUnstageAll{},
-		&CheckoutChildOrOtherIfNeeded{},
+		&CheckoutAncestorOrOtherIfNeeded{},
 		&CheckoutFirstExisting{},
 		&CheckoutHistoryPreserve{},
 		&CheckoutIfExists{},

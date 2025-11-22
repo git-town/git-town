@@ -69,7 +69,7 @@ func syncDeletedFeatureBranchProgram(branch gitdomain.LocalBranchName, initialPa
 // deletes the given local branch as part of syncing it
 func syncDeleteLocalBranchProgram(branch gitdomain.LocalBranchName, args BranchProgramArgs) {
 	args.Program.Value.Add(
-		&opcodes.CheckoutChildOrOtherIfNeeded{
+		&opcodes.CheckoutAncestorOrOtherIfNeeded{
 			Branch: branch,
 		},
 		&opcodes.BranchLocalDeleteContent{
