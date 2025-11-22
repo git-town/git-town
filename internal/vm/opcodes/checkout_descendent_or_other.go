@@ -9,9 +9,8 @@ import (
 	"github.com/git-town/git-town/v22/internal/vm/shared"
 )
 
-// CheckoutAncestorOrOtherIfNeeded checks out the first available ancestor branch of the current branch
-// or any other branch available in the current worktree
-// if the current branch is the same as the given branch.
+// CheckoutAncestorOrOther checks out the first available ancestor branch of the current branch
+// or any other branch available in the current worktree.
 type CheckoutDescendentOrOther struct {
 	Branch gitdomain.LocalBranchName
 }
