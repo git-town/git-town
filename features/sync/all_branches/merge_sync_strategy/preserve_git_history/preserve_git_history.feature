@@ -18,7 +18,7 @@ Feature: preserve the previous Git branch
     Given origin deletes the "previous" branch
     When I run "git-town sync --all"
     Then the current branch is still "current"
-    And there is now no previous Git branch
+    And the previous Git branch is now "main"
 
   Scenario: both branches deleted
     Given origin deletes the "previous" branch
