@@ -39,7 +39,8 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		hasOrder,
 		hasPerennialBranches,
 		hasPerennialRegex,
-		hasUnknownBranchType) {
+		hasUnknownBranchType,
+	) {
 		result.WriteString("\n[branches]\n")
 		if hasContributionRegex {
 			result.WriteString(fmt.Sprintf("contribution-regex = %q\n", contributionRegex))
@@ -96,7 +97,8 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		hasForgeType,
 		hasGitHubConnectorType,
 		hasGitLabConnectorType,
-		hasOriginHostName) {
+		hasOriginHostName,
+	) {
 		result.WriteString("\n[hosting]\n")
 		if hasDevRemote {
 			result.WriteString(fmt.Sprintf("dev-remote = %q\n", devRemote))
@@ -153,7 +155,8 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		hasPushBranches,
 		hasPushHook,
 		hasSyncTags,
-		hasSyncUpstream) {
+		hasSyncUpstream,
+	) {
 		result.WriteString("\n[sync]\n")
 		if hasAutoResolve {
 			result.WriteString(fmt.Sprintf("auto-resolve = %t\n", autoResolve))
