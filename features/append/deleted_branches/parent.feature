@@ -20,9 +20,9 @@ Feature: append a branch to a branch whose parent was shipped on the remote
       | child  | git fetch --prune --tags                          |
       |        | git checkout main                                 |
       | main   | git -c rebase.updateRefs=false rebase origin/main |
-      |        | git branch -D parent                              |
       |        | git checkout child                                |
-      | child  | git merge --no-edit --ff main                     |
+      | child  | git branch -D parent                              |
+      |        | git merge --no-edit --ff main                     |
       |        | git push                                          |
       |        | git checkout -b new                               |
     And Git Town prints:
