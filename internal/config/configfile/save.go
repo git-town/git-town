@@ -25,10 +25,10 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	contributionRegex, hasContributionRegex := data.ContributionRegex.Get()
 	displayTypes, hasDisplayTypes := data.DisplayTypes.Get()
 	featureRegex, hasFeatureRegex := data.FeatureRegex.Get()
+	hasPerennialBranches := len(data.PerennialBranches) > 0
 	main, hasMain := data.MainBranch.Get()
 	observedRegex, hasObservedRegex := data.ObservedRegex.Get()
 	order, hasOrder := data.Order.Get()
-	hasPerennialBranches := len(data.PerennialBranches) > 0
 	perennialRegex, hasPerennialRegex := data.PerennialRegex.Get()
 	unknownBranchType, hasUnknownBranchType := data.UnknownBranchType.Get()
 	// keep-sorted end
@@ -147,11 +147,11 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	autoResolve, hasAutoResolve := data.AutoResolve.Get()
 	autoSync, hasAutoSync := data.AutoSync.Get()
 	detached, hasDetached := data.Detached.Get()
+	pushBranches, hasPushBranches := data.PushBranches.Get()
+	pushHook, hasPushHook := data.PushHook.Get()
 	syncFeatureStrategy, hasSyncFeatureStrategy := data.SyncFeatureStrategy.Get()
 	syncPerennialStrategy, hasSyncPerennialStrategy := data.SyncPerennialStrategy.Get()
 	syncPrototypeStrategy, hasSyncPrototypeStrategy := data.SyncPrototypeStrategy.Get()
-	pushBranches, hasPushBranches := data.PushBranches.Get()
-	pushHook, hasPushHook := data.PushHook.Get()
 	syncTags, hasSyncTags := data.SyncTags.Get()
 	syncUpstream, hasSyncUpstream := data.SyncUpstream.Get()
 	// keep-sorted end
@@ -160,11 +160,11 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		hasAutoResolve,
 		hasAutoSync,
 		hasDetached,
+		hasPushBranches,
+		hasPushHook,
 		hasSyncFeatureStrategy,
 		hasSyncPerennialStrategy,
 		hasSyncPrototypeStrategy,
-		hasPushBranches,
-		hasPushHook,
 		hasSyncTags,
 		hasSyncUpstream,
 		// keep-sorted end
