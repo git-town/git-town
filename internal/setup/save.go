@@ -54,7 +54,7 @@ func Save(userInput UserInput, unvalidatedConfig config.UnvalidatedConfig, data 
 	}
 	switch userInput.StorageLocation {
 	case dialog.ConfigStorageOptionFile:
-		return saveAllToFile(userInput, unvalidatedConfig.GitLocal, frontend)
+		return saveAllToFile(userInput, unvalidatedConfig.File, unvalidatedConfig.GitLocal, frontend)
 	case dialog.ConfigStorageOptionGit:
 		return saveAllToGit(userInput, unvalidatedConfig.GitLocal, unvalidatedConfig.File, data, enterAll, frontend)
 	}
@@ -78,9 +78,10 @@ func saveAliases(valuesToWriteToGit configdomain.Aliases, valuesAlreadyInGit con
 	return nil
 }
 
-func saveAllToFile(userInput UserInput, oldConfigFile configdomain.PartialConfig, gitConfig configdomain.PartialConfig, runner subshelldomain.Runner) error {
+func saveAllToFile(userInput UserInput, existingConfigFile configdomain.PartialConfig, gitConfig configdomain.PartialConfig, runner subshelldomain.Runner) error {
 	userInput.Data.MainBranch = Some(userInput.ValidatedConfig.MainBranch)
-	if err := configfile.Save(userInput.Data); err != nil {
+	configData := existingConfigFile.Merge(userInput.Data)
+	if err := configfile.Save(configData); err != nil {
 		return err
 	}
 	if gitConfig.AutoSync.IsSome() {
