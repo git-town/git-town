@@ -21,9 +21,9 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
       |            | git checkout main                                 |
       | main       | git -c rebase.updateRefs=false rebase origin/main |
       |            | git push                                          |
+      |            | git branch -D child                               |
       |            | git checkout grandchild                           |
-      | grandchild | git branch -D child                               |
-      |            | git merge --no-edit --ff main                     |
+      | grandchild | git merge --no-edit --ff main                     |
     And Git Town prints the error:
       """
       git merge conflict

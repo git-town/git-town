@@ -23,11 +23,10 @@ Feature: multiple shipped branches
       | feature-3 | git fetch --prune --tags                          |
       |           | git checkout main                                 |
       | main      | git -c rebase.updateRefs=false rebase origin/main |
-      |           | git checkout feature-2                            |
-      | feature-2 | git branch -D feature-1                           |
+      |           | git branch -D feature-1                           |
+      |           | git branch -D feature-2                           |
       |           | git checkout feature-3                            |
-      | feature-3 | git branch -D feature-2                           |
-      |           | git merge --no-edit --ff main                     |
+      | feature-3 | git merge --no-edit --ff main                     |
       |           | git push                                          |
       |           | git push --tags                                   |
     And Git Town prints:

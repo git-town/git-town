@@ -20,9 +20,9 @@ Feature: syncing a branch whose parent was shipped
       | child  | git fetch --prune --tags                          |
       |        | git checkout main                                 |
       | main   | git -c rebase.updateRefs=false rebase origin/main |
+      |        | git branch -D parent                              |
       |        | git checkout child                                |
-      | child  | git branch -D parent                              |
-      |        | git merge --no-edit --ff main                     |
+      | child  | git merge --no-edit --ff main                     |
       |        | git push                                          |
     And Git Town prints:
       """

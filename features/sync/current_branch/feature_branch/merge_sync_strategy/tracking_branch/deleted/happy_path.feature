@@ -21,8 +21,8 @@ Feature: sync a branch whose tracking branch was shipped
       | feature-1 | git fetch --prune --tags                          |
       |           | git checkout main                                 |
       | main      | git -c rebase.updateRefs=false rebase origin/main |
+      |           | git branch -D feature-1                           |
       |           | git checkout feature-2                            |
-      | feature-2 | git branch -D feature-1                           |
     And Git Town prints:
       """
       deleted branch "feature-1"
