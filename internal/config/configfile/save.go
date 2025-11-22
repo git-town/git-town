@@ -1,6 +1,7 @@
 package configfile
 
 import (
+	"cmp"
 	"fmt"
 	"os"
 	"strings"
@@ -29,7 +30,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	order, hasOrder := data.Order.Get()
 	perennialRegex, hasPerennialRegex := data.PerennialRegex.Get()
 	unknownBranchType, hasUnknownBranchType := data.UnknownBranchType.Get()
-	if hasContributionRegex || hasDisplayTypes || hasFeatureRegex || hasMain || hasObservedRegex || hasOrder || hasPerennialBranches || hasPerennialRegex || hasUnknownBranchType {
+	if cmp.Or(hasContributionRegex, hasDisplayTypes, hasFeatureRegex, hasMain, hasObservedRegex, hasOrder, hasPerennialBranches, hasPerennialRegex, hasUnknownBranchType) {
 		result.WriteString("\n[branches]\n")
 		if hasContributionRegex {
 			result.WriteString(fmt.Sprintf("contribution-regex = %q\n", contributionRegex))
@@ -64,7 +65,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	newBranchType, hasNewBranchType := data.NewBranchType.Get()
 	shareNewBranches, hasShareNewBranches := data.ShareNewBranches.Get()
 	stash, hasStash := data.Stash.Get()
-	if hasBranchPrefix || hasNewBranchType || hasShareNewBranches || hasStash {
+	if cmp.Or(hasBranchPrefix, hasNewBranchType, hasShareNewBranches, hasStash) {
 		result.WriteString("\n[create]\n")
 		if hasBranchPrefix {
 			result.WriteString(fmt.Sprintf("branch-prefix = %q\n", branchPrefix))
@@ -85,7 +86,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	githubConnectorType, hasGitHubConnectorType := data.GitHubConnectorType.Get()
 	gitlabConnectorType, hasGitLabConnectorType := data.GitLabConnectorType.Get()
 	originHostName, hasOriginHostName := data.HostingOriginHostname.Get()
-	if hasDevRemote || hasForgeType || hasGitHubConnectorType || hasGitLabConnectorType || hasOriginHostName {
+	if cmp.Or(hasDevRemote, hasForgeType, hasGitHubConnectorType, hasGitLabConnectorType, hasOriginHostName) {
 		result.WriteString("\n[hosting]\n")
 		if hasDevRemote {
 			result.WriteString(fmt.Sprintf("dev-remote = %q\n", devRemote))
@@ -112,7 +113,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 
 	deleteTrackingBranch, hasDeleteTrackingBranch := data.ShipDeleteTrackingBranch.Get()
 	shipStrategy, hasShipStrategy := data.ShipStrategy.Get()
-	if hasDeleteTrackingBranch || hasShipStrategy {
+	if cmp.Or(hasDeleteTrackingBranch, hasShipStrategy) {
 		result.WriteString("\n[ship]\n")
 		if hasDeleteTrackingBranch {
 			result.WriteString(fmt.Sprintf("delete-tracking-branch = %t\n", deleteTrackingBranch))
@@ -132,7 +133,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	pushHook, hasPushHook := data.PushHook.Get()
 	syncTags, hasSyncTags := data.SyncTags.Get()
 	syncUpstream, hasSyncUpstream := data.SyncUpstream.Get()
-	if hasAutoResolve || hasAutoSync || hasDetached || hasSyncFeatureStrategy || hasSyncPerennialStrategy || hasSyncPrototypeStrategy || hasPushBranches || hasPushHook || hasSyncTags || hasSyncUpstream {
+	if cmp.Or(hasAutoResolve, hasAutoSync, hasDetached, hasSyncFeatureStrategy, hasSyncPerennialStrategy, hasSyncPrototypeStrategy, hasPushBranches, hasPushHook, hasSyncTags, hasSyncUpstream) {
 		result.WriteString("\n[sync]\n")
 		if hasAutoResolve {
 			result.WriteString(fmt.Sprintf("auto-resolve = %t\n", autoResolve))
