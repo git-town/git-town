@@ -63,7 +63,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	newBranchType, hasNewBranchType := data.NewBranchType.Get()
 	shareNewBranches, hasShareNewBranches := data.ShareNewBranches.Get()
 	stash, hasStash := data.Stash.Get()
-	if hasNewBranchType || hasShareNewBranches {
+	if hasNewBranchType || hasShareNewBranches || hasStash {
 		result.WriteString("\n[create]\n")
 		if hasNewBranchType {
 			result.WriteString(fmt.Sprintf("new-branch-type = %q\n", newBranchType))
