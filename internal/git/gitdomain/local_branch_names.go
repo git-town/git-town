@@ -55,7 +55,7 @@ func (self LocalBranchNames) Contains(branch LocalBranchName) bool {
 // in the order they are given.
 func (self LocalBranchNames) Hoist(branches ...LocalBranchName) LocalBranchNames {
 	matches := make(LocalBranchNames, 0, len(branches))
-	nonMatches := make(LocalBranchNames, 0, len(self)-len(branches))
+	nonMatches := make(LocalBranchNames, 0, max(len(self)-len(branches), 0))
 	for _, branch := range self {
 		if slices.Contains(branches, branch) {
 			matches = append(matches, branch)
