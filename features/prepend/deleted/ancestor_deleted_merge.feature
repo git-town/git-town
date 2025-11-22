@@ -20,9 +20,9 @@ Feature: prepend a branch to a branch that was shipped at the remote
       | BRANCH   | COMMAND                  |
       | branch-2 | git fetch --prune --tags |
       |          | git checkout main        |
-      | main     | git checkout branch-2    |
-      | branch-2 | git branch -D branch-1   |
-      |          | git checkout -b new main |
+      | main     | git branch -D branch-1   |
+      |          | git checkout branch-2    |
+      | branch-2 | git checkout -b new main |
     And Git Town prints:
       """
       deleted branch "branch-1"

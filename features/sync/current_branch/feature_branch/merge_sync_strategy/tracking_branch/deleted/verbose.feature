@@ -33,7 +33,6 @@ Feature: display all executed Git commands
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}                                                                                                                                                                                                                                                                                                        |
       |        | backend  | git log main..old --format=%s --reverse                                                                                                                                                                                                                                                                                                          |
       |        | frontend | git checkout main                                                                                                                                                                                                                                                                                                                                |
-      |        | backend  | git for-each-ref "--format=refname:%(refname) branchname:%(refname:lstrip=2) sha:%(objectname) head:%(if)%(HEAD)%(then)Y%(else)N%(end) worktree:%(if)%(worktreepath)%(then)Y%(else)N%(end) symref:%(if)%(symref)%(then)Y%(else)N%(end) upstream:%(upstream:lstrip=2) track:%(upstream:track,nobracket)" --sort=refname refs/heads/ refs/remotes/ |
       | main   | frontend | git branch -D old                                                                                                                                                                                                                                                                                                                                |
       |        | backend  | git config --unset git-town-branch.old.parent                                                                                                                                                                                                                                                                                                    |
       |        | backend  | git config --unset git-town-branch.old.branchtype                                                                                                                                                                                                                                                                                                |
@@ -46,7 +45,7 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                                                                                                                                                                                                                                                                                                                                   |
     And Git Town prints:
       """
-      Ran 28 shell commands.
+      Ran 27 shell commands.
       """
     And this lineage exists now
       """

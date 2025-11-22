@@ -29,9 +29,9 @@ Feature: disable auto-resolution of phantom merge conflicts via config setting w
       | branch-2 | git fetch --prune --tags                          |
       |          | git checkout main                                 |
       | main     | git -c rebase.updateRefs=false rebase origin/main |
+      |          | git branch -D branch-1                            |
       |          | git checkout branch-2                             |
-      | branch-2 | git branch -D branch-1                            |
-      |          | git merge --no-edit --ff main                     |
+      | branch-2 | git merge --no-edit --ff main                     |
     And Git Town prints the error:
       """
       CONFLICT (content): Merge conflict in file

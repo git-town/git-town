@@ -34,7 +34,6 @@ Feature: display all executed Git commands for the "compress" sync strategy
       |          | backend  | git rev-parse --verify --abbrev-ref @{-1}                                                                                                                                                                                                                                                                                                        |
       |          | backend  | git log main..branch-2 --format=%s --reverse                                                                                                                                                                                                                                                                                                     |
       |          | frontend | git checkout main                                                                                                                                                                                                                                                                                                                                |
-      |          | backend  | git for-each-ref "--format=refname:%(refname) branchname:%(refname:lstrip=2) sha:%(objectname) head:%(if)%(HEAD)%(then)Y%(else)N%(end) worktree:%(if)%(worktreepath)%(then)Y%(else)N%(end) symref:%(if)%(symref)%(then)Y%(else)N%(end) upstream:%(upstream:lstrip=2) track:%(upstream:track,nobracket)" --sort=refname refs/heads/ refs/remotes/ |
       | main     | frontend | git branch -D branch-2                                                                                                                                                                                                                                                                                                                           |
       |          | backend  | git config --unset git-town-branch.branch-2.parent                                                                                                                                                                                                                                                                                               |
       |          | backend  | git config --unset git-town-branch.branch-2.branchtype                                                                                                                                                                                                                                                                                           |
@@ -47,7 +46,7 @@ Feature: display all executed Git commands for the "compress" sync strategy
       |          | backend  | git stash list                                                                                                                                                                                                                                                                                                                                   |
     And Git Town prints:
       """
-      Ran 28 shell commands.
+      Ran 27 shell commands.
       """
     And this lineage exists now
       """

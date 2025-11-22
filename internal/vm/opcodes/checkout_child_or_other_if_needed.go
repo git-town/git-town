@@ -9,13 +9,22 @@ import (
 	"github.com/git-town/git-town/v22/internal/vm/shared"
 )
 
-// CheckoutChildOrOther checks out the first available child branch of the current branch,
+// CheckoutChildOrOtherIfNeeded checks out the first available child branch of the current branch,
 // or any other branch available in the current worktree.
-type CheckoutChildOrOther struct {
+type CheckoutChildOrOtherIfNeeded struct {
 	Branch gitdomain.LocalBranchName
 }
 
-func (self *CheckoutChildOrOther) Run(args shared.RunArgs) error {
+func (self *CheckoutChildOrOtherIfNeeded) Run(args shared.RunArgs) error {
+	currentBranchOpt, err := args.Git.CurrentBranch(args.Backend)
+	if err != nil {
+		return err
+	}
+	if currentBranch, hasCurrentBranch := currentBranchOpt.Get(); hasCurrentBranch {
+		if currentBranch != self.Branch {
+			return nil
+		}
+	}
 	availableBranches, err := args.Git.BranchesAvailableInCurrentWorktree(args.Backend)
 	if err != nil {
 		return err
