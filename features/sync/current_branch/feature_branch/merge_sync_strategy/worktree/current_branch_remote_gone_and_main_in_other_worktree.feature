@@ -11,7 +11,6 @@ Feature: sync a branch whose branch is gone while main is active in another work
     And branch "main" is active in another worktree
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH    | COMMAND                  |
@@ -23,7 +22,7 @@ Feature: sync a branch whose branch is gone while main is active in another work
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                                                |
-      | feature | git reset --hard {{ sha 'local feature commit' }}                                      |
-      |         | git push --force-with-lease origin {{ sha-in-origin 'origin feature commit' }}:feature |
+      | BRANCH    | COMMAND                                         |
+      | feature-2 | git branch feature-1 {{ sha 'initial commit' }} |
+      |           | git checkout feature-1                          |
     And the initial commits exist now
