@@ -31,6 +31,19 @@ func ParseLocalBranchNames(names string) LocalBranchNames {
 	return result
 }
 
+// Intersect provides all branch names that occur in this list and the given list,
+// ordered the same as in this list.
+func (self LocalBranchNames) Intersect(branches LocalBranchNames) LocalBranchNames {
+	result := make(LocalBranchNames, 0, len(self))
+	for _, branch := range self {
+		if branches.Contains(branch) {
+			result = append(result, branch)
+
+		}
+	}
+	return result
+}
+
 // AppendAllMissing provides a LocalBranchNames list consisting of the sum of this and elements of other list that aren't in this list.
 func (self LocalBranchNames) AppendAllMissing(others LocalBranchNames) LocalBranchNames {
 	missing := slice.FindAllMissing(self, others)
@@ -51,21 +64,19 @@ func (self LocalBranchNames) Contains(branch LocalBranchName) bool {
 	return slices.Contains(self, branch)
 }
 
-// Hoist moves the given needle to the front of the list.
-func (self LocalBranchNames) Hoist(needle LocalBranchName) LocalBranchNames {
-	result := make(LocalBranchNames, 0, len(self))
-	foundNeedle := false
+// Hoist returns the given list with the given needles moved to the front,
+// in the order they are given.
+func (self LocalBranchNames) Hoist(branches ...LocalBranchName) LocalBranchNames {
+	matches := make(LocalBranchNames, 0, len(branches))
+	nonMatches := make(LocalBranchNames, 0, len(self)-len(branches))
 	for _, branch := range self {
-		if branch == needle {
-			foundNeedle = true
+		if slices.Contains(branches, branch) {
+			matches = append(matches, branch)
 		} else {
-			result = append(result, branch)
+			nonMatches = append(nonMatches, branch)
 		}
 	}
-	if foundNeedle {
-		result = append(LocalBranchNames{needle}, result...)
-	}
-	return result
+	return append(matches, nonMatches...)
 }
 
 // Join provides the names of all branches in this collection connected by the given separator.

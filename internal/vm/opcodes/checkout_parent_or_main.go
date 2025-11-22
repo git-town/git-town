@@ -1,6 +1,8 @@
 package opcodes
 
 import (
+	"errors"
+
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/vm/shared"
 )
@@ -12,23 +14,15 @@ type CheckoutChildOrOther struct {
 }
 
 func (self *CheckoutChildOrOther) Run(args shared.RunArgs) error {
-	// first try to checkout the first available child branch
-	children := args.Config.Value.NormalConfig.Lineage.Children(self.Branch, args.Config.Value.NormalConfig.Order)
 	availableBranches, err := args.Git.BranchesAvailableInCurrentWorktree(args.Backend)
-	for _, child := range children {
-		if args.Git.BranchExists(args.Backend, child) {
-			args.PrependOpcodes(&CheckoutIfNeeded{Branch: child})
-			return nil
-		}
+	if err != nil {
+		return err
 	}
-	if len(children) > 0 {
-		args.PrependOpcodes(&CheckoutIfNeeded{Branch: children[0]})
+	ancestors := args.Config.Value.NormalConfig.Lineage.Descendants(self.Branch, args.Config.Value.NormalConfig.Order)
+	branches := availableBranches.Hoist(ancestors...)
+	for _, branch := range branches {
+		args.PrependOpcodes(&CheckoutIfNeeded{Branch: branch})
 		return nil
 	}
-	ancestors := args.Config.Value.NormalConfig.Lineage.Ancestors(self.Branch)
-	if len(ancestors) > 0 {
-		args.PrependOpcodes(&CheckoutIfNeeded{Branch: ancestors[0]})
-	}
-	args.PrependOpcodes(&CheckoutIfNeeded{Branch: parent})
-	return nil
+	return errors.New("no branch to switch to available")
 }
