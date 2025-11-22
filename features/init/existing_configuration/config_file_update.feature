@@ -15,25 +15,25 @@ Feature: don't ask for information already provided by the config file
       perennials = ["staging"]
       unknown-type = "observed"
       order = "desc"
-      
+
       [create]
       branch-prefix = "acme-"
       new-branch-type = "feature"
       share-new-branches = "propose"
       stash = true
-      
+
       [hosting]
       dev-remote = "something"
       origin-hostname = "github.com"
       forge-type = "github"
-      
+
       [propose]
       lineage = "none"
-      
+
       [ship]
       delete-tracking-branch = true
       strategy = "api"
-      
+
       [sync]
       auto-sync = false
       detached = false
@@ -43,7 +43,7 @@ Feature: don't ask for information already provided by the config file
       push-hook = true
       tags = true
       upstream = true
-      
+
       [sync-strategy]
       feature-branches = "rebase"
       prototype-branches = "merge"
@@ -66,7 +66,37 @@ Feature: don't ask for information already provided by the config file
     And the configuration file is now:
       """
       # See https://www.git-town.com/configuration-file for details
-      
+
       [branches]
       main = "main"
+      order = "desc"
+      perennials = ["staging"]
+      perennial-regex = "release-"
+
+      [create]
+      new-branch-type = "feature"
+      share-new-branches = "propose"
+      stash = true
+
+      [hosting]
+      dev-remote = "something"
+      forge-type = "github"
+      origin-hostname = "github.com"
+
+      [propose]
+      lineage = "none"
+
+      [ship]
+      delete-tracking-branch = true
+      strategy = "api"
+
+      [sync]
+      auto-sync = false
+      feature-strategy = "merge"
+      perennial-strategy = "rebase"
+      prototype-strategy = "merge"
+      push-branches = false
+      push-hook = true
+      tags = true
+      upstream = true
       """
