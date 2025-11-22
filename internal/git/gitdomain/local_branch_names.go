@@ -54,16 +54,20 @@ func (self LocalBranchNames) Contains(branch LocalBranchName) bool {
 // Hoist returns the given list with the given branches moved to the front,
 // in the order they are given.
 func (self LocalBranchNames) Hoist(branches ...LocalBranchName) LocalBranchNames {
-	matches := make(LocalBranchNames, 0, len(branches))
-	nonMatches := make(LocalBranchNames, 0, max(len(self)-len(branches), 0))
-	for _, branch := range self {
-		if slices.Contains(branches, branch) {
-			matches = append(matches, branch)
-		} else {
-			nonMatches = append(nonMatches, branch)
+	result := make(LocalBranchNames, 0, len(self))
+	// Add the hoisted branches first, in the order given
+	for _, branch := range branches {
+		if self.Contains(branch) {
+			result = append(result, branch)
 		}
 	}
-	return append(matches, nonMatches...)
+	// Add the remaining branches in their original order
+	for _, branch := range self {
+		if !slices.Contains(branches, branch) {
+			result = append(result, branch)
+		}
+	}
+	return result
 }
 
 // Join provides the names of all branches in this collection connected by the given separator.
