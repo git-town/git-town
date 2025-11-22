@@ -16,7 +16,8 @@ Feature: sync a branch whose branch is gone while main is active in another work
     Then Git Town runs the commands
       | BRANCH    | COMMAND                  |
       | feature-1 | git fetch --prune --tags |
-      |           | git checkout main        |
+      |           | git checkout feature-2   |
+      | feature-2 | git branch -D feature-1  |
     And the initial commits exist now
 
   Scenario: undo
