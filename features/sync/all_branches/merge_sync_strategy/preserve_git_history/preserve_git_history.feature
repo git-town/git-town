@@ -14,6 +14,7 @@ Feature: preserve the previous Git branch
     Then the current branch is now "previous"
     And the previous Git branch is now "main"
 
+  @this
   Scenario: current branch exists, previous branch gone
     Given origin deletes the "previous" branch
     When I run "git-town sync --all"
