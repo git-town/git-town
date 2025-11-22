@@ -20,15 +20,27 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	result := strings.Builder{}
 	result.WriteString("# See https://www.git-town.com/configuration-file for details\n")
 
-	main, hasMain := data.MainBranch.Get()
+	contributionRegex, hasContributionRegex := data.ContributionRegex.Get()
 	displayTypes, hasDisplayTypes := data.DisplayTypes.Get()
+	featureRegex, hasFeatureRegex := data.FeatureRegex.Get()
 	hasPerennialBranches := len(data.PerennialBranches) > 0
+	main, hasMain := data.MainBranch.Get()
+	observedRegex, hasObservedRegex := data.ObservedRegex.Get()
 	order, hasOrder := data.Order.Get()
 	perennialRegex, hasPerennialRegex := data.PerennialRegex.Get()
-	if hasMain || hasPerennialBranches || hasPerennialRegex {
+	if hasContributionRegex || hasFeatureRegex || hasMain || hasObservedRegex || hasOrder || hasPerennialBranches || hasPerennialRegex || hasDisplayTypes {
 		result.WriteString("\n[branches]\n")
+		if hasContributionRegex {
+			result.WriteString(fmt.Sprintf("contribution-regex = %q\n", contributionRegex))
+		}
+		if hasFeatureRegex {
+			result.WriteString(fmt.Sprintf("feature-regex = %q\n", featureRegex))
+		}
 		if hasMain {
 			result.WriteString(fmt.Sprintf("main = %q\n", main))
+		}
+		if hasObservedRegex {
+			result.WriteString(fmt.Sprintf("observed-regex = %q\n", observedRegex))
 		}
 		if hasOrder {
 			result.WriteString(fmt.Sprintf("order = %q\n", order))
