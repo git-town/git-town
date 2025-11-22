@@ -21,6 +21,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	result := strings.Builder{}
 	result.WriteString("# See https://www.git-town.com/configuration-file for details\n")
 
+	// keep-sorted start
 	contributionRegex, hasContributionRegex := data.ContributionRegex.Get()
 	displayTypes, hasDisplayTypes := data.DisplayTypes.Get()
 	featureRegex, hasFeatureRegex := data.FeatureRegex.Get()
@@ -30,7 +31,9 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	hasPerennialBranches := len(data.PerennialBranches) > 0
 	perennialRegex, hasPerennialRegex := data.PerennialRegex.Get()
 	unknownBranchType, hasUnknownBranchType := data.UnknownBranchType.Get()
+	// keep-sorted end
 	if cmp.Or(
+		// keep-sorted start
 		hasContributionRegex,
 		hasDisplayTypes,
 		hasFeatureRegex,
@@ -39,7 +42,9 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		hasOrder,
 		hasPerennialBranches,
 		hasPerennialRegex,
-		hasUnknownBranchType) {
+		hasUnknownBranchType,
+		// keep-sorted end
+	) {
 		result.WriteString("\n[branches]\n")
 		if hasContributionRegex {
 			result.WriteString(fmt.Sprintf("contribution-regex = %q\n", contributionRegex))
@@ -86,17 +91,22 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		}
 	}
 
+	// keep-sorted start
 	devRemote, hasDevRemote := data.DevRemote.Get()
 	forgeType, hasForgeType := data.ForgeType.Get()
 	githubConnectorType, hasGitHubConnectorType := data.GitHubConnectorType.Get()
 	gitlabConnectorType, hasGitLabConnectorType := data.GitLabConnectorType.Get()
 	originHostName, hasOriginHostName := data.HostingOriginHostname.Get()
+	// keep-sorted end
 	if cmp.Or(
+		// keep-sorted start
 		hasDevRemote,
 		hasForgeType,
 		hasGitHubConnectorType,
 		hasGitLabConnectorType,
-		hasOriginHostName) {
+		hasOriginHostName,
+		// keep-sorted end
+	) {
 		result.WriteString("\n[hosting]\n")
 		if hasDevRemote {
 			result.WriteString(fmt.Sprintf("dev-remote = %q\n", devRemote))
@@ -133,6 +143,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		}
 	}
 
+	// keep-sorted start
 	autoResolve, hasAutoResolve := data.AutoResolve.Get()
 	autoSync, hasAutoSync := data.AutoSync.Get()
 	detached, hasDetached := data.Detached.Get()
@@ -143,7 +154,9 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	pushHook, hasPushHook := data.PushHook.Get()
 	syncTags, hasSyncTags := data.SyncTags.Get()
 	syncUpstream, hasSyncUpstream := data.SyncUpstream.Get()
+	// keep-sorted end
 	if cmp.Or(
+		// keep-sorted start
 		hasAutoResolve,
 		hasAutoSync,
 		hasDetached,
@@ -153,7 +166,9 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		hasPushBranches,
 		hasPushHook,
 		hasSyncTags,
-		hasSyncUpstream) {
+		hasSyncUpstream,
+		// keep-sorted end
+	) {
 		result.WriteString("\n[sync]\n")
 		if hasAutoResolve {
 			result.WriteString(fmt.Sprintf("auto-resolve = %t\n", autoResolve))
