@@ -36,6 +36,7 @@ perennial-regex = "release-.*"
 unknown-type = "prototype"
 
 [create]
+branch-prefix = "feature-"
 new-branch-type = "prototype"
 push-new-branches = true
 share-new-branches = "push"
@@ -81,6 +82,7 @@ prototype-branches = "compress"
 					UnknownType:       Ptr("prototype"),
 				},
 				Create: &configfile.Create{
+					BranchPrefix:     Ptr("feature-"),
 					NewBranchType:    Ptr("prototype"),
 					PushNewbranches:  Ptr(true),
 					ShareNewBranches: Ptr("push"),

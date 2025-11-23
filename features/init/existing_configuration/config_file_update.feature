@@ -77,6 +77,7 @@ Feature: don't ask for information already provided by the config file
       unknown-branch-type = "observed"
 
       [create]
+      branch-prefix = "acme-"
       new-branch-type = "feature"
       share-new-branches = "propose"
       stash = true

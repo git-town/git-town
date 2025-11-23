@@ -51,6 +51,7 @@ func TestSave(t *testing.T) {
 			perennialRegex := asserts.NoError1(configdomain.ParsePerennialRegex("perennial-", "test"))
 			have := configfile.RenderTOML(configdomain.PartialConfig{
 				AutoResolve:       Some(configdomain.AutoResolve(false)),
+				BranchPrefix:      Some(configdomain.BranchPrefix("feature-")),
 				ContributionRegex: contributionRegex,
 				Detached:          Some(configdomain.Detached(true)),
 				DevRemote:         Some(gitdomain.RemoteOrigin),
@@ -98,6 +99,7 @@ perennial-regex = "perennial-"
 unknown-branch-type = "prototype"
 
 [create]
+branch-prefix = "feature-"
 new-branch-type = "prototype"
 share-new-branches = "propose"
 stash = true

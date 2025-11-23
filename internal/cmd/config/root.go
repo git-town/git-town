@@ -94,6 +94,7 @@ func printConfig(config config.UnvalidatedConfig) {
 	print.Entry("git user email", format.OptionalStringerSetting(config.NormalConfig.GitUserEmail))
 	fmt.Println()
 	print.Header("Create")
+	print.Entry("branch prefix", format.OptionalStringerSetting(config.NormalConfig.BranchPrefix))
 	print.Entry("new branch type", format.OptionalStringerSetting(config.NormalConfig.NewBranchType))
 	print.Entry("share new branches", config.NormalConfig.ShareNewBranches.String())
 	print.Entry("stash uncommitted changes", format.Bool(config.NormalConfig.Stash.ShouldStash()))
