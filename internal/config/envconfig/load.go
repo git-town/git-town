@@ -15,6 +15,7 @@ const (
 	autoSync                 = "GIT_TOWN_AUTO_SYNC"
 	bitbucketAppPassword     = "GIT_TOWN_BITBUCKET_APP_PASSWORD"
 	bitbucketUserName        = "GIT_TOWN_BITBUCKET_USERNAME"
+	branchPrefix             = "GIT_TOWN_BRANCH_PREFIX"
 	forgejoToken             = "GIT_TOWN_FORGEJO_TOKEN"
 	contributionRegex        = "GIT_TOWN_CONTRIBUTION_REGEX"
 	detached                 = "GIT_TOWN_DETACHED"
@@ -62,6 +63,7 @@ const (
 func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	autoResolve, errAutoResolve := load(env, autoResolve, gohacks.ParseBoolOpt[configdomain.AutoResolve])
 	autoSync, errAutoSync := load(env, autoSync, gohacks.ParseBoolOpt[configdomain.AutoSync])
+	branchPrefix, errBranchPrefix := load(env, branchPrefix, configdomain.ParseBranchPrefix)
 	contributionRegex, errContribRegex := load(env, contributionRegex, configdomain.ParseContributionRegex)
 	detached, errDetached := load(env, detached, gohacks.ParseBoolOpt[configdomain.Detached])
 	displayTypesOpt, errDisplayTypes := load(env, displayTypes, configdomain.ParseDisplayTypes)
@@ -109,6 +111,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	err := cmp.Or(
 		errAutoResolve,
 		errAutoSync,
+		errBranchPrefix,
 		errContribRegex,
 		errDetached,
 		errDisplayTypes,
@@ -144,6 +147,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		AutoSync:                 autoSync,
 		BitbucketAppPassword:     forgedomain.ParseBitbucketAppPassword(env.Get(bitbucketAppPassword)),
 		BitbucketUsername:        forgedomain.ParseBitbucketUsername(env.Get(bitbucketUserName)),
+		BranchPrefix:             branchPrefix,
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{}, // not loaded from env vars
 		ForgejoToken:             forgedomain.ParseForgejoToken(env.Get(forgejoToken)),
 		ContributionRegex:        contributionRegex,

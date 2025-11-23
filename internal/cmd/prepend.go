@@ -324,6 +324,9 @@ func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (data p
 		return data, configdomain.ProgramFlowExit, err
 	}
 	targetBranch := gitdomain.NewLocalBranchName(args.argv[0])
+	if prefix, hasPrefix := config.BranchPrefix.Get(); hasPrefix {
+		targetBranch = prefix.Apply(targetBranch)
+	}
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
 		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}

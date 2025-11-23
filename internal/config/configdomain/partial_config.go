@@ -21,6 +21,7 @@ type PartialConfig struct {
 	AutoSync                 Option[AutoSync]
 	BitbucketAppPassword     Option[forgedomain.BitbucketAppPassword]
 	BitbucketUsername        Option[forgedomain.BitbucketUsername]
+	BranchPrefix             Option[BranchPrefix]
 	BranchTypeOverrides      BranchTypeOverrides
 	ContributionRegex        Option[ContributionRegex]
 	Detached                 Option[Detached]
@@ -81,6 +82,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		AutoSync:                 other.AutoSync.Or(self.AutoSync),
 		BitbucketAppPassword:     other.BitbucketAppPassword.Or(self.BitbucketAppPassword),
 		BitbucketUsername:        other.BitbucketUsername.Or(self.BitbucketUsername),
+		BranchPrefix:             other.BranchPrefix.Or(self.BranchPrefix),
 		BranchTypeOverrides:      other.BranchTypeOverrides.Concat(self.BranchTypeOverrides),
 		ContributionRegex:        other.ContributionRegex.Or(self.ContributionRegex),
 		Detached:                 other.Detached.Or(self.Detached),

@@ -34,6 +34,7 @@ type NormalConfig struct {
 	AutoSync                 configdomain.AutoSync
 	BitbucketAppPassword     Option[forgedomain.BitbucketAppPassword]
 	BitbucketUsername        Option[forgedomain.BitbucketUsername]
+	BranchPrefix             Option[configdomain.BranchPrefix]
 	BranchTypeOverrides      configdomain.BranchTypeOverrides
 	ContributionRegex        Option[configdomain.ContributionRegex]
 	Detached                 configdomain.Detached
@@ -103,6 +104,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		AutoSync:                 other.AutoSync.GetOr(self.AutoSync),
 		BitbucketAppPassword:     other.BitbucketAppPassword.Or(self.BitbucketAppPassword),
 		BitbucketUsername:        other.BitbucketUsername.Or(self.BitbucketUsername),
+		BranchPrefix:             other.BranchPrefix.Or(self.BranchPrefix),
 		BranchTypeOverrides:      other.BranchTypeOverrides.Concat(self.BranchTypeOverrides),
 		ContributionRegex:        other.ContributionRegex.Or(self.ContributionRegex),
 		Detached:                 other.Detached.GetOr(self.Detached),
@@ -255,6 +257,7 @@ func DefaultNormalConfig() NormalConfig {
 		AutoSync:             true,
 		BitbucketAppPassword: None[forgedomain.BitbucketAppPassword](),
 		BitbucketUsername:    None[forgedomain.BitbucketUsername](),
+		BranchPrefix:         None[configdomain.BranchPrefix](),
 		BranchTypeOverrides:  configdomain.BranchTypeOverrides{},
 		ContributionRegex:    None[configdomain.ContributionRegex](),
 		Detached:             false,
@@ -310,6 +313,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		AutoSync:                 partial.AutoSync.GetOr(defaults.AutoSync),
 		BitbucketAppPassword:     partial.BitbucketAppPassword,
 		BitbucketUsername:        partial.BitbucketUsername,
+		BranchPrefix:             partial.BranchPrefix,
 		BranchTypeOverrides:      partial.BranchTypeOverrides,
 		ContributionRegex:        partial.ContributionRegex,
 		Detached:                 partial.Detached.GetOr(defaults.Detached),

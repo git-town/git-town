@@ -75,11 +75,15 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		}
 	}
 
+	branchPrefix, hasBranchPrefix := data.BranchPrefix.Get()
 	newBranchType, hasNewBranchType := data.NewBranchType.Get()
 	shareNewBranches, hasShareNewBranches := data.ShareNewBranches.Get()
 	stash, hasStash := data.Stash.Get()
-	if cmp.Or(hasNewBranchType, hasShareNewBranches, hasStash) {
+	if cmp.Or(hasBranchPrefix, hasNewBranchType, hasShareNewBranches, hasStash) {
 		result.WriteString("\n[create]\n")
+		if hasBranchPrefix {
+			result.WriteString(fmt.Sprintf("branch-prefix = %q\n", branchPrefix))
+		}
 		if hasNewBranchType {
 			result.WriteString(fmt.Sprintf("new-branch-type = %q\n", newBranchType))
 		}
