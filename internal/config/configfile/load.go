@@ -1,6 +1,7 @@
 package configfile
 
 import (
+	"cmp"
 	"fmt"
 	"io"
 	"os"
@@ -10,7 +11,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	"github.com/git-town/git-town/v22/internal/gohacks"
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v22/internal/messages"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
@@ -77,7 +77,6 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	var syncUpstream Option[configdomain.SyncUpstream]
 	var unknownBranchType Option[configdomain.UnknownBranchType]
 	// keep-sorted end
-	var err error
 	// load legacy definitions first, so that the proper definitions loaded later override them
 	if data.CreatePrototypeBranches != nil {
 		newBranchType = Some(configdomain.NewBranchType(configdomain.BranchTypePrototypeBranch))
@@ -102,7 +101,31 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	if data.SyncUpstream != nil {
 		syncUpstream = Some(configdomain.SyncUpstream(*data.SyncUpstream))
 	}
-	ec := gohacks.ErrorCollector{}
+	// keep-sorted start
+	var branchPrefixErr error
+	var defaultBranchTypeError error
+	var displayTypesErr error
+	var featureRegexErr error
+	var contributionRegexErr error
+	var observedRegexErr error
+	var perennialRegexErr error
+	var orderErr error
+	var unknownBranchTypeError error
+	var newBranchTypeError error
+	var shareNewBranchesErr error
+	var forgeTypeErr error
+	var githubConnectorTypeErr error
+	var gitlabConnectorTypeErr error
+	var hostingOriginHostnameErr error
+	var proposalsShowLineageErr error
+	var shipDeleteTrackingBranchErr error
+	var shipStrategyErr error
+	var syncFeatureStrategyErr error
+	var syncPerennialStrategyErr error
+	var syncPrototypeStrategyErr error
+	var syncTagsErr error
+	var syncUpstreamErr error
+	// keep-sorted end
 	// load proper definitions, overriding the values from the legacy definitions that were loaded above
 	if data.Branches != nil {
 		if data.Branches.Main != nil {
@@ -110,57 +133,53 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		}
 		perennialBranches = gitdomain.NewLocalBranchNames(data.Branches.Perennials...)
 		if data.Branches.PerennialRegex != nil {
-			perennialRegex, err = configdomain.ParsePerennialRegex(*data.Branches.PerennialRegex, messages.ConfigFile)
-			ec.Check(err)
+			perennialRegex, perennialRegexErr = configdomain.ParsePerennialRegex(*data.Branches.PerennialRegex, messages.ConfigFile)
 		}
 		if data.Branches.DefaultType != nil {
-			branchType, err := configdomain.ParseBranchType(*data.Branches.DefaultType, messages.ConfigFile)
-			ec.Check(err)
+			var branchType Option[configdomain.BranchType]
+			branchType, defaultBranchTypeError = configdomain.ParseBranchType(*data.Branches.DefaultType, messages.ConfigFile)
 			unknownBranchType = configdomain.UnknownBranchTypeOpt(branchType)
 		}
 		if data.Branches.DisplayTypes != nil {
-			displayTypes, err = configdomain.ParseDisplayTypes(*data.Branches.DisplayTypes, messages.ConfigFile)
-			ec.Check(err)
+			displayTypes, displayTypesErr = configdomain.ParseDisplayTypes(*data.Branches.DisplayTypes, messages.ConfigFile)
 		}
 		if data.Branches.FeatureRegex != nil {
-			verifiedRegexOpt, err := configdomain.ParseRegex(*data.Branches.FeatureRegex)
-			ec.Check(err)
+			var verifiedRegexOpt Option[configdomain.VerifiedRegex]
+			verifiedRegexOpt, featureRegexErr = configdomain.ParseRegex(*data.Branches.FeatureRegex)
 			if verifiedRegex, hasVerifiedRegex := verifiedRegexOpt.Get(); hasVerifiedRegex {
 				featureRegex = Some(configdomain.FeatureRegex{VerifiedRegex: verifiedRegex})
 			}
 		}
 		if data.Branches.ContributionRegex != nil {
-			verifiedRegexOpt, err := configdomain.ParseRegex(*data.Branches.ContributionRegex)
-			ec.Check(err)
+			var verifiedRegexOpt Option[configdomain.VerifiedRegex]
+			verifiedRegexOpt, contributionRegexErr = configdomain.ParseRegex(*data.Branches.ContributionRegex)
 			if verifiedRegex, hasVerifiedRegex := verifiedRegexOpt.Get(); hasVerifiedRegex {
 				contributionRegex = Some(configdomain.ContributionRegex{VerifiedRegex: verifiedRegex})
 			}
 		}
 		if data.Branches.ObservedRegex != nil {
-			verifiedRegexOpt, err := configdomain.ParseRegex(*data.Branches.ObservedRegex)
-			ec.Check(err)
+			var verifiedRegexOpt Option[configdomain.VerifiedRegex]
+			verifiedRegexOpt, observedRegexErr = configdomain.ParseRegex(*data.Branches.ObservedRegex)
 			if verifiedRegex, hasVerifiedRegex := verifiedRegexOpt.Get(); hasVerifiedRegex {
 				observedRegex = Some(configdomain.ObservedRegex{VerifiedRegex: verifiedRegex})
 			}
 		}
 		if data.Branches.Order != nil {
-			order, err = configdomain.ParseOrder(*data.Branches.Order, messages.ConfigFile)
-			ec.Check(err)
+			order, orderErr = configdomain.ParseOrder(*data.Branches.Order, messages.ConfigFile)
 		}
 		if data.Branches.UnknownType != nil {
-			branchType, err := configdomain.ParseBranchType(*data.Branches.UnknownType, messages.ConfigFile)
-			ec.Check(err)
+			var branchType Option[configdomain.BranchType]
+			branchType, unknownBranchTypeError = configdomain.ParseBranchType(*data.Branches.UnknownType, messages.ConfigFile)
 			unknownBranchType = configdomain.UnknownBranchTypeOpt(branchType)
 		}
 	}
 	if data.Create != nil {
 		if data.Create.BranchPrefix != nil {
-			branchPrefix, err = configdomain.ParseBranchPrefix(*data.Create.BranchPrefix, messages.ConfigFile)
-			ec.Check(err)
+			branchPrefix, branchPrefixErr = configdomain.ParseBranchPrefix(*data.Create.BranchPrefix, messages.ConfigFile)
 		}
 		if data.Create.NewBranchType != nil {
-			branchType, err := configdomain.ParseBranchType(*data.Create.NewBranchType, messages.ConfigFile)
-			ec.Check(err)
+			var branchType Option[configdomain.BranchType]
+			branchType, newBranchTypeError = configdomain.ParseBranchType(*data.Create.NewBranchType, messages.ConfigFile)
 			newBranchType = configdomain.NewBranchTypeOpt(branchType)
 		}
 		if data.Create.PushNewbranches != nil {
@@ -168,8 +187,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			finalMessages.Add(messages.PushNewBranchesDeprecation)
 		}
 		if data.Create.ShareNewBranches != nil {
-			shareNewBranches, err = configdomain.ParseShareNewBranches(*data.Create.ShareNewBranches, configdomain.KeyShareNewBranches.String())
-			ec.Check(err)
+			shareNewBranches, shareNewBranchesErr = configdomain.ParseShareNewBranches(*data.Create.ShareNewBranches, configdomain.KeyShareNewBranches.String())
 		}
 		if data.Create.Stash != nil {
 			stash = Some(configdomain.Stash(*data.Create.Stash))
@@ -177,23 +195,19 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	}
 	if data.Hosting != nil {
 		if data.Hosting.Platform != nil {
-			forgeType, err = forgedomain.ParseForgeType(*data.Hosting.Platform, messages.ConfigFile)
-			ec.Check(err)
+			forgeType, forgeTypeErr = forgedomain.ParseForgeType(*data.Hosting.Platform, messages.ConfigFile)
 		}
 		if data.Hosting.DevRemote != nil {
 			devRemote = gitdomain.NewRemote(*data.Hosting.DevRemote)
 		}
 		if data.Hosting.ForgeType != nil {
-			forgeType, err = forgedomain.ParseForgeType(*data.Hosting.ForgeType, messages.ConfigFile)
-			ec.Check(err)
+			forgeType, forgeTypeErr = forgedomain.ParseForgeType(*data.Hosting.ForgeType, messages.ConfigFile)
 		}
 		if data.Hosting.GitHubConnectorType != nil {
-			githubConnectorType, err = forgedomain.ParseGitHubConnectorType(*data.Hosting.GitHubConnectorType, messages.ConfigFile)
-			ec.Check(err)
+			githubConnectorType, githubConnectorTypeErr = forgedomain.ParseGitHubConnectorType(*data.Hosting.GitHubConnectorType, messages.ConfigFile)
 		}
 		if data.Hosting.GitLabConnectorType != nil {
-			gitlabConnectorType, err = forgedomain.ParseGitLabConnectorType(*data.Hosting.GitLabConnectorType, messages.ConfigFile)
-			ec.Check(err)
+			gitlabConnectorType, gitlabConnectorTypeErr = forgedomain.ParseGitLabConnectorType(*data.Hosting.GitLabConnectorType, messages.ConfigFile)
 		}
 		if data.Hosting.OriginHostname != nil {
 			hostingOriginHostname = configdomain.ParseHostingOriginHostname(*data.Hosting.OriginHostname)
@@ -201,8 +215,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	}
 	if data.Propose != nil {
 		if data.Propose.Lineage != nil {
-			proposalsShowLineage, err = forgedomain.ParseProposalsShowLineage(*data.Propose.Lineage, messages.ConfigFile)
-			ec.Check(err)
+			proposalsShowLineage, proposalsShowLineageErr = forgedomain.ParseProposalsShowLineage(*data.Propose.Lineage, messages.ConfigFile)
 		}
 	}
 	if data.Ship != nil {
@@ -215,16 +228,13 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	}
 	if data.SyncStrategy != nil {
 		if data.SyncStrategy.FeatureBranches != nil {
-			syncFeatureStrategy, err = configdomain.ParseSyncFeatureStrategy(*data.SyncStrategy.FeatureBranches, messages.ConfigFile)
-			ec.Check(err)
+			syncFeatureStrategy, syncFeatureStrategyErr = configdomain.ParseSyncFeatureStrategy(*data.SyncStrategy.FeatureBranches, messages.ConfigFile)
 		}
 		if data.SyncStrategy.PerennialBranches != nil {
-			syncPerennialStrategy, err = configdomain.ParseSyncPerennialStrategy(*data.SyncStrategy.PerennialBranches, messages.ConfigFile)
-			ec.Check(err)
+			syncPerennialStrategy, syncPerennialStrategyErr = configdomain.ParseSyncPerennialStrategy(*data.SyncStrategy.PerennialBranches, messages.ConfigFile)
 		}
 		if data.SyncStrategy.PrototypeBranches != nil {
-			syncPrototypeStrategy, err = configdomain.ParseSyncPrototypeStrategy(*data.SyncStrategy.PrototypeBranches, messages.ConfigFile)
-			ec.Check(err)
+			syncPrototypeStrategy, syncPrototypeStrategyErr = configdomain.ParseSyncPrototypeStrategy(*data.SyncStrategy.PrototypeBranches, messages.ConfigFile)
 		}
 	}
 	if data.Sync != nil {
@@ -238,16 +248,13 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			detached = Some(configdomain.Detached(*data.Sync.Detached))
 		}
 		if data.Sync.FeatureStrategy != nil {
-			syncFeatureStrategy, err = configdomain.ParseSyncFeatureStrategy(*data.Sync.FeatureStrategy, messages.ConfigFile)
-			ec.Check(err)
+			syncFeatureStrategy, syncFeatureStrategyErr = configdomain.ParseSyncFeatureStrategy(*data.Sync.FeatureStrategy, messages.ConfigFile)
 		}
 		if data.Sync.PerennialStrategy != nil {
-			syncPerennialStrategy, err = configdomain.ParseSyncPerennialStrategy(*data.Sync.PerennialStrategy, messages.ConfigFile)
-			ec.Check(err)
+			syncPerennialStrategy, syncPerennialStrategyErr = configdomain.ParseSyncPerennialStrategy(*data.Sync.PerennialStrategy, messages.ConfigFile)
 		}
 		if data.Sync.PrototypeStrategy != nil {
-			syncPrototypeStrategy, err = configdomain.ParseSyncPrototypeStrategy(*data.Sync.PrototypeStrategy, messages.ConfigFile)
-			ec.Check(err)
+			syncPrototypeStrategy, syncPrototypeStrategyErr = configdomain.ParseSyncPrototypeStrategy(*data.Sync.PrototypeStrategy, messages.ConfigFile)
 		}
 		if data.Sync.PushBranches != nil {
 			pushBranches = Some(configdomain.PushBranches(*data.Sync.PushBranches))
@@ -262,6 +269,33 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			syncUpstream = Some(configdomain.SyncUpstream(*data.Sync.Upstream))
 		}
 	}
+	// keep-sorted start
+	err := cmp.Or(
+		branchPrefixErr,
+		defaultBranchTypeError,
+		displayTypesErr,
+		featureRegexErr,
+		contributionRegexErr,
+		observedRegexErr,
+		perennialRegexErr,
+		orderErr,
+		unknownBranchTypeError,
+		newBranchTypeError,
+		shareNewBranchesErr,
+		forgeTypeErr,
+		githubConnectorTypeErr,
+		gitlabConnectorTypeErr,
+		hostingOriginHostnameErr,
+		proposalsShowLineageErr,
+		shipDeleteTrackingBranchErr,
+		shipStrategyErr,
+		syncFeatureStrategyErr,
+		syncPerennialStrategyErr,
+		syncPrototypeStrategyErr,
+		syncTagsErr,
+		syncUpstreamErr,
+	// keep-sorted end
+	)
 	return configdomain.PartialConfig{
 		Aliases:                  map[configdomain.AliasableCommand]string{},
 		AutoSync:                 autoSync,
@@ -308,5 +342,5 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		SyncTags:                 syncTags,
 		SyncUpstream:             syncUpstream,
 		Verbose:                  None[configdomain.Verbose](),
-	}, ec.Err
+	}, err
 }
