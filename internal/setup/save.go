@@ -217,28 +217,30 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 
 	// EXTENDED CONFIGURATION
 	// keep-sorted start
-	var errAutoSync error
-	var errBranchPrefix error
-	var errContributionRegex error
-	var errDetached error
-	var errFeatureRegex error
-	var errNewBranchType error
-	var errObservedRegex error
-	var errOrder error
-	var errPerennialRegex error
-	var errProposalsShowLineage error
-	var errPushBranches error
-	var errPushHook error
-	var errShareNewBranches error
-	var errShipDeleteTrackingBranch error
-	var errShipStrategy error
-	var errStash error
-	var errSyncFeatureStrategy error
-	var errSyncPerennialStrategy error
-	var errSyncPrototypeStrategy error
-	var errSyncTags error
-	var errSyncUpstream error
-	var errUnknownBranchType error
+	var (
+		errAutoSync                 error
+		errBranchPrefix             error
+		errContributionRegex        error
+		errDetached                 error
+		errFeatureRegex             error
+		errNewBranchType            error
+		errObservedRegex            error
+		errOrder                    error
+		errPerennialRegex           error
+		errProposalsShowLineage     error
+		errPushBranches             error
+		errPushHook                 error
+		errShareNewBranches         error
+		errShipDeleteTrackingBranch error
+		errShipStrategy             error
+		errStash                    error
+		errSyncFeatureStrategy      error
+		errSyncPerennialStrategy    error
+		errSyncPrototypeStrategy    error
+		errSyncTags                 error
+		errSyncUpstream             error
+		errUnknownBranchType        error
+	)
 	// keep-sorted end
 
 	// TODO: sort this alphabetically
