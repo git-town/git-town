@@ -25,7 +25,18 @@ func (self Order) String() string {
 	return string(self)
 }
 
-func ParseOrder(value string, source string) (Option[Order], error) {
+func ParseOrder(value string, source string) (Order, error) {
+	orderOpt, err := ParseOrderOpt(value, source)
+	if err != nil {
+		return "", err
+	}
+	if order, has := orderOpt.Get(); has {
+		return order, nil
+	}
+	return "", fmt.Errorf(messages.OrderInvalid, source, value)
+}
+
+func ParseOrderOpt(value string, source string) (Option[Order], error) {
 	switch strings.ToLower(value) {
 	case "":
 		return None[Order](), nil
