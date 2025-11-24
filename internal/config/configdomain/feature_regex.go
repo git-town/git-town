@@ -1,6 +1,7 @@
 package configdomain
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/git-town/git-town/v22/internal/messages"
@@ -11,8 +12,17 @@ type FeatureRegex struct {
 	VerifiedRegex
 }
 
-func ParseFeatureRegex(value string, source string) (Option[FeatureRegex], error) {
-	verifiedRegexOpt, err := ParseRegex(value)
+func ParseFeatureRegex(value string, source string) (FeatureRegex, error) {
+	verifiedRegex, err := ParseRegex(value)
+	featureRegex := FeatureRegex{VerifiedRegex: verifiedRegex}
+	if len(value) == 0 {
+		return featureRegex, errors.New("empty regex")
+	}
+	return featureRegex, err
+}
+
+func ParseFeatureRegexOpt(value string, source string) (Option[FeatureRegex], error) {
+	verifiedRegexOpt, err := ParseRegexOpt(value)
 	if err != nil {
 		return None[FeatureRegex](), fmt.Errorf(messages.CannotParse, source, err)
 	}
