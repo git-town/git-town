@@ -1,6 +1,7 @@
 package configdomain
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/git-town/git-town/v22/internal/messages"
@@ -12,8 +13,17 @@ type ObservedRegex struct {
 	VerifiedRegex
 }
 
-func ParseObservedRegex(value string, source string) (Option[ObservedRegex], error) {
-	verifiedRegexOpt, err := ParseRegex(value)
+func ParseObservedRegex(value string, source string) (ObservedRegex, error) {
+	verifiedRegex, err := ParseRegex(value)
+	observedRegex := ObservedRegex{VerifiedRegex: verifiedRegex}
+	if len(value) == 0 {
+		return observedRegex, errors.New("empty regex")
+	}
+	return observedRegex, err
+}
+
+func ParseObservedRegexOpt(value string, source string) (Option[ObservedRegex], error) {
+	verifiedRegexOpt, err := ParseRegexOpt(value)
 	if err != nil {
 		return None[ObservedRegex](), fmt.Errorf(messages.ObservedRegexCannotParse, value, source, err)
 	}
