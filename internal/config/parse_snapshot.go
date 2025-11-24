@@ -111,7 +111,8 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	syncPrototypeStrategy, errSyncPrototypeStrategy := load(snapshot, configdomain.KeySyncPrototypeStrategy, configdomain.ParseSyncPrototypeStrategy, ignoreUnknown)
 	syncTags, errSyncTags := load(snapshot, configdomain.KeySyncTags, gohacks.ParseBool[configdomain.SyncTags], ignoreUnknown)
 	syncUpstream, errSyncUpstream := load(snapshot, configdomain.KeySyncUpstream, gohacks.ParseBool[configdomain.SyncUpstream], ignoreUnknown)
-	unknownBranchType, errUnknownBranchType := load(snapshot, configdomain.KeyUnknownBranchType, configdomain.ParseBranchType, ignoreUnknown)
+	branchType, errUnknownBranchType := load(snapshot, configdomain.KeyUnknownBranchType, configdomain.ParseBranchType, ignoreUnknown)
+	unknownBranchType := configdomain.UnknownBranchTypeOpt(branchType)
 	err := cmp.Or(
 		errAutoResolve,
 		errAutoSync,

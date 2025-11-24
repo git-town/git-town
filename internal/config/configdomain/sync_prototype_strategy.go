@@ -28,7 +28,18 @@ func NewSyncPrototypeStrategyFromSyncFeatureStrategy(syncFeatureStrategy SyncFea
 	return SyncPrototypeStrategy(syncFeatureStrategy)
 }
 
-func ParseSyncPrototypeStrategy(value string, source string) (Option[SyncPrototypeStrategy], error) {
+func ParseSyncPrototypeStrategy(value string, source string) (SyncPrototypeStrategy, error) {
+	syncPrototypeStrategyOpt, err := ParseSyncPrototypeStrategyOpt(value, source)
+	if err != nil {
+		return "", err
+	}
+	if syncPrototypeStrategy, has := syncPrototypeStrategyOpt.Get(); has {
+		return syncPrototypeStrategy, nil
+	}
+	return "", fmt.Errorf(messages.CannotParse, source, err)
+}
+
+func ParseSyncPrototypeStrategyOpt(value string, source string) (Option[SyncPrototypeStrategy], error) {
 	syncStrategyOpt, err := ParseSyncStrategy(value)
 	if err != nil {
 		return None[SyncPrototypeStrategy](), fmt.Errorf(messages.CannotParse, source, err)
