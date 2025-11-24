@@ -17,14 +17,16 @@ import (
 
 func Save(userInput UserInput, unvalidatedConfig config.UnvalidatedConfig, data Data, enterAll bool, frontend subshelldomain.Runner) error {
 	errAliases := saveAliases(userInput.Data.Aliases, unvalidatedConfig.GitGlobal.Aliases, frontend)
-	// keep-sorted start
-	var errBitbucketAppPassword error
-	var errBitbucketUsername error
-	var errForgejoToken error
-	var errGitHubToken error
-	var errGitLabToken error
-	var errGiteaToken error
+	var (
+		// keep-sorted start
+		errBitbucketAppPassword error
+		errBitbucketUsername    error
+		errForgejoToken         error
+		errGitHubToken          error
+		errGitLabToken          error
+		errGiteaToken           error
 	// keep-sorted end
+	)
 	if forgeType, hasForgeType := userInput.DeterminedForgeType.Get(); hasForgeType {
 		switch forgeType {
 		case forgedomain.ForgeTypeAzureDevOps:
@@ -170,15 +172,17 @@ func saveAllToFile(userInput UserInput, existingConfigFile configdomain.PartialC
 }
 
 func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialConfig, configFile configdomain.PartialConfig, data Data, enterAll bool, frontend subshelldomain.Runner) error {
-	// keep-sorted start
-	var errForgeType error
-	var errGitHubConnectorType error
-	var errGitLabConnectorType error
-	var errMainBranch error
-	var errOriginHostname error
-	var errPerennialBranches error
-	var errRemotes error
+	var (
+		// keep-sorted start
+		errForgeType           error
+		errGitHubConnectorType error
+		errGitLabConnectorType error
+		errMainBranch          error
+		errOriginHostname      error
+		errPerennialBranches   error
+		errRemotes             error
 	// keep-sorted end
+	)
 
 	// BASIC CONFIGURATION
 	if configFile.MainBranch.IsNone() {
