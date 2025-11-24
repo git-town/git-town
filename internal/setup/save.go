@@ -244,8 +244,8 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 		errSyncTags                 error
 		errSyncUpstream             error
 		errUnknownBranchType        error
+		// keep-sorted end
 	)
-	// keep-sorted end
 
 	// TODO: sort this alphabetically
 	if configFile.AutoSync.IsNone() {
