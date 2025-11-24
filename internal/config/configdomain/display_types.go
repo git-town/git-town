@@ -73,7 +73,15 @@ func (self DisplayTypes) String() string {
 	panic("unhandled DisplayType quantifier: " + self.Quantifier)
 }
 
-func ParseDisplayTypes(text, source string) (Option[DisplayTypes], error) {
+func ParseDisplayTypes(text, source string) (DisplayTypes, error) {
+	displayTypesOpt, err := ParseDisplayTypesOpt(text, source)
+	if err != nil {
+		return DisplayTypes{}, err
+	}
+	return displayTypesOpt.Get(), nil
+}
+
+func ParseDisplayTypesOpt(text, source string) (Option[DisplayTypes], error) {
 	if len(text) == 0 {
 		return None[DisplayTypes](), nil
 	}
