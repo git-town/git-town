@@ -17,7 +17,7 @@ func Order() (AddFunc, ReadOrderFlagFunc) {
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.Order], error) {
 		text, errFlag := cmd.Flags().GetString(orderLong)
-		order, errParse := configdomain.ParseOrder(text, "--order flag")
+		order, errParse := configdomain.ParseOrderOpt(text, "--order flag")
 		return order, cmp.Or(errFlag, errParse)
 	}
 	return addFlag, readFlag

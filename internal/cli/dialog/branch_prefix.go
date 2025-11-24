@@ -36,7 +36,7 @@ func BranchPrefix(args Args[configdomain.BranchPrefix]) (Option[configdomain.Bra
 		Prompt:        messages.BranchPrefixPrompt,
 		Title:         branchPrefixTitle,
 	})
-	newValue, errNewValue := configdomain.ParseBranchPrefix(input, "dialog")
+	newValue, errNewValue := configdomain.ParseBranchPrefixOpt(input, "dialog")
 	if args.Global.Equal(newValue) {
 		// the user has entered the global value --> keep using the global value, don't store the local value
 		newValue = None[configdomain.BranchPrefix]()

@@ -32,7 +32,7 @@ func TestBranchType(t *testing.T) {
 			"pr":                      Some(configdomain.BranchTypePrototypeBranch),
 		}
 		for give, want := range tests {
-			have, err := configdomain.ParseBranchType(give, "test")
+			have, err := configdomain.ParseBranchTypeOpt(give, "test")
 			must.NoError(t, err)
 			must.Eq(t, want, have)
 		}

@@ -50,7 +50,7 @@ func TestBranchPrefix(t *testing.T) {
 			"prefix-": Some(configdomain.BranchPrefix("prefix-")),
 		}
 		for give, want := range tests {
-			have, err := configdomain.ParseBranchPrefix(give, "test")
+			have, err := configdomain.ParseBranchPrefixOpt(give, "test")
 			must.NoError(t, err)
 			must.Eq(t, want, have)
 		}

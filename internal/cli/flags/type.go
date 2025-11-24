@@ -32,7 +32,7 @@ func ParseBranchTypes(text string, source string) ([]configdomain.BranchType, er
 	branchTypeNames := SplitBranchTypeNames(text)
 	result := make([]configdomain.BranchType, 0, len(branchTypeNames))
 	for _, branchTypeName := range branchTypeNames {
-		branchTypeOpt, err := configdomain.ParseBranchType(branchTypeName, source)
+		branchTypeOpt, err := configdomain.ParseBranchTypeOpt(branchTypeName, source)
 		if err != nil {
 			return result, err
 		}
