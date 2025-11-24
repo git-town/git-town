@@ -200,12 +200,9 @@ func load[T any](snapshot configdomain.SingleSnapshot, key configdomain.Key, par
 		return None[T](), nil
 	}
 	value, err := parseFunc(valueStr, key.String())
-	if err != nil {
-		if ignoreUnknown {
-			fmt.Printf("Ignoring invalid value for %q: %q\n", key, valueStr)
-			return None[T](), nil
-		}
-		return value, err
+	if err != nil && ignoreUnknown {
+		fmt.Printf("Ignoring invalid value for %q: %q\n", key, valueStr)
+		return None[T](), nil
 	}
-	return value, nil
+	return value, err
 }
