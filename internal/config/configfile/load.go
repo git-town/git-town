@@ -44,39 +44,41 @@ func Load(rootDir gitdomain.RepoRootDir, fileName string, finalMessages stringsl
 
 // Validate converts the given low-level configfile data into high-level config data.
 func Validate(data Data, finalMessages stringslice.Collector) (configdomain.PartialConfig, error) {
-	// keep-sorted start
-	var autoResolve Option[configdomain.AutoResolve]
-	var autoSync Option[configdomain.AutoSync]
-	var branchPrefix Option[configdomain.BranchPrefix]
-	var contributionRegex Option[configdomain.ContributionRegex]
-	var detached Option[configdomain.Detached]
-	var devRemote Option[gitdomain.Remote]
-	var displayTypes Option[configdomain.DisplayTypes]
-	var featureRegex Option[configdomain.FeatureRegex]
-	var forgeType Option[forgedomain.ForgeType]
-	var githubConnectorType Option[forgedomain.GitHubConnectorType]
-	var gitlabConnectorType Option[forgedomain.GitLabConnectorType]
-	var hostingOriginHostname Option[configdomain.HostingOriginHostname]
-	var mainBranch Option[gitdomain.LocalBranchName]
-	var newBranchType Option[configdomain.NewBranchType]
-	var observedRegex Option[configdomain.ObservedRegex]
-	var order Option[configdomain.Order]
-	var perennialBranches gitdomain.LocalBranchNames
-	var perennialRegex Option[configdomain.PerennialRegex]
-	var proposalsShowLineage Option[forgedomain.ProposalsShowLineage]
-	var pushBranches Option[configdomain.PushBranches]
-	var pushHook Option[configdomain.PushHook]
-	var shareNewBranches Option[configdomain.ShareNewBranches]
-	var shipDeleteTrackingBranch Option[configdomain.ShipDeleteTrackingBranch]
-	var shipStrategy Option[configdomain.ShipStrategy]
-	var stash Option[configdomain.Stash]
-	var syncFeatureStrategy Option[configdomain.SyncFeatureStrategy]
-	var syncPerennialStrategy Option[configdomain.SyncPerennialStrategy]
-	var syncPrototypeStrategy Option[configdomain.SyncPrototypeStrategy]
-	var syncTags Option[configdomain.SyncTags]
-	var syncUpstream Option[configdomain.SyncUpstream]
-	var unknownBranchType Option[configdomain.UnknownBranchType]
+	var (
+		// keep-sorted start
+		autoResolve              Option[configdomain.AutoResolve]
+		autoSync                 Option[configdomain.AutoSync]
+		branchPrefix             Option[configdomain.BranchPrefix]
+		contributionRegex        Option[configdomain.ContributionRegex]
+		detached                 Option[configdomain.Detached]
+		devRemote                Option[gitdomain.Remote]
+		displayTypes             Option[configdomain.DisplayTypes]
+		featureRegex             Option[configdomain.FeatureRegex]
+		forgeType                Option[forgedomain.ForgeType]
+		githubConnectorType      Option[forgedomain.GitHubConnectorType]
+		gitlabConnectorType      Option[forgedomain.GitLabConnectorType]
+		hostingOriginHostname    Option[configdomain.HostingOriginHostname]
+		mainBranch               Option[gitdomain.LocalBranchName]
+		newBranchType            Option[configdomain.NewBranchType]
+		observedRegex            Option[configdomain.ObservedRegex]
+		order                    Option[configdomain.Order]
+		perennialBranches        gitdomain.LocalBranchNames
+		perennialRegex           Option[configdomain.PerennialRegex]
+		proposalsShowLineage     Option[forgedomain.ProposalsShowLineage]
+		pushBranches             Option[configdomain.PushBranches]
+		pushHook                 Option[configdomain.PushHook]
+		shareNewBranches         Option[configdomain.ShareNewBranches]
+		shipDeleteTrackingBranch Option[configdomain.ShipDeleteTrackingBranch]
+		shipStrategy             Option[configdomain.ShipStrategy]
+		stash                    Option[configdomain.Stash]
+		syncFeatureStrategy      Option[configdomain.SyncFeatureStrategy]
+		syncPerennialStrategy    Option[configdomain.SyncPerennialStrategy]
+		syncPrototypeStrategy    Option[configdomain.SyncPrototypeStrategy]
+		syncTags                 Option[configdomain.SyncTags]
+		syncUpstream             Option[configdomain.SyncUpstream]
+		unknownBranchType        Option[configdomain.UnknownBranchType]
 	// keep-sorted end
+	)
 	// load legacy definitions first, so that the proper definitions loaded later override them
 	if data.CreatePrototypeBranches != nil {
 		newBranchType = Some(configdomain.NewBranchType(configdomain.BranchTypePrototypeBranch))
@@ -101,31 +103,33 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	if data.SyncUpstream != nil {
 		syncUpstream = Some(configdomain.SyncUpstream(*data.SyncUpstream))
 	}
-	// keep-sorted start
-	var branchPrefixErr error
-	var contributionRegexErr error
-	var defaultBranchTypeError error
-	var displayTypesErr error
-	var featureRegexErr error
-	var forgeTypeErr error
-	var githubConnectorTypeErr error
-	var gitlabConnectorTypeErr error
-	var hostingOriginHostnameErr error
-	var newBranchTypeError error
-	var observedRegexErr error
-	var orderErr error
-	var perennialRegexErr error
-	var proposalsShowLineageErr error
-	var shareNewBranchesErr error
-	var shipDeleteTrackingBranchErr error
-	var shipStrategyErr error
-	var syncFeatureStrategyErr error
-	var syncPerennialStrategyErr error
-	var syncPrototypeStrategyErr error
-	var syncTagsErr error
-	var syncUpstreamErr error
-	var unknownBranchTypeError error
-	// keep-sorted end
+	var (
+		// keep-sorted start
+		branchPrefixErr             error
+		contributionRegexErr        error
+		defaultBranchTypeError      error
+		displayTypesErr             error
+		featureRegexErr             error
+		forgeTypeErr                error
+		githubConnectorTypeErr      error
+		gitlabConnectorTypeErr      error
+		hostingOriginHostnameErr    error
+		newBranchTypeError          error
+		observedRegexErr            error
+		orderErr                    error
+		perennialRegexErr           error
+		proposalsShowLineageErr     error
+		shareNewBranchesErr         error
+		shipDeleteTrackingBranchErr error
+		shipStrategyErr             error
+		syncFeatureStrategyErr      error
+		syncPerennialStrategyErr    error
+		syncPrototypeStrategyErr    error
+		syncTagsErr                 error
+		syncUpstreamErr             error
+		unknownBranchTypeError      error
+		// keep-sorted end
+	)
 	// load proper definitions, overriding the values from the legacy definitions that were loaded above
 	if data.Branches != nil {
 		if data.Branches.Main != nil {
