@@ -27,7 +27,18 @@ func GitHubConnectorTypes() []GitHubConnectorType {
 	}
 }
 
-func ParseGitHubConnectorType(text string, source string) (Option[GitHubConnectorType], error) {
+func ParseGitHubConnectorType(text string, source string) (GitHubConnectorType, error) {
+	gitHubConnectorTypeOpt, err := ParseGitHubConnectorTypeOpt(text, source)
+	if err != nil {
+		return "", err
+	}
+	if githubConnectorType, has := gitHubConnectorTypeOpt.Get(); has {
+		return githubConnectorType, nil
+	}
+	return "", fmt.Errorf(messages.GitHubConnectorTypeUnknown, source, text)
+}
+
+func ParseGitHubConnectorTypeOpt(text string, source string) (Option[GitHubConnectorType], error) {
 	if text == "" {
 		return None[GitHubConnectorType](), nil
 	}

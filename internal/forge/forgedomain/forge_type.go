@@ -23,8 +23,19 @@ const (
 	ForgeTypeGitea               ForgeType = "gitea"
 )
 
-// ParseForgeType provides the ForgeType enum matching the given text.
-func ParseForgeType(name string, source string) (Option[ForgeType], error) {
+func ParseForgeType(name string, source string) (ForgeType, error) {
+	forgeTypeOpt, err := ParseForgeTypeOpt(name, source)
+	if err != nil {
+		return "", err
+	}
+	if forgeType, hasForgeType := forgeTypeOpt.Get(); hasForgeType {
+		return forgeType, nil
+	}
+	return "", fmt.Errorf(messages.ForgeTypeUnknown, source, name)
+}
+
+// ParseForgeTypeOpt provides the ForgeType enum matching the given text.
+func ParseForgeTypeOpt(name string, source string) (Option[ForgeType], error) {
 	if name == "" {
 		return None[ForgeType](), nil
 	}
