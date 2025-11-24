@@ -103,21 +103,20 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	}
 	// keep-sorted start
 	var branchPrefixErr error
+	var contributionRegexErr error
 	var defaultBranchTypeError error
 	var displayTypesErr error
 	var featureRegexErr error
-	var contributionRegexErr error
-	var observedRegexErr error
-	var perennialRegexErr error
-	var orderErr error
-	var unknownBranchTypeError error
-	var newBranchTypeError error
-	var shareNewBranchesErr error
 	var forgeTypeErr error
 	var githubConnectorTypeErr error
 	var gitlabConnectorTypeErr error
 	var hostingOriginHostnameErr error
+	var newBranchTypeError error
+	var observedRegexErr error
+	var orderErr error
+	var perennialRegexErr error
 	var proposalsShowLineageErr error
+	var shareNewBranchesErr error
 	var shipDeleteTrackingBranchErr error
 	var shipStrategyErr error
 	var syncFeatureStrategyErr error
@@ -125,6 +124,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	var syncPrototypeStrategyErr error
 	var syncTagsErr error
 	var syncUpstreamErr error
+	var unknownBranchTypeError error
 	// keep-sorted end
 	// load proper definitions, overriding the values from the legacy definitions that were loaded above
 	if data.Branches != nil {

@@ -18,8 +18,8 @@ import (
 func Save(userInput UserInput, unvalidatedConfig config.UnvalidatedConfig, data Data, enterAll bool, frontend subshelldomain.Runner) error {
 	errAliases := saveAliases(userInput.Data.Aliases, unvalidatedConfig.GitGlobal.Aliases, frontend)
 	// keep-sorted start
-	var errBitbucketUsername error
 	var errBitbucketAppPassword error
+	var errBitbucketUsername error
 	var errForgejoToken error
 	var errGitHubToken error
 	var errGitLabToken error
@@ -45,8 +45,8 @@ func Save(userInput UserInput, unvalidatedConfig config.UnvalidatedConfig, data 
 	err := cmp.Or(
 		// keep-sorted start
 		errAliases,
-		errBitbucketUsername,
 		errBitbucketAppPassword,
+		errBitbucketUsername,
 		errForgejoToken,
 		errGitHubToken,
 		errGitLabToken,
@@ -171,13 +171,13 @@ func saveAllToFile(userInput UserInput, existingConfigFile configdomain.PartialC
 
 func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialConfig, configFile configdomain.PartialConfig, data Data, enterAll bool, frontend subshelldomain.Runner) error {
 	// keep-sorted start
-	var errMainBranch error
-	var errPerennialBranches error
-	var errRemotes error
-	var errOriginHostname error
 	var errForgeType error
 	var errGitHubConnectorType error
 	var errGitLabConnectorType error
+	var errMainBranch error
+	var errOriginHostname error
+	var errPerennialBranches error
+	var errRemotes error
 	// keep-sorted end
 
 	// BASIC CONFIGURATION
@@ -204,13 +204,13 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 	if !enterAll {
 		return cmp.Or(
 			// keep-sorted start
-			errMainBranch,
-			errPerennialBranches,
-			errRemotes,
-			errOriginHostname,
 			errForgeType,
 			errGitHubConnectorType,
 			errGitLabConnectorType,
+			errMainBranch,
+			errOriginHostname,
+			errPerennialBranches,
+			errRemotes,
 			// keep-sorted end
 		)
 	}
@@ -219,26 +219,26 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 	// keep-sorted start
 	var errAutoSync error
 	var errBranchPrefix error
-	var errDetached error
-	var errNewBranchType error
-	var errPerennialRegex error
-	var errUnknownBranchType error
-	var errFeatureRegex error
 	var errContributionRegex error
+	var errDetached error
+	var errFeatureRegex error
+	var errNewBranchType error
 	var errObservedRegex error
 	var errOrder error
+	var errPerennialRegex error
 	var errProposalsShowLineage error
 	var errPushBranches error
 	var errPushHook error
 	var errShareNewBranches error
-	var errShipStrategy error
 	var errShipDeleteTrackingBranch error
+	var errShipStrategy error
 	var errStash error
 	var errSyncFeatureStrategy error
 	var errSyncPerennialStrategy error
 	var errSyncPrototypeStrategy error
 	var errSyncTags error
 	var errSyncUpstream error
+	var errUnknownBranchType error
 	// keep-sorted end
 
 	// TODO: sort this alphabetically
@@ -312,26 +312,26 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 		// keep-sorted start
 		errAutoSync,
 		errBranchPrefix,
-		errDetached,
-		errNewBranchType,
-		errPerennialRegex,
-		errUnknownBranchType,
-		errFeatureRegex,
 		errContributionRegex,
+		errDetached,
+		errFeatureRegex,
+		errNewBranchType,
 		errObservedRegex,
 		errOrder,
+		errPerennialRegex,
 		errProposalsShowLineage,
 		errPushBranches,
 		errPushHook,
 		errShareNewBranches,
-		errShipStrategy,
 		errShipDeleteTrackingBranch,
+		errShipStrategy,
 		errStash,
 		errSyncFeatureStrategy,
 		errSyncPerennialStrategy,
 		errSyncPrototypeStrategy,
 		errSyncTags,
 		errSyncUpstream,
+		errUnknownBranchType,
 		// keep-sorted end
 	)
 }
