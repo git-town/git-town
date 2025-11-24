@@ -24,7 +24,18 @@ const (
 	SyncFeatureStrategyCompress = SyncFeatureStrategy(SyncStrategyCompress)
 )
 
-func ParseSyncFeatureStrategy(value string, source string) (Option[SyncFeatureStrategy], error) {
+func ParseSyncFeatureStrategy(value string, source string) (SyncFeatureStrategy, error) {
+	syncFeatureStrategyOpt, err := ParseSyncFeatureStrategyOpt(value, source)
+	if err != nil {
+		return "", err
+	}
+	if syncFeatureStrategy, has := syncFeatureStrategyOpt.Get(); has {
+		return syncFeatureStrategy, nil
+	}
+	return "", fmt.Errorf(messages.CannotParse, source, err)
+}
+
+func ParseSyncFeatureStrategyOpt(value string, source string) (Option[SyncFeatureStrategy], error) {
 	syncStrategyOpt, err := ParseSyncStrategy(value)
 	if err != nil {
 		return None[SyncFeatureStrategy](), fmt.Errorf(messages.CannotParse, source, err)
