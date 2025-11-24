@@ -48,6 +48,7 @@ Feature: show the configuration in Spanish
         git user email: email@example.com
 
       Create:
+        branch prefix: (not set)
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: yes

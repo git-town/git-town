@@ -20,6 +20,7 @@ Feature: show the configuration
     Given the main branch is "git-main"
     And Git setting "git-town.perennial-branches" is "git-perennial-1 git-perennial-2"
     And Git setting "git-town.auto-sync" is "false"
+    And Git setting "git-town.branch-prefix" is "git-"
     And Git setting "git-town.contribution-regex" is "^git-contribution-regex"
     And Git setting "git-town.detached" is "true"
     And Git setting "git-town.display-types" is "no"
@@ -53,6 +54,7 @@ Feature: show the configuration
       display-types = "all"
 
       [create]
+      branch-prefix = "file-"
       share-new-branches = "push"
       stash = true
 
@@ -98,6 +100,7 @@ Feature: show the configuration
         git user email: email@example.com
 
       Create:
+        branch prefix: git-
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: no

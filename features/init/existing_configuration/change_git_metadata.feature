@@ -33,6 +33,7 @@ Feature: change existing information in Git metadata
       | feature regex               | f e a t enter          |
       | contribution regex          | c o n t enter          |
       | observed regex              | o b s enter            |
+      | branch prefix               | k g - enter            |
       | new branch type             | down enter             |
       | unknown branch type         | down enter             |
       | sync feature strategy       | down enter             |
@@ -78,6 +79,7 @@ Feature: change existing information in Git metadata
       | git config git-town.forge-type github                    |
       | git config git-town.github-connector api                 |
       | git config git-town.auto-sync true                       |
+      | git config git-town.branch-prefix kg-                    |
       | git config git-town.detached true                        |
       | git config git-town.new-branch-type prototype            |
       | git config git-town.perennial-regex per                  |
