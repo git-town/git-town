@@ -22,7 +22,18 @@ func (self ProposalsShowLineage) String() string {
 	return string(self)
 }
 
-func ParseProposalsShowLineage(value string, source string) (Option[ProposalsShowLineage], error) {
+func ParseProposalsShowLineage(value string, source string) (ProposalsShowLineage, error) {
+	proposalsShowLineageOpt, err := ParseProposalsShowLineageOpt(value, source)
+	if err != nil {
+		return "", err
+	}
+	if proposalsShowLineage, has := proposalsShowLineageOpt.Get(); has {
+		return proposalsShowLineage, nil
+	}
+	return "", fmt.Errorf(messages.ProposalsLineageInvalid, source, value)
+}
+
+func ParseProposalsShowLineageOpt(value string, source string) (Option[ProposalsShowLineage], error) {
 	switch strings.ToLower(strings.TrimSpace(value)) {
 	case "":
 		return None[ProposalsShowLineage](), nil
