@@ -77,7 +77,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		syncTags                 Option[configdomain.SyncTags]
 		syncUpstream             Option[configdomain.SyncUpstream]
 		unknownBranchType        Option[configdomain.UnknownBranchType]
-	// keep-sorted end
+		// keep-sorted end
 	)
 	// load legacy definitions first, so that the proper definitions loaded later override them
 	if data.CreatePrototypeBranches != nil {
