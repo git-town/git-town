@@ -21,7 +21,18 @@ func (self ShipStrategy) String() string {
 	return string(self)
 }
 
-func ParseShipStrategy(text string, source string) (Option[ShipStrategy], error) {
+func ParseShipStrategy(text string, source string) (ShipStrategy, error) {
+	shipStrategyOpt, err := ParseShipStrategyOpt(text, source)
+	if err != nil {
+		return "", err
+	}
+	if shipStrategy, has := shipStrategyOpt.Get(); has {
+		return shipStrategy, nil
+	}
+	return "", fmt.Errorf(messages.ConfigShipStrategyUnknown, source, text)
+}
+
+func ParseShipStrategyOpt(text string, source string) (Option[ShipStrategy], error) {
 	text = strings.TrimSpace(text)
 	if text == "" {
 		return None[ShipStrategy](), nil

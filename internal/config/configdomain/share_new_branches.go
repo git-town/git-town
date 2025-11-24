@@ -26,7 +26,18 @@ func (self ShareNewBranches) String() string {
 	return string(self)
 }
 
-func ParseShareNewBranches(value string, source string) (Option[ShareNewBranches], error) {
+func ParseShareNewBranches(value string, source string) (ShareNewBranches, error) {
+	shareNewBranchesOpt, err := ParseShareNewBranchesOpt(value, source)
+	if err != nil {
+		return "", err
+	}
+	if shareNewBranches, has := shareNewBranchesOpt.Get(); has {
+		return shareNewBranches, nil
+	}
+	return "", fmt.Errorf("invalid value for %q: %q", source, value)
+}
+
+func ParseShareNewBranchesOpt(value string, source string) (Option[ShareNewBranches], error) {
 	if value == "" {
 		return None[ShareNewBranches](), nil
 	}
