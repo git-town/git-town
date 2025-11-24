@@ -20,8 +20,12 @@ func (self BranchPrefix) Apply(branch gitdomain.LocalBranchName) gitdomain.Local
 
 func (self BranchPrefix) String() string { return string(self) }
 
-func ParseBranchPrefix(value, _ string) (Option[BranchPrefix], error) {
-	if value == "" {
+func ParseBranchPrefix(value, _ string) (BranchPrefix, error) {
+	return BranchPrefix(value), nil
+}
+
+func ParseBranchPrefixOpt(value, _ string) (Option[BranchPrefix], error) {
+	if len(value) == 0 {
 		return None[BranchPrefix](), nil
 	}
 	return Some(BranchPrefix(value)), nil

@@ -1,6 +1,7 @@
 package configdomain
 
 import (
+	"errors"
 	"regexp"
 
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
@@ -23,10 +24,19 @@ func (self VerifiedRegex) String() string {
 	return self.text
 }
 
-func ParseRegex(text string) (Option[VerifiedRegex], error) {
+func ParseRegex(text string) (VerifiedRegex, error) {
+	regex, err := regexp.Compile(text)
+	verifiedRegex := VerifiedRegex{regex, text}
+	if len(text) == 0 {
+		return verifiedRegex, errors.New("empty regex")
+	}
+	return verifiedRegex, err
+}
+
+func ParseRegexOpt(text string) (Option[VerifiedRegex], error) {
 	if len(text) == 0 {
 		return None[VerifiedRegex](), nil
 	}
-	regex, err := regexp.Compile(text)
-	return Some(VerifiedRegex{regex, text}), err
+	regex, err := ParseRegex(text)
+	return Some(regex), err
 }

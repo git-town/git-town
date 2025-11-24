@@ -1,14 +1,19 @@
 Feature: show the configuration
 
-  Background:
+  @this
+  Scenario:
     Given a Git repo with origin
     And the main branch is "git-main"
     And global Git setting "git-town.perennial-branches" is "global-perennial-1 global-perennial-2"
     And local Git setting "git-town.perennial-branches" is "local-perennial-1 local-perennial-2"
-    And Git setting "git-town.auto-sync" is "false"
-    And Git setting "git-town.branch-prefix" is "git-"
-    And Git setting "git-town.contribution-regex" is "^git-contribution-regex"
-    And Git setting "git-town.detached" is "true"
+    And global Git setting "git-town.auto-sync" is "true"
+    And local Git setting "git-town.auto-sync" is "false"
+    And global Git setting "git-town.branch-prefix" is "git-"
+    And local Git setting "git-town.branch-prefix" is ""
+    And global Git setting "git-town.contribution-regex" is "^git-contribution-regex"
+    And local Git setting "git-town.contribution-regex" is ""
+    And global Git setting "git-town.detached" is "true"
+    And local Git setting "git-town.detached" is ""
     And Git setting "git-town.display-types" is "no"
     And Git setting "git-town.observed-regex" is "^git-observed-regex"
     And Git setting "git-town.perennial-regex" is "^git-perennial-"
@@ -66,7 +71,7 @@ Feature: show the configuration
     Then Git Town prints:
       """
       Branches:
-        contribution branches: contribution-1, contribution-2
+        contribution branches: (none)
         contribution regex: ^git-contribution-regex
         feature regex: git-feature-.*
         main branch: git-main

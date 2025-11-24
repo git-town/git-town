@@ -81,8 +81,8 @@ func NewLineageFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated
 }
 
 func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated bool, ignoreUnknown bool, runner subshelldomain.Runner) (configdomain.PartialConfig, error) {
-	autoResolve, errAutoResolve := load(snapshot, configdomain.KeyAutoResolve, gohacks.ParseBoolOpt[configdomain.AutoResolve], ignoreUnknown)
-	autoSync, errAutoSync := load(snapshot, configdomain.KeyAutoSync, gohacks.ParseBoolOpt[configdomain.AutoSync], ignoreUnknown)
+	autoResolve, errAutoResolve := load(snapshot, configdomain.KeyAutoResolve, gohacks.ParseBool[configdomain.AutoResolve], ignoreUnknown)
+	autoSync, errAutoSync := load(snapshot, configdomain.KeyAutoSync, gohacks.ParseBool[configdomain.AutoSync], ignoreUnknown)
 	branchPrefix, errBranchPrefix := load(snapshot, configdomain.KeyBranchPrefix, configdomain.ParseBranchPrefix, ignoreUnknown)
 	branchTypeOverrides, errBranchTypeOverride := NewBranchTypeOverridesInSnapshot(snapshot, ignoreUnknown, runner)
 	contributionRegex, errContributionRegex := load(snapshot, configdomain.KeyContributionRegex, configdomain.ParseContributionRegex, ignoreUnknown)
@@ -93,8 +93,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	githubConnectorType, errGitHubConnectorType := load(snapshot, configdomain.KeyGitHubConnectorType, forgedomain.ParseGitHubConnectorType, ignoreUnknown)
 	gitlabConnectorType, errGitLabConnectorType := load(snapshot, configdomain.KeyGitLabConnectorType, forgedomain.ParseGitLabConnectorType, ignoreUnknown)
 	lineage, errLineage := NewLineageFromSnapshot(snapshot, updateOutdated, runner)
-	newBranchTypeValue, errNewBranchType := load(snapshot, configdomain.KeyNewBranchType, configdomain.ParseBranchType, ignoreUnknown)
-	newBranchType := configdomain.NewBranchTypeOpt(newBranchTypeValue)
+	newBranchType, errNewBranchType := load(snapshot, configdomain.KeyNewBranchType, configdomain.ParseBranchType, ignoreUnknown)
 	observedRegex, errObservedRegex := load(snapshot, configdomain.KeyObservedRegex, configdomain.ParseObservedRegex, ignoreUnknown)
 	order, errOrder := load(snapshot, configdomain.KeyOrder, configdomain.ParseOrder, ignoreUnknown)
 	offline, errOffline := load(snapshot, configdomain.KeyOffline, gohacks.ParseBoolOpt[configdomain.Offline], ignoreUnknown)
@@ -111,8 +110,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	syncPrototypeStrategy, errSyncPrototypeStrategy := load(snapshot, configdomain.KeySyncPrototypeStrategy, configdomain.ParseSyncPrototypeStrategy, ignoreUnknown)
 	syncTags, errSyncTags := load(snapshot, configdomain.KeySyncTags, gohacks.ParseBoolOpt[configdomain.SyncTags], ignoreUnknown)
 	syncUpstream, errSyncUpstream := load(snapshot, configdomain.KeySyncUpstream, gohacks.ParseBoolOpt[configdomain.SyncUpstream], ignoreUnknown)
-	unknownBranchTypeValue, errUnknownBranchType := load(snapshot, configdomain.KeyUnknownBranchType, configdomain.ParseBranchType, ignoreUnknown)
-	unknownBranchType := configdomain.UnknownBranchTypeOpt(unknownBranchTypeValue)
+	unknownBranchType, errUnknownBranchType := load(snapshot, configdomain.KeyUnknownBranchType, configdomain.ParseBranchType, ignoreUnknown)
 	err := cmp.Or(
 		errAutoResolve,
 		errAutoSync,
@@ -194,7 +192,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	}, err
 }
 
-func load[T any](snapshot configdomain.SingleSnapshot, key configdomain.Key, parseFunc func(string, string) (Option[T], error), ignoreUnknown bool) (Option[T], error) { //nolint:ireturn
+func load[T any](snapshot configdomain.SingleSnapshot, key configdomain.Key, parseFunc func(string, string) (T, error), ignoreUnknown bool) (Option[T], error) { //nolint:ireturn
 	valueStr, has := snapshot[key]
 	if !has {
 		return None[T](), nil
@@ -204,5 +202,5 @@ func load[T any](snapshot configdomain.SingleSnapshot, key configdomain.Key, par
 		fmt.Printf("Ignoring invalid value for %q: %q\n", key, valueStr)
 		return None[T](), nil
 	}
-	return value, err
+	return Some(value), err
 }

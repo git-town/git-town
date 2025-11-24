@@ -60,8 +60,8 @@ const (
 func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	autoResolve, errAutoResolve := load(env, autoResolve, gohacks.ParseBoolOpt[configdomain.AutoResolve])
 	autoSync, errAutoSync := load(env, autoSync, gohacks.ParseBoolOpt[configdomain.AutoSync])
-	branchPrefix, errBranchPrefix := load(env, branchPrefix, configdomain.ParseBranchPrefix)
-	contributionRegex, errContribRegex := load(env, contributionRegex, configdomain.ParseContributionRegex)
+	branchPrefix, errBranchPrefix := load(env, branchPrefix, configdomain.ParseBranchPrefixOpt)
+	contributionRegex, errContribRegex := load(env, contributionRegex, configdomain.ParseContributionRegexOpt)
 	detached, errDetached := load(env, detached, gohacks.ParseBoolOpt[configdomain.Detached])
 	displayTypesOpt, errDisplayTypes := load(env, displayTypes, configdomain.ParseDisplayTypes)
 	dryRun, errDryRun := load(env, dryRun, gohacks.ParseBoolOpt[configdomain.DryRun])
