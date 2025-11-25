@@ -20,8 +20,12 @@ determine the repository state.
 
 ## See also
 
+<!-- keep-sorted start -->
+
 - [continue](continue.md) tries to continue the currently suspended Git Town
   command by re-running the Git command that failed.
 - [undo](undo.md) aborts the currently suspended Git Town command and undoes all
   the changes it did so far, leaving your repository in the same state it was in
   before you started the failing Git Town command
+
+<!-- keep-sorted end -->

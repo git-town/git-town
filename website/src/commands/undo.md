@@ -21,7 +21,11 @@ determine the repository state.
 
 ## See also
 
+<!-- keep-sorted start -->
+
 - [continue](continue.md) continues the currently suspended Git Town command
   after you have resolved the conflicting changes
 - [skip](skip.md) ignores all remaining merge conflicts on the current branch
   and then continues the currently suspended Git Town command
+
+<!-- keep-sorted end -->

@@ -129,5 +129,9 @@ create the remote tracking branch.
 
 ## See also
 
+<!-- keep-sorted start -->
+
 - [append](append.md) creates the new branch as a child of the current branch
 - [prepend](prepend.md) creates the new branch as a parent of the current branch
+
+<!-- keep-sorted end -->

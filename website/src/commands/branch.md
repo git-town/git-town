@@ -33,7 +33,11 @@ determine the repository state.
 
 ## See also
 
+<!-- keep-sorted start -->
+
 - [switch](switch.md) displays the branch hierarchy and lets you switch to a new
   branch in it
 - [walk](walk.md) executes a shell command or opens a shell in each of your
   local branches
+
+<!-- keep-sorted end -->
