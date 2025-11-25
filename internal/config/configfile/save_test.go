@@ -45,9 +45,9 @@ func TestSave(t *testing.T) {
 		t.Parallel()
 		t.Run("all options given", func(t *testing.T) {
 			t.Parallel()
-			contributionRegex := asserts.NoError1(configdomain.ParseContributionRegex("contribution-", "test"))
-			featureRegex := asserts.NoError1(configdomain.ParseFeatureRegex("feature-", "test"))
-			observedRegex := asserts.NoError1(configdomain.ParseObservedRegex("observed-", "test"))
+			contributionRegex := asserts.NoError1(configdomain.ParseContributionRegexOpt("contribution-", "test"))
+			featureRegex := asserts.NoError1(configdomain.ParseFeatureRegexOpt("feature-", "test"))
+			observedRegex := asserts.NoError1(configdomain.ParseObservedRegexOpt("observed-", "test"))
 			perennialRegex := asserts.NoError1(configdomain.ParsePerennialRegex("perennial-", "test"))
 			have := configfile.RenderTOML(configdomain.PartialConfig{
 				AutoResolve:       Some(configdomain.AutoResolve(false)),
@@ -60,7 +60,7 @@ func TestSave(t *testing.T) {
 					Quantifier:  configdomain.QuantifierNo,
 				}),
 				FeatureRegex:             featureRegex,
-				ForgeType:                asserts.NoError1(forgedomain.ParseForgeType("github", "test")),
+				ForgeType:                asserts.NoError1(forgedomain.ParseForgeTypeOpt("github", "test")),
 				GitHubConnectorType:      Some(forgedomain.GitHubConnectorTypeGh),
 				GitLabConnectorType:      Some(forgedomain.GitLabConnectorTypeGlab),
 				HostingOriginHostname:    configdomain.ParseHostingOriginHostname("forge"),
