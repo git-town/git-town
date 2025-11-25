@@ -46,6 +46,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		// keep-sorted end
 	) {
 		result.WriteString("\n[branches]\n")
+		// keep-sorted start block=yes
 		if hasContributionRegex {
 			result.WriteString(fmt.Sprintf("contribution-regex = %q\n", contributionRegex))
 		}
@@ -73,6 +74,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		if hasUnknownBranchType {
 			result.WriteString(fmt.Sprintf("unknown-branch-type = %q\n", unknownBranchType))
 		}
+		// keep-sorted end
 	}
 
 	branchPrefix, hasBranchPrefix := data.BranchPrefix.Get()
