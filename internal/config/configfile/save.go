@@ -159,11 +159,11 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	detached, hasDetached := data.Detached.Get()
 	pushBranches, hasPushBranches := data.PushBranches.Get()
 	pushHook, hasPushHook := data.PushHook.Get()
-	syncFeatureStrategy, hasSyncFeatureStrategy := data.SyncFeatureStrategy.Get()
-	syncPerennialStrategy, hasSyncPerennialStrategy := data.SyncPerennialStrategy.Get()
-	syncPrototypeStrategy, hasSyncPrototypeStrategy := data.SyncPrototypeStrategy.Get()
-	syncTags, hasSyncTags := data.SyncTags.Get()
-	syncUpstream, hasSyncUpstream := data.SyncUpstream.Get()
+	syncFeatureStrategy, hasFeatureStrategy := data.SyncFeatureStrategy.Get()
+	syncPerennialStrategy, hasPerennialStrategy := data.SyncPerennialStrategy.Get()
+	syncPrototypeStrategy, hasPrototypeStrategy := data.SyncPrototypeStrategy.Get()
+	syncTags, hasTags := data.SyncTags.Get()
+	syncUpstream, hasUpstream := data.SyncUpstream.Get()
 	// keep-sorted end
 	if cmp.Or(
 		// keep-sorted start
@@ -172,11 +172,11 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		hasDetached,
 		hasPushBranches,
 		hasPushHook,
-		hasSyncFeatureStrategy,
-		hasSyncPerennialStrategy,
-		hasSyncPrototypeStrategy,
-		hasSyncTags,
-		hasSyncUpstream,
+		hasFeatureStrategy,
+		hasPerennialStrategy,
+		hasPrototypeStrategy,
+		hasTags,
+		hasUpstream,
 		// keep-sorted end
 	) {
 		result.WriteString("\n[sync]\n")
@@ -196,19 +196,19 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		if hasPushHook {
 			result.WriteString(fmt.Sprintf("push-hook = %t\n", pushHook))
 		}
-		if hasSyncFeatureStrategy {
+		if hasFeatureStrategy {
 			result.WriteString(fmt.Sprintf("feature-strategy = %q\n", syncFeatureStrategy))
 		}
-		if hasSyncPerennialStrategy {
+		if hasPerennialStrategy {
 			result.WriteString(fmt.Sprintf("perennial-strategy = %q\n", syncPerennialStrategy))
 		}
-		if hasSyncPrototypeStrategy {
+		if hasPrototypeStrategy {
 			result.WriteString(fmt.Sprintf("prototype-strategy = %q\n", syncPrototypeStrategy))
 		}
-		if hasSyncTags {
+		if hasTags {
 			result.WriteString(fmt.Sprintf("tags = %t\n", syncTags))
 		}
-		if hasSyncUpstream {
+		if hasUpstream {
 			result.WriteString(fmt.Sprintf("upstream = %t\n", syncUpstream))
 		}
 		// keep-sorted end
