@@ -111,6 +111,10 @@ determine the repository state.
 
 ## See also
 
+<!-- keep-sorted start -->
+
 - [branch](branch.md) displays the branch hierarchy
 - [walk](walk.md) executes a shell command or opens a shell in each of your
   local branches
+
+<!-- keep-sorted end -->

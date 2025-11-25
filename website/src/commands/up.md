@@ -71,8 +71,12 @@ determine the repository state.
 
 ## See also
 
+<!-- keep-sorted start -->
+
 - [branch](branch.md) displays the branch hierarchy
 - [down](down.md) moves one position down in the current stack
 - [switch](switch.md) interactively switch between branches
 - [swap](swap.md) changes the stack by swapping the position of current branch
   with its parent
+
+<!-- keep-sorted end -->
