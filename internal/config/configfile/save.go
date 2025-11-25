@@ -190,6 +190,12 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		if hasDetached {
 			result.WriteString(fmt.Sprintf("detached = %t\n", detached))
 		}
+		if hasPushBranches {
+			result.WriteString(fmt.Sprintf("push-branches = %t\n", pushBranches))
+		}
+		if hasPushHook {
+			result.WriteString(fmt.Sprintf("push-hook = %t\n", pushHook))
+		}
 		if hasSyncFeatureStrategy {
 			result.WriteString(fmt.Sprintf("feature-strategy = %q\n", syncFeatureStrategy))
 		}
@@ -198,12 +204,6 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		}
 		if hasSyncPrototypeStrategy {
 			result.WriteString(fmt.Sprintf("prototype-strategy = %q\n", syncPrototypeStrategy))
-		}
-		if hasPushBranches {
-			result.WriteString(fmt.Sprintf("push-branches = %t\n", pushBranches))
-		}
-		if hasPushHook {
-			result.WriteString(fmt.Sprintf("push-hook = %t\n", pushHook))
 		}
 		if hasSyncTags {
 			result.WriteString(fmt.Sprintf("tags = %t\n", syncTags))
