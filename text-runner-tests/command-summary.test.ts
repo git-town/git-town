@@ -23,7 +23,7 @@ suite("extractCommand", () => {
 
 suite("extractArgs", () => {
   const tests = {
-    "git town append <branch-name> [-p | --prototype] [-d | --detached] [-c | --commit] [-m | --message <message>] [--propose] [--dry-run] [-v | --verbose]":
+    "git town append <branch-name> [-p | --prototype] [-d | --detached] [-c | --commit] [(-m | --message) <message>] [--propose] [--dry-run] [-v | --verbose]":
       [
         ["-p", "--prototype"],
         ["-d", "--detached"],
