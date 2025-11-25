@@ -10,6 +10,8 @@ configuration entries, run `git config --get-regexp git-town`. The following
 commands read and write the configuration entries for you so that you don't have
 to run Git configuration commands manually:
 
+<!-- keep-sorted start -->
+
 - [git town completions](commands/completions.md) - set up shell autocomplete
 - [git town config](commands/config.md) - display or update your Git Town
   configuration
@@ -17,5 +19,7 @@ to run Git configuration commands manually:
   of the parent branch
 - [git town config remove](commands/config-remove.md) - remove the Git Town
   configuration
-- [git town init](commands/init.md) - setup assistant for all config settings
 - [git town offline](commands/offline.md) - enable/disable offline mode
+- [git town init](commands/init.md) - setup assistant for all config settings
+
+<!-- keep-sorted end -->
