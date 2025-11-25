@@ -77,6 +77,11 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
+	fmt.Println("1111111111111111111111111111111111111111111111111111111111111111111")
+	value, has := unscopedSnapshot[configdomain.KeyBranchPrefix]
+	fmt.Println(value, has)
+	fmt.Println(unscopedConfig.BranchPrefix)
+	fmt.Println(localConfig.BranchPrefix)
 	configSnapshot := configdomain.BeginConfigSnapshot{
 		Global:   globalSnapshot,
 		Local:    localSnapshot,
