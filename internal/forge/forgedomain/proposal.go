@@ -30,7 +30,7 @@ func (self *Proposal) UnmarshalJSON(b []byte) error {
 	if err := json.Unmarshal(mapping["forge-type"], &forgeTypeName); err != nil {
 		return err
 	}
-	forgeTypeOpt, err := ParseForgeType(forgeTypeName, "JSON")
+	forgeTypeOpt, err := ParseForgeTypeOpt(forgeTypeName, "JSON")
 	if err != nil {
 		return err
 	}

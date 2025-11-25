@@ -36,7 +36,7 @@ func TestParseForgeType(t *testing.T) {
 			"Gitea":                Some(forgedomain.ForgeTypeGitea),
 		}
 		for give, want := range tests {
-			have, err := forgedomain.ParseForgeType(give, "test")
+			have, err := forgedomain.ParseForgeTypeOpt(give, "test")
 			must.NoError(t, err)
 			must.Eq(t, want, have)
 		}

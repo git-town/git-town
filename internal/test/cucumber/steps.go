@@ -286,7 +286,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(branchName)
-		wantOpt := asserts.NoError1(configdomain.ParseBranchType(branchTypeName, "test"))
+		wantOpt := asserts.NoError1(configdomain.ParseBranchTypeOpt(branchTypeName, "test"))
 		want := wantOpt.GetOrPanic()
 		have := devRepo.Config.BranchType(branch)
 		if have != want {
@@ -1226,7 +1226,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the coworker sets the "sync-feature-strategy" to "(merge|rebase)"$`, func(ctx context.Context, value string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
-		syncFeatureStrategy := asserts.NoError1(configdomain.ParseSyncFeatureStrategy(value, "test"))
+		syncFeatureStrategy := asserts.NoError1(configdomain.ParseSyncFeatureStrategyOpt(value, "test"))
 		_ = gitconfig.SetSyncFeatureStrategy(coworkerRepo.TestRunner, syncFeatureStrategy.GetOrPanic(), configdomain.ConfigScopeLocal)
 	})
 

@@ -48,7 +48,7 @@ func TestSave(t *testing.T) {
 			contributionRegex := asserts.NoError1(configdomain.ParseContributionRegexOpt("contribution-", "test"))
 			featureRegex := asserts.NoError1(configdomain.ParseFeatureRegexOpt("feature-", "test"))
 			observedRegex := asserts.NoError1(configdomain.ParseObservedRegexOpt("observed-", "test"))
-			perennialRegex := asserts.NoError1(configdomain.ParsePerennialRegex("perennial-", "test"))
+			perennialRegex := asserts.NoError1(configdomain.ParsePerennialRegexOpt("perennial-", "test"))
 			have := configfile.RenderTOML(configdomain.PartialConfig{
 				AutoResolve:       Some(configdomain.AutoResolve(false)),
 				BranchPrefix:      Some(configdomain.BranchPrefix("feature-")),
