@@ -46,7 +46,7 @@ determine the repository state.
 
 - [contribute](contribute.md) makes the chosen branches contribution branches
 - [observe](observe.md) makes the chosen branches feature branches
-- [prototype](prototype.md) makes the chosen branches prototype branches
 - [park](park.md) makes the chosen branches parked
+- [prototype](prototype.md) makes the chosen branches prototype branches
 
 <!-- keep-sorted end -->

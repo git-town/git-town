@@ -70,9 +70,9 @@ Disables automatic resolution of
 
 <!-- keep-sorted start -->
 
-- [set-parent](set-parent.md) moves the current branch and its descendents under
-  a different parent
 - [detach](detach.md) extracts the current branch from a stack, leaving its
   children in the stack.
+- [set-parent](set-parent.md) moves the current branch and its descendents under
+  a different parent
 
 <!-- keep-sorted end -->
