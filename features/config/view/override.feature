@@ -43,21 +43,21 @@ Feature: show the configuration
       unknown-type = "contribution"
       order = "asc"
       display-types = "all"
-      
+
       [create]
       branch-prefix = "file-"
       share-new-branches = "push"
       stash = true
-      
+
       [hosting]
       forge-type = "github"
       github-connector = "gh"
       origin-hostname = "github.com"
-      
+
       [ship]
       delete-tracking-branch = true
       strategy = "api"
-      
+
       [sync]
       auto-sync = true
       detached = false
@@ -84,18 +84,18 @@ Feature: show the configuration
         unknown branch type: observed
         order: desc
         display types: no branch types
-      
+
       Configuration:
         offline: no
         git user name: user
         git user email: email@example.com
-      
+
       Create:
         branch prefix: git-
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: no
-      
+
       Hosting:
         development remote: origin
         forge type: github
@@ -108,14 +108,14 @@ Feature: show the configuration
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
-      
+
       Propose:
         lineage: cli
-      
+
       Ship:
         delete tracking branch: no
         ship strategy: squash-merge
-      
+
       Sync:
         auto-resolve phantom conflicts: yes
         auto-sync: no
