@@ -83,6 +83,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	stash, hasStash := data.Stash.Get()
 	if cmp.Or(hasBranchPrefix, hasNewBranchType, hasShareNewBranches, hasStash) {
 		result.WriteString("\n[create]\n")
+		// keep-sorted start block=yes
 		if hasBranchPrefix {
 			result.WriteString(fmt.Sprintf("branch-prefix = %q\n", branchPrefix))
 		}
@@ -95,6 +96,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		if hasStash {
 			result.WriteString(fmt.Sprintf("stash = %s\n", stash))
 		}
+		// keep-sorted end
 	}
 
 	// keep-sorted start
@@ -114,6 +116,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		// keep-sorted end
 	) {
 		result.WriteString("\n[hosting]\n")
+		// keep-sorted start block=yes
 		if hasDevRemote {
 			result.WriteString(fmt.Sprintf("dev-remote = %q\n", devRemote))
 		}
@@ -129,6 +132,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		if hasOriginHostName {
 			result.WriteString(fmt.Sprintf("origin-hostname = %q\n", originHostName))
 		}
+		// keep-sorted end
 	}
 
 	proposalShowLineage, hasProposalShowLineage := data.ProposalsShowLineage.Get()
@@ -176,6 +180,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		// keep-sorted end
 	) {
 		result.WriteString("\n[sync]\n")
+		// keep-sorted start block=yes
 		if hasAutoResolve {
 			result.WriteString(fmt.Sprintf("auto-resolve = %t\n", autoResolve))
 		}
@@ -206,6 +211,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		if hasSyncUpstream {
 			result.WriteString(fmt.Sprintf("upstream = %t\n", syncUpstream))
 		}
+		// keep-sorted end
 	}
 	return result.String()
 }
