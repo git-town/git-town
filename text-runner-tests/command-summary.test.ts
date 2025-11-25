@@ -38,8 +38,8 @@ suite("extractArgs", () => {
       ["-h", "--help"],
     ],
     "git town config get-parent [<branch-name>] [-v | --verbose] [-h | --help]": [
-      ["-h", "--help"],
       ["-v", "--verbose"],
+      ["-h", "--help"],
     ],
   }
   for (const [give, want] of Object.entries(tests)) {
