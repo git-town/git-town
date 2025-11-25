@@ -25,12 +25,12 @@ suite("extractArgs", () => {
   const tests = {
     "git town append <branch-name> [-p | --prototype] [-d | --detached] [-c | --commit] [-m | --message <message>] [--propose] [--dry-run] [-v | --verbose]":
       [
-        ["--dry-run"],
-        ["--propose"],
-        ["-c", "--commit"],
-        ["-d", "--detached"],
-        ["-m", "--message string"],
         ["-p", "--prototype"],
+        ["-d", "--detached"],
+        ["-c", "--commit"],
+        ["-m", "--message string"],
+        ["--propose"],
+        ["--dry-run"],
         ["-v", "--verbose"],
       ],
     "git town completions (bash|fish|powershell|zsh) [--no-descriptions] [-h | --help]": [
@@ -98,17 +98,17 @@ Flags:
     const have = parseCommandHelpOutput(give)
     const want = [
       ["--auto-resolve"],
-      ["--dry-run"],
-      ["--propose"],
-      ["--push"],
-      ["--stash"],
-      ["--sync"],
       ["-b", "--beam"],
       ["-c", "--commit"],
       ["-d", "--detached"],
+      ["--dry-run"],
       ["-h", "--help"],
       ["-m", "--message string"],
+      ["--propose"],
       ["-p", "--prototype"],
+      ["--push"],
+      ["--stash"],
+      ["--sync"],
       ["-v", "--verbose"],
     ]
     deepEqual(have, want)
