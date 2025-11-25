@@ -16,17 +16,20 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-func LoadSnapshot(backend subshelldomain.RunnerQuerier, scopeOpt Option[configdomain.ConfigScope], updateOutdated configdomain.UpdateOutdatedSettings) (configdomain.SingleSnapshot, error) {
-	snapshot := configdomain.SingleSnapshot{}
+func LoadSnapshot(backend subshelldomain.RunnerQuerier, scopeOpt Option[configdomain.ConfigScope]) (string, error) {
 	cmdArgs := []string{"config", "-lz"}
-	scope, hasScope := scopeOpt.Get()
-	if hasScope {
+	if scope, hasScope := scopeOpt.Get(); hasScope {
 		cmdArgs = append(cmdArgs, scope.GitFlag())
 	}
-	output, err := backend.Query("git", cmdArgs...)
-	if err != nil || output == "" {
+	return backend.Query("git", cmdArgs...)
+}
+
+func ParseSnapshot(output string, scopeOpt Option[configdomain.ConfigScope], updateOutdated configdomain.UpdateOutdatedSettings) (configdomain.SingleSnapshot, error) {
+	snapshot := configdomain.SingleSnapshot{}
+	if output == "" {
 		return snapshot, nil //nolint:nilerr  // Git returns an error if there is no global Git config, assume empty config in this case
 	}
+	scope, hasScope := scopeOpt.Get()
 	for line := range strings.SplitSeq(output, "\x00") {
 		if len(line) == 0 {
 			continue
