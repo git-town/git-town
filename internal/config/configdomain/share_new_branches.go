@@ -37,6 +37,13 @@ func ParseShareNewBranches(value string, source string) (ShareNewBranches, error
 	return "", fmt.Errorf("invalid value for %q: %q", source, value)
 }
 
+func ParseShareNewBranchesDeprecatedBool(value bool) ShareNewBranches {
+	if value {
+		return ShareNewBranchesPush
+	}
+	return ShareNewBranchesNone
+}
+
 func ParseShareNewBranchesOpt(value string, source string) (Option[ShareNewBranches], error) {
 	if value == "" {
 		return None[ShareNewBranches](), nil
@@ -51,11 +58,4 @@ func ParseShareNewBranchesOpt(value string, source string) (Option[ShareNewBranc
 		}
 	}
 	return None[ShareNewBranches](), fmt.Errorf("invalid value for %q: %q", source, value)
-}
-
-func ParseShareNewBranchesDeprecatedBool(value bool) ShareNewBranches {
-	if value {
-		return ShareNewBranchesPush
-	}
-	return ShareNewBranchesNone
 }

@@ -1,7 +1,6 @@
 package configdomain
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/git-town/git-town/v22/internal/messages"
@@ -17,7 +16,7 @@ func ParseObservedRegex(value string, source string) (ObservedRegex, error) {
 	verifiedRegex, err := ParseRegex(value)
 	observedRegex := ObservedRegex{VerifiedRegex: verifiedRegex}
 	if len(value) == 0 {
-		return observedRegex, errors.New("empty regex")
+		return observedRegex, fmt.Errorf("observed regex in %s is empty", source)
 	}
 	return observedRegex, err
 }

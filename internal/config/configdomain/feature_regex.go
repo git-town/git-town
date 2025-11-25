@@ -1,7 +1,6 @@
 package configdomain
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/git-town/git-town/v22/internal/messages"
@@ -16,7 +15,7 @@ func ParseFeatureRegex(value string, source string) (FeatureRegex, error) {
 	verifiedRegex, err := ParseRegex(value)
 	featureRegex := FeatureRegex{VerifiedRegex: verifiedRegex}
 	if len(value) == 0 {
-		return featureRegex, errors.New("empty regex")
+		return featureRegex, fmt.Errorf("feature regex in %s is empty", source)
 	}
 	return featureRegex, err
 }

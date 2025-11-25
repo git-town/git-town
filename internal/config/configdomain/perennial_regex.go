@@ -1,7 +1,6 @@
 package configdomain
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/git-town/git-town/v22/internal/messages"
@@ -16,7 +15,7 @@ func ParsePerennialRegex(value string, source string) (PerennialRegex, error) {
 	verifiedRegex, err := ParseRegex(value)
 	perennialRegex := PerennialRegex{VerifiedRegex: verifiedRegex}
 	if len(value) == 0 {
-		return perennialRegex, errors.New("empty regex")
+		return perennialRegex, fmt.Errorf("perennial regex in %s is empty", source)
 	}
 	return perennialRegex, err
 }
