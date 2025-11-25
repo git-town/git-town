@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v22/internal/gohacks/slice"
+	"github.com/git-town/git-town/v22/internal/messages"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
@@ -78,7 +79,10 @@ func ParseDisplayTypes(text, source string) (DisplayTypes, error) {
 	if err != nil {
 		return DisplayTypes{}, err
 	}
-	return displayTypesOpt.Get(), nil
+	if displayTypes, has := displayTypesOpt.Get(); has {
+		return displayTypes, nil
+	}
+	return DisplayTypes{}, fmt.Errorf(messages.DialogResultUnknownBranchType, source, text)
 }
 
 func ParseDisplayTypesOpt(text, source string) (Option[DisplayTypes], error) {
@@ -103,7 +107,7 @@ func ParseDisplayTypesOpt(text, source string) (Option[DisplayTypes], error) {
 	}
 	branchTypes := make([]BranchType, len(parts))
 	for p, part := range parts {
-		branchTypeOpt, err := ParseBranchType(part, source)
+		branchTypeOpt, err := ParseBranchTypeOpt(part, source)
 		if err != nil {
 			return None[DisplayTypes](), err
 		}

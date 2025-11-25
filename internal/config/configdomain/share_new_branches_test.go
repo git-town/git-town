@@ -13,7 +13,7 @@ func TestParseShareNewBranches(t *testing.T) {
 
 	t.Run("empty string", func(t *testing.T) {
 		t.Parallel()
-		have, err := configdomain.ParseShareNewBranches("", "test source")
+		have, err := configdomain.ParseShareNewBranchesOpt("", "test source")
 		must.NoError(t, err)
 		must.True(t, have.IsNone())
 	})
@@ -37,7 +37,7 @@ func TestParseShareNewBranches(t *testing.T) {
 		for give, want := range tests {
 			t.Run(give, func(t *testing.T) {
 				t.Parallel()
-				have, err := configdomain.ParseShareNewBranches(give, "test source")
+				have, err := configdomain.ParseShareNewBranchesOpt(give, "test source")
 				must.NoError(t, err)
 				must.Eq(t, want, have)
 			})
