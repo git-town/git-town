@@ -20,5 +20,24 @@ function findCommandSummary(doc: textRunner.ast.NodeList): string[][] {
 }
 
 function findOptions(doc: textRunner.ast.NodeList): string[] {
+  let insideOptions = false
+  for (const node of doc) {
+    if (node.type === "h2_open") {
+      if (isOptionsNode(node, doc)) {
+        console.log("found options")
+        insideOptions = true
+        continue
+      }
+      // here we run into the next h2 heading after options
+      insideOptions = false
+      continue
+    }
+  }
   return []
+}
+
+function isOptionsNode(node: textRunner.ast.Node, doc: textRunner.ast.NodeList): boolean {
+  const h2Nodes = doc.nodesFor(node)
+  const h2Text = h2Nodes.text()
+  return h2Text === "Options"
 }
