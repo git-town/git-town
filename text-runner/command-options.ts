@@ -74,11 +74,11 @@ function texts(nodes: textRunner.ast.NodeList): string[] {
   return standardizeArgument(removeNegatedFlag(result))
 }
 
-function removeNegatedFlag(flags: string[]): string[] {
+export function removeNegatedFlag(flags: string[]): string[] {
   return flags.filter((flag) => !flag.startsWith("--no-"))
 }
 
-function standardizeArgument(texts: string[]): string[] {
+export function standardizeArgument(texts: string[]): string[] {
   const result: string[] = []
   for (const text of texts) {
     if (text.startsWith("--")) {
