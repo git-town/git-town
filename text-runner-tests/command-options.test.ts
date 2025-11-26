@@ -5,8 +5,14 @@ import { removeNegatedFlag, standardizeArgument } from "../text-runner/command-o
 suite("commandOptions", () => {
   test("removeNegatedFlag", () => {
     const tests = [
+      // remove the negated flag
       [
         ["-d", "--detached", "--no-detached"],
+        ["-d", "--detached"],
+      ],
+      // pass through flags without negation
+      [
+        ["-d", "--detached"],
         ["-d", "--detached"],
       ],
     ]
