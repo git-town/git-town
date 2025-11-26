@@ -32,19 +32,16 @@ function findOptions(doc: textRunner.ast.NodeList): string[][] {
   for (const node of doc) {
     if (node.type === "h2_open") {
       if (insideOptions) {
-        console.log("done parsing options")
         // here we run into the next h2 heading after options --> done parsing options
         return result
       }
       if (isOptionsNode(node, doc)) {
-        console.log("found options")
         insideOptions = true
         continue
       }
     }
     if (insideOptions) {
       if (isFlagNode(node, doc)) {
-        console.log("found flag")
         const h4Nodes = doc.nodesFor(node)
         result.push(texts(h4Nodes))
       }
@@ -70,5 +67,9 @@ function texts(nodes: textRunner.ast.NodeList): string[] {
       result.push(node.content)
     }
   }
-  return result
+  return removeNegatedFlag(result)
+}
+
+function removeNegatedFlag(flags: string[]): string[] {
+  return flags.filter((flag) => !flag.startsWith("--no-"))
 }
