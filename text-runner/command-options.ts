@@ -75,6 +75,9 @@ function texts(nodes: textRunner.ast.NodeList): string[] {
 }
 
 export function removeNegatedFlag(flags: string[]): string[] {
+  if (flags.length < 2) {
+    return flags
+  }
   return flags.filter((flag) => !flag.startsWith("--no-"))
 }
 
