@@ -44,7 +44,7 @@ branch with the main branch as its parent.
 
 ## Options
 
-<a type="command-options">
+<a type="command-options" />
 
 #### `-p`<br>`--prototype`
 
@@ -116,8 +116,6 @@ determine the repository state.
 
 Disables automatic resolution of
 [phantom merge conflicts](../stacked-changes.md#avoid-phantom-conflicts).
-
-</a>
 
 ## Configuration
 

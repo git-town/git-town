@@ -1,3 +1,4 @@
+import { deepEqual } from "node:assert/strict"
 import * as textRunner from "text-runner"
 import { extractArgs } from "./command-summary.ts"
 
@@ -5,6 +6,13 @@ export function commandOptions(action: textRunner.actions.Args) {
   const doc = action.document
   const summary = findCommandSummary(doc)
   const options = findOptions(doc)
+  const summaryJSON = JSON.stringify(summary, null, 2)
+  const optionsJSON = JSON.stringify(options, null, 2)
+  if (summaryJSON !== optionsJSON) {
+    action.log(`SUMMARY:\n${summaryJSON}`)
+    action.log(`BODY:\n${optionsJSON}`)
+    deepEqual(summaryJSON, optionsJSON)
+  }
 }
 
 function findCommandSummary(doc: textRunner.ast.NodeList): string[][] {
@@ -34,12 +42,33 @@ function findOptions(doc: textRunner.ast.NodeList): string[][] {
         continue
       }
     }
+    if (insideOptions) {
+      if (isFlagNode(node, doc)) {
+        console.log("found flag")
+        const h4Nodes = doc.nodesFor(node)
+        result.push(texts(h4Nodes))
+      }
+    }
   }
   return []
+}
+
+function isFlagNode(node: textRunner.ast.Node, doc: textRunner.ast.NodeList): boolean {
+  return node.type === "h4_open"
 }
 
 function isOptionsNode(node: textRunner.ast.Node, doc: textRunner.ast.NodeList): boolean {
   const h2Nodes = doc.nodesFor(node)
   const h2Text = h2Nodes.text()
   return h2Text === "Options"
+}
+
+function texts(nodes: textRunner.ast.NodeList): string[] {
+  let result: string[] = []
+  for (const node of nodes) {
+    if (node.type === "text") {
+      result.push(node.content)
+    }
+  }
+  return result
 }
