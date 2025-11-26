@@ -20,5 +20,9 @@ determine the repository state.
 
 ## See also
 
+<!-- keep-sorted start -->
+
 - [status show](status-show.md) displays the runstate that this command would
   delete
+
+<!-- keep-sorted end -->

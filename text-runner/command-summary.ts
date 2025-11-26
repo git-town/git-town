@@ -27,10 +27,18 @@ export function extractCommand(text: string): string {
 
 export function extractArgs(text: string): string[][] {
   const args: string[][] = []
-  // Match all optional arguments in square brackets: [-p | --prototype]
+  // Match all optional arguments in square brackets: [-p | --prototype] or [(-m | --message) <text>]
   const matches = text.matchAll(/\[([^\]]+)\]/g)
   for (const match of matches) {
-    const argText = match[1]
+    let argText = match[1]
+
+    // Check if this contains grouped arguments in parentheses
+    const groupMatch = argText.match(/^\(([^)]+)\)(.*)/)
+    if (groupMatch) {
+      // Extract the content inside parentheses and any content after (like <message>)
+      argText = groupMatch[1] + groupMatch[2]
+    }
+
     if (!argText.trim().startsWith("-")) {
       // this element doesn't contain a flag (doesn't start with -)
       continue

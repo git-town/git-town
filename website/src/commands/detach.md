@@ -60,6 +60,10 @@ determine the repository state.
 
 ## See also
 
-- [swap](swap.md) move the current branch up in the stack
+<!-- keep-sorted start -->
+
 - [set-parent](set-parent.md) move the current branch and its descendents under
   a different parent
+- [swap](swap.md) move the current branch up in the stack
+
+<!-- keep-sorted end -->

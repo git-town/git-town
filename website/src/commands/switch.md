@@ -3,7 +3,7 @@
 <a type="command-summary">
 
 ```command-summary
-git town switch [<branch-name-regex>...] [-a | --all] [-d | --display-types <type>] [-h | --help] [-m | --merge] [-o | --order <asc|desc>] [--stash] [-t | --type <name>] [-v | --verbose]
+git town switch [<branch-name-regex>...] [-a | --all] [(-d | --display-types) <type>] [-h | --help] [-m | --merge] [(-o | --order) <asc|desc>] [--stash] [(-t | --type) <name>] [-v | --verbose]
 ```
 
 </a>
@@ -111,6 +111,10 @@ determine the repository state.
 
 ## See also
 
+<!-- keep-sorted start -->
+
 - [branch](branch.md) displays the branch hierarchy
 - [walk](walk.md) executes a shell command or opens a shell in each of your
   local branches
+
+<!-- keep-sorted end -->
