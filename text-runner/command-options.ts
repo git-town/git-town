@@ -30,34 +30,38 @@ function findOptions(doc: textRunner.ast.NodeList): string[][] {
   let result: string[][] = []
   let insideOptions = false
   for (const node of doc) {
-    if (node.type === "h2_open") {
+    if (isH2(node)) {
       if (insideOptions) {
         // here we run into the next h2 heading after options --> done parsing options
         return result
       }
-      if (isOptionsNode(node, doc)) {
+      if (isOptionsHeading(node, doc)) {
         insideOptions = true
-        continue
       }
+      continue
     }
     if (insideOptions) {
-      if (isFlagNode(node, doc)) {
-        const h4Nodes = doc.nodesFor(node)
-        result.push(texts(h4Nodes))
+      if (isFlagHeading(node, doc)) {
+        const flagNodes = doc.nodesFor(node)
+        result.push(texts(flagNodes))
       }
     }
   }
   return []
 }
 
-function isFlagNode(node: textRunner.ast.Node, doc: textRunner.ast.NodeList): boolean {
+function isFlagHeading(node: textRunner.ast.Node, doc: textRunner.ast.NodeList): boolean {
   return node.type === "h4_open"
 }
 
-function isOptionsNode(node: textRunner.ast.Node, doc: textRunner.ast.NodeList): boolean {
-  const h2Nodes = doc.nodesFor(node)
-  const h2Text = h2Nodes.text()
-  return h2Text === "Options"
+function isH2(node: textRunner.ast.Node): boolean {
+  return node.type === "h2_open"
+}
+
+function isOptionsHeading(node: textRunner.ast.Node, doc: textRunner.ast.NodeList): boolean {
+  const nodes = doc.nodesFor(node)
+  const text = nodes.text()
+  return text === "Options"
 }
 
 function texts(nodes: textRunner.ast.NodeList): string[] {
@@ -67,9 +71,26 @@ function texts(nodes: textRunner.ast.NodeList): string[] {
       result.push(node.content)
     }
   }
-  return removeNegatedFlag(result)
+  return standardizeArgument(removeNegatedFlag(result))
 }
 
 function removeNegatedFlag(flags: string[]): string[] {
   return flags.filter((flag) => !flag.startsWith("--no-"))
+}
+
+function standardizeArgument(texts: string[]): string[] {
+  const result: string[] = []
+  for (const text of texts) {
+    if (text.startsWith("--")) {
+      const parts = text.split(" ")
+      if (parts.length > 1) {
+        parts[1] = "string"
+      }
+      result.push(parts.join(" "))
+    } else if (text.startsWith("-")) {
+      const parts = text.split(" ")
+      result.push(parts[0])
+    }
+  }
+  return result
 }
