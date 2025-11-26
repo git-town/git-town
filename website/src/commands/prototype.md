@@ -37,7 +37,11 @@ determine the repository state.
 
 ## See also
 
+<!-- keep-sorted start -->
+
 - [contribute](contribute.md) makes the chosen branches contribution branches
 - [feature](feature.md) makes the chosen branches feature branches
 - [observe](observe.md) makes the chosen branches observed
 - [park](park.md) makes the chosen branches parked
+
+<!-- keep-sorted end -->

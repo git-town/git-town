@@ -3,7 +3,7 @@
 <a type="command-summary">
 
 ```command-summary
-git town up [-d | --display-types <type>] [-h | --help] [-m | --merge] [-o | --order <asc|desc>] [-v | --verbose]
+git town up [(-d | --display-types) <type>] [-h | --help] [-m | --merge] [(-o | --order) <asc|desc>] [-v | --verbose]
 ```
 
 </a>
@@ -71,8 +71,12 @@ determine the repository state.
 
 ## See also
 
+<!-- keep-sorted start -->
+
 - [branch](branch.md) displays the branch hierarchy
 - [down](down.md) moves one position down in the current stack
-- [switch](switch.md) interactively switch between branches
 - [swap](swap.md) changes the stack by swapping the position of current branch
   with its parent
+- [switch](switch.md) interactively switch between branches
+
+<!-- keep-sorted end -->

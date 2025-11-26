@@ -3,7 +3,7 @@
 <a type="command-summary">
 
 ```command-summary
-git town compress [--dry-run] [-h | --help] [-m | --message <text>] [--no-verify] [-s | --stack] [-v | --verbose]
+git town compress [--dry-run] [-h | --help] [(-m | --message) <text>] [--no-verify] [-s | --stack] [-v | --verbose]
 ```
 
 </a>
@@ -142,5 +142,9 @@ determine the repository state.
 
 ## See also
 
+<!-- keep-sorted start -->
+
 - the [compress sync strategy](../preferences/sync-feature-strategy.md#compress)
   automatically compresses branches when they get synced
+
+<!-- keep-sorted end -->
