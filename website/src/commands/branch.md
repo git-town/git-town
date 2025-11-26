@@ -15,13 +15,19 @@ branches.
 
 ## Options
 
-#### `-d`<br>`--display-types`
+<a type="command-options" />
+
+#### `-d <branch-type>`<br>`--display-types <branch-type>`
 
 This flag allows customizing whether Git Town also displays the branch type in
 addition to the branch name when showing a list of branches. More info
 [here](../preferences/display-types.md#cli-flags).
 
-#### `-o`<br>`--order`
+#### `-h`<br>`--help`
+
+Display help for this command.
+
+#### `-o <asc|desc>`<br>`--order <asc|desc>`
 
 The `--order` flag allows customizing the order in which branches get displayed.
 More info [here](../preferences/order.md#cli-flag)
