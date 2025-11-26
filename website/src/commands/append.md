@@ -44,6 +44,8 @@ branch with the main branch as its parent.
 
 ## Options
 
+<a type="command-options">
+
 #### `-p`<br>`--prototype`
 
 Adding the `--prototype` aka `-p` switch creates a
@@ -114,6 +116,8 @@ determine the repository state.
 
 Disables automatic resolution of
 [phantom merge conflicts](../stacked-changes.md#avoid-phantom-conflicts).
+
+</a>
 
 ## Configuration
 
