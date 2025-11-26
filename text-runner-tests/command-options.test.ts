@@ -1,9 +1,9 @@
-import { deepEqual, equal } from "node:assert/strict"
+import { deepEqual } from "node:assert/strict"
 import { suite, test } from "node:test"
 import { removeNegatedFlag, standardizeArgument } from "../text-runner/command-options.ts"
 
 suite("commandOptions", () => {
-  test("removeNegatedFlag", () => {
+  suite("removeNegatedFlag", () => {
     const tests = [
       // remove the negated flag
       [
@@ -24,7 +24,7 @@ suite("commandOptions", () => {
     }
   })
 
-  test("standardizeArgument", () => {
+  suite("standardizeArgument", () => {
     const tests = [
       // standardize the argument
       [
