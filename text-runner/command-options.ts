@@ -15,22 +15,24 @@ function findCommandSummary(doc: textRunner.ast.NodeList): string[][] {
   const fence = fences[0]
   const fenceNodes = doc.nodesFor(fence)
   const fenceText = fenceNodes.text()
-  const summaryFlags = extractArgs(fenceText)
-  return summaryFlags
+  return extractArgs(fenceText)
 }
 
-function findOptions(doc: textRunner.ast.NodeList): string[] {
+function findOptions(doc: textRunner.ast.NodeList): string[][] {
+  let result: string[][] = []
   let insideOptions = false
   for (const node of doc) {
     if (node.type === "h2_open") {
+      if (insideOptions) {
+        console.log("done parsing options")
+        // here we run into the next h2 heading after options --> done parsing options
+        return result
+      }
       if (isOptionsNode(node, doc)) {
         console.log("found options")
         insideOptions = true
         continue
       }
-      // here we run into the next h2 heading after options
-      insideOptions = false
-      continue
     }
   }
   return []
