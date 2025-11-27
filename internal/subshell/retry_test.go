@@ -19,7 +19,6 @@ func TestBackendRunner_RetryOnIndexLock(t *testing.T) {
 	t.Run("detects index.lock error pattern correctly", func(t *testing.T) {
 		t.Parallel()
 		tmpDir := t.TempDir()
-		runner := subshell.BackendRunner{Dir: Some(tmpDir), Verbose: false, CommandsCounter: NewMutable(new(gohacks.Counter))}
 
 		testCases := []struct {
 			name        string
@@ -61,9 +60,11 @@ func TestBackendRunner_RetryOnIndexLock(t *testing.T) {
 		for _, tc := range testCases {
 			t.Run(tc.name, func(t *testing.T) {
 				t.Parallel()
+				// Create a separate runner for each subtest to avoid data races
+				runner := subshell.BackendRunner{Dir: Some(tmpDir), Verbose: false, CommandsCounter: NewMutable(new(gohacks.Counter))}
 				scriptPath := filepath.Join(tmpDir, fmt.Sprintf("test-%s.sh", tc.name))
 				scriptContent := fmt.Sprintf(`#!/bin/bash
->&2 echo "%s"
+>&2 echo %q
 exit 1
 `, tc.errorMsg)
 				must.NoError(t, os.WriteFile(scriptPath, []byte(scriptContent), 0o600))
@@ -114,9 +115,17 @@ exit 1
 		tmpDir := t.TempDir()
 		runner := subshell.BackendRunner{Dir: Some(tmpDir), Verbose: false, CommandsCounter: NewMutable(new(gohacks.Counter))}
 
-		// Create a script that always fails with lock error
+		// Create a script that counts attempts and always fails with lock error
+		counterFile := filepath.Join(tmpDir, "attempt-counter")
 		scriptPath := filepath.Join(tmpDir, "always-fails.sh")
 		scriptContent := `#!/bin/bash
+COUNTER_FILE="` + counterFile + `"
+if [ ! -f "$COUNTER_FILE" ]; then
+    echo "1" > "$COUNTER_FILE"
+else
+    COUNT=$(cat "$COUNTER_FILE")
+    echo $((COUNT + 1)) > "$COUNTER_FILE"
+fi
 >&2 echo "fatal: Unable to create '.git/index.lock': File exists."
 exit 1
 `
@@ -131,6 +140,10 @@ exit 1
 		must.Error(t, err)
 		// Should take at least 4 seconds (5 attempts with 4 delays between them)
 		must.GreaterEq(t, 4*time.Second, duration)
+		// Verify it was called exactly 5 times
+		counterBytes, err := os.ReadFile(counterFile)
+		must.NoError(t, err)
+		must.EqOp(t, "5\n", string(counterBytes))
 	})
 
 	t.Run("retries and succeeds on transient lock error", func(t *testing.T) {
@@ -169,37 +182,6 @@ fi
 		must.GreaterEq(t, 2*time.Second, duration)
 	})
 
-	t.Run("retries correct number of times", func(t *testing.T) {
-		t.Parallel()
-		tmpDir := t.TempDir()
-		runner := subshell.BackendRunner{Dir: Some(tmpDir), Verbose: false, CommandsCounter: NewMutable(new(gohacks.Counter))}
-
-		// Create a script that counts how many times it's called
-		counterFile := filepath.Join(tmpDir, "attempt-counter")
-		scriptPath := filepath.Join(tmpDir, "count-attempts.sh")
-		scriptContent := `#!/bin/bash
-COUNTER_FILE="` + counterFile + `"
-if [ ! -f "$COUNTER_FILE" ]; then
-    echo "1" > "$COUNTER_FILE"
-else
-    COUNT=$(cat "$COUNTER_FILE")
-    echo $((COUNT + 1)) > "$COUNTER_FILE"
-fi
->&2 echo "fatal: Unable to create '.git/index.lock': File exists."
-exit 1
-`
-		must.NoError(t, os.WriteFile(scriptPath, []byte(scriptContent), 0o600))
-		must.NoError(t, os.Chmod(scriptPath, 0o700))
-
-		_, err := runner.Query("bash", scriptPath)
-		must.Error(t, err)
-
-		// Read the counter to verify it was called exactly 5 times
-		counterBytes, err := os.ReadFile(counterFile)
-		must.NoError(t, err)
-		must.EqOp(t, "5\n", string(counterBytes))
-	})
-
 	t.Run("succeeds immediately when no lock error", func(t *testing.T) {
 		t.Parallel()
 		tmpDir := t.TempDir()
@@ -216,9 +198,6 @@ exit 1
 
 func TestFrontendRunner_RetryOnIndexLock(t *testing.T) {
 	t.Parallel()
-
-	// NOTE: FrontendRunner DOES properly retry because the subprocess is created
-	// INSIDE the retry loop (unlike BackendRunner which has a bug).
 
 	t.Run("does not retry on non-lock errors", func(t *testing.T) {
 		t.Parallel()
