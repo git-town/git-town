@@ -70,19 +70,25 @@ class Document {
           // here we run into the next h2 heading after options --> done parsing options
           return result
         }
-        if (isOptionsHeading(node, this.nodes)) {
+        if (this.isOptionsHeading(node)) {
           insideOptions = true
         }
         continue
       }
       if (insideOptions) {
-        if (isFlagHeading(node, this.nodes)) {
+        if (isFlagHeading(node)) {
           const flagNodes = this.nodes.nodesFor(node)
           result.push(texts(flagNodes))
         }
       }
     }
     return result
+  }
+
+  isOptionsHeading(node: textRunner.ast.Node): boolean {
+    const nodes = this.nodes.nodesFor(node)
+    const text = nodes.text()
+    return text === "Options"
   }
 }
 
@@ -193,18 +199,12 @@ export class HelpOutput {
   }
 }
 
-function isFlagHeading(node: textRunner.ast.Node, doc: textRunner.ast.NodeList): boolean {
+function isFlagHeading(node: textRunner.ast.Node): boolean {
   return node.type === "h4_open"
 }
 
 function isH2(node: textRunner.ast.Node): boolean {
   return node.type === "h2_open"
-}
-
-function isOptionsHeading(node: textRunner.ast.Node, doc: textRunner.ast.NodeList): boolean {
-  const nodes = doc.nodesFor(node)
-  const text = nodes.text()
-  return text === "Options"
 }
 
 function texts(nodes: textRunner.ast.NodeList): string[] {
