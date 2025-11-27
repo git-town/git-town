@@ -105,7 +105,7 @@ export class SummarySection {
 }
 
 /** GitTownCommand represents a specific Git Town command, like "append" or "sync" */
-export class GitTownCommand {
+class GitTownCommand {
   name: string
 
   constructor(name: string) {
@@ -115,12 +115,28 @@ export class GitTownCommand {
   /** provides the actual arguments of the command, as reported by calling the command with --help */
   async loadArgs(): Promise<string[][]> {
     const output = await this.runCommandHelp(this.name)
-    return this.parseHelpOutput(output)
+    return output.parse()
   }
 
-  parseHelpOutput(help: string): string[][] {
+  /** calls the command with "--help" on the CLI and provides the output */
+  async runCommandHelp(command: string): Promise<GitTownCommandHelpOutput> {
+    const result = await execAsync(`git town ${command} --help`)
+    return new GitTownCommandHelpOutput(result.stdout)
+  }
+}
+
+/** GitTownCommandHelpOutput is the output of a Git Town command executed with "--help" */
+export class GitTownCommandHelpOutput {
+  text: string
+
+  constructor(text: string) {
+    this.text = text
+  }
+
+  /** parses this output into a JS data structure */
+  parse(): string[][] {
     const result: string[][] = []
-    const lines = help.split("\n")
+    const lines = this.text.split("\n")
     let inFlagsSection = false
     for (const line of lines) {
       if (line.includes("Flags:")) {
@@ -149,12 +165,6 @@ export class GitTownCommand {
       }
     }
     return result
-  }
-
-  /** calls the command with "--help" on the CLI and provides the output */
-  async runCommandHelp(command: string): Promise<string> {
-    const result = await execAsync(`git town ${command} --help`)
-    return result.stdout
   }
 }
 

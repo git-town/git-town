@@ -99,7 +99,7 @@ suite("SummarySection", () => {
   })
 })
 
-suite("parseCommandHelpOutput", () => {
+suite("GitTownCommandHelpOutput.parse", () => {
   test("append", () => {
     const give = `
 Create a new feature branch as a child of the current branch.
@@ -145,8 +145,8 @@ Flags:
       --sync             sync branches (default true)
   -v, --verbose          display all Git commands run under the hood
 `
-    const gittownCommand = new command.GitTownCommand("append")
-    const have = gittownCommand.parseHelpOutput(give)
+    const output = new command.GitTownCommandHelpOutput(give)
+    const have = output.parse()
     const want = [
       ["--auto-resolve"],
       ["-b", "--beam"],
@@ -180,8 +180,8 @@ Flags:
   -o, --order string                   sort order for branch list (asc or desc)
   -v, --verbose                        display all Git commands run under the hood
 `
-    const gittownCommand = new command.GitTownCommand("branch")
-    const have = gittownCommand.parseHelpOutput(give)
+    const output = new command.GitTownCommandHelpOutput(give)
+    const have = output.parse()
     const want = [
       ["-d", "--display-types string"],
       ["-h", "--help"],
