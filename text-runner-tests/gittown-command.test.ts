@@ -46,7 +46,7 @@ suite("commandOptions", () => {
   })
 })
 
-suite("extractCommand", () => {
+suite("extractCommandName", () => {
   const tests = {
     "git town append": "append",
     "git town config get-parent": "config get-parent",
@@ -60,12 +60,12 @@ suite("extractCommand", () => {
   }
   for (const [give, want] of Object.entries(tests)) {
     test(`${give} -> ${want}`, () => {
-      equal(command.extractCommand(give), want)
+      equal(command.extractCommandName(give), want)
     })
   }
 })
 
-suite("extractArgs", () => {
+suite("extractSummaryArgs", () => {
   const tests = {
     "git town append <branch-name> [-p | --prototype] [-d | --detached] [-c | --commit] [(-m | --message) <message>] [--propose] [--dry-run] [-v | --verbose]":
       [
@@ -88,7 +88,7 @@ suite("extractArgs", () => {
   }
   for (const [give, want] of Object.entries(tests)) {
     test(`${give} -> ${want}`, () => {
-      deepEqual(command.extractArgs(give), want)
+      deepEqual(command.extractSummaryArgs(give), want)
     })
   }
 })
