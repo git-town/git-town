@@ -11,6 +11,10 @@ the diff between the current branch and its parent branch.
 
 ## Options
 
+#### `-h`<br>`--help`
+
+Display help for this command.
+
 #### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to

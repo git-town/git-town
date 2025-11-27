@@ -19,6 +19,10 @@ When called with `no`, `0`, `off`, or `false`, it disables offline mode.
 
 ## Options
 
+#### `-h`<br>`--help`
+
+Display help for this command.
+
 #### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to

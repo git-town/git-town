@@ -36,6 +36,10 @@ git town observe somebody-elses-branch
 
 ## Options
 
+#### `-h`<br>`--help`
+
+Display help for this command.
+
 #### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to

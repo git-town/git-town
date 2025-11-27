@@ -47,10 +47,25 @@ branch with its upstream counterpart. You can control this behavior with the
 
 ## Options
 
-#### `-p`<br>`--prototype`
+#### `--auto-resolve`
 
-Adding the `--prototype` aka `-p` switch creates a
-[prototype branch](../branch-types.md#prototype-branches).
+Disables automatic resolution of
+[phantom merge conflicts](../stacked-changes.md#avoid-phantom-conflicts).
+
+#### `-b`<br>`--beam`
+
+Moves ("beams") one or more commits from the current branch to the new feature
+branch that gets created. Lets you select the commits to beam via a visual
+dialog. Beaming suppresses all branch updates. Any merge conflicts encountered
+while beaming arise from moving the beamed commits.
+
+#### `-c`<br>`--commit`
+
+When given, commits the currently staged changes into the branch to create and
+remains on the current branch. This is intended to quickly commit changes
+unrelated to the current branch into another branch and keep hacking on the
+current branch. Committing suppresses all branch updates to allow you to get
+your open changes committed.
 
 #### `-d`<br>`--detached`<br>`--no-detached`
 
@@ -63,22 +78,16 @@ In detached mode, feature branches don't receive updates from the perennial
 branch at the root of your branch hierarchy. This can be useful in busy
 monorepos.
 
-#### `-c`<br>`--commit`
+#### `--dry-run`
 
-When given, commits the currently staged changes into the branch to create and
-remains on the current branch. This is intended to quickly commit changes
-unrelated to the current branch into another branch and keep hacking on the
-current branch. Committing suppresses all branch updates to allow you to get
-your open changes committed.
+Use the `--dry-run` flag to test-drive this command. It prints the Git commands
+that would be run but doesn't execute them.
 
-#### `-b`<br>`--beam`
+#### `-h`<br>`--help`
 
-Moves ("beams") one or more commits from the current branch to the new feature
-branch that gets created. Lets you select the commits to beam via a visual
-dialog. Beaming suppresses all branch updates. Any merge conflicts encountered
-while beaming arise from moving the beamed commits.
+Display help for this command.
 
-#### `-m`<br>`--message`
+#### `-m <text>`<br>`--message <text>`
 
 Commit message to use together with `--commit`. Implies `--commit`.
 
@@ -89,6 +98,11 @@ Propose the created branch.
 To always propose new branches, set the
 [share new branches](../preferences/share-new-branches.md) setting to `propose`.
 
+#### `-p`<br>`--prototype`
+
+Adding the `--prototype` aka `-p` switch creates a
+[prototype branch](../branch-types.md#prototype-branches).
+
 #### `--stash`<br>`--no-stash`
 
 Enables or disables [stashing](../preferences/stash.md) for this invocation.
@@ -98,20 +112,10 @@ Enables or disables [stashing](../preferences/stash.md) for this invocation.
 Enables or disables [automatic syncing](../preferences/auto-sync.md) before
 creating the new branch.
 
-#### `--dry-run`
-
-Use the `--dry-run` flag to test-drive this command. It prints the Git commands
-that would be run but doesn't execute them.
-
 #### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.
-
-#### `--auto-resolve`
-
-Disables automatic resolution of
-[phantom merge conflicts](../stacked-changes.md#avoid-phantom-conflicts).
 
 ## Configuration
 
