@@ -68,7 +68,7 @@ function findOptions(doc: textRunner.ast.NodeList): string[][] {
       }
     }
   }
-  return []
+  return result
 }
 
 async function commandArgs(command: string): Promise<string[][]> {
