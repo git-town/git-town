@@ -39,8 +39,8 @@ export async function gittownCommand(action: textRunner.actions.Args) {
 }
 
 /** provides the name of the Git Town command described by the given summary text */
-export function extractCommandName(text: string): string {
-  const match = text.match(/^git town ([^<[(]+?)(?:\s+-|\s+<|\s+\[|\s+\(|$)/)
+export function extractCommandName(summary: string): string {
+  const match = summary.match(/^git town ([^<[(]+?)(?:\s+-|\s+<|\s+\[|\s+\(|$)/)
   return match?.[1]?.trim() || ""
 }
 
