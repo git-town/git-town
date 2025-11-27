@@ -13,7 +13,7 @@ export async function gittownCommand(action: textRunner.actions.Args) {
   const commandName = extractCommandName(summaryText)
 
   // get the actual arguments of this Git Town command
-  const actualArgs = await commandArgs(commandName)
+  const actualArgs = await loadCommandArgs(commandName)
   const actualJSON = JSON.stringify(actualArgs, null, 2)
 
   // get the arguments described in the command summary
@@ -28,7 +28,7 @@ export async function gittownCommand(action: textRunner.actions.Args) {
   }
 
   // get the arguments described in the "## Options" section
-  const options = optionsInBody(doc)
+  const options = findArgsInBody(doc)
   const optionsJSON = JSON.stringify(options, null, 2)
 
   // verify that the options section contains the correct arguments
@@ -58,7 +58,7 @@ function findCommandSummary(doc: textRunner.ast.NodeList): string {
 }
 
 /** provides the options documented in the page body, under the "## Options" tag */
-function optionsInBody(doc: textRunner.ast.NodeList): string[][] {
+function findArgsInBody(doc: textRunner.ast.NodeList): string[][] {
   let result: string[][] = []
   let insideOptions = false
   for (const node of doc) {
@@ -83,13 +83,13 @@ function optionsInBody(doc: textRunner.ast.NodeList): string[][] {
 }
 
 /** provides the actual arguments of the command, as reported by calling the command with --help */
-async function commandArgs(command: string): Promise<string[][]> {
-  const output = await commandHelp(command)
+async function loadCommandArgs(command: string): Promise<string[][]> {
+  const output = await runCommandHelp(command)
   return parseCommandHelpOutput(output)
 }
 
 /** calls the command with "--help" on the CLI and provides the output */
-async function commandHelp(command: string): Promise<string> {
+async function runCommandHelp(command: string): Promise<string> {
   const result = await execAsync(`git town ${command} --help`)
   return result.stdout
 }
