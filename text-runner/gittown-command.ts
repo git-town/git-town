@@ -22,18 +22,18 @@ export async function gittownCommand(action: textRunner.actions.Args) {
   // ensure the summary documents the arguments correct
   if (summaryJSON !== actualJSON) {
     action.log(`ACTUAL:\n${actualJSON}`)
-    action.log(`SUMMARY:\n${summaryJSON}`)
+    action.log(`SUMMARY SECTION:\n${summaryJSON}`)
     deepEqual(summaryArgs, actualArgs)
   }
 
   // get the arguments described by the "## Options" section
-  const options = findArgsInBody(action.document)
-  const optionsJSON = JSON.stringify(options, null, 2)
+  const optionsArgs = findArgsInOptionsSection(action.document)
+  const optionsJSON = JSON.stringify(optionsArgs, null, 2)
 
   // ensure the options section documents the arguments correct
   if (summaryJSON !== optionsJSON) {
     action.log(`ACTUAL:\n${actualJSON}`)
-    action.log(`BODY:\n${optionsJSON}`)
+    action.log(`OPTIONS SECTION:\n${optionsJSON}`)
     deepEqual(optionsJSON, actualJSON)
   }
 }
@@ -57,7 +57,7 @@ function findCommandSummary(doc: textRunner.ast.NodeList): string {
 }
 
 /** provides the options documented in the page body, under the "## Options" tag */
-function findArgsInBody(doc: textRunner.ast.NodeList): string[][] {
+function findArgsInOptionsSection(doc: textRunner.ast.NodeList): string[][] {
   let result: string[][] = []
   let insideOptions = false
   for (const node of doc) {
