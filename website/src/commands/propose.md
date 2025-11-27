@@ -3,7 +3,7 @@
 <a type="command-summary">
 
 ```command-summary
-git town propose [--auto-resolve] [-b | --body <text>] [-f | --body-file <path>] [--dry-run] [-h | --help] [-s | --stack] [-t | --title <text>] [-v | --verbose]
+git town propose [--auto-resolve] [(-b | --body) <text>] [(-f | --body-file) <path>] [--dry-run] [-h | --help] [-s | --stack] [(-t | --title) <text>] [-v | --verbose]
 ```
 
 </a>
@@ -74,5 +74,9 @@ When using SSH identities, this command uses the hostname in the
 
 ## See also
 
+<!-- keep-sorted start -->
+
 - [repo](repo.md) opens the website for the repository in the browser
 - [ship](ship.md) ships the current branch
+
+<!-- keep-sorted end -->

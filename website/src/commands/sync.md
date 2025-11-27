@@ -139,6 +139,8 @@ tags with the [development remote](../preferences/dev-remote.md).
 
 When you run into merge conflicts:
 
+<!-- keep-sorted start -->
+
 - [continue](continue.md) allows you to resume the suspended Git Town command
   after you have resolved the merge conflicts by re-running the failed Git
   command
@@ -147,3 +149,5 @@ When you run into merge conflicts:
 - [undo](undo.md) aborts the currently suspended Git Town command and undoes all
   the changes it did, bringing your Git repository back to the state it was
   before you ran the currently suspended Git Town command
+
+<!-- keep-sorted end -->

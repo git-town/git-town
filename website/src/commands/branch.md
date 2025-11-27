@@ -3,7 +3,7 @@
 <a type="command-summary">
 
 ```command-summary
-git town branch [-d | --display-types <branch-types>] [-h | --help] [-o | --order <asc|desc>] [-v | --verbose]
+git town branch [(-d | --display-types) <branch-types>] [-h | --help] [(-o | --order) <asc|desc>] [-v | --verbose]
 ```
 
 </a>
@@ -33,7 +33,11 @@ determine the repository state.
 
 ## See also
 
+<!-- keep-sorted start -->
+
 - [switch](switch.md) displays the branch hierarchy and lets you switch to a new
   branch in it
 - [walk](walk.md) executes a shell command or opens a shell in each of your
   local branches
+
+<!-- keep-sorted end -->

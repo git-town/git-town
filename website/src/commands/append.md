@@ -3,7 +3,7 @@
 <a type="command-summary">
 
 ```command-summary
-git town append <branch-name> [--auto-resolve] [-b | --beam] [-c | --commit] [-d | --detached] [--dry-run] [-h | --help] [-m | --message <message>] [--propose] [-p | --prototype] [--push] [--stash] [--sync] [-v | --verbose]
+git town append <branch-name> [--auto-resolve] [-b | --beam] [-c | --commit] [-d | --detached] [--dry-run] [-h | --help] [(-m | --message) <message>] [--propose] [-p | --prototype] [--push] [--stash] [--sync] [-v | --verbose]
 ```
 
 </a>
@@ -129,6 +129,10 @@ creates a branch with the given [type](../branch-types.md).
 
 ## See also
 
+<!-- keep-sorted start -->
+
 - [hack](hack.md) creates the new branch as a child of the
   [main branch](../preferences/main-branch.md)
 - [prepend](prepend.md) creates the new branch as a parent of the current branch
+
+<!-- keep-sorted end -->
