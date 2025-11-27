@@ -52,16 +52,16 @@ func (self BackendRunner) execute(env []string, executable string, args ...strin
 	if self.Verbose {
 		printHeader(env, executable, args...)
 	}
-	subProcess := exec.CommandContext(context.Background(), executable, args...) // #nosec
-	subProcess.Env = append(subProcess.Environ(), env...)
-	if dir, has := self.Dir.Get(); has {
-		subProcess.Dir = dir
-	}
 	concurrentGitRetriesLeft := concurrentGitRetries
 	var outputText string
 	var outputBytes []byte
 	var err error
 	for {
+		subProcess := exec.CommandContext(context.Background(), executable, args...) // #nosec
+		subProcess.Env = append(subProcess.Environ(), env...)
+		if dir, has := self.Dir.Get(); has {
+			subProcess.Dir = dir
+		}
 		outputBytes, err = subProcess.CombinedOutput()
 		outputText = string(outputBytes)
 		if err == nil {
