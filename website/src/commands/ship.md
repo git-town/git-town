@@ -3,7 +3,7 @@
 <a type="command-summary">
 
 ```command-summary
-git town ship [<branch-name>] [--dry-run] [-h | --help] [-m | --message <text>] [-f | --message-file <path>] [-s | --strategy <name>] [-p | --to-parent] [-v | --verbose]
+git town ship [<branch-name>] [--dry-run] [-h | --help] [(-m | --message) <text>] [(-f | --message-file) <path>] [(-s | --strategy) <name>] [-p | --to-parent] [-v | --verbose]
 ```
 
 </a>
@@ -85,6 +85,10 @@ you can
 
 ## See also
 
+<!-- keep-sorted start -->
+
 - [propose](propose.md) creates a pull request for the current branch
 - [repo](repo.md) opens the website of your forge in the browser, so that you
   can ship branches there
+
+<!-- keep-sorted end -->

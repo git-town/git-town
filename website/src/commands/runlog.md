@@ -24,5 +24,9 @@ determine the repository state.
 
 ## See also
 
+<!-- keep-sorted start -->
+
 - [status show](status-show.md) displays the runstate, i.e. detailed information
   for the current or last Git Town command
+
+<!-- keep-sorted end -->

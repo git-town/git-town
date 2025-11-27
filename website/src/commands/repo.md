@@ -43,5 +43,9 @@ setting to tell Git Town about the hostname when using ssh identities.
 
 ## See also
 
+<!-- keep-sorted start -->
+
 - [propose](propose.md) opens the website displaying the pull request for the
   current branch
+
+<!-- keep-sorted end -->
