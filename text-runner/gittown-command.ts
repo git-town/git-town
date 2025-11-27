@@ -19,7 +19,7 @@ export async function gittownCommand(action: textRunner.actions.Args) {
   const summaryArgs = extractSummaryArgs(summaryText)
   const summaryJSON = JSON.stringify(summaryArgs, null, 2)
 
-  // ensure the summary documents the arguments correctly
+  // ensure the summary documents the arguments correct
   if (summaryJSON !== actualJSON) {
     action.log(`ACTUAL:\n${actualJSON}`)
     action.log(`SUMMARY:\n${summaryJSON}`)
@@ -30,7 +30,7 @@ export async function gittownCommand(action: textRunner.actions.Args) {
   const options = findArgsInBody(action.document)
   const optionsJSON = JSON.stringify(options, null, 2)
 
-  // ensure the options section documents the arguments correctly
+  // ensure the options section documents the arguments correct
   if (summaryJSON !== optionsJSON) {
     action.log(`ACTUAL:\n${actualJSON}`)
     action.log(`BODY:\n${optionsJSON}`)
