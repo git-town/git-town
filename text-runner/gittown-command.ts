@@ -8,22 +8,30 @@ const execAsync = promisify(exec)
 export async function gittownCommand(action: textRunner.actions.Args) {
   const doc = action.document
 
-  // verify the command summary
-  const summary = findCommandSummary(doc)
-  const command = extractCommand(summary)
-  const actualArgs = await commandArgs(command)
-  const documentedArgs = extractArgs(summary)
-  const summaryJSON = JSON.stringify(documentedArgs, null, 2)
+  // get the command that this page describes
+  const summaryText = findCommandSummary(doc)
+  const commandName = extractCommandName(summaryText)
+
+  // get the actual arguments of this Git Town command
+  const actualArgs = await commandArgs(commandName)
   const actualJSON = JSON.stringify(actualArgs, null, 2)
+
+  // get the arguments described in the command summary
+  const summaryArgs = extractSummaryArgs(summaryText)
+  const summaryJSON = JSON.stringify(summaryArgs, null, 2)
+
+  // ensure the summary contains the correct arguments
   if (summaryJSON !== actualJSON) {
     action.log(`ACTUAL:\n${actualJSON}`)
     action.log(`SUMMARY:\n${summaryJSON}`)
-    deepEqual(documentedArgs, actualArgs)
+    deepEqual(summaryArgs, actualArgs)
   }
 
-  // verify the command options
-  const options = findOptions(doc)
+  // get the arguments described in the "## Options" section
+  const options = optionsInBody(doc)
   const optionsJSON = JSON.stringify(options, null, 2)
+
+  // verify that the options section contains the correct arguments
   if (summaryJSON !== optionsJSON) {
     action.log(`ACTUAL:\n${actualJSON}`)
     action.log(`BODY:\n${optionsJSON}`)
@@ -31,11 +39,13 @@ export async function gittownCommand(action: textRunner.actions.Args) {
   }
 }
 
-export function extractCommand(text: string): string {
+/** provides the name of the Git Town command described by the given summary text */
+export function extractCommandName(text: string): string {
   const match = text.match(/^git town ([^<[(]+?)(?:\s+-|\s+<|\s+\[|\s+\(|$)/)
   return match?.[1]?.trim() ?? ""
 }
 
+/** provides the full text of the command summary section */
 function findCommandSummary(doc: textRunner.ast.NodeList): string {
   const fences = doc.nodesOfTypes("fence")
   if (fences.length === 0) {
@@ -47,7 +57,8 @@ function findCommandSummary(doc: textRunner.ast.NodeList): string {
   return fenceText
 }
 
-function findOptions(doc: textRunner.ast.NodeList): string[][] {
+/** provides the options documented in the page body, under the "## Options" tag */
+function optionsInBody(doc: textRunner.ast.NodeList): string[][] {
   let result: string[][] = []
   let insideOptions = false
   for (const node of doc) {
@@ -71,17 +82,19 @@ function findOptions(doc: textRunner.ast.NodeList): string[][] {
   return result
 }
 
+/** provides the actual arguments of the command, as reported by calling the command with --help */
 async function commandArgs(command: string): Promise<string[][]> {
   const output = await commandHelp(command)
   return parseCommandHelpOutput(output)
 }
 
+/** calls the command with "--help" on the CLI and provides the output */
 async function commandHelp(command: string): Promise<string> {
   const result = await execAsync(`git town ${command} --help`)
   return result.stdout
 }
 
-export function extractArgs(text: string): string[][] {
+export function extractSummaryArgs(text: string): string[][] {
   const args: string[][] = []
   // Match all optional arguments in square brackets: [-p | --prototype] or [(-m | --message) <text>]
   const matches = text.matchAll(/\[([^\]]+)\]/g)
