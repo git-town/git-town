@@ -147,7 +147,7 @@ class GitTownCommand {
   /** provides the actual arguments that this Git Town command accepts, determined by calling it with --help and parsing the output */
   async actualArgs(): Promise<string[][]> {
     const output = await this.runCommandHelp(this.name)
-    return output.parse()
+    return output.flags()
   }
 
   /** calls the command with "--help" on the CLI and returns the output */
@@ -165,8 +165,8 @@ export class HelpOutput {
     this.text = text
   }
 
-  /** parses this output into a JS data structure */
-  parse(): string[][] {
+  /** provides the content of the "Flags:" section of this help output as a list of flag variations */
+  flags(): string[][] {
     const result: string[][] = []
     const lines = this.text.split("\n")
     let inFlagsSection = false
