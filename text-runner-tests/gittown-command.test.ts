@@ -46,51 +46,57 @@ suite("commandOptions", () => {
   })
 })
 
-suite("extractCommandName", () => {
-  const tests = {
-    "git town append": "append",
-    "git town config get-parent": "config get-parent",
-    "git town sync": "sync",
-    "git town ship": "ship",
-    "git town append <branch-name> [-p | --prototype]": "append",
-    "git town sync --all": "sync",
-    "git town ship --all": "ship",
-    "git town completions (bash|fish|powershell|zsh) [--no-descriptions] [-h | --help]": "completions",
-    "git town config get-parent [<branch-name>] [-v | --verbose] [-h | --help]": "config get-parent",
-  }
-  for (const [give, want] of Object.entries(tests)) {
-    test(`${give} -> ${want}`, () => {
-      equal(command.extractCommandName(give), want)
-    })
-  }
-})
-
-suite("extractSummaryArgs", () => {
-  const tests = {
-    "git town append <branch-name> [-p | --prototype] [-d | --detached] [-c | --commit] [(-m | --message) <message>] [--propose] [--dry-run] [-v | --verbose]":
-      [
-        ["-p", "--prototype"],
-        ["-d", "--detached"],
-        ["-c", "--commit"],
-        ["-m", "--message string"],
-        ["--propose"],
-        ["--dry-run"],
-        ["-v", "--verbose"],
+suite("SummarySection", () => {
+  suite("args", () => {
+    const tests = {
+      "git town append <branch-name> [-p | --prototype] [-d | --detached] [-c | --commit] [(-m | --message) <message>] [--propose] [--dry-run] [-v | --verbose]":
+        [
+          ["-p", "--prototype"],
+          ["-d", "--detached"],
+          ["-c", "--commit"],
+          ["-m", "--message string"],
+          ["--propose"],
+          ["--dry-run"],
+          ["-v", "--verbose"],
+        ],
+      "git town completions (bash|fish|powershell|zsh) [--no-descriptions] [-h | --help]": [
+        ["--no-descriptions"],
+        ["-h", "--help"],
       ],
-    "git town completions (bash|fish|powershell|zsh) [--no-descriptions] [-h | --help]": [
-      ["--no-descriptions"],
-      ["-h", "--help"],
-    ],
-    "git town config get-parent [<branch-name>] [-v | --verbose] [-h | --help]": [
-      ["-v", "--verbose"],
-      ["-h", "--help"],
-    ],
-  }
-  for (const [give, want] of Object.entries(tests)) {
-    test(`${give} -> ${want}`, () => {
-      deepEqual(command.extractSummaryArgs(give), want)
-    })
-  }
+      "git town config get-parent [<branch-name>] [-v | --verbose] [-h | --help]": [
+        ["-v", "--verbose"],
+        ["-h", "--help"],
+      ],
+    }
+    for (const [give, want] of Object.entries(tests)) {
+      test(`${give} -> ${want}`, () => {
+        const summarySection = new command.SummarySection(give)
+        const have = summarySection.args()
+        deepEqual(have, want)
+      })
+    }
+  })
+
+  suite("command", () => {
+    const tests = {
+      "git town append": "append",
+      "git town config get-parent": "config get-parent",
+      "git town sync": "sync",
+      "git town ship": "ship",
+      "git town append <branch-name> [-p | --prototype]": "append",
+      "git town sync --all": "sync",
+      "git town ship --all": "ship",
+      "git town completions (bash|fish|powershell|zsh) [--no-descriptions] [-h | --help]": "completions",
+      "git town config get-parent [<branch-name>] [-v | --verbose] [-h | --help]": "config get-parent",
+    }
+    for (const [give, want] of Object.entries(tests)) {
+      test(`${give} -> ${want}`, () => {
+        const summarySection = new command.SummarySection(give)
+        const have = summarySection.command().name
+        equal(have, want)
+      })
+    }
+  })
 })
 
 suite("parseCommandHelpOutput", () => {
@@ -139,7 +145,8 @@ Flags:
       --sync             sync branches (default true)
   -v, --verbose          display all Git commands run under the hood
 `
-    const have = command.parseCommandHelpOutput(give)
+    const gittownCommand = new command.GitTownCommand("append")
+    const have = gittownCommand.parseHelpOutput(give)
     const want = [
       ["--auto-resolve"],
       ["-b", "--beam"],
@@ -173,7 +180,8 @@ Flags:
   -o, --order string                   sort order for branch list (asc or desc)
   -v, --verbose                        display all Git commands run under the hood
 `
-    const have = command.parseCommandHelpOutput(give)
+    const gittownCommand = new command.GitTownCommand("branch")
+    const have = gittownCommand.parseHelpOutput(give)
     const want = [
       ["-d", "--display-types string"],
       ["-h", "--help"],

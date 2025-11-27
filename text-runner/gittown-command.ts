@@ -7,16 +7,18 @@ const execAsync = promisify(exec)
 
 /** verifies a MD page that describes a Git Town command */
 export async function gittownCommand(action: textRunner.actions.Args) {
+  const doc = new Document(action.document)
+
   // determine the Git Town command that this page describes
-  const summaryText = findCommandSummary(action.document)
-  const commandName = extractCommandName(summaryText)
+  const summarySection = doc.summarySection()
+  const command = summarySection.command()
 
   // get the actual arguments of this Git Town command
-  const actualArgs = await loadCommandArgs(commandName)
+  const actualArgs = await command.loadArgs()
   const actualJSON = JSON.stringify(actualArgs, null, 2)
 
   // get the arguments described by the command summary
-  const summaryArgs = extractSummaryArgs(summaryText)
+  const summaryArgs = summarySection.args()
   const summaryJSON = JSON.stringify(summaryArgs, null, 2)
 
   // ensure the summary documents the arguments correct
@@ -38,22 +40,122 @@ export async function gittownCommand(action: textRunner.actions.Args) {
   }
 }
 
-/** provides the name of the Git Town command described by the given summary text */
-export function extractCommandName(summary: string): string {
-  const match = summary.match(/^git town ([^<[(]+?)(?:\s+-|\s+<|\s+\[|\s+\(|$)/)
-  return match?.[1]?.trim() || ""
+/** Document represents the AST for the entire document of a page describing a Git Town command */
+class Document {
+  nodes: textRunner.ast.NodeList
+
+  constructor(nodes: textRunner.ast.NodeList) {
+    this.nodes = nodes
+  }
+
+  /** provides the text of the command summary section */
+  summarySection(): SummarySection {
+    const fences = this.nodes.nodesOfTypes("fence")
+    if (fences.length === 0) {
+      throw new Error("no fenced blocks found")
+    }
+    // the first fenced block contains the summary
+    const summaryBlock = fences[0]
+    const summaryNodes = this.nodes.nodesFor(summaryBlock)
+    return new SummarySection(summaryNodes.text())
+  }
 }
 
-/** provides the full text of the command summary section */
-function findCommandSummary(doc: textRunner.ast.NodeList): string {
-  const fences = doc.nodesOfTypes("fence")
-  if (fences.length === 0) {
-    throw new Error("no fenced blocks found")
+/** SummarySection is the text in the ```command-summary``` block at the beginning of a page describing a Git Town command */
+export class SummarySection {
+  text: string
+
+  constructor(text: string) {
+    this.text = text
   }
-  // the first fenced block contains the summary
-  const summaryBlock = fences[0]
-  const summaryNodes = doc.nodesFor(summaryBlock)
-  return summaryNodes.text()
+
+  /** provides the arguments described in this summary section */
+  args(): string[][] {
+    const args: string[][] = []
+    // Match all optional arguments in square brackets: [-p | --prototype] or [(-m | --message) <text>]
+    const matches = this.text.matchAll(/\[([^\]]+)\]/g)
+    for (const match of matches) {
+      let argText = match[1]
+
+      // Check if this contains grouped arguments in parentheses
+      const groupMatch = argText.match(/^\(([^)]+)\)(.*)/)
+      if (groupMatch) {
+        // Extract the content inside parentheses and any content after (like <message>)
+        argText = groupMatch[1] + groupMatch[2]
+      }
+
+      if (!argText.trim().startsWith("-")) {
+        // this element doesn't contain a flag (doesn't start with -)
+        continue
+      }
+      const normalizedArgText = argText.replace(/<.+?>/g, "string")
+      // Split by | to get the different variations of the flag
+      const variations = normalizedArgText.split("|").map((v) => v.trim())
+      args.push(variations)
+    }
+    return args
+  }
+
+  /** provides the name of the Git Town command described by the given summary text */
+  command(): GitTownCommand {
+    const match = this.text.match(/^git town ([^<[(]+?)(?:\s+-|\s+<|\s+\[|\s+\(|$)/)
+    const commandName = match?.[1]?.trim() || ""
+    return new GitTownCommand(commandName)
+  }
+}
+
+/** GitTownCommand represents a specific Git Town command, like "append" or "sync" */
+export class GitTownCommand {
+  name: string
+
+  constructor(name: string) {
+    this.name = name
+  }
+
+  /** provides the actual arguments of the command, as reported by calling the command with --help */
+  async loadArgs(): Promise<string[][]> {
+    const output = await this.runCommandHelp(this.name)
+    return this.parseHelpOutput(output)
+  }
+
+  parseHelpOutput(help: string): string[][] {
+    const result: string[][] = []
+    const lines = help.split("\n")
+    let inFlagsSection = false
+    for (const line of lines) {
+      if (line.includes("Flags:")) {
+        inFlagsSection = true
+        continue
+      }
+      if (!inFlagsSection) {
+        continue
+      }
+      // Stop if we hit an empty line (end of flags section)
+      if (line.trim() === "") {
+        break
+      }
+      // Parse flag line - format: "  -b, --beam             description"
+      // The description starts after 2 or more spaces
+      const match = line.match(/^\s+(.+?)\s{2,}/)
+      if (match) {
+        const flagsPart = match[1].trim()
+        const flags = flagsPart.split(/,\s+/).map((flag) => {
+          // Remove default value notation like [="all"]
+          return flag.replace(/\[="[^"]*"\]/, "")
+        })
+        if (flags.length > 0) {
+          result.push(flags)
+        }
+      }
+    }
+    return result
+  }
+
+  /** calls the command with "--help" on the CLI and provides the output */
+  async runCommandHelp(command: string): Promise<string> {
+    const result = await execAsync(`git town ${command} --help`)
+    return result.stdout
+  }
 }
 
 /** provides the options documented in the page body, under the "## Options" tag */
@@ -79,44 +181,6 @@ function findArgsInOptionsSection(doc: textRunner.ast.NodeList): string[][] {
     }
   }
   return result
-}
-
-/** provides the actual arguments of the command, as reported by calling the command with --help */
-async function loadCommandArgs(command: string): Promise<string[][]> {
-  const output = await runCommandHelp(command)
-  return parseCommandHelpOutput(output)
-}
-
-/** calls the command with "--help" on the CLI and provides the output */
-async function runCommandHelp(command: string): Promise<string> {
-  const result = await execAsync(`git town ${command} --help`)
-  return result.stdout
-}
-
-export function extractSummaryArgs(text: string): string[][] {
-  const args: string[][] = []
-  // Match all optional arguments in square brackets: [-p | --prototype] or [(-m | --message) <text>]
-  const matches = text.matchAll(/\[([^\]]+)\]/g)
-  for (const match of matches) {
-    let argText = match[1]
-
-    // Check if this contains grouped arguments in parentheses
-    const groupMatch = argText.match(/^\(([^)]+)\)(.*)/)
-    if (groupMatch) {
-      // Extract the content inside parentheses and any content after (like <message>)
-      argText = groupMatch[1] + groupMatch[2]
-    }
-
-    if (!argText.trim().startsWith("-")) {
-      // this element doesn't contain a flag (doesn't start with -)
-      continue
-    }
-    const normalizedArgText = argText.replace(/<.+?>/g, "string")
-    // Split by | to get the different variations of the flag
-    const variations = normalizedArgText.split("|").map((v) => v.trim())
-    args.push(variations)
-  }
-  return args
 }
 
 function isFlagHeading(node: textRunner.ast.Node, doc: textRunner.ast.NodeList): boolean {
@@ -162,39 +226,6 @@ export function standardizeArgument(texts: string[]): string[] {
     } else if (text.startsWith("-")) {
       const parts = text.split(" ")
       result.push(parts[0])
-    }
-  }
-  return result
-}
-
-export function parseCommandHelpOutput(help: string): string[][] {
-  const result: string[][] = []
-  const lines = help.split("\n")
-  let inFlagsSection = false
-  for (const line of lines) {
-    if (line.includes("Flags:")) {
-      inFlagsSection = true
-      continue
-    }
-    if (!inFlagsSection) {
-      continue
-    }
-    // Stop if we hit an empty line (end of flags section)
-    if (line.trim() === "") {
-      break
-    }
-    // Parse flag line - format: "  -b, --beam             description"
-    // The description starts after 2 or more spaces
-    const match = line.match(/^\s+(.+?)\s{2,}/)
-    if (match) {
-      const flagsPart = match[1].trim()
-      const flags = flagsPart.split(/,\s+/).map((flag) => {
-        // Remove default value notation like [="all"]
-        return flag.replace(/\[="[^"]*"\]/, "")
-      })
-      if (flags.length > 0) {
-        result.push(flags)
-      }
     }
   }
   return result
