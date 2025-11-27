@@ -58,7 +58,7 @@ suite("SummarySection", () => {
       "git town config get-parent [<branch-name>] [-v | --verbose] [-h | --help]": "config get-parent",
     }
     for (const [give, want] of Object.entries(tests)) {
-      test(`${give} -> ${want}`, () => {
+      test(give, () => {
         const summarySection = new command.SummarySection(give)
         const have = summarySection.command().name
         equal(have, want)
