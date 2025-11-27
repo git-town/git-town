@@ -1,6 +1,6 @@
 # git town config get-parent
 
-<a type="gittown-command">
+<a type="git-town-command" />
 
 ```command-summary
 git town config get-parent [<branch-name>] [-h | --help] [-v | --verbose]

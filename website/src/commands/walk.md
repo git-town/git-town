@@ -1,6 +1,6 @@
 # git town walk
 
-<a type="gittown-command" />
+<a type="git-town-command" />
 
 ```command-summary
 git town walk [<command and arguments>] [-a | --all] [--dry-run] [-h | --help] [-s | --stack] [-v | --verbose]

@@ -1,6 +1,6 @@
 # git town config remove
 
-<a type="gittown-command" />
+<a type="git-town-command" />
 
 ```command-summary
 git town config remove [-h | --help] [-v | --verbose]

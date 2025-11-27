@@ -1,6 +1,6 @@
 # git town observe
 
-<a type="gittown-command" />
+<a type="git-town-command" />
 
 ```command-summary
 git town observe [<branch-name>...] [-h | --help] [-v | --verbose]

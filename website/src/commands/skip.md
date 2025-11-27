@@ -1,6 +1,6 @@
 # git town skip
 
-<a type="gittown-command" />
+<a type="git-town-command" />
 
 ```command-summary
 git town skip [-h | --help] [-v | --verbose]

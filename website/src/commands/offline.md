@@ -1,6 +1,6 @@
 # git town offline
 
-<a type="gittown-command" />
+<a type="git-town-command" />
 
 ```command-summary
 git town offline [<status>] [-h | --help] [-v | --verbose]

@@ -1,6 +1,6 @@
 # git town rename
 
-<a type="gittown-command" />
+<a type="git-town-command" />
 
 ```command-summary
 git town rename [<old-name>] <new-name> [--dry-run] [-f | --force] [-h | --help] [-v | --verbose]

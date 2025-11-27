@@ -6,7 +6,7 @@ import * as textRunner from "text-runner"
 const execAsync = promisify(exec)
 
 /** verifies a MD page that describes a Git Town command */
-export async function gittownCommand(action: textRunner.actions.Args) {
+export async function gitTownCommand(action: textRunner.actions.Args) {
   const doc = new Document(action.document)
 
   // determine the Git Town command that this page describes

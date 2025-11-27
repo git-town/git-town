@@ -1,6 +1,6 @@
 # git town status reset
 
-<a type="gittown-command" />
+<a type="git-town-command" />
 
 ```command-summary
 git town status reset [-h | --help] [-v | --verbose]

@@ -1,6 +1,6 @@
 # git town set-parent
 
-<a type="gittown-command" />
+<a type="git-town-command" />
 
 ```command-summary
 git town set-parent [<branch>] [--auto-resolve] [-h | --help] [--none] [-v | --verbose]

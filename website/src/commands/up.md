@@ -1,6 +1,6 @@
 # git town up
 
-<a type="gittown-command" />
+<a type="git-town-command" />
 
 ```command-summary
 git town up [(-d | --display-types) <type>] [-h | --help] [-m | --merge] [(-o | --order) <asc|desc>] [-v | --verbose]

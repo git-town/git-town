@@ -1,6 +1,6 @@
 # git town status show
 
-<a type="gittown-command" />
+<a type="git-town-command" />
 
 ```command-summary
 git town status show [-h | --help] [-v | --verbose]

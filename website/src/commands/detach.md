@@ -1,6 +1,6 @@
 # git town detach
 
-<a type="gittown-command" />
+<a type="git-town-command" />
 
 ```command-summary
 git town detach [--dry-run] [-h | --help] [-v | --verbose]

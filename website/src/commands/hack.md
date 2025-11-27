@@ -1,6 +1,6 @@
 # git town hack
 
-<a type="gittown-command" />
+<a type="git-town-command" />
 
 ```command-summary
 git town hack [<branch-name>...] [--auto-resolve] [-b | --beam] [-c | --commit] [-d | --detached] [--dry-run] [-h | --help] [(-m | --message) <message>] [--propose] [-p | --prototype] [--stash] [--sync] [-v | --verbose]

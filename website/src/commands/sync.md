@@ -1,6 +1,6 @@
 # git town sync
 
-<a type="gittown-command" />
+<a type="git-town-command" />
 
 ```command-summary
 git town sync [-a | --all] [--auto-resolve] [-d | --detached] [--dry-run] [-h | --help] [-p | --prune] [--push] [-s | --stack] [-v | --verbose]

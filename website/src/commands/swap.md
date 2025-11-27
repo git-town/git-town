@@ -1,6 +1,6 @@
 # git town swap
 
-<a type="gittown-command" />
+<a type="git-town-command" />
 
 ```command-summary
 git town swap [--auto-resolve] [--dry-run] [-h | --help] [-v | --verbose]

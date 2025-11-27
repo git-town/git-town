@@ -1,6 +1,6 @@
 # git town config
 
-<a type="gittown-command" />
+<a type="git-town-command" />
 
 ```command-summary
 git town config [(-d | --display-types) <type>] [-h | --help] [-v | --verbose]

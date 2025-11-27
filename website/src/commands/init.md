@@ -1,6 +1,6 @@
 # git town init
 
-<a type="gittown-command" />
+<a type="git-town-command" />
 
 ```command-summary
 git town init [-h | --help] [-v | --verbose]

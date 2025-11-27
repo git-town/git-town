@@ -1,6 +1,6 @@
 # git town merge
 
-<a type="gittown-command" />
+<a type="git-town-command" />
 
 ```command-summary
 git town merge [--dry-run] [-h | --help] [-v | --verbose]

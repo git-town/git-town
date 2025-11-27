@@ -1,6 +1,6 @@
 # git town diff-parent
 
-<a type="gittown-command" />
+<a type="git-town-command" />
 
 ```command-summary
 git town diff-parent [-h | --help] [-v | --verbose]

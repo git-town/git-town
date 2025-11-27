@@ -1,6 +1,6 @@
 # git town compress
 
-<a type="gittown-command" />
+<a type="git-town-command" />
 
 ```command-summary
 git town compress [--dry-run] [-h | --help] [(-m | --message) <text>] [--no-verify] [-s | --stack] [-v | --verbose]

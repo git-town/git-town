@@ -1,6 +1,6 @@
 # git town prototype
 
-<a type="gittown-command" />
+<a type="git-town-command" />
 
 ```command-summary
 git town prototype [<branch-name>...] [-h | --help] [-v | --verbose]

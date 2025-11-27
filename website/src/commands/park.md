@@ -1,6 +1,6 @@
 # git town park
 
-<a type="gittown-command" />
+<a type="git-town-command" />
 
 ```command-summary
 git town park [<branch-name>...] [-h | --help] [-v | --verbose]

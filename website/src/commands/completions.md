@@ -1,6 +1,6 @@
 # git town completions
 
-<a type="gittown-command" />
+<a type="git-town-command" />
 
 ```command-summary
 git town completions (bash|fish|powershell|zsh) [-h | --help] [--no-descriptions]

@@ -1,6 +1,6 @@
 # git town runlog
 
-<a type="gittown-command" />
+<a type="git-town-command" />
 
 ```command-summary
 git town runlog [-h | --help] [-v | --verbose]

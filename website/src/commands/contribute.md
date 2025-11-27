@@ -1,6 +1,6 @@
 # git town contribute
 
-<a type="gittown-command" />
+<a type="git-town-command" />
 
 ```command-summary
 git town contribute [<branch-name>...] [-h | --help] [-v | --verbose]

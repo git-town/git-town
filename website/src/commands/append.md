@@ -1,6 +1,6 @@
 # git town append
 
-<a type="gittown-command" />
+<a type="git-town-command" />
 
 ```command-summary
 git town append <branch-name> [--auto-resolve] [-b | --beam] [-c | --commit] [-d | --detached] [--dry-run] [-h | --help] [(-m | --message) <message>] [--propose] [-p | --prototype] [--push] [--stash] [--sync] [-v | --verbose]

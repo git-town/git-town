@@ -1,6 +1,6 @@
 # git town switch
 
-<a type="gittown-command" />
+<a type="git-town-command" />
 
 ```command-summary
 git town switch [<branch-name-regex>...] [-a | --all] [(-d | --display-types) <type>] [-h | --help] [-m | --merge] [(-o | --order) <asc|desc>] [--stash] [(-t | --type) <name>] [-v | --verbose]

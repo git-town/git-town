@@ -1,6 +1,6 @@
 # git town feature
 
-<a type="gittown-command" />
+<a type="git-town-command" />
 
 ```command-summary
 git town feature [<branch-name>...] [-h | --help] [-v | --verbose]

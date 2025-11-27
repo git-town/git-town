@@ -1,6 +1,6 @@
 # git town propose
 
-<a type="gittown-command" />
+<a type="git-town-command" />
 
 ```command-summary
 git town propose [--auto-resolve] [(-b | --body) <text>] [(-f | --body-file) <path>] [--dry-run] [-h | --help] [-s | --stack] [(-t | --title) <text>] [-v | --verbose]

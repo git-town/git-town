@@ -1,6 +1,6 @@
 import { deepEqual, equal } from "node:assert/strict"
 import { suite, test } from "node:test"
-import * as command from "../text-runner/gittown-command.ts"
+import * as command from "../text-runner/git-town-command.ts"
 
 suite("SummarySection", () => {
   suite("args", () => {

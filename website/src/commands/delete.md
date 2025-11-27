@@ -1,6 +1,6 @@
 # git town delete
 
-<a type="gittown-command" />
+<a type="git-town-command" />
 
 ```command-summary
 git town delete [<branch-name>...] [--dry-run] [-h | --help] [-v | --verbose]
