@@ -54,14 +54,18 @@ Running `git town walk --stack make lint` produces this output:
 
 Iterate through all local branches.
 
-#### `-s`<br>`--stack`
-
-Iterate through all branches of the stack that the current branch belongs to.
-
 #### `--dry-run`
 
 Test-drive this command: It prints the commands that would be run but doesn't
 execute them.
+
+#### `-h`<br>`--help`
+
+Display help for this command.
+
+#### `-s`<br>`--stack`
+
+Iterate through all branches of the stack that the current branch belongs to.
 
 #### `-v`<br>`--verbose`
 
