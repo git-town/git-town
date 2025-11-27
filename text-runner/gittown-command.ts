@@ -40,7 +40,7 @@ export async function gittownCommand(action: textRunner.actions.Args) {
   }
 }
 
-/** Document represents the AST for the entire document of a page describing a Git Town command */
+/** Document contains the AST for an entire page describing a Git Town command */
 class Document {
   nodes: textRunner.ast.NodeList
 
@@ -48,7 +48,7 @@ class Document {
     this.nodes = nodes
   }
 
-  /** provides the text of the ```command-summary``` block at the beginning of the document */
+  /** provides the text of the ```command-summary``` block at the beginning of this page */
   summarySection(): SummarySection {
     const fences = this.nodes.nodesOfTypes("fence")
     if (fences.length === 0) {
@@ -60,7 +60,7 @@ class Document {
     return new SummarySection(summaryNodes.text())
   }
 
-  /** provides the arguments documented in the "## Options" section of this document */
+  /** provides the arguments documented in the "## Options" section of this page */
   argsInOptions(): string[][] {
     let result: string[][] = []
     let insideOptions = false
@@ -85,6 +85,7 @@ class Document {
     return result
   }
 
+  /** indicates whether the given node is the "## Options" heading */
   isOptionsHeading(node: textRunner.ast.Node): boolean {
     const nodes = this.nodes.nodesFor(node)
     const text = nodes.text()
@@ -92,7 +93,7 @@ class Document {
   }
 }
 
-/** SummarySection is the text in the ```command-summary``` block at the beginning of a page describing a Git Town command */
+/** SummarySection contains the text of the ```command-summary``` block of a Document*/
 export class SummarySection {
   text: string
 
@@ -143,13 +144,13 @@ class GitTownCommand {
     this.name = name
   }
 
-  /** provides the actual arguments of this Git Town command, determined by calling it with --help and parsing the output */
+  /** provides the actual arguments that this Git Town command accepts, determined by calling it with --help and parsing the output */
   async actualArgs(): Promise<string[][]> {
     const output = await this.runCommandHelp(this.name)
     return output.parse()
   }
 
-  /** calls the command with "--help" on the CLI and provides the output */
+  /** calls the command with "--help" on the CLI and returns the output */
   async runCommandHelp(command: string): Promise<HelpOutput> {
     const result = await execAsync(`git town ${command} --help`)
     return new HelpOutput(result.stdout)
