@@ -22,22 +22,18 @@ export async function gitTownCommand(action: textRunner.actions.Args) {
   const summaryJSON = JSON.stringify(summaryArgs, null, 2)
 
   // ensure the summary documents the arguments correct
-  if (summaryJSON !== actualJSON) {
-    action.log(`ACTUAL:\n${actualJSON}`)
-    action.log(`SUMMARY SECTION:\n${summaryJSON}`)
-    deepEqual(summaryArgs, actualArgs)
-  }
+  action.log(`ACTUAL:\n${actualJSON}`)
+  action.log(`SUMMARY SECTION:\n${summaryJSON}`)
+  deepEqual(summaryArgs, actualArgs)
 
   // get the arguments described by the "## Options" section
   const optionsArgs = doc.argsInOptions()
   const optionsJSON = JSON.stringify(optionsArgs, null, 2)
 
   // ensure the options section documents the arguments correct
-  if (optionsJSON !== actualJSON) {
-    action.log(`ACTUAL:\n${actualJSON}`)
-    action.log(`OPTIONS SECTION:\n${optionsJSON}`)
-    deepEqual(optionsJSON, actualJSON)
-  }
+  action.log(`ACTUAL:\n${actualJSON}`)
+  action.log(`OPTIONS SECTION:\n${optionsJSON}`)
+  deepEqual(optionsArgs, actualArgs)
 }
 
 /** Document contains the AST for an entire page describing a Git Town command */
