@@ -56,8 +56,8 @@ suite("SummarySection", () => {
 })
 
 suite("HelpOutput.parse", () => {
-  test("append", () => {
-    const give = `
+  test("append command", () => {
+    const output = new command.HelpOutput(`
 Create a new feature branch as a child of the current branch.
 
 Consider this stack:
@@ -100,8 +100,7 @@ Flags:
       --stash            stash uncommitted changes when creating branches
       --sync             sync branches (default true)
   -v, --verbose          display all Git commands run under the hood
-`
-    const output = new command.HelpOutput(give)
+`)
     const have = output.parse()
     const want = [
       ["--auto-resolve"],
@@ -121,8 +120,8 @@ Flags:
     deepEqual(have, want)
   })
 
-  test("branch", () => {
-    const give = `
+  test("branch command", () => {
+    const output = new command.HelpOutput(`
 Display the local branch hierarchy and types.
 
 Git Town's equivalent of the "git branch" command.
@@ -135,8 +134,7 @@ Flags:
   -h, --help                           help for branch
   -o, --order string                   sort order for branch list (asc or desc)
   -v, --verbose                        display all Git commands run under the hood
-`
-    const output = new command.HelpOutput(give)
+`)
     const have = output.parse()
     const want = [
       ["-d", "--display-types string"],
