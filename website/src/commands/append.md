@@ -1,12 +1,10 @@
 # git town append
 
-<a type="command-summary">
+<a type="gittown-command" />
 
 ```command-summary
 git town append <branch-name> [--auto-resolve] [-b | --beam] [-c | --commit] [-d | --detached] [--dry-run] [-h | --help] [(-m | --message) <message>] [--propose] [-p | --prototype] [--push] [--stash] [--sync] [-v | --verbose]
 ```
-
-</a>
 
 The _append_ command creates a new feature branch with the given name as a
 direct child of the current branch and brings over all uncommitted changes to
@@ -43,8 +41,6 @@ When given a non-existing branch name, `git town append` creates a new feature
 branch with the main branch as its parent.
 
 ## Options
-
-<a type="command-options" />
 
 #### `--auto-resolve`
 

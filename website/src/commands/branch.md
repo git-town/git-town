@@ -1,12 +1,10 @@
 # git town branch
 
-<a type="command-summary">
+<a type="gittown-command" />
 
 ```command-summary
 git town branch [(-d | --display-types) <branch-types>] [-h | --help] [(-o | --order) <asc|desc>] [-v | --verbose]
 ```
-
-</a>
 
 The _branch_ command is Git Town's equivalent of the
 [git branch](https://git-scm.com/docs/git-branch) command. It displays the local
@@ -14,8 +12,6 @@ branch hierarchy, and the types of all branches except for main and feature
 branches.
 
 ## Options
-
-<a type="command-options" />
 
 #### `-d <branch-type>`<br>`--display-types <branch-type>`
 

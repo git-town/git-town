@@ -1,6 +1,50 @@
 import { deepEqual, equal } from "node:assert/strict"
 import { suite, test } from "node:test"
-import { extractArgs, extractCommand, parseCommandHelpOutput } from "../text-runner/command-summary.ts"
+import * as command from "../text-runner/gittown-command.ts"
+
+suite("commandOptions", () => {
+  suite("removeNegatedFlag", () => {
+    const tests = [
+      // remove the negated flag
+      [
+        ["-d", "--detached", "--no-detached"],
+        ["-d", "--detached"],
+      ],
+      // pass through flags without negation
+      [
+        ["-d", "--detached"],
+        ["-d", "--detached"],
+      ],
+    ]
+    for (const [give, want] of tests) {
+      test(`${give} -> ${want}`, () => {
+        const have = command.removeNegatedFlag(give)
+        deepEqual(have, want)
+      })
+    }
+  })
+
+  suite("standardizeArgument", () => {
+    const tests = [
+      // standardize the argument
+      [
+        ["-m <msg>", "--message <msg>"],
+        ["-m", "--message string"],
+      ],
+      // work without arguments
+      [
+        ["-p", "--prototype"],
+        ["-p", "--prototype"],
+      ],
+    ]
+    for (const [give, want] of tests) {
+      test(`${give} -> ${want}`, () => {
+        const have = command.standardizeArgument(give)
+        deepEqual(have, want)
+      })
+    }
+  })
+})
 
 suite("extractCommand", () => {
   const tests = {
@@ -16,7 +60,7 @@ suite("extractCommand", () => {
   }
   for (const [give, want] of Object.entries(tests)) {
     test(`${give} -> ${want}`, () => {
-      equal(extractCommand(give), want)
+      equal(command.extractCommand(give), want)
     })
   }
 })
@@ -44,7 +88,7 @@ suite("extractArgs", () => {
   }
   for (const [give, want] of Object.entries(tests)) {
     test(`${give} -> ${want}`, () => {
-      deepEqual(extractArgs(give), want)
+      deepEqual(command.extractArgs(give), want)
     })
   }
 })
@@ -95,7 +139,7 @@ Flags:
       --sync             sync branches (default true)
   -v, --verbose          display all Git commands run under the hood
 `
-    const have = parseCommandHelpOutput(give)
+    const have = command.parseCommandHelpOutput(give)
     const want = [
       ["--auto-resolve"],
       ["-b", "--beam"],
@@ -129,7 +173,7 @@ Flags:
   -o, --order string                   sort order for branch list (asc or desc)
   -v, --verbose                        display all Git commands run under the hood
 `
-    const have = parseCommandHelpOutput(give)
+    const have = command.parseCommandHelpOutput(give)
     const want = [
       ["-d", "--display-types string"],
       ["-h", "--help"],
