@@ -48,7 +48,7 @@ export function extractCommandName(text: string): string {
 function findCommandSummary(doc: textRunner.ast.NodeList): string {
   const fences = doc.nodesOfTypes("fence")
   if (fences.length === 0) {
-    throw new Error("no command summary found")
+    throw new Error("no fenced blocks found")
   }
   const fence = fences[0]
   const fenceNodes = doc.nodesFor(fence)
