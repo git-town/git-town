@@ -50,10 +50,10 @@ function findCommandSummary(doc: textRunner.ast.NodeList): string {
   if (fences.length === 0) {
     throw new Error("no fenced blocks found")
   }
-  const fence = fences[0]
-  const fenceNodes = doc.nodesFor(fence)
-  const fenceText = fenceNodes.text()
-  return fenceText
+  // the first fenced block contains the summary
+  const summaryBlock = fences[0]
+  const summaryNodes = doc.nodesFor(summaryBlock)
+  return summaryNodes.text()
 }
 
 /** provides the options documented in the page body, under the "## Options" tag */
