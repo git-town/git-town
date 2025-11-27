@@ -145,7 +145,7 @@ Flags:
       --sync             sync branches (default true)
   -v, --verbose          display all Git commands run under the hood
 `
-    const output = new command.GitTownCommandHelpOutput(give)
+    const output = new command.HelpOutput(give)
     const have = output.parse()
     const want = [
       ["--auto-resolve"],
@@ -180,7 +180,7 @@ Flags:
   -o, --order string                   sort order for branch list (asc or desc)
   -v, --verbose                        display all Git commands run under the hood
 `
-    const output = new command.GitTownCommandHelpOutput(give)
+    const output = new command.HelpOutput(give)
     const have = output.parse()
     const want = [
       ["-d", "--display-types string"],

@@ -14,7 +14,7 @@ export async function gittownCommand(action: textRunner.actions.Args) {
   const command = summarySection.command()
 
   // get the actual arguments of this Git Town command
-  const actualArgs = await command.loadArgs()
+  const actualArgs = await command.actualArgs()
   const actualJSON = JSON.stringify(actualArgs, null, 2)
 
   // get the arguments described by the command summary
@@ -29,7 +29,7 @@ export async function gittownCommand(action: textRunner.actions.Args) {
   }
 
   // get the arguments described by the "## Options" section
-  const optionsArgs = findArgsInOptionsSection(action.document)
+  const optionsArgs = doc.argsInOptions()
   const optionsJSON = JSON.stringify(optionsArgs, null, 2)
 
   // ensure the options section documents the arguments correct
@@ -48,7 +48,7 @@ class Document {
     this.nodes = nodes
   }
 
-  /** provides the text of the command summary section */
+  /** provides the text of the ```command-summary``` block at the beginning of the document */
   summarySection(): SummarySection {
     const fences = this.nodes.nodesOfTypes("fence")
     if (fences.length === 0) {
@@ -58,6 +58,31 @@ class Document {
     const summaryBlock = fences[0]
     const summaryNodes = this.nodes.nodesFor(summaryBlock)
     return new SummarySection(summaryNodes.text())
+  }
+
+  /** provides the arguments documented in the "## Options" section of this document */
+  argsInOptions(): string[][] {
+    let result: string[][] = []
+    let insideOptions = false
+    for (const node of this.nodes) {
+      if (isH2(node)) {
+        if (insideOptions) {
+          // here we run into the next h2 heading after options --> done parsing options
+          return result
+        }
+        if (isOptionsHeading(node, this.nodes)) {
+          insideOptions = true
+        }
+        continue
+      }
+      if (insideOptions) {
+        if (isFlagHeading(node, this.nodes)) {
+          const flagNodes = this.nodes.nodesFor(node)
+          result.push(texts(flagNodes))
+        }
+      }
+    }
+    return result
   }
 }
 
@@ -69,7 +94,7 @@ export class SummarySection {
     this.text = text
   }
 
-  /** provides the arguments described in this summary section */
+  /** provides the arguments that this summary section describes for its Git Town command */
   args(): string[][] {
     const args: string[][] = []
     // Match all optional arguments in square brackets: [-p | --prototype] or [(-m | --message) <text>]
@@ -96,7 +121,7 @@ export class SummarySection {
     return args
   }
 
-  /** provides the name of the Git Town command described by the given summary text */
+  /** provides the name of the Git Town command described by this summary section */
   command(): GitTownCommand {
     const match = this.text.match(/^git town ([^<[(]+?)(?:\s+-|\s+<|\s+\[|\s+\(|$)/)
     const commandName = match?.[1]?.trim() || ""
@@ -112,21 +137,21 @@ class GitTownCommand {
     this.name = name
   }
 
-  /** provides the actual arguments of the command, as reported by calling the command with --help */
-  async loadArgs(): Promise<string[][]> {
+  /** provides the actual arguments of this Git Town command, determined by calling it with --help and parsing the output */
+  async actualArgs(): Promise<string[][]> {
     const output = await this.runCommandHelp(this.name)
     return output.parse()
   }
 
   /** calls the command with "--help" on the CLI and provides the output */
-  async runCommandHelp(command: string): Promise<GitTownCommandHelpOutput> {
+  async runCommandHelp(command: string): Promise<HelpOutput> {
     const result = await execAsync(`git town ${command} --help`)
-    return new GitTownCommandHelpOutput(result.stdout)
+    return new HelpOutput(result.stdout)
   }
 }
 
-/** GitTownCommandHelpOutput is the output of a Git Town command executed with "--help" */
-export class GitTownCommandHelpOutput {
+/** HelpOutput is the output of a Git Town command executed with "--help" */
+export class HelpOutput {
   text: string
 
   constructor(text: string) {
@@ -166,31 +191,6 @@ export class GitTownCommandHelpOutput {
     }
     return result
   }
-}
-
-/** provides the options documented in the page body, under the "## Options" tag */
-function findArgsInOptionsSection(doc: textRunner.ast.NodeList): string[][] {
-  let result: string[][] = []
-  let insideOptions = false
-  for (const node of doc) {
-    if (isH2(node)) {
-      if (insideOptions) {
-        // here we run into the next h2 heading after options --> done parsing options
-        return result
-      }
-      if (isOptionsHeading(node, doc)) {
-        insideOptions = true
-      }
-      continue
-    }
-    if (insideOptions) {
-      if (isFlagHeading(node, doc)) {
-        const flagNodes = doc.nodesFor(node)
-        result.push(texts(flagNodes))
-      }
-    }
-  }
-  return result
 }
 
 function isFlagHeading(node: textRunner.ast.Node, doc: textRunner.ast.NodeList): boolean {
