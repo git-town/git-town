@@ -35,7 +35,7 @@ export async function gittownCommand(action: textRunner.actions.Args) {
   if (summaryJSON !== optionsJSON) {
     action.log(`ACTUAL:\n${actualJSON}`)
     action.log(`BODY:\n${optionsJSON}`)
-    deepEqual(summaryJSON, optionsJSON)
+    deepEqual(optionsJSON, actualJSON)
   }
 }
 
