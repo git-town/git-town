@@ -142,14 +142,9 @@ class GitTownCommand {
 
   /** provides the actual arguments that this Git Town command accepts, determined by calling it with --help and parsing the output */
   async actualArgs(): Promise<string[][]> {
-    const output = await this.runCommandHelp(this.name)
+    const result = await execAsync(`git town ${this.name} --help`)
+    const output = new HelpOutput(result.stdout)
     return output.flags()
-  }
-
-  /** calls the command with "--help" on the CLI and returns the output */
-  async runCommandHelp(command: string): Promise<HelpOutput> {
-    const result = await execAsync(`git town ${command} --help`)
-    return new HelpOutput(result.stdout)
   }
 }
 
