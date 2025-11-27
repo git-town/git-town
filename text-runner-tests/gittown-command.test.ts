@@ -4,9 +4,12 @@ import * as command from "../text-runner/gittown-command.ts"
 
 suite("SummarySection", () => {
   suite("args", () => {
-    const tests = {
-      "git town append <branch-name> [-p | --prototype] [-d | --detached] [-c | --commit] [(-m | --message) <message>] [--propose] [--dry-run] [-v | --verbose]":
-        [
+    const tests = [
+      {
+        desc: "append command",
+        give:
+          "git town append <branch-name> [-p | --prototype] [-d | --detached] [-c | --commit] [(-m | --message) <message>] [--propose] [--dry-run] [-v | --verbose]",
+        want: [
           ["-p", "--prototype"],
           ["-d", "--detached"],
           ["-c", "--commit"],
@@ -15,17 +18,26 @@ suite("SummarySection", () => {
           ["--dry-run"],
           ["-v", "--verbose"],
         ],
-      "git town completions (bash|fish|powershell|zsh) [--no-descriptions] [-h | --help]": [
-        ["--no-descriptions"],
-        ["-h", "--help"],
-      ],
-      "git town config get-parent [<branch-name>] [-v | --verbose] [-h | --help]": [
-        ["-v", "--verbose"],
-        ["-h", "--help"],
-      ],
-    }
-    for (const [give, want] of Object.entries(tests)) {
-      test(`${give} -> ${want}`, () => {
+      },
+      {
+        desc: "completions command",
+        give: "git town completions (bash|fish|powershell|zsh) [--no-descriptions] [-h | --help]",
+        want: [
+          ["--no-descriptions"],
+          ["-h", "--help"],
+        ],
+      },
+      {
+        desc: "config get-parent command",
+        give: "git town config get-parent [<branch-name>] [-v | --verbose] [-h | --help]",
+        want: [
+          ["-v", "--verbose"],
+          ["-h", "--help"],
+        ],
+      },
+    ]
+    for (const { desc, give, want } of tests) {
+      test(desc, () => {
         const summarySection = new command.SummarySection(give)
         const have = summarySection.args()
         deepEqual(have, want)
@@ -148,24 +160,24 @@ Flags:
 
 suite("removeNegatedFlag", () => {
   const tests = [
-    // remove the negated flag
-    [
-      ["-d", "--detached", "--no-detached"],
-      ["-d", "--detached"],
-    ],
-    // pass through flags without negation
-    [
-      ["-d", "--detached"],
-      ["-d", "--detached"],
-    ],
-    // allow a single negated flag
-    [
-      ["--no-detached"],
-      ["--no-detached"],
-    ],
+    {
+      desc: "remove the negated flag",
+      give: ["-d", "--detached", "--no-detached"],
+      want: ["-d", "--detached"],
+    },
+    {
+      desc: "pass through flags without negation",
+      give: ["-d", "--detached"],
+      want: ["-d", "--detached"],
+    },
+    {
+      desc: "allow a single negated flag",
+      give: ["--no-detached"],
+      want: ["--no-detached"],
+    },
   ]
-  for (const [give, want] of tests) {
-    test(`${give} -> ${want}`, () => {
+  for (const { desc, give, want } of tests) {
+    test(desc, () => {
       const have = command.removeNegatedFlag(give)
       deepEqual(have, want)
     })
@@ -174,19 +186,19 @@ suite("removeNegatedFlag", () => {
 
 suite("standardizeArgument", () => {
   const tests = [
-    // standardize the argument
-    [
-      ["-m <msg>", "--message <msg>"],
-      ["-m", "--message string"],
-    ],
-    // work without arguments
-    [
-      ["-p", "--prototype"],
-      ["-p", "--prototype"],
-    ],
+    {
+      desc: "standardize the argument",
+      give: ["-m <msg>", "--message <msg>"],
+      want: ["-m", "--message string"],
+    },
+    {
+      desc: "work without arguments",
+      give: ["-p", "--prototype"],
+      want: ["-p", "--prototype"],
+    },
   ]
-  for (const [give, want] of tests) {
-    test(`${give} -> ${want}`, () => {
+  for (const { desc, give, want } of tests) {
+    test(desc, () => {
       const have = command.standardizeArgument(give)
       deepEqual(have, want)
     })
