@@ -82,6 +82,15 @@ parent.
 
 ## Options
 
+#### `--auto-resolve`
+
+Disables automatic resolution of
+[phantom merge conflicts](../stacked-changes.md#avoid-phantom-conflicts).
+
+#### `-h`<br>`--help`
+
+Display help for this command.
+
 #### `--none`
 
 The `--none` option assigns no parent (removes the assigned parent), making the
@@ -91,11 +100,6 @@ branch a perennial branch.
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.
-
-#### `--auto-resolve`
-
-Disables automatic resolution of
-[phantom merge conflicts](../stacked-changes.md#avoid-phantom-conflicts).
 
 ## See also
 

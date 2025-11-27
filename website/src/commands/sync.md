@@ -76,15 +76,10 @@ if it's going to be deleted right afterwards.
 By default this command syncs only the current branch. The `--all` aka `-a`
 parameter makes Git Town sync all local branches.
 
-#### `--push`<br>`--no-push`
+#### `--auto-resolve`
 
-The `--push`/`--no-push` argument overrides the
-[push-branches](../preferences/push-branches.md) config setting.
-
-#### `-s`<br>`--stack`
-
-The `--stack` aka `-s` parameter makes Git Town sync all branches in the stack
-that the current branch belongs to.
+Disables automatic resolution of
+[phantom merge conflicts](../stacked-changes.md#avoid-phantom-conflicts).
 
 #### `-d`<br>`--detached`<br>`--no-detached`
 
@@ -97,25 +92,34 @@ In detached mode, feature branches don't receive updates from the perennial
 branch at the root of your branch hierarchy. This can be useful in busy
 monorepos.
 
-#### `-p`<br>`--prune`
-
-The `--prune` aka `-p` flag removes (prunes) empty branches, i.e. branches that
-effectively don't make any changes.
-
 #### `--dry-run`
 
 Use the `--dry-run` flag to test-drive this command. It prints the Git commands
 that would be run but doesn't execute them.
 
+#### `-h`<br>`--help`
+
+Display help for this command.
+
+#### `-p`<br>`--prune`
+
+The `--prune` aka `-p` flag removes (prunes) empty branches, i.e. branches that
+effectively don't make any changes.
+
+#### `--push`<br>`--no-push`
+
+The `--push`/`--no-push` argument overrides the
+[push-branches](../preferences/push-branches.md) config setting.
+
+#### `-s`<br>`--stack`
+
+The `--stack` aka `-s` parameter makes Git Town sync all branches in the stack
+that the current branch belongs to.
+
 #### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.
-
-#### `--auto-resolve`
-
-Disables automatic resolution of
-[phantom merge conflicts](../stacked-changes.md#avoid-phantom-conflicts).
 
 ## Configuration
 

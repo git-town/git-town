@@ -1,12 +1,10 @@
 # git town ship
 
-<a type="command-summary">
+<a type="gittown-command" />
 
 ```command-summary
 git town ship [<branch-name>] [--dry-run] [-h | --help] [(-m | --message) <text>] [(-f | --message-file) <path>] [(-s | --strategy) <name>] [-p | --to-parent] [-v | --verbose]
 ```
-
-</a>
 
 _Notice: Most people don't need to use this command. The recommended way to
 merge your feature branches is to use the web UI or merge queue of your code
@@ -31,6 +29,15 @@ When called with a positional argument, it ships the branch with the given name.
 
 ## Options
 
+#### `--dry-run`
+
+Use the `--dry-run` flag to test-drive this command. It prints the Git commands
+that would be run but doesn't execute them.
+
+#### `-h`<br>`--help`
+
+Display help for this command.
+
 #### `-m <text>`<br>`--message <text>`
 
 Similar to `git commit`, the `--message <message>` aka `-m` parameter allows
@@ -51,11 +58,6 @@ The _ship_ command ships only direct children of the main branch. To ship a
 child branch, you need to first ship or [delete](delete.md) all its ancestor
 branches. If you really want to ship into a non-perennial branch, you can
 override the protection against that with the `--to-parent` aka `-p` option.
-
-#### `--dry-run`
-
-Use the `--dry-run` flag to test-drive this command. It prints the Git commands
-that would be run but doesn't execute them.
 
 #### `-v`<br>`--verbose`
 

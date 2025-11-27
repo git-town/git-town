@@ -27,6 +27,11 @@ You can configure the browser which Git Town opens using the
 
 ## Options
 
+#### `--auto-resolve`
+
+Disables automatic resolution of
+[phantom merge conflicts](../stacked-changes.md#avoid-phantom-conflicts).
+
 #### `-b <text>`<br>`--body <text>`
 
 Pre-populate the body of the pull request with the given text.
@@ -37,30 +42,29 @@ When called with the `--body-file` aka `-f` flag, it pre-populates the body of
 the pull request with the content of the given file. The filename `-` reads the
 body text from STDIN.
 
-#### `-t <text>`<br>`--title <text>`
+#### `--dry-run`
 
-When called with the `--title <title>` aka `-t` flag, the _propose_ command
-pre-populate the title of the pull request to the given text.
+Use the `--dry-run` flag to test-drive this command. It prints the Git commands
+that would be run but doesn't execute them.
+
+#### `-h`<br>`--help`
+
+Display help for this command.
 
 #### `-s`<br>`--stack`
 
 The `--stack` aka `-s` parameter makes Git Town propose all branches in the
 stack that the current branch belongs to.
 
-#### `--dry-run`
+#### `-t <text>`<br>`--title <text>`
 
-Use the `--dry-run` flag to test-drive this command. It prints the Git commands
-that would be run but doesn't execute them.
+When called with the `--title <title>` aka `-t` flag, the _propose_ command
+pre-populate the title of the pull request to the given text.
 
 #### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.
-
-#### `--auto-resolve`
-
-Disables automatic resolution of
-[phantom merge conflicts](../stacked-changes.md#avoid-phantom-conflicts).
 
 ## Configuration
 

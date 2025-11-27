@@ -19,6 +19,10 @@ persisted runstate.
 
 ## Options
 
+#### `-h`<br>`--help`
+
+Display help for this command.
+
 #### `-p`<br>`--pending`
 
 The `--pending` aka `-p` argument causes this command to output only the name of
