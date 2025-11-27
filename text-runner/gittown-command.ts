@@ -7,10 +7,8 @@ const execAsync = promisify(exec)
 
 /** verifies a MD page that describes a Git Town command */
 export async function gittownCommand(action: textRunner.actions.Args) {
-  const doc = action.document
-
   // get the command that this page describes
-  const summaryText = findCommandSummary(doc)
+  const summaryText = findCommandSummary(action.document)
   const commandName = extractCommandName(summaryText)
 
   // get the actual arguments of this Git Town command
@@ -29,7 +27,7 @@ export async function gittownCommand(action: textRunner.actions.Args) {
   }
 
   // get the arguments described in the "## Options" section
-  const options = findArgsInBody(doc)
+  const options = findArgsInBody(action.document)
   const optionsJSON = JSON.stringify(options, null, 2)
 
   // verify that the options section contains the correct arguments
