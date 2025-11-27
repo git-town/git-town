@@ -44,7 +44,7 @@ class Document {
     this.nodes = nodes
   }
 
-  /** provides the text of the ```command-summary``` block at the beginning of this page */
+  /** provides the text of the ```command-summary block at the beginning of this page */
   summarySection(): SummarySection {
     const fences = this.nodes.nodesOfTypes("fence")
     if (fences.length === 0) {
