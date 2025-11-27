@@ -16,11 +16,6 @@ import (
 func TestBackendRunner_RetryOnIndexLock(t *testing.T) {
 	t.Parallel()
 
-	// NOTE: BackendRunner has a bug where the subprocess is created OUTSIDE the retry loop,
-	// so CombinedOutput() is called multiple times on the same *exec.Cmd, which doesn't work.
-	// This means BackendRunner doesn't actually retry properly.
-	// These tests document the current (buggy) behavior.
-
 	t.Run("succeeds immediately when no lock error", func(t *testing.T) {
 		t.Parallel()
 		tmpDir := t.TempDir()
@@ -34,13 +29,48 @@ func TestBackendRunner_RetryOnIndexLock(t *testing.T) {
 		must.Less(t, 100*time.Millisecond, duration)
 	})
 
-	t.Run("BUG: does not actually retry due to subprocess created outside loop", func(t *testing.T) {
+	t.Run("retries and succeeds on transient lock error", func(t *testing.T) {
+		t.Parallel()
+		tmpDir := t.TempDir()
+		runner := subshell.BackendRunner{Dir: Some(tmpDir), Verbose: false, CommandsCounter: NewMutable(new(gohacks.Counter))}
+
+		// Create a script that fails twice with lock error, then succeeds
+		scriptPath := filepath.Join(tmpDir, "retry-script.sh")
+		scriptContent := `#!/bin/bash
+COUNTER_FILE="` + tmpDir + `/counter"
+if [ ! -f "$COUNTER_FILE" ]; then
+    echo "0" > "$COUNTER_FILE"
+fi
+COUNT=$(cat "$COUNTER_FILE")
+echo $((COUNT + 1)) > "$COUNTER_FILE"
+
+if [ "$COUNT" -lt "2" ]; then
+    >&2 echo "fatal: Unable to create '.git/index.lock': File exists."
+    exit 1
+else
+    echo "success"
+    exit 0
+fi
+`
+		must.NoError(t, os.WriteFile(scriptPath, []byte(scriptContent), 0o755))
+
+		start := time.Now()
+		output, err := runner.Query("bash", scriptPath)
+		duration := time.Since(start)
+
+		must.NoError(t, err)
+		must.EqOp(t, "success\n", output)
+		// Should take at least 2 seconds (2 retries * 1 second delay)
+		must.GreaterEq(t, 2*time.Second, duration)
+	})
+
+	t.Run("exhausts retries and fails after max attempts", func(t *testing.T) {
 		t.Parallel()
 		tmpDir := t.TempDir()
 		runner := subshell.BackendRunner{Dir: Some(tmpDir), Verbose: false, CommandsCounter: NewMutable(new(gohacks.Counter))}
 
 		// Create a script that always fails with lock error
-		scriptPath := filepath.Join(tmpDir, "lock-error.sh")
+		scriptPath := filepath.Join(tmpDir, "always-fails.sh")
 		scriptContent := `#!/bin/bash
 >&2 echo "fatal: Unable to create '.git/index.lock': File exists."
 exit 1
@@ -51,10 +81,40 @@ exit 1
 		_, err := runner.Query("bash", scriptPath)
 		duration := time.Since(start)
 
-		// Due to the bug, it fails immediately without proper retries
+		// Should fail after exhausting retries
 		must.Error(t, err)
-		// Takes less than 2 seconds (no meaningful retries)
-		must.Less(t, 2*time.Second, duration)
+		// Should take at least 4 seconds (5 attempts with 4 delays between them)
+		must.GreaterEq(t, 4*time.Second, duration)
+	})
+
+	t.Run("retries correct number of times", func(t *testing.T) {
+		t.Parallel()
+		tmpDir := t.TempDir()
+		runner := subshell.BackendRunner{Dir: Some(tmpDir), Verbose: false, CommandsCounter: NewMutable(new(gohacks.Counter))}
+
+		// Create a script that counts how many times it's called
+		counterFile := filepath.Join(tmpDir, "attempt-counter")
+		scriptPath := filepath.Join(tmpDir, "count-attempts.sh")
+		scriptContent := `#!/bin/bash
+COUNTER_FILE="` + counterFile + `"
+if [ ! -f "$COUNTER_FILE" ]; then
+    echo "1" > "$COUNTER_FILE"
+else
+    COUNT=$(cat "$COUNTER_FILE")
+    echo $((COUNT + 1)) > "$COUNTER_FILE"
+fi
+>&2 echo "fatal: Unable to create '.git/index.lock': File exists."
+exit 1
+`
+		must.NoError(t, os.WriteFile(scriptPath, []byte(scriptContent), 0o755))
+
+		_, err := runner.Query("bash", scriptPath)
+		must.Error(t, err)
+
+		// Read the counter to verify it was called exactly 5 times
+		counterBytes, err := os.ReadFile(counterFile)
+		must.NoError(t, err)
+		must.EqOp(t, "5\n", string(counterBytes))
 	})
 
 	t.Run("does not retry on non-lock errors", func(t *testing.T) {
@@ -86,39 +146,39 @@ exit 1
 		runner := subshell.BackendRunner{Dir: Some(tmpDir), Verbose: false, CommandsCounter: NewMutable(new(gohacks.Counter))}
 
 		testCases := []struct {
-			name         string
-			errorMsg     string
-			shouldDetect bool
+			name        string
+			errorMsg    string
+			shouldRetry bool
 		}{
 			{
-				name:         "exact match",
-				errorMsg:     "fatal: Unable to create '.git/index.lock': File exists.",
-				shouldDetect: true,
+				name:        "exact match",
+				errorMsg:    "fatal: Unable to create '.git/index.lock': File exists.",
+				shouldRetry: true,
 			},
 			{
-				name:         "with path variations",
-				errorMsg:     "fatal: Unable to create '/path/to/repo/.git/index.lock': File exists.",
-				shouldDetect: true,
+				name:        "with path variations",
+				errorMsg:    "fatal: Unable to create '/path/to/repo/.git/index.lock': File exists.",
+				shouldRetry: true,
 			},
 			{
-				name:         "missing 'fatal' prefix",
-				errorMsg:     "Unable to create '.git/index.lock': File exists.",
-				shouldDetect: true,
+				name:        "missing 'fatal' prefix but has both patterns",
+				errorMsg:    "Unable to create '.git/index.lock': File exists.",
+				shouldRetry: false, // doesn't match because "fatal: Unable to create" is required
 			},
 			{
-				name:         "only has 'Unable to create'",
-				errorMsg:     "fatal: Unable to create '.git/something'",
-				shouldDetect: false,
+				name:        "only has 'Unable to create'",
+				errorMsg:    "fatal: Unable to create '.git/something'",
+				shouldRetry: false,
 			},
 			{
-				name:         "only has 'File exists'",
-				errorMsg:     "index.lock': File exists.",
-				shouldDetect: false,
+				name:        "only has 'File exists'",
+				errorMsg:    "index.lock': File exists.",
+				shouldRetry: false,
 			},
 			{
-				name:         "completely different error",
-				errorMsg:     "fatal: not a git repository",
-				shouldDetect: false,
+				name:        "completely different error",
+				errorMsg:    "fatal: not a git repository",
+				shouldRetry: false,
 			},
 		}
 
@@ -131,9 +191,18 @@ exit 1
 `, tc.errorMsg)
 				must.NoError(t, os.WriteFile(scriptPath, []byte(scriptContent), 0o755))
 
+				start := time.Now()
 				_, err := runner.Query("bash", scriptPath)
+				duration := time.Since(start)
+
 				must.Error(t, err)
-				// Just verify the error is detected, not timing (due to retry bug)
+				if tc.shouldRetry {
+					// Should take at least 4 seconds (exhausted retries)
+					must.GreaterEq(t, 4*time.Second, duration)
+				} else {
+					// Should fail immediately
+					must.Less(t, 500*time.Millisecond, duration)
+				}
 			})
 		}
 	})
