@@ -55,7 +55,7 @@ suite("SummarySection", () => {
   })
 })
 
-suite("HelpOutput.parse", () => {
+suite("HelpOutput.flags", () => {
   test("append command", () => {
     const output = new command.HelpOutput(`
 Create a new feature branch as a child of the current branch.
