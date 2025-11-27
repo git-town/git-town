@@ -1,12 +1,10 @@
 # git town down
 
-<a type="command-summary">
+<a type="gittown-command" />
 
 ```command-summary
 git town down [(-d | --display-types) <type>] [-h | --help] [-m | --merge] [(-o | --order) <asc|desc>] [-v | --verbose]
 ```
-
-</a>
 
 The _down_ command moves one position down in the current stack by switching to
 the parent of the current branch. After successfully switching branches, it

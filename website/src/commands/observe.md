@@ -1,12 +1,10 @@
 # git town observe
 
-<a type="command-summary">
+<a type="gittown-command" />
 
 ```command-summary
 git town observe [<branch-name>...] [-h | --help] [-v | --verbose]
 ```
-
-</a>
 
 The _observe_ command makes some of your branches
 [observed](../branch-types.md#observed-branches) branches.

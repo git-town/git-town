@@ -1,12 +1,10 @@
 # git town continue
 
-<a type="command-summary">
+<a type="gittown-command" />
 
 ```command-summary
 git town continue [-h | --help] [-v | --verbose]
 ```
-
-</a>
 
 When a Git Town command encounters a problem that it cannot resolve, for example
 a merge conflict, it stops to give the user an opportunity to resolve the issue.
@@ -15,6 +13,10 @@ continue executing the failed command. Git Town will retry the failed operation
 and execute all remaining operations of the original command.
 
 ## Options
+
+#### `-h`<br>`--help`
+
+Display help for this command.
 
 #### `-v`<br>`--verbose`
 

@@ -1,12 +1,10 @@
 # git town swap
 
-<a type="command-summary">
+<a type="gittown-command" />
 
 ```command-summary
 git town swap [--auto-resolve] [--dry-run] [-h | --help] [-v | --verbose]
 ```
-
-</a>
 
 The _swap_ command switches the position of the current branch with the branch
 ahead of it in the current stack, i.e. moves the current branch one position

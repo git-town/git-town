@@ -1,12 +1,10 @@
 # git town hack
 
-<a type="command-summary">
+<a type="gittown-command" />
 
 ```command-summary
 git town hack [<branch-name>...] [--auto-resolve] [-b | --beam] [-c | --commit] [-d | --detached] [--dry-run] [-h | --help] [(-m | --message) <message>] [--propose] [-p | --prototype] [--stash] [--sync] [-v | --verbose]
 ```
-
-</a>
 
 The _hack_ command ("let's start hacking") creates a new feature branch with the
 given name off the [main branch](../preferences/main-branch.md) and brings all

@@ -1,12 +1,10 @@
 # git town merge
 
-<a type="command-summary">
+<a type="gittown-command" />
 
 ```command-summary
 git town merge [--dry-run] [-h | --help] [-v | --verbose]
 ```
-
-</a>
 
 The _merge_ command merges the current branch into the branch ahead of it in the
 current stack.

@@ -1,12 +1,10 @@
 # git town prototype
 
-<a type="command-summary">
+<a type="gittown-command" />
 
 ```command-summary
 git town prototype [<branch-name>...] [-h | --help] [-v | --verbose]
 ```
-
-</a>
 
 The _prototype_ command marks some of your branches as
 [prototype branches](../branch-types.md#prototype-branches).

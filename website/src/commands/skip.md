@@ -1,12 +1,10 @@
 # git town skip
 
-<a type="command-summary">
+<a type="gittown-command" />
 
 ```command-summary
 git town skip [-h | --help] [-v | --verbose]
 ```
-
-</a>
 
 The _skip_ command allows to skip a Git branch with merge conflicts when syncing
 all feature branches.

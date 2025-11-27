@@ -1,12 +1,10 @@
 # git town sync
 
-<a type="command-summary">
+<a type="gittown-command" />
 
 ```command-summary
 git town sync [-a | --all] [--auto-resolve] [-d | --detached] [--dry-run] [-h | --help] [-p | --prune] [--push] [-s | --stack] [-v | --verbose]
 ```
-
-</a>
 
 The _sync_ command ("synchronize this branch") updates your local Git workspace
 with what happened in the rest of the repository.

@@ -1,12 +1,10 @@
 # git town prepend
 
-<a type="command-summary">
+<a type="gittown-command" />
 
 ```command-summary
 git town prepend [<branch-name>...] [--auto-resolve] [-b | --beam] [--body <string>] [-c | --commit] [-d | --detached] [--dry-run] [-h | --help] [(-m | --message) <message>] [--propose] [-p | --prototype] [--push] [--stash] [--sync] [(-t | --title) <text>] [-v | --verbose]
 ```
-
-</a>
 
 The _prepend_ command creates a new feature branch as the parent of the current
 branch. It does that by inserting the new feature branch between the current

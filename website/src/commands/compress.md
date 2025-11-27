@@ -1,12 +1,10 @@
 # git town compress
 
-<a type="command-summary">
+<a type="gittown-command" />
 
 ```command-summary
 git town compress [--dry-run] [-h | --help] [(-m | --message) <text>] [--no-verify] [-s | --stack] [-v | --verbose]
 ```
-
-</a>
 
 The _compress_ command squashes all commits on a branch into a single commit.
 
@@ -45,8 +43,6 @@ Branches must be in sync to compress them; run `git town sync` before running
 this command.
 
 ## Options
-
-<a type="command-options" />
 
 #### `--dry-run`
 

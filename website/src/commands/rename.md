@@ -1,12 +1,10 @@
 # git town rename
 
-<a type="command-summary">
+<a type="gittown-command" />
 
 ```command-summary
 git town rename [<old-name>] <new-name> [--dry-run] [-f | --force] [-h | --help] [-v | --verbose]
 ```
-
-</a>
 
 The _rename_ command renames the current branch and its tracking branch. The
 branch to rename must be fully [synced](sync.md). Updates all affected

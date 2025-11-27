@@ -1,12 +1,10 @@
 # git town status reset
 
-<a type="command-summary">
+<a type="gittown-command" />
 
 ```command-summary
 git town status reset [-h | --help] [-v | --verbose]
 ```
-
-</a>
 
 The _status reset_ command deletes the persisted runstate. This is only needed
 if the runstate is corrupted and causes Git Town to crash.

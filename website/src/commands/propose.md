@@ -1,12 +1,10 @@
 # git town propose
 
-<a type="command-summary">
+<a type="gittown-command" />
 
 ```command-summary
 git town propose [--auto-resolve] [(-b | --body) <text>] [(-f | --body-file) <path>] [--dry-run] [-h | --help] [-s | --stack] [(-t | --title) <text>] [-v | --verbose]
 ```
-
-</a>
 
 The _propose_ command helps create a new pull request (also known as merge
 request) for the current feature branch. It opens your forge's website to create
