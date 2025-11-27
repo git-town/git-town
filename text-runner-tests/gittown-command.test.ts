@@ -179,6 +179,11 @@ suite("standardizeArgument", () => {
       ["-p", "--prototype"],
       ["-p", "--prototype"],
     ],
+    // allow a single negated flag
+    [
+      ["--no-detached"],
+      ["--no-detached"],
+    ],
   ]
   for (const [give, want] of tests) {
     test(`${give} -> ${want}`, () => {
