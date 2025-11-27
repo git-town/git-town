@@ -161,17 +161,17 @@ Flags:
 suite("removeNegatedFlag", () => {
   const tests = [
     {
-      desc: "remove the negated flag",
+      desc: "has negated flag",
       give: ["-d", "--detached", "--no-detached"],
       want: ["-d", "--detached"],
     },
     {
-      desc: "pass through flags without negation",
+      desc: "no negated flag",
       give: ["-d", "--detached"],
       want: ["-d", "--detached"],
     },
     {
-      desc: "allow a single negated flag",
+      desc: "allows a single negated flag",
       give: ["--no-detached"],
       want: ["--no-detached"],
     },
@@ -187,12 +187,12 @@ suite("removeNegatedFlag", () => {
 suite("standardizeArgument", () => {
   const tests = [
     {
-      desc: "standardize the argument",
+      desc: "has argument",
       give: ["-m <msg>", "--message <msg>"],
       want: ["-m", "--message string"],
     },
     {
-      desc: "work without arguments",
+      desc: "no argument",
       give: ["-p", "--prototype"],
       want: ["-p", "--prototype"],
     },
