@@ -36,7 +36,7 @@ export async function gitTownCommand(action: textRunner.actions.Args) {
   deepEqual(optionsArgs, actualArgs)
 }
 
-/** Document contains the AST for an entire page describing a Git Town command */
+/** Document contains the AST for an entire webpage describing a Git Town command */
 class Document {
   nodes: textRunner.ast.NodeList
 
