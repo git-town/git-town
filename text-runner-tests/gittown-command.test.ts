@@ -55,7 +55,7 @@ suite("SummarySection", () => {
   })
 })
 
-suite("GitTownCommandHelpOutput.parse", () => {
+suite("HelpOutput.parse", () => {
   test("append", () => {
     const give = `
 Create a new feature branch as a child of the current branch.
