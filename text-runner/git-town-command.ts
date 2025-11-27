@@ -89,7 +89,7 @@ class Document {
   }
 }
 
-/** SummarySection contains the text of the ```command-summary``` block of a Document*/
+/** SummarySection contains the text of the ```command-summary block of a Document*/
 export class SummarySection {
   text: string
 
