@@ -1,12 +1,10 @@
 # git town feature
 
-<a type="command-summary">
+<a type="git-town-command" />
 
 ```command-summary
 git town feature [<branch-name>...] [-h | --help] [-v | --verbose]
 ```
-
-</a>
 
 The _feature_ command makes some of your branches
 [feature](../branch-types.md#feature-branches) branches.
@@ -34,6 +32,10 @@ git town feature somebody-elses-branch
 ```
 
 ## Options
+
+#### `-h`<br>`--help`
+
+Display help for this command.
 
 #### `-v`<br>`--verbose`
 

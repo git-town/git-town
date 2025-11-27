@@ -1,12 +1,10 @@
 # git town runlog
 
-<a type="command-summary">
+<a type="git-town-command" />
 
 ```command-summary
 git town runlog [-h | --help] [-v | --verbose]
 ```
-
-</a>
 
 Git Town records the SHA of all local and remote branches before and after each
 command runs into an immutable, append-only log file called the _runlog_.
@@ -16,6 +14,10 @@ back changes if [git town undo](undo.md) doesn’t fully undo the changes the la
 command made.
 
 ## Options
+
+#### `-h`<br>`--help`
+
+Display help for this command.
 
 #### `-v`<br>`--verbose`
 
