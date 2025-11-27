@@ -15,7 +15,7 @@ export async function gittownCommand(action: textRunner.actions.Args) {
   const actualArgs = await loadCommandArgs(commandName)
   const actualJSON = JSON.stringify(actualArgs, null, 2)
 
-  // get the arguments described in the command summary
+  // get the arguments described by the command summary
   const summaryArgs = extractSummaryArgs(summaryText)
   const summaryJSON = JSON.stringify(summaryArgs, null, 2)
 
@@ -26,7 +26,7 @@ export async function gittownCommand(action: textRunner.actions.Args) {
     deepEqual(summaryArgs, actualArgs)
   }
 
-  // get the arguments described in the "## Options" section
+  // get the arguments described by the "## Options" section
   const options = findArgsInBody(action.document)
   const optionsJSON = JSON.stringify(options, null, 2)
 
