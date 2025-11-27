@@ -7,7 +7,7 @@ const execAsync = promisify(exec)
 
 /** verifies a MD page that describes a Git Town command */
 export async function gittownCommand(action: textRunner.actions.Args) {
-  // get the command that this page describes
+  // determine the Git Town command that this page describes
   const summaryText = findCommandSummary(action.document)
   const commandName = extractCommandName(summaryText)
 
