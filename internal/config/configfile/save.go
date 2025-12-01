@@ -100,6 +100,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	}
 
 	// keep-sorted start
+	browser, hasBrowser := data.Browser.Get()
 	devRemote, hasDevRemote := data.DevRemote.Get()
 	forgeType, hasForgeType := data.ForgeType.Get()
 	githubConnectorType, hasGitHubConnectorType := data.GitHubConnectorType.Get()
@@ -108,6 +109,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	// keep-sorted end
 	if cmp.Or(
 		// keep-sorted start
+		hasBrowser,
 		hasDevRemote,
 		hasForgeType,
 		hasGitHubConnectorType,
@@ -117,6 +119,9 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	) {
 		result.WriteString("\n[hosting]\n")
 		// keep-sorted start block=yes
+		if hasBrowser {
+			result.WriteString(fmt.Sprintf("browser = %q\n", browser))
+		}
 		if hasDevRemote {
 			result.WriteString(fmt.Sprintf("dev-remote = %q\n", devRemote))
 		}
