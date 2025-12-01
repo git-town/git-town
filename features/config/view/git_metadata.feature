@@ -48,18 +48,18 @@ Feature: display configuration from Git metadata
         unknown branch type: observed
         order: asc
         display types: all branch types
-      
+
       Configuration:
         offline: no
         git user name: user
         git user email: email@example.com
-      
+
       Create:
         branch prefix: acme-
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: no
-      
+
       Hosting:
         browser: firefox
         development remote: origin
@@ -73,14 +73,14 @@ Feature: display configuration from Git metadata
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
-      
+
       Propose:
         lineage: cli
-      
+
       Ship:
         delete tracking branch: yes
         ship strategy: squash-merge
-      
+
       Sync:
         auto-resolve phantom conflicts: no
         auto-sync: no
@@ -120,18 +120,18 @@ Feature: display configuration from Git metadata
         unknown branch type: feature
         order: asc
         display types: all branch types except "feature" and "main"
-      
+
       Configuration:
         offline: no
         git user name: user
         git user email: email@example.com
-      
+
       Create:
         branch prefix: (not set)
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: yes
-      
+
       Hosting:
         browser: (not set)
         development remote: origin
@@ -145,14 +145,14 @@ Feature: display configuration from Git metadata
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
-      
+
       Propose:
         lineage: none
-      
+
       Ship:
         delete tracking branch: yes
         ship strategy: api
-      
+
       Sync:
         auto-resolve phantom conflicts: yes
         auto-sync: yes
@@ -165,7 +165,7 @@ Feature: display configuration from Git metadata
         sync tags: yes
         sync with upstream: yes
         auto-resolve phantom conflicts: yes
-      
+
       Branch Lineage:
         main
           alpha
@@ -175,7 +175,7 @@ Feature: display configuration from Git metadata
           parked-2
           prototype-1
           prototype-2
-      
+
         qa
           hotfix
       """
