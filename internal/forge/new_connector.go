@@ -2,6 +2,7 @@ package forge
 
 import (
 	"github.com/git-town/git-town/v22/internal/cli/print"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/azuredevops"
 	"github.com/git-town/git-town/v22/internal/forge/bitbucketcloud"
 	"github.com/git-town/git-town/v22/internal/forge/bitbucketdatacenter"
@@ -30,12 +31,14 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 	switch forgeType {
 	case forgedomain.ForgeTypeAzureDevOps:
 		connector = azuredevops.NewConnector(azuredevops.NewConnectorArgs{
+			Browser:          args.Browser,
 			ProposalOverride: proposalOverride,
 			RemoteURL:        remoteURL,
 		})
 	case forgedomain.ForgeTypeBitbucket:
 		connector = bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
 			AppPassword:      args.BitbucketAppPassword,
+			Browser:          args.Browser,
 			Log:              args.Log,
 			ProposalOverride: proposalOverride,
 			RemoteURL:        remoteURL,
@@ -44,6 +47,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 	case forgedomain.ForgeTypeBitbucketDatacenter:
 		connector = bitbucketdatacenter.NewConnector(bitbucketdatacenter.NewConnectorArgs{
 			AppPassword:      args.BitbucketAppPassword,
+			Browser:          args.Browser,
 			Log:              args.Log,
 			ProposalOverride: proposalOverride,
 			RemoteURL:        remoteURL,
@@ -52,6 +56,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 	case forgedomain.ForgeTypeForgejo:
 		connector = forgejo.NewConnector(forgejo.NewConnectorArgs{
 			APIToken:         args.ForgejoToken,
+			Browser:          args.Browser,
 			Log:              args.Log,
 			ProposalOverride: proposalOverride,
 			RemoteURL:        remoteURL,
@@ -59,6 +64,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 	case forgedomain.ForgeTypeGitea:
 		connector = gitea.NewConnector(gitea.NewConnectorArgs{
 			APIToken:         args.GiteaToken,
+			Browser:          args.Browser,
 			Log:              args.Log,
 			ProposalOverride: proposalOverride,
 			RemoteURL:        remoteURL,
@@ -69,6 +75,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			case forgedomain.GitHubConnectorTypeAPI:
 				connector, err = github.NewConnector(github.NewConnectorArgs{
 					APIToken:         args.GitHubToken,
+					Browser:          args.Browser,
 					Log:              args.Log,
 					ProposalOverride: proposalOverride,
 					RemoteURL:        remoteURL,
@@ -86,6 +93,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			// no GitHubConnectorType specified --> use the API connector
 			connector, err = github.NewConnector(github.NewConnectorArgs{
 				APIToken:         args.GitHubToken,
+				Browser:          args.Browser,
 				Log:              args.Log,
 				ProposalOverride: proposalOverride,
 				RemoteURL:        remoteURL,
@@ -97,6 +105,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			case forgedomain.GitLabConnectorTypeAPI:
 				connector, err = gitlab.NewConnector(gitlab.NewConnectorArgs{
 					APIToken:         args.GitLabToken,
+					Browser:          args.Browser,
 					Log:              args.Log,
 					ProposalOverride: proposalOverride,
 					RemoteURL:        remoteURL,
@@ -114,6 +123,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			// no GitLabConnectorType specified --> use the API connector
 			connector, err = gitlab.NewConnector(gitlab.NewConnectorArgs{
 				APIToken:         args.GitLabToken,
+				Browser:          args.Browser,
 				Log:              args.Log,
 				ProposalOverride: proposalOverride,
 				RemoteURL:        remoteURL,
@@ -127,6 +137,7 @@ type NewConnectorArgs struct {
 	Backend              subshelldomain.Querier
 	BitbucketAppPassword Option[forgedomain.BitbucketAppPassword]
 	BitbucketUsername    Option[forgedomain.BitbucketUsername]
+	Browser              Option[configdomain.Browser]
 	ForgeType            Option[forgedomain.ForgeType]
 	ForgejoToken         Option[forgedomain.ForgejoToken]
 	Frontend             subshelldomain.Runner

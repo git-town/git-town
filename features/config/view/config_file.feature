@@ -35,6 +35,7 @@ Feature: display information from config file
       stash = false
 
       [hosting]
+      browser = "chrome"
       forge-type = "github"
       github-connector = "gh"
       origin-hostname = "github.com"
@@ -84,6 +85,7 @@ Feature: display information from config file
         stash uncommitted changes: no
 
       Hosting:
+        browser: chrome
         development remote: origin
         forge type: github
         origin hostname: github.com

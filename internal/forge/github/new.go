@@ -8,6 +8,7 @@ import (
 	"golang.org/x/oauth2"
 
 	"github.com/git-town/git-town/v22/internal/cli/print"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/git/giturl"
@@ -22,6 +23,7 @@ func Detect(remoteURL giturl.Parts) bool {
 
 type NewConnectorArgs struct {
 	APIToken         Option[forgedomain.GitHubToken]
+	Browser          Option[configdomain.Browser]
 	Log              print.Logger
 	ProposalOverride Option[forgedomain.ProposalOverride]
 	RemoteURL        giturl.Parts
@@ -34,6 +36,7 @@ func NewConnector(args NewConnectorArgs) (forgedomain.Connector, error) { //noli
 			Organization: args.RemoteURL.Org,
 			Repository:   args.RemoteURL.Repo,
 		},
+		browser: args.Browser,
 	}
 	if proposalURLOverride, hasProposalOverride := args.ProposalOverride.Get(); hasProposalOverride {
 		return TestConnector{

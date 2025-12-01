@@ -15,12 +15,12 @@ import (
 	"github.com/acarl005/stripansi"
 	"github.com/cucumber/godog"
 	messages "github.com/cucumber/messages/go/v21"
-	"github.com/git-town/git-town/v22/internal/browser"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v22/internal/cli/format"
 	"github.com/git-town/git-town/v22/internal/cli/print"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/config/configfile"
+	"github.com/git-town/git-town/v22/internal/config/envconfig"
 	"github.com/git-town/git-town/v22/internal/config/gitconfig"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
@@ -707,7 +707,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		updateInitialSHAs(state)
 		env := os.Environ()
 		if browserPath, has := state.browserVariable.Get(); has {
-			env = envvars.Replace(env, browser.EnvVarName, browserPath)
+			env = envvars.Replace(env, envconfig.Browser, browserPath)
 		}
 		output, exitCode := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{
 			Env:   env,
@@ -826,7 +826,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.MockCommitMessage(message)
 		env := os.Environ()
 		if browserPath, has := state.browserVariable.Get(); has {
-			env = envvars.Replace(env, browser.EnvVarName, browserPath)
+			env = envvars.Replace(env, envconfig.Browser, browserPath)
 		}
 		output, exitCode := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{
 			Env: env,
@@ -877,7 +877,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		updateInitialSHAs(state)
 		env := os.Environ()
 		if browserPath, has := state.browserVariable.Get(); has {
-			env = envvars.Replace(env, browser.EnvVarName, browserPath)
+			env = envvars.Replace(env, envconfig.Browser, browserPath)
 		}
 		env = append(env, envVar1, envVar2, envVar3, envVar4)
 		for a, answer := range helpers.TableToInputEnv(input) {
@@ -911,7 +911,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		updateInitialSHAs(state)
 		env := os.Environ()
 		if browserPath, has := state.browserVariable.Get(); has {
-			env = envvars.Replace(env, browser.EnvVarName, browserPath)
+			env = envvars.Replace(env, envconfig.Browser, browserPath)
 		}
 		for a, answer := range helpers.TableToInputEnv(input) {
 			env = append(env, fmt.Sprintf("%s_%02d=%s", dialogcomponents.InputKey, a, answer))
@@ -981,7 +981,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^no tool to open browsers is installed$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		state.browserVariable = Some(string(browser.EnvVarNone))
+		state.browserVariable = Some(string(configdomain.NoBrowser))
 	})
 
 	sc.Step(`^no uncommitted files exist now$`, func(ctx context.Context) error {
@@ -1574,7 +1574,7 @@ func runCommand(state *ScenarioState, command string, captureState bool) {
 	var runOutput string
 	env := os.Environ()
 	if browserVariable, hasBrowserOverride := state.browserVariable.Get(); hasBrowserOverride {
-		env = envvars.Replace(env, browser.EnvVarName, browserVariable)
+		env = envvars.Replace(env, envconfig.Browser, browserVariable)
 	}
 	if hasDevRepo {
 		runOutput, exitCode = devRepo.MustQueryStringCodeWith(command, &subshell.Options{

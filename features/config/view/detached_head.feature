@@ -15,6 +15,7 @@ Feature: display configuration from Git metadata in detached head state
     And Git setting "git-town.perennial-branches" is "qa staging"
     And Git setting "git-town.auto-sync" is "false"
     And Git setting "git-town.branch-prefix" is "acme-"
+    And Git setting "git-town.browser" is "firefox"
     And Git setting "git-town.display-types" is "all"
     And Git setting "git-town.perennial-regex" is "^release-"
     And Git setting "git-town.contribution-regex" is "^renovate/"
@@ -60,6 +61,7 @@ Feature: display configuration from Git metadata in detached head state
         stash uncommitted changes: no
 
       Hosting:
+        browser: firefox
         development remote: origin
         forge type: (not set)
         origin hostname: (not set)
