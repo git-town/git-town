@@ -6,7 +6,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/forge/gh"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -74,7 +73,7 @@ func TestParseJSONOutput(t *testing.T) {
 		want := []forgedomain.Proposal{
 			{
 				Data: forgedomain.ProposalData{
-					Body:         Some(gitdomain.ProposalBody("GitLab also provides a CLI app. This PR adds support for it similar to GitHub.\n")),
+					Body:         gitdomain.NewProposalBodyOpt("GitLab also provides a CLI app. This PR adds support for it similar to GitHub.\n"),
 					MergeWithAPI: true,
 					Number:       5079,
 					Source:       "kg-glab",
