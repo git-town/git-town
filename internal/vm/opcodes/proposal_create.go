@@ -3,10 +3,10 @@ package opcodes
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v22/internal/forge"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/proposallineage"
 	"github.com/git-town/git-town/v22/internal/vm/shared"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
@@ -44,7 +44,7 @@ func (self *ProposalCreate) Run(args shared.RunArgs) error {
 
 	if args.Config.Value.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
 		if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
-			lineageTree, err := forge.NewProposalStackLineageTree(forge.ProposalStackLineageArgs{
+			lineageTree, err := proposallineage.NewProposalStackLineageTree(proposallineage.ProposalStackLineageArgs{
 				Connector:                Some(proposalFinder),
 				CurrentBranch:            self.Branch,
 				Lineage:                  args.Config.Value.NormalConfig.Lineage,

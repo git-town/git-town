@@ -22,6 +22,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/proposallineage"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
 	"github.com/git-town/git-town/v22/internal/validate"
 	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
@@ -367,14 +368,14 @@ func mergeProgram(repo execute.OpenRepoResult, data mergeData) program.Program {
 			Current:   data.initialBranch,
 			FullStack: true,
 			Program:   prog,
-			ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
+			ProposalStackLineageArgs: proposallineage.ProposalStackLineageArgs{
 				Connector:                forgedomain.ProposalFinderFromConnector(data.connector),
 				CurrentBranch:            data.initialBranch,
 				Lineage:                  data.config.NormalConfig.Lineage,
 				MainAndPerennialBranches: data.config.MainAndPerennials(),
 				Order:                    data.config.NormalConfig.Order,
 			},
-			ProposalStackLineageTree:             None[*forge.ProposalStackLineageTree](),
+			ProposalStackLineageTree:             None[*proposallineage.ProposalStackLineageTree](),
 			SkipUpdateForProposalsWithBaseBranch: gitdomain.LocalBranchNames{data.initialBranch},
 		})
 	}
