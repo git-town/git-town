@@ -5,7 +5,6 @@ import (
 
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 func parsePullRequest(pullRequest PullRequest, repoURL string) forgedomain.ProposalData {
@@ -16,7 +15,7 @@ func parsePullRequest(pullRequest PullRequest, repoURL string) forgedomain.Propo
 		Source:       gitdomain.NewLocalBranchName(pullRequest.FromRef.DisplayID),
 		Target:       gitdomain.NewLocalBranchName(pullRequest.ToRef.DisplayID),
 		Title:        gitdomain.ProposalTitle(pullRequest.Title),
-		Body:         NewOption(gitdomain.ProposalBody(pullRequest.Description)),
+		Body:         gitdomain.NewProposalBodyOpt(pullRequest.Description),
 		URL:          fmt.Sprintf("%s/pull-requests/%v/overview", repoURL, pullRequest.ID),
 	}
 }

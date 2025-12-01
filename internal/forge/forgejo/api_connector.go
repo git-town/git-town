@@ -251,7 +251,7 @@ func parsePullRequest(pullRequest *forgejo.PullRequest) forgedomain.ProposalData
 		Source:       gitdomain.NewLocalBranchName(pullRequest.Head.Ref),
 		Target:       gitdomain.NewLocalBranchName(pullRequest.Base.Ref),
 		Title:        gitdomain.ProposalTitle(pullRequest.Title),
-		Body:         NewOption(gitdomain.ProposalBody(pullRequest.Body)),
+		Body:         gitdomain.NewProposalBodyOpt(pullRequest.Body),
 		URL:          pullRequest.HTMLURL,
 	}
 }

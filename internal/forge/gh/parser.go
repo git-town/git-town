@@ -5,7 +5,6 @@ import (
 
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 func ParseJSONOutput(output string) ([]forgedomain.Proposal, error) {
@@ -19,7 +18,7 @@ func ParseJSONOutput(output string) ([]forgedomain.Proposal, error) {
 		result[d] = forgedomain.Proposal{
 			Data: forgedomain.ProposalData{
 				Active:       data.State == "open",
-				Body:         NewOption(gitdomain.ProposalBody(data.Body)),
+				Body:         gitdomain.NewProposalBodyOpt(data.Body),
 				MergeWithAPI: data.Mergeable == "MERGEABLE",
 				Number:       data.Number,
 				Source:       gitdomain.NewLocalBranchName(data.HeadRefName),

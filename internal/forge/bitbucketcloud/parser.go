@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
-	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 func parsePullRequest(pullRequest map[string]any) (result forgedomain.BitbucketCloudProposalData, err error) {

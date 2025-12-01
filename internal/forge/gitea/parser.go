@@ -4,7 +4,6 @@ import (
 	"code.gitea.io/sdk/gitea"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 func FilterPullRequests(pullRequests []*gitea.PullRequest, branch, target gitdomain.LocalBranchName) []*gitea.PullRequest {
@@ -35,7 +34,7 @@ func parsePullRequest(pullRequest *gitea.PullRequest) forgedomain.ProposalData {
 		Source:       gitdomain.NewLocalBranchName(pullRequest.Head.Ref),
 		Target:       gitdomain.NewLocalBranchName(pullRequest.Base.Ref),
 		Title:        gitdomain.ProposalTitle(pullRequest.Title),
-		Body:         NewOption(gitdomain.ProposalBody(pullRequest.Body)),
+		Body:         gitdomain.NewProposalBodyOpt(pullRequest.Body),
 		URL:          pullRequest.HTMLURL,
 	}
 }
