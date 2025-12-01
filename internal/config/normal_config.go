@@ -104,6 +104,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		BitbucketUsername:        other.BitbucketUsername.Or(self.BitbucketUsername),
 		BranchPrefix:             other.BranchPrefix.Or(self.BranchPrefix),
 		BranchTypeOverrides:      other.BranchTypeOverrides.Concat(self.BranchTypeOverrides),
+		Browser:                  other.Browser.Or(self.Browser),
 		ContributionRegex:        other.ContributionRegex.Or(self.ContributionRegex),
 		Detached:                 other.Detached.GetOr(self.Detached),
 		DevRemote:                other.DevRemote.GetOr(self.DevRemote),
