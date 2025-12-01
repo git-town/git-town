@@ -1,12 +1,10 @@
 # git town delete
 
-<a type="command-summary">
+<a type="git-town-command" />
 
 ```command-summary
 git town delete [<branch-name>...] [--dry-run] [-h | --help] [-v | --verbose]
 ```
-
-</a>
 
 The _delete_ command deletes the given branch from the local and if possible the
 remote repository, removes commits of deleted branches from their descendents
@@ -62,6 +60,10 @@ When called with a branch name, it deletes the given branch.
 
 Use the `--dry-run` flag to test-drive this command. It prints the Git commands
 that would be run but doesn't execute them.
+
+#### `-h`<br>`--help`
+
+Display help for this command.
 
 #### `-v`<br>`--verbose`
 
