@@ -82,6 +82,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		BitbucketUsername:        other.BitbucketUsername.Or(self.BitbucketUsername),
 		BranchPrefix:             other.BranchPrefix.Or(self.BranchPrefix),
 		BranchTypeOverrides:      other.BranchTypeOverrides.Concat(self.BranchTypeOverrides),
+		Browser:                  other.Browser.Or(self.Browser),
 		ContributionRegex:        other.ContributionRegex.Or(self.ContributionRegex),
 		Detached:                 other.Detached.Or(self.Detached),
 		DevRemote:                other.DevRemote.Or(self.DevRemote),
