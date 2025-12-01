@@ -16,6 +16,7 @@ const (
 	bitbucketAppPassword     = "GIT_TOWN_BITBUCKET_APP_PASSWORD"
 	bitbucketUserName        = "GIT_TOWN_BITBUCKET_USERNAME"
 	branchPrefix             = "GIT_TOWN_BRANCH_PREFIX"
+	Browser                  = "BROWSER"
 	forgejoToken             = "GIT_TOWN_FORGEJO_TOKEN"
 	contributionRegex        = "GIT_TOWN_CONTRIBUTION_REGEX"
 	detached                 = "GIT_TOWN_DETACHED"

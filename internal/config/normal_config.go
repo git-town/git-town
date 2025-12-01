@@ -36,6 +36,7 @@ type NormalConfig struct {
 	BitbucketUsername        Option[forgedomain.BitbucketUsername]
 	BranchPrefix             Option[configdomain.BranchPrefix]
 	BranchTypeOverrides      configdomain.BranchTypeOverrides
+	Browser                  Option[configdomain.Browser]
 	ContributionRegex        Option[configdomain.ContributionRegex]
 	Detached                 configdomain.Detached
 	DevRemote                gitdomain.Remote
