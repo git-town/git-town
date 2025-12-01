@@ -66,7 +66,7 @@ func createProposal(data jsonData) forgedomain.Proposal {
 			Number:       data.Number,
 			Source:       data.SourceBranch,
 			Target:       data.TargetBranch,
-			Title:        gitdomain.ProposalTitle(data.Title),
+			Title:        data.Title,
 			URL:          data.URL,
 		},
 		ForgeType: forgedomain.ForgeTypeGitLab,
