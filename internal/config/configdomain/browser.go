@@ -6,12 +6,12 @@ import (
 
 type Browser string
 
-func (self Browser) String() string {
-	return string(self)
-}
-
 func (self Browser) NoBrowser() bool {
 	return self == NoBrowser
+}
+
+func (self Browser) String() string {
+	return string(self)
 }
 
 func ParseBrowser(value, _ string) (Option[Browser], error) {
