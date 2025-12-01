@@ -29,6 +29,7 @@ func (self *ProposalCreate) Run(args shared.RunArgs) error {
 		return forgedomain.UnsupportedServiceError()
 	}
 
+	// TODO: create proposal with embedded lineage here. The lineage is loaded below.
 	err := connector.CreateProposal(forgedomain.CreateProposalArgs{
 		Branch:         self.Branch,
 		FrontendRunner: args.Frontend,
@@ -44,7 +45,7 @@ func (self *ProposalCreate) Run(args shared.RunArgs) error {
 	if args.Config.Value.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
 		if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
 			lineageTree, err := forge.NewProposalStackLineageTree(forge.ProposalStackLineageArgs{
-				Connector:                proposalFinder,
+				Connector:                Some(proposalFinder),
 				CurrentBranch:            self.Branch,
 				Lineage:                  args.Config.Value.NormalConfig.Lineage,
 				MainAndPerennialBranches: args.Config.Value.MainAndPerennials(),
