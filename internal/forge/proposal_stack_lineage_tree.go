@@ -6,6 +6,11 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
+type ProposalStackLineageTree struct {
+	BranchToProposal map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]
+	Node             *ProposalStackLineageTreeNode
+}
+
 func NewProposalStackLineageTree(args ProposalStackLineageArgs) (*ProposalStackLineageTree, error) {
 	tree := &ProposalStackLineageTree{
 		BranchToProposal: make(map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]),
@@ -14,11 +19,6 @@ func NewProposalStackLineageTree(args ProposalStackLineageArgs) (*ProposalStackL
 
 	err := tree.build(args)
 	return tree, err
-}
-
-type ProposalStackLineageTree struct {
-	BranchToProposal map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]
-	Node             *ProposalStackLineageTreeNode
 }
 
 func (self *ProposalStackLineageTree) Rebuild(args ProposalStackLineageArgs) error {
