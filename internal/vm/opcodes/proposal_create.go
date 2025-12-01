@@ -32,23 +32,17 @@ func (self *ProposalCreate) Run(args shared.RunArgs) error {
 	proposalBody := self.ProposalBody
 	if args.Config.Value.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
 		if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
-			lineageTree, err := forge.NewProposalStackLineageTree(forge.ProposalStackLineageArgs{
+			lineageArgs := forge.ProposalStackLineageArgs{
 				Connector:                Some(proposalFinder),
 				CurrentBranch:            self.Branch,
 				Lineage:                  args.Config.Value.NormalConfig.Lineage,
 				MainAndPerennialBranches: args.Config.Value.MainAndPerennials(),
 				Order:                    args.Config.Value.NormalConfig.Order,
-			})
+			}
+			lineageTree, err := forge.NewProposalStackLineageTree(lineageArgs)
 			if err != nil {
 				// TODO: make sure error message return from failing to construct lineage is consistent across all invocations
 				fmt.Printf("failed to construct proposal stack lineage: %s\n", err.Error())
-			}
-			lineageArgs := forge.ProposalStackLineageArgs{
-				Connector:                forgedomain.ProposalFinderFromConnector(args.Connector),
-				CurrentBranch:            self.Branch,
-				Lineage:                  args.Config.Value.NormalConfig.Lineage,
-				MainAndPerennialBranches: args.Config.Value.MainAndPerennials(),
-				Order:                    args.Config.Value.NormalConfig.Order,
 			}
 			builder, hasBuilder := forge.NewProposalStackLineageBuilder(lineageArgs, MutableSome(lineageTree)).Get()
 			if !hasBuilder {
