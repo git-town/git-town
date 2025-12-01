@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 func ParseJSONOutput(output string) ([]forgedomain.Proposal, error) {
@@ -18,12 +19,12 @@ func ParseJSONOutput(output string) ([]forgedomain.Proposal, error) {
 		result[d] = forgedomain.Proposal{
 			Data: forgedomain.ProposalData{
 				Active:       data.State == "open",
-				Body:         gitdomain.NewProposalBodyOpt(data.Body),
+				Body:         NewOption(data.Body),
 				MergeWithAPI: data.Mergeable == "MERGEABLE",
 				Number:       data.Number,
 				Source:       gitdomain.NewLocalBranchName(data.HeadRefName),
 				Target:       gitdomain.NewLocalBranchName(data.BaseRefName),
-				Title:        gitdomain.ProposalTitle(data.Title),
+				Title:        data.Title,
 				URL:          data.URL,
 			},
 			ForgeType: forgedomain.ForgeTypeGitHub,
@@ -34,12 +35,12 @@ func ParseJSONOutput(output string) ([]forgedomain.Proposal, error) {
 
 // data returned by glab in JSON mode
 type jsonData struct {
-	BaseRefName string `json:"baseRefName"`
-	Body        string `json:"body"`
-	HeadRefName string `json:"headRefName"`
-	Mergeable   string `json:"mergeable"`
-	Number      int    `json:"number"`
-	State       string `json:"state"`
-	Title       string `json:"title"`
-	URL         string `json:"url"`
+	BaseRefName string                  `json:"baseRefName"`
+	Body        gitdomain.ProposalBody  `json:"body"`
+	HeadRefName string                  `json:"headRefName"`
+	Mergeable   string                  `json:"mergeable"`
+	Number      int                     `json:"number"`
+	State       string                  `json:"state"`
+	Title       gitdomain.ProposalTitle `json:"title"`
+	URL         string                  `json:"url"`
 }
