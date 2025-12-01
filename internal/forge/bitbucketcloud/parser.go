@@ -142,7 +142,7 @@ func parsePullRequest(pullRequest map[string]any) (result forgedomain.BitbucketC
 			Source:       gitdomain.NewLocalBranchName(source6),
 			Target:       gitdomain.NewLocalBranchName(destination6),
 			Title:        gitdomain.ProposalTitle(title2),
-			Body:         NewOption(gitdomain.ProposalBody(body2)),
+			Body:         gitdomain.NewProposalBodyOpt(body2),
 			URL:          url6,
 		},
 		CloseSourceBranch: closeSourceBranch2,
