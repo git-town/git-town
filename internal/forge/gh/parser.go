@@ -35,12 +35,12 @@ func ParseJSONOutput(output string) ([]forgedomain.Proposal, error) {
 
 // data returned by glab in JSON mode
 type jsonData struct {
-	BaseRefName string `json:"baseRefName"`
-	Body        string `json:"body"`
-	HeadRefName string `json:"headRefName"`
-	Mergeable   string `json:"mergeable"`
-	Number      int    `json:"number"`
-	State       string `json:"state"`
-	Title       string `json:"title"`
-	URL         string `json:"url"`
+	BaseRefName string                  `json:"baseRefName"`
+	Body        gitdomain.ProposalBody  `json:"body"`
+	HeadRefName string                  `json:"headRefName"`
+	Mergeable   string                  `json:"mergeable"`
+	Number      int                     `json:"number"`
+	State       string                  `json:"state"`
+	Title       gitdomain.ProposalTitle `json:"title"`
+	URL         string                  `json:"url"`
 }

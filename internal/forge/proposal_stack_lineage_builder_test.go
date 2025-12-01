@@ -28,7 +28,7 @@ func (self *mockProposalFinder) FindProposal(branch, target gitdomain.LocalBranc
 	}
 	return Some(forgedomain.Proposal{
 		Data: forgedomain.ProposalData{
-			Body:         None[string](),
+			Body:         None[gitdomain.ProposalBody](),
 			MergeWithAPI: false,
 			Number:       1,
 			Source:       branch,

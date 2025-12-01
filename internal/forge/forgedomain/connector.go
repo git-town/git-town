@@ -46,7 +46,7 @@ type VerifyCredentialsResult struct {
 // to enable Git Town to update proposals at the active forge.
 type ProposalBodyUpdater interface {
 	// Updates the body (description) of the given proposal to the given value.
-	UpdateProposalBody(proposal ProposalInterface, newBody string) error
+	UpdateProposalBody(proposal ProposalInterface, newBody gitdomain.ProposalBody) error
 }
 
 // ProposalFinder describes methods that connectors need to implement
