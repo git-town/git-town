@@ -6,23 +6,30 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-func NewProposalStackLineageTree(args ProposalStackLineageArgs) (*ProposalStackLineageTree, error) {
-	tree := &ProposalStackLineageTree{
-		BranchToProposal: make(map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]),
-		Node:             newProposalStackLineageTreeNode(""),
-	}
-
-	err := tree.build(args)
-	return tree, err
-}
-
 type ProposalStackLineageTree struct {
 	BranchToProposal map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]
 	Node             *ProposalStackLineageTreeNode
 }
 
+func NewProposalStackLineageTree(args ProposalStackLineageArgs) (*ProposalStackLineageTree, error) {
+	tree := &ProposalStackLineageTree{
+		BranchToProposal: make(map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]),
+		Node: &ProposalStackLineageTreeNode{
+			branch:     "",
+			childNodes: []*ProposalStackLineageTreeNode{},
+			proposal:   None[forgedomain.Proposal](),
+		},
+	}
+	err := tree.build(args)
+	return tree, err
+}
+
 func (self *ProposalStackLineageTree) Rebuild(args ProposalStackLineageArgs) error {
-	self.Node = newProposalStackLineageTreeNode("")
+	self.Node = &ProposalStackLineageTreeNode{
+		branch:     "",
+		childNodes: []*ProposalStackLineageTreeNode{},
+		proposal:   None[forgedomain.Proposal](),
+	}
 	return self.build(args)
 }
 
@@ -62,7 +69,11 @@ func addDescendantNodes(branch gitdomain.LocalBranchName, args ProposalStackLine
 		return nil
 	}
 	parentNode := visited[parentBranch]
-	branchNode := newProposalStackLineageTreeNode(branch)
+	branchNode := &ProposalStackLineageTreeNode{
+		branch:     branch,
+		childNodes: []*ProposalStackLineageTreeNode{},
+		proposal:   None[forgedomain.Proposal](),
+	}
 	parentNode.childNodes = append(parentNode.childNodes, branchNode)
 	if proposal, ok := tree.BranchToProposal[branch]; ok {
 		branchNode.proposal = proposal
@@ -139,7 +150,11 @@ func createAncestorNode(
 	parent *ProposalStackLineageTreeNode,
 	tree *ProposalStackLineageTree,
 ) *ProposalStackLineageTreeNode {
-	node := newProposalStackLineageTreeNode(ancestor)
+	node := &ProposalStackLineageTreeNode{
+		branch:     ancestor,
+		childNodes: []*ProposalStackLineageTreeNode{},
+		proposal:   None[forgedomain.Proposal](),
+	}
 	parent.childNodes = append(parent.childNodes, node)
 	if proposal, ok := tree.BranchToProposal[ancestor]; ok {
 		node.proposal = proposal
@@ -180,14 +195,6 @@ func findRelevantChildren(
 	}
 
 	return relevantChildren, nil
-}
-
-func newProposalStackLineageTreeNode(branch gitdomain.LocalBranchName) *ProposalStackLineageTreeNode {
-	return &ProposalStackLineageTreeNode{
-		branch:     branch,
-		childNodes: make([]*ProposalStackLineageTreeNode, 0),
-		proposal:   None[forgedomain.Proposal](),
-	}
 }
 
 func shouldIncludeChild(
