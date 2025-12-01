@@ -52,6 +52,7 @@ func TestSave(t *testing.T) {
 			have := configfile.RenderTOML(configdomain.PartialConfig{
 				AutoResolve:       Some(configdomain.AutoResolve(false)),
 				BranchPrefix:      Some(configdomain.BranchPrefix("feature-")),
+				Browser:           Some(configdomain.Browser("chrome")),
 				ContributionRegex: contributionRegex,
 				Detached:          Some(configdomain.Detached(true)),
 				DevRemote:         Some(gitdomain.RemoteOrigin),
@@ -105,6 +106,7 @@ share-new-branches = "propose"
 stash = true
 
 [hosting]
+browser = "chrome"
 dev-remote = "origin"
 forge-type = "github"
 github-connector-type = "gh"
