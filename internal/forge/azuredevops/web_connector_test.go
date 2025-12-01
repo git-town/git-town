@@ -26,7 +26,7 @@ func TestWebConnector(t *testing.T) {
 			FrontendRunner: nil,
 			MainBranch:     "main",
 			ParentBranch:   "parent",
-			ProposalBody:   Some(gitdomain.ProposalBody("body")),
+			ProposalBody:   gitdomain.NewProposalBodyOpt("body"),
 			ProposalTitle:  Some(gitdomain.ProposalTitle("title")),
 		})
 		want := "https://dev.azure.com/kevingoslar/tikibase/_git/tikibase/pullrequestcreate?sourceRef=feature&targetRef=parent"

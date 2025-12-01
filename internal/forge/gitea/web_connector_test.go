@@ -26,7 +26,7 @@ func TestGitea(t *testing.T) {
 		})
 		t.Run("with body", func(t *testing.T) {
 			give := forgedomain.ProposalData{
-				Body:   Some(gitdomain.ProposalBody("body")),
+				Body:   gitdomain.NewProposalBodyOpt("body"),
 				Number: 123,
 				Title:  "my title",
 			}
@@ -49,7 +49,7 @@ func TestGitea(t *testing.T) {
 			Branch:        "feature",
 			MainBranch:    "main",
 			ParentBranch:  "parent",
-			ProposalBody:  Some(gitdomain.ProposalBody("body")),
+			ProposalBody:  gitdomain.NewProposalBodyOpt("body"),
 			ProposalTitle: Some(gitdomain.ProposalTitle("title")),
 		})
 		must.EqOp(t, "https://gitea.com/org/repo/compare/parent...feature", have)
