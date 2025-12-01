@@ -201,6 +201,7 @@ func determineSwapData(repo execute.OpenRepoResult) (data swapData, flow configd
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
+		Browser:              config.Browser,
 		ForgeType:            config.ForgeType,
 		ForgejoToken:         config.ForgejoToken,
 		Frontend:             repo.Frontend,
