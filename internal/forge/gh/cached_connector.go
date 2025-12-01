@@ -90,7 +90,7 @@ func (self *CachedConnector) SquashMergeProposal(number int, message gitdomain.C
 
 var _ forgedomain.ProposalBodyUpdater = &cachedConnector // type-check
 
-func (self *CachedConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody string) error {
+func (self *CachedConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody gitdomain.ProposalBody) error {
 	self.Cache.Clear()
 	return self.Connector.UpdateProposalBody(proposalData, updatedBody)
 }

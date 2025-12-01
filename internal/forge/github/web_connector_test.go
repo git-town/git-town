@@ -32,7 +32,7 @@ func TestWebConnector(t *testing.T) {
 			give := forgedomain.ProposalData{
 				Number: 123,
 				Title:  "my title",
-				Body:   Some("body"),
+				Body:   gitdomain.NewProposalBodyOpt("body"),
 			}
 			have := connector.DefaultProposalMessage(give)
 			want := "my title (#123)\n\nbody"

@@ -18,7 +18,7 @@ func TestWebConnector(t *testing.T) {
 		t.Run("with body", func(t *testing.T) {
 			t.Parallel()
 			give := forgedomain.ProposalData{
-				Body:   Some("body"),
+				Body:   Some(gitdomain.ProposalBody("body")),
 				Number: 123,
 				Title:  "my title",
 			}
@@ -30,7 +30,7 @@ func TestWebConnector(t *testing.T) {
 		t.Run("without body", func(t *testing.T) {
 			t.Parallel()
 			give := forgedomain.ProposalData{
-				Body:   None[string](),
+				Body:   None[gitdomain.ProposalBody](),
 				Number: 123,
 				Title:  "my title",
 			}

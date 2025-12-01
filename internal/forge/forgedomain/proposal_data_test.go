@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
@@ -18,7 +19,7 @@ func TestBitbucketCloudProposalData(t *testing.T) {
 		data := forgedomain.BitbucketCloudProposalData{
 			ProposalData: forgedomain.ProposalData{
 				Active:       true,
-				Body:         Some("body"),
+				Body:         Some(gitdomain.ProposalBody("body")),
 				MergeWithAPI: true,
 				Number:       123,
 				Source:       "source",

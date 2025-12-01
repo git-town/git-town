@@ -15,8 +15,8 @@ func parsePullRequest(pullRequest PullRequest, repoURL string) forgedomain.Propo
 		Number:       pullRequest.ID,
 		Source:       gitdomain.NewLocalBranchName(pullRequest.FromRef.DisplayID),
 		Target:       gitdomain.NewLocalBranchName(pullRequest.ToRef.DisplayID),
-		Title:        pullRequest.Title,
-		Body:         NewOption(pullRequest.Description),
+		Title:        gitdomain.ProposalTitle(pullRequest.Title),
+		Body:         NewOption(gitdomain.ProposalBody(pullRequest.Description)),
 		URL:          fmt.Sprintf("%s/pull-requests/%v/overview", repoURL, pullRequest.ID),
 	}
 }

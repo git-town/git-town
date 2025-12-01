@@ -19,12 +19,12 @@ func ParseJSONOutput(output string) ([]forgedomain.Proposal, error) {
 		result[d] = forgedomain.Proposal{
 			Data: forgedomain.ProposalData{
 				Active:       data.State == "open",
-				Body:         NewOption(data.Body),
+				Body:         NewOption(gitdomain.ProposalBody(data.Body)),
 				MergeWithAPI: data.Mergeable == "MERGEABLE",
 				Number:       data.Number,
 				Source:       gitdomain.NewLocalBranchName(data.HeadRefName),
 				Target:       gitdomain.NewLocalBranchName(data.BaseRefName),
-				Title:        data.Title,
+				Title:        gitdomain.ProposalTitle(data.Title),
 				URL:          data.URL,
 			},
 			ForgeType: forgedomain.ForgeTypeGitHub,

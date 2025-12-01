@@ -15,7 +15,7 @@ func TestGitea(t *testing.T) {
 	t.Run("DefaultProposalMessage", func(t *testing.T) {
 		t.Run("without body", func(t *testing.T) {
 			give := forgedomain.ProposalData{
-				Body:   None[string](),
+				Body:   None[gitdomain.ProposalBody](),
 				Number: 123,
 				Title:  "my title",
 			}
@@ -26,7 +26,7 @@ func TestGitea(t *testing.T) {
 		})
 		t.Run("with body", func(t *testing.T) {
 			give := forgedomain.ProposalData{
-				Body:   Some("body"),
+				Body:   Some(gitdomain.ProposalBody("body")),
 				Number: 123,
 				Title:  "my title",
 			}

@@ -34,8 +34,8 @@ func parsePullRequest(pullRequest *gitea.PullRequest) forgedomain.ProposalData {
 		Number:       int(pullRequest.Index),
 		Source:       gitdomain.NewLocalBranchName(pullRequest.Head.Ref),
 		Target:       gitdomain.NewLocalBranchName(pullRequest.Base.Ref),
-		Title:        pullRequest.Title,
-		Body:         NewOption(pullRequest.Body),
+		Title:        gitdomain.ProposalTitle(pullRequest.Title),
+		Body:         NewOption(gitdomain.ProposalBody(pullRequest.Body)),
 		URL:          pullRequest.HTMLURL,
 	}
 }

@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v22/internal/forge"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/shoenig/test/must"
 )
 
@@ -177,9 +178,9 @@ main
 		t.Run(tc.description, func(t *testing.T) {
 			t.Parallel()
 			// act
-			have := forge.ProposalBodyUpdateWithStackLineage(tc.currentBody, tc.lineage)
+			have := forge.ProposalBodyUpdateWithStackLineage(gitdomain.ProposalBody(tc.currentBody), tc.lineage)
 			// assert
-			must.EqOp(t, tc.want, have)
+			must.EqOp(t, gitdomain.ProposalBody(tc.want), have)
 		})
 	}
 }
