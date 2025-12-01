@@ -122,8 +122,8 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 
 var _ forgedomain.ProposalBodyUpdater = ghConnector // type-check
 
-func (self Connector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody string) error {
-	return self.Frontend.Run("gh", "pr", "edit", strconv.Itoa(proposalData.Data().Number), "--body="+updatedBody)
+func (self Connector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody gitdomain.ProposalBody) error {
+	return self.Frontend.Run("gh", "pr", "edit", strconv.Itoa(proposalData.Data().Number), "--body="+updatedBody.String())
 }
 
 // ============================================================================

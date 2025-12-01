@@ -116,11 +116,11 @@ func (self APIConnector) SquashMergeProposal(number int, message gitdomain.Commi
 
 var _ forgedomain.ProposalBodyUpdater = apiConnector
 
-func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedDescription string) error {
+func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedDescription gitdomain.ProposalBody) error {
 	data := proposalData.Data()
 	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)))
 	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), data.Number, &gitlab.UpdateMergeRequestOptions{
-		Description: Ptr(updatedDescription),
+		Description: Ptr(updatedDescription.String()),
 	})
 	self.log.Finished(err)
 	return err

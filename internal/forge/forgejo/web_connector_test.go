@@ -18,7 +18,7 @@ func TestWebConnector(t *testing.T) {
 		t.Run("with body", func(t *testing.T) {
 			t.Parallel()
 			give := forgedomain.ProposalData{
-				Body:   Some("body"),
+				Body:   gitdomain.NewProposalBodyOpt("body"),
 				Number: 123,
 				Title:  "my title",
 			}
@@ -30,7 +30,7 @@ func TestWebConnector(t *testing.T) {
 		t.Run("without body", func(t *testing.T) {
 			t.Parallel()
 			give := forgedomain.ProposalData{
-				Body:   None[string](),
+				Body:   None[gitdomain.ProposalBody](),
 				Number: 123,
 				Title:  "my title",
 			}
@@ -54,7 +54,7 @@ func TestWebConnector(t *testing.T) {
 			Branch:        "feature",
 			MainBranch:    "main",
 			ParentBranch:  "parent",
-			ProposalBody:  Some(gitdomain.ProposalBody("body")),
+			ProposalBody:  gitdomain.NewProposalBodyOpt("body"),
 			ProposalTitle: Some(gitdomain.ProposalTitle("title")),
 		})
 		must.EqOp(t, "https://codeberg.org/org/repo/compare/parent...feature", have)

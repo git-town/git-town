@@ -47,14 +47,14 @@ func ParsePermissionsOutput(output string) forgedomain.VerifyCredentialsResult {
 }
 
 type jsonData struct {
-	Description  string `json:"description"`
-	Mergeable    string `json:"detailed_merge_status"` //nolint:tagliatelle
-	Number       int    `json:"iid"`                   //nolint:tagliatelle
-	SourceBranch string `json:"source_branch"`         //nolint:tagliatelle
-	State        string `json:"state"`                 //nolint:tagliatelle
-	TargetBranch string `json:"target_branch"`         //nolint:tagliatelle
-	Title        string `json:"title"`
-	URL          string `json:"web_url"` //nolint:tagliatelle
+	Description  gitdomain.ProposalBody  `json:"description"`
+	Mergeable    string                  `json:"detailed_merge_status"` //nolint:tagliatelle
+	Number       int                     `json:"iid"`                   //nolint:tagliatelle
+	SourceBranch string                  `json:"source_branch"`         //nolint:tagliatelle
+	State        string                  `json:"state"`                 //nolint:tagliatelle
+	TargetBranch string                  `json:"target_branch"`         //nolint:tagliatelle
+	Title        gitdomain.ProposalTitle `json:"title"`
+	URL          string                  `json:"web_url"` //nolint:tagliatelle
 }
 
 func createProposal(data jsonData) forgedomain.Proposal {

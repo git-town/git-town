@@ -78,11 +78,11 @@ func RepositoryURL(hostNameWithStandardPort string, organization string, reposit
 func parsePullRequest(pullRequest *github.PullRequest) forgedomain.ProposalData {
 	return forgedomain.ProposalData{
 		Active:       pullRequest.GetState() == "open",
-		Body:         NewOption(pullRequest.GetBody()),
+		Body:         gitdomain.NewProposalBodyOpt(pullRequest.GetBody()),
 		Number:       pullRequest.GetNumber(),
 		Source:       gitdomain.NewLocalBranchName(pullRequest.Head.GetRef()),
 		Target:       gitdomain.NewLocalBranchName(pullRequest.Base.GetRef()),
-		Title:        pullRequest.GetTitle(),
+		Title:        gitdomain.ProposalTitle(pullRequest.GetTitle()),
 		MergeWithAPI: pullRequest.GetMergeableState() == "clean",
 		URL:          *pullRequest.HTMLURL,
 	}

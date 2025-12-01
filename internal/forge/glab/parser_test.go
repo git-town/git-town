@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/forge/glab"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
@@ -48,7 +49,7 @@ func TestParseJsonOutput(t *testing.T) {
 		want := []forgedomain.Proposal{
 			{
 				Data: forgedomain.ProposalData{
-					Body:         None[string](),
+					Body:         None[gitdomain.ProposalBody](),
 					MergeWithAPI: true,
 					Number:       5,
 					Source:       "kg-test",

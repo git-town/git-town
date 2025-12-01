@@ -1,25 +1,31 @@
 package forge
 
-import "strings"
+import (
+	"strings"
 
-func ProposalBodyUpdateWithStackLineage(currentBody, lineageContent string) string {
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+)
+
+func ProposalBodyUpdateWithStackLineage(body gitdomain.ProposalBody, lineageContent string) gitdomain.ProposalBody {
 	if lineageContent == "" {
-		return currentBody
+		return body
 	}
 	const startMarker = "<!-- branch-stack -->"
 	const endMarker = "<!-- branch-stack-end -->"
+
+	bodyStr := body.String()
 
 	// Create the full lineage section with both markers
 	lineageSection := startMarker + "\n" + lineageContent + "\n" + endMarker
 
 	// Find the start marker
-	startIndex := strings.Index(currentBody, startMarker)
+	startIndex := strings.Index(bodyStr, startMarker)
 	if startIndex != -1 {
 		// Find where our section ends
-		afterStart := currentBody[startIndex:]
+		afterStart := bodyStr[startIndex:]
 
 		var beforeSection, afterSection string
-		beforeSection = currentBody[:startIndex]
+		beforeSection = bodyStr[:startIndex]
 		// Look for the end marker
 		endMarkerIndex := strings.Index(afterStart, endMarker)
 
@@ -38,16 +44,16 @@ func ProposalBodyUpdateWithStackLineage(currentBody, lineageContent string) stri
 				afterSection = contentAfterMarker[doubleNewlineIndex:]
 			} else {
 				// No clear boundary found, set afterSection to everything after the startMarker
-				afterSection = currentBody[startIndex+len(startMarker):]
+				afterSection = bodyStr[startIndex+len(startMarker):]
 			}
 		}
 
-		return beforeSection + lineageSection + afterSection
+		return gitdomain.ProposalBody(beforeSection + lineageSection + afterSection)
 	}
 
 	// Marker doesn't exist - append it
-	if currentBody != "" {
-		return currentBody + "\n\n" + lineageSection
+	if bodyStr != "" {
+		return gitdomain.ProposalBody(bodyStr + "\n\n" + lineageSection)
 	}
-	return lineageSection
+	return gitdomain.ProposalBody(lineageSection)
 }

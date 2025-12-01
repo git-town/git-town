@@ -113,8 +113,8 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 
 var _ forgedomain.ProposalBodyUpdater = glabConnector // type check
 
-func (self Connector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedDescription string) error {
-	return self.Frontend.Run("glab", "mr", "update", strconv.Itoa(proposalData.Data().Number), "--description="+updatedDescription)
+func (self Connector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedDescription gitdomain.ProposalBody) error {
+	return self.Frontend.Run("glab", "mr", "update", strconv.Itoa(proposalData.Data().Number), "--description="+updatedDescription.String())
 }
 
 // ============================================================================
