@@ -17,13 +17,13 @@ type AddStackLineageUpdateOpcodesArgs struct {
 	FullStack                            configdomain.FullStack
 	Program                              Mutable[program.Program]
 	ProposalStackLineageArgs             proposallineage.ProposalStackLineageArgs
-	ProposalStackLineageTree             Option[*proposallineage.ProposalStackLineageTree]
+	ProposalStackLineageTree             Option[*proposallineage.Tree]
 	SkipUpdateForProposalsWithBaseBranch gitdomain.LocalBranchNames
 }
 
 // AddStackLineageUpdateOpcodes syncs all given proposals.
 // Returns the stack lineage tree if its needed to recall this function.
-func AddStackLineageUpdateOpcodes(args AddStackLineageUpdateOpcodesArgs) Option[*proposallineage.ProposalStackLineageTree] {
+func AddStackLineageUpdateOpcodes(args AddStackLineageUpdateOpcodesArgs) Option[*proposallineage.Tree] {
 	// TODO: there are now multiple places that load and use proposals for branches.
 	// To avoid double-loading the same proposal data in one run,
 	// extract an object that caches the already known proposals,
@@ -34,11 +34,11 @@ func AddStackLineageUpdateOpcodes(args AddStackLineageUpdateOpcodesArgs) Option[
 	if hasTree {
 		err = tree.Rebuild(args.ProposalStackLineageArgs)
 	} else {
-		tree, err = proposallineage.NewProposalStackLineageTree(args.ProposalStackLineageArgs)
+		tree, err = proposallineage.NewTree(args.ProposalStackLineageArgs)
 	}
 	if err != nil {
 		fmt.Printf("failed to update proposal stack lineage: %s\n", err.Error())
-		return None[*proposallineage.ProposalStackLineageTree]()
+		return None[*proposallineage.Tree]()
 	}
 
 	if args.FullStack.Enabled() {

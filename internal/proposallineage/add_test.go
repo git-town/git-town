@@ -178,7 +178,7 @@ main
 		t.Run(tc.description, func(t *testing.T) {
 			t.Parallel()
 			// act
-			have := proposallineage.ProposalBodyUpdateWithStackLineage(gitdomain.ProposalBody(tc.currentBody), tc.lineage)
+			have := proposallineage.Add(gitdomain.ProposalBody(tc.currentBody), tc.lineage)
 			// assert
 			must.EqOp(t, gitdomain.ProposalBody(tc.want), have)
 		})
