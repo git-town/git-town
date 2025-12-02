@@ -12,6 +12,11 @@ import (
 
 const indentMarker = "-"
 
+type Builder struct {
+	mainAndPerennialBranches gitdomain.LocalBranchNames
+	tree                     *Tree
+}
+
 type ProposalStackLineageArgs struct {
 	Connector                Option[forgedomain.ProposalFinder]
 	CurrentBranch            gitdomain.LocalBranchName
@@ -47,11 +52,6 @@ func NewBuilder(args ProposalStackLineageArgs, lineageTree OptionalMutable[Tree]
 	}
 
 	return Some(*builder)
-}
-
-type Builder struct {
-	mainAndPerennialBranches gitdomain.LocalBranchNames
-	tree                     *Tree
 }
 
 // Build returns the proposal stack lineage as a string
