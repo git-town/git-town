@@ -375,7 +375,7 @@ func mergeProgram(repo execute.OpenRepoResult, data mergeData) program.Program {
 				MainAndPerennialBranches: data.config.MainAndPerennials(),
 				Order:                    data.config.NormalConfig.Order,
 			},
-			ProposalStackLineageTree:             None[*proposallineage.ProposalStackLineageTree](),
+			ProposalStackLineageTree:             None[*proposallineage.Tree](),
 			SkipUpdateForProposalsWithBaseBranch: gitdomain.LocalBranchNames{data.initialBranch},
 		})
 	}

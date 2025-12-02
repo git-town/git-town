@@ -6,17 +6,17 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-type ProposalStackLineageTree struct {
+type Tree struct {
 	BranchToProposal map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]
-	Node             *ProposalStackLineageTreeNode
+	Node             *TreeNode
 }
 
-func NewProposalStackLineageTree(args ProposalStackLineageArgs) (*ProposalStackLineageTree, error) {
-	tree := &ProposalStackLineageTree{
+func NewTree(args ProposalStackLineageArgs) (*Tree, error) {
+	tree := &Tree{
 		BranchToProposal: make(map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]),
-		Node: &ProposalStackLineageTreeNode{
+		Node: &TreeNode{
 			branch:     "",
-			childNodes: []*ProposalStackLineageTreeNode{},
+			childNodes: []*TreeNode{},
 			proposal:   None[forgedomain.Proposal](),
 		},
 	}
@@ -24,17 +24,17 @@ func NewProposalStackLineageTree(args ProposalStackLineageArgs) (*ProposalStackL
 	return tree, err
 }
 
-func (self *ProposalStackLineageTree) Rebuild(args ProposalStackLineageArgs) error {
-	self.Node = &ProposalStackLineageTreeNode{
+func (self *Tree) Rebuild(args ProposalStackLineageArgs) error {
+	self.Node = &TreeNode{
 		branch:     "",
-		childNodes: []*ProposalStackLineageTreeNode{},
+		childNodes: []*TreeNode{},
 		proposal:   None[forgedomain.Proposal](),
 	}
 	return self.build(args)
 }
 
-func (self *ProposalStackLineageTree) build(args ProposalStackLineageArgs) error {
-	visited := make(map[gitdomain.LocalBranchName]*ProposalStackLineageTreeNode)
+func (self *Tree) build(args ProposalStackLineageArgs) error {
+	visited := make(map[gitdomain.LocalBranchName]*TreeNode)
 
 	descendants, err := buildAncestorChain(args, self, visited)
 	if err != nil {
@@ -52,13 +52,13 @@ func (self *ProposalStackLineageTree) build(args ProposalStackLineageArgs) error
 	return nil
 }
 
-type ProposalStackLineageTreeNode struct {
+type TreeNode struct {
 	branch     gitdomain.LocalBranchName
-	childNodes []*ProposalStackLineageTreeNode
+	childNodes []*TreeNode
 	proposal   Option[forgedomain.Proposal]
 }
 
-func addDescendantNodes(branch gitdomain.LocalBranchName, args ProposalStackLineageArgs, visited map[gitdomain.LocalBranchName]*ProposalStackLineageTreeNode, tree *ProposalStackLineageTree) error {
+func addDescendantNodes(branch gitdomain.LocalBranchName, args ProposalStackLineageArgs, visited map[gitdomain.LocalBranchName]*TreeNode, tree *Tree) error {
 	if _, ok := visited[branch]; ok {
 		return nil
 	}
@@ -69,9 +69,9 @@ func addDescendantNodes(branch gitdomain.LocalBranchName, args ProposalStackLine
 		return nil
 	}
 	parentNode := visited[parentBranch]
-	branchNode := &ProposalStackLineageTreeNode{
+	branchNode := &TreeNode{
 		branch:     branch,
-		childNodes: []*ProposalStackLineageTreeNode{},
+		childNodes: []*TreeNode{},
 		proposal:   None[forgedomain.Proposal](),
 	}
 	parentNode.childNodes = append(parentNode.childNodes, branchNode)
@@ -99,8 +99,8 @@ func addDescendantNodes(branch gitdomain.LocalBranchName, args ProposalStackLine
 
 func buildAncestorChain(
 	args ProposalStackLineageArgs,
-	tree *ProposalStackLineageTree,
-	visited map[gitdomain.LocalBranchName]*ProposalStackLineageTreeNode,
+	tree *Tree,
+	visited map[gitdomain.LocalBranchName]*TreeNode,
 ) (gitdomain.LocalBranchNames, error) {
 	ancestors := args.Lineage.Ancestors(args.CurrentBranch)
 	descendants := gitdomain.LocalBranchNames{args.CurrentBranch}
@@ -129,8 +129,8 @@ func buildAncestorChain(
 func buildDescendantChain(
 	descendants gitdomain.LocalBranchNames,
 	args ProposalStackLineageArgs,
-	tree *ProposalStackLineageTree,
-	visited map[gitdomain.LocalBranchName]*ProposalStackLineageTreeNode,
+	tree *Tree,
+	visited map[gitdomain.LocalBranchName]*TreeNode,
 ) error {
 	for _, descendant := range descendants {
 		if err := addDescendantNodes(descendant, args, visited, tree); err != nil {
@@ -147,12 +147,12 @@ type childWithProposal struct {
 
 func createAncestorNode(
 	ancestor gitdomain.LocalBranchName,
-	parent *ProposalStackLineageTreeNode,
-	tree *ProposalStackLineageTree,
-) *ProposalStackLineageTreeNode {
-	node := &ProposalStackLineageTreeNode{
+	parent *TreeNode,
+	tree *Tree,
+) *TreeNode {
+	node := &TreeNode{
 		branch:     ancestor,
-		childNodes: []*ProposalStackLineageTreeNode{},
+		childNodes: []*TreeNode{},
 		proposal:   None[forgedomain.Proposal](),
 	}
 	parent.childNodes = append(parent.childNodes, node)

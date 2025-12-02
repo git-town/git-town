@@ -187,7 +187,7 @@ Start:
 					MainAndPerennialBranches: sharedData.config.MainAndPerennials(),
 					Order:                    sharedData.config.NormalConfig.Order,
 				},
-				ProposalStackLineageTree: None[*proposallineage.ProposalStackLineageTree](),
+				ProposalStackLineageTree: None[*proposallineage.Tree](),
 				// Proposal has been shipped and its stack lineage
 				// information shouldn't need to be updated because
 				// proposal is not in a review state.
