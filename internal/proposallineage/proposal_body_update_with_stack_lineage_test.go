@@ -1,10 +1,10 @@
-package forge_test
+package proposallineage_test
 
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v22/internal/forge"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/proposallineage"
 	"github.com/shoenig/test/must"
 )
 
@@ -178,7 +178,7 @@ main
 		t.Run(tc.description, func(t *testing.T) {
 			t.Parallel()
 			// act
-			have := forge.ProposalBodyUpdateWithStackLineage(gitdomain.ProposalBody(tc.currentBody), tc.lineage)
+			have := proposallineage.ProposalBodyUpdateWithStackLineage(gitdomain.ProposalBody(tc.currentBody), tc.lineage)
 			// assert
 			must.EqOp(t, gitdomain.ProposalBody(tc.want), have)
 		})
