@@ -13,7 +13,7 @@ type Tree struct {
 
 func NewTree(args ProposalStackLineageArgs) (*Tree, error) {
 	tree := &Tree{
-		BranchToProposal: make(map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]),
+		BranchToProposal: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{},
 		Node: &TreeNode{
 			branch:     "",
 			childNodes: []*TreeNode{},
@@ -34,7 +34,7 @@ func (self *Tree) Rebuild(args ProposalStackLineageArgs) error {
 }
 
 func (self *Tree) build(args ProposalStackLineageArgs) error {
-	visited := make(map[gitdomain.LocalBranchName]*TreeNode)
+	visited := map[gitdomain.LocalBranchName]*TreeNode{}
 
 	descendants, err := buildAncestorChain(args, self, visited)
 	if err != nil {
