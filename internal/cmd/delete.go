@@ -367,7 +367,7 @@ func deleteFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data d
 					MainAndPerennialBranches: data.config.MainAndPerennials(),
 					Order:                    data.config.NormalConfig.Order,
 				},
-				ProposalStackLineageTree: None[*proposallineage.ProposalStackLineageTree](),
+				ProposalStackLineageTree: None[*proposallineage.Tree](),
 				// Do not update the proposal of the deleted branch.
 				// At this point, a forge (like github) would close
 				// the proposal because there is no longer a remote

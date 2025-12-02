@@ -11,7 +11,7 @@ import (
 type ProposalUpdateLineage struct {
 	Current         gitdomain.LocalBranchName
 	CurrentProposal Option[forgedomain.Proposal]
-	LineageTree     OptionalMutable[proposallineage.ProposalStackLineageTree]
+	LineageTree     OptionalMutable[proposallineage.Tree]
 }
 
 func (self *ProposalUpdateLineage) Run(args shared.RunArgs) error {
@@ -26,7 +26,7 @@ func (self *ProposalUpdateLineage) Run(args shared.RunArgs) error {
 		MainAndPerennialBranches: args.Config.Value.MainAndPerennials(),
 		Order:                    args.Config.Value.NormalConfig.Order,
 	}
-	builder, hasBuilder := proposallineage.NewProposalStackLineageBuilder(lineageArgs, self.LineageTree).Get()
+	builder, hasBuilder := proposallineage.NewBuilder(lineageArgs, self.LineageTree).Get()
 	if !hasBuilder {
 		return nil
 	}

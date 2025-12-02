@@ -20,28 +20,28 @@ type ProposalStackLineageArgs struct {
 	Order                    configdomain.Order
 }
 
-func NewProposalStackLineageBuilder(args ProposalStackLineageArgs, lineageTree OptionalMutable[ProposalStackLineageTree]) Option[ProposalStackLineageBuilder] {
+func NewBuilder(args ProposalStackLineageArgs, lineageTree OptionalMutable[Tree]) Option[Builder] {
 	if args.MainAndPerennialBranches.Contains(args.CurrentBranch) ||
 		args.Lineage.Len() == 0 {
 		// cannot create proposal stack lineage for main or perennial branch
-		return None[ProposalStackLineageBuilder]()
+		return None[Builder]()
 	}
 
 	tree, hasTree := lineageTree.Get()
 	if !hasTree {
 		var err error
-		tree, err = NewProposalStackLineageTree(args)
+		tree, err = NewTree(args)
 		if err != nil {
 			fmt.Printf("failed to build proposal stack lineage: %s", err.Error())
-			return None[ProposalStackLineageBuilder]()
+			return None[Builder]()
 		}
 	}
 
 	if tree == nil {
-		return None[ProposalStackLineageBuilder]()
+		return None[Builder]()
 	}
 
-	builder := &ProposalStackLineageBuilder{
+	builder := &Builder{
 		mainAndPerennialBranches: args.MainAndPerennialBranches,
 		tree:                     tree,
 	}
@@ -49,13 +49,13 @@ func NewProposalStackLineageBuilder(args ProposalStackLineageArgs, lineageTree O
 	return Some(*builder)
 }
 
-type ProposalStackLineageBuilder struct {
+type Builder struct {
 	mainAndPerennialBranches gitdomain.LocalBranchNames
-	tree                     *ProposalStackLineageTree
+	tree                     *Tree
 }
 
 // Build returns the proposal stack lineage as a string
-func (self *ProposalStackLineageBuilder) Build(args ProposalStackLineageArgs) string {
+func (self *Builder) Build(args ProposalStackLineageArgs) string {
 	var builder strings.Builder
 	builder.WriteString("\n-------------------------\n")
 	builder.WriteString(self.build(self.tree.Node, args, 0))
@@ -66,11 +66,11 @@ func (self *ProposalStackLineageBuilder) Build(args ProposalStackLineageArgs) st
 // UpdateStack updates the underlying tree representation of the proposal stack. If proposal data was
 // fetched on a previous call to UpdateStack or during ProposalStackLineageBuilder, the underlying
 // data structure fetches that information from a map.
-func (self *ProposalStackLineageBuilder) UpdateStack(args ProposalStackLineageArgs) error {
+func (self *Builder) UpdateStack(args ProposalStackLineageArgs) error {
 	return self.tree.Rebuild(args)
 }
 
-func (self *ProposalStackLineageBuilder) build(node *ProposalStackLineageTreeNode, args ProposalStackLineageArgs, indentLevel int) string {
+func (self *Builder) build(node *TreeNode, args ProposalStackLineageArgs, indentLevel int) string {
 	var builder strings.Builder
 	indent := strings.Repeat(" ", indentLevel*2)
 	nextIndentLevel := indentLevel + 1

@@ -44,7 +44,7 @@ func (self *ProposalCreate) Run(args shared.RunArgs) error {
 
 	if args.Config.Value.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
 		if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
-			lineageTree, err := proposallineage.NewProposalStackLineageTree(proposallineage.ProposalStackLineageArgs{
+			lineageTree, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
 				Connector:                Some(proposalFinder),
 				CurrentBranch:            self.Branch,
 				Lineage:                  args.Config.Value.NormalConfig.Lineage,
