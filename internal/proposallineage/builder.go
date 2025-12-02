@@ -82,8 +82,13 @@ func (self *Builder) build(node *TreeNode, args ProposalStackLineageArgs, indent
 		return builder.String()
 	}
 
-	proposal, hasProposal := node.proposal.Get()
-	if hasProposal {
+	proposalOpt := None[forgedomain.Proposal]()
+	if connector, hasConnector := args.Connector.Get(); hasConnector {
+		if finder, canFind := connector.(forgedomain.ProposalFinder); canFind {
+			proposalOpt, _ = finder.SearchProposal(node.branch)
+		}
+	}
+	if proposal, hasProposal := proposalOpt.Get(); hasProposal {
 		builder.WriteString(formattedDisplay(args, indent, proposal))
 	} else {
 		nextIndentLevel--
