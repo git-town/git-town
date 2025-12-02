@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 )
 
-func ProposalBodyUpdateWithStackLineage(body gitdomain.ProposalBody, lineageContent string) gitdomain.ProposalBody {
+func Add(body gitdomain.ProposalBody, lineageContent string) gitdomain.ProposalBody {
 	if lineageContent == "" {
 		return body
 	}

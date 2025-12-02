@@ -35,7 +35,7 @@ func (self *ProposalUpdateLineage) Run(args shared.RunArgs) error {
 	}
 	args.PrependOpcodes(&ProposalUpdateBody{
 		Proposal:    proposal,
-		UpdatedBody: proposallineage.ProposalBodyUpdateWithStackLineage(proposal.Data.Data().Body.GetOrZero(), builder.Build(lineageArgs)),
+		UpdatedBody: proposallineage.Add(proposal.Data.Data().Body.GetOrZero(), builder.Build(lineageArgs)),
 	})
 	return nil
 }
