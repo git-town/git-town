@@ -58,7 +58,7 @@ type TreeNode struct {
 	proposal   Option[forgedomain.Proposal]
 }
 
-func addDescendantNodes(branch gitdomain.LocalBranchName, args ProposalStackLineageArgs, visited map[gitdomain.LocalBranchName]*TreeNode, tree *Tree) error {
+func addDescendentNodes(branch gitdomain.LocalBranchName, args ProposalStackLineageArgs, visited map[gitdomain.LocalBranchName]*TreeNode, tree *Tree) error {
 	if _, ok := visited[branch]; ok {
 		return nil
 	}
@@ -89,7 +89,7 @@ func addDescendantNodes(branch gitdomain.LocalBranchName, args ProposalStackLine
 
 	children := args.Lineage.Children(branch, args.Order)
 	for _, child := range children {
-		if err := addDescendantNodes(child, args, visited, tree); err != nil {
+		if err := addDescendentNodes(child, args, visited, tree); err != nil {
 			return err
 		}
 	}
@@ -133,7 +133,7 @@ func buildDescendantChain(
 	visited map[gitdomain.LocalBranchName]*TreeNode,
 ) error {
 	for _, descendant := range descendants {
-		if err := addDescendantNodes(descendant, args, visited, tree); err != nil {
+		if err := addDescendentNodes(descendant, args, visited, tree); err != nil {
 			return err
 		}
 	}
