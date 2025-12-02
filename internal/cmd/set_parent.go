@@ -26,6 +26,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/proposallineage"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
 	"github.com/git-town/git-town/v22/internal/validate"
 	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
@@ -482,14 +483,14 @@ func updateProposalLineage(prog *program.Program, newParentOpt Option[gitdomain.
 			Current:   data.initialBranch,
 			FullStack: true,
 			Program:   NewMutable(prog),
-			ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
+			ProposalStackLineageArgs: proposallineage.ProposalStackLineageArgs{
 				Connector:                forgedomain.ProposalFinderFromConnector(data.connector),
 				CurrentBranch:            data.initialBranch,
 				Lineage:                  data.config.NormalConfig.Lineage,
 				MainAndPerennialBranches: data.config.MainAndPerennials(),
 				Order:                    data.config.NormalConfig.Order,
 			},
-			ProposalStackLineageTree:             None[*forge.ProposalStackLineageTree](),
+			ProposalStackLineageTree:             None[*proposallineage.ProposalStackLineageTree](),
 			SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(),
 		},
 	)
@@ -510,7 +511,7 @@ func updateProposalLineage(prog *program.Program, newParentOpt Option[gitdomain.
 			Current:   data.initialBranch,
 			FullStack: true,
 			Program:   NewMutable(prog),
-			ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
+			ProposalStackLineageArgs: proposallineage.ProposalStackLineageArgs{
 				Connector:                forgedomain.ProposalFinderFromConnector(data.connector),
 				CurrentBranch:            data.initialBranch,
 				Lineage:                  data.config.NormalConfig.Lineage,
@@ -533,7 +534,7 @@ func updateProposalLineage(prog *program.Program, newParentOpt Option[gitdomain.
 				Current:   data.initialBranch,
 				FullStack: true,
 				Program:   NewMutable(prog),
-				ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
+				ProposalStackLineageArgs: proposallineage.ProposalStackLineageArgs{
 					Connector:                forgedomain.ProposalFinderFromConnector(data.connector),
 					CurrentBranch:            newParent,
 					Lineage:                  data.config.NormalConfig.Lineage,
