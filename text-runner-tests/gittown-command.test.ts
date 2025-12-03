@@ -99,34 +99,39 @@ Usage:
   git-town append <branch> [flags]
 
 Flags:
-      --auto-resolve     auto-resolve phantom merge conflicts
-  -b, --beam             beam some commits from this branch to the new branch
-  -c, --commit           commit the stashed changes into the new branch
-  -d, --detached         don't update the perennial root branch
-      --dry-run          print but do not run the Git commands
-  -h, --help             help for append
-  -m, --message string   the commit message
-      --propose          propose the new branch
-  -p, --prototype        create a prototype branch
-      --push             push local branches
-      --stash            stash uncommitted changes when creating branches
-      --sync             sync branches (default true)
-  -v, --verbose          display all Git commands run under the hood
+      --auto-resolve      auto-resolve phantom merge conflicts
+  -b, --beam              beam some commits from this branch to the new branch
+  -c, --commit            commit the stashed changes into the new branch
+  -d, --detached          don't update the perennial root branch
+      --dry-run           print but do not run the Git commands
+  -h, --help              help for append
+  -m, --message string    the commit message
+      --no-auto-resolve   don't auto-resolve
+      --no-detached       disable detached
+      --no-push           don't push branches
+      --no-stash          don't stash uncommitted changes
+      --no-sync           don't sync branches
+      --propose           propose the new branch
+  -p, --prototype         create a prototype branch
+      --push              push local branches
+      --stash             stash uncommitted changes when creating branches
+      --sync              sync branches (default true)
+  -v, --verbose           display all Git commands run under the hood
 `)
     const have = output.flags()
     const want = [
-      ["--auto-resolve"],
+      ["--auto-resolve", "--no-auto-resolve"],
       ["-b", "--beam"],
       ["-c", "--commit"],
-      ["-d", "--detached"],
+      ["-d", "--detached", "--no-detached"],
       ["--dry-run"],
       ["-h", "--help"],
       ["-m", "--message string"],
       ["--propose"],
       ["-p", "--prototype"],
-      ["--push"],
-      ["--stash"],
-      ["--sync"],
+      ["--push", "--no-push"],
+      ["--stash", "--no-stash"],
+      ["--sync", "--no-sync"],
       ["-v", "--verbose"],
     ]
     deepEqual(have, want)

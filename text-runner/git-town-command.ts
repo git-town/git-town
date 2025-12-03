@@ -99,7 +99,7 @@ export class SummarySection {
 
   /** provides the arguments that this summary section describes for its Git Town command */
   args(): string[][] {
-    const args: string[][] = []
+    const result: string[][] = []
     // Match all optional arguments in square brackets: [-p | --prototype] or [(-m | --message) <text>]
     const matches = this.text.matchAll(/\[([^\]]+)\]/g)
     for (const match of matches) {
@@ -119,9 +119,9 @@ export class SummarySection {
       const normalizedArgText = argText.replace(/<.+?>/g, "string")
       // Split by | to get the different variations of the flag
       const variations = normalizedArgText.split("|").map((v) => v.trim())
-      args.push(variations)
+      result.push(variations)
     }
-    return args
+    return result
   }
 
   /** provides the name of the Git Town command described by this summary section */
