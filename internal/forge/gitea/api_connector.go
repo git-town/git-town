@@ -142,7 +142,7 @@ func (self *AuthConnector) SquashMergeProposal(number int, message gitdomain.Com
 
 var _ forgedomain.ProposalBodyUpdater = &apiConnector // type check
 
-func (self *AuthConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody string) error {
+func (self *AuthConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody gitdomain.ProposalBody) error {
 	client, err := self.getClient()
 	if err != nil {
 		return err
@@ -150,7 +150,7 @@ func (self *AuthConnector) UpdateProposalBody(proposalData forgedomain.ProposalI
 	data := proposalData.Data()
 	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)))
 	_, _, err = client.EditPullRequest(self.Organization, self.Repository, int64(data.Number), gitea.EditPullRequestOption{
-		Body: &updatedBody,
+		Body: Ptr(updatedBody.String()),
 	})
 	self.log.Finished(err)
 	return err

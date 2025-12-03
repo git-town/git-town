@@ -1,12 +1,10 @@
 # git town contribute
 
-<a type="command-summary">
+<a type="git-town-command" />
 
 ```command-summary
 git town contribute [<branch-name>...] [-h | --help] [-v | --verbose]
 ```
-
-</a>
 
 The _contribute_ command makes some of your branches
 [contribution](../branch-types.md#contribution-branches) branches.
@@ -43,6 +41,10 @@ git town contribute somebody-elses-branch
 ```
 
 ## Options
+
+#### `-h`<br>`--help`
+
+Display help for this command.
 
 #### `-v`<br>`--verbose`
 

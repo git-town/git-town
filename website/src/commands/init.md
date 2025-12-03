@@ -1,18 +1,20 @@
 # git town init
 
-<a type="command-summary">
+<a type="git-town-command" />
 
 ```command-summary
 git town init [-h | --help] [-v | --verbose]
 ```
-
-</a>
 
 The _init_ command launches Git Town's setup assistant. The setup assistant
 walks you through all configuration options for Git Town and gives you a chance
 to adjust them.
 
 ## Options
+
+#### `-h`<br>`--help`
+
+Display help for this command.
 
 #### `-v`<br>`--verbose`
 

@@ -5,8 +5,10 @@ import (
 	"net/url"
 
 	"github.com/git-town/git-town/v22/internal/browser"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 var (
@@ -17,16 +19,17 @@ var (
 // WebConnector provides connectivity to GitLab through the browser.
 type WebConnector struct {
 	forgedomain.HostedRepoInfo
+	browser Option[configdomain.Browser]
 }
 
 func (self WebConnector) BrowseRepository(runner subshelldomain.Runner) error {
-	browser.Open(self.RepositoryURL(), runner)
+	browser.Open(self.RepositoryURL(), runner, self.browser)
 	return nil
 }
 
 func (self WebConnector) CreateProposal(data forgedomain.CreateProposalArgs) error {
 	url := self.NewProposalURL(data)
-	browser.Open(url, data.FrontendRunner)
+	browser.Open(url, data.FrontendRunner, self.browser)
 	return nil
 }
 

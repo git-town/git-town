@@ -125,6 +125,7 @@ func determineUndoData(repo execute.OpenRepoResult) (data undoData, flow configd
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
+		Browser:              config.Browser,
 		ForgeType:            config.ForgeType,
 		ForgejoToken:         config.ForgejoToken,
 		Frontend:             repo.Frontend,

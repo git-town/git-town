@@ -3,6 +3,7 @@ package forgejo
 import (
 	"codeberg.org/mvdkleijn/forgejo-sdk/forgejo/v2"
 	"github.com/git-town/git-town/v22/internal/cli/print"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/giturl"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
@@ -15,6 +16,7 @@ func Detect(remoteURL giturl.Parts) bool {
 
 type NewConnectorArgs struct {
 	APIToken         Option[forgedomain.ForgejoToken]
+	Browser          Option[configdomain.Browser]
 	Log              print.Logger
 	ProposalOverride Option[forgedomain.ProposalOverride]
 	RemoteURL        giturl.Parts
@@ -28,6 +30,7 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint:iretur
 			Organization: args.RemoteURL.Org,
 			Repository:   args.RemoteURL.Repo,
 		},
+		browser: args.Browser,
 	}
 	if proposalURLOverride, hasProposalOverride := args.ProposalOverride.Get(); hasProposalOverride {
 		return TestConnector{

@@ -32,7 +32,7 @@ func TestWebConnector(t *testing.T) {
 			give := forgedomain.ProposalData{
 				Number: 123,
 				Title:  "my title",
-				Body:   Some("body"),
+				Body:   gitdomain.NewProposalBodyOpt("body"),
 			}
 			have := connector.DefaultProposalMessage(give)
 			want := "my title (#123)\n\nbody"
@@ -74,7 +74,7 @@ func TestWebConnector(t *testing.T) {
 				branch: "feature-#",
 				parent: "main",
 				title:  Some(gitdomain.ProposalTitle("my title")),
-				body:   Some(gitdomain.ProposalBody("my body")),
+				body:   gitdomain.NewProposalBodyOpt("my body"),
 				want:   "https://github.com/organization/repo/compare/feature-%23?expand=1&title=my+title&body=my+body",
 			},
 			"provide title only": {
@@ -88,7 +88,7 @@ func TestWebConnector(t *testing.T) {
 				branch: "feature-#",
 				parent: "main",
 				title:  None[gitdomain.ProposalTitle](),
-				body:   Some(gitdomain.ProposalBody("my body")),
+				body:   gitdomain.NewProposalBodyOpt("my body"),
 				want:   "https://github.com/organization/repo/compare/feature-%23?expand=1&body=my+body",
 			},
 		}

@@ -44,6 +44,7 @@ type Create struct {
 }
 
 type Hosting struct {
+	Browser             *string `toml:"browser"`
 	DevRemote           *string `toml:"dev-remote"`
 	ForgeType           *string `toml:"forge-type"`
 	GitHubConnectorType *string `toml:"github-connector"`

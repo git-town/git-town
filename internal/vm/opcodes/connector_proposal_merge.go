@@ -44,7 +44,7 @@ func (self *ConnectorProposalMerge) Run(args shared.RunArgs) error {
 		if err := args.Git.SquashMerge(args.Frontend, self.Branch); err != nil {
 			return err
 		}
-		if err := args.Git.CommentOutSquashCommitMessage(Some(forgedomain.CommitBody(proposalData, proposalData.Title) + "\n\n")); err != nil {
+		if err := args.Git.CommentOutSquashCommitMessage(Some(forgedomain.CommitBody(proposalData, proposalData.Title.String()) + "\n\n")); err != nil {
 			return fmt.Errorf(messages.SquashMessageProblem, err)
 		}
 		if err := args.Git.CommitStart(args.Frontend); err != nil {

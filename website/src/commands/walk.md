@@ -1,12 +1,10 @@
 # git town walk
 
-<a type="command-summary">
+<a type="git-town-command" />
 
 ```command-summary
 git town walk [<command and arguments>] [-a | --all] [--dry-run] [-h | --help] [-s | --stack] [-v | --verbose]
 ```
-
-</a>
 
 The _walk_ command ("walking the branch hierarchy") executes a given command for
 each feature branch. It stops if the command exits with an error, giving you a
@@ -56,14 +54,18 @@ Running `git town walk --stack make lint` produces this output:
 
 Iterate through all local branches.
 
-#### `-s`<br>`--stack`
-
-Iterate through all branches of the stack that the current branch belongs to.
-
 #### `--dry-run`
 
 Test-drive this command: It prints the commands that would be run but doesn't
 execute them.
+
+#### `-h`<br>`--help`
+
+Display help for this command.
+
+#### `-s`<br>`--stack`
+
+Iterate through all branches of the stack that the current branch belongs to.
 
 #### `-v`<br>`--verbose`
 

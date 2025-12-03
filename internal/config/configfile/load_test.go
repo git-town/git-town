@@ -42,6 +42,7 @@ push-new-branches = true
 share-new-branches = "push"
 
 [hosting]
+browser = "chrome"
 forge-type = "github"
 origin-hostname = "github.com"
 
@@ -88,6 +89,7 @@ prototype-branches = "compress"
 					ShareNewBranches: Ptr("push"),
 				},
 				Hosting: &configfile.Hosting{
+					Browser:        Ptr("chrome"),
 					ForgeType:      Ptr("github"),
 					OriginHostname: Ptr("github.com"),
 				},

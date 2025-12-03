@@ -32,7 +32,7 @@ func TestGitLabWebConnector(t *testing.T) {
 			give := forgedomain.ProposalData{
 				Number: 123,
 				Title:  "my title",
-				Body:   Some("body"),
+				Body:   gitdomain.NewProposalBodyOpt("body"),
 			}
 			have := connector.DefaultProposalMessage(give)
 			want := "my title (!123)\n\nbody"
@@ -75,14 +75,14 @@ func TestGitLabWebConnector(t *testing.T) {
 				branch: "feature",
 				parent: "main",
 				title:  None[gitdomain.ProposalTitle](),
-				body:   Some(gitdomain.ProposalBody("my body")),
+				body:   gitdomain.NewProposalBodyOpt("my body"),
 				want:   "https://gitlab.com/organization/repo/-/merge_requests/new?merge_request%5Bdescription%5D=my+body&merge_request%5Bsource_branch%5D=feature&merge_request%5Btarget_branch%5D=main",
 			},
 			"proposal with title and body": {
 				branch: "feature",
 				parent: "main",
 				title:  Some(gitdomain.ProposalTitle("my title")),
-				body:   Some(gitdomain.ProposalBody("my body")),
+				body:   gitdomain.NewProposalBodyOpt("my body"),
 				want:   "https://gitlab.com/organization/repo/-/merge_requests/new?merge_request%5Bdescription%5D=my+body&merge_request%5Bsource_branch%5D=feature&merge_request%5Btarget_branch%5D=main&merge_request%5Btitle%5D=my+title",
 			},
 		}

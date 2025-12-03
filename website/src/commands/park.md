@@ -1,12 +1,10 @@
 # git town park
 
-<a type="command-summary">
+<a type="git-town-command" />
 
 ```command-summary
 git town park [<branch-name>...] [-h | --help] [-v | --verbose]
 ```
-
-</a>
 
 The _park_ command [parks](../branch-types.md#parked-branches) some of your
 branches.
@@ -29,6 +27,10 @@ git town park alpha beta
 ```
 
 ## Options
+
+#### `-h`<br>`--help`
+
+Display help for this command.
 
 #### `-v`<br>`--verbose`
 

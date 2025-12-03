@@ -38,6 +38,7 @@ Feature: show the configuration when using an alternative config file
         stash uncommitted changes: yes
 
       Hosting:
+        browser: (not set)
         development remote: origin
         forge type: (not set)
         origin hostname: (not set)

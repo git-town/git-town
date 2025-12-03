@@ -4,13 +4,14 @@ import (
 	"errors"
 
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/vm/shared"
 )
 
 type ProposalUpdateBody struct {
 	Proposal    forgedomain.Proposal
-	UpdatedBody string
+	UpdatedBody gitdomain.ProposalBody
 }
 
 func (self *ProposalUpdateBody) Run(args shared.RunArgs) error {

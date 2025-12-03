@@ -75,6 +75,7 @@
     - [Share new branches](preferences/share-new-branches.md)
     - [Stash](preferences/stash.md)
   - [Hosting]()
+    - [Browser](preferences/browser.md)
     - [Development remote](preferences/dev-remote.md)
     - [Forge Type](preferences/forge-type.md)
     - [Origin hostname](preferences/hosting-origin-hostname.md)
@@ -101,5 +102,4 @@
     - [Sync tags](preferences/sync-tags.md)
     - [Sync with upstream](preferences/sync-upstream.md)
   - [Offline mode](preferences/offline.md)
-  - [BROWSER env variable](preferences/browser.md)
   - [Branch lineage](preferences/parent.md)

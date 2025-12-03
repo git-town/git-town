@@ -85,6 +85,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	autoSync, errAutoSync := load(snapshot, configdomain.KeyAutoSync, gohacks.ParseBoolOpt[configdomain.AutoSync], ignoreUnknown)
 	branchPrefix, errBranchPrefix := load(snapshot, configdomain.KeyBranchPrefix, configdomain.ParseBranchPrefix, ignoreUnknown)
 	branchTypeOverrides, errBranchTypeOverride := NewBranchTypeOverridesInSnapshot(snapshot, ignoreUnknown, runner)
+	browser, errBrowser := load(snapshot, configdomain.KeyBrowser, configdomain.ParseBrowser, ignoreUnknown)
 	contributionRegex, errContributionRegex := load(snapshot, configdomain.KeyContributionRegex, configdomain.ParseContributionRegex, ignoreUnknown)
 	detached, errDetached := load(snapshot, configdomain.KeyDetached, gohacks.ParseBoolOpt[configdomain.Detached], ignoreUnknown)
 	displayTypes, errDisplayTypes := load(snapshot, configdomain.KeyDisplayTypes, configdomain.ParseDisplayTypes, ignoreUnknown)
@@ -118,6 +119,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		errAutoSync,
 		errBranchPrefix,
 		errBranchTypeOverride,
+		errBrowser,
 		errContributionRegex,
 		errDetached,
 		errDisplayTypes,
@@ -153,6 +155,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		BitbucketUsername:        forgedomain.ParseBitbucketUsername(snapshot[configdomain.KeyBitbucketUsername]),
 		BranchPrefix:             branchPrefix,
 		BranchTypeOverrides:      branchTypeOverrides,
+		Browser:                  browser,
 		ForgejoToken:             forgedomain.ParseForgejoToken(snapshot[configdomain.KeyForgejoToken]),
 		ContributionRegex:        contributionRegex,
 		Detached:                 detached,

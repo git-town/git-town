@@ -13,12 +13,12 @@ import (
 	"github.com/git-town/git-town/v22/internal/config/cliconfig"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/execute"
-	"github.com/git-town/git-town/v22/internal/forge"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks"
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/proposallineage"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
 	"github.com/git-town/git-town/v22/internal/validate"
 	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
@@ -180,14 +180,14 @@ Start:
 				Current:   sharedData.initialBranch,
 				FullStack: true,
 				Program:   prog,
-				ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
+				ProposalStackLineageArgs: proposallineage.ProposalStackLineageArgs{
 					Connector:                forgedomain.ProposalFinderFromConnector(sharedData.connector),
 					CurrentBranch:            sharedData.initialBranch,
 					Lineage:                  sharedData.config.NormalConfig.Lineage,
 					MainAndPerennialBranches: sharedData.config.MainAndPerennials(),
 					Order:                    sharedData.config.NormalConfig.Order,
 				},
-				ProposalStackLineageTree: None[*forge.ProposalStackLineageTree](),
+				ProposalStackLineageTree: None[*proposallineage.Tree](),
 				// Proposal has been shipped and its stack lineage
 				// information shouldn't need to be updated because
 				// proposal is not in a review state.

@@ -21,6 +21,7 @@ Feature: show the configuration
     Given Git setting "git-town.perennial-branches" is "qa staging"
     And Git setting "git-town.perennial-regex" is "^release-"
     And Git setting "git-town.auto-sync" is "false"
+    And Git setting "git-town.browser" is "firefox"
     And Git setting "git-town.contribution-regex" is "^renovate/"
     And Git setting "git-town.display-types" is "all"
     And Git setting "git-town.observed-regex" is "^dependabot/"
@@ -61,6 +62,7 @@ Feature: show the configuration
         stash uncommitted changes: no
 
       Hosting:
+        browser: firefox
         development remote: origin
         forge type: (not set)
         origin hostname: (not set)
@@ -112,6 +114,7 @@ Feature: show the configuration
       stash = false
 
       [hosting]
+      browser = "firefox"
       forge-type = "github"
       origin-hostname = "github.com"
 
@@ -162,6 +165,7 @@ Feature: show the configuration
         stash uncommitted changes: no
 
       Hosting:
+        browser: firefox
         development remote: origin
         forge type: github
         origin hostname: github.com
@@ -199,6 +203,7 @@ Feature: show the configuration
     Given the main branch is "git-main"
     And Git setting "git-town.perennial-branches" is "git-perennial-1 git-perennial-2"
     And Git setting "git-town.auto-sync" is "false"
+    And Git setting "git-town.browser" is "firefox"
     And Git setting "git-town.contribution-regex" is "^git-contribution-regex"
     And Git setting "git-town.display-types" is "all"
     And Git setting "git-town.observed-regex" is "^git-observed-regex"
@@ -235,6 +240,7 @@ Feature: show the configuration
       stash = true
 
       [hosting]
+      browser = "chrome"
       forge-type = "github"
       origin-hostname = "github.com"
 
@@ -282,6 +288,7 @@ Feature: show the configuration
         stash uncommitted changes: no
 
       Hosting:
+        browser: firefox
         development remote: origin
         forge type: github
         origin hostname: github.com
@@ -354,6 +361,7 @@ Feature: show the configuration
         stash uncommitted changes: yes
 
       Hosting:
+        browser: (not set)
         development remote: origin
         forge type: (not set)
         origin hostname: (not set)
@@ -432,6 +440,7 @@ Feature: show the configuration
         stash uncommitted changes: yes
 
       Hosting:
+        browser: (not set)
         development remote: origin
         forge type: (not set)
         origin hostname: (not set)

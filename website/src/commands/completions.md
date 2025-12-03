@@ -1,12 +1,10 @@
 # git town completions
 
-<a type="command-summary">
+<a type="git-town-command" />
 
 ```command-summary
 git town completions (bash|fish|powershell|zsh) [-h | --help] [--no-descriptions]
 ```
-
-</a>
 
 The _completions_ command outputs shell scripts that enable auto-completion for
 Git Town in Bash, Fish, PowerShell, or Zsh. When set up, typing
@@ -61,6 +59,10 @@ autoload -Uz compinit
 ```
 
 ## Options
+
+#### `-h`<br>`--help`
+
+Display help for this command.
 
 #### `--no-descriptions`
 
