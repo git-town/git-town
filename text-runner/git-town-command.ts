@@ -187,7 +187,41 @@ export class HelpOutput {
         }
       }
     }
-    return result
+
+    // Group negated flags with their positive counterparts
+    const groupsToRemove = new Set<number>()
+
+    for (let i = 0; i < result.length; i++) {
+      const group = result[i]
+
+      // Check if this is a negated flag (single flag starting with --no-)
+      if (group.length !== 1 || !group[0].startsWith('--no-')) {
+        continue
+      }
+
+      const negatedFlag = group[0]
+      const positiveFlagName = negatedFlag.substring(5) // Remove '--no-'
+
+      // Find the group containing the positive counterpart
+      for (let j = 0; j < result.length; j++) {
+        if (i === j || groupsToRemove.has(j)) {
+          continue
+        }
+
+        const targetGroup = result[j]
+        const hasPositiveFlag = targetGroup.some(flag => flag === `--${positiveFlagName}`)
+
+        if (hasPositiveFlag) {
+          // Add the negated flag to this group
+          targetGroup.push(negatedFlag)
+          groupsToRemove.add(i)
+          break
+        }
+      }
+    }
+
+    // Filter out the groups that were merged
+    return result.filter((_, index) => !groupsToRemove.has(index))
   }
 }
 
