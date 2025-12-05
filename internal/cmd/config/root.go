@@ -22,6 +22,7 @@ const configDesc = "Display your Git Town configuration"
 func RootCmd() *cobra.Command {
 	addDisplayTypesFlag, readDisplayTypesFlag := flags.Displaytypes()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	addRedactFlag, readRedactFlag := flags.Redact()
 	configCmd := cobra.Command{
 		Use:     "config",
 		GroupID: cmdhelpers.GroupIDSetup,
@@ -31,7 +32,8 @@ func RootCmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			displayTypes, errDisplayTypes := readDisplayTypesFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errDisplayTypes, errVerbose); err != nil {
+			redact, errRedact := readRedactFlag(cmd)
+			if err := cmp.Or(errDisplayTypes, errRedact, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -45,17 +47,18 @@ func RootCmd() *cobra.Command {
 				Stash:        None[configdomain.Stash](),
 				Verbose:      verbose,
 			})
-			return executeDisplayConfig(cliConfig)
+			return executeDisplayConfig(cliConfig, redact)
 		},
 	}
 	addDisplayTypesFlag(&configCmd)
 	addVerboseFlag(&configCmd)
+	addRedactFlag(&configCmd)
 	configCmd.AddCommand(getParentCommand())
 	configCmd.AddCommand(removeConfigCommand())
 	return &configCmd
 }
 
-func executeDisplayConfig(cliConfig configdomain.PartialConfig) error {
+func executeDisplayConfig(cliConfig configdomain.PartialConfig, redact bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		IgnoreUnknown:    true,
@@ -67,11 +70,11 @@ func executeDisplayConfig(cliConfig configdomain.PartialConfig) error {
 	if err != nil {
 		return err
 	}
-	printConfig(repo.UnvalidatedConfig)
+	printConfig(repo.UnvalidatedConfig, redact)
 	return nil
 }
 
-func printConfig(config config.UnvalidatedConfig) {
+func printConfig(config config.UnvalidatedConfig, redact bool) {
 	fmt.Println()
 	print.Header("Branches")
 	print.Entry("contribution branches", format.BranchNames(config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypeContributionBranch)))
@@ -105,13 +108,13 @@ func printConfig(config config.UnvalidatedConfig) {
 	print.Entry("forge type", format.OptionalStringerSetting(config.NormalConfig.ForgeType))
 	print.Entry("origin hostname", format.OptionalStringerSetting(config.NormalConfig.HostingOriginHostname))
 	print.Entry("Bitbucket username", format.OptionalStringerSetting(config.NormalConfig.BitbucketUsername))
-	print.Entry("Bitbucket app password", format.OptionalStringerSetting(config.NormalConfig.BitbucketAppPassword))
-	print.Entry("Forgejo token", format.OptionalStringerSetting(config.NormalConfig.ForgejoToken))
-	print.Entry("Gitea token", format.OptionalStringerSetting(config.NormalConfig.GiteaToken))
+	print.Entry("Bitbucket app password", formatToken(config.NormalConfig.BitbucketAppPassword, redact))
+	print.Entry("Forgejo token", formatToken(config.NormalConfig.ForgejoToken, redact))
+	print.Entry("Gitea token", formatToken(config.NormalConfig.GiteaToken, redact))
 	print.Entry("GitHub connector type", format.OptionalStringerSetting(config.NormalConfig.GitHubConnectorType))
-	print.Entry("GitHub token", format.OptionalStringerSetting(config.NormalConfig.GitHubToken))
+	print.Entry("GitHub token", formatToken(config.NormalConfig.GitHubToken, redact))
 	print.Entry("GitLab connector type", format.OptionalStringerSetting(config.NormalConfig.GitLabConnectorType))
-	print.Entry("GitLab token", format.OptionalStringerSetting(config.NormalConfig.GitLabToken))
+	print.Entry("GitLab token", formatToken(config.NormalConfig.GitLabToken, redact))
 	fmt.Println()
 	print.Header("Propose")
 	print.Entry("lineage", format.StringsSetting(config.NormalConfig.ProposalsShowLineage.String()))
@@ -136,4 +139,15 @@ func printConfig(config config.UnvalidatedConfig) {
 	if config.NormalConfig.Lineage.Len() > 0 {
 		print.LabelAndValue("Branch Lineage", format.BranchLineage(config.NormalConfig.Lineage, config.NormalConfig.Order))
 	}
+}
+
+// formatToken returns a formatted token value. If redact is true and the token is set, it returns "(configured)".
+func formatToken[T fmt.Stringer](token Option[T], redact bool) string {
+	if redact {
+		if token.IsSome() {
+			return "(configured)"
+		}
+		return "(not set)"
+	}
+	return format.OptionalStringerSetting(token)
 }
