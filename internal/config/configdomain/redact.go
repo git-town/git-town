@@ -4,5 +4,5 @@ package configdomain
 type Redact bool
 
 func (self Redact) ShouldRedact() bool {
-	return bool(r)
+	return bool(self)
 }
