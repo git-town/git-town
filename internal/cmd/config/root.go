@@ -143,11 +143,8 @@ func printConfig(config config.UnvalidatedConfig, redact configdomain.Redact) {
 
 // formatToken returns a formatted token value. If redact is true and the token is set, it returns "(configured)".
 func formatToken[T fmt.Stringer](token Option[T], redact configdomain.Redact) string {
-	if redact.ShouldRedact() {
-		if token.IsSome() {
-			return "(configured)"
-		}
-		return "(not set)"
+	if redact.ShouldRedact() && token.IsSome() {
+		return "(configured)"
 	}
 	return format.OptionalStringerSetting(token)
 }
