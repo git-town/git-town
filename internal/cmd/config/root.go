@@ -58,7 +58,7 @@ func RootCmd() *cobra.Command {
 	return &configCmd
 }
 
-func executeDisplayConfig(cliConfig configdomain.PartialConfig, redact bool) error {
+func executeDisplayConfig(cliConfig configdomain.PartialConfig, redact configdomain.Redact) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
 		IgnoreUnknown:    true,
@@ -74,7 +74,7 @@ func executeDisplayConfig(cliConfig configdomain.PartialConfig, redact bool) err
 	return nil
 }
 
-func printConfig(config config.UnvalidatedConfig, redact bool) {
+func printConfig(config config.UnvalidatedConfig, redact configdomain.Redact) {
 	fmt.Println()
 	print.Header("Branches")
 	print.Entry("contribution branches", format.BranchNames(config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypeContributionBranch)))
@@ -142,8 +142,8 @@ func printConfig(config config.UnvalidatedConfig, redact bool) {
 }
 
 // formatToken returns a formatted token value. If redact is true and the token is set, it returns "(configured)".
-func formatToken[T fmt.Stringer](token Option[T], redact bool) string {
-	if redact {
+func formatToken[T fmt.Stringer](token Option[T], redact configdomain.Redact) string {
+	if redact.ShouldRedact() {
 		if token.IsSome() {
 			return "(configured)"
 		}
