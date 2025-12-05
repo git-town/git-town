@@ -1,12 +1,10 @@
 # git town swap
 
-<a type="command-summary">
+<a type="git-town-command" />
 
 ```command-summary
 git town swap [--auto-resolve] [--dry-run] [-h | --help] [-v | --verbose]
 ```
-
-</a>
 
 The _swap_ command switches the position of the current branch with the branch
 ahead of it in the current stack, i.e. moves the current branch one position
@@ -51,24 +49,32 @@ be owned by you, i.e. you cannot swap
 
 ## Options
 
+#### `--auto-resolve`
+
+Disables automatic resolution of
+[phantom merge conflicts](../stacked-changes.md#avoid-phantom-conflicts).
+
 #### `--dry-run`
 
 Use the `--dry-run` flag to test-drive this command. It prints the Git commands
 that would be run but doesn't execute them.
+
+#### `-h`<br>`--help`
+
+Display help for this command.
 
 #### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.
 
-#### `--auto-resolve`
-
-Disables automatic resolution of
-[phantom merge conflicts](../stacked-changes.md#avoid-phantom-conflicts).
-
 ## See also
 
-- [set-parent](set-parent.md) moves the current branch and its descendents under
-  a different parent
+<!-- keep-sorted start -->
+
 - [detach](detach.md) extracts the current branch from a stack, leaving its
   children in the stack.
+- [set-parent](set-parent.md) moves the current branch and its descendents under
+  a different parent
+
+<!-- keep-sorted end -->

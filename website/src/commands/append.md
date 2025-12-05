@@ -1,12 +1,10 @@
 # git town append
 
-<a type="command-summary">
+<a type="git-town-command" />
 
 ```command-summary
-git town append <branch-name> [--auto-resolve] [-b | --beam] [-c | --commit] [-d | --detached] [--dry-run] [-h | --help] [-m | --message <message>] [--propose] [-p | --prototype] [--push] [--stash] [--sync] [-v | --verbose]
+git town append <branch-name> [--auto-resolve] [-b | --beam] [-c | --commit] [-d | --detached] [--dry-run] [-h | --help] [(-m | --message) <message>] [--propose] [-p | --prototype] [--push] [--stash] [--sync] [-v | --verbose]
 ```
-
-</a>
 
 The _append_ command creates a new feature branch with the given name as a
 direct child of the current branch and brings over all uncommitted changes to
@@ -44,10 +42,25 @@ branch with the main branch as its parent.
 
 ## Options
 
-#### `-p`<br>`--prototype`
+#### `--auto-resolve`
 
-Adding the `--prototype` aka `-p` switch creates a
-[prototype branch](../branch-types.md#prototype-branches).
+Disables automatic resolution of
+[phantom merge conflicts](../stacked-changes.md#avoid-phantom-conflicts).
+
+#### `-b`<br>`--beam`
+
+Moves ("beams") one or more commits from the current branch to the new child
+branch that gets created. Lets you select the commits to beam via a visual
+dialog. Beaming suppresses all branch updates. Any merge conflicts encountered
+while beaming arise from moving the beamed commits.
+
+#### `-c`<br>`--commit`
+
+When given, commits the currently staged changes into the branch to create and
+remains on the current branch. This is intended to quickly commit changes
+unrelated to the current branch into another branch and keep hacking on the
+current branch. Committing suppresses all branch updates to allow you to get
+your open changes committed.
 
 #### `-d`<br>`--detached`<br>`--no-detached`
 
@@ -60,22 +73,16 @@ In detached mode, feature branches don't receive updates from the perennial
 branch at the root of your branch hierarchy. This can be useful in busy
 monorepos.
 
-#### `-c`<br>`--commit`
+#### `--dry-run`
 
-When given, commits the currently staged changes into the branch to create and
-remains on the current branch. This is intended to quickly commit changes
-unrelated to the current branch into another branch and keep hacking on the
-current branch. Committing suppresses all branch updates to allow you to get
-your open changes committed.
+Use the `--dry-run` flag to test-drive this command. It prints the Git commands
+that would be run but doesn't execute them.
 
-#### `-b`<br>`--beam`
+#### `-h`<br>`--help`
 
-Moves ("beams") one or more commits from the current branch to the new child
-branch that gets created. Lets you select the commits to beam via a visual
-dialog. Beaming suppresses all branch updates. Any merge conflicts encountered
-while beaming arise from moving the beamed commits.
+Display help for this command.
 
-#### `-m`<br>`--message`
+#### `-m <msg>`<br>`--message <msg>`
 
 Commit message to use together with `--commit`. Implies `--commit`.
 
@@ -85,6 +92,11 @@ Propose the created branch.
 
 To always propose new branches, set the
 [share new branches](../preferences/share-new-branches.md) setting to `propose`.
+
+#### `-p`<br>`--prototype`
+
+Adding the `--prototype` aka `-p` switch creates a
+[prototype branch](../branch-types.md#prototype-branches).
 
 #### `--push`<br>`--no-push`
 
@@ -100,20 +112,10 @@ Enables or disables [stashing](../preferences/stash.md) for this invocation.
 Enables or disables [automatic syncing](../preferences/auto-sync.md) of the
 current branch before appending the new one.
 
-#### `--dry-run`
-
-Use the `--dry-run` flag to test-drive this command. It prints the Git commands
-that would be run but doesn't execute them.
-
 #### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.
-
-#### `--auto-resolve`
-
-Disables automatic resolution of
-[phantom merge conflicts](../stacked-changes.md#avoid-phantom-conflicts).
 
 ## Configuration
 
@@ -129,6 +131,10 @@ creates a branch with the given [type](../branch-types.md).
 
 ## See also
 
+<!-- keep-sorted start -->
+
 - [hack](hack.md) creates the new branch as a child of the
   [main branch](../preferences/main-branch.md)
 - [prepend](prepend.md) creates the new branch as a parent of the current branch
+
+<!-- keep-sorted end -->

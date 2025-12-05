@@ -1,12 +1,10 @@
 # git town repo
 
-<a type="command-summary">
+<a type="git-town-command" />
 
 ```command-summary
 git town repo [<remote-name>] [-h | --help] [-v | --verbose]
 ```
-
-</a>
 
 The _repo_ command ("show me the repository") opens the homepage of the current
 repository in your browser. Git Town can display repositories hosted on
@@ -27,6 +25,10 @@ given name.
 
 ## Options
 
+#### `-h`<br>`--help`
+
+Display help for this command.
+
 #### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
@@ -43,5 +45,9 @@ setting to tell Git Town about the hostname when using ssh identities.
 
 ## See also
 
+<!-- keep-sorted start -->
+
 - [propose](propose.md) opens the website displaying the pull request for the
   current branch
+
+<!-- keep-sorted end -->

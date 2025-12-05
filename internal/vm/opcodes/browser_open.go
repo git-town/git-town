@@ -11,6 +11,6 @@ type BrowserOpen struct {
 }
 
 func (self *BrowserOpen) Run(args shared.RunArgs) error {
-	browser.Open(self.URL, args.Frontend)
+	browser.Open(self.URL, args.Frontend, args.Config.Value.NormalConfig.Browser)
 	return nil
 }

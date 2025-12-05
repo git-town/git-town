@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
-	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 func parsePullRequest(pullRequest map[string]any) (result forgedomain.BitbucketCloudProposalData, err error) {
@@ -141,8 +140,8 @@ func parsePullRequest(pullRequest map[string]any) (result forgedomain.BitbucketC
 			Number:       number,
 			Source:       gitdomain.NewLocalBranchName(source6),
 			Target:       gitdomain.NewLocalBranchName(destination6),
-			Title:        title2,
-			Body:         NewOption(body2),
+			Title:        gitdomain.ProposalTitle(title2),
+			Body:         gitdomain.NewProposalBodyOpt(body2),
 			URL:          url6,
 		},
 		CloseSourceBranch: closeSourceBranch2,

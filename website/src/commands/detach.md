@@ -1,12 +1,10 @@
 # git town detach
 
-<a type="command-summary">
+<a type="git-town-command" />
 
 ```command-summary
 git town detach [--dry-run] [-h | --help] [-v | --verbose]
 ```
-
-</a>
 
 The _detach_ command removes the current branch from the stack it is in and
 makes it a stand-alone top-level branch that ships directly into your main
@@ -53,6 +51,10 @@ command, and remove merge commits by [compressing](compress.md).
 Use the `--dry-run` flag to test-drive this command. It prints the Git commands
 that would be run but doesn't execute them.
 
+#### `-h`<br>`--help`
+
+Display help for this command.
+
 #### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
@@ -60,6 +62,10 @@ determine the repository state.
 
 ## See also
 
-- [swap](swap.md) move the current branch up in the stack
+<!-- keep-sorted start -->
+
 - [set-parent](set-parent.md) move the current branch and its descendents under
   a different parent
+- [swap](swap.md) move the current branch up in the stack
+
+<!-- keep-sorted end -->

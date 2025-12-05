@@ -115,11 +115,11 @@ func (self APIConnector) SquashMergeProposal(number int, message gitdomain.Commi
 
 var _ forgedomain.ProposalBodyUpdater = apiConnector // type check
 
-func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody string) error {
+func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, updatedBody gitdomain.ProposalBody) error {
 	data := proposalData.Data()
 	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)))
 	_, _, err := self.client.Value.PullRequests.Edit(context.Background(), self.Organization, self.Repository, data.Number, &github.PullRequest{
-		Body: Ptr(updatedBody),
+		Body: Ptr(updatedBody.String()),
 	})
 	self.log.Finished(err)
 	return err

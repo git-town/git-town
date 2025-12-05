@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
-	"github.com/git-town/git-town/v22/internal/forge"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks/mapstools"
+	"github.com/git-town/git-town/v22/internal/proposallineage"
 	"github.com/git-town/git-town/v22/internal/vm/opcodes"
 	"github.com/git-town/git-town/v22/internal/vm/program"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
@@ -16,14 +16,14 @@ type AddStackLineageUpdateOpcodesArgs struct {
 	Current                              gitdomain.LocalBranchName
 	FullStack                            configdomain.FullStack
 	Program                              Mutable[program.Program]
-	ProposalStackLineageArgs             forge.ProposalStackLineageArgs
-	ProposalStackLineageTree             Option[*forge.ProposalStackLineageTree]
+	ProposalStackLineageArgs             proposallineage.ProposalStackLineageArgs
+	ProposalStackLineageTree             Option[*proposallineage.Tree]
 	SkipUpdateForProposalsWithBaseBranch gitdomain.LocalBranchNames
 }
 
 // AddStackLineageUpdateOpcodes syncs all given proposals.
 // Returns the stack lineage tree if its needed to recall this function.
-func AddStackLineageUpdateOpcodes(args AddStackLineageUpdateOpcodesArgs) Option[*forge.ProposalStackLineageTree] {
+func AddStackLineageUpdateOpcodes(args AddStackLineageUpdateOpcodesArgs) Option[*proposallineage.Tree] {
 	// TODO: there are now multiple places that load and use proposals for branches.
 	// To avoid double-loading the same proposal data in one run,
 	// extract an object that caches the already known proposals,
@@ -34,11 +34,11 @@ func AddStackLineageUpdateOpcodes(args AddStackLineageUpdateOpcodesArgs) Option[
 	if hasTree {
 		err = tree.Rebuild(args.ProposalStackLineageArgs)
 	} else {
-		tree, err = forge.NewProposalStackLineageTree(args.ProposalStackLineageArgs)
+		tree, err = proposallineage.NewTree(args.ProposalStackLineageArgs)
 	}
 	if err != nil {
 		fmt.Printf("failed to update proposal stack lineage: %s\n", err.Error())
-		return None[*forge.ProposalStackLineageTree]()
+		return None[*proposallineage.Tree]()
 	}
 
 	if args.FullStack.Enabled() {

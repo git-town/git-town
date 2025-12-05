@@ -20,6 +20,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/proposallineage"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
 	"github.com/git-town/git-town/v22/internal/validate"
 	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
@@ -200,6 +201,7 @@ func determineDetachData(repo execute.OpenRepoResult) (data detachData, flow con
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
+		Browser:              config.Browser,
 		ForgeType:            config.ForgeType,
 		ForgejoToken:         config.ForgejoToken,
 		Frontend:             repo.Frontend,
@@ -441,14 +443,14 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 			Current:   data.initialBranch,
 			FullStack: true,
 			Program:   prog,
-			ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
+			ProposalStackLineageArgs: proposallineage.ProposalStackLineageArgs{
 				Connector:                forgedomain.ProposalFinderFromConnector(data.connector),
 				CurrentBranch:            data.initialBranch,
 				Lineage:                  data.config.NormalConfig.Lineage,
 				MainAndPerennialBranches: data.config.MainAndPerennials(),
 				Order:                    data.config.NormalConfig.Order,
 			},
-			ProposalStackLineageTree:             None[*forge.ProposalStackLineageTree](),
+			ProposalStackLineageTree:             None[*proposallineage.Tree](),
 			SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(),
 		})
 	}

@@ -1,12 +1,10 @@
 # git town compress
 
-<a type="command-summary">
+<a type="git-town-command" />
 
 ```command-summary
-git town compress [--dry-run] [-h | --help] [-m | --message <text>] [--no-verify] [-s | --stack] [-v | --verbose]
+git town compress [--dry-run] [-h | --help] [(-m | --message) <text>] [--no-verify] [-s | --stack] [-v | --verbose]
 ```
-
-</a>
 
 The _compress_ command squashes all commits on a branch into a single commit.
 
@@ -45,6 +43,15 @@ Branches must be in sync to compress them; run `git town sync` before running
 this command.
 
 ## Options
+
+#### `--dry-run`
+
+Use the `--dry-run` flag to test-drive this command. It prints the Git commands
+that would be run but doesn't execute them.
+
+#### `-h`<br>`--help`
+
+Display help for this command.
 
 #### `-m <text>`<br>`--message <text>`
 
@@ -130,11 +137,6 @@ changes from the old `commit 1a`, `commit 1b`, and `commit 1c`. The new
 `commit 2a` contains the changes made in `branch 2`, i.e. the changes from the
 old `commit 2a`, `commit 2b`, and `commit 2c`.
 
-#### `--dry-run`
-
-Use the `--dry-run` flag to test-drive this command. It prints the Git commands
-that would be run but doesn't execute them.
-
 #### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
@@ -142,5 +144,9 @@ determine the repository state.
 
 ## See also
 
+<!-- keep-sorted start -->
+
 - the [compress sync strategy](../preferences/sync-feature-strategy.md#compress)
   automatically compresses branches when they get synced
+
+<!-- keep-sorted end -->

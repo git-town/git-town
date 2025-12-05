@@ -17,6 +17,7 @@ Feature: display configuration defined in environment variables
       | GIT_TOWN_BITBUCKET_APP_PASSWORD      | bitbucket-password |
       | GIT_TOWN_BITBUCKET_USERNAME          | bitbucket-user     |
       | GIT_TOWN_BRANCH_PREFIX               | acme-              |
+      | BROWSER                              | firefox            |
       | GIT_TOWN_FORGEJO_TOKEN               | forgejo-token      |
       | GIT_TOWN_CONTRIBUTION_REGEX          | ^renovate/         |
       | GIT_TOWN_DETACHED                    | true               |
@@ -79,6 +80,7 @@ Feature: display configuration defined in environment variables
         stash uncommitted changes: no
 
       Hosting:
+        browser: firefox
         development remote: my-fork
         forge type: gitlab
         origin hostname: codeforge

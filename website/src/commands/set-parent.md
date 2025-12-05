@@ -1,12 +1,10 @@
 # git town set-parent
 
-<a type="command-summary">
+<a type="git-town-command" />
 
 ```command-summary
 git town set-parent [<branch>] [--auto-resolve] [-h | --help] [--none] [-v | --verbose]
 ```
-
-</a>
 
 The _set-parent_ command moves a branch and all its children below another
 branch. Consider this stack:
@@ -84,6 +82,15 @@ parent.
 
 ## Options
 
+#### `--auto-resolve`
+
+Disables automatic resolution of
+[phantom merge conflicts](../stacked-changes.md#avoid-phantom-conflicts).
+
+#### `-h`<br>`--help`
+
+Display help for this command.
+
 #### `--none`
 
 The `--none` option assigns no parent (removes the assigned parent), making the
@@ -94,13 +101,12 @@ branch a perennial branch.
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.
 
-#### `--auto-resolve`
-
-Disables automatic resolution of
-[phantom merge conflicts](../stacked-changes.md#avoid-phantom-conflicts).
-
 ## See also
+
+<!-- keep-sorted start -->
 
 - [detach](detach.md) extract the current branch from a stack, leaving its
   children in the stack.
 - [swap](swap.md) move the current branch up in the stack
+
+<!-- keep-sorted end -->

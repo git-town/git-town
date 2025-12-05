@@ -2,6 +2,7 @@ package bitbucketcloud
 
 import (
 	"github.com/git-town/git-town/v22/internal/cli/print"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/giturl"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
@@ -15,6 +16,7 @@ func Detect(remoteURL giturl.Parts) bool {
 
 type NewConnectorArgs struct {
 	AppPassword      Option[forgedomain.BitbucketAppPassword]
+	Browser          Option[configdomain.Browser]
 	Log              print.Logger
 	ProposalOverride Option[forgedomain.ProposalOverride]
 	RemoteURL        giturl.Parts
@@ -29,6 +31,7 @@ func NewConnector(args NewConnectorArgs) forgedomain.Connector { //nolint: iretu
 			Organization: args.RemoteURL.Org,
 			Repository:   args.RemoteURL.Repo,
 		},
+		browser: args.Browser,
 	}
 	if proposalURLOverride, hasProposalOverride := args.ProposalOverride.Get(); hasProposalOverride {
 		return TestConnector{

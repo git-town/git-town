@@ -1,12 +1,10 @@
 # git town park
 
-<a type="command-summary">
+<a type="git-town-command" />
 
 ```command-summary
 git town park [<branch-name>...] [-h | --help] [-v | --verbose]
 ```
-
-</a>
 
 The _park_ command [parks](../branch-types.md#parked-branches) some of your
 branches.
@@ -30,6 +28,10 @@ git town park alpha beta
 
 ## Options
 
+#### `-h`<br>`--help`
+
+Display help for this command.
+
 #### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
@@ -37,7 +39,11 @@ determine the repository state.
 
 ## See also
 
+<!-- keep-sorted start -->
+
 - [contribute](contribute.md) makes the chosen branches contribution branches
 - [feature](feature.md) makes the chosen branches feature branches
 - [observe](observe.md) makes the chosen branches observed
 - [prototype](prototype.md) makes the chosen branches prototype branches
+
+<!-- keep-sorted end -->

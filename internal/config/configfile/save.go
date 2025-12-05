@@ -46,6 +46,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		// keep-sorted end
 	) {
 		result.WriteString("\n[branches]\n")
+		// keep-sorted start block=yes
 		if hasContributionRegex {
 			result.WriteString(fmt.Sprintf("contribution-regex = %q\n", contributionRegex))
 		}
@@ -73,6 +74,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		if hasUnknownBranchType {
 			result.WriteString(fmt.Sprintf("unknown-branch-type = %q\n", unknownBranchType))
 		}
+		// keep-sorted end
 	}
 
 	branchPrefix, hasBranchPrefix := data.BranchPrefix.Get()
@@ -81,6 +83,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	stash, hasStash := data.Stash.Get()
 	if cmp.Or(hasBranchPrefix, hasNewBranchType, hasShareNewBranches, hasStash) {
 		result.WriteString("\n[create]\n")
+		// keep-sorted start block=yes
 		if hasBranchPrefix {
 			result.WriteString(fmt.Sprintf("branch-prefix = %q\n", branchPrefix))
 		}
@@ -93,9 +96,11 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		if hasStash {
 			result.WriteString(fmt.Sprintf("stash = %s\n", stash))
 		}
+		// keep-sorted end
 	}
 
 	// keep-sorted start
+	browser, hasBrowser := data.Browser.Get()
 	devRemote, hasDevRemote := data.DevRemote.Get()
 	forgeType, hasForgeType := data.ForgeType.Get()
 	githubConnectorType, hasGitHubConnectorType := data.GitHubConnectorType.Get()
@@ -104,6 +109,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	// keep-sorted end
 	if cmp.Or(
 		// keep-sorted start
+		hasBrowser,
 		hasDevRemote,
 		hasForgeType,
 		hasGitHubConnectorType,
@@ -112,6 +118,10 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		// keep-sorted end
 	) {
 		result.WriteString("\n[hosting]\n")
+		// keep-sorted start block=yes
+		if hasBrowser {
+			result.WriteString(fmt.Sprintf("browser = %q\n", browser))
+		}
 		if hasDevRemote {
 			result.WriteString(fmt.Sprintf("dev-remote = %q\n", devRemote))
 		}
@@ -127,6 +137,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		if hasOriginHostName {
 			result.WriteString(fmt.Sprintf("origin-hostname = %q\n", originHostName))
 		}
+		// keep-sorted end
 	}
 
 	proposalShowLineage, hasProposalShowLineage := data.ProposalsShowLineage.Get()
@@ -153,27 +164,28 @@ func RenderTOML(data configdomain.PartialConfig) string {
 	detached, hasDetached := data.Detached.Get()
 	pushBranches, hasPushBranches := data.PushBranches.Get()
 	pushHook, hasPushHook := data.PushHook.Get()
-	syncFeatureStrategy, hasSyncFeatureStrategy := data.SyncFeatureStrategy.Get()
-	syncPerennialStrategy, hasSyncPerennialStrategy := data.SyncPerennialStrategy.Get()
-	syncPrototypeStrategy, hasSyncPrototypeStrategy := data.SyncPrototypeStrategy.Get()
-	syncTags, hasSyncTags := data.SyncTags.Get()
-	syncUpstream, hasSyncUpstream := data.SyncUpstream.Get()
+	syncFeatureStrategy, hasFeatureStrategy := data.SyncFeatureStrategy.Get()
+	syncPerennialStrategy, hasPerennialStrategy := data.SyncPerennialStrategy.Get()
+	syncPrototypeStrategy, hasPrototypeStrategy := data.SyncPrototypeStrategy.Get()
+	syncTags, hasTags := data.SyncTags.Get()
+	syncUpstream, hasUpstream := data.SyncUpstream.Get()
 	// keep-sorted end
 	if cmp.Or(
 		// keep-sorted start
 		hasAutoResolve,
 		hasAutoSync,
 		hasDetached,
+		hasFeatureStrategy,
+		hasPerennialStrategy,
+		hasPrototypeStrategy,
 		hasPushBranches,
 		hasPushHook,
-		hasSyncFeatureStrategy,
-		hasSyncPerennialStrategy,
-		hasSyncPrototypeStrategy,
-		hasSyncTags,
-		hasSyncUpstream,
+		hasTags,
+		hasUpstream,
 		// keep-sorted end
 	) {
 		result.WriteString("\n[sync]\n")
+		// keep-sorted start block=yes
 		if hasAutoResolve {
 			result.WriteString(fmt.Sprintf("auto-resolve = %t\n", autoResolve))
 		}
@@ -183,13 +195,13 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		if hasDetached {
 			result.WriteString(fmt.Sprintf("detached = %t\n", detached))
 		}
-		if hasSyncFeatureStrategy {
+		if hasFeatureStrategy {
 			result.WriteString(fmt.Sprintf("feature-strategy = %q\n", syncFeatureStrategy))
 		}
-		if hasSyncPerennialStrategy {
+		if hasPerennialStrategy {
 			result.WriteString(fmt.Sprintf("perennial-strategy = %q\n", syncPerennialStrategy))
 		}
-		if hasSyncPrototypeStrategy {
+		if hasPrototypeStrategy {
 			result.WriteString(fmt.Sprintf("prototype-strategy = %q\n", syncPrototypeStrategy))
 		}
 		if hasPushBranches {
@@ -198,12 +210,13 @@ func RenderTOML(data configdomain.PartialConfig) string {
 		if hasPushHook {
 			result.WriteString(fmt.Sprintf("push-hook = %t\n", pushHook))
 		}
-		if hasSyncTags {
+		if hasTags {
 			result.WriteString(fmt.Sprintf("tags = %t\n", syncTags))
 		}
-		if hasSyncUpstream {
+		if hasUpstream {
 			result.WriteString(fmt.Sprintf("upstream = %t\n", syncUpstream))
 		}
+		// keep-sorted end
 	}
 	return result.String()
 }
