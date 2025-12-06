@@ -215,6 +215,56 @@ suite("removeNegatedFlag", () => {
   }
 })
 
+suite("negations", () => {
+  suite("isNegatable", () => {
+    const tests = {
+      "--(no)-detach": true,
+      "--beam": false,
+    }
+    for (const [give, want] of Object.entries(tests)) {
+      test(give, () => {
+        const have = command.isNegatable(give)
+        equal(have, want)
+      })
+    }
+  })
+
+  suite("splitNegation", () => {
+    const tests = {
+      "--(no)-detach": ["--detach", "--no-detach"],
+      "--beam": ["--beam"],
+    }
+    for (const [give, want] of Object.entries(tests)) {
+      test(give, () => {
+        const have = command.splitNegation(give)
+        deepEqual(have, want)
+      })
+    }
+  })
+
+  suite("splitNegations", () => {
+    const tests = [
+      {
+        desc: "negatable",
+        give: ["-d", "--(no)-detach"],
+        want: ["-d", "--detach", "--no-detach"],
+      },
+      {
+        desc: "not negatable",
+        give: ["-b", "--beam"],
+        want: ["-b", "--beam"],
+      },
+    ]
+    for (const { desc, give, want } of tests) {
+      test(desc, () => {
+        const section = new command.SummarySection("")
+        const have = command.splitNegations(give)
+        deepEqual(have, want)
+      })
+    }
+  })
+})
+
 suite("standardizeArgument", () => {
   const tests = [
     {
