@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town config [(-d | --display-types) <type>] [-h | --help] [-v | --verbose]
+git town config [(-d | --display-types) <type>] [-h | --help] [--redact] [-v | --verbose]
 ```
 
 The _config_ command displays and updates the local Git Town configuration.
@@ -29,6 +29,10 @@ addition to the branch name when showing a list of branches. More info
 #### `-h`<br>`--help`
 
 Display help for this command.
+
+#### `--redact`
+
+When set, does not output sensitive information like tokens.
 
 #### `-v`<br>`--verbose`
 
