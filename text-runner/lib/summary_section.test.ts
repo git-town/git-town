@@ -1,6 +1,6 @@
 import { deepEqual } from "node:assert/strict"
 import { suite, test } from "node:test"
-import { SummarySection } from "./summary.ts"
+import { SummarySection } from "./summary_section.ts"
 
 suite("SummarySection", () => {
   suite(".args()", () => {

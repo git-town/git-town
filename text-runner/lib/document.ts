@@ -1,5 +1,5 @@
 import * as textRunner from "text-runner"
-import { SummarySection } from "./summary.ts"
+import { SummarySection } from "./summary_section.ts"
 
 /** Document contains the AST for an entire webpage describing a Git Town command */
 export class Document {
