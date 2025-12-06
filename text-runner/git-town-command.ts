@@ -173,18 +173,25 @@ export class HelpOutput {
       if (line.trim() === "") {
         break
       }
-      // Parse flag line - format: "  -b, --beam             description"
-      // The description starts after 2 or more spaces
-      const match = line.match(/^\s+(.+?)\s{2,}/)
-      if (match) {
-        const flagsPart = match[1].trim()
-        const flags = flagsPart.split(/,\s+/).map((flag) => {
-          // Remove default value notation like [="all"]
-          return flag.replace(/\[="[^"]*"\]/, "")
-        })
-        if (flags.length > 0) {
-          result.push(flags)
-        }
+      const flags = this.flagLine(line)
+      result.push(...flags)
+    }
+    return result
+  }
+
+  flagLine(line: string): string[][] {
+    const result: string[][] = []
+    // Parse flag line - format: "  -b, --beam             description"
+    // The description starts after 2 or more spaces
+    const match = line.match(/^\s+(.+?)\s{2,}/)
+    if (match) {
+      const flagsPart = match[1].trim()
+      const flags = flagsPart.split(/,\s+/).map((flag) => {
+        // Remove default value notation like [="all"]
+        return flag.replace(/\[="[^"]*"\]/, "")
+      })
+      if (flags.length > 0) {
+        result.push(flags)
       }
     }
     return result
