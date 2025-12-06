@@ -1,6 +1,6 @@
 import { deepEqual } from "node:assert/strict"
 import * as textRunner from "text-runner"
-import { Document } from "./lib/document"
+import { Document } from "./lib/document.ts"
 
 /** verifies a MD page that describes a Git Town command */
 export async function gitTownCommand(action: textRunner.actions.Args) {
