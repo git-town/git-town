@@ -6,6 +6,6 @@
     "textrun-make": "0.6.0"
   },
   "scripts": {
-    "unit": "tools/rta node --test text-runner-tests/*.test.ts"
+    "unit": "tools/rta node --test text-runner/**/*.test.ts"
   }
 }
