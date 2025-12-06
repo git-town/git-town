@@ -158,6 +158,26 @@ Flags:
   })
 })
 
+suite("HelpOutput.flagLine", () => {
+  const tests = [
+    {
+      give: "  -b, --beam             description",
+      want: [["-b", "--beam"]],
+    },
+    {
+      give: `  -d, --display-types string[="all"]   display the branch types`,
+      want: [["-d", "--display-types string"]],
+    },
+  ]
+  for (const { give, want } of tests) {
+    test(give, () => {
+      const output = new command.HelpOutput("")
+      const have = output.flagLine(give)
+      deepEqual(have, want)
+    })
+  }
+})
+
 suite("removeNegatedFlag", () => {
   const tests = [
     {
