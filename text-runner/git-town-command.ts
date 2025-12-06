@@ -174,9 +174,7 @@ export class HelpOutput {
         break
       }
       const flags = parseFlagLine(line)
-      if (flags.length > 0) {
-        result.push(...flags)
-      }
+      result.push(...flags)
     }
     return result
   }
