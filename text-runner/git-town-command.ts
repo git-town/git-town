@@ -199,6 +199,22 @@ function isH2(node: textRunner.ast.Node): boolean {
   return node.type === "h2_open"
 }
 
+function parseFlagLine(line: string): string[][] {
+  const result: string[][] = []
+  const match = line.match(/^\s+(.+?)\s{2,}/)
+  if (match) {
+    const flagsPart = match[1].trim()
+    const flags = flagsPart.split(/,\s+/).map((flag) => {
+      // Remove default value notation like [="all"]
+      return flag.replace(/\[="[^"]*"\]/, "")
+    })
+    if (flags.length > 0) {
+      result.push(flags)
+    }
+  }
+  return result
+}
+
 function texts(nodes: textRunner.ast.NodeList): string[] {
   let result: string[] = []
   for (const node of nodes) {
