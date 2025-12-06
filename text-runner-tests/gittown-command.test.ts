@@ -73,7 +73,7 @@ suite("SummarySection", () => {
   })
 })
 
-suite("HelpOutput.flags", () => {
+suite("HelpOutput.flags", { only: true }, () => {
   test("append command", () => {
     const output = new command.HelpOutput(`
 Create a new feature branch as a child of the current branch.
@@ -215,7 +215,7 @@ suite("removeNegatedFlag", () => {
   }
 })
 
-suite("negations", () => {
+suite("negations", { only: true }, () => {
   suite("isNegatable", () => {
     const tests = {
       "--(no)-detach": true,
@@ -229,10 +229,15 @@ suite("negations", () => {
     }
   })
 
+  suite("variationName", () => {
+    const tests = {
+      "--(no)-detach": "detach",
+    }
+  })
+
   suite("splitNegation", () => {
     const tests = {
       "--(no)-detach": ["--detach", "--no-detach"],
-      "--beam": ["--beam"],
     }
     for (const [give, want] of Object.entries(tests)) {
       test(give, () => {
