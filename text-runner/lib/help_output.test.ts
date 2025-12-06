@@ -1,6 +1,6 @@
 import { deepEqual } from "node:assert/strict"
 import { suite, test } from "node:test"
-import { HelpOutput } from "./help-output.ts"
+import { HelpOutput } from "./help_output.ts"
 
 suite("HelpOutput", () => {
   suite(".flags()", () => {

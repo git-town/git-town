@@ -1,6 +1,6 @@
 import { exec } from "node:child_process"
 import { promisify } from "node:util"
-import { HelpOutput } from "./help-output.ts"
+import { HelpOutput } from "./help_output.ts"
 const execAsync = promisify(exec)
 
 /** GitTownCommand represents a specific Git Town command, like "append" or "sync" */
