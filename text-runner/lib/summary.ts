@@ -1,4 +1,4 @@
-import { GitTownCommand } from "./command"
+import { GitTownCommand } from "./command.ts"
 
 /** SummarySection contains the text of the ```command-summary block of a Document*/
 export class SummarySection {

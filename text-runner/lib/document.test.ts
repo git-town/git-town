@@ -1,6 +1,6 @@
 import { deepEqual } from "node:assert/strict"
 import { suite, test } from "node:test"
-import { removeNegatedFlag, standardizeArgument } from "./document"
+import { removeNegatedFlag, standardizeArgument } from "./document.ts"
 
 suite("removeNegatedFlag", () => {
   const tests = [
