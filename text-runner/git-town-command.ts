@@ -118,8 +118,17 @@ export class SummarySection {
       }
       const normalizedArgText = argText.replace(/<.+?>/g, "string")
       // Split by | to get the different variations of the flag
-      const variations = normalizedArgText.split("|").map((v) => v.trim())
-      result.push(variations)
+      const variations = normalizedArgText.split("|").map(v => v.trim())
+      const expanded = this.splitNegation(variations)
+      result.push(expanded)
+    }
+    return result
+  }
+
+  splitNegation(variations: string[]): string[] {
+    const result: string[] = []
+    for (const variation of variations) {
+      result.push(variation.split(" "))
     }
     return result
   }
