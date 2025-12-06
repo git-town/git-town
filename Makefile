@@ -101,7 +101,7 @@ lint: node_modules tools/rta@${RTA_VERSION}  # lints the main codebase concurren
 
 lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	(cd website && make test)
-# tools/rta govulncheck ./...
+# tools/rta govulncheck ./...   TODO: enable when Go 1.24.11 is available widely
 	@echo lint tools/format_self
 	@(cd tools/format_self && make test)
 	@echo lint tools/format_unittests
