@@ -119,6 +119,7 @@ export class SummarySection {
       const normalizedArgText = argText.replace(/<.+?>/g, "string")
       // Split by | to get the different variations of the flag
       const variations = normalizedArgText.split("|").map(v => v.trim())
+      // expand --(no)-foo into --foo and --no-foo
       const expanded = splitNegations(variations)
       result.push(expanded)
     }

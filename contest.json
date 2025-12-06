@@ -32,6 +32,12 @@
 
     {
       "type": "test-file",
+      "files": "**/*.test.ts",
+      "run": "tools/rta node --test {{file}}"
+    },
+
+    {
+      "type": "test-file",
       "files": ".cucumber-sort-order",
       "run": "cucumber-sort format"
     }
