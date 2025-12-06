@@ -12,7 +12,7 @@ const detachedLong = "detached"
 func Detached() (AddFunc, ReadDetachedFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.Flags().BoolP(detachedLong, "d", false, "don't update the perennial root branch")
-		defineNegatedFlag(cmd.Flags(), detachedLong)
+		defineNegatedFlag(cmd.Flags(), detachedLong, "disable detached")
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.Detached], error) {
 		return readNegatableFlag[configdomain.Detached](cmd.Flags(), detachedLong)

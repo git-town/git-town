@@ -8,20 +8,20 @@ suite("SummarySection", () => {
       {
         desc: "append command",
         give:
-          "git town append <branch-name> [--auto-resolve] [-b | --beam] [-c | --commit] [-d | --detached] [--dry-run] [-h | --help] [(-m | --message) <message>] [--propose] [-p | --prototype] [--push] [--stash] [--sync] [-v | --verbose]",
+          "git town append <branch-name> [--(no)-auto-resolve] [-b | --beam] [-c | --commit] [-d | --(no)-detached] [--dry-run] [-h | --help] [(-m | --message) <message>] [--(no)-propose] [-p | --prototype] [--(no)-push] [--(no)-stash] [--(no)-sync] [-v | --verbose]",
         want: [
-          ["--auto-resolve"],
+          ["--auto-resolve", "--no-auto-resolve"],
           ["-b", "--beam"],
           ["-c", "--commit"],
-          ["-d", "--detached"],
+          ["-d", "--detached", "--no-detached"],
           ["--dry-run"],
           ["-h", "--help"],
           ["-m", "--message string"],
-          ["--propose"],
+          ["--propose", "--no-propose"],
           ["-p", "--prototype"],
-          ["--push"],
-          ["--stash"],
-          ["--sync"],
+          ["--push", "--no-push"],
+          ["--stash", "--no-stash"],
+          ["--sync", "--no-sync"],
           ["-v", "--verbose"],
         ],
       },
@@ -73,7 +73,7 @@ suite("SummarySection", () => {
   })
 })
 
-suite("HelpOutput.flags", () => {
+suite("HelpOutput.flags", { only: true }, () => {
   test("append command", () => {
     const output = new command.HelpOutput(`
 Create a new feature branch as a child of the current branch.
@@ -105,34 +105,39 @@ Usage:
   git-town append <branch> [flags]
 
 Flags:
-      --auto-resolve     auto-resolve phantom merge conflicts
-  -b, --beam             beam some commits from this branch to the new branch
-  -c, --commit           commit the stashed changes into the new branch
-  -d, --detached         don't update the perennial root branch
-      --dry-run          print but do not run the Git commands
-  -h, --help             help for append
-  -m, --message string   the commit message
-      --propose          propose the new branch
-  -p, --prototype        create a prototype branch
-      --push             push local branches
-      --stash            stash uncommitted changes when creating branches
-      --sync             sync branches (default true)
-  -v, --verbose          display all Git commands run under the hood
+      --auto-resolve      auto-resolve phantom merge conflicts
+  -b, --beam              beam some commits from this branch to the new branch
+  -c, --commit            commit the stashed changes into the new branch
+  -d, --detached          don't update the perennial root branch
+      --dry-run           print but do not run the Git commands
+  -h, --help              help for append
+  -m, --message string    the commit message
+      --no-auto-resolve   don't auto-resolve
+      --no-detached       disable detached
+      --no-push           don't push branches
+      --no-stash          don't stash uncommitted changes
+      --no-sync           don't sync branches
+      --propose           propose the new branch
+  -p, --prototype         create a prototype branch
+      --push              push local branches
+      --stash             stash uncommitted changes when creating branches
+      --sync              sync branches (default true)
+  -v, --verbose           display all Git commands run under the hood
 `)
     const have = output.flags()
     const want = [
-      ["--auto-resolve"],
+      ["--auto-resolve", "--no-auto-resolve"],
       ["-b", "--beam"],
       ["-c", "--commit"],
-      ["-d", "--detached"],
+      ["-d", "--detached", "--no-detached"],
       ["--dry-run"],
       ["-h", "--help"],
       ["-m", "--message string"],
       ["--propose"],
       ["-p", "--prototype"],
-      ["--push"],
-      ["--stash"],
-      ["--sync"],
+      ["--push", "--no-push"],
+      ["--stash", "--no-stash"],
+      ["--sync", "--no-sync"],
       ["-v", "--verbose"],
     ]
     deepEqual(have, want)
@@ -208,6 +213,61 @@ suite("removeNegatedFlag", () => {
       deepEqual(have, want)
     })
   }
+})
+
+suite("negations", { only: true }, () => {
+  suite("isNegatable", () => {
+    const tests = {
+      "--(no)-detach": true,
+      "--beam": false,
+    }
+    for (const [give, want] of Object.entries(tests)) {
+      test(give, () => {
+        const have = command.isNegatable(give)
+        equal(have, want)
+      })
+    }
+  })
+
+  suite("variationName", () => {
+    const tests = {
+      "--(no)-detach": "detach",
+    }
+  })
+
+  suite("splitNegation", () => {
+    const tests = {
+      "--(no)-detach": ["--detach", "--no-detach"],
+    }
+    for (const [give, want] of Object.entries(tests)) {
+      test(give, () => {
+        const have = command.splitNegation(give)
+        deepEqual(have, want)
+      })
+    }
+  })
+
+  suite("splitNegations", () => {
+    const tests = [
+      {
+        desc: "negatable",
+        give: ["-d", "--(no)-detach"],
+        want: ["-d", "--detach", "--no-detach"],
+      },
+      {
+        desc: "not negatable",
+        give: ["-b", "--beam"],
+        want: ["-b", "--beam"],
+      },
+    ]
+    for (const { desc, give, want } of tests) {
+      test(desc, () => {
+        const section = new command.SummarySection("")
+        const have = command.splitNegations(give)
+        deepEqual(have, want)
+      })
+    }
+  })
 })
 
 suite("standardizeArgument", () => {
