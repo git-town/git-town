@@ -3,7 +3,7 @@ import { suite, test } from "node:test"
 import { SummarySection } from "./summary.ts"
 
 suite("SummarySection", () => {
-  suite("args", () => {
+  suite(".args()", () => {
     const tests = [
       {
         desc: "append command",
@@ -51,7 +51,7 @@ suite("SummarySection", () => {
     }
   })
 
-  suite("command", () => {
+  suite(".command()", () => {
     const tests = {
       "git town append": "append",
       "git town config get-parent": "config get-parent",

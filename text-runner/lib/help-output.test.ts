@@ -3,7 +3,7 @@ import { suite, test } from "node:test"
 import { HelpOutput } from "./help-output.ts"
 
 suite("HelpOutput", () => {
-  suite(".flags", () => {
+  suite(".flags()", () => {
     test("append command", () => {
       const output = new HelpOutput(`
 Create a new feature branch as a child of the current branch.
@@ -94,7 +94,7 @@ Flags:
     })
   })
 
-  suite(".flagLine", () => {
+  suite(".flagLine()", () => {
     const tests = [
       {
         give: "  -b, --beam             description",

@@ -3,7 +3,7 @@ import { suite, test } from "node:test"
 import { removeNegatedFlag, standardizeArgument } from "./document.ts"
 
 suite("Document", () => {
-  suite("removeNegatedFlag", () => {
+  suite("removeNegatedFlag()", () => {
     const tests = [
       {
         desc: "has negated flag",
@@ -29,7 +29,7 @@ suite("Document", () => {
     }
   })
 
-  suite("standardizeArgument", () => {
+  suite("standardizeArgument()", () => {
     const tests = [
       {
         desc: "has argument",
