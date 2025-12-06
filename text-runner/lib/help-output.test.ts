@@ -2,9 +2,10 @@ import { deepEqual } from "node:assert/strict"
 import { suite, test } from "node:test"
 import { HelpOutput } from "./help-output.ts"
 
-suite("HelpOutput.flags", () => {
-  test("append command", () => {
-    const output = new HelpOutput(`
+suite("HelpOutput", () => {
+  suite(".flags", () => {
+    test("append command", () => {
+      const output = new HelpOutput(`
 Create a new feature branch as a child of the current branch.
 
 Consider this stack:
@@ -48,27 +49,27 @@ Flags:
       --sync             sync branches (default true)
   -v, --verbose          display all Git commands run under the hood
 `)
-    const have = output.flags()
-    const want = [
-      ["--auto-resolve"],
-      ["-b", "--beam"],
-      ["-c", "--commit"],
-      ["-d", "--detached"],
-      ["--dry-run"],
-      ["-h", "--help"],
-      ["-m", "--message string"],
-      ["--propose"],
-      ["-p", "--prototype"],
-      ["--push"],
-      ["--stash"],
-      ["--sync"],
-      ["-v", "--verbose"],
-    ]
-    deepEqual(have, want)
-  })
+      const have = output.flags()
+      const want = [
+        ["--auto-resolve"],
+        ["-b", "--beam"],
+        ["-c", "--commit"],
+        ["-d", "--detached"],
+        ["--dry-run"],
+        ["-h", "--help"],
+        ["-m", "--message string"],
+        ["--propose"],
+        ["-p", "--prototype"],
+        ["--push"],
+        ["--stash"],
+        ["--sync"],
+        ["-v", "--verbose"],
+      ]
+      deepEqual(have, want)
+    })
 
-  test("branch command", () => {
-    const output = new HelpOutput(`
+    test("branch command", () => {
+      const output = new HelpOutput(`
 Display the local branch hierarchy and types.
 
 Git Town's equivalent of the "git branch" command.
@@ -82,33 +83,34 @@ Flags:
   -o, --order string                   sort order for branch list (asc or desc)
   -v, --verbose                        display all Git commands run under the hood
 `)
-    const have = output.flags()
-    const want = [
-      ["-d", "--display-types string"],
-      ["-h", "--help"],
-      ["-o", "--order string"],
-      ["-v", "--verbose"],
-    ]
-    deepEqual(have, want)
-  })
-})
-
-suite("HelpOutput.flagLine", () => {
-  const tests = [
-    {
-      give: "  -b, --beam             description",
-      want: [["-b", "--beam"]],
-    },
-    {
-      give: `  -d, --display-types string[="all"]   display the branch types`,
-      want: [["-d", "--display-types string"]],
-    },
-  ]
-  for (const { give, want } of tests) {
-    test(give, () => {
-      const output = new HelpOutput("")
-      const have = output.flagLine(give)
+      const have = output.flags()
+      const want = [
+        ["-d", "--display-types string"],
+        ["-h", "--help"],
+        ["-o", "--order string"],
+        ["-v", "--verbose"],
+      ]
       deepEqual(have, want)
     })
-  }
+  })
+
+  suite(".flagLine", () => {
+    const tests = [
+      {
+        give: "  -b, --beam             description",
+        want: [["-b", "--beam"]],
+      },
+      {
+        give: `  -d, --display-types string[="all"]   display the branch types`,
+        want: [["-d", "--display-types string"]],
+      },
+    ]
+    for (const { give, want } of tests) {
+      test(give, () => {
+        const output = new HelpOutput("")
+        const have = output.flagLine(give)
+        deepEqual(have, want)
+      })
+    }
+  })
 })
