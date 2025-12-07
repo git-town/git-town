@@ -5,15 +5,30 @@ and provides additional Git commands for branch management and synchronization.
 
 ## Development Guidelines
 
-You can change any file in the current folder and its subfolders, but never
-outside the folder.
+**Don't change anything outside this folder:** You can change any file in the
+current folder and its subfolders, but never outside the folder.
 
-Never create new Git branches or make Git commits. I will review the changes you
-make and then commit them on my own.
+**Don't commit changes:** Never create new Git branches or make Git commits. I
+will review the changes you make and then commit them on my own
+
+Write idiomatic Go except for these rules:
+
+- Use descriptive names for identifiers over brevity
+- Method receivers use `self` instead of short abbreviations
+- Use domain-specific types defined in the respective `*domain` packages if
+  applicable over the built-in basic data types. Create new types if applicable.
 
 ## Code Organization
 
-The codebase is organized into orthogonal subsystems with `*domain` packages:
+The relevant directories are:
+
+- `internal/` - Core application code
+- `pkg/` - Public packages
+- `features/` - End-to-end tests (Cucumber/Godog)
+- `tools/` - Custom linters and development tools
+- `website/` - Documentation website (mdBook)
+
+These code packages exist:
 
 - `internal/cmd` - defines the high-level commands that Git Town
 - `internal/config/` - Configuration management
@@ -32,20 +47,3 @@ The codebase is organized into orthogonal subsystems with `*domain` packages:
 - `internal/undo` - code used for the undo functionality, it calculates the
   difference between snapshots of the Git repository and determines the Git
   commands to move the repository from one snapshot to another
-
-#### Important Directories
-
-- `internal/` - Core application code
-- `pkg/` - Public packages
-- `features/` - End-to-end tests (Cucumber/Godog)
-- `tools/` - Custom linters and development tools
-- `website/` - Documentation website (mdBook)
-
-### Code Style
-
-Write idiomatic Go with these exceptions:
-
-- Use descriptive names for identifiers over brevity
-- Method receivers use `self` instead of short abbreviations
-- Use domain-specific types defined in the respective `*domain` packages if
-  applicable over the built-in basic type. Create new types if applicable.
