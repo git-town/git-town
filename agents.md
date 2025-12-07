@@ -52,7 +52,4 @@ These code packages exist:
 
 Read these files if needed to learn more about specific aspects:
 
-- run linters: docs/agents/linters.md
-- run unit tests: docs/agents/unit_tests.md
-- run end-to-end tests: docs/agents/end_to_end_tests.md
 - how the internal interpreter runtime works: docs/agents/interpreter.md
