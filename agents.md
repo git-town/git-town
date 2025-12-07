@@ -5,11 +5,11 @@ and provides additional Git commands for branch management and synchronization.
 
 ## Development Guidelines
 
-**Don't change anything outside this folder:** You can change any file in the
+Don't change anything outside this folder: You can change any file in the
 current folder and its subfolders, but never outside the folder.
 
-**Don't commit changes:** Never create new Git branches or make Git commits. I
-will review the changes you make and then commit them on my own
+Don't commit changes: Never create new Git branches or make Git commits. I will
+review the changes you make and then commit them on my own
 
 Write idiomatic Go except for these rules:
 
