@@ -13,10 +13,10 @@ review the changes you make and then commit them on my own
 
 Write idiomatic Go except for these rules:
 
-- Use descriptive names for identifiers over brevity
-- Method receivers use `self` instead of short abbreviations
-- Use domain-specific types defined in the respective `*domain` packages if
-  applicable over the built-in basic data types. Create new types if applicable.
+- Use descriptive names for all identifiers
+- Use `self` as the name for all method receivers
+- Use domain-specific types defined in the respective `*domain` packages. Create
+  new types if applicable.
 
 ## Code Organization
 
