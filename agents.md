@@ -47,3 +47,12 @@ These code packages exist:
 - `internal/undo` - code used for the undo functionality, it calculates the
   difference between snapshots of the Git repository and determines the Git
   commands to move the repository from one snapshot to another
+
+## Additional information
+
+Read these files if needed to learn more about specific aspects:
+
+- run linters: docs/agents/linters.md
+- run unit tests: docs/agents/unit_tests.md
+- run end-to-end tests: docs/agents/end_to_end_tests.md
+- how the internal interpreter runtime works: docs/agents/interpreter.md
