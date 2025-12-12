@@ -81,7 +81,7 @@ suite("negations", { only: true }, () => {
     }
     for (const [give, want] of Object.entries(tests)) {
       test(give, () => {
-        const have = command.isNegatable(give)
+        const have = isNegatable(give)
         equal(have, want)
       })
     }
