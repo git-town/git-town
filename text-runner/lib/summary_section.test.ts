@@ -1,6 +1,6 @@
 import { deepEqual } from "node:assert/strict"
 import { suite, test } from "node:test"
-import { SummarySection } from "./summary_section.ts"
+import { isNegatable, splitNegation, splitNegations, SummarySection } from "./summary_section.ts"
 
 suite("SummarySection", () => {
   suite(".args()", () => {
@@ -82,7 +82,7 @@ suite("negations", { only: true }, () => {
     for (const [give, want] of Object.entries(tests)) {
       test(give, () => {
         const have = isNegatable(give)
-        equal(have, want)
+        deepEqual(have, want)
       })
     }
   })
@@ -99,7 +99,7 @@ suite("negations", { only: true }, () => {
     }
     for (const [give, want] of Object.entries(tests)) {
       test(give, () => {
-        const have = command.splitNegation(give)
+        const have = splitNegation(give)
         deepEqual(have, want)
       })
     }
@@ -120,8 +120,8 @@ suite("negations", { only: true }, () => {
     ]
     for (const { desc, give, want } of tests) {
       test(desc, () => {
-        const section = new command.SummarySection("")
-        const have = command.splitNegations(give)
+        const section = new SummarySection("")
+        const have = splitNegations(give)
         deepEqual(have, want)
       })
     }

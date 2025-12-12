@@ -164,34 +164,6 @@ function isH2(node: textRunner.ast.Node): boolean {
   return node.type === "h2_open"
 }
 
-export function splitNegations(variations: string[]): string[] {
-  const result: string[] = []
-  for (const variation of variations) {
-    if (isNegatable(variation)) {
-      result.push(...splitNegation(variation))
-    } else {
-      result.push(variation)
-    }
-  }
-  return result
-}
-
-export function isNegatable(variation: string): boolean {
-  return variation.startsWith("--(no)-")
-}
-
-export function splitNegation(variation: string): string[] {
-  const result: string[] = []
-  const name = variationName(variation)
-  result.push(`--${name}`)
-  result.push(`--no-${name}`)
-  return result
-}
-
-export function variationName(variation: string): string {
-  return variation.substring(7)
-}
-
 function texts(nodes: textRunner.ast.NodeList): string[] {
   let result: string[] = []
   for (const node of nodes) {
