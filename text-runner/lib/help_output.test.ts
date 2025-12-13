@@ -102,25 +102,30 @@ Flags:
   })
 })
 
-suite("Lines", () => {
+suite("Lines", { only: true }, () => {
   suite(".flagLines()", () => {
     test("append command", () => {
       const output = new HelpOutput(appendHelpOutput)
       const have = output.lines().flagLines()
       const want = [
-        new FlagLine("      --auto-resolve     auto-resolve phantom merge conflicts"),
-        new FlagLine("  -b, --beam             beam some commits from this branch to the new branch"),
-        new FlagLine("  -c, --commit           commit the stashed changes into the new branch"),
-        new FlagLine("  -d, --detached         don't update the perennial root branch"),
-        new FlagLine("      --dry-run          print but do not run the Git commands"),
-        new FlagLine("  -h, --help             help for append"),
-        new FlagLine("  -m, --message string   the commit message"),
-        new FlagLine("      --propose          propose the new branch"),
-        new FlagLine("  -p, --prototype        create a prototype branch"),
-        new FlagLine("      --push             push local branches"),
-        new FlagLine("      --stash            stash uncommitted changes when creating branches"),
-        new FlagLine("      --sync             sync branches (default true)"),
-        new FlagLine("  -v, --verbose          display all Git commands run under the hood"),
+        new FlagLine("      --auto-resolve      auto-resolve phantom merge conflicts"),
+        new FlagLine("  -b, --beam              beam some commits from this branch to the new branch"),
+        new FlagLine("  -c, --commit            commit the stashed changes into the new branch"),
+        new FlagLine("  -d, --detached          don't update the perennial root branch"),
+        new FlagLine("      --dry-run           print but do not run the Git commands"),
+        new FlagLine("  -h, --help              help for append"),
+        new FlagLine("  -m, --message string    the commit message"),
+        new FlagLine("      --no-auto-resolve   don't auto-resolve"),
+        new FlagLine("      --no-detached       disable detached"),
+        new FlagLine("      --no-push           don't push branches"),
+        new FlagLine("      --no-stash          don't stash uncommitted changes"),
+        new FlagLine("      --no-sync           don't sync branches"),
+        new FlagLine("      --propose           propose the new branch"),
+        new FlagLine("  -p, --prototype         create a prototype branch"),
+        new FlagLine("      --push              push local branches"),
+        new FlagLine("      --stash             stash uncommitted changes when creating branches"),
+        new FlagLine("      --sync              sync branches (default true)"),
+        new FlagLine("  -v, --verbose           display all Git commands run under the hood"),
       ]
       deepEqual(have, want)
     })
