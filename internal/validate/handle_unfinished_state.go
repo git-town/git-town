@@ -207,6 +207,7 @@ func skipRunstate(args UnfinishedStateArgs, runState runstate.RunState) (configd
 		HasOpenChanges:  args.HasOpenChanges,
 		InitialBranch:   currentBranch,
 		Inputs:          args.Inputs,
+		Park:            false,
 		RootDir:         args.RootDir,
 		RunState:        runState,
 	})

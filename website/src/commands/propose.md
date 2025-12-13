@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town propose [--auto-resolve] [(-b | --body) <text>] [(-f | --body-file) <path>] [--dry-run] [-h | --help] [-s | --stack] [(-t | --title) <text>] [-v | --verbose]
+git town propose [--(no)-auto-resolve] [(-b | --body) <text>] [(-f | --body-file) <path>] [--dry-run] [-h | --help] [-s | --stack] [(-t | --title) <text>] [-v | --verbose]
 ```
 
 The _propose_ command helps create a new pull request (also known as merge
@@ -27,7 +27,7 @@ You can configure the browser which Git Town opens using the
 
 ## Options
 
-#### `--auto-resolve`
+#### `--auto-resolve`<br>`--no-auto-resolve`
 
 Disables automatic resolution of
 [phantom merge conflicts](../stacked-changes.md#avoid-phantom-conflicts).

@@ -12,7 +12,7 @@ const stashLong = "stash"
 func Stash() (AddFunc, ReadStashFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.Flags().Bool(stashLong, false, "stash uncommitted changes when creating branches")
-		defineNegatedFlag(cmd.Flags(), stashLong)
+		defineNegatedFlag(cmd.Flags(), stashLong, "don't stash uncommitted changes")
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.Stash], error) {
 		return readNegatableFlag[configdomain.Stash](cmd.Flags(), stashLong)

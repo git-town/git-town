@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town sync [-a | --all] [--auto-resolve] [-d | --detached] [--dry-run] [-h | --help] [-p | --prune] [--push] [-s | --stack] [-v | --verbose]
+git town sync [-a | --all] [--(no)-auto-resolve] [-d | --(no)-detached] [--dry-run] [-h | --help] [-p | --prune] [--(no)-push] [-s | --stack] [-v | --verbose]
 ```
 
 The _sync_ command ("synchronize this branch") updates your local Git workspace
@@ -76,7 +76,7 @@ if it's going to be deleted right afterwards.
 By default this command syncs only the current branch. The `--all` aka `-a`
 parameter makes Git Town sync all local branches.
 
-#### `--auto-resolve`
+#### `--auto-resolve`<br>`--no-auto-resolve`
 
 Disables automatic resolution of
 [phantom merge conflicts](../stacked-changes.md#avoid-phantom-conflicts).

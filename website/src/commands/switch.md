@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town switch [<branch-name-regex>...] [-a | --all] [(-d | --display-types) <type>] [-h | --help] [-m | --merge] [(-o | --order) <asc|desc>] [--stash] [(-t | --type) <name>] [-v | --verbose]
+git town switch [<branch-name-regex>...] [-a | --all] [(-d | --display-types) <type>] [-h | --help] [-m | --merge] [(-o | --order) <asc|desc>] [--(no)-stash] [(-t | --type) <name>] [-v | --verbose]
 ```
 
 The _switch_ command displays the branch hierarchy on your machine and allows
@@ -64,7 +64,7 @@ to move them to the new branch.
 The `--order` flag allows customizing the order in which branches get displayed.
 More info [here](../preferences/order.md#cli-flag)
 
-#### `--stash`
+#### `--stash`<br>`--no-stash`
 
 When set, Git Town stashes the open changes before switching to the new branch
 and then unstashes them. This guarantees that the switch will work, at the cost

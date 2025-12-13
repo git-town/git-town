@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town prepend [<branch-name>...] [--auto-resolve] [-b | --beam] [--body <string>] [-c | --commit] [-d | --detached] [--dry-run] [-h | --help] [(-m | --message) <message>] [--propose] [-p | --prototype] [--push] [--stash] [--sync] [(-t | --title) <text>] [-v | --verbose]
+git town prepend [<branch-name>...] [--(no)-auto-resolve] [-b | --beam] [--body <string>] [-c | --commit] [-d | --(no)-detached] [--dry-run] [-h | --help] [(-m | --message) <message>] [--propose] [-p | --prototype] [--(no)-push] [--(no)-stash] [--(no)-sync] [(-t | --title) <text>] [-v | --verbose]
 ```
 
 The _prepend_ command creates a new feature branch as the parent of the current
@@ -40,7 +40,7 @@ it. To do so, it pushes the new branch.
 
 ## Options
 
-#### `--auto-resolve`
+#### `--auto-resolve`<br>`--no-auto-resolve`
 
 Disables automatic resolution of
 [phantom merge conflicts](../stacked-changes.md#avoid-phantom-conflicts).
@@ -110,7 +110,7 @@ The `--push`/`--no-push` argument overrides the
 
 Enables or disables [stashing](../preferences/stash.md) for this invocation.
 
-#### `--sync`
+#### `--sync`<br>`--no-sync`
 
 Enables or disables [automatic syncing](../preferences/auto-sync.md) of the
 current branch before prepending the new one.

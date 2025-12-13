@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town hack [<branch-name>...] [--auto-resolve] [-b | --beam] [-c | --commit] [-d | --detached] [--dry-run] [-h | --help] [(-m | --message) <message>] [--propose] [-p | --prototype] [--stash] [--sync] [-v | --verbose]
+git town hack [<branch-name>...] [--(no)-auto-resolve] [-b | --beam] [-c | --commit] [-d | --(no)-detached] [--dry-run] [-h | --help] [(-m | --message) <message>] [--propose] [-p | --prototype] [--(no)-stash] [--(no)-sync] [-v | --verbose]
 ```
 
 The _hack_ command ("let's start hacking") creates a new feature branch with the
@@ -47,7 +47,7 @@ branch with its upstream counterpart. You can control this behavior with the
 
 ## Options
 
-#### `--auto-resolve`
+#### `--auto-resolve`<br>`--no-auto-resolve`
 
 Disables automatic resolution of
 [phantom merge conflicts](../stacked-changes.md#avoid-phantom-conflicts).
@@ -107,7 +107,7 @@ Adding the `--prototype` aka `-p` switch creates a
 
 Enables or disables [stashing](../preferences/stash.md) for this invocation.
 
-#### `--sync`
+#### `--sync`<br>`--no-sync`
 
 Enables or disables [automatic syncing](../preferences/auto-sync.md) before
 creating the new branch.

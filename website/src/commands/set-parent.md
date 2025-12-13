@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town set-parent [<branch>] [--auto-resolve] [-h | --help] [--none] [-v | --verbose]
+git town set-parent [<branch>] [--(no)-auto-resolve] [-h | --help] [--none] [-v | --verbose]
 ```
 
 The _set-parent_ command moves a branch and all its children below another
@@ -82,7 +82,7 @@ parent.
 
 ## Options
 
-#### `--auto-resolve`
+#### `--auto-resolve`<br>`--no-auto-resolve`
 
 Disables automatic resolution of
 [phantom merge conflicts](../stacked-changes.md#avoid-phantom-conflicts).

@@ -69,14 +69,7 @@ function texts(nodes: textRunner.ast.NodeList): string[] {
       result.push(node.content)
     }
   }
-  return standardizeArgument(removeNegatedFlag(result))
-}
-
-export function removeNegatedFlag(flags: string[]): string[] {
-  if (flags.length < 2) {
-    return flags
-  }
-  return flags.filter(flag => !flag.startsWith("--no-"))
+  return standardizeArgument(result)
 }
 
 export function standardizeArgument(texts: string[]): string[] {
