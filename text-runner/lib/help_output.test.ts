@@ -108,6 +108,59 @@ Flags:
       ]
       deepEqual(have, want)
     })
+
+    test("compress command", () => {
+      const output = new HelpOutput(`
+Squash all commits on the current branch down to a single commit.
+
+Compress is a more convenient way of running "git rebase --interactive"
+and choosing to fixup all commits.
+Branches must be in sync to compress them, run "git sync" as needed.
+
+Provide the --stack switch to compress all branches in the stack.
+
+The compressed commit uses the commit message of the first commit in the branch.
+You can provide a custom commit message with the -m switch.
+
+Assuming you have a feature branch with these commits:
+
+$ git log --format='%s'
+commit 1
+commit 2
+commit 3
+
+Let's compress these three commits into a single commit:
+
+$ git town compress
+
+Now your branch has a single commit with the name of the first commit but
+containing the changes of all three commits that existed on the branch before:
+
+$ git log --format='%s'
+commit 1
+
+Usage:
+  git-town compress [flags]
+
+Flags:
+      --dry-run          print but do not run the Git commands
+  -h, --help             help for compress
+  -m, --message string   customize the commit message
+      --no-verify        do not run pre-commit hooks
+  -s, --stack            Compress the entire stack
+  -v, --verbose          display all Git commands run under the hood
+`)
+      const have = output.flags()
+      const want = [
+        ["--dry-run"],
+        ["-h", "--help"],
+        ["-m", "--message string"],
+        ["--no-verify"],
+        ["-s", "--stack"],
+        ["-v", "--verbose"],
+      ]
+      deepEqual(have, want)
+    })
   })
 })
 
