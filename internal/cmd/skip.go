@@ -33,11 +33,11 @@ func skipCmd() *cobra.Command {
 		Short:   skipDesc,
 		Long:    cmdhelpers.Long(skipDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			verbose, err := readVerboseFlag(cmd)
+			park, err := readParkFlag(cmd)
 			if err != nil {
 				return err
 			}
-			park, err := readParkFlag(cmd)
+			verbose, err := readVerboseFlag(cmd)
 			if err != nil {
 				return err
 			}
