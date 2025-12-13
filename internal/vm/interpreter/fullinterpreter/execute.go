@@ -63,6 +63,10 @@ func Execute(args ExecuteArgs) error {
 		}
 		runnable, isRunnable := nextStep.(shared.Runnable)
 		if !isRunnable {
+			name := gohacks.TypeName(nextStep)
+			if name == "ProgramEndOfBranch" {
+				continue
+			}
 			panic(fmt.Errorf(messages.OpcodeNotRunnable, gohacks.TypeName(nextStep)))
 		}
 		err := runnable.Run(shared.RunArgs{
