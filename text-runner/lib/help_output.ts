@@ -6,7 +6,7 @@ export class HelpOutput {
     this.text = text
   }
 
-  /** provides the content of the "Flags:" section of this help output as a list of flag variations */
+  /** provides the CLI flags described in this help output */
   flags(): string[][] {
     const result: string[][] = []
     for (const flagLine of this.lines().flagLines()) {
@@ -77,21 +77,20 @@ export class FlagLine {
     this.text = text
   }
 
+  /** flags provides the flags that this FlagLine defines */
   flags(): string[][] {
     const result: string[][] = []
-    for (const line of this.text.split("\n")) {
-      // Parse flag line - format: "  -b, --beam             description"
-      // The description starts after 2 or more spaces
-      const match = line.match(/^\s+(.+?)\s{2,}/)
-      if (match) {
-        const flagsPart = match[1].trim()
-        const flags = flagsPart.split(/,\s+/).map((flag) => {
-          // Remove default value notation like [="all"]
-          return flag.replace(/\[="[^"]*"\]/, "")
-        })
-        if (flags.length > 0) {
-          result.push(flags)
-        }
+    // Parse flag line - format: "  -b, --beam             description"
+    // The description starts after 2 or more spaces
+    const match = this.text.match(/^\s+(.+?)\s{2,}/)
+    if (match) {
+      const flagsPart = match[1].trim()
+      const flags = flagsPart.split(/,\s+/).map((flag) => {
+        // Remove default value notation like [="all"]
+        return flag.replace(/\[="[^"]*"\]/, "")
+      })
+      if (flags.length > 0) {
+        result.push(flags)
       }
     }
     return result
