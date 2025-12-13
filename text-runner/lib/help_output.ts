@@ -79,19 +79,20 @@ export class FlagLine {
 
   /** flags provides the flags that this FlagLine defines */
   flags(): string[][] {
-    const result: string[][] = []
     // Parse flag line - format: "  -b, --beam             description"
     // The description starts after 2 or more spaces
     const match = this.text.match(/^\s+(.+?)\s{2,}/)
-    if (match) {
-      const flagsPart = match[1].trim()
-      const flags = flagsPart.split(/,\s+/).map((flag) => {
-        // Remove default value notation like [="all"]
-        return flag.replace(/\[="[^"]*"\]/, "")
-      })
-      if (flags.length > 0) {
-        result.push(flags)
-      }
+    if (!match) {
+      return []
+    }
+    const result: string[][] = []
+    const flagsPart = match[1].trim()
+    const flags = flagsPart.split(/,\s+/).map((flag) => {
+      // Remove default value notation like [="all"]
+      return flag.replace(/\[="[^"]*"\]/, "")
+    })
+    if (flags.length > 0) {
+      result.push(flags)
     }
     return result
   }
