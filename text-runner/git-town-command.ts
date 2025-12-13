@@ -74,6 +74,8 @@ class Document {
       if (insideOptions) {
         if (isFlagHeading(node)) {
           const flagNodes = this.nodes.nodesFor(node)
+          console.log(flagNodes)
+          console.log(texts(flagNodes))
           result.push(texts(flagNodes))
         }
       }
@@ -195,7 +197,7 @@ export class HelpOutput {
       const group = result[i]
 
       // Check if this is a negated flag (single flag starting with --no-)
-      if (group.length !== 1 || !group[0].startsWith('--no-')) {
+      if (group.length !== 1 || !group[0].startsWith("--no-")) {
         continue
       }
 
