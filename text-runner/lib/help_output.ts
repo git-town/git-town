@@ -9,24 +9,15 @@ export class HelpOutput {
   /** provides the content of the "Flags:" section of this help output as a list of flag variations */
   flags(): string[][] {
     const result: string[][] = []
-    const lines = this.text.split("\n")
-    let inFlagsSection = false
-    for (const line of lines) {
-      if (line.includes("Flags:")) {
-        inFlagsSection = true
-        continue
-      }
-      if (!inFlagsSection) {
-        continue
-      }
-      // Stop if we hit an empty line (end of flags section)
-      if (line.trim() === "") {
-        break
-      }
+    for (const line of this.flagLines()) {
       const flags = this.flagLine(line)
       result.push(...flags)
     }
     return result
+  }
+
+  flagLines(): Generator<string> {
+    return flagLines(this.text)
   }
 
   flagLine(line: string): string[][] {
@@ -45,5 +36,24 @@ export class HelpOutput {
       }
     }
     return result
+  }
+}
+
+/** yields all lines of the given Git Town command output that are part of the "Flags:" section */
+function* flagLines(output: string): Generator<string> {
+  let inFlagsSection = false
+  for (const line of output.split("\n")) {
+    if (line.includes("Flags:")) {
+      inFlagsSection = true
+      continue
+    }
+    if (!inFlagsSection) {
+      continue
+    }
+    // the flags section ends at the first empty line
+    if (line.trim() === "") {
+      break
+    }
+    yield line
   }
 }

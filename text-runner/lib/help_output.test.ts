@@ -2,10 +2,7 @@ import { deepEqual } from "node:assert/strict"
 import { suite, test } from "node:test"
 import { HelpOutput } from "./help_output.ts"
 
-suite("HelpOutput", () => {
-  suite(".flags()", () => {
-    test("append command", () => {
-      const output = new HelpOutput(`
+const appendHelpOutput = `
 Create a new feature branch as a child of the current branch.
 
 Consider this stack:
@@ -48,7 +45,45 @@ Flags:
       --stash            stash uncommitted changes when creating branches
       --sync             sync branches (default true)
   -v, --verbose          display all Git commands run under the hood
-`)
+`
+
+suite("HelpOutput", () => {
+  suite("flagLines()", () => {
+    test("append command", () => {
+      const output = new HelpOutput(appendHelpOutput)
+      const lines = output.flagLines()
+      deepEqual(lines.next().done, false)
+      deepEqual(lines.next().value, "      --auto-resolve     auto-resolve phantom merge conflicts")
+      deepEqual(lines.next().done, false)
+      deepEqual(lines.next().value, "  -b, --beam             beam some commits from this branch to the new branch")
+      deepEqual(lines.next().done, false)
+      deepEqual(lines.next().value, "  -c, --commit           commit the stashed changes into the new branch")
+      deepEqual(lines.next().done, false)
+      deepEqual(lines.next().value, "  -d, --detached         don't update the perennial root branch")
+      deepEqual(lines.next().done, false)
+      deepEqual(lines.next().value, "      --dry-run          print but do not run the Git commands")
+      deepEqual(lines.next().done, false)
+      deepEqual(lines.next().value, "  -h, --help             help for append")
+      deepEqual(lines.next().done, false)
+      deepEqual(lines.next().value, "  -m, --message string   the commit message")
+      deepEqual(lines.next().done, false)
+      deepEqual(lines.next().value, "      --propose          propose the new branch")
+      deepEqual(lines.next().done, false)
+      deepEqual(lines.next().value, "  -p, --prototype        create a prototype branch")
+      deepEqual(lines.next().done, false)
+      deepEqual(lines.next().value, "      --push             push local branches")
+      deepEqual(lines.next().done, false)
+      deepEqual(lines.next().value, "      --stash            stash uncommitted changes when creating branches")
+      deepEqual(lines.next().done, false)
+      deepEqual(lines.next().value, "      --sync             sync branches (default true)")
+      deepEqual(lines.next().done, false)
+      deepEqual(lines.next().value, "  -v, --verbose          display all Git commands run under the hood")
+      deepEqual(lines.next().done, true)
+    })
+  })
+  suite(".flags()", () => {
+    test("append command", () => {
+      const output = new HelpOutput(appendHelpOutput)
       const have = output.flags()
       const want = [
         ["--auto-resolve"],
