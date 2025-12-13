@@ -11,11 +11,6 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-var (
-	branchTypeOverrideSet BranchTypeOverrideSet
-	_                     shared.Runnable = &branchTypeOverrideSet
-)
-
 // BranchTypeOverrideSet registers the branch with the given name as a contribution branch in the Git config.
 type BranchTypeOverrideSet struct {
 	Branch     gitdomain.LocalBranchName
