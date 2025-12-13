@@ -107,7 +107,7 @@ The `--push`/`--no-push` argument overrides the
 
 Enables or disables [stashing](../preferences/stash.md) for this invocation.
 
-#### `--sync`
+#### `--sync`<br>`--no-sync`
 
 Enables or disables [automatic syncing](../preferences/auto-sync.md) of the
 current branch before appending the new one.

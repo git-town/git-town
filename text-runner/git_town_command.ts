@@ -28,7 +28,6 @@ export async function gitTownCommand(action: textRunner.actions.Args) {
   const optionsJSON = JSON.stringify(optionsArgs, null, 2)
 
   // ensure the options section documents the arguments correct
-  action.log(`ACTUAL:\n${actualJSON}`)
   action.log(`OPTIONS SECTION:\n${optionsJSON}`)
   deepEqual(optionsArgs, actualArgs)
 }
