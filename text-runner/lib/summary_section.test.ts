@@ -126,7 +126,6 @@ suite("negations", () => {
     ]
     for (const { desc, give, want } of tests) {
       test(desc, () => {
-        const section = new SummarySection("")
         const have = splitNegations(give)
         deepEqual(have, want)
       })
