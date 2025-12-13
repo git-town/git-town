@@ -11,6 +11,11 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
+var (
+	branchTypeOverrideSet BranchTypeOverrideSet
+	_                     shared.Runnable = &branchTypeOverrideSet
+)
+
 // BranchTypeOverrideSet registers the branch with the given name as a contribution branch in the Git config.
 type BranchTypeOverrideSet struct {
 	Branch     gitdomain.LocalBranchName
@@ -18,7 +23,9 @@ type BranchTypeOverrideSet struct {
 }
 
 func (self *BranchTypeOverrideSet) Run(args shared.RunArgs) error {
+	fmt.Println("555555555555555555555555555555")
 	if message, has := self.message().Get(); has {
+		fmt.Println("44444444444444444444444", message)
 		args.FinalMessages.Add(message)
 	}
 	return gitconfig.SetBranchTypeOverride(args.Backend, self.BranchType, self.Branch)

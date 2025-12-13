@@ -14,10 +14,20 @@ Feature: skip and park the current branch
       | beta   | local, origin | beta commit  | conflicting_file | beta content  |
       | gamma  | local, origin | gamma commit | feature2_file    | gamma content |
     And the current branch is "main"
-    When I run "git-town sync --all"
-
-  Scenario: skip with --park flag
+    And I run "git-town sync --all"
+    And Git Town runs the commands
+      | BRANCH | COMMAND                                           |
+      | main   | git fetch --prune --tags                          |
+      |        | git -c rebase.updateRefs=false rebase origin/main |
+      |        | git checkout alpha                                |
+      | alpha  | git merge --no-edit --ff main                     |
+      |        | git push                                          |
+      |        | git checkout beta                                 |
+      | beta   | git merge --no-edit --ff main                     |
     When I run "git-town skip --park"
+
+  @this
+  Scenario: skip with --park flag
     Then Git Town runs the commands
       | BRANCH | COMMAND                       |
       | beta   | git merge --abort             |

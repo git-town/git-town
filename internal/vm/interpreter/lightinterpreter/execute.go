@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks"
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
 	"github.com/git-town/git-town/v22/internal/vm/program"
@@ -22,7 +23,9 @@ func Execute(args ExecuteArgs) {
 		if !hasNextStep {
 			return
 		}
+		fmt.Println("6666666666666666", nextStep, gohacks.TypeName(nextStep))
 		if runnable, isRunnable := nextStep.(shared.Runnable); isRunnable {
+			fmt.Println("777777777777777777777", runnable, gohacks.TypeName(runnable))
 			err := runnable.Run(shared.RunArgs{
 				Backend:                         args.Backend,
 				BranchInfos:                     None[gitdomain.BranchInfos](),
