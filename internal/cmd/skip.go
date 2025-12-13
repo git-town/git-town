@@ -11,7 +11,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v22/internal/config/cliconfig"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
-	"github.com/git-town/git-town/v22/internal/config/gitconfig"
 	"github.com/git-town/git-town/v22/internal/execute"
 	"github.com/git-town/git-town/v22/internal/forge"
 	"github.com/git-town/git-town/v22/internal/messages"
@@ -61,7 +60,7 @@ func skipCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeSkip(cliConfig configdomain.PartialConfig, parkOpt Option[configdomain.Park]) error {
+func executeSkip(cliConfig configdomain.PartialConfig, park Option[configdomain.Park]) error {
 Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
@@ -173,14 +172,6 @@ Start:
 			return errors.New(messages.SkipBranchHasConflicts)
 		}
 	}
-	if park, hasPark := parkOpt.Get(); hasPark {
-		if park {
-			if err = gitconfig.SetBranchTypeOverride(repo.Backend, configdomain.BranchTypeParkedBranch, activeBranch); err != nil {
-				return err
-			}
-			fmt.Printf(messages.BranchIsNowParked, activeBranch)
-		}
-	}
 	return skip.Execute(skip.ExecuteArgs{
 		Backend:         repo.Backend,
 		CommandsCounter: repo.CommandsCounter,
@@ -192,6 +183,7 @@ Start:
 		HasOpenChanges:  repoStatus.OpenChanges,
 		InitialBranch:   activeBranch,
 		Inputs:          inputs,
+		Park:            park.GetOr(false),
 		RootDir:         repo.RootDir,
 		RunState:        runState,
 	})

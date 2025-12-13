@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v22/internal/config"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
@@ -33,12 +34,20 @@ type ExecuteArgs struct {
 	HasOpenChanges  bool
 	InitialBranch   gitdomain.LocalBranchName
 	Inputs          dialogcomponents.Inputs
+	Park            configdomain.Park
 	RootDir         gitdomain.RepoRootDir
 	RunState        runstate.RunState
 }
 
 // executes the "skip" command at the given runstate
 func Execute(args ExecuteArgs) error {
+	skipProgram := args.RunState.AbortProgram
+	if args.Park {
+		skipProgram = append(skipProgram, opcodes.BranchTypeOverrideSet{
+			Branch:     args.InitialBranch,
+			BranchType: configdomain.BranchTypeParkedBranch,
+		})
+	}
 	lightinterpreter.Execute(lightinterpreter.ExecuteArgs{
 		Backend:       args.Backend,
 		Config:        args.Config,
@@ -46,7 +55,7 @@ func Execute(args ExecuteArgs) error {
 		FinalMessages: args.FinalMessages,
 		Frontend:      args.Frontend,
 		Git:           args.Git,
-		Prog:          args.RunState.AbortProgram,
+		Prog:          skipProgram,
 	})
 	args.RunState.AbortProgram = program.Program{}
 	if err := revertChangesToCurrentBranch(args); err != nil {
