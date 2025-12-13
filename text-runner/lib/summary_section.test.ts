@@ -1,6 +1,6 @@
 import { deepEqual } from "node:assert/strict"
 import { suite, test } from "node:test"
-import { SummarySection } from "./summary_section.ts"
+import { isNegatable, splitNegation, splitNegations, SummarySection } from "./summary_section.ts"
 
 suite("SummarySection", () => {
   suite(".args()", () => {
@@ -8,20 +8,20 @@ suite("SummarySection", () => {
       {
         desc: "append command",
         give:
-          "git town append <branch-name> [--auto-resolve] [-b | --beam] [-c | --commit] [-d | --detached] [--dry-run] [-h | --help] [(-m | --message) <message>] [--propose] [-p | --prototype] [--push] [--stash] [--sync] [-v | --verbose]",
+          "git town append <branch-name> [--(no)-auto-resolve] [-b | --beam] [-c | --commit] [-d | --(no)-detached] [--dry-run] [-h | --help] [(-m | --message) <message>] [--(no)-propose] [-p | --prototype] [--(no)-push] [--(no)-stash] [--(no)-sync] [-v | --verbose]",
         want: [
-          ["--auto-resolve"],
+          ["--auto-resolve", "--no-auto-resolve"],
           ["-b", "--beam"],
           ["-c", "--commit"],
-          ["-d", "--detached"],
+          ["-d", "--detached", "--no-detached"],
           ["--dry-run"],
           ["-h", "--help"],
           ["-m", "--message string"],
-          ["--propose"],
+          ["--propose", "--no-propose"],
           ["-p", "--prototype"],
-          ["--push"],
-          ["--stash"],
-          ["--sync"],
+          ["--push", "--no-push"],
+          ["--stash", "--no-stash"],
+          ["--sync", "--no-sync"],
           ["-v", "--verbose"],
         ],
       },
@@ -67,6 +67,61 @@ suite("SummarySection", () => {
       test(give, () => {
         const summarySection = new SummarySection(give)
         const have = summarySection.command().name
+        deepEqual(have, want)
+      })
+    }
+  })
+})
+
+suite("negations", { only: true }, () => {
+  suite("isNegatable", () => {
+    const tests = {
+      "--(no)-detach": true,
+      "--beam": false,
+    }
+    for (const [give, want] of Object.entries(tests)) {
+      test(give, () => {
+        const have = isNegatable(give)
+        deepEqual(have, want)
+      })
+    }
+  })
+
+  suite("variationName", () => {
+    const tests = {
+      "--(no)-detach": "detach",
+    }
+  })
+
+  suite("splitNegation", () => {
+    const tests = {
+      "--(no)-detach": ["--detach", "--no-detach"],
+    }
+    for (const [give, want] of Object.entries(tests)) {
+      test(give, () => {
+        const have = splitNegation(give)
+        deepEqual(have, want)
+      })
+    }
+  })
+
+  suite("splitNegations", () => {
+    const tests = [
+      {
+        desc: "negatable",
+        give: ["-d", "--(no)-detach"],
+        want: ["-d", "--detach", "--no-detach"],
+      },
+      {
+        desc: "not negatable",
+        give: ["-b", "--beam"],
+        want: ["-b", "--beam"],
+      },
+    ]
+    for (const { desc, give, want } of tests) {
+      test(desc, () => {
+        const section = new SummarySection("")
+        const have = splitNegations(give)
         deepEqual(have, want)
       })
     }

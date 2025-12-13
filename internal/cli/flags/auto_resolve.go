@@ -12,7 +12,7 @@ const autoResolveLong = "auto-resolve"
 func AutoResolve() (AddFunc, ReadAutoResolveFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.Flags().Bool(autoResolveLong, false, "auto-resolve phantom merge conflicts")
-		defineNegatedFlag(cmd.Flags(), autoResolveLong)
+		defineNegatedFlag(cmd.Flags(), autoResolveLong, "don't auto-resolve")
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.AutoResolve], error) {
 		return readNegatableFlag[configdomain.AutoResolve](cmd.Flags(), autoResolveLong)
