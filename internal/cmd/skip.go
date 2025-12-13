@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v22/internal/config/cliconfig"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/config/gitconfig"
 	"github.com/git-town/git-town/v22/internal/execute"
 	"github.com/git-town/git-town/v22/internal/forge"
 	"github.com/git-town/git-town/v22/internal/messages"
@@ -25,6 +26,7 @@ const skipDesc = "Resume the last run Git Town command by skipping the current b
 
 func skipCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	addParkFlag, readParkFlag := flags.Park()
 	cmd := cobra.Command{
 		Use:     "skip",
 		GroupID: cmdhelpers.GroupIDErrors,
@@ -33,6 +35,10 @@ func skipCmd() *cobra.Command {
 		Long:    cmdhelpers.Long(skipDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			park, err := readParkFlag(cmd)
 			if err != nil {
 				return err
 			}
@@ -47,14 +53,15 @@ func skipCmd() *cobra.Command {
 				Stash:        None[configdomain.Stash](),
 				Verbose:      verbose,
 			})
-			return executeSkip(cliConfig)
+			return executeSkip(cliConfig, park)
 		},
 	}
 	addVerboseFlag(&cmd)
+	addParkFlag(&cmd)
 	return &cmd
 }
 
-func executeSkip(cliConfig configdomain.PartialConfig) error {
+func executeSkip(cliConfig configdomain.PartialConfig, parkOpt Option[configdomain.Park]) error {
 Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
@@ -164,6 +171,14 @@ Start:
 	if unfinishedDetails, hasUnfinishedDetails := runState.UnfinishedDetails.Get(); hasUnfinishedDetails {
 		if !unfinishedDetails.CanSkip {
 			return errors.New(messages.SkipBranchHasConflicts)
+		}
+	}
+	if park, hasPark := parkOpt.Get(); hasPark {
+		if park {
+			if err = gitconfig.SetBranchTypeOverride(repo.Backend, configdomain.BranchTypeParkedBranch, activeBranch); err != nil {
+				return err
+			}
+			fmt.Printf(messages.BranchIsNowParked, activeBranch)
 		}
 	}
 	return skip.Execute(skip.ExecuteArgs{
