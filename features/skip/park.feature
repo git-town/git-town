@@ -10,9 +10,9 @@ Feature: skip and park the current branch
     And the commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME        | FILE CONTENT  |
       | main   | origin        | main commit  | conflicting_file | main content  |
-      | alpha  | local, origin | alpha commit | feature1_file    | alpha content |
+      | alpha  | local, origin | alpha commit | alpha_file       | alpha content |
       | beta   | local, origin | beta commit  | conflicting_file | beta content  |
-      | gamma  | local, origin | gamma commit | feature2_file    | gamma content |
+      | gamma  | local, origin | gamma commit | gamma_file       | gamma content |
     And the current branch is "main"
     And I run "git-town sync --all"
     And Git Town runs the commands
