@@ -1,6 +1,6 @@
 import { deepEqual } from "node:assert/strict"
 import { suite, test } from "node:test"
-import { FlagLine, HelpOutput, replaceValueNotation } from "./help_output.ts"
+import { FlagLine, HelpOutput, mergeFlags, replaceValueNotation } from "./help_output.ts"
 
 const appendHelpOutput = `
 Create a new feature branch as a child of the current branch.
@@ -65,7 +65,7 @@ suite("HelpOutput", () => {
         ["--dry-run"],
         ["-h", "--help"],
         ["-m", "--message string"],
-        ["--propose", "--no-propose"],
+        ["--propose"],
         ["-p", "--prototype"],
         ["--push", "--no-push"],
         ["--stash", "--no-stash"],
@@ -102,7 +102,7 @@ Flags:
   })
 })
 
-suite("Lines", { only: true }, () => {
+suite("Lines", () => {
   suite(".flagLines()", () => {
     test("append command", () => {
       const output = new HelpOutput(appendHelpOutput)
@@ -159,4 +159,13 @@ suite("replaceValueNotation()", () => {
       deepEqual(have, want)
     })
   }
+})
+
+suite("mergeFlags()", { only: true }, () => {
+  test("merge flags", () => {
+    const give = [["-b", "--beam"], ["-d", "--detached"], ["--no-detached"]]
+    const want = [["-b", "--beam"], ["-d", "--detached", "--no-detached"]]
+    const have = mergeFlags(give)
+    deepEqual(have, want)
+  })
 })

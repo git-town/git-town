@@ -12,7 +12,7 @@ export class HelpOutput {
     for (const flagLine of this.lines().flagLines()) {
       result.push(flagLine.flags())
     }
-    return result
+    return mergeFlags(result)
   }
 
   lines(): Lines {
@@ -93,4 +93,12 @@ export class FlagLine {
 
 export function replaceValueNotation(flag: string): string {
   return flag.replace(/\[="[^"]*"\]/, "")
+}
+
+export function mergeFlags(flags: string[][]): string[][] {
+  const result: string[][] = []
+  for (const flag of flags) {
+    result.push(flag)
+  }
+  return result
 }
