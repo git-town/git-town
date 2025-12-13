@@ -42,14 +42,12 @@ type ExecuteArgs struct {
 // executes the "skip" command at the given runstate
 func Execute(args ExecuteArgs) error {
 	skipProgram := args.RunState.AbortProgram
-	fmt.Println("222222222222222222222222222", args.Park)
 	if args.Park {
 		skipProgram = append(skipProgram, &opcodes.BranchTypeOverrideSet{
 			Branch:     args.InitialBranch,
 			BranchType: configdomain.BranchTypeParkedBranch,
 		})
 	}
-	fmt.Println("33333333333333333333333", skipProgram.String())
 	lightinterpreter.Execute(lightinterpreter.ExecuteArgs{
 		Backend:       args.Backend,
 		Config:        args.Config,
@@ -63,7 +61,6 @@ func Execute(args ExecuteArgs) error {
 	if err := revertChangesToCurrentBranch(args); err != nil {
 		return err
 	}
-	fmt.Println("11111111111111111111111111111111111", args.FinalMessages.Result())
 	args.RunState.RunProgram = RemoveOpcodesForCurrentBranch(args.RunState.RunProgram)
 	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
 		Backend:                 args.Backend,

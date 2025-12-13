@@ -24,12 +24,10 @@ func Execute(args ExecuteArgs) {
 		if !hasNextStep {
 			return
 		}
-		fmt.Println("6666666666666666", nextStep, gohacks.TypeName(nextStep))
 		runnable, isRunnable := nextStep.(shared.Runnable)
 		if !isRunnable {
 			panic(fmt.Errorf(messages.OpcodeNotRunnable, gohacks.TypeName(nextStep)))
 		}
-		fmt.Println("777777777777777777777", runnable, gohacks.TypeName(runnable))
 		err := runnable.Run(shared.RunArgs{
 			Backend:                         args.Backend,
 			BranchInfos:                     None[gitdomain.BranchInfos](),
