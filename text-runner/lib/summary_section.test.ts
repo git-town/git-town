@@ -8,7 +8,7 @@ suite("SummarySection", () => {
       {
         desc: "append command",
         give:
-          "git town append <branch-name> [--(no)-auto-resolve] [-b | --beam] [-c | --commit] [-d | --(no)-detached] [--dry-run] [-h | --help] [(-m | --message) <message>] [--(no)-propose] [-p | --prototype] [--(no)-push] [--(no)-stash] [--(no)-sync] [-v | --verbose]",
+          "git town append <branch-name> [--(no)-auto-resolve] [-b | --beam] [-c | --commit] [-d | --(no)-detached] [--dry-run] [-h | --help] [(-m | --message) <message>] [--propose] [-p | --prototype] [--(no)-push] [--(no)-stash] [--(no)-sync] [-v | --verbose]",
         want: [
           ["--auto-resolve", "--no-auto-resolve"],
           ["-b", "--beam"],
@@ -17,7 +17,7 @@ suite("SummarySection", () => {
           ["--dry-run"],
           ["-h", "--help"],
           ["-m", "--message string"],
-          ["--propose", "--no-propose"],
+          ["--propose"],
           ["-p", "--prototype"],
           ["--push", "--no-push"],
           ["--stash", "--no-stash"],
