@@ -87,6 +87,10 @@ export class FlagLine {
     }
     const flagsPart = match[1].trim()
     // Remove default value notation like [="all"]
-    return flagsPart.split(/,\s+/).map(flag => flag.replace(/\[="[^"]*"\]/, ""))
+    return flagsPart.split(/,\s+/).map(replaceValueNotation)
   }
+}
+
+function replaceValueNotation(flag: string): string {
+  return flag.replace(/\[="[^"]*"\]/, "")
 }
