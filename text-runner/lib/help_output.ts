@@ -115,21 +115,18 @@ export function findGroupWithPositiveFlag(result: string[][], positiveFlag: stri
 function extractNegated(flags: string[][]): { normal: string[][]; negated: string[][] } {
   const negated: string[][] = []
   const normal: string[][] = []
-
   for (const currentFlags of flags) {
     if (isNegatedFlagsGroup(currentFlags)) {
       negated.push(currentFlags)
     } else {
-      normal.push([...currentFlags])
+      normal.push(currentFlags)
     }
   }
-
   return { normal, negated }
 }
 
 export function mergeFlags(flags: string[][]): string[][] {
   const { normal, negated } = extractNegated(flags)
-
   // merge negated flags with their positive counterparts
   for (const negatedFlags of negated) {
     const positiveFlag = getPositiveFlagName(negatedFlags[0])
