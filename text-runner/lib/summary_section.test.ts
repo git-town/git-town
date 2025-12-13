@@ -73,7 +73,7 @@ suite("SummarySection", () => {
   })
 })
 
-suite("negations", { only: true }, () => {
+suite("negations", () => {
   suite("isNegatable", () => {
     const tests = {
       "--(no)-detach": true,
