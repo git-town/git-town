@@ -124,17 +124,11 @@ suite("Lines", () => {
 
 suite("FlagLine", () => {
   suite(".flags()", () => {
-    const tests = [
-      {
-        give: "  -b, --beam             description",
-        want: ["-b", "--beam"],
-      },
-      {
-        give: `  -d, --display-types string[="all"]   display the branch types`,
-        want: ["-d", "--display-types string"],
-      },
-    ]
-    for (const { give, want } of tests) {
+    const tests = {
+      "  -b, --beam             description": ["-b", "--beam"],
+      "  -d, --display-types string[=\"all\"]   display the branch types": ["-d", "--display-types string"],
+    }
+    for (const [give, want] of Object.entries(tests)) {
       test(give, () => {
         const flagLine = new FlagLine(give)
         const have = flagLine.flags()
