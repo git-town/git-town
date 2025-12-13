@@ -18,5 +18,4 @@ func Park() (AddFunc, ReadParkFlagFunc) {
 	return addFlag, readFlag
 }
 
-// ReadParkFlagFunc is the type signature for the function that reads the "verbose" flag from the args to the given Cobra command.
 type ReadParkFlagFunc func(*cobra.Command) (configdomain.Park, error)
