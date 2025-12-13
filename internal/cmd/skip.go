@@ -173,7 +173,7 @@ Start:
 		}
 	}
 	if park {
-		activeBranchType := branchesAndTypes.Get(activeBranch).GetOr(validatedConfig.NormalConfig.UnknownBranchType.BranchType())
+		activeBranchType := validatedConfig.BranchType(activeBranch)
 		if err = canParkBranchType(activeBranchType, activeBranch, repo.FinalMessages); err != nil {
 			return err
 		}
