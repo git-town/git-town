@@ -82,9 +82,10 @@ func (self *Commands) BranchInSyncWithParent(querier subshelldomain.Querier, bra
 // BranchInSyncWithTracking returns whether the local branch with the given name
 // contains commits that have not been pushed to its tracking branch.
 func (self *Commands) BranchInSyncWithTracking(querier subshelldomain.Querier, branch gitdomain.LocalBranchName, devRemote gitdomain.Remote) (bool, error) {
-	out, err := querier.QueryTrim("git", "rev-parse", branch.String(), branch.TrackingBranch(devRemote).String())
+	trackingBranch := branch.TrackingBranch(devRemote)
+	out, err := querier.QueryTrim("git", "rev-parse", branch.String(), trackingBranch.String())
 	if err != nil {
-		return false, fmt.Errorf(messages.DiffProblem, branch, branch, err)
+		return false, fmt.Errorf(messages.DiffProblem, branch, trackingBranch, err)
 	}
 	lines := strings.Split(out, "\n")
 	if len(lines) != 2 {
