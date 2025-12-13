@@ -4,7 +4,8 @@
     "textWrap": "always"
   },
   "typescript": {
-    "semiColons": "asi"
+    "semiColons": "asi",
+    "width": 160
   },
   "includes": ["**/*.{js,ts,json,md}"],
   "excludes": ["CHANGELOG.md", "vendor/**", "tools/node_modules/**", "website/book/**"],
