@@ -1,0 +1,21 @@
+package flags
+
+import (
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/spf13/cobra"
+)
+
+const parkLong = "park"
+
+// Park provides type-safe access to the CLI arguments of type Park.
+func Park() (AddFunc, ReadParkFlagFunc) {
+	addFlag := func(cmd *cobra.Command) {
+		cmd.Flags().Bool(parkLong, false, "also mark the branch as parked")
+	}
+	readFlag := func(cmd *cobra.Command) (configdomain.Park, error) {
+		return readBoolFlag[configdomain.Park](cmd.Flags(), parkLong)
+	}
+	return addFlag, readFlag
+}
+
+type ReadParkFlagFunc func(*cobra.Command) (configdomain.Park, error)
