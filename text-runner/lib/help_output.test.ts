@@ -51,34 +51,33 @@ suite("HelpOutput", () => {
   suite("flagLines()", () => {
     test("append command", () => {
       const output = new HelpOutput(appendHelpOutput)
-      const lines = output.flagLines()
-      deepEqual(lines.next().done, false)
-      deepEqual(lines.next().value, "      --auto-resolve     auto-resolve phantom merge conflicts")
-      deepEqual(lines.next().done, false)
-      deepEqual(lines.next().value, "  -b, --beam             beam some commits from this branch to the new branch")
-      deepEqual(lines.next().done, false)
-      deepEqual(lines.next().value, "  -c, --commit           commit the stashed changes into the new branch")
-      deepEqual(lines.next().done, false)
-      deepEqual(lines.next().value, "  -d, --detached         don't update the perennial root branch")
-      deepEqual(lines.next().done, false)
-      deepEqual(lines.next().value, "      --dry-run          print but do not run the Git commands")
-      deepEqual(lines.next().done, false)
-      deepEqual(lines.next().value, "  -h, --help             help for append")
-      deepEqual(lines.next().done, false)
-      deepEqual(lines.next().value, "  -m, --message string   the commit message")
-      deepEqual(lines.next().done, false)
-      deepEqual(lines.next().value, "      --propose          propose the new branch")
-      deepEqual(lines.next().done, false)
-      deepEqual(lines.next().value, "  -p, --prototype        create a prototype branch")
-      deepEqual(lines.next().done, false)
-      deepEqual(lines.next().value, "      --push             push local branches")
-      deepEqual(lines.next().done, false)
-      deepEqual(lines.next().value, "      --stash            stash uncommitted changes when creating branches")
-      deepEqual(lines.next().done, false)
-      deepEqual(lines.next().value, "      --sync             sync branches (default true)")
-      deepEqual(lines.next().done, false)
-      deepEqual(lines.next().value, "  -v, --verbose          display all Git commands run under the hood")
-      deepEqual(lines.next().done, true)
+      const have = output.flagLines()
+      deepEqual(have.next(), { value: "      --auto-resolve     auto-resolve phantom merge conflicts", done: false })
+      deepEqual(have.next(), {
+        value: "  -b, --beam             beam some commits from this branch to the new branch",
+        done: false,
+      })
+      deepEqual(have.next(), {
+        value: "  -c, --commit           commit the stashed changes into the new branch",
+        done: false,
+      })
+      deepEqual(have.next(), { value: "  -d, --detached         don't update the perennial root branch", done: false })
+      deepEqual(have.next(), { value: "      --dry-run          print but do not run the Git commands", done: false })
+      deepEqual(have.next(), { value: "  -h, --help             help for append", done: false })
+      deepEqual(have.next(), { value: "  -m, --message string   the commit message", done: false })
+      deepEqual(have.next(), { value: "      --propose          propose the new branch", done: false })
+      deepEqual(have.next(), { value: "  -p, --prototype        create a prototype branch", done: false })
+      deepEqual(have.next(), { value: "      --push             push local branches", done: false })
+      deepEqual(have.next(), {
+        value: "      --stash            stash uncommitted changes when creating branches",
+        done: false,
+      })
+      deepEqual(have.next(), { value: "      --sync             sync branches (default true)", done: false })
+      deepEqual(have.next(), {
+        value: "  -v, --verbose          display all Git commands run under the hood",
+        done: false,
+      })
+      deepEqual(have.next(), { done: true, value: undefined })
     })
   })
   suite(".flags()", () => {
