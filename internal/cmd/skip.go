@@ -60,7 +60,7 @@ func skipCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeSkip(cliConfig configdomain.PartialConfig, park Option[configdomain.Park]) error {
+func executeSkip(cliConfig configdomain.PartialConfig, park configdomain.Park) error {
 Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
@@ -183,7 +183,7 @@ Start:
 		HasOpenChanges:  repoStatus.OpenChanges,
 		InitialBranch:   activeBranch,
 		Inputs:          inputs,
-		Park:            park.GetOr(false),
+		Park:            park,
 		RootDir:         repo.RootDir,
 		RunState:        runState,
 	})
