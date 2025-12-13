@@ -6,44 +6,91 @@ export class HelpOutput {
     this.text = text
   }
 
-  /** provides the content of the "Flags:" section of this help output as a list of flag variations */
+  /** provides the CLI flags described in this help output */
   flags(): string[][] {
     const result: string[][] = []
-    const lines = this.text.split("\n")
+    for (const flagLine of this.lines().flagLines()) {
+      result.push(flagLine.flags())
+    }
+    return result
+  }
+
+  lines(): Lines {
+    const result: Line[] = []
+    for (const line of this.text.split("\n")) {
+      result.push(new Line(line))
+    }
+    return new Lines(result)
+  }
+}
+
+/** Lines represents all lines in the help output for a Git Town command */
+class Lines {
+  lines: Line[]
+
+  constructor(lines: Line[]) {
+    this.lines = lines
+  }
+
+  /** flagsLines provides the lines of the "Flags:" section */
+  flagLines(): FlagLine[] {
+    let result: FlagLine[] = []
     let inFlagsSection = false
-    for (const line of lines) {
-      if (line.includes("Flags:")) {
+    for (const line of this.lines) {
+      if (line.isStartOfFlagsSection()) {
         inFlagsSection = true
         continue
       }
       if (!inFlagsSection) {
         continue
       }
-      // Stop if we hit an empty line (end of flags section)
-      if (line.trim() === "") {
+      if (line.isEndOfFlagsSection()) {
         break
       }
-      const flags = this.flagLine(line)
-      result.push(...flags)
+      result.push(new FlagLine(line.text))
     }
     return result
+  }
+}
+
+/** Line is a line in the help output of a Git Town command */
+class Line {
+  text: string
+  constructor(text: string) {
+    this.text = text
   }
 
-  flagLine(line: string): string[][] {
-    const result: string[][] = []
+  isStartOfFlagsSection(): boolean {
+    return this.text.includes("Flags:")
+  }
+
+  isEndOfFlagsSection(): boolean {
+    return this.text.trim() === ""
+  }
+}
+
+/** FlagLine is a line in the "Flags:" section of the help output of a Git Town command */
+export class FlagLine {
+  text: string
+
+  constructor(text: string) {
+    this.text = text
+  }
+
+  /** flags provides the flags that this FlagLine defines */
+  flags(): string[] {
     // Parse flag line - format: "  -b, --beam             description"
     // The description starts after 2 or more spaces
-    const match = line.match(/^\s+(.+?)\s{2,}/)
-    if (match) {
-      const flagsPart = match[1].trim()
-      const flags = flagsPart.split(/,\s+/).map((flag) => {
-        // Remove default value notation like [="all"]
-        return flag.replace(/\[="[^"]*"\]/, "")
-      })
-      if (flags.length > 0) {
-        result.push(flags)
-      }
+    const match = this.text.match(/^\s+(.+?)\s{2,}/)
+    if (!match) {
+      return []
     }
-    return result
+    const flagsPart = match[1].trim()
+    // Remove default value notation like [="all"]
+    return flagsPart.split(/,\s+/).map(replaceValueNotation)
   }
+}
+
+export function replaceValueNotation(flag: string): string {
+  return flag.replace(/\[="[^"]*"\]/, "")
 }

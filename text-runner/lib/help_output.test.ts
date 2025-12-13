@@ -1,11 +1,8 @@
 import { deepEqual } from "node:assert/strict"
 import { suite, test } from "node:test"
-import { HelpOutput } from "./help_output.ts"
+import { FlagLine, HelpOutput, replaceValueNotation } from "./help_output.ts"
 
-suite("HelpOutput", () => {
-  suite(".flags()", () => {
-    test("append command", () => {
-      const output = new HelpOutput(`
+const appendHelpOutput = `
 Create a new feature branch as a child of the current branch.
 
 Consider this stack:
@@ -53,7 +50,12 @@ Flags:
       --stash             stash uncommitted changes when creating branches
       --sync              sync branches (default true)
   -v, --verbose           display all Git commands run under the hood
-`)
+`
+
+suite("HelpOutput", () => {
+  suite(".flags()", () => {
+    test("append command", () => {
+      const output = new HelpOutput(appendHelpOutput)
       const have = output.flags()
       const want = [
         ["--auto-resolve", "--no-auto-resolve"],
@@ -98,24 +100,58 @@ Flags:
       deepEqual(have, want)
     })
   })
+})
 
-  suite(".flagLine()", () => {
-    const tests = [
-      {
-        give: "  -b, --beam             description",
-        want: [["-b", "--beam"]],
-      },
-      {
-        give: `  -d, --display-types string[="all"]   display the branch types`,
-        want: [["-d", "--display-types string"]],
-      },
-    ]
-    for (const { give, want } of tests) {
+suite("Lines", () => {
+  suite(".flagLines()", () => {
+    test("append command", () => {
+      const output = new HelpOutput(appendHelpOutput)
+      const have = output.lines().flagLines()
+      const want = [
+        new FlagLine("      --auto-resolve     auto-resolve phantom merge conflicts"),
+        new FlagLine("  -b, --beam             beam some commits from this branch to the new branch"),
+        new FlagLine("  -c, --commit           commit the stashed changes into the new branch"),
+        new FlagLine("  -d, --detached         don't update the perennial root branch"),
+        new FlagLine("      --dry-run          print but do not run the Git commands"),
+        new FlagLine("  -h, --help             help for append"),
+        new FlagLine("  -m, --message string   the commit message"),
+        new FlagLine("      --propose          propose the new branch"),
+        new FlagLine("  -p, --prototype        create a prototype branch"),
+        new FlagLine("      --push             push local branches"),
+        new FlagLine("      --stash            stash uncommitted changes when creating branches"),
+        new FlagLine("      --sync             sync branches (default true)"),
+        new FlagLine("  -v, --verbose          display all Git commands run under the hood"),
+      ]
+      deepEqual(have, want)
+    })
+  })
+})
+
+suite("FlagLine", () => {
+  suite(".flags()", () => {
+    const tests = {
+      "  -b, --beam             description": ["-b", "--beam"],
+      "  -d, --display-types string[=\"all\"]   display the branch types": ["-d", "--display-types string"],
+    }
+    for (const [give, want] of Object.entries(tests)) {
       test(give, () => {
-        const output = new HelpOutput("")
-        const have = output.flagLine(give)
+        const flagLine = new FlagLine(give)
+        const have = flagLine.flags()
         deepEqual(have, want)
       })
     }
   })
+})
+
+suite("replaceValueNotation()", () => {
+  const tests = {
+    "string[=\"all\"]": "string",
+    "string": "string",
+  }
+  for (const [give, want] of Object.entries(tests)) {
+    test(give, () => {
+      const have = replaceValueNotation(give)
+      deepEqual(have, want)
+    })
+  }
 })
