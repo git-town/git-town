@@ -48,7 +48,7 @@ Flags:
 `
 
 suite("HelpOutput", () => {
-  suite("flagLines()", () => {
+  suite(".flagLines()", () => {
     test("append command", () => {
       const output = new HelpOutput(appendHelpOutput)
       const have = output.flagLines()
