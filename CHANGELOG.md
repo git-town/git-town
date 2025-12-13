@@ -1,10 +1,13 @@
 # Git Town Changelog
 
+## 22.4.0 (unreleased)
+
+- The Git Town CLI can now embed [branch lineage]() directly into proposals. This feature is in preview. To enable it, configure [proposals-show-lineage]() to `cli` ([]()).
+
 ## 22.3.0 (2025-12-13)
 
 #### New Features
 
-- The Git Town CLI can now embed [branch lineage]() directly into proposals. This feature is in preview. To enable it, configure [proposals-show-lineage]() to `cli` ([]()).
 - All Git Town commands now display the negated versions of CLI flags ([#5814](https://github.com/git-town/git-town/issues/5814)).
 - The new [branch-prefix config setting]() automatically adds the given prefix to branches that Git Town creates ([#5677](https://github.com/git-town/git-town/issues/5677)).
 - `git town skip` now has a `--park` flag that allows parking branches for which you permanently don't wish to resolve merge conflicts ([#5839](https://github.com/git-town/git-town/issues/5839)).
