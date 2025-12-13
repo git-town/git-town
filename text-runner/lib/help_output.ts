@@ -95,37 +95,37 @@ export function replaceValueNotation(flag: string): string {
   return flag.replace(/\[="[^"]*"\]/, "")
 }
 
+function isNegatedFlagsGroup(flags: string[]): boolean {
+  return flags.length > 0 && flags.every(flag => flag.startsWith('--no-'))
+}
+
+function getPositiveFlagName(negatedFlag: string): string {
+  const baseName = negatedFlag.substring(5).split(' ')[0]
+  return '--' + baseName
+}
+
+function matchesPositiveFlag(flag: string, positiveFlag: string): boolean {
+  return flag === positiveFlag || flag.startsWith(positiveFlag + ' ')
+}
+
+function findGroupWithPositiveFlag(result: string[][], positiveFlag: string): string[] | undefined {
+  return result.find(group => group.some(flag => matchesPositiveFlag(flag, positiveFlag)))
+}
+
 export function mergeFlags(flags: string[][]): string[][] {
   const result: string[][] = []
 
   for (const currentFlags of flags) {
-    // Check if this group contains only negated flags (flags starting with --no-)
-    const allNegated = currentFlags.every(flag => flag.startsWith('--no-'))
+    if (isNegatedFlagsGroup(currentFlags)) {
+      const positiveFlag = getPositiveFlagName(currentFlags[0])
+      const targetGroup = findGroupWithPositiveFlag(result, positiveFlag)
 
-    if (allNegated && currentFlags.length > 0) {
-      // Extract the base flag name (without --no- prefix and without value types)
-      const negatedFlag = currentFlags[0]
-      const baseName = negatedFlag.substring(5).split(' ')[0] // Remove '--no-' and any value type
-      const positiveFlag = '--' + baseName
-
-      // Find in result which group contains the positive flag
-      let foundInResult = false
-      for (const resultGroup of result) {
-        // Check if any flag in the result group matches the positive flag (with or without value)
-        if (resultGroup.some(flag => flag === positiveFlag || flag.startsWith(positiveFlag + ' '))) {
-          // Add all negated flags from current group to this result group
-          resultGroup.push(...currentFlags)
-          foundInResult = true
-          break
-        }
-      }
-
-      if (!foundInResult) {
-        // No matching positive flag found, add as new group
+      if (targetGroup) {
+        targetGroup.push(...currentFlags)
+      } else {
         result.push([...currentFlags])
       }
     } else {
-      // Not a negated-only group, add as is
       result.push([...currentFlags])
     }
   }
