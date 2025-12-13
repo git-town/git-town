@@ -1,6 +1,6 @@
 import { deepEqual } from "node:assert/strict"
 import { suite, test } from "node:test"
-import { HelpOutput } from "./help_output.ts"
+import { FlagLine, HelpOutput } from "./help_output.ts"
 
 const appendHelpOutput = `
 Create a new feature branch as a child of the current branch.
@@ -48,26 +48,6 @@ Flags:
 `
 
 suite("HelpOutput", () => {
-  suite(".flagLines()", () => {
-    test("append command", () => {
-      const output = new HelpOutput(appendHelpOutput)
-      const have = output.flagLines()
-      deepEqual(have.next(), { value: "      --auto-resolve     auto-resolve phantom merge conflicts", done: false })
-      deepEqual(have.next(), { value: "  -b, --beam             beam some commits from this branch to the new branch", done: false })
-      deepEqual(have.next(), { value: "  -c, --commit           commit the stashed changes into the new branch", done: false })
-      deepEqual(have.next(), { value: "  -d, --detached         don't update the perennial root branch", done: false })
-      deepEqual(have.next(), { value: "      --dry-run          print but do not run the Git commands", done: false })
-      deepEqual(have.next(), { value: "  -h, --help             help for append", done: false })
-      deepEqual(have.next(), { value: "  -m, --message string   the commit message", done: false })
-      deepEqual(have.next(), { value: "      --propose          propose the new branch", done: false })
-      deepEqual(have.next(), { value: "  -p, --prototype        create a prototype branch", done: false })
-      deepEqual(have.next(), { value: "      --push             push local branches", done: false })
-      deepEqual(have.next(), { value: "      --stash            stash uncommitted changes when creating branches", done: false })
-      deepEqual(have.next(), { value: "      --sync             sync branches (default true)", done: false })
-      deepEqual(have.next(), { value: "  -v, --verbose          display all Git commands run under the hood", done: false })
-      deepEqual(have.next(), { done: true, value: undefined })
-    })
-  })
   suite(".flags()", () => {
     test("append command", () => {
       const output = new HelpOutput(appendHelpOutput)
@@ -115,8 +95,35 @@ Flags:
       deepEqual(have, want)
     })
   })
+})
 
-  suite(".flagLine()", () => {
+suite("Lines", () => {
+  suite(".flagLines()", () => {
+    test("append command", () => {
+      const output = new HelpOutput(appendHelpOutput)
+      const have = output.lines().flagLines()
+      const want = [
+        new FlagLine("      --auto-resolve     auto-resolve phantom merge conflicts"),
+        new FlagLine("  -b, --beam             beam some commits from this branch to the new branch"),
+        new FlagLine("  -c, --commit           commit the stashed changes into the new branch"),
+        new FlagLine("  -d, --detached         don't update the perennial root branch"),
+        new FlagLine("      --dry-run          print but do not run the Git commands"),
+        new FlagLine("  -h, --help             help for append"),
+        new FlagLine("  -m, --message string   the commit message"),
+        new FlagLine("      --propose          propose the new branch"),
+        new FlagLine("  -p, --prototype        create a prototype branch"),
+        new FlagLine("      --push             push local branches"),
+        new FlagLine("      --stash            stash uncommitted changes when creating branches"),
+        new FlagLine("      --sync             sync branches (default true)"),
+        new FlagLine("  -v, --verbose          display all Git commands run under the hood"),
+      ]
+      deepEqual(have, want)
+    })
+  })
+})
+
+suite("FlagLine", () => {
+  suite(".flags()", () => {
     const tests = [
       {
         give: "  -b, --beam             description",
@@ -129,8 +136,8 @@ Flags:
     ]
     for (const { give, want } of tests) {
       test(give, () => {
-        const output = new HelpOutput("")
-        const have = output.flagLine(give)
+        const flagLine = new FlagLine(give)
+        const have = flagLine.flags()
         deepEqual(have, want)
       })
     }

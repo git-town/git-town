@@ -9,51 +9,91 @@ export class HelpOutput {
   /** provides the content of the "Flags:" section of this help output as a list of flag variations */
   flags(): string[][] {
     const result: string[][] = []
-    for (const line of this.flagLines()) {
-      const flags = this.flagLine(line)
-      result.push(...flags)
+    for (const flagLine of this.lines().flagLines()) {
+      result.push(...flagLine.flags())
     }
     return result
   }
 
-  flagLines(): Generator<string> {
-    return flagLines(this.text)
+  lines(): Lines {
+    const result: Line[] = []
+    for (const line of this.text.split("\n")) {
+      result.push(new Line(line))
+    }
+    return new Lines(result)
+  }
+}
+
+/** Lines represents all lines in the help output for a Git Town command */
+class Lines {
+  lines: Line[]
+
+  constructor(lines: Line[]) {
+    this.lines = lines
   }
 
-  flagLine(line: string): string[][] {
-    const result: string[][] = []
-    // Parse flag line - format: "  -b, --beam             description"
-    // The description starts after 2 or more spaces
-    const match = line.match(/^\s+(.+?)\s{2,}/)
-    if (match) {
-      const flagsPart = match[1].trim()
-      const flags = flagsPart.split(/,\s+/).map((flag) => {
-        // Remove default value notation like [="all"]
-        return flag.replace(/\[="[^"]*"\]/, "")
-      })
-      if (flags.length > 0) {
-        result.push(flags)
+  /** flagsLines provides the lines of the "Flags:" section */
+  flagLines(): FlagLine[] {
+    let result: FlagLine[] = []
+    let inFlagsSection = false
+    for (const line of this.lines) {
+      if (line.isStartOfFlagsSection()) {
+        inFlagsSection = true
+        continue
       }
+      if (!inFlagsSection) {
+        continue
+      }
+      if (line.isEndOfFlagsSection()) {
+        break
+      }
+      result.push(new FlagLine(line.text))
     }
     return result
   }
 }
 
-/** yields all lines of the given Git Town command output that are part of the "Flags:" section */
-function* flagLines(output: string): Generator<string> {
-  let inFlagsSection = false
-  for (const line of output.split("\n")) {
-    if (line.includes("Flags:")) {
-      inFlagsSection = true
-      continue
+/** Line is a line in the help output of a Git Town command */
+class Line {
+  text: string
+  constructor(text: string) {
+    this.text = text
+  }
+
+  isStartOfFlagsSection(): boolean {
+    return this.text.includes("Flags:")
+  }
+
+  isEndOfFlagsSection(): boolean {
+    return this.text.trim() === ""
+  }
+}
+
+/** FlagLine is a line in the "Flags:" section of the help output of a Git Town command */
+export class FlagLine {
+  text: string
+
+  constructor(text: string) {
+    this.text = text
+  }
+
+  flags(): string[][] {
+    const result: string[][] = []
+    for (const line of this.text.split("\n")) {
+      // Parse flag line - format: "  -b, --beam             description"
+      // The description starts after 2 or more spaces
+      const match = line.match(/^\s+(.+?)\s{2,}/)
+      if (match) {
+        const flagsPart = match[1].trim()
+        const flags = flagsPart.split(/,\s+/).map((flag) => {
+          // Remove default value notation like [="all"]
+          return flag.replace(/\[="[^"]*"\]/, "")
+        })
+        if (flags.length > 0) {
+          result.push(flags)
+        }
+      }
     }
-    if (!inFlagsSection) {
-      continue
-    }
-    // the flags section ends at the first empty line
-    if (line.trim() === "") {
-      break
-    }
-    yield line
+    return result
   }
 }
