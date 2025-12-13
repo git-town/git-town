@@ -88,7 +88,7 @@ export class FlagLine {
     const result: string[][] = []
     const flagsPart = match[1].trim()
     // Remove default value notation like [="all"]
-    const flags = flagsPart.split(/,\s+/).map((flag) => flag.replace(/\[="[^"]*"\]/, ""))
+    const flags = flagsPart.split(/,\s+/).map(flag => flag.replace(/\[="[^"]*"\]/, ""))
     if (flags.length > 0) {
       result.push(flags)
     }
