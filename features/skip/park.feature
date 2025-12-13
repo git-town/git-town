@@ -24,6 +24,10 @@ Feature: skip and park the current branch
       |        | git push                                          |
       |        | git checkout beta                                 |
       | beta   | git merge --no-edit --ff main                     |
+    And Git Town prints the error:
+      """
+      CONFLICT (add/add): Merge conflict in conflicting_file
+      """
     When I run "git-town skip --park"
 
   Scenario: result
