@@ -1,34 +1,8 @@
 import { deepEqual } from "node:assert/strict"
 import { suite, test } from "node:test"
-import { removeNegatedFlag, standardizeArgument } from "./document.ts"
+import { standardizeArgument } from "./document.ts"
 
 suite("Document", () => {
-  suite("removeNegatedFlag()", () => {
-    const tests = [
-      {
-        desc: "has negated flag",
-        give: ["-d", "--detached", "--no-detached"],
-        want: ["-d", "--detached"],
-      },
-      {
-        desc: "no negated flag",
-        give: ["-d", "--detached"],
-        want: ["-d", "--detached"],
-      },
-      {
-        desc: "allows a single negated flag",
-        give: ["--no-detached"],
-        want: ["--no-detached"],
-      },
-    ]
-    for (const { desc, give, want } of tests) {
-      test(desc, () => {
-        const have = removeNegatedFlag(give)
-        deepEqual(have, want)
-      })
-    }
-  })
-
   suite("standardizeArgument()", () => {
     const tests = [
       {
