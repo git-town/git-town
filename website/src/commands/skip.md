@@ -17,7 +17,7 @@ Display help for this command.
 
 #### `--park`
 
-When set, also [parks](park.md) the current branch.
+When set, also [parks](park.md) the branch to be skipped.
 
 #### `-v`<br>`--verbose`
 
