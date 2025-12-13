@@ -6,7 +6,7 @@ import {
   getPositiveFlagName,
   HelpOutput,
   isNegatedFlagsGroup,
-  matchesPositiveFlag,
+  matchesFlag,
   mergeFlags,
   replaceValueNotation,
 } from "./help_output.ts"
@@ -264,19 +264,19 @@ suite("getPositiveFlagName()", () => {
 
 suite("matchesPositiveFlag()", () => {
   test("exact match", () => {
-    deepEqual(matchesPositiveFlag("--push", "--push"), true)
+    deepEqual(matchesFlag("--push", "--push"), true)
   })
 
   test("flag with value type", () => {
-    deepEqual(matchesPositiveFlag("--message string", "--message"), true)
+    deepEqual(matchesFlag("--message string", "--message"), true)
   })
 
   test("different flags", () => {
-    deepEqual(matchesPositiveFlag("--push", "--sync"), false)
+    deepEqual(matchesFlag("--push", "--sync"), false)
   })
 
   test("prefix but not value type", () => {
-    deepEqual(matchesPositiveFlag("--pushall", "--push"), false)
+    deepEqual(matchesFlag("--pushall", "--push"), false)
   })
 })
 

@@ -104,12 +104,12 @@ export function getPositiveFlagName(negatedFlag: string): string {
   return "--" + baseName
 }
 
-export function matchesPositiveFlag(flag: string, positiveFlag: string): boolean {
+export function matchesFlag(flag: string, positiveFlag: string): boolean {
   return flag === positiveFlag || flag.startsWith(positiveFlag + " ")
 }
 
 export function findGroupWithPositiveFlag(result: string[][], positiveFlag: string): string[] | undefined {
-  return result.find(group => group.some(flag => matchesPositiveFlag(flag, positiveFlag)))
+  return result.find(group => group.some(flag => matchesFlag(flag, positiveFlag)))
 }
 
 function extractNegated(flags: string[][]): { normal: string[][]; negated: string[][] } {
