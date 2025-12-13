@@ -83,7 +83,7 @@ export class FlagLine {
     // The description starts after 2 or more spaces
     const match = this.text.match(/^\s+(.+?)\s{2,}/)
     if (!match) {
-      return []
+      throw new Error(`This flag line doesn't seem to contain flags: ${this.text}`)
     }
     const flagsPart = match[1].trim()
     // Remove default value notation like [="all"]
