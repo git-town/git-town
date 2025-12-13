@@ -262,7 +262,7 @@ suite("getPositiveFlagName()", () => {
   }
 })
 
-suite("matchesPositiveFlag()", () => {
+suite("matchesFlag()", () => {
   test("exact match", () => {
     deepEqual(matchesFlag("--push", "--push"), true)
   })
