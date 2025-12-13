@@ -26,6 +26,10 @@
 - `git town propose` now only opens active proposals ([#5745](https://github.com/git-town/git-town/issues/5745)).
 - The `share-new-branches` config setting is now more lenient around which values it accepts ([#5719](https://github.com/git-town/git-town/pull/5719)).
 
+#### Contributors
+
+Shoutout to @erik-rw, @j2fw, @james-harlyy, @kevgo, @lukeramsden, @meowsus, @ruudk, @stephenwade, @yaadata for contributing code, ideas, and feedback to 130 shipped pull requests and 19 resolved issues!
+
 ## 22.2.0 (2025-10-31)
 
 #### New Features
