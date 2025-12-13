@@ -5,7 +5,7 @@
   },
   "typescript": {
     "semiColons": "asi",
-    "width": 160
+    "lineWidth": 140
   },
   "includes": ["**/*.{js,ts,json,md}"],
   "excludes": ["CHANGELOG.md", "vendor/**", "tools/node_modules/**", "website/book/**"],
