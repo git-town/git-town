@@ -27,7 +27,7 @@ Feature: skip and park the current branch
     When I run "git-town skip --park"
 
   @this
-  Scenario: skip with --park flag
+  Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                       |
       | beta   | git merge --abort             |
