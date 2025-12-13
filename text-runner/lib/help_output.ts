@@ -137,5 +137,19 @@ export function mergeFlags(flags: string[][]): string[][] {
       normal.push(negatedFlags)
     }
   }
+  // Sort flags alphabetically by their primary flag name
+  normal.sort((a, b) => {
+    const flagA = getSortKey(a)
+    const flagB = getSortKey(b)
+    return flagA.localeCompare(flagB)
+  })
   return normal
+}
+
+function getSortKey(flags: string[]): string {
+  // Prefer long flag (--xxx) over short flag (-x) for sorting
+  const longFlag = flags.find(flag => flag.startsWith("--"))
+  const flagToUse = longFlag || flags[0]
+  // Remove leading dashes and extract the flag name (without value type)
+  return flagToUse.replace(/^-+/, "").split(" ")[0].toLowerCase()
 }
