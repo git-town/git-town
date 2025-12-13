@@ -1,4 +1,4 @@
-Feature: skip and park the current branch
+Feature: skip and park a feature branch with conflicts
 
   Background:
     Given a Git repo with origin

@@ -1,4 +1,4 @@
-Feature: skip and park a perennial branch
+Feature: skip and park a perennial branch with conflicts
 
   Background:
     Given a Git repo with origin
