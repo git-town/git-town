@@ -134,9 +134,8 @@ export function mergeFlags(flags: string[][]): string[][] {
     if (targetGroup) {
       targetGroup.push(...negatedFlags)
     } else {
-      normal.push([...negatedFlags])
+      normal.push(negatedFlags)
     }
   }
-
   return normal
 }
