@@ -91,6 +91,6 @@ export class FlagLine {
   }
 }
 
-function replaceValueNotation(flag: string): string {
+export function replaceValueNotation(flag: string): string {
   return flag.replace(/\[="[^"]*"\]/, "")
 }

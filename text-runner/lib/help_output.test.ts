@@ -1,6 +1,6 @@
 import { deepEqual } from "node:assert/strict"
 import { suite, test } from "node:test"
-import { FlagLine, HelpOutput } from "./help_output.ts"
+import { FlagLine, HelpOutput, replaceValueNotation } from "./help_output.ts"
 
 const appendHelpOutput = `
 Create a new feature branch as a child of the current branch.
@@ -142,4 +142,17 @@ suite("FlagLine", () => {
       })
     }
   })
+})
+
+suite("replaceValueNotation()", () => {
+  const tests = {
+    "string[=\"all\"]": "string",
+    "string": "string",
+  }
+  for (const [give, want] of Object.entries(tests)) {
+    test(give, () => {
+      const have = replaceValueNotation(give)
+      deepEqual(have, want)
+    })
+  }
 })
