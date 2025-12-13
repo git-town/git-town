@@ -1,6 +1,6 @@
 import { deepEqual } from "node:assert/strict"
 import { suite, test } from "node:test"
-import { isNegatable, splitNegation, splitNegations, SummarySection } from "./summary_section.ts"
+import { isNegatable, splitNegation, splitNegations, SummarySection, variationName } from "./summary_section.ts"
 
 suite("SummarySection", () => {
   suite(".args()", () => {
@@ -90,6 +90,12 @@ suite("negations", () => {
   suite("variationName", () => {
     const tests = {
       "--(no)-detach": "detach",
+    }
+    for (const [give, want] of Object.entries(tests)) {
+      test(give, () => {
+        const have = variationName(give)
+        deepEqual(have, want)
+      })
     }
   })
 
