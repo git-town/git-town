@@ -172,6 +172,12 @@ Start:
 			return errors.New(messages.SkipBranchHasConflicts)
 		}
 	}
+	if park {
+		activeBranchType := branchesAndTypes.Get(activeBranch).GetOr(validatedConfig.NormalConfig.UnknownBranchType.BranchType())
+		if err = canParkBranchType(activeBranchType, activeBranch, repo.FinalMessages); err != nil {
+			return err
+		}
+	}
 	return skip.Execute(skip.ExecuteArgs{
 		Backend:         repo.Backend,
 		CommandsCounter: repo.CommandsCounter,
