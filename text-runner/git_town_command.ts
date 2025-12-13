@@ -21,14 +21,13 @@ export async function gitTownCommand(action: textRunner.actions.Args) {
   // ensure the summary documents the arguments correct
   action.log(`ACTUAL:\n${actualJSON}`)
   action.log(`SUMMARY SECTION:\n${summaryJSON}`)
-  deepEqual(summaryArgs, actualArgs)
+  deepEqual(summaryArgs, actualArgs, "summary section")
 
   // get the arguments described by the "## Options" section
   const optionsArgs = doc.argsInOptions()
   const optionsJSON = JSON.stringify(optionsArgs, null, 2)
 
   // ensure the options section documents the arguments correct
-  action.log(`ACTUAL:\n${actualJSON}`)
   action.log(`OPTIONS SECTION:\n${optionsJSON}`)
-  deepEqual(optionsArgs, actualArgs)
+  deepEqual(optionsArgs, actualArgs, "options section")
 }

@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town append <branch-name> [--auto-resolve] [-b | --beam] [-c | --commit] [-d | --detached] [--dry-run] [-h | --help] [(-m | --message) <message>] [--propose] [-p | --prototype] [--push] [--stash] [--sync] [-v | --verbose]
+git town append <branch-name> [--(no)-auto-resolve] [-b | --beam] [-c | --commit] [-d | --(no)-detached] [--dry-run] [-h | --help] [(-m | --message) <message>] [--propose] [-p | --prototype] [--(no)-push] [--(no)-stash] [--(no)-sync] [-v | --verbose]
 ```
 
 The _append_ command creates a new feature branch with the given name as a
@@ -42,7 +42,7 @@ branch with the main branch as its parent.
 
 ## Options
 
-#### `--auto-resolve`
+#### `--auto-resolve`<br>`--no-auto-resolve`
 
 Disables automatic resolution of
 [phantom merge conflicts](../stacked-changes.md#avoid-phantom-conflicts).
@@ -107,7 +107,7 @@ The `--push`/`--no-push` argument overrides the
 
 Enables or disables [stashing](../preferences/stash.md) for this invocation.
 
-#### `--sync`
+#### `--sync`<br>`--no-sync`
 
 Enables or disables [automatic syncing](../preferences/auto-sync.md) of the
 current branch before appending the new one.

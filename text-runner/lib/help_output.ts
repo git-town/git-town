@@ -12,7 +12,7 @@ export class HelpOutput {
     for (const flagLine of this.lines().flagLines()) {
       result.push(flagLine.flags())
     }
-    return result
+    return mergeFlags(result)
   }
 
   lines(): Lines {
@@ -93,4 +93,63 @@ export class FlagLine {
 
 export function replaceValueNotation(flag: string): string {
   return flag.replace(/\[="[^"]*"\]/, "")
+}
+
+export function isNegatedFlagsGroup(flags: string[]): boolean {
+  return flags.length > 0 && flags.every(flag => flag.startsWith("--no-"))
+}
+
+export function getPositiveFlagName(negatedFlag: string): string {
+  const baseName = negatedFlag.substring(5).split(" ")[0]
+  return "--" + baseName
+}
+
+export function matchesFlag(flag: string, positiveFlag: string): boolean {
+  return flag === positiveFlag || flag.startsWith(positiveFlag + " ")
+}
+
+export function findGroupWithPositiveFlag(result: string[][], positiveFlag: string): string[] | undefined {
+  return result.find(group => group.some(flag => matchesFlag(flag, positiveFlag)))
+}
+
+function extractNegated(flags: string[][]): { normal: string[][]; negated: string[][] } {
+  const negated: string[][] = []
+  const normal: string[][] = []
+  for (const currentFlags of flags) {
+    if (isNegatedFlagsGroup(currentFlags)) {
+      negated.push(currentFlags)
+    } else {
+      normal.push(currentFlags)
+    }
+  }
+  return { normal, negated }
+}
+
+export function mergeFlags(flags: string[][]): string[][] {
+  const { normal, negated } = extractNegated(flags)
+  // merge negated flags with their positive counterparts
+  for (const negatedFlags of negated) {
+    const positiveFlag = getPositiveFlagName(negatedFlags[0])
+    const targetGroup = findGroupWithPositiveFlag(normal, positiveFlag)
+    if (targetGroup) {
+      targetGroup.push(...negatedFlags)
+    } else {
+      normal.push(negatedFlags)
+    }
+  }
+  // Sort flags alphabetically by their primary flag name
+  normal.sort((a, b) => {
+    const flagA = getSortKey(a)
+    const flagB = getSortKey(b)
+    return flagA.localeCompare(flagB)
+  })
+  return normal
+}
+
+function getSortKey(flags: string[]): string {
+  // Prefer long flag (--xxx) over short flag (-x) for sorting
+  const longFlag = flags.find(flag => flag.startsWith("--"))
+  const flagToUse = longFlag || flags[0]
+  // Remove leading dashes and extract the flag name (without value type)
+  return flagToUse.replace(/^-+/, "").split(" ")[0].toLowerCase()
 }
