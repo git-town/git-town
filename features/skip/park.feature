@@ -26,7 +26,6 @@ Feature: skip and park the current branch
       | beta   | git merge --no-edit --ff main                     |
     When I run "git-town skip --park"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                       |

@@ -44,7 +44,7 @@ func Execute(args ExecuteArgs) error {
 	skipProgram := args.RunState.AbortProgram
 	fmt.Println("222222222222222222222222222", args.Park)
 	if args.Park {
-		skipProgram = append(skipProgram, opcodes.BranchTypeOverrideSet{
+		skipProgram = append(skipProgram, &opcodes.BranchTypeOverrideSet{
 			Branch:     args.InitialBranch,
 			BranchType: configdomain.BranchTypeParkedBranch,
 		})
