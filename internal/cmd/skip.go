@@ -55,8 +55,8 @@ func skipCmd() *cobra.Command {
 			return executeSkip(cliConfig, park)
 		},
 	}
-	addVerboseFlag(&cmd)
 	addParkFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
