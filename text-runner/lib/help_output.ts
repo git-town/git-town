@@ -95,38 +95,45 @@ export function replaceValueNotation(flag: string): string {
   return flag.replace(/\[="[^"]*"\]/, "")
 }
 
-function isNegatedFlagsGroup(flags: string[]): boolean {
+export function isNegatedFlagsGroup(flags: string[]): boolean {
   return flags.length > 0 && flags.every(flag => flag.startsWith('--no-'))
 }
 
-function getPositiveFlagName(negatedFlag: string): string {
+export function getPositiveFlagName(negatedFlag: string): string {
   const baseName = negatedFlag.substring(5).split(' ')[0]
   return '--' + baseName
 }
 
-function matchesPositiveFlag(flag: string, positiveFlag: string): boolean {
+export function matchesPositiveFlag(flag: string, positiveFlag: string): boolean {
   return flag === positiveFlag || flag.startsWith(positiveFlag + ' ')
 }
 
-function findGroupWithPositiveFlag(result: string[][], positiveFlag: string): string[] | undefined {
+export function findGroupWithPositiveFlag(result: string[][], positiveFlag: string): string[] | undefined {
   return result.find(group => group.some(flag => matchesPositiveFlag(flag, positiveFlag)))
 }
 
 export function mergeFlags(flags: string[][]): string[][] {
   const result: string[][] = []
+  const negatedGroups: string[][] = []
 
+  // First pass: add all non-negated flag groups
   for (const currentFlags of flags) {
     if (isNegatedFlagsGroup(currentFlags)) {
-      const positiveFlag = getPositiveFlagName(currentFlags[0])
-      const targetGroup = findGroupWithPositiveFlag(result, positiveFlag)
-
-      if (targetGroup) {
-        targetGroup.push(...currentFlags)
-      } else {
-        result.push([...currentFlags])
-      }
+      negatedGroups.push(currentFlags)
     } else {
       result.push([...currentFlags])
+    }
+  }
+
+  // Second pass: merge negated flags with their positive counterparts
+  for (const negatedFlags of negatedGroups) {
+    const positiveFlag = getPositiveFlagName(negatedFlags[0])
+    const targetGroup = findGroupWithPositiveFlag(result, positiveFlag)
+
+    if (targetGroup) {
+      targetGroup.push(...negatedFlags)
+    } else {
+      result.push([...negatedFlags])
     }
   }
 

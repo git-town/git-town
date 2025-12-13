@@ -1,6 +1,15 @@
 import { deepEqual } from "node:assert/strict"
 import { suite, test } from "node:test"
-import { FlagLine, HelpOutput, mergeFlags, replaceValueNotation } from "./help_output.ts"
+import {
+  findGroupWithPositiveFlag,
+  FlagLine,
+  getPositiveFlagName,
+  HelpOutput,
+  isNegatedFlagsGroup,
+  matchesPositiveFlag,
+  mergeFlags,
+  replaceValueNotation,
+} from "./help_output.ts"
 
 const appendHelpOutput = `
 Create a new feature branch as a child of the current branch.
@@ -161,11 +170,95 @@ suite("replaceValueNotation()", () => {
   }
 })
 
-suite("mergeFlags()", { only: true }, () => {
+suite("mergeFlags()", () => {
   test("merge flags", () => {
     const give = [["-b", "--beam"], ["-d", "--detached"], ["--no-detached"]]
     const want = [["-b", "--beam"], ["-d", "--detached", "--no-detached"]]
     const have = mergeFlags(give)
     deepEqual(have, want)
+  })
+})
+
+suite("isNegatedFlagsGroup()", () => {
+  const tests = [
+    { give: [], want: false },
+    { give: ["--no-push"], want: true },
+    { give: ["--no-push", "--no-sync"], want: true },
+    { give: ["--push"], want: false },
+    { give: ["--push", "--no-push"], want: false },
+  ]
+  for (const { give, want } of tests) {
+    test(JSON.stringify(give), () => {
+      const have = isNegatedFlagsGroup(give)
+      deepEqual(have, want)
+    })
+  }
+})
+
+suite("getPositiveFlagName()", () => {
+  const tests = {
+    "--no-push": "--push",
+    "--no-detached string": "--detached",
+    "--no-auto-resolve": "--auto-resolve",
+  }
+  for (const [give, want] of Object.entries(tests)) {
+    test(give, () => {
+      const have = getPositiveFlagName(give)
+      deepEqual(have, want)
+    })
+  }
+})
+
+suite("matchesPositiveFlag()", () => {
+  test("exact match", () => {
+    deepEqual(matchesPositiveFlag("--push", "--push"), true)
+  })
+
+  test("flag with value type", () => {
+    deepEqual(matchesPositiveFlag("--message string", "--message"), true)
+  })
+
+  test("different flags", () => {
+    deepEqual(matchesPositiveFlag("--push", "--sync"), false)
+  })
+
+  test("prefix but not value type", () => {
+    deepEqual(matchesPositiveFlag("--pushall", "--push"), false)
+  })
+})
+
+suite("findGroupWithPositiveFlag()", () => {
+  test("finds matching group", () => {
+    const groups = [
+      ["-b", "--beam"],
+      ["-d", "--detached"],
+      ["-p", "--push"],
+    ]
+    const have = findGroupWithPositiveFlag(groups, "--detached")
+    deepEqual(have, ["-d", "--detached"])
+  })
+
+  test("finds group with flag with value", () => {
+    const groups = [
+      ["-m", "--message string"],
+      ["-p", "--push"],
+    ]
+    const have = findGroupWithPositiveFlag(groups, "--message")
+    deepEqual(have, ["-m", "--message string"])
+  })
+
+  test("no matching group", () => {
+    const groups = [
+      ["-b", "--beam"],
+      ["-d", "--detached"],
+    ]
+    const have = findGroupWithPositiveFlag(groups, "--push")
+    deepEqual(have, undefined)
+  })
+
+  test("empty groups", () => {
+    const groups: string[][] = []
+    const have = findGroupWithPositiveFlag(groups, "--push")
+    deepEqual(have, undefined)
   })
 })
