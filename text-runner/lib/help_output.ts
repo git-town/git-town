@@ -10,7 +10,7 @@ export class HelpOutput {
   flags(): string[][] {
     const result: string[][] = []
     for (const flagLine of this.lines().flagLines()) {
-      result.push(...flagLine.flags())
+      result.push(flagLine.flags())
     }
     return result
   }
@@ -78,20 +78,16 @@ export class FlagLine {
   }
 
   /** flags provides the flags that this FlagLine defines */
-  flags(): string[][] {
+  flags(): string[] {
     // Parse flag line - format: "  -b, --beam             description"
     // The description starts after 2 or more spaces
     const match = this.text.match(/^\s+(.+?)\s{2,}/)
     if (!match) {
       return []
     }
-    const result: string[][] = []
     const flagsPart = match[1].trim()
     // Remove default value notation like [="all"]
     const flags = flagsPart.split(/,\s+/).map(flag => flag.replace(/\[="[^"]*"\]/, ""))
-    if (flags.length > 0) {
-      result.push(flags)
-    }
-    return result
+    return flags
   }
 }

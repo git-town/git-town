@@ -127,11 +127,11 @@ suite("FlagLine", () => {
     const tests = [
       {
         give: "  -b, --beam             description",
-        want: [["-b", "--beam"]],
+        want: ["-b", "--beam"],
       },
       {
         give: `  -d, --display-types string[="all"]   display the branch types`,
-        want: [["-d", "--display-types string"]],
+        want: ["-d", "--display-types string"],
       },
     ]
     for (const { give, want } of tests) {
