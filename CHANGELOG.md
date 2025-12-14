@@ -9,7 +9,7 @@
 #### New Features
 
 - All Git Town commands now also show the negated forms of CLI flags in their help output, making it clearer how to disable options ([#5814](https://github.com/git-town/git-town/issues/5814)).
-- Added a new [branch-prefix]() config setting that automatically prepends a prefix to branches created by Git Town ([#5677](https://github.com/git-town/git-town/issues/5677)).
+- Added a new [branch-prefix](https://www.git-town.com/preferences/branch-prefix.html) config setting that automatically prepends a prefix to branches created by Git Town ([#5677](https://github.com/git-town/git-town/issues/5677)).
 - `git town skip` gained a `--park` flag to permanently skip this branch ([#5839](https://github.com/git-town/git-town/issues/5839)).
 - `git town config` now supports a `--redact` flag that obfuscates sensitive configuration data like access tokens, making it safer to share configuration in bug reports ([#5831](https://github.com/git-town/git-town/pull/5831)).
 - `git town switch` gained a `--stash` flag to explicitly disable stashing uncommitted changes ([#5778](https://github.com/git-town/git-town/issues/5778)).
