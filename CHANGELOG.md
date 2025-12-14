@@ -13,7 +13,7 @@
 - `git town skip` gained a `--park` flag to permanently skip this branch ([#5839](https://github.com/git-town/git-town/issues/5839)).
 - `git town config` now supports a `--redact` flag that obfuscates sensitive configuration data like access tokens, making it safer to share configuration in bug reports ([#5831](https://github.com/git-town/git-town/pull/5831)).
 - `git town switch` gained a `--stash` flag to explicitly disable stashing uncommitted changes ([#5778](https://github.com/git-town/git-town/issues/5778)).
-- You can now configure which browser Git Town opens via the new [browser]() config setting. Previously this was only configurable through the `BROWSER` environment variable ([#5818](https://github.com/git-town/git-town/pull/5818)).
+- You can now configure which browser Git Town opens via the new [browser](https://www.git-town.com/preferences/browser.html) config setting. Previously this was only configurable through the `BROWSER` environment variable ([#5818](https://github.com/git-town/git-town/pull/5818)).
 - A JSON Schema for the Git Town config file is now published on [schemastore.org](https://www.schemastore.org), enabling validation and editor autocompletion ([#5703](https://github.com/git-town/git-town/issues/5703)).
 
 #### Bug Fixes
