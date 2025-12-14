@@ -18,7 +18,7 @@
 
 #### Bug Fixes
 
-- Git Town now retries backend Git commands that fail due to concurrent Git (for example when your IDE races the CLI) ([#5816](https://github.com/git-town/git-town/pull/5816)).
+- Git Town now retries backend Git commands that fail due to concurrent Git usage (for example when your IDE races the CLI) ([#5816](https://github.com/git-town/git-town/pull/5816)).
 - The setup assistant no longer deletes advanced configuration when running a quick setup ([#5802](https://github.com/git-town/git-town/pull/5802)).
 - The setup assistant now reliably writes all config values to the config file ([#5803](https://github.com/git-town/git-town/pull/5803)).
 - `git town sync` now switches to a local branch available in the current worktree before deleting the current branch ([#5797](https://github.com/git-town/git-town/issues/5797)).
