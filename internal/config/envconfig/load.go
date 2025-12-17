@@ -88,7 +88,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	pushHook, errPushHook := load(env, pushHook, gohacks.ParseBoolOpt[configdomain.PushHook])
 	shareNewBranches, errShareNewBranches := load(env, shareNewBranches, configdomain.ParseShareNewBranches)
 	shipDeleteTrackingBranch, errShipDeleteTrackingBranch := load(env, shipDeleteTrackingBranch, gohacks.ParseBoolOpt[configdomain.ShipDeleteTrackingBranch])
-	shipIgnoreUncommitted, errShipIgnoreUncommitted := load(env, shipIgnoreUncommitted, gohacks.ParseBoolOpt[configdomain.ShipIgnoreUncommitted])
+	shipIgnoreUncommitted, errShipIgnoreUncommitted := load(env, shipIgnoreUncommitted, gohacks.ParseBoolOpt[configdomain.IgnoreUncommitted])
 	shipStrategy, errShipStrategy := load(env, shipStrategy, configdomain.ParseShipStrategy)
 	stash, errStash := load(env, stash, gohacks.ParseBoolOpt[configdomain.Stash])
 	syncFeatureStrategy, errSyncFeatureStrategy := load(env, syncFeatureStrategy, configdomain.ParseSyncFeatureStrategy)

@@ -621,7 +621,7 @@ func saveShipDeleteTrackingBranch(valueToWriteToGit Option[configdomain.ShipDele
 	return gitconfig.RemoveShipDeleteTrackingBranch(runner)
 }
 
-func saveShipIgnoreUncommitted(valueToWriteToGit Option[configdomain.ShipIgnoreUncommitted], valueAlreadyInGit Option[configdomain.ShipIgnoreUncommitted], runner subshelldomain.Runner) error {
+func saveShipIgnoreUncommitted(valueToWriteToGit Option[configdomain.IgnoreUncommitted], valueAlreadyInGit Option[configdomain.IgnoreUncommitted], runner subshelldomain.Runner) error {
 	if valueAlreadyInGit.Equal(valueToWriteToGit) {
 		return nil
 	}

@@ -319,7 +319,7 @@ func SetShipDeleteTrackingBranch(runner subshelldomain.Runner, value configdomai
 	return SetConfigValue(runner, scope, configdomain.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.ShouldDeleteTrackingBranch()))
 }
 
-func SetShipIgnoreUncommitted(runner subshelldomain.Runner, value configdomain.ShipIgnoreUncommitted, scope configdomain.ConfigScope) error {
+func SetShipIgnoreUncommitted(runner subshelldomain.Runner, value configdomain.IgnoreUncommitted, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyShipIgnoreUncommitted, strconv.FormatBool(value.ShouldIgnoreUncommitted()))
 }
 

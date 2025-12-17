@@ -50,7 +50,7 @@ disable the ship-delete-tracking-branch configuration setting.`
 
 func Cmd() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
-	addIgnoreUncommittedFlag, readIgnoreUncommittedFlag := flags.ShipIgnoreUncommitted()
+	addIgnoreUncommittedFlag, readIgnoreUncommittedFlag := flags.IgnoreUncommitted()
 	addMessageFileFlag, readMessageFileFlag := flags.CommitMessageFile()
 	addMessageFlag, readMessageFlag := flags.CommitMessage("specify the commit message for the squash commit")
 	addShipStrategyFlag, readShipStrategyFlag := flags.ShipStrategy()

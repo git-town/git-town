@@ -65,7 +65,7 @@ type NormalConfig struct {
 	PushHook                 configdomain.PushHook
 	ShareNewBranches         configdomain.ShareNewBranches
 	ShipDeleteTrackingBranch configdomain.ShipDeleteTrackingBranch
-	ShipIgnoreUncommitted    configdomain.ShipIgnoreUncommitted
+	ShipIgnoreUncommitted    configdomain.IgnoreUncommitted
 	ShipStrategy             configdomain.ShipStrategy
 	Stash                    configdomain.Stash
 	SyncFeatureStrategy      configdomain.SyncFeatureStrategy

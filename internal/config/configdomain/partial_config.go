@@ -53,7 +53,7 @@ type PartialConfig struct {
 	PushHook                 Option[PushHook]
 	ShareNewBranches         Option[ShareNewBranches]
 	ShipDeleteTrackingBranch Option[ShipDeleteTrackingBranch]
-	ShipIgnoreUncommitted    Option[ShipIgnoreUncommitted]
+	ShipIgnoreUncommitted    Option[IgnoreUncommitted]
 	ShipStrategy             Option[ShipStrategy]
 	Stash                    Option[Stash]
 	SyncFeatureStrategy      Option[SyncFeatureStrategy]

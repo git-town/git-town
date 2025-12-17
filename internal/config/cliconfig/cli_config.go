@@ -13,7 +13,7 @@ type NewArgs struct {
 	Detached          Option[configdomain.Detached]
 	DisplayTypes      Option[configdomain.DisplayTypes]
 	DryRun            Option[configdomain.DryRun]
-	IgnoreUncommitted Option[configdomain.ShipIgnoreUncommitted]
+	IgnoreUncommitted Option[configdomain.IgnoreUncommitted]
 	Order             Option[configdomain.Order]
 	PushBranches      Option[configdomain.PushBranches]
 	Stash             Option[configdomain.Stash]
