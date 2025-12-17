@@ -35,11 +35,11 @@ Feature: sync only branches whose remote is gone
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                         |
-      | gamma  | git checkout main                               |
-      | main   | git reset --hard {{ sha 'initial commit' }}     |
-      |        | git branch alpha {{ sha 'alpha commit' }}       |
-      |        | git branch beta {{ sha-initial 'beta commit' }} |
-      |        | git checkout alpha                              |
+      | BRANCH | COMMAND                                             |
+      | gamma  | git checkout main                                   |
+      | main   | git reset --hard {{ sha-initial 'initial commit' }} |
+      |        | git branch alpha {{ sha-initial 'alpha commit' }}   |
+      |        | git branch beta {{ sha-initial 'beta commit' }}     |
+      |        | git checkout alpha                                  |
     And the initial lineage exists now
     And the initial commits exist now
