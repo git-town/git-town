@@ -8,8 +8,8 @@ Feature: ignore uncommitted changes using the config file
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
-    And the current branch is "feature"
     And Git setting "git-town.ship-strategy" is "squash-merge"
+    And the current branch is "feature"
     And an uncommitted file
     When I run "git-town ship" with these environment variables
       | GIT_TOWN_SHIP_IGNORE_UNCOMMITTED | true |
