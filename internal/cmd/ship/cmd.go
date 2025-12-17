@@ -122,7 +122,11 @@ Start:
 	if err != nil {
 		return err
 	}
-	sharedData, flow, err := determineSharedShipData(args.args, repo, args.shipStrategy)
+	sharedData, flow, err := determineSharedShipData(determineSharedShipDataArgs{
+		args:                 args.args,
+		repo:                 repo,
+		shipStrategyOverride: args.shipStrategy,
+	})
 	if err != nil {
 		return err
 	}
