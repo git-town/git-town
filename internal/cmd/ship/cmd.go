@@ -291,7 +291,6 @@ func validateSharedData(data sharedShipData, toParent configdomain.ShipIntoNonpe
 	}
 	if localName, hasLocalName := data.branchToShipInfo.LocalName.Get(); hasLocalName {
 		if localName == data.initialBranch {
-			// Don't validate if ignore-uncommitted is enabled
 			if !data.config.NormalConfig.ShipIgnoreUncommitted.ShouldIgnoreUncommitted() {
 				return validate.NoOpenChanges(data.hasOpenChanges)
 			}
