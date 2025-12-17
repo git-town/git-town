@@ -10,7 +10,7 @@ const goneLong = "gone"
 // type-safe access to the CLI arguments of type configdomain.Gone
 func Gone() (AddFunc, ReadGoneFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.Flags().BoolP(goneLong, "p", false, "sync only branches whose remote is gone")
+		cmd.Flags().Bool(goneLong, false, "sync only branches whose remote is gone")
 	}
 	readFlag := func(cmd *cobra.Command) (configdomain.Gone, error) {
 		return readBoolFlag[configdomain.Gone](cmd.Flags(), goneLong)

@@ -257,6 +257,7 @@ type syncData struct {
 }
 
 type determineSyncDataArgs struct {
+	gone            configdomain.Gone
 	syncAllBranches configdomain.AllBranches
 	syncStack       configdomain.FullStack
 }
@@ -372,8 +373,8 @@ func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) 
 	perennialAndMain := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
 	var branchNamesToSync gitdomain.LocalBranchNames
 	switch {
-	case args.gone:
-		branchNamesToSync = data.branchInfos.Branches
+	case args.gone.Enabled():
+		branchNamesToSync = data.branchInfos.BranchesDeletedAtRemote()
 	case args.syncAllBranches.Enabled() && repo.UnvalidatedConfig.NormalConfig.Detached.ShouldWorkDetached():
 		branchNamesToSync = localBranches.Remove(perennialAndMain...)
 	case args.syncAllBranches.Enabled():
