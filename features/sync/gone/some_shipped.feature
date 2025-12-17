@@ -12,9 +12,9 @@ Feature: sync only branches whose remote is gone
       | alpha  | local, origin | alpha commit |
       | beta   | local, origin | beta commit  |
       | gamma  | local, origin | gamma commit |
-    And the current branch is "alpha"
     And origin ships the "alpha" branch using the "squash-merge" ship-strategy
     And origin ships the "beta" branch using the "squash-merge" ship-strategy
+    And the current branch is "alpha"
     When I run "git-town sync --gone"
 
   Scenario: result
