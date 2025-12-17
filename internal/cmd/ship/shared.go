@@ -131,7 +131,7 @@ func determineSharedShipData(args determineSharedShipDataArgs) (data sharedShipD
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesToValidate: gitdomain.LocalBranchNames{branchToShip},
 		ConfigSnapshot:     args.repo.ConfigSnapshot,
-		Connector:          data.connector,
+		Connector:          connector,
 		Frontend:           args.repo.Frontend,
 		Git:                args.repo.Git,
 		Inputs:             inputs,

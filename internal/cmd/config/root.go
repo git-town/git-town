@@ -94,7 +94,7 @@ func printConfig(config config.UnvalidatedConfig, redact configdomain.Redact) {
 	print.Header("Configuration")
 	print.Entry("offline", format.Bool(config.NormalConfig.Offline.IsOffline()))
 	print.Entry("git user name", format.OptionalStringerSetting(config.NormalConfig.GitUserName))
-	print.Entry("git user email", format.OptionalStringerSetting(config.NormalConfig.GitUserEmail))
+	print.Entry("git user email", formatToken(config.NormalConfig.GitUserEmail, redact))
 	fmt.Println()
 	print.Header("Create")
 	print.Entry("branch prefix", format.OptionalStringerSetting(config.NormalConfig.BranchPrefix))
