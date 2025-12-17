@@ -100,7 +100,7 @@ that would be run but doesn't execute them.
 #### `--gone`
 
 Sync all local branches whose remote is gone. This effectively removes all local
-branches that were shipped or deleted at the remote from the local workspace.
+branches that were shipped or deleted at the remote.
 
 #### `-h`<br>`--help`
 
