@@ -63,6 +63,98 @@ func TestBranchInfos(t *testing.T) {
 		})
 	})
 
+	t.Run("BranchesDeletedAtRemote", func(t *testing.T) {
+		t.Parallel()
+		t.Run("empty BranchInfos", func(t *testing.T) {
+			t.Parallel()
+			branchInfos := gitdomain.BranchInfos{}
+			have := branchInfos.BranchesDeletedAtRemote()
+			want := gitdomain.LocalBranchNames{}
+			must.Eq(t, want, have)
+		})
+		t.Run("no branches deleted at remote", func(t *testing.T) {
+			t.Parallel()
+			branchInfos := gitdomain.BranchInfos{
+				{
+					LocalName:  gitdomain.NewLocalBranchNameOption("branch-1"),
+					SyncStatus: gitdomain.SyncStatusLocalOnly,
+				},
+				{
+					LocalName:  gitdomain.NewLocalBranchNameOption("branch-2"),
+					SyncStatus: gitdomain.SyncStatusUpToDate,
+					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-2")),
+				},
+			}
+			have := branchInfos.BranchesDeletedAtRemote()
+			want := gitdomain.LocalBranchNames{}
+			must.Eq(t, want, have)
+		})
+		t.Run("multiple branches deleted at remote", func(t *testing.T) {
+			t.Parallel()
+			branchInfos := gitdomain.BranchInfos{
+				{
+					LocalName:  gitdomain.NewLocalBranchNameOption("branch-1"),
+					SyncStatus: gitdomain.SyncStatusLocalOnly,
+				},
+				{
+					LocalName:  gitdomain.NewLocalBranchNameOption("branch-2"),
+					SyncStatus: gitdomain.SyncStatusDeletedAtRemote,
+				},
+				{
+					LocalName:  gitdomain.NewLocalBranchNameOption("branch-3"),
+					SyncStatus: gitdomain.SyncStatusUpToDate,
+					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-3")),
+				},
+				{
+					LocalName:  gitdomain.NewLocalBranchNameOption("branch-4"),
+					SyncStatus: gitdomain.SyncStatusDeletedAtRemote,
+				},
+				{
+					LocalName:  None[gitdomain.LocalBranchName](),
+					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-5")),
+					SyncStatus: gitdomain.SyncStatusDeletedAtRemote,
+				},
+			}
+			have := branchInfos.BranchesDeletedAtRemote()
+			want := gitdomain.NewLocalBranchNames("branch-2", "branch-4", "branch-5")
+			must.Eq(t, want, have)
+		})
+		t.Run("mixed statuses including deleted at remote", func(t *testing.T) {
+			t.Parallel()
+			branchInfos := gitdomain.BranchInfos{
+				{
+					LocalName:  gitdomain.NewLocalBranchNameOption("local-only"),
+					SyncStatus: gitdomain.SyncStatusLocalOnly,
+				},
+				{
+					LocalName:  gitdomain.NewLocalBranchNameOption("up-to-date"),
+					SyncStatus: gitdomain.SyncStatusUpToDate,
+					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/up-to-date")),
+				},
+				{
+					LocalName:  gitdomain.NewLocalBranchNameOption("deleted-at-remote-1"),
+					SyncStatus: gitdomain.SyncStatusDeletedAtRemote,
+				},
+				{
+					LocalName:  gitdomain.NewLocalBranchNameOption("ahead"),
+					SyncStatus: gitdomain.SyncStatusAhead,
+					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/ahead")),
+				},
+				{
+					LocalName:  gitdomain.NewLocalBranchNameOption("other-worktree"),
+					SyncStatus: gitdomain.SyncStatusOtherWorktree,
+				},
+				{
+					LocalName:  gitdomain.NewLocalBranchNameOption("deleted-at-remote-2"),
+					SyncStatus: gitdomain.SyncStatusDeletedAtRemote,
+				},
+			}
+			have := branchInfos.BranchesDeletedAtRemote()
+			want := gitdomain.NewLocalBranchNames("deleted-at-remote-1", "deleted-at-remote-2")
+			must.Eq(t, want, have)
+		})
+	})
+
 	t.Run("BranchesInOtherWorktrees", func(t *testing.T) {
 		t.Parallel()
 		t.Run("empty BranchInfos", func(t *testing.T) {
@@ -184,98 +276,6 @@ func TestBranchInfos(t *testing.T) {
 			}
 			have := branchInfos.BranchesInOtherWorktrees()
 			want := gitdomain.NewLocalBranchNames("other-worktree-1", "other-worktree-2")
-			must.Eq(t, want, have)
-		})
-	})
-
-	t.Run("BranchesDeletedAtRemote", func(t *testing.T) {
-		t.Parallel()
-		t.Run("empty BranchInfos", func(t *testing.T) {
-			t.Parallel()
-			branchInfos := gitdomain.BranchInfos{}
-			have := branchInfos.BranchesDeletedAtRemote()
-			want := gitdomain.LocalBranchNames{}
-			must.Eq(t, want, have)
-		})
-		t.Run("no branches deleted at remote", func(t *testing.T) {
-			t.Parallel()
-			branchInfos := gitdomain.BranchInfos{
-				{
-					LocalName:  gitdomain.NewLocalBranchNameOption("branch-1"),
-					SyncStatus: gitdomain.SyncStatusLocalOnly,
-				},
-				{
-					LocalName:  gitdomain.NewLocalBranchNameOption("branch-2"),
-					SyncStatus: gitdomain.SyncStatusUpToDate,
-					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-2")),
-				},
-			}
-			have := branchInfos.BranchesDeletedAtRemote()
-			want := gitdomain.LocalBranchNames{}
-			must.Eq(t, want, have)
-		})
-		t.Run("multiple branches deleted at remote", func(t *testing.T) {
-			t.Parallel()
-			branchInfos := gitdomain.BranchInfos{
-				{
-					LocalName:  gitdomain.NewLocalBranchNameOption("branch-1"),
-					SyncStatus: gitdomain.SyncStatusLocalOnly,
-				},
-				{
-					LocalName:  gitdomain.NewLocalBranchNameOption("branch-2"),
-					SyncStatus: gitdomain.SyncStatusDeletedAtRemote,
-				},
-				{
-					LocalName:  gitdomain.NewLocalBranchNameOption("branch-3"),
-					SyncStatus: gitdomain.SyncStatusUpToDate,
-					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-3")),
-				},
-				{
-					LocalName:  gitdomain.NewLocalBranchNameOption("branch-4"),
-					SyncStatus: gitdomain.SyncStatusDeletedAtRemote,
-				},
-				{
-					LocalName:  None[gitdomain.LocalBranchName](),
-					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-5")),
-					SyncStatus: gitdomain.SyncStatusDeletedAtRemote,
-				},
-			}
-			have := branchInfos.BranchesDeletedAtRemote()
-			want := gitdomain.NewLocalBranchNames("branch-2", "branch-4", "branch-5")
-			must.Eq(t, want, have)
-		})
-		t.Run("mixed statuses including deleted at remote", func(t *testing.T) {
-			t.Parallel()
-			branchInfos := gitdomain.BranchInfos{
-				{
-					LocalName:  gitdomain.NewLocalBranchNameOption("local-only"),
-					SyncStatus: gitdomain.SyncStatusLocalOnly,
-				},
-				{
-					LocalName:  gitdomain.NewLocalBranchNameOption("up-to-date"),
-					SyncStatus: gitdomain.SyncStatusUpToDate,
-					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/up-to-date")),
-				},
-				{
-					LocalName:  gitdomain.NewLocalBranchNameOption("deleted-at-remote-1"),
-					SyncStatus: gitdomain.SyncStatusDeletedAtRemote,
-				},
-				{
-					LocalName:  gitdomain.NewLocalBranchNameOption("ahead"),
-					SyncStatus: gitdomain.SyncStatusAhead,
-					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/ahead")),
-				},
-				{
-					LocalName:  gitdomain.NewLocalBranchNameOption("other-worktree"),
-					SyncStatus: gitdomain.SyncStatusOtherWorktree,
-				},
-				{
-					LocalName:  gitdomain.NewLocalBranchNameOption("deleted-at-remote-2"),
-					SyncStatus: gitdomain.SyncStatusDeletedAtRemote,
-				},
-			}
-			have := branchInfos.BranchesDeletedAtRemote()
-			want := gitdomain.NewLocalBranchNames("deleted-at-remote-1", "deleted-at-remote-2")
 			must.Eq(t, want, have)
 		})
 	})
