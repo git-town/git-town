@@ -165,6 +165,8 @@ Start:
 	if previousBranch, hasPreviousBranch := data.previousBranch.Get(); hasPreviousBranch {
 		finalBranchCandidates = append(finalBranchCandidates, previousBranch)
 	}
+	finalBranchCandidates = finalBranchCandidates.AppendAllMissing(data.branchInfos.NamesLocalBranches())
+	finalBranchCandidates = finalBranchCandidates.Remove(data.branchInfos.BranchesInOtherWorktrees()...)
 	runProgram.Value.Add(&opcodes.CheckoutFirstExisting{
 		Branches:   finalBranchCandidates,
 		MainBranch: data.config.ValidatedConfigData.MainBranch,
