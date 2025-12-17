@@ -15,7 +15,7 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-func Save(userInput UserInput, unvalidatedConfig config.UnvalidatedConfig, data Data, frontend subshelldomain.Runner) error {
+func Save(userInput UserInput, unvalidatedConfig config.UnvalidatedConfig, data Data, enterAll bool, frontend subshelldomain.Runner) error {
 	fc := gohacks.ErrorCollector{}
 	fc.Check(
 		saveAliases(userInput.Data.Aliases, unvalidatedConfig.GitGlobal.Aliases, frontend),
@@ -54,9 +54,9 @@ func Save(userInput UserInput, unvalidatedConfig config.UnvalidatedConfig, data 
 	}
 	switch userInput.StorageLocation {
 	case dialog.ConfigStorageOptionFile:
-		return saveAllToFile(userInput, unvalidatedConfig.GitLocal, frontend)
+		return saveAllToFile(userInput, unvalidatedConfig.File, unvalidatedConfig.GitLocal, frontend)
 	case dialog.ConfigStorageOptionGit:
-		return saveAllToGit(userInput, unvalidatedConfig.GitLocal, unvalidatedConfig.File, data, frontend)
+		return saveAllToGit(userInput, unvalidatedConfig.GitLocal, unvalidatedConfig.File, data, enterAll, frontend)
 	}
 	return nil
 }
@@ -78,13 +78,17 @@ func saveAliases(valuesToWriteToGit configdomain.Aliases, valuesAlreadyInGit con
 	return nil
 }
 
-func saveAllToFile(userInput UserInput, gitConfig configdomain.PartialConfig, runner subshelldomain.Runner) error {
+func saveAllToFile(userInput UserInput, existingConfigFile configdomain.PartialConfig, gitConfig configdomain.PartialConfig, runner subshelldomain.Runner) error {
 	userInput.Data.MainBranch = Some(userInput.ValidatedConfig.MainBranch)
-	if err := configfile.Save(userInput.Data); err != nil {
+	configData := existingConfigFile.Merge(userInput.Data)
+	if err := configfile.Save(configData); err != nil {
 		return err
 	}
 	if gitConfig.AutoSync.IsSome() {
 		_ = gitconfig.RemoveAutoSync(runner)
+	}
+	if gitConfig.BranchPrefix.IsSome() {
+		_ = gitconfig.RemoveBranchPrefix(runner)
 	}
 	if gitConfig.ContributionRegex.IsSome() {
 		_ = gitconfig.RemoveContributionRegex(runner)
@@ -161,22 +165,26 @@ func saveAllToFile(userInput UserInput, gitConfig configdomain.PartialConfig, ru
 	return saveFeatureRegex(userInput.Data.FeatureRegex, gitConfig.FeatureRegex, runner)
 }
 
-func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialConfig, configFile configdomain.PartialConfig, data Data, frontend subshelldomain.Runner) error {
+func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialConfig, configFile configdomain.PartialConfig, data Data, enterAll bool, frontend subshelldomain.Runner) error {
 	fc := gohacks.ErrorCollector{}
-	// TODO: sort this alphabetically
-	if configFile.AutoSync.IsNone() {
+
+	// BASIC CONFIGURATION
+	if configFile.MainBranch.IsNone() {
 		fc.Check(
-			saveAutoSync(userInput.Data.AutoSync, existingGitConfig.AutoSync, frontend),
+			saveMainBranch(userInput.Data.MainBranch, existingGitConfig.MainBranch, frontend),
 		)
 	}
-	if configFile.Detached.IsNone() {
+	fc.Check(
+		savePerennialBranches(userInput.Data.PerennialBranches, existingGitConfig.PerennialBranches, frontend),
+	)
+	if len(data.Remotes) > 1 && configFile.DevRemote.IsNone() {
 		fc.Check(
-			saveDetached(userInput.Data.Detached, existingGitConfig.Detached, frontend),
+			saveDevRemote(userInput.Data.DevRemote, existingGitConfig.DevRemote, frontend),
 		)
 	}
-	if configFile.NewBranchType.IsNone() {
+	if configFile.HostingOriginHostname.IsNone() {
 		fc.Check(
-			saveNewBranchType(userInput.Data.NewBranchType, existingGitConfig.NewBranchType, frontend),
+			saveOriginHostname(userInput.Data.HostingOriginHostname, existingGitConfig.HostingOriginHostname, frontend),
 		)
 	}
 	if configFile.ForgeType.IsNone() {
@@ -194,19 +202,33 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 			saveGitLabConnectorType(userInput.Data.GitLabConnectorType, existingGitConfig.GitLabConnectorType, frontend),
 		)
 	}
-	if configFile.HostingOriginHostname.IsNone() {
+
+	if !enterAll {
+		return fc.Err
+	}
+
+	// EXTENDED CONFIGURATION
+	// TODO: sort this alphabetically
+	if configFile.AutoSync.IsNone() {
 		fc.Check(
-			saveOriginHostname(userInput.Data.HostingOriginHostname, existingGitConfig.HostingOriginHostname, frontend),
+			saveAutoSync(userInput.Data.AutoSync, existingGitConfig.AutoSync, frontend),
 		)
 	}
-	if configFile.MainBranch.IsNone() {
+	if configFile.BranchPrefix.IsNone() {
 		fc.Check(
-			saveMainBranch(userInput.Data.MainBranch, existingGitConfig.MainBranch, frontend),
+			saveBranchPrefix(userInput.Data.BranchPrefix, existingGitConfig.BranchPrefix, frontend),
 		)
 	}
-	fc.Check(
-		savePerennialBranches(userInput.Data.PerennialBranches, existingGitConfig.PerennialBranches, frontend),
-	)
+	if configFile.Detached.IsNone() {
+		fc.Check(
+			saveDetached(userInput.Data.Detached, existingGitConfig.Detached, frontend),
+		)
+	}
+	if configFile.NewBranchType.IsNone() {
+		fc.Check(
+			saveNewBranchType(userInput.Data.NewBranchType, existingGitConfig.NewBranchType, frontend),
+		)
+	}
 	if configFile.PerennialRegex.IsNone() {
 		fc.Check(
 			savePerennialRegex(userInput.Data.PerennialRegex, existingGitConfig.PerennialRegex, frontend),
@@ -215,11 +237,6 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 	if configFile.UnknownBranchType.IsNone() {
 		fc.Check(
 			saveUnknownBranchType(userInput.Data.UnknownBranchType, existingGitConfig.UnknownBranchType, frontend),
-		)
-	}
-	if len(data.Remotes) > 1 && configFile.DevRemote.IsNone() {
-		fc.Check(
-			saveDevRemote(userInput.Data.DevRemote, existingGitConfig.DevRemote, frontend),
 		)
 	}
 	if configFile.FeatureRegex.IsNone() {
@@ -335,6 +352,17 @@ func saveBitbucketUsername(valueToWriteToGit Option[forgedomain.BitbucketUsernam
 		return gitconfig.SetBitbucketUsername(frontend, value, scope)
 	}
 	return gitconfig.RemoveBitbucketUsername(frontend)
+}
+
+func saveBranchPrefix(valueToWriteToGit Option[configdomain.BranchPrefix], valueAlreadyInGit Option[configdomain.BranchPrefix], runner subshelldomain.Runner) error {
+	if valueToWriteToGit.Equal(valueAlreadyInGit) {
+		return nil
+	}
+	if value, has := valueToWriteToGit.Get(); has {
+		return gitconfig.SetBranchPrefix(runner, value, configdomain.ConfigScopeLocal)
+	}
+	_ = gitconfig.RemoveBranchPrefix(runner)
+	return nil
 }
 
 func saveContributionRegex(valueToWriteToGit Option[configdomain.ContributionRegex], valueAlreadyInGit Option[configdomain.ContributionRegex], runner subshelldomain.Runner) error {

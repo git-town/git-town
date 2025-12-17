@@ -3,10 +3,10 @@ package browser
 
 import (
 	"fmt"
-	"os"
 	"os/exec"
 	"runtime"
 
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
@@ -14,8 +14,8 @@ import (
 
 // Open opens a new window/tab in the default browser with the given URL.
 // If no browser is found, it prints the URL.
-func Open(url string, frontend subshelldomain.Runner) {
-	command, hasCommand := OpenBrowserCommand().Get()
+func Open(url string, frontend subshelldomain.Runner, config Option[configdomain.Browser]) {
+	command, hasCommand := OpenBrowserCommand(config).Get()
 	if !hasCommand {
 		fmt.Printf(messages.BrowserOpen, url)
 		return
@@ -26,7 +26,7 @@ func Open(url string, frontend subshelldomain.Runner) {
 }
 
 // OpenBrowserCommand provides the console command to open the default browser.
-func OpenBrowserCommand() Option[string] {
+func OpenBrowserCommand(config Option[configdomain.Browser]) Option[string] {
 	if runtime.GOOS == "windows" {
 		// NOTE: the "explorer" command cannot handle special characters like "?" and "=".
 		//       In particular, "?" can be escaped via "\", but "=" cannot.
@@ -34,11 +34,11 @@ func OpenBrowserCommand() Option[string] {
 		return Some("start")
 	}
 	openBrowserCommands := make([]string, 0, 11)
-	if browser := os.Getenv(EnvVarName); browser != "" {
-		if browser == EnvVarNone {
+	if browser, hasBrowser := config.Get(); hasBrowser {
+		if browser.NoBrowser() {
 			return None[string]()
 		}
-		openBrowserCommands = append(openBrowserCommands, browser)
+		openBrowserCommands = append(openBrowserCommands, browser.String())
 	}
 	openBrowserCommands = append(openBrowserCommands,
 		"wsl-open",           // for Windows Subsystem for Linux, see https://github.com/git-town/git-town/issues/1344

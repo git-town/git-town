@@ -2,6 +2,7 @@ Feature: display invalid Git metadata
 
   Scenario: invalid sync-feature-strategy
     Given a Git repo with origin
+    And local Git setting "git-town.branch-prefix" is ""
     And local Git setting "git-town.feature-regex" is "(feat"
     And local Git setting "git-town.perennial-regex" is "(per"
     And local Git setting "git-town.proposals-show-lineage" is "zonk"
@@ -69,11 +70,13 @@ Feature: display invalid Git metadata
         git user email: email@example.com
 
       Create:
+        branch prefix: (not set)
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: yes
 
       Hosting:
+        browser: (not set)
         development remote: origin
         forge type: (not set)
         origin hostname: (not set)

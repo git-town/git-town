@@ -47,9 +47,12 @@ const (
 	BranchIsNowPrototype            = "branch %q is now a prototype branch\n"
 	BranchLocalProblem              = "cannot determine whether the local branch %q exists: %w"
 	BranchLocalSHAProblem           = "cannot determine SHA of local branch %q: %w"
+	BranchNotAvailable              = "there is no other branch to switch to"
 	BranchNotInSyncWithParent       = `branch %q is not in sync with its parent, please run "git town sync" and try again`
 	BranchOtherWorktree             = `branch %q is active in another worktree`
 	BranchParentChanged             = "branch %q is now a child of %q"
+	BranchPrefixPrompt              = "Branch prefix: "
+	BranchPrefixResult              = "Branch prefix: %s\n"
 	BranchTypeCannotDetermine       = "cannot determine type of branch %q"
 	BrowserOpen                     = "Please open in a browser: %s\n"
 
@@ -210,6 +213,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	ObservedRegexPrompt         = "Observed regex: "
 	ObservedRegexResult         = "Observed regex: %s\n"
 	OfflineNotAllowed           = "this command requires an active internet connection"
+	OpcodeNotRunnable           = "unrunnable opcode: %q"
 	OpcodeUnknown               = "unknown opcode: %q, run \"git town status reset\" to reset it"
 	OpenChangesProblem          = "cannot determine open changes: %w"
 	Order                       = "Order: %s\n"

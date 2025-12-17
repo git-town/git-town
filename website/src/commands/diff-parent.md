@@ -1,13 +1,19 @@
 # git town diff-parent
 
+<a type="git-town-command" />
+
 ```command-summary
-git town diff-parent [-v | --verbose]
+git town diff-parent [-h | --help] [-v | --verbose]
 ```
 
 The _diff-parent_ command displays the changes made on a feature branch, i.e.
 the diff between the current branch and its parent branch.
 
 ## Options
+
+#### `-h`<br>`--help`
+
+Display help for this command.
 
 #### `-v`<br>`--verbose`
 

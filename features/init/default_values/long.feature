@@ -22,6 +22,7 @@ Feature: Accepting all default values leads to a working setup
       | feature regex               | enter      |
       | contribution regex          | enter      |
       | observed regex              | enter      |
+      | branch prefix               | enter      |
       | new branch type             | enter      |
       | unknown branch type         | enter      |
       | sync feature strategy       | enter      |
@@ -44,10 +45,10 @@ Feature: Accepting all default values leads to a working setup
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                              |
+      | git config git-town.main-branch main                 |
       | git config git-town.auto-sync true                   |
       | git config git-town.detached false                   |
       | git config git-town.new-branch-type feature          |
-      | git config git-town.main-branch main                 |
       | git config git-town.unknown-branch-type feature      |
       | git config git-town.order asc                        |
       | git config git-town.proposals-show-lineage none      |
@@ -85,6 +86,7 @@ Feature: Accepting all default values leads to a working setup
     And local Git setting "git-town.forge-type" still doesn't exist
     And local Git setting "git-town.github-token" still doesn't exist
     And local Git setting "git-town.hosting-origin-hostname" still doesn't exist
+    And local Git setting "git-town.branch-prefix" still doesn't exist
     And local Git setting "git-town.proposals-show-lineage" still doesn't exist
     And local Git setting "git-town.feature-regex" now doesn't exist
     And local Git setting "git-town.contribution-regex" now doesn't exist

@@ -1,7 +1,9 @@
 # git town walk
 
+<a type="git-town-command" />
+
 ```command-summary
-git town walk [-a | --all] [-s | --stack] [--dry-run] [-v | --verbose] [<command and arguments>]
+git town walk [<command and arguments>] [-a | --all] [--dry-run] [-h | --help] [-s | --stack] [-v | --verbose]
 ```
 
 The _walk_ command ("walking the branch hierarchy") executes a given command for
@@ -52,14 +54,18 @@ Running `git town walk --stack make lint` produces this output:
 
 Iterate through all local branches.
 
-#### `-s`<br>`--stack`
-
-Iterate through all branches of the stack that the current branch belongs to.
-
 #### `--dry-run`
 
 Test-drive this command: It prints the commands that would be run but doesn't
 execute them.
+
+#### `-h`<br>`--help`
+
+Display help for this command.
+
+#### `-s`<br>`--stack`
+
+Iterate through all branches of the stack that the current branch belongs to.
 
 #### `-v`<br>`--verbose`
 
@@ -68,7 +74,11 @@ state.
 
 ## See also
 
+<!-- keep-sorted start -->
+
 - [branch](branch.md) displays the branch hierarchy and highlights the currently
   checked out branch in it
 - [switch](switch.md) displays the branch hierarchy and lets you select a branch
   to switch to
+
+<!-- keep-sorted end -->

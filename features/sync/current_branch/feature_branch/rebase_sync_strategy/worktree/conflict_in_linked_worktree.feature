@@ -6,9 +6,9 @@ Feature: sync a branch in a "linked worktree" that has a merge conflict
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the commits
-      | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
-      | main    | origin   | conflicting main commit    | conflicting_file | main content    |
-      | feature | local    | conflicting feature commit | conflicting_file | feature content |
+      | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
+      | main    | local, origin | conflicting main commit    | conflicting_file | main content    |
+      | feature | local         | conflicting feature commit | conflicting_file | feature content |
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "main"
     And branch "feature" is active in another worktree
@@ -16,10 +16,10 @@ Feature: sync a branch in a "linked worktree" that has a merge conflict
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                           |
-      | feature | git fetch --prune --tags                          |
-      |         | git push --force-with-lease --force-if-includes   |
-      |         | git -c rebase.updateRefs=false rebase origin/main |
+      | BRANCH  | COMMAND                                         |
+      | feature | git fetch --prune --tags                        |
+      |         | git push --force-with-lease --force-if-includes |
+      |         | git -c rebase.updateRefs=false rebase main      |
     And Git Town prints the error:
       """
       To continue after having resolved conflicts, run "git town continue".
@@ -53,6 +53,5 @@ Feature: sync a branch in a "linked worktree" that has a merge conflict
       | feature | git push --force-with-lease --force-if-includes |
     And these commits exist now
       | BRANCH  | LOCATION         | MESSAGE                 | FILE NAME        | FILE CONTENT     |
-      | main    | origin           | conflicting main commit | conflicting_file | main content     |
+      | main    | local, origin    | conflicting main commit | conflicting_file | main content     |
       | feature | origin, worktree | resolved commit         | conflicting_file | resolved content |
-      |         | worktree         | conflicting main commit | conflicting_file | main content     |

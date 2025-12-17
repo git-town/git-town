@@ -20,6 +20,16 @@ func (self BranchInfos) BranchIsActiveInAnotherWorktree(branch LocalBranchName) 
 	return branchInfo.SyncStatus == SyncStatusOtherWorktree
 }
 
+func (self BranchInfos) BranchesInOtherWorktrees() LocalBranchNames {
+	result := LocalBranchNames{}
+	for _, bi := range self {
+		if bi.SyncStatus == SyncStatusOtherWorktree {
+			result = append(result, bi.GetLocalOrRemoteNameAsLocalName())
+		}
+	}
+	return result
+}
+
 // FindByLocalName provides the branch with the given name if one exists.
 func (self BranchInfos) FindByLocalName(branchName LocalBranchName) OptionalMutable[BranchInfo] {
 	for bi, branch := range self {

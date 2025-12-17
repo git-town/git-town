@@ -163,6 +163,7 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
+		Browser:              config.Browser,
 		ForgeType:            config.ForgeType,
 		ForgejoToken:         config.ForgejoToken,
 		Frontend:             repo.Frontend,
@@ -217,6 +218,9 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 	} else {
 		oldBranchName = gitdomain.NewLocalBranchName(args[0])
 		newBranchName = gitdomain.NewLocalBranchName(args[1])
+	}
+	if prefix, hasPrefix := config.BranchPrefix.Get(); hasPrefix {
+		newBranchName = prefix.Apply(newBranchName)
 	}
 	oldBranch, hasOldBranch := branchesSnapshot.Branches.FindByLocalName(oldBranchName).Get()
 	if !hasOldBranch {

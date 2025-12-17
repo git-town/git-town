@@ -40,6 +40,7 @@ Feature: ask for information not provided by the config file
       | feature regex           | f e a t enter         |
       | contribution regex      | c o n t enter         |
       | observed regex          | o b s enter           |
+      | branch prefix           | a c m e - enter       |
       | new branch type         | enter                 |
       | unknown branch type     | enter                 |
       | sync feature strategy   | enter                 |
@@ -56,10 +57,11 @@ Feature: ask for information not provided by the config file
     Then Git Town runs the commands
       | COMMAND                                             |
       | git config git-town.github-token gh-token           |
+      | git config git-town.perennial-branches branch-1     |
+      | git config git-town.github-connector api            |
+      | git config git-town.branch-prefix acme-             |
       | git config git-town.detached false                  |
       | git config git-town.new-branch-type feature         |
-      | git config git-town.github-connector api            |
-      | git config git-town.perennial-branches branch-1     |
       | git config git-town.perennial-regex peren           |
       | git config git-town.unknown-branch-type feature     |
       | git config git-town.feature-regex feat              |

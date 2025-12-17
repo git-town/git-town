@@ -30,10 +30,12 @@ Feature: display information from config file
       display-types = "all"
 
       [create]
+      branch-prefix = "acme-"
       share-new-branches = "push"
       stash = false
 
       [hosting]
+      browser = "chrome"
       forge-type = "github"
       github-connector = "gh"
       origin-hostname = "github.com"
@@ -77,11 +79,13 @@ Feature: display information from config file
         git user email: email@example.com
 
       Create:
+        branch prefix: acme-
         new branch type: (not set)
         share new branches: push
         stash uncommitted changes: no
 
       Hosting:
+        browser: chrome
         development remote: origin
         forge type: github
         origin hostname: github.com

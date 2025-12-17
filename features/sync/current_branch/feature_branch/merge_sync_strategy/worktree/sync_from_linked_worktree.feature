@@ -26,20 +26,20 @@ Feature: sync a branch whose parent is active in another worktree
       | main   | git -c rebase.updateRefs=false rebase origin/main |
       |        | git push                                          |
       |        | git checkout child                                |
-      | child  | git merge --no-edit --ff origin/parent            |
+      | child  | git merge --no-edit --ff parent                   |
       |        | git merge --no-edit --ff origin/child             |
       |        | git push                                          |
     And these commits exist now
-      | BRANCH | LOCATION                | MESSAGE                                                 |
-      | main   | local, origin, worktree | origin main commit                                      |
-      |        |                         | local main commit                                       |
-      | parent | local                   | local parent commit                                     |
-      |        | origin                  | origin parent commit                                    |
-      | child  | origin, worktree        | local child commit                                      |
-      |        |                         | Merge remote-tracking branch 'origin/parent' into child |
-      |        |                         | origin child commit                                     |
-      |        |                         | Merge remote-tracking branch 'origin/child' into child  |
-      |        | worktree                | origin parent commit                                    |
+      | BRANCH | LOCATION                | MESSAGE                                                |
+      | main   | local, origin, worktree | origin main commit                                     |
+      |        |                         | local main commit                                      |
+      | parent | local                   | local parent commit                                    |
+      |        | origin                  | origin parent commit                                   |
+      | child  | origin, worktree        | local child commit                                     |
+      |        | origin                  | local parent commit                                    |
+      |        | origin, worktree        | Merge branch 'parent' into child                       |
+      |        |                         | origin child commit                                    |
+      |        |                         | Merge remote-tracking branch 'origin/child' into child |
 
   Scenario: undo in other worktree
     When I run "git-town undo" in the other worktree

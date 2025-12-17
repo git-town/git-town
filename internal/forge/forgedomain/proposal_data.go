@@ -7,12 +7,12 @@ import (
 
 type ProposalData struct {
 	Active       bool // whether the proposal is open
-	Body         Option[string]
+	Body         Option[gitdomain.ProposalBody]
 	MergeWithAPI bool
 	Number       int
 	Source       gitdomain.LocalBranchName
 	Target       gitdomain.LocalBranchName
-	Title        string
+	Title        gitdomain.ProposalTitle
 	URL          string
 }
 

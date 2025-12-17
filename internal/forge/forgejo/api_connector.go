@@ -141,7 +141,7 @@ func (self *APIConnector) SquashMergeProposal(number int, message gitdomain.Comm
 
 var _ forgedomain.ProposalBodyUpdater = &apiConnector // type check
 
-func (self *APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, newBody string) error {
+func (self *APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, newBody gitdomain.ProposalBody) error {
 	data := proposalData.Data()
 	client, err := self.getClient()
 	if err != nil {
@@ -149,7 +149,7 @@ func (self *APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalIn
 	}
 	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)))
 	_, _, err = client.EditPullRequest(self.Organization, self.Repository, int64(data.Number), forgejo.EditPullRequestOption{
-		Body: newBody,
+		Body: newBody.String(),
 	})
 	self.log.Finished(err)
 	return err
@@ -250,8 +250,8 @@ func parsePullRequest(pullRequest *forgejo.PullRequest) forgedomain.ProposalData
 		Number:       int(pullRequest.Index),
 		Source:       gitdomain.NewLocalBranchName(pullRequest.Head.Ref),
 		Target:       gitdomain.NewLocalBranchName(pullRequest.Base.Ref),
-		Title:        pullRequest.Title,
-		Body:         NewOption(pullRequest.Body),
+		Title:        gitdomain.ProposalTitle(pullRequest.Title),
+		Body:         gitdomain.NewProposalBodyOpt(pullRequest.Body),
 		URL:          pullRequest.HTMLURL,
 	}
 }

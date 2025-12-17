@@ -16,6 +16,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.push-hook" is "true"
     And local Git setting "git-town.new-branch-type" is "prototype"
     And local Git setting "git-town.order" is "desc"
+    And local Git setting "git-town.branch-prefix" is "acme-"
     And local Git setting "git-town.ship-strategy" is "squash-merge"
     And local Git setting "git-town.ship-delete-tracking-branch" is "false"
     And local Git setting "git-town.stash" is "false"
@@ -39,6 +40,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | feature regex               | enter      |
       | contribution regex          | enter      |
       | observed regex              | enter      |
+      | branch prefix               | enter      |
       | new branch type             | enter      |
       | unknown branch type         | enter      |
       | sync feature strategy       | enter      |
@@ -62,6 +64,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     Then Git Town runs the commands
       | COMMAND                                                 |
       | git config --unset git-town.auto-sync                   |
+      | git config --unset git-town.branch-prefix               |
       | git config --unset git-town.contribution-regex          |
       | git config --unset git-town.dev-remote                  |
       | git config --unset git-town.feature-regex               |
@@ -109,12 +112,17 @@ Feature: migrate existing configuration in Git metadata to a config file
       # See https://www.git-town.com/configuration-file for details
 
       [branches]
+      contribution-regex = "coworker-.*"
+      feature-regex = "user-.*"
       main = "main"
+      observed-regex = "other-.*"
       order = "desc"
       perennials = ["qa"]
       perennial-regex = "release-.*"
+      unknown-branch-type = "observed"
 
       [create]
+      branch-prefix = "acme-"
       new-branch-type = "prototype"
       share-new-branches = "no"
       stash = false
@@ -131,6 +139,7 @@ Feature: migrate existing configuration in Git metadata to a config file
 
       [sync]
       auto-sync = false
+      detached = false
       feature-strategy = "merge"
       perennial-strategy = "rebase"
       prototype-strategy = "merge"

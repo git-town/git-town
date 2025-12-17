@@ -27,7 +27,19 @@
     {
       "type": "test-file",
       "files": "**/*.md",
-      "run": "tools/rta npm exec text-runner {{file}}"
+      "run": "make docs"
+    },
+
+    {
+      "type": "test-file",
+      "files": "**/*.test.ts",
+      "run": "tools/rta node --test {{file}}"
+    },
+
+    {
+      "type": "test-file-line",
+      "files": "**/*.test.ts",
+      "run": "tools/rta node --test-only {{file}}"
     },
 
     {

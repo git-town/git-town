@@ -1,0 +1,208 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.git-town.com/git-town.toml",
+  "$ref": "#/$defs/Data",
+  "$defs": {
+    "Branches": {
+      "properties": {
+        "ContributionRegex": {
+          "type": "string"
+        },
+        "DefaultType": {
+          "type": "string"
+        },
+        "DisplayTypes": {
+          "type": "string"
+        },
+        "FeatureRegex": {
+          "type": "string"
+        },
+        "Main": {
+          "type": "string"
+        },
+        "ObservedRegex": {
+          "type": "string"
+        },
+        "Order": {
+          "type": "string"
+        },
+        "PerennialRegex": {
+          "type": "string"
+        },
+        "Perennials": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "UnknownType": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Create": {
+      "properties": {
+        "NewBranchType": {
+          "type": "string"
+        },
+        "PushNewbranches": {
+          "type": "boolean"
+        },
+        "ShareNewBranches": {
+          "type": "string"
+        },
+        "Stash": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Data": {
+      "properties": {
+        "Branches": {
+          "$ref": "#/$defs/Branches"
+        },
+        "Create": {
+          "$ref": "#/$defs/Create"
+        },
+        "CreatePrototypeBranches": {
+          "type": "boolean"
+        },
+        "Hosting": {
+          "$ref": "#/$defs/Hosting"
+        },
+        "Propose": {
+          "$ref": "#/$defs/Propose"
+        },
+        "PushHook": {
+          "type": "boolean"
+        },
+        "PushNewbranches": {
+          "type": "boolean"
+        },
+        "Ship": {
+          "$ref": "#/$defs/Ship"
+        },
+        "ShipDeleteTrackingBranch": {
+          "type": "boolean"
+        },
+        "ShipStrategy": {
+          "type": "string"
+        },
+        "Sync": {
+          "$ref": "#/$defs/Sync"
+        },
+        "SyncStrategy": {
+          "$ref": "#/$defs/SyncStrategy"
+        },
+        "SyncTags": {
+          "type": "boolean"
+        },
+        "SyncUpstream": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Hosting": {
+      "properties": {
+        "DevRemote": {
+          "type": "string"
+        },
+        "ForgeType": {
+          "type": "string"
+        },
+        "GitHubConnectorType": {
+          "type": "string"
+        },
+        "GitLabConnectorType": {
+          "type": "string"
+        },
+        "OriginHostname": {
+          "type": "string"
+        },
+        "Platform": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Propose": {
+      "properties": {
+        "Lineage": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Ship": {
+      "properties": {
+        "DeleteTrackingBranch": {
+          "type": "boolean"
+        },
+        "Strategy": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Sync": {
+      "properties": {
+        "AutoResolve": {
+          "type": "boolean"
+        },
+        "AutoSync": {
+          "type": "boolean"
+        },
+        "Detached": {
+          "type": "boolean"
+        },
+        "FeatureStrategy": {
+          "type": "string"
+        },
+        "PerennialStrategy": {
+          "type": "string"
+        },
+        "PrototypeStrategy": {
+          "type": "string"
+        },
+        "PushBranches": {
+          "type": "boolean"
+        },
+        "PushHook": {
+          "type": "boolean"
+        },
+        "Tags": {
+          "type": "boolean"
+        },
+        "Upstream": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "SyncStrategy": {
+      "properties": {
+        "FeatureBranches": {
+          "type": "string"
+        },
+        "PerennialBranches": {
+          "type": "string"
+        },
+        "PrototypeBranches": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    }
+  }
+}

@@ -1,7 +1,9 @@
 # git town sync
 
+<a type="git-town-command" />
+
 ```command-summary
-git town sync [-a | --all] [--no-push] [-s | --stack] [-d | --detached] [-p | --prune] [--dry-run] [-v | --verbose]
+git town sync [-a | --all] [--(no)-auto-resolve] [-d | --(no)-detached] [--dry-run] [-h | --help] [-p | --prune] [--(no)-push] [-s | --stack] [-v | --verbose]
 ```
 
 The _sync_ command ("synchronize this branch") updates your local Git workspace
@@ -74,15 +76,10 @@ if it's going to be deleted right afterwards.
 By default this command syncs only the current branch. The `--all` aka `-a`
 parameter makes Git Town sync all local branches.
 
-#### `--push`<br>`--no-push`
+#### `--auto-resolve`<br>`--no-auto-resolve`
 
-The `--push`/`--no-push` argument overrides the
-[push-branches](../preferences/push-branches.md) config setting.
-
-#### `-s`<br>`--stack`
-
-The `--stack` aka `-s` parameter makes Git Town sync all branches in the stack
-that the current branch belongs to.
+Disables automatic resolution of
+[phantom merge conflicts](../stacked-changes.md#avoid-phantom-conflicts).
 
 #### `-d`<br>`--detached`<br>`--no-detached`
 
@@ -95,25 +92,34 @@ In detached mode, feature branches don't receive updates from the perennial
 branch at the root of your branch hierarchy. This can be useful in busy
 monorepos.
 
-#### `-p`<br>`--prune`
-
-The `--prune` aka `-p` flag removes (prunes) empty branches, i.e. branches that
-effectively don't make any changes.
-
 #### `--dry-run`
 
 Use the `--dry-run` flag to test-drive this command. It prints the Git commands
 that would be run but doesn't execute them.
 
+#### `-h`<br>`--help`
+
+Display help for this command.
+
+#### `-p`<br>`--prune`
+
+The `--prune` aka `-p` flag removes (prunes) empty branches, i.e. branches that
+effectively don't make any changes.
+
+#### `--push`<br>`--no-push`
+
+The `--push`/`--no-push` argument overrides the
+[push-branches](../preferences/push-branches.md) config setting.
+
+#### `-s`<br>`--stack`
+
+The `--stack` aka `-s` parameter makes Git Town sync all branches in the stack
+that the current branch belongs to.
+
 #### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.
-
-#### `--auto-resolve`
-
-Disables automatic resolution of
-[phantom merge conflicts](../stacked-changes.md#avoid-phantom-conflicts).
 
 ## Configuration
 
@@ -135,6 +141,8 @@ tags with the [development remote](../preferences/dev-remote.md).
 
 When you run into merge conflicts:
 
+<!-- keep-sorted start -->
+
 - [continue](continue.md) allows you to resume the suspended Git Town command
   after you have resolved the merge conflicts by re-running the failed Git
   command
@@ -143,3 +151,5 @@ When you run into merge conflicts:
 - [undo](undo.md) aborts the currently suspended Git Town command and undoes all
   the changes it did, bringing your Git repository back to the state it was
   before you ran the currently suspended Git Town command
+
+<!-- keep-sorted end -->

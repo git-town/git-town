@@ -180,7 +180,7 @@ func (self APIConnector) SquashMergeProposal(number int, message gitdomain.Commi
 
 var _ forgedomain.ProposalBodyUpdater = apiConnector // type check
 
-func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, newBody string) error {
+func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, newBody gitdomain.ProposalBody) error {
 	data := proposalData.(forgedomain.BitbucketCloudProposalData)
 	self.log.Start(messages.APIProposalUpdateBody, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)))
 	_, err := self.client.Value.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
@@ -189,8 +189,8 @@ func (self APIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInt
 		RepoSlug:          self.Repository,
 		SourceBranch:      data.Source.String(),
 		DestinationBranch: data.Target.String(),
-		Title:             data.Title,
-		Description:       newBody,
+		Title:             data.Title.String(),
+		Description:       newBody.String(),
 		Draft:             data.Draft,
 		CloseSourceBranch: data.CloseSourceBranch,
 	})
@@ -213,8 +213,8 @@ func (self APIConnector) UpdateProposalSource(proposalData forgedomain.ProposalI
 		RepoSlug:          self.Repository,
 		SourceBranch:      source.String(),
 		DestinationBranch: data.Target.String(),
-		Title:             data.Title,
-		Description:       data.Body.GetOrZero(),
+		Title:             data.Title.String(),
+		Description:       data.Body.GetOrZero().String(),
 		Draft:             data.Draft,
 		CloseSourceBranch: data.CloseSourceBranch,
 	})
@@ -237,8 +237,8 @@ func (self APIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalI
 		RepoSlug:          self.Repository,
 		SourceBranch:      data.Source.String(),
 		DestinationBranch: target.String(),
-		Title:             data.Title,
-		Description:       data.Body.GetOrZero(),
+		Title:             data.Title.String(),
+		Description:       data.Body.GetOrZero().String(),
 		Draft:             data.Draft,
 		CloseSourceBranch: data.CloseSourceBranch,
 	})

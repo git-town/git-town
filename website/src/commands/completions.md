@@ -1,7 +1,9 @@
 # git town completions
 
+<a type="git-town-command" />
+
 ```command-summary
-git town completions (bash|fish|powershell|zsh) [--no-descriptions]
+git town completions (bash|fish|powershell|zsh) [-h | --help] [--no-descriptions]
 ```
 
 The _completions_ command outputs shell scripts that enable auto-completion for
@@ -57,6 +59,10 @@ autoload -Uz compinit
 ```
 
 ## Options
+
+#### `-h`<br>`--help`
+
+Display help for this command.
 
 #### `--no-descriptions`
 

@@ -36,11 +36,13 @@ perennial-regex = "release-.*"
 unknown-type = "prototype"
 
 [create]
+branch-prefix = "feature-"
 new-branch-type = "prototype"
 push-new-branches = true
 share-new-branches = "push"
 
 [hosting]
+browser = "chrome"
 forge-type = "github"
 origin-hostname = "github.com"
 
@@ -81,11 +83,13 @@ prototype-branches = "compress"
 					UnknownType:       Ptr("prototype"),
 				},
 				Create: &configfile.Create{
+					BranchPrefix:     Ptr("feature-"),
 					NewBranchType:    Ptr("prototype"),
 					PushNewbranches:  Ptr(true),
 					ShareNewBranches: Ptr("push"),
 				},
 				Hosting: &configfile.Hosting{
+					Browser:        Ptr("chrome"),
 					ForgeType:      Ptr("github"),
 					OriginHostname: Ptr("github.com"),
 				},

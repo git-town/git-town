@@ -1,7 +1,9 @@
 # git town merge
 
+<a type="git-town-command" />
+
 ```command-summary
-git town merge [--dry-run] [-v | --verbose]
+git town merge [--dry-run] [-h | --help] [-v | --verbose]
 ```
 
 The _merge_ command merges the current branch into the branch ahead of it in the
@@ -53,6 +55,10 @@ consolidate these commits, run [git town sync](sync.md).
 
 Use the `--dry-run` flag to test-drive this command. It prints the Git commands
 that would be run but doesn't execute them.
+
+#### `-h`<br>`--help`
+
+Display help for this command.
 
 #### `-v`<br>`--verbose`
 

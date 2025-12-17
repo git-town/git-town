@@ -19,6 +19,8 @@ Feature: display configuration from Git metadata
     Given Git setting "git-town.perennial-branches" is "qa staging"
     And Git setting "git-town.perennial-regex" is "^release-"
     And Git setting "git-town.auto-sync" is "false"
+    And Git setting "git-town.branch-prefix" is "acme-"
+    And Git setting "git-town.browser" is "firefox"
     And Git setting "git-town.contribution-regex" is "^renovate/"
     And Git setting "git-town.display-types" is "all"
     And Git setting "git-town.observed-regex" is "^dependabot/"
@@ -53,11 +55,13 @@ Feature: display configuration from Git metadata
         git user email: email@example.com
 
       Create:
+        branch prefix: acme-
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: no
 
       Hosting:
+        browser: firefox
         development remote: origin
         forge type: (not set)
         origin hostname: (not set)
@@ -123,11 +127,13 @@ Feature: display configuration from Git metadata
         git user email: email@example.com
 
       Create:
+        branch prefix: (not set)
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: yes
 
       Hosting:
+        browser: (not set)
         development remote: origin
         forge type: (not set)
         origin hostname: (not set)

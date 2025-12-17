@@ -1,8 +1,9 @@
 # git town status
 
+<a type="git-town-command" />
+
 ```command-summary
-git town status [-p | --pending] [-v | --verbose]
-git town status reset [-v | --verbose]
+git town status [-h | --help] [-p | --pending] [-v | --verbose]
 ```
 
 The _status_ command indicates whether Git Town has encountered a merge conflict
@@ -17,6 +18,10 @@ The [show](status-show.md) subcommand displays detailed information about the
 persisted runstate.
 
 ## Options
+
+#### `-h`<br>`--help`
+
+Display help for this command.
 
 #### `-p`<br>`--pending`
 

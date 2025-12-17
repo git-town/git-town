@@ -2,7 +2,7 @@ RTA_VERSION = 0.24.2  # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
-RELEASE_VERSION := "22.2.0"
+RELEASE_VERSION := "22.3.0"
 GO_TEST_ARGS = LANG=C GOGC=off BROWSER=
 
 contest: tools/rta@${RTA_VERSION}  # run the Contest server
@@ -53,6 +53,9 @@ dependencies: tools/rta@${RTA_VERSION}  # prints the dependencies between the in
 docs: install node_modules  # tests the documentation
 	@tools/rta node node_modules/.bin/text-runner --offline
 
+export-config-schema:  # exports the JSON-Schema for the configuration file
+	@go run tools/generate_jsonschema.go > docs/git-town.schema.json
+
 fix: tools/rta@${RTA_VERSION}  # runs all linters and auto-fixes
 	make --no-print-directory fix-optioncompare-in-tests
 	go run tools/format_unittests/format_unittests.go
@@ -98,7 +101,7 @@ lint: node_modules tools/rta@${RTA_VERSION}  # lints the main codebase concurren
 
 lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	(cd website && make test)
-	tools/rta govulncheck ./...
+# tools/rta govulncheck ./...   TODO: enable when Go 1.24.11 is available widely
 	@echo lint tools/format_self
 	@(cd tools/format_self && make test)
 	@echo lint tools/format_unittests
@@ -210,6 +213,10 @@ unit: install  # runs only the unit tests for changed code
 
 unit-all: install  # runs all the unit tests
 	env GOGC=off go test -count=1 -shuffle=on -timeout=60s $(UNIT_TEST_DIRS)
+	make --no-print-directory unit-text-runner
+
+unit-text-runner: tools/rta@${RTA_VERSION} node_modules
+	@tools/rta npm run unit
 
 unit-race: install  # runs all the unit tests with race detector
 	env GOGC=off go test -count=1 -timeout 60s -race $(UNIT_TEST_DIRS)

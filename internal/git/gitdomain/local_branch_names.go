@@ -51,19 +51,21 @@ func (self LocalBranchNames) Contains(branch LocalBranchName) bool {
 	return slices.Contains(self, branch)
 }
 
-// Hoist moves the given needle to the front of the list.
-func (self LocalBranchNames) Hoist(needle LocalBranchName) LocalBranchNames {
+// Hoist returns the given list with the given branches moved to the front,
+// in the order they are given.
+func (self LocalBranchNames) Hoist(branches ...LocalBranchName) LocalBranchNames {
 	result := make(LocalBranchNames, 0, len(self))
-	foundNeedle := false
-	for _, branch := range self {
-		if branch == needle {
-			foundNeedle = true
-		} else {
+	// Add the hoisted branches first, in the order given
+	for _, branch := range branches {
+		if slices.Contains(self, branch) {
 			result = append(result, branch)
 		}
 	}
-	if foundNeedle {
-		result = append(LocalBranchNames{needle}, result...)
+	// Add the remaining branches in their original order
+	for _, branch := range self {
+		if !slices.Contains(branches, branch) {
+			result = append(result, branch)
+		}
 	}
 	return result
 }

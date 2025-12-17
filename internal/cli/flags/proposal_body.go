@@ -23,7 +23,7 @@ func ProposalBody(short string) (AddFunc, ReadProposalBodyFlagFunc) {
 		if err != nil {
 			return None[gitdomain.ProposalBody](), err
 		}
-		return Some(gitdomain.ProposalBody(value)), nil
+		return gitdomain.NewProposalBodyOpt(value), nil
 	}
 	return addFlag, readFlag
 }

@@ -1,7 +1,9 @@
 # git town runlog
 
+<a type="git-town-command" />
+
 ```command-summary
-git town runlog [-v | --verbose]
+git town runlog [-h | --help] [-v | --verbose]
 ```
 
 Git Town records the SHA of all local and remote branches before and after each
@@ -13,6 +15,10 @@ command made.
 
 ## Options
 
+#### `-h`<br>`--help`
+
+Display help for this command.
+
 #### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
@@ -20,5 +26,9 @@ determine the repository state.
 
 ## See also
 
+<!-- keep-sorted start -->
+
 - [status show](status-show.md) displays the runstate, i.e. detailed information
   for the current or last Git Town command
+
+<!-- keep-sorted end -->

@@ -16,14 +16,9 @@ type AddFunc func(*cobra.Command)
 
 // defines the negated form of the flag with the given name and default value
 // You must define the non-negated version yourself, because there are too many things to configure there
-func defineNegatedFlag(flags *pflag.FlagSet, name string) {
+func defineNegatedFlag(flags *pflag.FlagSet, name, desc string) {
 	negateName := negate + name
-	flags.Bool(negateName, false, "")
-	if err := flags.MarkHidden(negateName); err != nil {
-		// this will never panic in production,
-		// our tests will fail if we provide a non-existing flag name here
-		panic(err)
-	}
+	flags.Bool(negateName, false, desc)
 }
 
 // provides the value of the CLI flag with the given name and bool-based type

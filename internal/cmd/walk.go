@@ -208,6 +208,7 @@ func determineWalkData(repo execute.OpenRepoResult, all configdomain.AllBranches
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
+		Browser:              config.Browser,
 		ForgeType:            config.ForgeType,
 		ForgejoToken:         config.ForgejoToken,
 		Frontend:             repo.Frontend,
@@ -287,10 +288,12 @@ func determineWalkData(repo execute.OpenRepoResult, all configdomain.AllBranches
 	case stack.Enabled():
 		branchesToWalk = validatedConfig.NormalConfig.Lineage.BranchLineageWithoutRoot(initialBranch, perennialBranchNames, validatedConfig.NormalConfig.Order)
 	}
+	branchesInOtherWorktrees := branchesSnapshot.Branches.BranchesInOtherWorktrees()
+	branchesInCurrentWorktree := branchesToWalk.Remove(branchesInOtherWorktrees...)
 	return walkData{
 		branchInfosLastRun: branchInfosLastRun,
 		branchesSnapshot:   branchesSnapshot,
-		branchesToWalk:     branchesToWalk,
+		branchesToWalk:     branchesInCurrentWorktree,
 		config:             validatedConfig,
 		connector:          connector,
 		hasOpenChanges:     repoStatus.OpenChanges,

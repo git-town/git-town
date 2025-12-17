@@ -44,38 +44,42 @@ func Load(rootDir gitdomain.RepoRootDir, fileName string, finalMessages stringsl
 
 // Validate converts the given low-level configfile data into high-level config data.
 func Validate(data Data, finalMessages stringslice.Collector) (configdomain.PartialConfig, error) {
-	// keep-sorted start
-	var autoResolve Option[configdomain.AutoResolve]
-	var autoSync Option[configdomain.AutoSync]
-	var contributionRegex Option[configdomain.ContributionRegex]
-	var detached Option[configdomain.Detached]
-	var devRemote Option[gitdomain.Remote]
-	var displayTypes Option[configdomain.DisplayTypes]
-	var featureRegex Option[configdomain.FeatureRegex]
-	var forgeType Option[forgedomain.ForgeType]
-	var githubConnectorType Option[forgedomain.GitHubConnectorType]
-	var gitlabConnectorType Option[forgedomain.GitLabConnectorType]
-	var hostingOriginHostname Option[configdomain.HostingOriginHostname]
-	var mainBranch Option[gitdomain.LocalBranchName]
-	var newBranchType Option[configdomain.NewBranchType]
-	var observedRegex Option[configdomain.ObservedRegex]
-	var order Option[configdomain.Order]
-	var perennialBranches gitdomain.LocalBranchNames
-	var perennialRegex Option[configdomain.PerennialRegex]
-	var proposalsShowLineage Option[forgedomain.ProposalsShowLineage]
-	var pushBranches Option[configdomain.PushBranches]
-	var pushHook Option[configdomain.PushHook]
-	var shareNewBranches Option[configdomain.ShareNewBranches]
-	var shipDeleteTrackingBranch Option[configdomain.ShipDeleteTrackingBranch]
-	var shipStrategy Option[configdomain.ShipStrategy]
-	var stash Option[configdomain.Stash]
-	var syncFeatureStrategy Option[configdomain.SyncFeatureStrategy]
-	var syncPerennialStrategy Option[configdomain.SyncPerennialStrategy]
-	var syncPrototypeStrategy Option[configdomain.SyncPrototypeStrategy]
-	var syncTags Option[configdomain.SyncTags]
-	var syncUpstream Option[configdomain.SyncUpstream]
-	var unknownBranchType Option[configdomain.UnknownBranchType]
-	// keep-sorted end
+	var (
+		// keep-sorted start
+		autoResolve              Option[configdomain.AutoResolve]
+		autoSync                 Option[configdomain.AutoSync]
+		branchPrefix             Option[configdomain.BranchPrefix]
+		browser                  Option[configdomain.Browser]
+		contributionRegex        Option[configdomain.ContributionRegex]
+		detached                 Option[configdomain.Detached]
+		devRemote                Option[gitdomain.Remote]
+		displayTypes             Option[configdomain.DisplayTypes]
+		featureRegex             Option[configdomain.FeatureRegex]
+		forgeType                Option[forgedomain.ForgeType]
+		githubConnectorType      Option[forgedomain.GitHubConnectorType]
+		gitlabConnectorType      Option[forgedomain.GitLabConnectorType]
+		hostingOriginHostname    Option[configdomain.HostingOriginHostname]
+		mainBranch               Option[gitdomain.LocalBranchName]
+		newBranchType            Option[configdomain.NewBranchType]
+		observedRegex            Option[configdomain.ObservedRegex]
+		order                    Option[configdomain.Order]
+		perennialBranches        gitdomain.LocalBranchNames
+		perennialRegex           Option[configdomain.PerennialRegex]
+		proposalsShowLineage     Option[forgedomain.ProposalsShowLineage]
+		pushBranches             Option[configdomain.PushBranches]
+		pushHook                 Option[configdomain.PushHook]
+		shareNewBranches         Option[configdomain.ShareNewBranches]
+		shipDeleteTrackingBranch Option[configdomain.ShipDeleteTrackingBranch]
+		shipStrategy             Option[configdomain.ShipStrategy]
+		stash                    Option[configdomain.Stash]
+		syncFeatureStrategy      Option[configdomain.SyncFeatureStrategy]
+		syncPerennialStrategy    Option[configdomain.SyncPerennialStrategy]
+		syncPrototypeStrategy    Option[configdomain.SyncPrototypeStrategy]
+		syncTags                 Option[configdomain.SyncTags]
+		syncUpstream             Option[configdomain.SyncUpstream]
+		unknownBranchType        Option[configdomain.UnknownBranchType]
+		// keep-sorted end
+	)
 	var err error
 	// load legacy definitions first, so that the proper definitions loaded later override them
 	if data.CreatePrototypeBranches != nil {
@@ -153,6 +157,10 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		}
 	}
 	if data.Create != nil {
+		if data.Create.BranchPrefix != nil {
+			branchPrefix, err = configdomain.ParseBranchPrefix(*data.Create.BranchPrefix, messages.ConfigFile)
+			ec.Check(err)
+		}
 		if data.Create.NewBranchType != nil {
 			branchType, err := configdomain.ParseBranchType(*data.Create.NewBranchType, messages.ConfigFile)
 			ec.Check(err)
@@ -171,6 +179,10 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		}
 	}
 	if data.Hosting != nil {
+		if data.Hosting.Browser != nil {
+			browser, err = configdomain.ParseBrowser(*data.Hosting.Browser, messages.ConfigFile)
+			ec.Check(err)
+		}
 		if data.Hosting.Platform != nil {
 			forgeType, err = forgedomain.ParseForgeType(*data.Hosting.Platform, messages.ConfigFile)
 			ec.Check(err)
@@ -262,7 +274,9 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		AutoSync:                 autoSync,
 		BitbucketAppPassword:     None[forgedomain.BitbucketAppPassword](),
 		BitbucketUsername:        None[forgedomain.BitbucketUsername](),
+		BranchPrefix:             branchPrefix,
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{},
+		Browser:                  browser,
 		ForgejoToken:             None[forgedomain.ForgejoToken](),
 		ContributionRegex:        contributionRegex,
 		Detached:                 detached,

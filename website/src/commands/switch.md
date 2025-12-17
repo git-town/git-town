@@ -1,7 +1,9 @@
 # git town switch
 
+<a type="git-town-command" />
+
 ```command-summary
-git town switch [<branch-name-regex>...] [-a | --all] [-d | --display-types] [-m | --merge] [-o | --order] [-t <name> | --type <name>] [-v | --verbose]
+git town switch [<branch-name-regex>...] [-a | --all] [(-d | --display-types) <type>] [-h | --help] [-m | --merge] [(-o | --order) <asc|desc>] [--(no)-stash] [(-t | --type) <name>] [-v | --verbose]
 ```
 
 The _switch_ command displays the branch hierarchy on your machine and allows
@@ -37,11 +39,15 @@ git town switch me- main
 
 The `--all` aka `-a` flag also displays both local and remote branches.
 
-#### `-d`<br>`--display-types`
+#### `-d <branch-types>`<br>`--display-types <branch-types>`
 
 This flag allows customizing whether Git Town also displays the branch type in
 addition to the branch name when showing a list of branches. More info
 [here](../preferences/display-types.md#cli-flags).
+
+#### `-h`<br>`--help`
+
+Display help for this command.
 
 #### `-m`<br>`--merge`
 
@@ -53,10 +59,16 @@ branch.
 This is useful when you have uncommitted changes in your current branch and want
 to move them to the new branch.
 
-#### `-o`<br>`--order`
+#### `-o <asc|desc>`<br>`--order <asc|desc>`
 
 The `--order` flag allows customizing the order in which branches get displayed.
 More info [here](../preferences/order.md#cli-flag)
+
+#### `--stash`<br>`--no-stash`
+
+When set, Git Town stashes the open changes before switching to the new branch
+and then unstashes them. This guarantees that the switch will work, at the cost
+of resetting any stashed changes.
 
 #### `-t <name>`<br>`--type <name>`
 
@@ -101,6 +113,10 @@ determine the repository state.
 
 ## See also
 
+<!-- keep-sorted start -->
+
 - [branch](branch.md) displays the branch hierarchy
 - [walk](walk.md) executes a shell command or opens a shell in each of your
   local branches
+
+<!-- keep-sorted end -->

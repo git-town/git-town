@@ -355,6 +355,58 @@ func TestBackendCommands(t *testing.T) {
 		})
 	})
 
+	t.Run("BranchesAvailableInCurrentWorktree", func(t *testing.T) {
+		t.Parallel()
+		t.Run("includes branches not checked out anywhere", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			runtime.CreateBranch("branch1", initial.BranchName())
+			runtime.CreateBranch("branch2", initial.BranchName())
+			runtime.CheckoutBranch("branch1")
+			available := asserts.NoError1(runtime.Git.BranchesAvailableInCurrentWorktree(runtime))
+			must.SliceContainsAll(t, gitdomain.LocalBranchNames{
+				gitdomain.NewLocalBranchName("initial"),
+				gitdomain.NewLocalBranchName("branch1"),
+				gitdomain.NewLocalBranchName("branch2"),
+			}, available)
+		})
+
+		t.Run("excludes branch checked out in another worktree", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			runtime.CreateBranch("branch1", initial.BranchName())
+			runtime.CreateBranch("branch2", initial.BranchName())
+			worktreeDir := t.TempDir()
+			runtime.AddWorktree(worktreeDir, "branch1")
+			available := asserts.NoError1(runtime.Git.BranchesAvailableInCurrentWorktree(runtime))
+			must.SliceContainsAll(t, gitdomain.LocalBranchNames{
+				gitdomain.NewLocalBranchName("initial"),
+				gitdomain.NewLocalBranchName("branch2"),
+			}, available)
+		})
+
+		t.Run("excludes remote branches", func(t *testing.T) {
+			t.Parallel()
+			origin := testruntime.Create(t)
+			local := testruntime.Clone(origin.TestRunner, t.TempDir())
+			origin.CreateBranch("remote-branch", initial.BranchName())
+			local.Fetch()
+			available := asserts.NoError1(local.Git.BranchesAvailableInCurrentWorktree(local))
+			must.SliceContainsAll(t, gitdomain.LocalBranchNames{
+				gitdomain.NewLocalBranchName("initial"),
+			}, available)
+		})
+
+		t.Run("empty repository", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			available := asserts.NoError1(runtime.Git.BranchesAvailableInCurrentWorktree(runtime))
+			must.SliceContainsAll(t, gitdomain.LocalBranchNames{
+				gitdomain.NewLocalBranchName("initial"),
+			}, available)
+		})
+	})
+
 	t.Run("BranchesSnapshot", func(t *testing.T) {
 		t.Parallel()
 		t.Run("recognizes the active branch names", func(t *testing.T) {

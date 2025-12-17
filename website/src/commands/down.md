@@ -1,7 +1,9 @@
 # git town down
 
+<a type="git-town-command" />
+
 ```command-summary
-git town down [-m | --merge] [-v | --verbose]
+git town down [(-d | --display-types) <type>] [-h | --help] [-m | --merge] [(-o | --order) <asc|desc>] [-v | --verbose]
 ```
 
 The _down_ command moves one position down in the current stack by switching to
@@ -36,11 +38,15 @@ main
 
 ## Options
 
-#### `-d`<br>`--display-types`
+#### `-d <branch-types>`<br>`--display-types <branch-types>`
 
 This flag allows customizing whether Git Town also displays the branch type in
 addition to the branch name when showing a list of branches. More info
 [here](../preferences/display-types.md#cli-flags).
+
+#### `-h`<br>`--help`
+
+Display help for this command.
 
 #### `-m`<br>`--merge`
 
@@ -52,7 +58,7 @@ branch.
 This is useful when you have uncommitted changes in your current branch and want
 to move them down to the parent branch.
 
-#### `-o`<br>`--order`
+#### `-o <asc|desc>`<br>`--order <asc|desc>`
 
 The `--order` flag allows customizing the order in which branches get displayed.
 More info [here](../preferences/order.md#cli-flag)
@@ -64,8 +70,12 @@ determine the repository state.
 
 ## See also
 
+<!-- keep-sorted start -->
+
 - [branch](branch.md) displays the branch hierarchy
-- [switch](switch.md) interactively switch between branches
 - [swap](swap.md) changes the stack by swapping the position of current branch
   with its parent
+- [switch](switch.md) interactively switch between branches
 - [up](up.md) moves one position up in the current stack
+
+<!-- keep-sorted end -->

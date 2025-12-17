@@ -23,6 +23,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/proposallineage"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
 	"github.com/git-town/git-town/v22/internal/validate"
 	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
@@ -266,6 +267,7 @@ func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (data p
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
+		Browser:              config.Browser,
 		ForgeType:            config.ForgeType,
 		ForgejoToken:         config.ForgejoToken,
 		Frontend:             repo.Frontend,
@@ -324,6 +326,9 @@ func determinePrependData(args prependArgs, repo execute.OpenRepoResult) (data p
 		return data, configdomain.ProgramFlowExit, err
 	}
 	targetBranch := gitdomain.NewLocalBranchName(args.argv[0])
+	if prefix, hasPrefix := config.BranchPrefix.Get(); hasPrefix {
+		targetBranch = prefix.Apply(targetBranch)
+	}
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
 		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
@@ -516,14 +521,14 @@ func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages
 				Current:   data.initialBranch,
 				FullStack: true,
 				Program:   prog,
-				ProposalStackLineageArgs: forge.ProposalStackLineageArgs{
+				ProposalStackLineageArgs: proposallineage.ProposalStackLineageArgs{
 					Connector:                forgedomain.ProposalFinderFromConnector(data.connector),
 					CurrentBranch:            data.initialBranch,
 					Lineage:                  data.config.NormalConfig.Lineage,
 					MainAndPerennialBranches: data.config.MainAndPerennials(),
 					Order:                    data.config.NormalConfig.Order,
 				},
-				ProposalStackLineageTree:             None[*forge.ProposalStackLineageTree](),
+				ProposalStackLineageTree:             None[*proposallineage.Tree](),
 				SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(),
 			},
 		)

@@ -216,6 +216,7 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data appendF
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
+		Browser:              config.Browser,
 		ForgeType:            config.ForgeType,
 		ForgejoToken:         config.ForgejoToken,
 		Frontend:             repo.Frontend,
@@ -302,6 +303,9 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data appendF
 		return data, configdomain.ProgramFlowExit, errors.New(messages.HackTooManyArguments)
 	}
 	targetBranch := targetBranches[0]
+	if prefix, hasPrefix := validatedConfig.NormalConfig.BranchPrefix.Get(); hasPrefix {
+		targetBranch = prefix.Apply(targetBranch)
+	}
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
 		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}

@@ -82,9 +82,10 @@ func (self *Commands) BranchInSyncWithParent(querier subshelldomain.Querier, bra
 // BranchInSyncWithTracking returns whether the local branch with the given name
 // contains commits that have not been pushed to its tracking branch.
 func (self *Commands) BranchInSyncWithTracking(querier subshelldomain.Querier, branch gitdomain.LocalBranchName, devRemote gitdomain.Remote) (bool, error) {
-	out, err := querier.QueryTrim("git", "rev-parse", branch.String(), branch.TrackingBranch(devRemote).String())
+	trackingBranch := branch.TrackingBranch(devRemote)
+	out, err := querier.QueryTrim("git", "rev-parse", branch.String(), trackingBranch.String())
 	if err != nil {
-		return false, fmt.Errorf(messages.DiffProblem, branch, branch, err)
+		return false, fmt.Errorf(messages.DiffProblem, branch, trackingBranch, err)
 	}
 	lines := strings.Split(out, "\n")
 	if len(lines) != 2 {
@@ -93,6 +94,32 @@ func (self *Commands) BranchInSyncWithTracking(querier subshelldomain.Querier, b
 	branchSHA := strings.TrimSpace(lines[0])
 	trackingSHA := strings.TrimSpace(lines[1])
 	return branchSHA == trackingSHA, nil
+}
+
+func (self *Commands) BranchesAvailableInCurrentWorktree(querier subshelldomain.Querier) (gitdomain.LocalBranchNames, error) {
+	branches, err := branchesQuery(querier)
+	if err != nil {
+		return gitdomain.LocalBranchNames{}, err
+	}
+	result := gitdomain.LocalBranchNames{}
+	for _, branch := range branches {
+		// Skip symbolic refs
+		if branch.Symref {
+			continue
+		}
+		// Only include local branches
+		if !isLocalRefName(branch.RefName) {
+			continue
+		}
+		// Include branches that are not checked out in other worktrees
+		// A branch is available in the current worktree if:
+		// - It's not checked out anywhere (!branch.Worktree), OR
+		// - It's checked out in the current worktree (branch.Head)
+		if !branch.Worktree || branch.Head {
+			result = append(result, branch.BranchName.LocalName())
+		}
+	}
+	return result, nil
 }
 
 func (self *Commands) BranchesSnapshot(querier subshelldomain.Querier) (gitdomain.BranchesSnapshot, error) {

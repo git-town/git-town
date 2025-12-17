@@ -25,6 +25,7 @@ const skipDesc = "Resume the last run Git Town command by skipping the current b
 
 func skipCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	addParkFlag, readParkFlag := flags.Park()
 	cmd := cobra.Command{
 		Use:     "skip",
 		GroupID: cmdhelpers.GroupIDErrors,
@@ -32,6 +33,10 @@ func skipCmd() *cobra.Command {
 		Short:   skipDesc,
 		Long:    cmdhelpers.Long(skipDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
+			park, err := readParkFlag(cmd)
+			if err != nil {
+				return err
+			}
 			verbose, err := readVerboseFlag(cmd)
 			if err != nil {
 				return err
@@ -47,14 +52,15 @@ func skipCmd() *cobra.Command {
 				Stash:        None[configdomain.Stash](),
 				Verbose:      verbose,
 			})
-			return executeSkip(cliConfig)
+			return executeSkip(cliConfig, park)
 		},
 	}
+	addParkFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeSkip(cliConfig configdomain.PartialConfig) error {
+func executeSkip(cliConfig configdomain.PartialConfig, park configdomain.Park) error {
 Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		CliConfig:        cliConfig,
@@ -77,6 +83,7 @@ Start:
 		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
+		Browser:              config.Browser,
 		ForgeType:            config.ForgeType,
 		ForgejoToken:         config.ForgejoToken,
 		Frontend:             repo.Frontend,
@@ -165,6 +172,12 @@ Start:
 			return errors.New(messages.SkipBranchHasConflicts)
 		}
 	}
+	if park {
+		activeBranchType := validatedConfig.BranchType(activeBranch)
+		if err = canParkBranchType(activeBranchType, activeBranch, repo.FinalMessages); err != nil {
+			return err
+		}
+	}
 	return skip.Execute(skip.ExecuteArgs{
 		Backend:         repo.Backend,
 		CommandsCounter: repo.CommandsCounter,
@@ -176,6 +189,7 @@ Start:
 		HasOpenChanges:  repoStatus.OpenChanges,
 		InitialBranch:   activeBranch,
 		Inputs:          inputs,
+		Park:            park,
 		RootDir:         repo.RootDir,
 		RunState:        runState,
 	})

@@ -25,6 +25,7 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.ship" is "town ship"
     And global Git setting "alias.sync" is "town sync"
     And local Git setting "git-town.auto-sync" is "false"
+    And local Git setting "git-town.branch-prefix" is "kg-"
     And local Git setting "git-town.contribution-regex" is "other.*"
     And local Git setting "git-town.detached" is "true"
     And local Git setting "git-town.dev-remote" is "fork"
@@ -62,6 +63,7 @@ Feature: remove existing configuration in Git metadata
       | feature regex               | backspace backspace backspace backspace backspace backspace enter           |                     |
       | contribution regex          | backspace backspace backspace backspace backspace backspace backspace enter |                     |
       | observed regex              | backspace backspace backspace backspace backspace enter                     |                     |
+      | branch prefix               | backspace backspace backspace enter                                         |                     |
       | new branch type             | up enter                                                                    |                     |
       | unknown branch type         | up enter                                                                    |                     |
       | sync feature strategy       | up enter                                                                    |                     |
@@ -99,12 +101,13 @@ Feature: remove existing configuration in Git metadata
       | git config --global --unset alias.set-parent         |
       | git config --global --unset alias.ship               |
       | git config --global --unset alias.sync               |
+      | git config git-town.perennial-branches ""            |
+      | git config --unset git-town.hosting-origin-hostname  |
+      | git config --unset git-town.forge-type               |
       | git config git-town.auto-sync true                   |
+      | git config --unset git-town.branch-prefix            |
       | git config git-town.detached false                   |
       | git config git-town.new-branch-type feature          |
-      | git config --unset git-town.forge-type               |
-      | git config --unset git-town.hosting-origin-hostname  |
-      | git config git-town.perennial-branches ""            |
       | git config --unset git-town.perennial-regex          |
       | git config git-town.unknown-branch-type feature      |
       | git config --unset git-town.feature-regex            |
@@ -174,6 +177,7 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.ship" is now "town ship"
     And global Git setting "alias.sync" is now "town sync"
     And local Git setting "git-town.auto-sync" is now "false"
+    And local Git setting "git-town.branch-prefix" is now "kg-"
     And local Git setting "git-town.contribution-regex" is now "other.*"
     And local Git setting "git-town.dev-remote" is now "fork"
     And local Git setting "git-town.feature-regex" is now "user.*"

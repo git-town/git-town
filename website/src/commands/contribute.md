@@ -1,7 +1,9 @@
 # git town contribute
 
+<a type="git-town-command" />
+
 ```command-summary
-git town contribute [<branch-name>...] [-v | --verbose]
+git town contribute [<branch-name>...] [-h | --help] [-v | --verbose]
 ```
 
 The _contribute_ command makes some of your branches
@@ -40,6 +42,10 @@ git town contribute somebody-elses-branch
 
 ## Options
 
+#### `-h`<br>`--help`
+
+Display help for this command.
+
 #### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
@@ -47,7 +53,11 @@ determine the repository state.
 
 ## See also
 
+<!-- keep-sorted start -->
+
 - [feature](feature.md) makes the chosen branches feature branches
 - [observe](observe.md) makes the chosen branches observed
-- [prototype](prototype.md) makes the chosen branches prototype branches
 - [park](park.md) makes the chosen branches parked
+- [prototype](prototype.md) makes the chosen branches prototype branches
+
+<!-- keep-sorted end -->

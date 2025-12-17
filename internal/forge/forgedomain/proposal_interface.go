@@ -10,7 +10,7 @@ func CommitBody(data ProposalData, title string) string {
 	result := title
 	if body, has := data.Body.Get(); has {
 		result += "\n\n"
-		result += body
+		result += body.String()
 	}
 	return result
 }

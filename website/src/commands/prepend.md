@@ -1,7 +1,9 @@
 # git town prepend
 
+<a type="git-town-command" />
+
 ```command-summary
-git town prepend [<branch-name>...] [-b | --beam] [--body <string>] [--propose] [-p | --prototype] [-t <text> | --title <text>] [-d | --detached] [-c | --commit] [-m | --message <message>] [--dry-run] [-v | --verbose]
+git town prepend [<branch-name>...] [--(no)-auto-resolve] [-b | --beam] [--body <string>] [-c | --commit] [-d | --(no)-detached] [--dry-run] [-h | --help] [(-m | --message) <message>] [--propose] [-p | --prototype] [--(no)-push] [--(no)-stash] [--(no)-sync] [(-t | --title) <text>] [-v | --verbose]
 ```
 
 The _prepend_ command creates a new feature branch as the parent of the current
@@ -38,10 +40,54 @@ it. To do so, it pushes the new branch.
 
 ## Options
 
+#### `--auto-resolve`<br>`--no-auto-resolve`
+
+Disables automatic resolution of
+[phantom merge conflicts](../stacked-changes.md#avoid-phantom-conflicts).
+
+#### `-b`<br>`--beam`
+
+Moves ("beams") one or more commits from the current branch to the new parent
+branch that gets created. Lets you select the commits to beam via a visual
+dialog. Beaming suppresses all branch updates. Any merge conflicts encountered
+while beaming arise from moving the beamed commits.
+
 #### `--body <string>`
 
 Pre-populate the body of the pull request to create with the given text.
 Requires `--propose`.
+
+#### `-c`<br>`--commit`
+
+When given, commits the currently staged changes into the branch to create and
+remains on the current branch. This is intended to quickly commit changes
+unrelated to the current branch into another branch and keep hacking on the
+current branch. Committing suppresses all branch updates to allow you to get
+your open changes committed.
+
+#### `-d`<br>`--detached`<br>`--no-detached`
+
+The `--detached` aka `-d` flag enables
+[detached mode](../preferences/detached.md) for the current command. If detached
+mode is enabled through [configuration data](../preferences/detached.md), the
+`--no-detached` flag disables detached mode for the current command.
+
+In detached mode, feature branches don't receive updates from the perennial
+branch at the root of your branch hierarchy. This can be useful in busy
+monorepos.
+
+#### `--dry-run`
+
+Use the `--dry-run` flag to test-drive this command. It prints the Git commands
+that would be run but doesn't execute them.
+
+#### `-h`<br>`--help`
+
+Display help for this command.
+
+#### `-m <text>`<br>`--message <text>`
+
+Commit message to use together with `--commit`. Implies `--commit`.
 
 #### `--propose`
 
@@ -55,41 +101,6 @@ To always propose new branches, set the
 Adding the `--prototype` aka `-p` switch creates a
 [prototype branch](../branch-types.md#prototype-branches).
 
-#### `-t <text>`<br>`--title <text>`
-
-Pre-populate the title of the pull request to create with the given text.
-Requires `--propose`.
-
-#### `-d`<br>`--detached`<br>`--no-detached`
-
-The `--detached` aka `-d` flag enables
-[detached mode](../preferences/detached.md) for the current command. If detached
-mode is enabled through [configuration data](../preferences/detached.md), the
-`--no-detached` flag disables detached mode for the current command.
-
-In detached mode, feature branches don't receive updates from the perennial
-branch at the root of your branch hierarchy. This can be useful in busy
-monorepos.
-
-#### `-c`<br>`--commit`
-
-When given, commits the currently staged changes into the branch to create and
-remains on the current branch. This is intended to quickly commit changes
-unrelated to the current branch into another branch and keep hacking on the
-current branch. Committing suppresses all branch updates to allow you to get
-your open changes committed.
-
-#### `-b`<br>`--beam`
-
-Moves ("beams") one or more commits from the current branch to the new parent
-branch that gets created. Lets you select the commits to beam via a visual
-dialog. Beaming suppresses all branch updates. Any merge conflicts encountered
-while beaming arise from moving the beamed commits.
-
-#### `-m`<br>`--message`
-
-Commit message to use together with `--commit`. Implies `--commit`.
-
 #### `--push`<br>`--no-push`
 
 The `--push`/`--no-push` argument overrides the
@@ -99,25 +110,20 @@ The `--push`/`--no-push` argument overrides the
 
 Enables or disables [stashing](../preferences/stash.md) for this invocation.
 
-#### `--sync`
+#### `--sync`<br>`--no-sync`
 
 Enables or disables [automatic syncing](../preferences/auto-sync.md) of the
 current branch before prepending the new one.
 
-#### `--dry-run`
+#### `-t <text>`<br>`--title <text>`
 
-Use the `--dry-run` flag to test-drive this command. It prints the Git commands
-that would be run but doesn't execute them.
+Pre-populate the title of the pull request to create with the given text.
+Requires `--propose`.
 
 #### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.
-
-#### `--auto-resolve`
-
-Disables automatic resolution of
-[phantom merge conflicts](../stacked-changes.md#avoid-phantom-conflicts).
 
 ## Configuration
 
@@ -132,6 +138,10 @@ creates a branch with the given [type](../branch-types.md).
 
 ## See also
 
+<!-- keep-sorted start -->
+
 - [append](append.md) creates the new branch as a child of the current branch
 - [hack](hack.md) creates the new branch as a child of the
   [main branch](../preferences/main-branch.md)
+
+<!-- keep-sorted end -->
