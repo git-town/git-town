@@ -73,24 +73,24 @@ func Cmd() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:  None[configdomain.AutoResolve](),
-				AutoSync:     None[configdomain.AutoSync](),
-				Detached:     None[configdomain.Detached](),
-				DisplayTypes: None[configdomain.DisplayTypes](),
-				DryRun:       dryRun,
-				Order:        None[configdomain.Order](),
-				PushBranches: None[configdomain.PushBranches](),
-				Stash:        None[configdomain.Stash](),
-				Verbose:      verbose,
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				Detached:          None[configdomain.Detached](),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            dryRun,
+				IgnoreUncommitted: ignoreUncommitted,
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
 			})
 			return executeShip(executeShipArgs{
-				args:              args,
-				cliConfig:         cliConfig,
-				ignoreUncommitted: ignoreUncommitted,
-				message:           message,
-				messageFile:       messageFile,
-				shipStrategy:      shipStrategy,
-				toParent:          toParent,
+				args:         args,
+				cliConfig:    cliConfig,
+				message:      message,
+				messageFile:  messageFile,
+				shipStrategy: shipStrategy,
+				toParent:     toParent,
 			})
 		},
 	}
@@ -105,13 +105,12 @@ func Cmd() *cobra.Command {
 }
 
 type executeShipArgs struct {
-	args              []string
-	cliConfig         configdomain.PartialConfig
-	ignoreUncommitted configdomain.ShipIgnoreUncommitted
-	message           Option[gitdomain.CommitMessage]
-	messageFile       Option[gitdomain.CommitMessageFile]
-	shipStrategy      Option[configdomain.ShipStrategy]
-	toParent          configdomain.ShipIntoNonperennialParent
+	args         []string
+	cliConfig    configdomain.PartialConfig
+	message      Option[gitdomain.CommitMessage]
+	messageFile  Option[gitdomain.CommitMessageFile]
+	shipStrategy Option[configdomain.ShipStrategy]
+	toParent     configdomain.ShipIntoNonperennialParent
 }
 
 func executeShip(args executeShipArgs) error {
@@ -129,7 +128,6 @@ Start:
 	}
 	sharedData, flow, err := determineSharedShipData(determineSharedShipDataArgs{
 		args:                 args.args,
-		ignoreUncommitted:    args.ignoreUncommitted,
 		repo:                 repo,
 		shipStrategyOverride: args.shipStrategy,
 	})

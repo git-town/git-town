@@ -8,15 +8,16 @@ import (
 )
 
 type NewArgs struct {
-	AutoResolve  Option[configdomain.AutoResolve]
-	AutoSync     Option[configdomain.AutoSync]
-	Detached     Option[configdomain.Detached]
-	DisplayTypes Option[configdomain.DisplayTypes]
-	DryRun       Option[configdomain.DryRun]
-	Order        Option[configdomain.Order]
-	PushBranches Option[configdomain.PushBranches]
-	Stash        Option[configdomain.Stash]
-	Verbose      Option[configdomain.Verbose]
+	AutoResolve       Option[configdomain.AutoResolve]
+	AutoSync          Option[configdomain.AutoSync]
+	Detached          Option[configdomain.Detached]
+	DisplayTypes      Option[configdomain.DisplayTypes]
+	DryRun            Option[configdomain.DryRun]
+	IgnoreUncommitted Option[configdomain.ShipIgnoreUncommitted]
+	Order             Option[configdomain.Order]
+	PushBranches      Option[configdomain.PushBranches]
+	Stash             Option[configdomain.Stash]
+	Verbose           Option[configdomain.Verbose]
 }
 
 func New(args NewArgs) configdomain.PartialConfig {
@@ -57,7 +58,7 @@ func New(args NewArgs) configdomain.PartialConfig {
 		PushHook:                 None[configdomain.PushHook](),
 		ShareNewBranches:         None[configdomain.ShareNewBranches](),
 		ShipDeleteTrackingBranch: None[configdomain.ShipDeleteTrackingBranch](),
-		ShipIgnoreUncommitted:    None[configdomain.ShipIgnoreUncommitted](),
+		ShipIgnoreUncommitted:    args.IgnoreUncommitted,
 		ShipStrategy:             None[configdomain.ShipStrategy](),
 		Stash:                    args.Stash,
 		SyncFeatureStrategy:      None[configdomain.SyncFeatureStrategy](),
