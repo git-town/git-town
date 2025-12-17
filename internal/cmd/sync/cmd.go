@@ -56,6 +56,7 @@ func Cmd() *cobra.Command {
 	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addGoneFlag, readGoneFlag := flags.Gone()
 	addPruneFlag, readPruneFlag := flags.Prune()
 	addPushFlag, readPushFlag := flags.Push()
 	addStackFlag, readStackFlag := flags.Stack("sync the stack that the current branch belongs to")
@@ -71,11 +72,12 @@ func Cmd() *cobra.Command {
 			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
 			detached, errDetached := readDetachedFlag(cmd)
 			dryRun, errDryRun := readDryRunFlag(cmd)
+			gone, errGone := readGoneFlag(cmd)
 			prune, errPrune := readPruneFlag(cmd)
 			pushBranches, errPushBranches := readPushFlag(cmd)
 			stack, errStack := readStackFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errAllBranches, errDetached, errDryRun, errAutoResolve, errPushBranches, errPrune, errStack, errVerbose); err != nil {
+			if err := cmp.Or(errAllBranches, errDetached, errDryRun, errAutoResolve, errGone, errPushBranches, errPrune, errStack, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -91,6 +93,7 @@ func Cmd() *cobra.Command {
 			})
 			return executeSync(executeSyncArgs{
 				cliConfig:       cliConfig,
+				gone:            gone,
 				prune:           prune,
 				stack:           stack,
 				syncAllBranches: allBranches,
@@ -101,6 +104,7 @@ func Cmd() *cobra.Command {
 	addAutoResolveFlag(&cmd)
 	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
+	addGoneFlag(&cmd)
 	addPruneFlag(&cmd)
 	addPushFlag(&cmd)
 	addStackFlag(&cmd)
@@ -110,6 +114,7 @@ func Cmd() *cobra.Command {
 
 type executeSyncArgs struct {
 	cliConfig       configdomain.PartialConfig
+	gone            configdomain.Gone
 	prune           configdomain.Prune
 	stack           configdomain.FullStack
 	syncAllBranches configdomain.AllBranches
@@ -129,6 +134,7 @@ Start:
 		return err
 	}
 	data, flow, err := determineSyncData(repo, determineSyncDataArgs{
+		gone:            args.gone,
 		syncAllBranches: args.syncAllBranches,
 		syncStack:       args.stack,
 	})
@@ -254,6 +260,7 @@ type syncData struct {
 }
 
 type determineSyncDataArgs struct {
+	gone            configdomain.Gone
 	syncAllBranches configdomain.AllBranches
 	syncStack       configdomain.FullStack
 }
@@ -369,6 +376,8 @@ func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) 
 	perennialAndMain := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
 	var branchNamesToSync gitdomain.LocalBranchNames
 	switch {
+	case args.gone.Enabled():
+		branchNamesToSync = branchesSnapshot.Branches.BranchesDeletedAtRemote()
 	case args.syncAllBranches.Enabled() && repo.UnvalidatedConfig.NormalConfig.Detached.ShouldWorkDetached():
 		branchNamesToSync = localBranches.Remove(perennialAndMain...)
 	case args.syncAllBranches.Enabled():

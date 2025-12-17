@@ -20,6 +20,16 @@ func (self BranchInfos) BranchIsActiveInAnotherWorktree(branch LocalBranchName) 
 	return branchInfo.SyncStatus == SyncStatusOtherWorktree
 }
 
+func (self BranchInfos) BranchesDeletedAtRemote() LocalBranchNames {
+	result := LocalBranchNames{}
+	for _, bi := range self {
+		if bi.SyncStatus == SyncStatusDeletedAtRemote {
+			result = append(result, bi.GetLocalOrRemoteNameAsLocalName())
+		}
+	}
+	return result
+}
+
 func (self BranchInfos) BranchesInOtherWorktrees() LocalBranchNames {
 	result := LocalBranchNames{}
 	for _, bi := range self {
