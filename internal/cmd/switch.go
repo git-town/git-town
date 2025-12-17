@@ -30,6 +30,7 @@ func switchCmd() *cobra.Command {
 	addDisplayTypesFlag, readDisplayTypesFlag := flags.Displaytypes()
 	addMergeFlag, readMergeFlag := flags.Merge()
 	addOrderFlag, readOrderFlag := flags.Order()
+	addStashFlag, readStashFlag := flags.Stash()
 	addTypeFlag, readTypeFlag := flags.BranchType()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
@@ -44,8 +45,9 @@ func switchCmd() *cobra.Command {
 			displayTypes, errDisplayTypes := readDisplayTypesFlag(cmd)
 			merge, errMerge := readMergeFlag(cmd)
 			order, errOrder := readOrderFlag(cmd)
+			stash, errStash := readStashFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errBranchTypes, errAllBranches, errDisplayTypes, errMerge, errOrder, errVerbose); err != nil {
+			if err := cmp.Or(errBranchTypes, errAllBranches, errDisplayTypes, errMerge, errOrder, errStash, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -56,7 +58,7 @@ func switchCmd() *cobra.Command {
 				DryRun:       None[configdomain.DryRun](),
 				Order:        order,
 				PushBranches: None[configdomain.PushBranches](),
-				Stash:        None[configdomain.Stash](),
+				Stash:        stash,
 				Verbose:      verbose,
 			})
 			return executeSwitch(executeSwitchArgs{
@@ -72,6 +74,7 @@ func switchCmd() *cobra.Command {
 	addDisplayTypesFlag(&cmd)
 	addMergeFlag(&cmd)
 	addOrderFlag(&cmd)
+	addStashFlag(&cmd)
 	addTypeFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
@@ -153,8 +156,7 @@ Start:
 	if branchToCheckout == data.initialBranch {
 		return nil
 	}
-	err = repo.Git.CheckoutBranch(repo.Frontend, branchToCheckout, args.merge)
-	if err != nil {
+	if err := performSwitch(branchToCheckout, args.cliConfig.Stash.GetOr(false), data.hasOpenChanges, args.merge, repo); err != nil {
 		exitCode := 1
 		var exitErr *exec.ExitError
 		if errors.As(err, &exitErr) {
@@ -168,11 +170,28 @@ Start:
 type switchData struct {
 	branchesSnapshot   gitdomain.BranchesSnapshot
 	config             config.UnvalidatedConfig
+	hasOpenChanges     bool
 	initialBranch      gitdomain.LocalBranchName
 	inputs             dialogcomponents.Inputs
 	lineage            configdomain.Lineage
 	regexes            []*regexp.Regexp
 	uncommittedChanges bool
+}
+
+func performSwitch(branchToCheckout gitdomain.LocalBranchName, stash configdomain.Stash, hasOpenChanges bool, merge configdomain.SwitchUsingMerge, repo execute.OpenRepoResult) error {
+	if stash.ShouldStash() && hasOpenChanges {
+		return switchWithStash(branchToCheckout, merge, repo)
+	}
+	return repo.Git.CheckoutBranch(repo.Frontend, branchToCheckout, merge)
+}
+
+func switchWithStash(branchToCheckout gitdomain.LocalBranchName, merge configdomain.SwitchUsingMerge, repo execute.OpenRepoResult) error {
+	if err := repo.Git.Stash(repo.Frontend); err != nil {
+		return err
+	}
+	errCheckout := repo.Git.CheckoutBranch(repo.Frontend, branchToCheckout, merge)
+	errPop := repo.Git.PopStash(repo.Frontend)
+	return cmp.Or(errCheckout, errPop)
 }
 
 func determineSwitchData(args []string, repo execute.OpenRepoResult) (data switchData, flow configdomain.ProgramFlow, err error) {
@@ -217,6 +236,7 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult) (data switc
 	return switchData{
 		branchesSnapshot:   branchesSnapshot,
 		config:             repo.UnvalidatedConfig,
+		hasOpenChanges:     repoStatus.OpenChanges,
 		initialBranch:      initialBranch,
 		inputs:             inputs,
 		lineage:            repo.UnvalidatedConfig.NormalConfig.Lineage,

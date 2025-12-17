@@ -49,6 +49,10 @@ func RemoveBitbucketUsername(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyBitbucketUsername)
 }
 
+func RemoveBranchPrefix(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyBranchPrefix)
+}
+
 func RemoveBranchTypeOverride(runner subshelldomain.Runner, branch gitdomain.LocalBranchName) error {
 	key := configdomain.NewBranchTypeOverrideKeyForBranch(branch)
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, key.Key)
@@ -196,6 +200,10 @@ func SetBitbucketAppPassword(runner subshelldomain.Runner, value forgedomain.Bit
 
 func SetBitbucketUsername(runner subshelldomain.Runner, value forgedomain.BitbucketUsername, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyBitbucketUsername, value.String())
+}
+
+func SetBranchPrefix(runner subshelldomain.Runner, value configdomain.BranchPrefix, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyBranchPrefix, value.String())
 }
 
 func SetBranchTypeOverride(runner subshelldomain.Runner, branchType configdomain.BranchType, branches ...gitdomain.LocalBranchName) error {

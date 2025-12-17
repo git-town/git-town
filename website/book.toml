@@ -4,7 +4,7 @@ description = "Git Town user manual"
 language = "en"
 multilingual = false
 src = "src"
-title = "Git Town 22.2"
+title = "Git Town 22.3"
 
 [preprocessor.gittown]
 command = "../tools/rta node ../tools/mdbook_preprocessor/mdbook_preprocessor.js"

@@ -1,7 +1,9 @@
 # git town ship
 
+<a type="git-town-command" />
+
 ```command-summary
-git town ship [<branch-name>] [-m <text> | --message <text>] [-s <name> | --strategy <name>] [-p | --to-parent] [--dry-run] [-v | --verbose]
+git town ship [<branch-name>] [--dry-run] [-h | --help] [(-m | --message) <text>] [(-f | --message-file) <path>] [(-s | --strategy) <name>] [-p | --to-parent] [-v | --verbose]
 ```
 
 _Notice: Most people don't need to use this command. The recommended way to
@@ -27,6 +29,15 @@ When called with a positional argument, it ships the branch with the given name.
 
 ## Options
 
+#### `--dry-run`
+
+Use the `--dry-run` flag to test-drive this command. It prints the Git commands
+that would be run but doesn't execute them.
+
+#### `-h`<br>`--help`
+
+Display help for this command.
+
 #### `-m <text>`<br>`--message <text>`
 
 Similar to `git commit`, the `--message <message>` aka `-m` parameter allows
@@ -47,11 +58,6 @@ The _ship_ command ships only direct children of the main branch. To ship a
 child branch, you need to first ship or [delete](delete.md) all its ancestor
 branches. If you really want to ship into a non-perennial branch, you can
 override the protection against that with the `--to-parent` aka `-p` option.
-
-#### `--dry-run`
-
-Use the `--dry-run` flag to test-drive this command. It prints the Git commands
-that would be run but doesn't execute them.
 
 #### `-v`<br>`--verbose`
 
@@ -81,6 +87,10 @@ you can
 
 ## See also
 
+<!-- keep-sorted start -->
+
 - [propose](propose.md) creates a pull request for the current branch
 - [repo](repo.md) opens the website of your forge in the browser, so that you
   can ship branches there
+
+<!-- keep-sorted end -->

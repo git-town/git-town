@@ -16,6 +16,8 @@ Feature: display configuration defined in environment variables
       | GIT_TOWN_AUTO_SYNC                   | false              |
       | GIT_TOWN_BITBUCKET_APP_PASSWORD      | bitbucket-password |
       | GIT_TOWN_BITBUCKET_USERNAME          | bitbucket-user     |
+      | GIT_TOWN_BRANCH_PREFIX               | acme-              |
+      | BROWSER                              | firefox            |
       | GIT_TOWN_FORGEJO_TOKEN               | forgejo-token      |
       | GIT_TOWN_CONTRIBUTION_REGEX          | ^renovate/         |
       | GIT_TOWN_DETACHED                    | true               |
@@ -72,11 +74,13 @@ Feature: display configuration defined in environment variables
         git user email: email@example.com
 
       Create:
+        branch prefix: acme-
         new branch type: prototype
         share new branches: push
         stash uncommitted changes: no
 
       Hosting:
+        browser: firefox
         development remote: my-fork
         forge type: gitlab
         origin hostname: codeforge

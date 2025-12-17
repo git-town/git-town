@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/execute"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks/mapstools"
+	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/vm/interpreter/configinterpreter"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
@@ -137,18 +138,8 @@ func determineParkData(args []string, repo execute.OpenRepoResult) (parkData, er
 
 func validateParkData(data parkData, repo execute.OpenRepoResult) error {
 	for branchName, branchType := range mapstools.SortedKeyValues(data.branchesToPark) {
-		switch branchType {
-		case configdomain.BranchTypeMainBranch:
-			return errors.New(messages.MainBranchCannotPark)
-		case configdomain.BranchTypePerennialBranch:
-			return errors.New(messages.PerennialBranchCannotPark)
-		case configdomain.BranchTypeParkedBranch:
-			repo.FinalMessages.Add(fmt.Sprintf(messages.BranchIsAlreadyParked, branchName))
-		case
-			configdomain.BranchTypeFeatureBranch,
-			configdomain.BranchTypeContributionBranch,
-			configdomain.BranchTypeObservedBranch,
-			configdomain.BranchTypePrototypeBranch:
+		if err := canParkBranchType(branchType, branchName, repo.FinalMessages); err != nil {
+			return err
 		}
 		hasLocalBranch := data.beginBranchesSnapshot.Branches.HasLocalBranch(branchName)
 		hasRemoteBranch := data.beginBranchesSnapshot.Branches.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote)
@@ -156,6 +147,23 @@ func validateParkData(data parkData, repo execute.OpenRepoResult) error {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}
 		data.branchesToPark.Add(branchName, branchType)
+	}
+	return nil
+}
+
+func canParkBranchType(branchType configdomain.BranchType, branchName gitdomain.LocalBranchName, finalMessages stringslice.Collector) error {
+	switch branchType {
+	case configdomain.BranchTypeMainBranch:
+		return errors.New(messages.MainBranchCannotPark)
+	case configdomain.BranchTypePerennialBranch:
+		return errors.New(messages.PerennialBranchCannotPark)
+	case configdomain.BranchTypeParkedBranch:
+		finalMessages.Add(fmt.Sprintf(messages.BranchIsAlreadyParked, branchName))
+	case
+		configdomain.BranchTypeFeatureBranch,
+		configdomain.BranchTypeContributionBranch,
+		configdomain.BranchTypeObservedBranch,
+		configdomain.BranchTypePrototypeBranch:
 	}
 	return nil
 }

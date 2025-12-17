@@ -36,6 +36,7 @@ func (self Branches) IsEmpty() bool {
 }
 
 type Create struct {
+	BranchPrefix     *string `toml:"branch-prefix"`
 	NewBranchType    *string `toml:"new-branch-type"`
 	PushNewbranches  *bool   `toml:"push-new-branches"`
 	ShareNewBranches *string `toml:"share-new-branches"`
@@ -43,6 +44,7 @@ type Create struct {
 }
 
 type Hosting struct {
+	Browser             *string `toml:"browser"`
 	DevRemote           *string `toml:"dev-remote"`
 	ForgeType           *string `toml:"forge-type"`
 	GitHubConnectorType *string `toml:"github-connector"`

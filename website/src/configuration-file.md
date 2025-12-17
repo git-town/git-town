@@ -20,6 +20,7 @@ perennial-regex = ""
 perennials = []
 
 [create]
+branch-prefix = ""
 new-branch-type = "feature"
 share-new-branches = "no"
 

@@ -26,7 +26,7 @@ func TestWebConnector(t *testing.T) {
 			Branch:        "branch",
 			MainBranch:    "main",
 			ParentBranch:  "parent-branch",
-			ProposalBody:  Some(gitdomain.ProposalBody("body")),
+			ProposalBody:  gitdomain.NewProposalBodyOpt("body"),
 			ProposalTitle: Some(gitdomain.ProposalTitle("title")),
 		})
 		want := "https://bitbucket.org/org/repo/pull-requests/new?source=branch&dest=org%2Frepo%3Aparent-branch"

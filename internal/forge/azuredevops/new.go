@@ -1,6 +1,7 @@
 package azuredevops
 
 import (
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/giturl"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
@@ -12,6 +13,7 @@ func Detect(remoteURL giturl.Parts) bool {
 }
 
 type NewConnectorArgs struct {
+	Browser          Option[configdomain.Browser]
 	ProposalOverride Option[forgedomain.ProposalOverride]
 	RemoteURL        giturl.Parts
 }
@@ -24,5 +26,6 @@ func NewConnector(args NewConnectorArgs) WebConnector {
 			Organization: args.RemoteURL.Org,
 			Repository:   args.RemoteURL.Repo,
 		},
+		browser: args.Browser,
 	}
 }

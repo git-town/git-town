@@ -3,10 +3,14 @@
     "features/**/*.feature"
   ],
   "exclude": [
+    "features/append/branch_prefix/config_file.feature",
     "features/detach/merge_conflict/dependent_changes.feature",
     "features/end_to_end/ship_prototype_branch_and_sync.feature",
+    "features/hack/branch_prefix/config_file.feature",
     "features/observe/give_existing_branch/multiple_branches.feature",
     "features/prepend/beam/stack/dependent_changes.feature",
+    "features/prepend/branch_prefix/config_file.feature",
+    "features/rename/branch_prefix/config_file.feature",
     "features/set_parent/hoist/rebase/dependent_changes.feature",
     "features/ship/always_merge/current_branch/additional_commits/before_undo/online.feature",
     "features/ship/always_merge/current_branch/ship_delete_tracking_branch/disabled.feature",
@@ -17,6 +21,8 @@
     "features/ship/fast_forward/supplied_branch/ship_delete_tracking_branch/disabled.feature",
     "features/ship/squash_merge/current_branch/delete_tracking_branch/disabled.feature",
     "features/ship/squash_merge/supplied_branch/delete_tracking_branch/disabled.feature",
+    "features/skip/park/branch_type/feature.feature",
+    "features/skip/park/branch_type/perennial.feature",
     "features/swap/merge_conflict/dependent_changes.feature",
     "features/sync/all_branches/merge_sync_strategy/conflicts/feature_branch_main_branch_conflict/conflict_feature_branch_main_branch.feature",
     "features/sync/all_branches/merge_sync_strategy/conflicts/feature_branch_main_branch_conflict/shipped_changes_conflict_with_existing_feature_branch.feature",
@@ -61,6 +67,7 @@
     "features/walk/failing_script/failing_script.feature",
     "features/walk/stack/no_args.feature",
     "features/walk/undo/manual.feature",
+    "features/walk/worktree/no_args.feature",
     "vendor/**/*.feature"
   ],
   "record": true,

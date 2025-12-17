@@ -8,7 +8,9 @@ import (
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks"
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
 	"github.com/git-town/git-town/v22/internal/vm/program"
 	"github.com/git-town/git-town/v22/internal/vm/shared"
@@ -22,23 +24,25 @@ func Execute(args ExecuteArgs) {
 		if !hasNextStep {
 			return
 		}
-		if runnable, isRunnable := nextStep.(shared.Runnable); isRunnable {
-			err := runnable.Run(shared.RunArgs{
-				Backend:                         args.Backend,
-				BranchInfos:                     None[gitdomain.BranchInfos](),
-				Config:                          NewMutable(&args.Config),
-				Connector:                       args.Connector,
-				FinalMessages:                   args.FinalMessages,
-				Frontend:                        args.Frontend,
-				Git:                             args.Git,
-				Inputs:                          dialogcomponents.NewInputs(),
-				PrependOpcodes:                  args.Prog.Prepend,
-				RegisterUndoablePerennialCommit: nil,
-				UpdateInitialSnapshotLocalSHA:   nil,
-			})
-			if err != nil {
-				fmt.Println(colors.Red().Styled("NOTICE: " + err.Error()))
-			}
+		runnable, isRunnable := nextStep.(shared.Runnable)
+		if !isRunnable {
+			panic(fmt.Errorf(messages.OpcodeNotRunnable, gohacks.TypeName(nextStep)))
+		}
+		err := runnable.Run(shared.RunArgs{
+			Backend:                         args.Backend,
+			BranchInfos:                     None[gitdomain.BranchInfos](),
+			Config:                          NewMutable(&args.Config),
+			Connector:                       args.Connector,
+			FinalMessages:                   args.FinalMessages,
+			Frontend:                        args.Frontend,
+			Git:                             args.Git,
+			Inputs:                          dialogcomponents.NewInputs(),
+			PrependOpcodes:                  args.Prog.Prepend,
+			RegisterUndoablePerennialCommit: nil,
+			UpdateInitialSnapshotLocalSHA:   nil,
+		})
+		if err != nil {
+			fmt.Println(colors.Red().Styled("NOTICE: " + err.Error()))
 		}
 	}
 }

@@ -1,7 +1,9 @@
 # git town observe
 
+<a type="git-town-command" />
+
 ```command-summary
-git town observe [<branch-name>...] [-v | --verbose]
+git town observe [<branch-name>...] [-h | --help] [-v | --verbose]
 ```
 
 The _observe_ command makes some of your branches
@@ -34,6 +36,10 @@ git town observe somebody-elses-branch
 
 ## Options
 
+#### `-h`<br>`--help`
+
+Display help for this command.
+
 #### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
@@ -41,7 +47,11 @@ determine the repository state.
 
 ## See also
 
+<!-- keep-sorted start -->
+
 - [contribute](contribute.md) makes the chosen branches contribution branches
 - [feature](feature.md) makes the chosen branches feature branches
-- [prototype](prototype.md) makes the chosen branches prototype branches
 - [park](park.md) makes the chosen branches parked
+- [prototype](prototype.md) makes the chosen branches prototype branches
+
+<!-- keep-sorted end -->

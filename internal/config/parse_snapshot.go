@@ -83,7 +83,9 @@ func NewLineageFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated
 func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated bool, ignoreUnknown bool, runner subshelldomain.Runner) (configdomain.PartialConfig, error) {
 	autoResolve, errAutoResolve := load(snapshot, configdomain.KeyAutoResolve, gohacks.ParseBoolOpt[configdomain.AutoResolve], ignoreUnknown)
 	autoSync, errAutoSync := load(snapshot, configdomain.KeyAutoSync, gohacks.ParseBoolOpt[configdomain.AutoSync], ignoreUnknown)
+	branchPrefix, errBranchPrefix := load(snapshot, configdomain.KeyBranchPrefix, configdomain.ParseBranchPrefix, ignoreUnknown)
 	branchTypeOverrides, errBranchTypeOverride := NewBranchTypeOverridesInSnapshot(snapshot, ignoreUnknown, runner)
+	browser, errBrowser := load(snapshot, configdomain.KeyBrowser, configdomain.ParseBrowser, ignoreUnknown)
 	contributionRegex, errContributionRegex := load(snapshot, configdomain.KeyContributionRegex, configdomain.ParseContributionRegex, ignoreUnknown)
 	detached, errDetached := load(snapshot, configdomain.KeyDetached, gohacks.ParseBoolOpt[configdomain.Detached], ignoreUnknown)
 	displayTypes, errDisplayTypes := load(snapshot, configdomain.KeyDisplayTypes, configdomain.ParseDisplayTypes, ignoreUnknown)
@@ -115,7 +117,9 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 	err := cmp.Or(
 		errAutoResolve,
 		errAutoSync,
+		errBranchPrefix,
 		errBranchTypeOverride,
+		errBrowser,
 		errContributionRegex,
 		errDetached,
 		errDisplayTypes,
@@ -149,7 +153,9 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		AutoSync:                 autoSync,
 		BitbucketAppPassword:     forgedomain.ParseBitbucketAppPassword(snapshot[configdomain.KeyBitbucketAppPassword]),
 		BitbucketUsername:        forgedomain.ParseBitbucketUsername(snapshot[configdomain.KeyBitbucketUsername]),
+		BranchPrefix:             branchPrefix,
 		BranchTypeOverrides:      branchTypeOverrides,
+		Browser:                  browser,
 		ForgejoToken:             forgedomain.ParseForgejoToken(snapshot[configdomain.KeyForgejoToken]),
 		ContributionRegex:        contributionRegex,
 		Detached:                 detached,
@@ -192,10 +198,15 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 }
 
 func load[T any](snapshot configdomain.SingleSnapshot, key configdomain.Key, parseFunc func(string, string) (T, error), ignoreUnknown bool) (T, error) { //nolint:ireturn
-	value, err := parseFunc(snapshot[key], key.String())
+	valueStr, has := snapshot[key]
+	if !has {
+		var zero T
+		return zero, nil
+	}
+	value, err := parseFunc(valueStr, key.String())
 	if err != nil {
 		if ignoreUnknown {
-			fmt.Printf("Ignoring invalid value for %q: %q\n", key, snapshot[key])
+			fmt.Printf("Ignoring invalid value for %q: %q\n", key, valueStr)
 			var zero T
 			return zero, nil
 		}

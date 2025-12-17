@@ -1,7 +1,9 @@
 # git town rename
 
+<a type="git-town-command" />
+
 ```command-summary
-git town rename [<old-name>] <new-name> [-f | --force] [--dry-run] [-v | --verbose]
+git town rename [<old-name>] <new-name> [--dry-run] [-f | --force] [-h | --help] [-v | --verbose]
 ```
 
 The _rename_ command renames the current branch and its tracking branch. The
@@ -24,15 +26,19 @@ given name.
 
 ## Options
 
+#### `--dry-run`
+
+Use the `--dry-run` flag to test-drive this command. It prints the Git commands
+that would be run but doesn't execute them.
+
 #### `-f`<br>`--force`
 
 Renaming perennial branches requires confirmation with the `--force` aka `-f`
 flag.
 
-#### `--dry-run`
+#### `-h`<br>`--help`
 
-Use the `--dry-run` flag to test-drive this command. It prints the Git commands
-that would be run but doesn't execute them.
+Display help for this command.
 
 #### `-v`<br>`--verbose`
 

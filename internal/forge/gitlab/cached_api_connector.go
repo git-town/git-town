@@ -82,7 +82,7 @@ func (self *CachedAPIConnector) SquashMergeProposal(number int, message gitdomai
 
 var _ forgedomain.ProposalBodyUpdater = &cachedAPIConnector
 
-func (self *CachedAPIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, newBody string) error {
+func (self *CachedAPIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, newBody gitdomain.ProposalBody) error {
 	self.cache.Clear()
 	return self.api.UpdateProposalBody(proposalData, newBody)
 }

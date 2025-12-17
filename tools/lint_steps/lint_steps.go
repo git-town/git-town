@@ -33,6 +33,11 @@ func main() {
 		panic("no step definitions found")
 	}
 
+	unanchoredStepDefs := CheckStepRegexAnchors(existingStepDefs)
+	for _, unanchoredStepDef := range unanchoredStepDefs {
+		fmt.Printf("%s:%d step definition regex must start with ^ and end with $: %s\n", fileName, unanchoredStepDef.Line, unanchoredStepDef.Text)
+	}
+
 	unsortedStepDefs := AllUnsortedStepDefs(existingStepDefs)
 	for _, unsortedStepDef := range unsortedStepDefs {
 		fmt.Printf("%s:%d steps are not alphabetically sorted, expected here: %s\n", fileName, unsortedStepDef.Line, unsortedStepDef.Text)
@@ -42,7 +47,7 @@ func main() {
 	for _, unusedStepDef := range unusedStepDefs {
 		fmt.Printf("%s:%d unused step definition: %s\n", fileName, unusedStepDef.Line, unusedStepDef.Text)
 	}
-	if len(unsortedStepDefs) > 0 || len(unusedStepDefs) > 0 {
+	if len(unanchoredStepDefs) > 0 || len(unsortedStepDefs) > 0 || len(unusedStepDefs) > 0 {
 		os.Exit(1)
 	}
 }

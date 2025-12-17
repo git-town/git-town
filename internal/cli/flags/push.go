@@ -12,7 +12,7 @@ const pushLong = "push"
 func Push() (AddFunc, ReadPushFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.Flags().Bool(pushLong, false, "push local branches")
-		defineNegatedFlag(cmd.Flags(), pushLong)
+		defineNegatedFlag(cmd.Flags(), pushLong, "don't push branches")
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.PushBranches], error) {
 		return readNegatableFlag[configdomain.PushBranches](cmd.Flags(), pushLong)

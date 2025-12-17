@@ -14,3 +14,4 @@ jobs:
         with:
           go-version-file: go.mod
       - run: make unit-race
+      - run: make unit-text-runner

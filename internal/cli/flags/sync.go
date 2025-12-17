@@ -12,7 +12,7 @@ const syncLong = "sync"
 func Sync() (AddFunc, ReadSyncFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.Flags().Bool(syncLong, true, "sync branches")
-		defineNegatedFlag(cmd.Flags(), syncLong)
+		defineNegatedFlag(cmd.Flags(), syncLong, "don't sync branches")
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.AutoSync], error) {
 		return readNegatableFlag[configdomain.AutoSync](cmd.Flags(), syncLong)
