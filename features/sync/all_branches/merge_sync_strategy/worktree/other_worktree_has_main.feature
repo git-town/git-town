@@ -20,20 +20,25 @@ Feature: sync a branch whose tracking branch was shipped
   @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                           |
-      | feature | git fetch --prune --tags                          |
-      |         | git checkout main                                 |
-      | main    | git -c rebase.updateRefs=false rebase origin/main |
-      |         | git branch -D feature                             |
-      |         | git push --tags                                   |
+      | BRANCH    | COMMAND                  |
+      | feature-2 | git fetch --prune --tags |
+      |           | git branch -D feature-1  |
+      |           | git checkout feature-3   |
+      | feature-3 | git checkout feature-2   |
+      | feature-2 | git push --tags          |
     And Git Town prints:
       """
-      deleted branch "feature"
+      deleted branch "feature-1"
       """
-    And no lineage exists now
+    And this lineage exists now
+      """
+      main
+        feature-2
+        feature-3
+      """
     And the branches are now
-      | REPOSITORY    | BRANCHES |
-      | local, origin | main     |
+      | REPOSITORY    | BRANCHES                   |
+      | local, origin | main, feature-2, feature-3 |
 
   Scenario: undo
     When I run "git-town undo"
