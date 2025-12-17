@@ -1,66 +1,36 @@
 # Git Town
 
-Git Town is a CLI tool written in Go that provides additional Git commands for
-automating branch management, synchronization, and cleanup.
+This is the source code for a CLI tool called "Git Town". It is written in Go
+and provides additional Git commands for branch management and synchronization.
 
 ## Development Guidelines
 
-- you can change any file in the current folder and its subfolders
-- never change files outside the Git repository
-- never create new Git branches
-- never make Git commits
-- I will review the changes you make and then commit them on my own.
+Don't change anything outside the current folder. You can change any file in the
+current folder and its subfolders.
 
-## Automated testing
+Don't commit changes: Never create new Git branches or make Git commits. I will
+review the changes you make and then commit them on my own
 
-To run all unit tests for the project, use this command:
+Write idiomatic Go except for these rules:
 
-```bash
-make unit
-```
+- Use descriptive names for all identifiers
+- Use `self` as the name for all method receivers
+- Use domain-specific types defined in the respective `*domain` packages. Create
+  new types if applicable.
 
-To run a single Cucumber test, also called end-to-end test, use this command:
+## Code Organization
 
-```bash
-make install
-go test -- <test path>
-```
+The relevant directories are:
 
-### Linters
+- `internal/` - Core application code
+- `pkg/` - Public packages
+- `features/` - End-to-end tests (Cucumber/Godog)
+- `tools/` - Custom linters and development tools
+- `website/` - Documentation website (mdBook)
 
-Please execute the linters after making changes to verify the correctness of
-your changes. To run them, use the following command:
+These code packages exist:
 
-```bash
-make lint
-```
-
-### End-to-End Tests
-
-End-to-end tests are defined in the "features" directory. They take a while to
-execute, so only run them to verify that everything still works after you are
-done making changes. To run all end-to-end tests:
-
-```bash
-make cuke
-```
-
-## Key Architectural Components
-
-#### VM-Based Execution Framework
-
-Git Town uses an interpreter that executes self-modifying code consisting of
-Git-related opcodes:
-
-- Commands inspect Git repo state and generate a program of opcodes
-- The interpreter (`internal/vm/`) executes these programs
-- Programs can modify themselves at runtime based on repo state
-- Runstate is persisted to disk for resume capability
-
-#### Subsystem Organization
-
-The codebase is organized into orthogonal subsystems with `*domain` packages:
-
+- `internal/cmd` - defines the high-level commands that Git Town
 - `internal/config/` - Configuration management
 - `internal/git/` - Git operations and domain types
 - `internal/forge/` - Integration with GitHub, GitLab, etc.
@@ -78,26 +48,8 @@ The codebase is organized into orthogonal subsystems with `*domain` packages:
   difference between snapshots of the Git repository and determines the Git
   commands to move the repository from one snapshot to another
 
-#### Important Directories
+## Additional information
 
-- `internal/` - Core application code
-- `pkg/` - Public packages
-- `features/` - End-to-end tests (Cucumber/Godog)
-- `tools/` - Custom linters and development tools
-- `website/` - Documentation website (mdBook)
+Read these files if needed to learn more about specific aspects:
 
-### Code Style
-
-- Write idiomatic Go except for the conditions listed below
-- Use descriptive naming over brevity
-- Method receivers use `self` instead of short abbreviations
-- Use domain-specific types defined in the respective `*domain` packages if
-  applicable over the built-in basic type.
-
-## Common Development Tasks
-
-### Debugging End-to-End Tests
-
-- Add the `@this` tag to a specific scenario and then run `make cukethis` to
-  execute only the tagged scenario
-- Add the `@debug` tag to a Cucumber scenario to see CLI output and Git commands
+- how the internal interpreter runtime works: docs/agents/interpreter.md

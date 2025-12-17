@@ -18,5 +18,25 @@
       "Bash(python3:*)"
     ],
     "deny": []
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "make fix"
+          },
+          {
+            "type": "command",
+            "command": "make unit"
+          },
+          {
+            "type": "command",
+            "command": "make lint"
+          }
+        ]
+      }
+    ]
   }
 }
