@@ -57,6 +57,7 @@ func New(args NewArgs) configdomain.PartialConfig {
 		PushHook:                 None[configdomain.PushHook](),
 		ShareNewBranches:         None[configdomain.ShareNewBranches](),
 		ShipDeleteTrackingBranch: None[configdomain.ShipDeleteTrackingBranch](),
+		ShipIgnoreUncommitted:    None[configdomain.ShipIgnoreUncommitted](),
 		ShipStrategy:             None[configdomain.ShipStrategy](),
 		Stash:                    args.Stash,
 		SyncFeatureStrategy:      None[configdomain.SyncFeatureStrategy](),

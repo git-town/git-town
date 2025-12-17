@@ -298,6 +298,7 @@ EnterForgeData:
 		PushHook:                 pushHook,
 		ShareNewBranches:         shareNewBranches,
 		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,
+		ShipIgnoreUncommitted:    None[configdomain.ShipIgnoreUncommitted](),
 		ShipStrategy:             shipStrategy,
 		Stash:                    stash,
 		SyncFeatureStrategy:      syncFeatureStrategy,

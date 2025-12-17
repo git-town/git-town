@@ -154,6 +154,10 @@ func RemoveShipDeleteTrackingBranch(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyShipDeleteTrackingBranch)
 }
 
+func RemoveShipIgnoreUncommitted(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyShipIgnoreUncommitted)
+}
+
 func RemoveShipStrategy(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyShipStrategy)
 }
@@ -313,6 +317,10 @@ func SetShareNewBranches(runner subshelldomain.Runner, value configdomain.ShareN
 
 func SetShipDeleteTrackingBranch(runner subshelldomain.Runner, value configdomain.ShipDeleteTrackingBranch, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.ShouldDeleteTrackingBranch()))
+}
+
+func SetShipIgnoreUncommitted(runner subshelldomain.Runner, value configdomain.ShipIgnoreUncommitted, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyShipIgnoreUncommitted, strconv.FormatBool(value.ShouldIgnoreUncommitted()))
 }
 
 func SetShipStrategy(runner subshelldomain.Runner, value configdomain.ShipStrategy, scope configdomain.ConfigScope) error {

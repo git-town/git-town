@@ -50,6 +50,7 @@ disable the ship-delete-tracking-branch configuration setting.`
 
 func Cmd() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addIgnoreUncommittedFlag, readIgnoreUncommittedFlag := flags.ShipIgnoreUncommitted()
 	addMessageFileFlag, readMessageFileFlag := flags.CommitMessageFile()
 	addMessageFlag, readMessageFlag := flags.CommitMessage("specify the commit message for the squash commit")
 	addShipStrategyFlag, readShipStrategyFlag := flags.ShipStrategy()
@@ -62,12 +63,13 @@ func Cmd() *cobra.Command {
 		Long:  cmdhelpers.Long(shipDesc, fmt.Sprintf(shipHelp, configdomain.KeyGitHubToken)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			dryRun, errDryRun := readDryRunFlag(cmd)
+			ignoreUncommitted, errIgnoreUncommitted := readIgnoreUncommittedFlag(cmd)
 			message, errMessage := readMessageFlag(cmd)
 			messageFile, errMessageFile := readMessageFileFlag(cmd)
 			shipStrategy, errShipStrategy := readShipStrategyFlag(cmd)
 			toParent, errToParent := readToParentFlag(cmd)
 			verbose, errVerbose := readVerboseFlag(cmd)
-			if err := cmp.Or(errDryRun, errMessage, errMessageFile, errShipStrategy, errToParent, errVerbose); err != nil {
+			if err := cmp.Or(errDryRun, errMessage, errMessageFile, errShipStrategy, errToParent, errIgnoreUncommitted, errVerbose); err != nil {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
@@ -82,17 +84,19 @@ func Cmd() *cobra.Command {
 				Verbose:      verbose,
 			})
 			return executeShip(executeShipArgs{
-				args:         args,
-				cliConfig:    cliConfig,
-				message:      message,
-				messageFile:  messageFile,
-				shipStrategy: shipStrategy,
-				toParent:     toParent,
+				args:              args,
+				cliConfig:         cliConfig,
+				ignoreUncommitted: ignoreUncommitted,
+				message:           message,
+				messageFile:       messageFile,
+				shipStrategy:      shipStrategy,
+				toParent:          toParent,
 			})
 		},
 	}
 	addMessageFileFlag(&cmd)
 	addDryRunFlag(&cmd)
+	addIgnoreUncommittedFlag(&cmd)
 	addMessageFlag(&cmd)
 	addShipStrategyFlag(&cmd)
 	addToParentFlag(&cmd)
@@ -101,12 +105,13 @@ func Cmd() *cobra.Command {
 }
 
 type executeShipArgs struct {
-	args         []string
-	cliConfig    configdomain.PartialConfig
-	message      Option[gitdomain.CommitMessage]
-	messageFile  Option[gitdomain.CommitMessageFile]
-	shipStrategy Option[configdomain.ShipStrategy]
-	toParent     configdomain.ShipIntoNonperennialParent
+	args              []string
+	cliConfig         configdomain.PartialConfig
+	ignoreUncommitted configdomain.ShipIgnoreUncommitted
+	message           Option[gitdomain.CommitMessage]
+	messageFile       Option[gitdomain.CommitMessageFile]
+	shipStrategy      Option[configdomain.ShipStrategy]
+	toParent          configdomain.ShipIntoNonperennialParent
 }
 
 func executeShip(args executeShipArgs) error {
@@ -122,7 +127,12 @@ Start:
 	if err != nil {
 		return err
 	}
-	sharedData, flow, err := determineSharedShipData(args.args, repo, args.shipStrategy)
+	sharedData, flow, err := determineSharedShipData(determineSharedShipDataArgs{
+		args:                 args.args,
+		ignoreUncommitted:    args.ignoreUncommitted,
+		repo:                 repo,
+		shipStrategyOverride: args.shipStrategy,
+	})
 	if err != nil {
 		return err
 	}
@@ -194,6 +204,17 @@ Start:
 				SkipUpdateForProposalsWithBaseBranch: gitdomain.LocalBranchNames{sharedData.initialBranch},
 			},
 		)
+	}
+	// Stash uncommitted changes if ignore-uncommitted is enabled
+	shouldStash := sharedData.hasOpenChanges && sharedData.config.NormalConfig.ShipIgnoreUncommitted.ShouldIgnoreUncommitted()
+	if shouldStash {
+		cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
+			DryRun:                   sharedData.config.NormalConfig.DryRun,
+			InitialStashSize:         sharedData.stashSize,
+			PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{sharedData.previousBranch},
+			RunInGitRoot:             false,
+			StashOpenChanges:         shouldStash,
+		})
 	}
 	optimizedProgram := optimizer.Optimize(prog.Immutable())
 	runState := runstate.RunState{
@@ -272,7 +293,10 @@ func validateSharedData(data sharedShipData, toParent configdomain.ShipIntoNonpe
 	}
 	if localName, hasLocalName := data.branchToShipInfo.LocalName.Get(); hasLocalName {
 		if localName == data.initialBranch {
-			return validate.NoOpenChanges(data.hasOpenChanges)
+			// Don't validate if ignore-uncommitted is enabled
+			if !data.config.NormalConfig.ShipIgnoreUncommitted.ShouldIgnoreUncommitted() {
+				return validate.NoOpenChanges(data.hasOpenChanges)
+			}
 		}
 	}
 	return nil
