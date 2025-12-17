@@ -22,9 +22,10 @@ Feature: sync a branch whose tracking branch was shipped
       | feature-1 | git fetch --prune --tags |
       |           | git checkout feature-2   |
       | feature-2 | git branch -D feature-1  |
-      |           | git checkout main        |
-    And Git Town prints:
+      |           | git push --tags          |
+    And Git Town prints the error:
       """
+      xxxx
       deleted branch "feature-1"
       """
     And this lineage exists now
