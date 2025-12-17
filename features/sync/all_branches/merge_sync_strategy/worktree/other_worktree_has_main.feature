@@ -15,7 +15,6 @@ Feature: sync a branch whose tracking branch was shipped
     And branch "main" is active in another worktree
     When I run "git-town sync --all"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH    | COMMAND                  |
@@ -23,9 +22,8 @@ Feature: sync a branch whose tracking branch was shipped
       |           | git checkout feature-2   |
       | feature-2 | git branch -D feature-1  |
       |           | git push --tags          |
-    And Git Town prints the error:
+    And Git Town prints:
       """
-      xxxx
       deleted branch "feature-1"
       """
     And this lineage exists now
@@ -40,8 +38,7 @@ Feature: sync a branch whose tracking branch was shipped
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                         |
-      | main   | git reset --hard {{ sha 'initial commit' }}     |
-      |        | git branch feature {{ sha 'feature-1 commit' }} |
-      |        | git checkout feature                            |
+      | BRANCH    | COMMAND                                           |
+      | feature-2 | git branch feature-1 {{ sha 'feature-1 commit' }} |
+      |           | git checkout feature-1                            |
     And the initial branches and lineage exist now
