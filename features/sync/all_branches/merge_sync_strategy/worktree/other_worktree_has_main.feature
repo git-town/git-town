@@ -6,12 +6,10 @@ Feature: sync a branch whose tracking branch was shipped
       | NAME      | TYPE    | PARENT | LOCATIONS     |
       | feature-1 | feature | main   | local, origin |
       | feature-2 | feature | main   | local, origin |
-      | feature-3 | feature | main   | local, origin |
     And the commits
       | BRANCH    | LOCATION      | MESSAGE          |
       | feature-1 | local, origin | feature-1 commit |
       | feature-2 | local, origin | feature-2 commit |
-      | feature-3 | local, origin | feature-3 commit |
     And origin ships the "feature-1" branch using the "squash-merge" ship-strategy
     And the current branch is "feature-1"
     And branch "main" is active in another worktree
@@ -21,11 +19,11 @@ Feature: sync a branch whose tracking branch was shipped
   Scenario: result
     Then Git Town runs the commands
       | BRANCH    | COMMAND                  |
-      | feature-2 | git fetch --prune --tags |
-      |           | git branch -D feature-1  |
+      | feature-1 | git fetch --prune --tags |
+      |           | git checkout feature-2   |
+      | feature-2 | git branch -D feature-1  |
       |           | git checkout feature-3   |
-      | feature-3 | git checkout feature-2   |
-      | feature-2 | git push --tags          |
+      | feature-3 | git push --tags          |
     And Git Town prints:
       """
       deleted branch "feature-1"
