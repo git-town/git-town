@@ -2,15 +2,14 @@ Feature: ignore uncommitted changes using the config file
 
   Background:
     Given a Git repo with origin
-    And the origin is "https://github.com/git-town/git-town.git"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
+    And Git setting "git-town.ship-strategy" is "squash-merge"
     And the current branch is "feature"
-    And tool "open" is installed
     And the configuration file:
       """
       [ship]

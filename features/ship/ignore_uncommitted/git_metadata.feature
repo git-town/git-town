@@ -2,7 +2,6 @@ Feature: ignore uncommitted changes using Git metadata
 
   Background:
     Given a Git repo with origin
-    And the origin is "https://github.com/git-town/git-town.git"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
@@ -10,8 +9,8 @@ Feature: ignore uncommitted changes using Git metadata
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
     And Git setting "git-town.ship-ignore-uncommitted" is "true"
+    And Git setting "git-town.ship-strategy" is "squash-merge"
     And the current branch is "feature"
-    And tool "open" is installed
     And an uncommitted file
     When I run "git-town ship"
 
