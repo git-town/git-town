@@ -30,6 +30,16 @@ func (self BranchInfos) BranchesInOtherWorktrees() LocalBranchNames {
 	return result
 }
 
+func (self BranchInfos) BranchesDeletedAtRemote() LocalBranchNames {
+	result := LocalBranchNames{}
+	for _, bi := range self {
+		if bi.SyncStatus == SyncStatusDeletedAtRemote {
+			result = append(result, bi.GetLocalOrRemoteNameAsLocalName())
+		}
+	}
+	return result
+}
+
 // FindByLocalName provides the branch with the given name if one exists.
 func (self BranchInfos) FindByLocalName(branchName LocalBranchName) OptionalMutable[BranchInfo] {
 	for bi, branch := range self {
