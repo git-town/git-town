@@ -13,7 +13,7 @@ Feature: sync a branch whose tracking branch was shipped
       | feature-2 | local, origin | feature-2 commit |
       | feature-3 | local, origin | feature-3 commit |
     And origin ships the "feature-1" branch using the "squash-merge" ship-strategy
-    And the current branch is "feature-2"
+    And the current branch is "feature-1"
     And branch "main" is active in another worktree
     When I run "git-town sync --all"
 
