@@ -2,7 +2,7 @@ package configdomain
 
 import "strconv"
 
-// IgnoreUncommitted indicates whether to stash uncommitted changes when shipping.
+// IgnoreUncommitted indicates whether to allow uncommitted changes when shipping.
 type IgnoreUncommitted bool
 
 func (self IgnoreUncommitted) ShouldIgnoreUncommitted() bool {
