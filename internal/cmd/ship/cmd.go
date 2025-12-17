@@ -204,7 +204,7 @@ Start:
 		)
 	}
 	// Stash uncommitted changes if ignore-uncommitted is enabled
-	shouldStash := sharedData.hasOpenChanges && sharedData.config.NormalConfig.ShipIgnoreUncommitted.ShouldIgnoreUncommitted()
+	shouldStash := sharedData.hasOpenChanges && sharedData.config.NormalConfig.ShipIgnoreUncommitted.AllowUncommitted()
 	if shouldStash {
 		cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 			DryRun:                   sharedData.config.NormalConfig.DryRun,
@@ -291,7 +291,7 @@ func validateSharedData(data sharedShipData, toParent configdomain.ShipIntoNonpe
 	}
 	if localName, hasLocalName := data.branchToShipInfo.LocalName.Get(); hasLocalName {
 		if localName == data.initialBranch {
-			if !data.config.NormalConfig.ShipIgnoreUncommitted.ShouldIgnoreUncommitted() {
+			if !data.config.NormalConfig.ShipIgnoreUncommitted.AllowUncommitted() {
 				return validate.NoOpenChanges(data.hasOpenChanges)
 			}
 		}

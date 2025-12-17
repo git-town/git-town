@@ -320,7 +320,7 @@ func SetShipDeleteTrackingBranch(runner subshelldomain.Runner, value configdomai
 }
 
 func SetShipIgnoreUncommitted(runner subshelldomain.Runner, value configdomain.IgnoreUncommitted, scope configdomain.ConfigScope) error {
-	return SetConfigValue(runner, scope, configdomain.KeyShipIgnoreUncommitted, strconv.FormatBool(value.ShouldIgnoreUncommitted()))
+	return SetConfigValue(runner, scope, configdomain.KeyShipIgnoreUncommitted, strconv.FormatBool(value.AllowUncommitted()))
 }
 
 func SetShipStrategy(runner subshelldomain.Runner, value configdomain.ShipStrategy, scope configdomain.ConfigScope) error {
