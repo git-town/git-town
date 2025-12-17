@@ -134,6 +134,7 @@ Start:
 		return err
 	}
 	data, flow, err := determineSyncData(repo, determineSyncDataArgs{
+		gone:            args.gone,
 		syncAllBranches: args.syncAllBranches,
 		syncStack:       args.stack,
 	})
@@ -374,7 +375,7 @@ func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) 
 	var branchNamesToSync gitdomain.LocalBranchNames
 	switch {
 	case args.gone.Enabled():
-		branchNamesToSync = data.branchInfos.BranchesDeletedAtRemote()
+		branchNamesToSync = branchesSnapshot.Branches.BranchesDeletedAtRemote()
 	case args.syncAllBranches.Enabled() && repo.UnvalidatedConfig.NormalConfig.Detached.ShouldWorkDetached():
 		branchNamesToSync = localBranches.Remove(perennialAndMain...)
 	case args.syncAllBranches.Enabled():
