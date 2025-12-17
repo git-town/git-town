@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town sync [-a | --all] [--(no)-auto-resolve] [-d | --(no)-detached] [--dry-run] [-h | --help] [-p | --prune] [--(no)-push] [-s | --stack] [-v | --verbose]
+git town sync [-a | --all] [--(no)-auto-resolve] [-d | --(no)-detached] [--dry-run] [--gone] [-h | --help] [-p | --prune] [--(no)-push] [-s | --stack] [-v | --verbose]
 ```
 
 The _sync_ command ("synchronize this branch") updates your local Git workspace
@@ -96,6 +96,11 @@ monorepos.
 
 Use the `--dry-run` flag to test-drive this command. It prints the Git commands
 that would be run but doesn't execute them.
+
+#### `--gone`
+
+Sync all local branches whose remote is gone. This effectively removes all local
+branches that were shipped or deleted at the remote from the local workspace.
 
 #### `-h`<br>`--help`
 
