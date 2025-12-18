@@ -10,7 +10,7 @@ Feature: display configuration defined in environment variables
       | observed-2     | observed     |        | local, origin |
     And Git Town is not configured
 
-  Scenario: all configured env vars, no stacked changes
+  Scenario: all configured in env vars, no stacked changes
     When I run "git-town config" with these environment variables
       | GIT_TOWN_AUTO_RESOLVE                | false              |
       | GIT_TOWN_AUTO_SYNC                   | false              |
