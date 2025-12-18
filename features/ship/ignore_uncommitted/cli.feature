@@ -16,18 +16,18 @@ Feature: ignore uncommitted changes using CLI flag
   @debug @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                     |
-      | feature | git add -A                                                  |
-      |         | git stash -m "Git Town WIP"                                 |
-      |         | git checkout main                                           |
-      | main    | git -c color.ui=always merge --squash --ff feature          |
-      |         | git commit -m "feature commit" --trailer "Co-authored-by: " |
-      |         | git push                                                    |
-      |         | git push origin :feature                                    |
-      |         | git branch -D feature                                       |
-      |         | git stash pop                                               |
-      |         | git restore --staged .                                      |
+      | BRANCH  | COMMAND                         |
+      | feature | git fetch --prune --tags        |
+      |         | git checkout main               |
+      | main    | git merge --squash --ff feature |
+      |         | git commit -m done              |
+      |         | git push                        |
+      |         | git push origin :feature        |
+      |         | git branch -D feature           |
     And the current branch is now "main"
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE |
+      | main   | local, origin | done    |
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
