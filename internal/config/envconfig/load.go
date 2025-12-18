@@ -78,7 +78,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	gitUserName := gitAuthorNameValue.Or(gitCommitterNameValue)
 	githubConnectorType, errGitHubConnectorType := load(env, githubConnectorType, forgedomain.ParseGitHubConnectorType)
 	gitlabConnectorType, errGitLabConnectorType := load(env, gitlabConnectorType, forgedomain.ParseGitLabConnectorType)
-	ignoreUncommitted, errignoreUncommitted := load(env, ignoreUncommitted, gohacks.ParseBoolOpt[configdomain.IgnoreUncommitted])
+	ignoreUncommitted, errIgnoreUncommitted := load(env, ignoreUncommitted, gohacks.ParseBoolOpt[configdomain.IgnoreUncommitted])
 	newBranchType, errNewBranchType := load(env, newBranchType, configdomain.ParseBranchType)
 	observedRegex, errObservedRegex := load(env, observedRegex, configdomain.ParseObservedRegex)
 	order, errOrder := configdomain.ParseOrder(env.Get(order), order)
@@ -111,6 +111,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errForgeType,
 		errGitHubConnectorType,
 		errGitLabConnectorType,
+		errIgnoreUncommitted,
 		errNewBranchType,
 		errObservedRegex,
 		errOffline,
@@ -121,7 +122,6 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errPushHook,
 		errShareNewBranches,
 		errShipDeleteTrackingBranch,
-		errignoreUncommitted,
 		errShipStrategy,
 		errStash,
 		errSyncFeatureStrategy,
