@@ -5,29 +5,29 @@ Feature: Fix invalid configuration data
     Given a Git repo with origin
     And Git Town is not configured
     # keep-sorted start
-    And local Git setting "init.defaultbranch" is "main"
-    And local Git setting "git-town.feature-regex" is "(feat"
-    And local Git setting "git-town.perennial-regex" is "(per"
-    And local Git setting "git-town.contribution-regex" is "(cont"
-    And local Git setting "git-town.ignore-uncommitted" is "zonk"
-    And local Git setting "git-town.observed-regex" is "(obs"
-    And local Git setting "git-town.new-branch-type" is "zonk"
+    And local Git setting "git-town.auto-sync" is "zonk"
     And local Git setting "git-town.branch-prefix" is "xx"
-    And local Git setting "git-town.unknown-branch-type" is "zonk"
+    And local Git setting "git-town.contribution-regex" is "(cont"
+    And local Git setting "git-town.detached" is "zonk"
+    And local Git setting "git-town.feature-regex" is "(feat"
+    And local Git setting "git-town.ignore-uncommitted" is "zonk"
+    And local Git setting "git-town.new-branch-type" is "zonk"
+    And local Git setting "git-town.observed-regex" is "(obs"
+    And local Git setting "git-town.order" is "zonk"
+    And local Git setting "git-town.perennial-regex" is "(per"
+    And local Git setting "git-town.push-branches" is "zonk"
+    And local Git setting "git-town.push-hook" is "zonk"
+    And local Git setting "git-town.share-new-branches" is "zonk"
+    And local Git setting "git-town.ship-delete-tracking-branch" is "zonk"
+    And local Git setting "git-town.ship-strategy" is "zonk"
+    And local Git setting "git-town.stash" is "zonk"
     And local Git setting "git-town.sync-feature-strategy" is "--help"
     And local Git setting "git-town.sync-perennial-strategy" is "zonk"
     And local Git setting "git-town.sync-prototype-strategy" is "zonk"
-    And local Git setting "git-town.sync-upstream" is "zonk"
-    And local Git setting "git-town.auto-sync" is "zonk"
     And local Git setting "git-town.sync-tags" is "zonk"
-    And local Git setting "git-town.detached" is "zonk"
-    And local Git setting "git-town.stash" is "zonk"
-    And local Git setting "git-town.share-new-branches" is "zonk"
-    And local Git setting "git-town.push-branches" is "zonk"
-    And local Git setting "git-town.push-hook" is "zonk"
-    And local Git setting "git-town.ship-strategy" is "zonk"
-    And local Git setting "git-town.ship-delete-tracking-branch" is "zonk"
-    And local Git setting "git-town.order" is "zonk"
+    And local Git setting "git-town.sync-upstream" is "zonk"
+    And local Git setting "git-town.unknown-branch-type" is "zonk"
+    And local Git setting "init.defaultbranch" is "main"
     # keep-sorted end
     When I run "git-town init" and enter into the dialogs:
       | DIALOG                      | KEYS                          |
@@ -114,35 +114,35 @@ Feature: Fix invalid configuration data
       Ignoring invalid value for "git-town.unknown-branch-type": "zonk"
       """
     # keep-sorted start
-    And local Git setting "git-town.feature-regex" is now "feat"
-    And local Git setting "git-town.perennial-regex" is now "per"
+    And local Git setting "git-town.auto-sync" is now "false"
     And local Git setting "git-town.contribution-regex" is now "cont"
-    And local Git setting "git-town.observed-regex" is now "obs"
+    And local Git setting "git-town.detached" is now "true"
+    And local Git setting "git-town.feature-regex" is now "feat"
     And local Git setting "git-town.new-branch-type" is now "parked"
-    And local Git setting "git-town.unknown-branch-type" is now "observed"
+    And local Git setting "git-town.observed-regex" is now "obs"
+    And local Git setting "git-town.order" is now "desc"
+    And local Git setting "git-town.perennial-regex" is now "per"
+    And local Git setting "git-town.push-branches" is now "false"
+    And local Git setting "git-town.push-hook" is now "false"
+    And local Git setting "git-town.share-new-branches" is now "push"
+    And local Git setting "git-town.ship-delete-tracking-branch" is now "false"
+    And local Git setting "git-town.ship-strategy" is now "always-merge"
+    And local Git setting "git-town.stash" is now "false"
     And local Git setting "git-town.sync-feature-strategy" is now "rebase"
     And local Git setting "git-town.sync-perennial-strategy" is now "rebase"
     And local Git setting "git-town.sync-prototype-strategy" is now "rebase"
-    And local Git setting "git-town.sync-upstream" is now "false"
-    And local Git setting "git-town.auto-sync" is now "false"
     And local Git setting "git-town.sync-tags" is now "false"
-    And local Git setting "git-town.detached" is now "true"
-    And local Git setting "git-town.stash" is now "false"
-    And local Git setting "git-town.share-new-branches" is now "push"
-    And local Git setting "git-town.push-branches" is now "false"
-    And local Git setting "git-town.push-hook" is now "false"
-    And local Git setting "git-town.ship-strategy" is now "always-merge"
-    And local Git setting "git-town.ship-delete-tracking-branch" is now "false"
-    And local Git setting "git-town.order" is now "desc"
-    # keep-sorted end
+    And local Git setting "git-town.sync-upstream" is now "false"
+    And local Git setting "git-town.unknown-branch-type" is now "observed"
+# keep-sorted end
 
   Scenario: undo
     When I run "git-town undo"
     Then global Git setting "alias.append" now doesn't exist
     # keep-sorted start
+    And global Git setting "alias.delete" now doesn't exist
     And global Git setting "alias.diff-parent" now doesn't exist
     And global Git setting "alias.hack" now doesn't exist
-    And global Git setting "alias.delete" now doesn't exist
     And global Git setting "alias.prepend" now doesn't exist
     And global Git setting "alias.propose" now doesn't exist
     And global Git setting "alias.rename" now doesn't exist
@@ -152,24 +152,24 @@ Feature: Fix invalid configuration data
     And global Git setting "alias.sync" now doesn't exist
     # keep-sorted end
     # keep-sorted start
-    And local Git setting "git-town.sync-feature-strategy" is now "--help"
-    And local Git setting "git-town.new-branch-type" is now "zonk"
-    And local Git setting "git-town.feature-regex" is now "(feat"
     And local Git setting "git-town.contribution-regex" is now "(cont"
+    And local Git setting "git-town.feature-regex" is now "(feat"
+    And local Git setting "git-town.new-branch-type" is now "zonk"
     And local Git setting "git-town.observed-regex" is now "(obs"
-    And local Git setting "git-town.stash" is now "zonk"
-    And local Git setting "git-town.sync-perennial-strategy" is now "zonk"
-    And local Git setting "git-town.sync-upstream" is now "zonk"
-    And local Git setting "git-town.sync-tags" is now "zonk"
     And local Git setting "git-town.perennial-regex" is now "(per"
-    And local Git setting "git-town.share-new-branches" is now "zonk"
     And local Git setting "git-town.push-hook" is now "zonk"
-    And local Git setting "git-town.ship-strategy" is now "zonk"
+    And local Git setting "git-town.share-new-branches" is now "zonk"
     And local Git setting "git-town.ship-delete-tracking-branch" is now "zonk"
+    And local Git setting "git-town.ship-strategy" is now "zonk"
+    And local Git setting "git-town.stash" is now "zonk"
+    And local Git setting "git-town.sync-feature-strategy" is now "--help"
+    And local Git setting "git-town.sync-perennial-strategy" is now "zonk"
+    And local Git setting "git-town.sync-tags" is now "zonk"
+    And local Git setting "git-town.sync-upstream" is now "zonk"
     And local Git setting "git-town.dev-remote" now doesn't exist
-    And local Git setting "git-town.main-branch" now doesn't exist
-    And local Git setting "git-town.perennial-branches" now doesn't exist
     And local Git setting "git-town.forge-type" now doesn't exist
     And local Git setting "git-town.github-token" now doesn't exist
     And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
-    # keep-sorted end
+    And local Git setting "git-town.main-branch" now doesn't exist
+    And local Git setting "git-town.perennial-branches" now doesn't exist
+  # keep-sorted end

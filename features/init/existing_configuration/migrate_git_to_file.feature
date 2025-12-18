@@ -114,7 +114,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And the configuration file is now:
       """
       # See https://www.git-town.com/configuration-file for details
-      
+
       [branches]
       contribution-regex = "coworker-.*"
       feature-regex = "user-.*"
@@ -124,24 +124,24 @@ Feature: migrate existing configuration in Git metadata to a config file
       perennials = ["qa"]
       perennial-regex = "release-.*"
       unknown-branch-type = "observed"
-      
+
       [create]
       branch-prefix = "acme-"
       new-branch-type = "prototype"
       share-new-branches = "no"
       stash = false
-      
+
       [hosting]
       dev-remote = "fork"
-      
+
       [propose]
       lineage = "cli"
-      
+
       [ship]
       delete-tracking-branch = false
       ignore-uncommitted = true
       strategy = "squash-merge"
-      
+
       [sync]
       auto-sync = false
       detached = false
@@ -160,25 +160,25 @@ Feature: migrate existing configuration in Git metadata to a config file
     When I run "git-town undo"
     Then local Git setting "git-town.auto-sync" is now "false"
     # keep-sorted start
+    And local Git setting "git-town.contribution-regex" is now "coworker-.*"
     And local Git setting "git-town.dev-remote" is now "fork"
+    And local Git setting "git-town.feature-regex" is now "user-.*"
     And local Git setting "git-town.ignore-uncommitted" is now "true"
     And local Git setting "git-town.new-branch-type" is now "prototype"
-    And local Git setting "git-town.perennial-regex" is now "release-.*"
-    And local Git setting "git-town.feature-regex" is now "user-.*"
-    And local Git setting "git-town.contribution-regex" is now "coworker-.*"
     And local Git setting "git-town.observed-regex" is now "other-.*"
     And local Git setting "git-town.order" is now "desc"
-    And local Git setting "git-town.unknown-branch-type" is now "observed"
-    And local Git setting "git-town.share-new-branches" is now "no"
+    And local Git setting "git-town.perennial-regex" is now "release-.*"
     And local Git setting "git-town.proposals-show-lineage" is now "cli"
     And local Git setting "git-town.push-branches" is now "true"
     And local Git setting "git-town.push-hook" is now "true"
-    And local Git setting "git-town.ship-strategy" is now "squash-merge"
+    And local Git setting "git-town.share-new-branches" is now "no"
     And local Git setting "git-town.ship-delete-tracking-branch" is now "false"
+    And local Git setting "git-town.ship-strategy" is now "squash-merge"
     And local Git setting "git-town.stash" is now "false"
     And local Git setting "git-town.sync-feature-strategy" is now "merge"
     And local Git setting "git-town.sync-perennial-strategy" is now "rebase"
-    And local Git setting "git-town.sync-upstream" is now "true"
     And local Git setting "git-town.sync-tags" is now "false"
+    And local Git setting "git-town.sync-upstream" is now "true"
+    And local Git setting "git-town.unknown-branch-type" is now "observed"
     # keep-sorted end
     And the main branch is now "main"
