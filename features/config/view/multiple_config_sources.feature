@@ -58,7 +58,6 @@ Feature: show the configuration
       [create]
       branch-prefix = "file-"
       share-new-branches = "push"
-      ignore-uncommitted = true
       stash = true
 
       [hosting]
@@ -69,6 +68,7 @@ Feature: show the configuration
 
       [ship]
       delete-tracking-branch = true
+      ignore-uncommitted = true
       strategy = "api"
 
       [sync]
