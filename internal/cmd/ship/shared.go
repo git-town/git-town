@@ -78,7 +78,6 @@ func determineSharedShipData(args determineSharedShipDataArgs) (data sharedShipD
 	if config.IgnoreUncommitted.AllowUncommitted() {
 		validateOpenChanges = false
 	}
-	fmt.Println("1111111111111111111111111111111111111111111111111", validateOpenChanges)
 	branchesSnapshot, stashSize, previousBranchInfos, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               args.repo.Backend,
 		CommandsCounter:       args.repo.CommandsCounter,
@@ -99,7 +98,6 @@ func determineSharedShipData(args determineSharedShipDataArgs) (data sharedShipD
 	if err != nil {
 		return emptyResult, configdomain.ProgramFlowExit, err
 	}
-	fmt.Println("22222222222222222222222222222222222222222222222222222")
 	switch flow {
 	case configdomain.ProgramFlowContinue:
 	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
