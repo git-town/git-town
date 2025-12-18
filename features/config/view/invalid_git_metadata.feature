@@ -2,6 +2,7 @@ Feature: display invalid Git metadata
 
   Scenario: invalid sync-feature-strategy
     Given a Git repo with origin
+    # keep-sorted start
     And local Git setting "git-town.branch-prefix" is ""
     And local Git setting "git-town.feature-regex" is "(feat"
     And local Git setting "git-town.perennial-regex" is "(per"
@@ -25,6 +26,7 @@ Feature: display invalid Git metadata
     And local Git setting "git-town.ship-strategy" is "zonk"
     And local Git setting "git-town.ship-delete-tracking-branch" is "zonk"
     And local Git setting "git-town.order" is "zonk"
+    # keep-sorted end
     When I run "git-town config"
     Then Git Town prints:
       """
@@ -50,7 +52,7 @@ Feature: display invalid Git metadata
       Ignoring invalid value for "git-town.sync-tags": "zonk"
       Ignoring invalid value for "git-town.sync-upstream": "zonk"
       Ignoring invalid value for "git-town.unknown-branch-type": "zonk"
-
+      
       Branches:
         contribution branches: (none)
         contribution regex: (not set)
@@ -65,18 +67,18 @@ Feature: display invalid Git metadata
         unknown branch type: feature
         order: asc
         display types: all branch types except "feature" and "main"
-
+      
       Configuration:
         offline: no
         git user name: user
         git user email: email@example.com
-
+      
       Create:
         branch prefix: (not set)
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: yes
-
+      
       Hosting:
         browser: (not set)
         development remote: origin
@@ -90,15 +92,15 @@ Feature: display invalid Git metadata
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
-
+      
       Propose:
         lineage: none
-
+      
       Ship:
         delete tracking branch: yes
         ignore uncommitted changes: no
         ship strategy: api
-
+      
       Sync:
         auto-resolve phantom conflicts: yes
         auto-sync: yes

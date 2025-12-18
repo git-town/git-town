@@ -8,6 +8,7 @@ Feature: change existing information in Git metadata
       | qa         | perennial | local, origin |
       | production | (none)    | local, origin |
     And the main branch is "main"
+    # keep-sorted start
     And local Git setting "git-town.ignore-uncommitted" is "true"
     And local Git setting "git-town.new-branch-type" is "parked"
     And local Git setting "git-town.share-new-branches" is "no"
@@ -18,6 +19,7 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.sync-tags" is "false"
     And local Git setting "git-town.detached" is "false"
     And local Git setting "git-town.ship-delete-tracking-branch" is "false"
+    # keep-sorted end
     When I run "git-town init" and enter into the dialogs:
       | DIALOG                      | KEYS                   |
       | welcome                     | enter                  |

@@ -3,6 +3,7 @@ Feature: reset invalid configuration
   Scenario: sync-feature-strategy is invalid
     Given a Git repo with origin
     And the main branch is "main"
+    # keep-sorted start
     And local Git setting "git-town.feature-regex" is "(feat"
     And local Git setting "git-town.perennial-regex" is "(per"
     And local Git setting "git-town.contribution-regex" is "(cont"
@@ -23,9 +24,11 @@ Feature: reset invalid configuration
     And local Git setting "git-town.ship-strategy" is "zonk"
     And local Git setting "git-town.ship-delete-tracking-branch" is "zonk"
     And local Git setting "git-town.order" is "zonk"
+    # keep-sorted end
     When I run "git-town config remove"
     Then Git Town runs no commands
     And Git Town is no longer configured
+    # keep-sorted start
     And local Git setting "git-town.feature-regex" now doesn't exist
     And local Git setting "git-town.perennial-regex" now doesn't exist
     And local Git setting "git-town.contribution-regex" now doesn't exist
@@ -46,3 +49,4 @@ Feature: reset invalid configuration
     And local Git setting "git-town.ship-strategy" now doesn't exist
     And local Git setting "git-town.ship-delete-tracking-branch" now doesn't exist
     And local Git setting "git-town.order" now doesn't exist
+    # keep-sorted end

@@ -14,6 +14,7 @@ Feature: aborting the setup assistant
 
   Scenario: result
     Then Git Town runs no commands
+    # keep-sorted start
     And local Git setting "git-town.forge-type" still doesn't exist
     And local Git setting "git-town.share-new-branches" still doesn't exist
     And local Git setting "git-town.push-hook" still doesn't exist
