@@ -157,6 +157,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		GitUserName:              gitUserName,
 		GiteaToken:               forgedomain.ParseGiteaToken(env.Get(giteaToken)),
 		HostingOriginHostname:    configdomain.ParseHostingOriginHostname(env.Get(originHostname)),
+		IgnoreUncommitted:        ignoreUncommitted,
 		Lineage:                  configdomain.NewLineage(), // not loaded from env vars
 		MainBranch:               gitdomain.NewLocalBranchNameOption(env.Get(mainBranch)),
 		NewBranchType:            configdomain.NewBranchTypeOpt(newBranchType),
@@ -170,7 +171,6 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		PushHook:                 pushHook,
 		ShareNewBranches:         shareNewBranches,
 		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,
-		IgnoreUncommitted:        ignoreUncommitted,
 		ShipStrategy:             shipStrategy,
 		Stash:                    stash,
 		SyncFeatureStrategy:      syncFeatureStrategy,
