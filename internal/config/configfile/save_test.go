@@ -65,6 +65,7 @@ func TestSave(t *testing.T) {
 				GitHubConnectorType:      Some(forgedomain.GitHubConnectorTypeGh),
 				GitLabConnectorType:      Some(forgedomain.GitLabConnectorTypeGlab),
 				HostingOriginHostname:    configdomain.ParseHostingOriginHostname("forge"),
+				IgnoreUncommitted:        Some(configdomain.IgnoreUncommitted(true)),
 				MainBranch:               Some(gitdomain.NewLocalBranchName("main")),
 				NewBranchType:            Some(configdomain.NewBranchType(configdomain.BranchTypePrototypeBranch)),
 				ObservedRegex:            observedRegex,
@@ -118,6 +119,7 @@ lineage = "cli"
 
 [ship]
 delete-tracking-branch = true
+ignore-uncommitted = true
 strategy = "api"
 
 [sync]
