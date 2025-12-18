@@ -8,6 +8,7 @@ Feature: Fix invalid configuration data
     And local Git setting "git-town.feature-regex" is "(feat"
     And local Git setting "git-town.perennial-regex" is "(per"
     And local Git setting "git-town.contribution-regex" is "(cont"
+    And local Git setting "git-town.ignore-uncommitted" is "zonk"
     And local Git setting "git-town.observed-regex" is "(obs"
     And local Git setting "git-town.new-branch-type" is "zonk"
     And local Git setting "git-town.branch-prefix" is "xx"
@@ -54,6 +55,7 @@ Feature: Fix invalid configuration data
       | push-hook                   | down enter                    |
       | ship-strategy               | down enter                    |
       | ship-delete-tracking branch | down enter                    |
+      | ignore-uncommitted          | down enter                    |
       | order                       | down enter                    |
       | proposals show lineage      | enter                         |
       | config storage              | enter                         |
@@ -78,6 +80,7 @@ Feature: Fix invalid configuration data
       | git config git-town.share-new-branches push           |
       | git config git-town.ship-strategy always-merge        |
       | git config git-town.ship-delete-tracking-branch false |
+      | git config git-town.ignore-uncommitted false          |
       | git config git-town.stash false                       |
       | git config git-town.sync-feature-strategy rebase      |
       | git config git-town.sync-perennial-strategy rebase    |
@@ -90,6 +93,7 @@ Feature: Fix invalid configuration data
       Ignoring invalid value for "git-town.contribution-regex": "(cont"
       Ignoring invalid value for "git-town.detached": "zonk"
       Ignoring invalid value for "git-town.feature-regex": "(feat"
+      Ignoring invalid value for "git-town.ignore-uncommitted": "zonk"
       Ignoring invalid value for "git-town.new-branch-type": "zonk"
       Ignoring invalid value for "git-town.observed-regex": "(obs"
       Ignoring invalid value for "git-town.order": "zonk"
