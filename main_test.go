@@ -43,7 +43,6 @@ func TestMain(_ *testing.M) {
 	} else {
 		options.Concurrency = runtime.NumCPU() * 4
 	}
-	// options.Concurrency = 1
 	switch flagMessyOutput {
 	case "":
 	case "0":
