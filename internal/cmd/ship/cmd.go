@@ -62,7 +62,6 @@ func Cmd() *cobra.Command {
 		Short: shipDesc,
 		Long:  cmdhelpers.Long(shipDesc, fmt.Sprintf(shipHelp, configdomain.KeyGitHubToken)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			fmt.Println("SHIP RUN")
 			dryRun, errDryRun := readDryRunFlag(cmd)
 			ignoreUncommitted, errIgnoreUncommitted := readIgnoreUncommittedFlag(cmd)
 			message, errMessage := readMessageFlag(cmd)
