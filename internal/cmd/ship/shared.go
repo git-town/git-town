@@ -86,7 +86,7 @@ func determineSharedShipData(args determineSharedShipDataArgs) (data sharedShipD
 		RepoStatus:            repoStatus,
 		RootDir:               args.repo.RootDir,
 		UnvalidatedConfig:     args.repo.UnvalidatedConfig,
-		ValidateNoOpenChanges: len(args.args) == 0 || config.IgnoreUncommitted.DisAllowUncommitted(),
+		ValidateNoOpenChanges: len(args.args) == 0, // || config.IgnoreUncommitted.DisAllowUncommitted(),
 	})
 	if err != nil {
 		return emptyResult, configdomain.ProgramFlowExit, err

@@ -2,6 +2,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v22/internal/cmd/config"
 	"github.com/git-town/git-town/v22/internal/cmd/ship"
 	"github.com/git-town/git-town/v22/internal/cmd/status"
@@ -38,7 +40,9 @@ func Execute() error {
 	rootCmd.AddCommand(runLogCommand())
 	rootCmd.AddCommand(status.RootCommand())
 	rootCmd.AddCommand(setParentCommand())
+	fmt.Println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
 	rootCmd.AddCommand(ship.Cmd())
+	fmt.Println("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
 	rootCmd.AddCommand(skipCmd())
 	rootCmd.AddCommand(swap.Cmd())
 	rootCmd.AddCommand(switchCmd())
