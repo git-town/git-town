@@ -31,3 +31,24 @@ Feature: ignore uncommitted changes using CLI flag
       | BRANCH | LOCATION      | MESSAGE |
       | main   | local, origin | shipped |
     And the uncommitted file still exists
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then Git Town runs the commands
+      | BRANCH  | COMMAND                                       |
+      | main    | git add -A                                    |
+      |         | git stash -m "Git Town WIP"                   |
+      |         | git revert {{ sha 'shipped' }}                |
+      |         | git push                                      |
+      |         | git branch feature {{ sha 'feature commit' }} |
+      |         | git push -u origin feature                    |
+      |         | git checkout feature                          |
+      | feature | git stash pop                                 |
+      |         | git restore --staged .                        |
+    And the initial lineage exists now
+    And these commits exist now
+      | BRANCH  | LOCATION      | MESSAGE          |
+      | main    | local, origin | shipped          |
+      |         |               | Revert "shipped" |
+      | feature | local, origin | feature commit   |
+    And the uncommitted file still exists
