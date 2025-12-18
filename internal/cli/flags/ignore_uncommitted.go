@@ -11,7 +11,8 @@ const ignoreUncommittedLong = "ignore-uncommitted"
 // type-safe access to the CLI arguments of type configdomain.IgnoreUncommitted
 func IgnoreUncommitted() (AddFunc, ReadIgnoreUncommittedFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		defineNegatedFlag(cmd.Flags(), ignoreUncommittedLong, "ignore uncommitted changes")
+		cmd.Flags().Bool(ignoreUncommittedLong, false, "ignore uncommitted changes")
+		defineNegatedFlag(cmd.Flags(), ignoreUncommittedLong, "don't ignore uncommitted changes")
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.IgnoreUncommitted], error) {
 		return readBoolOptFlag[configdomain.IgnoreUncommitted](cmd.Flags(), ignoreUncommittedLong)
