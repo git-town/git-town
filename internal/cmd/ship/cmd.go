@@ -203,17 +203,6 @@ Start:
 			},
 		)
 	}
-	// Stash uncommitted changes if ignore-uncommitted is enabled
-	shouldStash := sharedData.hasOpenChanges && sharedData.config.NormalConfig.IgnoreUncommitted.AllowUncommitted()
-	if shouldStash {
-		cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
-			DryRun:                   sharedData.config.NormalConfig.DryRun,
-			InitialStashSize:         sharedData.stashSize,
-			PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{sharedData.previousBranch},
-			RunInGitRoot:             false,
-			StashOpenChanges:         shouldStash,
-		})
-	}
 	optimizedProgram := optimizer.Optimize(prog.Immutable())
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: sharedData.branchesSnapshot,

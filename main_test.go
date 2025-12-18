@@ -36,7 +36,7 @@ func TestMain(_ *testing.M) {
 	default:
 		options.Format = "progress"
 	}
-	// options.Format = "pretty"
+	options.Format = "pretty"
 	if runtime.GOOS == "windows" {
 		options.Tags = "~@skipWindows"
 		options.Concurrency = runtime.NumCPU()

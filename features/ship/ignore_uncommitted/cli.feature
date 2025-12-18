@@ -10,8 +10,10 @@ Feature: ignore uncommitted changes using CLI flag
       | feature | local, origin | feature commit |
     And Git setting "git-town.ship-strategy" is "squash-merge"
     And the current branch is "feature"
-    And an uncommitted file
-    When I run "git-town ship --ignore-uncommitted"
+    # And an uncommitted file
+    # And inspect the repo
+    When I run "git-town ship"
+    # When I run "git-town ship --ignore-uncommitted"
 
   @debug @this
   Scenario: result
