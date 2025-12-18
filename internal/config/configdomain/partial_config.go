@@ -40,6 +40,7 @@ type PartialConfig struct {
 	GitUserName              Option[gitdomain.GitUserName]
 	GiteaToken               Option[forgedomain.GiteaToken]
 	HostingOriginHostname    Option[HostingOriginHostname]
+	IgnoreUncommitted        Option[IgnoreUncommitted]
 	Lineage                  Lineage
 	MainBranch               Option[gitdomain.LocalBranchName]
 	NewBranchType            Option[NewBranchType]
@@ -99,6 +100,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		GitUserName:              other.GitUserName.Or(self.GitUserName),
 		GiteaToken:               other.GiteaToken.Or(self.GiteaToken),
 		HostingOriginHostname:    other.HostingOriginHostname.Or(self.HostingOriginHostname),
+		IgnoreUncommitted:        other.IgnoreUncommitted.Or(self.IgnoreUncommitted),
 		Lineage:                  other.Lineage.Merge(self.Lineage),
 		MainBranch:               other.MainBranch.Or(self.MainBranch),
 		NewBranchType:            other.NewBranchType.Or(self.NewBranchType),

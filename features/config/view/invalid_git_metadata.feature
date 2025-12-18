@@ -7,6 +7,7 @@ Feature: display invalid Git metadata
     And local Git setting "git-town.perennial-regex" is "(per"
     And local Git setting "git-town.proposals-show-lineage" is "zonk"
     And local Git setting "git-town.contribution-regex" is "(cont"
+    And local Git setting "git-town.ignore-uncommitted" is "zonk"
     And local Git setting "git-town.observed-regex" is "(obs"
     And local Git setting "git-town.new-branch-type" is "zonk"
     And local Git setting "git-town.unknown-branch-type" is "zonk"
@@ -31,6 +32,7 @@ Feature: display invalid Git metadata
       Ignoring invalid value for "git-town.contribution-regex": "(cont"
       Ignoring invalid value for "git-town.detached": "zonk"
       Ignoring invalid value for "git-town.feature-regex": "(feat"
+      Ignoring invalid value for "git-town.ignore-uncommitted": "zonk"
       Ignoring invalid value for "git-town.new-branch-type": "zonk"
       Ignoring invalid value for "git-town.observed-regex": "(obs"
       Ignoring invalid value for "git-town.order": "zonk"
@@ -94,6 +96,7 @@ Feature: display invalid Git metadata
 
       Ship:
         delete tracking branch: yes
+        ignore uncommitted changes: no
         ship strategy: api
 
       Sync:

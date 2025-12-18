@@ -81,15 +81,16 @@ func Cmd() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:  autoResolve,
-				AutoSync:     None[configdomain.AutoSync](),
-				Detached:     detached,
-				DisplayTypes: None[configdomain.DisplayTypes](),
-				DryRun:       dryRun,
-				Order:        None[configdomain.Order](),
-				PushBranches: pushBranches,
-				Stash:        None[configdomain.Stash](),
-				Verbose:      verbose,
+				AutoResolve:       autoResolve,
+				AutoSync:          None[configdomain.AutoSync](),
+				Detached:          detached,
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            dryRun,
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      pushBranches,
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
 			})
 			return executeSync(executeSyncArgs{
 				cliConfig:       cliConfig,

@@ -42,6 +42,7 @@ Feature: display information from config file
 
       [ship]
       delete-tracking-branch = true
+      ignore-uncommitted = true
       strategy = "squash-merge"
 
       [sync]
@@ -103,6 +104,7 @@ Feature: display information from config file
 
       Ship:
         delete tracking branch: yes
+        ignore uncommitted changes: yes
         ship strategy: squash-merge
 
       Sync:
