@@ -49,7 +49,6 @@ disable the ship-delete-tracking-branch configuration setting.`
 )
 
 func Cmd() *cobra.Command {
-	fmt.Println("111111111111111111111111111111111")
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addIgnoreUncommittedFlag, readIgnoreUncommittedFlag := flags.IgnoreUncommitted()
 	addMessageFileFlag, readMessageFileFlag := flags.CommitMessageFile()
