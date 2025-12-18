@@ -20,6 +20,11 @@ exit with an error. When that happens, run [git town sync](sync.md) to get the
 branch in sync, re-test and re-review the updated branch, and then run
 `git town ship` again.
 
+To ensure that everything on your branch gets shipped, this command verifies
+that your workspace contains no uncommitted changes. You can configure this
+behavior using the [ignore-uncommitted](../preferences/ignore-uncommitted.md)
+setting.
+
 ## Positional argument
 
 When called without a positional argument, the _ship_ command ships the current
