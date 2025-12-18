@@ -8,7 +8,7 @@ Feature: ignore uncommitted changes using Git metadata
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
-    And Git setting "git-town.ship-ignore-uncommitted" is "true"
+    And Git setting "git-town.ignore-uncommitted" is "true"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     And the current branch is "feature"
     And an uncommitted file

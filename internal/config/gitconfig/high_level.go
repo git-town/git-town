@@ -102,6 +102,10 @@ func RemoveGiteaToken(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGiteaToken)
 }
 
+func RemoveIgnoreUncommitted(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyIgnoreUncommitted)
+}
+
 func RemoveMainBranch(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyMainBranch)
 }
@@ -152,10 +156,6 @@ func RemoveShareNewBranches(runner subshelldomain.Runner) error {
 
 func RemoveShipDeleteTrackingBranch(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyShipDeleteTrackingBranch)
-}
-
-func RemoveShipIgnoreUncommitted(runner subshelldomain.Runner) error {
-	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyShipIgnoreUncommitted)
 }
 
 func RemoveShipStrategy(runner subshelldomain.Runner) error {
@@ -263,6 +263,10 @@ func SetGiteaToken(runner subshelldomain.Runner, value forgedomain.GiteaToken, s
 	return SetConfigValue(runner, scope, configdomain.KeyGiteaToken, value.String())
 }
 
+func SetIgnoreUncommitted(runner subshelldomain.Runner, value configdomain.IgnoreUncommitted, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyIgnoreUncommitted, strconv.FormatBool(value.AllowUncommitted()))
+}
+
 func SetMainBranch(runner subshelldomain.Runner, value gitdomain.LocalBranchName, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyMainBranch, value.String())
 }
@@ -317,10 +321,6 @@ func SetShareNewBranches(runner subshelldomain.Runner, value configdomain.ShareN
 
 func SetShipDeleteTrackingBranch(runner subshelldomain.Runner, value configdomain.ShipDeleteTrackingBranch, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.ShouldDeleteTrackingBranch()))
-}
-
-func SetShipIgnoreUncommitted(runner subshelldomain.Runner, value configdomain.IgnoreUncommitted, scope configdomain.ConfigScope) error {
-	return SetConfigValue(runner, scope, configdomain.KeyShipIgnoreUncommitted, strconv.FormatBool(value.AllowUncommitted()))
 }
 
 func SetShipStrategy(runner subshelldomain.Runner, value configdomain.ShipStrategy, scope configdomain.ConfigScope) error {

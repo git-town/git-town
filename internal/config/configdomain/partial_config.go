@@ -40,6 +40,7 @@ type PartialConfig struct {
 	GitUserName              Option[gitdomain.GitUserName]
 	GiteaToken               Option[forgedomain.GiteaToken]
 	HostingOriginHostname    Option[HostingOriginHostname]
+	IgnoreUncommitted        Option[IgnoreUncommitted]
 	Lineage                  Lineage
 	MainBranch               Option[gitdomain.LocalBranchName]
 	NewBranchType            Option[NewBranchType]
@@ -53,7 +54,6 @@ type PartialConfig struct {
 	PushHook                 Option[PushHook]
 	ShareNewBranches         Option[ShareNewBranches]
 	ShipDeleteTrackingBranch Option[ShipDeleteTrackingBranch]
-	ShipIgnoreUncommitted    Option[IgnoreUncommitted]
 	ShipStrategy             Option[ShipStrategy]
 	Stash                    Option[Stash]
 	SyncFeatureStrategy      Option[SyncFeatureStrategy]
@@ -113,7 +113,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		PushHook:                 other.PushHook.Or(self.PushHook),
 		ShareNewBranches:         other.ShareNewBranches.Or(self.ShareNewBranches),
 		ShipDeleteTrackingBranch: other.ShipDeleteTrackingBranch.Or(self.ShipDeleteTrackingBranch),
-		ShipIgnoreUncommitted:    other.ShipIgnoreUncommitted.Or(self.ShipIgnoreUncommitted),
+		IgnoreUncommitted:        other.IgnoreUncommitted.Or(self.IgnoreUncommitted),
 		ShipStrategy:             other.ShipStrategy.Or(self.ShipStrategy),
 		Stash:                    other.Stash.Or(self.Stash),
 		SyncFeatureStrategy:      other.SyncFeatureStrategy.Or(self.SyncFeatureStrategy),

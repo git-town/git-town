@@ -59,6 +59,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		githubConnectorType      Option[forgedomain.GitHubConnectorType]
 		gitlabConnectorType      Option[forgedomain.GitLabConnectorType]
 		hostingOriginHostname    Option[configdomain.HostingOriginHostname]
+		ignoreUncommitted        Option[configdomain.IgnoreUncommitted]
 		mainBranch               Option[gitdomain.LocalBranchName]
 		newBranchType            Option[configdomain.NewBranchType]
 		observedRegex            Option[configdomain.ObservedRegex]
@@ -70,7 +71,6 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		pushHook                 Option[configdomain.PushHook]
 		shareNewBranches         Option[configdomain.ShareNewBranches]
 		shipDeleteTrackingBranch Option[configdomain.ShipDeleteTrackingBranch]
-		shipIgnoreUncommitted    Option[configdomain.IgnoreUncommitted]
 		shipStrategy             Option[configdomain.ShipStrategy]
 		stash                    Option[configdomain.Stash]
 		syncFeatureStrategy      Option[configdomain.SyncFeatureStrategy]
@@ -218,7 +218,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			shipDeleteTrackingBranch = Some(configdomain.ShipDeleteTrackingBranch(*data.Ship.DeleteTrackingBranch))
 		}
 		if data.Ship.IgnoreUncommitted != nil {
-			shipIgnoreUncommitted = Some(configdomain.IgnoreUncommitted(*data.Ship.IgnoreUncommitted))
+			ignoreUncommitted = Some(configdomain.IgnoreUncommitted(*data.Ship.IgnoreUncommitted))
 		}
 		if data.Ship.Strategy != nil {
 			shipStrategy = Some(configdomain.ShipStrategy(*data.Ship.Strategy))
@@ -312,7 +312,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		PushHook:                 pushHook,
 		ShareNewBranches:         shareNewBranches,
 		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,
-		ShipIgnoreUncommitted:    shipIgnoreUncommitted,
+		IgnoreUncommitted:        ignoreUncommitted,
 		ShipStrategy:             shipStrategy,
 		Stash:                    stash,
 		SyncFeatureStrategy:      syncFeatureStrategy,

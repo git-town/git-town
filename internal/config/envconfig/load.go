@@ -34,6 +34,7 @@ const (
 	githubToken              = "GIT_TOWN_GITHUB_TOKEN"
 	gitlabConnectorType      = "GIT_TOWN_GITLAB_CONNECTOR_TYPE"
 	gitlabToken              = "GIT_TOWN_GITLAB_TOKEN"
+	ignoreUncommitted        = "GIT_TOWN_IGNORE_UNCOMMITTED"
 	mainBranch               = "GIT_TOWN_MAIN_BRANCH"
 	newBranchType            = "GIT_TOWN_NEW_BRANCH_TYPE"
 	observedRegex            = "GIT_TOWN_OBSERVED_REGEX"
@@ -47,7 +48,6 @@ const (
 	pushHook                 = "GIT_TOWN_PUSH_HOOK"
 	shareNewBranches         = "GIT_TOWN_SHARE_NEW_BRANCHES"
 	shipDeleteTrackingBranch = "GIT_TOWN_SHIP_DELETE_TRACKING_BRANCH"
-	shipIgnoreUncommitted    = "GIT_TOWN_SHIP_IGNORE_UNCOMMITTED"
 	shipStrategy             = "GIT_TOWN_SHIP_STRATEGY"
 	stash                    = "GIT_TOWN_STASH"
 	syncFeatureStrategy      = "GIT_TOWN_SYNC_FEATURE_STRATEGY"
@@ -78,6 +78,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	gitUserName := gitAuthorNameValue.Or(gitCommitterNameValue)
 	githubConnectorType, errGitHubConnectorType := load(env, githubConnectorType, forgedomain.ParseGitHubConnectorType)
 	gitlabConnectorType, errGitLabConnectorType := load(env, gitlabConnectorType, forgedomain.ParseGitLabConnectorType)
+	ignoreUncommitted, errignoreUncommitted := load(env, ignoreUncommitted, gohacks.ParseBoolOpt[configdomain.IgnoreUncommitted])
 	newBranchType, errNewBranchType := load(env, newBranchType, configdomain.ParseBranchType)
 	observedRegex, errObservedRegex := load(env, observedRegex, configdomain.ParseObservedRegex)
 	order, errOrder := configdomain.ParseOrder(env.Get(order), order)
@@ -88,7 +89,6 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	pushHook, errPushHook := load(env, pushHook, gohacks.ParseBoolOpt[configdomain.PushHook])
 	shareNewBranches, errShareNewBranches := load(env, shareNewBranches, configdomain.ParseShareNewBranches)
 	shipDeleteTrackingBranch, errShipDeleteTrackingBranch := load(env, shipDeleteTrackingBranch, gohacks.ParseBoolOpt[configdomain.ShipDeleteTrackingBranch])
-	shipIgnoreUncommitted, errShipIgnoreUncommitted := load(env, shipIgnoreUncommitted, gohacks.ParseBoolOpt[configdomain.IgnoreUncommitted])
 	shipStrategy, errShipStrategy := load(env, shipStrategy, configdomain.ParseShipStrategy)
 	stash, errStash := load(env, stash, gohacks.ParseBoolOpt[configdomain.Stash])
 	syncFeatureStrategy, errSyncFeatureStrategy := load(env, syncFeatureStrategy, configdomain.ParseSyncFeatureStrategy)
@@ -121,7 +121,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errPushHook,
 		errShareNewBranches,
 		errShipDeleteTrackingBranch,
-		errShipIgnoreUncommitted,
+		errignoreUncommitted,
 		errShipStrategy,
 		errStash,
 		errSyncFeatureStrategy,
@@ -170,7 +170,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		PushHook:                 pushHook,
 		ShareNewBranches:         shareNewBranches,
 		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,
-		ShipIgnoreUncommitted:    shipIgnoreUncommitted,
+		IgnoreUncommitted:        ignoreUncommitted,
 		ShipStrategy:             shipStrategy,
 		Stash:                    stash,
 		SyncFeatureStrategy:      syncFeatureStrategy,

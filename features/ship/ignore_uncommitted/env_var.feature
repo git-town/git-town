@@ -12,7 +12,7 @@ Feature: ignore uncommitted changes using the config file
     And the current branch is "feature"
     And an uncommitted file
     When I run "git-town ship" with these environment variables
-      | GIT_TOWN_SHIP_IGNORE_UNCOMMITTED | true |
+      | GIT_TOWN_IGNORE_UNCOMMITTED | true |
 
   Scenario: result
     Then Git Town runs the commands

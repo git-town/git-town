@@ -53,6 +53,7 @@ type NormalConfig struct {
 	GitUserName              Option[gitdomain.GitUserName]
 	GiteaToken               Option[forgedomain.GiteaToken]
 	HostingOriginHostname    Option[configdomain.HostingOriginHostname]
+	IgnoreUncommitted        configdomain.IgnoreUncommitted
 	Lineage                  configdomain.Lineage
 	NewBranchType            Option[configdomain.NewBranchType]
 	ObservedRegex            Option[configdomain.ObservedRegex]
@@ -65,7 +66,6 @@ type NormalConfig struct {
 	PushHook                 configdomain.PushHook
 	ShareNewBranches         configdomain.ShareNewBranches
 	ShipDeleteTrackingBranch configdomain.ShipDeleteTrackingBranch
-	ShipIgnoreUncommitted    configdomain.IgnoreUncommitted
 	ShipStrategy             configdomain.ShipStrategy
 	Stash                    configdomain.Stash
 	SyncFeatureStrategy      configdomain.SyncFeatureStrategy
@@ -122,6 +122,7 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		GitUserName:              other.GitUserName.Or(self.GitUserName),
 		GiteaToken:               other.GiteaToken.Or(self.GiteaToken),
 		HostingOriginHostname:    other.HostingOriginHostname.Or(self.HostingOriginHostname),
+		IgnoreUncommitted:        other.IgnoreUncommitted.GetOr(self.IgnoreUncommitted),
 		Lineage:                  other.Lineage.Merge(self.Lineage),
 		NewBranchType:            other.NewBranchType.Or(self.NewBranchType),
 		ObservedRegex:            other.ObservedRegex.Or(self.ObservedRegex),
@@ -134,7 +135,6 @@ func (self *NormalConfig) OverwriteWith(other configdomain.PartialConfig) Normal
 		PushHook:                 other.PushHook.GetOr(self.PushHook),
 		ShareNewBranches:         other.ShareNewBranches.GetOr(self.ShareNewBranches),
 		ShipDeleteTrackingBranch: other.ShipDeleteTrackingBranch.GetOr(self.ShipDeleteTrackingBranch),
-		ShipIgnoreUncommitted:    other.ShipIgnoreUncommitted.GetOr(self.ShipIgnoreUncommitted),
 		ShipStrategy:             other.ShipStrategy.GetOr(self.ShipStrategy),
 		Stash:                    other.Stash.GetOr(self.Stash),
 		SyncFeatureStrategy:      other.SyncFeatureStrategy.GetOr(self.SyncFeatureStrategy),
@@ -289,7 +289,7 @@ func DefaultNormalConfig() NormalConfig {
 		PushHook:                 true,
 		ShareNewBranches:         configdomain.ShareNewBranchesNone,
 		ShipDeleteTrackingBranch: true,
-		ShipIgnoreUncommitted:    false,
+		IgnoreUncommitted:        false,
 		ShipStrategy:             configdomain.ShipStrategyAPI,
 		Stash:                    true,
 		SyncFeatureStrategy:      configdomain.SyncFeatureStrategyMerge,
@@ -341,7 +341,7 @@ func NewNormalConfigFromPartial(partial configdomain.PartialConfig, defaults Nor
 		PushHook:                 partial.PushHook.GetOr(defaults.PushHook),
 		ShareNewBranches:         partial.ShareNewBranches.GetOr(defaults.ShareNewBranches),
 		ShipDeleteTrackingBranch: partial.ShipDeleteTrackingBranch.GetOr(defaults.ShipDeleteTrackingBranch),
-		ShipIgnoreUncommitted:    partial.ShipIgnoreUncommitted.GetOr(defaults.ShipIgnoreUncommitted),
+		IgnoreUncommitted:        partial.IgnoreUncommitted.GetOr(defaults.IgnoreUncommitted),
 		ShipStrategy:             partial.ShipStrategy.GetOr(defaults.ShipStrategy),
 		Stash:                    partial.Stash.GetOr(defaults.Stash),
 		SyncFeatureStrategy:      syncFeatureStrategy,

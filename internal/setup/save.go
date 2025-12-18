@@ -138,8 +138,8 @@ func saveAllToFile(userInput UserInput, existingConfigFile configdomain.PartialC
 	if gitConfig.ShipDeleteTrackingBranch.IsSome() {
 		_ = gitconfig.RemoveShipDeleteTrackingBranch(runner)
 	}
-	if gitConfig.ShipIgnoreUncommitted.IsSome() {
-		_ = gitconfig.RemoveShipIgnoreUncommitted(runner)
+	if gitConfig.IgnoreUncommitted.IsSome() {
+		_ = gitconfig.RemoveIgnoreUncommitted(runner)
 	}
 	if gitConfig.Stash.IsSome() {
 		_ = gitconfig.RemoveStash(runner)
@@ -292,9 +292,9 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 			saveShipDeleteTrackingBranch(userInput.Data.ShipDeleteTrackingBranch, existingGitConfig.ShipDeleteTrackingBranch, frontend),
 		)
 	}
-	if configFile.ShipIgnoreUncommitted.IsNone() {
+	if configFile.IgnoreUncommitted.IsNone() {
 		fc.Check(
-			saveShipIgnoreUncommitted(userInput.Data.ShipIgnoreUncommitted, existingGitConfig.ShipIgnoreUncommitted, frontend),
+			saveIgnoreUncommitted(userInput.Data.IgnoreUncommitted, existingGitConfig.IgnoreUncommitted, frontend),
 		)
 	}
 	if configFile.Stash.IsNone() {
@@ -501,6 +501,16 @@ func saveGiteaToken(valueToWriteToGit Option[forgedomain.GiteaToken], valueAlrea
 	return gitconfig.RemoveGiteaToken(frontend)
 }
 
+func saveIgnoreUncommitted(valueToWriteToGit Option[configdomain.IgnoreUncommitted], valueAlreadyInGit Option[configdomain.IgnoreUncommitted], runner subshelldomain.Runner) error {
+	if valueAlreadyInGit.Equal(valueToWriteToGit) {
+		return nil
+	}
+	if value, has := valueToWriteToGit.Get(); has {
+		return gitconfig.SetIgnoreUncommitted(runner, value, configdomain.ConfigScopeLocal)
+	}
+	return gitconfig.RemoveIgnoreUncommitted(runner)
+}
+
 func saveMainBranch(valueToWriteToGit Option[gitdomain.LocalBranchName], valueAlreadyInGit Option[gitdomain.LocalBranchName], runner subshelldomain.Runner) error {
 	if valueToWriteToGit.Equal(valueAlreadyInGit) {
 		return nil
@@ -619,16 +629,6 @@ func saveShipDeleteTrackingBranch(valueToWriteToGit Option[configdomain.ShipDele
 		return gitconfig.SetShipDeleteTrackingBranch(runner, value, configdomain.ConfigScopeLocal)
 	}
 	return gitconfig.RemoveShipDeleteTrackingBranch(runner)
-}
-
-func saveShipIgnoreUncommitted(valueToWriteToGit Option[configdomain.IgnoreUncommitted], valueAlreadyInGit Option[configdomain.IgnoreUncommitted], runner subshelldomain.Runner) error {
-	if valueAlreadyInGit.Equal(valueToWriteToGit) {
-		return nil
-	}
-	if value, has := valueToWriteToGit.Get(); has {
-		return gitconfig.SetShipIgnoreUncommitted(runner, value, configdomain.ConfigScopeLocal)
-	}
-	return gitconfig.RemoveShipIgnoreUncommitted(runner)
 }
 
 func saveShipStrategy(valueToWriteToGit Option[configdomain.ShipStrategy], valueAlreadyInGit Option[configdomain.ShipStrategy], runner subshelldomain.Runner) error {
