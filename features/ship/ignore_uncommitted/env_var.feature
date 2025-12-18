@@ -1,4 +1,4 @@
-Feature: ignore uncommitted changes using the config file
+Feature: ignore uncommitted changes using the environment variable
 
   Background:
     Given a Git repo with origin
