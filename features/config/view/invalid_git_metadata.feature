@@ -7,6 +7,7 @@ Feature: display invalid Git metadata
     And local Git setting "git-town.perennial-regex" is "(per"
     And local Git setting "git-town.proposals-show-lineage" is "zonk"
     And local Git setting "git-town.contribution-regex" is "(cont"
+    And local Git setting "git-town.ignore-uncommitted" is "zonk"
     And local Git setting "git-town.observed-regex" is "(obs"
     And local Git setting "git-town.new-branch-type" is "zonk"
     And local Git setting "git-town.unknown-branch-type" is "zonk"
@@ -31,6 +32,7 @@ Feature: display invalid Git metadata
       Ignoring invalid value for "git-town.contribution-regex": "(cont"
       Ignoring invalid value for "git-town.detached": "zonk"
       Ignoring invalid value for "git-town.feature-regex": "(feat"
+      Ignoring invalid value for "git-town.ignore-uncommitted": "zonk"
       Ignoring invalid value for "git-town.new-branch-type": "zonk"
       Ignoring invalid value for "git-town.observed-regex": "(obs"
       Ignoring invalid value for "git-town.order": "zonk"
@@ -48,7 +50,7 @@ Feature: display invalid Git metadata
       Ignoring invalid value for "git-town.sync-tags": "zonk"
       Ignoring invalid value for "git-town.sync-upstream": "zonk"
       Ignoring invalid value for "git-town.unknown-branch-type": "zonk"
-
+      
       Branches:
         contribution branches: (none)
         contribution regex: (not set)
@@ -63,18 +65,18 @@ Feature: display invalid Git metadata
         unknown branch type: feature
         order: asc
         display types: all branch types except "feature" and "main"
-
+      
       Configuration:
         offline: no
         git user name: user
         git user email: email@example.com
-
+      
       Create:
         branch prefix: (not set)
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: yes
-
+      
       Hosting:
         browser: (not set)
         development remote: origin
@@ -88,14 +90,15 @@ Feature: display invalid Git metadata
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
-
+      
       Propose:
         lineage: none
-
+      
       Ship:
         delete tracking branch: yes
+        ignore uncommitted changes: no
         ship strategy: api
-
+      
       Sync:
         auto-resolve phantom conflicts: yes
         auto-sync: yes

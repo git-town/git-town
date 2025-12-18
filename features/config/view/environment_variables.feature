@@ -10,7 +10,7 @@ Feature: display configuration defined in environment variables
       | observed-2     | observed     |        | local, origin |
     And Git Town is not configured
 
-  Scenario: all configured in Git, no stacked changes
+  Scenario: all configured in env vars, no stacked changes
     When I run "git-town config" with these environment variables
       | GIT_TOWN_AUTO_RESOLVE                | false              |
       | GIT_TOWN_AUTO_SYNC                   | false              |
@@ -30,19 +30,20 @@ Feature: display configuration defined in environment variables
       | GIT_TOWN_GITHUB_TOKEN                | github-token       |
       | GIT_TOWN_GITLAB_CONNECTOR_TYPE       | glab               |
       | GIT_TOWN_GITLAB_TOKEN                | gitlab-token       |
+      | GIT_TOWN_IGNORE_UNCOMMITTED          | true               |
       | GIT_TOWN_MAIN_BRANCH                 | dev                |
       | GIT_TOWN_NEW_BRANCH_TYPE             | prototype          |
       | GIT_TOWN_OBSERVED_REGEX              | ^dependabot/       |
       | GIT_TOWN_ORDER                       | desc               |
       | GIT_TOWN_PROPOSALS_SHOW_LINEAGE      | cli                |
       | GIT_TOWN_ORIGIN_HOSTNAME             | codeforge          |
-      | GIT_TOWN_OFFLINE                     | 1                  |
+      | GIT_TOWN_OFFLINE                     |                  1 |
       | GIT_TOWN_PERENNIAL_BRANCHES          | qa staging         |
       | GIT_TOWN_PERENNIAL_REGEX             | ^release-          |
       | GIT_TOWN_PUSH_BRANCHES               | no                 |
       | GIT_TOWN_PUSH_HOOK                   | no                 |
       | GIT_TOWN_SHARE_NEW_BRANCHES          | push               |
-      | GIT_TOWN_SHIP_DELETE_TRACKING_BRANCH | 0                  |
+      | GIT_TOWN_SHIP_DELETE_TRACKING_BRANCH |                  0 |
       | GIT_TOWN_SHIP_STRATEGY               | fast-forward       |
       | GIT_TOWN_STASH                       | false              |
       | GIT_TOWN_SYNC_FEATURE_STRATEGY       | rebase             |
@@ -67,18 +68,18 @@ Feature: display configuration defined in environment variables
         unknown branch type: observed
         order: desc
         display types: all branch types
-
+      
       Configuration:
         offline: yes
         git user name: user
         git user email: email@example.com
-
+      
       Create:
         branch prefix: acme-
         new branch type: prototype
         share new branches: push
         stash uncommitted changes: no
-
+      
       Hosting:
         browser: firefox
         development remote: my-fork
@@ -92,14 +93,15 @@ Feature: display configuration defined in environment variables
         GitHub token: github-token
         GitLab connector type: glab
         GitLab token: gitlab-token
-
+      
       Propose:
         lineage: cli
-
+      
       Ship:
         delete tracking branch: no
+        ignore uncommitted changes: yes
         ship strategy: fast-forward
-
+      
       Sync:
         auto-resolve phantom conflicts: no
         auto-sync: no

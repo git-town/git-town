@@ -25,6 +25,7 @@ Feature: show the configuration
     And Git setting "git-town.contribution-regex" is "^git-contribution-regex"
     And Git setting "git-town.detached" is "true"
     And Git setting "git-town.display-types" is "no"
+    And Git setting "git-town.ignore-uncommitted" is "false"
     And Git setting "git-town.observed-regex" is "^git-observed-regex"
     And Git setting "git-town.perennial-regex" is "^git-perennial-"
     And Git setting "git-town.feature-regex" is "git-feature-.*"
@@ -53,22 +54,23 @@ Feature: show the configuration
       unknown-type = "contribution"
       order = "asc"
       display-types = "all"
-
+      
       [create]
       branch-prefix = "file-"
       share-new-branches = "push"
+      ignore-uncommitted = true
       stash = true
-
+      
       [hosting]
       browser = "chrome"
       forge-type = "github"
       github-connector = "gh"
       origin-hostname = "github.com"
-
+      
       [ship]
       delete-tracking-branch = true
       strategy = "api"
-
+      
       [sync]
       auto-sync = true
       detached = false
@@ -95,18 +97,18 @@ Feature: show the configuration
         unknown branch type: observed
         order: desc
         display types: no branch types
-
+      
       Configuration:
         offline: no
         git user name: user
         git user email: email@example.com
-
+      
       Create:
         branch prefix: git-
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: no
-
+      
       Hosting:
         browser: firefox
         development remote: origin
@@ -120,14 +122,15 @@ Feature: show the configuration
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
-
+      
       Propose:
         lineage: cli
-
+      
       Ship:
         delete tracking branch: no
+        ignore uncommitted changes: no
         ship strategy: squash-merge
-
+      
       Sync:
         auto-resolve phantom conflicts: yes
         auto-sync: no

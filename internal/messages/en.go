@@ -181,6 +181,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	HackBranchIsAlreadyFeature = "branch %q is already a feature branch"
 	HackTooManyArguments       = "please provide only one branch to create"
 
+	IgnoreUncommitted   = "Ship ignores uncommitted changes: %s\n"
 	InputAddOrRemove    = `invalid argument %q. Please provide either "add" or "remove"`
 	InputYesOrNo        = `invalid argument: %q. Please provide either "yes" or "no".\n`
 	InvalidStatusOutput = `invalid "git status -z" output: %q`
