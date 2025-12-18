@@ -49,4 +49,4 @@ Feature: reset invalid configuration
     And local Git setting "git-town.sync-tags" now doesn't exist
     And local Git setting "git-town.sync-upstream" now doesn't exist
     And local Git setting "git-town.unknown-branch-type" now doesn't exist
-    # keep-sorted end
+  # keep-sorted end

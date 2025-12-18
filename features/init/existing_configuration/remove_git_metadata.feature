@@ -148,17 +148,10 @@ Feature: remove existing configuration in Git metadata
     # keep-sorted end
     # keep-sorted start
     And local Git setting "git-town.auto-sync" is now "true"
-    And local Git setting "git-town.contribution-regex" now doesn't exist
     And local Git setting "git-town.dev-remote" is now "fork"
-    And local Git setting "git-town.feature-regex" now doesn't exist
-    And local Git setting "git-town.forge-type" now doesn't exist
-    And local Git setting "git-town.github-token" now doesn't exist
-    And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
     And local Git setting "git-town.ignore-uncommitted" is now "false"
     And local Git setting "git-town.new-branch-type" is now "feature"
-    And local Git setting "git-town.observed-regex" now doesn't exist
     And local Git setting "git-town.order" is now "asc"
-    And local Git setting "git-town.perennial-regex" now doesn't exist
     And local Git setting "git-town.proposals-show-lineage" is now "cli"
     And local Git setting "git-town.push-branches" is now "true"
     And local Git setting "git-town.push-hook" is now "true"
@@ -171,6 +164,13 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.sync-tags" is now "true"
     And local Git setting "git-town.sync-upstream" is now "true"
     And local Git setting "git-town.unknown-branch-type" is now "feature"
+    And local Git setting "git-town.contribution-regex" now doesn't exist
+    And local Git setting "git-town.feature-regex" now doesn't exist
+    And local Git setting "git-town.forge-type" now doesn't exist
+    And local Git setting "git-town.github-token" now doesn't exist
+    And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
+    And local Git setting "git-town.observed-regex" now doesn't exist
+    And local Git setting "git-town.perennial-regex" now doesn't exist
     # keep-sorted end
     And the main branch is still "main"
     And there are now no perennial branches

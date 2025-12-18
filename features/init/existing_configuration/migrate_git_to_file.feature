@@ -6,27 +6,27 @@ Feature: migrate existing configuration in Git metadata to a config file
     And the main branch is "main"
     # keep-sorted start
     And local Git setting "git-town.auto-sync" is "false"
-    And local Git setting "git-town.perennial-regex" is "release-.*"
-    And local Git setting "git-town.perennial-branches" is "qa"
+    And local Git setting "git-town.branch-prefix" is "acme-"
+    And local Git setting "git-town.contribution-regex" is "coworker-.*"
+    And local Git setting "git-town.dev-remote" is "fork"
     And local Git setting "git-town.feature-regex" is "user-.*"
     And local Git setting "git-town.ignore-uncommitted" is "true"
-    And local Git setting "git-town.contribution-regex" is "coworker-.*"
+    And local Git setting "git-town.new-branch-type" is "prototype"
     And local Git setting "git-town.observed-regex" is "other-.*"
-    And local Git setting "git-town.dev-remote" is "fork"
-    And local Git setting "git-town.share-new-branches" is "no"
+    And local Git setting "git-town.order" is "desc"
+    And local Git setting "git-town.perennial-branches" is "qa"
+    And local Git setting "git-town.perennial-regex" is "release-.*"
+    And local Git setting "git-town.proposals-show-lineage" is "cli"
     And local Git setting "git-town.push-branches" is "true"
     And local Git setting "git-town.push-hook" is "true"
-    And local Git setting "git-town.new-branch-type" is "prototype"
-    And local Git setting "git-town.order" is "desc"
-    And local Git setting "git-town.branch-prefix" is "acme-"
-    And local Git setting "git-town.ship-strategy" is "squash-merge"
+    And local Git setting "git-town.share-new-branches" is "no"
     And local Git setting "git-town.ship-delete-tracking-branch" is "false"
+    And local Git setting "git-town.ship-strategy" is "squash-merge"
     And local Git setting "git-town.stash" is "false"
     And local Git setting "git-town.sync-feature-strategy" is "merge"
     And local Git setting "git-town.sync-perennial-strategy" is "rebase"
-    And local Git setting "git-town.sync-upstream" is "true"
     And local Git setting "git-town.sync-tags" is "false"
-    And local Git setting "git-town.proposals-show-lineage" is "cli"
+    And local Git setting "git-town.sync-upstream" is "true"
     And local Git setting "git-town.unknown-branch-type" is "observed"
     # keep-sorted end
     When I run "git-town init" and enter into the dialogs:
@@ -93,32 +93,32 @@ Feature: migrate existing configuration in Git metadata to a config file
       | git config --unset git-town.unknown-branch-type         |
     # keep-sorted start
     And local Git setting "git-town.auto-sync" now doesn't exist
+    And local Git setting "git-town.contribution-regex" now doesn't exist
+    And local Git setting "git-town.feature-regex" now doesn't exist
     And local Git setting "git-town.forge-type" now doesn't exist
     And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
     And local Git setting "git-town.ignore-uncommitted" now doesn't exist
-    And local Git setting "git-town.sync-feature-strategy" now doesn't exist
-    And local Git setting "git-town.sync-perennial-strategy" now doesn't exist
-    And local Git setting "git-town.sync-upstream" now doesn't exist
-    And local Git setting "git-town.sync-tags" now doesn't exist
-    And local Git setting "git-town.perennial-regex" now doesn't exist
-    And local Git setting "git-town.feature-regex" now doesn't exist
-    And local Git setting "git-town.contribution-regex" now doesn't exist
+    And local Git setting "git-town.new-branch-type" now doesn't exist
     And local Git setting "git-town.observed-regex" now doesn't exist
     And local Git setting "git-town.order" now doesn't exist
-    And local Git setting "git-town.unknown-branch-type" now doesn't exist
-    And local Git setting "git-town.share-new-branches" now doesn't exist
+    And local Git setting "git-town.perennial-regex" now doesn't exist
+    And local Git setting "git-town.proposals-show-lineage" now doesn't exist
     And local Git setting "git-town.push-branches" now doesn't exist
     And local Git setting "git-town.push-hook" now doesn't exist
-    And local Git setting "git-town.new-branch-type" now doesn't exist
-    And local Git setting "git-town.ship-strategy" now doesn't exist
+    And local Git setting "git-town.share-new-branches" now doesn't exist
     And local Git setting "git-town.ship-delete-tracking-branch" now doesn't exist
-    And local Git setting "git-town.proposals-show-lineage" now doesn't exist
+    And local Git setting "git-town.ship-strategy" now doesn't exist
     And local Git setting "git-town.stash" now doesn't exist
+    And local Git setting "git-town.sync-feature-strategy" now doesn't exist
+    And local Git setting "git-town.sync-perennial-strategy" now doesn't exist
+    And local Git setting "git-town.sync-tags" now doesn't exist
+    And local Git setting "git-town.sync-upstream" now doesn't exist
+    And local Git setting "git-town.unknown-branch-type" now doesn't exist
     # keep-sorted end
     And the configuration file is now:
       """
       # See https://www.git-town.com/configuration-file for details
-      
+
       [branches]
       contribution-regex = "coworker-.*"
       feature-regex = "user-.*"
@@ -128,24 +128,24 @@ Feature: migrate existing configuration in Git metadata to a config file
       perennials = ["qa"]
       perennial-regex = "release-.*"
       unknown-branch-type = "observed"
-      
+
       [create]
       branch-prefix = "acme-"
       new-branch-type = "prototype"
       share-new-branches = "no"
       stash = false
-      
+
       [hosting]
       dev-remote = "fork"
-      
+
       [propose]
       lineage = "cli"
-      
+
       [ship]
       delete-tracking-branch = false
       ignore-uncommitted = true
       strategy = "squash-merge"
-      
+
       [sync]
       auto-sync = false
       detached = false
