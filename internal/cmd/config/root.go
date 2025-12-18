@@ -37,15 +37,16 @@ func RootCmd() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:  None[configdomain.AutoResolve](),
-				AutoSync:     None[configdomain.AutoSync](),
-				Detached:     None[configdomain.Detached](),
-				DisplayTypes: displayTypes,
-				DryRun:       None[configdomain.DryRun](),
-				Order:        None[configdomain.Order](),
-				PushBranches: None[configdomain.PushBranches](),
-				Stash:        None[configdomain.Stash](),
-				Verbose:      verbose,
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				Detached:          None[configdomain.Detached](),
+				DisplayTypes:      displayTypes,
+				DryRun:            None[configdomain.DryRun](),
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
 			})
 			return executeDisplayConfig(cliConfig, redact)
 		},
@@ -121,6 +122,7 @@ func printConfig(config config.UnvalidatedConfig, redact configdomain.Redact) {
 	fmt.Println()
 	print.Header("Ship")
 	print.Entry("delete tracking branch", format.Bool(config.NormalConfig.ShipDeleteTrackingBranch.ShouldDeleteTrackingBranch()))
+	print.Entry("ignore uncommitted changes", format.Bool(config.NormalConfig.IgnoreUncommitted.AllowUncommitted()))
 	print.Entry("ship strategy", config.NormalConfig.ShipStrategy.String())
 	fmt.Println()
 	print.Header("Sync")

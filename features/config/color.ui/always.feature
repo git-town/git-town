@@ -80,6 +80,7 @@ Feature: show the configuration
 
       Ship:
         delete tracking branch: yes
+        ignore uncommitted changes: no
         ship strategy: squash-merge
 
       Sync:
@@ -123,6 +124,7 @@ Feature: show the configuration
 
       [ship]
       delete-tracking-branch = true
+      ignore-uncommitted = true
       strategy = "squash-merge"
 
       [sync]
@@ -183,6 +185,7 @@ Feature: show the configuration
 
       Ship:
         delete tracking branch: yes
+        ignore uncommitted changes: yes
         ship strategy: squash-merge
 
       Sync:
@@ -209,6 +212,7 @@ Feature: show the configuration
     And Git setting "git-town.observed-regex" is "^git-observed-regex"
     And Git setting "git-town.perennial-regex" is "^git-perennial-"
     And Git setting "git-town.feature-regex" is "git-feature-.*"
+    And Git setting "git-town.ignore-uncommitted" is "false"
     And Git setting "git-town.order" is "desc"
     And Git setting "git-town.share-new-branches" is "no"
     And Git setting "git-town.ship-strategy" is "squash-merge"
@@ -246,6 +250,7 @@ Feature: show the configuration
 
       [ship]
       delete-tracking-branch = true
+      ignore-uncommitted = true
       strategy = "api"
 
       [sync]
@@ -306,6 +311,7 @@ Feature: show the configuration
 
       Ship:
         delete tracking branch: no
+        ignore uncommitted changes: no
         ship strategy: squash-merge
 
       Sync:
@@ -379,6 +385,7 @@ Feature: show the configuration
 
       Ship:
         delete tracking branch: yes
+        ignore uncommitted changes: no
         ship strategy: api
 
       Sync:
@@ -458,6 +465,7 @@ Feature: show the configuration
 
       Ship:
         delete tracking branch: yes
+        ignore uncommitted changes: no
         ship strategy: api
 
       Sync:

@@ -71,6 +71,13 @@ func determineSharedShipData(args determineSharedShipDataArgs) (data sharedShipD
 	if err != nil {
 		return emptyResult, configdomain.ProgramFlowExit, err
 	}
+	validateOpenChanges := false
+	if len(args.args) == 0 {
+		validateOpenChanges = true
+	}
+	if config.IgnoreUncommitted.AllowUncommitted() {
+		validateOpenChanges = false
+	}
 	branchesSnapshot, stashSize, previousBranchInfos, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               args.repo.Backend,
 		CommandsCounter:       args.repo.CommandsCounter,
@@ -86,7 +93,7 @@ func determineSharedShipData(args determineSharedShipDataArgs) (data sharedShipD
 		RepoStatus:            repoStatus,
 		RootDir:               args.repo.RootDir,
 		UnvalidatedConfig:     args.repo.UnvalidatedConfig,
-		ValidateNoOpenChanges: len(args.args) == 0,
+		ValidateNoOpenChanges: validateOpenChanges,
 	})
 	if err != nil {
 		return emptyResult, configdomain.ProgramFlowExit, err

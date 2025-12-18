@@ -89,6 +89,7 @@
     - [GitLab token](preferences/gitlab-token.md)
   - [Ship]()
     - [Delete tracking branch](preferences/ship-delete-tracking-branch.md)
+    - [Ignore uncommitted](preferences/ignore-uncommitted.md)
     - [Ship strategy](preferences/ship-strategy.md)
   - [Sync]()
     - [Auto-resolve phantom conflicts](preferences/auto-resolve.md)

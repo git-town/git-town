@@ -17,6 +17,7 @@ Feature: display configuration from Git metadata in detached head state
     And Git setting "git-town.branch-prefix" is "acme-"
     And Git setting "git-town.browser" is "firefox"
     And Git setting "git-town.display-types" is "all"
+    And Git setting "git-town.ignore-uncommitted" is "true"
     And Git setting "git-town.perennial-regex" is "^release-"
     And Git setting "git-town.contribution-regex" is "^renovate/"
     And Git setting "git-town.observed-regex" is "^dependabot/"
@@ -79,6 +80,7 @@ Feature: display configuration from Git metadata in detached head state
 
       Ship:
         delete tracking branch: yes
+        ignore uncommitted changes: yes
         ship strategy: squash-merge
 
       Sync:

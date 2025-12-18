@@ -31,6 +31,7 @@ Feature: don't ask for information already provided by the config file
 
       [ship]
       delete-tracking-branch = true
+      ignore-uncommitted = true
       strategy = "api"
 
       [sync]

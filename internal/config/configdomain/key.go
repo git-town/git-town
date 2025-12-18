@@ -94,6 +94,7 @@ const (
 	KeyGitLabConnectorType                 = Key("git-town.gitlab-connector")
 	KeyGitLabToken                         = Key("git-town.gitlab-token")
 	KeyHostingOriginHostname               = Key("git-town.hosting-origin-hostname")
+	KeyIgnoreUncommitted                   = Key("git-town.ignore-uncommitted")
 	KeyMainBranch                          = Key("git-town.main-branch")
 	KeyNewBranchType                       = Key("git-town.new-branch-type")
 	KeyObservedRegex                       = Key("git-town.observed-regex")
@@ -175,6 +176,7 @@ var keys = []Key{
 	KeyPushHook,
 	KeyShareNewBranches,
 	KeyShipDeleteTrackingBranch,
+	KeyIgnoreUncommitted,
 	KeyShipStrategy,
 	KeyStash,
 	KeySyncFeatureStrategy,

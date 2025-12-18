@@ -51,6 +51,7 @@ lineage = "cli"
 
 [ship]
 delete-tracking-branch = false
+ignore-uncommitted = true
 strategy = "api"
 
 [sync]
@@ -98,6 +99,7 @@ prototype-branches = "compress"
 				},
 				Ship: &configfile.Ship{
 					DeleteTrackingBranch: Ptr(false),
+					IgnoreUncommitted:    Ptr(true),
 					Strategy:             Ptr("api"),
 				},
 				Sync: &configfile.Sync{

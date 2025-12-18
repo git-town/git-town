@@ -38,6 +38,7 @@ Feature: Accepting all default values leads to a working setup
       | push-hook                   | enter      |
       | ship-strategy               | enter      |
       | ship-delete-tracking branch | enter      |
+      | ignore-uncommitted          | enter      |
       | order                       | enter      |
       | proposals show lineage      | enter      |
       | config storage              | enter      |
@@ -57,6 +58,7 @@ Feature: Accepting all default values leads to a working setup
       | git config git-town.share-new-branches no            |
       | git config git-town.ship-strategy api                |
       | git config git-town.ship-delete-tracking-branch true |
+      | git config git-town.ignore-uncommitted true          |
       | git config git-town.stash true                       |
       | git config git-town.sync-feature-strategy merge      |
       | git config git-town.sync-perennial-strategy ff-only  |

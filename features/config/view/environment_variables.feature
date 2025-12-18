@@ -30,6 +30,7 @@ Feature: display configuration defined in environment variables
       | GIT_TOWN_GITHUB_TOKEN                | github-token       |
       | GIT_TOWN_GITLAB_CONNECTOR_TYPE       | glab               |
       | GIT_TOWN_GITLAB_TOKEN                | gitlab-token       |
+      | GIT_TOWN_IGNORE_UNCOMMITTED          | true               |
       | GIT_TOWN_MAIN_BRANCH                 | dev                |
       | GIT_TOWN_NEW_BRANCH_TYPE             | prototype          |
       | GIT_TOWN_OBSERVED_REGEX              | ^dependabot/       |
@@ -98,6 +99,7 @@ Feature: display configuration defined in environment variables
 
       Ship:
         delete tracking branch: no
+        ignore uncommitted changes: yes
         ship strategy: fast-forward
 
       Sync:

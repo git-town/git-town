@@ -25,6 +25,7 @@ Feature: show the configuration
     And Git setting "git-town.contribution-regex" is "^git-contribution-regex"
     And Git setting "git-town.detached" is "true"
     And Git setting "git-town.display-types" is "no"
+    And Git setting "git-town.ignore-uncommitted" is "false"
     And Git setting "git-town.observed-regex" is "^git-observed-regex"
     And Git setting "git-town.perennial-regex" is "^git-perennial-"
     And Git setting "git-town.feature-regex" is "git-feature-.*"
@@ -67,6 +68,7 @@ Feature: show the configuration
 
       [ship]
       delete-tracking-branch = true
+      ignore-uncommitted = true
       strategy = "api"
 
       [sync]
@@ -126,6 +128,7 @@ Feature: show the configuration
 
       Ship:
         delete tracking branch: no
+        ignore uncommitted changes: no
         ship strategy: squash-merge
 
       Sync:

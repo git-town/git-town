@@ -34,6 +34,7 @@ const (
 	githubToken              = "GIT_TOWN_GITHUB_TOKEN"
 	gitlabConnectorType      = "GIT_TOWN_GITLAB_CONNECTOR_TYPE"
 	gitlabToken              = "GIT_TOWN_GITLAB_TOKEN"
+	ignoreUncommitted        = "GIT_TOWN_IGNORE_UNCOMMITTED"
 	mainBranch               = "GIT_TOWN_MAIN_BRANCH"
 	newBranchType            = "GIT_TOWN_NEW_BRANCH_TYPE"
 	observedRegex            = "GIT_TOWN_OBSERVED_REGEX"
@@ -77,6 +78,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	gitUserName := gitAuthorNameValue.Or(gitCommitterNameValue)
 	githubConnectorType, errGitHubConnectorType := load(env, githubConnectorType, forgedomain.ParseGitHubConnectorType)
 	gitlabConnectorType, errGitLabConnectorType := load(env, gitlabConnectorType, forgedomain.ParseGitLabConnectorType)
+	ignoreUncommitted, errIgnoreUncommitted := load(env, ignoreUncommitted, gohacks.ParseBoolOpt[configdomain.IgnoreUncommitted])
 	newBranchType, errNewBranchType := load(env, newBranchType, configdomain.ParseBranchType)
 	observedRegex, errObservedRegex := load(env, observedRegex, configdomain.ParseObservedRegex)
 	order, errOrder := configdomain.ParseOrder(env.Get(order), order)
@@ -109,6 +111,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errForgeType,
 		errGitHubConnectorType,
 		errGitLabConnectorType,
+		errIgnoreUncommitted,
 		errNewBranchType,
 		errObservedRegex,
 		errOffline,
@@ -154,6 +157,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		GitUserName:              gitUserName,
 		GiteaToken:               forgedomain.ParseGiteaToken(env.Get(giteaToken)),
 		HostingOriginHostname:    configdomain.ParseHostingOriginHostname(env.Get(originHostname)),
+		IgnoreUncommitted:        ignoreUncommitted,
 		Lineage:                  configdomain.NewLineage(), // not loaded from env vars
 		MainBranch:               gitdomain.NewLocalBranchNameOption(env.Get(mainBranch)),
 		NewBranchType:            configdomain.NewBranchTypeOpt(newBranchType),

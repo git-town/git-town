@@ -111,15 +111,16 @@ func prependCommand() *cobra.Command {
 				commit = true
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:  autoResolve,
-				AutoSync:     sync,
-				Detached:     detached,
-				DisplayTypes: None[configdomain.DisplayTypes](),
-				DryRun:       dryRun,
-				Order:        None[configdomain.Order](),
-				PushBranches: push,
-				Stash:        stash,
-				Verbose:      verbose,
+				AutoResolve:       autoResolve,
+				AutoSync:          sync,
+				Detached:          detached,
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            dryRun,
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      push,
+				Stash:             stash,
+				Verbose:           verbose,
 			})
 			return executePrepend(prependArgs{
 				argv:          args,

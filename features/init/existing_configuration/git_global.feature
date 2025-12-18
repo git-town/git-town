@@ -12,6 +12,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
     And global Git setting "git-town.feature-regex" is "^feat-"
     And global Git setting "git-town.contribution-regex" is "^cont-"
     And global Git setting "git-town.observed-regex" is "^obs-"
+    And global Git setting "git-town.ignore-uncommitted" is "true"
     And global Git setting "git-town.main-branch" is "main"
     And global Git setting "git-town.new-branch-type" is "prototype"
     And global Git setting "git-town.unknown-branch-type" is "prototype"
@@ -62,6 +63,7 @@ Feature: setup a new repo when I have configured some things in global Git metad
       | push hook                   | enter       |
       | ship strategy               | enter       |
       | ship delete tracking branch | enter       |
+      | ignore-uncommitted          | enter       |
       | order                       | enter       |
       | proposals show lineage      | enter       |
       | config storage              | enter       |

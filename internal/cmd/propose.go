@@ -79,15 +79,16 @@ func proposeCommand() *cobra.Command {
 				return err
 			}
 			cliConfig := cliconfig.New(cliconfig.NewArgs{
-				AutoResolve:  autoResolve,
-				AutoSync:     None[configdomain.AutoSync](),
-				Detached:     Some(configdomain.Detached(true)),
-				DisplayTypes: None[configdomain.DisplayTypes](),
-				DryRun:       dryRun,
-				Order:        None[configdomain.Order](),
-				PushBranches: None[configdomain.PushBranches](),
-				Stash:        None[configdomain.Stash](),
-				Verbose:      verbose,
+				AutoResolve:       autoResolve,
+				AutoSync:          None[configdomain.AutoSync](),
+				Detached:          Some(configdomain.Detached(true)),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            dryRun,
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
 			})
 			return executePropose(proposeArgs{
 				body:      bodyText,

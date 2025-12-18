@@ -56,6 +56,7 @@ Feature: show the configuration when using an alternative config file
 
       Ship:
         delete tracking branch: yes
+        ignore uncommitted changes: no
         ship strategy: api
 
       Sync:

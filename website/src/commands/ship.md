@@ -3,7 +3,7 @@
 <a type="git-town-command" />
 
 ```command-summary
-git town ship [<branch-name>] [--dry-run] [-h | --help] [(-m | --message) <text>] [(-f | --message-file) <path>] [(-s | --strategy) <name>] [-p | --to-parent] [-v | --verbose]
+git town ship [<branch-name>] [--dry-run] [-h | --help] [--(no)-ignore-uncommitted] [(-m | --message) <text>] [(-f | --message-file) <path>] [(-s | --strategy) <name>] [-p | --to-parent] [-v | --verbose]
 ```
 
 _Notice: Most people don't need to use this command. The recommended way to
@@ -19,6 +19,11 @@ The branch to ship must be in sync. If it isn't in sync, `git town ship` will
 exit with an error. When that happens, run [git town sync](sync.md) to get the
 branch in sync, re-test and re-review the updated branch, and then run
 `git town ship` again.
+
+To ensure that everything on your branch gets shipped, this command verifies
+that your workspace contains no uncommitted changes. You can configure this
+behavior using the [ignore-uncommitted](../preferences/ignore-uncommitted.md)
+setting.
 
 ## Positional argument
 
@@ -37,6 +42,11 @@ that would be run but doesn't execute them.
 #### `-h`<br>`--help`
 
 Display help for this command.
+
+#### `--ignore-uncommitted`<br>`--no-ignore-uncommitted`
+
+Overrides the [ignore-uncommitted](../preferences/ignore-uncommitted.md) setting
+for this call.
 
 #### `-m <text>`<br>`--message <text>`
 

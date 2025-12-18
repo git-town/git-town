@@ -8,6 +8,7 @@ Feature: change existing information in Git metadata
       | qa         | perennial | local, origin |
       | production | (none)    | local, origin |
     And the main branch is "main"
+    And local Git setting "git-town.ignore-uncommitted" is "true"
     And local Git setting "git-town.new-branch-type" is "parked"
     And local Git setting "git-town.share-new-branches" is "no"
     And local Git setting "git-town.order" is "desc"
@@ -49,6 +50,7 @@ Feature: change existing information in Git metadata
       | push hook                   | down enter             |
       | ship strategy               | down down enter        |
       | ship delete tracking branch | down enter             |
+      | ignore-uncommitted          | up enter               |
       | order                       | up enter               |
       | proposals show lineage      | down enter             |
       | config storage              | enter                  |
@@ -94,6 +96,7 @@ Feature: change existing information in Git metadata
       | git config git-town.share-new-branches push              |
       | git config git-town.ship-strategy fast-forward           |
       | git config git-town.ship-delete-tracking-branch true     |
+      | git config git-town.ignore-uncommitted false             |
       | git config git-town.stash false                          |
       | git config git-town.sync-feature-strategy rebase         |
       | git config git-town.sync-perennial-strategy rebase       |
@@ -111,6 +114,7 @@ Feature: change existing information in Git metadata
     And global Git setting "alias.set-parent" is now "town set-parent"
     And global Git setting "alias.ship" is now "town ship"
     And global Git setting "alias.sync" is now "town sync"
+    And local Git setting "git-town.ignore-uncommitted" is now "false"
     And local Git setting "git-town.perennial-branches" is now "production qa"
     And local Git setting "git-town.new-branch-type" is now "prototype"
     And local Git setting "git-town.forge-type" is now "github"
@@ -151,6 +155,7 @@ Feature: change existing information in Git metadata
     And global Git setting "alias.ship" now doesn't exist
     And global Git setting "alias.sync" now doesn't exist
     And local Git setting "git-town.auto-sync" is now "false"
+    And local Git setting "git-town.ignore-uncommitted" is now "true"
     And local Git setting "git-town.new-branch-type" is now "parked"
     And local Git setting "git-town.share-new-branches" is now "no"
     And local Git setting "git-town.push-branches" is now "false"
