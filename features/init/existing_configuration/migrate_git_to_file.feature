@@ -114,6 +114,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.ship-delete-tracking-branch" now doesn't exist
     And local Git setting "git-town.proposals-show-lineage" now doesn't exist
     And local Git setting "git-town.stash" now doesn't exist
+    # keep-sorted end
     And the configuration file is now:
       """
       # See https://www.git-town.com/configuration-file for details

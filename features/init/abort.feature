@@ -22,5 +22,6 @@ Feature: aborting the setup assistant
     And local Git setting "git-town.sync-perennial-strategy" still doesn't exist
     And local Git setting "git-town.sync-upstream" still doesn't exist
     And local Git setting "git-town.ship-delete-tracking-branch" still doesn't exist
+    # keep-sorted end
     And the main branch is still not set
     And there are still no perennial branches
