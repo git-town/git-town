@@ -285,6 +285,7 @@ EnterForgeData:
 		GitUserName:              None[gitdomain.GitUserName](),
 		GiteaToken:               giteaToken,
 		HostingOriginHostname:    hostingOriginHostName,
+		IgnoreUncommitted:        None[configdomain.IgnoreUncommitted](),
 		Lineage:                  configdomain.NewLineage(), // the setup assistant doesn't ask for this
 		MainBranch:               mainBranchSetting,
 		NewBranchType:            newBranchType,
@@ -298,7 +299,6 @@ EnterForgeData:
 		PushHook:                 pushHook,
 		ShareNewBranches:         shareNewBranches,
 		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,
-		IgnoreUncommitted:        None[configdomain.IgnoreUncommitted](),
 		ShipStrategy:             shipStrategy,
 		Stash:                    stash,
 		SyncFeatureStrategy:      syncFeatureStrategy,
