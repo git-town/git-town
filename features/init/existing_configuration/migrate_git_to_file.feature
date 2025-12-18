@@ -62,7 +62,6 @@ Feature: migrate existing configuration in Git metadata to a config file
       | proposals show lineage      | enter      |
       | config storage              | down enter |
 
-  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                                 |
@@ -161,6 +160,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     When I run "git-town undo"
     Then local Git setting "git-town.auto-sync" is now "false"
     And local Git setting "git-town.dev-remote" is now "fork"
+    And local Git setting "git-town.ignore-uncommitted" is now "true"
     And local Git setting "git-town.new-branch-type" is now "prototype"
     And local Git setting "git-town.perennial-regex" is now "release-.*"
     And local Git setting "git-town.feature-regex" is now "user-.*"
