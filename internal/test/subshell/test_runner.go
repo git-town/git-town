@@ -168,7 +168,6 @@ func (self *TestRunner) QueryWith(opts *Options, cmd string, args ...string) (st
 
 // QueryWith runs the given command with the given options in this ShellRunner's directory.
 func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string) (output string, exitCode int, err error) {
-	fmt.Println("555555555555555555555555555555", cmd, args)
 	currentBranchText := ""
 	if self.Verbose {
 		getBranchCmd := exec.Command("git", "rev-parse", "--abbrev-ref", "HEAD")

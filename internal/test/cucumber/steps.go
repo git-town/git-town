@@ -1570,7 +1570,6 @@ func runCommand(state *ScenarioState, command string, captureState bool) {
 		state.CaptureState()
 		updateInitialSHAs(state)
 	}
-	fmt.Println("222222222222222222222222222222")
 	var exitCode int
 	var runOutput string
 	env := os.Environ()
@@ -1578,11 +1577,9 @@ func runCommand(state *ScenarioState, command string, captureState bool) {
 		env = envvars.Replace(env, envconfig.Browser, browserVariable)
 	}
 	if hasDevRepo {
-		fmt.Println("333333333333333333333333333333")
 		runOutput, exitCode = devRepo.MustQueryStringCodeWith(command, &subshell.Options{
 			Env: env,
 		})
-		fmt.Println("444444444444444444444444444444")
 		devRepo.Reload()
 	} else {
 		parts := asserts.NoError1(shellquote.Split(command))

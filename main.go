@@ -6,7 +6,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"runtime/debug"
 
@@ -15,7 +14,6 @@ import (
 )
 
 func main() {
-	fmt.Println("GIT TOWN!!!!!")
 	debug.SetGCPercent(-1)
 	if err := cmd.Execute(); err != nil {
 		print.Error(err)
