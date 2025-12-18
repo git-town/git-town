@@ -102,6 +102,10 @@ func RemoveGiteaToken(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGiteaToken)
 }
 
+func RemoveIgnoreUncommitted(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyIgnoreUncommitted)
+}
+
 func RemoveMainBranch(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyMainBranch)
 }
@@ -257,6 +261,10 @@ func SetGitLabToken(runner subshelldomain.Runner, value forgedomain.GitLabToken,
 
 func SetGiteaToken(runner subshelldomain.Runner, value forgedomain.GiteaToken, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyGiteaToken, value.String())
+}
+
+func SetIgnoreUncommitted(runner subshelldomain.Runner, value configdomain.IgnoreUncommitted, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyIgnoreUncommitted, strconv.FormatBool(value.AllowUncommitted()))
 }
 
 func SetMainBranch(runner subshelldomain.Runner, value gitdomain.LocalBranchName, scope configdomain.ConfigScope) error {

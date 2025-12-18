@@ -72,6 +72,7 @@ Feature: show the configuration in Spanish
 
       Ship:
         delete tracking branch: yes
+        ignore uncommitted changes: no
         ship strategy: squash-merge
 
       Sync:

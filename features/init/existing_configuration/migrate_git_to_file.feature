@@ -8,6 +8,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.perennial-regex" is "release-.*"
     And local Git setting "git-town.perennial-branches" is "qa"
     And local Git setting "git-town.feature-regex" is "user-.*"
+    And local Git setting "git-town.ignore-uncommitted" is "true"
     And local Git setting "git-town.contribution-regex" is "coworker-.*"
     And local Git setting "git-town.observed-regex" is "other-.*"
     And local Git setting "git-town.dev-remote" is "fork"
@@ -56,6 +57,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | push hook                   | enter      |
       | ship strategy               | enter      |
       | ship delete tracking branch | enter      |
+      | ignore-uncommitted          | enter      |
       | order                       | enter      |
       | proposals show lineage      | enter      |
       | config storage              | down enter |
@@ -80,6 +82,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | git config --unset git-town.push-hook                   |
       | git config --unset git-town.ship-strategy               |
       | git config --unset git-town.ship-delete-tracking-branch |
+      | git config --unset git-town.ignore-uncommitted          |
       | git config --unset git-town.stash                       |
       | git config --unset git-town.sync-feature-strategy       |
       | git config --unset git-town.sync-perennial-strategy     |
@@ -89,6 +92,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.auto-sync" now doesn't exist
     And local Git setting "git-town.forge-type" now doesn't exist
     And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
+    And local Git setting "git-town.ignore-uncommitted" now doesn't exist
     And local Git setting "git-town.sync-feature-strategy" now doesn't exist
     And local Git setting "git-town.sync-perennial-strategy" now doesn't exist
     And local Git setting "git-town.sync-upstream" now doesn't exist
@@ -135,6 +139,7 @@ Feature: migrate existing configuration in Git metadata to a config file
 
       [ship]
       delete-tracking-branch = false
+      ignore-uncommitted = true
       strategy = "squash-merge"
 
       [sync]
@@ -155,6 +160,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     When I run "git-town undo"
     Then local Git setting "git-town.auto-sync" is now "false"
     And local Git setting "git-town.dev-remote" is now "fork"
+    And local Git setting "git-town.ignore-uncommitted" is now "true"
     And local Git setting "git-town.new-branch-type" is now "prototype"
     And local Git setting "git-town.perennial-regex" is now "release-.*"
     And local Git setting "git-town.feature-regex" is now "user-.*"

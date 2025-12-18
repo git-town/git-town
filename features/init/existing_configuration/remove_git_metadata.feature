@@ -32,6 +32,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.feature-regex" is "user.*"
     And local Git setting "git-town.forge-type" is "github"
     And local Git setting "git-town.hosting-origin-hostname" is "code"
+    And local Git setting "git-town.ignore-uncommitted" is "true"
     And local Git setting "git-town.new-branch-type" is "parked"
     And local Git setting "git-town.observed-regex" is "obs.*"
     And local Git setting "git-town.order" is "desc"
@@ -79,6 +80,7 @@ Feature: remove existing configuration in Git metadata
       | push hook                   | down enter                                                                  | enable              |
       | ship strategy               | down enter                                                                  |                     |
       | ship delete tracking branch | down enter                                                                  | disable             |
+      | ignore-uncommitted          | up enter                                                                    | disable             |
       | order                       | up enter                                                                    |                     |
       | proposals show lineage      | down enter                                                                  |                     |
       | config storage              | enter                                                                       | git metadata        |
@@ -120,6 +122,7 @@ Feature: remove existing configuration in Git metadata
       | git config git-town.share-new-branches no            |
       | git config git-town.ship-strategy api                |
       | git config git-town.ship-delete-tracking-branch true |
+      | git config git-town.ignore-uncommitted false         |
       | git config git-town.stash true                       |
       | git config git-town.sync-feature-strategy merge      |
       | git config git-town.sync-perennial-strategy rebase   |
@@ -139,6 +142,7 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.sync" now doesn't exist
     And local Git setting "git-town.auto-sync" is now "true"
     And local Git setting "git-town.dev-remote" is now "fork"
+    And local Git setting "git-town.ignore-uncommitted" is now "false"
     And local Git setting "git-town.new-branch-type" is now "feature"
     And local Git setting "git-town.order" is now "asc"
     And local Git setting "git-town.proposals-show-lineage" is now "cli"
@@ -183,6 +187,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.feature-regex" is now "user.*"
     And local Git setting "git-town.forge-type" is now "github"
     And local Git setting "git-town.hosting-origin-hostname" is now "code"
+    And local Git setting "git-town.ignore-uncommitted" is now "true"
     And local Git setting "git-town.new-branch-type" is now "parked"
     And local Git setting "git-town.observed-regex" is now "obs.*"
     And local Git setting "git-town.order" is now "desc"

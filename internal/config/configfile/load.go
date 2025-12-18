@@ -44,6 +44,7 @@ func Load(rootDir gitdomain.RepoRootDir, fileName string, finalMessages stringsl
 
 // Validate converts the given low-level configfile data into high-level config data.
 func Validate(data Data, finalMessages stringslice.Collector) (configdomain.PartialConfig, error) {
+	// TODO: convert to proper variable initialization using None
 	var (
 		// keep-sorted start
 		autoResolve              Option[configdomain.AutoResolve]
@@ -59,6 +60,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		githubConnectorType      Option[forgedomain.GitHubConnectorType]
 		gitlabConnectorType      Option[forgedomain.GitLabConnectorType]
 		hostingOriginHostname    Option[configdomain.HostingOriginHostname]
+		ignoreUncommitted        Option[configdomain.IgnoreUncommitted]
 		mainBranch               Option[gitdomain.LocalBranchName]
 		newBranchType            Option[configdomain.NewBranchType]
 		observedRegex            Option[configdomain.ObservedRegex]
@@ -216,6 +218,9 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		if data.Ship.DeleteTrackingBranch != nil {
 			shipDeleteTrackingBranch = Some(configdomain.ShipDeleteTrackingBranch(*data.Ship.DeleteTrackingBranch))
 		}
+		if data.Ship.IgnoreUncommitted != nil {
+			ignoreUncommitted = Some(configdomain.IgnoreUncommitted(*data.Ship.IgnoreUncommitted))
+		}
 		if data.Ship.Strategy != nil {
 			shipStrategy = Some(configdomain.ShipStrategy(*data.Ship.Strategy))
 		}
@@ -308,6 +313,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		PushHook:                 pushHook,
 		ShareNewBranches:         shareNewBranches,
 		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,
+		IgnoreUncommitted:        ignoreUncommitted,
 		ShipStrategy:             shipStrategy,
 		Stash:                    stash,
 		SyncFeatureStrategy:      syncFeatureStrategy,

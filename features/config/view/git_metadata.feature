@@ -23,6 +23,7 @@ Feature: display configuration from Git metadata
     And Git setting "git-town.browser" is "firefox"
     And Git setting "git-town.contribution-regex" is "^renovate/"
     And Git setting "git-town.display-types" is "all"
+    And Git setting "git-town.ignore-uncommitted" is "true"
     And Git setting "git-town.observed-regex" is "^dependabot/"
     And Git setting "git-town.feature-regex" is "^user-.*$"
     And Git setting "git-town.ship-strategy" is "squash-merge"
@@ -79,6 +80,7 @@ Feature: display configuration from Git metadata
 
       Ship:
         delete tracking branch: yes
+        ignore uncommitted changes: yes
         ship strategy: squash-merge
 
       Sync:
@@ -151,6 +153,7 @@ Feature: display configuration from Git metadata
 
       Ship:
         delete tracking branch: yes
+        ignore uncommitted changes: no
         ship strategy: api
 
       Sync:

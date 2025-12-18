@@ -17,6 +17,7 @@ Feature: ask for information not provided by the config file
 
       [ship]
       delete-tracking-branch = false
+      ignore-uncommitted = true
 
       [sync]
       auto-sync = false
