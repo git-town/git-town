@@ -12,7 +12,7 @@ const ignoreUncommittedLong = "ignore-uncommitted"
 func IgnoreUncommitted() (AddFunc, ReadIgnoreUncommittedFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.Flags().Bool(ignoreUncommittedLong, false, "ignore uncommitted changes")
-		defineNegatedFlag(cmd.Flags(), ignoreUncommittedLong, "don't ignore uncommitted changes")
+		defineNegatedFlag(cmd.Flags(), ignoreUncommittedLong, "warn about uncommitted changes")
 	}
 	readFlag := func(cmd *cobra.Command) (Option[configdomain.IgnoreUncommitted], error) {
 		return readBoolOptFlag[configdomain.IgnoreUncommitted](cmd.Flags(), ignoreUncommittedLong)
