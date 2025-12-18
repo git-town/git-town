@@ -10,7 +10,7 @@ func (self IgnoreUncommitted) AllowUncommitted() bool {
 }
 
 func (self IgnoreUncommitted) DisAllowUncommitted() bool {
-	return bool(self)
+	return !self.AllowUncommitted()
 }
 
 func (self IgnoreUncommitted) String() string {
