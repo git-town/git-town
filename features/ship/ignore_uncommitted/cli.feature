@@ -19,7 +19,7 @@ Feature: ignore uncommitted changes using CLI flag
       | feature | git fetch --prune --tags        |
       |         | git checkout main               |
       | main    | git merge --squash --ff feature |
-      |         | git commit -m done              |
+      |         | git commit -m shipped           |
       |         | git push                        |
       |         | git push origin :feature        |
       |         | git branch -D feature           |
