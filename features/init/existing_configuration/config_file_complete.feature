@@ -14,26 +14,26 @@ Feature: don't ask for information already provided by the config file
       perennials = ["staging"]
       unknown-type = "observed"
       order = "desc"
-      
+
       [create]
       branch-prefix = "acme-"
       new-branch-type = "feature"
       share-new-branches = "propose"
       stash = true
-      
+
       [hosting]
       dev-remote = "something"
       origin-hostname = "github.com"
       forge-type = "github"
-      
+
       [propose]
       lineage = "none"
-      
+
       [ship]
       delete-tracking-branch = true
       ignore-uncommitted = true
       strategy = "api"
-      
+
       [sync]
       auto-sync = false
       detached = false
@@ -43,7 +43,7 @@ Feature: don't ask for information already provided by the config file
       push-hook = true
       tags = true
       upstream = true
-      
+
       [sync-strategy]
       feature-branches = "rebase"
       prototype-branches = "merge"

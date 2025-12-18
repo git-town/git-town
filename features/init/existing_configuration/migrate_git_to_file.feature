@@ -114,7 +114,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And the configuration file is now:
       """
       # See https://www.git-town.com/configuration-file for details
-      
+
       [branches]
       contribution-regex = "coworker-.*"
       feature-regex = "user-.*"
@@ -124,24 +124,24 @@ Feature: migrate existing configuration in Git metadata to a config file
       perennials = ["qa"]
       perennial-regex = "release-.*"
       unknown-branch-type = "observed"
-      
+
       [create]
       branch-prefix = "acme-"
       new-branch-type = "prototype"
       share-new-branches = "no"
       stash = false
-      
+
       [hosting]
       dev-remote = "fork"
-      
+
       [propose]
       lineage = "cli"
-      
+
       [ship]
       delete-tracking-branch = false
       ignore-uncommitted = true
       strategy = "squash-merge"
-      
+
       [sync]
       auto-sync = false
       detached = false
