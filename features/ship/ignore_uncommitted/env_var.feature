@@ -24,8 +24,8 @@ Feature: ignore uncommitted changes using the environment variable
       |         | git push                        |
       |         | git push origin :feature        |
       |         | git branch -D feature           |
+    And the current branch is now "main"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE |
       | main   | local, origin | shipped |
-    And the current branch is now "main"
     And the uncommitted file still exists

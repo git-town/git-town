@@ -24,10 +24,10 @@ Feature: ignore uncommitted changes using CLI flag
       |         | git push origin :feature        |
       |         | git branch -D feature           |
     And the current branch is now "main"
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE |
-      | main   | local, origin | shipped |
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE |
+      | main   | local, origin | shipped |
     And the uncommitted file still exists
