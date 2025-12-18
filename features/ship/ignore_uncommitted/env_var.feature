@@ -11,21 +11,21 @@ Feature: ignore uncommitted changes using the config file
     And Git setting "git-town.ship-strategy" is "squash-merge"
     And the current branch is "feature"
     And an uncommitted file
-    When I run "git-town ship" with these environment variables
+    When I run "git-town ship -m shipped" with these environment variables
       | GIT_TOWN_IGNORE_UNCOMMITTED | true |
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                     |
-      | feature | git add -A                                                  |
-      |         | git stash -m "Git Town WIP"                                 |
-      |         | git checkout main                                           |
-      | main    | git -c color.ui=always merge --squash --ff feature          |
-      |         | git commit -m "feature commit" --trailer "Co-authored-by: " |
-      |         | git push                                                    |
-      |         | git push origin :feature                                    |
-      |         | git branch -D feature                                       |
-      |         | git stash pop                                               |
-      |         | git restore --staged .                                      |
+      | BRANCH  | COMMAND                         |
+      | feature | git fetch --prune --tags        |
+      |         | git checkout main               |
+      | main    | git merge --squash --ff feature |
+      |         | git commit -m shipped           |
+      |         | git push                        |
+      |         | git push origin :feature        |
+      |         | git branch -D feature           |
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE |
+      | main   | local, origin | shipped |
     And the current branch is now "main"
     And the uncommitted file still exists

@@ -12,20 +12,17 @@ Feature: ignore uncommitted changes using Git metadata
     And Git setting "git-town.ship-strategy" is "squash-merge"
     And the current branch is "feature"
     And an uncommitted file
-    When I run "git-town ship"
+    When I run "git-town ship -m shipped"
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                     |
-      | feature | git add -A                                                  |
-      |         | git stash -m "Git Town WIP"                                 |
-      |         | git checkout main                                           |
-      | main    | git -c color.ui=always merge --squash --ff feature          |
-      |         | git commit -m "feature commit" --trailer "Co-authored-by: " |
-      |         | git push                                                    |
-      |         | git push origin :feature                                    |
-      |         | git branch -D feature                                       |
-      |         | git stash pop                                               |
-      |         | git restore --staged .                                      |
+      | BRANCH  | COMMAND                         |
+      | feature | git fetch --prune --tags        |
+      |         | git checkout main               |
+      | main    | git merge --squash --ff feature |
+      |         | git commit -m shipped           |
+      |         | git push                        |
+      |         | git push origin :feature        |
+      |         | git branch -D feature           |
     And the current branch is now "main"
     And the uncommitted file still exists

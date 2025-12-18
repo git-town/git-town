@@ -11,7 +11,7 @@ Feature: ignore uncommitted changes using CLI flag
     And Git setting "git-town.ship-strategy" is "squash-merge"
     And the current branch is "feature"
     And an uncommitted file
-    When I run "git-town ship --ignore-uncommitted -m done"
+    When I run "git-town ship --ignore-uncommitted -m shipped"
 
   Scenario: result
     Then Git Town runs the commands
@@ -26,7 +26,7 @@ Feature: ignore uncommitted changes using CLI flag
     And the current branch is now "main"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE |
-      | main   | local, origin | done    |
+      | main   | local, origin | shipped |
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
