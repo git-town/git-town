@@ -50,7 +50,7 @@ Feature: display invalid Git metadata
       Ignoring invalid value for "git-town.sync-tags": "zonk"
       Ignoring invalid value for "git-town.sync-upstream": "zonk"
       Ignoring invalid value for "git-town.unknown-branch-type": "zonk"
-      
+
       Branches:
         contribution branches: (none)
         contribution regex: (not set)
@@ -65,18 +65,18 @@ Feature: display invalid Git metadata
         unknown branch type: feature
         order: asc
         display types: all branch types except "feature" and "main"
-      
+
       Configuration:
         offline: no
         git user name: user
         git user email: email@example.com
-      
+
       Create:
         branch prefix: (not set)
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: yes
-      
+
       Hosting:
         browser: (not set)
         development remote: origin
@@ -90,15 +90,15 @@ Feature: display invalid Git metadata
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
-      
+
       Propose:
         lineage: none
-      
+
       Ship:
         delete tracking branch: yes
         ignore uncommitted changes: no
         ship strategy: api
-      
+
       Sync:
         auto-resolve phantom conflicts: yes
         auto-sync: yes
