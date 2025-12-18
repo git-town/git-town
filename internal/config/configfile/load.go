@@ -44,6 +44,7 @@ func Load(rootDir gitdomain.RepoRootDir, fileName string, finalMessages stringsl
 
 // Validate converts the given low-level configfile data into high-level config data.
 func Validate(data Data, finalMessages stringslice.Collector) (configdomain.PartialConfig, error) {
+	// TODO: convert to proper variable initialization using None
 	var (
 		// keep-sorted start
 		autoResolve              Option[configdomain.AutoResolve]
