@@ -100,6 +100,7 @@ Feature: change existing information in Git metadata
       | git config git-town.sync-prototype-strategy rebase       |
       | git config git-town.sync-upstream false                  |
       | git config git-town.sync-tags true                       |
+    # keep-sorted start
     And global Git setting "alias.append" is now "town append"
     And global Git setting "alias.diff-parent" is now "town diff-parent"
     And global Git setting "alias.hack" is now "town hack"
@@ -111,6 +112,9 @@ Feature: change existing information in Git metadata
     And global Git setting "alias.set-parent" is now "town set-parent"
     And global Git setting "alias.ship" is now "town ship"
     And global Git setting "alias.sync" is now "town sync"
+    # keep-sorted end
+    # keep-sorted start
+    And local Git setting "git-town.ignore-uncommitted" is now "false"
     And local Git setting "git-town.perennial-branches" is now "production qa"
     And local Git setting "git-town.new-branch-type" is now "prototype"
     And local Git setting "git-town.forge-type" is now "github"
@@ -134,11 +138,13 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.ship-delete-tracking-branch" is now "true"
     And local Git setting "git-town.proposals-show-lineage" is now "cli"
     And local Git setting "git-town.dev-remote" still doesn't exist
+    # keep-sorted end
     And the main branch is now "main"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
+    # keep-sorted start
     And global Git setting "alias.append" now doesn't exist
     And global Git setting "alias.diff-parent" now doesn't exist
     And global Git setting "alias.hack" now doesn't exist
@@ -150,6 +156,8 @@ Feature: change existing information in Git metadata
     And global Git setting "alias.set-parent" now doesn't exist
     And global Git setting "alias.ship" now doesn't exist
     And global Git setting "alias.sync" now doesn't exist
+    # keep-sorted end
+    # keep-sorted start
     And local Git setting "git-town.auto-sync" is now "false"
     And local Git setting "git-town.new-branch-type" is now "parked"
     And local Git setting "git-town.share-new-branches" is now "no"
@@ -171,5 +179,6 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.unknown-branch-type" now doesn't exist
     And local Git setting "git-town.ship-strategy" now doesn't exist
     And local Git setting "git-town.proposals-show-lineage" now doesn't exist
+    # keep-sorted end
     And the main branch is now "main"
     And the perennial branches are now "qa"

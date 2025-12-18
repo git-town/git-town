@@ -68,10 +68,11 @@ Feature: Accepting all default values leads to a working setup
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
+    # keep-sorted start
     And global Git setting "alias.append" still doesn't exist
+    And global Git setting "alias.delete" still doesn't exist
     And global Git setting "alias.diff-parent" still doesn't exist
     And global Git setting "alias.hack" still doesn't exist
-    And global Git setting "alias.delete" still doesn't exist
     And global Git setting "alias.prepend" still doesn't exist
     And global Git setting "alias.propose" still doesn't exist
     And global Git setting "alias.rename" still doesn't exist
@@ -79,25 +80,28 @@ Feature: Accepting all default values leads to a working setup
     And global Git setting "alias.set-parent" still doesn't exist
     And global Git setting "alias.ship" still doesn't exist
     And global Git setting "alias.sync" still doesn't exist
+    # keep-sorted end
+    # keep-sorted start
+    And local Git setting "git-town.branch-prefix" still doesn't exist
+    And local Git setting "git-town.contribution-regex" now doesn't exist
     And local Git setting "git-town.dev-remote" still doesn't exist
-    And local Git setting "git-town.new-branch-type" still doesn't exist
-    And local Git setting "git-town.main-branch" still doesn't exist
-    And local Git setting "git-town.perennial-branches" still doesn't exist
+    And local Git setting "git-town.feature-regex" now doesn't exist
     And local Git setting "git-town.forge-type" still doesn't exist
     And local Git setting "git-town.github-token" still doesn't exist
     And local Git setting "git-town.hosting-origin-hostname" still doesn't exist
-    And local Git setting "git-town.branch-prefix" still doesn't exist
-    And local Git setting "git-town.proposals-show-lineage" still doesn't exist
-    And local Git setting "git-town.feature-regex" now doesn't exist
-    And local Git setting "git-town.contribution-regex" now doesn't exist
+    And local Git setting "git-town.main-branch" still doesn't exist
+    And local Git setting "git-town.new-branch-type" still doesn't exist
     And local Git setting "git-town.observed-regex" now doesn't exist
+    And local Git setting "git-town.perennial-branches" still doesn't exist
+    And local Git setting "git-town.perennial-regex" still doesn't exist
+    And local Git setting "git-town.proposals-show-lineage" still doesn't exist
+    And local Git setting "git-town.push-hook" still doesn't exist
+    And local Git setting "git-town.share-new-branches" still doesn't exist
+    And local Git setting "git-town.ship-delete-tracking-branch" still doesn't exist
+    And local Git setting "git-town.ship-strategy" still doesn't exist
     And local Git setting "git-town.stash" still doesn't exist
     And local Git setting "git-town.sync-feature-strategy" still doesn't exist
     And local Git setting "git-town.sync-perennial-strategy" still doesn't exist
-    And local Git setting "git-town.sync-upstream" still doesn't exist
     And local Git setting "git-town.sync-tags" still doesn't exist
-    And local Git setting "git-town.perennial-regex" still doesn't exist
-    And local Git setting "git-town.share-new-branches" still doesn't exist
-    And local Git setting "git-town.push-hook" still doesn't exist
-    And local Git setting "git-town.ship-strategy" still doesn't exist
-    And local Git setting "git-town.ship-delete-tracking-branch" still doesn't exist
+    And local Git setting "git-town.sync-upstream" still doesn't exist
+  # keep-sorted end

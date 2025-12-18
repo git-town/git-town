@@ -17,6 +17,7 @@ Feature: Accepting all default values leads to a working setup
 
   Scenario: result
     Then Git Town runs no commands
+    # keep-sorted start
     And local Git setting "git-town.dev-remote" still doesn't exist
     And local Git setting "git-town.new-branch-type" still doesn't exist
     And local Git setting "git-town.main-branch" still doesn't exist
@@ -35,10 +36,11 @@ Feature: Accepting all default values leads to a working setup
     And local Git setting "git-town.sync-tags" still doesn't exist
     And local Git setting "git-town.ship-strategy" still doesn't exist
     And local Git setting "git-town.ship-delete-tracking-branch" still doesn't exist
+    # keep-sorted end
     And the configuration file is now:
       """
       # See https://www.git-town.com/configuration-file for details
-
+      
       [branches]
       main = "main"
       """
@@ -47,6 +49,7 @@ Feature: Accepting all default values leads to a working setup
 
   Scenario: undo
     When I run "git-town undo"
+    # keep-sorted start
     Then global Git setting "alias.append" still doesn't exist
     And global Git setting "alias.diff-parent" still doesn't exist
     And global Git setting "alias.hack" still doesn't exist
@@ -58,6 +61,8 @@ Feature: Accepting all default values leads to a working setup
     And global Git setting "alias.set-parent" still doesn't exist
     And global Git setting "alias.ship" still doesn't exist
     And global Git setting "alias.sync" still doesn't exist
+    # keep-sorted end
+    # keep-sorted start
     And local Git setting "git-town.dev-remote" still doesn't exist
     And local Git setting "git-town.new-branch-type" still doesn't exist
     And local Git setting "git-town.main-branch" still doesn't exist
@@ -78,3 +83,4 @@ Feature: Accepting all default values leads to a working setup
     And local Git setting "git-town.push-hook" still doesn't exist
     And local Git setting "git-town.ship-strategy" still doesn't exist
     And local Git setting "git-town.ship-delete-tracking-branch" still doesn't exist
+    # keep-sorted end

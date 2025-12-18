@@ -110,7 +110,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And the configuration file is now:
       """
       # See https://www.git-town.com/configuration-file for details
-
+      
       [branches]
       contribution-regex = "coworker-.*"
       feature-regex = "user-.*"
@@ -120,23 +120,23 @@ Feature: migrate existing configuration in Git metadata to a config file
       perennials = ["qa"]
       perennial-regex = "release-.*"
       unknown-branch-type = "observed"
-
+      
       [create]
       branch-prefix = "acme-"
       new-branch-type = "prototype"
       share-new-branches = "no"
       stash = false
-
+      
       [hosting]
       dev-remote = "fork"
-
+      
       [propose]
       lineage = "cli"
-
+      
       [ship]
       delete-tracking-branch = false
       strategy = "squash-merge"
-
+      
       [sync]
       auto-sync = false
       detached = false
@@ -154,6 +154,7 @@ Feature: migrate existing configuration in Git metadata to a config file
   Scenario: undo
     When I run "git-town undo"
     Then local Git setting "git-town.auto-sync" is now "false"
+    # keep-sorted start
     And local Git setting "git-town.dev-remote" is now "fork"
     And local Git setting "git-town.new-branch-type" is now "prototype"
     And local Git setting "git-town.perennial-regex" is now "release-.*"
@@ -173,4 +174,5 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.sync-perennial-strategy" is now "rebase"
     And local Git setting "git-town.sync-upstream" is now "true"
     And local Git setting "git-town.sync-tags" is now "false"
+    # keep-sorted end
     And the main branch is now "main"

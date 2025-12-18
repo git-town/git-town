@@ -4,6 +4,7 @@ Feature: Fix invalid configuration data
   Background:
     Given a Git repo with origin
     And Git Town is not configured
+    # keep-sorted start
     And local Git setting "init.defaultbranch" is "main"
     And local Git setting "git-town.feature-regex" is "(feat"
     And local Git setting "git-town.perennial-regex" is "(per"
@@ -26,6 +27,7 @@ Feature: Fix invalid configuration data
     And local Git setting "git-town.ship-strategy" is "zonk"
     And local Git setting "git-town.ship-delete-tracking-branch" is "zonk"
     And local Git setting "git-town.order" is "zonk"
+    # keep-sorted end
     When I run "git-town init" and enter into the dialogs:
       | DIALOG                      | KEYS                          |
       | welcome                     | enter                         |
@@ -107,6 +109,7 @@ Feature: Fix invalid configuration data
       Ignoring invalid value for "git-town.sync-upstream": "zonk"
       Ignoring invalid value for "git-town.unknown-branch-type": "zonk"
       """
+    # keep-sorted start
     And local Git setting "git-town.feature-regex" is now "feat"
     And local Git setting "git-town.perennial-regex" is now "per"
     And local Git setting "git-town.contribution-regex" is now "cont"
@@ -127,10 +130,12 @@ Feature: Fix invalid configuration data
     And local Git setting "git-town.ship-strategy" is now "always-merge"
     And local Git setting "git-town.ship-delete-tracking-branch" is now "false"
     And local Git setting "git-town.order" is now "desc"
+    # keep-sorted end
 
   Scenario: undo
     When I run "git-town undo"
     Then global Git setting "alias.append" now doesn't exist
+    # keep-sorted start
     And global Git setting "alias.diff-parent" now doesn't exist
     And global Git setting "alias.hack" now doesn't exist
     And global Git setting "alias.delete" now doesn't exist
@@ -141,6 +146,8 @@ Feature: Fix invalid configuration data
     And global Git setting "alias.set-parent" now doesn't exist
     And global Git setting "alias.ship" now doesn't exist
     And global Git setting "alias.sync" now doesn't exist
+    # keep-sorted end
+    # keep-sorted start
     And local Git setting "git-town.sync-feature-strategy" is now "--help"
     And local Git setting "git-town.new-branch-type" is now "zonk"
     And local Git setting "git-town.feature-regex" is now "(feat"
@@ -161,3 +168,4 @@ Feature: Fix invalid configuration data
     And local Git setting "git-town.forge-type" now doesn't exist
     And local Git setting "git-town.github-token" now doesn't exist
     And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
+    # keep-sorted end

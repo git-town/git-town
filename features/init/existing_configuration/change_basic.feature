@@ -8,6 +8,7 @@ Feature: don't change existing extended information when changing basic informat
       | qa         | perennial | local, origin |
       | production | (none)    | local, origin |
     And the main branch is "main"
+    # keep-sorted start
     And local Git setting "git-town.new-branch-type" is "parked"
     And local Git setting "git-town.share-new-branches" is "no"
     And local Git setting "git-town.order" is "desc"
@@ -32,6 +33,7 @@ Feature: don't change existing extended information when changing basic informat
     And local Git setting "git-town.ship-strategy" is "fast-forward"
     And local Git setting "git-town.ship-delete-tracking-branch" is "true"
     And local Git setting "git-town.proposals-show-lineage" is "cli"
+    # keep-sorted end
     When I run "git-town init" and enter into the dialogs:
       | DIALOG                | KEYS                   |
       | welcome               | enter                  |
@@ -54,6 +56,7 @@ Feature: don't change existing extended information when changing basic informat
       | git config git-town.hosting-origin-hostname code       |
       | git config git-town.forge-type github                  |
       | git config git-town.github-connector api               |
+    # keep-sorted start
     And local Git setting "git-town.auto-sync" is still "false"
     And local Git setting "git-town.detached" is still "false"
     And local Git setting "git-town.perennial-branches" is now "production qa"
@@ -79,11 +82,13 @@ Feature: don't change existing extended information when changing basic informat
     And local Git setting "git-town.proposals-show-lineage" is still "cli"
     And local Git setting "git-town.stash" still doesn't exist
     And local Git setting "git-town.dev-remote" still doesn't exist
+    # keep-sorted end
     And the main branch is now "main"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
+    # keep-sorted start
     And global Git setting "alias.append" still doesn't exist
     And global Git setting "alias.diff-parent" still doesn't exist
     And global Git setting "alias.hack" still doesn't exist
@@ -95,6 +100,8 @@ Feature: don't change existing extended information when changing basic informat
     And global Git setting "alias.set-parent" still doesn't exist
     And global Git setting "alias.ship" still doesn't exist
     And global Git setting "alias.sync" still doesn't exist
+    # keep-sorted end
+    # keep-sorted start
     And local Git setting "git-town.auto-sync" is still "false"
     And local Git setting "git-town.detached" is still "false"
     And local Git setting "git-town.new-branch-type" is still "parked"
@@ -117,5 +124,6 @@ Feature: don't change existing extended information when changing basic informat
     And local Git setting "git-town.forge-type" now doesn't exist
     And local Git setting "git-town.github-token" now doesn't exist
     And local Git setting "git-town.stash" still doesn't exist
+    # keep-sorted end
     And the main branch is now "main"
     And the perennial branches are now "qa"

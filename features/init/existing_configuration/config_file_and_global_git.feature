@@ -13,22 +13,22 @@ Feature: don't ask for information already provided by the config file
       perennial-regex = "release-"
       perennials = ["staging"]
       unknown-type = "observed"
-
+      
       [create]
       new-branch-type = "feature"
       share-new-branches = "propose"
       stash = true
-
+      
       [hosting]
       dev-remote = "something"
       origin-hostname = "github.com"
       forge-type = "github"
       github-connector = "gh"
-
+      
       [ship]
       delete-tracking-branch = true
       strategy = "api"
-
+      
       [sync]
       detached = false
       feature-strategy = "merge"
@@ -36,7 +36,7 @@ Feature: don't ask for information already provided by the config file
       push-hook = true
       tags = true
       upstream = true
-
+      
       [sync-strategy]
       feature-branches = "rebase"
       prototype-branches = "merge"
@@ -53,6 +53,7 @@ Feature: don't ask for information already provided by the config file
       | config storage     | enter |
     Then Git Town runs no commands
     And global Git setting "git-town.github-token" is still "123456"
+    # keep-sorted start
     And local Git setting "git-town.dev-remote" still doesn't exist
     And local Git setting "git-town.new-branch-type" still doesn't exist
     And local Git setting "git-town.main-branch" still doesn't exist
@@ -71,4 +72,5 @@ Feature: don't ask for information already provided by the config file
     And local Git setting "git-town.ship-strategy" still doesn't exist
     And local Git setting "git-town.ship-delete-tracking-branch" still doesn't exist
     And local Git setting "git-town.unknown-branch-type" still doesn't exist
+    # keep-sorted end
     And there are still no perennial branches
