@@ -13,7 +13,6 @@ Feature: ignore uncommitted changes using CLI flag
     And an uncommitted file
     When I run "git-town ship --ignore-uncommitted -m done"
 
-  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                         |
