@@ -99,6 +99,8 @@ func InitializeSuite(ctx *godog.TestSuiteContext) {
 }
 
 func defineSteps(sc *godog.ScenarioContext) {
+	// keep-sorted start block=yes
+
 	sc.Step(`^a coworker clones the repository$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.fixture.AddCoworkerRepo()
@@ -1562,6 +1564,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^wait 1 second to ensure new Git timestamps$`, func() {
 		time.Sleep(1 * time.Second)
 	})
+
+	// keep-sorted end
 }
 
 func runCommand(state *ScenarioState, command string, captureState bool) {
