@@ -3,7 +3,11 @@ package configfile_test
 import (
 	"testing"
 
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/config/configfile"
+	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
@@ -69,9 +73,9 @@ feature-branches = "merge"
 perennial-branches = "rebase"
 prototype-branches = "compress"
 `[1:]
-			have, err := configfile.Decode(give)
+			haveData, err := configfile.Decode(give)
 			must.NoError(t, err)
-			want := configfile.Data{
+			wantData := configfile.Data{
 				Branches: &configfile.Branches{
 					ContributionRegex: Ptr("^gittown-"),
 					DefaultType:       Ptr("contribution"),
@@ -125,7 +129,61 @@ prototype-branches = "compress"
 				SyncTags:                 Ptr(false),
 				SyncUpstream:             Ptr(true),
 			}
-			must.Eq(t, want, *have)
+			must.Eq(t, wantData, *haveData)
+
+			finalMessages := stringslice.Collector{}
+			haveConfig, err := configfile.Validate(*haveData, finalMessages)
+			must.NoError(t, err)
+			wantConfig := configdomain.PartialConfig{
+				Aliases:                  configdomain.Aliases{},
+				AutoResolve:              Some(configdomain.AutoResolve(false)),
+				AutoSync:                 Some(configdomain.AutoSync(false)),
+				BitbucketAppPassword:     None[forgedomain.BitbucketAppPassword]()
+				BitbucketUsername:        None[forgedomain.BitbucketUsername](),
+				BranchPrefix:             Option[configdomain.BranchPrefix]{},
+				BranchTypeOverrides:      configdomain.BranchTypeOverrides{},
+				Browser:                  Option[configdomain.Browser]{},
+				ContributionRegex:        None[configdomain.ContributionRegex](),
+				Detached:                 None[configdomain.Detached](),
+				DevRemote:                None[gitdomain.Remote](),
+				DisplayTypes:             Option[configdomain.DisplayTypes]{},
+				DryRun:                   Option[configdomain.DryRun]{},
+				FeatureRegex:             Option[configdomain.FeatureRegex]{},
+				ForgeType:                Option[forgedomain.ForgeType]{},
+				ForgejoToken:             Option[forgedomain.ForgejoToken]{},
+				GitHubConnectorType:      Option[forgedomain.GitHubConnectorType]{},
+				GitHubToken:              Option[forgedomain.GitHubToken]{},
+				GitLabConnectorType:      Option[forgedomain.GitLabConnectorType]{},
+				GitLabToken:              Option[forgedomain.GitLabToken]{},
+				GitUserEmail:             Option[gitdomain.GitUserEmail]{},
+				GitUserName:              Option[gitdomain.GitUserName]{},
+				GiteaToken:               Option[forgedomain.GiteaToken]{},
+				HostingOriginHostname:    Option[configdomain.HostingOriginHostname]{},
+				IgnoreUncommitted:        Option[configdomain.IgnoreUncommitted]{},
+				Lineage:                  configdomain.Lineage{},
+				MainBranch:               Option[gitdomain.LocalBranchName]{},
+				NewBranchType:            Option[configdomain.NewBranchType]{},
+				ObservedRegex:            Option[configdomain.ObservedRegex]{},
+				Offline:                  Option[configdomain.Offline]{},
+				Order:                    Option[configdomain.Order]{},
+				PerennialBranches:        gitdomain.LocalBranchNames{},
+				PerennialRegex:           Option[configdomain.PerennialRegex]{},
+				ProposalsShowLineage:     Option[forgedomain.ProposalsShowLineage]{},
+				PushBranches:             Option[configdomain.PushBranches]{},
+				PushHook:                 Option[configdomain.PushHook]{},
+				ShareNewBranches:         Option[configdomain.ShareNewBranches]{},
+				ShipDeleteTrackingBranch: Option[configdomain.ShipDeleteTrackingBranch]{},
+				ShipStrategy:             Option[configdomain.ShipStrategy]{},
+				Stash:                    Option[configdomain.Stash]{},
+				SyncFeatureStrategy:      Option[configdomain.SyncFeatureStrategy]{},
+				SyncPerennialStrategy:    Option[configdomain.SyncPerennialStrategy]{},
+				SyncPrototypeStrategy:    Option[configdomain.SyncPrototypeStrategy]{},
+				SyncTags:                 Option[configdomain.SyncTags]{},
+				SyncUpstream:             Option[configdomain.SyncUpstream]{},
+				UnknownBranchType:        Option[configdomain.UnknownBranchType]{},
+				Verbose:                  Option[configdomain.Verbose]{},
+			}
+			must.Eq(t, wantConfig, haveConfig)
 		})
 
 		t.Run("incomplete content", func(t *testing.T) {
