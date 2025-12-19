@@ -99,7 +99,7 @@ func InitializeSuite(ctx *godog.TestSuiteContext) {
 }
 
 func defineSteps(sc *godog.ScenarioContext) {
-	// keep-sorted start block=yes newline_separated=yes case=no by_regex=\w+
+	// keep-sorted start block=yes newline_separated=yes case=no by_regex=(\w+)\s*(\w+)
 
 	sc.Step(`^a coworker clones the repository$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
