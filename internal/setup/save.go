@@ -84,6 +84,7 @@ func saveAllToFile(userInput UserInput, existingConfigFile configdomain.PartialC
 	if err := configfile.Save(configData); err != nil {
 		return err
 	}
+	// keep-sorted start
 	if gitConfig.AutoSync.IsSome() {
 		_ = gitconfig.RemoveAutoSync(runner)
 	}
@@ -162,6 +163,7 @@ func saveAllToFile(userInput UserInput, existingConfigFile configdomain.PartialC
 	if gitConfig.UnknownBranchType.IsSome() {
 		_ = gitconfig.RemoveUnknownBranchType(runner)
 	}
+	// keep-sorted end
 	if err := saveUnknownBranchType(userInput.Data.UnknownBranchType, gitConfig.UnknownBranchType, runner); err != nil {
 		return err
 	}
