@@ -99,7 +99,7 @@ func InitializeSuite(ctx *godog.TestSuiteContext) {
 }
 
 func defineSteps(sc *godog.ScenarioContext) {
-	// keep-sorted start block=yes newline_separated=yes case=no by_regex=(\w+)\W*(\w+)\W*(\w+)\W*(\w+)\W*(\w+)
+	// keep-sorted start block=yes newline_separated=yes case=no by_regex=(\w+)\W*(\w+)\W*(\w+)\W*(\w+)\W*(\w+)\W*(\w+)\W*(\w+)\W*(\w+)\W*(\w+)
 	sc.Step(`^a coworker clones the repository$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.fixture.AddCoworkerRepo()
@@ -244,6 +244,19 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^an uncommitted file$`, func(ctx context.Context) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		filename := "uncommitted file"
+		state.uncommittedFileName = Some(filename)
+		content := "uncommitted content"
+		state.uncommittedContent = Some(content)
+		devRepo.CreateFile(
+			filename,
+			content,
+		)
+	})
+
 	sc.Step(`^an uncommitted file "([^"]+)" with content "([^"]+)"$`, func(ctx context.Context, name, content string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -258,19 +271,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		filePath := filepath.Join(devRepo.WorkingDir, name)
 		//nolint:gosec // need permission 700 here in order for tests to work
 		return os.WriteFile(filePath, []byte(content.Content), 0o700)
-	})
-
-	sc.Step(`^an uncommitted file$`, func(ctx context.Context) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		filename := "uncommitted file"
-		state.uncommittedFileName = Some(filename)
-		content := "uncommitted content"
-		state.uncommittedContent = Some(content)
-		devRepo.CreateFile(
-			filename,
-			content,
-		)
 	})
 
 	sc.Step(`^an upstream repo$`, func(ctx context.Context) {
@@ -386,37 +386,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return gitconfig.SetParent(devRepo.TestRunner, branchName, parentName)
 	})
 
-	sc.Step(`^Git Town prints no output$`, func(ctx context.Context) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		output := state.runOutput.GetOrPanic()
-		if len(output) > 0 {
-			return fmt.Errorf("expected no output but found %q", output)
-		}
-		return nil
-	})
-
-	sc.Step(`^Git Town prints something like:$`, func(ctx context.Context, expected *godog.DocString) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		regex := regexp.MustCompile(expected.Content)
-		have := stripansi.Strip(state.runOutput.GetOrPanic())
-		if !regex.MatchString(have) {
-			return fmt.Errorf("EXPECTED: content matching %q\nGOT: %q", expected.Content, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^Git Town prints the error:$`, func(ctx context.Context, expected *godog.DocString) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		state.runExitCodeChecked = true
-		if !strings.Contains(stripansi.Strip(state.runOutput.GetOrPanic()), expected.Content) {
-			return fmt.Errorf("text not found:\n%s\n\nactual text:\n%s", expected.Content, state.runOutput.GetOrZero())
-		}
-		if exitCode := state.runExitCode.GetOrPanic(); exitCode == 0 {
-			return fmt.Errorf("unexpected exit code %d", exitCode)
-		}
-		return nil
-	})
-
 	sc.Step(`^Git Town prints:$`, func(ctx context.Context, expected *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		if exitCode := state.runExitCode.GetOrPanic(); exitCode != 0 {
@@ -446,6 +415,37 @@ func defineSteps(sc *godog.ScenarioContext) {
 			fmt.Println("==================================================================")
 			fmt.Println()
 			return errors.New("expected text not found")
+		}
+		return nil
+	})
+
+	sc.Step(`^Git Town prints no output$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		output := state.runOutput.GetOrPanic()
+		if len(output) > 0 {
+			return fmt.Errorf("expected no output but found %q", output)
+		}
+		return nil
+	})
+
+	sc.Step(`^Git Town prints something like:$`, func(ctx context.Context, expected *godog.DocString) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		regex := regexp.MustCompile(expected.Content)
+		have := stripansi.Strip(state.runOutput.GetOrPanic())
+		if !regex.MatchString(have) {
+			return fmt.Errorf("EXPECTED: content matching %q\nGOT: %q", expected.Content, have)
+		}
+		return nil
+	})
+
+	sc.Step(`^Git Town prints the error:$`, func(ctx context.Context, expected *godog.DocString) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		state.runExitCodeChecked = true
+		if !strings.Contains(stripansi.Strip(state.runOutput.GetOrPanic()), expected.Content) {
+			return fmt.Errorf("text not found:\n%s\n\nactual text:\n%s", expected.Content, state.runOutput.GetOrZero())
+		}
+		if exitCode := state.runExitCode.GetOrPanic(); exitCode == 0 {
+			return fmt.Errorf("unexpected exit code %d", exitCode)
 		}
 		return nil
 	})
@@ -503,18 +503,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^(global |local |)Git setting "([^"]+)" (?:now|still) doesn't exist$`, func(ctx context.Context, scope, name string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		parsedScope := asserts.NoError1(configdomain.ParseConfigScope(scope))
-		snapshot := devRepo.SnapShots.ByScope(parsedScope)
-		have, has := snapshot[configdomain.Key(name)]
-		if has {
-			return fmt.Errorf("unexpected value for %q: %q", name, have)
-		}
-		return nil
-	})
-
 	sc.Step(`^(global |local |)Git setting "([^"]+)" is "([^"]*)"$`, func(ctx context.Context, scope, key, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -530,6 +518,18 @@ func defineSteps(sc *godog.ScenarioContext) {
 		have := snapshot[configdomain.Key(name)]
 		if have != want {
 			return fmt.Errorf("unexpected value for key %q: want %q have %q", name, want, have)
+		}
+		return nil
+	})
+
+	sc.Step(`^(global |local |)Git setting "([^"]+)" (?:now|still) doesn't exist$`, func(ctx context.Context, scope, name string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		parsedScope := asserts.NoError1(configdomain.ParseConfigScope(scope))
+		snapshot := devRepo.SnapShots.ByScope(parsedScope)
+		have, has := snapshot[configdomain.Key(name)]
+		if has {
+			return fmt.Errorf("unexpected value for %q: %q", name, have)
 		}
 		return nil
 	})
@@ -730,6 +730,18 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.Reload()
 	})
 
+	sc.Step(`^I run "([^"]*)" and enter an empty commit message$`, func(ctx context.Context, cmd string) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		state.CaptureState()
+		updateInitialSHAs(state)
+		devRepo.MockCommitMessage("")
+		output, exitCode := devRepo.MustQueryStringCode(cmd)
+		state.runOutput = Some(output)
+		state.runExitCode = Some(exitCode)
+		devRepo.Reload()
+	})
+
 	sc.Step(`^I run "([^"]*)" and enter "([^"]*)" for the commit message$`, func(ctx context.Context, cmd, message string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -748,21 +760,20 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.Reload()
 	})
 
-	sc.Step(`^I run "([^"]*)" and enter an empty commit message$`, func(ctx context.Context, cmd string) {
+	sc.Step(`^I run "(.+)"$`, func(ctx context.Context, command string) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		runCommand(state, command, true)
+	})
+
+	sc.Step(`^I run "([^"]+)" in the "([^"]+)" folder$`, func(ctx context.Context, cmd, folderName string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		state.CaptureState()
 		updateInitialSHAs(state)
-		devRepo.MockCommitMessage("")
-		output, exitCode := devRepo.MustQueryStringCode(cmd)
+		output, exitCode := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Dir: folderName})
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 		devRepo.Reload()
-	})
-
-	sc.Step(`^I run "(.+)"$`, func(ctx context.Context, command string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		runCommand(state, command, true)
 	})
 
 	sc.Step(`^I run "([^"]*)" in the other worktree and enter "([^"]*)" for the commit message$`, func(ctx context.Context, cmd, message string) {
@@ -775,17 +786,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 		secondWorkTree.Reload()
-	})
-
-	sc.Step(`^I run "([^"]+)" in the "([^"]+)" folder$`, func(ctx context.Context, cmd, folderName string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		state.CaptureState()
-		updateInitialSHAs(state)
-		output, exitCode := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Dir: folderName})
-		state.runOutput = Some(output)
-		state.runExitCode = Some(exitCode)
-		devRepo.Reload()
 	})
 
 	sc.Step(`^I run "([^"]+)" in the other worktree$`, func(ctx context.Context, cmd string) {
@@ -1119,6 +1119,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.PushBranch()
 	})
 
+	sc.Step(`^the configuration file:$`, func(ctx context.Context, content *godog.DocString) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		devRepo.CreateFile(configfile.FileName, content.Content)
+	})
+
 	sc.Step(`^the configuration file is (?:now|still):$`, func(ctx context.Context, content *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -1133,12 +1139,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return errors.New("mismatching config file content")
 		}
 		return nil
-	})
-
-	sc.Step(`^the configuration file:$`, func(ctx context.Context, content *godog.DocString) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		devRepo.CreateFile(configfile.FileName, content.Content)
 	})
 
 	sc.Step(`^the coworker adds this commit to their current branch:$`, func(ctx context.Context, table *godog.Table) {
@@ -1218,17 +1218,17 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.runExitCode = Some(exitCode)
 	})
 
+	sc.Step(`^the coworker sets the parent branch of "([^"]*)" as "([^"]*)"$`, func(ctx context.Context, childBranch, parentBranch string) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
+		_ = coworkerRepo.Config.NormalConfig.SetParent(coworkerRepo.TestRunner, gitdomain.NewLocalBranchName(childBranch), gitdomain.NewLocalBranchName(parentBranch))
+	})
+
 	sc.Step(`^the coworker sets the "sync-feature-strategy" to "(merge|rebase)"$`, func(ctx context.Context, value string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
 		syncFeatureStrategy := asserts.NoError1(configdomain.ParseSyncFeatureStrategy(value, "test"))
 		_ = gitconfig.SetSyncFeatureStrategy(coworkerRepo.TestRunner, syncFeatureStrategy.GetOrPanic(), configdomain.ConfigScopeLocal)
-	})
-
-	sc.Step(`^the coworker sets the parent branch of "([^"]*)" as "([^"]*)"$`, func(ctx context.Context, childBranch, parentBranch string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
-		_ = coworkerRepo.Config.NormalConfig.SetParent(coworkerRepo.TestRunner, gitdomain.NewLocalBranchName(childBranch), gitdomain.NewLocalBranchName(parentBranch))
 	})
 
 	sc.Step(`^the coworkers workspace now contains file "([^"]*)" with content:$`, func(ctx context.Context, file string, expectedContent *godog.DocString) error {
