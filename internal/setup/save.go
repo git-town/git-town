@@ -84,7 +84,7 @@ func saveAllToFile(userInput UserInput, existingConfigFile configdomain.PartialC
 	if err := configfile.Save(configData); err != nil {
 		return err
 	}
-	// keep-sorted start
+	// keep-sorted start block=yes
 	if gitConfig.AutoSync.IsSome() {
 		_ = gitconfig.RemoveAutoSync(runner)
 	}
