@@ -99,38 +99,7 @@ func InitializeSuite(ctx *godog.TestSuiteContext) {
 }
 
 func defineSteps(sc *godog.ScenarioContext) {
-	// keep-sorted start block=yes newline_separated=yes case=no by_regex=['(?<first>\w+).*(?<second>\w*).*(?<third>\w*)': '${first} ${second} ${third}']
-	sc.Step(`^(global |local |)Git setting "([^"]+)" (?:now|still) doesn't exist$`, func(ctx context.Context, scope, name string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		parsedScope := asserts.NoError1(configdomain.ParseConfigScope(scope))
-		snapshot := devRepo.SnapShots.ByScope(parsedScope)
-		have, has := snapshot[configdomain.Key(name)]
-		if has {
-			return fmt.Errorf("unexpected value for %q: %q", name, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^(global |local |)Git setting "([^"]+)" is "([^"]*)"$`, func(ctx context.Context, scope, key, value string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		parsedScope := asserts.NoError1(configdomain.ParseConfigScope(scope))
-		return gitconfig.SetConfigValue(devRepo.TestRunner, parsedScope, configdomain.Key(key), value)
-	})
-
-	sc.Step(`^(global |local |)Git setting "([^"]+)" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, scope, name, want string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		parsedScope := asserts.NoError1(configdomain.ParseConfigScope(scope))
-		snapshot := devRepo.SnapShots.ByScope(parsedScope)
-		have := snapshot[configdomain.Key(name)]
-		if have != want {
-			return fmt.Errorf("unexpected value for key %q: want %q have %q", name, want, have)
-		}
-		return nil
-	})
-
+	// keep-sorted start block=yes newline_separated=yes case=no by_regex=(\w+)\W*(\w+)\W*(\w+)\W*(\w+)\W*(\w+)
 	sc.Step(`^a coworker clones the repository$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.fixture.AddCoworkerRepo()
@@ -309,6 +278,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.fixture.AddUpstream()
 	})
 
+	sc.Step(`^branch "([^"]+)" is active in another worktree$`, func(ctx context.Context, branch string) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		state.fixture.AddSecondWorktree(gitdomain.NewLocalBranchName(branch))
+	})
+
 	sc.Step(`^branch "([^"]+)" (?:now|still) has type "(\w+)"$`, func(ctx context.Context, branchName, branchTypeName string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -320,11 +294,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return fmt.Errorf("branch %q is %s", branch, have)
 		}
 		return nil
-	})
-
-	sc.Step(`^branch "([^"]+)" is active in another worktree$`, func(ctx context.Context, branch string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		state.fixture.AddSecondWorktree(gitdomain.NewLocalBranchName(branch))
 	})
 
 	sc.Step(`^commit "([^"]+)" on branch "([^"]+)" now has this full commit message$`, func(ctx context.Context, title, branchText string, expected *godog.DocString) error {
@@ -534,22 +503,35 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^I (?:run|ran) "([^"]+)" and enter into the dialogs?:$`, func(ctx context.Context, cmd string, input *godog.Table) {
+	sc.Step(`^(global |local |)Git setting "([^"]+)" (?:now|still) doesn't exist$`, func(ctx context.Context, scope, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		state.CaptureState()
-		updateInitialSHAs(state)
-		env := os.Environ()
-		if browserPath, has := state.browserVariable.Get(); has {
-			env = envvars.Replace(env, envconfig.Browser, browserPath)
+		parsedScope := asserts.NoError1(configdomain.ParseConfigScope(scope))
+		snapshot := devRepo.SnapShots.ByScope(parsedScope)
+		have, has := snapshot[configdomain.Key(name)]
+		if has {
+			return fmt.Errorf("unexpected value for %q: %q", name, have)
 		}
-		for a, answer := range helpers.TableToInputEnv(input) {
-			env = append(env, fmt.Sprintf("%s_%02d=%s", dialogcomponents.InputKey, a, answer))
+		return nil
+	})
+
+	sc.Step(`^(global |local |)Git setting "([^"]+)" is "([^"]*)"$`, func(ctx context.Context, scope, key, value string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		parsedScope := asserts.NoError1(configdomain.ParseConfigScope(scope))
+		return gitconfig.SetConfigValue(devRepo.TestRunner, parsedScope, configdomain.Key(key), value)
+	})
+
+	sc.Step(`^(global |local |)Git setting "([^"]+)" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, scope, name, want string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		parsedScope := asserts.NoError1(configdomain.ParseConfigScope(scope))
+		snapshot := devRepo.SnapShots.ByScope(parsedScope)
+		have := snapshot[configdomain.Key(name)]
+		if have != want {
+			return fmt.Errorf("unexpected value for key %q: want %q have %q", name, want, have)
 		}
-		output, exitCode := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
-		state.runOutput = Some(output)
-		state.runExitCode = Some(exitCode)
-		devRepo.Reload()
+		return nil
 	})
 
 	sc.Step(`^I add an unrelated stash entry with file "([^"]+)"$`, func(ctx context.Context, filename string) {
@@ -676,10 +658,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^I ran "([^"]+)" on branch "([^"]+)"$`, func(ctx context.Context, command string, branch string) error {
+	sc.Step(`^I ran "([^"]+)"$`, func(ctx context.Context, command string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		devRepo.CheckoutBranch(gitdomain.LocalBranchName(branch))
 		runCommand(state, command, false)
 		if exitCode, hasExitCode := state.runExitCode.Get(); hasExitCode {
 			if exitCode != 0 {
@@ -691,8 +671,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^I ran "([^"]+)"$`, func(ctx context.Context, command string) error {
+	sc.Step(`^I ran "([^"]+)" on branch "([^"]+)"$`, func(ctx context.Context, command string, branch string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		devRepo.CheckoutBranch(gitdomain.LocalBranchName(branch))
 		runCommand(state, command, false)
 		if exitCode, hasExitCode := state.runExitCode.Get(); hasExitCode {
 			if exitCode != 0 {
@@ -734,11 +716,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		content = strings.ReplaceAll(content, "\\n", "\n")
 		devRepo.CreateFile(filename, content)
 		devRepo.StageFiles(filename)
-	})
-
-	sc.Step(`^I run "(.+)"$`, func(ctx context.Context, command string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		runCommand(state, command, true)
 	})
 
 	sc.Step(`^I run "([^"]*)" and close the editor$`, func(ctx context.Context, cmd string) {
@@ -783,6 +760,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.Reload()
 	})
 
+	sc.Step(`^I run "(.+)"$`, func(ctx context.Context, command string) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		runCommand(state, command, true)
+	})
+
 	sc.Step(`^I run "([^"]*)" in the other worktree and enter "([^"]*)" for the commit message$`, func(ctx context.Context, cmd, message string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.CaptureState()
@@ -815,6 +797,24 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 		secondWorkTree.Reload()
+	})
+
+	sc.Step(`^I (?:run|ran) "([^"]+)" and enter into the dialogs?:$`, func(ctx context.Context, cmd string, input *godog.Table) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		state.CaptureState()
+		updateInitialSHAs(state)
+		env := os.Environ()
+		if browserPath, has := state.browserVariable.Get(); has {
+			env = envvars.Replace(env, envconfig.Browser, browserPath)
+		}
+		for a, answer := range helpers.TableToInputEnv(input) {
+			env = append(env, fmt.Sprintf("%s_%02d=%s", dialogcomponents.InputKey, a, answer))
+		}
+		output, exitCode := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
+		state.runOutput = Some(output)
+		state.runExitCode = Some(exitCode)
+		devRepo.Reload()
 	})
 
 	sc.Step(`^I run "([^"]+)" with the environment variables "([^"]+)" and "([^"]+)" and "([^"]+)" and "([^"]+)" and enter into the dialogs?:$`, func(ctx context.Context, cmd string, envVar1, envVar2, envVar3, envVar4 string, input *godog.Table) {
