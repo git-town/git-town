@@ -25,8 +25,6 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.set-parent" is "town set-parent"
     And global Git setting "alias.ship" is "town ship"
     And global Git setting "alias.sync" is "town sync"
-    # keep-sorted end
-    # keep-sorted start
     And local Git setting "git-town.auto-sync" is "false"
     And local Git setting "git-town.branch-prefix" is "kg-"
     And local Git setting "git-town.contribution-regex" is "other.*"
@@ -145,8 +143,6 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.set-parent" now doesn't exist
     And global Git setting "alias.ship" now doesn't exist
     And global Git setting "alias.sync" now doesn't exist
-    # keep-sorted end
-    # keep-sorted start
     And local Git setting "git-town.auto-sync" is now "true"
     And local Git setting "git-town.dev-remote" is now "fork"
     And local Git setting "git-town.ignore-uncommitted" is now "false"
@@ -189,8 +185,6 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.set-parent" is now "town set-parent"
     And global Git setting "alias.ship" is now "town ship"
     And global Git setting "alias.sync" is now "town sync"
-    # keep-sorted end
-    # keep-sorted start
     And local Git setting "git-town.auto-sync" is now "false"
     And local Git setting "git-town.branch-prefix" is now "kg-"
     And local Git setting "git-town.contribution-regex" is now "other.*"
