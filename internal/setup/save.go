@@ -224,24 +224,14 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 			saveBranchPrefix(userInput.Data.BranchPrefix, existingGitConfig.BranchPrefix, frontend),
 		)
 	}
+	if configFile.ContributionRegex.IsNone() {
+		fc.Check(
+			saveContributionRegex(userInput.Data.ContributionRegex, existingGitConfig.ContributionRegex, frontend),
+		)
+	}
 	if configFile.Detached.IsNone() {
 		fc.Check(
 			saveDetached(userInput.Data.Detached, existingGitConfig.Detached, frontend),
-		)
-	}
-	if configFile.NewBranchType.IsNone() {
-		fc.Check(
-			saveNewBranchType(userInput.Data.NewBranchType, existingGitConfig.NewBranchType, frontend),
-		)
-	}
-	if configFile.PerennialRegex.IsNone() {
-		fc.Check(
-			savePerennialRegex(userInput.Data.PerennialRegex, existingGitConfig.PerennialRegex, frontend),
-		)
-	}
-	if configFile.UnknownBranchType.IsNone() {
-		fc.Check(
-			saveUnknownBranchType(userInput.Data.UnknownBranchType, existingGitConfig.UnknownBranchType, frontend),
 		)
 	}
 	if configFile.FeatureRegex.IsNone() {
@@ -249,9 +239,14 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 			saveFeatureRegex(userInput.Data.FeatureRegex, existingGitConfig.FeatureRegex, frontend),
 		)
 	}
-	if configFile.ContributionRegex.IsNone() {
+	if configFile.IgnoreUncommitted.IsNone() {
 		fc.Check(
-			saveContributionRegex(userInput.Data.ContributionRegex, existingGitConfig.ContributionRegex, frontend),
+			saveIgnoreUncommitted(userInput.Data.IgnoreUncommitted, existingGitConfig.IgnoreUncommitted, frontend),
+		)
+	}
+	if configFile.NewBranchType.IsNone() {
+		fc.Check(
+			saveNewBranchType(userInput.Data.NewBranchType, existingGitConfig.NewBranchType, frontend),
 		)
 	}
 	if configFile.ObservedRegex.IsNone() {
@@ -262,6 +257,11 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 	if configFile.Order.IsNone() {
 		fc.Check(
 			saveOrder(userInput.Data.Order, existingGitConfig.Order, frontend),
+		)
+	}
+	if configFile.PerennialRegex.IsNone() {
+		fc.Check(
+			savePerennialRegex(userInput.Data.PerennialRegex, existingGitConfig.PerennialRegex, frontend),
 		)
 	}
 	if configFile.ProposalsShowLineage.IsNone() {
@@ -284,19 +284,14 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 			saveShareNewBranches(userInput.Data.ShareNewBranches, existingGitConfig.ShareNewBranches, frontend),
 		)
 	}
-	if configFile.ShipStrategy.IsNone() {
-		fc.Check(
-			saveShipStrategy(userInput.Data.ShipStrategy, existingGitConfig.ShipStrategy, frontend),
-		)
-	}
 	if configFile.ShipDeleteTrackingBranch.IsNone() {
 		fc.Check(
 			saveShipDeleteTrackingBranch(userInput.Data.ShipDeleteTrackingBranch, existingGitConfig.ShipDeleteTrackingBranch, frontend),
 		)
 	}
-	if configFile.IgnoreUncommitted.IsNone() {
+	if configFile.ShipStrategy.IsNone() {
 		fc.Check(
-			saveIgnoreUncommitted(userInput.Data.IgnoreUncommitted, existingGitConfig.IgnoreUncommitted, frontend),
+			saveShipStrategy(userInput.Data.ShipStrategy, existingGitConfig.ShipStrategy, frontend),
 		)
 	}
 	if configFile.Stash.IsNone() {
@@ -319,14 +314,19 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 			saveSyncPrototypeStrategy(userInput.Data.SyncPrototypeStrategy, existingGitConfig.SyncPrototypeStrategy, frontend),
 		)
 	}
+	if configFile.SyncTags.IsNone() {
+		fc.Check(
+			saveSyncTags(userInput.Data.SyncTags, existingGitConfig.SyncTags, frontend),
+		)
+	}
 	if configFile.SyncUpstream.IsNone() {
 		fc.Check(
 			saveSyncUpstream(userInput.Data.SyncUpstream, existingGitConfig.SyncUpstream, frontend),
 		)
 	}
-	if configFile.SyncTags.IsNone() {
+	if configFile.UnknownBranchType.IsNone() {
 		fc.Check(
-			saveSyncTags(userInput.Data.SyncTags, existingGitConfig.SyncTags, frontend),
+			saveUnknownBranchType(userInput.Data.UnknownBranchType, existingGitConfig.UnknownBranchType, frontend),
 		)
 	}
 	// keep-sorted end
