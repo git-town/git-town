@@ -22,7 +22,6 @@ func Save(userInput UserInput, unvalidatedConfig config.UnvalidatedConfig, data 
 	)
 	if forgeType, hasForgeType := userInput.DeterminedForgeType.Get(); hasForgeType {
 		switch forgeType {
-		// keep-sorted start block=yes
 		case forgedomain.ForgeTypeAzureDevOps:
 			// no API token for now
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
@@ -49,7 +48,6 @@ func Save(userInput UserInput, unvalidatedConfig config.UnvalidatedConfig, data 
 				saveGiteaToken(userInput.Data.GiteaToken, unvalidatedConfig.GitLocal.GiteaToken, userInput.Scope, frontend),
 			)
 		}
-		// keep-sorted end
 	}
 	if fc.Err != nil {
 		return fc.Err
@@ -215,7 +213,7 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 	}
 
 	// EXTENDED CONFIGURATION
-	// TODO: sort this alphabetically
+	// keep-sorted start block=yes
 	if configFile.AutoSync.IsNone() {
 		fc.Check(
 			saveAutoSync(userInput.Data.AutoSync, existingGitConfig.AutoSync, frontend),
@@ -331,6 +329,7 @@ func saveAllToGit(userInput UserInput, existingGitConfig configdomain.PartialCon
 			saveSyncTags(userInput.Data.SyncTags, existingGitConfig.SyncTags, frontend),
 		)
 	}
+	// keep-sorted end
 	return fc.Err
 }
 
