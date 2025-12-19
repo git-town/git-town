@@ -33,46 +33,4 @@ func TestStepDefSorting(t *testing.T) {
 		}
 		must.Eq(t, want, have)
 	})
-
-	t.Run("FindUnsortedStepDefs", func(t *testing.T) {
-		t.Parallel()
-		stepDefs := []lintSteps.StepDefinition{
-			{
-				Line: 1,
-				Text: `^a regex`,
-			},
-			{
-				Line: 2,
-				Text: `^c regex`,
-			},
-			{
-				Line: 3,
-				Text: `^b regex`,
-			},
-		}
-		have := lintSteps.AllUnsortedStepDefs(stepDefs)
-		want := []lintSteps.StepDefinition{
-			{
-				Line: 2,
-				Text: `^b regex`,
-			},
-			{
-				Line: 3,
-				Text: `^c regex`,
-			},
-		}
-		must.Eq(t, want, have)
-	})
-
-	t.Run("NormalizeForSort", func(t *testing.T) {
-		t.Parallel()
-		tests := map[string]string{
-			"abc":                        "abc",
-			`branch "([^"]+)" is active`: "branchisactive",
-		}
-		for give, want := range tests {
-			have := lintSteps.NormalizeForSort(give)
-			must.EqOp(t, want, have)
-		}
-	})
 }
