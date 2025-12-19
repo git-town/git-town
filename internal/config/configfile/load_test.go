@@ -132,7 +132,7 @@ prototype-branches = "compress"
 			}
 			must.Eq(t, wantData, *haveData)
 
-			finalMessages := stringslice.Collector{}
+			finalMessages := stringslice.NewCollector()
 			haveConfig, err := configfile.Validate(*haveData, finalMessages)
 			must.NoError(t, err)
 			contributionRegex := asserts.NoError1(configdomain.ParseContributionRegex("^gittown-", "test"))
