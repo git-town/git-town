@@ -49,6 +49,7 @@ Feature: Accepting all default values leads to a working setup
 
   Scenario: undo
     When I run "git-town undo"
+    Then global Git setting "alias.append" still doesn't exist
     # keep-sorted start
     And global Git setting "alias.delete" still doesn't exist
     And global Git setting "alias.diff-parent" still doesn't exist
@@ -60,7 +61,6 @@ Feature: Accepting all default values leads to a working setup
     And global Git setting "alias.set-parent" still doesn't exist
     And global Git setting "alias.ship" still doesn't exist
     And global Git setting "alias.sync" still doesn't exist
-    Then global Git setting "alias.append" still doesn't exist
     # keep-sorted end
     # keep-sorted start
     And local Git setting "git-town.contribution-regex" now doesn't exist
