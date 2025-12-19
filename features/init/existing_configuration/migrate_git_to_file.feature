@@ -72,25 +72,25 @@ Feature: migrate existing configuration in Git metadata to a config file
       | git config --unset git-town.contribution-regex          |
       | git config --unset git-town.dev-remote                  |
       | git config --unset git-town.feature-regex               |
+      | git config --unset git-town.ignore-uncommitted          |
       | git config --unset git-town.main-branch                 |
       | git config --unset git-town.new-branch-type             |
       | git config --unset git-town.observed-regex              |
       | git config --unset git-town.order                       |
-      | git config --unset git-town.perennial-branches          |
       | git config --unset git-town.perennial-regex             |
-      | git config --unset git-town.share-new-branches          |
       | git config --unset git-town.proposals-show-lineage      |
       | git config --unset git-town.push-branches               |
       | git config --unset git-town.push-hook                   |
-      | git config --unset git-town.ship-strategy               |
+      | git config --unset git-town.share-new-branches          |
       | git config --unset git-town.ship-delete-tracking-branch |
-      | git config --unset git-town.ignore-uncommitted          |
+      | git config --unset git-town.ship-strategy               |
       | git config --unset git-town.stash                       |
       | git config --unset git-town.sync-feature-strategy       |
       | git config --unset git-town.sync-perennial-strategy     |
-      | git config --unset git-town.sync-upstream               |
       | git config --unset git-town.sync-tags                   |
+      | git config --unset git-town.sync-upstream               |
       | git config --unset git-town.unknown-branch-type         |
+      | git config --unset git-town.perennial-branches          |
     # keep-sorted start
     And local Git setting "git-town.auto-sync" now doesn't exist
     And local Git setting "git-town.contribution-regex" now doesn't exist
@@ -118,7 +118,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And the configuration file is now:
       """
       # See https://www.git-town.com/configuration-file for details
-
+      
       [branches]
       contribution-regex = "coworker-.*"
       feature-regex = "user-.*"
@@ -128,24 +128,24 @@ Feature: migrate existing configuration in Git metadata to a config file
       perennials = ["qa"]
       perennial-regex = "release-.*"
       unknown-branch-type = "observed"
-
+      
       [create]
       branch-prefix = "acme-"
       new-branch-type = "prototype"
       share-new-branches = "no"
       stash = false
-
+      
       [hosting]
       dev-remote = "fork"
-
+      
       [propose]
       lineage = "cli"
-
+      
       [ship]
       delete-tracking-branch = false
       ignore-uncommitted = true
       strategy = "squash-merge"
-
+      
       [sync]
       auto-sync = false
       detached = false

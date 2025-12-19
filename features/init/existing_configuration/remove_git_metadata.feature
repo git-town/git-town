@@ -112,27 +112,27 @@ Feature: remove existing configuration in Git metadata
       | git config --unset git-town.forge-type               |
       | git config git-town.auto-sync true                   |
       | git config --unset git-town.branch-prefix            |
-      | git config git-town.detached false                   |
-      | git config git-town.new-branch-type feature          |
-      | git config --unset git-town.perennial-regex          |
-      | git config git-town.unknown-branch-type feature      |
-      | git config --unset git-town.feature-regex            |
       | git config --unset git-town.contribution-regex       |
+      | git config git-town.detached false                   |
+      | git config --unset git-town.feature-regex            |
+      | git config git-town.ignore-uncommitted false         |
+      | git config git-town.new-branch-type feature          |
       | git config --unset git-town.observed-regex           |
       | git config git-town.order asc                        |
+      | git config --unset git-town.perennial-regex          |
       | git config git-town.proposals-show-lineage cli       |
       | git config git-town.push-branches true               |
       | git config git-town.push-hook true                   |
       | git config git-town.share-new-branches no            |
-      | git config git-town.ship-strategy api                |
       | git config git-town.ship-delete-tracking-branch true |
-      | git config git-town.ignore-uncommitted false         |
+      | git config git-town.ship-strategy api                |
       | git config git-town.stash true                       |
       | git config git-town.sync-feature-strategy merge      |
       | git config git-town.sync-perennial-strategy rebase   |
       | git config git-town.sync-prototype-strategy merge    |
-      | git config git-town.sync-upstream true               |
       | git config git-town.sync-tags true                   |
+      | git config git-town.sync-upstream true               |
+      | git config git-town.unknown-branch-type feature      |
     # keep-sorted start
     And global Git setting "alias.append" now doesn't exist
     And global Git setting "alias.delete" now doesn't exist
