@@ -25,8 +25,6 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.set-parent" is "town set-parent"
     And global Git setting "alias.ship" is "town ship"
     And global Git setting "alias.sync" is "town sync"
-    # keep-sorted end
-    # keep-sorted start
     And local Git setting "git-town.auto-sync" is "false"
     And local Git setting "git-town.branch-prefix" is "kg-"
     And local Git setting "git-town.contribution-regex" is "other.*"
@@ -112,27 +110,27 @@ Feature: remove existing configuration in Git metadata
       | git config --unset git-town.forge-type               |
       | git config git-town.auto-sync true                   |
       | git config --unset git-town.branch-prefix            |
-      | git config git-town.detached false                   |
-      | git config git-town.new-branch-type feature          |
-      | git config --unset git-town.perennial-regex          |
-      | git config git-town.unknown-branch-type feature      |
-      | git config --unset git-town.feature-regex            |
       | git config --unset git-town.contribution-regex       |
+      | git config git-town.detached false                   |
+      | git config --unset git-town.feature-regex            |
+      | git config git-town.ignore-uncommitted false         |
+      | git config git-town.new-branch-type feature          |
       | git config --unset git-town.observed-regex           |
       | git config git-town.order asc                        |
+      | git config --unset git-town.perennial-regex          |
       | git config git-town.proposals-show-lineage cli       |
       | git config git-town.push-branches true               |
       | git config git-town.push-hook true                   |
       | git config git-town.share-new-branches no            |
-      | git config git-town.ship-strategy api                |
       | git config git-town.ship-delete-tracking-branch true |
-      | git config git-town.ignore-uncommitted false         |
+      | git config git-town.ship-strategy api                |
       | git config git-town.stash true                       |
       | git config git-town.sync-feature-strategy merge      |
       | git config git-town.sync-perennial-strategy rebase   |
       | git config git-town.sync-prototype-strategy merge    |
-      | git config git-town.sync-upstream true               |
       | git config git-town.sync-tags true                   |
+      | git config git-town.sync-upstream true               |
+      | git config git-town.unknown-branch-type feature      |
     # keep-sorted start
     And global Git setting "alias.append" now doesn't exist
     And global Git setting "alias.delete" now doesn't exist
@@ -145,8 +143,6 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.set-parent" now doesn't exist
     And global Git setting "alias.ship" now doesn't exist
     And global Git setting "alias.sync" now doesn't exist
-    # keep-sorted end
-    # keep-sorted start
     And local Git setting "git-town.auto-sync" is now "true"
     And local Git setting "git-town.dev-remote" is now "fork"
     And local Git setting "git-town.ignore-uncommitted" is now "false"
@@ -189,8 +185,6 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.set-parent" is now "town set-parent"
     And global Git setting "alias.ship" is now "town ship"
     And global Git setting "alias.sync" is now "town sync"
-    # keep-sorted end
-    # keep-sorted start
     And local Git setting "git-town.auto-sync" is now "false"
     And local Git setting "git-town.branch-prefix" is now "kg-"
     And local Git setting "git-town.contribution-regex" is now "other.*"

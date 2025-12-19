@@ -49,22 +49,22 @@ Feature: Accepting all default values leads to a working setup
       | git config git-town.main-branch main                 |
       | git config git-town.auto-sync true                   |
       | git config git-town.detached false                   |
+      | git config git-town.ignore-uncommitted true          |
       | git config git-town.new-branch-type feature          |
-      | git config git-town.unknown-branch-type feature      |
       | git config git-town.order asc                        |
       | git config git-town.proposals-show-lineage none      |
       | git config git-town.push-branches true               |
       | git config git-town.push-hook true                   |
       | git config git-town.share-new-branches no            |
-      | git config git-town.ship-strategy api                |
       | git config git-town.ship-delete-tracking-branch true |
-      | git config git-town.ignore-uncommitted true          |
+      | git config git-town.ship-strategy api                |
       | git config git-town.stash true                       |
       | git config git-town.sync-feature-strategy merge      |
       | git config git-town.sync-perennial-strategy ff-only  |
       | git config git-town.sync-prototype-strategy merge    |
-      | git config git-town.sync-upstream true               |
       | git config git-town.sync-tags true                   |
+      | git config git-town.sync-upstream true               |
+      | git config git-town.unknown-branch-type feature      |
     And there are still no perennial branches
 
   Scenario: undo
