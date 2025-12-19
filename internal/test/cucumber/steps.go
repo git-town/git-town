@@ -99,7 +99,7 @@ func InitializeSuite(ctx *godog.TestSuiteContext) {
 }
 
 func defineSteps(sc *godog.ScenarioContext) {
-	// keep-sorted start block=yes newline_separated=yes case=no by_regex=['(?i)(?<first>\w+).*(?<second>\w+).*(?<third>\w+)': '${first}${second}${third}']
+	// keep-sorted start block=yes newline_separated=yes case=no by_regex=['(?<first>\w+).*(?<second>\w*).*(?<third>\w*)': '${first} ${second} ${third}']
 	sc.Step(`^(global |local |)Git setting "([^"]+)" (?:now|still) doesn't exist$`, func(ctx context.Context, scope, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -129,6 +129,263 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return fmt.Errorf("unexpected value for key %q: want %q have %q", name, want, have)
 		}
 		return nil
+	})
+
+	sc.Step(`^a coworker clones the repository$`, func(ctx context.Context) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		state.fixture.AddCoworkerRepo()
+	})
+
+	sc.Step(`^a folder "([^"]*)"$`, func(ctx context.Context, name string) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		devRepo.CreateFolder(name)
+	})
+
+	sc.Step(`^a Git repo with origin$`, func(ctx context.Context) (context.Context, error) {
+		scenarioName := ctx.Value(keyScenarioName).(string)
+		scenarioTags := ctx.Value(keyScenarioTags).([]*messages.PickleTag)
+		fixture := fixtureFactory.CreateFixture(scenarioName)
+		if helpers.HasTag(scenarioTags, "@debug") {
+			fixture.DevRepo.GetOrPanic().Verbose = true
+			fixture.OriginRepo.GetOrPanic().Verbose = true
+		}
+		state := ScenarioState{
+			beforeRunDevSHAs:     None[gitdomain.Commits](),
+			beforeRunOriginSHAs:  None[gitdomain.Commits](),
+			browserVariable:      None[string](),
+			fixture:              fixture,
+			initialBranches:      None[datatable.DataTable](),
+			initialCommits:       None[datatable.DataTable](),
+			initialCurrentBranch: None[gitdomain.LocalBranchName](),
+			initialDevSHAs:       None[gitdomain.Commits](),
+			initialLineage:       None[string](),
+			initialOriginSHAs:    None[gitdomain.Commits](),
+			initialTags:          None[datatable.DataTable](),
+			initialWorktreeSHAs:  None[gitdomain.Commits](),
+			insideGitRepo:        true,
+			runExitCode:          None[int](),
+			runExitCodeChecked:   false,
+			runOutput:            None[string](),
+			uncommittedContent:   None[string](),
+			uncommittedFileName:  None[string](),
+		}
+		return context.WithValue(ctx, keyScenarioState, &state), nil
+	})
+
+	sc.Step(`^a local Git repo$`, func(ctx context.Context) (context.Context, error) {
+		scenarioName := ctx.Value(keyScenarioName).(string)
+		scenarioTags := ctx.Value(keyScenarioTags).([]*messages.PickleTag)
+		fixture := fixtureFactory.CreateFixture(scenarioName)
+		devRepo := fixture.DevRepo.GetOrPanic()
+		if helpers.HasTag(scenarioTags, "@debug") {
+			devRepo.Verbose = true
+		}
+		devRepo.RemoveRemote(gitdomain.RemoteOrigin)
+		fixture.OriginRepo = MutableNone[commands.TestCommands]()
+		state := ScenarioState{
+			beforeRunDevSHAs:     None[gitdomain.Commits](),
+			beforeRunOriginSHAs:  None[gitdomain.Commits](),
+			browserVariable:      None[string](),
+			fixture:              fixture,
+			initialBranches:      None[datatable.DataTable](),
+			initialCommits:       None[datatable.DataTable](),
+			initialCurrentBranch: None[gitdomain.LocalBranchName](),
+			initialDevSHAs:       None[gitdomain.Commits](),
+			initialLineage:       None[string](),
+			initialOriginSHAs:    None[gitdomain.Commits](),
+			initialTags:          None[datatable.DataTable](),
+			initialWorktreeSHAs:  None[gitdomain.Commits](),
+			insideGitRepo:        true,
+			runExitCode:          None[int](),
+			runExitCodeChecked:   false,
+			runOutput:            None[string](),
+			uncommittedContent:   None[string](),
+			uncommittedFileName:  None[string](),
+		}
+		return context.WithValue(ctx, keyScenarioState, &state), nil
+	})
+
+	sc.Step(`^a merge is (?:now|still) in progress$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		if !devRepo.Git.HasMergeInProgress(devRepo.TestRunner) {
+			return errors.New("expected merge in progress")
+		}
+		return nil
+	})
+
+	sc.Step(`^a proposal for this branch does not exist$`, func(ctx context.Context) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		devRepo.TestRunner.ProposalOverride = Some(forgedomain.OverrideNoProposal)
+	})
+
+	sc.Step(`^a proposal for this branch exists at "([^"]+)"$`, func(ctx context.Context, url string) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		devRepo.TestRunner.ProposalOverride = Some(url)
+	})
+
+	sc.Step(`^a rebase is (?:now|still) in progress$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		repoStatus := asserts.NoError1(devRepo.Git.RepoStatus(devRepo.TestRunner))
+		if !repoStatus.RebaseInProgress {
+			return errors.New("expected rebase in progress")
+		}
+		return nil
+	})
+
+	sc.Step(`^a remote "([^"]+)" pointing to "([^"]+)"$`, func(ctx context.Context, name, url string) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		devRepo.AddRemote(gitdomain.Remote(name), url)
+	})
+
+	sc.Step(`^a remote tag "([^"]+)" not on a branch$`, func(ctx context.Context, name string) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		state.fixture.OriginRepo.GetOrPanic().CreateStandaloneTag(name)
+	})
+
+	sc.Step(`^all branches are now synchronized$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		branchesOutOfSync, output := devRepo.HasBranchesOutOfSync()
+		if branchesOutOfSync {
+			return errors.New("unexpected out of sync:\n" + output)
+		}
+		return nil
+	})
+
+	sc.Step(`^an additional "([^"]+)" remote with URL "([^"]+)"$`, func(ctx context.Context, remote, url string) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		devRepo.AddRemote(gitdomain.Remote(remote), url)
+	})
+
+	sc.Step(`^an uncommitted file "([^"]+)" exists now$`, func(ctx context.Context, filename string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		files := devRepo.UncommittedFiles()
+		want := []string{filename}
+		if !reflect.DeepEqual(files, want) {
+			return fmt.Errorf("expected %s but found %s", want, files)
+		}
+		return nil
+	})
+
+	sc.Step(`^an uncommitted file "([^"]+)" with content "([^"]+)"$`, func(ctx context.Context, name, content string) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		state.uncommittedFileName = Some(name)
+		state.uncommittedContent = Some(content)
+		devRepo.CreateFile(name, content)
+	})
+
+	sc.Step(`^an uncommitted file "([^"]+)" with content:$`, func(ctx context.Context, name string, content *godog.DocString) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		filePath := filepath.Join(devRepo.WorkingDir, name)
+		//nolint:gosec // need permission 700 here in order for tests to work
+		return os.WriteFile(filePath, []byte(content.Content), 0o700)
+	})
+
+	sc.Step(`^an uncommitted file$`, func(ctx context.Context) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		filename := "uncommitted file"
+		state.uncommittedFileName = Some(filename)
+		content := "uncommitted content"
+		state.uncommittedContent = Some(content)
+		devRepo.CreateFile(
+			filename,
+			content,
+		)
+	})
+
+	sc.Step(`^an upstream repo$`, func(ctx context.Context) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		state.fixture.AddUpstream()
+	})
+
+	sc.Step(`^branch "([^"]+)" (?:now|still) has type "(\w+)"$`, func(ctx context.Context, branchName, branchTypeName string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		branch := gitdomain.NewLocalBranchName(branchName)
+		wantOpt := asserts.NoError1(configdomain.ParseBranchType(branchTypeName, "test"))
+		want := wantOpt.GetOrPanic()
+		have := devRepo.Config.BranchType(branch)
+		if have != want {
+			return fmt.Errorf("branch %q is %s", branch, have)
+		}
+		return nil
+	})
+
+	sc.Step(`^branch "([^"]+)" is active in another worktree$`, func(ctx context.Context, branch string) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		state.fixture.AddSecondWorktree(gitdomain.NewLocalBranchName(branch))
+	})
+
+	sc.Step(`^commit "([^"]+)" on branch "([^"]+)" now has this full commit message$`, func(ctx context.Context, title, branchText string, expected *godog.DocString) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		branch := gitdomain.NewLocalBranchName(branchText)
+		parent := devRepo.Config.NormalConfig.Lineage.Parent(branch).GetOrPanic()
+		sha := devRepo.CommitSHA(devRepo, gitdomain.CommitTitle(title), branch, parent.BranchName())
+		have := asserts.NoError1(devRepo.Git.CommitMessage(devRepo, sha)).String()
+		want := expected.Content
+		if have != want {
+			return fmt.Errorf("\nwant:\n%q\n\nhave:\n%q", want, have)
+		}
+		return nil
+	})
+
+	sc.Step(`^display "([^"]+)"$`, func(ctx context.Context, command string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		parts := strings.Split(command, " ")
+		output, err := devRepo.TestRunner.Query(parts[0], parts[1:]...)
+		fmt.Println("XXXXXXXXXXXXXXXXX " + strings.ToUpper(command) + " START XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+		fmt.Println(output)
+		fmt.Println("XXXXXXXXXXXXXXXXX " + strings.ToUpper(command) + " END XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+		return err
+	})
+
+	sc.Step(`^file "([^"]*)" (?:now|still) has content:$`, func(ctx context.Context, file string, expectedContent *godog.DocString) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		actualContent := strings.TrimSpace(devRepo.FileContent(file))
+		expectedText := handlebars.Expand(expectedContent.Content, handlebars.ExpandArgs{
+			BeforeRunDevSHAs:       state.beforeRunDevSHAs.GetOrPanic(),
+			BeforeRunOriginSHAsOpt: state.beforeRunOriginSHAs,
+			InitialDevCommits:      state.initialDevSHAs.GetOrPanic(),
+			InitialOriginCommits:   state.initialOriginSHAs,
+			InitialWorktreeCommits: state.initialWorktreeSHAs,
+			LocalRepo:              devRepo,
+			RemoteRepo:             state.fixture.OriginRepo.Value,
+			WorktreeRepo:           state.fixture.SecondWorktree.Value,
+		})
+		if expectedText != actualContent {
+			return fmt.Errorf("file content does not match\n\nEXPECTED:\n%q\n\nACTUAL:\n\n%q\n----------------------------", expectedText, actualContent)
+		}
+		return nil
+	})
+
+	sc.Step(`^file "([^"]+)" (?:now|still) has content "([^"]*)"$`, func(ctx context.Context, file, expectedContent string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		actualContent := devRepo.FileContent(file)
+		if expectedContent != actualContent {
+			return fmt.Errorf("file content does not match\n\nEXPECTED:\n%q\n\nACTUAL:\n\n%q\n----------------------------", expectedContent, actualContent)
+		}
+		return nil
+	})
+
+	sc.Step(`^Git has version "([^"]*)"$`, func(ctx context.Context, version string) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		devRepo.MockGit(version)
 	})
 
 	sc.Step(`^Git Town does not print "([^"]+)"$`, func(ctx context.Context, text string) error {
@@ -275,12 +532,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return errors.New("unexpected failure of scenario")
 		}
 		return nil
-	})
-
-	sc.Step(`^Git has version "([^"]*)"$`, func(ctx context.Context, version string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		devRepo.MockGit(version)
 	})
 
 	sc.Step(`^I (?:run|ran) "([^"]+)" and enter into the dialogs?:$`, func(ctx context.Context, cmd string, input *godog.Table) {
@@ -598,257 +849,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 		devRepo.Reload()
-	})
-
-	sc.Step(`^a Git repo with origin$`, func(ctx context.Context) (context.Context, error) {
-		scenarioName := ctx.Value(keyScenarioName).(string)
-		scenarioTags := ctx.Value(keyScenarioTags).([]*messages.PickleTag)
-		fixture := fixtureFactory.CreateFixture(scenarioName)
-		if helpers.HasTag(scenarioTags, "@debug") {
-			fixture.DevRepo.GetOrPanic().Verbose = true
-			fixture.OriginRepo.GetOrPanic().Verbose = true
-		}
-		state := ScenarioState{
-			beforeRunDevSHAs:     None[gitdomain.Commits](),
-			beforeRunOriginSHAs:  None[gitdomain.Commits](),
-			browserVariable:      None[string](),
-			fixture:              fixture,
-			initialBranches:      None[datatable.DataTable](),
-			initialCommits:       None[datatable.DataTable](),
-			initialCurrentBranch: None[gitdomain.LocalBranchName](),
-			initialDevSHAs:       None[gitdomain.Commits](),
-			initialLineage:       None[string](),
-			initialOriginSHAs:    None[gitdomain.Commits](),
-			initialTags:          None[datatable.DataTable](),
-			initialWorktreeSHAs:  None[gitdomain.Commits](),
-			insideGitRepo:        true,
-			runExitCode:          None[int](),
-			runExitCodeChecked:   false,
-			runOutput:            None[string](),
-			uncommittedContent:   None[string](),
-			uncommittedFileName:  None[string](),
-		}
-		return context.WithValue(ctx, keyScenarioState, &state), nil
-	})
-
-	sc.Step(`^a coworker clones the repository$`, func(ctx context.Context) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		state.fixture.AddCoworkerRepo()
-	})
-
-	sc.Step(`^a folder "([^"]*)"$`, func(ctx context.Context, name string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		devRepo.CreateFolder(name)
-	})
-
-	sc.Step(`^a local Git repo$`, func(ctx context.Context) (context.Context, error) {
-		scenarioName := ctx.Value(keyScenarioName).(string)
-		scenarioTags := ctx.Value(keyScenarioTags).([]*messages.PickleTag)
-		fixture := fixtureFactory.CreateFixture(scenarioName)
-		devRepo := fixture.DevRepo.GetOrPanic()
-		if helpers.HasTag(scenarioTags, "@debug") {
-			devRepo.Verbose = true
-		}
-		devRepo.RemoveRemote(gitdomain.RemoteOrigin)
-		fixture.OriginRepo = MutableNone[commands.TestCommands]()
-		state := ScenarioState{
-			beforeRunDevSHAs:     None[gitdomain.Commits](),
-			beforeRunOriginSHAs:  None[gitdomain.Commits](),
-			browserVariable:      None[string](),
-			fixture:              fixture,
-			initialBranches:      None[datatable.DataTable](),
-			initialCommits:       None[datatable.DataTable](),
-			initialCurrentBranch: None[gitdomain.LocalBranchName](),
-			initialDevSHAs:       None[gitdomain.Commits](),
-			initialLineage:       None[string](),
-			initialOriginSHAs:    None[gitdomain.Commits](),
-			initialTags:          None[datatable.DataTable](),
-			initialWorktreeSHAs:  None[gitdomain.Commits](),
-			insideGitRepo:        true,
-			runExitCode:          None[int](),
-			runExitCodeChecked:   false,
-			runOutput:            None[string](),
-			uncommittedContent:   None[string](),
-			uncommittedFileName:  None[string](),
-		}
-		return context.WithValue(ctx, keyScenarioState, &state), nil
-	})
-
-	sc.Step(`^a merge is (?:now|still) in progress$`, func(ctx context.Context) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		if !devRepo.Git.HasMergeInProgress(devRepo.TestRunner) {
-			return errors.New("expected merge in progress")
-		}
-		return nil
-	})
-
-	sc.Step(`^a proposal for this branch does not exist$`, func(ctx context.Context) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		devRepo.TestRunner.ProposalOverride = Some(forgedomain.OverrideNoProposal)
-	})
-
-	sc.Step(`^a proposal for this branch exists at "([^"]+)"$`, func(ctx context.Context, url string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		devRepo.TestRunner.ProposalOverride = Some(url)
-	})
-
-	sc.Step(`^a rebase is (?:now|still) in progress$`, func(ctx context.Context) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		repoStatus := asserts.NoError1(devRepo.Git.RepoStatus(devRepo.TestRunner))
-		if !repoStatus.RebaseInProgress {
-			return errors.New("expected rebase in progress")
-		}
-		return nil
-	})
-
-	sc.Step(`^a remote "([^"]+)" pointing to "([^"]+)"$`, func(ctx context.Context, name, url string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		devRepo.AddRemote(gitdomain.Remote(name), url)
-	})
-
-	sc.Step(`^a remote tag "([^"]+)" not on a branch$`, func(ctx context.Context, name string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		state.fixture.OriginRepo.GetOrPanic().CreateStandaloneTag(name)
-	})
-
-	sc.Step(`^all branches are now synchronized$`, func(ctx context.Context) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		branchesOutOfSync, output := devRepo.HasBranchesOutOfSync()
-		if branchesOutOfSync {
-			return errors.New("unexpected out of sync:\n" + output)
-		}
-		return nil
-	})
-
-	sc.Step(`^an additional "([^"]+)" remote with URL "([^"]+)"$`, func(ctx context.Context, remote, url string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		devRepo.AddRemote(gitdomain.Remote(remote), url)
-	})
-
-	sc.Step(`^an uncommitted file "([^"]+)" exists now$`, func(ctx context.Context, filename string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		files := devRepo.UncommittedFiles()
-		want := []string{filename}
-		if !reflect.DeepEqual(files, want) {
-			return fmt.Errorf("expected %s but found %s", want, files)
-		}
-		return nil
-	})
-
-	sc.Step(`^an uncommitted file "([^"]+)" with content "([^"]+)"$`, func(ctx context.Context, name, content string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		state.uncommittedFileName = Some(name)
-		state.uncommittedContent = Some(content)
-		devRepo.CreateFile(name, content)
-	})
-
-	sc.Step(`^an uncommitted file "([^"]+)" with content:$`, func(ctx context.Context, name string, content *godog.DocString) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		filePath := filepath.Join(devRepo.WorkingDir, name)
-		//nolint:gosec // need permission 700 here in order for tests to work
-		return os.WriteFile(filePath, []byte(content.Content), 0o700)
-	})
-
-	sc.Step(`^an uncommitted file$`, func(ctx context.Context) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		filename := "uncommitted file"
-		state.uncommittedFileName = Some(filename)
-		content := "uncommitted content"
-		state.uncommittedContent = Some(content)
-		devRepo.CreateFile(
-			filename,
-			content,
-		)
-	})
-
-	sc.Step(`^an upstream repo$`, func(ctx context.Context) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		state.fixture.AddUpstream()
-	})
-
-	sc.Step(`^branch "([^"]+)" (?:now|still) has type "(\w+)"$`, func(ctx context.Context, branchName, branchTypeName string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		branch := gitdomain.NewLocalBranchName(branchName)
-		wantOpt := asserts.NoError1(configdomain.ParseBranchType(branchTypeName, "test"))
-		want := wantOpt.GetOrPanic()
-		have := devRepo.Config.BranchType(branch)
-		if have != want {
-			return fmt.Errorf("branch %q is %s", branch, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^branch "([^"]+)" is active in another worktree$`, func(ctx context.Context, branch string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		state.fixture.AddSecondWorktree(gitdomain.NewLocalBranchName(branch))
-	})
-
-	sc.Step(`^commit "([^"]+)" on branch "([^"]+)" now has this full commit message$`, func(ctx context.Context, title, branchText string, expected *godog.DocString) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		branch := gitdomain.NewLocalBranchName(branchText)
-		parent := devRepo.Config.NormalConfig.Lineage.Parent(branch).GetOrPanic()
-		sha := devRepo.CommitSHA(devRepo, gitdomain.CommitTitle(title), branch, parent.BranchName())
-		have := asserts.NoError1(devRepo.Git.CommitMessage(devRepo, sha)).String()
-		want := expected.Content
-		if have != want {
-			return fmt.Errorf("\nwant:\n%q\n\nhave:\n%q", want, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^display "([^"]+)"$`, func(ctx context.Context, command string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		parts := strings.Split(command, " ")
-		output, err := devRepo.TestRunner.Query(parts[0], parts[1:]...)
-		fmt.Println("XXXXXXXXXXXXXXXXX " + strings.ToUpper(command) + " START XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-		fmt.Println(output)
-		fmt.Println("XXXXXXXXXXXXXXXXX " + strings.ToUpper(command) + " END XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-		return err
-	})
-
-	sc.Step(`^file "([^"]*)" (?:now|still) has content:$`, func(ctx context.Context, file string, expectedContent *godog.DocString) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		actualContent := strings.TrimSpace(devRepo.FileContent(file))
-		expectedText := handlebars.Expand(expectedContent.Content, handlebars.ExpandArgs{
-			BeforeRunDevSHAs:       state.beforeRunDevSHAs.GetOrPanic(),
-			BeforeRunOriginSHAsOpt: state.beforeRunOriginSHAs,
-			InitialDevCommits:      state.initialDevSHAs.GetOrPanic(),
-			InitialOriginCommits:   state.initialOriginSHAs,
-			InitialWorktreeCommits: state.initialWorktreeSHAs,
-			LocalRepo:              devRepo,
-			RemoteRepo:             state.fixture.OriginRepo.Value,
-			WorktreeRepo:           state.fixture.SecondWorktree.Value,
-		})
-		if expectedText != actualContent {
-			return fmt.Errorf("file content does not match\n\nEXPECTED:\n%q\n\nACTUAL:\n\n%q\n----------------------------", expectedText, actualContent)
-		}
-		return nil
-	})
-
-	sc.Step(`^file "([^"]+)" (?:now|still) has content "([^"]*)"$`, func(ctx context.Context, file, expectedContent string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		actualContent := devRepo.FileContent(file)
-		if expectedContent != actualContent {
-			return fmt.Errorf("file content does not match\n\nEXPECTED:\n%q\n\nACTUAL:\n\n%q\n----------------------------", expectedContent, actualContent)
-		}
-		return nil
 	})
 
 	sc.Step(`^in a separate terminal I create branch "([^"]+)" with commits$`, func(ctx context.Context, branchName string, table *godog.Table) {
