@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v22/pkg/asserts"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
@@ -134,40 +135,44 @@ prototype-branches = "compress"
 			finalMessages := stringslice.Collector{}
 			haveConfig, err := configfile.Validate(*haveData, finalMessages)
 			must.NoError(t, err)
+			contributionRegex := asserts.NoError1(configdomain.ParseContributionRegex("^gittown-", "test"))
+			featureRegex := asserts.NoError1(configdomain.ParseFeatureRegex("feature-", "test"))
+			observedRegex := asserts.NoError1(configdomain.ParseObservedRegex("observed-", "test"))
+			perennialRegex := asserts.NoError1(configdomain.ParsePerennialRegex("perennial-", "test"))
 			wantConfig := configdomain.PartialConfig{
 				Aliases:                  configdomain.Aliases{},
 				AutoResolve:              Some(configdomain.AutoResolve(false)),
 				AutoSync:                 Some(configdomain.AutoSync(false)),
-				BitbucketAppPassword:     None[forgedomain.BitbucketAppPassword]()
+				BitbucketAppPassword:     None[forgedomain.BitbucketAppPassword](),
 				BitbucketUsername:        None[forgedomain.BitbucketUsername](),
-				BranchPrefix:             Option[configdomain.BranchPrefix]{},
+				BranchPrefix:             Some(configdomain.BranchPrefix("feature-")),
 				BranchTypeOverrides:      configdomain.BranchTypeOverrides{},
-				Browser:                  Option[configdomain.Browser]{},
-				ContributionRegex:        None[configdomain.ContributionRegex](),
+				Browser:                  Some(configdomain.Browser("chrome")),
+				ContributionRegex:        contributionRegex,
 				Detached:                 None[configdomain.Detached](),
 				DevRemote:                None[gitdomain.Remote](),
-				DisplayTypes:             Option[configdomain.DisplayTypes]{},
-				DryRun:                   Option[configdomain.DryRun]{},
-				FeatureRegex:             Option[configdomain.FeatureRegex]{},
-				ForgeType:                Option[forgedomain.ForgeType]{},
-				ForgejoToken:             Option[forgedomain.ForgejoToken]{},
-				GitHubConnectorType:      Option[forgedomain.GitHubConnectorType]{},
-				GitHubToken:              Option[forgedomain.GitHubToken]{},
-				GitLabConnectorType:      Option[forgedomain.GitLabConnectorType]{},
-				GitLabToken:              Option[forgedomain.GitLabToken]{},
+				DisplayTypes:             None[configdomain.DisplayTypes](),
+				DryRun:                   None[configdomain.DryRun](),
+				FeatureRegex:             featureRegex,
+				ForgeType:                None[forgedomain.ForgeType](),
+				ForgejoToken:             None[forgedomain.ForgejoToken](),
+				GitHubConnectorType:      None[forgedomain.GitHubConnectorType](),
+				GitHubToken:              None[forgedomain.GitHubToken](),
+				GitLabConnectorType:      None[forgedomain.GitLabConnectorType](),
+				GitLabToken:              None[forgedomain.GitLabToken](),
 				GitUserEmail:             Option[gitdomain.GitUserEmail]{},
-				GitUserName:              Option[gitdomain.GitUserName]{},
+				GitUserName:              None[gitdomain.GitUserName](),
 				GiteaToken:               Option[forgedomain.GiteaToken]{},
 				HostingOriginHostname:    Option[configdomain.HostingOriginHostname]{},
 				IgnoreUncommitted:        Option[configdomain.IgnoreUncommitted]{},
 				Lineage:                  configdomain.Lineage{},
 				MainBranch:               Option[gitdomain.LocalBranchName]{},
 				NewBranchType:            Option[configdomain.NewBranchType]{},
-				ObservedRegex:            Option[configdomain.ObservedRegex]{},
+				ObservedRegex:            observedRegex,
 				Offline:                  Option[configdomain.Offline]{},
 				Order:                    Option[configdomain.Order]{},
 				PerennialBranches:        gitdomain.LocalBranchNames{},
-				PerennialRegex:           Option[configdomain.PerennialRegex]{},
+				PerennialRegex:           perennialRegex,
 				ProposalsShowLineage:     Option[forgedomain.ProposalsShowLineage]{},
 				PushBranches:             Option[configdomain.PushBranches]{},
 				PushHook:                 Option[configdomain.PushHook]{},
