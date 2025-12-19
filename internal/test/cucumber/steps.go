@@ -99,7 +99,7 @@ func InitializeSuite(ctx *godog.TestSuiteContext) {
 }
 
 func defineSteps(sc *godog.ScenarioContext) {
-	// keep-sorted start block=yes newline_separated=yes case=no by_regex=(?i)([^A-Za-z]+).*([^A-Za-z]*.*([^A-Za-z]*)).*([^A-Za-z]*)
+	// keep-sorted start block=yes newline_separated=yes case=no by_regex=['(?i)(?<first>\w+).*(?<second>\w+).*(?<third>\w+)': '${first}${second}${third}']
 	sc.Step(`^(global |local |)Git setting "([^"]+)" (?:now|still) doesn't exist$`, func(ctx context.Context, scope, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
