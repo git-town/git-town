@@ -52,8 +52,8 @@ Feature: don't ask for information already provided by the config file
       | enter all          | enter |
       | config storage     | enter |
     Then Git Town runs no commands
-    And global Git setting "git-town.github-token" is still "123456"
     # keep-sorted start
+    And global Git setting "git-town.github-token" is still "123456"
     And local Git setting "git-town.contribution-regex" still doesn't exist
     And local Git setting "git-town.dev-remote" still doesn't exist
     And local Git setting "git-town.feature-regex" still doesn't exist

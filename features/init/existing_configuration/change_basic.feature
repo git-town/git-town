@@ -82,8 +82,8 @@ Feature: don't change existing extended information when changing basic informat
     And local Git setting "git-town.unknown-branch-type" is still "observed"
     And local Git setting "git-town.dev-remote" still doesn't exist
     And local Git setting "git-town.stash" still doesn't exist
-    # keep-sorted end
     And the main branch is now "main"
+# keep-sorted end
 
   Scenario: undo
     When I run "git-town undo"
@@ -100,8 +100,6 @@ Feature: don't change existing extended information when changing basic informat
     And global Git setting "alias.set-parent" still doesn't exist
     And global Git setting "alias.ship" still doesn't exist
     And global Git setting "alias.sync" still doesn't exist
-    # keep-sorted end
-    # keep-sorted start
     And local Git setting "git-town.auto-sync" is still "false"
     And local Git setting "git-town.contribution-regex" is still "cont"
     And local Git setting "git-town.detached" is still "false"
@@ -124,6 +122,6 @@ Feature: don't change existing extended information when changing basic informat
     And local Git setting "git-town.github-token" now doesn't exist
     And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
     And local Git setting "git-town.stash" still doesn't exist
-    # keep-sorted end
     And the main branch is now "main"
     And the perennial branches are now "qa"
+  # keep-sorted end
