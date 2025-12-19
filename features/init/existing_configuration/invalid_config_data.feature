@@ -150,8 +150,6 @@ Feature: Fix invalid configuration data
     And global Git setting "alias.set-parent" now doesn't exist
     And global Git setting "alias.ship" now doesn't exist
     And global Git setting "alias.sync" now doesn't exist
-    # keep-sorted end
-    # keep-sorted start
     And local Git setting "git-town.contribution-regex" is now "(cont"
     And local Git setting "git-town.feature-regex" is now "(feat"
     And local Git setting "git-town.new-branch-type" is now "zonk"

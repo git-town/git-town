@@ -162,8 +162,8 @@ Feature: migrate existing configuration in Git metadata to a config file
 
   Scenario: undo
     When I run "git-town undo"
+    # keep-sorted start group_prefixes=And,Then
     Then local Git setting "git-town.auto-sync" is now "false"
-    # keep-sorted start
     And local Git setting "git-town.contribution-regex" is now "coworker-.*"
     And local Git setting "git-town.dev-remote" is now "fork"
     And local Git setting "git-town.feature-regex" is now "user-.*"
