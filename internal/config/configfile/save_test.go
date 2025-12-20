@@ -98,7 +98,7 @@ observed-regex = "observed-"
 order = "desc"
 perennials = ["qa", "staging"]
 perennial-regex = "perennial-"
-unknown-branch-type = "prototype"
+unknown-type = "prototype"
 
 [create]
 branch-prefix = "feature-"

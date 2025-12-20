@@ -72,7 +72,7 @@ func RenderTOML(data configdomain.PartialConfig) string {
 			result.WriteString(fmt.Sprintf("perennial-regex = %q\n", perennialRegex))
 		}
 		if hasUnknownBranchType {
-			result.WriteString(fmt.Sprintf("unknown-branch-type = %q\n", unknownBranchType))
+			result.WriteString(fmt.Sprintf("unknown-type = %q\n", unknownBranchType))
 		}
 		// keep-sorted end
 	}
