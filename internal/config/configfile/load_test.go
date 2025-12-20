@@ -49,6 +49,7 @@ share-new-branches = "push"
 
 [hosting]
 browser = "chrome"
+dev-remote = "origin"
 forge-type = "github"
 origin-hostname = "github.com"
 
@@ -97,6 +98,7 @@ prototype-branches = "compress"
 				},
 				Hosting: &configfile.Hosting{
 					Browser:        Ptr("chrome"),
+					DevRemote:      Ptr("origin"),
 					ForgeType:      Ptr("github"),
 					OriginHostname: Ptr("github.com"),
 				},
@@ -151,7 +153,7 @@ prototype-branches = "compress"
 				Browser:                  Some(configdomain.Browser("chrome")),
 				ContributionRegex:        contributionRegex,
 				Detached:                 Some(configdomain.Detached(true)),
-				DevRemote:                None[gitdomain.Remote](),
+				DevRemote:                Some(gitdomain.Remote("origin")),
 				DisplayTypes:             None[configdomain.DisplayTypes](),
 				DryRun:                   None[configdomain.DryRun](),
 				FeatureRegex:             featureRegex,
