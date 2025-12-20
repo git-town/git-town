@@ -142,7 +142,6 @@ prototype-branches = "compress"
 				SyncUpstream:             Ptr(true),
 			}
 			must.Eq(t, wantData, *haveData)
-
 			finalMessages := stringslice.NewCollector()
 			haveConfig, err := configfile.Validate(*haveData, finalMessages)
 			must.NoError(t, err)
