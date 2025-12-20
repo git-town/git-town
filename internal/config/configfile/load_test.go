@@ -34,6 +34,7 @@ sync-upstream = true
 main = "main"
 contribution-regex = "^gittown-"
 default-type = "contribution"
+display-types = "no main perennial"
 feature-regex = "^kg-"
 observed-regex = "^dependabot\\/"
 order = "desc"
@@ -82,6 +83,7 @@ prototype-branches = "compress"
 				Branches: &configfile.Branches{
 					ContributionRegex: Ptr("^gittown-"),
 					DefaultType:       Ptr("contribution"),
+					DisplayTypes:      Ptr("no main perennial"),
 					FeatureRegex:      Ptr("^kg-"),
 					Main:              Ptr("main"),
 					ObservedRegex:     Ptr(`^dependabot\/`),
@@ -143,18 +145,21 @@ prototype-branches = "compress"
 			observedRegex := asserts.NoError1(configdomain.ParseObservedRegex("observed-", "test"))
 			perennialRegex := asserts.NoError1(configdomain.ParsePerennialRegex("perennial-", "test"))
 			wantConfig := configdomain.PartialConfig{
-				Aliases:                  configdomain.Aliases{},
-				AutoResolve:              Some(configdomain.AutoResolve(false)),
-				AutoSync:                 None[configdomain.AutoSync](),
-				BitbucketAppPassword:     None[forgedomain.BitbucketAppPassword](),
-				BitbucketUsername:        None[forgedomain.BitbucketUsername](),
-				BranchPrefix:             Some(configdomain.BranchPrefix("feature-")),
-				BranchTypeOverrides:      configdomain.BranchTypeOverrides{},
-				Browser:                  Some(configdomain.Browser("chrome")),
-				ContributionRegex:        contributionRegex,
-				Detached:                 Some(configdomain.Detached(true)),
-				DevRemote:                Some(gitdomain.Remote("origin")),
-				DisplayTypes:             None[configdomain.DisplayTypes](),
+				Aliases:              configdomain.Aliases{},
+				AutoResolve:          Some(configdomain.AutoResolve(false)),
+				AutoSync:             None[configdomain.AutoSync](),
+				BitbucketAppPassword: None[forgedomain.BitbucketAppPassword](),
+				BitbucketUsername:    None[forgedomain.BitbucketUsername](),
+				BranchPrefix:         Some(configdomain.BranchPrefix("feature-")),
+				BranchTypeOverrides:  configdomain.BranchTypeOverrides{},
+				Browser:              Some(configdomain.Browser("chrome")),
+				ContributionRegex:    contributionRegex,
+				Detached:             Some(configdomain.Detached(true)),
+				DevRemote:            Some(gitdomain.Remote("origin")),
+				DisplayTypes: Some(configdomain.DisplayTypes{
+					BranchTypes: []configdomain.BranchType{configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch},
+					Quantifier:  configdomain.QuantifierNo,
+				}),
 				DryRun:                   None[configdomain.DryRun](),
 				FeatureRegex:             featureRegex,
 				ForgeType:                asserts.NoError1(forgedomain.ParseForgeType("github", "test")),
