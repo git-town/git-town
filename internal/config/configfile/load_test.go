@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v22/pkg/asserts"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
+	"github.com/kr/pretty"
 	"github.com/shoenig/test/must"
 )
 
@@ -132,9 +133,9 @@ upstream = true
 			haveConfig, err := configfile.Validate(*haveData, finalMessages)
 			must.NoError(t, err)
 			contributionRegex := asserts.NoError1(configdomain.ParseContributionRegex("^gittown-", "test"))
-			featureRegex := asserts.NoError1(configdomain.ParseFeatureRegex("feature-", "test"))
-			observedRegex := asserts.NoError1(configdomain.ParseObservedRegex("observed-", "test"))
-			perennialRegex := asserts.NoError1(configdomain.ParsePerennialRegex("perennial-", "test"))
+			featureRegex := asserts.NoError1(configdomain.ParseFeatureRegex("^kg-", "test"))
+			observedRegex := asserts.NoError1(configdomain.ParseObservedRegex("^dependabot\\/", "test"))
+			perennialRegex := asserts.NoError1(configdomain.ParsePerennialRegex("release-.*", "test"))
 			wantConfig := configdomain.PartialConfig{
 				Aliases:              configdomain.Aliases{},
 				AutoResolve:          Some(configdomain.AutoResolve(false)),
@@ -187,9 +188,8 @@ upstream = true
 				UnknownBranchType:        Some(configdomain.UnknownBranchType(configdomain.BranchTypePrototypeBranch)),
 				Verbose:                  None[configdomain.Verbose](),
 			}
-			haveJSON := asserts.NoError1(json.MarshalIndent(haveConfig, "", "  "))
-			wantJSON := asserts.NoError1(json.MarshalIndent(wantConfig, "", "  "))
-			must.EqOp(t, string(wantJSON), string(haveJSON))
+			pretty.Ldiff(t, haveConfig, wantConfig)
+			must.Eq(t, wantConfig, haveConfig)
 
 			// step 3: serialize back into TOML
 			haveTOML := configfile.RenderTOML(haveConfig)
