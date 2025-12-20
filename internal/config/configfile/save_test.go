@@ -98,7 +98,7 @@ observed-regex = "observed-"
 order = "desc"
 perennials = ["qa", "staging"]
 perennial-regex = "perennial-"
-unknown-branch-type = "prototype"
+unknown-type = "prototype"
 
 [create]
 branch-prefix = "feature-"
@@ -110,8 +110,8 @@ stash = true
 browser = "chrome"
 dev-remote = "origin"
 forge-type = "github"
-github-connector-type = "gh"
-gitlab-connector-type = "glab"
+github-connector = "gh"
+gitlab-connector = "glab"
 origin-hostname = "forge"
 
 [propose]

@@ -127,7 +127,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       order = "desc"
       perennials = ["qa"]
       perennial-regex = "release-.*"
-      unknown-branch-type = "observed"
+      unknown-type = "observed"
 
       [create]
       branch-prefix = "acme-"
