@@ -30,7 +30,7 @@ func Execute(args ExecuteArgs) {
 		}
 		err := runnable.Run(shared.RunArgs{
 			Backend:                         args.Backend,
-			BranchInfos:                     None[gitdomain.BranchInfos](),
+			BranchInfos:                     args.BranchInfos,
 			Config:                          NewMutable(&args.Config),
 			Connector:                       args.Connector,
 			FinalMessages:                   args.FinalMessages,
@@ -49,6 +49,7 @@ func Execute(args ExecuteArgs) {
 
 type ExecuteArgs struct {
 	Backend       subshelldomain.RunnerQuerier
+	BranchInfos   gitdomain.BranchInfos
 	Config        config.ValidatedConfig
 	Connector     Option[forgedomain.Connector]
 	FinalMessages stringslice.Collector
