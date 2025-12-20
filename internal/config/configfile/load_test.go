@@ -1,6 +1,7 @@
 package configfile_test
 
 import (
+	"encoding/json"
 	"testing"
 
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
@@ -142,14 +143,14 @@ prototype-branches = "compress"
 			wantConfig := configdomain.PartialConfig{
 				Aliases:                  configdomain.Aliases{},
 				AutoResolve:              Some(configdomain.AutoResolve(false)),
-				AutoSync:                 Some(configdomain.AutoSync(false)),
+				AutoSync:                 None[configdomain.AutoSync](),
 				BitbucketAppPassword:     None[forgedomain.BitbucketAppPassword](),
 				BitbucketUsername:        None[forgedomain.BitbucketUsername](),
 				BranchPrefix:             Some(configdomain.BranchPrefix("feature-")),
 				BranchTypeOverrides:      configdomain.BranchTypeOverrides{},
 				Browser:                  Some(configdomain.Browser("chrome")),
 				ContributionRegex:        contributionRegex,
-				Detached:                 None[configdomain.Detached](),
+				Detached:                 Some(configdomain.Detached(true)),
 				DevRemote:                None[gitdomain.Remote](),
 				DisplayTypes:             None[configdomain.DisplayTypes](),
 				DryRun:                   None[configdomain.DryRun](),
@@ -165,7 +166,7 @@ prototype-branches = "compress"
 				GiteaToken:               None[forgedomain.GiteaToken](),
 				HostingOriginHostname:    configdomain.ParseHostingOriginHostname("github.com"),
 				IgnoreUncommitted:        Some(configdomain.IgnoreUncommitted(true)),
-				Lineage:                  configdomain.Lineage{},
+				Lineage:                  configdomain.NewLineage(),
 				MainBranch:               Some(gitdomain.NewLocalBranchName("main")),
 				NewBranchType:            Some(configdomain.NewBranchType(configdomain.BranchTypePrototypeBranch)),
 				ObservedRegex:            observedRegex,
@@ -188,7 +189,9 @@ prototype-branches = "compress"
 				UnknownBranchType:        Some(configdomain.UnknownBranchType(configdomain.BranchTypePrototypeBranch)),
 				Verbose:                  None[configdomain.Verbose](),
 			}
-			must.Eq(t, wantConfig, haveConfig)
+			haveJSON := asserts.NoError1(json.MarshalIndent(haveConfig, "", "  "))
+			wantJSON := asserts.NoError1(json.MarshalIndent(wantConfig, "", "  "))
+			must.EqOp(t, string(wantJSON), string(haveJSON))
 		})
 
 		t.Run("incomplete content", func(t *testing.T) {
