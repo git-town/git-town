@@ -75,7 +75,7 @@ Feature: don't ask for information already provided by the config file
       order = "desc"
       perennials = ["staging"]
       perennial-regex = "release-"
-      unknown-branch-type = "observed"
+      unknown-type = "observed"
 
       [create]
       branch-prefix = "acme-"
@@ -86,7 +86,7 @@ Feature: don't ask for information already provided by the config file
       [hosting]
       dev-remote = "something"
       forge-type = "github"
-      github-connector-type = "api"
+      github-connector = "api"
       origin-hostname = "github.com"
 
       [propose]
