@@ -47,6 +47,7 @@ branch-prefix = "feature-"
 new-branch-type = "prototype"
 push-new-branches = true
 share-new-branches = "push"
+stash = true
 
 [hosting]
 browser = "chrome"
@@ -99,6 +100,7 @@ prototype-branches = "compress"
 					NewBranchType:    Ptr("prototype"),
 					PushNewbranches:  Ptr(true),
 					ShareNewBranches: Ptr("push"),
+					Stash:            Ptr(true),
 				},
 				Hosting: &configfile.Hosting{
 					Browser:             Ptr("chrome"),
@@ -191,7 +193,7 @@ prototype-branches = "compress"
 				ShareNewBranches:         Some(configdomain.ShareNewBranchesPush),
 				ShipDeleteTrackingBranch: Some(configdomain.ShipDeleteTrackingBranch(false)),
 				ShipStrategy:             Some(configdomain.ShipStrategyAPI),
-				Stash:                    None[configdomain.Stash](),
+				Stash:                    Some(configdomain.Stash(true)),
 				SyncFeatureStrategy:      Some(configdomain.SyncFeatureStrategyMerge),
 				SyncPerennialStrategy:    Some(configdomain.SyncPerennialStrategyRebase),
 				SyncPrototypeStrategy:    Some(configdomain.SyncPrototypeStrategyCompress),
