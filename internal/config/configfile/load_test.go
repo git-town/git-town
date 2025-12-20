@@ -38,7 +38,6 @@ unknown-type = "prototype"
 [create]
 branch-prefix = "feature-"
 new-branch-type = "prototype"
-push-new-branches = true
 share-new-branches = "push"
 stash = true
 
@@ -67,11 +66,6 @@ prototype-strategy = "compress"
 push-hook = true
 tags = false
 upstream = true
-
-[sync-strategy]
-feature-branches = "merge"
-perennial-branches = "rebase"
-prototype-branches = "compress"
 `[1:]
 
 			// step 1: decode into low-level data
@@ -92,7 +86,7 @@ prototype-branches = "compress"
 				Create: &configfile.Create{
 					BranchPrefix:     Ptr("feature-"),
 					NewBranchType:    Ptr("prototype"),
-					PushNewbranches:  Ptr(true),
+					PushNewbranches:  nil,
 					ShareNewBranches: Ptr("push"),
 					Stash:            Ptr(true),
 				},
@@ -122,11 +116,7 @@ prototype-branches = "compress"
 					Tags:              Ptr(false),
 					Upstream:          Ptr(true),
 				},
-				SyncStrategy: &configfile.SyncStrategy{
-					FeatureBranches:   Ptr("merge"),
-					PerennialBranches: Ptr("rebase"),
-					PrototypeBranches: Ptr("compress"),
-				},
+				SyncStrategy:             nil,
 				CreatePrototypeBranches:  nil,
 				PushHook:                 nil,
 				PushNewbranches:          nil,
