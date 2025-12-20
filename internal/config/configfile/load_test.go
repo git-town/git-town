@@ -136,10 +136,6 @@ upstream = true
 			finalMessages := stringslice.NewCollector()
 			haveConfig, err := configfile.Validate(*haveData, finalMessages)
 			must.NoError(t, err)
-			contributionRegex := asserts.NoError1(configdomain.ParseContributionRegex("^gittown-", "test"))
-			featureRegex := asserts.NoError1(configdomain.ParseFeatureRegex("^kg-", "test"))
-			observedRegex := asserts.NoError1(configdomain.ParseObservedRegex("^dependabot\\/", "test"))
-			perennialRegex := asserts.NoError1(configdomain.ParsePerennialRegex("release-.*", "test"))
 			wantConfig := configdomain.PartialConfig{
 				Aliases:              configdomain.Aliases{},
 				AutoResolve:          Some(configdomain.AutoResolve(false)),
@@ -149,7 +145,7 @@ upstream = true
 				BranchPrefix:         Some(configdomain.BranchPrefix("feature-")),
 				BranchTypeOverrides:  configdomain.BranchTypeOverrides{},
 				Browser:              Some(configdomain.Browser("chrome")),
-				ContributionRegex:    contributionRegex,
+				ContributionRegex:    asserts.NoError1(configdomain.ParseContributionRegex("^gittown-", "test")),
 				Detached:             Some(configdomain.Detached(true)),
 				DevRemote:            Some(gitdomain.Remote("origin")),
 				DisplayTypes: Some(configdomain.DisplayTypes{
@@ -157,7 +153,7 @@ upstream = true
 					Quantifier:  configdomain.QuantifierNo,
 				}),
 				DryRun:                   None[configdomain.DryRun](),
-				FeatureRegex:             featureRegex,
+				FeatureRegex:             asserts.NoError1(configdomain.ParseFeatureRegex("^kg-", "test")),
 				ForgeType:                asserts.NoError1(forgedomain.ParseForgeType("github", "test")),
 				ForgejoToken:             None[forgedomain.ForgejoToken](),
 				GitHubConnectorType:      Some(forgedomain.GitHubConnectorTypeGh),
@@ -172,11 +168,11 @@ upstream = true
 				Lineage:                  configdomain.NewLineage(),
 				MainBranch:               Some(gitdomain.NewLocalBranchName("main")),
 				NewBranchType:            Some(configdomain.NewBranchType(configdomain.BranchTypePrototypeBranch)),
-				ObservedRegex:            observedRegex,
+				ObservedRegex:            asserts.NoError1(configdomain.ParseObservedRegex("^dependabot\\/", "test")),
 				Offline:                  None[configdomain.Offline](),
 				Order:                    Some(configdomain.OrderDesc),
 				PerennialBranches:        gitdomain.NewLocalBranchNames("public", "staging"),
-				PerennialRegex:           perennialRegex,
+				PerennialRegex:           asserts.NoError1(configdomain.ParsePerennialRegex("release-.*", "test")),
 				ProposalsShowLineage:     Some(forgedomain.ProposalsShowLineageCLI),
 				PushBranches:             None[configdomain.PushBranches](),
 				PushHook:                 Some(configdomain.PushHook(true)),
