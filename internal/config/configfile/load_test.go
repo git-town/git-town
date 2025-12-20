@@ -52,6 +52,8 @@ share-new-branches = "push"
 browser = "chrome"
 dev-remote = "origin"
 forge-type = "github"
+github-connector = "gh"
+gitlab-connector = "glab"
 origin-hostname = "github.com"
 
 [propose]
@@ -99,10 +101,12 @@ prototype-branches = "compress"
 					ShareNewBranches: Ptr("push"),
 				},
 				Hosting: &configfile.Hosting{
-					Browser:        Ptr("chrome"),
-					DevRemote:      Ptr("origin"),
-					ForgeType:      Ptr("github"),
-					OriginHostname: Ptr("github.com"),
+					Browser:             Ptr("chrome"),
+					DevRemote:           Ptr("origin"),
+					ForgeType:           Ptr("github"),
+					GitHubConnectorType: Ptr("gh"),
+					GitLabConnectorType: Ptr("glab"),
+					OriginHostname:      Ptr("github.com"),
 				},
 				Propose: &configfile.Propose{
 					Lineage: Ptr("cli"),
@@ -164,9 +168,9 @@ prototype-branches = "compress"
 				FeatureRegex:             featureRegex,
 				ForgeType:                asserts.NoError1(forgedomain.ParseForgeType("github", "test")),
 				ForgejoToken:             None[forgedomain.ForgejoToken](),
-				GitHubConnectorType:      None[forgedomain.GitHubConnectorType](),
+				GitHubConnectorType:      Some(forgedomain.GitHubConnectorTypeGh),
 				GitHubToken:              None[forgedomain.GitHubToken](),
-				GitLabConnectorType:      None[forgedomain.GitLabConnectorType](),
+				GitLabConnectorType:      Some(forgedomain.GitLabConnectorTypeGlab),
 				GitLabToken:              None[forgedomain.GitLabToken](),
 				GitUserEmail:             None[gitdomain.GitUserEmail](),
 				GitUserName:              None[gitdomain.GitUserName](),

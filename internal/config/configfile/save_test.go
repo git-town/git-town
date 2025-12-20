@@ -110,8 +110,8 @@ stash = true
 browser = "chrome"
 dev-remote = "origin"
 forge-type = "github"
-github-connector-type = "gh"
-gitlab-connector-type = "glab"
+github-connector = "gh"
+gitlab-connector = "glab"
 origin-hostname = "forge"
 
 [propose]

@@ -129,10 +129,10 @@ func RenderTOML(data configdomain.PartialConfig) string {
 			result.WriteString(fmt.Sprintf("forge-type = %q\n", forgeType))
 		}
 		if hasGitHubConnectorType {
-			result.WriteString(fmt.Sprintf("github-connector-type = %q\n", githubConnectorType))
+			result.WriteString(fmt.Sprintf("github-connector = %q\n", githubConnectorType))
 		}
 		if hasGitLabConnectorType {
-			result.WriteString(fmt.Sprintf("gitlab-connector-type = %q\n", gitlabConnectorType))
+			result.WriteString(fmt.Sprintf("gitlab-connector = %q\n", gitlabConnectorType))
 		}
 		if hasOriginHostName {
 			result.WriteString(fmt.Sprintf("origin-hostname = %q\n", originHostName))
