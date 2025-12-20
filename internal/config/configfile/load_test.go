@@ -330,6 +330,5 @@ prototype-branches = "compress"
 			wantJSON := asserts.NoError1(json.MarshalIndent(wantConfig, "", "  "))
 			must.EqOp(t, string(wantJSON), string(haveJSON))
 		})
-
 	})
 }
