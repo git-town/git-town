@@ -75,6 +75,7 @@ upstream = true
 			wantData := configfile.Data{
 				Branches: &configfile.Branches{
 					ContributionRegex: Ptr("^gittown-"),
+					DefaultType:       nil,
 					DisplayTypes:      Ptr("no main perennial"),
 					FeatureRegex:      Ptr("^kg-"),
 					Main:              Ptr("main"),
@@ -98,6 +99,7 @@ upstream = true
 					GitHubConnectorType: Ptr("gh"),
 					GitLabConnectorType: Ptr("glab"),
 					OriginHostname:      Ptr("github.com"),
+					Platform:            nil,
 				},
 				Propose: &configfile.Propose{
 					Lineage: Ptr("cli"),
@@ -109,10 +111,12 @@ upstream = true
 				},
 				Sync: &configfile.Sync{
 					AutoResolve:       Ptr(false),
+					AutoSync:          nil,
 					Detached:          Ptr(true),
 					FeatureStrategy:   Ptr("merge"),
 					PerennialStrategy: Ptr("rebase"),
 					PrototypeStrategy: Ptr("compress"),
+					PushBranches:      nil,
 					PushHook:          Ptr(true),
 					Tags:              Ptr(false),
 					Upstream:          Ptr(true),
