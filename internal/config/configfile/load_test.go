@@ -289,10 +289,6 @@ prototype-branches = "compress"
 				Create: &configfile.Create{
 					PushNewbranches: Ptr(true),
 				},
-				Hosting: nil,
-				Propose: nil,
-				Ship:    nil,
-				Sync:    nil,
 				SyncStrategy: &configfile.SyncStrategy{
 					FeatureBranches:   Ptr("merge"),
 					PerennialBranches: Ptr("rebase"),
