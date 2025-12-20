@@ -13,7 +13,7 @@ import (
 
 type RunArgs struct {
 	Backend                         subshelldomain.RunnerQuerier
-	BranchInfos                     Option[gitdomain.BranchInfos]
+	BranchInfos                     gitdomain.BranchInfos
 	Config                          Mutable[config.ValidatedConfig]
 	Connector                       Option[forgedomain.Connector]
 	FinalMessages                   stringslice.Collector
