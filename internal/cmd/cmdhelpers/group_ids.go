@@ -4,7 +4,7 @@ const (
 	GroupIDBasic      = "basic"
 	GroupIDNavigation = "navigation"
 	GroupIDErrors     = "errors"
-	GroupIDSetup      = "setup"
+	GroupIDConfig     = "configuration"
 	GroupIDStack      = "stack"
 	GroupIDTypes      = "types"
 )

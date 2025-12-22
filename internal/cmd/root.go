@@ -48,7 +48,7 @@ func rootCmd() cobra.Command {
 		ID:    "types",
 		Title: "Control syncing:",
 	}, &cobra.Group{
-		ID:    "Configuration",
+		ID:    "configuration",
 		Title: "Commands to set up Git Town on your computer:",
 	})
 	rootCmd.CompletionOptions.DisableDefaultCmd = true

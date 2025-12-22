@@ -28,7 +28,7 @@ func initCommand() *cobra.Command {
 	cmd := cobra.Command{
 		Use:     initCmd,
 		Args:    cobra.NoArgs,
-		GroupID: cmdhelpers.GroupIDSetup,
+		GroupID: cmdhelpers.GroupIDConfig,
 		Short:   initDesc,
 		Long:    cmdhelpers.Long(initDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
