@@ -425,6 +425,7 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 				ProposalTitle: data.proposalTitle,
 			})
 		}
+		prog.Value.Add(&opcodes.ProgramEndOfBranch{})
 	}
 	return optimizer.Optimize(prog.Immutable())
 }
