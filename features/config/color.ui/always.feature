@@ -17,6 +17,7 @@ Feature: show the configuration
       | prototype-2    | prototype    | main   | local         |
     And local Git setting "color.ui" is "always"
 
+  @this
   Scenario: all configured in Git, no stacked changes
     Given Git setting "git-town.perennial-branches" is "qa staging"
     And Git setting "git-town.perennial-regex" is "^release-"
@@ -303,7 +304,7 @@ Feature: show the configuration
         Gitea token: (not set)
         GitHub connector: (not set)
         GitHub token: (not set)
-        GitLab connector type: (not set)
+        GitLab connector: (not set)
         GitLab token: (not set)
       
       Propose:
@@ -377,7 +378,7 @@ Feature: show the configuration
         Gitea token: (not set)
         GitHub connector: (not set)
         GitHub token: (not set)
-        GitLab connector type: (not set)
+        GitLab connector: (not set)
         GitLab token: (not set)
       
       Propose:

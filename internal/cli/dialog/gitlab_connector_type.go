@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	gitLabConnectorTypeTitle = `GitLab connector type`
+	gitLabConnectorTypeTitle = `GitLab connector`
 	gitLabConnectorTypeHelp  = `
 Git Town supports two ways to connect to GitLab:
 

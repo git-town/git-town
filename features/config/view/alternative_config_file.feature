@@ -48,7 +48,7 @@ Feature: show the configuration when using an alternative config file
         Gitea token: (not set)
         GitHub connector: (not set)
         GitHub token: (not set)
-        GitLab connector type: (not set)
+        GitLab connector: (not set)
         GitLab token: (not set)
       
       Propose:
