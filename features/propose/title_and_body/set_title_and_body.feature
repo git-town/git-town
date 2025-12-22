@@ -49,9 +49,9 @@ Feature: Prepopulate title and body
       |         | Looking for proposal online ... ok                                                                |
       |         | git add -A                                                                                        |
       |         | git stash -m "Git Town WIP"                                                                       |
+      |         | open https://github.com/git-town/git-town/compare/feature?expand=1&body=Proposal%0Abody%0Atext%21 |
       |         | git stash pop                                                                                     |
       |         | git restore --staged .                                                                            |
-      |         | open https://github.com/git-town/git-town/compare/feature?expand=1&body=Proposal%0Abody%0Atext%21 |
 
   Scenario: non-existing body file
     When I run "git-town propose --body-file zonk.txt"
