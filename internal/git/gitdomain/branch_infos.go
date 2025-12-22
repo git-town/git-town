@@ -94,6 +94,7 @@ func (self BranchInfos) FindMatchingRecord(other BranchInfo) OptionalMutable[Bra
 	return MutableNone[BranchInfo]()
 }
 
+// FindRemoteNameMatchingLocal finds the BranchInfo with a remote name that matches the given local branch name.
 func (self BranchInfos) FindRemoteNameMatchingLocal(localBranch LocalBranchName) OptionalMutable[BranchInfo] {
 	for b, bi := range self {
 		if remoteName, hasRemoteName := bi.RemoteName.Get(); hasRemoteName {
