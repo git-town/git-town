@@ -34,18 +34,21 @@ func rootCmd() cobra.Command {
 	}
 	rootCmd.AddGroup(&cobra.Group{
 		ID:    "basic",
-		Title: "Basic commands:",
+		Title: "Basic workflow:",
+	}, &cobra.Group{
+		ID:    "navigation",
+		Title: "Branch navigation:",
 	}, &cobra.Group{
 		ID:    "errors",
-		Title: "Commands to deal with errors:",
+		Title: "Error recovery:",
 	}, &cobra.Group{
 		ID:    "stack",
-		Title: "Commands for stacked changes:",
+		Title: "Stacked changes:",
 	}, &cobra.Group{
 		ID:    "types",
-		Title: "Commands to limit branch syncing:",
+		Title: "Control syncing:",
 	}, &cobra.Group{
-		ID:    "setup",
+		ID:    "Configuration",
 		Title: "Commands to set up Git Town on your computer:",
 	})
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
