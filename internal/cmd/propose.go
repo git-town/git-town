@@ -303,20 +303,17 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (data p
 		if err = validateBranchTypeToPropose(branchesAndTypes[initialBranch]); err != nil {
 			return data, configdomain.ProgramFlowExit, err
 		}
-		if validatedConfig.NormalConfig.Lineage.Parent(initialBranch).IsNone() {
-			return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.ProposalNoParent, initialBranch)
-		}
 	}
 	connector, hasConnector := connectorOpt.Get()
 	if !hasConnector {
 		return data, configdomain.ProgramFlowExit, forgedomain.UnsupportedServiceError()
 	}
 	proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder)
-	branchesToPropose := make([]branchToProposeData, len(branchNamesToPropose))
-	for b, branchNameToPropose := range branchNamesToPropose {
+	branchesToPropose := []branchToProposeData{}
+	for _, branchNameToPropose := range branchNamesToPropose {
 		branchType, has := branchesAndTypes[branchNameToPropose]
 		if !has {
-			return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchTypeCannotDetermine, branchNameToPropose)
+			continue
 		}
 		existingProposalURL := None[string]()
 		if canFindProposals {
@@ -334,12 +331,12 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (data p
 		if !hasBranchInfo {
 			return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchInfoNotFound, branchNameToPropose)
 		}
-		branchesToPropose[b] = branchToProposeData{
+		branchesToPropose = append(branchesToPropose, branchToProposeData{
 			branchType:          branchType,
 			existingProposalURL: existingProposalURL,
 			name:                branchNameToPropose,
 			syncStatus:          branchInfo.SyncStatus,
-		}
+		})
 	}
 	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, branchNamesToSync...)
 	branchesToSync, err := sync.BranchesToSync(branchInfosToSync, branchesSnapshot.Branches, repo, validatedConfig.ValidatedConfigData.MainBranch)
