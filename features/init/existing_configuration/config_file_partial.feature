@@ -9,16 +9,16 @@ Feature: ask for information not provided by the config file
       main = "main"
       perennials = ["public"]
       order = "desc"
-
+      
       [hosting]
       dev-remote = "something"
       forge-type = "github"
       origin-hostname = "github.com"
-
+      
       [ship]
       delete-tracking-branch = false
       ignore-uncommitted = true
-
+      
       [sync]
       auto-sync = false
       tags = false
@@ -33,7 +33,7 @@ Feature: ask for information not provided by the config file
       | welcome                 | enter                 |
       | aliases                 | enter                 |
       | perennial branches      | space enter           |
-      | github connector type   | enter                 |
+      | github connector        | enter                 |
       | github token            | g h - t o k e n enter |
       | token scope             | enter                 |
       | enter all               | down enter            |

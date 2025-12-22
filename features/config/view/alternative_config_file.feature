@@ -25,18 +25,18 @@ Feature: show the configuration when using an alternative config file
         unknown branch type: feature
         order: asc
         display types: all branch types except "feature" and "main"
-
+      
       Configuration:
         offline: no
         git user name: user
         git user email: email@example.com
-
+      
       Create:
         branch prefix: (not set)
         new branch type: (not set)
         share new branches: no
         stash uncommitted changes: yes
-
+      
       Hosting:
         browser: (not set)
         development remote: origin
@@ -46,19 +46,19 @@ Feature: show the configuration when using an alternative config file
         Bitbucket app password: (not set)
         Forgejo token: (not set)
         Gitea token: (not set)
-        GitHub connector type: (not set)
+        GitHub connector: (not set)
         GitHub token: (not set)
         GitLab connector type: (not set)
         GitLab token: (not set)
-
+      
       Propose:
         lineage: none
-
+      
       Ship:
         delete tracking branch: yes
         ignore uncommitted changes: no
         ship strategy: api
-
+      
       Sync:
         auto-resolve phantom conflicts: yes
         auto-sync: yes

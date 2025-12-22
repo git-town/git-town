@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	gitHubConnectorTypeTitle = `GitHub connector type`
+	gitHubConnectorTypeTitle = `GitHub connector`
 	gitHubConnectorTypeHelp  = `
 Git Town supports two ways to connect to GitHub:
 

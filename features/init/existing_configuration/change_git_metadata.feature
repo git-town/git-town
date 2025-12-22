@@ -28,7 +28,7 @@ Feature: change existing information in Git metadata
       | perennial branches          | space down space enter |
       | origin hostname             | c o d e enter          |
       | forge type                  | up up enter            |
-      | github connector type       | enter                  |
+      | github connector            | enter                  |
       | github token                | g h - t o k enter      |
       | token scope                 | enter                  |
       | enter all                   | down enter             |
@@ -57,6 +57,7 @@ Feature: change existing information in Git metadata
       | proposals show lineage      | down enter             |
       | config storage              | enter                  |
 
+  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                                  |
