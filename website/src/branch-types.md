@@ -35,7 +35,7 @@ with their parent and tracking branch.
 Perennial branches are long-lived branches. They have no parent and are never
 shipped. Typical perennial branches are `main`, `master`, `development`,
 `production`, `staging`, etc. Perennial branches often correspond with a cloud
-environment of the same name.
+environment of the same name (GitOps).
 
 ## Contribution branches
 
