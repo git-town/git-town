@@ -6,18 +6,28 @@ branches are getting synced. When properly configured, you can run
 branches will get synced in the specific ways it's supposed to get synced or not
 synced.
 
-## Feature branches
-
-Feature branches are the branches on which you typically make changes. They are
-typically cut from the _main branch_ and get merged back into it. You can also
-cut feature branches from any other branch type if needed. Feature branches sync
-with their parent and tracking branch.
+| Branch type  | Description                                             | Syncing behavior                          |
+| ------------ | ------------------------------------------------------- | ----------------------------------------- |
+| Main         | Primary development branch ("main", "master")           | Syncs with origin, pull from upstream     |
+| Perennial    | Long-lived branches for GitOps ("develop", "staging")   | Syncs from upstream/origin, never ships   |
+| Feature      | Normal feature branches                                 | Syncs from parent and tracking branch     |
+| Prototype    | Work-in-progress features                               | Syncs from parent, never pushes to remote |
+| Parked       | Inactive feature branches                               | No syncing, can ship                      |
+| Contribution | Feature owned by somebody else, share your changes      | Pull from remote, push                    |
+| Observed     | Feature owned by somebody else, keep your changes local | Pull from remote                          |
 
 ## Main branch
 
 The main branch is a _perennial branch_ from which feature branches get cut by
 default. The main branch contains the latest development version of your
 codebase.
+
+## Feature branches
+
+Feature branches are the branches on which you typically make changes. They are
+typically cut from the _main branch_ and get merged back into it. You can also
+cut feature branches from any other branch type if needed. Feature branches sync
+with their parent and tracking branch.
 
 ## Perennial branches
 
