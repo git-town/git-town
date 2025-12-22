@@ -25,7 +25,7 @@ func RootCmd() *cobra.Command {
 	addRedactFlag, readRedactFlag := flags.Redact()
 	configCmd := cobra.Command{
 		Use:     "config",
-		GroupID: cmdhelpers.GroupIDSetup,
+		GroupID: cmdhelpers.GroupIDConfig,
 		Args:    cobra.NoArgs,
 		Short:   configDesc,
 		Long:    cmdhelpers.Long(configDesc),

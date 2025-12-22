@@ -23,7 +23,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const switchDesc = "Display the local branches visually and allows switching between them"
+const switchDesc = "Switch branches visually"
 
 func switchCmd() *cobra.Command {
 	addAllFlag, readAllFlag := flags.All("list both remote-tracking and local branches")
@@ -35,7 +35,7 @@ func switchCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "switch",
-		GroupID: cmdhelpers.GroupIDBasic,
+		GroupID: cmdhelpers.GroupIDNavigation,
 		Args:    cobra.ArbitraryArgs,
 		Short:   switchDesc,
 		Long:    cmdhelpers.Long(switchDesc),

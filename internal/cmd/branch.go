@@ -33,10 +33,11 @@ func branchCmd() *cobra.Command {
 	addOrderFlag, readOrderFlag := flags.Order()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:   "branch",
-		Args:  cobra.NoArgs,
-		Short: branchDesc,
-		Long:  cmdhelpers.Long(branchDesc, branchHelp),
+		Use:     "branch",
+		Args:    cobra.NoArgs,
+		GroupID: cmdhelpers.GroupIDNavigation,
+		Short:   branchDesc,
+		Long:    cmdhelpers.Long(branchDesc, branchHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			displayTypes, errDisplayTypes := readDisplayTypesFlag(cmd)
 			order, errOrder := readOrderFlag(cmd)

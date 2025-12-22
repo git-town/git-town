@@ -7,7 +7,7 @@ Feature: show all available commands
     When I run "git-town"
     Then Git Town prints:
       """
-      Basic commands:
+      Basic workflow:
       """
 
   Scenario: unknown command
