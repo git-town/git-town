@@ -10,6 +10,9 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.contribution-regex" is "coworker-.*"
     And local Git setting "git-town.dev-remote" is "fork"
     And local Git setting "git-town.feature-regex" is "user-.*"
+    And local Git setting "git-town.forge-type" is "github"
+    And local Git setting "git-town.github-connector" is "api"
+    And local Git setting "git-town.hosting-origin-hostname" is "github.example.com"
     And local Git setting "git-town.ignore-uncommitted" is "true"
     And local Git setting "git-town.new-branch-type" is "prototype"
     And local Git setting "git-town.observed-regex" is "other-.*"
@@ -38,6 +41,8 @@ Feature: migrate existing configuration in Git metadata to a config file
       | dev-remote                  | enter      |
       | origin hostname             | enter      |
       | forge type                  | enter      |
+      | github connector            | enter      |
+      | github token                | enter      |
       | enter all                   | down enter |
       | perennial regex             | enter      |
       | feature regex               | enter      |
@@ -72,6 +77,9 @@ Feature: migrate existing configuration in Git metadata to a config file
       | git config --unset git-town.contribution-regex          |
       | git config --unset git-town.dev-remote                  |
       | git config --unset git-town.feature-regex               |
+      | git config --unset git-town.forge-type                  |
+      | git config --unset git-town.github-connector            |
+      | git config --unset git-town.hosting-origin-hostname     |
       | git config --unset git-town.ignore-uncommitted          |
       | git config --unset git-town.main-branch                 |
       | git config --unset git-town.new-branch-type             |
@@ -96,6 +104,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.contribution-regex" now doesn't exist
     And local Git setting "git-town.feature-regex" now doesn't exist
     And local Git setting "git-town.forge-type" now doesn't exist
+    And local Git setting "git-town.github-connector-type" now doesn't exist
     And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
     And local Git setting "git-town.ignore-uncommitted" now doesn't exist
     And local Git setting "git-town.new-branch-type" now doesn't exist
@@ -118,7 +127,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And the configuration file is now:
       """
       # See https://www.git-town.com/configuration-file for details
-
+      
       [branches]
       contribution-regex = "coworker-.*"
       feature-regex = "user-.*"
@@ -128,24 +137,27 @@ Feature: migrate existing configuration in Git metadata to a config file
       perennials = ["qa"]
       perennial-regex = "release-.*"
       unknown-type = "observed"
-
+      
       [create]
       branch-prefix = "acme-"
       new-branch-type = "prototype"
       share-new-branches = "no"
       stash = false
-
+      
       [hosting]
       dev-remote = "fork"
-
+      forge-type = "github"
+      github-connector = "api"
+      origin-hostname = "github.example.com"
+      
       [propose]
       lineage = "cli"
-
+      
       [ship]
       delete-tracking-branch = false
       ignore-uncommitted = true
       strategy = "squash-merge"
-
+      
       [sync]
       auto-sync = false
       detached = false
@@ -167,6 +179,9 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.contribution-regex" is now "coworker-.*"
     And local Git setting "git-town.dev-remote" is now "fork"
     And local Git setting "git-town.feature-regex" is now "user-.*"
+    And local Git setting "git-town.forge-type" is now "github"
+    And local Git setting "git-town.github-connector" is now "api"
+    And local Git setting "git-town.hosting-origin-hostname" is now "github.example.com"
     And local Git setting "git-town.ignore-uncommitted" is now "true"
     And local Git setting "git-town.new-branch-type" is now "prototype"
     And local Git setting "git-town.observed-regex" is now "other-.*"
