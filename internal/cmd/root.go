@@ -33,23 +33,23 @@ func rootCmd() cobra.Command {
 		},
 	}
 	rootCmd.AddGroup(&cobra.Group{
-		ID:    "basic",
+		ID:    cmdhelpers.GroupIDBasic,
 		Title: "Basic workflow:",
 	}, &cobra.Group{
-		ID:    "navigation",
-		Title: "Branch navigation:",
-	}, &cobra.Group{
-		ID:    "errors",
-		Title: "Error recovery:",
-	}, &cobra.Group{
-		ID:    "stack",
+		ID:    cmdhelpers.GroupIDStack,
 		Title: "Stacked changes:",
 	}, &cobra.Group{
-		ID:    "types",
+		ID:    cmdhelpers.GroupIDNavigation,
+		Title: "Branch navigation:",
+	}, &cobra.Group{
+		ID:    cmdhelpers.GroupIDTypes,
 		Title: "Control syncing:",
 	}, &cobra.Group{
-		ID:    "configuration",
-		Title: "Commands to set up Git Town on your computer:",
+		ID:    cmdhelpers.GroupIDErrors,
+		Title: "Error handling:",
+	}, &cobra.Group{
+		ID:    cmdhelpers.GroupIDConfig,
+		Title: "Configuration:",
 	})
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
 	addVersionFlag(&rootCmd)

@@ -34,7 +34,7 @@ import (
 
 const (
 	mergeCmd  = "merge"
-	mergeDesc = "Merges the current branch with its parent"
+	mergeDesc = "Combines the current branch with its parent"
 	mergeHelp = `
 Merges the current branch with its parent branch.
 Both branches must be feature branches.

@@ -20,7 +20,7 @@ import (
 
 const (
 	initCmd  = "init"
-	initDesc = "Prompts to setup your Git Town configuration"
+	initDesc = "Set up Git Town on your computer"
 )
 
 func initCommand() *cobra.Command {
