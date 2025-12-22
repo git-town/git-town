@@ -57,7 +57,6 @@ Feature: change existing information in Git metadata
       | proposals show lineage      | down enter             |
       | config storage              | enter                  |
 
-  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                                  |
