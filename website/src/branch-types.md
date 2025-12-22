@@ -4,17 +4,18 @@ Git Town supports many different types of Git branches. Branch types affect how
 branches are getting synced. When properly configured, you can run
 `git town sync` or `git town sync --all` at any time and each of your local
 branches will get synced in the specific ways it's supposed to get synced or not
-synced.
+synced. Here is an overview of the various branch types that Git Town
+distinguishes.
 
-| Branch type  | Description                                             | Syncing behavior                          |
-| ------------ | ------------------------------------------------------- | ----------------------------------------- |
-| Main         | Primary development branch ("main", "master")           | Syncs with origin, pull from upstream     |
-| Perennial    | Long-lived branches for GitOps ("develop", "staging")   | Syncs from upstream/origin, never ships   |
-| Feature      | Normal feature branches                                 | Syncs from parent and tracking branch     |
-| Prototype    | Work-in-progress features                               | Syncs from parent, never pushes to remote |
-| Parked       | Inactive feature branches                               | No syncing, can ship                      |
-| Contribution | Feature owned by somebody else, share your changes      | Pull from remote, push                    |
-| Observed     | Feature owned by somebody else, keep your changes local | Pull from remote                          |
+| branch type  | description                                         | syncing behavior                            | ship |
+| ------------ | --------------------------------------------------- | ------------------------------------------- | ---- |
+| main         | primary development branch<br>("main", "master")    | sync with origin,<br> pull from upstream    | no   |
+| perennial    | long-lived branch for GitOps ("develop", "staging") | sync with origin                            | no   |
+| feature      | normal feature branch                               | sync with parent and tracking branch        | yes  |
+| prototype    | work-in-progress feature                            | sync with parent,<br>don't push to tracking | yes  |
+| parked       | inactive feature branch                             | no syncing                                  | yes  |
+| contribution | somebody else's branch, share your changes          | sync with tracking                          | no   |
+| observed     | somebody else's branch, don't share your changes    | pull from tracking                          | no   |
 
 ## Main branch
 
