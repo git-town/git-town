@@ -104,7 +104,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.contribution-regex" now doesn't exist
     And local Git setting "git-town.feature-regex" now doesn't exist
     And local Git setting "git-town.forge-type" now doesn't exist
-    And local Git setting "git-town.github-connector-type" now doesn't exist
+    And local Git setting "git-town.github-connector" now doesn't exist
     And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
     And local Git setting "git-town.ignore-uncommitted" now doesn't exist
     And local Git setting "git-town.new-branch-type" now doesn't exist
