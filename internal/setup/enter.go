@@ -90,7 +90,6 @@ EnterForgeData:
 				return emptyResult, exit, false, err
 			}
 			if githubConnectorType, has := githubConnectorTypeOpt.Or(data.Config.File.GitHubConnectorType).Get(); has {
-				// user just entered a connector type
 				switch githubConnectorType {
 				case forgedomain.GitHubConnectorTypeAPI:
 					githubToken, exit, err = enterGitHubToken(data)
@@ -105,7 +104,7 @@ EnterForgeData:
 			if err != nil || exit {
 				return emptyResult, exit, false, err
 			}
-			if gitlabConnectorType, has := gitlabConnectorTypeOpt.Get(); has {
+			if gitlabConnectorType, has := gitlabConnectorTypeOpt.Or(data.Config.File.GitLabConnectorType).Get(); has {
 				switch gitlabConnectorType {
 				case forgedomain.GitLabConnectorTypeAPI:
 					gitlabToken, exit, err = enterGitLabToken(data)
