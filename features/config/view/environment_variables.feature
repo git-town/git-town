@@ -89,9 +89,9 @@ Feature: display configuration defined in environment variables
         Bitbucket app password: bitbucket-password
         Forgejo token: forgejo-token
         Gitea token: gitea-token
-        GitHub connector type: gh
+        GitHub connector: gh
         GitHub token: github-token
-        GitLab connector type: glab
+        GitLab connector: glab
         GitLab token: gitlab-token
 
       Propose:

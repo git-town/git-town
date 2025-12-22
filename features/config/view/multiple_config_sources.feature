@@ -118,9 +118,9 @@ Feature: show the configuration
         Bitbucket app password: (not set)
         Forgejo token: (not set)
         Gitea token: (not set)
-        GitHub connector type: api
+        GitHub connector: api
         GitHub token: (not set)
-        GitLab connector type: (not set)
+        GitLab connector: (not set)
         GitLab token: (not set)
 
       Propose:
