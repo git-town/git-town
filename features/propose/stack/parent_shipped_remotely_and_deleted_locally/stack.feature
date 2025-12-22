@@ -17,7 +17,6 @@ Feature: proposing a branch whose parent was shipped and the local branch delete
     And I ran "git branch -d parent"
     When I run "git-town propose --stack"
 
-  @debug @this
   Scenario: with stack
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                          |
