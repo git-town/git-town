@@ -472,9 +472,12 @@ func enterForgejoToken(data Data) (Option[forgedomain.ForgejoToken], dialogdomai
 }
 
 func enterGitHubConnectorType(data Data) (Option[forgedomain.GitHubConnectorType], dialogdomain.Exit, error) {
+	fmt.Println("11111111111111111111")
 	if data.Config.File.GitHubConnectorType.IsSome() {
+		fmt.Println("2222222222222222222222222")
 		return None[forgedomain.GitHubConnectorType](), false, nil
 	}
+	fmt.Println("3333333333333333333333")
 	return dialog.GitHubConnectorType(dialog.Args[forgedomain.GitHubConnectorType]{
 		Global: data.Config.GitGlobal.GitHubConnectorType,
 		Inputs: data.Inputs,
