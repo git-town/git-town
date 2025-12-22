@@ -26,9 +26,9 @@ Feature: display configuration defined in environment variables
       | GIT_TOWN_FEATURE_REGEX               | ^user-.*$          |
       | GIT_TOWN_FORGE_TYPE                  | gitlab             |
       | GIT_TOWN_GITEA_TOKEN                 | gitea-token        |
-      | GIT_TOWN_GITHUB_CONNECTOR_TYPE       | gh                 |
+      | GIT_TOWN_GITHUB_CONNECTOR            | gh                 |
       | GIT_TOWN_GITHUB_TOKEN                | github-token       |
-      | GIT_TOWN_GITLAB_CONNECTOR_TYPE       | glab               |
+      | GIT_TOWN_GITLAB_CONNECTOR            | glab               |
       | GIT_TOWN_GITLAB_TOKEN                | gitlab-token       |
       | GIT_TOWN_IGNORE_UNCOMMITTED          | true               |
       | GIT_TOWN_MAIN_BRANCH                 | dev                |
