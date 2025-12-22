@@ -15,7 +15,6 @@ Feature: proposing a child branch
     And tool "open" is installed
     When I run "git-town propose --stack"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                   |
