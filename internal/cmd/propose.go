@@ -303,9 +303,6 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (data p
 		if err = validateBranchTypeToPropose(branchesAndTypes[initialBranch]); err != nil {
 			return data, configdomain.ProgramFlowExit, err
 		}
-		if validatedConfig.NormalConfig.Lineage.Parent(initialBranch).IsNone() {
-			return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.ProposalNoParent, initialBranch)
-		}
 	}
 	connector, hasConnector := connectorOpt.Get()
 	if !hasConnector {
@@ -316,7 +313,7 @@ func determineProposeData(repo execute.OpenRepoResult, args proposeArgs) (data p
 	for b, branchNameToPropose := range branchNamesToPropose {
 		branchType, has := branchesAndTypes[branchNameToPropose]
 		if !has {
-			return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchTypeCannotDetermine, branchNameToPropose)
+			continue
 		}
 		existingProposalURL := None[string]()
 		if canFindProposals {

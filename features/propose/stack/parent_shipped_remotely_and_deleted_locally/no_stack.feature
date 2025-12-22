@@ -15,9 +15,9 @@ Feature: proposing a branch whose parent was shipped and the local branch delete
     And the current branch is "child"
     And tool "open" is installed
     And I ran "git branch -d parent"
-    When I run "git-town propose --stack"
+    When I run "git-town propose"
 
-  Scenario: result
+  Scenario: without stack
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                          |
       | child  | git fetch --prune --tags                                         |
