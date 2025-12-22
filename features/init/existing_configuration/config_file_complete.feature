@@ -1,7 +1,6 @@
 @messyoutput
 Feature: don't ask for information already provided by the config file
 
-  @debug @this
   Scenario:
     Given a Git repo with origin
     And the committed configuration file:
@@ -15,27 +14,27 @@ Feature: don't ask for information already provided by the config file
       perennials = ["staging"]
       unknown-type = "observed"
       order = "desc"
-
+      
       [create]
       branch-prefix = "acme-"
       new-branch-type = "feature"
       share-new-branches = "propose"
       stash = true
-
+      
       [hosting]
       dev-remote = "something"
       origin-hostname = "github.com"
       forge-type = "github"
       github-connector = "api"
-
+      
       [propose]
       lineage = "none"
-
+      
       [ship]
       delete-tracking-branch = true
       ignore-uncommitted = true
       strategy = "api"
-
+      
       [sync]
       auto-sync = false
       detached = false
@@ -45,7 +44,7 @@ Feature: don't ask for information already provided by the config file
       push-hook = true
       tags = true
       upstream = true
-
+      
       [sync-strategy]
       feature-branches = "rebase"
       prototype-branches = "merge"
@@ -62,6 +61,5 @@ Feature: don't ask for information already provided by the config file
       | enter all          | down enter        |
       | config storage     | enter             |
     Then Git Town runs the commands
-      | COMMAND                                  |
-      | git config git-town.github-token gh-tok  |
-      | git config git-town.github-connector api |
+      | COMMAND                                 |
+      | git config git-town.github-token gh-tok |
