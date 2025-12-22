@@ -47,7 +47,7 @@ func GitHubConnectorType(args Args[forgedomain.GitHubConnectorType]) (Option[for
 		},
 	}...)
 	cursor := entries.IndexOf(args.Local)
-	selection, exit, err := dialogcomponents.RadioList(entries, cursor, gitHubConnectorTypeTitle, gitHubConnectorTypeHelp, args.Inputs, "github-connector-type")
+	selection, exit, err := dialogcomponents.RadioList(entries, cursor, gitHubConnectorTypeTitle, gitHubConnectorTypeHelp, args.Inputs, "github-connector")
 	fmt.Printf(messages.GitHubConnectorTypeResult, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
 	return selection, exit, err
 }
