@@ -30,7 +30,7 @@ func downCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "down",
-		GroupID: cmdhelpers.GroupIDStack,
+		GroupID: cmdhelpers.GroupIDNavigation,
 		Args:    cobra.NoArgs,
 		Short:   downShort,
 		Long:    cmdhelpers.Long(downShort, downLong),
