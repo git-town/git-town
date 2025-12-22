@@ -71,10 +71,19 @@ EnterForgeData:
 				return emptyResult, exit, false, err
 			}
 			bitbucketAppPassword, exit, err = enterBitbucketAppPassword(data)
+			if err != nil || exit {
+				return emptyResult, exit, false, err
+			}
 		case forgedomain.ForgeTypeForgejo:
 			forgejoToken, exit, err = enterForgejoToken(data)
+			if err != nil || exit {
+				return emptyResult, exit, false, err
+			}
 		case forgedomain.ForgeTypeGitea:
 			giteaToken, exit, err = enterGiteaToken(data)
+			if err != nil || exit {
+				return emptyResult, exit, false, err
+			}
 		case forgedomain.ForgeTypeGitHub:
 			githubConnectorTypeOpt, exit, err = enterGitHubConnectorType(data)
 			if err != nil || exit {
@@ -84,6 +93,9 @@ EnterForgeData:
 				switch githubConnectorType {
 				case forgedomain.GitHubConnectorTypeAPI:
 					githubToken, exit, err = enterGitHubToken(data)
+					if err != nil || exit {
+						return emptyResult, exit, false, err
+					}
 				case forgedomain.GitHubConnectorTypeGh:
 				}
 			}
@@ -96,12 +108,12 @@ EnterForgeData:
 				switch gitlabConnectorType {
 				case forgedomain.GitLabConnectorTypeAPI:
 					gitlabToken, exit, err = enterGitLabToken(data)
+					if err != nil || exit {
+						return emptyResult, exit, false, err
+					}
 				case forgedomain.GitLabConnectorTypeGlab:
 				}
 			}
-		}
-		if err != nil || exit {
-			return emptyResult, exit, false, err
 		}
 	}
 	repeat, exit, err := testForgeAuth(testForgeAuthArgs{
