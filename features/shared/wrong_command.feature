@@ -1,4 +1,3 @@
-@this
 Feature: show all available commands
 
   Background:
