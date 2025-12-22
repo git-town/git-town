@@ -399,14 +399,6 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 		prog.Value.Add(&opcodes.BranchTrackingCreateIfNeeded{
 			CurrentBranch: branchToPropose.name,
 		})
-		previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
-		cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
-			DryRun:                   data.config.NormalConfig.DryRun,
-			InitialStashSize:         data.stashSize,
-			RunInGitRoot:             true,
-			StashOpenChanges:         data.hasOpenChanges,
-			PreviousBranchCandidates: previousBranchCandidates,
-		})
 		if branchToPropose.syncStatus == gitdomain.SyncStatusDeletedAtRemote {
 			repo.FinalMessages.Add(fmt.Sprintf(messages.BranchDeletedAtRemote, branchToPropose.name))
 			return prog.Immutable()
@@ -426,6 +418,14 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 			})
 		}
 	}
+	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
+	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
+		DryRun:                   data.config.NormalConfig.DryRun,
+		InitialStashSize:         data.stashSize,
+		RunInGitRoot:             true,
+		StashOpenChanges:         data.hasOpenChanges,
+		PreviousBranchCandidates: previousBranchCandidates,
+	})
 	return optimizer.Optimize(prog.Immutable())
 }
 
