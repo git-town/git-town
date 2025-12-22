@@ -403,14 +403,6 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 		prog.Value.Add(&opcodes.BranchTrackingCreateIfNeeded{
 			CurrentBranch: branchToPropose.name,
 		})
-		previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
-		cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
-			DryRun:                   data.config.NormalConfig.DryRun,
-			InitialStashSize:         data.stashSize,
-			RunInGitRoot:             true,
-			StashOpenChanges:         data.hasOpenChanges,
-			PreviousBranchCandidates: previousBranchCandidates,
-		})
 		if existingProposalURL, hasExistingProposal := branchToPropose.existingProposalURL.Get(); hasExistingProposal {
 			prog.Value.Add(
 				&opcodes.BrowserOpen{
@@ -427,6 +419,14 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 		}
 		prog.Value.Add(&opcodes.ProgramEndOfBranch{})
 	}
+	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
+	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
+		DryRun:                   data.config.NormalConfig.DryRun,
+		InitialStashSize:         data.stashSize,
+		RunInGitRoot:             true,
+		StashOpenChanges:         data.hasOpenChanges,
+		PreviousBranchCandidates: previousBranchCandidates,
+	})
 	return optimizer.Optimize(prog.Immutable())
 }
 
