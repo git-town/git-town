@@ -17,7 +17,6 @@ Feature: show the configuration
       | prototype-2    | prototype    | main   | local         |
     And local Git setting "color.ui" is "always"
 
-  @this
   Scenario: all configured in Git, no stacked changes
     Given Git setting "git-town.perennial-branches" is "qa staging"
     And Git setting "git-town.perennial-regex" is "^release-"
