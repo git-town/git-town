@@ -19,22 +19,23 @@ func (self *BranchDeleteIfEmptyAtRuntime) Run(args shared.RunArgs) error {
 	if err != nil {
 		return err
 	}
-	if !hasUnmergedChanges {
-		args.PrependOpcodes(
-			&CheckoutDescendentOrOther{
-				Branch: self.Branch,
-			},
-			&BranchTrackingDelete{
-				Branch: self.Branch.TrackingBranch(args.Config.Value.NormalConfig.DevRemote),
-			},
-			&BranchLocalDeleteContent{
-				BranchToDelete:     self.Branch,
-				BranchToRebaseOnto: args.Config.Value.ValidatedConfigData.MainBranch,
-			},
-			&LineageBranchRemove{
-				Branch: self.Branch,
-			},
-		)
+	if hasUnmergedChanges {
+		return nil
 	}
+	args.PrependOpcodes(
+		&CheckoutDescendentOrOther{
+			Branch: self.Branch,
+		},
+		&BranchTrackingDelete{
+			Branch: self.Branch.TrackingBranch(args.Config.Value.NormalConfig.DevRemote),
+		},
+		&BranchLocalDeleteContent{
+			BranchToDelete:     self.Branch,
+			BranchToRebaseOnto: args.Config.Value.ValidatedConfigData.MainBranch,
+		},
+		&LineageBranchRemove{
+			Branch: self.Branch,
+		},
+	)
 	return nil
 }
