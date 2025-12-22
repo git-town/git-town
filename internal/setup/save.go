@@ -103,6 +103,18 @@ func saveAllToFile(userInput UserInput, existingConfigFile configdomain.PartialC
 	if gitConfig.FeatureRegex.IsSome() {
 		_ = gitconfig.RemoveFeatureRegex(runner)
 	}
+	if gitConfig.ForgeType.IsSome() {
+		_ = gitconfig.RemoveForgeType(runner)
+	}
+	if gitConfig.GitHubConnectorType.IsSome() {
+		_ = gitconfig.RemoveGitHubConnectorType(runner)
+	}
+	if gitConfig.GitLabConnectorType.IsSome() {
+		_ = gitconfig.RemoveGitLabConnectorType(runner)
+	}
+	if gitConfig.HostingOriginHostname.IsSome() {
+		_ = gitconfig.RemoveOriginHostname(runner)
+	}
 	if gitConfig.IgnoreUncommitted.IsSome() {
 		_ = gitconfig.RemoveIgnoreUncommitted(runner)
 	}
