@@ -71,8 +71,14 @@ EnterForgeData:
 				return emptyResult, exit, false, err
 			}
 			bitbucketAppPassword, exit, err = enterBitbucketAppPassword(data)
+			if err != nil || exit {
+				return emptyResult, exit, false, err
+			}
 		case forgedomain.ForgeTypeForgejo:
 			forgejoToken, exit, err = enterForgejoToken(data)
+			if err != nil || exit {
+				return emptyResult, exit, false, err
+			}
 		case forgedomain.ForgeTypeGitea:
 			giteaToken, exit, err = enterGiteaToken(data)
 			if err != nil || exit {
