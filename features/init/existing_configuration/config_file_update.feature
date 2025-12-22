@@ -25,6 +25,7 @@ Feature: don't ask for information already provided by the config file
       dev-remote = "something"
       origin-hostname = "github.com"
       forge-type = "github"
+      github-connector-type = "api"
 
       [propose]
       lineage = "none"
