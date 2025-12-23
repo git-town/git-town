@@ -17,7 +17,7 @@ type SyncFeatureBranchRebase struct {
 
 func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
 	program := []shared.Opcode{}
-	syncTracking, _, trackingBranch, err := self.shouldSyncWithTracking(args)
+	syncTracking, hasTrackingBranch, trackingBranch, err := self.shouldSyncWithTracking(args)
 	if err != nil {
 		return err
 	}
@@ -35,10 +35,6 @@ func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
 			CommitsToRemove: self.ParentSHAPreviousRun,
 		},
 	)
-	syncTracking, hasTrackingBranch, _, err := self.shouldSyncWithTracking(args)
-	if err != nil {
-		return err
-	}
 	// update the tracking branch
 	if syncTracking && self.PushBranches.ShouldPush() && hasTrackingBranch && args.Config.Value.NormalConfig.Offline.IsOnline() {
 		program = append(program,
