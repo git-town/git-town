@@ -181,10 +181,10 @@ type compressData struct {
 type compressBranchData struct {
 	branchType       configdomain.BranchType
 	commitCount      int // number of commits in this branch
-	trackingBranch   Option[gitdomain.RemoteBranchName]
 	name             gitdomain.LocalBranchName
 	newCommitMessage gitdomain.CommitMessage // the commit message to use for the compressed commit in this branch
 	parentBranch     gitdomain.LocalBranchName
+	trackingBranch   Option[gitdomain.RemoteBranchName]
 }
 
 func determineCompressData(repo execute.OpenRepoResult, message Option[gitdomain.CommitMessage], compressEntireStack configdomain.FullStack) (data compressData, flow configdomain.ProgramFlow, err error) {
@@ -318,10 +318,10 @@ func determineCompressData(repo execute.OpenRepoResult, message Option[gitdomain
 		branchesToCompress = append(branchesToCompress, compressBranchData{
 			branchType:       branchType,
 			commitCount:      commitCount,
-			trackingBranch:   branchInfo.RemoteName,
 			name:             branchNameToCompress,
 			newCommitMessage: newCommitMessage,
 			parentBranch:     parentBranch,
+			trackingBranch:   branchInfo.RemoteName,
 		})
 	}
 	if len(branchesToCompress) == 0 {

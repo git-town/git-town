@@ -8,8 +8,8 @@ import (
 // PushCurrentBranchForceIfNeeded force-pushes the branch with the given name to the origin remote.
 type PushCurrentBranchForceIfNeeded struct {
 	CurrentBranch   gitdomain.LocalBranchName
-	TrackingBranch  gitdomain.RemoteBranchName
 	ForceIfIncludes bool
+	TrackingBranch  gitdomain.RemoteBranchName
 }
 
 func (self *PushCurrentBranchForceIfNeeded) Run(args shared.RunArgs) error {
