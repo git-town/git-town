@@ -17,11 +17,7 @@ func main() {
 	cfg := &packages.Config{
 		Mode: packages.NeedFiles | packages.NeedSyntax | packages.NeedTypes | packages.NeedTypesInfo,
 	}
-	pkgs, err := packages.Load(cfg, "./...")
-	if err != nil {
-		fmt.Printf("ERROR loading packages: %s\n", err)
-		os.Exit(1)
-	}
+	pkgs := asserts.NoError1(packages.Load(cfg, "./..."))
 	foundError := false
 	for _, pkg := range pkgs {
 		for i, file := range pkg.Syntax {
@@ -104,16 +100,8 @@ func (self *addfVisitor) verifyAddfCall(callExpr *ast.CallExpr) {
 
 	// Found a match - report the error
 	*self.foundError = true
-	workDir, err := os.Getwd()
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-	relPath, err := filepath.Rel(workDir, self.path)
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
+	workDir := asserts.NoError1(os.Getwd())
+	relPath := asserts.NoError1(filepath.Rel(workDir, self.path))
 	position := self.fileSet.Position(callExpr.Pos())
 	fmt.Printf("%s:%d: Please use the .Add method since no formatting is happening.\n", relPath, position.Line)
 }
