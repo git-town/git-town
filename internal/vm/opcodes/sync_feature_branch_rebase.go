@@ -42,6 +42,7 @@ func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
 			&PushCurrentBranchForceIfNeeded{
 				CurrentBranch:   self.Branch,
 				ForceIfIncludes: true,
+				TrackingBranch:  trackingBranch,
 			},
 		)
 	}
