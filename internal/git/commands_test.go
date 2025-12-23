@@ -297,7 +297,7 @@ func TestBackendCommands(t *testing.T) {
 			local := testruntime.Clone(origin.TestRunner, t.TempDir())
 			asserts.NoError(local.Git.CreateAndCheckoutBranch(local.TestRunner, "branch"))
 			asserts.NoError(local.Git.CreateTrackingBranch(local.TestRunner, "branch", gitdomain.RemoteOrigin, false))
-			inSync := asserts.NoError1(local.Git.BranchInSyncWithTracking(local.TestRunner, "branch", gitdomain.RemoteOrigin))
+			inSync := asserts.NoError1(local.Git.BranchInSyncWithTracking(local.TestRunner, "branch", "origin/branch"))
 			must.True(t, inSync)
 		})
 		t.Run("branch has local commits", func(t *testing.T) {
@@ -312,7 +312,7 @@ func TestBackendCommands(t *testing.T) {
 				FileName:    "local_file",
 				Message:     "add local file",
 			})
-			inSync := asserts.NoError1(local.Git.BranchInSyncWithTracking(local.TestRunner, "branch", gitdomain.RemoteOrigin))
+			inSync := asserts.NoError1(local.Git.BranchInSyncWithTracking(local.TestRunner, "branch", "origin/branch"))
 			must.False(t, inSync)
 		})
 		t.Run("branch has remote commits", func(t *testing.T) {
@@ -328,7 +328,7 @@ func TestBackendCommands(t *testing.T) {
 				Message:     "add remote file",
 			})
 			local.Fetch()
-			inSync := asserts.NoError1(local.Git.BranchInSyncWithTracking(local.TestRunner, "branch", gitdomain.RemoteOrigin))
+			inSync := asserts.NoError1(local.Git.BranchInSyncWithTracking(local.TestRunner, "branch", "origin/branch"))
 			must.False(t, inSync)
 		})
 		t.Run("branch has different local and remote commits", func(t *testing.T) {
@@ -350,7 +350,7 @@ func TestBackendCommands(t *testing.T) {
 				Message:     "add remote file",
 			})
 			local.Fetch()
-			inSync := asserts.NoError1(local.Git.BranchInSyncWithTracking(local.TestRunner, "branch", gitdomain.RemoteOrigin))
+			inSync := asserts.NoError1(local.Git.BranchInSyncWithTracking(local.TestRunner, "branch", "origin/branch"))
 			must.False(t, inSync)
 		})
 	})
