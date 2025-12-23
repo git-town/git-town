@@ -17,11 +17,11 @@ type SyncFeatureBranchRebase struct {
 
 func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
 	program := []shared.Opcode{}
-	syncTracking, trackingBranchOpt, err := self.shouldSyncWithTracking(args)
+	syncTracking, err := self.shouldSyncWithTracking(args)
 	if err != nil {
 		return err
 	}
-	trackingBranch, hasTrackingBranch := trackingBranchOpt.Get()
+	trackingBranch, hasTrackingBranch := self.TrackingBranch.Get()
 	if syncTracking && hasTrackingBranch {
 		program = append(program,
 			&RebaseTrackingBranch{
@@ -49,12 +49,11 @@ func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
 	return nil
 }
 
-func (self *SyncFeatureBranchRebase) shouldSyncWithTracking(args shared.RunArgs) (shouldSync bool, trackingBranchOpt Option[gitdomain.RemoteBranchName], err error) {
-	trackingBranchOpt = self.TrackingBranch
-	hasTrackingBranch := trackingBranchOpt.IsSome()
+func (self *SyncFeatureBranchRebase) shouldSyncWithTracking(args shared.RunArgs) (shouldSync bool, err error) {
+	hasTrackingBranch := self.TrackingBranch.IsSome()
 	if !hasTrackingBranch || args.Config.Value.NormalConfig.Offline.IsOffline() {
-		return false, trackingBranchOpt, nil
+		return false, nil
 	}
 	syncedWithTracking, err := args.Git.BranchInSyncWithTracking(args.Backend, self.Branch, args.Config.Value.NormalConfig.DevRemote)
-	return !syncedWithTracking, trackingBranchOpt, err
+	return !syncedWithTracking, err
 }
