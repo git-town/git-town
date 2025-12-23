@@ -748,6 +748,7 @@ func TestChanges(t *testing.T) {
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
+			BranchInfos:              before.Branches,
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
 			FinalMessages:            stringslice.NewCollector(),
@@ -761,7 +762,7 @@ func TestChanges(t *testing.T) {
 			// reset the feature branch to the previous SHA
 			&opcodes.CheckoutIfNeeded{Branch: "feature-branch"},
 			&opcodes.BranchCurrentResetToSHAIfNeeded{MustHaveSHA: "666666", SetToSHA: "333333"},
-			&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: "feature-branch", ForceIfIncludes: true},
+			&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: "feature-branch", ForceIfIncludes: true, TrackingBranch: "origin/feature-branch"},
 			// check out the initial branch
 			&opcodes.CheckoutIfExists{Branch: "feature-branch"},
 		}

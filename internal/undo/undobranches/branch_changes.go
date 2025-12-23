@@ -1,6 +1,7 @@
 package undobranches
 
 import (
+	"fmt"
 	"slices"
 
 	"github.com/git-town/git-town/v22/internal/config"
@@ -78,8 +79,10 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 		change := omniChangedFeatures[branch]
 		result.Add(&opcodes.CheckoutIfNeeded{Branch: branch})
 		result.Add(&opcodes.BranchCurrentResetToSHAIfNeeded{MustHaveSHA: change.After, SetToSHA: change.Before})
+		fmt.Println("11111111111111111111111111111111111111111111111111111111111111111111111111")
 		if branchInfo, hasBranchInfo := args.BranchInfos.FindByLocalName(branch).Get(); hasBranchInfo {
 			if tracking, hasTracking := branchInfo.RemoteName.Get(); hasTracking {
+				fmt.Println("22222222222222222222222222222222222222222222222222222222222222222222222222")
 				result.Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: branch, ForceIfIncludes: true, TrackingBranch: tracking})
 			}
 		}
