@@ -161,7 +161,7 @@ func isFmtSprintf(expr ast.Expr) bool {
 }
 
 func shouldIgnorePath(path string) bool {
-	return strings.HasPrefix(path, "vendor/") ||
+	return strings.Contains(path, "vendor/") ||
 		strings.Contains(path, ".git/") ||
-		strings.Contains(path, "internal/gohacks/stringslice/collector.go")
+		strings.HasSuffix(path, "internal/gohacks/stringslice/collector.go")
 }
