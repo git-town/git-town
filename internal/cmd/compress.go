@@ -384,7 +384,11 @@ func compressBranchProgram(args compressBranchProgramArgs) {
 	})
 	trackingBranch, hasTrackingBranch := args.data.trackingBranch.Get()
 	if hasTrackingBranch && args.offline.IsOnline() {
-		args.prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: args.data.name, ForceIfIncludes: true, TrackingBranch: trackingBranch})
+		args.prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{
+			CurrentBranch:   args.data.name,
+			ForceIfIncludes: true,
+			TrackingBranch:  trackingBranch,
+		})
 	}
 }
 
