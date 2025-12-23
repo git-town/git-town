@@ -20,8 +20,8 @@ Feature: Create proposals for prototype branches
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                                              |
       | prototype | git fetch --prune --tags                                             |
-      |           | Looking for proposal online ... ok                                   |
       |           | git push -u origin prototype                                         |
+      |           | Looking for proposal online ... ok                                   |
       |           | open https://github.com/git-town/git-town/compare/prototype?expand=1 |
     And Git Town prints:
       """
