@@ -40,28 +40,6 @@ func EmptyRunState() RunState {
 	return RunState{} //exhaustruct:ignore
 }
 
-// inserts a PushBranch opcode after all the opcodes for the current branch
-func (self *RunState) AddPushBranchAfterCurrentBranchProgram(gitCommands git.Commands, backend subshelldomain.Querier) error {
-	popped := program.Program{}
-	for {
-		nextOpcode, hasNextOpcode := self.RunProgram.Pop().Get()
-		if hasNextOpcode && !opcodes.IsEndOfBranchProgramOpcode(nextOpcode) {
-			popped.Add(nextOpcode)
-		} else {
-			currentBranchOpt, err := gitCommands.CurrentBranch(backend)
-			if err != nil {
-				return err
-			}
-			if currentBranch, hasCurrentBranch := currentBranchOpt.Get(); hasCurrentBranch {
-				self.RunProgram.Prepend(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: currentBranch})
-			}
-			self.RunProgram.PrependProgram(popped)
-			break
-		}
-	}
-	return nil
-}
-
 func (self *RunState) HasAbortProgram() bool {
 	return !self.AbortProgram.IsEmpty()
 }
