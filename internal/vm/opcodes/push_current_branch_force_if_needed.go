@@ -12,7 +12,8 @@ type PushCurrentBranchForceIfNeeded struct {
 }
 
 func (self *PushCurrentBranchForceIfNeeded) Run(args shared.RunArgs) error {
-	inSync, err := args.Git.BranchInSyncWithTracking(args.Backend, self.CurrentBranch, args.Config.Value.NormalConfig.DevRemote)
+	trackingBranch := self.CurrentBranch.AtRemote(args.Config.Value.NormalConfig.DevRemote)
+	inSync, err := args.Git.BranchInSyncWithTracking(args.Backend, self.CurrentBranch, trackingBranch)
 	if err != nil {
 		return err
 	}
