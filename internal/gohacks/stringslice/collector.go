@@ -15,7 +15,6 @@ func NewCollector() Collector {
 }
 
 // Add appends a string to this collector.
-// TODO: add an AddF method that receives a format string and a variadic number of arguments.
 func (self Collector) Add(text string) {
 	*self.data = append(*self.data, text)
 }
