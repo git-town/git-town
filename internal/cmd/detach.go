@@ -398,11 +398,12 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 			CommitsToRemove:    data.parentBranch.BranchName().Location(),
 		},
 	)
-	if data.branchToDetachInfo.HasTrackingBranch() {
+	if trackingBranch, hasTrackingBranch := data.branchToDetachInfo.RemoteName.Get(); hasTrackingBranch {
 		prog.Value.Add(
 			&opcodes.PushCurrentBranchForceIfNeeded{
 				CurrentBranch:   data.branchToDetachName,
 				ForceIfIncludes: true,
+				TrackingBranch:  trackingBranch,
 			},
 		)
 	}
