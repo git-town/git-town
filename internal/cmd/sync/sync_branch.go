@@ -165,7 +165,9 @@ func localBranchProgram(args localBranchProgramArgs) {
 		case isMainOrPerennialBranch:
 			args.Program.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: args.localName})
 		default:
-			pushFeatureBranchProgram(args.Program, args.localName, args.Config.NormalConfig.SyncFeatureStrategy)
+			if trackingBranch, hasTrackingBranch := args.branchInfo.RemoteName.Get(); hasTrackingBranch {
+				pushFeatureBranchProgram(args.Program, args.localName, trackingBranch, args.Config.NormalConfig.SyncFeatureStrategy)
+			}
 		}
 	}
 }
@@ -198,14 +200,14 @@ type pullParentBranchOfCurrentFeatureBranchOpcodeArgs struct {
 	trackingBranch    Option[gitdomain.RemoteBranchName]
 }
 
-func pushFeatureBranchProgram(prog Mutable[program.Program], branch gitdomain.LocalBranchName, syncFeatureStrategy configdomain.SyncFeatureStrategy) {
+func pushFeatureBranchProgram(prog Mutable[program.Program], branch gitdomain.LocalBranchName, trackingBranch gitdomain.RemoteBranchName, syncFeatureStrategy configdomain.SyncFeatureStrategy) {
 	switch syncFeatureStrategy {
 	case configdomain.SyncFeatureStrategyMerge:
 		prog.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branch})
 	case configdomain.SyncFeatureStrategyRebase:
-		prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: branch, ForceIfIncludes: true})
+		prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: branch, ForceIfIncludes: true, TrackingBranch: trackingBranch})
 	case configdomain.SyncFeatureStrategyCompress:
-		prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: branch, ForceIfIncludes: false})
+		prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: branch, ForceIfIncludes: false, TrackingBranch: trackingBranch})
 	}
 }
 
