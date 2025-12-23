@@ -25,8 +25,8 @@ func main() {
 				continue
 			}
 			visitor := &addfVisitor{
-				foundError: &foundError,
 				fileSet:    pkg.Fset,
+				foundError: &foundError,
 				path:       pkg.GoFiles[i],
 				typeInfo:   pkg.TypesInfo,
 			}
@@ -39,8 +39,8 @@ func main() {
 }
 
 type addfVisitor struct {
-	foundError *bool
 	fileSet    *token.FileSet
+	foundError *bool
 	path       string
 	typeInfo   *types.Info
 }
@@ -70,6 +70,22 @@ func (self *addfVisitor) Visit(node ast.Node) ast.Visitor {
 	}
 
 	return self
+}
+
+func (self *addfVisitor) isCollectorType(expr ast.Expr) bool {
+	if self.typeInfo == nil {
+		return false
+	}
+	typ := self.typeInfo.TypeOf(expr)
+	if typ == nil {
+		return false
+	}
+
+	// Get the underlying type name
+	typeName := typ.String()
+
+	// Check for both value and pointer receivers
+	return strings.Contains(typeName, "stringslice.Collector")
 }
 
 func (self *addfVisitor) verifyAddCall(callExpr *ast.CallExpr) {
@@ -104,22 +120,6 @@ func (self *addfVisitor) verifyAddfCall(callExpr *ast.CallExpr) {
 	relPath := asserts.NoError1(filepath.Rel(workDir, self.path))
 	position := self.fileSet.Position(callExpr.Pos())
 	fmt.Printf("%s:%d: Please use the .Add method since no formatting is happening.\n", relPath, position.Line)
-}
-
-func (self *addfVisitor) isCollectorType(expr ast.Expr) bool {
-	if self.typeInfo == nil {
-		return false
-	}
-	typ := self.typeInfo.TypeOf(expr)
-	if typ == nil {
-		return false
-	}
-
-	// Get the underlying type name
-	typeName := typ.String()
-
-	// Check for both value and pointer receivers
-	return strings.Contains(typeName, "stringslice.Collector")
 }
 
 func isFmtSprintf(expr ast.Expr) bool {
