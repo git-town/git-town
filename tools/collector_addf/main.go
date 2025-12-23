@@ -65,13 +65,16 @@ func (self *addfVisitor) Visit(node ast.Node) ast.Visitor {
 		return self
 	}
 
-	// ensure the method name is "Add"
 	if selectorExpr.Sel.Name == "Add" {
-		// Check if there's exactly one argument and it's a call to fmt.Sprintf
+		// here we have a collector.Add method call
+
+		// if .Add is called with more than one argument, this isn't the call site we are looking for
 		if len(callExpr.Args) != 1 {
+			fmt.Println(`please update the "collector_addf" linter, I found a call to collector.Add with more than one argument`)
 			return self
 		}
 
+		// Check if there's exactly one argument and it's a call to fmt.Sprintf
 		if !self.isFmtSprintf(callExpr.Args[0]) {
 			return self
 		}
