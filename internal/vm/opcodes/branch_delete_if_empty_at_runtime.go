@@ -22,13 +22,17 @@ func (self *BranchDeleteIfEmptyAtRuntime) Run(args shared.RunArgs) error {
 	if hasUnmergedChanges {
 		return nil
 	}
-	args.PrependOpcodes(
+	opcodes := []shared.Opcode{
 		&CheckoutDescendentOrOther{
 			Branch: self.Branch,
 		},
-		&BranchTrackingDelete{
-			Branch: self.Branch.TrackingBranch(args.Config.Value.NormalConfig.DevRemote),
-		},
+	}
+	if branchInfo, hasBranchInfo := args.BranchInfos.FindByLocalName(self.Branch).Get(); hasBranchInfo {
+		if trackingBranch, hasTrackingBranch := branchInfo.RemoteName.Get(); hasTrackingBranch {
+			opcodes = append(opcodes, &BranchTrackingDelete{Branch: trackingBranch})
+		}
+	}
+	opcodes = append(opcodes,
 		&BranchLocalDeleteContent{
 			BranchToDelete:     self.Branch,
 			BranchToRebaseOnto: args.Config.Value.ValidatedConfigData.MainBranch,
@@ -37,5 +41,6 @@ func (self *BranchDeleteIfEmptyAtRuntime) Run(args shared.RunArgs) error {
 			Branch: self.Branch,
 		},
 	)
+	args.PrependOpcodes(opcodes...)
 	return nil
 }
