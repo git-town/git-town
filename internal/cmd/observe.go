@@ -150,7 +150,7 @@ func validateObserveData(data observeData, repo execute.OpenRepoResult) error {
 		case configdomain.BranchTypePerennialBranch:
 			return errors.New(messages.PerennialBranchCannotObserve)
 		case configdomain.BranchTypeObservedBranch:
-			repo.FinalMessages.Add(fmt.Sprintf(messages.BranchIsAlreadyObserved, branchName))
+			repo.FinalMessages.Addf(messages.BranchIsAlreadyObserved, branchName)
 		case
 			configdomain.BranchTypeFeatureBranch,
 			configdomain.BranchTypeContributionBranch,

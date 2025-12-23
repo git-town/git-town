@@ -1,5 +1,7 @@
 package stringslice
 
+import "fmt"
+
 // Collector accumulates strings.
 type Collector struct {
 	data *[]string
@@ -15,6 +17,10 @@ func NewCollector() Collector {
 // Add appends a string to this collector.
 func (self Collector) Add(text string) {
 	*self.data = append(*self.data, text)
+}
+
+func (self Collector) Addf(format string, args ...any) {
+	self.Add(fmt.Sprintf(format, args...))
 }
 
 // Result provides all accumulated strings.
