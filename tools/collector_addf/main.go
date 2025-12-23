@@ -7,7 +7,6 @@ import (
 	"go/types"
 	"os"
 	"path/filepath"
-	"regexp"
 	"strings"
 
 	"golang.org/x/tools/go/packages"
@@ -97,12 +96,7 @@ func (self *fmtSprintfVisitor) Visit(node ast.Node) ast.Visitor {
 	// Check if the method name is "Addf"
 	if selectorExpr.Sel.Name == "Addf" {
 		// Check if there's at least one argument
-		if len(callExpr.Args) == 0 {
-			return self
-		}
-
-		// Check if the first argument is a string literal without format specifiers
-		if !self.isStringWithoutFormatting(callExpr.Args[0]) {
+		if len(callExpr.Args) > 1 {
 			return self
 		}
 
@@ -166,25 +160,6 @@ func (self *fmtSprintfVisitor) isFmtSprintf(expr ast.Expr) bool {
 	}
 
 	return pkgIdent.Name == "fmt"
-}
-
-func (self *fmtSprintfVisitor) isStringWithoutFormatting(expr ast.Expr) bool {
-	// Check if this is a basic literal
-	basicLit, isBasicLit := expr.(*ast.BasicLit)
-	if !isBasicLit {
-		return false
-	}
-
-	// Check if it's a string literal
-	if basicLit.Kind != token.STRING {
-		return false
-	}
-
-	// Check if the string contains format specifiers
-	// Format specifiers follow the pattern: %[flags][width][.precision]verb
-	// Common verbs: s, d, v, f, t, q, x, b, e, g, p, T, etc.
-	formatSpecifierPattern := regexp.MustCompile(`%[#0\- +]*\d*\.?\d*[a-zA-Z%]`)
-	return !formatSpecifierPattern.MatchString(basicLit.Value)
 }
 
 func shouldIgnorePath(path string) bool {
