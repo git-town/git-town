@@ -223,7 +223,7 @@ func (self *NormalConfig) RemovePerennialAncestors(runner subshelldomain.Runner,
 		if self.Lineage.Parent(perennialBranch).IsSome() {
 			_ = gitconfig.RemoveParent(runner, perennialBranch)
 			self.Lineage = self.Lineage.RemoveBranch(perennialBranch)
-			finalMessages.Add(fmt.Sprintf(messages.PerennialBranchRemovedParentEntry, perennialBranch))
+			finalMessages.AddF(messages.PerennialBranchRemovedParentEntry, perennialBranch)
 		}
 	}
 }

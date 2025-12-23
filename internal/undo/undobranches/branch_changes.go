@@ -1,7 +1,6 @@
 package undobranches
 
 import (
-	"fmt"
 	"slices"
 
 	"github.com/git-town/git-town/v22/internal/config"
@@ -70,7 +69,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 			result.Add(&opcodes.CommitRevertIfNeeded{SHA: change.After})
 			result.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branch})
 		} else {
-			args.FinalMessages.Add(fmt.Sprintf(messages.UndoCannotRevertCommitOnPerennialBranch, change.After))
+			args.FinalMessages.AddF(messages.UndoCannotRevertCommitOnPerennialBranch, change.After)
 		}
 	}
 
@@ -100,7 +99,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 				result.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branchName})
 			}
 		} else {
-			args.FinalMessages.Add(fmt.Sprintf(messages.UndoCannotRevertCommitOnPerennialBranch, afterSHA))
+			args.FinalMessages.AddF(messages.UndoCannotRevertCommitOnPerennialBranch, afterSHA)
 		}
 	}
 
