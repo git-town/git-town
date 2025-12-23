@@ -74,7 +74,8 @@ createProposal:
 			}
 			proposalOpt, err := proposalFinder.FindProposal(self.Branch, parentBranch)
 			if err != nil {
-				return err
+				args.FinalMessages.Add(fmt.Sprintf(messages.ProposalFindProblem, err.Error()))
+				return nil
 			}
 			if proposalOpt.IsSome() {
 				args.PrependOpcodes(&ProposalUpdateLineage{
