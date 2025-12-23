@@ -21,34 +21,34 @@ func main() {
 		fmt.Printf("ERROR loading packages: %s\n", err)
 		os.Exit(1)
 	}
-	errors := 0
+	foundError := false
 	for _, pkg := range pkgs {
 		for i, file := range pkg.Syntax {
 			if shouldIgnorePath(pkg.GoFiles[i]) {
 				continue
 			}
-			visitor := &fmtSprintfVisitor{
-				errors:   &errors,
-				fset:     pkg.Fset,
-				path:     pkg.GoFiles[i],
-				typeInfo: pkg.TypesInfo,
+			visitor := &addfVisitor{
+				foundError: &foundError,
+				fileSet:    pkg.Fset,
+				path:       pkg.GoFiles[i],
+				typeInfo:   pkg.TypesInfo,
 			}
 			ast.Walk(visitor, file)
 		}
 	}
-	if errors > 0 {
+	if foundError {
 		os.Exit(1)
 	}
 }
 
-type fmtSprintfVisitor struct {
-	errors   *int
-	fset     *token.FileSet
-	path     string
-	typeInfo *types.Info
+type addfVisitor struct {
+	foundError *bool
+	fileSet    *token.FileSet
+	path       string
+	typeInfo   *types.Info
 }
 
-func (self *fmtSprintfVisitor) Visit(node ast.Node) ast.Visitor {
+func (self *addfVisitor) Visit(node ast.Node) ast.Visitor {
 	callExpr, isCallExpr := node.(*ast.CallExpr)
 	if !isCallExpr {
 		return self
@@ -77,7 +77,7 @@ func (self *fmtSprintfVisitor) Visit(node ast.Node) ast.Visitor {
 		}
 
 		// Found a match - report the error
-		*self.errors++
+		*self.foundError = true
 		workDir, err := os.Getwd()
 		if err != nil {
 			fmt.Println(err.Error())
@@ -88,7 +88,7 @@ func (self *fmtSprintfVisitor) Visit(node ast.Node) ast.Visitor {
 			fmt.Println(err.Error())
 			return self
 		}
-		position := self.fset.Position(callExpr.Pos())
+		position := self.fileSet.Position(callExpr.Pos())
 		fmt.Printf("%s:%d: Please use the .Addf method to add formatted strings.\n", relPath, position.Line)
 		return self
 	}
@@ -101,7 +101,7 @@ func (self *fmtSprintfVisitor) Visit(node ast.Node) ast.Visitor {
 		}
 
 		// Found a match - report the error
-		*self.errors++
+		*self.foundError = true
 		workDir, err := os.Getwd()
 		if err != nil {
 			fmt.Println(err.Error())
@@ -112,7 +112,7 @@ func (self *fmtSprintfVisitor) Visit(node ast.Node) ast.Visitor {
 			fmt.Println(err.Error())
 			return self
 		}
-		position := self.fset.Position(callExpr.Pos())
+		position := self.fileSet.Position(callExpr.Pos())
 		fmt.Printf("%s:%d: Please use the .Add method instead, since no formatting is happening.\n", relPath, position.Line)
 		return self
 	}
@@ -120,7 +120,7 @@ func (self *fmtSprintfVisitor) Visit(node ast.Node) ast.Visitor {
 	return self
 }
 
-func (self *fmtSprintfVisitor) isCollectorType(expr ast.Expr) bool {
+func (self *addfVisitor) isCollectorType(expr ast.Expr) bool {
 	if self.typeInfo == nil {
 		return false
 	}
@@ -136,7 +136,7 @@ func (self *fmtSprintfVisitor) isCollectorType(expr ast.Expr) bool {
 	return strings.Contains(typeName, "stringslice.Collector")
 }
 
-func (self *fmtSprintfVisitor) isFmtSprintf(expr ast.Expr) bool {
+func (self *addfVisitor) isFmtSprintf(expr ast.Expr) bool {
 	callExpr, isCallExpr := expr.(*ast.CallExpr)
 	if !isCallExpr {
 		return false
