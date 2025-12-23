@@ -382,8 +382,13 @@ func compressBranchProgram(args compressBranchProgramArgs) {
 		CommitHook:     args.commitHook,
 		Message:        args.data.newCommitMessage,
 	})
-	if args.data.trackingBranch.IsSome() && args.offline.IsOnline() {
-		args.prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: args.data.name, ForceIfIncludes: true})
+	trackingBranch, hasTrackingBranch := args.data.trackingBranch.Get()
+	if hasTrackingBranch && args.offline.IsOnline() {
+		args.prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{
+			CurrentBranch:   args.data.name,
+			ForceIfIncludes: true,
+			TrackingBranch:  trackingBranch,
+		})
 	}
 }
 
