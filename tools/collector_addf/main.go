@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/git-town/git-town/v22/pkg/asserts"
 	"golang.org/x/tools/go/packages"
 )
 
@@ -66,33 +67,7 @@ func (self *addfVisitor) Visit(node ast.Node) ast.Visitor {
 	}
 
 	if selectorExpr.Sel.Name == "Add" {
-		// here we have a collector.Add method call
-
-		// if .Add is called with more than one argument, this isn't the call site we are looking for
-		if len(callExpr.Args) != 1 {
-			fmt.Println(`please update the "collector_addf" linter, I found a call to collector.Add with more than one argument`)
-			return self
-		}
-
-		// ensure the argument is a call to fmt.Sprintf
-		if !self.isFmtSprintf(callExpr.Args[0]) {
-			return self
-		}
-
-		// Found a match - report the error
-		*self.foundError = true
-		workDir, err := os.Getwd()
-		if err != nil {
-			fmt.Println(err.Error())
-			return self
-		}
-		relPath, err := filepath.Rel(workDir, self.path)
-		if err != nil {
-			fmt.Println(err.Error())
-			return self
-		}
-		position := self.fileSet.Position(callExpr.Pos())
-		fmt.Printf("%s:%d: Please use the .Addf method to add formatted strings.\n", relPath, position.Line)
+		self.verifyAddCall(callExpr)
 		return self
 	}
 
@@ -123,6 +98,26 @@ func (self *addfVisitor) Visit(node ast.Node) ast.Visitor {
 	return self
 }
 
+func (self *addfVisitor) verifyAddCall(callExpr *ast.CallExpr) (foundError bool) {
+	// if .Add is called with more than one argument, this isn't the call site we are looking for
+	if len(callExpr.Args) != 1 {
+		fmt.Println(`please update the "collector_addf" linter, I found a call to collector.Add with more than one argument`)
+		return false
+	}
+
+	// ensure the argument is a call to fmt.Sprintf
+	if !isFmtSprintf(callExpr.Args[0]) {
+		return false
+	}
+
+	// Found a match - report the error
+	workDir := asserts.NoError1(os.Getwd())
+	relPath := asserts.NoError1(filepath.Rel(workDir, self.path))
+	position := self.fileSet.Position(callExpr.Pos())
+	fmt.Printf("%s:%d  Please use the .Addf method to add formatted strings.\n", relPath, position.Line)
+	return
+}
+
 func (self *addfVisitor) isCollectorType(expr ast.Expr) bool {
 	if self.typeInfo == nil {
 		return false
@@ -139,7 +134,7 @@ func (self *addfVisitor) isCollectorType(expr ast.Expr) bool {
 	return strings.Contains(typeName, "stringslice.Collector")
 }
 
-func (self *addfVisitor) isFmtSprintf(expr ast.Expr) bool {
+func isFmtSprintf(expr ast.Expr) bool {
 	callExpr, isCallExpr := expr.(*ast.CallExpr)
 	if !isCallExpr {
 		return false
