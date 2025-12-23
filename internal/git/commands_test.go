@@ -1243,7 +1243,7 @@ func TestBackendCommands(t *testing.T) {
 			repo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
 			repo.CheckoutBranch(main.LocalBranchName())
 			asserts.NoError(repo.Git.DeleteLocalBranch(repo.TestRunner, branch))
-			have := asserts.NoError1(repo.Git.FirstCommitMessageInBranch(repo.TestRunner, branch.TrackingBranch(gitdomain.RemoteOrigin).BranchName(), main.BranchName()))
+			have := asserts.NoError1(repo.Git.FirstCommitMessageInBranch(repo.TestRunner, "origin/branch", main.BranchName()))
 			want := Some(gitdomain.CommitMessage("commit message 1"))
 			must.Eq(t, want, have)
 		})
