@@ -66,7 +66,7 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		return err
 	}
 	canSkip := false
-	if args.RunState.Command == "skip" {
+	if args.RunState.Command == "propose" {
 		canSkip = true
 	}
 	if args.RunState.Command == "sync" && !(repoStatus.RebaseInProgress && hasCurrentBranch && args.Config.ValidatedConfigData.IsMainBranch(currentBranch)) {
