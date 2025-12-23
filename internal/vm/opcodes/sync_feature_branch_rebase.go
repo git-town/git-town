@@ -17,11 +17,12 @@ type SyncFeatureBranchRebase struct {
 
 func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
 	program := []shared.Opcode{}
-	syncTracking, _, trackingBranch, err := self.shouldSyncWithTracking(args)
+	syncTracking, trackingBranchOpt, err := self.shouldSyncWithTracking(args)
 	if err != nil {
 		return err
 	}
-	if syncTracking {
+	trackingBranch, hasTrackingBranch := trackingBranchOpt.Get()
+	if syncTracking && hasTrackingBranch {
 		program = append(program,
 			&RebaseTrackingBranch{
 				PushBranches: self.PushBranches,
@@ -35,10 +36,6 @@ func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
 			CommitsToRemove: self.ParentSHAPreviousRun,
 		},
 	)
-	syncTracking, hasTrackingBranch, _, err := self.shouldSyncWithTracking(args)
-	if err != nil {
-		return err
-	}
 	// update the tracking branch
 	if syncTracking && self.PushBranches.ShouldPush() && hasTrackingBranch && args.Config.Value.NormalConfig.Offline.IsOnline() {
 		program = append(program,
@@ -52,11 +49,12 @@ func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
 	return nil
 }
 
-func (self *SyncFeatureBranchRebase) shouldSyncWithTracking(args shared.RunArgs) (shouldSync bool, hasTrackingBranch bool, trackingBranch gitdomain.RemoteBranchName, err error) {
-	trackingBranch, hasTrackingBranch = self.TrackingBranch.Get()
+func (self *SyncFeatureBranchRebase) shouldSyncWithTracking(args shared.RunArgs) (shouldSync bool, trackingBranchOpt Option[gitdomain.RemoteBranchName], err error) {
+	trackingBranchOpt = self.TrackingBranch
+	hasTrackingBranch := trackingBranchOpt.IsSome()
 	if !hasTrackingBranch || args.Config.Value.NormalConfig.Offline.IsOffline() {
-		return false, hasTrackingBranch, trackingBranch, nil
+		return false, trackingBranchOpt, nil
 	}
 	syncedWithTracking, err := args.Git.BranchInSyncWithTracking(args.Backend, self.Branch, args.Config.Value.NormalConfig.DevRemote)
-	return !syncedWithTracking, hasTrackingBranch, trackingBranch, err
+	return !syncedWithTracking, trackingBranchOpt, err
 }
