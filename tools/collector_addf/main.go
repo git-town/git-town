@@ -54,18 +54,18 @@ func (self *addfVisitor) Visit(node ast.Node) ast.Visitor {
 		return self
 	}
 
-	// Check if this is a method call (selector expression)
+	// ensure this is a method call
 	selectorExpr, isSelectorExpr := callExpr.Fun.(*ast.SelectorExpr)
 	if !isSelectorExpr {
 		return self
 	}
 
-	// Check if the receiver is of type stringslice.Collector
+	// ensure the receiver is of type stringslice.Collector
 	if !self.isCollectorType(selectorExpr.X) {
 		return self
 	}
 
-	// Check if the method name is "Add"
+	// ensure the method name is "Add"
 	if selectorExpr.Sel.Name == "Add" {
 		// Check if there's exactly one argument and it's a call to fmt.Sprintf
 		if len(callExpr.Args) != 1 {
