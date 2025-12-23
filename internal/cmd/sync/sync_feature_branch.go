@@ -51,7 +51,10 @@ func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBr
 		)
 	}
 	if args.prune {
-		args.program.Value.Add(&opcodes.BranchDeleteIfEmptyAtRuntime{Branch: args.localName})
+		args.program.Value.Add(&opcodes.BranchDeleteIfEmptyAtRuntime{
+			Branch:         args.localName,
+			TrackingBranch: args.trackingBranch,
+		})
 	}
 }
 
