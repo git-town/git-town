@@ -21,11 +21,11 @@ Feature: proposing using the "compress" sync strategy
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                             |
       | existing | git fetch --prune --tags                                            |
-      |          | Looking for proposal online ... ok                                  |
       |          | git merge --no-edit --ff origin/existing                            |
       |          | git reset --soft main --                                            |
       |          | git commit -m "local existing commit 1"                             |
       |          | git push --force-with-lease                                         |
+      |          | Looking for proposal online ... ok                                  |
       |          | open https://github.com/git-town/git-town/compare/existing?expand=1 |
     And the initial branches and lineage exist now
     And these commits exist now

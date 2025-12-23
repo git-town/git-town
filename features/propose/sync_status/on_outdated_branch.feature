@@ -25,7 +25,6 @@ Feature: sync before proposing
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                   |
       | child  | git fetch --prune --tags                                                  |
-      |        | Looking for proposal online ... ok                                        |
       |        | git checkout parent                                                       |
       | parent | git merge --no-edit --ff origin/parent                                    |
       |        | git push                                                                  |
@@ -33,6 +32,7 @@ Feature: sync before proposing
       | child  | git merge --no-edit --ff parent                                           |
       |        | git merge --no-edit --ff origin/child                                     |
       |        | git push                                                                  |
+      |        | Looking for proposal online ... ok                                        |
       |        | open https://github.com/git-town/git-town/compare/parent...child?expand=1 |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                                                  |
