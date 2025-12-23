@@ -9,7 +9,7 @@ help:  # prints all available targets
 
 lint:  # runs all linters
 	../rta golangci-lint run
-	../rta deadcode github.com/git-town/git-town/tools/fmt_sprintf_collector
+	../rta deadcode github.com/git-town/git-town/tools/collector_addf
 	@../rta --available alphavet && go vet "-vettool=$(shell ../rta --which alphavet)" $(shell go list ./...)
 	../ensure_no_files_with_dashes.sh
 	../rta golangci-lint cache clean

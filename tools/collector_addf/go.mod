@@ -1,4 +1,4 @@
-module github.com/git-town/git-town/tools/fmt_sprintf_collector
+module github.com/git-town/git-town/tools/collector_addf
 
 go 1.24.9
 
