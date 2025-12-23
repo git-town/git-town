@@ -381,9 +381,9 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 			Program:           prog,
 			RebaseOnto:        lastParent,
 		})
-		if descendent.info.HasTrackingBranch() {
+		if descendentTracking, descendentHasTracking := descendent.info.RemoteName.Get(); descendentHasTracking {
 			prog.Value.Add(
-				&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: descendent.name, ForceIfIncludes: true},
+				&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: descendent.name, ForceIfIncludes: true, TrackingBranch: descendentTracking},
 			)
 		}
 		lastParent = descendent.name
