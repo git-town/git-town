@@ -30,17 +30,15 @@ func (self *ProposalCreate) Run(args shared.RunArgs) error {
 		return forgedomain.UnsupportedServiceError()
 	}
 	if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
-		existingProposalOpt, err := proposalFinder.FindProposal(self.Branch, parentBranch)
-		if err != nil {
-			return err
-		}
-		if existingProposal, hasExistingProposal := existingProposalOpt.Get(); hasExistingProposal {
-			args.PrependOpcodes(
-				&BrowserOpen{
-					URL: existingProposal.Data.Data().URL,
-				},
-			)
-			return nil
+		if existingProposalOpt, err := proposalFinder.FindProposal(self.Branch, parentBranch); err == nil {
+			if existingProposal, hasExistingProposal := existingProposalOpt.Get(); hasExistingProposal {
+				args.PrependOpcodes(
+					&BrowserOpen{
+						URL: existingProposal.Data.Data().URL,
+					},
+				)
+				return nil
+			}
 		}
 	}
 
