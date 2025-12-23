@@ -383,7 +383,10 @@ func compressBranchProgram(args compressBranchProgramArgs) {
 		Message:        args.data.newCommitMessage,
 	})
 	if args.data.trackingBranch.IsSome() && args.offline.IsOnline() {
-		args.prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: args.data.name, ForceIfIncludes: true})
+		args.prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{
+			CurrentBranch:   args.data.name,
+			ForceIfIncludes: true,
+		})
 	}
 }
 
