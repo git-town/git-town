@@ -89,6 +89,7 @@ func (self *addfVisitor) verifyAddCall(callExpr *ast.CallExpr) {
 	}
 
 	// Found a match - report the error
+	*self.foundError = true
 	workDir := asserts.NoError1(os.Getwd())
 	relPath := asserts.NoError1(filepath.Rel(workDir, self.path))
 	position := self.fileSet.Position(callExpr.Pos())
