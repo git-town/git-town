@@ -74,7 +74,7 @@ func (self *addfVisitor) Visit(node ast.Node) ast.Visitor {
 			return self
 		}
 
-		// Check if there's exactly one argument and it's a call to fmt.Sprintf
+		// ensure the only argument is a call to fmt.Sprintf
 		if !self.isFmtSprintf(callExpr.Args[0]) {
 			return self
 		}
