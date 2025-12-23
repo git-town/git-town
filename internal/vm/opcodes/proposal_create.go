@@ -21,7 +21,8 @@ type ProposalCreate struct {
 func (self *ProposalCreate) Run(args shared.RunArgs) error {
 	parentBranch, hasParentBranch := args.Config.Value.NormalConfig.Lineage.Parent(self.Branch).Get()
 	if !hasParentBranch {
-		return fmt.Errorf(messages.ProposalNoParent, self.Branch)
+		args.FinalMessages.Addf(messages.ProposalNoParent, self.Branch)
+		return nil
 	}
 	connector, hasConnector := args.Connector.Get()
 	if !hasConnector {

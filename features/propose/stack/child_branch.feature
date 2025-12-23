@@ -13,7 +13,7 @@ Feature: proposing a child branch
       | child  | local, origin | child commit  |
     And the current branch is "child"
     And tool "open" is installed
-    When I run "git-town propose"
+    When I run "git-town propose --stack"
 
   Scenario: result
     Then Git Town runs the commands
@@ -23,6 +23,7 @@ Feature: proposing a child branch
       | parent | git checkout child                                                        |
       | child  | git merge --no-edit --ff parent                                           |
       |        | git push                                                                  |
+      |        | open https://github.com/git-town/git-town/compare/parent?expand=1         |
       |        | open https://github.com/git-town/git-town/compare/parent...child?expand=1 |
     And the initial lineage exists now
     And the initial branches exist now

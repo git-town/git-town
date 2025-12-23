@@ -49,6 +49,7 @@ func Execute(args ExecuteArgs) error {
 	})
 	lightinterpreter.Execute(lightinterpreter.ExecuteArgs{
 		Backend:       args.Backend,
+		BranchInfos:   args.RunState.BeginBranchesSnapshot.Branches,
 		Config:        args.Config,
 		Connector:     args.Connector,
 		FinalMessages: args.FinalMessages,

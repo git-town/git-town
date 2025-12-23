@@ -35,18 +35,18 @@ Feature: don't change existing extended information when changing basic informat
     And local Git setting "git-town.unknown-branch-type" is "observed"
     # keep-sorted end
     When I run "git-town init" and enter into the dialogs:
-      | DIALOG                | KEYS                   |
-      | welcome               | enter                  |
-      | aliases               | enter                  |
-      | main branch           | enter                  |
-      | perennial branches    | space down space enter |
-      | origin hostname       | c o d e enter          |
-      | forge type            | up up enter            |
-      | github connector type | enter                  |
-      | github token          | g h - t o k enter      |
-      | token scope           | enter                  |
-      | enter all             | enter                  |
-      | config storage        | enter                  |
+      | DIALOG             | KEYS                   |
+      | welcome            | enter                  |
+      | aliases            | enter                  |
+      | main branch        | enter                  |
+      | perennial branches | space down space enter |
+      | origin hostname    | c o d e enter          |
+      | forge type         | up up enter            |
+      | github connector   | enter                  |
+      | github token       | g h - t o k enter      |
+      | token scope        | enter                  |
+      | enter all          | enter                  |
+      | config storage     | enter                  |
 
   Scenario: result
     Then Git Town runs the commands

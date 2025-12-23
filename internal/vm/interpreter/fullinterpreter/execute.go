@@ -71,7 +71,7 @@ func Execute(args ExecuteArgs) error {
 		}
 		err := runnable.Run(shared.RunArgs{
 			Backend:                         args.Backend,
-			BranchInfos:                     Some(args.InitialBranchesSnapshot.Branches),
+			BranchInfos:                     args.InitialBranchesSnapshot.Branches,
 			Config:                          NewMutable(&args.Config),
 			Connector:                       args.Connector,
 			FinalMessages:                   args.FinalMessages,

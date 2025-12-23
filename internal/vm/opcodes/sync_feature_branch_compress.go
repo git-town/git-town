@@ -75,15 +75,13 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 	return nil
 }
 
-func determineParentBranchName(parentLocalName gitdomain.LocalBranchName, branchInfosOpt Option[gitdomain.BranchInfos], devRemote gitdomain.Remote) gitdomain.BranchName {
-	if branchInfos, hasBranchInfos := branchInfosOpt.Get(); hasBranchInfos {
-		if parentInfo, hasParentInfo := branchInfos.FindByLocalName(parentLocalName).Get(); hasParentInfo {
-			return parentInfo.GetLocalOrRemoteName()
-		}
-		parentRemoteName := parentLocalName.AtRemote(devRemote)
-		if _, hasParentInfo := branchInfos.FindByRemoteName(parentRemoteName).Get(); hasParentInfo {
-			return parentRemoteName.BranchName()
-		}
+func determineParentBranchName(parentLocalName gitdomain.LocalBranchName, branchInfos gitdomain.BranchInfos, devRemote gitdomain.Remote) gitdomain.BranchName {
+	if parentInfo, hasParentInfo := branchInfos.FindByLocalName(parentLocalName).Get(); hasParentInfo {
+		return parentInfo.GetLocalOrRemoteName()
+	}
+	parentRemoteName := parentLocalName.AtRemote(devRemote)
+	if _, hasParentInfo := branchInfos.FindByRemoteName(parentRemoteName).Get(); hasParentInfo {
+		return parentRemoteName.BranchName()
 	}
 	return parentLocalName.BranchName()
 }

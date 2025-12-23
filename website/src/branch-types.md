@@ -4,7 +4,24 @@ Git Town supports many different types of Git branches. Branch types affect how
 branches are getting synced. When properly configured, you can run
 `git town sync` or `git town sync --all` at any time and each of your local
 branches will get synced in the specific ways it's supposed to get synced or not
-synced.
+synced. Here is an overview of the various branch types that Git Town
+distinguishes.
+
+| branch type  | description                                         | syncing behavior                            | ship |
+| ------------ | --------------------------------------------------- | ------------------------------------------- | ---- |
+| main         | primary development branch<br>("main", "master")    | sync with origin,<br> pull from upstream    | no   |
+| perennial    | long-lived branch for GitOps ("develop", "staging") | sync with origin                            | no   |
+| feature      | normal feature branch                               | sync with parent and tracking branch        | yes  |
+| prototype    | work-in-progress feature                            | sync with parent,<br>don't push to tracking | yes  |
+| parked       | inactive feature branch                             | no syncing                                  | yes  |
+| contribution | somebody else's branch, share your changes          | sync with tracking                          | no   |
+| observed     | somebody else's branch, don't share your changes    | pull from tracking                          | no   |
+
+## Main branch
+
+The main branch is a _perennial branch_ from which feature branches get cut by
+default. The main branch contains the latest development version of your
+codebase.
 
 ## Feature branches
 
@@ -13,18 +30,12 @@ typically cut from the _main branch_ and get merged back into it. You can also
 cut feature branches from any other branch type if needed. Feature branches sync
 with their parent and tracking branch.
 
-## Main branch
-
-The main branch is a _perennial branch_ from which feature branches get cut by
-default. The main branch contains the latest development version of your
-codebase.
-
 ## Perennial branches
 
 Perennial branches are long-lived branches. They have no parent and are never
 shipped. Typical perennial branches are `main`, `master`, `development`,
 `production`, `staging`, etc. Perennial branches often correspond with a cloud
-environment of the same name.
+environment of the same name (GitOps).
 
 ## Contribution branches
 

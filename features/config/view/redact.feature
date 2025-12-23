@@ -21,8 +21,8 @@ Feature: redact API tokens in config output
         Bitbucket app password: (configured)
         Forgejo token: (configured)
         Gitea token: (configured)
-        GitHub connector type: (not set)
+        GitHub connector: (not set)
         GitHub token: (configured)
-        GitLab connector type: (not set)
+        GitLab connector: (not set)
         GitLab token: (configured)
       """

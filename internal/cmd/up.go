@@ -32,7 +32,7 @@ func upCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "up",
-		GroupID: cmdhelpers.GroupIDStack,
+		GroupID: cmdhelpers.GroupIDNavigation,
 		Args:    cobra.NoArgs,
 		Short:   upShort,
 		Long:    cmdhelpers.Long(upShort, upLong),

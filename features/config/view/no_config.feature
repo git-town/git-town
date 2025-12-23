@@ -49,9 +49,9 @@ Feature: no configuration data
         Bitbucket app password: (not set)
         Forgejo token: (not set)
         Gitea token: (not set)
-        GitHub connector type: (not set)
+        GitHub connector: (not set)
         GitHub token: (not set)
-        GitLab connector type: (not set)
+        GitLab connector: (not set)
         GitLab token: (not set)
 
       Propose:

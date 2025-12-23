@@ -1,8 +1,6 @@
 package opcodes
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/vm/shared"
@@ -19,6 +17,6 @@ func (self *LineageParentSet) Run(args shared.RunArgs) error {
 	if err := args.Config.Value.NormalConfig.SetParent(args.Backend, self.Branch, self.Parent); err != nil {
 		return err
 	}
-	args.FinalMessages.Add(fmt.Sprintf(messages.BranchParentChanged, self.Branch, self.Parent))
+	args.FinalMessages.Addf(messages.BranchParentChanged, self.Branch, self.Parent)
 	return nil
 }

@@ -2,7 +2,6 @@ package opcodes
 
 import (
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/vm/shared"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
@@ -16,10 +15,6 @@ type RebaseAncestorsUntilLocal struct {
 
 func (self *RebaseAncestorsUntilLocal) Run(args shared.RunArgs) error {
 	program := []shared.Opcode{}
-	branchInfos, hasBranchInfos := args.BranchInfos.Get()
-	if !hasBranchInfos {
-		panic(messages.BranchInfosNotProvided)
-	}
 	branch := self.Branch
 	for {
 		ancestor, hasAncestor := args.Config.Value.NormalConfig.Lineage.Parent(branch).Get()
@@ -30,7 +25,7 @@ func (self *RebaseAncestorsUntilLocal) Run(args shared.RunArgs) error {
 		if ancestorIsPerennial && args.Config.Value.NormalConfig.Detached.ShouldWorkDetached() {
 			break
 		}
-		ancestorIsLocal := branchInfos.HasLocalBranch(ancestor)
+		ancestorIsLocal := args.BranchInfos.HasLocalBranch(ancestor)
 		if !ancestorIsLocal {
 			// here the parent isn't local --> sync with its tracking branch, then try again with the grandparent until we find a local ancestor
 			program = append(program, &RebaseAncestorRemote{

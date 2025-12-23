@@ -48,7 +48,7 @@ func completionsCmd(rootCmd *cobra.Command) *cobra.Command {
 	completionsNoDescFlag := false
 	completionsCmd := cobra.Command{
 		Use:                   "completions [bash|zsh|fish|powershell]",
-		GroupID:               cmdhelpers.GroupIDSetup,
+		GroupID:               cmdhelpers.GroupIDConfig,
 		Args:                  cobra.ExactArgs(1),
 		DisableFlagsInUseLine: true,
 		Short:                 completionsDesc,
