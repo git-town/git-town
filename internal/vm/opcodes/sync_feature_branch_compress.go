@@ -44,7 +44,8 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 			return err
 		}
 	}
-	if trackingBranch, hasTrackingBranch := self.TrackingBranch.Get(); hasTrackingBranch {
+	trackingBranch, hasTrackingBranch := self.TrackingBranch.Get()
+	if hasTrackingBranch {
 		inSyncWithTracking, err := args.Git.BranchInSyncWithTracking(args.Backend, self.CurrentBranch, trackingBranch)
 		if err != nil {
 			return err
@@ -67,8 +68,12 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 				Message:        commitMessage,
 			},
 		)
-		if self.Offline.IsOnline() && self.TrackingBranch.IsSome() && self.PushBranches.ShouldPush() {
-			opcodes = append(opcodes, &PushCurrentBranchForceIfNeeded{CurrentBranch: self.CurrentBranch, ForceIfIncludes: false})
+		if self.Offline.IsOnline() && hasTrackingBranch && self.PushBranches.ShouldPush() {
+			opcodes = append(opcodes, &PushCurrentBranchForceIfNeeded{
+				CurrentBranch:   self.CurrentBranch,
+				ForceIfIncludes: false,
+				TrackingBranch:  trackingBranch,
+			})
 		}
 	}
 	args.PrependOpcodes(opcodes...)
