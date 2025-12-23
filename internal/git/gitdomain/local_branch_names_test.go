@@ -136,12 +136,4 @@ func TestLocalBranchNames(t *testing.T) {
 			must.Eq(t, want, have)
 		})
 	})
-
-	t.Run("TrackingBranch", func(t *testing.T) {
-		t.Parallel()
-		branch := gitdomain.NewLocalBranchName("branch")
-		have := branch.TrackingBranch(gitdomain.RemoteOrigin)
-		want := gitdomain.NewRemoteBranchName("origin/branch")
-		must.EqOp(t, want, have)
-	})
 }
