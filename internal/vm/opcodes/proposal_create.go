@@ -30,18 +30,22 @@ func (self *ProposalCreate) Run(args shared.RunArgs) error {
 		return forgedomain.UnsupportedServiceError()
 	}
 	if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
-		if existingProposalOpt, err := proposalFinder.FindProposal(self.Branch, parentBranch); err == nil {
-			if existingProposal, hasExistingProposal := existingProposalOpt.Get(); hasExistingProposal {
-				args.PrependOpcodes(
-					&BrowserOpen{
-						URL: existingProposal.Data.Data().URL,
-					},
-				)
-				return nil
-			}
+		existingProposalOpt, err := proposalFinder.FindProposal(self.Branch, parentBranch)
+		if err != nil {
+			args.FinalMessages.Add(fmt.Sprintf(messages.ProposalFindProblem, err.Error()))
+			goto createProposal
+		}
+		if existingProposal, hasExistingProposal := existingProposalOpt.Get(); hasExistingProposal {
+			args.PrependOpcodes(
+				&BrowserOpen{
+					URL: existingProposal.Data.Data().URL,
+				},
+			)
+			return nil
 		}
 	}
 
+createProposal:
 	// TODO: create proposal with embedded lineage here. The lineage is loaded below.
 	err := connector.CreateProposal(forgedomain.CreateProposalArgs{
 		Branch:         self.Branch,
