@@ -12,7 +12,8 @@ func DetermineUndoBranchesProgram(beginBranchesSnapshot, endBranchesSnapshot git
 	branchSpans = branchSpans.KeepOnly(touchedBranches)
 	branchChanges := branchSpans.Changes()
 	return branchChanges.UndoProgram(BranchChangesUndoProgramArgs{
-		BeginBranch:              beginBranchesSnapshot.Active.GetOrZero(),
+		BeginBranch:              beginBranchesSnapshot.Active.GetOrZero(), // TODO: try to get rid of GetOrZero here. The zero value is likely not correct.
+		BranchInfos:              beginBranchesSnapshot.Branches,
 		Config:                   validatedConfig,
 		EndBranch:                endBranchesSnapshot.Active.GetOrZero(),
 		FinalMessages:            finalMessages,

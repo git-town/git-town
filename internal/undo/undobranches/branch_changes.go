@@ -67,7 +67,11 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 		if slices.Contains(args.UndoablePerennialCommits, change.After) {
 			result.Add(&opcodes.CheckoutIfNeeded{Branch: branch})
 			result.Add(&opcodes.CommitRevertIfNeeded{SHA: change.After})
-			result.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branch})
+			if branchInfo, hasBranchInfo := args.BranchInfos.FindByLocalName(branch).Get(); hasBranchInfo {
+				if trackingBranch, hasTrackingBranch := branchInfo.RemoteName.Get(); hasTrackingBranch {
+					result.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branch, TrackingBranch: trackingBranch})
+				}
+			}
 		} else {
 			args.FinalMessages.Addf(messages.UndoCannotRevertCommitOnPerennialBranch, change.After)
 		}
@@ -78,7 +82,11 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 		change := omniChangedFeatures[branch]
 		result.Add(&opcodes.CheckoutIfNeeded{Branch: branch})
 		result.Add(&opcodes.BranchCurrentResetToSHAIfNeeded{MustHaveSHA: change.After, SetToSHA: change.Before})
-		result.Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: branch, ForceIfIncludes: true})
+		if branchInfo, hasBranchInfo := args.BranchInfos.FindByLocalName(branch).Get(); hasBranchInfo {
+			if trackingBranch, hasTrackingBranch := branchInfo.RemoteName.Get(); hasTrackingBranch {
+				result.Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: branch, ForceIfIncludes: true, TrackingBranch: trackingBranch})
+			}
+		}
 	}
 
 	// re-create removed omni-branches
@@ -96,7 +104,11 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 			if slices.Contains(args.UndoablePerennialCommits, afterSHA) {
 				result.Add(&opcodes.CheckoutIfNeeded{Branch: branchName})
 				result.Add(&opcodes.CommitRevertIfNeeded{SHA: afterSHA})
-				result.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branchName})
+				if branchInfo, hasBranchInfo := args.BranchInfos.FindByLocalName(branchName).Get(); hasBranchInfo {
+					if trackingBranch, hasTrackingBranch := branchInfo.RemoteName.Get(); hasTrackingBranch {
+						result.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branchName, TrackingBranch: trackingBranch})
+					}
+				}
 			}
 		} else {
 			args.FinalMessages.Addf(messages.UndoCannotRevertCommitOnPerennialBranch, afterSHA)
@@ -198,6 +210,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 
 type BranchChangesUndoProgramArgs struct {
 	BeginBranch              gitdomain.LocalBranchName
+	BranchInfos              gitdomain.BranchInfos
 	Config                   config.ValidatedConfig
 	EndBranch                gitdomain.LocalBranchName
 	FinalMessages            stringslice.Collector
