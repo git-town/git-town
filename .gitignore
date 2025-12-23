@@ -5,6 +5,7 @@ go.work.sum
 node_modules/
 rta.exe
 tools/alphavet*
+tools/collector_addf/collector_addf*
 tools/depth*
 tools/gofumpt*
 tools/golangci_lint*
