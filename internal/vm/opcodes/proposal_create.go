@@ -32,7 +32,7 @@ func (self *ProposalCreate) Run(args shared.RunArgs) error {
 	if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
 		existingProposalOpt, err := proposalFinder.FindProposal(self.Branch, parentBranch)
 		if err != nil {
-			args.FinalMessages.Add(fmt.Sprintf(messages.ProposalFindProblem, err.Error()))
+			args.FinalMessages.Addf(messages.ProposalFindProblem, err.Error())
 			goto createProposal
 		}
 		if existingProposal, hasExistingProposal := existingProposalOpt.Get(); hasExistingProposal {
@@ -74,7 +74,7 @@ createProposal:
 			}
 			proposalOpt, err := proposalFinder.FindProposal(self.Branch, parentBranch)
 			if err != nil {
-				args.FinalMessages.Add(fmt.Sprintf(messages.ProposalFindProblem, err.Error()))
+				args.FinalMessages.Addf(messages.ProposalFindProblem, err.Error())
 				return nil
 			}
 			if proposalOpt.IsSome() {
