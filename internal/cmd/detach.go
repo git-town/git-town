@@ -400,7 +400,11 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 	)
 	if data.branchToDetachInfo.HasTrackingBranch() {
 		prog.Value.Add(
-			&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: data.branchToDetachName, ForceIfIncludes: true},
+			&opcodes.PushCurrentBranchForceIfNeeded{
+				CurrentBranch:   data.branchToDetachName,
+				ForceIfIncludes: true,
+				TrackingBranch:  "",
+			},
 		)
 	}
 	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.initialBranch})
