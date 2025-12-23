@@ -82,11 +82,12 @@ func swapGitOperationsProgram(args swapGitOperationsProgramArgs) {
 				CommitsToRemove:    oldBranchSHA.Location(),
 			},
 		)
-		if child.info.HasTrackingBranch() {
+		if childTracking, childHasTracking := child.info.RemoteName.Get(); childHasTracking {
 			args.program.Value.Add(
 				&opcodes.PushCurrentBranchForceIfNeeded{
 					CurrentBranch:   child.name,
 					ForceIfIncludes: true,
+					TrackingBranch:  childTracking,
 				},
 			)
 		}
