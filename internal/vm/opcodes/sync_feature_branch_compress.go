@@ -44,8 +44,7 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 			return err
 		}
 	}
-	trackingBranch, hasTrackingBranch := self.TrackingBranch.Get()
-	if hasTrackingBranch {
+	if trackingBranch, hasTrackingBranch := self.TrackingBranch.Get(); hasTrackingBranch {
 		inSyncWithTracking, err := args.Git.BranchInSyncWithTracking(args.Backend, self.CurrentBranch, trackingBranch)
 		if err != nil {
 			return err
