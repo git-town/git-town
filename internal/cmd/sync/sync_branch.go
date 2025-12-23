@@ -165,7 +165,9 @@ func localBranchProgram(args localBranchProgramArgs) {
 		case isMainOrPerennialBranch && !shouldPushPerennialBranch(args.branchInfo.SyncStatus):
 			// don't push if its a perennial branch that doesn't need pushing
 		case isMainOrPerennialBranch:
-			args.Program.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: args.localName})
+			if trackingBranch, hasTrackingBranch := args.branchInfo.RemoteName.Get(); hasTrackingBranch {
+				args.Program.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: args.localName, TrackingBranch: trackingBranch})
+			}
 		default:
 			pushFeatureBranchProgram(args.Program, args.localName, args.Config.NormalConfig.SyncFeatureStrategy)
 		}
