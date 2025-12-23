@@ -55,7 +55,10 @@ func swapGitOperationsProgram(args swapGitOperationsProgramArgs) {
 	)
 	if args.parent.info.HasTrackingBranch() {
 		args.program.Value.Add(
-			&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: args.parent.info.LocalBranchName(), ForceIfIncludes: true},
+			&opcodes.PushCurrentBranchForceIfNeeded{
+				CurrentBranch:   args.parent.info.LocalBranchName(),
+				ForceIfIncludes: true,
+			},
 		)
 	}
 
