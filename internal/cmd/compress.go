@@ -181,7 +181,7 @@ type compressData struct {
 type compressBranchData struct {
 	branchType       configdomain.BranchType
 	commitCount      int // number of commits in this branch
-	hasTracking      bool
+	trackingBranch   Option[gitdomain.RemoteBranchName]
 	name             gitdomain.LocalBranchName
 	newCommitMessage gitdomain.CommitMessage // the commit message to use for the compressed commit in this branch
 	parentBranch     gitdomain.LocalBranchName
@@ -315,11 +315,10 @@ func determineCompressData(repo execute.OpenRepoResult, message Option[gitdomain
 		if !hasParent {
 			return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.CompressBranchNoParent, branchNameToCompress)
 		}
-		hasRemoteBranch, _, _ := branchInfo.HasRemoteBranch()
 		branchesToCompress = append(branchesToCompress, compressBranchData{
 			branchType:       branchType,
 			commitCount:      commitCount,
-			hasTracking:      hasRemoteBranch,
+			trackingBranch:   branchInfo.RemoteName,
 			name:             branchNameToCompress,
 			newCommitMessage: newCommitMessage,
 			parentBranch:     parentBranch,
@@ -383,8 +382,9 @@ func compressBranchProgram(args compressBranchProgramArgs) {
 		CommitHook:     args.commitHook,
 		Message:        args.data.newCommitMessage,
 	})
-	if args.data.hasTracking && args.offline.IsOnline() {
-		args.prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: args.data.name, ForceIfIncludes: true})
+	trackingBranch, hasTrackingBranch := args.data.trackingBranch.Get()
+	if hasTrackingBranch && args.offline.IsOnline() {
+		args.prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: args.data.name, ForceIfIncludes: true, TrackingBranch: trackingBranch})
 	}
 }
 
