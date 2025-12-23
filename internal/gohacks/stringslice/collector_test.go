@@ -10,29 +10,6 @@ import (
 func TestCollector(t *testing.T) {
 	t.Parallel()
 
-	t.Run("owned variable", func(t *testing.T) {
-		t.Parallel()
-		collector := stringslice.NewCollector()
-		must.Len(t, 0, collector.Result())
-		collector.Add("one")
-		collector.Add("two")
-		must.Eq(t, []string{"one", "two"}, collector.Result())
-	})
-
-	t.Run("works with pass by reference", func(t *testing.T) {
-		t.Parallel()
-		collector := stringslice.NewCollector()
-		passByReference(&collector)
-		must.Eq(t, []string{"external"}, collector.Result())
-	})
-
-	t.Run("works with pass by value", func(t *testing.T) {
-		t.Parallel()
-		collector := stringslice.NewCollector()
-		passByValue(collector)
-		must.Eq(t, []string{"external"}, collector.Result())
-	})
-
 	t.Run("AddF", func(t *testing.T) {
 		t.Parallel()
 
@@ -72,6 +49,29 @@ func TestCollector(t *testing.T) {
 			collector.Add("third")
 			must.Eq(t, []string{"first", "second: value", "third"}, collector.Result())
 		})
+	})
+
+	t.Run("owned variable", func(t *testing.T) {
+		t.Parallel()
+		collector := stringslice.NewCollector()
+		must.Len(t, 0, collector.Result())
+		collector.Add("one")
+		collector.Add("two")
+		must.Eq(t, []string{"one", "two"}, collector.Result())
+	})
+
+	t.Run("works with pass by reference", func(t *testing.T) {
+		t.Parallel()
+		collector := stringslice.NewCollector()
+		passByReference(&collector)
+		must.Eq(t, []string{"external"}, collector.Result())
+	})
+
+	t.Run("works with pass by value", func(t *testing.T) {
+		t.Parallel()
+		collector := stringslice.NewCollector()
+		passByValue(collector)
+		must.Eq(t, []string{"external"}, collector.Result())
 	})
 }
 

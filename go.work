@@ -4,6 +4,7 @@ use (
 	.
 	./tools/format_self
 	./tools/format_unittests
+	./tools/fmt_sprintf_collector
 	./tools/iterate_map
 	./tools/lint_cached_connectors
 	./tools/lint_steps

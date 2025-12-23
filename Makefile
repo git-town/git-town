@@ -80,6 +80,7 @@ lint: node_modules tools/rta@${RTA_VERSION}  # lints the main codebase concurren
 	make --no-print-directory alphavet
 	make --no-print-directory deadcode
 	make --no-print-directory lint-cached-connectors
+	make --no-print-directory lint-fmt-sprintf-collector
 	make --no-print-directory lint-iterate-map
 	make --no-print-directory lint-messages-sorted
 	make --no-print-directory lint-messy-output
@@ -106,6 +107,8 @@ lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	@(cd tools/format_self && make test)
 	@echo lint tools/format_unittests
 	@(cd tools/format_unittests && make test)
+	@echo lint tools/fmt_sprintf_collector
+	@(cd tools/fmt_sprintf_collector && make test)
 	@echo lint tools/lint_cached_connectors
 	@(cd tools/lint_cached_connectors && make test)
 	@echo lint tools/lint_steps
@@ -141,6 +144,9 @@ keep-sorted: tools/rta@${RTA_VERSION}
 
 lint-cached-connectors:
 	@(cd tools/lint_cached_connectors && go build) && ./tools/lint_cached_connectors/lint_cached_connectors
+
+lint-fmt-sprintf-collector:
+	@(cd tools/fmt_sprintf_collector && go build) && ./tools/fmt_sprintf_collector/fmt_sprintf_collector
 
 lint-iterate-map:
 	@(cd tools/iterate_map && go build) && ./tools/iterate_map/iterate_map
