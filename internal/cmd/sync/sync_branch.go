@@ -209,9 +209,9 @@ func pushFeatureBranchProgram(prog Mutable[program.Program], branch gitdomain.Lo
 	case configdomain.SyncFeatureStrategyMerge:
 		prog.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branch, TrackingBranch: trackingBranch})
 	case configdomain.SyncFeatureStrategyRebase:
-		prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: branch, ForceIfIncludes: true})
+		prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: branch, ForceIfIncludes: true, TrackingBranch: trackingBranch})
 	case configdomain.SyncFeatureStrategyCompress:
-		prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: branch, ForceIfIncludes: false})
+		prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: branch, ForceIfIncludes: false, TrackingBranch: trackingBranch})
 	}
 }
 
