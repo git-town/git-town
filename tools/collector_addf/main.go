@@ -66,48 +66,26 @@ func (self *addfVisitor) Visit(node ast.Node) ast.Visitor {
 		return self
 	}
 
-	if selectorExpr.Sel.Name == "Add" {
+	switch selectorExpr.Sel.Name {
+	case "Add":
 		self.verifyAddCall(callExpr)
-		return self
-	}
-
-	// Check if the method name is "Addf"
-	if selectorExpr.Sel.Name == "Addf" {
-		// Check if there's at least one argument
-		if len(callExpr.Args) > 1 {
-			return self
-		}
-
-		// Found a match - report the error
-		*self.foundError = true
-		workDir, err := os.Getwd()
-		if err != nil {
-			fmt.Println(err.Error())
-			return self
-		}
-		relPath, err := filepath.Rel(workDir, self.path)
-		if err != nil {
-			fmt.Println(err.Error())
-			return self
-		}
-		position := self.fileSet.Position(callExpr.Pos())
-		fmt.Printf("%s:%d: Please use the .Add method instead, since no formatting is happening.\n", relPath, position.Line)
-		return self
+	case "Addf":
+		self.verifyAddfCall(callExpr)
 	}
 
 	return self
 }
 
-func (self *addfVisitor) verifyAddCall(callExpr *ast.CallExpr) (foundError bool) {
+func (self *addfVisitor) verifyAddCall(callExpr *ast.CallExpr) {
 	// if .Add is called with more than one argument, this isn't the call site we are looking for
 	if len(callExpr.Args) != 1 {
 		fmt.Println(`please update the "collector_addf" linter, I found a call to collector.Add with more than one argument`)
-		return false
+		return
 	}
 
 	// ensure the argument is a call to fmt.Sprintf
 	if !isFmtSprintf(callExpr.Args[0]) {
-		return false
+		return
 	}
 
 	// Found a match - report the error
@@ -115,7 +93,28 @@ func (self *addfVisitor) verifyAddCall(callExpr *ast.CallExpr) (foundError bool)
 	relPath := asserts.NoError1(filepath.Rel(workDir, self.path))
 	position := self.fileSet.Position(callExpr.Pos())
 	fmt.Printf("%s:%d  Please use the .Addf method to add formatted strings.\n", relPath, position.Line)
-	return
+}
+
+func (self *addfVisitor) verifyAddfCall(callExpr *ast.CallExpr) {
+	// Check if there's at least one argument
+	if len(callExpr.Args) > 1 {
+		return
+	}
+
+	// Found a match - report the error
+	*self.foundError = true
+	workDir, err := os.Getwd()
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	relPath, err := filepath.Rel(workDir, self.path)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	position := self.fileSet.Position(callExpr.Pos())
+	fmt.Printf("%s:%d: Please use the .Add method since no formatting is happening.\n", relPath, position.Line)
 }
 
 func (self *addfVisitor) isCollectorType(expr ast.Expr) bool {
