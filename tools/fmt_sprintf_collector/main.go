@@ -92,7 +92,7 @@ func (self *fmtSprintfVisitor) Visit(node ast.Node) ast.Visitor {
 		return self
 	}
 	position := self.fset.Position(callExpr.Pos())
-	fmt.Printf("%s:%d: Please use the .AddF method to add formatted strings.\n", relPath, position.Line)
+	fmt.Printf("%s:%d: Please use the .Addf method to add formatted strings.\n", relPath, position.Line)
 	return self
 }
 

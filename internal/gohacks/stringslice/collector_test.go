@@ -10,7 +10,7 @@ import (
 func TestCollector(t *testing.T) {
 	t.Parallel()
 
-	t.Run("AddF", func(t *testing.T) {
+	t.Run("Addf", func(t *testing.T) {
 		t.Parallel()
 
 		t.Run("adds formatted strings", func(t *testing.T) {
