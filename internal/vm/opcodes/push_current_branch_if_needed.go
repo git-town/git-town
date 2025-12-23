@@ -8,7 +8,8 @@ import (
 // PushCurrentBranchIfNeeded pushes the current branch to its existing tracking branch
 // if it has unpushed commits.
 type PushCurrentBranchIfNeeded struct {
-	CurrentBranch gitdomain.LocalBranchName
+	CurrentBranch  gitdomain.LocalBranchName
+	TrackingBranch gitdomain.RemoteBranchName
 }
 
 func (self *PushCurrentBranchIfNeeded) Run(args shared.RunArgs) error {
@@ -18,7 +19,7 @@ func (self *PushCurrentBranchIfNeeded) Run(args shared.RunArgs) error {
 	if !branchExists {
 		return nil
 	}
-	inSync, err := args.Git.BranchInSyncWithTracking(args.Backend, self.CurrentBranch, args.Config.Value.NormalConfig.DevRemote)
+	inSync, err := args.Git.BranchInSyncWithTracking(args.Backend, self.CurrentBranch, self.TrackingBranch)
 	if err != nil {
 		return err
 	}

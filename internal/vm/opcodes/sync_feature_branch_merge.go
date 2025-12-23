@@ -62,7 +62,7 @@ func (self *SyncFeatureBranchMerge) Run(args shared.RunArgs) error {
 		branch = parent
 	}
 	if trackingBranch, hasTrackingBranch := self.TrackingBranch.Get(); hasTrackingBranch {
-		isInSync, err := args.Git.BranchInSyncWithTracking(args.Backend, self.Branch, args.Config.Value.NormalConfig.DevRemote)
+		isInSync, err := args.Git.BranchInSyncWithTracking(args.Backend, self.Branch, trackingBranch)
 		if err != nil {
 			return err
 		}
