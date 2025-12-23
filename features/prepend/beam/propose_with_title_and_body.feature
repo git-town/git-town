@@ -31,6 +31,7 @@ Feature: propose a newly prepended branch
       |          | git push --force-with-lease --force-if-includes                                                                         |
       |          | git checkout new                                                                                                        |
       | new      | git push -u origin new                                                                                                  |
+      |          | Looking for proposal online ... ok                                                                                      |
       |          | open https://github.com/git-town/git-town/compare/new?expand=1&title=proposal+title&body=proposal+body                  |
     And this lineage exists now
       """

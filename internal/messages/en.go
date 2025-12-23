@@ -238,6 +238,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	PrependDetachedHead                     = "please check out the branch for which you want to prepend a parent"
 	PreviousCommandFinished                 = "The previous Git Town command (%s) finished successfully.\n"
 	PreviousCommandProblem                  = "The last Git Town command (%s) hit a problem %v ago.\n"
+	ProposalFindProblem                     = "cannot find proposal: %s"
 	ProposalLineageUnsupportedForBranchType = "Proposal stack lineage unsupported for branch type %s"
 	ProposalMultipleFromFound               = "found %d proposals for branch %q"
 	ProposalMultipleFromToFound             = "found %d proposals from branch %q to branch %q"
