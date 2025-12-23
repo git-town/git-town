@@ -150,7 +150,7 @@ func validateContributeData(data contributeData, repo execute.OpenRepoResult) er
 		case configdomain.BranchTypePerennialBranch:
 			return errors.New(messages.PerennialBranchCannotMakeContribution)
 		case configdomain.BranchTypeContributionBranch:
-			repo.FinalMessages.AddF(messages.BranchIsAlreadyContribution, branchName)
+			repo.FinalMessages.Addf(messages.BranchIsAlreadyContribution, branchName)
 		case
 			configdomain.BranchTypeFeatureBranch,
 			configdomain.BranchTypeObservedBranch,

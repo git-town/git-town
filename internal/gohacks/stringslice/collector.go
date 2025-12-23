@@ -19,7 +19,7 @@ func (self Collector) Add(text string) {
 	*self.data = append(*self.data, text)
 }
 
-func (self Collector) AddF(format string, args ...any) {
+func (self Collector) Addf(format string, args ...any) {
 	self.Add(fmt.Sprintf(format, args...))
 }
 

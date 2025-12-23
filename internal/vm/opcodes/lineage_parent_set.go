@@ -17,6 +17,6 @@ func (self *LineageParentSet) Run(args shared.RunArgs) error {
 	if err := args.Config.Value.NormalConfig.SetParent(args.Backend, self.Branch, self.Parent); err != nil {
 		return err
 	}
-	args.FinalMessages.AddF(messages.BranchParentChanged, self.Branch, self.Parent)
+	args.FinalMessages.Addf(messages.BranchParentChanged, self.Branch, self.Parent)
 	return nil
 }

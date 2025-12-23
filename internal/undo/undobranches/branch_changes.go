@@ -69,7 +69,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 			result.Add(&opcodes.CommitRevertIfNeeded{SHA: change.After})
 			result.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branch})
 		} else {
-			args.FinalMessages.AddF(messages.UndoCannotRevertCommitOnPerennialBranch, change.After)
+			args.FinalMessages.Addf(messages.UndoCannotRevertCommitOnPerennialBranch, change.After)
 		}
 	}
 
@@ -99,7 +99,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 				result.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branchName})
 			}
 		} else {
-			args.FinalMessages.AddF(messages.UndoCannotRevertCommitOnPerennialBranch, afterSHA)
+			args.FinalMessages.Addf(messages.UndoCannotRevertCommitOnPerennialBranch, afterSHA)
 		}
 	}
 

@@ -149,7 +149,7 @@ func validatePrototypeData(data prototypeData, repo execute.OpenRepoResult) erro
 		case configdomain.BranchTypePerennialBranch:
 			return errors.New(messages.PerennialBranchCannotPrototype)
 		case configdomain.BranchTypePrototypeBranch:
-			repo.FinalMessages.AddF(messages.BranchIsAlreadyPrototype, branchName)
+			repo.FinalMessages.Addf(messages.BranchIsAlreadyPrototype, branchName)
 		case
 			configdomain.BranchTypeFeatureBranch,
 			configdomain.BranchTypeContributionBranch,

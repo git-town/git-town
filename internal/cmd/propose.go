@@ -383,16 +383,16 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 	})
 	for _, branchToPropose := range data.branchesToPropose {
 		if branchToPropose.syncStatus == gitdomain.SyncStatusDeletedAtRemote {
-			repo.FinalMessages.AddF(messages.BranchDeletedAtRemote, branchToPropose.name)
+			repo.FinalMessages.Addf(messages.BranchDeletedAtRemote, branchToPropose.name)
 			continue
 		}
 		switch branchToPropose.branchType {
 		case configdomain.BranchTypePrototypeBranch:
 			prog.Value.Add(&opcodes.BranchTypeOverrideRemove{Branch: branchToPropose.name})
-			repo.FinalMessages.AddF(messages.PrototypeRemoved, branchToPropose.name)
+			repo.FinalMessages.Addf(messages.PrototypeRemoved, branchToPropose.name)
 		case configdomain.BranchTypeParkedBranch:
 			prog.Value.Add(&opcodes.BranchTypeOverrideRemove{Branch: branchToPropose.name})
-			repo.FinalMessages.AddF(messages.ParkedRemoved, branchToPropose.name)
+			repo.FinalMessages.Addf(messages.ParkedRemoved, branchToPropose.name)
 		case configdomain.BranchTypeFeatureBranch:
 		case configdomain.BranchTypeContributionBranch, configdomain.BranchTypeMainBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypePerennialBranch:
 			continue

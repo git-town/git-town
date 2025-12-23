@@ -12,6 +12,6 @@ type BranchLocalDelete struct {
 }
 
 func (self *BranchLocalDelete) Run(args shared.RunArgs) error {
-	args.FinalMessages.AddF(messages.BranchDeleted, self.Branch)
+	args.FinalMessages.Addf(messages.BranchDeleted, self.Branch)
 	return args.Git.DeleteLocalBranch(args.Frontend, self.Branch)
 }

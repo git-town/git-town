@@ -159,7 +159,7 @@ func canParkBranchType(branchType configdomain.BranchType, branchName gitdomain.
 	case configdomain.BranchTypePerennialBranch:
 		return errors.New(messages.PerennialBranchCannotPark)
 	case configdomain.BranchTypeParkedBranch:
-		finalMessages.AddF(messages.BranchIsAlreadyParked, branchName)
+		finalMessages.Addf(messages.BranchIsAlreadyParked, branchName)
 	case
 		configdomain.BranchTypeFeatureBranch,
 		configdomain.BranchTypeContributionBranch,

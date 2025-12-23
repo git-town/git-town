@@ -142,7 +142,7 @@ func validateFeatureData(data featureData, repo execute.OpenRepoResult) error {
 		case configdomain.BranchTypePerennialBranch:
 			return errors.New(messages.PerennialBranchCannotMakeFeature)
 		case configdomain.BranchTypeFeatureBranch:
-			repo.FinalMessages.AddF(messages.HackBranchIsAlreadyFeature, branchName)
+			repo.FinalMessages.Addf(messages.HackBranchIsAlreadyFeature, branchName)
 		case
 			configdomain.BranchTypeObservedBranch,
 			configdomain.BranchTypeContributionBranch,
