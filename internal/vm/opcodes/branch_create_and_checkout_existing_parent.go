@@ -24,11 +24,14 @@ func (self *BranchCreateAndCheckoutExistingParent) Run(args shared.RunArgs) erro
 		return errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	var ancestorToUse gitdomain.BranchName
-	nearestAncestor, hasNearestAncestor := args.Git.FirstExistingBranch(args.Backend, self.Ancestors...).Get()
-	if hasNearestAncestor {
+	if nearestAncestor, hasNearestAncestor := args.Git.FirstExistingBranch(args.Backend, self.Ancestors...).Get(); hasNearestAncestor {
 		ancestorToUse = nearestAncestor.BranchName()
 	} else {
-		ancestorToUse = args.Config.Value.ValidatedConfigData.MainBranch.AtRemote(args.Config.Value.NormalConfig.DevRemote).BranchName()
+		mainInfo, hasMainBranch := args.BranchInfos.FindLocalOrRemote(args.Config.Value.ValidatedConfigData.MainBranch).Get()
+		if !hasMainBranch {
+			return errors.New(messages.MainBranchNotFound)
+		}
+		ancestorToUse = mainInfo.GetLocalOrRemoteName()
 	}
 	if ancestorToUse == currentBranch.BranchName() {
 		return args.Git.CreateAndCheckoutBranch(args.Frontend, self.Branch)
