@@ -99,10 +99,7 @@ func (self BranchInfo) IsLocalOnlyBranch() (bool, LocalBranchName) {
 	if !hasLocalBranch {
 		return false, branchName
 	}
-	if self.RemoteName.IsSome() {
-		return false, branchName
-	}
-	return true, branchName
+	return self.RemoteName.IsNone(), branchName
 }
 
 // IsOmniBranch indicates whether the branch described by this BranchInfo is omni
