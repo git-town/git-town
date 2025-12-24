@@ -207,7 +207,7 @@ type pullParentBranchOfCurrentFeatureBranchOpcodeArgs struct {
 func pushFeatureBranchProgram(prog Mutable[program.Program], branch gitdomain.LocalBranchName, trackingBranch gitdomain.RemoteBranchName, syncFeatureStrategy configdomain.SyncFeatureStrategy) {
 	switch syncFeatureStrategy {
 	case configdomain.SyncFeatureStrategyMerge:
-		prog.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branch})
+		prog.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branch, TrackingBranch: trackingBranch})
 	case configdomain.SyncFeatureStrategyRebase:
 		prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: branch, ForceIfIncludes: true, TrackingBranch: trackingBranch})
 	case configdomain.SyncFeatureStrategyCompress:
