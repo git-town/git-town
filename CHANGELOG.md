@@ -18,6 +18,7 @@
 - Git Town now handles branches at multiple Git remotes correctly ([#5838](https://github.com/git-town/git-town/discussions/5838)).
 - propose: now handles already existing proposals more gracefully ([#5865](https://github.com/git-town/git-town/issues/5865)).
 - init: storing connector types now store correctly into the config file ([#5817](https://github.com/git-town/git-town/issues/5817)).
+- sync --all: now checks out a branch that actually exists in your worktree before deleting a shipped branch ([#5847](https://github.com/git-town/git-town/issues/5847)).
 
 ## 22.3.0 (2025-12-13)
 
