@@ -149,7 +149,7 @@ func validateFeatureData(data featureData, repo execute.OpenRepoResult) error {
 			configdomain.BranchTypeParkedBranch,
 			configdomain.BranchTypePrototypeBranch:
 			hasLocalBranch := data.branchesSnapshot.Branches.HasLocalBranch(branchName)
-			hasRemoteBranch := data.branchesSnapshot.Branches.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote)
+			hasRemoteBranch := data.branchesSnapshot.Branches.HasMatchingTrackingBranchFor(branchName)
 			if !hasLocalBranch && !hasRemoteBranch {
 				return fmt.Errorf(messages.BranchDoesntExist, branchName)
 			}

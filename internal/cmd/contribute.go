@@ -158,7 +158,7 @@ func validateContributeData(data contributeData, repo execute.OpenRepoResult) er
 			configdomain.BranchTypePrototypeBranch:
 		}
 		hasLocalBranch := data.beginBranchesSnapshot.Branches.HasLocalBranch(branchName)
-		hasRemoteBranch := data.beginBranchesSnapshot.Branches.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote)
+		hasRemoteBranch := data.beginBranchesSnapshot.Branches.HasMatchingTrackingBranchFor(branchName)
 		if !hasLocalBranch && !hasRemoteBranch {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}

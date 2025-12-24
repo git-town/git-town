@@ -320,7 +320,7 @@ func determineAppendData(args determineAppendDataArgs, repo execute.OpenRepoResu
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
 		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
-	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch, repo.UnvalidatedConfig.NormalConfig.DevRemote) {
+	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
 		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
