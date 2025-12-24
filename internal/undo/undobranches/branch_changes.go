@@ -67,7 +67,11 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 		if slices.Contains(args.UndoablePerennialCommits, change.After) {
 			result.Add(&opcodes.CheckoutIfNeeded{Branch: branch})
 			result.Add(&opcodes.CommitRevertIfNeeded{SHA: change.After})
-			result.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branch})
+			if branchInfo, hasBranchInfo := args.BranchInfos.FindByLocalName(branch).Get(); hasBranchInfo {
+				if tracking, hasTracking := branchInfo.RemoteName.Get(); hasTracking {
+					result.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branch, TrackingBranch: tracking})
+				}
+			}
 		} else {
 			args.FinalMessages.Addf(messages.UndoCannotRevertCommitOnPerennialBranch, change.After)
 		}
@@ -100,7 +104,11 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 			if slices.Contains(args.UndoablePerennialCommits, afterSHA) {
 				result.Add(&opcodes.CheckoutIfNeeded{Branch: branchName})
 				result.Add(&opcodes.CommitRevertIfNeeded{SHA: afterSHA})
-				result.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branchName})
+				if branchInfo, hasBranchInfo := args.BranchInfos.FindByLocalName(branchName).Get(); hasBranchInfo {
+					if tracking, hasTracking := branchInfo.RemoteName.Get(); hasTracking {
+						result.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branchName, TrackingBranch: tracking})
+					}
+				}
 			}
 		} else {
 			args.FinalMessages.Addf(messages.UndoCannotRevertCommitOnPerennialBranch, afterSHA)
