@@ -34,27 +34,24 @@ func (self *RebaseAncestorsUntilLocal) Run(args shared.RunArgs) error {
 			branch = ancestor
 			continue
 		}
-		localAncestor, ancestorIsLocal := ancestorInfo.LocalName.Get()
-		if !ancestorIsLocal {
-			// here the parent isn't local --> sync with its tracking branch, then try again with the grandparent until we find a local ancestor
-			ancestorTracking, ancestorIsRemote := ancestorInfo.RemoteName.Get()
-			if !ancestorIsRemote {
-				return errors.New(messages.BranchInfoNoContent)
-			}
-			program = append(program, &RebaseAncestorRemote{
-				Ancestor: ancestorTracking,
-				Branch:   self.Branch,
+		if localAncestor, ancestorIsLocal := ancestorInfo.LocalName.Get(); ancestorIsLocal {
+			program = append(program, &RebaseAncestorLocal{
+				Ancestor:        localAncestor,
+				Branch:          self.Branch,
+				CommitsToRemove: self.CommitsToRemove,
 			})
-			branch = ancestor
-			continue
+			break
 		}
-		// here we found a local ancestor
-		program = append(program, &RebaseAncestorLocal{
-			Ancestor:        localAncestor,
-			Branch:          self.Branch,
-			CommitsToRemove: self.CommitsToRemove,
+		// the parent isn't local --> sync with its tracking branch, then try again with the grandparent until we find a local ancestor
+		ancestorTracking, ancestorIsRemote := ancestorInfo.RemoteName.Get()
+		if !ancestorIsRemote {
+			return errors.New(messages.BranchInfoNoContent)
+		}
+		program = append(program, &RebaseAncestorRemote{
+			Ancestor: ancestorTracking,
+			Branch:   self.Branch,
 		})
-		break
+		branch = ancestor
 	}
 	args.PrependOpcodes(program...)
 	return nil
