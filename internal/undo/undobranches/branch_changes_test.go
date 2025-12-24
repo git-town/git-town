@@ -758,7 +758,7 @@ func TestChanges(t *testing.T) {
 			// revert the commit on the perennial branch
 			&opcodes.CheckoutIfNeeded{Branch: "main"},
 			&opcodes.CommitRevertIfNeeded{SHA: "444444"},
-			&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: "main"},
+			&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: "main", TrackingBranch: "origin/main"},
 			// reset the feature branch to the previous SHA
 			&opcodes.CheckoutIfNeeded{Branch: "feature-branch"},
 			&opcodes.BranchCurrentResetToSHAIfNeeded{MustHaveSHA: "666666", SetToSHA: "333333"},
