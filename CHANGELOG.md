@@ -1,8 +1,21 @@
 # Git Town Changelog
 
-## 22.4.0 (unreleased)
+## 22.5.0 (unreleased)
 
 - The Git Town CLI can now embed branch lineage directly into proposals. This feature is in preview. To enable it, configure proposals-show-lineage to `cli`.
+
+## 22.4.0 (2025-12-24)
+
+#### New Features
+
+- ship: now allows ignoring uncommitted changes via the new [
+- propose --stack: You can now skip branches where proposal creation fails ([#5869](https://github.com/git-town/git-town/issues/5869))
+
+#### Bug fixes
+
+- Git Town now handles branches at multiple Git remotes correctly ([#5838](https://github.com/git-town/git-town/discussions/5838)).
+- propose: now handles already existing proposals more gracefully ([#5865](https://github.com/git-town/git-town/issues/5865)).
+- init: storing connector types now store correctly into the config file ([#5817](https://github.com/git-town/git-town/issues/5817)).
 
 ## 22.3.0 (2025-12-13)
 
