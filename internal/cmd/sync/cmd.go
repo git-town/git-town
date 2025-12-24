@@ -420,7 +420,7 @@ func determineSyncData(repo execute.OpenRepoResult, args determineSyncDataArgs) 
 	if repo.UnvalidatedConfig.NormalConfig.Detached {
 		allBranchNamesToSync = allBranchNamesToSync.Remove(perennialAndMain...)
 	}
-	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, allBranchNamesToSync...)
+	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(allBranchNamesToSync...)
 	branchesToSync, err := BranchesToSync(branchInfosToSync, branchesSnapshot.Branches, repo, validatedConfig.ValidatedConfigData.MainBranch)
 	if err != nil {
 		return data, configdomain.ProgramFlowExit, err
