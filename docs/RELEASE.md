@@ -2,6 +2,8 @@
 
 This guide is for maintainers who make releases of Git Town.
 
+- `git checkout public && git merge main && git push && git checkout - && git branch -d public`
+  - Netlify deploy: https://app.netlify.com/sites/git-town/deploys
 - in a branch:
   - update CHANGELOG.md
   - run `make stats-release` and copy the release stats and contributors into
@@ -10,19 +12,16 @@ This guide is for maintainers who make releases of Git Town.
     the README file
   - verify that the website content reflects all the changes made
   - search-and-replace the old version with the new version
-    - triple-digits: `22.3.0`
-    - double-digits: `22.3`
+    - triple-digits: `22.4.0`
+    - double-digits: `22.4`
     - its best to do this manually so that you don't change unrelated version
       numbers in CHANGELOG.md, lockfiles, and data files
   - if bumping the major version:
     - update `github.com/git-town/git-town/v22/` everywhere in this repo
     - update `github.com/git-town/git-town/v22` (without trailing slash)
-  - `git checkout public && git merge main && git push && git checkout - && git branch -d public`
-  - wait for Netlify to publish the website:
-    https://app.netlify.com/sites/git-town/deploys
   - update the changelog with links to the website
 - ship the branch
-- `git sync --all && git checkout main && git tag v22.3.0 && git push --tags`
+- `git sync --all && git checkout main && git tag v22.4.0 && git push --tags`
 - wait for CI to finish the release:
   https://github.com/git-town/git-town/actions
 - edit the new unpublished release:
