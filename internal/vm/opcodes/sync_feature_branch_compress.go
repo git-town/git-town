@@ -1,8 +1,11 @@
 package opcodes
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/vm/shared"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
@@ -22,7 +25,10 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 	opcodes := []shared.Opcode{}
 	commitsInBranch := gitdomain.Commits{}
 	if parentLocalName, hasParent := args.Config.Value.NormalConfig.Lineage.Parent(self.CurrentBranch).Get(); hasParent {
-		parentName := determineParentBranchName(parentLocalName, args.BranchInfos, args.Config.Value.NormalConfig.DevRemote)
+		parentName, hasParent := determineParentBranchName(parentLocalName, args.BranchInfos).Get()
+		if !hasParent {
+			return fmt.Errorf(messages.BranchInfoNotFound, parentLocalName)
+		}
 		inSyncWithParent, err := args.Git.BranchInSyncWithParent(args.Backend, self.CurrentBranch, parentName)
 		if err != nil {
 			return err
@@ -80,13 +86,12 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 	return nil
 }
 
-func determineParentBranchName(parentLocalName gitdomain.LocalBranchName, branchInfos gitdomain.BranchInfos, devRemote gitdomain.Remote) gitdomain.BranchName {
-	if parentInfo, hasParentInfo := branchInfos.FindByLocalName(parentLocalName).Get(); hasParentInfo {
-		return parentInfo.GetLocalOrRemoteName()
+func determineParentBranchName(parentLocalName gitdomain.LocalBranchName, branchInfos gitdomain.BranchInfos) Option[gitdomain.BranchName] {
+	if localInfo, parentIsLocal := branchInfos.FindByLocalName(parentLocalName).Get(); parentIsLocal {
+		return Some(localInfo.GetLocalOrRemoteName())
 	}
-	parentRemoteName := parentLocalName.AtRemote(devRemote)
-	if _, hasParentInfo := branchInfos.FindByRemoteName(parentRemoteName).Get(); hasParentInfo {
-		return parentRemoteName.BranchName()
+	if trackingInfo, parentIsRemote := branchInfos.FindRemoteNameMatchingLocal(parentLocalName).Get(); parentIsRemote {
+		return Some(trackingInfo.GetLocalOrRemoteName())
 	}
-	return parentLocalName.BranchName()
+	return None[gitdomain.BranchName]()
 }
