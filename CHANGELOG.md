@@ -8,7 +8,7 @@
 
 #### New Features
 
-* `sync` now has a `--gone` flag to only sync (i.e. remove) branches that have already been shipped or deleted on the remote. This provides a low-risk way to clean up obsolete local branches without touching anything active ([#5845](https://github.com/git-town/git-town/issues/5845)).
+* `sync` now has a `--gone` flag to only sync (i.e. remove) branches that have already been shipped or deleted on the remote. This provides a low-risk way to clean up obsolete local branches without configuring branch types ([#5845](https://github.com/git-town/git-town/issues/5845)).
 * `ship` can now ignore uncommitted changes via the new [ignore-uncommitted](https://www.git-town.com/preferences/ignore-uncommitted.html) configuration setting, making it easier to ship in messy working directories when you know what you're doing ([#5837](https://github.com/git-town/git-town/issues/5837)).
 * `propose --stack` now supports skipping branches where proposal creation fails instead of aborting by running [git town skip](https://www.git-town.com/commands/skip.html) ([#5869](https://github.com/git-town/git-town/issues/5869)).
 * `config --redact` now also obfuscates the configured user email in addition to other sensitive values ([#5850](https://github.com/git-town/git-town/pull/5850)).
