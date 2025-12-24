@@ -79,6 +79,7 @@ func TestChanges(t *testing.T) {
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
+			BranchInfos:              before.Branches,
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
@@ -171,6 +172,7 @@ func TestChanges(t *testing.T) {
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
+			BranchInfos:              before.Branches,
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
 			FinalMessages:            stringslice.NewCollector(),
@@ -265,6 +267,7 @@ func TestChanges(t *testing.T) {
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
+			BranchInfos:              before.Branches,
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
 			FinalMessages:            stringslice.NewCollector(),
@@ -328,6 +331,7 @@ func TestChanges(t *testing.T) {
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
+			BranchInfos:              before.Branches,
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
 			FinalMessages:            stringslice.NewCollector(),
@@ -404,6 +408,7 @@ func TestChanges(t *testing.T) {
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
+			BranchInfos:              before.Branches,
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
 			FinalMessages:            stringslice.NewCollector(),
@@ -503,6 +508,7 @@ func TestChanges(t *testing.T) {
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
+			BranchInfos:              before.Branches,
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
 			FinalMessages:            stringslice.NewCollector(),
@@ -628,6 +634,7 @@ func TestChanges(t *testing.T) {
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
+			BranchInfos:              before.Branches,
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
 			FinalMessages:            stringslice.NewCollector(),
@@ -842,6 +849,7 @@ func TestChanges(t *testing.T) {
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
+			BranchInfos:              before.Branches,
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
 			FinalMessages:            stringslice.NewCollector(),
@@ -976,6 +984,7 @@ func TestChanges(t *testing.T) {
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
+			BranchInfos:              before.Branches,
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
 			FinalMessages:            stringslice.NewCollector(),
@@ -1073,6 +1082,7 @@ func TestChanges(t *testing.T) {
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
+			BranchInfos:              before.Branches,
 			Config:                   config,
 			EndBranch:                after.Active.GetOrZero(),
 			FinalMessages:            stringslice.NewCollector(),
@@ -1164,6 +1174,7 @@ func TestChanges(t *testing.T) {
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
+			BranchInfos:              before.Branches,
 			Config:                   config,
 			EndBranch:                after.Active.GetOrZero(),
 			FinalMessages:            stringslice.NewCollector(),
@@ -1260,6 +1271,7 @@ func TestChanges(t *testing.T) {
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
+			BranchInfos:              before.Branches,
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
 			FinalMessages:            stringslice.NewCollector(),
@@ -1361,6 +1373,7 @@ func TestChanges(t *testing.T) {
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
+			BranchInfos:              before.Branches,
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
 			FinalMessages:            stringslice.NewCollector(),
@@ -1448,6 +1461,7 @@ func TestChanges(t *testing.T) {
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
+			BranchInfos:              before.Branches,
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
 			FinalMessages:            stringslice.NewCollector(),
@@ -1531,6 +1545,7 @@ func TestChanges(t *testing.T) {
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
+			BranchInfos:              before.Branches,
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
 			FinalMessages:            stringslice.NewCollector(),
