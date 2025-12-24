@@ -27,9 +27,11 @@ func (self *BranchCreateAndCheckoutExistingParent) Run(args shared.RunArgs) erro
 	if nearestAncestor, hasNearestAncestor := args.Git.FirstExistingBranch(args.Backend, self.Ancestors...).Get(); hasNearestAncestor {
 		ancestorToUse = nearestAncestor.BranchName()
 	} else {
-		if mainInfo, hasMainBranch := args.BranchInfos.FindLocalOrRemote(args.Config.Value.ValidatedConfigData.MainBranch).Get(); hasMainBranch {
-			ancestorToUse = mainInfo.GetLocalOrRemoteName()
+		mainInfo, hasMainBranch := args.BranchInfos.FindLocalOrRemote(args.Config.Value.ValidatedConfigData.MainBranch).Get()
+		if !hasMainBranch {
+			return errors.New(messages.MainBranchNotFound)
 		}
+		ancestorToUse = mainInfo.GetLocalOrRemoteName()
 	}
 	if ancestorToUse == currentBranch.BranchName() {
 		return args.Git.CreateAndCheckoutBranch(args.Frontend, self.Branch)
