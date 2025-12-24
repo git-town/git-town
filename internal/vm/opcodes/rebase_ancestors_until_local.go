@@ -31,6 +31,7 @@ func (self *RebaseAncestorsUntilLocal) Run(args shared.RunArgs) error {
 		}
 		ancestorInfo, hasAncestorInfo := args.BranchInfos.FindLocalOrRemote(ancestor).Get()
 		if !hasAncestorInfo {
+			branch = ancestor
 			continue
 		}
 		localAncestor, ancestorIsLocal := ancestorInfo.LocalName.Get()
