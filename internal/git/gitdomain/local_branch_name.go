@@ -26,7 +26,6 @@ func isValidLocalBranchName(value string) bool {
 }
 
 // AtRemote provides the RemoteBranchName of this branch at the given remote.
-// TODO: delete this
 func (self LocalBranchName) AtRemote(remote Remote) RemoteBranchName {
 	return NewRemoteBranchName(remote.String() + "/" + (string(self)))
 }
@@ -48,9 +47,3 @@ func (self LocalBranchName) RefName() string {
 
 // String implements the fmt.Stringer interface.
 func (self LocalBranchName) String() string { return string(self) }
-
-// TrackingBranch provides the name of the tracking branch for this local branch.
-// TODO: delete this
-func (self LocalBranchName) TrackingBranch(devRemote Remote) RemoteBranchName {
-	return self.AtRemote(devRemote)
-}
