@@ -325,7 +325,7 @@ func TestBranchInfos(t *testing.T) {
 			bis := gitdomain.BranchInfos{
 				branch1info,
 			}
-			have := bis.FindLocalOrRemote(branch1, gitdomain.RemoteOrigin)
+			have := bis.FindLocalOrRemote(branch1)
 			must.Eq(t, MutableSome(&branch1info), have)
 		})
 		t.Run("has remote name", func(t *testing.T) {
@@ -340,7 +340,7 @@ func TestBranchInfos(t *testing.T) {
 			bis := gitdomain.BranchInfos{
 				branch1info,
 			}
-			have := bis.FindLocalOrRemote(gitdomain.NewLocalBranchName("branch-1"), gitdomain.RemoteOrigin)
+			have := bis.FindLocalOrRemote(gitdomain.NewLocalBranchName("branch-1"))
 			must.Eq(t, MutableSome(&branch1info), have)
 		})
 		t.Run("no match", func(t *testing.T) {
@@ -355,7 +355,7 @@ func TestBranchInfos(t *testing.T) {
 			bis := gitdomain.BranchInfos{
 				branch1info,
 			}
-			have := bis.FindLocalOrRemote(gitdomain.NewLocalBranchName("zonk"), gitdomain.RemoteOrigin)
+			have := bis.FindLocalOrRemote(gitdomain.NewLocalBranchName("zonk"))
 			must.Eq(t, MutableNone[gitdomain.BranchInfo](), have)
 		})
 	})

@@ -459,7 +459,7 @@ func BranchesToSync(branchInfosToSync gitdomain.BranchInfos, allBranchInfos gitd
 		if !hasParentName {
 			parentLocalName = mainBranch
 		}
-		parentBranchInfo, hasParentBranchInfo := allBranchInfos.FindLocalOrRemote(parentLocalName, repo.UnvalidatedConfig.NormalConfig.DevRemote).Get()
+		parentBranchInfo, hasParentBranchInfo := allBranchInfos.FindLocalOrRemote(parentLocalName).Get()
 		if !hasParentBranchInfo {
 			result[b] = configdomain.BranchToSync{
 				BranchInfo:         branchInfo,

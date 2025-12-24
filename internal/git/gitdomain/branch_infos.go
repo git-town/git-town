@@ -65,15 +65,14 @@ func (self BranchInfos) FindByRemoteName(remoteBranch RemoteBranchName) Optional
 	return MutableNone[BranchInfo]()
 }
 
-func (self BranchInfos) FindLocalOrRemote(branchName LocalBranchName, remote Remote) OptionalMutable[BranchInfo] {
-	branchInfoOpt := self.FindByLocalName(branchName)
-	if branchInfoOpt.IsSome() {
-		return branchInfoOpt
+func (self BranchInfos) FindLocalOrRemote(branchName LocalBranchName) OptionalMutable[BranchInfo] {
+	localInfo := self.FindByLocalName(branchName)
+	if localInfo.IsSome() {
+		return localInfo
 	}
-	remoteName := branchName.AtRemote(remote)
-	branchInfoOpt = self.FindByRemoteName(remoteName)
-	if branchInfoOpt.IsSome() {
-		return branchInfoOpt
+	remoteInfo := self.FindRemoteNameMatchingLocal(branchName)
+	if remoteInfo.IsSome() {
+		return remoteInfo
 	}
 	return MutableNone[BranchInfo]()
 }
