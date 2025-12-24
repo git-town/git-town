@@ -3,6 +3,7 @@ package gitdomain
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v22/internal/messages"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
@@ -38,7 +39,7 @@ func (self BranchInfo) GetLocalOrRemoteName() BranchName {
 	if remoteName, hasRemoteName := self.RemoteName.Get(); hasRemoteName {
 		return remoteName.BranchName()
 	}
-	panic("BranchInfo has neither a local nor remote name")
+	panic(messages.BranchInfoNoContent)
 }
 
 func (self BranchInfo) GetLocalOrRemoteNameAsLocalName() LocalBranchName {
@@ -48,7 +49,7 @@ func (self BranchInfo) GetLocalOrRemoteNameAsLocalName() LocalBranchName {
 	if remoteName, hasRemoteName := self.RemoteName.Get(); hasRemoteName {
 		return remoteName.LocalBranchName()
 	}
-	panic("BranchInfo has neither a local nor remote name")
+	panic(messages.BranchInfoNoContent)
 }
 
 func (self BranchInfo) GetLocalOrRemoteSHA() SHA {
@@ -58,7 +59,7 @@ func (self BranchInfo) GetLocalOrRemoteSHA() SHA {
 	if remoteSHA, has := self.RemoteSHA.Get(); has {
 		return remoteSHA
 	}
-	panic("BranchInfo has neither a local nor remote SHA")
+	panic(messages.BranchInfoNoContent)
 }
 
 // GetRemoteBranch provides both the name and SHA of the remote branch.
@@ -137,7 +138,7 @@ func (self BranchInfo) LocalBranchName() LocalBranchName {
 	if remoteName, hasRemoteName := self.RemoteName.Get(); hasRemoteName {
 		return remoteName.LocalBranchName()
 	}
-	panic("this BranchInfo has neither a local nor remote branch")
+	panic(messages.BranchInfoNoContent)
 }
 
 func (self BranchInfo) String() string {
