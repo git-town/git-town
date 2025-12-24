@@ -1,7 +1,10 @@
 package opcodes
 
 import (
+	"errors"
+
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/git-town/git-town/v22/internal/vm/shared"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
@@ -16,28 +19,37 @@ type RebaseAncestorsUntilLocal struct {
 func (self *RebaseAncestorsUntilLocal) Run(args shared.RunArgs) error {
 	program := []shared.Opcode{}
 	branch := self.Branch
+	detached := args.Config.Value.NormalConfig.Detached.ShouldWorkDetached()
 	for {
 		ancestor, hasAncestor := args.Config.Value.NormalConfig.Lineage.Parent(branch).Get()
 		if !hasAncestor {
 			break
 		}
 		ancestorIsPerennial := args.Config.Value.IsMainOrPerennialBranch(ancestor)
-		if ancestorIsPerennial && args.Config.Value.NormalConfig.Detached.ShouldWorkDetached() {
+		if ancestorIsPerennial && detached {
 			break
 		}
-		ancestorIsLocal := args.BranchInfos.HasLocalBranch(ancestor)
+		ancestorInfo, hasAncestorInfo := args.BranchInfos.FindLocalOrRemote(ancestor).Get()
+		if !hasAncestorInfo {
+			continue
+		}
+		localAncestor, ancestorIsLocal := ancestorInfo.LocalName.Get()
 		if !ancestorIsLocal {
 			// here the parent isn't local --> sync with its tracking branch, then try again with the grandparent until we find a local ancestor
+			ancestorTracking, ancestorIsRemote := ancestorInfo.RemoteName.Get()
+			if !ancestorIsRemote {
+				return errors.New(messages.BranchInfoNoContent)
+			}
 			program = append(program, &RebaseAncestorRemote{
-				Ancestor: ancestor.AtRemote(args.Config.Value.NormalConfig.DevRemote),
+				Ancestor: ancestorTracking,
 				Branch:   self.Branch,
 			})
 			branch = ancestor
 			continue
 		}
-		// here we found a local parent
+		// here we found a local ancestor
 		program = append(program, &RebaseAncestorLocal{
-			Ancestor:        ancestor,
+			Ancestor:        localAncestor,
 			Branch:          self.Branch,
 			CommitsToRemove: self.CommitsToRemove,
 		})
