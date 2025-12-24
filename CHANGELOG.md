@@ -8,17 +8,18 @@
 
 #### New Features
 
-- sync: the new `--gone` flag only syncs (removes) branches that were shipped/deleted at the remote. This is an easy way to just remove obsolete branches from your workspace ([#5845](https://github.com/git-town/git-town/issues/5845)).
-- ship: now allows ignoring uncommitted changes via the new [ignore-uncommitted]() configuration setting ([#5837](https://github.com/git-town/git-town/issues/5837)).
-- propose --stack: You can now skip branches where proposal creation fails ([#5869](https://github.com/git-town/git-town/issues/5869))
-- config --redact: now also obfuscates the user email ([#5850](https://github.com/git-town/git-town/pull/5850)).
+* `sync` now has a `--gone` flag to only sync (i.e. remove) branches that have already been shipped or deleted on the remote. This provides a low-risk way to clean up obsolete local branches without touching anything active ([#5845](https://github.com/git-town/git-town/issues/5845)).
+* `ship` can now ignore uncommitted changes via the new [ignore-uncommitted](https://www.git-town.com/preferences/ignore-uncommitted.html) configuration setting, making it easier to ship in messy working directories when you know what you're doing ([#5837](https://github.com/git-town/git-town/issues/5837)).
+* `propose --stack` now supports skipping branches where proposal creation fails instead of aborting by running [git town skip](https://www.git-town.com/commands/skip.html) ([#5869](https://github.com/git-town/git-town/issues/5869)).
+* `config --redact` now also obfuscates the configured user email in addition to other sensitive values ([#5850](https://github.com/git-town/git-town/pull/5850)).
 
-#### Bug fixes
+#### Bug Fixes
 
-- Git Town now handles branches at multiple Git remotes correctly ([#5838](https://github.com/git-town/git-town/discussions/5838)).
-- propose: now handles already existing proposals more gracefully ([#5865](https://github.com/git-town/git-town/issues/5865)).
-- init: storing connector types now store correctly into the config file ([#5817](https://github.com/git-town/git-town/issues/5817)).
-- sync --all: now checks out a branch that actually exists in your worktree before deleting a shipped branch ([#5847](https://github.com/git-town/git-town/issues/5847)).
+* Improved handling of branches that exist across multiple Git remotes ([#5838](https://github.com/git-town/git-town/discussions/5838)).
+* `propose --stack` now skips branches where proposal creation failed but the proposal exists anyways ([#5865](https://github.com/git-town/git-town/issues/5865)).
+* `init` now correctly persists connector types to the config file ([#5817](https://github.com/git-town/git-town/issues/5817)).
+* `sync --all` now switches to a branch that is available in the worktree before deleting a shipped branch ([#5847](https://github.com/git-town/git-town/issues/5847)).
+
 
 ## 22.3.0 (2025-12-13)
 
