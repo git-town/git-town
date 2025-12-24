@@ -24,16 +24,17 @@ type SyncFeatureBranchCompress struct {
 func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 	opcodes := []shared.Opcode{}
 	commitsInBranch := gitdomain.Commits{}
-	if parentLocalName, hasParent := args.Config.Value.NormalConfig.Lineage.Parent(self.CurrentBranch).Get(); hasParent {
-		parentName, hasParent := determineParentBranchName(parentLocalName, args.BranchInfos).Get()
-		if !hasParent {
-			return fmt.Errorf(messages.BranchInfoNotFound, parentLocalName)
+	if configuredParent, hasParent := args.Config.Value.NormalConfig.Lineage.Parent(self.CurrentBranch).Get(); hasParent {
+		parentInfo, hasParentInfo := args.BranchInfos.FindLocalOrRemote(configuredParent).Get()
+		if !hasParentInfo {
+			return fmt.Errorf(messages.BranchInfoNotFound, configuredParent)
 		}
+		parentName := parentInfo.GetLocalOrRemoteName()
 		inSyncWithParent, err := args.Git.BranchInSyncWithParent(args.Backend, self.CurrentBranch, parentName)
 		if err != nil {
 			return err
 		}
-		parentIsPerennial := args.Config.Value.IsMainOrPerennialBranch(parentLocalName)
+		parentIsPerennial := args.Config.Value.IsMainOrPerennialBranch(configuredParent)
 		skipParent := args.Config.Value.NormalConfig.Detached.ShouldWorkDetached() && parentIsPerennial
 		if !inSyncWithParent && !skipParent {
 			opcodes = append(opcodes, &SyncFeatureBranchMerge{
@@ -84,14 +85,4 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 	}
 	args.PrependOpcodes(opcodes...)
 	return nil
-}
-
-func determineParentBranchName(parentLocalName gitdomain.LocalBranchName, branchInfos gitdomain.BranchInfos) Option[gitdomain.BranchName] {
-	if localInfo, parentIsLocal := branchInfos.FindByLocalName(parentLocalName).Get(); parentIsLocal {
-		return Some(localInfo.GetLocalOrRemoteName())
-	}
-	if trackingInfo, parentIsRemote := branchInfos.FindRemoteNameMatchingLocal(parentLocalName).Get(); parentIsRemote {
-		return Some(trackingInfo.GetLocalOrRemoteName())
-	}
-	return None[gitdomain.BranchName]()
 }
