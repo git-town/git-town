@@ -62,7 +62,7 @@ func (self *Commands) BranchExists(runner subshelldomain.Runner, branch gitdomai
 	return err == nil
 }
 
-func (self *Commands) BranchExistsRemotely(runner subshelldomain.Runner, branch gitdomain.LocalBranchName, remote gitdomain.Remote) bool {
+func (self *Commands) BranchExistsAtRemote(runner subshelldomain.Runner, branch gitdomain.LocalBranchName, remote gitdomain.Remote) bool {
 	err := runner.Run("git", "ls-remote", remote.String(), branch.String())
 	return err == nil
 }

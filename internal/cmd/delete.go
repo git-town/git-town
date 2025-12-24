@@ -294,7 +294,7 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (data delet
 		Order:                      validatedConfig.NormalConfig.Order,
 	})
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
-	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
+	_, nonExistingBranches := branchesSnapshot.Branches.Select(lineageBranches...)
 	return deleteData{
 		branchInfosLastRun:       branchInfosLastRun,
 		branchToDeleteInfo:       *branchToDeleteInfo,
