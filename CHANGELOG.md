@@ -8,7 +8,7 @@
 
 #### New Features
 
-- ship: now allows ignoring uncommitted changes via the new [
+- ship: now allows ignoring uncommitted changes via the new [ignore-uncommitted]() configuration setting ([#5837](https://github.com/git-town/git-town/issues/5837)).
 - propose --stack: You can now skip branches where proposal creation fails ([#5869](https://github.com/git-town/git-town/issues/5869))
 
 #### Bug fixes
