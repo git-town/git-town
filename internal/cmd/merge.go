@@ -352,10 +352,12 @@ func mergeProgram(repo execute.OpenRepoResult, data mergeData) program.Program {
 	prog.Value.Add(&opcodes.BranchLocalDelete{
 		Branch: data.initialBranch,
 	})
-	if data.parentBranchInfo.RemoteName.IsSome() && repo.IsOffline.IsOnline() {
+	parentTracking, parentHasTracking := data.parentBranchInfo.RemoteName.Get()
+	if parentHasTracking && repo.IsOffline.IsOnline() {
 		prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{
 			CurrentBranch:   data.parentBranch,
 			ForceIfIncludes: true,
+			TrackingBranch:  parentTracking,
 		})
 	}
 	if _, hasOverride := data.config.NormalConfig.BranchTypeOverrides[data.initialBranch]; hasOverride {
