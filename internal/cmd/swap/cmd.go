@@ -352,7 +352,7 @@ func determineSwapData(repo execute.OpenRepoResult) (data swapData, flow configd
 		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.SwapNeedsCompress, parentBranch)
 	}
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
-	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
+	_, nonExistingBranches := branchesSnapshot.Branches.Select(lineageBranches...)
 	return swapData{
 		branchInfosLastRun:    branchInfosLastRun,
 		branchesSnapshot:      branchesSnapshot,
