@@ -159,11 +159,15 @@ func localBranchProgram(args localBranchProgramArgs) {
 		case !args.branchInfo.HasTrackingBranch():
 			args.Program.Value.Add(&opcodes.BranchTrackingCreateIfLocalExists{Branch: args.localName})
 		case isMainBranch && args.Remotes.HasUpstream() && args.Config.NormalConfig.SyncUpstream.ShouldSyncUpstream():
-			args.Program.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: args.localName})
+			if trackingBranch, hasTrackingBranch := args.branchInfo.RemoteName.Get(); hasTrackingBranch {
+				args.Program.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: args.localName, TrackingBranch: trackingBranch})
+			}
 		case isMainOrPerennialBranch && !shouldPushPerennialBranch(args.branchInfo.SyncStatus):
 			// don't push if its a perennial branch that doesn't need pushing
 		case isMainOrPerennialBranch:
-			args.Program.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: args.localName})
+			if trackingBranch, hasTrackingBranch := args.branchInfo.RemoteName.Get(); hasTrackingBranch {
+				args.Program.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: args.localName, TrackingBranch: trackingBranch})
+			}
 		default:
 			if trackingBranch, hasTrackingBranch := args.branchInfo.RemoteName.Get(); hasTrackingBranch {
 				pushFeatureBranchProgram(args.Program, args.localName, trackingBranch, args.Config.NormalConfig.SyncFeatureStrategy)
