@@ -1629,6 +1629,7 @@ func TestChanges(t *testing.T) {
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			BeginBranch:              before.Active.GetOrPanic(),
+			BranchInfos:              before.Branches,
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
 			FinalMessages:            stringslice.NewCollector(),
@@ -1638,7 +1639,7 @@ func TestChanges(t *testing.T) {
 			// revert the undoable commit on the main branch
 			&opcodes.CheckoutIfNeeded{Branch: "main"},
 			&opcodes.CommitRevertIfNeeded{SHA: "444444"},
-			&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: "main"},
+			&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: "main", TrackingBranch: "origin/main"},
 			// re-create the feature branch
 			&opcodes.BranchCreate{Branch: "feature-branch", StartingPoint: "222222"},
 			&opcodes.BranchTrackingCreate{Branch: "feature-branch"},
