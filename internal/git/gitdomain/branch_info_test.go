@@ -177,7 +177,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: Some(branch1),
 				RemoteSHA:  Some(sha1),
 			}
-			hasRemoteBranch, name, sha := branchInfo.GetRemoteBranch()
+			hasRemoteBranch, name, sha := branchInfo.GetRemote()
 			must.True(t, hasRemoteBranch)
 			must.EqOp(t, branch1, name)
 			must.EqOp(t, sha1, sha)
@@ -193,7 +193,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 				RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 			}
-			hasRemoteBranch, name, sha := branchInfo.GetRemoteBranch()
+			hasRemoteBranch, name, sha := branchInfo.GetRemote()
 			must.True(t, hasRemoteBranch)
 			must.EqOp(t, branch1, name)
 			must.EqOp(t, sha1, sha)
@@ -207,7 +207,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: None[gitdomain.RemoteBranchName](),
 				RemoteSHA:  None[gitdomain.SHA](),
 			}
-			hasRemoteBranch, _, _ := branchInfo.GetRemoteBranch()
+			hasRemoteBranch, _, _ := branchInfo.GetRemote()
 			must.False(t, hasRemoteBranch)
 		})
 		t.Run("is empty", func(t *testing.T) {
@@ -219,7 +219,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: None[gitdomain.RemoteBranchName](),
 				RemoteSHA:  None[gitdomain.SHA](),
 			}
-			hasRemoteBranch, _, _ := branchInfo.GetRemoteBranch()
+			hasRemoteBranch, _, _ := branchInfo.GetRemote()
 			must.False(t, hasRemoteBranch)
 		})
 	})

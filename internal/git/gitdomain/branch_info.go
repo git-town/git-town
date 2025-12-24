@@ -62,8 +62,8 @@ func (self BranchInfo) GetLocalOrRemoteSHA() SHA {
 	panic(messages.BranchInfoNoContent)
 }
 
-// GetRemoteBranch provides both the name and SHA of the remote branch.
-func (self BranchInfo) GetRemoteBranch() (bool, RemoteBranchName, SHA) {
+// GetRemote provides both the name and SHA of the remote branch.
+func (self BranchInfo) GetRemote() (bool, RemoteBranchName, SHA) {
 	name, hasName := self.RemoteName.Get()
 	sha, hasSHA := self.RemoteSHA.Get()
 	return hasName && hasSHA, name, sha
@@ -78,19 +78,19 @@ func (self BranchInfo) GetSHAs() (hasBothSHA bool, localSHA, remoteSHA SHA) {
 
 func (self BranchInfo) HasOnlyLocalBranch() bool {
 	hasLocalBranch, _, _ := self.GetLocal()
-	hasRemoteBranch, _, _ := self.GetRemoteBranch()
+	hasRemoteBranch, _, _ := self.GetRemote()
 	return hasLocalBranch && !hasRemoteBranch
 }
 
 func (self BranchInfo) HasOnlyRemoteBranch() bool {
 	hasLocalBranch, _, _ := self.GetLocal()
-	hasRemoteBranch, _, _ := self.GetRemoteBranch()
+	hasRemoteBranch, _, _ := self.GetRemote()
 	return hasRemoteBranch && !hasLocalBranch
 }
 
 func (self BranchInfo) HasTrackingBranch() bool {
 	hasLocalBranch, _, _ := self.GetLocal()
-	hasRemoteBranch, _, _ := self.GetRemoteBranch()
+	hasRemoteBranch, _, _ := self.GetRemote()
 	return hasLocalBranch && hasRemoteBranch
 }
 

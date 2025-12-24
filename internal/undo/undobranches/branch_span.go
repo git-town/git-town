@@ -140,12 +140,12 @@ func (self BranchSpan) LocalRemoved() (localRemoved bool, branchName gitdomain.L
 
 func (self BranchSpan) RemoteAdded() (remoteAdded bool, addedRemoteBranchName gitdomain.RemoteBranchName, addedRemoteBranchSHA gitdomain.SHA) {
 	before, hasBefore := self.Before.Get()
-	beforeHasRemoteBranch, _, _ := before.GetRemoteBranch()
+	beforeHasRemoteBranch, _, _ := before.GetRemote()
 	after, hasAfter := self.After.Get()
 	if !hasAfter {
 		return false, addedRemoteBranchName, addedRemoteBranchSHA
 	}
-	afterHasRemoteBranch, afterRemoteBranchName, afterRemoteBranchSHA := after.GetRemoteBranch()
+	afterHasRemoteBranch, afterRemoteBranchName, afterRemoteBranchSHA := after.GetRemote()
 	remoteAdded = (!hasBefore || !beforeHasRemoteBranch) && afterHasRemoteBranch
 	return remoteAdded, afterRemoteBranchName, afterRemoteBranchSHA
 }
@@ -155,12 +155,12 @@ func (self BranchSpan) RemoteChanged() (remoteChanged bool, branchName gitdomain
 	if !hasBefore {
 		return false, branchName, beforeSHA, afterSHA
 	}
-	beforeHasRemoteBranch, beforeRemoteBranchName, beforeRemoteBranchSHA := before.GetRemoteBranch()
+	beforeHasRemoteBranch, beforeRemoteBranchName, beforeRemoteBranchSHA := before.GetRemote()
 	after, hasAfter := self.After.Get()
 	if !hasAfter {
 		return false, branchName, beforeSHA, afterSHA
 	}
-	afterHasRemoteBranch, _, afterRemoteBranchSHA := after.GetRemoteBranch()
+	afterHasRemoteBranch, _, afterRemoteBranchSHA := after.GetRemote()
 	remoteChanged = beforeHasRemoteBranch && afterHasRemoteBranch && beforeRemoteBranchSHA != afterRemoteBranchSHA
 	return remoteChanged, beforeRemoteBranchName, beforeRemoteBranchSHA, afterRemoteBranchSHA
 }
@@ -170,9 +170,9 @@ func (self BranchSpan) RemoteRemoved() (remoteRemoved bool, remoteBranchName git
 	if !hasBefore {
 		return false, remoteBranchName, beforeRemoteBranchSHA
 	}
-	beforeHasRemoteBranch, remoteBranchName, beforeSHA := before.GetRemoteBranch()
+	beforeHasRemoteBranch, remoteBranchName, beforeSHA := before.GetRemote()
 	after, hasAfter := self.After.Get()
-	afterHasRemoteBranch, _, _ := after.GetRemoteBranch()
+	afterHasRemoteBranch, _, _ := after.GetRemote()
 	remoteRemoved = beforeHasRemoteBranch && (!hasAfter || !afterHasRemoteBranch)
 	return remoteRemoved, remoteBranchName, beforeSHA
 }
