@@ -20,6 +20,9 @@
 * `init` now correctly persists connector types to the config file ([#5817](https://github.com/git-town/git-town/issues/5817)).
 * `sync --all` now switches to a branch that is available in the worktree before deleting a shipped branch ([#5847](https://github.com/git-town/git-town/issues/5847)).
 
+#### Contributors
+
+Shoutout to @degauden, @kevgo, @meowsus, @pcfreak30, @stephenwade for contributing code, feedback, and ideas to 62 shipped pull requests and 7 resolved issues!
 
 ## 22.3.0 (2025-12-13)
 
