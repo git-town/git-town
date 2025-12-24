@@ -8,8 +8,10 @@
 
 #### New Features
 
+- sync: the new `--gone` flag only syncs (removes) branches that were shipped/deleted at the remote. This is an easy way to just remove obsolete branches from your workspace ([#5845](https://github.com/git-town/git-town/issues/5845)).
 - ship: now allows ignoring uncommitted changes via the new [ignore-uncommitted]() configuration setting ([#5837](https://github.com/git-town/git-town/issues/5837)).
 - propose --stack: You can now skip branches where proposal creation fails ([#5869](https://github.com/git-town/git-town/issues/5869))
+- config --redact: now also obfuscates the user email ([#5850](https://github.com/git-town/git-town/pull/5850)).
 
 #### Bug fixes
 
