@@ -164,11 +164,11 @@ func TestNewSwitchBranch(t *testing.T) {
 					grandchild: child,
 				})
 				branchInfos := gitdomain.BranchInfos{
-					gitdomain.BranchInfo{RemoteName: Some(child.AtRemote(gitdomain.RemoteOrigin)), SyncStatus: gitdomain.SyncStatusRemoteOnly},
+					gitdomain.BranchInfo{RemoteName: Some(gitdomain.NewRemoteBranchName("origin/child")), SyncStatus: gitdomain.SyncStatusRemoteOnly},
 					gitdomain.BranchInfo{LocalName: Some(grandchild), SyncStatus: gitdomain.SyncStatusLocalOnly},
 					gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{LocalName: None[gitdomain.LocalBranchName](), RemoteName: Some(child.AtRemote(gitdomain.RemoteOrigin)), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{LocalName: Some(grandchild), RemoteName: Some(grandchild.AtRemote(gitdomain.RemoteOrigin)), SyncStatus: gitdomain.SyncStatusUpToDate},
+					gitdomain.BranchInfo{LocalName: None[gitdomain.LocalBranchName](), RemoteName: Some(gitdomain.NewRemoteBranchName("origin/child")), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{LocalName: Some(grandchild), RemoteName: Some(gitdomain.NewRemoteBranchName("origin/grandchild")), SyncStatus: gitdomain.SyncStatusUpToDate},
 				}
 				branchTypes := []configdomain.BranchType{}
 				branchesAndTypes := configdomain.BranchesAndTypes{}

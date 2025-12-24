@@ -345,7 +345,7 @@ func determineDetachData(repo execute.OpenRepoResult) (data detachData, flow con
 		}
 	}
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
-	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
+	_, nonExistingBranches := branchesSnapshot.Branches.Select(lineageBranches...)
 	return detachData{
 		branchInfosLastRun:     branchInfosLastRun,
 		branchToDetachInfo:     *branchToDetachInfo,
