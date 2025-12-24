@@ -142,7 +142,7 @@ func (self BranchInfos) HasLocalBranches(branches LocalBranchNames) bool {
 }
 
 // HasMatchingTrackingBranchFor indicates whether there is already a remote branch matching the given local branch.
-func (self BranchInfos) HasMatchingTrackingBranchFor(localBranch LocalBranchName, devRemote Remote) bool {
+func (self BranchInfos) HasMatchingTrackingBranchFor(localBranch LocalBranchName) bool {
 	return self.FindRemoteNameMatchingLocal(localBranch).IsSome()
 }
 

@@ -310,7 +310,7 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data appendF
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
 		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
-	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch, repo.UnvalidatedConfig.NormalConfig.DevRemote) {
+	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
 		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	branchNamesToSync := gitdomain.LocalBranchNames{validatedConfig.ValidatedConfigData.MainBranch}
