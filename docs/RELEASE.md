@@ -2,6 +2,7 @@
 
 This guide is for maintainers who make releases of Git Town.
 
+- `git checkout public && git merge main && git push && git checkout - && git branch -d public`
 - in a branch:
   - update CHANGELOG.md
   - run `make stats-release` and copy the release stats and contributors into
@@ -17,7 +18,6 @@ This guide is for maintainers who make releases of Git Town.
   - if bumping the major version:
     - update `github.com/git-town/git-town/v22/` everywhere in this repo
     - update `github.com/git-town/git-town/v22` (without trailing slash)
-  - `git checkout public && git merge main && git push && git checkout - && git branch -d public`
   - wait for Netlify to publish the website:
     https://app.netlify.com/sites/git-town/deploys
   - update the changelog with links to the website
