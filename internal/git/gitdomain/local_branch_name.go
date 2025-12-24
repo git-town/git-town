@@ -26,6 +26,7 @@ func isValidLocalBranchName(value string) bool {
 }
 
 // AtRemote provides the RemoteBranchName of this branch at the given remote.
+// TODO: delete this
 func (self LocalBranchName) AtRemote(remote Remote) RemoteBranchName {
 	return NewRemoteBranchName(remote.String() + "/" + (string(self)))
 }
