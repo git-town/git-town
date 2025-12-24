@@ -62,8 +62,8 @@ func (self BranchInfo) GetLocalOrRemoteSHA() SHA {
 	panic(messages.BranchInfoNoContent)
 }
 
-// GetRemoteBranch provides both the name and SHA of the remote branch.
-func (self BranchInfo) GetRemoteBranch() (bool, RemoteBranchName, SHA) {
+// GetRemote provides both the name and SHA of the remote branch.
+func (self BranchInfo) GetRemote() (bool, RemoteBranchName, SHA) {
 	name, hasName := self.RemoteName.Get()
 	sha, hasSHA := self.RemoteSHA.Get()
 	return hasName && hasSHA, name, sha
@@ -76,35 +76,21 @@ func (self BranchInfo) GetSHAs() (hasBothSHA bool, localSHA, remoteSHA SHA) {
 	return hasLocal && hasRemote, local, remote
 }
 
-func (self BranchInfo) HasLocalBranch() (hasLocalBranch bool, branchName LocalBranchName, sha SHA) {
-	localName, hasLocalName := self.LocalName.Get()
-	localSHA, hasLocalSHA := self.LocalSHA.Get()
-	hasLocalBranch = hasLocalName && hasLocalSHA
-	return hasLocalBranch, localName, localSHA
-}
-
 func (self BranchInfo) HasOnlyLocalBranch() bool {
-	hasLocalBranch, _, _ := self.HasLocalBranch()
-	hasRemoteBranch, _, _ := self.HasRemoteBranch()
+	hasLocalBranch, _, _ := self.GetLocal()
+	hasRemoteBranch, _, _ := self.GetRemote()
 	return hasLocalBranch && !hasRemoteBranch
 }
 
 func (self BranchInfo) HasOnlyRemoteBranch() bool {
-	hasLocalBranch, _, _ := self.HasLocalBranch()
-	hasRemoteBranch, _, _ := self.HasRemoteBranch()
+	hasLocalBranch, _, _ := self.GetLocal()
+	hasRemoteBranch, _, _ := self.GetRemote()
 	return hasRemoteBranch && !hasLocalBranch
 }
 
-func (self BranchInfo) HasRemoteBranch() (hasRemoteBranch bool, remoteBranchName RemoteBranchName, remoteBranchSHA SHA) {
-	remoteName, hasRemoteName := self.RemoteName.Get()
-	remoteSHA, hasRemoteSHA := self.RemoteSHA.Get()
-	hasRemoteBranch = hasRemoteName && hasRemoteSHA
-	return hasRemoteBranch, remoteName, remoteSHA
-}
-
 func (self BranchInfo) HasTrackingBranch() bool {
-	hasLocalBranch, _, _ := self.HasLocalBranch()
-	hasRemoteBranch, _, _ := self.HasRemoteBranch()
+	hasLocalBranch, _, _ := self.GetLocal()
+	hasRemoteBranch, _, _ := self.GetRemote()
 	return hasLocalBranch && hasRemoteBranch
 }
 

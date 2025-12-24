@@ -24,7 +24,7 @@ func NewEntry(event Event, branchInfos gitdomain.BranchInfos, pendingCommand Opt
 		if hasLocalBranch, localName, localSHA := branchInfo.GetLocal(); hasLocalBranch {
 			branches[localName.BranchName()] = localSHA
 		}
-		if hasRemoteBranch, remoteName, remoteSHA := branchInfo.GetRemoteBranch(); hasRemoteBranch {
+		if hasRemoteBranch, remoteName, remoteSHA := branchInfo.GetRemote(); hasRemoteBranch {
 			branches[remoteName.BranchName()] = remoteSHA
 		}
 	}
