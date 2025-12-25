@@ -68,6 +68,18 @@ func TestNewTree(t *testing.T) {
 		must.NoError(t, err)
 		must.NotNil(t, tree)
 		// tree.BranchToProposal stores the proposals for each branch
+		wantBranchToProposal := map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{
+			"feature-a": Some(forgedomain.Proposal{
+				Data: forgedomain.ProposalData{
+					Body:   None[gitdomain.ProposalBody](),
+					Source: featureA,
+					Target: mainBranch,
+					Title:  "proposal from feature-a to main",
+				},
+			}),
+		}
+		must.Eq(t, wantBranchToProposal, tree.BranchToProposal)
+
 		have_keys := slices.Collect(maps.Keys(tree.BranchToProposal))
 		slices.Sort(have_keys)
 		want_keys := gitdomain.LocalBranchNames{featureA, featureB, featureC}
