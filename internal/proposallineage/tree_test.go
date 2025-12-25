@@ -51,7 +51,6 @@ func TestNewTree(t *testing.T) {
 			Lineage:                  lineage,
 			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
 		})
-		must.NoError(t, err)
 		want := &proposallineage.Tree{
 			BranchToProposal: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{
 				"feature-a": Some(forgedomain.Proposal{
@@ -105,6 +104,7 @@ func TestNewTree(t *testing.T) {
 				Proposal: None[forgedomain.Proposal](),
 			},
 		}
+		must.NoError(t, err)
 		must.Eq(t, want, have)
 	})
 
