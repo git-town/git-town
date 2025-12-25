@@ -108,6 +108,77 @@ func TestNewTree(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
+	t.Run("leaf branch", func(t *testing.T) {
+		t.Parallel()
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			"feature-a": "main",
+			"feature-b": "feature-a",
+			"feature-c": "feature-a",
+		})
+		var connector forgedomain.ProposalFinder = &testConnector{}
+		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
+			Connector:                Some(connector),
+			CurrentBranch:            "feature-c",
+			Lineage:                  lineage,
+			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
+		})
+		want := &proposallineage.Tree{
+			BranchToProposal: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{
+				"feature-a": Some(forgedomain.Proposal{
+					Data: forgedomain.ProposalData{
+						Title: "proposal from feature-a to main",
+					},
+				}),
+				"feature-b": Some(forgedomain.Proposal{
+					Data: forgedomain.ProposalData{
+						Title: "proposal from feature-b to feature-a",
+					},
+				}),
+				"feature-c": Some(forgedomain.Proposal{
+					Data: forgedomain.ProposalData{
+						Title: "proposal from feature-c to feature-a",
+					},
+				}),
+			},
+			Node: &proposallineage.TreeNode{
+				Branch: "main",
+				ChildNodes: []*proposallineage.TreeNode{
+					{
+						Branch: "feature-a",
+						ChildNodes: []*proposallineage.TreeNode{
+							{
+								Branch:     "feature-c",
+								ChildNodes: []*proposallineage.TreeNode{},
+								Proposal: Some(forgedomain.Proposal{
+									Data: forgedomain.ProposalData{
+										Title: "proposal from feature-c to feature-a",
+									},
+								}),
+							},
+							{
+								Branch:     "feature-b",
+								ChildNodes: []*proposallineage.TreeNode{},
+								Proposal: Some(forgedomain.Proposal{
+									Data: forgedomain.ProposalData{
+										Title: "proposal from feature-b to feature-a",
+									},
+								}),
+							},
+						},
+						Proposal: Some(forgedomain.Proposal{
+							Data: forgedomain.ProposalData{
+								Title: "proposal from feature-a to main",
+							},
+						}),
+					},
+				},
+				Proposal: None[forgedomain.Proposal](),
+			},
+		}
+		must.NoError(t, err)
+		must.Eq(t, want, have)
+	})
+
 	t.Run("creates tree with empty child nodes when current branch has no children", func(t *testing.T) {
 		t.Parallel()
 		mainBranch := gitdomain.NewLocalBranchName("main")
