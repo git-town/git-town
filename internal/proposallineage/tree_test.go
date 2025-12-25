@@ -108,7 +108,7 @@ func TestNewTree(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("leaf branch", func(t *testing.T) {
+	t.Run("when on a leaf branch, it prints the leaf branch first and then the other siblings", func(t *testing.T) {
 		t.Parallel()
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 			"feature-a": "main",
@@ -177,29 +177,6 @@ func TestNewTree(t *testing.T) {
 		}
 		must.NoError(t, err)
 		must.Eq(t, want, have)
-	})
-
-	t.Run("creates tree with empty child nodes when current branch has no children", func(t *testing.T) {
-		t.Parallel()
-		mainBranch := gitdomain.NewLocalBranchName("main")
-		featureA := gitdomain.NewLocalBranchName("feature-a")
-		featureB := gitdomain.NewLocalBranchName("feature-b")
-		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-			featureA: mainBranch,
-			featureB: featureA,
-		})
-		var connector forgedomain.ProposalFinder = &testConnector{}
-		args := proposallineage.ProposalStackLineageArgs{
-			Connector:                Some(connector),
-			CurrentBranch:            featureB, // Leaf node
-			Lineage:                  lineage,
-			MainAndPerennialBranches: gitdomain.LocalBranchNames{mainBranch},
-		}
-
-		tree, err := proposallineage.NewTree(args)
-
-		must.NoError(t, err)
-		must.NotNil(t, tree)
 	})
 
 	t.Run("creates tree with multi-level lineage", func(t *testing.T) {
