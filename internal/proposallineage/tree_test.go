@@ -56,46 +56,7 @@ func TestNewTree(t *testing.T) {
 		must.Error(t, err)
 	})
 
-	t.Run("no connector", func(t *testing.T) {
-		t.Parallel()
-		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-			"feature-a": "main",
-			"feature-b": "feature-a",
-		})
-		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
-			Connector:                None[forgedomain.ProposalFinder](),
-			CurrentBranch:            "feature-a",
-			Lineage:                  lineage,
-			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
-		})
-		want := &proposallineage.Tree{
-			BranchToProposal: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{
-				"feature-a": None[forgedomain.Proposal](),
-				"feature-b": None[forgedomain.Proposal](),
-			},
-			Node: &proposallineage.TreeNode{
-				Branch: "main",
-				ChildNodes: []*proposallineage.TreeNode{
-					{
-						Branch: "feature-a",
-						ChildNodes: []*proposallineage.TreeNode{
-							{
-								Branch:     "feature-b",
-								ChildNodes: []*proposallineage.TreeNode{},
-								Proposal:   None[forgedomain.Proposal](),
-							},
-						},
-						Proposal: None[forgedomain.Proposal](),
-					},
-				},
-				Proposal: None[forgedomain.Proposal](),
-			},
-		}
-		must.NoError(t, err)
-		must.Eq(t, want, have)
-	})
-
-	t.Run("on a feature branch", func(t *testing.T) {
+	t.Run("feature branch", func(t *testing.T) {
 		t.Parallel()
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 			"feature-a": "main",
@@ -135,7 +96,7 @@ func TestNewTree(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("on a feature branch in the middle of a long lineage", func(t *testing.T) {
+	t.Run("feature branch in the middle of a long lineage", func(t *testing.T) {
 		t.Parallel()
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 			"feature-a": "main",
@@ -223,7 +184,7 @@ func TestNewTree(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("on a feature branch with multiple children", func(t *testing.T) {
+	t.Run("feature branch with multiple children", func(t *testing.T) {
 		t.Parallel()
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 			"feature-a": "main",
@@ -301,7 +262,7 @@ func TestNewTree(t *testing.T) {
 		must.Eq(t, wantRequests, connector.requests)
 	})
 
-	t.Run("on a leaf branch with siblings", func(t *testing.T) {
+	t.Run("leaf branch with siblings", func(t *testing.T) {
 		t.Parallel()
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 			"feature-a": "main",
@@ -372,7 +333,46 @@ func TestNewTree(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("on the perennial branch at the root", func(t *testing.T) {
+	t.Run("no connector", func(t *testing.T) {
+		t.Parallel()
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			"feature-a": "main",
+			"feature-b": "feature-a",
+		})
+		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
+			Connector:                None[forgedomain.ProposalFinder](),
+			CurrentBranch:            "feature-a",
+			Lineage:                  lineage,
+			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
+		})
+		want := &proposallineage.Tree{
+			BranchToProposal: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{
+				"feature-a": None[forgedomain.Proposal](),
+				"feature-b": None[forgedomain.Proposal](),
+			},
+			Node: &proposallineage.TreeNode{
+				Branch: "main",
+				ChildNodes: []*proposallineage.TreeNode{
+					{
+						Branch: "feature-a",
+						ChildNodes: []*proposallineage.TreeNode{
+							{
+								Branch:     "feature-b",
+								ChildNodes: []*proposallineage.TreeNode{},
+								Proposal:   None[forgedomain.Proposal](),
+							},
+						},
+						Proposal: None[forgedomain.Proposal](),
+					},
+				},
+				Proposal: None[forgedomain.Proposal](),
+			},
+		}
+		must.NoError(t, err)
+		must.Eq(t, want, have)
+	})
+
+	t.Run("perennial branch at the root", func(t *testing.T) {
 		t.Parallel()
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 			"feature-a": "main",
