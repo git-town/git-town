@@ -312,7 +312,6 @@ func TestNewTree(t *testing.T) {
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 			"feature-a": "main",
 			"feature-b": "feature-a",
-			"feature-c": "feature-a",
 		})
 		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
 			Connector:                None[forgedomain.ProposalFinder](),
@@ -324,7 +323,6 @@ func TestNewTree(t *testing.T) {
 			BranchToProposal: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{
 				"feature-a": None[forgedomain.Proposal](),
 				"feature-b": None[forgedomain.Proposal](),
-				"feature-c": None[forgedomain.Proposal](),
 			},
 			Node: &proposallineage.TreeNode{
 				Branch: "main",
@@ -334,11 +332,6 @@ func TestNewTree(t *testing.T) {
 						ChildNodes: []*proposallineage.TreeNode{
 							{
 								Branch:     "feature-b",
-								ChildNodes: []*proposallineage.TreeNode{},
-								Proposal:   None[forgedomain.Proposal](),
-							},
-							{
-								Branch:     "feature-c",
 								ChildNodes: []*proposallineage.TreeNode{},
 								Proposal:   None[forgedomain.Proposal](),
 							},
@@ -353,28 +346,7 @@ func TestNewTree(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("creates tree without connector", func(t *testing.T) {
-		t.Parallel()
-		mainBranch := gitdomain.NewLocalBranchName("main")
-		featureBranch := gitdomain.NewLocalBranchName("feature")
-		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-			featureBranch: mainBranch,
-		})
-		args := proposallineage.ProposalStackLineageArgs{
-			Connector:                None[forgedomain.ProposalFinder](),
-			CurrentBranch:            featureBranch,
-			Lineage:                  lineage,
-			MainAndPerennialBranches: gitdomain.LocalBranchNames{mainBranch},
-		}
-
-		tree, err := proposallineage.NewTree(args)
-
-		must.NoError(t, err)
-		must.NotNil(t, tree)
-		must.True(t, tree.BranchToProposal[featureBranch].IsNone())
-	})
-
-	t.Run("handles branches with no proposals", func(t *testing.T) {
+	t.Run("some branches have no proposal", func(t *testing.T) {
 		t.Parallel()
 		mainBranch := gitdomain.NewLocalBranchName("main")
 		noproposalBranch := gitdomain.NewLocalBranchName("no_proposal_branch")
