@@ -307,45 +307,6 @@ func TestNewTree(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("no connector", func(t *testing.T) {
-		t.Parallel()
-		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-			"feature-a": "main",
-			"feature-b": "feature-a",
-		})
-		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
-			Connector:                None[forgedomain.ProposalFinder](),
-			CurrentBranch:            "feature-a",
-			Lineage:                  lineage,
-			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
-		})
-		want := &proposallineage.Tree{
-			BranchToProposal: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{
-				"feature-a": None[forgedomain.Proposal](),
-				"feature-b": None[forgedomain.Proposal](),
-			},
-			Node: &proposallineage.TreeNode{
-				Branch: "main",
-				ChildNodes: []*proposallineage.TreeNode{
-					{
-						Branch: "feature-a",
-						ChildNodes: []*proposallineage.TreeNode{
-							{
-								Branch:     "feature-b",
-								ChildNodes: []*proposallineage.TreeNode{},
-								Proposal:   None[forgedomain.Proposal](),
-							},
-						},
-						Proposal: None[forgedomain.Proposal](),
-					},
-				},
-				Proposal: None[forgedomain.Proposal](),
-			},
-		}
-		must.NoError(t, err)
-		must.Eq(t, want, have)
-	})
-
 	t.Run("some branches have no proposal", func(t *testing.T) {
 		t.Parallel()
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
@@ -394,47 +355,80 @@ func TestNewTree(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("some branches have no proposal", func(t *testing.T) {
+	t.Run("no connector", func(t *testing.T) {
 		t.Parallel()
-		mainBranch := gitdomain.NewLocalBranchName("main")
-		noproposalBranch := gitdomain.NewLocalBranchName("no-proposal_branch")
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-			noproposalBranch: mainBranch,
+			"feature-a": "main",
+			"feature-b": "feature-a",
 		})
-		var connector forgedomain.ProposalFinder = &testConnector{}
-		args := proposallineage.ProposalStackLineageArgs{
-			Connector:                Some(connector),
-			CurrentBranch:            noproposalBranch,
+		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
+			Connector:                None[forgedomain.ProposalFinder](),
+			CurrentBranch:            "feature-a",
 			Lineage:                  lineage,
-			MainAndPerennialBranches: gitdomain.LocalBranchNames{mainBranch},
+			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
+		})
+		want := &proposallineage.Tree{
+			BranchToProposal: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{
+				"feature-a": None[forgedomain.Proposal](),
+				"feature-b": None[forgedomain.Proposal](),
+			},
+			Node: &proposallineage.TreeNode{
+				Branch: "main",
+				ChildNodes: []*proposallineage.TreeNode{
+					{
+						Branch: "feature-a",
+						ChildNodes: []*proposallineage.TreeNode{
+							{
+								Branch:     "feature-b",
+								ChildNodes: []*proposallineage.TreeNode{},
+								Proposal:   None[forgedomain.Proposal](),
+							},
+						},
+						Proposal: None[forgedomain.Proposal](),
+					},
+				},
+				Proposal: None[forgedomain.Proposal](),
+			},
 		}
-
-		tree, err := proposallineage.NewTree(args)
-
 		must.NoError(t, err)
-		must.NotNil(t, tree)
-		must.True(t, tree.BranchToProposal[noproposalBranch].IsNone())
+		must.Eq(t, want, have)
 	})
 
-	t.Run("handles error from proposal finder", func(t *testing.T) {
+	t.Run("errors from connector", func(t *testing.T) {
 		t.Parallel()
-		mainBranch := gitdomain.NewLocalBranchName("main")
-		featureBranch := gitdomain.NewLocalBranchName("feature")
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-			featureBranch: mainBranch,
+			"feature-a": "main",
+			"feature-b": "feature-a",
 		})
 		var connector forgedomain.ProposalFinder = &failingConnector{}
-		args := proposallineage.ProposalStackLineageArgs{
+		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
-			CurrentBranch:            featureBranch,
+			CurrentBranch:            "feature-a",
 			Lineage:                  lineage,
-			MainAndPerennialBranches: gitdomain.LocalBranchNames{mainBranch},
+			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
+		})
+		want := &proposallineage.Tree{
+			BranchToProposal: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{},
+			Node: &proposallineage.TreeNode{
+				Branch: "",
+				ChildNodes: []*proposallineage.TreeNode{
+					{
+						Branch: "main",
+						ChildNodes: []*proposallineage.TreeNode{
+							{
+								Branch:     "feature-a",
+								ChildNodes: []*proposallineage.TreeNode{},
+								Proposal:   None[forgedomain.Proposal](),
+							},
+						},
+						Proposal: None[forgedomain.Proposal](),
+					},
+				},
+				Proposal: None[forgedomain.Proposal](),
+			},
 		}
-
-		tree, err := proposallineage.NewTree(args)
-
-		must.Error(t, err)
-		must.NotNil(t, tree)
+		must.Error(t, err) // TODO: should it ignore errors and create the lineage without proposals?
+		must.Eq(t, want, have)
 	})
 }
 
