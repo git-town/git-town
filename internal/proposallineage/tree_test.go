@@ -179,6 +179,94 @@ func TestNewTree(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
+	t.Run("branch in the middle of a long lineage", func(t *testing.T) {
+		t.Parallel()
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			"feature-a": "main",
+			"feature-b": "feature-a",
+			"feature-c": "feature-b",
+			"feature-d": "feature-c",
+		})
+		var connector forgedomain.ProposalFinder = &testConnector{}
+		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
+			Connector:                Some(connector),
+			CurrentBranch:            "feature-a",
+			Lineage:                  lineage,
+			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
+		})
+		want := &proposallineage.Tree{
+			BranchToProposal: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{
+				"feature-a": Some(forgedomain.Proposal{
+					Data: forgedomain.ProposalData{
+						Title: "proposal from feature-a to main",
+					},
+				}),
+				"feature-b": Some(forgedomain.Proposal{
+					Data: forgedomain.ProposalData{
+						Title: "proposal from feature-b to feature-a",
+					},
+				}),
+				"feature-c": Some(forgedomain.Proposal{
+					Data: forgedomain.ProposalData{
+						Title: "proposal from feature-c to feature-b",
+					},
+				}),
+				"feature-d": Some(forgedomain.Proposal{
+					Data: forgedomain.ProposalData{
+						Title: "proposal from feature-d to feature-c",
+					},
+				}),
+			},
+			Node: &proposallineage.TreeNode{
+				Branch: "main",
+				ChildNodes: []*proposallineage.TreeNode{
+					{
+						Branch: "feature-a",
+						ChildNodes: []*proposallineage.TreeNode{
+							{
+								Branch: "feature-b",
+								ChildNodes: []*proposallineage.TreeNode{
+									{
+										Branch: "feature-c",
+										ChildNodes: []*proposallineage.TreeNode{
+											{
+												Branch:     "feature-d",
+												ChildNodes: []*proposallineage.TreeNode{},
+												Proposal: Some(forgedomain.Proposal{
+													Data: forgedomain.ProposalData{
+														Title: "proposal from feature-d to feature-c",
+													},
+												}),
+											},
+										},
+										Proposal: Some(forgedomain.Proposal{
+											Data: forgedomain.ProposalData{
+												Title: "proposal from feature-c to feature-b",
+											},
+										}),
+									},
+								},
+								Proposal: Some(forgedomain.Proposal{
+									Data: forgedomain.ProposalData{
+										Title: "proposal from feature-b to feature-a",
+									},
+								}),
+							},
+						},
+						Proposal: Some(forgedomain.Proposal{
+							Data: forgedomain.ProposalData{
+								Title: "proposal from feature-a to main",
+							},
+						}),
+					},
+				},
+				Proposal: None[forgedomain.Proposal](),
+			},
+		}
+		must.NoError(t, err)
+		must.Eq(t, want, have)
+	})
+
 	t.Run("creates tree with multi-level lineage", func(t *testing.T) {
 		t.Parallel()
 		mainBranch := gitdomain.NewLocalBranchName("main")
