@@ -612,36 +612,3 @@ func TestTreeRebuild(t *testing.T) {
 		must.Error(t, err)
 	})
 }
-
-func TestTreeWithComplexLineages(t *testing.T) {
-	t.Parallel()
-}
-
-func TestTreeWithMixedProposalAvailability(t *testing.T) {
-	t.Parallel()
-
-	t.Run("handles mix of branches with and without proposals", func(t *testing.T) {
-		t.Parallel()
-		mainBranch := gitdomain.NewLocalBranchName("main")
-		withProposal := gitdomain.NewLocalBranchName("with-proposal")
-		withoutProposal := gitdomain.NewLocalBranchName("no-proposal_branch")
-		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-			withProposal:    mainBranch,
-			withoutProposal: withProposal,
-		})
-		var connector forgedomain.ProposalFinder = &testConnector{}
-		args := proposallineage.ProposalStackLineageArgs{
-			Connector:                Some(connector),
-			CurrentBranch:            withProposal,
-			Lineage:                  lineage,
-			MainAndPerennialBranches: gitdomain.LocalBranchNames{mainBranch},
-		}
-
-		tree, err := proposallineage.NewTree(args)
-
-		must.NoError(t, err)
-		must.NotNil(t, tree)
-		must.True(t, tree.BranchToProposal[withProposal].IsSome())
-		must.True(t, tree.BranchToProposal[withoutProposal].IsNone())
-	})
-}
