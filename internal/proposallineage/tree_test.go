@@ -45,13 +45,12 @@ func TestNewTree(t *testing.T) {
 			"feature-c": "feature-a",
 		})
 		var connector forgedomain.ProposalFinder = &testProposalFinder{}
-		args := proposallineage.ProposalStackLineageArgs{
+		tree, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            "feature-a",
 			Lineage:                  lineage,
 			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
-		}
-		tree, err := proposallineage.NewTree(args)
+		})
 		must.NoError(t, err)
 		must.NotNil(t, tree)
 		wantTree := &proposallineage.Tree{
