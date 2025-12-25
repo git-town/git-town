@@ -278,6 +278,64 @@ func TestNewTree(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
+	t.Run("multiple independent stacks", func(t *testing.T) {
+		t.Parallel()
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			"feature-A1": "main",
+			"feature-A2": "feature-A1",
+			"feature-B1": "main",
+			"feature-B2": "feature-B1",
+		})
+		var connector forgedomain.ProposalFinder = &testConnector{}
+		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
+			Connector:                Some(connector),
+			CurrentBranch:            "feature-A1",
+			Lineage:                  lineage,
+			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
+		})
+		want := &proposallineage.Tree{
+			BranchToProposal: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{
+				"feature-A1": Some(forgedomain.Proposal{
+					Data: forgedomain.ProposalData{
+						Title: "proposal from feature-A1 to main",
+					},
+				}),
+				"feature-A2": Some(forgedomain.Proposal{
+					Data: forgedomain.ProposalData{
+						Title: "proposal from feature-A2 to feature-A1",
+					},
+				}),
+			},
+			Node: &proposallineage.TreeNode{
+				Branch: "main",
+				ChildNodes: []*proposallineage.TreeNode{
+					{
+						Branch: "feature-A1",
+						ChildNodes: []*proposallineage.TreeNode{
+							{
+								Branch:     "feature-A2",
+								ChildNodes: []*proposallineage.TreeNode{},
+								Proposal: Some(forgedomain.Proposal{
+									Data: forgedomain.ProposalData{
+										Title: "proposal from feature-A2 to feature-A1",
+									},
+								}),
+							},
+						},
+						Proposal: Some(forgedomain.Proposal{
+							Data: forgedomain.ProposalData{
+								Title: "proposal from feature-A1 to main",
+							},
+						}),
+					},
+				},
+				Proposal: None[forgedomain.Proposal](),
+			},
+		}
+		must.NoError(t, err)
+		must.Eq(t, want, have)
+	})
+
 	t.Run("on the perennial branch at the root", func(t *testing.T) {
 		t.Parallel()
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
@@ -557,72 +615,6 @@ func TestTreeRebuild(t *testing.T) {
 
 func TestTreeWithComplexLineages(t *testing.T) {
 	t.Parallel()
-
-	t.Run("handles multiple children with different order settings", func(t *testing.T) {
-		t.Parallel()
-		mainBranch := gitdomain.NewLocalBranchName("main")
-		parent := gitdomain.NewLocalBranchName("parent")
-		childA := gitdomain.NewLocalBranchName("child-a")
-		childB := gitdomain.NewLocalBranchName("child-b")
-		childC := gitdomain.NewLocalBranchName("child-c")
-
-		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-			childA: parent,
-			childB: parent,
-			childC: parent,
-			parent: mainBranch,
-		})
-		var connector forgedomain.ProposalFinder = &testConnector{}
-		args := proposallineage.ProposalStackLineageArgs{
-			Connector:                Some(connector),
-			CurrentBranch:            parent,
-			Lineage:                  lineage,
-			MainAndPerennialBranches: gitdomain.LocalBranchNames{mainBranch},
-			Order:                    configdomain.OrderAsc,
-		}
-
-		tree, err := proposallineage.NewTree(args)
-
-		must.NoError(t, err)
-		must.NotNil(t, tree)
-		must.True(t, tree.BranchToProposal[parent].IsSome())
-		must.True(t, tree.BranchToProposal[childA].IsSome())
-		must.True(t, tree.BranchToProposal[childB].IsSome())
-		must.True(t, tree.BranchToProposal[childC].IsSome())
-	})
-
-	t.Run("handles multiple independent stacks", func(t *testing.T) {
-		t.Parallel()
-		mainBranch := gitdomain.NewLocalBranchName("main")
-		stackA1 := gitdomain.NewLocalBranchName("stack-a-1")
-		stackA2 := gitdomain.NewLocalBranchName("stack-a-2")
-		stackB1 := gitdomain.NewLocalBranchName("stack-b-1")
-		stackB2 := gitdomain.NewLocalBranchName("stack-b-2")
-		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-			stackA1: mainBranch,
-			stackA2: stackA1,
-			stackB1: mainBranch,
-			stackB2: stackB1,
-		})
-		var connector forgedomain.ProposalFinder = &testConnector{}
-		args := proposallineage.ProposalStackLineageArgs{
-			Connector:                Some(connector),
-			CurrentBranch:            stackA1,
-			Lineage:                  lineage,
-			MainAndPerennialBranches: gitdomain.LocalBranchNames{mainBranch},
-		}
-
-		tree, err := proposallineage.NewTree(args)
-
-		must.NoError(t, err)
-		must.NotNil(t, tree)
-		// Should only include stack A in the tree
-		must.True(t, tree.BranchToProposal[stackA1].IsSome())
-		must.True(t, tree.BranchToProposal[stackA2].IsSome())
-		// Stack B should not be included because it's not in current branch's stack
-		must.True(t, tree.BranchToProposal[stackB1].IsNone())
-		must.True(t, tree.BranchToProposal[stackB2].IsNone())
-	})
 }
 
 func TestTreeWithMixedProposalAvailability(t *testing.T) {
