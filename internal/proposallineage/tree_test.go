@@ -22,9 +22,7 @@ func (self *testProposalFinder) FindProposal(source, target gitdomain.LocalBranc
 	}
 	return Some(forgedomain.Proposal{
 		Data: forgedomain.ProposalData{
-			Source: source,
-			Target: target,
-			Title:  gitdomain.ProposalTitle(fmt.Sprintf("proposal from %s to %s", source, target)),
+			Title: gitdomain.ProposalTitle(fmt.Sprintf("proposal from %s to %s", source, target)),
 		},
 	}), nil
 }
@@ -64,23 +62,17 @@ func TestNewTree(t *testing.T) {
 			BranchToProposal: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{
 				"feature-a": Some(forgedomain.Proposal{
 					Data: forgedomain.ProposalData{
-						Source: featureA,
-						Target: mainBranch,
-						Title:  "proposal from feature-a to main",
+						Title: "proposal from feature-a to main",
 					},
 				}),
 				"feature-b": Some(forgedomain.Proposal{
 					Data: forgedomain.ProposalData{
-						Source: featureB,
-						Target: featureA,
-						Title:  "proposal from feature-b to feature-a",
+						Title: "proposal from feature-b to feature-a",
 					},
 				}),
 				"feature-c": Some(forgedomain.Proposal{
 					Data: forgedomain.ProposalData{
-						Source: featureC,
-						Target: featureA,
-						Title:  "proposal from feature-c to feature-a",
+						Title: "proposal from feature-c to feature-a",
 					},
 				}),
 			},
@@ -95,9 +87,7 @@ func TestNewTree(t *testing.T) {
 								ChildNodes: []*proposallineage.TreeNode{},
 								Proposal: Some(forgedomain.Proposal{
 									Data: forgedomain.ProposalData{
-										Source: featureB,
-										Target: featureA,
-										Title:  "proposal from feature-b to feature-a",
+										Title: "proposal from feature-b to feature-a",
 									},
 								}),
 							},
@@ -106,18 +96,14 @@ func TestNewTree(t *testing.T) {
 								ChildNodes: []*proposallineage.TreeNode{},
 								Proposal: Some(forgedomain.Proposal{
 									Data: forgedomain.ProposalData{
-										Source: featureC,
-										Target: featureA,
-										Title:  "proposal from feature-c to feature-a",
+										Title: "proposal from feature-c to feature-a",
 									},
 								}),
 							},
 						},
 						Proposal: Some(forgedomain.Proposal{
 							Data: forgedomain.ProposalData{
-								Source: featureA,
-								Target: mainBranch,
-								Title:  "proposal from feature-a to main",
+								Title: "proposal from feature-a to main",
 							},
 						}),
 					},
