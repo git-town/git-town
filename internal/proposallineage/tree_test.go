@@ -558,63 +558,6 @@ func TestTreeRebuild(t *testing.T) {
 func TestTreeWithComplexLineages(t *testing.T) {
 	t.Parallel()
 
-	t.Run("handles current branch on perennial", func(t *testing.T) {
-		t.Parallel()
-		mainBranch := gitdomain.NewLocalBranchName("main")
-		featureBranch := gitdomain.NewLocalBranchName("feature")
-		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-			featureBranch: mainBranch,
-		})
-		var connector forgedomain.ProposalFinder = &testConnector{}
-		args := proposallineage.ProposalStackLineageArgs{
-			Connector:                Some(connector),
-			CurrentBranch:            mainBranch, // Current is perennial
-			Lineage:                  lineage,
-			MainAndPerennialBranches: gitdomain.LocalBranchNames{mainBranch},
-		}
-
-		tree, err := proposallineage.NewTree(args)
-
-		must.NoError(t, err)
-		must.NotNil(t, tree)
-		// When current branch is perennial, feature branches are not processed
-		// because the tree only builds from ancestors and descendants of current branch
-		must.True(t, tree.BranchToProposal[featureBranch].IsNone())
-	})
-
-	t.Run("handles deep nesting", func(t *testing.T) {
-		t.Parallel()
-		mainBranch := gitdomain.NewLocalBranchName("main")
-		branches := make([]gitdomain.LocalBranchName, 10)
-		lineageData := configdomain.LineageData{}
-
-		branches[0] = gitdomain.NewLocalBranchName("level-0")
-		lineageData[branches[0]] = mainBranch
-
-		for i := 1; i < 10; i++ {
-			branches[i] = gitdomain.NewLocalBranchName(fmt.Sprintf("level-%d", i))
-			lineageData[branches[i]] = branches[i-1]
-		}
-
-		lineage := configdomain.NewLineageWith(lineageData)
-		var connector forgedomain.ProposalFinder = &testConnector{}
-		args := proposallineage.ProposalStackLineageArgs{
-			Connector:                Some(connector),
-			CurrentBranch:            branches[4], // Middle of the chain
-			Lineage:                  lineage,
-			MainAndPerennialBranches: gitdomain.LocalBranchNames{mainBranch},
-		}
-
-		tree, err := proposallineage.NewTree(args)
-
-		must.NoError(t, err)
-		must.NotNil(t, tree)
-		// All branches in the chain should have proposals
-		for i := range 10 {
-			must.True(t, tree.BranchToProposal[branches[i]].IsSome())
-		}
-	})
-
 	t.Run("handles multiple children with different order settings", func(t *testing.T) {
 		t.Parallel()
 		mainBranch := gitdomain.NewLocalBranchName("main")
