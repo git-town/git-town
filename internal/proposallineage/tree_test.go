@@ -2,6 +2,8 @@ package proposallineage_test
 
 import (
 	"fmt"
+	"maps"
+	"slices"
 	"strings"
 	"testing"
 
@@ -16,23 +18,19 @@ import (
 // mockProposalFinder is a test implementation of forgedomain.ProposalFinder
 type testProposalFinder struct{}
 
-func (self *testProposalFinder) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
-	if strings.Contains(branch.String(), "no_proposal") {
+func (self *testProposalFinder) FindProposal(source, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+	if strings.Contains(source.String(), "no_proposal") {
 		return None[forgedomain.Proposal](), nil
-	}
-	var prNumber int
-	for _, char := range branch {
-		prNumber += int(char)
 	}
 	return Some(forgedomain.Proposal{
 		Data: forgedomain.ProposalData{
 			Body:         None[gitdomain.ProposalBody](),
 			MergeWithAPI: false,
-			Number:       prNumber,
-			Source:       branch,
+			Number:       1,
+			Source:       source,
 			Target:       target,
-			Title:        "Test Proposal",
-			URL:          fmt.Sprintf("https://github.com/test/pull/%d", prNumber),
+			Title:        gitdomain.ProposalTitle(fmt.Sprintf("proposal from %s to %s", source, target)),
+			URL:          "https://github.com/test/pull/1",
 		},
 		ForgeType: forgedomain.ForgeTypeGitHub,
 	}), nil
@@ -66,12 +64,71 @@ func TestNewTree(t *testing.T) {
 			Lineage:                  lineage,
 			MainAndPerennialBranches: gitdomain.LocalBranchNames{mainBranch},
 		}
-		have, err := proposallineage.NewTree(args)
+		tree, err := proposallineage.NewTree(args)
 		must.NoError(t, err)
-		must.NotNil(t, have)
-		must.True(t, have.BranchToProposal[featureA].IsSome())
-		must.True(t, have.BranchToProposal[featureB].IsSome())
-		must.True(t, have.BranchToProposal[featureC].IsSome())
+		must.NotNil(t, tree)
+		// tree.BranchToProposal stores the proposals for each branch
+		have_keys := slices.Collect(maps.Keys(tree.BranchToProposal))
+		slices.Sort(have_keys)
+		want_keys := gitdomain.LocalBranchNames{featureA, featureB, featureC}
+		must.Eq(t, want_keys, have_keys)
+		must.True(t, tree.BranchToProposal[featureA].IsSome())
+		must.True(t, tree.BranchToProposal[featureB].IsSome())
+		must.True(t, tree.BranchToProposal[featureC].IsSome())
+		// tree.Node stores the lineage
+		must.NotNil(t, tree.Node)
+		must.Eq(t, 1, len(tree.Node.ChildNodes))
+		haveChildNode := tree.Node.ChildNodes[0]
+		wantChildNode := &proposallineage.TreeNode{
+			Branch: featureA,
+			ChildNodes: []*proposallineage.TreeNode{
+				{
+					Branch:     featureB,
+					ChildNodes: []*proposallineage.TreeNode{},
+					Proposal: Some(forgedomain.Proposal{
+						Data: forgedomain.ProposalData{
+							Body:         None[gitdomain.ProposalBody](),
+							MergeWithAPI: false,
+							Number:       1,
+							Source:       featureB,
+							Target:       featureA,
+							Title:        "proposal from feature-b to feature-a",
+							URL:          "https://github.com/test/pull/1",
+						},
+						ForgeType: forgedomain.ForgeTypeGitHub,
+					}),
+				},
+				{
+					Branch:     featureC,
+					ChildNodes: []*proposallineage.TreeNode{},
+					Proposal: Some(forgedomain.Proposal{
+						Data: forgedomain.ProposalData{
+							Body:         None[gitdomain.ProposalBody](),
+							MergeWithAPI: false,
+							Number:       1,
+							Source:       featureC,
+							Target:       featureA,
+							Title:        "proposal from feature-c to feature-a",
+							URL:          "https://github.com/test/pull/1",
+						},
+						ForgeType: forgedomain.ForgeTypeGitHub,
+					}),
+				},
+			},
+			Proposal: Some(forgedomain.Proposal{
+				Data: forgedomain.ProposalData{
+					Body:         None[gitdomain.ProposalBody](),
+					MergeWithAPI: false,
+					Number:       1,
+					Source:       featureA,
+					Target:       mainBranch,
+					Title:        "proposal from feature-a to main",
+					URL:          "https://github.com/test/pull/1",
+				},
+				ForgeType: forgedomain.ForgeTypeGitHub,
+			}),
+		}
+		must.Eq(t, wantChildNode, haveChildNode)
 	})
 
 	t.Run("creates tree with empty child nodes when current branch has no children", func(t *testing.T) {

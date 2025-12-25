@@ -74,22 +74,22 @@ func (self *Builder) build(node *TreeNode, args ProposalStackLineageArgs, indent
 	var builder strings.Builder
 	indent := strings.Repeat(" ", indentLevel*2)
 	nextIndentLevel := indentLevel + 1
-	if args.MainAndPerennialBranches.Contains(node.branch) {
-		builder.WriteString(fmt.Sprintf("%s %s %s\n", indent, indentMarker, node.branch.BranchName()))
-		for _, child := range node.childNodes {
+	if args.MainAndPerennialBranches.Contains(node.Branch) {
+		builder.WriteString(fmt.Sprintf("%s %s %s\n", indent, indentMarker, node.Branch.BranchName()))
+		for _, child := range node.ChildNodes {
 			builder.WriteString(self.build(child, args, nextIndentLevel))
 		}
 		return builder.String()
 	}
 
-	proposal, hasProposal := node.proposal.Get()
+	proposal, hasProposal := node.Proposal.Get()
 	if hasProposal {
 		builder.WriteString(formattedDisplay(args, indent, proposal))
 	} else {
 		nextIndentLevel--
 	}
 
-	for _, child := range node.childNodes {
+	for _, child := range node.ChildNodes {
 		builder.WriteString(self.build(child, args, nextIndentLevel))
 	}
 
