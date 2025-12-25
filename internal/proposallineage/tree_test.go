@@ -56,64 +56,6 @@ func TestNewTree(t *testing.T) {
 		must.Error(t, err)
 	})
 
-	t.Run("multiple independent stacks", func(t *testing.T) {
-		t.Parallel()
-		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-			"feature-A1": "main",
-			"feature-A2": "feature-A1",
-			"feature-B1": "main",
-			"feature-B2": "feature-B1",
-		})
-		var connector forgedomain.ProposalFinder = &testFinder{}
-		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
-			Connector:                Some(connector),
-			CurrentBranch:            "feature-A1",
-			Lineage:                  lineage,
-			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
-		})
-		want := &proposallineage.Tree{
-			BranchToProposal: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{
-				"feature-A1": Some(forgedomain.Proposal{
-					Data: forgedomain.ProposalData{
-						Title: "proposal from feature-A1 to main",
-					},
-				}),
-				"feature-A2": Some(forgedomain.Proposal{
-					Data: forgedomain.ProposalData{
-						Title: "proposal from feature-A2 to feature-A1",
-					},
-				}),
-			},
-			Node: &proposallineage.TreeNode{
-				Branch: "main",
-				ChildNodes: []*proposallineage.TreeNode{
-					{
-						Branch: "feature-A1",
-						ChildNodes: []*proposallineage.TreeNode{
-							{
-								Branch:     "feature-A2",
-								ChildNodes: []*proposallineage.TreeNode{},
-								Proposal: Some(forgedomain.Proposal{
-									Data: forgedomain.ProposalData{
-										Title: "proposal from feature-A2 to feature-A1",
-									},
-								}),
-							},
-						},
-						Proposal: Some(forgedomain.Proposal{
-							Data: forgedomain.ProposalData{
-								Title: "proposal from feature-A1 to main",
-							},
-						}),
-					},
-				},
-				Proposal: None[forgedomain.Proposal](),
-			},
-		}
-		must.NoError(t, err)
-		must.Eq(t, want, have)
-	})
-
 	t.Run("no connector", func(t *testing.T) {
 		t.Parallel()
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
@@ -144,6 +86,46 @@ func TestNewTree(t *testing.T) {
 							},
 						},
 						Proposal: None[forgedomain.Proposal](),
+					},
+				},
+				Proposal: None[forgedomain.Proposal](),
+			},
+		}
+		must.NoError(t, err)
+		must.Eq(t, want, have)
+	})
+
+	t.Run("on a feature branch", func(t *testing.T) {
+		t.Parallel()
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			"feature-a": "main",
+		})
+		var connector forgedomain.ProposalFinder = &testFinder{}
+		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
+			Connector:                Some(connector),
+			CurrentBranch:            "feature-a",
+			Lineage:                  lineage,
+			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
+		})
+		want := &proposallineage.Tree{
+			BranchToProposal: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{
+				"feature-a": Some(forgedomain.Proposal{
+					Data: forgedomain.ProposalData{
+						Title: "proposal from feature-a to main",
+					},
+				}),
+			},
+			Node: &proposallineage.TreeNode{
+				Branch: "main",
+				ChildNodes: []*proposallineage.TreeNode{
+					{
+						Branch:     "feature-a",
+						ChildNodes: []*proposallineage.TreeNode{},
+						Proposal: Some(forgedomain.Proposal{
+							Data: forgedomain.ProposalData{
+								Title: "proposal from feature-a to main",
+							},
+						}),
 					},
 				},
 				Proposal: None[forgedomain.Proposal](),
@@ -415,23 +397,31 @@ func TestNewTree(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("simple feature branch", func(t *testing.T) {
+	t.Run("several independent stacks", func(t *testing.T) {
 		t.Parallel()
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-			"feature-a": "main",
+			"feature-A1": "main",
+			"feature-A2": "feature-A1",
+			"feature-B1": "main",
+			"feature-B2": "feature-B1",
 		})
 		var connector forgedomain.ProposalFinder = &testFinder{}
 		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
-			CurrentBranch:            "feature-a",
+			CurrentBranch:            "feature-A1",
 			Lineage:                  lineage,
 			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
 		})
 		want := &proposallineage.Tree{
 			BranchToProposal: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{
-				"feature-a": Some(forgedomain.Proposal{
+				"feature-A1": Some(forgedomain.Proposal{
 					Data: forgedomain.ProposalData{
-						Title: "proposal from feature-a to main",
+						Title: "proposal from feature-A1 to main",
+					},
+				}),
+				"feature-A2": Some(forgedomain.Proposal{
+					Data: forgedomain.ProposalData{
+						Title: "proposal from feature-A2 to feature-A1",
 					},
 				}),
 			},
@@ -439,11 +429,21 @@ func TestNewTree(t *testing.T) {
 				Branch: "main",
 				ChildNodes: []*proposallineage.TreeNode{
 					{
-						Branch:     "feature-a",
-						ChildNodes: []*proposallineage.TreeNode{},
+						Branch: "feature-A1",
+						ChildNodes: []*proposallineage.TreeNode{
+							{
+								Branch:     "feature-A2",
+								ChildNodes: []*proposallineage.TreeNode{},
+								Proposal: Some(forgedomain.Proposal{
+									Data: forgedomain.ProposalData{
+										Title: "proposal from feature-A2 to feature-A1",
+									},
+								}),
+							},
+						},
 						Proposal: Some(forgedomain.Proposal{
 							Data: forgedomain.ProposalData{
-								Title: "proposal from feature-a to main",
+								Title: "proposal from feature-A1 to main",
 							},
 						}),
 					},
