@@ -45,7 +45,6 @@ func TestNewTree(t *testing.T) {
 		t.Parallel()
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 			"feature-a": "main",
-			"feature-b": "feature-a",
 		})
 		var connector forgedomain.ProposalFinder = &failingFinder{}
 		_, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
