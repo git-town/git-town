@@ -58,9 +58,9 @@ func TestProposalStackLineageBuilder_CheckLineageAndProposals(t *testing.T) {
 	}
 	tree, err := proposallineage.NewTree(args)
 	must.NoError(t, err)
-	must.True(t, tree.BranchToProposal[mainBranch].IsNone())
-	must.True(t, tree.BranchToProposal[featureBranchB].IsSome())
-	must.True(t, tree.BranchToProposal[featureBranchA].IsSome())
+	must.True(t, tree.ProposalCache[mainBranch].IsNone())
+	must.True(t, tree.ProposalCache[featureBranchB].IsSome())
+	must.True(t, tree.ProposalCache[featureBranchA].IsSome())
 	want := `
 
 -------------------------
