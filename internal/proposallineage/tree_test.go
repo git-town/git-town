@@ -394,7 +394,7 @@ func TestNewTree(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("errors from connector", func(t *testing.T) {
+	t.Run("connector returns errors", func(t *testing.T) {
 		t.Parallel()
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 			"feature-a": "main",
@@ -410,7 +410,7 @@ func TestNewTree(t *testing.T) {
 		want := &proposallineage.Tree{
 			BranchToProposal: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{},
 			Node: &proposallineage.TreeNode{
-				Branch: "",
+				Branch: "", // TODO: this shouldn't be empty
 				ChildNodes: []*proposallineage.TreeNode{
 					{
 						Branch: "main",
@@ -429,6 +429,117 @@ func TestNewTree(t *testing.T) {
 		}
 		must.Error(t, err) // TODO: should it ignore errors and create the lineage without proposals?
 		must.Eq(t, want, have)
+	})
+}
+
+func TestTreeRebuild(t *testing.T) {
+	t.Parallel()
+
+	t.Run("rebuilds tree and reuses cached proposals", func(t *testing.T) {
+		t.Parallel()
+		mainBranch := gitdomain.NewLocalBranchName("main")
+		featureA := gitdomain.NewLocalBranchName("feature-a")
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			featureA: mainBranch,
+		})
+		var connector forgedomain.ProposalFinder = &testConnector{}
+		args := proposallineage.ProposalStackLineageArgs{
+			Connector:                Some(connector),
+			CurrentBranch:            featureA,
+			Lineage:                  lineage,
+			MainAndPerennialBranches: gitdomain.LocalBranchNames{mainBranch},
+		}
+
+		tree, err := proposallineage.NewTree(args)
+		must.NoError(t, err)
+		originalProposal := tree.BranchToProposal[featureA]
+
+		// Rebuild with same args
+		err = tree.Rebuild(args)
+		must.NoError(t, err)
+
+		// Should reuse the cached proposal
+		must.Eq(t, originalProposal, tree.BranchToProposal[featureA])
+	})
+
+	t.Run("rebuilds tree with updated lineage", func(t *testing.T) {
+		t.Parallel()
+		mainBranch := gitdomain.NewLocalBranchName("main")
+		featureA := gitdomain.NewLocalBranchName("feature-a")
+		featureB := gitdomain.NewLocalBranchName("feature-b")
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			featureA: mainBranch,
+			featureB: featureA,
+		})
+		var connector forgedomain.ProposalFinder = &testConnector{}
+		args := proposallineage.ProposalStackLineageArgs{
+			Connector:                Some(connector),
+			CurrentBranch:            featureA,
+			Lineage:                  lineage,
+			MainAndPerennialBranches: gitdomain.LocalBranchNames{mainBranch},
+		}
+
+		tree, err := proposallineage.NewTree(args)
+		must.NoError(t, err)
+
+		// Now update the lineage and rebuild
+		featureC := gitdomain.NewLocalBranchName("feature-c")
+		newLineage := configdomain.NewLineageWith(configdomain.LineageData{
+			featureA: mainBranch,
+			featureB: featureA,
+			featureC: featureB,
+		})
+		newArgs := proposallineage.ProposalStackLineageArgs{
+			Connector:                Some(connector),
+			CurrentBranch:            featureB,
+			Lineage:                  newLineage,
+			MainAndPerennialBranches: gitdomain.LocalBranchNames{mainBranch},
+		}
+
+		err = tree.Rebuild(newArgs)
+
+		must.NoError(t, err)
+		must.NotNil(t, tree.Node)
+		// BranchToProposal should retain cached proposals from first build
+		must.True(t, tree.BranchToProposal[featureA].IsSome())
+		must.True(t, tree.BranchToProposal[featureB].IsSome())
+		must.True(t, tree.BranchToProposal[featureC].IsSome())
+	})
+
+	t.Run("handles error during rebuild", func(t *testing.T) {
+		t.Parallel()
+		mainBranch := gitdomain.NewLocalBranchName("main")
+		featureA := gitdomain.NewLocalBranchName("feature-a")
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			featureA: mainBranch,
+		})
+		var connector forgedomain.ProposalFinder = &testConnector{}
+		args := proposallineage.ProposalStackLineageArgs{
+			Connector:                Some(connector),
+			CurrentBranch:            featureA,
+			Lineage:                  lineage,
+			MainAndPerennialBranches: gitdomain.LocalBranchNames{mainBranch},
+		}
+
+		tree, err := proposallineage.NewTree(args)
+		must.NoError(t, err)
+
+		// Rebuild with error-inducing connector
+		var errorConnector forgedomain.ProposalFinder = &failingConnector{}
+		featureB := gitdomain.NewLocalBranchName("feature-b")
+		newLineage := configdomain.NewLineageWith(configdomain.LineageData{
+			featureA: mainBranch,
+			featureB: featureA,
+		})
+		errorArgs := proposallineage.ProposalStackLineageArgs{
+			Connector:                Some(errorConnector),
+			CurrentBranch:            featureB,
+			Lineage:                  newLineage,
+			MainAndPerennialBranches: gitdomain.LocalBranchNames{mainBranch},
+		}
+
+		err = tree.Rebuild(errorArgs)
+		must.Error(t, err)
 	})
 }
 
@@ -510,117 +621,6 @@ func TestTreeCachingBehavior(t *testing.T) {
 
 		// featureB should now have a proposal
 		must.True(t, tree.BranchToProposal[featureB].IsSome())
-	})
-}
-
-func TestTreeRebuild(t *testing.T) {
-	t.Parallel()
-
-	t.Run("handles error during rebuild", func(t *testing.T) {
-		t.Parallel()
-		mainBranch := gitdomain.NewLocalBranchName("main")
-		featureA := gitdomain.NewLocalBranchName("feature-a")
-		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-			featureA: mainBranch,
-		})
-		var connector forgedomain.ProposalFinder = &testConnector{}
-		args := proposallineage.ProposalStackLineageArgs{
-			Connector:                Some(connector),
-			CurrentBranch:            featureA,
-			Lineage:                  lineage,
-			MainAndPerennialBranches: gitdomain.LocalBranchNames{mainBranch},
-		}
-
-		tree, err := proposallineage.NewTree(args)
-		must.NoError(t, err)
-
-		// Rebuild with error-inducing connector
-		var errorConnector forgedomain.ProposalFinder = &failingConnector{}
-		featureB := gitdomain.NewLocalBranchName("feature-b")
-		newLineage := configdomain.NewLineageWith(configdomain.LineageData{
-			featureA: mainBranch,
-			featureB: featureA,
-		})
-		errorArgs := proposallineage.ProposalStackLineageArgs{
-			Connector:                Some(errorConnector),
-			CurrentBranch:            featureB,
-			Lineage:                  newLineage,
-			MainAndPerennialBranches: gitdomain.LocalBranchNames{mainBranch},
-		}
-
-		err = tree.Rebuild(errorArgs)
-		must.Error(t, err)
-	})
-
-	t.Run("rebuilds tree and reuses cached proposals", func(t *testing.T) {
-		t.Parallel()
-		mainBranch := gitdomain.NewLocalBranchName("main")
-		featureA := gitdomain.NewLocalBranchName("feature-a")
-		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-			featureA: mainBranch,
-		})
-		var connector forgedomain.ProposalFinder = &testConnector{}
-		args := proposallineage.ProposalStackLineageArgs{
-			Connector:                Some(connector),
-			CurrentBranch:            featureA,
-			Lineage:                  lineage,
-			MainAndPerennialBranches: gitdomain.LocalBranchNames{mainBranch},
-		}
-
-		tree, err := proposallineage.NewTree(args)
-		must.NoError(t, err)
-		originalProposal := tree.BranchToProposal[featureA]
-
-		// Rebuild with same args
-		err = tree.Rebuild(args)
-		must.NoError(t, err)
-
-		// Should reuse the cached proposal
-		must.Eq(t, originalProposal, tree.BranchToProposal[featureA])
-	})
-
-	t.Run("rebuilds tree with updated lineage", func(t *testing.T) {
-		t.Parallel()
-		mainBranch := gitdomain.NewLocalBranchName("main")
-		featureA := gitdomain.NewLocalBranchName("feature-a")
-		featureB := gitdomain.NewLocalBranchName("feature-b")
-		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-			featureA: mainBranch,
-			featureB: featureA,
-		})
-		var connector forgedomain.ProposalFinder = &testConnector{}
-		args := proposallineage.ProposalStackLineageArgs{
-			Connector:                Some(connector),
-			CurrentBranch:            featureA,
-			Lineage:                  lineage,
-			MainAndPerennialBranches: gitdomain.LocalBranchNames{mainBranch},
-		}
-
-		tree, err := proposallineage.NewTree(args)
-		must.NoError(t, err)
-
-		// Now update the lineage and rebuild
-		featureC := gitdomain.NewLocalBranchName("feature-c")
-		newLineage := configdomain.NewLineageWith(configdomain.LineageData{
-			featureA: mainBranch,
-			featureB: featureA,
-			featureC: featureB,
-		})
-		newArgs := proposallineage.ProposalStackLineageArgs{
-			Connector:                Some(connector),
-			CurrentBranch:            featureB,
-			Lineage:                  newLineage,
-			MainAndPerennialBranches: gitdomain.LocalBranchNames{mainBranch},
-		}
-
-		err = tree.Rebuild(newArgs)
-
-		must.NoError(t, err)
-		must.NotNil(t, tree.Node)
-		// BranchToProposal should retain cached proposals from first build
-		must.True(t, tree.BranchToProposal[featureA].IsSome())
-		must.True(t, tree.BranchToProposal[featureB].IsSome())
-		must.True(t, tree.BranchToProposal[featureC].IsSome())
 	})
 }
 
