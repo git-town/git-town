@@ -15,9 +15,9 @@ func NewTree(args ProposalStackLineageArgs) (*Tree, error) {
 	tree := &Tree{
 		BranchToProposal: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{},
 		Node: &TreeNode{
-			branch:     "",
-			childNodes: []*TreeNode{},
-			proposal:   None[forgedomain.Proposal](),
+			Branch:     "",
+			ChildNodes: []*TreeNode{},
+			Proposal:   None[forgedomain.Proposal](),
 		},
 	}
 	err := tree.build(args)
@@ -26,9 +26,9 @@ func NewTree(args ProposalStackLineageArgs) (*Tree, error) {
 
 func (self *Tree) Rebuild(args ProposalStackLineageArgs) error {
 	self.Node = &TreeNode{
-		branch:     "",
-		childNodes: []*TreeNode{},
-		proposal:   None[forgedomain.Proposal](),
+		Branch:     "",
+		ChildNodes: []*TreeNode{},
+		Proposal:   None[forgedomain.Proposal](),
 	}
 	return self.build(args)
 }
@@ -45,17 +45,17 @@ func (self *Tree) build(args ProposalStackLineageArgs) error {
 		return err
 	}
 
-	if len(self.Node.childNodes) == 0 {
+	if len(self.Node.ChildNodes) == 0 {
 		return nil
 	}
-	self.Node = self.Node.childNodes[0]
+	self.Node = self.Node.ChildNodes[0]
 	return nil
 }
 
 type TreeNode struct {
-	branch     gitdomain.LocalBranchName
-	childNodes []*TreeNode
-	proposal   Option[forgedomain.Proposal]
+	Branch     gitdomain.LocalBranchName
+	ChildNodes []*TreeNode
+	Proposal   Option[forgedomain.Proposal]
 }
 
 func addDescendantNodes(branch gitdomain.LocalBranchName, args ProposalStackLineageArgs, visited map[gitdomain.LocalBranchName]*TreeNode, tree *Tree) error {
@@ -70,19 +70,19 @@ func addDescendantNodes(branch gitdomain.LocalBranchName, args ProposalStackLine
 	}
 	parentNode := visited[parentBranch]
 	branchNode := &TreeNode{
-		branch:     branch,
-		childNodes: []*TreeNode{},
-		proposal:   None[forgedomain.Proposal](),
+		Branch:     branch,
+		ChildNodes: []*TreeNode{},
+		Proposal:   None[forgedomain.Proposal](),
 	}
-	parentNode.childNodes = append(parentNode.childNodes, branchNode)
+	parentNode.ChildNodes = append(parentNode.ChildNodes, branchNode)
 	if proposal, ok := tree.BranchToProposal[branch]; ok {
-		branchNode.proposal = proposal
+		branchNode.Proposal = proposal
 	} else {
 		proposal, err := findProposal(branch, parentBranch, args.Connector)
 		if err != nil {
 			return err
 		}
-		branchNode.proposal = proposal
+		branchNode.Proposal = proposal
 		tree.BranchToProposal[branch] = proposal
 	}
 	visited[branch] = branchNode
@@ -116,8 +116,8 @@ func buildAncestorChain(
 		}
 
 		for _, child := range relevantChildren {
-			tree.BranchToProposal[child.branch] = child.proposal
-			descendants = append(descendants, child.branch)
+			tree.BranchToProposal[child.Branch] = child.Proposal
+			descendants = append(descendants, child.Branch)
 		}
 
 		previous = node
@@ -140,9 +140,9 @@ func buildDescendantChain(
 	return nil
 }
 
-type childWithProposal struct {
-	branch   gitdomain.LocalBranchName
-	proposal Option[forgedomain.Proposal]
+type ChildWithProposal struct {
+	Branch   gitdomain.LocalBranchName
+	Proposal Option[forgedomain.Proposal]
 }
 
 func createAncestorNode(
@@ -151,13 +151,13 @@ func createAncestorNode(
 	tree *Tree,
 ) *TreeNode {
 	node := &TreeNode{
-		branch:     ancestor,
-		childNodes: []*TreeNode{},
-		proposal:   None[forgedomain.Proposal](),
+		Branch:     ancestor,
+		ChildNodes: []*TreeNode{},
+		Proposal:   None[forgedomain.Proposal](),
 	}
-	parent.childNodes = append(parent.childNodes, node)
+	parent.ChildNodes = append(parent.ChildNodes, node)
 	if proposal, ok := tree.BranchToProposal[ancestor]; ok {
-		node.proposal = proposal
+		node.Proposal = proposal
 	}
 	return node
 }
@@ -177,9 +177,9 @@ func findRelevantChildren(
 	ancestor gitdomain.LocalBranchName,
 	args ProposalStackLineageArgs,
 	ancestors gitdomain.LocalBranchNames,
-) ([]childWithProposal, error) {
+) ([]ChildWithProposal, error) {
 	children := args.Lineage.Children(ancestor, args.Order)
-	var relevantChildren []childWithProposal
+	var relevantChildren []ChildWithProposal
 
 	for _, child := range children {
 		if shouldIncludeChild(ancestor, child, args.MainAndPerennialBranches, ancestors) {
@@ -187,9 +187,9 @@ func findRelevantChildren(
 			if err != nil {
 				return nil, err
 			}
-			relevantChildren = append(relevantChildren, childWithProposal{
-				branch:   child,
-				proposal: proposal,
+			relevantChildren = append(relevantChildren, ChildWithProposal{
+				Branch:   child,
+				Proposal: proposal,
 			})
 		}
 	}
