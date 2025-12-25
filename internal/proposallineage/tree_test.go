@@ -483,6 +483,7 @@ func TestTreeRebuild(t *testing.T) {
 		})
 		must.NoError(t, err)
 		must.NotNil(t, tree.Node)
+		// TODO: Make it not look up the proposals for feature-a and feature-b again. They should be cached internally.
 		wantRequests = []gitdomain.ProposalTitle{
 			"proposal from feature-a to main",
 			"proposal from feature-b to feature-a",
