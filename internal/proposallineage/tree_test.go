@@ -96,7 +96,7 @@ func TestNewTree(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("feature branch in the middle of a long lineage", func(t *testing.T) {
+	t.Run("feature branch in a long lineage", func(t *testing.T) {
 		t.Parallel()
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 			"feature-a": "main",
