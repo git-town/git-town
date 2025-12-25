@@ -35,16 +35,13 @@ func (self *Tree) Rebuild(args ProposalStackLineageArgs) error {
 
 func (self *Tree) build(args ProposalStackLineageArgs) error {
 	visited := map[gitdomain.LocalBranchName]*TreeNode{}
-
 	descendants, err := buildAncestorChain(args, self, visited)
 	if err != nil {
 		return err
 	}
-
 	if err := buildDescendantChain(descendants, args, self, visited); err != nil {
 		return err
 	}
-
 	if len(self.Node.ChildNodes) == 0 {
 		return nil
 	}
@@ -62,7 +59,6 @@ func addDescendantNodes(branch gitdomain.LocalBranchName, args ProposalStackLine
 	if _, ok := visited[branch]; ok {
 		return nil
 	}
-
 	parent := args.Lineage.Parent(branch)
 	parentBranch, hasParentBranch := parent.Get()
 	if !hasParentBranch {
@@ -86,14 +82,12 @@ func addDescendantNodes(branch gitdomain.LocalBranchName, args ProposalStackLine
 		tree.BranchToProposal[branch] = proposal
 	}
 	visited[branch] = branchNode
-
 	children := args.Lineage.Children(branch, args.Order)
 	for _, child := range children {
 		if err := addDescendantNodes(child, args, visited, tree); err != nil {
 			return err
 		}
 	}
-
 	return nil
 }
 
@@ -105,24 +99,19 @@ func buildAncestorChain(
 	ancestors := args.Lineage.Ancestors(args.CurrentBranch)
 	descendants := gitdomain.LocalBranchNames{args.CurrentBranch}
 	previous := tree.Node
-
 	for _, ancestor := range ancestors {
 		node := createAncestorNode(ancestor, previous, tree)
 		visited[ancestor] = node
-
 		relevantChildren, err := findRelevantChildren(ancestor, args, ancestors)
 		if err != nil {
 			return nil, err
 		}
-
 		for _, child := range relevantChildren {
 			tree.BranchToProposal[child.Branch] = child.Proposal
 			descendants = append(descendants, child.Branch)
 		}
-
 		previous = node
 	}
-
 	return descendants, nil
 }
 
@@ -178,23 +167,21 @@ func findRelevantChildren(
 	args ProposalStackLineageArgs,
 	ancestors gitdomain.LocalBranchNames,
 ) ([]ChildWithProposal, error) {
-	children := args.Lineage.Children(ancestor, args.Order)
-	var relevantChildren []ChildWithProposal
-
-	for _, child := range children {
+	var result []ChildWithProposal
+	for _, child := range args.Lineage.Children(ancestor, args.Order) {
 		if shouldIncludeChild(ancestor, child, args.MainAndPerennialBranches, ancestors) {
 			proposal, err := findProposal(child, ancestor, args.Connector)
 			if err != nil {
 				return nil, err
 			}
-			relevantChildren = append(relevantChildren, ChildWithProposal{
+			result = append(result, ChildWithProposal{
 				Branch:   child,
 				Proposal: proposal,
 			})
 		}
 	}
 
-	return relevantChildren, nil
+	return result, nil
 }
 
 func shouldIncludeChild(
@@ -203,8 +190,7 @@ func shouldIncludeChild(
 	mainAndPerennials gitdomain.LocalBranchNames,
 	ancestors gitdomain.LocalBranchNames,
 ) bool {
-	isMainOrPerennial := mainAndPerennials.Contains(ancestor)
-	if isMainOrPerennial {
+	if mainAndPerennials.Contains(ancestor) {
 		return ancestors.Contains(child)
 	}
 	return true

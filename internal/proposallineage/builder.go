@@ -31,7 +31,6 @@ func NewBuilder(args ProposalStackLineageArgs, lineageTree OptionalMutable[Tree]
 		// cannot create proposal stack lineage for main or perennial branch
 		return None[Builder]()
 	}
-
 	tree, hasTree := lineageTree.Get()
 	if !hasTree {
 		var err error
@@ -41,16 +40,13 @@ func NewBuilder(args ProposalStackLineageArgs, lineageTree OptionalMutable[Tree]
 			return None[Builder]()
 		}
 	}
-
 	if tree == nil {
 		return None[Builder]()
 	}
-
 	builder := &Builder{
 		mainAndPerennialBranches: args.MainAndPerennialBranches,
 		tree:                     tree,
 	}
-
 	return Some(*builder)
 }
 
@@ -81,18 +77,15 @@ func (self *Builder) build(node *TreeNode, args ProposalStackLineageArgs, indent
 		}
 		return builder.String()
 	}
-
 	proposal, hasProposal := node.Proposal.Get()
 	if hasProposal {
 		builder.WriteString(formattedDisplay(args, indent, proposal))
 	} else {
 		nextIndentLevel--
 	}
-
 	for _, child := range node.ChildNodes {
 		builder.WriteString(self.build(child, args, nextIndentLevel))
 	}
-
 	return builder.String()
 }
 
