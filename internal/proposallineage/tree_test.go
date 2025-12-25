@@ -267,35 +267,47 @@ func TestNewTree(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("creates tree with multi-level lineage", func(t *testing.T) {
+	t.Run("simple feature branch", func(t *testing.T) {
 		t.Parallel()
-		mainBranch := gitdomain.NewLocalBranchName("main")
-		featureA := gitdomain.NewLocalBranchName("feature-a")
-		featureB := gitdomain.NewLocalBranchName("feature-b")
-		featureC := gitdomain.NewLocalBranchName("feature-c")
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-			featureA: mainBranch,
-			featureB: featureA,
-			featureC: featureB,
+			"feature-a": "main",
 		})
 		var connector forgedomain.ProposalFinder = &testConnector{}
-		args := proposallineage.ProposalStackLineageArgs{
+		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
-			CurrentBranch:            featureB,
+			CurrentBranch:            "feature-a",
 			Lineage:                  lineage,
-			MainAndPerennialBranches: gitdomain.LocalBranchNames{mainBranch},
+			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
+		})
+		want := &proposallineage.Tree{
+			BranchToProposal: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{
+				"feature-a": Some(forgedomain.Proposal{
+					Data: forgedomain.ProposalData{
+						Title: "proposal from feature-a to main",
+					},
+				}),
+			},
+			Node: &proposallineage.TreeNode{
+				Branch: "main",
+				ChildNodes: []*proposallineage.TreeNode{
+					{
+						Branch:     "feature-a",
+						ChildNodes: []*proposallineage.TreeNode{},
+						Proposal: Some(forgedomain.Proposal{
+							Data: forgedomain.ProposalData{
+								Title: "proposal from feature-a to main",
+							},
+						}),
+					},
+				},
+				Proposal: None[forgedomain.Proposal](),
+			},
 		}
-
-		tree, err := proposallineage.NewTree(args)
-
 		must.NoError(t, err)
-		must.NotNil(t, tree)
-		must.True(t, tree.BranchToProposal[featureA].IsSome())
-		must.True(t, tree.BranchToProposal[featureB].IsSome())
-		must.True(t, tree.BranchToProposal[featureC].IsSome())
+		must.Eq(t, want, have)
 	})
 
-	t.Run("creates tree with simple lineage", func(t *testing.T) {
+	t.Run("simple feature branch", func(t *testing.T) {
 		t.Parallel()
 		mainBranch := gitdomain.NewLocalBranchName("main")
 		featureBranch := gitdomain.NewLocalBranchName("feature")
