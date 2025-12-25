@@ -13,12 +13,12 @@ type Tree struct {
 
 func NewTree(args ProposalStackLineageArgs) (*Tree, error) {
 	tree := &Tree{
-		ProposalCache: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{},
 		Node: &TreeNode{
 			Branch:     "",
 			ChildNodes: []*TreeNode{},
 			Proposal:   None[forgedomain.Proposal](),
 		},
+		ProposalCache: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{},
 	}
 	err := tree.build(args)
 	return tree, err
