@@ -268,11 +268,12 @@ func TestNewTree(t *testing.T) {
 			"feature-a": "main",
 			"feature-b": "feature-a",
 			"feature-c": "feature-a",
+			"feature-d": "feature-a",
 		})
 		var connector forgedomain.ProposalFinder = &testFinder{}
 		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
-			CurrentBranch:            "feature-c",
+			CurrentBranch:            "feature-d",
 			Lineage:                  lineage,
 			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
 		})
@@ -293,6 +294,11 @@ func TestNewTree(t *testing.T) {
 						Title: "proposal from feature-c to feature-a",
 					},
 				}),
+				"feature-d": Some(forgedomain.Proposal{
+					Data: forgedomain.ProposalData{
+						Title: "proposal from feature-d to feature-a",
+					},
+				}),
 			},
 			Node: &proposallineage.TreeNode{
 				Branch: "main",
@@ -301,11 +307,11 @@ func TestNewTree(t *testing.T) {
 						Branch: "feature-a",
 						ChildNodes: []*proposallineage.TreeNode{
 							{
-								Branch:     "feature-c",
+								Branch:     "feature-d",
 								ChildNodes: []*proposallineage.TreeNode{},
 								Proposal: Some(forgedomain.Proposal{
 									Data: forgedomain.ProposalData{
-										Title: "proposal from feature-c to feature-a",
+										Title: "proposal from feature-d to feature-a",
 									},
 								}),
 							},
@@ -315,6 +321,15 @@ func TestNewTree(t *testing.T) {
 								Proposal: Some(forgedomain.Proposal{
 									Data: forgedomain.ProposalData{
 										Title: "proposal from feature-b to feature-a",
+									},
+								}),
+							},
+							{
+								Branch:     "feature-c",
+								ChildNodes: []*proposallineage.TreeNode{},
+								Proposal: Some(forgedomain.Proposal{
+									Data: forgedomain.ProposalData{
+										Title: "proposal from feature-c to feature-a",
 									},
 								}),
 							},
