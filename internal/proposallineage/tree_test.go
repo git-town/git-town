@@ -27,10 +27,10 @@ func (self *testConnector) FindProposal(source, target gitdomain.LocalBranchName
 	}), nil
 }
 
-// errorProposalFinder returns errors for testing error handling
-type errorProposalFinder struct{}
+// a Connector double that simulates connection errors
+type failingConnector struct{}
 
-func (self *errorProposalFinder) FindProposal(branch, _ gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self *failingConnector) FindProposal(branch, _ gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	return None[forgedomain.Proposal](), fmt.Errorf("mock error finding proposal for %s", branch)
 }
 
@@ -232,7 +232,7 @@ func TestNewTree(t *testing.T) {
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 			featureBranch: mainBranch,
 		})
-		var connector forgedomain.ProposalFinder = &errorProposalFinder{}
+		var connector forgedomain.ProposalFinder = &failingConnector{}
 		args := proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            featureBranch,
@@ -350,7 +350,7 @@ func TestTreeRebuild(t *testing.T) {
 		must.NoError(t, err)
 
 		// Rebuild with error-inducing connector
-		var errorConnector forgedomain.ProposalFinder = &errorProposalFinder{}
+		var errorConnector forgedomain.ProposalFinder = &failingConnector{}
 		featureB := gitdomain.NewLocalBranchName("feature-b")
 		newLineage := configdomain.NewLineageWith(configdomain.LineageData{
 			featureA: mainBranch,
