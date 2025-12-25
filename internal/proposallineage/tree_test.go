@@ -45,15 +45,14 @@ func TestNewTree(t *testing.T) {
 			"feature-c": "feature-a",
 		})
 		var connector forgedomain.ProposalFinder = &testProposalFinder{}
-		tree, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
+		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            "feature-a",
 			Lineage:                  lineage,
 			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
 		})
 		must.NoError(t, err)
-		must.NotNil(t, tree)
-		wantTree := &proposallineage.Tree{
+		want := &proposallineage.Tree{
 			BranchToProposal: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{
 				"feature-a": Some(forgedomain.Proposal{
 					Data: forgedomain.ProposalData{
@@ -106,7 +105,7 @@ func TestNewTree(t *testing.T) {
 				Proposal: None[forgedomain.Proposal](),
 			},
 		}
-		must.Eq(t, wantTree, tree)
+		must.Eq(t, want, have)
 	})
 
 	t.Run("creates tree with empty child nodes when current branch has no children", func(t *testing.T) {
