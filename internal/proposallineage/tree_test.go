@@ -39,21 +39,17 @@ func TestNewTree(t *testing.T) {
 
 	t.Run("creates tree with branching structure", func(t *testing.T) {
 		t.Parallel()
-		mainBranch := gitdomain.NewLocalBranchName("main")
-		featureA := gitdomain.NewLocalBranchName("feature-a")
-		featureB := gitdomain.NewLocalBranchName("feature-b")
-		featureC := gitdomain.NewLocalBranchName("feature-c")
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-			featureA: mainBranch,
-			featureB: featureA,
-			featureC: featureA,
+			"feature-a": "main",
+			"feature-b": "feature-a",
+			"feature-c": "feature-a",
 		})
 		var connector forgedomain.ProposalFinder = &testProposalFinder{}
 		args := proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
-			CurrentBranch:            featureA,
+			CurrentBranch:            "feature-a",
 			Lineage:                  lineage,
-			MainAndPerennialBranches: gitdomain.LocalBranchNames{mainBranch},
+			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
 		}
 		tree, err := proposallineage.NewTree(args)
 		must.NoError(t, err)
@@ -77,13 +73,13 @@ func TestNewTree(t *testing.T) {
 				}),
 			},
 			Node: &proposallineage.TreeNode{
-				Branch: mainBranch,
+				Branch: "main",
 				ChildNodes: []*proposallineage.TreeNode{
 					{
-						Branch: featureA,
+						Branch: "feature-a",
 						ChildNodes: []*proposallineage.TreeNode{
 							{
-								Branch:     featureB,
+								Branch:     "feature-b",
 								ChildNodes: []*proposallineage.TreeNode{},
 								Proposal: Some(forgedomain.Proposal{
 									Data: forgedomain.ProposalData{
@@ -92,7 +88,7 @@ func TestNewTree(t *testing.T) {
 								}),
 							},
 							{
-								Branch:     featureC,
+								Branch:     "feature-c",
 								ChildNodes: []*proposallineage.TreeNode{},
 								Proposal: Some(forgedomain.Proposal{
 									Data: forgedomain.ProposalData{
