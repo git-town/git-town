@@ -42,7 +42,7 @@ func AddStackLineageUpdateOpcodes(args AddStackLineageUpdateOpcodesArgs) Option[
 	}
 
 	if args.FullStack.Enabled() {
-		for branch, proposal := range mapstools.SortedKeyValues(tree.BranchToProposal) {
+		for branch, proposal := range mapstools.SortedKeyValues(tree.ProposalCache) {
 			if args.SkipUpdateForProposalsWithBaseBranch.Contains(branch) {
 				continue
 			}
@@ -55,7 +55,7 @@ func AddStackLineageUpdateOpcodes(args AddStackLineageUpdateOpcodesArgs) Option[
 	} else if !args.SkipUpdateForProposalsWithBaseBranch.Contains(args.Current) {
 		args.Program.Value.Add(&opcodes.ProposalUpdateLineage{
 			Current:         args.Current,
-			CurrentProposal: tree.BranchToProposal[args.Current],
+			CurrentProposal: tree.ProposalCache[args.Current],
 			LineageTree:     MutableSome(tree),
 		})
 	}

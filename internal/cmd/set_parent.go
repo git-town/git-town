@@ -500,7 +500,7 @@ func updateProposalLineage(prog *program.Program, newParentOpt Option[gitdomain.
 	// if the tree is a Some type, we know it will trigger program runs to update
 	// proposals belonging to the base branches iterated on below
 	if tree, hasProposalStackTree := proposalStackTree.Get(); hasProposalStackTree {
-		for b := range maps.Keys(tree.BranchToProposal) {
+		for b := range maps.Keys(tree.ProposalCache) {
 			branchPropsalsUpdated.Add(b)
 		}
 	}

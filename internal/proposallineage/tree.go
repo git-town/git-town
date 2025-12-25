@@ -7,18 +7,18 @@ import (
 )
 
 type Tree struct {
-	BranchToProposal map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]
-	Node             *TreeNode
+	Node          *TreeNode
+	ProposalCache map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]
 }
 
 func NewTree(args ProposalStackLineageArgs) (*Tree, error) {
 	tree := &Tree{
-		BranchToProposal: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{},
 		Node: &TreeNode{
 			Branch:     "",
 			ChildNodes: []*TreeNode{},
 			Proposal:   None[forgedomain.Proposal](),
 		},
+		ProposalCache: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{},
 	}
 	err := tree.build(args)
 	return tree, err
@@ -71,7 +71,7 @@ func addDescendantNodes(branch gitdomain.LocalBranchName, args ProposalStackLine
 		Proposal:   None[forgedomain.Proposal](),
 	}
 	parentNode.ChildNodes = append(parentNode.ChildNodes, branchNode)
-	if proposal, ok := tree.BranchToProposal[branch]; ok {
+	if proposal, ok := tree.ProposalCache[branch]; ok {
 		branchNode.Proposal = proposal
 	} else {
 		proposal, err := findProposal(branch, parentBranch, args.Connector)
@@ -79,7 +79,7 @@ func addDescendantNodes(branch gitdomain.LocalBranchName, args ProposalStackLine
 			return err
 		}
 		branchNode.Proposal = proposal
-		tree.BranchToProposal[branch] = proposal
+		tree.ProposalCache[branch] = proposal
 	}
 	visited[branch] = branchNode
 	children := args.Lineage.Children(branch, args.Order)
@@ -107,7 +107,7 @@ func buildAncestorChain(
 			return nil, err
 		}
 		for _, child := range relevantChildren {
-			tree.BranchToProposal[child.Branch] = child.Proposal
+			tree.ProposalCache[child.Branch] = child.Proposal
 			descendants = append(descendants, child.Branch)
 		}
 		previous = node
@@ -145,7 +145,7 @@ func createAncestorNode(
 		Proposal:   None[forgedomain.Proposal](),
 	}
 	parent.ChildNodes = append(parent.ChildNodes, node)
-	if proposal, ok := tree.BranchToProposal[ancestor]; ok {
+	if proposal, ok := tree.ProposalCache[ancestor]; ok {
 		node.Proposal = proposal
 	}
 	return node
