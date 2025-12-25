@@ -35,7 +35,7 @@ func (self *testFinder) FindProposal(source, target gitdomain.LocalBranchName) (
 type failingFinder struct{}
 
 func (self *failingFinder) FindProposal(branch, _ gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
-	return None[forgedomain.Proposal](), fmt.Errorf("mock error finding proposal for %s", branch)
+	return None[forgedomain.Proposal](), fmt.Errorf("simulated error finding proposal for %s", branch)
 }
 
 func TestNewTree(t *testing.T) {
