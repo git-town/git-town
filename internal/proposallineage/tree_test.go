@@ -17,7 +17,7 @@ import (
 type testConnector struct{}
 
 func (self *testConnector) FindProposal(source, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
-	if strings.Contains(source.String(), "no_proposal") {
+	if strings.Contains(source.String(), "no-proposal") {
 		return None[forgedomain.Proposal](), nil
 	}
 	return Some(forgedomain.Proposal{
@@ -348,8 +348,56 @@ func TestNewTree(t *testing.T) {
 
 	t.Run("some branches have no proposal", func(t *testing.T) {
 		t.Parallel()
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			"feature-a":     "main",
+			"no-proposal-b": "feature-a",
+		})
+		var connector forgedomain.ProposalFinder = &testConnector{}
+		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
+			Connector:                Some(connector),
+			CurrentBranch:            "feature-a",
+			Lineage:                  lineage,
+			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
+		})
+		want := &proposallineage.Tree{
+			BranchToProposal: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{
+				"feature-a": Some(forgedomain.Proposal{
+					Data: forgedomain.ProposalData{
+						Title: "proposal from feature-a to main",
+					},
+				}),
+				"no-proposal-b": None[forgedomain.Proposal](),
+			},
+			Node: &proposallineage.TreeNode{
+				Branch: "main",
+				ChildNodes: []*proposallineage.TreeNode{
+					{
+						Branch: "feature-a",
+						ChildNodes: []*proposallineage.TreeNode{
+							{
+								Branch:     "no-proposal-b",
+								ChildNodes: []*proposallineage.TreeNode{},
+								Proposal:   None[forgedomain.Proposal](),
+							},
+						},
+						Proposal: Some(forgedomain.Proposal{
+							Data: forgedomain.ProposalData{
+								Title: "proposal from feature-a to main",
+							},
+						}),
+					},
+				},
+				Proposal: None[forgedomain.Proposal](),
+			},
+		}
+		must.NoError(t, err)
+		must.Eq(t, want, have)
+	})
+
+	t.Run("some branches have no proposal", func(t *testing.T) {
+		t.Parallel()
 		mainBranch := gitdomain.NewLocalBranchName("main")
-		noproposalBranch := gitdomain.NewLocalBranchName("no_proposal_branch")
+		noproposalBranch := gitdomain.NewLocalBranchName("no-proposal_branch")
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 			noproposalBranch: mainBranch,
 		})
@@ -716,7 +764,7 @@ func TestTreeWithMixedProposalAvailability(t *testing.T) {
 		t.Parallel()
 		mainBranch := gitdomain.NewLocalBranchName("main")
 		withProposal := gitdomain.NewLocalBranchName("with-proposal")
-		withoutProposal := gitdomain.NewLocalBranchName("no_proposal_branch")
+		withoutProposal := gitdomain.NewLocalBranchName("no-proposal_branch")
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 			withProposal:    mainBranch,
 			withoutProposal: withProposal,
