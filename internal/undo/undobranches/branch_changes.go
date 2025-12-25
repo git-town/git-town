@@ -3,11 +3,13 @@ package undobranches
 import (
 	"slices"
 
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	"github.com/git-town/git-town/v15/internal/undo/undodomain"
-	"github.com/git-town/git-town/v15/internal/vm/opcodes"
-	"github.com/git-town/git-town/v15/internal/vm/program"
+	"github.com/git-town/git-town/v22/internal/config"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/undo/undodomain"
+	"github.com/git-town/git-town/v22/internal/vm/opcodes"
+	"github.com/git-town/git-town/v22/internal/vm/program"
 )
 
 // BranchChanges describes the changes made to the branches in a Git repo.
@@ -20,6 +22,7 @@ type BranchChanges struct {
 	LocalAdded            gitdomain.LocalBranchNames
 	LocalChanged          LocalBranchChange
 	LocalRemoved          LocalBranchesSHAs
+	LocalRenamed          []LocalBranchRename
 	// OmniChanges are changes where the local SHA and the remote SHA are identical before the change as well as after the change,
 	OmniChanged LocalBranchChange // a branch had the same SHA locally and remotely, now it has a new SHA locally and remotely, the local and remote SHA are still equal
 	// OmniRemoved is when a branch that has the same SHA on its local and tracking branch gets removed.
@@ -62,65 +65,71 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 	for _, branch := range omniChangedPerennials.BranchNames() {
 		change := omniChangedPerennials[branch]
 		if slices.Contains(args.UndoablePerennialCommits, change.After) {
-			result.Add(&opcodes.Checkout{Branch: branch})
-			result.Add(&opcodes.RevertCommit{SHA: change.After})
-			result.Add(&opcodes.PushCurrentBranch{CurrentBranch: branch})
+			result.Add(&opcodes.CheckoutIfNeeded{Branch: branch})
+			result.Add(&opcodes.CommitRevertIfNeeded{SHA: change.After})
+			if branchInfo, hasBranchInfo := args.BranchInfos.FindByLocalName(branch).Get(); hasBranchInfo {
+				if tracking, hasTracking := branchInfo.RemoteName.Get(); hasTracking {
+					result.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branch, TrackingBranch: tracking})
+				}
+			}
+		} else {
+			args.FinalMessages.Addf(messages.UndoCannotRevertCommitOnPerennialBranch, change.After)
 		}
 	}
 
 	// reset omni-changed feature branches
 	for _, branch := range omniChangedFeatures.BranchNames() {
 		change := omniChangedFeatures[branch]
-		result.Add(&opcodes.Checkout{Branch: branch})
-		result.Add(&opcodes.ResetCurrentBranchToSHA{MustHaveSHA: change.After, SetToSHA: change.Before, Hard: true})
-		result.Add(&opcodes.ForcePushCurrentBranch{ForceIfIncludes: true})
+		result.Add(&opcodes.CheckoutIfNeeded{Branch: branch})
+		result.Add(&opcodes.BranchCurrentResetToSHAIfNeeded{MustHaveSHA: change.After, SetToSHA: change.Before})
+		if branchInfo, hasBranchInfo := args.BranchInfos.FindByLocalName(branch).Get(); hasBranchInfo {
+			if tracking, hasTracking := branchInfo.RemoteName.Get(); hasTracking {
+				result.Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: branch, ForceIfIncludes: true, TrackingBranch: tracking})
+			}
+		}
 	}
 
 	// re-create removed omni-branches
 	for _, branch := range self.OmniRemoved.BranchNames() {
 		sha := self.OmniRemoved[branch]
-		result.Add(&opcodes.CreateBranch{Branch: branch, StartingPoint: sha.Location()})
-		result.Add(&opcodes.CreateTrackingBranch{Branch: branch})
+		result.Add(&opcodes.BranchCreate{Branch: branch, StartingPoint: sha.Location()})
+		result.Add(&opcodes.BranchTrackingCreate{Branch: branch})
 	}
 
 	inconsistentlyChangedPerennials, inconsistentChangedFeatures := CategorizeInconsistentChanges(self.InconsistentlyChanged, args.Config)
 
-	// reset inconsintently changed perennial branches
+	// reset inconsistently changed perennial branches
 	for _, inconsistentlyChangedPerennial := range inconsistentlyChangedPerennials {
 		if isOmni, branchName, afterSHA := inconsistentlyChangedPerennial.After.IsOmniBranch(); isOmni {
 			if slices.Contains(args.UndoablePerennialCommits, afterSHA) {
-				result.Add(&opcodes.Checkout{Branch: branchName})
-				result.Add(&opcodes.RevertCommit{SHA: afterSHA})
-				result.Add(&opcodes.PushCurrentBranch{CurrentBranch: branchName})
+				result.Add(&opcodes.CheckoutIfNeeded{Branch: branchName})
+				result.Add(&opcodes.CommitRevertIfNeeded{SHA: afterSHA})
+				if branchInfo, hasBranchInfo := args.BranchInfos.FindByLocalName(branchName).Get(); hasBranchInfo {
+					if tracking, hasTracking := branchInfo.RemoteName.Get(); hasTracking {
+						result.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branchName, TrackingBranch: tracking})
+					}
+				}
 			}
+		} else {
+			args.FinalMessages.Addf(messages.UndoCannotRevertCommitOnPerennialBranch, afterSHA)
 		}
 	}
 
-	// reset inconsintently changed feature branches
+	// reset inconsistently changed feature branches
 	for _, inconsistentChange := range inconsistentChangedFeatures {
 		hasBeforeLocal, beforeLocalName, beforeLocalSHA := inconsistentChange.Before.GetLocal()
 		hasBeforeRemote, beforeRemoteName, beforeRemoteSHA := inconsistentChange.Before.GetRemote()
 		hasAfterSHAs, afterLocalSHA, afterRemoteSHA := inconsistentChange.After.GetSHAs()
 		if hasBeforeLocal && hasBeforeRemote && hasAfterSHAs {
-			result.Add(&opcodes.Checkout{Branch: beforeLocalName})
-			result.Add(&opcodes.ResetCurrentBranchToSHA{
+			result.Add(&opcodes.CheckoutIfNeeded{Branch: beforeLocalName})
+			result.Add(&opcodes.BranchCurrentResetToSHAIfNeeded{
 				MustHaveSHA: afterLocalSHA,
 				SetToSHA:    beforeLocalSHA,
-				Hard:        true,
 			})
-			result.Add(&opcodes.ResetRemoteBranchToSHA{
+			result.Add(&opcodes.BranchRemoteSetToSHAIfNeeded{
 				Branch:      beforeRemoteName,
 				MustHaveSHA: afterRemoteSHA,
 				SetToSHA:    beforeRemoteSHA,
-			})
-		}
-	}
-
-	// remove remotely added branches
-	for _, addedRemoteBranch := range self.RemoteAdded {
-		if addedRemoteBranch.Remote() != gitdomain.RemoteUpstream {
-			result.Add(&opcodes.DeleteTrackingBranch{
-				Branch: addedRemoteBranch,
 			})
 		}
 	}
@@ -129,7 +138,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 	_, removedFeatureTrackingBranches := CategorizeRemoteBranchesSHAs(self.RemoteRemoved, args.Config)
 	for _, branch := range removedFeatureTrackingBranches.BranchNames() {
 		sha := removedFeatureTrackingBranches[branch]
-		result.Add(&opcodes.CreateRemoteBranch{
+		result.Add(&opcodes.BranchRemoteCreate{
 			Branch: branch.LocalBranchName(),
 			SHA:    sha,
 		})
@@ -138,25 +147,33 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 	// reset locally changed branches
 	for _, localBranch := range self.LocalChanged.BranchNames() {
 		change := self.LocalChanged[localBranch]
-		result.Add(&opcodes.Checkout{Branch: localBranch})
-		result.Add(&opcodes.ResetCurrentBranchToSHA{MustHaveSHA: change.After, SetToSHA: change.Before, Hard: true})
+		result.Add(&opcodes.CheckoutIfNeeded{Branch: localBranch})
+		result.Add(&opcodes.BranchCurrentResetToSHAIfNeeded{MustHaveSHA: change.After, SetToSHA: change.Before})
 	}
 
 	// re-create locally removed branches
 	for _, removedLocalBranch := range self.LocalRemoved.BranchNames() {
 		startingPoint := self.LocalRemoved[removedLocalBranch]
-		result.Add(&opcodes.CreateBranch{
+		result.Add(&opcodes.BranchCreate{
 			Branch:        removedLocalBranch,
 			StartingPoint: startingPoint.Location(),
+		})
+	}
+
+	// restore the name of locally renamed branches
+	for _, rename := range self.LocalRenamed {
+		result.Add(&opcodes.BranchLocalRename{
+			NewName: rename.Before,
+			OldName: rename.After,
 		})
 	}
 
 	// remove locally added branches
 	for _, addedLocalBranch := range self.LocalAdded {
 		if args.EndBranch == addedLocalBranch {
-			result.Add(&opcodes.Checkout{Branch: args.BeginBranch})
+			result.Add(&opcodes.CheckoutIfNeeded{Branch: args.BeginBranch})
 		}
-		result.Add(&opcodes.DeleteLocalBranch{Branch: addedLocalBranch})
+		result.Add(&opcodes.BranchLocalDelete{Branch: addedLocalBranch})
 	}
 
 	// Ignore remotely changed perennial branches because we can't force-push to them
@@ -166,11 +183,23 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 	_, remoteFeatureChanges := CategorizeRemoteBranchChange(self.RemoteChanged, args.Config)
 	for _, remoteChangedFeatureBranch := range remoteFeatureChanges.BranchNames() {
 		change := remoteFeatureChanges[remoteChangedFeatureBranch]
-		result.Add(&opcodes.ResetRemoteBranchToSHA{
+		result.Add(&opcodes.BranchRemoteSetToSHAIfNeeded{
 			Branch:      remoteChangedFeatureBranch,
 			MustHaveSHA: change.After,
 			SetToSHA:    change.Before,
 		})
+	}
+
+	// undo the proposal changes now when the old and new remote branches exist
+	result.AddProgram(args.UndoAPIProgram)
+
+	// remove remotely added branches
+	for _, addedRemoteBranch := range self.RemoteAdded {
+		if addedRemoteBranch.Remote() != gitdomain.RemoteUpstream {
+			result.Add(&opcodes.BranchTrackingDelete{
+				Branch: addedRemoteBranch,
+			})
+		}
 	}
 
 	// This must be a CheckoutIfExists opcode because this branch might not exist
@@ -181,7 +210,10 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 
 type BranchChangesUndoProgramArgs struct {
 	BeginBranch              gitdomain.LocalBranchName
-	Config                   configdomain.ValidatedConfig
+	BranchInfos              gitdomain.BranchInfos
+	Config                   config.ValidatedConfig
 	EndBranch                gitdomain.LocalBranchName
+	FinalMessages            stringslice.Collector
+	UndoAPIProgram           program.Program
 	UndoablePerennialCommits []gitdomain.SHA
 }

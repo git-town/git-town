@@ -2,10 +2,9 @@ package gitdomain
 
 import (
 	"slices"
-	"sort"
 	"strings"
 
-	"github.com/git-town/git-town/v15/internal/gohacks/slice"
+	"github.com/git-town/git-town/v22/internal/gohacks/slice"
 )
 
 type LocalBranchNames []LocalBranchName
@@ -18,19 +17,25 @@ func NewLocalBranchNames(names ...string) LocalBranchNames {
 	return result
 }
 
-// ParseLocalBranchNamesRef constructs a LocalBranchNames instance
+// ParseLocalBranchNames constructs a LocalBranchNames instance
 // containing the branches listed in the given space-separated string.
 func ParseLocalBranchNames(names string) LocalBranchNames {
-	var branchNames []string
-	if names != "" {
-		branchNames = strings.Split(names, " ")
+	parts := strings.Split(names, " ")
+	result := make(LocalBranchNames, 0, len(parts))
+	for _, part := range parts {
+		if len(part) == 0 {
+			continue
+		}
+		result = append(result, NewLocalBranchName(part))
 	}
-	return NewLocalBranchNames(branchNames...)
+	return result
 }
 
 // AppendAllMissing provides a LocalBranchNames list consisting of the sum of this and elements of other list that aren't in this list.
-func (self LocalBranchNames) AppendAllMissing(others ...LocalBranchName) LocalBranchNames {
-	return slice.AppendAllMissing(self, others...)
+func (self LocalBranchNames) AppendAllMissing(others LocalBranchNames) LocalBranchNames {
+	missing := slice.FindAllMissing(self, others)
+	slice.NaturalSort(missing)
+	return append(self, missing...)
 }
 
 func (self LocalBranchNames) BranchNames() []BranchName {
@@ -46,19 +51,21 @@ func (self LocalBranchNames) Contains(branch LocalBranchName) bool {
 	return slices.Contains(self, branch)
 }
 
-// Hoist moves the given needle to the front of the list.
-func (self LocalBranchNames) Hoist(needle LocalBranchName) LocalBranchNames {
+// Hoist returns the given list with the given branches moved to the front,
+// in the order they are given.
+func (self LocalBranchNames) Hoist(branches ...LocalBranchName) LocalBranchNames {
 	result := make(LocalBranchNames, 0, len(self))
-	foundNeedle := false
-	for _, branch := range self {
-		if branch == needle {
-			foundNeedle = true
-		} else {
+	// Add the hoisted branches first, in the order given
+	for _, branch := range branches {
+		if slices.Contains(self, branch) {
 			result = append(result, branch)
 		}
 	}
-	if foundNeedle {
-		result = append(LocalBranchNames{needle}, result...)
+	// Add the remaining branches in their original order
+	for _, branch := range self {
+		if !slices.Contains(branches, branch) {
+			result = append(result, branch)
+		}
 	}
 	return result
 }
@@ -66,10 +73,6 @@ func (self LocalBranchNames) Hoist(needle LocalBranchName) LocalBranchNames {
 // Join provides the names of all branches in this collection connected by the given separator.
 func (self LocalBranchNames) Join(sep string) string {
 	return strings.Join(self.Strings(), sep)
-}
-
-func (self *LocalBranchNames) Prepend(branch LocalBranchName) {
-	*self = append(LocalBranchNames{branch}, *self...)
 }
 
 // Remove removes the given branch names from this collection.
@@ -81,26 +84,6 @@ func (self LocalBranchNames) Remove(toRemove ...LocalBranchName) LocalBranchName
 		}
 	}
 	return result
-}
-
-// RemoveWorktreeMarkers removes the workspace markers from the branch names in this list.
-func (self LocalBranchNames) RemoveWorktreeMarkers() LocalBranchNames {
-	result := make(LocalBranchNames, len(self))
-	for b, branch := range self {
-		if strings.HasPrefix(branch.String(), "+ ") {
-			result[b] = branch[2:]
-		} else {
-			result[b] = branch
-		}
-	}
-	return result
-}
-
-// Sort orders the branches in this collection alphabetically.
-func (self LocalBranchNames) Sort() {
-	sort.Slice(self, func(a, b int) bool {
-		return self[a] < self[b]
-	})
 }
 
 func (self LocalBranchNames) String() string {

@@ -9,14 +9,13 @@ import (
 	"os"
 	"runtime/debug"
 
-	"github.com/git-town/git-town/v15/internal/cli/print"
-	"github.com/git-town/git-town/v15/internal/cmd"
+	"github.com/git-town/git-town/v22/internal/cli/print"
+	"github.com/git-town/git-town/v22/internal/cmd"
 )
 
 func main() {
 	debug.SetGCPercent(-1)
-	err := cmd.Execute()
-	if err != nil {
+	if err := cmd.Execute(); err != nil {
 		print.Error(err)
 		os.Exit(1)
 	}

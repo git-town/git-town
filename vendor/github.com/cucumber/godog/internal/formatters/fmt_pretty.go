@@ -114,6 +114,16 @@ func (f *Pretty) Failed(pickle *messages.Pickle, step *messages.PickleStep, matc
 	f.printStep(pickle, step)
 }
 
+// Failed captures failed step.
+func (f *Pretty) Ambiguous(pickle *messages.Pickle, step *messages.PickleStep, match *formatters.StepDefinition, err error) {
+	f.Base.Ambiguous(pickle, step, match, err)
+
+	f.Lock.Lock()
+	defer f.Lock.Unlock()
+
+	f.printStep(pickle, step)
+}
+
 // Pending captures pending step.
 func (f *Pretty) Pending(pickle *messages.Pickle, step *messages.PickleStep, match *formatters.StepDefinition) {
 	f.Base.Pending(pickle, step, match)
@@ -233,7 +243,7 @@ func (f *Pretty) Summary() {
 	f.Base.Summary()
 }
 
-func (f *Pretty) printOutlineExample(pickle *messages.Pickle, backgroundSteps int) {
+func (f *Pretty) printOutlineExample(pickle *messages.Pickle, step *messages.PickleStep, backgroundSteps int) {
 	var errorMsg string
 	var clr = green
 
@@ -245,7 +255,7 @@ func (f *Pretty) printOutlineExample(pickle *messages.Pickle, backgroundSteps in
 	printExampleHeader := exampleTable.TableBody[0].Id == exampleRow.Id
 	firstExamplesTable := astScenario.Examples[0].Location.Line == exampleTable.Location.Line
 
-	pickleStepResults := f.Storage.MustGetPickleStepResultsByPickleID(pickle.Id)
+	pickleStepResults := f.Storage.MustGetPickleStepResultsByPickleIDUntilStep(pickle.Id, step.Id)
 
 	firstExecutedScenarioStep := len(pickleStepResults) == backgroundSteps+1
 	if firstExamplesTable && printExampleHeader && firstExecutedScenarioStep {
@@ -267,6 +277,9 @@ func (f *Pretty) printOutlineExample(pickle *messages.Pickle, backgroundSteps in
 		// determine example row status
 		switch {
 		case result.Status == failed:
+			errorMsg = result.Err.Error()
+			clr = result.Status.Color()
+		case result.Status == ambiguous:
 			errorMsg = result.Err.Error()
 			clr = result.Status.Color()
 		case result.Status == undefined || result.Status == pending:
@@ -406,7 +419,7 @@ func (f *Pretty) printStep(pickle *messages.Pickle, pickleStep *messages.PickleS
 	}
 
 	if !astBackgroundStep && len(astScenario.Examples) > 0 {
-		f.printOutlineExample(pickle, backgroundSteps)
+		f.printOutlineExample(pickle, pickleStep, backgroundSteps)
 		return
 	}
 

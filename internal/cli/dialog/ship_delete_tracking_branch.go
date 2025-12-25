@@ -2,66 +2,48 @@ package dialog
 
 import (
 	"fmt"
-	"strings"
 
-	"github.com/git-town/git-town/v15/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v15/internal/cli/dialog/components/list"
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	"github.com/git-town/git-town/v15/internal/messages"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents/list"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/messages"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 const (
 	shipDeleteTrackingBranchTitle = `Ship delete tracking branch`
 	ShipDeleteTrackingBranchHelp  = `
-Should "git ship" delete the tracking branch?
-You want to disable this if your code hosting platform
-(GitHub, GitLab, etc) deletes head branches when
-merging pull requests through its UI.
+Should git town ship delete
+the remote tracking branch after shipping?
+
+Disable this if your code hosting provider
+(GitHub, GitLab, etc.) automatically deletes
+branches when pull requests are merged through its UI.
 
 `
 )
 
-const (
-	ShipDeleteTrackingBranchEntryYes shipDeleteTrackingBranchEntry = `yes, "git ship" should delete tracking branches`
-	ShipDeleteTrackingBranchEntryNo  shipDeleteTrackingBranchEntry = `no, my code hosting platform deletes tracking branches`
-)
-
-func ShipDeleteTrackingBranch(existing configdomain.ShipDeleteTrackingBranch, inputs components.TestInput) (configdomain.ShipDeleteTrackingBranch, bool, error) {
-	entries := list.NewEntries(
-		ShipDeleteTrackingBranchEntryYes,
-		ShipDeleteTrackingBranchEntryNo,
-	)
-	var defaultPos int
-	if existing {
-		defaultPos = 0
-	} else {
-		defaultPos = 1
+func ShipDeleteTrackingBranch(args Args[configdomain.ShipDeleteTrackingBranch]) (Option[configdomain.ShipDeleteTrackingBranch], dialogdomain.Exit, error) {
+	entries := list.Entries[Option[configdomain.ShipDeleteTrackingBranch]]{}
+	if global, hasGlobal := args.Global.Get(); hasGlobal {
+		entries = append(entries, list.Entry[Option[configdomain.ShipDeleteTrackingBranch]]{
+			Data: None[configdomain.ShipDeleteTrackingBranch](),
+			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
+		})
 	}
-	selection, aborted, err := components.RadioList(list.NewEntries(entries...), defaultPos, shipDeleteTrackingBranchTitle, ShipDeleteTrackingBranchHelp, inputs)
-	if err != nil || aborted {
-		return true, aborted, err
-	}
-	fmt.Printf(messages.ShipDeletesTrackingBranches, components.FormattedSelection(selection.Data.Short(), aborted))
-	return selection.Data.ShipDeleteTrackingBranch(), aborted, err
-}
-
-type shipDeleteTrackingBranchEntry string
-
-func (self shipDeleteTrackingBranchEntry) ShipDeleteTrackingBranch() configdomain.ShipDeleteTrackingBranch {
-	switch self {
-	case ShipDeleteTrackingBranchEntryYes:
-		return configdomain.ShipDeleteTrackingBranch(true)
-	case ShipDeleteTrackingBranchEntryNo:
-		return configdomain.ShipDeleteTrackingBranch(false)
-	}
-	panic("unhandled shipDeleteTrackingBranchEntry: " + self)
-}
-
-func (self shipDeleteTrackingBranchEntry) Short() string {
-	start, _, _ := strings.Cut(self.String(), ",")
-	return start
-}
-
-func (self shipDeleteTrackingBranchEntry) String() string {
-	return string(self)
+	entries = append(entries, list.Entries[Option[configdomain.ShipDeleteTrackingBranch]]{
+		{
+			Data: Some(configdomain.ShipDeleteTrackingBranch(true)),
+			Text: `yes, "git town ship" should delete tracking branches`,
+		},
+		{
+			Data: Some(configdomain.ShipDeleteTrackingBranch(false)),
+			Text: `no, my forge deletes branches after merging them`,
+		},
+	}...)
+	defaultPos := entries.IndexOf(args.Local)
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, shipDeleteTrackingBranchTitle, ShipDeleteTrackingBranchHelp, args.Inputs, "ship-delete-tracking-branch")
+	fmt.Printf(messages.ShipDeletesTrackingBranches, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
+	return selection, exit, err
 }

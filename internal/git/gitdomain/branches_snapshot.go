@@ -1,6 +1,6 @@
 package gitdomain
 
-import . "github.com/git-town/git-town/v15/internal/gohacks/prelude"
+import . "github.com/git-town/git-town/v22/pkg/prelude"
 
 // BranchesSnapshot is a snapshot of the Git branches at a particular point in time.
 type BranchesSnapshot struct {
@@ -11,11 +11,15 @@ type BranchesSnapshot struct {
 	// Don't use these branches for business logic since businss logic might want to modify its in-memory cache of branches
 	// as it adds or removes branches.
 	Branches BranchInfos
+
+	// DetachedHead indicates whether the repo had a detached head at the time this snapshot was taken.
+	DetachedHead bool
 }
 
 func EmptyBranchesSnapshot() BranchesSnapshot {
 	return BranchesSnapshot{
-		Active:   None[LocalBranchName](),
-		Branches: BranchInfos{},
+		Active:       None[LocalBranchName](),
+		Branches:     BranchInfos{},
+		DetachedHead: false,
 	}
 }

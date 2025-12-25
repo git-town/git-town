@@ -3,6 +3,8 @@ package gitdomain
 import (
 	"fmt"
 	"strings"
+
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 // RemoteBranchName is the name of a remote branch, e.g. "origin/foo".
@@ -13,6 +15,13 @@ func NewRemoteBranchName(id string) RemoteBranchName {
 		panic(fmt.Sprintf("%q is not a valid remote branch name", id))
 	}
 	return RemoteBranchName(id)
+}
+
+func NewRemoteBranchNameOption(id string) Option[RemoteBranchName] {
+	if isValidRemoteBranchName(id) {
+		return Some(NewRemoteBranchName(id))
+	}
+	return None[RemoteBranchName]()
 }
 
 func isValidRemoteBranchName(value string) bool {
@@ -37,8 +46,8 @@ func (self RemoteBranchName) LocalBranchName() LocalBranchName {
 }
 
 func (self RemoteBranchName) Parts() (Remote, LocalBranchName) {
-	parts := strings.SplitN(string(self), "/", 2)
-	return NewRemote(parts[0]), NewLocalBranchName(parts[1])
+	remoteName, branchname, _ := strings.Cut(string(self), "/")
+	return Remote(remoteName), NewLocalBranchName(branchname)
 }
 
 func (self RemoteBranchName) Remote() Remote {
@@ -46,7 +55,6 @@ func (self RemoteBranchName) Remote() Remote {
 	return remote
 }
 
-// Implementation of the fmt.Stringer interface.
 func (self RemoteBranchName) String() string {
 	return string(self)
 }

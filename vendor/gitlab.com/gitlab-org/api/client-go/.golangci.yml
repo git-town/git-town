@@ -1,0 +1,139 @@
+version: "2"
+
+# Options for analysis running
+run:
+  concurrency: 4
+  issues-exit-code: 1
+  tests: true
+
+# Output configuration options
+output:
+  formats:
+    text:
+      path: stdout
+      colors: false
+      print-issued-lines: false
+    code-climate:
+      path: gl-code-quality-report.json
+linters:
+  enable:
+    - asciicheck
+    - dogsled
+    - dupword
+    - errorlint
+    - goconst
+    - godoclint
+    - misspell
+    - nakedret
+    - nolintlint
+    - revive
+    - staticcheck
+    - testifylint
+    - unconvert
+    - usestdlibvars
+    - whitespace
+    - tparallel
+    - paralleltest
+  disable:
+    - errcheck
+  settings:
+    misspell:
+      locale: US
+      ignore-rules:
+        - noteable
+    revive:
+      enable-all-rules: false
+      rules:
+        - name: deep-exit
+        - name: get-return
+        - name: redundant-import-alias
+        - name: time-date
+        - name: var-naming
+    staticcheck:
+      checks:
+        - ST1020
+        - ST1021
+        - ST1022
+    testifylint:
+      disable-all: true
+      enable:
+        - blank-import
+        - bool-compare
+        - compares
+        - contains
+        - empty
+        - encoded-compare
+        - equal-values
+        - error-is-as
+        - error-nil
+        - expected-actual
+        - formatter
+        - go-require
+        - len
+        - negative-positive
+        - nil-compare
+        - regexp
+        - useless-assert
+    usestdlibvars:
+      http-method: false
+      http-status-code: false
+      time-date-month: true
+
+  # List of regexps of issue texts to exclude.
+  exclusions:
+    generated: lax
+    presets:
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    rules:
+      - path: (.+)\.go$
+        text: ^.*, make it a constant$
+      - source: "// Deprecated:"
+        linters:
+          - staticcheck
+      - source: "// GitLab API docs:"
+        linters:
+          - staticcheck
+      - text: "var-naming: struct field PipelineId should be PipelineID"
+        path: commits\.go
+        linters:
+          - revive
+      - text: "var-naming: struct field SelectiveSyncNamespaceIds should be SelectiveSyncNamespaceIDs"
+        path: geo_nodes\.go
+        linters:
+          - revive
+      - text: "var-naming: struct field RefsUrl should be RefsURL"
+        path: import\.go
+        linters:
+          - revive
+      - text: "var-naming: struct field BitbucketServerUrl should be BitbucketServerURL"
+        path: import\.go
+        linters:
+          - revive
+      - text: "var-naming: struct field CrlUrl should be CrlURL"
+        path: tags\.go
+        linters:
+          - revive
+      - text: "var-naming: type ServicePingNonSqlMetrics should be ServicePingNonSQLMetrics"
+        path: usage_data\.go
+        linters:
+          - revive
+    paths:
+      - third_party$
+      - builtin$
+      - examples/*
+issues:
+  # Maximum issues count per one linter (set to 0 to disable)
+  max-issues-per-linter: 0
+  # Maximum count of issues with the same text (set to 0 to disable)
+  max-same-issues: 0
+formatters:
+  enable:
+    - gofumpt
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$

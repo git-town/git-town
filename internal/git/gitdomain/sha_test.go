@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	"github.com/git-town/git-town/v15/test/asserts"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/pkg/asserts"
 	"github.com/shoenig/test/must"
 )
 
@@ -51,22 +51,12 @@ func TestSHA(t *testing.T) {
 		})
 	})
 
-	t.Run("TruncateTo", func(t *testing.T) {
+	t.Run("Truncate", func(t *testing.T) {
 		t.Parallel()
-		t.Run("SHA is longer than the new length", func(t *testing.T) {
-			t.Parallel()
-			sha := gitdomain.NewSHA("123456789abcdef")
-			have := sha.TruncateTo(8)
-			want := gitdomain.NewSHA("12345678")
-			must.EqOp(t, want, have)
-		})
-		t.Run("SHA is shorter than the new length", func(t *testing.T) {
-			t.Parallel()
-			sha := gitdomain.NewSHA("123456789")
-			have := sha.TruncateTo(12)
-			want := gitdomain.NewSHA("123456789")
-			must.EqOp(t, want, have)
-		})
+		give := gitdomain.NewSHA("12345678901234567890123456789012")
+		want := gitdomain.NewSHA("1234567")
+		have := give.Truncate(7)
+		must.EqOp(t, want, have)
 	})
 
 	t.Run("UnmarshalJSON", func(t *testing.T) {

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://raw.githubusercontent.com/kevgo/text-runner/refs/heads/main/documentation/text-runner.schema.json",
+  "files": "**/*.md",
+  "exclude": [
+    "website/src/SUMMARY.md",
+    "vendor/"
+  ],
+  "format": "dot",
+  // regex patterns for link targets to ignore
+  "ignoreLinkTargets": [],
+  // prefix that makes anchor tags active regions
+  "regionMarker": "type",
+  // whether to display/emit skipped activities
+  "showSkipped": false,
+  // whether to run the tests in an external temp directory,
+  // uses ./tmp if false,
+  // you can also provide a custom directory path here
+  "systemTmp": true,
+  // whether to verify online files/links (warning: this makes tests flaky)
+  "online": false,
+  // whether to delete all files in the workspace folder before running the tests
+  "emptyWorkspace": true
+}

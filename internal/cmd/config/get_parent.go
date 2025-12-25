@@ -3,12 +3,14 @@ package config
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v15/internal/cli/flags"
-	"github.com/git-town/git-town/v15/internal/cli/print"
-	"github.com/git-town/git-town/v15/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	"github.com/git-town/git-town/v15/internal/execute"
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/cli/flags"
+	"github.com/git-town/git-town/v22/internal/cli/print"
+	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v22/internal/config/cliconfig"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/execute"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -22,38 +24,57 @@ func getParentCommand() *cobra.Command {
 		Short: getParentDesc,
 		Long:  cmdhelpers.Long(getParentDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeGetParent(args, readVerboseFlag(cmd))
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				Detached:          None[configdomain.Detached](),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            None[configdomain.DryRun](),
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
+			})
+			return executeGetParent(args, cliConfig)
 		},
 	}
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeGetParent(args []string, verbose configdomain.Verbose) error {
+func executeGetParent(args []string, cliConfig configdomain.PartialConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		DryRun:           false,
+		CliConfig:        cliConfig,
+		IgnoreUnknown:    false,
 		PrintBranchNames: false,
 		PrintCommands:    false,
 		ValidateGitRepo:  true,
 		ValidateIsOnline: false,
-		Verbose:          verbose,
 	})
 	if err != nil {
 		return err
 	}
 	var childBranch gitdomain.LocalBranchName
 	if len(args) == 0 {
-		childBranch, err = repo.Git.CurrentBranch(repo.Backend)
+		currentBranchOpt, err := repo.Git.CurrentBranch(repo.Backend)
 		if err != nil {
 			return err
+		}
+		if currentBranch, has := currentBranchOpt.Get(); has {
+			childBranch = currentBranch
 		}
 	} else {
 		childBranch = gitdomain.NewLocalBranchName(args[0])
 	}
-	parentOpt := repo.UnvalidatedConfig.Config.Value.Lineage.Parent(childBranch)
+	parentOpt := repo.UnvalidatedConfig.NormalConfig.Lineage.Parent(childBranch)
 	if parent, hasParent := parentOpt.Get(); hasParent {
 		fmt.Print(parent)
 	}
-	print.Footer(verbose, repo.CommandsCounter.Get(), repo.FinalMessages.Result())
+	print.Footer(repo.UnvalidatedConfig.NormalConfig.Verbose, repo.CommandsCounter.Immutable(), repo.FinalMessages.Result())
 	return nil
 }

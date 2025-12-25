@@ -6,9 +6,10 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	"github.com/git-town/git-town/v15/internal/gohacks/slice"
-	"github.com/git-town/git-town/v15/internal/vm/shared"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks/slice"
+	"github.com/git-town/git-town/v22/internal/vm/shared"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 // Program is a mutable collection of Opcodes.
@@ -25,8 +26,8 @@ func (self *Program) AddProgram(otherProgram Program) {
 }
 
 // IsEmpty returns whether or not this Program has any elements.
-func (self Program) IsEmpty() bool {
-	return len(self) == 0
+func (self *Program) IsEmpty() bool {
+	return len(*self) == 0
 }
 
 // MarshalJSON marshals this program to JSON.
@@ -39,30 +40,22 @@ func (self Program) MarshalJSON() ([]byte, error) {
 }
 
 // OpcodeTypes provides the names of the types of the opcodes in this program.
-func (self Program) OpcodeTypes() []string {
-	result := make([]string, len(self))
-	for o, opcode := range self {
+func (self *Program) OpcodeTypes() []string {
+	result := make([]string, len(*self))
+	for o, opcode := range *self {
 		result[o] = reflect.TypeOf(opcode).String()
 	}
 	return result
 }
 
-// Peek provides the first element of this program.
-func (self Program) Peek() shared.Opcode { //nolint:ireturn
-	if self.IsEmpty() {
-		return nil
-	}
-	return self[0]
-}
-
 // Pop removes and provides the first element of this program.
-func (self *Program) Pop() shared.Opcode { //nolint:ireturn
+func (self *Program) Pop() Option[shared.Opcode] {
 	if self.IsEmpty() {
-		return nil
+		return None[shared.Opcode]()
 	}
 	result := (*self)[0]
 	*self = (*self)[1:]
-	return result
+	return Some(result)
 }
 
 // Prepend adds the given opcode to the beginning of this program.
@@ -81,33 +74,32 @@ func (self *Program) PrependProgram(otherProgram Program) {
 	*self = result
 }
 
-func (self Program) RemoveAllButLast(removeType string) Program {
+func (self *Program) RemoveAllButLast(removeType string) Program {
 	allIndexes := slice.FindAll(self.OpcodeTypes(), removeType)
 	indexesToRemove := slice.TruncateLast(allIndexes)
-	return slice.RemoveAt(self, indexesToRemove...)
+	return slice.RemoveAt(*self, indexesToRemove...)
 }
 
 // Implementation of the fmt.Stringer interface.
-func (self Program) String() string {
+func (self *Program) String() string {
 	return self.StringIndented("")
 }
 
-func (self Program) StringIndented(indent string) string {
+func (self *Program) StringIndented(indent string) string {
+	if len(*self) == 0 {
+		return "(empty program)\n"
+	}
 	sb := strings.Builder{}
-	if self.IsEmpty() {
-		sb.WriteString("(empty program)\n")
-	} else {
-		sb.WriteString("Program:\n")
-		for o, opcode := range self {
-			sb.WriteString(fmt.Sprintf("%s%d: %#v\n", indent, o+1, opcode))
-		}
+	sb.WriteString("Program:\n")
+	for o, opcode := range *self {
+		sb.WriteString(fmt.Sprintf("%s%d: %#v\n", indent, o+1, opcode))
 	}
 	return sb.String()
 }
 
-func (self Program) TouchedBranches() []gitdomain.BranchName {
-	result := []gitdomain.BranchName{}
-	for _, opcode := range self {
+func (self *Program) TouchedBranches() []gitdomain.BranchName {
+	var result []gitdomain.BranchName
+	for _, opcode := range *self {
 		result = append(result, shared.BranchesInOpcode(opcode)...)
 	}
 	return result
@@ -116,8 +108,7 @@ func (self Program) TouchedBranches() []gitdomain.BranchName {
 // UnmarshalJSON unmarshals the program from JSON.
 func (self *Program) UnmarshalJSON(b []byte) error {
 	var jsonOpcodes []JSON
-	err := json.Unmarshal(b, &jsonOpcodes)
-	if err != nil {
+	if err := json.Unmarshal(b, &jsonOpcodes); err != nil {
 		return err
 	}
 	if len(jsonOpcodes) > 0 {

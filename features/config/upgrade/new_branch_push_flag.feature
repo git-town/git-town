@@ -2,18 +2,18 @@ Feature: automatically upgrade outdated configuration
 
   Scenario Outline:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And <LOCATION> Git Town setting "new-branch-push-flag" is "true"
+    And <LOCATION> Git setting "git-town.new-branch-push-flag" is "true"
     And the current branch is "feature"
     When I run "git-town <COMMAND>"
-    Then it prints:
+    Then Git Town prints:
       """
       Upgrading deprecated <LOCATION> setting "git-town.new-branch-push-flag" to "git-town.push-new-branches".
       """
-    And <LOCATION> Git Town setting "push-new-branches" is now "true"
-    And <LOCATION> Git Town setting "new-branch-push-flag" now doesn't exist
+    And <LOCATION> Git setting "git-town.share-new-branches" is now "push"
+    And <LOCATION> Git setting "git-town.new-branch-push-flag" now doesn't exist
 
     Examples:
       | COMMAND  | LOCATION |

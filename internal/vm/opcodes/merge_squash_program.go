@@ -1,0 +1,57 @@
+package opcodes
+
+import (
+	"errors"
+	"fmt"
+
+	"github.com/git-town/git-town/v22/internal/cli/dialog"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/vm/shared"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
+)
+
+// MergeSquashProgram prepends the opcodes to squash merge the branch with the given name into the current branch.
+type MergeSquashProgram struct {
+	Authors       []gitdomain.Author
+	Branch        gitdomain.LocalBranchName
+	CommitMessage Option[gitdomain.CommitMessage]
+	Parent        gitdomain.LocalBranchName
+}
+
+func (self *MergeSquashProgram) Run(args shared.RunArgs) error {
+	selectedGitUser, exit, err := dialog.SquashCommitAuthor(self.Branch, self.Authors, args.Inputs)
+	if err != nil {
+		return fmt.Errorf(messages.SquashCommitAuthorProblem, err)
+	}
+	if exit {
+		return errors.New("aborted by user")
+	}
+	localGitUser, hasLocalGitUser := args.Config.Value.NormalConfig.Author().Get()
+	var authorOpt Option[gitdomain.Author]
+	if hasLocalGitUser && selectedGitUser == localGitUser {
+		authorOpt = None[gitdomain.Author]()
+	} else {
+		authorOpt = Some(selectedGitUser)
+	}
+	program := []shared.Opcode{
+		&MergeSquashAutoUndo{
+			Branch: self.Branch,
+		},
+	}
+	if !args.Config.Value.NormalConfig.DryRun {
+		program = append(program, &CommitMessageCommentOut{})
+	}
+	program = append(program,
+		&CommitAutoUndo{
+			AuthorOverride:                 authorOpt,
+			FallbackToDefaultCommitMessage: false,
+			Message:                        self.CommitMessage,
+		},
+		&RegisterUndoablePerennialCommit{
+			Parent: self.Parent.BranchName(),
+		},
+	)
+	args.PrependOpcodes(program...)
+	return nil
+}

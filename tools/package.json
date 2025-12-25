@@ -1,8 +1,0 @@
-{
-  "dependencies": {
-    "gherkin-lint": "4.2.4",
-    "prettier": "3.2.5",
-    "text-runner": "5.0.2",
-    "textrun-make": "0.1.0"
-  }
-}

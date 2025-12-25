@@ -2,12 +2,12 @@ package set
 
 import (
 	"cmp"
+	"maps"
 	"slices"
-
-	"golang.org/x/exp/maps"
 )
 
-// a simple generic Set implementation
+// Set implements a simple generic Set implementation.
+// The zero value is not valid. Use set.New to create new instances.
 type Set[T cmp.Ordered] map[T]struct{}
 
 func New[T cmp.Ordered](values ...T) Set[T] {
@@ -27,12 +27,12 @@ func (self Set[T]) AddSet(other Set[T]) {
 }
 
 func (self Set[T]) Contains(value T) bool {
-	_, has := self[value]
-	return has
+	_, ok := self[value]
+	return ok
 }
 
 func (self Set[T]) Values() []T {
-	result := maps.Keys(self)
+	result := slices.Collect(maps.Keys(self))
 	slices.Sort(result)
 	return result
 }

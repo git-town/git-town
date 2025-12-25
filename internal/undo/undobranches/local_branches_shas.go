@@ -1,14 +1,17 @@
 package undobranches
 
 import (
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	"golang.org/x/exp/maps"
+	"maps"
+	"slices"
+
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks/slice"
 )
 
 type LocalBranchesSHAs map[gitdomain.LocalBranchName]gitdomain.SHA
 
 func (self LocalBranchesSHAs) BranchNames() gitdomain.LocalBranchNames {
-	result := gitdomain.LocalBranchNames(maps.Keys(self))
-	result.Sort()
+	result := gitdomain.LocalBranchNames(slices.Collect(maps.Keys(self)))
+	slice.NaturalSort(result)
 	return result
 }

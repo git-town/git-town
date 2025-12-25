@@ -1,15 +1,19 @@
 package config
 
 import (
+	"maps"
 	"slices"
 	"strings"
 
-	"github.com/git-town/git-town/v15/internal/cli/flags"
-	"github.com/git-town/git-town/v15/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	"github.com/git-town/git-town/v15/internal/execute"
+	"github.com/git-town/git-town/v22/internal/cli/flags"
+	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v22/internal/config/cliconfig"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/config/gitconfig"
+	"github.com/git-town/git-town/v22/internal/execute"
+	"github.com/git-town/git-town/v22/internal/gohacks/slice"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/spf13/cobra"
-	"golang.org/x/exp/maps"
 )
 
 const removeConfigDesc = "Removes the Git Town configuration"
@@ -22,35 +26,49 @@ func removeConfigCommand() *cobra.Command {
 		Short: removeConfigDesc,
 		Long:  cmdhelpers.Long(removeConfigDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return executeRemoveConfig(readVerboseFlag(cmd))
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				Detached:          None[configdomain.Detached](),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            None[configdomain.DryRun](),
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
+			})
+			return executeRemoveConfig(cliConfig)
 		},
 	}
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeRemoveConfig(verbose configdomain.Verbose) error {
+func executeRemoveConfig(cliConfig configdomain.PartialConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		DryRun:           false,
+		CliConfig:        cliConfig,
+		IgnoreUnknown:    true,
 		PrintBranchNames: false,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
 		ValidateIsOnline: false,
-		Verbose:          verbose,
 	})
 	if err != nil {
 		return err
 	}
-	err = repo.UnvalidatedConfig.GitConfig.RemoveLocalGitConfiguration(repo.UnvalidatedConfig.Config.Value.Lineage)
-	if err != nil {
+	if err = gitconfig.RemoveLocalGitConfiguration(repo.Backend, repo.ConfigSnapshot.Local); err != nil {
 		return err
 	}
-	aliasNames := maps.Keys(repo.UnvalidatedConfig.Config.Value.Aliases)
-	slices.Sort(aliasNames)
+	aliasNames := slices.Collect(maps.Keys(repo.UnvalidatedConfig.NormalConfig.Aliases))
+	slice.NaturalSort(aliasNames)
 	for _, aliasName := range aliasNames {
-		if strings.HasPrefix(repo.UnvalidatedConfig.Config.Value.Aliases[aliasName], "town ") {
-			err = repo.Git.RemoveGitAlias(repo.Frontend, aliasName)
-			if err != nil {
+		if strings.HasPrefix(repo.UnvalidatedConfig.NormalConfig.Aliases[aliasName], "town ") {
+			if err = gitconfig.RemoveAlias(repo.Frontend, aliasName); err != nil {
 				return err
 			}
 		}

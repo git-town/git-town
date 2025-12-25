@@ -28,9 +28,22 @@ func main() {
 	}
 }
 
-// shouldIgnorePath indicates whether the file with the given path should be ignored (not formatted).
-func shouldIgnorePath(path string) bool {
-	return path == "main_test.go"
+func FormatFileContent(content string) string {
+	lines := strings.Split(content, "\n")
+	newLines := make([]string, 0, len(lines))
+	previousLineEmpty := false
+	for _, line := range lines {
+		if IsTopLevelRunLine(line) && !previousLineEmpty {
+			newLines = append(newLines, "")
+		}
+		newLines = append(newLines, line)
+		previousLineEmpty = isEmptyLine(line)
+	}
+	return strings.Join(newLines, "\n")
+}
+
+func IsGoTestFile(path string) bool {
+	return strings.HasSuffix(path, "_test.go")
 }
 
 func IsTopLevelRunLine(line string) bool {
@@ -41,20 +54,7 @@ func isEmptyLine(line string) bool {
 	return line == ""
 }
 
-func IsGoTestFile(path string) bool {
-	return strings.HasSuffix(path, "_test.go")
-}
-
-func FormatFileContent(content string) string {
-	lines := strings.Split(content, "\n")
-	newLines := []string{}
-	previousLineEmpty := false
-	for _, line := range lines {
-		if IsTopLevelRunLine(line) && !previousLineEmpty {
-			newLines = append(newLines, "")
-		}
-		newLines = append(newLines, line)
-		previousLineEmpty = isEmptyLine(line)
-	}
-	return strings.Join(newLines, "\n")
+// shouldIgnorePath indicates whether the file with the given path should be ignored (not formatted).
+func shouldIgnorePath(path string) bool {
+	return path == "main_test.go"
 }

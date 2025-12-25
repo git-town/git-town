@@ -3,62 +3,50 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v15/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v15/internal/cli/dialog/components/list"
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	"github.com/git-town/git-town/v15/internal/messages"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents/list"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/messages"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 const (
 	pushHookTitle = `Push hook`
 	PushHookHelp  = `
-The "push-hook" setting determines whether Git Town
-permits or prevents Git hooks while pushing branches.
-Hooks are enabled by default. If your Git hooks are slow,
+The push-hook setting controls whether
+Git Town allows Git hooks to run when pushing branches.
+Hooks are enabled by default.
+If your Git hooks are slow,
 you can disable them to speed up branch syncing.
 
-When disabled, Git Town pushes using the "--no-verify" switch.
-More info at https://www.git-town.com/preferences/push-hook.
+When disabled, Git Town pushes with the --no-verify flag.
+
+More details: https://www.git-town.com/preferences/push-hook.
 
 `
 )
 
-const (
-	pushHookEntryEnabled  pushHookEntry = "enabled"
-	pushHookEntryDisabled pushHookEntry = "disabled"
-)
-
-func PushHook(existing configdomain.PushHook, inputs components.TestInput) (configdomain.PushHook, bool, error) {
-	entries := list.NewEntries(
-		pushHookEntryEnabled,
-		pushHookEntryDisabled,
-	)
-	var defaultPos int
-	if existing {
-		defaultPos = 0
-	} else {
-		defaultPos = 1
+func PushHook(args Args[configdomain.PushHook]) (Option[configdomain.PushHook], dialogdomain.Exit, error) {
+	entries := list.Entries[Option[configdomain.PushHook]]{}
+	if global, hasGlobal := args.Global.Get(); hasGlobal {
+		entries = append(entries, list.Entry[Option[configdomain.PushHook]]{
+			Data: None[configdomain.PushHook](),
+			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
+		})
 	}
-	selection, aborted, err := components.RadioList(list.NewEntries(entries...), defaultPos, pushHookTitle, PushHookHelp, inputs)
-	if err != nil || aborted {
-		return true, aborted, err
-	}
-	fmt.Printf(messages.PushHook, components.FormattedSelection(selection.String(), aborted))
-	return selection.Data.PushHook(), aborted, err
-}
-
-type pushHookEntry string
-
-func (self pushHookEntry) PushHook() configdomain.PushHook {
-	switch self {
-	case pushHookEntryEnabled:
-		return configdomain.PushHook(true)
-	case pushHookEntryDisabled:
-		return configdomain.PushHook(false)
-	}
-	panic("unhandled pushHookEntry: " + self)
-}
-
-func (self pushHookEntry) String() string {
-	return string(self)
+	entries = append(entries, list.Entries[Option[configdomain.PushHook]]{
+		{
+			Data: Some(configdomain.PushHook(true)),
+			Text: "enabled: run Git hooks when pushing branches",
+		},
+		{
+			Data: Some(configdomain.PushHook(false)),
+			Text: "disabled: don't run Git hooks when pushing branches",
+		},
+	}...)
+	defaultPos := entries.IndexOf(args.Local)
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, pushHookTitle, PushHookHelp, args.Inputs, "push-hook")
+	fmt.Printf(messages.PushHook, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
+	return selection, exit, err
 }

@@ -8,6 +8,36 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 
 ## Unreleased
 
+## [v0.15.1]
+
+### Added
+- Step text is added to "step is undefined" error - ([669](https://github.com/cucumber/godog/pull/669) - [vearutop](https://github.com/vearutop))
+- Localisation support by @MegaGrindStone in https://github.com/cucumber/godog/pull/665
+- feat: support uint types by @chengxilo in https://github.com/cucumber/godog/pull/695
+
+### Changed
+- Replace deprecated `::set-output` - ([681](https://github.com/cucumber/godog/pull/681) - [nodeg](https://github.com/nodeg))
+
+### Fixed
+- fix(errors): fix(errors): Fix expected Step argument count for steps with `context.Context` ([679](https://github.com/cucumber/godog/pull/679) - [tigh-latte](https://github.com/tigh-latte))
+- fix(formatter): On concurrent execution, execute formatter at end of Scenario - ([645](https://github.com/cucumber/godog/pull/645) - [tigh-latte](https://github.com/tigh-latte))
+- Pretty printing results now prints the line where the step is declared instead of the line where the handler is declared. ([668](https://github.com/cucumber/godog/pull/668) - [spencerc](https://github.com/SpencerC))
+- Update honnef.co/go/tools/cmd/staticcheck version in Makefile by @RezaZareiii in https://github.com/cucumber/godog/pull/670
+- fix: verify dogT exists in the context before using it by @cakoolen in https://github.com/cucumber/godog/pull/692
+- fix: change bang to being in README by @nahomEagleLion in https://github.com/cucumber/godog/pull/687
+- Mark junit test cases as skipped if no pickle step results available by @mrsheepuk in https://github.com/cucumber/godog/pull/597
+- Print step declaration line instead of handler declaration line by @SpencerC in https://github.com/cucumber/godog/pull/668
+
+## [v0.15.0]
+
+### Added
+- Improved the type checking of step return types and improved the error messages - ([647](https://github.com/cucumber/godog/pull/647) - [johnlon](https://github.com/johnlon))
+- Ambiguous step definitions will now be detected when strict mode is activated - ([636](https://github.com/cucumber/godog/pull/636)/([648](https://github.com/cucumber/godog/pull/648) - [johnlon](https://github.com/johnlon))
+- Provide support for attachments / embeddings including a new example in the examples dir - ([623](https://github.com/cucumber/godog/pull/623) - [johnlon](https://github.com/johnlon))
+
+### Changed
+- Formatters now have a `Close` method and associated `io.Writer` changed to `io.WriteCloser`.
+
 ## [v0.14.1]
 
 ### Added
@@ -29,7 +59,7 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 
 ### Changed
 - Update test.yml ([583](https://github.com/cucumber/godog/pull/583) - [vearutop](https://github.com/vearutop))
-  
+
 ## [v0.13.0]
 ### Added
 - Support for reading feature files from an `fs.FS` ([550](https://github.com/cucumber/godog/pull/550) - [tigh-latte](https://github.com/tigh-latte))
@@ -231,6 +261,8 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 ### Changed
 - Changed code references to DATA-DOG/godog to cucumber/godog to help get things building correctly. ([mxygem](https://github.com/mxygem))
 
+[v0.15.1]: https://github.com/cucumber/godog/compare/v0.15.0...v0.15.1
+[v0.15.0]: https://github.com/cucumber/godog/compare/v0.14.1...v0.15.0
 [v0.14.1]: https://github.com/cucumber/godog/compare/v0.14.0...v0.14.1
 [v0.14.0]: https://github.com/cucumber/godog/compare/v0.13.0...v0.14.0
 [v0.13.0]: https://github.com/cucumber/godog/compare/v0.12.6...v0.13.0

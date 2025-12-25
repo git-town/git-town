@@ -1,7 +1,5 @@
 package gohacks
 
-import "fmt"
-
 // ErrorCollector helps avoid excessive error checking
 // while gathering a larger number of values through fallible operations.
 // This is based on ideas outlined in https://go.dev/blog/errors-are-values.
@@ -21,9 +19,4 @@ func (self *ErrorCollector) Check(err error) bool {
 		self.Err = err
 	}
 	return self.Err != nil
-}
-
-// Fail registers the error constructed using the given format arguments.
-func (self *ErrorCollector) Fail(format string, a ...any) {
-	self.Check(fmt.Errorf(format, a...))
 }

@@ -1,0 +1,6 @@
+[branches]
+main = "main"
+perennials = ["public"]
+
+[ship]
+delete-tracking-branch = false

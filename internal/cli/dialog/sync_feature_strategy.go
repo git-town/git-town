@@ -2,66 +2,54 @@ package dialog
 
 import (
 	"fmt"
-	"strings"
 
-	"github.com/git-town/git-town/v15/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v15/internal/cli/dialog/components/list"
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	"github.com/git-town/git-town/v15/internal/messages"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents/list"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/messages"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 const (
-	syncFeatureStrategyTitle = `Sync-feature strategy`
+	syncFeatureStrategyTitle = `Feature branch sync strategy`
 	SyncFeatureStrategyHelp  = `
-How should Git Town synchronize feature branches?
-Feature branches are short-lived branches cut from
-the main branch and shipped back into the main branch.
-Typically you develop features and bug fixes on them,
-hence their name.
+Choose how Git Town should
+synchronize feature branches.
+
+These are short-lived branches
+created from the main branch
+and eventually merged back into it.
+Commonly used for developing
+new features and bug fixes.
 
 `
 )
 
-const (
-	syncFeatureStrategyEntryMerge  syncFeatureStrategyEntry = `merge updates from the parent branch into feature branches`
-	syncFeatureStrategyEntryRebase syncFeatureStrategyEntry = `rebase feature branches against their parent branch`
-)
-
-func SyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs components.TestInput) (configdomain.SyncFeatureStrategy, bool, error) {
-	entries := list.NewEntries(
-		syncFeatureStrategyEntryMerge,
-		syncFeatureStrategyEntryRebase,
-	)
-	var defaultPos int
-	switch existing {
-	case configdomain.SyncFeatureStrategyMerge:
-		defaultPos = 0
-	case configdomain.SyncFeatureStrategyRebase:
-		defaultPos = 1
-	default:
-		panic("unknown sync-feature-strategy: " + existing.String())
+func SyncFeatureStrategy(args Args[configdomain.SyncFeatureStrategy]) (Option[configdomain.SyncFeatureStrategy], dialogdomain.Exit, error) {
+	entries := list.Entries[Option[configdomain.SyncFeatureStrategy]]{}
+	if global, hasGlobal := args.Global.Get(); hasGlobal {
+		entries = append(entries, list.Entry[Option[configdomain.SyncFeatureStrategy]]{
+			Data: None[configdomain.SyncFeatureStrategy](),
+			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
+		})
 	}
-	selection, aborted, err := components.RadioList(list.NewEntries(entries...), defaultPos, syncFeatureStrategyTitle, SyncFeatureStrategyHelp, inputs)
-	if err != nil || aborted {
-		return configdomain.SyncFeatureStrategyMerge, aborted, err
-	}
-	cutSelection, _, _ := strings.Cut(selection.String(), " ")
-	fmt.Printf(messages.SyncFeatureBranches, components.FormattedSelection(cutSelection, aborted))
-	return selection.Data.SyncFeatureStrategy(), aborted, err
-}
-
-type syncFeatureStrategyEntry string
-
-func (self syncFeatureStrategyEntry) String() string {
-	return string(self)
-}
-
-func (self syncFeatureStrategyEntry) SyncFeatureStrategy() configdomain.SyncFeatureStrategy {
-	switch self {
-	case syncFeatureStrategyEntryMerge:
-		return configdomain.SyncFeatureStrategyMerge
-	case syncFeatureStrategyEntryRebase:
-		return configdomain.SyncFeatureStrategyRebase
-	}
-	panic("unhandled syncFeatureStrategyEntry: " + self)
+	entries = append(entries, list.Entries[Option[configdomain.SyncFeatureStrategy]]{
+		{
+			Data: Some(configdomain.SyncFeatureStrategyMerge),
+			Text: `merge updates from the parent and tracking branch`,
+		},
+		{
+			Data: Some(configdomain.SyncFeatureStrategyRebase),
+			Text: `rebase branches against their parent and tracking branch`,
+		},
+		{
+			Data: Some(configdomain.SyncFeatureStrategyCompress),
+			Text: `compress the branch after merging parent and tracking`,
+		},
+	}...)
+	defaultPos := entries.IndexOf(args.Local)
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncFeatureStrategyTitle, SyncFeatureStrategyHelp, args.Inputs, "sync-feature-strategy")
+	fmt.Printf(messages.SyncFeatureBranches, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
+	return selection, exit, err
 }

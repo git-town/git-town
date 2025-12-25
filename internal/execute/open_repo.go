@@ -1,97 +1,149 @@
 package execute
 
 import (
+	"context"
 	"errors"
+	"fmt"
 	"os"
+	"os/exec"
+	"runtime"
 
-	"github.com/git-town/git-town/v15/internal/config"
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	"github.com/git-town/git-town/v15/internal/config/configfile"
-	"github.com/git-town/git-town/v15/internal/config/gitconfig"
-	"github.com/git-town/git-town/v15/internal/git"
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	"github.com/git-town/git-town/v15/internal/gohacks"
-	"github.com/git-town/git-town/v15/internal/gohacks/cache"
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
-	"github.com/git-town/git-town/v15/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v15/internal/messages"
-	"github.com/git-town/git-town/v15/internal/subshell"
-	"github.com/git-town/git-town/v15/internal/undo/undoconfig"
-	"github.com/git-town/git-town/v15/internal/validate"
+	"github.com/git-town/git-town/v22/internal/config"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/config/configfile"
+	"github.com/git-town/git-town/v22/internal/config/envconfig"
+	"github.com/git-town/git-town/v22/internal/config/gitconfig"
+	"github.com/git-town/git-town/v22/internal/git"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks"
+	"github.com/git-town/git-town/v22/internal/gohacks/cache"
+	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/subshell"
+	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
+	defaultConfig := config.DefaultNormalConfig()
+	envConfig, err := envconfig.Load(envconfig.NewEnvVars(os.Environ()))
+	if err != nil {
+		return emptyOpenRepoResult(), fmt.Errorf("error loading configuration from environment variables: %w", err)
+	}
 	commandsCounter := NewMutable(new(gohacks.Counter))
 	backendRunner := subshell.BackendRunner{
 		Dir:             None[string](),
 		CommandsCounter: commandsCounter,
-		Verbose:         args.Verbose,
+		Verbose:         args.CliConfig.Verbose.Or(envConfig.Verbose).GetOr(defaultConfig.Verbose),
 	}
 	gitCommands := git.Commands{
-		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
-		RemotesCache:       &cache.Remotes{},
+		CurrentBranchCache: &cache.WithPrevious[gitdomain.LocalBranchName]{},
+		RemotesCache:       &cache.Cache[gitdomain.Remotes]{},
 	}
-	gitVersionMajor, gitVersionMinor, err := gitCommands.Version(backendRunner)
+	gitVersion, err := gitCommands.GitVersion(backendRunner)
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
-	err = validate.HasAcceptableGitVersion(gitVersionMajor, gitVersionMinor)
-	if err != nil {
-		return emptyOpenRepoResult(), err
+	if !gitVersion.IsMinimumRequiredGitVersion() {
+		return emptyOpenRepoResult(), errors.New(messages.GitVersionTooLow)
 	}
 	rootDir, hasRootDir := gitCommands.RootDirectory(backendRunner).Get()
 	if args.ValidateGitRepo {
 		if !hasRootDir {
-			err = errors.New(messages.RepoOutside)
+			return emptyOpenRepoResult(), errors.New(messages.RepoOutside)
+		}
+	}
+	globalSnapshot, err := gitconfig.LoadSnapshot(backendRunner, Some(configdomain.ConfigScopeGlobal), configdomain.UpdateOutdatedYes)
+	if err != nil {
+		return emptyOpenRepoResult(), err
+	}
+	globalConfig, err := config.NewPartialConfigFromSnapshot(globalSnapshot, true, args.IgnoreUnknown, backendRunner)
+	if err != nil {
+		return emptyOpenRepoResult(), err
+	}
+	localSnapshot, err := gitconfig.LoadSnapshot(backendRunner, Some(configdomain.ConfigScopeLocal), configdomain.UpdateOutdatedYes)
+	if err != nil {
+		return emptyOpenRepoResult(), err
+	}
+	localConfig, err := config.NewPartialConfigFromSnapshot(localSnapshot, true, args.IgnoreUnknown, backendRunner)
+	if err != nil {
+		return emptyOpenRepoResult(), err
+	}
+	unscopedSnapshot, err := gitconfig.LoadSnapshot(backendRunner, None[configdomain.ConfigScope](), configdomain.UpdateOutdatedNo)
+	if err != nil {
+		return emptyOpenRepoResult(), err
+	}
+	unscopedConfig, err := config.NewPartialConfigFromSnapshot(unscopedSnapshot, true, args.IgnoreUnknown, backendRunner)
+	if err != nil {
+		return emptyOpenRepoResult(), err
+	}
+	configSnapshot := configdomain.BeginConfigSnapshot{
+		Global:   globalSnapshot,
+		Local:    localSnapshot,
+		Unscoped: unscopedSnapshot,
+	}
+	finalMessages := stringslice.NewCollector()
+	configFile, hasConfigFile, err := configfile.Load(rootDir, configfile.FileName, finalMessages)
+	if err != nil {
+		return emptyOpenRepoResult(), err
+	}
+	if !hasConfigFile {
+		configFile, hasConfigFile, err = configfile.Load(rootDir, configfile.HiddenFileName, finalMessages)
+		if err != nil {
 			return emptyOpenRepoResult(), err
 		}
 	}
-	configGitAccess := gitconfig.Access{Runner: backendRunner}
-	globalSnapshot, globalConfig, err := configGitAccess.LoadGlobal(true)
-	if err != nil {
-		return emptyOpenRepoResult(), err
+	if !hasConfigFile {
+		configFile, _, err = configfile.Load(rootDir, configfile.AlternativeFileName, finalMessages)
+		if err != nil {
+			return emptyOpenRepoResult(), err
+		}
 	}
-	localSnapshot, localConfig, err := configGitAccess.LoadLocal(true)
-	if err != nil {
-		return emptyOpenRepoResult(), err
-	}
-	configSnapshot := undoconfig.ConfigSnapshot{
-		Global: globalSnapshot,
-		Local:  localSnapshot,
-	}
-	configFile, err := configfile.Load(rootDir)
-	if err != nil {
-		return emptyOpenRepoResult(), err
-	}
-	unvalidatedConfig, finalMessages := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
-		Access:       configGitAccess,
-		ConfigFile:   configFile,
-		DryRun:       args.DryRun,
-		GlobalConfig: globalConfig,
-		LocalConfig:  localConfig,
+	unvalidatedConfig := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
+		CliConfig:     args.CliConfig,
+		ConfigFile:    configFile,
+		Defaults:      defaultConfig,
+		EnvConfig:     envConfig,
+		FinalMessages: finalMessages,
+		GitGlobal:     globalConfig,
+		GitLocal:      localConfig,
+		GitUnscoped:   unscopedConfig,
 	})
+	backendRunner.Verbose = unvalidatedConfig.NormalConfig.Verbose
 	frontEndRunner := newFrontendRunner(newFrontendRunnerArgs{
 		backend:          backendRunner,
 		counter:          commandsCounter,
-		dryRun:           args.DryRun,
+		dryRun:           unvalidatedConfig.NormalConfig.DryRun,
 		getCurrentBranch: gitCommands.CurrentBranch,
+		getCurrentSHA:    gitCommands.CurrentSHA,
 		printBranchNames: args.PrintBranchNames,
 		printCommands:    args.PrintCommands,
 	})
-	isOffline := unvalidatedConfig.Config.Value.Offline
-	if args.ValidateIsOnline && isOffline.IsTrue() {
-		err = errors.New(messages.OfflineNotAllowed)
-		return emptyOpenRepoResult(), err
+	if unvalidatedConfig.NormalConfig.Verbose {
+		fmt.Println("Git Town " + config.GitTownVersion)
+		fmt.Println("OS:", runtime.GOOS)
+		var cmd *exec.Cmd
+		if runtime.GOOS == "windows" {
+			cmd = exec.CommandContext(context.Background(), "cmd", "/c", "ver")
+		} else {
+			cmd = exec.CommandContext(context.Background(), "uname", "-a")
+		}
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		_ = cmd.Run()
+	}
+	isOffline := unvalidatedConfig.NormalConfig.Offline
+	if args.ValidateIsOnline && isOffline.IsOffline() {
+		return emptyOpenRepoResult(), errors.New(messages.OfflineNotAllowed)
 	}
 	if args.ValidateGitRepo {
 		var currentDirectory string
 		currentDirectory, err = os.Getwd()
 		if err != nil {
-			err = errors.New(messages.DirCurrentProblem)
-			return emptyOpenRepoResult(), err
+			return emptyOpenRepoResult(), errors.New(messages.DirCurrentProblem)
 		}
 		if currentDirectory != rootDir.String() {
-			err = gitCommands.NavigateToDir(rootDir)
+			err = gitCommands.ChangeDir(rootDir)
 		}
 	}
 	return OpenRepoResult{
@@ -108,20 +160,20 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 }
 
 type OpenRepoArgs struct {
-	DryRun           configdomain.DryRun
+	CliConfig        configdomain.PartialConfig
+	IgnoreUnknown    bool
 	PrintBranchNames bool
 	PrintCommands    bool
 	ValidateGitRepo  bool
 	ValidateIsOnline bool
-	Verbose          configdomain.Verbose
 }
 
 type OpenRepoResult struct {
-	Backend           gitdomain.RunnerQuerier
+	Backend           subshelldomain.RunnerQuerier
 	CommandsCounter   Mutable[gohacks.Counter]
-	ConfigSnapshot    undoconfig.ConfigSnapshot
+	ConfigSnapshot    configdomain.BeginConfigSnapshot
 	FinalMessages     stringslice.Collector
-	Frontend          gitdomain.Runner
+	Frontend          subshelldomain.Runner
 	Git               git.Commands
 	IsOffline         configdomain.Offline
 	RootDir           gitdomain.RepoRootDir
@@ -133,7 +185,7 @@ func emptyOpenRepoResult() OpenRepoResult {
 }
 
 // newFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.
-func newFrontendRunner(args newFrontendRunnerArgs) gitdomain.Runner { //nolint:ireturn
+func newFrontendRunner(args newFrontendRunnerArgs) subshelldomain.Runner { //nolint:ireturn
 	if args.dryRun {
 		return &subshell.FrontendDryRunner{
 			Backend:          args.backend,
@@ -146,6 +198,7 @@ func newFrontendRunner(args newFrontendRunnerArgs) gitdomain.Runner { //nolint:i
 	return &subshell.FrontendRunner{
 		Backend:          args.backend,
 		GetCurrentBranch: args.getCurrentBranch,
+		GetCurrentSHA:    args.getCurrentSHA,
 		PrintBranchNames: args.printBranchNames,
 		PrintCommands:    args.printCommands,
 		CommandsCounter:  args.counter,
@@ -153,10 +206,11 @@ func newFrontendRunner(args newFrontendRunnerArgs) gitdomain.Runner { //nolint:i
 }
 
 type newFrontendRunnerArgs struct {
-	backend          gitdomain.Querier
+	backend          subshelldomain.Querier
 	counter          Mutable[gohacks.Counter]
 	dryRun           configdomain.DryRun
 	getCurrentBranch subshell.GetCurrentBranchFunc
+	getCurrentSHA    subshell.GetCurrentSHAFunc
 	printBranchNames bool
 	printCommands    bool
 }

@@ -1,0 +1,22 @@
+Feature: cannot make a detached head a contribution branch
+
+  Background:
+    Given a Git repo with origin
+    And the branches
+      | NAME   | TYPE    | PARENT | LOCATIONS |
+      | branch | feature | main   | local     |
+    And the commits
+      | BRANCH | LOCATION | MESSAGE  |
+      | branch | local    | commit 1 |
+      |        | local    | commit 2 |
+    And the current branch is "branch"
+    And I ran "git checkout HEAD^"
+    When I run "git-town contribute"
+
+  Scenario: result
+    Then Git Town runs no commands
+    And Git Town prints the error:
+      """
+      please check out the branch you want to convert into a contribution branch
+      """
+    And branch "branch" still has type "feature"

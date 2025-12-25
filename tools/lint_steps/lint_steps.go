@@ -5,20 +5,19 @@ import (
 	"os"
 	"regexp"
 
-	"github.com/git-town/git-town/v15/test/asserts"
+	"github.com/git-town/git-town/v22/pkg/asserts"
 )
 
 const (
-	fileName   = "test/cucumber/steps.go"
+	fileName   = "internal/test/cucumber/steps.go"
 	filePath   = "../../" + fileName
 	featureDir = "../../features"
 )
 
-var stepUsageRE *regexp.Regexp //nolint:gochecknoglobals
+var stepUsageRE *regexp.Regexp
 
 func main() {
-	stepsFileBytes, err := os.ReadFile(filePath)
-	asserts.NoError(err)
+	stepsFileBytes := asserts.NoError1(os.ReadFile(filePath))
 	stepsFileText := string(stepsFileBytes)
 
 	malformattedStepDefs := CheckStepDefinitions(stepsFileText)
@@ -34,6 +33,11 @@ func main() {
 		panic("no step definitions found")
 	}
 
+	unanchoredStepDefs := CheckStepRegexAnchors(existingStepDefs)
+	for _, unanchoredStepDef := range unanchoredStepDefs {
+		fmt.Printf("%s:%d step definition regex must start with ^ and end with $: %s\n", fileName, unanchoredStepDef.Line, unanchoredStepDef.Text)
+	}
+
 	unsortedStepDefs := AllUnsortedStepDefs(existingStepDefs)
 	for _, unsortedStepDef := range unsortedStepDefs {
 		fmt.Printf("%s:%d steps are not alphabetically sorted, expected here: %s\n", fileName, unsortedStepDef.Line, unsortedStepDef.Text)
@@ -43,7 +47,7 @@ func main() {
 	for _, unusedStepDef := range unusedStepDefs {
 		fmt.Printf("%s:%d unused step definition: %s\n", fileName, unusedStepDef.Line, unusedStepDef.Text)
 	}
-	if len(unsortedStepDefs) > 0 || len(unusedStepDefs) > 0 {
+	if len(unanchoredStepDefs) > 0 || len(unsortedStepDefs) > 0 || len(unusedStepDefs) > 0 {
 		os.Exit(1)
 	}
 }

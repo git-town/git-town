@@ -5,70 +5,94 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/git-town/git-town/v15/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v15/internal/cli/flags"
-	"github.com/git-town/git-town/v15/internal/cli/print"
-	"github.com/git-town/git-town/v15/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v15/internal/config"
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	"github.com/git-town/git-town/v15/internal/execute"
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
-	"github.com/git-town/git-town/v15/internal/hosting"
-	"github.com/git-town/git-town/v15/internal/hosting/hostingdomain"
-	"github.com/git-town/git-town/v15/internal/messages"
-	"github.com/git-town/git-town/v15/internal/validate"
-	fullInterpreter "github.com/git-town/git-town/v15/internal/vm/interpreter/full"
-	"github.com/git-town/git-town/v15/internal/vm/program"
-	"github.com/git-town/git-town/v15/internal/vm/runstate"
-	"github.com/git-town/git-town/v15/internal/vm/statefile"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v22/internal/cli/flags"
+	"github.com/git-town/git-town/v22/internal/cli/print"
+	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v22/internal/config"
+	"github.com/git-town/git-town/v22/internal/config/cliconfig"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/execute"
+	"github.com/git-town/git-town/v22/internal/forge"
+	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/state/runstate"
+	"github.com/git-town/git-town/v22/internal/validate"
+	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
+	"github.com/git-town/git-town/v22/internal/vm/program"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
-const continueDesc = "Restart the last run Git Town command after having resolved conflicts"
+const continueDesc = "Resume the last run Git Town command after having resolved conflicts"
 
 func continueCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "continue",
-		GroupID: "errors",
+		GroupID: cmdhelpers.GroupIDErrors,
 		Args:    cobra.NoArgs,
 		Short:   continueDesc,
 		Long:    cmdhelpers.Long(continueDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return executeContinue(readVerboseFlag(cmd))
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				Detached:          None[configdomain.Detached](),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            None[configdomain.DryRun](),
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
+			})
+			return executeContinue(cliConfig)
 		},
 	}
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeContinue(verbose configdomain.Verbose) error {
+func executeContinue(cliConfig configdomain.PartialConfig) error {
+Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		DryRun:           false,
+		CliConfig:        cliConfig,
+		IgnoreUnknown:    false,
 		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
 		ValidateIsOnline: false,
-		Verbose:          verbose,
 	})
 	if err != nil {
-		return err
-	}
-	data, exit, err := determineContinueData(repo, verbose)
-	if err != nil || exit {
 		return err
 	}
 	runState, exit, err := determineContinueRunstate(repo)
 	if err != nil || exit {
 		return err
 	}
-	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+	data, flow, err := determineContinueData(repo)
+	if err != nil || exit {
+		return err
+	}
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit:
+		return nil
+	case configdomain.ProgramFlowRestart:
+		goto Start
+	}
+	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
 		Backend:                 repo.Backend,
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               data.connector,
-		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
@@ -77,99 +101,127 @@ func executeContinue(verbose configdomain.Verbose) error {
 		InitialBranchesSnapshot: data.branchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        data.stashSize,
+		Inputs:                  data.inputs,
+		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
-		Verbose:                 verbose,
 	})
 }
 
-func determineContinueData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (data continueData, exit bool, err error) {
-	dialogTestInputs := components.LoadTestInputs(os.Environ())
+func determineContinueData(repo execute.OpenRepoResult) (data continueData, flow configdomain.ProgramFlow, err error) {
+	inputs := dialogcomponents.LoadInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return data, false, err
+		return data, configdomain.ProgramFlowExit, err
 	}
-	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	config := repo.UnvalidatedConfig.NormalConfig
+	connector, err := forge.NewConnector(forge.NewConnectorArgs{
+		Backend:              repo.Backend,
+		BitbucketAppPassword: config.BitbucketAppPassword,
+		BitbucketUsername:    config.BitbucketUsername,
+		Browser:              config.Browser,
+		ForgeType:            config.ForgeType,
+		ForgejoToken:         config.ForgejoToken,
+		Frontend:             repo.Frontend,
+		GitHubConnectorType:  config.GitHubConnectorType,
+		GitHubToken:          config.GitHubToken,
+		GitLabConnectorType:  config.GitLabConnectorType,
+		GitLabToken:          config.GitLabToken,
+		GiteaToken:           config.GiteaToken,
+		Log:                  print.Logger{},
+		RemoteURL:            config.DevURL(repo.Backend),
+	})
+	if err != nil {
+		return data, configdomain.ProgramFlowExit, err
+	}
+	branchesSnapshot, stashSize, _, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
-		DialogTestInputs:      dialogTestInputs,
+		Connector:             connector,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
 		HandleUnfinishedState: false,
+		Inputs:                inputs,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               verbose,
 	})
-	if err != nil || exit {
-		return data, exit, err
+	if err != nil {
+		return data, configdomain.ProgramFlowExit, err
 	}
-	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
+		return data, flow, nil
+	}
+	localBranches := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().NamesLocalBranches())
+	remotes, err := repo.Git.Remotes(repo.Backend)
+	if err != nil {
+		return data, configdomain.ProgramFlowExit, err
+	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
-		BranchesSnapshot:   branchesSnapshot,
+		BranchInfos:        branchesSnapshot.Branches,
+		BranchesAndTypes:   branchesAndTypes,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
-		DialogTestInputs:   dialogTestInputs,
+		ConfigSnapshot:     repo.ConfigSnapshot,
+		Connector:          data.connector,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
+		Inputs:             inputs,
 		LocalBranches:      localBranches,
+		Remotes:            remotes,
 		RepoStatus:         repoStatus,
-		TestInputs:         dialogTestInputs,
-		Unvalidated:        repo.UnvalidatedConfig,
+		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return data, exit, err
+		return data, configdomain.ProgramFlowExit, err
 	}
 	if repoStatus.Conflicts {
-		return data, false, errors.New(messages.ContinueUnresolvedConflicts)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.ContinueUnresolvedConflicts)
 	}
 	if repoStatus.UntrackedChanges {
-		return data, false, errors.New(messages.ContinueUntrackedChanges)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.ContinueUntrackedChanges)
 	}
-	var connector Option[hostingdomain.Connector]
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		initialBranch, err = repo.Git.CurrentBranch(repo.Backend)
+		currentBranchOpt, err := repo.Git.CurrentBranch(repo.Backend)
 		if err != nil {
-			return data, false, errors.New(messages.CurrentBranchCannotDetermine)
+			return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 		}
-	}
-	if originURL, hasOriginURL := validatedConfig.OriginURL().Get(); hasOriginURL {
-		connector, err = hosting.NewConnector(hosting.NewConnectorArgs{
-			Config:          repo.UnvalidatedConfig.Config.Get(),
-			HostingPlatform: validatedConfig.Config.HostingPlatform,
-			Log:             print.Logger{},
-			RemoteURL:       originURL,
-		})
+		if currentBranch, has := currentBranchOpt.Get(); has {
+			initialBranch = currentBranch
+		}
 	}
 	return continueData{
 		branchesSnapshot: branchesSnapshot,
 		config:           validatedConfig,
 		connector:        connector,
-		dialogTestInputs: dialogTestInputs,
 		hasOpenChanges:   repoStatus.OpenChanges,
 		initialBranch:    initialBranch,
+		inputs:           inputs,
 		stashSize:        stashSize,
-	}, false, err
+	}, configdomain.ProgramFlowContinue, err
 }
 
 type continueData struct {
 	branchesSnapshot gitdomain.BranchesSnapshot
 	config           config.ValidatedConfig
-	connector        Option[hostingdomain.Connector]
-	dialogTestInputs components.TestInputs
+	connector        Option[forgedomain.Connector]
 	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName
+	inputs           dialogcomponents.Inputs
 	stashSize        gitdomain.StashSize
 }
 
-func determineContinueRunstate(repo execute.OpenRepoResult) (runstate.RunState, bool, error) {
-	runStateOpt, err := statefile.Load(repo.RootDir)
+func determineContinueRunstate(repo execute.OpenRepoResult) (runstate.RunState, dialogdomain.Exit, error) {
+	runStateOpt, err := runstate.Load(repo.RootDir)
 	if err != nil {
 		return runstate.EmptyRunState(), true, fmt.Errorf(messages.RunstateLoadProblem, err)
 	}

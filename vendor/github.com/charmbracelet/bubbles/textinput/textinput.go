@@ -1,3 +1,5 @@
+// Package textinput provides a text input component for Bubble Tea
+// applications.
 package textinput
 
 import (
@@ -17,8 +19,10 @@ import (
 )
 
 // Internal messages for clipboard operations.
-type pasteMsg string
-type pasteErrMsg struct{ error }
+type (
+	pasteMsg    string
+	pasteErrMsg struct{ error }
+)
 
 // EchoMode sets the input behavior of the text input field.
 type EchoMode int
@@ -64,8 +68,8 @@ type KeyMap struct {
 var DefaultKeyMap = KeyMap{
 	CharacterForward:        key.NewBinding(key.WithKeys("right", "ctrl+f")),
 	CharacterBackward:       key.NewBinding(key.WithKeys("left", "ctrl+b")),
-	WordForward:             key.NewBinding(key.WithKeys("alt+right", "alt+f")),
-	WordBackward:            key.NewBinding(key.WithKeys("alt+left", "alt+b")),
+	WordForward:             key.NewBinding(key.WithKeys("alt+right", "ctrl+right", "alt+f")),
+	WordBackward:            key.NewBinding(key.WithKeys("alt+left", "ctrl+left", "alt+b")),
 	DeleteWordBackward:      key.NewBinding(key.WithKeys("alt+backspace", "ctrl+w")),
 	DeleteWordForward:       key.NewBinding(key.WithKeys("alt+delete", "alt+d")),
 	DeleteAfterCursor:       key.NewBinding(key.WithKeys("ctrl+k")),
@@ -181,19 +185,14 @@ func (m *Model) SetValue(s string) {
 	// Clean up any special characters in the input provided by the
 	// caller. This avoids bugs due to e.g. tab characters and whatnot.
 	runes := m.san().Sanitize([]rune(s))
-	m.setValueInternal(runes)
+	err := m.validate(runes)
+	m.setValueInternal(runes, err)
 }
 
-func (m *Model) setValueInternal(runes []rune) {
-	if m.Validate != nil {
-		if err := m.Validate(string(runes)); err != nil {
-			m.Err = err
-			return
-		}
-	}
+func (m *Model) setValueInternal(runes []rune, err error) {
+	m.Err = err
 
 	empty := len(m.value) == 0
-	m.Err = nil
 
 	if m.CharLimit > 0 && len(runes) > m.CharLimit {
 		m.value = runes[:m.CharLimit]
@@ -307,8 +306,6 @@ func (m *Model) insertRunesFromUserInput(v []rune) {
 	tail := make([]rune, len(tailSrc))
 	copy(tail, tailSrc)
 
-	oldPos := m.pos
-
 	// Insert pasted runes
 	for _, r := range paste {
 		head = append(head, r)
@@ -323,11 +320,8 @@ func (m *Model) insertRunesFromUserInput(v []rune) {
 
 	// Put it all back together
 	value := append(head, tail...)
-	m.setValueInternal(value)
-
-	if m.Err != nil {
-		m.pos = oldPos
-	}
+	inputErr := m.validate(value)
+	m.setValueInternal(value, inputErr)
 }
 
 // If a max width is defined, perform some logic to treat the visible area
@@ -378,6 +372,7 @@ func (m *Model) handleOverflow() {
 // deleteBeforeCursor deletes all text before the cursor.
 func (m *Model) deleteBeforeCursor() {
 	m.value = m.value[m.pos:]
+	m.Err = m.validate(m.value)
 	m.offset = 0
 	m.SetCursor(0)
 }
@@ -387,6 +382,7 @@ func (m *Model) deleteBeforeCursor() {
 // masked input.
 func (m *Model) deleteAfterCursor() {
 	m.value = m.value[:m.pos]
+	m.Err = m.validate(m.value)
 	m.SetCursor(len(m.value))
 }
 
@@ -432,6 +428,7 @@ func (m *Model) deleteWordBackward() {
 	} else {
 		m.value = append(m.value[:m.pos], m.value[oldPos:]...)
 	}
+	m.Err = m.validate(m.value)
 }
 
 // deleteWordForward deletes the word right to the cursor. If input is masked
@@ -471,6 +468,7 @@ func (m *Model) deleteWordForward() {
 	} else {
 		m.value = append(m.value[:oldPos], m.value[m.pos:]...)
 	}
+	m.Err = m.validate(m.value)
 
 	m.SetCursor(oldPos)
 }
@@ -569,18 +567,18 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 
 	// Let's remember where the position of the cursor currently is so that if
 	// the cursor position changes, we can reset the blink.
-	oldPos := m.pos //nolint
+	oldPos := m.pos
 
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch {
 		case key.Matches(msg, m.KeyMap.DeleteWordBackward):
-			m.Err = nil
 			m.deleteWordBackward()
 		case key.Matches(msg, m.KeyMap.DeleteCharacterBackward):
 			m.Err = nil
 			if len(m.value) > 0 {
 				m.value = append(m.value[:max(0, m.pos-1)], m.value[m.pos:]...)
+				m.Err = m.validate(m.value)
 				if m.pos > 0 {
 					m.SetCursor(m.pos - 1)
 				}
@@ -597,13 +595,12 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 			if m.pos < len(m.value) {
 				m.SetCursor(m.pos + 1)
 			}
-		case key.Matches(msg, m.KeyMap.DeleteWordBackward):
-			m.deleteWordBackward()
 		case key.Matches(msg, m.KeyMap.LineStart):
 			m.CursorStart()
 		case key.Matches(msg, m.KeyMap.DeleteCharacterForward):
 			if len(m.value) > 0 && m.pos < len(m.value) {
 				m.value = append(m.value[:m.pos], m.value[m.pos+1:]...)
+				m.Err = m.validate(m.value)
 			}
 		case key.Matches(msg, m.KeyMap.LineEnd):
 			m.CursorEnd()
@@ -663,14 +660,14 @@ func (m Model) View() string {
 	pos := max(0, m.pos-m.offset)
 	v := styleText(m.echoTransform(string(value[:pos])))
 
-	if pos < len(value) {
+	if pos < len(value) { //nolint:nestif
 		char := m.echoTransform(string(value[pos]))
 		m.Cursor.SetChar(char)
 		v += m.Cursor.View()                                   // cursor and text under it
 		v += styleText(m.echoTransform(string(value[pos+1:]))) // text after cursor
 		v += m.completionView(0)                               // suggested completion
 	} else {
-		if m.canAcceptSuggestion() {
+		if m.focus && m.canAcceptSuggestion() {
 			suggestion := m.matchedSuggestions[m.currentSuggestionIndex]
 			if len(value) < len(suggestion) {
 				m.Cursor.TextStyle = m.CompletionStyle
@@ -705,9 +702,11 @@ func (m Model) View() string {
 func (m Model) placeholderView() string {
 	var (
 		v     string
-		p     = []rune(m.Placeholder)
 		style = m.PlaceholderStyle.Inline(true).Render
 	)
+
+	p := make([]rune, m.Width+1)
+	copy(p, []rune(m.Placeholder))
 
 	m.Cursor.TextStyle = m.PlaceholderStyle
 	m.Cursor.SetChar(string(p[:1]))
@@ -761,31 +760,20 @@ func clamp(v, low, high int) int {
 	return min(high, max(low, v))
 }
 
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
-
 // Deprecated.
 
-// Deprecated: use cursor.Mode.
+// Deprecated: use [cursor.Mode].
+//
+//nolint:revive
 type CursorMode int
 
+//nolint:revive
 const (
-	// Deprecated: use cursor.CursorBlink.
+	// Deprecated: use [cursor.CursorBlink].
 	CursorBlink = CursorMode(cursor.CursorBlink)
-	// Deprecated: use cursor.CursorStatic.
+	// Deprecated: use [cursor.CursorStatic].
 	CursorStatic = CursorMode(cursor.CursorStatic)
-	// Deprecated: use cursor.CursorHide.
+	// Deprecated: use [cursor.CursorHide].
 	CursorHide = CursorMode(cursor.CursorHide)
 )
 
@@ -793,12 +781,16 @@ func (c CursorMode) String() string {
 	return cursor.Mode(c).String()
 }
 
-// Deprecated: use cursor.Mode().
+// Deprecated: use [cursor.Mode].
+//
+//nolint:revive
 func (m Model) CursorMode() CursorMode {
 	return CursorMode(m.Cursor.Mode())
 }
 
 // Deprecated: use cursor.SetMode().
+//
+//nolint:revive
 func (m *Model) SetCursorMode(mode CursorMode) tea.Cmd {
 	return m.Cursor.SetMode(cursor.Mode(mode))
 }
@@ -818,18 +810,35 @@ func (m Model) completionView(offset int) string {
 	return ""
 }
 
-// AvailableSuggestions returns the list of available suggestions.
-func (m *Model) AvailableSuggestions() []string {
-	suggestions := make([]string, len(m.suggestions))
-	for i, s := range m.suggestions {
+func (m *Model) getSuggestions(sugs [][]rune) []string {
+	suggestions := make([]string, len(sugs))
+	for i, s := range sugs {
 		suggestions[i] = string(s)
 	}
-
 	return suggestions
+}
+
+// AvailableSuggestions returns the list of available suggestions.
+func (m *Model) AvailableSuggestions() []string {
+	return m.getSuggestions(m.suggestions)
+}
+
+// MatchedSuggestions returns the list of matched suggestions.
+func (m *Model) MatchedSuggestions() []string {
+	return m.getSuggestions(m.matchedSuggestions)
+}
+
+// CurrentSuggestionIndex returns the currently selected suggestion index.
+func (m *Model) CurrentSuggestionIndex() int {
+	return m.currentSuggestionIndex
 }
 
 // CurrentSuggestion returns the currently selected suggestion.
 func (m *Model) CurrentSuggestion() string {
+	if m.currentSuggestionIndex >= len(m.matchedSuggestions) {
+		return ""
+	}
+
 	return string(m.matchedSuggestions[m.currentSuggestionIndex])
 }
 
@@ -879,4 +888,11 @@ func (m *Model) previousSuggestion() {
 	if m.currentSuggestionIndex < 0 {
 		m.currentSuggestionIndex = len(m.matchedSuggestions) - 1
 	}
+}
+
+func (m Model) validate(v []rune) error {
+	if m.Validate != nil {
+		return m.Validate(string(v))
+	}
+	return nil
 }

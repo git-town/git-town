@@ -38,7 +38,7 @@ type Options struct {
 	// Stops on the first failure
 	StopOnFailure bool
 
-	// Fail suite when there are pending or undefined steps
+	// Fail suite when there are pending or undefined or ambiguous steps
 	Strict bool
 
 	// Forces ansi color stripping
@@ -47,6 +47,9 @@ type Options struct {
 	// Various filters for scenarios parsed
 	// from feature files
 	Tags string
+
+	// Dialect to be used to parse feature files. If not set, default to "en".
+	Dialect string
 
 	// The formatter name
 	Format string

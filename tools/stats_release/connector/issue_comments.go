@@ -1,11 +1,11 @@
 package connector
 
-import "github.com/google/go-github/v58/github"
+import (
+	"github.com/git-town/git-town/v22/pkg/asserts"
+	"github.com/google/go-github/v58/github"
+)
 
 func (gh Connector) IssueComments(issue *github.Issue) []*github.IssueComment {
-	comments, _, err := gh.client.Issues.ListComments(gh.context, org, repo, *issue.Number, nil)
-	if err != nil {
-		panic(err)
-	}
+	comments, _ := asserts.NoError2(gh.client.Issues.ListComments(gh.context, org, repo, *issue.Number, nil))
 	return comments
 }

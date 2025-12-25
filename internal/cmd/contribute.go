@@ -4,22 +4,24 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/git-town/git-town/v15/internal/cli/flags"
-	"github.com/git-town/git-town/v15/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v15/internal/config"
-	"github.com/git-town/git-town/v15/internal/config/commandconfig"
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	"github.com/git-town/git-town/v15/internal/execute"
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
-	"github.com/git-town/git-town/v15/internal/messages"
-	configInterpreter "github.com/git-town/git-town/v15/internal/vm/interpreter/config"
+	"github.com/git-town/git-town/v22/internal/cli/flags"
+	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v22/internal/config"
+	"github.com/git-town/git-town/v22/internal/config/cliconfig"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/config/gitconfig"
+	"github.com/git-town/git-town/v22/internal/execute"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks/mapstools"
+	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/vm/interpreter/configinterpreter"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
-const contributeDesc = "Stop syncing some feature branches with their parents"
-
-const contributeHelp = `
+const (
+	contributeDesc = "Stop syncing some feature branches with their parents"
+	contributeHelp = `
 Marks the given local branches as contribution.
 If no branch is provided, marks the current branch.
 
@@ -28,36 +30,53 @@ and make commits to their branch,
 but want the other developers to manage the branch
 including syncing it with its parent and shipping it.
 
-On a contribution branch, "git sync"
+On a contribution branch, "git town sync"
 - pulls down updates from the tracking branch (always via rebase)
 - pushes your local commits to the tracking branch
 - does not pull updates from the parent branch
 `
+)
 
 func contributeCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "contribute [branches]",
 		Args:    cobra.ArbitraryArgs,
-		GroupID: "types",
+		GroupID: cmdhelpers.GroupIDTypes,
 		Short:   contributeDesc,
 		Long:    cmdhelpers.Long(contributeDesc, contributeHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeContribute(args, readVerboseFlag(cmd))
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				Detached:          Some(configdomain.Detached(true)),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            None[configdomain.DryRun](),
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
+			})
+			return executeContribute(args, cliConfig)
 		},
 	}
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeContribute(args []string, verbose configdomain.Verbose) error {
+func executeContribute(args []string, cliConfig configdomain.PartialConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		DryRun:           false,
+		CliConfig:        cliConfig,
+		IgnoreUnknown:    false,
 		PrintBranchNames: false,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
 		ValidateIsOnline: false,
-		Verbose:          verbose,
 	})
 	if err != nil {
 		return err
@@ -66,14 +85,11 @@ func executeContribute(args []string, verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	if err = validateContributeData(data); err != nil {
+	if err = validateContributeData(data, repo); err != nil {
 		return err
 	}
-	branchNames := data.branchesToMark.Keys()
-	if err = repo.UnvalidatedConfig.AddToContributionBranches(branchNames...); err != nil {
-		return err
-	}
-	if err = removeNonContributionBranchTypes(data.branchesToMark, repo.UnvalidatedConfig); err != nil {
+	branchNames := data.branchesToMakeContribution.Keys()
+	if err = gitconfig.SetBranchTypeOverride(repo.Backend, configdomain.BranchTypeContributionBranch, branchNames...); err != nil {
 		return err
 	}
 	printContributeBranches(branchNames)
@@ -82,7 +98,7 @@ func executeContribute(args []string, verbose configdomain.Verbose) error {
 			return err
 		}
 	}
-	return configInterpreter.Finished(configInterpreter.FinishedArgs{
+	return configinterpreter.Finished(configinterpreter.FinishedArgs{
 		Backend:               repo.Backend,
 		BeginBranchesSnapshot: Some(data.beginBranchesSnapshot),
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -91,43 +107,22 @@ func executeContribute(args []string, verbose configdomain.Verbose) error {
 		FinalMessages:         repo.FinalMessages,
 		Git:                   repo.Git,
 		RootDir:               repo.RootDir,
-		TouchedBranches:       data.branchesToMark.Keys().BranchNames(),
-		Verbose:               verbose,
+		TouchedBranches:       data.branchesToMakeContribution.Keys().BranchNames(),
+		Verbose:               repo.UnvalidatedConfig.NormalConfig.Verbose,
 	})
 }
 
 type contributeData struct {
-	allBranches           gitdomain.BranchInfos
-	beginBranchesSnapshot gitdomain.BranchesSnapshot
-	branchToCheckout      Option[gitdomain.LocalBranchName]
-	branchesToMark        commandconfig.BranchesAndTypes
+	beginBranchesSnapshot      gitdomain.BranchesSnapshot
+	branchInfos                gitdomain.BranchInfos
+	branchToCheckout           Option[gitdomain.LocalBranchName]
+	branchesToMakeContribution configdomain.BranchesAndTypes
 }
 
 func printContributeBranches(branches gitdomain.LocalBranchNames) {
 	for _, branch := range branches {
-		fmt.Printf(messages.ContributeBranchIsNowContribution, branch)
+		fmt.Printf(messages.BranchIsNowContribution, branch)
 	}
-}
-
-func removeNonContributionBranchTypes(branches commandconfig.BranchesAndTypes, config config.UnvalidatedConfig) error {
-	for branchName, branchType := range branches {
-		switch branchType {
-		case configdomain.BranchTypeObservedBranch:
-			if err := config.RemoveFromObservedBranches(branchName); err != nil {
-				return err
-			}
-		case configdomain.BranchTypeParkedBranch:
-			if err := config.RemoveFromParkedBranches(branchName); err != nil {
-				return err
-			}
-		case configdomain.BranchTypePrototypeBranch:
-			if err := config.RemoveFromPrototypeBranches(branchName); err != nil {
-				return err
-			}
-		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeContributionBranch, configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
-		}
-	}
-	return nil
 }
 
 func determineContributeData(args []string, repo execute.OpenRepoResult) (contributeData, error) {
@@ -135,54 +130,40 @@ func determineContributeData(args []string, repo execute.OpenRepoResult) (contri
 	if err != nil {
 		return contributeData{}, err
 	}
-	branchesToMark := commandconfig.BranchesAndTypes{}
-	var branchToCheckout Option[gitdomain.LocalBranchName]
-	switch len(args) {
-	case 0:
-		currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
-		if !hasCurrentBranch {
-			return contributeData{}, errors.New(messages.CurrentBranchCannotDetermine)
-		}
-		branchesToMark.Add(currentBranch, repo.UnvalidatedConfig.Config.Get())
-		branchToCheckout = None[gitdomain.LocalBranchName]()
-	case 1:
-		branch := gitdomain.NewLocalBranchName(args[0])
-		branchesToMark.Add(branch, repo.UnvalidatedConfig.Config.Get())
-		trackingBranchName := branch.TrackingBranch()
-		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByRemoteName(trackingBranchName).Get()
-		if !hasBranchInfo {
-			return contributeData{}, fmt.Errorf(messages.BranchDoesntExist, branch.String())
-		}
-		if branchInfo.SyncStatus == gitdomain.SyncStatusRemoteOnly {
-			branchToCheckout = Some(branch)
-		} else {
-			branchToCheckout = None[gitdomain.LocalBranchName]()
-		}
-	default:
-		branchesToMark.AddMany(gitdomain.NewLocalBranchNames(args...), repo.UnvalidatedConfig.Config.Get())
-		branchToCheckout = None[gitdomain.LocalBranchName]()
+	if branchesSnapshot.DetachedHead {
+		return contributeData{}, errors.New(messages.ContributeDetachedHead)
 	}
+	branchesToMakeContribution, branchToCheckout, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
 	return contributeData{
-		allBranches:           branchesSnapshot.Branches,
-		beginBranchesSnapshot: branchesSnapshot,
-		branchToCheckout:      branchToCheckout,
-		branchesToMark:        branchesToMark,
-	}, nil
+		beginBranchesSnapshot:      branchesSnapshot,
+		branchInfos:                branchesSnapshot.Branches,
+		branchToCheckout:           branchToCheckout,
+		branchesToMakeContribution: branchesToMakeContribution,
+	}, err
 }
 
-func validateContributeData(data contributeData) error {
-	for branchName, branchType := range data.branchesToMark {
-		if !data.allBranches.HasLocalBranch(branchName) && !data.allBranches.HasMatchingTrackingBranchFor(branchName) {
-			return fmt.Errorf(messages.BranchDoesntExist, branchName)
-		}
+func validateContributeData(data contributeData, repo execute.OpenRepoResult) error {
+	for branchName, branchType := range mapstools.SortedKeyValues(data.branchesToMakeContribution) {
 		switch branchType {
 		case configdomain.BranchTypeMainBranch:
 			return errors.New(messages.MainBranchCannotMakeContribution)
 		case configdomain.BranchTypePerennialBranch:
 			return errors.New(messages.PerennialBranchCannotMakeContribution)
 		case configdomain.BranchTypeContributionBranch:
-			return fmt.Errorf(messages.BranchIsAlreadyContribution, branchName)
-		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePrototypeBranch:
+			repo.FinalMessages.Addf(messages.BranchIsAlreadyContribution, branchName)
+		case
+			configdomain.BranchTypeFeatureBranch,
+			configdomain.BranchTypeObservedBranch,
+			configdomain.BranchTypeParkedBranch,
+			configdomain.BranchTypePrototypeBranch:
+		}
+		hasLocalBranch := data.beginBranchesSnapshot.Branches.HasLocalBranch(branchName)
+		hasRemoteBranch := data.beginBranchesSnapshot.Branches.HasMatchingTrackingBranchFor(branchName)
+		if !hasLocalBranch && !hasRemoteBranch {
+			return fmt.Errorf(messages.BranchDoesntExist, branchName)
+		}
+		if hasLocalBranch && !hasRemoteBranch {
+			return fmt.Errorf(messages.ContributeBranchIsLocal, branchName)
 		}
 	}
 	return nil

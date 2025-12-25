@@ -1,10 +1,7 @@
 package flags
 
 import (
-	"fmt"
-
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	"github.com/git-town/git-town/v15/internal/messages"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/spf13/cobra"
 )
 
@@ -13,17 +10,13 @@ const shipIntoNonPerennialParentLong = "to-parent"
 // type-safe access to the CLI arguments of type configdomain.ShipIntoNonPerennialParentLong
 func ShipIntoNonPerennialParent() (AddFunc, ReadShipIntoNonPerennialParentFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.PersistentFlags().BoolP(shipIntoNonPerennialParentLong, "p", false, "allow shipping into non-perennial parent")
+		cmd.Flags().BoolP(shipIntoNonPerennialParentLong, "p", false, "allow shipping into non-perennial parent")
 	}
-	readFlag := func(cmd *cobra.Command) configdomain.ShipIntoNonperennialParent {
-		value, err := cmd.Flags().GetBool(shipIntoNonPerennialParentLong)
-		if err != nil {
-			panic(fmt.Sprintf(messages.FlagStringDoesntExist, cmd.Name(), shipIntoNonPerennialParentLong))
-		}
-		return configdomain.ShipIntoNonperennialParent(value)
+	readFlag := func(cmd *cobra.Command) (configdomain.ShipIntoNonperennialParent, error) {
+		return readBoolFlag[configdomain.ShipIntoNonperennialParent](cmd.Flags(), shipIntoNonPerennialParentLong)
 	}
 	return addFlag, readFlag
 }
 
-// the type signature for the function that reads the dry-run flag from the args to the given Cobra command
-type ReadShipIntoNonPerennialParentFlagFunc func(*cobra.Command) configdomain.ShipIntoNonperennialParent
+// ReadShipIntoNonPerennialParentFlagFunc is the type signature for the function that reads the "to-parent" flag from the args to the given Cobra command.
+type ReadShipIntoNonPerennialParentFlagFunc func(*cobra.Command) (configdomain.ShipIntoNonperennialParent, error)

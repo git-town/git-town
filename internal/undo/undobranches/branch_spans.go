@@ -1,10 +1,10 @@
 package undobranches
 
 import (
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
-	"github.com/git-town/git-town/v15/internal/gohacks/slice"
-	"github.com/git-town/git-town/v15/internal/undo/undodomain"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks/slice"
+	"github.com/git-town/git-town/v22/internal/undo/undodomain"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 // BranchSpans describes how a Git Town command has modified the branches in a Git repository.
@@ -36,15 +36,13 @@ func (self BranchSpans) Changes() BranchChanges {
 	localAdded := gitdomain.LocalBranchNames{}
 	localChanged := LocalBranchChange{}
 	localRemoved := LocalBranchesSHAs{}
+	localRenamed := []LocalBranchRename{}
 	omniChanged := LocalBranchChange{}
 	omniRemoved := LocalBranchesSHAs{}
 	remoteAdded := gitdomain.RemoteBranchNames{}
 	remoteChanged := map[gitdomain.RemoteBranchName]undodomain.Change[gitdomain.SHA]{}
 	remoteRemoved := map[gitdomain.RemoteBranchName]gitdomain.SHA{}
 	for _, branchSpan := range self {
-		if branchSpan.NoChanges() {
-			continue
-		}
 		if isOmniRemove, beforeLocalBranch, beforeLocalSHA := branchSpan.IsOmniRemove(); isOmniRemove {
 			omniRemoved[beforeLocalBranch] = beforeLocalSHA
 			continue
@@ -55,6 +53,13 @@ func (self BranchSpans) Changes() BranchChanges {
 				After:  afterSHA,
 			}
 			continue
+		}
+		isLocalRename, beforeName, afterName := branchSpan.IsLocalRename()
+		if isLocalRename {
+			localRenamed = append(localRenamed, LocalBranchRename{
+				After:  afterName,
+				Before: beforeName,
+			})
 		}
 		isInconsistentChange, before, after := branchSpan.IsInconsistentChange()
 		if isInconsistentChange {
@@ -90,6 +95,7 @@ func (self BranchSpans) Changes() BranchChanges {
 		LocalAdded:            localAdded,
 		LocalChanged:          localChanged,
 		LocalRemoved:          localRemoved,
+		LocalRenamed:          localRenamed,
 		OmniChanged:           omniChanged,
 		OmniRemoved:           omniRemoved,
 		RemoteAdded:           remoteAdded,

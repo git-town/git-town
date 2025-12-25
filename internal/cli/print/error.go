@@ -3,7 +3,7 @@ package print
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v15/internal/cli/colors"
+	"github.com/git-town/git-town/v22/pkg/colors"
 )
 
 // Error prints the given error message to the console.

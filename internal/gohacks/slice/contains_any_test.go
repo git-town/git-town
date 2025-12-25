@@ -3,12 +3,19 @@ package slice_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v15/internal/gohacks/slice"
+	"github.com/git-town/git-town/v22/internal/gohacks/slice"
 	"github.com/shoenig/test/must"
 )
 
 func TestContainsAny(t *testing.T) {
 	t.Parallel()
+
+	t.Run("multiple elements in common", func(t *testing.T) {
+		t.Parallel()
+		haystack := []int{1, 2, 3}
+		needles := []int{2, 3, 4}
+		must.True(t, slice.ContainsAny(haystack, needles))
+	})
 
 	t.Run("no elements in common", func(t *testing.T) {
 		t.Parallel()
@@ -21,13 +28,6 @@ func TestContainsAny(t *testing.T) {
 		t.Parallel()
 		haystack := []int{1, 2, 3}
 		needles := []int{3, 4, 5}
-		must.True(t, slice.ContainsAny(haystack, needles))
-	})
-
-	t.Run("multiple elements in common", func(t *testing.T) {
-		t.Parallel()
-		haystack := []int{1, 2, 3}
-		needles := []int{2, 3, 4}
 		must.True(t, slice.ContainsAny(haystack, needles))
 	})
 }

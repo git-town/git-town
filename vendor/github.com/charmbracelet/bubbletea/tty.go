@@ -10,7 +10,24 @@ import (
 	"github.com/muesli/cancelreader"
 )
 
+func (p *Program) suspend() {
+	if err := p.ReleaseTerminal(); err != nil {
+		// If we can't release input, abort.
+		return
+	}
+
+	suspendProcess()
+
+	_ = p.RestoreTerminal()
+	go p.Send(ResumeMsg{})
+}
+
 func (p *Program) initTerminal() error {
+	if _, ok := p.renderer.(*nilRenderer); ok {
+		// No need to initialize the terminal if we're not rendering
+		return nil
+	}
+
 	if err := p.initInput(); err != nil {
 		return err
 	}
@@ -27,11 +44,15 @@ func (p *Program) restoreTerminalState() error {
 		p.renderer.showCursor()
 		p.disableMouse()
 
+		if p.renderer.reportFocus() {
+			p.renderer.disableReportFocus()
+		}
+
 		if p.renderer.altScreen() {
 			p.renderer.exitAltScreen()
 
 			// give the terminal a moment to catch up
-			time.Sleep(time.Millisecond * 10) //nolint:gomnd
+			time.Sleep(time.Millisecond * 10) //nolint:mnd
 		}
 	}
 
@@ -54,9 +75,14 @@ func (p *Program) restoreInput() error {
 }
 
 // initCancelReader (re)commences reading inputs.
-func (p *Program) initCancelReader() error {
+func (p *Program) initCancelReader(cancel bool) error {
+	if cancel && p.cancelReader != nil {
+		p.cancelReader.Cancel()
+		p.waitForReadLoop()
+	}
+
 	var err error
-	p.cancelReader, err = newInputReader(p.input)
+	p.cancelReader, err = newInputReader(p.input, p.mouseMode)
 	if err != nil {
 		return fmt.Errorf("error creating cancelreader: %w", err)
 	}
@@ -83,7 +109,7 @@ func (p *Program) readLoop() {
 func (p *Program) waitForReadLoop() {
 	select {
 	case <-p.readLoopDone:
-	case <-time.After(500 * time.Millisecond): //nolint:gomnd
+	case <-time.After(500 * time.Millisecond): //nolint:mnd
 		// The read loop hangs, which means the input
 		// cancelReader's cancel function has returned true even
 		// though it was not able to cancel the read.

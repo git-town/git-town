@@ -1,34 +1,44 @@
 package dialog
 
 import (
+	"cmp"
 	"fmt"
 
-	"github.com/git-town/git-town/v15/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
-	"github.com/git-town/git-town/v15/internal/messages"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/messages"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 const (
-	perennialRegexTitle = `Regular expression for perennial branches`
+	perennialRegexTitle = `Perennial branch Regex`
 	PerennialRegexHelp  = `
-All branches whose names match this regular expression
-are also considered perennial branches.
+Any branch name matching this regular expression
+will be treated as a perennial branch.
 
-If you are not sure, leave this empty.
+Example: ^release-.+
+
+If you're not sure what to enter here,
+it's safe to leave it blank.
 
 `
 )
 
-// PerennialRegex lets the user enter the GitHub API token.
-func PerennialRegex(oldValue Option[configdomain.PerennialRegex], inputs components.TestInput) (Option[configdomain.PerennialRegex], bool, error) {
-	value, aborted, err := components.TextField(components.TextFieldArgs{
-		ExistingValue: oldValue.String(),
+func PerennialRegex(args Args[configdomain.PerennialRegex]) (Option[configdomain.PerennialRegex], dialogdomain.Exit, error) {
+	input, exit, errInput := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
+		DialogName:    "perennial-regex",
+		ExistingValue: args.Local.Or(args.Global).StringOr(""),
 		Help:          PerennialRegexHelp,
-		Prompt:        "Perennial regex: ",
-		TestInput:     inputs,
+		Inputs:        args.Inputs,
+		Prompt:        messages.PerennialRegexPrompt,
 		Title:         perennialRegexTitle,
 	})
-	fmt.Printf(messages.PerennialRegex, components.FormattedSelection(value, aborted))
-	return configdomain.ParsePerennialRegex(value), aborted, err
+	newValue, errNewValue := configdomain.ParsePerennialRegex(input, "dialog")
+	if args.Global.Equal(newValue) {
+		// the user has entered the global value --> keep using the global value, don't store the local value
+		newValue = None[configdomain.PerennialRegex]()
+	}
+	fmt.Printf(messages.PerennialRegexResult, dialogcomponents.FormattedOption(newValue, args.Global.IsSome(), exit))
+	return newValue, exit, cmp.Or(errInput, errNewValue)
 }

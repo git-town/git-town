@@ -30,8 +30,7 @@ func TestStepDefUsage(t *testing.T) {
 				`tag "two"`,
 			}
 			have := lintSteps.FindUnusedStepDefs(definedSteps, usedSteps)
-			want := []lintSteps.StepDefinition{}
-			must.Eq(t, want, have)
+			must.Len(t, 0, have)
 		})
 
 		t.Run("some unused steps", func(t *testing.T) {

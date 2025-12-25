@@ -5,17 +5,16 @@ Feature: does not create prototyping branches this way
     When I run "git-town prototype zonk"
 
   Scenario: result
-    Then it runs no commands
-    And it prints the error:
+    Then Git Town runs no commands
+    And Git Town prints the error:
       """
       there is no branch "zonk"
       """
-    And there are still no prototype branches
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
-    And it prints:
+    Then Git Town runs no commands
+    And Git Town prints:
       """
       nothing to undo
       """

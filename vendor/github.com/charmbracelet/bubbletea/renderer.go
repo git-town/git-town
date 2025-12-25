@@ -70,6 +70,18 @@ type renderer interface {
 
 	// setWindowTitle sets the terminal window title.
 	setWindowTitle(string)
+
+	// reportFocus returns whether reporting focus events is enabled.
+	reportFocus() bool
+
+	// enableReportFocus reports focus events to the program.
+	enableReportFocus()
+
+	// disableReportFocus stops reporting focus events to the program.
+	disableReportFocus()
+
+	// resetLinesRendered ensures exec output remains on screen on exit
+	resetLinesRendered()
 }
 
 // repaintMsg forces a full repaint.

@@ -19,7 +19,7 @@ type ProgramOption func(*Program)
 // cancelled it will exit with an error ErrProgramKilled.
 func WithContext(ctx context.Context) ProgramOption {
 	return func(p *Program) {
-		p.ctx = ctx
+		p.externalCtx = ctx
 	}
 }
 
@@ -46,6 +46,23 @@ func WithInput(input io.Reader) ProgramOption {
 func WithInputTTY() ProgramOption {
 	return func(p *Program) {
 		p.inputType = ttyInput
+	}
+}
+
+// WithEnvironment sets the environment variables that the program will use.
+// This useful when the program is running in a remote session (e.g. SSH) and
+// you want to pass the environment variables from the remote session to the
+// program.
+//
+// Example:
+//
+//	var sess ssh.Session // ssh.Session is a type from the github.com/charmbracelet/ssh package
+//	pty, _, _ := sess.Pty()
+//	environ := append(sess.Environ(), "TERM="+pty.Term)
+//	p := tea.NewProgram(model, tea.WithEnvironment(environ)
+func WithEnvironment(env []string) ProgramOption {
+	return func(p *Program) {
+		p.environ = env
 	}
 }
 
@@ -168,6 +185,9 @@ func WithoutRenderer() ProgramOption {
 //
 // This feature is provisional, and may be changed or removed in a future version
 // of this package.
+//
+// Deprecated: this incurs a noticeable performance hit. A future release will
+// optimize ANSI automatically without the performance penalty.
 func WithANSICompressor() ProgramOption {
 	return func(p *Program) {
 		p.startupOptions |= withANSICompressor
@@ -215,5 +235,18 @@ func WithFilter(filter func(Model, Msg) Msg) ProgramOption {
 func WithFPS(fps int) ProgramOption {
 	return func(p *Program) {
 		p.fps = fps
+	}
+}
+
+// WithReportFocus enables reporting when the terminal gains and loses
+// focus. When this is enabled [FocusMsg] and [BlurMsg] messages will be sent
+// to your Update method.
+//
+// Note that while most terminals and multiplexers support focus reporting,
+// some do not. Also note that tmux needs to be configured to report focus
+// events.
+func WithReportFocus() ProgramOption {
+	return func(p *Program) {
+		p.startupOptions |= withReportFocus
 	}
 }

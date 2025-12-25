@@ -1,0 +1,36 @@
+name: end-to-end tests on old Git version
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  end-to-end-old:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - uses: actions/cache@v4
+        with:
+          path: git-2.30.0
+          key: ${{ runner.os }}-git
+      - run: sudo apt update
+      - name: install Spanish language pack
+        run: sudo apt-get install language-pack-es language-pack-es-base
+      - name: Install old Git
+        # https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
+        run: |
+          sudo apt-get install dh-autoreconf libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev
+          curl -O https://www.kernel.org/pub/software/scm/git/git-2.30.0.tar.gz
+          tar -zxf git-2.30.0.tar.gz
+          cd git-2.30.0
+          make configure
+          ./configure --prefix=/usr
+          make all
+          sudo make install
+          git --version
+      - run: make cukeall
+        shell: 'script -q -e -c "bash {0}"' # this creates /dev/tty needed by BubbleTea

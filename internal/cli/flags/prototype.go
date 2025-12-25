@@ -1,29 +1,22 @@
 package flags
 
 import (
-	"fmt"
-
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	"github.com/git-town/git-town/v15/internal/messages"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/spf13/cobra"
 )
 
 const prototypeLong = "prototype"
 
-// type-safe access to the CLI arguments of type gitdomain.Prototype
+// type-safe access to the CLI arguments of type configdomain.Prototype
 func Prototype() (AddFunc, ReadPrototypeFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.PersistentFlags().BoolP(prototypeLong, "p", false, "create a prototype branch")
+		cmd.Flags().BoolP(prototypeLong, "p", false, "create a prototype branch")
 	}
-	readFlag := func(cmd *cobra.Command) configdomain.Prototype {
-		value, err := cmd.Flags().GetBool(prototypeLong)
-		if err != nil {
-			panic(fmt.Sprintf(messages.FlagStringDoesntExist, cmd.Name(), prototypeLong))
-		}
-		return configdomain.Prototype(value)
+	readFlag := func(cmd *cobra.Command) (configdomain.Prototype, error) {
+		return readBoolFlag[configdomain.Prototype](cmd.Flags(), prototypeLong)
 	}
 	return addFlag, readFlag
 }
 
-// the type signature for the function that reads the dry-run flag from the args to the given Cobra command
-type ReadPrototypeFlagFunc func(*cobra.Command) configdomain.Prototype
+// ReadPrototypeFlagFunc is the type signature for the function that reads the "prototype" flag from the args to the given Cobra command.
+type ReadPrototypeFlagFunc func(*cobra.Command) (configdomain.Prototype, error)

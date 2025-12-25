@@ -3,24 +3,19 @@ package configdomain_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/shoenig/test/must"
 )
 
 func TestPerennialRegex(t *testing.T) {
 	t.Parallel()
 
-	t.Run("empty regex matches nothing", func(t *testing.T) {
-		t.Parallel()
-		perennialRegex := configdomain.PerennialRegex("")
-		must.False(t, perennialRegex.MatchesBranch(""))
-		must.False(t, perennialRegex.MatchesBranch("foo"))
-	})
-
 	t.Run("only characters, no wildcards matches all branch names that contain that phrase", func(t *testing.T) {
 		t.Parallel()
-		perennialRegex := configdomain.PerennialRegex("release")
+		perennialRegexOpt, err := configdomain.ParsePerennialRegex("release", "test")
+		must.NoError(t, err)
+		perennialRegex := perennialRegexOpt.GetOrPanic()
 		tests := map[string]bool{
 			"":                false,
 			"release":         true,
@@ -36,7 +31,9 @@ func TestPerennialRegex(t *testing.T) {
 
 	t.Run("with wildcards", func(t *testing.T) {
 		t.Parallel()
-		perennialRegex := configdomain.PerennialRegex("release-.*")
+		perennialRegexOpt, err := configdomain.ParsePerennialRegex("release-.*", "test")
+		must.NoError(t, err)
+		perennialRegex := perennialRegexOpt.GetOrPanic()
 		tests := map[string]bool{
 			"":                false,
 			"release":         false,

@@ -1,30 +1,49 @@
-# git park [branches]
+# git town park
+
+<a type="git-town-command" />
+
+```command-summary
+git town park [<branch-name>...] [-h | --help] [-v | --verbose]
+```
 
 The _park_ command [parks](../branch-types.md#parked-branches) some of your
 branches.
 
-## Examples
+To convert a parked branch back into a feature branch, use the
+[feature](feature.md) command or [propose](propose.md) it.
+
+## Positional arguments
 
 Park the current branch:
 
 ```fish
-git park
+git town park
 ```
 
 Park branches "alpha" and "beta":
 
 ```fish
-git park alpha beta
+git town park alpha beta
 ```
 
-Convert the current parked branch back to a feature branch:
+## Options
 
-```fish
-git hack
-```
+#### `-h`<br>`--help`
 
-Convert the parked branches "alpha" and "beta" back to feature branches:
+Display help for this command.
 
-```fish
-git hack alpha beta
-```
+#### `-v`<br>`--verbose`
+
+The `--verbose` aka `-v` flag prints all Git commands run under the hood to
+determine the repository state.
+
+## See also
+
+<!-- keep-sorted start -->
+
+- [contribute](contribute.md) makes the chosen branches contribution branches
+- [feature](feature.md) makes the chosen branches feature branches
+- [observe](observe.md) makes the chosen branches observed
+- [prototype](prototype.md) makes the chosen branches prototype branches
+
+<!-- keep-sorted end -->

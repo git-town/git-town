@@ -4,22 +4,24 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/git-town/git-town/v15/internal/cli/flags"
-	"github.com/git-town/git-town/v15/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v15/internal/config"
-	"github.com/git-town/git-town/v15/internal/config/commandconfig"
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	"github.com/git-town/git-town/v15/internal/execute"
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
-	"github.com/git-town/git-town/v15/internal/messages"
-	configInterpreter "github.com/git-town/git-town/v15/internal/vm/interpreter/config"
+	"github.com/git-town/git-town/v22/internal/cli/flags"
+	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v22/internal/config"
+	"github.com/git-town/git-town/v22/internal/config/cliconfig"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/config/gitconfig"
+	"github.com/git-town/git-town/v22/internal/execute"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks/mapstools"
+	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/vm/interpreter/configinterpreter"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
-const observeDesc = "Stop your contributions to some feature branches"
-
-const observeHelp = `
+const (
+	observeDesc = "Stop your contributions to some feature branches"
+	observeHelp = `
 Marks the given local branches as observed.
 If no branch is provided, observes the current branch.
 
@@ -27,36 +29,53 @@ Observed branches are useful when you assist other developers
 and make local changes to try out ideas,
 but want the other developers to implement and commit all official changes.
 
-On an observed branch, "git sync"
+On an observed branch, "git town sync"
 - pulls down updates from the tracking branch (always via rebase)
 - does not push your local commits to the tracking branch
 - does not pull updates from the parent branch
 `
+)
 
 func observeCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "observe [branches]",
 		Args:    cobra.ArbitraryArgs,
-		GroupID: "types",
+		GroupID: cmdhelpers.GroupIDTypes,
 		Short:   observeDesc,
 		Long:    cmdhelpers.Long(observeDesc, observeHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeObserve(args, readVerboseFlag(cmd))
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				Detached:          None[configdomain.Detached](),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            None[configdomain.DryRun](),
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
+			})
+			return executeObserve(args, cliConfig)
 		},
 	}
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeObserve(args []string, verbose configdomain.Verbose) error {
+func executeObserve(args []string, cliConfig configdomain.PartialConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		DryRun:           false,
+		CliConfig:        cliConfig,
+		IgnoreUnknown:    false,
 		PrintBranchNames: false,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
 		ValidateIsOnline: false,
-		Verbose:          verbose,
 	})
 	if err != nil {
 		return err
@@ -65,15 +84,12 @@ func executeObserve(args []string, verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	err = validateObserveData(data)
+	err = validateObserveData(data, repo)
 	if err != nil {
 		return err
 	}
 	branchNames := data.branchesToObserve.Keys()
-	if err = repo.UnvalidatedConfig.AddToObservedBranches(branchNames...); err != nil {
-		return err
-	}
-	if err = removeNonObserveBranchTypes(data.branchesToObserve, repo.UnvalidatedConfig); err != nil {
+	if err = gitconfig.SetBranchTypeOverride(repo.Backend, configdomain.BranchTypeObservedBranch, branchNames...); err != nil {
 		return err
 	}
 	printObservedBranches(branchNames)
@@ -82,7 +98,7 @@ func executeObserve(args []string, verbose configdomain.Verbose) error {
 			return err
 		}
 	}
-	return configInterpreter.Finished(configInterpreter.FinishedArgs{
+	return configinterpreter.Finished(configinterpreter.FinishedArgs{
 		Backend:               repo.Backend,
 		BeginBranchesSnapshot: Some(data.branchesSnapshot),
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -92,42 +108,21 @@ func executeObserve(args []string, verbose configdomain.Verbose) error {
 		Git:                   repo.Git,
 		RootDir:               repo.RootDir,
 		TouchedBranches:       branchNames.BranchNames(),
-		Verbose:               verbose,
+		Verbose:               repo.UnvalidatedConfig.NormalConfig.Verbose,
 	})
 }
 
 type observeData struct {
-	allBranches       gitdomain.BranchInfos
+	branchInfos       gitdomain.BranchInfos
 	branchesSnapshot  gitdomain.BranchesSnapshot
-	branchesToObserve commandconfig.BranchesAndTypes
+	branchesToObserve configdomain.BranchesAndTypes
 	checkout          Option[gitdomain.LocalBranchName]
 }
 
 func printObservedBranches(branches gitdomain.LocalBranchNames) {
 	for _, branch := range branches {
-		fmt.Printf(messages.ObservedBranchIsNowObserved, branch)
+		fmt.Printf(messages.BranchIsNowObserved, branch)
 	}
-}
-
-func removeNonObserveBranchTypes(branches commandconfig.BranchesAndTypes, config config.UnvalidatedConfig) error {
-	for branchName, branchType := range branches {
-		switch branchType {
-		case configdomain.BranchTypeContributionBranch:
-			if err := config.RemoveFromContributionBranches(branchName); err != nil {
-				return err
-			}
-		case configdomain.BranchTypeParkedBranch:
-			if err := config.RemoveFromParkedBranches(branchName); err != nil {
-				return err
-			}
-		case configdomain.BranchTypePrototypeBranch:
-			if err := config.RemoveFromPrototypeBranches(branchName); err != nil {
-				return err
-			}
-		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
-		}
-	}
-	return nil
 }
 
 func determineObserveData(args []string, repo execute.OpenRepoResult) (observeData, error) {
@@ -135,52 +130,40 @@ func determineObserveData(args []string, repo execute.OpenRepoResult) (observeDa
 	if err != nil {
 		return observeData{}, err
 	}
-	branchesToObserve := commandconfig.BranchesAndTypes{}
-	checkout := None[gitdomain.LocalBranchName]()
-	currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
-	if !hasCurrentBranch {
-		return observeData{}, errors.New(messages.CurrentBranchCannotDetermine)
+	if branchesSnapshot.DetachedHead {
+		return observeData{}, errors.New(messages.ObserveDetachedHead)
 	}
-	switch len(args) {
-	case 0:
-		branchesToObserve.Add(currentBranch, repo.UnvalidatedConfig.Config.Get())
-	case 1:
-		branch := gitdomain.NewLocalBranchName(args[0])
-		branchesToObserve.Add(branch, repo.UnvalidatedConfig.Config.Get())
-		trackingBranchName := branch.TrackingBranch()
-		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByRemoteName(trackingBranchName).Get()
-		if !hasBranchInfo {
-			return observeData{}, fmt.Errorf(messages.BranchDoesntExist, branch.String())
-		}
-		if branchInfo.SyncStatus == gitdomain.SyncStatusRemoteOnly {
-			checkout = Some(branch)
-		}
-	default:
-		branchesToObserve.AddMany(gitdomain.NewLocalBranchNames(args...), repo.UnvalidatedConfig.Config.Get())
-	}
+	branchesToObserve, branchToCheckout, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
 	return observeData{
-		allBranches:       branchesSnapshot.Branches,
+		branchInfos:       branchesSnapshot.Branches,
 		branchesSnapshot:  branchesSnapshot,
 		branchesToObserve: branchesToObserve,
-		checkout:          checkout,
-	}, nil
+		checkout:          branchToCheckout,
+	}, err
 }
 
-func validateObserveData(data observeData) error {
-	for branchName, branchType := range data.branchesToObserve {
-		if !data.allBranches.HasLocalBranch(branchName) && !data.allBranches.HasMatchingTrackingBranchFor(branchName) {
-			return fmt.Errorf(messages.BranchDoesntExist, branchName)
-		}
+func validateObserveData(data observeData, repo execute.OpenRepoResult) error {
+	for branchName, branchType := range mapstools.SortedKeyValues(data.branchesToObserve) {
 		switch branchType {
 		case configdomain.BranchTypeMainBranch:
 			return errors.New(messages.MainBranchCannotObserve)
 		case configdomain.BranchTypePerennialBranch:
 			return errors.New(messages.PerennialBranchCannotObserve)
 		case configdomain.BranchTypeObservedBranch:
-			return fmt.Errorf(messages.BranchIsAlreadyObserved, branchName)
-		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeContributionBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePrototypeBranch:
-		default:
-			panic("unhandled branch type" + branchType.String())
+			repo.FinalMessages.Addf(messages.BranchIsAlreadyObserved, branchName)
+		case
+			configdomain.BranchTypeFeatureBranch,
+			configdomain.BranchTypeContributionBranch,
+			configdomain.BranchTypeParkedBranch,
+			configdomain.BranchTypePrototypeBranch:
+		}
+		hasLocalBranch := data.branchesSnapshot.Branches.HasLocalBranch(branchName)
+		hasRemoteBranch := data.branchesSnapshot.Branches.HasMatchingTrackingBranchFor(branchName)
+		if !hasLocalBranch && !hasRemoteBranch {
+			return fmt.Errorf(messages.BranchDoesntExist, branchName)
+		}
+		if hasLocalBranch && !hasRemoteBranch {
+			return fmt.Errorf(messages.ObserveBranchIsLocal, branchName)
 		}
 	}
 	return nil

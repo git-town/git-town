@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/shoenig/test/must"
 )
 
@@ -24,13 +24,6 @@ func TestLocalBranchName(t *testing.T) {
 		t.Parallel()
 		branch := gitdomain.NewLocalBranchName("branch-1")
 		must.EqOp(t, "branch-1", branch.String())
-	})
-
-	t.Run("TrackingBranch", func(t *testing.T) {
-		t.Parallel()
-		branch := gitdomain.NewLocalBranchName("branch")
-		want := gitdomain.NewRemoteBranchName("origin/branch")
-		must.EqOp(t, want, branch.TrackingBranch())
 	})
 
 	t.Run("UnmarshalJSON", func(t *testing.T) {

@@ -13,78 +13,59 @@ Feature: sync inside a folder that doesn't exist on the main branch
       |         |               | folder commit              | new_folder/file1 |                 |
       | other   | local, origin | other commit               | file2            |                 |
     And the current branch is "current"
-    And an uncommitted file
     When I run "git-town sync --all" in the "new_folder" folder
 
   Scenario: result
-    Then it runs the commands
-      | BRANCH  | COMMAND                                 |
-      | current | git fetch --prune --tags                |
-      |         | git add -A                              |
-      |         | git stash                               |
-      |         | git checkout main                       |
-      | main    | git rebase origin/main                  |
-      |         | git checkout current                    |
-      | current | git merge --no-edit --ff origin/current |
-      |         | git merge --no-edit --ff main           |
-    And the current branch is still "current"
-    And the uncommitted file is stashed
+    Then Git Town runs the commands
+      | BRANCH  | COMMAND                       |
+      | current | git fetch --prune --tags      |
+      |         | git merge --no-edit --ff main |
+    And Git Town prints the error:
+      """
+      git merge conflict
+      """
     And a merge is now in progress
-    And it prints the error:
-      """
-      exit status 1
-      """
 
   Scenario: undo
     When I run "git-town undo" in the "new_folder" folder
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND           |
       | current | git merge --abort |
-      |         | git stash pop     |
-    And the current branch is still "current"
-    And the uncommitted file still exists
-    And no merge is in progress
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And no merge is now in progress
+    And the initial branches and lineage exist now
+    And the initial commits exist now
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue" in the "new_folder" folder
-    Then it runs no commands
-    And it prints the error:
+    Then Git Town runs no commands
+    And Git Town prints the error:
       """
       you must resolve the conflicts before continuing
       """
-    And the current branch is still "current"
-    And the uncommitted file is stashed
     And a merge is now in progress
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" in the "new_folder" folder
-    Then it runs the commands
-      | BRANCH  | COMMAND                               |
-      | current | git commit --no-edit                  |
-      |         | git push                              |
-      |         | git checkout other                    |
-      | other   | git merge --no-edit --ff origin/other |
-      |         | git merge --no-edit --ff main         |
-      |         | git push                              |
-      |         | git checkout current                  |
-      | current | git push --tags                       |
-      |         | git stash pop                         |
+    Then Git Town runs the commands
+      | BRANCH  | COMMAND                                 |
+      | current | git commit --no-edit                    |
+      |         | git merge --no-edit --ff origin/current |
+      |         | git push                                |
+      |         | git checkout other                      |
+      | other   | git merge --no-edit --ff main           |
+      |         | git push                                |
+      |         | git checkout current                    |
+      | current | git push --tags                         |
+    And no merge is now in progress
     And all branches are now synchronized
-    And the current branch is still "current"
-    And the uncommitted file still exists
-    And no merge is in progress
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, origin | conflicting main commit          |
       | current | local, origin | conflicting current commit       |
       |         |               | folder commit                    |
-      |         |               | conflicting main commit          |
       |         |               | Merge branch 'main' into current |
       | other   | local, origin | other commit                     |
-      |         |               | conflicting main commit          |
       |         |               | Merge branch 'main' into other   |
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |

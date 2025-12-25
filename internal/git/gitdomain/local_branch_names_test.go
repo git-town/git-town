@@ -3,7 +3,7 @@ package gitdomain_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/shoenig/test/must"
 )
 
@@ -15,25 +15,17 @@ func TestLocalBranchNames(t *testing.T) {
 		t.Run("append some new elements", func(t *testing.T) {
 			t.Parallel()
 			give := gitdomain.NewLocalBranchNames("one", "two")
-			have := give.AppendAllMissing("two", "three", "four")
-			want := gitdomain.NewLocalBranchNames("one", "two", "three", "four")
+			have := give.AppendAllMissing(gitdomain.NewLocalBranchNames("two", "three", "four"))
+			want := gitdomain.NewLocalBranchNames("one", "two", "four", "three")
 			must.Eq(t, want, have)
 		})
 		t.Run("append no new elements", func(t *testing.T) {
 			t.Parallel()
 			give := gitdomain.NewLocalBranchNames("one", "two")
-			have := give.AppendAllMissing("one", "two")
+			have := give.AppendAllMissing(gitdomain.NewLocalBranchNames("one", "two"))
 			want := gitdomain.NewLocalBranchNames("one", "two")
 			must.Eq(t, want, have)
 		})
-	})
-
-	t.Run("AtRemote", func(t *testing.T) {
-		t.Parallel()
-		branch := gitdomain.NewLocalBranchName("branch")
-		have := branch.AtRemote(gitdomain.RemoteOrigin)
-		want := gitdomain.NewRemoteBranchName("origin/branch")
-		must.EqOp(t, want, have)
 	})
 
 	t.Run("Contains", func(t *testing.T) {
@@ -46,17 +38,17 @@ func TestLocalBranchNames(t *testing.T) {
 
 	t.Run("Hoist", func(t *testing.T) {
 		t.Parallel()
-		t.Run("haystack contains needle", func(t *testing.T) {
+		t.Run("haystack contains needles", func(t *testing.T) {
 			t.Parallel()
-			branches := gitdomain.NewLocalBranchNames("one", "two", "three")
-			have := branches.Hoist(gitdomain.NewLocalBranchName("two"))
-			want := gitdomain.NewLocalBranchNames("two", "one", "three")
+			branches := gitdomain.NewLocalBranchNames("one", "two", "three", "four")
+			have := branches.Hoist("four", "two")
+			want := gitdomain.NewLocalBranchNames("four", "two", "one", "three")
 			must.Eq(t, want, have)
 		})
-		t.Run("haystack does not contain needle", func(t *testing.T) {
+		t.Run("haystack does not contain needles", func(t *testing.T) {
 			t.Parallel()
 			branches := gitdomain.NewLocalBranchNames("one", "two", "three")
-			have := branches.Hoist(gitdomain.NewLocalBranchName("zonk"))
+			have := branches.Hoist("zonk")
 			want := gitdomain.NewLocalBranchNames("one", "two", "three")
 			must.Eq(t, want, have)
 		})
@@ -72,7 +64,7 @@ func TestLocalBranchNames(t *testing.T) {
 		})
 		t.Run("no branch names", func(t *testing.T) {
 			t.Parallel()
-			branches := gitdomain.NewLocalBranchNames()
+			branches := gitdomain.LocalBranchNames{}
 			must.Eq(t, 0, len(branches))
 		})
 	})
@@ -98,24 +90,18 @@ func TestLocalBranchNames(t *testing.T) {
 		})
 	})
 
-	t.Run("Prepend", func(t *testing.T) {
+	t.Run("ParseLocalBranchNames", func(t *testing.T) {
 		t.Parallel()
-		t.Run("empty list", func(t *testing.T) {
-			t.Parallel()
-			branch := gitdomain.NewLocalBranchName("branch")
-			have := gitdomain.LocalBranchNames{}
-			have.Prepend(branch)
-			want := gitdomain.LocalBranchNames{branch}
+		tests := map[string]gitdomain.LocalBranchNames{
+			"one two":      {"one", "two"},
+			" one   two  ": {"one", "two"},
+			"   ":          {},
+			"":             {},
+		}
+		for give, want := range tests {
+			have := gitdomain.ParseLocalBranchNames(give)
 			must.Eq(t, want, have)
-		})
-		t.Run("populated list", func(t *testing.T) {
-			t.Parallel()
-			newBranch := gitdomain.NewLocalBranchName("new")
-			have := gitdomain.NewLocalBranchNames("one", "two")
-			have.Prepend(newBranch)
-			want := gitdomain.NewLocalBranchNames("new", "one", "two")
-			must.Eq(t, want, have)
-		})
+		}
 	})
 
 	t.Run("Remove", func(t *testing.T) {
@@ -141,29 +127,5 @@ func TestLocalBranchNames(t *testing.T) {
 			want := gitdomain.NewLocalBranchNames("one", "three")
 			must.Eq(t, want, have)
 		})
-	})
-
-	t.Run("RemoveWorktreeMarkers", func(t *testing.T) {
-		t.Parallel()
-		branches := gitdomain.NewLocalBranchNames("one", "+ two")
-		have := branches.RemoveWorktreeMarkers()
-		want := gitdomain.NewLocalBranchNames("one", "two")
-		must.Eq(t, want, have)
-	})
-
-	t.Run("TrackingBranch", func(t *testing.T) {
-		t.Parallel()
-		branch := gitdomain.NewLocalBranchName("branch")
-		have := branch.TrackingBranch()
-		want := gitdomain.NewRemoteBranchName("origin/branch")
-		must.EqOp(t, want, have)
-	})
-
-	t.Run("Sort", func(t *testing.T) {
-		t.Parallel()
-		branches := gitdomain.NewLocalBranchNames("one", "two", "three")
-		want := []string{"one", "three", "two"}
-		branches.Sort()
-		must.Eq(t, want, branches.Strings())
 	})
 }

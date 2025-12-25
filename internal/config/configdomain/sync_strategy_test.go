@@ -3,15 +3,15 @@ package configdomain_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
 func TestNewSyncStrategy(t *testing.T) {
 	t.Parallel()
 
-	t.Run("valid content", func(t *testing.T) {
+	t.Run("acceptable content", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]Option[configdomain.SyncStrategy]{
 			"":       None[configdomain.SyncStrategy](),

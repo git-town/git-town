@@ -34,13 +34,13 @@ func main() {
 
 	// print statistics
 	fmt.Println()
-	fmt.Printf("%s shipped PRs\n", console.Green.Styled(strconv.Itoa(len(closedPullRequests))))
+	fmt.Printf("%s shipped pull requests\n", console.Green.Styled(strconv.Itoa(len(closedPullRequests))))
 	fmt.Printf("%s resolved issues\n", console.Green.Styled(strconv.Itoa(len(closedIssues))))
 	users := contributors.Values()
 	fmt.Printf("%s contributors:\n", console.Cyan.Styled(strconv.Itoa(len(users))))
-	userNames := []string{}
-	for _, username := range users {
-		userNames = append(userNames, "@"+username)
+	userNames := make([]string, len(users))
+	for u, username := range users {
+		userNames[u] = "@" + username
 	}
 	fmt.Println(strings.Join(userNames, ", "))
 }

@@ -4,45 +4,70 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/git-town/git-town/v15/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v15/internal/config"
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	"github.com/git-town/git-town/v15/internal/git"
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	"github.com/git-town/git-town/v15/internal/gohacks"
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
-	"github.com/git-town/git-town/v15/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v15/internal/hosting/hostingdomain"
-	"github.com/git-town/git-town/v15/internal/messages"
-	"github.com/git-town/git-town/v15/internal/undo/undobranches"
-	fullInterpreter "github.com/git-town/git-town/v15/internal/vm/interpreter/full"
-	lightInterpreter "github.com/git-town/git-town/v15/internal/vm/interpreter/light"
-	"github.com/git-town/git-town/v15/internal/vm/program"
-	"github.com/git-town/git-town/v15/internal/vm/runstate"
-	"github.com/git-town/git-town/v15/internal/vm/shared"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v22/internal/config"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v22/internal/git"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks"
+	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/state/runstate"
+	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
+	"github.com/git-town/git-town/v22/internal/undo/undobranches"
+	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
+	"github.com/git-town/git-town/v22/internal/vm/interpreter/lightinterpreter"
+	"github.com/git-town/git-town/v22/internal/vm/opcodes"
+	"github.com/git-town/git-town/v22/internal/vm/program"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
+
+type ExecuteArgs struct {
+	Backend         subshelldomain.RunnerQuerier
+	CommandsCounter Mutable[gohacks.Counter]
+	Config          config.ValidatedConfig
+	Connector       Option[forgedomain.Connector]
+	FinalMessages   stringslice.Collector
+	Frontend        subshelldomain.Runner
+	Git             git.Commands
+	HasOpenChanges  bool
+	InitialBranch   gitdomain.LocalBranchName
+	Inputs          dialogcomponents.Inputs
+	Park            configdomain.Park
+	RootDir         gitdomain.RepoRootDir
+	RunState        runstate.RunState
+}
 
 // executes the "skip" command at the given runstate
 func Execute(args ExecuteArgs) error {
-	lightInterpreter.Execute(lightInterpreter.ExecuteArgs{
+	skipProgram := args.RunState.AbortProgram
+	if args.Park {
+		skipProgram = append(skipProgram, &opcodes.BranchTypeOverrideSet{
+			Branch:     args.InitialBranch,
+			BranchType: configdomain.BranchTypeParkedBranch,
+		})
+	}
+	lightinterpreter.Execute(lightinterpreter.ExecuteArgs{
 		Backend:       args.Backend,
+		BranchInfos:   args.RunState.BeginBranchesSnapshot.Branches,
 		Config:        args.Config,
+		Connector:     args.Connector,
 		FinalMessages: args.FinalMessages,
 		Frontend:      args.Frontend,
 		Git:           args.Git,
-		Prog:          args.RunState.AbortProgram,
+		Prog:          skipProgram,
 	})
-	err := revertChangesToCurrentBranch(args)
-	if err != nil {
+	args.RunState.AbortProgram = program.Program{}
+	if err := revertChangesToCurrentBranch(args); err != nil {
 		return err
 	}
-	args.RunState.RunProgram = removeOpcodesForCurrentBranch(args.RunState.RunProgram)
-	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+	args.RunState.RunProgram = RemoveOpcodesForCurrentBranch(args.RunState.RunProgram)
+	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
 		Backend:                 args.Backend,
 		CommandsCounter:         args.CommandsCounter,
 		Config:                  args.Config,
 		Connector:               args.Connector,
-		DialogTestInputs:        args.TestInputs,
 		FinalMessages:           args.FinalMessages,
 		Frontend:                args.Frontend,
 		Git:                     args.Git,
@@ -51,34 +76,19 @@ func Execute(args ExecuteArgs) error {
 		InitialBranchesSnapshot: args.RunState.BeginBranchesSnapshot,
 		InitialConfigSnapshot:   args.RunState.BeginConfigSnapshot,
 		InitialStashSize:        args.RunState.BeginStashSize,
+		Inputs:                  args.Inputs,
+		PendingCommand:          Some(args.RunState.Command),
 		RootDir:                 args.RootDir,
 		RunState:                args.RunState,
-		Verbose:                 args.Verbose,
 	})
 }
 
-type ExecuteArgs struct {
-	Backend         gitdomain.RunnerQuerier
-	CommandsCounter Mutable[gohacks.Counter]
-	Config          config.ValidatedConfig
-	Connector       Option[hostingdomain.Connector]
-	FinalMessages   stringslice.Collector
-	Frontend        gitdomain.Runner
-	Git             git.Commands
-	HasOpenChanges  bool
-	InitialBranch   gitdomain.LocalBranchName
-	RootDir         gitdomain.RepoRootDir
-	RunState        runstate.RunState
-	TestInputs      components.TestInputs
-	Verbose         configdomain.Verbose
-}
-
 // removes the remaining opcodes for the current branch from the given program
-func removeOpcodesForCurrentBranch(prog program.Program) program.Program {
+func RemoveOpcodesForCurrentBranch(prog program.Program) program.Program {
 	result := make(program.Program, 0, len(prog)-1)
 	skipping := true
 	for _, opcode := range prog {
-		if shared.IsEndOfBranchProgramOpcode(opcode) {
+		if opcodes.IsEndOfBranchProgramOpcode(opcode) && skipping {
 			skipping = false
 			continue
 		}
@@ -106,13 +116,18 @@ func revertChangesToCurrentBranch(args ExecuteArgs) error {
 	}
 	undoCurrentBranchProgram := spans.Changes().UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 		BeginBranch:              args.InitialBranch,
-		Config:                   args.Config.Config,
+		BranchInfos:              args.RunState.BeginBranchesSnapshot.Branches,
+		Config:                   args.Config,
 		EndBranch:                args.InitialBranch,
+		FinalMessages:            args.FinalMessages,
+		UndoAPIProgram:           args.RunState.UndoAPIProgram,
 		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
 	})
-	lightInterpreter.Execute(lightInterpreter.ExecuteArgs{
+	lightinterpreter.Execute(lightinterpreter.ExecuteArgs{
 		Backend:       args.Backend,
+		BranchInfos:   args.RunState.BeginBranchesSnapshot.Branches,
 		Config:        args.Config,
+		Connector:     args.Connector,
 		FinalMessages: args.FinalMessages,
 		Frontend:      args.Frontend,
 		Git:           args.Git,

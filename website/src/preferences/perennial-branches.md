@@ -1,4 +1,4 @@
-# perennial-branches
+# Perennial branches
 
 Perennial branches are long-lived branches. They have no parent and are never
 shipped. Typical perennial branches are `main`, `master`, `development`,
@@ -6,7 +6,7 @@ shipped. Typical perennial branches are `main`, `master`, `development`,
 
 You can see the configured perennial branches via the
 [config](../commands/config.md) command and change them via the
-[setup assistant](../commands/config-setup.md).
+[setup assistant](../commands/init.md).
 
 ## configure in config file
 
@@ -15,19 +15,19 @@ defined as part of the `[branches]` section:
 
 ```toml
 [branches]
-perennials = [ "branch", "other-branch" ]
+perennials = ["branch", "other-branch"]
 ```
 
 ## configure in Git metadata
 
 You can configure the perennial branches manually by running:
 
-```bash
+```wrap
 git config [--global] git-town.perennial-branches "branch other-branch"
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on
-your local machine. When not present, the setting applies to the current repo.
+your machine. Without it, the setting applies only to the current repository.
 
 ## bulk-define perennial branches
 
@@ -35,3 +35,9 @@ If you have many perennial branches that follow the same naming schema, like
 `release-v4.0-rev.1`, `release-v4.0-rev.2`, etc, you can define a
 [regular expression](perennial-regex.md) for them instead of listing them one by
 one.
+
+## environment variable
+
+You can configure the perennial branches by setting the
+`GIT_TOWN_PERENNIAL_BRANCHES` environment variable to a value comparable to
+similar Git metadata.

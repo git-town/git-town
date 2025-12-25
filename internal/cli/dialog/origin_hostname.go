@@ -3,31 +3,40 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v15/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
-	"github.com/git-town/git-town/v15/internal/messages"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/messages"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 const (
 	originHostnameTitle = `Origin hostname`
 	OriginHostnameHelp  = `
-When using SSH identities, define the hostname
-of your source code repository. Only change this
-if the auto-detection does not work for you.
+If you're using SSH identities,
+specify the hostname
+of your source code repository.
+
+Only update this
+if Git Town's auto-detection doesn't work.
 
 `
 )
 
-// GitHubToken lets the user enter the GitHub API token.
-func OriginHostname(oldValue Option[configdomain.HostingOriginHostname], inputs components.TestInput) (Option[configdomain.HostingOriginHostname], bool, error) {
-	token, aborted, err := components.TextField(components.TextFieldArgs{
-		ExistingValue: oldValue.String(),
+func OriginHostname(args Args[configdomain.HostingOriginHostname]) (Option[configdomain.HostingOriginHostname], dialogdomain.Exit, error) {
+	input, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
+		DialogName:    "origin-hostname",
+		ExistingValue: args.Local.Or(args.Global).StringOr(""),
 		Help:          OriginHostnameHelp,
-		Prompt:        "Origin hostname override: ",
-		TestInput:     inputs,
+		Inputs:        args.Inputs,
+		Prompt:        messages.OriginHostnamePrompt,
 		Title:         originHostnameTitle,
 	})
-	fmt.Printf(messages.OriginHostname, components.FormattedToken(token, aborted))
-	return configdomain.ParseHostingOriginHostname(token), aborted, err
+	newValue := configdomain.ParseHostingOriginHostname(input)
+	if args.Global.Equal(newValue) {
+		// the user has entered the global value --> keep using the global value, don't store the local value
+		newValue = None[configdomain.HostingOriginHostname]()
+	}
+	fmt.Printf(messages.OriginHostnameResult, dialogcomponents.FormattedOption(newValue, args.Global.IsSome(), exit))
+	return newValue, exit, err
 }

@@ -19,7 +19,11 @@ func main() {
 		if err != nil {
 			return err
 		}
-		newContent := FormatFileContent(string(content))
+		text := string(content)
+		newContent := FormatFileContent(text)
+		if newContent == text {
+			return nil
+		}
 		return os.WriteFile(path, []byte(newContent), dirEntry.Type().Perm())
 	})
 	fmt.Println()
@@ -27,18 +31,6 @@ func main() {
 		fmt.Printf("ERROR: %s\n", err)
 		os.Exit(1)
 	}
-}
-
-// shouldIgnorePath indicates whether the file with the given path should be ignored (not formatted).
-func shouldIgnorePath(path string) bool {
-	return strings.HasPrefix(path, "vendor/") ||
-		path == "internal/config/configdomain/push_hook.go" ||
-		path == "internal/config/configdomain/offline.go" ||
-		path == "internal/cli/dialog/hosting.go" ||
-		path == "internal/cli/print/logger.go" ||
-		path == "internal/cli/dialog/switch_branch.go" ||
-		path == "internal/gohacks/slice/natural_sort.go" ||
-		strings.HasPrefix(path, "tools/stats_release")
 }
 
 func FormatFileContent(content string) string {
@@ -61,7 +53,7 @@ func FormatLine(line string) string {
 	return strings.Replace(line, "("+matches[1], "(self", 1)
 }
 
-var instanceRE = regexp.MustCompile(`func \((\w+) (\*?\w+\).*)$`)
+var instanceRE = regexp.MustCompile(`func \((\w+) (\*?[\w\[\]]+\).*)$`)
 
 // IsGoFile indicates whether the given file path is a Go source code file.
 // Tests are not considered source code in the context of this source code formatter.
@@ -70,4 +62,16 @@ func IsGoFile(path string) bool {
 		return false
 	}
 	return strings.HasSuffix(path, ".go")
+}
+
+// shouldIgnorePath indicates whether the file with the given path should be ignored (not formatted).
+func shouldIgnorePath(path string) bool {
+	return strings.HasPrefix(path, "vendor/") ||
+		// keep-sorted start
+		path == "internal/cli/dialog/switch_branch.go" ||
+		path == "internal/config/configdomain/offline.go" ||
+		path == "internal/gohacks/slice/natural_sort.go" ||
+		path == "tools/tests_sorted/matcher/matcher.go" ||
+		// keep-sorted end
+		strings.HasPrefix(path, "tools/stats_release")
 }

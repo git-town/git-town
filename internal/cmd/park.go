@@ -4,53 +4,73 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/git-town/git-town/v15/internal/cli/flags"
-	"github.com/git-town/git-town/v15/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v15/internal/config"
-	"github.com/git-town/git-town/v15/internal/config/commandconfig"
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	"github.com/git-town/git-town/v15/internal/execute"
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
-	"github.com/git-town/git-town/v15/internal/messages"
-	configInterpreter "github.com/git-town/git-town/v15/internal/vm/interpreter/config"
+	"github.com/git-town/git-town/v22/internal/cli/flags"
+	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v22/internal/config"
+	"github.com/git-town/git-town/v22/internal/config/cliconfig"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/config/gitconfig"
+	"github.com/git-town/git-town/v22/internal/execute"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks/mapstools"
+	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/vm/interpreter/configinterpreter"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
-const parkDesc = "Suspend syncing of some feature branches"
-
-const parkHelp = `
+const (
+	parkDesc = "Suspend syncing of some feature branches"
+	parkHelp = `
 Parks the given local feature branches.
 If no branch is provided, parks the current branch.
 
 Git Town does not sync parked branches.
 The currently checked out branch gets synced even if parked.
 `
+)
 
 func parkCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "park [branches]",
 		Args:    cobra.ArbitraryArgs,
-		GroupID: "types",
+		GroupID: cmdhelpers.GroupIDTypes,
 		Short:   parkDesc,
 		Long:    cmdhelpers.Long(parkDesc, parkHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executePark(args, readVerboseFlag(cmd))
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				AutoResolve:       None[configdomain.AutoResolve](),
+				AutoSync:          None[configdomain.AutoSync](),
+				Detached:          Some(configdomain.Detached(true)),
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            None[configdomain.DryRun](),
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             None[configdomain.Stash](),
+				Verbose:           verbose,
+			})
+			return executePark(args, cliConfig)
 		},
 	}
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executePark(args []string, verbose configdomain.Verbose) error {
+func executePark(args []string, cliConfig configdomain.PartialConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		DryRun:           false,
+		CliConfig:        cliConfig,
+		IgnoreUnknown:    false,
 		PrintBranchNames: false,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
 		ValidateIsOnline: false,
-		Verbose:          verbose,
 	})
 	if err != nil {
 		return err
@@ -59,21 +79,22 @@ func executePark(args []string, verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	err = validateParkData(data)
-	if err != nil {
+	if err = validateParkData(data, repo); err != nil {
 		return err
 	}
 	branchNames := data.branchesToPark.Keys()
-	if err = repo.UnvalidatedConfig.AddToParkedBranches(branchNames...); err != nil {
-		return err
-	}
-	if err = removeNonParkBranchTypes(data.branchesToPark, repo.UnvalidatedConfig); err != nil {
+	if err = gitconfig.SetBranchTypeOverride(repo.Backend, configdomain.BranchTypeParkedBranch, branchNames...); err != nil {
 		return err
 	}
 	printParkedBranches(branchNames)
-	return configInterpreter.Finished(configInterpreter.FinishedArgs{
+	if branchToCheckout, hasBranchToCheckout := data.branchToCheckout.Get(); hasBranchToCheckout {
+		if err = repo.Git.CheckoutBranch(repo.Frontend, branchToCheckout, false); err != nil {
+			return err
+		}
+	}
+	return configinterpreter.Finished(configinterpreter.FinishedArgs{
 		Backend:               repo.Backend,
-		BeginBranchesSnapshot: None[gitdomain.BranchesSnapshot](),
+		BeginBranchesSnapshot: Some(data.beginBranchesSnapshot),
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		Command:               "park",
 		CommandsCounter:       repo.CommandsCounter,
@@ -81,36 +102,21 @@ func executePark(args []string, verbose configdomain.Verbose) error {
 		Git:                   repo.Git,
 		RootDir:               repo.RootDir,
 		TouchedBranches:       branchNames.BranchNames(),
-		Verbose:               verbose,
+		Verbose:               repo.UnvalidatedConfig.NormalConfig.Verbose,
 	})
 }
 
 type parkData struct {
-	allBranches    gitdomain.BranchInfos
-	branchesToPark commandconfig.BranchesAndTypes
+	beginBranchesSnapshot gitdomain.BranchesSnapshot
+	branchInfos           gitdomain.BranchInfos
+	branchToCheckout      Option[gitdomain.LocalBranchName]
+	branchesToPark        configdomain.BranchesAndTypes
 }
 
 func printParkedBranches(branches gitdomain.LocalBranchNames) {
 	for _, branch := range branches {
-		fmt.Printf(messages.ParkedBranchIsNowParked, branch)
+		fmt.Printf(messages.BranchIsNowParked, branch)
 	}
-}
-
-func removeNonParkBranchTypes(branches map[gitdomain.LocalBranchName]configdomain.BranchType, config config.UnvalidatedConfig) error {
-	for branchName, branchType := range branches {
-		switch branchType {
-		case configdomain.BranchTypeContributionBranch:
-			if err := config.RemoveFromContributionBranches(branchName); err != nil {
-				return err
-			}
-		case configdomain.BranchTypeObservedBranch:
-			if err := config.RemoveFromObservedBranches(branchName); err != nil {
-				return err
-			}
-		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch, configdomain.BranchTypePrototypeBranch:
-		}
-	}
-	return nil
 }
 
 func determineParkData(args []string, repo execute.OpenRepoResult) (parkData, error) {
@@ -118,38 +124,47 @@ func determineParkData(args []string, repo execute.OpenRepoResult) (parkData, er
 	if err != nil {
 		return parkData{}, err
 	}
-	branchesToPark := commandconfig.BranchesAndTypes{}
-	currentBranch, hasCurrentBranch := branchesSnapshot.Active.Get()
-	if !hasCurrentBranch {
-		return parkData{}, errors.New(messages.CurrentBranchCannotDetermine)
+	if branchesSnapshot.DetachedHead {
+		return parkData{}, errors.New(messages.ParkDetachedHead)
 	}
-	if len(args) == 0 {
-		branchesToPark.Add(currentBranch, repo.UnvalidatedConfig.Config.Get())
-	} else {
-		branchesToPark.AddMany(gitdomain.NewLocalBranchNames(args...), repo.UnvalidatedConfig.Config.Get())
-	}
+	branchesToPark, branchToCheckout, err := config.BranchesToMark(args, branchesSnapshot, repo.UnvalidatedConfig)
+
 	return parkData{
-		allBranches:    branchesSnapshot.Branches,
-		branchesToPark: branchesToPark,
-	}, nil
+		beginBranchesSnapshot: branchesSnapshot,
+		branchInfos:           branchesSnapshot.Branches,
+		branchToCheckout:      branchToCheckout,
+		branchesToPark:        branchesToPark,
+	}, err
 }
 
-func validateParkData(data parkData) error {
-	for branchName, branchType := range data.branchesToPark {
-		if !data.allBranches.HasLocalBranch(branchName) {
+func validateParkData(data parkData, repo execute.OpenRepoResult) error {
+	for branchName, branchType := range mapstools.SortedKeyValues(data.branchesToPark) {
+		if err := canParkBranchType(branchType, branchName, repo.FinalMessages); err != nil {
+			return err
+		}
+		hasLocalBranch := data.beginBranchesSnapshot.Branches.HasLocalBranch(branchName)
+		hasRemoteBranch := data.beginBranchesSnapshot.Branches.HasMatchingTrackingBranchFor(branchName)
+		if !hasLocalBranch && !hasRemoteBranch {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}
-		switch branchType {
-		case configdomain.BranchTypeMainBranch:
-			return errors.New(messages.MainBranchCannotPark)
-		case configdomain.BranchTypePerennialBranch:
-			return errors.New(messages.PerennialBranchCannotPark)
-		case configdomain.BranchTypeParkedBranch:
-			return fmt.Errorf(messages.BranchIsAlreadyParked, branchName)
-		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeContributionBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypePrototypeBranch:
-		default:
-			panic("unhandled branch type:" + branchType.String())
-		}
+		data.branchesToPark.Add(branchName, branchType)
+	}
+	return nil
+}
+
+func canParkBranchType(branchType configdomain.BranchType, branchName gitdomain.LocalBranchName, finalMessages stringslice.Collector) error {
+	switch branchType {
+	case configdomain.BranchTypeMainBranch:
+		return errors.New(messages.MainBranchCannotPark)
+	case configdomain.BranchTypePerennialBranch:
+		return errors.New(messages.PerennialBranchCannotPark)
+	case configdomain.BranchTypeParkedBranch:
+		finalMessages.Addf(messages.BranchIsAlreadyParked, branchName)
+	case
+		configdomain.BranchTypeFeatureBranch,
+		configdomain.BranchTypeContributionBranch,
+		configdomain.BranchTypeObservedBranch,
+		configdomain.BranchTypePrototypeBranch:
 	}
 	return nil
 }

@@ -12,18 +12,23 @@ import (
 
 var (
 	// file paths to ignore
-	ignorePaths = []string{ //nolint:gochecknoglobals
+	ignorePaths = []string{
+		"internal/config/configdomain/lineage_test.go",
 		"src/config/configfile/data.go",
 		"tools/structs_sorted/test.go",
 		"vendor/",
 	}
 
 	// struct types to ignore
-	ignoreTypes = []string{ //nolint:gochecknoglobals
+	ignoreTypes = []string{
 		"BranchSpan",
 		"Change",
+		"IdentSelectorMatcher", // Field order is meaningful.
 		"InconsistentChange",
+		"Lineage",
+		"LineageData",
 		"Parts",
+		"PositionalField", // Mimics ast.Field.
 	}
 )
 

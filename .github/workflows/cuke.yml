@@ -4,15 +4,17 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
 
 jobs:
-  run:
+  end-to-end:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-go@v4
+      - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
+      - run: sudo apt update
+      - name: install Spanish language pack
+        run: sudo apt-get install language-pack-es language-pack-es-base
       - run: make cukeall
         shell: 'script -q -e -c "bash {0}"' # this creates /dev/tty needed by BubbleTea

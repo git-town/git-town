@@ -3,9 +3,10 @@ package dialog_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v15/internal/cli/dialog"
-	"github.com/git-town/git-town/v15/internal/cli/dialog/components/list"
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/cli/dialog"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents/list"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/shoenig/test/must"
 )
 
@@ -54,7 +55,7 @@ func TestAliases(t *testing.T) {
 			t.Parallel()
 			give := configdomain.AliasableCommands{}
 			have := dialog.DetermineAliasSelectionText(give)
-			want := "(none)"
+			want := messages.DialogResultNone
 			must.EqOp(t, want, have)
 		})
 		t.Run("some commands selected", func(t *testing.T) {
@@ -134,13 +135,13 @@ func TestAliases(t *testing.T) {
 				},
 			}
 			// rotate the first time to set to "checked"
-			model.RotateCurrentEntry()
+			model = model.RotateCurrentEntry()
 			want := []dialog.AliasSelection{
 				dialog.AliasSelectionGT,
 			}
 			must.Eq(t, want, model.CurrentSelections)
 			// rotate a second time to set to "unchecked"
-			model.RotateCurrentEntry()
+			model = model.RotateCurrentEntry()
 			want = []dialog.AliasSelection{
 				dialog.AliasSelectionNone,
 			}
@@ -163,13 +164,13 @@ func TestAliases(t *testing.T) {
 				},
 			}
 			// rotate the first time to uncheck
-			model.RotateCurrentEntry()
+			model = model.RotateCurrentEntry()
 			want := []dialog.AliasSelection{
 				dialog.AliasSelectionNone,
 			}
 			must.Eq(t, want, model.CurrentSelections)
 			// rotate the second time to check again
-			model.RotateCurrentEntry()
+			model = model.RotateCurrentEntry()
 			want = []dialog.AliasSelection{
 				dialog.AliasSelectionGT,
 			}
@@ -192,19 +193,19 @@ func TestAliases(t *testing.T) {
 				},
 			}
 			// rotate the first time to check
-			model.RotateCurrentEntry()
+			model = model.RotateCurrentEntry()
 			want := []dialog.AliasSelection{
 				dialog.AliasSelectionGT,
 			}
 			must.Eq(t, want, model.CurrentSelections)
 			// rotate the second time to uncheck
-			model.RotateCurrentEntry()
+			model = model.RotateCurrentEntry()
 			want = []dialog.AliasSelection{
 				dialog.AliasSelectionNone,
 			}
 			must.Eq(t, want, model.CurrentSelections)
 			// rotate a third time to set to "other" again
-			model.RotateCurrentEntry()
+			model = model.RotateCurrentEntry()
 			want = []dialog.AliasSelection{
 				dialog.AliasSelectionOther,
 			}
@@ -228,7 +229,7 @@ func TestAliases(t *testing.T) {
 				dialog.AliasSelectionNone,
 			},
 		}
-		model.SelectAll()
+		model = model.SelectAll()
 		want := []dialog.AliasSelection{
 			dialog.AliasSelectionGT,
 			dialog.AliasSelectionGT,
@@ -253,7 +254,7 @@ func TestAliases(t *testing.T) {
 				dialog.AliasSelectionGT,
 			},
 		}
-		model.SelectNone()
+		model = model.SelectNone()
 		want := []dialog.AliasSelection{
 			dialog.AliasSelectionNone,
 			dialog.AliasSelectionNone,

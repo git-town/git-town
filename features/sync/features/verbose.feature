@@ -2,49 +2,57 @@ Feature: display all executed Git commands
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE               |
       | main    | local    | local main commit     |
       |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
+    And the current branch is "feature"
+    When I run "git-town sync --verbose"
 
   Scenario: result
-    When I run "git-town sync --verbose"
-    Then it runs the commands
-      | BRANCH  | TYPE     | COMMAND                                            |
-      |         | backend  | git version                                        |
-      |         | backend  | git rev-parse --show-toplevel                      |
-      |         | backend  | git config -lz --includes --global                 |
-      |         | backend  | git config -lz --includes --local                  |
-      |         | backend  | git status --long --ignore-submodules              |
-      |         | backend  | git remote                                         |
-      |         | backend  | git rev-parse --abbrev-ref HEAD                    |
-      | feature | frontend | git fetch --prune --tags                           |
-      |         | backend  | git stash list                                     |
-      |         | backend  | git branch -vva --sort=refname                     |
-      |         | backend  | git rev-parse --verify --abbrev-ref @{-1}          |
-      | feature | frontend | git checkout main                                  |
-      | main    | frontend | git rebase origin/main                             |
-      |         | backend  | git rev-list --left-right main...origin/main       |
-      | main    | frontend | git push                                           |
-      |         | frontend | git checkout feature                               |
-      | feature | frontend | git merge --no-edit --ff origin/feature            |
-      |         | frontend | git merge --no-edit --ff main                      |
-      |         | backend  | git rev-list --left-right feature...origin/feature |
-      | feature | frontend | git push                                           |
-      |         | backend  | git show-ref --verify --quiet refs/heads/feature   |
-      |         | backend  | git show-ref --verify --quiet refs/heads/main      |
-      |         | backend  | git branch -vva --sort=refname                     |
-      |         | backend  | git config -lz --includes --global                 |
-      |         | backend  | git config -lz --includes --local                  |
-      |         | backend  | git stash list                                     |
-    And it prints:
+    Then Git Town runs the commands
+      | BRANCH  | TYPE     | COMMAND                                                                                                                                                                                                                                                                                                                                          |
+      |         | backend  | git version                                                                                                                                                                                                                                                                                                                                      |
+      |         | backend  | git rev-parse --show-toplevel                                                                                                                                                                                                                                                                                                                    |
+      |         | backend  | git config -lz --global                                                                                                                                                                                                                                                                                                                          |
+      |         | backend  | git config -lz --local                                                                                                                                                                                                                                                                                                                           |
+      |         | backend  | git config -lz                                                                                                                                                                                                                                                                                                                                   |
+      |         | backend  | git for-each-ref "--format=refname:%(refname) branchname:%(refname:lstrip=2) sha:%(objectname) head:%(if)%(HEAD)%(then)Y%(else)N%(end) worktree:%(if)%(worktreepath)%(then)Y%(else)N%(end) symref:%(if)%(symref)%(then)Y%(else)N%(end) upstream:%(upstream:lstrip=2) track:%(upstream:track,nobracket)" --sort=refname refs/heads/ refs/remotes/ |
+      |         | backend  | git status -z --ignore-submodules                                                                                                                                                                                                                                                                                                                |
+      |         | backend  | git rev-parse --verify -q MERGE_HEAD                                                                                                                                                                                                                                                                                                             |
+      |         | backend  | git rev-parse --absolute-git-dir                                                                                                                                                                                                                                                                                                                 |
+      |         | backend  | git remote get-url origin                                                                                                                                                                                                                                                                                                                        |
+      |         | backend  | git remote                                                                                                                                                                                                                                                                                                                                       |
+      | feature | frontend | git fetch --prune --tags                                                                                                                                                                                                                                                                                                                         |
+      |         | backend  | git stash list                                                                                                                                                                                                                                                                                                                                   |
+      |         | backend  | git for-each-ref "--format=refname:%(refname) branchname:%(refname:lstrip=2) sha:%(objectname) head:%(if)%(HEAD)%(then)Y%(else)N%(end) worktree:%(if)%(worktreepath)%(then)Y%(else)N%(end) symref:%(if)%(symref)%(then)Y%(else)N%(end) upstream:%(upstream:lstrip=2) track:%(upstream:track,nobracket)" --sort=refname refs/heads/ refs/remotes/ |
+      |         | backend  | git rev-parse --verify --abbrev-ref @{-1}                                                                                                                                                                                                                                                                                                        |
+      |         | backend  | git log main..feature --format=%s --reverse                                                                                                                                                                                                                                                                                                      |
+      |         | frontend | git checkout main                                                                                                                                                                                                                                                                                                                                |
+      | main    | frontend | git -c rebase.updateRefs=false rebase origin/main                                                                                                                                                                                                                                                                                                |
+      |         | backend  | git rev-parse --verify -q refs/heads/main                                                                                                                                                                                                                                                                                                        |
+      |         | backend  | git rev-parse main origin/main                                                                                                                                                                                                                                                                                                                   |
+      |         | frontend | git push                                                                                                                                                                                                                                                                                                                                         |
+      |         | frontend | git checkout feature                                                                                                                                                                                                                                                                                                                             |
+      |         | backend  | git log --no-merges --format=%H refs/heads/main ^refs/heads/feature                                                                                                                                                                                                                                                                              |
+      |         | backend  | git rev-parse feature origin/feature                                                                                                                                                                                                                                                                                                             |
+      | feature | frontend | git merge --no-edit --ff main                                                                                                                                                                                                                                                                                                                    |
+      |         | frontend | git merge --no-edit --ff origin/feature                                                                                                                                                                                                                                                                                                          |
+      |         | backend  | git rev-parse --verify -q refs/heads/feature                                                                                                                                                                                                                                                                                                     |
+      |         | backend  | git rev-parse feature origin/feature                                                                                                                                                                                                                                                                                                             |
+      |         | frontend | git push                                                                                                                                                                                                                                                                                                                                         |
+      |         | backend  | git rev-parse --verify -q refs/heads/feature                                                                                                                                                                                                                                                                                                     |
+      |         | backend  | git for-each-ref "--format=refname:%(refname) branchname:%(refname:lstrip=2) sha:%(objectname) head:%(if)%(HEAD)%(then)Y%(else)N%(end) worktree:%(if)%(worktreepath)%(then)Y%(else)N%(end) symref:%(if)%(symref)%(then)Y%(else)N%(end) upstream:%(upstream:lstrip=2) track:%(upstream:track,nobracket)" --sort=refname refs/heads/ refs/remotes/ |
+      |         | backend  | git config -lz --global                                                                                                                                                                                                                                                                                                                          |
+      |         | backend  | git config -lz --local                                                                                                                                                                                                                                                                                                                           |
+      |         | backend  | git stash list                                                                                                                                                                                                                                                                                                                                   |
+    And Git Town prints:
       """
-      Ran 26 shell commands.
+      Ran 34 shell commands.
       """
     And all branches are now synchronized

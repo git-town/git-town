@@ -4,25 +4,13 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	"github.com/git-town/git-town/v15/test/asserts"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/pkg/asserts"
 	"github.com/shoenig/test/must"
 )
 
 func TestBranchName(t *testing.T) {
 	t.Parallel()
-
-	t.Run("NewBranchName and String", func(t *testing.T) {
-		t.Parallel()
-		t.Run("normal branch name", func(t *testing.T) {
-			branchName := gitdomain.NewBranchName("branch-1")
-			must.EqOp(t, "branch-1", branchName.String())
-		})
-		t.Run("does not allow empty branch names", func(t *testing.T) {
-			defer asserts.Paniced(t)
-			gitdomain.NewBranchName("")
-		})
-	})
 
 	t.Run("IsLocal", func(t *testing.T) {
 		t.Parallel()
@@ -60,6 +48,31 @@ func TestBranchName(t *testing.T) {
 		must.NoError(t, err)
 		want := `"branch-1"`
 		must.EqOp(t, want, string(have))
+	})
+
+	t.Run("NewBranchName and String", func(t *testing.T) {
+		t.Parallel()
+		t.Run("normal branch name", func(t *testing.T) {
+			t.Parallel()
+			branchName := gitdomain.NewBranchName("branch-1")
+			must.EqOp(t, "branch-1", branchName.String())
+		})
+		t.Run("does not allow empty branch names", func(t *testing.T) {
+			t.Parallel()
+			defer asserts.Paniced(t)
+			gitdomain.NewBranchName("")
+		})
+	})
+
+	t.Run("RefName", func(t *testing.T) {
+		t.Parallel()
+		tests := map[gitdomain.BranchName]string{
+			"main":        "refs/heads/main",
+			"origin/main": "origin/main",
+		}
+		for give, want := range tests {
+			must.EqOp(t, want, give.RefName())
+		}
 	})
 
 	t.Run("RemoteName", func(t *testing.T) {

@@ -3,7 +3,7 @@ set -e
 
 # This script installs the Git Town executable in the user's HOME directory.
 
-VERSION=15.1.0             # the version of Git Town to install
+VERSION=22.4.0             # the version of Git Town to install
 DEST=$HOME/.local/bin      # the folder into which to install the Git Town executable
 TMP_DIR=.git-town-download # temporary folder to use
 
@@ -38,6 +38,7 @@ main() {
 	echo "I have successfully:"
 	echo "- downloaded $URL"
 	echo "- extracted the Git Town $VERSION binary to $DEST_PATH"
+	echo "- made the Git Town binary executable"
 
 	# unpack the archive
 	rm -rf "$TMP_DIR"
@@ -102,6 +103,7 @@ download_and_extract() {
 
 	mkdir -p "$DEST"
 	mv "$TMP_DIR/$FILENAME" "$DEST"
+	chmod +x "$DEST/$FILENAME"
 }
 
 executable_filename() {

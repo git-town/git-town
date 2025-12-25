@@ -2,36 +2,22 @@ package configdomain
 
 import (
 	"fmt"
-	"regexp"
 
-	"github.com/git-town/git-town/v15/internal/cli/colors"
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
+	"github.com/git-town/git-town/v22/internal/messages"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-// PerennialRegex contains the "branches.perennial-regex" setting.
-type PerennialRegex string
+type PerennialRegex struct {
+	VerifiedRegex
+}
 
-// MatchesBranch indicates whether the given branch matches this PerennialRegex.
-func (self PerennialRegex) MatchesBranch(branch gitdomain.LocalBranchName) bool {
-	if self == "" {
-		return false
-	}
-	re, err := regexp.Compile(string(self))
+func ParsePerennialRegex(value string, source string) (Option[PerennialRegex], error) {
+	verifiedRegexOpt, err := ParseRegex(value)
 	if err != nil {
-		fmt.Println(colors.Red().Styled(fmt.Sprintf("Error in perennial regex %q: %s", self, err.Error())))
-		return false
+		return None[PerennialRegex](), fmt.Errorf(messages.CannotParse, source, err)
 	}
-	return re.MatchString(branch.String())
-}
-
-func (self PerennialRegex) String() string {
-	return string(self)
-}
-
-func ParsePerennialRegex(value string) Option[PerennialRegex] {
-	if value == "" {
-		return None[PerennialRegex]()
+	if verifiedRegex, hasVerifiedRegex := verifiedRegexOpt.Get(); hasVerifiedRegex {
+		return Some(PerennialRegex{VerifiedRegex: verifiedRegex}), err
 	}
-	return Some(PerennialRegex(value))
+	return None[PerennialRegex](), err
 }

@@ -1,0 +1,62 @@
+{
+  "$schema": "https://raw.githubusercontent.com/contest-framework/server/refs/heads/main/documentation/schema.json",
+  "actions": [
+    {
+      "type": "test-all",
+      "run": "make test-go"
+    },
+
+    {
+      "type": "test-file",
+      "files": "**/*.feature",
+      "run": "bash -c 'make install && go test -- {{file}}'"
+    },
+
+    {
+      "type": "test-file-line",
+      "files": "**/*.feature",
+      "run": "make cukethis"
+    },
+
+    {
+      "type": "test-file",
+      "files": "**/*_test.go",
+      "run": "go test {{file}}"
+    },
+
+    {
+      "type": "test-file",
+      "files": "**/*.md",
+      "run": "make docs"
+    },
+
+    {
+      "type": "test-file",
+      "files": "**/*.test.ts",
+      "run": "tools/rta node --test {{file}}"
+    },
+
+    {
+      "type": "test-file-line",
+      "files": "**/*.test.ts",
+      "run": "tools/rta node --test-only {{file}}"
+    },
+
+    {
+      "type": "test-file",
+      "files": ".cucumber-sort-order",
+      "run": "cucumber-sort format"
+    }
+  ],
+  "options": {
+    "beforeRun": {
+      "clearScreen": true
+    },
+    "afterRun": {
+      "newlines": 1,
+      "indicatorLines": 3,
+      "indicatorBackground": true,
+      "printResult": false
+    }
+  }
+}

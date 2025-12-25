@@ -42,7 +42,7 @@ Cucumber Godog follows [Semantic Versioning]. Version numbers are in the format 
     - Click "Publish release" to make the release public.
 
 6. **Announce the Release:**
-    - Make an announcement on relevant communication channels (e.g., [community Slack]) about the new release.
+    - Make an announcement on relevant communication channels (e.g., [community Discord]) about the new release.
 
 ## Additional Considerations
 
@@ -60,7 +60,7 @@ Cucumber Godog follows [Semantic Versioning]. Version numbers are in the format 
 
 Following these guidelines, including manual testing with external libraries, will help ensure a thorough release process for Cucumber Godog, allowing detection and resolution of potential backwards compatibility issues before tagging the release.
 
-[community Slack]: https://cucumber.io/community#slack
+[community Discord]: https://cucumber.io/community#discord
 [website]: https://cucumber.github.io/godog/
 [Releases]: https://github.com/cucumber/godog/releases
 [Semantic Versioning]: http://semver.org

@@ -1,4 +1,4 @@
-Feature: observing multiple branches
+Feature: observing multiple other branches
 
   Background:
     Given a Git repo with origin
@@ -8,45 +8,36 @@ Feature: observing multiple branches
       | contribution | contribution |        | local, origin |
       | parked       | parked       | main   | local, origin |
       | prototype    | prototype    | main   | local, origin |
-    And an uncommitted file
     When I run "git-town observe feature contribution parked prototype"
 
   Scenario: result
-    Then it runs no commands
-    And it prints:
+    Then Git Town runs no commands
+    And Git Town prints:
       """
       branch "feature" is now an observed branch
       """
-    And branch "feature" is now observed
-    And it prints:
+    And branch "feature" now has type "observed"
+    And Git Town prints:
       """
       branch "contribution" is now an observed branch
       """
-    And branch "contribution" is now observed
-    And there are now no contribution branches
-    And it prints:
+    And branch "contribution" now has type "observed"
+    And Git Town prints:
       """
       branch "parked" is now an observed branch
       """
-    And branch "parked" is now observed
-    And there are now no parked branches
-    And it prints:
+    And branch "parked" now has type "observed"
+    And Git Town prints:
       """
       branch "prototype" is now an observed branch
       """
-    And branch "prototype" is now observed
-    And there are now no prototype branches
-    And the current branch is still "main"
-    And the uncommitted file still exists
+    And branch "prototype" now has type "observed"
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
-      | BRANCH | COMMAND       |
-      | main   | git add -A    |
-      |        | git stash     |
-      |        | git stash pop |
-    And there are now no observed branches
-    And the initial branches exist
-    And the current branch is still "main"
-    And the uncommitted file still exists
+    Then Git Town runs no commands
+    And branch "feature" now has type "feature"
+    And branch "contribution" now has type "contribution"
+    And branch "parked" now has type "parked"
+    And branch "prototype" now has type "prototype"
+    And the initial branches exist now

@@ -1,5 +1,0 @@
-[build]
-  base = "website/"
-  publish = "book/"
-  command = "make build"
-  ignore = "/bin/false"

@@ -3,9 +3,9 @@ package shared_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	"github.com/git-town/git-town/v15/internal/vm/opcodes"
-	"github.com/git-town/git-town/v15/internal/vm/shared"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/vm/opcodes"
+	"github.com/git-town/git-town/v22/internal/vm/shared"
 	"github.com/shoenig/test/must"
 )
 
@@ -14,53 +14,53 @@ func TestBranchesInOpcode(t *testing.T) {
 
 	t.Run("BranchName", func(t *testing.T) {
 		t.Parallel()
-		opcode := opcodes.Merge{
-			Branch: gitdomain.NewBranchName("branch"),
+		opcode := opcodes.MergeIntoCurrentBranch{
+			BranchToMerge: "branch",
 		}
 		have := shared.BranchesInOpcode(&opcode)
 		want := []gitdomain.BranchName{
-			gitdomain.NewBranchName("branch"),
+			"branch",
 		}
 		must.Eq(t, want, have)
 	})
 
 	t.Run("LocalBranchName", func(t *testing.T) {
 		t.Parallel()
-		opcode := opcodes.ChangeParent{
-			Branch: gitdomain.NewLocalBranchName("branch"),
-			Parent: gitdomain.NewLocalBranchName("parent"),
+		opcode := opcodes.LineageParentSet{
+			Branch: "branch",
+			Parent: "parent",
 		}
 		have := shared.BranchesInOpcode(&opcode)
 		want := []gitdomain.BranchName{
-			gitdomain.NewBranchName("branch"),
-			gitdomain.NewBranchName("parent"),
+			"branch",
+			"parent",
 		}
 		must.Eq(t, want, have)
 	})
 
 	t.Run("LocalBranchNames", func(t *testing.T) {
 		t.Parallel()
-		opcode := opcodes.SetExistingParent{
-			Branch:    gitdomain.NewLocalBranchName("branch"),
+		opcode := opcodes.LineageParentSetFirstExisting{
+			Branch:    "branch",
 			Ancestors: gitdomain.NewLocalBranchNames("ancestor-1", "ancestor-2"),
 		}
 		have := shared.BranchesInOpcode(&opcode)
 		want := []gitdomain.BranchName{
-			gitdomain.NewBranchName("ancestor-1"),
-			gitdomain.NewBranchName("ancestor-2"),
-			gitdomain.NewBranchName("branch"),
+			"ancestor-1",
+			"ancestor-2",
+			"branch",
 		}
 		must.Eq(t, want, have)
 	})
 
 	t.Run("RemoteBranchName", func(t *testing.T) {
 		t.Parallel()
-		opcode := opcodes.DeleteTrackingBranch{
-			Branch: gitdomain.NewRemoteBranchName("origin/branch"),
+		opcode := opcodes.BranchTrackingDelete{
+			Branch: "origin/branch",
 		}
 		have := shared.BranchesInOpcode(&opcode)
 		want := []gitdomain.BranchName{
-			gitdomain.NewBranchName("origin/branch"),
+			"origin/branch",
 		}
 		must.Eq(t, want, have)
 	})

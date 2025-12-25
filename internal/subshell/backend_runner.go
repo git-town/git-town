@@ -1,17 +1,21 @@
 package subshell
 
 import (
+	"bytes"
+	"context"
 	"fmt"
 	"os"
 	"os/exec"
 	"strings"
+	"time"
 
 	"github.com/acarl005/stripansi"
-	"github.com/git-town/git-town/v15/internal/cli/colors"
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	"github.com/git-town/git-town/v15/internal/gohacks"
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
-	"github.com/git-town/git-town/v15/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks"
+	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/pkg/colors"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 // BackendRunner executes backend shell commands without output to the CLI.
@@ -25,37 +29,59 @@ type BackendRunner struct {
 }
 
 func (self BackendRunner) Query(executable string, args ...string) (string, error) {
-	return self.execute(executable, args...)
+	return self.execute([]string{}, executable, args...)
 }
 
 func (self BackendRunner) QueryTrim(executable string, args ...string) (string, error) {
-	output, err := self.execute(executable, args...)
+	output, err := self.execute([]string{}, executable, args...)
 	return strings.TrimSpace(stripansi.Strip(output)), err
 }
 
 func (self BackendRunner) Run(executable string, args ...string) error {
-	_, err := self.execute(executable, args...)
+	_, err := self.execute([]string{}, executable, args...)
 	return err
 }
 
-func (self BackendRunner) execute(executable string, args ...string) (string, error) {
-	self.CommandsCounter.Value.Inc()
+func (self BackendRunner) RunWithEnv(env []string, executable string, args ...string) error {
+	_, err := self.execute(env, executable, args...)
+	return err
+}
+
+func (self BackendRunner) execute(env []string, executable string, args ...string) (string, error) {
+	self.CommandsCounter.Value.Increment()
 	if self.Verbose {
-		printHeader(executable, args...)
+		printHeader(env, executable, args...)
 	}
-	subProcess := exec.Command(executable, args...) // #nosec
-	if dir, has := self.Dir.Get(); has {
-		subProcess.Dir = dir
-	}
-	subProcess.Env = append(subProcess.Environ(), "LC_ALL=C")
-	outputBytes, err := subProcess.CombinedOutput()
-	if err != nil {
-		err = ErrorDetails(executable, args, err, outputBytes)
+	concurrentGitRetriesLeft := concurrentGitRetries
+	var outputText string
+	var outputBytes []byte
+	var err error
+	for {
+		subProcess := exec.CommandContext(context.Background(), executable, args...) // #nosec
+		subProcess.Env = append(subProcess.Environ(), env...)
+		if dir, has := self.Dir.Get(); has {
+			subProcess.Dir = dir
+		}
+		outputBytes, err = subProcess.CombinedOutput()
+		outputText = string(outputBytes)
+		if err == nil {
+			break
+		}
+		if !containsConcurrentGitAccess(outputText) {
+			err = ErrorDetails(executable, args, err, outputBytes)
+			break
+		}
+		concurrentGitRetriesLeft -= 1
+		if concurrentGitRetriesLeft == 0 {
+			break
+		}
+		fmt.Println(messages.GitAnotherProcessIsRunningRetry)
+		time.Sleep(concurrentGitRetryDelay)
 	}
 	if self.Verbose && len(outputBytes) > 0 {
-		os.Stdout.Write(outputBytes)
+		os.Stdout.Write(bytes.ReplaceAll(outputBytes, []byte{0x00}, []byte{'\n', '\n'}))
 	}
-	return string(outputBytes), err
+	return outputText, err
 }
 
 func ErrorDetails(executable string, args []string, err error, output []byte) error {
@@ -71,8 +97,17 @@ OUTPUT END
 ----------------------------------------`, executable, strings.Join(args, " "), err, string(output))
 }
 
-func printHeader(cmd string, args ...string) {
+func containsConcurrentGitAccess(text string) bool {
+	return strings.Contains(text, "fatal: Unable to create '") && strings.Contains(text, "index.lock': File exists.")
+}
+
+func printHeader(env []string, cmd string, args ...string) {
 	quoted := stringslice.SurroundEmptyWith(args, `"`)
-	text := "\n(verbose) " + cmd + " " + strings.Join(quoted, " ")
+	quoted = stringslice.SurroundSpacesWith(quoted, `"`)
+	text := "\n(verbose) "
+	if len(env) > 0 {
+		text += strings.Join(env, " ") + " "
+	}
+	text += cmd + " " + strings.Join(quoted, " ")
 	fmt.Println(colors.Bold().Styled(text))
 }

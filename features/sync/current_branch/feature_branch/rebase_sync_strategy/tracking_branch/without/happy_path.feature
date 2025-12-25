@@ -2,51 +2,47 @@ Feature: sync the current feature branch without a tracking branch
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |
-    And Git Town setting "sync-feature-strategy" is "rebase"
-    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE              |
       | main    | local    | local main commit    |
       |         | origin   | origin main commit   |
       | feature | local    | local feature commit |
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
+    And the current branch is "feature"
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
-      | BRANCH  | COMMAND                    |
-      | feature | git fetch --prune --tags   |
-      |         | git checkout main          |
-      | main    | git rebase origin/main     |
-      |         | git push                   |
-      |         | git checkout feature       |
-      | feature | git rebase main            |
-      |         | git push -u origin feature |
+    Then Git Town runs the commands
+      | BRANCH  | COMMAND                                                                      |
+      | feature | git fetch --prune --tags                                                     |
+      |         | git checkout main                                                            |
+      | main    | git -c rebase.updateRefs=false rebase origin/main                            |
+      |         | git push                                                                     |
+      |         | git checkout feature                                                         |
+      | feature | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
+      |         | git push -u origin feature                                                   |
+    And the branches are now
+      | REPOSITORY    | BRANCHES      |
+      | local, origin | main, feature |
     And all branches are now synchronized
-    And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE              |
       | main    | local, origin | origin main commit   |
       |         |               | local main commit    |
-      | feature | local, origin | origin main commit   |
-      |         |               | local main commit    |
-      |         |               | local feature commit |
-    And the branches are now
-      | REPOSITORY    | BRANCHES      |
-      | local, origin | main, feature |
+      | feature | local, origin | local feature commit |
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                           |
-      | feature | git push origin :feature                          |
-      |         | git reset --hard {{ sha 'local feature commit' }} |
-    And the current branch is still "feature"
+      | feature | git reset --hard {{ sha 'local feature commit' }} |
+      |         | git push origin :feature                          |
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE              |
       | main    | local, origin | origin main commit   |
       |         |               | local main commit    |
       | feature | local         | local feature commit |
-    And the initial branches and lineage exist

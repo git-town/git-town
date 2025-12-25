@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
-	"github.com/git-town/git-town/v15/internal/messages"
+	"github.com/git-town/git-town/v22/internal/messages"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 // SyncStrategy defines legal values for "sync-*-strategy" configuration settings.
@@ -14,8 +14,10 @@ type SyncStrategy string
 func (self SyncStrategy) String() string { return string(self) }
 
 const (
-	SyncStrategyMerge  = SyncStrategy("merge")
-	SyncStrategyRebase = SyncStrategy("rebase")
+	SyncStrategyMerge    = SyncStrategy("merge")
+	SyncStrategyRebase   = SyncStrategy("rebase")
+	SyncStrategyFFOnly   = SyncStrategy("ff-only")
+	SyncStrategyCompress = SyncStrategy("compress")
 )
 
 func ParseSyncStrategy(text string) (Option[SyncStrategy], error) {
@@ -32,10 +34,12 @@ func ParseSyncStrategy(text string) (Option[SyncStrategy], error) {
 	return None[SyncStrategy](), fmt.Errorf(messages.ConfigSyncStrategyUnknown, text)
 }
 
-// provides all valid sync strategies
+// SyncStrategies provides all valid sync strategies
 func SyncStrategies() []SyncStrategy {
 	return []SyncStrategy{
 		SyncStrategyMerge,
 		SyncStrategyRebase,
+		SyncStrategyFFOnly,
+		SyncStrategyCompress,
 	}
 }

@@ -3,7 +3,7 @@ package set_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v15/pkg/set"
+	"github.com/git-town/git-town/v22/pkg/set"
 	"github.com/shoenig/test/must"
 )
 
@@ -31,10 +31,35 @@ func TestSet(t *testing.T) {
 
 	t.Run("Contains", func(t *testing.T) {
 		t.Parallel()
-		set := set.New(1, 2)
-		must.True(t, set.Contains(1))
-		must.True(t, set.Contains(2))
-		must.False(t, set.Contains(3))
+
+		t.Run("returns false for empty set", func(t *testing.T) {
+			t.Parallel()
+			s := set.New[int]()
+			must.False(t, s.Contains(1))
+		})
+
+		t.Run("returns true when value exists", func(t *testing.T) {
+			t.Parallel()
+			s := set.New(1, 2, 3)
+			must.True(t, s.Contains(1))
+			must.True(t, s.Contains(2))
+			must.True(t, s.Contains(3))
+		})
+
+		t.Run("returns false when value does not exist", func(t *testing.T) {
+			t.Parallel()
+			s := set.New(1, 2, 3)
+			must.False(t, s.Contains(4))
+			must.False(t, s.Contains(0))
+		})
+
+		t.Run("works with string type", func(t *testing.T) {
+			t.Parallel()
+			s := set.New("a", "b", "c")
+			must.True(t, s.Contains("a"))
+			must.True(t, s.Contains("b"))
+			must.False(t, s.Contains("d"))
+		})
 	})
 
 	t.Run("New", func(t *testing.T) {
@@ -43,7 +68,7 @@ func TestSet(t *testing.T) {
 		t.Run("no initial value", func(t *testing.T) {
 			t.Parallel()
 			set := set.New[int]()
-			must.Eq(t, []int{}, set.Values())
+			must.Len(t, 0, set.Values())
 		})
 
 		t.Run("one initial value", func(t *testing.T) {
@@ -63,13 +88,14 @@ func TestSet(t *testing.T) {
 		t.Parallel()
 
 		t.Run("no values", func(t *testing.T) {
+			t.Parallel()
 			set := set.New[int]()
 			have := set.Values()
-			want := []int{}
-			must.Eq(t, want, have)
+			must.Len(t, 0, have)
 		})
 
 		t.Run("with values", func(t *testing.T) {
+			t.Parallel()
 			set := set.New(1, 2)
 			have := set.Values()
 			want := []int{1, 2}

@@ -1,0 +1,30 @@
+Feature: cannot ship perennial branches
+
+  Background:
+    Given a Git repo with origin
+    And the branches
+      | NAME      | TYPE      | LOCATIONS     |
+      | perennial | perennial | local, origin |
+    And the commits
+      | BRANCH    | LOCATION      | MESSAGE          |
+      | perennial | local, origin | perennial commit |
+    And Git setting "git-town.ship-strategy" is "squash-merge"
+    And the current branch is "perennial"
+    When I run "git-town ship"
+
+  Scenario: result
+    Then Git Town runs the commands
+      | BRANCH    | COMMAND                  |
+      | perennial | git fetch --prune --tags |
+    And Git Town prints the error:
+      """
+      cannot ship perennial branches
+      """
+    And the initial branches and lineage exist now
+    And the initial commits exist now
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then Git Town runs no commands
+    And the initial branches and lineage exist now
+    And the initial commits exist now

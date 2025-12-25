@@ -1,12 +1,40 @@
-# git town config [subcommand]
+# git town config
+
+<a type="git-town-command" />
+
+```command-summary
+git town config [(-d | --display-types) <type>] [-h | --help] [--redact] [-v | --verbose]
+```
 
 The _config_ command displays and updates the local Git Town configuration.
 
-### Arguments
+## Subcommands
 
-- Running without a subcommand shows the current Git Town configuration.
-- The `get-parent` subcommand prints the parent branch of the current or given
-  branch.
-- The `reset` subcommand deletes all Git Town configuration entries.
-- The `setup` subcommand deletes all Git Town configuration entries and
-  interactively prompting for new values.
+Running without a subcommand shows the current Git Town configuration.
+
+- The [get-parent](config-get-parent.md) subcommand outputs the parent branch of
+  the current or given branch.
+- The [remove](config-remove.md) subcommand removes all Git Town related
+  configuration from the current Git repository.
+- The [init](init.md) subcommand launches Git Town's setup assistant.
+
+## Options
+
+#### `-d <branch-types>`<br>`--display-types <branch-types>`
+
+This flag allows customizing whether Git Town also displays the branch type in
+addition to the branch name when showing a list of branches. More info
+[here](../preferences/display-types.md#cli-flags).
+
+#### `-h`<br>`--help`
+
+Display help for this command.
+
+#### `--redact`
+
+When set, does not output sensitive information like tokens.
+
+#### `-v`<br>`--verbose`
+
+The `--verbose` aka `-v` flag prints all Git commands run under the hood to
+determine the repository state.

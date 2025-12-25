@@ -3,6 +3,6 @@
 These Git Town commands allow handling edge cases beyond of the basic
 development workflow outlined earlier.
 
-- [git kill](commands/kill.md) - delete a feature branch
-- [git rename-branch](commands/rename-branch.md) - rename a branch
-- [git repo](commands/repo.md) - view the Git repository in the browser
+- [git town delete](commands/delete.md) - delete a feature branch
+- [git town rename](commands/rename.md) - rename a branch
+- [git town repo](commands/repo.md) - view the Git repository in the browser

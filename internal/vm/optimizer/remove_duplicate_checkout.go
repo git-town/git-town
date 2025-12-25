@@ -1,8 +1,9 @@
 package optimizer
 
 import (
-	"github.com/git-town/git-town/v15/internal/vm/program"
-	"github.com/git-town/git-town/v15/internal/vm/shared"
+	"github.com/git-town/git-town/v22/internal/vm/opcodes"
+	"github.com/git-town/git-town/v22/internal/vm/program"
+	"github.com/git-town/git-town/v22/internal/vm/shared"
 )
 
 // RemoveDuplicateCheckout returns the given program were checkout opcodes
@@ -11,18 +12,18 @@ func RemoveDuplicateCheckout(prog program.Program) program.Program {
 	result := make([]shared.Opcode, 0, len(prog))
 	var lastOpcode shared.Opcode
 	for _, opcode := range prog {
-		if shared.IsCheckoutOpcode(opcode) {
+		if opcodes.IsCheckoutOpcode(opcode) {
 			lastOpcode = opcode
 			continue
 		}
-		if shared.IsEndOfBranchProgramOpcode(opcode) {
+		if opcodes.IsEndOfBranchProgramOpcode(opcode) {
 			result = append(result, opcode)
 			continue
 		}
 		if lastOpcode != nil {
 			result = append(result, lastOpcode)
+			lastOpcode = nil
 		}
-		lastOpcode = nil
 		result = append(result, opcode)
 	}
 	if lastOpcode != nil {

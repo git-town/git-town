@@ -3,8 +3,8 @@ package undostash_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	"github.com/git-town/git-town/v15/internal/undo/undostash"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/undo/undostash"
 	"github.com/shoenig/test/must"
 )
 
@@ -16,10 +16,10 @@ func TestStashDiff(t *testing.T) {
 		t.Run("entries added", func(t *testing.T) {
 			t.Parallel()
 			before := gitdomain.StashSize(1)
-			after := gitdomain.StashSize(3)
+			after := gitdomain.StashSize(2)
 			have := undostash.NewStashDiff(before, after)
 			want := undostash.StashDiff{
-				EntriesAdded: 2,
+				EntriesAdded: 1,
 			}
 			must.EqOp(t, want, have)
 		})

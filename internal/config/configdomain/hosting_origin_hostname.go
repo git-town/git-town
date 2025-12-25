@@ -3,7 +3,7 @@ package configdomain
 import (
 	"strings"
 
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 type HostingOriginHostname string

@@ -1,24 +1,25 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	"github.com/git-town/git-town/v15/internal/vm/shared"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/vm/shared"
 )
 
 // RebaseBranch rebases the current branch
 // against the branch with the given name.
 type RebaseBranch struct {
-	Branch                  gitdomain.BranchName
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	Branch gitdomain.BranchName
 }
 
-func (self *RebaseBranch) CreateAbortProgram() []shared.Opcode {
-	return []shared.Opcode{&AbortRebase{}}
-}
-
-func (self *RebaseBranch) CreateContinueProgram() []shared.Opcode {
+func (self *RebaseBranch) Abort() []shared.Opcode {
 	return []shared.Opcode{
-		&ContinueRebase{},
+		&RebaseAbort{},
+	}
+}
+
+func (self *RebaseBranch) Continue() []shared.Opcode {
+	return []shared.Opcode{
+		&RebaseContinueIfNeeded{},
 	}
 }
 

@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(make:*)",
+      "Bash(gofmt:*)",
+      "Bash(mkdir:*)",
+      "Bash(go run:*)",
+      "Bash(grep:*)",
+      "Bash(go:*)",
+      "Bash(ls:*)",
+      "Bash(sed:*)",
+      "Bash(awk:*)",
+      "Bash(python3:*)"
+    ],
+    "deny": []
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "make fix"
+          },
+          {
+            "type": "command",
+            "command": "make unit"
+          },
+          {
+            "type": "command",
+            "command": "make lint"
+          }
+        ]
+      }
+    ]
+  }
+}

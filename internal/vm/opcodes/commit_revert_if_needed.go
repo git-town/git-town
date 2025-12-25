@@ -1,0 +1,37 @@
+package opcodes
+
+import (
+	"errors"
+	"fmt"
+
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/vm/shared"
+)
+
+// CommitRevertIfNeeded adds a commit to the current branch
+// that reverts the commit with the given SHA.
+type CommitRevertIfNeeded struct {
+	SHA gitdomain.SHA
+}
+
+func (self *CommitRevertIfNeeded) Run(args shared.RunArgs) error {
+	currentBranchOpt, err := args.Git.CurrentBranch(args.Backend)
+	if err != nil {
+		return err
+	}
+	currentBranch, hasCurrentBranch := currentBranchOpt.Get()
+	if !hasCurrentBranch {
+		return errors.New(messages.CurrentBranchCannotDetermine)
+	}
+	parent := args.Config.Value.NormalConfig.Lineage.Parent(currentBranch)
+	commitsInCurrentBranch, err := args.Git.CommitsInBranch(args.Backend, currentBranch, parent)
+	if err != nil {
+		return err
+	}
+	if !commitsInCurrentBranch.ContainsSHA(self.SHA) {
+		return fmt.Errorf(messages.BranchDoesntContainCommit, currentBranch, self.SHA, commitsInCurrentBranch.SHAs().Join("|"))
+	}
+	args.PrependOpcodes(&CommitRevert{SHA: self.SHA})
+	return nil
+}

@@ -7,11 +7,11 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/git-town/git-town/v15/pkg/set"
-	"github.com/git-town/git-town/v15/test/asserts"
+	"github.com/git-town/git-town/v22/pkg/asserts"
+	"github.com/git-town/git-town/v22/pkg/set"
 )
 
-var unusedWhitelist = []string{ //nolint:gochecknoglobals
+var unusedWhitelist = []string{
 	`^display "([^"]+)"$`,
 	`^inspect the commits$`,
 	`^inspect the repo$`,
@@ -37,7 +37,7 @@ func CreateStepRegexes(definedSteps []StepDefinition) []StepRE {
 
 // provides all elements of the given defined steps that aren't used in the given executed steps
 func FindUnusedStepDefs(definedSteps []StepDefinition, usedSteps []string) []StepDefinition {
-	unusedStepDefs := []StepDefinition{}
+	var unusedStepDefs []StepDefinition
 	for _, stepDefRE := range CreateStepRegexes(definedSteps) {
 		if slices.Contains(unusedWhitelist, stepDefRE.regex.String()) {
 			continue
@@ -60,8 +60,8 @@ func FindUsedStepsIn(fileContent string) []string {
 	if stepUsageRE == nil {
 		stepUsageRE = regexp.MustCompile(`^\s*(?:Given|When|Then|And) (.*)$`)
 	}
-	result := []string{}
-	for _, line := range strings.Split(fileContent, "\n") {
+	var result []string
+	for line := range strings.SplitSeq(fileContent, "\n") {
 		matches := stepUsageRE.FindAllStringSubmatch(line, -1)
 		if len(matches) > 0 {
 			result = append(result, strings.TrimSpace(matches[0][1]))
@@ -72,12 +72,7 @@ func FindUsedStepsIn(fileContent string) []string {
 
 // indicates whether the given step definition is used anywhere in the given list of executed steps
 func IsStepDefUsed(definedStep StepRE, usedSteps []string) bool {
-	for _, usedStep := range usedSteps {
-		if definedStep.regex.MatchString(usedStep) {
-			return true
-		}
-	}
-	return false
+	return slices.ContainsFunc(usedSteps, definedStep.regex.MatchString)
 }
 
 // provides all steps that are executed in .feature files
@@ -88,8 +83,7 @@ func findAllUsedSteps() []string {
 		if filepath.Ext(path) != ".feature" {
 			return nil
 		}
-		fileContent, err := os.ReadFile(path)
-		asserts.NoError(err)
+		fileContent := asserts.NoError1(os.ReadFile(path))
 		for _, stepInFile := range FindUsedStepsIn(string(fileContent)) {
 			result.Add(stepInFile)
 		}

@@ -4,20 +4,20 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/git-town/git-town/v15/internal/gohacks"
-	"github.com/git-town/git-town/v15/internal/messages"
-	"github.com/git-town/git-town/v15/internal/vm/opcodes"
-	"github.com/git-town/git-town/v15/internal/vm/shared"
+	"github.com/git-town/git-town/v22/internal/gohacks"
+	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/vm/opcodes"
+	"github.com/git-town/git-town/v22/internal/vm/shared"
 )
 
 // JSON is used to store an opcode in JSON.
-type JSON struct { //nolint:musttag // JSON uses a custom serialization algorithm
+type JSON struct {
 	shared.Opcode
 }
 
 // MarshalJSON marshals the opcode to JSON.
 func (self *JSON) MarshalJSON() ([]byte, error) {
-	return json.Marshal(map[string]interface{}{
+	return json.Marshal(map[string]any{
 		"data": self.Opcode,
 		"type": gohacks.TypeName(self.Opcode),
 	})
@@ -26,13 +26,11 @@ func (self *JSON) MarshalJSON() ([]byte, error) {
 // UnmarshalJSON unmarshals the opcode from JSON.
 func (self *JSON) UnmarshalJSON(b []byte) error {
 	var mapping map[string]json.RawMessage
-	err := json.Unmarshal(b, &mapping)
-	if err != nil {
+	if err := json.Unmarshal(b, &mapping); err != nil {
 		return err
 	}
 	var opcodeType string
-	err = json.Unmarshal(mapping["type"], &opcodeType)
-	if err != nil {
+	if err := json.Unmarshal(mapping["type"], &opcodeType); err != nil {
 		return err
 	}
 	self.Opcode = opcodes.Lookup(opcodeType)

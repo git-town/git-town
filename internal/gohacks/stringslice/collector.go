@@ -1,24 +1,29 @@
 package stringslice
 
-// Collector accumulates string instances one at a time.
-// The zero value is an empty collection.
+import "fmt"
+
+// Collector accumulates strings.
 type Collector struct {
 	data *[]string
 }
 
 func NewCollector() Collector {
-	data := []string{}
+	var data []string
 	return Collector{
 		data: &data,
 	}
 }
 
-// Add appends a string instance to this collector.
+// Add appends a string to this collector.
 func (self Collector) Add(text string) {
 	*self.data = append(*self.data, text)
 }
 
-// Result provides all accumulated string instances.
+func (self Collector) Addf(format string, args ...any) {
+	self.Add(fmt.Sprintf(format, args...))
+}
+
+// Result provides all accumulated strings.
 func (self Collector) Result() []string {
 	if self.data == nil {
 		return []string{}

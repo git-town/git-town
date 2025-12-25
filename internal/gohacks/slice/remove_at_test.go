@@ -3,19 +3,19 @@ package slice_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	"github.com/git-town/git-town/v15/internal/gohacks/slice"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks/slice"
 	"github.com/shoenig/test/must"
 )
 
 func TestRemoveAt(t *testing.T) {
 	t.Parallel()
 
-	t.Run("index is within the list", func(t *testing.T) {
+	t.Run("index is at beginning of list", func(t *testing.T) {
 		t.Parallel()
 		list := []int{1, 2, 3}
-		have := slice.RemoveAt(list, 1)
-		want := []int{1, 3}
+		have := slice.RemoveAt(list, 0)
+		want := []int{2, 3}
 		must.Eq(t, want, have)
 	})
 
@@ -27,19 +27,19 @@ func TestRemoveAt(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("index is at beginning of list", func(t *testing.T) {
+	t.Run("index is out of bounds", func(t *testing.T) {
 		t.Parallel()
-		list := []int{1, 2, 3}
-		have := slice.RemoveAt(list, 0)
-		want := []int{2, 3}
+		list := []int{1, 2}
+		have := slice.RemoveAt(list, 20)
+		want := []int{1, 2}
 		must.Eq(t, want, have)
 	})
 
-	t.Run("slice alias type", func(t *testing.T) {
+	t.Run("index is within the list", func(t *testing.T) {
 		t.Parallel()
-		list := gitdomain.SHAs{gitdomain.NewSHA("111111"), gitdomain.NewSHA("222222"), gitdomain.NewSHA("333333")}
-		have := slice.RemoveAt(list, 0)
-		want := gitdomain.SHAs{gitdomain.NewSHA("222222"), gitdomain.NewSHA("333333")}
+		list := []int{1, 2, 3}
+		have := slice.RemoveAt(list, 1)
+		want := []int{1, 3}
 		must.Eq(t, want, have)
 	})
 
@@ -59,11 +59,11 @@ func TestRemoveAt(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("index is out of bounds", func(t *testing.T) {
+	t.Run("slice alias type", func(t *testing.T) {
 		t.Parallel()
-		list := []int{1, 2}
-		have := slice.RemoveAt(list, 20)
-		want := []int{1, 2}
+		list := gitdomain.SHAs{"111111", "222222", "333333"}
+		have := slice.RemoveAt(list, 0)
+		want := gitdomain.SHAs{"222222", "333333"}
 		must.Eq(t, want, have)
 	})
 }

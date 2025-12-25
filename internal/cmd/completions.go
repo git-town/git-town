@@ -5,26 +5,26 @@ import (
 	"os"
 	"strings"
 
-	"github.com/git-town/git-town/v15/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v15/internal/messages"
+	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v22/internal/messages"
 	"github.com/spf13/cobra"
 )
 
-const completionsDesc = "Generate auto-completion for bash, zsh, fish, or PowerShell"
-
-const completionsHelp = `
+const (
+	completionsDesc = "Generate auto-completion for bash, zsh, fish, or PowerShell"
+	completionsHelp = `
 When set up, "git town <TAB>" will auto-complete Git Town subcommands.
 
 To load autocompletion for Bash, run this command:
 
-	git town completions bash | source
+	source <(git-town completions bash)
 
 To load completions for each session, add the above line to your ~/.bashrc file.
 
 
 To load autocompletion for Zsh, run this command:
 
-	git town completions zsh | source
+	source <(git-town completions zsh)
 
 To load completions for each session, add the above line to your ~/.zshrc file.
 
@@ -42,12 +42,13 @@ To load autocompletions for Powershell, run this command:
 
 To load completions for each session, add the above line to your PowerShell profile.
 `
+)
 
 func completionsCmd(rootCmd *cobra.Command) *cobra.Command {
 	completionsNoDescFlag := false
 	completionsCmd := cobra.Command{
 		Use:                   "completions [bash|zsh|fish|powershell]",
-		GroupID:               "setup",
+		GroupID:               cmdhelpers.GroupIDConfig,
 		Args:                  cobra.ExactArgs(1),
 		DisableFlagsInUseLine: true,
 		Short:                 completionsDesc,

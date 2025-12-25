@@ -622,10 +622,17 @@ func detectOneMsg(b []byte, canHaveMoreData bool) (w int, msg Msg) {
 		case '<':
 			if matchIndices := mouseSGRRegex.FindSubmatchIndex(b[3:]); matchIndices != nil {
 				// SGR mouse events length is the length of the match plus the length of the escape sequence
-				mouseEventSGRLen := matchIndices[1] + 3 //nolint:gomnd
+				mouseEventSGRLen := matchIndices[1] + 3 //nolint:mnd
 				return mouseEventSGRLen, MouseMsg(parseSGRMouseEvent(b))
 			}
 		}
+	}
+
+	// Detect focus events.
+	var foundRF bool
+	foundRF, w, msg = detectReportFocus(b)
+	if foundRF {
+		return w, msg
 	}
 
 	// Detect bracketed paste.

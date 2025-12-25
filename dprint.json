@@ -3,10 +3,16 @@
   "markdown": {
     "textWrap": "always"
   },
-  "includes": ["**/*.{json,md}"],
+  "typescript": {
+    "semiColons": "asi"
+  },
+  "includes": ["**/*.{js,ts,json,md}"],
   "excludes": ["CHANGELOG.md", "vendor/**", "tools/node_modules/**", "tools/videos/", "website/book/**"],
   "plugins": [
-    "https://plugins.dprint.dev/json-0.14.0.wasm",
-    "https://plugins.dprint.dev/markdown-0.12.0.wasm"
+    "https://plugins.dprint.dev/json-0.21.0.wasm",
+    "https://plugins.dprint.dev/markdown-0.20.0.wasm",
+    "https://plugins.dprint.dev/toml-0.7.0.wasm",
+    "https://plugins.dprint.dev/g-plane/pretty_yaml-v0.5.1.wasm",
+    "https://plugins.dprint.dev/typescript-0.95.12.wasm"
   ]
 }

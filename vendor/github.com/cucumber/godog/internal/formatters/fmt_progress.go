@@ -98,6 +98,8 @@ func (f *Progress) step(pickleStepID string) {
 		fmt.Fprint(f.out, red("F"))
 	case undefined:
 		fmt.Fprint(f.out, yellow("U"))
+	case ambiguous:
+		fmt.Fprint(f.out, yellow("A"))
 	case pending:
 		fmt.Fprint(f.out, yellow("P"))
 	}
@@ -142,6 +144,16 @@ func (f *Progress) Undefined(pickle *messages.Pickle, step *messages.PickleStep,
 // Failed captures failed step.
 func (f *Progress) Failed(pickle *messages.Pickle, step *messages.PickleStep, match *formatters.StepDefinition, err error) {
 	f.Base.Failed(pickle, step, match, err)
+
+	f.Lock.Lock()
+	defer f.Lock.Unlock()
+
+	f.step(step.Id)
+}
+
+// Ambiguous steps.
+func (f *Progress) Ambiguous(pickle *messages.Pickle, step *messages.PickleStep, match *formatters.StepDefinition, err error) {
+	f.Base.Ambiguous(pickle, step, match, err)
 
 	f.Lock.Lock()
 	defer f.Lock.Unlock()

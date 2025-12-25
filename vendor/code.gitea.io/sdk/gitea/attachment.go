@@ -78,7 +78,7 @@ func (c *Client) CreateReleaseAttachment(user, repo string, release int64, file 
 	attachment := new(Attachment)
 	resp, err := c.getParsedResponse("POST",
 		fmt.Sprintf("/repos/%s/%s/releases/%d/assets", user, repo, release),
-		http.Header{"Content-Type": {writer.FormDataContentType()}}, body, &attachment)
+		http.Header{"Content-Type": []string{writer.FormDataContentType()}}, body, &attachment)
 	return attachment, resp, err
 }
 
@@ -106,6 +106,5 @@ func (c *Client) DeleteReleaseAttachment(user, repo string, release, id int64) (
 	if err := escapeValidatePathSegments(&user, &repo); err != nil {
 		return nil, err
 	}
-	_, resp, err := c.getResponse("DELETE", fmt.Sprintf("/repos/%s/%s/releases/%d/assets/%d", user, repo, release, id), nil, nil)
-	return resp, err
+	return c.doRequestWithStatusHandle("DELETE", fmt.Sprintf("/repos/%s/%s/releases/%d/assets/%d", user, repo, release, id), nil, nil)
 }

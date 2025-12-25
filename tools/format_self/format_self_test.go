@@ -13,6 +13,7 @@ func TestFormatSelf(t *testing.T) {
 	t.Run("FormatFileContent", func(t *testing.T) {
 		t.Parallel()
 		t.Run("unformatted, non-pointer receiver", func(t *testing.T) {
+			t.Parallel()
 			give := `
 package main
 type Foo struct{}
@@ -42,6 +43,23 @@ package main
 type Foo struct{}
 func (self *Foo) Bar() {
 	fmt.Println("")
+}`
+			must.EqOp(t, want, have)
+		})
+		t.Run("unformatted, generic method", func(t *testing.T) {
+			t.Parallel()
+			give := `
+package main
+type WithPrevious struct{}
+func (c *WithPrevious[T]) Initialized() bool {
+        return c.initialized
+}`
+			have := formatSelf.FormatFileContent(give)
+			want := `
+package main
+type WithPrevious struct{}
+func (self *WithPrevious[T]) Initialized() bool {
+        return c.initialized
 }`
 			must.EqOp(t, want, have)
 		})

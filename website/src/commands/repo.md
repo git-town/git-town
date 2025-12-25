@@ -1,20 +1,53 @@
-# git repo [remote]
+# git town repo
 
-The _repo_ command ("show the repository") opens the homepage of the current
-repository in your default browser. Git Town can display repositories hosted on
+<a type="git-town-command" />
+
+```command-summary
+git town repo [<remote-name>] [-h | --help] [-v | --verbose]
+```
+
+The _repo_ command ("show me the repository") opens the homepage of the current
+repository in your browser. Git Town can display repositories hosted on
 [GitHub](https://github.com), [GitLab](https://gitlab.com),
-[Gitea](https://gitea.com), and [Bitbucket](https://bitbucket.org).
+[Gitea](https://gitea.com), [Bitbucket](https://bitbucket.org), and
+[Forgejo](https://forgejo.org).
 
-### Arguments
+You can configure the browser which Git Town opens using the
+[BROWSER environment variable](../preferences/browser.md).
 
-Shows the repository at the remote with the given name. If no remote is given,
-shows the repository at the `origin` remote.
+## Positional arguments
 
-### Configuration
+When called without arguments, the _repo_ command shows the repository at the
+[development remote](../preferences/dev-remote.md).
 
-Git Town automatically identifies the hosting platform type through the `origin`
-remote. You can override the type of hosting server with the
-[hosting-platform](../preferences/hosting-platform.md) setting.
+When called with an argument, it shows the repository at the remote with the
+given name.
+
+## Options
+
+#### `-h`<br>`--help`
+
+Display help for this command.
+
+#### `-v`<br>`--verbose`
+
+The `--verbose` aka `-v` flag prints all Git commands run under the hood to
+determine the repository state.
+
+## Configuration
+
+Git Town automatically identifies the forge type through the URL of the
+development remote. You can override the type of hosting server with the
+[hosting-platform](../preferences/forge-type.md) setting.
 
 Set the [hosting-origin-hostname](../preferences/hosting-origin-hostname.md)
 setting to tell Git Town about the hostname when using ssh identities.
+
+## See also
+
+<!-- keep-sorted start -->
+
+- [propose](propose.md) opens the website displaying the pull request for the
+  current branch
+
+<!-- keep-sorted end -->

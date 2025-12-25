@@ -8,19 +8,18 @@ Feature: on the main branch with an upstream repo
       | main   | local    | local commit    |
       |        | origin   | origin commit   |
       |        | upstream | upstream commit |
+    And Git setting "git-town.sync-upstream" is "false"
     And the current branch is "main"
-    And Git Town setting "sync-upstream" is "false"
     And I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
-      | BRANCH | COMMAND                  |
-      | main   | git fetch --prune --tags |
-      |        | git rebase origin/main   |
-      |        | git push                 |
-      |        | git push --tags          |
+    Then Git Town runs the commands
+      | BRANCH | COMMAND                                           |
+      | main   | git fetch --prune --tags                          |
+      |        | git -c rebase.updateRefs=false rebase origin/main |
+      |        | git push                                          |
+      |        | git push --tags                                   |
     And all branches are now synchronized
-    And the current branch is still "main"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE         |
       | main   | local, origin | origin commit   |
@@ -29,11 +28,10 @@ Feature: on the main branch with an upstream repo
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
-    And the current branch is still "main"
+    Then Git Town runs no commands
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE         |
       | main   | local, origin | origin commit   |
       |        |               | local commit    |
       |        | upstream      | upstream commit |
-    And the initial branches and lineage exist

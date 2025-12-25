@@ -1,72 +1,85 @@
 package configdomain
 
 import (
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
+	"fmt"
+	"strings"
+
+	"github.com/git-town/git-town/v22/internal/messages"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-type BranchType int
+type BranchType string
 
 const (
-	BranchTypeMainBranch BranchType = iota
-	BranchTypePerennialBranch
-	BranchTypeFeatureBranch
-	BranchTypeParkedBranch
-	BranchTypeContributionBranch
-	BranchTypeObservedBranch
-	BranchTypePrototypeBranch
+	BranchTypeMainBranch         = BranchType("main")
+	BranchTypePerennialBranch    = BranchType("perennial")
+	BranchTypeFeatureBranch      = BranchType("feature")
+	BranchTypeParkedBranch       = BranchType("parked")
+	BranchTypeContributionBranch = BranchType("contribution")
+	BranchTypeObservedBranch     = BranchType("observed")
+	BranchTypePrototypeBranch    = BranchType("prototype")
 )
 
-func ParseBranchType(name string) Option[BranchType] {
-	switch name {
-	case "contribution":
-		return Some(BranchTypeContributionBranch)
-	case "feature":
-		return Some(BranchTypeFeatureBranch)
-	case "main":
-		return Some(BranchTypeMainBranch)
-	case "observed":
-		return Some(BranchTypeObservedBranch)
-	case "parked":
-		return Some(BranchTypeParkedBranch)
-	case "perennial":
-		return Some(BranchTypePerennialBranch)
-	case "prototype":
-		return Some(BranchTypePrototypeBranch)
-	case "(none)":
-		return None[BranchType]()
+func AllBranchTypes() []BranchType {
+	return []BranchType{
+		BranchTypeMainBranch,
+		BranchTypePerennialBranch,
+		BranchTypeFeatureBranch,
+		BranchTypeParkedBranch,
+		BranchTypeContributionBranch,
+		BranchTypeObservedBranch,
+		BranchTypePrototypeBranch,
 	}
-	panic("unknown branch type: " + name)
+}
+
+func ParseBranchType(text string, source string) (Option[BranchType], error) {
+	if len(text) == 0 || text == messages.DialogResultNone {
+		return None[BranchType](), nil
+	}
+	for _, branchType := range AllBranchTypes() {
+		if strings.HasPrefix(branchType.String(), text) {
+			return Some(branchType), nil
+		}
+	}
+	return None[BranchType](), fmt.Errorf(messages.DialogResultUnknownBranchType, source, text)
+}
+
+func (self BranchType) MustKnowParent() bool {
+	switch self {
+	case
+		BranchTypeMainBranch,
+		BranchTypePerennialBranch,
+		BranchTypeContributionBranch,
+		BranchTypeObservedBranch:
+		return false
+	case
+		BranchTypeFeatureBranch,
+		BranchTypeParkedBranch,
+		BranchTypePrototypeBranch:
+		return true
+	}
+	panic("unhandled branch type" + self.String())
 }
 
 // ShouldPush indicates whether a branch with this type should push its local commit to origin.
 func (self BranchType) ShouldPush(isInitialBranch bool) bool {
 	switch self {
-	case BranchTypeMainBranch, BranchTypeFeatureBranch, BranchTypePerennialBranch, BranchTypeContributionBranch:
+	case
+		BranchTypeMainBranch,
+		BranchTypeFeatureBranch,
+		BranchTypePerennialBranch,
+		BranchTypeContributionBranch:
 		return true
-	case BranchTypeObservedBranch, BranchTypePrototypeBranch:
+	case
+		BranchTypeObservedBranch,
+		BranchTypePrototypeBranch:
 		return false
 	case BranchTypeParkedBranch:
 		return isInitialBranch
 	}
-	panic("unhandled branch type")
+	panic("unhandled branch type" + self.String())
 }
 
 func (self BranchType) String() string {
-	switch self {
-	case BranchTypeContributionBranch:
-		return "contribution branch"
-	case BranchTypeFeatureBranch:
-		return "feature branch"
-	case BranchTypeMainBranch:
-		return "main branch"
-	case BranchTypeObservedBranch:
-		return "observed branch"
-	case BranchTypeParkedBranch:
-		return "parked branch"
-	case BranchTypePerennialBranch:
-		return "perennial branch"
-	case BranchTypePrototypeBranch:
-		return "prototype branch"
-	}
-	panic("unhandled branch type")
+	return string(self)
 }

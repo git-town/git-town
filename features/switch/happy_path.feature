@@ -1,3 +1,4 @@
+@messyoutput
 Feature: switch branches
 
   Scenario: switching to another branch
@@ -8,9 +9,8 @@ Feature: switch branches
       | beta  | feature | main   | local, origin |
     And the current branch is "alpha"
     When I run "git-town switch" and enter into the dialogs:
-      | KEYS       |
-      | down enter |
-    Then it runs the commands
+      | DIALOG        | KEYS       |
+      | switch-branch | down enter |
+    Then Git Town runs the commands
       | BRANCH | COMMAND           |
       | alpha  | git checkout beta |
-    And the current branch is now "beta"

@@ -1,10 +1,10 @@
 package configdomain
 
-import . "github.com/git-town/git-town/v15/internal/gohacks/prelude"
+import . "github.com/git-town/git-town/v22/pkg/prelude"
 
 type AliasableCommands []AliasableCommand
 
-// provides the AliasKey matching the given key name
+// LookupKey provides the AliasKey matching the given key name.
 func (self AliasableCommands) LookupKey(name string) Option[AliasKey] {
 	for _, aliasableCommand := range self {
 		keyOfCommand := aliasableCommand.Key()
@@ -30,16 +30,18 @@ func AllAliasableCommands() AliasableCommands {
 		AliasableCommandCompress,
 		AliasableCommandContribute,
 		AliasableCommandDiffParent,
+		AliasableCommandDown,
 		AliasableCommandHack,
-		AliasableCommandKill,
+		AliasableCommandDelete,
 		AliasableCommandObserve,
 		AliasableCommandPark,
 		AliasableCommandPrepend,
 		AliasableCommandPropose,
-		AliasableCommandRenameBranch,
+		AliasableCommandRename,
 		AliasableCommandRepo,
 		AliasableCommandSetParent,
 		AliasableCommandShip,
 		AliasableCommandSync,
+		AliasableCommandUp,
 	}
 }

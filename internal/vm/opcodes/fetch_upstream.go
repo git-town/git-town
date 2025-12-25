@@ -1,15 +1,14 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	"github.com/git-town/git-town/v15/internal/vm/shared"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/vm/shared"
 )
 
 // FetchUpstream brings the Git history of the local repository
 // up to speed with activities that happened in the upstream remote.
 type FetchUpstream struct {
-	Branch                  gitdomain.LocalBranchName
-	undeclaredOpcodeMethods `exhaustruct:"optional"`
+	Branch gitdomain.LocalBranchName
 }
 
 func (self *FetchUpstream) Run(args shared.RunArgs) error {

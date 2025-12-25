@@ -5,30 +5,33 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/git-town/git-town/v15/internal/cli/colors"
-	"github.com/git-town/git-town/v15/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v15/internal/cli/dialog/components/list"
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	"github.com/git-town/git-town/v15/internal/messages"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents/list"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/pkg/colors"
 	"github.com/muesli/termenv"
 )
 
 const (
 	aliasesTitle = `Git Aliases for Git Town commands`
 	aliasesHelp  = `
-Aliases allow you to call frequently used Git Town commands
-with less typing. For example, if the "git town sync" command
-is aliased, you can call it as "git sync".
+Aliases let you run Git Town commands with shorter,
+more convenient names.
+For example, with an alias set up,
+"git town sync" can be run as simply "git sync".
 
-Please select which Git Town commands should be shortened.
-If you are not sure, select all :)
+Select which commands you'd like to alias.
+If you're unsure, it's safe to enable all of them.
+You can always adjust later.
 
 `
 )
 
 // Aliases lets the user select which Git Town commands should have shorter aliases.
 // This includes asking the user and updating the respective settings based on the user selection.
-func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliases configdomain.Aliases, inputs components.TestInput) (configdomain.Aliases, bool, error) {
+func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliases configdomain.Aliases, inputs dialogcomponents.Inputs) (configdomain.Aliases, dialogdomain.Exit, error) {
 	program := tea.NewProgram(AliasesModel{
 		AllAliasableCommands: allAliasableCommands,
 		CurrentSelections:    NewAliasSelections(allAliasableCommands, existingAliases),
@@ -36,15 +39,15 @@ func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliase
 		OriginalAliases:      existingAliases,
 		selectedColor:        colors.Green(),
 	})
-	components.SendInputs(inputs, program)
+	dialogcomponents.SendInputs("aliases", inputs.Next(), program)
 	dialogResult, err := program.Run()
-	result := dialogResult.(AliasesModel) //nolint:forcetypeassert
+	result := dialogResult.(AliasesModel)
 	if err != nil || result.Aborted() {
 		return configdomain.Aliases{}, result.Aborted(), err
 	}
 	selectedCommands := result.Checked()
 	selectionText := DetermineAliasSelectionText(selectedCommands)
-	fmt.Printf(messages.AliasedCommands, components.FormattedSelection(selectionText, result.Aborted()))
+	fmt.Printf(messages.AliasedCommands, dialogcomponents.FormattedSelection(selectionText, result.Aborted()))
 	return DetermineAliasResult(result.CurrentSelections, allAliasableCommands, existingAliases), result.Aborted(), err
 }
 
@@ -71,7 +74,7 @@ func (self AliasesModel) Init() tea.Cmd {
 }
 
 // RotateCurrentEntry switches the status of the currently selected list entry to the next status.
-func (self *AliasesModel) RotateCurrentEntry() {
+func (self AliasesModel) RotateCurrentEntry() AliasesModel {
 	var newSelection AliasSelection
 	switch self.CurrentSelections[self.Cursor] {
 	case AliasSelectionNone:
@@ -88,20 +91,23 @@ func (self *AliasesModel) RotateCurrentEntry() {
 		newSelection = AliasSelectionNone
 	}
 	self.CurrentSelections[self.Cursor] = newSelection
+	return self
 }
 
 // SelectAll checks all entries in the list.
-func (self *AliasesModel) SelectAll() {
+func (self AliasesModel) SelectAll() AliasesModel {
 	for s := range self.CurrentSelections {
 		self.CurrentSelections[s] = AliasSelectionGT
 	}
+	return self
 }
 
 // SelectNone unchecks all entries in the list.
-func (self *AliasesModel) SelectNone() {
+func (self AliasesModel) SelectNone() AliasesModel {
 	for s := range self.CurrentSelections {
 		self.CurrentSelections[s] = AliasSelectionNone
 	}
+	return self
 }
 
 func (self AliasesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
@@ -114,7 +120,7 @@ func (self AliasesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ire
 	}
 	switch keyMsg.Type { //nolint:exhaustive
 	case tea.KeySpace:
-		self.RotateCurrentEntry()
+		self = self.RotateCurrentEntry()
 		return self, nil
 	case tea.KeyEnter:
 		self.Status = list.StatusDone
@@ -122,11 +128,11 @@ func (self AliasesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ire
 	}
 	switch keyMsg.String() {
 	case "a":
-		self.SelectAll()
+		self = self.SelectAll()
 	case "n":
-		self.SelectNone()
+		self = self.SelectNone()
 	case "o":
-		self.RotateCurrentEntry()
+		self = self.RotateCurrentEntry()
 		return self, nil
 	}
 	return self, nil
@@ -219,9 +225,9 @@ func DetermineAliasResult(selections []AliasSelection, allAliasableCommands conf
 func DetermineAliasSelectionText(selectedCommands configdomain.AliasableCommands) string {
 	switch len(selectedCommands) {
 	case 0:
-		return "(none)"
+		return messages.DialogResultNone
 	case len(configdomain.AllAliasableCommands()):
-		return "(all)"
+		return messages.DialogResultAll
 	default:
 		return strings.Join(selectedCommands.Strings(), ", ")
 	}

@@ -1,328 +1,417 @@
 package cmd
 
 import (
+	"cmp"
 	"errors"
 	"fmt"
 	"os"
-	"slices"
+	"regexp"
 
-	"github.com/git-town/git-town/v15/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v15/internal/cli/flags"
-	"github.com/git-town/git-town/v15/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v15/internal/config"
-	"github.com/git-town/git-town/v15/internal/config/commandconfig"
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	"github.com/git-town/git-town/v15/internal/execute"
-	"github.com/git-town/git-town/v15/internal/git"
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	"github.com/git-town/git-town/v15/internal/gohacks"
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
-	"github.com/git-town/git-town/v15/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v15/internal/hosting/hostingdomain"
-	"github.com/git-town/git-town/v15/internal/messages"
-	"github.com/git-town/git-town/v15/internal/undo/undoconfig"
-	"github.com/git-town/git-town/v15/internal/validate"
-	configInterpreter "github.com/git-town/git-town/v15/internal/vm/interpreter/config"
-	fullInterpreter "github.com/git-town/git-town/v15/internal/vm/interpreter/full"
-	"github.com/git-town/git-town/v15/internal/vm/runstate"
+	"github.com/git-town/git-town/v22/internal/cli/dialog"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v22/internal/cli/flags"
+	"github.com/git-town/git-town/v22/internal/cli/print"
+	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v22/internal/cmd/sync"
+	"github.com/git-town/git-town/v22/internal/config/cliconfig"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/execute"
+	"github.com/git-town/git-town/v22/internal/forge"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/messages"
+	"github.com/git-town/git-town/v22/internal/state/runstate"
+	"github.com/git-town/git-town/v22/internal/validate"
+	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
+	"github.com/git-town/git-town/v22/internal/vm/program"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
-const hackDesc = "Create a new feature branch off the main branch"
+const (
+	hackDesc = "Create a new feature branch off the main branch"
+	hackHelp = `
+Consider this stack:
 
-const hackHelp = `
-Syncs the main branch, forks a new feature branch with the given name off the main branch, pushes the new feature branch to origin (if and only if "push-new-branches" is true), and brings over all uncommitted changes to the new feature branch.
+main
+ \
+  branch-1
+   \
+*   branch-2
 
-See "sync" for information regarding upstream remotes.`
+We are on the "branch-2" branch. After running "git hack branch-3", our
+workspace contains these branches:
+
+main
+ \
+  branch-1
+   \
+    branch-2
+ \
+* branch-3
+
+The new branch "feature-2"
+is a child of the main branch.
+
+If there are no uncommitted changes,
+it also syncs all affected branches.
+`
+)
 
 func hackCmd() *cobra.Command {
-	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	addAutoResolveFlag, readAutoResolveFlag := flags.AutoResolve()
+	addBeamFlag, readBeamFlag := flags.Beam()
+	addCommitFlag, readCommitFlag := flags.Commit()
+	addCommitMessageFlag, readCommitMessageFlag := flags.CommitMessage("the commit message")
+	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addProposeFlag, readProposeFlag := flags.Propose()
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
+	addStashFlag, readStashFlag := flags.Stash()
+	addSyncFlag, readSyncFlag := flags.Sync()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "hack <branch>",
-		GroupID: "basic",
-		Args:    cobra.ArbitraryArgs,
+		GroupID: cmdhelpers.GroupIDBasic,
+		Args:    cobra.ExactArgs(1),
 		Short:   hackDesc,
 		Long:    cmdhelpers.Long(hackDesc, hackHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeHack(args, readDryRunFlag(cmd), readPrototypeFlag(cmd), readVerboseFlag(cmd))
+			autoResolve, errAutoResolve := readAutoResolveFlag(cmd)
+			beam, errBeam := readBeamFlag(cmd)
+			commit, errCommit := readCommitFlag(cmd)
+			commitMessage, errCommitMessage := readCommitMessageFlag(cmd)
+			detached, errDetached := readDetachedFlag(cmd)
+			dryRun, errDryRun := readDryRunFlag(cmd)
+			propose, errPropose := readProposeFlag(cmd)
+			prototype, errPrototype := readPrototypeFlag(cmd)
+			stash, errStash := readStashFlag(cmd)
+			sync, errSync := readSyncFlag(cmd)
+			verbose, errVerbose := readVerboseFlag(cmd)
+			if err := cmp.Or(errAutoResolve, errBeam, errCommit, errCommitMessage, errDetached, errDryRun, errPropose, errPrototype, errStash, errSync, errVerbose); err != nil {
+				return err
+			}
+			if commitMessage.IsSome() || propose.ShouldPropose() {
+				commit = true
+			}
+			cliConfig := cliconfig.New(cliconfig.NewArgs{
+				AutoResolve:       autoResolve,
+				AutoSync:          sync,
+				Detached:          detached,
+				DisplayTypes:      None[configdomain.DisplayTypes](),
+				DryRun:            dryRun,
+				IgnoreUncommitted: None[configdomain.IgnoreUncommitted](),
+				Order:             None[configdomain.Order](),
+				PushBranches:      None[configdomain.PushBranches](),
+				Stash:             stash,
+				Verbose:           verbose,
+			})
+			return executeHack(hackArgs{
+				argv:          args,
+				beam:          beam,
+				cliConfig:     cliConfig,
+				commit:        commit,
+				commitMessage: commitMessage,
+				propose:       propose,
+				prototype:     prototype,
+			})
 		},
 	}
+	addAutoResolveFlag(&cmd)
+	addBeamFlag(&cmd)
+	addCommitFlag(&cmd)
+	addCommitMessageFlag(&cmd)
+	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
+	addProposeFlag(&cmd)
 	addPrototypeFlag(&cmd)
+	addStashFlag(&cmd)
+	addSyncFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeHack(args []string, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) error {
+type hackArgs struct {
+	argv          []string
+	beam          configdomain.Beam
+	cliConfig     configdomain.PartialConfig
+	commit        configdomain.Commit
+	commitMessage Option[gitdomain.CommitMessage]
+	propose       configdomain.Propose
+	prototype     configdomain.Prototype
+}
+
+func executeHack(args hackArgs) error {
+Start:
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		DryRun:           dryRun,
+		CliConfig:        args.cliConfig,
+		IgnoreUnknown:    false,
 		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
 		ValidateIsOnline: false,
-		Verbose:          verbose,
 	})
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineHackData(args, repo, dryRun, prototype, verbose)
-	if err != nil || exit {
+	data, flow, err := determineHackData(args, repo)
+	if err != nil {
 		return err
 	}
-	createNewFeatureBranchData, doCreateNewFeatureBranch, convertToFeatureBranchData, doConvertToFeatureBranch := data.Get()
-	if doCreateNewFeatureBranch {
-		return createFeatureBranch(createFeatureBranchArgs{
-			appendData:            createNewFeatureBranchData,
-			backend:               repo.Backend,
-			beginBranchesSnapshot: createNewFeatureBranchData.branchesSnapshot,
-			beginConfigSnapshot:   repo.ConfigSnapshot,
-			beginStashSize:        createNewFeatureBranchData.stashSize,
-			commandsCounter:       repo.CommandsCounter,
-			dryRun:                dryRun,
-			finalMessages:         repo.FinalMessages,
-			frontend:              repo.Frontend,
-			git:                   repo.Git,
-			rootDir:               repo.RootDir,
-			verbose:               verbose,
-		})
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit:
+		return nil
+	case configdomain.ProgramFlowRestart:
+		goto Start
 	}
-	if doConvertToFeatureBranch {
-		return convertToFeatureBranch(convertToFeatureBranchArgs{
-			beginConfigSnapshot: repo.ConfigSnapshot,
-			config:              convertToFeatureBranchData.config,
-			makeFeatureData:     convertToFeatureBranchData,
-			repo:                repo,
-			rootDir:             repo.RootDir,
-			verbose:             verbose,
-		})
-	}
-	panic("both config arms were nil")
-}
-
-// If set to createNewFeatureData, the user wants to create a new feature branch.
-// If set to convertToFeatureData, the user wants to convert an already existing branch into a feature branch.
-type hackData = Either[appendFeatureData, convertToFeatureData]
-
-// this configuration is for when "git hack" is used to make contribution, observed, or parked branches feature branches
-type convertToFeatureData struct {
-	config         config.ValidatedConfig
-	targetBranches commandconfig.BranchesAndTypes
-}
-
-func createFeatureBranch(args createFeatureBranchArgs) error {
-	runProgram := appendProgram(args.appendData)
+	runProgram := appendProgram(repo.Backend, data, repo.FinalMessages, true)
 	runState := runstate.RunState{
-		BeginBranchesSnapshot: args.beginBranchesSnapshot,
-		BeginConfigSnapshot:   args.beginConfigSnapshot,
-		BeginStashSize:        args.beginStashSize,
+		BeginBranchesSnapshot: data.branchesSnapshot,
+		BeginConfigSnapshot:   repo.ConfigSnapshot,
+		BeginStashSize:        data.stashSize,
+		BranchInfosLastRun:    data.branchInfosLastRun,
 		Command:               "hack",
-		DryRun:                args.dryRun,
+		DryRun:                data.config.NormalConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
-		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
+		EndConfigSnapshot:     None[configdomain.EndConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
 		RunProgram:            runProgram,
 		TouchedBranches:       runProgram.TouchedBranches(),
+		UndoAPIProgram:        program.Program{},
 	}
-	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Backend:                 args.backend,
-		CommandsCounter:         args.commandsCounter,
-		Config:                  args.appendData.config,
-		Connector:               None[hostingdomain.Connector](),
-		DialogTestInputs:        args.appendData.dialogTestInputs,
-		FinalMessages:           args.finalMessages,
-		Frontend:                args.frontend,
-		Git:                     args.git,
-		HasOpenChanges:          args.appendData.hasOpenChanges,
-		InitialBranch:           args.appendData.initialBranch,
-		InitialBranchesSnapshot: args.beginBranchesSnapshot,
-		InitialConfigSnapshot:   args.beginConfigSnapshot,
-		InitialStashSize:        args.beginStashSize,
-		RootDir:                 args.rootDir,
+	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
+		Backend:                 repo.Backend,
+		CommandsCounter:         repo.CommandsCounter,
+		Config:                  data.config,
+		Connector:               data.connector,
+		FinalMessages:           repo.FinalMessages,
+		Frontend:                repo.Frontend,
+		Git:                     repo.Git,
+		HasOpenChanges:          data.hasOpenChanges,
+		InitialBranch:           data.initialBranch,
+		InitialBranchesSnapshot: data.branchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSize:        data.stashSize,
+		Inputs:                  data.inputs,
+		PendingCommand:          None[string](),
+		RootDir:                 repo.RootDir,
 		RunState:                runState,
-		Verbose:                 args.verbose,
 	})
 }
 
-type createFeatureBranchArgs struct {
-	appendData            appendFeatureData
-	backend               gitdomain.RunnerQuerier
-	beginBranchesSnapshot gitdomain.BranchesSnapshot
-	beginConfigSnapshot   undoconfig.ConfigSnapshot
-	beginStashSize        gitdomain.StashSize
-	commandsCounter       Mutable[gohacks.Counter]
-	dryRun                configdomain.DryRun
-	finalMessages         stringslice.Collector
-	frontend              gitdomain.Runner
-	git                   git.Commands
-	rootDir               gitdomain.RepoRootDir
-	verbose               configdomain.Verbose
-}
-
-func determineHackData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) (data hackData, exit bool, err error) {
-	dialogTestInputs := components.LoadTestInputs(os.Environ())
+func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data appendFeatureData, flow configdomain.ProgramFlow, err error) {
+	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
+	if err != nil {
+		return data, configdomain.ProgramFlowExit, err
+	}
+	inputs := dialogcomponents.LoadInputs(os.Environ())
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
-	targetBranches := gitdomain.NewLocalBranchNames(args...)
+	targetBranches := gitdomain.NewLocalBranchNames(args.argv...)
 	var repoStatus gitdomain.RepoStatus
 	repoStatus, err = repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return data, false, err
+		return data, configdomain.ProgramFlowExit, err
 	}
-	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	config := repo.UnvalidatedConfig.NormalConfig
+	connector, err := forge.NewConnector(forge.NewConnectorArgs{
+		Backend:              repo.Backend,
+		BitbucketAppPassword: config.BitbucketAppPassword,
+		BitbucketUsername:    config.BitbucketUsername,
+		Browser:              config.Browser,
+		ForgeType:            config.ForgeType,
+		ForgejoToken:         config.ForgejoToken,
+		Frontend:             repo.Frontend,
+		GitHubConnectorType:  config.GitHubConnectorType,
+		GitHubToken:          config.GitHubToken,
+		GitLabConnectorType:  config.GitLabConnectorType,
+		GitLabToken:          config.GitLabToken,
+		GiteaToken:           config.GiteaToken,
+		Log:                  print.Logger{},
+		RemoteURL:            config.DevURL(repo.Backend),
+	})
+	if err != nil {
+		return data, configdomain.ProgramFlowExit, err
+	}
+	fetch := true
+	if repoStatus.OpenChanges {
+		fetch = false
+	}
+	if args.beam.ShouldBeam() || args.commit.ShouldCommit() {
+		fetch = false
+	}
+	if !config.AutoSync {
+		fetch = false
+	}
+	branchesSnapshot, stashSize, branchInfosLastRun, flow, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
-		DialogTestInputs:      dialogTestInputs,
-		Fetch:                 len(args) == 1 && !repoStatus.OpenChanges,
+		Connector:             connector,
+		Fetch:                 fetch,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
 		HandleUnfinishedState: true,
+		Inputs:                inputs,
 		Repo:                  repo,
 		RepoStatus:            repoStatus,
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               verbose,
 	})
-	if err != nil || exit {
-		return data, exit, err
+	if err != nil {
+		return data, configdomain.ProgramFlowExit, err
 	}
-	localBranchNames := branchesSnapshot.Branches.LocalBranches().Names()
-	var branchesToValidate gitdomain.LocalBranchNames
-	shouldCreateBranch := len(targetBranches) == 1 && !slices.Contains(localBranchNames, targetBranches[0])
+	switch flow {
+	case configdomain.ProgramFlowContinue:
+	case configdomain.ProgramFlowExit, configdomain.ProgramFlowRestart:
+		return data, flow, nil
+	}
+	localBranchNames := branchesSnapshot.Branches.LocalBranches().NamesLocalBranches()
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
-	if shouldCreateBranch {
-		branchesToValidate = gitdomain.LocalBranchNames{}
-	} else {
-		if len(targetBranches) == 0 {
-			branchesToValidate = gitdomain.LocalBranchNames{initialBranch}
-		} else {
-			branchesToValidate = targetBranches
-		}
+	initialBranchInfo, hasInitialBranchInfo := branchesSnapshot.Branches.FindByLocalName(initialBranch).Get()
+	if !hasInitialBranchInfo {
+		return data, configdomain.ProgramFlowExit, errors.New(messages.CurrentBranchCannotDetermine)
+	}
+	branchesToValidate := gitdomain.LocalBranchNames{}
+	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(localBranchNames)
+	remotes, err := repo.Git.Remotes(repo.Backend)
+	if err != nil {
+		return data, configdomain.ProgramFlowExit, err
 	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
-		BranchesSnapshot:   branchesSnapshot,
+		BranchInfos:        branchesSnapshot.Branches,
+		BranchesAndTypes:   branchesAndTypes,
 		BranchesToValidate: branchesToValidate,
-		DialogTestInputs:   dialogTestInputs,
+		ConfigSnapshot:     repo.ConfigSnapshot,
+		Connector:          connector,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
+		Inputs:             inputs,
 		LocalBranches:      localBranchNames,
+		Remotes:            remotes,
 		RepoStatus:         repoStatus,
-		TestInputs:         dialogTestInputs,
-		Unvalidated:        repo.UnvalidatedConfig,
+		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return data, exit, err
-	}
-	if !shouldCreateBranch {
-		data = Right[appendFeatureData, convertToFeatureData](convertToFeatureData{
-			config:         validatedConfig,
-			targetBranches: commandconfig.NewBranchesAndTypes(branchesToValidate, validatedConfig.Config),
-		})
-		return data, false, nil
+		return data, configdomain.ProgramFlowExit, err
 	}
 	if len(targetBranches) > 1 {
-		return data, false, errors.New(messages.HackTooManyArguments)
+		return data, configdomain.ProgramFlowExit, errors.New(messages.HackTooManyArguments)
 	}
 	targetBranch := targetBranches[0]
-	var remotes gitdomain.Remotes
-	remotes, err = repo.Git.Remotes(repo.Backend)
-	if err != nil {
-		return data, false, err
+	if prefix, hasPrefix := validatedConfig.NormalConfig.BranchPrefix.Get(); hasPrefix {
+		targetBranch = prefix.Apply(targetBranch)
 	}
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
-		return data, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
+		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
-		return data, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
+		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
-	branchNamesToSync := gitdomain.LocalBranchNames{validatedConfig.Config.MainBranch}
-	var branchesToSync gitdomain.BranchInfos
-	branchesToSync, err = branchesSnapshot.Branches.Select(branchNamesToSync...)
-	data = Left[appendFeatureData, convertToFeatureData](appendFeatureData{
-		allBranches:               branchesSnapshot.Branches,
+	branchNamesToSync := gitdomain.LocalBranchNames{validatedConfig.ValidatedConfigData.MainBranch}
+	if validatedConfig.NormalConfig.Detached {
+		branchNamesToSync = validatedConfig.RemovePerennials(branchNamesToSync)
+	}
+	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(branchNamesToSync...)
+	branchesToSync, err := sync.BranchesToSync(branchInfosToSync, branchesSnapshot.Branches, repo, validatedConfig.ValidatedConfigData.MainBranch)
+	if err != nil {
+		return data, configdomain.ProgramFlowExit, err
+	}
+	commitsToBeam := []gitdomain.Commit{}
+	ancestor, hasAncestor := latestExistingAncestor(initialBranch, branchesSnapshot.Branches, validatedConfig.NormalConfig.Lineage).Get()
+	if args.beam.ShouldBeam() && !hasAncestor {
+		// ask the user for the parent branch
+		excludeBranches := append(
+			gitdomain.LocalBranchNames{initialBranch},
+			validatedConfig.NormalConfig.Lineage.Children(initialBranch, validatedConfig.NormalConfig.Order)...,
+		)
+		noneEntry := dialog.SwitchBranchEntry{
+			Branch:        messages.SetParentNoneOption,
+			Indentation:   "",
+			OtherWorktree: false,
+			Type:          configdomain.BranchTypeFeatureBranch,
+		}
+		entriesArgs := dialog.NewSwitchBranchEntriesArgs{
+			BranchInfos:       branchesSnapshot.Branches,
+			BranchTypes:       []configdomain.BranchType{},
+			BranchesAndTypes:  branchesAndTypes,
+			ExcludeBranches:   excludeBranches,
+			Lineage:           validatedConfig.NormalConfig.Lineage,
+			MainBranch:        Some(validatedConfig.ValidatedConfigData.MainBranch),
+			Order:             validatedConfig.NormalConfig.Order,
+			Regexes:           []*regexp.Regexp{},
+			ShowAllBranches:   true,
+			UnknownBranchType: validatedConfig.NormalConfig.UnknownBranchType,
+		}
+		entriesAll := append(dialog.SwitchBranchEntries{noneEntry}, dialog.NewSwitchBranchEntries(entriesArgs)...)
+		entriesArgs.ShowAllBranches = false
+		entriesLocal := append(dialog.SwitchBranchEntries{noneEntry}, dialog.NewSwitchBranchEntries(entriesArgs)...)
+		newParent, exit, err := dialog.SwitchBranch(dialog.SwitchBranchArgs{
+			CurrentBranch:      None[gitdomain.LocalBranchName](),
+			Cursor:             1, // select the "main branch" entry, below the "make perennial" entry
+			DisplayBranchTypes: validatedConfig.NormalConfig.DisplayTypes,
+			EntryData: dialog.EntryData{
+				EntriesAll:      entriesAll,
+				EntriesLocal:    entriesLocal,
+				ShowAllBranches: false,
+			},
+			InputName:          fmt.Sprintf("parent-branch-for-%q", initialBranch),
+			Inputs:             inputs,
+			Title:              Some(fmt.Sprintf(messages.ParentBranchTitle, initialBranch)),
+			UncommittedChanges: false,
+		})
+		if err != nil || exit {
+			return data, configdomain.ProgramFlowExit, err
+		}
+		// store the new parent
+		if err = validatedConfig.NormalConfig.SetParent(repo.Backend, initialBranch, newParent); err != nil {
+			return data, configdomain.ProgramFlowContinue, err
+		}
+		ancestor = newParent
+		hasAncestor = true
+	}
+	if args.beam.ShouldBeam() && hasAncestor {
+		commitsInBranch, err := repo.Git.CommitsInFeatureBranch(repo.Backend, initialBranch, ancestor.BranchName())
+		if err != nil {
+			return data, configdomain.ProgramFlowExit, err
+		}
+		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, targetBranch, repo.Git, repo.Backend, inputs)
+		if err != nil || exit {
+			return data, configdomain.ProgramFlowExit, err
+		}
+	}
+	if validatedConfig.NormalConfig.ShareNewBranches == configdomain.ShareNewBranchesPropose {
+		args.propose = true
+	}
+	data = appendFeatureData{
+		beam:                      args.beam,
+		branchInfos:               branchesSnapshot.Branches,
+		branchInfosLastRun:        branchInfosLastRun,
 		branchesSnapshot:          branchesSnapshot,
 		branchesToSync:            branchesToSync,
+		commit:                    args.commit,
+		commitMessage:             args.commitMessage,
+		commitsToBeam:             commitsToBeam,
 		config:                    validatedConfig,
-		dialogTestInputs:          dialogTestInputs,
-		dryRun:                    dryRun,
+		connector:                 connector,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             initialBranch,
-		newBranchParentCandidates: gitdomain.LocalBranchNames{validatedConfig.Config.MainBranch},
+		initialBranchInfo:         initialBranchInfo,
+		inputs:                    inputs,
+		newBranchParentCandidates: gitdomain.LocalBranchNames{validatedConfig.ValidatedConfigData.MainBranch},
+		nonExistingBranches:       nonExistingBranches,
+		preFetchBranchInfos:       preFetchBranchSnapshot.Branches,
 		previousBranch:            previousBranch,
-		prototype:                 prototype,
+		propose:                   args.propose,
+		prototype:                 args.prototype,
 		remotes:                   remotes,
 		stashSize:                 stashSize,
 		targetBranch:              targetBranch,
-	})
-	return data, false, err
-}
-
-func convertToFeatureBranch(args convertToFeatureBranchArgs) error {
-	err := validateConvertToFeatureData(args.makeFeatureData)
-	if err != nil {
-		return err
 	}
-	for branchName, branchType := range args.makeFeatureData.targetBranches {
-		switch branchType {
-		case configdomain.BranchTypeContributionBranch:
-			err = args.config.RemoveFromContributionBranches(branchName)
-		case configdomain.BranchTypeObservedBranch:
-			err = args.config.RemoveFromObservedBranches(branchName)
-		case configdomain.BranchTypeParkedBranch:
-			err = args.config.RemoveFromParkedBranches(branchName)
-		case configdomain.BranchTypePrototypeBranch:
-			err = args.config.RemoveFromPrototypeBranches(branchName)
-		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
-			panic(fmt.Sprintf("unchecked branch type: %s", branchType))
-		}
-		if err != nil {
-			return err
-		}
-		fmt.Printf(messages.HackBranchIsNowFeature, branchName)
-	}
-	return configInterpreter.Finished(configInterpreter.FinishedArgs{
-		Backend:               args.repo.Backend,
-		BeginBranchesSnapshot: None[gitdomain.BranchesSnapshot](),
-		BeginConfigSnapshot:   args.beginConfigSnapshot,
-		Command:               "observe",
-		CommandsCounter:       args.repo.CommandsCounter,
-		FinalMessages:         args.repo.FinalMessages,
-		Git:                   args.repo.Git,
-		RootDir:               args.rootDir,
-		TouchedBranches:       args.makeFeatureData.targetBranches.Keys().BranchNames(),
-		Verbose:               args.verbose,
-	})
-}
-
-type convertToFeatureBranchArgs struct {
-	beginConfigSnapshot undoconfig.ConfigSnapshot
-	config              config.ValidatedConfig
-	makeFeatureData     convertToFeatureData
-	repo                execute.OpenRepoResult
-	rootDir             gitdomain.RepoRootDir
-	verbose             configdomain.Verbose
-}
-
-func validateConvertToFeatureData(data convertToFeatureData) error {
-	for branchName, branchType := range data.targetBranches {
-		switch branchType {
-		case configdomain.BranchTypeContributionBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePrototypeBranch:
-			return nil
-		case configdomain.BranchTypeFeatureBranch:
-			return fmt.Errorf(messages.HackBranchIsAlreadyFeature, branchName)
-		case configdomain.BranchTypeMainBranch:
-			return errors.New(messages.HackCannotFeatureMainBranch)
-		case configdomain.BranchTypePerennialBranch:
-			return fmt.Errorf(messages.HackCannotFeaturePerennialBranch, branchName)
-		}
-		panic(fmt.Sprintf("unhandled branch type: %s", branchType))
-	}
-	return nil
+	return data, configdomain.ProgramFlowContinue, nil
 }

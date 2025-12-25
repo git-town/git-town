@@ -20,9 +20,21 @@ func (self BranchName) IsLocal() bool {
 	return !strings.HasPrefix(string(self), "origin/")
 }
 
-// LocalName provides the local version of this branch name.
+// LocalName provides the (theoretical) local version of this branch name.
 func (self BranchName) LocalName() LocalBranchName {
 	return NewLocalBranchName(strings.TrimPrefix(string(self), "origin/"))
+}
+
+func (self BranchName) Location() Location {
+	return NewLocation(self.String())
+}
+
+// RefName provides the fully qualified reference name for this branch.
+func (self BranchName) RefName() string {
+	if self.IsLocal() {
+		return "refs/heads/" + self.String()
+	}
+	return self.String()
 }
 
 // RemoteName provides the remote version of this branch name.
@@ -33,7 +45,7 @@ func (self BranchName) RemoteName() RemoteBranchName {
 	return NewRemoteBranchName("origin/" + string(self))
 }
 
-// Implementation of the fmt.Stringer interface.
+// String implements the fmt.Stringer interface.
 func (self BranchName) String() string {
 	return string(self)
 }

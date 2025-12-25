@@ -3,15 +3,18 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v15/internal/cli/flags"
-	"github.com/git-town/git-town/v15/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v22/internal/cli/flags"
+	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v22/internal/config"
 	"github.com/spf13/cobra"
 )
 
-const rootDesc = "Branching and workflow support for Git"
-
-const rootHelp = `
-Git Town helps create, sync, and ship changes efficiently and with minimal merge conflicts.`
+const (
+	rootDesc = "Branching and workflow support for Git"
+	rootHelp = `
+Git Town helps create, sync, and ship changes
+efficiently and with minimal merge conflicts.`
+)
 
 func rootCmd() cobra.Command {
 	addVersionFlag, readVersionFlag := flags.Version()
@@ -22,24 +25,31 @@ func rootCmd() cobra.Command {
 		Short:         rootDesc,
 		Long:          cmdhelpers.Long(rootDesc, rootHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return executeRoot(cmd, readVersionFlag(cmd))
+			version, err := readVersionFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeRoot(cmd, version)
 		},
 	}
 	rootCmd.AddGroup(&cobra.Group{
-		ID:    "basic",
-		Title: "Basic commands:",
+		ID:    cmdhelpers.GroupIDBasic,
+		Title: "Basic workflow:",
 	}, &cobra.Group{
-		ID:    "errors",
-		Title: "Commands to deal with errors:",
+		ID:    cmdhelpers.GroupIDStack,
+		Title: "Stacked changes:",
 	}, &cobra.Group{
-		ID:    "lineage",
-		Title: "Commands for stacked changes:",
+		ID:    cmdhelpers.GroupIDNavigation,
+		Title: "Branch navigation:",
 	}, &cobra.Group{
-		ID:    "types",
-		Title: "Commands to limit branch syncing:",
+		ID:    cmdhelpers.GroupIDTypes,
+		Title: "Control syncing:",
 	}, &cobra.Group{
-		ID:    "setup",
-		Title: "Commands to set up Git Town on your computer:",
+		ID:    cmdhelpers.GroupIDErrors,
+		Title: "Error handling:",
+	}, &cobra.Group{
+		ID:    cmdhelpers.GroupIDConfig,
+		Title: "Configuration:",
 	})
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
 	addVersionFlag(&rootCmd)
@@ -48,7 +58,7 @@ func rootCmd() cobra.Command {
 
 func executeRoot(cmd *cobra.Command, showVersion bool) error {
 	if showVersion {
-		fmt.Println("Git Town 15.1.0")
+		fmt.Println("Git Town " + config.GitTownVersion)
 		return nil
 	}
 	return cmd.Help()

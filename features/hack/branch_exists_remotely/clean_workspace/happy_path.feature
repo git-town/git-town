@@ -1,0 +1,25 @@
+Feature: already existing remote branch
+
+  Background:
+    Given a Git repo with origin
+    And the branches
+      | NAME     | TYPE    | PARENT | LOCATIONS |
+      | existing | feature | main   | origin    |
+    When I run "git-town hack existing"
+
+  Scenario: result
+    Then Git Town runs the commands
+      | BRANCH | COMMAND                  |
+      | main   | git fetch --prune --tags |
+    And Git Town prints the error:
+      """
+      there is already a branch "existing" at the "origin" remote
+      """
+    And no lineage exists now
+    And no commits exist now
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then Git Town runs no commands
+    And the initial branches and lineage exist now
+    And the initial commits exist now

@@ -1,9 +1,9 @@
 package undobranches
 
 import (
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
-	"github.com/git-town/git-town/v15/pkg/set"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
+	"github.com/git-town/git-town/v22/pkg/set"
 )
 
 // BranchSpan represents changes of a branch over time.
@@ -43,6 +43,35 @@ func (self BranchSpan) IsInconsistentChange() (isInconsistentChange bool, before
 	return isInconsistentChange, before, after
 }
 
+// IsLocalRename indicates whether this BranchSpan describes the situation where only the local branch was renamed.
+func (self BranchSpan) IsLocalRename() (isLocalRename bool, beforeName, afterName gitdomain.LocalBranchName) {
+	before, hasBefore := self.Before.Get()
+	if !hasBefore {
+		return false, "", ""
+	}
+	after, hasAfter := self.After.Get()
+	if !hasAfter {
+		return false, "", ""
+	}
+	beforeName, hasBeforeName := before.LocalName.Get()
+	if !hasBeforeName {
+		return false, "", ""
+	}
+	afterName, hasAfterName := after.LocalName.Get()
+	if !hasAfterName {
+		return false, "", ""
+	}
+	beforeSHA, hasBeforeSHA := before.LocalSHA.Get()
+	if !hasBeforeSHA {
+		return false, "", ""
+	}
+	afterSHA, hasAfterSHA := after.LocalSHA.Get()
+	if !hasAfterSHA {
+		return false, "", ""
+	}
+	return beforeName != afterName && beforeSHA == afterSHA, beforeName, afterName
+}
+
 // IsOmniChange indicates whether this BranchBeforeAfter changes a synced branch
 // from one SHA both locally and remotely to another SHA both locally and remotely.
 func (self BranchSpan) IsOmniChange() (isOmniChange bool, branchName gitdomain.LocalBranchName, beforeSHA, afterSHA gitdomain.SHA) {
@@ -75,12 +104,12 @@ func (self BranchSpan) IsOmniRemove() (isOmniRemove bool, beforeBranchName gitdo
 
 func (self BranchSpan) LocalAdded() (isLocalAdded bool, afterBranchName gitdomain.LocalBranchName, afterSHA gitdomain.SHA) {
 	before, hasBefore := self.Before.Get()
-	beforeHasLocalBranch, _, _ := before.HasLocalBranch()
+	beforeHasLocalBranch, _, _ := before.GetLocal()
 	after, hasAfter := self.After.Get()
 	if !hasAfter {
 		return false, afterBranchName, afterSHA
 	}
-	afterHasLocalBranch, afterLocalBranch, afterSHA := after.HasLocalBranch()
+	afterHasLocalBranch, afterLocalBranch, afterSHA := after.GetLocal()
 	isLocalAdded = (!hasBefore || !beforeHasLocalBranch) && afterHasLocalBranch
 	return isLocalAdded, afterLocalBranch, afterSHA
 }
@@ -90,44 +119,33 @@ func (self BranchSpan) LocalChanged() (localChanged bool, branch gitdomain.Local
 	if !hasBefore {
 		return false, branch, beforeSHA, afterSHA
 	}
-	hasLocalBranchBefore, beforeBranch, beforeSHA := before.HasLocalBranch()
+	hasLocalBranchBefore, beforeBranch, beforeSHA := before.GetLocal()
 	after, hasAfter := self.After.Get()
 	if !hasAfter {
 		return false, branch, beforeSHA, afterSHA
 	}
-	hasLocalBranchAfter, _, afterSHA := after.HasLocalBranch()
+	hasLocalBranchAfter, _, afterSHA := after.GetLocal()
 	localChanged = hasLocalBranchBefore && hasLocalBranchAfter && beforeSHA != afterSHA
 	return localChanged, beforeBranch, beforeSHA, afterSHA
 }
 
 func (self BranchSpan) LocalRemoved() (localRemoved bool, branchName gitdomain.LocalBranchName, beforeSHA gitdomain.SHA) {
 	before, hasBefore := self.Before.Get()
-	hasBeforeBranch, branchName, beforeSHA := before.HasLocalBranch()
+	hasBeforeBranch, branchName, beforeSHA := before.GetLocal()
 	after, hasAfter := self.After.Get()
-	hasAfterBranch, _, _ := after.HasLocalBranch()
+	hasAfterBranch, _, _ := after.GetLocal()
 	localRemoved = hasBefore && hasBeforeBranch && (!hasAfter || !hasAfterBranch)
 	return localRemoved, branchName, beforeSHA
 }
 
-// NoChanges indicates whether this BranchSpan contains changes or not.
-func (self BranchSpan) NoChanges() bool {
-	localAdded, _, _ := self.LocalAdded()
-	localRemoved, _, _ := self.LocalRemoved()
-	remoteAdded, _, _ := self.RemoteAdded()
-	remoteRemoved, _, _ := self.RemoteRemoved()
-	localChanged, _, _, _ := self.LocalChanged()
-	remoteChanged, _, _, _ := self.RemoteChanged()
-	return !localAdded && !localRemoved && !localChanged && !remoteAdded && !remoteRemoved && !remoteChanged
-}
-
 func (self BranchSpan) RemoteAdded() (remoteAdded bool, addedRemoteBranchName gitdomain.RemoteBranchName, addedRemoteBranchSHA gitdomain.SHA) {
 	before, hasBefore := self.Before.Get()
-	beforeHasRemoteBranch, _, _ := before.HasRemoteBranch()
+	beforeHasRemoteBranch, _, _ := before.GetRemote()
 	after, hasAfter := self.After.Get()
 	if !hasAfter {
 		return false, addedRemoteBranchName, addedRemoteBranchSHA
 	}
-	afterHasRemoteBranch, afterRemoteBranchName, afterRemoteBranchSHA := after.HasRemoteBranch()
+	afterHasRemoteBranch, afterRemoteBranchName, afterRemoteBranchSHA := after.GetRemote()
 	remoteAdded = (!hasBefore || !beforeHasRemoteBranch) && afterHasRemoteBranch
 	return remoteAdded, afterRemoteBranchName, afterRemoteBranchSHA
 }
@@ -137,12 +155,12 @@ func (self BranchSpan) RemoteChanged() (remoteChanged bool, branchName gitdomain
 	if !hasBefore {
 		return false, branchName, beforeSHA, afterSHA
 	}
-	beforeHasRemoteBranch, beforeRemoteBranchName, beforeRemoteBranchSHA := before.HasRemoteBranch()
+	beforeHasRemoteBranch, beforeRemoteBranchName, beforeRemoteBranchSHA := before.GetRemote()
 	after, hasAfter := self.After.Get()
 	if !hasAfter {
 		return false, branchName, beforeSHA, afterSHA
 	}
-	afterHasRemoteBranch, _, afterRemoteBranchSHA := after.HasRemoteBranch()
+	afterHasRemoteBranch, _, afterRemoteBranchSHA := after.GetRemote()
 	remoteChanged = beforeHasRemoteBranch && afterHasRemoteBranch && beforeRemoteBranchSHA != afterRemoteBranchSHA
 	return remoteChanged, beforeRemoteBranchName, beforeRemoteBranchSHA, afterRemoteBranchSHA
 }
@@ -152,9 +170,16 @@ func (self BranchSpan) RemoteRemoved() (remoteRemoved bool, remoteBranchName git
 	if !hasBefore {
 		return false, remoteBranchName, beforeRemoteBranchSHA
 	}
-	beforeHasRemoteBranch, remoteBranchName, beforeSHA := before.HasRemoteBranch()
+	beforeHasRemoteBranch, remoteBranchName, beforeSHA := before.GetRemote()
 	after, hasAfter := self.After.Get()
-	afterHasRemoteBranch, _, _ := after.HasRemoteBranch()
+	afterHasRemoteBranch, _, _ := after.GetRemote()
 	remoteRemoved = beforeHasRemoteBranch && (!hasAfter || !afterHasRemoteBranch)
 	return remoteRemoved, remoteBranchName, beforeSHA
 }
+
+// func (self BranchSpan) String() string {
+// 	result := "BranchSpan:\n"
+// 	result += "Before:" + self.Before.String() + "\n"
+// 	result += "After:" + self.After.String() + "\n"
+// 	return result
+// }

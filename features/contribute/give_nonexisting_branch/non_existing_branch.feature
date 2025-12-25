@@ -5,16 +5,12 @@ Feature: cannot make non-existing branches contribution branches
     When I run "git-town contribute non-existing"
 
   Scenario: result
-    Then it runs no commands
-    And it prints the error:
+    Then Git Town runs no commands
+    And Git Town prints the error:
       """
       there is no branch "non-existing"
       """
-    And the current branch is still "main"
-    And there are still no contribution branches
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
-    And there are still no contribution branches
-    And the current branch is still "main"
+    Then Git Town runs no commands

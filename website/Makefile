@@ -1,30 +1,30 @@
-# the version of mdbook to use
-MDBOOK_VERSION = 0.4.15
+RTA_VERSION = 0.24.2  # run-that-app version to use
 
+.DEFAULT_GOAL := help
 
-# the full path to the mdbook binary to use
-mdbook_path = bin/mdbook_${MDBOOK_VERSION}
+build: ../tools/rta@${RTA_VERSION}  # transpiles the website to HTML
+	../tools/rta --include=mdbook-linkcheck mdbook build
 
-
-build: ${mdbook_path}  # transpiles the website to HTML
-	${mdbook_path} build
-
-clean: ${mdbook_path}  # removes all build artifacts
-	${mdbook_path} clean
+clean: ../tools/rta@${RTA_VERSION}  # removes all build artifacts
+	../tools/rta mdbook clean
 	rm -rf bin
 
 help:  # prints available targets
-	@cat Makefile | grep '^[^ ]*:' | grep -v help | grep -v '^bin\/' | grep -v '$${mdbook_path}:' | grep -v '.SILENT' | sed 's/:.*#/#/' | column -s "#" -t
+	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-serve: ${mdbook_path}  # runs a local development server of the website
-	${mdbook_path} serve --open
+serve: ../tools/rta@${RTA_VERSION}  # runs a local development server of the website
+	PATH=$(MDBOOK_LINKCHECK_PATH):$$PATH ../tools/rta mdbook serve --open -n 127.0.0.1
 
-test:  # tests the website
-	cd .. && make --no-print-dir docs
+test: build unit  # tests the website
+	cd .. && make --no-print-directory docs
 
-${mdbook_path}:  # installs the mdbook binary
-	scripts/install_mdbook ${MDBOOK_VERSION}
+unit: ../tools/rta@${RTA_VERSION}  # runs the unit tests
+	cd ../tools && ./rta node --test
 
+# --- HELPER TARGETS --------------------------------------------------------------------------------------------------------------------------------
 
-.DEFAULT_GOAL := help
-.SILENT:
+../tools/rta@${RTA_VERSION}:
+	@rm -f ../tools/rta*
+	@(cd ../tools && curl https://raw.githubusercontent.com/kevgo/run-that-app/main/download.sh | sh -s ${RTA_VERSION})
+	@mv ../tools/rta ../tools/rta@${RTA_VERSION}
+	@ln -s rta@${RTA_VERSION} ../tools/rta

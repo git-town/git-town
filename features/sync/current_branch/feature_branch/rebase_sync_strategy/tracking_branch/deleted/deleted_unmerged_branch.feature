@@ -6,46 +6,28 @@ Feature: sync a branch with unmerged commits whose tracking branch was deleted
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | branch-1 | feature | main   | local, origin |
       | branch-2 | feature | main   | local, origin |
-    And Git Town setting "sync-feature-strategy" is "rebase"
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         |
       | branch-1 | local, origin | branch-1 commit |
-      | branch-2 | local, origin | branch-2 commit |
+      | branch-2 | local         | branch-2 commit |
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And origin deletes the "branch-2" branch
     And the current branch is "branch-2"
-    And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                  |
       | branch-2 | git fetch --prune --tags |
-      |          | git add -A               |
-      |          | git stash                |
-      |          | git checkout main        |
-      | main     | git rebase origin/main   |
-      |          | git checkout branch-2    |
-      | branch-2 | git rebase main          |
-      |          | git stash pop            |
-    And it prints:
+    And Git Town prints:
       """
       Branch "branch-2" was deleted at the remote but the local branch contains unshipped changes.
       """
-    And the current branch is now "branch-2"
-    And the uncommitted file still exists
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE         |
-      | branch-1 | local, origin | branch-1 commit |
-      | branch-2 | local         | branch-2 commit |
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
-      | BRANCH   | COMMAND       |
-      | branch-2 | git add -A    |
-      |          | git stash     |
-      |          | git stash pop |
-    And the current branch is now "branch-2"
-    And the uncommitted file still exists
-    And the initial branches and lineage exist
+    Then Git Town runs the commands
+      | BRANCH | COMMAND |
+    And the initial branches and lineage exist now

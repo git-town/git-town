@@ -2,14 +2,14 @@ Feature: ignore files
 
   Background:
     Given a Git repo with origin
-    And the branch
+    And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE   | FILE NAME  | FILE CONTENT |
       | feature | local    | my commit | .gitignore | ignored      |
-    And an uncommitted file with name "test/ignored/important" and content "changed ignored file"
+    And the current branch is "feature"
+    And an uncommitted file "test/ignored/important" with content "changed ignored file"
     When I run "git-town sync"
 
   Scenario: result
@@ -17,9 +17,8 @@ Feature: ignore files
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                                               |
       | feature | git push --force-with-lease origin {{ sha 'initial commit' }}:feature |
-    And the current branch is still "feature"
-    And the initial commits exist
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now
+    And the initial commits exist now

@@ -1,10 +1,20 @@
-go 1.22.3
+go 1.24.9
 
 use (
 	.
+	./tools/collector_addf
 	./tools/format_self
 	./tools/format_unittests
+	./tools/iterate_map
+	./tools/lint_cached_connectors
 	./tools/lint_steps
+	./tools/messages_sorted
+	./tools/messy_output
+	./tools/optioncompare
+	./tools/optioncompare_in_tests
+	./tools/print_config_exhaustive
 	./tools/stats_release
 	./tools/structs_sorted
+	./tools/tests_sorted
+	./tools/use_equal
 )

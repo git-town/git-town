@@ -2,63 +2,43 @@ package dialog
 
 import (
 	"fmt"
-	"strings"
 
-	"github.com/git-town/git-town/v15/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v15/internal/cli/dialog/components/list"
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	"github.com/git-town/git-town/v15/internal/messages"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents/list"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/messages"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 const (
 	syncTagsTitle = `Sync-tags strategy`
 	SyncTagsHelp  = `
-Should "git sync" sync tags with origin?
+Should "git town sync" sync Git tags with origin?
 
 `
 )
 
-const (
-	SyncTagsEntryYes syncTagsEntry = `yes, sync Git tags`
-	SyncTagsEntryNo  syncTagsEntry = `no, don't sync Git tags`
-)
-
-func SyncTags(existing configdomain.SyncTags, inputs components.TestInput) (configdomain.SyncTags, bool, error) {
-	entries := list.NewEntries(
-		SyncTagsEntryYes,
-		SyncTagsEntryNo,
-	)
-	var defaultPos int
-	if existing {
-		defaultPos = 0
-	} else {
-		defaultPos = 1
+func SyncTags(args Args[configdomain.SyncTags]) (Option[configdomain.SyncTags], dialogdomain.Exit, error) {
+	entries := list.Entries[Option[configdomain.SyncTags]]{}
+	if global, hasGlobal := args.Global.Get(); hasGlobal {
+		entries = append(entries, list.Entry[Option[configdomain.SyncTags]]{
+			Data: None[configdomain.SyncTags](),
+			Text: fmt.Sprintf(messages.DialogUseGlobalValue, global),
+		})
 	}
-	selection, aborted, err := components.RadioList(list.NewEntries(entries...), defaultPos, syncTagsTitle, SyncTagsHelp, inputs)
-	if err != nil || aborted {
-		return true, aborted, err
-	}
-	fmt.Printf(messages.SyncTags, components.FormattedSelection(selection.Data.Short(), aborted))
-	return selection.Data.SyncTags(), aborted, err
-}
-
-type syncTagsEntry string
-
-func (self syncTagsEntry) Short() string {
-	start, _, _ := strings.Cut(self.String(), ",")
-	return start
-}
-
-func (self syncTagsEntry) String() string {
-	return string(self)
-}
-
-func (self syncTagsEntry) SyncTags() configdomain.SyncTags {
-	switch self {
-	case SyncTagsEntryYes:
-		return configdomain.SyncTags(true)
-	case SyncTagsEntryNo:
-		return configdomain.SyncTags(false)
-	}
-	panic("unhandled syncTagsEntry: " + self)
+	entries = append(entries, list.Entries[Option[configdomain.SyncTags]]{
+		{
+			Data: Some(configdomain.SyncTags(true)),
+			Text: "yes, sync Git tags",
+		},
+		{
+			Data: Some(configdomain.SyncTags(false)),
+			Text: "no, don't sync Git tags",
+		},
+	}...)
+	defaultPos := entries.IndexOf(args.Local)
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncTagsTitle, SyncTagsHelp, args.Inputs, "sync-tags")
+	fmt.Printf(messages.SyncTags, dialogcomponents.FormattedOption(selection, args.Global.IsSome(), exit))
+	return selection, exit, err
 }

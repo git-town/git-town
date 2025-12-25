@@ -1,0 +1,45 @@
+# git town branch
+
+<a type="git-town-command" />
+
+```command-summary
+git town branch [(-d | --display-types) <branch-types>] [-h | --help] [(-o | --order) <asc|desc>] [-v | --verbose]
+```
+
+The _branch_ command is Git Town's equivalent of the
+[git branch](https://git-scm.com/docs/git-branch) command. It displays the local
+branch hierarchy, and the types of all branches except for main and feature
+branches.
+
+## Options
+
+#### `-d <branch-type>`<br>`--display-types <branch-type>`
+
+This flag allows customizing whether Git Town also displays the branch type in
+addition to the branch name when showing a list of branches. More info
+[here](../preferences/display-types.md#cli-flags).
+
+#### `-h`<br>`--help`
+
+Display help for this command.
+
+#### `-o <asc|desc>`<br>`--order <asc|desc>`
+
+The `--order` flag allows customizing the order in which branches get displayed.
+More info [here](../preferences/order.md#cli-flag)
+
+#### `-v`<br>`--verbose`
+
+The `--verbose` aka `-v` flag prints all Git commands run under the hood to
+determine the repository state.
+
+## See also
+
+<!-- keep-sorted start -->
+
+- [switch](switch.md) displays the branch hierarchy and lets you switch to a new
+  branch in it
+- [walk](walk.md) executes a shell command or opens a shell in each of your
+  local branches
+
+<!-- keep-sorted end -->

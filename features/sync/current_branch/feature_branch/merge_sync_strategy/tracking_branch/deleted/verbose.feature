@@ -11,70 +11,75 @@ Feature: display all executed Git commands
       | active | local, origin | active commit |
     And origin deletes the "old" branch
     And the current branch is "old"
+    When I run "git-town sync --verbose"
 
   Scenario: result
-    When I run "git-town sync --verbose"
-    Then it runs the commands
-      | BRANCH | TYPE     | COMMAND                                       |
-      |        | backend  | git version                                   |
-      |        | backend  | git rev-parse --show-toplevel                 |
-      |        | backend  | git config -lz --includes --global            |
-      |        | backend  | git config -lz --includes --local             |
-      |        | backend  | git status --long --ignore-submodules         |
-      |        | backend  | git remote                                    |
-      |        | backend  | git rev-parse --abbrev-ref HEAD               |
-      | old    | frontend | git fetch --prune --tags                      |
-      |        | backend  | git stash list                                |
-      |        | backend  | git branch -vva --sort=refname                |
-      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
-      | old    | frontend | git checkout main                             |
-      | main   | frontend | git rebase origin/main                        |
-      |        | backend  | git rev-list --left-right main...origin/main  |
-      | main   | frontend | git checkout old                              |
-      | old    | frontend | git merge --no-edit --ff main                 |
-      |        | backend  | git diff main..old                            |
-      | old    | frontend | git checkout main                             |
-      | main   | frontend | git branch -D old                             |
-      |        | backend  | git config --unset git-town-branch.old.parent |
-      |        | backend  | git show-ref --verify --quiet refs/heads/old  |
-      |        | backend  | git show-ref --verify --quiet refs/heads/main |
-      |        | backend  | git branch -vva --sort=refname                |
-      |        | backend  | git config -lz --includes --global            |
-      |        | backend  | git config -lz --includes --local             |
-      |        | backend  | git stash list                                |
-    And it prints:
+    Then Git Town runs the commands
+      | BRANCH | TYPE     | COMMAND                                                                                                                                                                                                                                                                                                                                          |
+      |        | backend  | git version                                                                                                                                                                                                                                                                                                                                      |
+      |        | backend  | git rev-parse --show-toplevel                                                                                                                                                                                                                                                                                                                    |
+      |        | backend  | git config -lz --global                                                                                                                                                                                                                                                                                                                          |
+      |        | backend  | git config -lz --local                                                                                                                                                                                                                                                                                                                           |
+      |        | backend  | git config -lz                                                                                                                                                                                                                                                                                                                                   |
+      |        | backend  | git for-each-ref "--format=refname:%(refname) branchname:%(refname:lstrip=2) sha:%(objectname) head:%(if)%(HEAD)%(then)Y%(else)N%(end) worktree:%(if)%(worktreepath)%(then)Y%(else)N%(end) symref:%(if)%(symref)%(then)Y%(else)N%(end) upstream:%(upstream:lstrip=2) track:%(upstream:track,nobracket)" --sort=refname refs/heads/ refs/remotes/ |
+      |        | backend  | git status -z --ignore-submodules                                                                                                                                                                                                                                                                                                                |
+      |        | backend  | git rev-parse --verify -q MERGE_HEAD                                                                                                                                                                                                                                                                                                             |
+      |        | backend  | git rev-parse --absolute-git-dir                                                                                                                                                                                                                                                                                                                 |
+      |        | backend  | git remote get-url origin                                                                                                                                                                                                                                                                                                                        |
+      |        | backend  | git remote                                                                                                                                                                                                                                                                                                                                       |
+      | old    | frontend | git fetch --prune --tags                                                                                                                                                                                                                                                                                                                         |
+      |        | backend  | git stash list                                                                                                                                                                                                                                                                                                                                   |
+      |        | backend  | git for-each-ref "--format=refname:%(refname) branchname:%(refname:lstrip=2) sha:%(objectname) head:%(if)%(HEAD)%(then)Y%(else)N%(end) worktree:%(if)%(worktreepath)%(then)Y%(else)N%(end) symref:%(if)%(symref)%(then)Y%(else)N%(end) upstream:%(upstream:lstrip=2) track:%(upstream:track,nobracket)" --sort=refname refs/heads/ refs/remotes/ |
+      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}                                                                                                                                                                                                                                                                                                        |
+      |        | backend  | git log main..old --format=%s --reverse                                                                                                                                                                                                                                                                                                          |
+      |        | frontend | git checkout main                                                                                                                                                                                                                                                                                                                                |
+      | main   | frontend | git branch -D old                                                                                                                                                                                                                                                                                                                                |
+      |        | backend  | git config --unset git-town-branch.old.parent                                                                                                                                                                                                                                                                                                    |
+      |        | backend  | git config --unset git-town-branch.old.branchtype                                                                                                                                                                                                                                                                                                |
+      |        | backend  | git rev-parse --verify -q refs/heads/old                                                                                                                                                                                                                                                                                                         |
+      |        | backend  | git rev-parse --verify -q refs/heads/active                                                                                                                                                                                                                                                                                                      |
+      |        | frontend | git checkout active                                                                                                                                                                                                                                                                                                                              |
+      |        | backend  | git for-each-ref "--format=refname:%(refname) branchname:%(refname:lstrip=2) sha:%(objectname) head:%(if)%(HEAD)%(then)Y%(else)N%(end) worktree:%(if)%(worktreepath)%(then)Y%(else)N%(end) symref:%(if)%(symref)%(then)Y%(else)N%(end) upstream:%(upstream:lstrip=2) track:%(upstream:track,nobracket)" --sort=refname refs/heads/ refs/remotes/ |
+      |        | backend  | git config -lz --global                                                                                                                                                                                                                                                                                                                          |
+      |        | backend  | git config -lz --local                                                                                                                                                                                                                                                                                                                           |
+      |        | backend  | git stash list                                                                                                                                                                                                                                                                                                                                   |
+    And Git Town prints:
       """
-      Ran 26 shell commands.
+      Ran 27 shell commands.
       """
-    And the current branch is now "main"
+    And this lineage exists now
+      """
+      main
+        active
+      """
     And the branches are now
       | REPOSITORY    | BRANCHES     |
       | local, origin | main, active |
-    And this lineage exists now
-      | BRANCH | PARENT |
-      | active | main   |
 
   Scenario: undo
-    Given I ran "git-town sync"
     When I run "git-town undo --verbose"
-    Then it runs the commands
-      | BRANCH | TYPE     | COMMAND                                    |
-      |        | backend  | git version                                |
-      |        | backend  | git rev-parse --show-toplevel              |
-      |        | backend  | git config -lz --includes --global         |
-      |        | backend  | git config -lz --includes --local          |
-      |        | backend  | git status --long --ignore-submodules      |
-      |        | backend  | git stash list                             |
-      |        | backend  | git branch -vva --sort=refname             |
-      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}  |
-      |        | backend  | git remote get-url origin                  |
-      | main   | frontend | git branch old {{ sha 'initial commit' }}  |
-      |        | backend  | git show-ref --quiet refs/heads/old        |
-      | main   | frontend | git checkout old                           |
-      |        | backend  | git config git-town-branch.old.parent main |
-    And it prints:
+    Then Git Town runs the commands
+      | BRANCH | TYPE     | COMMAND                                                                                                                                                                                                                                                                                                                                          |
+      |        | backend  | git version                                                                                                                                                                                                                                                                                                                                      |
+      |        | backend  | git rev-parse --show-toplevel                                                                                                                                                                                                                                                                                                                    |
+      |        | backend  | git config -lz --global                                                                                                                                                                                                                                                                                                                          |
+      |        | backend  | git config -lz --local                                                                                                                                                                                                                                                                                                                           |
+      |        | backend  | git config -lz                                                                                                                                                                                                                                                                                                                                   |
+      |        | backend  | git status -z --ignore-submodules                                                                                                                                                                                                                                                                                                                |
+      |        | backend  | git rev-parse --verify -q MERGE_HEAD                                                                                                                                                                                                                                                                                                             |
+      |        | backend  | git rev-parse --absolute-git-dir                                                                                                                                                                                                                                                                                                                 |
+      |        | backend  | git remote get-url origin                                                                                                                                                                                                                                                                                                                        |
+      |        | backend  | git stash list                                                                                                                                                                                                                                                                                                                                   |
+      |        | backend  | git for-each-ref "--format=refname:%(refname) branchname:%(refname:lstrip=2) sha:%(objectname) head:%(if)%(HEAD)%(then)Y%(else)N%(end) worktree:%(if)%(worktreepath)%(then)Y%(else)N%(end) symref:%(if)%(symref)%(then)Y%(else)N%(end) upstream:%(upstream:lstrip=2) track:%(upstream:track,nobracket)" --sort=refname refs/heads/ refs/remotes/ |
+      |        | backend  | git remote                                                                                                                                                                                                                                                                                                                                       |
+      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}                                                                                                                                                                                                                                                                                                        |
+      | active | frontend | git branch old {{ sha 'initial commit' }}                                                                                                                                                                                                                                                                                                        |
+      |        | backend  | git rev-parse --verify -q refs/heads/old                                                                                                                                                                                                                                                                                                         |
+      |        | frontend | git checkout old                                                                                                                                                                                                                                                                                                                                 |
+      |        | backend  | git config git-town-branch.old.branchtype feature                                                                                                                                                                                                                                                                                                |
+      |        | backend  | git config git-town-branch.old.parent main                                                                                                                                                                                                                                                                                                       |
+    And Git Town prints:
       """
-      Ran 13 shell commands.
+      Ran 18 shell commands.
       """
-    And the current branch is now "old"
-    And the initial branches and lineage exist
+    And the initial branches and lineage exist now

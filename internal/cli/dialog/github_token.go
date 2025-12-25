@@ -3,33 +3,46 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v15/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
-	"github.com/git-town/git-town/v15/internal/messages"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v22/internal/messages"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 const (
 	githubTokenTitle = `GitHub API token`
 	gitHubTokenHelp  = `
-If you have an API token for GitHub,
-and want to ship branches from the CLI,
-please enter it now.
+Git Town can update pull requests
+and ship branches on your behalf
+using the GitHub API.
+To enable this,
+enter a GitHub API token.
 
-It's okay to leave this empty.
+More details:
+https://www.git-town.com/preferences/github-token
+
+If you leave this blank,
+Git Town will not interact
+with the GitHub API.
 
 `
 )
 
-// GitHubToken lets the user enter the GitHub API token.
-func GitHubToken(oldValue Option[configdomain.GitHubToken], inputs components.TestInput) (Option[configdomain.GitHubToken], bool, error) {
-	text, aborted, err := components.TextField(components.TextFieldArgs{
-		ExistingValue: oldValue.String(),
+func GitHubToken(args Args[forgedomain.GitHubToken]) (Option[forgedomain.GitHubToken], dialogdomain.Exit, error) {
+	input, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
+		DialogName:    "github-token",
+		ExistingValue: args.Local.Or(args.Global).StringOr(""),
 		Help:          gitHubTokenHelp,
-		Prompt:        "Your GitHub API token: ",
-		TestInput:     inputs,
+		Inputs:        args.Inputs,
+		Prompt:        messages.GitHubTokenPrompt,
 		Title:         githubTokenTitle,
 	})
-	fmt.Printf(messages.GitHubToken, components.FormattedSecret(text, aborted))
-	return configdomain.ParseGitHubToken(text), aborted, err
+	newValue := forgedomain.ParseGitHubToken(input)
+	if args.Global.Equal(newValue) {
+		// the user has entered the global value --> keep using the global value, don't store the local value
+		newValue = None[forgedomain.GitHubToken]()
+	}
+	fmt.Printf(messages.GitHubTokenResult, dialogcomponents.FormattedSecret(newValue.StringOr(""), exit))
+	return newValue, exit, err
 }

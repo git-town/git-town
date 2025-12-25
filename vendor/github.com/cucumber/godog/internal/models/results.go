@@ -18,6 +18,13 @@ type PickleResult struct {
 	StartedAt time.Time
 }
 
+// PickleAttachment ...
+type PickleAttachment struct {
+	Name     string
+	MimeType string
+	Data     []byte
+}
+
 // PickleStepResult ...
 type PickleStepResult struct {
 	Status     StepResultStatus
@@ -28,6 +35,8 @@ type PickleStepResult struct {
 	PickleStepID string
 
 	Def *StepDefinition
+
+	Attachments []PickleAttachment
 }
 
 // NewStepResult ...
@@ -35,6 +44,7 @@ func NewStepResult(
 	status StepResultStatus,
 	pickleID, pickleStepID string,
 	match *StepDefinition,
+	attachments []PickleAttachment,
 	err error,
 ) PickleStepResult {
 	return PickleStepResult{
@@ -44,6 +54,7 @@ func NewStepResult(
 		PickleID:     pickleID,
 		PickleStepID: pickleStepID,
 		Def:          match,
+		Attachments:  attachments,
 	}
 }
 
@@ -61,6 +72,8 @@ const (
 	Undefined
 	// Pending ...
 	Pending
+	// Ambiguous ...
+	Ambiguous
 )
 
 // Color ...
@@ -90,6 +103,8 @@ func (st StepResultStatus) String() string {
 		return "undefined"
 	case Pending:
 		return "pending"
+	case Ambiguous:
+		return "ambiguous"
 	default:
 		return "unknown"
 	}

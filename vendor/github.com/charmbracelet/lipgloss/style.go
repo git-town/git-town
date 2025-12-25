@@ -5,6 +5,7 @@ import (
 	"unicode"
 
 	"github.com/charmbracelet/x/ansi"
+	"github.com/charmbracelet/x/cellbuf"
 	"github.com/muesli/termenv"
 )
 
@@ -189,7 +190,8 @@ func (s Style) String() string {
 
 // Copy returns a copy of this style, including any underlying string values.
 //
-// Deprecated: to copy just use assignment (i.e. a := b). All methods also return a new style.
+// Deprecated: to copy just use assignment (i.e. a := b). All methods also
+// return a new style.
 func (s Style) Copy() Style {
 	return s
 }
@@ -306,9 +308,7 @@ func (s Style) Render(strs ...string) string {
 		te = te.Underline()
 	}
 	if reverse {
-		if reverse {
-			teWhitespace = teWhitespace.Reverse()
-		}
+		teWhitespace = teWhitespace.Reverse()
 		te = te.Reverse()
 	}
 	if blink {
@@ -354,6 +354,8 @@ func (s Style) Render(strs ...string) string {
 
 	// Potentially convert tabs to spaces
 	str = s.maybeConvertTabs(str)
+	// carriage returns can cause strange behaviour when rendering.
+	str = strings.ReplaceAll(str, "\r\n", "\n")
 
 	// Strip newlines in single line mode
 	if inline {
@@ -363,7 +365,7 @@ func (s Style) Render(strs ...string) string {
 	// Word wrap
 	if !inline && width > 0 {
 		wrapAt := width - leftPadding - rightPadding
-		str = ansi.Wrap(str, wrapAt, "")
+		str = cellbuf.Wrap(str, wrapAt, "")
 	}
 
 	// Render core text
@@ -430,7 +432,7 @@ func (s Style) Render(strs ...string) string {
 	{
 		numLines := strings.Count(str, "\n")
 
-		if !(numLines == 0 && width == 0) {
+		if numLines != 0 || width != 0 {
 			var st *termenv.Style
 			if colorWhitespace || styleWhitespace {
 				st = &teWhitespace
@@ -563,14 +565,14 @@ func pad(str string, n int, style *termenv.Style) string {
 	return b.String()
 }
 
-func max(a, b int) int { //nolint:unparam
+func max(a, b int) int { //nolint:unparam,predeclared
 	if a > b {
 		return a
 	}
 	return b
 }
 
-func min(a, b int) int {
+func min(a, b int) int { //nolint:predeclared
 	if a < b {
 		return a
 	}

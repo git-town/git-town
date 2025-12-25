@@ -5,22 +5,30 @@ import (
 	"strconv"
 	"strings"
 
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
-	"github.com/git-town/git-town/v15/internal/messages"
+	"github.com/git-town/git-town/v22/internal/messages"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-func ParseBool(text, source string) (Option[bool], error) {
+func ParseBool[T ~bool](text, source string) (T, error) { //nolint:ireturn
 	switch strings.ToLower(text) {
 	case "":
-		return None[bool](), nil
-	case "yes", "on", "enable", "enabled":
-		return Some(true), nil
-	case "no", "off", "disable", "disabled":
-		return Some(false), nil
+		return false, fmt.Errorf(messages.ValueInvalid, source, text)
+	case "yes", "y", "on", "enable", "enabled":
+		return true, nil
+	case "no", "n", "off", "disable", "disabled":
+		return false, nil
 	}
 	parsed, err := strconv.ParseBool(text)
 	if err != nil {
-		return None[bool](), fmt.Errorf(messages.ValueInvalid, source, text)
+		return false, fmt.Errorf(messages.ValueInvalid, source, text)
 	}
-	return Some(parsed), nil
+	return T(parsed), nil
+}
+
+func ParseBoolOpt[T ~bool](text, source string) (Option[T], error) {
+	if text == "" {
+		return None[T](), nil
+	}
+	parsed, err := ParseBool[T](text, source)
+	return Some(parsed), err
 }

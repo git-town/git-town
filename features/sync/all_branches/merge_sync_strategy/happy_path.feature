@@ -25,86 +25,78 @@ Feature: sync all feature branches
       |            | origin        | qa origin commit         |
     And the current branch is "alpha"
 
-  Scenario: with "merge" sync-feature strategy
+  Scenario: with "merge" feature sync strategy
     When I run "git-town sync --all"
-    Then it runs the commands
-      | BRANCH     | COMMAND                               |
-      | alpha      | git fetch --prune --tags              |
-      |            | git checkout main                     |
-      | main       | git rebase origin/main                |
-      |            | git checkout alpha                    |
-      | alpha      | git merge --no-edit --ff origin/alpha |
-      |            | git merge --no-edit --ff main         |
-      |            | git push                              |
-      |            | git checkout beta                     |
-      | beta       | git merge --no-edit --ff origin/beta  |
-      |            | git merge --no-edit --ff main         |
-      |            | git push                              |
-      |            | git checkout observed                 |
-      | observed   | git rebase origin/observed            |
-      |            | git checkout production               |
-      | production | git rebase origin/production          |
-      |            | git push                              |
-      |            | git checkout qa                       |
-      | qa         | git rebase origin/qa                  |
-      |            | git push                              |
-      |            | git checkout alpha                    |
-      | alpha      | git push --tags                       |
-    And the current branch is still "alpha"
+    Then Git Town runs the commands
+      | BRANCH     | COMMAND                                                 |
+      | alpha      | git fetch --prune --tags                                |
+      |            | git checkout main                                       |
+      | main       | git -c rebase.updateRefs=false rebase origin/main       |
+      |            | git checkout alpha                                      |
+      | alpha      | git merge --no-edit --ff main                           |
+      |            | git push                                                |
+      |            | git checkout beta                                       |
+      | beta       | git merge --no-edit --ff main                           |
+      |            | git push                                                |
+      |            | git checkout observed                                   |
+      | observed   | git -c rebase.updateRefs=false rebase origin/observed   |
+      |            | git checkout production                                 |
+      | production | git -c rebase.updateRefs=false rebase origin/production |
+      |            | git push                                                |
+      |            | git checkout qa                                         |
+      | qa         | git -c rebase.updateRefs=false rebase origin/qa         |
+      |            | git push                                                |
+      |            | git checkout alpha                                      |
+      | alpha      | git push --tags                                         |
     And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE                        |
       | main       | local, origin | main commit                    |
       | alpha      | local, origin | alpha commit                   |
-      |            |               | main commit                    |
       |            |               | Merge branch 'main' into alpha |
       | beta       | local, origin | beta commit                    |
-      |            |               | main commit                    |
       |            |               | Merge branch 'main' into beta  |
-      | observed   | local, origin | origin observed commit         |
-      |            | local         | local observed commit          |
       | parked     | local         | local parked commit            |
       |            | origin        | origin parked commit           |
+      | observed   | local, origin | origin observed commit         |
+      |            | local         | local observed commit          |
       | production | local, origin | origin production commit       |
       |            |               | local production commit        |
       | qa         | local, origin | qa origin commit               |
       |            |               | qa local commit                |
 
-  Scenario: with "rebase" sync-feature strategy
-    Given Git Town setting "sync-feature-strategy" is "rebase"
+  Scenario: with "rebase" feature sync strategy
+    Given Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town sync --all"
-    Then it runs the commands
-      | BRANCH     | COMMAND                                         |
-      | alpha      | git fetch --prune --tags                        |
-      |            | git checkout main                               |
-      | main       | git rebase origin/main                          |
-      |            | git checkout alpha                              |
-      | alpha      | git rebase main                                 |
-      |            | git push --force-with-lease --force-if-includes |
-      |            | git checkout beta                               |
-      | beta       | git rebase main                                 |
-      |            | git push --force-with-lease --force-if-includes |
-      |            | git checkout observed                           |
-      | observed   | git rebase origin/observed                      |
-      |            | git checkout production                         |
-      | production | git rebase origin/production                    |
-      |            | git push                                        |
-      |            | git checkout qa                                 |
-      | qa         | git rebase origin/qa                            |
-      |            | git push                                        |
-      |            | git checkout alpha                              |
-      | alpha      | git push --tags                                 |
-    And the current branch is still "alpha"
+    Then Git Town runs the commands
+      | BRANCH     | COMMAND                                                                      |
+      | alpha      | git fetch --prune --tags                                                     |
+      |            | git checkout main                                                            |
+      | main       | git -c rebase.updateRefs=false rebase origin/main                            |
+      |            | git checkout alpha                                                           |
+      | alpha      | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
+      |            | git push --force-with-lease --force-if-includes                              |
+      |            | git checkout beta                                                            |
+      | beta       | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
+      |            | git push --force-with-lease --force-if-includes                              |
+      |            | git checkout observed                                                        |
+      | observed   | git -c rebase.updateRefs=false rebase origin/observed                        |
+      |            | git checkout production                                                      |
+      | production | git -c rebase.updateRefs=false rebase origin/production                      |
+      |            | git push                                                                     |
+      |            | git checkout qa                                                              |
+      | qa         | git -c rebase.updateRefs=false rebase origin/qa                              |
+      |            | git push                                                                     |
+      |            | git checkout alpha                                                           |
+      | alpha      | git push --tags                                                              |
     And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE                  |
       | main       | local, origin | main commit              |
-      | alpha      | local, origin | main commit              |
-      |            |               | alpha commit             |
-      | beta       | local, origin | main commit              |
-      |            |               | beta commit              |
-      | observed   | local, origin | origin observed commit   |
-      |            | local         | local observed commit    |
+      | alpha      | local, origin | alpha commit             |
+      | beta       | local, origin | beta commit              |
       | parked     | local         | local parked commit      |
       |            | origin        | origin parked commit     |
+      | observed   | local, origin | origin observed commit   |
+      |            | local         | local observed commit    |
       | production | local, origin | origin production commit |
       |            |               | local production commit  |
       | qa         | local, origin | qa origin commit         |

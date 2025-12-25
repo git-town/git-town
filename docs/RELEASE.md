@@ -2,27 +2,34 @@
 
 This guide is for maintainers who make releases of Git Town.
 
+- `git checkout public && git merge main && git push && git checkout - && git branch -d public`
+  - Netlify deploy: https://app.netlify.com/sites/git-town/deploys
 - in a branch:
   - update CHANGELOG.md
   - run `make stats-release` and copy the release stats and contributors into
     CHANGELOG.md
-  - verify that all newly added Git Town commands are not hidden
+  - verify that all newly added Git Town commands are not hidden and listed in
+    the README file
   - verify that the website content reflects all the changes made
   - search-and-replace the old version with the new version
-    - triple-digits: `15.1.0`
-    - double-digits: `15.1`
-    - don't change existing version numbers in CHANGELOG.md
+    - triple-digits: `22.4.0`
+    - double-digits: `22.4`
+    - its best to do this manually so that you don't change unrelated version
+      numbers in CHANGELOG.md, lockfiles, and data files
   - if bumping the major version:
-    - update `github.com/git-town/git-town/v15/` everywhere in this repo
-    - update `github.com/git-town/git-town/v15` (without trailing slash)
+    - update `github.com/git-town/git-town/v22/` everywhere in this repo
+    - update `github.com/git-town/git-town/v22` (without trailing slash)
+  - update the changelog with links to the website
 - ship the branch
-- `git tag v15.1.0 && git push --tags`
-- open the new release in the browser
+- `git sync --all && git checkout main && git tag v22.4.0 && git push --tags`
+- wait for CI to finish the release:
+  https://github.com/git-town/git-town/actions
+- edit the new unpublished release:
+  https://github.com/git-town/git-town/releases
 - copy the changelog into the release notes
 - publish the release
-- merge the `main` branch into the `public` branch
 
-### update the website
+### Update the website
 
 The website publishes from the `public` branch to avoid listing unreleased
 features to the public.
@@ -33,7 +40,7 @@ git merge main
 git push
 ```
 
-### debugging the release script
+### Debugging the release script
 
 Debugging is best done on a separate fork of this codebase. This avoids
 accidental releases to the official location, which then trigger other
@@ -57,7 +64,7 @@ git push ; git tag -d v0.0.1 ; git push origin :v0.0.1 ; git tag v0.0.1 ; git pu
 $env:GITHUB_TOKEN="<github token>"; $env:VERSION="0.0.1"; $env:TODAY="today"; .\tools\release.ps1
 ```
 
-### performing a manual release
+### Performing a manual release
 
 If the release script fails in production and doesn't create the release, and/or
 you want to investigate some release code, you can perform the release manually
@@ -85,11 +92,12 @@ on a Windows machine using PowerShell.
   git fetch --tags
   ```
 
-### release platforms
+### Release platforms
 
 - HomeBrew: Git Town is in the auto-updating
   [core formulae](https://formulae.brew.sh/formula/git-town)
 - Scoop: Git Town is in the auto-updating
   [core manifests](https://github.com/ScoopInstaller/Main/blob/master/bucket/git-town.json)
-- Arch Linux: the [AUR package](https://aur.archlinux.org/packages/git-town)
-  auto-updates
+- Arch Linux:
+  [official packaging](https://archlinux.org/packages/extra/x86_64/git-town/)
+  uses nvchecker to alert maintainers about updates

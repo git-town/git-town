@@ -1,13 +1,9 @@
-# main-branch
+# Main branch
 
 This setting stores the name of the main branch. The main branch is the default
 parent branch for new feature branches created with
-[git hack](../commands/hack.md) and the default branch into which Git Town
+[git town hack](../commands/hack.md) and the default branch into which Git Town
 [ships](../commands/ship.md) finished feature branches.
-
-The best way to change this setting is via the
-[setup assistant](../configuration.md). Git Town commands also prompt for this
-setting if needed.
 
 ## config file
 
@@ -23,9 +19,14 @@ main = "config-main"
 
 To configure the main branch in Git, run this command:
 
-```bash
+```wrap
 git config [--global] git-town.main-branch <value>
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on
-your local machine. When not present, the setting applies to the current repo.
+your machine. Without it, the setting applies only to the current repository.
+
+## environment variable
+
+You can configure the main branch by setting the `GIT_TOWN_MAIN_BRANCH`
+environment variable.

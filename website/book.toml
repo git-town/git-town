@@ -4,10 +4,17 @@ description = "Git Town user manual"
 language = "en"
 multilingual = false
 src = "src"
-title = "Git Town 15.1"
+title = "Git Town 22.4"
+
+[preprocessor.gittown]
+command = "../tools/rta node ../tools/mdbook_preprocessor/mdbook_preprocessor.js"
 
 [output.html]
 git-repository-url = "https://github.com/git-town/git-town"
 edit-url-template = "https://github.com/git-town/git-town/edit/main/website/{path}"
 site-url = "https://www.git-town.com/"
 no-section-label = true
+smart-punctuation = true
+
+[output.linkcheck]
+optional = true

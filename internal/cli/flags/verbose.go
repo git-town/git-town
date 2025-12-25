@@ -1,10 +1,8 @@
 package flags
 
 import (
-	"fmt"
-
-	"github.com/git-town/git-town/v15/internal/config/configdomain"
-	"github.com/git-town/git-town/v15/internal/messages"
+	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -13,20 +11,16 @@ const (
 	verboseShort = "v"
 )
 
-// type-safe access to the CLI arguments of type configdomain.Verbose
+// Verbose provides type-safe access to the CLI arguments of type configdomain.Verbose.
 func Verbose() (AddFunc, ReadVerboseFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.PersistentFlags().BoolP(verboseLong, verboseShort, false, "display all Git commands run under the hood")
+		cmd.Flags().BoolP(verboseLong, verboseShort, false, "display all Git commands run under the hood")
 	}
-	readFlag := func(cmd *cobra.Command) configdomain.Verbose {
-		value, err := cmd.Flags().GetBool(verboseLong)
-		if err != nil {
-			panic(fmt.Sprintf(messages.FlagStringDoesntExist, cmd.Name(), verboseLong))
-		}
-		return configdomain.Verbose(value)
+	readFlag := func(cmd *cobra.Command) (Option[configdomain.Verbose], error) {
+		return readBoolOptFlag[configdomain.Verbose](cmd.Flags(), verboseLong)
 	}
 	return addFlag, readFlag
 }
 
-// the type signature for the function that reads the verbose flag from the args to the given Cobra command
-type ReadVerboseFlagFunc func(*cobra.Command) configdomain.Verbose
+// ReadVerboseFlagFunc is the type signature for the function that reads the "verbose" flag from the args to the given Cobra command.
+type ReadVerboseFlagFunc func(*cobra.Command) (Option[configdomain.Verbose], error)

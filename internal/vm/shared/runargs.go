@@ -1,24 +1,26 @@
 package shared
 
 import (
-	"github.com/git-town/git-town/v15/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v15/internal/config"
-	"github.com/git-town/git-town/v15/internal/git"
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
-	"github.com/git-town/git-town/v15/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v15/internal/hosting/hostingdomain"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v22/internal/config"
+	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v22/internal/git"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
 type RunArgs struct {
-	Backend                         gitdomain.RunnerQuerier
-	Config                          config.ValidatedConfig
-	Connector                       Option[hostingdomain.Connector]
-	DialogTestInputs                components.TestInputs
+	Backend                         subshelldomain.RunnerQuerier
+	BranchInfos                     gitdomain.BranchInfos
+	Config                          Mutable[config.ValidatedConfig]
+	Connector                       Option[forgedomain.Connector]
 	FinalMessages                   stringslice.Collector
-	Frontend                        gitdomain.Runner
+	Frontend                        subshelldomain.Runner
 	Git                             git.Commands
+	Inputs                          dialogcomponents.Inputs
 	PrependOpcodes                  func(...Opcode)
 	RegisterUndoablePerennialCommit func(gitdomain.SHA)
-	UpdateInitialBranchLocalSHA     func(gitdomain.LocalBranchName, gitdomain.SHA) error
+	UpdateInitialSnapshotLocalSHA   func(gitdomain.LocalBranchName, gitdomain.SHA) error
 }

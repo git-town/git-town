@@ -3,9 +3,9 @@ package flags_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v15/internal/cli/flags"
-	"github.com/git-town/git-town/v15/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v15/internal/gohacks/prelude"
+	"github.com/git-town/git-town/v22/internal/cli/flags"
+	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/shoenig/test/must"
 	"github.com/spf13/cobra"
 )
@@ -20,7 +20,10 @@ func TestCommitMessage(t *testing.T) {
 		addFlag(&cmd)
 		err := cmd.ParseFlags([]string{"--message", "my-value"})
 		must.NoError(t, err)
-		must.Eq(t, Some(gitdomain.CommitMessage("my-value")), readFlag(&cmd))
+		have, err := readFlag(&cmd)
+		must.NoError(t, err)
+		want := Some(gitdomain.CommitMessage("my-value"))
+		must.Eq(t, want, have)
 	})
 
 	t.Run("short version", func(t *testing.T) {
@@ -30,6 +33,9 @@ func TestCommitMessage(t *testing.T) {
 		addFlag(&cmd)
 		err := cmd.ParseFlags([]string{"-m", "my-value"})
 		must.NoError(t, err)
-		must.Eq(t, Some(gitdomain.CommitMessage("my-value")), readFlag(&cmd))
+		have, err := readFlag(&cmd)
+		must.NoError(t, err)
+		want := Some(gitdomain.CommitMessage("my-value"))
+		must.Eq(t, want, have)
 	})
 }

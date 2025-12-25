@@ -3,9 +3,10 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v15/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v15/internal/cli/dialog/components/list"
-	"github.com/git-town/git-town/v15/internal/messages"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents/list"
+	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v22/internal/messages"
 )
 
 const (
@@ -14,7 +15,7 @@ const (
 How do you want to store the configuration data?
 
 You can store it as a configuration file
-(.git-branches.toml), which you commit
+(git-town.toml), which you commit
 to the repository. This sets up Git Town
 for all people working on this codebase.
 Personal data like your API tokens
@@ -31,17 +32,14 @@ const (
 	ConfigStorageOptionGit  ConfigStorageOption = `Git metadata`
 )
 
-func ConfigStorage(hasConfigFile bool, inputs components.TestInput) (ConfigStorageOption, bool, error) {
-	if hasConfigFile {
-		return ConfigStorageOptionFile, false, nil
-	}
+func ConfigStorage(inputs dialogcomponents.Inputs) (ConfigStorageOption, dialogdomain.Exit, error) {
 	entries := list.NewEntries(
-		ConfigStorageOptionFile,
 		ConfigStorageOptionGit,
+		ConfigStorageOptionFile,
 	)
-	selection, aborted, err := components.RadioList(entries, 0, configStorageTitle, configStorageHelp, inputs)
-	fmt.Printf(messages.ConfigStorage, components.FormattedSelection(selection.Short(), aborted))
-	return selection, aborted, err
+	selection, exit, err := dialogcomponents.RadioList(entries, 0, configStorageTitle, configStorageHelp, inputs, "config-storage")
+	fmt.Printf(messages.ConfigStorage, dialogcomponents.FormattedSelection(selection.Short(), exit))
+	return selection, exit, err
 }
 
 type ConfigStorageOption string

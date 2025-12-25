@@ -29,12 +29,12 @@ You can install Git Town on Windows using:
   `choco install git-town`
 - [Scoop](https://scoop.sh/#/apps?q=git+town): `scoop install git-town`
 - the
-  [Git Town Windows installer](https://github.com/git-town/git-town/releases/download/v15.1.0/git-town_windows_intel_64.msi)
+  [Git Town Windows installer](https://github.com/git-town/git-town/releases/download/v18.0.0/git-town_windows_intel_64.msi)
 
 If you use the Windows Subsystem for Linux, please install
 [wsl-open](https://www.npmjs.com/package/wsl-open) to allow the commands
-[git town repo](https://git-town.com/commands/repo.md) and
-[git town propose](https://git-town.com/commands/propose.md) to open a browser
+[git town repo](https://www.git-town.com/commands/repo) and
+[git town propose](https://www.git-town.com/commands/propose) to open a browser
 window for you.
 
 ## Linux
@@ -56,12 +56,33 @@ rpm -i git-town_linux_intel_64.rpm
 ```
 
 On Arch Linux, install the
-[git-town](https://aur.archlinux.org/packages/git-town) package from the AUR. Or
-download the matching `.pkg.tar.zst` file for your architecture and run:
+[git-town](https://archlinux.org/packages/extra/x86_64/git-town/) package from
+official package repositories:
 
 ```
-sudo pacman -U <filename>
+pacman -S git-town
 ```
+
+On openSUSE Tumbleweed, install the
+[git-town](https://build.opensuse.org/package/show/openSUSE:Factory/git-town)
+package from the official package repositories:
+
+```
+sudo zypper in git-town
+```
+
+OpenSUSE 15.x and 16.x users can use these steps to install Git Town:
+
+```bash
+# replace 15.6 with 16.0 in the following command
+zypper ar -f -r https://download.opensuse.org/repositories/home:/ojkastl_buildservice:/git-town/15.6/home:ojkastl_buildservice:git-town.repo
+zypper refresh # accept the GPG key for the devel:tools:scm repository
+zypper install git-town
+```
+
+There are separate packages for the shell completions called
+`git-town-bash-completion`, `git-town-zsh-completion`, and
+`git-town-fish-completion`.
 
 You can also install Git Town on Linux via
 [Homebrew for Linux](https://docs.brew.sh/Homebrew-on-Linux):
@@ -79,10 +100,10 @@ You can install Git Town on BSD via
 [freshports](https://www.freshports.org/devel/git-town) or by downloading the
 matching binaries from the GitHub release.
 
-## manual installation
+## Manual installation
 
 ```
-curl https://git-town.com/install.sh | sh
+curl https://www.git-town.com/install.sh | sh
 ```
 
 For a fully custom installation,
@@ -90,13 +111,13 @@ For a fully custom installation,
 your CPU architecture, extract it, and move the `git-town` executable into a
 directory listed in your `$PATH`, for example `/usr/local/bin`.
 
-## compile from source
+## Compile from source
 
 If you have the [Go compiler](https://go.dev) installed, you can compile the
 latest version of Git Town from source by running:
 
 ```
-go get github.com/git-town/git-town
+go get github.com/git-town/git-town/v22
 ```
 
 ## New releases
@@ -109,7 +130,7 @@ get notifications about new releases.
 
 To remove Git Town from your system:
 
-2. Remove the Git Town configuration from your repositories: in each repo, run
+1. Remove the Git Town configuration from your repositories: in each repo, run
    `git town config remove`
-3. If your operating system or package manager provides an uninstaller for Git
+2. If your operating system or package manager provides an uninstaller for Git
    Town, run it. If you installed Git Town manually, delete the binary.

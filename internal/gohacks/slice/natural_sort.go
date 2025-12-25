@@ -7,11 +7,12 @@ import (
 	"unicode"
 )
 
-// sorts the given elements in natural sort order (https://en.wikipedia.org/wiki/Natural_sort_order)
-func NaturalSort[T fmt.Stringer](list []T) []T {
-	sortableList := newSortable(list)
-	sort.Sort(sortableList)
-	return sortableList
+// NaturalSort sorts the given elements in natural sort order (https://en.wikipedia.org/wiki/Natural_sort_order).
+func NaturalSort[T fmt.Stringer](list []T) {
+	if len(list) < 2 {
+		return
+	}
+	sort.Sort(sortable[T](list))
 }
 
 // indicates whether text1 < text2 according to natural sort order
@@ -48,17 +49,17 @@ func newCutter(content string) cutter {
 }
 
 // indicates whether the given index is inside the content this cutter disects
-func (c cutter) hasContentAt(index int) bool {
+func (c *cutter) hasContentAt(index int) bool {
 	return index < len(c.content)
 }
 
 // indicates whether this cutter can yield more parts
-func (c cutter) hasMoreParts() bool {
+func (c *cutter) hasMoreParts() bool {
 	return c.index < len(c.content)
 }
 
 // indicates whether the rune at the given index is a number
-func (c cutter) isDigitAt(index int) bool {
+func (c *cutter) isDigitAt(index int) bool {
 	return unicode.IsDigit(rune(c.content[index]))
 }
 
@@ -90,12 +91,6 @@ func (part part) toNumber() int {
 
 // wraps the given []fmt.Stringer with the sort.Interface methods so that we can sort it using the stdlib
 type sortable[T fmt.Stringer] []T
-
-func newSortable[T fmt.Stringer](elements []T) sortable[T] {
-	sortable := make(sortable[T], len(elements))
-	copy(sortable, elements)
-	return sortable
-}
 
 func (self sortable[T]) Len() int {
 	return len(self)

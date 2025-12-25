@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/git-town/git-town/tools/stats_release/console"
+	"github.com/git-town/git-town/v22/pkg/asserts"
 	"github.com/google/go-github/v58/github"
 )
 
@@ -13,17 +14,14 @@ func (gh Connector) ClosedIssues(date string) (closedIssues []*github.Issue, clo
 	query := fmt.Sprintf("repo:%s/%s closed:>=%s", org, repo, date)
 	fmt.Printf("loading issues and pull requests closed since %s ", date)
 	for page := 1; ; page++ {
-		results, response, err := gh.client.Search.Issues(gh.context, query, &github.SearchOptions{
+		results, response := asserts.NoError2(gh.client.Search.Issues(gh.context, query, &github.SearchOptions{
 			Sort:  "closed",
 			Order: "asc",
 			ListOptions: github.ListOptions{
 				Page:    page,
 				PerPage: pageSize,
 			},
-		})
-		if err != nil {
-			panic(err)
-		}
+		}))
 		fmt.Print(".")
 		for _, issue := range results.Issues {
 			if issue.IsPullRequest() {
