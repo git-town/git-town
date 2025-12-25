@@ -2,8 +2,6 @@ package proposallineage_test
 
 import (
 	"fmt"
-	"maps"
-	"slices"
 	"strings"
 	"testing"
 
@@ -62,84 +60,72 @@ func TestNewTree(t *testing.T) {
 		tree, err := proposallineage.NewTree(args)
 		must.NoError(t, err)
 		must.NotNil(t, tree)
-		// tree.BranchToProposal stores the proposals for each branch
-		wantBranchToProposal := map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{
-			"feature-a": Some(forgedomain.Proposal{
-				Data: forgedomain.ProposalData{
-					Body:   None[gitdomain.ProposalBody](),
-					Source: featureA,
-					Target: mainBranch,
-					Title:  "proposal from feature-a to main",
-				},
-			}),
-			"feature-b": Some(forgedomain.Proposal{
-				Data: forgedomain.ProposalData{
-					Body:   None[gitdomain.ProposalBody](),
-					Source: featureB,
-					Target: featureA,
-					Title:  "proposal from feature-b to feature-a",
-				},
-			}),
-			"feature-c": Some(forgedomain.Proposal{
-				Data: forgedomain.ProposalData{
-					Body:   None[gitdomain.ProposalBody](),
-					Source: featureC,
-					Target: featureA,
-					Title:  "proposal from feature-c to feature-a",
-				},
-			}),
-		}
-		must.Eq(t, wantBranchToProposal, tree.BranchToProposal)
-
-		have_keys := slices.Collect(maps.Keys(tree.BranchToProposal))
-		slices.Sort(have_keys)
-		want_keys := gitdomain.LocalBranchNames{featureA, featureB, featureC}
-		must.Eq(t, want_keys, have_keys)
-		must.True(t, tree.BranchToProposal[featureA].IsSome())
-		must.True(t, tree.BranchToProposal[featureB].IsSome())
-		must.True(t, tree.BranchToProposal[featureC].IsSome())
-		// tree.Node stores the lineage
-		must.NotNil(t, tree.Node)
-		must.Eq(t, 1, len(tree.Node.ChildNodes))
-		haveChildNode := tree.Node.ChildNodes[0]
-		wantChildNode := &proposallineage.TreeNode{
-			Branch: featureA,
-			ChildNodes: []*proposallineage.TreeNode{
-				{
-					Branch:     featureB,
-					ChildNodes: []*proposallineage.TreeNode{},
-					Proposal: Some(forgedomain.Proposal{
-						Data: forgedomain.ProposalData{
-							Body:   None[gitdomain.ProposalBody](),
-							Source: featureB,
-							Target: featureA,
-							Title:  "proposal from feature-b to feature-a",
-						},
-					}),
-				},
-				{
-					Branch:     featureC,
-					ChildNodes: []*proposallineage.TreeNode{},
-					Proposal: Some(forgedomain.Proposal{
-						Data: forgedomain.ProposalData{
-							Body:   None[gitdomain.ProposalBody](),
-							Source: featureC,
-							Target: featureA,
-							Title:  "proposal from feature-c to feature-a",
-						},
-					}),
-				},
+		wantTree := &proposallineage.Tree{
+			BranchToProposal: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{
+				"feature-a": Some(forgedomain.Proposal{
+					Data: forgedomain.ProposalData{
+						Source: featureA,
+						Target: mainBranch,
+						Title:  "proposal from feature-a to main",
+					},
+				}),
+				"feature-b": Some(forgedomain.Proposal{
+					Data: forgedomain.ProposalData{
+						Source: featureB,
+						Target: featureA,
+						Title:  "proposal from feature-b to feature-a",
+					},
+				}),
+				"feature-c": Some(forgedomain.Proposal{
+					Data: forgedomain.ProposalData{
+						Source: featureC,
+						Target: featureA,
+						Title:  "proposal from feature-c to feature-a",
+					},
+				}),
 			},
-			Proposal: Some(forgedomain.Proposal{
-				Data: forgedomain.ProposalData{
-					Body:   None[gitdomain.ProposalBody](),
-					Source: featureA,
-					Target: mainBranch,
-					Title:  "proposal from feature-a to main",
+			Node: &proposallineage.TreeNode{
+				Branch: mainBranch,
+				ChildNodes: []*proposallineage.TreeNode{
+					{
+						Branch: featureA,
+						ChildNodes: []*proposallineage.TreeNode{
+							{
+								Branch:     featureB,
+								ChildNodes: []*proposallineage.TreeNode{},
+								Proposal: Some(forgedomain.Proposal{
+									Data: forgedomain.ProposalData{
+										Source: featureB,
+										Target: featureA,
+										Title:  "proposal from feature-b to feature-a",
+									},
+								}),
+							},
+							{
+								Branch:     featureC,
+								ChildNodes: []*proposallineage.TreeNode{},
+								Proposal: Some(forgedomain.Proposal{
+									Data: forgedomain.ProposalData{
+										Source: featureC,
+										Target: featureA,
+										Title:  "proposal from feature-c to feature-a",
+									},
+								}),
+							},
+						},
+						Proposal: Some(forgedomain.Proposal{
+							Data: forgedomain.ProposalData{
+								Source: featureA,
+								Target: mainBranch,
+								Title:  "proposal from feature-a to main",
+							},
+						}),
+					},
 				},
-			}),
+				Proposal: None[forgedomain.Proposal](),
+			},
 		}
-		must.Eq(t, wantChildNode, haveChildNode)
+		must.Eq(t, wantTree, tree)
 	})
 
 	t.Run("creates tree with empty child nodes when current branch has no children", func(t *testing.T) {
