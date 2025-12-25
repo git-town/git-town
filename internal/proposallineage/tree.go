@@ -7,8 +7,8 @@ import (
 )
 
 type Tree struct {
-	ProposalCache map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]
 	Node          *TreeNode
+	ProposalCache map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]
 }
 
 func NewTree(args ProposalStackLineageArgs) (*Tree, error) {
