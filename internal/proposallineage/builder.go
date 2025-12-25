@@ -26,8 +26,7 @@ type ProposalStackLineageArgs struct {
 }
 
 func NewBuilder(args ProposalStackLineageArgs, lineageTree OptionalMutable[Tree]) Option[Builder] {
-	if args.MainAndPerennialBranches.Contains(args.CurrentBranch) ||
-		args.Lineage.Len() == 0 {
+	if args.MainAndPerennialBranches.Contains(args.CurrentBranch) || args.Lineage.Len() == 0 {
 		// cannot create proposal stack lineage for main or perennial branch
 		return None[Builder]()
 	}
@@ -67,26 +66,26 @@ func (self *Builder) UpdateStack(args ProposalStackLineageArgs) error {
 }
 
 func (self *Builder) build(node *TreeNode, args ProposalStackLineageArgs, indentLevel int) string {
-	var builder strings.Builder
+	var result strings.Builder
 	indent := strings.Repeat(" ", indentLevel*2)
 	nextIndentLevel := indentLevel + 1
 	if args.MainAndPerennialBranches.Contains(node.Branch) {
-		builder.WriteString(fmt.Sprintf("%s %s %s\n", indent, indentMarker, node.Branch.BranchName()))
+		result.WriteString(fmt.Sprintf("%s %s %s\n", indent, indentMarker, node.Branch.BranchName()))
 		for _, child := range node.ChildNodes {
-			builder.WriteString(self.build(child, args, nextIndentLevel))
+			result.WriteString(self.build(child, args, nextIndentLevel))
 		}
-		return builder.String()
+		return result.String()
 	}
 	proposal, hasProposal := node.Proposal.Get()
 	if hasProposal {
-		builder.WriteString(formattedDisplay(args, indent, proposal))
+		result.WriteString(formattedDisplay(args, indent, proposal))
 	} else {
 		nextIndentLevel--
 	}
 	for _, child := range node.ChildNodes {
-		builder.WriteString(self.build(child, args, nextIndentLevel))
+		result.WriteString(self.build(child, args, nextIndentLevel))
 	}
-	return builder.String()
+	return result.String()
 }
 
 func formattedDisplay(args ProposalStackLineageArgs, currentIndentLevel string, proposal forgedomain.Proposal) string {
