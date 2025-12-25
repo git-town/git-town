@@ -5,7 +5,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
@@ -70,18 +69,9 @@ func TestNewTree(t *testing.T) {
 		have, err := proposallineage.NewTree(args)
 		must.NoError(t, err)
 		must.NotNil(t, have)
-		want := &proposallineage.Tree{
-			BranchToProposal: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{},
-			Node:             &proposallineage.TreeNode{},
-		}
-		t.Log("111111111111111111111111111111111111111111111111")
-		spew.Dump(have)
-		// pretty.Ldiff(t, want, have)
-		t.Log("222222222222222222222222222222222222222222222222")
-		must.Eq(t, want, have)
-		// must.True(t, tree.BranchToProposal[featureA].IsSome())
-		// must.True(t, tree.BranchToProposal[featureB].IsSome())
-		// must.True(t, tree.BranchToProposal[featureC].IsSome())
+		must.True(t, have.BranchToProposal[featureA].IsSome())
+		must.True(t, have.BranchToProposal[featureB].IsSome())
+		must.True(t, have.BranchToProposal[featureC].IsSome())
 	})
 
 	t.Run("creates tree with empty child nodes when current branch has no children", func(t *testing.T) {
