@@ -307,27 +307,50 @@ func TestNewTree(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("simple feature branch", func(t *testing.T) {
+	t.Run("no connector", func(t *testing.T) {
 		t.Parallel()
-		mainBranch := gitdomain.NewLocalBranchName("main")
-		featureBranch := gitdomain.NewLocalBranchName("feature")
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-			featureBranch: mainBranch,
+			"feature-a": "main",
+			"feature-b": "feature-a",
+			"feature-c": "feature-a",
 		})
-		var connector forgedomain.ProposalFinder = &testConnector{}
-		args := proposallineage.ProposalStackLineageArgs{
-			Connector:                Some(connector),
-			CurrentBranch:            featureBranch,
+		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
+			Connector:                None[forgedomain.ProposalFinder](),
+			CurrentBranch:            "feature-a",
 			Lineage:                  lineage,
-			MainAndPerennialBranches: gitdomain.LocalBranchNames{mainBranch},
+			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
+		})
+		want := &proposallineage.Tree{
+			BranchToProposal: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{
+				"feature-a": None[forgedomain.Proposal](),
+				"feature-b": None[forgedomain.Proposal](),
+				"feature-c": None[forgedomain.Proposal](),
+			},
+			Node: &proposallineage.TreeNode{
+				Branch: "main",
+				ChildNodes: []*proposallineage.TreeNode{
+					{
+						Branch: "feature-a",
+						ChildNodes: []*proposallineage.TreeNode{
+							{
+								Branch:     "feature-b",
+								ChildNodes: []*proposallineage.TreeNode{},
+								Proposal:   None[forgedomain.Proposal](),
+							},
+							{
+								Branch:     "feature-c",
+								ChildNodes: []*proposallineage.TreeNode{},
+								Proposal:   None[forgedomain.Proposal](),
+							},
+						},
+						Proposal: None[forgedomain.Proposal](),
+					},
+				},
+				Proposal: None[forgedomain.Proposal](),
+			},
 		}
-
-		tree, err := proposallineage.NewTree(args)
-
 		must.NoError(t, err)
-		must.NotNil(t, tree)
-		must.NotNil(t, tree.Node)
-		must.NotNil(t, tree.BranchToProposal)
+		must.Eq(t, want, have)
 	})
 
 	t.Run("creates tree without connector", func(t *testing.T) {
