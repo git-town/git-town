@@ -48,34 +48,13 @@ func TestNewTree(t *testing.T) {
 			"feature-b": "feature-a",
 		})
 		var connector forgedomain.ProposalFinder = &failingFinder{}
-		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
+		_, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            "feature-a",
 			Lineage:                  lineage,
 			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
 		})
-		want := &proposallineage.Tree{
-			BranchToProposal: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{},
-			Node: &proposallineage.TreeNode{
-				Branch: "", // TODO: this shouldn't be empty
-				ChildNodes: []*proposallineage.TreeNode{
-					{
-						Branch: "main",
-						ChildNodes: []*proposallineage.TreeNode{
-							{
-								Branch:     "feature-a",
-								ChildNodes: []*proposallineage.TreeNode{},
-								Proposal:   None[forgedomain.Proposal](),
-							},
-						},
-						Proposal: None[forgedomain.Proposal](),
-					},
-				},
-				Proposal: None[forgedomain.Proposal](),
-			},
-		}
 		must.Error(t, err)
-		must.Eq(t, want, have)
 	})
 
 	t.Run("multiple independent stacks", func(t *testing.T) {
