@@ -5,12 +5,12 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/proposallineage"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
-	"github.com/kr/pretty"
 	"github.com/shoenig/test/must"
 )
 
@@ -74,7 +74,10 @@ func TestNewTree(t *testing.T) {
 			BranchToProposal: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{},
 			Node:             &proposallineage.TreeNode{},
 		}
-		pretty.Ldiff(t, want, have)
+		t.Log("111111111111111111111111111111111111111111111111")
+		spew.Dump(have)
+		// pretty.Ldiff(t, want, have)
+		t.Log("222222222222222222222222222222222222222222222222")
 		must.Eq(t, want, have)
 		// must.True(t, tree.BranchToProposal[featureA].IsSome())
 		// must.True(t, tree.BranchToProposal[featureB].IsSome())
