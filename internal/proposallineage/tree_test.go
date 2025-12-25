@@ -74,7 +74,7 @@ func TestNewTree(t *testing.T) {
 				Proposal: None[forgedomain.Proposal](),
 			},
 		}
-		must.Error(t, err) // TODO: should it ignore errors and create the lineage without proposals?
+		must.Error(t, err)
 		must.Eq(t, want, have)
 	})
 
