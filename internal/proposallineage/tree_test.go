@@ -13,10 +13,10 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-// mockProposalFinder is a test implementation of forgedomain.ProposalFinder
-type testProposalFinder struct{}
+// a Connector double that implements the forgedomain.ProposalFinder interface
+type testConnector struct{}
 
-func (self *testProposalFinder) FindProposal(source, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self *testConnector) FindProposal(source, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	if strings.Contains(source.String(), "no_proposal") {
 		return None[forgedomain.Proposal](), nil
 	}
@@ -37,14 +37,14 @@ func (self *errorProposalFinder) FindProposal(branch, _ gitdomain.LocalBranchNam
 func TestNewTree(t *testing.T) {
 	t.Parallel()
 
-	t.Run("creates tree with branching structure", func(t *testing.T) {
+	t.Run("branch in the middle of a stack", func(t *testing.T) {
 		t.Parallel()
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 			"feature-a": "main",
 			"feature-b": "feature-a",
 			"feature-c": "feature-a",
 		})
-		var connector forgedomain.ProposalFinder = &testProposalFinder{}
+		var connector forgedomain.ProposalFinder = &testConnector{}
 		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            "feature-a",
@@ -117,7 +117,7 @@ func TestNewTree(t *testing.T) {
 			featureA: mainBranch,
 			featureB: featureA,
 		})
-		var connector forgedomain.ProposalFinder = &testProposalFinder{}
+		var connector forgedomain.ProposalFinder = &testConnector{}
 		args := proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            featureB, // Leaf node
@@ -142,7 +142,7 @@ func TestNewTree(t *testing.T) {
 			featureB: featureA,
 			featureC: featureB,
 		})
-		var connector forgedomain.ProposalFinder = &testProposalFinder{}
+		var connector forgedomain.ProposalFinder = &testConnector{}
 		args := proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            featureB,
@@ -166,7 +166,7 @@ func TestNewTree(t *testing.T) {
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 			featureBranch: mainBranch,
 		})
-		var connector forgedomain.ProposalFinder = &testProposalFinder{}
+		var connector forgedomain.ProposalFinder = &testConnector{}
 		args := proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            featureBranch,
@@ -210,7 +210,7 @@ func TestNewTree(t *testing.T) {
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 			noproposalBranch: mainBranch,
 		})
-		var connector forgedomain.ProposalFinder = &testProposalFinder{}
+		var connector forgedomain.ProposalFinder = &testConnector{}
 		args := proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            noproposalBranch,
@@ -259,7 +259,7 @@ func TestTreeCachingBehavior(t *testing.T) {
 			featureA: mainBranch,
 			featureB: featureA,
 		})
-		var connector forgedomain.ProposalFinder = &testProposalFinder{}
+		var connector forgedomain.ProposalFinder = &testConnector{}
 		args := proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            featureA,
@@ -293,7 +293,7 @@ func TestTreeCachingBehavior(t *testing.T) {
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 			featureA: mainBranch,
 		})
-		var connector forgedomain.ProposalFinder = &testProposalFinder{}
+		var connector forgedomain.ProposalFinder = &testConnector{}
 		args := proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            featureA,
@@ -338,7 +338,7 @@ func TestTreeRebuild(t *testing.T) {
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 			featureA: mainBranch,
 		})
-		var connector forgedomain.ProposalFinder = &testProposalFinder{}
+		var connector forgedomain.ProposalFinder = &testConnector{}
 		args := proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            featureA,
@@ -374,7 +374,7 @@ func TestTreeRebuild(t *testing.T) {
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 			featureA: mainBranch,
 		})
-		var connector forgedomain.ProposalFinder = &testProposalFinder{}
+		var connector forgedomain.ProposalFinder = &testConnector{}
 		args := proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            featureA,
@@ -403,7 +403,7 @@ func TestTreeRebuild(t *testing.T) {
 			featureA: mainBranch,
 			featureB: featureA,
 		})
-		var connector forgedomain.ProposalFinder = &testProposalFinder{}
+		var connector forgedomain.ProposalFinder = &testConnector{}
 		args := proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            featureA,
@@ -449,7 +449,7 @@ func TestTreeWithComplexLineages(t *testing.T) {
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 			featureBranch: mainBranch,
 		})
-		var connector forgedomain.ProposalFinder = &testProposalFinder{}
+		var connector forgedomain.ProposalFinder = &testConnector{}
 		args := proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            mainBranch, // Current is perennial
@@ -481,7 +481,7 @@ func TestTreeWithComplexLineages(t *testing.T) {
 		}
 
 		lineage := configdomain.NewLineageWith(lineageData)
-		var connector forgedomain.ProposalFinder = &testProposalFinder{}
+		var connector forgedomain.ProposalFinder = &testConnector{}
 		args := proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            branches[4], // Middle of the chain
@@ -513,7 +513,7 @@ func TestTreeWithComplexLineages(t *testing.T) {
 			childC: parent,
 			parent: mainBranch,
 		})
-		var connector forgedomain.ProposalFinder = &testProposalFinder{}
+		var connector forgedomain.ProposalFinder = &testConnector{}
 		args := proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            parent,
@@ -545,7 +545,7 @@ func TestTreeWithComplexLineages(t *testing.T) {
 			stackB1: mainBranch,
 			stackB2: stackB1,
 		})
-		var connector forgedomain.ProposalFinder = &testProposalFinder{}
+		var connector forgedomain.ProposalFinder = &testConnector{}
 		args := proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            stackA1,
@@ -578,7 +578,7 @@ func TestTreeWithMixedProposalAvailability(t *testing.T) {
 			withProposal:    mainBranch,
 			withoutProposal: withProposal,
 		})
-		var connector forgedomain.ProposalFinder = &testProposalFinder{}
+		var connector forgedomain.ProposalFinder = &testConnector{}
 		args := proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            withProposal,
