@@ -24,15 +24,10 @@ func (self *testProposalFinder) FindProposal(source, target gitdomain.LocalBranc
 	}
 	return Some(forgedomain.Proposal{
 		Data: forgedomain.ProposalData{
-			Body:         None[gitdomain.ProposalBody](),
-			MergeWithAPI: false,
-			Number:       0,
-			Source:       source,
-			Target:       target,
-			Title:        gitdomain.ProposalTitle(fmt.Sprintf("proposal from %s to %s", source, target)),
-			URL:          "",
+			Source: source,
+			Target: target,
+			Title:  gitdomain.ProposalTitle(fmt.Sprintf("proposal from %s to %s", source, target)),
 		},
-		ForgeType: forgedomain.ForgeTypeGitHub,
 	}), nil
 }
 
@@ -77,6 +72,22 @@ func TestNewTree(t *testing.T) {
 					Title:  "proposal from feature-a to main",
 				},
 			}),
+			"feature-b": Some(forgedomain.Proposal{
+				Data: forgedomain.ProposalData{
+					Body:   None[gitdomain.ProposalBody](),
+					Source: featureB,
+					Target: featureA,
+					Title:  "proposal from feature-b to feature-a",
+				},
+			}),
+			"feature-c": Some(forgedomain.Proposal{
+				Data: forgedomain.ProposalData{
+					Body:   None[gitdomain.ProposalBody](),
+					Source: featureC,
+					Target: featureA,
+					Title:  "proposal from feature-c to feature-a",
+				},
+			}),
 		}
 		must.Eq(t, wantBranchToProposal, tree.BranchToProposal)
 
@@ -104,7 +115,6 @@ func TestNewTree(t *testing.T) {
 							Target: featureA,
 							Title:  "proposal from feature-b to feature-a",
 						},
-						ForgeType: forgedomain.ForgeTypeGitHub,
 					}),
 				},
 				{
@@ -117,7 +127,6 @@ func TestNewTree(t *testing.T) {
 							Target: featureA,
 							Title:  "proposal from feature-c to feature-a",
 						},
-						ForgeType: forgedomain.ForgeTypeGitHub,
 					}),
 				},
 			},
@@ -128,7 +137,6 @@ func TestNewTree(t *testing.T) {
 					Target: mainBranch,
 					Title:  "proposal from feature-a to main",
 				},
-				ForgeType: forgedomain.ForgeTypeGitHub,
 			}),
 		}
 		must.Eq(t, wantChildNode, haveChildNode)
