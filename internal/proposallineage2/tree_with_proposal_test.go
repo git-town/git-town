@@ -1,4 +1,4 @@
-package proposallineage2
+package proposallineage2_test
 
 import (
 	"fmt"
@@ -7,6 +7,7 @@ import (
 
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
+	"github.com/git-town/git-town/v22/internal/proposallineage2"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
@@ -41,35 +42,35 @@ func TestAddProposalsToTree(t *testing.T) {
 
 	t.Run("all branches have proposals", func(t *testing.T) {
 		t.Parallel()
-		tree := TreeNode{
+		tree := proposallineage2.TreeNode{
 			Branch: "main",
-			Children: []TreeNode{
+			Children: []proposallineage2.TreeNode{
 				{
 					Branch: "feature-a",
-					Children: []TreeNode{
+					Children: []proposallineage2.TreeNode{
 						{
 							Branch:   "feature-a1",
-							Children: []TreeNode{},
+							Children: []proposallineage2.TreeNode{},
 						},
 					},
 				},
 				{
 					Branch:   "feature-b",
-					Children: []TreeNode{},
+					Children: []proposallineage2.TreeNode{},
 				},
 			},
 		}
 		var connector forgedomain.ProposalFinder = &testFinder{}
-		have := AddProposalsToTree(tree, Some(connector))
-		want := TreeNodeWithProposal{
+		have := proposallineage2.AddProposalsToTree(tree, Some(connector))
+		want := proposallineage2.TreeNodeWithProposal{
 			Branch: "main",
-			Children: []TreeNodeWithProposal{
+			Children: []proposallineage2.TreeNodeWithProposal{
 				{
 					Branch: "feature-a",
-					Children: []TreeNodeWithProposal{
+					Children: []proposallineage2.TreeNodeWithProposal{
 						{
 							Branch:   "feature-a1",
-							Children: []TreeNodeWithProposal{},
+							Children: []proposallineage2.TreeNodeWithProposal{},
 							Proposal: Some(forgedomain.Proposal{
 								Data: forgedomain.ProposalData{
 									Title: "proposal from feature-a1 to feature-a",
@@ -85,7 +86,7 @@ func TestAddProposalsToTree(t *testing.T) {
 				},
 				{
 					Branch:   "feature-b",
-					Children: []TreeNodeWithProposal{},
+					Children: []proposallineage2.TreeNodeWithProposal{},
 					Proposal: Some(forgedomain.Proposal{
 						Data: forgedomain.ProposalData{
 							Title: "proposal from feature-b to main",
@@ -100,31 +101,31 @@ func TestAddProposalsToTree(t *testing.T) {
 
 	t.Run("connector returns errors", func(t *testing.T) {
 		t.Parallel()
-		tree := TreeNode{
+		tree := proposallineage2.TreeNode{
 			Branch: "main",
-			Children: []TreeNode{
+			Children: []proposallineage2.TreeNode{
 				{
 					Branch: "feature-a",
-					Children: []TreeNode{
+					Children: []proposallineage2.TreeNode{
 						{
 							Branch:   "feature-a1",
-							Children: []TreeNode{},
+							Children: []proposallineage2.TreeNode{},
 						},
 					},
 				},
 			},
 		}
 		var connector forgedomain.ProposalFinder = &failingFinder{}
-		have := AddProposalsToTree(tree, Some(connector))
-		want := TreeNodeWithProposal{
+		have := proposallineage2.AddProposalsToTree(tree, Some(connector))
+		want := proposallineage2.TreeNodeWithProposal{
 			Branch: "main",
-			Children: []TreeNodeWithProposal{
+			Children: []proposallineage2.TreeNodeWithProposal{
 				{
-					Branch: "no-proposal-a",
-					Children: []TreeNodeWithProposal{
+					Branch: "feature-a",
+					Children: []proposallineage2.TreeNodeWithProposal{
 						{
 							Branch:   "feature-a1",
-							Children: []TreeNodeWithProposal{},
+							Children: []proposallineage2.TreeNodeWithProposal{},
 							Proposal: None[forgedomain.Proposal](),
 						},
 					},
@@ -138,34 +139,34 @@ func TestAddProposalsToTree(t *testing.T) {
 
 	t.Run("some branches have proposals", func(t *testing.T) {
 		t.Parallel()
-		tree := TreeNode{
+		tree := proposallineage2.TreeNode{
 			Branch: "main",
-			Children: []TreeNode{
+			Children: []proposallineage2.TreeNode{
 				{
 					Branch: "no-proposal-a",
-					Children: []TreeNode{
+					Children: []proposallineage2.TreeNode{
 						{
 							Branch:   "feature-a1",
-							Children: []TreeNode{},
+							Children: []proposallineage2.TreeNode{},
 						},
 					},
 				},
 			},
 		}
 		var connector forgedomain.ProposalFinder = &testFinder{}
-		have := AddProposalsToTree(tree, Some(connector))
-		want := TreeNodeWithProposal{
+		have := proposallineage2.AddProposalsToTree(tree, Some(connector))
+		want := proposallineage2.TreeNodeWithProposal{
 			Branch: "main",
-			Children: []TreeNodeWithProposal{
+			Children: []proposallineage2.TreeNodeWithProposal{
 				{
 					Branch: "no-proposal-a",
-					Children: []TreeNodeWithProposal{
+					Children: []proposallineage2.TreeNodeWithProposal{
 						{
 							Branch:   "feature-a1",
-							Children: []TreeNodeWithProposal{},
+							Children: []proposallineage2.TreeNodeWithProposal{},
 							Proposal: Some(forgedomain.Proposal{
 								Data: forgedomain.ProposalData{
-									Title: "proposal from feature-a1 to feature-a",
+									Title: "proposal from feature-a1 to no-proposal-a",
 								},
 							}),
 						},
