@@ -24,15 +24,6 @@ func NewTree(args ProposalStackLineageArgs) (*Tree, error) {
 	return tree, err
 }
 
-func (self *Tree) Rebuild(args ProposalStackLineageArgs) error {
-	self.Node = &TreeNode{
-		Branch:     "",
-		ChildNodes: []*TreeNode{},
-		Proposal:   None[forgedomain.Proposal](),
-	}
-	return self.build(args)
-}
-
 func (self *Tree) build(args ProposalStackLineageArgs) error {
 	visited := map[gitdomain.LocalBranchName]*TreeNode{}
 	descendants := buildAncestorChain(args, self, visited)
