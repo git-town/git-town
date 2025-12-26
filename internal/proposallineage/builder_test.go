@@ -56,8 +56,7 @@ func TestProposalStackLineageBuilder_CheckLineageAndProposals(t *testing.T) {
 		Lineage:                  lineage,
 		MainAndPerennialBranches: gitdomain.LocalBranchNames{mainBranch},
 	}
-	tree, err := proposallineage.NewTree(args)
-	must.NoError(t, err)
+	tree := proposallineage.NewTree(args)
 	must.True(t, tree.ProposalCache[mainBranch].IsNone())
 	must.True(t, tree.ProposalCache[featureBranchB].IsSome())
 	must.True(t, tree.ProposalCache[featureBranchA].IsSome())
@@ -361,8 +360,7 @@ func TestProposalStackLineageBuilder_PrependBranch(t *testing.T) {
 		Lineage:                  lineage,
 		MainAndPerennialBranches: gitdomain.LocalBranchNames{mainBranch},
 	}
-	tree, err := proposallineage.NewTree(args)
-	must.NoError(t, err)
+	tree := proposallineage.NewTree(args)
 	builder, hasBuilder := proposallineage.NewBuilder(args, MutableSome(tree)).Get()
 	must.True(t, hasBuilder)
 	original := `
@@ -392,8 +390,7 @@ func TestProposalStackLineageBuilder_PrependBranch(t *testing.T) {
 		Lineage:                  lineage,
 		MainAndPerennialBranches: gitdomain.LocalBranchNames{mainBranch},
 	}
-	tree, err = proposallineage.NewTree(args)
-	must.NoError(t, err)
+	tree = proposallineage.NewTree(args)
 	builder, hasBuilder = proposallineage.NewBuilder(args, MutableSome(tree)).Get()
 	must.True(t, hasBuilder)
 	must.EqOp(t, original, builder.Build(args))

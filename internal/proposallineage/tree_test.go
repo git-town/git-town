@@ -47,7 +47,7 @@ func TestNewTree(t *testing.T) {
 			"feature-a": "main",
 		})
 		var connector forgedomain.ProposalFinder = &failingFinder{}
-		tree, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
+		tree := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            "feature-a",
 			Lineage:                  lineage,
@@ -69,7 +69,6 @@ func TestNewTree(t *testing.T) {
 				Proposal: None[forgedomain.Proposal](),
 			},
 		}
-		must.NoError(t, err)
 		must.Eq(t, want, tree)
 	})
 
@@ -79,7 +78,7 @@ func TestNewTree(t *testing.T) {
 			"feature-a": "main",
 		})
 		var connector forgedomain.ProposalFinder = &testFinder{}
-		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
+		have := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            "feature-a",
 			Lineage:                  lineage,
@@ -109,7 +108,6 @@ func TestNewTree(t *testing.T) {
 				Proposal: None[forgedomain.Proposal](),
 			},
 		}
-		must.NoError(t, err)
 		must.Eq(t, want, have)
 	})
 
@@ -122,7 +120,7 @@ func TestNewTree(t *testing.T) {
 			"feature-d": "feature-c",
 		})
 		var connector forgedomain.ProposalFinder = &testFinder{}
-		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
+		have := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            "feature-a",
 			Lineage:                  lineage,
@@ -197,7 +195,6 @@ func TestNewTree(t *testing.T) {
 				Proposal: None[forgedomain.Proposal](),
 			},
 		}
-		must.NoError(t, err)
 		must.Eq(t, want, have)
 	})
 
@@ -210,7 +207,7 @@ func TestNewTree(t *testing.T) {
 		})
 		connector := testFinder{}
 		var proposalFinder forgedomain.ProposalFinder = &connector
-		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
+		have := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(proposalFinder),
 			CurrentBranch:            "feature-a",
 			Lineage:                  lineage,
@@ -269,7 +266,6 @@ func TestNewTree(t *testing.T) {
 				Proposal: None[forgedomain.Proposal](),
 			},
 		}
-		must.NoError(t, err)
 		must.Eq(t, want, have)
 		wantRequests := []gitdomain.ProposalTitle{
 			"proposal from feature-a to main",
@@ -288,7 +284,7 @@ func TestNewTree(t *testing.T) {
 			"feature-d": "feature-a",
 		})
 		var connector forgedomain.ProposalFinder = &testFinder{}
-		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
+		have := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            "feature-d",
 			Lineage:                  lineage,
@@ -361,7 +357,6 @@ func TestNewTree(t *testing.T) {
 				Proposal: None[forgedomain.Proposal](),
 			},
 		}
-		must.NoError(t, err)
 		must.Eq(t, want, have)
 	})
 
@@ -371,7 +366,7 @@ func TestNewTree(t *testing.T) {
 			"feature-a": "main",
 			"feature-b": "feature-a",
 		})
-		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
+		have := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
 			Connector:                None[forgedomain.ProposalFinder](),
 			CurrentBranch:            "feature-a",
 			Lineage:                  lineage,
@@ -400,7 +395,6 @@ func TestNewTree(t *testing.T) {
 				Proposal: None[forgedomain.Proposal](),
 			},
 		}
-		must.NoError(t, err)
 		must.Eq(t, want, have)
 	})
 
@@ -411,7 +405,7 @@ func TestNewTree(t *testing.T) {
 			"feature-b": "feature-a",
 		})
 		var connector forgedomain.ProposalFinder = &testFinder{}
-		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
+		have := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            "main",
 			Lineage:                  lineage,
@@ -425,7 +419,6 @@ func TestNewTree(t *testing.T) {
 				Proposal:   None[forgedomain.Proposal](),
 			},
 		}
-		must.NoError(t, err)
 		must.Eq(t, want, have)
 	})
 
@@ -438,7 +431,7 @@ func TestNewTree(t *testing.T) {
 			"feature-B2": "feature-B1",
 		})
 		var connector forgedomain.ProposalFinder = &testFinder{}
-		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
+		have := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            "feature-A1",
 			Lineage:                  lineage,
@@ -483,7 +476,6 @@ func TestNewTree(t *testing.T) {
 				Proposal: None[forgedomain.Proposal](),
 			},
 		}
-		must.NoError(t, err)
 		must.Eq(t, want, have)
 	})
 
@@ -494,7 +486,7 @@ func TestNewTree(t *testing.T) {
 			"no-proposal-b": "feature-a",
 		})
 		var connector forgedomain.ProposalFinder = &testFinder{}
-		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
+		have := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            "feature-a",
 			Lineage:                  lineage,
@@ -531,7 +523,6 @@ func TestNewTree(t *testing.T) {
 				Proposal: None[forgedomain.Proposal](),
 			},
 		}
-		must.NoError(t, err)
 		must.Eq(t, want, have)
 	})
 }

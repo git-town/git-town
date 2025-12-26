@@ -32,12 +32,7 @@ func NewBuilder(args ProposalStackLineageArgs, lineageTree OptionalMutable[Tree]
 	}
 	tree, hasTree := lineageTree.Get()
 	if !hasTree {
-		var err error
-		tree, err = NewTree(args)
-		if err != nil {
-			fmt.Printf("failed to build proposal stack lineage: %s", err.Error())
-			return None[Builder]()
-		}
+		tree = NewTree(args)
 	}
 	if tree == nil {
 		return None[Builder]()
