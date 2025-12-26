@@ -1,13 +1,14 @@
-package proposallineage
+package proposallineage_test
 
 import (
 	"testing"
 
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/proposallineage"
 	"github.com/shoenig/test/must"
 )
 
-func TestNewTree2(t *testing.T) {
+func TestCalculateTree(t *testing.T) {
 	t.Parallel()
 
 	t.Run("branch with multiple ancestors", func(t *testing.T) {
@@ -16,16 +17,16 @@ func TestNewTree2(t *testing.T) {
 			"feature-a": "main",
 			"feature-b": "feature-a",
 		})
-		have := CalculateTree("feature-b", lineage)
-		want := TreeNode2{
+		have := proposallineage.CalculateTree("feature-b", lineage)
+		want := proposallineage.TreeNode2{
 			Branch: "main",
-			Children: []TreeNode2{
+			Children: []proposallineage.TreeNode2{
 				{
 					Branch: "feature-a",
-					Children: []TreeNode2{
+					Children: []proposallineage.TreeNode2{
 						{
 							Branch:   "feature-b",
-							Children: []TreeNode2{},
+							Children: []proposallineage.TreeNode2{},
 						},
 					},
 				},
@@ -45,36 +46,36 @@ func TestNewTree2(t *testing.T) {
 			"feature-b2a": "feature-b2",
 			"feature-b2b": "feature-b2",
 		})
-		have := CalculateTree("feature-a", lineage)
-		want := TreeNode2{
+		have := proposallineage.CalculateTree("feature-a", lineage)
+		want := proposallineage.TreeNode2{
 			Branch: "main",
-			Children: []TreeNode2{
+			Children: []proposallineage.TreeNode2{
 				{
 					Branch: "feature-a",
-					Children: []TreeNode2{
+					Children: []proposallineage.TreeNode2{
 						{
 							Branch: "feature-b1",
-							Children: []TreeNode2{
+							Children: []proposallineage.TreeNode2{
 								{
 									Branch:   "feature-b1a",
-									Children: []TreeNode2{},
+									Children: []proposallineage.TreeNode2{},
 								},
 								{
 									Branch:   "feature-b1b",
-									Children: []TreeNode2{},
+									Children: []proposallineage.TreeNode2{},
 								},
 							},
 						},
 						{
 							Branch: "feature-b2",
-							Children: []TreeNode2{
+							Children: []proposallineage.TreeNode2{
 								{
 									Branch:   "feature-b2a",
-									Children: []TreeNode2{},
+									Children: []proposallineage.TreeNode2{},
 								},
 								{
 									Branch:   "feature-b2b",
-									Children: []TreeNode2{},
+									Children: []proposallineage.TreeNode2{},
 								},
 							},
 						},
@@ -93,22 +94,22 @@ func TestNewTree2(t *testing.T) {
 			"feature-c": "feature-b",
 			"feature-d": "feature-c",
 		})
-		have := CalculateTree("feature-a", lineage)
-		want := TreeNode2{
+		have := proposallineage.CalculateTree("feature-a", lineage)
+		want := proposallineage.TreeNode2{
 			Branch: "main",
-			Children: []TreeNode2{
+			Children: []proposallineage.TreeNode2{
 				{
 					Branch: "feature-a",
-					Children: []TreeNode2{
+					Children: []proposallineage.TreeNode2{
 						{
 							Branch: "feature-b",
-							Children: []TreeNode2{
+							Children: []proposallineage.TreeNode2{
 								{
 									Branch: "feature-c",
-									Children: []TreeNode2{
+									Children: []proposallineage.TreeNode2{
 										{
 											Branch:   "feature-d",
-											Children: []TreeNode2{},
+											Children: []proposallineage.TreeNode2{},
 										},
 									},
 								},
@@ -129,16 +130,16 @@ func TestNewTree2(t *testing.T) {
 			"feature-b":  "main",
 			"feature-b1": "feature-b",
 		})
-		have := CalculateTree("feature-a", lineage)
-		want := TreeNode2{
+		have := proposallineage.CalculateTree("feature-a", lineage)
+		want := proposallineage.TreeNode2{
 			Branch: "main",
-			Children: []TreeNode2{
+			Children: []proposallineage.TreeNode2{
 				{
 					Branch: "feature-a",
-					Children: []TreeNode2{
+					Children: []proposallineage.TreeNode2{
 						{
 							Branch:   "feature-a1",
-							Children: []TreeNode2{},
+							Children: []proposallineage.TreeNode2{},
 						},
 					},
 				},
@@ -150,10 +151,10 @@ func TestNewTree2(t *testing.T) {
 	t.Run("stand-alone perennial branch", func(t *testing.T) {
 		t.Parallel()
 		lineage := configdomain.NewLineage()
-		have := CalculateTree("main", lineage)
-		want := TreeNode2{
+		have := proposallineage.CalculateTree("main", lineage)
+		want := proposallineage.TreeNode2{
 			Branch:   "main",
-			Children: []TreeNode2{},
+			Children: []proposallineage.TreeNode2{},
 		}
 		must.Eq(t, want, have)
 	})
