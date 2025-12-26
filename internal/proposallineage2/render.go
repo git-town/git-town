@@ -15,8 +15,7 @@ func Render(tree TreeNodeWithProposal, currentBranch gitdomain.LocalBranchName) 
 }
 
 func renderNode(builder *strings.Builder, node TreeNodeWithProposal, currentBranch gitdomain.LocalBranchName, depth int, foundCurrent bool) {
-	branchOrAncestorHasProposal := determineBranchOrAncestorHasProposal(node)
-	if branchOrAncestorHasProposal || !foundCurrent {
+	if node.BranchOrAncestorHasProposal() || !foundCurrent {
 		builder.WriteString(strings.Repeat(" ", depth*2))
 		builder.WriteString("- ")
 		if proposal, hasProposal := node.Proposal.Get(); hasProposal {
@@ -34,16 +33,4 @@ func renderNode(builder *strings.Builder, node TreeNodeWithProposal, currentBran
 	for _, child := range node.Children {
 		renderNode(builder, child, currentBranch, depth+1, foundCurrent)
 	}
-}
-
-func determineBranchOrAncestorHasProposal(node TreeNodeWithProposal) bool {
-	if node.Proposal.IsSome() {
-		return true
-	}
-	for _, child := range node.Children {
-		if determineBranchOrAncestorHasProposal(child) {
-			return true
-		}
-	}
-	return false
 }

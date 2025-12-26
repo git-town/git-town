@@ -12,6 +12,18 @@ type TreeNodeWithProposal struct {
 	Proposal Option[forgedomain.Proposal]
 }
 
+func (self TreeNodeWithProposal) BranchOrAncestorHasProposal() bool {
+	if self.Proposal.IsSome() {
+		return true
+	}
+	for _, child := range self.Children {
+		if child.BranchOrAncestorHasProposal() {
+			return true
+		}
+	}
+	return false
+}
+
 func AddProposalsToTree(tree TreeNode, proposalFinder Option[forgedomain.ProposalFinder]) TreeNodeWithProposal {
 	return addProposalsToTreeHelper(tree, None[gitdomain.LocalBranchName](), proposalFinder)
 }
