@@ -194,7 +194,6 @@ Start:
 					MainAndPerennialBranches: data.config.MainAndPerennials(),
 					Order:                    data.config.NormalConfig.Order,
 				},
-				ProposalStackLineageTree:             None[*proposallineage.Tree](),
 				SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(),
 			},
 		)
