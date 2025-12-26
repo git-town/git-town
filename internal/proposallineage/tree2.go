@@ -22,16 +22,15 @@ func CalculateTree(branch gitdomain.LocalBranchName, lineage configdomain.Lineag
 
 // builds a tree2 from the given root that contains only the given relevant branches
 func buildTree2(branch gitdomain.LocalBranchName, lineage configdomain.Lineage, includeBranches gitdomain.LocalBranchNames) TreeNode2 {
-	node := TreeNode2{
-		Branch:   branch,
-		Children: []TreeNode2{},
-	}
+	children := []TreeNode2{}
 	for _, child := range lineage.Children(branch, configdomain.OrderAsc) {
 		if includeBranches.Contains(child) {
 			childNode := buildTree2(child, lineage, includeBranches)
-			node.Children = append(node.Children, childNode)
+			children = append(children, childNode)
 		}
 	}
-
-	return node
+	return TreeNode2{
+		Branch:   branch,
+		Children: children,
+	}
 }
