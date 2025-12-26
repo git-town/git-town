@@ -183,6 +183,31 @@ func TestAddProposalsToTree(t *testing.T) {
 func TestBranchOrAncestorHasProposal(t *testing.T) {
 	t.Parallel()
 
+	t.Run("multiple children, one has proposal", func(t *testing.T) {
+		t.Parallel()
+		node := proposallineage2.TreeNodeWithProposal{
+			Branch: "main",
+			Children: []proposallineage2.TreeNodeWithProposal{
+				{
+					Branch:   "feature-a",
+					Children: []proposallineage2.TreeNodeWithProposal{},
+					Proposal: None[forgedomain.Proposal](),
+				},
+				{
+					Branch:   "feature-b",
+					Children: []proposallineage2.TreeNodeWithProposal{},
+					Proposal: Some(forgedomain.Proposal{
+						Data: forgedomain.ProposalData{
+							Title: "proposal for feature-b",
+						},
+					}),
+				},
+			},
+			Proposal: None[forgedomain.Proposal](),
+		}
+		must.True(t, node.BranchOrAncestorHasProposal())
+	})
+
 	t.Run("node has no proposal and children have no proposals", func(t *testing.T) {
 		t.Parallel()
 		node := proposallineage2.TreeNodeWithProposal{
@@ -212,31 +237,6 @@ func TestBranchOrAncestorHasProposal(t *testing.T) {
 			Proposal: None[forgedomain.Proposal](),
 		}
 		must.False(t, node.BranchOrAncestorHasProposal())
-	})
-
-	t.Run("multiple children, one has proposal", func(t *testing.T) {
-		t.Parallel()
-		node := proposallineage2.TreeNodeWithProposal{
-			Branch: "main",
-			Children: []proposallineage2.TreeNodeWithProposal{
-				{
-					Branch:   "feature-a",
-					Children: []proposallineage2.TreeNodeWithProposal{},
-					Proposal: None[forgedomain.Proposal](),
-				},
-				{
-					Branch:   "feature-b",
-					Children: []proposallineage2.TreeNodeWithProposal{},
-					Proposal: Some(forgedomain.Proposal{
-						Data: forgedomain.ProposalData{
-							Title: "proposal for feature-b",
-						},
-					}),
-				},
-			},
-			Proposal: None[forgedomain.Proposal](),
-		}
-		must.True(t, node.BranchOrAncestorHasProposal())
 	})
 
 	t.Run("node has no proposal but direct child has proposal", func(t *testing.T) {

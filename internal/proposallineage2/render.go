@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 )
 
-const SPACES_PER_INDENT = 2
+const spacesPerIndent = 2
 
 func Render(tree TreeNodeWithProposal, currentBranch gitdomain.LocalBranchName) string {
 	var builder strings.Builder
@@ -18,7 +18,7 @@ func Render(tree TreeNodeWithProposal, currentBranch gitdomain.LocalBranchName) 
 
 func renderNode(builder *strings.Builder, node TreeNodeWithProposal, currentBranch gitdomain.LocalBranchName, depth int, foundCurrent bool) {
 	if node.BranchOrAncestorHasProposal() || !foundCurrent {
-		builder.WriteString(strings.Repeat(" ", depth*SPACES_PER_INDENT))
+		builder.WriteString(strings.Repeat(" ", depth*spacesPerIndent))
 		builder.WriteString("- ")
 		if proposal, hasProposal := node.Proposal.Get(); hasProposal {
 			builder.WriteString(proposal.Data.Data().URL)
