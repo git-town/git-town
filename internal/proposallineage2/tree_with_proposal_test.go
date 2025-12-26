@@ -30,13 +30,6 @@ func (self *testFinder2) FindProposal(source, target gitdomain.LocalBranchName) 
 	}), nil
 }
 
-// a Connector double that simulates connection errors
-type failingFinder2 struct{}
-
-func (self *failingFinder2) FindProposal(branch, _ gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
-	return None[forgedomain.Proposal](), fmt.Errorf("simulated error finding proposal for %s", branch)
-}
-
 func TestAddProposalsToTree(t *testing.T) {
 	t.Parallel()
 
