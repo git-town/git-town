@@ -130,7 +130,58 @@ func TestCalculateTree(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("stand-alone perennial branch", func(t *testing.T) {
+	t.Run("order descending", func(t *testing.T) {
+		t.Parallel()
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			"feature-a":   "main",
+			"feature-b1":  "feature-a",
+			"feature-b1a": "feature-b1",
+			"feature-b1b": "feature-b1",
+			"feature-b2":  "feature-a",
+			"feature-b2a": "feature-b2",
+			"feature-b2b": "feature-b2",
+		})
+		have := proposallineage.CalculateTree("feature-a", lineage, configdomain.OrderDesc)
+		want := proposallineage.TreeNode2{
+			Branch: "main",
+			Children: []proposallineage.TreeNode2{
+				{
+					Branch: "feature-a",
+					Children: []proposallineage.TreeNode2{
+						{
+							Branch: "feature-b2",
+							Children: []proposallineage.TreeNode2{
+								{
+									Branch:   "feature-b2b",
+									Children: []proposallineage.TreeNode2{},
+								},
+								{
+									Branch:   "feature-b2a",
+									Children: []proposallineage.TreeNode2{},
+								},
+							},
+						},
+						{
+							Branch: "feature-b1",
+							Children: []proposallineage.TreeNode2{
+								{
+									Branch:   "feature-b1b",
+									Children: []proposallineage.TreeNode2{},
+								},
+								{
+									Branch:   "feature-b1a",
+									Children: []proposallineage.TreeNode2{},
+								},
+							},
+						},
+					},
+				},
+			},
+		}
+		must.Eq(t, want, have)
+	})
+
+	t.Run("perennial branch", func(t *testing.T) {
 		t.Parallel()
 		lineage := configdomain.NewLineage()
 		have := proposallineage.CalculateTree("main", lineage, configdomain.OrderAsc)
