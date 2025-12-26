@@ -140,8 +140,10 @@ func findProposal(
 	proposalFinder Option[forgedomain.ProposalFinder],
 ) Option[forgedomain.Proposal] {
 	if finder, hasFinder := proposalFinder.Get(); hasFinder {
-		proposal, _ := finder.FindProposal(sourceBranch, targetBranch)
-		return proposal
+		proposal, err := finder.FindProposal(sourceBranch, targetBranch)
+		if err == nil {
+			return proposal
+		}
 	}
 	return None[forgedomain.Proposal]()
 }
