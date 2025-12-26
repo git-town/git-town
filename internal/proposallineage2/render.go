@@ -15,6 +15,9 @@ func Render(tree TreeNodeWithProposal, currentBranch gitdomain.LocalBranchName) 
 }
 
 func renderNode(builder *strings.Builder, node TreeNodeWithProposal, currentBranch gitdomain.LocalBranchName, depth int, foundCurrent bool) {
+	if foundCurrent && node.Proposal.IsNone() {
+		return
+	}
 	builder.WriteString(strings.Repeat(" ", depth*2))
 	builder.WriteString("- ")
 	if proposal, hasProposal := node.Proposal.Get(); hasProposal {
@@ -28,18 +31,7 @@ func renderNode(builder *strings.Builder, node TreeNodeWithProposal, currentBran
 		foundCurrent = true
 	}
 	builder.WriteString("\n")
-	if foundCurrent {
-		// After finding current, only render children with proposals
-		if isCurrentBranch {
-			for _, child := range node.Children {
-				if child.Proposal.IsSome() {
-					renderNode(builder, child, currentBranch, depth+1, foundCurrent)
-				}
-			}
-		}
-	} else {
-		for _, child := range node.Children {
-			renderNode(builder, child, currentBranch, depth+1, foundCurrent)
-		}
+	for _, child := range node.Children {
+		renderNode(builder, child, currentBranch, depth+1, foundCurrent)
 	}
 }
