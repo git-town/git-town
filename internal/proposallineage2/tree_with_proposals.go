@@ -15,6 +15,7 @@ type TreeNodeWithProposal struct {
 func AddProposalsToTree(tree TreeNode, proposalFinder Option[forgedomain.ProposalFinder]) TreeNodeWithProposal {
 	return TreeNodeWithProposal{
 		Branch:   tree.Branch,
+		Children: []TreeNodeWithProposal{},
 		Proposal: Option[forgedomain.Proposal]{},
 	}
 }
