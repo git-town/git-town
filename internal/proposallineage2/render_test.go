@@ -16,19 +16,17 @@ import (
 
 // a double that implements the forgedomain.ProposalFinder interface
 type testFinder struct {
-	requests []gitdomain.ProposalTitle
+	count int
 }
 
 func (self *testFinder) FindProposal(source, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	if strings.Contains(source.String(), "no-proposal") {
 		return None[forgedomain.Proposal](), nil
 	}
-	title := gitdomain.ProposalTitle(fmt.Sprintf("proposal from %s to %s", source, target))
-	self.requests = append(self.requests, title)
+	self.count++
 	return Some(forgedomain.Proposal{
 		Data: forgedomain.ProposalData{
-			URL:   "https://www.github.com/git-town/git-town/pull/" + strconv.Itoa(len(self.requests)),
-			Title: title,
+			URL: "https://www.github.com/git-town/git-town/pull/" + strconv.Itoa(self.count),
 		},
 	}), nil
 }
