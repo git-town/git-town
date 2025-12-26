@@ -16,26 +16,19 @@ func Render(tree TreeNodeWithProposal, currentBranch gitdomain.LocalBranchName) 
 }
 
 func renderNode(builder *strings.Builder, node TreeNodeWithProposal, currentBranch gitdomain.LocalBranchName, depth int, foundCurrent *bool) {
-	indent := strings.Repeat(" ", depth*2)
-	builder.WriteString(indent)
+	builder.WriteString(strings.Repeat(" ", depth*2))
 	builder.WriteString("- ")
-
-	// Write content (proposal URL or branch name)
 	if proposal, hasProposal := node.Proposal.Get(); hasProposal {
 		builder.WriteString(proposal.Data.Data().URL)
 	} else {
-		builder.WriteString(string(node.Branch))
+		builder.WriteString(node.Branch.String())
 	}
-
-	// Add pointer if this is the current branch (first occurrence only)
 	isCurrentBranch := node.Branch == currentBranch && !*foundCurrent
 	if isCurrentBranch {
 		builder.WriteString(" :point_left:")
 		*foundCurrent = true
 	}
-
 	builder.WriteString("\n")
-
 	// Determine if we should render children
 	if *foundCurrent {
 		// After finding current, only render children with same branch name
