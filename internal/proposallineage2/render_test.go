@@ -12,6 +12,7 @@ import (
 func TestRender(t *testing.T) {
 	t.Parallel()
 	t.Run("all branches have proposals", func(t *testing.T) {
+		t.Parallel()
 		tree := proposallineage2.TreeNodeWithProposal{
 			Branch: "main",
 			Children: []proposallineage2.TreeNodeWithProposal{
@@ -51,6 +52,7 @@ func TestRender(t *testing.T) {
 	})
 
 	t.Run("no proposals", func(t *testing.T) {
+		t.Parallel()
 		tree := proposallineage2.TreeNodeWithProposal{
 			Branch: "main",
 			Children: []proposallineage2.TreeNodeWithProposal{
