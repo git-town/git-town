@@ -418,7 +418,6 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 					Order:                    data.config.NormalConfig.Order,
 				},
 
-				ProposalStackLineageTree:             None[*proposallineage.Tree](),
 				SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(),
 			},
 		)

@@ -1,8 +1,6 @@
 package sync
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks/mapstools"
@@ -17,7 +15,6 @@ type AddStackLineageUpdateOpcodesArgs struct {
 	FullStack                            configdomain.FullStack
 	Program                              Mutable[program.Program]
 	ProposalStackLineageArgs             proposallineage.ProposalStackLineageArgs
-	ProposalStackLineageTree             Option[*proposallineage.Tree]
 	SkipUpdateForProposalsWithBaseBranch gitdomain.LocalBranchNames
 }
 
@@ -29,18 +26,7 @@ func AddStackLineageUpdateOpcodes(args AddStackLineageUpdateOpcodesArgs) Option[
 	// extract an object that caches the already known proposals,
 	// i.e. which branch has which proposal,
 	// and loads missing proposal info on demand.
-	tree, hasTree := args.ProposalStackLineageTree.Get()
-	var err error
-	if hasTree {
-		err = tree.Rebuild(args.ProposalStackLineageArgs)
-	} else {
-		tree, err = proposallineage.NewTree(args.ProposalStackLineageArgs)
-	}
-	if err != nil {
-		fmt.Printf("failed to update proposal stack lineage: %s\n", err.Error())
-		return None[*proposallineage.Tree]()
-	}
-
+	tree := proposallineage.NewTree(args.ProposalStackLineageArgs)
 	if args.FullStack.Enabled() {
 		for branch, proposal := range mapstools.SortedKeyValues(tree.ProposalCache) {
 			if args.SkipUpdateForProposalsWithBaseBranch.Contains(branch) {
