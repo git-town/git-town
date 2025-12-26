@@ -9,35 +9,6 @@ import (
 
 func TestNewTree2(t *testing.T) {
 	t.Parallel()
-	t.Run("stand-alone perennial branch", func(t *testing.T) {
-		t.Parallel()
-		lineage := configdomain.NewLineage()
-		have := CalculateTree("main", lineage)
-		want := TreeNode2{
-			Branch:   "main",
-			Children: []TreeNode2{},
-		}
-		must.Eq(t, want, have)
-	})
-
-	// TODO: delete after code is written
-	t.Run("branch with one ancestor", func(t *testing.T) {
-		t.Parallel()
-		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-			"feature": "main",
-		})
-		have := CalculateTree("feature", lineage)
-		want := TreeNode2{
-			Branch: "main",
-			Children: []TreeNode2{
-				{
-					Branch:   "feature",
-					Children: []TreeNode2{},
-				},
-			},
-		}
-		must.Eq(t, want, have)
-	})
 
 	t.Run("branch with multiple ancestors", func(t *testing.T) {
 		t.Parallel()
@@ -55,66 +26,6 @@ func TestNewTree2(t *testing.T) {
 						{
 							Branch:   "feature-b",
 							Children: []TreeNode2{},
-						},
-					},
-				},
-			},
-		}
-		must.Eq(t, want, have)
-	})
-
-	t.Run("branch with one descendent", func(t *testing.T) {
-		t.Parallel()
-		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-			"feature-a": "main",
-			"feature-b": "feature-a",
-		})
-		have := CalculateTree("feature-a", lineage)
-		want := TreeNode2{
-			Branch: "main",
-			Children: []TreeNode2{
-				{
-					Branch: "feature-a",
-					Children: []TreeNode2{
-						{
-							Branch:   "feature-b",
-							Children: []TreeNode2{},
-						},
-					},
-				},
-			},
-		}
-		must.Eq(t, want, have)
-	})
-
-	t.Run("branch with multiple descendents", func(t *testing.T) {
-		t.Parallel()
-		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-			"feature-a": "main",
-			"feature-b": "feature-a",
-			"feature-c": "feature-b",
-			"feature-d": "feature-c",
-		})
-		have := CalculateTree("feature-a", lineage)
-		want := TreeNode2{
-			Branch: "main",
-			Children: []TreeNode2{
-				{
-					Branch: "feature-a",
-					Children: []TreeNode2{
-						{
-							Branch: "feature-b",
-							Children: []TreeNode2{
-								{
-									Branch: "feature-c",
-									Children: []TreeNode2{
-										{
-											Branch:   "feature-d",
-											Children: []TreeNode2{},
-										},
-									},
-								},
-							},
 						},
 					},
 				},
@@ -174,6 +85,42 @@ func TestNewTree2(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
+	t.Run("branch with multiple descendents", func(t *testing.T) {
+		t.Parallel()
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			"feature-a": "main",
+			"feature-b": "feature-a",
+			"feature-c": "feature-b",
+			"feature-d": "feature-c",
+		})
+		have := CalculateTree("feature-a", lineage)
+		want := TreeNode2{
+			Branch: "main",
+			Children: []TreeNode2{
+				{
+					Branch: "feature-a",
+					Children: []TreeNode2{
+						{
+							Branch: "feature-b",
+							Children: []TreeNode2{
+								{
+									Branch: "feature-c",
+									Children: []TreeNode2{
+										{
+											Branch:   "feature-d",
+											Children: []TreeNode2{},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		}
+		must.Eq(t, want, have)
+	})
+
 	t.Run("ignore independent lineages", func(t *testing.T) {
 		t.Parallel()
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
@@ -196,6 +143,17 @@ func TestNewTree2(t *testing.T) {
 					},
 				},
 			},
+		}
+		must.Eq(t, want, have)
+	})
+
+	t.Run("stand-alone perennial branch", func(t *testing.T) {
+		t.Parallel()
+		lineage := configdomain.NewLineage()
+		have := CalculateTree("main", lineage)
+		want := TreeNode2{
+			Branch:   "main",
+			Children: []TreeNode2{},
 		}
 		must.Eq(t, want, have)
 	})
