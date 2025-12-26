@@ -47,13 +47,30 @@ func TestNewTree(t *testing.T) {
 			"feature-a": "main",
 		})
 		var connector forgedomain.ProposalFinder = &failingFinder{}
-		_, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
+		tree, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            "feature-a",
 			Lineage:                  lineage,
 			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
 		})
-		must.Error(t, err)
+		want := &proposallineage.Tree{
+			ProposalCache: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{
+				"feature-a": None[forgedomain.Proposal](),
+			},
+			Node: &proposallineage.TreeNode{
+				Branch: "main",
+				ChildNodes: []*proposallineage.TreeNode{
+					{
+						Branch:     "feature-a",
+						ChildNodes: []*proposallineage.TreeNode{},
+						Proposal:   None[forgedomain.Proposal](),
+					},
+				},
+				Proposal: None[forgedomain.Proposal](),
+			},
+		}
+		must.NoError(t, err)
+		must.Eq(t, want, tree)
 	})
 
 	t.Run("feature branch", func(t *testing.T) {
@@ -573,7 +590,6 @@ func TestTreeRebuild(t *testing.T) {
 		// build tree for lineage 1
 		lineage1 := configdomain.NewLineageWith(configdomain.LineageData{
 			"feature-a": "main",
-			"feature-b": "feature-a",
 		})
 		connector := testFinder{}
 		var proposalFinder forgedomain.ProposalFinder = &connector
@@ -586,14 +602,12 @@ func TestTreeRebuild(t *testing.T) {
 		must.NoError(t, err)
 		wantRequests := []gitdomain.ProposalTitle{
 			"proposal from feature-a to main",
-			"proposal from feature-b to feature-a",
 		}
 		must.Eq(t, wantRequests, connector.requests)
 		// build tree for lineage 2
 		lineage2 := configdomain.NewLineageWith(configdomain.LineageData{
 			"feature-a": "main",
 			"feature-b": "feature-a",
-			"feature-c": "feature-b",
 		})
 		var errorConnector forgedomain.ProposalFinder = &failingFinder{}
 		err = tree.Rebuild(proposallineage.ProposalStackLineageArgs{
@@ -602,6 +616,30 @@ func TestTreeRebuild(t *testing.T) {
 			Lineage:                  lineage2,
 			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
 		})
-		must.Error(t, err)
+		want := &proposallineage.Tree{
+			ProposalCache: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{
+				"feature-a": None[forgedomain.Proposal](),
+				"feature-b": None[forgedomain.Proposal](),
+			},
+			Node: &proposallineage.TreeNode{
+				Branch: "main",
+				ChildNodes: []*proposallineage.TreeNode{
+					{
+						Branch: "feature-a",
+						ChildNodes: []*proposallineage.TreeNode{
+							{
+								Branch:     "feature-b",
+								ChildNodes: []*proposallineage.TreeNode{},
+								Proposal:   None[forgedomain.Proposal](),
+							},
+						},
+						Proposal: None[forgedomain.Proposal](),
+					},
+				},
+				Proposal: None[forgedomain.Proposal](),
+			},
+		}
+		must.NoError(t, err)
+		must.Eq(t, want, tree)
 	})
 }
