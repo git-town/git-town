@@ -33,7 +33,7 @@ func (self *Tree) Rebuild(args ProposalStackLineageArgs) error {
 
 func (self *Tree) build(args ProposalStackLineageArgs) error {
 	visited := map[gitdomain.LocalBranchName]*TreeNode{}
-	descendants := buildAncestorChain(args, self, visited)
+	descendants := buildAncestorChain(args, self, visited, args.Connector)
 	buildDescendantChain(descendants, args, self, visited)
 	if len(self.Node.ChildNodes) == 0 {
 		return nil
@@ -77,12 +77,13 @@ func buildAncestorChain(
 	args ProposalStackLineageArgs,
 	tree *Tree,
 	visited map[gitdomain.LocalBranchName]*TreeNode,
+	connector Option[forgedomain.ProposalFinder],
 ) gitdomain.LocalBranchNames {
 	ancestors := args.Lineage.Ancestors(args.CurrentBranch)
 	descendants := gitdomain.LocalBranchNames{args.CurrentBranch}
 	previous := tree.Node
 	for _, ancestor := range ancestors {
-		node := createAncestorNode(ancestor, previous, tree)
+		node := createAncestorNode(ancestor, previous, connector)
 		visited[ancestor] = node
 		relevantChildren := findRelevantChildren(ancestor, args, ancestors)
 		for _, child := range relevantChildren {
@@ -112,7 +113,7 @@ type ChildWithProposal struct {
 func createAncestorNode(
 	ancestor gitdomain.LocalBranchName,
 	parent *TreeNode,
-	tree *Tree,
+	connector Option[forgedomain.ProposalFinder],
 ) *TreeNode {
 	node := &TreeNode{
 		Branch:     ancestor,
@@ -120,18 +121,16 @@ func createAncestorNode(
 		Proposal:   None[forgedomain.Proposal](),
 	}
 	parent.ChildNodes = append(parent.ChildNodes, node)
-	if proposal, ok := tree.ProposalCache[ancestor]; ok {
-		node.Proposal = proposal
-	}
+	node.Proposal = findProposal(ancestor, parent.Branch, connector)
 	return node
 }
 
 func findProposal(
 	sourceBranch gitdomain.LocalBranchName,
 	targetBranch gitdomain.LocalBranchName,
-	proposalFinder Option[forgedomain.ProposalFinder],
+	connector Option[forgedomain.ProposalFinder],
 ) Option[forgedomain.Proposal] {
-	if finder, hasFinder := proposalFinder.Get(); hasFinder {
+	if finder, hasFinder := connector.Get(); hasFinder {
 		proposal, err := finder.FindProposal(sourceBranch, targetBranch)
 		if err == nil {
 			return proposal
