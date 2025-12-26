@@ -58,13 +58,6 @@ func (self *Builder) Build(args ProposalStackLineageArgs) string {
 	return builder.String()
 }
 
-// UpdateStack updates the underlying tree representation of the proposal stack. If proposal data was
-// fetched on a previous call to UpdateStack or during ProposalStackLineageBuilder, the underlying
-// data structure fetches that information from a map.
-func (self *Builder) UpdateStack(args ProposalStackLineageArgs) error {
-	return self.tree.Rebuild(args)
-}
-
 func (self *Builder) build(node *TreeNode, args ProposalStackLineageArgs, indentLevel int) string {
 	var result strings.Builder
 	indent := strings.Repeat(" ", indentLevel*2)

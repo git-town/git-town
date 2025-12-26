@@ -30,9 +30,6 @@ func (self *ProposalUpdateLineage) Run(args shared.RunArgs) error {
 	if !hasBuilder {
 		return nil
 	}
-	if err := builder.UpdateStack(lineageArgs); err != nil {
-		return err
-	}
 	args.PrependOpcodes(&ProposalUpdateBody{
 		Proposal:    proposal,
 		UpdatedBody: proposallineage.Add(proposal.Data.Data().Body.GetOrZero(), builder.Build(lineageArgs)),
