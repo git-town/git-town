@@ -491,7 +491,6 @@ func updateProposalLineage(prog *program.Program, newParentOpt Option[gitdomain.
 				MainAndPerennialBranches: data.config.MainAndPerennials(),
 				Order:                    data.config.NormalConfig.Order,
 			},
-			ProposalStackLineageTree:             None[*proposallineage.Tree](),
 			SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(),
 		},
 	)
@@ -519,7 +518,6 @@ func updateProposalLineage(prog *program.Program, newParentOpt Option[gitdomain.
 				MainAndPerennialBranches: data.config.MainAndPerennials(),
 				Order:                    data.config.NormalConfig.Order,
 			},
-			ProposalStackLineageTree: proposalStackTree,
 			// Do not update the same proposal more than once because we updated
 			// it in a previous step
 			SkipUpdateForProposalsWithBaseBranch: branchPropsalsUpdated.Values(),
@@ -542,7 +540,6 @@ func updateProposalLineage(prog *program.Program, newParentOpt Option[gitdomain.
 					MainAndPerennialBranches: data.config.MainAndPerennials(),
 					Order:                    data.config.NormalConfig.Order,
 				},
-				ProposalStackLineageTree: proposalStackTree,
 				// Do not update the same proposal more than once because we updated
 				// it in a previous step
 				SkipUpdateForProposalsWithBaseBranch: branchPropsalsUpdated.Values(),
