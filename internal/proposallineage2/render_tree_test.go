@@ -9,7 +9,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestRender(t *testing.T) {
+func TestRenderTree(t *testing.T) {
 	t.Parallel()
 
 	t.Run("all branches have proposals", func(t *testing.T) {

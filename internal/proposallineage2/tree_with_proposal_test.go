@@ -13,11 +13,11 @@ import (
 )
 
 // a double that implements the forgedomain.ProposalFinder interface
-type testFinder struct {
+type testFinder2 struct {
 	requests []gitdomain.ProposalTitle
 }
 
-func (self *testFinder) FindProposal(source, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self *testFinder2) FindProposal(source, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	if strings.Contains(source.String(), "no-proposal") {
 		return None[forgedomain.Proposal](), nil
 	}
@@ -31,9 +31,9 @@ func (self *testFinder) FindProposal(source, target gitdomain.LocalBranchName) (
 }
 
 // a Connector double that simulates connection errors
-type failingFinder struct{}
+type failingFinder2 struct{}
 
-func (self *failingFinder) FindProposal(branch, _ gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self *failingFinder2) FindProposal(branch, _ gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	return None[forgedomain.Proposal](), fmt.Errorf("simulated error finding proposal for %s", branch)
 }
 
@@ -60,7 +60,7 @@ func TestAddProposalsToTree(t *testing.T) {
 				},
 			},
 		}
-		var connector forgedomain.ProposalFinder = &testFinder{}
+		var connector forgedomain.ProposalFinder = &testFinder2{}
 		have := proposallineage2.AddProposalsToTree(tree, Some(connector))
 		want := proposallineage2.TreeNodeWithProposal{
 			Branch: "main",
@@ -153,7 +153,7 @@ func TestAddProposalsToTree(t *testing.T) {
 				},
 			},
 		}
-		var connector forgedomain.ProposalFinder = &testFinder{}
+		var connector forgedomain.ProposalFinder = &testFinder2{}
 		have := proposallineage2.AddProposalsToTree(tree, Some(connector))
 		want := proposallineage2.TreeNodeWithProposal{
 			Branch: "main",
