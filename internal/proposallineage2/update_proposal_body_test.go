@@ -11,12 +11,14 @@ import (
 func TestUpdateProposalBody(t *testing.T) {
 	t.Parallel()
 
-	t.Run("append to end of empty body", func(t *testing.T) {
+	t.Run("append to end of body without marker", func(t *testing.T) {
 		t.Parallel()
-		body := gitdomain.ProposalBody("")
+		body := gitdomain.ProposalBody("Proposal body text")
 		lineageSection := "main\n  - feat-a\n    - feat-b"
 		have := proposallineage2.UpdateProposalBody(body, lineageSection)
 		want := gitdomain.ProposalBody(`
+Proposal body text
+
 <!-- branch-stack-start -->
 main
   - feat-a
@@ -26,14 +28,12 @@ main
 		must.EqOp(t, want, have)
 	})
 
-	t.Run("append to end of body without marker", func(t *testing.T) {
+	t.Run("append to end of empty body", func(t *testing.T) {
 		t.Parallel()
-		body := gitdomain.ProposalBody("Proposal body text")
+		body := gitdomain.ProposalBody("")
 		lineageSection := "main\n  - feat-a\n    - feat-b"
 		have := proposallineage2.UpdateProposalBody(body, lineageSection)
 		want := gitdomain.ProposalBody(`
-Proposal body text
-
 <!-- branch-stack-start -->
 main
   - feat-a
