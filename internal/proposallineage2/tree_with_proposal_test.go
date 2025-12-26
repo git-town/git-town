@@ -98,6 +98,44 @@ func TestAddProposalsToTree(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
+	t.Run("connector returns errors", func(t *testing.T) {
+		t.Parallel()
+		tree := TreeNode{
+			Branch: "main",
+			Children: []TreeNode{
+				{
+					Branch: "feature-a",
+					Children: []TreeNode{
+						{
+							Branch:   "feature-a1",
+							Children: []TreeNode{},
+						},
+					},
+				},
+			},
+		}
+		var connector forgedomain.ProposalFinder = &failingFinder{}
+		have := AddProposalsToTree(tree, Some(connector))
+		want := TreeNodeWithProposal{
+			Branch: "main",
+			Children: []TreeNodeWithProposal{
+				{
+					Branch: "no-proposal-a",
+					Children: []TreeNodeWithProposal{
+						{
+							Branch:   "feature-a1",
+							Children: []TreeNodeWithProposal{},
+							Proposal: None[forgedomain.Proposal](),
+						},
+					},
+					Proposal: None[forgedomain.Proposal](),
+				},
+			},
+			Proposal: None[forgedomain.Proposal](),
+		}
+		must.Eq(t, want, have)
+	})
+
 	t.Run("some branches have proposals", func(t *testing.T) {
 		t.Parallel()
 		tree := TreeNode{
@@ -130,44 +168,6 @@ func TestAddProposalsToTree(t *testing.T) {
 									Title: "proposal from feature-a1 to feature-a",
 								},
 							}),
-						},
-					},
-					Proposal: None[forgedomain.Proposal](),
-				},
-			},
-			Proposal: None[forgedomain.Proposal](),
-		}
-		must.Eq(t, want, have)
-	})
-
-	t.Run("connector returns errors", func(t *testing.T) {
-		t.Parallel()
-		tree := TreeNode{
-			Branch: "main",
-			Children: []TreeNode{
-				{
-					Branch: "feature-a",
-					Children: []TreeNode{
-						{
-							Branch:   "feature-a1",
-							Children: []TreeNode{},
-						},
-					},
-				},
-			},
-		}
-		var connector forgedomain.ProposalFinder = &failingFinder{}
-		have := AddProposalsToTree(tree, Some(connector))
-		want := TreeNodeWithProposal{
-			Branch: "main",
-			Children: []TreeNodeWithProposal{
-				{
-					Branch: "no-proposal-a",
-					Children: []TreeNodeWithProposal{
-						{
-							Branch:   "feature-a1",
-							Children: []TreeNodeWithProposal{},
-							Proposal: None[forgedomain.Proposal](),
 						},
 					},
 					Proposal: None[forgedomain.Proposal](),
