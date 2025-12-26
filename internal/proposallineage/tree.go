@@ -10,7 +10,7 @@ type Tree struct {
 	Node *TreeNode
 }
 
-func NewTree(args ProposalStackLineageArgs) (*Tree, error) {
+func NewTree(args ProposalStackLineageArgs) *Tree {
 	tree := &Tree{
 		Node: &TreeNode{
 			Branch:     "",
@@ -18,28 +18,18 @@ func NewTree(args ProposalStackLineageArgs) (*Tree, error) {
 			Proposal:   None[forgedomain.Proposal](),
 		},
 	}
-	err := tree.build(args)
-	return tree, err
+	tree.build(args)
+	return tree
 }
 
-func (self *Tree) Rebuild(args ProposalStackLineageArgs) error {
-	self.Node = &TreeNode{
-		Branch:     "",
-		ChildNodes: []*TreeNode{},
-		Proposal:   None[forgedomain.Proposal](),
-	}
-	return self.build(args)
-}
-
-func (self *Tree) build(args ProposalStackLineageArgs) error {
+func (self *Tree) build(args ProposalStackLineageArgs) {
 	visited := map[gitdomain.LocalBranchName]*TreeNode{}
 	descendants := buildAncestorChain(args, self, visited, args.Connector)
 	buildDescendantChain(descendants, args, self, visited)
 	if len(self.Node.ChildNodes) == 0 {
-		return nil
+		return
 	}
 	self.Node = self.Node.ChildNodes[0]
-	return nil
 }
 
 type TreeNode struct {

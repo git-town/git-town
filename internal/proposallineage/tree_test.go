@@ -47,7 +47,7 @@ func TestNewTree(t *testing.T) {
 			"feature-a": "main",
 		})
 		var connector forgedomain.ProposalFinder = &failingFinder{}
-		tree, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
+		tree := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            "feature-a",
 			Lineage:                  lineage,
@@ -66,7 +66,6 @@ func TestNewTree(t *testing.T) {
 				Proposal: None[forgedomain.Proposal](),
 			},
 		}
-		must.NoError(t, err)
 		must.Eq(t, want, tree)
 	})
 
@@ -76,7 +75,7 @@ func TestNewTree(t *testing.T) {
 			"feature-a": "main",
 		})
 		var connector forgedomain.ProposalFinder = &testFinder{}
-		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
+		have := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            "feature-a",
 			Lineage:                  lineage,
@@ -99,7 +98,6 @@ func TestNewTree(t *testing.T) {
 				Proposal: None[forgedomain.Proposal](),
 			},
 		}
-		must.NoError(t, err)
 		must.Eq(t, want, have)
 	})
 
@@ -112,7 +110,7 @@ func TestNewTree(t *testing.T) {
 			"feature-d": "feature-c",
 		})
 		var connector forgedomain.ProposalFinder = &testFinder{}
-		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
+		have := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            "feature-a",
 			Lineage:                  lineage,
@@ -165,7 +163,6 @@ func TestNewTree(t *testing.T) {
 				Proposal: None[forgedomain.Proposal](),
 			},
 		}
-		must.NoError(t, err)
 		must.Eq(t, want, have)
 	})
 
@@ -178,7 +175,7 @@ func TestNewTree(t *testing.T) {
 		})
 		connector := testFinder{}
 		var proposalFinder forgedomain.ProposalFinder = &connector
-		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
+		have := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(proposalFinder),
 			CurrentBranch:            "feature-a",
 			Lineage:                  lineage,
@@ -220,7 +217,6 @@ func TestNewTree(t *testing.T) {
 				Proposal: None[forgedomain.Proposal](),
 			},
 		}
-		must.NoError(t, err)
 		must.Eq(t, want, have)
 		wantRequests := []gitdomain.ProposalTitle{
 			"proposal from feature-a to main",
@@ -239,7 +235,7 @@ func TestNewTree(t *testing.T) {
 			"feature-d": "feature-a",
 		})
 		var connector forgedomain.ProposalFinder = &testFinder{}
-		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
+		have := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            "feature-d",
 			Lineage:                  lineage,
@@ -290,7 +286,6 @@ func TestNewTree(t *testing.T) {
 				Proposal: None[forgedomain.Proposal](),
 			},
 		}
-		must.NoError(t, err)
 		must.Eq(t, want, have)
 	})
 
@@ -300,7 +295,7 @@ func TestNewTree(t *testing.T) {
 			"feature-a": "main",
 			"feature-b": "feature-a",
 		})
-		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
+		have := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
 			Connector:                None[forgedomain.ProposalFinder](),
 			CurrentBranch:            "feature-a",
 			Lineage:                  lineage,
@@ -325,7 +320,6 @@ func TestNewTree(t *testing.T) {
 				Proposal: None[forgedomain.Proposal](),
 			},
 		}
-		must.NoError(t, err)
 		must.Eq(t, want, have)
 	})
 
@@ -336,7 +330,7 @@ func TestNewTree(t *testing.T) {
 			"feature-b": "feature-a",
 		})
 		var connector forgedomain.ProposalFinder = &testFinder{}
-		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
+		have := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            "main",
 			Lineage:                  lineage,
@@ -349,7 +343,6 @@ func TestNewTree(t *testing.T) {
 				Proposal:   None[forgedomain.Proposal](),
 			},
 		}
-		must.NoError(t, err)
 		must.Eq(t, want, have)
 	})
 
@@ -362,7 +355,7 @@ func TestNewTree(t *testing.T) {
 			"feature-B2": "feature-B1",
 		})
 		var connector forgedomain.ProposalFinder = &testFinder{}
-		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
+		have := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            "feature-A1",
 			Lineage:                  lineage,
@@ -395,7 +388,6 @@ func TestNewTree(t *testing.T) {
 				Proposal: None[forgedomain.Proposal](),
 			},
 		}
-		must.NoError(t, err)
 		must.Eq(t, want, have)
 	})
 
@@ -406,7 +398,7 @@ func TestNewTree(t *testing.T) {
 			"no-proposal-b": "feature-a",
 		})
 		var connector forgedomain.ProposalFinder = &testFinder{}
-		have, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
+		have := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
 			Connector:                Some(connector),
 			CurrentBranch:            "feature-a",
 			Lineage:                  lineage,
@@ -435,111 +427,6 @@ func TestNewTree(t *testing.T) {
 				Proposal: None[forgedomain.Proposal](),
 			},
 		}
-		must.NoError(t, err)
 		must.Eq(t, want, have)
-	})
-}
-
-func TestTreeRebuild(t *testing.T) {
-	t.Parallel()
-
-	t.Run("builds a new tree using the cached proposals", func(t *testing.T) {
-		t.Parallel()
-		// build tree for lineage 1
-		lineage1 := configdomain.NewLineageWith(configdomain.LineageData{
-			"feature-a": "main",
-			"feature-b": "feature-a",
-		})
-		connector := testFinder{}
-		var proposalFinder forgedomain.ProposalFinder = &connector
-		tree, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
-			Connector:                Some(proposalFinder),
-			CurrentBranch:            "feature-a",
-			Lineage:                  lineage1,
-			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
-		})
-		must.NoError(t, err)
-		wantRequests := []gitdomain.ProposalTitle{
-			"proposal from feature-a to main",
-			"proposal from feature-b to feature-a",
-		}
-		must.Eq(t, wantRequests, connector.requests)
-		// build tree for lineage 2
-		lineage2 := configdomain.NewLineageWith(configdomain.LineageData{
-			"feature-a": "main",
-			"feature-b": "feature-a",
-			"feature-c": "feature-b",
-		})
-		connector = testFinder{}
-		proposalFinder = &connector
-		err = tree.Rebuild(proposallineage.ProposalStackLineageArgs{
-			Connector:                Some(proposalFinder),
-			CurrentBranch:            "feature-b",
-			Lineage:                  lineage2,
-			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
-		})
-		must.NoError(t, err)
-		must.NotNil(t, tree.Node)
-		// TODO: Make it not look up the proposals for feature-a and feature-b again. They should be cached internally.
-		wantRequests = []gitdomain.ProposalTitle{
-			"proposal from feature-a to main",
-			"proposal from feature-b to feature-a",
-			"proposal from feature-c to feature-b",
-		}
-		must.Eq(t, wantRequests, connector.requests)
-	})
-
-	t.Run("error during rebuild", func(t *testing.T) {
-		t.Parallel()
-		// build tree for lineage 1
-		lineage1 := configdomain.NewLineageWith(configdomain.LineageData{
-			"feature-a": "main",
-		})
-		connector := testFinder{}
-		var proposalFinder forgedomain.ProposalFinder = &connector
-		tree, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
-			Connector:                Some(proposalFinder),
-			CurrentBranch:            "feature-a",
-			Lineage:                  lineage1,
-			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
-		})
-		must.NoError(t, err)
-		wantRequests := []gitdomain.ProposalTitle{
-			"proposal from feature-a to main",
-		}
-		must.Eq(t, wantRequests, connector.requests)
-		// build tree for lineage 2
-		lineage2 := configdomain.NewLineageWith(configdomain.LineageData{
-			"feature-a": "main",
-			"feature-b": "feature-a",
-		})
-		var errorConnector forgedomain.ProposalFinder = &failingFinder{}
-		err = tree.Rebuild(proposallineage.ProposalStackLineageArgs{
-			Connector:                Some(errorConnector),
-			CurrentBranch:            "feature-b",
-			Lineage:                  lineage2,
-			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
-		})
-		want := &proposallineage.Tree{
-			Node: &proposallineage.TreeNode{
-				Branch: "main",
-				ChildNodes: []*proposallineage.TreeNode{
-					{
-						Branch: "feature-a",
-						ChildNodes: []*proposallineage.TreeNode{
-							{
-								Branch:     "feature-b",
-								ChildNodes: []*proposallineage.TreeNode{},
-								Proposal:   None[forgedomain.Proposal](),
-							},
-						},
-						Proposal: None[forgedomain.Proposal](),
-					},
-				},
-				Proposal: None[forgedomain.Proposal](),
-			},
-		}
-		must.NoError(t, err)
-		must.Eq(t, want, tree)
 	})
 }
