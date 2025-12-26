@@ -21,24 +21,24 @@ func TestCalculateTree(t *testing.T) {
 			"feature-e": "feature-d",
 		})
 		have := proposallineage2.CalculateTree("feature-b", lineage, configdomain.OrderAsc)
-		want := proposallineage2.TreeNode2{
+		want := proposallineage2.TreeNode{
 			Branch: "main",
-			Children: []proposallineage2.TreeNode2{
+			Children: []proposallineage2.TreeNode{
 				{
 					Branch: "feature-a",
-					Children: []proposallineage2.TreeNode2{
+					Children: []proposallineage2.TreeNode{
 						{
 							Branch: "feature-b",
-							Children: []proposallineage2.TreeNode2{
+							Children: []proposallineage2.TreeNode{
 								{
 									Branch: "feature-c",
-									Children: []proposallineage2.TreeNode2{
+									Children: []proposallineage2.TreeNode{
 										{
 											Branch: "feature-d",
-											Children: []proposallineage2.TreeNode2{
+											Children: []proposallineage2.TreeNode{
 												{
 													Branch:   "feature-e",
-													Children: []proposallineage2.TreeNode2{},
+													Children: []proposallineage2.TreeNode{},
 												},
 											},
 										},
@@ -65,35 +65,35 @@ func TestCalculateTree(t *testing.T) {
 			"feature-b2b": "feature-b2",
 		})
 		have := proposallineage2.CalculateTree("feature-a", lineage, configdomain.OrderAsc)
-		want := proposallineage2.TreeNode2{
+		want := proposallineage2.TreeNode{
 			Branch: "main",
-			Children: []proposallineage2.TreeNode2{
+			Children: []proposallineage2.TreeNode{
 				{
 					Branch: "feature-a",
-					Children: []proposallineage2.TreeNode2{
+					Children: []proposallineage2.TreeNode{
 						{
 							Branch: "feature-b1",
-							Children: []proposallineage2.TreeNode2{
+							Children: []proposallineage2.TreeNode{
 								{
 									Branch:   "feature-b1a",
-									Children: []proposallineage2.TreeNode2{},
+									Children: []proposallineage2.TreeNode{},
 								},
 								{
 									Branch:   "feature-b1b",
-									Children: []proposallineage2.TreeNode2{},
+									Children: []proposallineage2.TreeNode{},
 								},
 							},
 						},
 						{
 							Branch: "feature-b2",
-							Children: []proposallineage2.TreeNode2{
+							Children: []proposallineage2.TreeNode{
 								{
 									Branch:   "feature-b2a",
-									Children: []proposallineage2.TreeNode2{},
+									Children: []proposallineage2.TreeNode{},
 								},
 								{
 									Branch:   "feature-b2b",
-									Children: []proposallineage2.TreeNode2{},
+									Children: []proposallineage2.TreeNode{},
 								},
 							},
 						},
@@ -113,15 +113,15 @@ func TestCalculateTree(t *testing.T) {
 			"feature-b1": "feature-b",
 		})
 		have := proposallineage2.CalculateTree("feature-a", lineage, configdomain.OrderAsc)
-		want := proposallineage2.TreeNode2{
+		want := proposallineage2.TreeNode{
 			Branch: "main",
-			Children: []proposallineage2.TreeNode2{
+			Children: []proposallineage2.TreeNode{
 				{
 					Branch: "feature-a",
-					Children: []proposallineage2.TreeNode2{
+					Children: []proposallineage2.TreeNode{
 						{
 							Branch:   "feature-a1",
-							Children: []proposallineage2.TreeNode2{},
+							Children: []proposallineage2.TreeNode{},
 						},
 					},
 				},
@@ -142,35 +142,35 @@ func TestCalculateTree(t *testing.T) {
 			"feature-b2b": "feature-b2",
 		})
 		have := proposallineage2.CalculateTree("feature-a", lineage, configdomain.OrderDesc)
-		want := proposallineage2.TreeNode2{
+		want := proposallineage2.TreeNode{
 			Branch: "main",
-			Children: []proposallineage2.TreeNode2{
+			Children: []proposallineage2.TreeNode{
 				{
 					Branch: "feature-a",
-					Children: []proposallineage2.TreeNode2{
+					Children: []proposallineage2.TreeNode{
 						{
 							Branch: "feature-b2",
-							Children: []proposallineage2.TreeNode2{
+							Children: []proposallineage2.TreeNode{
 								{
 									Branch:   "feature-b2b",
-									Children: []proposallineage2.TreeNode2{},
+									Children: []proposallineage2.TreeNode{},
 								},
 								{
 									Branch:   "feature-b2a",
-									Children: []proposallineage2.TreeNode2{},
+									Children: []proposallineage2.TreeNode{},
 								},
 							},
 						},
 						{
 							Branch: "feature-b1",
-							Children: []proposallineage2.TreeNode2{
+							Children: []proposallineage2.TreeNode{
 								{
 									Branch:   "feature-b1b",
-									Children: []proposallineage2.TreeNode2{},
+									Children: []proposallineage2.TreeNode{},
 								},
 								{
 									Branch:   "feature-b1a",
-									Children: []proposallineage2.TreeNode2{},
+									Children: []proposallineage2.TreeNode{},
 								},
 							},
 						},
@@ -185,9 +185,9 @@ func TestCalculateTree(t *testing.T) {
 		t.Parallel()
 		lineage := configdomain.NewLineage()
 		have := proposallineage2.CalculateTree("main", lineage, configdomain.OrderAsc)
-		want := proposallineage2.TreeNode2{
+		want := proposallineage2.TreeNode{
 			Branch:   "main",
-			Children: []proposallineage2.TreeNode2{},
+			Children: []proposallineage2.TreeNode{},
 		}
 		must.Eq(t, want, have)
 	})
