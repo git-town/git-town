@@ -1,4 +1,4 @@
-package proposallineage
+package proposallineage2
 
 import (
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
