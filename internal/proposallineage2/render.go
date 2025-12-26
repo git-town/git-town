@@ -28,19 +28,16 @@ func renderNode(builder *strings.Builder, node TreeNodeWithProposal, currentBran
 		foundCurrent = true
 	}
 	builder.WriteString("\n")
-	// Determine if we should render children
 	if foundCurrent {
 		// After finding current, only render children with proposals
 		if isCurrentBranch {
 			for _, child := range node.Children {
-				if _, hasProposal := child.Proposal.Get(); hasProposal {
+				if child.Proposal.IsSome() {
 					renderNode(builder, child, currentBranch, depth+1, foundCurrent)
 				}
 			}
 		}
-		// Don't render anything else after finding current
 	} else {
-		// Before finding current, render all children
 		for _, child := range node.Children {
 			renderNode(builder, child, currentBranch, depth+1, foundCurrent)
 		}
