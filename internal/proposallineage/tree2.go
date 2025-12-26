@@ -13,14 +13,14 @@ type TreeNode2 struct {
 // CalculateTree provides the full lineage tree for the given branch,
 // from the perennial root to all leafs that have the given branch as a descendent.
 func CalculateTree(branch gitdomain.LocalBranchName, lineage configdomain.Lineage) TreeNode2 {
-	root := lineage.Root(branch)
 	ancestorsAndBranch := lineage.BranchAndAncestors(branch)
+	root := ancestorsAndBranch[0]
 	descendants := lineage.Descendants(branch, configdomain.OrderAsc)
 	relevantBranches := append(ancestorsAndBranch, descendants...)
 	return buildTree2(root, lineage, relevantBranches)
 }
 
-// builds a tree2 from the given root that contains only the given relevant branches
+// buildTree2 provides the Tree2 for the given branch and all its descendents.
 func buildTree2(branch gitdomain.LocalBranchName, lineage configdomain.Lineage, includeBranches gitdomain.LocalBranchNames) TreeNode2 {
 	children := []TreeNode2{}
 	for _, child := range lineage.Children(branch, configdomain.OrderAsc) {
