@@ -12,7 +12,7 @@ func TestNewTree2(t *testing.T) {
 	t.Run("stand-alone perennial branch", func(t *testing.T) {
 		t.Parallel()
 		lineage := configdomain.NewLineage()
-		have := NewTree2("main", lineage)
+		have := CalculateTree("main", lineage)
 		want := TreeNode2{
 			Branch:   "main",
 			Children: []TreeNode2{},
@@ -26,7 +26,7 @@ func TestNewTree2(t *testing.T) {
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 			"feature": "main",
 		})
-		have := NewTree2("feature", lineage)
+		have := CalculateTree("feature", lineage)
 		want := TreeNode2{
 			Branch: "main",
 			Children: []TreeNode2{
@@ -45,7 +45,7 @@ func TestNewTree2(t *testing.T) {
 			"feature-a": "main",
 			"feature-b": "feature-a",
 		})
-		have := NewTree2("feature-b", lineage)
+		have := CalculateTree("feature-b", lineage)
 		want := TreeNode2{
 			Branch: "main",
 			Children: []TreeNode2{
@@ -69,7 +69,7 @@ func TestNewTree2(t *testing.T) {
 			"feature-a": "main",
 			"feature-b": "feature-a",
 		})
-		have := NewTree2("feature-a", lineage)
+		have := CalculateTree("feature-a", lineage)
 		want := TreeNode2{
 			Branch: "main",
 			Children: []TreeNode2{
@@ -95,7 +95,7 @@ func TestNewTree2(t *testing.T) {
 			"feature-c": "feature-b",
 			"feature-d": "feature-c",
 		})
-		have := NewTree2("feature-a", lineage)
+		have := CalculateTree("feature-a", lineage)
 		want := TreeNode2{
 			Branch: "main",
 			Children: []TreeNode2{
@@ -134,7 +134,7 @@ func TestNewTree2(t *testing.T) {
 			"feature-b2a": "feature-b2",
 			"feature-b2b": "feature-b2",
 		})
-		have := NewTree2("feature-a", lineage)
+		have := CalculateTree("feature-a", lineage)
 		want := TreeNode2{
 			Branch: "main",
 			Children: []TreeNode2{
@@ -182,7 +182,7 @@ func TestNewTree2(t *testing.T) {
 			"feature-b":  "main",
 			"feature-b1": "feature-b",
 		})
-		have := NewTree2("feature-a", lineage)
+		have := CalculateTree("feature-a", lineage)
 		want := TreeNode2{
 			Branch: "main",
 			Children: []TreeNode2{
