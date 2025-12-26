@@ -11,11 +11,14 @@ import (
 func TestCalculateTree(t *testing.T) {
 	t.Parallel()
 
-	t.Run("branch with multiple ancestors", func(t *testing.T) {
+	t.Run("branch in a long lineage", func(t *testing.T) {
 		t.Parallel()
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 			"feature-a": "main",
 			"feature-b": "feature-a",
+			"feature-c": "feature-b",
+			"feature-d": "feature-c",
+			"feature-e": "feature-d",
 		})
 		have := proposallineage.CalculateTree("feature-b", lineage, configdomain.OrderAsc)
 		want := proposallineage.TreeNode2{
@@ -25,8 +28,23 @@ func TestCalculateTree(t *testing.T) {
 					Branch: "feature-a",
 					Children: []proposallineage.TreeNode2{
 						{
-							Branch:   "feature-b",
-							Children: []proposallineage.TreeNode2{},
+							Branch: "feature-b",
+							Children: []proposallineage.TreeNode2{
+								{
+									Branch: "feature-c",
+									Children: []proposallineage.TreeNode2{
+										{
+											Branch: "feature-d",
+											Children: []proposallineage.TreeNode2{
+												{
+													Branch:   "feature-e",
+													Children: []proposallineage.TreeNode2{},
+												},
+											},
+										},
+									},
+								},
+							},
 						},
 					},
 				},
@@ -76,42 +94,6 @@ func TestCalculateTree(t *testing.T) {
 								{
 									Branch:   "feature-b2b",
 									Children: []proposallineage.TreeNode2{},
-								},
-							},
-						},
-					},
-				},
-			},
-		}
-		must.Eq(t, want, have)
-	})
-
-	t.Run("branch with multiple descendents", func(t *testing.T) {
-		t.Parallel()
-		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-			"feature-a": "main",
-			"feature-b": "feature-a",
-			"feature-c": "feature-b",
-			"feature-d": "feature-c",
-		})
-		have := proposallineage.CalculateTree("feature-a", lineage, configdomain.OrderAsc)
-		want := proposallineage.TreeNode2{
-			Branch: "main",
-			Children: []proposallineage.TreeNode2{
-				{
-					Branch: "feature-a",
-					Children: []proposallineage.TreeNode2{
-						{
-							Branch: "feature-b",
-							Children: []proposallineage.TreeNode2{
-								{
-									Branch: "feature-c",
-									Children: []proposallineage.TreeNode2{
-										{
-											Branch:   "feature-d",
-											Children: []proposallineage.TreeNode2{},
-										},
-									},
 								},
 							},
 						},
