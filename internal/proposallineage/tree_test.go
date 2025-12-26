@@ -54,9 +54,6 @@ func TestNewTree(t *testing.T) {
 			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
 		})
 		want := &proposallineage.Tree{
-			ProposalCache: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{
-				"feature-a": None[forgedomain.Proposal](),
-			},
 			Node: &proposallineage.TreeNode{
 				Branch: "main",
 				ChildNodes: []*proposallineage.TreeNode{
@@ -86,13 +83,6 @@ func TestNewTree(t *testing.T) {
 			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
 		})
 		want := &proposallineage.Tree{
-			ProposalCache: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{
-				"feature-a": Some(forgedomain.Proposal{
-					Data: forgedomain.ProposalData{
-						Title: "proposal from feature-a to main",
-					},
-				}),
-			},
 			Node: &proposallineage.TreeNode{
 				Branch: "main",
 				ChildNodes: []*proposallineage.TreeNode{
@@ -129,28 +119,6 @@ func TestNewTree(t *testing.T) {
 			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
 		})
 		want := &proposallineage.Tree{
-			ProposalCache: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{
-				"feature-a": Some(forgedomain.Proposal{
-					Data: forgedomain.ProposalData{
-						Title: "proposal from feature-a to main",
-					},
-				}),
-				"feature-b": Some(forgedomain.Proposal{
-					Data: forgedomain.ProposalData{
-						Title: "proposal from feature-b to feature-a",
-					},
-				}),
-				"feature-c": Some(forgedomain.Proposal{
-					Data: forgedomain.ProposalData{
-						Title: "proposal from feature-c to feature-b",
-					},
-				}),
-				"feature-d": Some(forgedomain.Proposal{
-					Data: forgedomain.ProposalData{
-						Title: "proposal from feature-d to feature-c",
-					},
-				}),
-			},
 			Node: &proposallineage.TreeNode{
 				Branch: "main",
 				ChildNodes: []*proposallineage.TreeNode{
@@ -217,23 +185,6 @@ func TestNewTree(t *testing.T) {
 			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
 		})
 		want := &proposallineage.Tree{
-			ProposalCache: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{
-				"feature-a": Some(forgedomain.Proposal{
-					Data: forgedomain.ProposalData{
-						Title: "proposal from feature-a to main",
-					},
-				}),
-				"feature-b": Some(forgedomain.Proposal{
-					Data: forgedomain.ProposalData{
-						Title: "proposal from feature-b to feature-a",
-					},
-				}),
-				"feature-c": Some(forgedomain.Proposal{
-					Data: forgedomain.ProposalData{
-						Title: "proposal from feature-c to feature-a",
-					},
-				}),
-			},
 			Node: &proposallineage.TreeNode{
 				Branch: "main",
 				ChildNodes: []*proposallineage.TreeNode{
@@ -295,28 +246,6 @@ func TestNewTree(t *testing.T) {
 			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
 		})
 		want := &proposallineage.Tree{
-			ProposalCache: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{
-				"feature-a": Some(forgedomain.Proposal{
-					Data: forgedomain.ProposalData{
-						Title: "proposal from feature-a to main",
-					},
-				}),
-				"feature-b": Some(forgedomain.Proposal{
-					Data: forgedomain.ProposalData{
-						Title: "proposal from feature-b to feature-a",
-					},
-				}),
-				"feature-c": Some(forgedomain.Proposal{
-					Data: forgedomain.ProposalData{
-						Title: "proposal from feature-c to feature-a",
-					},
-				}),
-				"feature-d": Some(forgedomain.Proposal{
-					Data: forgedomain.ProposalData{
-						Title: "proposal from feature-d to feature-a",
-					},
-				}),
-			},
 			Node: &proposallineage.TreeNode{
 				Branch: "main",
 				ChildNodes: []*proposallineage.TreeNode{
@@ -378,10 +307,6 @@ func TestNewTree(t *testing.T) {
 			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
 		})
 		want := &proposallineage.Tree{
-			ProposalCache: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{
-				"feature-a": None[forgedomain.Proposal](),
-				"feature-b": None[forgedomain.Proposal](),
-			},
 			Node: &proposallineage.TreeNode{
 				Branch: "main",
 				ChildNodes: []*proposallineage.TreeNode{
@@ -418,7 +343,6 @@ func TestNewTree(t *testing.T) {
 			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
 		})
 		want := &proposallineage.Tree{
-			ProposalCache: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{},
 			Node: &proposallineage.TreeNode{
 				Branch:     "",
 				ChildNodes: []*proposallineage.TreeNode{},
@@ -445,18 +369,6 @@ func TestNewTree(t *testing.T) {
 			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
 		})
 		want := &proposallineage.Tree{
-			ProposalCache: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{
-				"feature-A1": Some(forgedomain.Proposal{
-					Data: forgedomain.ProposalData{
-						Title: "proposal from feature-A1 to main",
-					},
-				}),
-				"feature-A2": Some(forgedomain.Proposal{
-					Data: forgedomain.ProposalData{
-						Title: "proposal from feature-A2 to feature-A1",
-					},
-				}),
-			},
 			Node: &proposallineage.TreeNode{
 				Branch: "main",
 				ChildNodes: []*proposallineage.TreeNode{
@@ -501,14 +413,6 @@ func TestNewTree(t *testing.T) {
 			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
 		})
 		want := &proposallineage.Tree{
-			ProposalCache: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{
-				"feature-a": Some(forgedomain.Proposal{
-					Data: forgedomain.ProposalData{
-						Title: "proposal from feature-a to main",
-					},
-				}),
-				"no-proposal-b": None[forgedomain.Proposal](),
-			},
 			Node: &proposallineage.TreeNode{
 				Branch: "main",
 				ChildNodes: []*proposallineage.TreeNode{
@@ -617,10 +521,6 @@ func TestTreeRebuild(t *testing.T) {
 			MainAndPerennialBranches: gitdomain.LocalBranchNames{"main"},
 		})
 		want := &proposallineage.Tree{
-			ProposalCache: map[gitdomain.LocalBranchName]Option[forgedomain.Proposal]{
-				"feature-a": None[forgedomain.Proposal](),
-				"feature-b": None[forgedomain.Proposal](),
-			},
 			Node: &proposallineage.TreeNode{
 				Branch: "main",
 				ChildNodes: []*proposallineage.TreeNode{
