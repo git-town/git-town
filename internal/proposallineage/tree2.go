@@ -12,20 +12,20 @@ type TreeNode2 struct {
 
 // CalculateTree provides the full lineage tree for the given branch,
 // from the perennial root to all leafs that have the given branch as a descendent.
-func CalculateTree(branch gitdomain.LocalBranchName, lineage configdomain.Lineage) TreeNode2 {
+func CalculateTree(branch gitdomain.LocalBranchName, lineage configdomain.Lineage, order configdomain.Order) TreeNode2 {
 	ancestorsAndBranch := lineage.BranchAndAncestors(branch)
 	root := ancestorsAndBranch[0]
-	descendants := lineage.Descendants(branch, configdomain.OrderAsc)
+	descendants := lineage.Descendants(branch, order)
 	relevantBranches := append(ancestorsAndBranch, descendants...)
-	return buildTree2(root, lineage, relevantBranches)
+	return buildTree2(root, lineage, relevantBranches, order)
 }
 
 // buildTree2 provides the Tree2 for the given branch and all its descendents.
-func buildTree2(branch gitdomain.LocalBranchName, lineage configdomain.Lineage, includeBranches gitdomain.LocalBranchNames) TreeNode2 {
+func buildTree2(branch gitdomain.LocalBranchName, lineage configdomain.Lineage, includeBranches gitdomain.LocalBranchNames, order configdomain.Order) TreeNode2 {
 	children := []TreeNode2{}
-	for _, child := range lineage.Children(branch, configdomain.OrderAsc) {
+	for _, child := range lineage.Children(branch, order) {
 		if includeBranches.Contains(child) {
-			childNode := buildTree2(child, lineage, includeBranches)
+			childNode := buildTree2(child, lineage, includeBranches, order)
 			children = append(children, childNode)
 		}
 	}
