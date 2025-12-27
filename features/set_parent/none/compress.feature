@@ -34,7 +34,7 @@ Feature: make a branch perennial using the compress sync strategy
       """
       branch-2
         branch-3
-      
+
       main
         branch-1
       """

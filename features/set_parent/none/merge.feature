@@ -34,7 +34,7 @@ Feature: remove a branch from a stack
       """
       branch-2
         branch-3
-      
+
       main
         branch-1
       """

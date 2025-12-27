@@ -37,7 +37,7 @@ Feature: remove a branch and all its children from a stack with dependent change
       """
       branch-2
         branch-3
-      
+
       main
         branch-1
       """
