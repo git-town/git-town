@@ -20,7 +20,7 @@ Feature: branch was deleted at the remote
       | other  | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      branch "feature" was deleted at the remote
+      branch feature was deleted at the remote
       """
   #
   # NOTE: Cannot test undo here.

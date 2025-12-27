@@ -6,7 +6,7 @@ Feature: automatically upgrade outdated configuration
     When I run "git-town config"
     Then Git Town prints:
       """
-      Upgrading deprecated <LOCATION> setting "git-town.code-hosting-driver" to "git-town.forge-type".
+      Upgrading deprecated <LOCATION> setting git-town.code-hosting-driver to git-town.forge-type.
       """
     And <LOCATION> Git setting "git-town.forge-type" is now "github"
     And <LOCATION> Git setting "git-town.code-hosting-driver" now doesn't exist

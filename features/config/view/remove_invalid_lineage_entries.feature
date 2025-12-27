@@ -9,6 +9,6 @@ Feature: remove parent entries for perennial branches
     When I run "git-town config"
     Then Git Town prints:
       """
-      removing lineage entry for "feature" because the parent is the child
+      removing lineage entry for feature because the parent is the child
       """
     And no lineage exists now

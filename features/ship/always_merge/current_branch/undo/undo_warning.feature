@@ -16,5 +16,5 @@ Feature: git-town undo prints a warning message for a merge commit
     When I run "git-town undo"
     Then Git Town prints something like:
       """
-      Cannot undo commit ".*" because it is on a perennial branch
+      Cannot undo commit .* because it is on a perennial branch
       """

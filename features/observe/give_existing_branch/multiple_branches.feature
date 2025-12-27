@@ -14,22 +14,22 @@ Feature: observing multiple other branches
     Then Git Town runs no commands
     And Git Town prints:
       """
-      branch "feature" is now an observed branch
+      branch feature is now an observed branch
       """
     And branch "feature" now has type "observed"
     And Git Town prints:
       """
-      branch "contribution" is now an observed branch
+      branch contribution is now an observed branch
       """
     And branch "contribution" now has type "observed"
     And Git Town prints:
       """
-      branch "parked" is now an observed branch
+      branch parked is now an observed branch
       """
     And branch "parked" now has type "observed"
     And Git Town prints:
       """
-      branch "prototype" is now an observed branch
+      branch prototype is now an observed branch
       """
     And branch "prototype" now has type "observed"
 

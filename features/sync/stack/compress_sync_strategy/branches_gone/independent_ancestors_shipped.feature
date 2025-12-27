@@ -35,11 +35,11 @@ Feature: sync a stack that contains shipped parent branches using the "compress"
       |           | git push --force-with-lease                       |
     And Git Town prints:
       """
-      deleted branch "feature-1"
+      deleted branch feature-1
       """
     And Git Town prints:
       """
-      deleted branch "feature-2"
+      deleted branch feature-2
       """
     And this lineage exists now
       """

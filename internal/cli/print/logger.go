@@ -36,18 +36,17 @@ func (self Logger) Start(template string, data ...any) {
 		fmt.Print(colors.Bold().Styled(template))
 		return
 	}
-	// Split by any of "%s", "%d", or "%w"
-	re := regexp.MustCompile(`%(?:s|d|w)`)
+	re := regexp.MustCompile(`%(?:s|d|w)`) // Split by any of "%s", "%d", or "%w"
 	parts := re.Split(template, -1)
 	matches := re.FindAllString(template, -1)
 	for i := range data {
 		fmt.Print(colors.Bold().Styled(parts[i]))
-		// Use the matched format specifier, or default to "%s"
-		format := "%s"
-		if i < len(matches) {
-			format = matches[i]
+		format := matches[i]
+		if format == "%s" {
+			fmt.Print(colors.BoldCyan().Styled(fmt.Sprintf(format, data[i])))
+		} else {
+			fmt.Print(colors.Bold().Styled(fmt.Sprintf(format, data[i])))
 		}
-		fmt.Print(colors.BoldCyan().Styled(fmt.Sprintf(format, data[i])))
 	}
 	fmt.Print(colors.Bold().Styled(parts[len(parts)-1]))
 }
