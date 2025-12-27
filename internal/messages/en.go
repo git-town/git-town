@@ -177,7 +177,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	GitVersionMinorNotNumber        = "cannot convert minor version %s to int: %w"
 	GitVersionProblem               = "cannot determine Git version: %w"
 	GitVersionTooLow                = "this app requires Git 2.30 or higher"
-	GitVersionUnexpectedOutput      = "'git version' returned unexpected output: %s.\nPlease open an issue and supply the output of running 'git version'"
+	GitVersionUnexpectedOutput      = "'git version' returned unexpected output: %q.\nPlease open an issue and supply the output of running 'git version'"
 
 	HackBranchIsAlreadyFeature = "branch %s is already a feature branch"
 	HackTooManyArguments       = "please provide only one branch to create"
