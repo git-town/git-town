@@ -40,7 +40,7 @@ Feature: remove a branch and all its children from a stack with independent chan
       |          | git checkout branch-2                                          |
     And Git Town prints:
       """
-      branch "branch-2" is now a child of "main"
+      branch branch-2 is now a child of "main"
       """
     And this lineage exists now
       """

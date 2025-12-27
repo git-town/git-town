@@ -28,7 +28,7 @@ Feature: remove a branch from a stack
     Then Git Town runs no commands
     And Git Town prints:
       """
-      branch "branch-2" is now a child of "main"
+      branch branch-2 is now a child of main
       """
     And this lineage exists now
       """

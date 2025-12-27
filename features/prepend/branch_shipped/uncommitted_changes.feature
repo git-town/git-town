@@ -29,7 +29,7 @@ Feature: prepend a branch to a branch that was shipped at the remote
       """
     And Git Town prints:
       """
-      branch "child" is now a child of "new"
+      branch child is now a child of new
       """
     And this lineage exists now
       """
