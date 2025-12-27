@@ -2,7 +2,7 @@ package print
 
 import (
 	"fmt"
-	"strings"
+	"regexp"
 
 	"github.com/git-town/git-town/v22/pkg/colors"
 )
@@ -36,10 +36,18 @@ func (self Logger) Start(template string, data ...any) {
 		fmt.Print(colors.Bold().Styled(template))
 		return
 	}
-	parts := strings.Split(template, "%s")
+	// Split by any of "%s", "%d", or "%w"
+	re := regexp.MustCompile(`%(?:s|d|w)`)
+	parts := re.Split(template, -1)
+	matches := re.FindAllString(template, -1)
 	for i := range data {
 		fmt.Print(colors.Bold().Styled(parts[i]))
-		fmt.Print(colors.BoldCyan().Styled(fmt.Sprintf("%s", data[i])))
+		// Use the matched format specifier, or default to "%s"
+		format := "%s"
+		if i < len(matches) {
+			format = matches[i]
+		}
+		fmt.Print(colors.BoldCyan().Styled(fmt.Sprintf(format, data[i])))
 	}
 	fmt.Print(colors.Bold().Styled(parts[len(parts)-1]))
 }
