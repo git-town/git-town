@@ -62,7 +62,7 @@ const (
 	CommandsRun                        = "Ran %d shell commands."
 	CommitMessageProblem               = "cannot determine last commit message: %w"
 	CommitsSelected                    = "%d commits selected"
-	CompletionTypeUnknown              = "unknown completion type: %s"
+	CompletionTypeUnknown              = "unknown completion type: %q"
 	CompressAlreadyOneCommit           = "branch %s has already just one commit"
 	CompressBranchNoParent             = "cannot compress branch %s because it has no parent"
 	CompressContributionBranch         = "you are merely contributing to branch %s and should leave compressing it to the branch owner"
