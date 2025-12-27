@@ -28,13 +28,13 @@ Feature: make a branch perennial using the compress sync strategy
     Then Git Town runs no commands
     And Git Town prints:
       """
-      branch "branch-2" is now perennial
+      branch branch-2 is now perennial
       """
     And this lineage exists now
       """
       branch-2
         branch-3
-
+      
       main
         branch-1
       """

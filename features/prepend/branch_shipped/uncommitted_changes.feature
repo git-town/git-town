@@ -25,7 +25,7 @@ Feature: prepend a branch to a branch that was shipped at the remote
       |        | git restore --staged .      |
     And Git Town prints:
       """
-      branch "new" is now a child of "parent"
+      branch new is now a child of parent
       """
     And Git Town prints:
       """

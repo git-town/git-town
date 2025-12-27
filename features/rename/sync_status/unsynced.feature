@@ -30,5 +30,5 @@ Feature: rename an unsynced branch
       | old    | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      branch "old" is not in sync with its parent, please run "git town sync" and try again
+      branch old is not in sync with its parent, please run "git town sync" and try again
       """

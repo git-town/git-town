@@ -49,11 +49,11 @@ Feature: shipped branch with multiple descendents
       """
     And Git Town prints:
       """
-      branch "feature-1a" is now a child of "main"
+      branch feature-1a is now a child of main
       """
     And Git Town prints:
       """
-      branch "feature-1b" is now a child of "main"
+      branch feature-1b is now a child of "main"
       """
     And this lineage exists now
       """
