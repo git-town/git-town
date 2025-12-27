@@ -41,7 +41,7 @@ Feature: shipped branch with multiple descendents
       |            | git push --tags                                   |
     And Git Town prints:
       """
-      deleted branch "feature-1"
+      deleted branch feature-1
       """
     And Git Town prints:
       """

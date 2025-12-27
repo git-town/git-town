@@ -26,7 +26,7 @@ Feature: prepend a branch to a branch that was shipped at the remote
       |          | git checkout -b new main                                   |
     And Git Town prints:
       """
-      deleted branch "branch-1"
+      deleted branch branch-1
       """
     And Git Town prints:
       """

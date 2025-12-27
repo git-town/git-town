@@ -31,11 +31,11 @@ Feature: multiple shipped branches
       |           | git push --tags                                   |
     And Git Town prints:
       """
-      deleted branch "feature-1"
+      deleted branch feature-1
       """
     And Git Town prints:
       """
-      deleted branch "feature-2"
+      deleted branch feature-2
       """
     And this lineage exists now
       """
