@@ -2,6 +2,7 @@ package print
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/git-town/git-town/v22/pkg/colors"
 )
@@ -30,12 +31,17 @@ func (self Logger) Ok() {
 }
 
 func (self Logger) Start(template string, data ...any) {
-	cyanData := make([]any, len(data))
-	for i, d := range data {
-		cyanData[i] = colors.Cyan().Styled(fmt.Sprintf("%s", d))
-	}
 	fmt.Println()
-	fmt.Print(colors.Bold().Styled(fmt.Sprintf(template, cyanData...)))
+	if len(data) == 0 {
+		fmt.Print(colors.Bold().Styled(template))
+		return
+	}
+	parts := strings.Split(template, "%s")
+	for i, part := range parts {
+		fmt.Print(colors.Bold().Styled(part))
+		fmt.Print(colors.BoldCyan().Styled(fmt.Sprintf("%s", data[i])))
+	}
+	fmt.Print(colors.Bold().Styled(parts[len(parts)-1]))
 }
 
 func (self Logger) Success(message string) {
