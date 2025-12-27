@@ -11,7 +11,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/cli/flags"
 	"github.com/git-town/git-town/v22/internal/cli/print"
 	"github.com/git-town/git-town/v22/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v22/internal/cmd/sync"
 	"github.com/git-town/git-town/v22/internal/config"
 	"github.com/git-town/git-town/v22/internal/config/cliconfig"
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
@@ -182,7 +181,7 @@ Start:
 		runProgram.Value.Add(&opcodes.PushTags{})
 	}
 	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
-		sync.AddSyncProposalsProgram(sync.AddSyncProposalsProgramArgs{
+		AddSyncProposalsProgram(AddSyncProposalsProgramArgs{
 			ChangedBranches: gitdomain.LocalBranchNames{data.initialBranch},
 			Config:          data.config,
 			Program:         runProgram,
