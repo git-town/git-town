@@ -6,24 +6,17 @@ import (
 	"github.com/git-town/git-town/v22/internal/vm/opcodes"
 	"github.com/git-town/git-town/v22/internal/vm/program"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
-	"github.com/git-town/git-town/v22/pkg/set"
 )
 
-type AddOpcodesToUpdateProposalStackArgs struct {
+type AddSyncProposalsProgramArgs struct {
 	ChangedBranches gitdomain.LocalBranchNames // all branches that were modified in the current command
 	Config          config.ValidatedConfig
 	Program         Mutable[program.Program]
 }
 
-func AddOpcodesToUpdateProposalStack(args AddOpcodesToUpdateProposalStackArgs) {
-	affectedBranches := set.New[gitdomain.LocalBranchName]()
-	for _, branch := range args.ChangedBranches {
-		branchLineage := args.Config.NormalConfig.Lineage.BranchLineageWithoutRoot(branch, args.Config.NormalConfig.PerennialBranches, args.Config.NormalConfig.Order)
-		affectedBranches.Add(branchLineage...)
-	}
-	for _, branch := range affectedBranches.Values() {
-		args.Program.Value.Add(&opcodes.ProposalUpdateLineage{
-			Branch: branch,
-		})
+func AddSyncProposalsProgram(args AddSyncProposalsProgramArgs) {
+	affectedBranches := args.Config.NormalConfig.Lineage.Clan(args.ChangedBranches, args.Config.MainAndPerennials(), args.Config.NormalConfig.Order)
+	for _, branch := range affectedBranches {
+		args.Program.Value.Add(&opcodes.ProposalUpdateLineage{Branch: branch})
 	}
 }

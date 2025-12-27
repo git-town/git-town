@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/gohacks/mapstools"
 	"github.com/git-town/git-town/v22/internal/gohacks/slice"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
+	"github.com/git-town/git-town/v22/pkg/set"
 )
 
 // Lineage encapsulates all data and functionality around parent branches.
@@ -125,6 +126,15 @@ func (self Lineage) Children(branch gitdomain.LocalBranchName, order Order) gitd
 		slice.NaturalSortReverse(result)
 	}
 	return result
+}
+
+// Clan provides all branches that are related to the given branches, including all ancestors and descendents.
+func (self Lineage) Clan(branches gitdomain.LocalBranchNames, perennialBranches gitdomain.LocalBranchNames, order Order) gitdomain.LocalBranchNames {
+	result := set.New[gitdomain.LocalBranchName]()
+	for _, branch := range branches {
+		result.Add(self.BranchLineageWithoutRoot(branch, perennialBranches, order)...)
+	}
+	return result.Values()
 }
 
 // Descendants provides all branches that depend on the given branch in its lineage.

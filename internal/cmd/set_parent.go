@@ -479,7 +479,7 @@ func updateProposalLineage(prog *program.Program, newParentOpt Option[gitdomain.
 		return
 	}
 
-	proposalStackTree := sync.AddOpcodesToUpdateProposalStack(sync.AddOpcodesToUpdateProposalStackArgs{
+	proposalStackTree := sync.AddSyncProposalsProgram(sync.AddSyncProposalsProgramArgs{
 		Current:   data.initialBranch,
 		FullStack: true,
 		Program:   NewMutable(prog),
@@ -504,7 +504,7 @@ func updateProposalLineage(prog *program.Program, newParentOpt Option[gitdomain.
 
 	// If we are moving to a parent that is part of a completely different stack,
 	// update the lineage of all members of this other stack
-	_ = sync.AddOpcodesToUpdateProposalStack(sync.AddOpcodesToUpdateProposalStackArgs{
+	_ = sync.AddSyncProposalsProgram(sync.AddSyncProposalsProgramArgs{
 		Current:   data.initialBranch,
 		FullStack: true,
 		Program:   NewMutable(prog),
@@ -524,7 +524,7 @@ func updateProposalLineage(prog *program.Program, newParentOpt Option[gitdomain.
 	if hasNewParent {
 		// If we are moving to a parent that is part of a completely different stack,
 		// update the lineage of all members of this other stack
-		_ = sync.AddOpcodesToUpdateProposalStack(sync.AddOpcodesToUpdateProposalStackArgs{
+		_ = sync.AddSyncProposalsProgram(sync.AddSyncProposalsProgramArgs{
 			Current:   data.initialBranch,
 			FullStack: true,
 			Program:   NewMutable(prog),

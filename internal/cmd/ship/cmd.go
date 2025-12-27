@@ -183,8 +183,8 @@ Start:
 		shipProgramSquashMerge(prog, repo, sharedData, squashMergeData, message)
 	}
 	if sharedData.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
-		_ = sync.AddOpcodesToUpdateProposalStack(
-			sync.AddOpcodesToUpdateProposalStackArgs{
+		_ = sync.AddSyncProposalsProgram(
+			sync.AddSyncProposalsProgramArgs{
 				Current:   sharedData.initialBranch,
 				FullStack: true,
 				Program:   prog,

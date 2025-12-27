@@ -182,8 +182,8 @@ Start:
 		runProgram.Value.Add(&opcodes.PushTags{})
 	}
 	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
-		_ = AddOpcodesToUpdateProposalStack(
-			AddOpcodesToUpdateProposalStackArgs{
+		_ = AddSyncProposalsProgram(
+			AddSyncProposalsProgramArgs{
 				Current:   data.initialBranch,
 				FullStack: args.stack,
 				Program:   runProgram,

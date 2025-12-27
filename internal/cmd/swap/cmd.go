@@ -405,8 +405,8 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 		})
 	}
 	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
-		_ = sync.AddOpcodesToUpdateProposalStack(
-			sync.AddOpcodesToUpdateProposalStackArgs{
+		_ = sync.AddSyncProposalsProgram(
+			sync.AddSyncProposalsProgramArgs{
 				Current:   data.initialBranch,
 				FullStack: true,
 				Program:   prog,

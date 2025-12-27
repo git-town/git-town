@@ -355,7 +355,7 @@ func deleteFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data d
 	}
 	deleteLocalBranch(prog, finalUndoProgram, data)
 	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
-		sync.AddOpcodesToUpdateProposalStack(sync.AddOpcodesToUpdateProposalStackArgs{
+		sync.AddSyncProposalsProgram(sync.AddSyncProposalsProgramArgs{
 			ChangedBranches: gitdomain.LocalBranchNames{data.branchToDeleteInfo.GetLocalOrRemoteNameAsLocalName()},
 			Config:          data.config,
 			Program:         prog,
