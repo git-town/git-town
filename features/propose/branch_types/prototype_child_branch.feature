@@ -25,6 +25,6 @@ Feature: Create proposals for prototype branches
       |           | open https://github.com/git-town/git-town/compare/parent...prototype?expand=1 |
     And Git Town prints:
       """
-      branch "prototype" is no longer a prototype branch
+      branch prototype is no longer a prototype branch
       """
     And branch "prototype" now has type "feature"

@@ -12,7 +12,7 @@ Feature: parking the current feature branch
     Then Git Town runs no commands
     And Git Town prints:
       """
-      branch "feature" is now parked
+      branch feature is now parked
       """
     And branch "feature" now has type "parked"
 

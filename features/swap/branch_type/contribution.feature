@@ -15,7 +15,7 @@ Feature: swapping a contribution branch
       | current | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot swap: branch "current" is a contribution branch
+      cannot swap: branch current is a contribution branch
       """
 
   Scenario: undo

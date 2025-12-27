@@ -27,7 +27,7 @@ Feature: detaching a branch that contains merge commits
       | branch-2 | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      branch "branch-2" contains merge commits, please compress and try again
+      branch branch-2 contains merge commits, please compress and try again
       """
   #
   # NOTE: Cannot test undo here.

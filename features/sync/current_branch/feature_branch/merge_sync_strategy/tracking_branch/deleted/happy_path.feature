@@ -25,7 +25,7 @@ Feature: sync a branch whose tracking branch was shipped
       |           | git checkout feature-2                            |
     And Git Town prints:
       """
-      deleted branch "feature-1"
+      deleted branch feature-1
       """
     And the previous Git branch is now "main"
     And this lineage exists now

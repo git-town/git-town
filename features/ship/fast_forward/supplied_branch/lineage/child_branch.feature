@@ -23,7 +23,7 @@ Feature: does not ship a child branch using the fast-forward strategy
     And Git Town prints the error:
       """
       shipping this branch would ship "alpha" and "beta" as well,
-      please ship "alpha" first
+      please ship alpha first
       """
     And the initial lineage exists now
     And the initial commits exist now

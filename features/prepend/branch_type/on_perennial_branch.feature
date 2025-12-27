@@ -10,7 +10,7 @@ Feature: does not prepend perennial branches
       | main   | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      the branch "main" is not a feature branch. Only feature branches can have parent branches
+      the branch main is not a feature branch. Only feature branches can have parent branches
       """
 
   Scenario: on perennial branch
@@ -24,5 +24,5 @@ Feature: does not prepend perennial branches
       | production | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      the branch "production" is not a feature branch. Only feature branches can have parent branches
+      the branch production is not a feature branch. Only feature branches can have parent branches
       """

@@ -11,7 +11,7 @@ Feature: already existing local branch
     Then Git Town runs no commands
     And Git Town prints:
       """
-      branch "existing" is already a feature branch
+      branch existing is already a feature branch
       """
     And the initial branches and lineage exist now
 

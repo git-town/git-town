@@ -15,7 +15,7 @@ Feature: does not merge branches whose parent is perennial
       | current | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot merge branch "current" because its parent branch (main) has no parent
+      cannot merge branch current because its parent branch main has no parent
       """
   #
   # NOTE: Cannot test undo here.

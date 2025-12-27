@@ -14,7 +14,7 @@ Feature: does not compress empty branches
       | feature | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      branch "feature" has no commits
+      branch feature has no commits
       """
     And the initial branches and lineage exist now
   #

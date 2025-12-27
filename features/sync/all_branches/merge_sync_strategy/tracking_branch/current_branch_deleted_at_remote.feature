@@ -22,7 +22,7 @@ Feature: sync a branch whose tracking branch was shipped
       |         | git push --tags                                   |
     And Git Town prints:
       """
-      deleted branch "feature"
+      deleted branch feature
       """
     And no lineage exists now
     And the branches are now

@@ -15,7 +15,7 @@ Feature: park another remote branch
       |        | git checkout remote-feature |
     And Git Town prints:
       """
-      branch "remote-feature" is now parked
+      branch remote-feature is now parked
       """
     And branch "remote-feature" now has type "parked"
 

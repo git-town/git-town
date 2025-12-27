@@ -19,7 +19,7 @@ Feature: compressing a branch when its parent received additional commits
       | feature | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      branch "feature" is not in sync with its parent, please run "git town sync" and try again
+      branch feature is not in sync with its parent, please run "git town sync" and try again
       """
     And the initial branches and lineage exist now
     And the initial commits exist now

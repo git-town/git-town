@@ -21,7 +21,7 @@ Feature: sync perennial branch that was deleted at the remote
       | main      | git push --tags          |
     And Git Town prints:
       """
-      deleted branch "perennial"
+      deleted branch perennial
       """
     And no lineage exists now
     And the branches are now

@@ -11,7 +11,7 @@ Feature: make the current local feature branch an observed branch
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      branch "feature" is local only - branches you want to observe must have a remote branch because they are per definition other people's branches
+      branch feature is local only - branches you want to observe must have a remote branch because they are per definition other people's branches
       """
     And branch "feature" still has type "feature"
   #

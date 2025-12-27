@@ -16,7 +16,7 @@ Feature: remove parent entries for perennial branches
     When I run "git-town sync"
     Then Git Town prints:
       """
-      Removed parent entry for perennial branch "feature-2"
+      Removed parent entry for perennial branch feature-2
       """
     And this lineage exists now
       """

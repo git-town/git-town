@@ -11,7 +11,7 @@ Feature: make another prototype branch a contribution branch
     Then Git Town runs no commands
     And Git Town prints:
       """
-      branch "prototype" is now a contribution branch
+      branch prototype is now a contribution branch
       """
     And branch "prototype" now has type "contribution"
 

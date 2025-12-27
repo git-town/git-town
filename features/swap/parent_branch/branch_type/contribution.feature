@@ -15,7 +15,7 @@ Feature: swapping a branch with its contribution parent
       | current | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot swap: branch "parent" is a contribution branch
+      cannot swap: branch parent is a contribution branch
       """
   #
   # NOTE: Cannot test undo here.

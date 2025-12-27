@@ -20,7 +20,7 @@ Feature: cannot ship a feature branch that is active in another worktree
       | other  | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      branch "feature" is active in another worktree
+      branch feature is active in another worktree
       """
   #
   # NOTE: Cannot test undo here.

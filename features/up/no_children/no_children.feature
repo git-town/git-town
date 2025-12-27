@@ -12,5 +12,5 @@ Feature: switching when the branch has no children
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      branch "alpha" has no children
+      branch alpha has no children
       """

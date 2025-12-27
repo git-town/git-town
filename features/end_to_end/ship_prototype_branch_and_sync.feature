@@ -25,7 +25,7 @@ Feature: end-to-end workflow of creating a prototype branch, shipping, and pruni
       |        | git push --tags                                   |
     And Git Town prints:
       """
-      deleted branch "hooks"
+      deleted branch hooks
       """
     And the branches are now
       | REPOSITORY    | BRANCHES |
