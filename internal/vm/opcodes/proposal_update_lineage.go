@@ -41,9 +41,12 @@ func (self *ProposalUpdateLineage) Run(args shared.RunArgs) error {
 	if !hasProposal {
 		return nil
 	}
+	oldProposalBody := proposal.Data.Data().Body.GetOrZero()
 	lineageSection := proposallineage2.RenderSection(args.Config.Value.NormalConfig.Lineage, self.Branch, args.Config.Value.NormalConfig.Order, args.Connector)
-	updatedProposalBody := proposallineage2.UpdateProposalBody(proposal.Data.Data().Body.GetOrZero(), lineageSection)
-	// TODO: if the new proposal body is the same as the old proposal body, exit here
+	updatedProposalBody := proposallineage2.UpdateProposalBody(oldProposalBody, lineageSection)
+	if updatedProposalBody == oldProposalBody {
+		return nil
+	}
 	err = proposalBodyUpdater.UpdateProposalBody(proposal.Data, updatedProposalBody)
 	if err != nil {
 		args.FinalMessages.Addf(messages.ProposalBodyUpdateProblem, err.Error())
