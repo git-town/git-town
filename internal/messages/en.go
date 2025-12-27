@@ -219,7 +219,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	OpcodeUnknown               = "unknown opcode: %q, run \"git town status reset\" to reset it"
 	OpenChangesProblem          = "cannot determine open changes: %w"
 	Order                       = "Order: %s\n"
-	OrderInvalid                = "invalid order defined in %s: %s"
+	OrderInvalid                = "invalid order defined in %q: %s"
 	OriginHostnamePrompt        = "Origin hostname override: "
 	OriginHostnameResult        = "Origin hostname: %s\n"
 
