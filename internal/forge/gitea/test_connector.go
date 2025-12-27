@@ -22,7 +22,7 @@ type TestConnector struct {
 }
 
 func (self TestConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
-	self.log.Start(messages.APIProposalFindStart)
+	self.log.Start(messages.APIProposalFindStart, branch, target)
 	self.log.Ok()
 	if self.override == forgedomain.OverrideNoProposal {
 		return None[forgedomain.Proposal](), nil

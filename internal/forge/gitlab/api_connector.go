@@ -34,7 +34,7 @@ type APIConnector struct {
 var _ forgedomain.ProposalFinder = apiConnector
 
 func (self APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
-	self.log.Start(messages.APIProposalFindStart)
+	self.log.Start(messages.APIProposalFindStart, branch, target)
 	opts := &gitlab.ListProjectMergeRequestsOptions{
 		State:        gitlab.Ptr("opened"),
 		SourceBranch: gitlab.Ptr(branch.String()),
