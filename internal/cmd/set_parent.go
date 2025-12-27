@@ -469,7 +469,11 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 	}
 
 	// Update proposal lineage for both cases (removing parent or setting new parent)
-	updateProposalLineage(&prog, newParentOpt, data)
+	sync.AddSyncProposalsProgram(sync.AddSyncProposalsProgramArgs{
+		ChangedBranches: gitdomain.LocalBranchNames{data.branchToDeleteInfo.GetLocalOrRemoteNameAsLocalName()},
+		Config:          data.config,
+		Program:         prog,
+	})
 	return optimizer.Optimize(prog), false
 }
 
