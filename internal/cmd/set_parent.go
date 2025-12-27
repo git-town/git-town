@@ -360,6 +360,7 @@ func verifySetParentData(data setParentData) error {
 func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setParentData) (prog program.Program, exit dialogdomain.Exit) {
 	proposal, hasProposal := data.proposal.Get()
 	// update lineage
+	oldParent, hasOldParent := data.config.NormalConfig.Lineage.Parent(data.initialBranch).Get()
 	newParent, hasNewParent := newParentOpt.Get()
 	if !hasNewParent {
 		prog.Add(&opcodes.BranchTypeOverrideSet{Branch: data.initialBranch, BranchType: configdomain.BranchTypePerennialBranch})
@@ -380,7 +381,6 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 		case configdomain.SyncFeatureStrategyMerge:
 			// don't update commits when using the "merge" sync strategy
 		case configdomain.SyncFeatureStrategyCompress, configdomain.SyncFeatureStrategyRebase:
-			parent, hasParent := data.config.NormalConfig.Lineage.Parent(data.initialBranch).Get()
 			switch data.config.BranchType(data.initialBranch) {
 			case
 				configdomain.BranchTypeContributionBranch,
@@ -400,11 +400,11 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 					)
 				}
 				// remove the old parent's changes from the moved branch
-				if hasParent {
+				if hasOldParent {
 					prog.Add(
 						&opcodes.RebaseOnto{
 							BranchToRebaseOnto: newParent.BranchName(),
-							CommitsToRemove:    parent.Location(),
+							CommitsToRemove:    oldParent.Location(),
 						},
 					)
 				} else {
@@ -421,7 +421,7 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 				}
 			}
 			// remove the old parent's changes from the descendents of the moved branch
-			if hasParent {
+			if hasOldParent {
 				descendents := data.config.NormalConfig.Lineage.Descendants(data.initialBranch, data.config.NormalConfig.Order)
 				for _, descendent := range descendents {
 					switch data.config.BranchType(descendent) {
@@ -449,7 +449,7 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 						prog.Add(
 							&opcodes.RebaseOnto{
 								BranchToRebaseOnto: data.initialBranch.BranchName(),
-								CommitsToRemove:    parent.Location(),
+								CommitsToRemove:    oldParent.Location(),
 							},
 						)
 						if hasDescendentBranchInfo && descendentBranchInfo.HasTrackingBranch() {
