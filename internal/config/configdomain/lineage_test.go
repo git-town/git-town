@@ -332,8 +332,7 @@ func TestLineage(t *testing.T) {
 				one: main,
 			})
 			have := lineage.Clan(gitdomain.LocalBranchNames{}, gitdomain.LocalBranchNames{main})
-			want := gitdomain.LocalBranchNames{}
-			must.Eq(t, want, have)
+			must.Nil(t, have)
 		})
 		t.Run("branch with no lineage", func(t *testing.T) {
 			t.Parallel()
@@ -346,8 +345,7 @@ func TestLineage(t *testing.T) {
 			t.Parallel()
 			lineage := configdomain.NewLineage()
 			have := lineage.Clan(gitdomain.LocalBranchNames{main}, gitdomain.LocalBranchNames{main})
-			want := gitdomain.LocalBranchNames{}
-			must.Eq(t, want, have)
+			must.Nil(t, have)
 		})
 		t.Run("deep lineage with descendants", func(t *testing.T) {
 			t.Parallel()
