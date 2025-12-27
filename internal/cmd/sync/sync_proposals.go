@@ -33,15 +33,15 @@ func AddStackLineageUpdateOpcodes(args AddStackLineageUpdateOpcodesArgs) Option[
 				continue
 			}
 			args.Program.Value.Add(&opcodes.ProposalUpdateLineage{
-				Current:         branch,
-				CurrentProposal: proposal,
+				Branch:         branch,
+				Proposal: proposal,
 				LineageTree:     MutableSome(tree),
 			})
 		}
 	} else if !args.SkipUpdateForProposalsWithBaseBranch.Contains(args.Current) {
 		args.Program.Value.Add(&opcodes.ProposalUpdateLineage{
-			Current:         args.Current,
-			CurrentProposal: tree.ProposalCache[args.Current],
+			Branch:         args.Current,
+			Proposal: tree.ProposalCache[args.Current],
 			LineageTree:     MutableSome(tree),
 		})
 	}

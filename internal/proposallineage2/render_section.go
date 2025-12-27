@@ -7,7 +7,7 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-func Render(lineage configdomain.Lineage, currentBranch gitdomain.LocalBranchName, order configdomain.Order, connector Option[forgedomain.ProposalFinder]) string {
+func RenderSection(lineage configdomain.Lineage, currentBranch gitdomain.LocalBranchName, order configdomain.Order, connector Option[forgedomain.Connector]) string {
 	// step 1: calculate the structure of the lineage tree to display
 	tree := CalculateTree(currentBranch, lineage, order)
 

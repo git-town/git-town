@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/proposallineage2"
+	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
@@ -17,6 +18,18 @@ import (
 // a double that implements the forgedomain.ProposalFinder interface
 type testFinder struct {
 	count int
+}
+
+func (self *testFinder) BrowseRepository(runner subshelldomain.Runner) error {
+	return nil
+}
+
+func (self *testFinder) CreateProposal(data forgedomain.CreateProposalArgs) error {
+	return nil
+}
+
+func (self *testFinder) DefaultProposalMessage(data forgedomain.ProposalData) string {
+	return ""
 }
 
 func (self *testFinder) FindProposal(source, _ gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
@@ -33,6 +46,18 @@ func (self *testFinder) FindProposal(source, _ gitdomain.LocalBranchName) (Optio
 
 // a Connector double that simulates connection errors
 type failingFinder struct{}
+
+func (self *failingFinder) BrowseRepository(runner subshelldomain.Runner) error {
+	return fmt.Errorf("simulated error browsing repository")
+}
+
+func (self *failingFinder) CreateProposal(data forgedomain.CreateProposalArgs) error {
+	return fmt.Errorf("simulated error creating proposal")
+}
+
+func (self *failingFinder) DefaultProposalMessage(data forgedomain.ProposalData) string {
+	return ""
+}
 
 func (self *failingFinder) FindProposal(branch, _ gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	return None[forgedomain.Proposal](), fmt.Errorf("simulated error finding proposal for %s", branch)
@@ -51,8 +76,8 @@ func TestRender(t *testing.T) {
 			"feature-b1": "feature-b",
 			"feature-b2": "feature-b",
 		})
-		var connector forgedomain.ProposalFinder = &testFinder{}
-		have := proposallineage2.Render(lineage, "feature-a", configdomain.OrderAsc, Some(connector))
+		var connector forgedomain.Connector = &testFinder{}
+		have := proposallineage2.RenderSection(lineage, "feature-a", configdomain.OrderAsc, Some(connector))
 		want := `
 
 -------------------------
@@ -73,8 +98,8 @@ func TestRender(t *testing.T) {
 			"feature-b": "feature-a",
 			"feature-c": "feature-b",
 		})
-		var connector forgedomain.ProposalFinder = &failingFinder{}
-		have := proposallineage2.Render(lineage, "feature-a", configdomain.OrderAsc, Some(connector))
+		var connector forgedomain.Connector = &failingFinder{}
+		have := proposallineage2.RenderSection(lineage, "feature-a", configdomain.OrderAsc, Some(connector))
 		want := `
 
 -------------------------
@@ -93,8 +118,8 @@ func TestRender(t *testing.T) {
 			"no-proposal-b": "no-proposal-a",
 			"feature-c":     "no-proposal-b",
 		})
-		var connector forgedomain.ProposalFinder = &testFinder{}
-		have := proposallineage2.Render(lineage, "no-proposal-a", configdomain.OrderAsc, Some(connector))
+		var connector forgedomain.Connector = &testFinder{}
+		have := proposallineage2.RenderSection(lineage, "no-proposal-a", configdomain.OrderAsc, Some(connector))
 		want := `
 
 -------------------------

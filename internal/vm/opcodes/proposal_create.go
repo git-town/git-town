@@ -73,8 +73,8 @@ createProposal:
 			}
 			if proposalOpt.IsSome() {
 				args.PrependOpcodes(&ProposalUpdateLineage{
-					Current:         self.Branch,
-					CurrentProposal: proposalOpt,
+					Branch:         self.Branch,
+					Proposal: proposalOpt,
 					LineageTree:     MutableSome(lineageTree),
 				})
 			}

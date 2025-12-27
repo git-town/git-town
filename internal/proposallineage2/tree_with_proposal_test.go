@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/proposallineage2"
+	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
@@ -15,6 +16,18 @@ import (
 // a double that implements the forgedomain.ProposalFinder interface
 type testFinder2 struct {
 	requests []gitdomain.ProposalTitle
+}
+
+func (self *testFinder2) BrowseRepository(runner subshelldomain.Runner) error {
+	return nil
+}
+
+func (self *testFinder2) CreateProposal(data forgedomain.CreateProposalArgs) error {
+	return nil
+}
+
+func (self *testFinder2) DefaultProposalMessage(data forgedomain.ProposalData) string {
+	return ""
 }
 
 func (self *testFinder2) FindProposal(source, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
@@ -53,7 +66,7 @@ func TestAddProposalsToTree(t *testing.T) {
 				},
 			},
 		}
-		var connector forgedomain.ProposalFinder = &testFinder2{}
+		var connector forgedomain.Connector = &testFinder2{}
 		have := proposallineage2.AddProposalsToTree(tree, Some(connector))
 		want := proposallineage2.TreeNodeWithProposal{
 			Branch: "main",
@@ -108,7 +121,7 @@ func TestAddProposalsToTree(t *testing.T) {
 				},
 			},
 		}
-		var connector forgedomain.ProposalFinder = &failingFinder{}
+		var connector forgedomain.Connector = &failingFinder{}
 		have := proposallineage2.AddProposalsToTree(tree, Some(connector))
 		want := proposallineage2.TreeNodeWithProposal{
 			Branch: "main",
@@ -146,7 +159,7 @@ func TestAddProposalsToTree(t *testing.T) {
 				},
 			},
 		}
-		var connector forgedomain.ProposalFinder = &testFinder2{}
+		var connector forgedomain.Connector = &testFinder2{}
 		have := proposallineage2.AddProposalsToTree(tree, Some(connector))
 		want := proposallineage2.TreeNodeWithProposal{
 			Branch: "main",

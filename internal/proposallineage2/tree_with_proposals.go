@@ -24,11 +24,11 @@ func (self TreeNodeWithProposal) BranchOrAncestorHasProposal() bool {
 	return false
 }
 
-func AddProposalsToTree(tree TreeNode, proposalFinder Option[forgedomain.ProposalFinder]) TreeNodeWithProposal {
-	return addProposalsToTreeHelper(tree, None[gitdomain.LocalBranchName](), proposalFinder)
+func AddProposalsToTree(tree TreeNode, connector Option[forgedomain.Connector]) TreeNodeWithProposal {
+	return addProposalsToTreeHelper(tree, None[gitdomain.LocalBranchName](), connector)
 }
 
-func addProposalsToTreeHelper(tree TreeNode, parent Option[gitdomain.LocalBranchName], connector Option[forgedomain.ProposalFinder]) TreeNodeWithProposal {
+func addProposalsToTreeHelper(tree TreeNode, parent Option[gitdomain.LocalBranchName], connector Option[forgedomain.Connector]) TreeNodeWithProposal {
 	proposal := loadProposal(tree.Branch, parent, connector)
 	children := make([]TreeNodeWithProposal, len(tree.Children))
 	for i, child := range tree.Children {
@@ -41,10 +41,14 @@ func addProposalsToTreeHelper(tree TreeNode, parent Option[gitdomain.LocalBranch
 	}
 }
 
-func loadProposal(branch gitdomain.LocalBranchName, parentOpt Option[gitdomain.LocalBranchName], connector Option[forgedomain.ProposalFinder]) Option[forgedomain.Proposal] {
+func loadProposal(branch gitdomain.LocalBranchName, parentOpt Option[gitdomain.LocalBranchName], connectorOpt Option[forgedomain.Connector]) Option[forgedomain.Proposal] {
 	parent, hasParent := parentOpt.Get()
-	finder, hasFinder := connector.Get()
-	if !hasParent || !hasFinder {
+	connector, hasConnector := connectorOpt.Get()
+	if !hasParent || !hasConnector {
+		return None[forgedomain.Proposal]()
+	}
+	finder, canFindProposals := connector.(forgedomain.ProposalFinder)
+	if !canFindProposals {
 		return None[forgedomain.Proposal]()
 	}
 	proposal, err := finder.FindProposal(branch, parent)
