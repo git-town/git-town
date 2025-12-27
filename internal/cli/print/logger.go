@@ -36,8 +36,7 @@ func (self Logger) Start(template string, data ...any) {
 		fmt.Print(colors.Bold().Styled(template))
 		return
 	}
-	// Split by any of "%s", "%d", or "%w"
-	re := regexp.MustCompile(`%(?:s|d|w)`)
+	re := regexp.MustCompile(`%(?:s|d|w)`) // Split by any of "%s", "%d", or "%w"
 	parts := re.Split(template, -1)
 	matches := re.FindAllString(template, -1)
 	for i := range data {
