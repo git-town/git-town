@@ -448,7 +448,7 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 		}
 	}
 	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
-		_ = sync.AddStackLineageUpdateOpcodes(sync.AddStackLineageUpdateOpcodesArgs{
+		_ = sync.AddOpcodesToUpdateProposalStack(sync.AddOpcodesToUpdateProposalStackArgs{
 			Current:   data.initialBranch,
 			FullStack: true,
 			Program:   prog,

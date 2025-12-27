@@ -367,7 +367,7 @@ func mergeProgram(repo execute.OpenRepoResult, data mergeData) program.Program {
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
-		_ = sync.AddStackLineageUpdateOpcodes(sync.AddStackLineageUpdateOpcodesArgs{
+		_ = sync.AddOpcodesToUpdateProposalStack(sync.AddOpcodesToUpdateProposalStackArgs{
 			Current:   data.initialBranch,
 			FullStack: true,
 			Program:   prog,
