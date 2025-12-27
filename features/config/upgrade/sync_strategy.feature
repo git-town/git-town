@@ -6,7 +6,7 @@ Feature: automatically upgrade outdated configuration
     When I run "git-town <COMMAND>"
     Then Git Town prints:
       """
-      Upgrading deprecated <LOCATION> setting "git-town.sync-strategy" to "git-town.sync-feature-strategy".
+      Upgrading deprecated <LOCATION> setting git-town.sync-strategy to git-town.sync-feature-strategy.
       """
     And <LOCATION> Git setting "git-town.sync-feature-strategy" is now "rebase"
     And <LOCATION> Git setting "git-town.sync-strategy" now doesn't exist

@@ -269,7 +269,7 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsLocally, newBranchName)
 	}
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(newBranchName) {
-		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
+		return data, configdomain.ProgramFlowExit, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName, config.DevRemote)
 	}
 	parentOpt := validatedConfig.NormalConfig.Lineage.Parent(initialBranch)
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()

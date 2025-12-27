@@ -25,7 +25,7 @@ func TestParseGitHubConnectorType(t *testing.T) {
 		},
 		"invalid": {
 			val: None[forgedomain.GitHubConnectorType](),
-			err: errors.New(`unknown GitHubConnectorType defined in "test": "invalid"`),
+			err: errors.New(`unknown GitHubConnectorType defined in test: "invalid"`),
 		},
 		"": {
 			val: None[forgedomain.GitHubConnectorType](),

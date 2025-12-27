@@ -21,7 +21,7 @@ Feature: delete a branch that is active in another worktree
       | good   | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      branch "dead" is active in another worktree
+      branch dead is active in another worktree
       """
   #
   # NOTE: Cannot test undo here.

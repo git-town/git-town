@@ -6,7 +6,7 @@ Feature: automatically upgrade kill alias
     When I run "git-town hack foo"
     Then Git Town prints:
       """
-      Upgrading deprecated global setting "alias.kill" to "alias.delete".
+      Upgrading deprecated global setting alias.kill to alias.delete.
       """
     And global Git setting "alias.delete" is now "town delete"
     And global Git setting "alias.kill" now doesn't exist
