@@ -129,10 +129,10 @@ func (self Lineage) Children(branch gitdomain.LocalBranchName, order Order) gitd
 }
 
 // Clan provides all branches that are related to the given branches, including all ancestors and descendents.
-func (self Lineage) Clan(branches gitdomain.LocalBranchNames, perennialBranches gitdomain.LocalBranchNames, order Order) gitdomain.LocalBranchNames {
+func (self Lineage) Clan(branches gitdomain.LocalBranchNames, perennialBranches gitdomain.LocalBranchNames) gitdomain.LocalBranchNames {
 	result := set.New[gitdomain.LocalBranchName]()
 	for _, branch := range branches {
-		result.Add(self.BranchLineageWithoutRoot(branch, perennialBranches, order)...)
+		result.Add(self.BranchLineageWithoutRoot(branch, perennialBranches, OrderAsc)...)
 	}
 	return result.Values()
 }
