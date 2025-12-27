@@ -31,7 +31,7 @@ Feature: using the "compress" strategy, sync a branch whose parent was shipped
       |        | git push --force-with-lease                       |
     And Git Town prints:
       """
-      deleted branch "parent"
+      deleted branch parent
       """
     And this lineage exists now
       """

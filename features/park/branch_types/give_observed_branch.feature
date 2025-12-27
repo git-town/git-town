@@ -11,7 +11,7 @@ Feature: park another observed branch
     Then Git Town runs no commands
     And Git Town prints:
       """
-      branch "observed" is now parked
+      branch observed is now parked
       """
     And branch "observed" now has type "parked"
 

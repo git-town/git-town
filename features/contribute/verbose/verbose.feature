@@ -27,7 +27,7 @@ Feature: make the current branch a contribution branch verbosely
       """
     And Git Town prints:
       """
-      branch "feature" is now a contribution branch
+      branch feature is now a contribution branch
       """
     And branch "feature" now has type "contribution"
 

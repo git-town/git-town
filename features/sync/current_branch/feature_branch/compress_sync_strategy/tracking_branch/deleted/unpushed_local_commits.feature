@@ -21,7 +21,7 @@ Feature: using the "compress" strategy, sync a branch with unmerged commits whos
       | branch-2 | git fetch --prune --tags |
     And Git Town prints:
       """
-      Branch "branch-2" was deleted at the remote but the local branch contains unshipped changes.
+      Branch branch-2 was deleted at the remote but the local branch contains unshipped changes.
       """
     And the initial branches and lineage exist now
     And the initial commits exist now

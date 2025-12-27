@@ -21,7 +21,7 @@ Feature: cannot ship a branch without proposal via API
       |         | Looking for proposal online ... ok |
     And Git Town prints the error:
       """
-      cannot ship branch "feature" via API because it has no proposal
+      cannot ship branch feature via API because it has no proposal
       """
   #
   # NOTE: Cannot test undo here.

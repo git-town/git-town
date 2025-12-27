@@ -13,15 +13,15 @@ Feature: make multiple other branches contribution branches
     Then Git Town runs no commands
     And Git Town prints:
       """
-      branch "feature-1" is now a contribution branch
+      branch feature-1 is now a contribution branch
       """
     And Git Town prints:
       """
-      branch "feature-2" is now a contribution branch
+      branch feature-2 is now a contribution branch
       """
     And Git Town prints:
       """
-      branch "feature-3" is now a contribution branch
+      branch feature-3 is now a contribution branch
       """
     And branch "feature-1" now has type "contribution"
     And branch "feature-2" now has type "contribution"

@@ -41,7 +41,7 @@ Feature: skip and park a feature branch with conflicts
       | main   | git push --tags               |
     And Git Town prints:
       """
-      branch "beta" is now parked
+      branch beta is now parked
       """
     And no merge is now in progress
     And branch "beta" now has type "parked"

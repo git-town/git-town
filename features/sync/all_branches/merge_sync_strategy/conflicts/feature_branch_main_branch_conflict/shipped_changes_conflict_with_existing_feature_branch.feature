@@ -37,7 +37,7 @@ Feature: shipped changes conflict with multiple existing feature branches
       | gamma  | git merge --no-edit --ff main |
     And Git Town prints the error:
       """
-      deleted branch "beta"
+      deleted branch beta
       """
     And Git Town prints the error:
       """

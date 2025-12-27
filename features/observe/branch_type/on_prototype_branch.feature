@@ -12,7 +12,7 @@ Feature: observe the current prototype branch
     Then Git Town runs no commands
     And Git Town prints:
       """
-      branch "prototype" is now an observed branch
+      branch prototype is now an observed branch
       """
     And branch "prototype" now has type "observed"
 

@@ -12,7 +12,7 @@ Feature: prototype the current local branch
     Then Git Town runs no commands
     And Git Town prints:
       """
-      branch "feature" is now a prototype branch
+      branch feature is now a prototype branch
       """
     And branch "feature" now has type "prototype"
 

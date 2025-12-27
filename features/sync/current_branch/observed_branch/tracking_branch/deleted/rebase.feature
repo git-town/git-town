@@ -23,7 +23,7 @@ Feature: remove an observed branch as soon as its tracking branch is gone, even 
       | main     | git branch -D observed   |
     And Git Town prints:
       """
-      deleted branch "observed"
+      deleted branch observed
       """
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
