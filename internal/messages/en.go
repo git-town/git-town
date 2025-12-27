@@ -31,7 +31,7 @@ const (
 	BranchDeletedHasUnmergedChanges = "Branch %s was deleted at the remote but the local branch contains unshipped changes.\nI am therefore not removing this branch. You can see the unshipped changes by running \"git town diff-parent\"."
 	BranchDiffProblem               = "cannot determine if branch %s has unmerged commits: %w"
 	BranchDoesntContainCommit       = "branch %s does not contain commit %s. Found commits %s"
-	BranchDoesntExist               = "there is no branch %s"
+	BranchDoesntExist               = "there is no branch %q"
 	BranchHasWrongSHA               = "cannot reset branch %s to %s because it received additional commits in the meantime. It should have SHA %s but has %s"
 	BranchInfoNoContent             = "BranchInfo has neither a local nor remote name"
 	BranchInfoNotFound              = "cannot find branch info for %s"

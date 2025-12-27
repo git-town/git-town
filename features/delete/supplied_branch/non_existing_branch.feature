@@ -8,5 +8,5 @@ Feature: non-existing branch
       | main   | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      there is no branch non-existing
+      there is no branch "non-existing"
       """

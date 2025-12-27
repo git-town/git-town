@@ -12,7 +12,7 @@ Feature: does not ship a non-existing branch
       | main   | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      there is no branch non-existing-branch
+      there is no branch "non-existing-branch"
       """
 
   Scenario: undo

@@ -9,5 +9,5 @@ Feature: does not diff non-existing branch
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      there is no branch non-existing
+      there is no branch "non-existing"
       """
