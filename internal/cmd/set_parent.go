@@ -4,7 +4,6 @@ import (
 	"cmp"
 	"errors"
 	"fmt"
-	"maps"
 	"os"
 	"regexp"
 
@@ -26,7 +25,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
-	"github.com/git-town/git-town/v22/internal/proposallineage"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
 	"github.com/git-town/git-town/v22/internal/validate"
 	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
@@ -34,7 +32,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/vm/optimizer"
 	"github.com/git-town/git-town/v22/internal/vm/program"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
-	"github.com/git-town/git-town/v22/pkg/set"
 )
 
 const (
@@ -468,80 +465,19 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 		}
 	}
 
-	// Update proposal lineage for both cases (removing parent or setting new parent)
-	sync.AddSyncProposalsProgram(sync.AddSyncProposalsProgramArgs{
-		ChangedBranches: gitdomain.LocalBranchNames{data.branchToDeleteInfo.GetLocalOrRemoteNameAsLocalName()},
-		Config:          data.config,
-		Program:         prog,
-	})
-	return optimizer.Optimize(prog), false
-}
-
-// updateProposalLineage updates the proposal stack lineage when changing the parent
-func updateProposalLineage(prog *program.Program, newParentOpt Option[gitdomain.LocalBranchName], data setParentData) {
 	if data.config.NormalConfig.ProposalsShowLineage != forgedomain.ProposalsShowLineageCLI {
-		return
-	}
-
-	proposalStackTree := sync.AddSyncProposalsProgram(sync.AddSyncProposalsProgramArgs{
-		Current:   data.initialBranch,
-		FullStack: true,
-		Program:   NewMutable(prog),
-		ProposalStackLineageArgs: proposallineage.ProposalStackLineageArgs{
-			Connector:                forgedomain.ProposalFinderFromConnector(data.connector),
-			CurrentBranch:            data.initialBranch,
-			Lineage:                  data.config.NormalConfig.Lineage,
-			MainAndPerennialBranches: data.config.MainAndPerennials(),
-			Order:                    data.config.NormalConfig.Order,
-		},
-		SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(),
-	})
-
-	branchPropsalsUpdated := set.New[gitdomain.LocalBranchName]()
-	// if the tree is a Some type, we know it will trigger program runs to update
-	// proposals belonging to the base branches iterated on below
-	if tree, hasTree := proposalStackTree.Get(); hasTree {
-		for b := range maps.Keys(tree.ProposalCache) {
-			branchPropsalsUpdated.Add(b)
+		parents := gitdomain.LocalBranchNames{}
+		if hasOldParent {
+			parents = append(parents, oldParent)
 		}
-	}
-
-	// If we are moving to a parent that is part of a completely different stack,
-	// update the lineage of all members of this other stack
-	_ = sync.AddSyncProposalsProgram(sync.AddSyncProposalsProgramArgs{
-		Current:   data.initialBranch,
-		FullStack: true,
-		Program:   NewMutable(prog),
-		ProposalStackLineageArgs: proposallineage.ProposalStackLineageArgs{
-			Connector:                forgedomain.ProposalFinderFromConnector(data.connector),
-			CurrentBranch:            data.initialBranch,
-			Lineage:                  data.config.NormalConfig.Lineage,
-			MainAndPerennialBranches: data.config.MainAndPerennials(),
-			Order:                    data.config.NormalConfig.Order,
-		},
-		// Do not update the same proposal more than once because we updated
-		// it in a previous step
-		SkipUpdateForProposalsWithBaseBranch: branchPropsalsUpdated.Values(),
-	})
-
-	newParent, hasNewParent := newParentOpt.Get()
-	if hasNewParent {
-		// If we are moving to a parent that is part of a completely different stack,
-		// update the lineage of all members of this other stack
-		_ = sync.AddSyncProposalsProgram(sync.AddSyncProposalsProgramArgs{
-			Current:   data.initialBranch,
-			FullStack: true,
-			Program:   NewMutable(prog),
-			ProposalStackLineageArgs: proposallineage.ProposalStackLineageArgs{
-				Connector:                forgedomain.ProposalFinderFromConnector(data.connector),
-				CurrentBranch:            newParent,
-				Lineage:                  data.config.NormalConfig.Lineage,
-				MainAndPerennialBranches: data.config.MainAndPerennials(),
-				Order:                    data.config.NormalConfig.Order,
-			},
-			// Do not update the same proposal more than once because we updated
-			// it in a previous step
-			SkipUpdateForProposalsWithBaseBranch: branchPropsalsUpdated.Values(),
+		if hasNewParent {
+			parents = append(parents, newParent)
+		}
+		sync.AddSyncProposalsProgram(sync.AddSyncProposalsProgramArgs{
+			ChangedBranches: parents,
+			Config:          data.config,
+			Program:         NewMutable(&prog),
 		})
 	}
+	return optimizer.Optimize(prog), false
 }
