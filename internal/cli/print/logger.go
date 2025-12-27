@@ -30,8 +30,12 @@ func (self Logger) Ok() {
 }
 
 func (self Logger) Start(template string, data ...any) {
+	cyanData := make([]any, len(data))
+	for i, d := range data {
+		cyanData[i] = colors.Cyan().Styled(fmt.Sprintf("%s", d))
+	}
 	fmt.Println()
-	fmt.Print(colors.Bold().Styled(fmt.Sprintf(template, data...)))
+	fmt.Print(colors.Bold().Styled(fmt.Sprintf(template, cyanData...)))
 }
 
 func (self Logger) Success(message string) {
