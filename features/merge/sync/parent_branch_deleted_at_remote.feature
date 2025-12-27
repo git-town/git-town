@@ -24,7 +24,7 @@ Feature: merging a branch whose parent was deleted remotely
       | beta   | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      branch "alpha" is not in sync with its parent, please run "git town sync" and try again
+      branch alpha is not in sync with its parent, please run "git town sync" and try again
       """
     And the initial branches and lineage exist now
     And the initial commits exist now

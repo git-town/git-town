@@ -20,7 +20,7 @@ Feature: cannot ship a local branch via API
       | feature | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot ship branch "feature" via API because it has no remote branch
+      cannot ship branch feature via API because it has no remote branch
       """
     And the initial branches and lineage exist now
     And the initial commits exist now

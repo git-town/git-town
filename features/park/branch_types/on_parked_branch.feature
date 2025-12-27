@@ -12,7 +12,7 @@ Feature: parking the current parked branch
     Then Git Town runs no commands
     And Git Town prints:
       """
-      branch "parked" is already parked
+      branch parked is already parked
       """
     And branch "parked" still has type "parked"
 

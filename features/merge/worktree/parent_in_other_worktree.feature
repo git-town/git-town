@@ -24,7 +24,7 @@ Feature: merging a branch whose parent is active in another worktree
       | beta   | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      branch "alpha" is active in another worktree
+      branch alpha is active in another worktree
       """
     And the initial lineage exists now
     And the initial commits exist now

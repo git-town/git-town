@@ -16,7 +16,7 @@ Feature: make a feature branch perennial
     Then Git Town runs no commands
     And Git Town prints:
       """
-      branch "child" is now perennial
+      branch child is now perennial
       """
     And this lineage exists now
       """

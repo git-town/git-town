@@ -27,7 +27,7 @@ Feature: using the "compress" strategy, sync a branch whose tracking branch was 
       |           | git checkout feature-2                            |
     And Git Town prints:
       """
-      deleted branch "feature-1"
+      deleted branch feature-1
       """
     And this lineage exists now
       """

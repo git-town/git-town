@@ -10,7 +10,7 @@ Feature: automatically upgrade outdated configuration
     When I run "git-town <COMMAND>"
     Then Git Town prints:
       """
-      Upgrading deprecated <LOCATION> setting "git-town.new-branch-push-flag" to "git-town.push-new-branches".
+      Upgrading deprecated <LOCATION> setting git-town.new-branch-push-flag to git-town.push-new-branches.
       """
     And <LOCATION> Git setting "git-town.share-new-branches" is now "push"
     And <LOCATION> Git setting "git-town.new-branch-push-flag" now doesn't exist

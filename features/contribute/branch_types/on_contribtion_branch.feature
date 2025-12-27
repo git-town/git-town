@@ -12,7 +12,7 @@ Feature: make the current contribution branch a contribution branch
     Then Git Town runs no commands
     And Git Town prints:
       """
-      branch "contribution" is already a contribution branch
+      branch contribution is already a contribution branch
       """
     And branch "contribution" still has type "contribution"
 

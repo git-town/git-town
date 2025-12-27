@@ -10,5 +10,5 @@ Feature: switching when the branch has no parent
       | BRANCH | COMMAND |
     And Git Town prints the error:
       """
-      branch "main" has no parent
+      branch main has no parent
       """

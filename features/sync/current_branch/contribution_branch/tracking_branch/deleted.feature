@@ -21,7 +21,7 @@ Feature: remove a contribution branch as soon as its tracking branch is gone, ev
       | main         | git branch -D contribution |
     And Git Town prints:
       """
-      deleted branch "contribution"
+      deleted branch contribution
       """
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |

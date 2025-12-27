@@ -12,7 +12,7 @@ Feature: prototype another prototype branch
     Then Git Town runs no commands
     And Git Town prints:
       """
-      branch "prototype" is already a prototype branch
+      branch prototype is already a prototype branch
       """
     And branch "prototype" still has type "prototype"
 

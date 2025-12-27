@@ -20,7 +20,7 @@ Feature: proposing a branch that was deleted at the remote
       | main    | git branch -D feature    |
     And Git Town prints:
       """
-      branch "feature" was deleted at the remote
+      branch feature was deleted at the remote
       """
     And no lineage exists now
     And the branches are now

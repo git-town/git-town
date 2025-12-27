@@ -8,7 +8,7 @@ Feature: cannot set parent of perennial branches
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      the branch "main" is not a feature branch. Only feature branches can have parent branches
+      the branch main is not a feature branch. Only feature branches can have parent branches
       """
     And the initial lineage exists now
 
@@ -21,6 +21,6 @@ Feature: cannot set parent of perennial branches
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      the branch "qa" is not a feature branch. Only feature branches can have parent branches
+      the branch qa is not a feature branch. Only feature branches can have parent branches
       """
     And the initial lineage exists now

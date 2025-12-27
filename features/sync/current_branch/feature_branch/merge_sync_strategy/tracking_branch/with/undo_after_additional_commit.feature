@@ -21,7 +21,7 @@ Feature: undo offline sync after additional commits to the feature branch
     Then Git Town runs no commands
     And Git Town prints:
       """
-      cannot reset branch "feature"
+      cannot reset branch feature
       """
     And Git Town prints:
       """

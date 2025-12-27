@@ -18,7 +18,7 @@ Feature: unknown ship strategy
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      unknown ship strategy in "git-town.ship-strategy": "zonk"
+      unknown ship strategy in git-town.ship-strategy: "zonk"
       """
 
   Scenario: undo
@@ -26,7 +26,7 @@ Feature: unknown ship strategy
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      unknown ship strategy in "git-town.ship-strategy": "zonk"
+      unknown ship strategy in git-town.ship-strategy: "zonk"
       """
     And the initial branches and lineage exist now
     And the initial commits exist now

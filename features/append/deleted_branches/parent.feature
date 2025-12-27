@@ -27,7 +27,7 @@ Feature: append a branch to a branch whose parent was shipped on the remote
       |        | git checkout -b new                               |
     And Git Town prints:
       """
-      deleted branch "parent"
+      deleted branch parent
       """
     And this lineage exists now
       """

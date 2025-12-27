@@ -24,7 +24,7 @@ Feature: using the "compress" strategy, sync a branch with unshipped local chang
       | shipped | git merge --no-edit --ff main                     |
     And Git Town prints:
       """
-      Branch "shipped" was deleted at the remote but the local branch contains unshipped changes.
+      Branch shipped was deleted at the remote but the local branch contains unshipped changes.
       """
     And the initial branches and lineage exist now
 

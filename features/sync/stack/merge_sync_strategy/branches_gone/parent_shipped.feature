@@ -26,7 +26,7 @@ Feature: syncing a branch whose parent was shipped
       |        | git push                                          |
     And Git Town prints:
       """
-      deleted branch "parent"
+      deleted branch parent
       """
     And this lineage exists now
       """

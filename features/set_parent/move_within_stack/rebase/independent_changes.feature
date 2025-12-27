@@ -35,7 +35,7 @@ Feature: make a child branch a sibling in a stack with independent changes
       |          | git push --force-with-lease --force-if-includes                |
     And Git Town prints:
       """
-      branch "branch-3" is now a child of "branch-1"
+      branch branch-3 is now a child of branch-1
       """
     And this lineage exists now
       """

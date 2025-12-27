@@ -23,7 +23,7 @@ Feature: merging when the branch is not in sync with its tracking branch
       | beta   | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      branch "beta" is not in sync with its tracking branch, please run "git town sync" and try again
+      branch beta is not in sync with its tracking branch, please run "git town sync" and try again
       """
   #
   # NOTE: Cannot test undo here.

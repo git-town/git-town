@@ -20,7 +20,7 @@ Feature: refuses shipping a branch with conflicts between the supplied feature b
       | other  | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      branch "feature" is not in sync
+      branch feature is not in sync
       """
   #
   # NOTE: Cannot test undo here.

@@ -19,7 +19,7 @@ Feature: shipping a branch whose tracking branch is deleted using the always-mer
       | feature | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      branch "feature" was deleted at the remote
+      branch feature was deleted at the remote
       """
   #
   # NOTE: Cannot test undo here.

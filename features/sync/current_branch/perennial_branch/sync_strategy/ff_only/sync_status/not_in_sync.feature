@@ -19,7 +19,7 @@ Feature: sync the current perennial branch using the ff-only sync strategy when 
       | production | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot sync branch "production" because it has unpushed local commits
+      cannot sync branch production because it has unpushed local commits
       """
     And the initial branches and lineage exist now
     And the initial commits exist now

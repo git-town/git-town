@@ -13,7 +13,7 @@ Feature: make the current feature branch a contribution branch in Spanish
     Then Git Town runs no commands
     And Git Town prints:
       """
-      branch "feature" is now a contribution branch
+      branch feature is now a contribution branch
       """
     And branch "feature" now has type "contribution"
 

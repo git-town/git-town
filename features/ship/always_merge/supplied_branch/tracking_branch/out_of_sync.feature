@@ -20,7 +20,7 @@ Feature: does not ship the given out-of-sync branch using the always-merge strat
       | other  | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      branch "feature" is not in sync
+      branch feature is not in sync
       """
   #
   # NOTE: Cannot test undo here.

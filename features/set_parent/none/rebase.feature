@@ -31,7 +31,7 @@ Feature: remove a branch and all its children from a stack with dependent change
     Then Git Town runs no commands
     And Git Town prints:
       """
-      branch "branch-2" is now perennial
+      branch branch-2 is now perennial
       """
     And this lineage exists now
       """
