@@ -21,7 +21,7 @@ Feature: dry-run merging branches
       | beta_1 | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      branch alpha has more than one child
+      branch "alpha" has more than one child
       """
   #
   # NOTE: Cannot test undo here.
