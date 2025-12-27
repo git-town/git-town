@@ -129,10 +129,7 @@ func (self *APIConnector) SquashMergeProposal(number int, message gitdomain.Comm
 		return err
 	}
 	self.log.Ok()
-	self.log.Start(messages.APIProposalLookupStart)
-	_, _, err = client.GetPullRequest(self.Organization, self.Repository, int64(number))
-	self.log.Finished(err)
-	return err
+	return nil
 }
 
 // ============================================================================
