@@ -22,7 +22,7 @@ Feature: partially undo an offline ship using the always-merge strategy after ad
       |        | git checkout feature                          |
     And Git Town prints:
       """
-      cannot reset branch "main"
+      cannot reset branch main
       """
     And Git Town prints:
       """
