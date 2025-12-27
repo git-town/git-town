@@ -20,7 +20,7 @@ Feature: does not ship empty feature branches
       | other  | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      the branch "empty" has no shippable changes
+      the branch empty has no shippable changes
       """
     And the initial branches and lineage exist now
     And the initial commits exist now
