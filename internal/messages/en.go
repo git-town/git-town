@@ -85,7 +85,7 @@ const (
 	ConfigScopeUnknown                 = "unknown configuration scope"
 	ConfigShipStrategyUnknown          = "unknown ship strategy in %s: %q"
 	ConfigStorage                      = "Config storage: %s\n"
-	ConfigSyncStrategyUnknown          = "unknown sync strategy: %s"
+	ConfigSyncStrategyUnknown          = "unknown sync strategy: %q"
 	ConflictDetectionProblem           = "cannot determine conflicts: %w"
 	ConflictMerge                      = "git merge conflict"
 	ConflictRebase                     = "git rebase conflict"
