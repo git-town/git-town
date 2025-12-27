@@ -22,8 +22,8 @@ Feature: does not ship a child branch
       | alpha  | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      shipping this branch would ship "alpha" and "beta" as well,
-      please ship "alpha" first
+      shipping this branch would ship alpha and beta as well,
+      please ship alpha first
       """
     And the initial lineage exists now
     And the initial commits exist now
