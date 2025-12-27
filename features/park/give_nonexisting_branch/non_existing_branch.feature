@@ -12,7 +12,7 @@ Feature: cannot park non-existing branches
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      there is no branch "non-existing"
+      there is no branch non-existing
       """
     And branch "feature" still has type "feature"
   #

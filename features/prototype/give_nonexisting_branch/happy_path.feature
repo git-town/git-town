@@ -8,7 +8,7 @@ Feature: does not create prototyping branches this way
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      there is no branch "zonk"
+      there is no branch zonk
       """
 
   Scenario: undo
