@@ -18,7 +18,7 @@ Feature: cannot compress branches that are out of sync
       | feature | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      please sync branch "feature" before compressing it
+      please sync branch feature before compressing it
       """
     And the initial branches and lineage exist now
     And the initial commits exist now
@@ -31,7 +31,7 @@ Feature: cannot compress branches that are out of sync
     When I run "git-town compress"
     Then Git Town prints the error:
       """
-      please sync branch "feature" before compressing it
+      please sync branch feature before compressing it
       """
     And the initial branches and lineage exist now
     And the initial commits exist now
@@ -45,7 +45,7 @@ Feature: cannot compress branches that are out of sync
     When I run "git-town compress"
     Then Git Town prints the error:
       """
-      please sync branch "feature" before compressing it
+      please sync branch feature before compressing it
       """
     And the initial branches and lineage exist now
     And the initial commits exist now
@@ -59,7 +59,7 @@ Feature: cannot compress branches that are out of sync
     When I run "git-town compress"
     Then Git Town prints the error:
       """
-      please sync branch "feature" before compressing it
+      please sync branch feature before compressing it
       """
     And the initial branches and lineage exist now
     And the initial commits exist now
