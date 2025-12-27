@@ -1,5 +1,7 @@
 package messages
 
+// NOTE: %s gets printed in cyan, all other placeholders get printed normally
+
 const (
 	AliasedCommands                  = "Aliased commands: %s\n"
 	APIParentBranchLookupStart       = "Looking for parent of %s ... "
