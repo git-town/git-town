@@ -24,7 +24,7 @@ Feature: merging a branch that was deleted at the remote
       | beta   | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      branch "beta" is not in sync with its tracking branch, please run "git town sync" and try again
+      branch beta is not in sync with its tracking branch, please run "git town sync" and try again
       """
     And the initial branches and lineage exist now
     And the initial commits exist now
