@@ -20,26 +20,26 @@ type testFinder struct {
 	count int
 }
 
-func (self *testFinder) BrowseRepository(runner subshelldomain.Runner) error {
+func (tf *testFinder) BrowseRepository(runner subshelldomain.Runner) error {
 	return nil
 }
 
-func (self *testFinder) CreateProposal(data forgedomain.CreateProposalArgs) error {
+func (tf *testFinder) CreateProposal(data forgedomain.CreateProposalArgs) error {
 	return nil
 }
 
-func (self *testFinder) DefaultProposalMessage(data forgedomain.ProposalData) string {
+func (tf *testFinder) DefaultProposalMessage(data forgedomain.ProposalData) string {
 	return ""
 }
 
-func (self *testFinder) FindProposal(source, _ gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (tf *testFinder) FindProposal(source, _ gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	if strings.Contains(source.String(), "no-proposal") {
 		return None[forgedomain.Proposal](), nil
 	}
-	self.count++
+	tf.count++
 	return Some(forgedomain.Proposal{
 		Data: forgedomain.ProposalData{
-			URL: "https://www.github.com/git-town/git-town/pull/" + strconv.Itoa(self.count),
+			URL: "https://www.github.com/git-town/git-town/pull/" + strconv.Itoa(tf.count),
 		},
 	}), nil
 }
@@ -47,19 +47,19 @@ func (self *testFinder) FindProposal(source, _ gitdomain.LocalBranchName) (Optio
 // a Connector double that simulates connection errors
 type failingFinder struct{}
 
-func (self *failingFinder) BrowseRepository(runner subshelldomain.Runner) error {
+func (ff *failingFinder) BrowseRepository(runner subshelldomain.Runner) error {
 	return fmt.Errorf("simulated error browsing repository")
 }
 
-func (self *failingFinder) CreateProposal(data forgedomain.CreateProposalArgs) error {
+func (ff *failingFinder) CreateProposal(data forgedomain.CreateProposalArgs) error {
 	return fmt.Errorf("simulated error creating proposal")
 }
 
-func (self *failingFinder) DefaultProposalMessage(data forgedomain.ProposalData) string {
+func (ff *failingFinder) DefaultProposalMessage(data forgedomain.ProposalData) string {
 	return ""
 }
 
-func (self *failingFinder) FindProposal(branch, _ gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (ff *failingFinder) FindProposal(branch, _ gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	return None[forgedomain.Proposal](), fmt.Errorf("simulated error finding proposal for %s", branch)
 }
 
