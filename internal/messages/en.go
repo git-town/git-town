@@ -371,7 +371,7 @@ and will be removed in future versions of Git Town.`
 	UpNoChild                               = "branch %s has no children"
 	UpNoCurrentBranch                       = "you need to be on a branch to go up"
 
-	ValueInvalid = "invalid value for %s: %s. Please provide either \"yes\" or \"no\""
+	ValueInvalid = "invalid value for %s: %q. Please provide either \"yes\" or \"no\""
 
 	WalkAllOrStack   = "please provide either --all or --stack"
 	WalkDetachedHead = "please check out the branch from which to walk"
