@@ -45,7 +45,7 @@ func (self Logger) Start(template string, data ...any) {
 		if format == "%s" {
 			fmt.Print(colors.BoldCyan().Styled(fmt.Sprintf(format, data[i])))
 		} else {
-			fmt.Printf(format, data[i])
+			fmt.Print(colors.Bold().Styled(fmt.Sprintf(format, data[i])))
 		}
 	}
 	fmt.Print(colors.Bold().Styled(parts[len(parts)-1]))
