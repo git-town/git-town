@@ -37,8 +37,8 @@ func (self Logger) Start(template string, data ...any) {
 		return
 	}
 	parts := strings.Split(template, "%s")
-	for i, part := range parts {
-		fmt.Print(colors.Bold().Styled(part))
+	for i := range data {
+		fmt.Print(colors.Bold().Styled(parts[i]))
 		fmt.Print(colors.BoldCyan().Styled(fmt.Sprintf("%s", data[i])))
 	}
 	fmt.Print(colors.Bold().Styled(parts[len(parts)-1]))
