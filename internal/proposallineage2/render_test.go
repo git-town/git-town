@@ -1,6 +1,7 @@
 package proposallineage2_test
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -20,15 +21,15 @@ type testFinder struct {
 	count int
 }
 
-func (tf *testFinder) BrowseRepository(runner subshelldomain.Runner) error {
+func (tf *testFinder) BrowseRepository(_ subshelldomain.Runner) error {
 	return nil
 }
 
-func (tf *testFinder) CreateProposal(data forgedomain.CreateProposalArgs) error {
+func (tf *testFinder) CreateProposal(_ forgedomain.CreateProposalArgs) error {
 	return nil
 }
 
-func (tf *testFinder) DefaultProposalMessage(data forgedomain.ProposalData) string {
+func (tf *testFinder) DefaultProposalMessage(_ forgedomain.ProposalData) string {
 	return ""
 }
 
@@ -47,15 +48,15 @@ func (tf *testFinder) FindProposal(source, _ gitdomain.LocalBranchName) (Option[
 // a Connector double that simulates connection errors
 type failingFinder struct{}
 
-func (ff *failingFinder) BrowseRepository(runner subshelldomain.Runner) error {
-	return fmt.Errorf("simulated error browsing repository")
+func (ff *failingFinder) BrowseRepository(_ subshelldomain.Runner) error {
+	return errors.New("simulated error browsing repository")
 }
 
-func (ff *failingFinder) CreateProposal(data forgedomain.CreateProposalArgs) error {
-	return fmt.Errorf("simulated error creating proposal")
+func (ff *failingFinder) CreateProposal(_ forgedomain.CreateProposalArgs) error {
+	return errors.New("simulated error creating proposal")
 }
 
-func (ff *failingFinder) DefaultProposalMessage(data forgedomain.ProposalData) string {
+func (ff *failingFinder) DefaultProposalMessage(_ forgedomain.ProposalData) string {
 	return ""
 }
 

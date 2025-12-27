@@ -18,15 +18,15 @@ type testFinder2 struct {
 	requests []gitdomain.ProposalTitle
 }
 
-func (self *testFinder2) BrowseRepository(runner subshelldomain.Runner) error {
+func (self *testFinder2) BrowseRepository(_ subshelldomain.Runner) error {
 	return nil
 }
 
-func (self *testFinder2) CreateProposal(data forgedomain.CreateProposalArgs) error {
+func (self *testFinder2) CreateProposal(_ forgedomain.CreateProposalArgs) error {
 	return nil
 }
 
-func (self *testFinder2) DefaultProposalMessage(data forgedomain.ProposalData) string {
+func (self *testFinder2) DefaultProposalMessage(_ forgedomain.ProposalData) string {
 	return ""
 }
 
