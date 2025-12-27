@@ -156,7 +156,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	ForgeGitLabUpdateMRViaAPI    = "Updating target branch for MR !%d to %s ... "
 	ForgejoTokenPrompt           = "Forgejo API token: "
 	ForgejoTokenResult           = "Forgejo token: %s\n"
-	ForgeTypeUnknown             = "unknown forge type defined in %s: %s"
+	ForgeTypeUnknown             = "unknown forge type defined in %s: %q"
 
 	GitAnotherProcessIsRunningRetry = "another git process seems to be running in this repository, retrying in 1 sec ..."
 	GitDirMissing                   = "cannot determine the '.git' directory: %w"
