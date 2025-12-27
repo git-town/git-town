@@ -1,8 +1,6 @@
 package opcodes
 
 import (
-	"errors"
-
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
@@ -17,15 +15,18 @@ type ProposalUpdateLineage struct {
 func (self *ProposalUpdateLineage) Run(args shared.RunArgs) error {
 	connector, hasConnector := args.Connector.Get()
 	if !hasConnector {
-		return forgedomain.UnsupportedServiceError()
+		args.FinalMessages.Add(forgedomain.UnsupportedServiceError().Error())
+		return nil
 	}
 	proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder)
 	if !canFindProposals {
-		return errors.New(messages.ConnectorCannotFindProposals)
+		args.FinalMessages.Add(messages.ConnectorCannotFindProposals)
+		return nil
 	}
 	proposalBodyUpdater, canUpdateProposalBody := connector.(forgedomain.ProposalBodyUpdater)
 	if !canUpdateProposalBody {
-		return errors.New(messages.ConnectorCannotUpdateProposalBody)
+		args.FinalMessages.Add(messages.ConnectorCannotUpdateProposalBody)
+		return nil
 	}
 	parentBranch, hasParentBranch := args.Config.Value.NormalConfig.Lineage.Parent(self.Branch).Get()
 	if !hasParentBranch {
