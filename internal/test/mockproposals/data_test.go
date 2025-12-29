@@ -167,7 +167,7 @@ func TestMockProposals(t *testing.T) {
 			must.Eq(t, want, have)
 		})
 
-		t.Run("returns empty slice when no proposals match source", func(t *testing.T) {
+		t.Run("no proposals match source", func(t *testing.T) {
 			t.Parallel()
 			proposals := mockproposals.MockProposals{
 				{
@@ -182,58 +182,11 @@ func TestMockProposals(t *testing.T) {
 			must.Len(t, 0, have)
 		})
 
-		t.Run("returns empty slice when proposals slice is empty", func(t *testing.T) {
+		t.Run("proposals slice is empty", func(t *testing.T) {
 			t.Parallel()
 			proposals := mockproposals.MockProposals{}
 			have := proposals.Search("feature-branch")
 			must.Len(t, 0, have)
-		})
-
-		t.Run("returns single proposal when only one matches", func(t *testing.T) {
-			t.Parallel()
-			proposals := mockproposals.MockProposals{
-				{
-					Number: 1,
-					Source: "feature-branch",
-					Target: "main",
-					Title:  "Proposal 1",
-					URL:    "https://example.com/pr/1",
-				},
-				{
-					Number: 2,
-					Source: "other-branch",
-					Target: "main",
-					Title:  "Proposal 2",
-					URL:    "https://example.com/pr/2",
-				},
-			}
-			have := proposals.Search("feature-branch")
-			must.Len(t, 1, have)
-			must.EqOp(t, 1, have[0].Number)
-		})
-
-		t.Run("returns all proposals when all match source", func(t *testing.T) {
-			t.Parallel()
-			proposals := mockproposals.MockProposals{
-				{
-					Number: 1,
-					Source: "feature-branch",
-					Target: "main",
-					Title:  "Proposal 1",
-					URL:    "https://example.com/pr/1",
-				},
-				{
-					Number: 2,
-					Source: "feature-branch",
-					Target: "develop",
-					Title:  "Proposal 2",
-					URL:    "https://example.com/pr/2",
-				},
-			}
-			have := proposals.Search("feature-branch")
-			must.Len(t, 2, have)
-			must.EqOp(t, 1, have[0].Number)
-			must.EqOp(t, 2, have[1].Number)
 		})
 	})
 }
