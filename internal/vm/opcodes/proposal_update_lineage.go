@@ -47,8 +47,7 @@ func (self *ProposalUpdateLineage) Run(args shared.RunArgs) error {
 	if updatedProposalBody == oldProposalBody {
 		return nil
 	}
-	err = proposalBodyUpdater.UpdateProposalBody(proposal.Data, updatedProposalBody)
-	if err != nil {
+	if err = proposalBodyUpdater.UpdateProposalBody(proposal.Data, updatedProposalBody); err != nil {
 		args.FinalMessages.Addf(messages.ProposalBodyUpdateProblem, err.Error())
 	}
 	return nil
