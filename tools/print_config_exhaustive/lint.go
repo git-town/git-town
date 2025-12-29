@@ -18,6 +18,7 @@ var whiteList = []string{
 	"Aliases",
 	"BranchTypeOverrides",
 	"DryRun",
+	"TestHome",
 	"Verbose",
 }
 

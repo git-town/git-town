@@ -2,7 +2,6 @@
 package subshell
 
 import (
-	"os"
 	"time"
 )
 
@@ -11,10 +10,3 @@ const concurrentGitRetries = 5
 
 // the amount of time Git Town should wait between retries when there is another Git process running
 const concurrentGitRetryDelay = 1 * time.Second
-
-const TestToken = "GIT_TOWN_TEST"
-
-func IsInTest() bool {
-	_, result := os.LookupEnv(TestToken)
-	return result
-}

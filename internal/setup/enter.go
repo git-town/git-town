@@ -2,7 +2,6 @@ package setup
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/git-town/git-town/v22/internal/cli/dialog"
 	"github.com/git-town/git-town/v22/internal/cli/dialog/dialogcomponents"
@@ -15,7 +14,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/git/giturl"
 	"github.com/git-town/git-town/v22/internal/messages"
-	"github.com/git-town/git-town/v22/internal/subshell"
 	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
@@ -130,6 +128,7 @@ EnterForgeData:
 		gitlabToken:          gitlabToken.Or(data.Config.GitGlobal.GitLabToken),
 		inputs:               data.Inputs,
 		remoteURL:            data.Config.NormalConfig.RemoteURL(data.Backend, devRemote.GetOr(config.DefaultNormalConfig().DevRemote)),
+		testHome:             data.Config.NormalConfig.TestHome,
 	})
 	if err != nil || exit {
 		return emptyResult, exit, false, err
@@ -323,6 +322,7 @@ EnterForgeData:
 		SyncPrototypeStrategy:    syncPrototypeStrategy,
 		SyncTags:                 syncTags,
 		SyncUpstream:             syncUpstream,
+		TestHome:                 None[configdomain.TestHome](),
 		UnknownBranchType:        unknownBranchType,
 		Verbose:                  None[configdomain.Verbose](), // the setup assistant doesn't ask for this
 	}
@@ -807,7 +807,7 @@ func shouldAskForScope(args enterTokenScopeArgs) bool {
 }
 
 func testForgeAuth(args testForgeAuthArgs) (repeat bool, exit dialogdomain.Exit, err error) {
-	if _, inTest := os.LookupEnv(subshell.TestToken); inTest {
+	if args.testHome.IsSome() {
 		return false, false, nil
 	}
 	connectorOpt, err := forge.NewConnector(forge.NewConnectorArgs{
@@ -863,6 +863,7 @@ type testForgeAuthArgs struct {
 	gitlabToken          Option[forgedomain.GitLabToken]
 	inputs               dialogcomponents.Inputs
 	remoteURL            Option[giturl.Parts]
+	testHome             Option[configdomain.TestHome]
 }
 
 func tokenScopeDialog(args enterTokenScopeArgs) (configdomain.ConfigScope, dialogdomain.Exit, error) {

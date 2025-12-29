@@ -15,6 +15,7 @@ const (
 )
 
 // ProposalOverride allows returning mock proposal data in tests.
+// TODO: delete this once the new infrastructure for proposals in E2E tests is complete.
 type ProposalOverride string
 
 func (self ProposalOverride) String() string {

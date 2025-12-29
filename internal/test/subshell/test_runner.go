@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/config/envconfig"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v22/internal/subshell"
@@ -198,7 +199,7 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 		opts.Env = envvars.Replace(opts.Env, "GIT_EDITOR", filepath.Join(self.BinDir, gitEditor))
 	}
 	// mark as test run
-	opts.Env = append(opts.Env, subshell.TestToken+"="+self.HomeDir)
+	opts.Env = append(opts.Env, envconfig.TestHome+"="+self.HomeDir)
 	// set the working dir
 	opts.Dir = filepath.Join(self.WorkingDir, opts.Dir)
 	// run the command inside the custom environment
