@@ -465,7 +465,7 @@ func setParentProgram(newParentOpt Option[gitdomain.LocalBranchName], data setPa
 		}
 	}
 	// update proposal lineages
-	if data.config.NormalConfig.ProposalsShowLineage != forgedomain.ProposalsShowLineageCLI {
+	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
 		parents := gitdomain.LocalBranchNames{}
 		if hasOldParent {
 			parents = append(parents, oldParent)
