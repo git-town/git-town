@@ -9,7 +9,7 @@ import (
 )
 
 type AddSyncProposalsProgramArgs struct {
-	ChangedBranches gitdomain.LocalBranchNames // all branches that were modified in the current command
+	ChangedBranches gitdomain.LocalBranchNames // all branches that the current Git Town command has changed
 	Config          config.ValidatedConfig
 	Program         Mutable[program.Program]
 }
