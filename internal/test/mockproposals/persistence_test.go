@@ -114,29 +114,33 @@ func TestPersistence(t *testing.T) {
 			t.Parallel()
 			workspaceDir := t.TempDir()
 			proposalsFile := filepath.Join(workspaceDir, "proposals.json")
-			err := os.WriteFile(proposalsFile, []byte(`[{"Number": 999}]`), 0o600)
-			must.NoError(t, err)
-
+			asserts.NoError(os.WriteFile(proposalsFile, []byte(`[{"Number": 999}]`), 0o600))
 			newProposals := mockproposals.MockProposals{
 				{
-					Active:       false,
-					Body:         None[gitdomain.ProposalBody](),
-					MergeWithAPI: false,
-					Number:       456,
-					Source:       gitdomain.NewLocalBranchName("new-branch"),
-					Target:       gitdomain.NewLocalBranchName("main"),
-					Title:        gitdomain.ProposalTitle("New Proposal"),
-					URL:          "https://example.com/pr/456",
+					Body:   None[gitdomain.ProposalBody](),
+					Number: 456,
+					Source: "new-branch",
+					Target: "main",
+					Title:  "Test Proposal",
+					URL:    "https://example.com/pr/456",
 				},
 			}
-
 			mockproposals.Save(workspaceDir, newProposals)
-
-			content, err := os.ReadFile(proposalsFile)
-			must.NoError(t, err)
-			must.StrContains(t, string(content), `"Number": 456`)
-			must.StrContains(t, string(content), `"Source": "new-branch"`)
-			must.StrNotContains(t, string(content), `"Number": 999`)
+			have := asserts.NoError1(os.ReadFile(proposalsFile))
+			want := `
+[
+  {
+    "Active": false,
+    "Body": null,
+    "MergeWithAPI": false,
+    "Number": 456,
+    "Source": "new-branch",
+    "Target": "main",
+    "Title": "Test Proposal",
+    "URL": "https://example.com/pr/456"
+  }
+]`[1:]
+			must.Eq(t, want, string(have))
 		})
 	})
 
