@@ -14,7 +14,7 @@ Feature: already existing known remote branch
       | main   | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      there is already a branch "existing"
+      there is already a branch "existing" at the origin remote
       """
 
   Scenario: undo
