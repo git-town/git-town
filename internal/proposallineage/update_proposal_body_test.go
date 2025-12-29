@@ -10,11 +10,11 @@ import (
 
 func TestUpdateProposalBody(t *testing.T) {
 	t.Parallel()
+	lineageSection := "main\n  - feat-a\n    - feat-b"
 
 	t.Run("append to end of body without marker", func(t *testing.T) {
 		t.Parallel()
 		body := gitdomain.ProposalBody("Proposal body text")
-		lineageSection := "main\n  - feat-a\n    - feat-b"
 		have := proposallineage.UpdateProposalBody(body, lineageSection)
 		want := gitdomain.ProposalBody(`
 Proposal body text
@@ -31,7 +31,6 @@ main
 	t.Run("append to end of empty body", func(t *testing.T) {
 		t.Parallel()
 		body := gitdomain.ProposalBody("")
-		lineageSection := "main\n  - feat-a\n    - feat-b"
 		have := proposallineage.UpdateProposalBody(body, lineageSection)
 		want := gitdomain.ProposalBody(`
 <!-- branch-stack-start -->
@@ -54,7 +53,6 @@ Proposal body text
 
 text
 `[1:])
-		lineageSection := "main\n  - feat-a\n    - feat-b"
 		have := proposallineage.UpdateProposalBody(body, lineageSection)
 		want := gitdomain.ProposalBody(`
 Proposal body text
@@ -85,7 +83,6 @@ main
     - old-b
 <!-- branch-stack-end -->
 `[1:])
-		lineageSection := "main\n  - feat-a\n    - feat-b"
 		have := proposallineage.UpdateProposalBody(body, lineageSection)
 		want := gitdomain.ProposalBody(`
 Proposal body text
