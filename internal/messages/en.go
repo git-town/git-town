@@ -357,7 +357,7 @@ and will be removed in future versions of Git Town.`
 
 	UndoCannotRevertCommitOnPerennialBranch = "Cannot undo commit %s because it is on a perennial branch"
 	UndoContinueGuidance                    = "\n\nTo continue after having resolved conflicts, run \"git town continue\".\nTo go back to where you started, run \"git town undo\".\n"
-	UndoCreateOpcodeProblem                 = "cannot create undo operations for %s: %w"
+	UndoCreateOpcodeProblem                 = "cannot create undo operations for %q: %w"
 	UndoMessage                             = `You can run "git town undo" to go back to where you started.`
 	UndoNothingToDo                         = "nothing to undo"
 	UnfinishedCommandHandle                 = "Handle unfinished command: %s\n"
@@ -372,7 +372,7 @@ and will be removed in future versions of Git Town.`
 	UpNoChild                               = "branch %s has no children"
 	UpNoCurrentBranch                       = "you need to be on a branch to go up"
 
-	ValueInvalid = "invalid value for %s: %s. Please provide either \"yes\" or \"no\""
+	ValueInvalid = "invalid value for %s: %q. Please provide either \"yes\" or \"no\""
 
 	WalkAllOrStack   = "please provide either --all or --stack"
 	WalkDetachedHead = "please check out the branch from which to walk"
