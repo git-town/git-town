@@ -318,8 +318,6 @@ func TestLineage(t *testing.T) {
 		})
 		t.Run("multiple branches from different lineages", func(t *testing.T) {
 			t.Parallel()
-			alpha := gitdomain.NewLocalBranchName("first")
-			beta := gitdomain.NewLocalBranchName("second")
 			lineage := configdomain.NewLineageWith(configdomain.LineageData{
 				one:   main,
 				two:   one,
@@ -327,7 +325,7 @@ func TestLineage(t *testing.T) {
 				beta:  alpha,
 			})
 			have := lineage.Clan(gitdomain.LocalBranchNames{one, alpha}, gitdomain.LocalBranchNames{main})
-			want := gitdomain.LocalBranchNames{alpha, one, beta, two}
+			want := gitdomain.LocalBranchNames{alpha, beta, one, two}
 			must.Eq(t, want, have)
 		})
 		t.Run("empty branches input", func(t *testing.T) {
