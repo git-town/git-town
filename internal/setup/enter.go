@@ -128,6 +128,7 @@ EnterForgeData:
 		gitlabToken:          gitlabToken.Or(data.Config.GitGlobal.GitLabToken),
 		inputs:               data.Inputs,
 		remoteURL:            data.Config.NormalConfig.RemoteURL(data.Backend, devRemote.GetOr(config.DefaultNormalConfig().DevRemote)),
+		testHome:             data.Config.NormalConfig.TestHome,
 	})
 	if err != nil || exit {
 		return emptyResult, exit, false, err
@@ -321,6 +322,7 @@ EnterForgeData:
 		SyncPrototypeStrategy:    syncPrototypeStrategy,
 		SyncTags:                 syncTags,
 		SyncUpstream:             syncUpstream,
+		TestHome:                 None[configdomain.TestHome](),
 		UnknownBranchType:        unknownBranchType,
 		Verbose:                  None[configdomain.Verbose](), // the setup assistant doesn't ask for this
 	}
