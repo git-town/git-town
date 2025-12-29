@@ -17,15 +17,15 @@ func CalculateTree(branch gitdomain.LocalBranchName, lineage configdomain.Lineag
 	root := ancestorsAndBranch[0]
 	descendants := lineage.Descendants(branch, order)
 	relevantBranches := append(ancestorsAndBranch, descendants...)
-	return buildTree2(root, lineage, relevantBranches, order)
+	return buildTree(root, lineage, relevantBranches, order)
 }
 
-// buildTree2 provides the Tree2 for the given branch and all its descendents.
-func buildTree2(branch gitdomain.LocalBranchName, lineage configdomain.Lineage, includeBranches gitdomain.LocalBranchNames, order configdomain.Order) TreeNode {
+// buildTree provides the Tree2 for the given branch and all its descendents.
+func buildTree(branch gitdomain.LocalBranchName, lineage configdomain.Lineage, includeBranches gitdomain.LocalBranchNames, order configdomain.Order) TreeNode {
 	children := []TreeNode{}
 	for _, child := range lineage.Children(branch, order) {
 		if includeBranches.Contains(child) {
-			childNode := buildTree2(child, lineage, includeBranches, order)
+			childNode := buildTree(child, lineage, includeBranches, order)
 			children = append(children, childNode)
 		}
 	}
