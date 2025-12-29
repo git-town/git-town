@@ -55,6 +55,7 @@ const (
 	syncPrototypeStrategy    = "GIT_TOWN_SYNC_PROTOTYPE_STRATEGY"
 	syncTags                 = "GIT_TOWN_SYNC_TAGS"
 	syncUpstream             = "GIT_TOWN_SYNC_UPSTREAM"
+	testHome                 = "GIT_TOWN_TEST"
 	unknownBranchType        = "GIT_TOWN_UNKNOWN_BRANCH_TYPE"
 	verbose                  = "GIT_TOWN_VERBOSE"
 )
@@ -96,7 +97,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	syncPrototypeStrategy, errSyncPrototypeStrategy := load(env, syncPrototypeStrategy, configdomain.ParseSyncPrototypeStrategy)
 	syncTags, errSyncTags := load(env, syncTags, gohacks.ParseBoolOpt[configdomain.SyncTags])
 	syncUpstream, errSyncUpstream := load(env, syncUpstream, gohacks.ParseBoolOpt[configdomain.SyncUpstream])
-	testHome, errTestHome := load(env, testHome, configdomain.ParseTestHome)
+	testHome, errTestHome := NewOption(configdomain.TestHome(env.Get(testHome)))
 	unknownBranchType, errUnknownBranchType := load(env, unknownBranchType, configdomain.ParseBranchType)
 	verbose, errVerbose := load(env, verbose, gohacks.ParseBoolOpt[configdomain.Verbose])
 	err := cmp.Or(
@@ -130,6 +131,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errSyncPrototypeStrategy,
 		errSyncTags,
 		errSyncUpstream,
+		errTestHome,
 		errUnknownBranchType,
 		errVerbose,
 	)
@@ -179,6 +181,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		SyncPrototypeStrategy:    syncPrototypeStrategy,
 		SyncTags:                 syncTags,
 		SyncUpstream:             syncUpstream,
+		TestHome:                 testHome,
 		UnknownBranchType:        configdomain.UnknownBranchTypeOpt(unknownBranchType),
 		Verbose:                  verbose,
 	}, err
