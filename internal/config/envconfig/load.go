@@ -97,7 +97,7 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 	syncPrototypeStrategy, errSyncPrototypeStrategy := load(env, syncPrototypeStrategy, configdomain.ParseSyncPrototypeStrategy)
 	syncTags, errSyncTags := load(env, syncTags, gohacks.ParseBoolOpt[configdomain.SyncTags])
 	syncUpstream, errSyncUpstream := load(env, syncUpstream, gohacks.ParseBoolOpt[configdomain.SyncUpstream])
-	testHome, errTestHome := NewOption(configdomain.TestHome(env.Get(testHome)))
+	testHome := NewOption(configdomain.TestHome(env.Get(testHome)))
 	unknownBranchType, errUnknownBranchType := load(env, unknownBranchType, configdomain.ParseBranchType)
 	verbose, errVerbose := load(env, verbose, gohacks.ParseBoolOpt[configdomain.Verbose])
 	err := cmp.Or(
@@ -131,7 +131,6 @@ func Load(env EnvVars) (configdomain.PartialConfig, error) {
 		errSyncPrototypeStrategy,
 		errSyncTags,
 		errSyncUpstream,
-		errTestHome,
 		errUnknownBranchType,
 		errVerbose,
 	)
