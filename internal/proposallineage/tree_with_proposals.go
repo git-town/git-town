@@ -1,4 +1,4 @@
-package proposallineage2
+package proposallineage
 
 import (
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"

@@ -1,4 +1,4 @@
-package proposallineage2_test
+package proposallineage_test
 
 import (
 	"errors"
@@ -10,7 +10,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	"github.com/git-town/git-town/v22/internal/proposallineage2"
+	"github.com/git-town/git-town/v22/internal/proposallineage"
 	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/shoenig/test/must"
@@ -78,7 +78,7 @@ func TestRender(t *testing.T) {
 			"feature-b2": "feature-b",
 		})
 		var connector forgedomain.Connector = &testFinder{}
-		have := proposallineage2.RenderSection(lineage, "feature-a", configdomain.OrderAsc, Some(connector))
+		have := proposallineage.RenderSection(lineage, "feature-a", configdomain.OrderAsc, Some(connector))
 		want := `
 
 -------------------------
@@ -100,7 +100,7 @@ func TestRender(t *testing.T) {
 			"feature-c": "feature-b",
 		})
 		var connector forgedomain.Connector = &failingFinder{}
-		have := proposallineage2.RenderSection(lineage, "feature-a", configdomain.OrderAsc, Some(connector))
+		have := proposallineage.RenderSection(lineage, "feature-a", configdomain.OrderAsc, Some(connector))
 		want := `
 
 -------------------------
@@ -120,7 +120,7 @@ func TestRender(t *testing.T) {
 			"feature-c":     "no-proposal-b",
 		})
 		var connector forgedomain.Connector = &testFinder{}
-		have := proposallineage2.RenderSection(lineage, "no-proposal-a", configdomain.OrderAsc, Some(connector))
+		have := proposallineage.RenderSection(lineage, "no-proposal-a", configdomain.OrderAsc, Some(connector))
 		want := `
 
 -------------------------

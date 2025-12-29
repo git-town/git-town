@@ -1,10 +1,10 @@
-package proposallineage2_test
+package proposallineage_test
 
 import (
 	"testing"
 
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	"github.com/git-town/git-town/v22/internal/proposallineage2"
+	"github.com/git-town/git-town/v22/internal/proposallineage"
 	"github.com/shoenig/test/must"
 )
 
@@ -15,7 +15,7 @@ func TestUpdateProposalBody(t *testing.T) {
 		t.Parallel()
 		body := gitdomain.ProposalBody("Proposal body text")
 		lineageSection := "main\n  - feat-a\n    - feat-b"
-		have := proposallineage2.UpdateProposalBody(body, lineageSection)
+		have := proposallineage.UpdateProposalBody(body, lineageSection)
 		want := gitdomain.ProposalBody(`
 Proposal body text
 
@@ -32,7 +32,7 @@ main
 		t.Parallel()
 		body := gitdomain.ProposalBody("")
 		lineageSection := "main\n  - feat-a\n    - feat-b"
-		have := proposallineage2.UpdateProposalBody(body, lineageSection)
+		have := proposallineage.UpdateProposalBody(body, lineageSection)
 		want := gitdomain.ProposalBody(`
 <!-- branch-stack-start -->
 main
@@ -55,7 +55,7 @@ Proposal body text
 text
 `[1:])
 		lineageSection := "main\n  - feat-a\n    - feat-b"
-		have := proposallineage2.UpdateProposalBody(body, lineageSection)
+		have := proposallineage.UpdateProposalBody(body, lineageSection)
 		want := gitdomain.ProposalBody(`
 Proposal body text
 
@@ -86,7 +86,7 @@ main
 <!-- branch-stack-end -->
 `[1:])
 		lineageSection := "main\n  - feat-a\n    - feat-b"
-		have := proposallineage2.UpdateProposalBody(body, lineageSection)
+		have := proposallineage.UpdateProposalBody(body, lineageSection)
 		want := gitdomain.ProposalBody(`
 Proposal body text
 

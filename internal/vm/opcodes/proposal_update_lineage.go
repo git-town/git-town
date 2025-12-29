@@ -4,7 +4,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
-	"github.com/git-town/git-town/v22/internal/proposallineage2"
+	"github.com/git-town/git-town/v22/internal/proposallineage"
 	"github.com/git-town/git-town/v22/internal/vm/shared"
 )
 
@@ -42,8 +42,8 @@ func (self *ProposalUpdateLineage) Run(args shared.RunArgs) error {
 		return nil
 	}
 	oldProposalBody := proposal.Data.Data().Body.GetOrZero()
-	lineageSection := proposallineage2.RenderSection(args.Config.Value.NormalConfig.Lineage, self.Branch, args.Config.Value.NormalConfig.Order, args.Connector)
-	updatedProposalBody := proposallineage2.UpdateProposalBody(oldProposalBody, lineageSection)
+	lineageSection := proposallineage.RenderSection(args.Config.Value.NormalConfig.Lineage, self.Branch, args.Config.Value.NormalConfig.Order, args.Connector)
+	updatedProposalBody := proposallineage.UpdateProposalBody(oldProposalBody, lineageSection)
 	if updatedProposalBody == oldProposalBody {
 		return nil
 	}

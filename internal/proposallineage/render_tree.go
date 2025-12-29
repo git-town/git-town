@@ -1,4 +1,4 @@
-package proposallineage2
+package proposallineage
 
 import (
 	"strings"
