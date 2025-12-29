@@ -103,14 +103,11 @@ func TestPersistence(t *testing.T) {
 		t.Run("save empty proposals", func(t *testing.T) {
 			t.Parallel()
 			workspaceDir := t.TempDir()
-			proposals := mockproposals.MockProposals{}
-
-			mockproposals.Save(workspaceDir, proposals)
-
+			give := mockproposals.MockProposals{}
+			mockproposals.Save(workspaceDir, give)
 			proposalsFile := filepath.Join(workspaceDir, "proposals.json")
-			content, err := os.ReadFile(proposalsFile)
-			must.NoError(t, err)
-			must.EqOp(t, "[]", string(content))
+			have := asserts.NoError1(os.ReadFile(proposalsFile))
+			must.EqOp(t, "[]", string(have))
 		})
 
 		t.Run("overwrite existing file", func(t *testing.T) {
