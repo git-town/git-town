@@ -15,6 +15,8 @@ func TestLineage(t *testing.T) {
 	one := gitdomain.NewLocalBranchName("one")
 	two := gitdomain.NewLocalBranchName("two")
 	three := gitdomain.NewLocalBranchName("three")
+	alpha := gitdomain.NewLocalBranchName("alpha")
+	beta := gitdomain.NewLocalBranchName("beta")
 
 	t.Run("Ancestors", func(t *testing.T) {
 		t.Parallel()
@@ -301,12 +303,14 @@ func TestLineage(t *testing.T) {
 			want := gitdomain.LocalBranchNames{one, two}
 			must.Eq(t, want, have)
 		})
-		t.Run("multiple branches from same lineage", func(t *testing.T) {
+		t.Run("multiple branches from same lineage when other lineages exist", func(t *testing.T) {
 			t.Parallel()
 			lineage := configdomain.NewLineageWith(configdomain.LineageData{
 				one:   main,
 				two:   one,
 				three: two,
+				alpha: main,
+				beta:  alpha,
 			})
 			have := lineage.Clan(gitdomain.LocalBranchNames{one, two}, gitdomain.LocalBranchNames{main})
 			want := gitdomain.LocalBranchNames{one, three, two}
