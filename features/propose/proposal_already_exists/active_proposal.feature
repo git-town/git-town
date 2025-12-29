@@ -16,7 +16,7 @@ Feature: open the page of an already existing proposal
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                            |
       | feature | git fetch --prune --tags                           |
-      |         | Looking for proposal online ... ok                 |
+      |         | Finding proposal from feature into main ... ok     |
       |         | open https://github.com/git-town/git-town/pull/123 |
     And the initial branches and lineage exist now
   #

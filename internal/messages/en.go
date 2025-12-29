@@ -1,12 +1,11 @@
 package messages
 
-// NOTE: %s gets printed in cyan, all other placeholders get printed normally
-
 const (
 	AliasedCommands                  = "Aliased commands: %s\n"
-	APIParentBranchLookupStart       = "Looking for parent of %s ... "
-	APIProposalLookupStart           = "Looking for proposal online ... "
-	APIProposalUpdateBody            = "Update proposal body for proposal #%s ... "
+	APIParentBranchLookupStart       = "Finding parent of %s ... "
+	APIProposalFindStart             = "Finding proposal from %s into %s ... "
+	APIProposalSearchStart           = "Finding proposals for %s ... "
+	APIProposalUpdateBody            = "Update body for proposal #%s ... "
 	APIProposalUpdateStart           = "Updating proposal online ... "
 	APIUnexpectedResultDataStructure = "unexpected result data structure"
 	APIUpdateProposalSource          = "Updating source branch of proposal %s to %s ... "
@@ -22,8 +21,8 @@ const (
 	BitBucketAppPasswordResult      = "Bitbucket App Password: %s"
 	BitBucketUsernamePrompt         = "Bitbucket username: "
 	BitBucketUsernameResult         = "Bitbucket username: %s"
-	BranchAlreadyExistsLocally      = "there is already a branch %q"
-	BranchAlreadyExistsRemotely     = "there is already a branch %q at the %q remote"
+	BranchAlreadyExistsLocally      = "there is already a branch %s"
+	BranchAlreadyExistsRemotely     = "there is already a branch %s at the %s remote"
 	BranchAuthorMultiple            = "\nMultiple people authored the %s branch.\n\n"
 	BranchCheckoutProblem           = "cannot check out branch %s: %w"
 	BranchContainsMergeCommits      = "branch %s contains merge commits, please compress and try again"
@@ -168,7 +167,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	GiteaTokenResult                = "Gitea token: %s\n"
 	GitHubConnectorTypeResult       = "GitHub connector: %s\n"
 	GitHubConnectorTypeUnknown      = "unknown GitHubConnectorType defined in %s: %q"
-	GitHubEnterpriseInitializeError = "cannot initialize GitHub Enterprise client: %s"
+	GitHubEnterpriseInitializeError = "cannot initialize GitHub Enterprise client: %q"
 	GitHubTokenPrompt               = "GitHub API token: "
 	GitHubTokenResult               = "GitHub token: %s\n"
 	GitLabConnectorTypePrompt       = "GitLab connector: "

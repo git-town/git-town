@@ -37,7 +37,7 @@ type APIConnector struct {
 var _ forgedomain.ProposalFinder = &apiConnector // type check
 
 func (self *APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
-	self.log.Start(messages.APIProposalLookupStart)
+	self.log.Start(messages.APIProposalFindStart, branch, target)
 	client, err := self.getClient()
 	if err != nil {
 		return None[forgedomain.Proposal](), err

@@ -25,7 +25,7 @@ Feature: proposing using the "compress" sync strategy
       |          | git reset --soft main --                                            |
       |          | git commit -m "local existing commit 1"                             |
       |          | git push --force-with-lease                                         |
-      |          | Looking for proposal online ... ok                                  |
+      |          | Finding proposal from existing into main ... ok                     |
       |          | open https://github.com/git-town/git-town/compare/existing?expand=1 |
     And the initial branches and lineage exist now
     And these commits exist now
