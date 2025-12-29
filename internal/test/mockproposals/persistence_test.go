@@ -147,42 +147,26 @@ func TestPersistence(t *testing.T) {
 	t.Run("Load and Save roundtrip", func(t *testing.T) {
 		t.Parallel()
 		workspaceDir := t.TempDir()
-		originalProposals := mockproposals.MockProposals{
+		give := mockproposals.MockProposals{
 			{
-				Active:       true,
-				Body:         gitdomain.NewProposalBodyOpt("body 1"),
-				MergeWithAPI: true,
-				Number:       1,
-				Source:       gitdomain.NewLocalBranchName("branch1"),
-				Target:       gitdomain.NewLocalBranchName("main"),
-				Title:        gitdomain.ProposalTitle("Title 1"),
-				URL:          "https://example.com/pr/1",
+				Body:   gitdomain.NewProposalBodyOpt("body 1"),
+				Number: 1,
+				Source: "branch1",
+				Target: "main",
+				Title:  "Title 1",
+				URL:    "https://example.com/pr/1",
 			},
 			{
-				Active:       false,
-				Body:         None[gitdomain.ProposalBody](),
-				MergeWithAPI: false,
-				Number:       2,
-				Source:       gitdomain.NewLocalBranchName("branch2"),
-				Target:       gitdomain.NewLocalBranchName("main"),
-				Title:        gitdomain.ProposalTitle("Title 2"),
-				URL:          "https://example.com/pr/2",
+				Body:   None[gitdomain.ProposalBody](),
+				Number: 2,
+				Source: "branch2",
+				Target: "main",
+				Title:  "Title 2",
+				URL:    "https://example.com/pr/2",
 			},
 		}
-
-		mockproposals.Save(workspaceDir, originalProposals)
-		loadedProposals := mockproposals.Load(workspaceDir)
-
-		must.Len(t, len(originalProposals), loadedProposals)
-		for i, original := range originalProposals {
-			must.Eq(t, original.Active, loadedProposals[i].Active)
-			must.Eq(t, original.Body, loadedProposals[i].Body)
-			must.Eq(t, original.MergeWithAPI, loadedProposals[i].MergeWithAPI)
-			must.Eq(t, original.Number, loadedProposals[i].Number)
-			must.Eq(t, original.Source, loadedProposals[i].Source)
-			must.Eq(t, original.Target, loadedProposals[i].Target)
-			must.Eq(t, original.Title, loadedProposals[i].Title)
-			must.Eq(t, original.URL, loadedProposals[i].URL)
-		}
+		mockproposals.Save(workspaceDir, give)
+		have := mockproposals.Load(workspaceDir)
+		must.Eq(t, give, have)
 	})
 }
