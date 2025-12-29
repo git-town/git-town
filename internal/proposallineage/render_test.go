@@ -34,7 +34,7 @@ func (tf *testFinder) DefaultProposalMessage(_ forgedomain.ProposalData) string 
 }
 
 func (tf *testFinder) FindProposal(source, _ gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
-	if strings.Contains(source.String(), "no-proposal") {
+	if strings.HasPrefix(source.String(), "no-proposal") {
 		return None[forgedomain.Proposal](), nil
 	}
 	tf.count++
