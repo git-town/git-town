@@ -3,7 +3,9 @@ package mockproposals_test
 import (
 	"testing"
 
+	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/test/mockproposals"
+	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -13,101 +15,91 @@ func TestMockProposals(t *testing.T) {
 	t.Run("FindBySourceAndTarget", func(t *testing.T) {
 		t.Run("source and target match", func(t *testing.T) {
 			t.Parallel()
+			data1 := forgedomain.ProposalData{
+				Number: 1,
+				Source: "feature-branch",
+				Target: "main",
+			}
+			data2 := forgedomain.ProposalData{
+				Number: 2,
+				Source: "other-branch",
+				Target: "main",
+			}
+			proposals := mockproposals.MockProposals{data1, data2}
+			have := proposals.FindBySourceAndTarget("feature-branch", "main")
+			want := Some(data1)
+			must.Eq(t, want, have)
+		})
+
+		t.Run("source matches but target does not", func(t *testing.T) {
+			t.Parallel()
 			proposals := mockproposals.MockProposals{
 				{
 					Number: 1,
 					Source: "feature-branch",
 					Target: "main",
-				},
-				{
-					Number: 2,
-					Source: "other-branch",
-					Target: "main",
+					Title:  "Proposal 1",
+					URL:    "https://example.com/pr/1",
 				},
 			}
-			have := proposals.FindBySourceAndTarget("feature-branch", "main")
-			want
-			must.True(t, have.IsSome())
-			value, _ := have.Get()
-			must.EqOp(t, 1, value.Number)
-			must.EqOp(t, "feature-branch", value.Source)
-			must.EqOp(t, "main", value.Target)
+			have := proposals.FindBySourceAndTarget("feature-branch", "develop")
+			must.True(t, have.IsNone())
 		})
 
-	t.Run("returns None when source matches but target does not", func(t *testing.T) {
-		t.Parallel()
-		proposals := mockproposals.MockProposals{
-			{
+		t.Run("target matches but source does not", func(t *testing.T) {
+			t.Parallel()
+			proposals := mockproposals.MockProposals{
+				{
+					Number: 1,
+					Source: "feature-branch",
+					Target: "main",
+					Title:  "Proposal 1",
+					URL:    "https://example.com/pr/1",
+				},
+			}
+			have := proposals.FindBySourceAndTarget("other-branch", "main")
+			must.True(t, have.IsNone())
+		})
+
+		t.Run("neither source nor target match", func(t *testing.T) {
+			t.Parallel()
+			proposals := mockproposals.MockProposals{
+				{
+					Number: 1,
+					Source: "feature-branch",
+					Target: "main",
+					Title:  "Proposal 1",
+					URL:    "https://example.com/pr/1",
+				},
+			}
+			have := proposals.FindBySourceAndTarget("other-branch", "develop")
+			must.True(t, have.IsNone())
+		})
+
+		t.Run("proposals slice is empty", func(t *testing.T) {
+			t.Parallel()
+			proposals := mockproposals.MockProposals{}
+			have := proposals.FindBySourceAndTarget("feature-branch", "main")
+			must.True(t, have.IsNone())
+		})
+
+		t.Run("multiple match", func(t *testing.T) {
+			t.Parallel()
+			data1 := forgedomain.ProposalData{
 				Number: 1,
 				Source: "feature-branch",
 				Target: "main",
-				Title:  "Proposal 1",
-				URL:    "https://example.com/pr/1",
-			},
-		}
-		have := proposals.FindBySourceAndTarget("feature-branch", "develop")
-		must.True(t, have.IsNone())
-	})
-
-	t.Run("returns None when target matches but source does not", func(t *testing.T) {
-		t.Parallel()
-		proposals := mockproposals.MockProposals{
-			{
-				Number: 1,
-				Source: "feature-branch",
-				Target: "main",
-				Title:  "Proposal 1",
-				URL:    "https://example.com/pr/1",
-			},
-		}
-		have := proposals.FindBySourceAndTarget("other-branch", "main")
-		must.True(t, have.IsNone())
-	})
-
-	t.Run("returns None when neither source nor target match", func(t *testing.T) {
-		t.Parallel()
-		proposals := mockproposals.MockProposals{
-			{
-				Number: 1,
-				Source: "feature-branch",
-				Target: "main",
-				Title:  "Proposal 1",
-				URL:    "https://example.com/pr/1",
-			},
-		}
-		have := proposals.FindBySourceAndTarget("other-branch", "develop")
-		must.True(t, have.IsNone())
-	})
-
-	t.Run("returns None when proposals slice is empty", func(t *testing.T) {
-		t.Parallel()
-		proposals := mockproposals.MockProposals{}
-		have := proposals.FindBySourceAndTarget("feature-branch", "main")
-		must.True(t, have.IsNone())
-	})
-
-	t.Run("returns first matching proposal when multiple match", func(t *testing.T) {
-		t.Parallel()
-		proposals := mockproposals.MockProposals{
-			{
-				Number: 1,
-				Source: "feature-branch",
-				Target: "main",
-				Title:  "Proposal 1",
-				URL:    "https://example.com/pr/1",
-			},
-			{
+			}
+			data2 := forgedomain.ProposalData{
 				Number: 2,
 				Source: "feature-branch",
 				Target: "main",
-				Title:  "Proposal 2",
-				URL:    "https://example.com/pr/2",
-			},
-		}
-		have := proposals.FindBySourceAndTarget("feature-branch", "main")
-		must.True(t, have.IsSome())
-		value, _ := have.Get()
-		must.EqOp(t, 1, value.Number)
+			}
+			proposals := mockproposals.MockProposals{data1, data2}
+			have := proposals.FindBySourceAndTarget("feature-branch", "main")
+			want := Some(data1)
+			must.Eq(t, want, have)
+		})
 	})
 }
 
