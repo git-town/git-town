@@ -173,6 +173,7 @@ type deleteData struct {
 	initialBranch            gitdomain.LocalBranchName
 	inputs                   dialogcomponents.Inputs
 	nonExistingBranches      gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
+	oldClan                  gitdomain.LocalBranchNames
 	previousBranch           Option[gitdomain.LocalBranchName]
 	proposalsOfChildBranches []forgedomain.Proposal
 	stashSize                gitdomain.StashSize
@@ -294,6 +295,7 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (data delet
 	})
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
 	_, nonExistingBranches := branchesSnapshot.Branches.Select(lineageBranches...)
+	oldClan := validatedConfig.NormalConfig.Lineage.Clan(gitdomain.LocalBranchNames{branchToDelete}, validatedConfig.MainAndPerennials())
 	return deleteData{
 		branchInfosLastRun:       branchInfosLastRun,
 		branchToDeleteInfo:       *branchToDeleteInfo,
@@ -306,6 +308,7 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult) (data delet
 		initialBranch:            initialBranch,
 		inputs:                   inputs,
 		nonExistingBranches:      nonExistingBranches,
+		oldClan:                  oldClan,
 		previousBranch:           previousBranchOpt,
 		proposalsOfChildBranches: proposalsOfChildBranches,
 		stashSize:                stashSize,
@@ -356,7 +359,7 @@ func deleteFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data d
 	deleteLocalBranch(prog, finalUndoProgram, data)
 	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
 		sync.AddSyncProposalsProgram(sync.AddSyncProposalsProgramArgs{
-			ChangedBranches: gitdomain.LocalBranchNames{data.branchToDeleteInfo.GetLocalOrRemoteNameAsLocalName()},
+			ChangedBranches: data.oldClan,
 			Config:          data.config,
 			Program:         prog,
 		})
