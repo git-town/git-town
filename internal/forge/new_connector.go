@@ -15,6 +15,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/forge/glab"
 	"github.com/git-town/git-town/v22/internal/git/giturl"
 	"github.com/git-town/git-town/v22/internal/subshell/subshelldomain"
+	"github.com/git-town/git-town/v22/internal/test/mockproposals"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
@@ -70,6 +71,13 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			RemoteURL:        remoteURL,
 		})
 	case forgedomain.ForgeTypeGitHub:
+		if testHome, inTestMode := args.TestHome.Get(); inTestMode {
+			connector = github.MockAPIConnector{
+				WebConnector: github.NewWebConnector(remoteURL, args.Browser),
+				Proposals:    mockproposals.Load(testHome.String()),
+				OriginRepo:   originRepo,
+			}
+		}
 		if githubConnectorType, hasGitHubConnectorType := args.GitHubConnectorType.Get(); hasGitHubConnectorType {
 			switch githubConnectorType {
 			case forgedomain.GitHubConnectorTypeAPI:
@@ -148,4 +156,5 @@ type NewConnectorArgs struct {
 	GiteaToken           Option[forgedomain.GiteaToken]
 	Log                  print.Logger
 	RemoteURL            Option[giturl.Parts]
+	TestHome             Option[configdomain.TestHome]
 }

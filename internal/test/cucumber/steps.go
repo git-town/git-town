@@ -31,6 +31,7 @@ import (
 	"github.com/git-town/git-town/v22/internal/test/fixture"
 	"github.com/git-town/git-town/v22/internal/test/handlebars"
 	"github.com/git-town/git-town/v22/internal/test/helpers"
+	"github.com/git-town/git-town/v22/internal/test/mockproposals"
 	"github.com/git-town/git-town/v22/internal/test/output"
 	"github.com/git-town/git-town/v22/internal/test/subshell"
 	"github.com/git-town/git-town/v22/internal/test/testgit"
@@ -1438,7 +1439,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^the proposals$`, func(ctx context.Context, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		state.fixture.CreateProposals(table)
+		proposals := mockproposals.FromGherkinTable(table, state.fixture.DevRepo.GetOrPanic().Config.NormalConfig.Lineage)
+		mockproposals.Save(state.fixture.Dir, proposals)
 	})
 
 	sc.Step(`^there are (?:now|still) no perennial branches$`, func(ctx context.Context) error {
