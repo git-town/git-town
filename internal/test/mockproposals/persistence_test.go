@@ -22,7 +22,8 @@ func TestPersistence(t *testing.T) {
 			t.Parallel()
 			workspaceDir := t.TempDir()
 			proposalsFile := mockproposals.FilePath(workspaceDir)
-			content := `[
+			content := `
+[
   {
     "Body": "test body",
     "Number": 123,
@@ -31,7 +32,7 @@ func TestPersistence(t *testing.T) {
     "Title": "Test Proposal",
     "URL": "https://example.com/pr/123"
   }
-]`
+]`[1:]
 			asserts.NoError(os.WriteFile(proposalsFile, []byte(content), 0o600))
 			have := mockproposals.Load(workspaceDir)
 			want := mockproposals.MockProposals{
@@ -50,50 +51,53 @@ func TestPersistence(t *testing.T) {
 		t.Run("file does not exist", func(t *testing.T) {
 			t.Parallel()
 			workspaceDir := t.TempDir()
-			result := mockproposals.Load(workspaceDir)
-			must.Len(t, 0, result)
+			have := mockproposals.Load(workspaceDir)
+			must.Len(t, 0, have)
 		})
 
-		t.Run("empty file", func(t *testing.T) {
+		t.Run("file without proposals", func(t *testing.T) {
 			t.Parallel()
 			workspaceDir := t.TempDir()
 			proposalsFile := filepath.Join(workspaceDir, "proposals.json")
-			err := os.WriteFile(proposalsFile, []byte("[]"), 0o600)
-			must.NoError(t, err)
-
-			result := mockproposals.Load(workspaceDir)
-			must.Len(t, 0, result)
+			asserts.NoError(os.WriteFile(proposalsFile, []byte("[]"), 0o600))
+			have := mockproposals.Load(workspaceDir)
+			must.Len(t, 0, have)
 		})
 	})
 
 	t.Run("Save", func(t *testing.T) {
 		t.Parallel()
 
-		t.Run("save proposals", func(t *testing.T) {
+		t.Run("save and load", func(t *testing.T) {
 			t.Parallel()
 			workspaceDir := t.TempDir()
-			proposals := mockproposals.MockProposals{
+			give := mockproposals.MockProposals{
 				{
-					Active:       true,
-					Body:         gitdomain.NewProposalBodyOpt("test body"),
-					MergeWithAPI: true,
-					Number:       123,
-					Source:       gitdomain.NewLocalBranchName("feature-branch"),
-					Target:       gitdomain.NewLocalBranchName("main"),
-					Title:        gitdomain.ProposalTitle("Test Proposal"),
-					URL:          "https://example.com/pr/123",
+					Body:   gitdomain.NewProposalBodyOpt("test body"),
+					Source: "feature-branch",
+					Number: 123,
+					Target: "main",
+					Title:  "Test Proposal",
+					URL:    "https://example.com/pr/123",
 				},
 			}
-
-			mockproposals.Save(workspaceDir, proposals)
-
+			mockproposals.Save(workspaceDir, give)
 			proposalsFile := filepath.Join(workspaceDir, "proposals.json")
-			content, err := os.ReadFile(proposalsFile)
-			must.NoError(t, err)
-			must.StrContains(t, string(content), `"Number": 123`)
-			must.StrContains(t, string(content), `"Source": "feature-branch"`)
-			must.StrContains(t, string(content), `"Target": "main"`)
-			must.StrContains(t, string(content), `"Title": "Test Proposal"`)
+			have := asserts.NoError1(os.ReadFile(proposalsFile))
+			want := `
+[
+  {
+    "Active": false,
+    "Body": "test body",
+    "MergeWithAPI": false,
+    "Number": 123,
+    "Source": "feature-branch",
+    "Target": "main",
+    "Title": "Test Proposal",
+    "URL": "https://example.com/pr/123"
+  }
+]`[1:]
+			must.Eq(t, want, string(have))
 		})
 
 		t.Run("save empty proposals", func(t *testing.T) {
