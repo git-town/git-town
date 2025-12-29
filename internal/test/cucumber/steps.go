@@ -1436,6 +1436,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^the proposals$`, func(ctx context.Context, table *godog.Table) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		state.fixture.CreateProposals(table)
+	})
+
 	sc.Step(`^there are (?:now|still) no perennial branches$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
