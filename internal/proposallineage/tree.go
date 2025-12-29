@@ -20,7 +20,7 @@ func CalculateTree(branch gitdomain.LocalBranchName, lineage configdomain.Lineag
 	return buildTree(root, lineage, relevantBranches, order)
 }
 
-// buildTree provides the Tree for the given branch and all its descendents.
+// buildTree provides the TreeNodes for the given branch and all its descendents.
 func buildTree(branch gitdomain.LocalBranchName, lineage configdomain.Lineage, includeBranches gitdomain.LocalBranchNames, order configdomain.Order) TreeNode {
 	children := []TreeNode{}
 	for _, child := range lineage.Children(branch, order) {
