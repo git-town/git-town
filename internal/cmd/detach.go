@@ -20,7 +20,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v22/internal/messages"
-	"github.com/git-town/git-town/v22/internal/proposallineage"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
 	"github.com/git-town/git-town/v22/internal/validate"
 	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
@@ -370,6 +369,7 @@ func determineDetachData(repo execute.OpenRepoResult) (data detachData, flow con
 func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Frontend, data.config.NormalConfig.Order)
+	oldParent := data.parentBranch
 	// step 1: delete the commits of the branch to detach from all descendents,
 	// while that branch is still in the form it had inside the stack
 	lastParent := data.parentBranch
@@ -448,18 +448,10 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 		}
 	}
 	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
-		_ = sync.AddStackLineageUpdateOpcodes(sync.AddStackLineageUpdateOpcodesArgs{
-			Current:   data.initialBranch,
-			FullStack: true,
-			Program:   prog,
-			ProposalStackLineageArgs: proposallineage.ProposalStackLineageArgs{
-				Connector:                forgedomain.ProposalFinderFromConnector(data.connector),
-				CurrentBranch:            data.initialBranch,
-				Lineage:                  data.config.NormalConfig.Lineage,
-				MainAndPerennialBranches: data.config.MainAndPerennials(),
-				Order:                    data.config.NormalConfig.Order,
-			},
-			SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(),
+		sync.AddSyncProposalsProgram(sync.AddSyncProposalsProgramArgs{
+			ChangedBranches: gitdomain.LocalBranchNames{data.branchToDetachName, oldParent},
+			Config:          data.config,
+			Program:         prog,
 		})
 	}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{

@@ -18,7 +18,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/gohacks"
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v22/internal/messages"
-	"github.com/git-town/git-town/v22/internal/proposallineage"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
 	"github.com/git-town/git-town/v22/internal/validate"
 	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
@@ -148,6 +147,7 @@ Start:
 	if err = validateSharedData(sharedData, args.toParent, message); err != nil {
 		return err
 	}
+	oldClan := sharedData.config.NormalConfig.Lineage.Clan(gitdomain.LocalBranchNames{sharedData.initialBranch}, sharedData.config.MainAndPerennials())
 	prog := NewMutable(&program.Program{})
 	switch sharedData.config.NormalConfig.ShipStrategy {
 	case configdomain.ShipStrategyAPI:
@@ -183,24 +183,11 @@ Start:
 		shipProgramSquashMerge(prog, repo, sharedData, squashMergeData, message)
 	}
 	if sharedData.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
-		_ = sync.AddStackLineageUpdateOpcodes(
-			sync.AddStackLineageUpdateOpcodesArgs{
-				Current:   sharedData.initialBranch,
-				FullStack: true,
-				Program:   prog,
-				ProposalStackLineageArgs: proposallineage.ProposalStackLineageArgs{
-					Connector:                forgedomain.ProposalFinderFromConnector(sharedData.connector),
-					CurrentBranch:            sharedData.initialBranch,
-					Lineage:                  sharedData.config.NormalConfig.Lineage,
-					MainAndPerennialBranches: sharedData.config.MainAndPerennials(),
-					Order:                    sharedData.config.NormalConfig.Order,
-				},
-				// Proposal has been shipped and its stack lineage
-				// information shouldn't need to be updated because
-				// proposal is not in a review state.
-				SkipUpdateForProposalsWithBaseBranch: gitdomain.LocalBranchNames{sharedData.initialBranch},
-			},
-		)
+		sync.AddSyncProposalsProgram(sync.AddSyncProposalsProgramArgs{
+			ChangedBranches: oldClan.Remove(sharedData.initialBranch),
+			Config:          sharedData.config,
+			Program:         prog,
+		})
 	}
 	optimizedProgram := optimizer.Optimize(prog.Immutable())
 	runState := runstate.RunState{

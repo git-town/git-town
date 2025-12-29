@@ -20,7 +20,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v22/internal/messages"
-	"github.com/git-town/git-town/v22/internal/proposallineage"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
 	"github.com/git-town/git-town/v22/internal/validate"
 	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
@@ -405,22 +404,11 @@ func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages strin
 		})
 	}
 	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
-		_ = sync.AddStackLineageUpdateOpcodes(
-			sync.AddStackLineageUpdateOpcodesArgs{
-				Current:   data.initialBranch,
-				FullStack: true,
-				Program:   prog,
-				ProposalStackLineageArgs: proposallineage.ProposalStackLineageArgs{
-					Connector:                forgedomain.ProposalFinderFromConnector(data.connector),
-					CurrentBranch:            data.initialBranch,
-					Lineage:                  data.config.NormalConfig.Lineage,
-					MainAndPerennialBranches: data.config.MainAndPerennials(),
-					Order:                    data.config.NormalConfig.Order,
-				},
-
-				SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(),
-			},
-		)
+		sync.AddSyncProposalsProgram(sync.AddSyncProposalsProgramArgs{
+			ChangedBranches: gitdomain.LocalBranchNames{data.initialBranch},
+			Config:          data.config,
+			Program:         prog,
+		})
 	}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.config.NormalConfig.DryRun,

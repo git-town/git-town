@@ -19,7 +19,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
-	"github.com/git-town/git-town/v22/internal/proposallineage"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
 	"github.com/git-town/git-town/v22/internal/validate"
 	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
@@ -182,21 +181,11 @@ Start:
 		runProgram.Value.Add(&opcodes.PushTags{})
 	}
 	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
-		_ = AddStackLineageUpdateOpcodes(
-			AddStackLineageUpdateOpcodesArgs{
-				Current:   data.initialBranch,
-				FullStack: args.stack,
-				Program:   runProgram,
-				ProposalStackLineageArgs: proposallineage.ProposalStackLineageArgs{
-					Connector:                forgedomain.ProposalFinderFromConnector(data.connector),
-					CurrentBranch:            data.initialBranch,
-					Lineage:                  data.config.NormalConfig.Lineage,
-					MainAndPerennialBranches: data.config.MainAndPerennials(),
-					Order:                    data.config.NormalConfig.Order,
-				},
-				SkipUpdateForProposalsWithBaseBranch: gitdomain.NewLocalBranchNames(),
-			},
-		)
+		AddSyncProposalsProgram(AddSyncProposalsProgramArgs{
+			ChangedBranches: gitdomain.LocalBranchNames{data.initialBranch},
+			Config:          data.config,
+			Program:         runProgram,
+		})
 	}
 
 	cmdhelpers.Wrap(runProgram, cmdhelpers.WrapOptions{
