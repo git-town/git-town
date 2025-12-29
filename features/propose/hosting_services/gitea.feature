@@ -16,7 +16,7 @@ Feature: Gitea support
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                         |
       | feature | git fetch --prune --tags                                        |
-      |         | Looking for proposal online ... ok                              |
+      |         | Finding proposal from feature into main ... ok                  |
       |         | open https://gitea.com/git-town/git-town/compare/main...feature |
 
     Examples:
@@ -40,7 +40,7 @@ Feature: Gitea support
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                   |
       | feature | git fetch --prune --tags                                                  |
-      |         | Looking for proposal online ... ok                                        |
+      |         | Finding proposal from feature into main ... ok                            |
       |         | open https://gitea.com/git-town/git-town.gitea.com/compare/main...feature |
 
     Examples:
@@ -62,7 +62,7 @@ Feature: Gitea support
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                          |
       | fix-#2 | git fetch --prune --tags                                         |
-      |        | Looking for proposal online ... ok                               |
+      |        | Finding proposal from fix-#2 into main ... ok                    |
       |        | open https://gitea.com/git-town/git-town/compare/main...fix-%232 |
 
   Scenario: URL-encodes forward slashes
@@ -75,7 +75,7 @@ Feature: Gitea support
     Then Git Town runs the commands
       | BRANCH       | COMMAND                                                                |
       | test/feature | git fetch --prune --tags                                               |
-      |              | Looking for proposal online ... ok                                     |
+      |              | Finding proposal from test/feature into main ... ok                    |
       |              | open https://gitea.com/git-town/git-town/compare/main...test%2Ffeature |
 
   Scenario: stacked change with known parent
@@ -91,5 +91,5 @@ Feature: Gitea support
       | child  | git fetch --prune --tags                                        |
       |        | git checkout parent                                             |
       | parent | git checkout child                                              |
-      |        | Looking for proposal online ... ok                              |
+      |        | Finding proposal from child into parent ... ok                  |
       | child  | open https://gitea.com/git-town/git-town/compare/parent...child |

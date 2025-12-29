@@ -21,7 +21,7 @@ Feature: rename the current branch to a branch that is active in another worktre
       | old    | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      there is already a branch "other"
+      there is already a branch other
       """
   #
   # NOTE: Cannot test undo here.
