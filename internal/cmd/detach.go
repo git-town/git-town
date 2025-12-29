@@ -449,7 +449,7 @@ func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages s
 	}
 	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
 		sync.AddSyncProposalsProgram(sync.AddSyncProposalsProgramArgs{
-			ChangedBranches: gitdomain.LocalBranchNames{oldParent},
+			ChangedBranches: gitdomain.LocalBranchNames{data.branchToDetachName, oldParent},
 			Config:          data.config,
 			Program:         prog,
 		})
