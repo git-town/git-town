@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	"github.com/git-town/git-town/v22/internal/subshell"
 	"github.com/git-town/git-town/v22/internal/vm/shared"
 )
 
@@ -27,7 +26,7 @@ func (self *RebaseOnto) Continue() []shared.Opcode {
 }
 
 func (self *RebaseOnto) Run(args shared.RunArgs) error {
-	if subshell.IsInTest() {
+	if args.Config.Value.NormalConfig.TestHome.IsSome() {
 		// Fix for https://github.com/git-town/git-town/issues/4942.
 		// Waiting here in end-to-end tests to ensure new timestamps for the rebased commits,
 		// which avoids flaky end-to-end tests.
