@@ -101,80 +101,71 @@ func TestMockProposals(t *testing.T) {
 			must.Eq(t, want, have)
 		})
 	})
-}
 
-func TestMockProposals_FindById(t *testing.T) {
-	t.Parallel()
-
-	t.Run("finds proposal when ID matches", func(t *testing.T) {
-		t.Parallel()
-		proposals := mockproposals.MockProposals{
-			{
+	t.Run("FindById", func(t *testing.T) {
+		t.Run("ID matches", func(t *testing.T) {
+			t.Parallel()
+			data1 := forgedomain.ProposalData{
 				Number: 1,
 				Source: "feature-branch",
 				Target: "main",
-				Title:  "Proposal 1",
-				URL:    "https://example.com/pr/1",
-			},
-			{
+			}
+			data2 := forgedomain.ProposalData{
 				Number: 2,
 				Source: "other-branch",
 				Target: "main",
-				Title:  "Proposal 2",
-				URL:    "https://example.com/pr/2",
-			},
-		}
-		have := proposals.FindById(2)
-		must.True(t, have.IsSome())
-		value := have.GetOrPanic()
-		must.EqOp(t, 2, value.Number)
-		must.EqOp(t, "other-branch", value.Source)
-	})
+			}
+			proposals := mockproposals.MockProposals{data1, data2}
+			have := proposals.FindById(2)
+			want := MutableSome(&data2)
+			must.Eq(t, want, have)
+		})
 
-	t.Run("returns MutableNone when ID does not match", func(t *testing.T) {
-		t.Parallel()
-		proposals := mockproposals.MockProposals{
-			{
-				Number: 1,
-				Source: "feature-branch",
-				Target: "main",
-				Title:  "Proposal 1",
-				URL:    "https://example.com/pr/1",
-			},
-		}
-		have := proposals.FindById(999)
-		must.True(t, have.IsNone())
-	})
+		t.Run("ID does not match", func(t *testing.T) {
+			t.Parallel()
+			proposals := mockproposals.MockProposals{
+				{
+					Number: 1,
+					Source: "feature-branch",
+					Target: "main",
+					Title:  "Proposal 1",
+					URL:    "https://example.com/pr/1",
+				},
+			}
+			have := proposals.FindById(999)
+			must.True(t, have.IsNone())
+		})
 
-	t.Run("returns MutableNone when proposals slice is empty", func(t *testing.T) {
-		t.Parallel()
-		proposals := mockproposals.MockProposals{}
-		have := proposals.FindById(1)
-		must.True(t, have.IsNone())
-	})
+		t.Run("returns MutableNone when proposals slice is empty", func(t *testing.T) {
+			t.Parallel()
+			proposals := mockproposals.MockProposals{}
+			have := proposals.FindById(1)
+			must.True(t, have.IsNone())
+		})
 
-	t.Run("finds proposal with ID 0", func(t *testing.T) {
-		t.Parallel()
-		proposals := mockproposals.MockProposals{
-			{
-				Number: 0,
-				Source: "feature-branch",
-				Target: "main",
-				Title:  "Proposal 0",
-				URL:    "https://example.com/pr/0",
-			},
-			{
-				Number: 1,
-				Source: "other-branch",
-				Target: "main",
-				Title:  "Proposal 1",
-				URL:    "https://example.com/pr/1",
-			},
-		}
-		have := proposals.FindById(0)
-		must.True(t, have.IsSome())
-		value := have.GetOrPanic()
-		must.EqOp(t, 0, value.Number)
+		t.Run("finds proposal with ID 0", func(t *testing.T) {
+			t.Parallel()
+			proposals := mockproposals.MockProposals{
+				{
+					Number: 0,
+					Source: "feature-branch",
+					Target: "main",
+					Title:  "Proposal 0",
+					URL:    "https://example.com/pr/0",
+				},
+				{
+					Number: 1,
+					Source: "other-branch",
+					Target: "main",
+					Title:  "Proposal 1",
+					URL:    "https://example.com/pr/1",
+				},
+			}
+			have := proposals.FindById(0)
+			must.True(t, have.IsSome())
+			value := have.GetOrPanic()
+			must.EqOp(t, 0, value.Number)
+		})
 	})
 }
 
