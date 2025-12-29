@@ -17,6 +17,30 @@ func TestUpdateProposalBody(t *testing.T) {
 		body := gitdomain.ProposalBody(`
 Proposal body text
 
+<!-- branch-stack-start -->
+main
+  - old-a
+    - old-b
+<!-- branch-stack-end -->
+`[1:])
+		have := proposallineage.UpdateProposalBody(body, lineageSection)
+		want := gitdomain.ProposalBody(`
+Proposal body text
+
+<!-- branch-stack-start -->
+main
+  - feat-a
+    - feat-b
+<!-- branch-stack-end -->
+`[1:])
+		must.EqOp(t, want, have)
+	})
+
+	t.Run("body with marker and existing lineage", func(t *testing.T) {
+		t.Parallel()
+		body := gitdomain.ProposalBody(`
+Proposal body text
+
 <!-- branch-stack -->
 <!-- branch-stack-start -->
 main
