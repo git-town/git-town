@@ -28,7 +28,7 @@ func UpdateProposalBody(body gitdomain.ProposalBody, lineageSection string) gitd
 		return gitdomain.ProposalBody(bodyStr[:startIdx] + wrappedLineage + bodyStr[endLineEnd:])
 	}
 
-	// here there is no lineage section, check for existing stack marker
+	// here there is no lineage section, check for stack marker
 	stackIdx := strings.Index(bodyStr, stackMarker)
 	if stackIdx != -1 {
 		// Insert lineage after the marker
