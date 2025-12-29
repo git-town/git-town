@@ -14,7 +14,7 @@ Feature: already existing local branch
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      there is already a branch "existing"
+      there is already a branch existing
       """
     And the uncommitted file still exists
   #
