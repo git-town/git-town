@@ -91,6 +91,7 @@ const (
 	ConflictMerge                      = "git merge conflict"
 	ConflictRebase                     = "git rebase conflict"
 	ConnectorCannotFindProposals       = "connector cannot find proposals"
+	ConnectorCannotSearchProposals     = "connector cannot search proposals"
 	ConnectorCannotUpdateProposalBody  = "connector cannot update proposal body"
 	ContinueMessage                    = `You can run "git town continue" to finish it.`
 	ContinueNothingToDo                = "nothing to continue"

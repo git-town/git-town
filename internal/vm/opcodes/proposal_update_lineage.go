@@ -20,9 +20,9 @@ func (self *ProposalUpdateLineage) Run(args shared.RunArgs) error {
 		args.FinalMessages.Add(forgedomain.UnsupportedServiceError().Error())
 		return nil
 	}
-	proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder)
-	if !canFindProposals {
-		args.FinalMessages.Add(messages.ConnectorCannotFindProposals)
+	proposalSearcher, canSearchProposals := connector.(forgedomain.ProposalSearcher)
+	if !canSearchProposals {
+		args.FinalMessages.Add(messages.ConnectorCannotSearchProposals)
 		return nil
 	}
 	fmt.Println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
@@ -32,17 +32,12 @@ func (self *ProposalUpdateLineage) Run(args shared.RunArgs) error {
 		return nil
 	}
 	fmt.Println("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB", self.Branch, args.Config.Value.NormalConfig.Lineage)
-	parentBranch, hasParentBranch := args.Config.Value.NormalConfig.Lineage.Parent(self.Branch).Get()
-	if !hasParentBranch {
-		return nil
-	}
-	fmt.Println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC", parentBranch)
-	proposalOpt, err := proposalFinder.FindProposal(self.Branch, parentBranch)
+	proposals, err := proposalSearcher.SearchProposals(self.Branch)
 	if err != nil {
 		args.FinalMessages.Addf(messages.ProposalFindProblem, err.Error())
 		return nil
 	}
-	fmt.Println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD", proposalOpt)
+	fmt.Println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD", proposals)
 	// TODO: here it tries to update the old proposals based on already updated lineage.
 	// In this case, the lineage lists branch "beta" as a child of "main", but such a proposal doesn't exist.
 	// Possible solutions:
@@ -54,20 +49,18 @@ func (self *ProposalUpdateLineage) Run(args shared.RunArgs) error {
 	//    But these updates are different in nature (update target branch and update body),
 	//    so it seems okay to do them separately.
 	//    This also seems more correct, since all branches for "beta" need to get this update anyways.
-	proposal, hasProposal := proposalOpt.Get()
-	if !hasProposal {
-		return nil
-	}
-	fmt.Println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
-	oldProposalBody := proposal.Data.Data().Body.GetOrZero()
-	lineageSection := proposallineage.RenderSection(args.Config.Value.NormalConfig.Lineage, self.Branch, args.Config.Value.NormalConfig.Order, args.Connector)
-	updatedProposalBody := proposallineage.UpdateProposalBody(oldProposalBody, lineageSection)
-	fmt.Println("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF", oldProposalBody, updatedProposalBody)
-	if updatedProposalBody == oldProposalBody {
-		return nil
-	}
-	if err = proposalBodyUpdater.UpdateProposalBody(proposal.Data, updatedProposalBody); err != nil {
-		args.FinalMessages.Addf(messages.ProposalBodyUpdateProblem, err.Error())
+	for _, proposal := range proposals {
+		fmt.Println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
+		oldProposalBody := proposal.Data.Data().Body.GetOrZero()
+		lineageSection := proposallineage.RenderSection(args.Config.Value.NormalConfig.Lineage, self.Branch, args.Config.Value.NormalConfig.Order, args.Connector)
+		updatedProposalBody := proposallineage.UpdateProposalBody(oldProposalBody, lineageSection)
+		fmt.Println("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF", oldProposalBody, updatedProposalBody)
+		if updatedProposalBody == oldProposalBody {
+			continue
+		}
+		if err = proposalBodyUpdater.UpdateProposalBody(proposal.Data, updatedProposalBody); err != nil {
+			args.FinalMessages.Addf(messages.ProposalBodyUpdateProblem, err.Error())
+		}
 	}
 	return nil
 }
