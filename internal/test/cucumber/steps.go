@@ -1443,7 +1443,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^the proposals$`, func(ctx context.Context, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		state.hasProposals = true
+		state.proposalsDefined = true
 		proposals := mockproposals.FromGherkinTable(table, state.fixture.DevRepo.GetOrPanic().Config.NormalConfig.Lineage)
 		mockproposals.Save(state.fixture.Dir, proposals)
 	})
