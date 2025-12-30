@@ -8,10 +8,10 @@ Feature: delete the current feature branch from a stack and update proposals
       | beta  | feature | alpha  | local, origin |
     And the proposals
       | ID | SOURCE BRANCH | TARGET BRANCH | BODY       |
-      |  1 | alpha         | main          | alpha body |
-      |  2 | beta          | alpha         | beta body  |
-    And the current branch is "alpha"
+      | 1  | alpha         | main          | alpha body |
+      | 2  | beta          | alpha         | beta body  |
     And Git setting "git-town.proposals-show-lineage" is "cli"
+    And the current branch is "alpha"
     When I run "git-town delete"
 
   @this
