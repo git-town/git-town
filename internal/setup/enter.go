@@ -825,6 +825,7 @@ func testForgeAuth(args testForgeAuthArgs) (repeat bool, exit dialogdomain.Exit,
 		GiteaToken:           args.giteaToken,
 		Log:                  print.Logger{},
 		RemoteURL:            args.devURL,
+		TestHome:             args.testHome,
 	})
 	if err != nil {
 		return false, false, err
