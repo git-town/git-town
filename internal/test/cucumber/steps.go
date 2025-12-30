@@ -39,6 +39,7 @@ import (
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 	"github.com/google/go-cmp/cmp"
 	"github.com/kballard/go-shellquote"
+	"github.com/sergi/go-diff/diffmatchpatch"
 )
 
 // the global FixtureFactory instance.
@@ -81,7 +82,7 @@ func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 			print.Error(fmt.Errorf("%s - scenario %q doesn't document exit code %d", scenario.Uri, scenario.Name, exitCode))
 			os.Exit(1)
 		}
-		if state.proposalsDefined && !state.proposalsChecked {
+		if state.initialProposals.IsSome() && !state.proposalsChecked {
 			print.Error(fmt.Errorf("%s - scenario %q doesn't verify proposals", scenario.Uri, scenario.Name))
 			os.Exit(1)
 		}
@@ -1367,6 +1368,24 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^the initial proposals exist now$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		state.proposalsChecked = true
+		have := string(mockproposals.LoadBytes(state.fixture.Dir))
+		want, hasInitialProposals := state.initialProposals.Get()
+		if !hasInitialProposals {
+			return errors.New("no initial proposals defined")
+		}
+		dmp := diffmatchpatch.New()
+		diffs := dmp.DiffMain(want, have, false)
+		if len(diffs) == 1 && diffs[0].Type == 0 {
+			return nil
+		}
+		fmt.Printf("\nERROR! Found %d differences to the initial proposals\n\n", len(diffs))
+		fmt.Println(dmp.DiffPrettyText(diffs))
+		return errors.New("mismatching proposals found, see diff above")
+	})
+
 	sc.Step(`^the initial tags exist now$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		currentTags := state.fixture.TagTable()
@@ -1443,9 +1462,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^the proposals$`, func(ctx context.Context, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		state.proposalsDefined = true
 		proposals := mockproposals.FromGherkinTable(table, state.fixture.DevRepo.GetOrPanic().Config.NormalConfig.Lineage)
-		mockproposals.Save(state.fixture.Dir, proposals)
+		initialProposals := mockproposals.Save(state.fixture.Dir, proposals)
+		state.initialProposals = Some(initialProposals)
 	})
 
 	sc.Step(`^the proposals are now$`, func(ctx context.Context, want *godog.Table) error {
