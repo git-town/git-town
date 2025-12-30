@@ -13,6 +13,7 @@ func TestMockProposals(t *testing.T) {
 	t.Parallel()
 
 	t.Run("FindByID", func(t *testing.T) {
+		t.Parallel()
 		t.Run("ID matches", func(t *testing.T) {
 			t.Parallel()
 			data1 := forgedomain.ProposalData{
@@ -54,6 +55,7 @@ func TestMockProposals(t *testing.T) {
 	})
 
 	t.Run("FindBySourceAndTarget", func(t *testing.T) {
+		t.Parallel()
 		t.Run("source and target match", func(t *testing.T) {
 			t.Parallel()
 			data1 := forgedomain.ProposalData{
@@ -144,6 +146,7 @@ func TestMockProposals(t *testing.T) {
 	})
 
 	t.Run("Search", func(t *testing.T) {
+		t.Parallel()
 		t.Run("returns all proposals matching source", func(t *testing.T) {
 			t.Parallel()
 			data1 := forgedomain.ProposalData{
