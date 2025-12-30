@@ -72,7 +72,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 		})
 	case forgedomain.ForgeTypeGitHub:
 		if testHome, inTestMode := args.TestHome.Get(); inTestMode {
-			connector = github.MockConnector{
+			connector = &github.MockConnector{
 				WebConnector: github.NewWebConnector(remoteURL, args.Browser),
 				Proposals:    mockproposals.Load(testHome.String()),
 			}
