@@ -17,7 +17,6 @@ func FromGherkinTable(table *godog.Table, lineage configdomain.Lineage) MockProp
 	result := MockProposals{}
 	headers := helpers.TableFields(table)
 	for i := 1; i < len(table.Rows); i++ {
-		fmt.Println("555555555555555555555555555555555555555555555555555555555", i, table.Rows[i].Cells)
 		id := Some(i)
 		source := None[gitdomain.LocalBranchName]()
 		target := None[gitdomain.LocalBranchName]()
@@ -25,7 +24,6 @@ func FromGherkinTable(table *godog.Table, lineage configdomain.Lineage) MockProp
 		body := None[gitdomain.ProposalBody]()
 		url := None[string]()
 		for f, field := range table.Rows[i].Cells {
-			fmt.Println("66666666666666666666666666666666666666", f, field)
 			switch headers[f] {
 			case "ID":
 				value, err := strconv.Atoi(field.Value)
@@ -77,6 +75,7 @@ func FromGherkinTable(table *godog.Table, lineage configdomain.Lineage) MockProp
 
 func ToDataTable(proposals MockProposals, fields []string) datatable.DataTable {
 	result := datatable.DataTable{}
+	result.AddRow(fields...)
 	for _, proposal := range proposals {
 		row := make([]string, len(fields))
 		for f, field := range fields {
@@ -88,7 +87,7 @@ func ToDataTable(proposals MockProposals, fields []string) datatable.DataTable {
 			case "TARGET BRANCH":
 				row[f] = proposal.Target.String()
 			case "BODY":
-				row[f] = proposal.Body.String()
+				row[f] = proposal.Body.GetOrZero().String()
 			case "URL":
 				row[f] = proposal.URL
 			default:
