@@ -76,8 +76,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 				WebConnector: github.NewWebConnector(remoteURL, args.Browser),
 				Proposals:    mockproposals.Load(testHome.String()),
 			}
-		}
-		if githubConnectorType, hasGitHubConnectorType := args.GitHubConnectorType.Get(); hasGitHubConnectorType {
+		} else if githubConnectorType, hasGitHubConnectorType := args.GitHubConnectorType.Get(); hasGitHubConnectorType {
 			switch githubConnectorType {
 			case forgedomain.GitHubConnectorTypeAPI:
 				connector, err = github.NewConnector(github.NewConnectorArgs{
