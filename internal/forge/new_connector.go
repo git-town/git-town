@@ -77,22 +77,23 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 				Proposals:    mockproposals.Load(testHome.String()),
 			}
 		} else {
-		switch args.GitHubConnectorType.GetOr(forgedomain.GitHubConnectorTypeAPI) {
-		case forgedomain.GitHubConnectorTypeAPI:
-			connector, err = github.NewConnector(github.NewConnectorArgs{
-				APIToken:         args.GitHubToken,
-				Browser:          args.Browser,
-				Log:              args.Log,
-				ProposalOverride: proposalOverride,
-				RemoteURL:        remoteURL,
-			})
-		case forgedomain.GitHubConnectorTypeGh:
-			connector = &gh.CachedConnector{
-				Connector: gh.Connector{
-					Backend:  args.Backend,
-					Frontend: args.Frontend,
-				},
-				Cache: forgedomain.APICache{},
+			switch args.GitHubConnectorType.GetOr(forgedomain.GitHubConnectorTypeAPI) {
+			case forgedomain.GitHubConnectorTypeAPI:
+				connector, err = github.NewConnector(github.NewConnectorArgs{
+					APIToken:         args.GitHubToken,
+					Browser:          args.Browser,
+					Log:              args.Log,
+					ProposalOverride: proposalOverride,
+					RemoteURL:        remoteURL,
+				})
+			case forgedomain.GitHubConnectorTypeGh:
+				connector = &gh.CachedConnector{
+					Connector: gh.Connector{
+						Backend:  args.Backend,
+						Frontend: args.Frontend,
+					},
+					Cache: forgedomain.APICache{},
+				}
 			}
 		}
 	case forgedomain.ForgeTypeGitLab:
