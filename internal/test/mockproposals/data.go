@@ -14,7 +14,7 @@ import (
 
 type MockProposals []forgedomain.ProposalData
 
-func (self MockProposals) FindById(id int) OptionalMutable[forgedomain.ProposalData] {
+func (self MockProposals) FindByID(id int) OptionalMutable[forgedomain.ProposalData] {
 	for _, proposal := range self {
 		if proposal.Number == id {
 			return MutableSome(&proposal)

@@ -12,7 +12,7 @@ import (
 func TestMockProposals(t *testing.T) {
 	t.Parallel()
 
-	t.Run("FindById", func(t *testing.T) {
+	t.Run("FindByID", func(t *testing.T) {
 		t.Run("ID matches", func(t *testing.T) {
 			t.Parallel()
 			data1 := forgedomain.ProposalData{
@@ -26,7 +26,7 @@ func TestMockProposals(t *testing.T) {
 				Target: "main",
 			}
 			proposals := mockproposals.MockProposals{data1, data2}
-			have := proposals.FindById(2)
+			have := proposals.FindByID(2)
 			want := MutableSome(&data2)
 			must.Eq(t, want, have)
 		})
@@ -41,14 +41,14 @@ func TestMockProposals(t *testing.T) {
 					Title:  "Proposal 1",
 				},
 			}
-			have := proposals.FindById(999)
+			have := proposals.FindByID(999)
 			must.True(t, have.IsNone())
 		})
 
 		t.Run("proposals slice is empty", func(t *testing.T) {
 			t.Parallel()
 			proposals := mockproposals.MockProposals{}
-			have := proposals.FindById(1)
+			have := proposals.FindByID(1)
 			must.True(t, have.IsNone())
 		})
 	})
