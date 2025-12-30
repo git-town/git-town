@@ -91,7 +91,7 @@ func ToDataTable(proposals []forgedomain.ProposalData, fields []string) datatabl
 			case "URL":
 				row[f] = proposal.URL
 			default:
-				panic(fmt.Sprintf("unknown field: %s", field))
+				panic("unknown field: " + field)
 			}
 		}
 		result.AddRow(row...)
