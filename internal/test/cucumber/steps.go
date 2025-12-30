@@ -1443,6 +1443,19 @@ func defineSteps(sc *godog.ScenarioContext) {
 		mockproposals.Save(state.fixture.Dir, proposals)
 	})
 
+	sc.Step(`^the proposals are now$`, func(ctx context.Context, want *godog.Table) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		have := mockproposals.Load(state.fixture.Dir)
+		haveTable := mockproposals.ToDataTable(have, helpers.TableFields(want))
+		diff, errorCount := haveTable.EqualGherkin(want)
+		if errorCount != 0 {
+			fmt.Printf("\nERROR! Found %d differences in the existing proposals\n\n", errorCount)
+			fmt.Println(diff)
+			return errors.New("mismatching proposals found, see diff above")
+		}
+		return nil
+	})
+
 	sc.Step(`^there are (?:now|still) no perennial branches$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()

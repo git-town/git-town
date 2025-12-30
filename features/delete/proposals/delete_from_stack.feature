@@ -8,8 +8,8 @@ Feature: delete the current feature branch from a stack and update proposals
       | beta  | feature | alpha  | local, origin |
     And the proposals
       | ID | SOURCE BRANCH | TARGET BRANCH | BODY       |
-      | 1  | alpha         | main          | alpha body |
-      | 2  | beta          | alpha         | beta body  |
+      |  1 | alpha         | main          | alpha body |
+      |  2 | beta          | alpha         | beta body  |
     And Git setting "git-town.proposals-show-lineage" is "cli"
     And the current branch is "alpha"
     When I run "git-town delete"
@@ -22,6 +22,10 @@ Feature: delete the current feature branch from a stack and update proposals
       |        | git push origin :alpha   |
       |        | git checkout beta        |
       | beta   | git branch -D alpha      |
+    And the proposals are now
+      | ID | SOURCE BRANCH | TARGET BRANCH | BODY       |
+      |  1 | alpha         | main          | alpha body |
+      |  2 | beta          | alpha         | beta body  |
     And this lineage exists now
       """
       main

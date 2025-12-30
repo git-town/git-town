@@ -18,8 +18,7 @@ var (
 // MockAPIConnector provides access to the Bitbucket Cloud API while caching proposal information.
 type MockAPIConnector struct {
 	WebConnector
-	Proposals     mockproposals.MockProposals
-	ReceivedCalls []string
+	Proposals mockproposals.MockProposals
 }
 
 // ============================================================================
