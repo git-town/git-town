@@ -7,8 +7,8 @@ import (
 )
 
 type MockProposals struct {
-	Proposals []forgedomain.ProposalData
 	FilePath  string // path of the JSON file containing the proposal data on disk
+	Proposals []forgedomain.ProposalData
 }
 
 func (self *MockProposals) FindByID(id int) OptionalMutable[forgedomain.ProposalData] {
