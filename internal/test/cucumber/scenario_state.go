@@ -58,6 +58,10 @@ type ScenarioState struct {
 	// whether the developer workspace contains a Git repository
 	insideGitRepo bool
 
+	// whether this scenario defines proposals
+	proposalsDefined bool
+
+	// whether this scenario verifies the proposals it has defined
 	proposalsChecked bool
 
 	// the error of the last run of Git Town

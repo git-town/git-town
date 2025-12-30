@@ -81,7 +81,7 @@ func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 			print.Error(fmt.Errorf("%s - scenario %q doesn't document exit code %d", scenario.Uri, scenario.Name, exitCode))
 			os.Exit(1)
 		}
-		if !state.proposalsChecked {
+		if state.proposalsDefined && !state.proposalsChecked {
 			print.Error(fmt.Errorf("%s - scenario %q doesn't verify proposals", scenario.Uri, scenario.Name))
 			os.Exit(1)
 		}
@@ -1443,6 +1443,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^the proposals$`, func(ctx context.Context, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		state.hasProposals = true
 		proposals := mockproposals.FromGherkinTable(table, state.fixture.DevRepo.GetOrPanic().Config.NormalConfig.Lineage)
 		mockproposals.Save(state.fixture.Dir, proposals)
 	})
