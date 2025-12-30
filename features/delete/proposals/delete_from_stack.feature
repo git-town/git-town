@@ -15,7 +15,6 @@ Feature: delete the current feature branch from a stack and update proposals
     And the current branch is "alpha"
     When I run "git-town delete"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                  |
@@ -40,9 +39,9 @@ Feature: delete the current feature branch from a stack and update proposals
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                       |
-      | other  | git branch current {{ sha 'current commit' }} |
-      |        | git push -u origin current                    |
-      |        | git checkout current                          |
+      | BRANCH | COMMAND                                     |
+      | beta   | git branch alpha {{ sha 'initial commit' }} |
+      |        | git push -u origin alpha                    |
+      |        | git checkout alpha                          |
     And the initial branches and lineage exist now
     And the initial commits exist now
