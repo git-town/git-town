@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/pkg/asserts"
 )
 
@@ -22,7 +23,7 @@ func Load(workspaceDir string) MockProposals {
 	return result
 }
 
-func Save(workspaceDir string, proposals MockProposals) {
+func Save(workspaceDir string, proposals []forgedomain.ProposalData) {
 	content := asserts.NoError1(json.MarshalIndent(proposals, "", "  "))
 	asserts.NoError(os.WriteFile(FilePath(workspaceDir), content, 0o600))
 }

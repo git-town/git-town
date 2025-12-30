@@ -11,25 +11,31 @@ type MockProposals struct {
 	FilePath  string // path of the JSON file containing the proposal data on disk
 }
 
-func (self MockProposals) FindByID(id int) OptionalMutable[forgedomain.ProposalData] {
-	for _, proposal := range self.Proposals {
+func (self *MockProposals) FindByID(id int) OptionalMutable[forgedomain.ProposalData] {
+	for p, proposal := range self.Proposals {
 		if proposal.Number == id {
-			return MutableSome(&proposal)
+			return MutableSome(&self.Proposals[p])
 		}
 	}
 	return MutableNone[forgedomain.ProposalData]()
 }
 
-func (self MockProposals) FindBySourceAndTarget(source, target gitdomain.LocalBranchName) Option[forgedomain.ProposalData] {
-	for _, proposal := range self.Proposals {
+func (self *MockProposals) FindBySourceAndTarget(source, target gitdomain.LocalBranchName) Option[forgedomain.ProposalData] {
+	for p, proposal := range self.Proposals {
 		if proposal.Source == source && proposal.Target == target {
-			return Some(proposal)
+			return Some(self.Proposals[p])
 		}
 	}
 	return None[forgedomain.ProposalData]()
 }
 
-func (self MockProposals) Search(source gitdomain.LocalBranchName) []forgedomain.ProposalData {
+// Save stores the changes made to the given proposal to disk.
+func (self *MockProposals) Save(proposal forgedomain.ProposalData) {
+	self.Update(proposal)
+	Save(self.FilePath, self.Proposals)
+}
+
+func (self *MockProposals) Search(source gitdomain.LocalBranchName) []forgedomain.ProposalData {
 	result := []forgedomain.ProposalData{}
 	for _, proposal := range self.Proposals {
 		if proposal.Source == source {
@@ -37,4 +43,12 @@ func (self MockProposals) Search(source gitdomain.LocalBranchName) []forgedomain
 		}
 	}
 	return result
+}
+
+func (self *MockProposals) Update(proposal forgedomain.ProposalData) {
+	for p := range self.Proposals {
+		if self.Proposals[p].Number == proposal.Number {
+			self.Proposals[p] = proposal
+		}
+	}
 }

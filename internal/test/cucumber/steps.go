@@ -1446,7 +1446,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the proposals are now$`, func(ctx context.Context, want *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		have := mockproposals.Load(state.fixture.Dir)
-		haveTable := mockproposals.ToDataTable(have, helpers.TableFields(want))
+		haveTable := mockproposals.ToDataTable(have.Proposals, helpers.TableFields(want))
 		diff, errorCount := haveTable.EqualGherkin(want)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing proposals\n\n", errorCount)
