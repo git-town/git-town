@@ -161,6 +161,7 @@ func (self *TestRunner) QueryTrim(name string, arguments ...string) (string, err
 // QueryWith provides the output of the given command and ensures it exited with code 0.
 func (self *TestRunner) QueryWith(opts *Options, cmd string, args ...string) (string, error) {
 	output, exitCode, err := self.QueryWithCode(opts, cmd, args...)
+	fmt.Println("2222222222222222222222222222222222222", cmd, args, exitCode, output, err)
 	if exitCode != 0 {
 		err = fmt.Errorf("process \"%s %s\" failed with code %d.\nOUTPUT START\n%s\nOUTPUT END", cmd, strings.Join(args, " "), exitCode, output)
 	}
@@ -208,9 +209,10 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 		subProcess.Dir = opts.Dir
 	}
 	subProcess.Env = opts.Env
-	var outputBuf bytes.Buffer
-	subProcess.Stdout = &outputBuf
-	subProcess.Stderr = &outputBuf
+	var stdoutBuf bytes.Buffer
+	var stderrBuf bytes.Buffer
+	subProcess.Stdout = &stdoutBuf
+	subProcess.Stderr = &stderrBuf
 	if input, hasInput := opts.Input.Get(); hasInput {
 		var stdin io.WriteCloser
 		stdin, err = subProcess.StdinPipe()
@@ -241,7 +243,11 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 			exitCode = exitErr.ExitCode()
 			err = nil
 		} else {
-			err = subshell.ErrorDetails(cmd, args, err, outputBuf.Bytes())
+			stdoutBytes := stdoutBuf.Bytes()
+			stderrBytes := stderrBuf.Bytes()
+			output := make([]byte, len(stdoutBytes)+len(stderrBytes))
+			// copy stdoutBytes and stderrBytes to output
+			err = subshell.ErrorDetails(cmd, args, err, output)
 		}
 	}
 	if self.Verbose {
