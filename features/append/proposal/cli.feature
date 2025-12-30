@@ -9,11 +9,13 @@ Feature: append a new feature branch to an existing feature branch and sync prop
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
     And the proposals
-      | ID | SOURCE BRANCH | BODY |
-      |  1 | existing      | body |
+      | ID | SOURCE BRANCH | TARGET BRANCH | BODY |
+      |  1 | existing      | main          | body |
     And the current branch is "existing"
+    And Git setting "git-town.proposals-show-lineage" is "cli"
     When I run "git-town append new"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                  |

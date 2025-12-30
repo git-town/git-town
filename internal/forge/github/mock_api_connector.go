@@ -1,6 +1,7 @@
 package github
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/git-town/git-town/v22/internal/config/configdomain"
@@ -21,7 +22,7 @@ var (
 // MockAPIConnector provides access to the Bitbucket Cloud API while caching proposal information.
 type MockAPIConnector struct {
 	WebConnector
-	OriginRepo    *commands.TestCommands
+	OriginRepo    Option[commands.TestCommands]
 	Proposals     mockproposals.MockProposals
 	ReceivedCalls []string
 }
@@ -65,13 +66,17 @@ func (self *MockAPIConnector) SquashMergeProposal(number int, message gitdomain.
 	if !hasProposal {
 		return fmt.Errorf("proposal with id %d not found", number)
 	}
-	self.OriginRepo.CheckoutBranch("main")
+	originRepo, hasOriginRepo := self.OriginRepo.Get()
+	if !hasOriginRepo {
+		return errors.New("this repo has no origin")
+	}
+	originRepo.CheckoutBranch("main")
 	branchToShip := proposal.Source
-	asserts.NoError(self.OriginRepo.Git.SquashMerge(self.OriginRepo.TestRunner, branchToShip))
-	self.OriginRepo.StageFiles("-A")
-	asserts.NoError(self.OriginRepo.Git.Commit(self.OriginRepo.TestRunner, configdomain.UseCustomMessage(message), gitdomain.NewAuthorOpt("CI <ci@acme.com>"), configdomain.CommitHookEnabled))
-	self.OriginRepo.RemoveBranch(branchToShip)
-	self.OriginRepo.CheckoutBranch("initial")
+	asserts.NoError(originRepo.Git.SquashMerge(originRepo.TestRunner, branchToShip))
+	originRepo.StageFiles("-A")
+	asserts.NoError(originRepo.Git.Commit(originRepo.TestRunner, configdomain.UseCustomMessage(message), gitdomain.NewAuthorOpt("CI <ci@acme.com>"), configdomain.CommitHookEnabled))
+	originRepo.RemoveBranch(branchToShip)
+	originRepo.CheckoutBranch("initial")
 	return nil
 }
 
