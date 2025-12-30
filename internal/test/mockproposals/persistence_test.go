@@ -56,7 +56,7 @@ func TestPersistence(t *testing.T) {
 			workspaceDir := t.TempDir()
 			have := mockproposals.Load(workspaceDir)
 			want := mockproposals.MockProposals{
-				Proposals: []forgedomain.ProposalData{},
+				Proposals: nil,
 				FilePath:  "",
 			}
 			must.Eq(t, want, have)
@@ -144,7 +144,9 @@ func TestPersistence(t *testing.T) {
 		t.Run("save empty proposals", func(t *testing.T) {
 			t.Parallel()
 			workspaceDir := t.TempDir()
-			give := mockproposals.MockProposals{}
+			give := mockproposals.MockProposals{
+				Proposals: []forgedomain.ProposalData{},
+			}
 			mockproposals.Save(workspaceDir, give.Proposals)
 			proposalsFile := filepath.Join(workspaceDir, "proposals.json")
 			have := asserts.NoError1(os.ReadFile(proposalsFile))

@@ -14,13 +14,17 @@ func FilePath(workspaceDir string) string {
 }
 
 func Load(workspaceDir string) MockProposals {
-	proposals, err := os.ReadFile(FilePath(workspaceDir))
+	filePath := FilePath(workspaceDir)
+	fileData, err := os.ReadFile(filePath)
 	if err != nil {
 		return MockProposals{}
 	}
-	var result MockProposals
-	asserts.NoError(json.Unmarshal(proposals, &result))
-	return result
+	var proposals []forgedomain.ProposalData
+	asserts.NoError(json.Unmarshal(fileData, &proposals))
+	return MockProposals{
+		Proposals: proposals,
+		FilePath:  filePath,
+	}
 }
 
 func Save(workspaceDir string, proposals []forgedomain.ProposalData) {
