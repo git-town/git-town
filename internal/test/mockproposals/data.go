@@ -7,7 +7,7 @@ import (
 )
 
 type MockProposals struct {
-	FilePath  string // path of the JSON file containing the proposal data on disk
+	Dir       string // path of the JSON file containing the proposal data on disk
 	Proposals []forgedomain.ProposalData
 }
 
@@ -32,7 +32,7 @@ func (self *MockProposals) FindBySourceAndTarget(source, target gitdomain.LocalB
 // Save stores the changes made to the given proposal to disk.
 func (self *MockProposals) Save(proposal forgedomain.ProposalData) {
 	self.Update(proposal)
-	Save(self.FilePath, self.Proposals)
+	Save(self.Dir, self.Proposals)
 }
 
 func (self *MockProposals) Search(source gitdomain.LocalBranchName) []forgedomain.ProposalData {

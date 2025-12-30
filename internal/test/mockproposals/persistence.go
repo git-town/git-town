@@ -18,14 +18,14 @@ func Load(workspaceDir string) MockProposals {
 	fileData, err := os.ReadFile(filePath)
 	if err != nil {
 		return MockProposals{
-			FilePath:  filePath,
+			Dir:       workspaceDir,
 			Proposals: []forgedomain.ProposalData{},
 		}
 	}
 	var proposals []forgedomain.ProposalData
 	asserts.NoError(json.Unmarshal(fileData, &proposals))
 	return MockProposals{
-		FilePath:  filePath,
+		Dir:       workspaceDir,
 		Proposals: proposals,
 	}
 }

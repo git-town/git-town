@@ -47,7 +47,7 @@ func TestPersistence(t *testing.T) {
 						URL:    "https://example.com/pr/123",
 					},
 				},
-				FilePath: proposalsFilePath,
+				Dir: workspaceDir,
 			}
 			must.Eq(t, want, have)
 		})
@@ -57,8 +57,8 @@ func TestPersistence(t *testing.T) {
 			workspaceDir := t.TempDir()
 			have := mockproposals.Load(workspaceDir)
 			want := mockproposals.MockProposals{
-				Proposals: nil,
-				FilePath:  "",
+				Proposals: []forgedomain.ProposalData{},
+				Dir:       workspaceDir,
 			}
 			must.Eq(t, want, have)
 		})
@@ -71,7 +71,7 @@ func TestPersistence(t *testing.T) {
 			have := mockproposals.Load(workspaceDir)
 			want := mockproposals.MockProposals{
 				Proposals: []forgedomain.ProposalData{},
-				FilePath:  proposalsFile,
+				Dir:       workspaceDir,
 			}
 			must.Eq(t, want, have)
 		})
@@ -99,7 +99,7 @@ func TestPersistence(t *testing.T) {
 					URL:    "https://example.com/pr/2",
 				},
 			},
-			FilePath: filepath.Join(workspaceDir, "proposals.json"),
+			Dir: workspaceDir,
 		}
 		mockproposals.Save(workspaceDir, give.Proposals)
 		have := mockproposals.Load(workspaceDir)
