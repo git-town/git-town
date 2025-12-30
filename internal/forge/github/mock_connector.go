@@ -11,12 +11,12 @@ import (
 
 // type checks
 var (
-	mockAPIConnector MockAPIConnector
+	mockAPIConnector MockConnector
 	_                forgedomain.Connector = &mockAPIConnector
 )
 
-// MockAPIConnector provides access to the Bitbucket Cloud API while caching proposal information.
-type MockAPIConnector struct {
+// MockConnector provides access to the Bitbucket Cloud API while caching proposal information.
+type MockConnector struct {
 	WebConnector
 	Proposals mockproposals.MockProposals
 }
@@ -27,7 +27,7 @@ type MockAPIConnector struct {
 
 var _ forgedomain.ProposalFinder = &mockAPIConnector // type check
 
-func (self *MockAPIConnector) FindProposal(source, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self *MockConnector) FindProposal(source, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	data, has := self.Proposals.FindBySourceAndTarget(source, target).Get()
 	if !has {
 		return None[forgedomain.Proposal](), nil
@@ -41,7 +41,7 @@ func (self *MockAPIConnector) FindProposal(source, target gitdomain.LocalBranchN
 
 var _ forgedomain.ProposalSearcher = &mockAPIConnector // type check
 
-func (self *MockAPIConnector) SearchProposals(source gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
+func (self *MockConnector) SearchProposals(source gitdomain.LocalBranchName) ([]forgedomain.Proposal, error) {
 	result := []forgedomain.Proposal{}
 	for _, data := range self.Proposals.Search(source) {
 		result = append(result, forgedomain.Proposal{Data: data, ForgeType: forgedomain.ForgeTypeGitHub})
@@ -55,7 +55,7 @@ func (self *MockAPIConnector) SearchProposals(source gitdomain.LocalBranchName) 
 
 var _ forgedomain.ProposalBodyUpdater = &mockAPIConnector // type check
 
-func (self *MockAPIConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, newBody gitdomain.ProposalBody) error {
+func (self *MockConnector) UpdateProposalBody(proposalData forgedomain.ProposalInterface, newBody gitdomain.ProposalBody) error {
 	fmt.Println("1111111111111111111111111111111111111111111111111111111111111111111111111")
 	proposal, hasProposal := self.Proposals.FindByID(proposalData.Data().Number).Get()
 	if !hasProposal {
@@ -71,7 +71,7 @@ func (self *MockAPIConnector) UpdateProposalBody(proposalData forgedomain.Propos
 
 var _ forgedomain.ProposalTargetUpdater = &mockAPIConnector // type check
 
-func (self *MockAPIConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
+func (self *MockConnector) UpdateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName) error {
 	proposal, hasProposal := self.Proposals.FindByID(proposalData.Data().Number).Get()
 	if !hasProposal {
 		return fmt.Errorf("proposal with id %d not found", proposalData.Data().Number)
