@@ -3,6 +3,7 @@ package gitdomain
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v22/internal/messages"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
@@ -38,7 +39,7 @@ func (self BranchInfo) GetLocalOrRemoteName() BranchName {
 	if remoteName, hasRemoteName := self.RemoteName.Get(); hasRemoteName {
 		return remoteName.BranchName()
 	}
-	panic("BranchInfo has neither a local nor remote name")
+	panic(messages.BranchInfoNoContent)
 }
 
 func (self BranchInfo) GetLocalOrRemoteNameAsLocalName() LocalBranchName {
@@ -48,7 +49,7 @@ func (self BranchInfo) GetLocalOrRemoteNameAsLocalName() LocalBranchName {
 	if remoteName, hasRemoteName := self.RemoteName.Get(); hasRemoteName {
 		return remoteName.LocalBranchName()
 	}
-	panic("BranchInfo has neither a local nor remote name")
+	panic(messages.BranchInfoNoContent)
 }
 
 func (self BranchInfo) GetLocalOrRemoteSHA() SHA {
@@ -58,11 +59,11 @@ func (self BranchInfo) GetLocalOrRemoteSHA() SHA {
 	if remoteSHA, has := self.RemoteSHA.Get(); has {
 		return remoteSHA
 	}
-	panic("BranchInfo has neither a local nor remote SHA")
+	panic(messages.BranchInfoNoContent)
 }
 
-// GetRemoteBranch provides both the name and SHA of the remote branch.
-func (self BranchInfo) GetRemoteBranch() (bool, RemoteBranchName, SHA) {
+// GetRemote provides both the name and SHA of the remote branch.
+func (self BranchInfo) GetRemote() (bool, RemoteBranchName, SHA) {
 	name, hasName := self.RemoteName.Get()
 	sha, hasSHA := self.RemoteSHA.Get()
 	return hasName && hasSHA, name, sha
@@ -75,35 +76,21 @@ func (self BranchInfo) GetSHAs() (hasBothSHA bool, localSHA, remoteSHA SHA) {
 	return hasLocal && hasRemote, local, remote
 }
 
-func (self BranchInfo) HasLocalBranch() (hasLocalBranch bool, branchName LocalBranchName, sha SHA) {
-	localName, hasLocalName := self.LocalName.Get()
-	localSHA, hasLocalSHA := self.LocalSHA.Get()
-	hasLocalBranch = hasLocalName && hasLocalSHA
-	return hasLocalBranch, localName, localSHA
-}
-
 func (self BranchInfo) HasOnlyLocalBranch() bool {
-	hasLocalBranch, _, _ := self.HasLocalBranch()
-	hasRemoteBranch, _, _ := self.HasRemoteBranch()
+	hasLocalBranch, _, _ := self.GetLocal()
+	hasRemoteBranch, _, _ := self.GetRemote()
 	return hasLocalBranch && !hasRemoteBranch
 }
 
 func (self BranchInfo) HasOnlyRemoteBranch() bool {
-	hasLocalBranch, _, _ := self.HasLocalBranch()
-	hasRemoteBranch, _, _ := self.HasRemoteBranch()
+	hasLocalBranch, _, _ := self.GetLocal()
+	hasRemoteBranch, _, _ := self.GetRemote()
 	return hasRemoteBranch && !hasLocalBranch
 }
 
-func (self BranchInfo) HasRemoteBranch() (hasRemoteBranch bool, remoteBranchName RemoteBranchName, remoteBranchSHA SHA) {
-	remoteName, hasRemoteName := self.RemoteName.Get()
-	remoteSHA, hasRemoteSHA := self.RemoteSHA.Get()
-	hasRemoteBranch = hasRemoteName && hasRemoteSHA
-	return hasRemoteBranch, remoteName, remoteSHA
-}
-
 func (self BranchInfo) HasTrackingBranch() bool {
-	hasLocalBranch, _, _ := self.HasLocalBranch()
-	hasRemoteBranch, _, _ := self.HasRemoteBranch()
+	hasLocalBranch, _, _ := self.GetLocal()
+	hasRemoteBranch, _, _ := self.GetRemote()
 	return hasLocalBranch && hasRemoteBranch
 }
 
@@ -112,10 +99,7 @@ func (self BranchInfo) IsLocalOnlyBranch() (bool, LocalBranchName) {
 	if !hasLocalBranch {
 		return false, branchName
 	}
-	if self.RemoteName.IsSome() {
-		return false, branchName
-	}
-	return true, branchName
+	return self.RemoteName.IsNone(), branchName
 }
 
 // IsOmniBranch indicates whether the branch described by this BranchInfo is omni
@@ -137,7 +121,7 @@ func (self BranchInfo) LocalBranchName() LocalBranchName {
 	if remoteName, hasRemoteName := self.RemoteName.Get(); hasRemoteName {
 		return remoteName.LocalBranchName()
 	}
-	panic("this BranchInfo has neither a local nor remote branch")
+	panic(messages.BranchInfoNoContent)
 }
 
 func (self BranchInfo) String() string {

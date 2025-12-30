@@ -43,7 +43,7 @@ func (self *AuthConnector) FindProposal(branch, target gitdomain.LocalBranchName
 	if err != nil {
 		return None[forgedomain.Proposal](), err
 	}
-	self.log.Start(messages.APIProposalLookupStart)
+	self.log.Start(messages.APIProposalFindStart, branch, target)
 	openPullRequests, _, err := client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
 			PageSize: 50,
@@ -79,7 +79,7 @@ func (self *AuthConnector) SearchProposals(branch gitdomain.LocalBranchName) ([]
 	if err != nil {
 		return []forgedomain.Proposal{}, err
 	}
-	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
+	self.log.Start(messages.APIProposalSearchStart, branch.String())
 	openPullRequests, _, err := client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
 			PageSize: 50,
@@ -130,10 +130,7 @@ func (self *AuthConnector) SquashMergeProposal(number int, message gitdomain.Com
 		return err
 	}
 	self.log.Ok()
-	self.log.Start(messages.APIProposalLookupStart)
-	_, _, err = client.GetPullRequest(self.Organization, self.Repository, int64(number))
-	self.log.Finished(err)
-	return err
+	return nil
 }
 
 // ============================================================================

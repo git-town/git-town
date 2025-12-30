@@ -12,7 +12,7 @@ Feature: make the current parked branch a contribution branch
     Then Git Town runs no commands
     And Git Town prints:
       """
-      branch "parked" is now a contribution branch
+      branch parked is now a contribution branch
       """
     And branch "parked" now has type "contribution"
 

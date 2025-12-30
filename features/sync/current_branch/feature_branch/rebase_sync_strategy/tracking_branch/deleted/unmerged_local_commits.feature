@@ -24,7 +24,7 @@ Feature: sync a branch with unshipped local changes whose tracking branch was de
       | shipped | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
     And Git Town prints:
       """
-      Branch "shipped" was deleted at the remote but the local branch contains unshipped changes.
+      Branch shipped was deleted at the remote but the local branch contains unshipped changes.
       """
     And the initial branches and lineage exist now
 

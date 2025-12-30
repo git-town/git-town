@@ -13,7 +13,7 @@ Feature: already existing remote branch
       | main   | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      there is already a branch "existing" at the "origin" remote
+      there is already a branch existing at the origin remote
       """
     And no lineage exists now
     And no commits exist now

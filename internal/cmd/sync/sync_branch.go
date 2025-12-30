@@ -16,7 +16,7 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	parentName, hasParentName := parentNameOpt.Get()
 	parentSHAInitial := None[gitdomain.SHA]()
 	if hasParentName {
-		if parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindLocalOrRemote(parentName, args.Config.NormalConfig.DevRemote).Get(); hasParentBranchInfo {
+		if parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindLocalOrRemote(parentName).Get(); hasParentBranchInfo {
 			parentSHAInitial = parentBranchInfo.LocalSHA.Or(parentBranchInfo.RemoteSHA)
 		}
 	}
@@ -155,21 +155,22 @@ func localBranchProgram(args localBranchProgramArgs) {
 	}
 	if args.PushBranches.ShouldPush() && args.Remotes.HasRemote(args.Config.NormalConfig.DevRemote) && args.Config.NormalConfig.Offline.IsOnline() && branchType.ShouldPush(args.localName == args.InitialBranch) {
 		isMainBranch := branchType == configdomain.BranchTypeMainBranch
+		trackingBranch, hasTrackingBranch := args.branchInfo.RemoteName.Get()
 		switch {
-		case !args.branchInfo.HasTrackingBranch():
+		case !hasTrackingBranch:
 			args.Program.Value.Add(&opcodes.BranchTrackingCreateIfLocalExists{Branch: args.localName})
 		case isMainBranch && args.Remotes.HasUpstream() && args.Config.NormalConfig.SyncUpstream.ShouldSyncUpstream():
-			if trackingBranch, hasTrackingBranch := args.branchInfo.RemoteName.Get(); hasTrackingBranch {
+			if hasTrackingBranch {
 				args.Program.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: args.localName, TrackingBranch: trackingBranch})
 			}
 		case isMainOrPerennialBranch && !shouldPushPerennialBranch(args.branchInfo.SyncStatus):
 			// don't push if its a perennial branch that doesn't need pushing
 		case isMainOrPerennialBranch:
-			if trackingBranch, hasTrackingBranch := args.branchInfo.RemoteName.Get(); hasTrackingBranch {
+			if hasTrackingBranch {
 				args.Program.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: args.localName, TrackingBranch: trackingBranch})
 			}
 		default:
-			if trackingBranch, hasTrackingBranch := args.branchInfo.RemoteName.Get(); hasTrackingBranch {
+			if hasTrackingBranch {
 				pushFeatureBranchProgram(args.Program, args.localName, trackingBranch, args.Config.NormalConfig.SyncFeatureStrategy)
 			}
 		}

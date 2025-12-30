@@ -296,19 +296,19 @@ func (self *TestCommands) CreateTag(name string) {
 	self.MustRun("git", "tag", "-a", name, "-m", name)
 }
 
-// ExistingParent provides the first ancestor of the given branch that actually exists in the repo.
+// ExistingParent provides the oldest ancestor of the given branch that actually exists in the repo.
 func (self *TestCommands) ExistingParent(branch gitdomain.LocalBranchName, lineage configdomain.Lineage) Option[gitdomain.BranchName] {
+	snapshot := asserts.NoError1(self.Git.BranchesSnapshot(self))
 	for {
-		parentOpt := lineage.Parent(branch)
-		parent, hasParent := parentOpt.Get()
+		parent, hasParent := lineage.Parent(branch).Get()
 		if !hasParent {
 			return None[gitdomain.BranchName]()
 		}
-		if self.Git.BranchExists(self, parent) {
+		if snapshot.Branches.FindByLocalName(parent).IsSome() {
 			return Some(parent.BranchName())
 		}
-		if self.Git.BranchExistsRemotely(self, parent, gitdomain.RemoteOrigin) {
-			return Some(parent.AtRemote(gitdomain.RemoteOrigin).BranchName())
+		if parentInfo, hasRemoteParent := snapshot.Branches.FindRemoteNameMatchingLocal(parent).Get(); hasRemoteParent {
+			return Some(parentInfo.RemoteName.GetOrPanic().BranchName())
 		}
 		branch = parent
 	}

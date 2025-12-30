@@ -27,7 +27,7 @@ Feature: swapping a feature branch with merge commits
       | branch-2 | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot swap because branch "branch-2" contains merge commits - please compress and try again
+      cannot swap because branch branch-2 contains merge commits - please compress and try again
       """
   #
   # NOTE: Cannot test undo here.

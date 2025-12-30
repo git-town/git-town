@@ -14,10 +14,10 @@ Feature: GitLab support
     And the current branch is "feature"
     When I run "git-town propose"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                            |
-      | feature | git fetch --prune --tags           |
-      |         | Looking for proposal online ... ok |
-      |         | open <BROWSER URL>                 |
+      | BRANCH  | COMMAND                                        |
+      | feature | git fetch --prune --tags                       |
+      |         | Finding proposal from feature into main ... ok |
+      |         | open <BROWSER URL>                             |
 
     Examples:
       | REPO ORIGIN                                  | BROWSER URL                                                                                                                                      |
@@ -38,5 +38,5 @@ Feature: GitLab support
       | child  | git fetch --prune --tags                                                                                                              |
       |        | git checkout parent                                                                                                                   |
       | parent | git checkout child                                                                                                                    |
-      |        | Looking for proposal online ... ok                                                                                                    |
+      |        | Finding proposal from child into parent ... ok                                                                                        |
       | child  | open https://gitlab.com/kadu/kadu/-/merge_requests/new?merge_request%5Bsource_branch%5D=child&merge_request%5Btarget_branch%5D=parent |

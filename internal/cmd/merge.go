@@ -22,7 +22,6 @@ import (
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
-	"github.com/git-town/git-town/v22/internal/proposallineage"
 	"github.com/git-town/git-town/v22/internal/state/runstate"
 	"github.com/git-town/git-town/v22/internal/validate"
 	"github.com/git-town/git-town/v22/internal/vm/interpreter/fullinterpreter"
@@ -352,12 +351,12 @@ func mergeProgram(repo execute.OpenRepoResult, data mergeData) program.Program {
 	prog.Value.Add(&opcodes.BranchLocalDelete{
 		Branch: data.initialBranch,
 	})
-	parentTrackingBranch, hasParentTrackingBranch := data.parentBranchInfo.RemoteName.Get()
-	if hasParentTrackingBranch && repo.IsOffline.IsOnline() {
+	parentTracking, parentHasTracking := data.parentBranchInfo.RemoteName.Get()
+	if parentHasTracking && repo.IsOffline.IsOnline() {
 		prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{
 			CurrentBranch:   data.parentBranch,
 			ForceIfIncludes: true,
-			TrackingBranch:  parentTrackingBranch,
+			TrackingBranch:  parentTracking,
 		})
 	}
 	if _, hasOverride := data.config.NormalConfig.BranchTypeOverrides[data.initialBranch]; hasOverride {
@@ -367,19 +366,10 @@ func mergeProgram(repo execute.OpenRepoResult, data mergeData) program.Program {
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	if data.config.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
-		_ = sync.AddStackLineageUpdateOpcodes(sync.AddStackLineageUpdateOpcodesArgs{
-			Current:   data.initialBranch,
-			FullStack: true,
-			Program:   prog,
-			ProposalStackLineageArgs: proposallineage.ProposalStackLineageArgs{
-				Connector:                forgedomain.ProposalFinderFromConnector(data.connector),
-				CurrentBranch:            data.initialBranch,
-				Lineage:                  data.config.NormalConfig.Lineage,
-				MainAndPerennialBranches: data.config.MainAndPerennials(),
-				Order:                    data.config.NormalConfig.Order,
-			},
-			ProposalStackLineageTree:             None[*proposallineage.Tree](),
-			SkipUpdateForProposalsWithBaseBranch: gitdomain.LocalBranchNames{data.initialBranch},
+		sync.AddSyncProposalsProgram(sync.AddSyncProposalsProgramArgs{
+			ChangedBranches: gitdomain.LocalBranchNames{data.initialBranch},
+			Config:          data.config,
+			Program:         prog,
 		})
 	}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{

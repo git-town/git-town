@@ -1,12 +1,9 @@
 package opcodes
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
 	"github.com/git-town/git-town/v22/internal/messages"
-	"github.com/git-town/git-town/v22/internal/proposallineage"
 	"github.com/git-town/git-town/v22/internal/vm/shared"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
@@ -60,31 +57,10 @@ createProposal:
 	}
 
 	if args.Config.Value.NormalConfig.ProposalsShowLineage == forgedomain.ProposalsShowLineageCLI {
-		if proposalFinder, canFindProposals := connector.(forgedomain.ProposalFinder); canFindProposals {
-			lineageTree, err := proposallineage.NewTree(proposallineage.ProposalStackLineageArgs{
-				Connector:                Some(proposalFinder),
-				CurrentBranch:            self.Branch,
-				Lineage:                  args.Config.Value.NormalConfig.Lineage,
-				MainAndPerennialBranches: args.Config.Value.MainAndPerennials(),
-				Order:                    args.Config.Value.NormalConfig.Order,
-			})
-			if err != nil {
-				// TODO: make sure error message return from failing to construct lineage is consistent across all invocations
-				fmt.Printf("failed to construct proposal stack lineage: %s\n", err.Error())
-			}
-			proposalOpt, err := proposalFinder.FindProposal(self.Branch, parentBranch)
-			if err != nil {
-				args.FinalMessages.Addf(messages.ProposalFindProblem, err.Error())
-				return nil
-			}
-			if proposalOpt.IsSome() {
-				args.PrependOpcodes(&ProposalUpdateLineage{
-					Current:         self.Branch,
-					CurrentProposal: proposalOpt,
-					LineageTree:     MutableSome(lineageTree),
-				})
-			}
-		}
+		// TODO: remove this once we embed the lineage when creating the proposal
+		args.PrependOpcodes(&ProposalUpdateLineage{
+			Branch: self.Branch,
+		})
 	}
 	return nil
 }

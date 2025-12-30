@@ -1,64 +1,22 @@
 package sync
 
 import (
-	"fmt"
-
-	"github.com/git-town/git-town/v22/internal/config/configdomain"
+	"github.com/git-town/git-town/v22/internal/config"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	"github.com/git-town/git-town/v22/internal/gohacks/mapstools"
-	"github.com/git-town/git-town/v22/internal/proposallineage"
 	"github.com/git-town/git-town/v22/internal/vm/opcodes"
 	"github.com/git-town/git-town/v22/internal/vm/program"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
-type AddStackLineageUpdateOpcodesArgs struct {
-	Current                              gitdomain.LocalBranchName
-	FullStack                            configdomain.FullStack
-	Program                              Mutable[program.Program]
-	ProposalStackLineageArgs             proposallineage.ProposalStackLineageArgs
-	ProposalStackLineageTree             Option[*proposallineage.Tree]
-	SkipUpdateForProposalsWithBaseBranch gitdomain.LocalBranchNames
+type AddSyncProposalsProgramArgs struct {
+	ChangedBranches gitdomain.LocalBranchNames // all branches that the current Git Town command has changed
+	Config          config.ValidatedConfig
+	Program         Mutable[program.Program]
 }
 
-// AddStackLineageUpdateOpcodes syncs all given proposals.
-// Returns the stack lineage tree if its needed to recall this function.
-func AddStackLineageUpdateOpcodes(args AddStackLineageUpdateOpcodesArgs) Option[*proposallineage.Tree] {
-	// TODO: there are now multiple places that load and use proposals for branches.
-	// To avoid double-loading the same proposal data in one run,
-	// extract an object that caches the already known proposals,
-	// i.e. which branch has which proposal,
-	// and loads missing proposal info on demand.
-	tree, hasTree := args.ProposalStackLineageTree.Get()
-	var err error
-	if hasTree {
-		err = tree.Rebuild(args.ProposalStackLineageArgs)
-	} else {
-		tree, err = proposallineage.NewTree(args.ProposalStackLineageArgs)
+func AddSyncProposalsProgram(args AddSyncProposalsProgramArgs) {
+	affectedBranches := args.Config.NormalConfig.Lineage.Clan(args.ChangedBranches, args.Config.MainAndPerennials())
+	for _, branch := range affectedBranches {
+		args.Program.Value.Add(&opcodes.ProposalUpdateLineage{Branch: branch})
 	}
-	if err != nil {
-		fmt.Printf("failed to update proposal stack lineage: %s\n", err.Error())
-		return None[*proposallineage.Tree]()
-	}
-
-	if args.FullStack.Enabled() {
-		for branch, proposal := range mapstools.SortedKeyValues(tree.BranchToProposal) {
-			if args.SkipUpdateForProposalsWithBaseBranch.Contains(branch) {
-				continue
-			}
-			args.Program.Value.Add(&opcodes.ProposalUpdateLineage{
-				Current:         branch,
-				CurrentProposal: proposal,
-				LineageTree:     MutableSome(tree),
-			})
-		}
-	} else if !args.SkipUpdateForProposalsWithBaseBranch.Contains(args.Current) {
-		args.Program.Value.Add(&opcodes.ProposalUpdateLineage{
-			Current:         args.Current,
-			CurrentProposal: tree.BranchToProposal[args.Current],
-			LineageTree:     MutableSome(tree),
-		})
-	}
-
-	return Some(tree)
 }

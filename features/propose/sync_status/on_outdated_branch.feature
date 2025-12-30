@@ -32,7 +32,7 @@ Feature: sync before proposing
       | child  | git merge --no-edit --ff parent                                           |
       |        | git merge --no-edit --ff origin/child                                     |
       |        | git push                                                                  |
-      |        | Looking for proposal online ... ok                                        |
+      |        | Finding proposal from child into parent ... ok                            |
       |        | open https://github.com/git-town/git-town/compare/parent...child?expand=1 |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                                                  |

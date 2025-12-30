@@ -20,7 +20,7 @@ Feature: don't sync tags while proposing
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                            |
       | feature | git fetch --prune --no-tags                                        |
-      |         | Looking for proposal online ... ok                                 |
+      |         | Finding proposal from feature into main ... ok                     |
       |         | open https://github.com/git-town/git-town/compare/feature?expand=1 |
     And the initial tags exist now
 

@@ -1,8 +1,28 @@
 # Git Town Changelog
 
-## 22.4.0 (unreleased)
+## 22.5.0 (unreleased)
 
 - The Git Town CLI can now embed branch lineage directly into proposals. This feature is in preview. To enable it, configure proposals-show-lineage to `cli`.
+
+## 22.4.0 (2025-12-24)
+
+#### New Features
+
+- `sync` now has a `--gone` flag to only sync (i.e. remove) branches that have already been shipped or deleted on the remote. This provides a low-risk way to clean up obsolete local branches without configuring branch types or touching anything active ([#5845](https://github.com/git-town/git-town/issues/5845)).
+- `ship` can now ignore uncommitted changes via the new [ignore-uncommitted](https://www.git-town.com/preferences/ignore-uncommitted.html) configuration setting, making it easier to ship in messy working directories when you know what you're doing ([#5837](https://github.com/git-town/git-town/issues/5837)).
+- `propose --stack` now supports skipping branches where proposal creation fails instead of aborting by running [git town skip](https://www.git-town.com/commands/skip.html) ([#5869](https://github.com/git-town/git-town/issues/5869)).
+- `config --redact` now also obfuscates the configured user email in addition to other sensitive values ([#5850](https://github.com/git-town/git-town/pull/5850)).
+
+#### Bug Fixes
+
+- Improved handling of branches that exist across multiple Git remotes ([#5838](https://github.com/git-town/git-town/discussions/5838)).
+- `propose --stack` now skips branches where proposal creation failed but the proposal exists anyways ([#5865](https://github.com/git-town/git-town/issues/5865)).
+- `init` now correctly persists connector types to the config file ([#5817](https://github.com/git-town/git-town/issues/5817)).
+- `sync --all` now switches to a branch that is available in the worktree before deleting a shipped branch ([#5847](https://github.com/git-town/git-town/issues/5847)).
+
+#### Contributors
+
+Shoutout to @degauden, @kevgo, @meowsus, @pcfreak30, @stephenwade for contributing code, feedback, and ideas to 62 shipped pull requests and 7 resolved issues!
 
 ## 22.3.0 (2025-12-13)
 

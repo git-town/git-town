@@ -37,7 +37,7 @@ type APIConnector struct {
 var _ forgedomain.ProposalFinder = &apiConnector // type check
 
 func (self *APIConnector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
-	self.log.Start(messages.APIProposalLookupStart)
+	self.log.Start(messages.APIProposalFindStart, branch, target)
 	client, err := self.getClient()
 	if err != nil {
 		return None[forgedomain.Proposal](), err
@@ -129,10 +129,7 @@ func (self *APIConnector) SquashMergeProposal(number int, message gitdomain.Comm
 		return err
 	}
 	self.log.Ok()
-	self.log.Start(messages.APIProposalLookupStart)
-	_, _, err = client.GetPullRequest(self.Organization, self.Repository, int64(number))
-	self.log.Finished(err)
-	return err
+	return nil
 }
 
 // ============================================================================

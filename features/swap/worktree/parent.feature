@@ -17,7 +17,7 @@ Feature: swapping a feature branch whose parent is active an another worktree
       | branch-2 | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot swap because branch "branch-1" it is active in another worktree
+      cannot swap because branch branch-1 it is active in another worktree
       """
   #
   # NOTE: Cannot test undo here.

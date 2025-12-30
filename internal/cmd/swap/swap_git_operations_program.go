@@ -30,11 +30,9 @@ func swapGitOperationsProgram(args swapGitOperationsProgramArgs) {
 			CommitsToRemove:    args.parent.info.LocalBranchName().Location(),
 		},
 	)
-	localBranch, HasLocalBranch := args.current.info.LocalName.Get()
-	trackingBranch, hasTrackingBranch := args.current.info.RemoteName.Get()
-	if HasLocalBranch && hasTrackingBranch {
+	if trackingBranch, hasTrackingBranch := args.current.info.RemoteName.Get(); hasTrackingBranch {
 		args.program.Value.Add(
-			&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: localBranch, ForceIfIncludes: true, TrackingBranch: trackingBranch},
+			&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: args.current.info.LocalBranchName(), ForceIfIncludes: true, TrackingBranch: trackingBranch},
 		)
 	}
 
@@ -86,12 +84,12 @@ func swapGitOperationsProgram(args swapGitOperationsProgramArgs) {
 				CommitsToRemove:    oldBranchSHA.Location(),
 			},
 		)
-		if childTracking, childHasTracking := child.info.RemoteName.Get(); childHasTracking {
+		if trackingBranch, hasTrackingBranch := child.info.RemoteName.Get(); hasTrackingBranch {
 			args.program.Value.Add(
 				&opcodes.PushCurrentBranchForceIfNeeded{
 					CurrentBranch:   child.name,
 					ForceIfIncludes: true,
-					TrackingBranch:  childTracking,
+					TrackingBranch:  trackingBranch,
 				},
 			)
 		}

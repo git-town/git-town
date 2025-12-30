@@ -13,7 +13,7 @@ Feature: convert a branch to feature branch in the presence of uncommitted chang
     Then Git Town runs no commands
     And Git Town prints:
       """
-      branch "existing" is now a feature branch
+      branch existing is now a feature branch
       """
     And the initial branches and lineage exist now
     And branch "existing" now has type "feature"

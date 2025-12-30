@@ -26,7 +26,7 @@ func shipProgramAlwaysMerge(repo execute.OpenRepoResult, args shipProgramAlwaysM
 	}
 	args.prog.Value.Add(&opcodes.MergeAlwaysProgram{Branch: args.sharedData.branchToShip, CommitMessage: args.commitMessage})
 	if args.mergeData.remotes.HasRemote(args.sharedData.config.NormalConfig.DevRemote) && args.sharedData.config.NormalConfig.Offline.IsOnline() {
-		if trackingBranch, hasTrackingBranch := args.sharedData.branchToShipInfo.RemoteName.Get(); hasTrackingBranch {
+		if trackingBranch, hasTrackingBranch := args.sharedData.targetBranch.RemoteName.Get(); hasTrackingBranch {
 			args.prog.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: args.sharedData.targetBranchName, TrackingBranch: trackingBranch})
 		}
 	}

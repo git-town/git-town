@@ -325,7 +325,7 @@ func TestBranchInfos(t *testing.T) {
 			bis := gitdomain.BranchInfos{
 				branch1info,
 			}
-			have := bis.FindLocalOrRemote(branch1, gitdomain.RemoteOrigin)
+			have := bis.FindLocalOrRemote(branch1)
 			must.Eq(t, MutableSome(&branch1info), have)
 		})
 		t.Run("has remote name", func(t *testing.T) {
@@ -340,7 +340,7 @@ func TestBranchInfos(t *testing.T) {
 			bis := gitdomain.BranchInfos{
 				branch1info,
 			}
-			have := bis.FindLocalOrRemote(gitdomain.NewLocalBranchName("branch-1"), gitdomain.RemoteOrigin)
+			have := bis.FindLocalOrRemote(gitdomain.NewLocalBranchName("branch-1"))
 			must.Eq(t, MutableSome(&branch1info), have)
 		})
 		t.Run("no match", func(t *testing.T) {
@@ -355,7 +355,7 @@ func TestBranchInfos(t *testing.T) {
 			bis := gitdomain.BranchInfos{
 				branch1info,
 			}
-			have := bis.FindLocalOrRemote(gitdomain.NewLocalBranchName("zonk"), gitdomain.RemoteOrigin)
+			have := bis.FindLocalOrRemote(gitdomain.NewLocalBranchName("zonk"))
 			must.Eq(t, MutableNone[gitdomain.BranchInfo](), have)
 		})
 	})
@@ -558,7 +558,7 @@ func TestBranchInfos(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
 			}
-			must.True(t, bs.HasMatchingTrackingBranchFor(gitdomain.NewLocalBranchName("one"), gitdomain.RemoteOrigin))
+			must.True(t, bs.HasMatchingTrackingBranchFor(gitdomain.NewLocalBranchName("one")))
 		})
 		t.Run("has a remote-only branch with that name", func(t *testing.T) {
 			t.Parallel()
@@ -571,7 +571,7 @@ func TestBranchInfos(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
 			}
-			must.True(t, bs.HasMatchingTrackingBranchFor(gitdomain.NewLocalBranchName("one"), gitdomain.RemoteOrigin))
+			must.True(t, bs.HasMatchingTrackingBranchFor(gitdomain.NewLocalBranchName("one")))
 		})
 		t.Run("has a local branch with a matching name", func(t *testing.T) {
 			t.Parallel()
@@ -584,7 +584,7 @@ func TestBranchInfos(t *testing.T) {
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
 			}
-			must.False(t, bs.HasMatchingTrackingBranchFor(gitdomain.NewLocalBranchName("one"), gitdomain.RemoteOrigin))
+			must.False(t, bs.HasMatchingTrackingBranchFor(gitdomain.NewLocalBranchName("one")))
 		})
 	})
 
@@ -850,7 +850,7 @@ func TestBranchInfos(t *testing.T) {
 				RemoteSHA:  None[gitdomain.SHA](),
 			},
 		}
-		have, nonExisting := bs.Select(gitdomain.RemoteOrigin, "one", "three")
+		have, nonExisting := bs.Select("one", "three")
 		want := gitdomain.BranchInfos{
 			gitdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchNameOption("one"),

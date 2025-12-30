@@ -25,7 +25,7 @@ Feature: delete a branch within a branch chain
       | alpha  | git branch -D beta       |
     And Git Town prints:
       """
-      branch "gamma" is now a child of "alpha"
+      branch gamma is now a child of alpha
       """
     And this lineage exists now
       """

@@ -140,7 +140,7 @@ func determinePrototypeData(args []string, repo execute.OpenRepoResult) (prototy
 
 func validatePrototypeData(data prototypeData, repo execute.OpenRepoResult) error {
 	for branchName, branchType := range mapstools.SortedKeyValues(data.branchesToPrototype) {
-		if !data.branchesSnapshot.Branches.HasLocalBranch(branchName) && !data.branchesSnapshot.Branches.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote) {
+		if !data.branchesSnapshot.Branches.HasLocalBranch(branchName) && !data.branchesSnapshot.Branches.HasMatchingTrackingBranchFor(branchName) {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}
 		switch branchType {

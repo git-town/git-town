@@ -22,7 +22,7 @@ Feature: append a branch to a branch whose tracking branch was deleted
       |         | git checkout -b new                               |
     And Git Town prints:
       """
-      deleted branch "shipped"
+      deleted branch shipped
       """
     And this lineage exists now
       """

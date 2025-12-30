@@ -12,7 +12,7 @@ Feature: prototype the current prototoype branch
     Then Git Town runs no commands
     And Git Town prints:
       """
-      branch "migrate-task-20223" is already a prototype branch
+      branch migrate-task-20223 is already a prototype branch
       """
     And branch "migrate-task-20223" still has type "prototype"
 
