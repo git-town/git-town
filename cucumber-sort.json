@@ -89,6 +89,7 @@
       "^the branches$",
       "^the commits$"
     ],
+    "^the proposals$",
     "^I rename the \".*\" remote to .*$",
     "^Git Town is not configured$",
     "^the main branch is \".*\"$",
