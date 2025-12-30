@@ -12,6 +12,47 @@ import (
 func TestMockProposals(t *testing.T) {
 	t.Parallel()
 
+	t.Run("FindById", func(t *testing.T) {
+		t.Run("ID matches", func(t *testing.T) {
+			t.Parallel()
+			data1 := forgedomain.ProposalData{
+				Number: 1,
+				Source: "feature-branch",
+				Target: "main",
+			}
+			data2 := forgedomain.ProposalData{
+				Number: 2,
+				Source: "other-branch",
+				Target: "main",
+			}
+			proposals := mockproposals.MockProposals{data1, data2}
+			have := proposals.FindById(2)
+			want := MutableSome(&data2)
+			must.Eq(t, want, have)
+		})
+
+		t.Run("ID does not match", func(t *testing.T) {
+			t.Parallel()
+			proposals := mockproposals.MockProposals{
+				{
+					Number: 1,
+					Source: "feature-branch",
+					Target: "main",
+					Title:  "Proposal 1",
+				},
+			}
+			have := proposals.FindById(999)
+			must.True(t, have.IsNone())
+		})
+
+		t.Run("proposals slice is empty", func(t *testing.T) {
+			t.Parallel()
+			proposals := mockproposals.MockProposals{}
+			have := proposals.FindById(1)
+			must.True(t, have.IsNone())
+		})
+	})
+
 	t.Run("FindBySourceAndTarget", func(t *testing.T) {
 		t.Run("source and target match", func(t *testing.T) {
 			t.Parallel()
@@ -99,47 +140,6 @@ func TestMockProposals(t *testing.T) {
 			have := proposals.FindBySourceAndTarget("feature-branch", "main")
 			want := Some(data1)
 			must.Eq(t, want, have)
-		})
-	})
-
-	t.Run("FindById", func(t *testing.T) {
-		t.Run("ID matches", func(t *testing.T) {
-			t.Parallel()
-			data1 := forgedomain.ProposalData{
-				Number: 1,
-				Source: "feature-branch",
-				Target: "main",
-			}
-			data2 := forgedomain.ProposalData{
-				Number: 2,
-				Source: "other-branch",
-				Target: "main",
-			}
-			proposals := mockproposals.MockProposals{data1, data2}
-			have := proposals.FindById(2)
-			want := MutableSome(&data2)
-			must.Eq(t, want, have)
-		})
-
-		t.Run("ID does not match", func(t *testing.T) {
-			t.Parallel()
-			proposals := mockproposals.MockProposals{
-				{
-					Number: 1,
-					Source: "feature-branch",
-					Target: "main",
-					Title:  "Proposal 1",
-				},
-			}
-			have := proposals.FindById(999)
-			must.True(t, have.IsNone())
-		})
-
-		t.Run("proposals slice is empty", func(t *testing.T) {
-			t.Parallel()
-			proposals := mockproposals.MockProposals{}
-			have := proposals.FindById(1)
-			must.True(t, have.IsNone())
 		})
 	})
 

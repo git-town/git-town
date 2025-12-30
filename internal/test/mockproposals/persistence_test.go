@@ -65,6 +65,32 @@ func TestPersistence(t *testing.T) {
 		})
 	})
 
+	t.Run("Load and Save roundtrip", func(t *testing.T) {
+		t.Parallel()
+		workspaceDir := t.TempDir()
+		give := mockproposals.MockProposals{
+			{
+				Body:   gitdomain.NewProposalBodyOpt("body 1"),
+				Number: 1,
+				Source: "branch1",
+				Target: "main",
+				Title:  "Title 1",
+				URL:    "https://example.com/pr/1",
+			},
+			{
+				Body:   None[gitdomain.ProposalBody](),
+				Number: 2,
+				Source: "branch2",
+				Target: "main",
+				Title:  "Title 2",
+				URL:    "https://example.com/pr/2",
+			},
+		}
+		mockproposals.Save(workspaceDir, give)
+		have := mockproposals.Load(workspaceDir)
+		must.Eq(t, give, have)
+	})
+
 	t.Run("Save", func(t *testing.T) {
 		t.Parallel()
 
@@ -142,31 +168,5 @@ func TestPersistence(t *testing.T) {
 ]`[1:]
 			must.Eq(t, want, string(have))
 		})
-	})
-
-	t.Run("Load and Save roundtrip", func(t *testing.T) {
-		t.Parallel()
-		workspaceDir := t.TempDir()
-		give := mockproposals.MockProposals{
-			{
-				Body:   gitdomain.NewProposalBodyOpt("body 1"),
-				Number: 1,
-				Source: "branch1",
-				Target: "main",
-				Title:  "Title 1",
-				URL:    "https://example.com/pr/1",
-			},
-			{
-				Body:   None[gitdomain.ProposalBody](),
-				Number: 2,
-				Source: "branch2",
-				Target: "main",
-				Title:  "Title 2",
-				URL:    "https://example.com/pr/2",
-			},
-		}
-		mockproposals.Save(workspaceDir, give)
-		have := mockproposals.Load(workspaceDir)
-		must.Eq(t, give, have)
 	})
 }
