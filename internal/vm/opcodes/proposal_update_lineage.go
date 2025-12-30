@@ -43,6 +43,11 @@ func (self *ProposalUpdateLineage) Run(args shared.RunArgs) error {
 		return nil
 	}
 	fmt.Println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD", proposalOpt)
+	// TODO: here it tries to update the old proposals based on already updated lineage.
+	// In this case, the lineage lists branch beta as a child of main, but such a proposal doesn't exist.
+	// Possible solutions:
+	// 1. Update the embedded stack when updating the proposal target
+	// 2. Update all proposals that have beta as the source branch
 	proposal, hasProposal := proposalOpt.Get()
 	if !hasProposal {
 		return nil
