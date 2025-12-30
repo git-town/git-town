@@ -9,8 +9,8 @@ Feature: append a new feature branch to an existing feature branch and sync prop
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
     And the proposals
-      | ID | SOURCE   | BODY |
-      |  1 | existing | body |
+      | ID | SOURCE BRANCH | BODY |
+      |  1 | existing      | body |
     And the current branch is "existing"
     When I run "git-town append new"
 

@@ -60,9 +60,9 @@ func FromGherkinTable(table *godog.Table, lineage configdomain.Lineage) MockProp
 					panic(err)
 				}
 				id = Some(value)
-			case "SOURCE":
+			case "SOURCE BRANCH":
 				source = Some(gitdomain.NewLocalBranchName(field.Value))
-			case "TARGET":
+			case "TARGET BRANCH":
 				target = Some(gitdomain.NewLocalBranchName(field.Value))
 			case "TITLE":
 				title = Some(gitdomain.ProposalTitle(field.Value))
