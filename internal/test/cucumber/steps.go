@@ -1440,12 +1440,14 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the proposals$`, func(ctx context.Context, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		proposals := mockproposals.FromGherkinTable(table, state.fixture.DevRepo.GetOrPanic().Config.NormalConfig.Lineage)
+		fmt.Println("33333333333333333333333333333333333333333333333333333333333333333333333333333333333", proposals)
 		mockproposals.Save(state.fixture.Dir, proposals)
 	})
 
 	sc.Step(`^the proposals are now$`, func(ctx context.Context, want *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		have := mockproposals.Load(state.fixture.Dir)
+		fmt.Println("11111111111111111111111111111111111111111111111111111111111111111111111111111111111", have)
 		haveTable := mockproposals.ToDataTable(have, helpers.TableFields(want))
 		diff, errorCount := haveTable.EqualGherkin(want)
 		if errorCount != 0 {

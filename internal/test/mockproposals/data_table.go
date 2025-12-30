@@ -16,7 +16,8 @@ import (
 func FromGherkinTable(table *godog.Table, lineage configdomain.Lineage) MockProposals {
 	result := MockProposals{}
 	headers := helpers.TableFields(table)
-	for i := 1; i >= len(table.Rows); i++ {
+	for i := 1; i < len(table.Rows); i++ {
+		fmt.Println("555555555555555555555555555555555555555555555555555555555", i, table.Rows[i].Cells)
 		id := Some(i)
 		source := None[gitdomain.LocalBranchName]()
 		target := None[gitdomain.LocalBranchName]()
@@ -24,6 +25,7 @@ func FromGherkinTable(table *godog.Table, lineage configdomain.Lineage) MockProp
 		body := None[gitdomain.ProposalBody]()
 		url := None[string]()
 		for f, field := range table.Rows[i].Cells {
+			fmt.Println("66666666666666666666666666666666666666", f, field)
 			switch headers[f] {
 			case "ID":
 				value, err := strconv.Atoi(field.Value)
@@ -42,22 +44,22 @@ func FromGherkinTable(table *godog.Table, lineage configdomain.Lineage) MockProp
 			case "URL":
 				url = Some(field.Value)
 			}
-			if id.IsNone() {
-				id = Some(i)
+		}
+		if id.IsNone() {
+			id = Some(i)
+		}
+		if source.IsNone() {
+			panic("please provide the source branch")
+		}
+		if target.IsNone() {
+			parent, hasParent := lineage.Parent(source.GetOrPanic()).Get()
+			if !hasParent {
+				panic(fmt.Sprintf("branch %q has no parent", source.GetOrPanic()))
 			}
-			if source.IsNone() {
-				panic("please provide the source branch")
-			}
-			if target.IsNone() {
-				parent, hasParent := lineage.Parent(source.GetOrPanic()).Get()
-				if !hasParent {
-					panic(fmt.Sprintf("branch %q has no parent", source.GetOrPanic()))
-				}
-				target = Some(parent)
-			}
-			if title.IsNone() {
-				title = Some(gitdomain.ProposalTitle(fmt.Sprintf("Proposal from %s to %s", source.GetOrPanic(), target.GetOrPanic())))
-			}
+			target = Some(parent)
+		}
+		if title.IsNone() {
+			title = Some(gitdomain.ProposalTitle(fmt.Sprintf("Proposal from %s to %s", source.GetOrPanic(), target.GetOrPanic())))
 		}
 		result = append(result, forgedomain.ProposalData{
 			Active:       true,
@@ -66,8 +68,8 @@ func FromGherkinTable(table *godog.Table, lineage configdomain.Lineage) MockProp
 			Number:       id.GetOrPanic(),
 			Source:       source.GetOrPanic(),
 			Target:       target.GetOrPanic(),
-			Title:        title.GetOrPanic(),
-			URL:          url.GetOrPanic(),
+			Title:        title.GetOrZero(),
+			URL:          url.GetOrZero(),
 		})
 	}
 	return result

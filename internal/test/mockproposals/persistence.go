@@ -2,6 +2,7 @@ package mockproposals
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -24,5 +25,6 @@ func Load(workspaceDir string) MockProposals {
 
 func Save(workspaceDir string, proposals MockProposals) {
 	content := asserts.NoError1(json.MarshalIndent(proposals, "", "  "))
+	fmt.Println("22222222222222222222222222222", string(content))
 	asserts.NoError(os.WriteFile(FilePath(workspaceDir), content, 0o600))
 }
