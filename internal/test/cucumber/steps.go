@@ -81,6 +81,10 @@ func InitializeScenario(scenarioContext *godog.ScenarioContext) {
 			print.Error(fmt.Errorf("%s - scenario %q doesn't document exit code %d", scenario.Uri, scenario.Name, exitCode))
 			os.Exit(1)
 		}
+		if !state.proposalsChecked {
+			print.Error(fmt.Errorf("%s - scenario %q doesn't verify proposals", scenario.Uri, scenario.Name))
+			os.Exit(1)
+		}
 		if state != nil {
 			state.fixture.Delete()
 		}
@@ -1445,6 +1449,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^the proposals are now$`, func(ctx context.Context, want *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		state.proposalsChecked = true
 		have := mockproposals.Load(state.fixture.Dir)
 		haveTable := mockproposals.ToDataTable(have.Proposals, helpers.TableFields(want))
 		diff, errorCount := haveTable.EqualGherkin(want)

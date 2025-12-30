@@ -58,6 +58,8 @@ type ScenarioState struct {
 	// whether the developer workspace contains a Git repository
 	insideGitRepo bool
 
+	proposalsChecked bool
+
 	// the error of the last run of Git Town
 	runExitCode Option[int]
 
