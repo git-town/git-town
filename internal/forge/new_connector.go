@@ -70,27 +70,8 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 			RemoteURL:        remoteURL,
 		})
 	case forgedomain.ForgeTypeGitHub:
-		if githubConnectorType, hasGitHubConnectorType := args.GitHubConnectorType.Get(); hasGitHubConnectorType {
-			switch githubConnectorType {
-			case forgedomain.GitHubConnectorTypeAPI:
-				connector, err = github.NewConnector(github.NewConnectorArgs{
-					APIToken:         args.GitHubToken,
-					Browser:          args.Browser,
-					Log:              args.Log,
-					ProposalOverride: proposalOverride,
-					RemoteURL:        remoteURL,
-				})
-			case forgedomain.GitHubConnectorTypeGh:
-				connector = &gh.CachedConnector{
-					Connector: gh.Connector{
-						Backend:  args.Backend,
-						Frontend: args.Frontend,
-					},
-					Cache: forgedomain.APICache{},
-				}
-			}
-		} else {
-			// no GitHubConnectorType specified --> use the API connector
+		switch args.GitHubConnectorType.GetOr(forgedomain.GitHubConnectorTypeAPI) {
+		case forgedomain.GitHubConnectorTypeAPI:
 			connector, err = github.NewConnector(github.NewConnectorArgs{
 				APIToken:         args.GitHubToken,
 				Browser:          args.Browser,
@@ -98,29 +79,18 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 				ProposalOverride: proposalOverride,
 				RemoteURL:        remoteURL,
 			})
+		case forgedomain.GitHubConnectorTypeGh:
+			connector = &gh.CachedConnector{
+				Connector: gh.Connector{
+					Backend:  args.Backend,
+					Frontend: args.Frontend,
+				},
+				Cache: forgedomain.APICache{},
+			}
 		}
 	case forgedomain.ForgeTypeGitLab:
-		if gitLabConnectorType, hasGitLabConnectorType := args.GitLabConnectorType.Get(); hasGitLabConnectorType {
-			switch gitLabConnectorType {
-			case forgedomain.GitLabConnectorTypeAPI:
-				connector, err = gitlab.NewConnector(gitlab.NewConnectorArgs{
-					APIToken:         args.GitLabToken,
-					Browser:          args.Browser,
-					Log:              args.Log,
-					ProposalOverride: proposalOverride,
-					RemoteURL:        remoteURL,
-				})
-			case forgedomain.GitLabConnectorTypeGlab:
-				connector = &glab.CachedConnector{
-					Connector: glab.Connector{
-						Backend:  args.Backend,
-						Frontend: args.Frontend,
-					},
-					Cache: forgedomain.APICache{},
-				}
-			}
-		} else {
-			// no GitLabConnectorType specified --> use the API connector
+		switch args.GitLabConnectorType.GetOr(forgedomain.GitLabConnectorTypeAPI) {
+		case forgedomain.GitLabConnectorTypeAPI:
 			connector, err = gitlab.NewConnector(gitlab.NewConnectorArgs{
 				APIToken:         args.GitLabToken,
 				Browser:          args.Browser,
@@ -128,6 +98,14 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 				ProposalOverride: proposalOverride,
 				RemoteURL:        remoteURL,
 			})
+		case forgedomain.GitLabConnectorTypeGlab:
+			connector = &glab.CachedConnector{
+				Connector: glab.Connector{
+					Backend:  args.Backend,
+					Frontend: args.Frontend,
+				},
+				Cache: forgedomain.APICache{},
+			}
 		}
 	}
 	return NewOption(connector), err
