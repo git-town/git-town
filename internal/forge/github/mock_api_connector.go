@@ -1,15 +1,11 @@
 package github
 
 import (
-	"errors"
 	"fmt"
 
-	"github.com/git-town/git-town/v22/internal/config/configdomain"
 	"github.com/git-town/git-town/v22/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v22/internal/git/gitdomain"
-	"github.com/git-town/git-town/v22/internal/test/commands"
 	"github.com/git-town/git-town/v22/internal/test/mockproposals"
-	"github.com/git-town/git-town/v22/pkg/asserts"
 	. "github.com/git-town/git-town/v22/pkg/prelude"
 )
 
@@ -22,7 +18,6 @@ var (
 // MockAPIConnector provides access to the Bitbucket Cloud API while caching proposal information.
 type MockAPIConnector struct {
 	WebConnector
-	OriginRepo    Option[commands.TestCommands]
 	Proposals     mockproposals.MockProposals
 	ReceivedCalls []string
 }
@@ -53,31 +48,6 @@ func (self *MockAPIConnector) SearchProposals(source gitdomain.LocalBranchName) 
 		result = append(result, forgedomain.Proposal{Data: data, ForgeType: forgedomain.ForgeTypeGitHub})
 	}
 	return result, nil
-}
-
-// ============================================================================
-// squash-merge proposals
-// ============================================================================
-
-var _ forgedomain.ProposalMerger = &mockAPIConnector // type check
-
-func (self *MockAPIConnector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
-	proposal, hasProposal := self.Proposals.FindById(number).Get()
-	if !hasProposal {
-		return fmt.Errorf("proposal with id %d not found", number)
-	}
-	originRepo, hasOriginRepo := self.OriginRepo.Get()
-	if !hasOriginRepo {
-		return errors.New("this repo has no origin")
-	}
-	originRepo.CheckoutBranch("main")
-	branchToShip := proposal.Source
-	asserts.NoError(originRepo.Git.SquashMerge(originRepo.TestRunner, branchToShip))
-	originRepo.StageFiles("-A")
-	asserts.NoError(originRepo.Git.Commit(originRepo.TestRunner, configdomain.UseCustomMessage(message), gitdomain.NewAuthorOpt("CI <ci@acme.com>"), configdomain.CommitHookEnabled))
-	originRepo.RemoveBranch(branchToShip)
-	originRepo.CheckoutBranch("initial")
-	return nil
 }
 
 // ============================================================================

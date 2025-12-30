@@ -89,12 +89,14 @@ func FromGherkinTable(table *godog.Table, lineage configdomain.Lineage) MockProp
 			}
 		}
 		result = append(result, forgedomain.ProposalData{
-			Body:   body,
-			Number: id.GetOrPanic(),
-			Source: source.GetOrPanic(),
-			Target: target.GetOrPanic(),
-			Title:  title.GetOrPanic(),
-			URL:    url.GetOrPanic(),
+			Active:       true,
+			Body:         body,
+			MergeWithAPI: true,
+			Number:       id.GetOrPanic(),
+			Source:       source.GetOrPanic(),
+			Target:       target.GetOrPanic(),
+			Title:        title.GetOrPanic(),
+			URL:          url.GetOrPanic(),
 		})
 	}
 	return result
